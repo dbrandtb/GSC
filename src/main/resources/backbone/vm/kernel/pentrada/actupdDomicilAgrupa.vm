@@ -1,0 +1,22 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_ACTUALIZA_DATOS.P_UPD_DOMICIL_AGRUPA" id="actupdDomicilAgrupa">
+		<param eval="true" name="pi_CDUNIECO" type="NUMERIC">$!params.get("pi_CDUNIECO")</param>
+		<param eval="true" name="pi_CDRAMO" type="NUMERIC">$!params.get("pi_CDRAMO")</param>
+		<param eval="true" name="pi_ESTADO" type="VARCHAR">$!params.get("pi_ESTADO")</param>
+		<param eval="true" name="pi_NMPOLIZA" type="NUMERIC">$!params.get("pi_NMPOLIZA")</param>
+		<param eval="true" name="pi_CDTIPIDE" type="VARCHAR">$!params.get("pi_CDTIPIDE")</param>
+		<param eval="true" name="pi_CDIDEPER" type="VARCHAR">$!params.get("pi_CDIDEPER")</param>
+		<param eval="true" name="pi_CDPERSON" type="NUMERIC">$!params.get("pi_CDPERSON")</param>
+		<param eval="true" name="pi_CDROL" type="VARCHAR">$!params.get("pi_CDROL")</param>
+		<param eval="true" name="pi_NMSITUAC" type="NUMERIC">$!params.get("pi_NMSITUAC")</param>
+		<param eval="true" name="pi_NMSUPLEM" type="VARCHAR">$!params.get("pi_NMSUPLEM")</param>
+		<param eval="true" name="pi_NMORDDOM" type="NUMERIC">$!params.get("pi_NMORDDOM")</param>
+		<param eval="true" name="pi_CDAGRUPA" type="NUMERIC">$!params.get("pi_CDAGRUPA")</param>
+		<param eval="true" name="pi_SWMODAGR" type="VARCHAR">$!params.get("pi_SWMODAGR")</param>
+		<param eval="true" name="pi_SWMODDOM" type="VARCHAR">$!params.get("pi_SWMODDOM")</param>
+		<param eval="true" name="pi_ACCION" type="VARCHAR">$!params.get("pi_ACCION")</param>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

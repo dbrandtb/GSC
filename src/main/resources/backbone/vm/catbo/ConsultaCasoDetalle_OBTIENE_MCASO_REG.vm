@@ -1,0 +1,12 @@
+<statements>
+	<statement type="stored" name="PKG_CATBO.P_OBTIENE_MCASO_REG" id="pObtieneMCasoReg">
+		
+		<param eval="true" name="pv_nmcaso_i" type="NUMERIC">$!params.get("pv_nmcaso_i")</param>
+		<param eval="true" name="pv_matriz_i" type="NUMERIC">$!params.get("pv_mamtriz_i")</param>
+		
+		<outparam id="pv_registro_o" type="CURSOR"></outparam>
+		
+		<outparam id="pv_msg_id_o" type="INTEGER"/>        
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+	</statement>
+</statements>

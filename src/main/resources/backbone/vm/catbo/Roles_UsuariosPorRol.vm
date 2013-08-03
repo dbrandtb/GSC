@@ -1,0 +1,9 @@
+<statements>
+	<statement type="stored" name="PKG_ROLES.P_OBTIENE_USUARIOS_POR_ROL" id="pObtieneUsuariosPorRol">
+        <param eval="true" name="grupo" type="VARCHAR">$!params.get("grupo")</param>
+
+		<outparam id="pv_registro_o" type="CURSOR"></outparam>
+		<outparam id="pv_msg_id_o" type="NUMERIC"/>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+	</statement>
+</statements>

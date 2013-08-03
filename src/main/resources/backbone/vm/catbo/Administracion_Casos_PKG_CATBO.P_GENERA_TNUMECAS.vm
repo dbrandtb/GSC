@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_CATBO.P_GENERA_TNUMECAS" id="generaTnumecas">
+       <param eval="true" name="pv_cdmodulo_i" type="VARCHAR">$!params.get("pv_cdmodulo_i")</param>
+
+
+        <outparam id="pv_nmcaso_o" type="VARCHAR"/>
+        <outparam id="pv_msg_id_o" type="NUMERIC"/>
+        <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

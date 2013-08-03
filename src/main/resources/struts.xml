@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+	<!-- Includes para el wizard -->
+
+	<include file="struts/config/struts-definicion.xml"/>
+
+    <include file="struts/config/struts-rol.xml"/>
+    <include file="struts/config/struts-incisos.xml"/>
+    <include file="struts/config/struts-atributosVariables.xml"/>
+    <include file="struts/config/struts-expresiones.xml"/>
+    <include file="struts/config/struts-tablaCincoClaves.xml"/>
+    <include file="struts/config/struts-librerias.xml"/>
+    <include file="struts/config/struts-coberturas.xml"/>
+    <include file="struts/config/struts-datosFijos.xml"/>
+    <include file="struts/config/struts-tipoObjeto.xml"/>
+    <include file="struts/config/struts-sumaAsegurada.xml"/>
+    <include file="struts/config/struts-reglaValidacion.xml"/>
+    <include file="struts/config/struts-conceptosCobertura.xml"/>
+    <include file="struts/config/struts-planes.xml"/>
+
+    <!--include file="struts/config/struts-configurador-beta.xml"/-->
+
+    <include file="struts/config/struts-portal.xml"/>
+    
+    <!--
+    Se declara la referencia al archivo de configuracion de struts
+    para el modulo test de paginacion y exportacion 
+    -->
+    
+    <include file="struts/config/struts-test.xml"/>
+    
+    <!--
+    Se declara la referencia del archivo de configuracion de struts
+    para el modulo Mantenimiento de Planes.*SE MANTIENE PENDIENTE EL 
+    MECANISMO DE EXPORTACION * 
+     -->
+     
+    <include file="struts/config/struts-mantto.xml"/>
+    
+     <!--Modulo para configuracion de pantallas  -->
+     
+    <include file="struts/config/struts-conf-pantallas.xml"/>
+
+
+    <!--Modulo para configuracion de reportes  -->
+
+    <include file="struts/config/struts-reportes.xml"/>
+    
+    <!--include file="struts/config/struts-builder.xml"/-->
+
+     <!--Modulo para configuracion de Jaspers  -->
+
+    <include file="struts/config/struts-jaspers.xml"/>
+    
+    <!--Modulo para configuracion del Menu -->
+    
+    <include file="struts/config/struts-configmenu.xml"/>
+    
+    <!--Modulo para configuracion del Menu Usuario -->
+    
+    <include file="struts/config/struts-menuusuario.xml"/>
+    
+    <!--Modulo para configuracion del Menu Usuario -->
+    
+    <include file="struts/config/struts-opcmenuusuario.xml"/>
+    
+    <!--
+    Se declara la referencia del archivo de configuracion de struts
+    para el modulo Configuracion de Página Principal.
+    -->
+    
+    <include file="struts/config/struts-flujos-cotizacion.xml"/>
+    
+    <!--
+    Se declara la referencia del archivo de configuracion de struts
+    para el modulo Flujos Cotizacion.
+    -->
+    
+    <include file="struts/config/struts-flujos-endoso.xml"/>
+    
+    <!--
+    Se declara la referencia del archivo de configuracion de struts
+    para el modulo Flujos Endoso.
+    -->
+    
+    
+    <include file="struts/config/struts-principal.xml"/>
+    <include file="struts/config/struts-configurador-pantallas.xml"/>
+    <include file="struts/config/struts-config-workflow.xml"/>
+    
+    <!--
+    Se declara la referencia del archivo de configuracion de struts
+    para el modulo Procesos Emision.
+    -->
+    <include file="struts/config/struts-flujos-emision.xml"/>
+    
+    <include file="struts/config/struts-configurador-alfa.xml"/>
+    
+    <!--
+    Se declara la referencia del archivo de configuracion de struts
+    para el modulo Procesos Emision.
+    -->
+    <include file="struts/config/struts-flujos-renovacion.xml"/>
+    
+     <!--
+    Se declara la referencia del archivo de configuracion de struts
+    para el modulo wizard de parametrización.
+    -->
+    <include file="struts/config/struts-atributosVariables.xml"/>
+    
+    <!--
+    Se declara la referencia del archivo de configuracion de struts
+    para procesos criticos.
+    -->
+    <include file="struts/config/struts-procesos-criticos.xml"/>
+    
+    <!--
+    Se declara la referencia del archivo de configuracion de struts
+    para Instrumentos de Pago por Cliente
+    -->
+	<include file="struts/config/struts-instrumentosDePago.xml"/>    
+	
+	
+	<include file="struts/config/struts-presiniestros.xml"/>    
+	<include file="struts/config/struts-dctosPresiniestros.xml"/>    
+	
+
+	<!-- Archivos de CIMA -->
+    <include file="struts-cima.xml"/>
+    <include file="struts-catbo.xml"/>
+    <package name="default" extends="json-default">
+        <interceptors>
+            <interceptor-stack name="defaultStack">
+                <interceptor-ref name="exception" />
+				<!--  <interceptor-ref name="alias" />-->
+                <interceptor-ref name="servletConfig" />
+                <interceptor-ref name="prepare" />
+                               <!-- <interceptor-ref name="i18n" />
+                <interceptor-ref name="chain" />
+                <interceptor-ref name="modelDriven" />
+                <interceptor-ref name="fileUpload" />-->               
+                <interceptor-ref name="staticParams" />
+                <interceptor-ref name="params" />
+                <interceptor-ref name="conversionError" />
+                <interceptor-ref name="validation">
+                    <param name="excludeMethods">cancel,execute,delete,edit,list</param>
+                </interceptor-ref>
+                <interceptor-ref name="workflow">
+                    <param name="excludeMethods">input,back,cancel</param>
+                </interceptor-ref>
+            </interceptor-stack>
+        </interceptors>
+
+		<action name="index">
+			<result>/index.jsp</result>
+		<!-- 
+			<result>/jsp/portal/index.jsp</result>
+			 -->
+			
+		</action>
+				<!-- <action name="portal">
+			<result>/jsp/portal/portal.jsp</result>
+			<result type="redirect">load</result>
+		</action>
+		 -->
+		
+		<action name="load" class="paginaPrincipalAction" method="getPaginaPrincipal">
+			<result>/jsp/portal/portal.jsp</result>
+		</action>
+        
+        <action name="menuPrueba" class="menuAction" method="llenadoMenuPrincipal">
+            <result name="input">/jsp/menu/menu.jsp</result>
+            <result name="success" type="json">
+                <param name="root">listaMenu</param>
+            </result>
+        </action>
+        
+        <action name="menuVertical" class="menuAction" method="llenadoMenuPrincipal">
+            <result name="input">/jsp/menu/menu.jsp</result>
+            <result name="success" type="json">
+                <param name="root">listaMenuVertical</param>
+            </result>
+        </action>
+        
+		<action name="logout">
+			<result>jsp/portal/login.jsp</result>
+		</action>
+		
+		<!-- RBS 20111212 Action para login -->
+		<action name="autenticaUsuario" class="autenticacionAction" method="autenticaUsuario">
+			<result name="success" type="json"><param name="ignoreHierarchy">false</param></result>
+			<result name="input">jsp/portal/login.jsp</result>
+		</action>
+        <!--  -->
+        <action name="seleccionaRolCliente" class="loadClientesRolesAction" method="getRolesClientes">
+	    	<exception-mapping result="success" exception="javax.servlet.ServletException">/jsp/portal/treeRolElemento.jsp</exception-mapping>
+	    	<exception-mapping result="success" exception="java.sql.SQLException">/jsp/portal/treeRolElemento.jsp</exception-mapping>
+	    	<exception-mapping result="success" exception="java.lang.Exception">/jsp/portal/treeRolElemento.jsp</exception-mapping>
+			<result name="success">/jsp/portal/treeRolElemento.jsp</result>
+			<!--<result name="portal" type="redirect">portal</result>-->
+			<result name="load" type="redirect">load</result>
+		</action>		
+		
+		
+		<action name="ArbolRolCliente" class="loadClientesRolesAction" method="getRolesClientes">
+			<result name="success" type="json">			
+			<param name="root">listaRolCliente</param>
+			</result>
+		</action>
+
+		<action name="regresaCodigo" class="loadClientesRolesAction" method="getCodigoTree">
+			<result name="success" type="json"><param name="ignoreHierarchy">false</param></result>
+			<result name="input">/jsp/portal/treeRolElemento.jsp</result>
+			<result name="confcompleta" type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		
+		<action name="consultaPolizasRenovar" class="renovacionAction" method="obtienePantallaPolizasRenovar">
+           <result name="input">/jsp/flujos/renovacion/consultaPolizasRenovar.jsp</result>
+       </action>
+		
+		 <action name="detallePoliza">
+           <result>/resources/jsp-script/procesos/emision/detallePoliza-script.jsp</result>
+       </action>
+	   
+	   <!-- Wizard -->
+	   <action name="LayoutBrowser">
+			<result>/WEB-INF/jsp/productos/layoutBrowser/layoutBrowser.jsp</result>
+		</action>
+		<action name="ArbolListaProductos" class="ArbolProductosAction" method="listaProductosJson">
+			<result name="success" type="json">
+				<param name="root">listaProductos</param>
+			</result>
+		</action>
+		<action name="LlenandoProductos" class="ArbolProductosAction" method="llenandoEstructuraProducto">
+			<result name="success" type="json"/>
+		</action>
+		<action name="SubirCodigosASession" class="ArbolProductosAction" method="subirCodigosASession">
+			<result name="success" type="json"/>
+		</action>
+		<action name="VistaProductos" class="ArbolProductosAction" method="vistaPantallasJson">
+			<result name="success" type="json">
+				<param name="root">listaFuncionesJson</param>
+			</result>
+		</action>
+		<action name="Redireccionate">
+			<result>/indexWithIframe.jsp</result>
+		</action>
+		
+		<action name="RemueveCosasDeSessionEnLibrerias" class="PrincipalLibreriasAction" method="remueveCosasDeSessionEnLibrerias">
+            <result name="success" type="json"/>      
+		</action>
+		
+		
+		<!-- TODO: quitar actions, son para que se ejecute la funcionalidad de 'Expresiones' en Numeracion de Polizas(buscar otra forma de no repetirlos): -->
+    	<action name="ObtenerCodigoExpresion" class="AtributosVariablesAction" method="obtenerCodigoExpresion">
+			<result name="success" type="json"/>      
+		</action>
+    	<action name="Expresiones" class="ExpresionesAction">
+			<result name="input">/WEB-INF/jsp/productos/expresiones/expresiones.jsp</result>
+		</action>
+		<action name="ExpresionesWindow" class="ExpresionesAction">		
+			 <result name="input">/WEB-INF/jsp/productos/expresiones/expresionesDiv.jsp</result>			 
+		</action>
+		<action name="Complex" class="ExpresionesAction">
+			<result name="input">/WEB-INF/jsp/productos/expresiones/complex.jsp</result>
+		</action>
+		<action name="ValidarExpresion" class="ExpresionesAction" method="validarExpresion">
+			<result name="success" type="json"/>				
+		</action>
+		<action name="Test" class="ExpresionesAction" method="test">
+			<result name="success" type="json"/>				
+		</action>
+		<action name="FuncionesArbol" class="ExpresionesAction" method="funcionesArbolJSON">
+			<result name="success" type="json">
+				<param name="root">listaFuncionesJson</param>
+			</result>
+		</action>
+		<action name="VariablesTemporalesArbol" class="ExpresionesAction" method=" variablesTemporalesArbolJSON">
+			<result name="success" type="json">
+				<param name="root">listaVariablesTemporalesJson</param>
+			</result>
+		</action>
+		<action name="CamposDelProductoArbol" class="ExpresionesAction" method="camposDelProductoArbolJSON">
+			<result name="success" type="json">
+				<param name="root">listaCamposDelProductoJson</param>
+			</result>
+		</action>
+		<action name="ComboVariables" class="ExpresionesAction" method="listaComboVariablesJSON">
+			<result name="success" type="json"/>				
+		</action>
+		<action name="ComboTabla" class="ExpresionesAction" method="listaTablaJSON">
+			<result name="success" type="json"/>				
+		</action>
+		<action name="ComboColumna" class="ExpresionesAction" method="listaColumnaJSON">
+			<result name="success" type="json"/>				
+		</action>
+		<action name="ComboClave" class="ExpresionesAction" method="listaClaveJSON">
+			<result name="success" type="json"/>				
+		</action>
+		<action name="AgregarClave" class="ExpresionesAction" method="llenarClave">
+			<result name="success" type="json"/>				
+		</action>
+		<action name="AgregarVariable" class="ExpresionesAction" method="agregarVariable">
+			<result name="success" type="json"/>				
+		</action>
+		<action name="AgregarExpresion" class="ExpresionesAction" method="agregarExpresion">
+			<result name="success" type="json"/>				
+		</action>
+		<action name="EditarExpresion" class="ExpresionesAction" method="editarExpresion">
+			<result name="success" type="json"/>				
+		</action>
+		<action name="EliminarVariable" class="ExpresionesAction" method="eliminarVariable">
+			<result name="success" type="json"/>				
+		</action>
+		<!-- TODO: FIN de quitar actions, son para que se ejecute lo de Expresiones en Numeracion de Polizas -->
+	   
+    </package>
+
+</struts>

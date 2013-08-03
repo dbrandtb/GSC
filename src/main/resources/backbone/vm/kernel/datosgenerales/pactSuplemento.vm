@@ -1,0 +1,23 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_DATOS_GENERALES.P_ActualizarSuplemento" id="pactSuplemento">
+		<param eval="true" name="pi_CDUNIECO" type="NUMERIC">$!params.get("pi_CDUNIECO")</param>
+		<param eval="true" name="pi_CDRAMO" type="NUMERIC">$!params.get("pi_CDRAMO")</param>
+		<param eval="true" name="pi_ESTADO" type="VARCHAR">$!params.get("pi_ESTADO")</param>
+		<param eval="true" name="pi_NMPOLIZA" type="NUMERIC">$!params.get("pi_NMPOLIZA")</param>
+		<param eval="true" name="pi_NMSUPLEM" type="VARCHAR">$!params.get("pi_NMSUPLEM")</param>
+		<param eval="true" name="pi_NMSITUAC" type="NUMERIC">$!params.get("pi_NMSITUAC")</param>
+		<param eval="true" name="pi_FEINIVAL" type="DATE">$!params.get("pi_FEINIVAL")</param>
+		<param eval="true" name="pi_HHINIVAL" type="VARCHAR">$!params.get("pi_HHINIVAL")</param>
+		<param eval="true" name="pi_FEFINVAL" type="DATE">$!params.get("pi_FEFINVAL")</param>
+		<param eval="true" name="pi_HHFINVAL" type="VARCHAR">$!params.get("pi_HHFINVAL")</param>
+		<param eval="true" name="pi_SWANULA" type="VARCHAR">$!params.get("pi_SWANULA")</param>
+		<param eval="true" name="pi_NSUPLOGI" type="NUMERIC">$!params.get("pi_NSUPLOGI")</param>
+		<param eval="true" name="pi_NSUPUSUA" type="NUMERIC">$!params.get("pi_NSUPUSUA")</param>
+		<param eval="true" name="pi_NSUPSESS" type="NUMERIC">$!params.get("pi_NSUPSESS")</param>
+		<param eval="true" name="pi_FESESSIO" type="DATE">$!params.get("pi_FESESSIO")</param>
+		<param eval="true" name="pi_CDBLOQUE" type="VARCHAR">$!params.get("pi_CDBLOQUE")</param>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
+<statements>
+    
+    <statement type='stored' name="PKG_COTIZA.P_ROLES_CARRITO" id="pObtenerRolesCarritoCompras">
+     
+        <param eval="true" name="p_cdunieco" type="NUMERIC">$!params.get("cdUniEco")</param>
+        <param eval="true" name="p_cdramo" type="NUMERIC">$!params.get("cdRamo")</param>
+        <param eval="true" name="p_nmpoliza" type="NUMERIC">$!params.get("nmPoliza")</param>
+        <param eval="true" name="p_nmsuplem" type="NUMERIC">$!params.get("nmSuplem")</param>
+        <param eval="true" name="p_cvepersona" type="NUMERIC">$!params.get("cdAsegur")</param>
+        <param eval="true" name="p_cvepappol" type="NUMERIC">$!params.get("cdRol")</param>
+        
+        
+        <outparam id="pv_registro_o" type="CURSOR"/>
+        <outparam id="pv_msg_id_o" type="NUMERIC"></outparam>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+        
+    </statement>
+                              
+</statements>

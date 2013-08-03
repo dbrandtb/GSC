@@ -1,0 +1,19 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_ACTUALIZA_DATOS.P_ACT_TGREXCOA" id="getCapitalRevalora">
+		<param eval="true" name="pi_CDUNIECO" type="NUMERIC">$!params.get("pi_CDUNIECO")</param>
+		<param eval="true" name="pi_CDRAMO" type="NUMERIC">$!params.get("pi_CDRAMO")</param>
+		<param eval="true" name="pi_ESTADO" type="VARCHAR">$!params.get("pi_ESTADO")</param>
+		<param eval="true" name="pi_NMPOLIZA" type="NUMERIC">$!params.get("pi_NMPOLIZA")</param>
+		<param eval="true" name="pi_NMSITUAC" type="NUMERIC">$!params.get("pi_NMSITUAC")</param>
+		<param eval="true" name="pi_NMSUPLEM" type="VARCHAR">$!params.get("pi_NMSUPLEM")</param>
+		<param eval="true" name="pi_FEINIEXC" type="DATE">$!params.get("pi_FEINIEXC")</param>
+		<param eval="true" name="pi_FEFINEXC" type="DATE">$!params.get("pi_FEFINEXC")</param>
+		<param eval="true" name="pi_CDGARANT" type="VARCHAR">$!params.get("pi_CDGARANT")</param>
+		<param eval="true" name="pi_STATUS" type="VARCHAR">$!params.get("pi_STATUS")</param>
+		<param eval="true" name="pi_FECARGA" type="DATE">$!params.get("pi_FECARGA")</param>
+		<param eval="true" name="pi_ACCION" type="VARCHAR">$!params.get("pi_ACCION")</param>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

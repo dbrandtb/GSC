@@ -1,0 +1,9 @@
+<statements>
+	<statement type="stored" name="PKG_WIZARD.P_TTIPOSITLIST" id="pTTipoSitList">
+		<param eval="true" name="pv_cdramo_i" type="NUMERIC">$!params.codigoProducto</param>
+		<outparam id="pv_registro_o" type="CURSOR"/>
+		<outparam id="pv_msg_id_o" type="NUMERIC"/>	
+		<outparam id="pv_title_o" type="VARCHAR"/>	
+</statement>
+</statements>
+

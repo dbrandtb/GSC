@@ -1,0 +1,13 @@
+<statements>
+	<statement type="stored" name="PKG_SATELITES.P_OBTIENE_TVALOPOL" id="cargarBloqueB1B">
+		<param eval="true" name="pv_cdunieco" type="NUMERIC">$!params.get("pi_CDUNIECO")</param>
+		<param eval="true" name="pv_cdramo" type="NUMERIC">$!params.get("pi_CDRAMO")</param>
+		<param eval="true" name="pv_estado" type="VARCHAR">$!params.get("pi_ESTADO")</param>
+		<param eval="true" name="pv_nmpoliza" type="NUMERIC">$!params.get("pi_NMPOLIZA")</param>
+		<param eval="true" name="pv_cdatribu" type="VARCHAR">$!params.get("pi_CDATRIBU")</param>
+		<outparam id="po_rc_cursor" type="CURSOR"/>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

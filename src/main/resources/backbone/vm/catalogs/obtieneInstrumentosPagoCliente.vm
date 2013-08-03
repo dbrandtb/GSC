@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
+<statements>
+	<statement type="stored" name="PKG_LISTAS.P_INST_PAGO2" id="obtenerInstrumentosPagoPorCliente">
+  		<param eval="true" name="pv_cliente_i" type="VARCHAR"><![CDATA[$!params.get("cdElemento")]]></param>
+  		<outparam id="pv_registro_o" type="CURSOR"/>
+		<outparam id="pv_msg_id_o"	 type="NUMERIC"/>
+		<outparam id="pv_title_o"	 type="VARCHAR"/>
+		
+	</statement>
+</statements>

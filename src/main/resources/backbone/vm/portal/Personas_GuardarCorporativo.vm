@@ -1,0 +1,15 @@
+<statements>
+	<statement type="stored" name="PKG_PERSONA.P_GUARDA_CORPORA" id="guardarCorporativo">
+        <param eval="true" name="pi_cdperson" type="NUMERIC">$!params.get("codigoPersona")</param>
+        <param eval="true" name="pi_cdelemen" type="NUMERIC">$!params.get("cdElemento")</param>
+        <param eval="true" name="pi_status" type="NUMERIC">$!params.get("Estado")</param>
+        <param eval="true" name="pi_feinicio" type="VARCHAR">$!params.get("FechaAlta")</param>
+        <param eval="true" name="pi_fefin" type="VARCHAR">$!params.get("FechaBaja")</param>
+        <param eval="true" name="pi_cdgrupoper" type="NUMERIC">$!params.get("codigoGrupo")</param>
+        <param eval="true" name="pi_nmnomina" type="VARCHAR">$!params.get("Nomina")</param>
+
+
+        <outparam id="po_msg_id" type="NUMERIC"></outparam>
+        <outparam id="po_title" type="VARCHAR"></outparam>
+	</statement>
+</statements>

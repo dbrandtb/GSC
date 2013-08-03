@@ -1,0 +1,1750 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <bean id="catbo-endpoint" abstract="true" parent="parent-endpoint" >
+        <property name="templateModule" value="catbo" />
+        <property name="xslModule" value="catbo" />
+    </bean>
+
+
+    <!-- COMBOS -->
+
+
+ <bean id="OBTENER_TABLA_GET_LISTAS" parent="catbo-endpoint">
+	        <property name="templateName" value="ObtenerGetListas.vm" />
+	        <property name="xslName" value="ObtenerGetListas.xsl" />
+	        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	 </bean>
+	 
+	 
+      <bean id="OBTIENE_USUARIOS_ENCUESTAS" parent="catbo-endpoint">
+	        <property name="templateName" value="ObtenerUsuariosEncuestas.vm" />
+	        <property name="xslName" value="ObtenerUsuariosEncuestas.xsl" />
+	        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	 </bean>
+	 
+
+     <bean id="OBTIENE_MODULOS_ENCUESTAS" parent="catbo-endpoint">
+	        <property name="templateName" value="ObtenerClaves.vm" />
+	        <property name="xslName" value="ObtenerClaves.xsl" />
+	        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	 </bean>
+	 
+	  <bean id="OBTIENE_COMBO_ENCUESTAS_CAMPAN" parent="catbo-endpoint">
+	        <property name="templateName" value="ObtenerClaves.vm" />
+	        <property name="xslName" value="ObtenerClaves.xsl" />
+	        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	 </bean>
+	 
+	 
+      <bean id="OBTIENE_FORMATOS_ORDEN" parent="catbo-endpoint">
+	        <property name="templateName" value="AsociarOrdenTrabajo_comboObtieneFormatos.vm" />
+	        <property name="xslName" value="AsociarOrdenTrabajo_comboObtieneFormatos.xsl" />
+	        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+
+      <bean id="OBTIENE_PRODUCTOS_POR_ASEGURADORA_Y_CLIENTE" parent="catbo-endpoint">
+        <property name="templateName" value="AgrupacionPapel_ProductosPorAseguradoraYCliente.vm"></property>
+        <property name="xslName" value="AgrupacionPapel_ProductosPorAseguradoraYCliente.xsl"></property>
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+
+     <bean id="OBTIENE_ASEGURADORA_POR_CLIENTE" parent="catbo-endpoint">
+        <property name="templateName" value="AgrupacionPapel_AseguradoraPorCliente.vm"></property>
+        <property name="xslName" value="AgrupacionPapel_AseguradoraPorCliente.xsl"></property>
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+
+
+    <bean id="LISTA_ASEGURADORAS" parent="catbo-endpoint">
+		<property name="templateName" value="Aseguradoras_ObtenerCombo.vm"></property>
+		<property name="xslName" value="Aseguradoras_ObtenerCombo.xsl"></property>
+		<property name="unmarshallClass" value="java.util.ArrayList"></property>
+    </bean>
+
+    <bean id="OBTIENE_RAMOS" parent="catbo-endpoint" >
+        <property name="templateName" value="ObtenerRamos.vm" />
+        <property name="xslName" value="ObtenerRamos.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+    
+    <!-- Cambio del servicio del combo producto -->
+    
+      <bean id="OBTIENE_RAMOS_2" parent="catbo-endpoint" >
+        <property name="templateName" value="ObtenerRamosNuevo.vm" />
+        <property name="xslName" value="ObtenerRamosNuevo.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+   
+
+   	<bean id="OBTIENE_TIPO_GUION" parent="catbo-endpoint">
+	        <property name="templateName" value="ObtenerMetodoEnvio.vm" />
+	        <property name="xslName" value="ObtenerTipoGuion.xsl" />
+	        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+     <bean id="OBTIENE_PROCESOS_CAT" parent="catbo-endpoint" >
+        <property name="templateName" value="Cat_ObtenerComboProcesos.vm" />
+        <property name="xslName" value="Cat_ObtenerComboProcesos.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+
+	<bean id="OBTIENE_PROCESOS_CAT_MATRIZ" parent="catbo-endpoint" >
+        <property name="templateName" value="Cat_ObtenerComboProcesosMatriz.vm" />
+        <property name="xslName" value="Cat_ObtenerComboProcesosMatriz.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+
+
+     <bean id="OBTIENE_ESTADOS_EJECUTIVO" parent="catbo-endpoint">
+		<property name="templateName" value="ObtenerTipoNivel.vm"></property>
+		<property name="xslName" value="ObtenerTipoNivel.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+
+    <bean id="OBTIENE_CLIENTES_CORP_BO" parent="catbo-endpoint">
+    	<property name="templateName" value="ObtenerClientesCorpBO.vm"></property>
+    	<property name="xslName" value="ObtenerClientesCorpBO.xsl"></property>
+    	<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+
+ <bean id="OBTENER_DATOS_CATALOGO_BO" parent="catbo-endpoint">
+    	<property name="templateName" value="Administracion_Casos_Datos_Catalogo.vm"></property>
+    	<property name="xslName" value="Administracion_Casos_Datos_Catalogo.xsl"></property>
+    	<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+
+    <bean id="DATOS_CATALOGO" parent="catbo-endpoint">
+    	<property name="templateName" value="Administracion_Casos_Datos_Catalogo.vm"></property>
+    	<property name="xslName" value="Administracion_Casos_Datos_Catalogo.xsl"></property>
+    	<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+
+     <bean id="CATALOGO_PRIORIDAD" parent="catbo-endpoint">
+    	<property name="templateName" value="Administracion_Casos_Datos_Catalogo.vm"></property>
+    	<property name="xslName" value="Administracion_Casos_Datos_Catalogo.xsl"></property>
+    	<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+
+      <bean id="OBTIENE_NIVEL_ATENCION" parent="catbo-endpoint">
+    	<property name="templateName" value="Administracion_Casos_Datos_Catalogo.vm"></property>
+    	<property name="xslName" value="Administracion_Casos_Datos_Catalogo.xsl"></property>
+    	<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+
+     <bean id="OBTIENE_UNIDAD_TIEMPO" parent="catbo-endpoint">
+    	<property name="templateName" value="Administracion_Casos_Datos_Catalogo.vm"></property>
+    	<property name="xslName" value="Administracion_Casos_Datos_Catalogo.xsl"></property>
+    	<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+
+    <bean id="OBTIENE_ROL" parent="catbo-endpoint">
+    	<property name="templateName" value="Administracion_Casos_Datos_Catalogo.vm"></property>
+    	<property name="xslName" value="Administracion_Casos_Datos_Catalogo.xsl"></property>
+    	<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+
+    <bean id="OBTIENE_TIPOS_ARCHIVOS" parent="catbo-endpoint">
+    	<property name="templateName" value="Administracion_Casos_Obtiene_Tipos_Archivos.vm"></property>
+    	<property name="xslName" value="Administracion_Casos_Obtiene_Tipos_Archivos.xsl"></property>
+    	<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+
+    <bean id="OBTIENE_DATOS_CATALOGO" parent="catbo-endpoint">
+    	<property name="templateName" value="Matriz_Datos_Catalogo.vm"></property>
+    	<property name="xslName" value="Matriz_Datos_Catalogo.xsl"></property>
+    	<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+
+    <bean id="MATRIZ_OBTIENE_ROL" parent="catbo-endpoint">
+    	<property name="templateName" value="Matriz_Datos_Catalogo.vm"></property>
+    	<property name="xslName" value="Matriz_Datos_Catalogo.xsl"></property>
+    	<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+
+    <bean id="MATRIZ_NIVEL_ATENCION" parent="catbo-endpoint">
+    	<property name="templateName" value="Matriz_Datos_Catalogo.vm"></property>
+    	<property name="xslName" value="Matriz_Datos_Catalogo.xsl"></property>
+    	<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+
+     <bean id="MATRIZ_UNIDAD_TIEMPO" parent="catbo-endpoint">
+    	<property name="templateName" value="Matriz_Datos_Catalogo.vm"></property>
+    	<property name="xslName" value="Matriz_Datos_Catalogo.xsl"></property>
+    	<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+
+	<bean id="MATRIZ_OBTIENE_RESPONSABLES" parent="catbo-endpoint">
+    	<property name="templateName" value="ObtenerComboResponsables.vm"></property>
+    	<property name="xslName" value="ObtenerComboResponsables.xsl"></property>
+    	<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+    
+    <bean id="OBTENER_PRODUCTOS_ASEGURADORA_ENCUESTA" parent="catbo-endpoint" >
+        <property name="templateName" value="ObtenerProductosAseguradoraEncuesta.vm" />
+        <property name="xslName" value="ObtenerProductosAseguradoraEncuesta.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<bean id="OBTIENE_COMBO_MODULOS_ENCUESTAS" parent="catbo-endpoint">
+    	<property name="templateName" value="ObtenerModuloEncuesta.vm"></property>
+    	<property name="xslName" value="ObtenerModuloEncuesta.xsl"></property>
+    	<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+
+	<bean id="OBTIENE_COMBO_CAMPANHA_ENCUESTAS" parent="catbo-endpoint">
+    	<property name="templateName" value="ObtenerCampanhaEncuesta.vm"></property>
+    	<property name="xslName" value="ObtenerCampanhaEncuesta.xsl"></property>
+    	<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+
+	<bean id="OBTIENE_COMBO_TEMA_ENCUESTAS" parent="catbo-endpoint">
+    	<property name="templateName" value="ObtenerTemaEncuesta.vm"></property>
+    	<property name="xslName" value="ObtenerTemaEncuesta.xsl"></property>
+    	<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+
+	<bean id="OBTIENE_COMBO_ENCUESTA_ENCUESTAS" parent="catbo-endpoint">
+    	<property name="templateName" value="ObtenerEncuestaEncuesta.vm"></property>
+    	<property name="xslName" value="ObtenerEncuestaEncuesta.xsl"></property>
+    	<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+
+    
+    <!-- FIN COMBOS -->
+
+<bean id="OBTIENE_MENSAJE" parent="catbo-endpoint" >
+        <property name="templateName" value="ObtieneMensaje.vm" />
+        <property name="xslName" value="ObtieneMensaje.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="LOGIN" parent="catbo-endpoint" >
+        <property name="templateName" value="Login.vm" />
+        <property name="xslName" value="Login.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="USUARIOS_OBTENER_ROLES_USUARIO" parent="catbo-endpoint" >
+        <property name="templateName" value="Usuarios_ObtenerRolesUsuario.vm" />
+        <property name="xslName" value="Usuarios_ObtenerRolesUsuario.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="USUARIOS_USUARIO_EN_GRUPO" parent="catbo-endpoint" >
+        <property name="templateName" value="Usuarios_UsuarioEnGrupo.vm" />
+        <property name="xslName" value="Usuarios_UsuarioEnGrupo.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="ROLES_OBTENER_USUARIOS_POR_ROL" parent="catbo-endpoint" >
+        <property name="templateName" value="Roles_UsuariosPorRol.vm" />
+        <property name="xslName" value="Roles_UsuariosPorRol.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="USUARIOS_OBTENER_USUARIO" parent="catbo-endpoint" >
+        <property name="templateName" value="Usuarios_Get.vm" />
+        <property name="xslName" value="Usuarios_Get.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<!-- ***************** Endpoints de Notificaciones ***********  -->
+<bean id="BUSCAR_NOTIFICACIONES" parent="catbo-endpoint" >
+        <property name="templateName" value="Notificaciones_Buscar.vm" />
+        <property name="xslName" value="Notificacion_Buscar.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="BORRAR_NOTIFICACION" parent="catbo-endpoint" >
+        <property name="templateName" value="Notificaciones_Borrar.vm" />
+        <property name="xslName" value="Stdr_OutMensage.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="BORRAR_NOTIFICACION_PROCESO" parent="catbo-endpoint" >
+        <property name="templateName" value="NotificacionesProceso_Borrar.vm" />
+        <property name="xslName" value="Stdr_OutMensage.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="OBTENERREG_NOTIFICACION" parent="catbo-endpoint" >
+        <property name="templateName" value="Notificaciones_ObtenerReg.vm" />
+        <property name="xslName" value="Notificaciones_ObtenerReg.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="OBTENERREG_NOTIFICACION_PROCESO" parent="catbo-endpoint" >
+        <property name="templateName" value="NotificacionesProcesos_ObtenerReg.vm" />
+        <property name="xslName" value="NotificacionesProcesos_ObtenerReg.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="OBTENERREG_PROCESO_NOTIFICACION" parent="catbo-endpoint" >
+        <property name="templateName" value="ProcesosNotificaciones_Buscar.vm" />
+        <property name="xslName" value="ProcesosNotificaciones_Buscar.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="OBTIENE_ESTADOS_CASO" parent="catbo-endpoint" >
+        <property name="templateName" value="ObtieneEstadosCaso.vm" />
+        <property name="xslName" value="ObtieneEstadosCaso.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+<bean id="OBTIENE_ESTADOS_NOTIFI" parent="catbo-endpoint" >
+        <property name="templateName" value="ObtieneEstadosNotifi.vm" />
+        <property name="xslName" value="ObtieneEstadosNotifi.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="INSERTAR_NOTIFICACIONES" parent="catbo-endpoint" >
+        <property name="templateName" value="Notificaciones_Insertar.vm" />
+        <property name="xslName" value="Notificaciones_Insertar.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="INSERTAR_NOTIFICACIONES_PROCESO" parent="catbo-endpoint" >
+        <property name="templateName" value="NotificacionesProceso_Insertar.vm" />
+        <property name="xslName" value="Stdr_OutMensage.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="OBTIENE_VARIABLES_NOTIFI" parent="catbo-endpoint">
+		<property name="templateName" value="ObtenerVariablesNotifi.vm" />
+		<property name="xslName" value="ObtenerVariablesNotifi.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="OBTIENE_NOTIFICACION_REGION" parent="catbo-endpoint" >
+        <property name="templateName" value="ObtenerFormato.vm" />
+        <property name="xslName" value="ObtenerFormato.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="OBTIENE_TIPO_METODO_ENVIO" parent="catbo-endpoint" >
+        <property name="templateName" value="ObtenerMetodoEnvio.vm" />
+        <property name="xslName" value="ObtenerMetodoEnvio.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+
+<!-- ***************** FIN Endpoints de Notificaciones ***********  -->
+
+<!-- ***************** Endpoints de Formatos de Documentos ***********  -->
+<bean id="BUSCAR_FORMATOS_DOCUMENTOS" parent="catbo-endpoint" >
+        <property name="templateName" value="FormatosDocumentos_Buscar.vm" />
+        <property name="xslName" value="FormatosDocumentos_Buscar.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="BORRAR_FORMATOS_DOCUMENTOS" parent="catbo-endpoint" >
+        <property name="templateName" value="FormatosDocumentos_Borrar.vm" />
+        <property name="xslName" value="Stdr_OutMensage.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="OBTIENERREG_FORMATOS_DOCUMENTOS" parent="catbo-endpoint" >
+        <property name="templateName" value="FormatosDocumentos_ObtenerReg.vm" />
+        <property name="xslName" value="FormatosDocumentos_ObtenerReg.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="GUARDAR_FORMATOS_DOCUMENTOS" parent="catbo-endpoint" >
+        <property name="templateName" value="FormatosDocumentos_Guardar.vm" />
+        <property name="xslName" value="Stdr_OutMensage.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="OBTIENE_FORMANTOS_DOCUMENTOS_EXPORT" parent="catbo-endpoint" >
+        <property name="templateName" value="FormatosDocumentos_Buscar.vm" />
+        <property name="xslName" value="FormatosDocumentos_Exportar.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+
+<!-- ***************** FIN Endpoints de Formatos de Documentos ***********  -->
+
+<!-- BEGIN OPERACIONES CAT -->
+<bean id="BUSCAR_GUIONES" parent="catbo-endpoint" >
+        <property name="templateName" value="OperacionesCAT_Buscar.vm" />
+        <property name="xslName" value="OperacionesCAT_Buscar.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="OBTENERREG_GUION" parent="catbo-endpoint" >
+        <property name="templateName" value="OperacionesCAT_ObtenerRegGuion.vm" />
+        <property name="xslName" value="OperacionesCAT_ObtenerRegGuion.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+
+<bean id="BORRAR_GUION" parent="catbo-endpoint" >
+        <property name="templateName" value="OperacionesCAT_BorrarGuion.vm" />
+        <property name="xslName" value="Stdr_OutMensage.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="BORRAR_DIALOGO" parent="catbo-endpoint" >
+        <property name="templateName" value="OperacionesCAT_BorrarDialogo.vm" />
+        <property name="xslName" value="Stdr_OutMensage.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="BUSCAR_DIALOGOS_GUION" parent="catbo-endpoint" >
+        <property name="templateName" value="OperacionesCAT_BuscarDialogosGuion.vm" />
+        <property name="xslName" value="OperacionesCAT_BuscarDialogosGuion.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="INSERTAR_GUARDAR_GUION" parent="catbo-endpoint" >
+        <property name="templateName" value="OperacionesCAT_InsertaGuardaGuion.vm" />
+        <property name="xslName" value="Stdr_OutMensage.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="INSERTAR_GUARDAR_DIALOGO_GUION" parent="catbo-endpoint" >
+        <property name="templateName" value="OperacionesCAT_InsertaGuardaDialogoGuion.vm" />
+        <property name="xslName" value="Stdr_OutMensage.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="OBTIENE_GUIONES_EXPORT" parent="catbo-endpoint" >
+        <property name="templateName" value="OperacionesCAT_Buscar.vm" />
+        <property name="xslName" value="OperacionesCAT_Exportar.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+
+<bean id="OBTIENE_DIALOGOS_GUION_EXPORT" parent="catbo-endpoint" >
+        <property name="templateName" value="OperacionesCAT_BuscarDialogosGuion.vm" />
+        <property name="xslName" value="OperacionesCAT_BuscarDialogosGuionExporta.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+
+<bean id="OBTENER_GUIONES_DISP" parent="catbo-endpoint" >
+        <property name="templateName" value="OperacionesCAT_BuscarGuionesDisp.vm" />
+        <property name="xslName" value="OperacionesCAT_BuscarGuionesDisp.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="OBTENER_GUION_SCRIPT_INICIAL" parent="catbo-endpoint" >
+        <property name="templateName" value="OperacionesCAT_ObtenerGuionInicial.vm" />
+        <property name="xslName" value="OperacionesCAT_ObtenerGuionInicial.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="GUARDAR_DIALOGO_SCRIPT_OBSERVACION" parent="catbo-endpoint" >
+        <property name="templateName" value="OperacionesCAT_GuardaDialogoScript.vm" />
+        <property name="xslName" value="Stdr_OutMensage.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="OBTENER_ENCUESTAS_PENDIENTES" parent="catbo-endpoint" >
+        <property name="templateName" value="OperacionesCAT_ObtenerEncuestasPendientes.vm" />
+        <property name="xslName" value="OperacionesCAT_ObtenerEncuestasPendientes.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+
+
+<!-- END OPERACIONES CAT -->
+
+    <!--  CALENDARIO CAT -->
+    <bean id="OBTENER_CALENDARIO" parent="catbo-endpoint" >
+            <property name="templateName" value="Calendario_Obtiene_Calendario.vm" />
+            <property name="xslName" value="Calendario_Obtiene_Calendario.xsl" />
+            <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+    <!-- END CALENDARIO CAT -->
+
+     <!--  CALENDARIO: DIA DEL MES CAT -->
+    <bean id="OBTENER_DIA_MES" parent="catbo-endpoint" >
+            <property name="templateName" value="Calendario_Obtiene_Dia_Mes.vm" />
+            <property name="xslName" value="Calendario_Obtiene_Dia_Mes.xsl" />
+            <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+    <!-- END CALENDARIO: DIA DEL MES CAT -->
+
+     <!--  CALENDARIO: GUARDAR CALENDARIO -->
+    <bean id="GUARDAR_CALENDARIO" parent="catbo-endpoint" >
+            <property name="templateName" value="Calendario_Guardar_Calendario.vm" />
+            <property name="xslName" value="Calendario_Guardar_Calendario.xsl" />
+            <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+    <!-- END CALENDARIO: GUARDAR CALENDARIO -->
+    
+    <!--  CALENDARIO: EDITAR CALENDARIO -->
+    <bean id="EDITAR_CALENDARIO" parent="catbo-endpoint" >
+            <property name="templateName" value="Calendario_Editar_Calendario.vm" />
+            <property name="xslName" value="Calendario_Editar_Calendario.xsl" />
+            <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+    <!-- END CALENDARIO: EDITAR CALENDARIO -->
+
+   <!--  CALENDARIO: BORRA CALENDARIO -->
+    <bean id="BORRAR_CALENDARIO" parent="catbo-endpoint" >
+           <property name="templateName" value="Calendario_Borrar_Calendario.vm" />
+           <property name="xslName" value="Calendario_Borrar_Calendario.xsl" />
+           <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+   </bean>
+   <!-- END CALENDARIO: BORRA CALENDARIO -->
+   
+   <!--  CALENDARIO: EXPORTA CALENDARIO -->
+   <bean id="OBTENER_CALENDARIO_EXPORT" parent="catbo-endpoint" >
+           <property name="templateName" value="Calendario_Obtiene_Calendario.vm" />
+           <property name="xslName" value="Calendario_Obtiene_Calendario_Export.xsl" />
+           <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+   </bean>
+   <!-- END CALENDARIO: EXPORTA CALENDARIO -->
+
+
+    <!-- ***************** Endpoints de Matriz de Asignación ***********  -->
+
+    <!--  MATRIZ ASIGNACION: OBTENER MATRIZ -->
+   <bean id="OBTENER_MATRIZ" parent="catbo-endpoint" >
+           <property name="templateName" value="Matriz_Obtiene_Matriz.vm" />
+           <property name="xslName" value="Matriz_Obtiene_Matriz.xsl" />
+           <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+   </bean>
+   <bean id="OBTIENE_MATRICES_ASIGNACION_EXPORT" parent="catbo-endpoint" >
+           <property name="templateName" value="Matriz_Obtiene_Matriz.vm" />
+           <property name="xslName" value="Matriz_Obtiene_Matriz_Export.xsl" />
+           <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+   </bean>
+   <!-- END MATRIZ ASIGNACION: OBTENER MATRIZ -->
+
+   <!-- MATRIZ ASIGNACION: BORRAR MATRIZ -->
+
+   <bean id="BORRAR_MATRIZ" parent="catbo-endpoint" >
+           <property name="templateName" value="Matriz_Borra_Matriz.vm" />
+           <property name="xslName" value="Matriz_Borra_Matriz.xsl" />
+           <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+   </bean>
+     <!-- END MATRIZ ASIGNACION: BORRAR MATRIZ -->
+
+     <!-- MATRIZ ASIGNACION: OBTENER REGISTRO -->
+
+   <bean id="OBTENER_REGISTRO" parent="catbo-endpoint" >
+           <property name="templateName" value="Matriz_Obtiene_Registro.vm" />
+           <property name="xslName" value="Matriz_Obtiene_Registro.xsl" />
+           <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+   </bean>
+     <!-- END MATRIZ ASIGNACION: OBTENER REGISTRO -->
+
+     <!-- MATRIZ ASIGNACION: OBTENER NIVEL DE ATENCION -->
+
+   <bean id="OBTENER_NIVATENCION" parent="catbo-endpoint" >
+           <property name="templateName" value="Matriz_Obtiene_NivAtencion.vm" />
+           <property name="xslName" value="Matriz_Obtiene_NivAtencion.xsl" />
+           <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+   </bean>
+     <!-- END MATRIZ ASIGNACION: OBTENER NIVEL DE ATENCION -->
+
+
+      <!-- MATRIZ ASIGNACION: OBTENER RESPONSABLES -->
+
+   <bean id="OBTENER_RESPONSABLES" parent="catbo-endpoint" >
+           <property name="templateName" value="Matriz_Obtiene_Responsables.vm" />
+           <property name="xslName" value="Matriz_Obtiene_Responsables.xsl" />
+           <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+   </bean>
+     <!-- END MATRIZ ASIGNACION: OBTENER RESPONSABLES -->
+
+
+     <!-- MATRIZ ASIGNACION: GUARDAR MATRIZ -->
+
+   <bean id="GUARDAR_MATRIZ" parent="catbo-endpoint" >
+           <property name="templateName" value="Matriz_Guardar_Matriz.vm" />
+           <property name="xslName" value="Matriz_Guardar_Matriz.xsl" />
+           <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+   </bean>
+     <!-- END MATRIZ ASIGNACION: GUARDAR MATRIZ -->
+
+
+      <!-- MATRIZ ASIGNACION: BORRAR RESPONSABLE -->
+
+   <bean id="BORRAR_RESPONSABLE" parent="catbo-endpoint" >
+           <property name="templateName" value="Matriz_Borrar_Responsable.vm" />
+           <property name="xslName" value="Matriz_Borrar_Responsable.xsl" />
+           <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+   </bean>
+     <!-- END MATRIZ ASIGNACION: BORRAR RESPONSABLE -->
+
+       <!-- MATRIZ ASIGNACION: BORRAR TIEMPOS -->
+
+   <bean id="BORRAR_TIEMPOS" parent="catbo-endpoint" >
+           <property name="templateName" value="Matriz_Borrar_Tiempos.vm" />
+           <property name="xslName" value="Matriz_Borrar_Tiempos.xsl" />
+           <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+   </bean>
+     <!-- END MATRIZ ASIGNACION: BORRAR TIEMPOS -->
+
+     <!-- MATRIZ ASIGNACION: GUARDAR RESPONSABLES -->
+
+   <bean id="GUARDAR_RESPONSABLES" parent="catbo-endpoint" >
+           <property name="templateName" value="Matriz_Guardar_Responsable.vm" />
+           <property name="xslName" value="Matriz_Guardar_Responsable.xsl" />
+           <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+   </bean>
+     <!-- END MATRIZ ASIGNACION: GUARDAR RESPONSABLES -->
+
+     <!-- MATRIZ ASIGNACION: GUARDAR TIEMPOS -->
+
+   <bean id="GUARDAR_TIEMPOS" parent="catbo-endpoint" >
+           <property name="templateName" value="Matriz_Guardar_Tiempos.vm" />
+           <property name="xslName" value="Matriz_Guardar_Tiempos.xsl" />
+           <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+   </bean>
+     <!-- END MATRIZ ASIGNACION: GUARDAR TIEMPOS -->
+
+     <!-- MATRIZ ASIGNACION: GUARDAR SUPLENTES -->
+
+   <bean id="GUARDAR_SUPLENTES" parent="catbo-endpoint" >
+           <property name="templateName" value="Matriz_Guardar_Suplente.vm" />
+           <property name="xslName" value="Matriz_Guardar_Suplente.xsl" />
+           <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+   </bean>
+     <!-- END MATRIZ ASIGNACION: GUARDAR SUPLENTES -->
+
+    <!-- MATRIZ ASIGNACION: TIEMPO RESOLUCION -->
+
+  <bean id="OBTENER_TIEMPORESOLUCION" parent="catbo-endpoint" >
+          <property name="templateName" value="Matriz_Obtiene_TiempoResolucion.vm" />
+          <property name="xslName" value="Matriz_Obtiene_TiempoResolucion.xsl" />
+          <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+  </bean>
+    <!-- END MATRIZ ASIGNACION: TIEMPO RESOLUCION -->
+
+     <!-- MATRIZ ASIGNACION: GET OBTENER RESPONSABLES -->
+
+  <bean id="GET_OBTENER_RESPONSABLES" parent="catbo-endpoint" >
+          <property name="templateName" value="Matriz_getObtiene_Responsables.vm" />
+          <property name="xslName" value="Matriz_getObtiene_Responsables.xsl" />
+          <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+  </bean>
+    <!-- END MATRIZ ASIGNACION: GET OBTENER RESPONSABLES-->
+
+     <!-- MATRIZ ASIGNACION: VALIDA RESPONSABLES -->
+
+  <bean id="VALIDA_RESPONSABLE" parent="catbo-endpoint" >
+          <property name="templateName" value="Matriz_Valida_Responsable.vm" />
+          <property name="xslName" value="Matriz_Valida_Responsable.xsl" />
+          <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+  </bean>
+    <!-- END MATRIZ ASIGNACION: VALIDA RESPONSABLES-->
+
+
+
+
+     <!-- ***************** FIN Endpoints de Matriz de Asignación ***********  -->
+
+
+ <!-- ***************** Endpoints de Admistracion de Casos ***********  -->
+
+<!--ADMINISTRACION DE CASOS: OBTENER NUM REGISTRO -->
+<bean id="OBTENER_NUM_REGISTRO" parent="catbo-endpoint" >
+           <property name="templateName" value="Administracion_Casos_Obtener_Num_Caso_Registro.vm" />
+           <property name="xslName" value="Administracion_Casos_Obtiene_Num_Casos_Registro.xsl" />
+           <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+   </bean>
+     <!-- ADMINISTRACION DE CASOS: OBTENER NUM REGISTRO -->
+
+     <!--ADMINISTRACION DE CASOS: GUARDAR NUMEROS DE CASO -->
+<bean id="GUARDAR_NUMEROS_CASO" parent="catbo-endpoint" >
+           <property name="templateName" value="Administracion_Casos_Guardar_Numeros_Caso.vm" />
+           <property name="xslName" value="Administracion_Casos_Guardar_Numeros_Caso.xsl" />
+           <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+   </bean>
+     <!-- ADMINISTRACION DE CASOS: GUARDAR NUMEROS DE CASO  -->
+
+       <!--ADMINISTRACION DE CASOS: OBTIENE TAREAS -->
+    <bean id="OBTIENE_TAREAS" parent="catbo-endpoint" >
+           <property name="templateName" value="Administracion_Casos_Obtiene_Tareas.vm" />
+           <property name="xslName" value="Administracion_Casos_Obtiene_Tareas.xsl" />
+           <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+   </bean>
+     <!-- ADMINISTRACION DE CASOS: OBTENER TAREAS EN REGISTRO -->
+
+     <bean id="OBTENER_TAREAS_REGISTRO" parent="catbo-endpoint" >
+           <property name="templateName" value="Administracion_Casos_get_Obtener_Tareas.vm" />
+           <property name="xslName" value="Administracion_Casos_get_Obtener_Tareas.xsl" />
+           <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+   </bean>
+     <!-- ADMINISTRACION DE CASOS: OBTIENE TAREAS EN REGISTRO -->
+
+     <!-- ADMINISTRACION DE CASOS:BORRA TAREA-->
+
+     <bean id="BORRA_TAREA" parent="catbo-endpoint" >
+           <property name="templateName" value="Administracion_Casos_Borra_Tarea.vm" />
+           <property name="xslName" value="Administracion_Casos_Borra_Tarea.xsl" />
+           <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+   </bean>
+     <!-- ADMINISTRACION DE CASOS: :BORRA TAREA- -->
+
+     <!-- ADMINISTRACION DE CASOS:GUARDAR TAREA-->
+
+     <bean id="GUARDAR_TAREA" parent="catbo-endpoint" >
+           <property name="templateName" value="Administracion_Casos_Guardar_Tarea.vm" />
+           <property name="xslName" value="Administracion_Casos_Guardar_Tarea.xsl" />
+           <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+   </bean>
+     <!-- ADMINISTRACION DE CASOS: :GUARDAR TIEMPO -->
+
+          <bean id="GUARDAR_TIEMPO" parent="catbo-endpoint" >
+           <property name="templateName" value="Administracion_Casos_Guardar_Tiempo.vm" />
+           <property name="xslName" value="Administracion_Casos_Guardar_Tiempo.xsl" />
+           <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+   </bean>
+     <!-- ADMINISTRACION DE CASOS: :GUARDAR TIEMPO -->
+
+      <!-- ADMINISTRACION DE CASOS: :BORRA CASO -->
+
+          <bean id="BORRA_CASO" parent="catbo-endpoint" >
+           <property name="templateName" value="Administracion_Casos_Borra_Caso.vm" />
+           <property name="xslName" value="Administracion_Casos_Borra_Caso.xsl" />
+           <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+   </bean>
+     <!-- ADMINISTRACION DE CASOS: :BORRA CASO -->
+
+       <!-- ADMINISTRACION DE CASOS: :OBTENER RESPONSABLE -->
+
+         <bean id="OBTENER_RESPONSABLE" parent="catbo-endpoint" >
+           <property name="templateName" value="Administracion_Casos_Obtener_Responsable.vm" />
+           <property name="xslName" value="Administracion_Casos_Obtener_Responsable.xsl" />
+           <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+   </bean>
+     <!-- ADMINISTRACION DE CASOS: :OBTENER RESPONSABLE -->
+     <!-- gaby -->
+
+    <!-- ADMINISTRACION DE CASOS: :OBTENER NUMERO CASO -->
+    <bean id="OBTENER_NUM_CASOS" parent="catbo-endpoint" >
+        <property name="templateName" value="Administracion_Casos_Obtiene_Num_Casos.vm" />
+        <property name="xslName" value="Administracion_Casos_Obtiene_Num_Casos.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- ADMINISTRACION DE CASOS: :OBTENER NUMERO CASO -->
+
+
+    <!-- ADMINISTRACION DE CASOS: :BORRA NUMERO CASO -->
+    <bean id="BORRA_NUM_CASOS" parent="catbo-endpoint" >
+        <property name="templateName" value="Administracion_Casos_Borra_Num_Caso.vm" />
+        <property name="xslName" value="Administracion_Casos_Borra_Num_Caso.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- ADMINISTRACION DE CASOS: :BORRA NUMERO CASO -->
+
+    <!-- ADMINISTRACION DE CASOS: :OBTENER CASOS-->
+    <bean id="OBTENER_CASOS" parent="catbo-endpoint" >
+        <property name="templateName" value="Administracion_Casos_Obtener_Casos.vm" />
+        <property name="xslName" value="Administracion_Casos_Obtener_Casos.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- ADMINISTRACION DE CASOS: :OBTENER CASOS -->
+
+<!-- ADMINISTRACION DE CASOS: :OBTENER CASO REGISTRO-->
+
+    <bean id="OBTENER_CASO_REG" parent="catbo-endpoint" >
+        <property name="templateName" value="Administracion_Casos_Obtener_Caso_Reg.vm" />
+        <property name="xslName" value="ConsultaCasoDetalle_OBTIENE_MCASO_REG.xsl" />
+        <!--property name="xslName" value="Administracion_Casos_Obtener_Caso_Reg.xsl" /-->
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- ADMINISTRACION DE CASOS: :OBTENER CASO REGISTRO-->
+
+<!-- ADMINISTRACION DE CASOS: :GUARDAR COMPRA-->
+    <bean id="GUARDAR_COMPRA" parent="catbo-endpoint" >
+        <property name="templateName" value="Administracion_Casos_Guardar_Compra.vm" />
+        <property name="xslName" value="Administracion_Casos_Guardar_Compra.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- ADMINISTRACION DE CASOS: GUARDAR COMPRA-->
+
+  <!-- ADMINISTRACION DE CASOS: VALIDA COMPRA TIEMPO-->
+    <bean id="VALIDA_COMPRA_TIEMPO" parent="catbo-endpoint" >
+        <property name="templateName" value="Administracion_Casos_Valida_Compra_Tiempo.vm" />
+        <property name="xslName" value="Administracion_Casos_Valida_Compra_Tiempo.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- ADMINISTRACION DE CASOS: VALIDA COMPRA TIEMPO-->
+
+  <!-- ADMINISTRACION DE CASOS: OBTENER_COMPRA-->
+    <bean id="OBTENER_COMPRA" parent="catbo-endpoint" >
+        <property name="templateName" value="Administracion_Casos_Obtener_Compra.vm" />
+        <property name="xslName" value="Administracion_Casos_Obtener_Compra.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- ADMINISTRACION DE CASOS: OBTENER_COMPRA-->
+
+  <!-- ADMINISTRACION DE CASOS: OBTENER ENCABEZADO MOVIMIENTOS-->
+    <bean id="OBTENER_ENCABEZADO_MOVIMIENTOS" parent="catbo-endpoint" >
+        <property name="templateName" value="Administracion_Casos_Obtener_Encabezado_Movimientos.vm" />
+        <property name="xslName" value="Administracion_Casos_Obtener_Encabezado_Movimientos.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- ADMINISTRACION DE CASOS: OBTENER ENCABEZADOS MOVIMIENTOS-->
+
+  <!-- ADMINISTRACION DE CASOS: OBTENER MOVIMIENTOS-->
+    <bean id="OBTENER_MOVIMIENTOS" parent="catbo-endpoint" >
+        <property name="templateName" value="Administracion_Casos_Obtener_Movimientos.vm" />
+        <property name="xslName" value="Administracion_Casos_Obtener_Movimientos.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- ADMINISTRACION DE CASOS: OBTENER  MOVIMIENTOS-->
+
+  <!-- ADMINISTRACION DE CASOS: BORRRA MOVIMIENTOS-->
+    <bean id="BORRA_MOVIMIENTOS" parent="catbo-endpoint" >
+        <property name="templateName" value="Administracion_Casos_Borra_Movimientos.vm" />
+        <property name="xslName" value="Administracion_Casos_Borra_Movimientos.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- ADMINISTRACION DE CASOS:BORRA  MOVIMIENTOS-->
+
+  <!-- ADMINISTRACION DE CASOS:GUARDAR MOVIMIENTO-->
+    <bean id="GUARDAR_MOVIMIENTO" parent="catbo-endpoint" >
+        <property name="templateName" value="Administracion_Casos_Guardar_Movimiento.vm" />
+        <property name="xslName" value="Administracion_Casos_Guardar_Movimiento.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- ADMINISTRACION DE CASOS: GUARDAR MOVIMIENTO-->
+
+   <!-- ADMINISTRACION DE CASOS: GUARDAR REASIGNACION-->
+    <bean id="GUARDAR_REASIGNACION" parent="catbo-endpoint" >
+        <property name="templateName" value="Administracion_Casos_Guardar_Reasignacion.vm" />
+        <property name="xslName" value="Administracion_Casos_Guardar_Reasignacion.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- ADMINISTRACION DE CASOS: GUARDAR REASIGNACION-->
+
+   <!-- ADMINISTRACION DE CASOS: OBTENER MOVIMINETO CASO-->
+    <bean id="OBTENER_MOVIMINETO_CASO" parent="catbo-endpoint" >
+        <property name="templateName" value="Administracion_Casos_Obtener_Movimientos.vm" />
+        <property name="xslName" value="Administracion_Casos_Obtener_Movimientos.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- ADMINISTRACION DE CASOS:OBTENER MOVIMINETO CASO-->
+
+   <!-- ADMINISTRACION DE CASOS: GET OBTENER MOVIMINETO CASO-->
+    <bean id="GET_OBTENER_MOVIMINETO_CASO" parent="catbo-endpoint" >
+        <property name="templateName" value="Administracion_Casos_get_Obtener_Movimiento_Caso.vm" />
+        <property name="xslName" value="Administracion_Casos_get_Obtener_Movimiento_Caso.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- ADMINISTRACION DE CASOS:GET OBTENER MOVIMINETO CASO-->
+
+   <!-- ADMINISTRACION DE CASOS: OBTENER ARCHIVOS CASO-->
+    <bean id="OBTENER_ARCHIVOS_CASO" parent="catbo-endpoint" >
+        <property name="templateName" value="Administracion_Casos_Obtiene_Archivos_Caso.vm" />
+        <property name="xslName" value="Administracion_Casos_Obtiene_Archivos_Caso.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+
+  <!-- ADMINISTRACION DE CASOS:BORRAR ARCHIVO CASO-->
+
+    <!-- ADMINISTRACION DE CASOS:OBTENER ARCHIVOS CASO-->
+    <bean id="BORRAR_ARCHIVO_CASO" parent="catbo-endpoint" >
+        <property name="templateName" value="Administracion_Casos_Borra_Archivo_Caso.vm" />
+        <property name="xslName" value="Administracion_Casos_Borra_Archivo_Caso.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- ADMINISTRACION DE CASOS:BORRAR ARCHIVO CASO-->
+
+  <!-- ADMINISTRACION DE CASOS:GUARDAR ARCHIVO CASO-->
+    <bean id="GUARDAR_ARCHIVO_CASO" parent="catbo-endpoint" >
+        <property name="templateName" value="Administracion_Casos_Guardar_Archivo_Caso.vm" />
+        <property name="xslName" value="Administracion_Casos_Guardar_Archivo_Caso.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- ADMINISTRACION DE CASOS: GUARDAR ARCHIVO CASO-->
+
+
+  <!-- ADMINISTRACION DE CASOS: OBTIENE RESPONSABLES CASO-->
+    <bean id="OBTIENE_RESPONSABLES_CASO" parent="catbo-endpoint" >
+        <property name="templateName" value="Administracion_Casos_Obtener_Responsable.vm" />
+        <property name="xslName" value="Administracion_Casos_Obtener_Responsable.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- ADMINISTRACION DE CASOS: OBTIENE RESPONSABLES CASO-->
+
+  <!-- ADMINISTRACION DE CASOS: OBTIENE POLIZAS-->
+    <bean id="OBTIENE_POLIZAS_CATBO" parent="catbo-endpoint" >
+        <property name="templateName" value="Administracion_Casos_Obtiene_Polizas.vm" />
+        <property name="xslName" value="Administracion_Casos_Obtiene_Polizas.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- ADMINISTRACION DE CASOS: OBTIENE POLIZAS-->
+
+  <!-- ADMINISTRACION DE CASOS: GUARDAR CASOS-->
+    <bean id="GUARDAR_CASOS" parent="catbo-endpoint" >
+        <property name="templateName" value="Administracion_Casos_Guardar_Casos.vm" />
+        <property name="xslName" value="Administracion_Casos_Guardar_Casos.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- ADMINISTRACION DE CASOS: GUARDAR CASOS-->
+
+
+  <!-- ADMINISTRACION DE CASOS: GUARDA MCASOUSR-->
+    <bean id="GUARDA_MCASOUSR" parent="catbo-endpoint" >
+        <property name="templateName" value="Administracion_Casos_PKG_CATBO.P_GUARDA_MCASOUSR.vm" />
+        <property name="xslName" value="Administracion_Casos_PKG_CATBO.P_GUARDA_MCASOUSR.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- ADMINISTRACION DE CASOS: GUARDA MCASOUSR-->
+
+   <!-- ADMINISTRACION DE CASOS: GUARDA SUPLENTE-->
+    <bean id="GUARDA_SUPLENTE" parent="catbo-endpoint" >
+        <property name="templateName" value="Administracion_Casos_PKG_CATBO.P_GUARDA_SUPLENTE.vm" />
+        <property name="xslName" value="Administracion_Casos_PKG_CATBO.P_GUARDA_SUPLENTE.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- ADMINISTRACION DE CASOS: GUARDA SUPLENTE-->
+
+   <!-- ADMINISTRACION DE CASOS: GENERA TNUMECAS-->
+    <bean id="GENERA_TNUMECAS" parent="catbo-endpoint" >
+        <property name="templateName" value="Administracion_Casos_PKG_CATBO.P_GENERA_TNUMECAS.vm" />
+        <property name="xslName" value="Administracion_Casos_PKG_CATBO.P_GENERA_TNUMECAS.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- ADMINISTRACION DE CASOS: GENERA TNUMECAS-->
+
+    <!-- ADMINISTRACION DE CASOS: OBTENER SUFIJO PREFIJO-->
+    <bean id="OBTENER_SUFIJO_PREFIJO" parent="catbo-endpoint" >
+        <property name="templateName" value="Administracion_Casos_Obtener_Sufijo_Prefijo.vm" />
+        <property name="xslName" value="Administracion_Casos_Obtener_Sufijo_Prefijo.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+    <!-- ADMINISTRACION DE CASOS: OBTENER SUFIJO PREFIJO-->
+
+      <!-- ADMINISTRACION DE CASOS: OBTENER ATRIBUTO SECCION-->
+    <bean id="OBTENER_ATRIBUTO_SECCION" parent="catbo-endpoint" >
+        <property name="templateName" value="Administracion_Casos_Obtener_Atributo_Seccion.vm" />
+        <property name="xslName" value="Administracion_Casos_Obtener_Atributo_Seccion.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+    <!-- ADMINISTRACION DE CASOS: OBTENER ATRIBUTO SECCION-->
+    
+      <!-- ADMINISTRACION DE CASOS: OBTENER ATRIBUTO SECCION COMBO CONTROL-->
+    <bean id="OBTENER_ATRIBUTO_SECCION_COMBO_CONTROL" parent="catbo-endpoint" >
+        <property name="templateName" value="Administracion_Casos_Obtener_Atributo_Seccion.vm" />
+        <property name="xslName" value="Administracion_Casos_Obtener_Atributo_Seccion_CC.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+    <!-- ADMINISTRACION DE CASOS: OBTENER ATRIBUTO SECCION COMBO CONTROL-->
+
+     <!-- ADMINISTRACION DE CASOS: OBTENER SECCION ORDEN-->
+    <bean id="OBTENER_SECCION_ORDEN" parent="catbo-endpoint" >
+        <property name="templateName" value="Administracion_Casos_Obtener_Secciones_Orden.vm" />
+        <property name="xslName" value="Administracion_Casos_Obtener_Secciones_Orden.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+    <!-- ADMINISTRACION DE CASOS: OBTENER SECCION ORDEN-->
+
+<!-- ADMINISTRACION DE CASOS: EXPORTAR NUMERACION DE CASOS -->
+    <bean id="OBTENER_NUMERACION_CASOS_EXPORT" parent="catbo-endpoint" >
+        <property name="templateName" value="Administracion_Casos_Obtiene_Num_Casos.vm" />
+        <property name="xslName" value="Administracion_Casos_Exportar_Num_Casos.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+<!-- ADMINISTRACION DE CASOS: EXPORTAR NUMERACION DE CASOS -->
+
+<!-- ADMINISTRACION DE CASOS: EXPORTAR LISTADO DE MOVIMIENTOS POR CASO -->
+    <bean id="LISTADO_MOVIMIENTO_CASO_EXPORT" parent="catbo-endpoint" >
+        <property name="templateName" value="Administracion_Casos_Obtener_Movimientos.vm" />
+        <property name="xslName" value="Administracion_Casos_Exportar_Listado_Movimiento.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+<!-- ADMINISTRACION DE CASOS: EXPORTAR LISTADO DE MOVIMIENTOS POR CASO -->
+
+<!-- ADMINISTRACION DE CASOS: OBTENER USUARIOS RESPONSABLES MOVIMIENTO CASO -->
+    <bean id="USUARIOS_RESPONSABLES_MOVCASO" parent="catbo-endpoint" >
+        <property name="templateName" value="Administracion_Casos_Obtener_Usuarios_Resp_MovCaso.vm" />
+        <property name="xslName" value="Administracion_Casos_Obtener_Responsable.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+<!-- ADMINISTRACION DE CASOS:OBTENER USUARIOS RESPONSABLES MOVIMIENTO CASO -->
+
+<!-- ***************** FIN Endpoints de Admistracion de Casos ***********  -->
+
+
+<!-- ***************** Endpoints de Procesos******************  -->
+
+   <!-- PROCESO: OBTENER TIEMPO CASO-->
+    <bean id="OBTENER_TIEMPO_CASO" parent="catbo-endpoint" >
+        <property name="templateName" value="Proceso_PKG_CATBO_PROCESO.P_OBTENER_TIEMPO_CASO.vm" />
+        <property name="xslName" value="Proceso_PKG_CATBO_PROCESO.P_OBTENER_TIEMPO_CASO.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+   <!-- PROCESO: OBTENER TIEMPO CASO-->
+
+   <!-- PROCESO: OBTENER TIEMPO RESTANTE-->
+    <bean id="OBTENER_TIEMPO_RESTANTE" parent="catbo-endpoint" >
+        <property name="templateName" value="Proceso_PKG_CATBO_PROCESO.P_OBTENER_TIEMPO_RESTANTE.vm" />
+        <property name="xslName" value="Proceso_PKG_CATBO_PROCESO.P_OBTENER_TIEMPO_RESTANTE.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- PROCESO: OBTENER TIEMPO RESTANTE-->
+
+  <!-- PROCESO: OBTENER_USUARIO_PROCESO -->
+    <bean id="OBTENER_USUARIO_PROCESO" parent="catbo-endpoint" >
+        <property name="templateName" value="Proceso_Obtener_Usuario_Proceso.vm" />
+        <property name="xslName" value="Proceso_Obtener_Proceso.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- PROCESO: OBTENER_USUARIO_PROCESO -->
+
+    <!-- PROCESO: : GUARADAR_ID_TAREA_INSTANCIA -->
+    <bean id="GUARADAR_ID_TAREA_INSTANCIA" parent="catbo-endpoint" >
+        <property name="templateName" value="Proceso_Guardar_Id_Tarea_Instancia.vm" />
+        <property name="xslName" value="Proceso_Guaradar_Id_Tarea_Instancia.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- PROCESO: GUARADAR_ID_TAREA_INSTANCIA -->
+
+  <!-- PROCESO: GUARDAR ESCALAMIENTO -->
+    <bean id="GUARDA_ESCALAMIENTO" parent="catbo-endpoint" >
+        <property name="templateName" value="Proceso_Guarda_Escalamiento.vm" />
+        <property name="xslName" value="Proceso_Guardar_Escalamiento.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- PROCESO: GUARDAR ESCALAMIENTO -->
+
+  <!-- PROCESO: VALIDAR_NIVEL_ESCALAMIENTO -->
+    <bean id="VALIDAR_NIVEL_ESCALAMIENTO" parent="catbo-endpoint" >
+        <property name="templateName" value="Proceso_Valida_Nivel_Escalamiento.vm" />
+        <property name="xslName" value="Proceso_Valida_Nivel_Escalamiento.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- PROCESO: VALIDAR_NIVEL_ESCALAMIENTO -->
+
+  <!-- PROCESO: OBTENER PARAMETROS -->
+    <bean id="OBTENER_PARAMETROS" parent="catbo-endpoint" >
+        <property name="templateName" value="Proceso_PKG_CATBO_PROCESO.P_OBTENER_PARAMETROS.vm" />
+        <property name="xslName" value="Proceso_PKG_CATBO_PROCESO.P_OBTENER_PARAMETROS.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- PROCESO: OBTENER PARAMETOS -->
+
+    <!-- PROCESO: OBTENER TASK ID -->
+    <bean id="OBTIENE_TASK_ID" parent="catbo-endpoint" >
+        <property name="templateName" value="Proceso_Obtener_Task_Id.vm" />
+        <property name="xslName" value="Proceso_Obtener_Task_Id.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- PROCESO: OBTENER TASK ID -->
+      <!-- PROCESO: OBTENER RESONSABLES DE ENVIO -->
+    <bean id="OBTENER_RESONSABLES_DE_ENVIO" parent="catbo-endpoint" >
+        <property name="templateName" value="Proceso_Obtener_Responsables_Envio.vm" />
+        <property name="xslName" value="Proceso_Obtener_Responsables_Envio.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- PROCESO: OBTENER RESONSABLES DE ENVIO  -->
+
+  <!-- PROCESO: OBTENER MAIL RESPONSABLES -->
+    <bean id="OBTENER_MAIL_RESPONSABLES" parent="catbo-endpoint" >
+        <property name="templateName" value="Proceso_Obtener_Mail_Responsables.vm" />
+        <property name="xslName" value="Proceso_Obtener_Mail_Responsables.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- PROCESO: OBTENER MAIL RESPONSABLES -->
+
+   <!-- PROCESO: OBTENER MAIL CLIENTE -->
+    <bean id="OBTENER_MAIL_CLIENTE" parent="catbo-endpoint" >
+        <property name="templateName" value="Proceso_Obtener_Mail_Cliente.vm" />
+        <property name="xslName" value="Proceso_Obtener_Mail_Cliente.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- PROCESO: OBTENER MAIL CLIENTE -->
+
+   <!-- PROCESO: OBTENER CCASOS -->
+   
+    <bean id="OBTIENE_CASOS_CLIENTE" parent="catbo-endpoint" >
+        <property name="templateName" value="Obtener_Suplentes.vm" />
+        <property name="xslName" value="Obtener_Suplentes.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+
+
+
+
+<!-- ***************** FIN Endpoints de Procesos****************  -->
+
+
+
+
+  <!-- ***************** Endpoints de Archivos y Faxes ***********  -->
+
+  <!-- ARCHIVOS Y FAXES: OBTENER ARCHIVOS-->
+    <bean id="OBTENER_ARCHIVOS" parent="catbo-endpoint" >
+        <property name="templateName" value="ArchivosFaxes_Obtener_Archivos.vm" />
+        <property name="xslName" value="ArchivosFaxes_Obtener_Archivos.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- ARCHIVOS Y FAXES: OBTENER ARCHIVOS-->
+
+   <!-- ARCHIVOS Y FAXES: BORRAR ARCHIVOS-->
+    <bean id="BORRAR_ARCHIVOS" parent="catbo-endpoint" >
+        <property name="templateName" value="ArchivosFaxes_Borrar_Archivos.vm" />
+        <property name="xslName" value="ArchivosFaxes_Borrar_Archivos.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- ARCHIVOS Y FAXES: BORRAR ARCHIVOS-->
+
+   <!-- ARCHIVOS Y FAXES: GET OBTENER ARCHIVO-->
+    <bean id="GET_OBTENER_ARCHIVO" parent="catbo-endpoint" >
+        <property name="templateName" value="ArchivosFaxes_getObtener_Archivo.vm" />
+        <property name="xslName" value="ArchivosFaxes_getObtener_Archivo.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- ARCHIVOS Y FAXES: GET OBTENER ARCHIVO-->
+
+   <!-- ARCHIVOS Y FAXES: GUARDAR ARCHIVOS-->
+    <bean id="GUARDAR_ARCHIVOS" parent="catbo-endpoint" >
+        <property name="templateName" value="ArchivosFaxes_Guardar_Archivos.vm" />
+        <property name="xslName" value="ArchivosFaxes_Guardar_Archivos.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- ARCHIVOS Y FAXES: GUARDAR ARCHIVOS-->
+
+   <!-- ARCHIVOS Y FAXES: OBTENER FAXES-->
+    <bean id="OBTENER_FAXES" parent="catbo-endpoint" >
+        <property name="templateName" value="ArchivosFaxes_Obtener_Faxes.vm" />
+        <property name="xslName" value="ArchivosFaxes_Obtener_Faxes.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- ARCHIVOS Y FAXES: OBTENER FAXES-->
+
+  <!-- ARCHIVOS Y FAXES: BORRAR FAX-->
+    <bean id="BORRAR_FAX" parent="catbo-endpoint" >
+        <property name="templateName" value="ArchivosFaxes_Borrar_Fax.vm" />
+        <property name="xslName" value="ArchivosFaxes_Borrar_Fax.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- ARCHIVOS Y FAXES: BORRAR FAX-->
+
+   <!-- ARCHIVOS Y FAXES: GETOBTENER FAX-->
+    <bean id="GET_OBTENER_FAX" parent="catbo-endpoint" >
+        <property name="templateName" value="ArchivosFaxes_getObtener_Fax.vm" />
+        <property name="xslName" value="ArchivosFaxes_getObtener_Fax.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- ARCHIVOS Y FAXES: GETOBTENER FAX-->
+
+  <!-- ARCHIVOS Y FAXES: OBTENER VALORES FAX-->
+    <bean id="OBTENER_VALORES_FAX" parent="catbo-endpoint" >
+        <property name="templateName" value="ArchivosFaxes_Obtener_ValoresFax.vm" />
+        <property name="xslName" value="ArchivosFaxes_Obtener_ValoresFax.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- ARCHIVOS Y FAXES: OBTENER VALORES FAX-->
+
+  <!-- ARCHIVOS Y FAXES: GUARDAR FAX-->
+    <bean id="GUARDAR_FAX" parent="catbo-endpoint" >
+        <property name="templateName" value="ArchivosFaxes_Guardar_Fax.vm" />
+        <property name="xslName" value="ArchivosFaxes_Guardar_Fax.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- ARCHIVOS Y FAXES: GUARDAR FAX-->
+
+    <!-- ARCHIVOS Y FAXES: GUARDAR VALORES FAX-->
+    <bean id="GUARDAR_VALORES_FAX" parent="catbo-endpoint" >
+        <property name="templateName" value="ArchivosFaxes_Guardar_Valores_Fax.vm" />
+        <property name="xslName" value="ArchivosFaxes_Guardar_Valores_Fax.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- ARCHIVOS Y FAXES: GUARDAR VALORES FAX-->
+
+  <!-- ARCHIVOS Y FAXES: OBTENER ARCHIVOS INTERFAZ-->
+    <bean id="OBTENER_ARCHIVOS_INTERFAZ" parent="catbo-endpoint" >
+        <property name="templateName" value="ArchivosFaxes_Obtener_Archivos_Interfaz.vm" />
+        <property name="xslName" value="ArchivosFaxes_Obtener_Archivos_Interfaz.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- ARCHIVOS Y FAXES: OBTENER ARCHIVOS INTERFAZ-->
+
+   <!-- ARCHIVOS Y FAXES: VALIDAR NUMERO CASO-->
+    <bean id="VALIDAR_NUMERO_CASO" parent="catbo-endpoint" >
+        <property name="templateName" value="ArchivosFaxes_Validar_Numero_Caso.vm" />
+        <property name="xslName" value="ArchivosFaxes_Validar_Numero_Caso.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+  <!-- ARCHIVOS Y FAXES: VALIDAR NUMERO CASO-->
+
+  <!-- ***************** Fin Endpoints de Archivos y Faxes ***********  -->
+
+<!-- ***************** Endpoints de Status de Casos ***********  -->
+<bean id="BUSCAR_STATUS_CASOS" parent="catbo-endpoint" >
+        <property name="templateName" value="StatusCasos_Buscar.vm" />
+        <property name="xslName" value="StatusCasos_Buscar.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="BORRAR_STATUS_CASOS" parent="catbo-endpoint" >
+        <property name="templateName" value="StatusCasos_Borrar.vm" />
+        <property name="xslName" value="Stdr_OutMensage.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="OBTIENERREG_STATUS_CASOS" parent="catbo-endpoint" >
+        <property name="templateName" value="StatusCasos_ObtenerReg.vm" />
+        <property name="xslName" value="StatusCasos_ObtenerReg.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="GUARDAR_STATUS_CASOS" parent="catbo-endpoint" >
+        <property name="templateName" value="StatusCasos_Guardar.vm" />
+        <property name="xslName" value="Stdr_OutMensage.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="BUSCAR_STATUS_CASOS_TAREAS" parent="catbo-endpoint" >
+        <property name="templateName" value="StatusCasosTarea_Buscar.vm" />
+        <property name="xslName" value="StatusCasosTarea_Buscar.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="GUARDAR_STATUS_CASOS_TAREAS" parent="catbo-endpoint" >
+        <property name="templateName" value="StatusCasosTarea_Guardar.vm" />
+        <property name="xslName" value="Stdr_OutMensage.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="BORRAR_STATUS_CASOS_TAREAS" parent="catbo-endpoint" >
+        <property name="templateName" value="StatusCasosTarea_Borrar.vm" />
+        <property name="xslName" value="Stdr_OutMensage.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="OBTIENE_STATUS_CASOS_EXPORT" parent="catbo-endpoint" >
+        <property name="templateName" value="StatusCasos_Buscar.vm" />
+        <property name="xslName" value="StatusCasos_Exportar.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="OBTIENE_INDICADOR_AVISO" parent="catbo-endpoint" >
+        <property name="templateName" value="ObtenerMetodoEnvio.vm" />
+        <property name="xslName" value="ObtenerMetodoEnvio.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="BUSCAR_STATUS_CASOS_TAREAS_PROCESOS" parent="catbo-endpoint" >
+        <property name="templateName" value="StatusCasosTareaProcesos_Buscar.vm" />
+        <property name="xslName" value="StatusCasosTareaProcesos_Buscar.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+
+<!-- ***************** FIN Endpoints de Status de Casos ***********  -->
+
+
+	<bean id="OBTIENE_CDMATRIZ" parent="catbo-endpoint" >
+        <property name="templateName" value="AltaCaso_comboTareas.vm" />
+        <property name="xslName" value="AltaCaso_comboTareas.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+    
+    <bean id="OBTIENE_ASEGURADORAS_PRODUCT_CORP" parent="catbo-endpoint" >
+        <property name="templateName" value="ObtieneAsegProductCorp.vm" />
+        <property name="xslName" value="ObtieneAsegProductCorp.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+    
+    
+    <bean id="MATRIZ_OBTIENE_PRIORIDADES" parent="catbo-endpoint" >
+        <property name="templateName" value="AltaCaso_comboPrioridades.vm" />
+        <property name="xslName" value="AltaCaso_comboPrioridades.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+
+    <bean id="OBTIENE_MODULOS" parent="catbo-endpoint" >
+        <property name="templateName" value="NumeracionCasos_ComboObtieneModulos.vm" />
+        <property name="xslName" value="NumeracionCasos_ComboObtieneModulos.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+
+    <!-- ***************** FIN Endpoints de Status de Casos ***********  -->
+    <bean id="OBTIENE_FORMATOS" parent="catbo-endpoint" >
+        <property name="templateName" value="FormatoOrdenesTrabajo_Buscar.vm" />
+        <property name="xslName" value="FormatoOrdenesTrabajo_Buscar.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+
+    <bean id="OBTIENE_TFPRONEG" parent="catbo-endpoint" >
+        <property name="templateName" value="ConfiguracionProcesos_Buscar.vm" />
+        <property name="xslName" value="ConfiguracionProcesos_Buscar.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+
+<!-- ***************** Endpoints de Tareas Cat Bo ***********  -->
+<bean id="BUSCAR_TAREAS_CAT_BO" parent="catbo-endpoint" >
+        <property name="templateName" value="TareasCatBo_Buscar.vm" />
+        <property name="xslName" value="TareasCatBo_Buscar.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="BORRAR_TAREAS_CAT_BO" parent="catbo-endpoint" >
+        <property name="templateName" value="TareasCatBo_Borrar.vm" />
+        <property name="xslName" value="Stdr_OutMensage.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="OBTIENERREG_TAREAS_CAT_BO" parent="catbo-endpoint" >
+        <property name="templateName" value="TareasCatBo_ObtenerReg.vm" />
+        <property name="xslName" value="TareasCatBo_ObtenerReg.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="GUARDAR_TAREAS_CAT_BO" parent="catbo-endpoint" >
+        <property name="templateName" value="TareasCatBo_Guardar.vm" />
+        <property name="xslName" value="Stdr_OutMensage.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="OBTIENE_TAREAS_CAT_BO_EXPORT" parent="catbo-endpoint" >
+        <property name="templateName" value="TareasCatBo_Buscar.vm" />
+        <property name="xslName" value="TareasCatBo_Exportar.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="OBTIENE_TAREA_PRIORIDAD" parent="catbo-endpoint" >
+        <property name="templateName" value="ObtenerTareaPrioridad.vm" />
+        <property name="xslName" value="ObtenerTareaPrioridad.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="OBTIENE_TAREA_ESTATUS" parent="catbo-endpoint" >
+        <property name="templateName" value="ObtenerTareaEstatus.vm" />
+        <property name="xslName" value="ObtenerTareaEstatus.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<bean id="BUSCAR_TAREAS_CAT_BO_VALIDA" parent="catbo-endpoint" >
+        <property name="templateName" value="TareasCatBo_Buscar_Validar.vm" />
+        <property name="xslName" value="TareasCatBo_Buscar_Validar.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+</bean>
+
+<!-- ***************** FIN Endpoints de Tareas Cat Bo ***********  -->
+
+ <bean id="OBTIENE_CASOS_SOLICITUD_EXPORT" parent="catbo-endpoint" >
+        <property name="templateName" value="Administracion_Casos_Obtener_Casos.vm" />
+        <property name="xslName" value="Administracion_Casos_Obtener_Casos_Export.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+
+        <bean id="OBTENER_LISTA_USUARIOS_RESPONSABLES" parent="catbo-endpoint" >
+	        <property name="templateName" value="Administracion_Casos_Obtener_Responsables_Caso.vm" />
+	        <property name="xslName" value="Administracion_Casos_Obtener_Responsables_Caso.xsl" />
+	        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+
+	<bean id="GUARDAR_FORMATO_ORDEN" parent="catbo-endpoint" >
+	        <property name="templateName" value="Administracion_Casos_guardarSecciones.vm" />
+	        <property name="xslName" value="Stdr_OutMensage.xsl" />
+	        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+     <bean id="OBTIENE_DATOS_CATALOGO_CON_DEPENDIENTES" parent="catbo-endpoint" >
+	        <property name="templateName" value="Matriz_Datos_Catalogo_depend.vm" />
+	        <property name="xslName" value="Matriz_Datos_Catalogo_depend.xsl" />
+	        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<bean id="OBTENER_CLIENTES" parent="catbo-endpoint" >
+	        <property name="templateName" value="ConsultaClientes_obtener.vm" />
+	        <property name="xslName" value="ConsultaClientes_obtener.xsl" />
+	        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<bean id="OBTIENE_PLANES_PRODUCTO" parent="catbo-endpoint" >
+	        <property name="templateName" value="ObtieneComboPlanesPorProducto.vm" />
+	        <property name="xslName" value="ObtieneComboPlanesPorProducto.xsl" />
+	        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="INST_PAGO" parent="catbo-endpoint" >
+	        <property name="templateName" value="ObtenerInstrumentosPago.vm" />
+	        <property name="xslName" value="ObtenerInstrumentosPago.xsl" />
+	        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<bean id="OBTIENE_MONEDAS" parent="catbo-endpoint" >
+	        <property name="templateName" value="ObtenerMonedas.vm" />
+	        <property name="xslName" value="ObtenerMonedas.xsl" />
+	        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+    	 <bean id="OBTIENE_NIVEL_ATENCION_MATRIZ" parent="catbo-endpoint" >
+	        <property name="templateName" value="ObtenerNivelAtencionMatriz.vm" />
+	        <property name="xslName" value="ObtenerNivelAtencionMatriz.xsl" />
+	        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+    <bean id="OBTIENE_DATOS_MODULOS" parent="catbo-endpoint">
+    	<property name="templateName" value="Matriz_Datos_Modulo.vm"></property>
+    	<property name="xslName" value="Matriz_Datos_Modulo.xsl"></property>
+    	<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+
+	<!-- ADMINISTRACION CASOS - GUARDAR MOVIM. GENERICO -->
+    <bean id="GUARDAR_MOVIM_GENERICO" parent="catbo-endpoint">
+    	<property name="templateName" value="Administracion_Casos_Guardar_Mov_Gen.vm"></property>
+    	<property name="xslName" value="Administracion_Casos_Guardar_Mov_Gen.xsl"></property>
+    	<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+	<!-- FIN ADMINISTRACION CASOS - GUARDAR MOVIM. GENERICO -->
+
+	<bean id="ESTATUS_CASO" parent="catbo-endpoint">
+    	<property name="templateName" value="ObtieneComboStatusCaso.vm"></property>
+    	<property name="xslName" value="ObtieneComboStatusCaso.xsl"></property>
+    	<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+    
+    <!-- Acceso Endpoints de Configurar Encuesta -->
+      <bean id="COMBO_CLICORPO_ASEGURADORA_PRODUCTO" parent="catbo-endpoint">
+    	<property name="templateName" value="ObtenerClientesCorpAseguraProducto.vm"></property>
+    	<property name="xslName" value="ObtenerClientesCorpBO.xsl"></property>
+    	<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+
+     <bean id="OBTIENE_ENCUESTA" parent="catbo-endpoint">
+    	<property name="templateName" value="Configurar_Encuesta_Obtener_Encuesta.vm"></property>
+    	<property name="xslName" value="Configurar_Encuesta_Obtener_Encuesta.xsl"></property>
+    	<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+
+     <bean id="GUARDACONFIGURACION_ENCUESTA" parent="catbo-endpoint">
+    	<property name="templateName" value="GuardarConfigurar_Encuesta.vm"></property>
+    	<property name="xslName" value="GuardarConfigurarEncuesta.xsl"></property>
+    	<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+
+
+
+   <bean id="OBTENER_ENCUESTAS" parent="catbo-endpoint">
+    	<property name="templateName" value="Encuesta_Obtener_Encuestas.vm"></property>
+    	<property name="xslName" value="Encuesta_Obtener_Encuestas.xsl"></property>
+    	<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+    
+     <bean id="OBTIENE_ENCUESTAS_EXPORT" parent="catbo-endpoint">
+    	<property name="templateName" value="Encuesta_Obtener_Encuestas.vm"></property>
+    	<property name="xslName" value="Encuesta_Obtener_Encuestas_Exportar.xsl"></property>
+    	<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+    
+    <bean id="ASIGNA_ENCUESTA_OBTIENE_ENCUESTA_EXPORT" parent="catbo-endpoint" >
+        <property name="templateName" value="Asignar_Encuesta_Obtener_Encuesta.vm" />
+        <property name="xslName" value="ObtenerAsignacionEncuestas_Exportar.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	
+     <bean id="OBTIENE_COMBO_ENCUESTAS" parent="catbo-endpoint" >
+	        <property name="templateName" value="ObtieneComboEncuesta.vm" />
+	        <property name="xslName" value="ObtieneComboEncuesta.xsl" />
+	        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+    <bean id="OBTENER_VALOR_ENCUESTA" parent="catbo-endpoint">
+    	<property name="templateName" value="ValorEncuesta_Obtener_ValorEncuesta.vm"></property>
+    	<property name="xslName" value="ValorEncuesta_Obtener_ValorEncuesta.xsl"></property>
+    	<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+    
+       <bean id="OBTENER_VALORES_ENCUESTA_EXPORT" parent="catbo-endpoint">
+    	<property name="templateName" value="ValorEncuesta_Obtener_ValorEncuesta.vm"></property>
+    	<property name="xslName" value="ValorEncuesta_Obtener_ValorEncuesta_Exportar.xsl"></property>
+    	<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+    
+    <bean id="OBTIENE_ENCUESTA_REGISTRO" parent="catbo-endpoint" >
+        <property name="templateName" value="Configurar_Encuesta_Obtener_Encuesta_Registro.vm" />
+        <property name="xslName" value="Configurar_Encuesta_Obtener_Encuesta_Registro.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+    
+    <bean id="BORRA_ENCUESTA" parent="catbo-endpoint" >
+        <property name="templateName" value="Configurar_Encuesta_Borrar_Encuesta.vm" />
+        <property name="xslName" value="Configurar_Encuesta_Borrar_Encuesta.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+    <bean id="OBTIENER_CATBOTIMEC" parent="catbo-endpoint" >
+        <property name="templateName" value="Obtiene_CatboTimec.vm" />
+        <property name="xslName" value="Obtiene_CatboTimec.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<bean id="GUARDAR_TIEMPO_ENCUESTA" parent="catbo-endpoint" >
+        <property name="templateName" value="Tiempo_Encuesta_Guarda.vm" />
+        <property name="xslName" value="Tiempo_Encuesta_Guarda.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+    
+    <bean id="BORRA_TIEMPO_ENCUESTA" parent="catbo-endpoint" >
+        <property name="templateName" value="Tiempo_Encuesta_Borra.vm" />
+        <property name="xslName" value="Tiempo_Encuesta_Borra.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<bean id="GUARDAR_TENCUEST" parent="catbo-endpoint" >
+        <property name="templateName" value="Tiempo_Encuesta_Guarda_Tencuest.vm" />
+        <property name="xslName" value="Tiempo_Encuesta_Guarda_Tencuest.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+    
+
+	<bean id="GUARDAR_TPREGUNTA" parent="catbo-endpoint" >
+        <property name="templateName" value="Encuesta_Guarda_Tpregunta.vm" />
+        <property name="xslName" value="Encuesta_Guarda_Tpregunta.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+    
+    <bean id="BORRAR_ASIGNAR_ENCUESTA" parent="catbo-endpoint" >
+        <property name="templateName" value="Asignar_Encuesta_Borrar_Encuesta.vm" />
+        <property name="xslName" value="Asignar_Encuesta_Borrar_Encuesta.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	 <bean id="BORRAR_TVALENCT" parent="catbo-endpoint" >
+        <property name="templateName" value="Encuesta_Borra_Tvalenct.vm" />
+        <property name="xslName" value="Encuesta_Borra_Tvalenct.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+		
+	 <bean id="BORRAR_TPREGUNT" parent="catbo-endpoint" >
+        <property name="templateName" value="Encuesta_Borra_Tpregunt.vm" />
+        <property name="xslName" value="Encuesta_Borra_Tpregunt.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	 <bean id="BORRA_CATBO_TIEMPO_ENCUESTA" parent="catbo-endpoint" >
+        <property name="templateName" value="Tiempo_Encuesta_Borra_CATBOTIMEC.vm" />
+        <property name="xslName" value="Tiempo_Encuesta_Borra_CATBOTIMEC.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+   <bean id="OBTIENE_CONFIG_ENCUESTAS_EXPORT" parent="catbo-endpoint" >
+        <property name="templateName" value="Configurar_Encuesta_Obtener_Encuesta.vm" />
+        <property name="xslName" value="Configurar_Encuesta_Obtener_Encuesta_Export.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+
+    <bean id="GUARDA_TVALENCT" parent="catbo-endpoint" >
+        <property name="templateName" value="Configurar_Encuesta_Obtener_Encuesta.vm" />
+        <property name="xslName" value="Configurar_Encuesta_Obtener_Encuesta_Export.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<bean id="ASIGNA_ENCUESTA_OBTIENE_ENCUESTA_REGISTRO" parent="catbo-endpoint" >
+        <property name="templateName" value="Asignar_Encuesta_Obtener_Encuesta_Registro.vm" />
+        <property name="xslName" value="Asignar_Encuesta_Obtener_Encuesta_Registro.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<bean id="OBTIENE_ENCUESTA_PREGUNTAS" parent="catbo-endpoint" >
+        <property name="templateName" value="Encuesta_Obtener_Tpregunta.vm" />
+        <property name="xslName" value="Tiempo_Encuesta_Obtener_Tpregunta.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<bean id="OBTENERREG_ENCUESTA_PREGUNTAS" parent="catbo-endpoint" >
+        <property name="templateName" value="Encuesta_ObtenerReg_Tencuest.vm" />
+        <property name="xslName" value="Tiempo_Encuesta_ObtenerReg_Tencuest.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<bean id="OBTIENE_ENCUESTA_PREGUNTAS_EXPORT" parent="catbo-endpoint" >
+        <property name="templateName" value="Encuesta_Obtener_Tpregunta.vm" />
+        <property name="xslName" value="Tiempo_Encuesta_Pregunta_Exportar.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<bean id="GUARDAR_TENCUEST_AGREGAR" parent="catbo-endpoint" >
+        <property name="templateName" value="Tiempo_Encuesta_Guarda_Tencuest_Ag.vm" />
+        <property name="xslName" value="Tiempo_Encuesta_Guarda_Tencuest_Ag.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+<bean id="OBTENER_TVALENCT_REG" parent="catbo-endpoint" >
+        <property name="templateName" value="ValorEncuesta_Obtener_ValorEncuesta_Reg.vm" />
+        <property name="xslName" value="ValorEncuesta_Obtener_ValorEncuesta_Reg.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTENER_TVALENCT_ENC" parent="catbo-endpoint" >
+        <property name="templateName" value="ValorEncuesta_Obtener_ValorEncuesta_Enc.vm" />
+        <property name="xslName" value="ValorEncuesta_Obtener_ValorEncuesta_Enc.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+
+    <!-- ***************** FIN Endpoints de Configurar Encuesta ***********  -->
+
+<!-- ***************** Endpoints de Asignar Encuesta***********  -->
+	
+	<bean id="ASIGNA_ENCUESTA_OBTIENE_ENCUESTA" parent="catbo-endpoint" >
+        <property name="templateName" value="Asignar_Encuesta_Obtener_Encuesta.vm" />
+        <property name="xslName" value="Asignar_Encuesta_Obtener_Encuesta.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	
+	<bean id="GUARDA_ASIGNACION_ENCUESTA" parent="catbo-endpoint" >
+        <property name="templateName" value="AsignacionEncuesta_Guardar.vm" />
+        <property name="xslName" value="AccesoEstructuraRolUsuario_Guardar.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+<!-- ***************** FIN Endpoints Asignar Encuesta***********  -->
+	
+	<!-- Acceso Estructura Rol -->
+    <bean id="ACCESOESTRUCTURAROLUSUARIO_BORRAR" parent="catbo-endpoint" >
+        <property name="templateName" value="AccesoEstructuraRolUsuario_Borrar.vm" />
+        <property name="xslName" value="AccesoEstructuraRolUsuario_Borrar.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+    <bean id="ACCESOESTRUCTURAROLUSUARIO_BUSCAR" parent="catbo-endpoint" >
+        <property name="templateName" value="AccesoEstructuraRolUsuario_Buscar.vm" />
+        <property name="xslName" value="AccesoEstructuraRolUsuario_Buscar.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+    <bean id="ACCESOESTRUCTURAROLUSUARIO_GUARDAR" parent="catbo-endpoint" >
+        <property name="templateName" value="AccesoEstructuraRolUsuario_Guardar.vm" />
+        <property name="xslName" value="AccesoEstructuraRolUsuario_Guardar.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<bean id="OBTIENE_ROL_SEG" parent="catbo-endpoint" >
+        <property name="templateName" value="AccesoEstructuraRolUsuario_comboRoles.vm" />
+        <property name="xslName" value="AccesoEstructuraRolUsuario_comboRoles.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<bean id="EXPORT_LIST_ACCESO_ESTRUCTURA_ROL_USUARIO" parent="catbo-endpoint" >
+        <property name="templateName" value="AccesoEstructuraRolUsuario_Buscar.vm" />
+        <property name="xslName" value="AccesoEstructuraRolUsuario_Export.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>		
+	
+	<bean id="OBTENER_USUARIOS" parent="catbo-endpoint" >
+        <property name="templateName" value="AccesoEstructuraRolUsuario_comboUsuarios.vm" />
+        <property name="xslName" value="AccesoEstructuraRolUsuario_comboUsuarios.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	
+	<!-- Fin Acceso Estructura Rol -->
+	
+	<bean id="OBTENER_REEMPLAZANTES" parent="catbo-endpoint" >
+        <property name="templateName" value="Matriz_Obtiene_Responsables.vm" />
+        <property name="xslName" value="Matriz_Obtiene_Responsables.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<!-- ***************** Endpoints de Reasignacion Casos ***********  -->
+
+	<bean id="BUSCAR_REASIGNACION_CASO" parent="catbo-endpoint" >
+	        <property name="templateName" value="ReasignacionDeCaso_Buscar.vm" />
+	        <property name="xslName" value="ReasignacionDeCaso_Buscar.xsl" />
+	        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<bean id="GUARDAR_REASIGNACION_CASO" parent="catbo-endpoint" >
+	        <property name="templateName" value="ReasignacionDeCaso_Guardar.vm" />
+	        <property name="xslName" value="Stdr_OutMensage.xsl" />
+	        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<bean id="GUARDAR_MOVIMIENTO_CASO" parent="catbo-endpoint" >
+	        <property name="templateName" value="MovimientoCaso_Guardar.vm" />
+	        <property name="xslName" value="Stdr_OutMensage.xsl" />
+	        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	
+	
+	
+	<!-- ***************** Fin Endpoints de Reasignacion Casos ***********  -->	
+
+    <!-- ADMINISTRACION DE CASOS: GUARDAR REASIGNACION-->
+     <bean id="GUARDAR_REASIGNACION1" parent="catbo-endpoint" >
+         <property name="templateName" value="Administracion_Casos_Guardar_Reasignacion1.vm" />
+         <property name="xslName" value="Administracion_Casos_Guardar_Reasignacion1.xsl" />
+         <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+     </bean>
+
+	<bean id="COMBO_DATOS_GENERICOS" parent="catbo-endpoint">
+	        <property name="templateName" value="comboDatosGenericos.vm" />
+	        <property name="xslName" value="comboDatosGenericos.xsl" />
+	        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	
+	
+	<!-- ***************** Endpoints de Reasignacion Casos 1 ***********  -->
+
+	<bean id="BUSCAR_REASIGNACION_CASO_USR" parent="catbo-endpoint" >
+	        <property name="templateName" value="ReasignacionDeCaso_Usr_Buscar.vm" />
+	        <property name="xslName" value="ReasignacionDeCaso_Usr_Buscar.xsl" />
+	        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<bean id="BUSCAR_REASIGNACION_CASO_USR_RSPNSBL" parent="catbo-endpoint" >
+	        <property name="templateName" value="ReasignacionDeCaso_Usr_Rspmsbl_Buscar.vm" />
+	        <property name="xslName" value="ReasignacionDeCaso_Usr_Rspmsbl_Buscar.xsl" />
+	        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<bean id="GUARDAR_REASIGNACION_CASO_USR" parent="catbo-endpoint" >
+         <property name="templateName" value="ReasignacionDeCaso_Guardar_Usr.vm" />
+         <property name="xslName" value="Stdr_OutMensage.xsl" />
+         <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+     </bean>
+	<!-- ***************** Fin Endpoints de Reasignacion Casos 1 ***********  -->	
+
+    <bean id="OBTIENE_PAIS" parent="catbo-endpoint">
+    	<property name="templateName" value="Matriz_Datos_Catalogo.vm"></property>
+    	<property name="xslName" value="Calendario_Datos_Pais.xsl"></property>
+    	<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+
+    <bean id="OBTIENE_MES" parent="catbo-endpoint">
+    	<property name="templateName" value="Obtiene_Mes.vm"></property>
+    	<property name="xslName" value="Calendario_Datos_Mes.xsl"></property>
+    	<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+		
+	<bean id="P_VALIDA_TCONFIGENCUESTA" parent="catbo-endpoint">
+    	<property name="templateName" value="Valida_TConfiguraencuesta.vm"></property>
+    	<property name="xslName" value="Valida_TConfiguraencuesta.xsl"></property>
+    	<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+    
+    <bean id="VALIDA_TCONFIGENCUESTA_CLI" parent="catbo-endpoint">
+    	<property name="templateName" value="Valida_TConfiguraencuesta.vm"></property>
+    	<property name="xslName" value="Valida_TConfiguraencuesta.xsl"></property>
+    	<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+
+<!-- ***************** Endpoints de Ingresar Encuesta ***********  -->
+	
+	<bean id="OBTENER_PREGUNTA_ENCUESTA" parent="catbo-endpoint" >
+        <property name="templateName" value="Ingresar_Encuesta_Obtener_Lapregunta.vm" />
+        <property name="xslName" value="Ingresar_Encuesta_Obtener_Lapregunta.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<bean id="OBTENER_PREGUNTA_ENCUESTA_SIGUIENTE" parent="catbo-endpoint" >
+        <property name="templateName" value="Ingresar_Encuesta_Obtener_Lapregunta_Sig.vm" />
+        <property name="xslName" value="Ingresar_Encuesta_Obtener_Lapregunta_Sig.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<bean id="GUARDAR_RESPUESTA_ENCUESTA" parent="catbo-endpoint" >
+        <property name="templateName" value="Ingresar_Encuesta_Guardar_Larespuesta.vm" />
+        <property name="xslName" value="Stdr_OutMensage.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	
+<!-- ***************** FIN Endpoints de Ingresar Encuesta ***********  -->
+
+
+	
+</beans>

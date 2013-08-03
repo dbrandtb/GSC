@@ -1,0 +1,12 @@
+<statements>
+	<statement type="stored" name="PKG_CONSULTA.P_OBTIENE_MRECIDET" id="emisionObtieneRecibosDetalle">
+		<param eval="true" name="pv_cdUnieco_i" type="NUMERIC">$!params.cdunieco</param>
+		<param eval="true" name="pv_cdRamo_i"   type="NUMERIC">$!params.cdramo</param>
+		<param eval="true" name="pv_Estado_i"   type="VARCHAR">$!params.estado</param>
+		<param eval="true" name="pv_NmPoliza_i" type="NUMERIC">$!params.nmpoliza</param>
+		<param eval="true" name="pv_nmRecibo_i" type="NUMERIC">$!params.nmrecibo</param>
+		<outparam id="pv_RegDatos_o" type="CURSOR"/>
+		<outparam id="pv_msg_id_o" type="VARCHAR"/>
+		<outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

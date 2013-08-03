@@ -1,0 +1,9 @@
+<statements>
+	<statement type="stored" name="PKG_TABLASDE_APOYO.P_GET_FORMATOS_CLAVES_VTA" id="pgetFormatoClavesVTA">
+		<param eval="true" name="nombretabla" type="VARCHAR">$!params.get("nombretabla")</param>
+		<outparam id="cursor_vta" type="CURSOR"/>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

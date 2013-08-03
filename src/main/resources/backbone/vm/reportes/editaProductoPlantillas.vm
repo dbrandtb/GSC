@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_REPORTES.P_GUARDA_TPLANPROD" id="editaProductoPlantillas">
+        <param eval="true" name="pv_cdplanti_i" type="VARCHAR">$!params.get("cdPlantilla")</param>
+        <param eval="true" name="pv_cdramo_old_i" type="VARCHAR">$!params.get("cdProductoAnterior")</param>
+	    <param eval="true" name="pv_cdramo_new_i" type="VARCHAR">$!params.get("cdProductoNuevo")</param>
+		<outparam id="pv_msg_id_o" type="NUMERIC"/>
+		<outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

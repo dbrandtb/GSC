@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+
+    <include file="struts-default.xml" />                           
+
+    <package name="funcionalidadesPrivilegios" extends="json-default" namespace="/funcionalidadesPrivilegios">
+    
+    
+		
+		<action name="buscarFuncionalidadesPrivilegios" class="listaFuncionalidadesPrivilegiosAction" method="cmdBuscarClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		
+		<action name="getFuncionalidad" class="listaFuncionalidadesPrivilegiosAction" method="cmdGetFuncionalidadClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+	
+	
+	<action name="borrarFuncionalidadPrivilegio" class="funcionalidadesPrivilegiosAction" method="cmdBorrarFuncionalidadPrivilegioClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		
+	 <action name="irConfiguraFuncionalidadesPrivilegios" class="funcionalidadesPrivilegiosAction" method="irConfiguraFuncionalidadesPrivilegiosClick">
+             <result type="chain" name="configuracionFuncionalidadesPrivilegios">configuracionFuncionalidadesPrivilegios</result>
+    </action>
+    
+     <action name="irConfiguraFuncionalidadesPrivilegiosEditar" class="funcionalidadesPrivilegiosAction" method="irConfiguraFuncionalidadesPrivilegiosEditarClick">
+             <result type="chain" name="configuracionFuncionalidadesPrivilegiosEditar">configuracionFuncionalidadesPrivilegiosEditar</result>
+    </action>
+    
+    
+    
+     <action name="irFuncionalidadesPrivilegios" class="funcionalidadesPrivilegiosAction" method="irFuncionalidadesPrivilegiosClick">
+             <result type="chain" name="funcionalidadesPrivilegios">funcionalidadesPrivilegios</result>
+    </action>
+    
+	<action name="guardarFuncionalidadPrivilegio" class="funcionalidadesPrivilegiosAction" method="cmdGuardarFuncionalidadPrivilegioClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+	</action>    
+    
+    <action name="exportarFuncionalidades" class="listaFuncionalidadesPrivilegiosAction" method="cmdExportarFuncionalidadesClick">
+			<result name="success" type="stream">
+				<param name="contentType">${contentType}</param>
+				<param name="inputName">inputStream</param>
+				<param name="contentDisposition">filename="${filename}"</param>
+				<param name="bufferSize">4096</param>
+			</result>
+		</action>        
+    
+    
+     <!-- Obtener combo para Funcionalidades -->
+	    <action name="obtenerComboFuncionalidades" class="funcionalidadesPrivilegiosAction" method="obtenerComboFuncionalidades">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+     	</action>
+     	
+     	
+     		
+	
+    </package>
+
+</struts>

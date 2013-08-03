@@ -1,0 +1,11 @@
+<statements>
+	<statement type="stored" name="PKG_TRADUC.P_OBTIENE_PROPIEDADES_REG " id="getMecanismoDeTooltip">
+       <param eval="true" name="pv_idobjeto_i" type="NUMERIC">$!params.get("idObjeto")</param>  
+	   <param eval="true" name="pv_lang_code_i" type="NUMERIC">$!params.get("lang_Code")</param>
+	          	   
+  	   <outparam id="po_registro" type="CURSOR"/>
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>
+

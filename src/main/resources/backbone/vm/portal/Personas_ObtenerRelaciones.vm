@@ -1,0 +1,9 @@
+<statements>
+	<statement type="stored" name="PKG_PERSONA.P_OBTIENE_MPERRELA" id="personasObtenerRelaciones">
+	   <param eval="true" name="pv_CDPERSON_i" type="NUMERIC">$!params.get("codigoPersona")</param>
+      
+		<outparam id="pv_registro_o" type="CURSOR"></outparam>
+		<outparam id="pv_msg_id_o" type="NUMERIC"/>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+	</statement>
+</statements>

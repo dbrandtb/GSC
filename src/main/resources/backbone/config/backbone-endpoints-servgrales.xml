@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+	
+    <bean id="servgrales-endpoints" abstract="true" parent="parent-endpoint-kernel">
+		<property name="templateModule" value="generales"/>
+		<property name="xslModule" value="generales"/>
+	</bean>
+	
+    <bean id="P_SGINSERTA_TVALOPOL" parent="servgrales-endpoints">
+        <property name="templateName" value="pInsertaTVALOPOL.vm"/>
+        <property name="xslName" value="checkStatusTransac.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    
+    <bean id="P_SGINSERTA_TVALOSIT" parent="servgrales-endpoints">
+        <property name="templateName" value="pInsertaTVALOSIT.vm"/>
+        <property name="xslName" value="checkStatusTransac.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    
+    <bean id="P_SGINSERTA_MPOLIGAR" parent="servgrales-endpoints">
+        <property name="templateName" value="pInsertaMPOLIGAR.vm"/>
+        <property name="xslName" value="checkStatusTransac.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    
+    <bean id="P_SGINSERTA_MPOLIGAR_ENDOSOS" parent="servgrales-endpoints">
+        <property name="templateName" value="pInsertaMPOLIGAREndosos.vm"/>
+        <property name="xslName" value="checkStatusTransacEndosos.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>     
+    
+    <bean id="P_SGINSERTA_TVALOGAR" parent="servgrales-endpoints">
+        <property name="templateName" value="pInsertaTVALOGAR.vm"/>
+        <property name="xslName" value="checkStatusTransac.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    
+    <bean id="P_SGINSERTA_TVALOGAR_ENDOSOS" parent="servgrales-endpoints">
+        <property name="templateName" value="pInsertaTVALOGAREndosos.vm"/>
+        <property name="xslName" value="checkStatusTransacEndosos.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    
+    <bean id="P_SGFECHAS_OTTEMPOT" parent="servgrales-endpoints">
+        <property name="templateName" value="pgetFechasOttempot.vm"/>
+        <property name="xslName" value="pgetFechasOttempot.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    
+    <bean id="P_SGINSERTA_MPOLICAP" parent="servgrales-endpoints">
+        <property name="templateName" value="pInsertaMPOLICAP.vm"/>
+        <property name="xslName" value="checkStatusTransac.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    
+    <bean id="P_SGINSERTA_MPOLICAP_ENDOSOS" parent="servgrales-endpoints">
+        <property name="templateName" value="pInsertaMPOLICAPEndosos.vm"/>
+        <property name="xslName" value="checkStatusTransacEndosos.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    
+    <bean id="P_ValorDefectoRevalorizaciones" parent="servgrales-endpoints">
+        <property name="templateName" value="pgetValoresDefaultRevalora.vm"/>
+        <property name="xslName" value="pgetValoresDefaultRevalora.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    
+    <bean id="P_Borrar_Autorizaciones" parent="servgrales-endpoints">
+        <property name="templateName" value="pdeleteAutorizaciones.vm"/>
+        <property name="xslName" value="checkStatusTransac.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    
+    <bean id="P_Inserta_Borra_MPOLIAUT" parent="servgrales-endpoints">
+        <property name="templateName" value="pinsertMPOLIAUT.vm"/>
+        <property name="xslName" value="checkStatusTransac.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    
+    <bean id="P_FORMATO_CAMPOS_B1B" parent="servgrales-endpoints">
+        <property name="templateName" value="pgetFormatoCamposB1B.vm"/>
+        <property name="xslName" value="pgetFormatoCamposB1B.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    
+    <!--		
+	<bean id="P_DATOS_PERSONA" parent="servgrales-endpoints">
+		<property name="templateName" value="pgetDatosAgtPersona.vm"/>
+		<property name="xslName" value="pgetDatosAgtPersona.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+    -->
+</beans>

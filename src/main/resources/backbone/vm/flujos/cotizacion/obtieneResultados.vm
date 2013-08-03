@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
+<statements>
+	<statement type="stored" name="PKG_COTIZA.P_GEN_TARIFICACION" id="obtenerResultados">
+		
+		<param eval="true" name="pv_cdusuari_i" type="VARCHAR"><![CDATA[$!params.get("CD_USUARI")]]></param>
+  		<param eval="true" name="pv_cdunieco_i" type="NUMERIC"><![CDATA[$!params.get("CD_UNIECO")]]></param>
+  		<param eval="true" name="pv_cdramo_i" 	type="NUMERIC"><![CDATA[$!params.get("CD_RAMO")]]></param>
+  		<param eval="true" name="pv_estado_i" 	type="VARCHAR"><![CDATA[$!params.get("ESTADO")]]></param>
+  		<param eval="true" name="pv_nmpoliza_i" type="NUMERIC"><![CDATA[$!params.get("NMPOLIZA")]]></param>
+  		<param eval="true" name="pv_cdelemen_i" type="NUMERIC"><![CDATA[$!params.get("CD_ELEMENT")]]></param>
+  		<param eval="true" name="pv_cdtipsit_i" type="VARCHAR"><![CDATA[$!params.get("CD_TIPSIT")]]></param>
+  		
+  		<outparam id="po_registro" type="CURSOR"/>
+		<outparam id="po_msg_id" type="NUMERIC"/>
+		<outparam id="p_out_title" type="VARCHAR"/>
+		
+	</statement>
+</statements>

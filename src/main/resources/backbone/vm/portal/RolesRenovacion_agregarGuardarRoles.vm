@@ -1,0 +1,10 @@
+<statements>
+	<statement type="stored" name="PKG_RENOVA.P_GUARDA_ROL_RENOVA" id="pGuardaConfigura">
+			   
+       <param eval="true" name="pv_cdrenova_i" type="NUMERIC">$!params.get("cdRenova")</param>
+       <param eval="true" name="pv_cdrol_i" type="VARCHAR">$!params.get("cdRol")</param>
+       
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

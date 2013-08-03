@@ -1,0 +1,10 @@
+<statements>
+	<statement type="stored" name="PKG_TABAPOYO.P_OBTIENE_CLAVES" id="pObtenerNumeroIncisosCombo">
+		
+        <param eval="true" name="pi_nmtabla" type="NUMERIC">$!params.get("pi_tabla")</param>
+       
+		<outparam id="pv_registro_o" type="CURSOR"></outparam>
+		<outparam id="pv_msg_id_o" type="INTEGER"/>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+	</statement>
+</statements>

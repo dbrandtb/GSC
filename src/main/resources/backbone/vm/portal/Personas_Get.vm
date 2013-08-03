@@ -1,0 +1,10 @@
+<statements>
+	<statement type="stored" name="PKG_PERSONA.P_OBTIENE_PERSONA" id="pObtienePersona">
+        <param eval="true" name="pi_otfisjur" type="VARCHAR">$!params.get("TipoPersona")</param>
+        <param eval="true" name="pi_cdperson" type="NUMERIC">$!params.get("codPersona")</param>
+
+		<outparam id="pv_registro_o" type="CURSOR"></outparam>
+		<outparam id="pv_msg_id_o" type="INTEGER"/>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+	</statement>
+</statements>

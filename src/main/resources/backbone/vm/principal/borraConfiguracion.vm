@@ -1,0 +1,10 @@
+<statements>
+	<statement type="stored" name="PKG_CONFPAGINA.P_BORRA_SECCION" id="borraConfigura">		
+		<param eval="true" name="PV_CDCONFIGURA_I" type="NUMERIC">$!params.claveDeConfiguracion</param>
+		<param eval="true" name="PV_CDSECCION_I" type="NUMERIC">$params.claveDeSeccion</param>
+		<outparam id="PV_BORRA_HIJO_O" type="NUMERIC"/>
+		<outparam id="PV_BORRA_PADRE_O" type="NUMERIC"/>
+		<outparam id="pv_msg_id_o" type="NUMERIC"/>		
+		<outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

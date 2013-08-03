@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+    
+    <bean id="autoriza-endpoints" abstract="true" parent="parent-endpoint-kernel">
+        <property name="templateModule" value="autorizacion" />
+        <property name="xslModule" value="autorizacion" />
+    </bean>
+
+    <bean id="P_ACT_SWAUTOTI_MPOLIAUT" parent="autoriza-endpoints">
+        <property name="templateName" value="pactualizaSwAutoriza.vm" />
+        <property name="xslName" value="checkStatusTransac.xsl" />
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO" />
+    </bean>
+    
+    <bean id="P_EXISTE_AUTORIZA_NEGADAS" parent="autoriza-endpoints">
+        <property name="templateName" value="valExistAutorizacionNegada.vm" />
+        <property name="xslName" value="checkStatusTransac.xsl" />
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO" />
+    </bean>
+
+    <!-- VERIFICAR ESTE BEAN, YA QUE  PARA Servicios Autorizacion no es invocado -->
+    <!--bean id="P_EXISTE_NIVEL_PARA" parent="autoriza-endpoints">
+        <property name="templateName" value="pgetNivelAutoriza.vm" />
+        <property name="xslName" value="pgetNivelAutoriza.xsl" />
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO" />
+    </bean-->
+
+    <!-- VERIFICAR VM Y XSL, MOVERLOS A CARPETA DE AUTORIZACION -->
+    <bean id="P_GET_USER_AUTORIZAC" parent="utilities-endpoints">
+        <property name="templateName" value="pgetUserAutorizacion.vm" />
+        <property name="xslName" value="pgetUserAutorizacion.xsl" />
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO" />
+    </bean>
+
+    <bean id="P_GET_AUTORIZACION" parent="autoriza-endpoints">
+        <property name="templateName" value="pgetAutorizacion.vm" />
+        <property name="xslName" value="pgetAutorizacion.xsl" />
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO" />
+    </bean>
+    
+    <bean id="P_GET_MINMAX_INCISO_MPOLIAUT" parent="autoriza-endpoints">
+        <property name="templateName" value="pgetMinMaxSituacMPOLIAUT.vm" />
+        <property name="xslName" value="pgetMinMaxSituacMPOLIAUT.xsl" />
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO" />
+    </bean>
+    
+    <bean id="P_INCISO_AUTORIZAC_PENDIENTE" parent="autoriza-endpoints">
+        <property name="templateName" value="pgetIncisosAutorizacPendiente.vm" />
+        <property name="xslName" value="pgetIncisosAutorizacPendiente.xsl" />
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO" />
+    </bean>
+    
+    <bean id="P_VALIDA_AUTORIZACION" parent="autoriza-endpoints">
+        <property name="templateName" value="valAutorizacion.vm" />
+        <property name="xslName" value="valAutorizacion.xsl" />
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO" />
+    </bean>
+
+</beans>

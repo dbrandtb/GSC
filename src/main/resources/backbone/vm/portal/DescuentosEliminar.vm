@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<statements>
+    <statement type="stored" name="PKG_DSCTO.P_ELIMINA_DSCTO" id="eliminaDscto">
+        <param eval="true" name="P_CVE_DESCTO" type="NUMERIC">$!params.get("cdDscto")</param>
+        <outparam id="pv_msg_id_o" type="NUMERIC"></outparam>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+    </statement>
+</statements>

@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+  <!-- Action ComboBox -->
+    <bean id="combosActionBO" class="mx.com.aon.catbo.web.CombosAction" scope="prototype">
+        <property name="combosManager" ref="combosManagerBO"/>
+        <property name="combosManager2" ref="combosManager2BO"/>
+    </bean>  
+    
+   <bean id="combosActionBO2" class="mx.com.aon.catbo.web.CombosAction" scope="prototype">
+        <property name="combosManager2" ref="combosManager2BO"/>                             <!-- se agrego -->
+    </bean>  
+    
+    
+    <bean id="pruebaAction" class="mx.com.aon.catbo.web.PruebaAction" scope="prototype">
+        <property name="pruebaActionManager" ref="pruebaActionManager"/>
+    </bean>
+
+    <bean id="administracionTiposFaxAction" class="mx.com.aon.catbo.web.AdministracionTiposFaxAction" scope="prototype">
+        <property name="archivosManager" ref="archivosManager"/>
+    </bean>
+
+    
+    <bean id="loginActionBO" class="mx.com.aon.catbo.web.LoginAction" scope="prototype">
+        <property name="loginManager" ref="loginManagerBO"/>
+    </bean>
+
+<!-- Notificaciones -->
+    <bean id="listaNotificacionesAction" class="mx.com.aon.catbo.web.ListaNotificacionesAction" scope="prototype">
+       <property name="notificacionesManager" ref="notificacionesManager"/>
+    </bean>
+
+    <bean id="notificacionesAction" class="mx.com.aon.catbo.web.NotificacionesAction" scope="prototype">
+       <property name="notificacionesManager" ref="notificacionesManager"/>
+    </bean>
+<!-- FIN Notificaciones -->    
+
+<!-- Formatos de Documentos -->    
+    <bean id="listaFormatosDocumentosAction" class="mx.com.aon.catbo.web.ListaFormatosDocumentosAction" scope="prototype">
+       <property name="exportMediator" ref="exportMediatorBO"/>
+       <property name="formatosDocumentosManager" ref="formatosDocumentosManager"/>
+    </bean>
+    
+    <bean id="formatosDocumentosAction" class="mx.com.aon.catbo.web.FormatosDocumentosAction" scope="prototype">
+       <property name="formatosDocumentosManager" ref="formatosDocumentosManager"/>
+    </bean>    
+<!-- FIN Formatos de Documentos --> 
+    
+    <bean id="listaOperacionesCATAction" class="mx.com.aon.catbo.web.ListaOperacionesCATAction" scope="prototype">
+       <property name="exportMediator" ref="exportMediatorBO"/>
+       <property name="operacionCATManager" ref="operacionCATManager"/>
+    </bean> 
+
+   <bean id="operacionesCATAction" class="mx.com.aon.catbo.web.OperacionesCATAction" scope="prototype">
+       <property name="operacionCATManager" ref="operacionCATManager"/>
+    </bean> 
+    
+    <bean id="treeViewAction" class="mx.com.aon.catbo.web.TreeViewAction" scope="prototype">
+       <property name="operacionCATManager" ref="operacionCATManager"/>
+    </bean>    
+    
+    <!-- Matriz Asignacion --> 
+    <bean id="listaMatrizAsignacionAction" class="mx.com.aon.catbo.web.ListaMatrizAsignacionAction" scope="prototype">
+       <property name="exportMediator" ref="exportMediatorBO"/>
+       <property name="matrizAsignacionManager" ref="matrizAsignacionManager"/>
+    </bean> 
+
+   <bean id="matrizAsignacionAction" class="mx.com.aon.catbo.web.MatrizAsignacionAction" scope="prototype">
+       <property name="matrizAsignacionManager" ref="matrizAsignacionManager"/>
+       <property name="procesoManager" ref="procesoManager"/>
+    </bean> 
+<!-- Fin Matriz Asignacion -->
+    
+    <!-- Configura Matriz Asignacion --> 
+    <bean id="listaConfiguraMatrizTareaAction" class="mx.com.aon.catbo.web.ListaConfiguraMatrizTareaAction" scope="prototype">
+       <property name="exportMediator" ref="exportMediatorBO"/>
+       <property name="matrizAsignacionManager" ref="matrizAsignacionManager"/>
+    </bean> 
+
+   <bean id="configuraMatrizTareaAction" class="mx.com.aon.catbo.web.ConfiguraMatrizTareaAction" scope="prototype">
+       <property name="matrizAsignacionManager" ref="matrizAsignacionManager"/>
+    </bean> 
+	<!-- Fin Configura Matriz Asignacion -->
+	
+	<!-- Administracion de Casos --> 
+    <bean id="listaAdministacionCasosAction" class="mx.com.aon.catbo.web.ListaAdministacionCasosAction" scope="prototype">
+       <property name="exportMediator" ref="exportMediatorBO"/>
+       <property name="administracionCasosManager" ref="administracionCasosManager"/>
+       <property name="administracionCasosManager2" ref="administracionCasosManager2"/>            
+    </bean> 
+    
+   <bean id="consultaClienteAction" class="mx.com.aon.catbo.web.ConsultaClienteAction" scope="prototype">
+       <property name="administracionCasosManager" ref="administracionCasosManager"/>
+    </bean>
+    
+    <bean id="consultarCasoDetalleAction" class="mx.com.aon.catbo.web.ConsultarCasoDetalleAction" scope="prototype">
+       <property name="administracionCasosManager" ref="administracionCasosManager"/>
+    </bean>
+    
+    <bean id="consultarCasosAction" class="mx.com.aon.catbo.web.ConsultarCasosAction" scope="prototype">
+       <property name="administracionCasosManager" ref="administracionCasosManager"/>
+    </bean>
+    
+    <bean id="scriptAtencionAction" class="mx.com.aon.catbo.web.ScriptAtencionAction" scope="prototype">
+       <property name="administracionCasosManager" ref="administracionCasosManager"/>
+    </bean> 
+    
+    
+    <bean id="consultarMovimientosCasoAction" class="mx.com.aon.catbo.web.ConsultarMovimientosCasoAction" scope="prototype">
+        <property name="administracionCasosManager" ref="administracionCasosManager"/>
+        <property name="procesoManager" ref="procesoManager"/>
+    </bean>
+    
+    <bean id="reasignarCasoAction" class="mx.com.aon.catbo.web.ReasignarCasoAction" scope="prototype">
+       <property name="administracionCasosManager" ref="administracionCasosManager"/>
+       <property name="procesoManager" ref="procesoManager"/>
+       <property name="administracionCasosManager2" ref="administracionCasosManager2"/>       
+    </bean>
+
+    <bean id="numeracionCasosAction" class="mx.com.aon.catbo.web.NumeracionCasosAction" scope="prototype">
+       <property name="administracionCasosManager" ref="administracionCasosManager"/>
+    </bean>
+
+ <!-- <bean id="listaAdministracionCasosAction" class="mx.com.aon.catbo.web.ListaAdministacionCasosAction" scope="prototype">
+       <property name="administracionCasosManager" ref="administracionCasosManager"/>
+    </bean> -->
+    
+    <bean id="altaCasoAction" class="mx.com.aon.catbo.web.AltaCasoAction" scope="prototype">
+       <property name="administracionCasosManager" ref="administracionCasosManager"/>
+    </bean>
+    
+    <!-- Administracion de Casos --> 
+    
+    <!-- Status de Casos -->    
+    <bean id="listaStatusCasosAction" class="mx.com.aon.catbo.web.ListaStatusCasosAction" scope="prototype">
+       <property name="exportMediator" ref="exportMediatorBO"/>
+       <property name="statusCasosManager" ref="statusCasosManager"/>
+    </bean>
+    
+    <bean id="statusCasosAction" class="mx.com.aon.catbo.web.StatusCasosAction" scope="prototype">
+       <property name="statusCasosManager" ref="statusCasosManager"/>
+    </bean>    
+    <!-- FIN Status de Casos --> 
+    
+    <!-- Tareas Cat Bo -->    
+    <bean id="listaTareasCatBoAction" class="mx.com.aon.catbo.web.ListaTareasCatBoAction" scope="prototype">
+       <property name="exportMediator" ref="exportMediatorBO"/>
+       <property name="tareasCatBoManager" ref="tareasCatBoManager"/>
+    </bean>
+    
+    <bean id="tareasCatBoAction" class="mx.com.aon.catbo.web.TareasCatBoAction" scope="prototype">
+       <property name="tareasCatBoManager" ref="tareasCatBoManager"/>
+    </bean>    
+    <!-- FIN Tareas Cat Bo -->    
+    
+      <bean id="listaConsultaCasosSolicitudAction" class="mx.com.aon.catbo.web.ListaConsultaCasosSolicitudAction" scope="prototype">
+       <property name="exportMediator" ref="exportMediatorBO"/>
+       <property name="administracionCasosManager" ref="administracionCasosManager"/>
+       <property name="administracionCasosManager2" ref="administracionCasosManager2"/>
+    </bean>
+    
+    <!-- Consulta de poliza -->
+    <bean id="listaConsultaPolizasAction" class="mx.com.aon.catbo.web.ListaConsultaPolizasAction" scope="prototype">
+       <property name="administracionCasosManager" ref="administracionCasosManager"/>
+    </bean>
+    <!-- Fin de Consulta de poliza -->
+    
+    <!-- Configuarcion de Encuestas -->
+    <bean id="listaConfigurarEncuestaAction" class="mx.com.aon.catbo.web.ListaConfigurarEncuestaAction" scope="prototype">
+      <property name="exportMediator" ref="exportMediatorBO"/>
+       <property name="configurarEncuestaManager" ref="configurarEncuestaManager"/>
+       
+    </bean>    
+ 
+ 	<bean id="listaConfigurarEncuestaDinamicoAction" class="mx.com.aon.catbo.web.ListaConfigurarEncuestaDinamicoAction" scope="prototype">
+      <property name="exportMediator" ref="exportMediatorBO"/>
+       <property name="configurarEncuestaManager" ref="configurarEncuestaManager"/>
+       
+    </bean> 
+
+
+   <bean id="configurarEncuestaAction" class="mx.com.aon.catbo.web.ConfigurarEncuestaAction" scope="prototype">
+       <property name="configurarEncuestaManager" ref="configurarEncuestaManager"/>
+       <property name="configurarEncuestaManager2" ref="configurarEncuestaManager2"/>
+    </bean>
+
+    <!-- Fin de Configuracion de Encuestas -->
+    
+    <!-- Acceso Estructura Rol -->
+    <bean id="listaAccesoEstructuraRolUsuarioAction" class="mx.com.aon.catbo.web.ListaAccesoEstructuraRolUsuarioAction" scope="prototype">
+    	<property name="exportMediator" ref="exportMediatorBO"/>
+       	<property name="accesoEstructuraRolUsuarioManager" ref="accesoEstructuraRolUsuarioManager"/>
+    </bean>
+
+    <bean id="accesoEstructuraRolUsuarioAction" class="mx.com.aon.catbo.web.AccesoEstructuraRolUsuarioAction" scope="prototype">
+       <property name="accesoEstructuraRolUsuarioManager" ref="accesoEstructuraRolUsuarioManager"/>
+    </bean>
+    <!-- Fin Acceso Estructura Rol -->
+
+    <bean id="listaEncuestasAction" class="mx.com.aon.catbo.web.ListaEncuestasAction" scope="prototype">
+       <property name="exportMediator" ref="exportMediatorBO"/>
+       <property name="configurarEncuestaManager" ref="configurarEncuestaManager"/>
+    </bean>
+
+	<!-- Calendario -->
+    <bean id="listaCalendarioAction" class="mx.com.aon.catbo.web.ListaCalendarioAction" scope="prototype">
+    	<property name="exportMediator" ref="exportMediatorBO"/>
+       	<property name="calendarioManager" ref="calendarioManager"/>
+    </bean>
+
+    <bean id="calendarioAction" class="mx.com.aon.catbo.web.CalendarioAction" scope="prototype">
+       <property name="calendarioManager" ref="calendarioManager"/>
+    </bean>
+	<!-- Fin Calendario -->
+	
+	<bean id="configurarCompraTiempoAction" class="mx.com.aon.catbo.web.ConfigurarCompraTiempoAction" scope="prototype">
+       <property name="configurarCompraTiempoManager" ref="configurarCompraTiempoManager"/>
+	</bean>
+	
+
+	<bean id="compraTiempoAction" class="mx.com.aon.catbo.web.CompraTiempoAction" scope="prototype">
+       <property name="configurarCompraTiempoManager" ref="configurarCompraTiempoManager"/>
+       <property name="procesoManager" ref="procesoManager"/>
+    </bean>
+
+    <!-- Archivo -->
+    <bean id="archivoAction" class="mx.com.aon.catbo.web.ArchivoAction" scope="prototype">
+        <property name="mediaDAOJdbc" ref="mediaDAOJdbc"/>
+        <property name="archivosManagerJdbcTemplate" ref="archivosManagerJdbcTemplate"/>
+        <property name="archivosManager" ref="archivosManager"/>
+    </bean>
+
+    <bean id="atributosArchivoAction" class="mx.com.aon.catbo.web.AtributosArchivoAction" scope="prototype">
+        <property name="archivosManager" ref="archivosManager"/>
+   <!--  <property name="exportMediator" ref="exportMediator"/> --> 
+    </bean>
+
+    <!-- Fin Archivo -->
+    
+    <!-- Archivo y Faxes -->
+    <bean id="consultaFaxAction" class="mx.com.aon.catbo.web.ConsultaFaxAction" scope="prototype">
+        <property name="archivosFaxesManager" ref="archivosFaxesManager"/>
+    </bean>
+   
+    
+    <bean id="listaAdministracionTiposFaxAction" class="mx.com.aon.catbo.web.ListaAdministracionTiposFaxAction" scope="prototype">
+        <property name="exportMediator" ref="exportMediator"/>
+        <property name="archivosManager" ref="archivosManager"/>
+    </bean>
+     
+    <bean id="listaConsultaFaxAction" class="mx.com.aon.catbo.web.ListaConsultaFaxAction" scope="prototype">
+    	<property name="exportMediator" ref="exportMediator"/>
+       	<property name="archivosFaxesManager" ref="archivosFaxesManager"/>
+    </bean>
+
+    <!-- Fin Archivo y Faxes -->
+    
+     <!--Administrar Usuarios por Modulo -->
+      <bean id="administrarUsuariosModuloAction" class="mx.com.aon.catbo.web.AdministrarUsuariosModuloAction" scope="prototype">
+        <property name="administrarUsuariosModuloManager" ref="administrarUsuariosModuloManager"/>
+    </bean>
+    
+   <bean id="listaAdministrarUsuariosModuloAction" class="mx.com.aon.catbo.web.ListaAdministrarUsuariosModuloAction" scope="prototype">
+         <property name="exportMediator" ref="exportMediatorBO"/>
+        <property name="administrarUsuariosModuloManager" ref="administrarUsuariosModuloManager"/>
+    </bean>
+    <!-- Fin Archivo -->
+    
+         <!-- Envio de mail -->
+	<bean id="envioMailAction" class="mx.com.aon.catbo.web.EnvioMailAction" scope="prototype">
+    	<!--property name="envioMailManager" ref="envioMailManager"/-->
+    	<property name="configuracionMailManager" ref="configuracionMailManager"/>
+    	 <property name="notificacionMailManager" ref="notificacionMailManager"/>
+    </bean>
+    <!-- Fin Envio de mail -->
+    
+    <bean id="listaAltaCasoAction" class="mx.com.aon.catbo.web.ListaAltaCasoAction" scope="prototype">
+        <property name="altaCasosManager" ref="altaCasosManager"/>
+    </bean>
+    
+     <!--Generacion Claves -->
+    <bean id="listaGeneracionClavesAction" class="mx.com.aon.catbo.web.ListaGeneracionClavesAction" scope="prototype">
+        <property name="exportMediator" ref="exportMediator"/>
+        <property name="generacionClavesManager" ref="generacionClavesManager"/>
+    </bean>
+   
+    <bean id="generacionClavesAction" class="mx.com.aon.catbo.web.GeneracionClavesAction" scope="prototype">
+        <property name="generacionClavesManager" ref="generacionClavesManager"/>
+    </bean>
+    <!-- Fin Generacion Claves  -->
+    
+    <!-- Datos de Archivos -->
+	<bean id="listaDatosArchivosAction" class="mx.com.aon.catbo.web.ListaDatosArchivosAction" scope="prototype">
+	    <property name="exportMediator" ref="exportMediator"/>
+    	<property name="datosArchivosManager" ref="datosArchivosManager"/> 
+    </bean>
+    <!-- Fin Datos de Archivos -->
+    
+    <!-- Guion Llamadas -->
+    <bean id="guionLlamadasAction" class="mx.com.aon.catbo.web.GuionLlamadasAction" scope="prototype">
+	    <!-- <property name="exportMediator" ref="exportMediator"/>--> 
+    	<property name="guionLlamadasManager" ref="guionLlamadasManager"/> 
+    </bean>
+    <!-- Fin Guion Llamadas -->
+    <!--  -->
+    <bean id="listaAdministracionTipoArchivoAction" class="mx.com.aon.catbo.web.ListaAdministracionTipoArchivoAction" scope="prototype">
+	    <property name="exportMediator" ref="exportMediator"/>
+    	<property name="administrarTipoArchivoManager" ref="administrarTipoArchivoManager"/> 
+    </bean>
+     <!--Fin Guion Llamadas -->
+     
+     <!--Administracion Fax -->
+     <bean id="listaAdministracionFaxAction" class="mx.com.aon.catbo.web.ListaAdministracionFaxAction" scope="prototype">
+	   <!--  <property name="exportMediator" ref="exportMediator"/>-->
+    	<property name="administracionFaxManager" ref="administracionFaxManager"/> 
+    </bean>
+    <bean id="administracionFaxAction" class="mx.com.aon.catbo.web.AdministracionFaxAction" scope="prototype">
+	   <!--  <property name="exportMediator" ref="exportMediator"/>-->
+    	<property name="faxDAOJdbc" ref="faxDAOJdbc"/> 
+    	<property name="administracionFaxManager" ref="administracionFaxManager"/> 
+    </bean>
+     <bean id="exportarAdministracionFaxAction" class="mx.com.aon.catbo.web.ExportarAdministracionFaxAction" scope="prototype">
+	     <property name="exportMediator" ref="exportMediator"/> 
+	    <!-- <property name="dataSource" ref="dataSource" /> --> 
+    	<property name="administracionFaxManager" ref="administracionFaxManager"/> 
+    	<property name="archivosFaxesManager" ref="archivosFaxesManager"/>
+    </bean>
+    
+    <!--Fin Administracion Fax -->
+    
+    <!-- Consultar carga de Archivos -->
+    <bean id="cargaArchivosAction" class="mx.com.aon.catbo.web.CargaArchivosAction" scope="prototype">
+        <property name="cargaArchivosManager" ref="cargaArchivosManager"/>
+    </bean>
+    
+    
+    <bean id="reporteDetalleCaso" class="mx.com.aon.catbo.web.ExportarDetalleDeCasoAction" scope="prototype">
+       <property name="dataSource" ref="dataSource" />
+       <property name="administracionCasosManager" ref="administracionCasosManager3"/>
+       <property name="administracionCasosManager2" ref="administracionCasosManager"/>
+       <property name="exportMediator" ref="exportMediator"/> 
+    </bean>
+    
+    <!-- Ingresar Encuesta -->
+    <bean id="ingresarEncuestaAction" class="mx.com.aon.catbo.web.IngresarEncuestaAction" scope="prototype">
+       <property name="ingresarEncuestaManager" ref="ingresarEncuestaManager"/>
+    </bean>
+    
+     <bean id="exportarIngresarEncuestasEditarAction" class="mx.com.aon.catbo.web.ExportarIngresarEncuestasEditarAction" scope="prototype">
+	     <property name="exportMediator" ref="exportMediator"/> 
+	    <!-- <property name="dataSource" ref="dataSource" /> --> 
+    	<property name="configurarEncuestaManager" ref="configurarEncuestaManager"/> 
+    </bean>
+	<!-- FIN Ingresar Encuesta -->   
+    
+    
+</beans>

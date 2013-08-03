@@ -1,0 +1,10 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_FOLIOS.Valida_FolioArt" id="pValidaFolioArt">
+		<param eval="true" name="p_nmoperac" type="VARCHAR">$!params.get("p_nmoperac")</param>
+		<param eval="true" name="p_cdtiproc" type="VARCHAR">$!params.get("p_cdtiproc")</param>
+		<param eval="true" name="p_cdagente" type="VARCHAR">$!params.get("p_cdagente")</param>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

@@ -1,0 +1,14 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_PENTRADA.P_GET_TVALOPOL_GRPSBGRP_PERTAR" id="pgetPerfilTarifaGrpSubgrp">
+		<param eval="true" name="pi_CDUNIECO" type="NUMERIC">$!params.get("pi_CDUNIECO")</param>
+		<param eval="true" name="pi_CDRAMO" type="NUMERIC">$!params.get("pi_CDRAMO")</param>
+		<param eval="true" name="pi_ESTADO" type="VARCHAR">$!params.get("pi_ESTADO")</param>
+		<param eval="true" name="pi_NMPOLIZA" type="NUMERIC">$!params.get("pi_NMPOLIZA")</param>
+		<outparam id="po_CDGRUPO" type="VARCHAR"/>
+		<outparam id="po_CDSUBGRP" type="VARCHAR"/>
+		<outparam id="po_CDPERFIT" type="VARCHAR"/>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

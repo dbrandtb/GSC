@@ -1,0 +1,9 @@
+<statements>
+	<statement type="stored" name="PKG_WIZARD.P_BORRA_TIPO_INCISO" id="pBorraTipoInciso">
+		<param eval="true" name="pv_cdtipsit_i" type="VARCHAR">$!params.codigoTipoSituacion</param>
+		<param eval="true" name="pv_cdtipobj_i" type="VARCHAR">$!params.codigoTipoObjeto</param>
+		
+		<outparam id="pv_msg_id_o" type="NUMERIC"/>	
+		<outparam id="pv_title_o" type="VARCHAR"/>	
+</statement>
+</statements>

@@ -1,0 +1,8 @@
+<statements>
+	<statement type="stored" name="$!params.get('nombreSP')" id="pObtenerTipoNivel">
+
+		<outparam id="pv_refcursor_o" type="CURSOR"></outparam>
+		<outparam id="po_msg_id" type="INTEGER"/>
+        <outparam id="po_title" type="VARCHAR"></outparam>
+	</statement>
+</statements>

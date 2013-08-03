@@ -1,0 +1,35 @@
+package mx.com.aon.portal.service;
+
+import java.util.List;
+import java.util.Map;
+
+import mx.com.aon.core.ApplicationException;
+
+
+/**
+ * 
+ * @author ricardo.bautista
+ *
+ */
+public interface CatalogServiceJdbcTemplate {
+	
+	/**
+     * 
+     * @param endpointName
+     * @return
+     * @throws ApplicationException
+     */
+    @SuppressWarnings("unchecked")
+    List getItemList(String endpointName, String itemId)throws ApplicationException;
+    
+    /**
+	 * 
+	 * @param endpointName
+	 * @param parameters
+	 * @return
+	 * @throws ApplicationException
+	 */
+	@SuppressWarnings("unchecked")
+	List getItemList( String endpointName, Map<String,Object> parameters)throws ApplicationException;
+	
+}

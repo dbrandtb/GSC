@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<bean id="tablaCincoClaves-endpoint" abstract="true"
+		parent="parent-endpoint">
+		<property name="templateModule" value="tablaCincoClaves" />
+		<property name="xslModule" value="tablaCincoClaves" />
+	</bean>
+
+<!-- Bean declarado para obtener las claves y descripciones de los atributos existentes en BD-->
+
+	<bean id="OBTIENE_DESCRIPCION_CINCO_CLAVES" parent="tablaCincoClaves-endpoint">
+		<property name="templateName" value="obtieneDescripcionClaves.vm" />
+		<property name="xslName" value="obtieneDescripcionClaves.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.catweb.configuracion.producto.tablaCincoClaves.model.DescripcionCincoClavesVO" />
+	</bean>
+	
+	<bean id="OBTIENE_DESCRIPCION_ATRIBUTOS_CINCO_CLAVES" parent="tablaCincoClaves-endpoint">
+		<property name="templateName" value="obtieneDescripcionAtributos.vm" />
+		<property name="xslName" value="obtieneDescripcionAtributos.xsl" />
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>
+<!-- Bean declarado para insertar las claves, descripciones y atributos a la BD-->	
+	<bean id="INSERTA_VALORES_CINCO_CLAVES" parent="tablaCincoClaves-endpoint">
+		<property name="templateName" value="insertaValoresCincoClaves.vm" />
+		<property name="xslName" value="obtieneResultado.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<!-- bean id="OBTIENE_VALORES_CINCO_CLAVES" parent="tablaCincoClaves-endpoint">
+		<property name="templateName" value="obtieneValoresCincoClaves.vm" />
+		<property name="xslName" value="obtieneValoresCincoClaves.xsl" />
+		<property name="unmarshallClass" value="com.biosnet.ice.wizard.productos.tablaCincoClaves.model.ValoresCincoClavesVO" />
+	</bean-->
+<!-- Bean declarado para obtener los valores de las claves y los atributos existentes en BD-->	
+	<bean id="OBTIENE_VALORES_CLAVE" parent="tablaCincoClaves-endpoint">
+		<property name="templateName" value="obtieneValoresClave.vm" />
+		<property name="xslName" value="obtieneValoresClave.xsl" />
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>
+	
+	<bean id="OBTIENE_VALORES_ATRIBUTOS_CLAVES" parent="tablaCincoClaves-endpoint">
+		<property name="templateName" value="obtieneValoresAtributos.vm" />
+		<property name="xslName" value="obtieneValoresAtributos.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.catweb.configuracion.producto.tablaCincoClaves.model.DescripcionVeinticincoAtributosVO" />
+	</bean>
+	  
+</beans>

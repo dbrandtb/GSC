@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <bean id="principalEmision" class="mx.com.aon.procesos.emision.web.PrincipalEmisionAction" abstract="false"/>
+    
+	<bean id="emisionAction" class="mx.com.aon.procesos.emision.web.EmisionAction" scope="prototype" parent="principalEmision">
+		<property name="emisionManager" ref="emisionManager" />
+        <property name="catalogManager" ref="catalogManager" />
+        <property name="exportMediator" ref="exportMediator"/>
+        <property name="polizasManager" ref="polizasManager"/>
+       
+	</bean>
+</beans>
+

@@ -1,0 +1,7 @@
+<statements>
+	<statement type="stored" name="PKG_ORDENT.P_SECCIONES_ORDEN" id="seccionesOrden">
+		<outparam id="pv_registro_o" type="CURSOR"></outparam>
+		<outparam id="pv_msg_id_o" type="INTEGER"/>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+	</statement>
+</statements>

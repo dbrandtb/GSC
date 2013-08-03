@@ -1,0 +1,160 @@
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+
+	<include file="struts-default.xml" />
+
+	<package name="personas" extends="json-default" namespace="/personas">
+
+
+    <!--
+    Configuracion del Action con tipo de respuesta JSON, esto generara a partir
+    de los atributos la respuesta en formato JSON para el Reader de ExtJs
+    -->
+    <action name="buscarPersonas" class="listaPersonasAction" method="cmdBuscarPersonas">
+        <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+
+    <action name="guardarDatosGenerales" class="personasAction" method="cmdGuardarDatosGenerales">
+        <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+
+    <action name="guardarDatosDomicilio" class="personasAction" method="cmdGuardarDomicilio">
+        <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+
+    <action name="guardarTelefonos" class="personasAction" method="guardarTelefonos">
+        <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+
+    <action name="borrarTelefono" class="personasAction" method="cmdBorrarTelefono">
+        <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+
+    <action name="borrarDomicilio" class="personasAction" method="cmdBorrarDomicilio">
+        <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+
+    <action name="obtenerPersona" class="personasAction" method="cmdGetPersona">
+        <result type="json">
+	    	<param name="excludeProperties">metaData.*</param>
+        	<param name="ignoreHierarchy">false</param>
+        </result>
+    </action>
+
+    <action name="obtenerTelefonos" class="personasAction" method="cmdObtenerTelefonos">
+        <result type="json">
+	    	<param name="excludeProperties">metaData.*</param>
+        	<param name="ignoreHierarchy">false</param>
+        </result>
+    </action>
+
+    <action name="obtenerDomicilio" class="personasAction" method="cmdObtenerDomicilios">
+        <result type="json">
+	    	<param name="excludeProperties">metaData.*</param>
+        	<param name="ignoreHierarchy">false</param>
+        </result>
+    </action>
+
+    <action name="obtenerCorporativo" class="personasAction" method="cmdObtenerCorporativo">
+        <result type="json">
+	    	<param name="excludeProperties">metaData.*</param>
+        	<param name="ignoreHierarchy">false</param>
+        </result>
+    </action>
+
+    <action name="obtenerDatosAdicionales" class="personasAction" method="cmdObtenerDatosAdicionales">
+    	<!--exception-mapping result="datosAdicionales" exception="javax.servlet.ServletException">iframeDatosAdicionales</exception-mapping>
+    	<exception-mapping result="datosAdicionales" exception="java.sql.SQLException">iframeDatosAdicionales</exception-mapping-->
+    	<!--exception-mapping result="datosAdicionales" exception="mx.com.aon.core.ApplicationException">abmPersonas</exception-mapping-->
+    	<!--exception-mapping result="datosAdicionales" exception="java.lang.Exception">iframeDatosAdicionales</exception-mapping>
+    	<result type="chain" name="datosAdicionales">iframeDatosAdicionales</result-->
+        <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+
+    <action name="guardarDatosAdicionales" class="personasAction" method="cmdGuardarDatosAdicionales">
+        <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+
+    <action name="guardarCorporativo" class="personasAction" method="cmdGuardarCorporativo">
+        <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+
+    <action name="irEditarPersona" class="personasAction" method="cmdirEditarPersona">
+    	<exception-mapping result="getPersona" exception="javax.servlet.ServletException">abmPersonas</exception-mapping>
+    	<exception-mapping result="getPersona" exception="java.sql.SQLException">abmPersonas</exception-mapping>
+    	<!--exception-mapping result="getPersona" exception="mx.com.aon.core.ApplicationException">abmPersonas</exception-mapping-->
+    	<exception-mapping result="getPersona" exception="java.lang.Exception">abmPersonas</exception-mapping>
+    	<result type="chain" name="getPersona">abmPersonas</result>
+    </action>
+
+    <action name="irAgregarPersona" class="personasAction" method="cmdirAgregarPersona">
+    	<exception-mapping result="agregarPersona" exception="javax.servlet.ServletException">abmPersonas</exception-mapping>
+    	<exception-mapping result="agregarPersona" exception="java.sql.SQLException">abmPersonas</exception-mapping>
+    	<!-- exception-mapping result="agregarPersona" exception="mx.com.aon.core.ApplicationException">abmPersonas</exception-mapping-->
+    	<exception-mapping result="agregarPersona" exception="java.lang.Exception">abmPersonas</exception-mapping>
+    	<result type="chain" name="agregarPersona">abmPersonas</result>
+    </action>
+
+	<action name="exportarPersonas" class="listaPersonasAction" method="cmdExportarClick">
+		<result name="success" type="stream">
+			<param name="contentType">${contentType}</param>
+			<param name="inputName">inputStream</param>
+			<param name="contentDisposition">filename="${filename}"</param>
+			<param name="bufferSize">4096</param>
+		</result>
+	</action>  
+
+    <action name="guardarDatosRelaciones" class="personasAction" method="cmdGuardarRelaciones">
+        <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+
+    <action name="obtenerRelaciones" class="personasAction" method="cmdObtenerRelaciones">
+        <result type="json">
+	    	<param name="excludeProperties">metaData.*</param>
+        	<param name="ignoreHierarchy">false</param>
+        </result>
+    </action>
+
+    <action name="borrarPersona" class="personasAction" method="cmdBorrarPersona">
+        <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+
+   <action name="irPersonas" class="personasAction" method="cmdIrPersonasClick">
+            <result type="chain" name="irPantallaPeronas">personas</result>
+    </action>
+ 
+    <action name="obtenerUsuariosPersonas" class="personasAction" method="cmdObtenerUsuarioClave">
+        <result type="json">
+	    	<param name="excludeProperties">metaData.*</param>
+        	<param name="ignoreHierarchy">false</param>
+        </result>
+    </action>
+ 
+ 
+<!-- 
+    <action name="obtenerUsuariosPersonas" class="personasAction" method="cmdObtenerUsuarioClave">
+	    <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>  
+-->        
+    <action name="guardarDatosUsuariosPersonas" class="personasAction" method="cmdGuardaUsuarioClave">
+        <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+    
+    <action name="buscarUsuariosSinPersonas" class="listaPersonasAction" method="cmdBuscarUsuarioSinPersonas">
+        <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+    
+    <action name="guardarUsuariosSinPersonas" class="personasAction" method="cmdGuardaAsociarUsuarioClave">
+        <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+        
+    <action name="guardarCrearUsuariosPersonas" class="personasAction" method="cmdGuardarCrearUsuariosPersonas">
+        <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>        
+        
+        
+	</package>
+
+</struts>

@@ -1,0 +1,21 @@
+<statements>
+    <statement type="stored" name="PACK_NEWALEA_PENTRADA.P_VALIDAR_FECHAS_WORKING" id="valFechasEndosoWorking">
+        <param eval="true" name="pi_CDUNIECO" type="NUMERIC">$!params.get("pi_CDUNIECO")</param>
+        <param eval="true" name="pi_CDRAMO" type="NUMERIC">$!params.get("pi_CDRAMO")</param>
+        <param eval="true" name="pi_ESTADO" type="VARCHAR">$!params.get("pi_ESTADO")</param>
+        <param eval="true" name="pi_NMPOLIZA" type="NUMERIC">$!params.get("pi_NMPOLIZA")</param>
+        <param eval="true" name="pi_CDTIPSUPW||||||||||||||||||" type="NUMERIC">$!params.get("pi_CDTIPSUPW")</param>
+        <inoutparam eval="true" name="p_FECHA" id="p_FECHA" type="VARCHAR">$!params.get("p_FECHA")</inoutparam>
+        <inoutparam eval="true" name="p_HORA" id="p_HORA" type="VARCHAR">$!params.get("p_HORA")</inoutparam>
+        <inoutparam eval="true" name="p_NMSUPLEM" id="p_NMSUPLEM" type="VARCHAR">$!params.get("p_NMSUPLEM")</inoutparam>
+        <inoutparam eval="true" name="p_NSUPLOGI" id="p_NSUPLOGI" type="VARCHAR">$!params.get("p_NSUPLOGI")</inoutparam>
+        <inoutparam eval="true" name="p_FEINIVAL" id="p_FEINIVAL" type="VARCHAR">$!params.get("p_FEINIVAL")</inoutparam>
+        <inoutparam eval="true" name="p_FEFINVAL" id="p_FEFINVAL" type="VARCHAR">$!params.get("p_FEFINVAL")</inoutparam>
+        <inoutparam eval="true" name="p_HHINIVAL" id="p_HHINIVAL" type="VARCHAR">$!params.get("p_HHINIVAL")</inoutparam>
+        <inoutparam eval="true" name="p_HHFINVAL" id="p_HHFINVAL" type="VARCHAR">$!params.get("p_HHFINVAL")</inoutparam>
+        <inoutparam eval="true" name="p_SWANULA" id="p_SWANULA" type="VARCHAR">$!params.get("p_SWANULA")</inoutparam>
+        <outparam id="po_CDERROR" type="VARCHAR"/>
+        <outparam id="po_DSERROR" type="VARCHAR"/>
+        <outparam id="po_TIPOERROR" type="VARCHAR"/>
+    </statement>
+</statements>

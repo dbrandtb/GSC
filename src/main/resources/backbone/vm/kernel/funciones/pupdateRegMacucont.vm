@@ -1,0 +1,10 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_FUNCIONES.P_Update_Registro_Macucont" id="pupdateRegMacucont">
+		<param eval="true" name="gblPlan" type="VARCHAR">$!params.get("piCdplan")</param>
+		<param eval="true" name="gblPerpla" type="VARCHAR">$!params.get("piCdperpla")</param>
+		<param eval="true" name="gblContre" type="VARCHAR">$!params.get("piCdcontre")</param>
+		<param eval="true" name="gblReins" type="VARCHAR">$!params.get("piNmreins")</param>
+		<param eval="true" name="importeDep" type="NUMERIC">$!params.get("piImpordep")</param>
+		<param eval="true" name="importePreliq" type="NUMERIC">$!params.get("piImporpre")</param>
+	</statement>
+</statements>

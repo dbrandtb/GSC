@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<statements>
+
+ <statement type="stored" name="PKG_WIZARD.p_inserttvabdkey" id="pInsertTvabdKey">
+  <param eval="true" name="PV_CDEXPRES_I" type="NUMERIC">$!params.CDEXPRES</param>
+  <param eval="true" name="PV_CDVARIAB_I" type="VARCHAR"><![CDATA[$!params.CDVARIABLE]]></param>
+  <param eval="true" name="PV_OTEXPRES_I" type="VARCHAR"><![CDATA[$!params.EXPRESION]]></param>
+  <param eval="true" name="PV_SWRECALC_I" type="VARCHAR"><![CDATA[$!params.RECALCULAR]]></param>
+  <param eval="true" name="PV_OTSECUEN_I" type="VARCHAR"><![CDATA[$!params.CODIGO_SECUENCIA]]></param>
+  <param eval="true" name="PV_OTTIPORG_I" type="VARCHAR"><![CDATA[$!params.OTTIPORG]]></param>
+  <param eval="true" name="PV_OTTIPEXP_I" type="VARCHAR"><![CDATA[$!params.OTTIPEXP]]></param>
+  <param eval="true" name="pv_cdexpres_key_i" type="VARCHAR"><![CDATA[$!params.CODIGO_EXPRESION_KEY]]></param>
+  
+  <outparam id="pv_msg_id_o" type="NUMERIC"/>  
+  <outparam id="pv_title_o" type="VARCHAR"/>
+</statement>
+
+</statements>

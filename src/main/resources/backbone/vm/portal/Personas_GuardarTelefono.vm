@@ -1,0 +1,13 @@
+<statements>
+	<statement type="stored" name="PKG_PERSONA.P_GUARDA_TELEFONO" id="guardaTelefono">
+        <param eval="true" name="pi_cdperson" type="NUMERIC">$!params.get("codigoPersona")</param>
+        <param eval="true" name="pi_cdtiptel" type="VARCHAR">$!params.get("codigoTipoTelefono")</param>
+        <param eval="true" name="pi_nmordtel" type="NUMERIC">$!params.get("numOrden")</param>
+        <param eval="true" name="pi_cdarea" type="NUMERIC">$!params.get("codigoArea")</param>
+        <param eval="true" name="pi_nmtelefo" type="VARCHAR">$!params.get("Numero")</param>
+        <param eval="true" name="pi_nmextens" type="NUMERIC">$!params.get("Extension")</param>
+
+        <outparam id="po_msg_id" type="NUMERIC"></outparam>
+        <outparam id="po_title" type="VARCHAR"></outparam>
+	</statement>
+</statements>

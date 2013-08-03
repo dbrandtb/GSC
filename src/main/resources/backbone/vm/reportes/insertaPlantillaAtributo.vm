@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_REPORTES.P_INSERTA_TATRIPLA" id="insertPlantillaAtributo">
+
+	    <param eval="true" name="p_ncdplanti" type="NUMERIC"><![CDATA[$!params.get("cdPlantilla")]]></param>
+	    <param eval="true" name="p_vdsatribu" type="VARCHAR"><![CDATA[$!params.get("dsAtributo")]]></param>
+	    <param eval="true" name="p_vswformat" type="VARCHAR"><![CDATA[$!params.get("formato")]]></param>
+	    <param eval="true" name="p_nnmlmin" type="NUMERIC"><![CDATA[$!params.get("minimo")]]></param>
+	    <param eval="true" name="p_nnmlmax" type="NUMERIC"><![CDATA[$!params.get("maximo")]]></param>
+	    <param eval="true" name="p_vottabval" type="VARCHAR"><![CDATA[$!params.get("apoyo")]]></param>
+
+		<outparam id="pv_existe_i" type="NUMERIC"/>
+        <outparam id="pv_title_o" type="VARCHAR"/>
+		<outparam id="pv_msg_id_o" type="NUMERIC"/>
+	</statement>
+</statements>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<!-- Bean con propiedades utilizadas por las listas de los grids -->
+	<bean id="abstractListAction" class="mx.com.aon.portal.web.AbstractListAction" abstract="true" >
+	</bean>
+
+    <!--
+    Action asociado por inyeccion al archivo de conf. de struts-configmenu para el servicio de consulta
+    para los datos de la tabla paginada de Configuracion de Menu.
+    -->
+    <bean id="configuraMenuAction" class="mx.com.aon.portal.web.configmenu.ConfiguraMenuAction" scope="prototype" parent="abstractListAction">
+        <property name="configMenuManager" ref="configMenuManager"/>
+    </bean>
+    
+    <!--
+    Action asociado por inyeccion al archivo de conf de struts-configmenu para el servicio de agregar, 
+    cargar y editar una opcion de la tabla de Configuracion de Menu. 
+     -->    
+    <bean id="agregarOpcionAction" class="mx.com.aon.portal.web.configmenu.AgregarOpcionAction" scope="prototype">
+        <property name="configMenuManager" ref="configMenuManager"/>
+        <property name="catalogManager" ref="catalogManager" />
+    </bean>
+</beans>

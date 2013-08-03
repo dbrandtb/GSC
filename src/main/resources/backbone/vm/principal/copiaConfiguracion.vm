@@ -1,0 +1,12 @@
+<statements>
+	<statement type="stored" name="PKG_CONFPAGINA.P_COPIA_CONFIGURA" id="copiaConfigura">
+		<param eval="true" name="PV_CDELEMENTO_I" type="NUMERIC">$!params.idCliente</param>
+		<param eval="true" name="PV_CDROL_I" type="VARCHAR">$!params.idRol</param>
+		<param eval="true" name="PV_CDELEMENTO_NVO_I" type="NUMERIC">$!params.idClienteNvo</param>
+		<param eval="true" name="PV_CDROL_NUEVO_I" type="VARCHAR">$!params.idRolNvo</param>
+		<outparam id="PV_ACT_PADRE_O" type="NUMERIC"/>
+		<outparam id="PV_ACT_HIJO_O" type="NUMERIC"/>
+		<outparam id="PV_MSG_ID_O" type="NUMERIC"/>		
+		<outparam id="PV_TITLE_O" type="VARCHAR"/>
+	</statement>
+</statements>

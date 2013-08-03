@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_ALERTAS.P_GUARDA_ALERTA" id="guardaAlertasUsuario">
+       <param eval="true" name="pv_cdidunico_i" type="NUMERIC">$!params.get("cdIdUnico")</param>  	   
+       <param eval="true" name="pv_cdidconfalerta_i" type="NUMERIC">$!params.get("cdIdConfAlerta")</param>  	   
+
+       <param eval="true" name="pv_cve_aseguradora_i" type="NUMERIC">$!params.get("cdUniEco")</param>  	   
+       <param eval="true" name="pv_poliza_i" type="NUMERIC">$!params.get("nmPoliza")</param>  	   
+       <param eval="true" name="pv_recibo_i" type="NUMERIC">$!params.get("nmRecibo")</param>  	   
+       <param eval="true" name="pv_cve_proceso_i" type="NUMERIC">$!params.get("cdProceso")</param>  	   
+       <param eval="true" name="pv_fec_ult_envio_i" type="VARCHAR">$!params.get("feUltimoEvento")</param>  	   
+       <param eval="true" name="pv_fec_sig_envio_i" type="VARCHAR">$!params.get("feSiguienteEvento")</param>  	   
+       <param eval="true" name="pv_fec_vencimiento_i" type="VARCHAR">$!params.get("feVencimiento")</param>  	   
+       <param eval="true" name="pv_correo_i" type="VARCHAR">$!params.get("dsCorreo")</param>  	   
+       <param eval="true" name="pv_mensaje_i" type="VARCHAR"><![CDATA[$!params.get("dsMensaje")]]></param>  	   
+       <param eval="true" name="pv_mandar_pantalla_i" type="NUMERIC">$!params.get("fgMandarPantalla")</param>  	   
+       <param eval="true" name="pv_perm_pantalla_i" type="NUMERIC">$!params.get("fgPermanecePantalla")</param>  	   
+       <param eval="true" name="pv_cve_frecuencia_i" type="NUMERIC">$!params.get("nmFrecuencia")</param>  	   
+       <param eval="true" name="pv_cdelemento_i" type="NUMERIC">$!params.get("cdElemento")</param>  	   
+       <param eval="true" name="pv_cdusuario_i" type="VARCHAR">$!params.get("cdUsuario")</param>  	   
+
+  	   <!--outparam id="pv_registro_o" type="NUMERIC"/-->
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

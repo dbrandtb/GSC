@@ -1,0 +1,11 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_UTILITY.PL_VAL" id="valValoresAtributos">
+		<param eval="true" name="pi_TABLA" type="VARCHAR">$!params.get("piTabla")</param>
+		<param eval="true" name="pi_CODIGO" type="VARCHAR">$!params.get("piCodigo")</param>
+       <inoutparam eval="true" name="p_DESCRIP" id="p_DESCRIP" type="VARCHAR">$!params.get("pDsatribu")</inoutparam>
+		<param eval="true" name="pi_PARAM" type="VARCHAR">$!params.get("piCdparam")</param>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

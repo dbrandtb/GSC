@@ -1,0 +1,15 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_PERSONAS.P_VALIDACIONES_FUSION" id="valFusion">
+		<param eval="true" name="pi_CDTIPIDE" type="VARCHAR">$!params.get("pi_CDTIPIDE")</param>
+		<param eval="true" name="pi_CDIDEPER" type="VARCHAR">$!params.get("pi_CDIDEPER")</param>
+		<param eval="true" name="pi_DSNOMBRE" type="VARCHAR">$!params.get("pi_DSNOMBRE")</param>
+		<param eval="true" name="pi_CURP" type="VARCHAR">$!params.get("pi_CURP")</param>
+		<param eval="true" name="pi_CDPOSTAL" type="VARCHAR">$!params.get("pi_CDPOSTAL")</param>
+       <inoutparam eval="true" name="p_CDPAIS" id="p_CDPAIS" type="VARCHAR">$!params.get("p_CDPAIS")</inoutparam>
+		<param eval="true" name="pi_CDCOLONI" type="VARCHAR">$!params.get("pi_CDCOLONI")</param>
+		<param eval="true" name="pi_DSDOMICI" type="VARCHAR">$!params.get("pi_DSDOMICI")</param>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

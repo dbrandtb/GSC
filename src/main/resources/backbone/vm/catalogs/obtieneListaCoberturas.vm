@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
+<statements>
+		
+	<statement type="stored" name="PKG_LISTAS.P_COBERTURAS" id="obtenerCoberturas">
+        	<param eval="true" name="pv_cdramo_i"	type="NUMERIC"><![CDATA[$!params.CD_RAMO]]></param>
+        	<param eval="true" name="pv_cdplan_i"	type="VARCHAR"><![CDATA[$!params.CD_PLAN]]></param>
+        	<param eval="true" name="pv_cdtipsit_i"	type="VARCHAR"><![CDATA[$!params.CD_TIPSIT]]></param>
+        	
+        	<outparam id="po_registro" type="CURSOR"/>		
+			<outparam id="po_msg_id" type="NUMERIC"/>
+        	<outparam id="po_title" type="VARCHAR"/>
+	</statement>	
+	    
+</statements>

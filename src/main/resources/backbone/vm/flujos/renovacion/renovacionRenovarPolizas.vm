@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
+<statements>
+#foreach($parametrosRenovar  in  $params.COPIA_TARIFICA_MTA)
+	<statement type="stored" name="PKG_RENOVA.P_COPIA_TARIFICA_MTA" id="renovacionCopiaTarificaMta">
+		<param eval="true" name="pv_cdunieco_i" type="NUMERIC">1</param>
+		<param eval="true" name="pv_cdramo_i" type="NUMERIC"><![CDATA[$parametrosRenovar.cdRamo]]></param>
+		<param eval="true" name="pv_estado_i" type="VARCHAR"><![CDATA[$parametrosRenovar.estado]]></param>
+		<param eval="true" name="pv_nmpoliza_i" type="NUMERIC"><![CDATA[$parametrosRenovar.nmPoliza]]></param>
+		<param eval="true" name="pv_nmsituac_i" type="NUMERIC"><![CDATA[$parametrosRenovar.nmSituac]]></param>
+		<param eval="true" name="pv_cdusuari_i" type="VARCHAR"><![CDATA[$!params.get("CD_USUARIO")]]></param>
+		<param eval="true" name="pv_cdelemen_i" type="NUMERIC"><![CDATA[$parametrosRenovar.cdCliente]]></param>
+		<param eval="true" name="pv_cdidioma_i" type="NUMERIC"><![CDATA[$!params.get("CD_IDIOMA")]]></param>
+		<outparam id="pv_msg_id_o" type="NUMERIC"/>
+		<outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+#end
+</statements>

@@ -1,0 +1,9 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_PENTRADA.P_VALIDA_TIPO_ENDOSO" id="valTipoEndoso">
+		<param eval="true" name="pi_CDRAMO" type="NUMERIC">$!params.get("pi_CDRAMO")</param>
+		<param eval="true" name="pi_CDTIPSUP" type="NUMERIC">$!params.get("pi_CDTIPSUP")</param>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

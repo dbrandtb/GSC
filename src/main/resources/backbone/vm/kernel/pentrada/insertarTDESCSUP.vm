@@ -1,0 +1,19 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_DATOS_GENERALES.P_INSERTA_TDESCSUP" id="insertarTDESCSUP">
+		<param eval="true" name="pi_CDUNIECO" type="NUMERIC">$params.get("pi_CDUNIECO")</param>
+		<param eval="true" name="pi_CDRAMO" type="NUMERIC">$params.get("pi_CDRAMO")</param>
+		<param eval="true" name="pi_ESTADO" type="VARCHAR">$params.get("pi_ESTADO")</param>
+		<param eval="true" name="pi_NMPOLIZA" type="NUMERIC">$params.get("pi_NMPOLIZA")</param>
+		<param eval="true" name="pi_NSUPLOGI" type="NUMERIC">$params.get("pi_NSUPLOGI")</param>
+		<param eval="true" name="pi_CDTIPSUP" type="NUMERIC">$params.get("pi_CDTIPSUP")</param>
+		<param eval="true" name="pi_FEEMISIO" type="DATE">$params.get("pi_FEEMISIO")</param>
+		<param eval="true" name="pi_NMSOLICI" type="NUMERIC">$params.get("pi_NMSOLICI")</param>
+		<param eval="true" name="pi_FESOLICI" type="DATE">$params.get("pi_FESOLICI")</param>
+		<param eval="true" name="pi_FEREFERE" type="DATE">$params.get("pi_FEREFERE")</param>
+		<param eval="true" name="pi_CDSEQPOL" type="NUMERIC">$params.get("pi_CDSEQPOL")</param>
+		<param eval="true" name="pi_SWTEMPOR" type="VARCHAR">$params.get("pi_SWTEMPOR")</param>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

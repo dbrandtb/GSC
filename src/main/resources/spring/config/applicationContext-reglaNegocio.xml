@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+	
+	<bean id="ReglaNegocioManager" 
+		  class="mx.com.aon.catweb.configuracion.producto.service.impl.ReglaNegocioManagerImpl" parent="abstractManagerBean">
+ 		<property name="endpoints">
+			<map>    
+				<!--  Insert reglas de negocio -->
+        		<entry key="INSERTAR_VARIABLE_TEMPORAL">
+            		<ref bean="INSERTAR_VARIABLE_TEMPORAL"/>            
+            	</entry>
+            	<entry key="INSERTAR_VALIDACION">
+            		<ref bean="INSERTAR_VALIDACION"/>            
+            	</entry>
+            	<entry key="INSERTAR_CONCEPTO_TARIFICACION">
+            		<ref bean="INSERTAR_CONCEPTO_TARIFICACION"/>            
+            	</entry>
+            	<entry key="INSERTAR_AUTORIZACION">
+            		<ref bean="INSERTAR_AUTORIZACION"/>            
+            	</entry>
+            	<entry key="INSERTAR_CONDICION">
+            		<ref bean="INSERTAR_CONDICION"/>            
+            	</entry>
+            	
+            	<!--  Consulta de reglas de negocio -->
+            	<entry key="OBTENER_VARIABLE_TEMPORAL">
+            		<ref bean="OBTENER_VARIABLE_TEMPORAL"/>            
+            	</entry>
+            	<entry key="OBTENER_VALIDACION">
+            		<ref bean="OBTENER_VALIDACION"/>            
+            	</entry>
+            	<entry key="OBTENER_CONCEPTO_TARIFICACION">
+            		<ref bean="OBTENER_CONCEPTO_TARIFICACION"/>            
+            	</entry>
+            	<entry key="OBTENER_AUTORIZACION">
+            		<ref bean="OBTENER_AUTORIZACION"/>            
+            	</entry>
+            	<entry key="OBTENER_CONDICION">
+            		<ref bean="OBTENER_CONDICION"/>            
+            	</entry>
+            	
+            	<entry key="OBTIENE_TIPO_CONCEPTOS">
+            		<ref bean="OBTIENE_TIPO_CONCEPTOS"/>
+            	</entry>
+            	
+            	<!-- Variables temporales asociadas al producto -->
+            	<entry key="OBTIENE_VARIABLES_TEMPORALES_PRODUCTO">
+            		<ref bean="OBTIENE_VARIABLES_TEMPORALES_PRODUCTO"/>
+            	</entry>
+            	<entry key="ASOCIAR_VARIABLES_TEMPORALES_PRODUCTO">
+            		<ref bean="ASOCIAR_VARIABLES_TEMPORALES_PRODUCTO"/>
+            	</entry>
+            	<entry key="DESASOCIAR_VARIABLES_TEMPORALES_PRODUCTO">
+            		<ref bean="DESASOCIAR_VARIABLES_TEMPORALES_PRODUCTO"/>
+            	</entry>
+            	
+            	<entry key="ELIMINA_VAR_TMP">
+            		<ref bean="ELIMINA_VAR_TMP"/>
+            	</entry>
+            	
+        	</map>
+    	</property>
+	</bean>		
+</beans>

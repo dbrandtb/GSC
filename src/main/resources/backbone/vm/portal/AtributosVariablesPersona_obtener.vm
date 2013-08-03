@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+    <statement type="stored" name="PKG_WIZARD.P_ATRIBVARROLINC" id="pAtribVarRolInc">
+        
+        <outparam id="pv_registro_o" type="CURSOR"></outparam>
+        
+        <outparam id="pv_msg_id_o" type="NUMERIC"></outparam>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+    </statement>
+</statements>

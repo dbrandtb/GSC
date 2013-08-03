@@ -1,0 +1,11 @@
+<statements>
+	<statement type="stored" name="PKG_CONFPAGINA.P_OBTIENE_ROL" id="configurarExport">
+		<param eval="true" name="PV_CDCONFIGURA_I" type="NUMERIC">$!params.nombre</param>
+		<param eval="true" name="PV_CDROL_I" type="VARCHAR">$!params.rol</param>
+		<param eval="true" name="PV_CDELEMENTO_I" type="NUMERIC">$!params.cliente</param>
+		<param eval="true" name="PV_DSSECCION_I" type="VARCHAR">$!params.seccion</param>
+		<outparam id="PV_REGISTRO_O" type="CURSOR"/>
+		<outparam id="PV_MSG_ID_O" type="NUMERIC"/>
+		<outparam id="PV_TITLE_O" type="VARCHAR"/>
+	</statement>
+</statements>

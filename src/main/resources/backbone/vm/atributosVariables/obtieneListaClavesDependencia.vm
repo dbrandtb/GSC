@@ -1,0 +1,11 @@
+<statements>
+	<statement type="stored" name="PKG_LISTAS.P_GET_ATRB_TAB_APOYO" id="pvalSituacionExcluidaCoa">
+		<param eval="true" name="PV_CDTABLA_I" type="VARCHAR">$!params.codigoTabla</param>
+		<param eval="true" name="PV_LANGCODE" type="NUMERIC">$!params.langCode</param>
+		
+		<outparam id="PV_REGISTRO_O" type="CURSOR"/>
+		<outparam id="PV_MSG_ID_O" type="NUMERIC"/>		
+		<outparam id="PV_TITLE_O" type="VARCHAR"/>	
+		<outparam id="PV_MSG_TEXT" type="VARCHAR"/>	
+	</statement>
+</statements>

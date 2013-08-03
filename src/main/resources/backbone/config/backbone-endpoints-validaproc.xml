@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+	<bean id="validaproc-endpoints" abstract="true" parent="parent-endpoint-kernel">
+		<property name="templateModule" value="validaproc"/>
+		<property name="xslModule" value="validaproc"/>
+	</bean>
+	<!--PACK_NEWALEA_VALIDAPROC-->
+	<bean id="P_VALIDA_ALEACTP" parent="validaproc-endpoints">
+		<property name="templateName" value="pvalidaALEAACTP.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<!--PACK_NEWALEA_VALIDAPROC-->
+	<bean id="P_VALIDA_ALEAJSUP" parent="validaproc-endpoints">
+		<property name="templateName" value="pvalidaALEAJSUP.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<!--PACK_NEWALEA_VALIDAPROC-->
+	<bean id="P_VALIDA_BBVLCOTI" parent="validaproc-endpoints">
+		<property name="templateName" value="pvalidaBBVLCOTI.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<!--PACK_NEWALEA_VALIDAPROC-->
+	<bean id="P_VALIDA_BBVTARXINC" parent="validaproc-endpoints">
+		<property name="templateName" value="pvalidaBBVTARXINC.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<!--PACK_NEWALEA_VALIDAPROC-->
+	<bean id="P_VALIDA_TARIFICACG" parent="validaproc-endpoints">
+		<property name="templateName" value="pvalidaTarificaCG.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+</beans>

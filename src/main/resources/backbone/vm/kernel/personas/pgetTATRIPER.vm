@@ -1,0 +1,8 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_PERSONAS.P_GET_TATRIPER" id="pgetTATRIPER">
+		<outparam id="rc_cursor" type="CURSOR"/>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

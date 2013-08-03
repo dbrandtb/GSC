@@ -1,0 +1,9 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_PERSONAS.P_VALIDA_CDPOSTAL" id="valCodPostal">
+		<param eval="true" name="pi_CDPOSTAL" type="VARCHAR">$!params.get("pi_CDPOSTAL")</param>
+       <inoutparam eval="true" name="p_CDPAIS" id="p_CDPAIS" type="VARCHAR">$!params.get("p_CDPAIS")</inoutparam>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

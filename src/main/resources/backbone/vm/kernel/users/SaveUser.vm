@@ -1,0 +1,6 @@
+<statements>
+	<statement id="save" type="insert">
+		INSERT INTO APP_USER (ID, FIRST_NAME, LAST_NAME, BIRTHDAY) 
+		VALUES (SEQUSER.NEXTVAL, '$params.firstName', '$params.LastName', TO_DATE('$params.birthday', 'MM/DD/YYYY'))
+	</statement>
+</statements>

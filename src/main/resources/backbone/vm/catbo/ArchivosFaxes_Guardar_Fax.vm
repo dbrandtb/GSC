@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_CATBO.P_GUARDA_MFAXE" id="guardarFax">
+	   <param eval="true" name="pv_nmcaso_i" type="VARCHAR"><![CDATA[$!params.get("pv_nmcaso_i")]]></param>
+	   <param eval="true" name="pv_nmfax_i" type="VARCHAR"><![CDATA[$!params.get("pv_nmfax_i")]]></param>
+       <param eval="true" name="pv_cdtipoar_i" type="VARCHAR"><![CDATA[$!params.get("pv_cdtipoar_i")]]></param>
+       <param eval="true" name="pv_feingreso_i" type="VARCHAR"><![CDATA[$!params.get("pv_feingreso_i")]]></param>
+       <param eval="true" name="pv_ferecepcion_i" type="VARCHAR"><![CDATA[$!params.get("pv_ferecepcion_i")]]></param>
+       <param eval="true" name="pv_nmpoliex_i" type="VARCHAR"><![CDATA[$!params.get("pv_nmpoliex_i")]]></param>
+       <param eval="true" name=" pv_cdusuari_i" type="NUMERIC"><![CDATA[$!params.get("pv_cdusuari_i")]]></param>
+       <param eval="true" name="pv_blarchivo_i" type="VARCHAR"><![CDATA[$!params.get("pv_blarchivo_i")]]></param>
+       	     	   
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>
+ 
+

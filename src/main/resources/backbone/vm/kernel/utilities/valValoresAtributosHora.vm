@@ -1,0 +1,8 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_UTILITY.PL_VALIDA_HORA" id="valValoresAtributosHora">
+		<param eval="true" name="pi_hora" type="VARCHAR">$!params.get("piHora")</param>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

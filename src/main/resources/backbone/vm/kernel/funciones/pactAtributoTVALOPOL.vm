@@ -1,0 +1,6 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_FUNCIONES.P_Act_Atributo_Tvalopol" id="pactAtributoTVALOPOL">
+		<param eval="true" name="valor" type="VARCHAR">$!params.get("piValor")</param>
+		<param eval="true" name="rowid2" type="VARCHAR">$!params.get("piRowid")</param>
+	</statement>
+</statements>

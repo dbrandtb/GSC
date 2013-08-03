@@ -1,0 +1,33 @@
+<statements>
+	<statement type="stored" name="PKG_WIZARD.P_INSERTATRIBCOB" id="pInsertAtribCob">
+		<param eval="true" name="PV_CDRAMO_I" type="NUMERIC">$!params.cdRamo</param>
+		<param eval="true" name="PV_CDTIPSIT_I" type="VARCHAR">$!params.codigoSituacion</param>
+		<param eval="true" name="PV_CDGARANT_I" type="VARCHAR">$!params.codigoGarantia</param>
+		<param eval="true" name="PV_CDATRIBU_I" type="NUMERIC">$!params.claveCampo</param>
+		<param eval="true" name="PV_CDTABLA_I" type="VARCHAR">$!params.cdTabla</param>
+		<param eval="true" name="PV_CDFORMATO_I" type="VARCHAR">$!params.cdFormato</param>
+		<param eval="true" name="PV_ENDOSOS_I" type="VARCHAR">$!params.endosos</param>
+		<param eval="true" name="PV_EMISION_I" type="VARCHAR">$!params.emision</param>
+		<param eval="true" name="PV_MINIMO_I" type="NUMERIC">$!params.minimo</param>
+		<param eval="true" name="PV_MAXIMO_I" type="NUMERIC">$!params.maximo</param>
+		<param eval="true" name="PV_SWOBLIGA_I" type="VARCHAR">$!params.obligatorio</param>		
+		<param eval="true" name="PV_SWCOTIZA_I" type="VARCHAR">$!params.cotizador</param>
+		<param eval="true" name="PV_SWDATCOM_I" type="VARCHAR">$!params.datoComplementario</param>
+		<param eval="true" name="PV_SWCOMOBL_I" type="VARCHAR">$!params.obligatorioComplementario</param>
+		<param eval="true" name="PV_SWCOMUPD_I" type="VARCHAR">$!params.modificableComplementario</param>
+		<param eval="true" name="PV_SWENDOSO_I" type="VARCHAR">$!params.apareceEndoso</param>
+		<param eval="true" name="PV_SWENDOBL_I" type="VARCHAR">$!params.obligatorioEndoso</param>				
+		<param eval="true" name="PV_SWINSERT_I" type="VARCHAR">$!params.inserta</param>		
+		<param eval="true" name="PV_DSATRIBU_I" type="VARCHAR">$!params.descripcion</param>		
+		<param eval="true" name="PV_CDEXPRES_I" type="NUMERIC">$!params.codigoExpresion</param>
+		
+		<param eval="true" name="pv_cdatribu_padre_i" type="NUMERIC">$!params.codigoPadre</param>				
+		<param eval="true" name="pv_nmorden_i" type="NUMERIC">$!params.orden</param>		
+		<param eval="true" name="pv_nmagrupa_i" type="NUMERIC">$!params.agrupador</param>		
+		<param eval="true" name="pv_cdcondicvis_i" type="VARCHAR">$!params.codigoCondicion</param>
+		<param eval="true" name="pv_SWTARIFI_i" type="VARCHAR">$!params.retarificacion</param>
+		
+		<outparam id="pv_msg_id_o" type="NUMERIC"/>
+		<outparam id="pv_title_o" type="VARCHAR"/>		
+</statement>
+</statements>

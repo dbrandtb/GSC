@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_WIZARD.P_GUARDA_TATRIAGE" id="guardarAtributosVariablesAgentes">
+       <param eval="true" name="pv_cdatribu_i" type="NUMERIC">$!params.get("cdAtribu")</param>
+       <param eval="true" name="pv_dsatribu_i" type="VARCHAR"><![CDATA[$!params.get("dsAtribu")]]></param>
+       <param eval="true" name="pv_swformat_i" type="VARCHAR"><![CDATA[$!params.get("swFormat")]]></param>
+       <param eval="true" name="pv_nmlmax_i" type="NUMERIC">$!params.get("nmlMax")</param>
+       <param eval="true" name="pv_nmlmin_i" type="NUMERIC">$!params.get("nmlMin")</param>
+       <param eval="true" name="pv_swobliga_i" type="VARCHAR"><![CDATA[$!params.get("swObliga")]]></param>
+  	   <param eval="true" name="pv_ottabval_i" type="VARCHAR"><![CDATA[$!params.get("otTabVal")]]></param>	
+  	   <param eval="true" name="pv_gb_swformat_i" type="VARCHAR"><![CDATA[$!params.get("gbSwFormat")]]></param>	  		
+  		
+  		<outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

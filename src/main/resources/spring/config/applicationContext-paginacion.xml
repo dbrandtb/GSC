@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+	
+	<!-- Bean al que se le agregaran claves para paginar datos 
+	-->
+	<bean id="pagerManager" class="mx.com.aon.portal.service.impl.PagerManagerImpl">
+        <property name="endpoints">
+            <map>
+            	<entry key="OBTIENE_OPCIONES_CONFIGMENU"><ref bean="OBTIENE_OPCIONES_CONFIGMENU" /></entry>
+            	<entry key="BUSCA_CONJUNTOS_PANTALLAS"><ref bean="BUSCA_CONJUNTOS_PANTALLAS" /></entry>
+                
+                <entry key="OBTIENE_PROCESOSXCTA">
+                    <ref bean="OBTIENE_PROCESOSXCTA" />
+                </entry>
+                
+                <entry key="OBTIENE_PASOSXCTA">
+                    <ref bean="OBTIENE_PASOSXCTA"/>
+                </entry>  
+            </map>
+        </property>
+    </bean>
+
+</beans>
+

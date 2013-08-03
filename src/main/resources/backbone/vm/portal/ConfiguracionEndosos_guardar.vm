@@ -1,0 +1,11 @@
+<statements>
+	<statement type="stored" name="PKG_ENDOSOS.P_GUARDA_TTIPSUPL" id="pGuardaTTipSupl">
+			   
+       <param eval="true" name="pv_cdtipsup_i" type="NUMERIC">$!params.get("pv_cdtipsup_i")</param>
+       <param eval="true" name="pv_dstipsup_i" type="VARCHAR">$!params.get("pv_dstipsup_i")</param>
+       <param eval="true" name="pv_swtarifi_i" type="VARCHAR">$!params.get("pv_swtarifi_i")</param>
+       
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

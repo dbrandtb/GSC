@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
+<statements>
+    
+    <statement type='stored' name="PKG_CONFIGURA.P_OBTIENE_EJECUTIVOS" id="pObtenerEjecutivosCuenta">
+     
+        <param eval="true" name="P_CLIENTE" type="VARCHAR"><![CDATA[$!params.get("dsNombre")]]></param>
+        <param eval="true" name="P_AGENTE" type="VARCHAR"><![CDATA[$!params.get("nomAgente")]]></param>
+         <param eval="true" name="P_GRUPO" type="VARCHAR"><![CDATA[$!params.get("desGrupo")]]></param>
+         
+        <outparam id="pv_registro_o" type="CURSOR"/>
+        <outparam id="pv_msg_id_o" type="NUMERIC"></outparam>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+        
+    </statement>
+    
+</statements>

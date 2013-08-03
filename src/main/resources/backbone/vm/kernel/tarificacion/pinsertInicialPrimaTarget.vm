@@ -1,0 +1,12 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_TARIFICACION.P_INSERT_INICIAL" id="pinsertInicialPrimaTarget">
+		<param eval="true" name="pi_NMSITUAC" type="NUMERIC">$!params.get("pi_NMSITUAC")</param>
+		<param eval="true" name="pi_NMSUPLEM" type="VARCHAR">$!params.get("pi_NMSUPLEM")</param>
+		<param eval="true" name="pi_CDAGRUPA" type="NUMERIC">$!params.get("pi_CDAGRUPA")</param>
+		<param eval="true" name="pi_PRMBASE" type="NUMERIC">$!params.get("pi_PRMBASE")</param>
+		<param eval="true" name="pi_PRMTARG" type="NUMERIC">$!params.get("pi_PRMTARG")</param>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

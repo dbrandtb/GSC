@@ -1,0 +1,11 @@
+<statements>
+	<statement type="stored" name="PKG_WIZARD.P_BORRA_TATRIROL" id="pEliminarAtribVarRol">
+		<param eval="true" name="PV_CDRAMO_I" type="NUMERIC">$!params.cdRamo</param>
+		<param eval="true" name="PV_CDROL_I" type="VARCHAR">$!params.codigoRol</param>
+		<param eval="true" name="PV_CDATRIBU_I" type="NUMERIC">$!params.codigoAtributoVariable</param>
+		
+		<outparam id="pv_msg_id_o" type="NUMERIC"/>
+		<outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>
+

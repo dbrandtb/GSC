@@ -1,0 +1,19 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_ACTUALIZA_DATOS.P_ACT_MPOLICOA" id="actualizaMPOLICOA">
+		<param eval="true" name="pi_CDUNIECO" type="NUMERIC">$!params.get("pi_CDUNIECO")</param>
+		<param eval="true" name="pi_CDRAMO" type="NUMERIC">$!params.get("pi_CDRAMO")</param>
+		<param eval="true" name="pi_ESTADO" type="VARCHAR">$!params.get("pi_ESTADO")</param>
+		<param eval="true" name="pi_NMPOLIZA" type="NUMERIC">$!params.get("pi_NMPOLIZA")</param>
+		<param eval="true" name="pi_NMSUPLEM" type="VARCHAR">$!params.get("pi_NMSUPLEM")</param>
+		<param eval="true" name="pi_CDCIA" type="VARCHAR">$!params.get("pi_CDCIA")</param>
+		<param eval="true" name="pi_CDTIPCOA" type="VARCHAR">$!params.get("pi_CDTIPCOA")</param>
+		<param eval="true" name="pi_STATUS" type="VARCHAR">$!params.get("pi_STATUS")</param>
+		<param eval="true" name="pi_SWABRIDO" type="VARCHAR">$!params.get("pi_SWABRIDO")</param>
+		<param eval="true" name="pi_PORCPART" type="NUMERIC">$!params.get("pi_PORCPART")</param>
+		<param eval="true" name="pi_CDMODELO" type="NUMERIC">$!params.get("pi_CDMODELO")</param>
+		<param eval="true" name="pi_ACCION" type="VARCHAR">$!params.get("pi_ACCION")</param>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

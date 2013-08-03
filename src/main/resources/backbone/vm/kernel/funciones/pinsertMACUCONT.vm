@@ -1,0 +1,11 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_FUNCIONES.P_Crea_Registro_Macucont" id="pinsertMACUCONT">
+		<param eval="true" name="gblPlan" type="VARCHAR">$!params.get("piPlan")</param>
+		<param eval="true" name="gblPerpla" type="VARCHAR">$!params.get("piPerpla")</param>
+		<param eval="true" name="gblContre" type="VARCHAR">$!params.get("piContre")</param>
+		<param eval="true" name="gblReins" type="VARCHAR">$!params.get("piReins")</param>
+		<param eval="true" name="tasa" type="VARCHAR">$!params.get("piTasa")</param>
+		<param eval="true" name="gblMes" type="VARCHAR">$!params.get("piMes")</param>
+		<param eval="true" name="gblAnno" type="VARCHAR">$!params.get("piAnno")</param>
+	</statement>
+</statements>

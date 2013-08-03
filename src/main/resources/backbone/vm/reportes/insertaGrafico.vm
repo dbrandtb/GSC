@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_REPORTES.P_GUARDA_MGRAFICO" id="insertGrafico">   
+
+	    <param eval="true" name="p_ncdreporte_i" type="VARCHAR"><![CDATA[$!params.get("cdReporte")]]></param>
+	    <param eval="true" name="p_vnmgrafico_i" type="VARCHAR"><![CDATA[$!params.get("nombreGrafico")]]></param>
+	    <param eval="true" name="p_vtipo_i" type="VARCHAR"><![CDATA[$!params.get("tipo")]]></param>
+        <outparam id="pv_title_o" type="VARCHAR"/> 
+		<outparam id="pv_msg_id_o" type="NUMERIC"/>
+	</statement>
+</statements>

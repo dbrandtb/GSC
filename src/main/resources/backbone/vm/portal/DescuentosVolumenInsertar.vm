@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_DSCTO.P_GUARDA_VOLUMEN" id="guardaVolumen">
+        
+        <outparam eval="true" id="pv_cddscto_io" type="NUMERIC"></outparam>
+        
+        <param eval="true" name="pv_dsnombre_i" type="VARCHAR"><![CDATA[$!params.get("dsNombre")]]></param>
+        <param eval="true" name="pv_cdtipo_i" type="NUMERIC">$!params.get("cdtipo")</param>
+        <param eval="true" name="pv_cdelemento_i" type="NUMERIC">$!params.get("cdelemento")</param>
+        <param eval="true" name="pv_cdperson_i" type="NUMERIC">$!params.get("cdperson")</param>
+        <param eval="true" name="pv_fgacumul_i" type="NUMERIC">$!params.get("fgacumul")</param>
+        <param eval="true" name="pv_cdestado_i" type="NUMERIC">$!params.get("cdestado")</param>
+        
+        <outparam id="pv_msg_id_o" type="NUMERIC"></outparam>
+        <outparam id="pv_title_o" type="VARCHAR"/>		
+	
+	</statement>
+</statements>

@@ -1,0 +1,12 @@
+<statements>
+	<statement type="stored" name="PKG_ENDOSOS.P_EXISTE_CAMBIO" id="valExisteCambio">
+		<param eval="true" name="pv_cdunieco_i" type="NUMERIC">$!params.cdunieco</param>
+		<param eval="true" name="pv_cdramo_i" type="NUMERIC">$!params.cdramo</param>
+		<param eval="true" name="pv_estado_i" type="VARCHAR">$!params.estado</param>
+		<param eval="true" name="pv_nmpoliza_i" type="NUMERIC">$!params.nmpoliza</param>
+		<param eval="true" name="pv_nmsuplem_i" type="VARCHAR">$!params.nmsuplem</param>
+		<outparam id="pv_existe_i" type="NUMERIC"/>
+		<outparam id="pv_msg_id_o" type="VARCHAR"/>
+		<outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

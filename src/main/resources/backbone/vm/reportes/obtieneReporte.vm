@@ -1,0 +1,6 @@
+<statements>
+        <statement type="stored" name="PKG_REPORTES.P_OBTIENE_MREPORTE" id="reportes">
+        <param eval="true" name="p_vdsreporte" type="VARCHAR">$!params.get("dsReporte")</param>
+        <outparam id="p_cu_reportes" type="CURSOR"/>
+    </statement>
+</statements>

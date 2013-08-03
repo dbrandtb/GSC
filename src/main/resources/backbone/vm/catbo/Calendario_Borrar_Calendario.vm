@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_CATBO.P_BORRA_TCALENDA" id="borraNumeroDeCasos">
+       <param eval="true" name="pv_cdpais_i" type="VARCHAR"><![CDATA[$!params.get("pv_cdpais_i")]]></param>
+       <param eval="true" name="pv_nmanio_i" type="NUMERIC"><![CDATA[$!params.get("pv_nmanio_i")]]></param>
+       <param eval="true" name="pv_nmmes_i" type="NUMERIC"><![CDATA[$!params.get("pv_nmmes_i")]]></param>
+       <param eval="true" name="pv_nmdia_i" type="NUMERIC"><![CDATA[$!params.get("pv_nmdia_i")]]></param>
+ 	  
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

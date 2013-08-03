@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+	
+	 
+  
+	<bean id="DatosFijosManager" class="mx.com.aon.catweb.configuracion.producto.service.impl.DatosFijosManagerImpl">
+ 		<property name="endpoints">
+			<map>    
+				<!--  Datos de coberturas -->
+            	<entry key="OBTENER_DATOS_FIJOS_PRODUCTO">
+            		<ref bean="OBTENER_DATOS_FIJOS_PRODUCTO"/>            
+            	</entry>
+            	<entry key="OBTENER_CATALOGO_BLOQUES">
+            		<ref bean="OBTENER_CATALOGO_BLOQUES"/>            
+            	</entry>
+            	<entry key="OBTENER_CATALOGO_CAMPOS">
+            		<ref bean="OBTENER_CATALOGO_CAMPOS"/>            
+            	</entry>
+            	<entry key="INSERTAR_DATO_FIJO">
+            		<ref bean="INSERTAR_DATO_FIJO"/>            
+            	</entry>
+        	</map>
+    	</property>
+	</bean>
+		
+</beans>

@@ -1,0 +1,14 @@
+<statements>
+	<statement type="stored" name="PKG_SATELITES.P_MOV_MPOLAGEN" id="movMPOLAGEN">		
+		<param eval="true" name="pv_cdunieco_i" type="NUMERIC"><![CDATA[$!params.get("CD_UNIECO")]]></param>
+		<param eval="true" name="pv_cdramo_i" type="NUMERIC"><![CDATA[$!params.get("CD_RAMO")]]></param>
+		<param eval="true" name="pv_estado_i" type="VARCHAR"><![CDATA[$!params.get("ESTADO")]]></param>
+		<param eval="true" name="pv_nmpoliza_i" type="VARCHAR"><![CDATA[$!params.get("NMPOLIZA")]]></param>
+		<param eval="true" name="pv_nmsuplem_i" type="VARCHAR"><![CDATA[$!params.get("NM_SUPLEM")]]></param>
+		<param eval="true" name="pv_cduniage_i" type="VARCHAR"><![CDATA[$!params.get("CD_UNIAGE")]]></param>
+		<param eval="true" name="pv_cdelemento_i" type="VARCHAR"><![CDATA[$!params.get("CD_ELEMENTO")]]></param>
+		<param eval="true" name="pv_accion_i" type="VARCHAR"><![CDATA[I]]></param>
+		<outparam id="pv_msg_id_o" type="NUMERIC"/>
+		<outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

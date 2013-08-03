@@ -1,0 +1,9 @@
+<statements>
+	<statement type="stored" name="PKG_LISTAS.P_PLANES_X_SITUACION" id="lista-planes">		  		
+  		<param eval="true" name="PV_CDRAMO_I" type="NUMERIC"><![CDATA[$!params.get("codigoProducto")]]></param>
+  		<param eval="true" name="PV_CDTIPSIT_I" type="VARCHAR"><![CDATA[$!params.get("codigoSituacion")]]></param>
+  		<outparam id="PV_REGISTRO_O" type="CURSOR"/>
+		<outparam id="PV_MSG_ID_O" type="NUMERIC"/>
+		<outparam id="PV_TITLE_O" type="VARCHAR"/>		
+	</statement>
+</statements>

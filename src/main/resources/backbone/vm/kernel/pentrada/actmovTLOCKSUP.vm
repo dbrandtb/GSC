@@ -1,0 +1,15 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_ACTUALIZA_DATOS.P_MOV_TLOCKSUP" id="actmovTLOCKSUP">
+		<inoutparam eval="true" name="p_ERROR" id="p_ERROR" type="VARCHAR">$!params.get("p_ERROR")</inoutparam>
+		<param eval="true" name="pi_CDUNIECO" type="NUMERIC">$!params.get("pi_CDUNIECO")</param>
+		<param eval="true" name="pi_CDRAMO" type="NUMERIC">$!params.get("pi_CDRAMO")</param>
+		<param eval="true" name="pi_ESTADO" type="VARCHAR">$!params.get("pi_ESTADO")</param>
+		<param eval="true" name="pi_NMPOLIZA" type="NUMERIC">$!params.get("pi_NMPOLIZA")</param>
+		<param eval="true" name="pi_NSUPLOGI" type="NUMERIC">$!params.get("pi_NSUPLOGI")</param>
+		<param eval="true" name="pi_CDTIPSUP" type="NUMERIC">$!params.get("pi_CDTIPSUP")</param>
+		<param eval="true" name="pi_OTTIPSUP" type="VARCHAR">$!params.get("pi_OTTIPSUP")</param>
+		<param eval="true" name="pi_NMSUPTAR" type="VARCHAR">$!params.get("pi_NMSUPTAR")</param>
+		<param eval="true" name="pi_CDPARBEN" type="VARCHAR">$!params.get("pi_CDPARBEN")</param>
+		<param eval="true" name="pi_ACCION" type="VARCHAR">$!params.get("pi_ACCION")</param>
+	</statement>
+</statements>

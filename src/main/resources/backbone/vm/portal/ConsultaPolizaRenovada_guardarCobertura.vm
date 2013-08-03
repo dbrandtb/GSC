@@ -1,0 +1,40 @@
+<statements>
+	<statement type="stored" name="PKG_SATELITES. P_MOV_MPOLIGAR" id="pMovPoliGar">
+		
+        <param eval="true" name="pv_cdunieco_i" type="NUMERIC">$!params.get("pv_cdunieco_i")</param>
+        <param eval="true" name="pv_cdramo_i"   type="VARCHAR">$!params.get("pv_cdramo_i")</param>
+    	<param eval="true" name="pv_estado_i"   type="VARCHAR">$!params.get("pv_estado_i")</param>
+        <param eval="true" name="pv_nmpoliza_i" type="VARCHAR">$!params.get("pv_nmpoliza_i")</param>
+        <param eval="true" name="pv_nmsituac_i" type="INTEGER">$!params.get("pv_nmsituac_i")</param>
+        <param eval="true" name="pv_cdgarant_i" type="INTEGER">$!params.get("pv_cdgarant_i")</param>
+        <param eval="true" name="pv_nmsuplem_i" type="INTEGER">$!params.get("pv_nmsuplem_i")</param>
+        <param eval="true" name="pv_cdcapita_i" type="INTEGER">$!params.get("pv_cdcapita_i")</param>
+        <param eval="true" name="pv_status_i" type="INTEGER">$!params.get("pv_status_i")</param>
+		<param eval=“true” name="pv_cdtipbca_i" type="INTEGER">$!params.get("pv_status_i")</param>
+   		<param eval="true" name="pv_ptvalbas_i" type="INTEGER">$!params.get("pv_ptvalbas_i")</param>
+   		<param eval="true" name="pv_pttasa_i" type="INTEGER">$!params.get("pv_pttasa_i")</param>
+   		<param eval="true" name="pv_cdtipfra_i" type="INTEGER">$!params.get("pv_cdtipfra_i")</param>
+   		<param eval="true" name="pv_swmanual_i" type="INTEGER">$!params.get("pv_swmanual_i")</param>
+   		<param eval="true" name="pv_cdplan_i" type="INTEGER">$!params.get("pv_cdplan_i")</param>
+   		<param eval="true" name="pv_nmcumulo_i" type="INTEGER">$!params.get("pv_nmcumulo_i")</param>
+   		<param eval="true" name="pv_cdtipcum_i" type="INTEGER">$!params.get("pv_cdtipcum_i")</param>
+   		<param eval="true" name="pv_nmcesion_i" type="INTEGER">$!params.get("pv_nmcesion_i")</param>
+   		<param eval="true" name="pv_cdmoneda_i" type="INTEGER">$!params.get("pv_cdmoneda_i")</param>
+   		<param eval="true" name="pv_swexcum_i" type="INTEGER">$!params.get("pv_swexcum_i")</param>
+   		<param eval="true" name="pv_ptimpexc_i" type="INTEGER">$!params.get("pv_ptimpexc_i")</param>
+   		<param eval="true" name="pv_ptimpfac_i" type="INTEGER">$!params.get("pv_ptimpfac_i")</param>
+   		<param eval="true" name="pv_ptfacefe_i" type="INTEGER">$!params.get("pv_ptfacefe_i")</param>
+   		<param eval="true" name="pv_imporrea_i" type="INTEGER">$!params.get("pv_imporrea_i")</param>
+   		<param eval="true" name="pv_swincapa_i" type="INTEGER">$!params.get("pv_swincapa_i")</param>
+   		<param eval="true" name="pv_cdgrupo_i" type="INTEGER">$!params.get("pv_cdgrupo_i")</param>
+   		<param eval="true" name="pv_swreas_i" type="INTEGER">$!params.get("pv_swreas_i")</param>
+   		<param eval="true" name="pv_cdagrupa_i" type="INTEGER">$!params.get("pv_cdagrupa_i")</param>
+   		<param eval="true" name="pv_fevencim_i" type="INTEGER">$!params.get("pv_fevencim_i")</param>
+
+      <param eval="true" name="pv_accion"   type="INTEGER">$!params.get("pv_accion")</param>
+        
+        <outparam id="pv_msg_id_o" type="VARCHAR"></outparam>
+		<outparam id="pv_title_o" type="NUMERIC"/>
+	</statement>
+</statements>
+                           

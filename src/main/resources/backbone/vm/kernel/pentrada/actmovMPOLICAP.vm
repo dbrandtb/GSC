@@ -1,0 +1,17 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_ACTUALIZA_DATOS.P_MOV_MPOLICAP" id="actmovMPOLICAP">
+       <inoutparam eval="true" name="Gv_Identificador_Error" id="Gv_Identificador_Error" type="VARCHAR">$!params.get("p_ERROR")</inoutparam>
+  		<param eval="true" name="Gn_CdUnieco" type="NUMERIC">$!params.get("pi_CDUNIECO")</param>
+		<param eval="true" name="Gn_CdRamo" type="NUMERIC">$!params.get("pi_CDRAMO")</param>
+		<param eval="true" name="Gv_Estado" type="VARCHAR">$!params.get("pi_ESTADO")</param>
+		<param eval="true" name="Gn_NmPoliza" type="NUMERIC">$!params.get("pi_NMPOLIZA")</param>
+		<param eval="true" name="Gn_Nmsituac" type="NUMERIC">$!params.get("pi_NMSITUAC")</param>
+		<param eval="true" name="Gn_NmSuplem_Sesion" type="VARCHAR">$!params.get("pi_NMSUPLEM_SESION")</param>
+		<param eval="true" name="Gv_Swrevalo" type="VARCHAR">$!params.get("pi_SWREVALO")</param>
+		<param eval="true" name="Gv_Cdcapita" type="NUMERIC">$!params.get("pi_CDCAPITA")</param>
+		<param eval="true" name="Gn_Ptcapita" type="NUMERIC">$!params.get("pi_PTCAPITA")</param>
+		<param eval="true" name="Gn_NmSuplem_Bloque" type="VARCHAR">$!params.get("pi_NMSUPLEM_BLOQUE")</param>
+       <inoutparam eval="true" name="Gv_Rowid" id="Gv_Rowid" type="VARCHAR">$!params.get("p_ROWID")</inoutparam>
+		<param eval="true" name="Gv_ModoAcceso" type="VARCHAR">$!params.get("pi_MODOACCESO")</param>
+	</statement>
+</statements>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+    <statement type="stored" name="PKG_CONFG_CUENTA.P_INSERTA_ESTRUCT" id="pInsertaEstruct">
+        <param eval="true" name="pi_dsestruc" type="VARCHAR"><![CDATA[$!params.get("descripcion")]]></param>
+        <param eval="true" name="pi_cdregion" type="VARCHAR"><![CDATA[$!params.get("codigoRegion")]]></param>
+        <param eval="true" name="Pi_cdidioma" type="VARCHAR"><![CDATA[$!params.get("codigoIdioma")]]></param>
+        <outparam id="pv_msg_id_o" type="NUMERIC"></outparam>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+    </statement>
+</statements>

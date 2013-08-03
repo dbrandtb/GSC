@@ -1,0 +1,8 @@
+<statements>
+	<statement type="stored" name="PKG_TABLASDE_APOYO.P_GET_NMTABLA_LISTA" id="pgetNmtablaLista">
+		<outparam id="po_cursorNumerodeTablas" type="CURSOR"/>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_AON_CHECKLIST.P_OBTIENE_CONFIGURACION" id="obtieneConfiguracion">
+        <param eval="true" name="pi_cve_persona" type="VARCHAR"><![CDATA[$!params.get("persona")]]></param>
+        <param eval="true" name="pi_nombre" type="VARCHAR"><![CDATA[$!params.get("nombre")]]></param>
+        <outparam id="po_registro" type="CURSOR"></outparam>
+        <outparam id="pv_msg_id_o" type="NUMERIC"/>
+        <outparam id="pv_title_o" type="VARCHAR"/> 		
+	</statement>
+</statements>

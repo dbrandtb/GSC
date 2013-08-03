@@ -1,0 +1,5 @@
+<statements>
+	<statement type="select">
+		SELECT * FROM app_user
+	</statement>
+</statements>

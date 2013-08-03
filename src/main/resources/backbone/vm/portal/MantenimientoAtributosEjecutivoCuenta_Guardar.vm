@@ -1,0 +1,11 @@
+<!-- MantenimientoAtributosEjecutivoCuenta_Guardar.vm -->
+<statements>
+    <statement type="stored" name="PKG_CATALOGO.P_INSERTA_AGENTE_VARIABLES" id="guardaoAtributosAgente">
+        <param eval="true" name="pv_cdagente_i" type="VARCHAR">$!params.get("cdEjecutivo")</param>
+        <param eval="true" name="pv_cdatribu_i" type="NUMERIC">$!params.get("cdAtribu")</param>
+        <param eval="true" name="pv_otvalor_i" type="VARCHAR">$!params.get("otValor")</param>
+
+        <outparam id="pv_msg_id_o" type="NUMERIC"/>
+        <outparam id="pv_title_o" type="VARCHAR"/>        
+    </statement>
+</statements>

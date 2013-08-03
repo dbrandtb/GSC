@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_REPORTES.P_GUARDA_MREPORTEAUX" id="P_GUARDA_MREPORTEAUX">   
+
+	    <param eval="true" name="p_ncdreporte_i" type="VARCHAR">$!params.get("p_ncdreporte_i")</param>
+	    <param eval="true" name="p_ncdusuari_i" type="VARCHAR">$!params.get("p_ncdusuari_i")</param>
+	    <param eval="true" name="p_vfedesde_i" type="VARCHAR">$!params.get("p_vfedesde_i")</param>
+        <param eval="true" name="p_vfehasta_i" type="VARCHAR">$!params.get("p_vfehasta_i")</param>
+
+        <outparam id="pv_title_o" type="VARCHAR"/> 
+		<outparam id="pv_msg_id_o" type="NUMERIC"/>
+	</statement>
+</statements>

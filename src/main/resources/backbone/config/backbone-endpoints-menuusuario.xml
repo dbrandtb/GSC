@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <bean id="menuusuario-endpoint" abstract="true"
+        parent="parent-endpoint">
+        <property name="templateModule" value="menuusuario" />
+        <property name="xslModule" value="menuusuario" />
+    </bean>
+
+    <!-- Bean declarado para obtener la configuracion de Menu Usuario existente en BD-->
+
+    <bean id="OBTIENE_MENU_USUARIO" parent="menuusuario-endpoint">
+        <property name="templateName" value="obtieneMenuUsuario.vm" />
+        <property name="xslName" value="obtieneMenuUsuario.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+    
+    <bean id="EXPORT_MENU_USUARIO" parent="menuusuario-endpoint">
+        <property name="templateName" value="obtieneMenuUsuario.vm" />
+        <property name="xslName" value="obtieneMenuUsuarioExport.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <!-- Bean declarado para obtener roles totales existentes en BD-->
+
+    <bean id="OBTIENE_ROLES" parent="menuusuario-endpoint">
+        <property name="templateName" value="obtieneRoles.vm" />
+        <property name="xslName" value="obtieneRoles.xsl" />
+        <property name="unmarshallClass"
+            value="java.util.ArrayList" />
+    </bean>
+    
+    <!-- Bean declarado para obtener lista de clientes-->
+    
+    <bean id="OBTIENE_CLIENTES_MENU_USUARIO" parent="menuusuario-endpoint">
+        <property name="templateName" value="obtieneClientes.vm" />
+        <property name="xslName" value="obtieneClientes.xsl" />
+        <property name="unmarshallClass"
+            value="java.util.ArrayList" />
+    </bean>
+    
+    <!-- Bean declarado para obtener los usuarios -->
+        
+    <bean id="OBTIENE_USUARIOS_MENU_USUARIO" parent="menuusuario-endpoint">
+        <property name="templateName" value="obtieneUsuarios.vm" />
+        <property name="xslName" value="obtieneUsuarios.xsl" />
+        <property name="unmarshallClass"
+            value="java.util.ArrayList" />
+    </bean>
+    
+     <!-- Bean declarado para obtener los usuarios por nivel y rol -->
+        
+    <bean id="OBTIENE_USUARIOS_X_NIVEL_ROL" parent="menuusuario-endpoint">
+        <property name="templateName" value="obtieneUsuariosPorNivelRol.vm" />
+        <property name="xslName" value="obtieneUsuarios.xsl" />
+        <property name="unmarshallClass"
+            value="java.util.ArrayList" />
+    </bean>
+    
+    <!-- Bean declarado para obtener lista de Secciones-->
+    
+    <bean id="OBTIENE_SECCIONES" parent="menuusuario-endpoint">
+        <property name="templateName" value="obtieneSecciones.vm" />
+        <property name="xslName" value="obtieneSecciones.xsl" />
+        <property name="unmarshallClass"
+            value="java.util.ArrayList" />
+    </bean>
+    
+    <!-- Bean declarado para obtener lista de Roles-->
+    
+    <bean id="CARGA_ROLES" parent="menuusuario-endpoint">
+        <property name="templateName" value="cargaRoles.vm" />
+        <property name="xslName" value="cargaRoles.xsl" />
+        <property name="unmarshallClass"
+            value="java.util.ArrayList" />
+    </bean>
+    
+    <!-- Bean declarado para obtener lista de tipos-->
+    
+    <bean id="OBTIENE_TIPOS" parent="menuusuario-endpoint">
+        <property name="templateName" value="obtieneTipos.vm" />
+        <property name="xslName" value="obtieneTipos.xsl" />
+        <property name="unmarshallClass"
+            value="java.util.ArrayList" />
+    </bean>
+    <!--Bean declarado para guardar una nueva configuracion-->
+    
+    <bean id="GUARDA_CONFIGURACION_MENU" parent="menuusuario-endpoint">
+        <property name="templateName" value="guardaConfiguracionMenu.vm" />
+        <property name="xslName" value="obtieneMensaje.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.model.MensajesVO" />
+    </bean>
+    
+    <!-- Bean decalarado para copiar una configuracion -->
+    <bean id="COPIA_CONFIGURACION_MENU" parent="menuusuario-endpoint">
+        <property name="templateName" value="copiaConfiguracionMenu.vm"/>
+        <property name="xslName" value="obtieneMensaje.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.model.MensajesVO" />        
+    </bean>                                                          
+    <!-- Bean declarado para borrar una configuracion de Menu -->                
+    <bean id="BORRA_CONFIGURACION_MENU" parent="menuusuario-endpoint">      
+        <property name="templateName" value="borraConfiguracionMenu.vm"/>
+        <property name="xslName" value="obtieneMensaje.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.model.MensajesVO" />
+    </bean>
+    <!--Bean para la consulta de los datos completos de configuraciones para la exportacion  -->
+     <bean id="EXPORT_CONFIGURACIONES" parent="menuusuario-endpoint" >
+        <property name="templateName" value="obtieneRoles.vm" />
+        <property name="xslName" value="exportConfiguracion.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+</beans>

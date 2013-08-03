@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<statements>
+
+	<statement type="stored" name="PKG_TABAPOYO.P_GUARDA_CLAVES" id="pGuardaClaves">
+		<param eval="true" name="PI_TIP_TRAN" type="NUMERIC">$!params.tipoTransaccion</param>
+		<param eval="true" name="PI_NMTABLA" type="NUMERIC">$!params.nmTabla</param>
+		<param eval="true" name="PI_DSCLAVE1" type="VARCHAR">$!params.clave.clave</param>
+		<param eval="true" name="PI_SWFORMA1" type="VARCHAR">$!params.clave.formatoClave</param>
+		<param eval="true" name="PI_NMLMIN1" type="NUMERIC">$!params.clave.minimoClave</param>
+		<param eval="true" name="PI_NMLMAX1" type="NUMERIC">$!params.clave.maximoClave</param>
+		<param eval="true" name="PI_DSCLAVE2" type="VARCHAR">$!params.clave.clave2</param>
+		<param eval="true" name="PI_SWFORMA2" type="VARCHAR">$!params.clave.formatoClave2</param>
+		<param eval="true" name="PI_NMLMIN2" type="NUMERIC">$!params.clave.minimoClave2</param>
+		<param eval="true" name="PI_NMLMAX2" type="NUMERIC">$!params.clave.maximoClave2</param>
+		<param eval="true" name="PI_DSCLAVE3" type="VARCHAR">$!params.clave.clave3</param>
+		<param eval="true" name="PI_SWFORMA3" type="VARCHAR">$!params.clave.formatoClave3</param>
+		<param eval="true" name="PI_NMLMIN3" type="NUMERIC">$!params.clave.minimoClave3</param>
+		<param eval="true" name="PI_NMLMAX3" type="NUMERIC">$!params.clave.maximoClave3</param>
+		<param eval="true" name="PI_DSCLAVE4" type="VARCHAR">$!params.clave.clave4</param>
+		<param eval="true" name="PI_SWFORMA4" type="VARCHAR">$!params.clave.formatoClave4</param>
+		<param eval="true" name="PI_NMLMIN4" type="NUMERIC">$!params.clave.minimoClave4</param>
+		<param eval="true" name="PI_NMLMAX4" type="NUMERIC">$!params.clave.maximoClave4</param>
+		<param eval="true" name="PI_DSCLAVE5" type="VARCHAR">$!params.clave.clave5</param>
+		<param eval="true" name="PI_SWFORMA5" type="VARCHAR">$!params.clave.formatoClave5</param>
+		<param eval="true" name="PI_NMLMIN5" type="NUMERIC">$!params.clave.minimoClave5</param>
+		<param eval="true" name="PI_NMLMAX5" type="NUMERIC">$!params.clave.maximoClave5</param>
+			
+		<outparam id="PV_MSG_ID_O" type="NUMERIC"/>
+		<outparam id="PV_TITLE_O" type="VARCHAR"/>		
+	</statement>
+
+</statements>

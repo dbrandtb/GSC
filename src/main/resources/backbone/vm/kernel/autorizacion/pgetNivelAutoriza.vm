@@ -1,0 +1,8 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_AUTORIZACION.P_EXISTE_NIVEL_PARA" id="pgetNivelAutoriza">
+		<param eval="true" name="pi_CDRAMO" type="NUMERIC">$!params.get("pi_CDRAMO")</param>
+		<param eval="true" name="pi_CDMOTIVO" type="VARCHAR">$!params.get("pi_CDMOTIVO")</param>
+		<outparam id="po_NIVELREQ" type="NUMERIC"/>
+		<outparam id="po_DSMOTIVO" type="VARCHAR"/>
+	</statement>
+</statements>

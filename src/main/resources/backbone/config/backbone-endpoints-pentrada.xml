@@ -1,0 +1,607 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+    <bean id="pentrada-endpoints" abstract="true" parent="parent-endpoint-kernel">
+        <property name="templateModule" value="pentrada"/>
+        <property name="xslModule" value="pentrada"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_GETDATOSPRODUCTO" parent="pentrada-endpoints">
+        <property name="templateName" value="getDatosProducto.vm"/>
+        <property name="xslName" value="getDatosProducto.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS-->
+    <bean id="P_ACT_MPOLICAB" parent="pentrada-endpoints">
+        <property name="templateName" value="actualizaMPOLICAB.vm"/>
+        <property name="xslName" value="checkStatusTransac.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_DATOS_GENERALES-->
+    <bean id="P_ACTUALIZA_MPOLICOI" parent="pentrada-endpoints">
+        <property name="templateName" value="actualizaMPOLICOI.vm"/>
+        <property name="xslName" value="actualizaMPOLICOI.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_GETDEFAULTUNIDADECONOMICA" parent="pentrada-endpoints">
+        <property name="templateName" value="getUnidecoDefault.vm"/>
+        <property name="xslName" value="getUnidecoDefault.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_VAL_EXISTE_POLIZA_WORKING" parent="pentrada-endpoints">
+        <property name="templateName" value="valExistPolizaWorking.vm"/>
+        <property name="xslName" value="checkStatusTransac.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_VALIDAPOLIZAENVIGOR" parent="pentrada-endpoints">
+        <property name="templateName" value="valPolizaEnVigor.vm"/>
+        <property name="xslName" value="valPolizaEnVigor.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_VENTANAANULACION" parent="pentrada-endpoints">
+        <property name="templateName" value="getVentanaAnulacion.vm"/>
+        <property name="xslName" value="getVentanaAnulacion.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_VALIDAPOLIZAENDOSOENWORKING" parent="pentrada-endpoints">
+        <property name="templateName" value="valEndosoEnWorking.vm"/>
+        <property name="xslName" value="valEndosoEnWorking.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_VENTANABLOQUEO" parent="pentrada-endpoints">
+        <property name="templateName" value="getVentanaBloqueo.vm"/>
+        <property name="xslName" value="getVentanaBloqueo.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_OBTENER_FEC_INIFIN_ENDOSO" parent="pentrada-endpoints">
+        <property name="templateName" value="getFecIniFinEndoso.vm"/>
+        <property name="xslName" value="getFecIniFinEndoso.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_VALIDATIPOSUPLEMENTO" parent="pentrada-endpoints">
+        <property name="templateName" value="valTipoSuplemento.vm"/>
+        <property name="xslName" value="checkStatusTransac.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_FECHAS_VIGENCIA_ENDOSO" parent="pentrada-endpoints">
+        <property name="templateName" value="getFechaVigenciaEndoso.vm"/>
+        <property name="xslName" value="getFechaVigenciaEndoso.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_FECHAS_VIGENCIA_POLIZA" parent="pentrada-endpoints">
+        <property name="templateName" value="getFechaVigenciaPoliza.vm"/>
+        <property name="xslName" value="getFechaVigenciaPoliza.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_VALIDACLAVEENDOSO" parent="pentrada-endpoints">
+        <property name="templateName" value="valClaveEndoso.vm"/>
+        <property name="xslName" value="checkStatusTransac.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_VALIDAEXISTEENDOSOANTERIOR" parent="pentrada-endpoints">
+        <property name="templateName" value="valExistEndosoAnt.vm"/>
+        <property name="xslName" value="valExistEndosoAnt.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_VALIDABLOQUEOPOLIZA" parent="pentrada-endpoints">
+        <property name="templateName" value="valBloqueoPoliza.vm"/>
+        <property name="xslName" value="valBloqueoPoliza.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_NOSUPLEMENTOLOGICO" parent="pentrada-endpoints">
+        <property name="templateName" value="getNroSuplLogigo.vm"/>
+        <property name="xslName" value="getNroSuplLogigo.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_DATOS_BLOQUEO" parent="pentrada-endpoints">
+        <property name="templateName" value="getDatosBloqueo.vm"/>
+        <property name="xslName" value="getDatosBloqueo.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_VALIDARPARAMETROS" parent="pentrada-endpoints">
+        <property name="templateName" value="valParametMPARAPRO.vm"/>
+        <property name="xslName" value="valParametMPARAPRO.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_VALIDAREASEGUROPORRAMO" parent="pentrada-endpoints">
+        <property name="templateName" value="valReaseguroRamo.vm"/>
+        <property name="xslName" value="valReaseguroRamo.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_VALIDAVENTANAANULACION" parent="pentrada-endpoints">
+        <property name="templateName" value="valVentanaAnulacion.vm"/>
+        <property name="xslName" value="valVentanaAnulacion.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_VALIDAEXISTERECIBO" parent="pentrada-endpoints">
+        <property name="templateName" value="valExistRecibo.vm"/>
+        <property name="xslName" value="checkStatusTransac.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_VALIDAFECHAINICIO" parent="pentrada-endpoints">
+        <property name="templateName" value="valFechaInicioRecibo.vm"/>
+        <property name="xslName" value="valFechaInicioRecibo.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_VALIDACONTROLCARTERA" parent="pentrada-endpoints">
+        <property name="templateName" value="valControlCartera.vm"/>
+        <property name="xslName" value="valControlCartera.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS-->
+    <bean id="P_ACT_TVALIDNA" parent="pentrada-endpoints">
+        <property name="templateName" value="actualizaTVALIDNA.vm"/>
+        <property name="xslName" value="checkStatusTransac.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_DATOS_GENERALES-->
+    <!--<bean id="P_INSERTAR_MSUPLEME" parent="pentrada-endpoints">
+         <property name="templateName" value="insertarMSUPLEME.vm"/>
+         <property name="xslName" value="checkStatusTransac.xsl"/>
+         <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+     </bean>-->
+    <!--PACK_NEWALEA_DATOS_GENERALES-->
+    <bean id="P_INSERTA_TDESCSUP" parent="pentrada-endpoints">
+        <property name="templateName" value="insertarTDESCSUP.vm"/>
+        <property name="xslName" value="checkStatusTransac.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_SERVICIOSGRALES-->
+    <bean id="P_DATOS_PERSONA" parent="pentrada-endpoints">
+        <property name="templateName" value="getDatosPersona.vm"/>
+        <property name="xslName" value="getDatosPersona.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS-->
+    <bean id="P_MOV_MPOLIZAS" parent="pentrada-endpoints">
+        <property name="templateName" value="actmovMPOLIZAS.vm"/>
+        <property name="xslName" value="actmovMPOLIZAS.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.services.to.GuardarBloqueResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS-->
+    <bean id="P_ACT_MPOLICOA" parent="pentrada-endpoints">
+        <property name="templateName" value="actualizaMPOLICOA.vm"/>
+        <property name="xslName" value="checkStatusTransac.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS-->
+    <bean id="P_ACT_MPOLIOBJ" parent="pentrada-endpoints">
+        <property name="templateName" value="actualizaMPOLIOBJ.vm"/>
+        <property name="xslName" value="actualizaMPOLIOBJ.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS-->
+    <bean id="P_ACT_MPOLISIT" parent="pentrada-endpoints">
+        <property name="templateName" value="actualizaMPOLISIT.vm"/>
+        <property name="xslName" value="checkStatusTransac.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS-->
+    <bean id="P_ACT_MSUPCOA" parent="pentrada-endpoints">
+        <property name="templateName" value="actualizaMSUPCOA.vm"/>
+        <property name="xslName" value="checkStatusTransac.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS-->
+    <bean id="P_ACT_MSUPLEME" parent="pentrada-endpoints">
+        <property name="templateName" value="actualizaMSUPLEME.vm"/>
+        <property name="xslName" value="checkStatusTransac.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS-->
+    <bean id="P_ACT_TDESCSUP" parent="pentrada-endpoints">
+        <property name="templateName" value="actualizaTDESCSUP.vm"/>
+        <property name="xslName" value="checkStatusTransac.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS-->
+    <bean id="P_ACT_TDETSUPL" parent="pentrada-endpoints">
+        <property name="templateName" value="actualizaTDETSUPL.vm"/>
+        <property name="xslName" value="checkStatusTransac.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS, SE COMENTA ESTE BEAN, YA QUE EXISTE EN COBERTURAS... -->
+    <!--bean id="P_ACT_TGREXCOA" parent="pentrada-endpoints">
+         <property name="templateName" value="actualizaTGREXCOA.vm"/>
+         <property name="xslName" value="checkStatusTransac.xsl"/>
+         <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+     </bean-->
+
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS-->
+    <bean id="P_ACT_TSIEXCOA" parent="pentrada-endpoints">
+        <property name="templateName" value="actualizaTSIEXCOA.vm"/>
+        <property name="xslName" value="checkStatusTransac.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS-->
+    <bean id="P_ACT_TVALOOBJ" parent="pentrada-endpoints">
+        <property name="templateName" value="actualizaTVALOOBJ.vm"/>
+        <property name="xslName" value="checkStatusTransac.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS-->
+    <bean id="P_MOV_MDOMICIL" parent="pentrada-endpoints">
+        <property name="templateName" value="actmovMDOMICIL.vm"/>
+        <property name="xslName" value="actmovMDOMICIL.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS-->
+    <bean id="P_MOV_MORDTRAB" parent="pentrada-endpoints">
+        <property name="templateName" value="actmovMORDTRAB.vm"/>
+        <property name="xslName" value="checkStatusTransac2.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS-->
+    <bean id="P_MOV_MPERSONA" parent="pentrada-endpoints">
+        <property name="templateName" value="actmovMPERSONA.vm"/>
+        <property name="xslName" value="actmovMPERSONA.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS-->
+    <bean id="P_MOV_MPOLIAGE" parent="pentrada-endpoints">
+        <property name="templateName" value="actmovMPOLIAGE.vm"/>
+        <property name="xslName" value="actmovMPOLIAGE.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.services.to.GuardarBloqueResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS-->
+    <bean id="P_MOV_MPOLIAGR" parent="pentrada-endpoints">
+        <property name="templateName" value="actmovMPOLIAGR.vm"/>
+        <property name="xslName" value="actmovMPOLIAGR.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.services.to.GuardarBloqueResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS-->
+    <bean id="P_MOV_MPOLIAUT" parent="pentrada-endpoints">
+        <property name="templateName" value="actmovMPOLIAUT.vm"/>
+        <property name="xslName" value="checkStatusTransac2.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS-->
+    <bean id="P_MOV_MPOLICAP" parent="pentrada-endpoints">
+        <property name="templateName" value="actmovMPOLICAP.vm"/>
+        <property name="xslName" value="actmovMPOLICAP.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.services.to.GuardarBloqueResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS-->
+    <bean id="P_MOV_MPOLIGAR" parent="pentrada-endpoints">
+        <property name="templateName" value="actmovMPOLIGAR.vm"/>
+        <!--		<property name="xslName" value="checkStatusTransac2.xsl"/>-->
+        <property name="xslName" value="actmovMPOLIGAR2.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.services.to.GuardarBloqueResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS-->
+    <bean id="P_MOV_MPOLIGAR_SUP" parent="pentrada-endpoints">
+        <property name="templateName" value="actmovMPOLIGARSUP.vm"/>
+        <property name="xslName" value="checkStatusTransac.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.services.to.GuardarBloqueResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS-->
+    <bean id="P_MOV_MPOLIOBJ" parent="pentrada-endpoints">
+        <property name="templateName" value="actmovMPOLIOBJ.vm"/>
+        <property name="xslName" value="checkTransactionBloqueB6.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.services.to.GuardarBloqueResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS-->
+    <bean id="P_MOV_MPOLIPER" parent="pentrada-endpoints">
+        <property name="templateName" value="actmovMPOLIPER.vm"/>
+        <property name="xslName" value="actmovMPOLIPER.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.services.to.GuardarBloqueResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS-->
+    <bean id="P_MOV_MPOLIREC" parent="pentrada-endpoints">
+        <property name="templateName" value="actmovMPOLIREC.vm"/>
+        <property name="xslName" value="checkStatusTransac.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS-->
+    <bean id="P_MOV_MPOLIREV" parent="pentrada-endpoints">
+        <property name="templateName" value="actmovMPOLIREV.vm"/>
+        <property name="xslName" value="actmovMPOLIREV.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.services.to.GuardarBloqueResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS-->
+    <bean id="P_MOV_MPOLISIT" parent="pentrada-endpoints">
+        <property name="templateName" value="actmovMPOLISIT.vm"/>
+        <property name="xslName" value="actmovMPOLISIT.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.services.to.GuardarBloqueResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS-->
+    <bean id="P_MOV_MSUPLEME" parent="pentrada-endpoints">
+        <property name="templateName" value="actmovMSUPLEME.vm"/>
+        <property name="xslName" value="checkStatusTransac2.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS-->
+    <bean id="P_MOV_TBLOQUEO" parent="pentrada-endpoints">
+        <property name="templateName" value="actmovTBLOQUEO.vm"/>
+        <property name="xslName" value="checkStatusTransac2.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS-->
+    <bean id="P_MOV_TDESCSUP" parent="pentrada-endpoints">
+        <property name="templateName" value="actmovTDESCSUP.vm"/>
+        <property name="xslName" value="checkStatusTransac2.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS-->
+    <bean id="P_MOV_TDETSUPL" parent="pentrada-endpoints">
+        <property name="templateName" value="actmovTDETSUPL.vm"/>
+        <property name="xslName" value="checkStatusTransac2.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS-->
+    <bean id="P_MOV_TLOCKCON" parent="pentrada-endpoints">
+        <property name="templateName" value="actmovTLOCKCON.vm"/>
+        <property name="xslName" value="checkStatusTransac2.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS-->
+    <bean id="P_MOV_TLOCKSUP" parent="pentrada-endpoints">
+        <property name="templateName" value="actmovTLOCKSUP.vm"/>
+        <property name="xslName" value="checkStatusTransac2.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS-->
+    <bean id="P_MOV_TVALOGAR" parent="pentrada-endpoints">
+        <property name="templateName" value="actmovTVALOGAR.vm"/>
+        <property name="xslName" value="checkStatusTransac2B19B.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.services.to.GuardarBloqueResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS-->
+    <bean id="P_MOV_TVALOOBJ" parent="pentrada-endpoints">
+        <property name="templateName" value="actmovTVALOOBJ.vm"/>
+        <property name="xslName" value="checkStatusTransac1.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.services.to.GuardarBloqueResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS-->
+    <bean id="P_MOV_TVALOPER" parent="pentrada-endpoints">
+        <property name="templateName" value="actmovTVALOPER.vm"/>
+        <property name="xslName" value="tvaloPer.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+
+
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS-->
+    <bean id="P_MOV_TVALOPOL" parent="pentrada-endpoints">
+        <property name="templateName" value="actmovTVALOPOL.vm"/>
+        <property name="xslName" value="tvalPol.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.services.to.GuardarBloqueResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS   LEO-->
+    <bean id="P_MOV_TVALOSIT" parent="pentrada-endpoints">
+        <property name="templateName" value="actmovTVALOSIT.vm"/>
+        <property name="xslName" value="checkStatusTransac2.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <bean id="P_GUARDA_MOV_TVALOSIT" parent="pentrada-endpoints">
+        <property name="templateName" value="guardamovTVALOSIT.vm"/>
+        <property name="xslName" value="checkStatusTransac2.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_ACTUALIZA_DATOS-->
+    <bean id="P_UPD_DOMICIL_AGRUPA" parent="pentrada-endpoints">
+        <property name="templateName" value="actupdDomicilAgrupa.vm"/>
+        <property name="xslName" value="checkStatusTransac.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_ANULACION_ENDOSO" parent="pentrada-endpoints">
+        <property name="templateName" value="panulacionEndoso.vm"/>
+        <property name="xslName" value="checkStatusTransac.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_ANULAR_ORDEN_TRABAJO" parent="pentrada-endpoints">
+        <property name="templateName" value="panulacionOrdenTrabajo.vm"/>
+        <property name="xslName" value="panulacionOrdenTrabajo.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_BLOQUEAR_POLIZA" parent="pentrada-endpoints">
+        <property name="templateName" value="pbloquearPoliza.vm"/>
+        <property name="xslName" value="pbloquearPoliza.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_CONTAR_SITUACIONES" parent="pentrada-endpoints">
+        <property name="templateName" value="pcontarSituaciones.vm"/>
+        <property name="xslName" value="pcontarSituaciones.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_CONTROL_POLIZA" parent="pentrada-endpoints">
+        <property name="templateName" value="pcontrolPoliza.vm"/>
+        <property name="xslName" value="pcontrolPoliza.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_COPIA_WORKING" parent="pentrada-endpoints">
+        <property name="templateName" value="pcopiaWorking.vm"/>
+        <property name="xslName" value="pcopiaWorking.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_DESPLEGAR_ORDEN_TRABAJO" parent="pentrada-endpoints">
+        <property name="templateName" value="pdesplegarOrdenTrabajo.vm"/>
+        <property name="xslName" value="pdesplegarOrdenTrabajo.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_EXISTE_TLOG" parent="pentrada-endpoints">
+        <property name="templateName" value="valExistTLOG.vm"/>
+        <property name="xslName" value="checkStatusTransac.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_GET_DESC_GRUPSUBGRUP" parent="pentrada-endpoints">
+        <property name="templateName" value="pgetDescGrupoSubgrupo.vm"/>
+        <property name="xslName" value="pgetDescGrupoSubgrupo.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_GET_FECHA_FINAL_SUP" parent="pentrada-endpoints">
+        <property name="templateName" value="pgetFechaFinSuplemento.vm"/>
+        <property name="xslName" value="pgetFechaFinSuplemento.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_GET_OBLIG_ORDTRAB" parent="pentrada-endpoints">
+        <property name="templateName" value="pgetObligatotiedadOrdenTrabajo.vm"/>
+        <property name="xslName" value="pgetObligatotiedadOrdenTrabajo.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA (Ref Cursor)-->
+    <bean id="P_GET_PRODUCTOS_COLECTIVO" parent="pentrada-endpoints">
+        <property name="templateName" value="pgetProductosColectivos.vm"/>
+        <property name="xslName" value="pgetProductosColectivos.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_GET_TVALOPOL_GRPSBGRP_PERTAR" parent="pentrada-endpoints">
+        <property name="templateName" value="pgetPerfilTarifaGrpSubgrp.vm"/>
+        <property name="xslName" value="pgetPerfilTarifaGrpSubgrp.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_INSERTAMPOLICAB" parent="pentrada-endpoints">
+        <property name="templateName" value="pinsertaMPOLICAB.vm"/>
+        <property name="xslName" value="checkStatusTransac.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_OBTENER_CODIGO_AGENTE" parent="pentrada-endpoints">
+        <property name="templateName" value="pgetCodigoAgente.vm"/>
+        <property name="xslName" value="pgetCodigoAgente.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_OBTENER_OFICINA_XDEFECTO" parent="pentrada-endpoints">
+        <property name="templateName" value="pgetOficinaDefault.vm"/>
+        <property name="xslName" value="pgetOficinaDefault.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_RECUPERARTOMADORPOLIZA" parent="pentrada-endpoints">
+        <property name="templateName" value="pgetTomadorPoliza.vm"/>
+        <property name="xslName" value="pgetTomadorPoliza.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_VALIDA_TIPO_ENDOSO" parent="pentrada-endpoints">
+        <property name="templateName" value="valTipoEndoso.vm"/>
+        <property name="xslName" value="checkStatusTransac.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_VALIDAREDUCCIONAUTORIZADA" parent="pentrada-endpoints">
+        <property name="templateName" value="valReduccionAutorizada.vm"/>
+        <property name="xslName" value="checkStatusTransac.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_VALIDAFECHACIERRE" parent="pentrada-endpoints">
+        <property name="templateName" value="valFechaCierreMens.vm"/>
+        <property name="xslName" value="checkStatusTransac.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_VALIDAR_MAX_RECIBO" parent="pentrada-endpoints">
+        <property name="templateName" value="valMaximoRecibo.vm"/>
+        <property name="xslName" value="valMaximoRecibo.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_VALIDAR_BLOQUEO" parent="pentrada-endpoints">
+        <property name="templateName" value="valBloqueoEndosoPoliza.vm"/>
+        <property name="xslName" value="valBloqueoEndosoPoliza.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_VALIDAR_TDESCSUP_NMSOLICI" parent="pentrada-endpoints">
+        <property name="templateName" value="valNroSolicitudTdescsup.vm"/>
+        <property name="xslName" value="valNroSolicitudTdescsup.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_VALIDAR_DOTACION" parent="pentrada-endpoints">
+        <property name="templateName" value="valDotacion.vm"/>
+        <property name="xslName" value="valDotacion.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_VALIDAR_UNILIF" parent="pentrada-endpoints">
+        <property name="templateName" value="valUnilife.vm"/>
+        <property name="xslName" value="valUnilife.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_VALIDAR_MPARAPRO" parent="pentrada-endpoints">
+        <property name="templateName" value="valParametrosProduc.vm"/>
+        <property name="xslName" value="valParametrosProduc.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_VALIDAR_FECHAS_WORKING" parent="pentrada-endpoints">
+        <property name="templateName" value="valFechasEndosoWorking.vm"/>
+        <property name="xslName" value="valFechasEndosoWorking.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_VALIDAR_EXISTEN_SUPLEMENTOS" parent="pentrada-endpoints">
+        <property name="templateName" value="valExistSuplementos.vm"/>
+        <property name="xslName" value="checkStatusTransac.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_VALIDAR_SINIESTROS_SUPL" parent="pentrada-endpoints">
+        <property name="templateName" value="valSiniestrosSupl.vm"/>
+        <property name="xslName" value="checkStatusTransac.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_VALIDAR_VIGENCIA_ENDOSO" parent="pentrada-endpoints">
+        <property name="templateName" value="valVigenciaEndoso.vm"/>
+        <property name="xslName" value="checkStatusTransac.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_VALIDAR_ULTIMO_PERIODO_REC" parent="pentrada-endpoints">
+        <property name="templateName" value="valUltPeriodoRecibo.vm"/>
+        <property name="xslName" value="checkStatusTransac.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    <!--PACK_NEWALEA_PENTRADA-->
+    <bean id="P_GENERA_NMSUPLEM" parent="pentrada-endpoints">
+        <property name="templateName" value="pgeneraNMSUPLEM.vm"/>
+        <property name="xslName" value="pgeneraNMSUPLEM.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    
+    <bean id="CALCULA_NUMERO_OBJETO" parent="pentrada-endpoints">
+        <property name="templateName" value="getPCALCNMOBJETO.vm"/>
+        <property name="xslName" value="checkTransactionBloqueB6.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.services.to.GuardarBloqueResultadoDAO"/>
+    </bean>
+   
+</beans>

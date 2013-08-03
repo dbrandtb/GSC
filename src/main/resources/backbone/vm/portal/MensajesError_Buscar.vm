@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+    <statement type="stored" name="PKG_ERROR.P_OBTIENE_MENSAJE" id="pObtieneMensajesError">
+        <param eval="true" name="pi_msg_id" type="NUMERIC">$!params.get("cdError")</param>
+        <param eval="true" name="pi_msg_text" type="VARCHAR"><![CDATA[$!params.get("dsMensaje")]]></param>
+
+        <outparam id="pv_msg_id_o" type="NUMERIC"></outparam>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+        <outparam id="pv_registro_o" type="CURSOR"></outparam>
+    </statement>
+</statements>

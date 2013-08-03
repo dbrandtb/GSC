@@ -1,0 +1,16 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_PENTRADA.P_VALIDAPOLIZAENDOSOENWORKING" id="valEndosoEnWorking">
+		<param eval="true" name="pi_CDUNIECO" type="NUMERIC">$!params.get("pi_CDUNIECO")</param>
+		<param eval="true" name="pi_CDRAMO" type="NUMERIC">$!params.get("pi_CDRAMO")</param>
+		<param eval="true" name="pi_ESTADO" type="VARCHAR">$!params.get("pi_ESTADO")</param>
+		<param eval="true" name="pi_NMPOLIZA" type="NUMERIC">$!params.get("pi_NMPOLIZA")</param>
+		<param eval="true" name="pi_TIPO_SUPL" type="NUMERIC">$!params.get("pi_TIPO_SUPL")</param>
+		<param eval="true" name="pi_TIPSUPL" type="NUMERIC">$!params.get("pi_TIPSUPL")</param>
+		<outparam id="po_OTTIPSUP" type="VARCHAR"/>
+		<outparam id="po_CDTIPSUP_WORK" type="NUMERIC"/>
+		<outparam id="po_NSUPLOGI" type="NUMERIC"/>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

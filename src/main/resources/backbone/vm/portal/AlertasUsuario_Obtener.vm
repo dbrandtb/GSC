@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_ALERTAS.P_ALERTAS_USUARIO" id="buscarAlertasUsuario">
+       <param eval="true" name="pv_dsusuario_i" type="VARCHAR"><![CDATA[$!params.get("dsUsuario")]]></param>  	   
+       <param eval="true" name="pv_dsnombre_i" type="VARCHAR"><![CDATA[$!params.get("dsNombre")]]></param>  	   
+       <param eval="true" name="pv_dsproces_i" type="VARCHAR"><![CDATA[$!params.get("dsProceso")]]></param>  	   
+       <param eval="true" name="pv_dstipram_i" type="VARCHAR"><![CDATA[$!params.get("dsTipRam")]]></param>  	   
+       <param eval="true" name="pv_dsunieco_i" type="VARCHAR"><![CDATA[$!params.get("dsUniEco")]]></param>  	   
+       <param eval="true" name="pv_dsrol_i" type="VARCHAR"><![CDATA[$!params.get("dsRol")]]></param>  	   
+
+  	   <outparam id="pv_registro_o" type="CURSOR"/>
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

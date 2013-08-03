@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_CANCELA.P_GUARDA_RAZON_PRODUCTO" id="guardarRazonProducto">
+			   
+       <param eval="true" name="pv_cdrazon_i" type="NUMERIC">$!params.get("cdrazon")</param>
+       <param eval="true" name="pv_cdramo_i" type="NUMERIC">$!params.get("cdramo")</param>
+       <param eval="true" name="pv_cdmetodo_i" type="VARCHAR">$!params.get("cdmetodo")</param>
+       <param eval="true" name="pv_nmdiasde_i" type="NUMERIC"></param>
+       <param eval="true" name="pv_nmdiasha_i" type="NUMERIC"></param>
+       
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

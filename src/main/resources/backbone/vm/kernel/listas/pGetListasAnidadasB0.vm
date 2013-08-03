@@ -1,0 +1,16 @@
+<statements>
+    <statement type="stored" name="PACK_NEWALEA_CACHELISTAS.P_GET_LISTAS_ANIDADAS_B0" id="pListasAnidadas">
+        <param eval="true" name="pi_CDPANTAL" type="VARCHAR">$!params.cdPantal</param>
+        <param eval="true" name="pi_IDLISTA" type="VARCHAR">$!params.idLista</param>
+        <param eval="true" name="pi_USUARIO" type="VARCHAR">$!params.usuario</param>
+        <param eval="true" name="pi_CDUNIECO" type="VARCHAR">$!params.cdUnieco</param>
+        <param eval="true" name="pi_CDRAMO" type="VARCHAR">$!params.cdRamo</param>
+        <param eval="true" name="pi_CDGRUPO" type="VARCHAR">$!params.cdGrupo</param>
+        <param eval="true" name="pi_CDSUBGRP" type="VARCHAR">$!params.cdSubgrupo</param>        
+        
+        <outparam id="rc_cursor" type="CURSOR"/>
+        <outparam id="po_CDERROR" type="VARCHAR"/>
+        <outparam id="po_DSERROR" type="VARCHAR"/>
+        <outparam id="po_TIPOERROR" type="VARCHAR"/>
+    </statement>
+</statements>

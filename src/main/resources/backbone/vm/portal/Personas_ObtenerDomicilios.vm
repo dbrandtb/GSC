@@ -1,0 +1,9 @@
+<statements>
+	<statement type="stored" name="PKG_PERSONA.P_OBTIENE_DOMICILIO" id="obtieneDomiciliosPersona">
+        <param eval="true" name="pi_cdperson" type="VARCHAR">$!params.get("codigoPersona")</param>
+
+        <outparam id="po_resulset" type="CURSOR"></outparam>
+		<outparam id="po_msg_id" type="INTEGER"/>
+        <outparam id="po_title" type="VARCHAR"></outparam>
+	</statement>
+</statements>

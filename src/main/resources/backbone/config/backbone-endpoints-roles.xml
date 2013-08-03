@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<bean id="roles-endpoint" abstract="true"
+		parent="parent-endpoint">
+		<property name="templateModule" value="rol" />
+		<property name="xslModule" value="rol" />
+	</bean>
+
+<!-- Bean declarado para obtener catalogo rol existente en BD-->
+
+	<bean id="CATALOGO_ROLES" parent="roles-endpoint">
+		<property name="templateName" value="listaCRol.vm" />
+		<property name="xslName" value="listaCombosVariable.xsl" />
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>
+	
+	<bean id="CATALOGO_OBLIGATORIO" parent="roles-endpoint">
+		<property name="templateName" value="listaCObligatorio.vm" />
+		<property name="xslName" value="listaCombosVariable.xsl" />
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>
+	
+	<bean id="CATALOGO_ATRIBUTOS_VARIABLES" parent="roles-endpoint">
+		<property name="templateName" value="listaCAtributosVariablesRol.vm" />
+		<property name="xslName" value="listaCombosVariable.xsl" />
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>
+	
+	<bean id="OBTIENE_ATRIBUTOS_VARIABLES_ROL" parent="roles-endpoint">
+		<property name="templateName" value="obtieneAtributosVariablesRol.vm" />
+		<property name="xslName" value="obtieneAtributosVariablesRol.xsl" />
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>
+	
+	<bean id="AGREGAR_ROL_CATALOGO" parent="roles-endpoint">
+		<property name="templateName" value="agregarRolCatalogo.vm" />
+		<property name="transformResult" value="false" />
+        <property name="unmarshallResult" value="false" />
+	</bean>
+	
+	<bean id="AGREGAR_ATRIBUTO_VARIABLE_ROL" parent="roles-endpoint">
+		<property name="templateName" value="agregarAtributoVariableRol.vm" />
+		<property name="transformResult" value="false" />
+        <property name="unmarshallResult" value="false" />
+	</bean>
+	
+	<bean id="ELIMINAR_ATRIBUTO_VARIABLE_ROL" parent="roles-endpoint">
+		<property name="templateName" value="eliminarAtributoVariableRol.vm" />
+		<property name="xslModule" value="catalogs" />
+		<property name="xslName" value="obtieneMensajes.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.model.MensajesVO" />
+	</bean>
+	
+	<bean id="ELIMINAR_ROL" parent="roles-endpoint">
+		<property name="templateName" value="eliminarRol.vm" />
+		<property name="xslName" value="eliminarRol.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<bean id="VALIDA_HIJOS_ATRIB_VAR_ROL" parent="roles-endpoint">
+		<property name="templateModule" value="atributosVariables" />
+		<property name="templateName" value="validaHijosAtribVarRol.vm" />
+		<property name="xslModule" value="atributosVariables" />
+		<property name="xslName" value="validaHijosAtributosVariables.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.model.MensajesVO" />
+	</bean>
+	
+	<bean id="AGREGAR_ROL_INCISO" parent="roles-endpoint">
+		<property name="templateName" value="agregarRolInciso.vm" />
+		<property name="transformResult" value="false" />
+        <property name="unmarshallResult" value="false" />
+	</bean>
+	
+	<bean id="AGREGAR_ATRIBUTO_VARIABLE_CATALOGO" parent="roles-endpoint">
+		<property name="templateName" value="agregarAtributoVariableCatalogo.vm" />
+		<property name="transformResult" value="false" />
+        <property name="unmarshallResult" value="false" />
+	</bean>
+	
+	<bean id="OBTIENE_ROL_ASOCIADO" parent="roles-endpoint">
+		<property name="templateName" value="obtieneRolAsociado.vm" />
+		<property name="xslName" value="obtieneRolAsociado.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.catweb.configuracion.producto.rol.model.RolVO" />
+	</bean>
+
+
+</beans>
+

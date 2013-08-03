@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
+<statements>
+    
+    <statement type='stored' name="PKG_CONFG_CUENTA.P_OBTIENE_DESTRUCT" id="pObtieneDestruct">
+    
+        
+        <param eval="true" name="pv_cdestruc_i" type="NUMERIC">$!params.get("codigoEstructura")</param>
+        <param eval="true" name="pv_dselemen_i" type="VARCHAR"><![CDATA[$!params.get("nombre")]]></param>
+        <param eval="true" name="pv_dspadre_i" type="VARCHAR"><![CDATA[$!params.get("vinculoPadre")]]></param>
+        <param eval="true" name="pv_swnomina_i" type="VARCHAR"><![CDATA[$!params.get("nomina")]]></param>
+       
+        <outparam id="lcur_registros_i" type="CURSOR"/>
+        <outparam id="po_msg_id" type="NUMERIC"/>
+        <outparam id="po_title" type="VARCHAR"/>
+        
+           
+    </statement>
+    
+</statements>

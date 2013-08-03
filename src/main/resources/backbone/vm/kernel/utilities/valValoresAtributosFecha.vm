@@ -1,0 +1,9 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_UTILITY.PL_VALIDA_FECHA" id="valValoresAtributosFecha">
+		<param eval="true" name="pi_FECHA" type="VARCHAR">$params.get("piFecha")</param>
+		<outparam id="pi_VALUE" type="VARCHAR"/>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

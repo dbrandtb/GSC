@@ -1,0 +1,10 @@
+<statements>
+	<statement type="stored" name="PKG_CARROCOMPRA.P_BORRA_CONFIGURA" id="borraCarritoCompras">
+        
+        <param eval="true" name="p_cdconfiguracion" type="NUMERIC">$!params.get("cdConfiguracion")</param>
+       
+        <outparam id="pv_msg_id_o" type="NUMERIC"></outparam>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+      
+	</statement>
+</statements>

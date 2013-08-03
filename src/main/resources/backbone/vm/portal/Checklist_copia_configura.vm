@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+    <statement type="stored" name="PKG_AON_CHECKLIST.P_COPIA_CONFIGURA" id="pCopiaConfigura">
+    	<param eval="true" name="pv_cdconfig_fuente_i" type="NUMERIC">$!params.get("codigoConfiguracion")</param>
+    	<param eval="true" name="pv_cdelemento_destino_i" type="NUMERIC">$!params.get("codigoElemento")</param>
+        <param eval="true" name="pv_cdperson_destino_i" type="NUMERIC">$!params.get("codigoPersona")</param>
+        <outparam id="pv_msg_id_o" type="NUMERIC"></outparam>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+    </statement>
+</statements>

@@ -1,0 +1,7 @@
+<statements>
+	<statement type="stored" name="PKG_WORKFLOW.P_BORRA_CONFIGURA" id="borraProcesos">
+		<param eval="true" name="P_CDPROCXCTA" type="NUMERIC">$!params.procxcta</param>
+		<outparam id="PV_MSG_ID_O" type="NUMERIC"/>
+		<outparam id="PV_TITLE_O" type="VARCHAR"/>
+	</statement>
+</statements>

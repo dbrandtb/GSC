@@ -1,0 +1,11 @@
+<statements>
+	<statement type="stored" name="PKG_EMISION.P_OBTIENE_MPOLIZAS2" id="obtienePolizasDetalle">
+		<param eval="true" name="pv_cdunieco" type="NUMERIC">$!params.cdUnieco</param>
+		<param eval="true" name="pv_cdramo" type="NUMERIC">$!params.cdRamo</param>
+		<param eval="true" name="pv_estado" type="VARCHAR">$!params.estado</param>
+		<param eval="true" name="pv_nmpoliza" type="NUMERIC">$!params.nmPoliza</param>
+		<outparam id="PV_REGISTRO_O" type="CURSOR"/>
+		<outparam id="PV_MSG_ID_O" type="NUMERIC"/>
+		<outparam id="PV_TITLE_O" type="VARCHAR"/>
+	</statement>
+</statements>

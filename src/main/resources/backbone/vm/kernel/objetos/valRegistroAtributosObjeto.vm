@@ -1,0 +1,14 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_OBJETOS.P_VALIDA_REGISTRO_B6B" id="valRegistroAtributosObjeto">
+		<param eval="true" name="pi_OTVALOR" type="VARCHAR">$!params.get("pi_OTVALOR")</param>
+		<param eval="true" name="pi_SWFORMAT" type="VARCHAR">$!params.get("pi_SWFORMAT")</param>
+		<param eval="true" name="pi_SWOBLIGA" type="VARCHAR">$!params.get("pi_SWOBLIGA")</param>
+		<param eval="true" name="pi_LIMMIN" type="VARCHAR">$!params.get("pi_LIMMIN")</param>
+		<param eval="true" name="pi_LIMMAX" type="VARCHAR">$!params.get("pi_LIMMAX")</param>
+		<param eval="true" name="pi_TABLA" type="VARCHAR">$!params.get("pi_TABLA")</param>
+		<outparam id="po_DSVALOR" type="VARCHAR"/>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

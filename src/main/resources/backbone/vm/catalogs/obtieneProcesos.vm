@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
+<statements>
+		
+	<statement type="stored" name="PKG_WORKFLOW.P_OBTIENE_PROCESOS" id="obtenerEstado">
+        	<outparam id="po_registro" type="CURSOR"/>		
+			<outparam id="po_msg_id" type="NUMERIC"/>
+        	<outparam id="po_title" type="VARCHAR"/>
+	</statement>	
+	    
+</statements>

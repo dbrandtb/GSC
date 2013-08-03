@@ -1,0 +1,9 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_PERSONAS.P_FUSION_DOMICILOS" id="pfusionDomicilios">
+		<param eval="true" name="pi_IDPROCESO" type="VARCHAR">$!params.get("pi_IDPROCESO")</param>
+		<param eval="true" name="pi_USER" type="VARCHAR">$!params.get("pi_USER")</param>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

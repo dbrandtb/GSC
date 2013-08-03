@@ -1,0 +1,47 @@
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+
+	<include file="struts-default.xml" />
+
+	<package name="configuracionAlertasAutomatico" extends="json-default" namespace="/configuracionAlertasAutomatico">
+
+
+    <action name="buscarConfiguracionAlertasAutomatico" class="listaConfiguracionAlertasAutomaticoAction" method="cmdBuscarClick">
+        <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+
+    <!-- usado para insert y update -->
+    <action name="guardarConfiguracionAlertasAutomatico" class="configuracionAlertasAutomaticoAction"  method="cmdGuardarClick">
+        <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+    
+    <action name="borrarConfiguracionAlertasAutomatico" class="configuracionAlertasAutomaticoAction"  method="cmdBorrarClick">
+        <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+    
+    <action name="exportConfiguraAlertasAuto" class="listaConfiguracionAlertasAutomaticoAction" method="cmdExportarClick">
+				<result name="success" type="stream">
+				<param name="contentType">${contentType}</param>
+				<param name="inputName">inputStream</param>
+				<param name="contentDisposition">filename="${filename}"</param>
+				<param name="bufferSize">4096</param>
+			</result>
+	</action>     
+	
+   <action name="getConfiguracionAlertasAutomatico" class="configuracionAlertasAutomaticoAction"  method="cmdGetClick">
+        <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+
+    <action name="buscarAlertas" class="configuracionAlertasAutomaticoAction"  method="cmdGetClick">
+        <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+
+    <action name="buscarVariables" class="listaConfiguracionAlertasAutomaticoAction"  method="cmdGetListaVariables">
+        <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+
+	</package>
+
+</struts>

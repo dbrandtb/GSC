@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
+<statements>
+	<statement type="stored" name="PKG_RENOVA.P_OBTIENE_POLIZAS_RENOVADAS" id="renovacionRenovarPolizas">
+		<param eval="true" name="pv_Aseguradora_i" type="VARCHAR">$!params.cdUnieco</param>
+		<param eval="true" name="pv_Asegurado_i"   type="NUMERIC">$!params.Asegurado</param>
+		<param eval="true" name="pv_Producto_i"    type="NUMERIC">$!params.cdRamo</param>
+		<param eval="true" name="pv_Poliza_i"      type="NUMERIC">$!params.nmPoliEx</param>
+		<param eval="true" name="pv_Cliente_i"     type="NUMERIC">$!params.cdElemento</param>
+		<param eval="true" name="pv_estado_i" 	   type="VARCHAR">$!params.estado</param>
+		<outparam id="pv_obtiene_polizas_o" type="CURSOR"/>
+		<outparam id="pv_msg_id_o" type="NUMERIC"/>
+		<outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

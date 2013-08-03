@@ -1,0 +1,14 @@
+<statements>
+	<statement type="stored" name="PKG_RENOVA.P_OBTIENE_COBERTURA_RENOVA" id="pObtieneCoberturaRenova">
+		
+		<param eval="true" name="pv_cdunieco_i" type="NUMERIC">$!params.get("pv_cdunieco_i")</param>
+		<param eval="true" name="pv_cdramo_i" type="NUMERIC">$!params.get("pv_cdramo_i")</param>
+		<param eval="true" name="pv_nmpoliza_i" type="NUMERIC">$!params.get("pv_nmpoliza_i")</param>
+		<param eval="true" name="pv_nmsituac_i" type="NUMERIC">$!params.get("pv_nmsituac_i")</param>
+		
+		<outparam id="pv_registro_o" type="CURSOR"></outparam>
+		
+		<outparam id="pv_msg_id_o" type="INTEGER"/>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+	</statement>
+</statements>

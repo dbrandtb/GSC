@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
+<statements>
+	<statement type="stored" name="PKG_MENU.P_OBTIENE_MENU" id="obtiene_menu">
+		<param eval="true" name="PV_CDMENU_I" type="VARCHAR">$!params</param>
+		<outparam id="PV_REGISTRO_O" type="CURSOR"/>
+		<outparam id="PV_MSG_ID_O" type="NUMERIC"/>
+		<outparam id="PV_TITLE_O" type="NUMERIC"/>
+		<outparam id="PV_TEXT_O" type="VARCHAR"/>
+	</statement>
+</statements>

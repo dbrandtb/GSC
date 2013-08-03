@@ -1,0 +1,84 @@
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+
+	<include file="struts-default.xml" />
+
+	<package name="encuestas" extends="json-default" namespace="/encuestas">
+
+
+    <action name="obtenerEncuestas" class="listaEncuestasAction" method="obtenerEncuestas">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+	</action>
+    
+     <action name="borrarEncuesta" class="configurarEncuestaAction" method="cmdBorrarEncuestaClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+	</action>
+    
+    <action name="insertarGuardarPreguntasEncuesta" class="configurarEncuestaAction" method="insertarGuardarPreguntasEncuesta">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+	</action>
+    
+    <action name="obtenerEncuestaPreguntas" class="listaEncuestasAction" method="obtenerEncuestaPreguntaClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+	</action>
+
+    <action name="obtenerEncuestaPreguntasGet" class="configurarEncuestaAction" method="obtenerEncuestaPreguntasGetClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+	</action>
+
+    
+    <!--
+    <action name="borrarAdministracionAtributosFax" class="administracionAtributosFaxAction" method="cmdBorrarClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+
+    <action name="getAdministracionAtributosFax" class="administracionAtributosFaxAction" method="cmdGetClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+
+    <action name="guardarAdministracionAtributosFax" class="administracionAtributosFaxAction" method="cmdGuardarClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+      -->
+      
+    <action name="exportarEncuestas" class="listaEncuestasAction" method="cmdExportarEncuestas">
+        <result name="success" type="stream">
+             <param name="contentType">${contentType}</param>
+            <param name="inputName">inputStream</param>
+            <param name="contentDisposition">filename="${filename}"</param>
+            <param name="bufferSize">4096</param>
+        </result>
+    </action>  
+  
+    <action name="exportarEncuestaPreguntas" class="listaEncuestasAction" method="cmdExportarEncuestaPregunta">
+        <result name="success" type="stream">
+            <param name="contentType">${contentType}</param>
+            <param name="inputName">inputStream</param>
+            <param name="contentDisposition">filename="${filename}"</param>
+            <param name="bufferSize">4096</param>
+        </result>
+    </action>  
+    
+    
+    <action name="guardarEncuestaPreguntas" class="configurarEncuestaAction" method="cmdGuardarEncuestaNuevaClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+	</action>
+  
+    <action name="guardarEncuestaPreguntasAgregar" class="configurarEncuestaAction" method="cmdGuardarEncuestaAgregarClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+	</action>
+	
+	<action name="borrarEncuestaPregunta" class="configurarEncuestaAction" method="cmdBorrarEncuestaPreguntaClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+	</action>
+	
+	<action name="validaConfiguracionEncuesta" class="configurarEncuestaAction" method="cmdValidaConfiguracionEncuestaClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+	</action>
+
+
+	</package>
+
+</struts>

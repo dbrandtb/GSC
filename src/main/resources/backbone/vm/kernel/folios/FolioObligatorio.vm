@@ -1,0 +1,16 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_FOLIOS.Folio_Obligatorio" id="pValidaFolio">
+		<param eval="true" name="p_nmoperac" type="VARCHAR">$!params.get("p_nmoperac")</param>
+		<param eval="true" name="p_cdunieco" type="NUMERIC">$!params.get("p_cdunieco")</param>
+		<param eval="true" name="p_cdramo" type="NUMERIC">$!params.get("p_cdramo")</param>
+		<param eval="true" name="p_cdtiproc" type="VARCHAR">$!params.get("p_cdtiproc")</param>
+		<param eval="true" name="p_cdagente" type="VARCHAR">$!params.get("p_cdagente")</param>
+		<param eval="true" name="p_nmpoliza" type="NUMERIC">$!params.get("p_nmpoliza")</param>
+		<param eval="true" name="p_cdusuari" type="VARCHAR">$!params.get("p_cdusuari")</param>
+		<param eval="true" name="p_ntipsup" type="NUMERIC">$!params.get("p_ntipsup")</param>
+        <param eval="true" name="p_tipo" type="NUMERIC">$!params.get("p_tipo")</param>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

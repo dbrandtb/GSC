@@ -1,0 +1,12 @@
+<statements>
+	<statement type="stored" name="PKG_COTIZA.P_BORRA_CONCEPTO_DESGLOSE" id="borrarDesglosePolizas">
+        
+        <param eval="true" name="p_cliente" type="INTEGER">$!params.get("cdPerson")</param>
+        <param eval="true" name="p_concepto" type="VARCHAR">$!params.get("cdTipCon")</param>
+        <param eval="true" name="p_producto" type="INTEGER">$!params.get("cdRamo")</param>
+      
+       	<outparam id="pv_msg_id_o" type="NUMERIC"/>
+       	<outparam id="pv_title_o" type="VARCHAR"/>
+       	
+	</statement>
+</statements>

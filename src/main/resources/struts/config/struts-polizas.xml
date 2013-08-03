@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+
+    <include file="struts-default.xml" />                           
+
+    <package name="polizas" extends="json-default" namespace="/polizas">
+    
+    
+		
+		<action name="buscarPolizasCancelar" class="listaPolizaAction" method="cmdBuscarClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		
+		<action name="buscarPolizasCanceladas" class="listaPolizaAction" method="cmdBuscarPolizasCanceladasClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+	
+	<action name="guardarPolizas" class="polizaAction" method="guardarPolizasClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+	
+		<action name="revertirPolizasCanceladas" class="polizaAction" method="revertirPolizasCanceladasClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+	
+	<action name="irRehabilitacionManual" class="polizaAction" method="irRehabilitacionManual">
+            <result type="chain" name="rehabilitacionManual">rehabilitacionManual</result>
+		</action>
+
+	<action name="irDetallePoliza" class="emisionAction" method="obtienePantalla">
+		<result name="input">/jsp/procesos/emision/detallePoliza.jsp</result>
+	</action>
+	
+	<!-- Validación Poliza Endosos -->
+    <action name="validacionPolizaRehabilitacion" class="emisionAction"  method="validacionPolizaRehabilitacion" >
+        <result name="success" type="json" />
+    </action>
+   <!--  <action name="irDetallePoliza" class="polizaAction" method="irDetallePolizas">
+    	        <result type="chain" name="poliza">
+	          <param name="actionName">detallePoliza</param>
+	          <param name="namespace">/procesoemision</param>
+	        </result>
+    	</action>-->
+	
+	
+	  <action name="exportPolizasCanceladas" class="polizaAction" method="cmdExportPolizasCanceladasClick">
+			<result name="success" type="stream">
+				<param name="contentType">${contentType}</param>
+				<param name="inputName">inputStream</param>
+				<param name="contentDisposition">filename="${filename}"</param>
+				<param name="bufferSize">4096</param>
+			</result>
+		</action>   
+		
+		
+		 <action name="exportPolizasACancelar" class="polizaAction" method="cmdExportPolizasACancelarClick">
+			<result name="success" type="stream">
+				<param name="contentType">${contentType}</param>
+				<param name="inputName">inputStream</param>
+				<param name="contentDisposition">filename="${filename}"</param>
+				<param name="bufferSize">4096</param>
+			</result>
+		</action>   
+		     
+    
+    </package>
+
+</struts>

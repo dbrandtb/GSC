@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<statements>
+    <statement type="stored" name="PKG_EMISION.P_DETALLE_TNUMEPOEX" id="pGetNumeroPoliza">
+        
+        <param eval="true" name="pv_cdunieco_i" type="VARCHAR">$!params.get("pv_cdunieco_i")</param>
+        <param eval="true" name="pv_cdelemento_i" type="VARCHAR">$!params.get("pv_cdelemento_i")</param>
+        <param eval="true" name="pv_cdramo_i" type="VARCHAR">$!params.get("pv_cdramo_i")</param>
+       
+        <outparam id="pv_registro_o" type="CURSOR"></outparam>
+        <outparam id="pv_msg_id_o" type="NUMERIC"></outparam>
+        <outparam id="po_title" type="VARCHAR"></outparam>
+    </statement>
+</statements>

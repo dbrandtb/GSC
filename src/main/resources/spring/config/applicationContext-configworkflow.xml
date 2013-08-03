@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+    
+    <bean id="configWorkFlowManager" class="mx.com.aon.portal.service.impl.configworkflow.ConfigWorkFlowManagerImpl">
+        <property name="endpoints">
+            <map>
+                <entry key="INSERTA_PROCESOS">
+                    <ref bean="INSERTA_PROCESOS"/>
+                </entry>
+
+                <entry key="BORRA_PROCESOS">
+                    <ref bean="BORRA_PROCESOS"/>
+                </entry>
+
+                <entry key="OBTIENE_PROCESOSXCTA_REG">
+                    <ref bean="OBTIENE_PROCESOSXCTA_REG"/>
+                </entry>
+
+                <entry key="INSERTA_PASOSXCTA">
+                    <ref bean="INSERTA_PASOSXCTA"/>
+                </entry>
+                
+                <entry key="BORRA_PASOSXCTA">
+                    <ref bean="BORRA_PASOSXCTA"/>
+                </entry>
+            </map>
+        </property>
+    </bean>
+    
+</beans>

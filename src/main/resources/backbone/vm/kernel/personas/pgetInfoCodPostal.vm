@@ -1,0 +1,17 @@
+
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_PERSONAS.P_GET_INFO_CODPOSTAL" id="pgetInfoCodPostal">
+		<param eval="true" name="pi_CDCODPOS" type="VARCHAR">$!params.get("pi_CDCODPOS")</param>
+		<outparam id="po_CDPAIS" type="VARCHAR"/>
+		<outparam id="po_DSPAIS" type="VARCHAR"/>
+		<outparam id="po_CDPROVIN" type="NUMERIC"/>
+		<outparam id="po_DSPROVIN" type="VARCHAR"/>
+		<outparam id="po_CDMUNICI" type="VARCHAR"/>
+		<outparam id="po_DSMUNICI" type="VARCHAR"/>
+		<outparam id="po_CDCIUDAD" type="VARCHAR"/>
+		<outparam id="po_DSCIUDAD" type="VARCHAR"/>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

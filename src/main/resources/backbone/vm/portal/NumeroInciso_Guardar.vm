@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<statements>
+    <statement type="stored" name="PKG_EMISION.P_GUARDA_TNUMINEX" id="pGuardaNumeroInciso">
+        
+        <param eval="true" name="pv_cdunieco_i" type="NUMERIC">$!params.get("pv_cdunieco_i")</param>
+        <param eval="true" name="pv_cdelemento_i" type="NUMERIC">$!params.get("pv_cdelemento_i")</param>
+        <param eval="true" name="pv_cdperson_i" type="NUMERIC">$!params.get("pv_cdperson_i")</param>
+        <param eval="true" name="pv_cdramo_i" type="NUMERIC">$!params.get("pv_cdramo_i")</param>
+        <param eval="true" name="pv_INDSITUAC_i" type="VARCHAR">$!params.get("pv_INDSITUAC_i")</param>
+        <param eval="true" name="pv_INDSUFPRE_i" type="VARCHAR">$!params.get("pv_INDSUFPRE_i")</param>
+        <param eval="true" name="pv_DSSUFPRE_i" type="VARCHAR">$!params.get("pv_DSSUFPRE_i")</param>
+        <param eval="true" name="pv_INDCALC_i" type="NUMERIC">$!params.get("pv_INDCALC_i")</param>
+        <param eval="true" name="pv_DSCALCULO_i" type="VARCHAR">$!params.get("pv_DSCALCULO_i")</param>
+        <param eval="true" name="pv_NMFOLIOINI_i" type="NUMERIC">$!params.get("pv_NMFOLIOINI_i")</param>
+        <param eval="true" name="pv_NMFOLIOFIN_i" type="NUMERIC">$!params.get("pv_NMFOLIOFIN_i")</param>
+        
+              
+        <outparam id="pv_msg_id_o" type="NUMERIC"></outparam>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+    </statement>
+</statements>

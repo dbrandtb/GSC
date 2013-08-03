@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_REPORTES.P_BORRA_TATRIREP" id="borraAtributo">
+        <param eval="true" name="p_ncdreportes" type="NUMERIC">$!params.get("cdReporte")</param>
+        <param eval="true" name="p_ncdatribu" type="NUMERIC">$!params.get("cdAtributo")</param>
+
+		<outparam id="pv_existe_i" type="NUMERIC"/>
+        <outparam id="pv_title_o" type="VARCHAR"/>
+		<outparam id="pv_msg_id_o" type="NUMERIC"/>
+	</statement>
+</statements>

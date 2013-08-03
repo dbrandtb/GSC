@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+    <include file="struts-default.xml" />                           
+
+    <package name="configuracionProcesos" extends="json-default" namespace="/configuracionProcesos">
+		
+		<action name="buscarProcesos" class="listaConfiguracionProcesoAction" method="cmdBuscarClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		
+		<action name="exportarProcesos" class="listaConfiguracionProcesoAction" method="cmdExportarClick">
+			<result name="success" type="stream">
+				 <param name="contentType">${contentType}</param>
+				<param name="inputName">inputStream</param>
+				<param name="contentDisposition">filename="${filename}"</param>
+				<param name="bufferSize">4096</param>
+			</result>
+		</action>  
+		
+		<action name="guardarProceso" class="configuracionProcesoAction" method="cmdGuardarProceso">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		
+		<action name="actualizarProceso" class="configuracionProcesoAction" method="cmdActualizarProceso">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		
+		<action name="obtenerProceso" class="configuracionProcesoAction" method="cdObtenerProceso">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		
+		<action name="borrarProceso" class="configuracionProcesoAction" method="cmdBorrarProceso">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		
+    </package>
+
+</struts>

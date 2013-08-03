@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<statements>
+	<statement type="stored" name="PKG_WIZARD.P_ADD_COBERTURA" id="pAddCobertura">
+		<param eval="true" name="PV_CDGARANT_I" type="VARCHAR">$!params.claveCobertura</param>
+		<param eval="true" name="PV_DSGARANT_I" type="VARCHAR"><![CDATA[$!params.descripcionCobertura]]></param>
+		<param eval="true" name="PV_CDTIPOGA_I" type="VARCHAR">$!params.tipoCobertura</param>
+		<param eval="true" name="PV_CDTIPRAM_I" type="VARCHAR">$!params.ramoCobertura</param>
+		<param eval="true" name="PV_SWREAUTO_I" type="VARCHAR">$!params.reinstalacion</param>
+		<param eval="true" name="PV_SWINFLAC_I" type="VARCHAR">$!params.indiceInflacionario</param>
+		
+		<outparam id="PV_MSG_ID_O" type="NUMERIC"/>
+		<outparam id="PV_TITLE_O" type="VARCHAR"/>
+	</statement>
+</statements>

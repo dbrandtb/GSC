@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_REPORTES.P_GUARDA_MPLANTIL" id="insertaPlantilla">
+
+	    <param eval="true" name="p_ncdplanti" type="NUMERIC"><![CDATA[$!params.get("cdPlantilla")]]></param>
+	    <param eval="true" name="p_vdsplanti" type="VARCHAR"><![CDATA[$!params.get("dsPlantilla")]]></param>
+	    <param eval="true" name="p_nstatus" type="NUMERIC"><![CDATA[$!params.get("status")]]></param>
+	    <param eval="true" name="INSERTAR" type="NUMERIC"><![CDATA[$!params.get("insertar")]]></param>
+
+		<outparam id="pv_existe_i" type="NUMERIC"/>
+        <outparam id="pv_title_o" type="VARCHAR"/>
+		<outparam id="pv_msg_id_o" type="NUMERIC"/>
+	</statement>
+</statements>

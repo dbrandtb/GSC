@@ -1,0 +1,19 @@
+<statements>
+	<statement type="stored" name="PKG_CONFPAGINA.P_INSERTA_CONFIGURA" id="guardaNuevaConfigura">
+		<param eval="true" name="pv_cdconfig_i" type="NUMERIC">$!params.get("claveConfig")</param>
+		<param eval="true" name="pv_dsconfig_i" type="VARCHAR"><![CDATA[$!params.get("descripcionConfig")]]></param>
+		<param eval="true" name="pv_cdelemento_i" type="NUMERIC">$!params.get("claveElemento")</param>
+		<param eval="true" name="pv_cdrol_i" type="VARCHAR"><![CDATA[$!params.get("claveRol")]]></param>
+		<param eval="true" name="pv_cdseccion_i" type="NUMERIC">$!params.get("claveSeccion")</param>
+		<param eval="true" name="pv_swhabilitado_i" type="NUMERIC">$!params.get("swHabilitado")</param>
+		<param eval="true" name="pv_dsespecificacion_i" type="VARCHAR"><![CDATA[$!params.get("especificacion")]]></param>
+		<param eval="true" name="pv_dscontenido_i" type="VARCHAR"><![CDATA[$!params.get("contenidoDato")]]></param>
+		<param eval="true" name="pv_cdtipo_i" type="NUMERIC">$!params.get("claveTipo")</param>
+		<param eval="true" name="pv_dsarchivo_i" type="VARCHAR"><![CDATA[$!params.get("archivoLoad")]]></param>
+		<param eval="true" name="pv_dscontenidosec_i" type="VARCHAR"><![CDATA[$!params.contenidoDatoSeg]]></param>
+		
+		<outparam id="pv_msg_id_o" type="NUMERIC"/>		
+		<outparam id="pv_title_o" type="VARCHAR"/>
+		
+	</statement>
+</statements>

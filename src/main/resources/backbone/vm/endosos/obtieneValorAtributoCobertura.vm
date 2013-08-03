@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
+<statements>
+		
+	<statement type="stored" name="PKG_LISTAS.P_GET_DESC_TTAPVAT1" id="obtenerDescTtapvat">
+			<param eval="true" name="pv_cdtabla_i"	type="VARCHAR"><![CDATA[$!params.TABLA]]></param>
+        	<param eval="true" name="pv_cdidioma_i"	type="NUMERIC">1</param>
+        	<param eval="true" name="pv_cdregion_i"	type="NUMERIC">1</param>
+        	<param eval="true" name="pv_codigo_i"	type="VARCHAR"><![CDATA[$!params.CLAVE]]></param>        	
+        	
+        	<outparam id="pv_descrip_o" type="VARCHAR"/>
+	</statement>	
+	    
+</statements>

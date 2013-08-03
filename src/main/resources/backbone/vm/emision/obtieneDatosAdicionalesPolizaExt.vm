@@ -1,0 +1,12 @@
+<statements>
+	<statement type="stored" name="PKG_EMISION.P_OBTIENE_TVALOPOL" id="emisionObtieneDatosAdPolizaExt">
+		<param eval="true" name="pv_cdunieco" type="NUMERIC">$!params.cdunieco</param>
+		<param eval="true" name="pv_cdramo"   type="NUMERIC">$!params.cdramo</param>
+		<param eval="true" name="pv_estado"   type="VARCHAR">$!params.estado</param>
+		<param eval="true" name="pv_nmpoliza" type="NUMERIC">$!params.nmpoliza</param>
+		<param eval="true" name="pv_cdatribu" type="NUMERIC"></param>
+		<outparam id="pv_registro_o" type="CURSOR"/>
+		<outparam id="pv_msg_id_o" type="VARCHAR"/>
+		<outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

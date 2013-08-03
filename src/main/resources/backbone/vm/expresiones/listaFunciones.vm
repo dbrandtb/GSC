@@ -1,0 +1,8 @@
+<statements>
+	<statement type="stored" name="PKG_WIZARD.P_TFUNCDES" id="pTFuncDes">
+		<outparam id="PV_REGISTRO_O" type="CURSOR"/>
+		<outparam id="PV_MSG_ID_O" type="NUMERIC"/>
+		<outparam id="PV_TITLE_O" type="VARCHAR"/>
+				
+</statement>
+</statements>

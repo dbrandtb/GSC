@@ -1,0 +1,340 @@
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+
+<struts>
+	<include file="struts-default.xml" />
+
+	<package name="dctosPresiniestros" extends="json-default" namespace="/dctosPresiniestros">
+
+	   <action name="configurarAtributosDctosPresiniestros">
+           <result>/jsp/flujos/presiniestros/documentos/configurarAtributosDctosPresiniestros.jsp</result>
+       </action>
+       
+       <action name="obtenComboCliente" class="documentosPresiniestrosAction" method="obtenComboCliente">
+			<result name="success" type="json"/>      
+		</action>
+		
+		<action name="obtenComboAseguradora" class="documentosPresiniestrosAction" method="obtenComboAseguradora">
+			<result name="success" type="json"/>      
+		</action>
+		
+		<action name="obtenComboProducto" class="documentosPresiniestrosAction" method="obtenComboProducto">
+			<result name="success" type="json"/>      
+		</action>
+		
+		<action name="obtenComboDocumentos" class="documentosPresiniestrosAction" method="obtenComboDocumentos">
+			<result name="success" type="json"/>      
+		</action>
+       
+       	<action name="obtenGridInstrumetosPagoCliente" class="documentosPresiniestrosAction" method="obtenGridInstrumetosPagoCliente">
+			<result name="success" type="json"/>      
+		</action>
+		
+		<action name="agregarIntrumentoPagoCliente" class="documentosPresiniestrosAction" method="agregarIntrumentoPagoCliente">
+			<result name="success" type="json"/>      
+		</action>
+		
+		<action name="borrarIntrumentoPagoCliente" class="documentosPresiniestrosAction" method="borrarIntrumentoPagoCliente">
+			<result name="success" type="json"/>      
+		</action>
+		
+		
+		
+		<action name="obtenAtributosGridInstrumetosPago" class="documentosPresiniestrosAction" method="obtenAtributosGridInstrumetosPago">
+			<result name="success" type="json"/>      
+		</action>
+		
+		<action name="guardaAtributoIntrumentoPago" class="documentosPresiniestrosAction" method="guardaAtributoIntrumentoPago">
+			<result name="success" type="json"/>      
+		</action>
+		
+		<action name="borrarAtributoIntrumentoPago" class="documentosPresiniestrosAction" method="borrarAtributoIntrumentoPago">
+			<result name="success" type="json"/>      
+		</action>
+		
+		<action name="obtenAtributosDocumento" class="documentosPresiniestrosAction" method="obtenAtributosDocumento">
+			<result name="success" type="json"/>      
+		</action>
+		
+		
+		<action name="obtenDctosPresiniestro" class="documentosPresiniestrosAction" method="obtenDctosPresiniestro">
+			<result name="success" type="json"/>      
+		</action>
+		
+		
+<!-- Redireccionamiento a struts de expresiones y de tablas de apoyo-->
+		
+		<action name="ObtenerCodigoExpresion" >
+	        <result type="chain">
+	          <param name="actionName">ObtenerCodigoExpresion</param>
+	          <param name="namespace">/expresiones</param>
+	        </result>
+    	</action>
+		
+		<action name="Expresiones" >
+	        <result type="chain">
+	          <param name="actionName">Expresiones</param>
+	          <param name="namespace">/expresiones</param>
+	        </result>
+    	</action>
+    	
+		<action name="ExpresionesWindow" >
+	        <result type="chain">
+	          <param name="actionName">ExpresionesWindow</param>
+	          <param name="namespace">/expresiones</param>
+	        </result>
+    	</action>
+    	
+		<action name="Complex" >
+	        <result type="chain">
+	          <param name="actionName">Complex</param>
+	          <param name="namespace">/expresiones</param>
+	        </result>
+    	</action>
+    	
+		<action name="ValidarExpresion" >
+	        <result type="chain">
+	          <param name="actionName">ValidarExpresion</param>
+	          <param name="namespace">/expresiones</param>
+	        </result>
+    	</action>
+    	
+		<action name="Test" >
+	        <result type="chain">
+	          <param name="actionName">Test</param>
+	          <param name="namespace">/expresiones</param>
+	        </result>
+    	</action>
+    	
+		<action name="FuncionesArbol" >
+	        <result type="chain">
+	          <param name="actionName">FuncionesArbol</param>
+	          <param name="namespace">/expresiones</param>
+	        </result>
+    	</action>
+    	
+		<action name="VariablesTemporalesArbol" >
+	        <result type="chain">
+	          <param name="actionName">VariablesTemporalesArbol</param>
+	          <param name="namespace">/expresiones</param>
+	        </result>
+    	</action>
+    	
+		<action name="CamposDelProductoArbol" >
+	        <result type="chain">
+	          <param name="actionName">CamposDelProductoArbol</param>
+	          <param name="namespace">/expresiones</param>
+	        </result>
+    	</action>
+    	
+		<action name="ComboVariables" >
+	        <result type="chain">
+	          <param name="actionName">ComboVariables</param>
+	          <param name="namespace">/expresiones</param>
+	        </result>
+    	</action>
+    	
+		<action name="ComboTabla" >
+	        <result type="chain">
+	          <param name="actionName">ComboTabla</param>
+	          <param name="namespace">/expresiones</param>
+	        </result>
+    	</action>
+    	
+		<action name="ComboColumna" >
+	        <result type="chain">
+	          <param name="actionName">ComboColumna</param>
+	          <param name="namespace">/expresiones</param>
+	        </result>
+    	</action>
+    	
+		<action name="ComboClave" >
+	        <result type="chain">
+	          <param name="actionName">ComboClave</param>
+	          <param name="namespace">/expresiones</param>
+	        </result>
+    	</action>
+    	
+		<action name="AgregarClave" >
+	        <result type="chain">
+	          <param name="actionName">AgregarClave</param>
+	          <param name="namespace">/expresiones</param>
+	        </result>
+    	</action>
+    	
+		<action name="AgregarVariable" >
+	        <result type="chain">
+	          <param name="actionName">AgregarVariable</param>
+	          <param name="namespace">/expresiones</param>
+	        </result>
+    	</action>
+    	
+		<action name="AgregarExpresion" >
+	        <result type="chain">
+	          <param name="actionName">AgregarExpresion</param>
+	          <param name="namespace">/expresiones</param>
+	        </result>
+    	</action>
+    	
+		<action name="EditarExpresion" >
+	        <result type="chain">
+	          <param name="actionName">EditarExpresion</param>
+	          <param name="namespace">/expresiones</param>
+	        </result>
+    	</action>
+    	
+		<action name="EliminarVariable" >
+	        <result type="chain">
+	          <param name="actionName">EliminarVariable</param>
+	          <param name="namespace">/expresiones</param>
+	        </result>
+    	</action>
+    	
+		<action name="ExisteExpresion" >
+	        <result type="chain">
+	          <param name="actionName">ExisteExpresion</param>
+	          <param name="namespace">/expresiones</param>
+	        </result>
+    	</action>
+    	
+		<action name="LimpiarSesion" >
+	        <result type="chain">
+	          <param name="actionName">LimpiarSesion</param>
+	          <param name="namespace">/expresiones</param>
+	        </result>
+    	</action>
+    	
+    	
+    	
+    	<!-- Redireccionamiento de 5 claves-->
+		<action name="ListaClavesEditable" >
+	        <result type="chain">
+	          <param name="actionName">ListaClavesEditable</param>
+	          <param name="namespace">/tablaCincoClaves</param>
+	        </result>
+    	</action>
+    	
+		<action name="BorrarValoresTablaCincoClaves" >
+	        <result type="chain">
+	          <param name="actionName">BorrarValoresTablaCincoClaves</param>
+	          <param name="namespace">/tablaCincoClaves</param>
+	        </result>
+    	</action>
+    	
+		<action name="ListaAtributosEditable" >
+	        <result type="chain">
+	          <param name="actionName">ListaAtributosEditable</param>
+	          <param name="namespace">/tablaCincoClaves</param>
+	        </result>
+    	</action>
+    	
+		<action name="InsertarValoresTablaEditable" >
+	        <result type="chain">
+	          <param name="actionName">InsertarValoresTablaEditable</param>
+	          <param name="namespace">/tablaCincoClaves</param>
+	        </result>
+    	</action>
+    	
+		<action name="InsertarValoresTablaCincoClaves" >
+	        <result type="chain">
+	          <param name="actionName">InsertarValoresTablaCincoClaves</param>
+	          <param name="namespace">/tablaCincoClaves</param>
+	        </result>
+    	</action>
+    	
+		<action name="ListaCincoClaves" >
+	        <result type="chain">
+	          <param name="actionName">ListaCincoClaves</param>
+	          <param name="namespace">/tablaCincoClaves</param>
+	        </result>
+    	</action>
+    	
+		<action name="ListaAtributos" >
+	        <result type="chain">
+	          <param name="actionName">ListaAtributos</param>
+	          <param name="namespace">/tablaCincoClaves</param>
+	        </result>
+    	</action>
+    	
+		<action name="CatalogoClnatura" >
+	        <result type="chain">
+	          <param name="actionName">CatalogoClnatura</param>
+	          <param name="namespace">/tablaCincoClaves</param>
+	        </result>
+    	</action>
+    	
+		<action name="InsertarTabla" >
+	        <result type="chain">
+	          <param name="actionName">InsertarTabla</param>
+	          <param name="namespace">/tablaCincoClaves</param>
+	        </result>
+    	</action>
+    	
+		<action name="EditaTabla5ClavesCabecera" >
+	        <result type="chain">
+	          <param name="actionName">EditaTabla5ClavesCabecera</param>
+	          <param name="namespace">/tablaCincoClaves</param>
+	        </result>
+    	</action>
+    	
+    	
+    	<!-- Otros redireccionamientos a atributos variables -->
+		<action name="EliminarTablaClave" >
+	        <result type="chain">
+	          <param name="actionName">EliminarTablaClave</param>
+	          <param name="namespace">/atributosVariables</param>
+	        </result>
+    	</action>
+    	
+		<action name="ListaCargaManual" >
+	        <result type="chain">
+	          <param name="actionName">ListaCargaManual</param>
+	          <param name="namespace">/atributosVariables</param>
+	        </result>
+    	</action>
+    	
+		<action name="EditarListaDeValoresCabecera" >
+	        <result type="chain">
+	          <param name="actionName">EditarListaDeValoresCabecera</param>
+	          <param name="namespace">/atributosVariables</param>
+	        </result>
+    	</action>
+    	
+		<action name="CargaCatalogos" >
+	        <result type="chain">
+	          <param name="actionName">CargaCatalogos</param>
+	          <param name="namespace">/atributosVariables</param>
+	        </result>
+    	</action>
+    	
+		<action name="CargaCatalogos2" >
+	        <result type="chain">
+	          <param name="actionName">CargaCatalogos2</param>
+	          <param name="namespace">/atributosVariables</param>
+	        </result>
+    	</action>
+    	
+		<action name="CargaClaveDependcia" >
+	        <result type="chain">
+	          <param name="actionName">CargaClaveDependcia</param>
+	          <param name="namespace">/atributosVariables</param>
+	        </result>
+    	</action>
+    	
+		<action name="GuardarListaDeValores" >
+	        <result type="chain">
+	          <param name="actionName">GuardarListaDeValores</param>
+	          <param name="namespace">/atributosVariables</param>
+	        </result>
+    	</action>
+    	
+		<action name="EliminaCargaManual" >
+	        <result type="chain">
+	          <param name="actionName">EliminaCargaManual</param>
+	          <param name="namespace">/atributosVariables</param>
+	        </result>
+    	</action>
+
+	</package>
+
+</struts>

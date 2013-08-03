@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<statements>
+	#foreach($descripcion in $params.listaDescripcion)
+	<statement type="stored" name="PKG_TABAPOYO.P_GUARDA_ATRIBUTOS" id="pGuardaAtributos">
+		<param eval="true" name="PI_TIP_TRAN" type="NUMERIC">$!params.tipoTransaccion</param>
+		<param eval="true" name="PI_NMTABLA" type="NUMERIC">$!params.nmTabla</param>
+		<param eval="true" name="PI_CDATRIBU" type="VARCHAR">$!descripcion.cdAtribu</param>
+		<param eval="true" name="PI_DSATRIBU" type="VARCHAR">$!descripcion.descripcionFormato</param>
+		<param eval="true" name="PI_SWFORMAT" type="VARCHAR">$!descripcion.formatoDescripcion</param>
+		<param eval="true" name="PI_NMLMIN" type="NUMERIC">$!descripcion.minimoDescripcion</param>
+		<param eval="true" name="PI_NMLMAX" type="NUMERIC">$!descripcion.maximoDescripcion</param>	
+		<outparam id="PV_MSG_ID_O" type="NUMERIC"/>
+		<outparam id="PV_TITLE_O" type="VARCHAR"/>		
+</statement>
+	#end
+</statements>

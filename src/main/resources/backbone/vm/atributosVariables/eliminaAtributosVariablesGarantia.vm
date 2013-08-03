@@ -1,0 +1,11 @@
+<statements>
+	<statement type="stored" name="PKG_WIZARD.P_BORRA_TATRIGAR" id="pBorraTatriGar">
+		<param eval="true" name="PV_CDRAMO_I" type="NUMERIC">$!params.cdRamo</param>
+		<param eval="true" name="PV_CDTIPSIT_I" type="VARCHAR">$!params.codigoSituacion</param>
+		<param eval="true" name="PV_CDGARANT_I" type="VARCHAR">$!params.codigoGarantia</param>
+		<param eval="true" name="PV_CDATRIBU_I" type="NUMERIC">$!params.claveCampo</param>
+		
+		<outparam id="pv_msg_id_o" type="NUMERIC"/>
+		<outparam id="pv_title_o" type="VARCHAR"/>		
+</statement>
+</statements>

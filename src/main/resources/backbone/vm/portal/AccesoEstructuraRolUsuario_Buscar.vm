@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_CONFG_CUENTA.P_OBTIENE_ROL_USUARIO" id="pObtieneRolUsuario">
+       <param eval="true" name="pv_dsnivel_i" type="VARCHAR"><![CDATA[$!params.get("dsNivel")]]></param>
+       <param eval="true" name="pv_dsusuario_i" type="VARCHAR"><![CDATA[$!params.get("dsUsuario")]]></param>
+       <param eval="true" name="pv_dsrol_i" type="VARCHAR"><![CDATA[$!params.get("dsRol")]]></param>       
+       <param eval="true" name="pv_dsestado_i" type="VARCHAR"><![CDATA[$!params.get("dsEstado")]]></param>
+ 	  	   
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+       
+       <outparam id="pv_registro_o" type="CURSOR"/>
+       
+	</statement>
+</statements>

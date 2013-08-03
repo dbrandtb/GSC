@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<statements>
+	<statement type="stored" name="PKG_ENDOSOS.P_TARIFICA_INCISOS_FALTANTES" id="tarificaIncisosFaltantes">
+		<param eval="true" name="pv_cdunieco_i" type="NUMERIC"><![CDATA[$!params.cdunieco]]></param>
+		<param eval="true" name="pv_cdramo_i"   type="NUMERIC"><![CDATA[$!params.cdramo]]></param>
+		<param eval="true" name="pv_estado_i"   type="VARCHAR"><![CDATA[$!params.estado]]></param>
+		<param eval="true" name="pv_nmpoliza_i" type="NUMERIC"><![CDATA[$!params.nmpoliza]]></param>
+		<param eval="true" name="pv_nmsuplem_i" type="VARCHAR"><![CDATA[$!params.nmsuplem]]></param>
+		<outparam id="pv_codereturn" type="NUMERIC"/>
+		<outparam id="pv_msg_id_o" type="VARCHAR"/>
+		<outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

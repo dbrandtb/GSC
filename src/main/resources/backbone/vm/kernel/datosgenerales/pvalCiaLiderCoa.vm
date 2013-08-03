@@ -1,0 +1,8 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_DATOS_GENERALES.P_VALIDAR_CIALIDER" id="pvalCiaLiderCoa">
+		<param eval="true" name="pi_CIALIDER" type="VARCHAR">$!params.get("pi_CIALIDER")</param>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_ORDENT.P_GUARDA_SECCION_ORDEN" id="pGuardarSeccionOrden">
+		
+       <param eval="true" name="pv_cdordentrabajo_i" type="NUMERIC">$!params.get("pv_cdordentrabajo_i")</param>
+       <param eval="true" name="pv_cdformatoorden_i" type="NUMERIC">$!params.get("pv_cdformatoorden_i")</param>
+       <param eval="true" name="pv_cdseccion_i" type="NUMERIC">$!params.get("pv_cdseccion_i")</param>
+       <param eval="true" name="pv_cdatribu_i" type="NUMERIC">$!params.get("pv_cdatribu_i")</param>
+       <param eval="true" name="pv_otvalor_i" type="VARCHAR"><![CDATA[$!params.get("pv_otvalor_i")]]></param>
+         		
+  		<outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

@@ -1,0 +1,28 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_PERSONAS.P_GET_AGRUPADOR" id="pgetAgrupador">
+		<param eval="true" name="pi_CDUNIECO" type="NUMERIC">$!params.get("pi_CDUNIECO")</param>
+		<param eval="true" name="pi_CDRAMO" type="NUMERIC">$!params.get("pi_CDRAMO")</param>
+		<param eval="true" name="pi_ESTADO" type="VARCHAR">$!params.get("pi_ESTADO")</param>
+		<param eval="true" name="pi_NMPOLIZA" type="NUMERIC">$!params.get("pi_NMPOLIZA")</param>
+		<param eval="true" name="pi_CDAGRUPA" type="NUMERIC">$!params.get("pi_CDAGRUPA")</param>
+		<outparam id="pi_CDPERSON" type="NUMERIC"/>
+		<outparam id="pi_NMORDDOM" type="NUMERIC"/>
+		<outparam id="pi_CDFORPAG" type="VARCHAR"/>
+		<outparam id="pi_DSFORPAG" type="VARCHAR"/>
+		<outparam id="pi_CDBANCO" type="VARCHAR"/>
+		<outparam id="pi_DSBAN" type="VARCHAR"/>
+		<outparam id="pi_CDSUCURS" type="VARCHAR"/>
+		<outparam id="pi_DSSUC" type="VARCHAR"/>
+		<outparam id="pi_CDCUENTA" type="VARCHAR"/>
+		<outparam id="pi_CDRAZON" type="VARCHAR"/>
+		<outparam id="pi_SWREGULA" type="VARCHAR"/>
+		<outparam id="pi_DSREG" type="VARCHAR"/>
+		<outparam id="pi_CDPERREG" type="NUMERIC"/>
+		<outparam id="pi_FEULTREG" type="VARCHAR"/>
+		<outparam id="pi_CDGESTOR" type="VARCHAR"/>
+		<outparam id="pi_DSGESTOR" type="VARCHAR"/>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

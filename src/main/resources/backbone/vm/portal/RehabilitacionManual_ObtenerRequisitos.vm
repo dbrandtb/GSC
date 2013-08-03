@@ -1,0 +1,15 @@
+<statements>
+<statement type="stored" name="PKG_CANCELA.P_REQUISITO_REHABILITA" id="pObtieneRequisitos">
+		
+	   <param eval="true" name="pv_cdunieco_i" type="NUMERIC">$!params.get("cdUniEco")</param>
+	   <param eval="true" name="pv_nmpoliza_i" type="NUMERIC">$!params.get("nmPoliza")</param>
+	   <param eval="true" name="pv_estado_i" type="VARCHAR">$!params.get("estado")</param>
+	   <param eval="true" name="pv_nmsuplem_i" type="NUMERIC">$!params.get("nmSuplem")</param>
+	   <param eval="true" name="pv_nmsituac_i" type="NUMERIC">$!params.get("nmSituac")</param>
+ 
+       <outparam id="pv_registro_o" type="CURSOR"/>
+  	   
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

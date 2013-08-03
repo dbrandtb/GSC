@@ -1,0 +1,8 @@
+<statements>
+    <statement type="stored" name="PKG_CATALOGO.P_BORRA_AGENTES" id="borraAgente">
+        <param eval="true" name="pv_cdagente_i" type="VARCHAR">$!params.get("cdEjecutivo")</param>
+
+        <outparam id="pv_msg_id_o" type="NUMERIC"/>
+        <outparam id="pv_title_o" type="VARCHAR"/>        
+    </statement>
+</statements>

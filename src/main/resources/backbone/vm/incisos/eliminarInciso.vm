@@ -1,0 +1,9 @@
+<statements>
+	<statement type="stored" name="PKG_WIZARD.P_BORRA_RIESGO_REG" id="pBorraRiesgoReg">
+		<param eval="true" name="pv_cdramo_i" type="VARCHAR">$!params.cdramo</param>
+		<param eval="true" name="pv_cdtipsit_i" type="VARCHAR">$!params.cdtipsit</param>
+		
+		<outparam id="pv_msg_id_o" type="NUMERIC"/>
+		<outparam id="pv_title_o" type="VARCHAR"/>		
+	</statement>
+</statements>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+    <statement type="stored" name="PKG_CATALOGO.P_OBTIENE_AGENTES" id="listaAgentes">
+        <param eval="true" name="pv_cdagente_i" type="VARCHAR"><![CDATA[$!params.get("cdEjecutivo")]]></param>
+        <param eval="true" name="pv_dsnombre_i" type="VARCHAR"><![CDATA[$!params.get("dsPerson")]]></param>
+        <param eval="true" name="pv_fedesde_i" type="VARCHAR">$!params.get("fechaInicial")</param>
+        <param eval="true" name="pv_fehasta_i" type="VARCHAR">$!params.get("fechaFinal")</param>
+        <param eval="true" name="pv_swactivo_i" type="VARCHAR"><![CDATA[$!params.get("status")]]></param>
+
+        <outparam id="pv_registro_o" type="CURSOR"/>
+
+        <outparam id="pv_msg_id_o" type="NUMERIC"/>
+        <outparam id="pv_title_o" type="VARCHAR"/>        
+    </statement>
+</statements>

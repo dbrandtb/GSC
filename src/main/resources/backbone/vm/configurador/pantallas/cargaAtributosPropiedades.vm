@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
+<statements>
+  <statement type="stored" name="PKG_CONFIGURA_PANTALLA2.P_CARGA_ATRIBUTOS_PROPIEDADES" id="cargaAtributosPropiedades">
+     <param eval="true" name="PV_CDMASTER_I" type="INTEGER">$!params.cdTipoMaster</param>
+     <param eval="true" name="PV_CDPROCESO_I" type="INTEGER">$!params.cdProceso</param>
+     <param eval="true" name="PV_CDTIPO_I" type="INTEGER">$!params.tipoMaster</param>
+     <param eval="true" name="PV_PRODUCTO_I" type="INTEGER">$!params.cdProducto</param>
+
+	##
+	<param eval="true" name="pv_cdtipsit_i" type="VARCHAR"><![CDATA[$!params.claveSituacion]]></param>	
+     
+     <outparam id="PV_REGISTRO_O" type="CURSOR"></outparam>
+     <outparam id="PV_MSG_ID_O" type="NUMERIC"></outparam>
+     <outparam id="PV_TITLE_O" type="VARCHAR"></outparam>
+  </statement>
+</statements>

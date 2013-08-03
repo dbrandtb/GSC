@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
+<statements>
+	<statement type="select">
+		SELECT 
+			'$params.user' AS NAME, 
+			'$params.password' AS LASTNAME,
+			'DEFAULT' AS PERFIL 
+		FROM DUAL
+	</statement>
+</statements>

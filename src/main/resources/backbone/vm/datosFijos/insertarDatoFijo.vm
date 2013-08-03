@@ -1,0 +1,12 @@
+<statements>
+	<statement type="stored" name="PKG_WIZARD.P_INSERTTCMPFFLD" id="pvalSituacionExcluidaCoa">
+		<param eval="true" name="PV_CDRAMO_I" type="VARCHAR">$!params.codigoRamo</param>
+		<param eval="true" name="PV_CDFUNCIO_I" type="VARCHAR">SIGS2035</param>
+		<param eval="true" name="PV_CDBLOQUE_I" type="VARCHAR">$!params.codigoBloque</param>
+		<param eval="true" name="PV_CDCAMPO_I" type="VARCHAR">$!params.codigoCampo</param>
+		<param eval="true" name="PV_CDEXPRES_I" type="VARCHAR">$!params.codigoExpresion</param>
+		
+		<outparam id="PV_MSG_ID_O" type="NUMERIC"/> 	
+		<outparam id="PV_TITLE_O" type="VARCHAR"/>		
+</statement>
+</statements>

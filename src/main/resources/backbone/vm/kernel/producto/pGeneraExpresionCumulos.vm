@@ -1,0 +1,9 @@
+<statements>
+	<statement type="stored" name="PKG_GENERAR_PRODUCTO.GENERA_DATOS_EXPRESIO_CUMULO" id="pGeneraExpresionCumulos">
+		<param eval="true" name="pi_CDRAMO" type="NUMERIC">$!params.get("pi_CDRAMO")</param>
+		<outparam id="po_rc_cursor" type="CURSOR"/>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

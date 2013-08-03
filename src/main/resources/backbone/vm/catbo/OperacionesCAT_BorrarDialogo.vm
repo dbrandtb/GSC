@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_NOTIFICACIONES_CATBO.P_BORRA_TDIALOGO" id="borrarDialogo">
+       
+      <!-- <param eval="true" name="pv_cdunieco_i" type="NUMERIC">$!params.get("cdUniEco")</param>  
+       <param eval="true" name="pv_cdramo_i" type="NUMERIC">$!params.get("cdRamo")</param>
+       <param eval="true" name="pv_cdelemento_i" type="NUMERIC">$!params.get("cdElemento")</param> 
+       <param eval="true" name="pv_cdproceso_i" type="VARCHAR">$!params.get("cdProceso")</param> --> 
+       <param eval="true" name="pv_cdguion_i" type="NUMERIC">$!params.get("cdGuion")</param> 
+       <param eval="true" name="pv_cddialogo_i" type="NUMERIC">$!params.get("cdDialogo")</param> 
+         	  
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>
+

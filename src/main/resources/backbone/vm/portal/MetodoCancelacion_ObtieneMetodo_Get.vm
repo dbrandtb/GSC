@@ -1,0 +1,10 @@
+<statements>
+	<statement type="stored" name="PKG_CANCELA.P_OBTIENE_METODO" id="pObtieneMetodoCancelacionGet">
+        
+        <param eval="true" name="pv_cdmetodo_i" type="VARCHAR">$!params.get("cdMetodo")</param>
+     
+        <outparam id="pv_registro_o" type="CURSOR"></outparam>
+		<outparam id="pv_msg_id_o" type="NUMERIC"/>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+	</statement>
+</statements>

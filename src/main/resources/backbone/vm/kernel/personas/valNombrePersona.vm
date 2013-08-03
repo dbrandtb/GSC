@@ -1,0 +1,9 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_PERSONAS.P_VALIDAR_DSNOMBRE" id="valNombrePersona">
+       <inoutparam eval="true" name="p_DSNOMBRE" id="p_DSNOMBRE" type="VARCHAR">$!params.get("p_DSNOMBRE")</inoutparam>
+		<outparam id="po_FILTER" type="VARCHAR"/>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

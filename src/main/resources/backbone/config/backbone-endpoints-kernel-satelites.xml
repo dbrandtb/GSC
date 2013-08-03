@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+    
+	<bean id="satelites-endpoint" abstract="true" parent="parent-endpoint-kernel">
+        <property name="templateModule" value="satelites" />
+        <property name="xslModule" value="satelites" />
+    </bean>
+    
+    <!-- bean id="CALCULA_NUMERO_POLIZA" parent="satelites-endpoint">
+		<property name="templateName" value="calcNumPoliza.vm" />
+		
+		<property name="xslDir" value="classpath:backbone/xsl" />
+		<property name="xslModule" value="portal" />
+		<property name="xslName" value="obtieneUnEntero.xsl" />
+		<property name="unmarshallClass" value="java.lang.Integer" />
+	</bean 
+	<bean id="CALCULA_NUMERO_POLIZA" parent="parent-endpoint">
+		<property name="templateModule" value="kernel/satelites" />
+		<property name="templateName" value="calcNumPoliza.vm" />
+		
+		<property name="xslModule" value="kernel/satelites" />
+		<property name="xslName" value="calcNumPoliza.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.model.BaseObjectVO" />
+	</bean>
+    
+    <bean id="GENERA_SUPLEMENTO_FISICO" parent="parent-endpoint">
+    <property name="templateModule" value="kernel/satelites" />
+    	<property name="templateName" value="generaSuplFisico.vm" />
+    	
+		<property name="xslModule" value="endosos" />
+		<property name="xslName" value="obtieneSuplFisico.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.model.BaseObjectVO" />
+    </bean>
+    
+    <bean id="GENERA_SUPLEMENTO_LOGICO" parent="parent-endpoint">
+    	<property name="templateModule" value="kernel/satelites" />
+    	<property name="templateName" value="generaSuplLogico.vm" />
+    	
+		<property name="xslModule" value="portal" />
+		<property name="xslName" value="obtieneUnEntero.xsl" />
+		<property name="unmarshallClass" value="java.lang.Integer" />
+    </bean>
+    -->
+    <bean id="GENERA_SUPLEMENTOS" parent="parent-endpoint">
+        <property name="templateModule" value="endosos" />
+        <property name="templateName" value="generaSuplems.vm" />
+        <property name="xslModule" value="endosos" />
+        <property name="xslName" value="generaSuplems.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.flujos.endoso.model.SuplemVO" />
+    </bean>
+    <!--
+    <bean id="MOV_T_DESC_SUP" parent="satelites-endpoint">
+		<property name="templateName" value="movTDESCSUP.vm" />
+		<property name="transformResult" value="false" />
+        <property name="unmarshallResult" value="false" />
+	</bean>
+    
+    <bean id="MOV_M_SUPLEME" parent="satelites-endpoint">
+		<property name="templateName" value="movMSUPLEME.vm" />
+		<property name="transformResult" value="false" />
+        <property name="unmarshallResult" value="false" />
+	</bean>
+	
+	<bean id="MOV_MPOLIAGR" parent="satelites-endpoint">
+		<property name="templateName" value="movMPOLIAGR.vm" />
+		<property name="transformResult" value="false" />
+        <property name="unmarshallResult" value="false" />
+	</bean>
+	
+	<bean id="MOV_MPOLIAGE" parent="satelites-endpoint">
+		<property name="templateName" value="movMPOLIAGE.vm" />
+		<property name="transformResult" value="false" />
+        <property name="unmarshallResult" value="false" />
+	</bean>
+    -->
+    <bean id="OBTIENE_MPOLIAGR" parent="satelites-endpoint">
+        <property name="templateName" value="obtenerMPOLIAGR.vm" />
+        <property name="xslName" value="obtenerMPOLIAGR.xsl" />
+        <property name="unmarshallClass"
+			value="java.util.ArrayList" />
+    </bean>
+    
+	<bean id="MOV_MPOLAGEN" parent="satelites-endpoint">
+		<property name="templateName" value="movMPOLAGEN.vm" />
+		<property name="transformResult" value="false" />
+        <property name="unmarshallResult" value="false" />
+	</bean>
+</beans>

@@ -1,0 +1,7 @@
+<statements>
+	
+	<statement type="select">
+		SELECT * FROM tpantalla where cdconjunto = $params.cdConjunto AND cdpantalla = $params.cdPantalla
+	</statement>
+	
+</statements>

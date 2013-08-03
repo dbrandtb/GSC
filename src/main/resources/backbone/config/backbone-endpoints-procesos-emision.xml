@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <bean id="emision-endpoint" abstract="true"
+        parent="parent-endpoint">
+        <property name="templateModule" value="emision" />
+        <property name="xslModule" value="emision" />
+    </bean>
+    
+    <!-- Bean declarado para obtener planes totales existentes en BD-->
+    <bean id="OBTIENE_POLIZAS" parent="emision-endpoint">
+        <property name="templateName" value="obtienePolizas.vm" />
+        <property name="xslName" value="obtienePolizas.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+    
+    <!-- Bean declarado para obtener planes totales existentes en BD y Exportarlos (solo cambia el XSL) -->
+    <bean id="OBTIENE_POLIZAS_EXPORT" parent="emision-endpoint">
+        <property name="templateName" value="obtienePolizas.vm" />
+        <property name="xslName" value="obtienePolizasArray.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="OBTIENE_POLIZA_DETALLE" parent="emision-endpoint">
+        <property name="templateName" value="obtienePolizaDetalle.vm" />
+        <property name="xslName" value="obtienePolizaDetalle.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="OBTIENE_DATOS_ADICIONALES_DETALLE_POLIZA" parent="emision-endpoint">
+        <property name="templateName" value="obtieneDatosAdicionalesPolizaExt.vm" />
+        <property name="xslName" value="obtieneDatosExt.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="OBTIENE_OBJETO_ASEGURABLE" parent="emision-endpoint">
+        <property name="templateName" value="obtieneObjetoAsegurable.vm" />
+        <property name="xslName" value="obtieneObjetoAsegurable.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+    
+    <bean id="OBTIENE_FUNCION_POLIZA" parent="emision-endpoint">
+        <property name="templateName" value="obtieneFuncionPoliza.vm" />
+        <property name="xslName" value="obtieneFuncionPoliza.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+    
+    <!-- Bean declarado para obtener los recibos existentes en BD-->
+    <bean id="EMISION_OBTIENE_RECIBOS" parent="emision-endpoint">
+        <property name="templateName" value="obtieneRecibos.vm" />
+        <property name="xslName" value="obtieneRecibos.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+    
+    <bean id="OBTIENE_PANTALLA_POLIZA" parent="emision-endpoint">
+        <property name="templateName" value="obtienePantalla.vm" />
+        <property name="xslName" value="obtienePantalla.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="OBTIENE_DATOS_ADICIONALES" parent="emision-endpoint">
+        <property name="templateName" value="obtieneDatosAdicionales.vm" />
+        <property name="xslName" value="obtieneDatosAdicionales.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="EMISION_OBTIENE_DATOS_ROL" parent="emision-endpoint">
+        <property name="templateName" value="obtieneDatosRol.vm" />
+        <property name="xslName" value="obtieneDatosRol.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.procesos.emision.model.DatosRolVO" />
+    </bean>
+    
+    <bean id="EMISION_OBTIENE_DATOS_ROL_EXT" parent="emision-endpoint">
+        <property name="templateName" value="obtieneDatosRol.vm" />
+        <property name="xslName" value="obtieneDatosExt.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="EMISION_OBTIENE_DATOS_COBERTURAS" parent="emision-endpoint">
+        <property name="templateName" value="obtieneDatosCoberturas.vm" />
+        <property name="xslName" value="obtieneDatosExt.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="EMISION_OBTIENE_DATOS_ACCESORIOS" parent="emision-endpoint">
+        <property name="templateName" value="obtieneDatosAccesorios.vm" />
+        <property name="xslName" value="obtieneDatosExt.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="PROCESO_EMISION" parent="emision-endpoint">
+        <property name="templateName" value="procesoEmision.vm" />
+        <property name="xslModule" value="general" />
+        <property name="xslName" value="ObtieneMensaje.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+    
+    <bean id="EMISION_DATOS_INCISOS" parent="emision-endpoint">
+        <property name="templateName" value="obtieneDatosIncisos.vm" />
+        <property name="xslName" value="obtieneDatosExt.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="EMISION_GRID_COBERTURA_INCISOS" parent="emision-endpoint">
+        <property name="templateName" value="obtieneGridCoberturasIncisos.vm" />
+        <property name="xslName" value="obtieneGridCoberturaIncisos.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+    
+    <bean id="ENDOSOS_GRID_COBERTURA_INCISOS" parent="emision-endpoint">
+        <property name="templateName" value="obtieneGridCoberturasIncisosEndosos.vm" />
+        <property name="xslName" value="obtieneGridCoberturaIncisosEndosos.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+    
+    <bean id="EMISION_GRID_ACCESORIOS_INCISOS" parent="emision-endpoint">
+        <property name="templateName" value="obtieneGridAccesoriosIncisos.vm" />
+        <property name="xslName" value="obtieneGridAccesoriosIncisos.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+    
+    <!-- Bean declarado para obtener los recibos existentes en BD-->
+    <bean id="EMISION_OBTIENE_RECIBOS_DETALLE" parent="emision-endpoint">
+        <property name="templateName" value="obtieneRecibosDetalle.vm" />
+        <property name="xslName" value="obtieneRecibosDetalle.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+    
+    <bean id="MOV_MPOLIAGR2" parent="emision-endpoint">
+		<property name="templateName" value="movMPOLIAGR2.vm" />
+		<property name="transformResult" value="false" />
+        <property name="unmarshallResult" value="false" />
+	</bean>
+    
+    <bean id="OBTIENE_POLIZA_MAESTRA" parent="emision-endpoint">
+        <property name="templateName" value="obtienePolizaMaestra.vm" />
+        <property name="xslName" value="obtienePolizaMaestra.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+    
+    <bean id="EMISION_GUARDA_POLIZA_MAESTRA" parent="emision-endpoint">
+        <property name="templateName" value="guardaPolizaMaestra.vm" />
+        <property name="xslModule" value="catalogs" />
+		<property name="xslName" value="obtieneMensajes.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.model.MensajesVO" />
+    </bean>
+    
+    <bean id="OBTIENE_POLIZA_MAESTRA_REG" parent="emision-endpoint">
+        <property name="templateName" value="obtienePolizaMaestraReg.vm" />
+		<property name="xslName" value="obtienePolizaMaestraReg.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.procesos.emision.model.PolizaMaestraVO" />
+    </bean>
+    
+    <bean id="VALIDA_ENDOSO_POLIZA" parent="emision-endpoint">
+        <property name="templateName" value="validaEndosoPoliza.vm" />
+        <property name="xslName" value="validaEndosoPoliza.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.model.BaseObjectVO" />
+    </bean>
+    
+    <bean id="VALIDA_ENDOSO_REHABILITACION" parent="emision-endpoint">
+        <property name="templateName" value="validaEndosoRehabilitacion.vm" />
+        <property name="xslName" value="validaEndosoPoliza.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.model.BaseObjectVO" />
+    </bean>
+    
+    <bean id="OBTIENE_POLIZA_MAESTRA_EXPORT" parent="emision-endpoint">
+        <property name="templateName" value="obtienePolizaMaestraExport.vm" />
+        <property name="xslName" value="obtienePolizaMaestraExport.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+    
+</beans>

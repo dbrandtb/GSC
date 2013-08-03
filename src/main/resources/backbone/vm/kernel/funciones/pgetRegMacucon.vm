@@ -1,0 +1,12 @@
+
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_FUNCIONES.P_Get_Registro_Macucont" id="pgetRegMacucon">
+		<param eval="true" name="gblPlan" type="VARCHAR">$!params.get("piCdplan")</param>
+		<param eval="true" name="gblPerpla" type="VARCHAR">$!params.get("piCdperpla")</param>
+		<param eval="true" name="gblContre" type="VARCHAR">$!params.get("piCdcontre")</param>
+		<param eval="true" name="gblReins" type="VARCHAR">$!params.get("piNmreins")</param>
+		<param eval="true" name="gblMes" type="VARCHAR">$!params.get("piMes")</param>
+		<param eval="true" name="gblAnno" type="VARCHAR">$!params.get("piAnno")</param>
+		<outparam id="cursorPrimdep" type="CURSOR"/>
+	</statement>
+</statements>

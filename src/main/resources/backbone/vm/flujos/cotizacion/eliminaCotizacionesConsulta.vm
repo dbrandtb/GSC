@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
+<statements>
+#foreach($cotizacion  in  $params.COTIZACIONES)
+
+	<statement type="stored" name="PKG_COTIZA.P_MOV_ZWPOLREC" id="eliminarCobertura">
+		
+		<param eval="true" name="pv_cdusuari_i" type="VARCHAR"><![CDATA[$!params.get("CDUSUARI")]]></param>
+  		<param eval="true" name="pv_cdunieco_i" type="NUMERIC"><![CDATA[$!cotizacion.codigoAseguradora]]></param>  
+  		<param eval="true" name="pv_cdramo_i"   type="NUMERIC"><![CDATA[$!cotizacion.codigoProducto]]></param>
+  		<param eval="true" name="pv_estado_i"   type="VARCHAR"><![CDATA[$!cotizacion.estado]]></param>
+  		<param eval="true" name="pv_nmpoliza_i" type="NUMERIC"><![CDATA[$!cotizacion.nmpoliza]]></param>
+  		<param eval="true" name="pv_cdcia_i"    type="NUMERIC"><![CDATA[$!cotizacion.cdcia]]></param>
+		<param eval="true" name="pv_cdperpag_i" type="NUMERIC"><![CDATA[$!cotizacion.codigoFormaPago]]></param>
+  		<param eval="true" name="pv_nmsituac_i" type="NUMERIC"><![CDATA[$!cotizacion.nmsituac]]></param>
+  		<param eval="true" name="pv_nmsuplem_i" type="NUMERIC"><![CDATA[$!cotizacion.nmsuplem]]></param>
+		<param eval="true" name="pv_cdplan_i"   type="VARCHAR"><![CDATA[$!cotizacion.cdplan]]></param>
+  		<param eval="true" name="pv_nmimpfpg_i" type="NUMERIC"><![CDATA[$!cotizacion.prima]]></param> 
+  		<param eval="true" name="pv_accion_i"   type="VARCHAR">D</param>
+  		<param eval="true" name="pv_swguarda_i" type="VARCHAR"></param>
+  		
+  		<outparam id="po_msg_id" type="NUMERIC"/>
+		<outparam id="p_out_title" type="VARCHAR"/>
+		
+	</statement>
+	
+#end
+</statements>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

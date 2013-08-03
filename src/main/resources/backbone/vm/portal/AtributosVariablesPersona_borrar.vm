@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<statements>
+     <statement type="stored" name="PKG_WIZARD.P_BORRA_TATRIPER" id="pBorraConfAtribVblesPersona">
+     	
+        <param eval="true" name="pv_cdatribu_i" type="VARCHAR">$!params.get('pv_cdatribu_i')</param>        
+        
+        <outparam id="pv_msg_id_o" type="NUMERIC"></outparam>        
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+    </statement>
+</statements>

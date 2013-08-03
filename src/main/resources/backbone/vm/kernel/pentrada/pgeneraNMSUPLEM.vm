@@ -1,0 +1,12 @@
+<statements>
+	<statement type="stored" name="P_GENERA_NMSUPLEM" id="pgeneraNMSUPLEM">
+       <inoutparam eval="true" name="Gv_Identificador_Error" id="Gv_Identificador_Error" type="VARCHAR">$params.get("Error")</inoutparam>
+		<param eval="true" name="Gn_Cdunieco" type="NUMERIC">$!params.get("pi_CDUNIECO")</param>
+		<param eval="true" name="Gn_Cdramo" type="NUMERIC">$!params.get("pi_CDRAMO")</param>
+		<param eval="true" name="Gv_Estado" type="VARCHAR">$!params.get("pi_ESTADO")</param>
+		<param eval="true" name="Gn_Nmpoliza" type="NUMERIC">$!params.get("pi_NMPOLIZA")</param>
+		<param eval="true" name="Gd_Feinival" type="DATE">$!params.get("pi_FEINIVAL")</param>
+		<param eval="true" name="Gv_Hhinival" type="VARCHAR">$!params.get("pi_HHINIVAL")</param>
+       <inoutparam eval="true" name="Gn_Nmsuplem_New" id="Gn_Nmsuplem_New" type="VARCHAR">$!params.get("p_NMSUPLEM")</inoutparam>
+	</statement>
+</statements>

@@ -1,0 +1,10 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_VALIDAPROC.P_VALIDA_ALEACTP" id="pvalidaALEAACTP">
+		<param eval="true" name="p_cdunieco" type="NUMERIC">$!params.get("p_cdunieco")</param>
+		<param eval="true" name="p_cdramo" type="NUMERIC">$!params.get("p_cdramo")</param>
+		<param eval="true" name="p_newnmpol" type="NUMERIC">$!params.get("p_newnmpol")</param>
+		<param eval="true" name="p_oldnmpol" type="NUMERIC">$!params.get("p_oldnmpol")</param>
+		<outparam id="p_status" type="NUMERIC"/>
+		<outparam id="p_errormsg" type="VARCHAR"/>
+	</statement>
+</statements>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_AYUDA.P_OBTIENE_COBERTURAS" id="buscarAyudaCoberturas">
+       <param eval="true" name="pv_dsunieco_i" type="VARCHAR"><![CDATA[$!params.get("dsUnieco")]]></param>
+       <param eval="true" name="pv_dssubramo_i" type="VARCHAR"><![CDATA[$!params.get("dsSubram")]]></param>
+       <param eval="true" name="pv_dsgarant_i" type="VARCHAR"><![CDATA[$!params.get("dsGarant")]]></param>
+       <param eval="true" name="pv_dstiporam_i" type="VARCHAR"><![CDATA[$!params.get("dsTipram")]]></param>
+       <param eval="true" name="pv_dsramo_i" type="VARCHAR"><![CDATA[$!params.get("dsRamo")]]></param>
+       <!--Se cambió el pl para que aceptara el parametro pv_lang_code_i 09/09/2008-->
+       <param eval="true" name="pv_lang_code_i" type="NUMERIC">$!params.get("pv_lang_code_i")</param>
+	
+  	   <outparam id="pv_registro_o" type="CURSOR"/>
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>
+

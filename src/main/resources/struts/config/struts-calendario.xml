@@ -1,0 +1,51 @@
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+	<include file="struts-default.xml" />
+
+	<package name="calendario" extends="json-default" namespace="/calendario">
+
+	    <action name="traerCalendario" class="listaCalendarioAction" method="cmdBuscarCalendarClick">
+	            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+	
+	    <action name="getElCalendario" class="calendarioAction" method="cmdGetCalendarioClick">
+	            <result type="json"><param name="ignoreHierarchy">false</param></result>
+	    </action>
+	
+	    <action name="salvaCalendario" class="calendarioAction" method="cmdGuardarCalendarioClick">
+	            <result type="json"><param name="ignoreHierarchy">false</param></result>
+	    </action>
+	
+	    <action name="delCalendario" class="calendarioAction" method="cmdBorrarCalendarioClick">
+	            <result type="json"><param name="ignoreHierarchy">false</param></result>
+	    </action>
+
+
+		<action name="exportarCalendario" class="listaCalendarioAction" method="cmdExportarCalendarClick">
+	        <result name="success" type="stream">
+	            <param name="contentType">${contentType}</param>
+	            <param name="inputName">inputStream</param>
+	            <param name="contentDisposition">filename="${filename}"</param>
+	            <param name="bufferSize">4096</param>
+	        </result>
+	    </action> 
+
+
+	<!--  <action name="exportarCalendario" class="listaCalendarioAction" method="showPDF">
+	   <result name="success" type="stream">
+	    <param name="contentType">${contentType}</param>
+	    <param name="inputName">inputStream</param>
+	    <param name="contentDisposition">filename="${filename}"</param>
+	    <param name="bufferSize">4096</param>
+	   </result>
+	  </action> -->
+  	    
+	    <action name="editarCalendario" class="calendarioAction" method="cmdEditarCalendarioClick">
+	            <result type="json"><param name="ignoreHierarchy">false</param></result>
+	    </action> 
+
+	</package>
+
+</struts>

@@ -1,0 +1,393 @@
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <include file="struts-default.xml" />
+
+    
+    <package name="flujocotizacion" extends="json-default" namespace="/flujocotizacion">
+    
+        <interceptors>
+            <interceptor name="cotizacionWorkflowInterceptor" class="mx.com.aon.flujos.cotizacion.web.interceptors.CotizacionWorkflowInterceptor"/>
+            <interceptor-stack name="defaultStack">
+                <interceptor-ref name="exception" />
+                <interceptor-ref name="alias" />
+                <interceptor-ref name="servletConfig" />
+                <interceptor-ref name="prepare" />
+                <interceptor-ref name="i18n" />
+                <interceptor-ref name="chain" />
+                <interceptor-ref name="modelDriven" />
+                <interceptor-ref name="fileUpload" />
+                <interceptor-ref name="staticParams" />
+                <interceptor-ref name="params" />
+                <interceptor-ref name="conversionError" />
+                <interceptor-ref name="validation">
+                    <param name="excludeMethods">cancel,execute,delete,edit,list</param>
+                </interceptor-ref>
+                <interceptor-ref name="workflow">
+                    <param name="excludeMethods">input,back,cancel</param>
+                </interceptor-ref>
+            </interceptor-stack>
+        </interceptors>
+        
+       
+        <action name="cotizacionEntrada" class="entradaCotizacion" method="entrar" >
+            <result name="input" >/jsp/flujos/cotizacion/capturaDatosCotizacion.jsp</result>     
+        </action>
+        
+        
+       
+       
+       <action name="generaCotizacion" class="cotizarAction" method="cotizar" >
+            <result name="success" type="json" />
+        </action>
+        
+         <action name="limpiar" class="cotizarAction" method="limpiar" >
+             <result name="input"/>
+        </action>
+        
+        <action name="getCotizacion" class="cotizarAction" method="obtieneDataCotizar" >
+            <result name="success" type="json" />
+        </action>
+
+        <action name="resultadoCotizacion" class="resultadoCotizacion" method="entrar" >
+              <result name="input">/jsp/flujos/cotizacion/resultadoCotizacion.jsp</result>
+        </action>
+       
+		<action name="getDetalle" class="resultadoCotizacion" method="obtieneDetalle" >
+              <result name="success" type="json" />
+        </action>
+        
+		<action name="enviaMail" class="resultadoCotizacion" method="enviaMailCotizacion">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>   
+       
+        <action name="getGridTest" class="gridAction"  method="load" >
+            <result name="success" type="json" />
+        </action>
+
+        <action name="obtenerListaCombo" class="comboAction"  method="load" >
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="obtenerListaComboId" class="comboAction"  method="loadWithId" >
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="obtenerListaComboOttabval" class="comboAction"  method="loadOttabval" >
+            <result name="success" type="json" />
+        </action>
+        
+        <!-- ######### Ejemplo de un grid Editable #####################-->
+        
+        <action name="resultadoCotizacionEditable">
+            <result>/jsp/flujos/cotizacion/resultadoCotizacionEditable.jsp</result>        
+        </action>
+        
+       
+        
+        <action name="obtenerDatosGrid" class="resultadoCotizacion" method="obtenerDatosGrid" >
+            <result name="success" type="json" />
+        </action>
+        
+        <!-- ######### Ejemplo de un grid MATRIZ #####################-->
+        
+        
+        
+        <action name="resultadoCotizacionMatriz">
+            <result>/jsp/flujos/cotizacion/resultadoCotizacionMatriz.jsp</result>        
+        </action>
+        
+         <!-- ######### Ejemplo de demo #####################-->
+         
+         <action name="capturaCotizacion" class="entradaCotizacion" method="entrar" >
+            <interceptor-ref name="cotizacionWorkflowInterceptor" />
+            <interceptor-ref name="defaultStack" />
+            <result name="input" >/jsp/flujos/cotizacion/capturaCotizacion.jsp</result>     
+        </action>
+        
+        <!-- ######### Ejemplo de demo con 2 iframes #####################-->
+        <action name="capturaCotizacionFrame" class="entradaCotizacion" method="entrar" >
+            <interceptor-ref name="cotizacionWorkflowInterceptor" />
+            <interceptor-ref name="defaultStack" />
+            <result name="input" >/jsp/flujos/cotizacion/capturaCotizacionFrame.jsp</result>     
+        </action>
+        
+        <action name="regresaCapturaCotizacion" class="entradaCotizacion" method="regresar">
+            <result name="input" >/jsp/flujos/cotizacion/capturaCotizacion.jsp</result>     
+        </action>
+        
+        <action name="obtenerRegresar" class="entradaCotizacion" method="obtenerRegresar">
+            <result name="success" type="json" />     
+        </action>
+        
+        <action name="obtenerDatosRegistro" class="resultadoCotizacion" method="obtenerDatosRegistro" >
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="resultCotizacion" class="resultadoCotizacion" method="entrar">
+            <result  name="input">/jsp/flujos/cotizacion/resultCotizacion.jsp</result>        
+            <result  name="error">/jsp/flujos/cotizacion/capturaCotizacion.jsp</result>
+        </action>
+        
+        <action name="validaCamposEntrada" class="resultadoCotizacion" method="validaCamposEntrada">
+            <result name="input" type="json" />
+            <result name="error" type="json" />
+        </action>
+        
+        <action name="obtenerResultados" class="resultadoCotizacion" method="obtenerResultado" >
+            <result name="success" type="json" />
+        </action>
+        
+        
+         <action name="obtenerCoberturas" class="resultadoCotizacion" method="obtieneCoberturas" >
+              <result name="success" type="json" />
+        </action>
+        
+        <action name="obtenerAyudaCobertura" class="resultadoCotizacion" method="obtieneAyudaCobertura" >
+              <!--  <result name="input">/jsp/flujos/cotizacion/ayudaCobertura.jsp</result>  -->
+              <result name="success" type="json" /> 
+        </action>
+        
+        <action name="comprar" class="resultadoCotizacion" method="comprar" >
+              <result name="success" type="json" />
+        </action>
+        
+        
+        
+        <action name="guardaCotizacion" class="resultadoCotizacion" method="guardaCotizacion">
+        	<result name="success" type="json"/>
+        </action>
+        
+        <!-- ######### Ejemplo de componentes de EXTJS #####################-->
+        <action name="ejemploComponentes" class="cotizarAction" method="entrarEjemplo" >
+              <result name="input">/jsp/flujos/cotizacion/componentesTest.jsp</result>
+        </action>
+        
+        <action name="generaDataEjemplo" class="cotizarAction" method="generaDataEjemplo" >
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="getDataEjemplo" class="cotizarAction" method="obtieneDataEjemplo" >
+            <result name="success" type="json" />
+        </action>
+        
+        
+        <!-- ######### consultar Cotizacion #####################-->    
+        <action name="consultaCotizaciones" class="consultaCotizacionAction" >
+            <result name="input">/jsp/flujos/cotizacion/consultaCotizaciones.jsp</result>
+        </action>
+        <action name="detalleConsultaCotizacion" class="consultaCotizacionAction" method="detalleConsultaCotizacion">
+            <result name="success" type="chain">resultCotizacion</result>
+            <result  name="error">/jsp/flujos/cotizacion/consultaCotizaciones.jsp</result>
+        </action>
+        <action name="buscarCotizacion" class="consultaCotizacionAction" method="consultarCotizacion" >
+            <result name="success" type="json" />
+        </action>
+        <action name="obtieneAseguradoras" class="consultaCotizacionAction" method="obtieneAseguradoras" >
+            <result name="success" type="json" />
+        </action>
+        <action name="obtieneProductos" class="consultaCotizacionAction" method="obtieneProductos" >
+            <result name="success" type="json" />
+        </action>        
+        <action name="borrarCotizaciones" class="consultaCotizacionAction" method="borrarCotizaciones" >
+            <result name="success" type="json" />
+        </action>
+        <action name="obtieneTVALOSIT3" class="consultaCotizacionAction" method="obtieneTVALOSIT3" >
+            <result name="success" type="json" />
+        </action>
+        <action name="obtieneCoberturas" class="consultaCotizacionAction" method="obtieneCoberturas" >
+        	<result name="success" type="json" />
+        </action>
+        
+        <action name="obtieneTvalositCotiza" class="consultaCotizacionAction" method="obtieneTvalositCotiza" >
+            <result name="success" type="json" />
+        </action>
+        
+        
+        
+        
+        
+        <!-- ######### comprar Cotizacion #####################-->
+        <action name="comprarCotizaciones" class="comprarCotizacionAction" method="comprarCotizaciones">
+            <result name="success" type="chain">entrarComprarCotizaciones</result>
+        </action>        
+        <action name="entrarComprarCotizaciones" class="comprarCotizacionAction">
+            <result name="input">/jsp/flujos/cotizacion/comprarCotizacion.jsp</result>
+        </action>        
+        
+        <!-- action llamado cuando se va a Comprar desde Consulta Cotizaciones -->
+        <action name="consultaCotizacionesComprar" class="comprarCotizacionAction" method="consultaCotizacionesComprar">
+            <result name="success" type="chain">comprarCotizaciones</result>
+        </action>
+        
+        <action name="listaAccesorios" class="comprarCotizacionAction" method="accesoriosList">
+            <result name="success" type="json" />
+        </action>  
+        <action name="listaCobertutasCompra" class="comprarCotizacionAction" method="obtieneCoberturasList">
+            <result name="success" type="json" />
+        </action>    
+        <action name="listaDomicilio" class="comprarCotizacionAction" method="domicilioList">
+            <result name="success" type="json" />
+        </action>     
+        <action name="listaFormasDePago" class="comprarCotizacionAction" method="intrumentoPagoList">
+            <result name="success" type="json" />
+        </action> 
+        <action name="listaBancos" class="comprarCotizacionAction" method="bancoList">
+            <result name="success" type="json" />
+        </action> 
+        <action name="listaSucursal" class="comprarCotizacionAction" method="sucursalList">
+            <result name="success" type="json" />
+        </action>         
+        <action name="listaPersonasUsuario" class="comprarCotizacionAction" method="personasUsuarioList">
+            <result name="success" type="json" />
+        </action> 
+        <action name="listaPersonasUsuarioMultiSelect" class="comprarCotizacionAction" method="personasUsuarioMultiSelectList">
+            <result name="success" type="json" />
+        </action> 
+        <action name="listaFuncionesPoliza" class="comprarCotizacionAction" method="funcionesPolizaList">
+            <result name="success" type="json" />
+        </action>
+        <action name="listaTipoTarjetaYCredito" class="comprarCotizacionAction" method="listaTipoTarjetaYCredito">
+            <result name="success" type="json" />
+        </action>  
+		<action name="funcionesPolizaCotizacionCompra" class="comprarCotizacionAction" method="funcionesPolizaCotizacionCompra">
+            <result name="success" type="json" />
+        </action> 
+        <action name="eliminarFuncionPoliza" class="comprarCotizacionAction" method="eliminarFuncionPoliza">
+            <result name="success" type="json" />
+        </action> 
+        <action name="comprarCotizacionCompras" class="comprarCotizacionAction" method="comprarCotizacionCompra">
+            <result name="success" type="json" />
+            <result name="error" type="json" />
+        </action> 
+        <!-- action consultar cotizacion hogar -->
+        
+        <action name="cotizarHogar" class="resultadoCotizacionHogarAction">
+			<result name="success">/jsp/flujos/cotizacion/hogar/cotizacionHogar.jsp</result>
+            <result name="input">/jsp/flujos/cotizacion/hogar/cotizacionHogar.jsp</result>
+        </action>
+        
+        <!--Action que recupera la lista de cotizacion de hogar-->
+        <action name="cotizacionHogar" class="resultadoCotizacionHogarAction" method="cargaDatosCotizacion">
+        	<result name="success" type="json"/>
+        	<result name="input">/jsp/flujos/cotizacion/hogar/cotizacionHogar.jsp</result>
+        </action>
+        
+        <!-- Action que se encarga de sumar todas las primas anuales y mensuales -->
+        <action name="cargarSumaTotal" class="resultadoCotizacionHogarAction" method="cargaSumas">
+        	<result name="success" type="json"/>
+        	<result name="input">/jsp/flujos/cotizacion/hogar/cotizacionHogar.jsp</result>
+        </action>
+        
+        <!-- Action que recupera los datos editados de la lista -->
+        <action name="obtieneModificados" class="resultadoCotizacionHogarAction" method="recuperaModificados">
+        	<result name="success" type="json"/>
+        	<result name="input">/jsp/flujos/cotizacion/hogar/cotizacionHogar.jsp</result>
+        </action>
+
+		<action name="obtienePantallaConfiguradaTest" class="obtienePantallaConfiguradaTestAction">
+        	<!--result name="success" type="json"/-->
+        	<result name="success">/jsp/flujos/cotizacion/testPantalla.jsp</result>
+        </action>
+        
+        
+        <action name="obtienePantallaParametrosTest" class="obtienePantallaConfiguradaTestAction" method="test">
+        	<!--result name="success" type="json"/-->
+        	<result name="success">/jsp/flujos/cotizacion/testPantalla2.jsp</result>
+        </action>
+        
+        <!-- Actions encargados de la cotizacion en base a valores por defecto -->
+        <action name="valoresPorDefectoCotizacion" class="valoresPorDefectoCotizacionAction">
+            <result name="success" type="json"/>
+            <result name="input">/jsp/flujos/cotizacion/valoresPorDefectoCotizacion.jsp</result>
+        </action>
+        
+        <action name="agregaIncisos" class="valoresPorDefectoCotizacionAction" method="agregaIncisosJson">
+			<result name="success" type="json" />
+		</action>
+        
+        <!-- Actions encargados de mostrar resultados en grid -->
+        <action name="muestraResultadosAction" class="muestraResultadosAction">
+            <result name="success" type="json"/>
+            <result name="input">/jsp/flujos/cotizacion/muestraResultados.jsp</result>
+        </action>
+        
+        <action name="agregaIncisosConsultaCotizacion" class="muestraResultadosAction" method="agregaIncisosJson">
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="borrarIncisos" class="valoresPorDefectoCotizacionAction" method="borrarIncisosJson">
+            <result name="success" type="json" />
+        </action>
+        <action name="cotizarElemento" class="valoresPorDefectoCotizacionAction" method="cotizarElementoJson">
+            <result name="success" type="chain">resultCotizacion</result>
+            <result name="error">/jsp/flujos/cotizacion/consultaCotizaciones.jsp</result>
+        </action>
+         <action name="listaEspecial" class="listadoEspecialAction" method="obtieneEquipo">
+        	<result name="success">/jsp/flujos/cotizacion/equipo/equipoEspecial.jsp</result>
+        	<result name="input">/jsp/flujos/cotizacion/equipo/equipoEspecial.jsp</result>
+        </action>
+
+        
+        <action name="cargaListaEspecial" class="listadoEspecialAction" method="obtieneEquipo">
+        	<result name="success" type="json"/>
+        	<result name="input">/jsp/flujos/cotizacion/equipo/equipoEspecial.jsp</result>
+        </action>
+        
+        <action name="cargaListaTipo" class="listadoEspecialAction" method="obtieneTipos">
+        	<result name="success" type="json"/>
+        	<result name="input">/jsp/flujos/cotizacion/equipo/equipoEspecial.jsp</result>
+        </action>
+        
+        <action name="cargaItems" class="listadoEspecialAction" method="obtieneCombos">
+        	<result name="success" type="json"/>
+        	<result name="input">/jsp/flujos/cotizacion/equipo/equipoEspecial.jsp</result>
+        </action>
+        
+        <action name="obtieneEtiqueta" class="listadoEspecialAction" method="obtieneLabelObjetos">
+         <result name="success" type="json"/>
+         <result name="input">/jsp/flujos/cotizacion/equipo/equipoEspecial.jsp</result>
+        </action>
+        
+        
+        <action name="servicioEquipo" class="listadoEspecialAction" method="serviceEquipo">
+        	<result name="success" type="json"/>
+        	<result name="input">/jsp/flujos/cotizacion/equipo/equipoEspecial.jsp</result>
+        </action>
+        
+		<action name="guardaEquipo" class="listadoEspecialAction" method="guardaEquipo">
+        	<result name="success" type="json"/>
+        	<result name="input">/jsp/flujos/cotizacion/equipo/equipoEspecial.jsp</result>
+        </action>
+        
+        <action name="cargaEdicion" class="listadoEspecialAction" method="editAtributosVariables">
+         <result name="success" type="json"/>
+         <result name="input">/jsp/flujos/cotizacion/equipo/equipoEspecial.jsp</result>
+        </action>
+        
+        <action name="editaEquipo" class="listadoEspecialAction" method="editarEquipo">
+         <result name="success" type="json"/>
+         <result name="input">/jsp/flujos/cotizacion/equipo/equipoEspecial.jsp</result>
+        </action>
+        
+        <action name="listaFuncionRol" class="comprarCotizacionAction" method="listaFuncionRol">
+            <result name="success" type="json" />
+        </action>        
+        <action name="listaSexo" class="comprarCotizacionAction" method="listaSexo">
+            <result name="success" type="json" />
+        </action>
+        <action name="guardaPersonaCotizacion" class="comprarCotizacionAction" method="guardaPersonaCotizacion">
+            <result name="success" type="json" />
+        </action> 
+        
+        <action name="listaFormasPago" class="comprarCotizacionAction" method="intrumentoPagoLista">
+          <result name="success" type="json" />
+        </action>
+        
+        <action name="atributosVariablesInstrumetosPago" class="comprarCotizacionAction" method="atributosVariablesInstrumetosPago">
+          <result name="success" type="json" />
+        </action>
+        
+        </package>
+
+</struts>
+        

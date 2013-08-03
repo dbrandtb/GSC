@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
+<statements>
+	#foreach($copiaPantallas in $params.LISTA_PANTALLAS)
+	<statement type="stored" name="PKG_CONFIGURA_PANTALLA2.P_COPIA_PANTALLA" id="copiaPantalla">
+		<param eval="true" name="pv_cdconjunto_i" type="NUMERIC"><![CDATA[$!params.get("CD_CONJUNTO")]]></param>
+		<param eval="true" name="pv_cdpantalla_i" type="NUMERIC"><![CDATA[$!copiaPantallas]]></param>
+		<param eval="true" name="pv_cdelemento" type="NUMERIC"><![CDATA[$!params.get("CD_ELEMENTO")]]></param>
+		<outparam id="po_msg_id" type="NUMERIC"/>
+		<outparam id="p_out_title" type="VARCHAR"/>	
+	</statement>
+	#end
+</statements>
+
+

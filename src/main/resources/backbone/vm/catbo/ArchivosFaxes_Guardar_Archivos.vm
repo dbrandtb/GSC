@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_CATBO.P_GUARDA_TATRIARAC" id="guardarArchivos">
+       <param eval="true" name="pv_cdtipoar_i" type="VARCHAR"><![CDATA[$!params.get("pv_cdtipoar_i")]]></param>
+       <param eval="true" name="pv_cdatribu_i" type="NUMERIC"><![CDATA[$!params.get("pv_cdatribu_i")]]></param>
+       <param eval="true" name="pv_dsatribu_i" type="VARCHAR"><![CDATA[$!params.get("pv_dsatribu_i")]]></param>
+       <param eval="true" name="pv_swformat_i" type="VARCHAR"><![CDATA[$!params.get("pv_swformat_i")]]></param>
+       <param eval="true" name=" pv_nmlmax_i" type="NUMERIC"><![CDATA[$!params.get(" pv_nmlmax_i")]]></param>
+       <param eval="true" name="ppv_nmlmin_i" type="NUMERIC"><![CDATA[$!params.get("pv_nmlmin_i")]]></param>
+       <param eval="true" name="pv_swobliga_i" type="VARCHAR"><![CDATA[$!params.get("pv_swobliga_i")]]></param>
+       <param eval="true" name="pv_ottabval_i" type="VARCHAR"><![CDATA[$!params.get("pv_ottabval_i")]]></param>
+       <param eval="true" name="pv_status_i" type="VARCHAR"><![CDATA[$!params.get("pv_status_i")]]></param>
+ 	     	   
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>
+ 

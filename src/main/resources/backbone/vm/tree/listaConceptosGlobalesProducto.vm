@@ -1,0 +1,8 @@
+<statements>
+	<statement type="stored" name="PKG_WIZARD.P_LOADCONCEPGLOB" id="pLoadConceptosProducto">
+		<param eval="true" name="pv_cdramo" type="NUMERIC">$!params.codigoProducto</param>
+		<outparam id="P_REGISTRO" type="CURSOR"/>
+		<outparam id="PO_MSG_ID" type="NUMERIC"/>	
+		<outparam id="PV_TITLE_O" type="VARCHAR"/>	
+</statement>
+</statements>

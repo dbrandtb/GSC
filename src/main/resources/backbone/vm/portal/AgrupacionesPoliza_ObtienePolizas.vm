@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_AGRUPAPOL.P_OBTIENE_AGRUPACIONES" id="obtieneAgrupacionPolizas">
+        <param eval="true" name="pv_cliente_i" type="VARCHAR"><![CDATA[$!params.get("pv_cliente_i")]]></param>
+        <param eval="true" name="pv_tipo_ramo_i" type="VARCHAR"><![CDATA[$!params.get("pv_tipo_ramo_i")]]></param>
+        <param eval="true" name="pv_tipo_agrupa_i" type="VARCHAR"><![CDATA[$!params.get("pv_tipo_agrupa_i")]]></param>
+        <param eval="true" name="pv_aseguradora_i" type="VARCHAR"><![CDATA[$!params.get("pv_aseguradora_i")]]></param>
+        <param eval="true" name="pv_producto_i" type="VARCHAR"><![CDATA[$!params.get("pv_producto_i")]]></param>
+
+		<outparam id="po_msg_id" type="NUMERIC"/>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+        <outparam id="lcur_registros_o" type="CURSOR"></outparam>
+	</statement>
+</statements>

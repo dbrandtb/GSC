@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_LISTAS.P_CIA_POLIZAS" id="comboPolizasPorAseguradora">
+       <param eval="true" name="p_cve_aseguradora" type="NUMERIC">$!params.get("cdUniEco")</param>  	   
+  	   <outparam id="pv_registro_o" type="CURSOR"/>
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

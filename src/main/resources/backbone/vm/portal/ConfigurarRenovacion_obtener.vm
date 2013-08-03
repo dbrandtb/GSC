@@ -1,0 +1,14 @@
+<statements>
+	<statement type="stored" name="PKG_RENOVA.P_OBTIENE_CLIENTE_TIPO" id="pObtieneClienteTipo">
+		
+       <param eval="true" name="pv_dselemen_i" type="VARCHAR">$!params.get("pv_dselemen_i")</param>
+       <param eval="true" name="pv_dstiporenova_i" type="VARCHAR">$!params.get("pv_dstiporenova_i")</param>
+       <param eval="true" name="pv_dsunieco_i" type="VARCHAR">$!params.get("pv_dsunieco_i")</param>
+       <param eval="true" name="pv_dsramo_i" type="VARCHAR">$!params.get("pv_dsramo_i")</param>
+
+  	   <outparam id="pv_registro_o" type="CURSOR"/>
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+       
+	</statement>
+</statements>

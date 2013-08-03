@@ -1,0 +1,9 @@
+<statements>
+	<statement type="stored" name="PKG_TABLASDE_APOYO.P_GET_FORMATOS_CLAVES" id="pgetFormatoClaves">
+		<param eval="true" name="pi_nmtabla" type="VARCHAR">$!params.get("nombreTabla")</param>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+		<outparam id="po_cursortablaapoyo" type="CURSOR"/>
+	</statement>
+</statements>

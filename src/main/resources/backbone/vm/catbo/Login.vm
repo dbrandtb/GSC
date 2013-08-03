@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
+<statements>
+	<statement type="stored" name="P_LOGIN" id="pObtieneUser">
+        <param eval="true" name="user_id" type="VARCHAR">$!params.get("user")</param>
+        <!--param eval="true" name="pwd" type="VARCHAR">$!params.get("pwd")</param-->
+
+        <outparam id="po_resulset" type="CURSOR"></outparam>
+		<outparam id="pv_msg_id_o" type="NUMERIC"/>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+	</statement>
+</statements>

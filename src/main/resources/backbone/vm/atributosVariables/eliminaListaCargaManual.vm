@@ -1,0 +1,16 @@
+<statements>
+
+ <statement type="stored" name="PKG_TABAPOYO.P_BORRA_VALORATT" id="pEliminaClaveValorT1Clave">
+  <param eval="true" name="pi_tabla" type="VARCHAR">$!params.cdTabla</param>
+  <param eval="true" name="pi_clave01" type="VARCHAR"><![CDATA[$!params.elemento.key]]></param>
+  <param eval="true" name="pi_clave02" type="VARCHAR"></param>
+  <param eval="true" name="pi_clave03" type="VARCHAR"></param>
+  <param eval="true" name="pi_clave04" type="VARCHAR"></param>
+  <param eval="true" name="pi_clave05" type="VARCHAR"></param>
+  
+
+  <outparam id="pv_msg_id_o" type="NUMERIC"/>  
+  <outparam id="pv_title_o" type="VARCHAR"/>
+</statement>
+
+</statements>

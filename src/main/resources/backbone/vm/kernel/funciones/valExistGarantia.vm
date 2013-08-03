@@ -1,0 +1,11 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_FUNCIONES.P_Existe_Garantia" id="valExistGarantia">
+		<outparam id="existe" type="VARCHAR"/>
+		<param eval="true" name="gblUniEco" type="VARCHAR">$!params.get("pi_CDUNIECO")</param>
+		<param eval="true" name="gblRamo" type="VARCHAR">$!params.get("pi_CDRAMO")</param>
+		<param eval="true" name="gblEstado" type="VARCHAR">$!params.get("pi_ESTADO")</param>
+		<param eval="true" name="gblPoliza" type="VARCHAR">$!params.get("pi_NMPOLIZA")</param>
+		<param eval="true" name="suplemento" type="VARCHAR">$!params.get("pi_NMSUPLEM")</param>
+		<param eval="true" name="cdgarant2" type="VARCHAR">$!params.get("piCdgarant")</param>
+	</statement>
+</statements>

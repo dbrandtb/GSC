@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_CATBO.P_GUARDA_MOVIMIENTO" id="guardarMovimientoCaso">
+       <param eval="true" name="pv_nmcaso_i" type="VARCHAR"><![CDATA[$!params.get("nmCaso")]]></param>
+       <param eval="true" name="pv_cdusumov_i" type="VARCHAR"><![CDATA[$!params.get("cdUsuMov")]]></param>
+       <param eval="true" name="pv_cdnivatn_i" type="NUMERIC">$!params.get("cdNivatn")</param>
+        		
+  	<outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

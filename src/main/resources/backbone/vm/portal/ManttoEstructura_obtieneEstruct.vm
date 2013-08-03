@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+    <statement type="stored" name="PKG_CONFG_CUENTA.P_OBTIENE_ESTRUCT" id="pObtieneEstruct">
+        <param eval="true" name="pv_dsestruc_i" type="VARCHAR"><![CDATA[$!params.get("descripcion")]]></param>
+        <outparam id="lcur_registros_i" type="CURSOR"></outparam>
+        <outparam id="po_msg_id" type="NUMERIC"></outparam>
+        <outparam id="po_title" type="VARCHAR"></outparam>
+    </statement>
+</statements>

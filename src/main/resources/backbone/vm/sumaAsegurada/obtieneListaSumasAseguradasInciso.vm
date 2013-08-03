@@ -1,0 +1,11 @@
+<statements>
+	<statement type="stored" name="PKG_WIZARD.P_OBTIENE_SUMA_ASEGURADA" id="pObtieneSumaAsegurada">
+		<param eval="true" name="PV_CDRAMO_I" type="NUMERIC">$!params.codigoRamo</param>
+		<param eval="true" name="PV_CDGARANT_I" type="VARCHAR">$!params.codigoCobertura</param>
+		<param eval="true" name="PV_CDCAPITA_I" type="NUMERIC">$!params.codigoCapital</param>
+		<param eval="true" name="PV_CDTIPSIT_I" type="VARCHAR">$!params.codigoTipoSituacion</param>	
+		<outparam id="PV_REGISTRO_O" type="CURSOR"/>
+		<outparam id="PV_MSG_ID_O" type="NUMERIC"/>
+		<outparam id="PV_TITLE_O" type="VARCHAR"/>		
+</statement>
+</statements>

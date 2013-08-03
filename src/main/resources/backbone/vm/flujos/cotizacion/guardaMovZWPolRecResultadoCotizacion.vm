@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
+<statements>
+	<statement type="stored" name="PKG_COTIZA.P_MOV_ZWPOLREC" id="guardarCobertura">
+		<param eval="true" name="pv_cdusuari_i  " type="VARCHAR"><![CDATA[$!params.get("CDUSUARI")]]></param>
+  		<param eval="true" name="pv_cdunieco_i  " type="NUMERIC"><![CDATA[$!params.get("CCVO").cdUnieco]]></param>
+  		<param eval="true" name="pv_cdramo_i    " type="NUMERIC"><![CDATA[$!params.get("CCVO").cdRamo]]></param>
+  		<param eval="true" name="pv_estado_i    " type="VARCHAR"><![CDATA[$!params.get("CCVO").estado]]></param>
+  		<param eval="true" name="pv_nmpoliza_i  " type="NUMERIC"><![CDATA[$!params.get("CCVO").nmPoliza]]></param>
+  		<param eval="true" name="pv_cdcia_i     " type="NUMERIC"><![CDATA[$!params.get("CCVO").cdCiaaseg]]></param>
+		<param eval="true" name="pv_cdperpag_i  " type="NUMERIC"><![CDATA[$!params.get("CCVO").cdPerpag]]></param>
+  		<param eval="true" name="pv_nmsituac_i  " type="NUMERIC"><![CDATA[$!params.get("CCVO").numeroSituacion]]></param>
+  		<param eval="true" name="pv_nmsuplem_i  " type="NUMERIC"><![CDATA[$!params.get("CCVO").nmSuplem]]></param>
+		<param eval="true" name="pv_cdplan_i    " type="VARCHAR"><![CDATA[$!params.get("CCVO").cdPlan]]></param>
+  		<param eval="true" name="pv_nmimpfpg_i  " type="NUMERIC"></param>
+  		<param eval="true" name="pv_accion_i    " type="VARCHAR">U</param>
+  		<param eval="true" name="pv_swguarda_i  " type="VARCHAR">S</param>
+  		
+  		<outparam id="po_msg_id" type="NUMERIC"/>
+		<outparam id="p_out_title" type="VARCHAR"/>
+		
+	</statement>
+</statements>

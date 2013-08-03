@@ -1,0 +1,10 @@
+<statements>
+	<statement type="stored" name="PKG_PERSONA.P_OBTIENE_ASEGURADO" id="obtieneAsegurado">
+		<param eval="true" name="pv_cdramo" type="NUMERIC">$!params.get("cdRamo")</param>
+		<param eval="true" name="pv_cdsisrol" type="VARCHAR">$!params.get("cdSisrol")</param>
+		<param eval="true" name="pv_cdperson" type="NUMERIC">$!params.get("cdPerson")</param>
+		<outparam id="po_resulset" type="CURSOR"/>
+		<outparam id="pv_msg_id_o" type="NUMERIC"/>
+		<outparam id="pv_title_o" type="VARCHAR"/>		
+</statement>
+</statements>

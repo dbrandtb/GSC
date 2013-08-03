@@ -1,0 +1,39 @@
+<statements>
+
+    <statement type="update">
+        UPDATE MPOLIOBJ
+        SET DSOBJLOB = empty_clob()
+        WHERE
+        CDUNIECO = $params.CDUNIECO
+        AND CDRAMO = $params.CDRAMO
+        AND ESTADO = $params.ESTADO
+        AND NMPOLIZA = $params.NMPOLIZA
+        AND NMSITUAC = $params.NMSITUAC
+        AND NMOBJETO = $params.NMOBJETO
+        AND NMSUPLEM = $params.NMSUPLEM
+    </statement>
+
+
+    <statement type="setClobNotNull" remoteEval="true">
+        <query remoteEval="true">
+            SELECT DSOBJLOB
+            FROM MPOLIOBJ
+            WHERE
+            CDUNIECO = $params.CDUNIECO
+            AND CDRAMO = $params.CDRAMO
+            AND ESTADO = $params.ESTADO
+            AND NMPOLIZA = $params.NMPOLIZA
+            AND NMSITUAC = $params.NMSITUAC
+            AND NMOBJETO = $params.NMOBJETO
+            AND NMSUPLEM = $params.NMSUPLEM
+            FOR UPDATE
+        </query>
+        <clob>
+            <![CDATA[
+                $params.TEXTO_DSOBJLOB
+            ]]>
+        </clob>
+    </statement>
+
+
+</statements>

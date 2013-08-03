@@ -1,0 +1,8 @@
+<statements>
+	<statement type="stored" name="PKG_COTIZA.P_FINALIZA_ORDEN" id="finalizarOrdenesDeCompras">
+       <param eval="true" name="p_cdcarro" type="NUMERIC">$!params.get("cdCarro")</param>  	   
+
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

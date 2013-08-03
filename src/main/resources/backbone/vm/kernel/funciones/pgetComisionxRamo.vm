@@ -1,0 +1,11 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_FUNCIONES.P_Get_Comisiones_Por_Tramo" id="pgetComisionxRamo">
+		<param eval="true" name="nmcuadro2" type="VARCHAR">$!params.get("piNmcuadro")</param>
+		<param eval="true" name="durano" type="NUMERIC">$!params.get("piDuracdes")</param>
+		<param eval="true" name="cdgarant2" type="VARCHAR">$!params.get("piCdgarant")</param>
+		<param eval="true" name="cdtipcon2" type="VARCHAR">$!params.get("piCdtipcon")</param>
+		<param eval="true" name="anual" type="NUMERIC">$!params.get("piAnualdes")</param>
+		<param eval="true" name="impcom" type="NUMERIC">$!params.get("piImpordes")</param>
+		<outparam id="cursorComisiones" type="CURSOR"/>
+	</statement>
+</statements>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
+<statements>
+	<statement type="stored" name="PKG_COTIZA.P_GUARDA_COTIZA" id="guardaCotiza">
+		<param eval="true" name="pv_cdelemento_i" type="NUMERIC">$!params</param>
+  		<outparam id="pv_registro_o" type="VARCHAR"/>
+		<outparam id="pv_msg_id_o" type="NUMERIC"/>
+		<outparam id="pv_title_o" type="VARCHAR"/>		
+	</statement>
+</statements>

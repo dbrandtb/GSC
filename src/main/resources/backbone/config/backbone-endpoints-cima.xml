@@ -1,0 +1,3051 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+    
+	<bean id="portal-endpoint" abstract="true" parent="parent-endpoint" >
+		<property name="templateModule" value="portal" />
+		<property name="xslModule" value="portal" />
+	</bean>
+
+	<!-- EndPoints CIMA -->
+	<!-- **************** Endpoints de Mantenimiento de Estructuras ***********  -->
+	<bean id="LISTA_ESTRUCTURA" parent="portal-endpoint" >
+		<property name="templateName" value="ListaEstructura.vm" />
+		<property name="xslName" value="ListaEstructura.xsl" />
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>
+    
+	<bean id="OBTIENE_ESTRUCT" parent="portal-endpoint" >
+		<property name="templateName" value="ManttoEstructura_obtieneEstruct.vm" />
+		<property name="xslName" value="ManttoEstructura_obtieneEstruct.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+    
+	<bean id="OBTIENE_ESTRUCT_EXPORT" parent="portal-endpoint" >
+		<property name="templateName" value="ManttoEstructura_obtieneEstruct.vm" /><!-- El mismo de la busqueda  -->
+		<property name="xslName" value="ManttoEstructura_obtieneEstruct_export.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+    
+	<bean id="OBTIENE_ESTRUCT_REG" parent="portal-endpoint" >
+		<property name="templateName" value="ManttoEstructura_obtieneEstructReg.vm" />
+		<property name="xslName" value="ManttoEstructura_obtieneEstructReg.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+    
+	<bean id="COPIA_ESTRUCT" parent="portal-endpoint" >
+		<property name="templateName" value="ManttoEstructura_copiaEstruct.vm" />
+		<property name="xslName" value="ManttoEstructura_copiaEstruct.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+    
+	<bean id="BORRA_ESTRUCT" parent="portal-endpoint" >
+		<property name="templateName" value="ManttoEstructura_borraEstruct.vm" />
+		<property name="xslName" value="ManttoEstructura_borraEstruct.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+    
+	<bean id="INSERTA_ESTRUCT" parent="portal-endpoint" >
+		<property name="templateName" value="AgregarEstructura_insertaEstruct.vm" />
+		<property name="xslName" value="AgregarEstructura_insertaEstruct.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+    
+	<bean id="GUARDA_ESTRUCT" parent="portal-endpoint" >
+		<property name="templateName" value="EditarEstructura_guardaEstruct.vm" />
+		<property name="xslName" value="EditarEstructura_guardaEstruct.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<!-- ***************** FIN Endpoints de Mantenimiento de Estructuras ***********  -->
+
+	<!-- ***************** Endpoints de Configurar Estructuras ***********  -->
+ 
+ 
+	<bean id="BORRA_DESTRUCT" parent="portal-endpoint" >
+		<property name="templateName" value="ConfigurarEstructura_borraDestruct.vm" />
+		<property name="xslName" value="ConfigurarEstructura_borraDestruct.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+    
+	<bean id="COPIA_DESTRUCT" parent="portal-endpoint" >
+		<property name="templateName" value="ConfigurarEstructura_copiaDestruct.vm" />
+		<property name="xslName" value="ConfigurarEstructura_copiaDestruct.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+        
+	<bean id="GUARDA_DESTRUCT" parent="portal-endpoint" >
+		<property name="templateName" value="ConfigurarEstructura_guardaDestruct.vm" />
+		<property name="xslName" value="ConfigurarEstructura_guardaDestruct.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+    
+	<bean id="INSERTA_DESTRUCT" parent="portal-endpoint" >
+		<property name="templateName" value="ConfigurarEstructura_insertaDestruct.vm" />
+		<property name="xslName" value="ConfigurarEstructura_insertaDestruct.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+    
+	<bean id="OBTIENE_DESTRUCT" parent="portal-endpoint" >
+		<property name="templateName" value="ConfigurarEstructura_obtieneDestruct.vm" />
+		<property name="xslName" value="ConfigurarEstructura_obtieneDestruct.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+ 
+ 
+	<bean id="OBTIENE_DESTRUCT_EXPORT" parent="portal-endpoint" >
+		<property name="templateName" value="ConfigurarEstructura_obtieneDestruct.vm" /><!-- El mismo de la busqueda  -->
+		<property name="xslName" value="ConfigurarEstructura_obtieneDestruct_export.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+    
+	<bean id="OBTIENE_DESTRUCT_REG" parent="portal-endpoint" >
+		<property name="templateName" value="ConfigurarEstructura_obtieneDestructReg.vm" />
+		<property name="xslName" value="ConfigurarEstructura_obtieneDestructReg.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<bean id="OBTIENE_CLIENTES_2" parent="portal-endpoint" >
+		<property name="templateName" value="ObtenerPersonas.vm" />
+		<property name="xslName" value="ObtenerPersonas.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" /> 
+	</bean>
+
+	<bean id="OBTIENE_PADRE" parent="portal-endpoint" >
+		<property name="templateName" value="ObtenerPadre.vm" />
+		<property name="xslName" value="ObtenerPadre.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<bean id="OBTIENE_TIPO_NIVEL" parent="portal-endpoint" >
+		<property name="templateName" value="ObtenerTipoNivel.vm" />
+		<property name="xslName" value="ObtenerTipoNivel.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+
+	<!-- ***************** FIN Endpoints de Configurar Estructuras ***********  -->
+
+
+
+
+
+	<!-- ***************** Endpoints de Tareas de Checklist *****************  -->
+	<!-- ***************** Endpoints de Tareas de Checklist *****************  -->
+	<bean id="P_OBTIENE_TAREAS" parent="portal-endpoint" >
+		<property name="templateName" value="TareasChecklist.vm" />
+		<property name="xslName" value="TareasChecklist.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+    
+	<bean id="P_VALIDA_BORRA_TAREA" parent="portal-endpoint" >
+		<property name="templateName" value="ValidaBorrarTareasChecklist.vm" />
+		<property name="xslName" value="ValidaBorrarTareasChecklist.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+    
+	<bean id="P_BORRA_TAREA" parent="portal-endpoint" >
+		<property name="templateName" value="BorraTareasChecklist.vm" />
+		<property name="xslName" value="BorraTareasChecklist.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+    
+	<bean id="P_SECCION_CHECK" parent="portal-endpoint" >
+		<property name="templateName" value="ObteneSeccionChecklist.vm" />
+		<property name="xslName" value="ObteneSeccionChecklist.xsl" />
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>
+    
+	<bean id="P_OBTENE_ESTADO" parent="portal-endpoint" >
+		<property name="templateName" value="ObteneEstadoChecklist.vm" />
+		<property name="xslName" value="ObteneEstadoChecklist.xsl" />
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>
+    
+	<bean id="P_GUARDA_TAREA" parent="portal-endpoint" >
+		<property name="templateName" value="GuardaTareaChecklist.vm" />
+		<property name="xslName" value="GuardaTareaChecklist.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+    
+    
+	<bean id="P_OBTIENE_TAREA" parent="portal-endpoint" >
+		<property name="templateName" value="ObtieneTareaChecklist.vm" />
+		<property name="xslName" value="ObtieneTareaChecklist.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+    
+	<bean id="P_LISTA_TAREAS" parent="portal-endpoint" >
+		<property name="templateName" value="ListaTareasChecklist.vm" />
+		<property name="xslName" value="ListaTareasChecklist.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+    
+
+	<!-- ***************** Endpoints de Tareas de Checklist *****************  -->
+	<!-- ******************* Endpoints de MantenimientoPlaes **************** -->
+	<bean id="P_OBTIENE_PLANCIA" parent="portal-endpoint">
+		<property name="templateName" value="PlanesXCliente_ListaPlanes.vm"></property>
+		<property name="xslName" value="MantenimientoPlanesXCliente_ObtenerPlanes.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="GUARDA_PLANPRCIA" parent="portal-endpoint">
+		<property name="templateName" value="MantenimientoPlanesXCliente_EditarPlanes.vm"></property>
+		<property name="xslName" value="MantenimientoPlanesXCliente_EditarPlanes.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="INSERTA_PLANPRCIA" parent="portal-endpoint">
+		<property name="templateName" value="MantenimientoPlanesXCliente_InsertaPlan.vm"></property>
+		<property name="xslName" value="MantenimientoPlanesXCliente_InsertaPlan.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="GET_PLANCIA" parent="portal-endpoint">
+		<property name="templateName" value="MantenimientoPlanesXCliente_Get.vm"></property>
+		<property name="xslName" value="MantenimientoPlanesXCliente_Get.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="BORRAR_PLANPRCIA" parent="portal-endpoint">
+		<property name="templateName" value="MantenimientoPlanesXCliente_Borrar.vm"></property>
+		<property name="xslName" value="MantenimientoPlanesXCliente_Borrar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="OBTIENE_PLANCLIENTE_EXPORT" parent="portal-endpoint" >
+		<property name="templateName" value="PlanesXCliente_ListaPlanes.vm" /><!-- El mismo de la busqueda  -->
+		<property name="xslName" value="MantenimientoPlanesXCliente_obtienePlanesCliente_export.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>  
+ 
+	<bean id="OBTENER_ASEGURADORAS_POR_PRODUCTO" parent="portal-endpoint" >
+		<property name="templateName" value="PlanPorClientes_comboAsegeguradorasPorProducto.vm" />
+		<property name="xslName" value="PlanPorClientes_comboAsegeguradorasPorProducto.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+ 
+	<bean id="COBERTURAS_X_PLAN" parent="portal-endpoint" >
+		<property name="templateName" value="PlanPorClientes_comboCoberturasXPlan.vm" />
+		<property name="xslName" value="PlanPorClientes_comboCoberturasXPlan.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="PLANES" parent="portal-endpoint" >
+		<property name="templateName" value="PlanPorClientes_comboPlanes.vm" />
+		<property name="xslName" value="PlanPorClientes_comboPlanes.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="PRODUCTOS_X_PLAN" parent="portal-endpoint" >
+		<property name="templateName" value="PlanPorClientes_comboProductosXPlan.vm" />
+		<property name="xslName" value="PlanPorClientes_ProductosXPlan.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="SITUACION_X_PLAN" parent="portal-endpoint" >
+		<property name="templateName" value="PlanPorClientes_comboSituacionXPlan.vm" />
+		<property name="xslName" value="PlanPorClientes_comboSituacionXPlan.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<!-- ******************* Endpoints de MantenimientoPlaes **************** -->
+	<bean id="TIPO_SITUACION" parent="portal-endpoint">
+		<property name="templateName" value="MantenimientoPlanesXCliente_ComboSituacion.vm"></property>
+		<property name="xslName" value="MantenimientoPlanesXCliente_ComboSituacion.xsl"></property>
+		<property name="unmarshallClass" value="java.util.ArrayList"></property>
+	</bean>
+	<bean id="TIPOS_COBERTURAS" parent="portal-endpoint">
+		<property name="templateName" value="MantenimientoPlanesXCliente_ComboCoberturas.vm"></property>
+		<property name="xslName" value="MantenimientoPlanesXCliente_ComboCoberturas.xsl"></property>
+		<property name="unmarshallClass" value="java.util.ArrayList"></property>
+	</bean>
+
+
+	<!-- ******************* Endpoints de Configuracion de Cuenta **************** -->
+	<bean id="OBTIENE_CLIENTES_CORPO" parent="portal-endpoint">
+		<property name="templateName" value="TareasChecklist_cliente_corpo.vm"></property>
+		<property name="xslName" value="TareasChecklist_cliente_corpo.xsl"></property>
+		<property name="unmarshallClass" value="java.util.ArrayList"></property>
+	</bean>
+	<bean id="COPIA_CONFIGURA" parent="portal-endpoint">
+		<property name="templateName" value="Checklist_copia_configura.vm"></property>
+		<property name="xslName" value="Checklist_copia_configura.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<!-- ******************* Endpoints de Configuracion de Cuenta **************** -->
+
+	<!-- Endpoints de CheckList de Cuenta -->
+
+	<!-- Endpoints de CheckList de Cuenta agregado por Carlos Ibañez no borrar -->
+	<bean id="P_OBTIENE_CONFIGURACION" parent="portal-endpoint" >
+		<property name="templateName" value="ObtieneConfiCuentaChecklist.vm" />
+		<property name="xslName" value="ObtieneConfiCuentaChecklist.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<bean id="P_BORRA_CONFIGURACION" parent="portal-endpoint" >
+		<property name="templateName" value="BorraConfiCuentaChecklist.vm" />
+		<property name="xslName" value="BorraConfiCuentaChecklist.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<!-- Endpoints de CheckList de Cuenta agregado por Carlos Ibañez no borrar -->
+
+	<bean id="CHKLIST_GUARDA_TAREA_SECCION_CTA" parent="portal-endpoint">
+		<property name="templateName" value="CheckListCuentaPreRequisitos_GuardarTareaSeccionCta.vm"></property>
+		<property name="xslName" value="CheckListCuentaPreRequisitos_GuardarTareaSeccionCta.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="CHKLISTCTA_OBTIENE_ENCABEZADO" parent="portal-endpoint">
+		<property name="templateName" value="CheckListCuentaPreRequisitos_ObtenerEncabezados.vm"></property>
+		<property name="xslName" value="CheckListCuentaPreRequisitos_ObtenerEncabezados.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="LISTA_ASEGURADORAS" parent="portal-endpoint">
+		<property name="templateName" value="Aseguradoras_ObtenerCombo.vm"></property>
+		<property name="xslName" value="Aseguradoras_ObtenerCombo.xsl"></property>
+		<property name="unmarshallClass" value="java.util.ArrayList"></property>
+	</bean>
+
+	<bean id="CHKLISTCTA_OBTIENE_TAREAS_SECCION" parent="portal-endpoint">
+		<property name="templateName" value="CheckListCuenta_ObtenerTareasSeccion.vm"></property>
+		<property name="xslName" value="CheckListCuenta_ObtenerTareasSeccion.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="CHKLISTCTA_OBTIENE_SECCION" parent="portal-endpoint">
+		<property name="templateName" value="CheckListCuenta_ObtenerSeccion.vm"></property>
+		<property name="xslName" value="CheckListCuenta_ObtenerSeccion.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="CHKLISTCTA_CONFIGURACION_COMPLETA" parent="portal-endpoint">
+		<property name="templateName" value="CheckListCuenta_ConfiguracionCompleta.vm"></property>
+		<property name="xslName" value="CheckListCuenta_ConfiguracionCompleta.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="OBTENER_CLIENTES_CORPO" parent="portal-endpoint">
+		<property name="templateName" value="CheckListCuentaPreRequisitos_ObtenerClientes.vm"></property>
+		<property name="xslName" value="CheckListCuentaPreRequisitos_ObtenerClientes.xsl"></property>
+		<property name="unmarshallClass" value="java.util.ArrayList"></property>
+	</bean>
+	<bean id="OBTENER_CLIENTES_CORPO_REN" parent="portal-endpoint">
+		<property name="templateName" value="ObtenerClientesCorpRen.vm"></property>
+		<property name="xslName" value="ObtenerClientesCorpRen.xsl"></property>
+		<property name="unmarshallClass" value="java.util.ArrayList"></property>
+	</bean>
+	<bean id="OBTENER_CONFIGURAR_PLAN" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarPlanes_Listar.vm"></property>
+		<property name="xslName" value="ConfigurarPlanes_Listar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="INSERTAR_CONFIGURAR_PLAN" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarPlanes_Insertar.vm"></property>
+		<property name="xslName" value="ConfigurarPlanes_Insertar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="ACTUALIZAR_CONFIGURAR_PLAN" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarPlanes_Actualizar.vm"></property>
+		<property name="xslName" value="ConfigurarPlanes_Actualizar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="OBTENER_PLANPRO" parent="portal-endpoint">
+		<property name="templateName" value="DetallePlanXCliente_Listar.vm"></property>
+		<property name="xslName" value="DetallePlanXCliente_Listar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="BORRAR_PLANPRO" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarPlanes_Borrar.vm"></property>
+		<property name="xslName" value="ConfigurarPlanes_Borrar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="GET_CONFIGURAR_PLAN" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarPlanes_Get.vm"></property>
+		<property name="xslName" value="ConfigurarPlanes_Get.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="OBTIENE_PLANES_EXPORT" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarPlanes_Listar.vm"></property>
+		<property name="xslName" value="MantenimientoPlanes_obtienePlanes_export.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<!-- **************** Endpoints de Descuentos ***********  -->
+	<bean id="OBTIENE_DESCTOS" parent="portal-endpoint" >
+		<property name="templateName" value="ListaDescuentos.vm" />
+		<property name="xslName" value="ListaDescuentos.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+    
+	<bean id="ELIMINA_DSCTO" parent="portal-endpoint" >
+		<property name="templateName" value="DescuentosEliminar.vm" />
+		<property name="xslName" value="DescuentosEliminar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+    
+	<bean id="COPIA_DSCTO" parent="portal-endpoint" >
+		<property name="templateName" value="DescuentosCopiar.vm" />
+		<property name="xslName" value="DescuentosCopiar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<bean id="OBTIENE_ESTADOS_DESCUENTOS" parent="portal-endpoint" >
+		<property name="templateName" value="ObtenerEstadosDescuentos.vm" />
+		<property name="xslName" value="ObtenerEstadosDescuentos.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+    
+	<bean id="OBTIENE_PRODUCTOS_DESCUENTOS" parent="portal-endpoint" >
+		<property name="templateName" value="ObtenerProductosDescuentos.vm" />
+		<property name="xslName" value="ObtenerProductosDescuentos.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+    
+	<bean id="OBTIENE_PLANES_CIMA" parent="portal-endpoint" >
+		<property name="templateName" value="Planes.vm" />
+		<property name="xslName" value="Planes.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+    
+	<bean id="OBTIENE_TIPOS_DSCTO" parent="portal-endpoint" >
+		<property name="templateName" value="TiposDscto.vm" />
+		<property name="xslName" value="TiposDscto.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+    
+	<bean id="OBTIENE_DESCUENTOS_EXPORT" parent="portal-endpoint" >
+		<property name="templateName" value="ListaDescuentos.vm" />
+		<property name="xslName" value="DescuentosListaExportar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+    
+	<bean id="OBTIENE_TIPO_SITUACION_PRODUCTO" parent="portal-endpoint">
+		<property name="templateName" value="comboSituacionProducto.vm"></property>
+		<property name="xslName" value="comboSituacionProducto.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+    
+	<!-- ***************** FIN Endpoints de Descuentos ***********  -->
+	<!-- ************FIN DE BEANS DE LOS COMBOBOX DE DESCUENTOS************ -->
+    
+	<bean id="BORRA_DET_PROD" parent="portal-endpoint" >
+		<property name="templateName" value="DescuentosDetBorrar.vm" />
+		<property name="xslName" value="DescuentosDetBorrar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="ELIMINA_DET_VOLUMEN" parent="portal-endpoint" >
+		<property name="templateName" value="DescuentosDetEliminar.vm" />
+		<property name="xslName" value="DescuentosDetEliminar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTIENE_DETALLE_PROD" parent="portal-endpoint" >
+		<property name="templateName" value="DescuentosDetProductos.vm" />
+		<property name="xslName" value="DescuentosDetProductos.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTIENE_DET_VOLUMEN" parent="portal-endpoint" >
+		<property name="templateName" value="DescuentosDetVolumen.vm" />
+		<property name="xslName" value="DescuentosDetVolumen.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTIENE_ENC_PROD" parent="portal-endpoint" >
+		<property name="templateName" value="DescuentosObtieneEncProducto.vm" />
+		<property name="xslName" value="DescuentosObtieneEncProducto.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTIENE_ENC_VOLUMEN" parent="portal-endpoint" >
+		<property name="templateName" value="DescuentosObtieneEncVolumen.vm" />
+		<property name="xslName" value="DescuentosObtieneEncVolumen.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="GUARDA_PRODUCTO_DETALLE" parent="portal-endpoint" >
+		<property name="templateName" value="DescuentosDetProdGuardar.vm" />
+		<property name="xslName" value="DescuentosDetProdGuardar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="GUARDA_VOLUMEN_DET" parent="portal-endpoint" >
+		<property name="templateName" value="DescuentosDetVolumenGuardar.vm" />
+		<property name="xslName" value="DescuentosDetVolumenGuardar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="GUARDA_PRODUCTO" parent="portal-endpoint" >
+		<property name="templateName" value="DescuentosProductoGuardar.vm" />
+		<property name="xslName" value="DescuentosProductoGuardar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="GUARDA_VOLUMEN" parent="portal-endpoint" >
+		<property name="templateName" value="DescuentosVolumenGuardar.vm" />
+		<property name="xslName" value="DescuentosVolumenGuardar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="INSERTA_PRODUCTO" parent="portal-endpoint" >
+		<property name="templateName" value="DescuentosProductoInsertar.vm" />
+		<property name="xslName" value="DescuentosProductoGuardar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="INSERTA_VOLUMEN" parent="portal-endpoint" >
+		<property name="templateName" value="DescuentosVolumenInsertar.vm" />
+		<property name="xslName" value="DescuentosVolumenGuardar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+
+
+	<!-- Configuracion Alertas Automatico  -->
+
+	<bean id="OBTIENE_CONF_ALERTA_AUTO" parent="portal-endpoint">
+		<property name="templateName" value="ConfiguracionAlertasAutomatico_obtener.vm"></property>
+		<property name="xslName" value="ConfiguracionAlertasAutomatico_obtener.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="OBTIENE_CONF_ALERTA_AUTO_EXPORT" parent="portal-endpoint">
+		<property name="templateName" value="ConfiguracionAlertasAutomatico_obtener.vm"></property>
+		<property name="xslName" value="ConfiguracionAlertasAutomatico_obtener_export.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+
+
+	<bean id="OBTIENE_CONF_ALERTA_AUTO_REG" parent="portal-endpoint">
+		<property name="templateName" value="ConfiguracionAlertasAutomatico_obtenerReg.vm"></property>
+		<property name="xslName" value="ConfiguracionAlertasAutomatico_obtenerReg.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+
+	<bean id="INSERTA_CONF_ALERTA_AUTO" parent="portal-endpoint">
+		<property name="templateName" value="ConfiguracionAlertasAutomatico_guardar.vm"></property>
+		<property name="xslName" value="ConfiguracionAlertasAutomatico_agregar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="BORRA_CONF_ALERTA_AUTO" parent="portal-endpoint">
+		<property name="templateName" value="ConfiguracionAlertasAutomatico_Borrar.vm"></property>
+		<property name="xslName" value="ConfiguracionAlertasAutomatico_borrar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+    
+
+
+	<!-- FIN Configuracion Alertas Automatico  -->
+
+
+
+
+	<!-- Carrito de Compras  -->
+
+	<bean id="OBTIENE_CARRITO_COMPRAS" parent="portal-endpoint">
+		<property name="templateName" value="CarritoCompras_Obtener.vm"></property>
+		<property name="xslName" value="CarritoCompras_obtener.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+
+	<bean id="OBTIENE_CARRITO_COMPRAS_REG" parent="portal-endpoint">
+		<property name="templateName" value="CarritoCompras_Obtener.vm"></property>
+		<property name="xslName" value="CarritoCompras_obtener.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+
+	<bean id="INSERTA_GUARDA_CARRITO_COMPRAS" parent="portal-endpoint">
+		<property name="templateName" value="CarritoCompras_Guardar.vm"></property>
+		<property name="xslName" value="CarritoCompras_agregar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="GUARDA_MTARJETA" parent="portal-endpoint">
+		<property name="templateName" value="CarritoCompras_GuardarFormaPago.vm"></property>
+		<property name="xslName" value="CarritoCompras_GuardarFormaPago.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="BORRA_CARRITO_COMPRAS" parent="portal-endpoint">
+		<property name="templateName" value="CarritoCompras_Borrar.vm"></property>
+		<property name="xslName" value="CarritoCompras_borrar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+
+	<bean id="OBTIENE_ROLES_CARRITO_COMPRAS" parent="portal-endpoint">
+		<property name="templateName" value="CarritoCompras_ObtenerRoles.vm"></property>
+		<property name="xslName" value="CarritoCompras_ObtenerRoles.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="OBTIENE_PRODUCTOS_CARRITO_COMPRAS" parent="portal-endpoint">
+		<property name="templateName" value="CarritoCompras_ObtenerProductos.vm"></property>
+		<property name="xslName" value="CarritoCompras_ObtenerProductos.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="CALCULA_DESCUENTO_CARRITO_COMPRAS" parent="portal-endpoint">
+		<property name="templateName" value="CarritoCompras_CalculaDescuento.vm"></property>
+		<property name="xslName" value="CarritoCompras_CalculaDescuento.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="OBTENER_MONTOS_CARRITO_COMPRAS" parent="portal-endpoint">
+		<property name="templateName" value="CarritoCompras_ObtenerMontos.vm"></property>
+		<property name="xslName" value="CarritoCompras_ObtenerMontos.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="OBTIENE_ENC_ORDEN_CARRITO_COMPRAS" parent="portal-endpoint">
+		<property name="templateName" value="CarritoCompras_EncOrden.vm"></property>
+		<property name="xslName" value="CarritoCompras_EncOrden.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="DET_ORDEN_CARRITO_COMPRAS" parent="portal-endpoint">
+		<property name="templateName" value="CarritoCompras_DetOrden.vm"></property>
+		<property name="xslName" value="CarritoCompras_DetOrden.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="MONTOS_ORDEN_CARRITO_COMPRAS" parent="portal-endpoint">
+		<property name="templateName" value="CarritoCompras_MontosOrden.vm"></property>
+		<property name="xslName" value="CarritoCompras_MontosOrden.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="OBTIENE_DIRECCION_ORDEN_CARRITO_COMPRAS" parent="portal-endpoint">
+		<property name="templateName" value="CarritoCompras_ObtenerDireccionOrden.vm"></property>
+		<property name="xslName" value="CarritoCompras_ObtenerDireccionOrden.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="OBTIENE_INSTRUMENTOS_PAGO" parent="portal-endpoint">
+		<property name="templateName" value="ObtenerInstrumentosPago.vm"></property>
+		<property name="xslName" value="ObtenerInstrumentosPago.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="OBTIENE_BANCOS" parent="portal-endpoint">
+		<property name="templateName" value="ObtenerBancos.vm"></property>
+		<property name="xslName" value="ObtenerBancos.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="OBTIENE_TIPOS_TARJETA" parent="portal-endpoint">
+		<property name="templateName" value="ObtenerTiposTarjeta.vm"></property>
+		<property name="xslName" value="ObtenerTiposTarjeta.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="GUARDAR_CARRITO" parent="portal-endpoint">
+		<property name="templateName" value="CarritoCompras_GuardarCarrito.vm"></property>
+		<property name="xslName" value="CarritoCompras_agregar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="BORRA_REG_CARRITO_COMPRAS" parent="portal-endpoint">
+		<property name="templateName" value="CarritoCompras_BorrarReg.vm"></property>
+		<property name="xslName" value="CarritoCompras_borrarReg.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<!-- FIN Carrito de Compras  -->
+
+
+	<!-- Desglose de Polizas  -->
+
+	<bean id="OBTIENE_DESGLOSE_POLIZAS_REG" parent="portal-endpoint">
+		<property name="templateName" value="DesglosePolizas_obtener_reg.vm"></property>
+		<property name="xslName" value="DesglosePolizas_obtener.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+
+	<bean id="INSERTA_DESGLOSE_POLIZAS" parent="portal-endpoint">
+		<property name="templateName" value="DesglosePolizas_guardar.vm"></property>
+		<property name="xslName" value="DesglosePolizas_agregar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+
+	<bean id="COPIA_DESGLOSE_POLIZAS" parent="portal-endpoint">
+		<property name="templateName" value="DesglosePolizas_copiar.vm"></property>
+		<property name="xslName" value="DesglosePolizas_obtener.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="BORRA_DESGLOSE_POLIZAS" parent="portal-endpoint">
+		<property name="templateName" value="DesglosePolizas_Borrar.vm"></property>
+		<property name="xslName" value="DesglosePolizas_borrar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+
+	<bean id="OBTIENE_DESGLOSE_POLIZAS" parent="portal-endpoint">
+		<property name="templateName" value="DesglosePolizas_obtener.vm"></property>
+		<property name="xslName" value="DesglosePolizas_obtener.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+
+	<bean id="OBTIENE_DESGLOSE_POLIZAS_EXPORT" parent="portal-endpoint">
+		<property name="templateName" value="DesglosePolizas_obtener.vm"></property>
+		<property name="xslName" value="DesglosePolizas_obtener_export.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+
+    
+	<!-- FIN Desglose de Polizas  -->
+
+
+	<!-- Comienzo Ayuda Coberturas  -->
+	<bean id="OBTENERREG_AYUDA_COBERTURAS" parent="portal-endpoint">
+		<property name="templateName" value="AyudaCoberturas_ObtenerReg.vm"></property>
+		<property name="xslName" value="AyudaCoberturas_ObtenerReg.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="BUSCAR_AYUDA_COBERTURAS" parent="portal-endpoint">
+		<property name="templateName" value="AyudaCoberturas_Buscar.vm"></property>
+		<property name="xslName" value="AyudaCoberturas_Buscar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="INSERTAR_AYUDA_COBERTURAS" parent="portal-endpoint">
+		<property name="templateName" value="AyudaCoberturas_Insertar.vm"></property>
+		<property name="xslName" value="AyudaCoberturas_Insertar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="GUARDAR_AYUDA_COBERTURAS" parent="portal-endpoint">
+		<property name="templateName" value="AyudaCoberturas_Guardar.vm"></property>
+		<property name="xslName" value="AyudaCoberturas_Guardar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="BORRAR_AYUDA_COBERTURAS" parent="portal-endpoint">
+		<property name="templateName" value="AyudaCoberturas_Borrar.vm"></property>
+		<property name="xslName" value="AyudaCoberturas_Borrar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="COPIAR_AYUDA_COBERTURAS" parent="portal-endpoint">
+		<property name="templateName" value="AyudaCoberturas_Copiar.vm"></property>
+		<property name="xslName" value="AyudaCoberturas_Copiar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="OBTIENE_AYUDA_COBERTURAS_EXPORT" parent="portal-endpoint" >
+		<property name="templateName" value="AyudaCoberturas_Buscar.vm" />
+		<property name="xslName" value="AyudaCoberturas_BuscarExportar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<!-- Comienzo Combos de Ayuda Coberturas -->
+	<bean id="OBTIENE_RAMOS" parent="portal-endpoint" >
+		<property name="templateName" value="ObtenerRamos.vm" />
+		<property name="xslName" value="ObtenerRamos.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<bean id="OBTIENE_SUBRAMOS" parent="portal-endpoint" >
+		<property name="templateName" value="ObtenerSubRamos.vm" />
+		<property name="xslName" value="ObtenerSubRamos.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<bean id="OBTIENE_PRODUCTOS_AYUDA" parent="portal-endpoint" >
+		<property name="templateName" value="ObtenerProductosAyuda.vm" />
+		<property name="xslName" value="ObtenerProductosAyuda.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+
+	<bean id="OBTIENE_PRODUCTOS_AYUDA_CLIENTE"  parent="portal-endpoint">
+		<property name="templateName" value="ObtenerProductosAyudaCliente.vm" />
+		<property name="xslName" value="ObtenerProductosAyudaCliente.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+
+
+	<!-- FIN Combos de Ayuda Coberturas -->
+	<!-- FIN Ayuda Coberturas  -->
+
+	<bean id="OBTIENE_USUARIOS_CIMA" parent="portal-endpoint" >
+		<property name="templateName" value="ConfiguracionAlertasAutomatico_Usuarios.vm" />
+		<property name="xslName" value="ConfiguracionAlertasAutomatico_Usuarios.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTIENE_CONF_ALERTAS_AUTO_CLIENTES" parent="portal-endpoint" >
+		<property name="templateName" value="ConfiguracionAlertasAutomatico_Clientes.vm" />
+		<property name="xslName" value="ConfiguracionAlertasAutomatico_Clientes.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTIENE_CONF_ALERTAS_AUTO_PROCESOS" parent="portal-endpoint" >
+		<property name="templateName" value="ConfiguracionAlertasAutomatico_Procesos.vm" />
+		<property name="xslName" value="ConfiguracionAlertasAutomatico_Procesos.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTIENE_CONF_ALERTAS_AUTO_TEMPORALIDAD" parent="portal-endpoint" >
+		<property name="templateName" value="ConfiguracionAlertasAutomatico_Temporalidad.vm" />
+		<property name="xslName" value="ConfiguracionAlertasAutomatico_Temporalidad.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTIENE_CONF_ALERTAS_AUTO_ROL" parent="portal-endpoint" >
+		<property name="templateName" value="ConfiguracionAlertasAutomatico_Rol.vm" />
+		<property name="xslName" value="ConfiguracionAlertasAutomatico_Rol.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTIENE_CONF_ALERTAS_AUTO_TIPO_RAMO" parent="portal-endpoint" >
+		<property name="templateName" value="ConfiguracionAlertasAutomatico_TipoRamo.vm" />
+		<property name="xslName" value="ConfiguracionAlertasAutomatico_TipoRamo.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTIENE_REGIONES" parent="portal-endpoint" >
+		<property name="templateName" value="ObtenerRegiones.vm" />
+		<property name="xslName" value="ObtenerRegiones.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<bean id="OBTIENE_IDIOMAS_REGION" parent="portal-endpoint" >
+		<property name="templateName" value="ObtenerIdiomasRegion.vm" />
+		<property name="xslName" value="ObtenerIdiomasRegion.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+
+	<!-- Traduccion de los mensajes de errores -->
+    
+	<bean id="OBTIENE_MENSAJE" parent="portal-endpoint" >
+		<property name="templateName" value="ObtieneMensaje.vm" />
+		<property name="xslName" value="ObtieneMensaje.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<!-- Obtiene los valores de Si No para el combo de Si/No -->
+	<bean id="OBTIENE_SINO" parent="portal-endpoint" >
+		<property name="templateName" value="ObtieneSiNo.vm" />
+		<property name="xslName" value="ObtieneSiNo.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<!-- Obtiene los valores de idiomas -->
+	<bean id="OBTIENE_IDIOMAS_AYUDA" parent="portal-endpoint" >
+		<property name="templateName" value="ObtenerIdiomasAyuda.vm" />
+		<property name="xslName" value="ObtenerIdiomasAyuda.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<!-- Obtiene los valores de Concepto Producto -->
+	<bean id="OBTIENE_CONCEPTO_PRODUCTO" parent="portal-endpoint" >
+		<property name="templateName" value="ObtieneConceptoProducto.vm" />
+		<property name="xslName" value="ObtieneConceptoProducto.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+    
+    
+	<!-- Obtiene los valores de Concepto por  Producto -->
+	<bean id="OBTIENE_CONCEPTO_POR_PRODUCTO" parent="portal-endpoint">
+		<property name="templateName" value="ObtieneConceptoPorProducto.vm" />
+		<property name="xslName" value="ObtieneConceptoPorProducto.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+    
+   
+	<!-- Obtiene los valores de Concepto Producto -->
+	<bean id="OBTIENE_PRODUCTOS_C" parent="portal-endpoint" >
+		<property name="templateName" value="ObtenerProductosC.vm" />
+		<property name="xslName" value="ObtenerProductosC.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<!-- Obtiene los valores de Concepto Producto -->
+    
+	<!-- Combo Producto -->
+	<bean id="OBTIENE_PRODUCTO" parent="portal-endpoint" >
+		<property name="templateName" value="ObtenerProducto.vm" />
+		<property name="xslName" value="ObtenerProducto.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<!-- Fin combo producto -->
+    
+    
+	<bean id="OBTIENE_COBERTURAS_PRODUCTO" parent="portal-endpoint" >
+		<property name="templateName" value="ObtenerCoberturasProducto.vm" />
+		<property name="xslName" value="ObtenerCoberturasProducto.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<!-- Agrupacion Por Papel -->
+	<bean id="AGRUPACIONPAPEL_OBTIENE_AGRUPACION" parent="portal-endpoint" >
+		<property name="templateName" value="AgrupacionPapel_Obtener_Agrupacion.vm" />
+		<property name="xslName" value="AgrupacionPapel_Obtener_Agrupacion.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<bean id="AGRUPACIONPAPEL_GUARDA_PAPELES" parent="portal-endpoint" >
+		<property name="templateName" value="AgrupacionPapel_Guardar.vm" />
+		<property name="xslName" value="AgrupacionPapel_Guardar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+    
+    
+    
+
+
+	<!-- Configurar Agrupación por Grupo de Personas --> 
+
+	<bean id="OBTIENERREG_AGRUPACION_GRUPO_PERSONAS" parent="portal-endpoint">
+		<property name="templateName" value="AgrupacionGrupoPersonas_ObtenerRegAgp.vm"></property>
+		<property name="xslName" value="AgrupacionGrupoPersonas_ObtenerRegAgp.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="OBTIENERREG_GRUPO_PERSONAS" parent="portal-endpoint">
+		<property name="templateName" value="AgrupacionGrupoPersonas_ObtenerRegGp.vm"></property>
+		<property name="xslName" value="AgrupacionGrupoPersonas_ObtenerRegGp.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="INSERTA_AGRUPACION_GRUPO_PERSONAS" parent="portal-endpoint">
+		<property name="templateName" value="AgrupacionGrupoPersonas_Insertar.vm"></property>
+		<property name="xslName" value="AgrupacionGrupoPersonas_Insertar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="GUARDA_AGRUPACION_GRUPO_PERSONAS" parent="portal-endpoint">
+		<property name="templateName" value="AgrupacionGrupoPersonas_Guardar.vm"></property>
+		<property name="xslName" value="AgrupacionGrupoPersonas_Guardar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="BORRAR_GRUPO_PERSONAS" parent="portal-endpoint">
+		<property name="templateName" value="AgrupacionGrupoPersonas_Borrar_Grupo.vm"></property>
+		<property name="xslName" value="AgrupacionGrupoPersonas_Borrar_Grupo.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<!-- combo box -->
+	<bean id="OBTIENE_GRUPO_PERSONAS_CLIENTE" parent="portal-endpoint">
+		<property name="templateName" value="ObtenerGrupoPersonasCliente.vm" />
+		<property name="xslName" value="ObtenerGrupoPersonasCliente.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<!--  fin de Configurar Agrupación por Grupo de Personas -->
+
+
+	<!-- Ejecutivos Cuenta  -->
+
+	<bean id="OBTIENE_EJECUTIVO_CUENTA_REG" parent="portal-endpoint">
+		<property name="templateName" value="EjecutivosCuenta_obtenerReg.vm"></property>
+		<property name="xslName" value="EjecutivosCuenta_ObtenerReg.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+
+	<bean id="INSERTA_GUARDA_EJECUTIVO_CUENTA" parent="portal-endpoint">
+		<property name="templateName" value="EjecutivosCuenta_agregarGuardar.vm"></property>
+		<property name="xslName" value="EjecutivosCuenta_agregarGuardar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	
+	<bean id="BORRA_EJECUTIVO_CUENTA" parent="portal-endpoint">
+		<property name="templateName" value="EjecutivosCuenta_borrar.vm"></property>
+		<property name="xslName" value="EjecutivosCuenta_borrar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<bean id="OBTIENE_EJECUTIVOS_CUENTA" parent="portal-endpoint">
+		<property name="templateName" value="EjecutivosCuenta_obtener.vm"></property>
+		<property name="xslName" value="EjecutivosCuenta_obtener.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<!-- Probando -->
+	<bean id="OBTIENE_EJECUTIVOS_CUENTA_EXPORT" parent="portal-endpoint">
+		<property name="templateName" value="EjecutivosCuenta_obtener.vm"></property>
+		<property name="xslName" value="EjecutivosCuenta_Obtener_Exportar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="OBTIENE_EJECUTIVOS_AON" parent="portal-endpoint">
+		<property name="templateName" value="ObtieneEjecutivosAon.vm"></property>
+		<property name="xslName" value="ObtieneEjecutivosAon.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<bean id="OBTIENE_TIPO_EJECUTIVOS_AON" parent="portal-endpoint">
+		<property name="templateName" value="ObtieneTipoEjecutivosAon.vm"></property>
+		<property name="xslName" value="ObtieneTipoEjecutivosAon.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="OBTIENE_ESTADOS_EJECUTIVO" parent="portal-endpoint">
+		<property name="templateName" value="ObtenerTipoNivel.vm"></property>
+		<property name="xslName" value="ObtenerTipoNivel.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+
+	<bean id="OBTIENE_LINEAS_ATENCION" parent="portal-endpoint">
+		<property name="templateName" value="ObtenerTipoNivel.vm"></property>
+		<property name="xslName" value="ObtenerTipoNivel.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<bean id="OBTIENE_GRUPO_PERSONAS" parent="portal-endpoint">
+		<property name="templateName" value="ObtenerTipoNivel.vm"></property>
+		<property name="xslName" value="ObtenerTipoNivel.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<bean id="OBTIENE_CLIENTES_CORPORATIVO" parent="portal-endpoint">
+		<property name="templateName" value="ObtieneClientesCorporativo.vm"></property>
+		<property name="xslName" value="ObtieneClientesCorporativo.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	
+	<bean id="OBTIENE_PRODUCTOS_EJECUTIVOS_CUENTA" parent="portal-endpoint">
+		<property name="templateName" value="EjecutivosCuenta_obtenerProductos.vm"></property>
+		<property name="xslName" value="EjecutivosCuenta_obtenerProductos.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	
+	<bean id="OBTIENE_TIPOS_RAMO_CLIENTE_EJEC_CUENTA" parent="portal-endpoint">
+		<property name="templateName" value="EjecutivosCuenta_obtenerTiposRamoCliente.vm"></property>
+		<property name="xslName" value="EjecutivosCuenta_obtenerTiposRamoCliente.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<!-- FIN  Ejecutivos Cuenta  -->
+
+	<!-- Alertas Por Usuario -->
+	<bean id="OBTIENE_ALERTAS_USUARIO" parent="portal-endpoint">
+		<property name="templateName" value="AlertasUsuario_Obtener.vm"></property>
+		<property name="xslName" value="AlertasUsuario_Obtener.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="OBTIENE_ALERTA_USUARIO_REG" parent="portal-endpoint">
+		<property name="templateName" value="AlertasUsuario_Get.vm"></property>
+		<property name="xslName" value="AlertasUsuario_Get.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="GUARDA_ALERTA_USUARIO" parent="portal-endpoint">
+		<property name="templateName" value="AlertasUsuario_Guardar.vm"></property>
+		<property name="xslName" value="AlertasUsuario_Guardar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="OBTIENE_POLIZA_POR_ASEGURADORA" parent="portal-endpoint">
+		<property name="templateName" value="AlertasUsuario_ComboPolizaPorAseguradora.vm"></property>
+		<property name="xslName" value="AlertasUsuario_ComboPolizaPorAseguradora.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="OBTIENE_RECIBO_POR_POLIZA_POR_ASEGURADORA" parent="portal-endpoint">
+		<property name="templateName" value="AlertasUsuario_ComboReciboPorPolizaPorAseguradora.vm"></property>
+		<property name="xslName" value="AlertasUsuario_ComboReciboPorPolizaPorAseguradora.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="BORRA_ALERTA" parent="portal-endpoint">
+		<property name="templateName" value="AlertasUsuario_Borrar.vm"></property>
+		<property name="xslName" value="AlertasUsuario_Borrar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<!-- Fin Alertas Por Usuario -->
+
+	<bean id="OBTIENE_VINCULOS_PADRES_POR_ESTRUCTURA" parent="portal-endpoint">
+		<property name="templateName" value="ObtenerPadrePorEstructura.vm" />
+		<property name="xslName" value="ObtenerPadre.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+
+	<!-- Caso de uso de Agrupacion de Polizas -->
+	<bean id="OBTIENE_AGRUPACIONES" parent="portal-endpoint">
+		<property name="templateName" value="AgrupacionesPoliza_ObtienePolizas.vm" />
+		<property name="xslName" value="AgrupacionesPoliza_ObtienePolizas.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="OBTIENE_AGRUPACION_POLIZAS_EXPORT" parent="portal-endpoint">
+		<property name="templateName" value="AgrupacionesPoliza_ObtienePolizas.vm" />
+		<property name="xslName" value="AgrupacionesPoliza_ObtienePolizas_Exportar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+
+	<bean id="OBTIENE_AGRUPACION" parent="portal-endpoint">
+		<property name="templateName" value="AgrupacionesPoliza_ObtieneAgrupacion.vm" />
+		<property name="xslName" value="AgrupacionesPoliza_ObtieneAgrupacion.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="GUARDA_AGRUPACION" parent="portal-endpoint">
+		<property name="templateName" value="AgrupacionesPoliza_GuardarAgrupacion.vm" />
+		<property name="xslName" value="AgrupacionesPoliza_GuardaAgrupacion.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+ 
+	<bean id="BORRA_AGRUPACION" parent="portal-endpoint">
+		<property name="templateName" value="AgrupacionesPoliza_BorraPolizas.vm" />
+		<property name="xslName" value="AgrupacionesPoliza_BorraPolizas.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>    
+
+	<bean id="OBTENER_ASEGURADORAS_CLIENTE" parent="portal-endpoint">
+		<property name="templateName" value="AseguradorasCliente_ObtenerCombo.vm"></property>
+		<property name="xslName" value="AseguradorasCliente_ObtenerCombo.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<bean id="OBTENER_ASEGURADORAS_X_ASEGURADO" parent="portal-endpoint">
+		<property name="templateName" value="AseguradorasXAsegurado.vm"></property>
+		<property name="xslName" value="AseguradorasCliente_ObtenerCombo.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="OBTENER_PRODUCTOS_ASEGURADORA_CLIENTE" parent="portal-endpoint">
+        <property name="templateName" value="ObtenerProductosAseguradoraCliente.vm"></property>
+        <property name="xslName" value="ObtenerProductosAseguradoraCliente.xsl"></property>
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+    
+    <bean id="OBTENER_PRODUCTOS_ASEGURADORA_CLIENTE_REN" parent="portal-endpoint">
+        <property name="templateName" value="ObtenerProductosAseguradoraClienteRen.vm"></property>
+        <property name="xslName" value="ObtenerProductosAseguradoraClienteRen.xsl"></property>
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+    
+    <bean id="OBTENER_PRODUCTOS_ASEGURADORA_CLIENTE2" parent="portal-endpoint">
+        <property name="templateName" value="ObtenerProductosAseguradoraCliente2.vm"></property>
+        <property name="xslName" value="ObtenerProductosAseguradoraCliente.xsl"></property>
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+
+    <bean id="OBTIENE_PRODUCTOS_TRAMO_CLIENTE" parent="portal-endpoint">
+        <property name="templateName" value="ObtenerProductosTramoCliente.vm"></property>
+        <property name="xslName" value="ObtenerProductosTramoCliente.xsl"></property>
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+    
+	<bean id="OBTENER_RAMOS_CLIENTE" parent="portal-endpoint">
+		<property name="templateName" value="ObtenerRamosCliente.vm"></property>
+		<property name="xslName" value="ObtenerRamosCliente.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<!-- Fin de Caso de uso de Agrupacion de Polizas -->
+
+	<bean id="AGRUPACION_PAPEL_OBTIENE_PAPELES" parent="portal-endpoint">
+		<property name="templateName" value="AgrupacionPapel_ObtenerPapeles.vm"></property>
+		<property name="xslName" value="AgrupacionPapel_ObtenerPapeles.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+    
+	<bean id="AGRUPACION_PAPEL_BORRAR_ROL" parent="portal-endpoint">
+		<property name="templateName" value="AgrupacionPapel_Borrar_Rol.vm"></property>
+		<property name="xslName" value="AgrupacionPapel_Borrar_Rol.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="OBTIENE_ASEGURADORA_POR_CLIENTE" parent="portal-endpoint">
+		<property name="templateName" value="AgrupacionPapel_AseguradoraPorCliente.vm"></property>
+		<property name="xslName" value="AgrupacionPapel_AseguradoraPorCliente.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<bean id="OBTIENE_ASEGURADORA_POR_CLIENTE_REN" parent="portal-endpoint">
+		<property name="templateName" value="AgrupacionPapel_AseguradoraPorClienteRen.vm"></property>
+		<property name="xslName" value="AgrupacionPapel_AseguradoraPorClienteRen.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="OBTIENE_PAPELES_POR_CLIENTE" parent="portal-endpoint">
+		<property name="templateName" value="AgrupacionPapel_Papeles.vm"></property>
+		<property name="xslName" value="AgrupacionPapel_Papeles.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="OBTIENE_PRODUCTOS_POR_ASEGURADORA_Y_CLIENTE" parent="portal-endpoint">
+		<property name="templateName" value="AgrupacionPapel_ProductosPorAseguradoraYCliente.vm"></property>
+		<property name="xslName" value="AgrupacionPapel_ProductosPorAseguradoraYCliente.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="CHKLIST_INSERTA_TAREA_SECCION_CTA" parent="portal-endpoint">
+		<property name="templateName" value="CheckListCuentaPreRequisitos_InsertarTareaSeccionCta.vm"></property>
+		<property name="xslName" value="CheckListCuentaPreRequisitos_GuardarTareaSeccionCta.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="OBTIENE_TIPO_PERSONA_J" parent="portal-endpoint">
+		<property name="templateName" value="ObtenerTipoPersonasJ.vm"></property>
+		<property name="xslName" value="ObtenerTipoPersonasJ.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="PERSONAS_BUSCAR" parent="portal-endpoint">
+		<property name="templateName" value="Personas_Listar.vm"></property>
+		<property name="xslName" value="Personas_Listar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<bean id="BUSCAR_USUARIO_SIN_PERSONA" parent="portal-endpoint">
+		<property name="templateName" value="Personas_UsuariosSinListar.vm"></property>
+		<property name="xslName" value="Personas_UsuariosSinListar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="PERSONAS_EXPORTAR" parent="portal-endpoint" >
+		<property name="templateName" value="Personas_Listar.vm" />
+		<property name="xslName" value="Personas_Exportar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>  
+
+	<!-- Caso de uso Secciones -->
+	
+	<bean id="GUARDA_SECCION" parent="portal-endpoint">
+		<property name="templateName" value="Secciones_AgregarSeccion.vm"></property>
+		<property name="xslName" value="Secciones_AgregarSeccion.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<bean id="BUSCA_SECCIONES" parent="portal-endpoint">
+		<property name="templateName" value="Secciones_BuscarSecciones.vm"></property>
+		<property name="xslName" value="Secciones_BuscarSecciones.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+    
+	<bean id="BORRA_SECCION" parent="portal-endpoint">
+		<property name="templateName" value="Secciones_BorrarSeccion.vm"></property>
+		<property name="xslName" value="Secciones_BorrarSeccion.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+    
+	<bean id="OBTIENE_SECCION" parent="portal-endpoint">
+		<property name="templateName" value="Secciones_GetSeccion.vm"></property>
+		<property name="xslName" value="Secciones_GetSeccion.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+    
+	<bean id="OBTIENE_BLOQUES" parent="portal-endpoint">
+		<property name="templateName" value="ObtenerBloques.vm"></property>
+		<property name="xslName" value="ObtenerBloques.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<bean id="OBTIENE_SECCION_EXPORT" parent="portal-endpoint">
+		<property name="templateName" value="Secciones_BuscarSecciones.vm"></property>
+		<property name="xslName" value="Secciones_Obtener_Export.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+    
+	<bean id="VALIDA_BLOQUE" parent="portal-endpoint">
+		<property name="templateName" value="Secciones_ValidaBloque.vm"></property>
+		<property name="xslName" value="Secciones_ValidaBloque.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<!-- Fin Caso de uso Secciones -->	
+
+	<!-- Comienzo de Personas -->
+	<bean id="PERSONAS_GUARDAR" parent="portal-endpoint">
+		<property name="templateName" value="Personas_Guardar.vm"></property>
+		<property name="xslName" value="Personas_Guardar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="PERSONAS_INSERTAR" parent="portal-endpoint">
+		<property name="templateName" value="Personas_Insertar.vm"></property>
+		<property name="xslName" value="Personas_Insertar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="PERSONAS_GUARDAR_DATOS_ADICIONALES" parent="portal-endpoint">
+		<property name="templateName" value="Personas_GuardarDatosAdicionales.vm"></property>
+		<property name="xslName" value="Personas_GuardarDatosAdicionales.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="PERSONAS_GUARDAR_CORPORATIVO" parent="portal-endpoint">
+		<property name="templateName" value="Personas_GuardarCorporativo.vm"></property>
+		<property name="xslName" value="Personas_GuardarCorporativo.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="PERSONAS_GUARDAR_DOMICILIO" parent="portal-endpoint">
+		<property name="templateName" value="Personas_GuardarDomicilio.vm"></property>
+		<property name="xslName" value="Personas_GuardarDomicilio.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="PERSONAS_GUARDAR_TELEFONO" parent="portal-endpoint">
+		<property name="templateName" value="Personas_GuardarTelefono.vm"></property>
+		<property name="xslName" value="Personas_GuardarTelefono.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="PERSONAS_OBTENER_DATOS_ADICIONALES" parent="portal-endpoint">
+		<property name="templateName" value="Personas_ObtenerDatosAdicionales.vm"></property>
+		<property name="xslName" value="Personas_ObtenerDatosAdicionales.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="OBTENER_USUARIO_CLAVE_PERSONA" parent="portal-endpoint">
+		<property name="templateName" value="Personas_ObtenerUsuariosClaves.vm"></property>
+		<property name="xslName" value="Personas_ObtenerUsuariosClaves.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<bean id="PERSONAS_GUARDAR_CLAVE_USUARIO" parent="portal-endpoint">
+		<property name="templateName" value="Personas_GuardarUsuarioClave.vm"></property>
+		<property name="xslName" value="Personas_GuardarUsuarioClave.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<bean id="PERSONAS_GUARDAR_ASOCIAR_CLAVE_USUARIO" parent="portal-endpoint">
+		<property name="templateName" value="Personas_GuardarAsociarUsuarioClave.vm"></property>
+		<property name="xslName" value="Personas_GuardarAsociarUsuarioClave.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>	
+
+	<bean id="PERSONAS_GUARDAR_CREAR_CLAVE_USUARIO" parent="portal-endpoint">
+		<property name="templateName" value="Personas_GuardarCrearUsuarioClave.vm"></property>
+		<property name="xslName" value="Personas_GuardarCrearUsuarioClave.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>	
+	
+	<!-- Fin Personas -->
+	
+	
+	<!-- Metodos de Cancelacion -->
+	
+	<bean id="INSERTA_GUARDA_METODO_CANCELACION" parent="portal-endpoint">
+		<property name="templateName" value="MetodoCancelacion_InsertarGuardar.vm"></property>
+		<property name="xslName" value="MetodoCancelacion_InsertarGuardar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+    
+	<bean id="BORRA_METODO_CANCELACION" parent="portal-endpoint">
+		<property name="templateName" value="MetodoCancelacion_Borrar.vm"></property>
+		<property name="xslName" value="MetodoCancelacion_Borrar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<bean id="OBTIENE_METODOS_CANCELACION" parent="portal-endpoint">
+		<property name="templateName" value="MetodoCancelacion_ObtieneMetodos.vm"></property>
+		<property name="xslName" value="MetodoCancelacion_ObtieneMetodos.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+    
+     
+	<bean id="OBTIENE_METODO_CANCELACION_REG" parent="portal-endpoint">
+		<property name="templateName" value="MetodoCancelacion_ObtieneMetodo_Get.vm"></property>
+		<property name="xslName" value="MetodoCancelacion_ObtieneMetodos.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+   
+     
+	<bean id="OBTIENE_METODOS_CANCELACION_EXPORT" parent="portal-endpoint">
+		<property name="templateName" value="MetodoCancelacion_ObtieneMetodos.vm" />
+		<property name="xslName" value="MetodoCancelacion_ObtieneMetodos_Exportar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+    
+	<!-- Fin Metodos de Cancelacion -->	
+	
+	<!-- Formato de Ordenes de Trabajo --> 
+
+	<bean id="BORRAR_FORMATO_ORDENES_TRABAJO" parent="portal-endpoint">
+		<property name="templateName" value="FormatoOrdenesTrabajo_Borrar.vm"></property>
+		<property name="xslName" value="FormatoOrdenesTrabajo_Borrar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<bean id="GUARDAR_FORMATO_ORDENES_TRABAJO" parent="portal-endpoint">
+		<property name="templateName" value="FormatoOrdenesTrabajo_Guardar.vm"></property>
+		<property name="xslName" value="FormatoOrdenesTrabajo_Guardar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<bean id="OBTIENE_FORMATO_ORDENES_TRABAJO" parent="portal-endpoint">
+		<property name="templateName" value="FormatoOrdenesTrabajo_ObtenerReg.vm"></property>
+		<property name="xslName" value="FormatoOrdenesTrabajo_ObtenerReg.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<bean id="COPIA_FORMATO_ORDENES_TRABAJO" parent="portal-endpoint">
+		<property name="templateName" value="FormatoOrdenesTrabajo_Copiar.vm"></property>
+		<property name="xslName" value="FormatoOrdenesTrabajo_Copiar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="BUSCAR_FORMATO_ORDENES_TRABAJO" parent="portal-endpoint">
+		<property name="templateName" value="FormatoOrdenesTrabajo_Buscar.vm" />
+		<property name="xslName" value="FormatoOrdenesTrabajo_Buscar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<!--  fin de Formato de Ordenes de Trabajo -->
+	
+	<!-- ********************* ASOCIAR FORMATO ORDENES TRABAJO **************************** -->
+	<bean id="OBTIENE_FORMATOXCTA" parent="portal-endpoint">
+		<property name="templateName" value="AsociarOrdenTrabajo_obtenerFormatoxCta.vm" />
+		<property name="xslName" value="AsociarOrdenTrabajo_obtenerFormatoxCta.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="GUARDA_ASOCIACION_ORDEN_TRABAJO" parent="portal-endpoint">
+		<property name="templateName" value="AsociarOrdenTrabajo_Guardar.vm" />
+		<property name="xslName" value="AsociarOrdenTrabajo_Guardar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="FORMAS_CALCULO_FOLIO" parent="portal-endpoint">
+		<property name="templateName" value="AsociarOrdenTrabajo_comboFormasCalculoFolio.vm" />
+		<property name="xslName" value="AsociarOrdenTrabajo_comboFormasCalculoFolio.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTIENE_FORMATOS" parent="portal-endpoint">
+		<property name="templateName" value="AsociarOrdenTrabajo_comboObtieneFormatos.vm" />
+		<property name="xslName" value="AsociarOrdenTrabajo_comboObtieneFormatos.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTIENE_PROCESOS_CIMA" parent="portal-endpoint">
+		<property name="templateName" value="AsociarOrdenTrabajo_comboObtieneProcesos.vm" />
+		<property name="xslName" value="AsociarOrdenTrabajo_comboObtieneProcesos.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<!-- ***************** FIN ASOCIAR FORMATO ORDENES TRABAJO **************************** -->
+	
+	
+	<!-- Numeros Incisos	 -->
+	<bean id="OBTIENE_NUMEROS_INCISO" parent="portal-endpoint">
+		<property name="templateName" value="NumeroInciso_Obtener.vm" />
+		<property name="xslName" value="NumeroInciso_Obtener.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<bean id="OBTIENE_NUMERO_INCISO_REG" parent="portal-endpoint">
+		<property name="templateName" value="NumeroInciso_ObtenerReg.vm" />
+		<property name="xslName" value="NumeroInciso_Obtener.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<bean id="OBTIENE_NUMEROS_INCISO_EXPORT" parent="portal-endpoint">
+		<property name="templateName" value="NumeroInciso_Obtener.vm"></property>
+		<property name="xslName" value="NumeroInciso_Obtener_Exportar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	
+	<bean id="INSERTA_NUMERO_INCISO" parent="portal-endpoint">
+		<property name="templateName" value="NumeroInciso_Insertar.vm"></property>
+		<property name="xslName" value="NumeroInciso_Insertar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<bean id="GUARDA_NUMERO_INCISO" parent="portal-endpoint">
+		<property name="templateName" value="NumeroInciso_Guardar.vm"></property>
+		<property name="xslName" value="NumeroInciso_Guardar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<bean id="BORRAR_NUMERO_INCISO" parent="portal-endpoint">
+		<property name="templateName" value="NumeroInciso_Borrar.vm"></property>
+		<property name="xslName" value="NumeroInciso_Borrar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<bean id="OBTENER_COMBO_NUMERO_INCISO" parent="portal-endpoint">
+		<property name="templateName" value="ObtenerTipoNivel.vm"></property>
+		<property name="xslName" value="ObtenerTipoNivel.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<bean id="OBTIENE_TRAMOS" parent="portal-endpoint">
+		<property name="templateName" value="NumeroInciso_ObtenerTramo.vm"></property>
+		<property name="xslName" value="NumeroInciso_ObtenerTramo.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	
+	<!-- Numeros Incisos	 -->
+	
+	
+	<!-- Numeros Polizas	 -->
+	<bean id="OBTIENE_NUMEROS_POLIZA" parent="portal-endpoint">
+		<property name="templateName" value="NumeroPoliza_Obtener.vm" />
+		<property name="xslName" value="NumeroPoliza_Obtener.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<bean id="OBTIENE_NUMERO_POLIZA_REG" parent="portal-endpoint">
+		<property name="templateName" value="NumeroPoliza_ObtenerReg.vm" />
+		<property name="xslName" value="NumeroPoliza_ObtenerReg.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<bean id="OBTIENE_NUMEROS_POLIZA_EXPORT" parent="portal-endpoint">
+		<property name="templateName" value="NumeroPoliza_Obtener.vm"></property>
+		<property name="xslName" value="NumeroPoliza_Obtener_Exportar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	
+	<bean id="INSERTA_NUMERO_POLIZA" parent="portal-endpoint">
+		<property name="templateName" value="NumeroPoliza_Insertar.vm"></property>
+		<property name="xslName" value="NumeroPoliza_Insertar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<bean id="GUARDA_NUMERO_POLIZA" parent="portal-endpoint">
+		<property name="templateName" value="NumeroPoliza_Guardar.vm"></property>
+		<property name="xslName" value="NumeroPoliza_Guardar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<bean id="BORRAR_NUMERO_POLIZA" parent="portal-endpoint">
+		<property name="templateName" value="NumeroPoliza_Borrar.vm"></property>
+		<property name="xslName" value="NumeroPoliza_Borrar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<bean id="BORRAR_NUMERO_POLIZA_EMISION" parent="portal-endpoint">
+		<property name="templateName" value="NumeroPoliza_Borrar_Emision.vm"></property>
+		<property name="xslName" value="NumeroPoliza_Borrar_Emision.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<bean id="OBTENER_COMBO_NUMERO_POLIZA" parent="portal-endpoint">
+		<property name="templateName" value="ObtenerTipoNivel.vm"></property>
+		<property name="xslName" value="ObtenerTipoNivel.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<!-- Numeros Polizas	 -->
+	
+	
+	<bean id="OBTENER_COMBO_NACIONALIDAD" parent="portal-endpoint">
+		<property name="templateName" value="ObtenerNacionalidad.vm"></property>
+		<property name="xslName" value="ObtenerNacionalidad.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="OBTENER_ESTADO_CIVIL" parent="portal-endpoint">
+		<property name="templateName" value="ObtenerTipoNivel.vm"></property>
+		<property name="xslName" value="ObtenerTipoNivel.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="OBTENER_PERSONA" parent="portal-endpoint">
+		<property name="templateName" value="Personas_Get.vm"></property>
+		<property name="xslName" value="Personas_Get.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="OBTIENE_TIPO_EMPRESA" parent="portal-endpoint">
+		<property name="templateName" value="ObtenerTipoEmpresa.vm"></property>
+		<property name="xslName" value="ObtenerTipoEmpresa.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="OBTIENE_TIPO_IDENTIFICADOR" parent="portal-endpoint">
+		<property name="templateName" value="ObtenerTipoIdentificador.vm"></property>
+		<property name="xslName" value="ObtenerTipoIdentificador.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="OBTENER_DOMICILIOS_PERSONA" parent="portal-endpoint">
+		<property name="templateName" value="Personas_ObtenerDomicilios.vm"></property>
+		<property name="xslName" value="Personas_ObtenerDomicilios.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="OBTIENE_TIPOS_DOMICILIO" parent="portal-endpoint">
+		<property name="templateName" value="Personas_ObtenerTiposDomicilios.vm"></property>
+		<property name="xslName" value="Personas_ObtenerTiposDomicilios.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="OBTIENE_PAISES" parent="portal-endpoint">
+		<property name="templateName" value="Personas_ObtenerPaises.vm"></property>
+		<property name="xslName" value="Personas_ObtenerPaises.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="OBTIENE_COLONIAS" parent="portal-endpoint">
+		<property name="templateName" value="Personas_ObtenerColonias.vm"></property>
+		<property name="xslName" value="Personas_ObtenerColonias.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="OBTIENE_ESTADOS" parent="portal-endpoint">
+		<property name="templateName" value="Personas_ObtenerEstados.vm"></property>
+		<property name="xslName" value="Personas_ObtenerEstados.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="OBTIENE_MUNICIPIOS" parent="portal-endpoint">
+		<property name="templateName" value="Personas_ObtenerMunicipios.vm"></property>
+		<property name="xslName" value="Personas_ObtenerMunicipios.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="OBTENER_TELEFONOS_PERSONA" parent="portal-endpoint">
+		<property name="templateName" value="Personas_ObtenerTelefonos.vm"></property>
+		<property name="xslName" value="Personas_ObtenerTelefonos.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="OBTIENE_TIPOS_TELEFONO" parent="portal-endpoint">
+		<property name="templateName" value="Personas_ObtenerTiposTelefono.vm"></property>
+		<property name="xslName" value="Personas_ObtenerTiposTelefono.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="OBTIENE_GRUPO_CORPORATIVO" parent="portal-endpoint">
+		<property name="templateName" value="Personas_ObtenerGrupoCorporativo.vm"></property>
+		<property name="xslName" value="Personas_ObtenerGrupoCorporativo.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="OBTIENE_ESTADOS_CORPORATIVO" parent="portal-endpoint">
+		<property name="templateName" value="Personas_ObtenerEstadosCorporativos.vm"></property>
+		<property name="xslName" value="Personas_ObtenerEstadosCorporativos.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	
+	<!-- Motivos Cancelacion  --> 
+
+	<bean id="BORRAR_MOTIVOS_CANCELACION" parent="portal-endpoint">
+		<property name="templateName" value="MotivosCancelacion_BorrarMc.vm"></property>
+		<property name="xslName" value="MotivosCancelacion_BorrarMc.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<bean id="BORRAR_REQUISITOS_CANCELACION" parent="portal-endpoint">
+		<property name="templateName" value="MotivosCancelacion_BorrarRc.vm"></property>
+		<property name="xslName" value="MotivosCancelacion_BorrarRc.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<bean id="GUARDAR_MOTIVOS_CANCELACION" parent="portal-endpoint">
+		<property name="templateName" value="MotivosCancelacion_GuardarMc.vm"></property>
+		<property name="xslName" value="MotivosCancelacion_GuardarMc.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<bean id="GUARDAR_REQUISITOS_CANCELACION" parent="portal-endpoint">
+		<property name="templateName" value="MotivosCancelacion_GuardarRc.vm"></property>
+		<property name="xslName" value="MotivosCancelacion_GuardarRc.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="BUSCAR_MOTIVOS_CANCELACION" parent="portal-endpoint">
+		<property name="templateName" value="MotivosCancelacion_BuscarMc.vm" />
+		<property name="xslName" value="MotivosCancelacion_BuscarMc.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<bean id="OBTIENE_REQUISITOS_CANCELACION" parent="portal-endpoint">
+		<property name="templateName" value="MotivosCancelacion_ObtenerRegRc.vm" />
+		<property name="xslName" value="MotivosCancelacion_ObtenerRegRc.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<bean id="OBTIENE_MOTIVOS_CANCELACION" parent="portal-endpoint">
+		<property name="templateName" value="MotivosCancelacion_ObtenerRegMc.vm" />
+		<property name="xslName" value="MotivosCancelacion_ObtenerRegMc.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<bean id="INSERTAR_MOTIVOS_CANCELACION" parent="portal-endpoint">
+		<property name="templateName" value="MotivosCancelacion_InsertarMc.vm" />
+		<property name="xslName" value="MotivosCancelacion_GuardarMc.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<bean id="OBTIENE_MOTIVOS_CANCELACION_EXPORT" parent="portal-endpoint" >
+		<property name="templateName" value="MotivosCancelacion_BuscarMc.vm" /><!-- El mismo de la busqueda  -->
+		<property name="xslName" value="MotivosCancelacion_obtieneEstruct_export.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	
+	<!-- Fin Motivos Cancelacion -->
+	<bean id="OBTENER_CORPORATIVO_PERSONA" parent="portal-endpoint">
+		<property name="templateName" value="Personas_ObtenerCorporativos.vm"></property>
+		<property name="xslName" value="Personas_ObtenerCorporativos.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="BORRAR_DOMICILIO_PERSONA" parent="portal-endpoint">
+		<property name="templateName" value="Personas_BorrarDomicilio.vm"></property>
+		<property name="xslName" value="Personas_BorrarDomicilio.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="BORRAR_TELEFONO_PERSONA" parent="portal-endpoint">
+		<property name="templateName" value="Personas_BorrarTelefono.vm"></property>
+		<property name="xslName" value="Personas_BorrarTelefono.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="OBTIENE_NIVEL_CORPORATIVO" parent="portal-endpoint">
+		<property name="templateName" value="Personas_ObtenerNivelCorporativo.vm"></property>
+		<property name="xslName" value="Personas_ObtenerNivelCorporativo.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<!-- Czo Razones Cancelacion Producto -->
+	<bean id="OBTIENE_RAZONES_PRODUCTO" parent="portal-endpoint">
+		<property name="templateName" value="RazonesCancelacionProductoObtener.vm"></property>
+		<property name="xslName" value="RazonesCancelacionProductoObtener.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<!--bean id="VALIDA_RAZON_CANCELA" parent="portal-endpoint">
+			<property name="templateName" value="RazonesCancelacionProductoValidar.vm"></property>
+			<property name="xslName" value="RazonesCancelacionProductoValidar.xsl"></property>
+			<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+		</bean-->
+	<bean id="BORRA_RAZON_PRODUCTO" parent="portal-endpoint">
+		<property name="templateName" value="RazonesCancelacionProductoBorrar.vm"></property>
+		<property name="xslName" value="RazonesCancelacionProductoBorrar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="GUARDA_RAZON_PRODUCTO" parent="portal-endpoint">
+		<property name="templateName" value="RazonesCancelacionProductoGuardar.vm"></property>
+		<property name="xslName" value="RazonesCancelacionProductoGuardar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="RAZON_CANCELACION" parent="portal-endpoint">
+		<property name="templateName" value="RazonesCancelacionProductoComboRazones.vm"></property>
+		<property name="xslName" value="RazonesCancelacionProductoComboRazones.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="RAZON_CANCELACION_PRODUCTO" parent="portal-endpoint">
+		<property name="templateName" value="RazonesCancelacionProductoCombo.vm"></property>
+		<property name="xslName" value="RazonesCancelacionProductoComboRazones.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="METODO_CANCELACION" parent="portal-endpoint">
+		<property name="templateName" value="RazonesCancelacionProductoComboMetodos.vm"></property>
+		<property name="xslName" value="RazonesCancelacionProductoComboMetodos.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="OBTIENE_RAZONES_CANCELACION_PRODUCTO_EXPORT" parent="portal-endpoint">
+		<property name="templateName" value="RazonesCancelacionProductoObtener.vm"></property>
+		<property name="xslName" value="RazonesCancelacionProductoObtener_export.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<!-- Fin Razones Cancelacion Producto -->
+	 
+	<bean id="OBTIENE_SEXO" parent="portal-endpoint">
+		<property name="templateName" value="ObtenerSexo.vm"></property>
+		<property name="xslName" value="ObtenerSexo.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<!-- Caso de uso PeriodosGracia -->
+	
+	<bean id="BUSCA_PERIODOSGRACIA" parent="portal-endpoint">
+		<property name="templateName" value="PeriodosGracia_Buscar.vm"></property>
+		<property name="xslName" value="PeriodosGracia_Buscar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	    
+	<bean id="BORRA_PERIODOSGRACIA" parent="portal-endpoint">
+		<property name="templateName" value="PeriodosGracia_Borrar.vm"></property>
+		<property name="xslName" value="PeriodosGracia_Borrar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+    
+	<bean id="GUARDA_PERIODOSGRACIA" parent="portal-endpoint">
+		<property name="templateName" value="PeriodosGracia_agregarGuardar.vm"></property>
+		<property name="xslName" value="PeriodosGracia_agregarGuardar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="OBTIENE_PERIODOSGRACIA" parent="portal-endpoint">
+		<property name="templateName" value="PeriodosGracia_Get.vm"></property>
+		<property name="xslName" value="PeriodosGracia_Get.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+        
+	<bean id="OBTIENE_PERIODOSGRACIA_EXPORT" parent="portal-endpoint">
+		<property name="templateName" value="PeriodosGracia_Buscar.vm"></property>
+		<property name="xslName" value="PeriodosGracia_Exportar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+    
+                  
+	<!-- Fin Caso de uso PeriodosGracia -->	
+	
+	<!-- BEGIN U.C. CONFIGURAR ORDENES DE TRABAJO -->
+	
+	<bean id="OBTIENE_SECCIONES_FORMATO" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarOrdenesTrabajo_obtieneSecciones.vm"></property>
+		<property name="xslName" value="ConfigurarOrdenesTrabajo_obtieneSecciones.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="GUARDA_SECCION_FORMATO" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarOrdenesTrabajo_guardaSeccion.vm"></property>
+		<property name="xslName" value="ConfigurarOrdenesTrabajo_guardaSeccion.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="ELIMINA_SECCION_FORMATO" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarOrdenesTrabajo_eliminaSeccion.vm"></property>
+		<property name="xslName" value="ConfigurarOrdenesTrabajo_eliminaSeccion.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="SECCIONES_ORDEN" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarOrdenesTrabajo_comboSecciones.vm"></property>
+		<property name="xslName" value="ConfigurarOrdenesTrabajo_comboSecciones.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="TIPO_OBJETO" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarOrdenesTrabajo_comboTiposObjetos.vm"></property>
+		<property name="xslName" value="ConfigurarOrdenesTrabajo_comboTiposObjetos.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<bean id="VALOR_DEFECTO_ATRIBUTO" parent="portal-endpoint">
+		<property name="templateName" value="ValoresDefectoAtributos_obtener.vm"></property>
+		<property name="xslName" value="ValoresDefectoAtributos_obtener.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="GUARDA_VALOR_DEFECTO_ATRI" parent="portal-endpoint">
+		<property name="templateName" value="ValoresDefectoAtributos_guardar.vm"></property>
+		<property name="xslName" value="ValoresDefectoAtributos_guardar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<!-- END U.C. CONFIGURAR ORDENES DE TRABAJO -->
+		
+		
+	<!-- Requisitos de Rehabilitacion -->
+	<bean id="OBTIENE_TIPOS_DOCUMENTO" parent="portal-endpoint">
+		<property name="templateName" value="ObtenerTipoDocumento.vm" />
+		<property name="xslName" value="ObtenerTipoDocumento.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<!-- Requisitos de Rehabilitacion -->
+
+
+	<!-- Periodos de Gracia por Cliente	 -->
+	<bean id="OBTIENE_PERIODOS_GRACIA_CLIENTE" parent="portal-endpoint">
+		<property name="templateName" value="PeriodosGraciaCliente_Obtener.vm" />
+		<property name="xslName" value="PeriodosGraciaCliente_Obtener.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<bean id="OBTIENE_PERIODOS_GRACIA_CLIENTE_EXPORT" parent="portal-endpoint">
+		<property name="templateName" value="PeriodosGraciaCliente_Obtener.vm"></property>
+		<property name="xslName" value="PeriodosGraciaCliente_Obtener_Exportar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	
+	<bean id="INSERTAR_PERIODO_GRACIA_CLIENTE" parent="portal-endpoint">
+		<property name="templateName" value="PeriodosGraciaCliente_Insertar.vm"></property>
+		<property name="xslName" value="PeriodosGraciaCliente_Insertar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<bean id="BORRA_PERIODO_GRACIA_CLIENTE" parent="portal-endpoint">
+		<property name="templateName" value="PeriodosGraciaCliente_Borrar.vm"></property>
+		<property name="xslName" value="PeriodosGraciaCliente_Borrar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<bean id="OBTIENE_PERIODOS_GRACIA" parent="portal-endpoint">
+		<property name="templateName" value="PeriodosGraciaCliente_ObtenerCombo_PeriodoGracia.vm"></property>
+		<property name="xslName" value="PeriodosGraciaCliente_ObtenerCombo_PeriodoGracia.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<!-- FIN Periodos de Gracia por Cliente	 -->
+	
+	   
+	<!-- Asociar Formato  --> 
+	<bean id="BUSCAR_ASOCIAR_FORMATOS" parent="portal-endpoint">
+		<property name="templateName" value="AsociarFormatos_Buscar.vm"></property>
+		<property name="xslName" value="AsociarFormatos_Buscar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+		
+	<bean id="OBTIENE_ASOCIAR_FORMATOS_EXPORT" parent="portal-endpoint">
+		<property name="templateName" value="AsociarFormatos_Buscar.vm" />
+		<property name="xslName" value="AsociarFormatos_ObtenerEstruct_Export.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<bean id="BORRAR_ASOCIAR_FORMATOS" parent="portal-endpoint">
+		<property name="templateName" value="AsociarFormatos_Borrar.vm" />
+		<property name="xslName" value="AsociarFormatos_Borrar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<!--  Fin de Asociar Formato -->
+
+
+	<!-- configurafion Atributo Formato Orden de Trabajo	 -->
+	<bean id="OBTIENE_SECCION_FORMATO" parent="portal-endpoint">
+		<property name="templateName" value="ConfAtributosFormatoOrdenTrabajo_ComboSeccionFormato.vm" />
+		<property name="xslName" value="ConfAtributosFormatoOrdenTrabajo_ComboSeccionFormato.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<bean id="OBTIENE_BLOQUES_CONF_ATRIBUTO_FORMATO_ORDEN_TRABAJO" parent="portal-endpoint">
+		<property name="templateName" value="ConfAtributosFormatoOrdenTrabajo_ComboBloques.vm"></property>
+		<property name="xslName" value="ConfAtributosFormatoOrdenTrabajo_ComboBloques.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+    
+	<bean id="OBTIENE_FORMATO_CAMPO" parent="portal-endpoint" >
+		<property name="templateName" value="ConfAtributosFormatoOrdenTrabajo_ComboFormatosCampos.vm" />
+		<property name="xslName" value="ConfAtributosFormatoOrdenTrabajo_ComboFormatosCampos.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+        
+	<bean id="INSERTA_GUARDA_ATRIB_SECCION" parent="portal-endpoint" >
+		<property name="templateName" value="ConfiguracionAtributosFormatosOrdenTrabajo_InsertarGuardar.vm" />
+		<property name="xslName" value="ConfiguracionAtributosFormatosOrdenTrabajo_InsertarGuardar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+        
+	<bean id="BORRA_ATRIBUTO" parent="portal-endpoint" >
+		<property name="templateName" value="ConfiguracionAtributosFormatosOrdenTrabajo_Borrar.vm" />
+		<property name="xslName" value="ConfiguracionAtributosFormatosOrdenTrabajo_Borrar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+        
+	<bean id="OBTIENE_ATRIB_SECCION" parent="portal-endpoint" >
+		<property name="templateName" value="ConfiguracionAtributosFormatosOrdenTrabajo_Obtener.vm" />
+		<property name="xslName" value="ConfiguracionAtributosFormatosOrdenTrabajo_Obtener.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>  
+    
+	<bean id="OBTIENE_CAMPO_BLOQUE" parent="portal-endpoint" >
+		<property name="templateName" value="ConfAtributosFormatoOrdenTrabajo_ComboCampoBloques.vm" />
+		<property name="xslName" value="ConfAtributosFormatoOrdenTrabajo_ComboCampoBloques.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>  
+	<!-- FIN configurafion Atributo Formato Orden de Trabajo -->	
+
+
+	<!-- Requisitos de Rehabilitacion --> 
+
+	<bean id="BORRAR_REQUISITO_REHABILITACION" parent="portal-endpoint">
+		<property name="templateName" value="RequisitosRehabilitacion_Borrar.vm"></property>
+		<property name="xslName" value="RequisitosRehabilitacion_Borrar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<bean id="AGREGAR_GUARDAR_REQUISITO_REHABILITACION" parent="portal-endpoint">
+		<property name="templateName" value="RequisitosRehabilitacion_Guardar.vm"></property>
+		<property name="xslName" value="RequisitosRehabilitacion_Guardar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<bean id="OBTENER_REQUISITO_REHABILITACION" parent="portal-endpoint">
+		<property name="templateName" value="RequisitosRehabilitacion_ObtenerReg.vm"></property>
+		<property name="xslName" value="RequisitosRehabilitacion_ObtenerReg.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="BUSCAR_REQUISITOS_REHABILITACION" parent="portal-endpoint">
+		<property name="templateName" value="RequisitosRehabilitacion_Buscar.vm" />
+		<property name="xslName" value="RequisitosRehabilitacion_Buscar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<bean id="OBTENER_REQUISITOS_REHABILITACION_EXPORT" parent="portal-endpoint">
+		<property name="templateName" value="RequisitosRehabilitacion_Buscar.vm"></property>
+		<property name="xslName" value="RequisitosRehabilitacion_ObtieneMetodos_Exportar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<!--  fin de Requisitos Rehabilitacion -->
+
+
+	<!-- Mantenimiento de Errores -->
+	<bean id="MENSAJES_ERROR_BUSCAR" parent="portal-endpoint" >
+		<property name="templateName" value="MensajesError_Buscar.vm" />
+		<property name="xslName" value="MensajesError_Buscar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>  
+	<bean id="MENSAJES_ERROR_EXPORTAR" parent="portal-endpoint" >
+		<property name="templateName" value="MensajesError_Buscar.vm" />
+		<property name="xslName" value="MensajesError_Exportar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>  
+	<bean id="MENSAJES_ERROR_GET" parent="portal-endpoint" >
+		<property name="templateName" value="MensajesError_Get.vm" />
+		<property name="xslName" value="MensajesError_Get.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>  
+	<bean id="MENSAJES_ERROR_GUARDAR" parent="portal-endpoint" >
+		<property name="templateName" value="MensajesError_Guardar.vm" />
+		<property name="xslName" value="MensajesError_Guardar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>  
+	<bean id="OBTIENE_TIPO_ERROR" parent="portal-endpoint" >
+		<property name="templateName" value="MensajesError_ObtenerTipoError.vm" />
+		<property name="xslName" value="MensajesError_ObtenerTipoError.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>  
+	<bean id="OBTIENE_CLIENTES_CORP_POR_USUARIO" parent="portal-endpoint" >
+		<property name="templateName" value="Obtener_Clientes_Corpo_Por_Usuario.vm" />
+		<property name="xslName" value="Obtener_Clientes_Corpo_Por_Usuario.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	
+    
+	<!-- Orden De Compra  --> 
+	<bean id="BUSCAR_ORDEN_DE_COMPRAS" parent="portal-endpoint">
+		<property name="templateName" value="OrdenesDeCompras_Buscar.vm"></property>
+		<property name="xslName" value="OrdenesDeCompras_Buscar.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="OBTIENERREG_ORDEN_DE_COMPRAS_PERSONAS" parent="portal-endpoint">
+		<property name="templateName" value="CarritoCompras_EncOrden.vm" />
+		<property name="xslName" value="OrdenesDeCompras_EncOrden.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+		
+	<bean id="FINALIZAR_ORDEN_DE_COMPRAS" parent="portal-endpoint">
+		<property name="templateName" value="OrdenesDeCompras_Finalizar.vm" />
+		<property name="xslName" value="OrdenesDeCompras_Finalizar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<!--  Fin de Orden De Compra -->
+	
+	<!-- CZO SELECCION DE POLIZAS PARA RENOVACION -->
+	<bean id="EJECUTAR_SELECCION_POLIZAS_RENOVACION" parent="portal-endpoint">
+		<property name="templateName" value="SeleccionPolizasRenovacion_ejecutar.vm" />
+		<property name="xslName" value="SeleccionPolizasRenovacion_ejecutar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	
+	<bean id="OBTIENE_RAMOS_CLIENTE" parent="portal-endpoint">
+		<property name="templateName" value="SeleccionPolizasRenovacion_comboRamosCliente.vm" />
+		<property name="xslName" value="SeleccionPolizasRenovacion_comboRamosCliente.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<bean id="OBTIENE_RAMOS_CLIENTE_REN" parent="portal-endpoint">
+		<property name="templateName" value="SeleccionPolizasRenovacion_comboRamosClienteRen.vm" />
+		<property name="xslName" value="SeleccionPolizasRenovacion_comboRamosClienteRen.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<!-- FIN SELECCION DE POLIZAS PARA RENOVACION -->
+    
+	<!-- CZO CONFIGURACION DE ENDOSOS -->
+	<bean id="OBTIENE_TTIPSUPL" parent="portal-endpoint">
+		<property name="templateName" value="ConfiguracionEndosos_obtener.vm" />
+		<property name="xslName" value="ConfiguracionEndosos_obtener.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="GUARDA_TTIPSUPL" parent="portal-endpoint">
+		<property name="templateName" value="ConfiguracionEndosos_guardar.vm" />
+		<property name="xslName" value="ConfiguracionEndosos_guardar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	
+	<bean id="BORRA_TTIPSUPL" parent="portal-endpoint">
+		<property name="templateName" value="ConfiguracionEndosos_borrar.vm" />
+		<property name="xslName" value="ConfiguracionEndosos_borrar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	
+	<bean id="OBTIENE_TTIPSUPL_EXPORT" parent="portal-endpoint">
+		<property name="templateName" value="ConfiguracionEndosos_obtener.vm" />
+		<property name="xslName" value="ConfiguracionEndosos_exportar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<!-- FIN CONFIGURACION DE ENDOSOS -->
+	<bean id="LISTA_ASEGURADORAS_POR_CLIENTE_Y_PRODUCTO" parent="portal-endpoint">
+		<property name="templateName" value="PlanesXCliente_AseguradoraPorClienteYProducto.vm"></property>
+		<property name="xslName" value="PlanesXCliente_AseguradoraPorClienteYProducto.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="OBTIENE_SITUACION_POR_PRODUCTO_Y_PLAN" parent="portal-endpoint">
+		<property name="templateName" value="Obtener_SituacionPorProductoYPlan.vm"></property>
+		<property name="xslName" value="Obtener_SituacionPorProductoYPlan.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<bean id="OBTIENE_GARANTIA_POR_PRODUCTO_Y_SITUACION" parent="portal-endpoint">
+		<property name="templateName" value="Obtener_GarantiaPorProductoYSituacion.vm"></property>
+		<property name="xslName" value="Obtener_GarantiaPorProductoYSituacion.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<!-- CZO CONFIGURACION DE NUMERACION DE ENDOSOS -->
+	<bean id="OBTIENE_TNUMENEX" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarNumeracionEndosos_obtener.vm" />
+		<property name="xslName" value="ConfigurarNumeracionEndosos_obtener.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="GUARDA_TNUMENEX" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarNumeracionEndosos_guardar.vm" />
+		<property name="xslName" value="ConfigurarNumeracionEndosos_guardar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	
+	<bean id="BORRA_TNUMENEX" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarNumeracionEndosos_borrar.vm" />
+		<property name="xslName" value="ConfigurarNumeracionEndosos_borrar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	
+	<bean id="OBTIENE_TNUMENEX_EXPORT" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarNumeracionEndosos_obtener.vm" />
+		<property name="xslName" value="ConfigurarNumeracionEndosos_exportar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTIENE_PLANES_PRODUCTO" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarNumeracionEndosos_obtenerPlanesProducto.vm" />
+		<property name="xslName" value="ConfigurarNumeracionEndosos_obtenerPlanesProducto.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTIENE_NRO_POLIZAS" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarNumeracionEndosos_comboNroPolizas.vm" />
+		<property name="xslName" value="ConfigurarNumeracionEndosos_comboNroPolizas.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTIENE_POLIZAS_MAESTRAS" parent="portal-endpoint">
+		<property name="templateName"	value="ConfigurarNumeracionEndosos_comboPolizasMaestras.vm" />
+		<property name="xslName" 		value="ConfigurarNumeracionEndosos_comboPolizasMaestras.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="GET_TNUMENEX" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarNumeracionEndosos_get.vm" />
+		<property name="xslName" value="ConfigurarNumeracionEndosos_obtener.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<!-- FIN CONFIGURACION DE NUMERACION DE ENDOSOS -->
+	<!--cbo Personas para carrito de compras-->
+	<bean id="OBTIENE_PERSONAS" parent="portal-endpoint">
+		<property name="templateName" value="Personas_ObtenerPersonas.vm"></property>
+		<property name="xslName" value="Personas_ObtenerPersonas.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	<!-- CZO CONFIGURAR FORMA CALCULO ATRIBUTOS VARIABLES -->	
+		
+	<bean id="OBTIENE_CONFIGURAR_FORMA_CALCULO_ATRIBUTOS" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarFormaCalculoAtributosVariables_ObtenerReg.vm" />
+		<property name="xslName" value="ConfigurarFormaCalculoAtributosVariables_ObtenerReg.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	
+	
+	<bean id="OBTIENE_CONFIGURAR_FORMA_CALCULO_ATRIBUTOS_COPIA" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarFormaCalculoAtributosVariables_ObtenerRegCopia.vm" />
+		<property name="xslName" value="ConfigurarFormaCalculoAtributosVariables_ObtenerRegCopia.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	
+	
+	<bean id="AGREGAR_CONFIGURAR_FORMA_CALCULO_ATRIBUTOS" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarFormaCalculoAtributosVariables_guardar.vm" />
+		<property name="xslName" value="ConfigurarFormaCalculoAtributosVariables_guardar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	
+	
+	<bean id="GUARDA_CONFIGURAR_FORMA_CALCULO_ATRIBUTOS" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarFormaCalculoAtributosVariables_guardar.vm" />
+		<property name="xslName" value="ConfigurarFormaCalculoAtributosVariables_guardar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	
+		
+	<bean id="BORRAR_CONFIGURAR_FORMA_CALCULO_ATRIBUTOS" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarFormaCalculoAtributosVariables_Borrar.vm" />
+		<property name="xslName" value="ConfigurarFormaCalculoAtributosVariables_Borrar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	
+	
+	<bean id="COPIAR_CONFIGURAR_FORMA_CALCULO_ATRIBUTOS" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarFormaCalculoAtributosVariables_Copiar.vm" />
+		<property name="xslName" value="ConfigurarFormaCalculoAtributosVariables_Copiar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	
+	
+	<bean id="BUSCAR_CONFIGURAR_FORMA_CALCULO_ATRIBUTOS" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarFormaCalculoAtributosVariables_Buscar.vm" />
+		<property name="xslName" value="ConfigurarFormaCalculoAtributosVariables_Buscar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	   
+	
+	<bean id="OBTIENE_CONFIGURAR_FORMA_CALCULO_ATRIBUTOS_EXPORT" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarFormaCalculoAtributosVariables_Buscar.vm" />
+		<property name="xslName" value="ConfigurarFormaCalculoAtributosVariables_BuscarExportar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	 
+	    
+	<!-- FIN CONFIGURAR FORMA CALCULO ATRIBUTOS VARIABLES -->
+
+	<!-- CZO CONFIGURAR RENOVACION -->	
+	<bean id="OBTIENE_CLIENTE_TIPO" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarRenovacion_obtener.vm" />
+		<property name="xslName" value="ConfigurarRenovacion_obtener.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="ELIMINA_CONFIGURACION" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarRenovacion_eliminar.vm" />
+		<property name="xslName" value="ConfigurarRenovacion_eliminar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="GUARDA_CONFIGURA" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarRenovacion_guardar.vm" />
+		<property name="xslName" value="ConfigurarRenovacion_guardar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTIENE_CLIENTE_TIPO_EXPORT" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarRenovacion_obtener.vm" />
+		<property name="xslName" value="ConfigurarRenovacion_exportar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTIENE_TIPOS_RENOVA" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarRenovacion_comboTiposRenovacion.vm" />
+		<property name="xslName" value="ConfigurarRenovacion_comboTiposRenovacion.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTIENE_CONFIGURA_CLIENTE" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarRenovacion_getConfiguraCliente.vm" />
+		<property name="xslName" value="ConfigurarRenovacion_getConfiguraCliente.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="VALIDA_RENOVA_ROL" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarRenovacion_getValidaRol.vm" />
+		<property name="xslName" value="ConfigurarRenovacion_getValidaRol.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	
+	<!-- END CONFIGURAR RENOVACION -->	
+
+	<bean id="COMBO_DATOS_GENERICOS" parent="portal-endpoint">
+		<property name="templateName" value="comboDatosGenericos.vm" />
+		<property name="xslName" value="comboDatosGenericos.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	
+	
+	<!-- ACCIONES DE RENOVACION -->	
+		
+	<bean id="OBTIENE_ENCABEZADO_CONFIGURAR_ACCIONES_RENOVACION" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarAccionesRenovacion_ObtenerReg.vm" />
+		<property name="xslName" value="ConfigurarAccionesRenovacion_ObtenerReg.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	
+	
+	<bean id="OBTIENE_CONFIGURAR_ACCIONES_RENOVACION_ACCION" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarAccionesRenovacion_ObtenerRegAccion.vm" />
+		<property name="xslName" value="ConfigurarAccionesRenovacion_ObtenerRegAccion.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+			
+	<bean id="GUARDA_CONFIGURAR_ACCIONES_RENOVACION" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarAccionesRenovacion_Guardar.vm" />
+		<property name="xslName" value="ConfigurarAccionesRenovacion_Guardar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	
+		
+	<bean id="BORRAR_CONFIGURAR_ACCIONES_RENOVACION" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarAccionesRenovacion_Borrar.vm" />
+		<property name="xslName" value="ConfigurarAccionesRenovacion_Borrar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	
+	
+	<bean id="BUSCAR_CONFIGURAR_ACCIONES_RENOVACION" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarAccionesRenovacion_Buscar.vm" />
+		<property name="xslName" value="ConfigurarAccionesRenovacion_Buscar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	   
+	
+	<bean id="OBTIENE_CONFIGURAR_ACCIONES_RENOVACION_EXPORT" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarAccionesRenovacion_Buscar.vm" />
+		<property name="xslName" value="ConfigurarAccionesRenovacion_BuscarExportar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	 
+	
+	<bean id="OBTIENE_ACCION_RENOVACION_ROLES" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarAccionesRenovacion_ComboAccionRenovacionRoles.vm" />
+		<property name="xslName" value="ConfigurarAccionesRenovacion_ComboAccionRenovacionRoles.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<bean id="OBTIENE_ACCION_RENOVACION_PANTALLA" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarAccionesRenovacion_ComboAccionRenovacionPantalla.vm" />
+		<property name="xslName" value="ConfigurarAccionesRenovacion_ComboAccionRenovacionPantalla.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<bean id="OBTIENE_ACCION_RENOVACION_CAMPO" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarAccionesRenovacion_ComboAccionRenovacionCampo.vm" />
+		<property name="xslName" value="ConfigurarAccionesRenovacion_ComboAccionRenovacionCampo.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<bean id="OBTIENE_ACCION_RENOVACION_ACCION" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarAccionesRenovacion_ComboAccionRenovacionAccion.vm" />
+		<property name="xslName" value="ConfigurarAccionesRenovacion_ComboAccionRenovacionAccion.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+    
+	<!-- FIN ACCIONES DE RENOVACION -->
+
+	<!-- CZO CONFIGURAR RENOVACION DE ROLES-->	
+	<bean id="OBTENER_ENCABEZADO_ROLES_RENOVACION" parent="portal-endpoint">
+		<property name="templateName" value="RolesRenovacion_getEncabezado.vm" />
+		<property name="xslName" value="RolesRenovacion_getEncabezado.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTENER_ROLES_RENOVACION" parent="portal-endpoint">
+		<property name="templateName" value="RolesRenovacion_obtenerRoles.vm" />
+		<property name="xslName" value="RolesRenovacion_obtenerRoles.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="AGREGAR_GUARDAR_ROL_RENOVACION" parent="portal-endpoint">
+		<property name="templateName" value="RolesRenovacion_agregarGuardarRoles.vm" />
+		<property name="xslName" value="RolesRenovacion_agregarGuardarRoles.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="BORRAR_ROL_RENOVACION" parent="portal-endpoint">
+		<property name="templateName" value="RolesRenovacion_borrarRoles.vm" />
+		<property name="xslName" value="RolesRenovacion_borrarRoles.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTIENE_ROLES_RENOVACION_EXPORT" parent="portal-endpoint">
+		<property name="templateName" value="RolesRenovacion_obtenerRoles.vm" />
+		<property name="xslName" value="RolesRenovacion_exportarRoles.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTIENE_ACCION_RENOVACION_ROL" parent="portal-endpoint">
+		<property name="templateName" value="ConfigurarAccionesRenovacion_ComboAccionRenovacionRol.vm" />
+		<property name="xslName" value="ConfigurarAccionesRenovacion_ComboAccionRenovacionRol.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<!-- END CONFIGURAR RENOVACION DE ROLES-->	
+    
+	<!-- BEGIN RANGOS DE RENOVACION -->
+   
+	<bean id="BUSCAR_RANGOS_RENOVACION" parent="portal-endpoint">
+		<property name="templateName" value="RangosRenovacion_ObtenerRangos.vm" />
+		<property name="xslName" value="RangosRenovacion_ObtenerRangos.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	 
+	
+	<bean id="GET_ENCABEZADO_RANGO_RENOVACION" parent="portal-endpoint">
+		<property name="templateName" value="RangosRenovacion_ObtenerEncabezado.vm" />
+		<property name="xslName" value="RangosRenovacion_ObtenerEncabezado.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	 
+	
+	<bean id="GET_RANGO_RENOVACION" parent="portal-endpoint">
+		<property name="templateName" value="RangosRenovacion_ObtieneRango.vm" />
+		<property name="xslName" value="RangosRenovacion_ObtieneRango.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	 
+	
+	<bean id="AGREGAR_GUARDAR_RANGO_RENOVACION" parent="portal-endpoint">
+		<property name="templateName" value="RangosRenovacion_AgregarGuardarRango.vm" />
+		<property name="xslName" value="RangosRenovacion_AgregarGuardarRango.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	 
+	
+	<bean id="BORRAR_RANGO_RENOVACION" parent="portal-endpoint">
+		<property name="templateName" value="RangosRenovacion_Borrar.vm" />
+		<property name="xslName" value="RangosRenovacion_Borrar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	 
+	
+	<bean id="OBTIENE_RANGOS_RENOVACION_EXPORT" parent="portal-endpoint">
+		<property name="templateName" value="RangosRenovacion_ObtenerRangos.vm" />
+		<property name="xslName" value="RangosRenovacion_BuscarExportar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<!-- END RANGOS DE RENOVACION -->
+
+	<!-- CZO MECANISMO DE TOOLTIP -->
+	<bean id="BUSCAR_MECANISMO_TOOLTIP" parent="portal-endpoint">
+		<property name="templateName" value="MecanismoDeTooltip_Buscar.vm" />
+		<property name="xslName" value="MecanismoDeTooltip_Buscar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="AGREGAR_GUARDAR_MECANISMO_TOOLTIP" parent="portal-endpoint">
+		<property name="templateName" value="MecanismoDeTooltip_Agregar_Guardar.vm" />
+		<property name="xslName" value="MecanismoDeTooltip_Agregar_Guardar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="BORRAR_MECANISMO_TOOLTIP" parent="portal-endpoint">
+		<property name="templateName" value="MecanismoDeTooltip_Borrar.vm" />
+		<property name="xslName" value="MecanismoDeTooltip_Borrar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTIENE_MECANISMO_TOOLTIP" parent="portal-endpoint">
+		<property name="templateName" value="MecanismoDeTooltip_Obtener_Reg.vm" />
+		<property name="xslName" value="MecanismoDeTooltip_Obtener_Reg.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="COPIAR_MECANISMO_TOOLTIP" parent="portal-endpoint">
+		<property name="templateName" value="MecanismoDeTooltip_Copiar.vm" />
+		<property name="xslName" value="MecanismoDeTooltip_Copiar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTIENE_MECANISMO_TOOLTIP_EXPORT" parent="portal-endpoint">
+		<property name="templateName" value="MecanismoDeTooltip_Buscar.vm" />
+		<property name="xslName" value="MecanismoDeTooltip_Buscar_Exportar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="BUSCAR_MECANISMO_TOOLTIP_PAGE" parent="portal-endpoint">
+		<property name="templateName" value="MecanismoDeTooltip_Buscar_Page.vm" />
+		<property name="xslName" value="MecanismoDeTooltip_Buscar_Page.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="BUSCAR_MENSAJES_USUARIO" parent="portal-endpoint">
+		<property name="templateName" value="MecanismoDeTooltip_Buscar_Mensajes_Usuario.vm" />
+		<property name="xslName" value="MecanismoDeTooltip_Buscar_Mensajes_Usuario.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<!-- END MECANISMO DE TOOLTIP -->
+
+	<bean id="FORMULA_METODO_CANCELACION_ENCABEZADO" parent="portal-endpoint">
+		<property name="templateName" value="FormulaMetodoCancelacion_ObtenerEncabezado.vm" />
+		<property name="xslName" value="FormulaMetodoCancelacion_ObtenerEncabezado.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<!-- FORMULA DEL METODO DE CANCELACION -->    
+
+	<bean id="BUSCAR_TOOLTIPS" parent="portal-endpoint">
+		<property name="templateName" value="RangosRenovacion_ObtenerRangos.vm" />
+		<property name="xslName" value="RangosRenovacion_BuscarExportar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<bean id="OBTIENE_TIPO_OBJETO" parent="portal-endpoint">
+		<property name="templateName" value="ObtenerTipoNivel.vm" />
+		<property name="xslName" value="ObtenerTipoObjeto.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<!-- Rehabilitacion Masiva -->
+	<bean id="OBTENER_POLIZADAS_CANCELADAS_PARA_REHABILITAR" parent="portal-endpoint">
+		<property name="templateName" value="RehabilitacionMasiva_ObtenerPolizasARehabilitar.vm" />
+		<property name="xslName" value="RehabilitacionMasiva_ObtenerPolizasARehabilitar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<!--   Este BEAN, se ha comentado debido a que se paso al esquema DAO por problema con las fechas
+		<bean id="REHABILITACION_MASIVA_REHABILITAR_POLIZA" parent="portal-endpoint">
+				<property name="templateName" value="RehabilitacionMasiva_RehabilitarPoliza.vm" />
+				<property name="xslName" value="RehabilitacionMasiva_RehabilitarPoliza.xsl" />
+				<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+		</bean>
+		-->
+	<bean id="POLIZAS_A_REHABILITAR_EXPORTAR" parent="portal-endpoint">
+		<property name="templateName" value="RehabilitacionMasiva_ObtenerPolizasARehabilitar.vm" />
+		<property name="xslName" value="RehabilitacionMasiva_Exportar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<!-- Rehabilitacion Manual -->
+	<bean id="REHABILITACION_MANUAL_OBTENER_POLIZA" parent="portal-endpoint">
+		<property name="templateName" value="RehabilitacionManual_ObtenerPoliza.vm" />
+		<property name="xslName" value="RehabilitacionManual_ObtenerPoliza.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="REHABILITACION_MANUAL_OBTENER_DATOS_CANCELACION" parent="portal-endpoint">
+		<property name="templateName" value="RehabilitacionManual_ObtenerDatosCancelacion.vm" />
+		<property name="xslName" value="RehabilitacionManual_ObtenerDatosCancelacion.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<bean id="REHABILITACION_MANUAL_OBTENER_REQUISITOS" parent="portal-endpoint">
+		<property name="templateName" value="RehabilitacionManual_ObtenerRequisitos.vm" />
+		<property name="xslName" value="RehabilitacionManual_ObtenerRequisitos.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<bean id="VERIFICAR_RECIBOS_ANTERIORES_PAGADOS" parent="portal-endpoint">
+		<property name="templateName" value="RehabilitacionManual_ValidarRecibosPagados.vm" />
+		<property name="xslName" value="RehabilitacionManual_ValidarRecibosPagados.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<bean id="REHABILITACION_MANUAL_GUARDAR_REQUISITOS" parent="portal-endpoint">
+		<property name="templateName" value="RehabilitacionManual_GuardarRequisitos.vm" />
+		<property name="xslName" value="RehabilitacionManual_GuardarRequisitos.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<bean id="REHABILITACION_MANUAL_REHABILITAR_POLIZA" parent="portal-endpoint">
+		<property name="templateName" value="RehabilitacionMasiva_RehabilitarPoliza.vm" />
+		<property name="xslName" value="RehabilitacionMasiva_RehabilitarPoliza.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<bean id="REHABILITACION_MANUAL_POLIZAS_COMBO_POLIZAS_CANCELADAS" parent="portal-endpoint">
+		<property name="templateName" value="RehabilitacionManual_ComboPolizas.vm" />
+		<property name="xslName" value="RehabilitacionManual_ComboPolizas.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<!-- CZO CONSULTA POLIZA RENOVADA -->
+	<bean id="OBTIENE_POLIZA_ENCABEZADO" parent="portal-endpoint">
+		<property name="templateName" value="ConsultaPolizaRenovada_getPolizaEnc.vm" />
+		<property name="xslName" value="ConsultaPolizaRenovada_getPolizaEnc.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTIENE_TVALOPOL" parent="portal-endpoint">
+		<property name="templateName" value="ConsultaPolizaRenovada_getTValoPol.vm" />
+		<property name="xslName" value="ConsultaPolizaRenovada_getTValoPol.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="MOV_MPOLIZAS" parent="portal-endpoint">
+		<property name="templateName" value="ConsultaPolizaRenovada_guardarDatosGrales.vm" />
+		<property name="xslName" value="ConsultaPolizaRenovada_guardarDatosGrales.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="MOV_TVALOPOL" parent="portal-endpoint">
+		<property name="templateName" value="ConsultaPolizaRenovada_guardarValoresPoliza.vm" />
+		<property name="xslName" value="ConsultaPolizaRenovada_guardarValoresPoliza.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTIENE_OBJETO_ASEGURABLE" parent="portal-endpoint">
+		<property name="templateName" value="ConsultaPolizaRenovada_obtenerObjAsegurable.vm" />
+		<property name="xslName" value="ConsultaPolizaRenovada_obtenerObjAsegurable.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTIENE_FUNCION" parent="portal-endpoint">
+		<property name="templateName" value="ConsultaPolizaRenovada_obtenerFunciones.vm" />
+		<property name="xslName" value="ConsultaPolizaRenovada_obtenerFunciones.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTIENE_TVALOPER" parent="portal-endpoint">
+		<property name="templateName" value="ConsultaPolizaRenovada_obtenerDatosVariables.vm" />
+		<property name="xslName" value="ConsultaPolizaRenovada_obtenerDatosVariables.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="PERXCTE" parent="portal-endpoint">
+		<property name="templateName" value="ConsultaPolizaRenovada_comboFormaPago.vm" />
+		<property name="xslName" value="ConsultaPolizaRenovada_comboFormaPago.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="INST_PAGO" parent="portal-endpoint">
+		<property name="templateName" value="ConsultaPolizaRenovada_comboInstrumentoPago.vm" />
+		<property name="xslName" value="ObtenerInstrumentosPago.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="ELIMINA_INCISO" parent="portal-endpoint">
+		<property name="templateName" value="ConsultaPolizaRenovada_eliminarInciso.vm" />
+		<property name="xslName" value="ConsultaPolizaRenovada_eliminarInciso.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="MOV_MPOLIPER" parent="portal-endpoint">
+		<property name="templateName" value="ConsultaPolizaRenovada_eliminarFuncion.vm" />
+		<property name="xslName" value="ConsultaPolizaRenovada_eliminarFuncion.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="GUARDA_DATOS_VAR_ROL" parent="portal-endpoint">
+		<property name="templateName" value="ConsultaPolizaRenovada_guardaDatosVarRol.vm" />
+		<property name="xslName" value="ConsultaPolizaRenovada_guardaDatosVarRol.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="ROL" parent="portal-endpoint">
+		<property name="templateName" value="ConsultaPolizaRenovada_comboRoles.vm" />
+		<property name="xslName" value="ConsultaPolizaRenovada_comboRoles.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTIENE_PERSONA" parent="portal-endpoint">
+		<property name="templateName" value="ConsultaPolizaRenovada_comboPersonas.vm" />
+		<property name="xslName" value="ConsultaPolizaRenovada_comboPersonas.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTIENE_DATOS_OBJETO" parent="portal-endpoint">
+		<property name="templateName" value="ConsultaPolizaRenovada_datosObjeto.vm" />
+		<property name="xslName" value="ConsultaPolizaRenovada_datosObjeto.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="MOV_TVALOSIT" parent="portal-endpoint">
+		<property name="templateName" value="ConsultaPolizaRenovada_guardaIncisosObj.vm" />
+		<property name="xslName" value="ConsultaPolizaRenovada_guardaIncisosObj.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTIENE_MPOLISIT" parent="portal-endpoint">
+		<property name="templateName" value="ConsultaPolizaRenovada_comboIncisos.vm" />
+		<property name="xslName" value="ConsultaPolizaRenovada_comboIncisos.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTIENE_COBERTURA_ANT" parent="portal-endpoint">
+		<property name="templateName" value="ConsultaPolizaRenovada_obtieneCoberturaAnt.vm" />
+		<property name="xslName" value="ConsultaPolizaRenovada_obtieneCoberturaAnt.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTIENE_COBERTURA_RENOVADA" parent="portal-endpoint">
+		<property name="templateName" value="ConsultaPolizaRenovada_obtieneCoberturaRenovada.vm" />
+		<property name="xslName" value="ConsultaPolizaRenovada_obtieneCoberturaAnt.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="BORRA_INCISO_COBERTURA" parent="portal-endpoint">
+		<property name="templateName" value="ConsultaPolizaRenovada_borraIncisoCobertura.vm" />
+		<property name="xslName" value="templateSalida.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="COBERTURAS_PRODUCTO" parent="portal-endpoint">
+		<property name="templateName" value="ConsultaPolizaRenovada_obtenerCoberturaProd.vm" />
+		<property name="xslName" value="ConsultaPolizaRenovada_obtenerCoberturaProd.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="MOV_MPOLIGAR" parent="portal-endpoint">
+		<property name="templateName" value="ConsultaPolizaRenovada_guardarCobertura.vm" />
+		<property name="xslName" value="templateSalida.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTIENE_TVALOGAR" parent="portal-endpoint">
+		<property name="templateName" value="ConsultaPolizaRenovada_obtieneDtosVblesCobertura.vm" />
+		<property name="xslName" value="ConsultaPolizaRenovada_obtieneDtosVblesCobertura.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="MOV_TVALOGAR" parent="portal-endpoint">
+		<property name="templateName" value="ConsultaPolizaRenovada_guardaDatosCobertura.vm" />
+		<property name="xslName" value="templateSalida.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>			
+	<bean id="MOV_MPOLIOBJ" parent="portal-endpoint">
+		<property name="templateName" value="ConsultaPolizaRenovada_addUpdateDelAccesorio.vm" />
+		<property name="xslName" value="templateSalida.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTIENE_TVALOOBJ" parent="portal-endpoint">
+		<property name="templateName" value="ConsultaPolizaRenovada_obtenerDetalleAccesorios.vm" />
+		<property name="xslName" value="ConsultaPolizaRenovada_obtenerDetalleAccesorios.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTIENE_MPOLIOBJ" parent="portal-endpoint">
+		<property name="templateName" value="ConsultaPolizaRenovada_obtenerAccesorios.vm" />
+		<property name="xslName" value="ConsultaPolizaRenovada_obtenerAccesorios.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTIENE_RECIBOS" parent="portal-endpoint">
+		<property name="templateName" value="ConsultaPolizaRenovada_obtenerRecibos.vm" />
+		<property name="xslName" value="ConsultaPolizaRenovada_obtenerRecibos.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBJETO_RAMO" parent="portal-endpoint">
+		<property name="templateName" value="ConsultaPolizaRenovada_comboObjetosRamo.vm" />
+		<property name="xslName" value="ConsultaPolizaRenovada_comboObjetosRamo.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTIENE_TIPO_OBJ_ATRIBUTOS" parent="portal-endpoint">
+		<property name="templateName" value="ConsultaPolizaRenovada_obtieneDatosVblesTipoObj.vm" />
+		<property name="xslName" value="ConsultaPolizaRenovada_obtieneDatosVblesTipoObj.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<!-- FIN CONSULTA POLIZA RENOVADA -->
+
+	<!-- Mantenimiento Ejecutivos Cuenta -->
+	<bean id="MANTENIMIENTO_EJECUTIVOS_CUENTA_BUSCAR_EJECUTIVOS" parent="portal-endpoint">
+		<property name="templateName" value="MantenimientoEjecutivosCuenta_Buscar.vm" />
+		<property name="xslName" value="MantenimientoEjecutivosCuenta_Buscar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="MANTENIMIENTO_EJECUTIVOS_CUENTA_GUARDAR" parent="portal-endpoint">
+		<property name="templateName" value="MantenimientoEjecutivosCuenta_Guardar.vm" />
+		<property name="xslName" value="MantenimientoEjecutivosCuenta_Guardar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="MANTENIMIENTO_EJECUTIVOS_CUENTA_OBTENER" parent="portal-endpoint">
+		<property name="templateName" value="MantenimientoEjecutivosCuenta_Obtener.vm" />
+		<property name="xslName" value="MantenimientoEjecutivosCuenta_Obtener.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="MANTENIMIENTO_EJECUTIVOS_CUENTA_BORRAR" parent="portal-endpoint">
+		<property name="templateName" value="MantenimientoEjecutivosCuenta_Borrar.vm" />
+		<property name="xslName" value="MantenimientoEjecutivosCuenta_Borrar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="MANTENIMIENTO_EJECUTIVOS_CUENTA_OBTENER_ATRIBUTOS" parent="portal-endpoint">
+		<property name="templateName" value="MantenimientoEjecutivosCuenta_ObtenerAtributos.vm" />
+		<property name="xslName" value="MantenimientoEjecutivosCuenta_ObtenerAtributos.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="MANTENIMIENTO_EJECUTIVOS_CUENTA_BORRAR_ATRIBUTOS" parent="portal-endpoint">
+		<property name="templateName" value="MantenimientoAtributosEjecutivoCuenta_Guardar.vm" />
+		<property name="xslName" value="MantenimientoAtributosEjecutivoCuenta_Guardar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="MANTENIMIENTO_EJECUTIVOS_EXPORTAR_ATRIBUTOS" parent="portal-endpoint">
+		<property name="templateName" value="MantenimientoEjecutivosCuenta_ObtenerAtributos.vm" />
+		<property name="xslName" value="MantenimientoEjecutivosCuenta_ExportarAtributos.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<bean id="MANTENIMIENTO_EJECUTIVOS_EXPORTAR_EJECUTIVOS" parent="portal-endpoint">
+		<property name="templateName" value="MantenimientoEjecutivosCuenta_Buscar.vm" />
+		<property name="xslName" value="MantenimientoEjecutivosCuenta_ExportarEjecutivos.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+
+	<!-- Fin Mantenimiento Ejecutivos Cuenta -->
+	<bean id="OBTENER_ESTADOS_EJECUTIVOS_CUENTA" parent="portal-endpoint">
+		<property name="templateName" value="MantenimientoEjecutivosCuenta_ComboEstados.vm" />
+		<property name="xslName" value="MantenimientoEjecutivosCuenta_ComboEstados.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<!-- Configuracion Procesos -->
+	<bean id="CONFIGURACION_PROCESO_BUSCAR" parent="portal-endpoint">
+		<property name="templateName" value="ConfiguracionProcesos_Buscar.vm" />
+		<property name="xslName" value="ConfiguracionProcesos_Buscar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="CONFIGURACION_PROCESO_EXPORTAR" parent="portal-endpoint">
+		<property name="templateName" value="ConfiguracionProcesos_Buscar.vm" />
+		<property name="xslName" value="ConfiguracionProcesos_Exportar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="CONFIGURACION_PROCESO_OBTENER" parent="portal-endpoint">
+		<property name="templateName" value="ConfiguracionProcesos_Obtener.vm" />
+		<property name="xslName" value="ConfiguracionProcesos_Buscar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="CONFIGURACION_PROCESO_ACTUALIZAR" parent="portal-endpoint">
+		<property name="templateName" value="ConfiguracionProcesos_Actualizar.vm" />
+		<property name="xslName" value="ConfiguracionProcesos_Actualizar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="CONFIGURACION_PROCESO_AGREGAR" parent="portal-endpoint">
+		<property name="templateName" value="ConfiguracionProcesos_Guardar.vm" />
+		<property name="xslName" value="ConfiguracionProcesos_Actualizar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="CONFIGURACION_PROCESO_BORRAR" parent="portal-endpoint">
+		<property name="templateName" value="ConfiguracionProcesos_Borrar.vm" />
+		<property name="xslName" value="ConfiguracionProcesos_Borrar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<!-- Configuracion Procesos -->
+	<bean id="OBTENER_DATOS_CATALOGO" parent="portal-endpoint">
+		<property name="templateName" value="ObtenerDatosCatalogo.vm" />
+		<property name="xslName" value="ObtenerDatosCatalogo.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTENER_PRODUCTOS_POR_ASEGURADORA" parent="portal-endpoint">
+		<property name="templateName" value="ObtenerProductosPorAseguradora.vm" />
+		<property name="xslName" value="ObtenerProductosPorAseguradora.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTIENE_TIPOS_PROCESOS" parent="portal-endpoint">
+		<property name="templateName" value="AsociarOrdenTrabajo_comboObtieneProcesos.vm" />
+		<property name="xslName" value="AsociarOrdenTrabajo_comboObtieneProcesos.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<!-- Configuracion Catalogos -->
+	<bean id="CONFIGURAR_CATALOGOS_COMPUESTOS_OBTENER_TITULO" parent="portal-endpoint">
+		<property name="templateName" value="ConfiguradorCatalogos_ObtenerTitulo.vm" />
+		<property name="xslName" value="ConfiguradorCatalogos_ObtenerTitulo.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="CONFIGURAR_CATALOGOS_SIMPLES_OBTENER_TITULO" parent="portal-endpoint">
+		<property name="templateName" value="ConfiguradorCatalogos_ObtenerTitulo.vm" />
+		<property name="xslName" value="ConfiguradorCatalogos_ObtenerTitulo.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="CONFIGURAR_CATALOGOS_SIMPLES_OBTENER_CAMPOS" parent="portal-endpoint">
+		<property name="templateName" value="ConfiguradorCatalogosSimples_ObtenerCampos.vm" />
+		<property name="xslName" value="ConfiguradorCatalogosSimples_ObtenerCampos.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<bean id="CONFIGURAR_CATALOGOS_COMPUESTOS_OBTENER_CAMPOS" parent="portal-endpoint">
+		<property name="templateName" value="ConfiguradorCatalogosSimples_ObtenerCampos.vm" />
+		<property name="xslName" value="ConfiguradorCatalogosSimples_ObtenerCampos.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="CONFIGURAR_CATALOGOS_COMPUESTOS_EXPORTAR" parent="portal-endpoint">
+		<property name="templateName" value="ConfiguradorCatalogosCompuestos_ObtenerColumnas.vm" />
+		<property name="xslName" value="ConfiguradorCatalogosCompuestos_Exportar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<bean id="CONFIGURAR_CATALOGOS_SIMPLES_OBTENER_REGISTROS" parent="portal-endpoint">
+		<property name="templateName" value="ConfiguradorCatalogosCompuestos_ObtenerRegistros.vm" />
+		<property name="xslName" value="ConfiguradorCatalogosSimples_ObtenerRegistros.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<bean id="CONFIGURAR_CATALOGOS_SIMPLES_BORRAR_REGISTRO" parent="portal-endpoint">
+		<property name="templateName" value="ConfiguradorCatalogosSimples_BorrarRegistro.vm" />
+		<property name="xslName" value="ConfiguradorCatalogosSimples_BorrarRegistro.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<bean id="CONFIGURAR_CATALOGOS_SIMPLES_OBTENER_REGISTRO" parent="portal-endpoint">
+		<property name="templateName" value="ConfiguradorCatalogosSimples_ObtenerRegistro.vm" />
+		<property name="xslName" value="ConfiguradorCatalogosSimples_ObtenerRegistro.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<bean id="PERSONAS_OBTENER_RELACIONES" parent="portal-endpoint">
+		<property name="templateName" value="Personas_ObtenerRelaciones.vm" />
+		<property name="xslName" value="Personas_ObtenerRelaciones.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<bean id="PERSONAS_GUARDAR_RELACIONES" parent="portal-endpoint">
+		<property name="templateName" value="Personas_GuardarRelaciones.vm" />
+		<property name="xslName" value="Personas_GuardarRelaciones.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<bean id="ATRIBUTOS_VARIABLES_AGENTE_LISTA_VALORES" parent="portal-endpoint">
+		<property name="templateName" value="AtributosVariablesAgentes_ListaValores.vm" />
+		<property name="xslName" value="AtributosVariablesAgente_ListaValores.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<!-- Configuracion Catalogos -->
+	<bean id="CONFIGURAR_CATALOGOS_SIMPLES_OBTENER_COLUMNAS" parent="portal-endpoint">
+		<property name="templateName" value="ConfiguradorCatalogosSimples_ObtenerColumnas.vm" />
+		<property name="xslName" value="ConfiguradorCatalogosSimples_ObtenerColumnas.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="CONFIGURAR_CATALOGOS_COMPUESTOS_OBTENER_COLUMNAS" parent="portal-endpoint">
+		<property name="templateName" value="ConfiguradorCatalogosCompuestos_ObtenerColumnas.vm" />
+		<property name="xslName" value="ConfiguradorCatalogosCompuestos_ObtenerColumnas.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<bean id="CONFIGURAR_CATALOGOS_SIMPLES_GUARDAR_REGISTRO" parent="portal-endpoint">
+		<property name="templateName" value="ConfiguradorCatalogosSimples_GuardarRegistro.vm" />
+		<property name="xslName" value="ConfiguradorCatalogosSimples_GuardarRegistro.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="CONFIGURAR_CATALOGOS_COMPUESTOS_GUARDAR_REGISTRO" parent="portal-endpoint">
+		<property name="templateName" value="ConfiguradorCatalogosCompuestos_GuardarRegistro.vm" />
+		<property name="xslName" value="ConfiguradorCatalogosSimples_GuardarRegistro.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<bean id="CONFIGURAR_CATALOGOS_SIMPLES_ACTUALIZAR_REGISTRO" parent="portal-endpoint">
+		<property name="templateName" value="ConfiguradorCatalogosSimples_ActualizarRegistro.vm" />
+		<property name="xslName" value="ConfiguradorCatalogosSimples_GuardarRegistro.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="CONFIGURAR_CATALOGOS_COMPUESTOS_ACTUALIZAR_REGISTRO" parent="portal-endpoint">
+		<property name="templateName" value="ConfiguradorCatalogosCompuestos_ActualizarRegistro.vm" />
+		<property name="xslName" value="ConfiguradorCatalogosSimples_GuardarRegistro.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="CONFIGURAR_CATALOGOS_SIMPLES_BORRAR" parent="portal-endpoint">
+		<property name="templateName" value="ConfiguradorCatalogosSimples_BorrarRegistro.vm" />
+		<property name="xslName" value="ConfiguradorCatalogosSimples_GuardarRegistro.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="CONFIGURAR_CATALOGOS_COMPUESTOS_BORRAR" parent="portal-endpoint">
+		<property name="templateName" value="ConfiguradorCatalogosCompuestos_BorrarRegistro.vm" />
+		<property name="xslName" value="ConfiguradorCatalogosSimples_GuardarRegistro.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<bean id="CONFIGURAR_CATALOGOS_SIMPLES_EXPORTAR" parent="portal-endpoint">
+		<property name="templateName" value="ConfiguradorCatalogosSimples_ObtenerColumnas.vm" />
+		<property name="xslName" value="ConfiguradorCatalogosSimples_Exportar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<!-- Fin Configuracion Catalogos -->
+	<bean id="TIDIOMAS" parent="portal-endpoint">
+		<property name="templateName" value="ConfiguradorCatalogosSimples_comboTIdiomas.vm" />
+		<property name="xslName" value="ConfiguradorCatalogosSimples_comboTIdiomas.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<!-- Mantenimiento de Catalogos Logicos -->
+	<bean id="BORRA_TCATALOG" parent="portal-endpoint">
+		<property name="templateName" value="ManttoCatLog_borrar.vm" />
+		<property name="xslName" value="StandarOutMsg.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="OBTIENE_CATLOG_EXPORT" parent="portal-endpoint">
+		<property name="templateName" value="ManttoCatLog_obtenerRegistros.vm" />
+		<property name="xslName" value="ManttoCatLog_exportarRegistros.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="GUARDA_TCATALOG" parent="portal-endpoint">
+		<property name="templateName" value="ManttoCatLog_guardar.vm" />
+		<property name="xslName" value="StandarOutMsg.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<bean id="OBTIENE_TCATALOG" parent="portal-endpoint">
+		<property name="templateName" value="ManttoCatLog_obtenerRegistros.vm" />
+		<property name="xslName" value="ManttoCatLog_obtenerRegistros.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+
+	<bean id="OBTIENE_TCATALOG_REG" parent="portal-endpoint">
+		<property name="templateName" value="ManttoCatLog_obtenerRegistro.vm" />
+		<property name="xslName" value="ManttoCatLog_obtenerRegistro.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<!-- Fin Mantenimiento de Catalogos Logicos -->
+	
+	<!-- Pantalla de mantenimiento de atributos variables de persona -->
+	<bean id="BORRA_TATRIPER" parent="portal-endpoint">
+		<property name="templateName" value="AtributosVariablesPersona_borrar.vm" />
+		<property name="xslName" value="StandarOutMsg.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="ATRIBVARROLINC" parent="portal-endpoint">
+		<property name="templateName" value="AtributosVariablesPersona_obtener.vm" />
+		<property name="xslName" value="AtributosVariablesPersona_obtener.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="INSERT_TATRIPER" parent="portal-endpoint">
+		<property name="templateName" value="AtributosVariablesPersona_guardar.vm" />
+		<property name="xslName" value="StandarOutMsg.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="CATEGORIA_PERSONA" parent="portal-endpoint">
+		<property name="templateName" value="AtributosVariablesPersona_comboCategorias.vm" />
+		<property name="xslName" value="AtributosVariablesPersona_comboCategorias.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<!-- Fin Pantalla de mantenimiento de atributos variables de persona -->
+	
+	<!-- Atributos Varibles Por Agente -->
+	<bean id="BUSCAR_ATRIBUTOS_VARIABLES_AGENTE" parent="portal-endpoint">
+		<property name="templateName" value="AtributosVariblesAgentes_Buscar.vm" />
+		<property name="xslName" value="AtributosVariblesAgentes_Buscar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>		
+	<bean id="BORRAR_ATRIBUTOS_VARIABLES_AGENTE" parent="portal-endpoint">
+		<property name="templateName" value="AtributosVariblesAgentes_Borrar.vm" />
+		<property name="xslName" value="AtributosVariblesAgentes_Borrar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	
+	<bean id="INSERTAR_ATRIBUTOS_VARIABLES_AGENTE" parent="portal-endpoint">
+		<property name="templateName" value="AtributosVariblesAgentes_Guardar.vm" />
+		<property name="xslName" value="AtributosVariblesAgentes_Guardar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	
+	<!-- Fin Atributos Varibles Por Agente -->
+	
+	<!-- Cancelacion Manual de Polizas -->
+	<bean id="CANCELACION_MANUAL_POLIZAS_BUSCAR" parent="portal-endpoint">
+		<property name="templateName" value="CancelacionManualPolizas_Buscar.vm" />
+		<property name="xslName" value="CancelacionManualPolizas_Buscar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	
+	<bean id="CANCELACION_MANUAL_POLIZAS_OBTENER_INCISOS" parent="portal-endpoint">
+		<property name="templateName" value="CancelacionManualPolizas_ObtenerIncisos.vm" />
+		<property name="xslName" value="CancelacionManualPolizas_ObtenerIncisos.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	
+	<bean id="CANCELACION_MANUAL_POLIZAS_CALCULAR_PRIMA" parent="portal-endpoint">
+		<property name="templateName" value="CancelacionManualPolizas_CalcularPrima.vm" />
+		<property name="xslName" value="CancelacionManualPolizas_CalcularPrima.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	
+	<!--
+		<bean id="CANCELACION_MANUAL_POLIZAS_GUARDAR" parent="portal-endpoint">
+				<property name="templateName" value="CancelacionManualPolizas_Guardar.vm" />
+				<property name="xslName" value="CancelacionManualPolizas_Guardar.xsl" />
+				<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+		</bean>
+		-->	
+	<bean id="CANCELACION_MANUAL_POLIZAS_COMBO_POLIZAS" parent="portal-endpoint">
+		<property name="templateName" value="CancelacionManualPolizas_ComboPolizas.vm" />
+		<property name="xslName" value="CancelacionManualPolizas_ComboPolizas.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	
+	<bean id="CANCELACION_MANUAL_POLIZAS_COMBO_ASEGURADORAS" parent="portal-endpoint">
+		<property name="templateName" value="CancelacionManualPolizas_ComboAseguradoras.vm" />
+		<property name="xslName" value="CancelacionManualPolizas_ComboAseguradoras.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	
+	<!-- Fin Cancelacion Manual de Polizas -->
+
+	<!-- Vm para combos dinámicos -->
+	<bean id="COMBO_DINAMICO" parent="portal-endpoint">
+		<property name="templateName" value="ComboDinamico.vm" />
+		<property name="xslName" value="CancelacionManualPolizas_ComboAseguradoras.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	
+	<!-- Fin Vm para combos dinámicos -->
+
+	<!-- Vm para combos dinámicos -->
+	<bean id="COMBO_CATALOGOS_DINAMICOS" parent="portal-endpoint">
+		<property name="templateName" value="ConfiguradorCatalogosDinamicos_Combos.vm" />
+		<property name="xslName" value="ConfiguradorCatalogosDinamicos_Combos.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	
+	<!-- Fin Vm para combos dinámicos -->
+
+	<!-- Acceso Estructura Rol -->
+	<bean id="ACCESOESTRUCTURAROLUSUARIO_BORRAR" parent="portal-endpoint" >
+		<property name="templateName" value="AccesoEstructuraRolUsuario_Borrar.vm" />
+		<property name="xslName" value="AccesoEstructuraRolUsuario_Borrar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="ACCESOESTRUCTURAROLUSUARIO_BUSCAR" parent="portal-endpoint" >
+		<property name="templateName" value="AccesoEstructuraRolUsuario_Buscar.vm" />
+		<property name="xslName" value="AccesoEstructuraRolUsuario_Buscar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<bean id="ACCESOESTRUCTURAROLUSUARIO_GUARDAR" parent="portal-endpoint" >
+		<property name="templateName" value="AccesoEstructuraRolUsuario_Guardar.vm" />
+		<property name="xslName" value="AccesoEstructuraRolUsuario_Guardar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<bean id="OBTIENE_ROL_SEG" parent="portal-endpoint" >
+		<property name="templateName" value="AccesoEstructuraRolUsuario_comboRoles.vm" />
+		<property name="xslName" value="AccesoEstructuraRolUsuario_comboRoles.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<bean id="EXPORT_LIST_ACCESO_ESTRUCTURA_ROL_USUARIO" parent="portal-endpoint" >
+		<property name="templateName" value="AccesoEstructuraRolUsuario_Buscar.vm" />
+		<property name="xslName" value="AccesoEstructuraRolUsuario_Export.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>		
+	
+	<bean id="OBTENER_USUARIOS" parent="portal-endpoint" >
+		<property name="templateName" value="AccesoEstructuraRolUsuario_comboUsuarios.vm" />
+		<property name="xslName" value="AccesoEstructuraRolUsuario_comboUsuarios.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	
+	<!-- Fin Acceso Estructura Rol -->
+
+	<bean id="OBTENER_DATOS_CATALOGO_VARIABLE" parent="portal-endpoint">
+		<property name="templateName" value="Obtener_Datos_Catalogo.vm"></property>
+		<property name="xslName" value="Obtener_Datos_Catalogo.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	<bean id="OBTIENE_CLIENTES_CORP_BO" parent="portal-endpoint">
+		<property name="templateName" value="ObtenerClientesCorpBO.vm"></property>
+		<property name="xslName" value="ObtenerClientesCorpBO.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+    
+	<bean id="OBTIENE_CLIENTES_CARRITO" parent="portal-endpoint">
+		<property name="templateName" value="ObtenerClientesCarrito.vm"></property>
+		<property name="xslName" value="ObtenerClientesCarrito.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+    
+	<bean id="OBTENER_INDICADOR_NUMERO_ENDOSOS" parent="portal-endpoint">
+		<property name="templateName" value="ObtenerIndicadorNumEndosos.vm"></property>
+		<property name="xslName" value="ObtenerIndicadorNumEndosos.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+
+	<bean id="OBTIENE_CONF_ALERTA_AUTO_VALORES_VARIABLES" parent="portal-endpoint">
+		<property name="templateName" value="ObtenerDatosCatalogo.vm" />
+		<property name="xslName" value="ObtenerConfAlertasAuto_Variables.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	<!-- Numeracion Poliza -->
+	<bean id="OBTENER_PROCESO_POLIZA" parent="portal-endpoint">
+		<property name="templateName" value="ObtenerProcesoPoliza.vm" />
+		<property name="xslName" value="ObtenerProcesoPoliza.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<bean id="OBTENER_TIPO_POLIZA" parent="portal-endpoint">
+		<property name="templateName" value="ObtenerTipoPoliza.vm" />
+		<property name="xslName" value="ObtenerTipoPoliza.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	
+	<!-- Fin Numeracion Poliza -->
+	
+	<bean id="OBTIENE_VINCULO_PADRE_EDITAR" parent="portal-endpoint">
+		<property name="templateName" value="ObtenerVinculoPadreEditar.vm" />
+		<property name="xslName" value="ObtenerVinculoPadreEditar.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>	
+	
+	<bean id="OBTIENE_P_LISTA_TCATALOG" parent="catbo-endpoint">
+		<property name="templateName" value="ObtenerPListaCatalogo.vm"></property>
+		<property name="xslName" value="ObtenerTipoNivel.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+	
+	
+	
+</beans>

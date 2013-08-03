@@ -1,0 +1,6 @@
+ #foreach( $seccion in $parameters.master.sectionList )
+        data.push(
+        	$seccion 
+   		);   		
+   		
+#end  

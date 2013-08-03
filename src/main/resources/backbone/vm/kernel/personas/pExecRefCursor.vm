@@ -1,0 +1,9 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_PERSONAS.P_EXEC_REF_CURSOR" id="pExecRefCursor">
+		<param eval="true" name="pi_FILTRO" type="VARCHAR">$!params.get("pi_FILTRO")</param>
+		<outparam id="rc_cursor" type="CURSOR"/>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

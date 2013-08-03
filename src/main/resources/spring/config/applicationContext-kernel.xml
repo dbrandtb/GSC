@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+    
+	<bean id="kernelManager" class="mx.com.aon.kernel.service.impl.KernelManagerImpl" parent="abstractManagerJdbcTemplateInvoke">
+		<property name="serviciosGeneralesNegocio" ref="serviciosGeneralesNegocio"/>
+		<property name="serviciosGeneralesSistema" ref="servGeneralesSistema"/>
+		<property name="serviciosGeneralesBloques" ref="serviciosGeneralesBloques"/>
+		<property name="serviciosGeneralesCargarBloques" ref="serviciosGeneralesCargarBloques"/>
+        <property name="serviciosGeneralesDAO" ref="serviciosGeneralesDAO"/>
+
+		<property name="endpoints">
+            <map>
+                <!--<entry key="CALCULA_NUMERO_POLIZA">
+                    <ref bean="CALCULA_NUMERO_POLIZA" />
+                </entry>
+
+                <entry key="GENERA_SUPLEMENTO_FISICO">
+                    <ref bean="GENERA_SUPLEMENTO_FISICO" />
+                </entry>
+                
+                <entry key="GENERA_SUPLEMENTO_LOGICO">
+                    <ref bean="GENERA_SUPLEMENTO_LOGICO" />
+                </entry>
+                -->
+                <entry key="GENERA_SUPLEMENTOS">
+                    <ref bean="GENERA_SUPLEMENTOS" />
+                </entry>
+                <!--
+                <entry key="MOV_T_DESC_SUP">
+                    <ref bean="MOV_T_DESC_SUP" />
+                </entry>
+                
+                <entry key="MOV_M_SUPLEME">
+                    <ref bean="MOV_M_SUPLEME" />
+                </entry>
+                
+                <entry key="MOV_MPOLIAGR">
+                    <ref bean="MOV_MPOLIAGR" />
+                </entry>
+                
+                <entry key="MOV_MPOLIAGE">
+                    <ref bean="MOV_MPOLIAGE" />
+                </entry>
+                -->
+                <entry key="MOV_MPOLAGEN">
+                    <ref bean="MOV_MPOLAGEN" />
+                </entry>
+                
+                
+                <entry key="CLONAR_SITUACION">
+                    <ref bean="CLONAR_SITUACION" />
+                </entry>
+                
+                <entry key="EJECUTA_P_EXEC_SIGSVDEF">
+                    <ref bean="EJECUTA_P_EXEC_SIGSVDEF" />
+                </entry>
+                <entry key="PROC_INCISO_DEF">
+                    <ref bean="PROC_INCISO_DEF" />
+                </entry>
+                
+                <entry key="PROCESO_EMISION">
+                    <ref bean="PROCESO_EMISION" />
+                </entry>
+                
+                <entry key="OBTIENE_DESCRIPCION">
+                    <ref bean="OBTIENE_DESCRIPCION" />
+                </entry>
+                
+                <entry key="CALCULA_NUMERO_OBJETO">
+                    <ref bean="CALCULA_NUMERO_OBJETO" />
+                </entry>
+                
+                <entry key="OBTIENE_TVALOSIT_COTIZA">
+                    <ref bean="OBTIENE_TVALOSIT_COTIZA" />
+                </entry>
+                
+                <entry key="EXEC_VALIDADOR">
+                    <ref bean="EXEC_VALIDADOR" />
+                </entry>
+            </map>
+        </property>
+        <property name="abstractDAO">
+    		<ref bean="procesosDao" />
+    	</property>
+    	<property name="formatoOT">
+    		<ref bean="PDFGeneratorFormatoOT" />
+    	</property>
+    	
+	</bean>
+
+</beans>

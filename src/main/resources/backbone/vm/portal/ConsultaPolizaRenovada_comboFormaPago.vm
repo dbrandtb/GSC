@@ -1,0 +1,11 @@
+<statements>
+	<statement type="stored" name="PKG_LISTAS.P_PERXCTE" id="pPerXCte">
+		
+		<param eval="true" name="p_cliente" type="NUMERIC">$!params.get("p_cliente")</param>
+		
+		<outparam id="pv_registro_o" type="CURSOR"></outparam>
+		
+		<outparam id="pv_msg_id_o" type="INTEGER"/>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+	</statement>
+</statements>

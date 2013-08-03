@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_RENOVA.P_REVERSAR_MAQUILLA" id="reversar-maquilla">		
+		<param eval="true" name="P_CDUNIECO" type="NUMERIC">$!params.get("cdunieco")</param>
+		<param eval="true" name="P_CDRAMO"   type="NUMERIC">$!params.get("cdramo")</param>
+		<param eval="true" name="P_ESTADO"   type="VARCHAR">$!params.get("estado")</param>
+		<param eval="true" name="P_NMPOLIZA" type="NUMERIC">$!params.get("nmpoliza")</param>
+		<outparam id="PV_MSG_ID_O"   type="VARCHAR"/>
+		<outparam id="PV_TITLE_O"    type="VARCHAR"/>
+	</statement>
+</statements>

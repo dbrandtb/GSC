@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+	
+	
+		
+	<bean id="TablaCincoClavesManager" class="mx.com.aon.catweb.configuracion.producto.service.impl.TablaCincoClavesManagerImpl" parent="abstractManagerBean">
+	   	<property name="endpoints">
+		    <map>    
+	    <!--  Datos de cinco claves -->
+    	        <entry key="OBTIENE_DESCRIPCION_CINCO_CLAVES">
+        	        <ref bean="OBTIENE_DESCRIPCION_CINCO_CLAVES"/>            
+           	 	</entry>   
+             	<entry key="OBTIENE_DESCRIPCION_ATRIBUTOS_CINCO_CLAVES">
+    	            <ref bean="OBTIENE_DESCRIPCION_ATRIBUTOS_CINCO_CLAVES"/>            
+	       	    </entry> 
+	       	    <entry key="INSERTA_VALORES_CINCO_CLAVES">
+    	            <ref bean="INSERTA_VALORES_CINCO_CLAVES"/>            
+	       	    </entry>  
+	       	    <!-- entry key="OBTIENE_VALORES_CINCO_CLAVES">
+    	            <ref bean="OBTIENE_VALORES_CINCO_CLAVES"/>            
+	       	    </entry-->
+	       	    <entry key="OBTIENE_VALORES_CLAVE">
+    	            <ref bean="OBTIENE_VALORES_CLAVE"/>            
+	       	    </entry> 
+	       	    <entry key="OBTIENE_VALORES_ATRIBUTOS_CLAVES">
+    	            <ref bean="OBTIENE_VALORES_ATRIBUTOS_CLAVES"/>            
+	       	    </entry>
+	       	   
+	       	                    
+         	</map>
+    	</property> 
+ 	</bean>	
+ 	<bean id="TablaCincoClavesManagerJdbcTemplateImpl" class="mx.com.aon.catweb.configuracion.producto.service.impl.TablaCincoClavesManagerJdbcTemplateImpl" parent="abstractManagerJdbcTemplateInvoke">
+            <property name="abstractDAO">
+                <ref bean="tablaCincoClavesDAO"/>
+            </property>
+    </bean>
+
+</beans>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
+<statements>
+	<statement type='select'>
+		SELECT 
+			'$params'						  AS PERFIL,
+			'/resources/static/info.html'     AS  TOP, 
+			''								  AS  NAV,
+			'/resources/static/infoTit.html'  AS  TOPLEFT,
+			'/resources/static/infoTit.html'  AS  TOPCENTER,
+			'/resources/static/infoTit.html'  AS  TOPRIGHT,
+			'/resources/static/navTit.jsp'	  AS  LEFT_1,
+			'/resources/static/infoTit.html'  AS  LEFT_2,
+			'/resources/static/infoTit.html'  AS  LEFT_3,
+			'/resources/static/infoTit.html'  AS  LEFT_4,
+			'/resources/static/infoTit.html'  AS  LEFT_5,
+			'/resources/static/infoTit.html'  AS  RIGHT_1,
+			'/resources/static/infoTit.html'  AS  RIGHT_2,
+			'/resources/static/infoTit.html'  AS  RIGHT_3,
+			'/resources/static/infoTit.html'  AS  RIGHT_4,
+			'/resources/static/infoTit.html'  AS  RIGHT_5,
+			'/resources/static/infoTit.html'  AS  MAIN,
+			'/resources/static/infoTit.html'  AS  NEWS,
+			'/resources/static/infoTit.html'  AS  KNEWTHAT,
+			'/resources/static/infoTit.html'  AS  MAINDOWN,
+			'/resources/static/infoTit.html'  AS  OTHERLEFT,
+			'/resources/static/infoTit.html'  AS  OTHERRIGHT,
+			'/resources/static/infoTit.html'  AS  OTHERS,
+			'/resources/static/infoTit.html'  AS  FOOTERLEFT,
+			'/resources/static/infoTit.html'  AS  FOOTERCENTER,
+			'/resources/static/infoTit.html'  AS  FOOTERRIGHT
+		FROM DUAL
+	</statement>
+</statements>
+

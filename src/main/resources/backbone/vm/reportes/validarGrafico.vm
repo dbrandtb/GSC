@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_REPORTES.P_VALIDA_MGRAFICO" id="validaGrafico">
+	    <param eval="true" name="p_ncdreporte_i" type="NUMERIC">$!params.get("cdReporte")</param>
+	    <outparam id="p_ncantidad_o" type="NUMERIC"/>
+	    <outparam id="pv_msg_id_o" type="NUMERIC"/>
+		<outparam id="pv_title_o" type="VARCHAR"/>	
+	</statement>
+</statements>

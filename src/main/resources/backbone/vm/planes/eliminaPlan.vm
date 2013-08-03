@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_WIZARD.P_BORRA_PLANES_REG" id="pBorraPlanesReg">
+  		<param eval="true" name="pv_cdramo_i"	type="NUMERIC"><![CDATA[$!params.get("cdRamo")]]></param>
+  		<param eval="true" name="pv_cdtipsit_i"	type="VARCHAR"><![CDATA[$!params.get("cdTipSit")]]></param>
+		<param eval="true" name="pv_cdplan_i"	type="VARCHAR"><![CDATA[$!params.get("cdPlan")]]></param>
+		
+		<outparam id="pv_msg_id_o" type="NUMERIC"/>
+		<outparam id="pv_title_o" type="VARCHAR"/>		
+	</statement>
+</statements>

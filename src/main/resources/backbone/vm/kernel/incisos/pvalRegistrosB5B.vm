@@ -1,0 +1,23 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_INCISOS.P_VALIDA_CADA_REGISTRO_B5B" id="pvalRegistrosB5B">
+		<param eval="true" name="pi_CDUNIECO" type="NUMERIC">$!params.get("pi_CDUNIECO")</param>
+		<param eval="true" name="pi_CDRAMO" type="NUMERIC">$!params.get("pi_CDRAMO")</param>
+		<param eval="true" name="pi_ESTADO" type="VARCHAR">$!params.get("pi_ESTADO")</param>
+		<param eval="true" name="pi_NMPOLIZA" type="NUMERIC">$!params.get("pi_NMPOLIZA")</param>
+		<param eval="true" name="pi_NMSITUAC" type="NUMERIC">$!params.get("pi_NMSITUAC")</param>
+		<param eval="true" name="pi_NMSUPLEM" type="VARCHAR">$!params.get("pi_NMSUPLEM")</param>
+		<param eval="true" name="pi_STATUS" type="VARCHAR">$!params.get("pi_STATUS")</param>
+		<param eval="true" name="pi_CDTIPSIT" type="VARCHAR">$!params.get("pi_CDTIPSIT")</param>
+		<param eval="true" name="pi_CDATRIBU" type="NUMERIC">$!params.get("pi_CDATRIBU")</param>
+       <inoutparam eval="true" name="p_OTVALOR" id="p_OTVALOR" type="VARCHAR">$!params.get("p_OTVALOR")</inoutparam>
+		<param eval="true" name="pi_ACCION" type="VARCHAR">$!params.get("pi_ACCION")</param>
+		<param eval="true" name="p_OTTABVAL" type="VARCHAR">$!params.get("p_OTTABVAL")</param>
+       <inoutparam eval="true" name="p_INDIC_REG" id="p_INDIC_REG" type="VARCHAR">$!params.get("p_INDIC_REG")</inoutparam>
+		<outparam id="po_SWPRODUC" type="VARCHAR"/>
+       <inoutparam eval="true" name="p_NTOTVALOR" id="p_NTOTVALOR" type="VARCHAR">$!params.get("p_NTOTVALOR")</inoutparam>
+		<param eval="true" name="pi_SWOBLIGA" type="NUMERIC">$!params.get("pi_SWOBLIGA")</param>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>
