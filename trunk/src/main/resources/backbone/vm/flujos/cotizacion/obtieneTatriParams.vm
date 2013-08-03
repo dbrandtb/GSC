@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
+<statements>
+	<statement type="stored" name="PKG_COTIZA.P_GET_TATRI_PARAM" id="obtenerTatriParams">
+		<param eval="true" name="pv_cdunieco_i" type="NUMERIC"><![CDATA[$!params.get("CD_UNIECO")]]></param>
+  		<param eval="true" name="pv_cdramo_i" type="NUMERIC"><![CDATA[$!params.get("CD_RAMO")]]></param>
+  		<param eval="true" name="pv_estado_i" type="VARCHAR"><![CDATA[$!params.get("ESTADO")]]></param>
+  		<param eval="true" name="pv_nmpoliza_i" type="NUMERIC"><![CDATA[$!params.get("NM_POLIZA")]]></param>
+  		<param eval="true" name="pv_nmsituac_i" type="NUMERIC"><![CDATA[$!params.get("NM_SITUCION")]]></param>
+  		<param eval="true" name="pv_cdgarant_i" type="VARCHAR"><![CDATA[$!params.get("CD_GARANT")]]></param>
+  		<param eval="true" name="pv_cdperson_i" type="NUMERIC"><![CDATA[$!params.get("CD_PERSON")]]></param>
+  		<param eval="true" name="pv_cdrol_i" type="VARCHAR"><![CDATA[$!params.get("CD_ROL")]]></param>
+  		<param eval="true" name="pv_nmobjeto_i" type="NUMERIC"><![CDATA[$!params.get("NM_OBJETO")]]></param>
+  		<param eval="true" name="pv_cdatribu_i" type="NUMERIC"><![CDATA[$!params.get("CD_ATRIBU")]]></param>
+  		<param eval="true" name="pv_status_i" type="VARCHAR"><![CDATA[$!params.get("STATUS")]]></param>
+  		<param eval="true" name="pv_bloque_i" type="VARCHAR"><![CDATA[$!params.get("BLOQUE")]]></param>
+  		<outparam id="po_registro" type="CURSOR"/>
+		<outparam id="po_msg_id" type="NUMERIC"/>
+		<outparam id="p_out_title" type="VARCHAR"/>
+		
+	</statement>
+</statements>

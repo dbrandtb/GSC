@@ -1,0 +1,11 @@
+<statements>
+	<statement type="stored" name="PKG_PERSONA.P_OBTIENE_DATOS_ADICIONALES" id="pObtieneDatosAdicionalesPersona">
+        <param eval="true" name="pi_otfisjur" type="VARCHAR">$!params.get("codigoTipoPersona")</param>
+        <param eval="true" name="pi_cdatribu" type="NUMERIC">$!params.get("codigoAtributo")</param>
+        <param eval="true" name="pi_cdperson" type="NUMERIC">$!params.get("codigoPersona")</param>
+
+		<outparam id="po_resulset" type="CURSOR"></outparam>
+		<outparam id="pv_msg_id_o" type="NUMERIC"/>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+	</statement>
+</statements>

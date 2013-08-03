@@ -1,0 +1,21 @@
+<statements>
+	<statement type="stored" name="PKG_SATELITES. P_MOV_MPOLIPER" id="pMovMPoliPer">
+		
+        <param eval="true" name="pv_cdunieco_i" type="NUMERIC">$!params.get("pv_cdunieco_i")</param>
+        <param eval="true" name="pv_cdramo_i" type="VARCHAR">$!params.get("pv_cdramo_i")</param>
+        <param eval="true" name="pv_estado_i" type="VARCHAR">$!params.get("pv_estado_i")</param>
+        <param eval="true" name="pv_nmpoliza_i" type="VARCHAR">$!params.get("pv_nmpoliza_i")</param>
+        <param eval="true" name="pv_nmsituac_i" type="INTEGER">$!params.get("pv_nmsituac_i")</param>
+        <param eval="true" name="pv_cdrol_i" type="INTEGER">$!params.get("pv_cdrol_i")</param>
+        <param eval="true" name="pv_cdperson_i" type="INTEGER">$!params.get("pv_cdperson_i")</param>
+        <param eval="true" name="pv_nmsuplem_i" type="INTEGER">$!params.get("pv_nmsuplem_i")</param>
+        <param eval="true" name="pv_status_i" type="INTEGER">$!params.get("pv_status_i")</param>
+        <param eval="true" name="pv_nmorddom_i" type="INTEGER">$!params.get("pv_nmorddom_i")</param>
+        <param eval="true" name="pv_swreclam_i" type="INTEGER">$!params.get("pv_swreclam_i")</param>
+        <param eval="true" name="pv_accion_i" type="INTEGER">$!params.get("pv_accion_i")</param>
+        
+        
+        <outparam id="pv_msg_id_o" type="VARCHAR"></outparam>
+		<outparam id="pv_title_o" type="NUMERIC"/>
+	</statement>
+</statements>

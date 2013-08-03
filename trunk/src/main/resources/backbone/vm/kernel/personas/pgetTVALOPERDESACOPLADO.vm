@@ -1,0 +1,11 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_PERSONAS.P_GET_ATRIB_PERS_FISJUR" id="pgetTVALOPERDESACOPLADO">
+		<param eval="true" name="pi_OTFISJUR" type="VARCHAR">$!params.get("pi_OTFISJUR")</param>
+		<param eval="true" name="pi_GRUPOAT" type="VARCHAR">$!params.get("pi_GRUPOAT")</param>
+		<param eval="true" name="pi_CDPERSON" type="VARCHAR">$!params.get("pi_CDPERSON")</param>
+		<outparam id="rc_cursor" type="CURSOR"/>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

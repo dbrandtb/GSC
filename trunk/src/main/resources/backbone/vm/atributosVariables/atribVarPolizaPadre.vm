@@ -1,0 +1,10 @@
+<statements>
+	<statement type="stored" name="PKG_WIZARD.P_ATRIBVARPOL_PADRE" id="obtieneListaPadre">
+		<param eval="true" name="pv_cdramo_i" type="NUMERIC">$!params.cdRamo</param>		
+		<param eval="true" name="pv_cdatribu_i" type="NUMERIC">$!params.codigoAtributoP</param>
+		
+		<outparam id="PV_REGISTRO_O" type="CURSOR"/>
+		<outparam id="PV_MSG_ID_O" type="NUMERIC"/>		
+		<outparam id="PV_TITLE_O" type="VARCHAR"/>	
+	</statement>
+</statements>

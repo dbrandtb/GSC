@@ -1,0 +1,24 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_PENTRADA.P_NOSUPLEMENTOLOGICO" id="getNroSuplLogigo">
+		<param eval="true" name="pi_CDUNIECO" type="NUMERIC">$!params.get("pi_CDUNIECO")</param>
+		<param eval="true" name="pi_CDRAMO" type="NUMERIC">$!params.get("pi_CDRAMO")</param>
+		<param eval="true" name="pi_ESTADO" type="VARCHAR">$!params.get("pi_ESTADO")</param>
+		<param eval="true" name="pi_NMPOLIZA" type="NUMERIC">$!params.get("pi_NMPOLIZA")</param>
+       <inoutparam eval="true" name="p_FECHA" id="p_FECHA" type="VARCHAR">$!params.get("p_FECHA")</inoutparam>
+       <inoutparam eval="true" name="p_HORA" id="p_HORA" type="VARCHAR">$!params.get("p_HORA")</inoutparam>
+		<param eval="true" name="pi_OTTIPSUP" type="VARCHAR">$!params.get("pi_OTTIPSUP")</param>
+		<param eval="true" name="pi_TIPSUP_WORK" type="NUMERIC">$!params.get("pi_TIPSUP_WORK")</param>
+		<outparam id="po_NSUPLOGI" type="NUMERIC"/>
+		<outparam id="po_NMSUPLEM" type="VARCHAR"/>
+		<outparam id="po_FEINIVAL" type="DATE"/>
+		<outparam id="po_FEFINVAL" type="DATE"/>
+		<outparam id="po_HHINIVAL" type="VARCHAR"/>
+		<outparam id="po_HHFINVAL" type="VARCHAR"/>
+		<outparam id="po_SWANULA" type="VARCHAR"/>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>
+
+

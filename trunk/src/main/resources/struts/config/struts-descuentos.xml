@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+
+    <include file="struts-default.xml" />                           
+
+    <package name="descuentos" extends="json-default" namespace="/descuentos">
+		<!--
+		Configuracion del Action con tipo de respuesta JSON, esto generara a partir
+		de los atributos la respuesta en formato JSON para el Reader de ExtJs
+		-->
+		<action name="buscarDescuentos" class="listaDescuentosAction">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		
+		<action name="exportarDescuentos" class="listaDescuentosAction" method="cmdExportarClick">
+			<result name="success" type="stream">
+				 <param name="contentType">${contentType}</param>
+				<param name="inputName">inputStream</param>
+				<param name="contentDisposition">filename="${filename}"</param>
+				<param name="bufferSize">4096</param>
+			</result>
+		</action>      
+		
+		<action name="irAgregarDescuento" class="descuentosAction" method="irAgregarDescuentoClick">
+            <result type="chain" name="agregarDescuento">descuentosConfigurar</result>
+		</action>
+
+		<action name="irEditarDescuento" class="descuentosAction" method="irEditarDescuentoClick">
+            <result type="chain" name="editarDescuento">descuentosConfigurar</result>
+		</action>
+
+	    <action name="borrarDescuento" class="descuentosAction" method="cmdBorrarClick">
+	        <result type="json"><param name="ignoreHierarchy">false</param></result>
+	    </action>
+
+		<action name="copiarDescuento" class="descuentosAction" method="cmdCopiarClick">
+	        <result type="json"><param name="ignoreHierarchy">false</param></result>
+	    </action>
+    	
+    	<action name="getEncabezadoProducto" class="descuentosConfigurarProductosAction" method="cmdGetEncabezadoProducto">
+	        <result type="json"><param name="ignoreHierarchy">false</param></result>
+	    </action>
+	    
+	    <action name="getDetalleProducto" class="descuentosConfigurarProductosAction" method="cmdGetDetalleProducto">
+	        <result type="json"><param name="ignoreHierarchy">false</param></result>
+	    </action>
+	    
+	    <action name="getEncabezadoVolumen" class="descuentosConfigurarVolumenAction" method="cmdGetEncabezadoVolumen">
+	        <result type="json"><param name="ignoreHierarchy">false</param></result>
+	    </action>
+	    
+	    <action name="getDetalleVolumen" class="descuentosConfigurarVolumenAction" method="cmdGetDetalleVolumen">
+	        <result type="json"><param name="ignoreHierarchy">false</param></result>
+	    </action>
+	    
+	    <action name="guardarProducto" class="descuentosConfigurarProductosAction" method="cmdGuardarProducto">
+	        <result type="json"><param name="ignoreHierarchy">false</param></result>
+	    </action>
+	    
+	    <action name="guardarProductoDetalle" class="descuentosConfigurarProductosAction" method="cmdGuardarProductoDetalle">
+	        <result type="json"><param name="ignoreHierarchy">false</param></result>
+	    </action>
+	    
+	    <action name="guardarVolumen" class="descuentosConfigurarVolumenAction" method="cmdGuardarVolumen">
+	        <result type="json"><param name="ignoreHierarchy">false</param></result>
+	    </action>
+	    
+	    <action name="guardarVolumenDetalle" class="descuentosConfigurarVolumenAction" method="cmdGuardarDetalleVolumen">
+	        <result type="json"><param name="ignoreHierarchy">false</param></result>
+	    </action>
+	    
+	    <action name="borrarProductoDetalle" class="descuentosConfigurarProductosAction" method="cmdBorrarProductoDetalle">
+	        <result type="json"><param name="ignoreHierarchy">false</param></result>
+	    </action>
+	    
+	    <action name="borrarVolumenDetalle" class="descuentosConfigurarVolumenAction" method="cmdBorrarVolumenDetalle">
+	        <result type="json"><param name="ignoreHierarchy">false</param></result>
+	    </action>
+	    
+	    <action name="irDescuentos" class="descuentosConfigurarVolumenAction" method="irDescuentosClick">
+	        <result type="chain" name="descuentos">descuentos</result>
+	    </action>
+	    
+    </package>
+
+</struts>

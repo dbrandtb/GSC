@@ -1,0 +1,9 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_INCISOS.P_GET_TATRISIT_SWACTUAL" id="pgetTatrisitSwactual">
+		<param eval="true" name="pi_CDTIPSIT" type="VARCHAR">$!params.get("pi_CDTIPSIT")</param>
+		<outparam id="po_CADENA" type="VARCHAR"/>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

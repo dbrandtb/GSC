@@ -1,0 +1,11 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_FUNCIONES.P_Inserta_Reg_Tvalopol" id="pinsertRegTvalopol">
+		<param eval="true" name="gblUniEco" type="VARCHAR">$!params.get("pi_CDUNIECO")</param>
+		<param eval="true" name="gblRamo" type="VARCHAR">$!params.get("pi_CDRAMO")</param>
+		<param eval="true" name="gblEstado" type="VARCHAR">$!params.get("pi_ESTADO")</param>
+		<param eval="true" name="gblPoliza" type="VARCHAR">$!params.get("pi_NMPOLIZA")</param>
+		<param eval="true" name="gblSuplem" type="VARCHAR">$!params.get("pi_NMSUPLEM")</param>
+		<param eval="true" name="codigoAtributo" type="VARCHAR">$!params.get("piCdatribu")</param>
+		<param eval="true" name="valorAtributo" type="VARCHAR">$!params.get("piOtvalor")</param>
+	</statement>
+</statements>

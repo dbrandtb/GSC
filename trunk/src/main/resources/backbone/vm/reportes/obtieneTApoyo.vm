@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+        <statement type="stored" name="PKG_WIZARD.P_LISVALATRIBVAR" id="obtiene_tabla">
+        <param eval="true" name="pv_cdtabla_i" type="VARCHAR">$!params.get("cdtabla")</param>
+        <outparam id="pv_registro_o" type="CURSOR"/>
+        <outparam id="PV_MSG_ID_O" type="NUMERIC"/>
+		<outparam id="PV_TITLE_O" type="VARCHAR"/>
+    </statement>
+</statements>

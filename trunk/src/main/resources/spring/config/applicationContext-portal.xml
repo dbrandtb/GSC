@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <bean id="loginManager" class="mx.com.aon.portal.service.impl.LoginManagerImpl">
+        <property name="endpoints">
+            <map>
+            <entry key="VALIDA_USUARIO"><ref bean="VALIDA_USUARIO"/></entry>
+            <entry key="CONSULTA_PERFIL"><ref bean="CONSULTA_PERFIL"/></entry>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="navigationManager" class="mx.com.aon.portal.service.impl.NavigationManagerImpl">
+        <property name="endpoints">
+            <map>
+            	<entry key="CARGA_NAVEGACION">
+            		<ref bean="CARGA_NAVEGACION"/>
+            	</entry>
+            	<entry key="CARGA_ROLES_CLIENTES">
+	            	<ref bean="CARGA_ROLES_CLIENTES"/>
+            	</entry>
+            	<entry key="CARGA_NUMERO_REGISTRO">
+	            	<ref bean="CARGA_NUMERO_REGISTRO"/>
+            	</entry>            	
+            	<entry key="CARGA_VARIABLES_USER_ISO">
+	            	<ref bean="CARGA_VARIABLES_USER_ISO"/>
+            	</entry>
+            	<entry key="CARGA_ROLES_CLIENTES_USER">
+	            	<ref bean="CARGA_ROLES_CLIENTES_USER"/>
+            	</entry>      
+            </map>
+        </property>
+    </bean>
+
+    <bean id="pagingManager" class="mx.com.aon.test.service.impl.PagingManagerImpl">
+        <property name="endpoints">
+            <map>
+            <entry key="CONSULTA_PAGINADA"><ref bean="CONSULTA_PAGINADA"/></entry>
+            </map>
+        </property>
+    </bean>
+    <bean id="paginaPrincipalManager" class="mx.com.aon.portal.service.impl.PaginaPrincipalManagerImpl">
+    	<property name="endpoints">
+    		<map>
+    			<entry key="CARGA_COMPONENTES">
+    				<ref bean="CARGA_COMPONENTES"/>
+    			</entry>
+    			<entry key="OBTIENE_EMAIL">
+    				<ref bean="OBTIENE_EMAIL"/>
+    			</entry>
+    		</map>
+    	</property>
+    </bean>
+    <bean id="menuPrincipalManager" class="mx.com.aon.portal.service.impl.MenuPrincipalManagerImpl">
+    	<property name="endpoints">
+    		<map>
+    			<entry key="CARGA_MENU_PRINCIPAL">
+    				<ref bean="CARGA_MENU_PRINCIPAL"/>
+    			</entry>
+    			<entry key="CARGA_MENU_VERTICAL">
+    				<ref bean="CARGA_MENU_VERTICAL"/>
+    			</entry>
+    		</map>
+    	</property>
+    </bean>
+    
+    
+    
+    <!-- Beans utilizados para JdbcTemplates: -->
+    <bean id="processResultManager" class="mx.com.aon.portal.service.ProcessResultManager">
+        <property name="endpoints">
+            <map>
+            <entry key="OBTIENE_MENSAJE"><ref bean="OBTIENE_MENSAJE"/></entry>
+            </map>
+        </property>
+    </bean>
+
+
+    <bean id="abstractManagerBean" abstract="true" class="mx.com.aon.portal.service.impl.AbstractManager">
+        <property name="processResultManager">
+            <ref bean="processResultManager"/>
+        </property>
+    </bean>
+
+    <bean id="processResultManagerJdbcTemplate" class="mx.com.aon.portal.service.ProcessResultManagerJdbcTemplate">
+        <property name="abstractDAO">
+            <ref bean="processResultDAO"/>
+        </property>
+    </bean>
+
+
+    <bean id="abstractManagerJdbcTemplateInvoke" abstract="true" class="mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke">
+        <property name="processResultManager">
+            <ref bean="processResultManagerJdbcTemplate"/>
+        </property>
+    </bean>
+    <!-- FIN de beans utilizados para JdbcTemplates -->
+    
+    
+    <!-- bean utilizado para acceder a BD utilizando JdbcTemplates -->
+    <bean id="menuPrincipalManagerJdbcTemplate" class="mx.com.aon.portal.service.impl.MenuPrincipalManagerJdbcTemplateImpl" parent="abstractManagerJdbcTemplateInvoke">
+            <property name="abstractDAO">
+                <ref bean="menuPrincipalDAO"/>
+            </property>
+	</bean>
+</beans>

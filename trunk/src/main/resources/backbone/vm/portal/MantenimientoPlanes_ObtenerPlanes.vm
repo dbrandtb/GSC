@@ -1,0 +1,9 @@
+<statements>
+	<statement type="stored" name="PKG_CONFG_CUENTA.P_OBTIENE_PLAN" id="obtienePlanes">
+        <param eval="true" name="p_producto" type="INTEGER">$!params.get("codigoramo")</param>
+        <param eval="true" name="p_desc_plan" type="VARCHAR">$!params.get("codigoplan")</param>
+		<outparam id="po_msg_id" type="INTEGER"/>
+        <outparam id="p_out_title" type="VARCHAR"></outparam>
+        <outparam id="p_registros" type="CURSOR"></outparam>
+	</statement>
+</statements>

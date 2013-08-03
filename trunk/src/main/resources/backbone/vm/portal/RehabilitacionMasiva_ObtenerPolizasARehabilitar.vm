@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_CANCELA.P_POLIZAS_CANC_A_REHABILITAR" id="pObtienePolizasARehabilitar">
+        <param eval="true" name="pv_asegurado_i" type="VARCHAR"><![CDATA[$!params.get("dsAsegurado")]]></param>
+        <param eval="true" name="pv_dsuniage_i" type="VARCHAR"><![CDATA[$!params.get("dsAseguradora")]]></param>
+        <param eval="true" name="pv_dsramo_i" type="VARCHAR"><![CDATA[$!params.get("dsProducto")]]></param>
+        <param eval="true" name="pv_nmpoliza_i" type="NUMERIC">$!params.get("nmPoliza")</param>
+        <param eval="true" name="pv_nmsituac_i" type="NUMERIC">$!params.get("nmInciso")</param>
+
+		<outparam id="pv_registro_o" type="CURSOR"></outparam>
+		<outparam id="pv_msg_id_o" type="INTEGER"/>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+	</statement>
+</statements>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+    <statement type="stored" name="PKG_AON_CHECKLIST.P_OBTIENE_TAREAS" id="obtieneTareas">
+        <param eval="true" name="pv_dsseccion_i" type="VARCHAR"><![CDATA[$!params.get("seccion")]]></param>
+        <param eval="true" name="pv_dstarea_i" type="VARCHAR"><![CDATA[$!params.get("tarea")]]></param>
+        <param eval="true" name="pv_dsestado_i" type="VARCHAR"><![CDATA[$!params.get("estado")]]></param>
+        <outparam id="pv_registro_o" type="CURSOR"/>
+        <outparam id="pv_msg_id_o" type="NUMERIC"/>
+        <outparam id="pv_title_o" type="VARCHAR"/>        
+    </statement>
+</statements>
+
+

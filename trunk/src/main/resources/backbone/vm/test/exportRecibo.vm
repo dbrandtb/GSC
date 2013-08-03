@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
+<statements>
+	<statement type="select" id="consulta">
+		SELECT NMPOLIZA,NMSUPLEM,NMRECIBO,TO_CHAR(FEINICIO,'dd/mm/yyyy') AS FEINICIO
+        	FROM MRECIBO
+	</statement>
+</statements>

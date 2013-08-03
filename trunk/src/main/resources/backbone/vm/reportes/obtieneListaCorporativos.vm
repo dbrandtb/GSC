@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+    <statement type="stored" name="PKG_REPORTES.P_CLIENTES_CORPO" id="corporativos">
+    <outparam id="pv_registro_o" type="CURSOR"/>
+    </statement>
+</statements>         

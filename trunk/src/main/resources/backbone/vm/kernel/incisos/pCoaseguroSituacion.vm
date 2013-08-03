@@ -1,0 +1,13 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_INCISOS.P_PROCESO_COASEGURO_INCISO" id="pCoaseguroSituacion">
+		<param eval="true" name="pi_CDUNIECO" type="NUMERIC">$!params.get("pi_CDUNIECO")</param>
+		<param eval="true" name="pi_CDRAMO" type="NUMERIC">$!params.get("pi_CDRAMO")</param>
+		<param eval="true" name="pi_ESTADO" type="VARCHAR">$!params.get("pi_ESTADO")</param>
+		<param eval="true" name="pi_NMPOLIZA" type="NUMERIC">$!params.get("pi_NMPOLIZA")</param>
+		<param eval="true" name="pi_NMSITUAC" type="NUMERIC">$!params.get("pi_NMSITUAC")</param>
+       <inoutparam eval="true" name="p_SWEXCOA" id="p_SWEXCOA" type="VARCHAR">$!params.get("p_SWEXCOA")</inoutparam>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

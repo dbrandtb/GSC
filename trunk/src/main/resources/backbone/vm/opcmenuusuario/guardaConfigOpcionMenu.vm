@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
+<statements>
+	<statement type="stored" name="PKG_MENU.P_GUARDA_OPCION_MENU" id="guarda_opcion_menu">
+		<param eval="true" name="PV_CDMENU_I" type="NUMERIC">$!params.claveMenu</param>
+		<param eval="true" name="PV_CDNIVEL_I" type="NUMERIC">$!params.claveOpcionMenu</param>
+		<param eval="true" name="PV_DSMENU_EST_I" type="VARCHAR">$!params.opcionMenu</param>
+		<param eval="true" name="PV_CDRAMO_I" type="NUMERIC">$!params.ramo</param>
+		<param eval="true" name="PV_CDNIVEL_PADRE_I" type="NUMERIC">$!params.opcionPadre</param>
+		<param eval="true" name="PV_CDTITULO_I" type="NUMERIC">$!params.pantallaAsociada</param>
+		<param eval="true" name="PV_CDESTADO_I" type="NUMERIC">$!params.estado</param>
+		<param eval="true" name="PV_CDTIPSIT_I" type="VARCHAR">$!params.situacion</param>
+		<outparam id="PV_MSG_ID_O" type="NUMERIC"/>
+		<outparam id="PV_TITLE_O" type="NUMERIC"/>
+		<outparam id="PV_TEXT_O" type="VARCHAR"/>
+	</statement>
+</statements>

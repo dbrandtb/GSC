@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+	<bean id="tarifica-endpoints" abstract="true" parent="parent-endpoint-kernel">
+		<property name="templateModule" value="tarificacion"/>
+		<property name="xslModule" value="tarificacion"/>
+	</bean>
+	
+	<bean id="P_ACEPTAR_PRIMA_TARGET" parent="tarifica-endpoints">
+		<property name="templateName" value="paceptarPrimaTarget.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_ACT_ZWPRTGCB" parent="tarifica-endpoints">
+		<property name="templateName" value="pactualizaZWPRTGCB.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_CALCULAR_RECIBO" parent="tarifica-endpoints">
+		<property name="templateName" value="pcalcularRecibo.vm"/>
+		<property name="xslName" value="pcalcularRecibo.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_CONFIRMAR_POLIZA" parent="tarifica-endpoints">
+		<property name="templateName" value="pconfirmarPoliza.vm"/>
+		<property name="xslName" value="pconfirmarPoliza.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_DELETE_COA_PREV" parent="tarifica-endpoints">
+		<property name="templateName" value="pdeleteCoaPrevio.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_DELETE_PRMTRG" parent="tarifica-endpoints">
+		<property name="templateName" value="pdeletePrimaTarget.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GEN_COASEG" parent="tarifica-endpoints">
+		<property name="templateName" value="pgeneraCoaseguro.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GET_INCISOS_PRMTGT" parent="tarifica-endpoints">
+		<property name="templateName" value="pgetIncisosPrimaTarget.vm"/>
+		<property name="xslName" value="pgetIncisosPrimaTarget.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GET_TARIFICACION" parent="tarifica-endpoints">
+		<property name="templateName" value="ptarificarPrimaTarget.vm"/>
+		<property name="xslName" value="ptarificarPrimaTarget.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GET_TARXINC_FALTAN" parent="tarifica-endpoints">
+		<property name="templateName" value="pgetFaltaTarificarSituacion.vm"/>
+		<property name="xslName" value="pgetFaltaTarificarSituacion.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GET_TOTALES_ENDOSO" parent="tarifica-endpoints">
+		<property name="templateName" value="pgetTotalesxEndoso.vm"/>
+		<property name="xslName" value="pgetTotalesxEndoso.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_INSERT_INICIAL" parent="tarifica-endpoints">
+		<property name="templateName" value="pinsertInicialPrimaTarget.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_INSERT_ZWMPOLIREC" parent="tarifica-endpoints">
+		<property name="templateName" value="pinsertZWMPOLIREC.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_MINMAX_INCISO_ENDOSO" parent="tarifica-endpoints">
+		<property name="templateName" value="pgetMinMaxIncisoEndoso.vm"/>
+		<property name="xslName" value="pgetMinMaxIncisoEndoso.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_PREVIO_ALEAJSUP" parent="tarifica-endpoints">
+		<property name="templateName" value="pprevioALEAJSUP.vm"/>
+		<property name="xslName" value="pprevioALEAJSUP.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_PREVIO_ALEAVGAR" parent="tarifica-endpoints">
+		<property name="templateName" value="pprevioALEAVGAR.vm"/>
+		<property name="xslName" value="pprevioALEAVGAR.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_PREVIO_BBVLCOTI" parent="tarifica-endpoints">
+		<property name="templateName" value="pprevioBBVLCOTI.vm"/>
+		<property name="xslName" value="pprevioBBVLCOTI.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_PRIMA_TARGET" parent="tarifica-endpoints">
+		<property name="templateName" value="pPrimaTarget.vm"/>
+		<property name="xslName" value="pPrimaTarget.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_PROC_RECIBOS" parent="tarifica-endpoints">
+		<property name="templateName" value="pprocRecibos.vm"/>
+		<property name="xslName" value="pprocRecibos.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_PROC_TARXINC_FALTAN" parent="tarifica-endpoints">
+		<property name="templateName" value="pprocTarxincFaltan.vm"/>
+		<property name="xslName" value="pprocTarxincFaltan.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_VAL_PRIMA_BASE" parent="tarifica-endpoints">
+		<property name="templateName" value="valPrimaBase.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_VAL_PRIMA_TARGET" parent="tarifica-endpoints">
+		<property name="templateName" value="valPrimaTarget.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_VALIDAR_CAMBIOS" parent="tarifica-endpoints">
+		<property name="templateName" value="valCambiosPrimaTarget.vm"/>
+		<property name="xslName" value="valCambiosPrimaTarget.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_VALIDAR_TBLOQUEO" parent="tarifica-endpoints">
+		<property name="templateName" value="valBloqueoTarificacion.vm"/>
+		<property name="xslName" value="valBloqueoTarificacion.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+    
+    <bean id="P_GET_TARIFICACION_GENERAL_INCISOS" parent="tarifica-endpoints">
+        <property name="templateName" value="ptarificarPrimaTarget.vm"/>
+        <property name="xslName" value="ptarificarAtributosBean.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+	
+</beans>

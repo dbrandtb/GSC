@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_CATBO.P_GUARDAR_MTAREAS" id="guardar_Tarea">
+       <param eval="true" name="pv_cdproceso_i" type="NUMERIC">$!params.get("pv_cdproceso_i")</param>
+       <param eval="true" name="pv_estatus_i" type="VARCHAR"><![CDATA[$!params.get("pv_estatus_i")]]></param>
+       <param eval="true" name=" pv_cdmodulo_i" type="VARCHAR"><![CDATA[$!params.get(" pv_cdmodulo_i")]]></param>
+       <param eval="true" name=" pv_cdpriord_i" type="NUMERIC">$!params.get(" pv_cdpriord_i")</param>
+       <param eval="true" name="pv_indesemaforo_i" type="NUMERIC">$!params.get("pv_indesemaforo_i")</param>
+       
+  		
+  		<outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

@@ -1,0 +1,741 @@
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+
+	<include file="struts-default.xml" />
+
+	<package name="combos-catbo" extends="json-default" namespace="/combos-catbo">
+
+
+		<!--
+		Configuracion del Action con tipo de respuesta JSON, esto generara a partir
+		de los atributos la respuesta en formato JSON para el Reader de ExtJs
+		-->
+		<action name="obtenerProductos" class="combosActionBO" method="obtenerProductos">
+			<result name="success" type="json" />
+		</action>
+
+        <action name="obtenerTiposSituacion" class="combosActionBO" method="obtenerTiposSituacion">
+            <result name="success" type="json" />
+        </action>
+
+        <action name="obtenerTiposCobertura" class="combosActionBO" method="obtenerTiposCobertura">
+            <result name="success" type="json" />
+        </action>
+
+        <action name="obtenerAseguradoras" class="combosActionBO" method="obtenerAseguradoras">
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="obtenerSecciones" class="combosActionBO" method="obtenerSecciones">
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="obtenerEstados" class="combosActionBO" method="obtenerEstados">
+            <result name="success" type="json" />
+        </action>
+
+        <action name="obtenerClientesCorp" class="combosActionBO" method="obtenerClientesCorp">
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="obtenerClientes" class="combosActionBO" method="obtenerClientes">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="obtenerPadres" class="combosActionBO" method="obtenerPadres">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="obtenerTiposNivel" class="combosActionBO" method="obtenerTiposNivel">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+		<action name="obtenerEstadosDescuentos" class="combosActionBO" method="obtenerEstadosDescuentos">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="obtenerProductosDescuentos" class="combosActionBO" method="obtenerProductosAseguradoraCliente">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="obtenerTiposDscto" class="combosActionBO" method="obtenerTiposDscto">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="obtenerPlanes" class="combosActionBO" method="obtenerPlanes">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="obtenerRamos" class="combosActionBO" method="obtenerRamos">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+          <action name="obtenerRamosNuevo" class="combosActionBO" method="obtenerRamosNuevo">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+		<action name="obtenerSubramos" class="combosActionBO" method="obtenerSubRamos">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="obtenerProductosAyuda" class="combosActionBO" method="obtenerProductosAyuda">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="obtenerIdiomasAyuda" class="combosActionBO" method="obtenerIdiomasAyuda">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="confAlertasAutoUsuarios" class="combosActionBO" method="obtenerConfAlertasAutoUsuarios">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="confAlertasAutoClientes" class="combosActionBO" method="obtenerConfAlertasAutoClientes">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="confAlertasAutoProcesos" class="combosActionBO" method="obtenerConfAlertasAutoProcesos">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="confAlertasAutoTemporalidad" class="combosActionBO" method="obtenerConfAlertasAutoTemporalidad">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="confAlertasAutoRol" class="combosActionBO" method="obtenerConfAlertasAutoRol">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="confAlertasAutoTipoRamo" class="combosActionBO" method="obtenerConfAlertasAutoTipoRamo">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="confAlertasAutoRegion" class="combosActionBO" method="obtenerRegiones">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="obtenerSiNo" class="combosActionBO" method="obtenerSiNo">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="obtenerFrecuencias" class="combosActionBO" method="obtenerFrecuencias">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="obtenerConceptosProducto" class="combosActionBO" method="obtenerConceptosProducto">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="obtenerProductosAyudaCoberturas" class="combosActionBO" method="obtenerProductosAyudaCoberturas">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="obtenerTiposCoberturaProducto" class="combosActionBO" method="obtenerTiposCoberturaProducto">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="obtenerLineasOperacion" class="combosActionBO" method="obtenerLineasOperacion">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+
+        <action name="obtenerEjecutivosAon" class="combosActionBO" method="obtenerEjecutivosAon">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="obtenerEstadosEjecutivo" class="combosActionBO" method="obtenerEstadoEjecutivo">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="obtenerLineasAtencion" class="combosActionBO" method="obtenerLineasAtencion">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="obtenerGrupoPersonas" class="combosActionBO" method="obtenerGrupoPersonas">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="obtenerPolizasPorAseguradora" class="combosActionBO" method="obtenerPolizasPorAseguradora">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="obtenerPolizasPorAseguradora2" class="combosActionBO" method="obtenerPolizasPorAseguradora2">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="obtenerReciboPorPolizasPorAseguradora" class="combosActionBO" method="obtenerReciboPorPolizaPorAseguradora">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="comboVinculosPadrePorEstructura" class="combosActionBO" method="obtenerVinculosPadrePorCodigoEstructura">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+       <action name="obtenerClientesCorporativo" class="combosActionBO" method="obtenerClientesCorporativo">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+         <action name="obtenerProductosEjecutivosCuenta" class="combosActionBO" method="obtenerProductosEjecutivosCuenta">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="obtenerProductosAseguradoraCliente" class="combosActionBO" method="obtenerProductosAseguradoraCliente">
+          <result type="json"><param name="ignoreHierarchy">false</param></result>
+       </action>
+
+        <action name="obtenerRamosCliente" class="combosActionBO" method="obtenerRamosCliente">
+          <result type="json"><param name="ignoreHierarchy">false</param></result>
+       </action>
+       
+        <action name="obtenerTiposRamoClienteEjecutivoCuenta" class="combosActionBO" method="obtenerTiposRamoClienteEjecutivoCuenta">
+          <result type="json"><param name="ignoreHierarchy">false</param></result>
+       </action>
+
+        <action name="obtenerAseguradorasCliente" class="combosActionBO" method="obtenerAseguradorasCliente">
+          <result type="json"><param name="ignoreHierarchy">false</param></result>
+       </action>
+
+        <action name="obtenerEstadosAgrupacionPoliza" class="combosActionBO" method="obtenerEstadosAgrupacionPoliza">
+          <result type="json"><param name="ignoreHierarchy">false</param></result>
+       </action>
+
+        <action name="obtenerTiposAgrupacionPoliza" class="combosActionBO" method="obtenerTiposAgrupacionPoliza">
+          <result type="json"><param name="ignoreHierarchy">false</param></result>
+       </action>
+
+        <action name="comboAgrupacionPapelesPapel" class="combosActionBO" method="comboAgrupacionPapeles_Papel">
+          <result type="json"><param name="ignoreHierarchy">false</param></result>
+       </action>
+
+        <action name="comboAseguradorasPorCliente" class="combosActionBO" method="comboAseguradorasPorCliente">
+          <result type="json"><param name="ignoreHierarchy">false</param></result>
+       </action>
+
+        <action name="comboProductosPorAseguradorYCliente" class="combosActionBO" method="comboProductosPorAseguradorYCliente">
+          <result type="json"><param name="ignoreHierarchy">false</param></result>
+       </action>
+       
+       <action name="obtenerGrupoPersonasClientes" class="combosActionBO" method="obtenerGrupoPersonas">
+          <result type="json"><param name="ignoreHierarchy">false</param></result>
+       </action>
+
+        <action name="comboBloques" class="combosActionBO" method="comboBloques">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="comboFormaCalculoFolioNroIncisos" class="combosActionBO" method="comboFormaCalculoFolioNroIncisos">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="comboIndicadorNumeracionNroIncisos" class="combosActionBO" method="comboIndicadorNumeracionNroIncisos">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+         <action name="comboIndicador_SP_NroIncisos" class="combosActionBO" method="comboIndicador_SP_NroIncisos">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+         <action name="comboTipoPersonaJ" class="combosActionBO" method="comboTipoPersonaJ">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+         <action name="comboNacionalidad" class="combosActionBO" method="comboNacionalidad">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+         <action name="comboEstadoCivil" class="combosActionBO" method="combosEstadoCivil">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+         <action name="comboTipoEmpresa" class="combosActionBO" method="comboTipoEmpresa">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+         <action name="comboTipoIdentificador" class="combosActionBO" method="comboTipoIdentificador">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="comboTipoDomicilio" class="combosActionBO" method="comboTipoDomicilio">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="comboPaises" class="combosActionBO" method="comboPais">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="comboColonias" class="combosActionBO" method="comboColonia">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="comboEstadosPais" class="combosActionBO" method="comboEstadosPais">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="comboMunicipios" class="combosActionBO" method="comboMunicipio">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="comboTiposTelefono" class="combosActionBO" method="comboTipoTelefono">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="comboGruposCorporativos" class="combosActionBO" method="comboGruposCorporativos">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="comboEstadosCorporativos" class="combosActionBO" method="comboEstadosCorporativos">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="comboNivelesCorporativos" class="combosActionBO" method="comboNivelesCorporativos">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="obtenerRehabilitacionMotivosCancelacion" class="combosActionBO" method="obtenerSiNo">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="obtenerVerpagosGrupoMotivosCancelacion" class="combosActionBO" method="obtenerSiNo">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="comboSexo" class="combosActionBO" method="comboSexos">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+		
+		<action name="comboRazones" class="combosActionBO" method="comboRazones">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="comboMetodos" class="combosActionBO" method="comboMetodos">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="comboSeccionesFormatoOrden" class="combosActionBO" method="obtenerComboSeccionesOrden">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="comboTiposObjetos" class="combosActionBO" method="obtenerComboTiposObjetos">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="obtenerPeriodosGracia" class="combosActionBO" method="obtenerPeriodosGracia">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+         <action name="obtenerTiposDocumento" class="combosActionBO" method="obtenerTiposDocumento">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+		
+		<action name="obtenerSeccionesFormato" class="combosActionBO" method="obtenerSeccionesFormato">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="obtenerBloquesConfAtributosFormatoOrdenTrabajo" class="combosActionBO" method="obtenerBloquesConfAtributosFormatoOrdenTrabajo">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="comboFormato" class="combosActionBO2" method="comboObtieneFormatos">    <!--  se agrego comboObtieneFormatos -->
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+          
+          <action name="obtenerComboFormatosCampo" class="combosActionBO" method="obtenerComboFormatosCampo">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="comboTipoError" class="combosActionBO" method="comboTipoError">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+          <action name="obtenerComboCampoBloques" class="combosActionBO" method="obtenerComboCampoBloques">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="obtenerFormatos" class="combosActionBO" method="comboObtenerFormatos">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="obtenerProcesos" class="combosActionBO" method="comboObtenerProcesos">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="comboObtenerFormasCalculoFolio" class="combosActionBO" method="comboObtenerFormasCalculoFolio">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <!--action name="comboFormaCalculoFolioAseguradora" class="combosActionBO" method="comboFormaCalculoFolioAseguradora">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action-->
+        
+        <action name="comboClientesPorUsuario" class="combosActionBO" method="comboClientesPorUsuario">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+         <action name="obtenerComboProductosTramoCliente" class="combosActionBO" method="obtenerComboProductosTramoCliente">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="obtenerComboTipoSituacionProductos" class="combosActionBO" method="obtenerComboTipoSituacionProductos">
+            <result name="success" type="json" />
+        </action>
+        
+         <action name="comboInstrumentosPago" class="combosActionBO" method="comboInstrumentosPago">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+         <action name="comboBancos" class="combosActionBO" method="comboBancos">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+         <action name="comboTiposTarjetas" class="combosActionBO" method="comboTiposTarjetas">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+         <action name="comboAseguradoraPorClienteYProducto" class="combosActionBO" method="comboAseguradoraPorClienteYProducto">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+          <action name="obtenerIndicadorSINO" class="combosActionBO" method="obtenerIndicadorSINO">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="obtenerGarantiaPorProductoYSituacion" class="combosActionBO" method="obtenerGarantiaPorProductoYSituacion">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="obtenerSituacionPorProductoYPlan" class="combosActionBO" method="obtenerSituacionPorProductoYPlan">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="obtenerPlanesProducto" class="combosActionBO" method="obtenerPlanesProducto">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+         <action name="comboPersonas" class="combosActionBO" method="obtenerComboPersonas">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="obtenerComboGenerico" class="combosActionBO" method="obtenerComboGenerico">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="obtenerFormaCalculo" class="combosActionBO" method="obtenerComboFormaCalculo">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="obtenerFormaAtributo" class="combosActionBO" method="obtenerComboFormaAtributo">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="obtenerNrosPolizasAseguradoraProductoPlanCorpo" class="combosActionBO" method="obtenerComboNrosPolizas">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="obtenerTiposRenova" class="combosActionBO" method="obtenerComboTiposRenova">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="obtenerAccionesRenovacionRol" class="combosActionBO" method="obtenerComboAccionesRenovacionRol">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="obtenerAccionesRenovacionPantalla" class="combosActionBO" method="obtenerComboAccionesRenovacionPantalla">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="obtenerAccionesRenovacionCampo" class="combosActionBO" method="obtenerComboAccionesRenovacionCampo">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="obtenerAccionesRenovacionAccion" class="combosActionBO" method="obtenerComboAccionesRenovacionAccion">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="obtenerAccionesRenovacionRoles" class="combosActionBO" method="obtenerComboAccionesRenovacionRoles">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action> 
+        
+        <action name="obtenerRamosPorCliente" class="combosActionBO" method="obtenerRamosPorCliente">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="obtenerTipoObjeto" class="combosActionBO" method="obtenerComboTipoObjeto">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="getComboFormaPago" class="combosActionBO" method="obtenerComboFormaPago">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="getComboInstrumentoPago" class="combosActionBO" method="obtenerComboInstrumentoPago">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="obtenerComboRoles" class="combosActionBO" method="obtenerComboRoles">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+         <action name="obtenerComboPersona" class="combosActionBO" method="obtenerComboNombrePersonas">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="obtenerCombosIncisos" class="combosActionBO" method="obtenerComboIncisosCoberturaPoliza">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="comboCoberturasProducto" class="combosActionBO" method="obtenerComboCoberturasProducto">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="comboObjetoRamo" class="combosActionBO" method="obtenerComboObjetosRamo">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        
+        <action name="comboTipoGuion" class="combosActionBO" method="obtenerComboTipoGuion">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="comboNotificacionesRegion" class="combosActionBO" method="obtenerComboNotificacionRegion">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+         <action name="obtenerComboProcesosCat" class="combosActionBO" method="obtenerComboProcesosCat">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="obtenerComboProcesosCatMatriz" class="combosActionBO" method="obtenerComboProcesosCatMatriz">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="obtenerEstadoEjecutivo" class="combosActionBO" method="obtenerEstadoEjecutivo">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="comboTipoMetodoEnvio" class="combosActionBO" method="obtenerComboTipoMetodoEnvio">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="comboClientesCorpBO" class="combosActionBO" method="obtenerComboClientesCorpBO">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+		
+		  <action name="obtenerComboNivelesAtencion" class="combosActionBO" method="obtenerComboNivelesAtencion">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+		
+		 <action name="obtenerComboRolesUsuariosResponsables" class="combosActionBO" method="obtenerComboRolesUsuariosResponsables">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+		
+        <action name="comboStatusIndicadorAviso" class="combosActionBO" method="obtenerComboIndicadorAviso">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        
+         <action name="obtenerComboRolesUsuariosResponsables" class="combosActionBO" method="obtenerComboRolesUsuariosResponsables">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+		<!--   CONFIGURACION DE COMBOS PARA ADMINISTRACION DE CASOS   -->
+		
+		 <action name="obtenerComboTareas" class="combosActionBO" method="obtenerTareas">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="obtenerComboAseguradorasProdCorp" class="combosActionBO" method="obtenerAseguradorasProdCorp">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="obtenerComboPrioridades" class="combosActionBO" method="obtenerPrioridades">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+         <action name="obtenerIndicadorNumeracion" class="combosActionBO" method="obtenerDatosCatalogo">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+         <action name="obtenerComboUnidadTiempoComprar" class="combosActionBO" method="obtenerComboUnidadTiempoComprar">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+          <action name="obtenerComboRoles" class="combosActionBO" method="obtenerComboRoles">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+          <action name="obtenerResponsables" class="combosActionBO" method="obtenerResponsables">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="ObtenerDatosModulos" class="combosActionBO" method="obtenerModulos">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        <action name="obtenerComboDatosCatalogosDep" class="combosActionBO" method="obtenerComboDatosCatalogosDep">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="comboPrioridadTareasCatBo" class="combosActionBO" method="obtenerComboTareaPrioridad">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>        
+
+        <action name="comboEstatusTareasCatBo" class="combosActionBO" method="obtenerComboTareaEstatus">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action> 
+        
+        <action name="obtenerComboPlanesProducto" class="combosActionBO" method="obtenerPlanesProducto">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="obtenerComboMonedas" class="combosActionBO" method="obtenerComboMonedas">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+          <action name="obtenerComboNivelAtencionMatriz" class="combosActionBO" method="obtenerComboNivelAtencionMatriz">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action> 
+        
+        <action name="comboObtenerPrioridades" class="combosActionBO" method="obtenerDatosCatalogo">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="traerDatosModulos" class="combosActionBO" method="obtieneDatosModulo">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="obtenerDatosCatalogo" class="combosActionBO" method="obtenerDatosCatalogo">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="obtieneTiposArchivos" class="combosActionBO" method="obtieneTiposArchivos">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="obtenerComboStatus" class="combosActionBO" method="obtenerComboStatus">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+		<!-- FIN CONFIGURACION DE COMBOS PARA ADMINISTRACION DE CASOS -->
+        
+        <action name="comboUsuariosReemplazantes" class="combosActionBO" method="obtenerComboUsuariosReemplazantes">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="comboRolesUsuarios" class="combosActionBO" method="comboRolesUsuarios">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="comboUsuarios" class="combosActionBO" method="comboUsuarios">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+    
+        <action name="comboModulosEncuestas" class="combosActionBO" method="comboModulosEncuestas">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="comboEncuestas" class="combosActionBO" method="comboEncuestas">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+   
+        <action name="comboUsuariosEncuestas" class="combosActionBO" method="comboUsuariosEncuestas">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+   
+        <action name="comboCampanEncuestas" class="combosActionBO" method="comboCampanEncuestas">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+   
+   
+        <action name="comboProductosAseguradoraEncuestas" class="combosActionBO" method="comboProductosAseguradoraEncuestas">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+   
+        <action name="comboClientesAseguradoraEncuestas" class="combosActionBO" method="comboClientesAseguradoraEncuestas">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+   
+        <action name="obtenerPais" class="combosActionBO" method="obtenerDatosPais">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="obtenerMes" class="combosActionBO" method="obtenerDatosMes">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+    
+    	<action name="obtenerNivel" class="combosActionBO" method="comboNivel">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+    
+    	<action name="obtenerUnidad" class="combosActionBO" method="comboUnidad">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+    
+        <action name="comboObtenerListas" class="combosActionBO" method="comboObtenerListas">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="comboListas" class="combosActionBO" method="comboListas">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="obtenerCompraTiempo" class="combosActionBO" method="comboObtieneTipoGuion">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+                                    <!-- combosActionBO -->
+        <action name="comboTablas" class="combosActionBO2" method="comboObtieneTablas">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        					
+        					<!-- Combo Tipo Fax AdministracionFax -->
+        <action name="comboObtenerTipoFax" class="combosActionBO" method="comboObtenerTipoFax">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+           <action name="comboUsuarioResponsableNuevo" class="combosActionBO" method="obtenerComboUsuariosResponsables">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="comboCargaArchivos" class="combosActionBO" method="obtenerComboCargaArchivos">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="comboCargaArchivos2" class="combosActionBO" method="obtenerComboCargaArchivos2">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+         <action name="obtenerTabla" class="combosActionBO" method="obtenerTablaClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+     	</action>
+        
+        
+        	<!-- Combo Obtener Usuarios -->
+
+
+    
+
+     <!--  <action name="obtenerUsuarios" class="combosAction" method="comboObtieneUsuario">
+           <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>  -->
+
+         <action name="obtenerComboModuloEnc" class="combosActionBO" method="obtenerComboModuloEnc">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+     	</action>
+
+         <action name="obtenerComboCampanhaEnc" class="combosActionBO" method="obtenerComboCampanhaEnc">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+     	</action>
+
+         <action name="obtenerComboTemaEnc" class="combosActionBO" method="obtenerComboTemaEnc">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+     	</action>
+
+         <action name="obtenerComboEncuestaEnc" class="combosActionBO" method="obtenerComboEncuestaEnc">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+     	</action>
+	
+	
+    </package>
+
+</struts>
+

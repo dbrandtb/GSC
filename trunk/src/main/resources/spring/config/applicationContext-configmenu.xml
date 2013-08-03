@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+    
+    <bean id="configMenuManager" class="mx.com.aon.portal.service.impl.configmenu.ConfigMenuManagerImpl" parent="abstractManagerBean" >
+		<property name="endpoints">
+			<map>
+				<entry key="OBTIENE_OPCIONES_CONFIGMENU">
+					<ref bean="OBTIENE_OPCIONES_CONFIGMENU" />
+				</entry>
+				<entry key="INSERTA_OPCION">
+					<ref bean="INSERTA_OPCION" />
+				</entry>
+				<entry key="EDITA_OPCION">
+                    <ref bean="EDITA_OPCION" />
+                </entry>   
+                <entry key="VALIDA_BORRADO">
+                    <ref bean="VALIDA_BORRADO"/>
+                </entry>            			
+                <entry key="BORRA_OPCION">
+                    <ref bean="BORRA_OPCION"/>
+                </entry>
+			</map>
+		</property>
+	</bean>
+</beans>

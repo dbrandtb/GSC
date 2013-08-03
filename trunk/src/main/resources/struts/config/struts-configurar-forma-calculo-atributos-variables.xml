@@ -1,0 +1,44 @@
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+	<include file="struts-default.xml" />
+
+	<package name="configurarFormaCalculoAtributosVariables" extends="json-default" namespace="/configurarFormaCalculoAtributosVariables">
+	
+		<action name="buscarConfigurarFormaCalculoAtributo" class="listaConfigurarFormaCalculoAtributosVariablesAction" method="cmdBuscarClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		
+		<action name="borrarConfigurarFormaCalculoAtributo" class="configurarFormaCalculoAtributosVariablesAction" method="cmdBorrarClick" >
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+		<action name="getConfigurarFormaCalculoAtributo" class="configurarFormaCalculoAtributosVariablesAction" method="cmdGetClick" >
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+		<action name="getCopiaConfigurarFormaCalculoAtributo" class="configurarFormaCalculoAtributosVariablesAction" method="cmdGetCopiaClick" >
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+ 		        
+        <action name="guardarConfigurarFormaCalculoAtributo" class="configurarFormaCalculoAtributosVariablesAction" method="cmdGuardarClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+         <action name="copiarConfigurarFormaCalculoAtributo" class="configurarFormaCalculoAtributosVariablesAction" method="cmdCopiarClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+        
+        <action name="exportarConfigurarFormaCalculoAtributo" class="listaConfigurarFormaCalculoAtributosVariablesAction" method="cmdExportarClick">
+			<result name="success" type="stream">
+				<param name="contentType">application/binary</param>
+				<param name="inputName">inputStream</param>
+				<param name="contentDisposition">filename="${filename}"</param>
+				<param name="bufferSize">4096</param>
+			</result>
+		</action>  	        
+        
+    </package>
+    
+
+</struts>

@@ -1,0 +1,17 @@
+<statements>
+	<statement type="stored" name="PKG_COTIZA.P_CLONAR_SITUACION" id="clonarSituacion">
+		<param eval="true" name="pv_cdelemen_i" type="VARCHAR"><![CDATA[$!params.get("CD_ELEMENT")]]></param>
+  		<param eval="true" name="pv_cdunieco_i" type="NUMERIC"><![CDATA[$!params.get("CD_UNIECO")]]></param>
+  		<param eval="true" name="pv_cdramo_i" type="NUMERIC"><![CDATA[$!params.get("CD_RAMO")]]></param>
+  		<param eval="true" name="pv_estado_i" type="VARCHAR"><![CDATA[$!params.get("ESTADO")]]></param>
+  		<param eval="true" name="pv_nmpoliza_i" type="NUMERIC"><![CDATA[$!params.get("NMPOLIZA")]]></param>
+  		<param eval="true" name="pv_nmsituac_i" type="NUMERIC"><![CDATA[$!params.get("NMSITUAC")]]></param>
+  		<param eval="true" name="pv_cdtipsit_i" type="VARCHAR"><![CDATA[$!params.get("CD_TIP_SIT")]]></param>
+  		<param eval="true" name="pv_fecha_i" type="VARCHAR"><![CDATA[$!params.get("FECHA")]]></param>
+  		<param eval="true" name="pv_cdusuario_i" type="VARCHAR"><![CDATA[$!params.get("CD_USUARIO")]]></param>
+  		<param eval="true" name="pv_cadena_i" type="VARCHAR"><![CDATA[$!params.get("CADENA_SOLICI_TARIFAS")]]></param>
+  		<outparam id="pv_record1_o" type="CURSOR"/>
+		<outparam id="pv_msg_id_o" type="NUMERIC"/>
+		<outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

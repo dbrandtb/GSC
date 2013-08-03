@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
+<statements>
+	<statement type="stored" name="PKG_COTIZA.P_BUSCA_COTIZACIONES" id="buscaCotizaciones">
+		<param eval="true" name="pv_cdusuario_i" type="VARCHAR"><![CDATA[$!params.get("CDUSUARIO")]]></param>
+  		<param eval="true" name="pv_aseguradora_i" type="NUMERIC"><![CDATA[$!params.get("ASEGURADORA")]]></param>
+  		<param eval="true" name="pv_producto_i" type="NUMERIC"><![CDATA[$!params.get("PRODUCTO")]]></param>
+  		<param eval="true" name="pv_nmpoliza_i" type="NUMERIC"><![CDATA[$!params.get("COTIZACION")]]></param>
+  		<outparam id="pv_record_o" type="CURSOR"/>
+		<outparam id="pv_msg_id_o" type="NUMERIC"/>
+		<outparam id="pv_title_o" type="VARCHAR"/>
+		
+	</statement>
+</statements>

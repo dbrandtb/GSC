@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+
+
+
+    <bean id="processResultDAO" class="mx.com.aon.portal.dao.ProcessResultDAO">
+       <property name="dataSource" ref="dataSource" />
+    </bean>
+
+	<bean id="menuPrincipalDAO" class="mx.com.aon.portal.dao.MenuPrincipalDAO">
+       <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <bean id="nativeJdbcExtractor"
+    class="org.springframework.jdbc.support.nativejdbc.SimpleNativeJdbcExtractor"
+    lazy-init="true"/>
+
+    <!-- LobHandler for Oracle JDBC drivers -->
+    <!-- (refers to the NativeJdbcExtractor above to get access to native OracleConnections) -->
+    <bean id="oracleLobHandler" class="org.springframework.jdbc.support.lob.OracleLobHandler" lazy-init="true">
+        <property name="nativeJdbcExtractor"><ref local="nativeJdbcExtractor"/></property>
+    </bean>
+
+	<!--bean id="mediaDAO" class="mx.com.aon.catbo.dao.MediaDAOImpl">
+       <property name="dataSource" ref="dataSource" />
+        <property name="lobHandler"><ref bean="oracleLobHandler"/></property>
+    </bean-->
+
+</beans>
+

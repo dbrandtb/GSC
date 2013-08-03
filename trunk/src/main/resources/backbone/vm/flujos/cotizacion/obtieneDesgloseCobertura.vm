@@ -1,0 +1,23 @@
+<statements>
+	<statement type="stored" name="PKG_COTIZA.P_DESGLOSE_COBERTURAS" id="obtenerDesgloseCoberturas">
+		
+  		
+		<param eval="true" name="PV_USUARIO_I" type="VARCHAR"><![CDATA[$!params.usuario]]></param>
+  		<param eval="true" name="PV_CDUNIECO_I" type="NUMERIC"><![CDATA[$!params.cdUnieco]]></param>
+  		<param eval="true" name="PV_ESTADO_I" type="VARCHAR"><![CDATA[$!params.estado]]></param>
+  		<param eval="true" name="PV_NMPOLIZA_I" type="NUMERIC"><![CDATA[$!params.nmPoliza]]></param>
+  		<param eval="true" name="PV_NMSITUAC_I" type="NUMERIC"><![CDATA[$!params.nmSituac]]></param>
+  		<param eval="true" name="PV_NMSUPLEM_I" type="NUMERIC"><![CDATA[$!params.nmSupleme]]></param>
+  		<param eval="true" name="PV_CDELEMEN_I" type="NUMERIC"><![CDATA[$!params.cdElemen]]></param>	
+  		<param eval="true" name="PV_CDRAMO_I" type="NUMERIC"><![CDATA[$!params.cdRamo]]></param>
+  		<param eval="true" name="PV_CDTIPSIT_I" type="VARCHAR"><![CDATA[$!params.cdTipsit]]></param>
+  		<param eval="true" name="PV_REGION_I" type="VARCHAR"><![CDATA[$!params.region]]></param>
+  		<param eval="true" name="PV_PAIS_I" type="VARCHAR"><![CDATA[$!params.pais]]></param>
+  		<param eval="true" name="PV_IDIOMA_I" type="VARCHAR"><![CDATA[$!params.idioma]]></param>
+  	
+  		<outparam id="PV_RECORD_O" type="CURSOR"/>
+		<outparam id="PV_MSG_ID_O" type="NUMERIC"/>
+		<outparam id="PV_TITLE_O" type="VARCHAR"/>
+		
+	</statement>
+</statements>	

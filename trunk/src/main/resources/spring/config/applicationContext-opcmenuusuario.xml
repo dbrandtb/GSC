@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <bean id="opcMenuUsuarioManager"
+        class="mx.com.aon.portal.service.impl.opcmenuusuario.OpcMenuUsuarioManagerImpl">
+        <property name="endpoints">
+            <map>
+                <entry key="OBTIENE_MENU">
+                    <ref bean="OBTIENE_MENU" />
+                </entry>
+                <entry key="OBTIENE_OPCIONES_MENU">
+                    <ref bean="OBTIENE_OPCIONES_MENU" />
+                </entry>
+                <entry key="OBTIENE_ROLES">
+                    <ref bean="OBTIENE_ROLES" />
+                </entry>
+                <entry key="OBTIENE_CLIENTES">
+                    <ref bean="OBTIENE_CLIENTES" />
+                </entry>
+                <entry key="OBTIENE_USUARIOS">
+                    <ref bean="OBTIENE_USUARIOS" />
+                </entry>
+                <entry key="OBTIENE_OPCIONES">
+                    <ref bean="OBTIENE_OPCIONES" />
+                </entry>
+                <entry key="OBTIENE_PRODUCTO_CLIENTES">
+                    <ref bean="OBTIENE_PRODUCTO_CLIENTES" />
+                </entry>
+                <entry key="OBTIENE_NIVEL_MENU">
+                    <ref bean="OBTIENE_NIVEL_MENU" />
+                </entry>
+                <entry key="OBTIENE_TIPOS">
+                    <ref bean="OBTIENE_TIPOS" />
+                </entry>
+                <entry key="OBTIENE_TIPOS_SITUACION">
+                    <ref bean="OBTIENE_TIPOS_SITUACION" />
+                </entry>
+                <entry key="GUARDA_CONFIG_OPCION_MENU">
+                    <ref bean="GUARDA_CONFIG_OPCION_MENU" />
+                </entry>
+                <entry key="COPIA_CONFIGURACION">
+                    <ref bean="COPIA_CONFIGURACION" />
+                </entry>
+                <entry key="BORRA_CONFIG_OPCION_MENU">
+                    <ref bean="BORRA_CONFIG_OPCION_MENU"/>
+                </entry>
+            </map>
+        </property>
+    </bean>
+</beans>

@@ -1,0 +1,19 @@
+<statements>
+	<statement type="stored" name="PKG_TABAPOYO.P_OBTENER_VALORATT_TODO" id="obtenerComboGenerico">
+        <param eval="true" name="pi_tabla" type="VARCHAR">$!params.get("TablaLogica")</param>
+        <param eval="true" name="pi_atrib_desc" type="VARCHAR">$!params.get("pi_atrib_desc")</param>
+        <param eval="true" name="pi_nom_clave01" type="VARCHAR">$!params.get("pi_nom_clave01")</param>
+        <param eval="true" name="pi_nom_clave02" type="VARCHAR">$!params.get("pi_nom_clave02")</param>
+        <param eval="true" name="pi_val_clave02" type="VARCHAR">$!params.get("pi_val_clave02")</param>
+        <param eval="true" name="pi_nom_clave03" type="VARCHAR">$!params.get("pi_nom_clave03")</param>
+        <param eval="true" name="pi_val_clave03" type="VARCHAR">$!params.get("pi_val_clave03")</param>
+        <param eval="true" name="pi_nom_clave04" type="VARCHAR">$!params.get("pi_nom_clave04")</param>
+        <param eval="true" name="pi_val_clave04" type="VARCHAR">$!params.get("pi_val_clave04")</param>
+        <param eval="true" name="pi_nom_clave05" type="VARCHAR">$!params.get("pi_nom_clave05")</param>
+        <param eval="true" name="pi_val_clave05" type="VARCHAR">$!params.get("pi_val_clave05")</param>
+
+		<outparam id="pv_refcursor_o" type="CURSOR"></outparam>
+		<outparam id="po_msg_id" type="NUMERIC"/>
+        <outparam id="po_title" type="VARCHAR"></outparam>
+	</statement>
+</statements>

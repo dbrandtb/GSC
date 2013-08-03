@@ -1,0 +1,7 @@
+<statements>
+	<statement type="stored" name="PKG_LISTAS.P_PRODUCTOS_N" id="productos">
+		<outparam id="po_resulset" type="CURSOR"/>
+		<outparam id="po_msg_id" type="NUMERIC"/>
+		<outparam id="po_title" type="VARCHAR"/>
+</statement>
+</statements>

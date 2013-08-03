@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_PERSONA.P_MOV_MPERRELA" id="guardaRelacionesPERSONAS">
+
+        <param eval="true" name="pv_CDPERSON_i" type="NUMERIC">$!params.get("cdPerson")</param>  	   
+        <param eval="true" name="pv_CDPERREL_i" type="NUMERIC">$!params.get("cdPerRel")</param>  	   
+        <param eval="true" name="pv_CDRELACI_i" type="NUMERIC">$!params.get("cdRelaci")</param>  	   
+        <param eval="true" name="pv_CDROL_i" type="NUMERIC">$!params.get("cdRol")</param>  	   
+        <param eval="true" name="pv_accion_i" type="VARCHAR">$!params.get("cdAccion")</param>  	   
+
+		<outparam id="pv_msg_id_o" type="NUMERIC"/>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+	</statement>
+</statements>

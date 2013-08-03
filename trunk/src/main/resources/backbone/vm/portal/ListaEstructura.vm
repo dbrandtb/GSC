@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
+<statements>
+	<statement type='select'>
+		SELECT 
+			'$params' AS PERFIL,
+			'/resources/static/info.html'     AS  TOP, 
+			'/portal/loadNav.action'		  AS  NAV,
+			'/resources/static/navTit.html'	  AS  LEFT_1,
+			'/test/testPaging.action'  		  AS  MAIN
+		FROM DUAL
+	</statement>
+</statements>

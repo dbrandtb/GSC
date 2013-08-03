@@ -1,0 +1,132 @@
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+
+<struts>
+	<include file="struts-default.xml" />
+
+	<package name="presiniestros" extends="json-default" namespace="/presiniestros">
+
+		<action name="consultaPolizasPresiniestros">
+           <result>/jsp/flujos/presiniestros/consultaPresiniestros.jsp</result>
+        </action>
+
+		<action name="exportarBusqueda" class="presiniestrosAction" method="exportarBusqueda">
+			<result name="success" type="stream">
+				<param name="contentType">${contentType}</param>
+				<param name="inputName">inputStream</param>
+				<param name="contentDisposition">filename="${filename}"</param>
+				<param name="bufferSize">4096</param>
+			</result>
+		</action>     
+
+        <!-- Consulta de Presiniestros -->
+
+       <action name="obtieneEmpresas" class="presiniestrosAction" method="obtieneEmpresas">
+			<result name="success" type="json"/>
+		</action>
+
+       <action name="obtieneAseguradoras" class="presiniestrosAction" method="obtieneAseguradoras">
+			<result name="success" type="json"/>
+		</action>
+		
+       <action name="obtieneRamos" class="presiniestrosAction" method="obtieneRamos">
+			<result name="success" type="json"/>
+		</action>
+
+       <action name="buscarPresiniestro" class="presiniestrosAction" method="buscarPresiniestro">
+			<result name="success" type="json"/>
+		</action>
+
+       <action name="agregarPresiniestro" class="presiniestrosAction" method="agregarPresiniestro">
+			<result name="success" type="json"/>
+			<result name="automoviles">/jsp/flujos/presiniestros/presiniestrosAutomoviles.jsp</result>
+			<result name="danos">/jsp/flujos/presiniestros/presiniestrosDanos.jsp</result>
+			<result name="beneficios">/jsp/flujos/presiniestros/presiniestrosBeneficios.jsp</result>
+			<result name="gastosfunerarios">/jsp/flujos/presiniestros/presiniestrosGastosFunerarios.jsp</result>
+		</action>
+
+       <action name="consultarPresiniestro" class="presiniestrosAction" method="consultarPresiniestro">
+			<result name="success" type="json"/>
+		</action>
+		
+		<action name="exportarConsultarPresiniestro" class="presiniestrosAction" method="exportarConsultarPresiniestro">
+			<result name="success" type="stream">
+				<param name="contentType">${contentType}</param>
+				<param name="inputName">inputStream</param>
+				<param name="contentDisposition">filename="${filename}"</param>
+				<param name="bufferSize">4096</param>
+			</result>
+		</action> 
+		
+       <action name="editarPresiniestro" class="presiniestrosAction" method="editarPresiniestro">
+			<result name="success" type="json"/>
+			<result name="automoviles">/jsp/flujos/presiniestros/presiniestrosAutomoviles.jsp</result>
+			<result name="danos">/jsp/flujos/presiniestros/presiniestrosDanos.jsp</result>
+			<result name="beneficios">/jsp/flujos/presiniestros/presiniestrosBeneficios.jsp</result>
+			<result name="gastosfunerarios">/jsp/flujos/presiniestros/presiniestrosGastosFunerarios.jsp</result>
+		</action>
+		
+		<!-- Presiniestros - Automoviles -->
+
+       <action name="guardarPresiniestroAutomovil" class="presiniestrosAction" method="guardarPresiniestroAutomovil">
+			<result name="success" type="json"/>
+		</action>		
+		
+		<!-- Presiniestros - Daños -->
+		
+		<action name="guardarPresiniestroDano" class="presiniestrosAction" method="guardarPresiniestroDano">
+			<result name="success" type="json"/>
+		</action>
+		
+		
+		<!-- Presiniestros - Beneficios -->
+		
+		
+		<action name="capturaPresiniestroBeneficios">
+           <result>/jsp/flujos/presiniestros/presiniestrosBeneficios.jsp</result>
+        </action>
+        
+        
+        <action name="obtieneDocumentos" class="presiniestrosAction" method="obtieneDocumentosPresiniestro">
+			<result name="success" type="json"/>      
+		</action>
+		
+        <action name="agregarDocumento" class="presiniestrosAction" method="agregarDocumento">
+			<result name="success" type="json"/>      
+		</action>
+		
+        <action name="editarDocumento" class="presiniestrosAction" method="editaDocumento">
+			<result name="success" type="json"/>      
+		</action>
+		
+		<action name="eliminaDocumento" class="presiniestrosAction" method="eliminaDocumento">
+			<result name="success" type="json"/>      
+		</action>
+		
+		<action name="obtieneComboTipTramit" class="presiniestrosAction" method="obtieneComboTipTramit">
+			<result name="success" type="json"/>      
+		</action>
+		
+		<action name="obtieneComboPadecimientos" class="presiniestrosAction" method="obtieneComboPadecimientos">
+			<result name="success" type="json"/>      
+		</action>
+		
+		<action name="guardaPresiniestroBeneficios" class="presiniestrosAction" method="guardaPresiniestroBeneficios">
+			<result name="success" type="json"/>      
+		</action>
+		
+		<action name="guardaPresiniestroVidaYGastosFunerarios" class="presiniestrosAction" method="guardaPresiniestroGastosFunerarios">
+			<result name="success" type="json"/>      
+		</action>
+		
+		<action name="obtieneDescObs" class="presiniestrosAction" method="obtieneDescObs">
+			<result name="success" type="json"/>      
+		</action>
+		
+		<!-- Presiniestros - Gastos -->
+
+		<!-- 			 -->
+
+	</package>
+
+</struts>

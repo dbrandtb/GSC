@@ -1,0 +1,10 @@
+<statements>
+	<statement type="stored" name="PKG_LISTAS.P_ASEGURADORA" id="obtieneTiposCoberturas">
+		<param eval="true" name="pv_cdelemento_i" type="NUMERIC">$!params.get("cdElemento")</param>
+		<param eval="true" name="pv_producto_i" type="NUMERIC">$!params.get("cdRamo")</param>
+		
+		<outparam id="po_resulset" type="CURSOR"></outparam>
+		<outparam id="po_msg_id" type="INTEGER"/>
+        <outparam id="po_title" type="VARCHAR"></outparam>
+	</statement>
+</statements>

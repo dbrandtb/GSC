@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
+<statements>
+	<statement type="stored" name="PKG_TABAPOYO.P_GUARDA_TABLA" id="pGuardaTabla">
+		<param eval="true" name="PI_CDTABLA" type="VARCHAR">$!params.nombre</param>		
+		<inoutparam eval="true" name="PI_NMTABLA" id="PI_NMTABLA" type="NUMERIC">$!params.numeroTabla</inoutparam>
+		<param eval="true" name="PI_DSTABLA" type="VARCHAR">$!params.descripcion</param>
+		<param eval="true" name="PI_OTTIPOAC" type="VARCHAR">$!params.ottipoac</param>
+		<param eval="true" name="PI_OTTIPOTB" type="VARCHAR">$!params.ottipotb</param>
+		<param eval="true" name="PI_SWMODIFI" type="VARCHAR">$!params.modificaValores</param>
+		<param eval="true" name="PI_SWERROR" type="VARCHAR">$!params.enviarTablaErrores</param>
+		<param eval="true" name="PI_CLNATURA" type="NUMERIC">$!params.clnatura</param>
+		<param eval="true" name="PI_CDTABLJ1" type="VARCHAR">$!params.cdCatalogo1</param>
+		<param eval="true" name="PI_CDTABLJ2" type="VARCHAR">$!params.cdCatalogo2</param>
+		<param eval="true" name="PI_CDTABLJ3" type="VARCHAR">$!params.claveDependencia</param>
+							
+		<outparam id="PO_MSG_ID" type="NUMERIC"/>
+		<outparam id="PV_TITLE_O" type="VARCHAR"/>		
+</statement>
+</statements>

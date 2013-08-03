@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+
+
+
+	<!--
+	Action asociado por inyeccion al archivo de conf. de struts-mantto para el servicio de consulta
+	para los datos de la tabla paginada de Mantenimiento de Planes 
+	-->
+    <bean id="manttoAction" class="mx.com.aon.portal.web.plan.ManttoAction" scope="prototype">
+    	<property name="manttoManager" ref="manttoManager"/>
+    </bean>
+    
+    <!--
+    Action asociado por inyeccion al archivo de conf de struts-mantto para el servicio de agregar, 
+    cargar y editar un plan de la tabla de Mantenimeinto de Planes. 
+     -->    
+   <bean id="agregarPlanAction" class="mx.com.aon.portal.web.plan.AgregarPlanAction" scope="prototype">
+    	<property name="manttoManager" ref="manttoManager"/>
+   </bean>
+   <!--
+    Action asociado por inyeccion al archivo de conf de struts-mantto para el servicio de exportacion de la
+    tabla paginada de Mantenimeinto de Planes. 
+     -->  
+   <bean id="exportPlanAction" class="mx.com.aon.portal.web.plan.ExportPlanAction" scope="prototype">
+        <property name="exportMediator" ref="exportMediator"/>
+        <property name="exportModel" ref="exportModelPlan"/>
+   </bean>
+   
+   <!--
+    Action asociado por inyeccion al archivo de conf de struts-mantto para el servicio de exportacion de la
+    tabla paginada de Mantenimeinto de Planes. 
+     -->
+   
+   <bean id="exportModelPlan" class="mx.com.aon.portal.service.impl.plan.ExportPlanManagerImpl" scope="prototype">
+		<property name="endpoints">
+			<map>
+				<entry key="EXPORT_PLANES">
+					<ref bean="EXPORT_PLANES" />
+				</entry>
+			</map>
+		</property>
+	</bean> 
+    
+</beans>

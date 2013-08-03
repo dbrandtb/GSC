@@ -1,0 +1,10 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_PERSONAS.P_VALIDAR_CDIDEPER" id="valCodIdPersona">
+		<param eval="true" name="pi_CDIDEPER" type="VARCHAR">$!params.get("pi_CDIDEPER")</param>
+		<param eval="true" name="pi_CDTIPIDE" type="VARCHAR">$!params.get("pi_CDTIPIDE")</param>
+		<outparam id="po_STRIDPER" type="VARCHAR"/>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

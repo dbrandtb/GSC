@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
+<statements>
+    
+    <statement type='stored' name="PKG_COTIZA.P_OBTIENE_DESGLOSE_CONCEPTO" id="pBuscarDesglosePolizasReg">
+     
+        <param eval="true" name="p_cliente" type="NUMERIC">$!params.get("cdPerson")</param>
+        <param eval="true" name="p_concepto" type="VARCHAR">$!params.get("cdTipCon")</param>
+        <param eval="true" name="p_producto" type="NUMERIC">$!params.get("cdRamo")</param>
+     
+        <outparam id="p_record" type="CURSOR"/>
+        
+    </statement>
+    
+</statements>

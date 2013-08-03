@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+	
+	 
+  
+	<bean id="IncisoManager" class="mx.com.aon.catweb.configuracion.producto.service.impl.IncisoManagerImpl" parent="abstractManagerJdbcTemplateInvoke">
+ 		<property name="endpoints">
+			<map>    
+				<!--  Datos de incisos -->
+            	<entry key="OBTIENE_INCISOS_DEL_PRODUCTO">
+            		<ref bean="OBTIENE_INCISOS_DEL_PRODUCTO"/>            
+            	</entry>
+        		<entry key="OBTIENE_INCISOS">
+            		<ref bean="OBTIENE_INCISOS"/>            
+            	</entry>
+            	<entry key="AGREGAR_INCISO">
+            		<ref bean="AGREGAR_INCISO"/>            
+            	</entry>
+            	<entry key="ASOCIAR_INCISO">
+            		<ref bean="ASOCIAR_INCISO"/>            
+            	</entry>
+            	<entry key="ELIMINAR_INCISO">
+            		<ref bean="ELIMINAR_INCISO"/>            
+            	</entry>
+        	</map>
+    	</property>
+    	<property name="abstractDAO">
+    		<ref bean="incisoDao" />
+    	</property>
+	</bean>
+		
+</beans>

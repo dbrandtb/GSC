@@ -1,0 +1,14 @@
+<statements>
+	<statement type="stored" name="PKG_ENDOSOS.P_CALC_VALOR_ENDOSO" id="calculaValorEndoso">
+		<param eval="true" name="PV_CDUNIECO_I" type="NUMERIC"><![CDATA[$!params.cdunieco]]></param>
+		<param eval="true" name="PV_CDRAMO_I"   type="NUMERIC"><![CDATA[$!params.cdramo]]></param>
+		<param eval="true" name="PV_ESTADO_I"   type="VARCHAR"><![CDATA[$!params.estado]]></param>
+		<param eval="true" name="PV_NMPOLIZA_I" type="NUMERIC"><![CDATA[$!params.nmpoliza]]></param>
+		<param eval="true" name="pv_nmsituac_i" type="NUMERIC"><![CDATA[$!params.nmsituac]]></param>
+		<param eval="true" name="PV_NMSUPLEM_I" type="VARCHAR"><![CDATA[$!params.nmsuplem]]></param>
+		<param eval="true" name="PV_FEINIVAL_I" type="VARCHAR"><![CDATA[$!params.feinival]]></param>
+		<param eval="true" name="pv_cdelemen_i" type="VARCHAR"><![CDATA[$!params.cdelemen]]></param>
+		<outparam id="pv_msg_id_o"		type="VARCHAR"/>
+		<outparam id="pv_title_o"		type="VARCHAR"/>
+	</statement>
+</statements>

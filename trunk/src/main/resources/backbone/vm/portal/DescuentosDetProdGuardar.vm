@@ -1,0 +1,12 @@
+<statements>
+	<statement type="stored" name="PKG_DSCTO.P_GUARDA_PRODUCTO_DETALLE" id="guardaProdDetalle">
+        <param eval="true" name="P_CVE_DESCTO" type="NUMERIC">$!params.get("cddscto")</param>
+        <param eval="true" name="P_CVE_DESCTOD" type="NUMERIC">$!params.get("cddsctod")</param>
+        <param eval="true" name="P_CVE_ASEGURADORA" type="NUMERIC">$!params.get("cdunieco")</param>
+        <param eval="true" name="P_CVE_RAMO" type="NUMERIC">$!params.get("cdramo")</param>
+        <param eval="true" name="P_CVE_TIPSIT" type="VARCHAR">$!params.get("cdtipsit")</param>
+        <param eval="true" name="P_CVE_PLAN" type="VARCHAR">$!params.get("cdplan")</param>
+        <outparam id="pv_msg_id_o" type="NUMERIC"></outparam>
+        <outparam id="pv_title_o" type="VARCHAR"/>		
+	</statement>
+</statements>

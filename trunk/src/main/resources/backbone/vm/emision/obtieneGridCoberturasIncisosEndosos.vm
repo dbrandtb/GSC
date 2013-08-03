@@ -1,0 +1,19 @@
+<statements>
+	<statement type="stored" name="PKG_COTIZA.P_GET_COBERTURA_CAPITAL" id="endososObtieneGridCoberturasIncisos">
+		<param eval="true" name="pv_usuario_i"  type="VARCHAR">$!params.usuario</param>
+		<param eval="true" name="pv_cdunieco_i" type="NUMERIC">$!params.cdunieco</param>
+		<param eval="true" name="pv_estado_i"   type="VARCHAR">$!params.estado</param>
+		<param eval="true" name="pv_nmpoliza_i" type="NUMERIC">$!params.nmpoliza</param>
+		<param eval="true" name="pv_nmsituac_i" type="NUMERIC">$!params.nmsituac</param>
+		<param eval="true" name="pv_nmsuplem_i" type="VARCHAR">$!params.nmsuplem</param>
+		<param eval="true" name="pv_cdplan_i"   type="VARCHAR">$!params.cdplan</param>
+		<param eval="true" name="pv_cdramo_i"   type="NUMERIC">$!params.cdramo</param>
+		<param eval="true" name="pv_cdcia_i"    type="NUMERIC">$!params.cdcia</param>
+		<param eval="true" name="pv_region_i"   type="VARCHAR">$!params.region</param>
+		<param eval="true" name="pv_pais_i"     type="VARCHAR">$!params.pais</param>
+		<param eval="true" name="pv_idioma_i"   type="VARCHAR">$!params.idioma</param>
+		<outparam id="pv_record_o" type="CURSOR"/>
+		<outparam id="pv_msg_id_o"   type="VARCHAR"/>
+		<outparam id="pv_title_o"    type="VARCHAR"/>
+	</statement>
+</statements>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<statements>
+	<statement type="stored" name="PKG_COTIZA.P_OBTIENE_TIPO_OBJ_ATRIBUTOS" id="atributos-variables">		  		
+  		<param eval="true" name="pi_CDUNIECO" type="VARCHAR"><![CDATA[$!params.get("cdUnieco")]]></param>
+  		<param eval="true" name="pi_CDRAMO" type="VARCHAR"><![CDATA[$!params.get("cdRamo")]]></param>
+  		<param eval="true" name="pi_ESTADO" type="VARCHAR"><![CDATA[$!params.get("estado")]]></param>
+  		<param eval="true" name="pi_NMPOLIZA" type="VARCHAR"><![CDATA[$!params.get("nmPoliza")]]></param>
+  		<param eval="true" name="pi_NMSITUAC" type="VARCHAR"><![CDATA[$!params.get("nmSituac")]]></param>
+  		<param eval="true" name="pi_NMOBJETO" type="VARCHAR"><![CDATA[$!params.get("nmObjeto")]]></param>
+  		<param eval="true" name="pi_CDTIPOBJ" type="VARCHAR"><![CDATA[$!params.get("clave")]]></param>
+  		<outparam id="PV_REGISTRO_O" type="CURSOR"/>
+		<outparam id="PV_MSG_ID_O" type="NUMERIC"/>
+		<outparam id="PV_TITLE_O" type="VARCHAR"/>		
+	</statement>
+</statements>

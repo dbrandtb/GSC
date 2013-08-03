@@ -1,0 +1,767 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="CART0001"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Landscape"
+		 pageWidth="842"
+		 pageHeight="595"
+		 columnWidth="782"
+		 columnSpacing="0"
+		 leftMargin="30"
+		 rightMargin="30"
+		 topMargin="20"
+		 bottomMargin="20"
+		 whenNoDataType="NoDataSection"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+
+	<parameter name="OTVALOR04" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[new String("01-01-2007")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="OTVALOR05" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[new String("31-12-2008")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="OTVALOR06" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="OTVALOR07" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[new String("PRUEBA")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="OTVALOR08" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="cdusuario" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[new String("PRUEBA")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="OTVALOR01" isForPrompting="false" class="java.lang.Integer">
+		<defaultValueExpression ><![CDATA[new Integer(30)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="OTVALOR02" isForPrompting="false" class="java.lang.Integer">
+		<defaultValueExpression ><![CDATA[new Integer(500)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="wCDREPORTE" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[new String("1")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="wCDUSUARIO" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[new String("PRUEBA")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DSREPORTE" isForPrompting="false" class="java.lang.String"/>
+	<queryString><![CDATA[select to_char(to_date(reg1.fedesde,'dd/mm/rrrr'),'Month-RRRR','NLS_DATE_LANGUAGE=SPANISH') Mes,
+       to_number(to_char(to_date(reg1.fedesde,'dd/mm/rrrr'),'RRRRMM'))                                        MesNumero,
+       ---
+       --- Altas de Polizas (Cuando la Poliza-Certificado se Emitio o se Puso en V).
+       ---
+       'ALTA'                                                             Concepto,
+      (select count(*) 
+       from   mpolisit a,
+              mpolagen1 b 
+       where  b.cduniage = $P{OTVALOR01}   and
+              b.cdramo   = $P{OTVALOR02}  and
+              b.estado   = 'M'             and
+              b.nmsuplem = (select max(c.nmsuplem)
+                            from   mpolagen1 c
+                            where  c.cdunieco = b.cdunieco  and
+                                   c.cdramo   = b.cdramo    and
+                                   c.estado   = b.estado    and
+                                   c.nmpoliza = b.nmpoliza) and 
+              a.cdunieco = b.cdunieco      and 
+              a.cdramo   = b.cdramo        and
+              a.estado   = 'M'             and
+              a.status   = 'V'             and --- Inciso Vigente     
+              a.nmpoliza = b.nmpoliza      and                 
+              trunc(a.fefecsit) between to_date(reg1.fedesde,'dd-mm-rrrr') and 
+                                        to_date(reg1.fehasta,'dd-mm-rrrr') and
+              a.nmsuplem = (select max(d.nmsuplem)
+                            from   mpolisit d       --- Antes MPOLIPER
+                            where  d.nmsituac  = a.nmsituac and
+                                   d.nmsuplem  = a.nmsuplem and 
+                                   d.status    = a.status   and
+                                   d.estado    = a.estado   and
+                                   d.cdunieco  = a.cdunieco and
+                                   d.cdramo    = a.cdramo   and
+                                   d.nmpoliza  = a.nmpoliza)) Cantidad,
+       ---
+       --- Recibos que no esten (2-Anulado), (4-Devuelto), (5-Impagado)
+       ---
+      (select sum(h.ptimport) 
+       from   mpolagen1 g,
+              mrecibo  h 
+       where  h.cdunieco = g.cdunieco   and
+              h.cdramo   = g.cdramo     and
+              h.estado   = g.estado     and
+              h.nmpoliza = g.nmpoliza   and
+              h.cdestado not in (2,4,5) and
+              trunc(h.feinicio) between to_date(reg1.fedesde,'dd-mm-rrrr') and 
+                                        to_date(reg1.fehasta,'dd-mm-rrrr') and
+              ---                       
+              g.nmsuplem = (select max(h.nmsuplem)
+                            from   mpolagen1 h
+                            where  h.cdunieco = g.cdunieco  and
+                                   h.cdramo   = g.cdramo    and
+                                   h.estado   = g.estado    and
+                                   h.nmpoliza = g.nmpoliza) and
+              g.cduniage = $P{OTVALOR01}    and
+              g.cdramo   = $P{OTVALOR02}   and
+              g.estado   = 'M')                    Prima
+       ---
+from  (select x.fedesde,
+              x.fehasta 
+       from   mreporteaux x
+       where  x.cdreporte = $P{wCDREPORTE}    and
+              x.cdusuari  =$P{wCDUSUARIO}) reg1
+       ---
+       union
+       ---
+select to_char(to_date(reg2.fedesde,'dd/mm/rrrr'),'Month-RRRR','NLS_DATE_LANGUAGE=SPANISH') Mes,
+       to_number(to_char(to_date(reg2.fedesde,'dd/mm/rrrr'),'RRRRMM'))                      MesNumero,
+       'BAJA'                                                                  Concepto,
+       ---
+       --- Polizas de Baja (Cuando la Poliza-Certificado se Anulo o se Puso en M).
+       ---
+      (select count(*)
+       from   mpolizas i,
+              mpolagen1 j   
+       where  ---
+              trunc(i.feanulac) between to_date(reg2.fedesde,'dd-mm-rrrr') and 
+                                        to_date(reg2.fehasta,'dd-mm-rrrr') and
+              i.nmsuplem = (select max(k.nmsuplem)
+                            from   mpolizas k  --- Antes MPOLIPER
+                            where  k.estado    = i.estado     and
+                                   k.cdunieco  = i.cdunieco   and
+                                   k.cdramo    = i.cdramo     and
+                                   k.nmpoliza  = i.nmpoliza)  and
+              i.swestado = 2               and --- Anulada / Baja
+              i.nmpoliza = j.nmpoliza      and          
+              i.estado   = j.estado        and              
+              i.cdramo   = j.cdramo        and
+              i.cdunieco = j.cdunieco      and
+              ---
+              j.nmsuplem = (select max(j1.nmsuplem)
+                            from   mpolagen1 j1
+                            where  j1.cdunieco = j.cdunieco  and
+                                   j1.cdramo   = j.cdramo    and
+                                   j1.estado   = j.estado    and
+                                   j1.nmpoliza = j.nmpoliza) and 
+              j.estado   = 'M'             and 
+              j.cduniage = $P{OTVALOR01}   and
+              j.cdramo   = $P{OTVALOR02})                  Cantidad,
+       ---
+       --- Polizas que esten Canceladas 
+       ---
+      (select sum(k.ptimport)
+       from   mpolizas i,
+              mpolagen1 j,
+              mrecibo  k   
+       where  --- 
+              k.cdunieco = i.cdunieco and       
+              k.cdramo   = i.cdramo   and       
+              k.estado   = i.estado   and
+              k.nmpoliza = i.nmpoliza and   
+              k.cdestado in (2,4,5)   and
+              ---
+              trunc(i.feanulac) between to_date(reg2.fedesde,'dd-mm-rrrr') and 
+                                        to_date(reg2.fehasta,'dd-mm-rrrr') and
+              i.nmsuplem = (select max(k1.nmsuplem)
+                            from   mpolizas k1  --- Antes MPOLIPER
+                            where  k1.estado    = i.estado     and
+                                   k1.cdunieco  = i.cdunieco   and
+                                   k1.cdramo    = i.cdramo     and
+                                   k1.nmpoliza  = i.nmpoliza)  and
+              i.swestado = 2               and --- Anulada / Baja
+              i.nmpoliza = j.nmpoliza      and          
+              i.estado   = j.estado        and              
+              i.cdramo   = j.cdramo        and
+              i.cdunieco = j.cdunieco      and
+              ---
+              j.nmsuplem = (select max(j1.nmsuplem)
+                            from   mpolagen1 j1
+                            where  j1.cdunieco = j.cdunieco  and
+                                   j1.cdramo   = j.cdramo    and
+                                   j1.estado   = j.estado    and
+                                   j1.nmpoliza = j.nmpoliza) and 
+              j.estado   = 'M'             and 
+              j.cduniage = $P{OTVALOR01}   and
+              j.cdramo   = $P{OTVALOR02})                       Prima
+       --------               
+from  (select x.fedesde,
+              x.fehasta 
+       from   mreporteaux x
+       where  x.cdreporte = $P{wCDREPORTE}    and
+              x.cdusuari  = $P{wCDUSUARIO}) reg2              
+       ---
+       union
+       ---
+select to_char(to_date(reg3.fedesde,'dd/mm/rrrr'),'Month-RRRR','NLS_DATE_LANGUAGE=SPANISH') Mes,
+       to_number(to_char(to_date(reg3.fedesde,'dd/mm/rrrr'),'RRRRMM'))                      MesNumero,
+       --------       
+       'VIGENTES'                                                              Concepto,
+       ---
+      (select count(*) 
+       from   mpolisit p,
+              mpolagen1 q
+       where  --- 
+              q.cduniage = $P{OTVALOR01}   and
+              q.cdramo   = $P{OTVALOR02}  and
+              q.estado   = 'M'             and
+              q.nmsuplem = (select max(q1.nmsuplem)
+                            from   mpolagen1 q1
+                            where  q1.cdunieco = q.cdunieco  and
+                                   q1.cdramo   = q.cdramo    and
+                                   q1.estado   = q.estado    and
+                                   q1.nmpoliza = q.nmpoliza) and 
+              ---                           
+              p.cdunieco = q.cdunieco      and 
+              p.cdramo   = q.cdramo        and
+              p.estado   = 'M'             and
+              p.status   = 'V'             and --- Inciso Vigente        
+              p.nmpoliza = q.nmpoliza      and                        
+              trunc(p.fefecsit) between to_date(reg3.fedesde,'dd-mm-rrrr') and 
+                                        to_date(reg3.fehasta,'dd-mm-rrrr') and              
+              p.nmsuplem = (select max(p1.nmsuplem)
+                            from   mpolisit p1 --- Antes MPOLIPER
+                            where  p1.nmsituac  = p.nmsituac  and
+                                   p1.nmsuplem  = p.nmsuplem  and 
+                                   p1.status    = p.status    and
+                                   p1.estado    = p.estado    and
+                                   p1.cdunieco  = p.cdunieco  and
+                                   p1.cdramo    = p.cdramo    and
+                                   p1.nmpoliza  = p.nmpoliza))     Cantidad,
+       ---
+       0                                                           Prima
+from  (select x.fedesde,
+              x.fehasta 
+       from   mreporteaux x
+       where  x.cdreporte = $P{wCDREPORTE}    and
+              x.cdusuari  = $P{wCDUSUARIO}) reg3
+order by
+       MesNumero Asc]]></queryString>
+
+	<field name="MES" class="java.lang.String"/>
+	<field name="MESNUMERO" class="java.math.BigDecimal"/>
+	<field name="CONCEPTO" class="java.lang.String"/>
+	<field name="CANTIDAD" class="java.math.BigDecimal"/>
+	<field name="PRIMA" class="java.math.BigDecimal"/>
+
+	<variable name="VALIDAR" class="java.lang.Boolean" resetType="Report" calculation="Nothing">
+	</variable>
+		<background>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</background>
+		<title>
+			<band height="89"  isSplitAllowed="true" >
+				<staticText>
+					<reportElement
+						x="6"
+						y="3"
+						width="106"
+						height="18"
+						key="staticText-5"/>
+					<box></box>
+					<textElement>
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Aon Risk Services]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="6"
+						y="16"
+						width="44"
+						height="16"
+						key="staticText-6"/>
+					<box></box>
+					<textElement>
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Usuario:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="115"
+						y="16"
+						width="100"
+						height="18"
+						key="textField-1"/>
+					<box></box>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{cdusuario}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="115"
+						y="27"
+						width="411"
+						height="16"
+						key="textField-6"/>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA[$P{OTVALOR01}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="115"
+						y="39"
+						width="411"
+						height="16"
+						key="textField-7"/>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA[$P{OTVALOR02}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="6"
+						y="39"
+						width="56"
+						height="16"
+						key="staticText-7"/>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Producto:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="6"
+						y="26"
+						width="68"
+						height="17"
+						key="staticText-8"/>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Aseguradora:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="115"
+						y="62"
+						width="94"
+						height="16"
+						key="textField-9"/>
+					<box></box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{OTVALOR05}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="6"
+						y="3"
+						width="106"
+						height="18"
+						key="staticText-14"/>
+					<box></box>
+					<textElement>
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Aon Risk Services]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="6"
+						y="16"
+						width="44"
+						height="16"
+						key="staticText-15"/>
+					<box></box>
+					<textElement>
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Usuario:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="6"
+						y="39"
+						width="56"
+						height="16"
+						key="staticText-16"/>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Producto:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="6"
+						y="62"
+						width="56"
+						height="16"
+						key="staticText-19"/>
+					<box></box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Fecha Fin]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="115"
+						y="51"
+						width="94"
+						height="16"
+						key="textField-20"/>
+					<box></box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{OTVALOR04}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="6"
+						y="51"
+						width="79"
+						height="16"
+						key="staticText-20"/>
+					<box></box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Fecha de Inicio]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="true" evaluationTime="Report" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="704"
+						y="1"
+						width="76"
+						height="18"
+						key="textField-21"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="K:mm a" isBlankWhenNull="true" evaluationTime="Report" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="704"
+						y="13"
+						width="76"
+						height="18"
+						key="textField-22"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="704"
+						y="23"
+						width="66"
+						height="18"
+						key="textField-23"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Pagina " + $V{PAGE_NUMBER} + " de "]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Report" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="729"
+						y="23"
+						width="51"
+						height="13"
+						key="textField-24"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["" + $V{PAGE_NUMBER} + ""]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="647"
+						y="33"
+						width="42"
+						height="18"
+						key="staticText-22"/>
+					<box></box>
+					<textElement verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Reporte:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="295"
+						y="72"
+						width="211"
+						height="17"
+						key="textField-25"/>
+					<box></box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{DSREPORTE}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="689"
+						y="34"
+						width="93"
+						height="17"
+						key="textField-26"/>
+					<box></box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{wCDREPORTE}]]></textFieldExpression>
+				</textField>
+			</band>
+		</title>
+		<pageHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageFooter>
+		<summary>
+			<band height="280"  isSplitAllowed="true" >
+				<crosstab >
+					<reportElement
+						x="6"
+						y="0"
+						width="717"
+						height="261"
+						forecolor="#CCCCCC"
+						backcolor="#CCCCCC"
+						key="crosstab-1"
+						isPrintRepeatedValues="false"/>
+					<crosstabHeaderCell>						<cellContents backcolor="#660000" mode="Opaque">
+					<box>					<pen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<topPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="1.0" lineColor="#FFFFFF"/>
+</box>
+				<staticText>
+					<reportElement
+						x="13"
+						y="5"
+						width="75"
+						height="15"
+						forecolor="#FFFFFF"
+						backcolor="#FFFFFF"
+						key="staticText-22"/>
+					<box></box>
+					<textElement textAlignment="Center">
+						<font/>
+					</textElement>
+				<text><![CDATA[Concepto]]></text>
+				</staticText>
+						</cellContents>
+					</crosstabHeaderCell>					<rowGroup name="CONCEPTO" width="100">
+						<bucket>
+							<bucketExpression class="java.lang.String"><![CDATA[$F{CONCEPTO}]]></bucketExpression>
+						</bucket>
+						<crosstabRowHeader>
+						<cellContents backcolor="#E3E2E2" mode="Opaque">
+					<box>					<pen lineWidth="1.25" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<topPen lineWidth="1.25" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="1.25" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="1.25" lineStyle="Solid" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="1.25" lineStyle="Solid" lineColor="#FFFFFF"/>
+</box>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="100"
+						height="30"
+						key="textField"/>
+					<box></box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{CONCEPTO}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="36"
+						y="31"
+						width="59"
+						height="18"
+						key="staticText-23">
+							<printWhenExpression><![CDATA[$V{VALIDAR}]]></printWhenExpression>
+						</reportElement>
+					<box></box>
+					<textElement>
+						<font/>
+					</textElement>
+				<text><![CDATA[Aseguradora]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="36"
+						y="50"
+						width="59"
+						height="15"
+						key="staticText-23"
+						isRemoveLineWhenBlank="true">
+							<printWhenExpression><![CDATA[$V{VALIDAR}]]></printWhenExpression>
+						</reportElement>
+					<box></box>
+					<textElement>
+						<font/>
+					</textElement>
+				<text><![CDATA[Unidades]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="18"
+						y="66"
+						width="77"
+						height="15"
+						key="staticText-23">
+							<printWhenExpression><![CDATA[$V{VALIDAR}]]></printWhenExpression>
+						</reportElement>
+					<box></box>
+					<textElement>
+						<font/>
+					</textElement>
+				<text><![CDATA[Primas Netas]]></text>
+				</staticText>
+						</cellContents>
+						</crosstabRowHeader>
+					</rowGroup>
+					<columnGroup name="MES" height="26" headerPosition="Center">
+						<bucket>
+							<bucketExpression class="java.lang.String"><![CDATA[$F{MES}]]></bucketExpression>
+						</bucket>
+						<crosstabColumnHeader>
+						<cellContents backcolor="#660000" mode="Opaque">
+					<box>					<pen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<topPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="1.0" lineColor="#FFFFFF"/>
+</box>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="50"
+						height="25"
+						forecolor="#FFFFFF"
+						backcolor="#000000"
+						key="textField"/>
+					<box></box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{MES}]]></textFieldExpression>
+				</textField>
+						</cellContents>
+						</crosstabColumnHeader>
+					</columnGroup>
+
+					<measure name="PRIMA_Nothing" class="java.math.BigDecimal">
+						<measureExpression><![CDATA[$F{PRIMA}]]></measureExpression>
+					</measure>
+					<measure name="CANTIDAD_Nothing" class="java.math.BigDecimal">
+						<measureExpression><![CDATA[$F{CANTIDAD}]]></measureExpression>
+					</measure>
+					<measure name="VALIDAR" class="java.lang.Boolean">
+						<measureExpression><![CDATA[/*$V{VALIDAR}.setValue(false);
+if (($F{CONCEPTO}.equals("ALTAS")) || ($F{CONCEPTO}.equals("BAJAS")))
+	 $V{VALIDAR}.setValue(true);*/
+$V{VALIDAR}]]></measureExpression>
+					</measure>
+					<crosstabCell width="50" height="85">
+						<cellContents backcolor="#E3E2E2" mode="Opaque">
+					<box>					<pen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<topPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="1.0" lineColor="#FFFFFF"/>
+</box>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="1"
+						y="66"
+						width="46"
+						height="15"
+						key="textField"/>
+					<box></box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="false"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{PRIMA_Nothing}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="2"
+						y="32"
+						width="46"
+						height="15"
+						key="textField-27"/>
+					<box></box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="false"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{CANTIDAD_Nothing}]]></textFieldExpression>
+				</textField>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="0" height="85" columnTotalGroup="MES">
+						<cellContents backcolor="#E3E2E2" mode="Opaque">
+					<box>					<pen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<topPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="1.0" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="1.0" lineColor="#FFFFFF"/>
+</box>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="50" height="0" rowTotalGroup="CONCEPTO">
+						<cellContents mode="Transparent">
+					<box></box>
+						</cellContents>
+					</crosstabCell>
+					<crosstabCell width="0" height="0" rowTotalGroup="CONCEPTO" columnTotalGroup="MES">
+						<cellContents mode="Transparent">
+					<box></box>
+						</cellContents>
+					</crosstabCell>
+					<whenNoDataCell>						<cellContents mode="Transparent">
+					<box></box>
+						</cellContents>
+					</whenNoDataCell>					</crosstab>
+			</band>
+		</summary>
+</jasperReport>

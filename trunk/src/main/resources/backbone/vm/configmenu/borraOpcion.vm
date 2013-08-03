@@ -1,0 +1,9 @@
+<statements>
+	<statement type="stored" name="PKG_MENU.P_BORRA_OPCION" id="pBorraOpcion">		
+		<param eval="true" name="PV_CDTITULO_I" type="NUMERIC">$params</param>
+		<outparam id="pv_msg_id_o" type="NUMERIC"/>
+		<outparam id="pv_title_o" type="VARCHAR"/>
+		<outparam id="pv_text_o" type="VARCHAR"/>
+</statement>
+</statements>
+

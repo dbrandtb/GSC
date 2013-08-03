@@ -1,0 +1,19 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_TARIFICACION.P_PREVIO_ALEAVGAR" id="pprevioALEAVGAR">
+		<param eval="true" name="pi_CDUNIECO" type="NUMERIC">$!params.get("pi_CDUNIECO")</param>
+		<param eval="true" name="pi_CDRAMO" type="NUMERIC">$!params.get("pi_CDRAMO")</param>
+		<param eval="true" name="pi_ESTADO" type="VARCHAR">$!params.get("pi_ESTADO")</param>
+		<param eval="true" name="pi_NMPOLIZA" type="NUMERIC">$!params.get("pi_NMPOLIZA")</param>
+		<param eval="true" name="pi_NMSUPLEM" type="VARCHAR">$!params.get("pi_NMSUPLEM")</param>
+		<param eval="true" name="pi_NMPOLNEW" type="NUMERIC">$!params.get("pi_NMPOLNEW")</param>
+		<param eval="true" name="pi_NMSUPNEW" type="VARCHAR">$!params.get("pi_NMSUPNEW")</param>
+		<param eval="true" name="pi_ESTADNEW" type="VARCHAR">$!params.get("pi_ESTADNEW")</param>
+		<param eval="true" name="pi_FEEFECTO" type="DATE">$!params.get("pi_FEEFECTO")</param>
+		<param eval="true" name="pi_FEFINAL" type="DATE">$!params.get("pi_FEFINAL")</param>
+		<param eval="true" name="pi_TIPROCES" type="VARCHAR">$!params.get("pi_TIPROCES")</param>
+		<outparam id="po_ALEAVGAR" type="VARCHAR"/>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

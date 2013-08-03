@@ -1,0 +1,19 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_TARIFICACION.P_PREVIO_BBVLCOTI" id="pprevioBBVLCOTI">
+		<param eval="true" name="pi_CDUNIECO" type="NUMERIC">$!params.get("pi_CDUNIECO")</param>
+		<param eval="true" name="pi_CDRAMO" type="NUMERIC">$!params.get("pi_CDRAMO")</param>
+		<param eval="true" name="pi_ESTADO" type="VARCHAR">$!params.get("pi_ESTADO")</param>
+		<param eval="true" name="pi_NMPOLIZA" type="NUMERIC">$!params.get("pi_NMPOLIZA")</param>
+		<param eval="true" name="pi_NMSUPLEM" type="VARCHAR">$!params.get("pi_NMSUPLEM")</param>
+		<param eval="true" name="pi_CDPERPAG" type="NUMERIC">$!params.get("pi_CDPERPAG")</param>
+		<param eval="true" name="pi_FEEFECTO" type="DATE">$!params.get("pi_FEEFECTO")</param>
+		<param eval="true" name="pi_CDMONEDA" type="VARCHAR">$!params.get("pi_CDMONEDA")</param>
+		<outparam id="po_IDPROCES" type="VARCHAR"/>
+		<outparam id="po_NMMAXRND" type="NUMERIC"/>
+		<outparam id="po_CTRECIBO" type="VARCHAR"/>
+		<outparam id="po_BBVLCOTI" type="VARCHAR"/>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

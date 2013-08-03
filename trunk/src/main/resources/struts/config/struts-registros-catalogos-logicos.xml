@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+    <include file="struts-default.xml" />                           
+
+    <package name="catalogosLogicos" extends="json-default" namespace="/catalogosLogicos">
+		
+		<action name="buscarRegistros" class="listaRegistrosCatalogosLogicosAction" method="cmdBuscarClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		
+		<action name="exportarRegistros" class="listaRegistrosCatalogosLogicosAction" method="cmdExportClick">
+			<result name="success" type="stream">
+				<param name="contentType">${contentType}</param>
+				<param name="inputName">inputStream</param>
+				<param name="contentDisposition">filename="${filename}"</param>
+				<param name="bufferSize">4096</param>
+			</result>
+		</action>  
+		
+		<action name="obtenerRegistro" class="registrosCatalogosLogicosAction" method="obtenerRegistroCatalogoLogico">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+
+		<action name="borrarRegistro" class="registrosCatalogosLogicosAction" method="cmdBorrarRegistroClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		
+		<action name="guardarRegistro" class="registrosCatalogosLogicosAction" method="cmdGuardarRegistroClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		
+    	
+    </package>
+
+</struts>
+

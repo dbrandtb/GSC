@@ -1,0 +1,11 @@
+<statements>
+	<statement type="stored" name="PKG_LISTAS.P_PRODUCTOS_C" id="listaProductos">
+        <param eval="true" name="pv_cdunieco_i" type="NUMERIC">$!params.get("pv_cdunieco_i")</param>
+        <param eval="true" name="pv_cdtipram_i" type="NUMERIC">$!params.get("pv_cdtipram_i")</param>
+        <param eval="true" name="pv_cdsubram_i" type="NUMERIC">$!params.get("pv_cdsubram_i")</param>
+        
+		<outparam id="pv_registro_o" type="CURSOR"></outparam>
+		<outparam id="pv_msg_id_o" type="INTEGER"></outparam>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+	</statement>
+</statements>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_CATBO.P_BORRA_MMATRIZ" id="borraMatriz">
+       <param eval="true" name="pv_cdmatriz_i" type="NUMERIC"><![CDATA[$!params.get("pv_cdmatriz_i")]]></param>
+ 	  
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>
+ 

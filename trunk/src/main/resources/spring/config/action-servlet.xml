@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <bean id="loginAction" class="mx.com.aon.portal.web.LoginAction" scope="prototype">
+        <property name="loginManager" ref="loginManager"/>
+    </bean>
+
+    <bean id="loadNavAction" class="mx.com.aon.portal.web.LoadNavAction" scope="prototype">
+        <property name="navigationManager" ref="navigationManager"/>
+    </bean>
+    
+    <bean id="paginaPrincipalAction" class="mx.com.aon.portal.web.PaginaPrincipalAction" scope="prototype">
+    	<property name="paginaPrincipalManager" ref="paginaPrincipalManager"/>
+    </bean>
+    
+    <bean id="autenticacionAction" class="mx.com.aon.portal.web.AutenticacionAction" scope="prototype">
+    	<!--property name="paginaPrincipalManager" ref="paginaPrincipalManager"/-->
+    </bean>
+    
+    <bean id="menuAction" class="mx.com.aon.portal.web.MenuAction" scope="prototype">
+    	<!-- property name="menuPrincipalManager" ref="menuPrincipalManager"></property -->
+    	<property name="menuPrincipalManagerJdbcTemplate" ref="menuPrincipalManagerJdbcTemplate"></property>
+    </bean>
+     <bean id="loadClientesRolesAction" class="mx.com.aon.portal.web.LoadClientesRolesAction" scope="prototype">
+         <property name="navigationManager" ref="navigationManager"></property>
+		 <property name="principalManagerJdbcTemplate" ref="principalManagerJdbcTemplate" />
+         <property name="usuarioManager" ref="usuarioManager"></property>
+    </bean>
+	
+	
+	<bean id="PadreAction" class="mx.com.aon.catweb.configuracion.producto.web.Padre" abstract="true">
+		<property name="tablasManager" ref="AplicacionManager" />
+	</bean>
+    
+	<bean id="PadreExpresionesAction" class="mx.com.aon.catweb.configuracion.producto.web.ExpresionesPadre" abstract="true">
+        <property name="expresionesManager" ref="ExpresionesManager"/>
+    </bean>
+    
+    <bean id="ArbolProductosAction" class="mx.com.aon.catweb.configuracion.producto.general.ArbolProductosAction" scope="prototype" parent="PadreAction">
+	    <property name="treeManager" ref="TreeManager" />
+    </bean>
+	
+</beans>

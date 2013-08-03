@@ -1,0 +1,10 @@
+<statements>
+	<statement type="stored" name="PKG_ORDENT.P_VALIDA_BLOQUE" id="borrarSeccion">
+		
+	   <param eval="true" name="pv_cdseccion_i" type="NUMERIC">$!params.get("pv_cdseccion_i")</param>
+	   <param eval="true" name="pv_cdbloque_i" type="VARCHAR">$!params.get("pv_cdbloque_i")</param>
+
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

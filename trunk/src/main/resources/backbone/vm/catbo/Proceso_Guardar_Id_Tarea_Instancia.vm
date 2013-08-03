@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_CATBO_PROCESO.P_GUARDA_IDS" id="GuaradrIdTareaInstancia">
+       <param eval="true" name="pv_nmcaso_i" type="VARCHAR"><![CDATA[$!params.get("pv_nmcaso_i")]]></param>
+        <param eval="true" name="pv_task_id_i" type="VARCHAR"><![CDATA[$!params.get("pv_task_id_i")]]></param>
+         <param eval="true" name="pv_instance_id_i" type="VARCHAR"><![CDATA[$!params.get("pv_instance_id_i")]]></param>
+        	   
+ 	   
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>
+ 

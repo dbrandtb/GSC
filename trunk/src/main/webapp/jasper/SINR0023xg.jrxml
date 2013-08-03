@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="Untitled_report_2"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Landscape"
+		 pageWidth="792"
+		 pageHeight="612"
+		 columnWidth="732"
+		 columnSpacing="0"
+		 leftMargin="30"
+		 rightMargin="30"
+		 topMargin="20"
+		 bottomMargin="20"
+		 whenNoDataType="AllSectionsNoDetail"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+
+	<parameter name="CDUSUARIO" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="OTVALOR01" isForPrompting="false" class="java.lang.Integer">
+		<defaultValueExpression ><![CDATA[new Integer(30)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="OTVALOR02" isForPrompting="false" class="java.lang.Integer">
+		<defaultValueExpression ><![CDATA[new Integer(115) ]]></defaultValueExpression>
+	</parameter>
+	<parameter name="OTVALOR03" isForPrompting="false" class="java.lang.Integer">
+		<defaultValueExpression ><![CDATA[new Integer(11504) ]]></defaultValueExpression>
+	</parameter>
+	<parameter name="OTVALOR04" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[new String ("01-01-2007")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="OTVALOR05" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[new String ("31-12-2008")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="wCDREPORTE" isForPrompting="false" class="java.lang.Integer">
+		<defaultValueExpression ><![CDATA[new Integer(19) ]]></defaultValueExpression>
+	</parameter>
+	<parameter name="OTVALOR06" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[new String("PRUEBA")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="OTVALOR07" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[new String("PRUEBA")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="OTVALOR08" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA[new String("PRUEBA")]]></defaultValueExpression>
+	</parameter>
+	<queryString><![CDATA[select  r.dsreporte   ,
+            r.nmreporte ,  
+            a.cdplanti    ,
+           a.cdelemento  ,
+           a.cdunieco    ,
+           a.cdramo      ,
+           c.DSUNIECO                                                    Aseguradora ,
+           b.DSRAMO                                                       Producto    ,
+           a.OTVALOR25                                                 Causa       ,
+           count(a.OTVALOR01)                                      Cantidad_Siniestros, 
+           sum(to_number(a.OTVALOR37))                     Importe_Siniestro                
+from   TVALOPLA  a,
+          TRAMOS    b,
+          TUNIDECO  c,
+           TPLANREP p,
+           MREPORTE r   
+where  r.cdreporte  = p.cdreporte  and
+            a.cdunieco   = c.cdunieco  and
+            b.cdramo     = a.cdramo    and
+           a.cdplanti   = p.cdplanti           and
+           p.cdunieco = a.cdunieco and
+           p.cdelemento = a.cdelemento and
+           p.cdramo      = a.cdramo  and
+           p.cdreporte    = 23  and
+           a.cdelemento = 6117       and
+           a.cdunieco   = 30         and
+           a.cdramo     = 115        and
+           to_date(a.otvalor08,'DD-MM-RRRR','NLS_DATE_LANGUAGE=AMERICAN') between 
+           to_date('01-01-2007','DD-MM-RRRR','NLS_DATE_LANGUAGE=AMERICAN') and
+           to_date('31-12-2008','DD-MM-RRRR','NLS_DATE_LANGUAGE=AMERICAN')              
+group by
+           r.dsreporte   ,
+            r.nmreporte ,  
+           c.DSUNIECO   ,
+           b.DSRAMO     ,
+           a.cdplanti   ,
+           a.cdelemento ,
+           a.cdunieco   ,
+           a.cdramo     ,
+           a.OTVALOR25]]></queryString>
+
+	<field name="DSREPORTE" class="java.lang.String"/>
+	<field name="NMREPORTE" class="java.lang.String"/>
+	<field name="CDPLANTI" class="java.math.BigDecimal"/>
+	<field name="CDELEMENTO" class="java.math.BigDecimal"/>
+	<field name="CDUNIECO" class="java.math.BigDecimal"/>
+	<field name="CDRAMO" class="java.math.BigDecimal"/>
+	<field name="ASEGURADORA" class="java.lang.String"/>
+	<field name="PRODUCTO" class="java.lang.String"/>
+	<field name="CAUSA" class="java.lang.String"/>
+	<field name="CANTIDAD_SINIESTROS" class="java.math.BigDecimal"/>
+	<field name="IMPORTE_SINIESTRO" class="java.math.BigDecimal"/>
+
+		<background>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</background>
+		<title>
+			<band height="138"  isSplitAllowed="true" >
+				<staticText>
+					<reportElement
+						x="0"
+						y="2"
+						width="106"
+						height="18"
+						key="staticText-1"/>
+					<box></box>
+					<textElement>
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Aon Risk Services]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="0"
+						y="15"
+						width="44"
+						height="16"
+						key="staticText-2"/>
+					<box></box>
+					<textElement>
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Usuario:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="116"
+						y="15"
+						width="100"
+						height="18"
+						key="textField-1"/>
+					<box></box>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{CDUSUARIO}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="270"
+						y="100"
+						width="228"
+						height="33"
+						key="textField"/>
+					<box></box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{DSREPORTE}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="116"
+						y="29"
+						width="381"
+						height="16"
+						key="textField-7"/>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{OTVALOR06}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="116"
+						y="43"
+						width="381"
+						height="16"
+						key="textField-8"/>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{OTVALOR07}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="0"
+						y="43"
+						width="56"
+						height="16"
+						key="staticText-6"/>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Producto:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="0"
+						y="29"
+						width="70"
+						height="17"
+						key="staticText-7"/>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Aseguradora:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="116"
+						y="56"
+						width="381"
+						height="16"
+						key="textField-9"/>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{OTVALOR08}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="0"
+						y="56"
+						width="64"
+						height="16"
+						key="staticText-8"/>
+					<box></box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Cuenta]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="116"
+						y="79"
+						width="91"
+						height="16"
+						key="textField-10"/>
+					<box></box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{OTVALOR05}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="0"
+						y="79"
+						width="79"
+						height="16"
+						key="staticText-9"/>
+					<box></box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Fecha Fin]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="116"
+						y="67"
+						width="91"
+						height="16"
+						key="textField-11"/>
+					<box></box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{OTVALOR04}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="0"
+						y="67"
+						width="79"
+						height="16"
+						key="staticText-10"/>
+					<box></box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Fecha de Inicio]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Report" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="654"
+						y="2"
+						width="76"
+						height="18"
+						key="textField-13"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="K:mm a" isBlankWhenNull="false" evaluationTime="Report" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="654"
+						y="14"
+						width="76"
+						height="18"
+						key="textField-14"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="647"
+						y="23"
+						width="66"
+						height="18"
+						key="textField-15"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Pagina " + $V{PAGE_NUMBER} + " de "]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Report" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="704"
+						y="24"
+						width="26"
+						height="18"
+						key="textField-16"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["" + $V{PAGE_NUMBER} + ""]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="632"
+						y="38"
+						width="42"
+						height="14"
+						key="staticText-11"/>
+					<box></box>
+					<textElement verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<text><![CDATA[Reporte:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="498"
+						y="7"
+						width="73"
+						height="18"
+						forecolor="#FFFFFF"
+						backcolor="#FFFFFF"
+						key="staticText-12"/>
+					<box></box>
+					<textElement markup="html">
+						<font isPdfEmbedded ="true"/>
+					</textElement>
+				<text><![CDATA[V.-14-4-2009]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="654"
+						y="39"
+						width="75"
+						height="14"
+						key="staticText-13"/>
+					<box></box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<text><![CDATA[SINR0023]]></text>
+				</staticText>
+			</band>
+		</title>
+		<pageHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageFooter>
+		<summary>
+			<band height="344"  isSplitAllowed="true" >
+				<lineChart>
+					<chart  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="0"
+						width="719"
+						height="337"
+						key="element-2"/>
+					<box></box>
+						<chartLegend textColor="#000000" backgroundColor="#FFFFFF" >
+					</chartLegend>
+					</chart>
+					<categoryDataset>
+						<dataset >
+						</dataset>
+						<categorySeries>
+							<seriesExpression><![CDATA[$F{CANTIDAD_SINIESTROS}]]></seriesExpression>
+							<categoryExpression><![CDATA[$F{CAUSA}]]></categoryExpression>
+							<valueExpression><![CDATA[$F{CANTIDAD_SINIESTROS}]]></valueExpression>
+				<itemHyperlink >
+				</itemHyperlink>
+						</categorySeries>
+						<categorySeries>
+							<seriesExpression><![CDATA[$F{CANTIDAD_SINIESTROS}]]></seriesExpression>
+							<categoryExpression><![CDATA[$F{CAUSA}]]></categoryExpression>
+							<valueExpression><![CDATA[$F{IMPORTE_SINIESTRO}]]></valueExpression>
+				<itemHyperlink >
+				</itemHyperlink>
+						</categorySeries>
+					</categoryDataset>
+					<linePlot >
+						<plot />
+						<categoryAxisFormat>
+							<axisFormat >
+							</axisFormat>
+						</categoryAxisFormat>
+						<valueAxisFormat>
+							<axisFormat >
+							</axisFormat>
+						</valueAxisFormat>
+					</linePlot>
+				</lineChart>
+			</band>
+		</summary>
+</jasperReport>

@@ -1,0 +1,13 @@
+<statements>
+	<statement type="stored" name="PKG_CANCELA.P_ELIMINA_REQUISITO_REHABILITA" id="borrarRequisitosRehabilitacion">
+        <param eval="true" name="pv_cdrequisito_i" type="NUMERIC">$!params.get("cdRequisito")</param>
+        <param eval="true" name="pv_cdunieco_i" type="NUMERIC">$!params.get("cdUnieco")</param>
+        <param eval="true" name="pv_cdramo_i" type="NUMERIC">$!params.get("cdRamo")</param>
+        <param eval="true" name="pv_cdelemento_i" type="NUMERIC">$!params.get("cdElemento")</param>
+        <param eval="true" name="pv_cddocxcta_i" type="NUMERIC">$!params.get("cdDocXcta")</param>
+
+        
+        <outparam id="pv_msg_id_o" type="NUMERIC"/>
+        <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

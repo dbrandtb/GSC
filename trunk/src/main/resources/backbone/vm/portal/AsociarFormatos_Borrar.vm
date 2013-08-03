@@ -1,0 +1,8 @@
+<statements>
+	<statement type="stored" name="PKG_ORDENT.P_BORRA_FORMATOSXCTA" id="borraAsociaMotivos">
+        <param eval="true" name="pv_cdasocia_i" type="NUMERIC">$!params.get("cdAsocia")</param>
+        
+        <outparam id="pv_msg_id_o" type="INTEGER"/>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam> 
+	</statement>
+</statements>

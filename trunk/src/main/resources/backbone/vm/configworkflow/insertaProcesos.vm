@@ -1,0 +1,14 @@
+<statements>
+	<statement type="stored" name="PKG_WORKFLOW.P_GUARDAR_PROCESOXCTA" id="insertaProcesos">
+		<param eval="true" name="PV_CDPROCXCTA_I" type="NUMERIC">$!params.procxcta</param>
+		<param eval="true" name="P_CDPROCESO" type="NUMERIC">$!params.proceso</param>
+		<param eval="true" name="P_CDUNIECO"  type="NUMERIC">$!params.aseguradora</param>
+		<param eval="true" name="P_CDRAMO"    type="NUMERIC">$!params.producto</param>
+		<param eval="true" name="P_CDPERSON"  type="NUMERIC">$!params.persona</param>
+		<param eval="true" name="P_CDESTADO"  type="NUMERIC">$!params.estado</param>
+		<param eval="true" name="P_DSPROCESO" type="VARCHAR">$!params.nombre</param>		
+		<param eval="true" name="PV_CDELEMENTO_I" type="NUMERIC">$!params.cliente</param>
+		<outparam id="PV_MSG_ID_O" type="NUMERIC"/>
+		<outparam id="PV_TITLE_O" type="VARCHAR"/>
+	</statement>
+</statements>

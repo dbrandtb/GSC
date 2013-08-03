@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<bean id="atributosVariables-endpoint" abstract="true"
+		parent="parent-endpoint">
+		<property name="templateModule" value="atributosVariables" />
+		<property name="xslModule" value="atributosVariables" />
+	</bean>
+
+<!-- Bean declarado para obtener incisos totales existentes en BD-->
+	
+	<bean id="OBTIENE_CLAVE_ATRIBUTO_PRODUCTO" parent="atributosVariables-endpoint">
+		<property name="templateName" value="obtieneClaveAtributoProducto.vm" />
+		<property name="xslName" value="obtieneClaveAtributoVariable.xsl" />
+		<property name="unmarshallClass" value="java.lang.Integer" />
+	</bean>
+	
+	<bean id="OBTIENE_CLAVE_ATRIBUTO_SITUACION" parent="atributosVariables-endpoint">
+		<property name="templateName" value="obtieneClaveAtributoInciso.vm" />
+		<property name="xslName" value="obtieneClaveAtributoVariable.xsl" />
+		<property name="unmarshallClass" value="java.lang.Integer" />
+	</bean>
+	
+	<bean id="OBTIENE_CLAVE_ATRIBUTO_GARANTIA" parent="atributosVariables-endpoint">
+		<property name="templateName" value="obtieneClaveAtributoCobertura.vm" />
+		<property name="xslName" value="obtieneClaveAtributoVariable.xsl" />
+		<property name="unmarshallClass" value="java.lang.Integer" />
+	</bean>
+	
+	<!-- Bean declarado para agregar un incisos a la BD *NOTA: retorna un valor number
+	 de la bd para el MSG_ID pero en este momento no se esta manipulando por eso
+	 transformResult = false y unmarshallResult = false -->	
+	
+	<bean id="GUARDA_ATRIBUTOS_VARIABLES" parent="atributosVariables-endpoint">
+		<property name="templateName" value="guardaAtributosVariables.vm" />
+		<property name="xslName" value="obtieneUnEntero.xsl" />
+		<property name="unmarshallClass" value="java.lang.Integer" />
+	</bean>
+	
+	<bean id="GUARDA_ATRIBUTOS_VARIABLES_INCISO" parent="atributosVariables-endpoint">
+		<property name="templateName" value="guardaAtributosVariablesSituacion.vm" />
+		<property name="xslModule" value="catalogs" />
+		<property name="xslName" value="obtieneMensajes.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.model.MensajesVO" />
+	</bean>
+	<bean id="GUARDA_ATRIBUTOS_VARIABLES_GARANTIA" parent="atributosVariables-endpoint">
+		<property name="templateName" value="guardaAtributosVariablesGarantia.vm" />
+		<property name="xslModule" value="catalogs" />
+		<property name="xslName" value="obtieneMensajes.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.model.MensajesVO" />
+	</bean>
+	<bean id="ELIMINA_ATRIBUTOS_VARIABLES_GARANTIA" parent="atributosVariables-endpoint">
+		<property name="templateName" value="eliminaAtributosVariablesGarantia.vm" />
+
+		<property name="xslModule" value="catalogs" />
+		<property name="xslName" value="obtieneMensajes.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.model.MensajesVO" />
+	</bean>
+	<bean id="ELIMINA_ATRIBUTOS_VARIABLES_INCISO" parent="atributosVariables-endpoint">
+		<property name="templateName" value="eliminaAtributosVariablesInciso.vm" />
+
+		<property name="xslModule" value="catalogs" />
+		<property name="xslName" value="obtieneMensajes.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.model.MensajesVO" />
+	</bean>
+	<bean id="ELIMINA_ATRIBUTOS_VARIABLES_PRODUCTO" parent="atributosVariables-endpoint">
+		<property name="templateName" value="eliminaAtributosVariablesProducto.vm" />
+
+		<property name="xslModule" value="catalogs" />
+		<property name="xslName" value="obtieneMensajes.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.model.MensajesVO" />
+	</bean>
+	
+<!-- Bean declarado para obtener catalogos existentes en BD de lista de valores-->
+
+	<bean id="OBTIENE_CATALOGO" parent="atributosVariables-endpoint">
+		<property name="templateName" value="obtieneCatalogosListaDeValores.vm" />
+		<property name="xslName" value="obtieneCatalogosListaDeValores.xsl" />
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>
+	
+	<bean id="GUARDA_LISTA_DE_VALORES" parent="atributosVariables-endpoint">
+		<property name="templateName" value="guardaListaDeValores.vm" />
+		<property name="xslName" value="guardaListaValores.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.catweb.configuracion.producto.model.ListaDeValoresVO" />
+	</bean>	
+	
+	<bean id="GUARDA_CLAVE_LISTA_DE_VALORES" parent="atributosVariables-endpoint">
+		<property name="templateName" value="guardaClaveListaDeValores.vm" />
+		<property name="transformResult" value="false" />
+        <property name="unmarshallResult" value="false" />
+	</bean>	
+	
+	<bean id="GUARDA_DESCRIPCION_LISTA_DE_VALORES" parent="atributosVariables-endpoint">
+		<property name="templateName" value="guardaDescripcionListaDeValores.vm" />
+		<property name="transformResult" value="false" />
+        <property name="unmarshallResult" value="false" />
+	</bean>
+	
+	
+	<bean id="GUARDA_LISTA_CARGA_MANUAL" parent="atributosVariables-endpoint">
+		<property name="templateName" value="guardaListaCargaManual.vm" />
+		<property name="xslModule" value="tablaCincoClaves" />
+		<property name="xslName" value="obtieneResultado.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+	<bean id="ELIMINA_LISTA_CARGA_MANUAL" parent="atributosVariables-endpoint">
+		<property name="templateName" value="eliminaListaCargaManual.vm" />
+		<property name="transformResult" value="false" />
+		<property name="unmarshallResult" value="false" />
+	</bean>
+	
+	<bean id="OBTIENE_LISTA_CARGA_MANUAL" parent="atributosVariables-endpoint">
+		<property name="templateName" value="obtieneListaDeCargaManual.vm" />
+		<property name="xslName" value="llaveValor.xsl" />
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>
+
+<!-- carga de 1 y 5 claves -->
+	<bean id="OBTIENE_TABLA_1Y5_CLAVES" parent="atributosVariables-endpoint">
+		<property name="templateName" value="obtieneTabla1y5Claves.vm" />
+		<property name="xslName" value="obtieneTabla1y5Claves.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.catweb.configuracion.producto.model.ListaDeValoresVO" />
+	</bean>
+	
+	<bean id="OBTIENE_CLAVES_1Y5" parent="atributosVariables-endpoint">
+		<property name="templateName" value="obtieneClaves1y5.vm" />
+		<property name="xslName" value="obtieneClaves1y5.xsl" />
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>
+	
+	<bean id="OBTIENE_DESCRIPCIONES_1Y5" parent="atributosVariables-endpoint">
+		<property name="templateName" value="obtieneDescripciones1y5.vm" />
+		<property name="xslName" value="obtieneDescripciones1y5.xsl" />
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>
+	
+<!-- Bean declarado para obtener atributos variables de los tres niveles (producto,riesgo,cobertura)-->
+
+	<bean id="OBTIENE_ATRIBUTO_VARIABLE_PRODUCTO" parent="atributosVariables-endpoint">
+		<property name="templateName" value="obtieneAtributoVariableProducto.vm" />
+		<property name="xslName" value="obtieneAtributoVariable.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.catweb.configuracion.producto.atributosVariables.model.AtributosVariablesVO" />
+	</bean>	
+	
+	<bean id="OBTIENE_ATRIBUTO_VARIABLE_RIESGO" parent="atributosVariables-endpoint">
+		<property name="templateName" value="obtieneAtributoVariableRiesgo.vm" />
+		<property name="xslName" value="obtieneAtributoVariable.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.catweb.configuracion.producto.atributosVariables.model.AtributosVariablesVO" />
+	</bean>	
+	
+	<bean id="OBTIENE_ATRIBUTO_VARIABLE_COBERTURA" parent="atributosVariables-endpoint">
+		<property name="templateName" value="obtieneAtributoVariableCobertura.vm" />
+		<property name="xslName" value="obtieneAtributoVariable.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.catweb.configuracion.producto.atributosVariables.model.AtributosVariablesVO" />
+	</bean>	
+
+	<bean id="OBTIENE_PADRES" parent="atributosVariables-endpoint">
+		<property name="templateName" value="atribVarObjPadre.vm" />
+		<property name="xslName" value="llaveValor.xsl" />
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>	
+	
+	<bean id="OBTIENE_PADRES_OBJETO" parent="atributosVariables-endpoint">
+		<property name="templateName" value="atribVarObjPadres.vm" />
+		<property name="xslName" value="llaveValor.xsl" />
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>	
+	
+	<!-- <bean id="OBTIENE_PADRES_POLIZA" parent="atributosVariables-endpoint">
+		<property name="templateName" value="atribVarPolizaPadre.vm" />
+		<property name="xslName" value="llaveValor.xsl" />
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>	
+
+	<bean id="OBTIENE_PADRES_GARANTIA" parent="atributosVariables-endpoint">
+		<property name="templateName" value="atribVarGarPadre.vm" />
+		<property name="xslName" value="llaveValor.xsl" />
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>	
+	
+	<bean id="OBTIENE_PADRES_ROL" parent="atributosVariables-endpoint">
+		<property name="templateName" value="atribVarRolPadre.vm" />
+		<property name="xslName" value="llaveValor.xsl" />
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>	-->
+	
+<!-- Beans declarados para la edicion de la lista de valores -->
+
+	<bean id="OBTIENE_CABECERA_LISTA_DE_VALORES" parent="atributosVariables-endpoint">
+		<property name="templateName" value="obtieneCabeceraListaDeValores.vm" />
+		<property name="xslName" value="obtieneTabla1y5Claves.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.catweb.configuracion.producto.model.ListaDeValoresVO" />
+	</bean>
+	
+	<bean id="OBTIENE_CLAVE_LISTA_DE_VALORES" parent="atributosVariables-endpoint">
+		<property name="templateName" value="obtieneClaveListaDeValores.vm" />
+		<property name="xslName" value="obtieneTabla1y5Claves.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.catweb.configuracion.producto.model.ListaDeValoresVO" />
+	</bean>
+	
+	<bean id="OBTIENE_DESCRIPCION_LISTA_DE_VALORES" parent="atributosVariables-endpoint">
+		<property name="templateName" value="obtieneDescripcionListaDeValores.vm" />
+		<property name="xslName" value="obtieneTabla1y5Claves.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.catweb.configuracion.producto.model.ListaDeValoresVO" />
+	</bean>
+	
+	<bean id="OBTIENE_LISTA_CLAVES_DEPENDENCIAS" parent="atributosVariables-endpoint">
+		<property name="templateName" value="obtieneListaClavesDependencia.vm" />
+		<property name="xslName" value="llaveValor.xsl" />
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>
+	
+	
+	<bean id="ELIMINAR_TABLA_CLAVE" parent="atributosVariables-endpoint">
+		<property name="templateName" value="eliminarTablaClave.vm" />
+		<property name="transformResult" value="false" />
+        <property name="unmarshallResult" value="false" />
+	</bean>
+	
+	<bean id="VALIDA_HIJOS_ATRIB_VAR_PRODUCTO" parent="atributosVariables-endpoint">
+		<property name="templateName" value="validaHijosAtribVarProducto.vm" />
+		<property name="xslName" value="validaHijosAtributosVariables.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.model.MensajesVO" />
+	</bean>
+	
+	<bean id="VALIDA_HIJOS_ATRIB_VAR_INCISO_RIESGO" parent="atributosVariables-endpoint">
+		<property name="templateName" value="validaHijosAtribVarRiesgo.vm" />
+		<property name="xslName" value="validaHijosAtributosVariables.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.model.MensajesVO" />
+	</bean>
+	
+	<bean id="VALIDA_HIJOS_ATRIB_VAR_COBERTURA" parent="atributosVariables-endpoint">
+		<property name="templateName" value="validaHijosAtribVarCobertura.vm" />
+		<property name="xslName" value="validaHijosAtributosVariables.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.model.MensajesVO" />
+	</bean>
+	
+</beans>

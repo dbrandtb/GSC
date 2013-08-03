@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+    <include file="struts-default.xml" />                           
+
+    <package name="administracionTipoArchivo" extends="json-default" namespace="/administracionTipoArchivo">
+		
+		<action name="obtenerTipoArchivo" class="listaAdministracionTipoArchivoAction" method="cmdBuscarClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		
+		
+	<action name="exportarTipoArchivo" class="listaAdministracionTipoArchivoAction" method="cmdExportarClick">
+				<result name="success" type="stream">
+			    <param name="contentType">${contentType}</param>
+				<param name="inputName">inputStream</param>
+				<param name="contentDisposition">filename="${filename}"</param>
+				<param name="bufferSize">4096</param>
+			</result>
+	</action>   
+		
+		
+		
+   	    <action name="borrarTipoArchivo" class="listaAdministracionTipoArchivoAction" method="cmdBorrarClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action> 
+		
+
+       <action name="iradministraciontiposfax" class="listaAdministracionTipoArchivoAction" method="cmdAdministracionTipoFax">
+      <result type="chain" name="administracionTiposFax">administracionTiposFax</result>
+     </action>
+
+
+		<action name="guardarTipoArchivo" class="listaAdministracionTipoArchivoAction" method="cmdGuardarClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action> 
+		
+		<action name="irAdministracionArchivos" class="listaAdministracionTipoArchivoAction" method="cmdIrAdministracArchivoClick">
+            <result type="chain" name="irPantallaAdministracionTipoArchivo">administracionTipoArchivo</result>
+         </action>
+
+		<!--action name="backToSomewhere" class="" method="backToSomewhereClick">
+            <result type="chain" name=""></result>
+		</action-->
+    	
+    </package>
+
+</struts>

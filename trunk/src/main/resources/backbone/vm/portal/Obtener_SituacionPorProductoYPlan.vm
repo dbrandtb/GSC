@@ -1,0 +1,10 @@
+<statements>
+	<statement type="stored" name="PKG_LISTAS.P_TIPO_SITUACION" id="pObtieneTipoSituacionPorProductoYPlan">
+       <param eval="true" name="pv_cdramo_i" type="NUMERIC">$!params.get("cdRamo")</param>
+       <param eval="true" name="pv_cdplan_i" type="VARCHAR">$!params.get("cdPlan")</param>
+
+		<outparam id="pv_registro_o" type="CURSOR"></outparam>
+		<outparam id="pv_msg_id_o" type="INTEGER"/>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+	</statement>
+</statements>

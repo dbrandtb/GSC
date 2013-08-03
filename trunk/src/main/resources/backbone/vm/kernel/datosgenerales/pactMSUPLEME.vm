@@ -1,0 +1,16 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_DATOS_GENERALES.P_ACTUALIZA_MSUPLEME" id="pactMSUPLEME">
+		<param eval="true" name="pi_CDUNIECO" type="NUMERIC">$!params.get("pi_CDUNIECO")</param>
+		<param eval="true" name="pi_CDRAMO" type="NUMERIC">$!params.get("pi_CDRAMO")</param>
+		<param eval="true" name="pi_ESTADO" type="VARCHAR">$!params.get("pi_ESTADO")</param>
+		<param eval="true" name="pi_NMPOLIZA" type="NUMERIC">$!params.get("pi_NMPOLIZA")</param>
+		<param eval="true" name="pi_NMSUPLEM" type="VARCHAR">$!params.get("pi_NMSUPLEM")</param>
+		<param eval="true" name="pi_FEINIVAL" type="DATE">$!params.get("pi_FEINIVAL")</param>
+		<param eval="true" name="pi_HHINIVAL" type="VARCHAR">$!params.get("pi_HHINIVAL")</param>
+		<param eval="true" name="pi_FEFINVAL" type="DATE">$!params.get("pi_FEFINVAL")</param>
+		<param eval="true" name="pi_HHFINVAL" type="VARCHAR">$!params.get("pi_HHFINVAL")</param>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

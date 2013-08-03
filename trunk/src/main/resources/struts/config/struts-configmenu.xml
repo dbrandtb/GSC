@@ -1,0 +1,85 @@
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <include file="struts-default.xml" />
+
+    <package name="configmenu" extends="json-default" namespace="/configmenu">
+
+        <!--
+        Redireccionamiento de action a jsp 
+        -->
+        <action name="configuraMenu" class="configuraMenuAction">
+            <result name="success">/jsp/configmenu/buscaOpciones.jsp</result>
+            <result name="input">/jsp/configmenu/buscaOpciones.jsp</result>            
+        </action>
+		
+
+		<!-- 
+		Configuracion del Action con tipo de respuesta JSON, esto generara a partir
+		de los atributos la respuesta en formato JSON para el Reader de ExtJs 
+		-->
+<!-- 
+		<action name="opciones" class="configuraMenuAction" method="opcionesJson">
+			<result name="success" type="json" />
+
+		</action>
+-->
+		<action name="opciones" class="configuraMenuAction" method="cmdGetOpciones">
+			<result name="success" type="json" />
+		</action>
+		<!--
+		Configuracion del action para cargar todos los productos existentes en el
+		combo con tipo de Respuesta Json 
+		 -->
+		<action name="ObtieneOpciones" class="agregarOpcionAction" method="obtieneOpciones">			
+            <result name="success" type="json"/>
+		</action>
+		<!--
+		Configuracion del action para agregar un nuevo plan con tipo de Respuesta Json 
+		 -->
+		
+		<action name="InsertaOpcion" class="agregarOpcionAction" method="insertaOpcion">			            
+            <result name="success" type="json"/>            
+		</action>
+		
+		<!-- 
+		Configuracion del Action para editar un producto con tipo de Respuesta Json
+		 -->
+		<action name="EditaOpcion" class="agregarOpcionAction" method="editaOpcion">
+                        
+            <result name="success" type="json"/>
+        </action>
+        <!--
+        Configuracion del Action para obtener un plan con tipo de Respuesta Json. 
+         -->
+		<action name="ObtieneOpcion" class="agregarOpcionAction" method="obtieneOpcion">
+                        
+            <result name="success" type="json"/>
+        </action>
+        <!--
+        Configuracion del Action con tipo de Respuesta Json para borrar una
+        opcion del Menu 
+         -->
+        <action name="BorrarAction" class="agregarOpcionAction" method="borrarOpcion">
+           <result name="success" type="json"/>
+           <result name="input">/jsp/configmenu/buscaOpciones.jsp</result>
+        </action>
+        <!--  
+        Configuración del Action para la exportación del documentos, se tiene que
+        declarar como tipo de respuesta "stream" y el tipo mime de retorno, asi como
+        el atributo asociado al flujo de datos con el archivo y el nombre del archivo
+        generado, junto con el tamaño del buffer de transferencia
+        --> 
+        <action name="exportConfig" class="exportConfigAction">
+            <result name="success" type="stream">
+                <param name="contentType">application/binary</param>
+                <param name="inputName">inputStream</param>
+                <param name="contentDisposition">filename="${filename}"</param>
+                <param name="bufferSize">8000</param>
+            </result>
+        </action>
+		
+	</package>
+
+</struts>
+
+

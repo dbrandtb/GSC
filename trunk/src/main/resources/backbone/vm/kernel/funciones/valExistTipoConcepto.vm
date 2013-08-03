@@ -1,0 +1,6 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_FUNCIONES.P_Get_Existe_Tipo" id="valExistTipoConcepto">
+		<outparam id="existeTipo" type="VARCHAR"/>
+		<param eval="true" name="cdtipcon2" type="VARCHAR">$!params.get("piCdtipcon")</param>
+	</statement>
+</statements>

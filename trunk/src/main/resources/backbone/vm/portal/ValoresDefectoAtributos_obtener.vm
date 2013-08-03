@@ -1,0 +1,11 @@
+<statements>
+	<statement type="stored" name="PKG_ORDENT.P_VALOR_DEFECTO_ATRIBUTO" id="valorDefectoAtributo">
+       <param eval="true" name="pv_cdformatoorden_i" type="VARCHAR">$!params.get("cdformatoorden")</param>
+       <param eval="true" name="pv_cdseccion_i" type="VARCHAR">$!params.get("cdseccion")</param>
+       <param eval="true" name="pv_cdatribu_i" type="VARCHAR">$!params.get("cdatribu")</param>
+
+  	   <outparam id="pv_registro_o" type="CURSOR"/>
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

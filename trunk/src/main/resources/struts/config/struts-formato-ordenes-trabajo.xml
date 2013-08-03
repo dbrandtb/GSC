@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+
+    <include file="struts-default.xml" />                           
+
+    <package name="formatoOrdenesTrabajo" extends="json-default" namespace="/formatoOrdenesTrabajo">
+    
+    	<action name="buscarFormatoOrdenesTrabajo" class="listaFormatoOrdenesTrabajoAction" method="cmdBuscarClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+		
+		<action name="borrarFormatoOrdenesTrabajo" class="formatoOrdenesTrabajoAction" method="cmdBorrarClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		       
+       <action name="guardarFormatoOrdenesTrabajo" class="formatoOrdenesTrabajoAction" method="cmdGuardarClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>     
+
+       <action name="obtenerFormatoOrdenesTrabajo" class="formatoOrdenesTrabajoAction" method="cmdGetClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>  
+
+       <action name="copiarFormatoOrdenesTrabajo" class="formatoOrdenesTrabajoAction" method="cmdCopiarClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+       </action>  
+        
+       <action name="irConfigurarOrdenesTrabajo" class="formatoOrdenesTrabajoAction" method="cmdIrConfigurarOrdenesTrabajo">
+	    	<result type="chain" name="configurarOrdenesTrabajo">configurarOrdenesTrabajo</result>
+	   </action>
+
+    </package>
+
+</struts>

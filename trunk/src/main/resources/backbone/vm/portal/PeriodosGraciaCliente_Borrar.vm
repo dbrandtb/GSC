@@ -1,0 +1,12 @@
+<statements>
+	<statement type="stored" name="PKG_CANCELA.P_BORRA_PERIODO_CLIENTE" id="borraPeriodoGraciaCliente">
+		
+        <param eval="true" name="pv_cdtramo_i" type="VARCHAR">$!params.get("pv_cdtramo_i")</param>
+        <param eval="true" name="pv_cdelemento_i" type="NUMERIC">$!params.get("pv_cdelemento_i")</param>
+        <param eval="true" name="pv_cdunieco_i" type="NUMERIC">$!params.get("pv_cdunieco_i")</param>
+        <param eval="true" name="pv_cdramo_i" type="NUMERIC">$!params.get("pv_cdramo_i")</param>
+        
+        <outparam id="pv_msg_id_o" type="NUMERIC"/>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>        
+	</statement>
+</statements>

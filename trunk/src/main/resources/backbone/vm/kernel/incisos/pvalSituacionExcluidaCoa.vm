@@ -1,0 +1,17 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_INCISOS.P_ValidarSit_ExcluidaCoaseguro" id="pvalSituacionExcluidaCoa">
+		<param eval="true" name="pi_CDUNIECO" type="NUMERIC">$!params.get("pi_CDUNIECO")</param>
+		<param eval="true" name="pi_CDRAMO" type="NUMERIC">$!params.get("pi_CDRAMO")</param>
+		<param eval="true" name="pi_ESTADO" type="VARCHAR">$!params.get("pi_ESTADO")</param>
+		<param eval="true" name="pi_NMPOLIZA" type="NUMERIC">$!params.get("pi_NMPOLIZA")</param>
+		<param eval="true" name="pi_NMSITUAC" type="NUMERIC">$!params.get("pi_NMSITUAC")</param>
+		<param eval="true" name="pi_CDCAPITA" type="NUMERIC">$!params.get("pi_CDCAPITA")</param>
+		<param eval="true" name="p_TipExc" type="VARCHAR">$!params.get("p_TipExc")</param>
+		<param eval="true" name="p_SwExcSitGar" type="VARCHAR">$!params.get("p_SwExcSitGar")</param>
+       <inoutparam eval="true" name="p_SWEXCOA" id="p_SWEXCOA" type="VARCHAR">$!params.get("p_SWEXCOA")</inoutparam>
+       <inoutparam eval="true" name="p_CDAGRUPA" id="p_CDAGRUPA" type="NUMERIC">$!params.get("p_CDAGRUPA")</inoutparam>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

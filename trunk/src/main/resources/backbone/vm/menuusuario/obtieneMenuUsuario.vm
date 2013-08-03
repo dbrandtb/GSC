@@ -1,0 +1,12 @@
+<statements>
+	<statement type="stored" name="PKG_MENU.P_OBTIENE_MENU_USUARIO" id="consulta">
+		<param eval="true" name="PV_DSMENU_I" type="VARCHAR">$!params.get("nombre")</param>
+		<param eval="true" name="PV_CDPERSON_I" type="VARCHAR">$!params.get("cliente")</param>
+		<param eval="true" name="PV_CDROL_I" type="VARCHAR">$!params.get("rol")</param>
+		<param eval="true" name="PV_CDUSUARIO_I" type="VARCHAR">$!params.get("usuario")</param>
+		<outparam id="PV_REGISTRO_O" type="CURSOR"/>
+		<outparam id="PV_MSG_ID_O" type="NUMERIC"/>
+		<outparam id="PV_TITLE_O" type="NUMERIC"/>
+		<outparam id="PV_TEXT_O" type="VARCHAR"/>
+	</statement>
+</statements>

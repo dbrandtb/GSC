@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<bean id="tree-endpoint" abstract="true"
+		parent="parent-endpoint">
+		<property name="templateModule" value="tree" />
+		<property name="xslModule" value="tree" />
+	</bean>
+	
+	<!-- Consulta de reglas de negocio -->
+	<bean id="OBTENER_RAMA_PRODUCTO" parent="tree-endpoint">
+		<property name="templateName" value="listaProductos.vm" />
+		<property name="xslName" value="listaProductos.xsl" />
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>
+	<bean id="OBTENER_RAMA_SITUACION" parent="tree-endpoint">
+		<property name="templateName" value="listaSituacion.vm" />
+		<property name="xslName" value="listaSituacion.xsl" />
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>
+	<bean id="OBTENER_RAMA_ATRIBUTOS_PRODUCTO" parent="tree-endpoint">
+		<property name="templateName" value="listaAtributosVariablesProducto.vm" />
+		<property name="xslName" value="listaSituacion.xsl" />
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>
+	<bean id="OBTENER_RAMA_CONCEPTOS_GLOBALES_PRODUCTO" parent="tree-endpoint">
+		<property name="templateName" value="listaConceptosGlobalesProducto.vm" />
+		<property name="xslName" value="listaSituacion.xsl" />
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>
+	<bean id="OBTENER_RAMA_DATOS_FIJOS_PRODUCTO" parent="tree-endpoint">
+		<property name="templateName" value="listaDatosFijos.vm" />
+		<property name="xslName" value="listaRolesDatosFijos.xsl" />
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>
+	<bean id="OBTENER_RAMA_ROLES_PRODUCTO" parent="tree-endpoint">
+		<property name="templateName" value="listaRolesProducto.vm" />
+		<property name="xslName" value="listaRolesDatosFijos.xsl" />
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>
+	<bean id="OBTENER_ATRIBUTOS_SITUACION" parent="tree-endpoint">
+		<property name="templateName" value="listaAtributosVariablesSituacion.vm" />
+		<property name="xslName" value="listaRolesDatosFijos.xsl" />
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>
+	<bean id="OBTENER_ATRIBUTOS_GARANTIA" parent="tree-endpoint">
+		<property name="templateName" value="listaAtributosVariableGarantia.vm" />
+		<property name="xslName" value="listaRamasGarantia.xsl" />
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>
+	<bean id="OBTENER_GARANTIA" parent="tree-endpoint">
+		<property name="templateName" value="listaGarantiasSituacion.vm" />
+		<property name="xslName" value="listaRolesDatosFijos.xsl" />
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>
+	
+	<bean id="OBTENER_OBJETOS" parent="tree-endpoint">
+		<property name="templateName" value="listaObjetos.vm" />
+		<property name="xslName" value="listaProductos.xsl" />
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>
+</beans>

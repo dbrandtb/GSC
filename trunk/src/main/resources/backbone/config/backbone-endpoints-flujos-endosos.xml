@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <bean id="endosos-endpoint" abstract="true"
+        parent="parent-endpoint">
+        <property name="templateModule" value="endosos" />
+        <property name="xslModule" value="endosos" />
+    </bean>
+    
+    <bean id="ENDOSOS_DATOS_INCISOS" parent="endosos-endpoint">
+        <property name="templateModule" value="emision" />
+        <property name="templateName" value="obtieneDatosIncisos.vm" />
+        <property name="xslModule" value="flujos/cotizacion" />
+        <property name="xslName" value="atributosVariablesDatos.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    <bean id="ENDOSOS_DATOS_INCISOS_COMBOS" parent="endosos-endpoint">
+        <property name="templateModule" value="emision" />
+        <property name="templateName" value="obtieneDatosIncisos.vm" />
+        <property name="xslName" value="obtieneCombosControlEndosos.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+
+    <bean id="VALIDA_TARIFICACION_ENDOSOS_POLIZA" parent="endosos-endpoint">
+        <property name="templateName" value="tarificarValidaPoliza.vm" />
+        <property name="xslName" value="tarificarValidaPoliza.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+    <bean id="TARIFICA_INCISOS_FALTANTES" parent="endosos-endpoint">
+        <property name="templateName" value="tarificaIncisosFaltantes.vm" />
+        <property name="xslName" value="tarificaIncisosFaltantes.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+    <bean id="EXISTEN_CAMBIOS" parent="endosos-endpoint">
+        <property name="templateName" value="existeCambio.vm" />
+        <property name="xslName" value="existeCambio.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+    <bean id="OBTIENE_TARIFICACION_ENDOSOS_POLIZA" parent="endosos-endpoint">
+        <property name="templateModule" value="emision" />
+        <property name="templateName" value="obtieneMpoliRecEndoso.vm" />
+        <property name="xslName" value="obtienePoliObj.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+    <bean id="BORRA_ENDOSO_RESUMEN_TARIFICACION" parent="endosos-endpoint">
+        <property name="templateModule" value="emision" />
+        <property name="templateName" value="sacaEndoso.vm" />
+        <property name="transformResult" value="false" />
+        <property name="unmarshallResult" value="false" />
+    </bean>
+    <bean id="REVERSA_MAQUILLA" parent="endosos-endpoint">
+        <property name="templateModule" value="flujos/renovacion" />
+        <property name="templateName" value="renovacionReversarMaquilla.vm" />
+        <property name="transformResult" value="false" />
+        <property name="unmarshallResult" value="false" />
+    </bean>
+
+    <bean id="ENDOSOS_DATOS_ROL_EXT" parent="endosos-endpoint">
+        <property name="templateName" value="obtieneDatosRol.vm" />
+        <property name="xslName" value="obtieneDatosExt.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="ENDOSO_OBTIENE_AGRUPADORES" parent="endosos-endpoint">
+        <property name="templateName" value="obtieneAgrupadores.vm" />
+        <property name="xslName" value="obtieneAgrupadores.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+
+    <bean id="ENDOSO_ACTUALIZA_FECHAS" parent="endosos-endpoint">
+        <property name="templateName" value="actualizaFechas.vm" />
+        <property name="xslName" value="actualizaFechas.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.model.BaseObjectVO" />
+    </bean>
+    
+    <bean id="GUARDA_DATOS_ENDOSO" parent="endosos-endpoint">
+        <property name="templateModule" value="emision" />
+        <property name="templateName" value="movMPOLIAGR.vm" />
+        <property name="transformResult" value="false" />
+        <property name="unmarshallResult" value="false" />
+    </bean>
+    
+    <bean id="GUARDA_DATOS_ENDOSO_TARJETA" parent="endosos-endpoint">
+        <property name="templateModule" value="kernel/satelites" />
+        <property name="templateName" value="movMTARJETA.vm" />
+        <property name="transformResult" value="false" />
+        <property name="unmarshallResult" value="false" />
+    </bean>
+    
+    <bean id="ENDOSO_GENERA_SUPL_LOGICO" parent="endosos-endpoint">
+        <property name="templateName" value="obtieneSuplLogico.vm" />
+        <property name="xslName" value="obtieneSuplLogico.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.model.BaseObjectVO" />
+    </bean>
+    
+    <bean id="ENDOSO_GENERA_SUPL_FISICO" parent="endosos-endpoint">
+        <property name="templateName" value="obtieneSuplFisico.vm" />
+        <property name="xslName" value="obtieneSuplFisico.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.model.BaseObjectVO" />
+    </bean>
+    
+    <bean id="GUARDA_DATOS_ENDOSO_POLIAGR" parent="endosos-endpoint">
+        <property name="templateModule" value="emision" />
+        <property name="templateName" value="movMPOLIAGR.vm" />
+        <property name="transformResult" value="false" />
+        <property name="unmarshallResult" value="false" />
+    </bean>
+    
+    <bean id="ENDOSOS_GRID_ACCESORIOS_INCISOS" parent="emision-endpoint">
+        <property name="templateName" value="obtieneGridAccesoriosIncisos.vm" />
+        <property name="xslName" value="obtieneGridAccesoriosIncisos.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+        <!-- 
+        <property name="xslModule" value="flujos/cotizacion" />
+        <property name="xslName" value="atributosVariables.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+         -->
+    </bean>
+
+    <bean id="ENDOSOS_OBTIENE_DATOS_ADICIONALES_POLIZA" parent="endosos-endpoint">
+        <property name="templateName" value="obtieneDatosAdicionalesPolizaExt.vm" />
+        <property name="xslName" value="obtieneDatosExt.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+
+    <bean id="ENDOSOS_OBTIENE_DATOS_COBERTURAS" parent="endosos-endpoint">
+        <property name="templateModule" value="emision" />
+        <property name="templateName" value="obtieneDatosCoberturas.vm" />
+        <property name="xslName" value="obtieneDatosExt.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="ENDOSOS_OBTIENE_DATOS_ACCESORIOS" parent="endosos-endpoint">
+        <property name="templateModule" value="emision" />
+        <property name="templateName" value="obtieneDatosAccesorios.vm" />
+        <property name="xslName" value="obtieneDatosExt.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="ENDOSOS_OBTIENE_COMBOS" parent="endosos-endpoint">
+        <property name="templateModule" value="emision" />
+        <property name="templateName" value="obtieneDatosCoberturas.vm" />
+        <property name="xslName" value="obtieneCombosControl.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="ENDOSOS_OBTIENE_DATOS_ADICIONALES_COMBO" parent="endosos-endpoint">
+        <property name="templateName" value="obtieneDatosAdicionalesPolizaExt.vm" />
+        <property name="xslName" value="obtieneCombosControl.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="ENDOSOS_OBTIENE_DATOS_POLIZA" parent="endosos-endpoint">
+        <property name="templateName" value="getDatosPoliza.vm" />
+        <property name="xslName" value="obtieneDatosPoliza.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="ENDOSOS_VAL_POLIZA_CANCEL" parent="endosos-endpoint">
+        <property name="templateName" value="valPolizaCancel.vm" />
+        <property name="xslName" value="valPolizaCancel.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.flujos.endoso.model.PolizaCancelVO" />
+    </bean>
+    
+    <bean id="ENDOSOS_BAJA_INCISO" parent="endosos-endpoint">
+        <property name="templateName" value="bajaInciso.vm" />
+        <property name="xslName" value="bajaInciso.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.model.BaseObjectVO" />
+    </bean>
+    
+    <bean id="OBTIENE_VALOR_ATRIBUTO_COBERTURA" parent="endosos-endpoint" >
+        <property name="templateName" value="obtieneValorAtributoCobertura.vm" />
+        <property name="xslName" value="obtieneValorAtributoCobertura.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.model.BaseObjectVO" />
+    </bean>
+    
+    <bean id="OBTIENE_TIPOS_ITEMS_ATRIBUTOS_ACCESORIOS" parent="endosos-endpoint">
+        <property name="templateName" value="pObtieneTipoObjAtributosAcc.vm"/>
+        <property name="xslModule" value="flujos/cotizacion" />
+        <property name="xslName" value="atributosVariables.xsl"/>
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="OBTIENE_COMBOS_ITEMS_ATRIBUTOS_ACCESORIOS" parent="endosos-endpoint">
+        <property name="templateName" value="pObtieneTipoObjAtributosAcc.vm"/>
+        <property name="xslName" value="obtieneCombosControlAccesorios.xsl"/>
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="OBTIENE_LISTA_TIPO_PRODUCTO_ACCESORIOS" parent="endosos-endpoint">
+        <property name="templateModule" value="flujos/cotizacion" />
+        <property name="templateName" value="pObjetoRamo.vm"/>
+        <property name="xslModule" value="flujos/cotizacion" />
+        <property name="xslName" value="pObjetoRamo.xsl"/>
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="ENDOSOS_GUARDA_FUNCION_ROL" parent="endosos-endpoint">
+        <property name="templateName" value="pMovTvaloper.vm"/>
+        <property name="xslName" value="obtieneMensaje.xsl"/>
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"/>
+    </bean>
+    
+    <bean id="ENDOSOS_OBTIENE_DATOS_ROL_ITEMS" parent="endosos-endpoint">
+        <property name="templateName" value="obtieneDatosRol2.vm" />
+        <property name="xslModule" value="flujos/cotizacion" />
+        <property name="xslName" value="atributosVariables.xsl"/>
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+        <!--  
+        <property name="xslName" value="obtieneDatosExt.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+        -->
+    </bean>
+    
+    <bean id="ENDOSOS_OBTIENE_DATOS_ROL_COMBOS" parent="endosos-endpoint">
+        <property name="templateName" value="obtieneDatosRol2.vm" />
+        <property name="xslName" value="obtieneCombosControlAccesorios.xsl"/>
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+        <!--  
+        <property name="xslName" value="obtieneDatosExt.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+        -->
+    </bean>
+    
+    <bean id="ENDOSOS_DATOS_ROL_ITEMS" parent="endosos-endpoint">
+        <property name="templateName" value="obtieneDatosRol.vm" />
+        <!--
+        <property name="xslModule" value="flujos/cotizacion" />
+        <property name="xslName" value="atributosVariables.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+        -->
+        <property name="xslName" value="obtieneDatosExt.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="ENDOSOS_DATOS_ROL_COMBOS" parent="endosos-endpoint">
+        <property name="templateName" value="obtieneDatosRol.vm" />
+        <property name="xslName" value="obtieneDatosExtCombos.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+        <!--  
+        <property name="xslName" value="obtieneDatosExt.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+        -->
+    </bean>
+    
+    <bean id="ENDOSOS_PMOVMPOLIPER" parent="endosos-endpoint">
+        <property name="templateName" value="pMovMPoliPer.vm" />
+        <property name="xslName" value="obtieneMensaje.xsl"/>
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"/>
+    </bean>
+    
+    <bean id="ENDOSOS_OBTIENE_DATOS_TARIFICAR" parent="endosos-endpoint">
+        <property name="templateName" value="obtieneDatosEndoso.vm" />
+        <property name="xslName" value="obtieneDatosEndoso.xsl"/>
+        <property name="unmarshallClass" value="java.util.ArrayList"/>
+    </bean>
+    
+    <bean id="ENDOSOS_OBTIENE_VALOR_TARIFICAR" parent="endosos-endpoint">
+        <property name="templateName" value="tarificarGetValorEndoso.vm"/>
+        <property name="xslName" value="tarificarGetValorEndoso.xsl"/>
+        <property name="unmarshallClass" value="mx.com.aon.flujos.endoso.model.TarificarVO"/>
+    </bean>
+    
+    <bean id="ENDOSOS_CONFIRMAR_TARIFICAR" parent="endosos-endpoint">
+        <property name="templateName" value="tarificarConfirmarEndoso.vm" />
+        <property name="xslName" value="obtieneMensajeEndoso.xsl"/>
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"/>
+    </bean>
+    
+    <bean id="CALCULA_VALOR_ENDOSOS" parent="endosos-endpoint">
+        <property name="templateName" value="calculaValorEndoso.vm" />
+        <property name="xslName" value="obtieneMensajeError.xsl"/>
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"/>
+    </bean>
+</beans>

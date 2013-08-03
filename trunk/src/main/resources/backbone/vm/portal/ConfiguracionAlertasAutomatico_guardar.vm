@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+  
+    <statement type='stored' name="PKG_ALERTAS.P_GUARDA_CONFALERTA" id="guardarConfAlertaAuto">
+
+        <param eval="true" name="pv_cdidunico_i" type="NUMERIC">$!params.get("cdIdUnico")</param> 
+        <param eval="true" name="pv_usuario_i" type="VARCHAR">$!params.get("usuario")</param>
+        <param eval="true" name="pv_cve_cliente_i" type="NUMERIC">$!params.get("cliente")</param>
+        <param eval="true" name="pv_nombre_alerta_i" type="VARCHAR"><![CDATA[$!params.get("nombreAlerta")]]></param>
+        <param eval="true" name="pv_cve_proceso_i" type="NUMERIC">$!params.get("proceso")</param>
+        <param eval="true" name="pv_cve_temporalidad_i" type="NUMERIC">$!params.get("temporalidad")</param>
+        <param eval="true" name="pv_mensaje_i" type="VARCHAR"><![CDATA[$!params.get("mensaje")]]></param>
+        <param eval="true" name="pv_frecuencia_i" type="NUMERIC">$!params.get("frecuencia")</param> 
+        <param eval="true" name="pv_fec_inic_i" type="DATE">$!params.get("fecInic")</param>
+        <param eval="true" name="pv_dias_antic_i" type="NUMERIC">$!params.get("diasAntic")</param>
+        <param eval="true" name="pv_duracion_i" type="NUMERIC">$!params.get("duracion")</param>
+        <param eval="true" name="pv_mandar_email_i" type="NUMERIC">$!params.get("mandarEmail")</param>
+        <param eval="true" name="pv_popup_i" type="NUMERIC">$!params.get("popup")</param>
+        <param eval="true" name="pv_pantalla_i" type="NUMERIC">$!params.get("pantalla")</param>
+        <param eval="true" name="pv_rol_i" type="VARCHAR">$!params.get("rol")</param> 
+        <param eval="true" name="pv_cve_ramo_i" type="VARCHAR">$!params.get("ramo")</param>
+        <param eval="true" name="pv_cve_aseguradora_i" type="NUMERIC">$!params.get("aseguradora")</param>
+        <param eval="true" name="pv_cve_producto_i" type="NUMERIC">$!params.get("producto")</param>
+        <param eval="true" name="pv_region_i" type="VARCHAR">$!params.get("region")</param>
+                        
+     			
+        <!--outparam id="pv_resultado_o" type="NUMERIC"/-->
+       	<outparam id="pv_msg_id_o" type="NUMERIC"/>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+	
+	</statement>
+
+    
+</statements>

@@ -1,0 +1,12 @@
+<statements>
+	<statement type="stored" name="PKG_CANCELA.P_VALIDA_RAZON_CANCELA" id="validaRazonCancela">
+		
+	   <param eval="true" name="pv_cdrazon_i" type="NUMERIC">$!params.get("cdrazon")</param>
+	   <param eval="true" name="pv_cdproducto_i" type="VARCHAR">$!params.get("cdramo")</param>
+ 
+       <outparam id="pv_resultado_o" type="NUMERIC"/>
+  	   
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

@@ -1,0 +1,10 @@
+<statements>
+	<statement type="stored" name="PKG_LISTAS.P_LISTA_TCATALOG" id="listaTipos">
+		<param eval="true" name="PV_CDTABLA_I" type="VARCHAR">$!params.cdtabla</param>
+		<param eval="true" name="PV_CDIDIOMA_I" type="NUMERIC">$!params.cdidioma</param>
+		<param eval="true" name="PV_CDREGION_I" type="NUMERIC">$!params.cdregion</param>
+		<outparam id="PV_REGISTRO_O" type="CURSOR"/>
+		<outparam id="PV_MSG_ID_O" type="NUMERIC"/>  
+		<outparam id="PV_TITLE_O" type="VARCHAR"/> 
+	</statement>
+</statements>

@@ -1,0 +1,15 @@
+<statements>
+	<statement type="stored" name="PKG_MENU.P_GUARDA_MENU" id="insertaConfigura">
+		<param eval="true" name="PV_CDMENU_I" type="NUMERIC">$!params.claveMenu</param>
+		<param eval="true" name="PV_DSMENU_I" type="VARCHAR">$!params.nombreMenu</param>
+		<param eval="true" name="PV_CDELEMENTO_I" type="NUMERIC">$!params.claveCliente</param>
+		<param eval="true" name="PV_CDPERSON_I" type="NUMERIC"></param>
+		<param eval="true" name="PV_CDROL_I" type="VARCHAR">$!params.claveRol</param>
+		<param eval="true" name="PV_CDUSUARIO_I" type="VARCHAR">$!params.claveUsuario</param>
+		<param eval="true" name="PV_CDESTADO_I" type="NUMERIC">$!params.estado</param>
+		<param eval="true" name="PV_CDTIPOMENU_I" type="NUMERIC">$!params.tipoMenu</param>
+		<outparam id="PV_MSG_ID_O" type="NUMERIC"/>
+		<outparam id="PV_TITLE_O" type="NUMERIC"/>
+		<outparam id="PV_TEXT_O" type="VARCHAR"/>
+	</statement>
+</statements>

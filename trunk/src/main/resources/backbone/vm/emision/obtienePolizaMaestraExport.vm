@@ -1,0 +1,10 @@
+<statements>
+	<statement type="stored" name="PKG_CONFG_CUENTA.P_OBTIENE_POLIZA_MAESTRA" id="obtienePolizaMaestraExport">
+		<param eval="true" name="pv_dselemen_i" type="NUMERIC"><![CDATA[$!params.get("dsElemen")]]></param>
+		<param eval="true" name="pv_dsramo_i" type="VARCHAR"><![CDATA[$!params.get("dsRamo")]]></param>
+		<param eval="true" name="pv_dsunieco_i" type="VARCHAR"><![CDATA[$!params.get("dsUnieco")]]></param>
+		<outparam id="pv_registro_o" type="CURSOR"/>
+		<outparam id="pv_msg_id_o" type="VARCHAR"/>
+		<outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

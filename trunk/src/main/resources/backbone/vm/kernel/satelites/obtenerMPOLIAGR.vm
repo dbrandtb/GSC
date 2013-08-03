@@ -1,0 +1,13 @@
+<statements>
+	<statement type="stored" name="PKG_EMISION.P_OBTIENE_MPOLIAGR" id="obtieneMPOLIAGR">		
+		<param eval="true" name="pv_cdunieco_i" type="NUMERIC"><![CDATA[$!params.get("CD_UNIECO")]]></param>
+		<param eval="true" name="pv_cdramo_i"   type="NUMERIC"><![CDATA[$!params.get("CD_RAMO")]]></param>
+		<param eval="true" name="pv_estado_i"   type="VARCHAR"><![CDATA[$!params.get("ESTADO")]]></param>
+		<param eval="true" name="pv_nmpoliza_i" type="NUMERIC"><![CDATA[$!params.get("NMPOLIZA")]]></param>
+		<param eval="true" name="pv_cdagrupa_i" type="NUMERIC"><![CDATA[$!params.get("CD_AGRUPA")]]></param>
+		<param eval="true" name="pv_cdperson_i" type="NUMERIC"><![CDATA[$!params.get("CD_PERSON")]]></param>
+		<outparam id="pv_registro_o" type="CURSOR"/>
+		<outparam id="pv_msg_id_o" type="NUMERIC"/>		
+		<outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

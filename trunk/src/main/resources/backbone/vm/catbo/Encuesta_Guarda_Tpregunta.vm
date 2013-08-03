@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_ENCUESTAS.P_GUARDA_TPREGUNTA" id="guardarTpregunta">
+		
+       <param eval="true" name="pv_cdencuesta_i" type="NUMERIC">$!params.get("cdEncuesta")</param>
+       <param eval="true" name="pv_cdpregunta_i" type="NUMERIC">$!params.get("cdPregunta")</param>
+
+       <param eval="true" name="pv_dspregunta_i" type="VARCHAR"><![CDATA[$!params.get("dsPregunta")]]></param>
+       <param eval="true" name="pv_swobliga_i" type="VARCHAR"><![CDATA[$!params.get("swObliga")]]></param>
+       <param eval="true" name="pv_cdsecuencia_i" type="NUMERIC">$!params.get("cdSecuencia")</param>
+       <param eval="true" name="pv_cddefault_i" type="VARCHAR"><![CDATA[$!params.get("cdDefault")]]></param>
+       <param eval="true" name="pv_ottapval_i" type="VARCHAR"><![CDATA[$!params.get("ottApval")]]></param>
+       
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+	
+</statements>
+ 

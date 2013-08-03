@@ -1,0 +1,80 @@
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+
+	<include file="struts-default.xml" />
+
+	<package name="operacionesCat" extends="json-default" namespace="/operacionesCat">
+
+
+    <action name="buscarGuiones" class="listaOperacionesCATAction" method="cmdBuscarClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+	</action>
+
+    <action name="buscarDialogosGuion" class="listaOperacionesCATAction" method="cmdBuscarDialogosClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+	</action>
+
+    <action name="obtenerDialogoGuionInicial" class="listaOperacionesCATAction" method="cmdObtenerDialogoGuionInicialClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+	</action>
+	
+    <action name="getGuion" class="listaOperacionesCATAction" method="cmdGetGuionClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+	</action>
+	
+	<action name="borrarGuion" class="operacionesCATAction" method="cmdBorrarGuionClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+	</action>
+    
+    <action name="borrarDialogo" class="operacionesCATAction" method="cmdBorrarDialogoClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+	
+	<action name="guardarGuion" class="operacionesCATAction" method="cmdGuardarGuionClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+	</action>
+	
+	<action name="guardarDialogoGuion" class="operacionesCATAction" method="cmdGuardarDialogoGuionClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+	</action>
+    
+    <action name="exportarGuion" class="listaOperacionesCATAction" method="cmdExportarGuionClick">
+        <result name="success" type="stream">
+             <param name="contentType">${contentType}</param>
+            <param name="inputName">inputStream</param>
+            <param name="contentDisposition">filename="${filename}"</param>
+            <param name="bufferSize">4096</param>
+        </result>
+    </action>  
+	
+	<action name="exportarDialogosGuion" class="listaOperacionesCATAction" method="cmdExportarDialogosGuionClick">
+         <result name="success" type="stream">
+            <param name="contentType">${contentType}</param>
+            <param name="inputName">inputStream</param>
+            <param name="contentDisposition">filename="${filename}"</param>
+            <param name="bufferSize">4096</param>
+        </result>
+    </action>  
+
+    <action name="buscarDialogosPaginado" class="listaOperacionesCATAction" method="cmdBuscarDialogos">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+	</action>
+    
+
+	<action name="guardarDialogoScriptObservacion" class="operacionesCATAction" method="cmdGuardarDialogoScriptObservacion">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+	</action>
+	
+	<action name="obtenerEncuestasPendientes" class="listaOperacionesCATAction" method="cmdObtenerEncuestasPendientes">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+	</action>
+	
+	<action name="obtenerFuncionNombre" class="listaOperacionesCATAction" method="cmdGetFuncionNombreClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+	</action>
+
+	</package>
+
+</struts>

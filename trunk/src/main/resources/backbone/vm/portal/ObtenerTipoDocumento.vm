@@ -1,0 +1,12 @@
+<statements>
+	<statement type="stored" name="PKG_LISTAS.P_TIPO_DOCUMENTO" id="pObtieneTipoDocumento">
+		
+		<param eval="true" name="pv_cdelemento_i" type="NUMERIC">$!params.get("cdElemento")</param>  
+		<param eval="true" name="pv_cdunieco_i" type="NUMERIC">$!params.get("cdUniEco")</param>  	   
+        <param eval="true" name="pv_cdramo_i" type="NUMERIC">$!params.get("cdRamo")</param>  	
+		
+		<outparam id="pv_registro_o" type="CURSOR"></outparam>
+		<outparam id="pv_msg_id_o" type="INTEGER"/>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+	</statement>
+</statements>

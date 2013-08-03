@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_CATBO_PROCESO.P_OBTENER_NUM_CASO" id="obtenerNumcaso">
+       <param eval="true" name="pv_nmcaso_i" type="VARCHAR"><![CDATA[$!params.get("pv_nmcaso_i")]]></param>
+        <param eval="true" name="pv_nmovimiento_i" type="NUMERIC"><![CDATA[$!params.get("pv_nmovimiento_i")]]></param>
+ 	   
+ 	   <outparam id="pv_registro_o" type="NUMERIC"/>
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

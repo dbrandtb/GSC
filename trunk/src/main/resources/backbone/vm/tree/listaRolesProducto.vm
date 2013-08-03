@@ -1,0 +1,10 @@
+<statements>
+	<statement type="stored" name="PKG_WIZARD.P_LOADROLESINC" id="pLoadRolesInc">
+		<param eval="true" name="pv_cdramo_i" type="NUMERIC">$!params.codigoProducto</param>
+		<param eval="true" name="pv_cdnivel_i" type="NUMERIC">$!params.nivel</param>
+		<param eval="true" name="pv_cdtipsit_i" type="VARCHAR">$!params.codigoSituacion</param>
+		<outparam id="P_REGISTRO" type="CURSOR"/>
+		<outparam id="PO_MSG_ID" type="NUMERIC"/>	
+		<outparam id="PV_TITLE_O" type="VARCHAR"/>	
+</statement>
+</statements>

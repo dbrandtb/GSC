@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
+<statements>
+	<statement type="select" id="consulta">
+		SELECT NMPOLIZA,NMSUPLEM,NMRECIBO,FEINICIO FROM (
+		   SELECT NMPOLIZA,NMSUPLEM,NMRECIBO,TO_CHAR(FEINICIO,'dd/mm/yyyy') AS FEINICIO,ROWNUM nmlinea 
+		      FROM MRECIBO A 
+		      ORDER BY $params.get("order") $params.get("dir")
+		)
+		WHERE nmlinea BETWEEN $params.get("start") AND $params.get("limit")
+	</statement>
+	<statement type="select" id="count">
+		SELECT COUNT(*) as COUNT 
+		FROM MRECIBO
+	</statement>
+</statements>

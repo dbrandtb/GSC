@@ -1,0 +1,8 @@
+<statements>
+	<statement type="stored" name="PKG_CONFG_CUENTA.P_COPIA_PLAN" id="copiaPlan">
+		<param eval="true" name="P_PRODUCTO" type="NUMERIC">$!params.cdRamo</param>
+		<param eval="true" name="P_DES_PLAN" type="VARCHAR">$!params.dsPlan</param>
+		<outparam id="PV_TITLE_O" type="VARCHAR"/>
+		<outparam id="PV_MSG_ID_O" type="NUMERIC"/>
+	</statement>					
+</statements>

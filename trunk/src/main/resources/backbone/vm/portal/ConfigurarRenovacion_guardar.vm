@@ -1,0 +1,15 @@
+<statements>
+	<statement type="stored" name="PKG_RENOVA.P_GUARDA_CONFIGURA" id="pGuardaConfigura">
+			   
+       <param eval="true" name="pv_cdrenova_i" type="NUMERIC">$!params.get("pv_cdrenova_i")</param>
+       <param eval="true" name="pv_cdpersona_i" type="NUMERIC">$!params.get("pv_cdpersona_i")</param>
+       <param eval="true" name="pv_cdelemento_i" type="NUMERIC">$!params.get("pv_cdelemento_i")</param>
+       <param eval="true" name="pv_cdunieco_i" type="NUMERIC">$!params.get("pv_cdunieco_i")</param>
+       <param eval="true" name="pv_cdramo_i" type="NUMERIC">$!params.get("pv_cdramo_i")</param>
+       <param eval="true" name="pv_cdtiporenova_i" type="NUMERIC">$!params.get("pv_cdtiporenova_i")</param>
+       <param eval="true" name="pv_cddiasanticipacion" type="NUMERIC">$!params.get("pv_cddiasanticipacion")</param>
+       <param eval="true" name="pv_swconnum_i" type="VARCHAR">$!params.get("pv_swconnum_i")</param>
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

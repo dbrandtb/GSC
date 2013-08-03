@@ -1,0 +1,19 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_ACTUALIZA_DATOS.P_MOV_MPERSONA" id="actmovMPERSONA">
+       <inoutparam eval="true" name="Gv_Identificador_Error" id="Gv_Identificador_Error" type="VARCHAR"></inoutparam>
+       <inoutparam eval="true" name="Gn_cdperson" id="Gn_cdperson" type="NUMERIC">$params.get("pi_CDPERSON")</inoutparam>
+		<param eval="true" name="Gv_Cdtipide" type="VARCHAR">$!params.get("pi_CDTIPIDE")</param>
+		<param eval="true" name="Gv_Cdideper" type="VARCHAR">$!params.get("pi_CDIDEPER")</param>
+		<param eval="true" name="Gv_Dsnombre" type="VARCHAR">$!params.get("pi_DSNOMBRE")</param>
+		<param eval="true" name="Gv_Dsnombr1" type="VARCHAR">$!params.get("pi_DSNOMBR1")</param>
+		<param eval="true" name="Gv_Dsnombr2" type="VARCHAR">$!params.get("pi_DSNOMBR2")</param>
+		<param eval="true" name="Gv_Dsapell1" type="VARCHAR">$!params.get("pi_DSAPELL1")</param>
+		<param eval="true" name="Gv_Dsapell2" type="VARCHAR">$!params.get("pi_DSAPELL2")</param>
+		<param eval="true" name="Gv_Cdtipper" type="VARCHAR">$!params.get("pi_CDTIPPER")</param>
+		<param eval="true" name="Gv_Otfisjur" type="VARCHAR">$!params.get("pi_OTFISJUR")</param>
+		<param eval="true" name="Gv_Otsexo" type="VARCHAR">$!params.get("pi_OTSEXO")</param>
+		<param eval="true" name="Gd_Fenacimi" type="VARCHAR">$!params.get("pi_FENACIMI")</param>
+		<param eval="true" name="Gn_Cdprovin" type="VARCHAR">$!params.get("pi_CDPROVIN")</param>
+		<param eval="true" name="Gv_Accion" type="VARCHAR">$!params.get("pi_ACCION")</param>
+	</statement>
+</statements>

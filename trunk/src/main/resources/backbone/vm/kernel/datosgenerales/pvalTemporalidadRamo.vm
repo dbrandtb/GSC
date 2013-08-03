@@ -1,0 +1,9 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_DATOS_GENERALES.P_VALIDAR_TEMPORALIDAD" id="pvalTemporalidadRamo">
+		<param eval="true" name="pi_CDRAMO" type="NUMERIC">$!params.get("pi_CDRAMO")</param>
+		<param eval="true" name="pi_OTTEMPOT" type="VARCHAR">$!params.get("pi_OTTEMPOT")</param>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

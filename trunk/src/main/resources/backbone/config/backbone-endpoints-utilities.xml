@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+	<bean id="utilities-endpoints" abstract="true" parent="parent-endpoint-kernel">
+		<property name="templateModule" value="utilities"/>
+		<property name="xslModule" value="utilities"/>
+	</bean>
+	
+	<bean id="P_GET_USER_DB" parent="utilities-endpoints">
+		<property name="templateName" value="pgetUserDB.vm"/>
+		<property name="xslName" value="pgetUserDB.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+    
+	<bean id="P_EXIST_POLIZA" parent="utilities-endpoints">
+		<property name="templateName" value="valExistPoliza.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_INFO_DESPLIEGUE_DOCUMENTO" parent="utilities-endpoints">
+		<property name="templateName" value="pdesplegarInfoDocument.vm"/>
+		<property name="xslName" value="pdesplegarInfoDocument.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_INFO_IMPRESION" parent="utilities-endpoints">
+		<property name="templateName" value="pdesplegarInfoImpresion.vm"/>
+		<property name="xslName" value="pdesplegarInfoImpresion.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	
+    <!--
+	<bean id="P_GENERA_SUPLEMENTO_FISICO" parent="utilities-endpoints">
+		<property name="templateName" value="pgeneraSuplFisico.vm"/>
+		<property name="xslName" value="pgeneraSuplFisico.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_CompararRegistroB1B" parent="utilities-endpoints">
+		<property name="templateName" value="valcomparaRegistroB1B.vm"/>
+		<property name="xslName" value="valcomparaRegistroB1B.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GET_RAMOS_PARAPRO" parent="utilities-endpoints">
+		<property name="templateName" value="pgetRamoMPARAPRO.vm"/>
+		<property name="xslName" value="pgetRamoMPARAPRO.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GET_SUPL_MINMAX" parent="utilities-endpoints">
+		<property name="templateName" value="pgetSuplMinMax.vm"/>
+		<property name="xslName" value="pgetSuplMinMax.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GET_USER_AUTORIZAC" parent="utilities-endpoints">
+		<property name="templateName" value="pgetUserAutorizacion.vm"/>
+		<property name="xslName" value="pgetUserAutorizacion.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GET_VALUE_TRAMOS" parent="utilities-endpoints">
+		<property name="templateName" value="pgetDatosRamo.vm"/>
+		<property name="xslName" value="pgetDatosRamo.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_OBTENER_DESC_ATRB" parent="utilities-endpoints">
+		<property name="templateName" value="pgetDescAtributo.vm"/>
+		<property name="xslName" value="pgetDescAtributo.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_PROC_AUDIT" parent="utilities-endpoints">
+		<property name="templateName" value="pactualizaAuditoria.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_SUM_SITUAC" parent="utilities-endpoints">
+		<property name="templateName" value="pcuentaSituaciones.vm"/>
+		<property name="xslName" value="pcuentaSituaciones.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="PL_VAL" parent="utilities-endpoints">
+		<property name="templateName" value="valValoresAtributos.vm"/>
+		<property name="xslName" value="valValoresAtributos.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="PL_VALATR" parent="utilities-endpoints">
+		<property name="templateName" value="valValoresAtributosAll.vm"/>
+		<property name="xslName" value="valValoresAtributosAll.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="PL_VALATR_DES" parent="utilities-endpoints">
+		<property name="templateName" value="valValoresAtributosDesc.vm"/>
+		<property name="xslName" value="valValoresAtributosDesc.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="PL_VALFORMAT" parent="utilities-endpoints">
+		<property name="templateName" value="valValoresAtributosFormat.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="PL_VALIDA_FECHA" parent="utilities-endpoints">
+		<property name="templateName" value="valValoresAtributosFecha.vm"/>
+		<property name="xslName" value="valValoresAtributosFecha.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="PL_VALIDA_HORA" parent="utilities-endpoints">
+		<property name="templateName" value="valValoresAtributosHora.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+    -->
+</beans>

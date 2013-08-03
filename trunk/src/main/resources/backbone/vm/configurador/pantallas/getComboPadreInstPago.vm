@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<statements>
+	<statement type="stored" name="PKG_INSTPAGO.P_OBTIENE_PADRE_LIS" id="pObtienePadreInstPago">
+		<param eval="true" name="pv_cdunica" type="VARCHAR"><![CDATA[$!params.cdunica]]></param>
+		<param eval="true" name="pv_ottabval_i" type="VARCHAR"><![CDATA[$!params.ottabval]]></param>
+		<outparam id="pv_registro_o" type="CURSOR"/>
+		<outparam id="po_msg_id_o" type="NUMERIC"/>
+		<outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>					
+</statements>

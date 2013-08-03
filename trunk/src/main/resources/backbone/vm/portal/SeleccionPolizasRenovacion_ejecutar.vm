@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<statements>
+    <statement type="stored" name="PKG_RENOVA.P_SELECCION_POLIZAS" id="pSeleccionPolizas">
+    	
+        <param eval="true" name="p_CdElemento" type="NUMERIC">$!params.get("p_CdElemento")</param>
+        <param eval="true" name="p_CdTipRam" type="VARCHAR">$!params.get("p_CdTipRam")</param>
+        <param eval="true" name="p_CDUniEco" type="NUMERIC">$!params.get("p_CDUniEco")</param>
+        <param eval="true" name="p_CDRamo" type="NUMERIC">$!params.get("p_CDRamo")</param>
+        <param eval="true" name="p_NmPolde" type="NUMERIC">$!params.get("p_NmPolde")</param>
+        <param eval="true" name="p_NmPolHasta" type="NUMERIC">$!params.get("p_NmPolHasta")</param>
+        <param eval="true" name="p_DiasVen" type="NUMERIC">$!params.get("p_DiasVen")</param>
+        
+        <outparam id="pv_msg_id_o" type="INTEGER"></outparam>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+        
+    </statement>
+</statements>

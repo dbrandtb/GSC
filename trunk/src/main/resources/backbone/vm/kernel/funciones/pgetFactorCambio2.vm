@@ -1,0 +1,8 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_FUNCIONES.P_Get_Factor_Cambio_2" id="pgetFactorCambio2">
+		<outparam id="factor" type="NUMERIC"/>
+		<param eval="true" name="monedaOrigen" type="VARCHAR">$!params.get("piCdmonori")</param>
+		<param eval="true" name="monedaDestino" type="VARCHAR">$!params.get("piCdmondes")</param>
+		<param eval="true" name="fechaCambio" type="DATE">$!params.get("piFecambio")</param>
+	</statement>
+</statements>

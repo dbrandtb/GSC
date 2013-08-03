@@ -1,0 +1,13 @@
+<statements>
+	<statement type="stored" name="PKG_SATELITES.P_GENERA_SUPL_FISICO" id="endosoObtieneSuplFisico">
+		<param eval="true" name="pv_cdunieco" type="NUMERIC">$!params.cdunieco</param>
+		<param eval="true" name="pv_cdramo"   type="NUMERIC">$!params.cdramo</param>
+		<param eval="true" name="pv_estado"   type="VARCHAR">$!params.estado</param>
+		<param eval="true" name="pv_nmpoliza" type="NUMERIC">$!params.nmpoliza</param>
+		<param eval="true" name="pv_fecha_i" type="VARCHAR">$!params.fecha</param>
+		<param eval="true" name="pv_hhinival_i" type="VARCHAR">$!params.hora</param>
+		<outparam id="pv_nmsuplem_o" type="VARCHAR"/>
+		<outparam id="pv_msg_id_o" type="VARCHAR"/>
+		<outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

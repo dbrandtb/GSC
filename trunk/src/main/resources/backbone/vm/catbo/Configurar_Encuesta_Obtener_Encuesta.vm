@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_ENCUESTAS.P_OBTIENE_TCONFIGENCUESTA" id="obtieneEncuesta">
+	
+		<param eval="true" name="pv_dsunieco_i" type="VARCHAR"><![CDATA[$!params.get("pv_dsunieco_i")]]></param>
+ 		<param eval="true" name="pv_dsramo_i" type="VARCHAR"><![CDATA[$!params.get("pv_dsramo_i")]]></param>
+		<param eval="true" name="pv_dselemento_i" type="VARCHAR"><![CDATA[$!params.get("pv_dselemento_i")]]></param>
+  	 	<param eval="true" name="pv_dsproceso_i" type="VARCHAR"><![CDATA[$!params.get("pv_dsproceso_i")]]></param>
+  	  	<param eval="true" name="pv_dscampan_i" type="VARCHAR"><![CDATA[$!params.get("pv_dscampan_i")]]></param>
+  	    <param eval="true" name="pv_dsmodulo_i" type="VARCHAR"><![CDATA[$!params.get("pv_dsmodulo_i")]]></param>
+  	    <param eval="true" name="pv_dsencuesta_i" type="VARCHAR"><![CDATA[$!params.get("pv_dsencuesta_i")]]></param>
+  	      
+  	    <outparam id="pv_registro_o" type="CURSOR"/>
+  	    <outparam id="pv_msg_id_o" type="NUMERIC"/>
+        <outparam id="pv_title_o" type="VARCHAR"/>
+        
+	</statement>
+</statements>
+ 

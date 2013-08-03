@@ -1,0 +1,13 @@
+<statements>
+	<statement type="stored" name="PKG_CONFG_CUENTA.P_INSERTA_PLANPRO" id="inserta-plan-pro">		
+		  		
+  		<param eval="true" name="P_PRODUCTO" 	type="NUMERIC"><![CDATA[$!params.get("cdRamo")]]></param>
+  		<param eval="true" name="P_PLAN" 		type="VARCHAR"><![CDATA[$!params.get("cdPlan")]]></param>
+  		<param eval="true" name="P_SITUACION" 	type="VARCHAR"><![CDATA[$!params.get("cdTipSit")]]></param>
+  		<param eval="true" name="P_GARANTIA" 	type="VARCHAR"><![CDATA[$!params.get("cdgarant")]]></param>
+  		<param eval="true" name="P_OBLIG" 		type="NUMERIC"><![CDATA[$!params.get("obligatorio")]]></param>
+  
+		<outparam id="pv_msg_id_o" type="NUMERIC"/>
+		<outparam id="pv_title_o" type="VARCHAR"/>	
+	</statement>
+</statements>

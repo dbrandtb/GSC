@@ -1,0 +1,16 @@
+<statements>
+	<statement type="stored" name="PKG_TABAPOYO.P_OBTIENE_VALORES_ATRIBUTOS" id="pObtieneValoresAtributos">
+		<param eval="true" name="PV_NMTABLA_I" type="NUMERIC">$!params.nmTabla</param>
+		<param eval="true" name="PV_OTCLAVE1_I" type="VARCHAR">$!params.claves.descripcionClave1</param>
+		<param eval="true" name="PV_OTCLAVE2_I" type="VARCHAR">$!params.claves.descripcionClave2</param>
+		<param eval="true" name="PV_OTCLAVE3_I" type="VARCHAR">$!params.claves.descripcionClave3</param>
+		<param eval="true" name="PV_OTCLAVE4_I" type="VARCHAR">$!params.claves.descripcionClave4</param>
+		<param eval="true" name="PV_OTCLAVE5_I" type="VARCHAR">$!params.claves.descripcionClave5</param>
+		<param eval="true" name="PV_FEDESDE_I" type="DATE">$!params.claves.fechaDesde</param>
+		<param eval="true" name="PV_FEHASTA_I" type="DATE">$!params.claves.fechaHasta</param>
+
+		<outparam id="PV_REGISTRO_O" type="CURSOR"/>
+		<outparam id="PV_MSG_ID_O" type="NUMERIC"/>		
+		<outparam id="PV_TITLE_O" type="VARCHAR"/>	
+	</statement>
+</statements>

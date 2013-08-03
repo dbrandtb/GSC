@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
+<statements>
+#foreach($parametrosRenovar  in  $params.GUARDAR)
+	<statement type="stored" name="PKG_RENOVA.P_GUARDA_POLIZA_SELECCION" id="renovacionGuardaPolizaSeleccion">
+		<param eval="true" name="pv_Aseguradora_i" type="NUMERIC"><![CDATA[$parametrosRenovar.cdCia]]></param>
+		<param eval="true" name="pv_Producto_i" type="NUMERIC"><![CDATA[$parametrosRenovar.cdRamo]]></param>
+		<param eval="true" name="pv_Poliza_i" type="VARCHAR"><![CDATA[$parametrosRenovar.nmPoliza]]></param>
+		<param eval="true" name="pv_nmsituac_i" type="NUMERIC"><![CDATA[$parametrosRenovar.nmSituac]]></param>
+		<param eval="true" name="pv_Renovar_i" type="VARCHAR"><![CDATA[$parametrosRenovar.renovar]]></param>
+		<outparam id="pv_msg_id_o" type="NUMERIC"/>
+		<outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+#end
+</statements>

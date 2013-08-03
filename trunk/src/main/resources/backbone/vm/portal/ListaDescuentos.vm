@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+    <statement type="stored" name="PKG_DSCTO.P_OBTIENE_DESCTOS" id="obtieneDesctos">
+        <param eval="true" name="pv_dsnombre_i" type="VARCHAR"><![CDATA[$!params.get("dsDscto")]]></param>
+        <param eval="true" name="pv_dstipo_i" type="VARCHAR"><![CDATA[$!params.get("otValor")]]></param>
+        <param eval="true" name="pv_dselemen_i" type="VARCHAR"><![CDATA[$!params.get("dsCliente")]]></param>
+        <param eval="true" name="pv_cdestruc_i" type="NUMERIC"><![CDATA[$!params.get("cdEstruct")]]></param>
+        <outparam id="pv_registro_o" type="CURSOR"></outparam>
+        <outparam id="pv_msg_id_o" type="NUMERIC"></outparam>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+    </statement>
+</statements>

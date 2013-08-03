@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+    <include file="struts-default.xml" />                           
+
+    <package name="consultaPolizaRenovada" extends="json-default" namespace="/consultaPolizaRenovada">
+		
+		<action name="obtenerValoresPoliza" class="listaConsultaPolizaRenovadaAction" method="obtenerValoresPoliza">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		<action name="obtenerObjetosAsegurables" class="listaConsultaPolizaRenovadaAction" method="obtenerObjetosAsegurables">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		<action name="obtenerFunciones" class="listaConsultaPolizaRenovadaAction" method="obtenerFuncionesEnPoliza">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		<action name="obtenerValoresFuncion" class="listaConsultaPolizaRenovadaAction" method="obtenerDatosVariablesDeFuncionEnPoliza">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		<action name="obtenerDatosObjeto" class="listaConsultaPolizaRenovadaAction" method="obtenerDatosVariablesObjetoAsegurable">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		<action name="obtenerCoberturaAnterior" class="listaConsultaPolizaRenovadaAction" method="obtenerCoberturaAnterior">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		<action name="obtenerCoberturaRenovada" class="listaConsultaPolizaRenovadaAction" method="obtenerCoberturaRenovada">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		<action name="obtenerDatosVariablesTValoGar" class="listaConsultaPolizaRenovadaAction" method="obtenerDatosVariablesCobertura">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		<action name="obtenerEquipo" class="listaConsultaPolizaRenovadaAction" method="obtenerListaEquipoEspecial">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		<action name="obtenerDetalleEquipo" class="listaConsultaPolizaRenovadaAction" method="obtenerListaDetalleEquipoEspecial">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		<action name="obtenerTipoObjetosAtributos" class="listaConsultaPolizaRenovadaAction" method="obtenerAtributosVblesSegunTipoObjeto">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>		
+		<action name="obtenerRecibos" class="listaConsultaPolizaRenovadaAction" method="obtenerRecibos">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		
+		
+		<action name="obtenerEncabezadoPoliza" class="consultaPolizaRenovadaAction" method="getPolizaEncabezado">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		<action name="guardarMovPoliza" class="consultaPolizaRenovadaAction" method="guardarMovPolizaClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		<action name="guardarValoresPoliza" class="consultaPolizaRenovadaAction" method="guardarValoresPolizaClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		<action name="eliminarInciso" class="consultaPolizaRenovadaAction" method="eliminarObjetoAsegurableClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		<action name="eliminarFuncion" class="consultaPolizaRenovadaAction" method="eliminarFuncionEnPolizaClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		<action name="guardarObjetoAsegurable" class="consultaPolizaRenovadaAction" method="guardarMovMPolizasClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		<action name="guardarDatosVariablesRol" class="consultaPolizaRenovadaAction" method="guardarDatosVblesDeFuncionEnPolizaClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		<action name="guardarMovMPoliPer" class="consultaPolizaRenovadaAction" method="guardarFuncionEnPolizaClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		<action name="guardarDatosVblesObjetAsegurable" class="consultaPolizaRenovadaAction" method="guardarDatosVblesDelObjetoAsegurableClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		<action name="guardaCobertura" class="consultaPolizaRenovadaAction" method="guardarNuevaCoberturaClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		<action name="guardarDatosVariablesMovTValoGar" class="consultaPolizaRenovadaAction" method="guardarDatosVblesCoberturaClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		<action name="eliminarAccesorio" class="consultaPolizaRenovadaAction" method="eliminarAccesorioClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+		<action name="insertarOEditarAccesorio" class="consultaPolizaRenovadaAction" method="incluirAccesorioClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+	
+    </package>
+
+</struts>

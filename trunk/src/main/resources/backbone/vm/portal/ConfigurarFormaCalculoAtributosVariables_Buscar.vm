@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+       <statement type="stored" name="PKG_PARAMETRIZA.P_ATRIB_FORCAL" id="buscarConfigurarFormaCalculoAtributosVariables">
+       <param eval="true" name="pv_dsunieco_i" type="VARCHAR"><![CDATA[$!params.get("dsUnieco")]]></param>
+       <param eval="true" name="pv_dsramo_i" type="VARCHAR"><![CDATA[$!params.get("dsRamo")]]></param>
+       <param eval="true" name="pv_dselemento_i" type="VARCHAR"><![CDATA[$!params.get("dsElemen")]]></param>
+       <param eval="true" name="pv_dstipsit_i" type="VARCHAR"><![CDATA[$!params.get("dsTipSit")]]></param>
+
+  	   <outparam id="pv_registro_o" type="CURSOR"/>
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>
+

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+	
+    <bean id="tablasapoyo-endpoints" abstract="true" parent="parent-endpoint-kernel">
+		<property name="templateModule" value="tablasapoyo"/>
+		<property name="xslModule" value="tablasapoyo"/>
+	</bean>
+    
+	
+	<bean id="P_EJECUTA_QUERY_1CLAVE" parent="tablasapoyo-endpoints">
+		<property name="templateName" value="pejecutaQuery1Clave.vm"/>
+		<property name="xslName" value="pejecutaQuery2Clave.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_EJECUTA_QUERY_1CLAVE_TRAMOS" parent="tablasapoyo-endpoints">
+		<property name="templateName" value="pejecutaQuery1ClaveRamo.vm"/>
+		<property name="xslName" value="pejecutaQuery2Clave.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_EJECUTA_QUERY_2CLAVE" parent="tablasapoyo-endpoints">
+		<property name="templateName" value="pejecutaQuery2Clave.vm"/>
+		<property name="xslName" value="pejecutaQuery2Clave.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_EJECUTA_QUERY_2CLAVE_TRAMOS" parent="tablasapoyo-endpoints">
+		<property name="templateName" value="pejecutaQuery2ClaveRamo.vm"/>
+		<property name="xslName" value="pejecutaQuery2Clave.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_EJECUTA_QUERY_3CLAVE" parent="tablasapoyo-endpoints">
+		<property name="templateName" value="pejecutaQuery3Clave.vm"/>
+		<property name="xslName" value="pejecutaQuery2Clave.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_EJECUTA_QUERY_3CLAVE_TRAMOS" parent="tablasapoyo-endpoints">
+		<property name="templateName" value="pejecutaQuery3ClaveRamo.vm"/>
+		<property name="xslName" value="pejecutaQuery2Clave.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_EJECUTA_QUERY_4CLAVE" parent="tablasapoyo-endpoints">
+		<property name="templateName" value="pejecutaQuery4Clave.vm"/>
+		<property name="xslName" value="pejecutaQuery2Clave.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_EJECUTA_QUERY_4CLAVE_TRAMOS" parent="tablasapoyo-endpoints">
+		<property name="templateName" value="pejecutaQuery4ClaveRamo.vm"/>
+		<property name="xslName" value="pejecutaQuery2Clave.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_EJECUTA_QUERY_5CLAVE" parent="tablasapoyo-endpoints">
+		<property name="templateName" value="pejecutaQuery5Clave.vm"/>
+		<property name="xslName" value="pejecutaQuery2Clave.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_EJECUTA_QUERY_5CLAVE_TRAMOS" parent="tablasapoyo-endpoints">
+		<property name="templateName" value="pejecutaQuery5ClaveRamo.vm"/>
+		<property name="xslName" value="pejecutaQuery2Clave.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+    
+	<!--bean id="P_EJECUTA_QUERY_TABLAAPOYO" parent="tablasapoyo-endpoints">
+		<property name="templateName" value="pejecutaQueryTablaApoyo.vm"/>
+		<property name="xslName" value="pejecutaQueryTablaApoyo.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean-->
+
+	<bean id="P_GET_FORMATOS_CLAVES" parent="tablasapoyo-endpoints">
+		<property name="templateName" value="pgetFormatoClaves.vm"/>
+		<property name="xslName" value="pgetFormatoClaves.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+
+    
+    <!-- REVISAR BEAN Y ARCHIVO ENDPOINT QUE ES UTILIZADO PARA CACHEPRODUCTODAO...  -->
+	<bean id="P_GET_FORMATOS_CLAVES_VTA" parent="tablasapoyo-endpoints">
+		<property name="templateName" value="pgetFormatoClavesVTA.vm"/>
+		<property name="xslName" value="pgetFormatoClavesVTA.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+    
+    <!--
+	<bean id="P_GET_NMTABLA_LISTA" parent="tablasapoyo-endpoints">
+		<property name="templateName" value="pgetNmtablaLista.vm"/>
+		<property name="xslName" value="pgetNmtablaLista.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GET_TABLADEAPOYO" parent="tablasapoyo-endpoints">
+		<property name="templateName" value="pgetTablaApoyo.vm"/>
+		<property name="xslName" value="pgetTablaApoyo.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+    -->
+    
+	<bean id="P_GET_TIPOACCESO" parent="tablasapoyo-endpoints">
+		<property name="templateName" value="pgetTipoAcceso.vm"/>
+		<property name="xslName" value="pgetTipoAcceso.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+    
+	<!--bean id="P_TABLA_APOYO_QUERY" parent="tablasapoyo-endpoints">
+		<property name="templateName" value="pgetTablaApoyoQuery.vm"/>
+		<property name="xslName" value="pgetTablaApoyoQuery.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean-->
+   
+</beans>

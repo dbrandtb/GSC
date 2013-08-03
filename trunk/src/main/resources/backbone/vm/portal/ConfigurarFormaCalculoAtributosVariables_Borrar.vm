@@ -1,0 +1,7 @@
+<statements>
+	<statement type="stored" name="PKG_PARAMETRIZA.P_BORRA_FORCALATRIB" id="borrarConfigurarFormaCalculoAtributosVariables">
+        <param eval="true" name="pv_cdiden_i" type="NUMERIC">$!params.get("cdIden")</param>
+        <outparam id="pv_msg_id_o" type="NUMERIC"/>
+        <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

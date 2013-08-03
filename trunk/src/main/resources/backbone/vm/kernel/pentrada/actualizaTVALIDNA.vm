@@ -1,0 +1,18 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_ACTUALIZA_DATOS.P_ACT_TVALIDNA" id="actualizaTVALIDNA">
+		<param eval="true" name="pi_CDUNIECO" type="NUMERIC">$!params.get("pi_CDUNIECO")</param>
+		<param eval="true" name="pi_CDRAMO" type="NUMERIC">$!params.get("pi_CDRAMO")</param>
+		<param eval="true" name="pi_ESTADO" type="VARCHAR">$!params.get("pi_ESTADO")</param>
+		<param eval="true" name="pi_NMPOLIZA" type="NUMERIC">$!params.get("pi_NMPOLIZA")</param>
+		<param eval="true" name="pi_NMSUPLEM" type="VARCHAR">$!params.get("pi_NMSUPLEM")</param>
+		<param eval="true" name="pi_NMSITUAC" type="NUMERIC">$!params.get("pi_NMSITUAC")</param>
+		<param eval="true" name="pi_CDCAPGAR" type="VARCHAR">$!params.get("pi_CDCAPGAR")</param>
+		<param eval="true" name="pi_CDBLOQUE" type="VARCHAR">$!params.get("pi_CDBLOQUE")</param>
+		<param eval="true" name="pi_NMSECCIO" type="NUMERIC">$!params.get("pi_NMSECCIO")</param>
+		<param eval="true" name="pi_DSERROR" type="VARCHAR">$!params.get("pi_DSERROR")</param>
+		<param eval="true" name="pi_ACCION" type="VARCHAR">$!params.get("pi_ACCION")</param>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

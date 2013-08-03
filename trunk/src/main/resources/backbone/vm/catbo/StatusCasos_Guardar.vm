@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_CATBO.P_GUARDAR_CATBOSTCAS" id="guardarStatusCasos">
+       <param eval="true" name="pv_cdstatus_i" type="NUMERIC">$!params.get("cdStatus")</param>
+       <param eval="true" name="pv_dsstatus_i" type="VARCHAR"><![CDATA[$!params.get("dsStatus")]]></param>
+       <param eval="true" name="pv_indaviso_i" type="VARCHAR"><![CDATA[$!params.get("indAviso")]]></param>
+ 		
+  		<outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

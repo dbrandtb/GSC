@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<bean id="planes-endpoint" abstract="true"
+		parent="parent-endpoint">
+		<property name="templateModule" value="planes" />
+		<property name="xslModule" value="planes" />
+	</bean>
+
+	<bean id="OBTIENE_LISTA_PLANES_CONFIGURACION" parent="planes-endpoint">
+		<property name="templateName" value="pPlanesConfiguracion.vm" />
+		<property name="xslName" value="planesConfiguracion.xsl" />
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>
+ 
+     <bean id="OBTIENE_LISTA_PLANES_RAMAS" parent="planes-endpoint">
+        <property name="templateName" value="pPlanesRamas.vm" />
+        <property name="xslName" value="planesRamas.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+	<bean id="OBTIENE_LISTA_COBERTURAS_PLANES_CONFIGURACION" parent="planes-endpoint">
+		<property name="templateName" value="pPlanesCoberturas.vm" />
+		<property name="xslName" value="planesConfiguracion.xsl" />
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>
+ 
+	<bean id="GUARDA_PLAN_CONFIGURACION" parent="planes-endpoint">
+		<property name="templateName" value="agregarPlanConfiguracion.vm" />
+		<property name="transformResult" value="false" />
+        <property name="unmarshallResult" value="false" />
+	</bean>
+ 
+	<bean id="GUARDA_COBERTURA_PLAN_CONFIGURACION" parent="planes-endpoint">
+		<property name="templateName" value="agregarCoberturaPlanConfiguracion.vm" />
+		
+		<property name="xslModule" value="catalogs" />
+        <property name="xslName" value="obtieneMensajes.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.model.MensajesVO" />
+	</bean>
+	
+	<bean id="ELIMINA_PLAN" parent="planes-endpoint">
+		<property name="templateName" value="eliminaPlan.vm" />
+		<property name="transformResult" value="false" />
+        <property name="unmarshallResult" value="false" />
+	</bean>
+       
+    <bean id="MODIFICA_COBERTURA_PLAN" parent="planes-endpoint">
+		<property name="templateName" value="ModificaCoberturaPlan.vm"></property>
+	    <property name="transformResult" value="false" />
+        <property name="unmarshallResult" value="false" />
+	</bean>
+      
+    
+    
+</beans>
+
+
+

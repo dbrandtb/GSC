@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
+<statements>
+	<statement type="stored" name="PKG_PERSONA.P_GRABA_PERSONA_COT" id="guardarPersonaCotizacion">
+		<param eval="true" name="pv_cdperson" type="NUMERIC">$!params.cdPerson</param>
+  		<param eval="true" name="pv_nombre1" type="VARCHAR">$!params.nombre</param>
+  		<param eval="true" name="pv_nombre2" type="VARCHAR">$!params.nombre2</param>
+  		<param eval="true" name="pv_apellido1" type="VARCHAR">$!params.apellidoPaterno</param>
+  		<param eval="true" name="pv_apellido2" type="VARCHAR">$!params.apellidoMaterno</param>
+  		<param eval="true" name="pv_fenacimi" type="VARCHAR">$!params.fechaNacimiento</param>
+		<param eval="true" name="pv_sexo" type="VARCHAR">$!params.sexo</param>
+  		<param eval="true" name="pv_cdrol" type="NUMERIC">$!params.rol</param>
+ 		<outparam id="pv_cdperson_o" type="VARCHAR"/>
+ 		<outparam id="pv_msg_id_o" type="NUMERIC"/>
+		<outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

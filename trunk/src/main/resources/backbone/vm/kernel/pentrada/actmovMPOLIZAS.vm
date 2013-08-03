@@ -1,0 +1,99 @@
+<statements>
+	<statement type="stored" name="PKG_SATELITES.P_MOV_MPOLIZAS" id="actmovMPOLIZAS">
+		<param eval="true" name="pv_cdunieco" type="NUMERIC">$!params.get("pi_CDUNIECO")</param>
+		<param eval="true" name="pv_cdramo" type="NUMERIC">$!params.get("pi_CDRAMO")</param>
+		<param eval="true" name="pv_estado" type="VARCHAR">$!params.get("pi_ESTADO")</param>
+		<param eval="true" name="pv_nmpoliza" type="NUMERIC">$!params.get("pi_NMPOLIZA")</param>
+		<param eval="true" name="pv_nmsuplem" type="VARCHAR">$!params.get("pi_NMSUPLEM")</param>
+		<param eval="true" name="pv_status" type="VARCHAR">$!params.get("pi_STATUS")</param>
+		<param eval="true" name="pv_swestado" type="VARCHAR">$!params.get("pi_SWESTADO")</param>
+		<param eval="true" name="pv_nmsolici" type="NUMERIC">$!params.get("pi_NMSOLICI")</param>
+		<param eval="true" name="pv_feautori" type="VARCHAR">$!params.get("pi_FEAUTORI")</param>
+		<param eval="true" name="pv_cdmotanu" type="NUMERIC">$!params.get("pi_CDMOTANU")</param>
+		<param eval="true" name="pv_feanulac" type="VARCHAR">$!params.get("pi_FEANULAC")</param>
+		<param eval="true" name="pv_swautori" type="VARCHAR">$!params.get("pi_SWAUTORI")</param>
+		<param eval="true" name="pv_cdmoneda" type="VARCHAR">$!params.get("pi_CDMONEDA")</param>
+		<param eval="true" name="pv_feinisus" type="VARCHAR">$!params.get("pi_FEINISUS")</param>
+		<param eval="true" name="pv_fefinsus" type="VARCHAR">$!params.get("pi_FEFINSUS")</param>
+		<param eval="true" name="pv_ottempot" type="VARCHAR">$!params.get("pi_OTTEMPOT")</param>
+		<param eval="true" name="pv_feefecto" type="VARCHAR">$!params.get("pi_FEEFECTO")</param>
+		<param eval="true" name="pv_hhefecto" type="VARCHAR">$!params.get("pi_HHEFECTO")</param>
+		<param eval="true" name="pv_feproren" type="VARCHAR">$!params.get("pi_FEPROREN")</param>
+		<param eval="true" name="pv_fevencim" type="VARCHAR">$!params.get("pi_FEVENCIM")</param>
+		<param eval="true" name="pv_nmrenova" type="NUMERIC">$!params.get("pi_NMRENOVA")</param>
+		<param eval="true" name="pv_ferecibo" type="VARCHAR">$!params.get("pi_FERECIBO")</param>
+		<param eval="true" name="pv_feultsin" type="VARCHAR">$!params.get("pi_FEULTSIN")</param>
+		<param eval="true" name="pv_nmnumsin" type="NUMERIC">$!params.get("pi_NMNUMSIN")</param>
+		<param eval="true" name="pv_cdtipcoa" type="VARCHAR">$!params.get("pi_CDTIPCOA")</param>
+		<param eval="true" name="pv_swtarifi" type="VARCHAR">$!params.get("pi_SWTARIFI")</param>
+		<param eval="true" name="pv_swabrido" type="VARCHAR">$!params.get("pi_SWABRIDO")</param>
+		<param eval="true" name="pv_feemisio" type="VARCHAR">$!params.get("pi_FEEMISIO")</param>
+		<param eval="true" name="pv_cdperpag" type="NUMERIC">$!params.get("pi_CDPERPAG")</param>
+		<param eval="true" name="pv_nmpoliex" type="VARCHAR">$!params.get("pi_NMPOLIEX")</param>
+		<param eval="true" name="pv_nmcuadro" type="VARCHAR">$!params.get("pi_NMCUADRO")</param>
+		<param eval="true" name="pv_porredau" type="NUMERIC">$!params.get("pi_PORREDAU")</param>
+		<param eval="true" name="pv_swconsol" type="VARCHAR">$!params.get("pi_SWCONSOL")</param>
+		
+		<param eval="true" name="pv_nmpolant" type="VARCHAR"></param>
+		<param eval="true" name="pv_nmpolnva" type="VARCHAR"></param>
+		<param eval="true" name="pv_fesolici" type="VARCHAR">$!params.get("pi_FEEFECTO")</param>
+		<param eval="true" name="pv_cdramant" type="VARCHAR"></param>
+		<param eval="true" name="pv_cdmejred" type="VARCHAR"></param>
+		<param eval="true" name="pv_nmpoldoc" type="NUMERIC"></param>
+		<param eval="true" name="pv_nmpoliza2" type="NUMERIC"></param>
+		<param eval="true" name="pv_nmrenove" type="NUMERIC"></param>
+		<param eval="true" name="pv_nmsuplee" type="NUMERIC"></param>
+		<param eval="true" name="pv_ttipcamc" type="NUMERIC"></param>
+		<param eval="true" name="pv_ttipcamv" type="NUMERIC"></param>
+		<param eval="true" name="pv_swpatent" type="VARCHAR"></param>
+		
+		<param eval="true" name="pv_accion" type="VARCHAR">$!params.get("pi_ACCION")</param>
+		
+		<outparam id="pv_msg_id_o" type="NUMERIC"/>
+		<outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>
+
+#*
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_ACTUALIZA_DATOS.P_MOV_MPOLIZAS" id="actmovMPOLIZAS">
+       <inoutparam eval="true" name="Gv_Identificador_Error" id="Gv_Identificador_Error" type="VARCHAR">$!params.get("p_ERROR")</inoutparam>
+       <inoutparam eval="true" name="Gn_CdUnieco" id="Gn_CdUnieco" type="NUMERIC">$!params.get("pi_CDUNIECO")</inoutparam>
+		<param eval="true" name="Gn_CdRamo" type="NUMERIC">$!params.get("pi_CDRAMO")</param>
+		<param eval="true" name="Gv_ESTADO" type="VARCHAR">$!params.get("pi_ESTADO")</param>
+		<param eval="true" name="Gn_NmPoliza" type="NUMERIC">$!params.get("pi_NMPOLIZA")</param>
+		<param eval="true" name="Gn_NmSuplemBloque" type="VARCHAR">$!params.get("pi_NMSUPLEM_BLOQUE")</param>
+		<param eval="true" name="Gn_NmSuplemSesion" type="VARCHAR">$!params.get("pi_NMSUPLEM_SESION")</param>
+		<param eval="true" name="Gv_Status" type="VARCHAR">$!params.get("pi_STATUS")</param>
+		<param eval="true" name="Gv_Swestado" type="VARCHAR">$!params.get("pi_SWESTADO")</param>
+		<param eval="true" name="Gn_Nmsolici" type="NUMERIC">$!params.get("pi_NMSOLICI")</param>
+		<param eval="true" name="Gd_Feautori" type="DATE">$!params.get("pi_FEAUTORI")</param>
+		<param eval="true" name="Gn_Cdmotanu" type="NUMERIC">$!params.get("pi_CDMOTANU")</param>
+		<param eval="true" name="Gd_Feanulac" type="DATE">$!params.get("pi_FEANULAC")</param>
+		<param eval="true" name="Gv_Swautori" type="VARCHAR">$!params.get("pi_SWAUTORI")</param>
+		<param eval="true" name="Gv_Cdmoneda" type="VARCHAR">$!params.get("pi_CDMONEDA")</param>
+		<param eval="true" name="Gd_Feinisus" type="DATE">$!params.get("pi_FEINISUS")</param>
+		<param eval="true" name="Gd_Fefinsus" type="DATE">$!params.get("pi_FEFINSUS")</param>
+		<param eval="true" name="Gv_Ottempot" type="VARCHAR">$!params.get("pi_OTTEMPOT")</param>
+		<param eval="true" name="Gd_Feefecto" type="DATE">$!params.get("pi_FEEFECTO")</param>
+		<param eval="true" name="Gv_Hhefecto" type="VARCHAR">$!params.get("pi_HHEFECTO")</param>
+		<param eval="true" name="Gd_Feproren" type="DATE">$!params.get("pi_FEPROREN")</param>
+		<param eval="true" name="Gd_Fevencim" type="DATE">$!params.get("pi_FEVENCIM")</param>
+		<param eval="true" name="Gn_Nmrenova" type="NUMERIC">$!params.get("pi_NMRENOVA")</param>
+		<param eval="true" name="Gd_Ferecibo" type="DATE">$!params.get("pi_FERECIBO")</param>
+		<param eval="true" name="Gd_Feultsin" type="DATE">$!params.get("pi_FEULTSIN")</param>
+		<param eval="true" name="Gn_Nmnumsin" type="NUMERIC">$!params.get("pi_NMNUMSIN")</param>
+		<param eval="true" name="Gv_Cdtipcoa" type="VARCHAR">$!params.get("pi_CDTIPCOA")</param>
+		<param eval="true" name="Gv_Swtarifi" type="VARCHAR">$!params.get("pi_SWTARIFI")</param>
+		<param eval="true" name="Gv_Swabrido" type="VARCHAR">$!params.get("pi_SWABRIDO")</param>
+		<param eval="true" name="Gd_Feemisio" type="DATE">$!params.get("pi_FEEMISIO")</param>
+		<param eval="true" name="Gn_Cdperpag" type="NUMERIC">$!params.get("pi_CDPERPAG")</param>
+		<param eval="true" name="Gn_Nmpoliex" type="VARCHAR">$!params.get("pi_NMPOLIEX")</param>
+		<param eval="true" name="Gv_Nmcuadro" type="VARCHAR">$!params.get("pi_NMCUADRO")</param>
+		<param eval="true" name="Gn_Porredau" type="NUMERIC">$!params.get("pi_PORREDAU")</param>
+		<param eval="true" name="Gv_Swconsol" type="VARCHAR">$!params.get("pi_SWCONSOL")</param>
+         <inoutparam eval="true" name="Gv_Rowid" id="Gv_Rowid" type="VARCHAR">$!params.get("p_ROWID")</inoutparam>
+		<param eval="true" name="Gv_Accion" type="VARCHAR">$!params.get("pi_ACCION")</param>
+	</statement>
+</statements>
+*#

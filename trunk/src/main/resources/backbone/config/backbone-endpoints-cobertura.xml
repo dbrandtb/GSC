@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<bean id="coberturas-endpoint" abstract="true"
+		parent="parent-endpoint">
+		<property name="templateModule" value="coberturas" />
+		<property name="xslModule" value="coberturas" />
+	</bean>
+
+<!-- Bean declarado para obtener los combos de coberturas existentes en BD-->
+
+	<bean id="OBTIENE_COBERTURAS" parent="coberturas-endpoint">
+		<property name="templateName" value="obtieneCoberturas.vm" />
+		<property name="xslName" value="obtieneCoberturas.xsl" />
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>
+	
+	<bean id="OBTIENE_CONDICION_COBERTURA" parent="coberturas-endpoint">
+		<property name="templateName" value="obtieneCondicionCobertura.vm" />
+		<property name="xslName" value="obtieneCondicionCobertura.xsl" />
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>
+
+	<bean id="OBTIENE_RAMO_COBERTURA" parent="coberturas-endpoint">
+		<property name="templateName" value="obtieneRamoCobertura.vm" />
+		<property name="xslName" value="obtieneRamoCobertura.xsl" />
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>
+	
+	<bean id="OBTIENE_SUMA_ASEGURADA_COBERTURA" parent="coberturas-endpoint">
+		<property name="templateName" value="obtieneSumaAseguradaCobertura.vm" />
+		<property name="xslName" value="obtieneSumaAseguradaCobertura.xsl" />
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>
+	
+	<bean id="OBTIENE_COBERTURA_ASOCIADA" parent="coberturas-endpoint">
+		<property name="templateName" value="obtieneCoberturaAsociada.vm" />
+		<property name="xslName" value="obtieneCoberturaAsociada.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.catweb.configuracion.producto.coberturas.model.CoberturaVO" />
+	</bean>
+	
+	
+
+	<!-- Bean declarado para agregar una cobertura en la BD-->	
+	
+	<bean id="INSERTA_COBERTURA" parent="coberturas-endpoint">
+		<property name="templateName" value="insertaCobertura.vm" />
+		<property name="transformResult" value="false" />
+        <property name="unmarshallResult" value="false" />
+	</bean>
+	
+	<!-- Bean declarado para obtener asociar una cobertura en la BD-->
+	<bean id="ASOCIA_COBERTURA" parent="coberturas-endpoint">
+		<property name="templateName" value="asociaCobertura.vm" />
+		<property name="transformResult" value="false" />
+        <property name="unmarshallResult" value="false" />
+	</bean>
+</beans>

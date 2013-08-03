@@ -1,0 +1,9 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_FUNCIONES.P_Get_Tempo" id="pgetTemporalidad">
+		<outparam id="tempo" type="NUMERIC"/>
+		<param eval="true" name="gblPlan" type="VARCHAR">$!params.get("piCdplan")</param>
+		<param eval="true" name="gblPerpla" type="VARCHAR">$!params.get("piCdperpla")</param>
+		<param eval="true" name="gblMes" type="VARCHAR">$!params.get("piMes")</param>
+		<param eval="true" name="gblAnno" type="VARCHAR">$!params.get("piAnno")</param>
+	</statement>
+</statements>

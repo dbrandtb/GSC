@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+        <statement type="stored" name="PKG_REPORTES.P_OBTIENE_MGRAFICOS" id="Obtienecatalog">
+        <param eval="true" name="p_ncdreporte_i" type="VARCHAR">$!params.get("cdReporte")</param>
+        <param eval="true" name="p_vtipo_i" type="VARCHAR">$!params.get("tipo")</param>
+        <param eval="true" name="p_vcdtabla_i" type="VARCHAR">$!params.get("cdTabla")</param>
+        <param eval="true" name="p_ncdregion_i" type="VARCHAR">$!params.get("cdRegion")</param>
+        <param eval="true" name="p_ncdidioma_i" type="VARCHAR">$!params.get("cdIdioma")</param>
+        <outparam id="pv_registro_o" type="CURSOR"/>
+        <outparam id="pv_msg_id_o" type="NUMERIC"/>
+		<outparam id="pv_title_o" type="VARCHAR"/>	
+    </statement>
+</statements>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_CONFG_CUENTA.P_OBTIENE_PLANCIA" id="obtienePlanesXCliente">		
+        <param eval="true" name="pv_elemento_i" type="VARCHAR"><![CDATA[$!params.get("codigoElemento")]]></param>
+        <param eval="true" name="pv_producto_i" type="VARCHAR"><![CDATA[$!params.get("codigoProducto")]]></param>
+        <param eval="true" name="pv_unieco_i" type="VARCHAR"><![CDATA[$!params.get("aseguradora")]]></param>
+        <param eval="true" name="pv_plan_i" type="VARCHAR"><![CDATA[$!params.get("codigoPlan")]]></param>                
+        <param eval="true" name="pv_situacion_i" type="VARCHAR"><![CDATA[$!params.get("codigoSituacion")]]></param>
+        <param eval="true" name="pv_garantia_i" type="VARCHAR"><![CDATA[$!params.get("garantia")]]></param>
+
+        
+		<outparam id="po_msg_id" type="INTEGER"/>
+        
+        <outparam id="p_out_title" type="VARCHAR"></outparam>
+        <outparam id="lcur_registros" type="CURSOR"></outparam>
+	</statement>
+</statements>
+

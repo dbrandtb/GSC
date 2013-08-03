@@ -1,0 +1,13 @@
+<statements>
+	<statement type="stored" name="PKG_WIZARD.P_GETTABCOLUMBYVAR" id="pGetTabColumByVar2">
+		<param eval="true" name="PV_CDEXPRES_I" type="NUMERIC">$!params.codigoExpresion</param>								
+		<param eval="true" name="PV_CDVARIAB_I" type="VARCHAR">$!params.codigoVariable</param>								
+		<param eval="true" name="PV_OTTABLA_I" type="VARCHAR">$!params.tabla</param>								
+		<param eval="true" name="PV_OTSELECT_I" type="VARCHAR">$!params.columna</param>								
+	
+		<outparam id="PV_REGISTRO_O" type="CURSOR"/>
+		<outparam id="PV_MSG_ID_O" type="NUMERIC"/>
+		<outparam id="PV_TITLE_O" type="VARCHAR"/>
+				
+	</statement>
+</statements>

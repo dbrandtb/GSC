@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
+<statements>
+  
+    <statement type='stored' name="PKG_COTIZA.P_GUARDA_CARRITO" id="guardarCarritoCompras">
+
+        <param eval="true" name="p_cdcarro_i" type="NUMERIC">$!params.get("p_cdcarro_i")</param> 
+        <param eval="true" name="p_cdusuari" type="VARCHAR">$!params.get("p_cdusuari")</param> 
+        <param eval="true" name="p_feinicio" type="VARCHAR">$!params.get("p_feinicio")</param>
+        <param eval="true" name="p_nmtarj" type="NUMERIC">$!params.get("p_nmtarj")</param>        
+        <param eval="true" name="p_cdcontra" type="NUMERIC">$!params.get("p_cdcontra")</param>
+        <param eval="true" name="p_cdasegur" type="NUMERIC">$!params.get("p_cdasegur")</param> 
+        <param eval="true" name="p_nmsubtot" type="NUMERIC">$!params.get("p_nmsubtot")</param>
+        <param eval="true" name="p_nmdsc" type="NUMERIC">$!params.get("p_nmdsc")</param>        
+        <param eval="true" name="p_nmtotal" type="NUMERIC">$!params.get("p_nmtotal")</param>
+        <param eval="true" name="p_cdestado" type="NUMERIC">$!params.get("p_cdestado")</param> 
+        <param eval="true" name="p_feestado" type="VARCHAR">$!params.get("p_feestado")</param>
+        <param eval="true" name="p_cdtipdom" type="VARCHAR">$!params.get("p_cdtipdom")</param>        
+        <param eval="true" name="p_nmorddom" type="NUMERIC">$!params.get("p_nmorddom")</param>
+        <param eval="true" name="p_cdclient" type="NUMERIC">$!params.get("p_cdclient")</param> 
+        <param eval="true" name="p_cdunieco" type="NUMERIC">$!params.get("p_cdunieco")</param>
+        <param eval="true" name="p_cdramo" type="NUMERIC">$!params.get("p_cdramo")</param>        
+        <param eval="true" name="p_nmpoliza" type="NUMERIC">$!params.get("p_nmpoliza")</param>
+        <param eval="true" name="p_nmsuplem" type="NUMERIC">$!params.get("p_nmsuplem")</param> 
+        <param eval="true" name="p_mntotalp" type="NUMERIC">$!params.get("p_mntotalp")</param>
+        <param eval="true" name="p_cdtipsit" type="VARCHAR">$!params.get("p_cdtipsit")</param>        
+        <param eval="true" name="p_cdplan" type="VARCHAR">$!params.get("p_cdplan")</param>
+        <param eval="true" name="p_fgdscapli" type="NUMERIC">$!params.get("p_fgdscapli")</param>
+        <param eval="true" name="p_feingres" type="VARCHAR">$!params.get("p_feingres")</param>        
+        <param eval="true" name="p_cdestadod" type="NUMERIC">$!params.get("p_cdestadod")</param>
+        <param eval="true" name="p_cdforpag" type="NUMERIC">$!params.get("p_cdforpag")</param>
+                          
+                         
+        <outparam id="pv_msg_id_o" type="NUMERIC"></outparam>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+       
+	
+	</statement>
+
+    
+</statements>

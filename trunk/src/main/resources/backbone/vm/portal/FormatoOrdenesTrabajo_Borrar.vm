@@ -1,0 +1,8 @@
+<statements>
+	<statement type="stored" name="PKG_ORDENT.P_BORRA_FORMATO" id="borrarFormatoOrdenesTrabajo">
+        <param eval="true" name="P_CVE_FORMATOORDEN" type="NUMERIC">$!params.get("cdFormatoOrden")</param>
+        
+        <outparam id="pv_msg_id_o" type="NUMERIC"/>
+        <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

@@ -1,0 +1,31 @@
+<statements>
+	#foreach($atributo in $params)
+	<statement type="stored" name="PKG_WIZARD.P_INSATRIBROLINC" id="pAgregarAtribVarRol">
+		<param eval="true" name="PV_CDRAMO_I" type="NUMERIC">$!atributo.cdRamo</param>
+		<param eval="true" name="PV_CDNIVEL_I" type="NUMERIC">$!atributo.codigoNivel</param>
+		<param eval="true" name="PV_CDROL_I" type="VARCHAR">$!atributo.codigoRol</param>
+		<param eval="true" name="PV_CDATRIBU_I" type="NUMERIC">$!atributo.codigoAtributoVariable</param>
+		<param eval="true" name="PV_SWOBLIGA_I" type="VARCHAR">$!atributo.switchObligatorio</param>
+		<param eval="true" name="PV_CDTIPSIT_I" type="VARCHAR">$!atributo.codigoTipsit</param>
+		<param eval="true" name="PV_OTTABVAL_I" type="VARCHAR">$!atributo.codigoListaDeValores</param>		
+		<param eval="true" name="PV_SWCOTIZA_I" type="VARCHAR">$!atributo.apareceCotizador</param>
+		<param eval="true" name="PV_SWCOTUPD_I" type="VARCHAR">$!atributo.modificaCotizador</param>
+		<param eval="true" name="PV_SWDATCOM_I" type="VARCHAR">$!atributo.datoComplementario</param>
+		<param eval="true" name="PV_SWCOMOBL_I" type="VARCHAR">$!atributo.obligatorioComplementario</param>
+		<param eval="true" name="PV_SWCOMUPD_I" type="VARCHAR">$!atributo.modificableComplementario</param>
+		<param eval="true" name="PV_SWENDOSO_I" type="VARCHAR">$!atributo.apareceEndoso</param>
+		<param eval="true" name="PV_SWENDOBL_I" type="VARCHAR">$!atributo.obligatorioEndoso</param>
+		<param eval="true" name="PV_SWENDUPD_I" type="VARCHAR">$!atributo.modificaEndoso</param>		
+		<param eval="true" name="PV_CDATRIBU_PADRE_I" type="NUMERIC">$!atributo.codigoPadre</param>
+		<param eval="true" name="PV_NMORDEN_I" type="NUMERIC">$!atributo.orden</param>
+		<param eval="true" name="PV_NMAGRUPA_I" type="NUMERIC">$!atributo.agrupador</param>
+		<param eval="true" name="PV_CDCONDICVIS_I" type="VARCHAR">$!atributo.codigoCondicion</param>		
+		<param eval="true" name="PV_CDEXPRES_I" type="VARCHAR">$!atributo.codigoExpresion</param>
+		<param eval="true" name="PV_SWTARIFI_i" type="VARCHAR">$!atributo.retarificacion</param>
+		
+		<outparam id="PV_MSG_ID_O" type="NUMERIC"/>
+		<outparam id="PV_TITLE_O" type="VARCHAR"/>		
+	</statement>
+	#end
+</statements>
+

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_AGRUPAPOL.P_BORRA_GRUPO" id="borrarGrupo">
+       <param eval="true" name="pv_cve_grupo_i" type="NUMERIC">$!params.get("pv_cve_grupo_i")</param>  	 
+       <param eval="true" name="pv_cdagrgrupo_i" type="NUMERIC">$!params.get("pv_cdagrgrupo_i")</param>  
+         
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

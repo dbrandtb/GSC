@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
+<statements>
+	<statement type="stored" name="PKG_WORKFLOW.P_OBTIENE_PROCESOXCTA" id="obtenerProcesoXCta">
+		    <param eval="true" name="pv_dsprocesoflujo_i" type="VARCHAR">$!params.proceso</param>
+		    <param eval="true" name="pv_dsunieco_i" type="VARCHAR">$!params.aseguradora</param>
+		    <param eval="true" name="pv_dsnombre_i" type="VARCHAR">$!params.nombre</param>
+		    <param eval="true" name="pv_dselemento_i" type="VARCHAR">$!params.cliente</param>
+		    <param eval="true" name="pv_dsramo_i" type="VARCHAR">$!params.producto</param>
+        	<outparam id="po_registro" type="CURSOR"/>		
+			<outparam id="po_msg_id" type="NUMERIC"/>
+        	<outparam id="po_title" type="VARCHAR"/>
+	</statement>
+</statements>

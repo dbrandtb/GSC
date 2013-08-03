@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_ENCUESTAS.P_VALIDA_TCONFIGENCUESTA" id="validaConfigurarEncuesta">
+       <param eval="true" name="pv_cdmodulo_i" type="VARCHAR"><![CDATA[$!params.get("pv_cdmodulo_i")]]></param>
+ 	   <param eval="true" name="pv_cdunieco_i" type="NUMERIC"><![CDATA[$!params.get("pv_cdunieco_i")]]></param>
+ 	   <param eval="true" name="pv_cdramo_i" type="NUMERIC"><![CDATA[$!params.get("pv_cdramo_i")]]></param>
+ 	   <param eval="true" name="pv_cdelemento_i" type="NUMERIC"><![CDATA[$!params.get("pv_cdelemento_i")]]></param>
+ 	   
+  	   <outparam id="PV_VALIDA_I" type="NUMERIC"/>
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>
+ 

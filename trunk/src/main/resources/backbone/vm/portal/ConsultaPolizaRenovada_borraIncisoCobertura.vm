@@ -1,0 +1,13 @@
+<statements>
+	<statement type="stored" name="PKG_RENOVA.P_BORRA_INCISO_COBERTURA" id="pBorraIncisoCobertura">
+		
+        <param eval="true" name="pv_cdunieco_i" type="NUMERIC">$!params.get("pv_cdunieco_i")</param>
+        <param eval="true" name="pv_cdramo_i" type="VARCHAR">$!params.get("pv_cdramo_i")</param>
+        <param eval="true" name="pv_nmpoliza_i" type="VARCHAR">$!params.get("pv_nmpoliza_i")</param>
+        <param eval="true" name="pv_nmsituac_i" type="INTEGER">$!params.get("pv_nmsituac_i")</param>
+        <param eval="true" name="pv_cdgarant_i" type="INTEGER">$!params.get("pv_cdgarant_i")</param>
+        
+        <outparam id="pv_msg_id_o" type="VARCHAR"></outparam>
+		<outparam id="pv_title_o" type="NUMERIC"/>
+	</statement>
+</statements>

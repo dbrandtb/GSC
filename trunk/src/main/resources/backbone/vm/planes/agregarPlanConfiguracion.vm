@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
+<statements>
+	<statement type="stored" name="PKG_CONFG_CUENTA.P_INSERTA_PLAN" id="inserta-plan">		  		
+  		<param eval="true" name="P_PRODUCTO" type="NUMERIC"><![CDATA[$!params.get("cdRamo")]]></param>
+  		<param eval="true" name="P_CVE_PLAN" type="VARCHAR"><![CDATA[$!params.get("cdPlan")]]></param>
+  		<param eval="true" name="P_DES_PLAN" type="VARCHAR"><![CDATA[$!params.get("dsPlan")]]></param>
+  		<param eval="true" name="p_cve_sit" type="VARCHAR"><![CDATA[$!params.get("cdTipsit")]]></param>
+		<outparam id="PV_MSG_ID_O" type="NUMERIC"/>
+		<outparam id="PV_TITLE_O" type="VARCHAR"/>		
+	</statement>
+</statements>

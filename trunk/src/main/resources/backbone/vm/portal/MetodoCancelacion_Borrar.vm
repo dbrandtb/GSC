@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<statements>
+     <statement type="stored" name="PKG_CANCELA.P_BORRA_METODO" id="pBorraMetodoCancelacion">
+        <param eval="true" name="pv_cdmetodo_i" type="VARCHAR">$!params.get('pv_cdmetodo_i')</param>
+         
+        <outparam id="pv_msg_id_o" type="NUMERIC"></outparam>        
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+    </statement>
+</statements>

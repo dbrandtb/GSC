@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+    <statement type='stored' name="PKG_CONFG_CUENTA.P_INSERTA_DESTRUCT" id="pInsertaDestruct">
+    <!--
+          pi_cdestruc   IN  MESTRUCT.CDESTRUC%TYPE,
+          pi_dselemen   IN  MDESTRUC.DSELEMEN%TYPE,
+          pi_cdpadre    IN  MDESTRUC.CDPADRE%TYPE,
+          pi_cdtipniv   IN  MDESTRUC.CDTIPNIV%TYPE,
+          pi_nmposic    IN  MDESTRUC.NMPOSIC%TYPE,
+          pi_swnomina   IN  MDESTRUC.SWNOMINA%TYPE,
+          po_msg_id     OUT gb_messages.msg_id%TYPE,
+          po_title      OUT gb_messages.title%TYPE)
+    -->
+    
+        <param eval="true" name="pi_cdestruc" type="NUMERIC">$!params.get("codigoEstructura")</param>
+        <param eval="true" name="pi_dselemen" type="VARCHAR"><![CDATA[$!params.get("nombre")]]></param>
+        <param eval="true" name="pi_cdpadre" type="NUMERIC">$!params.get("vinculoPadre")</param>
+        <param eval="true" name="pi_cdtipniv" type="NUMERIC">$!params.get("tipoNivel")</param>
+        <param eval="true" name="pi_nmposic" type="NUMERIC">$!params.get("posicion")</param>
+        <param eval="true" name="pi_swnomina" type="VARCHAR">$!params.get("nomina")</param>
+        <param eval="true" name="pi_cdperson" type="NUMERIC">$!params.get("codigoElemento")</param>
+<!--
+        <param eval="true" name="pi_cdestruc" type="NUMERIC">$!params.get("codigoEstructura")</param>
+        <param eval="true" name="pi_dselemen" type="VARCHAR">$!params.get("codigoElemento")</param>
+        <param eval="true" name="pi_cdpadre" type="NUMERIC">$!params.get("vinculoPadre")</param>
+        <param eval="true" name="pi_cdtipniv" type="NUMERIC">$!params.get("tipoNivel")</param>
+        <param eval="true" name="pi_nmposic" type="NUMERIC">$!params.get("posicion")</param>
+        <param eval="true" name="pi_swnomina" type="VARCHAR">$!params.get("nomina")</param>
+-->
+        <outparam id="po_msg_id" type="NUMERIC"/>
+        <outparam id="po_title" type="VARCHAR"/>
+       
+    </statement>
+    
+</statements>

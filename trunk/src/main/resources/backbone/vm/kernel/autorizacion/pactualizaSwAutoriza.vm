@@ -1,0 +1,17 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_AUTORIZACION.P_ACT_SWAUTOTI_MPOLIAUT" id="pactualizaSwAutoriza">
+		<param eval="true" name="pi_CDUNIECO" type="NUMERIC">$!params.get("pi_CDUNIECO")</param>
+		<param eval="true" name="pi_CDRAMO" type="NUMERIC">$!params.get("pi_CDRAMO")</param>
+		<param eval="true" name="pi_ESTADO" type="VARCHAR">$!params.get("pi_ESTADO")</param>
+		<param eval="true" name="pi_NMPOLIZA" type="NUMERIC">$!params.get("pi_NMPOLIZA")</param>
+		<param eval="true" name="pi_NMSITUAC" type="NUMERIC">$!params.get("pi_NMSITUAC")</param>
+		<param eval="true" name="pi_NMSUPLEM" type="VARCHAR">$!params.get("pi_NMSUPLEM")</param>
+		<param eval="true" name="pi_CDMOTIVO" type="VARCHAR">$!params.get("pi_CDMOTIVO")</param>
+		<param eval="true" name="pi_CDUSUARI" type="VARCHAR">$!params.get("pi_CDUSUARI")</param>
+		<param eval="true" name="pi_SWAUTORI" type="VARCHAR">$!params.get("pi_SWAUTORI")</param>
+		<param eval="true" name="pi_OBSERVAC" type="VARCHAR">$!params.get("pi_OBSERVAC")</param>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

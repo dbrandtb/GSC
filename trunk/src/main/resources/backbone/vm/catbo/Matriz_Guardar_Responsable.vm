@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_CATBO.P_GUARDA_TMATRESP" id="guardarResponsables">
+       <param eval="true" name="cdmatriz" type="NUMERIC"><![CDATA[$!params.get("cdmatriz")]]></param>
+ 	   <param eval="true" name="cdnivatn" type="NUMERIC"><![CDATA[$!params.get("cdnivatn")]]></param>
+  	   <param eval="true" name="cdrolmat" type="VARCHAR"><![CDATA[$!params.get("cdrolmat")]]></param>
+  	   <param eval="true" name="cdusuari" type="VARCHAR"><![CDATA[$!params.get("cdusuari")]]></param>
+  	   <param eval="true" name="pv_email_i" type="VARCHAR"><![CDATA[$!params.get("pv_email_i")]]></param>
+  	   <param eval="true" name="status" type="NUMERIC"><![CDATA[$!params.get("status")]]></param>
+  	   <param eval="true" name="pv_operacion_i" type="VARCHAR"><![CDATA[$!params.get("operacion")]]></param>
+  	   
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>
+ 

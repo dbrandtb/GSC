@@ -1,0 +1,30 @@
+<statements>
+    <statement type="stored" name="PACK_NEWALEA_CACHELISTAS.P_EXEC_LISTAS2" id="pExecListas">
+        
+        <param eval="true" name="pi_CDPANTAL" type="VARCHAR">$!params.cdPantal</param>
+        <param eval="true" name="pi_IDLISTA" type="VARCHAR">$!params.idLista</param>
+        <param eval="true" name="pi_CDBLOQUE" type="VARCHAR">$!params.cdBloque</param>        
+        <param eval="true" name="pi_CDATRIBU" type="VARCHAR">$!params.cdAtribu</param>        
+        <param eval="true" name="pi_CDUNIECO" type="VARCHAR">$params.cdUnieco</param>
+        <param eval="true" name="pi_CDRAMO" type="VARCHAR">$!params.cdRamo</param>
+        <param eval="true" name="pi_ESTADO" type="VARCHAR">$!params.estado</param>
+        <param eval="true" name="pi_NMPOLIZA" type="VARCHAR">$!params.nmPoliza</param>
+        <param eval="true" name="pi_NMSITUAC" type="VARCHAR">$!params.nmSituac</param>
+        <param eval="true" name="pi_CDTIPSIT" type="VARCHAR">$!params.cdTipSit</param>
+        <param eval="true" name="pi_CDGARANT" type="VARCHAR">$!params.cdGarant</param>
+        <param eval="true" name="pi_CDCAPITA" type="VARCHAR">$!params.cdCapita</param>
+        <param eval="true" name="pi_NMOBJETO" type="VARCHAR">$!params.nmObjeto</param>
+        <param eval="true" name="pi_CDTIPOBJ" type="VARCHAR">$!params.cdTipObj</param>
+        <param eval="true" name="pi_CDAGENTE" type="VARCHAR">$!params.cdAgente</param>
+        <param eval="true" name="pi_CDPERSON" type="VARCHAR">$!params.cdPerson</param>
+        <param eval="true" name="pi_NMSUPLEM" type="VARCHAR">$!params.nmSuplement</param>
+        <param eval="true" name="pi_FILTRO" type="VARCHAR">$!params.filtro</param>
+        <param eval="true" name="pi_TPFILTRO" type="VARCHAR">$!params.tipoFiltro</param>
+        <param eval="true" name="pi_VALANID" type="VARCHAR">$!params.piValanid</param>
+        <outparam id="po_TPLISTA" type="VARCHAR"/>
+        <outparam id="rc_cursor" type="CURSOR"/>
+        <outparam id="po_CDERROR" type="VARCHAR"/>
+        <outparam id="po_DSERROR" type="VARCHAR"/>
+        <outparam id="po_TIPOERROR" type="VARCHAR"/>
+    </statement>
+</statements>

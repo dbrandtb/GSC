@@ -1,0 +1,14 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_PENTRADA.P_VALIDAR_TDESCSUP_NMSOLICI" id="valNroSolicitudTdescsup">
+		<param eval="true" name="pi_CDUNIECO" type="NUMERIC">$!params.get("pi_CDUNIECO")</param>
+		<param eval="true" name="pi_CDRAMO" type="NUMERIC">$!params.get("pi_CDRAMO")</param>
+		<param eval="true" name="pi_ESTADO" type="VARCHAR">$!params.get("pi_ESTADO")</param>
+		<param eval="true" name="pi_NMPOLIZA" type="NUMERIC">$!params.get("pi_NMPOLIZA")</param>
+		<param eval="true" name="pi_NSUPLOGI" type="NUMERIC">$!params.get("pi_NSUPLOGI")</param>
+		<param eval="true" name="pi_NMSOLICI" type="NUMERIC">$!params.get("pi_NMSOLICI")</param>
+		<outparam id="po_NMSOLICI" type="NUMERIC"/>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

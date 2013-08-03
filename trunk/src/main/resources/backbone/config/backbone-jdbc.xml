@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Configuracion de acceso a base de datos entorno Local -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+        <!-- Home -->
+        <!--property name="url" value="jdbc:oracle:thin:@localhost:1522:ORCL"/-->
+        <!-- Facultad 06-05-08-->
+        <!--
+        <property name="url" value="jdbc:oracle:thin:@192.168.100.107:1521:ORCL"/>
+        <property name="username" value="ice"/>
+        <property name="password" value="welcome1"/>
+        -->
+        <!-- Biosnet 06-05-08-->
+        <property name="url" value="jdbc:oracle:thin:@192.168.1.190:1527:acwqa"/>
+        <property name="username" value="ice_configuring"/>
+        <property name="password" value="ice_configuring"/>
+
+        <!-- property name="maxActive" value="30"/>
+        <property name="maxIdle" value="10"/>
+        <property name="maxWait" value="1000"/>
+        <property name="defaultAutoCommit" value="true"/ -->
+    </bean>
+
+    <!-- Transaction manager for Spring JDBC -->
+    <bean id="transactionManager"
+        class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <bean id="jdbcDao"
+        class="com.wittyconsulting.backbone.service.support.jdbc.dao.XMLJdbcDao">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <bean id="jdbcService"
+        class="com.wittyconsulting.backbone.service.support.jdbc.JdbcService">
+        <property name="xmlDao" ref="jdbcDao" />
+    </bean>
+
+</beans>

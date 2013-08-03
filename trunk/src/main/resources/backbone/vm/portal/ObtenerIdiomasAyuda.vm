@@ -1,0 +1,7 @@
+<statements>
+	<statement type="stored" name="PKG_LISTAS.P_IDIOMAS_TRAD" id="pObtieneIdiomasAyuda">
+		<outparam id="po_resulset" type="CURSOR"></outparam>
+		<outparam id="pv_msg_id_o" type="NUMERIC"/>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+	</statement>
+</statements>

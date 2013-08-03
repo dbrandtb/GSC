@@ -1,0 +1,13 @@
+<statements>
+	<statement type="stored" name="PKG_TABLASDE_APOYO.P_EJECUTA_QUERY_3CLAVE_TRAMOS" id="pejecutaQuery3ClaveRamo">
+		<param eval="true" name="clave1Valor" type="VARCHAR">$!params.get("clave1Valor")</param>
+		<param eval="true" name="clave2Valor" type="VARCHAR">$!params.get("clave2Valor")</param>
+		<param eval="true" name="clave3Valor" type="VARCHAR">$!params.get("clave3Valor")</param>
+		<param eval="true" name="nombreTablaWhere" type="VARCHAR">$!params.get("nombreTablaWhere")</param>
+		<param eval="true" name="fecha" type="VARCHAR">$!params.get("fecha")</param>
+		<param eval="true" name="formatoClave1" type="VARCHAR">$!params.get("formatoClave1")</param>
+		<param eval="true" name="formatoClave2" type="VARCHAR">$!params.get("formatoClave2")</param>
+		<param eval="true" name="formatoClave3" type="VARCHAR">$!params.get("formatoClave3")</param>
+		<outparam id="cursor_vta" type="CURSOR"/>
+	</statement>
+</statements>

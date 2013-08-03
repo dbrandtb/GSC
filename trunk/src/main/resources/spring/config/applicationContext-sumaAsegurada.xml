@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+	
+	<bean id="SumaAseguradaManager" class="mx.com.aon.catweb.configuracion.producto.service.impl.SumaAseguradaManagerImpl">
+ 		<property name="endpoints">
+			<map>    				
+        		<entry key="CATALOGO_TIPO_SUMA_ASEGURADA">
+            		<ref bean="CATALOGO_TIPO_SUMA_ASEGURADA"/>            
+            	</entry>
+            	<entry key="CATALOGO_SUMA_ASEGURADA">
+            		<ref bean="CATALOGO_SUMA_ASEGURADA"/>            
+            	</entry> 
+            	<entry key="CATALOGO_MONEDA_SUMA_ASEGURADA">
+            		<ref bean="CATALOGO_MONEDA_SUMA_ASEGURADA"/>            
+            	</entry> 
+            	<entry key="LISTA_SUMAS_ASEGURADAS">
+            		<ref bean="LISTA_SUMAS_ASEGURADAS"/>            
+            	</entry>       
+				<entry key="AGREGAR_SUMA_ASEGURADA">
+            		<ref bean="AGREGAR_SUMA_ASEGURADA"/>            
+            	</entry>  
+            	<entry key="ELIMINAR_SUMA_ASEGURADA_PRODUCTO">
+            		<ref bean="ELIMINAR_SUMA_ASEGURADA_PRODUCTO"/>            
+            	</entry>
+            	<entry key="LISTA_SUMAS_ASEGURADAS_INCISO">
+            		<ref bean="LISTA_SUMAS_ASEGURADAS_INCISO"/>            
+            	</entry>  
+            	<entry key="AGREGAR_SUMA_ASEGURADA_INCISO">
+            		<ref bean="AGREGAR_SUMA_ASEGURADA_INCISO"/>            
+            	</entry> 
+            	<entry key="ELIMINAR_SUMA_ASEGURADA_INCISO">
+            		<ref bean="ELIMINAR_SUMA_ASEGURADA_INCISO"/>            
+            	</entry>  
+            	        	       		 
+        	</map>
+    	</property>	
+	</bean>
+	
+	<bean id="sumaAseguradaDAO" class="mx.com.aon.catweb.configuracion.producto.dao.SumaAseguradaDAO">
+       <property name="dataSource" ref="dataSource" />
+    </bean>
+		
+</beans>

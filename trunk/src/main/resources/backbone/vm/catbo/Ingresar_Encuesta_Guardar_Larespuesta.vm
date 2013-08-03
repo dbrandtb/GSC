@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_ENCUESTAS.P_GUARDA_TVALENCT" id="guardarEncuestaLarespuesta">
+		
+       <param eval="true" name="pv_nmconfig_i" type="NUMERIC">$!params.get("nmConfig")</param>
+       <param eval="true" name="pv_cdunieco_i" type="NUMERIC">$!params.get("cdUniEco")</param>
+       <param eval="true" name="pv_cdramo_i" type="NUMERIC">$!params.get("cdRamo")</param>
+       <param eval="true" name="pv_estado_i" type="VARCHAR"><![CDATA[$!params.get("estado")]]></param>
+       <param eval="true" name="pv_nmpoliza_i" type="NUMERIC">$!params.get("nmPoliza")</param>
+       <param eval="true" name="pv_cdperson_i" type="NUMERIC">$!params.get("cdPerson")</param>
+       <param eval="true" name="pv_cdencuesta_i" type="NUMERIC">$!params.get("cdEncuesta")</param>
+       <param eval="true" name="pv_cdpregun_i" type="NUMERIC">$!params.get("cdPregunt")</param>
+       <param eval="true" name="pv_otvalor_i" type="VARCHAR"><![CDATA[$!params.get("otValor")]]></param>
+
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+	
+</statements>
+ 

@@ -1,0 +1,14 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_FOLIOS.Obtiene_ListaFolios" id="pobtieneFolios">
+		<param eval="true" name="p_cdunieco" type="NUMERIC">$!params.get("pi_CDUNIECO")</param>
+		<param eval="true" name="p_cdramo" type="NUMERIC">$!params.get("pi_CDRAMO")</param>
+		<param eval="true" name="p_cdtiproc" type="VARCHAR">$!params.get("pi_PROC")</param>
+		<param eval="true" name="p_cdagente" type="VARCHAR">$!params.get("pi_CDAGENTE")</param>
+		<param eval="true" name="p_nmpoliza" type="NUMERIC">$!params.get("pi_NMPOLIZA")</param>
+		<param eval="true" name="p_filtro" type="VARCHAR">$!params.get("pi_NMSUPLEM")</param>
+		<outparam id="pc_folios" type="CURSOR"/>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+    
+    <bean id="cotizacionService" 
+    	  class="mx.com.aon.flujos.cotizacion.service.impl.CotizacionServiceImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="GET_COMBO_PADRE">
+                    <ref bean="GET_COMBO_PADRE" />
+                </entry>
+                
+                <entry key="GET_COMBO_PADRE_INSTPAGO">
+                    <ref bean="GET_COMBO_PADRE_INSTPAGO" />
+                </entry>
+                
+                <entry key="OBTIENE_TATRI_PARAMS">
+                    <ref bean="OBTIENE_TATRI_PARAMS" />
+                </entry>
+                
+                <entry key="OBTIENE_RESULTADOS">
+                    <ref bean="OBTIENE_RESULTADOS" />
+                </entry>
+                
+                <entry key="OBTIENE_COBERTURAS_CONFIGURADOR">
+                    <ref bean="OBTIENE_COBERTURAS_CONFIGURADOR" />
+                </entry>
+                
+                <entry key="OBTIENE_AYUDA_COBERTURA">
+                    <ref bean="OBTIENE_AYUDA_COBERTURA" />
+                </entry>
+                                
+                <entry key="OBTIENE_PANTALLA_FINAL">
+                    <ref bean="OBTIENE_PANTALLA_FINAL" />
+                </entry>
+                
+                <entry key="BOTON_GUARDA_COTIZACION">
+                    <ref bean="BOTON_GUARDA_COTIZACION" />
+                </entry>
+                
+                <entry key="GUARDA_COTIZACION_RESULTADO">
+                    <ref bean="GUARDA_COTIZACION_RESULTADO" />
+                </entry>
+                
+                <entry key="OBTEN_ASEGURADORAS">
+                    <ref bean="OBTEN_ASEGURADORAS" />
+                </entry>
+                
+                <entry key="OBTIEN_COTIZACIONES">
+                    <ref bean="OBTIEN_COTIZACIONES"/>
+                </entry>
+                
+                <entry key="ELIMINA_COTIZACIONES_CONSULTA">
+                    <ref bean="ELIMINA_COTIZACIONES_CONSULTA"/>
+                </entry>
+                                
+                <entry key="OBTIENE_DESGLOSE_COBERTURAS">
+                    <ref bean="OBTIENE_DESGLOSE_COBERTURAS"/>
+                </entry>
+                
+                <entry key="OBTIENE_RECIBOS_COTIZACION">
+                    <ref bean="OBTIENE_RECIBOS_COTIZACION"/>
+                </entry>
+                
+                <entry key="P_MOV_M_POLI_PER">
+                    <ref bean="P_MOV_M_POLI_PER"/>
+                </entry>
+                
+                <entry key="OBTIENE_MPOLIOBJ">
+                    <ref bean="OBTIENE_MPOLIOBJ"/>
+                </entry>
+                
+                <entry key="GET_ROLES_DC">
+                    <ref bean="GET_ROLES_DC"/>
+                </entry>
+                
+                <entry key="OBTIENE_NMSUPLEM">
+                    <ref bean="OBTIENE_NMSUPLEM"/>
+                </entry>
+                
+                <entry key="OBTIENE_PANTALLA_CONFIGURADA_TEST">
+                    <ref bean="OBTIENE_PANTALLA_CONFIGURADA_TEST"/>
+                </entry>
+                
+                <entry key="OBTIENE_LISTA_COTIZACION_ESPECIAL">
+                    <ref bean="OBTIENE_LISTA_COTIZACION_ESPECIAL"/>
+                </entry>
+                
+                 <entry key="OBTIENE_ETIQUETA_PRODUCTO_ESPECIAL">
+                    <ref bean="OBTIENE_ETIQUETA_PRODUCTO_ESPECIAL"/>
+                </entry>
+                
+                <entry key="OBTIENE_lISTA_TIPO_PRODUCTO_ESPECIAL">
+                    <ref bean="OBTIENE_lISTA_TIPO_PRODUCTO_ESPECIAL"/>
+                </entry>
+                
+                 <entry key="CONSULTA_SERVICIO_SATELITE_MPOLIOBJ">
+                    <ref bean="CONSULTA_SERVICIO_SATELITE_MPOLIOBJ"/>
+                </entry>
+                
+                <entry key="SERVICIO_EQUIPO_ESPECIAL_COTIZACION">
+                    <ref bean="SERVICIO_EQUIPO_ESPECIAL_COTIZACION"/>
+                </entry>
+                                
+                <entry key="OBTIENE_TIPOS_ITEMS_ATRIBUTOS_EQUIPO">
+                    <ref bean="OBTIENE_TIPOS_ITEMS_ATRIBUTOS_EQUIPO"/>
+                </entry>
+                
+                <entry key="OBTIENE_COMBOS_ITEMS_ATRIBUTOS_EQUIPO">
+                    <ref bean="OBTIENE_COMBOS_ITEMS_ATRIBUTOS_EQUIPO"/>
+                </entry>
+                
+                <entry key="OBTIENE_LISTA_FUNCION_ROL">
+                    <ref bean="OBTIENE_LISTA_FUNCION_ROL"/>
+                </entry>
+                
+                <entry key="OBTIENE_LISTA_SEXO">
+                    <ref bean="OBTIENE_LISTA_SEXO"/>
+                </entry>
+                
+                <entry key="GRABA_PERSONA_COT">
+                    <ref bean="GRABA_PERSONA_COT"/>
+                </entry>
+                
+                <entry key="MOV_MPOLIAGR2">
+                    <ref bean="MOV_MPOLIAGR2" />
+                </entry>
+                <entry key="GUARDA_DATOS_ENDOSO_TARJETA">
+                    <ref bean="GUARDA_DATOS_ENDOSO_TARJETA" />
+                </entry>
+                
+                <entry key="OBTIENE_NUMERO_OBJETO_EQUIPO_ESPECIAL">
+                    <ref bean="OBTIENE_NUMERO_OBJETO_EQUIPO_ESPECIAL" />
+                </entry>
+                
+                 <entry key="OBTIENE_TIPOS_ITEMS_ATRIBUTOS_EQUIPO_EDICION">
+                    <ref bean="OBTIENE_TIPOS_ITEMS_ATRIBUTOS_EQUIPO_EDICION" />
+                </entry>
+                <entry key="OBTIENE_COMBOS_ATRIBUTOS_EQUIPO_EDICION">
+                    <ref bean="OBTIENE_COMBOS_ATRIBUTOS_EQUIPO_EDICION" />
+                </entry>
+                <entry key="OBTIENE_TVALOSIT3">
+                    <ref bean="OBTIENE_TVALOSIT3" />
+                </entry>
+                <entry key="OBTIENE_TVALOSIT_COTIZA">
+                    <ref bean="OBTIENE_TVALOSIT_COTIZA" />
+                </entry>
+                <entry key="CLONA_OBJETOS">
+                    <ref bean="CLONA_OBJETOS" />
+                </entry>
+                
+                <entry key="OBTIENE_ASEGURADO">
+                    <ref bean="OBTIENE_ASEGURADO" />
+                </entry>
+            </map>
+        </property>
+    </bean>
+    
+</beans>

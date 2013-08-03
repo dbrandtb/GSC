@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_CATBO.P_OBTIENE_SUFPRE" id="obtenerSufijoPrefijo">
+       
+       <param eval="true" name="pv_cdmodulo_i" type="VARCHAR"><![CDATA[$!params.get("pv_cdmodulo_i")]]></param>
+
+  	   <outparam id="pv_dssufpre_o" type="VARCHAR"/>
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+       
+	</statement>
+</statements>
+ 

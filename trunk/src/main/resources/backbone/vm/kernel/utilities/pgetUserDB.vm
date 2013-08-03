@@ -1,0 +1,9 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_UTILITY.P_GET_USER_DB" id="pgetUserDB">
+		<outparam id="po_USERDB" type="VARCHAR"/>
+		<outparam id="po_USERNAME" type="VARCHAR"/>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

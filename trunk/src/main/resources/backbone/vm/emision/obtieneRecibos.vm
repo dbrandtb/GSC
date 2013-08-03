@@ -1,0 +1,10 @@
+<statements>
+	<statement type="stored" name="PKG_EMISION.P_OBTIENE_RECIBOS" id="emisionObtieneRecibos">
+		<param eval="true" name="pv_cdunieco_i" type="NUMERIC">$!params.aseguradora</param>
+		<param eval="true" name="pv_cdramo_i" type="NUMERIC">$!params.producto</param>
+		<param eval="true" name="pv_nmpoliza_i" type="NUMERIC">$!params.poliza</param>
+		<outparam id="pv_registro_o" type="CURSOR"/>
+		<outparam id="pv_msg_id_o" type="VARCHAR"/>
+		<outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

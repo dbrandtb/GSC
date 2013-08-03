@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_REPORTES.P_BORRA_MGRAFICOS" id="borraGrafico">
+	    <param eval="true" name="p_ncdreporte_i" type="VARCHAR">$!params.get("cdReporte")</param>
+	    <param eval="true" name="p_vnmgrafico_i" type="VARCHAR">$!params.get("nombreGrafico")</param>
+	    <outparam id="pv_msg_id_o" type="VARCHAR"/>
+		<outparam id="pv_title_o" type="NUMERIC"/>
+	</statement>
+</statements>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+   <statement type="stored" name="PKG_TABAPOYO.P_GUARDA_TCATALOG" id="pGuardaCatalogo">
+        <param eval="true" name="pv_cdtabla_i" type="VARCHAR"><![CDATA[$!params.get('pv_cdtabla_i')]]></param>
+        <param eval="true" name="pv_cdregion_i" type="NUMERIC">$!params.get('pv_cdregion_i')</param>
+        <param eval="true" name="pv_cdidioma_i" type="NUMERIC">$!params.get('pv_cdidioma_i')</param>
+        <param eval="true" name="pv_codigo_i" type="VARCHAR"><![CDATA[$!params.get('pv_codigo_i')]]></param>
+        <param eval="true" name="pv_descripc_i" type="VARCHAR"><![CDATA[$!params.get('pv_descripc_i')]]></param>
+        <param eval="true" name="pv_descripl_i" type="VARCHAR"><![CDATA[$!params.get('pv_descripl_i')]]></param>
+        <param eval="true" name="pv_dslabel_i" type="VARCHAR"><![CDATA[$!params.get('pv_dslabel_i')]]></param>
+        
+        <outparam id="pv_msg_id_o" type="NUMERIC"></outparam>        
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+   </statement>
+</statements>

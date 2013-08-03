@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+	
+    <bean id="personas-endpoints" abstract="true" parent="parent-endpoint-kernel">
+		<property name="templateModule" value="personas"/>
+		<property name="xslModule" value="personas"/>
+	</bean>
+	
+    <!-- verificar, ya que este endpoint no es llamado desde java.. -->
+	<bean id="P_COUNT_PERSONAS" parent="personas-endpoints">
+		<property name="templateName" value="pcounterPersonas.vm"/>
+		<property name="xslName" value="pcounterPersonas.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+    
+	<bean id="P_EXISTE_MPOLIPER" parent="personas-endpoints">
+		<property name="templateName" value="valExistMPOLIPER.vm"/>
+		<property name="xslName" value="valExistMPOLIPER.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_FUSION_DOMICILOS" parent="personas-endpoints">
+		<property name="templateName" value="pfusionDomicilios.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_FUSION_PERSONAS" parent="personas-endpoints">
+		<property name="templateName" value="pfusionPersonas.vm"/>
+		<property name="xslName" value="pfusionPersonas.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GENERA_DATA_FUSION" parent="personas-endpoints">
+		<property name="templateName" value="pgeneraDatosFusion.vm"/>
+		<property name="xslName" value="pgeneraDatosFusion.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GENERAR_CDPERSON" parent="personas-endpoints">
+		<property name="templateName" value="pgeneraCodigoPersona.vm"/>
+		<property name="xslName" value="pgeneraCodigoPersona.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GET_AGRUPADOR" parent="personas-endpoints">
+		<property name="templateName" value="pgetAgrupador.vm"/>
+		<property name="xslName" value="pgetAgrupador.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GET_DESCRIP_DOMICIL" parent="personas-endpoints">
+		<property name="templateName" value="pgetDescDomicilio.vm"/>
+		<property name="xslName" value="pgetDescDomicilio.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GET_DOMIC_PERS_DESC" parent="personas-endpoints">
+		<property name="templateName" value="pgetDescDomicilPersona.vm"/>
+		<property name="xslName" value="pgetDescDomicilPersona.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GET_DOMICIL_PERSONA" parent="personas-endpoints">
+		<property name="templateName" value="pgetDomicilioPersona.vm"/>
+		<property name="xslName" value="pgetDomicilioPersona.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GET_DOMICILIO_FUSION" parent="personas-endpoints">
+		<property name="templateName" value="pgetDomicilioFusion.vm"/>
+		<property name="xslName" value="pgetDomicilioFusion.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GET_DOMICILIOS_PERSONA" parent="personas-endpoints">
+		<property name="templateName" value="pgetDomiciliosPersona.vm"/>
+		<property name="xslName" value="pgetDomiciliosPersona.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GET_INCISOS_PERSONAS" parent="personas-endpoints">
+		<property name="templateName" value="pgetIncisosPersona.vm"/>
+		<property name="xslName" value="pgetIncisosPersona.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GET_INFO_CODPOSTAL" parent="personas-endpoints">
+		<property name="templateName" value="pgetInfoCodPostal.vm"/>
+		<property name="xslName" value="pgetInfoCodPostal.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GET_MAX_DOMICILIO" parent="personas-endpoints">
+		<property name="templateName" value="pgetMaxOrdinalDomicilio.vm"/>
+		<property name="xslName" value="pgetMaxOrdinalDomicilio.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GET_MAXNUMERO_ROL" parent="personas-endpoints">
+		<property name="templateName" value="pgetNroMaxRolRamo.vm"/>
+		<property name="xslName" value="pgetNroMaxRolRamo.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GET_PERSONA" parent="personas-endpoints">
+		<property name="templateName" value="pgetDatosPersona.vm"/>
+		<property name="xslName" value="pgetDatosPersona.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+    
+	<bean id="P_GET_PERSONAS_NIVEL_POLIZA" parent="personas-endpoints">
+		<property name="templateName" value="pgetPersonasNivelPoliza.vm"/>
+		<property name="xslName" value="pgetPersonasNivelPoliza.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	
+    <bean id="P_GET_ROLES_OBLIGAT_INC" parent="personas-endpoints">
+		<property name="templateName" value="pgetRolesObligatSituacion.vm"/>
+		<property name="xslName" value="pgetRolesObligatSituacion.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+    <!-- VERIFICAR EDNPOINT , YA QUE NO ES LLAMADO DESDE JAVA... -->
+	<bean id="P_GET_SWDOMICIL" parent="personas-endpoints">
+		<property name="templateName" value="pgetIndicadorDomicilio.vm"/>
+		<property name="xslName" value="pgetIndicadorDomicilio.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GET_TATRIPER" parent="personas-endpoints">
+		<property name="templateName" value="pgetTATRIPER.vm"/>
+		<property name="xslName" value="pgetTATRIPER.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GET_TIPOIVA" parent="personas-endpoints">
+		<property name="templateName" value="pgetTipoIVA.vm"/>
+		<property name="xslName" value="pgetTipoIVA.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GET_TOMADOR_AGRUPA_INC" parent="personas-endpoints">
+		<property name="templateName" value="pgetTomadorAgrupSituac.vm"/>
+		<property name="xslName" value="pgetTomadorAgrupSituac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GET_TOMADOR_AGRUPADORES" parent="personas-endpoints">
+		<property name="templateName" value="pgetTomadorAgrupadores.vm"/>
+		<property name="xslName" value="pgetTomadorAgrupadores.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GET_TOMADOR_ASEGURADO" parent="personas-endpoints">
+		<property name="templateName" value="pgetTomadorAsegurado.vm"/>
+		<property name="xslName" value="pgetTomadorAsegurado.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GET_TVALOPER" parent="personas-endpoints">
+		<property name="templateName" value="pgetTVALOPER.vm"/>
+		<property name="xslName" value="pgetTVALOPER.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GET_ATRIB_PERS_FISJUR" parent="personas-endpoints">
+		<property name="templateName" value="pgetTVALOPERDESACOPLADO.vm"/>
+		<property name="xslName" value="pgetTVALOPERDESACOPLADO.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_VAL_BUSQUEDA_PERSONAS" parent="personas-endpoints">
+		<property name="templateName" value="pgetFiltroBusqPersonas.vm"/>
+		<property name="xslName" value="pgetFiltroBusqPersonas.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_VAL_DOMICIL_AGRUPA" parent="personas-endpoints">
+		<property name="templateName" value="valDomicilioAgrupador.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+    
+    <!-- VERIFICAR BEAN... , YA QUE NO ES INVOCADO DESDE JAVA -->
+	<bean id="P_VAL_EXISTE_DOMICIL" parent="personas-endpoints">
+		<property name="templateName" value="valExistDomicilio.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+    
+    <!-- VERIFICAR BEAN, YA QEU NO ES INVOCADO DESDE JAVA -->
+	<bean id="P_VAL_PERSONAS_CONFIRMA" parent="personas-endpoints">
+		<property name="templateName" value="valExistPersonasConfirma.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+    <!-- VERIFICAR BEAN... -->
+	<bean id="P_VALIDA_CDCOLONI" parent="personas-endpoints">
+		<property name="templateName" value="valColonia.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+    
+    <!-- VERIFICAR BEAN.. -->
+	<bean id="P_VALIDA_CDPOSTAL" parent="personas-endpoints">
+		<property name="templateName" value="valCodPostal.vm"/>
+		<property name="xslName" value="valCodPostal.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+    
+    <!-- bean definido... -->
+	<bean id="P_VALIDA_PEST_PERSONAS" parent="personas-endpoints">
+		<property name="templateName" value="valPestanaPersonas.vm"/>
+		<property name="xslName" value="valPestanaPersonas.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	
+    <bean id="P_VALIDACIONES_FUSION" parent="personas-endpoints">
+		<property name="templateName" value="valFusion.vm"/>
+		<property name="xslName" value="valFusion.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_VALIDAR_CDIDEPER" parent="personas-endpoints">
+		<property name="templateName" value="valCodIdPersona.vm"/>
+		<property name="xslName" value="valCodIdPersona.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_VALIDAR_DSNOMBRE" parent="personas-endpoints">
+		<property name="templateName" value="valNombrePersona.vm"/>
+		<property name="xslName" value="valNombrePersona.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>  
+   
+   <!-- BEANS POR DEFINIR..... -->
+   
+    <bean id="LISTA_ESPECIAL_COLONIA" parent="personas-endpoints">
+        <property name="templateName" value="pgetListaEspecColonias.vm"/>
+        <property name="xslName" value="pgetListaEspecColonias.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    
+    <bean id="P_GET_ROLES_OBLIGAT_POL" parent="personas-endpoints">
+        <property name="templateName" value="pgetRolesObligatPoliza.vm"/>
+        <property name="xslName" value="pgetRolesObligatPoliza.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    
+    <bean id="P_EXEC_REF_CURSOR" parent="personas-endpoints">
+        <property name="templateName" value="pExecRefCursor.vm"/>
+        <property name="xslName" value="pExecRefCursor.xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    
+    
+
+
+    <!-- FALTA DEFINIR ENDPOINT ....
+    <bean id="P_Mov_Mdomicil2er" parent="pentrada-endpoints">
+        <property name="templateName" value=".vm"/>
+        <property name="xslName" value=".xsl"/>
+        <property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+    </bean>
+    -->
+   
+</beans>

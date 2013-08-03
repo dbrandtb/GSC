@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_ENDOSOS.P_GUARDA_TNUMENEX" id="pGuardaTNumEnEx">
+			   
+       <param eval="true" name="pv_cdelemento_i" type="NUMERIC">$!params.get("pv_cdelemento_i")</param>
+       <param eval="true" name="pv_cdunieco_i" type="VARCHAR">$!params.get("pv_cdunieco_i")</param>
+       <param eval="true" name="pv_cdramo_i" type="VARCHAR">$!params.get("pv_cdramo_i")</param>
+       <param eval="true" name="pv_cdplan_i" type="VARCHAR">$!params.get("pv_cdplan_i")</param>
+       <param eval="true" name="pv_nmpoliex_i" type="VARCHAR">$!params.get("pv_nmpoliex_i")</param>
+       <param eval="true" name="pv_indcalc_i" type="NUMERIC">$!params.get("pv_indcalc_i")</param>
+       <param eval="true" name="pv_nminicial_i" type="NUMERIC">$!params.get("pv_nminicial_i")</param>
+       <param eval="true" name="pv_nmfinal_i" type="NUMERIC">$!params.get("pv_nmfinal_i")</param>
+       <param eval="true" name="pv_nmactual_i" type="NUMERIC">$!params.get("pv_nmactual_i")</param>
+       <param eval="true" name="pv_otexpres_i" type="VARCHAR"><![CDATA[$!params.get("pv_otexpres_i")]]></param>    
+       <param eval="true" name="pv_accion_i" type="VARCHAR"><![CDATA[$!params.get("pv_accion_i")]]></param>   
+                 
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>
+
+ 

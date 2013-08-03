@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<bean id="serviciosPersonas" class="mx.com.ice.services.business.ServiciosPersonas">
+        <property name="servicioPersonasDao" ref="serviciosPersonasDAO"/>
+    </bean>
+     <!-- 
+     <bean id="personasPersonasAction" scope="prototype" class="mx.com.royalsun.web.personas.PersonasAction">
+        <property name="listasManager" ref="listasManager"/>
+        <property name="servicio" ref="screenServicesOfPersonasImpl"/>
+        <property name="serviciosPersonas" ref="serviciosPersonas"/>
+    </bean>
+
+    <bean id="screenServicesOfPersonasImpl"
+      class="mx.com.royalsun.service.impl.ScreenServicesOfPersonasImpl">
+    <property name="servicioPantallaPersonas" ref="servicioPantallaPersonas"/>
+    </bean>
+    <bean id="servicioPantallaPersonas"
+          class="mx.com.royalsun.service.pantallapersonas.ServicioPantallaPersonas">
+        <property name="serviciosIncisos" ref="serviciosIncisos"/>
+        <property name="serviciosGeneralesBloques" ref="serviciosGeneralesBloques"/>
+        <property name="serviciosGeneralesNegocio" ref="serviciosGeneralesNegocio"/>
+        <property name="serviciosGeneralesSistema" ref="servGeneralesSistema"/>
+        <property name="serviciosPersonas" ref="serviciosPersonas"/>
+        <property name="servicioFolio" ref="serviciosFolios"/>
+        <property name="parserUtil" ref="parserUtil"/>
+    </bean>
+     -->
+    <bean id="serviciosPersonasDAO" class="mx.com.ice.services.business.dao.ServiciosPersonasDAO">
+        <property name="endpoints">
+            <map>
+                <!-- bean no definido en este dao..  -->
+                <!--entry key="P_COUNT_PERSONAS">
+                    <ref bean="P_COUNT_PERSONAS" />
+                </entry-->
+                <entry key="P_GET_ATRIB_PERS_FISJUR">
+                    <ref bean="P_GET_ATRIB_PERS_FISJUR" />
+                </entry>
+                <entry key="P_EXISTE_MPOLIPER">
+                    <ref bean="P_EXISTE_MPOLIPER" />
+                </entry>
+                <entry key="P_FUSION_DOMICILOS">
+                    <ref bean="P_FUSION_DOMICILOS" />
+                </entry>
+                <entry key="P_FUSION_PERSONAS">
+                    <ref bean="P_FUSION_PERSONAS" />
+                </entry>
+                <entry key="P_GENERA_DATA_FUSION">
+                    <ref bean="P_GENERA_DATA_FUSION" />
+                </entry>
+                <entry key="P_GENERAR_CDPERSON">
+                    <ref bean="P_GENERAR_CDPERSON" />
+                </entry>
+                <entry key="P_GET_AGRUPADOR">
+                    <ref bean="P_GET_AGRUPADOR" />
+                </entry>
+                <entry key="P_GET_DESCRIP_DOMICIL">
+                    <ref bean="P_GET_DESCRIP_DOMICIL" />
+                </entry>
+                <entry key="P_GET_DOMIC_PERS_DESC">
+                    <ref bean="P_GET_DOMIC_PERS_DESC" />
+                </entry>
+                <entry key="P_GET_DOMICIL_PERSONA">
+                    <ref bean="P_GET_DOMICIL_PERSONA" />
+                </entry>
+                <entry key="P_GET_DOMICILIO_FUSION">
+                    <ref bean="P_GET_DOMICILIO_FUSION" />
+                </entry>
+                <entry key="P_GET_DOMICILIOS_PERSONA">
+                    <ref bean="P_GET_DOMICILIOS_PERSONA" />
+                </entry>
+                <entry key="P_GET_INCISOS_PERSONAS">
+                    <ref bean="P_GET_INCISOS_PERSONAS" />
+                </entry>
+                <entry key="P_GET_INFO_CODPOSTAL">
+                    <ref bean="P_GET_INFO_CODPOSTAL" />
+                </entry>
+                <entry key="P_GET_MAX_DOMICILIO">
+                    <ref bean="P_GET_MAX_DOMICILIO" />
+                </entry>
+                <entry key="P_GET_MAXNUMERO_ROL">
+                    <ref bean="P_GET_MAXNUMERO_ROL" />
+                </entry>
+                <entry key="P_GET_PERSONA">
+                    <ref bean="P_GET_PERSONA" />
+                </entry>
+                <entry key="P_GET_PERSONAS_NIVEL_POLIZA">
+                    <ref bean="P_GET_PERSONAS_NIVEL_POLIZA" />
+                </entry>
+                <entry key="P_GET_ROLES_OBLIGAT_INC">
+                    <ref bean="P_GET_ROLES_OBLIGAT_INC" />
+                </entry>
+                
+                <!-- VERIFICAR ENDPOINT. YA QUE NO ES LLAMADO DESDE JAVA -->
+                <!--entry key="P_GET_SWDOMICIL">
+                    <ref bean="P_GET_SWDOMICIL" />
+                </entry-->               
+                
+                <entry key="P_GET_TATRIPER">
+                    <ref bean="P_GET_TATRIPER" />
+                </entry>
+                <entry key="P_GET_TIPOIVA">
+                    <ref bean="P_GET_TIPOIVA" />
+                </entry>
+                <entry key="P_GET_TOMADOR_AGRUPA_INC">
+                    <ref bean="P_GET_TOMADOR_AGRUPA_INC" />
+                </entry>
+                <entry key="P_GET_TOMADOR_AGRUPADORES">
+                    <ref bean="P_GET_TOMADOR_AGRUPADORES" />
+                </entry>
+                <entry key="P_GET_TOMADOR_ASEGURADO">
+                    <ref bean="P_GET_TOMADOR_ASEGURADO" />
+                </entry>
+                <entry key="P_GET_TVALOPER">
+                    <ref bean="P_GET_TVALOPER" />
+                </entry>
+                <entry key="P_VAL_BUSQUEDA_PERSONAS">
+                    <ref bean="P_VAL_BUSQUEDA_PERSONAS" />
+                </entry>
+                <entry key="P_VAL_DOMICIL_AGRUPA">
+                    <ref bean="P_VAL_DOMICIL_AGRUPA" />
+                </entry>
+                
+                <!-- VERIFICAR BEAN -->
+                <entry key="P_VAL_EXISTE_DOMICIL">
+                    <ref bean="P_VAL_EXISTE_DOMICIL" />
+                </entry>
+                
+                <!-- VERIFICAR BEAN -->
+                <!--entry key="P_VAL_PERSONAS_CONFIRMA">
+                    <ref bean="P_VAL_PERSONAS_CONFIRMA" />
+                </entry-->
+                
+                <!-- VERIFICAR BEAN -->
+                <!--entry key="P_VALIDA_CDCOLONI">
+                    <ref bean="P_VALIDA_CDCOLONI" />
+                </entry-->
+                
+                <!-- VERIFICAR BEAN.. -->
+                <!--entry key="P_VALIDA_CDPOSTAL">
+                    <ref bean="P_VALIDA_CDPOSTAL" />
+                </entry-->
+                
+                <entry key="P_VALIDA_PEST_PERSONAS">
+                    <ref bean="P_VALIDA_PEST_PERSONAS" />
+                </entry>
+                <entry key="P_VALIDACIONES_FUSION">
+                    <ref bean="P_VALIDACIONES_FUSION" />
+                </entry>
+                <entry key="P_VALIDAR_CDIDEPER">
+                    <ref bean="P_VALIDAR_CDIDEPER" />
+                </entry>
+                <entry key="P_VALIDAR_DSNOMBRE">
+                    <ref bean="P_VALIDAR_DSNOMBRE" />
+                </entry>
+                
+                <entry key="P_MOV_MPERSONA">
+                    <ref bean="P_MOV_MPERSONA" />
+                </entry>
+                
+                  <entry key="P_UPD_DOMICIL_AGRUPA">
+                    <ref bean="P_UPD_DOMICIL_AGRUPA" />
+                </entry>
+                
+                <entry key="P_MOV_TVALOPER">
+                    <ref bean="P_MOV_TVALOPER" />
+                </entry>                
+                
+                <entry key="LISTA_ESPECIAL_COLONIA">
+                    <ref bean="LISTA_ESPECIAL_COLONIA" />
+                </entry>                
+                
+                <entry key="P_GET_ROLES_OBLIGAT_POL">
+                    <ref bean="P_GET_ROLES_OBLIGAT_POL" />
+                </entry>
+                
+                <entry key="P_EXEC_REF_CURSOR">
+                    <ref bean="P_EXEC_REF_CURSOR" />
+                </entry>
+                                
+                <entry key="P_MOV_MDOMICIL">
+                    <ref bean="P_MOV_MDOMICIL" />
+                </entry>
+                
+            </map>
+        </property>
+    </bean>
+
+</beans>

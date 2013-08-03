@@ -1,0 +1,28 @@
+<statements>
+	<statement type="stored" name="PKG_LISTAS.P_GRUPOPER" id="pObtenerGrupoCorporativo">
+        <param eval="true" name="po_cdelemto" type="NUMERIC">$!params.get("cdElemento")</param>
+
+		<outparam id="pv_registro_o" type="CURSOR"></outparam>
+		<outparam id="pv_msg_id_o" type="NUMERIC"/>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+	</statement>
+</statements>
+<!--statements>
+	<statement type="stored" name="PKG_LISTAS.P_LISTA_GRUPOP" id="pObtenerGrupoCorporativo">
+        <param eval="true" name="pi_tabla" type="VARCHAR">$!params.get("pi_tabla")</param>
+        <param eval="true" name="pi_atrib_desc" type="VARCHAR">$!params.get("pi_atrib_desc")</param>
+        <param eval="true" name="pi_nom_clave01" type="VARCHAR">$!params.get("pi_nom_clave01")</param>
+        <param eval="true" name="pi_nom_clave02" type="VARCHAR">$!params.get("pi_nom_clave02")</param>
+        <param eval="true" name="pi_val_clave02" type="VARCHAR">$!params.get("pi_val_clave02")</param>
+        <param eval="true" name="pi_nom_clave03" type="VARCHAR">$!params.get("pi_nom_clave03")</param>
+        <param eval="true" name="pi_val_clave03" type="VARCHAR">$!params.get("pi_val_clave03")</param>
+        <param eval="true" name="pi_nom_clave04" type="VARCHAR">$!params.get("pi_nom_clave04")</param>
+        <param eval="true" name="pi_val_clave04" type="VARCHAR">$!params.get("pi_val_clave04")</param>
+        <param eval="true" name="pi_nom_clave05" type="VARCHAR">$!params.get("pi_nom_clave05")</param>
+        <param eval="true" name="pi_val_clave05" type="VARCHAR">$!params.get("pi_val_clave05")</param>
+
+		<outparam id="pv_registro_o" type="CURSOR"></outparam>
+		<outparam id="pv_msg_id_o" type="NUMERIC"/>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+	</statement>
+</statements-->

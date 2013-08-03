@@ -1,0 +1,17 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_DATOS_GENERALES.P_GENERAR_ORDEN_TRABAJO" id="pGeneraOrdenTrabajo">
+		<param eval="true" name="pi_CDUNIECO" type="NUMERIC">$!params.get("pi_CDUNIECO")</param>
+		<param eval="true" name="pi_CDRAMO" type="NUMERIC">$!params.get("pi_CDRAMO")</param>
+		<param eval="true" name="pi_ESTADO" type="VARCHAR">$!params.get("pi_ESTADO")</param>
+		<param eval="true" name="pi_NMPOLIZA" type="NUMERIC">$!params.get("pi_NMPOLIZA")</param>
+		<param eval="true" name="pi_NMSUPLEM" type="VARCHAR">$!params.get("pi_NMSUPLEM")</param>
+		<param eval="true" name="pi_NSUPLOGI" type="NUMERIC">$!params.get("pi_NSUPLOGI")</param>
+		<param eval="true" name="pi_EDOFOLIO" type="VARCHAR">$!params.get("pi_EDOFOLIO")</param>
+		<param eval="true" name="pi_CDAGENTE" type="VARCHAR">$!params.get("pi_CDAGENTE")</param>
+		<param eval="true" name="pi_NMORDTRAB" type="NUMERIC">$!params.get("pi_NMORDTRAB")</param>
+		<param eval="true" name="pi_CDTIPSUP" type="NUMERIC">$!params.get("pi_CDTIPSUP")</param>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

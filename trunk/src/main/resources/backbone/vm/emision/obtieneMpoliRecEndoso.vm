@@ -1,0 +1,16 @@
+<statements>
+	<statement type="stored" name="PKG_ENDOSOS.P_OBTIENE_MPOLIREC" id="obtiene-resumen-tarificacion">
+		
+		<param eval="true" name="pv_cdunieco_i" type="NUMERIC">$!params.get("cdUnieco")</param>
+		<param eval="true" name="pv_cdramo_i"   type="NUMERIC">$!params.get("cdRamo")</param>
+		<param eval="true" name="pv_estado_i"   type="VARCHAR">$!params.get("estado")</param>
+		<param eval="true" name="pv_nmpoliza_i" type="NUMERIC">$!params.get("nmPoliza")</param>
+		<param eval="true" name="pv_nmsituac_i" type="NUMERIC">$!params.get("nmSituac")</param>
+		<param eval="true" name="pv_cdcontar_i" type="NUMERIC">$!params.get("cdContar")</param>
+		<param eval="true" name="pv_cdgarant_i" type="NUMERIC">$!params.get("cdGarant")</param>
+
+		<outparam id="pv_registro_o" type="CURSOR"/>
+		<outparam id="pv_msg_id_o"   type="VARCHAR"/>
+		<outparam id="pv_title_o"    type="VARCHAR"/>
+	</statement>
+</statements>

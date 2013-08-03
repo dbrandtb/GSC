@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+    
+    <bean id="principalBuilderAction" class="mx.com.aon.configurador.builder.web.PrincipalBuilderAction" abstract="true">
+        
+    </bean>
+    
+    
+   <bean id="builderDemoAction" class="mx.com.aon.configurador.builder.web.BuilderEnterAction" scope="prototype" parent="principalBuilderAction">
+        
+    </bean>
+
+	<bean id="fileTreeAction" class="mx.com.aon.configurador.builder.web.FileTreeAction" scope="prototype" parent="principalBuilderAction">
+        
+    </bean>
+    
+
+    
+</beans>

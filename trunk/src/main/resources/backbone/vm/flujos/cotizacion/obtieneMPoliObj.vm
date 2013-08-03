@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
+<statements>
+	<statement type="stored" name="PKG_COTIZA.P_OBTIENE_MPOLIOBJ" id="obtieneMPoliObj">
+				
+		<param eval="true" name="pv_cdunieco"	type="NUMERIC"><![CDATA[$!params.get("CDUNIECO")]]></param>
+  		<param eval="true" name="pv_cdramo" 	type="NUMERIC"><![CDATA[$!params.get("CDRAMO")]]></param>
+  		<param eval="true" name="pv_estado"		type="VARCHAR"><![CDATA[$!params.get("ESTADO")]]></param>
+  		<param eval="true" name="pv_nmpoliza"	type="NUMERIC"><![CDATA[$!params.get("NMPOLIZA")]]></param>
+		<param eval="true" name="pv_nmsituac" 	type="NUMERIC"><![CDATA[$!params.get("NMSITUAC")]]></param>
+  		<param eval="true" name="pv_nmobjeto" 	type="NUMERIC"><![CDATA[$!params.get("NMOBJETO")]]></param>
+		
+		<outparam id="po_registro" 	type="CURSOR"/>
+		<outparam id="po_msg_id" 	type="NUMERIC"/>
+		<outparam id="p_out_title"	type="VARCHAR"/>
+		
+	</statement>
+</statements>

@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<bean id="serviciosGeneralesBloques" class="mx.com.ice.services.business.ServiciosGeneralesBloques">
+        <!--<property name="daoCargaBloques" ref="serviciosGeneralesBloquesDAO"/>-->
+        <property name="serviciosGeneralesDAO" ref="serviciosGeneralesDAO"/>
+    </bean>       	
+   <bean id="serviciosGeneralesCargarBloques" class="mx.com.ice.services.business.ServiciosCargarBloques">
+        <!--<property name="daoCargaBloques" ref="serviciosGeneralesBloquesDAO"/>-->
+        <property name="serviciosGeneralesDAO" ref="serviciosGeneralesDAO"/>
+    </bean>
+    <bean id="serviciosGeneralesDAO" class="mx.com.ice.services.business.dao.ServiciosGeneralesDAO">
+        <property name="endpoints">
+            <map>
+                <entry key="P_CARGAR_BLOQUE_B1">
+                    <ref bean="P_CARGAR_BLOQUE_B1" />
+                </entry>
+                <entry key="P_CARGAR_BLOQUE_B1B">
+                    <ref bean="P_CARGAR_BLOQUE_B1B" />
+                </entry>
+                <entry key="P_CARGAR_BLOQUE_B2">
+                    <ref bean="P_CARGAR_BLOQUE_B2" />
+                </entry>
+                <entry key="P_CARGAR_BLOQUE_B5">
+                    <ref bean="P_CARGAR_BLOQUE_B5" />
+                </entry>
+                <entry key="P_CARGAR_BLOQUE_B5B">
+                    <ref bean="P_CARGAR_BLOQUE_B5B" />
+                </entry>
+                <entry key="P_CARGAR_BLOQUE_B18">
+                    <ref bean="P_CARGAR_BLOQUE_B18" />
+                </entry>
+                <entry key="P_CARGAR_BLOQUE_B19">
+                    <ref bean="P_CARGAR_BLOQUE_B19" />
+                </entry>
+                <entry key="P_CARGAR_BLOQUE_B19B">
+                    <ref bean="P_CARGAR_BLOQUE_B19B" />
+                </entry>
+                
+                <entry key="P_CARGAR_BLOQUE_B6">
+                    <ref bean="P_CARGAR_BLOQUE_B6" />
+                </entry>
+                
+                <entry key="P_CARGAR_BLOQUE_B6B">
+                    <ref bean="P_CARGAR_BLOQUE_B6B" />
+                </entry>
+                
+                <entry key="P_CARGAR_BLOQUE_B9">
+                    <ref bean="P_CARGAR_BLOQUE_B9" />
+                </entry>
+                <entry key="P_VALIDACION_PENDIENTE_BLOQUE">
+                    <ref bean="P_VALIDACION_PENDIENTE_BLOQUE" />
+                </entry>
+                <entry key="P_VALIDACIONES_BLOQUES">
+                    <ref bean="P_VALIDACIONES_BLOQUES" />
+                </entry>
+                   
+                
+                <entry key="P_ACT_TVALIDNA">
+                    <ref bean="P_ACT_TVALIDNA" />
+                </entry>
+                
+                <!-- BEAN DEFINIDO EN ENDPOINTS-ENTRADA  -->
+                <entry key="P_MOV_MPOLIZAS">
+                    <ref bean="P_MOV_MPOLIZAS" />
+                </entry>
+                
+                <!-- BEAN DEFINIDO EN ENDPOINT-ENTRADA  -->
+                <entry key="P_MOV_MPOLISIT">
+                    <ref bean="P_MOV_MPOLISIT" />
+                </entry>
+                
+                <!-- BEAN DEFINIDO EN ENDPOINT-ENTRADA  -->
+                <entry key="P_MOV_TVALOPOL">
+                    <ref bean="P_MOV_TVALOPOL" />
+                </entry>
+                
+                <!-- BEAN DEFINIDO EN ENDPOINT-ENTRADA  -->
+                <entry key="P_MOV_TVALOSIT">
+                    <ref bean="P_MOV_TVALOSIT"/>
+                </entry>
+                
+                <!-- BEAN DEFINIDO EN ENDPOINT-ENTRADA  -->
+                <entry key="P_GUARDA_MOV_TVALOSIT">
+                    <ref bean="P_GUARDA_MOV_TVALOSIT"/>
+                </entry>                
+                
+                <!-- BEAN DEFINIDO EN ENDPOINT-SERVGENRAL  -->
+                <entry key="P_SGINSERTA_TVALOPOL">
+                    <ref bean="P_SGINSERTA_TVALOPOL" />
+                </entry>
+                
+                <!-- BEAN DEFINIDO EN ENDPOINT-SERVGENRAL  -->
+                <entry key="P_SGINSERTA_TVALOSIT"> 
+                    <ref bean="P_SGINSERTA_TVALOSIT" />
+                </entry>
+                
+                <!-- BEAN DEFINIDO EN ENDPOINT-SERVGENRAL  -->
+                <entry key="P_SGINSERTA_MPOLIGAR">
+                    <ref bean="P_SGINSERTA_MPOLIGAR" />
+                </entry>
+                
+                <!-- BEAN DEFINIDO EN ENDPOINT-SERVGENRAL  -->
+                <entry key="P_SGINSERTA_MPOLIGAR_ENDOSOS">
+                    <ref bean="P_SGINSERTA_MPOLIGAR_ENDOSOS" />
+                </entry>
+                
+                <!-- BEAN DEFINIDO EN ENDPOINT-SERVGENRAL  -->
+                <entry key="P_SGINSERTA_TVALOGAR">
+                    <ref bean="P_SGINSERTA_TVALOGAR" />
+                </entry>
+                
+                <!-- BEAN DEFINIDO EN ENDPOINT-SERVGENRAL  -->
+                <entry key="P_SGINSERTA_TVALOGAR_ENDOSOS">
+                    <ref bean="P_SGINSERTA_TVALOGAR_ENDOSOS" />
+                </entry>
+                
+                <!-- BEAN DEFINIDO EN ENDPOINT-SERVGENRAL  -->
+                <entry key="P_SGFECHAS_OTTEMPOT">
+                    <ref bean="P_SGFECHAS_OTTEMPOT" />
+                </entry>
+                
+                <!-- BEAN DEFINIDO EN ENDPOINT-SERVGENRAL  -->
+                <entry key="P_SGINSERTA_MPOLICAP">
+                    <ref bean="P_SGINSERTA_MPOLICAP" />
+                </entry>
+                
+                <!-- BEAN DEFINIDO EN ENDPOINT-SERVGENRAL  -->
+                <entry key="P_SGINSERTA_MPOLICAP_ENDOSOS">
+                    <ref bean="P_SGINSERTA_MPOLICAP_ENDOSOS" />
+                </entry>
+                
+                <!-- BEAN DEFINIDO EN ENDPOINT-SERVGENRAL  -->
+                <entry key="P_ValorDefectoRevalorizaciones">
+                    <ref bean="P_ValorDefectoRevalorizaciones" />
+                </entry>
+                
+                <!-- BEAN DEFINIDO EN ENDPOINT-SERVGENRAL  -->
+                <entry key="P_Borrar_Autorizaciones">
+                    <ref bean="P_Borrar_Autorizaciones" />
+                </entry>
+                
+                <!-- BEAN DEFINIDO EN ENDPOINT-SERVGENRAL  -->
+                <entry key="P_Inserta_Borra_MPOLIAUT">
+                    <ref bean="P_Inserta_Borra_MPOLIAUT" />
+                </entry>
+                
+                <!-- BEAN DEFINIDO EN ENDPOINT-SERVGENRAL  -->
+                <entry key="P_FORMATO_CAMPOS_B1B">
+                    <ref bean="P_FORMATO_CAMPOS_B1B" />
+                </entry>               
+              
+                <entry key="P_DATOS_PERSONA">
+                    <ref bean="P_DATOS_PERSONA" />
+                </entry>
+                
+                <!-- BEAN DEFINIDO EN ENDPOINT-ENTRADA  -->
+                <entry key="P_MOV_MPOLIAGE">
+                    <ref bean="P_MOV_MPOLIAGE" />
+                </entry>
+                
+                <!-- BEAN DEFINIDO EN ENDPOINT-ENTRADA  -->
+                <entry key="P_MOV_TVALOGAR">
+                    <ref bean="P_MOV_TVALOGAR" />
+                </entry>
+                
+                <!-- BEAN DEFINIDO EN ENDPOINT-ENTRADA  -->
+                <entry key="P_MOV_MPOLIPER">
+                    <ref bean="P_MOV_MPOLIPER" />
+                </entry>
+                
+                <!-- BEAN DEFINIDO EN ENDPOINT-ENTRADA  -->
+                <entry key="P_MOV_TVALOPER">
+                    <ref bean="P_MOV_TVALOPER" />
+                </entry>                
+                
+                <entry key="P_MOV_MDOMICIL">
+                    <ref bean="P_MOV_MDOMICIL" />
+                </entry>
+                
+                <!-- BEAN DEFINIDO EN ENDPOINT-ENTRADA  -->
+                <entry key="P_MOV_MPOLIAGR">
+                    <ref bean="P_MOV_MPOLIAGR" />
+                </entry>
+                
+                <!-- BEAN DEFINIDO EN ENDPOINT-ENTRADA  -->
+                <entry key="P_MOV_MPOLIGAR">
+                    <ref bean="P_MOV_MPOLIGAR" />
+                </entry>
+                
+                <!-- DEFINIR ESTE BEAN .... -->
+                <!--entry key="P_MOV_MPOLIGAR3">
+                    <ref bean="P_MOV_MPOLIGAR3" />
+                </entry-->
+                
+                <!-- BEAN DEFINIDO EN ENDPOINT-ENTRADA  -->
+                <entry key="P_MOV_MPOLICAP">
+                    <ref bean="P_MOV_MPOLICAP" />
+                </entry>                
+                
+                <!-- DEFINIR ESTE BEAN .... -->
+                <!--entry key="P_MOV_MPOLICAP2">
+                    <ref bean="P_MOV_MPOLICAP2" />
+                </entry-->
+                
+                <!-- BEAN DEFINIDO EN ENDPOINT-ENTRADA  -->
+                <entry key="P_MOV_MPOLIOBJ">
+                    <ref bean="P_MOV_MPOLIOBJ" />
+                </entry>
+                
+                <!-- BEAN DEFINIDO EN ENDPOINT-ENTRADA  -->
+                <entry key="P_MOV_TVALOOBJ">
+                    <ref bean="P_MOV_TVALOOBJ" />
+                </entry>
+                
+                <!-- BEAN DEFINIDO EN ENDPOINT-ENTRADA  -->
+                <entry key="P_MOV_MPOLIREV">
+                    <ref bean="P_MOV_MPOLIREV" />
+                </entry>
+                
+                <!-- DEFINIR ESTE BEAN .... -->
+                <!--entry key="P_MOV_MPOLIREV2">
+                    <ref bean="P_MOV_MPOLIREV2" />
+                </entry-->                
+                
+                <!-- DEFINIR ESTE BEAN .... -->
+                <!--entry key="P_CARGAR_BLOQUES">
+                    <ref bean="P_CARGAR_BLOQUES" />
+                </entry-->                
+                
+                <!-- BEAN DEFINIDO EN ENDPOINT-DATOS GENERALES  -->
+                <entry key="P_GET_DATOS_BLOQUE_B1B">
+                    <ref bean="P_GET_DATOS_BLOQUE_B1B"/>
+                </entry>
+                
+                <!-- BEAN DEFINIDO EN ENDPOINT-DATOS GENERALES  -->
+                <entry key="P_GET_LISTA_B1B">
+                    <ref bean="P_GET_LISTA_B1B"/>
+                </entry>
+                
+                <!-- ENDPOINT DEFINIDO EN PENTRADA.. -->
+                <entry key="P_VALIDAR_MPARAPRO">
+                    <ref bean="P_VALIDAR_MPARAPRO" />
+                </entry>
+                
+                <!-- ENDPOINT DEFINIDO EN PENTRADA.. -->
+                <entry key="P_VALIDAR_FECHAS_WORKING">
+                    <ref bean="P_VALIDAR_FECHAS_WORKING" />
+                </entry>
+                
+                <!-- DEFINIR ESTE BEAN .... -->
+                <!--entry key="P_GET_SUPL_MINMAX">
+                    <ref bean="P_GET_SUPL_MINMAX" />
+                </entry-->
+                
+                <!-- DEFINIR ESTE BEAN .... -->
+                <!--entry key="P_PROC_AUDIT">
+                    <ref bean="P_PROC_AUDIT" />
+                </entry-->
+                
+                <!-- ENDPOINT DEFINIDO EN ENDPOINTS PERSONAS  -->
+                <entry key="P_VALIDA_PEST_PERSONAS">
+                    <ref bean="P_VALIDA_PEST_PERSONAS" />
+                </entry>                
+                
+                <entry key="P_VALIDA_BBVLCOTI">
+                    <ref bean="P_VALIDA_BBVLCOTI" />
+                </entry>                
+                
+                <entry key="P_VALIDA_ALEACTP">
+                    <ref bean="P_VALIDA_ALEACTP" />
+                </entry>                
+                
+                <entry key="P_VALIDA_TARIFICACG">
+                    <ref bean="P_VALIDA_TARIFICACG" />
+                </entry>                
+                
+                <entry key="P_VALIDA_BBVTARXINC">
+                    <ref bean="P_VALIDA_BBVTARXINC" />
+                </entry>                
+                
+                <entry key="P_VALIDA_ALEAJSUP">
+                    <ref bean="P_VALIDA_ALEAJSUP" />
+                </entry>
+                
+                <entry key="P_GET_DESC_AGENTES">
+                    <ref bean="P_GET_DESC_AGENTES" />
+                </entry>
+                
+            </map>
+        </property>
+    </bean>    
+</beans>

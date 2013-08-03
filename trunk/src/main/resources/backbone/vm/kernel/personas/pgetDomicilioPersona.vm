@@ -1,0 +1,11 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_PERSONAS.P_GET_DOMICIL_PERSONA" id="pgetDomicilioPersona">
+		<param eval="true" name="pi_CDTIPIDE" type="VARCHAR">$!params.get("pi_CDTIPIDE")</param>
+		<param eval="true" name="pi_CDIDEPER" type="VARCHAR">$!params.get("pi_CDIDEPER")</param>
+		<param eval="true" name="pi_NOMBRE" type="VARCHAR">$!params.get("pi_NOMBRE")</param>
+		<outparam id="rc_cursor" type="CURSOR"/>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

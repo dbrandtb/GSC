@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<statements>
+     <statement type="stored" name="PKG_CONFG_CUENTA.P_BORRA_ESTRUCT" id="pBorraEstruct">
+        <param eval="true" name="pi_cdestruc" type="NUMERIC">$!params.get('codigo')</param>
+        <outparam id="pv_msg_id_o" type="NUMERIC"></outparam>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+    </statement>
+</statements>

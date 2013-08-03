@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_PERSONA.P_GUARDA_REGISTRO" id="guardaUsuarioClavePersona">
+		<param eval="true" name="PI_CDUSUARI_I" type="VARCHAR"><![CDATA[$!params.get("cdUsuari")]]></param>
+		<param eval="true" name="PI_NMREGPAGINA_I" type="NUMERIC">$!params.get("registGrid")</param>
+	
+		<outparam id="pv_msg_id_o" type="NUMERIC"/>
+		<outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

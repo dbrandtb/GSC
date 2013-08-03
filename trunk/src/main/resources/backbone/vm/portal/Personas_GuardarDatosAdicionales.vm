@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_PERSONA.P_SALVA_DATOS_ADIC" id="guardaDatosAdicionales">
+        <param eval="true" name="pi_cdunieco" type="NUMERIC">$!params.get("cdUniEco")</param>
+        <param eval="true" name="pi_cdramo" type="NUMERIC">$!params.get("cdRamo")</param>
+        <param eval="true" name="pi_estado" type="VARCHAR">$!params.get("estado")</param>
+        <param eval="true" name="pi_nmpoliza" type="NUMERIC">$!params.get("nmPoliza")</param>
+        <param eval="true" name="pi_nmsituac" type="NUMERIC">$!params.get("nmSituac")</param>
+        <param eval="true" name="pi_cdrol" type="VARCHAR">$!params.get("cdRol")</param>
+        <param eval="true" name="pi_cdperson" type="NUMERIC">$!params.get("cdPerson")</param>
+        <param eval="true" name="pi_cdtipsit" type="VARCHAR">$!params.get("cdTipSit")</param>
+        <param eval="true" name="pi_nmsuplem" type="NUMERIC">$!params.get("nmSuplem")</param>
+        <param eval="true" name="pi_otvalor01" type="VARCHAR"><![CDATA[$!params.get("otValor01")]]></param>
+        <param eval="true" name="pi_otvalor02" type="VARCHAR"><![CDATA[$!params.get("otValor02")]]></param>
+        <param eval="true" name="pi_otvalor03" type="VARCHAR"><![CDATA[$!params.get("otValor03")]]></param>
+        <param eval="true" name="pi_otvalor04" type="VARCHAR"><![CDATA[$!params.get("otValor04")]]></param>
+        <param eval="true" name="pi_otvalor05" type="VARCHAR"><![CDATA[$!params.get("otValor05")]]></param>
+        <param eval="true" name="pi_otvalor06" type="VARCHAR"><![CDATA[$!params.get("otValor06")]]></param>
+        <param eval="true" name="pi_otvalor07" type="VARCHAR"><![CDATA[$!params.get("otValor07")]]></param>
+        <param eval="true" name="pi_otvalor08" type="VARCHAR"><![CDATA[$!params.get("otValor08")]]></param>
+        <param eval="true" name="pi_otvalor09" type="VARCHAR"><![CDATA[$!params.get("otValor09")]]></param>
+        <param eval="true" name="pi_otvalor10" type="VARCHAR"><![CDATA[$!params.get("otValor10")]]></param>
+        <param eval="true" name="pi_otvalor11" type="VARCHAR"><![CDATA[$!params.get("otValor11")]]></param>
+        <param eval="true" name="pi_otvalor12" type="VARCHAR"><![CDATA[$!params.get("otValor12")]]></param>
+        <param eval="true" name="pi_otvalor13" type="VARCHAR"><![CDATA[$!params.get("otValor13")]]></param>
+        <param eval="true" name="pi_otvalor14" type="VARCHAR"><![CDATA[$!params.get("otValor14")]]></param>
+        <param eval="true" name="pi_otvalor15" type="VARCHAR"><![CDATA[$!params.get("otValor15")]]></param>
+        <param eval="true" name="pi_otvalor16" type="VARCHAR"><![CDATA[$!params.get("otValor16")]]></param>
+        <param eval="true" name="pi_otvalor17" type="VARCHAR"><![CDATA[$!params.get("otValor17")]]></param>
+        <param eval="true" name="pi_otvalor18" type="VARCHAR"><![CDATA[$!params.get("otValor18")]]></param>
+        <param eval="true" name="pi_otvalor19" type="VARCHAR"><![CDATA[$!params.get("otValor19")]]></param>
+        <param eval="true" name="pi_otvalor20" type="VARCHAR"><![CDATA[$!params.get("otValor20")]]></param>
+        <param eval="true" name="pi_otvalor21" type="VARCHAR"><![CDATA[$!params.get("otValor21")]]></param>
+        <param eval="true" name="pi_otvalor22" type="VARCHAR"><![CDATA[$!params.get("otValor22")]]></param>
+        <param eval="true" name="pi_otvalor23" type="VARCHAR"><![CDATA[$!params.get("otValor23")]]></param>
+        <param eval="true" name="pi_otvalor24" type="VARCHAR"><![CDATA[$!params.get("otValor24")]]></param>
+        <param eval="true" name="pi_otvalor25" type="VARCHAR"><![CDATA[$!params.get("otValor25")]]></param>
+        <param eval="true" name="pi_otvalor26" type="VARCHAR"><![CDATA[$!params.get("otValor26")]]></param>
+        <param eval="true" name="pi_otvalor27" type="VARCHAR"><![CDATA[$!params.get("otValor27")]]></param>
+        <param eval="true" name="pi_otvalor28" type="VARCHAR"><![CDATA[$!params.get("otValor28")]]></param>
+        <param eval="true" name="pi_otvalor29" type="VARCHAR"><![CDATA[$!params.get("otValor29")]]></param>
+        <param eval="true" name="pi_otvalor30" type="VARCHAR"><![CDATA[$!params.get("otValor30")]]></param>
+        <param eval="true" name="pi_otvalor31" type="VARCHAR"><![CDATA[$!params.get("otValor31")]]></param>
+        <param eval="true" name="pi_otvalor32" type="VARCHAR"><![CDATA[$!params.get("otValor32")]]></param>
+        <param eval="true" name="pi_otvalor33" type="VARCHAR"><![CDATA[$!params.get("otValor33")]]></param>
+        <param eval="true" name="pi_otvalor34" type="VARCHAR"><![CDATA[$!params.get("otValor34")]]></param>
+        <param eval="true" name="pi_otvalor35" type="VARCHAR"><![CDATA[$!params.get("otValor35")]]></param>
+        <param eval="true" name="pi_otvalor36" type="VARCHAR"><![CDATA[$!params.get("otValor36")]]></param>
+        <param eval="true" name="pi_otvalor37" type="VARCHAR"><![CDATA[$!params.get("otValor37")]]></param>
+        <param eval="true" name="pi_otvalor38" type="VARCHAR"><![CDATA[$!params.get("otValor38")]]></param>
+        <param eval="true" name="pi_otvalor39" type="VARCHAR"><![CDATA[$!params.get("otValor39")]]></param>
+        <param eval="true" name="pi_otvalor40" type="VARCHAR"><![CDATA[$!params.get("otValor40")]]></param>
+        <param eval="true" name="pi_otvalor41" type="VARCHAR"><![CDATA[$!params.get("otValor41")]]></param>
+        <param eval="true" name="pi_otvalor42" type="VARCHAR"><![CDATA[$!params.get("otValor42")]]></param>
+        <param eval="true" name="pi_otvalor43" type="VARCHAR"><![CDATA[$!params.get("otValor43")]]></param>
+        <param eval="true" name="pi_otvalor44" type="VARCHAR"><![CDATA[$!params.get("otValor44")]]></param>
+        <param eval="true" name="pi_otvalor45" type="VARCHAR"><![CDATA[$!params.get("otValor45")]]></param>
+        <param eval="true" name="pi_otvalor46" type="VARCHAR"><![CDATA[$!params.get("otValor46")]]></param>
+        <param eval="true" name="pi_otvalor47" type="VARCHAR"><![CDATA[$!params.get("otValor47")]]></param>
+        <param eval="true" name="pi_otvalor48" type="VARCHAR"><![CDATA[$!params.get("otValor48")]]></param>
+        <param eval="true" name="pi_otvalor49" type="VARCHAR"><![CDATA[$!params.get("otValor49")]]></param>
+        <param eval="true" name="pi_otvalor50" type="VARCHAR"><![CDATA[$!params.get("otValor50")]]></param>
+
+        <outparam id="pv_msg_id_o" type="NUMERIC"></outparam>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+	</statement>
+</statements>

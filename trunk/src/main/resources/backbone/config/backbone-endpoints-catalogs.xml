@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <bean id="catalogs-endpoint" abstract="true" parent="parent-endpoint">
+        <property name="templateModule" value="catalogs" />
+        <property name="xslModule" value="catalogs" />
+    </bean>
+
+	
+    <bean id="OBTIENE_PROCESOS" parent="catalogs-endpoint" >
+        <property name="templateName" value="obtieneProcesos.vm" />
+        <property name="xslName" value="labelValueList.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="OBTIENE_CLIENTES_CORPO_CATALOGS" parent="catalogs-endpoint" >
+        <property name="templateName" value="obtieneClientesCorpo.vm" />
+        <property name="xslName" value="clienteList.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="OBTIENE_PRODUCTOS_CLIENTE" parent="catalogs-endpoint" >
+        <property name="templateName" value="obtieneProductosCliente.vm" />
+        <property name="xslName" value="labelValueList.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="OBTIENE_PRODUCTOS_CLIENTE_ASEGURADORA" parent="catalogs-endpoint" >
+        <property name="templateName" value="obtieneProductosClienteAseguradora.vm" />
+        <property name="xslName" value="labelValueList.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="OBTIENE_INTRUMENTOS_PAGO_CLIENTE" parent="catalogs-endpoint" >
+        <property name="templateName" value="obtieneInstrumentosPagoCliente.vm" />
+        <property name="xslName" value="obtieneInstrumentosPagoCliente.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+    
+    <bean id="OBTIENE_TIPOS_DOCUMENTOS" parent="catalogs-endpoint" >
+        <property name="templateName" value="obtieneDocumentosCliente.vm" />
+        <property name="xslName" value="obtieneDocumentosCliente.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+    </bean>
+    
+    <bean id="OBTIENE_LISTA" parent="catalogs-endpoint" >
+        <property name="templateName" value="obtieneLista.vm" />
+        <property name="xslName" value="labelValueList.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="OBTIENE_ASEGURADORAS" parent="catalogs-endpoint" >
+        <property name="templateName" value="obtieneAseguradoras.vm" />
+        <property name="xslName" value="labelValueList.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="OBTIENE_ASEGURADORAS_CAT2" parent="catalogs-endpoint" >
+        <property name="templateName" value="obtieneAseguradorasCat2.vm" />
+        <property name="xslName" value="labelValueList.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="OBTIENE_ASEGURADORAS_POR_CLIENTE_Y_PRODUCTO" parent="catalogs-endpoint">
+		<property name="templateName" value="aseguradoraPorClienteYProducto.vm"></property>
+		<property name="xslName" value="aseguradoraPorClienteYProducto.xsl"></property>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"></property>
+	</bean>
+    
+    <bean id="OBTIENE_PRODUCTOS_CATALOGO" parent="catalogs-endpoint" >
+        <property name="templateName" value="obtieneProductos.vm" />
+        <property name="xslName" value="labelValueList.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="OBTIENE_INTRUMETOS_PAGO" parent="catalogs-endpoint" >
+        <property name="templateName" value="obtieneInstrumentosDePago.vm" />
+        <property name="xslName" value="labelValueFeedbackList.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="CATALOGS_OBTIENE_BANCOS" parent="catalogs-endpoint" >
+        <property name="templateName" value="obtieneBancos.vm" />
+        <property name="xslName" value="labelValueList.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="OBTIENE_PRODUCTOS_CAT" parent="catalogs-endpoint" >
+        <property name="templateName" value="obtieneProductosCat.vm" />
+        <property name="xslName" value="labelValueList.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="OBTIENE_PRODUCTOS_ASEGURADORA_CAT" parent="catalogs-endpoint" >
+        <property name="templateName" value="obtieneProductosAseguradoraCat.vm" />
+        <property name="xslName" value="labelValueList.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+   
+    <bean id="OBTIENE_ASEGURADORAS_CAT" parent="catalogs-endpoint" >
+        <property name="templateName" value="obtieneAseguradorasCat.vm" />
+        <property name="xslName" value="labelValueList.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+     <bean id="OBTIENE_ASEGURADORAS_CLIENTE_CAT" parent="catalogs-endpoint" >
+        <property name="templateName" value="obtieneAseguradorasClienteCat.vm" />
+        <property name="xslName" value="labelValueList.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    
+    
+    <bean id="OBTIENE_STATUSPOLIZA_CAT" parent="catalogs-endpoint" >
+        <property name="templateName" value="obtieneStatusPolizaCat.vm" />
+        <property name="xslName" value="labelValueList.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="OBTIENE_PERSONA_USUARIO" parent="catalogs-endpoint" >
+        <property name="templateName" value="obtienePersonaUsuario.vm" />
+        <property name="xslName" value="labelValueList.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="OBTIENE_DOMICILIO_PERSONA" parent="catalogs-endpoint" >
+        <property name="templateName" value="obtieneDomicilioPersona.vm" />
+        <property name="xslName" value="labelValueList.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="OBTIENE_BANCOS_SUCURSAL" parent="catalogs-endpoint" >
+        <property name="templateName" value="obtieneBancosSucursal.vm" />
+        <property name="xslName" value="labelValueList.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="OBTIENE_TIPO_TARJETA" parent="catalogs-endpoint" >
+        <property name="templateName" value="obtieneTipoTarjeta.vm" />
+        <property name="xslName" value="labelValueList.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="OBTIENE_TIPO_TARJETA_Y_SWCREDITO" parent="catalogs-endpoint" >
+        <property name="templateName" value="obtieneTipoTarjeta.vm" />
+        <property name="xslModule" value="flujos/cotizacion" />
+        <property name="xslName" value="obtieneTipoTarjetaYCredito.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+
+	<bean id="OBTIENE_DESCRIPCION" parent="catalogs-endpoint">
+        <property name="templateName" value="obtieneDescripcion.vm" />
+        <property name="xslName" value="obtieneDescripcion.xsl" />
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+    
+    <bean id="OBTIENE_LISTA_COBERTURAS" parent="catalogs-endpoint" >
+        <property name="templateName" value="obtieneListaCoberturas.vm" />
+        <property name="xslName" value="labelValueList.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+
+    <bean id="OBTIENE_LISTA_SEXO" parent="catalogs-endpoint" >
+        <property name="templateName" value="obtieneSexo.vm" />
+        <property name="xslName" value="labelValueList.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+
+    <bean id="OBTIENE_LISTA_FUNCION_ROL" parent="catalogs-endpoint" >
+        <property name="templateName" value="obtieneFuncionRol.vm" />
+        <property name="xslName" value="labelValueList.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="OBTIENE_LISTA_COBERTURAS_NO_AGREGADAS" parent="catalogs-endpoint" >
+        <property name="templateName" value="obtieneListaCoberturasNoAgregadas.vm" />
+        <property name="xslName" value="labelValueList.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="OBTIENE_LISTA_ROLES" parent="catalogs-endpoint" >
+        <property name="templateName" value="obtieneRoles.vm" />
+        <property name="xslName" value="cargaRoles.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="OBTIENE_MENSAJES" parent="catalogs-endpoint" >
+        <property name="templateName" value="obtieneMensajes.vm" />
+        <property name="xslName" value="obtieneMensajes.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.model.MensajesVO" />
+    </bean>
+    
+    <bean id="OBTIENE_LISTA_TIPOS" parent="catalogs-endpoint" >
+        <property name="templateName" value="obtieneTipos.vm" />
+        <property name="xslName" value="labelValueList.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="OBTIENE_TIPO_SITUACION" parent="catalogs-endpoint" >
+        <property name="templateName" value="obtieneTipoSituacion.vm" />
+        <property name="xslName" value="labelValueList.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="OBTIENE_PANTALLAS_WF" parent="catalogs-endpoint" >
+        <property name="templateName" value="obtienePantallas.vm" />
+        <property name="xslName" value="labelValueList.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="OBTIENE_PASOS_WF" parent="catalogs-endpoint" >
+        <property name="templateName" value="obtieneComboPasos.vm" />
+        <property name="xslName" value="labelValueList.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="OBTIENE_INTRUMETOS_DE_PAGO" parent="catalogs-endpoint" >
+        <property name="templateName" value="obtieneInstrumentosDePago.vm" />
+        <property name="xslName" value="obtieneInstrumentosPago.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+</beans>

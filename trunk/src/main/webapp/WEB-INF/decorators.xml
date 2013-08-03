@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<decorators defaultdir="/decorators">
+    <excludes>
+        <pattern>/nodecorate/*</pattern>
+        <pattern>/resources/*</pattern>
+        <pattern>/styles/*</pattern>
+        <pattern>/scripts/*</pattern>
+        <pattern>/images/*</pattern>
+        <pattern>/dojo/*</pattern>
+        <pattern>/struts/*</pattern>        
+        <pattern>/jsp/portal/portal.jsp</pattern>
+ 	<pattern>/jsp/menu/menu.jsp</pattern>
+ 	<pattern>/jsp/alertas/*.jsp</pattern>
+ 	<pattern>/load.action</pattern>
+         <pattern>/administracionCasos/obtenerAtributosVariablesCasos*</pattern>
+    </excludes>       
+    
+    <decorator name="empty" page="empty.jsp">
+   		<pattern>/portal.action</pattern>
+        <pattern>/index.action</pattern>
+        <pattern>/test/*.jsp</pattern>
+        <pattern>/flujocotizacion/obtenerAyudaCobertura.action</pattern>
+        <pattern>/procesoemision/ayudaCobertura.action</pattern>
+        <pattern>/procesoemicion/busquedaPoliza.action</pattern>  
+ 	    <pattern>*/menuusuario/menuUsuario.action</pattern>         
+        <pattern>/menuusuario/*.action</pattern>
+      <!--   <pattern>/bo.action</pattern>  -->
+      <!--  <pattern>/*load.action</pattern>  -->                  
+    </decorator>
+    <decorator name="decmainbody" page="decmainbody.jsp">
+   		<pattern>/jsp/portal/mainBody.jsp</pattern>                          
+    </decorator>
+    <decorator name="default" page="default.jsp">
+        <!-- <pattern>/flujocotizacion/*.action</pattern> -->          
+        <!-- Se comento para ver si se soluciona la falla del config de pantalla -->
+        <!--pattern>/configmenu/*.action</pattern-->
+                
+        <pattern>/menuusuario/*.action</pattern>
+        <pattern>/confbeta/*.action</pattern>
+        <pattern>/mantto/*.action</pattern>
+        <pattern>/principal/*.action</pattern>
+        <pattern>/procesoemision/*.action</pattern>
+        <pattern>/flujoendoso/*.action</pattern>
+        <pattern>/configworkflow/*.action</pattern>
+        <!--
+        <pattern>/*load.action</pattern>
+        -->
+        <!--pattern>/*</pattern-->        
+        <!--         
+        <pattern>/confalfa/*.action</pattern>
+        <pattern>/opcmenuusuario/*.action</pattern>
+        -->
+        
+    <decorator name="clean" page="clean.jsp">
+		<pattern>/ArbolRolCliente.action</pattern>
+		<pattern>/seleccionaRolCliente.action</pattern>  
+		<pattern>/jsp/portal/treeRolElemento.jsp</pattern>
+		<pattern>/jsp/portal/index.jsp</pattern>
+    </decorator>
+         
+    </decorator>
+    
+    <decorator name="default2" page="default2.jsp">
+    	<pattern>/jsp/*/*.jsp</pattern>          
+    	<pattern>/*.action</pattern>
+    	<pattern>/configmenu/*.action</pattern>
+    	
+    	<!-- Cambios añadidos para solucionar la falla del config de pantalla -->
+    	<pattern>*/configuradorpantallas/entrarConfPantallas.action</pattern>
+    	
+    	<pattern>/principal/*.action</pattern>   
+    	<pattern>/procesos/*.action</pattern>
+    	<pattern>/indexWithIframe.jsp</pattern>  
+    	<pattern>*/procesoemision/detallePoliza.action</pattern>
+    	<pattern>*/procesoemision/busquedaPoliza.action</pattern>
+    	<pattern>*/procesoemision/irCancelacionManual.action</pattern>
+    	<pattern>*/procesoemision/consultaPolizasMaestras.action</pattern>
+    	<pattern>*/procesoemision/irPolizasCanceladas.action</pattern>  	
+    	<pattern>*/procesoemision/irAgrupacionPorRol.action</pattern>
+    	<pattern>*/procesoemision/irAgrupacionPorGrupoPersona.action</pattern>
+    	<pattern>*/procesoemision/irPolizasARenovar.action</pattern> 
+    	<pattern>*/procesoemision/irPolizasRenovadas.action</pattern>
+    	<pattern>*/procesoemision/irAsignarNumero.action</pattern>
+    	<pattern>*/flujoendoso/irPolizasRenovadas.action</pattern>
+    	<pattern>*/flujoendoso/detallePoliza.action</pattern>    	
+    	  	
+    </decorator>   	
+    
+    <!--decorator name="default" page="default.jsp">
+        <pattern>/*</pattern>
+    </decorator-->
+
+    
+    
+</decorators>

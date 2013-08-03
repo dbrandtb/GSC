@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+ 
+	<bean id="serviciosCoberturas" class="mx.com.ice.services.business.ServiciosCoberturas">
+        <property name="coberturasDao" ref="serviciosCoberturasDAO"/>
+        <property name="servGeneralesNegocio" ref="serviciosGeneralesNegocio"/>
+        <!-- property name="servicioPantallaCoberturas" ref="servicioPantallaCoberturas"/ -->
+        <property name="servIncisos" ref="serviciosIncisos"/>
+    </bean>
+    
+    <bean id="serviciosCoberturasDAO" class="mx.com.ice.services.business.dao.ServiciosCoberturasDAO">
+        <property name="endpoints">
+            <map>
+                <!-- ENDPOINT QUE SE COMENTA, HASTA DEFINIRSE DEL QUE PROCEDURE INVOCARA.. -->
+                <!--entry key="P_GET_CODATRIBUTO_VARMODELO_COB">
+                    <ref bean="P_GET_CODATRIBUTO_VARMODELO_COB" />
+                </entry-->
+                
+                <entry key="P_GET_DSGARANT">
+                    <ref bean="P_GET_DSGARANT" />
+                </entry>
+                <entry key="P_GET_DSCAPITAL">
+                    <ref bean="P_GET_DSCAPITAL" />
+                </entry>             
+                <entry key="P_EXISTE_TGREXCOA">
+                    <ref bean="P_EXISTE_TGREXCOA" />
+                </entry>
+                
+                <!-- ESTA LLAVE SOLO ESTA EN SERVICIOS COBERTURASDAO..  ... -->
+                <entry key="P_ACT_TGREXCOA">
+                    <ref bean="P_ACT_TGREXCOA" />
+                </entry>
+                                
+                <entry key="P_GET_CAPITAL_REVALOR">
+                    <ref bean="P_GET_CAPITAL_REVALOR" />
+                </entry>                
+                
+                <entry key="P_FALTAN_ATRIBUTOB19B_OBLIG">
+                    <ref bean="P_FALTAN_ATRIBUTOB19B_OBLIG" />
+                </entry>
+                
+                <entry key="P_FALTAN_GARANTIAS_OBLIG">
+                    <ref bean="P_FALTAN_GARANTIAS_OBLIG" />
+                </entry>
+                
+                <entry key="P_FALTAN_ATRIBUTOS_B19B">
+                    <ref bean="P_FALTAN_ATRIBUTOS_B19B" />
+                </entry>
+                
+                <entry key="P_EXISTEN_GARANTIAS_SIT">
+                    <ref bean="P_EXISTEN_GARANTIAS_SIT" />
+                </entry>                
+            </map>
+        </property>
+    </bean>
+ 
+    
+</beans>

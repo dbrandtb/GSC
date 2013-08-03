@@ -1,0 +1,10 @@
+<statements>
+	<statement type="stored" name="PKG_USER.P_VALIDA_USUARIO_EN_GRUPO" id="pUsuarioEnGrupo">
+        <param eval="true" name="pv_user_i" type="VARCHAR">$!params.get("user")</param>
+        <param eval="true" name="pv_grupo_i" type="VARCHAR">$!params.get("grupo")</param>
+
+		<outparam id="pv_valida_o" type="NUMERIC"></outparam>
+		<outparam id="pv_msg_id_o" type="NUMERIC"/>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+	</statement>
+</statements>

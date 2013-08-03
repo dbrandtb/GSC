@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<statements>
+	<statement type="stored" name="PKG_LISTAS.P_OBJETO_RAMO" id="obtener-lista-tipo">
+		<param eval="true" name="PV_CDRAMO_I" type="NUMERIC"><![CDATA[$!params.get("cdRamo")]]></param>
+  		<param eval="true" name="PV_CDTIPSIT_I" type="VARCHAR"><![CDATA[$!params.get("cdTipsit")]]></param>
+  		
+  		<outparam id="PV_REGISTRO_O" type="CURSOR"/>
+		<outparam id="PV_MSG_ID_O" type="NUMERIC"/>
+		<outparam id="PV_TITLE_O" type="VARCHAR"/>		
+	</statement>
+</statements>

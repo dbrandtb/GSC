@@ -1,0 +1,7 @@
+<statements>
+	<statement type="stored" name="PKG_SEGURIDAD.VALIDA_USUARIO_CONTRASENA" id="pValidaUsuarioContrasena">
+		<param eval="true" name="P_USUARIO" type="VARCHAR"><![CDATA[$!params.get("P_USUARIO")]]></param>
+		<param eval="true" name="P_CONTRASENA" type="VARCHAR"><![CDATA[$!params.get("P_CONTRASENA")]]></param>
+		<outparam id="X_RESPUESTA" type="VARCHAR"/>
+	</statement>
+</statements>

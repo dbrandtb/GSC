@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="" crossContext="true" reloadable="true">
+    <Resource name="jdbc/OracleDS" auth="Container" type="javax.sql.DataSource" 
+        maxActive="20" maxIdle="30" maxWait="10000" username="ice_configuring" password="ice_configuring"
+        driverClassName="oracle.jdbc.driver.OracleDriver"
+        url="jdbc:oracle:thin:@192.168.1.190:1527:acwt"></Resource>
+</Context>

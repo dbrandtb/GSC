@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
+<statements>
+  
+    <statement type='stored' name="PKG_CARROCOMPRA.P_GUARDA_CONFIGURA" id="agregarGuardarCarritoCompras">
+
+        <param eval="true" name="p_cdconfiguracion" type="NUMERIC">$!params.get("cdConfiguracion")</param> 
+        <param eval="true" name="p_cliente" type="NUMERIC">$!params.get("cliente")</param>
+        <param eval="true" name="p_cdelemento" type="NUMERIC">$!params.get("cdelemento")</param>        
+        <param eval="true" name="p_sino" type="NUMERIC">$!params.get("siNo")</param>
+       
+        
+        <outparam id="pv_msg_id_o" type="NUMERIC"></outparam>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+       
+	
+	</statement>
+
+    
+</statements>

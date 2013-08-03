@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_TRADUC.P_INSERTA_PROPIEDADES " id="insertarMecanismoDeTooltip">
+		
+       <param eval="true" name="pv_idobjeto_i" type="NUMERIC">$!params.get("idObjeto")</param>
+       <param eval="true" name="pv_nbobjeto_i" type="VARCHAR">$!params.get("nbObjeto")</param>
+       <param eval="true" name="pv_idtitulo_i" type="NUMERIC">$!params.get("idTitulo")</param>
+       <param eval="true" name="pv_tipoobj_i" type="NUMERIC">$!params.get("fgTipoObjeto")</param>
+       <param eval="true" name="pv_etiqueta_i" type="VARCHAR">$!params.get("nbEtiqueta")</param>
+       <param eval="true" name="pv_tooltp_i" type="VARCHAR">$!params.get("dsTooltip")</param>
+  	   <param eval="true" name="pv_gayuda_i" type="NUMERIC">$!params.get("fgAyuda")</param>	
+  	   <param eval="true" name="pv_dayuda_i" type="VARCHAR"><![CDATA[$!params.get("dsAyuda")]]></param>  		
+  	   <param eval="true" name="pv_lang_code_i" type="NUMERIC">$!params.get("lang_Code")</param>
+  		 
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

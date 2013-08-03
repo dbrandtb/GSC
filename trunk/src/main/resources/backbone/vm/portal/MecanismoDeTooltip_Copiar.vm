@@ -1,0 +1,11 @@
+<statements>
+	<statement type="stored" name="PKG_TRADUC.P_COPIA_PROPIEDADES " id="copiarMecanismoDeTooltip">
+		
+       <param eval="true" name="pv_idobjeto_i" type="NUMERIC">$!params.get("idObjeto")</param>
+       <param eval="true" name="pv_lang_code_i" type="NUMERIC">$!params.get("lang_Code")</param>
+  	   
+  	   <outparam id="pv_idobjeto_new_o" type="NUMERIC"/>
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

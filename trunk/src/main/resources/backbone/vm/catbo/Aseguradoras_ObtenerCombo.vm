@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_LISTAS.P_LISTA_ASEGURADORA" id="obtieneAseguradoras">
+		<outparam id="pv_registro_o" type="CURSOR"></outparam>
+		<outparam id="po_msg_id" type="INTEGER"/>
+        <outparam id="po_title" type="VARCHAR"></outparam>
+	</statement>
+</statements>

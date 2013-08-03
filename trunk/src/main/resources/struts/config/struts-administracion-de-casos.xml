@@ -1,0 +1,295 @@
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+
+	<include file="struts-default.xml" />
+
+	<package name="administracionCasos" extends="json-default" namespace="/administracionCasos">
+
+	<!-- CONSULTA DE CASOS / SOLICITUDES  -->
+    <action name="buscarCasosSolicitudes" class="listaAdministacionCasosAction" method="btnBuscarCasosClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+	</action>
+    <action name="irAgregarCaso" class="consultarCasosAction" method="btnIrAgregarCasoClick">
+            <result type="chain" name="irPantallaIngresarCaso">ingresarCaso</result>
+    </action>
+    <action name="irConsultarDetalle" class="consultarCasosAction" method="btnIrEditarCasoClick">
+            <result type="chain" name="irPantallaConsultarCasoDetalle">consultarCasoDetalle</result>
+    </action> 
+    <action name="eliminarCaso" class="consultarCasosAction" method="cmdBorrarClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+    <!-- FALTA CREAR EL ACTION PARA REASIGNACION DE CASO Y ASIGNAR LA CONFIGURACION EN SPRING -->
+    <action name="obtenerUsuariosPorModulo" class="reasignarCasoAction" method="obtenerUsuariosPorModulo">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+    <action name="guardarReasignacionCaso" class="reasignarCasoAction" method="cmdGuardarReasignacionCasoClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+    <action name="exportarListado" class="listaAdministacionCasosAction" method="cmdExportarListadoCasosSolicitudesClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+    <!-- FIN DE CONSULTA DE CASOS / SOLICITUDES  -->
+    
+    
+    <!-- CONSULTA DE DETALLE DE CASOS -->
+    
+
+    <action name="buscarUsuariosResponsables" class="listaAdministacionCasosAction" method="btnObtenerUsuariosResponsablesCasosClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+	</action>
+
+	
+	 <action name="obtenerCaso" class="listaAdministacionCasosAction" method="btnObtenerCasoClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+	</action>
+	
+	 <action name="obtenerMovimientoPorCasos" class="listaAdministacionCasosAction" method="obtenerMovimientoPorCasos">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+	</action>
+	
+	<!--action name="irConsultaMovimiento" class="consultarMovimientosCasoAction" method="cmdIrPantallaConsultaMovimientoClick">
+            <result type="chain" name="consultarMovimientosCaso">consultarMovimientosCaso</result>
+	</action-->
+	<action name="irConsultaMovimiento" class="listaAdministacionCasosAction" method="cmbIrConsultarMovimientoCasoClick">
+    	<exception-mapping result="irConsultarMovimientoCaso" exception="javax.servlet.ServletException">consultarMovimientosCaso</exception-mapping>
+    	<exception-mapping result="irConsultarMovimientoCaso" exception="java.sql.SQLException">consultarMovimientosCaso</exception-mapping>    	
+    	<exception-mapping result="irConsultarMovimientoCaso" exception="java.lang.Exception">consultarMovimientosCaso</exception-mapping>
+        <result type="chain" name="irConsultarMovimientoCaso">consultarMovimientosCaso</result>
+    </action>
+	
+	<action name="validacionCompraTiempo" class="consultarCasoDetalleAction" method="cmdValidacionCompraTiempo">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+    
+    <action name="guardarCompraDeTiempo" class="consultarCasoDetalleAction" method="btnGuardarCompraDeTiempoClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+    
+    <action name="getEncMovimientosPorCasos" class="consultarMovimientosCasoAction" method="getEncMovimientosPorCasos">
+            <result type="chain" name=""></result>
+    </action>
+    
+     <action name="borrarMovimientoPorCaso" class="consultarMovimientosCasoAction" method="cmdBorrarMovimientoPorCasoClick">
+            <result type="chain" name=""></result>
+    </action>
+    
+     <action name="guardarMovimientoDelCaso" class="consultarMovimientosCasoAction" method="cmdGuardarMovimientoDelCasoClick">
+            <result type="chain" name=""></result>
+    </action>
+    
+    
+     <action name="guardarReasigancionCaso" class="reasignarCasoAction" method="cmdGuardarReasigancionCasoClick">
+            <result type="chain" name=""></result>
+    </action>
+    
+    
+    
+    <action name="" class="consultarCasoDetalleAction" method="">
+            <result type="chain" name=""></result>
+    </action>
+    
+    <!-- FIN DE CONSULTA DE DETALLE DE CASOS  -->
+
+    
+    <!-- NUMERACION DE CASOS -->
+    
+    <action name="buscarNumeracionCasos" class="listaAdministacionCasosAction" method="cmdBuscarNcClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+	</action>
+	
+    <action name="getNumeracionCasos" class="numeracionCasosAction" method="cmdGetClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+    
+     <action name="borrarNumeracionCasos" class="numeracionCasosAction" method="cmdBorrarClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+    
+     <action name="guardarNumeracionCasos" class="numeracionCasosAction" method="cmdGuardarClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+
+	<action name="exportarNumeracionCasos" class="listaAdministacionCasosAction" method="cmdExportarListadoCasosSolicitudesClick">
+        <result name="success" type="stream">
+             <param name="contentType">${contentType}</param>
+            <param name="inputName">inputStream</param>
+            <param name="contentDisposition">filename="${filename}"</param>
+            <param name="bufferSize">4096</param>
+        </result>
+    </action>  
+	
+    <!-- FIN NUMERACION DE CASOS -->
+	
+	   <!-- ******************************************************** ALTA DE CASO ******************************************************** -->
+    <action name="obtenerEncabezado" class="altaCasoAction" method="obtenerEncabezado">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+    <action name="obtenerPolizas" class="listaAdministacionCasosAction" method="obtenerPolizas">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+    <action name="obtenerAtributosVariablesCasos" class="listaAdministacionCasosAction" method="cmbTareaSelect">
+        <result type="chain" name="dinamico">atributosVariables</result>
+    </action>
+    <action name="guardarNuevoCaso" class="altaCasoAction" method="cmdGuardarClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+    <action name="irConsultaCaso" class="altaCasoAction" method="cmdIrConsultaCasoClick">
+            <result type="chain" name="irPantallaConsultaDeCaso">consultarCasoSolicitud</result>
+    </action> 
+          
+    
+    <action name="obtenerListaUsuariosResponsables" class="listaAdministacionCasosAction" method="buscarListaUsuariosResponsables">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+    
+ 	<action name="obtenerAtributosVariablesCasosDos" class="listaAdministacionCasosAction" method="cmbTareaSelectConCaso">
+        <result type="chain" name="dinamico">atributosVariables</result>
+        <result type="chain" name="vacio">atributosVariablesVacio</result>
+    </action>
+    <!-- ***************************************************** FIN DE ALTA DE CASO ***************************************************** -->
+    
+    <!-- ***************************************************** CONSULTA DE CLIENTES ***************************************************** -->
+    <action name="buscarClientes" class="listaAdministacionCasosAction" method="cmdBuscarClientesClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+    
+    <action name="irConsultarCasos" class="consultarCasosAction" method="cmdIrConsultarCasosClick">
+            <result type="chain" name="irPantallaConsultaCaso">consultarCasoSolicitud</result>
+    </action>
+     
+    
+    <!-- ***************************************************** FIN CONSULTA DE CLIENTES ***************************************************** -->
+
+ <!-- ***************************************************** SCRIPT DE ATENCION ***************************************************** -->
+
+
+     <action name="irScriptAtencion" class="scriptAtencionAction" method="cmdIrScriptAtencionClick">
+            <result type="chain" name="irPantallaScriptAtencion">catScriptAtencion</result>
+     </action>
+
+
+ <!-- ***************************************************** FIN SCRIPT DE ATENCION ***************************************************** -->
+
+	<action name="encabezadoCasoDetalle" class="consultarCasoDetalleAction" method="cmdEncabezadoCasoDetalle">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+    
+    <action name="obtenerDatosAtributosVariables" class="listaAdministacionCasosAction" method="obtenerDatosAtributosVariables">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+    
+     <!-- MOVIMIENTOS POR CASO -->
+    <action name="getEncabezadoMovimientosCaso" class="consultarMovimientosCasoAction" method="obtenerEncabezadoMovimientosCaso">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+    <action name="obtenerListadoMovimientosCaso" class="listaAdministacionCasosAction" method="obtenerListadoMovimientosCaso">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+    <action name="getMovimientoCaso" class="consultarMovimientosCasoAction" method="obtenerMovimientoCaso">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+    <action name="obtenerUsuariosResponsablesMovCaso" class="listaAdministacionCasosAction" method="obtenerUsuariosResponsablesMovCaso">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+    <action name="guardarNuevoMovimientoCaso" class="consultarMovimientosCasoAction" method="cmdGuardarClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+    <action name="borrarMovimientoCaso" class="consultarMovimientosCasoAction" method="cmdBorrarClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>    
+    <action name="irConsultaCasoDetalle" class="consultarMovimientosCasoAction" method="cmdIrPaginaConsultaCasoDetalleClick">
+            <result type="chain" name="consultarCasoDetalle">consultarCasoDetalle</result>
+    </action>
+    
+    <action name="exportarListadoMovimientosCaso" class="listaAdministacionCasosAction" method="cmdExportarListadoMovimientosCasoClick">
+            <result name="success" type="stream">
+             <param name="contentType">${contentType}</param>
+            <param name="inputName">inputStream</param>
+            <param name="contentDisposition">filename="${filename}"</param>
+            <param name="bufferSize">4096</param>
+        </result>
+    </action>
+    
+    <action name="obtenerDatosDelMovimiento" class="consultarMovimientosCasoAction" method="obtenerDatosDelMovimiento">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+    
+    <!--  Reasignacion Casos       -->
+    <action name="buscarReasignacionCaso" class="listaAdministacionCasosAction" method="cmdBuscarReasignacionCasoClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+    
+    <action name="guardarReasignacionCaso" class="reasignarCasoAction" method="cmdGuardarReasignacionCasoClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>    
+    
+    <action name="regresarConsultarCaso" class="reasignarCasoAction" method="cmdRegresarConsultaCasoClick">
+            <result type="chain" name="regresarPantallaConsultaCaso">consultarCasoSolicitud</result>
+    </action>    
+
+    <action name="guardarMovimientoCaso" class="reasignarCasoAction" method="cmdGuardarMovimientoCasoClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>  
+    
+    <!--  FIN Reasignacion Casos   -->  
+
+    <!--  Reasignacion Casos  1   -->
+    <action name="buscarReasignacionCasoUsr" class="listaAdministacionCasosAction" method="cmdBuscarReasignacionCasoUsrClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+
+    <action name="buscarReasignacionCasoUsrRspnsbl" class="listaAdministacionCasosAction" method="cmdBuscarReasignacionCasoUsrRspnsblClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+    
+    <action name="guardarReasignacionCasoUsr" class="reasignarCasoAction" method="cmdGuardarReasignacionCasoUsuarioClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>    
+    
+    <action name="regresarConfigurarMatrizTarea" class="reasignarCasoAction" method="cmdConfigurarMatrizTareaClick">
+            <result type="chain" name="regresarPantallaConfigurarMatrizTarea">configuraMatrizTarea</result>
+    </action>  
+    
+    <!--  FIN Reasignacion Casos  1 -->    
+    
+    <action name="buscarUsuariosResponsablesMov" class="listaAdministacionCasosAction" method="obtenerUsuariosResponsablesMovCaso">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+	</action>
+    
+	<!-- <action name="exportaDetalleCaso" class="reporteDetalleCaso" method="showPDF">
+			<result name="success" type="stream">
+				<param name="contentType">${contentType}</param>
+				<param name="inputName">inputStream</param>
+				<param name="contentDisposition">filename="${filename}"</param>
+				<param name="bufferSize">4096</param>
+			</result>
+	</action> -->
+	
+	<action name="exportaDetalleCaso" class="reporteDetalleCaso" method="showExportar">
+			<result name="success" type="stream">
+				<param name="contentType">${contentType}</param>
+				<param name="inputName">inputStream</param>
+				<param name="contentDisposition">filename="${filename}"</param>
+				<param name="bufferSize">4096</param>
+			</result>
+	</action>
+	
+	<action name="irConsultaClientes" class="consultarCasosAction" method="cmdIrConsultaClientes">
+            <result type="chain" name="irPantallaConsultaClientes">consultaDeCliente</result>
+    </action>
+    
+    
+    <action name="validaStatusCaso" class="compraTiempoAction" method="validaStatusCasoClik">
+	            <result type="json"><param name="ignoreHierarchy">false</param></result>
+	</action>
+	
+    <action name="validarTiemposMatriz" class="listaAdministacionCasosAction" method="validaTiemposMatrizClik">
+	            <result type="json"><param name="ignoreHierarchy">false</param></result>
+	</action>
+	
+	
+	</package>
+
+</struts>

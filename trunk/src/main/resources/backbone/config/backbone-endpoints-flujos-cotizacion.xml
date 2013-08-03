@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <bean id="flujos-cotizacion-endpoint" abstract="true" parent="parent-endpoint">
+        <property name="templateModule" value="flujos/cotizacion" />
+        <property name="xslModule" value="flujos/cotizacion" />
+    </bean>
+
+    <bean id="GET_COMBO_PADRE" parent="conf-pantallas-endpoint">
+        <property name="templateName" value="getComboPadre.vm" />
+        <property name="xslName" value="getComboPadre.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="GET_COMBO_PADRE_INSTPAGO" parent="conf-pantallas-endpoint">
+        <property name="templateName" value="getComboPadreInstPago.vm" />
+        <property name="xslName" value="getComboPadre.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+
+    <bean id="OBTIENE_TATRI_PARAMS" parent="flujos-cotizacion-endpoint">
+        <property name="templateName" value="obtieneTatriParams.vm" />
+        <property name="xslName" value="obtieneTatriParams.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.flujos.model.TatriParametrosVO" />
+    </bean>
+
+    <bean id="OBTIENE_RESULTADOS" parent="flujos-cotizacion-endpoint">
+        <property name="templateName" value="obtieneResultados.vm" />
+        <property name="xslName" value="obtieneResultados.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.configurador.pantallas.model.components.GridVO" />
+    </bean>
+
+    <bean id="OBTIENE_COBERTURAS_CONFIGURADOR" parent="flujos-cotizacion-endpoint">
+        <property name="templateName" value="obtieneCoberturas.vm" />
+        <property name="xslName" value="obtieneCoberturas.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+
+    <bean id="OBTIENE_AYUDA_COBERTURA" parent="flujos-cotizacion-endpoint">
+        <property name="templateName" value="obtieneAyudaCoberturas.vm" />
+       	<property name="xslName" value="obtieneAyudaCoberturas.xsl" />
+       	<property name="unmarshallClass" value="mx.com.aon.flujos.cotizacion.model.AyudaCoberturaCotizacionVO" />
+    </bean>
+
+    <bean id="OBTIENE_PANTALLA_FINAL" parent="flujos-cotizacion-endpoint">
+        <property name="templateName" value="obtienePantallaFinal.vm" />
+        <property name="xslName" value="obtienePantallaFinal.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.configurador.pantallas.model.PantallaVO" />
+    </bean>
+    
+	<bean id="BOTON_GUARDA_COTIZACION" parent="flujos-cotizacion-endpoint">
+        <property name="templateName" value="botonGuardaCotizacion.vm" />
+        <property name="xslModule" value="general" />
+        <property name="xslName" value="String.xsl" />
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    <bean id="GUARDA_COTIZACION_RESULTADO" parent="flujos-cotizacion-endpoint">
+        <property name="templateName" value="guardaMovZWPolRecResultadoCotizacion.vm" />
+		<property name="transformResult" value="false" />
+        <property name="unmarshallResult" value="false" />
+    </bean>
+    
+    <bean id="OBTEN_ASEGURADORAS" parent="flujos-cotizacion-endpoint">
+        <property name="templateName" value="obtieneAseguradoras.vm" />
+		<property name="xslName" value="obtieneAseguradoras.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+		
+	<bean id="OBTIEN_COTIZACIONES" parent="flujos-cotizacion-endpoint">
+        <property name="templateName" value="buscaCotizaciones.vm" />
+		<property name="xslName" value="obtieneCotizaciones.xsl" />
+       	<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+    
+	<bean id="ELIMINA_COTIZACIONES_CONSULTA" parent="flujos-cotizacion-endpoint">
+        <property name="templateName" value="eliminaCotizacionesConsulta.vm" />
+		<property name="transformResult" value="false" />
+        <property name="unmarshallResult" value="false" />
+    </bean>
+
+	<bean id="OBTIENE_RECIBOS_COTIZACION" parent="flujos-cotizacion-endpoint">
+        <property name="templateName" value="obtieneRecibos.vm" />
+		<property name="xslName" value="obtieneRecibos.xsl" />
+       	<property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="OBTIENE_MPOLIOBJ" parent="flujos-cotizacion-endpoint">
+        <property name="templateName" value="obtieneMPoliObj.vm" />
+		<property name="xslName" value="obtieneMPoliObj.xsl" />
+       	<property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+        
+    <bean id="P_MOV_M_POLI_PER" parent="flujos-cotizacion-endpoint">
+        <property name="templateName" value="pMovMPoliPer.vm" />
+		<property name="transformResult" value="false" />
+        <property name="unmarshallResult" value="false" />
+    </bean>
+    
+    <bean id="OBTIENE_NMSUPLEM" parent="flujos-cotizacion-endpoint">
+		<property name="templateName" value="obtieneNmsuplem.vm"/>
+		<property name="xslName" value="obtieneNmsuplem.xsl"/>
+		<property name="unmarshallClass" value="mx.com.aon.portal.model.BaseObjectVO" />
+	</bean>
+        
+   	<bean id="GET_ROLES_DC" parent="flujos-cotizacion-endpoint">
+        <property name="templateName" value="obtieneRolesDC.vm" />
+		<property name="xslName" value="obtieneRolesDC.xsl" />
+       	<property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>    
+    <bean id="OBTIENE_DESGLOSE_COBERTURAS" parent="flujos-cotizacion-endpoint">
+		<property name="templateName" value="obtieneDesgloseCobertura.vm"/>
+		<property name="xslName" value="obtieneDesgloseCobertura.xsl"/>
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>
+	
+	<bean id="OBTIENE_PANTALLA_CONFIGURADA_TEST" parent="flujos-cotizacion-endpoint">
+		<property name="templateName" value="obtienePantallaConfiguradaTest.vm"/>
+		<property name="xslName" value="obtienePantallaConfiguradaTest.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.configurador.pantallas.model.PantallaVO" />
+	</bean>
+	<bean id="OBTIENE_LISTA_COTIZACION_ESPECIAL" parent="flujos-cotizacion-endpoint">
+		<property name="templateName" value="obtienePoliObj.vm"/>
+		<property name="xslName" value="obtienePoliObj.xsl"/>
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>
+	<bean id="OBTIENE_ETIQUETA_PRODUCTO_ESPECIAL" parent="flujos-cotizacion-endpoint">
+		<property name="templateName" value="labelObjeto.vm"/>
+		<property name="xslName" value="labelObjeto.xsl"/>
+		<property name="unmarshallClass" value="mx.com.aon.portal.model.BaseObjectVO" />
+	</bean>
+	<bean id="OBTIENE_lISTA_TIPO_PRODUCTO_ESPECIAL" parent="flujos-cotizacion-endpoint">
+		<property name="templateName" value="pObjetoRamo.vm"/>
+		<property name="xslName" value="pObjetoRamo.xsl"/>
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>
+	<bean id="CONSULTA_SERVICIO_SATELITE_MPOLIOBJ" parent="flujos-cotizacion-endpoint">
+        <property name="templateName" value="pMovMpoliObj.vm" />
+		<property name="transformResult" value="false" />
+        <property name="unmarshallResult" value="false" />
+    </bean>
+    <bean id="SERVICIO_EQUIPO_ESPECIAL_COTIZACION" parent="flujos-cotizacion-endpoint">
+        <property name="templateName" value="pMovServicio.vm" />
+		<property name="transformResult" value="false" />
+        <property name="unmarshallResult" value="false" />
+    </bean>
+     <bean id="OBTIENE_TIPOS_ITEMS_ATRIBUTOS_EQUIPO" parent="flujos-cotizacion-endpoint">
+		<property name="templateName" value="pObtieneTipoObjAtributos.vm"/>
+		<property name="xslName" value="atributosVariables.xsl"/>
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="OBTIENE_COMBOS_ITEMS_ATRIBUTOS_EQUIPO" parent="flujos-cotizacion-endpoint">
+        <property name="templateName" value="pObtieneTipoObjAtributos.vm"/>
+        <property name="xslModule" value="endosos" />
+        <property name="xslName" value="obtieneCombosControl.xsl"/>
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="OBTIENE_TIPOS_ITEMS_ATRIBUTOS_EQUIPO_EDICION" parent="flujos-cotizacion-endpoint">
+        <property name="templateName" value="pObtieneEdicionObjAtributos.vm"/>
+        <property name="xslName" value="atributosVariablesEdicion.xsl"/>
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    <bean id="OBTIENE_COMBOS_ATRIBUTOS_EQUIPO_EDICION" parent="flujos-cotizacion-endpoint">
+        <property name="templateName" value="pObtieneEdicionObjAtributos.vm"/>
+        <property name="xslModule" value="endosos" />
+        <property name="xslName" value="obtieneCombosControl.xsl"/>
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+	<bean id="CLONAR_SITUACION" parent="flujos-cotizacion-endpoint">
+		<property name="templateName"	value="clonarSituacion.vm"/>
+		<property name="xslName"		value="clonarSituacion.xsl"/>
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>
+	
+	<bean id="EJECUTA_P_EXEC_SIGSVDEF" parent="flujos-cotizacion-endpoint">
+		<property name="templateName"	value="ejecutaP_EXEC_SIGSVDEF.vm"/>
+		<property name="xslName"		value="mensajeValXdefecto.xsl"/>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+    <bean id="PROC_INCISO_DEF" parent="flujos-cotizacion-endpoint">
+        <property name="templateName" value="procIncisoDef.vm" />
+		<property name="transformResult" value="false" />
+        <property name="unmarshallResult" value="false" />
+    </bean>
+    
+    <bean id="OBTIENE_NUMERO_OBJETO_EQUIPO_ESPECIAL" parent="flujos-cotizacion-endpoint">
+       <property name="templateName" value="ObjetoNumeroEquipo.vm"/>
+       <property name="xslName" value="ObjetoNumeroEquipo.xsl"/>
+       <property name="unmarshallClass" value="java.lang.Integer" />
+    </bean>
+	
+    <bean id="GRABA_PERSONA_COT" parent="flujos-cotizacion-endpoint">
+        <property name="templateName"		value="guardaPersonaCotizacion.vm" />
+        <property name="xslName"			value="guardaPersonaCotizacion.xsl" />
+		<property name="unmarshallClass"	value="mx.com.aon.portal.model.BaseObjectVO" />
+    </bean>
+    
+    <bean id="OBTIENE_TVALOSIT3" parent="flujos-cotizacion-endpoint">
+        <property name="templateName" value="obtieneTVALOSIT3.vm" />
+        <!-- property name="xslName" value="obtieneTVALOSIT3.xsl" / -->
+        <property name="xslModule" value="emision" />
+        <property name="xslName" value="obtieneDatosExt.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+    
+    <bean id="OBTIENE_TVALOSIT_COTIZA" parent="flujos-cotizacion-endpoint">
+		<property name="templateName"	value="obtieneTvalositCotiza.vm"/>
+		<property name="xslName"		value="obtieneTvalositCotiza.xsl"/>
+		<property name="unmarshallClass" value="java.util.ArrayList" />
+	</bean>
+	
+	<bean id="CLONA_OBJETOS" parent="flujos-cotizacion-endpoint">
+        <property name="templateName" value="clonaObjetos.vm" />
+		<property name="transformResult" value="false" />
+        <property name="unmarshallResult" value="false" />
+    </bean>
+    
+    <bean id="OBTIENE_ASEGURADO" parent="flujos-cotizacion-endpoint">
+		<property name="templateName"	value="obtieneAsegurado.vm"/>
+		<property name="xslName"		value="obtieneAsegurado.xsl"/>
+		<property name="unmarshallClass" value="mx.com.aon.flujos.cotizacion.model.RolVO" />
+	</bean>
+	
+	<bean id="EXEC_VALIDADOR" parent="flujos-cotizacion-endpoint">
+		<property name="templateName"	value="ejecutaP_EXEC_VALIDADOR.vm"/>
+		<property name="xslName"		value="ejecutaP_EXEC_VALIDADOR.xsl"/>
+		<property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean>
+	
+</beans>

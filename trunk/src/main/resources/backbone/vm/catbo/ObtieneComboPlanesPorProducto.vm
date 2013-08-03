@@ -1,0 +1,12 @@
+<statements>
+	<statement type="stored" name="PKG_LISTAS.P_PLAN" id="pPlan">
+       
+       <param eval="true" name="po_producto" type="NUMERIC">$!params.get("po_producto")</param>
+       
+  	   <outparam id="pv_registro_o" type="CURSOR"/>
+  	   
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+       
+	</statement>
+</statements>

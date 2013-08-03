@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_CANCELA.P_GUARDA_MOTIVO" id="guardarMotivosCancelacion">
+		
+	   <param eval="true" name="pv_cdrazon_i" type="NUMERIC">$!params.get("cdRazon")</param>
+	   <param eval="true" name="pv_dsrazon_i" type="VARCHAR"><![CDATA[$!params.get("dsRazon")]]></param>
+       <param eval="true" name="pv_swreinst_i" type="VARCHAR">$!params.get("swReInst")</param>
+       <param eval="true" name="pv_swverpagos_i" type="VARCHAR">$!params.get("swVerPag")</param>
+ 
+       
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

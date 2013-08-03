@@ -1,0 +1,18 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_UTILITY.P_GET_RAMOS_PARAPRO" id="pgetRamoMPARAPRO">
+		<param eval="true" name="pi_ramo" type="NUMERIC">$!params.get("pi_CDRAMO")</param>
+		<outparam id="po_dsramo" type="VARCHAR"/>
+		<outparam id="po_swcoaseg" type="VARCHAR"/>
+		<outparam id="po_swunilIf" type="VARCHAR"/>
+		<outparam id="po_swdivide" type="VARCHAR"/>
+		<outparam id="po_swcolind" type="VARCHAR"/>
+		<outparam id="po_swbefini" type="VARCHAR"/>
+		<outparam id="po_swreaseg" type="VARCHAR"/>
+		<outparam id="po_cdtipagc" type="VARCHAR"/>
+		<outparam id="po_cdroltom" type="VARCHAR"/>
+		<outparam id="po_nomimage" type="VARCHAR"/>
+		<outparam id="po_tipimage" type="VARCHAR"/>
+		<outparam id="po_nmagente" type="VARCHAR"/>
+		<outparam id="po_swunlink" type="VARCHAR"/>
+	</statement>
+</statements>

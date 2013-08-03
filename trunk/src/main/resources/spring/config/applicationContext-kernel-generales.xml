@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+    
+    <bean id="serviciosGeneralesNegocio" class="mx.com.ice.services.business.ServiciosGeneralesNegocio">
+        <!-- REFERENCIA EN ARCHIVO   -->
+        <property name="serviciosGeneralesDAO" ref="serviciosGeneralesDAO"/>
+        
+        <!-- REFERENCIA EN ARCHIVO   -->
+        <!-- property name="servicioClausulaDAO" ref="serviciosClausulasDAO"/ -->
+        
+        <!-- REFERENCIA EN ARCHIVO   -->
+        <property name="servicioPersonas" ref="serviciosPersonas"/>
+        
+        <!-- REFERENCIA EN ARCHIVO   -->
+        <property name="serviciosCoberturasDAO" ref="serviciosCoberturasDAO"/>
+        
+ 		<!-- REFERENCIA EN ARCHIVO   -->        
+        <property name="serviciosGenBloque" ref="serviciosGeneralesBloques"/>
+        
+        <!-- REFERENCIA EN ARCHIVO   -->        
+        <property name="servIncisos" ref="serviciosIncisos"/>
+    </bean>
+      
+        
+    
+</beans>

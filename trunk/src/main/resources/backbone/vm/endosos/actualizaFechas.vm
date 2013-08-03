@@ -1,0 +1,14 @@
+<statements>
+	<statement type="stored" name="PKG_ENDOSOS.P_ACT_MSUPLEME" id="endosoActualizaFechas">
+		<param eval="true" name="pv_cdunieco_i" type="NUMERIC">$!params.cdunieco</param>
+		<param eval="true" name="pv_cdramo_i"   type="NUMERIC">$!params.cdramo</param>
+		<param eval="true" name="pv_estado_i"   type="VARCHAR">$!params.estado</param>
+		<param eval="true" name="pv_nmpoliza_i" type="NUMERIC">$!params.nmpoliza</param>
+		<param eval="true" name="pv_nsuplogi_i"   type="NUMERIC">$!params.nsuplogi</param>
+		<param eval="true" name="pv_fecha_i" type="VARCHAR">$!params.fecha</param>
+		<param eval="true" name="pv_indfecha" type="VARCHAR">$!params.indfecha</param>
+		<outparam id="pv_nmsuplem_o" type="VARCHAR"/>
+		<outparam id="pv_msg_id_o" type="VARCHAR"/>
+		<outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

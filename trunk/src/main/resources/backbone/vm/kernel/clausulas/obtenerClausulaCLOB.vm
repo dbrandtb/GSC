@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<statements>
+    <statement type="select">
+        <![CDATA[
+            SELECT DSLINEA
+            FROM   MPOLICED a
+            WHERE  a.CDUNIECO = $!params.pi_CDUNIECO
+              AND  a.CDRAMO = $!params.pi_CDRAMO
+              AND  a.ESTADO = $!params.pi_ESTADO
+              AND  a.NMPOLIZA = $!params.pi_NMPOLIZA
+              AND  a.NMSITUAC = $!params.pi_NMSITUAC
+              AND  a.NMORDINA = $!params.pi_NMORDINA
+              AND  a.NMSUPLEM = (SELECT MAX(b.NMSUPLEM)
+                                FROM   MPOLICED b
+                                WHERE  b.CDUNIECO = a.CDUNIECO
+                                  AND  b.CDRAMO = a.CDRAMO
+                                  AND  b.ESTADO = a.ESTADO
+                                  AND  b.NMPOLIZA = a.NMPOLIZA
+                                  AND  b.NMSITUAC = a.NMSITUAC
+                                  AND  b.NMORDINA = a.NMORDINA
+                                  AND  b.NMSUPLEM <= $!params.pi_NMSUPLEM)
+              AND  a.STATUS = 'V'
+        ]]>
+    </statement>
+</statements>

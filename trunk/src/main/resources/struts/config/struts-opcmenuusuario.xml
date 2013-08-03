@@ -1,0 +1,173 @@
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <include file="struts-default.xml" />
+
+    <package name="opcmenuusuario" extends="json-default" namespace="/opcmenuusuario">
+
+        <!--
+        Redireccionamiento de action a jsp 
+        -->
+        <action name="opcMenuUsuario" class="configOpcionMenuUsuario">
+            <result name="success">/jsp/opcmenuusuario/opcMenuUsuario.jsp</result>
+            <result name="input">/jsp/opcmenuusuario/opcMenuUsuario.jsp</result>
+        </action>
+        <!-- 
+        Configuracion del Action con tipo de respuesta JSON, esto generara a partir
+        de los atributos la respuesta en formato JSON para el Reader de ExtJs 
+        -->
+        <action name="opcMenuUsuariosJson" class="configOpcionMenuUsuario" method="menuUsuariosJson">
+            <result name="success" type="json">
+            	<param name="ignoreHierarchy">false</param>
+            </result>
+        </action> 
+        <!--
+        Configuracion del Action con tipo de respuesta JSON, esto generara a partir 
+        de los atributos la respuesta en Formato JSON para el Reader de ExtJS y cargar el 
+        combo de Clientes.
+        -->
+        <action name="clienteAction" class="configOpcionMenuUsuario" method="getComboCliente">
+            <result name="success" type="json" />
+        </action>
+        <!--
+        Configuracion del Action con tipo de respuesta JSON, esto generara a partir 
+        de los atributos la respuesta en Formato JSON para el Reader de ExtJS y cargar el 
+        combo de Usuarios.
+        -->
+        <action name="usuariosAction" class="configOpcionMenuUsuario" method="getComboUsuarios">
+            <result name="success" type="json" />
+        </action>
+        <!--
+        Configuracion del Action con tipo de respuesta JSON, esto generara a partir 
+        de los atributos la respuesta en Formato JSON para el Reader de ExtJS y cargar el 
+        combo de Productos.
+        -->
+        <action name="productoClienteAction" class="configOpcionMenuUsuario" method="getComboProductoCliente">
+            <result name="success" type="json" />
+        </action>
+        <!--
+        Configuracion del Action con tipo de respuesta JSON, esto generara a partir 
+        de los atributos la respuesta en Formato JSON para el Reader de ExtJS y cargar el 
+        combo de Productos.
+        -->
+        <action name="nivelMenuAction" class="configOpcionMenuUsuario" method="getComboNivelMenu">
+            <result name="success" type="json" />
+        </action>
+        <!--
+        Configuracion del Action con tipo de respuesta JSON, esto generara a partir 
+        de los atributos la respuesta en Formato JSON para el Reader de ExtJS y cargar el 
+        combo de Roles.
+        -->
+        <action name="rolAction" class="configOpcionMenuUsuario" method="getComboRol">
+            <result name="success" type="json" />
+        </action>
+    
+        <!--
+        Configuracion del Action con tipo de respuesta JSON, esto generara a partir 
+        de los atributos la respuesta en Formato JSON para el Reader de ExtJs y carga el
+        combo de Secciones.
+        -->
+        <action name="seccionAction" class="configOpcionMenuUsuario" method="getComboSeccion">
+            <result name="success" type="json" />
+        </action> 
+        <!--
+        Configuracion del Action con tipo de respuesta JSON, esto generara, a partir 
+        de los atributos la respuesta en Formato JSON para el reader de ExtJs y carga el 
+        combo de tipos.
+        -->
+        <action name="tipoAction" class="configOpcionMenuUsuario" method="getComboTipo">
+            <result name="success" type="json" />
+        </action>
+        
+        <!--
+        Configuracion del Action con tipo de respuesta JSON, esto generara, a partir 
+        de los atributos la respuesta en Formato JSON para el reader de ExtJs y carga el 
+        combo de tipos.
+        -->
+        <action name="tipoMenuAction" class="configOpcionMenuUsuario" method="getComboTipoMenu">
+            <result name="success" type="json" />
+        </action>
+        
+        <!--
+        Configuracion del Action con tipo de respuesta JSON, esto generara, a partir 
+        de los atributos la respuesta en Formato JSON para el reader de ExtJs y carga el 
+        combo de tipos.
+        -->
+        <action name="estadoAction" class="configOpcionMenuUsuario" method="getComboEstado">
+            <result name="success" type="json" />
+        </action>
+        
+        <!--
+        Configuracion del Action con tipo de respuesta JSON, esto generara, a partir 
+        de los atributos la respuesta en Formato JSON para el reader de ExtJs y carga el 
+        combo de tipos.
+        -->
+        <action name="obtenerTipoSituacion" class="configOpcionMenuUsuario" method="obtenerTipoSituacion">
+            <result name="success" type="json" />
+        </action>
+        
+        <!--
+        Configuracion del Action con tipo de respuesta JSON, esto generara, a partir 
+        de los atributos la respuesta en Formato JSON para el reader de ExtJs y carga el 
+        combo de tipos.
+        -->
+        <action name="opcionesAction" class="configOpcionMenuUsuario" method="getComboOpciones">
+            <result name="success" type="json" />
+        </action>
+        <!--
+        Configuracion del Action con tipo de Respuesta Json para insertar una nueva 
+        configuracion de la pagina principal.
+        -->
+        <action name="guardarOpcMenuAction" class="configOpcionMenuUsuario" method="addMenu">
+            <result name="success" type="json"/>
+            <result name="input">/jsp/opcmenuusuario/opcMenuUsuario.jsp</result>
+        </action>
+        <!--
+        Configuracion del Action con tipo de Respuesta Json para editar una 
+        configuracion de la pagina principal de Configuracion de Pagina principal. 
+         -->
+        <action name="editarOpcMenuAction" class="configOpcionMenuUsuario" method="editarMenu">
+            <result name="success" type="json"/>
+            <result name="input">/jsp/opcmenuusuario/opcMenuUsuario.jsp</result>
+        </action>
+        <!--
+        Configuracion del Action con tipo de Respuesta Json para editar una 
+        configuracion de la pagina principal de Configuracion de Pagina principal. 
+         -->
+        <action name="configurarOpcMenuAction" class="configOpcionMenuUsuario" method="configurarMenu">
+            <result name="success" type="json"/>
+            <result name="input">/jsp/opcmenuusuario/opcMenuUsuario.jsp</result>
+        </action>
+        <!--
+        Configuracion del Action con tipo de Respuesta Json para copiar una 
+        configuracion de la pagina principal de Configuracion de Pagina principal. 
+         -->
+        <action name="copiarOpcMenuAction" class="opcionMenuUsuario" method="copiarRoles">
+            <result name="success" type="json"/>
+            <result name="input">/jsp/opcmenuusuario/opcMenuUsuario.jsp</result>
+        </action>
+        <!--
+        Configuracion del Action con tipo de Respuesta Json para borrar una
+        configuracion de la pagina principal de Configuracion de Pagina Principal 
+         -->
+         <action name="borrarOpcMenuAction" class="opcionMenuUsuario" method="borrarOpcionMenu">
+            <result name="success" type="json"/>
+            <result name="input">/jsp/opcmenuusuario/opcMenuUsuario.jsp</result>
+         </action>
+        <!--  
+        Configuración del Action para la exportación del documentos, se tiene que
+        declarar como tipo de respuesta "stream" y el tipo mime de retorno, asi como
+        el atributo asociado al flujo de datos con el archivo y el nombre del archivo
+        generado, junto con el tamaño del buffer de transferencia
+        --> 
+        <action name="exportMenuUsuario" class="exportMenuUsuarioAction">
+            <result name="success" type="stream">
+                 <param name="contentType">${contentType}</param>
+                <param name="inputName">inputStream</param>
+                <param name="contentDisposition">filename="${filename}"</param>
+                <param name="bufferSize">8000</param>
+            </result>
+        </action>
+        
+    </package>
+
+</struts>

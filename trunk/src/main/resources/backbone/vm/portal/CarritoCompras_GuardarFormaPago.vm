@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
+<statements>
+  
+    <statement type='stored' name="PKG_COTIZA.P_GUARDA_MTARJETA" id="agregarGuardarCarritoComprasFormaPago">
+
+        <param eval="true" name="pv_nmtarjeta_i" type="NUMERIC">$!params.get("pv_nmtarjeta_i")</param> 
+        <param eval="true" name="pv_cdtitarj_i" type="VARCHAR">$!params.get("pv_cdtitarj_i")</param>
+        <param eval="true" name="pv_cdperson_i" type="NUMERIC">$!params.get("pv_cdperson_i")</param>        
+        <param eval="true" name="pv_fevence_i" type="VARCHAR">$!params.get("pv_fevence_i")</param>
+        <param eval="true" name="pv_cdbanco_i" type="VARCHAR">$!params.get("pv_cdbanco_i")</param>
+        <param eval="true" name="pv_debcred_i" type="VARCHAR">$!params.get("pv_debcred_i")</param>        
+       
+        <outparam id="pv_msg_id_o" type="NUMERIC"></outparam>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+       
+	</statement>
+
+</statements>

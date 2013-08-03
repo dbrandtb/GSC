@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+
+    <include file="struts-default.xml" />                           
+
+    <package name="atributosVariablesPersona" extends="json-default" namespace="/atributosVariablesPersona">
+
+		<action name="buscarAtributosVariablesPersona" class="listaAtributosVariablesPersonaAction" method="obtenerAtributosVariablesPersona">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+		</action>
+			
+       <action name="borrarAtributosVariablesPersona" class="atributosVariablesPersonaAction" method="cmdBorrarClick">
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+
+        <action name="guardarAtributosVariablesPersona" class="atributosVariablesPersonaAction" method="cmdGuardarClick" >
+            <result type="json"><param name="ignoreHierarchy">false</param></result>
+        </action>
+     
+    </package>
+
+</struts>

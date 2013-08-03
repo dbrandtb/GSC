@@ -1,0 +1,7 @@
+<statements>
+   <statement type="stored" name="DAEMON_TEST" id="ejecucionProC">
+        <param eval="true" name="p_commandline" type="VARCHAR">$!params.p_commandline</param>
+        <param eval="true" name="p_daemonname" type="VARCHAR">$!params.p_daemonname</param>       
+    </statement>
+    
+</statements>

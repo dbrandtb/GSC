@@ -1,0 +1,31 @@
+<statements>
+	#foreach($atributo in $params)
+	<statement type="stored" name="PKG_WIZARD.P_INSERTA_TATRIOBJ" id="pvalSituacionExcluidaCoa">
+		<param eval="true" name="PV_CDTIPOBJ_I" type="VARCHAR">$!atributo.codigoObjeto</param>
+		<param eval="true" name="PV_CDATRIBU_I" type="NUMERIC">$!atributo.codigoAtributoVariable</param>
+		<param eval="true" name="PV_SWFORMAT_I" type="VARCHAR">$!atributo.codigoFormato</param>
+		<param eval="true" name="PV_NMLMAX_I" type="VARCHAR">$!atributo.maximo</param>
+		<param eval="true" name="PV_NMLMIN_I" type="NUMERIC">$!atributo.minimo</param>
+		<param eval="true" name="PV_SWOBLIGA_I" type="VARCHAR">$!atributo.switchObligatorio</param>
+		<param eval="true" name="PV_DSATRIBU_I" type="VARCHAR">$!atributo.descripcionAtributoVariable</param>
+		<param eval="true" name="PV_OTTABVAL_I" type="VARCHAR">$!atributo.codigoTabla</param>
+		<param eval="true" name="PV_SWPRODUC_I" type="VARCHAR">$!atributo.emision</param>
+		<param eval="true" name="PV_SWSUPLEM_I" type="VARCHAR">$!atributo.endoso</param>
+		<param eval="true" name="PV_SWACTUAL_I" type="VARCHAR">$!atributo.retarificacion</param>
+		<param eval="true" name="PV_GB_SWFORMAT_I" type="VARCHAR"></param>
+		<param eval="true" name="PV_CDATRIBU_PADRE_I" type="NUMERIC">$!atributo.codigoPadre</param>
+		<param eval="true" name="PV_NMORDEN_I" type="NUMERIC">$!atributo.orden</param>
+		<param eval="true" name="PV_NMAGRUPA_I" type="NUMERIC">$!atributo.agrupador</param>
+		<param eval="true" name="PV_CDCONDICVIS_I" type="VARCHAR">$!atributo.codigoCondicion</param>
+		<param eval="true" name="PV_SWCOTIZA_I" type="VARCHAR">$!atributo.apareceCotizador</param>		
+		<param eval="true" name="PV_SWDATCOM_I" type="VARCHAR">$!atributo.datoComplementario</param>
+		<param eval="true" name="PV_SWCOMOBL_I" type="VARCHAR">$!atributo.obligatorioComplementario</param>
+		<param eval="true" name="PV_SWCOMUPD_I" type="VARCHAR">$!atributo.modificableComplementario</param>
+		<param eval="true" name="PV_SWENDOSO_I" type="VARCHAR">$!atributo.apareceEndoso</param>
+		<param eval="true" name="PV_SWENDOBL_I" type="VARCHAR">$!atributo.obligatorioEndoso</param>
+		
+		<outparam id="PV_MSG_ID_O" type="NUMERIC"/>
+		<outparam id="PV_TITLE_O" type="VARCHAR"/>		
+	</statement>
+	#end
+</statements>

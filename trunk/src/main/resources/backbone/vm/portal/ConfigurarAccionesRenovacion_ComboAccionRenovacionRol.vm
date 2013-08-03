@@ -1,0 +1,10 @@
+<statements>
+	<statement type="stored" name="PKG_LISTAS.P_ROLES_X_NIVEL" id="obtieneRenovacionRolesPorNivel">
+		<param eval="true" name="pv_cdelemento_i" type="NUMERIC">$!params.get("pv_cdelemento_i")</param>
+		
+		<outparam id="pv_registro_o" type="CURSOR"></outparam>
+		<outparam id="pv_msg_id_o" type="INTEGER"/>
+        <outparam id="pv_title_o" type="VARCHAR"></outparam>
+        
+	</statement>
+</statements>

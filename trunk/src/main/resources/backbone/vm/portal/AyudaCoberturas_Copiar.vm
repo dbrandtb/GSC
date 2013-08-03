@@ -1,0 +1,14 @@
+<statements>
+	<statement type="stored" name="PKG_AYUDA.P_COPIA_COBERTURA" id="copiarAyudaCoberturas">
+       <param eval="true" name="pi_cdgarantiaxcia" type="NUMERIC">$!params.get("cdGarantiaxCia")</param>		
+       <param eval="true" name="pi_cve_aseguradora" type="NUMERIC">$!params.get("cdUnieco")</param>
+       <param eval="true" name="pi_cve_subramo" type="NUMERIC">$!params.get("cdSubram")</param>
+       <param eval="true" name="pi_cve_cobertura" type="VARCHAR">$!params.get("cdGarant")</param>       
+       <param eval="true" name="pi_cve_ramo" type="VARCHAR">$!params.get("cdTipram")</param>
+       <param eval="true" name="pi_cve_producto" type="NUMERIC">$!params.get("cdRamo")</param>
+       <param eval="true" name="pi_lang_code" type="NUMERIC">$!params.get("langCode")</param>
+  	   
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

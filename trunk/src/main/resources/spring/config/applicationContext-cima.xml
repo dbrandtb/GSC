@@ -1,0 +1,1227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+    <bean id="processResultManager" class="mx.com.aon.portal.service.ProcessResultManager">
+        <property name="endpoints">
+            <map>
+            <entry key="OBTIENE_MENSAJE"><ref bean="OBTIENE_MENSAJE"/></entry>
+            </map>
+        </property>
+    </bean>
+
+
+    <bean id="abstractManagerBean" abstract="true" class="mx.com.aon.portal.service.impl.AbstractManager">
+        <property name="processResultManager">
+            <ref bean="processResultManager"/>
+        </property>
+    </bean>
+
+    <bean id="processResultManagerJdbcTemplate" class="mx.com.aon.portal.service.ProcessResultManagerJdbcTemplate">
+        <property name="abstractDAO">
+            <ref bean="processResultDAO"/>
+        </property>
+    </bean>
+
+
+    <bean id="abstractManagerJdbcTemplateInvoke" abstract="true" class="mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke">
+        <property name="processResultManager">
+            <ref bean="processResultManagerJdbcTemplate"/>
+        </property>
+    </bean>
+
+
+    <bean id="estructuraManager" class="mx.com.aon.portal.service.impl.EstructuraManagerImpl" parent="abstractManagerJdbcTemplateInvoke">
+    <!--
+        <property name="endpoints">
+            <map>
+            <entry key="LISTA_ESTRUCTURA"><ref bean="LISTA_ESTRUCTURA"/></entry>
+            <entry key="OBTIENE_ESTRUCT"><ref bean="OBTIENE_ESTRUCT"/></entry>
+            <entry key="OBTIENE_ESTRUCT_EXPORT"><ref bean="OBTIENE_ESTRUCT_EXPORT"/></entry>
+            <entry key="OBTIENE_ESTRUCT_REG"><ref bean="OBTIENE_ESTRUCT_REG"/></entry>
+            <entry key="COPIA_ESTRUCT"><ref bean="COPIA_ESTRUCT"/></entry>
+            <entry key="BORRA_ESTRUCT"><ref bean="BORRA_ESTRUCT"/></entry>
+            <entry key="INSERTA_ESTRUCT"><ref bean="INSERTA_ESTRUCT"/></entry>
+            <entry key="GUARDA_ESTRUCT"><ref bean="GUARDA_ESTRUCT"/></entry>
+            </map>
+        </property>
+       -->
+       		<property name="abstractDAO">
+            	<ref bean="estructuraDAO"/>
+        	</property>
+    </bean>
+	
+
+ <bean id="configurarEstructuraManager" class="mx.com.aon.portal.service.impl.ConfigurarEstructuraImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+          <map>
+            <entry key="INSERTA_DESTRUCT"><ref bean="INSERTA_DESTRUCT"/></entry>
+            <entry key="GUARDA_DESTRUCT"><ref bean="GUARDA_DESTRUCT"/></entry>
+            <entry key="BORRA_DESTRUCT"> <ref bean="BORRA_DESTRUCT"/></entry>
+            <entry key="OBTIENE_DESTRUCT"> <ref bean="OBTIENE_DESTRUCT"/></entry>
+            <entry key="COPIA_DESTRUCT"> <ref bean="COPIA_DESTRUCT"/></entry>
+            <entry key="OBTIENE_DESTRUCT_EXPORT"> <ref bean="OBTIENE_DESTRUCT_EXPORT"/></entry>
+            <entry key="OBTIENE_DESTRUCT_REG"> <ref bean="OBTIENE_DESTRUCT_REG"/></entry>
+            <entry key="OBTIENE_CLIENTES"> <ref bean="OBTIENE_CLIENTES"/></entry>
+          </map>
+        </property>
+    </bean>
+    
+  	           
+  
+    
+    
+    <bean id="estructuraManagerTareasChecklist" class="mx.com.aon.portal.service.impl.EstructuraManagerCheckListImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+            <entry key="P_OBTIENE_TAREAS"><ref bean="P_OBTIENE_TAREAS"/></entry>
+            <entry key="P_VALIDA_BORRA_TAREA"><ref bean="P_VALIDA_BORRA_TAREA"/></entry>
+            <entry key="P_BORRA_TAREA"><ref bean="P_BORRA_TAREA"/></entry>
+            <entry key="P_SECCION_CHECK"><ref bean="P_SECCION_CHECK"/></entry>
+            <entry key="P_OBTENE_ESTADO"><ref bean="P_OBTENE_ESTADO"/></entry>
+            <entry key="P_GUARDA_TAREA"><ref bean="P_GUARDA_TAREA"/></entry>  
+            <entry key="P_OBTIENE_TAREA"><ref bean="P_OBTIENE_TAREA"/></entry>
+            <entry key="P_LISTA_TAREAS"><ref bean="P_LISTA_TAREAS"/></entry>                     
+            </map>
+        </property>
+    </bean>
+    
+
+
+    <bean id="detallePlanXClienteManager" class="mx.com.aon.portal.service.impl.DetallePlanXClienteManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+            <entry key="P_OBTIENE_PLANCIA"><ref bean="P_OBTIENE_PLANCIA"/></entry>
+            <entry key="GUARDA_PLANPRCIA"><ref bean="GUARDA_PLANPRCIA"/></entry>
+            <entry key="INSERTA_PLANPRCIA"><ref bean="INSERTA_PLANPRCIA"/></entry>
+            <entry key="TIPO_SITUACION"><ref bean="TIPO_SITUACION"/></entry>
+            <entry key="TIPOS_COBERTURAS"><ref bean="TIPOS_COBERTURAS"/></entry>
+            <entry key="LISTA_ASEGURADORAS"><ref bean="LISTA_ASEGURADORAS"/></entry>
+            <entry key="GET_PLANCIA"><ref bean="GET_PLANCIA"/></entry>
+            <entry key="BORRAR_PLANPRCIA"><ref bean="BORRAR_PLANPRCIA"/></entry>
+            <entry key="OBTIENE_PLANCLIENTE_EXPORT"><ref bean="OBTIENE_PLANCLIENTE_EXPORT"/></entry>
+            </map>
+        </property>
+    </bean>
+    
+
+
+    <bean id="combosManager" class="mx.com.aon.portal.service.impl.CombosManagerImpl"  parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="TIPO_SITUACION"><ref bean="TIPO_SITUACION"/></entry>
+                <entry key="TIPOS_COBERTURAS"><ref bean="TIPOS_COBERTURAS"/></entry>
+                <entry key="LISTA_ASEGURADORAS"><ref bean="LISTA_ASEGURADORAS"/></entry>
+                <entry key="OBTENER_CLIENTES_CORPO"><ref bean="OBTENER_CLIENTES_CORPO"/></entry>
+                <entry key="OBTENER_CLIENTES_CORPO_REN"><ref bean="OBTENER_CLIENTES_CORPO_REN"/></entry>
+                <entry key="P_SECCION_CHECK"><ref bean="P_SECCION_CHECK"/></entry>
+                <entry key="P_OBTENE_ESTADO"><ref bean="P_OBTENE_ESTADO"/></entry>
+               	<entry key="OBTIENE_CLIENTES_2"> <ref bean="OBTIENE_CLIENTES_2"/></entry>
+                <entry key="OBTIENE_PADRE"> <ref bean="OBTIENE_PADRE"/></entry>
+                <entry key="OBTIENE_TIPO_NIVEL"> <ref bean="OBTIENE_TIPO_NIVEL"/></entry>
+                <entry key="OBTIENE_ESTADOS_DESCUENTOS"> <ref bean="OBTIENE_ESTADOS_DESCUENTOS"/></entry>
+                <entry key="OBTIENE_PRODUCTOS_DESCUENTOS"> <ref bean="OBTIENE_PRODUCTOS_DESCUENTOS"/></entry>
+                <!--entry key="CLIENTES_CORPO_DSCTO"> <ref bean="CLIENTES_CORPO_DSCTO"/></entry-->
+                <entry key="OBTIENE_PLANES_CIMA"> <ref bean="OBTIENE_PLANES_CIMA"/></entry>
+                <entry key="OBTIENE_TIPOS_DSCTO"> <ref bean="OBTIENE_TIPOS_DSCTO"/></entry>
+                <entry key="OBTIENE_RAMOS"> <ref bean="OBTIENE_RAMOS"/></entry>
+                <entry key="OBTIENE_SUBRAMOS"> <ref bean="OBTIENE_SUBRAMOS"/></entry>
+                <entry key="OBTIENE_PRODUCTOS_AYUDA"> <ref bean="OBTIENE_PRODUCTOS_AYUDA"/></entry>
+                <entry key="OBTIENE_PRODUCTO"><ref bean="OBTIENE_PRODUCTO"/></entry>
+    
+           		<entry key="OBTIENE_USUARIOS_CIMA"><ref bean="OBTIENE_USUARIOS_CIMA"/></entry>
+           		<entry key="OBTIENE_CONF_ALERTAS_AUTO_CLIENTES"><ref bean="OBTIENE_CONF_ALERTAS_AUTO_CLIENTES"/></entry>
+           		<entry key="OBTIENE_CONF_ALERTAS_AUTO_PROCESOS"><ref bean="OBTIENE_CONF_ALERTAS_AUTO_PROCESOS"/></entry>
+           		<entry key="OBTIENE_CONF_ALERTAS_AUTO_TEMPORALIDAD"><ref bean="OBTIENE_CONF_ALERTAS_AUTO_TEMPORALIDAD"/></entry>
+           		<entry key="OBTIENE_CONF_ALERTAS_AUTO_ROL"><ref bean="OBTIENE_CONF_ALERTAS_AUTO_ROL"/></entry>
+           		<entry key="OBTIENE_CONF_ALERTAS_AUTO_TIPO_RAMO"><ref bean="OBTIENE_CONF_ALERTAS_AUTO_TIPO_RAMO"/></entry>
+                <entry key="OBTIENE_REGIONES"><ref bean="OBTIENE_REGIONES"/></entry>
+                <entry key="OBTIENE_IDIOMAS_REGION"><ref bean="OBTIENE_IDIOMAS_REGION"/></entry>                
+                <entry key="OBTIENE_SINO"><ref bean="OBTIENE_SINO"/></entry>
+                <entry key="OBTIENE_IDIOMAS_AYUDA"><ref bean="OBTIENE_IDIOMAS_AYUDA"/></entry>
+                <entry key="OBTIENE_CONCEPTO_PRODUCTO"><ref bean="OBTIENE_CONCEPTO_PRODUCTO"/></entry>
+                <entry key="OBTIENE_PRODUCTOS_C"><ref bean="OBTIENE_PRODUCTOS_C"/></entry>
+                <entry key="OBTIENE_COBERTURAS_PRODUCTO"><ref bean="OBTIENE_COBERTURAS_PRODUCTO"/></entry>
+                <entry key="OBTIENE_EJECUTIVOS_AON"><ref bean="OBTIENE_EJECUTIVOS_AON"/></entry>
+                <entry key="OBTIENE_TIPO_EJECUTIVOS_AON"><ref bean="OBTIENE_TIPO_EJECUTIVOS_AON"/></entry>
+				<entry key="OBTIENE_ESTADOS_EJECUTIVO"><ref bean="OBTIENE_ESTADOS_EJECUTIVO"/></entry>
+				<entry key="OBTIENE_LINEAS_ATENCION"><ref bean="OBTIENE_LINEAS_ATENCION"/></entry>
+				<entry key="OBTIENE_GRUPO_PERSONAS"><ref bean="OBTIENE_GRUPO_PERSONAS"/></entry>
+				<entry key="OBTIENE_POLIZA_POR_ASEGURADORA"><ref bean="OBTIENE_POLIZA_POR_ASEGURADORA"/></entry>
+				<entry key="OBTIENE_RECIBO_POR_POLIZA_POR_ASEGURADORA"><ref bean="OBTIENE_RECIBO_POR_POLIZA_POR_ASEGURADORA"/></entry>
+				<entry key="OBTIENE_VINCULOS_PADRES_POR_ESTRUCTURA"><ref bean="OBTIENE_VINCULOS_PADRES_POR_ESTRUCTURA"/></entry>
+				<entry key="OBTIENE_GRUPO_PERSONAS_CLIENTE"><ref bean="OBTIENE_GRUPO_PERSONAS_CLIENTE"/></entry>	
+				<entry key="OBTIENE_CLIENTES_CORPORATIVO"><ref bean="OBTIENE_CLIENTES_CORPORATIVO"/></entry>
+                <entry key="OBTIENE_PRODUCTOS_EJECUTIVOS_CUENTA"><ref bean="OBTIENE_PRODUCTOS_EJECUTIVOS_CUENTA"/></entry>
+                <entry key="OBTENER_ASEGURADORAS_CLIENTE"><ref bean="OBTENER_ASEGURADORAS_CLIENTE"/></entry>
+                <entry key="OBTENER_ASEGURADORAS_X_ASEGURADO"><ref bean="OBTENER_ASEGURADORAS_X_ASEGURADO"/></entry>
+                <entry key="OBTENER_PRODUCTOS_ASEGURADORA_CLIENTE"><ref bean="OBTENER_PRODUCTOS_ASEGURADORA_CLIENTE"/></entry>
+                <entry key="OBTENER_PRODUCTOS_ASEGURADORA_CLIENTE_REN"><ref bean="OBTENER_PRODUCTOS_ASEGURADORA_CLIENTE_REN"/></entry>
+				<entry key="OBTENER_PRODUCTOS_ASEGURADORA_CLIENTE2"><ref bean="OBTENER_PRODUCTOS_ASEGURADORA_CLIENTE2"/></entry>
+                <entry key="OBTENER_RAMOS_CLIENTE"><ref bean="OBTENER_RAMOS_CLIENTE"/></entry>
+                <entry key="OBTIENE_TIPOS_RAMO_CLIENTE_EJEC_CUENTA"><ref bean="OBTIENE_TIPOS_RAMO_CLIENTE_EJEC_CUENTA"/></entry>
+                <entry key="OBTIENE_ASEGURADORA_POR_CLIENTE"><ref bean="OBTIENE_ASEGURADORA_POR_CLIENTE"/></entry>
+                <entry key="OBTIENE_ASEGURADORA_POR_CLIENTE_REN"><ref bean="OBTIENE_ASEGURADORA_POR_CLIENTE_REN"/></entry>
+                <entry key="OBTIENE_PAPELES_POR_CLIENTE"><ref bean="OBTIENE_PAPELES_POR_CLIENTE"/></entry>
+                <entry key="OBTIENE_PRODUCTOS_POR_ASEGURADORA_Y_CLIENTE"><ref bean="OBTIENE_PRODUCTOS_POR_ASEGURADORA_Y_CLIENTE"/></entry>
+                <entry key="OBTIENE_TIPO_PERSONA_J"><ref bean="OBTIENE_TIPO_PERSONA_J"/></entry>
+                <entry key="OBTIENE_BLOQUES"><ref bean="OBTIENE_BLOQUES"/></entry>
+                <entry key="OBTENER_COMBO_NUMERO_INCISO"><ref bean="OBTENER_COMBO_NUMERO_INCISO"/></entry>
+                <entry key="OBTENER_COMBO_NACIONALIDAD"><ref bean="OBTENER_COMBO_NACIONALIDAD"/></entry>
+                <entry key="OBTENER_ESTADO_CIVIL"><ref bean="OBTENER_ESTADO_CIVIL"/></entry>
+                <entry key="OBTIENE_TIPO_EMPRESA"><ref bean="OBTIENE_TIPO_EMPRESA"/></entry>
+                <entry key="OBTIENE_TIPO_IDENTIFICADOR"><ref bean="OBTIENE_TIPO_IDENTIFICADOR"/></entry>
+                <entry key="OBTIENE_TIPOS_DOMICILIO"><ref bean="OBTIENE_TIPOS_DOMICILIO"/></entry>
+                <entry key="OBTIENE_PAISES"><ref bean="OBTIENE_PAISES"/></entry>
+                <entry key="OBTIENE_COLONIAS"><ref bean="OBTIENE_COLONIAS"/></entry>
+                <entry key="OBTIENE_ESTADOS"><ref bean="OBTIENE_ESTADOS"/></entry>
+                <entry key="OBTIENE_MUNICIPIOS"><ref bean="OBTIENE_MUNICIPIOS"/></entry>
+                <entry key="OBTIENE_TIPOS_TELEFONO"><ref bean="OBTIENE_TIPOS_TELEFONO"/></entry>
+                <entry key="OBTIENE_GRUPO_CORPORATIVO"><ref bean="OBTIENE_GRUPO_CORPORATIVO"/></entry>
+                <entry key="OBTIENE_ESTADOS_CORPORATIVO"><ref bean="OBTIENE_ESTADOS_CORPORATIVO"/></entry>
+                <entry key="OBTIENE_NIVEL_CORPORATIVO"><ref bean="OBTIENE_NIVEL_CORPORATIVO"/></entry>
+                <entry key="OBTIENE_SEXO"><ref bean="OBTIENE_SEXO"/></entry>
+                <entry key="RAZON_CANCELACION"><ref bean="RAZON_CANCELACION"/></entry>
+				<entry key="METODO_CANCELACION"><ref bean="METODO_CANCELACION"/></entry>
+				<entry key="SECCIONES_ORDEN"><ref bean="SECCIONES_ORDEN"/></entry>
+				<entry key="TIPO_OBJETO"><ref bean="TIPO_OBJETO"/></entry>
+			    <entry key="OBTIENE_PERIODOS_GRACIA"><ref bean="OBTIENE_PERIODOS_GRACIA"/></entry>
+                <entry key="OBTIENE_TIPOS_DOCUMENTO"><ref bean="OBTIENE_TIPOS_DOCUMENTO"/></entry>
+                <entry key="OBTIENE_SECCION_FORMATO"><ref bean="OBTIENE_SECCION_FORMATO"/></entry>
+                <entry key="OBTIENE_BLOQUES_CONF_ATRIBUTO_FORMATO_ORDEN_TRABAJO"><ref bean="OBTIENE_BLOQUES_CONF_ATRIBUTO_FORMATO_ORDEN_TRABAJO"/></entry>
+                <entry key="OBTIENE_FORMATO_CAMPO"><ref bean="OBTIENE_FORMATO_CAMPO"/></entry>
+                <entry key="OBTIENE_TIPO_ERROR"><ref bean="OBTIENE_TIPO_ERROR"/></entry>
+                <entry key="OBTIENE_CAMPO_BLOQUE"><ref bean="OBTIENE_CAMPO_BLOQUE"/></entry>
+                <entry key="FORMAS_CALCULO_FOLIO"><ref bean="FORMAS_CALCULO_FOLIO"/></entry>
+                <entry key="OBTIENE_FORMATOS"><ref bean="OBTIENE_FORMATOS"/></entry>
+                <entry key="OBTIENE_PROCESOS"><ref bean="OBTIENE_PROCESOS_CIMA"/></entry>
+                <entry key="OBTIENE_CLIENTES_CORP_POR_USUARIO"><ref bean="OBTIENE_CLIENTES_CORP_POR_USUARIO"/></entry>
+                <entry key="OBTIENE_PRODUCTOS_TRAMO_CLIENTE"><ref bean="OBTIENE_PRODUCTOS_TRAMO_CLIENTE"/></entry>
+                <entry key="OBTIENE_TIPO_SITUACION_PRODUCTO"><ref bean="OBTIENE_TIPO_SITUACION_PRODUCTO"/></entry>
+                <entry key="OBTIENE_INSTRUMENTOS_PAGO"><ref bean="OBTIENE_INSTRUMENTOS_PAGO"/></entry>
+                <entry key="OBTIENE_BANCOS"><ref bean="OBTIENE_BANCOS"/></entry>
+                <entry key="OBTIENE_TIPOS_TARJETA"><ref bean="OBTIENE_TIPOS_TARJETA"/></entry>
+                <entry key="LISTA_ASEGURADORAS_POR_CLIENTE_Y_PRODUCTO"><ref bean="LISTA_ASEGURADORAS_POR_CLIENTE_Y_PRODUCTO"/></entry>
+                <entry key="OBTIENE_SITUACION_POR_PRODUCTO_Y_PLAN"><ref bean="OBTIENE_SITUACION_POR_PRODUCTO_Y_PLAN"/></entry>
+                <entry key="OBTIENE_GARANTIA_POR_PRODUCTO_Y_SITUACION"><ref bean="OBTIENE_GARANTIA_POR_PRODUCTO_Y_SITUACION"/></entry>
+				<entry key="OBTIENE_PLANES_PRODUCTO"><ref bean="OBTIENE_PLANES_PRODUCTO"/></entry>
+            	                <entry key="OBTIENE_PERSONAS"><ref bean="OBTIENE_PERSONAS"/></entry>
+                <entry key="COMBO_DATOS_GENERICOS"><ref bean="COMBO_DATOS_GENERICOS"/></entry>
+                <entry key="OBTIENE_NRO_POLIZAS"><ref bean="OBTIENE_NRO_POLIZAS"/></entry>
+                <entry key="OBTIENE_POLIZAS_MAESTRAS"><ref bean="OBTIENE_POLIZAS_MAESTRAS"/></entry>
+                <entry key="OBTIENE_TIPOS_RENOVA"><ref bean="OBTIENE_TIPOS_RENOVA"/></entry>
+                <entry key="OBTIENE_ACCION_RENOVACION_ROL"><ref bean="OBTIENE_ACCION_RENOVACION_ROL"/></entry>
+                <entry key="OBTIENE_ACCION_RENOVACION_PANTALLA"><ref bean="OBTIENE_ACCION_RENOVACION_PANTALLA"/></entry>
+                <entry key="OBTIENE_ACCION_RENOVACION_CAMPO"><ref bean="OBTIENE_ACCION_RENOVACION_CAMPO"/></entry>
+                <entry key="OBTIENE_ACCION_RENOVACION_ACCION"><ref bean="OBTIENE_ACCION_RENOVACION_ACCION"/></entry>
+                <entry key="OBTIENE_ACCION_RENOVACION_ROLES"><ref bean="OBTIENE_ACCION_RENOVACION_ROLES"/></entry>
+                <entry key="OBTIENE_RAMOS_CLIENTE"><ref bean="OBTIENE_RAMOS_CLIENTE"/></entry>
+                <entry key="OBTIENE_RAMOS_CLIENTE_REN"><ref bean="OBTIENE_RAMOS_CLIENTE_REN"/></entry>
+                <entry key="OBTIENE_TIPO_OBJETO"><ref bean="OBTIENE_TIPO_OBJETO"/></entry>
+                <entry key="PERXCTE"><ref bean="PERXCTE"/></entry>
+                <entry key="INST_PAGO"><ref bean="INST_PAGO"/></entry>
+                <entry key="ROL"><ref bean="ROL"/></entry>
+                <entry key="OBTIENE_PERSONA"><ref bean="OBTIENE_PERSONA"/></entry>
+                <entry key="OBTIENE_MPOLISIT"><ref bean="OBTIENE_MPOLISIT"/></entry>
+                <entry key="COBERTURAS_PRODUCTO"><ref bean="COBERTURAS_PRODUCTO"/></entry>  
+                <entry key="OBJETO_RAMO"><ref bean="OBJETO_RAMO"/></entry>           
+                <entry key="OBTENER_ESTADOS_EJECUTIVOS_CUENTA"><ref bean="OBTENER_ESTADOS_EJECUTIVOS_CUENTA"/></entry>
+                <entry key="OBTENER_PRODUCTOS_POR_ASEGURADORA"><ref bean="OBTENER_PRODUCTOS_POR_ASEGURADORA"/></entry>
+                <entry key="OBTENER_DATOS_CATALOGO"><ref bean="OBTENER_DATOS_CATALOGO"/></entry>
+                <entry key="OBTIENE_TIPOS_PROCESOS"><ref bean="OBTIENE_TIPOS_PROCESOS"/></entry>
+                <entry key="ATRIBUTOS_VARIABLES_AGENTE_LISTA_VALORES"><ref bean="ATRIBUTOS_VARIABLES_AGENTE_LISTA_VALORES"/></entry>
+				<entry key="OBTENER_ASEGURADORAS_POR_PRODUCTO"><ref bean="OBTENER_ASEGURADORAS_POR_PRODUCTO"/></entry>
+				<entry key="TIDIOMAS"><ref bean="TIDIOMAS"/></entry>
+				<entry key="COBERTURAS_X_PLAN"><ref bean="COBERTURAS_X_PLAN"/></entry>
+				<entry key="PLANES"><ref bean="PLANES"/></entry>
+				<entry key="PRODUCTOS_X_PLAN"><ref bean="PRODUCTOS_X_PLAN"/></entry>
+				<entry key="SITUACION_X_PLAN"><ref bean="SITUACION_X_PLAN"/></entry>
+				<entry key="CATEGORIA_PERSONA"><ref bean="CATEGORIA_PERSONA"/></entry>
+				<entry key="CANCELACION_MANUAL_POLIZAS_COMBO_POLIZAS"><ref bean="CANCELACION_MANUAL_POLIZAS_COMBO_POLIZAS"/></entry>
+				<entry key="CANCELACION_MANUAL_POLIZAS_COMBO_ASEGURADORAS"><ref bean="CANCELACION_MANUAL_POLIZAS_COMBO_ASEGURADORAS"/></entry>
+				<entry key="REHABILITACION_MANUAL_POLIZAS_COMBO_POLIZAS_CANCELADAS"><ref bean="REHABILITACION_MANUAL_POLIZAS_COMBO_POLIZAS_CANCELADAS"/></entry>
+                <entry key="COMBO_CATALOGOS_DINAMICOS"><ref bean="COMBO_CATALOGOS_DINAMICOS"/></entry>
+                <entry key="OBTENER_DATOS_CATALOGO_VARIABLE"><ref bean="OBTENER_DATOS_CATALOGO_VARIABLE"/></entry>
+                <entry key="OBTIENE_CLIENTES_CORP_BO"><ref bean="OBTIENE_CLIENTES_CORP_BO"/></entry>
+                <entry key="OBTIENE_ROL_SEG"><ref bean="OBTIENE_ROL_SEG"/></entry>
+                <entry key="OBTENER_USUARIOS"><ref bean="OBTENER_USUARIOS"/></entry>
+                <entry key="OBTIENE_CLIENTES_CARRITO"><ref bean="OBTIENE_CLIENTES_CARRITO"/></entry>
+                <entry key="OBTIENE_CLIENTES_CORPO"><ref bean="OBTIENE_CLIENTES_CORPO"/></entry>
+                <entry key="OBTENER_INDICADOR_NUMERO_ENDOSOS"><ref bean="OBTENER_INDICADOR_NUMERO_ENDOSOS"/></entry>
+                <entry key="OBTENER_PROCESO_POLIZA"><ref bean="OBTENER_PROCESO_POLIZA"/></entry>
+                <entry key="OBTENER_TIPO_POLIZA"><ref bean="OBTENER_TIPO_POLIZA"/></entry>
+                <entry key="OBTIENE_VINCULO_PADRE_EDITAR"><ref bean="OBTIENE_VINCULO_PADRE_EDITAR"/></entry>
+                <entry key="OBTIENE_PRODUCTOS_AYUDA_CLIENTE"><ref bean="OBTIENE_PRODUCTOS_AYUDA_CLIENTE"/></entry>
+                <entry key="OBTIENE_CONCEPTO_POR_PRODUCTO"><ref bean="OBTIENE_CONCEPTO_POR_PRODUCTO"/></entry>
+                <entry key="OBTIENE_P_LISTA_TCATALOG"><ref bean="OBTIENE_P_LISTA_TCATALOG"/></entry>
+                <entry key="RAZON_CANCELACION_PRODUCTO"><ref bean="RAZON_CANCELACION_PRODUCTO"/></entry>
+
+            </map>
+            
+            
+        </property>
+    </bean>
+
+
+<!-- Bean para CheckList de Cuenta -->
+    <bean id="checkListCuentaPreRequisitosManager" class="mx.com.aon.portal.service.impl.CheckListCuentaPreRequisitosManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+            <entry key="CHKLIST_GUARDA_TAREA_SECCION_CTA"><ref bean="CHKLIST_GUARDA_TAREA_SECCION_CTA"/></entry>
+            <entry key="CHKLISTCTA_OBTIENE_ENCABEZADO"><ref bean="CHKLISTCTA_OBTIENE_ENCABEZADO"/></entry>
+            <entry key="CHKLISTCTA_OBTIENE_TAREAS_SECCION"><ref bean="CHKLISTCTA_OBTIENE_TAREAS_SECCION"/></entry>
+            <entry key="CHKLISTCTA_OBTIENE_SECCION"><ref bean="CHKLISTCTA_OBTIENE_SECCION"/></entry>
+            <entry key="CHKLISTCTA_CONFIGURACION_COMPLETA"><ref bean="CHKLISTCTA_CONFIGURACION_COMPLETA"/></entry>
+            <entry key="OBTENER_CONFIGURAR_PLAN"><ref bean="OBTENER_CONFIGURAR_PLAN"/></entry>
+            <entry key="CHKLIST_INSERTA_TAREA_SECCION_CTA"><ref bean="CHKLIST_INSERTA_TAREA_SECCION_CTA"/></entry>
+            </map>
+        </property>
+    </bean>
+    <bean id="mantenimientoPlanesManager" class="mx.com.aon.portal.service.impl.MantenimientoPlanesManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+	            <entry key="OBTENER_CONFIGURAR_PLAN"><ref bean="OBTENER_CONFIGURAR_PLAN"/></entry>
+	            <entry key="INSERTAR_CONFIGURAR_PLAN"><ref bean="INSERTAR_CONFIGURAR_PLAN"/></entry>
+	            <entry key="ACTUALIZAR_CONFIGURAR_PLAN"><ref bean="ACTUALIZAR_CONFIGURAR_PLAN"/></entry>
+	            <entry key="OBTENER_PLANPRO"><ref bean="OBTENER_PLANPRO"/></entry>
+	            <entry key="BORRAR_PLANPRO"><ref bean="BORRAR_PLANPRO"/></entry>
+	            <entry key="GET_CONFIGURAR_PLAN"><ref bean="GET_CONFIGURAR_PLAN"/></entry>
+	            <entry key="OBTIENE_PLANES_EXPORT"><ref bean="OBTIENE_PLANES_EXPORT"/></entry>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="managerCuentaChecklist" class="mx.com.aon.portal.service.impl.ManagerCuentaClienteConfiguraImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+	            <entry key="OBTENER_CLIENTES_CORPO"><ref bean="OBTIENE_CLIENTES_CORPO"/></entry>
+	            <entry key="COPIA_CONFIGURA"><ref bean="COPIA_CONFIGURA"/></entry>
+	            <entry key="P_OBTIENE_CONFIGURACION"><ref bean="P_OBTIENE_CONFIGURACION"/></entry>
+            	<entry key="P_BORRA_CONFIGURACION"><ref bean="P_BORRA_CONFIGURACION"/></entry>   
+			</map>
+		</property>
+	</bean>
+	
+	<!-- Configuracion de Beans para Descuentos -->
+	<bean id="descuentosManager" class="mx.com.aon.portal.service.impl.DescuentosManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+	            <entry key="OBTIENE_DESCTOS"><ref bean="OBTIENE_DESCTOS"/></entry>
+	            <entry key="ELIMINA_DSCTO"><ref bean="ELIMINA_DSCTO"/></entry>
+	            <entry key="COPIA_DSCTO"><ref bean="COPIA_DSCTO"/></entry>
+				<entry key="BORRA_DET_PROD"><ref bean="BORRA_DET_PROD"/></entry>
+	            <entry key="ELIMINA_DET_VOLUMEN"><ref bean="ELIMINA_DET_VOLUMEN"/></entry>
+	            <entry key="OBTIENE_DETALLE_PROD"><ref bean="OBTIENE_DETALLE_PROD"/></entry>
+	            <entry key="OBTIENE_DET_VOLUMEN"><ref bean="OBTIENE_DET_VOLUMEN"/></entry>
+	            <entry key="OBTIENE_ENC_PROD"><ref bean="OBTIENE_ENC_PROD"/></entry>
+	            <entry key="OBTIENE_ENC_VOLUMEN"><ref bean="OBTIENE_ENC_VOLUMEN"/></entry>
+	            <entry key="GUARDA_PRODUCTO_DETALLE"><ref bean="GUARDA_PRODUCTO_DETALLE"/></entry>
+	            <entry key="GUARDA_VOLUMEN_DET"><ref bean="GUARDA_VOLUMEN_DET"/></entry>
+	            <entry key="GUARDA_PRODUCTO"><ref bean="GUARDA_PRODUCTO"/></entry>
+	            <entry key="GUARDA_VOLUMEN"><ref bean="GUARDA_VOLUMEN"/></entry>
+	            <entry key="OBTIENE_DESCUENTOS_EXPORT"><ref bean="OBTIENE_DESCUENTOS_EXPORT"/></entry>
+	            <entry key="INSERTA_PRODUCTO"><ref bean="INSERTA_PRODUCTO"/></entry>
+	            <entry key="INSERTA_VOLUMEN"><ref bean="INSERTA_VOLUMEN"/></entry>
+	        </map>
+		</property>
+	</bean>
+	<!-- FIN ConfiguraciÃ³n de Beans para UC Descuentos -->
+	
+	
+	<bean id="configuracionAlertasAutomaticoManager" class="mx.com.aon.portal.service.impl.ConfiguracionAlertasAutomaticoManagerImpl"  parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="OBTIENE_CONF_ALERTA_AUTO"><ref bean="OBTIENE_CONF_ALERTA_AUTO"/></entry>
+                <entry key="OBTIENE_CONF_ALERTA_AUTO_REG"><ref bean="OBTIENE_CONF_ALERTA_AUTO_REG"/></entry>
+           		<entry key="INSERTA_CONF_ALERTA_AUTO"><ref bean="INSERTA_CONF_ALERTA_AUTO"/></entry>
+           		<entry key="BORRA_CONF_ALERTA_AUTO"><ref bean="BORRA_CONF_ALERTA_AUTO"/></entry>
+           		<entry key="OBTIENE_CONF_ALERTA_AUTO_EXPORT"><ref bean="OBTIENE_CONF_ALERTA_AUTO_EXPORT"/></entry>
+           		<entry key="OBTIENE_CONF_ALERTA_AUTO_VALORES_VARIABLES"><ref bean="OBTIENE_CONF_ALERTA_AUTO_VALORES_VARIABLES"/></entry>
+            </map>
+        </property>
+    </bean>
+    
+    <bean id="configuracionAlertasAutomaticoManager2" class="mx.com.aon.portal.service.impl.ConfiguracionAlertasAutomaticoManager2Impl" parent="abstractManagerJdbcTemplateInvoke">
+            <property name="abstractDAO">
+                <ref bean="configuracionAlertasAutomaticosDAO"/>
+            </property>
+    </bean>  
+    
+    <bean id="carritoComprasManager" class="mx.com.aon.portal.service.impl.CarritoComprasManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="OBTIENE_CARRITO_COMPRAS"><ref bean="OBTIENE_CARRITO_COMPRAS"/></entry>
+                <entry key="OBTIENE_CARRITO_COMPRAS_REG"><ref bean="OBTIENE_CARRITO_COMPRAS_REG"/></entry>
+           		<entry key="INSERTA_GUARDA_CARRITO_COMPRAS"><ref bean="INSERTA_GUARDA_CARRITO_COMPRAS"/></entry>
+           		<entry key="BORRA_CARRITO_COMPRAS"><ref bean="BORRA_CARRITO_COMPRAS"/></entry>
+           		<entry key="OBTIENE_ROLES_CARRITO_COMPRAS"><ref bean="OBTIENE_ROLES_CARRITO_COMPRAS"/></entry>
+           		<entry key="OBTIENE_PRODUCTOS_CARRITO_COMPRAS"><ref bean="OBTIENE_PRODUCTOS_CARRITO_COMPRAS"/></entry>
+           		<entry key="CALCULA_DESCUENTO_CARRITO_COMPRAS"><ref bean="CALCULA_DESCUENTO_CARRITO_COMPRAS"/></entry>
+           		<entry key="OBTENER_MONTOS_CARRITO_COMPRAS"><ref bean="OBTENER_MONTOS_CARRITO_COMPRAS"/></entry>
+           		<entry key="OBTIENE_ENC_ORDEN_CARRITO_COMPRAS"><ref bean="OBTIENE_ENC_ORDEN_CARRITO_COMPRAS"/></entry>
+           		<entry key="DET_ORDEN_CARRITO_COMPRAS"><ref bean="DET_ORDEN_CARRITO_COMPRAS"/></entry>
+           		<entry key="MONTOS_ORDEN_CARRITO_COMPRAS"><ref bean="MONTOS_ORDEN_CARRITO_COMPRAS"/></entry>
+           		<entry key="OBTIENE_DIRECCION_ORDEN_CARRITO_COMPRAS"><ref bean="OBTIENE_DIRECCION_ORDEN_CARRITO_COMPRAS"/></entry>
+                <entry key="GUARDAR_CARRITO"><ref bean="GUARDAR_CARRITO"/></entry>
+                 <entry key="BORRA_REG_CARRITO_COMPRAS"><ref bean="BORRA_REG_CARRITO_COMPRAS"/></entry>
+                 <entry key="GUARDA_MTARJETA"><ref bean="GUARDA_MTARJETA"/></entry>
+           	</map>
+        </property>
+    </bean>
+    
+     <bean id="desglosePolizasManager" class="mx.com.aon.portal.service.impl.DesglosePolizasManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="OBTIENE_DESGLOSE_POLIZAS_REG"><ref bean="OBTIENE_DESGLOSE_POLIZAS_REG"/></entry>
+                <entry key="INSERTA_DESGLOSE_POLIZAS"><ref bean="INSERTA_DESGLOSE_POLIZAS"/></entry>
+           		<entry key="COPIA_DESGLOSE_POLIZAS"><ref bean="COPIA_DESGLOSE_POLIZAS"/></entry>
+           		<entry key="BORRA_DESGLOSE_POLIZAS"><ref bean="BORRA_DESGLOSE_POLIZAS"/></entry>
+           		<entry key="OBTIENE_DESGLOSE_POLIZAS"><ref bean="OBTIENE_DESGLOSE_POLIZAS"/></entry>
+           		<entry key="OBTIENE_DESGLOSE_POLIZAS_EXPORT"><ref bean="OBTIENE_DESGLOSE_POLIZAS_EXPORT"/></entry>
+           	</map>
+        </property>
+    </bean>
+	
+	<!-- Configuracion del Beans para Ayuda Coberturas -->
+	<bean id="ayudaCoberturasManager" class="mx.com.aon.portal.service.impl.AyudaCoberturasManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+	            <entry key="OBTENERREG_AYUDA_COBERTURAS"><ref bean="OBTENERREG_AYUDA_COBERTURAS"/></entry>
+	            <entry key="BUSCAR_AYUDA_COBERTURAS"><ref bean="BUSCAR_AYUDA_COBERTURAS"/></entry>
+				<entry key="INSERTAR_AYUDA_COBERTURAS"><ref bean="INSERTAR_AYUDA_COBERTURAS"/></entry>
+	            <entry key="GUARDAR_AYUDA_COBERTURAS"><ref bean="GUARDAR_AYUDA_COBERTURAS"/></entry>
+	            <entry key="BORRAR_AYUDA_COBERTURAS"><ref bean="BORRAR_AYUDA_COBERTURAS"/></entry>
+	            <entry key="COPIAR_AYUDA_COBERTURAS"><ref bean="COPIAR_AYUDA_COBERTURAS"/></entry>
+	            <entry key="OBTIENE_AYUDA_COBERTURAS_EXPORT"><ref bean="OBTIENE_AYUDA_COBERTURAS_EXPORT"/></entry>	            
+			</map>
+		</property>
+	</bean>
+	<!-- FIN Configuracion del Beans para Ayuda Coberturas -->
+	
+	<!-- Configuracion del Beans para Agrupacion por Papel-->
+	<bean id="agrupacionPapelManager" class="mx.com.aon.portal.service.impl.AgrupacionPapelManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+	            <entry key="AGRUPACIONPAPEL_OBTIENE_AGRUPACION"><ref bean="AGRUPACIONPAPEL_OBTIENE_AGRUPACION"/></entry>
+	            <entry key="AGRUPACIONPAPEL_GUARDA_PAPELES"><ref bean="AGRUPACIONPAPEL_GUARDA_PAPELES"/></entry>
+                <entry key="AGRUPACION_PAPEL_OBTIENE_PAPELES"><ref bean="AGRUPACION_PAPEL_OBTIENE_PAPELES"/></entry>
+                <entry key="AGRUPACION_PAPEL_BORRAR_ROL"><ref bean="AGRUPACION_PAPEL_BORRAR_ROL"/></entry>
+			</map>
+		</property>
+	</bean>
+
+	
+	<!-- Configuracion del Beans para Agrupacion por Grupo de Personas -->
+	<bean id="agrupacionGrupoPersonasManager" class="mx.com.aon.portal.service.impl.AgrupacionGrupoPersonasManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+	            <entry key="OBTIENERREG_AGRUPACION_GRUPO_PERSONAS"><ref bean="OBTIENERREG_AGRUPACION_GRUPO_PERSONAS"/></entry>
+	            <entry key="OBTIENERREG_GRUPO_PERSONAS"><ref bean="OBTIENERREG_GRUPO_PERSONAS"/></entry>
+		        <entry key="INSERTA_AGRUPACION_GRUPO_PERSONAS"><ref bean="INSERTA_AGRUPACION_GRUPO_PERSONAS"/></entry>
+	            <entry key="GUARDA_AGRUPACION_GRUPO_PERSONAS"><ref bean="GUARDA_AGRUPACION_GRUPO_PERSONAS"/></entry>
+	             <entry key="BORRAR_GRUPO_PERSONAS"><ref bean="BORRAR_GRUPO_PERSONAS"/></entry>
+	    </map>
+		</property>
+	</bean>
+<!-- FIN Configuracion del Beans para Agrupacion por Grupo de Personas -->
+
+	
+	
+
+<!-- Ejecutivos Cuenta -->
+	<bean id="ejecutivosCuentaManager" class="mx.com.aon.portal.service.impl.EjecutivosCuentaManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+	            <entry key="OBTIENE_EJECUTIVO_CUENTA_REG"><ref bean="OBTIENE_EJECUTIVO_CUENTA_REG"/></entry>
+	            <!--<entry key="INSERTA_GUARDA_EJECUTIVO_CUENTA"><ref bean="INSERTA_GUARDA_EJECUTIVO_CUENTA"/></entry>-->
+				<entry key="BORRA_EJECUTIVO_CUENTA"><ref bean="BORRA_EJECUTIVO_CUENTA"/></entry>
+	            <entry key="OBTIENE_EJECUTIVOS_CUENTA"><ref bean="OBTIENE_EJECUTIVOS_CUENTA"/></entry>
+	            <entry key="OBTIENE_EJECUTIVOS_CUENTA_EXPORT"><ref bean="OBTIENE_EJECUTIVOS_CUENTA_EXPORT"/></entry>
+	       </map>
+		</property>
+	</bean>
+	<!-- FIN Ejecutivos Cuenta -->
+
+	<!-- Alertas Por Usuario -->
+	<bean id="alertasUsuarioManager" class="mx.com.aon.portal.service.impl.AlertasUsuarioManagerImpl" parent="abstractManagerJdbcTemplateInvoke">
+        <!--
+        <property name="endpoints">
+            <map>
+	            <entry key="OBTIENE_ALERTAS_USUARIO"><ref bean="OBTIENE_ALERTAS_USUARIO"/></entry>
+	            <entry key="OBTIENE_ALERTA_USUARIO_REG"><ref bean="OBTIENE_ALERTA_USUARIO_REG"/></entry>
+				<entry key="GUARDA_ALERTA_USUARIO"><ref bean="GUARDA_ALERTA_USUARIO"/></entry>
+				<entry key="BORRA_ALERTA"><ref bean="BORRA_ALERTA"/></entry>
+	       </map>
+		</property>
+		-->
+        <property name="abstractDAO">
+            <ref bean="alertaDAOPortal"/>
+        </property>
+        <property name="mailUtil">
+            <ref bean="mailUtil"/>
+        </property>
+        
+	</bean>
+	<!-- Fin Alertas Por Usuario -->
+
+    <!-- Agrupacion Polizas -->
+    <bean id="agrupacionPolizasManager" class="mx.com.aon.portal.service.impl.AgrupacionPolizasManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="OBTIENE_AGRUPACIONES"><ref bean="OBTIENE_AGRUPACIONES"/></entry>
+                <entry key="OBTIENE_AGRUPACION"><ref bean="OBTIENE_AGRUPACION"/></entry>
+                <entry key="GUARDA_AGRUPACION"><ref bean="GUARDA_AGRUPACION"/></entry>
+                <entry key="BORRA_AGRUPACION"><ref bean="BORRA_AGRUPACION"/></entry>
+                <entry key="OBTIENE_AGRUPACION_POLIZAS_EXPORT"><ref bean="OBTIENE_AGRUPACION_POLIZAS_EXPORT"/></entry>
+           </map>
+        </property>
+    </bean>
+    <!-- Agrupacion Polizas -->
+
+	<!-- Personas -->
+    <bean id="personasManager" class="mx.com.aon.portal.service.impl.PersonasManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="PERSONAS_BUSCAR"><ref bean="PERSONAS_BUSCAR"/></entry>
+                <entry key="PERSONAS_GUARDAR"><ref bean="PERSONAS_GUARDAR"/></entry>
+                <entry key="PERSONAS_GUARDAR_DATOS_ADICIONALES"><ref bean="PERSONAS_GUARDAR_DATOS_ADICIONALES"/></entry>
+                <entry key="PERSONAS_GUARDAR_CORPORATIVO"><ref bean="PERSONAS_GUARDAR_CORPORATIVO"/></entry>
+                <entry key="PERSONAS_GUARDAR_DOMICILIO"><ref bean="PERSONAS_GUARDAR_DOMICILIO"/></entry>
+                <entry key="PERSONAS_GUARDAR_TELEFONO"><ref bean="PERSONAS_GUARDAR_TELEFONO"/></entry>
+                <entry key="OBTENER_PERSONA"><ref bean="OBTENER_PERSONA"/></entry>
+                <entry key="OBTENER_DOMICILIOS_PERSONA"><ref bean="OBTENER_DOMICILIOS_PERSONA"/></entry>
+                <entry key="OBTENER_TELEFONOS_PERSONA"><ref bean="OBTENER_TELEFONOS_PERSONA"/></entry>
+                <entry key="OBTENER_CORPORATIVO_PERSONA"><ref bean="OBTENER_CORPORATIVO_PERSONA"/></entry>
+                <entry key="BORRAR_DOMICILIO_PERSONA"><ref bean="BORRAR_DOMICILIO_PERSONA"/></entry>
+                <entry key="BORRAR_TELEFONO_PERSONA"><ref bean="BORRAR_TELEFONO_PERSONA"/></entry>
+                <entry key="PERSONAS_INSERTAR"><ref bean="PERSONAS_INSERTAR"/></entry>
+                <entry key="PERSONAS_OBTENER_DATOS_ADICIONALES"><ref bean="PERSONAS_OBTENER_DATOS_ADICIONALES"/></entry>
+                <entry key="PERSONAS_EXPORTAR"><ref bean="PERSONAS_EXPORTAR"/></entry>
+                <entry key="PERSONAS_OBTENER_RELACIONES"><ref bean="PERSONAS_OBTENER_RELACIONES"/></entry>
+                <entry key="PERSONAS_GUARDAR_RELACIONES"><ref bean="PERSONAS_GUARDAR_RELACIONES"/></entry>
+                
+                <entry key="OBTENER_USUARIO_CLAVE_PERSONA"><ref bean="OBTENER_USUARIO_CLAVE_PERSONA"/></entry>
+                <entry key="PERSONAS_GUARDAR_CLAVE_USUARIO"><ref bean="PERSONAS_GUARDAR_CLAVE_USUARIO"/></entry>
+                <entry key="BUSCAR_USUARIO_SIN_PERSONA"><ref bean="BUSCAR_USUARIO_SIN_PERSONA"/></entry>
+                <entry key="PERSONAS_GUARDAR_ASOCIAR_CLAVE_USUARIO"><ref bean="PERSONAS_GUARDAR_ASOCIAR_CLAVE_USUARIO"/></entry>
+                <entry key="PERSONAS_GUARDAR_CREAR_CLAVE_USUARIO"><ref bean="PERSONAS_GUARDAR_CREAR_CLAVE_USUARIO"/></entry>
+
+           </map>
+        </property>
+    </bean>
+	<!-- Fin Personas -->
+    <!-- Secciones -->
+    <bean id="seccionesManager" class="mx.com.aon.portal.service.impl.SeccionesManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="GUARDA_SECCION"><ref bean="GUARDA_SECCION"/></entry>
+                <entry key="BUSCA_SECCIONES"><ref bean="BUSCA_SECCIONES"/></entry>
+                <entry key="BORRA_SECCION"><ref bean="BORRA_SECCION"/></entry>
+                <entry key="OBTIENE_SECCION"><ref bean="OBTIENE_SECCION"/></entry>
+                <entry key="OBTIENE_SECCION_EXPORT"><ref bean="OBTIENE_SECCION_EXPORT"/></entry>
+                <entry key="VALIDA_BLOQUE"><ref bean="VALIDA_BLOQUE"/></entry>
+           </map>
+        </property>
+    </bean>
+    <!-- Fin Secciones -->
+
+	<!-- Metodos de Cancelacion -->
+	 <bean id="metodosCancelacionManager" class="mx.com.aon.portal.service.impl.MetodosCancelacionManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="INSERTA_GUARDA_METODO_CANCELACION"><ref bean="INSERTA_GUARDA_METODO_CANCELACION"/></entry>
+                <entry key="BORRA_METODO_CANCELACION"><ref bean="BORRA_METODO_CANCELACION"/></entry>
+                <entry key="OBTIENE_METODOS_CANCELACION"><ref bean="OBTIENE_METODOS_CANCELACION"/></entry>
+                <entry key="OBTIENE_METODO_CANCELACION_REG"><ref bean="OBTIENE_METODO_CANCELACION_REG"/></entry>
+                <entry key="OBTIENE_METODOS_CANCELACION_EXPORT"><ref bean="OBTIENE_METODOS_CANCELACION_EXPORT"/></entry>
+           </map>
+        </property>
+    </bean>
+	<!-- FIN Metodos de Cancelacion -->
+	
+	<!-- FormatoOrdenesTrabajo -->
+    <bean id="formatoOrdenesTrabajoManager" class="mx.com.aon.portal.service.impl.FormatoOrdenesTrabajoManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="BORRAR_FORMATO_ORDENES_TRABAJO"><ref bean="BORRAR_FORMATO_ORDENES_TRABAJO"/></entry>
+                <entry key="GUARDAR_FORMATO_ORDENES_TRABAJO"><ref bean="GUARDAR_FORMATO_ORDENES_TRABAJO"/></entry>
+                <entry key="OBTIENE_FORMATO_ORDENES_TRABAJO"><ref bean="OBTIENE_FORMATO_ORDENES_TRABAJO"/></entry>
+                <entry key="COPIA_FORMATO_ORDENES_TRABAJO"><ref bean="COPIA_FORMATO_ORDENES_TRABAJO"/></entry>
+                <entry key="BUSCAR_FORMATO_ORDENES_TRABAJO"><ref bean="BUSCAR_FORMATO_ORDENES_TRABAJO"/></entry>
+           </map>
+        </property>
+    </bean>
+    <!-- Fin FormatoOrdenesTrabajo -->
+    
+    <!-- ********************** ASOCIAR FORMATO ORDENES TRABAJO **************************** -->    
+    <bean id="asociarOrdenTrabajoManager" class="mx.com.aon.portal.service.impl.AsociarOrdenTrabajoManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+            	<entry key="OBTIENE_FORMATOXCTA"><ref bean="OBTIENE_FORMATOXCTA"/></entry>
+                <entry key="GUARDA_ASOCIACION_ORDEN_TRABAJO"><ref bean="GUARDA_ASOCIACION_ORDEN_TRABAJO"/></entry>
+            </map>
+        </property>
+    </bean>    
+    <!-- ***************** FIN ASOCIAR FORMATO ORDENES TRABAJO **************************** -->
+    
+    <!-- Numeros de Incisos -->
+    <bean id="numeroIncisosManager" class="mx.com.aon.portal.service.impl.NumeroIncisosManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="OBTIENE_NUMEROS_INCISO"><ref bean="OBTIENE_NUMEROS_INCISO"/></entry>
+                <entry key="OBTIENE_NUMERO_INCISO_REG"><ref bean="OBTIENE_NUMERO_INCISO_REG"/></entry>
+                <entry key="OBTIENE_NUMEROS_INCISO_EXPORT"><ref bean="OBTIENE_NUMEROS_INCISO_EXPORT"/></entry>
+                <entry key="INSERTA_NUMERO_INCISO"><ref bean="INSERTA_NUMERO_INCISO"/></entry>
+                <entry key="GUARDA_NUMERO_INCISO"><ref bean="GUARDA_NUMERO_INCISO"/></entry>
+                <entry key="BORRAR_NUMERO_INCISO"><ref bean="BORRAR_NUMERO_INCISO"/></entry>
+               <entry key="OBTIENE_TRAMOS"><ref bean="OBTIENE_TRAMOS"/></entry>
+            </map>
+        </property>
+    </bean>
+      <!-- FIN Numeros de Incisos -->
+    
+    
+      <!-- Numeros de Polizas -->
+    <bean id="numeroPolizasManager" class="mx.com.aon.portal.service.impl.NumeroPolizasManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="OBTIENE_NUMEROS_POLIZA"><ref bean="OBTIENE_NUMEROS_POLIZA"/></entry>
+                <entry key="OBTIENE_NUMERO_POLIZA_REG"><ref bean="OBTIENE_NUMERO_POLIZA_REG"/></entry>
+                <entry key="OBTIENE_NUMEROS_POLIZA_EXPORT"><ref bean="OBTIENE_NUMEROS_POLIZA_EXPORT"/></entry>
+                <entry key="INSERTA_NUMERO_POLIZA"><ref bean="INSERTA_NUMERO_POLIZA"/></entry>
+                <entry key="GUARDA_NUMERO_POLIZA"><ref bean="GUARDA_NUMERO_POLIZA"/></entry>
+                <entry key="BORRAR_NUMERO_POLIZA"><ref bean="BORRAR_NUMERO_POLIZA"/></entry>
+                <entry key="BORRAR_NUMERO_POLIZA_EMISION"><ref bean="BORRAR_NUMERO_POLIZA_EMISION"/></entry>
+            </map>
+        </property>
+    </bean>
+    <!-- Fin FormatoOrdenesTrabajo -->
+    
+    <!-- Motivos Cancelacion -->
+    <bean id="motivosCancelacionManager" class="mx.com.aon.portal.service.impl.MotivosCancelacionManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="BORRAR_MOTIVOS_CANCELACION"><ref bean="BORRAR_MOTIVOS_CANCELACION"/></entry>
+                <entry key="BORRAR_REQUISITOS_CANCELACION"><ref bean="BORRAR_REQUISITOS_CANCELACION"/></entry>
+                <entry key="INSERTAR_MOTIVOS_CANCELACION"><ref bean="INSERTAR_MOTIVOS_CANCELACION"/></entry>
+                <entry key="GUARDAR_REQUISITOS_CANCELACION"><ref bean="GUARDAR_REQUISITOS_CANCELACION"/></entry>
+                <entry key="GUARDAR_MOTIVOS_CANCELACION"><ref bean="GUARDAR_MOTIVOS_CANCELACION"/></entry>
+                <entry key="BUSCAR_MOTIVOS_CANCELACION"><ref bean="BUSCAR_MOTIVOS_CANCELACION"/></entry>
+                <entry key="OBTIENE_REQUISITOS_CANCELACION"><ref bean="OBTIENE_REQUISITOS_CANCELACION"/></entry>
+                <entry key="OBTIENE_MOTIVOS_CANCELACION"><ref bean="OBTIENE_MOTIVOS_CANCELACION"/></entry>
+                <entry key="OBTIENE_MOTIVOS_CANCELACION_EXPORT"><ref bean="OBTIENE_MOTIVOS_CANCELACION_EXPORT"/></entry>              
+           </map>
+        </property>
+    </bean>
+    <!-- Fin Motivos Cancelacion -->
+    
+    <!-- Czo Razones Cancelacion Producto -->
+    <bean id="razonesCancelacionProductoManager" class="mx.com.aon.portal.service.impl.RazonesCancelacionProductoManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="OBTIENE_RAZONES_PRODUCTO"><ref bean="OBTIENE_RAZONES_PRODUCTO"/></entry>
+                <!--entry key="VALIDA_RAZON_CANCELA"><ref bean="VALIDA_RAZON_CANCELA"/></entry-->
+                <entry key="BORRA_RAZON_PRODUCTO"><ref bean="BORRA_RAZON_PRODUCTO"/></entry>
+                <entry key="GUARDA_RAZON_PRODUCTO"><ref bean="GUARDA_RAZON_PRODUCTO"/></entry>
+                <entry key="OBTIENE_RAZONES_CANCELACION_PRODUCTO_EXPORT"><ref bean="OBTIENE_RAZONES_CANCELACION_PRODUCTO_EXPORT"/></entry>
+           </map>
+        </property>
+    </bean>
+    <!-- Fin Razones Cancelacion Producto -->
+    
+    <!-- U.C. PeriodosGracia -->
+    <bean id="periodosGraciaManager" class="mx.com.aon.portal.service.impl.PeriodosGraciaManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="BUSCA_PERIODOSGRACIA"><ref bean="BUSCA_PERIODOSGRACIA"/></entry>
+                <entry key="BORRA_PERIODOSGRACIA"><ref bean="BORRA_PERIODOSGRACIA"/></entry>
+
+                <entry key="OBTIENE_PERIODOSGRACIA"><ref bean="OBTIENE_PERIODOSGRACIA"/></entry>
+                <entry key="GUARDA_PERIODOSGRACIA"><ref bean="GUARDA_PERIODOSGRACIA"/></entry>
+                <entry key="OBTIENE_PERIODOSGRACIA_EXPORT"><ref bean="OBTIENE_PERIODOSGRACIA_EXPORT"/></entry>                 
+
+            </map>
+        </property>
+    </bean>
+    <!-- Fin U.C. PeriodosGracia -->
+
+    <!-- BEGIN U.C. CONFIGURAR OREDENES DE TRABAJO -->
+	<bean id="configurarSeccionOrdenManager" class="mx.com.aon.portal.service.impl.ConfigurarSeccionOrdenManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>      
+                <entry key="OBTIENE_SECCIONES_FORMATO"><ref bean="OBTIENE_SECCIONES_FORMATO"/></entry>
+                <entry key="GUARDA_SECCION_FORMATO"><ref bean="GUARDA_SECCION_FORMATO"/></entry>
+                <entry key="ELIMINA_SECCION_FORMATO"><ref bean="ELIMINA_SECCION_FORMATO"/></entry>
+            </map>
+        </property>
+    </bean>	
+	            
+    <bean id="valoresDefectoAtributosManager" class="mx.com.aon.portal.service.impl.ValoresDefectoAtributosManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="VALOR_DEFECTO_ATRIBUTO"><ref bean="VALOR_DEFECTO_ATRIBUTO"/></entry>
+                <entry key="GUARDA_VALOR_DEFECTO_ATRI"><ref bean="GUARDA_VALOR_DEFECTO_ATRI"/></entry>                
+            </map>
+        </property>
+    </bean>
+    <!-- END U.C. CONFIGURAR OREDENES DE TRABAJO -->
+           
+           
+    <!-- Periodo de Gracia por Cliente -->
+    <bean id="periodosGraciaClienteManager" class="mx.com.aon.portal.service.impl.PeriodosGraciaClienteManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="OBTIENE_PERIODOS_GRACIA_CLIENTE"><ref bean="OBTIENE_PERIODOS_GRACIA_CLIENTE"/></entry>
+                <entry key="OBTIENE_PERIODOS_GRACIA_CLIENTE_EXPORT"><ref bean="OBTIENE_PERIODOS_GRACIA_CLIENTE_EXPORT"/></entry>
+                <entry key="INSERTAR_PERIODO_GRACIA_CLIENTE"><ref bean="INSERTAR_PERIODO_GRACIA_CLIENTE"/></entry>
+                <entry key="BORRA_PERIODO_GRACIA_CLIENTE"><ref bean="BORRA_PERIODO_GRACIA_CLIENTE"/></entry>
+           </map>
+        </property>
+    </bean>
+    <!-- Fin Periodo de Gracia por Cliente -->
+    
+     <!-- Asociar Formato -->
+    <bean id="asociarFormatosManager" class="mx.com.aon.portal.service.impl.AsociarFormatosManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="BORRAR_ASOCIAR_FORMATOS"><ref bean="BORRAR_ASOCIAR_FORMATOS"/></entry>
+                <entry key="BUSCAR_ASOCIAR_FORMATOS"><ref bean="BUSCAR_ASOCIAR_FORMATOS"/></entry>
+                <entry key="OBTIENE_ASOCIAR_FORMATOS_EXPORT"><ref bean="OBTIENE_ASOCIAR_FORMATOS_EXPORT"/></entry>
+           </map>
+        </property>
+    </bean>
+    <!-- Fin Asociar Formato --> 
+    
+    
+    
+    <!-- Configuracion Atributos formato Orden de Trabajo -->
+     <bean id="configuracionAtributosFormatosOrdenTrabajoManager" class="mx.com.aon.portal.service.impl.ConfiguracionAtributosFormatosOrdenTrabajoManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="INSERTA_GUARDA_ATRIB_SECCION"><ref bean="INSERTA_GUARDA_ATRIB_SECCION"/></entry>
+                <entry key="BORRA_ATRIBUTO"><ref bean="BORRA_ATRIBUTO"/></entry>
+                <entry key="OBTIENE_ATRIB_SECCION"><ref bean="OBTIENE_ATRIB_SECCION"/></entry>
+           </map>
+        </property>
+    </bean>
+    <!--FIN Configuracion Atributos formato Orden de Trabajo -->   
+    
+
+    <!-- Requisitos de Rehabilitacion -->
+    <bean id="requisitosRehabilitacionManager" class="mx.com.aon.portal.service.impl.RequisitosRehabilitacionManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="AGREGAR_GUARDAR_REQUISITO_REHABILITACION"><ref bean="AGREGAR_GUARDAR_REQUISITO_REHABILITACION"/></entry>
+                <entry key="BORRAR_REQUISITO_REHABILITACION"><ref bean="BORRAR_REQUISITO_REHABILITACION"/></entry>
+                <entry key="BUSCAR_REQUISITOS_REHABILITACION"><ref bean="BUSCAR_REQUISITOS_REHABILITACION"/></entry>
+                <entry key="OBTENER_REQUISITO_REHABILITACION"><ref bean="OBTENER_REQUISITO_REHABILITACION"/></entry>
+                <entry key="OBTENER_REQUISITOS_REHABILITACION_EXPORT"><ref bean="OBTENER_REQUISITOS_REHABILITACION_EXPORT"/></entry>
+           </map>
+        </property>
+    </bean>
+    <!-- Fin Requisitos de Rehabilitacion --> 
+    
+	<!-- Mantenimiento de Mensajes de Error -->
+     <bean id="mensajesErrorManager" class="mx.com.aon.portal.service.impl.MensajesErrorManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="MENSAJES_ERROR_BUSCAR"><ref bean="MENSAJES_ERROR_BUSCAR"/></entry>
+                <entry key="MENSAJES_ERROR_GET"><ref bean="MENSAJES_ERROR_GET"/></entry>
+                <entry key="MENSAJES_ERROR_GUARDAR"><ref bean="MENSAJES_ERROR_GUARDAR"/></entry>
+                <entry key="MENSAJES_ERROR_EXPORTAR"><ref bean="MENSAJES_ERROR_EXPORTAR"/></entry>
+           </map>
+        </property>
+    </bean>
+	<!-- Fin Mantenimiento de Mensajes de Error -->
+	
+<!-- Orden De Compras -->
+     <bean id="ordenesDeComprasManager" class="mx.com.aon.portal.service.impl.OrdenesDeComprasManagerImpl" parent="abstractManagerJdbcTemplateInvoke">
+<!--
+        <property name="endpoints">
+            <map>
+                <entry key="BUSCAR_ORDEN_DE_COMPRAS"><ref bean="BUSCAR_ORDEN_DE_COMPRAS"/></entry>
+                <entry key="OBTIENERREG_ORDEN_DE_COMPRAS_PERSONAS"><ref bean="OBTIENERREG_ORDEN_DE_COMPRAS_PERSONAS"/></entry>
+                <entry key="FINALIZAR_ORDEN_DE_COMPRAS"><ref bean="FINALIZAR_ORDEN_DE_COMPRAS"/></entry>
+           </map>
+        </property>
+-->
+         <property name="abstractDAO">
+             <ref bean="carritoComprasDAO"/>
+         </property>
+    </bean>
+<!-- FIN Orden De Compras -->
+
+<!-- CZO SELECCION DE POLIZAS PARA RENOVACION -->
+	<bean id="seleccionPolizasRenovacionManager" class="mx.com.aon.portal.service.impl.SeleccionPolizasRenovacionManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="EJECUTAR_SELECCION_POLIZAS_RENOVACION"><ref bean="EJECUTAR_SELECCION_POLIZAS_RENOVACION"/></entry>
+           </map>
+        </property>
+    </bean>	
+	<!-- FIN SELECCION DE POLIZAS PARA RENOVACION -->
+
+	<!-- CZO CONFIGURACION DE ENDOSOS -->
+	<bean id="configuracionEndososManager" class="mx.com.aon.portal.service.impl.ConfiguracionEndososManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="OBTIENE_TTIPSUPL"><ref bean="OBTIENE_TTIPSUPL"/></entry>
+                <entry key="GUARDA_TTIPSUPL"><ref bean="GUARDA_TTIPSUPL"/></entry>
+                <entry key="BORRA_TTIPSUPL"><ref bean="BORRA_TTIPSUPL"/></entry>
+                <entry key="OBTIENE_TTIPSUPL_EXPORT"><ref bean="OBTIENE_TTIPSUPL_EXPORT"/></entry>
+           </map>
+        </property>
+    </bean>	
+	<!-- FIN CONFIGURACION DE ENDOSOS -->
+	
+	<!-- CZO CONFIGURACION DE NUMERACION DE ENDOSOS -->
+	<bean id="configurarNumeracionEndososManager" class="mx.com.aon.portal.service.impl.ConfigurarNumeracionEndososManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="BORRA_TNUMENEX"><ref bean="BORRA_TNUMENEX"/></entry>
+                <entry key="OBTIENE_TNUMENEX_EXPORT"><ref bean="OBTIENE_TNUMENEX_EXPORT"/></entry>
+                <entry key="GUARDA_TNUMENEX"><ref bean="GUARDA_TNUMENEX"/></entry>
+                <entry key="OBTIENE_TNUMENEX"><ref bean="OBTIENE_TNUMENEX"/></entry>
+                <entry key="GET_TNUMENEX"><ref bean="GET_TNUMENEX"/></entry>
+           </map>
+        </property>
+    </bean>	
+	<!-- FIN CONFIGURACION DE NUMERACION DE ENDOSOS -->
+	
+<!-- CZO CONFIGURAR FORMA CALCULO ATRIBUTOS VARIABLES -->
+	<bean id="configurarFormaCalculoAtributosVariablesManager" class="mx.com.aon.portal.service.impl.ConfigurarFormaCalculoAtributosVariablesManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="OBTIENE_CONFIGURAR_FORMA_CALCULO_ATRIBUTOS"><ref bean="OBTIENE_CONFIGURAR_FORMA_CALCULO_ATRIBUTOS"/></entry>
+                <entry key="OBTIENE_CONFIGURAR_FORMA_CALCULO_ATRIBUTOS_COPIA"><ref bean="OBTIENE_CONFIGURAR_FORMA_CALCULO_ATRIBUTOS_COPIA"/></entry>                
+                <entry key="AGREGAR_CONFIGURAR_FORMA_CALCULO_ATRIBUTOS"><ref bean="AGREGAR_CONFIGURAR_FORMA_CALCULO_ATRIBUTOS"/></entry>
+                <entry key="GUARDA_CONFIGURAR_FORMA_CALCULO_ATRIBUTOS"><ref bean="GUARDA_CONFIGURAR_FORMA_CALCULO_ATRIBUTOS"/></entry>
+                <entry key="BORRAR_CONFIGURAR_FORMA_CALCULO_ATRIBUTOS"><ref bean="BORRAR_CONFIGURAR_FORMA_CALCULO_ATRIBUTOS"/></entry>                
+                <entry key="COPIAR_CONFIGURAR_FORMA_CALCULO_ATRIBUTOS"><ref bean="COPIAR_CONFIGURAR_FORMA_CALCULO_ATRIBUTOS"/></entry>
+                <entry key="BUSCAR_CONFIGURAR_FORMA_CALCULO_ATRIBUTOS"><ref bean="BUSCAR_CONFIGURAR_FORMA_CALCULO_ATRIBUTOS"/></entry>                
+                <entry key="OBTIENE_CONFIGURAR_FORMA_CALCULO_ATRIBUTOS_EXPORT"><ref bean="OBTIENE_CONFIGURAR_FORMA_CALCULO_ATRIBUTOS_EXPORT"/></entry>
+           </map>
+        </property>
+    </bean>	
+<!-- FIN CONFIGURAR FORMA CALCULO ATRIBUTOS VARIABLES -->	
+
+	<!-- CZO CONFIGURAR RENOVACION -->
+	<bean id="configuracionRenovacionManager" class="mx.com.aon.portal.service.impl.ConfiguracionRenovacionManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="OBTIENE_CLIENTE_TIPO"><ref bean="OBTIENE_CLIENTE_TIPO"/></entry>
+                <entry key="ELIMINA_CONFIGURACION"><ref bean="ELIMINA_CONFIGURACION"/></entry>
+                <entry key="GUARDA_CONFIGURA"><ref bean="GUARDA_CONFIGURA"/></entry>
+                <entry key="OBTIENE_CLIENTE_TIPO_EXPORT"><ref bean="OBTIENE_CLIENTE_TIPO_EXPORT"/></entry>
+                <entry key="OBTIENE_CONFIGURA_CLIENTE"><ref bean="OBTIENE_CONFIGURA_CLIENTE"/></entry>
+                <entry key="VALIDA_RENOVA_ROL"><ref bean="VALIDA_RENOVA_ROL"/></entry>
+           </map>
+        </property>
+    </bean>	
+	<!-- END CONFIGURAR RENOVACION -->
+	
+	<!-- ACCIONES DE RENOVACION -->
+	<bean id="configurarAccionesRenovacionManager" class="mx.com.aon.portal.service.impl.ConfigurarAccionesRenovacionManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="OBTIENE_ENCABEZADO_CONFIGURAR_ACCIONES_RENOVACION"><ref bean="OBTIENE_ENCABEZADO_CONFIGURAR_ACCIONES_RENOVACION"/></entry>
+                <entry key="OBTIENE_CONFIGURAR_ACCIONES_RENOVACION_ACCION"><ref bean="OBTIENE_CONFIGURAR_ACCIONES_RENOVACION_ACCION"/></entry>
+                <entry key="GUARDA_CONFIGURAR_ACCIONES_RENOVACION"><ref bean="GUARDA_CONFIGURAR_ACCIONES_RENOVACION"/></entry>
+                <entry key="BORRAR_CONFIGURAR_ACCIONES_RENOVACION"><ref bean="BORRAR_CONFIGURAR_ACCIONES_RENOVACION"/></entry>
+                <entry key="BUSCAR_CONFIGURAR_ACCIONES_RENOVACION"><ref bean="BUSCAR_CONFIGURAR_ACCIONES_RENOVACION"/></entry>
+                <entry key="OBTIENE_CONFIGURAR_ACCIONES_RENOVACION_EXPORT"><ref bean="OBTIENE_CONFIGURAR_ACCIONES_RENOVACION_EXPORT"/></entry>
+           </map>
+        </property>
+    </bean>	
+	<!-- FIN ACCIONES RENOVACION -->
+	
+	<!-- CZO CONFIGURA RENOVACION DE ROLES -->
+	<bean id="rolesRenovacionManager" class="mx.com.aon.portal.service.impl.RolesRenovacionManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="OBTENER_ENCABEZADO_ROLES_RENOVACION"><ref bean="OBTENER_ENCABEZADO_ROLES_RENOVACION"/></entry>
+                <entry key="OBTENER_ROLES_RENOVACION"><ref bean="OBTENER_ROLES_RENOVACION"/></entry>
+                <entry key="AGREGAR_GUARDAR_ROL_RENOVACION"><ref bean="AGREGAR_GUARDAR_ROL_RENOVACION"/></entry>
+                <entry key="BORRAR_ROL_RENOVACION"><ref bean="BORRAR_ROL_RENOVACION"/></entry>
+                <entry key="OBTIENE_ROLES_RENOVACION_EXPORT"><ref bean="OBTIENE_ROLES_RENOVACION_EXPORT"/></entry>
+           </map>
+        </property>
+    </bean>	
+	<!-- END CONFIGURA RENOVACION DE ROLES -->
+		
+			<!-- BEGIN RANGO RENOVACION -->
+		<bean id="rangoRenovacionReporteManager" class="mx.com.aon.portal.service.impl.RangoRenovacionReporteManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="BUSCAR_RANGOS_RENOVACION"><ref bean="BUSCAR_RANGOS_RENOVACION"/></entry>
+                <entry key="BORRAR_RANGO_RENOVACION"><ref bean="BORRAR_RANGO_RENOVACION"/></entry>
+                <entry key="GET_ENCABEZADO_RANGO_RENOVACION"><ref bean="GET_ENCABEZADO_RANGO_RENOVACION"/></entry>
+                <entry key="GET_RANGO_RENOVACION"><ref bean="GET_RANGO_RENOVACION"/></entry>
+                <entry key="AGREGAR_GUARDAR_RANGO_RENOVACION"><ref bean="AGREGAR_GUARDAR_RANGO_RENOVACION"/></entry>
+                <entry key="OBTIENE_RANGOS_RENOVACION_EXPORT"><ref bean="OBTIENE_RANGOS_RENOVACION_EXPORT"/></entry>
+           </map>
+        </property>
+    </bean>	
+	<!-- END RANGO RENOVACION -->
+	
+	<!-- BEGIN MECANISMO DE TOOLTIP-->
+		<bean id="mecanismoDeTooltipManager" class="mx.com.aon.portal.service.impl.MecanismoDeTooltipManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="BUSCAR_MECANISMO_TOOLTIP"><ref bean="BUSCAR_MECANISMO_TOOLTIP"/></entry>
+                <entry key="AGREGAR_GUARDAR_MECANISMO_TOOLTIP"><ref bean="AGREGAR_GUARDAR_MECANISMO_TOOLTIP"/></entry>
+                <entry key="OBTIENE_MECANISMO_TOOLTIP"><ref bean="OBTIENE_MECANISMO_TOOLTIP"/></entry>
+                <entry key="COPIAR_MECANISMO_TOOLTIP"><ref bean="COPIAR_MECANISMO_TOOLTIP"/></entry>
+                <entry key="BORRAR_MECANISMO_TOOLTIP"><ref bean="BORRAR_MECANISMO_TOOLTIP"/></entry>
+                <entry key="OBTIENE_MECANISMO_TOOLTIP_EXPORT"><ref bean="OBTIENE_MECANISMO_TOOLTIP_EXPORT"/></entry>
+                <entry key="BUSCAR_MECANISMO_TOOLTIP_PAGE"><ref bean="BUSCAR_MECANISMO_TOOLTIP_PAGE"/></entry>
+                <entry key="BUSCAR_MENSAJES_USUARIO"><ref bean="BUSCAR_MENSAJES_USUARIO"/></entry>
+           </map>
+        </property>
+    </bean>	
+	<!-- END MECANISMO DE TOOLTIP -->
+
+	<!-- FORMULA DEL METODO DE CANCELACION -->
+	<bean id="formulaMetodoCancelacionManager" class="mx.com.aon.portal.service.impl.FormulaMetodoCancelacionManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="FORMULA_METODO_CANCELACION_ENCABEZADO"><ref bean="FORMULA_METODO_CANCELACION_ENCABEZADO"/></entry>
+           </map>
+        </property>
+    </bean>	
+	<!-- FORMULA DEL METODO DE CANCELACION -->
+
+	<!-- Manejo de ToolTips -->
+		<bean id="toolTipsManager" class="mx.com.aon.portal.service.impl.ToolTipsManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="BUSCAR_TOOLTIPS"><ref bean="BUSCAR_TOOLTIPS"/></entry>
+           </map>
+        </property>
+    </bean>	
+	<!-- Fin Manejo de ToolTips -->	
+
+
+	<!-- Rehabilitacion Masiva -->
+	<bean id="rehabilitacionMasivaManager" class="mx.com.aon.portal.service.impl.RehabilitacionMasivaManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="OBTENER_POLIZADAS_CANCELADAS_PARA_REHABILITAR"><ref bean="OBTENER_POLIZADAS_CANCELADAS_PARA_REHABILITAR"/></entry>
+                <entry key="POLIZAS_A_REHABILITAR_EXPORTAR"><ref bean="POLIZAS_A_REHABILITAR_EXPORTAR"/></entry>
+                <!--  <entry key="REHABILITACION_MASIVA_REHABILITAR_POLIZA"><ref bean="REHABILITACION_MASIVA_REHABILITAR_POLIZA"/></entry>--> <!-- Se paso al esquema DAO -->
+           </map>
+        </property>
+    </bean>	
+	<!-- Fin Rehabilitacion Masiva -->
+
+	<!-- Rehabilitacion Manual -->
+	<bean id="rehabilitacionManualManager" class="mx.com.aon.portal.service.impl.RehabilitacionManualManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="REHABILITACION_MANUAL_OBTENER_POLIZA"><ref bean="REHABILITACION_MANUAL_OBTENER_POLIZA"/></entry>
+                <entry key="REHABILITACION_MANUAL_OBTENER_DATOS_CANCELACION"><ref bean="REHABILITACION_MANUAL_OBTENER_DATOS_CANCELACION"/></entry>
+                <entry key="REHABILITACION_MANUAL_OBTENER_REQUISITOS"><ref bean="REHABILITACION_MANUAL_OBTENER_REQUISITOS"/></entry>
+                <entry key="VERIFICAR_RECIBOS_ANTERIORES_PAGADOS"><ref bean="VERIFICAR_RECIBOS_ANTERIORES_PAGADOS"/></entry>
+                <entry key="REHABILITACION_MANUAL_GUARDAR_REQUISITOS"><ref bean="REHABILITACION_MANUAL_GUARDAR_REQUISITOS"/></entry>
+                <entry key="REHABILITACION_MANUAL_REHABILITAR_POLIZA"><ref bean="REHABILITACION_MANUAL_REHABILITAR_POLIZA"/></entry>
+           </map>
+        </property>
+    </bean>	
+	<!-- Fin Rehabilitacion Manual -->
+	
+	<!-- CZO CONSULTA POLIZA RENOVADA -->
+	<bean id="consultaPolizaRenovadaManager" class="mx.com.aon.portal.service.impl.ConsultaPolizaRenovadaManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="OBTIENE_POLIZA_ENCABEZADO"><ref bean="OBTIENE_POLIZA_ENCABEZADO"/></entry>
+                <entry key="OBTIENE_TVALOPOL"><ref bean="OBTIENE_TVALOPOL"/></entry>
+                <entry key="MOV_MPOLIZAS"><ref bean="MOV_MPOLIZAS"/></entry>
+                <entry key="MOV_TVALOPOL"><ref bean="MOV_TVALOPOL"/></entry>
+                <entry key="OBTIENE_OBJETO_ASEGURABLE"><ref bean="OBTIENE_OBJETO_ASEGURABLE"/></entry>
+                <entry key="OBTIENE_FUNCION"><ref bean="OBTIENE_FUNCION"/></entry>
+                <entry key="OBTIENE_TVALOPER"><ref bean="OBTIENE_TVALOPER"/></entry>
+                <entry key="ELIMINA_INCISO"><ref bean="ELIMINA_INCISO"/></entry>
+                <entry key="MOV_MPOLIPER"><ref bean="MOV_MPOLIPER"/></entry>
+                <entry key="GUARDA_DATOS_VAR_ROL"><ref bean="GUARDA_DATOS_VAR_ROL"/></entry>
+                <entry key="OBTIENE_DATOS_OBJETO"><ref bean="OBTIENE_DATOS_OBJETO"/></entry>
+                <entry key="MOV_TVALOSIT"><ref bean="MOV_TVALOSIT"/></entry>
+                <entry key="OBTIENE_COBERTURA_ANT"><ref bean="OBTIENE_COBERTURA_ANT"/></entry>
+                <entry key="OBTIENE_COBERTURA_RENOVADA"><ref bean="OBTIENE_COBERTURA_RENOVADA"/></entry>
+                <entry key="BORRA_INCISO_COBERTURA"><ref bean="BORRA_INCISO_COBERTURA"/></entry>
+                <entry key="MOV_MPOLIGAR"><ref bean="MOV_MPOLIGAR"/></entry>
+                <entry key="OBTIENE_TVALOGAR"><ref bean="OBTIENE_TVALOGAR"/></entry>
+                <entry key="MOV_TVALOGAR"><ref bean="MOV_TVALOGAR"/></entry>
+                <entry key="MOV_MPOLIOBJ"><ref bean="MOV_MPOLIOBJ"/></entry>
+                <entry key="OBTIENE_TVALOOBJ"><ref bean="OBTIENE_TVALOOBJ"/></entry>
+                <entry key="OBTIENE_MPOLIOBJ"><ref bean="OBTIENE_MPOLIOBJ"/></entry>
+                <entry key="OBTIENE_RECIBOS"><ref bean="OBTIENE_RECIBOS"/></entry>
+                <entry key="OBTIENE_TIPO_OBJ_ATRIBUTOS"><ref bean="OBTIENE_TIPO_OBJ_ATRIBUTOS"/></entry>
+            </map>
+        </property>
+    </bean>
+	<!-- END CONSULTA POLIZA RENOVADA -->
+	
+	<bean id="mantenimientoEjecutivosCuentaManager" class="mx.com.aon.portal.service.impl.MantenimientoEjecutivosCuentaManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="MANTENIMIENTO_EJECUTIVOS_CUENTA_BUSCAR_EJECUTIVOS"><ref bean="MANTENIMIENTO_EJECUTIVOS_CUENTA_BUSCAR_EJECUTIVOS"/></entry>
+                <entry key="MANTENIMIENTO_EJECUTIVOS_CUENTA_GUARDAR"><ref bean="MANTENIMIENTO_EJECUTIVOS_CUENTA_GUARDAR"/></entry>
+                <entry key="MANTENIMIENTO_EJECUTIVOS_CUENTA_OBTENER"><ref bean="MANTENIMIENTO_EJECUTIVOS_CUENTA_OBTENER"/></entry>
+                <entry key="MANTENIMIENTO_EJECUTIVOS_CUENTA_BORRAR"><ref bean="MANTENIMIENTO_EJECUTIVOS_CUENTA_BORRAR"/></entry>
+                <entry key="MANTENIMIENTO_EJECUTIVOS_CUENTA_OBTENER_ATRIBUTOS"><ref bean="MANTENIMIENTO_EJECUTIVOS_CUENTA_OBTENER_ATRIBUTOS"/></entry>
+                <entry key="MANTENIMIENTO_EJECUTIVOS_CUENTA_BORRAR_ATRIBUTOS"><ref bean="MANTENIMIENTO_EJECUTIVOS_CUENTA_BORRAR_ATRIBUTOS"/></entry>
+                <entry key="MANTENIMIENTO_EJECUTIVOS_EXPORTAR_EJECUTIVOS"><ref bean="MANTENIMIENTO_EJECUTIVOS_EXPORTAR_EJECUTIVOS"/></entry>
+                <entry key="MANTENIMIENTO_EJECUTIVOS_EXPORTAR_ATRIBUTOS"><ref bean="MANTENIMIENTO_EJECUTIVOS_EXPORTAR_ATRIBUTOS"/></entry>
+			</map>
+        </property>
+    </bean>
+
+	<!-- Configuracion Procesos -->
+	<bean id="configuracionProcesoManager" class="mx.com.aon.portal.service.impl.ConfiguracionProcesoManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="CONFIGURACION_PROCESO_ACTUALIZAR"><ref bean="CONFIGURACION_PROCESO_ACTUALIZAR"/></entry>
+                <entry key="CONFIGURACION_PROCESO_BUSCAR"><ref bean="CONFIGURACION_PROCESO_BUSCAR"/></entry>
+                <entry key="CONFIGURACION_PROCESO_AGREGAR"><ref bean="CONFIGURACION_PROCESO_AGREGAR"/></entry>
+                <entry key="CONFIGURACION_PROCESO_OBTENER"><ref bean="CONFIGURACION_PROCESO_OBTENER"/></entry>
+                <entry key="CONFIGURACION_PROCESO_EXPORTAR"><ref bean="CONFIGURACION_PROCESO_EXPORTAR"/></entry>
+                <entry key="CONFIGURACION_PROCESO_BORRAR"><ref bean="CONFIGURACION_PROCESO_BORRAR"/></entry>
+			</map>
+        </property>
+    </bean>
+	<!-- Fin Configuracion Procesos -->
+
+    <!-- ToolTip Bean -->
+    <bean id="toolTipBean" class="mx.com.aon.portal.web.tooltip.ToolTipBean">
+        <property name="mecanismoDeTooltipManager" ref="mecanismoDeTooltipManager"/>
+    </bean>
+
+	<!-- Configuracion Catalogos -->
+    <bean id="configuradorCatalogosManager" class="mx.com.aon.portal.service.impl.ConfiguradorCatalogosManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="CONFIGURAR_CATALOGOS_SIMPLES_OBTENER_CAMPOS"><ref bean="CONFIGURAR_CATALOGOS_SIMPLES_OBTENER_CAMPOS"/></entry>
+                <entry key="CONFIGURAR_CATALOGOS_SIMPLES_OBTENER_REGISTROS"><ref bean="CONFIGURAR_CATALOGOS_SIMPLES_OBTENER_REGISTROS"/></entry>
+                <entry key="CONFIGURAR_CATALOGOS_SIMPLES_BORRAR_REGISTRO"><ref bean="CONFIGURAR_CATALOGOS_SIMPLES_BORRAR_REGISTRO"/></entry>
+                <entry key="CONFIGURAR_CATALOGOS_SIMPLES_OBTENER_REGISTRO"><ref bean="CONFIGURAR_CATALOGOS_SIMPLES_OBTENER_REGISTRO"/></entry>
+                <entry key="CONFIGURAR_CATALOGOS_SIMPLES_OBTENER_COLUMNAS"><ref bean="CONFIGURAR_CATALOGOS_SIMPLES_OBTENER_COLUMNAS"/></entry>
+                <entry key="CONFIGURAR_CATALOGOS_SIMPLES_GUARDAR_REGISTRO"><ref bean="CONFIGURAR_CATALOGOS_SIMPLES_GUARDAR_REGISTRO"/></entry>
+                <entry key="CONFIGURAR_CATALOGOS_SIMPLES_ACTUALIZAR_REGISTRO"><ref bean="CONFIGURAR_CATALOGOS_SIMPLES_ACTUALIZAR_REGISTRO"/></entry>
+                <entry key="CONFIGURAR_CATALOGOS_SIMPLES_BORRAR"><ref bean="CONFIGURAR_CATALOGOS_SIMPLES_BORRAR"/></entry>
+                <entry key="CONFIGURAR_CATALOGOS_SIMPLES_EXPORTAR"><ref bean="CONFIGURAR_CATALOGOS_SIMPLES_EXPORTAR"/></entry>
+                <entry key="CONFIGURAR_CATALOGOS_SIMPLES_OBTENER_TITULO"><ref bean="CONFIGURAR_CATALOGOS_SIMPLES_OBTENER_TITULO"/></entry>
+			</map>
+        </property>
+    </bean>
+    <bean id="configuradorCatalogosCompuestosManager" class="mx.com.aon.portal.service.impl.ConfiguradorCatalogosCompuestosManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="CONFIGURAR_CATALOGOS_COMPUESTOS_OBTENER_CAMPOS"><ref bean="CONFIGURAR_CATALOGOS_COMPUESTOS_OBTENER_CAMPOS"/></entry>
+                <entry key="CONFIGURAR_CATALOGOS_COMPUESTOS_OBTENER_COLUMNAS"><ref bean="CONFIGURAR_CATALOGOS_COMPUESTOS_OBTENER_COLUMNAS"/></entry>
+                <entry key="CONFIGURAR_CATALOGOS_COMPUESTOS_GUARDAR_REGISTRO"><ref bean="CONFIGURAR_CATALOGOS_COMPUESTOS_GUARDAR_REGISTRO"/></entry>
+                <entry key="CONFIGURAR_CATALOGOS_COMPUESTOS_ACTUALIZAR_REGISTRO"><ref bean="CONFIGURAR_CATALOGOS_COMPUESTOS_ACTUALIZAR_REGISTRO"/></entry>
+                <entry key="CONFIGURAR_CATALOGOS_COMPUESTOS_BORRAR"><ref bean="CONFIGURAR_CATALOGOS_COMPUESTOS_BORRAR"/></entry>
+                <entry key="CONFIGURAR_CATALOGOS_COMPUESTOS_EXPORTAR"><ref bean="CONFIGURAR_CATALOGOS_COMPUESTOS_EXPORTAR"/></entry>
+                <entry key="CONFIGURAR_CATALOGOS_COMPUESTOS_OBTENER_TITULO"><ref bean="CONFIGURAR_CATALOGOS_COMPUESTOS_OBTENER_TITULO"/></entry>
+			</map>
+        </property>
+    </bean>
+	<!-- Fin Configuracion Catalogos -->
+	
+	<!-- Mantenimiento de Catalogos Logicos -->
+    <bean id="manttoCatalogosLogicosManager" class="mx.com.aon.portal.service.impl.ManttoCatalogosLogicosManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="BORRA_TCATALOG"><ref bean="BORRA_TCATALOG"/></entry>
+                <entry key="OBTIENE_CATLOG_EXPORT"><ref bean="OBTIENE_CATLOG_EXPORT"/></entry>
+                <entry key="GUARDA_TCATALOG"><ref bean="GUARDA_TCATALOG"/></entry>
+                <entry key="OBTIENE_TCATALOG_REG"><ref bean="OBTIENE_TCATALOG_REG"/></entry>
+                <entry key="OBTIENE_TCATALOG"><ref bean="OBTIENE_TCATALOG"/></entry>
+			</map>
+        </property>
+    </bean>
+	<!-- Fin Mantenimiento de Catalogos Logicos -->
+	
+	<!-- Pantalla de mantenimiento de atributos variables de persona -->
+    <bean id="atributosVariablesPersonaManager" class="mx.com.aon.portal.service.impl.AtributosVariablesPersonaManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="BORRA_TATRIPER"><ref bean="BORRA_TATRIPER"/></entry>
+                <entry key="ATRIBVARROLINC"><ref bean="ATRIBVARROLINC"/></entry>
+                <entry key="INSERT_TATRIPER"><ref bean="INSERT_TATRIPER"/></entry>
+			</map>
+        </property>
+    </bean>
+	<!-- Fin Pantalla de mantenimiento de atributos variables de persona -->
+	
+	<!-- Atributos Varibles Por Agente -->
+    <bean id="atributosVariablesAgenteManager" class="mx.com.aon.portal.service.impl.AtributosVariablesAgenteManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+            	<entry key="BUSCAR_ATRIBUTOS_VARIABLES_AGENTE"><ref bean="BUSCAR_ATRIBUTOS_VARIABLES_AGENTE"/></entry>
+            	<entry key="BORRAR_ATRIBUTOS_VARIABLES_AGENTE"><ref bean="BORRAR_ATRIBUTOS_VARIABLES_AGENTE"/></entry>
+            	<entry key="INSERTAR_ATRIBUTOS_VARIABLES_AGENTE"><ref bean="INSERTAR_ATRIBUTOS_VARIABLES_AGENTE"/></entry>
+			</map>
+        </property>
+    </bean>            
+	<!-- Fin Atributos Varibles Por Agente -->
+	
+	<!-- Cancelacion Manual -->
+    <bean id="cancelacionManualPolizasManager" class="mx.com.aon.portal.service.impl.CancelacionManualPolizasManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+            	<entry key="CANCELACION_MANUAL_POLIZAS_BUSCAR"><ref bean="CANCELACION_MANUAL_POLIZAS_BUSCAR"/></entry>
+            	<entry key="CANCELACION_MANUAL_POLIZAS_OBTENER_INCISOS"><ref bean="CANCELACION_MANUAL_POLIZAS_OBTENER_INCISOS"/></entry>
+            	<entry key="CANCELACION_MANUAL_POLIZAS_CALCULAR_PRIMA"><ref bean="CANCELACION_MANUAL_POLIZAS_CALCULAR_PRIMA"/></entry>
+            	<!--  <entry key="CANCELACION_MANUAL_POLIZAS_GUARDAR"><ref bean="CANCELACION_MANUAL_POLIZAS_GUARDAR"/></entry>-->
+			</map>
+        </property>
+    </bean>            
+	<!-- Cancelacion Manual -->
+	
+<!-- Acceso Estructuras -->
+    <bean id="accesoEstructuraRolUsuarioManager" class="mx.com.aon.portal.service.impl.AccesoEstructuraRolUsuarioManagerImpl" parent="abstractManagerBean">
+        <property name="endpoints">
+            <map>
+                <entry key="ACCESOESTRUCTURAROLUSUARIO_BORRAR"><ref bean="ACCESOESTRUCTURAROLUSUARIO_BORRAR"/></entry>
+                <entry key="ACCESOESTRUCTURAROLUSUARIO_BUSCAR"><ref bean="ACCESOESTRUCTURAROLUSUARIO_BUSCAR"/></entry>
+                <entry key="ACCESOESTRUCTURAROLUSUARIO_GUARDAR"><ref bean="ACCESOESTRUCTURAROLUSUARIO_GUARDAR"/></entry>
+                <entry key="EXPORT_LIST_ACCESO_ESTRUCTURA_ROL_USUARIO"><ref bean="EXPORT_LIST_ACCESO_ESTRUCTURA_ROL_USUARIO"/></entry>
+           </map>
+        </property>
+    </bean>
+    <!-- Fin Acceso Estructura -->
+	
+	<!-- Consulta de Polizas a Cancelar y Consulta de Polizas a Canceladas -->
+        <bean id="polizasManager" class="mx.com.aon.portal.service.impl.PolizasManagerImpl" parent="abstractManagerJdbcTemplateInvoke">
+            <property name="abstractDAO">
+                <ref bean="polizaDAO"/>
+            </property>
+        </bean>
+    <!-- Fin Consulta de Polizas a Cancelar y Consulta de Polizas a Canceladas -->
+
+    <!-- Cotizaciones Masivas -->
+        <bean id="cotizacionManager" class="mx.com.aon.portal.service.impl.CotizacionManagerImpl" parent="abstractManagerJdbcTemplateInvoke">
+            <property name="abstractDAO">
+                <ref bean="cotizacionDAO"/>
+            </property>
+ 
+            <property name="ftp">
+                <ref bean="ftpUtil"/>
+            </property>
+
+        </bean>
+    <!--Fin Cotizaciones Masivas --> 
+    
+    <!-- detalle Cotizaciones Masivas -->
+        <bean id="cotizacionManagerJdbcTemplate" class="mx.com.aon.flujos.cotizacion.service.impl.CotizacionManagerImpl" parent="abstractManagerJdbcTemplateInvoke">
+            <property name="abstractDAO">
+                <ref bean="cotizacionDAO"/>
+            </property>
+        </bean>
+    <!-- Cotizaciones -->    
+    
+        
+    <!-- Funcionalidades -->
+        <bean id="funcionalidadManager" class="mx.com.aon.portal.service.impl.FuncionalidadManagerImpl" parent="abstractManagerJdbcTemplateInvoke">
+            <property name="abstractDAO">
+                <ref bean="funcionalidadDAO"/>
+            </property>
+        </bean>
+    <!--Fin Funcionalidades -->
+
+    <!-- CombosManager2 -->
+        <bean id="comboManagerJdbcTemplateImpl" class="mx.com.aon.portal.service.impl.ComboManagerJdbcTemplateImpl" parent="abstractManagerJdbcTemplateInvoke">
+            <property name="abstractDAO">
+                <ref bean="combosDAOPortal"/>
+            </property>
+        </bean>
+    <!--CombosManager2 -->
+    
+    <!-- Funcionalidades -->
+        <bean id="personasManagerJdbcTemplate" class="mx.com.aon.portal.service.impl.PersonasManagerJdbcTemplateImpl" parent="abstractManagerJdbcTemplateInvoke">
+            <property name="abstractDAO">
+                <ref bean="personaDAO"/>
+            </property>
+        </bean>
+    <!--Fin Funcionalidades -->
+
+    <!-- UsuarioManager -->
+        <bean id="usuarioManager" class="mx.com.aon.portal.service.impl.UsuarioManagerImpl" parent="abstractManagerJdbcTemplateInvoke">
+            <property name="abstractDAO">
+                <ref bean="usuarioDAO"/>
+            </property>
+        </bean>
+    <!--UsuarioManager -->
+  <!-- Mecanismo Alerta -->
+        <bean id="mecanismosAlertasManager" class="mx.com.aon.portal.service.impl.MecanismosAlertasManagerImpl" parent="abstractManagerJdbcTemplateInvoke">
+            <property name="abstractDAO">
+                <ref bean="mecanismoAlertaDAO"/>
+            </property>
+        </bean>
+    <!--Fin Mecanismo Alerta -->
+    <!--Ejecutivo -->
+        <bean id="ejecutivoManager" class="mx.com.aon.portal.service.impl.EjecutivoManagerImpl" parent="abstractManagerJdbcTemplateInvoke">
+            <property name="abstractDAO">
+                <ref bean="ejecutivoDAO"/>
+            </property>
+        </bean>
+    <!--Fin Ejecutivo -->
+    
+    <!-- Generacion Claves-->
+	<bean id="generacionClavesManager" class="mx.com.aon.portal.service.impl.GeneracionClavesManagerImpl" parent="abstractManagerJdbcTemplateInvoke">
+            <property name="abstractDAO">
+                <ref bean="generacionClavesDAO"/>
+            </property>
+    </bean>       
+    <!-- FIN Generacion Claves-->
+    
+      <bean id="consultaActividadUsuarioManager" class="mx.com.aon.portal.service.impl.ConsultaActividadUsuarioManagerImpl" parent="abstractManagerJdbcTemplateInvoke">
+            <property name="abstractDAO">
+                <ref bean="actividadUsuarioDAO"/>
+            </property>
+    </bean>       
+
+	<bean id="mecanismoDeTooltipManagerJdbcTemplate" class="mx.com.aon.portal.service.impl.MecanismoDeTooltipManagerJdbcTemplateImpl" parent="abstractManagerJdbcTemplateInvoke">
+            <property name="abstractDAO">
+                <ref bean="mecanismoDeTooltipDAO"/>
+            </property>
+	</bean>
+	
+	    <!-- Administracion de Catalogo de Sistema Externo-->
+	    
+	<bean id="administrarCatalogSistemaExternoManager" class="mx.com.aon.portal.service.impl.AdministrarCatalogSistemaExternoManagerImpl" parent="abstractManagerJdbcTemplateInvoke">
+      <property name="abstractDAO">
+      <ref bean="administrarCatalogSistemExternoDAO"/>
+      </property>
+	 </bean>
+
+	 <bean id="administracionEquivalenciaManager" class="mx.com.aon.portal.service.impl.AdministracionEquivalenciaManagerImpl" parent="abstractManagerJdbcTemplateInvoke">
+            <property name="abstractDAO">
+                <ref bean="administracionDeEquivalenciaDAO"/>
+            </property>
+     </bean>
+     
+     <bean id="administrarEquivalenciaCatalogosManager" class="mx.com.aon.portal.service.impl.AdministrarEquivalenciaCatalogosManagerImpl" parent="abstractManagerJdbcTemplateInvoke">
+            <property name="abstractDAO">
+                <ref bean="equivalenciaCatalogosDAO"/>
+            </property>
+	</bean>	
+	
+	
+	<bean id="reporteDeudaManager" class="mx.com.aon.portal.service.impl.ReporteDeudaImpl" parent="abstractManagerJdbcTemplateInvoke">
+        <property name="abstractDAO">
+            <ref bean="reporteDeudaDAO"/>
+        </property>
+	</bean>	
+	
+	<!--Pantallas Nuevas Consulta de Segmentacion -->
+	<bean id="segmentacionManager" class="mx.com.aon.portal.service.impl.SegmentacionManagerImpl" parent="abstractManagerJdbcTemplateInvoke">
+        <property name="abstractDAO">
+            <ref bean="segmentacionDAO"/>
+        </property>
+	</bean>	
+	
+	
+</beans>
+

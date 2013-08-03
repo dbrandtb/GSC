@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+	
+    <bean id="AplicacionManager" class="mx.com.aon.catweb.configuracion.producto.service.impl.TablaApoyoManagerImpl">
+ 		<property name="endpoints">
+			<map>    
+				<!--  Datos de tablas de apoyo -->
+        		<entry key="OBTIENE_TABLA_APOYO">
+            		<ref bean="OBTIENE_TABLA_APOYO"/>            
+            	</entry>
+        	</map>
+    	</property>
+    	<property name="tablaApoyo">
+    		<map>
+    			<entry key="TIPO_SEGURO">
+    				<value>CTIPOSEGUR</value>
+    			</entry>
+    			<entry key="NATURALEZA">
+    				<value>TNATURA</value>
+    			</entry>
+    			<entry key="OBLIGATORIEDAD_ROL">
+    				<value>CINCISOCOMP</value>
+    			</entry>
+    			<entry key="LEYENDA_SUMA_ASEGURADA">
+    				<value>LABELGAR</value>
+    			</entry>
+    		</map>
+    	</property>
+	</bean>		
+    
+</beans>

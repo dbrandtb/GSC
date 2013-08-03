@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
+<statements>
+	<statement type="stored" name="PKG_COTIZA.P_AYUDA_COBERTURAS" id="obtenerAyudaCobertura">
+		<param eval="true" name="pv_ciaaseg_i" type="NUMERIC"><![CDATA[$!params.get("idA")]]></param>
+  		<param eval="true" name="pv_cdramo_i" type="NUMERIC"><![CDATA[$!params.get("idR")]]></param>
+  		<param eval="true" name="pv_garant_i" type="VARCHAR"><![CDATA[$!params.get("idG")]]></param>
+  		<outparam id="po_registro" type="CURSOR"/>
+		<outparam id="po_msg_id" type="NUMERIC"/>
+		<outparam id="p_out_title" type="VARCHAR"/>
+		
+	</statement>
+</statements>

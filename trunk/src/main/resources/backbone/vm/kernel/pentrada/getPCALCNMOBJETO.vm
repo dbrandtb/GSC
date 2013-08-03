@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_SATELITES.P_CALC_NMOBJETO" id="getPCALCNMOBJETO">
+		<param eval="true" name="pv_cdunieco_i" type="NUMERIC">$!params.get("pi_CDUNIECO")</param>
+		<param eval="true" name="pv_cdramo_i" type="NUMERIC">$!params.get("pi_CDRAMO")</param>
+		<param eval="true" name="pv_estado_i" type="VARCHAR">$!params.get("pi_ESTADO")</param>
+		<param eval="true" name="pv_nmpoliza_i" type="NUMERIC">$!params.get("pi_NMPOLIZA")</param>		
+		<outparam id="po_nmobjeto_o" type="VARCHAR"/>
+		<outparam id="pv_msg_id_o" type="VARCHAR"/>
+		<outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

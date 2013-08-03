@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_AON_CHECKLIST.P_GUARDA_TAREA" id="guardaTarea">
+        <param eval="true" name="pv_cdseccion_i" type="NUMERIC"><![CDATA[$!params.get("seccion")]]></param>
+        <param eval="true" name="pv_cdtarea_i" type="VARCHAR">$!params.get("tarea")</param>
+        <param eval="true" name="pv_dstarea_i" type="VARCHAR">$!params.get("dstarea")</param>
+        <param eval="true" name="pv_cdtarea_padre_i" type="NUMERIC">$!params.get("tareaPadre")</param>
+        <param eval="true" name="pv_cdestado_i" type="NUMERIC">$!params.get("estado")</param>
+        <param eval="true" name="pv_dsurl_i" type="VARCHAR">$!params.get("url")</param>
+        <param eval="true" name="pv_cdcopia_i" type="NUMERIC">$!params.get("copia")</param>
+        <param eval="true" name="pv_dsayuda_i" type="VARCHAR"><![CDATA[$!params.get("ayuda")]]></param>
+        <outparam id="pv_msg_id_o" type="NUMERIC"></outparam>
+        <outparam id="pv_title_o" type="VARCHAR"/>		
+	</statement>
+</statements>
+
+

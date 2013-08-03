@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_REPORTES.P_INSERTA_MREPORTE" id="insertReporte">
+	    <param eval="true" name="p_vdsreporte" type="VARCHAR"><![CDATA[$!params.get("dsReporte")]]></param>
+	    <param eval="true" name="p_vnmreporte" type="VARCHAR"><![CDATA[$!params.get("nmReporte")]]></param>
+       	<outparam id="pv_existe_i" type="NUMERIC"/>
+        <outparam id="pv_msg_id_o" type="NUMERIC"/>
+        <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

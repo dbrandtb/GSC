@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_CATBO.P_GUARDA_SUPLENTE" id="guardarSuplente">
+		
+	   <param eval="true" name="pv_cdmatriz_i" type="NUMERIC">$!params.get("pv_cdmatriz_i")</param>	
+	   <param eval="true" name="pv_cdusr_old_i" type="VARCHAR"><![CDATA[$!params.get("pv_cdusr_old_i")]]></param>
+ 	   <param eval="true" name="pv_cdusr_new_i" type="VARCHAR"><![CDATA[$!params.get("pv_cdusr_new_i")]]></param>  	   
+  	   <param eval="true" name="pv_cdusuario_i" type="VARCHAR">$!params.get("pv_cdusuario_i")</param>
+  	   <param eval="true" name="pv_cdnivatn_i" type="NUMERIC">$!params.get("pv_cdnivatn_i")</param>
+  	   <param eval="true" name="pv_nmcaso_i" type="NUMERIC">$!params.get("pv_nmcaso_i")</param>
+
+  	   
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>
+ 

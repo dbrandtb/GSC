@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_AGRUPAPOL.P_BORRA_ROL" id="borrarRol">
+       <param eval="true" name="pv_agrupacion_i" type="NUMERIC">$!params.get("pv_agrupacion_i")</param>
+       <param eval="true" name="pv_cdagrrol_i" type="NUMERIC">$!params.get("pv_cdagrrol_i")</param>
+        		   
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>

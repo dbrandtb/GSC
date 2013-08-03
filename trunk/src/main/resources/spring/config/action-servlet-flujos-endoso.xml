@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+	
+	<!-- PrincipalEndoso -->
+    <bean id="principalEndoso" class="mx.com.aon.flujos.endoso.web.PrincipalEndosoAction" abstract="true">
+        <property name="catalogManager" ref="catalogManager" />
+		<property name="kernelManager" ref="kernelManager" />
+        <property name="endosoManager" ref="endosoManager" />        
+    </bean>
+  
+	<!-- EndosoAction -->
+	<bean id="endosoAction" class="mx.com.aon.flujos.endoso.web.EndosoAction" scope="prototype" parent="principalEndoso"/>
+  
+    <bean id="busquedaPolizaAction" class="mx.com.aon.flujos.endoso.web.BusquedaPolizaAction" scope="prototype" parent="principalEndoso"/>
+    
+    <bean id="datosGeneralesAction" class="mx.com.aon.flujos.endoso.web.DatosGeneralesAction" scope="prototype" parent="principalEndoso"/>
+ 
+    <bean id="agentesContratantesAction" class="mx.com.aon.flujos.endoso.web.AgentesContratantesAction" scope="prototype" parent="principalEndoso"/>
+    
+    <bean id="agrupadoresIncisosAction" class="mx.com.aon.flujos.endoso.web.AgrupadoresIncisosAction" scope="prototype" parent="principalEndoso"/>
+    
+    <bean id="gruposAction" class="mx.com.aon.flujos.endoso.web.GruposAction" scope="prototype" parent="principalEndoso"/>
+    
+    <bean id="personasAseguradasAction" class="mx.com.aon.flujos.endoso.web.PersonasAseguradasAction" scope="prototype" parent="principalEndoso"/>
+    
+    <bean id="clausulasAction" class="mx.com.aon.flujos.endoso.web.ClausulasAction" scope="prototype" parent="principalEndoso"/>
+    
+    <bean id="objetosAction" class="mx.com.aon.flujos.endoso.web.ObjetosAction" scope="prototype" parent="principalEndoso"/>
+    
+    <bean id="coberturasSumasAseguradasAction" class="mx.com.aon.flujos.endoso.web.CoberturasSumasAseguradasAction" scope="prototype" parent="principalEndoso"/>
+    
+    <bean id="tarificacionAction" class="mx.com.aon.flujos.endoso.web.TarificacionAction" scope="prototype" parent="principalEndoso"/>
+<!--  -->    
+    <bean id="endosoPolizaAction" class="mx.com.aon.flujos.endoso.web.EndosoPolizaAction" scope="prototype" parent="principalEndoso">
+    	<property name="endosoManager" ref="endosoManager" />
+    </bean>
+    
+    <bean id="incisoEndosoAction" class="mx.com.aon.flujos.endoso.web.IncisoEndosoAction" scope="prototype" parent="principalEndoso"/>
+    
+    <bean id="coberturasEndosoAction" class="mx.com.aon.flujos.endoso.web.CoberturasEndosoAction" scope="prototype" parent="principalEndoso"/>
+    
+    <bean id="accesoriosEndosoAction" class="mx.com.aon.flujos.endoso.web.AccesoriosEndosoAction" scope="prototype" parent="principalEndoso"/>
+    
+    <bean id="rolPolizaEndosoAction" class="mx.com.aon.flujos.endoso.web.RolPolizaEndosoAction" scope="prototype" parent="principalEndoso">
+        <property name="endosoManager" ref="endosoManager" />        
+    </bean>
+    
+</beans>

@@ -1,0 +1,57 @@
+	         <!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+
+	<include file="struts-default.xml" />
+
+	<package name="agrupacionPapel" extends="json-default" namespace="/agrupacionPapel">
+
+    <!--
+    Configuracion del Action con tipo de respuesta JSON, esto generara a partir
+    de los atributos la respuesta en formato JSON para el Reader de ExtJs
+    -->
+    <action name="buscarPapeles" class="listaAgrupacionPapelAction" method="cmdBuscarClick">
+        <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+
+    <action name="getAgrupacionPapel" class="agrupacionPapelAction" method="cmdGetAgrupacionPapel">
+        <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+
+    <action name="irEditarAgrupacionPapel" class="agrupacionPapelAction" method="cmdIrEditarAgrupacion">
+    	<result type="chain" name="getAgrupacionPapel">agrupacionPapel</result>
+    </action>
+
+    <action name="guardarAgrupacionPapel" class="agrupacionPapelAction" method="cmdGuardarClick">
+        <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+    
+    <action name="irAgrupacionPolizas" class="agrupacionPapelAction" method="irAgrupacionPolizasClick">
+        <result type="chain" name="agrupacionPolizas">agrupacionPolizas</result>
+    </action>
+    
+    <action name="borrarRol" class="agrupacionPapelAction" method="cmdBorrarClick">
+         <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+    
+   <!--  <action name="irAsignarPolizas" class="agrupacionPapelAction" method="irAsignarPolizasClick">
+        <result type="chain" name="asignarPolizas">asignarPolizas</result>
+    </action>
+ 	-->
+
+	<action name="irAsignarPolizas" class="agrupacionPapelAction"  method="irAsignarPolizasClick">
+        <result type="chain" name="consultaPolizasMaestras">
+          <param name="actionName">consultaPolizasMaestras</param>
+          <param name="namespace">/procesoemision</param>
+        </result>
+    </action>
+
+    <action name="actualizarAgrupacionPapel" class="agrupacionPapelAction" method="cmdActualizarClick">
+        <result type="json"><param name="ignoreHierarchy">false</param></result>
+    </action>
+
+ </package>
+
+</struts>
+

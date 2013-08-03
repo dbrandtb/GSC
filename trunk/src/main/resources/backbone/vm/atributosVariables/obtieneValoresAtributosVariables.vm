@@ -1,0 +1,8 @@
+<statements>
+	<statement type="stored" name="PKG_WIZARD.LOAD_TABLA_APOYO" id="pObtieneValsAtribVars">
+		<param eval="true" name="PV_OTTIPOTB_I" type="VARCHAR">$!params</param>
+		<outparam id="LCUR_REGISTRO_I" type="CURSOR"/>
+		<outparam id="PO_MSG_ID" type="NUMERIC"/>		
+		<outparam id="PV_TITLE_O" type="VARCHAR"/>	
+</statement>
+</statements>

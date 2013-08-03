@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<statements>
+	<statement type="stored" name="PKG_CANCELA.P_POLIZAS_CANC_A_REHABILITAR" id="pObtienePoliza">
+		
+	   <param eval="true" name="pv_cdunieco_i" type="NUMERIC">$!params.get("cdUniEco")</param>
+	   <param eval="true" name="pv_cdramo_i" type="NUMERIC">$!params.get("cdRamo")</param>
+	   <param eval="true" name="pv_estado_i" type="VARCHAR"><![CDATA[$!params.get("estado")]]></param>
+	   <param eval="true" name="pv_nmpoliza_i" type="NUMERIC">$!params.get("nmPoliza")</param>
+	   <param eval="true" name="pv_nmsituac_i" type="NUMERIC">$!params.get("nmSituac")</param>
+
+       <outparam id="pv_registro_o" type="CURSOR"/>
+  	   
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements>
+<!--statements>
+	<statement type="stored" name="PKG_CANCELA.P_POLIZAS_CANC_A_REHABILITAR" id="pObtienePoliza">
+		
+	   <param eval="true" name="pv_asegurado_i" type="VARCHAR"><![CDATA[$!params.get("dsAsegurado")]]></param>
+	   <param eval="true" name="pv_dsuniage_i" type="VARCHAR"><![CDATA[$!params.get("dsAseguradora")]]></param>
+	   <param eval="true" name="pv_dsramo_i" type="VARCHAR"><![CDATA[$!params.get("dsRamo")]]></param>
+	   <param eval="true" name="pv_nmpoliza_i" type="NUMERIC">$!params.get("nmPoliza")</param>
+	   <param eval="true" name="pv_nmsituac_i" type="NUMERIC">$!params.get("nmSituac")</param>
+
+       <outparam id="pv_registro_o" type="CURSOR"/>
+  	   
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements-->
+<!--statements>
+	<statement type="stored" name="PKG_CANCELA.P_OBTIENE_POLIZA_CANCELA" id="pObtienePoliza">
+		
+	   <param eval="true" name="pv_asegurado_i" type="VARCHAR">$!params.get("dsAsegurado")</param>
+	   <param eval="true" name="pv_dsuniage_i" type="VARCHAR">$!params.get("dsAseguradora")</param>
+	   <param eval="true" name="pv_nmpoliza_i" type="NUMERIC">$!params.get("nmPoliza")</param>
+	   <param eval="true" name="pv_estado_i" type="VARCHAR">$!params.get("estado")</param>
+	   <param eval="true" name="pv_nmsuplem_i" type="NUMERIC">$!params.get("nmSuplem")</param>
+	   <param eval="true" name="pv_nmsituac_i" type="NUMERIC">$!params.get("nmSituac")</param>
+ 
+       <outparam id="pv_registro_o" type="CURSOR"/>
+  	   
+  	   <outparam id="pv_msg_id_o" type="NUMERIC"/>
+       <outparam id="pv_title_o" type="VARCHAR"/>
+	</statement>
+</statements-->

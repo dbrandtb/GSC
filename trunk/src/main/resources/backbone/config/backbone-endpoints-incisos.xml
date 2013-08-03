@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+	<bean id="incisos-endpoints" abstract="true" parent="parent-endpoint-kernel">
+		<property name="templateModule" value="incisos"/>
+		<property name="xslModule" value="incisos"/>
+	</bean>
+	
+	<bean id="P_GET_MINIMO_INCISO" parent="incisos-endpoints">
+		<property name="templateName" value="getMinimoInciso.vm"/>
+		<property name="xslName" value="getMinimoInciso.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GET_MAXIMO_INCISO" parent="incisos-endpoints">
+		<property name="templateName" value="getMaximoInciso.vm"/>
+		<property name="xslName" value="getMaximoInciso.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="DELETE_CAPIT_TSIEXCOA" parent="incisos-endpoints">
+		<property name="templateName" value="pdeleteCapitalTSIEXCOA.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_ASIGNARNUMERO_INCISO" parent="incisos-endpoints">
+		<property name="templateName" value="pasignaNumeroInciso.vm"/>
+		<property name="xslName" value="pasignaNumeroInciso.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_B5_ASEGURADO" parent="incisos-endpoints">
+		<property name="templateName" value="pAseguradoB5.vm"/>
+		<property name="xslName" value="pAseguradoB5.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_B5_VALIDAR_NMSITUAC" parent="incisos-endpoints">
+		<property name="templateName" value="pvalSituacionB5.vm"/>
+		<property name="xslName" value="pvalSituacionB5.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_B5B_VALIDAR" parent="incisos-endpoints">
+		<property name="templateName" value="pvalSituacionB5B.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_B5B_VALOR" parent="incisos-endpoints">
+		<property name="templateName" value="pvalValorAtributoB5B.vm"/>
+		<property name="xslName" value="pvalValorAtributoB5B.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_BORRAR_GARANTIAS" parent="incisos-endpoints">
+		<property name="templateName" value="pdeleteGarantias.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_BORRAR_SITUACION" parent="incisos-endpoints">
+		<property name="templateName" value="pdeleteSituacion.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_COPIAR_INCISO" parent="incisos-endpoints">
+		<property name="templateName" value="pcopiarSituacion.vm"/>
+		<property name="xslName" value="pcopiarSituacion.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_CTRL_ROLES_GLOBALES" parent="incisos-endpoints">
+		<property name="templateName" value="pcrtlRolesGlobales.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_EXISTE_ATRIBUTOB5B_VIG" parent="incisos-endpoints">
+		<property name="templateName" value="pexistAtributoB5Bvigente.vm"/>
+		<property name="xslName" value="pexistAtributoB5Bvigente.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_EXISTE_COBERTURA_NO_DEFECTO" parent="incisos-endpoints">
+		<property name="templateName" value="pexistCoberturaNoDefecto.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_EXISTE_NUMRAMO" parent="incisos-endpoints">
+		<property name="templateName" value="pexistNumeroRamoColect.vm"/>
+		<property name="xslName" value="pexistNumeroRamoColect.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_EXISTE_NUMSIT" parent="incisos-endpoints">
+		<property name="templateName" value="pexistNumeroSituacion.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_EXISTE_TSIEXCOA" parent="incisos-endpoints">
+		<property name="templateName" value="pexistSituacionExcluidaCoa.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_FALTAN_ATRIBUTOB5B_OBLIG" parent="incisos-endpoints">
+		<property name="templateName" value="pfaltanAtributosObligB5B.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GET_ATRIBUT_VARIABLE_INCISO" parent="incisos-endpoints">
+		<property name="templateName" value="pgetAtributosSituacionB5B.vm"/>
+		<property name="xslName" value="pgetAtributosSituacionB5B.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GET_COBERTURAS_NO_INSERTAR" parent="incisos-endpoints">
+		<property name="templateName" value="pgetCoberturasNoInsertar.vm"/>
+		<property name="xslName" value="pgetCoberturasNoInsertar.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GET_CODATRIBUTO_VARMODELO" parent="incisos-endpoints">
+		<property name="templateName" value="pgetCodAtributoModelo.vm"/>
+		<property name="xslName" value="pgetCodAtributoModelo.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GET_DATOS_INCISO" parent="incisos-endpoints">
+		<property name="templateName" value="pgetDatosInciso.vm"/>
+		<property name="xslName" value="pgetDatosInciso.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GET_INCISOS" parent="incisos-endpoints">
+		<property name="templateName" value="pgetIncisos.vm"/>
+		<property name="xslName" value="pgetIncisos.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GET_TATRISIT_SWACTUAL" parent="incisos-endpoints">
+		<property name="templateName" value="pgetTatrisitSwactual.vm"/>
+		<property name="xslName" value="pgetTatrisitSwactual.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GET_TIPO_SITUACION" parent="incisos-endpoints">
+		<property name="templateName" value="pgetTipoSituacion.vm"/>
+		<property name="xslName" value="pgetTipoSituacion.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GET_TIPO_SITUACION_DEFECTO" parent="incisos-endpoints">
+		<property name="templateName" value="pgetTipoSituacionDefault.vm"/>
+		<property name="xslName" value="pgetTipoSituacionDefault.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GET_VALOR_DEFECTO_SITUACION" parent="incisos-endpoints">
+		<property name="templateName" value="pgetValorDefectoSituac.vm"/>
+		<property name="xslName" value="pgetValorDefectoSituac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_GET_VALORATRIBU_VAR_TATRISIT" parent="incisos-endpoints">
+		<property name="templateName" value="pgetValorAtributoTatrisit.vm"/>
+		<property name="xslName" value="pgetValorAtributoTatrisit.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_MINMAX_SUPL" parent="incisos-endpoints">
+		<property name="templateName" value="pgetMinMaxSuplemento.vm"/>
+		<property name="xslName" value="pgetMinMaxSuplemento.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_POR_CADA_REGISTRO_B5" parent="incisos-endpoints">
+		<property name="templateName" value="pvalSituaciones.vm"/>
+		<property name="xslName" value="pvalSituaciones.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_PROCESO_COASEGURO_INCISO" parent="incisos-endpoints">
+		<property name="templateName" value="pCoaseguroSituacion.vm"/>
+		<property name="xslName" value="pCoaseguroSituacion.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_V_ROL_REQUERIDO" parent="incisos-endpoints">
+		<property name="templateName" value="pvalRolRequeridoSituac.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_VALIDA_CADA_REGISTRO_B5B" parent="incisos-endpoints">
+		<property name="templateName" value="pvalRegistrosB5B.vm"/>
+		<property name="xslName" value="pvalRegistrosB5B.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_VALIDA_COPIADO_INCISO" parent="incisos-endpoints">
+		<property name="templateName" value="pvalCopiadoSituacion.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_VALIDAALTA_INCISO_SUPL_ACT" parent="incisos-endpoints">
+		<property name="templateName" value="pvalSuplActualSituacion.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_VALIDAR_EXISTEN_ATRB_GARANT" parent="incisos-endpoints">
+		<property name="templateName" value="pvalExistAtribGarantia.vm"/>
+		<property name="xslName" value="pvalExistAtribGarantia.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_VALIDAR_EXISTEN_ATRIBUTOS" parent="incisos-endpoints">
+		<property name="templateName" value="pvalExistAtributosB5B.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_VALIDAR_EXISTEN_CAPITALES" parent="incisos-endpoints">
+		<property name="templateName" value="pvalExistCapitales.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_VALIDAR_EXISTEN_GARANT_CAPIT" parent="incisos-endpoints">
+		<property name="templateName" value="pvalExistGarantCapitales.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_VALIDAR_EXISTEN_GARANTIAS" parent="incisos-endpoints">
+		<property name="templateName" value="pvalExistGarantias.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_VALIDAR_SITUACION_NUEVA" parent="incisos-endpoints">
+		<property name="templateName" value="pvalNuevaSituacion.vm"/>
+		<property name="xslName" value="checkStatusTransac.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_ValidarSit_ExcluidaCoaseguro" parent="incisos-endpoints">
+		<property name="templateName" value="pvalSituacionExcluidaCoa.vm"/>
+		<property name="xslName" value="pvalSituacionExcluidaCoa.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="P_VALORES_MPARAPRO" parent="incisos-endpoints">
+		<property name="templateName" value="pgetValoresMparapro.vm"/>
+		<property name="xslName" value="pgetValoresMparapro.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+	<bean id="VERIFICAR_CAMBIO_X_INCISO" parent="incisos-endpoints">
+		<property name="templateName" value="pvalCambioSituacion.vm"/>
+		<property name="xslName" value="pvalCambioSituacion.xsl"/>
+		<property name="unmarshallClass" value="mx.com.ice.kernel.to.ResultadoDAO"/>
+	</bean>
+    
+</beans>

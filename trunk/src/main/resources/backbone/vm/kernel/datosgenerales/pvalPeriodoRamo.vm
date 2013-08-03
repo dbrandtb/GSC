@@ -1,0 +1,10 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_DATOS_GENERALES.P_VALIDAR_PERIODO" id="pvalPeriodoRamo">
+		<param eval="true" name="pi_CDRAMO" type="NUMERIC">$!params.get("pi_CDRAMO")</param>
+		<param eval="true" name="pi_FEEFECT" type="DATE">$!params.get("pi_FEEFECT")</param>
+		<outparam id="po_VALPERIODO" type="NUMERIC"/>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

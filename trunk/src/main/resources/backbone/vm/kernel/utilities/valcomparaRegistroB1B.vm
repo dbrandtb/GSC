@@ -1,0 +1,18 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_UTILITY.P_CompararRegistroB1B" id="valcomparaRegistroB1B">
+		<param eval="true" name="pi_CDUNIECO" type="NUMERIC">$!params.get("pi_CDUNIECO")</param>
+		<param eval="true" name="pi_CDRAMO" type="NUMERIC">$!params.get("pi_CDRAMO")</param>
+		<param eval="true" name="pi_ESTADO" type="VARCHAR">$!params.get("pi_ESTADO")</param>
+		<param eval="true" name="pi_NMPOLIZA" type="NUMERIC">$!params.get("pi_NMPOLIZA")</param>
+		<param eval="true" name="pi_NMSUPLEM" type="VARCHAR">$!params.get("pi_NMSUPLEM")</param>
+		<param eval="true" name="pi_STATUS" type="VARCHAR">$!params.get("piStatus")</param>
+		<param eval="true" name="pi_CDATRIBU" type="NUMERIC">$!params.get("piCdatribu")</param>
+       <inoutparam eval="true" name="pi_OTVALOR" id="pi_OTVALOR" type="VARCHAR">$!params.get("piOtvalor")</inoutparam>
+		<param eval="true" name="pi_SWPRODUC" type="VARCHAR">$!params.get("piSwproduc")</param>
+		<param eval="true" name="pi_NTOTVALOR" type="VARCHAR">$!params.get("piNtotvalor")</param>
+		<param eval="true" name="pi_IDENT" type="VARCHAR">$!params.get("piIdent")</param>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

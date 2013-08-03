@@ -1,0 +1,18 @@
+<statements>
+	<statement type="stored" name="PACK_NEWALEA_DATOS_GENERALES.P_MOSTRAR_MODELO" id="pmostrarModelosCoaseguro">
+		<param eval="true" name="pi_CDUNIECO" type="NUMERIC">$!params.get("pi_CDUNIECO")</param>
+		<param eval="true" name="pi_CDRAMO" type="NUMERIC">$!params.get("pi_CDRAMO")</param>
+		<param eval="true" name="pi_ESTADO" type="VARCHAR">$!params.get("pi_ESTADO")</param>
+		<param eval="true" name="pi_NMPOLIZA" type="NUMERIC">$!params.get("pi_NMPOLIZA")</param>
+		<param eval="true" name="pi_NMSUPLEM" type="VARCHAR">$!params.get("pi_NMSUPLEM")</param>
+		<param eval="true" name="pi_CDTIPCOA" type="VARCHAR">$!params.get("pi_CDTIPCOA")</param>
+		<param eval="true" name="pi_CDMODELO" type="NUMERIC">$!params.get("pi_CDMODELO")</param>
+		<outparam id="po_CDMODELO" type="NUMERIC"/>
+		<outparam id="po_CDCIA" type="VARCHAR"/>
+		<outparam id="po_SWABRIDO" type="VARCHAR"/>
+		<outparam id="po_PORCPART" type="NUMERIC"/>
+		<outparam id="po_CDERROR" type="VARCHAR"/>
+		<outparam id="po_DSERROR" type="VARCHAR"/>
+		<outparam id="po_TIPOERROR" type="VARCHAR"/>
+	</statement>
+</statements>

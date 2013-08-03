@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <!--OJO BEAN BASE-->
+    <bean id="reportes-endpoint" abstract="true" parent="parent-endpoint">
+        <property name="templateModule" value="reportes" />
+        <property name="xslModule" value="reportes" />
+    </bean>
+
+    <!-- Bean declarado para obtener REPORTES existentes en BD-->
+
+    <bean id="P_OBTIENE_MREPORTE" parent="reportes-endpoint">
+        <property name="templateName" value="obtieneReporte.vm" />
+        <property name="xslName" value="obtieneReporte.xsl" />
+        <property name="unmarshallClass"
+                  value="java.util.ArrayList" />
+    </bean>
+
+    <!-- Bean declarado para obtener REPORTES de ejecutar existentes en BD-->
+
+    <bean id="P_OBTIENE_MREPORTE_EJECUTAR" parent="reportes-endpoint">
+        <property name="templateName" value="obtieneReporteEjecutar.vm" />
+        <property name="xslName" value="obtieneReporteEjecutar.xsl" />
+        <property name="unmarshallClass"
+                  value="java.util.ArrayList" />
+    </bean>
+
+
+
+    <!-- Bean declarado para insertar REPORTES-->
+
+    <bean id="P_INSERTA_MREPORTE" parent="reportes-endpoint">
+        <property name="templateName" value="insertaReporte.vm"/>
+        <property name="xslName" value="insertaReporte.xsl"/>
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"/>
+    </bean>
+
+    <!-- Bean declarado para editar REPORTES-->
+
+    <bean id="P_EDITA_MREPORTE" parent="reportes-endpoint">
+        <property name="templateName" value="editarReporte.vm" />
+        <property name="xslName" value="editarReporte.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+
+    <!-- Bean declarado para borrar REPORTES-->
+
+    <bean id="P_BORRA_MREPORTE" parent="reportes-endpoint">
+        <property name="templateName" value="borrarReporte.vm" />
+        <property name="xslName" value="borrarReporte.xsl"/>
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"/>
+    </bean>
+
+    <!-- Bean declarado para COMBO GRAFICO-->
+
+    <bean id="P_COMBO_GRAFICO" parent="reportes-endpoint">
+        <property name="templateName" value="obtieneComboGrafico.vm" />
+        <property name="xslName" value="obtieneComboGrafico.xsl" />
+        <property name="unmarshallClass"
+                  value="java.util.ArrayList" />
+    </bean>
+
+    <!-- Bean declarado para COMBO GRAFICO-->
+
+    <bean id="P_GRAFICO" parent="reportes-endpoint">
+        <property name="templateName" value="obtieneGrafico.vm" />
+        <property name="xslName" value="obtieneGrafico.xsl" />
+        <property name="unmarshallClass"
+                  value="java.util.ArrayList" />
+    </bean>
+
+    <!-- Bean declarado para VALIDAR GRAFICO-->
+
+    <bean id="P_VALIDAR" parent="reportes-endpoint">
+        <property name="templateName" value="validarGrafico.vm"/>
+        <property name="xslName" value="validarGrafico.xsl"/>
+        <property name="unmarshallClass" value="mx.com.aon.portal.model.reporte.ReporteVO"/>
+    </bean>
+
+    <!-- Bean declarado para lista de aseguradoras-->
+
+    <bean id="P_LISTA_ASEGURADORA" parent="reportes-endpoint">
+        <property name="templateName" value="listaAseguradora.vm"/>
+        <property name="xslName" value="listaAseguradora.xsl"/>
+        <property name="unmarshallClass"
+                  value="java.util.ArrayList" />
+    </bean>
+
+    <!-- Bean declarado para lista de productos-->
+
+    <bean id="P_LISTA_PRODUCTOS" parent="reportes-endpoint">
+        <property name="templateName" value="listaProductos.vm"/>
+        <property name="xslName" value="listaProductos.xsl"/>
+        <property name="unmarshallClass"
+                  value="java.util.ArrayList" />
+    </bean>
+
+    <!-- Bean declarado para lista de cuentas-->
+
+    <bean id="P_LISTA_CUENTA" parent="reportes-endpoint">
+        <property name="templateName" value="listaCuentas.vm"/>
+        <property name="xslName" value="listaCuentas.xsl"/>
+        <property name="unmarshallClass" value="java.util.ArrayList"/>
+    </bean>
+
+    <!-- Bean declarado guardar reporte para CART0001     -->
+
+    <bean id="P_GUARDAR_REPORTE_AUX" parent="reportes-endpoint">
+        <property name="templateName" value="guardarReporteAux.vm" />
+        <property name="transformResult" value="false" />
+        <property name="unmarshallResult" value="false" />
+    </bean>
+
+    <!-- Bean declarado para AGREGAR GRAFICO-->
+
+    <bean id="P_INSERTA_GRAFICO" parent="reportes-endpoint">
+        <property name="templateName" value="insertaGrafico.vm" />
+        <property name="xslName" value="insertaGrafico.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+
+    <!-- Bean declarado para EDITAR GRAFICO-->
+
+    <bean id="P_EDITA_GRAFICO" parent="reportes-endpoint">
+        <property name="templateName" value="insertaGrafico.vm" />
+        <property name="xslName" value="insertaGrafico.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+
+    <!-- Bean declarado para BORRAR GRAFICO-->
+
+    <bean id="P_BORRA_GRAFICO" parent="reportes-endpoint">
+        <property name="templateName" value="borrarGrafico.vm" />
+        <property name="xslName" value="borrarGrafico.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+
+
+    <!-- Bean declarado para obtiene atributos-->
+    <bean id="P_OBTIENE_ATRIBUTOS" parent="reportes-endpoint">
+        <property name="templateName" value="obtieneAtributo.vm" />
+        <property name="xslName" value="obtieneAtributo.xsl" />
+        <property name="unmarshallClass"
+                  value="java.util.ArrayList" />
+    </bean>
+
+    <bean id="P_INSERTA_TATRIREP" parent="reportes-endpoint">
+        <property name="templateName" value="insertaAtributo.vm" />
+        <property name="xslName" value="insertaAtributo.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+
+    <bean id="P_EDITA_ATRIBUTO" parent="reportes-endpoint">
+        <property name="templateName" value="editaAtributo.vm" />
+        <property name="xslName" value="editaAtributo.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+
+    <bean id="P_BORRA_ATRIBUTO" parent="reportes-endpoint">
+        <property name="templateName" value="borrarAtributo.vm" />
+        <property name="transformResult" value="false" />
+        <property name="unmarshallResult" value="false" />
+    </bean>
+
+    <!-- Bean declarado para obtiene plantillas-->
+    <bean id="P_OBTIENE_MPLANTIL" parent="reportes-endpoint">
+        <property name="templateName" value="obtienePlantilla.vm" />
+        <property name="xslName" value="obtienePlantilla.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+
+    <bean id="P_GUARDA_MPLANTIL" parent="reportes-endpoint">
+        <property name="templateName" value="insertaPlantilla.vm" />
+        <property name="xslName" value="insertarPlantilla.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+
+    <bean id="P_BORRA_MPLANTIL" parent="reportes-endpoint">
+        <property name="templateName" value="borrarPlantilla.vm" />
+        <property name="xslName" value="borrarPlantilla.xsl"/>
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados"/>
+    </bean>
+
+
+
+    <!-- Bean declarado para obtiene Productos -->
+    <bean id="P_OBTIENE_REPORTES_PRODUCTOS" parent="reportes-endpoint">
+        <property name="templateName" value="obtieneProducto.vm" />
+        <property name="xslName" value="obtieneProducto.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+
+    <bean id="P_OBTIENE_REPORTES_PRODUCTOS_PLANTILLAS" parent="reportes-endpoint">
+        <property name="templateName" value="obtieneProductoPlantillas.vm" />
+        <property name="xslName" value="obtieneProductoPlantillas.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+
+    <bean id="P_COMBO_REPORTES_PRODUCTOS" parent="reportes-endpoint">
+        <property name="templateName" value="comboProductoReporte.vm" />
+        <property name="xslName" value="comboProductoReporte.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+
+    <bean id="P_INSERTAR_PRODUCTO" parent="reportes-endpoint">
+        <property name="templateName" value="insertaProducto.vm" />
+        <property name="xslName" value="insertaProducto.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+
+    <bean id="P_INSERTAR_PRODUCTO_PLANTILLAS" parent="reportes-endpoint">
+        <property name="templateName" value="insertaProductoPlantillas.vm" />
+        <property name="xslName" value="insertaProductoPlantillas.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+
+    <bean id="P_BORRAR_PRODUCTO" parent="reportes-endpoint">
+        <property name="templateName" value="borrarProducto.vm" />
+        <property name="transformResult" value="false" />
+        <property name="unmarshallResult" value="false" />
+    </bean>
+
+    <bean id="P_BORRAR_PRODUCTO_PLANTILLAS" parent="reportes-endpoint">
+        <property name="templateName" value="borrarProductoPlantillas.vm" />
+        <property name="xslName" value="borrarProductoPlantillas.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+
+    <bean id="P_EDITAR_PRODUCTO" parent="reportes-endpoint">
+        <property name="templateName" value="editaProducto.vm" />
+        <property name="xslName" value="editaProducto.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+
+    <bean id="P_EDITAR_PRODUCTO_PLANTILLAS" parent="reportes-endpoint">
+        <property name="templateName" value="editaProductoPlantillas.vm" />
+        <property name="xslName" value="editaProductoPlantillas.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+
+    <!-- Bean declarado para obtiene plantillas - Atrinbutos -->
+    <bean id="P_OBTIENE_TATRIPLA" parent="reportes-endpoint">
+        <property name="templateName" value="obtienePlantillaAtributo.vm" />
+        <property name="xslName" value="obtienePlantillaAtributo.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+
+    <bean id="P_INSERTA_TATRIPLA" parent="reportes-endpoint">
+        <property name="templateName" value="insertaPlantillaAtributo.vm" />
+        <property name="xslName" value="insertaPlantillaAtributo.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+
+    <bean id="P_GUARDA_TATRIPLA" parent="reportes-endpoint">
+        <property name="templateName" value="editarPlantillaAtributo.vm" />
+        <property name="xslName" value="editarPlantillaAtributo.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+
+    <bean id="P_BORRA_TATRIPLA" parent="reportes-endpoint">
+        <property name="templateName" value="borrarPlantillaAtributo.vm" />
+        <property name="xslName" value="borrarPlantillaAtributo.xsl" />
+        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+    </bean>
+
+    <!-- Bean declarado para obtiene plantillas reportes-->
+    <bean id="P_OBTIENE_TPLANREP" parent="reportes-endpoint">
+        <property name="templateName" value="obtienePlantillaReporte.vm" />
+        <property name="xslName" value="obtienePlantillaReporte.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+
+    <bean id="P_GUARDA_TPLANREP" parent="reportes-endpoint">
+        <property name="templateName" value="insertaPlantillaReporte.vm" />
+        <property name="transformResult" value="false" />
+        <property name="unmarshallResult" value="false" />
+    </bean>
+
+    <bean id="P_GUARDA_TPLANREP1" parent="reportes-endpoint">
+        <property name="templateName" value="editarPlantillaReporte.vm" />
+        <property name="transformResult" value="false" />
+        <property name="unmarshallResult" value="false" />
+    </bean>
+
+    <bean id="P_BORRA_TPLANREP" parent="reportes-endpoint">
+        <property name="templateName" value="borrarPlantillaReporte.vm" />
+        <property name="transformResult" value="false" />
+        <property name="unmarshallResult" value="false" />
+    </bean>
+
+    <bean id="P_CLIENTES_CORPO" parent="reportes-endpoint">
+        <property name="templateName" value="obtieneListaCorporativos.vm" />
+        <property name="xslName" value="obtieneListaCorporativos.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+
+    <bean id="P_ASEGURADORA" parent="reportes-endpoint">
+        <property name="templateName" value="obtieneListaAseguradora.vm" />
+        <property name="xslName" value="obtieneListaAseguradora.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+
+    <bean id="P_PRODUCTOS" parent="reportes-endpoint">
+        <property name="templateName" value="obtieneListaProductos.vm" />
+        <property name="xslName" value="obtieneListaProductos.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+    </bean>
+
+    <bean id="P_LISVALATRIBVAR" parent="reportes-endpoint">
+        <property name="templateName" value="obtieneTApoyo.vm" />
+        <property name="xslName" value="obtieneTApoyo.xsl" />
+        <property name="unmarshallClass" value="java.util.ArrayList" />
+        <!--<property name="templateName" value="obtieneListaProductos.vm" />
+     <property name="xslName" value="obtieneListaProductos.xsl" />
+     <property name="unmarshallClass" value="java.util.ArrayList" />-->
+    </bean>
+
+</beans>
