@@ -31,6 +31,14 @@
     <decorator name="decmainbody" page="decmainbody.jsp">
    		<pattern>/jsp/portal/mainBody.jsp</pattern>                          
     </decorator>
+    
+    <decorator name="clean" page="clean.jsp">
+		<pattern>/ArbolRolCliente.action</pattern>
+		<pattern>/seleccionaRolCliente.action</pattern>  
+		<pattern>/jsp/portal/treeRolElemento.jsp</pattern>
+		<pattern>/jsp/portal/index.jsp</pattern>
+    </decorator>
+    
     <decorator name="default" page="default.jsp">
         <!-- <pattern>/flujocotizacion/*.action</pattern> -->          
         <!-- Se comento para ver si se soluciona la falla del config de pantalla -->
@@ -52,13 +60,6 @@
         <pattern>/opcmenuusuario/*.action</pattern>
         -->
         
-    <decorator name="clean" page="clean.jsp">
-		<pattern>/ArbolRolCliente.action</pattern>
-		<pattern>/seleccionaRolCliente.action</pattern>  
-		<pattern>/jsp/portal/treeRolElemento.jsp</pattern>
-		<pattern>/jsp/portal/index.jsp</pattern>
-    </decorator>
-         
     </decorator>
     
     <decorator name="default2" page="default2.jsp">
