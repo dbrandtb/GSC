@@ -90,7 +90,8 @@ public class DummyUserContextFilter implements Filter {
     		        logger.debug("seteando el userVO en el ThreadLocal");
     		        ThreadLocal<UserVO> tl = ConnectionCallInterceptor.getLocalUser();
     		        tl.set(userVO);
-    		        doAudit(userVO,request);
+    		        /**TODO: PARA quitar la auditoria de quien puede ejecutar servicios BD*/
+    		        //doAudit(userVO,request);
     		        chain.doFilter(request, response);
     	        	} catch (Exception e) {
     	        		chain.doFilter(request, response);
