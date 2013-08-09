@@ -196,7 +196,7 @@
 			<result name="input">jsp/portal/login.jsp</result>
 		</action>
         <!--  -->
-        <action name="seleccionaRolCliente" class="loadClientesRolesAction" method="getRolesClientes">
+        <action name="seleccionaRolCliente" class="loadClientesRolesAction" method="obtenRolesClientes">
 	    	<exception-mapping result="success" exception="javax.servlet.ServletException">/jsp/portal/treeRolElemento.jsp</exception-mapping>
 	    	<exception-mapping result="success" exception="java.sql.SQLException">/jsp/portal/treeRolElemento.jsp</exception-mapping>
 	    	<exception-mapping result="success" exception="java.lang.Exception">/jsp/portal/treeRolElemento.jsp</exception-mapping>
@@ -206,13 +206,13 @@
 		</action>		
 		
 		
-		<action name="ArbolRolCliente" class="loadClientesRolesAction" method="getRolesClientes">
+		<action name="ArbolRolCliente" class="loadClientesRolesAction" method="jsonObtenRolesClientes">
 			<result name="success" type="json">			
 			<param name="root">listaRolCliente</param>
 			</result>
 		</action>
 
-		<action name="regresaCodigo" class="loadClientesRolesAction" method="getCodigoTree">
+		<action name="regresaCodigo" class="loadClientesRolesAction" method="obtenCodigoTree">
 			<result name="success" type="json"><param name="ignoreHierarchy">false</param></result>
 			<result name="input">/jsp/portal/treeRolElemento.jsp</result>
 			<result name="confcompleta" type="json"><param name="ignoreHierarchy">false</param></result>
