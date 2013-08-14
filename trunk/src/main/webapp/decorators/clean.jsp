@@ -10,7 +10,7 @@
 <link href="${ctx}/resources/css/header_light.css" rel="stylesheet" type="text/css" />
 <link href="${ctx}/resources/css/toolbar_magenta.css" rel="stylesheet" type="text/css" />
 <link href="${ctx}/resources/css/footer_magenta.css" rel="stylesheet" type="text/css" />
-<link href="${ctx}/resources/css/template_css.css" rel="stylesheet" type="text/css" />
+<link href="${ctx}/resources/css/template_clean_css.css" rel="stylesheet" type="text/css" /><!-- jtezva: se reemplazo template_css por template_clean_css porque template original tenia copiado el codigo del estilo de extjs2 -->
 <decorator:head/>
 <style type="text/css">
     #mainbody   {float: none;}
