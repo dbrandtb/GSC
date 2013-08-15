@@ -172,7 +172,7 @@ public class ListaDatosArchivosAction extends AbstractListAction{
 
 	
 
-	public DatosArchivosManager getDatosArchivosManager() {
+	public DatosArchivosManager obtenDatosArchivosManager() {
 		return datosArchivosManager;
 	}
 

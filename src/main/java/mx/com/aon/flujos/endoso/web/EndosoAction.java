@@ -454,7 +454,7 @@ public class EndosoAction extends PrincipalEndosoAction{
     }
     
     @SuppressWarnings("unchecked")
-    public String getPantallaDatosRol(){
+    public String obtenPantallaDatosRol(){
         Map <String,String> param = new HashMap<String,String>();   
         param.put("cdunieco", cdUnieco);
         param.put("cdramo", cdRamo);
@@ -472,7 +472,7 @@ public class EndosoAction extends PrincipalEndosoAction{
             logger.debug("***** DEXT: " + dext);
         }catch(ApplicationException ex){
             if (logger.isDebugEnabled())
-                logger.debug("getPantallaDatosRol EXCEPTION:: " + ex);
+                logger.debug("obtenPantallaDatosRol EXCEPTION:: " + ex);
         }
         
         success = true;
@@ -699,7 +699,7 @@ public class EndosoAction extends PrincipalEndosoAction{
                                 
                                 valorAtributo = camposValores[numAtributo++];
                                 logger.debug(":: valorAtributo -> " + valorAtributo);
-                                descripcionAtributo = getValorAtributo(
+                                descripcionAtributo = obtenValorAtributo(
                                         backupTables[numStore++], 
                                         valorAtributo);
                                 logger.debug(":: descripcionAtributo -> " + descripcionAtributo);

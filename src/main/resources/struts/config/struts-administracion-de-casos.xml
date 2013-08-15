@@ -67,7 +67,7 @@
             <result type="json"><param name="ignoreHierarchy">false</param></result>
     </action>
     
-    <action name="getEncMovimientosPorCasos" class="consultarMovimientosCasoAction" method="getEncMovimientosPorCasos">
+    <action name="getEncMovimientosPorCasos" class="consultarMovimientosCasoAction" method="obtenEncMovimientosPorCasos">
             <result type="chain" name=""></result>
     </action>
     

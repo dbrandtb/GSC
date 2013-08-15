@@ -130,7 +130,7 @@ public class ListaFormatosDocumentosAction extends AbstractListAction{
 	}
 
 
-	public FormatosDocumentosManager getFormatosDocumentosManager() {
+	public FormatosDocumentosManager obtenFormatosDocumentosManager() {
 		return formatosDocumentosManager;
 	}
 

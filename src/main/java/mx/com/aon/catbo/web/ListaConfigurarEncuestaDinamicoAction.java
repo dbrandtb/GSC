@@ -520,7 +520,7 @@ public class ListaConfigurarEncuestaDinamicoAction extends AbstractListAction{
 		ListaConfigurarEncuestaAction.logger = logger;
 	}*/
 
-	/*public ConfigurarEncuestaManager getConfigurarEncuestaManager() {
+	/*public ConfigurarEncuestaManager obtenConfigurarEncuestaManager() {
 		return configurarEncuestaManager;
 	}*/
 

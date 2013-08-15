@@ -151,7 +151,7 @@ public class ReasignarCasoAction extends ActionSupport{
 		return "regresarPantallaConfigurarMatrizTarea";
 	}
 	
-	public AdministracionCasosManager getAdministracionCasosManager() {
+	public AdministracionCasosManager obtenAdministracionCasosManager() {
 		return administracionCasosManager;
 	}
 
@@ -233,7 +233,7 @@ public class ReasignarCasoAction extends ActionSupport{
 		this.cdNivatn = cdNivatn;
 	}
 
-	public ProcesoManager getProcesoManager() {
+	public ProcesoManager obtenProcesoManager() {
 		return procesoManager;
 	}
 

@@ -37,7 +37,7 @@ public class ReportesProductosAction extends ActionSupport implements SessionAwa
     private String dsProducto;
     private String codProducto;
 
-    public MensajesErrorManager getMensajesErrorManager() {
+    public MensajesErrorManager obtenMensajesErrorManager() {
     return mensajesErrorManager;
 }
 
@@ -122,7 +122,7 @@ public class ReportesProductosAction extends ActionSupport implements SessionAwa
         this.validarAux = validarAux;
     }
 
-    public ReportesManager getReportesManager() {
+    public ReportesManager obtenReportesManager() {
         return reportesManager;
     }
 

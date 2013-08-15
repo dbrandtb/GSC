@@ -222,7 +222,7 @@ public class AgrupacionGrupoPersonasAction extends ActionSupport {
 	@SuppressWarnings("unchecked")
 	public List getMEstructuraList() {return mEstructuraList;}
 	
-	public AgrupacionGrupoPersonasManager getAgrupacionGrupoPersonasManager() {
+	public AgrupacionGrupoPersonasManager obtenAgrupacionGrupoPersonasManager() {
 		return agrupacionGrupoPersonasManager;
 	}
 

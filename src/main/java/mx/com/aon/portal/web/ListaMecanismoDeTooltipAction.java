@@ -139,7 +139,7 @@ public class ListaMecanismoDeTooltipAction extends AbstractListAction{
 	}
 
 
-	public MecanismoDeTooltipManager getMecanismoDeTooltipManager() {
+	public MecanismoDeTooltipManager obtenMecanismoDeTooltipManager() {
 		return mecanismoDeTooltipManager;
 	}
 

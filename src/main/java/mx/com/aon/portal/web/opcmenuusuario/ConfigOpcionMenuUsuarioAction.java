@@ -345,8 +345,8 @@ public class ConfigOpcionMenuUsuarioAction extends AbstractListAction {
      * @throws Exception
      *//*
     @SuppressWarnings("unchecked")//Map Control.
-    public String getComboCliente() throws Exception{
-        log.debug("-> ConfigOpcionMenuUsuarioAction.getComboCliente");
+    public String obtenComboCliente() throws Exception{
+        log.debug("-> ConfigOpcionMenuUsuarioAction.obtenComboCliente");
         clientes = (ArrayList<ClienteVO>) session.get("LISTA_CLIENTES");
         log.debug("clientes session----->" + clientes);
         if (clientes != null && !clientes.isEmpty()) {
@@ -367,8 +367,8 @@ public class ConfigOpcionMenuUsuarioAction extends AbstractListAction {
      * @throws Exception
      *//*
     @SuppressWarnings("unchecked")//Map Control.
-    public String getComboUsuarios() throws Exception{
-        log.debug("-> ConfigOpcionMenuUsuarioAction.getComboUsuarios");       
+    public String obtenComboUsuarios() throws Exception{
+        log.debug("-> ConfigOpcionMenuUsuarioAction.obtenComboUsuarios");       
         usuarios = (ArrayList<UsuarioVO>) session.get("LISTA_USUARIOS_MENU");
         log.debug("usuarios session----->" + usuarios);
         
@@ -390,8 +390,8 @@ public class ConfigOpcionMenuUsuarioAction extends AbstractListAction {
      * @throws Exception
      */
     @SuppressWarnings("unchecked")//Map Control.
-    public String getComboProductoCliente() throws Exception{
-        productoCliente = getProductoClienteLista();
+    public String obtenComboProductoCliente() throws Exception{
+        productoCliente = obtenProductoClienteLista();
         log.debug("productoCliente: " + productoCliente);
         session.put("LISTA_PRODUCTO_CLIENTES", productoCliente);
         success = true;
@@ -402,7 +402,7 @@ public class ConfigOpcionMenuUsuarioAction extends AbstractListAction {
      * @return
      * @throws ApplicationException 
      */
-    private ArrayList<ProductoClienteVO> getProductoClienteLista() throws ApplicationException {
+    private ArrayList<ProductoClienteVO> obtenProductoClienteLista() throws ApplicationException {
         if (StringUtils.isBlank(cdElemento)) {
             cdElemento = (String) session.get("CD_ELEMENTO");
         }
@@ -415,7 +415,7 @@ public class ConfigOpcionMenuUsuarioAction extends AbstractListAction {
      * @throws Exception
      */
     @SuppressWarnings("unchecked")//Map Control.
-    public String getComboNivelMenu() throws Exception{
+    public String obtenComboNivelMenu() throws Exception{
         if (StringUtils.isBlank(cdMenu)) {
             cdMenu = (String) session.get("CD_MENU");
         }
@@ -434,7 +434,7 @@ public class ConfigOpcionMenuUsuarioAction extends AbstractListAction {
      * @throws Exception
      */
     @SuppressWarnings("unchecked")
-    public String getComboTipo() throws Exception {
+    public String obtenComboTipo() throws Exception {
         log.debug("-> ConfigOpcionMenuUsuarioAction.getComboTipo");
         tipos = (ArrayList<TipoVO>) session.get("LISTA_TIPOS");
         if (log.isDebugEnabled()) {
@@ -455,8 +455,8 @@ public class ConfigOpcionMenuUsuarioAction extends AbstractListAction {
     }
     
     @SuppressWarnings("unchecked")
-    public String getComboTipoMenu() throws Exception{
-        log.debug("-> ConfigOpcionMenuUsuarioAction.getComboTipoMenu");
+    public String obtenComboTipoMenu() throws Exception{
+        log.debug("-> ConfigOpcionMenuUsuarioAction.obtenComboTipoMenu");
         tiposMenu = (ArrayList<TipoVO>) session.get("LISTA_TIPOS_MENU");
         if (log.isDebugEnabled()) {
             log.debug("tiposMenu session-->" + tiposMenu);
@@ -476,8 +476,8 @@ public class ConfigOpcionMenuUsuarioAction extends AbstractListAction {
     }
     
     @SuppressWarnings("unchecked")
-    public String getComboEstado() throws Exception{
-        log.debug("-> ConfigOpcionMenuUsuarioAction.getComboEstado");
+    public String obtenComboEstado() throws Exception{
+        log.debug("-> ConfigOpcionMenuUsuarioAction.obtenComboEstado");
         estados = (ArrayList<TipoVO>) session.get("LISTA_ESTADOS");
         if (log.isDebugEnabled()) {
             log.debug("estados session-->" + estados);
@@ -497,9 +497,9 @@ public class ConfigOpcionMenuUsuarioAction extends AbstractListAction {
     }
     
     @SuppressWarnings("unchecked")
-    public String getComboOpciones() throws Exception{
+    public String obtenComboOpciones() throws Exception{
         if (log.isDebugEnabled()) {
-            log.debug("-> ConfigOpcionMenuUsuarioAction.getComboOpciones");
+            log.debug("-> ConfigOpcionMenuUsuarioAction.obtenComboOpciones");
         }
         opciones = (ArrayList<OpcionesVO>) session.get("LISTA_OPCIONES");
         //if (log.isDebugEnabled()) {

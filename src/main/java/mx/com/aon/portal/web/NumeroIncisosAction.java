@@ -247,7 +247,7 @@ public class NumeroIncisosAction extends ActionSupport {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List getNumeroIncisosManagerList() {
+	public List obtenNumeroIncisosManagerList() {
 		return numeroIncisosManagerList;
 	}
 	@SuppressWarnings("unchecked")
@@ -332,7 +332,7 @@ public class NumeroIncisosAction extends ActionSupport {
 		this.cdSufPreCia = cdSufPreCia;
 	}
 	@SuppressWarnings("unchecked")
-	public List getNumeroIncisosManagerListLoadTramo() {
+	public List obtenNumeroIncisosManagerListLoadTramo() {
 		return numeroIncisosManagerListLoadTramo;
 	}
 

@@ -149,7 +149,7 @@ public class ConfigurarAccionesRenovacionAction extends ActionSupport {
 	public String cmdBorrarClick() throws Exception{
 		String messageResult = "";
 		try{
-			messageResult = getConfigurarAccionesRenovacionManager().borrarConfigurarAccionesRenovacion(cdRenova, cdTitulo, cdRol, cdCampo);	
+			messageResult = obtenConfigurarAccionesRenovacionManager().borrarConfigurarAccionesRenovacion(cdRenova, cdTitulo, cdRol, cdCampo);	
             success = true;
             addActionMessage(messageResult);
             return SUCCESS;
@@ -176,7 +176,7 @@ public class ConfigurarAccionesRenovacionAction extends ActionSupport {
 
 	public void setSuccess(boolean success) {this.success = success;}
 
-	public ConfigurarAccionesRenovacionManager getConfigurarAccionesRenovacionManager() {
+	public ConfigurarAccionesRenovacionManager obtenConfigurarAccionesRenovacionManager() {
 		return configurarAccionesRenovacionManager;
 	}
 

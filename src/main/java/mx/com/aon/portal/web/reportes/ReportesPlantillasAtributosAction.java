@@ -61,7 +61,7 @@ public class ReportesPlantillasAtributosAction extends ActionSupport implements 
     private MensajeErrorVO msgError;
     private String wrongMsg;
 
-    public ReportesAgregarManager getReportesAgregarManager() {
+    public ReportesAgregarManager obtenReportesAgregarManager() {
         return reportesAgregarManager;
     }
 
@@ -69,7 +69,7 @@ public class ReportesPlantillasAtributosAction extends ActionSupport implements 
         this.reportesAgregarManager = reportesAgregarManager;
     }
 
-    public MensajesErrorManager getMensajesErrorManager() {
+    public MensajesErrorManager obtenMensajesErrorManager() {
         return mensajesErrorManager;
     }
 
@@ -143,7 +143,7 @@ public class ReportesPlantillasAtributosAction extends ActionSupport implements 
         this.tapoyo = tapoyo;
     }
 
-    public ReportesManager getReportesManager() {
+    public ReportesManager obtenReportesManager() {
         return reportesManager;
     }
 

@@ -269,7 +269,7 @@ public class ListaAdministracionTipoArchivoAction extends AbstractListAction{
 	}
 
 
-	public AdministrarTipoArchivoManager getAdministrarTipoArchivoManager() {
+	public AdministrarTipoArchivoManager obtenAdministrarTipoArchivoManager() {
 		return administrarTipoArchivoManager;
 	}
 

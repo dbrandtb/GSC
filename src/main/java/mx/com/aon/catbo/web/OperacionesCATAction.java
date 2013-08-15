@@ -284,7 +284,7 @@ public class OperacionesCATAction extends ActionSupport {
 		this.success = success;
 	}
 
-	public OperacionCATManager getOperacionCATManager() {
+	public OperacionCATManager obtenOperacionCATManager() {
 		return operacionCATManager;
 	}
 

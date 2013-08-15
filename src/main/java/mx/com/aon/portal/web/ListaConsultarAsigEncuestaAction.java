@@ -188,7 +188,7 @@ public class ListaConsultarAsigEncuestaAction extends AbstractListAction{
 
 	public void setExportMediator(ExportMediator exportMediator) {this.exportMediator = exportMediator;}	
 
-	public ConsultarAsigEncuestaManager getConsultarAsigEncuestaManager() {
+	public ConsultarAsigEncuestaManager obtenConsultarAsigEncuestaManager() {
 			return consultarAsigEncuestaManager;
 		}
 

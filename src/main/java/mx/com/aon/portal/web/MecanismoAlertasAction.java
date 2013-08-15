@@ -129,7 +129,7 @@ public class MecanismoAlertasAction extends AbstractListAction{
 		this.success = success;
 	}
 
-	public MecanismosAlertasManager getMecanismosAlertasManager() {
+	public MecanismosAlertasManager obtenMecanismosAlertasManager() {
 		return mecanismosAlertasManager;
 	}
 

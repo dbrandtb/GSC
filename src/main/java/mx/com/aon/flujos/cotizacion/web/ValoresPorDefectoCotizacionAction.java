@@ -135,7 +135,7 @@ public class ValoresPorDefectoCotizacionAction extends PrincipalCotizacionAction
         if (logger.isDebugEnabled()) {
         	logger.debug("##############  xml generado es : " + xml );
         }
-        List<NameLabelControlVO> listFieldNames = getLabelNames(xml);
+        List<NameLabelControlVO> listFieldNames = obtenLabelNames(xml);
         if (logger.isDebugEnabled()) {
         	logger.debug("##############  listFieldNames : " + listFieldNames );
         }
@@ -390,7 +390,7 @@ public class ValoresPorDefectoCotizacionAction extends PrincipalCotizacionAction
      * @param xml
      * @return lista de nombre de los controles
      */
-    private List<NameLabelControlVO> getLabelNames(String xml) {
+    private List<NameLabelControlVO> obtenLabelNames(String xml) {
         if (logger.isDebugEnabled()) {
             logger.debug("-> DatosPantallaAction.getLabelNames");    
         }

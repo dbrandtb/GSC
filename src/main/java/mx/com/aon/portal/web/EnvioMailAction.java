@@ -88,7 +88,7 @@ public class EnvioMailAction extends ActionSupport {
         return success;
     }
 
-    public EnvioMailManager getEnvioMailManager() {
+    public EnvioMailManager obtenEnvioMailManager() {
 		return envioMailManager;
 	}
 

@@ -144,7 +144,7 @@ public class ListaAdministrarUsuariosModuloAction extends AbstractListAction{
 
 
 
-	public AdministrarUsuariosModuloManager getAdministrarUsuariosModuloManager() {
+	public AdministrarUsuariosModuloManager obtenAdministrarUsuariosModuloManager() {
 		return administrarUsuariosModuloManager;
 	}
 

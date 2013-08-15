@@ -188,7 +188,7 @@ public class ListaTareasCatBoAction extends AbstractListAction{
 		this.tareasCatBoManager = tareasCatBoManager;
 	}
 
-	public TareasCatBoManager getTareasCatBoManager() {
+	public TareasCatBoManager obtenTareasCatBoManager() {
 		return tareasCatBoManager;
 	}
 

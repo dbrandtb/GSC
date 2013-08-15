@@ -23,7 +23,7 @@
         de los atributos la respuesta en Formato JSON para el Reader de ExtJS y cargar el 
         combo de Clientes.
         -->
-        <action name="clienteAction" class="configMenuUsuario" method="getComboCliente">
+        <action name="clienteAction" class="configMenuUsuario" method="obtenComboCliente">
             <result name="success" type="json" />
         </action>
         <!--
@@ -31,15 +31,16 @@
         de los atributos la respuesta en Formato JSON para el Reader de ExtJS y cargar el 
         combo de Usuarios.
         -->
-        <action name="usuariosAction" class="configMenuUsuario" method="getComboUsuarios">
+        <action name="usuariosAction" class="configMenuUsuario" method="obtenComboUsuarios">
             <result name="success" type="json" />
         </action>
         <!--
         Configuracion del Action con tipo de respuesta JSON, esto generara a partir 
         de los atributos la respuesta en Formato JSON para el Reader de ExtJS y cargar el 
         combo de Productos.
+         TODO: productoClienteAction no apunta a ningun metodo
         -->
-        <action name="productoClienteAction" class="configMenuUsuario" method="getProductoCliente">
+        <action name="productoClienteAction" class="configMenuUsuario" method="obtenProductoCliente">
             <result name="success" type="json" />
         </action>
         <!--
@@ -47,7 +48,7 @@
         de los atributos la respuesta en Formato JSON para el Reader de ExtJS y cargar el 
         combo de Roles.
         -->
-        <action name="rolAction" class="configMenuUsuario" method="getComboRol">
+        <action name="rolAction" class="configMenuUsuario" method="obtenComboRol">
             <result name="success" type="json" />
         </action>
     
@@ -55,8 +56,10 @@
         Configuracion del Action con tipo de respuesta JSON, esto generara a partir 
         de los atributos la respuesta en Formato JSON para el Reader de ExtJs y carga el
         combo de Secciones.
+        
+        TODO: no apunta a ningun metodo
         -->
-        <action name="seccionAction" class="configMenuUsuario" method="getComboSeccion">
+        <action name="seccionAction" class="configMenuUsuario" method="obtenComboSeccion">
             <result name="success" type="json" />
         </action> 
         <!--
@@ -64,7 +67,7 @@
         de los atributos la respuesta en Formato JSON para el reader de ExtJs y carga el 
         combo de tipos.
         -->
-        <action name="tipoAction" class="configMenuUsuario" method="getComboTipo">
+        <action name="tipoAction" class="configMenuUsuario" method="obtenComboTipo">
             <result name="success" type="json" />
         </action>
         
@@ -73,7 +76,7 @@
         de los atributos la respuesta en Formato JSON para el reader de ExtJs y carga el 
         combo de tipos.
         -->
-        <action name="tipoMenuAction" class="configMenuUsuario" method="getComboTipoMenu">
+        <action name="tipoMenuAction" class="configMenuUsuario" method="obtenComboTipoMenu">
             <result name="success" type="json" />
         </action>
         
@@ -82,7 +85,7 @@
         de los atributos la respuesta en Formato JSON para el reader de ExtJs y carga el 
         combo de tipos.
         -->
-        <action name="estadoAction" class="configMenuUsuario" method="getComboEstado">
+        <action name="estadoAction" class="configMenuUsuario" method="obtenComboEstado">
             <result name="success" type="json" />
         </action>
         <!--
@@ -137,7 +140,7 @@
         de los atributos la respuesta en Formato JSON para el Reader de ExtJS y cargar el 
         combo de Usuarios por nivel y rol.
         -->
-        <action name="usuariosNivelRolAction" class="configMenuUsuario" method="getComboUsuariosNivelRol">
+        <action name="usuariosNivelRolAction" class="configMenuUsuario" method="obtenComboUsuariosNivelRol">
             <result name="success" type="json" />
         </action>
         

@@ -215,7 +215,7 @@ public class EjecutivosCuentaAction extends ActionSupport {
 	public void setFeFin(String feFin) {
 		this.feFin = feFin;
 	}
-	public EjecutivosCuentaManager getEjecutivoCuentasManager() {
+	public EjecutivosCuentaManager obtenEjecutivoCuentasManager() {
 		return ejecutivosCuentaManager;
 	}
 	public void setEjecutivoCuentasManager(
@@ -241,7 +241,7 @@ public class EjecutivosCuentaAction extends ActionSupport {
 			List<EjecutivoCuentaVO> ejecutivosCuentaList) {
 		mEjecutivosCuentaList = ejecutivosCuentaList;
 	}
-	public EjecutivosCuentaManager getEjecutivosCuentaManager() {
+	public EjecutivosCuentaManager obtenEjecutivosCuentaManager() {
 		return ejecutivosCuentaManager;
 	}
 	public void setEjecutivosCuentaManager(

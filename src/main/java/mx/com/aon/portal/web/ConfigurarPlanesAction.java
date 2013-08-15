@@ -120,7 +120,7 @@ public class ConfigurarPlanesAction extends AbstractListAction{
         }
 	}
 
-	public MantenimientoPlanesManager getMantenimientoPlanesManager() {
+	public MantenimientoPlanesManager obtenMantenimientoPlanesManager() {
 		return mantenimientoPlanesManager;
 	}
 

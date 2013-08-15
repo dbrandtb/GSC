@@ -91,7 +91,7 @@ public class ConfigurarEstructuraAction extends ActionSupport {
 	public String cmdBorrarClick() throws Exception{
 		String messageResult = "";
 		try{
-			messageResult = getConfigurarEstructuraManager().borrarConfigurarEstructura(getCodigoEstructura(),getCodigoElemento());	
+			messageResult = obtenConfigurarEstructuraManager().borrarConfigurarEstructura(getCodigoEstructura(),getCodigoElemento());	
             success = true;
             addActionMessage(messageResult);
             return SUCCESS;
@@ -254,7 +254,7 @@ public class ConfigurarEstructuraAction extends ActionSupport {
 	@SuppressWarnings("unchecked")
 	public List getMEstructuraList() {return mEstructuraList;}
 	
-	public ConfigurarEstructuraManager getConfigurarEstructuraManager() {
+	public ConfigurarEstructuraManager obtenConfigurarEstructuraManager() {
 		return configurarEstructuraManager;
 	}
 

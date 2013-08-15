@@ -132,38 +132,38 @@ public class ConfiguraWorkflowAction extends PrincipalConfigWorkflowAction{
     }
   
     @SuppressWarnings("unchecked")
-    public String getComboProceso() throws Exception{
+    public String obtenComboProceso() throws Exception{
         
     	try{
 			procesosList = catalogManager.getItemList("OBTIENE_PROCESOS");
 	        session.put("COMBO_PROCESOS_LIST", procesosList);
     	}catch(Exception e){
         	if(logger.isDebugEnabled())
-        		logger.debug("Exception ConfiguraWorkflowAction.getComboProceso: " + e);
+        		logger.debug("Exception ConfiguraWorkflowAction.obtenComboProceso: " + e);
     	}
         
     	return SUCCESS;
     }
     
     @SuppressWarnings("unchecked")
-    public String getComboCliente() throws Exception{
+    public String obtenComboCliente() throws Exception{
         
     	try{
     		clientesList = catalogManager.getItemList("OBTIENE_CLIENTES_CORPO_CATALOGS");
         	session.put("COMBO_CORPORATIVO_LIST", clientesList);
     	}catch(Exception e){
         	if(logger.isDebugEnabled())
-        		logger.debug("Exception ConfiguraWorkflowAction.getComboCliente: " + e);
+        		logger.debug("Exception ConfiguraWorkflowAction.obtenComboCliente: " + e);
     	}
         
     	return SUCCESS;
     }
     
     @SuppressWarnings("unchecked")
-    public String getComboAseguradora() throws Exception{
+    public String obtenComboAseguradora() throws Exception{
     	
         if(logger.isDebugEnabled()){
-        	logger.debug("******ConfiguraWorkflowAction.getComboAseguradora******");
+        	logger.debug("******ConfiguraWorkflowAction.obtenComboAseguradora******");
         	logger.debug("id cliente:" + cdelemento);
         }
         
@@ -175,17 +175,17 @@ public class ConfiguraWorkflowAction extends PrincipalConfigWorkflowAction{
         	
         }catch(Exception e){
         	if(logger.isDebugEnabled())
-        	logger.debug("Exception ConfiguraWorkflowAction.getComboAseguradora: " + e);
+        	logger.debug("Exception ConfiguraWorkflowAction.obtenComboAseguradora: " + e);
         }
 
     	return SUCCESS;
     }
     
     @SuppressWarnings("unchecked")
-    public String getComboProducto() throws Exception{
+    public String obtenComboProducto() throws Exception{
     	
         if(logger.isDebugEnabled()){
-        	logger.debug("******ConfiguraWorkflowAction.getComboProducto******");
+        	logger.debug("******ConfiguraWorkflowAction.obtenComboProducto******");
             logger.debug("id cliente: " + cdelemento);
         	logger.debug("id aseguradora: " + cdunieco);
         }
@@ -200,7 +200,7 @@ public class ConfiguraWorkflowAction extends PrincipalConfigWorkflowAction{
 	        session.put("COMBO_PRODUCTOS_LIST", procesosList);
         }catch(Exception e){
         	if(logger.isDebugEnabled())
-        	logger.debug("Exception ConfiguraWorkflowAction.getComboProducto: " + e);
+        	logger.debug("Exception ConfiguraWorkflowAction.obtenComboProducto: " + e);
         }
 
     	return SUCCESS;

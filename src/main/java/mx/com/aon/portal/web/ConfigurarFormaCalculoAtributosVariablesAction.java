@@ -192,7 +192,7 @@ public class ConfigurarFormaCalculoAtributosVariablesAction extends ActionSuppor
 	public String cmdBorrarClick() throws Exception{
 		String messageResult = "";
 		try{
-			messageResult = getConfigurarFormaCalculoAtributosVariablesManager().borrarConfigurarFormaCalculoAtributo(cdIden);	
+			messageResult = obtenConfigurarFormaCalculoAtributosVariablesManager().borrarConfigurarFormaCalculoAtributo(cdIden);	
             success = true;
             addActionMessage(messageResult);
             return SUCCESS;
@@ -225,7 +225,7 @@ public class ConfigurarFormaCalculoAtributosVariablesAction extends ActionSuppor
 			configurarFormaCalculoAtributoVariableVO.setCdUnieco(cdUnieco);
 			configurarFormaCalculoAtributoVariableVO.setCdRamo(cdRamo);
 			configurarFormaCalculoAtributoVariableVO.setCdElemento(cdElemento); 	
-			WrapperResultados res= getConfigurarFormaCalculoAtributosVariablesManager().copiarConfigurarFormaCalculoAtributo(configurarFormaCalculoAtributoVariableVO);		
+			WrapperResultados res= obtenConfigurarFormaCalculoAtributosVariablesManager().copiarConfigurarFormaCalculoAtributo(configurarFormaCalculoAtributoVariableVO);		
             cdError=res.getMsgId();
 			success = true;
             addActionMessage(res.getMsgText());
@@ -250,7 +250,7 @@ public class ConfigurarFormaCalculoAtributosVariablesAction extends ActionSuppor
 	public void setSuccess(boolean success) {this.success = success;}
 
 
-	public ConfigurarFormaCalculoAtributosVariablesManager getConfigurarFormaCalculoAtributosVariablesManager() {
+	public ConfigurarFormaCalculoAtributosVariablesManager obtenConfigurarFormaCalculoAtributosVariablesManager() {
 		return configurarFormaCalculoAtributosVariablesManager;
 	}
 

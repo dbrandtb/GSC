@@ -286,7 +286,7 @@ public class NotificacionesAction extends ActionSupport {
 		this.cdMetEnv = cdMetEnv;
 	}
 
-	/*public NotificacionesManager getNotificacionesManager() {
+	/*public NotificacionesManager obtenNotificacionesManager() {
 		return notificacionesManager;
 	}*/
 

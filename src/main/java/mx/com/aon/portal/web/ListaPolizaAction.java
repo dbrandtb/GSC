@@ -301,7 +301,7 @@ public class ListaPolizaAction extends AbstractListAction{
 	}
 
 
-	public PolizasManager getPolizasManager() {
+	public PolizasManager obtenPolizasManager() {
 		return polizasManager;
 	}
 

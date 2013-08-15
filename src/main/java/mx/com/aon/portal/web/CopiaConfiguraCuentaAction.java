@@ -142,7 +142,7 @@ public class CopiaConfiguraCuentaAction extends ActionSupport{
 		this.comboClientes = comboClientes;
 	}
 
-	public ManagerCuentaChecklist getManagerCuentaChecklist() {
+	public ManagerCuentaChecklist obtenManagerCuentaChecklist() {
 		return managerCuentaChecklist;
 	}
 }

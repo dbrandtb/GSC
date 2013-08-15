@@ -176,7 +176,7 @@ public class RangosRenovacionAction extends ActionSupport {
 			RangoRenovacionReporteManager rangoRenovacionReporteManager) {
 		this.rangoRenovacionReporteManager = rangoRenovacionReporteManager;
 	}
-	public List<RangoRenovacionReporteVO> getMRangoRenovacionReporteManagerList() {
+	public List<RangoRenovacionReporteVO> obtenMRangoRenovacionReporteManagerList() {
 		return mRangoRenovacionReporteManagerList;
 	}
 	public void setMRangoRenovacionReporteManagerList(

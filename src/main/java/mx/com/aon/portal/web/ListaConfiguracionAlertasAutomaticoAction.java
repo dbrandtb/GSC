@@ -238,7 +238,7 @@ public class ListaConfiguracionAlertasAutomaticoAction extends AbstractListActio
 
 	public void setExportMediator(ExportMediator exportMediator) {this.exportMediator = exportMediator;}	
 
-	public ConfiguracionAlertasAutomaticoManager getConfiguracionAlertasAutomaticoManager() {
+	public ConfiguracionAlertasAutomaticoManager obtenConfiguracionAlertasAutomaticoManager() {
 			return configuracionAlertasAutomaticoManager;
 		}
 

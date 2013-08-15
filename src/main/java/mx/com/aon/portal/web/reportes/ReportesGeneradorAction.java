@@ -104,7 +104,7 @@ public class ReportesGeneradorAction extends ActionSupport implements SessionAwa
         this.totalCount = totalCount;
     }
 
-    public ReportesManager getReportesManager() {
+    public ReportesManager obtenReportesManager() {
         return reportesManager;
     }
 

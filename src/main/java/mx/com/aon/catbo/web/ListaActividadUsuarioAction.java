@@ -447,7 +447,7 @@ public class ListaActividadUsuarioAction extends AbstractListAction {
 		return "actividadUsuario";
 	}
 
-	/*public ConsultaActividadUsuarioManager getConsultaActividadUsuarioManager() {
+	/*public ConsultaActividadUsuarioManager obtenConsultaActividadUsuarioManager() {
 		return consultaActividadUsuarioManager;
 	}*/
 

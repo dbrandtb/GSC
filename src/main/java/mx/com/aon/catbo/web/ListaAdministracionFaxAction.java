@@ -891,7 +891,7 @@ public class ListaAdministracionFaxAction extends AbstractListAction implements 
 	}
 
 
-	public MatrizAsignacionManager getMatrizAsignacionManager() {
+	public MatrizAsignacionManager obtenMatrizAsignacionManager() {
 		return matrizAsignacionManager;
 	}
 
@@ -912,7 +912,7 @@ public class ListaAdministracionFaxAction extends AbstractListAction implements 
 	}
 
 
-	public AdministracionCasosManager getAdministracionCasosManager() {
+	public AdministracionCasosManager obtenAdministracionCasosManager() {
 		return administracionCasosManager;
 	}
 

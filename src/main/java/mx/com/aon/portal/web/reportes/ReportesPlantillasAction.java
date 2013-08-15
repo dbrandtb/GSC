@@ -56,7 +56,7 @@ public class ReportesPlantillasAction extends ActionSupport implements SessionAw
     private String wrongMsg;
 
 
-    public ReportesAgregarManager getReportesAgregarManager() {
+    public ReportesAgregarManager obtenReportesAgregarManager() {
         return reportesAgregarManager;
     }
 
@@ -64,7 +64,7 @@ public class ReportesPlantillasAction extends ActionSupport implements SessionAw
         this.reportesAgregarManager = reportesAgregarManager;
     }
 
-    public MensajesErrorManager getMensajesErrorManager() {
+    public MensajesErrorManager obtenMensajesErrorManager() {
         return mensajesErrorManager;
     }
 
@@ -130,7 +130,7 @@ public class ReportesPlantillasAction extends ActionSupport implements SessionAw
         this.totalCount = totalCount;
     }
 
-    public ReportesManager getReportesManager() {
+    public ReportesManager obtenReportesManager() {
         return reportesManager;
     }
 

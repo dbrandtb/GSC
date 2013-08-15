@@ -82,13 +82,13 @@ public class ConfiguraWorkflowPs3Action extends PrincipalConfigWorkflowAction{
     
 
     @SuppressWarnings("unchecked")
-    public String getComboPasos() throws Exception{
+    public String obtenComboPasos() throws Exception{
     	
     	
     	cdprocxcta = (Long) ActionContext.getContext().getSession().get("OPCION_PROCESO_ID");
     	
         if(logger.isDebugEnabled()){
-        	logger.debug("******ConfiguraWorkflowPs3Action.getComboPasos******");
+        	logger.debug("******ConfiguraWorkflowPs3Action.obtenComboPasos******");
         	logger.debug("cdprocxcta :"+cdprocxcta);
         	logger.debug("cdpaso :"+cdpaso);
         }
@@ -105,7 +105,7 @@ public class ConfiguraWorkflowPs3Action extends PrincipalConfigWorkflowAction{
         	
         }catch(Exception e){
         	if(logger.isDebugEnabled())
-        	logger.debug("Exception ConfiguraWorkflowPs3Action.getComboPasos: " + e);
+        	logger.debug("Exception ConfiguraWorkflowPs3Action.obtenComboPasos: " + e);
         }
 
     	return SUCCESS;

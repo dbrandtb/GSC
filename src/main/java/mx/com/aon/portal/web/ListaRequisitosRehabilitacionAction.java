@@ -143,7 +143,7 @@ public class ListaRequisitosRehabilitacionAction extends AbstractListAction{
 	public void setExportMediator(ExportMediator exportMediator) {this.exportMediator = exportMediator;}
 
 
-	public RequisitosRehabilitacionManager getRequisitosRehabilitacionManager() {
+	public RequisitosRehabilitacionManager obtenRequisitosRehabilitacionManager() {
 		return requisitosRehabilitacionManager;
 	}
 

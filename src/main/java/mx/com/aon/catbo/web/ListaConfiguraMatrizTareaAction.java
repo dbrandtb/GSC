@@ -241,7 +241,7 @@ public class ListaConfiguraMatrizTareaAction extends AbstractListAction{
 		this.success = success;
 	}
 
-	public MatrizAsignacionManager getMatrizAsignacionManager() {
+	public MatrizAsignacionManager obtenMatrizAsignacionManager() {
 		return matrizAsignacionManager;
 	}
 

@@ -128,7 +128,7 @@ public class ListaGeneracionClavesAction extends AbstractListAction{
 
 
 
-	public GeneracionClavesManager getGeneracionClavesManager() {
+	public GeneracionClavesManager obtenGeneracionClavesManager() {
 		return generacionClavesManager;
 	}
 

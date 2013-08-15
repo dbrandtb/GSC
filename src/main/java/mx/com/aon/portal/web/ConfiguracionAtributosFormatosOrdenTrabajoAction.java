@@ -198,7 +198,7 @@ public class ConfiguracionAtributosFormatosOrdenTrabajoAction extends ActionSupp
 		this.success = success;
 	}
 
-	public ConfiguracionAtributosFormatosOrdenTrabajoManager getConfiguracionAtributosFormatosOrdenTrabajoManager() {
+	public ConfiguracionAtributosFormatosOrdenTrabajoManager obtenConfiguracionAtributosFormatosOrdenTrabajoManager() {
 		return configuracionAtributosFormatosOrdenTrabajoManager;
 	}
 

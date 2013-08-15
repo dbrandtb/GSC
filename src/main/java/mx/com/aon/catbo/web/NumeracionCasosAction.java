@@ -162,7 +162,7 @@ public class NumeracionCasosAction extends ActionSupport{
 		NumeracionCasosAction.logger = logger;
 	}
 
-	public AdministracionCasosManager getAdministracionCasosManager() {
+	public AdministracionCasosManager obtenAdministracionCasosManager() {
 		return administracionCasosManager;
 	}
 

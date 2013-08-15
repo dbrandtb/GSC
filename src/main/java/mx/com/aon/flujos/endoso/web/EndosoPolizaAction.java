@@ -98,7 +98,7 @@ public class EndosoPolizaAction extends PrincipalEndosoAction {
     
 	
 	public String borraSessiones() throws Exception {
-		logger.debug("borraSessiones getEndososPoliza########");
+		logger.debug("borraSessiones obtenEndososPoliza########");
 		session.remove("LISTA_ENDOSOS_POLIZA");
 		return INPUT;
 	}
@@ -259,8 +259,8 @@ public class EndosoPolizaAction extends PrincipalEndosoAction {
         }        
     }
 
-    public String getValorEndoso() throws Exception{
-		logger.debug("***EndosoPolizaAction getValorEndoso***");
+    public String obtenValorEndoso() throws Exception{
+		logger.debug("***EndosoPolizaAction obtenValorEndoso***");
 		if (globalVarVO == null) {
             globalVarVO = (GlobalVariableContainerVO) session.get(Constantes.GLOBAL_VARIABLE_CONTAINER);
             logger.debug("globalVarVO	:"+globalVarVO);
@@ -289,8 +289,8 @@ public class EndosoPolizaAction extends PrincipalEndosoAction {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public String getEndososPoliza() throws Exception {
-		logger.debug("EndosoPolizaAction getEndososPoliza########");
+	public String obtenEndososPoliza() throws Exception {
+		logger.debug("EndosoPolizaAction obtenEndososPoliza########");
 		
 		if (globalVarVO == null) {
             globalVarVO = (GlobalVariableContainerVO) session.get(Constantes.GLOBAL_VARIABLE_CONTAINER);
@@ -315,7 +315,7 @@ public class EndosoPolizaAction extends PrincipalEndosoAction {
 		//totalCount = endososList.size();
 		
         if (logger.isDebugEnabled()) {
-            logger.debug("getEndososPoliza params:	"+params);
+            logger.debug("obtenEndososPoliza params:	"+params);
         }
 		
 		try{
@@ -332,7 +332,7 @@ public class EndosoPolizaAction extends PrincipalEndosoAction {
             }
 		}catch(Exception e){
             if (logger.isDebugEnabled()) {
-                logger.error("getEndososPoliza No se encontraron datos:  "+e);
+                logger.error("obtenEndososPoliza No se encontraron datos:  "+e);
             }
 		}
         
@@ -830,7 +830,7 @@ public class EndosoPolizaAction extends PrincipalEndosoAction {
 		this.totalPagarF = totalPagarF;
 	}
 
-	public EndosoManager getEndosoManager() {
+	public EndosoManager obtenEndosoManager() {
 		return endosoManager;
 	}
 

@@ -144,7 +144,7 @@ public class MuestraResultadosAction extends PrincipalCotizacionAction {
         String xml = xmlSerializado.write( json, "ISO-8859-1" );
         
         logger.debug("##############  xml generado es : " + xml );
-        List<NameLabelControlVO> listFieldNames = getLabelNames(xml);
+        List<NameLabelControlVO> listFieldNames = obtenLabelNames(xml);
         logger.debug("##############  listFieldNames : " + listFieldNames );
         
         ColumnGridEstandarVO columnGridVO = null;
@@ -354,7 +354,7 @@ public class MuestraResultadosAction extends PrincipalCotizacionAction {
      * @param xml
      * @return lista de nombre de los controles
      */
-    private List<NameLabelControlVO> getLabelNames(String xml) {
+    private List<NameLabelControlVO> obtenLabelNames(String xml) {
         if (logger.isDebugEnabled()) {
 		            logger.debug("-> DatosPantallaAction.getLabelNames");
 		        }

@@ -46,7 +46,7 @@
             Configuracion del action para cargar el combo de Aseguradora dependiendo del Cliente
             existentes en los combos con tipo de Respuesta Json 
         -->
-        <action name="obtenerComboProceso" class="configuraWorkflow" method="getComboProceso">
+        <action name="obtenerComboProceso" class="configuraWorkflow" method="obtenComboProceso">
             <result name="success" type="json" />
         </action>
         
@@ -54,7 +54,7 @@
             Configuracion del action para cargar el combo de Aseguradora dependiendo del Cliente
             existentes en los combos con tipo de Respuesta Json 
         -->
-        <action name="obtenerComboCliente" class="configuraWorkflow" method="getComboCliente">
+        <action name="obtenerComboCliente" class="configuraWorkflow" method="obtenComboCliente">
             <result name="success" type="json" />
         </action>
         
@@ -62,7 +62,7 @@
             Configuracion del action para cargar el combo de Aseguradora dependiendo del Cliente
             existentes en los combos con tipo de Respuesta Json 
         -->
-        <action name="obtenerComboAseguradora" class="configuraWorkflow" method="getComboAseguradora">
+        <action name="obtenerComboAseguradora" class="configuraWorkflow" method="obtenComboAseguradora">
             <result name="success" type="json" />
         </action>
         
@@ -70,7 +70,7 @@
             Configuracion del action para cargar combo de Producto dependiendo de Cliente y 
             Aseguradora con tipo de Respuesta Json 
         -->
-        <action name="obtenerComboProducto" class="configuraWorkflow" method="getComboProducto">
+        <action name="obtenerComboProducto" class="configuraWorkflow" method="obtenComboProducto">
             <result name="success" type="json" />
         </action>
         
@@ -110,7 +110,7 @@
             Configuracion del action para cargar el combo de Aseguradora dependiendo del Cliente
             existentes en los combos con tipo de Respuesta Json 
         -->
-        <action name="comboPantallas" class="configuraWorkflowPasos" method="getComboPantallas">
+        <action name="comboPantallas" class="configuraWorkflowPasos" method="obtenComboPantallas">
             <result name="success" type="json" />
         </action>
         
@@ -150,7 +150,7 @@
             Configuracion del action para cargar el combo de Aseguradora dependiendo del Cliente
             existentes en los combos con tipo de Respuesta Json 
         -->
-        <action name="comboPasos" class="configuraWorkflowOpciones" method="getComboPasos">
+        <action name="comboPasos" class="configuraWorkflowOpciones" method="obtenComboPasos">
             <result name="success" type="json" />
         </action>
         

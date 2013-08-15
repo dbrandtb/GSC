@@ -205,7 +205,7 @@ public class ListaEncuestasAction extends AbstractListAction{
 	
 	
 	
-	public ConfigurarEncuestaManager getConfigurarEncuestaManager() {
+	public ConfigurarEncuestaManager obtenConfigurarEncuestaManager() {
 		return configurarEncuestaManager;
 	}
 

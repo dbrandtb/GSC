@@ -143,7 +143,7 @@ public class ListaPeriodosGraciaAction extends AbstractListAction{
 			this.descripcion = descripcion;
 		}
 
-		public PeriodosGraciaManager getPeriodosGraciaManager() {
+		public PeriodosGraciaManager obtenPeriodosGraciaManager() {
 			return periodosGraciaManager;
 		}
 

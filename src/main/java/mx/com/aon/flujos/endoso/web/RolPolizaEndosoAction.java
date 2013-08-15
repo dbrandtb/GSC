@@ -51,7 +51,7 @@ public class RolPolizaEndosoAction extends PrincipalEndosoAction {
 	private String cdNivel;
 	
 	@SuppressWarnings("unchecked")
-	public String getComboRol() throws Exception {
+	public String obtenComboRol() throws Exception {
 		//Se obtienen datos de la variable global de session
 		if (globalVarVO == null) {
             globalVarVO = (GlobalVariableContainerVO) session.get(Constantes.GLOBAL_VARIABLE_CONTAINER);
@@ -89,7 +89,7 @@ public class RolPolizaEndosoAction extends PrincipalEndosoAction {
 	}
 
 	@SuppressWarnings("unchecked")
-	public String getComboPersona() throws Exception {
+	public String obtenComboPersona() throws Exception {
 
 		UserVO usuario = (UserVO) session.get("USUARIO");
 		//Map<String, Object> params = new HashMap<String, Object>();
@@ -105,7 +105,7 @@ public class RolPolizaEndosoAction extends PrincipalEndosoAction {
 	}
 
 	@SuppressWarnings("unchecked")
-	public String getPantallaRolPoliza() throws Exception {
+	public String obtenPantallaRolPoliza() throws Exception {
 
 		if (globalVarVO == null) {
             globalVarVO = (GlobalVariableContainerVO) session.get(Constantes.GLOBAL_VARIABLE_CONTAINER);
@@ -148,7 +148,7 @@ public class RolPolizaEndosoAction extends PrincipalEndosoAction {
 		param.put("accion", accion);
 		
 		if (logger.isDebugEnabled()) {
-			logger.debug("***getPantallaRolPoliza***");
+			logger.debug("***obtenPantallaRolPoliza***");
 			logger.debug("param			:"+param);
 		}
 		
@@ -246,7 +246,7 @@ public class RolPolizaEndosoAction extends PrincipalEndosoAction {
 	}
 
 	@SuppressWarnings("unchecked")
-	public String getPolizaRol() throws Exception {
+	public String obtenPolizaRol() throws Exception {
 		
 		String msg = null;
 
@@ -279,8 +279,8 @@ public class RolPolizaEndosoAction extends PrincipalEndosoAction {
             }
 
             if (logger.isDebugEnabled()) {
-                logger.debug("-> RolPolizaEndosoAction.getPolizaRol");
-                logger.debug(":: getPolizaRol parameters : " + parameters);
+                logger.debug("-> RolPolizaEndosoAction.obtenPolizaRol");
+                logger.debug(":: obtenPolizaRol parameters : " + parameters);
                 logger.debug(":: nmSituac : " + nmSituac);
             }
             
@@ -379,7 +379,7 @@ public class RolPolizaEndosoAction extends PrincipalEndosoAction {
 			String clave		= null;
 			
 			msg = (String) endosoManager.getEndPoint(params, "ENDOSOS_PMOVMPOLIPER");
-			logger.debug("getPolizaRol ENDOSOS_PMOVMPOLIPER :" + msg);
+			logger.debug("obtenPolizaRol ENDOSOS_PMOVMPOLIPER :" + msg);
 			AtributosVariablesVO varVo = new AtributosVariablesVO();
 			for (Object key : parameters.keySet()){
 				clave = key.toString();
@@ -397,9 +397,9 @@ public class RolPolizaEndosoAction extends PrincipalEndosoAction {
 					}
 			}
 			params.put("item", varVo);
-			logger.debug("getPolizaRol parameters :" + parameters);
+			logger.debug("obtenPolizaRol parameters :" + parameters);
 			numRespuesta = (String) endosoManager.getEndPoint(params,"ENDOSOS_GUARDA_FUNCION_ROL");
-			logger.debug("getPolizaRol ENDOSOS_GUARDA_FUNCION_ROL :" + msg);
+			logger.debug("obtenPolizaRol ENDOSOS_GUARDA_FUNCION_ROL :" + msg);
             
             if (logger.isDebugEnabled()) {
                 logger.debug("::: accion           : " + params.get("accion"));
@@ -550,7 +550,7 @@ public class RolPolizaEndosoAction extends PrincipalEndosoAction {
 		this.success = success;
 	}
 
-	public EndosoManager getEndosoManager() {
+	public EndosoManager obtenEndosoManager() {
 		return endosoManager;
 	}
 

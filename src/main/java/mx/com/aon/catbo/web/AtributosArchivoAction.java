@@ -254,7 +254,7 @@ public class AtributosArchivoAction extends AbstractListAction {
 		this.inputStream = inputStream;
 	}
 
-	public ArchivosManager getArchivosManager() {
+	public ArchivosManager obtenArchivosManager() {
 		return archivosManager;
 	}
 

@@ -42,7 +42,7 @@ public class ReportesGraficosAction extends ActionSupport implements SessionAwar
     private boolean success;
     private List<ComboGraficoVo> combo;
 
-    public ReportesManager getReportesManager() {
+    public ReportesManager obtenReportesManager() {
         return reportesManager;
     }
 

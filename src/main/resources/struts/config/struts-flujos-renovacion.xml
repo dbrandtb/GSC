@@ -16,19 +16,20 @@
             <result name="success" type="json" />
         </action>
         <!-- Obtiene combo de Aseguradora -->
-        <action name="getComboAsegradora" class="renovacionAction"  method="getComboAsegradora" >
+        <action name="getComboAsegradora" class="renovacionAction"  method="obtenComboAsegradora" >
             <result name="success" type="json" />
         </action>
         <!-- Obtiene combo de tipo de Poliza -->
-        <action name="getComboTiposPoliza" class="renovacionAction"  method="getComboTiposPoliza" >
+        <action name="getComboTiposPoliza" class="renovacionAction"  method="obtenComboTiposPoliza" >
             <result name="success" type="json" />
         </action>
         <!-- Obtiene combo de Producto -->
-        <action name="getComboProducto" class="renovacionAction"  method="getComboProducto" >
+        <action name="getComboProducto" class="renovacionAction"  method="obtenComboProducto" >
             <result name="success" type="json" />
         </action>
-        <!-- Obtiene combo de Cliente -->
-        <action name="getComboCliente" class="renovacionAction"  method="getComboCliente" >
+        
+        <!-- Obtiene combo de Cliente TODO: no apunta a ningun metodo -->
+        <action name="getComboCliente" class="renovacionAction"  method="obtenComboCliente" >
             <result name="success" type="json" />
         </action>
         <!-- Guarda las Pólizas Renovadas -->

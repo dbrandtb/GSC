@@ -221,7 +221,7 @@
             Configuracion del action para obtener parametro de la vista previa
       
          -->
-        <action name="obtenerComponente" class="vistaPreviaAction" method="getParametro">
+        <action name="obtenerComponente" class="vistaPreviaAction" method="obtenParametro">
             <result name="success" type="json"><param name="ignoreHierarchy">false</param></result>
                
         </action>

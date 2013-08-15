@@ -270,7 +270,7 @@ public class ConsultaCotizacionAction extends PrincipalCotizacionAction {
         String  prmEstado   = estado;
         prmEstado = prmEstado.toUpperCase();
      
-        setListaConsultaTvalositCotiza(getCotizacionManagerJdbcTemplate().obtineTvalositCotiza(prmCdunieco,prmPoliza,prmCdramo,prmEstado));
+        setListaConsultaTvalositCotiza(obtenCotizacionManagerJdbcTemplate().obtineTvalositCotiza(prmCdunieco,prmPoliza,prmCdramo,prmEstado));
         
         if(getListaConsultaTvalositCotiza() == null ){
         	  setListaConsultaTvalositCotiza(new ArrayList<CotizacionMasivaVO>());
@@ -360,7 +360,7 @@ public class ConsultaCotizacionAction extends PrincipalCotizacionAction {
 		this.cotizacionManagerJdbcTemplate = cotizacionManagerJdbcTemplate;
 	}
 
-	public  CotizacionPrincipalManager getCotizacionManagerJdbcTemplate() {
+	public  CotizacionPrincipalManager obtenCotizacionManagerJdbcTemplate() {
 		return cotizacionManagerJdbcTemplate;
 	}
 

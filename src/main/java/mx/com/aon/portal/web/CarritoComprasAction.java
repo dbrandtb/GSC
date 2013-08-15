@@ -321,13 +321,13 @@ public class CarritoComprasAction extends ActionSupport {
    public boolean getSuccess() {return success;}
    public void setSuccess(boolean success) {this.success = success;}
 	  
-	public CarritoComprasManager getCarritoComprasManager() {
+	public CarritoComprasManager obtenCarritoComprasManager() {
 		return carritoComprasManager;
 	}
 	public void setCarritoComprasManager(CarritoComprasManager carritoComprasManager) {
 		this.carritoComprasManager = carritoComprasManager;
 	}
-	public List<CarritoComprasVO> getMCarritoComprasManagerList() {
+	public List<CarritoComprasVO> obtenMCarritoComprasManagerList() {
 		return mCarritoComprasManagerList;
 	}
 	public void setMCarritoComprasManagerList(

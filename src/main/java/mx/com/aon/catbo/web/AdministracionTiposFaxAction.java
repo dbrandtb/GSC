@@ -219,7 +219,7 @@ public class AdministracionTiposFaxAction extends ActionSupport {
 		this.success = success;
 	}
 
-	public ArchivosManager getArchivosManager() {
+	public ArchivosManager obtenArchivosManager() {
 		return archivosManager;
 	}
 

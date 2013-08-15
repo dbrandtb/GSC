@@ -90,7 +90,7 @@ public class GeneracionClavesAction extends ActionSupport {
 		this.success = success;
 	}
 
-	public GeneracionClavesManager getGeneracionClavesManager() {
+	public GeneracionClavesManager obtenGeneracionClavesManager() {
 		return generacionClavesManager;
 	}
 

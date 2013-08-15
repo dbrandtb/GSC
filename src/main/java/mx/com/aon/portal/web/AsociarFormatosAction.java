@@ -41,7 +41,7 @@ public class AsociarFormatosAction extends ActionSupport {
 	public String cmdBorrarClick() throws Exception{
 		String messageResult = "";
 		try{
-			messageResult = getAsociarFormatosManager().borrarAsociarFormatos(cdAsocia);	
+			messageResult = obtenAsociarFormatosManager().borrarAsociarFormatos(cdAsocia);	
             success = true;
             addActionMessage(messageResult);
             return SUCCESS;
@@ -65,7 +65,7 @@ public class AsociarFormatosAction extends ActionSupport {
 	
 
 
-	public AsociarFormatosManager getAsociarFormatosManager() {
+	public AsociarFormatosManager obtenAsociarFormatosManager() {
 		return asociarFormatosManager;
 	}
 

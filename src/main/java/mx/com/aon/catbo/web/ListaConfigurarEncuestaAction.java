@@ -519,7 +519,7 @@ public class ListaConfigurarEncuestaAction extends AbstractListAction{
 		ListaConfigurarEncuestaAction.logger = logger;
 	}*/
 
-	/*public ConfigurarEncuestaManager getConfigurarEncuestaManager() {
+	/*public ConfigurarEncuestaManager obtenConfigurarEncuestaManager() {
 		return configurarEncuestaManager;
 	}*/
 

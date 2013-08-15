@@ -45,7 +45,7 @@
 		</action>
 		
 		
-		<action name="obtenerEncabezadoPoliza" class="consultaPolizaRenovadaAction" method="getPolizaEncabezado">
+		<action name="obtenerEncabezadoPoliza" class="consultaPolizaRenovadaAction" method="obtenPolizaEncabezado">
             <result type="json"><param name="ignoreHierarchy">false</param></result>
 		</action>
 		<action name="guardarMovPoliza" class="consultaPolizaRenovadaAction" method="guardarMovPolizaClick">

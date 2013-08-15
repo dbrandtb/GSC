@@ -87,7 +87,7 @@ public class ListaOrdenesDeComprasAction extends AbstractListAction{
 			return "ordenesDeCompras";
 	 }
 
-	public OrdenesDeComprasManager getOrdenesDeComprasManager() {
+	public OrdenesDeComprasManager obtenOrdenesDeComprasManager() {
 		return ordenesDeComprasManager;
 	}
 

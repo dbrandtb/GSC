@@ -368,7 +368,7 @@ public class ListaCarritoComprasAction extends AbstractListAction{
 	}
 
 
-	public CarritoComprasManager getCarritoComprasManager() {
+	public CarritoComprasManager obtenCarritoComprasManager() {
 		return carritoComprasManager;
 	}
 
@@ -427,7 +427,7 @@ public class ListaCarritoComprasAction extends AbstractListAction{
 		mCarritoComprasManagerList = carritoComprasManagerList;
 	}
 	
-	public List<CarritoComprasManager> getMCarritoComprasManagerList() {
+	public List<CarritoComprasManager> obtenMCarritoComprasManagerList() {
 		return mCarritoComprasManagerList;
 	}
 
@@ -512,7 +512,7 @@ public class ListaCarritoComprasAction extends AbstractListAction{
 	}
 
 
-	public List<CarritoComprasDireccionOrdenVO> getMCarritoComprasManagerListDire() {
+	public List<CarritoComprasDireccionOrdenVO> obtenMCarritoComprasManagerListDire() {
 		return mCarritoComprasManagerListDire;
 	}
 
@@ -523,7 +523,7 @@ public class ListaCarritoComprasAction extends AbstractListAction{
 	}
 
 
-	public List<CarritoComprasRolesVO> getMCarritoComprasManagerListEncOrden() {
+	public List<CarritoComprasRolesVO> obtenMCarritoComprasManagerListEncOrden() {
 		return mCarritoComprasManagerListEncOrden;
 	}
 
@@ -534,7 +534,7 @@ public class ListaCarritoComprasAction extends AbstractListAction{
 	}
 
 
-	public List<CarritoComprasRolesVO> getMCarritoComprasManagerListDetOrden() {
+	public List<CarritoComprasRolesVO> obtenMCarritoComprasManagerListDetOrden() {
 		return mCarritoComprasManagerListDetOrden;
 	}
 

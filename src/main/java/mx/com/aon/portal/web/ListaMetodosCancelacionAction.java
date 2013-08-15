@@ -125,7 +125,7 @@ public class ListaMetodosCancelacionAction extends AbstractListAction{
 	}
 	
 	
-	public MetodosCancelacionManager getMetodosCancelacionManager() {
+	public MetodosCancelacionManager obtenMetodosCancelacionManager() {
 		return metodosCancelacionManager;
 	}
 	public void setMetodosCancelacionManager(

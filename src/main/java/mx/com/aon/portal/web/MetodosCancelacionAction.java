@@ -159,7 +159,7 @@ public class MetodosCancelacionAction extends ActionSupport {
 		this.dsMetodo = dsMetodo;
 	}
 
-	public MetodosCancelacionManager getMetodosCancelacionManager() {
+	public MetodosCancelacionManager obtenMetodosCancelacionManager() {
 		return metodosCancelacionManager;
 	}
 	public void setMetodosCancelacionManager(

@@ -111,7 +111,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 	}
 	
 	// TODO Cambiar este metodo para que carge de alguna variable o constante en archivos .properties, XML o BD.
-	public String getCadena(String cadena) throws Exception{
+	public String obtenCadena(String cadena) throws Exception{
 		if(cadena.contains("AON")){
 		String[] cadenaMetodo =  cadena.split("AON");
 	    cadenaFinal = "\\AON"+cadenaMetodo[1];
@@ -138,7 +138,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 	
 	
 	@SuppressWarnings("unchecked")
-	public String getPaginaPrincipal() throws Exception {
+	public String obtenPaginaPrincipal() throws Exception {
 
 		if (logger.isDebugEnabled()) {
 			logger.debug("Entrando al metodo getConfiguracionPagina");
@@ -189,7 +189,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 														
 							logger.debug("contenido-top:"+portalVO.getDescripcionArchivo());
-							session.put("CONTENIDO_TOP_IMAGE", getCadena(portalVO.getDescripcionArchivo()));
+							session.put("CONTENIDO_TOP_IMAGE", obtenCadena(portalVO.getDescripcionArchivo()));
 		
 						}
 						break;
@@ -199,7 +199,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 														
 							logger.debug("contenido-nav:"+portalVO.getDescripcionArchivo());
-							session.put("CONTENIDO_NAV_IMAGE", getCadena(portalVO.getDescripcionArchivo()));
+							session.put("CONTENIDO_NAV_IMAGE", obtenCadena(portalVO.getDescripcionArchivo()));
 						}
 						break;
 					case 3:
@@ -208,7 +208,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 														
 							logger.debug("contenido-topLeft"+portalVO.getDescripcionArchivo());
-							session.put("CONTENIDO_TOPLEFT_IMAGE", getCadena(portalVO.getDescripcionArchivo()));
+							session.put("CONTENIDO_TOPLEFT_IMAGE", obtenCadena(portalVO.getDescripcionArchivo()));
 						}
 						
 						//Si es tipo ALERTA, se agrega el nombre del div en donde se mostraran
@@ -221,7 +221,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 													
 							logger.debug("contenido-topCenter"+portalVO.getDescripcionArchivo());
-							session.put("CONTENIDO_TOPCENTER_IMAGE",getCadena(portalVO.getDescripcionArchivo()));
+							session.put("CONTENIDO_TOPCENTER_IMAGE",obtenCadena(portalVO.getDescripcionArchivo()));
 						}
 
 						//Si es tipo ALERTA, se agrega el nombre del div en donde se mostraran
@@ -233,7 +233,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-topRight"+portalVO.getDescripcionArchivo());
-							session.put("CONTENIDO_TOPRIGHT_IMAGE", getCadena(portalVO.getDescripcionArchivo()));
+							session.put("CONTENIDO_TOPRIGHT_IMAGE", obtenCadena(portalVO.getDescripcionArchivo()));
 						}
 						
 						//Si es tipo ALERTA, se agrega el nombre del div en donde se mostraran
@@ -245,10 +245,10 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 							session.put("CONTENIDO_LEFT_1", StringEscapeUtils.unescapeHtml(portalVO.getEspecificacion()));
 						}else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {							
 							logger.debug("contenido-left-1"+portalVO.getDescripcionArchivo());
-							session.put("CONTENIDO_LEFT_1_IMAGE", getCadena(portalVO.getDescripcionArchivo()));						
+							session.put("CONTENIDO_LEFT_1_IMAGE", obtenCadena(portalVO.getDescripcionArchivo()));						
 						}if(StringUtils.isNotBlank(portalVO.getOtroContenido())){
 							logger.debug("contenido-left-1-otro"+portalVO.getOtroContenido());
-							session.put("CONTENIDO_LEFT_1_FILE", getCadena(portalVO.getOtroContenido()));
+							session.put("CONTENIDO_LEFT_1_FILE", obtenCadena(portalVO.getOtroContenido()));
 						}
 
 						//Si es tipo ALERTA, se agrega el nombre del div en donde se mostraran
@@ -260,10 +260,10 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 						}else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-left-2"+portalVO.getDescripcionArchivo());
-							session.put("CONTENIDO_LEFT_2_IMAGE",getCadena(portalVO.getDescripcionArchivo()));
+							session.put("CONTENIDO_LEFT_2_IMAGE",obtenCadena(portalVO.getDescripcionArchivo()));
 						}if(StringUtils.isNotBlank(portalVO.getOtroContenido())){
 							logger.debug("contenido-left-2-otro"+portalVO.getOtroContenido());
-							session.put("CONTENIDO_LEFT_2_FILE", getCadena(portalVO.getOtroContenido()));
+							session.put("CONTENIDO_LEFT_2_FILE", obtenCadena(portalVO.getOtroContenido()));
 						}
 						
 						//Si es tipo ALERTA, se agrega el nombre del div en donde se mostraran
@@ -275,10 +275,10 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-left-3"+portalVO.getDescripcionArchivo());
-							session.put("CONTENIDO_LEFT_3_IMAGE",getCadena(portalVO.getDescripcionArchivo()));
+							session.put("CONTENIDO_LEFT_3_IMAGE",obtenCadena(portalVO.getDescripcionArchivo()));
 						}if(StringUtils.isNotBlank(portalVO.getOtroContenido())){
 							logger.debug("contenido-left-3-otro"+portalVO.getOtroContenido());
-							session.put("CONTENIDO_LEFT_3_FILE", getCadena(portalVO.getOtroContenido()));
+							session.put("CONTENIDO_LEFT_3_FILE", obtenCadena(portalVO.getOtroContenido()));
 						}
 						
 						//Si es tipo ALERTA, se agrega el nombre del div en donde se mostraran
@@ -292,10 +292,10 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-left-4_image"+portalVO.getDescripcionArchivo());
-							session.put("CONTENIDO_LEFT_4_IMAGE",getCadena(portalVO.getDescripcionArchivo()));
+							session.put("CONTENIDO_LEFT_4_IMAGE",obtenCadena(portalVO.getDescripcionArchivo()));
 						}if(StringUtils.isNotBlank(portalVO.getOtroContenido())){
 							logger.debug("contenido-left-4-otro"+portalVO.getOtroContenido());
-							session.put("CONTENIDO_LEFT_4_FILE", getCadena(portalVO.getOtroContenido()));
+							session.put("CONTENIDO_LEFT_4_FILE", obtenCadena(portalVO.getOtroContenido()));
 						}
 
 						//Si es tipo ALERTA, se agrega el nombre del div en donde se mostraran
@@ -307,10 +307,10 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-left-5"+portalVO.getDescripcionArchivo());
-							session.put("CONTENIDO_LEFT_5_IMAGE",getCadena(portalVO.getDescripcionArchivo()));
+							session.put("CONTENIDO_LEFT_5_IMAGE",obtenCadena(portalVO.getDescripcionArchivo()));
 						}if(StringUtils.isNotBlank(portalVO.getOtroContenido())){
 							logger.debug("contenido-left-5-otro"+portalVO.getOtroContenido());
-							session.put("CONTENIDO_LEFT_5_FILE", getCadena(portalVO.getOtroContenido()));
+							session.put("CONTENIDO_LEFT_5_FILE", obtenCadena(portalVO.getOtroContenido()));
 						}
 						
 						//Si es tipo ALERTA, se agrega el nombre del div en donde se mostraran
@@ -322,11 +322,11 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-right-1"+portalVO.getDescripcionArchivo());
-							session.put("CONTENIDO_RIGHT_1_IMAGE",getCadena(portalVO.getDescripcionArchivo()));
+							session.put("CONTENIDO_RIGHT_1_IMAGE",obtenCadena(portalVO.getDescripcionArchivo()));
 						}if(StringUtils.isNotBlank(portalVO.getOtroContenido())){
 							
 							logger.debug("contenido-right-1-otro"+portalVO.getOtroContenido());
-							session.put("CONTENIDO_RIGHT_1_FILE", getCadena(portalVO.getOtroContenido()));
+							session.put("CONTENIDO_RIGHT_1_FILE", obtenCadena(portalVO.getOtroContenido()));
 						}
 						
 						//Si es tipo ALERTA, se agrega el nombre del div en donde se mostraran
@@ -338,11 +338,11 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-right-2"+portalVO.getDescripcionArchivo());
-							session.put("CONTENIDO_RIGHT_2_IMAGE",getCadena(portalVO.getDescripcionArchivo()));
+							session.put("CONTENIDO_RIGHT_2_IMAGE",obtenCadena(portalVO.getDescripcionArchivo()));
 						}if(StringUtils.isNotBlank(portalVO.getOtroContenido())){
 							
 							logger.debug("contenido-right-2-otro"+portalVO.getOtroContenido());
-							session.put("CONTENIDO_RIGHT_2_FILE", getCadena(portalVO.getOtroContenido()));
+							session.put("CONTENIDO_RIGHT_2_FILE", obtenCadena(portalVO.getOtroContenido()));
 						}
 
 						//Si es tipo ALERTA, se agrega el nombre del div en donde se mostraran
@@ -355,11 +355,11 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-right-3"+portalVO.getDescripcionArchivo());
-							session.put("CONTENIDO_RIGHT_3_IMAGE",getCadena(portalVO.getDescripcionArchivo()));
+							session.put("CONTENIDO_RIGHT_3_IMAGE",obtenCadena(portalVO.getDescripcionArchivo()));
 						}if(StringUtils.isNotBlank(portalVO.getOtroContenido())){
 							
 							logger.debug("contenido-right-3-otro"+portalVO.getOtroContenido());
-							session.put("CONTENIDO_RIGHT_3_FILE", getCadena(portalVO.getOtroContenido()));
+							session.put("CONTENIDO_RIGHT_3_FILE", obtenCadena(portalVO.getOtroContenido()));
 						}
 
 						//Si es tipo ALERTA, se agrega el nombre del div en donde se mostraran
@@ -372,12 +372,12 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-right-4"+portalVO.getDescripcionArchivo());
-							session.put("CONTENIDO_RIGHT_4_IMAGE",getCadena(portalVO.getDescripcionArchivo()));
+							session.put("CONTENIDO_RIGHT_4_IMAGE",obtenCadena(portalVO.getDescripcionArchivo()));
 							
 						}if(StringUtils.isNotBlank(portalVO.getOtroContenido())){
 							
 							logger.debug("contenido-right-4-otro"+portalVO.getOtroContenido());
-							session.put("CONTENIDO_RIGHT_4_FILE", getCadena(portalVO.getOtroContenido()));
+							session.put("CONTENIDO_RIGHT_4_FILE", obtenCadena(portalVO.getOtroContenido()));
 						}
 
 						//Si es tipo ALERTA, se agrega el nombre del div en donde se mostraran
@@ -390,11 +390,11 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-right-5"+portalVO.getDescripcionArchivo());
-							session.put("CONTENIDO_RIGHT_5_IMAGE", getCadena(portalVO.getDescripcionArchivo()));
+							session.put("CONTENIDO_RIGHT_5_IMAGE", obtenCadena(portalVO.getDescripcionArchivo()));
 						}if(StringUtils.isNotBlank(portalVO.getOtroContenido())){
 							
 							logger.debug("contenido-right-5-otro"+portalVO.getOtroContenido());
-							session.put("CONTENIDO_RIGHT_5_FILE", getCadena(portalVO.getOtroContenido()));
+							session.put("CONTENIDO_RIGHT_5_FILE", obtenCadena(portalVO.getOtroContenido()));
 						}
 
 						//Si es tipo ALERTA, se agrega el nombre del div en donde se mostraran
@@ -408,7 +408,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-main"+portalVO.getContenido());
-							session.put("CONTENIDO_MAIN_IMAGE",getCadena(portalVO.getContenido()));
+							session.put("CONTENIDO_MAIN_IMAGE",obtenCadena(portalVO.getContenido()));
 						}
 
 						//Si es tipo ALERTA, se agrega el nombre del div en donde se mostraran
@@ -421,11 +421,11 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 						}else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-news"+portalVO.getDescripcionArchivo());
-							session.put("CONTENIDO_NEWS_IMAGE",getCadena(portalVO.getDescripcionArchivo()));
+							session.put("CONTENIDO_NEWS_IMAGE",obtenCadena(portalVO.getDescripcionArchivo()));
 						}if(StringUtils.isNotBlank(portalVO.getOtroContenido())){
 							
 							logger.debug("contenido-news-otro"+portalVO.getOtroContenido());
-							session.put("CONTENIDO_NEWS_FILE", getCadena(portalVO.getOtroContenido()));
+							session.put("CONTENIDO_NEWS_FILE", obtenCadena(portalVO.getOtroContenido()));
 						}
 
 						//Si es tipo ALERTA, se agrega el nombre del div en donde se mostraran
@@ -438,11 +438,11 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 						}else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-newThat"+portalVO.getDescripcionArchivo());
-							session.put("CONTENIDO_KNEWTHAT_IMAGE",getCadena(portalVO.getDescripcionArchivo()));
+							session.put("CONTENIDO_KNEWTHAT_IMAGE",obtenCadena(portalVO.getDescripcionArchivo()));
 						}if(StringUtils.isNotBlank(portalVO.getOtroContenido())){
 							
 							logger.debug("contenido-newThat-otro:"+portalVO.getOtroContenido());
-							session.put("CONTENIDO_KNEWTHAT_FILE", getCadena(portalVO.getOtroContenido()));
+							session.put("CONTENIDO_KNEWTHAT_FILE", obtenCadena(portalVO.getOtroContenido()));
 						}
 
 						//Si es tipo ALERTA, se agrega el nombre del div en donde se mostraran
@@ -456,7 +456,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-mainDown"+portalVO.getDescripcionArchivo());
-							session.put("CONTENIDO_MAINDOWN_IMAGE",getCadena(portalVO.getDescripcionArchivo()));
+							session.put("CONTENIDO_MAINDOWN_IMAGE",obtenCadena(portalVO.getDescripcionArchivo()));
 						}
 
 						//Si es tipo ALERTA, se agrega el nombre del div en donde se mostraran
@@ -469,11 +469,11 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-otherLeft"+portalVO.getDescripcionArchivo());
-							session.put("CONTENIDO_OTHERLEFT_IMAGE",getCadena(portalVO.getDescripcionArchivo()));
+							session.put("CONTENIDO_OTHERLEFT_IMAGE",obtenCadena(portalVO.getDescripcionArchivo()));
 						}if(StringUtils.isNotBlank(portalVO.getOtroContenido())){
 							
 							logger.debug("contenido-otherLeft-otro:"+portalVO.getOtroContenido());
-							session.put("CONTENIDO_OTHERLEFT_FILE", getCadena(portalVO.getOtroContenido()));
+							session.put("CONTENIDO_OTHERLEFT_FILE", obtenCadena(portalVO.getOtroContenido()));
 						}
 
 						//Si es tipo ALERTA, se agrega el nombre del div en donde se mostraran
@@ -486,11 +486,11 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-otherRight"+portalVO.getDescripcionArchivo());
-							session.put("CONTENIDO_OTHERRIGHT_IMAGE",getCadena(portalVO.getDescripcionArchivo()));
+							session.put("CONTENIDO_OTHERRIGHT_IMAGE",obtenCadena(portalVO.getDescripcionArchivo()));
 							
 						} if(StringUtils.isNotBlank(portalVO.getOtroContenido())){							
 							logger.debug("contenido-otherRight-otro:"+portalVO.getOtroContenido());
-							session.put("CONTENIDO_OTHERRIGHT_FILE", getCadena(portalVO.getOtroContenido()));
+							session.put("CONTENIDO_OTHERRIGHT_FILE", obtenCadena(portalVO.getOtroContenido()));
 						}
 
 						//Si es tipo ALERTA, se agrega el nombre del div en donde se mostraran
@@ -503,7 +503,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-others"+portalVO.getDescripcionArchivo());
-							session.put("CONTENIDO_OTHERS_IMAGE",getCadena(portalVO.getDescripcionArchivo()));
+							session.put("CONTENIDO_OTHERS_IMAGE",obtenCadena(portalVO.getDescripcionArchivo()));
 						}
 
 						//Si es tipo ALERTA, se agrega el nombre del div en donde se mostraran
@@ -516,7 +516,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-footerLeft"+portalVO.getDescripcionArchivo());
-							session.put("CONTENIDO_FOOTERLEFT_IMAGE",getCadena(portalVO.getDescripcionArchivo()));
+							session.put("CONTENIDO_FOOTERLEFT_IMAGE",obtenCadena(portalVO.getDescripcionArchivo()));
 						}
 
 						//Si es tipo ALERTA, se agrega el nombre del div en donde se mostraran
@@ -529,7 +529,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-footerCenter"+portalVO.getDescripcionArchivo());
-							session.put("CONTENIDO_FOOTERCENTER_IMAGE", getCadena(portalVO.getDescripcionArchivo()));
+							session.put("CONTENIDO_FOOTERCENTER_IMAGE", obtenCadena(portalVO.getDescripcionArchivo()));
 						}
 
 						//Si es tipo ALERTA, se agrega el nombre del div en donde se mostraran
@@ -542,7 +542,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-footerRight"+portalVO.getDescripcionArchivo());
-							session.put("CONTENIDO_FOOTERRIGHT_IMAGE",getCadena(portalVO.getDescripcionArchivo()));
+							session.put("CONTENIDO_FOOTERRIGHT_IMAGE",obtenCadena(portalVO.getDescripcionArchivo()));
 							
 						}
 

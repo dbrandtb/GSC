@@ -221,7 +221,7 @@ public class ListaPersonasAction extends AbstractListAction {
 	}
 
 
-	public PersonasManager getPersonasManager() {
+	public PersonasManager obtenPersonasManager() {
 		return personasManager;
 	}
 

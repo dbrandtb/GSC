@@ -461,7 +461,7 @@ public class tablaEquivalenciaAction extends AbstractListAction{
 	}
 	
 	
-	public AdministracionEquivalenciaManager getAdministracionEquivalenciaManager() {
+	public AdministracionEquivalenciaManager obtenAdministracionEquivalenciaManager() {
 		return administracionEquivalenciaManager;
 	}
 

@@ -49,7 +49,7 @@ public class RequisitosRehabilitacionAction extends ActionSupport {
 	public String cmdBorrarClick() throws Exception
 	{
 		try{
-			resultMessage = this.getRequisitosRehabilitacionManager().borrarRequisitoRehabilitacion(cdRequisito, cdUnieco, cdRamo, cdElemento, cdDocXcta);
+			resultMessage = this.obtenRequisitosRehabilitacionManager().borrarRequisitoRehabilitacion(cdRequisito, cdUnieco, cdRamo, cdElemento, cdDocXcta);
             success = true;
             addActionMessage(resultMessage);
             return SUCCESS;
@@ -142,7 +142,7 @@ public class RequisitosRehabilitacionAction extends ActionSupport {
 	public void setSuccess(boolean success) {this.success = success;}
 
 
-	public RequisitosRehabilitacionManager getRequisitosRehabilitacionManager() {
+	public RequisitosRehabilitacionManager obtenRequisitosRehabilitacionManager() {
 		return requisitosRehabilitacionManager;
 	}
 

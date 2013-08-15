@@ -159,7 +159,7 @@ public class JasperReportesAction extends ActionSupport  implements SessionAware
         this.reportesList = reportes;
     }
 
-    public ReportesManager getReportesManager() {
+    public ReportesManager obtenReportesManager() {
         return reportesManager;
     }
 

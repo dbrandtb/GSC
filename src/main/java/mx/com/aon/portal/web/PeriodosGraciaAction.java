@@ -158,7 +158,7 @@ public class PeriodosGraciaAction extends ActionSupport {
 	}
 
 
-	public PeriodosGraciaManager getPeriodosGraciaManager() {
+	public PeriodosGraciaManager obtenPeriodosGraciaManager() {
 		return periodosGraciaManager;
 	}
 

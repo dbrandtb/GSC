@@ -65,7 +65,7 @@ public class MotivosCancelacionAction extends ActionSupport {
 	 */
 	public String cmdBorrarClickMc() throws Exception{
 		try{
-			resultMessage = this.getMotivosCancelacionManager().borrarMotivosCancelacion(cdRazon);
+			resultMessage = this.obtenMotivosCancelacionManager().borrarMotivosCancelacion(cdRazon);
 			addActionMessage(resultMessage);
             success = true;
             return SUCCESS;
@@ -94,7 +94,7 @@ public class MotivosCancelacionAction extends ActionSupport {
 	 */
 	public String cmdBorrarClickRc() throws Exception{
 		try{
-			resultMessage = this.getMotivosCancelacionManager().borrarRequisitoCancelacion(cdRazon,cdAdvert);
+			resultMessage = this.obtenMotivosCancelacionManager().borrarRequisitoCancelacion(cdRazon,cdAdvert);
 			addActionMessage(resultMessage);
             success = true;
             return SUCCESS;
@@ -266,7 +266,7 @@ public class MotivosCancelacionAction extends ActionSupport {
 		this.success = success;
 	}
 
-	public MotivosCancelacionManager getMotivosCancelacionManager() {
+	public MotivosCancelacionManager obtenMotivosCancelacionManager() {
 		return motivosCancelacionManager;
 	}
 

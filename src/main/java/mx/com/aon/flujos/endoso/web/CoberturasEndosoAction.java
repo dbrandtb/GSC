@@ -93,7 +93,7 @@ public class CoberturasEndosoAction extends PrincipalEndosoAction {
         listCoberturasIncisos = new ArrayList<IncisosVO>();
         
         try {
-            PagedList pagedList = getCoberturasIncisos();
+            PagedList pagedList = obtenCoberturasIncisos();
             if (pagedList != null) {
                 listCoberturasIncisos = pagedList.getItemsRangeList();
                 totalCount = pagedList.getTotalItems();
@@ -115,7 +115,7 @@ public class CoberturasEndosoAction extends PrincipalEndosoAction {
      * @throws ApplicationException 
      * @throws mx.com.ice.services.exception.ApplicationException 
      */
-    private PagedList getCoberturasIncisos() throws mx.com.ice.services.exception.ApplicationException, ApplicationException {
+    private PagedList obtenCoberturasIncisos() throws mx.com.ice.services.exception.ApplicationException, ApplicationException {
 //      se obtienen los datos
         if (globalVarVO == null) {
             globalVarVO = (GlobalVariableContainerVO) session.get(Constantes.GLOBAL_VARIABLE_CONTAINER);
@@ -204,7 +204,7 @@ public class CoberturasEndosoAction extends PrincipalEndosoAction {
         }
         
         boolean save = true;
-        PagedList pagedList = getCoberturasIncisos();
+        PagedList pagedList = obtenCoberturasIncisos();
         if (pagedList != null) {
             listCoberturasIncisos = pagedList.getItemsRangeList();
         } else {
@@ -430,7 +430,7 @@ public class CoberturasEndosoAction extends PrincipalEndosoAction {
      *  
      */
     @SuppressWarnings("unchecked")
-    public String getCombos() throws Exception {
+    public String obtenCombos() throws Exception {
         if (globalVarVO == null) {
             globalVarVO = (GlobalVariableContainerVO) session.get(Constantes.GLOBAL_VARIABLE_CONTAINER);
         }
@@ -445,7 +445,7 @@ public class CoberturasEndosoAction extends PrincipalEndosoAction {
         }
         
         if (logger.isDebugEnabled()){
-            logger.debug("----> getCombos");
+            logger.debug("----> obtenCombos");
             logger.debug("cdUnieco     : " + cdUnieco);
             logger.debug("cdRamo       : " + cdRamo);
             logger.debug("estado       : " + estado);
@@ -500,7 +500,7 @@ public class CoberturasEndosoAction extends PrincipalEndosoAction {
             /////////////////////////////////////////////////////////////////////////
             
             session.put("CLAVE_OBJETO_COBERTURAS", claveObjeto);
-            extElementsAgregar = getListCoberturasExtElements(param, valoresXDefectoMap);
+            extElementsAgregar = obtenListCoberturasExtElements(param, valoresXDefectoMap);
             /*SimpleCombo simpleCombo = null;
             String idCombo = null;
             String cve = null;
@@ -530,7 +530,7 @@ public class CoberturasEndosoAction extends PrincipalEndosoAction {
                         valoresXDefectoCoberturaVO = valoresXDefectoMap.get(cve);
                         valorAtributo = valoresXDefectoCoberturaVO.getValorCob();
                         logger.debug(":: valorAtributo -> " + valorAtributo);
-                        descripcionAtributo = getValorAtributo("", valorAtributo);
+                        descripcionAtributo = obtenValorAtributo("", valorAtributo);
                         logger.debug(":: descripcionAtributo -> " + descripcionAtributo);
                         
                         simpleCombo.setValue(descripcionAtributo);
@@ -804,11 +804,11 @@ public class CoberturasEndosoAction extends PrincipalEndosoAction {
      * @throws Exception 
      */
     @SuppressWarnings("unchecked")
-    public String getPantallaCoberturas() throws Exception{
+    public String obtenPantallaCoberturas() throws Exception{
         status = "V";
         
         if (logger.isDebugEnabled()){
-            logger.debug("----> getPantallaCoberturas");
+            logger.debug("----> obtenPantallaCoberturas");
             logger.debug("cdUnieco          :"+cdUnieco);
             logger.debug("cdRamo            :"+cdRamo);
             logger.debug("estado            :"+estado);
@@ -830,7 +830,7 @@ public class CoberturasEndosoAction extends PrincipalEndosoAction {
         param.put("cdatribu", "");
         param.put("status", status); 
         
-        extElements = getListCoberturasExtElements(param, dsDeducible);
+        extElements = obtenListCoberturasExtElements(param, dsDeducible);
         
         if (extElements == null || extElements.isEmpty()) {
             TextFieldControl tfHidden = new TextFieldControl();
@@ -861,10 +861,10 @@ public class CoberturasEndosoAction extends PrincipalEndosoAction {
      * @return
      * @throws Exception 
      */
-    private List<ExtElement> getListCoberturasExtElements(Map<String, String> param, 
+    private List<ExtElement> obtenListCoberturasExtElements(Map<String, String> param, 
             String dsDeducible) throws Exception {
         if (logger.isDebugEnabled()){
-            logger.debug("----> getListCoberturasExtElements");
+            logger.debug("----> obtenListCoberturasExtElements");
             logger.debug("cdUnieco     :" + param.get("cdunieco"));
             logger.debug("cdRamo       :" + param.get("cdramo"));
             logger.debug("estado       :" + param.get("estado"));
@@ -911,7 +911,7 @@ public class CoberturasEndosoAction extends PrincipalEndosoAction {
                             for (SimpleCombo scombo : storeElements) {
                             
                                 if (DEDUCIBLE.equals(scombo.getId())) {
-                                    descripcionDsDeducible = getValorAtributo(
+                                    descripcionDsDeducible = obtenValorAtributo(
                                             StringUtils.replace(simpleCombo.getStore(), "store", ""), 
                                                 dsDeducible);
                                     logger.debug(":: descripcionAtributo -> " + descripcionDsDeducible);
@@ -936,7 +936,7 @@ public class CoberturasEndosoAction extends PrincipalEndosoAction {
             //}            
         }catch(ApplicationException ex){
             if (logger.isDebugEnabled()) {
-                logger.debug("getPantallaCoberturas EXCEPTION:: " + ex);
+                logger.debug("obtenPantallaCoberturas EXCEPTION:: " + ex);
             }
         }
         
@@ -950,10 +950,10 @@ public class CoberturasEndosoAction extends PrincipalEndosoAction {
      * @return
      * @throws Exception 
      */
-    private List<ExtElement> getListCoberturasExtElements(Map<String, String> param, 
+    private List<ExtElement> obtenListCoberturasExtElements(Map<String, String> param, 
             Map<String, ValoresXDefectoCoberturaVO> valoresXDefectoMap) throws Exception {
         if (logger.isDebugEnabled()){
-            logger.debug("----> getListCoberturasExtElements");
+            logger.debug("----> obtenListCoberturasExtElements");
             logger.debug("cdUnieco     :" + param.get("cdunieco"));
             logger.debug("cdRamo       :" + param.get("cdramo"));
             logger.debug("estado       :" + param.get("estado"));
@@ -1015,7 +1015,7 @@ public class CoberturasEndosoAction extends PrincipalEndosoAction {
                                             valorAtributo = valoresXDefectoCoberturaVO.getValorCob();
                                         
                                             logger.debug("::::: valorAtributo -> " + valorAtributo);
-                                            descripcionAtributo = getValorAtributo(
+                                            descripcionAtributo = obtenValorAtributo(
                                                     StringUtils.replace(simpleCombo.getStore(), "store", ""), 
                                                     valorAtributo);
                                             logger.debug("::::: descripcionAtributo -> " + descripcionAtributo);
@@ -1062,7 +1062,7 @@ public class CoberturasEndosoAction extends PrincipalEndosoAction {
             //}            
         }catch(ApplicationException ex){
             if (logger.isDebugEnabled()) {
-                logger.debug("getPantallaCoberturas EXCEPTION:: " + ex);
+                logger.debug("obtenPantallaCoberturas EXCEPTION:: " + ex);
             }
         }
         

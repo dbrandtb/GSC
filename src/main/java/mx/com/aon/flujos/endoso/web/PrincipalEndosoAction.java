@@ -201,7 +201,7 @@ public class PrincipalEndosoAction extends ActionSupport implements  SessionAwar
      * @return
      * @throws Exception
      */
-    protected String getValorAtributo(String tabla, String clave) throws Exception{   
+    protected String obtenValorAtributo(String tabla, String clave) throws Exception{   
         if (logger.isDebugEnabled()) {
             logger.debug("---> getValorAtributo ");
             logger.debug("::::.. tabla : " + tabla);
@@ -231,7 +231,7 @@ public class PrincipalEndosoAction extends ActionSupport implements  SessionAwar
      * @return
      * @throws Exception
      */
-    protected String getValorAtributo(String tabla, String clave, Map<String, String> entryDataCombo) throws Exception{   
+    protected String obtenValorAtributo(String tabla, String clave, Map<String, String> entryDataCombo) throws Exception{   
         if (logger.isDebugEnabled()) {
             logger.debug("---> getValorAtributo ");
             logger.debug("::::.. tabla : " + tabla);

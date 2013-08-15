@@ -168,7 +168,7 @@
 		</action>
 		 -->
 		
-		<action name="load" class="paginaPrincipalAction" method="getPaginaPrincipal">
+		<action name="load" class="paginaPrincipalAction" method="obtenPaginaPrincipal">
 			<result>/jsp/portal/portal.jsp</result>
 		</action>
         

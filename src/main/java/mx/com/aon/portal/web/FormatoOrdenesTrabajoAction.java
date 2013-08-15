@@ -49,7 +49,7 @@ public class FormatoOrdenesTrabajoAction extends ActionSupport {
 	public String cmdBorrarClick() throws Exception{
 		String messageResult = "";
 		try{
-			messageResult = this.getFormatoOrdenesTrabajoManager().borrarFormatoOrdenesTrabajo(cdFormatoOrden);
+			messageResult = this.obtenFormatoOrdenesTrabajoManager().borrarFormatoOrdenesTrabajo(cdFormatoOrden);
 			addActionMessage(messageResult);
             success = true;
             return SUCCESS;
@@ -147,7 +147,7 @@ public class FormatoOrdenesTrabajoAction extends ActionSupport {
 			FormatoOrdenesTrabajoVO formatoOrdenesTrabajoVO = new FormatoOrdenesTrabajoVO();
 			formatoOrdenesTrabajoVO.setCdFormatoOrden(cdFormatoOrden);
         	
-			messageResult = this.getFormatoOrdenesTrabajoManager().copiarFormatoOrdenesTrabajo(cdFormatoOrden);
+			messageResult = this.obtenFormatoOrdenesTrabajoManager().copiarFormatoOrdenesTrabajo(cdFormatoOrden);
 			addActionMessage(messageResult);
             success = true;
             return SUCCESS;
@@ -211,7 +211,7 @@ public class FormatoOrdenesTrabajoAction extends ActionSupport {
 		this.formatoOrdenesTrabajoManager = formatoOrdenesTrabajoManager;
 	}
 
-	public FormatoOrdenesTrabajoManager getFormatoOrdenesTrabajoManager() {
+	public FormatoOrdenesTrabajoManager obtenFormatoOrdenesTrabajoManager() {
 		return formatoOrdenesTrabajoManager;
 	}
 

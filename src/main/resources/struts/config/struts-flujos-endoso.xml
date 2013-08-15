@@ -43,7 +43,7 @@
         </action>
 
         <!-- Consulta Atributos Variables de Funcion en Poliza (Datos Rol) -->
-        <action name="datosRol" class="endosoAction" method="getPantallaDatosRol">
+        <action name="datosRol" class="endosoAction" method="obtenPantallaDatosRol">
             <result name="success" type="json" />
         </action>
 
@@ -207,12 +207,12 @@
         </action>
 
         <!-- Consulta Agrupador -->
-        <action name="consultaAgrupador" class="incisoEndosoAction" method="getAgrupador">
+        <action name="consultaAgrupador" class="incisoEndosoAction" method="obtenAgrupador">
             <result name="success" type="json" />
         </action>
 
         <!-- Consulta de Coberturas -->
-        <action name="datosCoberturas" class="coberturasEndosoAction" method="getPantallaCoberturas">
+        <action name="datosCoberturas" class="coberturasEndosoAction" method="obtenPantallaCoberturas">
             <result name="success" type="json" />
         </action>
 
@@ -235,7 +235,7 @@
         </action>
 
         <!-- Pantalla Incisos -->
-        <action name="datosIncisosEndoso" class="incisoEndosoAction" method="getPantallaIncisos">
+        <action name="datosIncisosEndoso" class="incisoEndosoAction" method="obtenPantallaIncisos">
             <result name="success">/jsp/flujos/endoso/datosIncisosEndoso.jsp</result>
         </action>
 
@@ -244,7 +244,7 @@
             <result name="success" type="json" />
         </action>
 
-        <action name="cargaItems" class="coberturasEndosoAction" method="getCombos">
+        <action name="cargaItems" class="coberturasEndosoAction" method="obtenCombos">
             <result name="success" type="json" />
             <result name="input">/jsp/flujos/endoso/datosIncisosEndoso.jsp</result>
         </action>
@@ -259,12 +259,12 @@
             <result name="success" type="json" />
         </action>
 
-        <action name="cargaItemsAccesorios" class="accesoriosEndosoAction" method="getCombos">
+        <action name="cargaItemsAccesorios" class="accesoriosEndosoAction" method="obtenCombos">
             <result name="success" type="json" />
             <result name="input">/jsp/flujos/endoso/datosIncisosEndoso.jsp</result>
         </action>
 
-        <action name="cargaListaTipoAccesorios" class="accesoriosEndosoAction" method="getTipos">
+        <action name="cargaListaTipoAccesorios" class="accesoriosEndosoAction" method="obtenTipos">
             <result name="success" type="json" />
             <result name="input">/jsp/flujos/endoso/datosIncisosEndoso.jsp</result>
         </action>
@@ -285,7 +285,7 @@
         </action>
 
         <!-- Consulta de Accesorios -->
-        <action name="datosAccesorios" class="accesoriosEndosoAction" method="getPantallaAccesorios">
+        <action name="datosAccesorios" class="accesoriosEndosoAction" method="obtenPantallaAccesorios">
             <result name="success" type="json" />
         </action>
 
@@ -315,11 +315,11 @@
         <action name="psacaEndoso" class="endosoPolizaAction" method="psacaEndoso">
             <result name="success" type="json" />
         </action>
-        <action name="poliza" class="endosoPolizaAction" method="getEndososPoliza">
+        <action name="poliza" class="endosoPolizaAction" method="obtenEndososPoliza">
             <result name="success">/jsp/flujos/endoso/poliza/endosoPoliza.jsp</result>
             <result name="input">/jsp/flujos/endoso/poliza/endosoPoliza.jsp</result>
         </action>
-        <action name="cargaEndosos" class="endosoPolizaAction" method="getEndososPoliza">
+        <action name="cargaEndosos" class="endosoPolizaAction" method="obtenEndososPoliza">
             <result name="success" type="json" />
         </action>
         <action name="cargaTotales" class="endosoPolizaAction" method="cargaImportes">
@@ -331,7 +331,7 @@
         <action name="obtieneDetalleTarificar" class="endosoPolizaAction" method="obtieneDetalleTarificar">
             <result name="success" type="json" />
         </action>
-        <action name="getValorEndoso" class="endosoPolizaAction" method="getValorEndoso">
+        <action name="getValorEndoso" class="endosoPolizaAction" method="obtenValorEndoso">
             <result name="success" type="json" />
         </action>
         <action name="confirmarTarificar" class="endosoPolizaAction" method="confirmarTarificar">
@@ -364,16 +364,16 @@
             <result name="success" type="json" />
         </action>
         <!-- Rol Poliza -->
-        <action name="getPolizaRol" class="rolPolizaEndosoAction" method="getPolizaRol">
+        <action name="getPolizaRol" class="rolPolizaEndosoAction" method="obtenPolizaRol">
             <result name="success" type="json" />
         </action>
-        <action name="getPantallaRolPoliza" class="rolPolizaEndosoAction" method="getPantallaRolPoliza">
+        <action name="getPantallaRolPoliza" class="rolPolizaEndosoAction" method="obtenPantallaRolPoliza">
             <result name="success" type="json" />
         </action>
-        <action name="getComboRol" class="rolPolizaEndosoAction" method="getComboRol">
+        <action name="getComboRol" class="rolPolizaEndosoAction" method="obtenComboRol">
             <result name="success" type="json" />
         </action>
-        <action name="getComboPersona" class="rolPolizaEndosoAction" method="getComboPersona">
+        <action name="getComboPersona" class="rolPolizaEndosoAction" method="obtenComboPersona">
             <result name="success" type="json" />
         </action>
 

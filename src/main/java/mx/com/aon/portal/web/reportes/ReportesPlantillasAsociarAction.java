@@ -100,7 +100,7 @@ public class ReportesPlantillasAsociarAction extends ActionSupport implements Se
         this.plantillas_reportes = plantillas_reportes;
     }
 
-    public ReportesManager getReportesManager() {
+    public ReportesManager obtenReportesManager() {
         return reportesManager;
     }
 

@@ -4536,7 +4536,7 @@ public class CombosAction extends ActionSupport {
 	}
 
 
-	public List getComboSexo() {
+	public List obtenCombosexo() {
 		return comboSexo;
 	}
 
@@ -4698,7 +4698,7 @@ public class CombosAction extends ActionSupport {
 		}
 
 
-		/*public CombosManager getCombosManager() {
+		/*public CombosManager obtenCombosManager() {
 			return combosManager;
 		}*/
 
@@ -5448,7 +5448,7 @@ public class CombosAction extends ActionSupport {
 			this.cboUnidad = cboUnidad;
 		}
 
-		public CombosManager getCombosManager() {
+		public CombosManager obtenCombosManager() {
 			return combosManager;
 		}
 
@@ -5533,7 +5533,7 @@ public class CombosAction extends ActionSupport {
 		}
 
 
-		public CombosManager2 getCombosManager2() {
+		public CombosManager2 obtenCombosManager2() {
 			return combosManager2;
 		}
 

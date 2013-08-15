@@ -73,7 +73,7 @@ public class ConsultaPolizaRenovadaAction extends ActionSupport{
 	 * 
 	 * @throws Exception
 	 */
-	public String getPolizaEncabezado()throws ApplicationException{
+	public String obtenPolizaEncabezado()throws ApplicationException{
 		try{
 			mListPolizaEncabezado = new ArrayList<EncabezadoPolizaVO>();
 			EncabezadoPolizaVO vo = consultaPolizaRenovadaManager.getPolizaEncabezado(cdUniEco, cdRamo, estado, nmPoliza); 
