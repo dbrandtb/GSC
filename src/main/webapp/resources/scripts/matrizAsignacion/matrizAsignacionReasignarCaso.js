@@ -78,7 +78,7 @@ var incisosFormBuscaUsuarios = new Ext.FormPanel({
                 						} else{
                 							Ext.MessageBox.alert(getLabelFromMap('400000', helpMap,'Aviso'),getLabelFromMap('400013', helpMap,'Complete la informacion requerida'));
 										}
-									*/}
+									}
         							},{
         							text:getLabelFromMap('ntfcnButtonCancelar',helpMap,'Cancelar'),
         							tooltip: getToolTipFromMap('ntfcnButtonCancelar',helpMap,'Cancelar busqueda de Asignaciones'),                              
@@ -89,7 +89,7 @@ var incisosFormBuscaUsuarios = new Ext.FormPanel({
         					}]
         				}]	            
         
-});   
+});   */
 
 
    
@@ -439,9 +439,9 @@ function cbkConnection (_success, _message) {
 	}else {
 		Ext.Msg.alert(getLabelFromMap('400000', helpMap,'Aviso'), _message, function(){reloadGrid()});
 	}
-}  */    
+}      
 });
-
+*/
 
 /*
 function reloadGrid(){
@@ -458,5 +458,4 @@ function cbkReload(_r, _options, _success, _store) {
 		Ext.Msg.alert(getLabelFromMap('400010', helpMap,'Error'), _store.reader.jsonData.actionErrors[0]);
 	}
 }
-*/
 */

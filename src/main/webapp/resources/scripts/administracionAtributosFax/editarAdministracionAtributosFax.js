@@ -212,8 +212,8 @@ if (record.get('cdAtribu')!= "" && record.get('cdTipoAr')!= "" )
 admEdtFax.form.load (
 {
     params: { 
-                cdAtribu: setValue(record.get('cdAtribu'),
-                cdTipoAr: setValue(record.get('cdTipoAr')
+                cdAtribu: setValue(record.get('cdAtribu')),
+                cdTipoAr: setValue(record.get('cdTipoAr'))
                 },
     waitTitle: getLabelFromMap('400017',helpMap,'Espere ...'),
     waitMsg : getLabelFromMap('400028',helpMap,'Leyendo datos ...'),

@@ -107,7 +107,7 @@ function createGrid(){
         		text:getLabelFromMap('gridPlanClienteBack',helpMap,'Regresa a la pantalla anterior')
             	},{
             	tooltip: getToolTipFromMap('gridPlanClienteExp',helpMap,'Exportar'),
-        		text:getLabelFromMap('gridPlanClienteExp',helpMap, 'Exporta un plan')
+        		text:getLabelFromMap('gridPlanClienteExp',helpMap, 'Exporta un plan'),
             	handler:function(){
                         var url = _ACTION_PLANESCLIENTE_EXPORT + '?codigoElemento=' + codigoElemento.getValue()+ '&codigoProducto=' + codigoProducto.getValue()+ '&codigoPlan=' + codigoPlan.getValue() + '?codigoTipoSituacion=' + codigoTipoSituacion.getValue() + '?garantia=' + garantia.getValue() + '?aseguradora=' + aseguradora.getValue();
                 	 	showExportDialog( url );
