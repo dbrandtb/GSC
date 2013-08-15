@@ -168,7 +168,7 @@ public class ConsultarCasoDetalleAction extends ActionSupport{
 	}
 
 
-	public AdministracionCasosManager getAdministracionCasosManager() {
+	public AdministracionCasosManager obtenAdministracionCasosManager() {
 		return administracionCasosManager;
 	}
 

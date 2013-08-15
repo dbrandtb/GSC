@@ -564,7 +564,7 @@ public class ConfigurarEncuestaAction extends ActionSupport{
 		this.success = success;
 	}
 
-	public ConfigurarEncuestaManager getConfigurarEncuestaManager() {
+	public ConfigurarEncuestaManager obtenConfigurarEncuestaManager() {
 		return configurarEncuestaManager;
 	}
 

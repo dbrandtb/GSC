@@ -185,7 +185,7 @@ public class DatosFijosAction extends ExpresionesPadre{
 	/**
 	 * @return the datosFijosManager
 	 */
-	public DatosFijosManager getDatosFijosManager() {
+	public DatosFijosManager obtenDatosFijosManager() {
 		return datosFijosManager;
 	}
 	/**

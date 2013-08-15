@@ -174,7 +174,7 @@ public class ConfigurarCompraTiempoAction extends ActionSupport{
 	}
 
 	
-	public ConfigurarCompraTiempoManager getConfigurarCompraTiempoManager() {
+	public ConfigurarCompraTiempoManager obtenConfigurarCompraTiempoManager() {
 		return configurarCompraTiempoManager;
 	}
 

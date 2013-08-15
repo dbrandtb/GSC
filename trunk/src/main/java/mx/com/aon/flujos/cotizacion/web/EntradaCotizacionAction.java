@@ -162,7 +162,7 @@ public class EntradaCotizacionAction extends PrincipalCotizacionAction {
     	 * Se obtienen los combos de la pantalla final para asignarlos al objeto ComboControl
     	 */
     	try {
-    		Map<String,String> storesNames = getStoresTables( (String) session.get("CAPTURA_PANTALLA") );
+    		Map<String,String> storesNames = obtenStoresTables( (String) session.get("CAPTURA_PANTALLA") );
             Iterator It = storesNames.entrySet().iterator();
             while (It.hasNext()) {
             	ComboControl cc = new ComboControl();
@@ -476,7 +476,7 @@ public class EntradaCotizacionAction extends PrincipalCotizacionAction {
         		 */        		
         		paramsCotInput = (Map<String, String>) session.get("COTIZACION_INPUT");
         		logger.debug("paramsCotInput : "+paramsCotInput);
-        		storesNames = getStoresTables(pantallaInicialCot);
+        		storesNames = obtenStoresTables(pantallaInicialCot);
         		logger.debug("storesNames : "+storesNames);
 
         		Iterator itcs = paramsCotInput.entrySet().iterator();
@@ -642,7 +642,7 @@ public class EntradaCotizacionAction extends PrincipalCotizacionAction {
     }
     
     @SuppressWarnings("unchecked")
-	protected Map<String, String> getStoresTables(String nuevaEtiqueta) throws Exception{
+	protected Map<String, String> obtenStoresTables(String nuevaEtiqueta) throws Exception{
 		String cadenaStore = null;
 		String[] cadenaStoreSplit = null;
 		String cadenaStoreClean = null;
@@ -717,7 +717,7 @@ public class EntradaCotizacionAction extends PrincipalCotizacionAction {
     }
     
     @SuppressWarnings("unchecked")
-	protected Map<String, String> getTextTables(String nuevaEtiqueta) throws Exception{
+	protected Map<String, String> obtenTextTables(String nuevaEtiqueta) throws Exception{
 		String cadenaStore = null;
 		String[] cadenaStoreSplit = null;
 		String cadenaStoreClean = null;
@@ -766,7 +766,7 @@ public class EntradaCotizacionAction extends PrincipalCotizacionAction {
 		return storesNames;
     }
     
-    protected String getValorAtributo(String tabla, String clave) throws Exception{   
+    protected String obtenValorAtributo(String tabla, String clave) throws Exception{   
         if (logger.isDebugEnabled()) {
             logger.debug("---> getValorAtributo ");
             logger.debug("::::.. tabla : " + tabla);
@@ -805,7 +805,7 @@ public class EntradaCotizacionAction extends PrincipalCotizacionAction {
         Map parametrosDatosVariables = new HashMap();
 		Map<String,String> storesNames = new HashMap<String, String>();
 		
-		storesNames = getStoresTables(pantallaInicialCot);
+		storesNames = obtenStoresTables(pantallaInicialCot);
         /*
          * Nos aseguramos que si existe PARAMS_DATOS_VARIABLES en session, lo asignamos al mapa parametrosDatosVariables
          */

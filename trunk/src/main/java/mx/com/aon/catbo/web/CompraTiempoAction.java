@@ -207,7 +207,7 @@ public class CompraTiempoAction extends ActionSupport {
 	}
 
 
-	/*public ConfigurarCompraTiempoManager getCompraTiempoManager() {
+	/*public ConfigurarCompraTiempoManager obtenCompraTiempoManager() {
 		return compraTiempoManager;
 	}
 
@@ -218,7 +218,7 @@ public class CompraTiempoAction extends ActionSupport {
 	}*/
 
 
-	/*public ProcesoManager getProcesoManager() {
+	/*public ProcesoManager obtenProcesoManager() {
 		return procesoManager;
 	}*/
 
@@ -228,7 +228,7 @@ public class CompraTiempoAction extends ActionSupport {
 	}
 
 
-	/*public CombosManager getCombosManager() {
+	/*public CombosManager obtenCombosManager() {
 		return combosManager;
 	}
 

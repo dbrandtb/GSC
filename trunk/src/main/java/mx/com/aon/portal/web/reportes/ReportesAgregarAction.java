@@ -50,7 +50,7 @@ public class ReportesAgregarAction extends ActionSupport {
         this.wrongMsg = wrongMsg;
     }
 
-    public MensajesErrorManager getMensajesErrorManager() {
+    public MensajesErrorManager obtenMensajesErrorManager() {
         return mensajesErrorManager;
     }
 
@@ -309,7 +309,7 @@ public class ReportesAgregarAction extends ActionSupport {
         this.statusPlantilla = statusPlantilla;
     }
 
-    public ReportesAgregarManager getReportesAgregarManager() {
+    public ReportesAgregarManager obtenReportesAgregarManager() {
         return reportesAgregarManager;
     }
 

@@ -88,7 +88,7 @@ public class ReportesAtributosAction extends ActionSupport implements SessionAwa
         this.totalCount = totalCount;
     }
 
-    public ReportesManager getReportesManager() {
+    public ReportesManager obtenReportesManager() {
         return reportesManager;
     }
 

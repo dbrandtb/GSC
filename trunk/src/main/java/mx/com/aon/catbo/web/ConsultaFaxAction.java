@@ -204,7 +204,7 @@ public class ConsultaFaxAction extends ActionSupport{
 	}
 
 	
-	public ArchivosFaxesManager getArchivosFaxesManager() {
+	public ArchivosFaxesManager obtenArchivosFaxesManager() {
 		return archivosFaxesManager;
 	}
 

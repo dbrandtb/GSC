@@ -200,7 +200,7 @@ public class ListaStatusCasosAction extends AbstractListAction{
 		mEstructuraList = estructuraList;
 	}
 
-	public StatusCasosManager getStatusCasosManager() {
+	public StatusCasosManager obtenStatusCasosManager() {
 		return statusCasosManager;
 	}
 

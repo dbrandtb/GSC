@@ -212,7 +212,7 @@ public class ListaDesglosePolizasAction extends AbstractListAction{
 		}
 
 
-		public DesglosePolizasManager getDesglosePolizasManager() {
+		public DesglosePolizasManager obtenDesglosePolizasManager() {
 			return desglosePolizasManager;
 		}
 }

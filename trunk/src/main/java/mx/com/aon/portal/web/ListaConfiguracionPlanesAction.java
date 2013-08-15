@@ -72,7 +72,7 @@ public class ListaConfiguracionPlanesAction extends AbstractListAction {
 		mPlanesMPlanPro = planesMPlanPro;
 	}
 
-	public MantenimientoPlanesManager getMantenimientoPlanesManager() {
+	public MantenimientoPlanesManager obtenMantenimientoPlanesManager() {
 		return mantenimientoPlanesManager;
 	}
 

@@ -165,7 +165,7 @@ public class ListaFuncionalidadesPrivilegiosAction extends AbstractListAction{
 
 	public void setExportMediator(ExportMediator exportMediator) {this.exportMediator = exportMediator;}
 
-	public FuncionalidadManager getFuncionalidadManager() {
+	public FuncionalidadManager obtenFuncionalidadManager() {
 		return funcionalidadManager;
 	}
 

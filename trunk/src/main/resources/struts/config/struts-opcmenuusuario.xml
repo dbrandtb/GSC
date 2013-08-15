@@ -25,7 +25,7 @@
         de los atributos la respuesta en Formato JSON para el Reader de ExtJS y cargar el 
         combo de Clientes.
         -->
-        <action name="clienteAction" class="configOpcionMenuUsuario" method="getComboCliente">
+        <action name="clienteAction" class="configOpcionMenuUsuario" method="obtenComboCliente">
             <result name="success" type="json" />
         </action>
         <!--
@@ -33,7 +33,7 @@
         de los atributos la respuesta en Formato JSON para el Reader de ExtJS y cargar el 
         combo de Usuarios.
         -->
-        <action name="usuariosAction" class="configOpcionMenuUsuario" method="getComboUsuarios">
+        <action name="usuariosAction" class="configOpcionMenuUsuario" method="obtenComboUsuarios">
             <result name="success" type="json" />
         </action>
         <!--
@@ -41,7 +41,7 @@
         de los atributos la respuesta en Formato JSON para el Reader de ExtJS y cargar el 
         combo de Productos.
         -->
-        <action name="productoClienteAction" class="configOpcionMenuUsuario" method="getComboProductoCliente">
+        <action name="productoClienteAction" class="configOpcionMenuUsuario" method="obtenComboProductoCliente">
             <result name="success" type="json" />
         </action>
         <!--
@@ -49,15 +49,17 @@
         de los atributos la respuesta en Formato JSON para el Reader de ExtJS y cargar el 
         combo de Productos.
         -->
-        <action name="nivelMenuAction" class="configOpcionMenuUsuario" method="getComboNivelMenu">
+        <action name="nivelMenuAction" class="configOpcionMenuUsuario" method="obtenComboNivelMenu">
             <result name="success" type="json" />
         </action>
         <!--
         Configuracion del Action con tipo de respuesta JSON, esto generara a partir 
         de los atributos la respuesta en Formato JSON para el Reader de ExtJS y cargar el 
         combo de Roles.
+        
+        TODO: no apunta a ningun metodo
         -->
-        <action name="rolAction" class="configOpcionMenuUsuario" method="getComboRol">
+        <action name="rolAction" class="configOpcionMenuUsuario" method="obtenComboRol">
             <result name="success" type="json" />
         </action>
     
@@ -65,8 +67,10 @@
         Configuracion del Action con tipo de respuesta JSON, esto generara a partir 
         de los atributos la respuesta en Formato JSON para el Reader de ExtJs y carga el
         combo de Secciones.
+        
+        TODO: no apunta a ningun metodo
         -->
-        <action name="seccionAction" class="configOpcionMenuUsuario" method="getComboSeccion">
+        <action name="seccionAction" class="configOpcionMenuUsuario" method="obtenComboSeccion">
             <result name="success" type="json" />
         </action> 
         <!--
@@ -74,7 +78,7 @@
         de los atributos la respuesta en Formato JSON para el reader de ExtJs y carga el 
         combo de tipos.
         -->
-        <action name="tipoAction" class="configOpcionMenuUsuario" method="getComboTipo">
+        <action name="tipoAction" class="configOpcionMenuUsuario" method="obtenComboTipo">
             <result name="success" type="json" />
         </action>
         
@@ -83,7 +87,7 @@
         de los atributos la respuesta en Formato JSON para el reader de ExtJs y carga el 
         combo de tipos.
         -->
-        <action name="tipoMenuAction" class="configOpcionMenuUsuario" method="getComboTipoMenu">
+        <action name="tipoMenuAction" class="configOpcionMenuUsuario" method="obtenComboTipoMenu">
             <result name="success" type="json" />
         </action>
         
@@ -92,7 +96,7 @@
         de los atributos la respuesta en Formato JSON para el reader de ExtJs y carga el 
         combo de tipos.
         -->
-        <action name="estadoAction" class="configOpcionMenuUsuario" method="getComboEstado">
+        <action name="estadoAction" class="configOpcionMenuUsuario" method="obtenComboEstado">
             <result name="success" type="json" />
         </action>
         
@@ -110,7 +114,7 @@
         de los atributos la respuesta en Formato JSON para el reader de ExtJs y carga el 
         combo de tipos.
         -->
-        <action name="opcionesAction" class="configOpcionMenuUsuario" method="getComboOpciones">
+        <action name="opcionesAction" class="configOpcionMenuUsuario" method="obtenComboOpciones">
             <result name="success" type="json" />
         </action>
         <!--

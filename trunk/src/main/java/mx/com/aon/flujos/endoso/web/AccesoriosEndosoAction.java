@@ -157,7 +157,7 @@ public class AccesoriosEndosoAction extends PrincipalEndosoAction {
         
         String idSesion = ServletActionContext.getRequest().getSession().getId();
         
-        parameters = getParametersPantalla(parameters);
+        parameters = obtenParametersPantalla(parameters);
         //nmObjeto = getNmObjeto(parameters);
         
         try {
@@ -244,7 +244,7 @@ public class AccesoriosEndosoAction extends PrincipalEndosoAction {
             nmSuplem = globalVarVO.getValueVariableGlobal(VariableKernel.NumeroSuplemento());
             nmSituac = globalVarVO.getValueVariableGlobal(VariableKernel.NumeroSituacion());
             
-            parameters = getParametersPantalla(parameters);
+            parameters = obtenParametersPantalla(parameters);
             //nmObjeto = getNmObjeto(parameters);
             
             try {
@@ -270,7 +270,7 @@ public class AccesoriosEndosoAction extends PrincipalEndosoAction {
      * @param parameters2
      * @return
      */
-    private TreeMap<String, String> getParametersPantalla(TreeMap<String, String> parameters2) {
+    private TreeMap<String, String> obtenParametersPantalla(TreeMap<String, String> parameters2) {
         if (logger.isDebugEnabled()){
             logger.debug("----> AccesoriosEndosoAction.getParametersPantalla");
             logger.debug(":: parameters2 :: " + parameters2);
@@ -323,7 +323,7 @@ public class AccesoriosEndosoAction extends PrincipalEndosoAction {
      * @throws Exception 
      */
     @SuppressWarnings("unchecked")
-    public String getPantallaAccesorios() throws Exception{
+    public String obtenPantallaAccesorios() throws Exception{
         if (globalVarVO == null) {
             globalVarVO = (GlobalVariableContainerVO) session.get(Constantes.GLOBAL_VARIABLE_CONTAINER);
         }
@@ -340,7 +340,7 @@ public class AccesoriosEndosoAction extends PrincipalEndosoAction {
         //UserVO usuario = (UserVO)session.get("USUARIO");
         
         if (logger.isDebugEnabled()){
-            logger.debug("----> AccesoriosEndosoAction.getPantallaAccesorios");
+            logger.debug("----> AccesoriosEndosoAction.obtenPantallaAccesorios");
             logger.debug("cdUnieco          :" + cdUnieco);
             logger.debug("cdRamo            :" + cdRamo);
             logger.debug("estado            :" + estado);
@@ -365,7 +365,7 @@ public class AccesoriosEndosoAction extends PrincipalEndosoAction {
         
         try{
             //dextAccesorios = endosoManager.getDatosRolExt(param, "ENDOSOS_OBTIENE_DATOS_ACCESORIOS");
-            dextAccesorios = getDextAccesoriosList(param, nmObjeto);
+            dextAccesorios = obtenDextAccesoriosList(param, nmObjeto);
             logger.debug(":::::::: dextAccesorios : " + dextAccesorios);
         }catch(ApplicationException ex){
             if (logger.isDebugEnabled())
@@ -382,7 +382,7 @@ public class AccesoriosEndosoAction extends PrincipalEndosoAction {
      * @throws mx.com.ice.services.exception.ApplicationException 
      * @throws Exception 
      */
-    private List<ExtElement> getDextAccesoriosList(Map<String, String> param, String nmObjeto) 
+    private List<ExtElement> obtenDextAccesoriosList(Map<String, String> param, String nmObjeto) 
             throws Exception {
         if (logger.isDebugEnabled()) {
             logger.debug("----> AccesoriosEndosoAction.getDextAccesoriosList");
@@ -447,7 +447,7 @@ public class AccesoriosEndosoAction extends PrincipalEndosoAction {
                                     if (id.equals(scombo.getId())) {
                                         valorAtributo = camposValores[numAtributo];
                                         logger.debug(":: valorAtributo -> " + valorAtributo);
-                                        descripcionAtributo = getValorAtributo(
+                                        descripcionAtributo = obtenValorAtributo(
                                                 backupTables[numStore++], 
                                                 valorAtributo);
                                         logger.debug(":: descripcionAtributo -> " + descripcionAtributo);
@@ -543,9 +543,9 @@ public class AccesoriosEndosoAction extends PrincipalEndosoAction {
      *             Metodo que carga la lista para el combo de tipos.
      * 
      */
-    public String getTipos() throws Exception {
+    public String obtenTipos() throws Exception {
         if (logger.isDebugEnabled()) {
-            logger.debug("----> AccesoriosEndosoAction.getTipos");
+            logger.debug("----> AccesoriosEndosoAction.obtenTipos");
         }
         if (session.containsKey(Constantes.GLOBAL_VARIABLE_CONTAINER)) {
             globalVarVO = (GlobalVariableContainerVO) session.get(Constantes.GLOBAL_VARIABLE_CONTAINER);
@@ -572,9 +572,9 @@ public class AccesoriosEndosoAction extends PrincipalEndosoAction {
      * 
      */
     @SuppressWarnings("unchecked")
-    public String getCombos() throws Exception {
+    public String obtenCombos() throws Exception {
         if (logger.isDebugEnabled()){
-            logger.debug("----> AccesoriosEndosoAction.getCombos");
+            logger.debug("----> AccesoriosEndosoAction.obtenCombos");
             logger.debug("###### codigoObjeto : " + claveObjeto);
             logger.debug("###### descripcionObj : " + descripcionObjeto);
         }
@@ -594,7 +594,7 @@ public class AccesoriosEndosoAction extends PrincipalEndosoAction {
         }
         if (StringUtils.isNotBlank(claveObjeto)) {
             session.put("CLAVE_OBJETO_ESPECIAL", claveObjeto);
-            logger.debug("########### Entro al metodo getCombos ###########");
+            logger.debug("########### Entro al metodo obtenCombos ###########");
             if (itemLista == null) {
                 itemLista = new ArrayList<ExtElement>();
             }

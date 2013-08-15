@@ -84,7 +84,7 @@ public class ConfigurarTareaChecklistAction extends ActionSupport {
 			this.success = success;
 		}
 
-		public EstructuraManagerTareasChecklist getEstructuraManager() {
+		public EstructuraManagerTareasChecklist obtenEstructuraManager() {
 			return estructuraManager;
 		}
 

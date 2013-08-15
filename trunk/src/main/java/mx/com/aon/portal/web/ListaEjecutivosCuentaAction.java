@@ -122,7 +122,7 @@ public class ListaEjecutivosCuentaAction extends AbstractListAction{
 		return SUCCESS;
 	}
 
-	public EjecutivosCuentaManager getEjecutivosCuentaManager() {
+	public EjecutivosCuentaManager obtenEjecutivosCuentaManager() {
 		return ejecutivosCuentaManager;
 	}
 

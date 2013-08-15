@@ -130,10 +130,10 @@ public class ConfiguraWorkflowPs2Action extends PrincipalConfigWorkflowAction{
     
 
     @SuppressWarnings("unchecked")
-    public String getComboPantallas() throws Exception{
+    public String obtenComboPantallas() throws Exception{
     	
         if(logger.isDebugEnabled())
-        	logger.debug("******ConfiguraWorkflowAction.getComboPantallas******");
+        	logger.debug("******ConfiguraWorkflowAction.obtenComboPantallas******");
 
         
         try{
@@ -143,7 +143,7 @@ public class ConfiguraWorkflowPs2Action extends PrincipalConfigWorkflowAction{
         	
         }catch(Exception e){
         	if(logger.isDebugEnabled())
-        	logger.debug("Exception ConfiguraWorkflowPs2Action.getComboPantallas: " + e);
+        	logger.debug("Exception ConfiguraWorkflowPs2Action.obtenComboPantallas: " + e);
         }
 
     	return SUCCESS;

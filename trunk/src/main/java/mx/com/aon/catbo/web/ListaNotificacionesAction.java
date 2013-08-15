@@ -227,7 +227,7 @@ public class ListaNotificacionesAction extends AbstractListAction{
 			return SUCCESS;
 		}
 	}
-	/*public NotificacionesManager getNotificacionesManager() {
+	/*public NotificacionesManager obtenNotificacionesManager() {
 		return notificacionesManager;
 	}*/
 

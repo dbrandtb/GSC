@@ -106,7 +106,7 @@ public class RolesRenovacionAction extends ActionSupport{
 	public String cmdBorrarClick() throws Exception{
 		String messageResult = "";
 		try{
-			messageResult = getRolesRenovacionManager().borrarRolRenovacion(cdRenova,cdRol);	
+			messageResult = obtenRolesRenovacionManager().borrarRolRenovacion(cdRenova,cdRol);	
             success = true;
             addActionMessage(messageResult);
             return SUCCESS;
@@ -131,7 +131,7 @@ public class RolesRenovacionAction extends ActionSupport{
 
 	public void setSuccess(boolean success) {this.success = success;}
 	
-	public RolesRenovacionManager getRolesRenovacionManager() {
+	public RolesRenovacionManager obtenRolesRenovacionManager() {
 		return rolesRenovacionManager;
 	}
 

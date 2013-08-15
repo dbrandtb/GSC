@@ -105,7 +105,7 @@ public class ListaMotivosCancelacionAction extends AbstractListAction{
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public String getBuscarClick() throws Exception{
+	public String obtenBuscarClick() throws Exception{
 		try{
             PagedList pagedList = this.motivosCancelacionManager.getRequisitoCancelacion(cdRazon, start, limit);
             rcEstructuraList = pagedList.getItemsRangeList();

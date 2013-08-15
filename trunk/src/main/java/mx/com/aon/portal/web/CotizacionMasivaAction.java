@@ -206,7 +206,7 @@ public class CotizacionMasivaAction extends AbstractListAction implements  Sessi
 		}
     }
 
-	public CotizacionManager getCotizacionManager() {
+	public CotizacionManager obtenCotizacionManager() {
 		return cotizacionManager;
 	}
 	/**

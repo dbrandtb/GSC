@@ -468,7 +468,7 @@ private Map session;
 	}
 
 
-	public OperacionCATManager getOperacionCATManager() {
+	public OperacionCATManager obtenOperacionCATManager() {
 		return operacionCATManager;
 	}
 

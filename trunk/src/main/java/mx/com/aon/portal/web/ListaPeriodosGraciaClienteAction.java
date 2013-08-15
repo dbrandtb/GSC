@@ -148,7 +148,7 @@ public class ListaPeriodosGraciaClienteAction extends AbstractListAction{
 		public void setExportMediator(ExportMediator exportMediator) {this.exportMediator = exportMediator;}
 
 
-		public PeriodosGraciaClienteManager getPeriodosGraciaClienteManager() {
+		public PeriodosGraciaClienteManager obtenPeriodosGraciaClienteManager() {
 			return periodosGraciaClienteManager;
 		}
 

@@ -173,7 +173,7 @@ public class ListaNumeroPolizasAction extends AbstractListAction{
 
 
 
-/*	public NumeroPolizasManager getNumeroPolizasManager() {
+/*	public NumeroPolizasManager obtenNumeroPolizasManager() {
 		return numeroPolizasManager;
 	}*/
 

@@ -223,7 +223,7 @@ public class ConfiguraMatrizTareaAction extends ActionSupport {
 		this.success = success;
 	}
 
-	public MatrizAsignacionManager getMatrizAsignacionManager() {
+	public MatrizAsignacionManager obtenMatrizAsignacionManager() {
 		return matrizAsignacionManager;
 	}
 

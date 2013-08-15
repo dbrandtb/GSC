@@ -198,13 +198,13 @@ public class RenovacionAction extends PrincipalRenovacionAction {
 	}
 
 	@SuppressWarnings("unchecked")
-	public String getComboAsegradora() {
+	public String obtenComboAsegradora() {
 
 		try {
 			listaAseguradora = renovacionManager
 					.getItemList("OBTIENE_ASEGURADORAS_CAT");
 		} catch (Exception e) {
-			logger.debug("getComboAsegradora EXCEPTION :" + e);
+			logger.debug("obtenComboAsegradora EXCEPTION :" + e);
 		}
 
 		// success = true;
@@ -213,7 +213,7 @@ public class RenovacionAction extends PrincipalRenovacionAction {
 
 	
 	@SuppressWarnings("unchecked")
-	public String getComboTiposPoliza()throws Exception{
+	public String obtenComboTiposPoliza()throws Exception{
 			
 		UserVO usuario = (UserVO) session.get("USUARIO");
 		
@@ -232,7 +232,7 @@ public class RenovacionAction extends PrincipalRenovacionAction {
     		logger.debug("ListaTiposPoliza: "+listaTiposPoliza);
     		
 		} catch (Exception e) {
-			logger.debug("getComboTiposPoliza EXCEPTION :" + e);
+			logger.debug("obtenComboTiposPoliza EXCEPTION :" + e);
 		}
 
 		// success = true;
@@ -240,13 +240,13 @@ public class RenovacionAction extends PrincipalRenovacionAction {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public String getComboProducto() {
+	public String obtenComboProducto() {
 
 		try {
 			listaProducto = renovacionManager
 					.getItemList("OBTIENE_PRODUCTOS_CAT");
 		} catch (Exception e) {
-			logger.debug("getComboProducto EXCEPTION :" + e);
+			logger.debug("obtenComboProducto EXCEPTION :" + e);
 		}
 
 		// success = true;
@@ -254,13 +254,13 @@ public class RenovacionAction extends PrincipalRenovacionAction {
 	}
 
 	@SuppressWarnings("unchecked")
-	public String getComboCliente() {
+	public String obtenComboCliente() {
 
 		try {
 			listaCliente = renovacionManager
 					.getItemList("OBTIENE_CLIENTES_CORPO");
 		} catch (Exception e) {
-			logger.debug("getComboCliente EXCEPTION :" + e);
+			logger.debug("obtenComboCliente EXCEPTION :" + e);
 		}
 
 		// success = true;
@@ -722,7 +722,7 @@ public class RenovacionAction extends PrincipalRenovacionAction {
 	/**
 	 * @return the renovacionManager
 	 */
-	public RenovacionManager getRenovacionManager() {
+	public RenovacionManager obtenRenovacionManager() {
 		return renovacionManager;
 	}
 

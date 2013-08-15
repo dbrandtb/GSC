@@ -145,7 +145,7 @@ public class ListaRolesRenovacionAction extends AbstractListAction{
 		ListaRolesRenovacionAction.logger = logger;
 	}
 
-	public RolesRenovacionManager getRolesRenovacionManager() {
+	public RolesRenovacionManager obtenRolesRenovacionManager() {
 		return rolesRenovacionManager;
 	}
 

@@ -260,14 +260,14 @@ public class NumeroPolizasAction extends ActionSupport {
 		return "consultaPolizasMaestras";
 	}
 	
-	public NumeroPolizasManager getNumeroPolizasManager() {
+	public NumeroPolizasManager obtenNumeroPolizasManager() {
 		return numeroPolizasManager;
 	}
 	public void setNumeroPolizasManager(NumeroPolizasManager numeroPolizasManager) {
 		this.numeroPolizasManager = numeroPolizasManager;
 	}
 	@SuppressWarnings("unchecked")
-	public List getMNumeroPolizasManagerList() {
+	public List obtenMNumeroPolizasManagerList() {
 		return mNumeroPolizasManagerList;
 	}
 	@SuppressWarnings("unchecked")

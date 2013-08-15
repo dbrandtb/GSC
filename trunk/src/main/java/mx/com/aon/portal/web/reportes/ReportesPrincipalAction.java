@@ -126,7 +126,7 @@ public class ReportesPrincipalAction extends ActionSupport implements SessionAwa
         this.reporteVo = reporteVo;
     }
 
-    public ReportesManager getReportesManager() {
+    public ReportesManager obtenReportesManager() {
         return reportesManager;
     }
 

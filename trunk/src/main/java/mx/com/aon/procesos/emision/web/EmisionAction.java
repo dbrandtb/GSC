@@ -807,7 +807,7 @@ public class EmisionAction extends PrincipalEmisionAction{
     public String obtenerPantallaDatosRol(){
     	
     	if (logger.isDebugEnabled()){
-	    	logger.debug("***** getPantallaDatosRol ******");
+	    	logger.debug("***** obtenPantallaDatosRol ******");
 	    	logger.debug("cdUnieco : " + cdUnieco);
 	    	logger.debug("cdRamo   : " + cdRamo);
 	    	logger.debug("estado   : " + estado);
@@ -826,7 +826,7 @@ public class EmisionAction extends PrincipalEmisionAction{
     		logger.debug("dext: " + dext);
     	}catch(ApplicationException ex){
     		if (logger.isDebugEnabled())
-    			logger.debug("getPantallaDatosRol EXCEPTION:: " + ex);
+    			logger.debug("obtenPantallaDatosRol EXCEPTION:: " + ex);
     	}
     	
     	success = true;

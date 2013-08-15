@@ -231,7 +231,7 @@ public class AyudaCoberturasAction extends ActionSupport {
 	
 	public List<AyudaCoberturasVO> getMEstructuraList() {return mEstructuraList;}
 
-	public AyudaCoberturasManager getAyudaCoberturasManager() {
+	public AyudaCoberturasManager obtenAyudaCoberturasManager() {
 		return ayudaCoberturasManager;
 	}
 

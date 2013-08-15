@@ -419,10 +419,10 @@ public class IncisoEndosoAction extends PrincipalEndosoAction {
      * @author Alejandro Garcia
      */
     @SuppressWarnings("unchecked")
-    public String getPantallaDatosRol(){
+    public String obtenPantallaDatosRol(){
         
         if (logger.isDebugEnabled()){
-            logger.debug("***** getPantallaDatosRol ******");
+            logger.debug("***** obtenPantallaDatosRol ******");
             logger.debug("cdUnieco: " + cdUnieco);
             logger.debug("cdRamo: " + cdRamo);
             logger.debug("estado: " + estado);
@@ -492,7 +492,7 @@ public class IncisoEndosoAction extends PrincipalEndosoAction {
      * @throws Exception 
      */
     @SuppressWarnings("unchecked")
-    public String getPantallaIncisos() throws 
+    public String obtenPantallaIncisos() throws 
             Exception{
         
     	ResultadoTransaccion rt = null;
@@ -531,7 +531,7 @@ public class IncisoEndosoAction extends PrincipalEndosoAction {
 	        nmSituac = globalVarVO.getValueVariableGlobal(VariableKernel.NumeroSituacion());
 	        
 	        if (logger.isDebugEnabled()){
-	            logger.debug("---> getPantallaIncisos");
+	            logger.debug("---> obtenPantallaIncisos");
 	            logger.debug("cdunieco     :" + cdUnieco);
 	            logger.debug("cdramo       :" + cdRamo);
 	            logger.debug("nmpoliza     :" + nmPoliza);
@@ -658,7 +658,7 @@ public class IncisoEndosoAction extends PrincipalEndosoAction {
 	                                    }
 	                                    
 	                                    if (StringUtils.isNotBlank(valorAtributo)) {
-		                                    descripcionAtributo = getValorAtributo(
+		                                    descripcionAtributo = obtenValorAtributo(
 		                                            backupTables[numStore], 
 		                                            valorAtributo,
 		                                            entryDataCombo);
@@ -692,21 +692,21 @@ public class IncisoEndosoAction extends PrincipalEndosoAction {
 		                                    		
 		                                    		if (StringUtils.isNotBlank(ccontrol.getGrouping())) {
 		                                    			if ("1".equals(ccontrol.getGroupingId())) {
-		                                    				scombo.setStore(getDefaultJsonStore(
+		                                    				scombo.setStore(obtenDefaultJsonStore(
 		                                    						url,  
 		                                    						ccontrol.getBackupTable(),
 		                                    						valorAtributo,
 		                                    						"0"));	
 		                                    				tempValorAtributo = valorAtributo;
 		                                    			} else if ("2".equals(ccontrol.getGroupingId())) {
-		                                    				scombo.setStore(getDefaultJsonStore(
+		                                    				scombo.setStore(obtenDefaultJsonStore(
 		                                    						url,  
 		                                    						ccontrol.getBackupTable(),
 		                                    						tempValorAtributo,
 		                                    						"0"));	
 		                                    				tempValorAtributo = valorAtributo;
 		                                    			} else if ("3".equals(ccontrol.getGroupingId())) {
-		                                    				scombo.setStore(getDefaultJsonStore(
+		                                    				scombo.setStore(obtenDefaultJsonStore(
 		                                    						url,  
 		                                    						ccontrol.getBackupTable(),
 		                                    						tempValorAtributo,
@@ -848,7 +848,7 @@ public class IncisoEndosoAction extends PrincipalEndosoAction {
 	            }
 	        }
 	        catch(ApplicationException ex){
-	            logger.debug("getPantallaIncisos EXCEPTION:: " + ex);
+	            logger.debug("obtenPantallaIncisos EXCEPTION:: " + ex);
 	        }
         }
         
@@ -857,7 +857,7 @@ public class IncisoEndosoAction extends PrincipalEndosoAction {
         return SUCCESS;
     }
 
-	private String getDefaultJsonStore(String url, String backupTable, String valorAnterior, String valorAntAnt) {
+	private String obtenDefaultJsonStore(String url, String backupTable, String valorAnterior, String valorAntAnt) {
 		
 		if (logger.isDebugEnabled()){
             logger.debug("-------> getDefaultJsonStore");  
@@ -1214,7 +1214,7 @@ public class IncisoEndosoAction extends PrincipalEndosoAction {
      * @author Alejandro Garcia
      */
     @SuppressWarnings("unchecked")
-    public String getAgrupador(){
+    public String obtenAgrupador(){
 //      Se obtiene de sesión el objeto globalContainer
         if (globalVarVO == null) {
             globalVarVO = (GlobalVariableContainerVO) session.get(Constantes.GLOBAL_VARIABLE_CONTAINER);
@@ -1226,7 +1226,7 @@ public class IncisoEndosoAction extends PrincipalEndosoAction {
         nmPoliza = globalVarVO.getValueVariableGlobal(VariableKernel.NumeroPoliza());
         
         if (logger.isDebugEnabled()){
-            logger.debug("***getAgrupador***");
+            logger.debug("***obtenAgrupador***");
             logger.debug("cdunieco     :" + cdUnieco);
             logger.debug("cdramo       :" + cdRamo);
             logger.debug("estado     :" + estado);
@@ -1247,7 +1247,7 @@ public class IncisoEndosoAction extends PrincipalEndosoAction {
             logger.debug("listMpoliagr Agrupador : " + listMpoliagr);
         }
         catch(ApplicationException ex){
-            logger.debug("***** getAgrupador EXCEPTION:: " + ex);
+            logger.debug("***** obtenAgrupador EXCEPTION:: " + ex);
         }
         
         success = true;
@@ -2079,7 +2079,7 @@ public class IncisoEndosoAction extends PrincipalEndosoAction {
     /**
      * @return the endosoManager
      */
-    public EndosoManager getEndosoManager() {
+    public EndosoManager obtenEndosoManager() {
         return endosoManager;
     }
 

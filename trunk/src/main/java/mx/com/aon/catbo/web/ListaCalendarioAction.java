@@ -283,7 +283,7 @@ public class ListaCalendarioAction extends AbstractListAction{
 	}
 
 
-	public CalendarioManager getCalendarioManager() {
+	public CalendarioManager obtenCalendarioManager() {
 		return calendarioManager;
 	}
 

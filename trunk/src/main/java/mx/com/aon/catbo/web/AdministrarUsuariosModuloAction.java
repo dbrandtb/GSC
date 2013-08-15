@@ -190,7 +190,7 @@ public class AdministrarUsuariosModuloAction extends ActionSupport{//ActionSuppo
 	}
 
 
-/*	public AdministrarUsuariosModuloManager getAdministrarUsuariosModuloManager() {
+/*	public AdministrarUsuariosModuloManager obtenAdministrarUsuariosModuloManager() {
 		return administrarUsuariosModuloManager;
 	}
 

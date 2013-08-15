@@ -154,7 +154,7 @@ public class ListaRangosRenovacionAction extends AbstractListAction{
 
 		public void setExportMediator(ExportMediator exportMediator) {this.exportMediator = exportMediator;}
 
-		public RangoRenovacionReporteManager getRangoRenovacionReporteManager() {
+		public RangoRenovacionReporteManager obtenRangoRenovacionReporteManager() {
 			return rangoRenovacionReporteManager;
 		}
 
@@ -163,7 +163,7 @@ public class ListaRangosRenovacionAction extends AbstractListAction{
 			this.rangoRenovacionReporteManager = rangoRenovacionReporteManager;
 		}
 
-		public List<RangoRenovacionReporteManager> getMRangoRenovacionReporteManagerList() {
+		public List<RangoRenovacionReporteManager> obtenMRangoRenovacionReporteManagerList() {
 			return mRangoRenovacionReporteManagerList;
 		}
 

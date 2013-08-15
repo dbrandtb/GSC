@@ -179,7 +179,7 @@ public class CalendarioAction extends ActionSupport{
 		CalendarioAction.logger = logger;
 	}
 
-	/*public CalendarioManager getCalendarioManager() {
+	/*public CalendarioManager obtenCalendarioManager() {
 		return calendarioManager;
 	}*/
 

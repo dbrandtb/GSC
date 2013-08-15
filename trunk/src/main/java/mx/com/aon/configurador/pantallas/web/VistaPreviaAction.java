@@ -80,13 +80,13 @@ public class VistaPreviaAction  extends PrincipalConfPantallaAction {
      * @return Cadena SUCCESS
      * @throws Exception
      */
-    public String getParametro() throws Exception {
+    public String obtenParametro() throws Exception {
         boolean isDebugueable = logger.isDebugEnabled();
         
         
         if(isDebugueable){
             logger.debug("######################################################");
-            logger.debug("### Llegando a metodo getParametro en VistaPreviaAction...");
+            logger.debug("### Llegando a metodo obtenParametro en VistaPreviaAction...");
             logger.debug("### componenete-------" + componente);
             logger.debug("######################################################");
         }

@@ -168,7 +168,7 @@ public void setPv_cdopera_i(String pv_cdopera_i) {
 
 
 
-public FuncionalidadManager getFuncionalidadManager() {
+public FuncionalidadManager obtenFuncionalidadManager() {
 	return funcionalidadManager;
 }
 

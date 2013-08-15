@@ -11,7 +11,7 @@
             <result type="json"><param name="ignoreHierarchy">false</param></result>
 		</action>
 		
-		<action name="buscarMotivosCancelacionRequisitos" class="listaMotivosCancelacionAction" method="getBuscarClick">
+		<action name="buscarMotivosCancelacionRequisitos" class="listaMotivosCancelacionAction" method="obtenBuscarClick">
             <result type="json"><param name="ignoreHierarchy">false</param></result>
 		</action>
 		

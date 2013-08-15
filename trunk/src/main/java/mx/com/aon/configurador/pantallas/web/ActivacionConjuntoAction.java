@@ -210,7 +210,7 @@ public class ActivacionConjuntoAction extends PrincipalConfPantallaAction {
 //	/**
 //	 * @return the configuradorManager
 //	 */
-//	public ConfiguradorPantallaService getConfiguradorManager() {
+//	public ConfiguradorPantallaService obtenConfiguradorManager() {
 //		return configuradorManager;
 //	}
 

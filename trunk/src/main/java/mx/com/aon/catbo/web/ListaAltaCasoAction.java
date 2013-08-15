@@ -97,7 +97,7 @@ public class ListaAltaCasoAction extends AbstractListAction implements SessionAw
 	
 
 	
-	public AltaCasosManager getAltaCasosManager() {
+	public AltaCasosManager obtenAltaCasosManager() {
 		return altaCasosManager;
 	}
 	public void setAltaCasosManager(AltaCasosManager altaCasosManager) {

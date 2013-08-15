@@ -132,7 +132,7 @@ public class ListaNumeroIncisosAction extends AbstractListAction{
 	}
 	
     
-    public NumeroIncisosManager getNumeroIncisosManager() {
+    public NumeroIncisosManager obtenNumeroIncisosManager() {
 		return numeroIncisosManager;
 	}
 

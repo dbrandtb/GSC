@@ -111,7 +111,7 @@ public class PeriodosGraciaClienteAction extends ActionSupport {
 	public void setSuccess(boolean success) {this.success = success;}
 
 
-	public PeriodosGraciaClienteManager getPeriodosGraciaClienteManager() {
+	public PeriodosGraciaClienteManager obtenPeriodosGraciaClienteManager() {
 		return periodosGraciaClienteManager;
 	}
 

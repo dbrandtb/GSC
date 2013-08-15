@@ -170,7 +170,7 @@ public class OrdenesDeComprasAction extends ActionSupport {
 		this.resultMessage = resultMessage;
 	}
 
-	public OrdenesDeComprasManager getOrdenesDeComprasManager() {
+	public OrdenesDeComprasManager obtenOrdenesDeComprasManager() {
 		return ordenesDeComprasManager;
 	}
 

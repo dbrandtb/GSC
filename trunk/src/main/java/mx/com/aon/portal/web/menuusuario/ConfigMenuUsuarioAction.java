@@ -286,7 +286,7 @@ public class ConfigMenuUsuarioAction extends ActionSupport implements SessionAwa
      * @throws Exception
      */
     @SuppressWarnings("unchecked")//Map Control.
-    public String getComboCliente() throws Exception{
+    public String obtenComboCliente() throws Exception{
         log.debug("Cargando combo de Clientes");
         clientes = (ArrayList<ClienteVO>) session.get("LISTA_CLIENTES");
         log.debug("clientes session----->" + clientes);
@@ -310,7 +310,7 @@ public class ConfigMenuUsuarioAction extends ActionSupport implements SessionAwa
      * @throws Exception
      */
     @SuppressWarnings("unchecked")//Map Control.
-    public String getComboUsuarios() throws Exception{
+    public String obtenComboUsuarios() throws Exception{
         log.debug("Cargando combo de Usuarios...");       
         usuarios = (ArrayList<UsuarioVO>) session.get("LISTA_USUARIOS_MENU");
         log.debug("usuarios session----->" + usuarios);
@@ -335,7 +335,7 @@ public class ConfigMenuUsuarioAction extends ActionSupport implements SessionAwa
      * @throws Exception
      */
     @SuppressWarnings("unchecked")//Map Control.
-    public String getComboUsuariosNivelRol() throws Exception {
+    public String obtenComboUsuariosNivelRol() throws Exception {
         if (log.isDebugEnabled()) {
             log.debug(">>>>>>> Cargando combo de Usuarios x nivel y rol...");
         }
@@ -358,7 +358,7 @@ public class ConfigMenuUsuarioAction extends ActionSupport implements SessionAwa
      * @throws Exception
      */
     @SuppressWarnings("unchecked")
-    public String getComboTipo() throws Exception {
+    public String obtenComboTipo() throws Exception {
         tabla = "CTIPOPAGPRIN";
         log.debug("Cargando combo de tipos");
         tipos = menuUsuarioManager.getListaTipo(tabla);
@@ -370,7 +370,7 @@ public class ConfigMenuUsuarioAction extends ActionSupport implements SessionAwa
     }
     
     @SuppressWarnings("unchecked")
-    public String getComboTipoMenu() throws Exception{
+    public String obtenComboTipoMenu() throws Exception{
         log.debug("Cargando combo de tipo menu");
         tiposMenu = (ArrayList<TipoVO>) obtieneTiposMenu();
         //tiposMenu = menuUsuarioManager.getListaTipo("TTIPOMENU");
@@ -381,7 +381,7 @@ public class ConfigMenuUsuarioAction extends ActionSupport implements SessionAwa
     }
     
     @SuppressWarnings("unchecked")
-    public String getComboEstado() throws Exception{
+    public String obtenComboEstado() throws Exception{
         log.debug("Cargando combo de estado");
         estados = (ArrayList<TipoVO>) obtieneEstados();
         //estados = menuUsuarioManager.getListaTipo("TACTIVO");
@@ -392,7 +392,7 @@ public class ConfigMenuUsuarioAction extends ActionSupport implements SessionAwa
     }
     
     @SuppressWarnings("unchecked")
-    public String getComboRol() throws Exception{
+    public String obtenComboRol() throws Exception{
         log.debug("Cargando combo de rol");
         rolesLista = menuUsuarioManager.getListaRol();
         session.put("LISTA_ROLES", rolesLista);

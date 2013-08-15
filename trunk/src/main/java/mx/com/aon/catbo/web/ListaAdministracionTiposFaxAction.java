@@ -200,7 +200,7 @@ public class ListaAdministracionTiposFaxAction extends AbstractListAction{
 	}
 
 
-	public ArchivosManager getArchivosManager() {
+	public ArchivosManager obtenArchivosManager() {
 		return archivosManager;
 	}
 

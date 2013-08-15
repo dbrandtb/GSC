@@ -44,7 +44,7 @@ public class ConsultaArchivosAction extends ActionSupport{
 	//private transient Manager manager;
 	
 	
-	public String getEncArchivoPorMovimientoDeCaso()throws Exception{
+	public String obtenEncArchivoPorMovimientoDeCaso()throws Exception{
 		try
 		{
 			/*mEncEncArchivoCasoVO = new ArrayList<VO>();
