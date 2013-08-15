@@ -99,7 +99,7 @@ table.adminform textarea {width: auto; color: #666;}
 #showcase {	border-bottom: 1px none; border-top: 1px none; background: #FFF;}
 /** template layout stuff **/
 #page_bg {height: 100%; padding: 0;	margin-bottom: 1px;}
-div.wrapper {margin: auto; position: relative;}
+div.wrapper {margin: auto; /*position: relative;*/}
 #header {height: 112px;	overflow: hidden;}
 #access {position: absolute; z-index: 10000; top: 0; right: 25px; width: 200px; height: 20px; overflow: hidden;}
 #access #selectors {position: relative;	height: 8px;}
