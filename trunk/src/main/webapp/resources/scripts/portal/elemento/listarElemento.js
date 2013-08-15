@@ -29,7 +29,7 @@ proxyUrl.on('beforeload', function(p, params) {
             root: 'elementosComboBox',
             id: 'codigoComboProducto'
             },[
-           {name: 'codigoComboProducto', type: 'string',mapping:'codigo'},         f
+           {name: 'codigoComboProducto', type: 'string',mapping:'codigo'},
            {name: 'descripcionComboProducto', type: 'string',mapping:'descripcion'}
         ]),
         remoteSort: true

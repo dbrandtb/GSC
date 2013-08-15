@@ -142,7 +142,7 @@ function reloadGrid(){
 
               }
             );
-
+}
 
     var codigoCliente = new Ext.form.TextField({
         fieldLabel: 'C&oacute;digo Cliente',
@@ -274,10 +274,10 @@ function reloadGrid(){
 
     agregar = function() {
         Ext.MessageBox.alert('Agregar', 'Acci&oacute;n de Agregar un elemento!');
-    }
+    };
 
     editar = function() {
         Ext.MessageBox.alert('Editar', 'Acci&oacute;n de Editar un elemento!');
-    }
+    };
 
 });

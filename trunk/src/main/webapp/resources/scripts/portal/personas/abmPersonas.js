@@ -1041,12 +1041,12 @@ var agregarNuevoCorporativo = false;
 		            		//text: 'Borrar',
 		            		handler: function() {
 		            					if (grillaDomicilios.getSelectionModel().getSelections().length > 0) {
-		            						Ext.MessageBox.confirm(getLabelFromMap('400000', helpMap,'Aviso'),getLabelFromMap('400050', helpMap,'Seguro desea eliminar el domicilio?')), 
+		            						Ext.MessageBox.confirm(getLabelFromMap('400000', helpMap,'Aviso'),getLabelFromMap('400050', helpMap,'Seguro desea eliminar el domicilio?'), 
 		            									function(btn) {
 		            											if (btn == "yes") {
 		            												borrarDomicilio();
 		            											}
-		            									}
+		            									});
 		            						
 		            					}else {
 		            						Ext.MessageBox.alert(getLabelFromMap('400000', helpMap,'Aviso'),getLabelFromMap('400047', helpMap,'Debe seleccionar un domicilio para eliminar'));
@@ -1294,13 +1294,13 @@ var agregarNuevoCorporativo = false;
 		            		//text: 'Borrar',
 		            		handler: function () {
 		            						if (grillaTelefonos.getSelections().length > 0) {
-		            							Ext.MessageBox.alert(getLabelFromMap('400000', helpMap,'Aviso'),getLabelFromMap('400051', helpMap,'Seguro desea eliminar el teléfono seleccionado?')),		            							
+		            							Ext.MessageBox.alert(getLabelFromMap('400000', helpMap,'Aviso'),getLabelFromMap('400051', helpMap,'Seguro desea eliminar el teléfono seleccionado?'),		            							
 		            							//Ext.MessageBox.confirm('Confirmación', 'Seguro desea borrar el teléfono seleccionado?', 
 		            											function(btn){
 		            												if (btn == "yes") {
 		            													borrarTelefono();
 		            												}
-		            											}
+		            											});
 		            						
 		            						}else {
 		            							Ext.MessageBox.alert(getLabelFromMap('400000', helpMap,'Aviso'),getLabelFromMap('400053', helpMap,'Debe seleccionar un teléfono para eliminar'));		            							
