@@ -68,7 +68,7 @@ Ext.form.FileUploadField = Ext.extend(Ext.form.TextField,  {
             type: 'file',
             size: 1
         });
-        console.log(this.fileInput);
+        //console.log(this.fileInput);
         var btnCfg = Ext.applyIf(this.buttonCfg || {}, {
             text: this.buttonText
         });
