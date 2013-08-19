@@ -512,7 +512,7 @@ function editarPrincipal(record){
             	if (getSelectedRecord() != null) {
             			copiarPrincipal(getSelectedRecord().data.claveElemento,getSelectedRecord().data.claveRol);              
                         Ext.getCmp('copiarForm').getForm().loadRecord(getSelectedRecord());
-                        console.log(getSelectedRecord());
+                        //console.log(getSelectedRecord());
                                   	                                	                          
 	                } else {
     	                Ext.MessageBox.alert('Aviso','Debe seleccionar un registro para realizar esta operaci&oacute;n');

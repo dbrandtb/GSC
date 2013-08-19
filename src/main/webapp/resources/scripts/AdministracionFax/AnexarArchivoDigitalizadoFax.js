@@ -180,7 +180,7 @@ var comboTipoArchivo = new Ext.form.ComboBox({
 						
 		});
 		
-		console.log(panelUpload);
+		//console.log(panelUpload);
 		ventana.show();
 		panelUpload.show();
 		storeComboCargaArchivos.load();

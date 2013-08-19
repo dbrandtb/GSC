@@ -438,7 +438,7 @@ storeGetTcataex.baseParams= {
     storeGetTcataex.load({
     callback: function(r, options, success){
     	if(!success){
-        console.log(storeGetTcataex.reader);
+        //console.log(storeGetTcataex.reader);
         Ext.MessageBox.alert('Buscar',storeGetTcataex.reader.jsonData.errorMessages[0]);
         //grid2.store.removeAll();
         }

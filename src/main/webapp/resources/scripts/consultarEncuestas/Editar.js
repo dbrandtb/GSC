@@ -85,8 +85,8 @@ function editarEncuestas(record){
 				pv_nmpoliza_i:'516',//record.get('nmPoliza');
 				pv_cdperson_i:'714'//record.get('')
 				},
-				success:function(form, action){alert('succes');console.log(action)},
-				failure:function(){alert('failure');console.log(formPanelEdit);/*console.log(storeForm);*//*alert(storeForm.reader.jsonData.mListValorEncuesta[0])*/},
+				success:function(form, action){alert('succes');/*console.log(action)*/},
+				failure:function(){alert('failure');/*console.log(formPanelEdit);console.log(storeForm);*//*alert(storeForm.reader.jsonData.mListValorEncuesta[0])*/},
 				callback:function(r,o,success){
 					if(success){alert('callback:'+ r)}
 					}

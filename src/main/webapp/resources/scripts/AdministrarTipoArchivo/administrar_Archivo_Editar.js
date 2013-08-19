@@ -1,5 +1,5 @@
  function actualizar(record){
- console.log(record);
+ //console.log(record);
     		
    	/*	var _proxy = new Ext.data.HttpProxy({url: _ACTION_OBTENER_INDICADORES_SI_NO});
    		
