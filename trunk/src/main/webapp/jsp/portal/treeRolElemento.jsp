@@ -99,10 +99,10 @@ Ext.onReady(function(){
         {
             itemclick: function(s,n)
             {
-                console.log(n);
+                //console.log(n);
                 if (n.data.leaf==true)
                 {
-                    console.log("leaf");
+                    //console.log("leaf");
                     var treePath= n.getPath("codigoObjeto");
                     var codigoObjetoSplit=new Array();
                     codigoObjetoSplit= treePath.split("/");
@@ -111,7 +111,7 @@ Ext.onReady(function(){
                         codigoRol : n.data.codigoObjeto,
                         codigoCliente : codigoObjetoSplit[2]
                     };
-                    console.log(params2);
+                    //console.log(params2);
                     startMask ('arbolProductosId', 'Espere...');
                     Ext.Ajax.request(
                     {
@@ -148,7 +148,7 @@ Ext.onReady(function(){
                         failure:function(response,opts)
                         {
                             endMask();
-                            console.log("error");
+                            //console.log("error");
                             Ext.Msg.show({
                                 title:'Error',
                                 msg: 'Error de comunicaci&oacute;n',
