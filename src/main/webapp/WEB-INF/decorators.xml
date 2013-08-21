@@ -84,9 +84,18 @@
     	<pattern>*/procesoemision/irPolizasRenovadas.action</pattern>
     	<pattern>*/procesoemision/irAsignarNumero.action</pattern>
     	<pattern>*/flujoendoso/irPolizasRenovadas.action</pattern>
-    	<pattern>*/flujoendoso/detallePoliza.action</pattern>    	
+    	<pattern>*/flujoendoso/detallePoliza.action</pattern>
+    	
+    	<excludes>
+        <pattern>/saludbasica.action</pattern>
+        <pattern>/jsp/extjs4/asegurados.jsp</pattern>
+        </excludes>    	
     	  	
     </decorator>   	
+    <decorator name="default4" page="default4.jsp">
+        <pattern>/saludbasica.action</pattern>
+        <pattern>/jsp/extjs4/asegurados.jsp</pattern>
+    </decorator>
     
     <!--decorator name="default" page="default.jsp">
         <pattern>/*</pattern>
