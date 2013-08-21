@@ -316,8 +316,33 @@
 		<action name="EliminarVariable" class="ExpresionesAction" method="eliminarVariable">
 			<result name="success" type="json"/>				
 		</action>
+                <action name="dinosaurio" class="mx.com.aon.portal.web.DinosaurioAction" method="jsoo">
+                    <result name="success">/jsp/portal/dinosaurio.jsp</result>
+                </action>
+                <action name="dinosaurio2" class="mx.com.aon.portal.web.DinosaurioAction" method="jsoo">
+                    <interceptor-ref name="json">
+                        <param name="enableSMD">true</param>
+                        <param name="ignoreSMDMethodInterfaces">false</param>
+                    </interceptor-ref>
+                    <result name="success" type="json"/>
+                </action>
 		<!-- TODO: FIN de quitar actions, son para que se ejecute lo de Expresiones en Numeracion de Polizas -->
-	   
+                <action name="saludbasica" class="mx.com.aon.portal2.web.AseguradosAction" method="asegurados">
+                    <result name="success">/jsp/extjs4/asegurados.jsp</result>
+                    <result name="input">/error.jsp</result>
+                </action>
+                <action name="jsonObtenCiudades" class="mx.com.aon.portal2.web.JsonGenericList" method="obtenCiudades"><result name="success" type="json" /></action>
+                <action name="jsonObtenCopagos" class="mx.com.aon.portal2.web.JsonGenericList" method="obtenCopagos"><result name="success" type="json" /></action>
+                <action name="jsonObtenSumasAseguradas" class="mx.com.aon.portal2.web.JsonGenericList" method="obtenSumasAseguradas"><result name="success" type="json" /></action>
+                <action name="jsonObtenCirculosHospitalarios" class="mx.com.aon.portal2.web.JsonGenericList" method="obtenCirculosHospitalarios"><result name="success" type="json" /></action>
+                <action name="jsonObtenCoberturaVacunas" class="mx.com.aon.portal2.web.JsonGenericList" method="obtenCoberturasVacunas"><result name="success" type="json" /></action>
+                <action name="jsonObtenCoberturaPrevencionEnfermedadesAdultos" class="mx.com.aon.portal2.web.JsonGenericList" method="obtenCoberturasPrevencionEnfermedadesAdultos"><result name="success" type="json" /></action>
+                <action name="jsonObtenMaternidad" class="mx.com.aon.portal2.web.JsonGenericList" method="obtenMaternidad"><result name="success" type="json" /></action>
+                <action name="jsonObtenSumaAseguradaMaternidad" class="mx.com.aon.portal2.web.JsonGenericList" method="obtenSumaAseguradaMaternidad"><result name="success" type="json" /></action>
+                <action name="jsonObtenBaseTabuladorReembolso" class="mx.com.aon.portal2.web.JsonGenericList" method="obtenBaseTabuladorReembolso"><result name="success" type="json" /></action>
+                <action name="jsonObtenCostoEmergenciaExtranjero" class="mx.com.aon.portal2.web.JsonGenericList" method="obtenCostoEmergenciaExtranjero"><result name="success" type="json" /></action>
+                <action name="jsonObtenGeneros" class="mx.com.aon.portal2.web.JsonGenericList" method="obtenGeneros"><result name="success" type="json" /></action>
+                <action name="jsonObtenRoles" class="mx.com.aon.portal2.web.JsonGenericList" method="obtenRoles"><result name="success" type="json" /></action>
     </package>
 
 </struts>
