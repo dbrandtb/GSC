@@ -5,6 +5,7 @@
 package mx.com.aon.portal.web;
 
 import java.util.List;
+import mx.com.aon.portal2.web.GenericVO;
 
 /**
  *
@@ -16,6 +17,8 @@ public class Dinosaurio
         private String nombre;
         private int edad;
         private List<Carrito> carritos;
+        private GenericVO hijo;
+        private GenericVO hijo2;
 
         public Long getId() {
             return id;
@@ -48,4 +51,20 @@ public class Dinosaurio
         public void setCarritos(List<Carrito> carritos) {
             this.carritos = carritos;
         }
+
+        public GenericVO getHijo() {
+            return hijo;
+        }
+
+        public void setHijo(GenericVO hijo) {
+            this.hijo = hijo;
+        }
+
+    public GenericVO getHijo2() {
+        return hijo2;
     }
+
+    public void setHijo2(GenericVO hijo2) {
+        this.hijo2 = hijo2;
+    }
+}
