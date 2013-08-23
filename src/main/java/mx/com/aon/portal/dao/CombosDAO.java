@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.List;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import mx.com.aon.portal2.web.GenericVO;
 
 public class CombosDAO extends AbstractDAO{
 
@@ -46,6 +47,13 @@ public class CombosDAO extends AbstractDAO{
         addStoredProcedure("COMBO_LISTA_VALORES_INST_PAGO",new ObtenerListaValores(getDataSource()));
         addStoredProcedure("COMBO_CONDICION_INST_PAGO",new ObtenerCondicionInstrPago(getDataSource()));
         
+        //////////////////////////
+        //jtezva 2013 08 21     //
+        //combos de salud vital //
+        //////////////////////////
+        addStoredProcedure("CATALOGOS_COTIZA_SALUD",new CatalogosCotizaSalud(getDataSource()));
+        addStoredProcedure("CATALOGO_ROLES_SALUD",new CatalogoRolesSalud(getDataSource()));
+        //////////////////////////
         
     }
 
@@ -708,6 +716,80 @@ public class CombosDAO extends AbstractDAO{
    	        }
    	    }  
     	 
+     //////////////////////////////////////
+     // jtezva 2013 08 21                //
+     // Combos de cotizacion salud vital //
+     //////////////////////////////////////
+     protected class CatalogosCotizaSalud extends CustomStoredProcedure {
+
+        protected CatalogosCotizaSalud(DataSource dataSource)
+        {
+            super(dataSource, "PKG_LISTAS.P_GET_ATRIBUTOS_SIT");
+            declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdatribu_i", OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new CatalogosCotizaSaludMapper()));
+            declareParameter(new SqlOutParameter("pv_messages_o", OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+            
+            compile();
+        }
+
+        public WrapperResultados mapWrapperResultados(Map map) throws Exception
+        {
+            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+            WrapperResultados wrapperResultados = mapper.build(map);
+            List result = (List) map.get("pv_registro_o");
+            wrapperResultados.setItemList(result);
+            return wrapperResultados;
+        }
+    }
+
+    protected class CatalogosCotizaSaludMapper implements RowMapper
+    {
+        public Object mapRow(ResultSet rs, int rowNum) throws SQLException
+        {
+            return new GenericVO(rs.getString("CODIGO"),rs.getString("DESCRIPCION"));
+        }
+    }
+    //////////////////////////////////////
+    
+    ///////////////////////////////////
+    // jtezva 2013 08 21             //
+    // Combo de roles de salud vital //
+    ///////////////////////////////////
+    protected class CatalogoRolesSalud extends CustomStoredProcedure {
+
+        protected CatalogoRolesSalud(DataSource dataSource) {
+            /*pv_cdramo_i   IN TRAMOS.cdramo%TYPE,
+             pv_registro_o OUT TRefTipoError,
+             pv_msg_id_o   OUT GB_MESSAGES.msg_id%TYPE,
+             pv_title_o    OUT GB_MESSAGES.title%TYPE*/
+            super(dataSource, "PKG_LISTAS.P_ROL_RAMO");
+            declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new CatalogoRolesSaludMapper()));
+            declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+
+            compile();
+        }
+
+        public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+            WrapperResultados wrapperResultados = mapper.build(map);
+            List result = (List) map.get("pv_registro_o");
+            wrapperResultados.setItemList(result);
+            return wrapperResultados;
+        }
+    }
+
+    protected class CatalogoRolesSaludMapper implements RowMapper {
+
+        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new GenericVO(rs.getString("cdrol"), rs.getString("dsrol"));
+        }
+    }
+    ///////////////////////////////////
 }
 
 
