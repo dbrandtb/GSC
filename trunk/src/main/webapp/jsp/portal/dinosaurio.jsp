@@ -10,7 +10,95 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <script type="text/javascript" src="${ctx}/resources/extjs4/ext-all-debug.js"></script>
+        <script type="text/javascript" src="${ctx}/resources/extjs4/base_extjs4.js"></script>
         <script>
+            
+            Ext.define('Generic',
+            {
+                extend   : 'Ext.data.Model',
+                fields   :
+                [
+                    {name:'key',     type: 'string'},
+                    {name:'value',  type: 'string'}
+                ]
+            });
+            
+            Ext.define('Generic2',
+            {
+                extend   : 'Ext.data.Model',
+                fields   :
+                [
+                    {name:'key',     type: 'string'},
+                    {name:'value',  type: 'string'}
+                ]
+            });
+            
+            Ext.define('Carrito2',
+            {
+                extend   : 'Ext.data.Model',
+                fields   :
+                [
+                    {name:'id',     type: 'numeric'},
+                    {name:'marca',  type: 'string'},
+                    {name:'anio',   type: 'numeric'}
+                ]
+            });
+            
+            Ext.define('Dinosaurio2',
+            {
+                extend   : 'Ext.data.Model',
+                fields:
+                [
+                    {name:'id',      type: 'numeric'},
+                    {name:'nombre',  type: 'string'},
+                    {name:'edad',    type: 'numeric'}
+                ],
+                hasOne:
+                [{
+                    name: 'hijo',
+                    model: 'Generic',
+                    foreignKey: 'hijo',
+                    associationKey: 'hijo'
+                },{
+                    name: 'hijo2',
+                    model: 'Generic2',
+                    foreignKey: 'hijo2',
+                    associationKey: 'hijo2'
+                }],
+                hasMany:
+                [{
+                    name: 'carritos',
+                    model: 'Carrito2',
+                    foreignKey: 'carritos',
+                    associationKey: 'carritos',
+                    getterName: 'getCarritos'
+                }],
+                proxy:
+                {
+                    type:'ajax',
+                    url:'<s:url action="dinosaurio2" namespace="/" />',
+                    reader:{
+                        type:'json',
+                        root:'dino'
+                    }
+                }
+            });
+            
+            /*Ext.define('MiCotiza',{
+                extend:'CotizacionSalud',
+                constructor:function(){this.callParent(arguments);}
+            });*/
+            
+            console.log(Ext.create('CotizacionSalud',{}));
+            
+            var dino2=Ext.ModelManager.getModel('GeCiudad');
+            dino2.load(123, {
+                success: function(dino) {
+                    console.log('###response',dino);
+                    console.log('###carritos',dino.get('nombre'));
+                }
+            });
+            
             var Carrito=function()
             {
                 this.id="";
@@ -24,43 +112,8 @@
                 this.edad="";
                 this.carritos=[];
             };
-            /*Ext.define('Carrito',
             /*
-             private Long id;
-            private String marca;
-            private int anio;
-             *
-            {
-                extend   : 'Ext.data.Model',
-                fields   :
-                [
-                    {name:'id',     type: 'long'    },
-                    {name:'marca',  type: 'string'  },
-                    {name:'anio',   type: 'int'     }
-                ]
-            });
-            Ext.define('Dinosaurio',
-            /*
-            private Long id;
-            private String nombre;
-            private int edad;
-            private List<Carrito> carritos;
-             *
-            {
-                fields   :
-                [
-                    {name:'id',      type: 'long'    },
-                    {name:'nombre',  type: 'string'  },
-                    {name:'edad',    type: 'int'     }
-                ],
-                hasMany:[
-                {
-                    //foreignKey: 'carritos',          /* rule 3, 5 *
-                    //associationKey: 'carritos',    /* rule 4, 5 *
-                    name: 'carritos',              /* rule 6 *
-                    model: 'Carrito'   /* rule 7 *
-                }]
-            });*/
+            */
             
             var dinosaurio=new Dinosaurio();
             console.log(dinosaurio);
@@ -84,7 +137,7 @@
             console.log(c2);
             dinosaurio.carritos.push(c2);
             console.log(dinosaurio);
-            
+            /*
             Ext.Ajax.request(
             {
                 url: "<s:url action="dinosaurio2" namespace="/" />",
@@ -104,7 +157,7 @@
                         icon: Ext.Msg.ERROR
                     });
                 }
-            });
+            });*/
             
         </script>
         <title>JSP Page</title>
