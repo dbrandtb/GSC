@@ -568,7 +568,7 @@ Ext.onReady(function(){
                         dataIndex: 'nombre',
                         flex: 2,
                         editor: {
-                            allowBlank: false
+                            //allowBlank: false
                         }
                     },
                     {
@@ -576,7 +576,7 @@ Ext.onReady(function(){
                         dataIndex: 'segundoNombre',
                         flex: 2,
                         editor: {
-                            allowBlank: false
+                            //allowBlank: false
                         }
                     },
                     {
@@ -584,7 +584,7 @@ Ext.onReady(function(){
                         dataIndex: 'apellidoPaterno',
                         flex: 2,
                         editor: {
-                            allowBlank: false
+                            //allowBlank: false
                         }
                     },
                     {
@@ -592,7 +592,7 @@ Ext.onReady(function(){
                         dataIndex: 'apellidoMaterno',
                         flex: 2,
                         editor: {
-                            allowBlank: false
+                            //allowBlank: false
                         }
                     },
                     {
@@ -766,6 +766,15 @@ Ext.onReady(function(){
                                 icon: Ext.Msg.ERROR
                             });
                         }*/
+                    });
+                }
+                else
+                {
+                    Ext.Msg.show({
+                        title:'Datos incompletos',
+                        msg: 'Favor de instroducir los datos requeridos',
+                        buttons: Ext.Msg.OK,
+                        icon: Ext.Msg.ERROR
                     });
                 }
             }
