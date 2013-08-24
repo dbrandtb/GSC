@@ -354,5 +354,8 @@
     </bean>
 	<!-- FIN Ingresar Encuesta -->   
     
+    <bean id="JsonGenericList" class="mx.com.aon.portal2.web.JsonGenericList" scope="prototype">
+        <property name="combosManager2" ref="comboManagerJdbcTemplateImpl"/>
+    </bean>  
     
 </beans>
