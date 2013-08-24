@@ -772,7 +772,7 @@ Ext.onReady(function(){
                 {
                     Ext.Msg.show({
                         title:'Datos incompletos',
-                        msg: 'Favor de instroducir los datos requeridos',
+                        msg: 'Favor de introducir todos los campos requeridos',
                         buttons: Ext.Msg.OK,
                         icon: Ext.Msg.ERROR
                     });
