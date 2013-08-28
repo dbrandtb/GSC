@@ -128,6 +128,16 @@
             <result  name="error">/jsp/flujos/cotizacion/capturaCotizacion.jsp</result>
         </action>
         
+        <action name="resultadoCotizacionVital" class="cotizacionVital" method="cotizar">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+            <!--<result  name="input">/jsp/flujos/cotizacion/resultCotizacion.jsp</result>-->
+            <!--<result  name="error">/jsp/flujos/cotizacion/capturaCotizacion.jsp</result>-->
+        </action>
+        
         <action name="validaCamposEntrada" class="resultadoCotizacion" method="validaCamposEntrada">
             <result name="input" type="json" />
             <result name="error" type="json" />

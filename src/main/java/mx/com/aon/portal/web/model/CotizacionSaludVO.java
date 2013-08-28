@@ -15,6 +15,7 @@ import mx.com.aon.portal2.web.GenericVO;
 public class CotizacionSaludVO {
     
     private Long id;
+    private GenericVO estado;
     private GenericVO ciudad;
     private BigDecimal deducible;
     private GenericVO copago;
@@ -26,6 +27,8 @@ public class CotizacionSaludVO {
     private GenericVO sumaAseguradaMaternidad;
     private GenericVO baseTabuladorReembolso;
     private GenericVO costoEmergenciaExtranjero;
+    private GenericVO coberturaEliminacionPenalizacionCambioZona;
+    
     private List<IncisoSaludVO> incisos;
 
     public Long getId() {
@@ -130,6 +133,22 @@ public class CotizacionSaludVO {
 
     public void setIncisos(List<IncisoSaludVO> incisos) {
         this.incisos = incisos;
+    }
+
+    public GenericVO getEstado() {
+        return estado;
+    }
+
+    public void setEstado(GenericVO estado) {
+        this.estado = estado;
+    }
+
+    public GenericVO getCoberturaEliminacionPenalizacionCambioZona() {
+        return coberturaEliminacionPenalizacionCambioZona;
+    }
+
+    public void setCoberturaEliminacionPenalizacionCambioZona(GenericVO coberturaEliminacionPenalizacionCambioZona) {
+        this.coberturaEliminacionPenalizacionCambioZona = coberturaEliminacionPenalizacionCambioZona;
     }
     
 }

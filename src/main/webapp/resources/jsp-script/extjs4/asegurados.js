@@ -1,15 +1,27 @@
-var comboCiudad,storeCiudades;
-var comboCopago,storeCopagos;
-var comboSumaAsegurada,storeSumasAseguradas;
-var comboCirculoHospitalario,storeCirculoHospitalario;
-var comboCoberturaVacunas,storeCoberturaVacunas;
-var comboCoberturaPrevencionEnfermedadesAdultos,storeCoberturaPrevencionEnfermedadesAdultos;
-var comboMaternidad,storeMaternidad;
-var comboSumaAseguradaMaternidad,storeSumaAseguradaMaternidad;
-var comboBaseTabuladorReembolso,storeBaseTabuladorReembolso;
-var comboCostoEmergenciaExtranjero,storeCostoEmergenciaExtranjero;
-var comboGeneros,storeGeneros;
-var comboRoles,storeRoles;
+///////////////////////////////////////
+////// ini catalogos de tatrisit //////
+///////////////////////////////////////
+var comboGeneros,storeGeneros;                                      //1
+//fecha nacimiento                                                    2
+var comboEstados,storeEstados;                                      //3
+var comboCiudad,storeCiudades;                                      //4
+//deducible                                                           5
+var comboCopago,storeCopagos;                                       //6
+var comboSumaAsegurada,storeSumasAseguradas;                        //7
+var comboCirculoHospitalario,storeCirculoHospitalario;              //8
+var comboCoberturaVacunas,storeCoberturaVacunas;                    //9
+var comboCoberturaPrevencionEnfermedadesAdultos,
+        storeCoberturaPrevencionEnfermedadesAdultos;                //10
+var comboMaternidad,storeMaternidad;                                //11
+var comboSumaAseguradaMaternidad,storeSumaAseguradaMaternidad;      //12
+var comboBaseTabuladorReembolso,storeBaseTabuladorReembolso;        //13
+var comboCostoEmergenciaExtranjero,storeCostoEmergenciaExtranjero;  //14
+var comboCobElimPenCambioZona,storeCobElimPenCambioZona;            //15
+var comboRoles,storeRoles;                                          //16
+///////////////////////////////////////
+////// fin catalogos de tatrisit //////
+///////////////////////////////////////
+
 var storeIncisos;
 var formPanel;
 
@@ -18,6 +30,49 @@ Ext.onReady(function(){
     //////////////////////////////
     ////// Inicio de stores //////
     //////////////////////////////
+    
+    //1 sexo (GRID)
+    storeGeneros = new Ext.data.Store({
+        model: 'Generic',
+        autoLoad:true,
+        proxy:
+        {
+            type: 'ajax',
+            url : _URL_OBTEN_CATALOGO_GENERICO,
+            extraParams:{cdatribu:CDATRIBU_SEXO},
+            reader:
+            {
+                type: 'json',
+                root: 'lista'
+            }
+        }
+    });
+    
+    //3 estados
+    storeEstados = new Ext.data.Store({
+        model: 'Generic',
+        autoLoad:true,
+        proxy:
+        {
+            type: 'ajax',
+            url : _URL_OBTEN_CATALOGO_GENERICO,
+            extraParams:{cdatribu:CDATRIBU_ESTADO},
+            reader:
+            {
+                type: 'json',
+                root: 'lista'
+            }
+        },
+        sorters:
+        [
+            {
+                property : 'value',
+                direction: 'ASC'
+            }
+        ]
+    });
+    
+    //4 ciudades
     storeCiudades = new Ext.data.Store({
         model: 'Generic',
         autoLoad:true,
@@ -41,6 +96,7 @@ Ext.onReady(function(){
         ]
     });
     
+    //6 copago
     storeCopagos = new Ext.data.Store({
         model: 'Generic',
         autoLoad:true,
@@ -57,6 +113,7 @@ Ext.onReady(function(){
         }
     });
     
+    //7 suma asegurada
     storeSumasAseguradas = new Ext.data.Store({
         model: 'Generic',
         autoLoad:true,
@@ -73,6 +130,7 @@ Ext.onReady(function(){
         }
     });
     
+    //8 circulo hospitalario
     storeCirculoHospitalario = new Ext.data.Store({
         model: 'Generic',
         autoLoad:true,
@@ -96,6 +154,7 @@ Ext.onReady(function(){
         ]
     });
     
+    //9 cobertura vacunas
     storeCoberturaVacunas = new Ext.data.Store({
         model: 'Generic',
         autoLoad:true,
@@ -112,6 +171,7 @@ Ext.onReady(function(){
         }
     });
     
+    //10 enfemedades adultos
     storeCoberturaPrevencionEnfermedadesAdultos = new Ext.data.Store({
         model: 'Generic',
         autoLoad:true,
@@ -128,6 +188,7 @@ Ext.onReady(function(){
         }
     });
     
+    //11 maternidad
     storeMaternidad = new Ext.data.Store({
         model: 'Generic',
         autoLoad:true,
@@ -144,6 +205,7 @@ Ext.onReady(function(){
         }
     });
     
+    //12 suma maternidad
     storeSumaAseguradaMaternidad = new Ext.data.Store({
         model: 'Generic',
         autoLoad:true,
@@ -160,6 +222,7 @@ Ext.onReady(function(){
         }
     });
     
+    //13 base tabulador reembolso
     storeBaseTabuladorReembolso = new Ext.data.Store({
         model: 'Generic',
         autoLoad:true,
@@ -176,6 +239,7 @@ Ext.onReady(function(){
         }
     });
     
+    //14 emergencia extranjero
     storeCostoEmergenciaExtranjero = new Ext.data.Store({
         model: 'Generic',
         autoLoad:true,
@@ -192,14 +256,15 @@ Ext.onReady(function(){
         }
     });
     
-    storeGeneros = new Ext.data.Store({
+    //15 cobertura eliminacion penalizaacion cambio zona
+    storeCobElimPenCambioZona = new Ext.data.Store({
         model: 'Generic',
         autoLoad:true,
         proxy:
         {
             type: 'ajax',
             url : _URL_OBTEN_CATALOGO_GENERICO,
-            extraParams:{cdatribu:CDATRIBU_SEXO},
+            extraParams:{cdatribu:CDATRIBU_COB_ELIM_PEN_CAMBIO_ZONA},
             reader:
             {
                 type: 'json',
@@ -208,6 +273,7 @@ Ext.onReady(function(){
         }
     });
     
+    //16 roles (GRID)
     storeRoles = new Ext.data.Store({
         model: 'Generic',
         autoLoad:true,
@@ -215,7 +281,7 @@ Ext.onReady(function(){
         {
             type: 'ajax',
             url : _URL_OBTEN_CATALOGO_GENERICO,
-            extraParams:{cdatribu:'roles'},
+            extraParams:{cdatribu:CDATRIBU_ROL},
             reader:
             {
                 type: 'json',
@@ -279,15 +345,27 @@ Ext.onReady(function(){
     
     //////////////////////////////////////////////////////////////////////
     ////// Inicio de combos de formulario y combos editores de grid //////
-    /////////////////////////////////////////////////////////////////////
-    comboCiudad=Ext.create('Ext.form.ComboBox2',
+    //////////////////////////////////////////////////////////////////////
+    
+    //1 sexo (GRID)
+    comboGeneros=Ext.create('Ext.form.ComboBox',
     {
-        id:'comboCiudad',
-        fieldLabel: 'Ciudad',
-        name:'ciudad',
-        hiddenName:'cot.ciudad.key',
-        model:'GeCiudad',
-        store: storeCiudades,
+        id:'comboGeneros',
+        store: storeGeneros,
+        displayField: 'value',
+        valueField: 'key',
+        allowBlank:false,
+        editable:false
+    });
+    
+    //3 estado
+    comboEstados=Ext.create('Ext.form.ComboBox2',
+    {
+        id:'comboEstados',
+        fieldLabel: 'Estado',
+        name:'estado',
+        model:'GeEstado',
+        store: storeEstados,
         displayField: 'value',
         valueField: 'key',
         allowBlank:false,
@@ -295,11 +373,26 @@ Ext.onReady(function(){
         emptyText:'Seleccione...'
     });
     
+    //4 ciudad
+    comboCiudad=Ext.create('Ext.form.ComboBox2',
+    {
+        id:'comboCiudad',
+        fieldLabel: 'Ciudad',
+        name:'ciudad',
+        model:'GeCiudad',
+        store: storeCiudades,
+        displayField: 'value',
+        valueField: 'key',
+        allowBlank:false,
+        editable:false,
+        emptyText:'Seleccione un estado...'
+    });
+    
+    //6 copago
     comboCopago=Ext.create('Ext.form.ComboBox2',
     {
         id:'comboCopago',
         name:'copago',
-        hiddenName:'cot.copago.key',
         fieldLabel: 'Copago',
         store: storeCopagos,
         displayField: 'value',
@@ -309,11 +402,11 @@ Ext.onReady(function(){
         emptyText:'Seleccione...'
     });
     
+    //7 suma asegurada
     comboSumaAsegurada=Ext.create('Ext.form.ComboBox2',
     {
         id:'comboSumaAsegurada',
         name:'sumaSegurada',
-        hiddenName:'cot.sumaSegurada.key',
         fieldLabel: 'Suma asegurada',
         store: storeSumasAseguradas,
         displayField: 'value',
@@ -323,11 +416,11 @@ Ext.onReady(function(){
         emptyText:'Seleccione...'
     });
     
+    //8 circulo hospitalario
     comboCirculoHospitalario=Ext.create('Ext.form.ComboBox2',
     {
         id:'comboCirculoHospitalario',
         name:'circuloHospitalario',
-        hiddenName:'cot.circuloHospitalario.key',
         fieldLabel: 'C&iacute;rculo hospitalario',
         store: storeCirculoHospitalario,
         displayField: 'value',
@@ -337,11 +430,11 @@ Ext.onReady(function(){
         emptyText:'Seleccione...'
     });
     
+    //9 cobertura vacunas
     comboCoberturaVacunas=Ext.create('Ext.form.ComboBox2',
     {
         id:'comboCoberturaVacunas',
         name:'coberturaVacunas',
-        hiddenName:'cot.coberturaVacunas.key',
         fieldLabel: 'Cobertura de vacunas',
         store: storeCoberturaVacunas,
         displayField: 'value',
@@ -351,11 +444,11 @@ Ext.onReady(function(){
         emptyText:'Seleccione...'
     });
     
+    //10 enfermedades adultos
     comboCoberturaPrevencionEnfermedadesAdultos=Ext.create('Ext.form.ComboBox2',
     {
         id:'comboCoberturaPrevencionEnfermedadesAdultos',
         name:'coberturaPrevencionEnfermedadesAdultos',
-        hiddenName:'cot.coberturaPrevencionEnfermedadesAdultos.key',
         fieldLabel: 'Cobertura de prevenci&oacute;n de enfermedades en adultos',
         store: storeCoberturaPrevencionEnfermedadesAdultos,
         displayField: 'value',
@@ -365,11 +458,11 @@ Ext.onReady(function(){
         emptyText:'Seleccione...'
     });
     
+    //11 maternidad
     comboMaternidad=Ext.create('Ext.form.ComboBox2',
     {
         id:'comboMaternidad',
         name:'maternidad',
-        hiddenName:'cot.maternidad.key',
         fieldLabel: 'Maternidad',
         store: storeMaternidad,
         displayField: 'value',
@@ -379,11 +472,11 @@ Ext.onReady(function(){
         emptyText:'Seleccione...'
     });
     
+    //12 suma maternidad
     comboSumaAseguradaMaternidad=Ext.create('Ext.form.ComboBox2',
     {
         id:'comboSumaAseguradaMaternidad',
         name:'sumaAseguradaMaternidad',
-        hiddenName:'cot.sumaAseguradaMaternidad.key',
         fieldLabel: 'Suma asegurada maternidad',
         store: storeSumaAseguradaMaternidad,
         displayField: 'value',
@@ -393,11 +486,11 @@ Ext.onReady(function(){
         emptyText:'Seleccione...'
     });
     
+    //13 tabulador reembolso
     comboBaseTabuladorReembolso=Ext.create('Ext.form.ComboBox2',
     {
         id:'comboBaseTabuladorReembolso',
         name:'baseTabuladorReembolso',
-        hiddenName:'cot.baseTabuladorReembolso.key',
         fieldLabel: 'Base de tabulador de reembolso',
         store: storeBaseTabuladorReembolso,
         displayField: 'value',
@@ -407,6 +500,7 @@ Ext.onReady(function(){
         emptyText:'Seleccione...'
     });
     
+    //14 emergencia extranjero
     comboCostoEmergenciaExtranjero=Ext.create('Ext.form.ComboBox2',
     {
         id:'comboCostoEmergenciaExtranjero',
@@ -420,16 +514,21 @@ Ext.onReady(function(){
         emptyText:'Seleccione...'
     });
     
-    comboGeneros=Ext.create('Ext.form.ComboBox',
+    //15 combo cobertura eliminacion penalizacion cambio zona
+    comboCobElimPenCambioZona=Ext.create('Ext.form.ComboBox2',
     {
-        id:'comboGeneros',
-        store: storeGeneros,
+        id:'comboCobEiPenCamZona',
+        name:'coberturaEliminacionPenalizacionCambioZona',
+        fieldLabel: 'Cobertura de elim. de pen. de cambio de zona',
+        store: storeCobElimPenCambioZona,
         displayField: 'value',
         valueField: 'key',
         allowBlank:false,
-        editable:false
+        editable:false,
+        emptyText:'Seleccione...'
     });
     
+    //16 rol (GRID)
     comboRoles=Ext.create('Ext.form.ComboBox',
     {
         id:'comboRoles',
@@ -683,14 +782,23 @@ Ext.onReady(function(){
         overflowX:'auto',
         bodyPadding: 10,
         width:800,
-        height:500,
-        url:_URL_COTIZAR,
+        //height:500,
         renderTo:'maindiv',
         model:'CotizacionSalud',
         items:
         [
-            comboCiudad,
-            {
+            {                                               //0
+                id: 'idCotizacion',
+                name:'id',
+                xtype: 'numberfield',
+                fieldLabel: 'N&uacute;mero de cotizaci&oacute;n',
+                readonly:true
+            },
+            //sexo (inciso)                                   1
+            //fecha nacimiento (inciso)                       2
+            comboEstados,                                   //3
+            comboCiudad,                                    //4
+            {                                               //5
                 id: 'deducible',
                 name:'deducible',
                 xtype: 'numberfield',
@@ -698,15 +806,17 @@ Ext.onReady(function(){
                 allowBlank: false,
                 renderer:Ext.util.Format.usMoney
             },
-            comboCopago,
-            comboSumaAsegurada,
-            comboCirculoHospitalario,
-            comboCoberturaVacunas,
-            comboCoberturaPrevencionEnfermedadesAdultos,
-            comboMaternidad,
-            comboSumaAseguradaMaternidad,
-            comboBaseTabuladorReembolso,
-            comboCostoEmergenciaExtranjero,
+            comboCopago,                                    //6
+            comboSumaAsegurada,                             //7
+            comboCirculoHospitalario,                       //8
+            comboCoberturaVacunas,                          //9
+            comboCoberturaPrevencionEnfermedadesAdultos,    //10
+            comboMaternidad,                                //11
+            comboSumaAseguradaMaternidad,                   //12
+            comboBaseTabuladorReembolso,                    //13
+            comboCostoEmergenciaExtranjero,                 //14
+            comboCobElimPenCambioZona,                      //15
+            //rol (inciso)                                    16
             new EditorIncisos()
         ],
         buttons: [{
@@ -716,57 +826,75 @@ Ext.onReady(function(){
                 var form = this.up('form').getForm();
                 if (form.isValid()) {
                     var incisosRecords = storeIncisos.getRange();
-                    var incisosJson = [];
-                    for (var i in incisosRecords) {
-                        incisosJson.push({
-                            id: incisosRecords[i].get('id'),
-                            rol:
+                    if(incisosRecords&&incisosRecords.length>0)
+                    {
+                        var incisosJson = [];
+                        for (var i in incisosRecords) {
+                            incisosJson.push({
+                                id: incisosRecords[i].get('id'),
+                                rol:
+                                {
+                                    key:typeof incisosRecords[i].get('rol')=='string'?incisosRecords[i].get('rol'):incisosRecords[i].get('rol').get('key'),
+                                    value:''
+                                },
+                                fechaNacimiento: incisosRecords[i].get('fechaNacimiento'),
+                                sexo:
+                                {
+                                    key:typeof incisosRecords[i].get('sexo')=='string'?incisosRecords[i].get('sexo'):incisosRecords[i].get('sexo').get('key'),
+                                    value:''
+                                },
+                                nombre: incisosRecords[i].get('nombre'),
+                                segundoNombre: incisosRecords[i].get('segundoNombre'),
+                                apellidoPaterno: incisosRecords[i].get('apellidoPaterno'),
+                                apellidoMaterno: incisosRecords[i].get('apellidoMaterno')
+                            });
+                        }
+                        var submitValues=form.getValues();
+                        submitValues['incisos']=incisosJson;
+                        window.console&&console.log(submitValues);
+                        // Submit the Ajax request and handle the response
+                        Ext.MessageBox.show({
+                            msg: 'Cotizando...',
+                            width:300,
+                            wait:true,
+                            waitConfig:{interval:100}
+                        });
+                        Ext.Ajax.request(
+                        {
+                            url: _URL_COTIZAR,
+                            jsonData:Ext.encode(submitValues),
+                            success:function(response,opts)
                             {
-                                key:typeof incisosRecords[i].get('rol')=='string'?incisosRecords[i].get('rol'):incisosRecords[i].get('rol').get('key'),
-                                value:''
+                                Ext.MessageBox.hide();
+                                var jsonResp = Ext.decode(response.responseText);
+                                window.console&&console.log(jsonResp);
+                                if(jsonResp.success==true)
+                                {
+                                    window.location  = _URL_RESULTADO_COTIZACION;
+                                }
                             },
-                            fechaNacimiento: incisosRecords[i].get('fechaNacimiento'),
-                            sexo:
+                            failure:function(response,opts)
                             {
-                                key:typeof incisosRecords[i].get('sexo')=='string'?incisosRecords[i].get('sexo'):incisosRecords[i].get('sexo').get('key'),
-                                value:''
-                            },
-                            nombre: incisosRecords[i].get('nombre'),
-                            segundoNombre: incisosRecords[i].get('segundoNombre'),
-                            apellidoPaterno: incisosRecords[i].get('apellidoPaterno'),
-                            apellidoMaterno: incisosRecords[i].get('apellidoMaterno')
+                                Ext.MessageBox.hide();
+                                window.console&&console.log("error");
+                                Ext.Msg.show({
+                                    title:'Error',
+                                    msg: 'Error de comunicaci&oacute;n',
+                                    buttons: Ext.Msg.OK,
+                                    icon: Ext.Msg.ERROR
+                                });
+                            }
                         });
                     }
-                    var submitValues=form.getValues();
-                    submitValues['incisos']=incisosJson;
-                    window.console&&console.log(submitValues);
-                    // Submit the Ajax request and handle the response
-                    Ext.MessageBox.show({
-                        msg: 'Cotizando...',
-                        width:300,
-                        wait:true,
-                        waitConfig:{interval:100}
-                    });
-                    Ext.Ajax.request(
+                    else
                     {
-                        url: _URL_COTIZAR,
-                        jsonData:Ext.encode(submitValues)/*,
-                        success:function(response,opts)
-                        {
-                            var jsonResp = Ext.decode(response.responseText);
-                            console.log(jsonResp);
-                        },
-                        failure:function(response,opts)
-                        {
-                            console.log("error");
-                            Ext.Msg.show({
-                                title:'Error',
-                                msg: 'Error de comunicaci&oacute;n',
-                                buttons: Ext.Msg.OK,
-                                icon: Ext.Msg.ERROR
-                            });
-                        }*/
-                    });
+                        Ext.Msg.show({
+                            title:'Datos incompletos',
+                            msg: 'Favor de introducir al menos un asegurado',
+                            buttons: Ext.Msg.OK,
+                            icon: Ext.Msg.ERROR
+                        });
+                    }
                 }
                 else
                 {
@@ -793,7 +921,7 @@ Ext.onReady(function(){
         proxy:
         {
             type:'ajax',
-            url:_URL_ASEGURAR,
+            url:_URL_CARGAR_COTIZACION,
             reader:{
                 type:'json',
                 root:'cotizacion'

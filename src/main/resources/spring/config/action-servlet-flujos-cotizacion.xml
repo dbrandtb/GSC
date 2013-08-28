@@ -31,6 +31,10 @@
      <property name="kernelManager" ref="kernelManager"/>
     </bean>
     
+    <bean id="cotizacionVital" class="mx.com.aon.flujos.cotizacion4.web.ResultadoCotizacion4Action" scope="prototype" parent="principalCotizacion">
+        <property name="kernelManagerSustituto" ref="kernelManagerSustituto"/>
+    </bean>
+    
     <bean id="consultaCotizacionAction" class="mx.com.aon.flujos.cotizacion.web.ConsultaCotizacionAction" scope="prototype" parent="principalCotizacion">
          <property name="cotizacionManager" ref="cotizacionService"/>
          <property name="catalogosManager" 	ref="catalogManager"/>

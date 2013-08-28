@@ -59,6 +59,8 @@ public class ProcesoDAO extends AbstractDAO {
 	public static final String EXEC_VALIDADOR = "EXEC_VALIDADOR";
 	public static final String P_MOV_MPOLIZAS = "P_MOV_MPOLIZAS";
 	public static final String P_MOV_TVALOSIT = "P_MOV_TVALOSIT";
+        public static final String P_MOV_MPOLISIT = "P_MOV_MPOLISIT";
+        public static final String P_CLONAR_PERSONAS="P_CLONAR_PERSONAS";
 
 	protected void initDao() throws Exception {
 		addStoredProcedure(PERMISO_EJECUCION_PROCESO,
@@ -86,6 +88,8 @@ public class ProcesoDAO extends AbstractDAO {
 		
 		addStoredProcedure(P_MOV_MPOLIZAS, new InsertaMaestroPolizas(getDataSource()));
 		addStoredProcedure(P_MOV_TVALOSIT, new InsertaValoresSituaciones(getDataSource()));
+                addStoredProcedure(P_MOV_MPOLISIT, new InsertaMPolisit(getDataSource()));
+                addStoredProcedure(P_CLONAR_PERSONAS, new ClonaPersonas(getDataSource()));
 		
 	
 	}
@@ -867,5 +871,72 @@ public class ProcesoDAO extends AbstractDAO {
 		}
     }
     
+    
+    protected class InsertaMPolisit extends CustomStoredProcedure
+    {
+    	protected InsertaMPolisit(DataSource dataSource)
+        {
+            super(dataSource,"PKG_SATELITES.P_MOV_MPOLISIT");
+            declareParameter(new SqlParameter("pv_cdunieco_i",      OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("pv_cdramo_i",        OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("pv_estado_i",        OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmpoliza_i",      OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("pv_nmsituac_i",      OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("pv_nmsuplem_i",      OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("pv_status_i",        OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdtipsit_i",      OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_swreduci_i",      OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdagrupa_i",      OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("pv_cdestado_i",      OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("pv_fefecsit_i",      OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_fecharef_i",      OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdgrupo_i",       OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmsituaext_i",    OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmsitaux_i",      OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("pv_nmsbsitext_i",    OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdplan_i",        OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdasegur_i",      OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_accion_i",        OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
+            compile();
+    	}
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception
+        {
+            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+            return mapper.build(map);
+        }
+    }
+    
+    protected class ClonaPersonas extends CustomStoredProcedure
+    {
+    	protected ClonaPersonas(DataSource dataSource)
+        {
+            super(dataSource,"PKG_COTIZA.P_CLONAR_PERSONAS");
+            declareParameter(new SqlParameter("pv_cdelemen_i",  OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdunieco_i",  OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("pv_cdramo_i",    OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("pv_estado_i",    OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmpoliza_i",  OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("pv_nmsituac_i",  OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("pv_cdtipsit_i",  OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_fecha_i",     OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdusuario_i", OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_p_nombre",    OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_s_nombre",    OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_apellidop",   OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_apellidom",   OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_sexo",        OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_fenacimi",    OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o",  OracleTypes.VARCHAR));
+            compile();
+    	}
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception
+        {
+            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+            return mapper.build(map);
+        }
+    }
     
 }

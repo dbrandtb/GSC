@@ -15,18 +15,23 @@ Ext.define('Generic',
     ]
 });
 
-Ext.define('GeCiudad',                                  {extend:'Generic'});
-Ext.define('GeSexo',                                    {extend:'Generic'});
-Ext.define('GeRol',                                     {extend:'Generic'});
-Ext.define('GeCopago',                                  {extend:'Generic'});
-Ext.define('GeSumaAsegurada',                           {extend:'Generic'});
-Ext.define('GeCirculoHospitalario',                     {extend:'Generic'});
-Ext.define('GeCoberturaVacunas',                        {extend:'Generic'});
-Ext.define('GeCoberturaPrevencionEnfermedadesAdultos',  {extend:'Generic'});
-Ext.define('GeMaternidad',                              {extend:'Generic'});
-Ext.define('GeSumaAseguradaMaternidad',                 {extend:'Generic'});
-Ext.define('GeBaseTabuladorReembolso',                  {extend:'Generic'});
-Ext.define('GeCostoEmergenciaExtranjero',               {extend:'Generic'});
+//catalogos tatrisit
+Ext.define('GeSexo',                                    {extend:'Generic'});//1
+//fecha nacimiento                                                            2
+Ext.define('GeEstado',                                  {extend:'Generic'});//3
+Ext.define('GeCiudad',                                  {extend:'Generic'});//4
+//deducible                                                                   5
+Ext.define('GeCopago',                                  {extend:'Generic'});//6
+Ext.define('GeSumaAsegurada',                           {extend:'Generic'});//7
+Ext.define('GeCirculoHospitalario',                     {extend:'Generic'});//8
+Ext.define('GeCoberturaVacunas',                        {extend:'Generic'});//9
+Ext.define('GeCoberturaPrevencionEnfermedadesAdultos',  {extend:'Generic'});//10
+Ext.define('GeMaternidad',                              {extend:'Generic'});//11
+Ext.define('GeSumaAseguradaMaternidad',                 {extend:'Generic'});//12
+Ext.define('GeBaseTabuladorReembolso',                  {extend:'Generic'});//13
+Ext.define('GeCostoEmergenciaExtranjero',               {extend:'Generic'});//14
+Ext.define('GeCobElimPenCambioZona',                    {extend:'Generic'});//15
+Ext.define('GeRol',                                     {extend:'Generic'});//16
 
 Ext.define('IncisoSalud',
 {
@@ -49,18 +54,23 @@ Ext.define('CotizacionSalud',
     extend:'Ext.data.Model',
     fields:
     [
-        {name:'id',                                     type:'numeric'},
-        {name:'ciudad',                                 type:'GeCiudad'},
-        {name:'deducible',                              type:'numeric'},
-        {name:'copago',                                 type:'GeCopago'},
-        {name:'sumaSegurada',                           type:'GeSumaAsegurada'},
-        {name:'circuloHospitalario',                    type:'GeCirculoHospitalario'},
-        {name:'coberturaVacunas',                       type:'GeCoberturaVacunas'},
-        {name:'coberturaPrevencionEnfermedadesAdultos', type:'GeCoberturaPrevencionEnfermedadesAdultos'},
-        {name:'maternidad',                             type:'GeMaternidad'},
-        {name:'sumaAseguradaMaternidad',                type:'GeSumaAseguradaMaternidad'},
-        {name:'baseTabuladorReembolso',                 type:'GeBaseTabuladorReembolso'},
-        {name:'costoEmergenciaExtranjero',              type:'GeCostoEmergenciaExtranjero'}
+        {name:'id',                                         type:'numeric'},                                    //0
+        //sexo (inciso)                                                                                           1
+        //fecha nacimiento (inciso)                                                                               2
+        {name:'estado',                                     type:'GeEstado'},                                   //3
+        {name:'ciudad',                                     type:'GeCiudad'},                                   //4
+        {name:'deducible',                                  type:'numeric'},                                    //5
+        {name:'copago',                                     type:'GeCopago'},                                   //6
+        {name:'sumaSegurada',                               type:'GeSumaAsegurada'},                            //7
+        {name:'circuloHospitalario',                        type:'GeCirculoHospitalario'},                      //8
+        {name:'coberturaVacunas',                           type:'GeCoberturaVacunas'},                         //9
+        {name:'coberturaPrevencionEnfermedadesAdultos',     type:'GeCoberturaPrevencionEnfermedadesAdultos'},   //10
+        {name:'maternidad',                                 type:'GeMaternidad'},                               //11
+        {name:'sumaAseguradaMaternidad',                    type:'GeSumaAseguradaMaternidad'},                  //12
+        {name:'baseTabuladorReembolso',                     type:'GeBaseTabuladorReembolso'},                   //13
+        {name:'costoEmergenciaExtranjero',                  type:'GeCostoEmergenciaExtranjero'},                //14
+        {name:'coberturaEliminacionPenalizacionCambioZona', type:'GeCobElimPenCambioZona'}                      //15
+        //rol (inciso)                                                                                            16
     ],
     hasMany:
     [{

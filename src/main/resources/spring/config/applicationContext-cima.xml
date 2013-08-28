@@ -1119,6 +1119,12 @@
                 <ref bean="cotizacionDAO"/>
             </property>
         </bean>
+        
+        <bean id="kernelManagerSustituto" class="mx.com.aon.kernel.service.impl.KernelManagerSustitutoImpl" parent="abstractManagerJdbcTemplateInvoke">
+            <property name="abstractDAO">
+                <ref bean="procesosDao"/>
+            </property>
+        </bean>
     <!-- Cotizaciones -->    
     
         

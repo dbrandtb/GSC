@@ -25,18 +25,23 @@ public class DinosaurioAction extends PrincipalCoreAction implements CookiesAwar
     public String jsoo()
     {
         cotizacion=new CotizacionSaludVO();
-        cotizacion.setId(                                       69l);
-        cotizacion.setCiudad(                                   new GenericVO("04","lol"));
-        cotizacion.setDeducible(                                new BigDecimal("69"));
-        cotizacion.setCopago(                                   new GenericVO("10000","lol"));
-        cotizacion.setSumaSegurada(                             new GenericVO("14000","lol"));
-        cotizacion.setCirculoHospitalario(                      new GenericVO("3","lol"));
-        cotizacion.setCoberturaVacunas(                         new GenericVO("S","lol"));
-        cotizacion.setCoberturaPrevencionEnfermedadesAdultos(   new GenericVO("S","lol"));
-        cotizacion.setMaternidad(                               new GenericVO("S","lol"));
-        cotizacion.setSumaAseguradaMaternidad(                  new GenericVO("100000","lol"));
-        cotizacion.setBaseTabuladorReembolso(                   new GenericVO("35000","lol"));
-        cotizacion.setCostoEmergenciaExtranjero(                new GenericVO("S","lol"));
+        cotizacion.setId(                                           6969l);                         //0
+        //sexo (inciso)                                                                               1
+        //fecha nacimiento (inciso)                                                                   2
+        cotizacion.setEstado(                                       new GenericVO("02","lol"));     //3
+        cotizacion.setCiudad(                                       new GenericVO("06001","lol"));  //4
+        cotizacion.setDeducible(                                    new BigDecimal("690000"));      //5
+        cotizacion.setCopago(                                       new GenericVO("10000","lol"));  //6
+        cotizacion.setSumaSegurada(                                 new GenericVO("14000","lol"));  //7
+        cotizacion.setCirculoHospitalario(                          new GenericVO("3","lol"));      //8
+        cotizacion.setCoberturaVacunas(                             new GenericVO("S","lol"));      //9
+        cotizacion.setCoberturaPrevencionEnfermedadesAdultos(       new GenericVO("S","lol"));      //10
+        cotizacion.setMaternidad(                                   new GenericVO("S","lol"));      //11
+        cotizacion.setSumaAseguradaMaternidad(                      new GenericVO("100000","lol")); //12
+        cotizacion.setBaseTabuladorReembolso(                       new GenericVO("35000","lol"));  //13
+        cotizacion.setCostoEmergenciaExtranjero(                    new GenericVO("S","lol"));      //14
+        cotizacion.setCoberturaEliminacionPenalizacionCambioZona(   new GenericVO("N","lol"));      //15
+        //rol (inciso)                                                                                16
         return SUCCESS;
     }
     
