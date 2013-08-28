@@ -75,12 +75,16 @@ Ext.onReady(function(){
     //4 ciudades
     storeCiudades = new Ext.data.Store({
         model: 'Generic',
-        autoLoad:true,
+        autoLoad:false,
         proxy:
         {
             type: 'ajax',
             url : _URL_OBTEN_CATALOGO_GENERICO,
-            extraParams:{cdatribu:CDATRIBU_CIUDAD},
+            extraParams:
+            {
+                cdatribu:CDATRIBU_CIUDAD,
+                padre:''
+            },
             reader:
             {
                 type: 'json',
@@ -370,7 +374,16 @@ Ext.onReady(function(){
         valueField: 'key',
         allowBlank:false,
         editable:false,
-        emptyText:'Seleccione...'
+        emptyText:'Seleccione...',
+        listeners:
+        {
+            change:function(record,value)
+            {
+                storeCiudades.load({
+                    params:{padre:value}
+                });
+            }
+        }
     });
     
     //4 ciudad
