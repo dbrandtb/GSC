@@ -80,11 +80,6 @@ Ext.onReady(function(){
         {
             type: 'ajax',
             url : _URL_OBTEN_CATALOGO_GENERICO,
-            extraParams:
-            {
-                cdatribu:CDATRIBU_CIUDAD,
-                padre:''
-            },
             reader:
             {
                 type: 'json',
@@ -356,6 +351,7 @@ Ext.onReady(function(){
     {
         id:'comboGeneros',
         store: storeGeneros,
+        queryMode:'local',
         displayField: 'value',
         valueField: 'key',
         allowBlank:false,
@@ -370,6 +366,7 @@ Ext.onReady(function(){
         name:'estado',
         model:'GeEstado',
         store: storeEstados,
+        queryMode:'local',
         displayField: 'value',
         valueField: 'key',
         allowBlank:false,
@@ -379,8 +376,30 @@ Ext.onReady(function(){
         {
             change:function(record,value)
             {
+                comboCiudad.setLoading(true, true);
                 storeCiudades.load({
-                    params:{padre:value}
+                    params:
+                    {
+                        codigoTabla:'2TMUNI',
+                        idPadre:value
+                    },
+                    callback: function(records, operation, success)
+                    {
+                        var ciudadActual=comboCiudad.getValue();
+                        var actualEnStoreCiudades=false;
+                        storeCiudades.each(function(record)
+                        {
+                            if(ciudadActual==record.get('key'))
+                            {
+                                actualEnStoreCiudades=true;
+                            }
+                        });
+                        if(!actualEnStoreCiudades)
+                        {
+                            comboCiudad.clearValue();
+                        }
+                        comboCiudad.setLoading(false);
+                    }
                 });
             }
         }
@@ -394,6 +413,7 @@ Ext.onReady(function(){
         name:'ciudad',
         model:'GeCiudad',
         store: storeCiudades,
+        queryMode:'local',
         displayField: 'value',
         valueField: 'key',
         allowBlank:false,
@@ -408,6 +428,7 @@ Ext.onReady(function(){
         name:'copago',
         fieldLabel: 'Copago',
         store: storeCopagos,
+        queryMode:'local',
         displayField: 'value',
         valueField: 'key',
         allowBlank:false,
@@ -422,6 +443,7 @@ Ext.onReady(function(){
         name:'sumaSegurada',
         fieldLabel: 'Suma asegurada',
         store: storeSumasAseguradas,
+        queryMode:'local',
         displayField: 'value',
         valueField: 'key',
         allowBlank:false,
@@ -436,6 +458,7 @@ Ext.onReady(function(){
         name:'circuloHospitalario',
         fieldLabel: 'C&iacute;rculo hospitalario',
         store: storeCirculoHospitalario,
+        queryMode:'local',
         displayField: 'value',
         valueField: 'key',
         allowBlank:false,
@@ -450,6 +473,7 @@ Ext.onReady(function(){
         name:'coberturaVacunas',
         fieldLabel: 'Cobertura de vacunas',
         store: storeCoberturaVacunas,
+        queryMode:'local',
         displayField: 'value',
         valueField: 'key',
         allowBlank:false,
@@ -464,6 +488,7 @@ Ext.onReady(function(){
         name:'coberturaPrevencionEnfermedadesAdultos',
         fieldLabel: 'Cobertura de prevenci&oacute;n de enfermedades en adultos',
         store: storeCoberturaPrevencionEnfermedadesAdultos,
+        queryMode:'local',
         displayField: 'value',
         valueField: 'key',
         allowBlank:false,
@@ -478,6 +503,7 @@ Ext.onReady(function(){
         name:'maternidad',
         fieldLabel: 'Maternidad',
         store: storeMaternidad,
+        queryMode:'local',
         displayField: 'value',
         valueField: 'key',
         allowBlank:false,
@@ -492,6 +518,7 @@ Ext.onReady(function(){
         name:'sumaAseguradaMaternidad',
         fieldLabel: 'Suma asegurada maternidad',
         store: storeSumaAseguradaMaternidad,
+        queryMode:'local',
         displayField: 'value',
         valueField: 'key',
         allowBlank:false,
@@ -506,6 +533,7 @@ Ext.onReady(function(){
         name:'baseTabuladorReembolso',
         fieldLabel: 'Base de tabulador de reembolso',
         store: storeBaseTabuladorReembolso,
+        queryMode:'local',
         displayField: 'value',
         valueField: 'key',
         allowBlank:false,
@@ -520,6 +548,7 @@ Ext.onReady(function(){
         name:'costoEmergenciaExtranjero',
         fieldLabel: 'Costo de emergencia en el extranjero',
         store: storeCostoEmergenciaExtranjero,
+        queryMode:'local',
         displayField: 'value',
         valueField: 'key',
         allowBlank:false,
@@ -534,6 +563,7 @@ Ext.onReady(function(){
         name:'coberturaEliminacionPenalizacionCambioZona',
         fieldLabel: 'Cobertura de elim. de pen. de cambio de zona',
         store: storeCobElimPenCambioZona,
+        queryMode:'local',
         displayField: 'value',
         valueField: 'key',
         allowBlank:false,
@@ -546,6 +576,7 @@ Ext.onReady(function(){
     {
         id:'comboRoles',
         store: storeRoles,
+        queryMode:'local',
         displayField: 'value',
         valueField: 'key',
         allowBlank:false,
