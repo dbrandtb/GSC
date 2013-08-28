@@ -40,6 +40,6 @@
         <script src="${ctx}/resources/jsp-script/extjs4/asegurados.js"></script>
     </head>
     <body>
-        <div id="maindiv"></div>
+        <div id="maindiv" style="height:850px;border:0px solid blue;"></div>
     </body>
 </html>
