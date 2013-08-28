@@ -792,7 +792,7 @@ Ext.onReady(function(){
                 name:'id',
                 xtype: 'numberfield',
                 fieldLabel: 'N&uacute;mero de cotizaci&oacute;n',
-                readonly:true
+                readOnly: true
             },
             //sexo (inciso)                                   1
             //fecha nacimiento (inciso)                       2
