@@ -28,7 +28,7 @@ public class DinosaurioAction extends PrincipalCoreAction implements CookiesAwar
         cotizacion.setId(                                           6969l);                         //0
         //sexo (inciso)                                                                               1
         //fecha nacimiento (inciso)                                                                   2
-        cotizacion.setEstado(                                       new GenericVO("02","lol"));     //3
+        cotizacion.setEstado(                                       new GenericVO("06","lol"));     //3
         cotizacion.setCiudad(                                       new GenericVO("06001","lol"));  //4
         cotizacion.setDeducible(                                    new BigDecimal("690000"));      //5
         cotizacion.setCopago(                                       new GenericVO("10000","lol"));  //6
