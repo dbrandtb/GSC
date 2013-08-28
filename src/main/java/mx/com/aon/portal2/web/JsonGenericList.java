@@ -7,6 +7,7 @@ package mx.com.aon.portal2.web;
 import java.util.ArrayList;
 import java.util.List;
 import mx.com.aon.core.web.PrincipalCoreAction;
+import mx.com.aon.portal.dao.CatalogosDAO;
 import mx.com.aon.portal.service.CombosManager2;
 import org.apache.log4j.Logger;
 
@@ -22,22 +23,23 @@ public class JsonGenericList extends PrincipalCoreAction
     private List<GenericVO> lista;
     private CombosManager2 combosManager2;
     private String cdatribu;
-    private String padre;
+    private String codigoTabla;
+    private String idPadre;
     private static Logger log = Logger.getLogger(JsonGenericList.class);
     
     public String obtenCatalogo()
     {
         try
         {
-            if(padre==null||padre.isEmpty())
+            if(cdatribu!=null&&!cdatribu.isEmpty())
+            //catalogo normal
             {
                 lista=combosManager2.obtenCatalogoSaludVital("", "SL", cdatribu);
             }
             else
+            //catalogo dependiente
             {
-                log.debug("########################");
-                log.debug("### PADRE: "+padre+" ###");
-                log.debug("########################");
+                lista=combosManager2.obtenComboDependienteOverride(codigoTabla, idPadre, "NO ME USAN LOL");
             }
         }
         catch(Exception ex)
@@ -68,12 +70,20 @@ public class JsonGenericList extends PrincipalCoreAction
         this.cdatribu = cdatribu;
     }
 
-    public String getPadre() {
-        return padre;
+    public String getCodigoTabla() {
+        return codigoTabla;
     }
 
-    public void setPadre(String padre) {
-        this.padre = padre;
+    public void setCodigoTabla(String codigoTabla) {
+        this.codigoTabla = codigoTabla;
+    }
+
+    public String getIdPadre() {
+        return idPadre;
+    }
+
+    public void setIdPadre(String idPadre) {
+        this.idPadre = idPadre;
     }
 }
 /////////////////////////////////////////////////////////////////////////////////
