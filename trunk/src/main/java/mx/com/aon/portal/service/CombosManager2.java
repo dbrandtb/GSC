@@ -51,5 +51,7 @@ public interface CombosManager2 {
 	public List obtenCatalogoSaludVital(String producto, String cdtipsit, String cdatribu) throws ApplicationException;
         
         public List obtenCatalogoRoles(String pv_cdramo_i) throws ApplicationException;
+        
+        public List obtenComboDependienteOverride(String codigoTablaDependiente,String valorTablaPadre,String valantant) throws ApplicationException;
 	
 }
