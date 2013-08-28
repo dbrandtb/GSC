@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.service.CombosManager2;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -21,19 +22,22 @@ public class JsonGenericList extends PrincipalCoreAction
     private List<GenericVO> lista;
     private CombosManager2 combosManager2;
     private String cdatribu;
-    private static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(JsonGenericList.class);
+    private String padre;
+    private static Logger log = Logger.getLogger(JsonGenericList.class);
     
     public String obtenCatalogo()
     {
         try
         {
-            if(cdatribu!=null&&cdatribu.equals("roles"))//solo para el caso en que obtenga roles (Titular, cónyugue, hijo...)
-            {
-                lista=combosManager2.obtenCatalogoRoles("2");
-            }
-            else//para los demas catalogos
+            if(padre==null||padre.isEmpty())
             {
                 lista=combosManager2.obtenCatalogoSaludVital("", "SL", cdatribu);
+            }
+            else
+            {
+                log.debug("########################");
+                log.debug("### PADRE: "+padre+" ###");
+                log.debug("########################");
             }
         }
         catch(Exception ex)
@@ -62,6 +66,14 @@ public class JsonGenericList extends PrincipalCoreAction
 
     public void setCdatribu(String cdatribu) {
         this.cdatribu = cdatribu;
+    }
+
+    public String getPadre() {
+        return padre;
+    }
+
+    public void setPadre(String padre) {
+        this.padre = padre;
     }
 }
 /////////////////////////////////////////////////////////////////////////////////
