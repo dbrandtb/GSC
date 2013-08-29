@@ -711,7 +711,7 @@ Ext.onReady(function(){
                         dataIndex: 'nombre',
                         flex: 2,
                         editor: {
-                            //allowBlank: false
+                            allowBlank: false
                         }
                     },
                     {
@@ -760,7 +760,25 @@ Ext.onReady(function(){
                     text: 'Agregar inciso',
                     scope: this,
                     handler: this.onAddClick
-                }]
+                }],
+                /*http://www.sencha.com/forum/showthread.php?141626-Grid-Validation-with-Error-Indication-%28suggestions-needed%29*/
+                //valida las celdas y les pone el estilo rojito
+                listeners:
+                {
+                    // add the validation after render so that validation is not triggered when the record is loaded.
+                    afterrender: function (grid)
+                    {
+                        var view = grid.getView();
+                        // validation on record level through "itemupdate" event
+                        view.on('itemupdate', function (record, y, node, options)
+                            {
+                                this.validateRow(this.getColumnIndexes(),record, y, true);
+                            },
+                            grid
+                        );
+                    }
+                }/*http://www.sencha.com/forum/showthread.php?141626-Grid-Validation-with-Error-Indication-%28suggestions-needed%29*/
+
             });
 
             this.callParent();
@@ -787,6 +805,42 @@ Ext.onReady(function(){
             });
         },*/
 
+        /*http://www.sencha.com/forum/showthread.php?141626-Grid-Validation-with-Error-Indication-%28suggestions-needed%29*/
+        //regresa las columnas con editor que tengan allowBlank=false (requeridas)
+        getColumnIndexes: function () {
+            var me, columnIndexes;
+            me = this;
+            columnIndexes = [];
+            Ext.Array.each(me.columns, function (column)
+            {
+                // only validate column with editor
+                if (Ext.isDefined(column.getEditor())&&column.getEditor().allowBlank==false) {
+                    columnIndexes.push(column.dataIndex);
+                } else {
+                    columnIndexes.push(undefined);
+                }
+            });
+            return columnIndexes;
+        },
+        validateRow: function (columnIndexes,record, y)
+        //hace que una celda de columna con allowblank=false tenga el estilo rojito
+        {
+            var view = this.getView();
+            Ext.each(columnIndexes, function (columnIndex, x)
+            {
+                if(columnIndex)
+                {
+                    var cell=view.getCellByPosition({row: y, column: x});
+                    cellValue=record.get(columnIndex);
+                    if((!cellValue)||(cellValue.lenght==0))
+                    {
+                        cell.addCls("custom-x-form-invalid-field");
+                    }
+                }
+            });
+            return false;
+        }/*http://www.sencha.com/forum/showthread.php?141626-Grid-Validation-with-Error-Indication-%28suggestions-needed%29*/,
+
         onAddClick: function(){
             // Create a model instance
             var rec = new IncisoSalud({
@@ -800,8 +854,20 @@ Ext.onReady(function(){
             });
 
             this.getStore().insert(0, rec);
-
-            this.cellEditing.startEditByPosition({
+            
+            var cellEditing2=this.cellEditing;
+            
+            //para que valide toda la fila al insertarla
+            Ext.Array.each(this.columns, function (column,index)
+            {
+                cellEditing2.startEditByPosition({
+                    row: 0, 
+                    column: index
+                });
+            });
+            
+            //para acomodarse en la primer celda para editar
+            cellEditing2.startEditByPosition({
                 row: 0, 
                 column: 0
             });
