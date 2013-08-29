@@ -1,20 +1,9 @@
 package mx.com.aon.portal.web;
 
 import java.io.InputStream;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import net.sf.json.JSONFunction;
-import net.sf.json.JSONObject;
-
-import org.apache.commons.beanutils.BasicDynaClass;
-import org.apache.commons.beanutils.DynaBean;
-import org.apache.commons.beanutils.DynaProperty;
-import org.apache.log4j.Logger;
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.interceptor.SessionAware;
 
 import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.ExportMediator;
@@ -29,16 +18,19 @@ import mx.com.aon.portal.model.ExtJSFieldVO;
 import mx.com.aon.portal.model.GridColumnModelVO;
 import mx.com.aon.portal.model.JSONRecordReaderVO;
 import mx.com.aon.portal.model.ValoresCamposCatalogosCompuestosVO;
-import mx.com.aon.portal.model.ValoresCamposCatalogosSimplesVO;
 import mx.com.aon.portal.service.ConfiguradorCatalogosCompuestosManager;
 import mx.com.aon.portal.service.PagedList;
-import mx.com.aon.portal.util.ConvertUtil;
 import mx.com.aon.portal.util.Util;
 import mx.com.aon.portal.web.tooltip.ToolTipBean;
+import net.sf.json.JSONFunction;
+import net.sf.json.JSONObject;
 
-//import mx.com.aon.portal.web.tests.ConverterTest;
-
-import com.opensymphony.xwork2.ActionSupport;
+import org.apache.commons.beanutils.BasicDynaClass;
+import org.apache.commons.beanutils.DynaBean;
+import org.apache.commons.beanutils.DynaProperty;
+import org.apache.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.interceptor.SessionAware;
 
 public class ConfiguradorCatalogosCompuestosAction extends AbstractListAction implements SessionAware{
 	private transient ConfiguradorCatalogosCompuestosManager configuradorCatalogosCompuestosManager;
