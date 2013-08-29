@@ -7,6 +7,7 @@ import java.util.Map;
 
 import mx.com.aon.portal.model.ReporteDeudaVO;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.DaoException;
 
 import org.apache.commons.digester.Digester;
 import org.apache.log4j.Logger;
@@ -18,7 +19,7 @@ public class ReporteDeudaDAO  extends AbstractDAO {
     private static Logger logger = Logger.getLogger(ReporteDeudaDAO.class);
 
 
-   public Object invoke(String storeProcedureName, Object parameters) throws BackboneApplicationException {
+   public Object invoke(String storeProcedureName, Object parameters) throws DaoException {
           try {
         	         	  
         	  Map params = (Map) parameters;
@@ -59,7 +60,7 @@ public class ReporteDeudaDAO  extends AbstractDAO {
               return wrapperResultados;
 
           } catch (Exception ex) {
-              throw new BackboneApplicationException("Error inesperado en el acceso a los datos",ex);
+              throw new DaoException("Error inesperado en el acceso a los datos",ex);
           }
     }
 

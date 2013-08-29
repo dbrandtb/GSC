@@ -1,13 +1,13 @@
 package mx.com.aon.portal.service;
 
-import org.apache.log4j.Logger;
-import com.wittyconsulting.backbone.exception.BackboneApplicationException;
-
 import java.util.HashMap;
 
-import mx.com.aon.portal.util.WrapperResultados;
-import mx.com.aon.portal.dao.AbstractDAO;
 import mx.com.aon.core.ApplicationException;
+import mx.com.aon.portal.dao.AbstractDAO;
+import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.DaoException;
+
+import org.apache.log4j.Logger;
 
 public class ProcessResultManagerJdbcTemplate {
 
@@ -65,7 +65,7 @@ public class ProcessResultManagerJdbcTemplate {
             res = (WrapperResultados) abstractDAO.invoke(ERROR_STORE_PROCEDURE,map);
             return res;
 
-        } catch (BackboneApplicationException e) {
+        } catch (DaoException e) {
             logger.error("Error inesperado al invocar el procedimiento de lectura del mensaje de error" + ERROR_STORE_PROCEDURE, e);
             throw new ApplicationException("Error inesperado al invocar el procedimiento de lectura del mensaje de error");
         }
