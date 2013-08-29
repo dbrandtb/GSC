@@ -40,5 +40,26 @@
         class="com.wittyconsulting.backbone.service.support.jdbc.JdbcService">
         <property name="xmlDao" ref="jdbcDao" />
     </bean>
+    
+    <!-- Agregado para setear el contexto de VPD -->
+    <bean class=
+        "org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+        <property name="beanNames">
+            <list>
+                <value>dataSource</value>
+            </list>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <value>dataAccessInterceptor</value>
+            </list>
+        </property>
+        <property name="proxyTargetClass" value="false"/>
+    </bean>
+
+    <bean id="dataAccessInterceptor" class="mx.com.aon.portal.util.ConnectionCallInterceptor"/>
+
+    <!-- Fin Agregado para setear el contexto de VPD -->
+
 
 </beans>
