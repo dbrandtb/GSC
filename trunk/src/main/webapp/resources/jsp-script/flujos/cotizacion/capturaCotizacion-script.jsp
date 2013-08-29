@@ -62,6 +62,7 @@ Ext.onReady(function(){
 			method: 'POST',
 			successProperty : '@success',
             callback: function (options, success, response) {
+							mask.hide();
             				var ok = Ext.util.JSON.decode(response.responseText).success;
 
             				if(ok){
