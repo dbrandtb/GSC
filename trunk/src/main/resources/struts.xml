@@ -133,7 +133,11 @@
     <include file="struts-cima.xml"/>
     <include file="struts-catbo.xml"/>
     <package name="default" extends="json-default">
+    
         <interceptors>
+        
+            <interceptor name="authenticationInterceptor" class="mx.com.gseguros.interceptors.AuthenticationInterceptor" />
+        
             <interceptor-stack name="defaultStack">
                 <interceptor-ref name="exception" />
 				<!--  <interceptor-ref name="alias" />-->
@@ -153,7 +157,15 @@
                     <param name="excludeMethods">input,back,cancel</param>
                 </interceptor-ref>
             </interceptor-stack>
+            
+            <interceptor-stack name="secureStack">
+                <interceptor-ref name="authenticationInterceptor" />
+                <interceptor-ref name="defaultStack" />
+            </interceptor-stack>
+            
         </interceptors>
+        
+        <default-interceptor-ref name="secureStack" />
 
 		<action name="index">
 			<result>/index.jsp</result>
@@ -327,11 +339,18 @@
                     <result name="success" type="json"/>
                 </action>
 		<!-- TODO: FIN de quitar actions, son para que se ejecute lo de Expresiones en Numeracion de Polizas -->
-                <action name="cotizacionVital" class="cotizacionVital" method="entrar">
+                <action name="saludbasica" class="mx.com.aon.portal2.web.AseguradosAction" method="asegurados">
                     <result name="success">/jsp/extjs4/asegurados.jsp</result>
                     <result name="input">/error.jsp</result>
                 </action>
                 <action name="jsonObtenCatalogoGenerico" class="JsonGenericList" method="obtenCatalogo"><result name="success" type="json" /></action>
+                <action name="cotizaSalud" class="mx.com.aon.portal2.web.AseguradosAction" method="cotizar">
+                    <interceptor-ref name="json">
+                        <param name="enableSMD">true</param>
+                        <param name="ignoreSMDMethodInterfaces">false</param>
+                    </interceptor-ref>
+                    <result name="success" type="json" />
+                </action>
     </package>
 
 </struts>
