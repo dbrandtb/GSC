@@ -1,14 +1,15 @@
 package mx.com.aon.portal.service.impl;
 
-import org.apache.log4j.Logger;
+import java.util.List;
+
+import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.dao.AbstractDAO;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.service.ProcessResultManagerJdbcTemplate;
 import mx.com.aon.portal.util.WrapperResultados;
-import mx.com.aon.core.ApplicationException;
-import com.wittyconsulting.backbone.exception.BackboneApplicationException;
+import mx.com.gseguros.exception.DaoException;
 
-import java.util.List;
+import org.apache.log4j.Logger;
 
 public abstract class AbstractManagerJdbcTemplateInvoke {
 
@@ -54,7 +55,7 @@ public abstract class AbstractManagerJdbcTemplateInvoke {
 
             res = (WrapperResultados) abstractDAO.invoke(endpointName,arg);
 
-        } catch (BackboneApplicationException e) {
+        } catch (DaoException e) {
 			logger.error("No se puedo ejecutar pagedBackBoneInvoke para el endpoint " + endpointName, e);
 			throw new ApplicationException("No se puedo ejecutar pagedBackBoneInvoke para el endpoint " + endpointName,e);
 		}
@@ -120,7 +121,7 @@ public abstract class AbstractManagerJdbcTemplateInvoke {
 
             res = (WrapperResultados) abstractDAO.invoke(endpointName,arg);
 
-        } catch (BackboneApplicationException e) {
+        } catch (DaoException e) {
 			logger.error("No se puedo ejecutar pagedBackBoneInvoke para el endpoint " + endpointName, e);
 			throw new ApplicationException("No se puedo ejecutar pagedBackBoneInvoke para el endpoint " + endpointName,e);
 		}
@@ -179,7 +180,7 @@ public abstract class AbstractManagerJdbcTemplateInvoke {
 
             res = (WrapperResultados) abstractDAO.invoke(endpointName,arg);
 
-        } catch (BackboneApplicationException e) {
+        } catch (DaoException e) {
             logger.error("No se puedo ejecutar pagedBackBoneInvoke para el endpoint " + endpointName, e);
             throw new ApplicationException("No se puedo ejecutar pagedBackBoneInvoke para el endpoint " + endpointName,e);
         }
@@ -220,7 +221,7 @@ public abstract class AbstractManagerJdbcTemplateInvoke {
 
             res = (WrapperResultados) abstractDAO.invoke(endpointName,arg);
 
-        } catch (BackboneApplicationException e) {
+        } catch (DaoException e) {
             logger.error("No se puedo ejecutar pagedBackBoneInvoke para el endpoint " + endpointName, e);
             throw new ApplicationException("No se puedo ejecutar pagedBackBoneInvoke para el endpoint " + endpointName,e);
         }
@@ -246,7 +247,7 @@ public abstract class AbstractManagerJdbcTemplateInvoke {
 
             res = (WrapperResultados) abstractDAO.invoke(endpointName,arg);
 
-        } catch (BackboneApplicationException e) {
+        } catch (DaoException e) {
             logger.error("No se puedo ejecutar pagedBackBoneInvoke para el endpoint " + endpointName, e);
             throw new ApplicationException("No se puedo ejecutar pagedBackBoneInvoke para el endpoint " + endpointName,e);
         }
@@ -273,7 +274,7 @@ public abstract class AbstractManagerJdbcTemplateInvoke {
 
             res = (WrapperResultados) abstractDAO.invoke(endpointName,arg);
 
-        } catch (BackboneApplicationException e) {
+        } catch (DaoException e) {
             logger.error("No se puedo ejecutar pagedBackBoneInvoke para el endpoint " + endpointName, e);
             throw new ApplicationException("No se puedo ejecutar pagedBackBoneInvoke para el endpoint " + endpointName,e);
         }
@@ -292,7 +293,7 @@ public abstract class AbstractManagerJdbcTemplateInvoke {
 
             res = (WrapperResultados) abstractDAO.invoke(endpointName,arg);
 
-        } catch (BackboneApplicationException e) {
+        } catch (DaoException e) {
             logger.error("No se puedo ejecutar pagedBackBoneInvoke para el endpoint " + endpointName, e);
             throw new ApplicationException("No se puedo ejecutar pagedBackBoneInvoke para el endpoint " + endpointName,e);
         }
@@ -318,7 +319,7 @@ public abstract class AbstractManagerJdbcTemplateInvoke {
 
             res = (WrapperResultados) abstractDAO.invoke(endpointName,arg);
 
-        } catch (BackboneApplicationException e) {
+        } catch (DaoException e) {
             logger.error("No se puedo ejecutar pagedBackBoneInvoke para el endpoint " + endpointName, e);
             return null;
         }
