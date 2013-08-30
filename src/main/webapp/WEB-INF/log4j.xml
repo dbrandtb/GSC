@@ -3,23 +3,8 @@
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
     
-    <appender name="stdout" class="org.apache.log4j.ConsoleAppender">
-        <param name="Threshold" value="debug" />
-        <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%d{HH:mm:ss,SSS} [%3.3t] %5.5p %18C{1} %X - %m%n" />
-        </layout>
-    </appender>
-    <appender name="aon" class="org.apache.log4j.DailyRollingFileAppender">
-        <param name="File" value="c:\\tmp\\shared\\acw\\aon-log-integracion\\AON_DEBUG.log" />
-        <param name="Threshold" value="debug" />
-        <param name="append" value="false" />
-        <param name="DatePattern" value="'.'yyyy-MM-dd" />
-        <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%d{HH:mm:ss,SSS} [%3.3t] %5.5p %18C{1} %X - %m%n" />
-        </layout>
-    </appender>
-   <appender name="sql" class="org.apache.log4j.DailyRollingFileAppender">
-        <param name="File" value="c:\\tmp\\shared\\acw\\aon-log-integracion\\AON_SQL.log" />
+    <appender name="apache" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="/tmp/shared/gs/icebroker-log/APACHE.log" />
         <param name="Threshold" value="info" />
         <param name="append" value="false" />
         <param name="DatePattern" value="'.'yyyy-MM-dd" />
@@ -27,45 +12,97 @@
             <param name="ConversionPattern" value="%d{HH:mm:ss,SSS} [%3.3t] %5.5p %C %X - %m%n" />
         </layout>
     </appender>
-   <appender name="apache" class="org.apache.log4j.DailyRollingFileAppender">
-        <param name="File" value="c:\\tmp\\shared\\acw\\aon-log-integracion\\AON_APACHE.log" />
+    <appender name="icebroker" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="/tmp/shared/gs/icebroker-log/GENERAL.log" />
+        <param name="Threshold" value="debug" />
+        <param name="append" value="false" />
+        <param name="DatePattern" value="'.'yyyy-MM-dd" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{HH:mm:ss,SSS} [%3.3t] %5.5p %18C{1} %X - %m%n" />
+        </layout>
+    </appender>
+    <appender name="backbone" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="/tmp/shared/gs/icebroker-log/BACKBONE.log" />
         <param name="Threshold" value="info" />
         <param name="append" value="false" />
         <param name="DatePattern" value="'.'yyyy-MM-dd" />
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%d{HH:mm:ss,SSS} [%3.3t] %5.5p %C %X - %m%n" />
+        </layout>
+    </appender>
+    <appender name="catbo" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="/tmp/shared/gs/icebroker-log/CATBO.log" />
+        <param name="Threshold" value="debug" />
+        <param name="append" value="false" />
+        <param name="DatePattern" value="'.'yyyy-MM-dd" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{HH:mm:ss,SSS} [%3.3t] %5.5p %18C{1} %X - %m%n" />
+        </layout>
+    </appender>
+    <appender name="ice_kernel" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="/tmp/shared/gs/icebroker-log/ICE_KERNEL.log" />
+        <param name="Threshold" value="debug" />
+        <param name="append" value="false" />
+        <param name="DatePattern" value="'.'yyyy-MM-dd" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{HH:mm:ss,SSS} [%3.3t] %5.5p %18C{1} %X - %m%n" />
+        </layout>
+    </appender>
+    <appender name="sql" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="/tmp/shared/gs/icebroker-log/SQL.log" />
+        <param name="Threshold" value="info" />
+        <param name="append" value="false" />
+        <param name="DatePattern" value="'.'yyyy-MM-dd" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{HH:mm:ss,SSS} [%3.3t] %5.5p %C %X - %m%n" />
+        </layout>
+    </appender>
+    <appender name="consola" class="org.apache.log4j.ConsoleAppender">
+        <param name="Threshold" value="debug" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{HH:mm:ss,SSS} [%3.3t] %5.5p %18C{1} %X - %m%n" />
         </layout>
     </appender>
     
-   <logger name="mx">
-        <level value="debug,error" />
-        <appender-ref ref="aon" />
-        <appender-ref ref="stdout" />
-    </logger>
-    <logger name="com.wittyconsulting.backbone.service.support.jdbc">
+    <logger name="com.wittyconsulting.backbone"><!-- antes com.wittyconsulting.backbone.service.support.jdbc -->
         <level value="info,warn,debug,error,fatal" />
-        <appender-ref ref="aon" />
-        <appender-ref ref="stdout" />
-    </logger>
-    <logger name="org.springframework.jdbc">
-        <level value="info,warn,debug,error,fatal" />
-        <appender-ref ref="aon" />
-        <appender-ref ref="stdout" />
-    </logger>
-    <logger name="org.aspectj.weaver">
-        <level value="error" />
-        <appender-ref ref="aon" />
-        <appender-ref ref="stdout" />
+        <appender-ref ref="backbone" /><!-- antes icebroker -->
+        <appender-ref ref="consola" />
     </logger>
     <logger name="java.sql">
         <level value="debug,info,warn,error,fatal" />
         <appender-ref ref="sql" />
-        <appender-ref ref="stdout" />
+        <appender-ref ref="consola" />
+    </logger>
+    <logger name="mx" additivity="false">
+        <level value="info,warn,debug,error,fatal" />
+        <appender-ref ref="icebroker" />
+        <appender-ref ref="consola" />
+    </logger>
+    <logger name="mx.com.aon.catbo">
+        <level value="info,warn,debug,error,fatal" />
+        <appender-ref ref="catbo" />
+        <appender-ref ref="consola" />
+    </logger>
+    <logger name="mx.com.ice">
+        <level value="info,warn,debug,error,fatal" />
+        <appender-ref ref="ice_kernel" />
+        <appender-ref ref="consola" />
     </logger>
     <logger name="org.apache">
         <level value="info,debug,error,fatal" />
         <appender-ref ref="apache" />
-        <appender-ref ref="stdout" />
+        <appender-ref ref="consola" />
+    </logger>
+    <logger name="org.aspectj.weaver">
+        <level value="error" />
+        <appender-ref ref="icebroker" />
+        <appender-ref ref="consola" />
+    </logger>
+    <logger name="org.springframework.jdbc">
+        <level value="info,warn,debug,error,fatal" />
+        <appender-ref ref="sql" /><!-- antes ref="icebroker" -->
+        <appender-ref ref="consola" />
     </logger>
 
 </log4j:configuration>
