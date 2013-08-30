@@ -80,6 +80,68 @@ Ext.define('CotizacionSalud',
         associationKey: 'incisos'
     }]
 });
+
+Ext.define('RowCotizacion', {
+    extend: 'Ext.data.Model',
+    fields: [
+        {type:'string',name:'cdIdentifica'      },
+        {type:'string',name:'cdUnieco'          },
+        {type:'string',name:'cdRamo'            },
+        {type:'string',name:'estado'            },
+        {type:'string',name:'nmPoliza'          },
+        {type:'string',name:'nmSuplem'          },
+        {type:'string',name:'status'            },
+        {type:'string',name:'cdPlan'            },
+        {type:'string',name:'dsPlan'            },
+        {type:'string',name:'mnPrima'           },
+        {type:'string',name:'cdCiaaseg'         },
+        {type:'string',name:'dsUnieco'          },
+        {type:'string',name:'cdPerpag'          },
+        {type:'string',name:'dsPerpag'          },
+        {type:'string',name:'cdTipsit'          },
+        {type:'string',name:'dsTipsit'          },
+        {type:'string',name:'numeroSituacion'   },
+        {type:'string',name:'cdGarant'          },
+        {type:'string',name:'dsGarant'          },
+        {type:'string',name:'swOblig'           },
+        {type:'string',name:'sumaAseg'          },
+        {type:'string',name:'nMimpfpg'          },
+        {type:'string',name:'primaFormap'       },
+        {type:'string',name:'feEmisio'          },
+        {type:'string',name:'feVencim'          },
+        {type:'string',name:'Alto'              },
+        {type:'string',name:'CDAlto'            },
+        {type:'string',name:'DSAlto'            },
+        {type:'string',name:'NMAlto'            },
+        {type:'string',name:'Bajo'              },
+        {type:'string',name:'CDBajo'            },
+        {type:'string',name:'DSBajo'            },
+        {type:'string',name:'NMBajo'            },
+        {type:'string',name:'Medio'             },
+        {type:'string',name:'CDMedio'           },
+        {type:'string',name:'DSMedio'           },
+        {type:'string',name:'NMMedio'           }
+        
+    ]
+});
+
+Ext.define('RowCobertura',{
+    extend:'Ext.data.Model',
+    fields:
+    [
+        {type:'string',name:'cdCiaaseg'},
+        {type:'string',name:'cdGarant'},
+        {type:'string',name:'cdRamo'},
+        {type:'string',name:'deducible'},
+        {type:'string',name:'dsGarant'},
+        {type:'string',name:'sumaAsegurada'}
+    ]
+});
 /////////////////////////
 ////// FIN MODELOS //////
 /////////////////////////
+
+Ext.onReady(function(){
+    Ext.util.Format.thousandSeparator = ',';
+    Ext.util.Format.decimalSeparator = '.';
+});

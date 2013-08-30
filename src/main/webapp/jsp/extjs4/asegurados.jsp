@@ -36,10 +36,15 @@
             var _URL_COTIZAR=                           '<s:url action="resultadoCotizacionVital" namespace="/flujocotizacion" />';
             //URL redireccion despues de cotizar
             var _URL_RESULTADO_COTIZACION=              '<s:url namespace="/flujocotizacion" action="resultCotizacion" />';
+            var _URL_RESULTADOS=                        '<s:url namespace="/flujocotizacion" action="obtenCotizacion4" />';
+            var _URL_COBERTURAS=                        '<s:url namespace="/flujocotizacion" action="obtenerCoberturas4" />';
         </script>
         <script src="${ctx}/resources/jsp-script/extjs4/asegurados.js"></script>
     </head>
     <body>
-        <div id="maindiv" style="height:850px;border:0px solid blue;"></div>
+        <div style="height:1250px;">
+            <div id="maindiv"></div>
+            <div id="divResultados" style="margin-top:10px;"></div>
+        </div>
     </body>
 </html>

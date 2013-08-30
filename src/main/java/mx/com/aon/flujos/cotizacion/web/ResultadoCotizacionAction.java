@@ -1025,7 +1025,7 @@ public class ResultadoCotizacionAction extends PrincipalCotizacionAction {
                         if (registrosTransformados.get(g).getDynaClass().getDynaProperty(sPlanSinBlancos)
                                 != null) {
                             logger.debug("####llenado de valores a datos dinamicos---");
-                            registrosTransformados.get(g).set(sPlanSinBlancos, rDatos.getMnPrima());
+                            registrosTransformados.get(g).set(sPlanSinBlancos, rDatos.getMnPrima().replace(",", ""));
                             registrosTransformados.get(g).set("CD" + sPlanSinBlancos, rDatos.getCdPlan());
                             registrosTransformados.get(g).set("DS" + sPlanSinBlancos, rDatos.getDsPlan());
                             registrosTransformados.get(g).set("NM" + sPlanSinBlancos, rDatos.getNumeroSituacion());

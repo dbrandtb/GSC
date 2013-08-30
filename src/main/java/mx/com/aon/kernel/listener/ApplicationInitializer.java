@@ -27,7 +27,7 @@ public class ApplicationInitializer implements ServletContextListener{
     public void contextInitialized(ServletContextEvent event) {
     	ServletContext context = event.getServletContext();
     	 try {
-             TimeZone.setDefault(TimeZone.getTimeZone("America/Mexico_City"));
+             TimeZone.setDefault(TimeZone.getTimeZone("America/Mexico_City"));/*
              //Obteniendo propiedades para archivo de propiedades NewALEA
              //Se carga por OAS
              //Global.PROPERTIES=System.getProperty("NewALEA.run.properties","/opt/ice/acw/NewALEA-Config/NewALEA-run.properties");
@@ -110,7 +110,7 @@ public class ApplicationInitializer implements ServletContextListener{
              //Carga de Data inicial de New ALEA.
              
              //CacheSistema.generarProducto("2");
-             CacheSistema.cargarDataInicial();
+             CacheSistema.cargarDataInicial();*/
              
              
          } catch (FactoryConfigurationError e) {

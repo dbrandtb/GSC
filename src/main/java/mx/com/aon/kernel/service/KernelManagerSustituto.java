@@ -7,6 +7,8 @@ package mx.com.aon.kernel.service;
 import java.util.List;
 import java.util.Map;
 import mx.com.aon.core.ApplicationException;
+import mx.com.aon.flujos.cotizacion.model.CoberturaCotizacionVO;
+import mx.com.aon.flujos.cotizacion.model.ResultadoCotizacionVO;
 import mx.com.aon.flujos.cotizacion.model.SituacionVO;
 import mx.com.aon.portal.util.WrapperResultados;
 
@@ -23,4 +25,6 @@ public interface KernelManagerSustituto {
     public WrapperResultados coberturas(Map<String,String> parameters) throws ApplicationException;
     public WrapperResultados ejecutaASIGSVALIPOL(Map<String,String> parameters) throws ApplicationException;
     public WrapperResultados clonaPersonas(Map<String,String> parameters) throws ApplicationException;
+    public List<ResultadoCotizacionVO> obtenerResultadosCotizacion(Map<String,String> parameters) throws ApplicationException;
+    public List<CoberturaCotizacionVO> obtenerCoberturas(Map<String,String> parameters) throws ApplicationException;
 }

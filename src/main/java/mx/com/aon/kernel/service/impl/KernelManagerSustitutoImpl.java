@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import mx.com.aon.core.ApplicationException;
+import mx.com.aon.flujos.cotizacion.model.CoberturaCotizacionVO;
+import mx.com.aon.flujos.cotizacion.model.ResultadoCotizacionVO;
 import mx.com.aon.flujos.cotizacion.model.SituacionVO;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.dao.ProcesoDAO;
@@ -100,6 +102,24 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         log.debug("### kernel sustituto clonaPersonas id:"+res.getMsgId());
         log.debug("### kernel sustituto clonaPersonas mesage:"+res.getMsgText());
         return res;
+    }
+    
+    public List<ResultadoCotizacionVO> obtenerResultadosCotizacion(Map<String,String> parameters) throws ApplicationException
+    {
+        log.debug("### kernel sustituto obtenerResultadosCotizacion map: "+parameters);
+        List<ResultadoCotizacionVO> lista= this.getAllBackBoneInvoke(parameters, ProcesoDAO.OBTENER_RESULTADOS_COTIZACION);
+        lista=lista!=null?lista:new ArrayList<ResultadoCotizacionVO>(0);
+        log.debug("### kernel sustituto obtenerResultadosCotizacion lista size: "+lista.size());
+        return lista;
+    }
+    
+    public List<CoberturaCotizacionVO> obtenerCoberturas(Map<String,String> parameters) throws ApplicationException
+    {
+        log.debug("### kernel sustituto obtenerCoberturas map: "+parameters);
+        List<CoberturaCotizacionVO> lista= this.getAllBackBoneInvoke(parameters, ProcesoDAO.OBTENER_COBERTURAS);
+        lista=lista!=null?lista:new ArrayList<CoberturaCotizacionVO>(0);
+        log.debug("### kernel sustituto obtenerCoberturas lista size: "+lista.size());
+        return lista;
     }
     
 }
