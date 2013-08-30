@@ -3,15 +3,22 @@ package mx.com.aon.flujos.cotizacion4.web;
 import com.opensymphony.xwork2.ActionContext;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import mx.com.aon.configurador.pantallas.model.components.GridVO;
 import mx.com.aon.core.web.PrincipalCoreAction;
+import mx.com.aon.flujos.cotizacion.model.CoberturaCotizacionVO;
+import mx.com.aon.flujos.cotizacion.model.ResultadoCotizacionVO;
+import mx.com.aon.flujos.cotizacion.service.impl.CotizacionManagerImpl;
+import mx.com.aon.flujos.cotizacion.web.ResultadoCotizacionAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal.web.model.IncisoSaludVO;
+import net.sf.json.JSONArray;
 import org.apache.log4j.Logger;
 
 /**
@@ -42,8 +49,10 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     public static final String cdatribuCostoEmergenciaExtranjero    ="14";
     public static final String cdatribuCobEliPenCamZona             ="15";
     public static final String cdatribuRol                          ="16";
+    public static final String SK_COBERTURAS_COTIZACION             ="SK_COBERTURAS_COTIZACION";//llave de sesion
     
     //Datos de cotizacion
+    private String id;                                            //0
     //sexo (inciso)                                               1
     //fecha nacimiento (inciso)                                   2
     private String estado;                                      //3
@@ -63,6 +72,16 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     
     private List<IncisoSaludVO> incisos;
     private boolean success;
+    private GridVO gridResultados;
+    private JSONArray dataResult = new JSONArray();
+    private List<CoberturaCotizacionVO>listaCoberturas;
+    private String jsonCober_unieco;
+    private String jsonCober_estado;
+    private String jsonCober_nmpoiza;
+    private String jsonCober_cdplan;
+    private String jsonCober_cdramo;
+    private String jsonCober_cdcia;
+    private String jsonCober_situa;
     
     //utilitarios
     SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
@@ -296,7 +315,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
                 mapaClonPersonaIterado.put("pv_nmsituac_i",     contador+"");
                 mapaClonPersonaIterado.put("pv_cdtipsit_i",     "SL");
                 mapaClonPersonaIterado.put("pv_fecha_i",        renderFechas.format(calendarHoy.getTime()));
-                mapaClonPersonaIterado.put("pv_cdusuario_i",    usuario.getName());
+                mapaClonPersonaIterado.put("pv_cdusuario_i",    usuario.getUser());
                 mapaClonPersonaIterado.put("pv_p_nombre",       i.getNombre());
                 mapaClonPersonaIterado.put("pv_s_nombre",       i.getSegundoNombre());
                 mapaClonPersonaIterado.put("pv_apellidop",      i.getApellidoPaterno());
@@ -309,24 +328,6 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             /////////////////////////////////
             ////// fin clonar personas //////
             /////////////////////////////////
-            
-            /* ini *
-            Map<String,String> map3=new HashMap<String,String>(0);
-            map3.put("pv_cdelemen_i",   usuario.getEmpresa().getElementoId());
-            map3.put("pv_cdunieco_i",   "1");
-            map3.put("pv_cdramo_i",     "2");
-            map3.put("pv_estado_i",     "W");
-            map3.put("pv_nmpoliza_i",   numeroPoliza);
-            map3.put("pv_nmsituac_i",   "0");
-            map3.put("pv_cdtipsit_i",   "SL");
-            map3.put("pv_fecha_i",      renderFechas.format(calendarHoy.getTime()));
-            map3.put("pv_cdusuario_i",  usuario.getUser());
-            map3.put("pv_cadena_i",     null);//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-            log.debug("### Invocacion de clonar situaciones map:" +map3);
-            List<SituacionVO> listaSituacionesClonadas=kernelManagerSustituto.clonaSituaciones(map3);
-            listaSituacionesClonadas=listaSituacionesClonadas!=null?listaSituacionesClonadas:new ArrayList<SituacionVO>(0);
-            log.debug("### listaSituacionesClonadas size() "+listaSituacionesClonadas.size());
-            /* fin */
             
             ////////////////////////
             ////// coberturas //////
@@ -344,28 +345,111 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             ////// coberturas //////
             ////////////////////////
             
-            /* ini *
-            Map<String,String> map5=new HashMap<String,String>(0);
-            map5.put("pv_cdusuari_i",   usuario.getUser());
-            map5.put("pv_cdelemen_i",   usuario.getEmpresa().getElementoId());
-            map5.put("pv_cdunieco_i",   "1");
-            map5.put("pv_cdramo_i",     "2");
-            map5.put("pv_estado_i",     "W");
-            map5.put("pv_nmpoliza_i",   numeroPoliza);
-            map5.put("pv_nmsituac_i",   "0");
-            map5.put("pv_nmsuplem_i",   null);//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-            map5.put("pv_cdtipsit_i",   "SL");
-            log.debug("### Invocacion de ejecutaASIGSVALIPOL (tarificacion) map:" +map5);
-            WrapperResultados wr4=kernelManagerSustituto.ejecutaASIGSVALIPOL(map5);
-            log.debug("### response id "+wr4.getMsgId());
-            log.debug("### response text "+wr4.getMsgText());
-            /* fin */
+            //////////////////////////
+            ////// TARIFICACION //////
+            /*//////////////////////*/
+            Map<String,String> mapaTarificacion=new HashMap<String,String>(0);
+            mapaTarificacion.put("pv_cdusuari_i",   usuario.getUser());
+            mapaTarificacion.put("pv_cdelemen_i",   usuario.getEmpresa().getElementoId());
+            mapaTarificacion.put("pv_cdunieco_i",   "1");
+            mapaTarificacion.put("pv_cdramo_i",     "2");
+            mapaTarificacion.put("pv_estado_i",     "W");
+            mapaTarificacion.put("pv_nmpoliza_i",   numeroPoliza);
+            mapaTarificacion.put("pv_nmsituac_i",   "0");
+            mapaTarificacion.put("pv_nmsuplem_i",   "0");
+            mapaTarificacion.put("pv_cdtipsit_i",   "SL");
+            WrapperResultados wr4=kernelManagerSustituto.ejecutaASIGSVALIPOL(mapaTarificacion);
+            /*//////////////////////*/
+            ////// TARIFICACION //////
+            //////////////////////////
+            
+            ///////////////////////////////////
+            ////// Generacion cotizacion //////
+            /*///////////////////////////////*/
+            Map<String,String> mapaDuroResultados=new HashMap<String,String>(0);
+            mapaDuroResultados.put("pv_cdusuari_i", usuario.getUser());
+            mapaDuroResultados.put("pv_cdunieco_i", "1");
+            mapaDuroResultados.put("pv_cdramo_i",   "2");
+            mapaDuroResultados.put("pv_estado_i",   "W");
+            mapaDuroResultados.put("pv_nmpoliza_i", numeroPoliza);
+            mapaDuroResultados.put("pv_cdelemen_i", usuario.getEmpresa().getElementoId());
+            mapaDuroResultados.put("pv_cdtipsit_i", "SL");
+            List<ResultadoCotizacionVO> listaResultados=kernelManagerSustituto.obtenerResultadosCotizacion(mapaDuroResultados);
+            //utilizando logica anterior
+            CotizacionManagerImpl managerAnterior=new CotizacionManagerImpl();
+            gridResultados=managerAnterior.adaptarDatosCotizacion(listaResultados);
+            log.debug("### session poniendo resultados con grid: "+listaResultados.size());
+            session.put(ResultadoCotizacionAction.DATOS_GRID, gridResultados);
+            /*///////////////////////////////*/
+            ////// Generacion cotizacion //////
+            ///////////////////////////////////
+            
+            id=numeroPoliza;
             
             success=true;
         }
         catch(Exception ex)
         {
             log.error(ex.getMessage(), ex);
+            success=false;
+        }
+        return SUCCESS;
+    }
+    
+    public String obtenerResultadosCotizacion()
+    {
+        try
+        {
+            ResultadoCotizacionAction actionAnterior=new ResultadoCotizacionAction();
+            actionAnterior.setSession(session);
+            actionAnterior.obtenerResultado();
+            dataResult=actionAnterior.getDataResult();
+            success=true;
+        }
+        catch(Exception ex)
+        {
+            log.error("error al obtener datos del grid",ex);
+            success=false;
+            dataResult=new JSONArray();
+        }
+        return SUCCESS;
+    }
+    
+    public String obtenerCoberturas()
+    {
+        try
+        {
+            if(jsonCober_unieco!=null&&jsonCober_unieco.length()>0
+                    &&jsonCober_cdplan!=null&&jsonCober_cdplan.length()>0
+                    )//cuando se reciben parametros se calcula
+            {
+                UserVO usuario=(UserVO) session.get("USUARIO");
+                Map<String,String>mapaCoberturas=new HashMap<String,String>(0);
+                mapaCoberturas.put("pv_usuario_i",   usuario.getUser());
+                mapaCoberturas.put("pv_cdunieco_i",  jsonCober_unieco);
+                mapaCoberturas.put("pv_estado_i",    jsonCober_estado);
+                mapaCoberturas.put("pv_nmpoliza_i",  jsonCober_nmpoiza);
+                mapaCoberturas.put("pv_nmsituac_i",  jsonCober_situa);
+                mapaCoberturas.put("pv_nmsuplem_i",  "0");
+                mapaCoberturas.put("pv_cdplan_i",    jsonCober_cdplan);
+                mapaCoberturas.put("pv_cdramo_i",    jsonCober_cdramo);
+                mapaCoberturas.put("pv_cdcia_i",     jsonCober_cdcia);
+                mapaCoberturas.put("pv_region_i",    "ME");
+                mapaCoberturas.put("pv_pais_i",      usuario.getPais().getValue());
+                mapaCoberturas.put("pv_idioma_i",    usuario.getIdioma().getValue());
+                this.listaCoberturas=this.kernelManagerSustituto.obtenerCoberturas(mapaCoberturas);
+                session.put(SK_COBERTURAS_COTIZACION,listaCoberturas);
+            }
+            else//cuando dan refresh se obtiene calculo anterior
+            {
+                listaCoberturas=(List<CoberturaCotizacionVO>) session.get(SK_COBERTURAS_COTIZACION);
+            }
+            success=true;
+        }
+        catch(Exception ex)
+        {
+            log.error("Error al obtener las coberturas",ex);
+            listaCoberturas=new ArrayList<CoberturaCotizacionVO>(0);
             success=false;
         }
         return SUCCESS;
@@ -550,6 +634,70 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     public String getCdatribuEstado()
     {
         return cdatribuEstado;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public GridVO getGridResultados() {
+        return gridResultados;
+    }
+
+    public void setGridResultados(GridVO gridResultados) {
+        this.gridResultados = gridResultados;
+    }
+
+    public JSONArray getDataResult() {
+        return dataResult;
+    }
+
+    public void setDataResult(JSONArray dataResult) {
+        this.dataResult = dataResult;
+    }
+
+    public List<CoberturaCotizacionVO> getListaCoberturas() {
+        return listaCoberturas;
+    }
+
+    public void setListaCoberturas(List<CoberturaCotizacionVO> listaCoberturas) {
+        this.listaCoberturas = listaCoberturas;
+    }
+
+    public void setJsonCober_unieco(String jsonCober_unieco) {
+        this.jsonCober_unieco = jsonCober_unieco;
+    }
+
+    public void setJsonCober_estado(String jsonCober_estado) {
+        this.jsonCober_estado = jsonCober_estado;
+    }
+
+    public void setJsonCober_nmpoiza(String jsonCober_nmpoiza) {
+        this.jsonCober_nmpoiza = jsonCober_nmpoiza;
+    }
+
+    public void setJsonCober_cdplan(String jsonCober_cdplan) {
+        this.jsonCober_cdplan = jsonCober_cdplan;
+    }
+
+    public void setJsonCober_cdramo(String jsonCober_cdramo) {
+        this.jsonCober_cdramo = jsonCober_cdramo;
+    }
+
+    public void setJsonCober_cdcia(String jsonCober_cdcia) {
+        this.jsonCober_cdcia = jsonCober_cdcia;
+    }
+
+    public String getJsonCober_situa() {
+        return jsonCober_situa;
+    }
+
+    public void setJsonCober_situa(String jsonCober_situa) {
+        this.jsonCober_situa = jsonCober_situa;
     }
     
 }

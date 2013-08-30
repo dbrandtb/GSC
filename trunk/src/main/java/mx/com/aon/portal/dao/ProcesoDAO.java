@@ -2,17 +2,17 @@ package mx.com.aon.portal.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.sql.DataSource;
-
+import mx.com.aon.flujos.cotizacion.model.CoberturaCotizacionVO;
 import mx.com.aon.flujos.cotizacion.model.DatosEntradaCotizaVO;
+import mx.com.aon.flujos.cotizacion.model.ResultadoCotizacionVO;
 import mx.com.aon.flujos.cotizacion.model.SituacionVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import oracle.jdbc.driver.OracleTypes;
-
 import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;
@@ -61,6 +61,8 @@ public class ProcesoDAO extends AbstractDAO {
 	public static final String P_MOV_TVALOSIT = "P_MOV_TVALOSIT";
         public static final String P_MOV_MPOLISIT = "P_MOV_MPOLISIT";
         public static final String P_CLONAR_PERSONAS="P_CLONAR_PERSONAS";
+        public static final String OBTENER_RESULTADOS_COTIZACION="OBTENER_RESULTADOS_COTIZACION";
+        public static final String OBTENER_COBERTURAS="OBTENER_COBERTURAS";
 
 	protected void initDao() throws Exception {
 		addStoredProcedure(PERMISO_EJECUCION_PROCESO,
@@ -90,8 +92,8 @@ public class ProcesoDAO extends AbstractDAO {
 		addStoredProcedure(P_MOV_TVALOSIT, new InsertaValoresSituaciones(getDataSource()));
                 addStoredProcedure(P_MOV_MPOLISIT, new InsertaMPolisit(getDataSource()));
                 addStoredProcedure(P_CLONAR_PERSONAS, new ClonaPersonas(getDataSource()));
-		
-	
+		addStoredProcedure(OBTENER_RESULTADOS_COTIZACION, new ObtieneResultadosCotiza(getDataSource()));
+                addStoredProcedure(OBTENER_COBERTURAS, new ObtieneCoberturas(getDataSource()));
 	}
 
 	protected class BuscarMatrizAsignacion extends CustomStoredProcedure {
@@ -938,5 +940,123 @@ public class ProcesoDAO extends AbstractDAO {
             return mapper.build(map);
         }
     }
+    
+    ////////////////////////////////////////////
+    ////// Override de obtener cotizacion //////
+    /*////////////////////////////////////////*/
+    protected class ObtieneResultadosCotiza extends CustomStoredProcedure
+    {
+    	protected ObtieneResultadosCotiza(DataSource dataSource)
+        {
+            super(dataSource,"PKG_COTIZA.P_GEN_TARIFICACION");
+            declareParameter(new SqlParameter("pv_cdusuari_i", OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("pv_cdelemen_i", OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_record_o", OracleTypes.CURSOR, new ResultadosCotizaMapper()));
+            declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+            compile();
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+            WrapperResultados wrapperResultados = mapper.build(map);
+            List result = (List) map.get("pv_record_o");
+            wrapperResultados.setItemList(result);
+            return wrapperResultados;
+    	}
+    }
+    
+    protected class ResultadosCotizaMapper implements RowMapper {
+        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+            DecimalFormat formatter = new DecimalFormat("#,##0.00");
+            ResultadoCotizacionVO result = new ResultadoCotizacionVO();
+            result.setCdIdentifica(rs.getString("CDIDENTIFICA"));
+            result.setCdUnieco(rs.getString("CDUNIECO"));
+            result.setDsUnieco(	rs.getString("DSUNIECO"));
+            result.setCdRamo(rs.getString("CDRAMO"));
+            result.setEstado(rs.getString("ESTADO"));
+            result.setNmPoliza(rs.getString("NMPOLIZA"));
+            result.setNmSuplem(rs.getString("NMSUPLEM"));
+            result.setStatus(rs.getString("STATUS"));
+            result.setCdPlan(rs.getString("CDPLAN"));
+            result.setDsPlan(rs.getString("DSPLAN"));
+            result.setCdCiaaseg(rs.getString("CDCIAASEG"));
+            result.setCdPerpag(rs.getString("CDPERPAG"));
+            result.setDsPerpag(rs.getString("DSPERPAG"));
+            result.setCdTipsit(rs.getString("CDTIPSIT"));
+            //result.setDsTipsit(rs.getString("DSTIPSIT"));
+            result.setFeEmisio(rs.getString("FEEMISIO"));
+            result.setFeVencim(rs.getString("FEVENCIM"));
+            result.setNumeroSituacion(rs.getString("NMSITUAC"));
+            try{
+                //if(logger.isDebugEnabled())logger.debug("Antes de parseo mnprima: " + rs.getDouble("MNPRIMA"));
+                result.setMnPrima(formatter.format(rs.getDouble("MNPRIMA")));
+                //if(logger.isDebugEnabled())logger.debug("Despues de parseo mnprima: " + result.getMnPrima());
+            }catch(NumberFormatException nfe){
+                logger.error("Error al parsear el valor de la mnprima "+ rs.getString("MNPRIMA"), nfe);
+                result.setMnPrima(rs.getString("MNPRIMA"));
+            }
+            return result;
+        }
+    }
+    /*////////////////////////////////////////*/
+    ////// Override de obtener cotizacion //////
+    ////////////////////////////////////////////
+    
+    ////////////////////////////////////////////
+    ////// Override de obtener coberturas //////
+    /*////////////////////////////////////////*/
+    protected class ObtieneCoberturas extends CustomStoredProcedure
+    {
+    	protected ObtieneCoberturas(DataSource dataSource)
+        {
+            super(dataSource,"PKG_COTIZA.P_COBERTURAS");
+            declareParameter(new SqlParameter("pv_usuario_i",   OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdunieco_i",  OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("pv_estado_i",    OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmpoliza_i",  OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("pv_nmsituac_i",  OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("pv_nmsuplem_i",  OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("pv_cdplan_i",    OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdramo_i",    OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("pv_cdcia_i",     OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_region_i",    OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_pais_i",      OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_idioma_i",    OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_record_o", OracleTypes.CURSOR, new ObtieneCoberturasMapper()));
+            declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+            compile();
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+            WrapperResultados wrapperResultados = mapper.build(map);
+            List result = (List) map.get("pv_record_o");
+            wrapperResultados.setItemList(result);
+            return wrapperResultados;
+    	}
+    }
+    
+    protected class ObtieneCoberturasMapper implements RowMapper {
+        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+            CoberturaCotizacionVO result=new CoberturaCotizacionVO();
+            result.setDeducible(        rs.getString("deducible"));
+            result.setCdGarant(         rs.getString("CDGARANT"));
+            result.setDsGarant(         rs.getString("DSGARANT"));
+            result.setSumaAsegurada(    rs.getString("SUMASEG"));
+            result.setCdCiaaseg(null);
+            result.setCdRamo(null);
+            return result;
+        }
+    }
+    /*////////////////////////////////////////*/
+    ////// Override de obtener coberturas //////
+    ////////////////////////////////////////////
     
 }

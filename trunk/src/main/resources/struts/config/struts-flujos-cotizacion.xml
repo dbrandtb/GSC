@@ -128,6 +128,10 @@
             <result  name="error">/jsp/flujos/cotizacion/capturaCotizacion.jsp</result>
         </action>
         
+        <action name="obtenCotizacion4" class="cotizacionVital" method="obtenerResultadosCotizacion">
+            <result name="success" type="json" />
+        </action>
+        
         <action name="resultadoCotizacionVital" class="cotizacionVital" method="cotizar">
             <interceptor-ref name="json">
                 <param name="enableSMD">true</param>
@@ -150,6 +154,11 @@
         
          <action name="obtenerCoberturas" class="resultadoCotizacion" method="obtieneCoberturas" >
               <result name="success" type="json" />
+        </action>
+        
+        <!-- jtezva agregado -->
+        <action name="obtenerCoberturas4" class="cotizacionVital" method="obtenerCoberturas">
+            <result name="success" type="json" />
         </action>
         
         <action name="obtenerAyudaCobertura" class="resultadoCotizacion" method="obtieneAyudaCobertura" >

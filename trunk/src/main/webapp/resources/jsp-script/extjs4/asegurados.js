@@ -24,6 +24,36 @@ var comboRoles,storeRoles;                                          //16
 
 var storeIncisos;
 var formPanel;
+var gridIncisos;
+var gridResultados,storeResultados;
+var botonVerCoberturas;
+var botonComprar;
+
+//window coberturas
+var windowCoberturas;
+var coberturasFormPanel;
+var storeCoberturas;
+var gridCoberturas;
+
+//grid selection
+var selected_prima;
+var selected_cd_plan;
+var selected_ds_plan;
+var selected_nm_plan;
+var selected_record;
+
+///////////////////////////////////////////////////////
+////// funcion que muestra el grid de resultados //////
+/*///////////////////////////////////////////////////*/
+function mostrarGrid()
+{
+    formPanel.setDisabled(true);
+    gridResultados.show();
+    storeResultados.load();
+}
+/*///////////////////////////////////////////////////*/
+////// funcion que muestra el grid de resultados //////
+///////////////////////////////////////////////////////
 
 Ext.onReady(function(){
     
@@ -316,6 +346,65 @@ Ext.onReady(function(){
             }
         ]*/
     });
+    
+    /////////////////////////////
+    ////// Store resutados //////
+    /*/////////////////////////*/
+    Ext.define('StoreResultados', {
+        extend: 'Ext.data.Store',
+        constructor: function(cfg) {
+            var me = this;
+            cfg = cfg || {};
+            me.callParent([Ext.apply({
+                autoLoad: false,
+                model: 'RowCotizacion',
+                storeId: 'StoreResultados',
+                //groupField: 'dsUnieco',
+                proxy: {
+                    type: 'ajax',
+                    url: _URL_RESULTADOS,
+                    reader: {
+                        type: 'json',
+                        root: 'dataResult'
+                    }
+                }
+            }, cfg)]);
+        }
+    });
+    storeResultados=new StoreResultados();
+    /*/////////////////////////*/
+    ////// Store resutados //////
+    /////////////////////////////
+    
+    /////////////////////////////
+    ////// storeCoberturas //////
+    /*/////////////////////////*/
+    Ext.define('StoreCoberturas', {
+        extend: 'Ext.data.Store',
+        constructor: function(cfg) {
+            var me = this;
+            cfg = cfg || {};
+            me.callParent([Ext.apply({
+                autoLoad: false,
+                model: 'RowCobertura',
+                storeId: 'StoreCoberturas',
+                //groupField: 'dsUnieco',
+                proxy: {
+                    type: 'ajax',
+                    url: _URL_COBERTURAS,
+                    reader: {
+                        type: 'json',
+                        root: 'listaCoberturas'
+                    }
+                }
+            }, cfg)]);
+        }
+    });
+    storeCoberturas=new StoreCoberturas();
+    /*/////////////////////////*/
+    ////// storeCoberturas //////
+    /////////////////////////////
+    
     ///////////////////////////
     ////// Fin de stores //////
     ///////////////////////////
@@ -586,6 +675,407 @@ Ext.onReady(function(){
     ////// Fin de combos de formulario y combos editores de grid //////
     ///////////////////////////////////////////////////////////////////
     
+    /////////////////////
+    ////// Botones //////
+    /*/////////////////*/
+    botonVerCoberturas=Ext.create('Ext.Button', {
+        text: 'Ver coberturas',
+        disabled:true,
+        handler: function()
+        {
+            storeCoberturas.load({
+                params:
+                {
+                    jsonCober_unieco:selected_record.get('cdUnieco'),
+                    jsonCober_estado:selected_record.get('estado'),
+                    jsonCober_nmpoiza:selected_record.get('nmPoliza'),
+                    jsonCober_cdplan:selected_cd_plan,
+                    jsonCober_cdramo:selected_record.get('cdRamo'),
+                    jsonCober_cdcia:selected_record.get('cdCiaaseg'),
+                    jsonCober_situa:selected_nm_plan
+                }
+            });
+            gridCoberturas.setTitle('Plan '+selected_ds_plan);
+            windowCoberturas.show();
+        }
+    });
+    botonComprar=Ext.create('Ext.Button', {
+        text: 'Comprar',
+        disabled:true,
+        handler: function()
+        {
+            
+        }
+    });
+    /*/////////////////*/
+    ////// Botones //////
+    /////////////////////
+    
+    ///////////////////////////////
+    ////// window coberturas //////
+    /*///////////////////////////*/
+    gridCoberturas=Ext.create('Ext.grid.Panel',{
+        title:'Sin plan',
+        store:storeCoberturas,
+        height:300,
+        bbar:new Ext.PagingToolbar({
+            pageSize: 15,
+            store: storeCoberturas,
+            displayInfo: true,
+            displayMsg: 'Registros mostrados {0} - {1} de {2}',
+            emptyMsg: 'No hay registros para mostrar',
+            beforePageText: 'P&aacute;gina',
+            afterPageText: 'de {0}'
+        }),
+        columns:
+        [
+            {
+                dataIndex:'dsGarant',
+                text:'Cobertura',
+                flex:1
+            },
+            {
+                dataIndex:'sumaAsegurada',
+                text:'Suma asegurada',
+                flex:1
+            },
+            {
+                dataIndex:'deducible',
+                text:'Deducible',
+                flex:1
+            }
+        ]
+    });
+    
+    coberturasFormPanel =  new Ext.form.FormPanel(
+    {
+        id:'coberturasFormPanel',
+        url:'flujocotizacion/obtenerAyudaCobertura.action',
+        border:false,
+        layout:'form',
+        items:gridCoberturas
+    });
+    
+    windowCoberturas = new Ext.Window(
+    {
+        plain:true,
+	id:'windowCoberturas',
+	width: 500,
+	height:400,
+        modal:true,
+	autoScroll:true, 
+	title: 'Coberturas',
+	layout: 'fit',
+	bodyStyle:'padding:5px;',
+	buttonAlign:'center',
+	closeAction:'hide',
+	closable : true,
+	items: coberturasFormPanel,
+	buttons: [{
+		text:'Regresar',
+		handler: function() { 
+			windowCoberturas.hide(); 
+		}
+	}]
+    });
+    /*///////////////////////////*/
+    ////// window coberturas //////
+    ///////////////////////////////
+    
+    /////////////////////////////
+    ////// grid resultados //////
+    /*/////////////////////////*/
+    Ext.define('GridResultados',
+    {
+        extend: 'Ext.grid.Panel',
+        /*xtype: 'grouped-grid',
+        requires: [
+            'Ext.grid.feature.Grouping'
+        ],
+        collapsible: true,
+        features: [{
+            ftype: 'grouping',
+            groupHeaderTpl: 'Aseguradora: {name}',
+            hideGroupedHeader: true,
+            startCollapsed: true,
+            id: 'restaurantGrouping'
+        }],*/
+        renderTo:'divResultados',
+        hidden:true,
+        frame:true,
+        store:storeResultados,
+        height: 250,
+        width: 800,
+        title: 'Resultados',
+        selType: 'cellmodel',
+        bbar: new Ext.PagingToolbar({
+            pageSize: 15,
+            store: storeResultados,
+            displayInfo: true,
+            displayMsg: 'Registros mostrados {0} - {1} de {2}',
+            emptyMsg: 'No hay registros para mostrar',
+            beforePageText: 'P&aacute;gina',
+            afterPageText: 'de {0}'
+        }),
+        buttonAlign:'center',
+        buttons:
+        [
+            botonComprar,
+            botonVerCoberturas,
+            {
+                text:'Editar cotizaci&oacute;n',
+                handler:function()
+                {
+                    formPanel.setDisabled(false);
+                    gridResultados.hide();
+                    botonVerCoberturas.setDisabled(true);
+                    //botonComprar.setDisabled(true);
+                }
+            },
+            {
+                text:'Nueva cotizaci&oacute;n',
+                handler:function()
+                {
+                    formPanel.setDisabled(false);
+                    formPanel.getForm().reset();
+                    gridResultados.hide();
+                    storeIncisos.removeAll();
+                    storeIncisos.sync();
+                    botonVerCoberturas.setDisabled(true);
+                    //botonComprar.setDisabled(true);
+                }
+            },
+            {
+                text:'Imprimir',
+                disabled:true,
+                handler:function()
+                {
+                    
+                }
+            }
+        ],
+        listeners:
+        {
+            itemclick: function(dv, record, item, index, e)
+            {
+                var y=this.getSelectionModel().getCurrentPosition().row;
+                var x=this.getSelectionModel().getCurrentPosition().column;
+                if(x>0)
+                {
+                    var pos='';
+                    if(x==1)
+                    {
+                        pos='Alto';
+                    }
+                    else if(x==2)
+                    {
+                        pos='Bajo';
+                    }
+                    else
+                    {
+                        pos='Medio';
+                    }
+                    selected_prima=record.get(pos);
+                    selected_cd_plan=record.get('CD'+pos);
+                    selected_ds_plan=record.get('DS'+pos);
+                    selected_nm_plan=record.get('NM'+pos);
+                    selected_record=record;
+                    window.console&&console.log(selected_prima,selected_cd_plan,selected_ds_plan,selected_nm_plan,selected_record);
+                    botonVerCoberturas.setDisabled(false);
+                    //botonComprar.setDisabled(false);
+                }
+                else
+                {
+                    botonVerCoberturas.setDisabled(true);
+                    //botonComprar.setDisabled(true);
+                }
+                //alert("idplan = " + idplan + " desplan = " + desplan+ "  nmplan="+ nmplan + "  mnPrima=" + mnPrima);
+                
+            }
+        },
+        columns:
+        [
+            {   
+                header: "cdIdentifica",
+                dataIndex:'cdIdentifica',
+                sortable:true,
+                id:'cdIdentifica',
+                hidden:true
+            },
+            {
+                header: "cdUnieco",
+                dataIndex:'cdUnieco',
+                sortable:true,
+                hidden:true			            
+            },
+            {
+                header: "cdCiaaseg",
+                dataIndex:'cdCiaaseg',
+                sortable:true,
+                hidden:true
+            },
+            {
+                header: "dsUnieco",
+                dataIndex:'dsUnieco',
+                sortable:true,
+                hidden:true
+            },
+            {
+                header: "cdPerpag",
+                dataIndex:'cdPerpag',
+                sortable:true,
+                hidden:true
+            },
+            {
+                header: "numeroSituacion",
+                dataIndex:'numeroSituacion',
+                sortable:true,
+                hidden:true
+            },
+            {
+                header: "cdRamo",
+                dataIndex:'cdRamo',
+                sortable:true,
+                hidden:true
+            },
+            {			          
+                header: "Descripci&oacute;n",
+                dataIndex:'dsPerpag',
+                sortable:false,
+                menuDisabled:true,
+                flex:1
+            },
+            {
+                header: "cdPlan",
+                dataIndex:'cdPlan',
+                sortable:true,
+                hidden:true
+            },
+            {			          
+                header: "dsPlan",
+                dataIndex:'dsPlan',
+                sortable:false,
+                hidden:true
+            },
+            {
+                header: "feEmisio",
+                dataIndex:'feEmisio',
+                sortable:false,
+                hidden:true
+            },
+            {			          
+                header: "feVencim",
+                dataIndex:'feVencim',
+                sortable:false,
+                hidden:true
+            },
+            /*generadas*/
+            {   
+                dataIndex: "Alto",
+                header: "Alto",
+                hidden: false,
+                id: "Alto",
+                sortable: false,
+                flex:1,
+                renderer:Ext.util.Format.usMoney
+            },
+            {
+                dataIndex: "CDAlto",
+                header: "CDAlto",
+                hidden: true,
+                id: "CDAlto",
+                sortable: false,
+                width: 100
+            },
+            {
+                dataIndex: "DSAlto",
+                header: "DSAlto",
+                hidden: true,
+                id: "DSAlto",
+                sortable: false,
+                width: 100
+            },
+            {
+                dataIndex: "NMAlto",
+                header: "NMAlto",
+                hidden: true,
+                id: "NMAlto",
+                sortable: false,
+                width: 100
+            },
+            {
+                dataIndex: "Bajo",
+                header: "Bajo",
+                hidden: false,
+                id: "Bajo",
+                sortable: false,
+                flex:1,
+                renderer:Ext.util.Format.usMoney
+            },
+            {
+                dataIndex: "CDBajo",
+                header: "CDBajo",
+                hidden: true,
+                id: "CDBajo",
+                sortable: false,
+                width: 100
+            },
+            {
+                dataIndex: "DSBajo",
+                header: "DSBajo",
+                hidden: true,
+                id: "DSBajo",
+                sortable: false,
+                width: 100
+            },
+            {
+                dataIndex: "NMBajo",
+                header: "NMBajo",
+                hidden: true,
+                id: "NMBajo",
+                sortable: false,
+                width: 100
+            },
+            {
+                dataIndex: "Medio",
+                header: "Medio",
+                hidden: false,
+                id: "Medio",
+                sortable: false,
+                flex:1,
+                renderer:Ext.util.Format.usMoney
+            },
+            {
+                dataIndex: "CDMedio",
+                header: "CDMedio",
+                hidden: true,
+                id: "CDMedio",
+                sortable: false,
+                width: 100
+            },
+            {
+                dataIndex: "DSMedio",
+                header: "DSMedio",
+                hidden: true,
+                id: "DSMedio",
+                sortable: false,
+                width: 100
+            },
+            {
+                dataIndex: "NMMedio",
+                header: "NMMedio",
+                hidden: true,
+                id: "NMMedio",
+                sortable: false,
+                width: 100
+            }
+        ]
+    });
+    gridResultados=new GridResultados();
+    /*/////////////////////////*/
+    ////// grid resultados //////
+    /////////////////////////////
+    
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////// Inicio de declaracion de grid                                                                             //////
     ////// http://docs.sencha.com/extjs/4.2.1/extjs-build/examples/build/KitchenSink/ext-theme-neptune/#cell-editing //////
@@ -602,7 +1092,7 @@ Ext.onReady(function(){
         ],
         xtype: 'cell-editing',
 
-        title: 'Incisos',
+        title: 'Asegurados',
         frame: false,
 
         initComponent: function() {
@@ -611,7 +1101,7 @@ Ext.onReady(function(){
             });
 
             Ext.apply(this, {
-                width: 700,
+                width: 750,
                 height: 200,
                 plugins: [this.cellEditing],
                 store: storeIncisos,
@@ -620,7 +1110,7 @@ Ext.onReady(function(){
                     {
                         header: 'Rol',
                         dataIndex: 'rol',
-                        width: 110,
+                        flex:1,
                         editor: comboRoles,
                         renderer:function(v)
                         {
@@ -659,18 +1149,18 @@ Ext.onReady(function(){
                     {
                         header: 'Fecha de nacimiento',
                         dataIndex: 'fechaNacimiento',
-                        width: 120,
+                        flex:2,
                         renderer: Ext.util.Format.dateRenderer('d M Y'),
                         editor: {
                             xtype: 'datefield',
-                            format: 'd/m/y',
-                            editable:false
+                            format: 'd/m/Y',
+                            editable:true
                         }
                     },
                     {
                         header: 'Sexo',
                         dataIndex: 'sexo',
-                        width: 70,
+                        flex:1,
                         editor: comboGeneros,
                         renderer:function(v)
                         {
@@ -709,9 +1199,9 @@ Ext.onReady(function(){
                     {
                         header: 'Nombre',
                         dataIndex: 'nombre',
-                        flex: 2,
+                        flex: 1,
                         editor: {
-                            allowBlank: false
+                            //allowBlank: false
                         }
                     },
                     {
@@ -855,19 +1345,8 @@ Ext.onReady(function(){
 
             this.getStore().insert(0, rec);
             
-            var cellEditing2=this.cellEditing;
-            
-            //para que valide toda la fila al insertarla
-            Ext.Array.each(this.columns, function (column,index)
-            {
-                cellEditing2.startEditByPosition({
-                    row: 0, 
-                    column: index
-                });
-            });
-            
             //para acomodarse en la primer celda para editar
-            cellEditing2.startEditByPosition({
+            this.cellEditing.startEditByPosition({
                 row: 0, 
                 column: 0
             });
@@ -882,17 +1361,20 @@ Ext.onReady(function(){
     ////// http://docs.sencha.com/extjs/4.2.1/extjs-build/examples/build/KitchenSink/ext-theme-neptune/#cell-editing //////
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
+    gridIncisos=new EditorIncisos();
+    
     ///////////////////////////////
     ////// Inicio formulario //////
     ///////////////////////////////
     formPanel=Ext.create('Ext.form.Panel',
     {
-        title:'Asegurados',
+        title:'Cotizaci&oacute;n de salud vital',
         overflowY:'auto',
         overflowX:'auto',
         bodyPadding: 10,
+        frame:true,
         width:800,
-        //height:500,
+        buttonAlign:'center',
         renderTo:'maindiv',
         model:'CotizacionSalud',
         items:
@@ -913,8 +1395,7 @@ Ext.onReady(function(){
                 name:'deducible',
                 xtype: 'numberfield',
                 fieldLabel: 'Deducible',
-                allowBlank: false,
-                renderer:Ext.util.Format.usMoney
+                allowBlank: false
             },
             comboCopago,                                    //6
             comboSumaAsegurada,                             //7
@@ -927,7 +1408,7 @@ Ext.onReady(function(){
             comboCostoEmergenciaExtranjero,                 //14
             comboCobElimPenCambioZona,                      //15
             //rol (inciso)                                    16
-            new EditorIncisos()
+            gridIncisos
         ],
         buttons: [{
             text: 'Cotizar',
@@ -963,29 +1444,33 @@ Ext.onReady(function(){
                         submitValues['incisos']=incisosJson;
                         window.console&&console.log(submitValues);
                         // Submit the Ajax request and handle the response
-                        Ext.MessageBox.show({
+                        formPanel.setLoading(true);
+                        /*Ext.MessageBox.show({
                             msg: 'Cotizando...',
                             width:300,
                             wait:true,
                             waitConfig:{interval:100}
-                        });
+                        });*/
                         Ext.Ajax.request(
                         {
                             url: _URL_COTIZAR,
                             jsonData:Ext.encode(submitValues),
                             success:function(response,opts)
                             {
-                                Ext.MessageBox.hide();
+                                //Ext.MessageBox.hide();
+                                formPanel.setLoading(false);
                                 var jsonResp = Ext.decode(response.responseText);
                                 window.console&&console.log(jsonResp);
                                 if(jsonResp.success==true)
                                 {
-                                    window.location  = _URL_RESULTADO_COTIZACION;
+                                    Ext.getCmp('idCotizacion').setValue(jsonResp.id);
+                                    mostrarGrid();
                                 }
                             },
                             failure:function(response,opts)
                             {
-                                Ext.MessageBox.hide();
+                                //Ext.MessageBox.hide();
+                                formPanel.setLoading(false);
                                 window.console&&console.log("error");
                                 Ext.Msg.show({
                                     title:'Error',
@@ -1016,7 +1501,15 @@ Ext.onReady(function(){
                     });
                 }
             }
-        }]
+        },
+        {
+            text:'Limpiar',
+            handler:function()
+            {
+                formPanel.getForm().reset();
+            }
+        }
+    ]
     });
     ////////////////////////////
     ////// Fin formulario //////
@@ -1025,7 +1518,7 @@ Ext.onReady(function(){
     ///////////////////////////////////////////////
     ////// Cargador de formulario (sin grid) //////
     ///////////////////////////////////////////////
-    Ext.define('LoaderCotizacion',
+    /*Ext.define('LoaderCotizacion',
     {
         extend:'CotizacionSalud',
         proxy:
@@ -1044,7 +1537,7 @@ Ext.onReady(function(){
         success: function(resp) {
             formPanel.getForm().loadRecord(resp);
         }
-    });
+    });*/
     //////////////////////////////////////////////////////
     ////// Fin de cargador de formulario (sin grid) //////
     //////////////////////////////////////////////////////
