@@ -27,8 +27,7 @@
         if($cmp.length>0)
         {
             $cmp.attr({
-                href:'#',
-                onclick:'LoadPage("/cotizacionVital.action");return false;'
+                href:'javascript:LoadPage("/cotizacionVital.action");'
             });
             window.clearInterval(miIntervalCambioLiga);
             window.console&&console.log("STOP");
