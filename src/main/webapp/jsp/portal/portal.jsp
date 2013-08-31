@@ -17,6 +17,32 @@
 
 <link rel="stylesheet" type="text/css" href="${ctx}/resources/extjs/resources/css/ext-all.css" />
 <link rel="stylesheet" type="text/css" href="${ctx}/resources/extjs/resources/css/xtheme-gray.css" />	
+<!-- ESTE BLOQUE IMPORTA jQUERY Y REEMPLAZA LA LIGA a cotizacion vital 2 -->
+<script src="${ctx}/resources/extjs4/jquery-1.10.2.min.js" ></script>
+<script>
+    var miIntervalCambioLiga;
+    function reemplazaLiga()
+    {
+        var $cmp=$("li a[href*='null?CDTITULO']");
+        if($cmp.length>0)
+        {
+            $cmp.attr({
+                href:'#',
+                onclick:'LoadPage("/cotizacionVital.action");return false;'
+            });
+            window.clearInterval(miIntervalCambioLiga);
+            window.console&&console.log("STOP");
+        }
+        else
+        {
+            window.console&&console.log("SEARCHING LIGA...");
+        }
+    }
+    $(document).ready(function(){
+        miIntervalCambioLiga=setInterval(reemplazaLiga,500);
+    });
+</script>
+<!-- FIN ESTE BLOQUE IMPORTA jQUERY Y REEMPLAZA LA LIGA a cotizacion vital 2 -->
 
 <!-- Estilo para algunos elementos de las secciones -->
 <link href="${ctx}/resources/css/secciones.css" rel="stylesheet" type="text/css" />
@@ -130,9 +156,9 @@
 
 <jsp:include page="/jsp/menu/menu.jsp" flush="true" />
 <jsp:include page="/jsp/alertas/alertaPopUp.jsp" flush="true"/>
- 
+
 </head>
-<body id="page_bg" class="w-wide f-default header-light toolbar-magenta footer-magenta" onunload="cerrar()">		
+<body id="page_bg" class="w-wide f-default header-light toolbar-magenta footer-magenta" onunload="cerrar()">
 	<div id="showcase">
 		<div class="wrapper">
 			<div class="padding">
