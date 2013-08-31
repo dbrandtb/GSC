@@ -728,6 +728,7 @@ public class CombosDAO extends AbstractDAO{
             super(dataSource, "PKG_LISTAS.P_GET_ATRIBUTOS_SIT");
             declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdatribu_i", OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_otvalor_i", OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new CatalogosCotizaSaludMapper()));
             declareParameter(new SqlOutParameter("pv_messages_o", OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
