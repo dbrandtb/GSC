@@ -190,11 +190,12 @@ public class ComboManagerJdbcTemplateImpl extends AbstractManagerJdbcTemplateInv
      /////////////////////////////////////////////
      // jtezva 2013 08 21 catalogos salud vital //
      /////////////////////////////////////////////
-     public List obtenCatalogoSaludVital(String producto, String cdtipsit, String cdatribu) throws ApplicationException
+     public List obtenCatalogoSaludVital(String producto, String cdtipsit, String cdatribu, String otval) throws ApplicationException
      {
          HashMap<String,Object> params = new HashMap<String,Object>();
          params.put("pv_cdatribu_i",cdatribu);
          params.put("pv_cdtipsit_i",cdtipsit);
+         params.put("pv_otvalor_i",otval);
          params.put("producto",producto);
          String endpointName = "CATALOGOS_COTIZA_SALUD";
          return  getAllBackBoneInvoke(params, endpointName);
