@@ -35,8 +35,8 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     //Constantes de catalogos
     public static final String cdatribuSexo                         ="1";
     //                         fecha nacimiento                       2
-    public static final String cdatribuEstado                       ="3";
-    public static final String cdatribuCiudad                       ="4";
+    //                         codigoPostal                           3
+    public static final String cdatribuEstado                       ="4";
     //                         deducible                              5
     public static final String cdatribuCopago                       ="6";
     public static final String cdatribuSumaAsegurada                ="7";
@@ -55,8 +55,9 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     private String id;                                            //0
     //sexo (inciso)                                               1
     //fecha nacimiento (inciso)                                   2
-    private String estado;                                      //3
-    private String ciudad;                                      //4
+    private String codigoPostal;                                //3
+    private String estado;                                      //4
+    //private String ciudad;                                    //4 X(
     private BigDecimal deducible;                               //5
     private String copago;                                      //6
     private String sumaSegurada;                                //7
@@ -239,8 +240,8 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
                 mapaValositIterado.put("pv_cdtipsit",    "SL");
                 mapaValositIterado.put("pv_otvalor01",   i.getSexo().getKey());//sexo
                 mapaValositIterado.put("pv_otvalor02",   renderFechas.format(i.getFechaNacimiento()));//f nacimiento
-                mapaValositIterado.put("pv_otvalor03",   estado);//estado
-                mapaValositIterado.put("pv_otvalor04",   ciudad);//ciudad
+                mapaValositIterado.put("pv_otvalor03",   codigoPostal);//estado
+                mapaValositIterado.put("pv_otvalor04",   estado);//estado
                 mapaValositIterado.put("pv_otvalor05",   deducible.toString());//deducible
                 mapaValositIterado.put("pv_otvalor06",   copago);//copago
                 mapaValositIterado.put("pv_otvalor07",   sumaSegurada);//suma asegurada
@@ -459,12 +460,12 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
         this.kernelManagerSustituto = kernelManagerSustituto;
     }
 
-    public String getCiudad() {
-        return ciudad;
+    public String getCodigoPostal() {
+        return codigoPostal;
     }
 
-    public void setCiudad(String ciudad) {
-        this.ciudad = ciudad;
+    public void setCodigoPostal(String codigoPostal) {
+        this.codigoPostal = codigoPostal;
     }
 
     public BigDecimal getDeducible() {
@@ -557,10 +558,6 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 
     public String getCdatribuSexo() {
         return cdatribuSexo;
-    }
-
-    public String getCdatribuCiudad() {
-        return cdatribuCiudad;
     }
 
     public String getCdatribuCopago() {
