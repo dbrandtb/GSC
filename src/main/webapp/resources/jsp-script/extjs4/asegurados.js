@@ -1462,26 +1462,47 @@ Ext.onReady(function(){
                     if(incisosRecords&&incisosRecords.length>0)
                     {
                         var incisosJson = [];
-                        for (var i in incisosRecords) {
+                        storeIncisos.each(function(record,index){
                             incisosJson.push({
-                                id: incisosRecords[i].get('id'),
+                                id: record.get('id'),
                                 rol:
                                 {
-                                    key:typeof incisosRecords[i].get('rol')=='string'?incisosRecords[i].get('rol'):incisosRecords[i].get('rol').get('key'),
+                                    key:typeof record.get('rol')=='string'?record.get('rol'):record.get('rol').get('key'),
                                     value:''
                                 },
-                                fechaNacimiento: incisosRecords[i].get('fechaNacimiento'),
+                                fechaNacimiento: record.get('fechaNacimiento'),
                                 sexo:
                                 {
-                                    key:typeof incisosRecords[i].get('sexo')=='string'?incisosRecords[i].get('sexo'):incisosRecords[i].get('sexo').get('key'),
+                                    key:typeof record.get('sexo')=='string'?record.get('sexo'):record.get('sexo').get('key'),
                                     value:''
                                 },
-                                nombre: incisosRecords[i].get('nombre'),
-                                segundoNombre: incisosRecords[i].get('segundoNombre'),
-                                apellidoPaterno: incisosRecords[i].get('apellidoPaterno'),
-                                apellidoMaterno: incisosRecords[i].get('apellidoMaterno')
+                                nombre: record.get('nombre'),
+                                segundoNombre: record.get('segundoNombre'),
+                                apellidoPaterno: record.get('apellidoPaterno'),
+                                apellidoMaterno: record.get('apellidoMaterno')
                             });
-                        }
+                        });
+                        /*for (var i in incisosRecords) {
+                            console.log(i);
+                            incisosJson.push({
+                                id: incisosRecords[i].id,
+                                rol:
+                                {
+                                    key:typeof incisosRecords[i].rol=='string'?incisosRecords[i].rol:incisosRecords[i].rol.key,
+                                    value:''
+                                },
+                                fechaNacimiento: incisosRecords[i].fechaNacimiento,
+                                sexo:
+                                {
+                                    key:typeof incisosRecords[i].sexo=='string'?incisosRecords[i].sexo:incisosRecords[i].sexo.key,
+                                    value:''
+                                },
+                                nombre: incisosRecords[i].nombre,
+                                segundoNombre: incisosRecords[i].segundoNombre,
+                                apellidoPaterno: incisosRecords[i].apellidoPaterno,
+                                apellidoMaterno: incisosRecords[i].apellidoMaterno
+                            });
+                        }*/
                         var submitValues=form.getValues();
                         submitValues['incisos']=incisosJson;
                         window.console&&console.log(submitValues);
