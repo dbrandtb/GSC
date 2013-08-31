@@ -24,23 +24,14 @@ public class JsonGenericList extends PrincipalCoreAction
     private CombosManager2 combosManager2;
     private String cdatribu;
     private String codigoTabla;
-    private String idPadre;
+    private String idPadre="";
     private static Logger log = Logger.getLogger(JsonGenericList.class);
     
     public String obtenCatalogo()
     {
         try
         {
-            if(cdatribu!=null&&!cdatribu.isEmpty())
-            //catalogo normal
-            {
-                lista=combosManager2.obtenCatalogoSaludVital("", "SL", cdatribu);
-            }
-            else
-            //catalogo dependiente
-            {
-                lista=combosManager2.obtenComboDependienteOverride(codigoTabla, idPadre, "NO ME USAN LOL");
-            }
+            lista=combosManager2.obtenCatalogoSaludVital("", "SL", cdatribu, idPadre!=null&&idPadre.length()>0?idPadre:null);
         }
         catch(Exception ex)
         {
