@@ -3,8 +3,9 @@
 ///////////////////////////////////////
 var comboGeneros,storeGeneros;                                      //1
 //fecha nacimiento                                                    2
-var comboEstados,storeEstados;                                      //3
-var comboCiudad,storeCiudades;                                      //4
+var campoCodigoPostal;                                              //3
+var comboEstados,storeEstados;                                      //4
+//var comboCiudad,storeCiudades;                                      //4 X(
 //deducible                                                           5
 var comboCopago,storeCopagos;                                       //6
 var comboSumaAsegurada,storeSumasAseguradas;                        //7
@@ -78,10 +79,10 @@ Ext.onReady(function(){
         }
     });
     
-    //3 estados
+    //4 estados
     storeEstados = new Ext.data.Store({
         model: 'Generic',
-        autoLoad:true,
+        autoLoad:false,
         proxy:
         {
             type: 'ajax',
@@ -102,7 +103,7 @@ Ext.onReady(function(){
         ]
     });
     
-    //4 ciudades
+    /*4 ciudades X( 
     storeCiudades = new Ext.data.Store({
         model: 'Generic',
         autoLoad:false,
@@ -123,7 +124,7 @@ Ext.onReady(function(){
                 direction: 'ASC'
             }
         ]
-    });
+    });*/
     
     //6 copago
     storeCopagos = new Ext.data.Store({
@@ -447,7 +448,47 @@ Ext.onReady(function(){
         editable:false
     });
     
-    //3 estado
+    //3 codigo postal
+    campoCodigoPostal=Ext.create('Ext.form.field.Text',{
+        fieldLabel: 'C&oacute;digo postal',
+        name:'codigoPostal',
+        allowBlank:false,
+        maskRe: /[0-9]/,
+        regex:/[0-9]/,
+        listeners:
+        {
+            blur:function(el)
+            {
+                comboEstados.setLoading(true);
+                storeEstados.load({
+                    params:
+                    {
+                        //codigoTabla:'2TMUNI',
+                        idPadre:el.value
+                    },
+                    callback: function(records, operation, success)
+                    {
+                        var estadoActual=comboEstados.getValue();
+                        var actualEnStoreEstados=false;
+                        storeEstados.each(function(record)
+                        {
+                            if(estadoActual==record.get('key'))
+                            {
+                                actualEnStoreEstados=true;
+                            }
+                        });
+                        if(!actualEnStoreEstados)
+                        {
+                            comboEstados.clearValue();
+                        }
+                        comboEstados.setLoading(false);
+                    }
+                });
+            }
+        }
+    });
+    
+    //4 estado
     comboEstados=Ext.create('Ext.form.ComboBox2',
     {
         id:'comboEstados',
@@ -460,7 +501,7 @@ Ext.onReady(function(){
         valueField: 'key',
         allowBlank:false,
         editable:false,
-        emptyText:'Seleccione...',
+        emptyText:'Seleccione...'/*,
         listeners:
         {
             change:function(record,value)
@@ -491,10 +532,10 @@ Ext.onReady(function(){
                     }
                 });
             }
-        }
+        }*/
     });
     
-    //4 ciudad
+    /*4 ciudad X(
     comboCiudad=Ext.create('Ext.form.ComboBox2',
     {
         id:'comboCiudad',
@@ -508,7 +549,7 @@ Ext.onReady(function(){
         allowBlank:false,
         editable:false,
         emptyText:'Seleccione un estado...'
-    });
+    });*/
     
     //6 copago
     comboCopago=Ext.create('Ext.form.ComboBox2',
@@ -1388,8 +1429,9 @@ Ext.onReady(function(){
             },
             //sexo (inciso)                                   1
             //fecha nacimiento (inciso)                       2
-            comboEstados,                                   //3
-            comboCiudad,                                    //4
+            campoCodigoPostal,                              //3
+            comboEstados,                                   //4
+            //comboCiudad,                                    4 X(
             {                                               //5
                 id: 'deducible',
                 name:'deducible',
@@ -1399,7 +1441,7 @@ Ext.onReady(function(){
             },
             comboCopago,                                    //6
             comboSumaAsegurada,                             //7
-            comboCirculoHospitalario,                       //8
+            //comboCirculoHospitalario,                       //8
             comboCoberturaVacunas,                          //9
             comboCoberturaPrevencionEnfermedadesAdultos,    //10
             comboMaternidad,                                //11
@@ -1507,6 +1549,8 @@ Ext.onReady(function(){
             handler:function()
             {
                 formPanel.getForm().reset();
+                storeIncisos.removeAll();
+                storeIncisos.sync();
             }
         }
     ]
