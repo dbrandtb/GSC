@@ -51,6 +51,7 @@ function bloquearFormulario(isBloqueado)
     Ext.getCmp('botonLimpiar').setDisabled(isBloqueado);
     Ext.getCmp('botonCotizar').setDisabled(isBloqueado);
     Ext.getCmp('idCotizacion').setReadOnly(true);
+    Ext.getCmp('fechaFinVigencia').setReadOnly(true);
     gridIncisos.setDisabled(isBloqueado);
 }
 
@@ -502,7 +503,8 @@ Ext.onReady(function(){
                     }
                 });
             }
-        }
+        },
+        labelWidth: 250
     });
     
     //4 estado
@@ -518,7 +520,8 @@ Ext.onReady(function(){
         valueField: 'key',
         allowBlank:false,
         editable:false,
-        emptyText:'Seleccione...'/*,
+        emptyText:'Seleccione...',
+        labelWidth:250/*,
         listeners:
         {
             change:function(record,value)
@@ -580,7 +583,8 @@ Ext.onReady(function(){
         valueField: 'key',
         allowBlank:false,
         editable:false,
-        emptyText:'Seleccione...'
+        emptyText:'Seleccione...',
+        labelWidth:250
     });
     
     //7 suma asegurada
@@ -595,7 +599,8 @@ Ext.onReady(function(){
         valueField: 'key',
         allowBlank:false,
         editable:false,
-        emptyText:'Seleccione...'
+        emptyText:'Seleccione...',
+        labelWidth:250
     });
     
     //8 circulo hospitalario
@@ -625,7 +630,8 @@ Ext.onReady(function(){
         valueField: 'key',
         allowBlank:false,
         editable:false,
-        emptyText:'Seleccione...'
+        emptyText:'Seleccione...',
+        labelWidth:250
     });
     
     //10 enfermedades adultos
@@ -640,7 +646,8 @@ Ext.onReady(function(){
         valueField: 'key',
         allowBlank:false,
         editable:false,
-        emptyText:'Seleccione...'
+        emptyText:'Seleccione...',
+        labelWidth:250
     });
     
     //11 maternidad
@@ -655,7 +662,8 @@ Ext.onReady(function(){
         valueField: 'key',
         allowBlank:false,
         editable:false,
-        emptyText:'Seleccione...'
+        emptyText:'Seleccione...',
+        labelWidth:250
     });
     
     //12 suma maternidad
@@ -670,7 +678,8 @@ Ext.onReady(function(){
         valueField: 'key',
         allowBlank:false,
         editable:false,
-        emptyText:'Seleccione...'
+        emptyText:'Seleccione...',
+        labelWidth:250
     });
     
     //13 tabulador reembolso
@@ -685,7 +694,8 @@ Ext.onReady(function(){
         valueField: 'key',
         allowBlank:false,
         editable:false,
-        emptyText:'Seleccione...'
+        emptyText:'Seleccione...',
+        labelWidth:250
     });
     
     //14 emergencia extranjero
@@ -700,7 +710,8 @@ Ext.onReady(function(){
         valueField: 'key',
         allowBlank:false,
         editable:false,
-        emptyText:'Seleccione...'
+        emptyText:'Seleccione...',
+        labelWidth:250
     });
     
     //15 combo cobertura eliminacion penalizacion cambio zona
@@ -715,7 +726,8 @@ Ext.onReady(function(){
         valueField: 'key',
         allowBlank:false,
         editable:false,
-        emptyText:'Seleccione...'
+        emptyText:'Seleccione...',
+        labelWidth:250
     });
     
     //16 rol (GRID)
@@ -1439,12 +1451,51 @@ Ext.onReady(function(){
         model:'CotizacionSalud',
         items:
         [
-            {                                               //0
+            {//0
                 id: 'idCotizacion',
-                name:'id',
+                name: 'id',
                 xtype: 'numberfield',
                 fieldLabel: 'N&uacute;mero de cotizaci&oacute;n',
-                readOnly: true
+                readOnly: true,
+                labelWidth: 250,
+            },
+            {
+                xtype: 'panel',
+                layout: 'hbox',
+                bodyPadding:5,
+                style:'margin-bottom:5px;',
+                items: [
+                    {
+                        id: 'fechaInicioVigencia',
+                        name: 'fechaInicioVigencia',
+                        fieldLabel: 'Fecha de inicio de vigencia',
+                        xtype: 'datefield',
+                        format: 'd/m/Y',
+                        editable: true,
+                        allowBlank:false,
+                        labelWidth:180,
+                        listeners:{
+                            change:function(field,value)
+                            {
+                                try
+                                {
+                                    Ext.getCmp('fechaFinVigencia').setValue(Ext.Date.add(value, Ext.Date.YEAR, 1));
+                                }catch(e){}
+                            }
+                        }
+                    },
+                    {
+                        id: 'fechaFinVigencia',
+                        name: 'fechaFinVigencia',
+                        fieldLabel: 'Fecha de fin de vigencia',
+                        xtype: 'datefield',
+                        format: 'd/m/Y',
+                        readOnly: true,
+                        allowBlank:false,
+                        labelWidth:180,
+                        style:'margin-left:5px;'
+                    }
+                ]
             },
             //sexo (inciso)                                   1
             //fecha nacimiento (inciso)                       2
@@ -1456,7 +1507,8 @@ Ext.onReady(function(){
                 name:'deducible',
                 xtype: 'numberfield',
                 fieldLabel: 'Deducible',
-                allowBlank: false
+                allowBlank: false,
+                labelWidth: 250,
             },
             comboCopago,                                    //6
             comboSumaAsegurada,                             //7
