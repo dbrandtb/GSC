@@ -200,7 +200,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
                 //////////////////////////////////
                 ////// ini mpolisit iterado //////
                 //////////////////////////////////
-                Map<String,String>mapaPolisitIterado=new HashMap<String,String>(0);
+                Map<String,Object>mapaPolisitIterado=new HashMap<String,Object>(0);
                 mapaPolisitIterado.put("pv_cdunieco_i",    "1");
                 mapaPolisitIterado.put("pv_cdramo_i",      "2");
                 mapaPolisitIterado.put("pv_estado_i",      "W");
@@ -212,8 +212,8 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
                 mapaPolisitIterado.put("pv_swreduci_i",    null);
                 mapaPolisitIterado.put("pv_cdagrupa_i",    "1");
                 mapaPolisitIterado.put("pv_cdestado_i",    "0");
-                mapaPolisitIterado.put("pv_fefecsit_i",    renderFechas.format(calendarHoy.getTime()));
-                mapaPolisitIterado.put("pv_fecharef_i",    renderFechas.format(calendarHoy.getTime()));
+                mapaPolisitIterado.put("pv_fefecsit_i",    calendarHoy.getTime());
+                mapaPolisitIterado.put("pv_fecharef_i",    calendarHoy.getTime());
                 mapaPolisitIterado.put("pv_cdgrupo_i",     null);
                 mapaPolisitIterado.put("pv_nmsituaext_i",  null);
                 mapaPolisitIterado.put("pv_nmsitaux_i",    null);
