@@ -307,7 +307,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             for(IncisoSaludVO i : incisos)
             {
                 log.debug("### Iteracion de clonar personas #"+contador);
-                Map<String,String> mapaClonPersonaIterado=new HashMap<String,String>(0);
+                Map<String,Object> mapaClonPersonaIterado=new HashMap<String,Object>(0);
                 mapaClonPersonaIterado.put("pv_cdelemen_i",     usuario.getEmpresa().getElementoId());
                 mapaClonPersonaIterado.put("pv_cdunieco_i",     "1");
                 mapaClonPersonaIterado.put("pv_cdramo_i",       "2");
@@ -315,14 +315,14 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
                 mapaClonPersonaIterado.put("pv_nmpoliza_i",     numeroPoliza);
                 mapaClonPersonaIterado.put("pv_nmsituac_i",     contador+"");
                 mapaClonPersonaIterado.put("pv_cdtipsit_i",     "SL");
-                mapaClonPersonaIterado.put("pv_fecha_i",        renderFechas.format(calendarHoy.getTime()));
+                mapaClonPersonaIterado.put("pv_fecha_i",        calendarHoy.getTime());
                 mapaClonPersonaIterado.put("pv_cdusuario_i",    usuario.getUser());
                 mapaClonPersonaIterado.put("pv_p_nombre",       i.getNombre());
                 mapaClonPersonaIterado.put("pv_s_nombre",       i.getSegundoNombre());
                 mapaClonPersonaIterado.put("pv_apellidop",      i.getApellidoPaterno());
                 mapaClonPersonaIterado.put("pv_apellidom",      i.getApellidoMaterno());
                 mapaClonPersonaIterado.put("pv_sexo",           i.getSexo().getKey());
-                mapaClonPersonaIterado.put("pv_fenacimi",       renderFechas.format(i.getFechaNacimiento()));
+                mapaClonPersonaIterado.put("pv_fenacimi",       i.getFechaNacimiento());
                 kernelManagerSustituto.clonaPersonas(mapaClonPersonaIterado);
                 contador++;
             }
