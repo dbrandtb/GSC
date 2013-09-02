@@ -288,6 +288,7 @@ public class LoadClientesRolesAction extends PrincipalCoreAction {
             }
             session.put("CARGA_USUARIO_COMPLETO", userList);
             success = true;
+            logger.debug("retorno=" + retorno);
         }
         ////////////////////////////////////////////////
         
