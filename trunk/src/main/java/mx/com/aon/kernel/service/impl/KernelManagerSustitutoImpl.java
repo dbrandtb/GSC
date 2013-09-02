@@ -50,7 +50,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return res;
     }
     
-    public WrapperResultados insertaPolisit(Map<String, String> parameters) throws ApplicationException
+    public WrapperResultados insertaPolisit(Map<String, Object> parameters) throws ApplicationException
     {
         log.debug("### kernel sustituto insertaPolisit map: "+parameters);
         WrapperResultados res=this.returnBackBoneInvoke(parameters, ProcesoDAO.P_MOV_MPOLISIT);
