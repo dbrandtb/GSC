@@ -19,7 +19,7 @@ import mx.com.aon.portal.util.WrapperResultados;
 public interface KernelManagerSustituto {
     public WrapperResultados calculaNumeroPoliza(String pv_cdunieco_i, String pv_cdramo_i, String pv_estado_i) throws ApplicationException;
     public WrapperResultados insertaMaestroPolizas(Map<String, String> parameters) throws ApplicationException;
-    public WrapperResultados insertaPolisit(Map<String, String> parameters) throws ApplicationException;
+    public WrapperResultados insertaPolisit(Map<String, Object> parameters) throws ApplicationException;
     public WrapperResultados insertaValoresSituaciones(Map<String, String> parameters) throws ApplicationException;
     public List<SituacionVO> clonaSituaciones(Map<String,String> parameters) throws ApplicationException;
     public WrapperResultados coberturas(Map<String,String> parameters) throws ApplicationException;
