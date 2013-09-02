@@ -1604,6 +1604,7 @@ Ext.onReady(function(){
     ///////////////////////////////////////////////
     ////// Cargador de formulario (sin grid) //////
     ///////////////////////////////////////////////
+    /*
     Ext.define('LoaderCotizacion',
     {
         extend:'CotizacionSalud',
@@ -1626,6 +1627,7 @@ Ext.onReady(function(){
             bloquearFormulario(false);
         }
     });
+    */
     //////////////////////////////////////////////////////
     ////// Fin de cargador de formulario (sin grid) //////
     //////////////////////////////////////////////////////
