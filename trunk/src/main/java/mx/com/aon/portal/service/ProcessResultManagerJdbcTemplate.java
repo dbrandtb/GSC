@@ -40,6 +40,11 @@ public class ProcessResultManagerJdbcTemplate {
                     logger.error("No se puede procesar el mensaje de error ");
                     throw new ApplicationException("No se encuentra el mensaje de error asociado");
                 }
+                
+                if(messageResult != null){
+                	logger.debug("MsgTitle=" + messageResult.getMsgTitle());
+                    logger.debug("MsgText=" + messageResult.getMsgText());
+                }
 
                 if (messageResult.getMsgTitle().equals(ERROR_MSG_TITLE)) {
                     throw new ApplicationException(messageResult.getMsgText());
