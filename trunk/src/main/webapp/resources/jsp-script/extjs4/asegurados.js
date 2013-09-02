@@ -43,14 +43,31 @@ var selected_ds_plan;
 var selected_nm_plan;
 var selected_record;
 
+function bloquearFormulario(isBloqueado)
+{
+    formPanel.getForm().getFields().each(function(field,index){
+        field.setReadOnly(isBloqueado);
+    });
+    Ext.getCmp('botonLimpiar').setDisabled(isBloqueado);
+    Ext.getCmp('botonCotizar').setDisabled(isBloqueado);
+    Ext.getCmp('idCotizacion').setReadOnly(true);
+    gridIncisos.setDisabled(isBloqueado);
+}
+
 ///////////////////////////////////////////////////////
 ////// funcion que muestra el grid de resultados //////
 /*///////////////////////////////////////////////////*/
 function mostrarGrid()
 {
-    formPanel.setDisabled(true);
+    bloquearFormulario(true);
     gridResultados.show();
-    storeResultados.load();
+    gridResultados.focus();
+    storeResultados.load({
+        callback:function(){
+            //window.console&&console.log("cotizado");
+            gridResultados.getView().refresh();
+        }
+    });
 }
 /*///////////////////////////////////////////////////*/
 ////// funcion que muestra el grid de resultados //////
@@ -867,8 +884,9 @@ Ext.onReady(function(){
                 text:'Editar cotizaci&oacute;n',
                 handler:function()
                 {
-                    formPanel.setDisabled(false);
+                    bloquearFormulario(false);
                     gridResultados.hide();
+                    formPanel.focus();
                     botonVerCoberturas.setDisabled(true);
                     //botonComprar.setDisabled(true);
                 }
@@ -877,9 +895,10 @@ Ext.onReady(function(){
                 text:'Nueva cotizaci&oacute;n',
                 handler:function()
                 {
-                    formPanel.setDisabled(false);
+                    bloquearFormulario(false);
                     formPanel.getForm().reset();
                     gridResultados.hide();
+                    formPanel.focus();
                     storeIncisos.removeAll();
                     storeIncisos.sync();
                     botonVerCoberturas.setDisabled(true);
@@ -921,7 +940,7 @@ Ext.onReady(function(){
                     selected_ds_plan=record.get('DS'+pos);
                     selected_nm_plan=record.get('NM'+pos);
                     selected_record=record;
-                    window.console&&console.log(selected_prima,selected_cd_plan,selected_ds_plan,selected_nm_plan,selected_record);
+                    //window.console&&console.log(selected_prima,selected_cd_plan,selected_ds_plan,selected_nm_plan,selected_record);
                     botonVerCoberturas.setDisabled(false);
                     //botonComprar.setDisabled(false);
                 }
@@ -1159,20 +1178,20 @@ Ext.onReady(function(){
                             if(typeof v == 'string')
                             //tengo solo el indice
                             {
-                                window.console&&console.log('string:');
+                                //window.console&&console.log('string:');
                                 storeRoles.each(function(rec){
-                                    window.console&&console.log('iterando...');
+                                    //window.console&&console.log('iterando...');
                                     if(rec.data.key==v)
                                     {
                                         leyenda=rec.data.value;
                                     }
                                 });
-                                window.console&&console.log(leyenda);
+                                //window.console&&console.log(leyenda);
                             }
                             else
                             //tengo objeto que puede venir como Generic u otro mas complejo
                             {
-                                window.console&&console.log('object:');
+                                //window.console&&console.log('object:');
                                 if(v.key&&v.value)
                                 //objeto Generic
                                 {
@@ -1182,7 +1201,7 @@ Ext.onReady(function(){
                                 {
                                     leyenda=v.data.value;
                                 }
-                                window.console&&console.log(leyenda);
+                                //window.console&&console.log(leyenda);
                             }
                             return leyenda;
                         }
@@ -1209,20 +1228,20 @@ Ext.onReady(function(){
                             if(typeof v == 'string')
                             //tengo solo el indice
                             {
-                                window.console&&console.log('string:');
+                                //window.console&&console.log('string:');
                                 storeGeneros.each(function(rec){
-                                    window.console&&console.log('iterando...');
+                                    //window.console&&console.log('iterando...');
                                     if(rec.data.key==v)
                                     {
                                         leyenda=rec.data.value;
                                     }
                                 });
-                                window.console&&console.log(leyenda);
+                                //window.console&&console.log(leyenda);
                             }
                             else
                             //tengo objeto que puede venir como Generic u otro mas complejo
                             {
-                                window.console&&console.log('object:');
+                                //window.console&&console.log('object:');
                                 if(v.key&&v.value)
                                 //objeto Generic
                                 {
@@ -1232,7 +1251,7 @@ Ext.onReady(function(){
                                 {
                                     leyenda=v.data.value;
                                 }
-                                window.console&&console.log(leyenda);
+                                //window.console&&console.log(leyenda);
                             }
                             return leyenda;
                         }
@@ -1453,6 +1472,7 @@ Ext.onReady(function(){
             gridIncisos
         ],
         buttons: [{
+            id:'botonCotizar',
             text: 'Cotizar',
             handler: function() {
                 // The getForm() method returns the Ext.form.Basic instance:
@@ -1483,7 +1503,7 @@ Ext.onReady(function(){
                             });
                         });
                         /*for (var i in incisosRecords) {
-                            console.log(i);
+                            window.console&&console.log(i);
                             incisosJson.push({
                                 id: incisosRecords[i].id,
                                 rol:
@@ -1505,7 +1525,7 @@ Ext.onReady(function(){
                         }*/
                         var submitValues=form.getValues();
                         submitValues['incisos']=incisosJson;
-                        window.console&&console.log(submitValues);
+                        //window.console&&console.log(submitValues);
                         // Submit the Ajax request and handle the response
                         formPanel.setLoading(true);
                         /*Ext.MessageBox.show({
@@ -1523,7 +1543,7 @@ Ext.onReady(function(){
                                 //Ext.MessageBox.hide();
                                 formPanel.setLoading(false);
                                 var jsonResp = Ext.decode(response.responseText);
-                                window.console&&console.log(jsonResp);
+                                //window.console&&console.log(jsonResp);
                                 if(jsonResp.success==true)
                                 {
                                     Ext.getCmp('idCotizacion').setValue(jsonResp.id);
@@ -1534,7 +1554,7 @@ Ext.onReady(function(){
                             {
                                 //Ext.MessageBox.hide();
                                 formPanel.setLoading(false);
-                                window.console&&console.log("error");
+                                //window.console&&console.log("error");
                                 Ext.Msg.show({
                                     title:'Error',
                                     msg: 'Error de comunicaci&oacute;n',
@@ -1567,6 +1587,7 @@ Ext.onReady(function(){
         },
         {
             text:'Limpiar',
+            id:'botonLimpiar',
             handler:function()
             {
                 formPanel.getForm().reset();
@@ -1583,7 +1604,7 @@ Ext.onReady(function(){
     ///////////////////////////////////////////////
     ////// Cargador de formulario (sin grid) //////
     ///////////////////////////////////////////////
-    /*Ext.define('LoaderCotizacion',
+    Ext.define('LoaderCotizacion',
     {
         extend:'CotizacionSalud',
         proxy:
@@ -1601,8 +1622,10 @@ Ext.onReady(function(){
     loaderCotizacion.load(123, {
         success: function(resp) {
             formPanel.getForm().loadRecord(resp);
+            bloquearFormulario(true);
+            bloquearFormulario(false);
         }
-    });*/
+    });
     //////////////////////////////////////////////////////
     ////// Fin de cargador de formulario (sin grid) //////
     //////////////////////////////////////////////////////
