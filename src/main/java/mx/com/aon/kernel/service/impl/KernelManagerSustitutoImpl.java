@@ -95,7 +95,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return res;
     }
     
-    public WrapperResultados clonaPersonas(Map<String,String> parameters) throws ApplicationException
+    public WrapperResultados clonaPersonas(Map<String,Object> parameters) throws ApplicationException
     {
         log.debug("### kernel sustituto clonaPersonas map: "+parameters);
         WrapperResultados res=this.returnBackBoneInvoke(parameters, ProcesoDAO.P_CLONAR_PERSONAS);
