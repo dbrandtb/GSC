@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,6 +71,8 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     private String costoEmergenciaExtranjero;                   //14
     private String coberturaEliminacionPenalizacionCambioZona;  //15
     //rol (inciso)                                                16
+    private String fechaInicioVigencia;
+    private String fechaFinVigencia;
     
     private List<IncisoSaludVO> incisos;
     private boolean success;
@@ -151,9 +154,9 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             mapa.put("pv_feinisus",     null);
             mapa.put("pv_fefinsus",     null);
             mapa.put("pv_ottempot",     "R");
-            mapa.put("pv_feefecto",     renderFechas.format(calendarHoy.getTime()));
+            mapa.put("pv_feefecto",     fechaFinVigencia);//renderFechas.format(calendarHoy.getTime()));
             mapa.put("pv_hhefecto",     "12:00");
-            mapa.put("pv_feproren",     renderFechas.format(fechaEnUnAnio.getTime()));
+            mapa.put("pv_feproren",     fechaFinVigencia);//renderFechas.format(fechaEnUnAnio.getTime()));
             mapa.put("pv_fevencim",     null);
             mapa.put("pv_nmrenova",     "0");
             mapa.put("pv_ferecibo",     null);
@@ -695,6 +698,22 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 
     public void setJsonCober_situa(String jsonCober_situa) {
         this.jsonCober_situa = jsonCober_situa;
+    }
+
+    public String getFechaInicioVigencia() {
+        return fechaInicioVigencia;
+    }
+
+    public void setFechaInicioVigencia(String fechaInicioVigencia) {
+        this.fechaInicioVigencia = fechaInicioVigencia;
+    }
+
+    public String getFechaFinVigencia() {
+        return fechaFinVigencia;
+    }
+
+    public void setFechaFinVigencia(String fechaFinVigencia) {
+        this.fechaFinVigencia = fechaFinVigencia;
     }
     
 }
