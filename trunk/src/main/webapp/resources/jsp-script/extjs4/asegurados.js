@@ -113,7 +113,7 @@ function mostrarGrid()
 {
     bloquearFormulario(true);
     gridResultados.show();
-    gridResultados.focus();
+    window.parent.scrollTo(0,800);
     storeResultados.load({
         callback:function(){
             //window.console&&console.log("cotizado");
@@ -1068,7 +1068,7 @@ Ext.onReady(function(){
                 {
                     bloquearFormulario(false);
                     gridResultados.hide();
-                    formPanel.focus();
+                    window.parent.scrollTo(0,0);
                     botonVerCoberturas.setDisabled(true);
                     //botonComprar.setDisabled(true);
                 }
@@ -1080,7 +1080,7 @@ Ext.onReady(function(){
                     bloquearFormulario(false);
                     formPanel.getForm().reset();
                     gridResultados.hide();
-                    formPanel.focus();
+                    window.parent.scrollTo(0,0);
                     storeIncisos.removeAll();
                     storeIncisos.sync();
                     botonVerCoberturas.setDisabled(true);
@@ -1627,7 +1627,7 @@ Ext.onReady(function(){
                 xtype: 'numberfield',
                 fieldLabel: 'N&uacute;mero de cotizaci&oacute;n',
                 readOnly: true,
-                labelWidth: 250,
+                labelWidth: 250
             },
             {
                 xtype: 'panel',
