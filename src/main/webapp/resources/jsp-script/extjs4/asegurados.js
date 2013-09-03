@@ -68,7 +68,7 @@ function detallesCobertura()
                 &&jsonResp.ayudaCobertura.dsAyuda
                 &&jsonResp.ayudaCobertura.dsAyuda.length>0)
             {
-                windowAyuCoberturas.setHtml('<table width=430 ><tr><td align=left bgcolor="#98012e" style="color:white;font-size:11px;"><b>'+jsonResp.ayudaCobertura.dsGarant+'</b></td></tr><tr><td style="font-size:11px; ">'+jsonResp.ayudaCobertura.dsAyuda+'</td></tr></table>');
+                windowAyudaCobertura.html='<table width=430 ><tr><td align=left bgcolor="#98012e" style="color:white;font-size:11px;"><b>'+jsonResp.ayudaCobertura.dsGarant+'</b></td></tr><tr><td style="font-size:11px; ">'+jsonResp.ayudaCobertura.dsAyuda+'</td></tr></table>';
                 windowAyudaCobertura.show();
             }
             else
