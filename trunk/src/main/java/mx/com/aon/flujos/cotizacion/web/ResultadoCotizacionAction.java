@@ -1025,7 +1025,23 @@ public class ResultadoCotizacionAction extends PrincipalCotizacionAction {
                         if (registrosTransformados.get(g).getDynaClass().getDynaProperty(sPlanSinBlancos)
                                 != null) {
                             logger.debug("####llenado de valores a datos dinamicos---");
-                            registrosTransformados.get(g).set(sPlanSinBlancos, rDatos.getMnPrima().replace(",", ""));
+                            //jtezva sumador de cotizaciones
+                            if(registrosTransformados.get(g).get(sPlanSinBlancos)!=null
+                                    &&((String)registrosTransformados.get(g).get(sPlanSinBlancos)).length()>0)
+                            {
+                                //Ya existía un valor aquí
+                                Double prima=Double.parseDouble((String)registrosTransformados.get(g).get(sPlanSinBlancos));
+                                prima+=Double.parseDouble(rDatos.getMnPrima().replace(",", ""));
+                                registrosTransformados.get(g).set(sPlanSinBlancos, prima.toString());
+                                logger.debug("####valor de prima sumado: "+prima.toString());
+                            }
+                            else
+                            {
+                                registrosTransformados.get(g).set(sPlanSinBlancos, rDatos.getMnPrima().replace(",", ""));
+                                logger.debug("####primer valor de prima: "+rDatos.getMnPrima().replace(",", ""));
+                            }
+                            //!jtezva sumador de cotizaciones
+                            //registrosTransformados.get(g).set(sPlanSinBlancos, rDatos.getMnPrima().replace(",", ""));
                             registrosTransformados.get(g).set("CD" + sPlanSinBlancos, rDatos.getCdPlan());
                             registrosTransformados.get(g).set("DS" + sPlanSinBlancos, rDatos.getDsPlan());
                             registrosTransformados.get(g).set("NM" + sPlanSinBlancos, rDatos.getNumeroSituacion());
