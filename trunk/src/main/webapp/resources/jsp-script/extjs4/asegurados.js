@@ -6,7 +6,7 @@ var comboGeneros,storeGeneros;                                      //1
 var campoCodigoPostal;                                              //3
 var comboEstados,storeEstados;                                      //4
 //var comboCiudad,storeCiudades;                                      //4 X(
-//deducible                                                           5
+var comboDeducible,storeDeducible;                                  //5
 var comboCopago,storeCopagos;                                       //6
 var comboSumaAsegurada,storeSumasAseguradas;                        //7
 var comboCirculoHospitalario,storeCirculoHospitalario;              //8
@@ -35,6 +35,8 @@ var windowCoberturas;
 var coberturasFormPanel;
 var storeCoberturas;
 var gridCoberturas;
+var windowAyudaCobertura;
+var botonVerDetalleCobertura;
 
 //grid selection
 var selected_prima;
@@ -42,6 +44,55 @@ var selected_cd_plan;
 var selected_ds_plan;
 var selected_nm_plan;
 var selected_record;
+var selected_cobertura;
+
+function detallesCobertura()
+{
+    windowCoberturas.setLoading(true);
+    Ext.Ajax.request(
+    {
+        url: _URL_DETALLE_COBERTURA,
+        params:{
+            idCobertura:selected_cobertura.get('cdGarant'),
+            idCiaAseguradora:selected_record.get('cdCiaaseg'),//del grid de resultados
+            idRamo:selected_record.get('cdRamo')//del grid de resultados
+        },
+        success: function(response, opts)
+        {
+            //Ext.MessageBox.hide();
+            windowCoberturas.setLoading(false);
+            var jsonResp = Ext.decode(response.responseText);
+            if(jsonResp.ayudaCobertura
+                &&jsonResp.ayudaCobertura.dsGarant
+                &&jsonResp.ayudaCobertura.dsGarant.length>0
+                &&jsonResp.ayudaCobertura.dsAyuda
+                &&jsonResp.ayudaCobertura.dsAyuda.length>0)
+            {
+                windowAyuCoberturas.setHtml('<table width=430 ><tr><td align=left bgcolor="#98012e" style="color:white;font-size:11px;"><b>'+jsonResp.ayudaCobertura.dsGarant+'</b></td></tr><tr><td style="font-size:11px; ">'+jsonResp.ayudaCobertura.dsAyuda+'</td></tr></table>');
+                windowAyudaCobertura.show();
+            }
+            else
+            {
+                Ext.Msg.show({
+                    title: 'No hay informaci&oacute;n',
+                    msg: 'No hay informaci&oacute;n de la cobertura',
+                    buttons: Ext.Msg.OK,
+                    icon: Ext.Msg.ERROR
+                });
+            }
+        },
+        failure: function(response, opts)
+        {
+            windowCoberturas.setLoading(false);
+            Ext.Msg.show({
+                title: 'Error',
+                msg: 'Error de comunicaci&oacute;n',
+                buttons: Ext.Msg.OK,
+                icon: Ext.Msg.ERROR
+            });
+        }
+    });
+}
 
 function bloquearFormulario(isBloqueado)
 {
@@ -111,14 +162,14 @@ Ext.onReady(function(){
                 type: 'json',
                 root: 'lista'
             }
-        },
+        }/*,
         sorters:
         [
             {
                 property : 'value',
                 direction: 'ASC'
             }
-        ]
+        ]*/
     });
     
     /*4 ciudades X( 
@@ -143,6 +194,23 @@ Ext.onReady(function(){
             }
         ]
     });*/
+    
+    //5 deducible
+    storeDeducible = new Ext.data.Store({
+        model: 'Generic',
+        autoLoad:true,
+        proxy:
+        {
+            type: 'ajax',
+            url : _URL_OBTEN_CATALOGO_GENERICO,
+            extraParams:{cdatribu:CDATRIBU_DEDUCIBLE},
+            reader:
+            {
+                type: 'json',
+                root: 'lista'
+            }
+        }
+    });
     
     //6 copago
     storeCopagos = new Ext.data.Store({
@@ -192,14 +260,14 @@ Ext.onReady(function(){
                 type: 'json',
                 root: 'lista'
             }
-        },
+        }/*,
         sorters:
         [
             {
                 property : 'value',
                 direction: 'ASC'
             }
-        ]
+        ]*/
     });
     
     //9 cobertura vacunas
@@ -571,6 +639,22 @@ Ext.onReady(function(){
         emptyText:'Seleccione un estado...'
     });*/
     
+    //5 deducible
+    comboDeducible=Ext.create('Ext.form.ComboBox2',
+    {
+        id:'comboDeducible',
+        name:'deducible',
+        fieldLabel: 'Deducible',
+        store: storeDeducible,
+        queryMode:'local',
+        displayField: 'value',
+        valueField: 'key',
+        allowBlank:false,
+        editable:false,
+        emptyText:'Seleccione...',
+        labelWidth:250
+    });
+    
     //6 copago
     comboCopago=Ext.create('Ext.form.ComboBox2',
     {
@@ -766,8 +850,14 @@ Ext.onReady(function(){
                 }
             });
             gridCoberturas.setTitle('Plan '+selected_ds_plan);
+            botonVerDetalleCobertura.setDisabled(true);
             windowCoberturas.show();
         }
+    });
+    botonVerDetalleCobertura=Ext.create('Ext.Button', {
+        text: 'Ver detalle de coberturas',
+        disabled:true,
+        handler: detallesCobertura
     });
     botonComprar=Ext.create('Ext.Button', {
         text: 'Comprar',
@@ -788,6 +878,7 @@ Ext.onReady(function(){
         title:'Sin plan',
         store:storeCoberturas,
         height:300,
+        selType: 'cellmodel',
         bbar:new Ext.PagingToolbar({
             pageSize: 15,
             store: storeCoberturas,
@@ -797,6 +888,7 @@ Ext.onReady(function(){
             beforePageText: 'P&aacute;gina',
             afterPageText: 'de {0}'
         }),
+        buttons:[botonVerDetalleCobertura],
         columns:
         [
             {
@@ -813,8 +905,37 @@ Ext.onReady(function(){
                 dataIndex:'deducible',
                 text:'Deducible',
                 flex:1
+            }/*,
+            {
+                dataIndex:'cdGarant',
+                hidden:true
+            },
+            {
+                dataIndex:'cdCiaaseg',
+                hidden:true
+            },
+            {
+                dataIndex:'cdRamo',
+                hidden:true
+            }*/
+        ],
+        listeners:
+        {
+            itemclick: function(dv, record, item, index, e)
+            {
+                var y=this.getSelectionModel().getCurrentPosition().row;
+                var x=this.getSelectionModel().getCurrentPosition().column;
+                if(x==0)
+                {
+                    selected_cobertura=record;
+                    botonVerDetalleCobertura.setDisabled(false);
+                }
+                else
+                {
+                    botonVerDetalleCobertura.setDisabled(true);
+                }
             }
-        ]
+        }
     });
     
     coberturasFormPanel =  new Ext.form.FormPanel(
@@ -851,6 +972,55 @@ Ext.onReady(function(){
     /*///////////////////////////*/
     ////// window coberturas //////
     ///////////////////////////////
+    
+    /////////////////////////////////////
+    ////// window ayuda coberturas //////
+    /*/////////////////////////////////*/
+    windowAyudaCobertura = new Ext.Window({
+        title: 'Ayuda Coberturas',
+        width: 450,
+        height: 350,
+        bodyStyle: 'background:white',
+        overflow: 'auto',
+        modal:true,
+        autoScroll: true,
+        buttonAlign: 'center',
+        closable: false,
+        buttons: [/*{
+                text: 'Imprimir',
+                handler: function() {
+                    // *** Cambiamos los nombres de los id's para que al IMPRIMIR se muestre solo lo que queremos
+                    if (!Ext.isEmpty(document.getElementById("impresionAyudaInvisible"))) {
+                        document.getElementById("impresionAyudaInvisible").id = "impresionAyuda";
+                    }
+                    if (!Ext.isEmpty(document.getElementById("impresionResultadosCotizacion"))) {
+                        document.getElementById("impresionResultadosCotizacion").id = "impresionResultadosCotizacionInvisible";
+                    }
+
+                    document.getElementById("impresionAyuda").innerHTML = '<table width=430 ><tr><td align=left bgcolor="#98012e" style="color:white;font-size:12px;"><b>Ayuda Coberturas</b></td></tr><tr><td style="font-size:12px; ">' + ayudaVoL + '</td></tr></table>';
+
+                    var spans = document.getElementById("impresionAyuda").getElementsByTagName("span");
+                    for (var i = 0; i < spans.length; i++) {
+                        spans[i].style.fontSize = "";
+                        spans[i].style.lineHeight = "";
+                        spans[i].style.textAlign = "";
+                    }
+                    window.print();
+
+
+                    // *** Esconder elemento que ya se imprimió para que no se muestre en la pantalla de cotizacion
+                    esconderElemento("impresionAyuda");
+                }
+            }, */{
+                text: 'Cerrar',
+                handler: function() {
+                    windowAyudaCobertura.hide();
+                }
+            }]
+    });
+    /*/////////////////////////////////*/
+    ////// window ayuda coberturas //////
+    /////////////////////////////////////
     
     /////////////////////////////
     ////// grid resultados //////
@@ -1502,14 +1672,7 @@ Ext.onReady(function(){
             campoCodigoPostal,                              //3
             comboEstados,                                   //4
             //comboCiudad,                                    4 X(
-            {                                               //5
-                id: 'deducible',
-                name:'deducible',
-                xtype: 'numberfield',
-                fieldLabel: 'Deducible',
-                allowBlank: false,
-                labelWidth: 250,
-            },
+            comboDeducible,                                 //5
             comboCopago,                                    //6
             comboSumaAsegurada,                             //7
             //comboCirculoHospitalario,                       //8
