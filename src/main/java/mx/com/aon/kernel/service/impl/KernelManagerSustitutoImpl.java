@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import mx.com.aon.core.ApplicationException;
+import mx.com.aon.flujos.cotizacion.model.AyudaCoberturaCotizacionVO;
 import mx.com.aon.flujos.cotizacion.model.CoberturaCotizacionVO;
 import mx.com.aon.flujos.cotizacion.model.ResultadoCotizacionVO;
 import mx.com.aon.flujos.cotizacion.model.SituacionVO;
@@ -120,6 +121,18 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         lista=lista!=null?lista:new ArrayList<CoberturaCotizacionVO>(0);
         log.debug("### kernel sustituto obtenerCoberturas lista size: "+lista.size());
         return lista;
+    }
+    
+    public AyudaCoberturaCotizacionVO obtenerAyudaCobertura(String idCobertura,String idRamo,String idCiaAsegurador) throws ApplicationException
+    {
+        Map<String,Object>parameters=new HashMap<String,Object>(0);
+        parameters.put("pv_ciaaseg_i",idCobertura);
+        parameters.put("pv_cdramo_i",idRamo);
+        parameters.put("pv_ciaaseg_i",idCiaAsegurador);
+        log.debug("### kernel sustituto obtenerAyudaCobertura map: "+parameters);
+        AyudaCoberturaCotizacionVO res=(AyudaCoberturaCotizacionVO) this.getBackBoneInvoke(parameters, ProcesoDAO.OBTENER_AYUDA_COBERTURA);
+        log.debug("### kernel sustituto obtenerAyudaCobertura return: "+res);
+        return res;
     }
     
 }
