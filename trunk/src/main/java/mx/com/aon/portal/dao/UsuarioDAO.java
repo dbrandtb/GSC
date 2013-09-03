@@ -1,25 +1,20 @@
 package mx.com.aon.portal.dao;
 
-import org.apache.log4j.Logger;
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.core.SqlOutParameter;
-import org.springframework.jdbc.core.RowMapper;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
-import oracle.jdbc.driver.OracleTypes;
-import mx.com.aon.portal.util.WrapperResultados;
-import mx.com.aon.portal.model.EstructuraVO;
-import mx.com.aon.portal.model.RamaVO;
-import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.model.UsuarioRolEmpresaVO;
+import mx.com.aon.portal.util.WrapperResultados;
+import oracle.jdbc.driver.OracleTypes;
 
-import java.util.Map;
-import java.util.List;
-import java.util.ArrayList;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.math.BigDecimal;
+import org.apache.log4j.Logger;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.SqlOutParameter;
+import org.springframework.jdbc.core.SqlParameter;
 
 public class UsuarioDAO extends AbstractDAO {
 
@@ -30,6 +25,7 @@ public class UsuarioDAO extends AbstractDAO {
         addStoredProcedure("CARGA_ROLES_CLIENTES",new CargaRolesClientes(getDataSource()));
         addStoredProcedure("CARGA_ROLES_CLIENTES_USER",new CargaRolesClientes(getDataSource()));
         addStoredProcedure("AUTHORIZED_EXPORT",new AuthorizedUserExport(getDataSource()));
+        addStoredProcedure("OBTIENE_VARIABLES_ISO",new ObtieneVariablesIso(getDataSource()));
     }
 
 
@@ -96,7 +92,27 @@ public class UsuarioDAO extends AbstractDAO {
         }
     }
 
+    protected class ObtieneVariablesIso extends CustomStoredProcedure {
 
+        protected ObtieneVariablesIso(DataSource dataSource) {
+            super(dataSource, "PKG_VAR_GLOBAL.P_VARIABLES_OBTIENE_ISO");
+            declareParameter(new SqlParameter("P_USUARIO", OracleTypes.VARCHAR));
+            
+            declareParameter(new SqlOutParameter("P_PAIS", OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("P_LANGUAGUE_ISO", OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("LANGCODE", OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("REGIONID", OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("P_DSFORMATONUMERICO", OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("P_DSFORMATOFECHA", OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("P_DSFORMATOFECHAC", OracleTypes.VARCHAR));
+            compile();
+          }
+
+        public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+            return (WrapperResultados) mapper.build(map);
+        }
+      }
 
 
 }
