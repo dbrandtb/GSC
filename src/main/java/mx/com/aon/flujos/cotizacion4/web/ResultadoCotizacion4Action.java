@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import mx.com.aon.configurador.pantallas.model.components.GridVO;
 import mx.com.aon.core.web.PrincipalCoreAction;
+import mx.com.aon.flujos.cotizacion.model.AyudaCoberturaCotizacionVO;
 import mx.com.aon.flujos.cotizacion.model.CoberturaCotizacionVO;
 import mx.com.aon.flujos.cotizacion.model.ResultadoCotizacionVO;
 import mx.com.aon.flujos.cotizacion.service.impl.CotizacionManagerImpl;
@@ -38,7 +39,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     //                         fecha nacimiento                       2
     //                         codigoPostal                           3
     public static final String cdatribuEstado                       ="4";
-    //                         deducible                              5
+    public static final String cdatribuDeducible                    ="5";
     public static final String cdatribuCopago                       ="6";
     public static final String cdatribuSumaAsegurada                ="7";
     public static final String cdatribuCirculoHospitalario          ="8";
@@ -90,6 +91,12 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     //utilitarios
     SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
     Calendar calendarHoy=Calendar.getInstance();
+    
+    //para obtener la ayuda de cobertura
+    private String idCobertura;
+    private String idRamo;
+    private String idCiaAseguradora;
+    private AyudaCoberturaCotizacionVO ayudaCobertura;
     
     public String entrar()
     {
@@ -458,6 +465,22 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
         }
         return SUCCESS;
     }
+    
+    public String obtenerAyudaCoberturas()
+    {
+        try
+        {
+            log.debug("### obtener ayuda de cobertura para cobertura: "+idCobertura+","+idRamo+","+idCiaAseguradora);
+            ayudaCobertura=kernelManagerSustituto.obtenerAyudaCobertura(idCobertura,idRamo,idCiaAseguradora);
+            success=true;
+        }
+        catch(Exception ex)
+        {
+            log.error("error al obtener la ayuda de coberturas",ex);
+            success=false;
+        }
+        return SUCCESS;
+    }
 
     public void setKernelManagerSustituto(KernelManagerSustituto kernelManagerSustituto) {
         this.kernelManagerSustituto = kernelManagerSustituto;
@@ -714,6 +737,43 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 
     public void setFechaFinVigencia(String fechaFinVigencia) {
         this.fechaFinVigencia = fechaFinVigencia;
+    }
+
+    public String getIdCobertura() {
+        return idCobertura;
+    }
+
+    public void setIdCobertura(String idCobertura) {
+        this.idCobertura = idCobertura;
+    }
+
+    public AyudaCoberturaCotizacionVO getAyudaCobertura() {
+        return ayudaCobertura;
+    }
+
+    public void setAyudaCobertura(AyudaCoberturaCotizacionVO ayudaCobertura) {
+        this.ayudaCobertura = ayudaCobertura;
+    }
+    
+    public String getCdatribuDeducible()
+    {
+        return cdatribuDeducible;
+    }
+
+    public String getIdRamo() {
+        return idRamo;
+    }
+
+    public void setIdRamo(String idRamo) {
+        this.idRamo = idRamo;
+    }
+
+    public String getIdCiaAseguradora() {
+        return idCiaAseguradora;
+    }
+
+    public void setIdCiaAseguradora(String idCiaAseguradora) {
+        this.idCiaAseguradora = idCiaAseguradora;
     }
     
 }
