@@ -1107,15 +1107,15 @@ Ext.onReady(function(){
                     var pos='';
                     if(x==1)
                     {
-                        pos='Alto';
+                        pos='Bajo';
                     }
                     else if(x==2)
                     {
-                        pos='Bajo';
+                        pos='Medio';
                     }
                     else
                     {
-                        pos='Medio';
+                        pos='Alto';
                     }
                     selected_prima=record.get(pos);
                     selected_cd_plan=record.get('CD'+pos);
@@ -1212,39 +1212,6 @@ Ext.onReady(function(){
                 hidden:true
             },
             /*generadas*/
-            {   
-                dataIndex: "Alto",
-                header: "Alto",
-                hidden: false,
-                id: "Alto",
-                sortable: false,
-                flex:1,
-                renderer:Ext.util.Format.usMoney
-            },
-            {
-                dataIndex: "CDAlto",
-                header: "CDAlto",
-                hidden: true,
-                id: "CDAlto",
-                sortable: false,
-                width: 100
-            },
-            {
-                dataIndex: "DSAlto",
-                header: "DSAlto",
-                hidden: true,
-                id: "DSAlto",
-                sortable: false,
-                width: 100
-            },
-            {
-                dataIndex: "NMAlto",
-                header: "NMAlto",
-                hidden: true,
-                id: "NMAlto",
-                sortable: false,
-                width: 100
-            },
             {
                 dataIndex: "Bajo",
                 header: "Bajo",
@@ -1308,6 +1275,39 @@ Ext.onReady(function(){
                 header: "NMMedio",
                 hidden: true,
                 id: "NMMedio",
+                sortable: false,
+                width: 100
+            },
+            {
+                dataIndex: "Alto",
+                header: "Alto",
+                hidden: false,
+                id: "Alto",
+                sortable: false,
+                flex:1,
+                renderer:Ext.util.Format.usMoney
+            },
+            {
+                dataIndex: "CDAlto",
+                header: "CDAlto",
+                hidden: true,
+                id: "CDAlto",
+                sortable: false,
+                width: 100
+            },
+            {
+                dataIndex: "DSAlto",
+                header: "DSAlto",
+                hidden: true,
+                id: "DSAlto",
+                sortable: false,
+                width: 100
+            },
+            {
+                dataIndex: "NMAlto",
+                header: "NMAlto",
+                hidden: true,
+                id: "NMAlto",
                 sortable: false,
                 width: 100
             }
