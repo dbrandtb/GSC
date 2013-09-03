@@ -135,8 +135,16 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             ///////////////////////////////////////////
             ////// ini Crear un numero de poliza //////
             ///////////////////////////////////////////
-            WrapperResultados wrapperNumeroPoliza=kernelManagerSustituto.calculaNumeroPoliza("1", "2", "W");
-            String numeroPoliza=(String) wrapperNumeroPoliza.getItemMap().get("NUMERO_POLIZA");
+            String numeroPoliza;
+            if(id!=null&&id.length()>0)
+            {
+                numeroPoliza=id;
+            }
+            else
+            {
+                WrapperResultados wrapperNumeroPoliza=kernelManagerSustituto.calculaNumeroPoliza("1", "2", "W");
+                numeroPoliza=(String) wrapperNumeroPoliza.getItemMap().get("NUMERO_POLIZA");
+            }
             ///////////////////////////////////////////
             ////// fin Crear un numero de poliza //////
             ///////////////////////////////////////////
