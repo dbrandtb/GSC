@@ -1644,6 +1644,7 @@ Ext.onReady(function(){
                         editable: true,
                         allowBlank:false,
                         labelWidth:180,
+                        value:new Date(),
                         listeners:{
                             change:function(field,value)
                             {
@@ -1663,7 +1664,8 @@ Ext.onReady(function(){
                         readOnly: true,
                         allowBlank:false,
                         labelWidth:180,
-                        style:'margin-left:5px;'
+                        style:'margin-left:5px;',
+                        value:Ext.Date.add(new Date(), Ext.Date.YEAR, 1)
                     }
                 ]
             },
