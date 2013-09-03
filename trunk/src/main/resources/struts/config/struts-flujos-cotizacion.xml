@@ -160,6 +160,10 @@
         <action name="obtenerCoberturas4" class="cotizacionVital" method="obtenerCoberturas">
             <result name="success" type="json" />
         </action>
+        <action name="obtenerAyudaCoberturas4" class="cotizacionVital" method="obtenerAyudaCoberturas">
+            <result name="success" type="json" />
+        </action>
+        <!-- jtezva agregado -->
         
         <action name="obtenerAyudaCobertura" class="resultadoCotizacion" method="obtieneAyudaCobertura" >
               <!--  <result name="input">/jsp/flujos/cotizacion/ayudaCobertura.jsp</result>  -->
