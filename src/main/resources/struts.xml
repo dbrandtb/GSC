@@ -4,6 +4,8 @@
 
 <struts>
 
+    <constant name="struts.devMode" value="true"/>
+
 	<!-- Includes para el wizard -->
 
 	<include file="struts/config/struts-definicion.xml"/>
@@ -132,7 +134,7 @@
 	<!-- Archivos de CIMA -->
     <include file="struts-cima.xml"/>
     <include file="struts-catbo.xml"/>
-    <package name="default" extends="json-default">
+    <package name="default" namespace="/" extends="json-default">
         <interceptors>
             <interceptor-stack name="defaultStack">
                 <interceptor-ref name="exception" />
