@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
+import mx.com.aon.flujos.cotizacion.model.AyudaCoberturaCotizacionVO;
 import mx.com.aon.flujos.cotizacion.model.CoberturaCotizacionVO;
 import mx.com.aon.flujos.cotizacion.model.DatosEntradaCotizaVO;
 import mx.com.aon.flujos.cotizacion.model.ResultadoCotizacionVO;
@@ -63,6 +64,7 @@ public class ProcesoDAO extends AbstractDAO {
         public static final String P_CLONAR_PERSONAS="P_CLONAR_PERSONAS";
         public static final String OBTENER_RESULTADOS_COTIZACION="OBTENER_RESULTADOS_COTIZACION";
         public static final String OBTENER_COBERTURAS="OBTENER_COBERTURAS";
+        public static final String OBTENER_AYUDA_COBERTURA="OBTENER_AYUDA_COBERTURA";
 
 	protected void initDao() throws Exception {
 		addStoredProcedure(PERMISO_EJECUCION_PROCESO,
@@ -94,6 +96,7 @@ public class ProcesoDAO extends AbstractDAO {
                 addStoredProcedure(P_CLONAR_PERSONAS, new ClonaPersonas(getDataSource()));
 		addStoredProcedure(OBTENER_RESULTADOS_COTIZACION, new ObtieneResultadosCotiza(getDataSource()));
                 addStoredProcedure(OBTENER_COBERTURAS, new ObtieneCoberturas(getDataSource()));
+                addStoredProcedure(OBTENER_AYUDA_COBERTURA, new ObtieneAyudaCoberturas(getDataSource()));
 	}
 
 	protected class BuscarMatrizAsignacion extends CustomStoredProcedure {
@@ -1058,5 +1061,44 @@ public class ProcesoDAO extends AbstractDAO {
     /*////////////////////////////////////////*/
     ////// Override de obtener coberturas //////
     ////////////////////////////////////////////
+    
+    //////////////////////////////////////
+    ////// Obtener ayuda coberturas //////
+    /*//////////////////////////////////*/
+    protected class ObtieneAyudaCoberturas extends CustomStoredProcedure
+    {
+    	protected ObtieneAyudaCoberturas(DataSource dataSource)
+        {
+            super(dataSource,"PKG_COTIZA.P_AYUDA_COBERTURAS");
+            declareParameter(new SqlParameter("pv_ciaaseg_i",   OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("pv_cdramo_i",    OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_ciaaseg_i",   OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("po_registro", OracleTypes.CURSOR, new ObtieneAyudaCoberturasMapper()));
+            declareParameter(new SqlOutParameter("po_msg_id",   OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("p_out_title", OracleTypes.VARCHAR));
+            compile();
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+            WrapperResultados wrapperResultados = mapper.build(map);
+            List result = (List) map.get("po_registro");
+            wrapperResultados.setItemList(result);
+            return wrapperResultados;
+    	}
+    }
+    
+    protected class ObtieneAyudaCoberturasMapper implements RowMapper {
+        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+            AyudaCoberturaCotizacionVO ayuda=new AyudaCoberturaCotizacionVO();
+            ayuda.setCdGarant(rs.getString("cdgarant"));
+            ayuda.setDsAyuda(rs.getString("dsayuda"));
+            ayuda.setDsGarant("dsgarant");
+            return ayuda;
+        }
+    }
+    /*//////////////////////////////////*/
+    ////// Obtener ayuda coberturas //////
+    //////////////////////////////////////
     
 }
