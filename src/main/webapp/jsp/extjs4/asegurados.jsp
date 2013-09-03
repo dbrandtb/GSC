@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <script src="${ctx}/resources/extjs4/jquery-1.10.2.min.js" ></script>
         <script type="text/javascript">
             //URL padre de los catalogos
             var _URL_OBTEN_CATALOGO_GENERICO=           '<s:url action="jsonObtenCatalogoGenerico" namespace="/" />';
