@@ -16,7 +16,7 @@
             //fecha nacimiento                                                                                        2
             var CDATRIBU_ESTADO=                        '<s:property value="cdatribuEstado" />';                    //3
             var CDATRIBU_CIUDAD=                        '<s:property value="cdatribuCiudad" />';                    //4
-            //deducible                                                                                               5
+            var CDATRIBU_DEDUCIBLE=                     '<s:property value="cdatribuDeducible" />';                 //5
             var CDATRIBU_COPAGO=                        '<s:property value="cdatribuCopago" />';                    //6
             var CDATRIBU_SUMA_ASEGURADA=                '<s:property value="cdatribuSumaAsegurada" />';             //7
             var CDATRIBU_CIRCULO_HOSPITALARIO=          '<s:property value="cdatribuCirculoHospitalario" />';       //8
@@ -38,6 +38,7 @@
             var _URL_RESULTADO_COTIZACION=              '<s:url namespace="/flujocotizacion" action="resultCotizacion" />';
             var _URL_RESULTADOS=                        '<s:url namespace="/flujocotizacion" action="obtenCotizacion4" />';
             var _URL_COBERTURAS=                        '<s:url namespace="/flujocotizacion" action="obtenerCoberturas4" />';
+            var _URL_DETALLE_COBERTURA=                 '<s:url namespace="/flujocotizacion" action="obtenerAyudaCoberturas4" />';
         </script>
         <script src="${ctx}/resources/jsp-script/extjs4/asegurados.js"></script>
     </head>
