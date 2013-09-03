@@ -1070,9 +1070,9 @@ public class ProcesoDAO extends AbstractDAO {
     	protected ObtieneAyudaCoberturas(DataSource dataSource)
         {
             super(dataSource,"PKG_COTIZA.P_AYUDA_COBERTURAS");
-            declareParameter(new SqlParameter("pv_garant_i",    OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_cdramo_i",    OracleTypes.NUMERIC));
             declareParameter(new SqlParameter("pv_ciaaseg_i",   OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("pv_cdramo_i",    OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("pv_garant_i",    OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("po_registro", OracleTypes.CURSOR, new ObtieneAyudaCoberturasMapper()));
             declareParameter(new SqlOutParameter("po_msg_id",   OracleTypes.NUMERIC));
             declareParameter(new SqlOutParameter("p_out_title", OracleTypes.VARCHAR));
