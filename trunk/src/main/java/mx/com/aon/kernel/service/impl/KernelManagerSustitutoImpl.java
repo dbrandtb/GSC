@@ -126,7 +126,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
     public AyudaCoberturaCotizacionVO obtenerAyudaCobertura(String idCobertura,String idRamo,String idCiaAsegurador) throws ApplicationException
     {
         Map<String,Object>parameters=new HashMap<String,Object>(0);
-        parameters.put("pv_ciaaseg_i",idCobertura);
+        parameters.put("pv_garant_i",idCobertura);
         parameters.put("pv_cdramo_i",idRamo);
         parameters.put("pv_ciaaseg_i",idCiaAsegurador);
         log.debug("### kernel sustituto obtenerAyudaCobertura map: "+parameters);
