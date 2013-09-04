@@ -5,11 +5,32 @@
     xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 
 
-    <display-name>icebroker</display-name>
+    <display-name>gseguros</display-name>
+    
+    <!--servlet>
+		<servlet-name>jsp</servlet-name>
+		<servlet-class>oracle.jsp.runtimev2.JspServlet</servlet-class>
+		<init-param>
+			<param-name>debug_mode</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>developer_mode</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>encode_to_java</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>emit_debuginfo</param-name>
+			<param-value>true</param-value>
+		</init-param>
+    </servlet-->
 
     <context-param>
         <param-name>webAppRootKey</param-name>
-        <param-value>icebroker.root</param-value>
+        <param-value>gseguros.root</param-value>
     </context-param>
 
     <context-param>
@@ -65,8 +86,7 @@
     </filter>
 
 
-
-    <!-- CUIDADOO CON EL ORDEN DE LOS FILTROS -->
+    <!-- CUIDADO CON EL ORDEN DE LOS FILTROS -->
     <filter-mapping>
         <filter-name>redirect-login-filter</filter-name>
         <url-pattern>*.action</url-pattern>
@@ -101,16 +121,16 @@
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
-    <!-- Listener default para Spring -->
+
 
     <!-- Listeners Biosnet -->
-    <listener>
+    <!-- listener>
         <listener-class>mx.com.aon.kernel.listener.ApplicationInitializer</listener-class>
-    </listener>
+    </listener -->
 
-    <listener>
+    <!-- listener>
         <listener-class>mx.com.aon.kernel.listener.ListenerSession</listener-class>
-    </listener>
+    </listener -->
 
     <!-- Welcome file lists -->
     <welcome-file-list>
@@ -118,7 +138,7 @@
         <welcome-file>default.jsp</welcome-file>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
-    <error-page>
+    <!--error-page>
         <error-code>404</error-code>
         <location>/404.jsp</location>
     </error-page>
@@ -126,12 +146,11 @@
     <error-page>
         <error-code>500</error-code>
         <location>/error.jsp</location>
-    </error-page>
+    </error-page-->
 
     <!-- How long the sessions will stick around for -->
     <session-config>
         <session-timeout>180</session-timeout> <!--180 seconds = 3 mins -->
     </session-config>
-
 
 </web-app>
