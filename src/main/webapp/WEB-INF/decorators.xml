@@ -87,14 +87,18 @@
     	<pattern>*/flujoendoso/detallePoliza.action</pattern>
     	
     	<excludes>
-        <pattern>/cotizacionVital.action</pattern>
-        <pattern>/jsp/extjs4/asegurados.jsp</pattern>
+            <pattern>/cotizacionVital.action</pattern>
+            <pattern>/jsp/extjs4/asegurados.jsp</pattern>
+            <pattern>/dinosaurio.action</pattern>
+            <pattern>/jsp/extjs4/testFileUpload.jsp</pattern>
         </excludes>    	
     	  	
     </decorator>   	
     <decorator name="default4" page="default4.jsp">
         <pattern>/cotizacionVital.action</pattern>
         <pattern>/jsp/extjs4/asegurados.jsp</pattern>
+        <pattern>/dinosaurio.action</pattern>
+        <pattern>/jsp/extjs4/testFileUpload.jsp</pattern>
     </decorator>
     
     <!--decorator name="default" page="default.jsp">
