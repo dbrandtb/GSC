@@ -87,4 +87,7 @@
      	<property name="cotizacionManagerJdbcTemplate" ref="cotizacionManagerJdbcTemplate"></property>
     </bean>
     
+    <bean id="beanSubirArchivo" class="mx.com.gseguros.portal.general.util.SubirArchivoAction" scope="prototype">
+    </bean>
+    
 </beans>
