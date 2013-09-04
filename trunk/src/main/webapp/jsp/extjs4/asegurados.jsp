@@ -43,7 +43,7 @@
         <script src="${ctx}/resources/jsp-script/extjs4/asegurados.js"></script>
     </head>
     <body>
-        <div style="height:1250px;">
+        <div style="height:900px;">
             <div id="maindiv"></div>
             <div id="divResultados" style="margin-top:10px;"></div>
         </div>
