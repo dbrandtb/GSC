@@ -3,7 +3,11 @@
 <!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
 
 <struts>
-
+    <!-- jtezva agregado para monitorear el progreso de subir archivo -->
+    <bean type="org.apache.struts2.dispatcher.multipart.MultiPartRequest" name="monitored" class="mx.com.gseguros.portal.general.util.CustomMonitoredMultiPartRequest" scope="default" />
+    <constant name="struts.multipart.handler" value="monitored" />
+    <!-- jtezva agregado para monitorear el progreso de subir archivo -->
+    
     <constant name="struts.devMode" value="true"/>
 
 	<!-- Includes para el wizard -->
@@ -319,7 +323,7 @@
 			<result name="success" type="json"/>				
 		</action>
                 <action name="dinosaurio" class="mx.com.aon.portal.web.DinosaurioAction" method="jsoo">
-                    <result name="success">/jsp/portal/dinosaurio.jsp</result>
+                    <result name="success">/jsp/portal/testFileUpload.jsp</result>
                 </action>
                 <action name="dinosaurio2" class="mx.com.aon.portal.web.DinosaurioAction" method="jsoo">
                     <interceptor-ref name="json">
@@ -334,6 +338,11 @@
                     <result name="input">/error.jsp</result>
                 </action>
                 <action name="jsonObtenCatalogoGenerico" class="JsonGenericList" method="obtenCatalogo"><result name="success" type="json" /></action>
+                <!-- jtezva subir archivo -->
+                <action name="subirArchivo" class="beanSubirArchivo" method="subirArchivo">
+                    <result name="success" type="json" />
+                </action>
+                <!-- jtezva subir archivo -->
     </package>
 
 </struts>
