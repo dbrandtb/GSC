@@ -1629,9 +1629,27 @@ Ext.onReady(function(){
                 readOnly: true,
                 labelWidth: 250
             },
+            //sexo (inciso)                                   1
+            //fecha nacimiento (inciso)                       2
+            campoCodigoPostal,                              //3
+            comboEstados,                                   //4
+            //comboCiudad,                                    4 X(
+            comboDeducible,                                 //5
+            comboCopago,                                    //6
+            comboSumaAsegurada,                             //7
+            //comboCirculoHospitalario,                       //8
+            comboCoberturaVacunas,                          //9
+            comboCoberturaPrevencionEnfermedadesAdultos,    //10
+            comboMaternidad,                                //11
+            comboSumaAseguradaMaternidad,                   //12
+            comboBaseTabuladorReembolso,                    //13
+            comboCostoEmergenciaExtranjero,                 //14
+            comboCobElimPenCambioZona,                      //15
+            //rol (inciso)                                    16
             {
                 xtype: 'panel',
                 layout: 'hbox',
+                width:750,
                 bodyPadding:5,
                 style:'margin-bottom:5px;',
                 items: [
@@ -1669,23 +1687,6 @@ Ext.onReady(function(){
                     }
                 ]
             },
-            //sexo (inciso)                                   1
-            //fecha nacimiento (inciso)                       2
-            campoCodigoPostal,                              //3
-            comboEstados,                                   //4
-            //comboCiudad,                                    4 X(
-            comboDeducible,                                 //5
-            comboCopago,                                    //6
-            comboSumaAsegurada,                             //7
-            //comboCirculoHospitalario,                       //8
-            comboCoberturaVacunas,                          //9
-            comboCoberturaPrevencionEnfermedadesAdultos,    //10
-            comboMaternidad,                                //11
-            comboSumaAseguradaMaternidad,                   //12
-            comboBaseTabuladorReembolso,                    //13
-            comboCostoEmergenciaExtranjero,                 //14
-            comboCobElimPenCambioZona,                      //15
-            //rol (inciso)                                    16
             gridIncisos
         ],
         buttons: [{
