@@ -7,39 +7,39 @@
 
     <jee:jndi-lookup id="dataSource" jndi-name="jdbc/Aon"/>
 
-	<!-- Transaction manager for Spring JDBC -->
-	<bean id="transactionManager"
-		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="dataSource" />
-	</bean>
+    <!-- Transaction manager for Spring JDBC -->
+    <bean id="transactionManager"
+        class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
 
-	<bean id="jdbcDao"
-		class="com.wittyconsulting.backbone.service.support.jdbc.dao.XMLJdbcDao">
-		<property name="dataSource" ref="dataSource" />
-	</bean>
+    <bean id="jdbcDao"
+        class="com.wittyconsulting.backbone.service.support.jdbc.dao.XMLJdbcDao">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
 
-	<bean id="jdbcService"
-		class="com.wittyconsulting.backbone.service.support.jdbc.JdbcService">
-		<property name="xmlDao" ref="jdbcDao" />
-	</bean>
+    <bean id="jdbcService"
+        class="com.wittyconsulting.backbone.service.support.jdbc.JdbcService">
+        <property name="xmlDao" ref="jdbcDao" />
+    </bean>
 
 <!-- Agregado para setear el contexto de VPD -->
-	<bean class=
-	    "org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
-	    <property name="beanNames">
-	        <list>
-	            <value>dataSource</value>
-	        </list>
-	    </property>
-	    <property name="interceptorNames">
-	        <list>
-	            <value>dataAccessInterceptor</value>
-	        </list>
-	    </property>
-	    <property name="proxyTargetClass" value="false"/>
-	</bean>
+    <bean class=
+        "org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+        <property name="beanNames">
+            <list>
+                <value>dataSource</value>
+            </list>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <value>dataAccessInterceptor</value>
+            </list>
+        </property>
+        <property name="proxyTargetClass" value="false"/>
+    </bean>
 
-	<bean id="dataAccessInterceptor" class="mx.com.aon.portal.util.ConnectionCallInterceptor"/>
+    <bean id="dataAccessInterceptor" class="mx.com.aon.portal.util.ConnectionCallInterceptor"/>
 
 <!-- Fin Agregado para setear el contexto de VPD -->
 
