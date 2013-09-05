@@ -1,13 +1,14 @@
 package mx.com.aon.portal.util;
 
+import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import mx.com.aon.portal.model.UserVO;
 
 import org.apache.commons.beanutils.Converter;
 import org.apache.log4j.Logger;
-
-import java.text.SimpleDateFormat;
-import java.text.ParseException;
-import java.util.Date;
 
 /**
  * Created by IntelliJ IDEA.
@@ -16,13 +17,15 @@ import java.util.Date;
  * Time: 10:50:04 PM
  * To change this template use File | Settings | File Templates.
  */
-public class UserSQLDateConverter implements Converter {
+public class UserSQLDateConverter implements Converter, Serializable {
 
-     public static  String MASCARA_DATE_ddMMYYYY="dd-MM-yyyy";
-     public static  String MASCARA_DATE_ddMMYYYY_B="dd/MM/yyyy";
-     public static  String MASCARA_DATE_YYYYMMdd="yyyy-MM-dd";
-     public static  String MASCARA_TIMESTAMP="dd-MM-yyyy HH:mm:ss";
-     public static  String MASCARA_TIMESTAMP_B="dd/MM/yyyy HH:mm:ss";
+	private static final long serialVersionUID = 1880382166958715192L;
+	
+	public static  String MASCARA_DATE_ddMMYYYY="dd-MM-yyyy";
+    public static  String MASCARA_DATE_ddMMYYYY_B="dd/MM/yyyy";
+    public static  String MASCARA_DATE_YYYYMMdd="yyyy-MM-dd";
+    public static  String MASCARA_TIMESTAMP="dd-MM-yyyy HH:mm:ss";
+    public static  String MASCARA_TIMESTAMP_B="dd/MM/yyyy HH:mm:ss";
 
 
   /**
