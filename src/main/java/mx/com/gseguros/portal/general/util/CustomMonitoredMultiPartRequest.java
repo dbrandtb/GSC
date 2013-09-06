@@ -1,5 +1,5 @@
 /*
- * $Id: JakartaMultiPartRequest.java 1062361 2011-01-23 10:17:42Z mcucchiara $
+ * $Id: JakartaMultiPartRequest.java 1384107 2012-09-12 20:14:23Z lukaszlenart $
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -21,16 +21,20 @@
 
 package mx.com.gseguros.portal.general.util;
 
+import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.inject.Inject;
+import com.opensymphony.xwork2.util.LocalizedTextUtil;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.RequestContext;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.struts2.StrutsConstants;
+
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
@@ -41,48 +45,84 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
 
 /**
  * Multipart form data request adapter for Jakarta Commons Fileupload package.
  */
-public class CustomMonitoredMultiPartRequest implements MultiPartRequest {
+public class CustomMonitoresMultiPartRequest implements MultiPartRequest {
     
-    static final Logger LOG = LoggerFactory.getLogger(MultiPartRequest.class);
-    private org.apache.log4j.Logger log=org.apache.log4j.Logger.getLogger(CustomMonitoredMultiPartRequest.class);
-    
+    private org.apache.log4j.Logger log=org.apache.log4j.Logger.getLogger(CustomMonitoresMultiPartRequest.class);
+    static final Logger LOG = LoggerFactory.getLogger(CustomMonitoresMultiPartRequest.class);
+
     // maps parameter name -> List of FileItem objects
-    protected Map<String,List<FileItem>> files = new HashMap<String,List<FileItem>>();
+    protected Map<String, List<FileItem>> files = new HashMap<String, List<FileItem>>();
 
     // maps parameter name -> List of param values
-    protected Map<String,List<String>> params = new HashMap<String,List<String>>();
+    protected Map<String, List<String>> params = new HashMap<String, List<String>>();
 
     // any errors while processing this request
     protected List<String> errors = new ArrayList<String>();
-    
+
     protected long maxSize;
+    private Locale defaultLocale = Locale.ENGLISH;
 
     @Inject(StrutsConstants.STRUTS_MULTIPART_MAXSIZE)
     public void setMaxSize(String maxSize) {
         this.maxSize = Long.parseLong(maxSize);
     }
 
+    @Inject
+    public void setLocaleProvider(LocaleProvider provider) {
+        defaultLocale = provider.getLocale();
+    }
+
     /**
      * Creates a new request wrapper to handle multi-part data using methods adapted from Jason Pell's
      * multipart classes (see class description).
      *
-     * @param saveDir        the directory to save off the file
+     * @param saveDir the directory to save off the file
      * @param request the request containing the multipart
-     * @throws java.io.IOException  is thrown if encoding fails.
+     * @throws java.io.IOException is thrown if encoding fails.
      */
     public void parse(HttpServletRequest request, String saveDir) throws IOException {
         try {
+            setLocale(request);
             processUpload(request, saveDir);
-        } catch (FileUploadException e) {
-            LOG.warn("Unable to parse request", e);
-            errors.add(e.getMessage());
+        } catch (FileUploadBase.SizeLimitExceededException e) {
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("Request exceeded size limit!", e);
+            }
+            String errorMessage = buildErrorMessage(e, new Object[]{e.getPermittedSize(), e.getActualSize()});
+            if (!errors.contains(errorMessage)) {
+                errors.add(errorMessage);
+            }
+        } catch (Exception e) {
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("Unable to parse request", e);
+            }
+            String errorMessage = buildErrorMessage(e, new Object[]{});
+            if (!errors.contains(errorMessage)) {
+                errors.add(errorMessage);
+            }
         }
+    }
+
+    protected void setLocale(HttpServletRequest request) {
+        if (defaultLocale == null) {
+            defaultLocale = request.getLocale();
+        }
+    }
+
+    protected String buildErrorMessage(Throwable e, Object[] args) {
+        String errorKey = "struts.messages.upload.error." + e.getClass().getSimpleName();
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Preparing error message for key: [#0]", errorKey);
+        }
+        return LocalizedTextUtil.findText(this.getClass(), errorKey, defaultLocale, e.getMessage(), args);
     }
 
     private void processUpload(HttpServletRequest request, String saveDir) throws FileUploadException, UnsupportedEncodingException {
@@ -99,7 +139,9 @@ public class CustomMonitoredMultiPartRequest implements MultiPartRequest {
     }
 
     private void processFileField(FileItem item) {
-        LOG.debug("Item is a file upload");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Item is a file upload");
+        }
 
         // Skip file uploads that don't have a file name - meaning that no file was selected.
         if (item.getName() == null || item.getName().trim().length() < 1) {
@@ -119,7 +161,9 @@ public class CustomMonitoredMultiPartRequest implements MultiPartRequest {
     }
 
     private void processNormalFormField(FileItem item, String charset) throws UnsupportedEncodingException {
-        LOG.debug("Item is a normal form field");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Item is a normal form field");
+        }
         List<String> values;
         if (params.get(item.getFieldName()) != null) {
             values = params.get(item.getFieldName());
@@ -137,22 +181,22 @@ public class CustomMonitoredMultiPartRequest implements MultiPartRequest {
             values.add(item.getString());
         }
         params.put(item.getFieldName(), values);
+        item.delete();
     }
 
     private List<FileItem> parseRequest(HttpServletRequest servletRequest, String saveDir) throws FileUploadException {
         DiskFileItemFactory fac = createDiskFileItemFactory(saveDir);
         ServletFileUpload upload = new ServletFileUpload(fac);
         upload.setSizeMax(maxSize);
-        
         //jtezva agregado para monitorear el progreso al subir archivo
-        String upload_key="SK_UPLOAD_KEY_"+servletRequest.getParameter("uploadKey");
-        servletRequest.getSession(true).setAttribute(upload_key, new CustomProgressListener());
-        CustomProgressListener pl=(CustomProgressListener) servletRequest.getSession(true).getAttribute(upload_key);
+        String uploadKey=(String)servletRequest.getSession(true).getAttribute("SK_LLAVE_ULTIMO_ARCHIVO");
+        log.debug("ultima llave: "+uploadKey);
+        servletRequest.getSession(true).setAttribute(uploadKey, new CustomProgressListener());
+        CustomProgressListener pl=(CustomProgressListener) servletRequest.getSession(true).getAttribute(uploadKey);
         upload.setProgressListener(pl);
         pl.setEstado(CustomProgressListener.SUBIENDO);
         log.debug("Upload started "+System.currentTimeMillis());
         //fin modificaciones
-        
         return upload.parseRequest(createRequestContext(servletRequest));
     }
 
@@ -204,12 +248,12 @@ public class CustomMonitoredMultiPartRequest implements MultiPartRequest {
         List<File> fileList = new ArrayList<File>(items.size());
         for (FileItem fileItem : items) {
             File storeLocation = ((DiskFileItem) fileItem).getStoreLocation();
-            if(fileItem.isInMemory() && storeLocation!=null && !storeLocation.exists()) {
+            if (fileItem.isInMemory() && storeLocation != null && !storeLocation.exists()) {
                 try {
                     storeLocation.createNewFile();
                 } catch (IOException e) {
-                    if(LOG.isErrorEnabled()){
-                        LOG.error("Cannot write uploaded empty file to disk: " + storeLocation.getAbsolutePath(),e);
+                    if (LOG.isErrorEnabled()) {
+                        LOG.error("Cannot write uploaded empty file to disk: " + storeLocation.getAbsolutePath(), e);
                     }
                 }
             }
@@ -289,14 +333,14 @@ public class CustomMonitoredMultiPartRequest implements MultiPartRequest {
     /* (non-Javadoc)
      * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#getErrors()
      */
-    public List getErrors() {
+    public List<String> getErrors() {
         return errors;
     }
 
     /**
      * Returns the canonical name of the given file.
      *
-     * @param filename  the given file
+     * @param filename the given file
      * @return the canonical name of the given file
      */
     private String getCanonicalName(String filename) {
@@ -314,7 +358,7 @@ public class CustomMonitoredMultiPartRequest implements MultiPartRequest {
     /**
      * Creates a RequestContext needed by Jakarta Commons Upload.
      *
-     * @param req  the request.
+     * @param req the request.
      * @return a new request context.
      */
     private RequestContext createRequestContext(final HttpServletRequest req) {
@@ -341,8 +385,24 @@ public class CustomMonitoredMultiPartRequest implements MultiPartRequest {
         };
     }
 
+    /* (non-Javadoc)
+    * @see org.apache.struts2.dispatcher.multipart.MultiPartRequest#cleanUp()
+    */
     public void cleanUp() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Set<String> names = files.keySet();
+        for (String name : names) {
+            List<FileItem> items = files.get(name);
+            for (FileItem item : items) {
+                if (LOG.isDebugEnabled()) {
+                    String msg = LocalizedTextUtil.findText(this.getClass(), "struts.messages.removing.file",
+                            Locale.ENGLISH, "no.message.found", new Object[]{name, item});
+                    LOG.debug(msg);
+                }
+                if (!item.isInMemory()) {
+                    item.delete();
+                }
+            }
+        }
     }
 
 }
