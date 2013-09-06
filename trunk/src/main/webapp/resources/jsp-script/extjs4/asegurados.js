@@ -864,7 +864,54 @@ Ext.onReady(function(){
         disabled:true,
         handler: function()
         {
-            
+            //console.log("trigger:");
+            //console.log("nmpoliza",selected_record.get('nmPoliza'));
+            //console.log("cdperpag",selected_record.get('cdPerpag'));
+            //console.log("cdplan",selected_cd_plan);
+            formPanel.setLoading(true);
+            Ext.Ajax.request(
+            {
+                url: urlComprarCotizacion,
+                params:{
+                    comprarNmpoliza:selected_record.get('nmPoliza'),
+                    comprarCdplan:selected_cd_plan,
+                    comprarCdperpag:selected_record.get('cdPerpag')
+                },
+                success:function(response,opts)
+                {
+                    //Ext.MessageBox.hide();
+                    formPanel.setLoading(false);
+                    //matar botones
+                    botonComprar.hide();
+                    botonVerCoberturas.hide();
+                    botonVerDetalleCobertura.hide();
+                    Ext.getCmp('botonCotizar').hide();
+                    Ext.getCmp('botonLimpiar').hide();
+                    Ext.getCmp('botonEditarCotiza').hide();
+                    Ext.getCmp('botonNuevaCotiza').hide();
+                    Ext.getCmp('botonImprimir').hide();
+                    //!matar botones
+                    var jsonResp = Ext.decode(response.responseText);
+                    //window.console&&console.log(jsonResp);
+                    Ext.Msg.show({
+                        title:'Cotizaci&oacute;n comprada',
+                        msg:'Su poliza ha sido enviada a mesa de control con el n&uacute;mero '+Ext.getCmp('idCotizacion').getValue(),
+                        buttons: Ext.Msg.OK
+                    });
+                },
+                failure:function(response,opts)
+                {
+                    //Ext.MessageBox.hide();
+                    formPanel.setLoading(false);
+                    //window.console&&console.log("error");
+                    Ext.Msg.show({
+                        title:'Error',
+                        msg: 'Error de comunicaci&oacute;n',
+                        buttons: Ext.Msg.OK,
+                        icon: Ext.Msg.ERROR
+                    });
+                }
+            });
         }
     });
     /*/////////////////*/
@@ -1063,6 +1110,7 @@ Ext.onReady(function(){
             botonComprar,
             botonVerCoberturas,
             {
+                id:'botonEditarCotiza',
                 text:'Editar cotizaci&oacute;n',
                 handler:function()
                 {
@@ -1070,10 +1118,11 @@ Ext.onReady(function(){
                     gridResultados.hide();
                     window.parent.scrollTo(0,0);
                     botonVerCoberturas.setDisabled(true);
-                    //botonComprar.setDisabled(true);
+                    botonComprar.setDisabled(true);
                 }
             },
             {
+                id:'botonNuevaCotiza',
                 text:'Nueva cotizaci&oacute;n',
                 handler:function()
                 {
@@ -1084,10 +1133,11 @@ Ext.onReady(function(){
                     storeIncisos.removeAll();
                     storeIncisos.sync();
                     botonVerCoberturas.setDisabled(true);
-                    //botonComprar.setDisabled(true);
+                    botonComprar.setDisabled(true);
                 }
             },
             {
+                id:'botonImprimir',
                 text:'Imprimir',
                 disabled:true,
                 handler:function()
@@ -1107,15 +1157,15 @@ Ext.onReady(function(){
                     var pos='';
                     if(x==1)
                     {
-                        pos='Bajo';
+                        pos='Plus100';
                     }
                     else if(x==2)
                     {
-                        pos='Medio';
+                        pos='Plus500';
                     }
                     else
                     {
-                        pos='Alto';
+                        pos='Plus1000';
                     }
                     selected_prima=record.get(pos);
                     selected_cd_plan=record.get('CD'+pos);
@@ -1124,12 +1174,12 @@ Ext.onReady(function(){
                     selected_record=record;
                     //window.console&&console.log(selected_prima,selected_cd_plan,selected_ds_plan,selected_nm_plan,selected_record);
                     botonVerCoberturas.setDisabled(false);
-                    //botonComprar.setDisabled(false);
+                    botonComprar.setDisabled(false);
                 }
                 else
                 {
                     botonVerCoberturas.setDisabled(true);
-                    //botonComprar.setDisabled(true);
+                    botonComprar.setDisabled(true);
                 }
                 //alert("idplan = " + idplan + " desplan = " + desplan+ "  nmplan="+ nmplan + "  mnPrima=" + mnPrima);
                 
@@ -1213,101 +1263,101 @@ Ext.onReady(function(){
             },
             /*generadas*/
             {
-                dataIndex: "Bajo",
-                header: "Bajo",
+                dataIndex: "Plus100",
+                header: "Plus 100",
                 hidden: false,
-                id: "Bajo",
+                id: "Plus100",
                 sortable: false,
                 flex:1,
                 renderer:Ext.util.Format.usMoney
             },
             {
-                dataIndex: "CDBajo",
-                header: "CDBajo",
+                dataIndex: "CDPlus100",
+                header: "CDPlus100",
                 hidden: true,
-                id: "CDBajo",
+                id: "CDPlus100",
                 sortable: false,
                 width: 100
             },
             {
-                dataIndex: "DSBajo",
-                header: "DSBajo",
+                dataIndex: "DSPlus100",
+                header: "DSPlus100",
                 hidden: true,
-                id: "DSBajo",
+                id: "DSPlus100",
                 sortable: false,
                 width: 100
             },
             {
-                dataIndex: "NMBajo",
-                header: "NMBajo",
+                dataIndex: "NMPlus100",
+                header: "NMPlus100",
                 hidden: true,
-                id: "NMBajo",
+                id: "NMPlus100",
                 sortable: false,
                 width: 100
             },
             {
-                dataIndex: "Medio",
-                header: "Medio",
+                dataIndex: "Plus500",
+                header: "Plus 500",
                 hidden: false,
-                id: "Medio",
+                id: "Plus500",
                 sortable: false,
                 flex:1,
                 renderer:Ext.util.Format.usMoney
             },
             {
-                dataIndex: "CDMedio",
-                header: "CDMedio",
+                dataIndex: "CDPlus500",
+                header: "CDPlus500",
                 hidden: true,
-                id: "CDMedio",
+                id: "CDPlus500",
                 sortable: false,
                 width: 100
             },
             {
-                dataIndex: "DSMedio",
-                header: "DSMedio",
+                dataIndex: "DSPlus500",
+                header: "DSPlus500",
                 hidden: true,
-                id: "DSMedio",
+                id: "DSPlus500",
                 sortable: false,
                 width: 100
             },
             {
-                dataIndex: "NMMedio",
-                header: "NMMedio",
+                dataIndex: "NMPlus500",
+                header: "NMPlus500",
                 hidden: true,
-                id: "NMMedio",
+                id: "NMPlus500",
                 sortable: false,
                 width: 100
             },
             {
-                dataIndex: "Alto",
-                header: "Alto",
+                dataIndex: "Plus1000",
+                header: "Plus 1000",
                 hidden: false,
-                id: "Alto",
+                id: "Plus1000",
                 sortable: false,
                 flex:1,
                 renderer:Ext.util.Format.usMoney
             },
             {
-                dataIndex: "CDAlto",
-                header: "CDAlto",
+                dataIndex: "CDPlus1000",
+                header: "CDPlus1000",
                 hidden: true,
-                id: "CDAlto",
+                id: "CDPlus1000",
                 sortable: false,
                 width: 100
             },
             {
-                dataIndex: "DSAlto",
-                header: "DSAlto",
+                dataIndex: "DSPlus1000",
+                header: "DSPlus1000",
                 hidden: true,
-                id: "DSAlto",
+                id: "DSPlus1000",
                 sortable: false,
                 width: 100
             },
             {
-                dataIndex: "NMAlto",
-                header: "NMAlto",
+                dataIndex: "NMPlus1000",
+                header: "NMPlus1000",
                 hidden: true,
-                id: "NMAlto",
+                id: "NMPlus1000",
                 sortable: false,
                 width: 100
             }
