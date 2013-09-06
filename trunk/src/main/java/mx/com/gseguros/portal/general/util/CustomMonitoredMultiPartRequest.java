@@ -53,7 +53,7 @@ import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
 /**
  * Multipart form data request adapter for Jakarta Commons Fileupload package.
  */
-public class CustomMonitoresMultiPartRequest implements MultiPartRequest {
+public class CustomMonitoredMultiPartRequest implements MultiPartRequest {
     
     private org.apache.log4j.Logger log=org.apache.log4j.Logger.getLogger(CustomMonitoresMultiPartRequest.class);
     static final Logger LOG = LoggerFactory.getLogger(CustomMonitoresMultiPartRequest.class);
