@@ -109,19 +109,18 @@ Ext.define('RowCotizacion', {
         {type:'string',name:'primaFormap'       },
         {type:'string',name:'feEmisio'          },
         {type:'string',name:'feVencim'          },
-        {type:'string',name:'Alto'              },
-        {type:'string',name:'CDAlto'            },
-        {type:'string',name:'DSAlto'            },
-        {type:'string',name:'NMAlto'            },
-        {type:'string',name:'Bajo'              },
-        {type:'string',name:'CDBajo'            },
-        {type:'string',name:'DSBajo'            },
-        {type:'string',name:'NMBajo'            },
-        {type:'string',name:'Medio'             },
-        {type:'string',name:'CDMedio'           },
-        {type:'string',name:'DSMedio'           },
-        {type:'string',name:'NMMedio'           }
-        
+        {type:'string',name:'Plus1000'          },
+        {type:'string',name:'CDPlus1000'        },
+        {type:'string',name:'DSPlus1000'        },
+        {type:'string',name:'NMPlus1000'        },
+        {type:'string',name:'Plus100'           },
+        {type:'string',name:'CDPlus100'         },
+        {type:'string',name:'DSPlus100'         },
+        {type:'string',name:'NMPlus100'         },
+        {type:'string',name:'Plus500'           },
+        {type:'string',name:'CDPlus500'         },
+        {type:'string',name:'DSPlus500'         },
+        {type:'string',name:'NMPlus500'         }
     ]
 });
 
