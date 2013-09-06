@@ -56,7 +56,7 @@ import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
 public class CustomMonitoredMultiPartRequest implements MultiPartRequest {
     
     private org.apache.log4j.Logger log=org.apache.log4j.Logger.getLogger(CustomMonitoredMultiPartRequest.class);
-    static final Logger LOG = LoggerFactory.getLogger(CustomMonitoresMultiPartRequest.class);
+    static final Logger LOG = LoggerFactory.getLogger(CustomMonitoredMultiPartRequest.class);
 
     // maps parameter name -> List of FileItem objects
     protected Map<String, List<FileItem>> files = new HashMap<String, List<FileItem>>();
