@@ -33,12 +33,13 @@
             /////////////////////////////////////
             
             //URL destino
-            var _URL_COTIZAR=                           '<s:url action="resultadoCotizacionVital" namespace="/flujocotizacion" />';
+            var _URL_COTIZAR=               '<s:url action="resultadoCotizacionVital" namespace="/flujocotizacion" />';
             //URL redireccion despues de cotizar
-            var _URL_RESULTADO_COTIZACION=              '<s:url namespace="/flujocotizacion" action="resultCotizacion" />';
-            var _URL_RESULTADOS=                        '<s:url namespace="/flujocotizacion" action="obtenCotizacion4" />';
-            var _URL_COBERTURAS=                        '<s:url namespace="/flujocotizacion" action="obtenerCoberturas4" />';
-            var _URL_DETALLE_COBERTURA=                 '<s:url namespace="/flujocotizacion" action="obtenerAyudaCoberturas4" />';
+            var _URL_RESULTADO_COTIZACION=  '<s:url namespace="/flujocotizacion" action="resultCotizacion" />';
+            var _URL_RESULTADOS=            '<s:url namespace="/flujocotizacion" action="obtenCotizacion4" />';
+            var _URL_COBERTURAS=            '<s:url namespace="/flujocotizacion" action="obtenerCoberturas4" />';
+            var _URL_DETALLE_COBERTURA=     '<s:url namespace="/flujocotizacion" action="obtenerAyudaCoberturas4" />';
+            var urlComprarCotizacion=       '<s:url namespace="/flujocotizacion" action="comprarCotizacion4" />';
         </script>
         <script src="${ctx}/resources/jsp-script/extjs4/asegurados.js"></script>
     </head>
