@@ -159,6 +159,9 @@
                 </interceptor-ref>
             </interceptor-stack>
         </interceptors>
+        <global-results>
+            <result name="denied">/jsp/extjs4/denegado.jsp</result>
+        </global-results>
 
 		<action name="index">
 			<result>/index.jsp</result>
