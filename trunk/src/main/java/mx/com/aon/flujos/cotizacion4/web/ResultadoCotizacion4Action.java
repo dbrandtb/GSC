@@ -29,6 +29,11 @@ import org.apache.log4j.Logger;
  */
 public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 468349054462501325L;
+
     private Logger log= Logger.getLogger(ResultadoCotizacion4Action.class);
     
     //beans
@@ -102,6 +107,9 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     private String comprarNmpoliza;
     private String comprarCdplan;
     private String comprarCdperpag;
+    private String comprarCdramo;
+    private String comprarCdciaaguradora;
+    private String comprarCdunieco;
     
     public String entrar()
     {
@@ -185,7 +193,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             mapa.put("pv_feinisus",     null);
             mapa.put("pv_fefinsus",     null);
             mapa.put("pv_ottempot",     "R");
-            mapa.put("pv_feefecto",     fechaFinVigencia);//renderFechas.format(calendarHoy.getTime()));
+            mapa.put("pv_feefecto",     fechaInicioVigencia);//renderFechas.format(calendarHoy.getTime()));
             mapa.put("pv_hhefecto",     "12:00");
             mapa.put("pv_feproren",     fechaFinVigencia);//renderFechas.format(fechaEnUnAnio.getTime()));
             mapa.put("pv_fevencim",     null);
@@ -222,6 +230,27 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             ///////////////////////////////////////////////////////
             ////// fin Guardar el maestro de poliza nmpoliza //////
             ///////////////////////////////////////////////////////
+            
+            ////////////////////////////////////////
+            ////// ordenar primero al titular //////
+            /*////////////////////////////////////*/
+            int indiceTitular=0;
+            for(int i=0;i<incisos.size();i++)
+            {
+            	if(incisos.get(i).getRol().getKey().equals("T"))
+            	{
+            		indiceTitular=i;
+            	}
+            }
+            List<IncisoSaludVO>listaOrdenada=new ArrayList<IncisoSaludVO>(0);
+            IncisoSaludVO titular=incisos.get(indiceTitular);
+            listaOrdenada.add(titular);
+            incisos.remove(indiceTitular);
+            listaOrdenada.addAll(incisos);
+            incisos=listaOrdenada;
+            /*////////////////////////////////////*/
+			////// ordenar primero al titular //////
+            ////////////////////////////////////////
             
             ///////////////////////////////////////////////////////////////////////////////
             ////// ini Guardar las situaciones (mpolisit y un mvalosit por cada una) //////
@@ -491,9 +520,43 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     }
     
     public String comprarCotizacion()
+    /*pv_cdunieco   input
+    --pv_cdramo     input
+    --pv_estado     W
+    --pv_nmpoliza   input
+    --pv_nmsituac   0
+    --pv_cdelement  Usuario sesion
+    --pv_cdperson   Usuario sesion
+    --pv_cdasegur   input
+    --pv_cdplan     input
+    --pv_cdperpag   input
+    */
     {
-        log.debug(comprarNmpoliza+","+comprarCdplan+","+comprarCdperpag);
-        success=true;
+        try
+        {
+            UserVO usuarioSesion=(UserVO) this.session.get("USUARIO");
+            DatosUsuario userData=kernelManagerSustituto.obtenerDatosUsuario(usuarioSesion.getUser());
+            
+            Map<String,String>parameters=new HashMap<String,String>(0);
+            parameters.put("pv_cdunieco",   comprarCdunieco);
+            parameters.put("pv_cdramo",     comprarCdramo);
+            parameters.put("pv_estado",     "W"); 
+            parameters.put("pv_nmpoliza",   comprarNmpoliza);
+            parameters.put("pv_nmsituac",   "0");
+            parameters.put("pv_cdelement",  usuarioSesion.getEmpresa().getElementoId());
+            parameters.put("pv_cdperson",   userData.getCdperson());
+            parameters.put("pv_cdasegur",   comprarCdciaaguradora);
+            parameters.put("pv_cdplan",     comprarCdplan);
+            parameters.put("pv_cdperpag",   comprarCdperpag);
+            log.debug("mapa en action: "+parameters);
+            kernelManagerSustituto.comprarCotizacion(parameters);
+            success=true;
+        }
+        catch(Exception ex)
+        {
+            log.error("error al comprar cotizacion",ex);
+            success=false;
+        }
         return SUCCESS;
     }
     
@@ -829,6 +892,30 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 
     public void setComprarCdperpag(String comprarCdperpag) {
         this.comprarCdperpag = comprarCdperpag;
+    }
+
+    public String getComprarCdramo() {
+        return comprarCdramo;
+    }
+
+    public void setComprarCdramo(String comprarCdramo) {
+        this.comprarCdramo = comprarCdramo;
+    }
+
+    public String getComprarCdciaaguradora() {
+        return comprarCdciaaguradora;
+    }
+
+    public void setComprarCdciaaguradora(String comprarCdciaaguradora) {
+        this.comprarCdciaaguradora = comprarCdciaaguradora;
+    }
+
+    public String getComprarCdunieco() {
+        return comprarCdunieco;
+    }
+
+    public void setComprarCdunieco(String comprarCdunieco) {
+        this.comprarCdunieco = comprarCdunieco;
     }
     
 }
