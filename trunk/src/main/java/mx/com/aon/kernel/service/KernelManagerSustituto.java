@@ -33,4 +33,5 @@ public interface KernelManagerSustituto {
     public AyudaCoberturaCotizacionVO obtenerAyudaCobertura(String idCobertura,String idRamo,String idCiaAsegurador) throws ApplicationException;
     public List<Tatrisit> obtenerTatrisit(String cdtipsit) throws ApplicationException;
     public DatosUsuario obtenerDatosUsuario(String cdusuario) throws ApplicationException;
+    public WrapperResultados comprarCotizacion(Map<String,String> parameters) throws ApplicationException;
 }
