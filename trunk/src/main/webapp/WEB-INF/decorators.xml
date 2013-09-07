@@ -91,6 +91,7 @@
             <pattern>/jsp/extjs4/asegurados.jsp</pattern>
             
             <pattern>/dinosaurio.action</pattern>
+            <pattern>/jsp/extjs4/denegado.jsp</pattern>
             
             <pattern>/datosComplementarios.action</pattern>
             <pattern>/jsp/extjs4/complementarios.jsp</pattern>
@@ -111,6 +112,7 @@
         <pattern>/jsp/extjs4/asegurados.jsp</pattern>
         
         <pattern>/dinosaurio.action</pattern>
+        <pattern>/jsp/extjs4/denegado.jsp</pattern>
         
         <pattern>/datosComplementarios.action</pattern>
         <pattern>/jsp/extjs4/complementarios.jsp</pattern>
