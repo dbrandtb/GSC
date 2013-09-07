@@ -9,13 +9,15 @@ import java.util.Map;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.general.util.ConstantesCatalogos;
 
 /**
  *
  * @author Jair
  */
-public class ComplementariosAction extends PrincipalCoreAction{
+public class ComplementariosAction extends PrincipalCoreAction implements ConstantesCatalogos{
     
+    private static final long serialVersionUID = -1269892388621564059L;
     private org.apache.log4j.Logger log =org.apache.log4j.Logger.getLogger(ComplementariosAction.class);
     private Item items;
     private Item fields;
@@ -28,8 +30,14 @@ public class ComplementariosAction extends PrincipalCoreAction{
     private String estado;
     private String nmpoliza;
     private boolean success=true;
+    private ScreenInterceptor scrInt=new ScreenInterceptor(); 
     
     public String mostrarPantalla()
+    {
+    	return scrInt.intercept(this,ScreenInterceptor.PANTALLA_COMPLEMENTARIOS_GENERAL);
+    }
+    
+    public String mostrarPantallaGeneral()
     {
         try
         {
@@ -38,11 +46,11 @@ public class ComplementariosAction extends PrincipalCoreAction{
             //gc.genera(listaTatrisit);
             //items=gc.getItems();
             //fields=gc.getFields();
-            fields=new Item("items",null,Item.ARR);
+            fields=new Item("fields",null,Item.ARR);
             
-            fields.add(Item.crear(null,null,Item.OBJ).add(new Item("name","panel1.cdciaaseg")));
-            fields.add(Item.crear(null,null,Item.OBJ).add(new Item("name","panel1.cdramo")));
-            fields.add(Item.crear(null,null,Item.OBJ).add(new Item("name","panel1.cdagente")));
+            fields.add(Item.crear(null,null,Item.OBJ).add(new Item("name","panel1.dsciaaseg")));
+            fields.add(Item.crear(null,null,Item.OBJ).add(new Item("name","panel1.nombreagente")));
+            fields.add(Item.crear(null,null,Item.OBJ).add(new Item("name","panel1.dsramo")));
             
             fields.add(Item.crear(null,null,Item.OBJ).add(new Item("name","panel2.nmpoliza")));
             fields.add(Item.crear(null,null,Item.OBJ).add(new Item("name","panel2.estado")));
@@ -62,30 +70,32 @@ public class ComplementariosAction extends PrincipalCoreAction{
         return SUCCESS;
     }
     
+    /*
+     * json
+     * @out success
+     */
     public String cargar()
     {
         panel1=new HashMap<String, String>(0);
         panel2=new HashMap<String, String>(0);
-        parametros=new HashMap<String, String>(0);
-        //duro
-        panel1.put("cdciaaseg",cdunieco);
-        panel1.put("cdramo",cdramo);
-        
+        //////////////////
+        ////// duro //////
+        /*//////////////*/
+        panel1.put("dsciaaseg","#General de seguros");
+        panel1.put("dsramo","#Salud Vital");
+        panel1.put("nombreagente","#Alvaro");
         panel2.put("nmpoliza",nmpoliza);
-        panel2.put("nmpolizaant","25");
-        panel2.put("estado",estado);
-        panel2.put("fesolici","11/08/1990");
-        panel2.put("solici",nmpoliza);
-        panel2.put("feefec","12/08/1990");
-        panel2.put("cdtipopol","1");
-        panel2.put("fevencimi","13/08/1990");
-        panel2.put("ferenova","14/08/1990");
-        panel2.put("cdperpag","12");
-        
-        parametros.put("otval02", "17/08/1990");
-        parametros.put("otval03", "90000");
-        parametros.put("otval04", "29");
-        //!duro
+        panel2.put("estado","#W");
+        panel2.put("fesolici","06/09/1969");
+        panel2.put("solici","696969");
+        panel2.put("feefec","06/09/1969");
+        panel2.put("ferenova","06/09/1969");
+        panel2.put("cdtipopol","#R");
+        panel2.put("cdperpag","#12");
+        /*//////////////*/
+        ////// duro //////
+        //////////////////
+        success=true;
         return SUCCESS;
     }
     
@@ -180,6 +190,18 @@ public class ComplementariosAction extends PrincipalCoreAction{
 
     public void setSuccess(boolean success) {
         this.success = success;
+    }
+
+    public String getCON_CAT_POL_ESTADO() {
+        return CON_CAT_POL_ESTADO;
+    }
+
+    public String getCON_CAT_POL_TIPO_POLIZA() {
+        return CON_CAT_POL_TIPO_POLIZA;
+    }
+
+    public String getCON_CAT_POL_TIPO_PAGO() {
+        return CON_CAT_POL_TIPO_PAGO;
     }
     
 }
