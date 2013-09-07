@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +19,7 @@ import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal.web.model.IncisoSaludVO;
+import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import net.sf.json.JSONArray;
 import org.apache.log4j.Logger;
 
@@ -98,6 +98,11 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     private String idCiaAseguradora;
     private AyudaCoberturaCotizacionVO ayudaCobertura;
     
+    //para comprar cotizacion
+    private String comprarNmpoliza;
+    private String comprarCdplan;
+    private String comprarCdperpag;
+    
     public String entrar()
     {
         UserVO usuario=(UserVO) session.get("USUARIO");
@@ -125,11 +130,21 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             
             ///////////////////////////////////////////////////
             ////// Calcular un anio a partir de la fecha //////
-            ///////////////////////////////////////////////////
+            /*///////////////////////////////////////////////*
             Calendar fechaEnUnAnio=Calendar.getInstance();
             fechaEnUnAnio.add(Calendar.YEAR, 1);
             log.debug("### fecha "+renderFechas.format(calendarHoy.getTime()));
-            log.debug("### fecha en un anio: "+renderFechas.format(fechaEnUnAnio.getTime()));
+            log.debug("### fecha en un anio: "+renderFechas.format(fechaEnUnAnio.getTime()));*/
+            /*///////////////////////////////////////////////*/
+            ////// Calcular un anio a partir de la fecha //////
+            ///////////////////////////////////////////////////
+            
+            ///////////////////////////////////////////////////
+            ////// obtener datos del usuario //////////////////
+            /*///////////////////////////////////////////////*/
+            DatosUsuario datosUsuario=kernelManagerSustituto.obtenerDatosUsuario(usuario.getUser());
+            /*///////////////////////////////////////////////*/
+            ////// obtener datos del usuario //////////////////
             ///////////////////////////////////////////////////
             
             ///////////////////////////////////////////
@@ -142,7 +157,8 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             }
             else
             {
-                WrapperResultados wrapperNumeroPoliza=kernelManagerSustituto.calculaNumeroPoliza("1", "2", "W");
+                WrapperResultados wrapperNumeroPoliza=kernelManagerSustituto
+                        .calculaNumeroPoliza(datosUsuario.getCdunieco(),datosUsuario.getCdramo(),"W");
                 numeroPoliza=(String) wrapperNumeroPoliza.getItemMap().get("NUMERO_POLIZA");
             }
             ///////////////////////////////////////////
@@ -153,8 +169,8 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             ////// ini Guardar el maestro de poliza nmpoliza //////
             ///////////////////////////////////////////////////////
             Map<String,String>mapa=new HashMap<String,String>(0);
-            mapa.put("pv_cdunieco",     "1");
-            mapa.put("pv_cdramo",       "2");
+            mapa.put("pv_cdunieco",     datosUsuario.getCdunieco());
+            mapa.put("pv_cdramo",       datosUsuario.getCdramo());
             mapa.put("pv_estado",       "W");
             mapa.put("pv_nmpoliza",     numeroPoliza);
             mapa.put("pv_nmsuplem",     "0");
@@ -219,14 +235,14 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
                 ////// ini mpolisit iterado //////
                 //////////////////////////////////
                 Map<String,Object>mapaPolisitIterado=new HashMap<String,Object>(0);
-                mapaPolisitIterado.put("pv_cdunieco_i",    "1");
-                mapaPolisitIterado.put("pv_cdramo_i",      "2");
+                mapaPolisitIterado.put("pv_cdunieco_i",    datosUsuario.getCdunieco());
+                mapaPolisitIterado.put("pv_cdramo_i",      datosUsuario.getCdramo());
                 mapaPolisitIterado.put("pv_estado_i",      "W");
                 mapaPolisitIterado.put("pv_nmpoliza_i",    numeroPoliza);
                 mapaPolisitIterado.put("pv_nmsituac_i",    contador+"");
                 mapaPolisitIterado.put("pv_nmsuplem_i",    "0");
                 mapaPolisitIterado.put("pv_status_i",      "V");
-                mapaPolisitIterado.put("pv_cdtipsit_i",    "SL");
+                mapaPolisitIterado.put("pv_cdtipsit_i",    datosUsuario.getCdtipsit());
                 mapaPolisitIterado.put("pv_swreduci_i",    null);
                 mapaPolisitIterado.put("pv_cdagrupa_i",    "1");
                 mapaPolisitIterado.put("pv_cdestado_i",    "0");
@@ -248,17 +264,17 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
                 ////// ini mvalosit iterado //////
                 //////////////////////////////////
                 Map<String,String>mapaValositIterado=new HashMap<String,String>(0);
-                mapaValositIterado.put("pv_cdunieco",    "1");
-                mapaValositIterado.put("pv_cdramo",      "2");
+                mapaValositIterado.put("pv_cdunieco",    datosUsuario.getCdunieco());
+                mapaValositIterado.put("pv_cdramo",      datosUsuario.getCdramo());
                 mapaValositIterado.put("pv_estado",      "W");
                 mapaValositIterado.put("pv_nmpoliza",    numeroPoliza);
                 mapaValositIterado.put("pv_nmsituac",    contador+"");
                 mapaValositIterado.put("pv_nmsuplem",    "0");
                 mapaValositIterado.put("pv_status",      "V");
-                mapaValositIterado.put("pv_cdtipsit",    "SL");
+                mapaValositIterado.put("pv_cdtipsit",    datosUsuario.getCdtipsit());
                 mapaValositIterado.put("pv_otvalor01",   i.getSexo().getKey());//sexo
                 mapaValositIterado.put("pv_otvalor02",   renderFechas.format(i.getFechaNacimiento()));//f nacimiento
-                mapaValositIterado.put("pv_otvalor03",   codigoPostal);//estado
+                mapaValositIterado.put("pv_otvalor03",   codigoPostal);//codigoPostal
                 mapaValositIterado.put("pv_otvalor04",   estado);//estado
                 mapaValositIterado.put("pv_otvalor05",   deducible.toString());//deducible
                 mapaValositIterado.put("pv_otvalor06",   copago);//copago
@@ -327,12 +343,12 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
                 log.debug("### Iteracion de clonar personas #"+contador);
                 Map<String,Object> mapaClonPersonaIterado=new HashMap<String,Object>(0);
                 mapaClonPersonaIterado.put("pv_cdelemen_i",     usuario.getEmpresa().getElementoId());
-                mapaClonPersonaIterado.put("pv_cdunieco_i",     "1");
-                mapaClonPersonaIterado.put("pv_cdramo_i",       "2");
+                mapaClonPersonaIterado.put("pv_cdunieco_i",     datosUsuario.getCdunieco());
+                mapaClonPersonaIterado.put("pv_cdramo_i",       datosUsuario.getCdramo());
                 mapaClonPersonaIterado.put("pv_estado_i",       "W");
                 mapaClonPersonaIterado.put("pv_nmpoliza_i",     numeroPoliza);
                 mapaClonPersonaIterado.put("pv_nmsituac_i",     contador+"");
-                mapaClonPersonaIterado.put("pv_cdtipsit_i",     "SL");
+                mapaClonPersonaIterado.put("pv_cdtipsit_i",     datosUsuario.getCdtipsit());
                 mapaClonPersonaIterado.put("pv_fecha_i",        calendarHoy.getTime());
                 mapaClonPersonaIterado.put("pv_cdusuario_i",    usuario.getUser());
                 mapaClonPersonaIterado.put("pv_p_nombre",       i.getNombre());
@@ -352,8 +368,8 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             ////// coberturas //////
             /*////////////////////*/
             Map<String,String> mapCoberturas=new HashMap<String,String>(0);
-            mapCoberturas.put("pv_cdunieco_i",   "1");
-            mapCoberturas.put("pv_cdramo_i",     "2");
+            mapCoberturas.put("pv_cdunieco_i",   datosUsuario.getCdunieco());
+            mapCoberturas.put("pv_cdramo_i",     datosUsuario.getCdramo());
             mapCoberturas.put("pv_estado_i",     "W");
             mapCoberturas.put("pv_nmpoliza_i",   numeroPoliza);
             mapCoberturas.put("pv_nmsituac_i",   "0");
@@ -370,13 +386,13 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             Map<String,String> mapaTarificacion=new HashMap<String,String>(0);
             mapaTarificacion.put("pv_cdusuari_i",   usuario.getUser());
             mapaTarificacion.put("pv_cdelemen_i",   usuario.getEmpresa().getElementoId());
-            mapaTarificacion.put("pv_cdunieco_i",   "1");
-            mapaTarificacion.put("pv_cdramo_i",     "2");
+            mapaTarificacion.put("pv_cdunieco_i",   datosUsuario.getCdunieco());
+            mapaTarificacion.put("pv_cdramo_i",     datosUsuario.getCdramo());
             mapaTarificacion.put("pv_estado_i",     "W");
             mapaTarificacion.put("pv_nmpoliza_i",   numeroPoliza);
             mapaTarificacion.put("pv_nmsituac_i",   "0");
             mapaTarificacion.put("pv_nmsuplem_i",   "0");
-            mapaTarificacion.put("pv_cdtipsit_i",   "SL");
+            mapaTarificacion.put("pv_cdtipsit_i",   datosUsuario.getCdtipsit());
             WrapperResultados wr4=kernelManagerSustituto.ejecutaASIGSVALIPOL(mapaTarificacion);
             /*//////////////////////*/
             ////// TARIFICACION //////
@@ -387,12 +403,12 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             /*///////////////////////////////*/
             Map<String,String> mapaDuroResultados=new HashMap<String,String>(0);
             mapaDuroResultados.put("pv_cdusuari_i", usuario.getUser());
-            mapaDuroResultados.put("pv_cdunieco_i", "1");
-            mapaDuroResultados.put("pv_cdramo_i",   "2");
+            mapaDuroResultados.put("pv_cdunieco_i", datosUsuario.getCdunieco());
+            mapaDuroResultados.put("pv_cdramo_i",   datosUsuario.getCdramo());
             mapaDuroResultados.put("pv_estado_i",   "W");
             mapaDuroResultados.put("pv_nmpoliza_i", numeroPoliza);
             mapaDuroResultados.put("pv_cdelemen_i", usuario.getEmpresa().getElementoId());
-            mapaDuroResultados.put("pv_cdtipsit_i", "SL");
+            mapaDuroResultados.put("pv_cdtipsit_i", datosUsuario.getCdtipsit());
             List<ResultadoCotizacionVO> listaResultados=kernelManagerSustituto.obtenerResultadosCotizacion(mapaDuroResultados);
             //utilizando logica anterior
             CotizacionManagerImpl managerAnterior=new CotizacionManagerImpl();
@@ -471,6 +487,13 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             listaCoberturas=new ArrayList<CoberturaCotizacionVO>(0);
             success=false;
         }
+        return SUCCESS;
+    }
+    
+    public String comprarCotizacion()
+    {
+        log.debug(comprarNmpoliza+","+comprarCdplan+","+comprarCdperpag);
+        success=true;
         return SUCCESS;
     }
     
@@ -782,6 +805,30 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 
     public void setIdCiaAseguradora(String idCiaAseguradora) {
         this.idCiaAseguradora = idCiaAseguradora;
+    }
+
+    public String getComprarNmpoliza() {
+        return comprarNmpoliza;
+    }
+
+    public void setComprarNmpoliza(String comprarNmpoliza) {
+        this.comprarNmpoliza = comprarNmpoliza;
+    }
+
+    public String getComprarCdplan() {
+        return comprarCdplan;
+    }
+
+    public void setComprarCdplan(String comprarCdplan) {
+        this.comprarCdplan = comprarCdplan;
+    }
+
+    public String getComprarCdperpag() {
+        return comprarCdperpag;
+    }
+
+    public void setComprarCdperpag(String comprarCdperpag) {
+        this.comprarCdperpag = comprarCdperpag;
     }
     
 }
