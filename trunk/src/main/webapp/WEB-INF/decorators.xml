@@ -89,16 +89,40 @@
     	<excludes>
             <pattern>/cotizacionVital.action</pattern>
             <pattern>/jsp/extjs4/asegurados.jsp</pattern>
+            
             <pattern>/dinosaurio.action</pattern>
+            
+            <pattern>/datosComplementarios.action</pattern>
+            <pattern>/jsp/extjs4/complementarios.jsp</pattern>
+            
+            <pattern>/subirArchivoMostrarPanel.action</pattern>
             <pattern>/jsp/extjs4/testFileUpload.jsp</pattern>
+            
+            <pattern>/subirArchivo.action</pattern>
+            <pattern>/jsp/extjs4/subirArchivoReceptor.jsp</pattern>
+            
+            <pattern>/subirArchivoMostrarBarra.action</pattern>
+            <pattern>/jsp/extjs4/subirArchivoBarra.jsp</pattern>
         </excludes>    	
     	  	
     </decorator>   	
     <decorator name="default4" page="default4.jsp">
         <pattern>/cotizacionVital.action</pattern>
         <pattern>/jsp/extjs4/asegurados.jsp</pattern>
+        
         <pattern>/dinosaurio.action</pattern>
+        
+        <pattern>/datosComplementarios.action</pattern>
+        <pattern>/jsp/extjs4/complementarios.jsp</pattern>
+        
+        <pattern>/subirArchivoMostrarPanel.action</pattern>
         <pattern>/jsp/extjs4/testFileUpload.jsp</pattern>
+        
+        <pattern>/subirArchivo.action</pattern>
+        <pattern>/jsp/extjs4/subirArchivoReceptor.jsp</pattern>
+        
+        <pattern>/subirArchivoMostrarBarra.action</pattern>
+        <pattern>/jsp/extjs4/subirArchivoBarra.jsp</pattern>
     </decorator>
     
     <!--decorator name="default" page="default.jsp">
