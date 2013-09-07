@@ -17,6 +17,8 @@ import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.dao.ProcesoDAO;
 import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
+import mx.com.gseguros.portal.cotizacion.model.Tatrisit;
 import org.apache.log4j.Logger;
 
 /**
@@ -133,6 +135,27 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         AyudaCoberturaCotizacionVO res=(AyudaCoberturaCotizacionVO) this.getBackBoneInvoke(parameters, ProcesoDAO.OBTENER_AYUDA_COBERTURA);
         log.debug("### kernel sustituto obtenerAyudaCobertura return: "+res);
         return res;
+    }
+    
+    public DatosUsuario obtenerDatosUsuario(String cdusuario) throws ApplicationException
+    {
+        Map<String,Object>parameters=new HashMap<String,Object>(0);
+        parameters.put("pv_cdusuari_i",cdusuario);
+        log.debug("### kernel sustituto obtenerDatosUsuario map: "+parameters);
+        DatosUsuario res=(DatosUsuario) this.getBackBoneInvoke(parameters, ProcesoDAO.OBTENER_DATOS_USUARIO);
+        log.debug("### kernel sustituto obtenerDatosUsuario return: "+res);
+        return res;
+    }
+    
+    public List<Tatrisit> obtenerTatrisit(String cdtipsit) throws ApplicationException
+    {
+        Map<String,Object> parameters=new HashMap<String,Object>(0);
+        parameters.put("pv_cdtipsit_i",cdtipsit);
+        log.debug("### kernel sustituto obtenerTatrisit map: "+parameters);
+        List<Tatrisit> lista= this.getAllBackBoneInvoke(parameters, ProcesoDAO.OBTENER_TATRISIT);
+        lista=lista!=null?lista:new ArrayList<Tatrisit>(0);
+        log.debug("### kernel sustituto obtenerTatrisit lista size: "+lista.size());
+        return lista;
     }
     
 }
