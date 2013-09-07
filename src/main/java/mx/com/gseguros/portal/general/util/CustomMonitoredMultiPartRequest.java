@@ -189,13 +189,17 @@ public class CustomMonitoredMultiPartRequest implements MultiPartRequest {
         ServletFileUpload upload = new ServletFileUpload(fac);
         upload.setSizeMax(maxSize);
         //jtezva agregado para monitorear el progreso al subir archivo
-        String uploadKey=(String)servletRequest.getSession(true).getAttribute("SK_LLAVE_ULTIMO_ARCHIVO");
-        log.debug("ultima llave: "+uploadKey);
-        servletRequest.getSession(true).setAttribute(uploadKey, new CustomProgressListener());
-        CustomProgressListener pl=(CustomProgressListener) servletRequest.getSession(true).getAttribute(uploadKey);
-        upload.setProgressListener(pl);
-        pl.setEstado(CustomProgressListener.SUBIENDO);
-        log.debug("Upload started "+System.currentTimeMillis());
+        if(servletRequest.getSession(true).getAttribute("SK_LLAVE_ULTIMO_ARCHIVO")!=null
+                &&!((String)servletRequest.getSession(true).getAttribute("SK_LLAVE_ULTIMO_ARCHIVO")).isEmpty())
+        {
+            String uploadKey=(String)servletRequest.getSession(true).getAttribute("SK_LLAVE_ULTIMO_ARCHIVO");
+            log.debug("ultima llave: "+uploadKey);
+            servletRequest.getSession(true).setAttribute(uploadKey, new CustomProgressListener());
+            CustomProgressListener pl=(CustomProgressListener) servletRequest.getSession(true).getAttribute(uploadKey);
+            upload.setProgressListener(pl);
+            pl.setEstado(CustomProgressListener.SUBIENDO);
+            log.debug("Upload started "+System.currentTimeMillis());
+        }
         //fin modificaciones
         return upload.parseRequest(createRequestContext(servletRequest));
     }
