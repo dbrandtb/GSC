@@ -69,6 +69,7 @@ public class ProcesoDAO extends AbstractDAO {
         public static final String OBTENER_AYUDA_COBERTURA="OBTENER_AYUDA_COBERTURA";
         public static final String OBTENER_TATRISIT="OBTENER_TATRISIT";
         public static final String OBTENER_DATOS_USUARIO="OBTENER_DATOS_USUARIO";
+    public static final String COMPRAR_COTIZACION="COMPRAR_COTIZACION";
 
 	protected void initDao() throws Exception {
 		addStoredProcedure(PERMISO_EJECUCION_PROCESO,
@@ -103,6 +104,8 @@ public class ProcesoDAO extends AbstractDAO {
                 addStoredProcedure(OBTENER_AYUDA_COBERTURA, new ObtieneAyudaCoberturas(getDataSource()));
                 addStoredProcedure(OBTENER_TATRISIT, new ObtieneTatrisit(getDataSource()));
                 addStoredProcedure(OBTENER_DATOS_USUARIO, new ObtieneDatosUsuario(getDataSource()));
+                
+        addStoredProcedure(COMPRAR_COTIZACION, new ComprarCotizacion(getDataSource()));
 	}
 
 	protected class BuscarMatrizAsignacion extends CustomStoredProcedure {
@@ -1191,5 +1194,37 @@ public class ProcesoDAO extends AbstractDAO {
     /*//////////////////////////////////*/
     ////// Obtener datos usuario /////////
     //////////////////////////////////////
+    
+    ////////////////////////////////
+    ////// comprar cotizacion //////
+    /*////////////////////////////*/
+    protected class ComprarCotizacion extends CustomStoredProcedure
+    {
+    	protected ComprarCotizacion(DataSource dataSource)
+        {
+            super(dataSource,"PKG_COTIZA.P_PROC_INCISO_DEF");
+            declareParameter(new SqlParameter("pv_cdunieco",	OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdramo",  	OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_estado",  	OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmpoliza",  	OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmsituac",  	OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdelement",	OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdperson",	OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdasegur",	OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdplan",	OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdperpag",	OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o",	OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o",	OracleTypes.VARCHAR));
+            compile();
+    	}
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception
+        {
+            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+            return mapper.build(map);
+        }
+    }
+    /*////////////////////////////*/
+	////// comprar cotizacion //////
+    ////////////////////////////////
     
 }
