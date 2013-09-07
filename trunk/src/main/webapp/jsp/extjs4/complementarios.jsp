@@ -16,7 +16,7 @@
         <script>
             var urlGuardar='<s:url namespace="/" action="guardarDatosComplementarios" />';
             var urlCargar='<s:url namespace="/" action="cargarDatosComplementarios" />';
-            
+            var urlCargarCatalogos='<s:url namespace="/flujocotizacion" action="cargarCatalogos" />';
             Ext.onReady(function(){
                 
                 Ext.define('MiModeloDinamico',{
@@ -41,47 +41,47 @@
                                 columns: 3
                             },
                             items:[
-                                Ext.create('Ext.form.ComboBox', {
+                                Ext.create('Ext.form.TextField', {
                                     id:'companiaAseguradora',//id3
-                                    name:'panel1.cdciaaseg',
+                                    name:'panel1.dsciaaseg',
                                     fieldLabel: 'Compa&ntilde;&iacute;a aseguradora',
                                     /*store:Ext.create('Ext.data.Store', {
                                         model: 'Generic',
                                         data : [{key:'20',value:'General de seguros'}]
-                                    }),*/
+                                    }),
                                     queryMode: 'local',
                                     displayField: 'value',
-                                    valueField: 'key',
+                                    valueField: 'key',*/
                                     readOnly:true,
                                     style:'margin:5px;'
                                 }),
-                                Ext.create('Ext.form.ComboBox', {
+                                Ext.create('Ext.form.TextField', {
                                     id:'agenteVentas',
-                                    name:'panel1.cdagente',
+                                    name:'panel1.nombreagente',
                                     fieldLabel: 'Agente',
                                     /*store:Ext.create('Ext.data.Store', {
                                         model: 'Generic',
                                         data : [{key:'20',value:'General de seguros'}]
-                                    }),*/
+                                    }),
                                     queryMode: 'local',
                                     displayField: 'value',
                                     valueField: 'key',
-                                    //value:Ext.create('Generic',{key:'20',value:'General de seguros'}),
+                                    //value:Ext.create('Generic',{key:'20',value:'General de seguros'}),*/
                                     readOnly:true,
                                     style:'margin:5px;'
                                 }),
-                                Ext.create('Ext.form.ComboBox', {
+                                Ext.create('Ext.form.TextField', {
                                     id:'producto',//id4
-                                    name:'panel1.cdramo',
+                                    name:'panel1.dsramo',
                                     fieldLabel: 'Producto',
                                     /*store:Ext.create('Ext.data.Store', {
                                         model: 'Generic',
                                         data : [{key:'2',value:'Salud Vital'}]
-                                    }),*/
+                                    }),
                                     queryMode: 'local',
                                     displayField: 'value',
                                     valueField: 'key',
-                                    //value:Ext.create('Generic',{key:'2',value:'Salud vital'}),
+                                    //value:Ext.create('Generic',{key:'2',value:'Salud vital'}),*/
                                     readOnly:true,
                                     style:'margin:5px;'
                                 })
@@ -113,10 +113,21 @@
                                     fieldLabel:'Estado',
                                     displayField: 'value',
                                     valueField: 'key',
-                                    /*store:Ext.create('Ext.data.Store', {
-                                        model: 'Generic',
-                                        data : [{key:'W',value:'En proceso'}]
-                                    }),*/
+                                    store:Ext.create('Ext.data.Store', {
+                                        model:'Generic',
+                                        autoLoad:true,
+                                        proxy:
+                                        {
+                                            type: 'ajax',
+                                            url:urlCargarCatalogos,
+                                            extraParams:{catalogo:'<s:property value="CON_CAT_POL_ESTADO" />'},
+                                            reader:
+                                            {
+                                                type: 'json',
+                                                root: 'lista'
+                                            }
+                                        }
+                                    }),
                                     editable:false,
                                     queryMode:'local',
                                     style:'margin:5px;',
@@ -175,8 +186,19 @@
                                     displayField: 'value',
                                     valueField: 'key',
                                     store:Ext.create('Ext.data.Store', {
-                                        model: 'Generic',
-                                        data : [{key:'1',value:'Renovación'}]
+                                        model:'Generic',
+                                        autoLoad:true,
+                                        proxy:
+                                        {
+                                            type: 'ajax',
+                                            url:urlCargarCatalogos,
+                                            extraParams:{catalogo:'<s:property value="CON_CAT_POL_TIPO_POLIZA" />'},
+                                            reader:
+                                            {
+                                                type: 'json',
+                                                root: 'lista'
+                                            }
+                                        }
                                     }),
                                     editable:false,
                                     queryMode:'local',
@@ -191,8 +213,19 @@
                                     displayField: 'value',
                                     valueField: 'key',
                                     store:Ext.create('Ext.data.Store', {
-                                        model: 'Generic',
-                                        data : [{key:'12',value:'Anual'}]
+                                        model:'Generic',
+                                        autoLoad:true,
+                                        proxy:
+                                        {
+                                            type: 'ajax',
+                                            url:urlCargarCatalogos,
+                                            extraParams:{catalogo:'<s:property value="CON_CAT_POL_TIPO_PAGO" />'},
+                                            reader:
+                                            {
+                                                type: 'json',
+                                                root: 'lista'
+                                            }
+                                        }
                                     }),
                                     editable:false,
                                     queryMode:'local',
@@ -217,6 +250,7 @@
                     buttons:[
                         {
                             text:'Guardar',
+                            icon: 'resources/extjs4/resources/ext-theme-classic/images/icons/fam/accept.png',
                             handler:function()
                             {
                                 var form=Ext.getCmp('formPanel');
@@ -254,6 +288,18 @@
                                     });
                                 }
                             }
+                        },
+                        {
+                            text:'Editar asegurados',
+                            icon: 'resources/extjs4/resources/ext-theme-classic/images/icons/fam/user.png'
+                        },
+                        {
+                            text:'Editar agentes',
+                            icon: 'resources/extjs4/resources/ext-theme-classic/images/icons/fam/user_gray.png'
+                        },
+                        {
+                            text:'Editar documentos',
+                            icon: 'resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
                         }
                     ]
                 });
@@ -261,22 +307,19 @@
                 
                 ///////////////////////////////////////////////
                 ////// Cargador de formulario (sin grid) //////
-                ///////////////////////////////////////////////
+                /*///////////////////////////////////////////*/
                 Ext.define('LoaderForm',
                 {
                     extend:'MiModeloDinamico',
                     proxy:
                     {
                         extraParams:{
-                            cdunieco:'<s:property value="cdunieco" />',
-                            cdramo:'<s:property value="cdramo" />',
-                            estado:'<s:property value="estado" />',
                             nmpoliza:'<s:property value="nmpoliza" />'
                         },
                         type:'ajax',
                         url:urlCargar,
                         reader:{
-                            type:'json',
+                            type:'json'
                         }
                     }
                 });
@@ -286,9 +329,18 @@
                     success: function(resp) {
                         //console.log(resp);
                         Ext.getCmp('formPanel').loadRecord(resp);
+                    },
+                    failure:function()
+                    {
+                        Ext.Msg.show({
+                            title:'Error',
+                            icon: Ext.Msg.ERROR,
+                            msg: 'Error al cargar',
+                            buttons: Ext.Msg.OK
+                        });
                     }
                 });
-                //////////////////////////////////////////////////////
+                /*//////////////////////////////////////////////////*/
                 ////// Fin de cargador de formulario (sin grid) //////
                 //////////////////////////////////////////////////////
                 
