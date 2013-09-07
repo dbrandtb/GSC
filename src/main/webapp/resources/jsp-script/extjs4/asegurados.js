@@ -419,7 +419,7 @@ Ext.onReady(function(){
                 sexo:new Generic({'key':'H','value':'Hombre'}),
                 nombre:'Alvaro',
                 segundoNombre:'Jair',
-                apellidoPaterno:'Martínez',
+                apellidoPaterno:'Martï¿½nez',
                 apellidoMaterno:'Varela'
             },
             {
@@ -875,31 +875,47 @@ Ext.onReady(function(){
                 params:{
                     comprarNmpoliza:selected_record.get('nmPoliza'),
                     comprarCdplan:selected_cd_plan,
-                    comprarCdperpag:selected_record.get('cdPerpag')
+                    comprarCdperpag:selected_record.get('cdPerpag'),
+                    comprarCdramo:selected_record.get('cdRamo'),
+                    comprarCdciaaguradora:selected_record.get('cdCiaaseg'),
+                    comprarCdunieco:selected_record.get('cdUnieco')
                 },
                 success:function(response,opts)
                 {
-                    //Ext.MessageBox.hide();
                     formPanel.setLoading(false);
-                    //matar botones
-                    botonComprar.hide();
-                    botonVerCoberturas.hide();
-                    botonVerDetalleCobertura.hide();
-                    Ext.getCmp('botonCotizar').hide();
-                    Ext.getCmp('botonLimpiar').hide();
-                    Ext.getCmp('botonEditarCotiza').hide();
-                    Ext.getCmp('botonNuevaCotiza').hide();
-                    Ext.getCmp('botonImprimir').hide();
-                    //!matar botones
-                    var jsonResp = Ext.decode(response.responseText);
-                    //window.console&&console.log(jsonResp);
-                    Ext.Msg.show({
-                        title:'Cotizaci&oacute;n comprada',
-                        msg:'Su poliza ha sido enviada a mesa de control con el n&uacute;mero '+Ext.getCmp('idCotizacion').getValue(),
-                        buttons: Ext.Msg.OK
-                    });
+                    var json=Ext.decode(response.responseText);
+                    if(json.success==true)
+                    {
+                        //Ext.MessageBox.hide();
+                        //matar botones
+                        botonComprar.hide();
+                        botonVerCoberturas.hide();
+                        botonVerDetalleCobertura.hide();
+                        Ext.getCmp('botonCotizar').hide();
+                        Ext.getCmp('botonLimpiar').hide();
+                        Ext.getCmp('botonEditarCotiza').hide();
+                        //Ext.getCmp('botonNuevaCotiza').hide();
+                        Ext.getCmp('botonImprimir').hide();
+                        //!matar botones
+                        var jsonResp = Ext.decode(response.responseText);
+                        //window.console&&console.log(jsonResp);
+                        Ext.Msg.show({
+                            title:'Cotizaci&oacute;n comprada',
+                            msg:'Su poliza ha sido enviada a mesa de control con el n&uacute;mero '+Ext.getCmp('idCotizacion').getValue(),
+                            buttons: Ext.Msg.OK
+                        });
+                    }
+                    else
+                    {
+                        Ext.Msg.show({
+                            title:'Error',
+                            msg: 'Error al comprar la cotizaci&oacute;n '+opts.params.comprarNmpoliza,
+                            buttons: Ext.Msg.OK,
+                            icon: Ext.Msg.ERROR
+                        });
+                    }
                 },
-                failure:function(response,opts)
+                failure:function()
                 {
                     //Ext.MessageBox.hide();
                     formPanel.setLoading(false);
@@ -1055,7 +1071,7 @@ Ext.onReady(function(){
                     window.print();
 
 
-                    // *** Esconder elemento que ya se imprimió para que no se muestre en la pantalla de cotizacion
+                    // *** Esconder elemento que ya se imprimiï¿½ para que no se muestre en la pantalla de cotizacion
                     esconderElemento("impresionAyuda");
                 }
             }, */{
@@ -1134,6 +1150,15 @@ Ext.onReady(function(){
                     storeIncisos.sync();
                     botonVerCoberturas.setDisabled(true);
                     botonComprar.setDisabled(true);
+                    //desbloquear botones
+                    botonComprar.show();
+                    botonVerCoberturas.show();
+                    botonVerDetalleCobertura.show();
+                    Ext.getCmp('botonCotizar').show();
+                    Ext.getCmp('botonLimpiar').show();
+                    Ext.getCmp('botonEditarCotiza').show();
+                    //Ext.getCmp('botonNuevaCotiza').show();
+                    Ext.getCmp('botonImprimir').show();
                 }
             },
             {
@@ -1745,111 +1770,153 @@ Ext.onReady(function(){
             handler: function() {
                 // The getForm() method returns the Ext.form.Basic instance:
                 var form = this.up('form').getForm();
-                if (form.isValid()) {
-                    var incisosRecords = storeIncisos.getRange();
-                    if(incisosRecords&&incisosRecords.length>0)
-                    {
-                        var incisosJson = [];
-                        storeIncisos.each(function(record,index){
-                            incisosJson.push({
-                                id: record.get('id'),
-                                rol:
-                                {
-                                    key:typeof record.get('rol')=='string'?record.get('rol'):record.get('rol').get('key'),
-                                    value:''
-                                },
-                                fechaNacimiento: record.get('fechaNacimiento'),
-                                sexo:
-                                {
-                                    key:typeof record.get('sexo')=='string'?record.get('sexo'):record.get('sexo').get('key'),
-                                    value:''
-                                },
-                                nombre: record.get('nombre'),
-                                segundoNombre: record.get('segundoNombre'),
-                                apellidoPaterno: record.get('apellidoPaterno'),
-                                apellidoMaterno: record.get('apellidoMaterno')
-                            });
-                        });
-                        /*for (var i in incisosRecords) {
-                            window.console&&console.log(i);
-                            incisosJson.push({
-                                id: incisosRecords[i].id,
-                                rol:
-                                {
-                                    key:typeof incisosRecords[i].rol=='string'?incisosRecords[i].rol:incisosRecords[i].rol.key,
-                                    value:''
-                                },
-                                fechaNacimiento: incisosRecords[i].fechaNacimiento,
-                                sexo:
-                                {
-                                    key:typeof incisosRecords[i].sexo=='string'?incisosRecords[i].sexo:incisosRecords[i].sexo.key,
-                                    value:''
-                                },
-                                nombre: incisosRecords[i].nombre,
-                                segundoNombre: incisosRecords[i].segundoNombre,
-                                apellidoPaterno: incisosRecords[i].apellidoPaterno,
-                                apellidoMaterno: incisosRecords[i].apellidoMaterno
-                            });
-                        }*/
-                        var submitValues=form.getValues();
-                        submitValues['incisos']=incisosJson;
-                        //window.console&&console.log(submitValues);
-                        // Submit the Ajax request and handle the response
-                        formPanel.setLoading(true);
-                        /*Ext.MessageBox.show({
-                            msg: 'Cotizando...',
-                            width:300,
-                            wait:true,
-                            waitConfig:{interval:100}
-                        });*/
-                        Ext.Ajax.request(
-                        {
-                            url: _URL_COTIZAR,
-                            jsonData:Ext.encode(submitValues),
-                            success:function(response,opts)
-                            {
-                                //Ext.MessageBox.hide();
-                                formPanel.setLoading(false);
-                                var jsonResp = Ext.decode(response.responseText);
-                                //window.console&&console.log(jsonResp);
-                                if(jsonResp.success==true)
-                                {
-                                    Ext.getCmp('idCotizacion').setValue(jsonResp.id);
-                                    mostrarGrid();
-                                }
-                            },
-                            failure:function(response,opts)
-                            {
-                                //Ext.MessageBox.hide();
-                                formPanel.setLoading(false);
-                                //window.console&&console.log("error");
-                                Ext.Msg.show({
-                                    title:'Error',
-                                    msg: 'Error de comunicaci&oacute;n',
-                                    buttons: Ext.Msg.OK,
-                                    icon: Ext.Msg.ERROR
-                                });
-                            }
-                        });
-                    }
-                    else
-                    {
-                        Ext.Msg.show({
+
+                var hayTitular=0;
+                var menorDeEdad=false;
+                storeIncisos.each(function(record,index){
+                	var rol=typeof record.get('rol')=='string'?record.get('rol'):record.get('rol').get('key');
+                	if(rol=="T")
+                	{
+                		hayTitular++;
+                		var fechaNacimiento = new Date(record.get('fechaNacimiento'));
+                		var hoy = new Date();
+                		var edad = parseInt((hoy/365/24/60/60/1000 -fechaNacimiento/365/24/60/60/1000));
+                		//console.log("hoy",parseInt(hoy));
+                		//console.log("fenacimi",parseInt(fechaNacimiento));
+                		//console.log("edad",edad);
+                		menorDeEdad=edad<18;
+                	}
+                });
+                if (form.isValid())
+                {
+	                if(hayTitular==1)
+		            {
+	                	if(!menorDeEdad)
+	                	{
+		                    var incisosRecords = storeIncisos.getRange();
+		                    if(incisosRecords&&incisosRecords.length>0)
+		                    {
+		                        var incisosJson = [];
+		                        storeIncisos.each(function(record,index){
+	                            incisosJson.push({
+	                                id: record.get('id'),
+	                                rol:
+	                                {
+	                                    key:typeof record.get('rol')=='string'?record.get('rol'):record.get('rol').get('key'),
+	                                    value:''
+	                                },
+	                                fechaNacimiento: record.get('fechaNacimiento'),
+	                                sexo:
+	                                {
+	                                    key:typeof record.get('sexo')=='string'?record.get('sexo'):record.get('sexo').get('key'),
+	                                    value:''
+	                                },
+	                                nombre: record.get('nombre'),
+	                                segundoNombre: record.get('segundoNombre'),
+	                                apellidoPaterno: record.get('apellidoPaterno'),
+	                                apellidoMaterno: record.get('apellidoMaterno')
+	                            });
+	                            });
+	                            /*for (var i in incisosRecords) {
+	                                window.console&&console.log(i);
+	                                incisosJson.push({
+	                                    id: incisosRecords[i].id,
+	                                    rol:
+	                                    {
+	                                        key:typeof incisosRecords[i].rol=='string'?incisosRecords[i].rol:incisosRecords[i].rol.key,
+	                                        value:''
+	                                    },
+	                                    fechaNacimiento: incisosRecords[i].fechaNacimiento,
+	                                    sexo:
+	                                    {
+	                                        key:typeof incisosRecords[i].sexo=='string'?incisosRecords[i].sexo:incisosRecords[i].sexo.key,
+	                                        value:''
+	                                    },
+	                                    nombre: incisosRecords[i].nombre,
+	                                    segundoNombre: incisosRecords[i].segundoNombre,
+	                                    apellidoPaterno: incisosRecords[i].apellidoPaterno,
+	                                    apellidoMaterno: incisosRecords[i].apellidoMaterno
+	                            	});
+	                        	}*/
+	                        	var submitValues=form.getValues();
+	                        	submitValues['incisos']=incisosJson;
+	                        	//window.console&&console.log(submitValues);
+	                        	//Submit the Ajax request and handle the response
+	                        	formPanel.setLoading(true);
+	                        	/*Ext.MessageBox.show({
+	                            	msg: 'Cotizando...',
+	                            	width:300,
+	                            	wait:true,
+	                            	waitConfig:{interval:100}
+	                        	});*/
+	                        	Ext.Ajax.request(
+	                        	{
+	                            	url: _URL_COTIZAR,
+	                            	jsonData:Ext.encode(submitValues),
+	                            	success:function(response,opts)
+	                            	{
+	                                	//Ext.MessageBox.hide();
+	                            		formPanel.setLoading(false);
+	                                	var jsonResp = Ext.decode(response.responseText);
+	                                	//window.console&&console.log(jsonResp);
+	                                	if(jsonResp.success==true)
+	                                	{
+	                                		Ext.getCmp('idCotizacion').setValue(jsonResp.id);
+	                                		mostrarGrid();
+	                                	}
+	                            	},
+	                            	failure:function(response,opts)
+	                            	{
+	                                	//Ext.MessageBox.hide();
+	                                	formPanel.setLoading(false);
+	                                	//window.console&&console.log("error");
+	                                	Ext.Msg.show({
+	                                    	title:'Error',
+	                                    	msg: 'Error de comunicaci&oacute;n',
+	                                    	buttons: Ext.Msg.OK,
+	                                    	icon: Ext.Msg.ERROR
+	                                	});
+	                            	}
+	                        	});
+	                    	}
+	                    	else
+	                    	{
+	                        	Ext.Msg.show({
+	                            	title:'Datos incompletos',
+	                            	msg: 'Favor de introducir al menos un asegurado',
+	                            	buttons: Ext.Msg.OK,
+	                            	icon: Ext.Msg.ERROR
+	                        	});
+	                    	}
+	                	}
+	                	else
+	                	{
+	                		Ext.Msg.show({
+	                            title:'Datos incompletos',
+	                            msg: 'El titular no puede ser menor de edad',
+	                            buttons: Ext.Msg.OK,
+	                            icon: Ext.Msg.WARNING
+	                        });
+	                	}
+		            }
+                	else
+                	{
+                		Ext.Msg.show({
                             title:'Datos incompletos',
-                            msg: 'Favor de introducir al menos un asegurado',
+                            msg: 'Favor de introducir solo un titular',
                             buttons: Ext.Msg.OK,
-                            icon: Ext.Msg.ERROR
+                            icon: Ext.Msg.WARNING
                         });
-                    }
+                	}
                 }
                 else
                 {
-                    Ext.Msg.show({
-                        title:'Datos incompletos',
-                        msg: 'Favor de introducir todos los campos requeridos',
-                        buttons: Ext.Msg.OK,
-                        icon: Ext.Msg.ERROR
-                    });
+                	Ext.Msg.show({
+                    	title:'Datos incompletos',
+                    	msg: 'Favor de introducir todos los campos requeridos',
+                    	buttons: Ext.Msg.OK,
+                    	icon: Ext.Msg.WARNING
+                	});
                 }
             }
         },
