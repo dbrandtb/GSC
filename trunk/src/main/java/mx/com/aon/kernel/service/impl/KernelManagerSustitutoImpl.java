@@ -158,4 +158,13 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return lista;
     }
     
+    public WrapperResultados comprarCotizacion(Map<String,String> parameters) throws ApplicationException
+    {
+    	log.debug("### kernel sustituto comprarCotizacion map: "+parameters);
+        WrapperResultados res=this.returnBackBoneInvoke(parameters, ProcesoDAO.COMPRAR_COTIZACION);
+        log.debug("### kernel sustituto comprarCotizacion id:"+res.getMsgId());
+        log.debug("### kernel sustituto comprarCotizacion mesage:"+res.getMsgText());
+        return res;
+    }
+    
 }
