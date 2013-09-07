@@ -5,7 +5,6 @@
 <struts>
     <!-- jtezva agregado para monitorear el progreso de subir archivo -->
     <bean type="org.apache.struts2.dispatcher.multipart.MultiPartRequest" name="monitored" class="mx.com.gseguros.portal.general.util.CustomMonitoredMultiPartRequest" scope="default" />
-    <constant name="struts.multipart.handler" value="monitored" />
     <!-- jtezva agregado para monitorear el progreso de subir archivo -->
     
     <constant name="struts.devMode" value="true"/>
@@ -339,10 +338,31 @@
                 </action>
                 <action name="jsonObtenCatalogoGenerico" class="JsonGenericList" method="obtenCatalogo"><result name="success" type="json" /></action>
                 <!-- jtezva subir archivo -->
+                <action name="subirArchivoMostrarPanel" class="beanSubirArchivo" method="mostrarPanel">
+                    <result name="success">/jsp/portal/testFileUpload.jsp</result>
+                </action>
+                <action name="subirArchivoPonerLlaveSesion" class="beanSubirArchivo" method="ponerLlaveSesion">
+                    <result name="success" type="json" />
+                </action>
                 <action name="subirArchivo" class="beanSubirArchivo" method="subirArchivo">
+                    <result name="success">/jsp/extjs4/subirArchivoReceptor.jsp</result>
+                </action>
+                <action name="subirArchivoMostrarBarra" class="beanSubirArchivo" method="mostrarBarra">
+                    <result name="success">/jsp/extjs4/subirArchivoBarra.jsp</result>
+                </action>
+                <action name="jsonObtenerProgreso" class="beanSubirArchivo" method="jsonObtenerProgreso">
                     <result name="success" type="json" />
                 </action>
                 <!-- jtezva subir archivo -->
+                <action name="datosComplementarios" class="beanDatosComplementarios" method="mostrarPantalla">
+                    <result name="success">/jsp/extjs4/complementarios.jsp</result>
+                </action>
+                <action name="guardarDatosComplementarios" class="beanDatosComplementarios" method="guardar">
+                    <result name="success" type="json" />
+                </action>
+                <action name="cargarDatosComplementarios" class="beanDatosComplementarios" method="cargar">
+                    <result name="success" type="json" />
+                </action>
     </package>
 
 </struts>
