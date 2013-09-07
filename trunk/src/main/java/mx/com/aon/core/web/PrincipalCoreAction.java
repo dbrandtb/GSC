@@ -38,8 +38,12 @@ public abstract class PrincipalCoreAction extends ActionSupport implements Sessi
 		this.session = session;		
 	}
 
+	public Map<String,Object> getSession()
+	{
+		return session;
+	}
 	
 	
-	
+
 
 }
