@@ -13,6 +13,8 @@ import mx.com.aon.flujos.cotizacion.model.DatosEntradaCotizaVO;
 import mx.com.aon.flujos.cotizacion.model.ResultadoCotizacionVO;
 import mx.com.aon.flujos.cotizacion.model.SituacionVO;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
+import mx.com.gseguros.portal.cotizacion.model.Tatrisit;
 import oracle.jdbc.driver.OracleTypes;
 import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
@@ -65,6 +67,8 @@ public class ProcesoDAO extends AbstractDAO {
         public static final String OBTENER_RESULTADOS_COTIZACION="OBTENER_RESULTADOS_COTIZACION";
         public static final String OBTENER_COBERTURAS="OBTENER_COBERTURAS";
         public static final String OBTENER_AYUDA_COBERTURA="OBTENER_AYUDA_COBERTURA";
+        public static final String OBTENER_TATRISIT="OBTENER_TATRISIT";
+        public static final String OBTENER_DATOS_USUARIO="OBTENER_DATOS_USUARIO";
 
 	protected void initDao() throws Exception {
 		addStoredProcedure(PERMISO_EJECUCION_PROCESO,
@@ -97,6 +101,8 @@ public class ProcesoDAO extends AbstractDAO {
 		addStoredProcedure(OBTENER_RESULTADOS_COTIZACION, new ObtieneResultadosCotiza(getDataSource()));
                 addStoredProcedure(OBTENER_COBERTURAS, new ObtieneCoberturas(getDataSource()));
                 addStoredProcedure(OBTENER_AYUDA_COBERTURA, new ObtieneAyudaCoberturas(getDataSource()));
+                addStoredProcedure(OBTENER_TATRISIT, new ObtieneTatrisit(getDataSource()));
+                addStoredProcedure(OBTENER_DATOS_USUARIO, new ObtieneDatosUsuario(getDataSource()));
 	}
 
 	protected class BuscarMatrizAsignacion extends CustomStoredProcedure {
@@ -1099,6 +1105,91 @@ public class ProcesoDAO extends AbstractDAO {
     }
     /*//////////////////////////////////*/
     ////// Obtener ayuda coberturas //////
+    //////////////////////////////////////
+    
+    //////////////////////////////////////////////
+    ////// Obtiene campos tatrisit de tabla //////
+    /*//////////////////////////////////////////*/
+    protected class ObtieneTatrisit extends CustomStoredProcedure
+    {
+    	protected ObtieneTatrisit(DataSource dataSource)
+        {
+            super(dataSource,"PKG_LISTAS.P_GET_ATRI_SITUACION");
+            declareParameter(new SqlParameter("pv_cdtipsit_i",      OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtieneTatrisitMapper()));
+            declareParameter(new SqlOutParameter("pv_messages_o",   OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+            WrapperResultados wrapperResultados = mapper.build(map);
+            List result = (List) map.get("pv_registro_o");
+            wrapperResultados.setItemList(result);
+            return wrapperResultados;
+    	}
+    }
+    
+    protected class ObtieneTatrisitMapper implements RowMapper {
+        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Tatrisit result=new Tatrisit();
+            result.setCdatribu(rs.getString("CDATRIBU"));
+            result.setSwformat(rs.getString("SWFORMAT"));
+            result.setNmlmin(rs.getString("NMLMIN"));
+            result.setNmlmax(rs.getString("NMLMAX"));
+            result.setSwobliga(rs.getString("SWOBLIGA"));
+            result.setDsatribu(rs.getString("DSATRIBU"));
+            result.setOttabval(rs.getString("OTTABVAL"));
+            result.setCdtablj1(rs.getString("CDTABLJ1"));
+            return result;
+        }
+    }
+    /*//////////////////////////////////////////*/
+    ////// Obtiene campos tatrisit de tabla //////
+    //////////////////////////////////////////////
+    
+    //////////////////////////////////////
+    ////// Obtener datos usuario /////////
+    /*//////////////////////////////////*/
+    protected class ObtieneDatosUsuario extends CustomStoredProcedure
+    {
+    	protected ObtieneDatosUsuario(DataSource dataSource)
+        {
+            super(dataSource,"pkg_satelites.p_get_info_usuario");
+            declareParameter(new SqlParameter(   "pv_cdusuari_i",   OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtieneDatosUsuarioMapper()));
+            declareParameter(new SqlOutParameter("pv_messages_o",   OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
+            compile();
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+            WrapperResultados wrapperResultados = mapper.build(map);
+            List result = (List) map.get("pv_registro_o");
+            wrapperResultados.setItemList(result);
+            return wrapperResultados;
+    	}
+    }
+    
+    protected class ObtieneDatosUsuarioMapper implements RowMapper {
+        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+            DatosUsuario datosUsuario=new DatosUsuario();
+            datosUsuario.setCdagente(rs.getString("cdagente"));
+            datosUsuario.setCdperson(rs.getString("cdperson"));
+            datosUsuario.setCdramo(rs.getString("cdramo"));
+            datosUsuario.setCdtipsit(rs.getString("cdtipsit"));
+            datosUsuario.setCdunieco(rs.getString("cdunieco"));
+            datosUsuario.setCdusuari(rs.getString("cdusuari"));
+            datosUsuario.setNmcuadro(rs.getString("nmcuadro"));
+            datosUsuario.setNombre(rs.getString("nombre"));
+            return datosUsuario;
+        }
+    }
+    /*//////////////////////////////////*/
+    ////// Obtener datos usuario /////////
     //////////////////////////////////////
     
 }
