@@ -12,6 +12,8 @@ import mx.com.aon.flujos.cotizacion.model.CoberturaCotizacionVO;
 import mx.com.aon.flujos.cotizacion.model.ResultadoCotizacionVO;
 import mx.com.aon.flujos.cotizacion.model.SituacionVO;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
+import mx.com.gseguros.portal.cotizacion.model.Tatrisit;
 
 /**
  *
@@ -29,4 +31,6 @@ public interface KernelManagerSustituto {
     public List<ResultadoCotizacionVO> obtenerResultadosCotizacion(Map<String,String> parameters) throws ApplicationException;
     public List<CoberturaCotizacionVO> obtenerCoberturas(Map<String,String> parameters) throws ApplicationException;
     public AyudaCoberturaCotizacionVO obtenerAyudaCobertura(String idCobertura,String idRamo,String idCiaAsegurador) throws ApplicationException;
+    public List<Tatrisit> obtenerTatrisit(String cdtipsit) throws ApplicationException;
+    public DatosUsuario obtenerDatosUsuario(String cdusuario) throws ApplicationException;
 }
