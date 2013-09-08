@@ -220,6 +220,11 @@
       <bean id="tablaCincoClavesDAO" class="mx.com.aon.catweb.configuracion.producto.dao.TablaCincoClavesDAO">
         <property name="dataSource" ref="dataSource" />
       </bean>
+
+      <!-- Para consultas de Poliza -->
+      <bean id="consultasPolizaDAO" class="mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO">
+        <property name="dataSource" ref="dataSource" />
+      </bean>
       
       
 </beans>
