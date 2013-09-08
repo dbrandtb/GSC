@@ -11,6 +11,6 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     </head>
     <body>
-        <h1>Acceso denegado</h1>
+        <h1 style="padding:10px;">Su petición no se puede procesar por datos insuficientes</h1>
     </body>
 </html>

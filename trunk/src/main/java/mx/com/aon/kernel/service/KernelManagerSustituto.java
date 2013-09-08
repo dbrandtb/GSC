@@ -12,6 +12,7 @@ import mx.com.aon.flujos.cotizacion.model.CoberturaCotizacionVO;
 import mx.com.aon.flujos.cotizacion.model.ResultadoCotizacionVO;
 import mx.com.aon.flujos.cotizacion.model.SituacionVO;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Tatrisit;
 
@@ -33,5 +34,8 @@ public interface KernelManagerSustituto {
     public AyudaCoberturaCotizacionVO obtenerAyudaCobertura(String idCobertura,String idRamo,String idCiaAsegurador) throws ApplicationException;
     public List<Tatrisit> obtenerTatrisit(String cdtipsit) throws ApplicationException;
     public DatosUsuario obtenerDatosUsuario(String cdusuario) throws ApplicationException;
+    public WrapperResultados movDetalleSuplemento(Map<String,String> parameters) throws ApplicationException;
     public WrapperResultados comprarCotizacion(Map<String,String> parameters) throws ApplicationException;
+    public Map<String,Object> getInfoMpolizas(Map<String,Object>parameters) throws ApplicationException;
+    public List<GenericVO> getTmanteni(String tabla) throws ApplicationException;
 }

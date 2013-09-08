@@ -3,6 +3,7 @@ package mx.com.aon.portal.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import mx.com.aon.flujos.cotizacion.model.DatosEntradaCotizaVO;
 import mx.com.aon.flujos.cotizacion.model.ResultadoCotizacionVO;
 import mx.com.aon.flujos.cotizacion.model.SituacionVO;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Tatrisit;
 import oracle.jdbc.driver.OracleTypes;
@@ -69,7 +71,10 @@ public class ProcesoDAO extends AbstractDAO {
         public static final String OBTENER_AYUDA_COBERTURA="OBTENER_AYUDA_COBERTURA";
         public static final String OBTENER_TATRISIT="OBTENER_TATRISIT";
         public static final String OBTENER_DATOS_USUARIO="OBTENER_DATOS_USUARIO";
-    public static final String COMPRAR_COTIZACION="COMPRAR_COTIZACION";
+        public static final String INSERTAR_DETALLE_SUPLEMEN="INSERTAR_DETALLE_SUPLEME";
+        public static final String COMPRAR_COTIZACION="COMPRAR_COTIZACION";
+        public static final String GET_INFO_MPOLIZAS="GET_INFO_MPOLIZAS";
+        public static final String OBTENER_TMANTENI="OBTENER_TMANTENI";
 
 	protected void initDao() throws Exception {
 		addStoredProcedure(PERMISO_EJECUCION_PROCESO,
@@ -104,8 +109,10 @@ public class ProcesoDAO extends AbstractDAO {
                 addStoredProcedure(OBTENER_AYUDA_COBERTURA, new ObtieneAyudaCoberturas(getDataSource()));
                 addStoredProcedure(OBTENER_TATRISIT, new ObtieneTatrisit(getDataSource()));
                 addStoredProcedure(OBTENER_DATOS_USUARIO, new ObtieneDatosUsuario(getDataSource()));
-                
-        addStoredProcedure(COMPRAR_COTIZACION, new ComprarCotizacion(getDataSource()));
+                addStoredProcedure(INSERTAR_DETALLE_SUPLEMEN, new InsertarDetalleSuplemen(getDataSource()));
+                addStoredProcedure(COMPRAR_COTIZACION, new ComprarCotizacion(getDataSource()));
+                addStoredProcedure(GET_INFO_MPOLIZAS, new GetInfoMpolizas(getDataSource()));
+                addStoredProcedure(OBTENER_TMANTENI, new ObtenerTmanteni(getDataSource()));
 	}
 
 	protected class BuscarMatrizAsignacion extends CustomStoredProcedure {
@@ -1195,6 +1202,44 @@ public class ProcesoDAO extends AbstractDAO {
     ////// Obtener datos usuario /////////
     //////////////////////////////////////
     
+    ///////////////////////////////////////
+    ////// insertar detalle suplemen //////
+    /*///////////////////////////////////*/
+    protected class InsertarDetalleSuplemen extends CustomStoredProcedure
+    {
+    	protected InsertarDetalleSuplemen(DataSource dataSource)
+        {
+            super(dataSource,"PKG_SATELITES.P_MOV_TDESCSUP");
+            declareParameter(new SqlParameter("pv_cdunieco_i",  OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdramo_i",    OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_estado_i",    OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmpoliza_i",  OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nsuplogi_i",  OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdtipsup_i",  OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_feemisio_i",  OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmsolici_i",  OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_fesolici_i",  OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_ferefere_i",  OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdseqpol_i",  OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cduser_i",    OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nusuasus_i",  OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nlogisus_i",  OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdperson_i",  OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_accion_i",    OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o",	OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o",	OracleTypes.VARCHAR));
+            compile();
+    	}
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception
+        {
+            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+            return mapper.build(map);
+        }
+    }
+    /*///////////////////////////////////*/
+    ////// insertar detalle suplemen //////
+    ///////////////////////////////////////
+    
     ////////////////////////////////
     ////// comprar cotizacion //////
     /*////////////////////////////*/
@@ -1224,7 +1269,109 @@ public class ProcesoDAO extends AbstractDAO {
         }
     }
     /*////////////////////////////*/
-	////// comprar cotizacion //////
+    ////// comprar cotizacion //////
     ////////////////////////////////
+    
+    //////////////////////////////////////////////
+    ////// Obtiene informacion de poliza /////////
+    /*//////////////////////////////////////////*/
+    protected class GetInfoMpolizas extends CustomStoredProcedure
+    {
+    	protected GetInfoMpolizas(DataSource dataSource)
+        {
+            super(dataSource,"PKG_SATELITES.P_GET_INFO_MPOLIZAS");
+            declareParameter(new SqlParameter("pv_cdunieco",    OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("pv_cdramo",      OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("pv_estado",      OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmpoliza",    OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdusuari",    OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new GetInfoMpolizasMapper()));
+            declareParameter(new SqlOutParameter("pv_messages_o",   OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+            WrapperResultados wrapperResultados = mapper.build(map);
+            List result = (List) map.get("pv_registro_o");
+            wrapperResultados.setItemList(result);
+            return wrapperResultados;
+    	}
+    }
+    
+    protected class GetInfoMpolizasMapper implements RowMapper {
+        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+            List<String>columns=new ArrayList<String>(0);
+            columns.add("cdusuari");
+            columns.add("cdunieco");
+            columns.add("dsunieco");
+            columns.add("cdperson");
+            columns.add("cdagente");
+            columns.add("nombre");
+            columns.add("cdramo");
+            columns.add("dsramo");
+            columns.add("nmcuadro");
+            columns.add("cdtipsit");
+            columns.add("fesolici");
+            columns.add("nmsolici");
+            columns.add("feefecto");
+            columns.add("feproren");
+            columns.add("ottempot");
+            columns.add("cdperpag");
+            Map<String,Object>map=new HashMap<String,Object>(0);
+            for(String columnName:columns)
+            {
+                if(columnName.substring(0,2).equals("fe"))
+                {
+                    map.put(columnName, rs.getDate(columnName));
+                }
+                else
+                {
+                    map.put(columnName, rs.getString(columnName));
+                }
+            }
+            return map;
+        }
+    }
+    /*//////////////////////////////////////////*/
+    ////// Obtiene informacion de poliza /////////
+    //////////////////////////////////////////////
+    
+    //////////////////////////////////////////////
+    ////// obtiene tablas de catalogos ///////////
+    /*//////////////////////////////////////////*/
+    protected class ObtenerTmanteni extends CustomStoredProcedure
+    {
+    	protected ObtenerTmanteni(DataSource dataSource)
+        {
+            super(dataSource,"PKG_LISTAS.P_GET_TMANTENI");
+            declareParameter(new SqlParameter("pv_cdtabla",         OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerTmanteniMapper()));
+            declareParameter(new SqlOutParameter("pv_messages_o",   OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+            WrapperResultados wrapperResultados = mapper.build(map);
+            List result = (List) map.get("pv_registro_o");
+            wrapperResultados.setItemList(result);
+            return wrapperResultados;
+    	}
+    }
+    
+    protected class ObtenerTmanteniMapper implements RowMapper {
+        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+            GenericVO generic=new GenericVO();
+            generic.setKey(rs.getString("codigo"));
+            generic.setValue(rs.getString("DESCRIPC"));
+            return generic;
+        }
+    }
+    /*//////////////////////////////////////////*/
+    ////// obtiene tablas de catalogos ///////////
+    //////////////////////////////////////////////
     
 }
