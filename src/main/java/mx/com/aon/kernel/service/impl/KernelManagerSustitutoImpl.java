@@ -17,6 +17,7 @@ import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.dao.ProcesoDAO;
 import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Tatrisit;
 import org.apache.log4j.Logger;
@@ -165,6 +166,33 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         log.debug("### kernel sustituto comprarCotizacion id:"+res.getMsgId());
         log.debug("### kernel sustituto comprarCotizacion mesage:"+res.getMsgText());
         return res;
+    }
+    
+    public WrapperResultados movDetalleSuplemento(Map<String,String> parameters) throws ApplicationException
+    {
+    	log.debug("### kernel sustituto movDetalleSuplemento map: "+parameters);
+        WrapperResultados res=this.returnBackBoneInvoke(parameters, ProcesoDAO.INSERTAR_DETALLE_SUPLEMEN);
+        log.debug("### kernel sustituto movDetalleSuplemento id:"+res.getMsgId());
+        log.debug("### kernel sustituto movDetalleSuplemento mesage:"+res.getMsgText());
+        return res;
+    }
+
+    public Map<String,Object> getInfoMpolizas(Map<String, Object> parameters) throws ApplicationException {
+        log.debug("### kernel sustituto getInfoMpolizas map: "+parameters);
+        Map<String,Object> map=(Map<String,Object>) this.getBackBoneInvoke(parameters, ProcesoDAO.GET_INFO_MPOLIZAS);
+        log.debug("### kernel sustituto response map: "+map);
+        return map;
+    }
+    
+    public List<GenericVO> getTmanteni(String tabla) throws ApplicationException
+    {
+        log.debug("### kernel sustituto getTmanteni tabla: "+tabla);
+        Map<String,String> parameters=new HashMap<String,String>(0);
+        parameters.put("pv_cdtabla",tabla);
+        List<GenericVO> lista= this.getAllBackBoneInvoke(parameters, ProcesoDAO.OBTENER_TMANTENI);
+        lista=lista!=null?lista:new ArrayList<GenericVO>(0);
+        log.debug("### kernel sustituto obtenerTatrisit lista size: "+lista.size());
+        return lista;
     }
     
 }

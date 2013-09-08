@@ -10,15 +10,28 @@ public class ScreenInterceptor {
 	{
 		/**
 		 * pantalla de datos complemetarios generales
-		 * return mostrarPantallaGeneral();
+                 * @requiere:
+                    cdunieco
+                    cdramo
+                    estado
+                    nmpoliza
+		 * @return:
+                    mostrarPantallaGeneral();
 		 */
 		if(screen==PANTALLA_COMPLEMENTARIOS_GENERAL)
 		{
 			ComplementariosAction a=(ComplementariosAction)action;
 			if(a.getSession()==null
-					||a.getSession().get("USUARIO")==null
-					||a.getNmpoliza()==null
-					||a.getNmpoliza().isEmpty())
+                            ||a.getSession().get("USUARIO")==null
+                            ||a.getCdunieco()==null
+                            ||a.getCdunieco().isEmpty()
+                            ||a.getCdramo()==null
+                            ||a.getCdramo().isEmpty()
+                            ||a.getEstado()==null
+                            ||a.getNmpoliza().isEmpty()
+                            ||a.getNmpoliza()==null
+                            ||a.getNmpoliza().isEmpty()
+                            )
 			{
 				return "denied";
 			}

@@ -314,7 +314,10 @@
                     proxy:
                     {
                         extraParams:{
-                            nmpoliza:'<s:property value="nmpoliza" />'
+                            cdunieco : '<s:property value="nmpoliza" />',
+                            cdramo :   '<s:property value="cdramo" />',
+                            estado :   '<s:property value="estado" />',
+                            nmpoliza : '<s:property value="nmpoliza" />'
                         },
                         type:'ajax',
                         url:urlCargar,

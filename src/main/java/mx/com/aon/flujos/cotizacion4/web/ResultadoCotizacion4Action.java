@@ -538,6 +538,25 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             DatosUsuario userData=kernelManagerSustituto.obtenerDatosUsuario(usuarioSesion.getUser());
             
             Map<String,String>parameters=new HashMap<String,String>(0);
+            parameters.put("pv_cdunieco_i", comprarCdunieco);
+            parameters.put("pv_cdramo_i",   comprarCdramo);
+            parameters.put("pv_estado_i",   "W");
+            parameters.put("pv_nmpoliza_i", comprarNmpoliza);
+            parameters.put("pv_nsuplogi_i", "0");
+            parameters.put("pv_cdtipsup_i", "90");
+            parameters.put("pv_feemisio_i", renderFechas.format(calendarHoy.getTime()));
+            parameters.put("pv_nmsolici_i", null);
+            parameters.put("pv_fesolici_i", renderFechas.format(calendarHoy.getTime()));
+            parameters.put("pv_ferefere_i", null);
+            parameters.put("pv_cdseqpol_i", null);
+            parameters.put("pv_cduser_i",   usuarioSesion.getUser());
+            parameters.put("pv_nusuasus_i", null);
+            parameters.put("pv_nlogisus_i", null);
+            parameters.put("pv_cdperson_i", userData.getCdperson());
+            parameters.put("pv_accion_i",   "I");
+            kernelManagerSustituto.movDetalleSuplemento(parameters);
+            
+            parameters=new HashMap<String,String>(0);
             parameters.put("pv_cdunieco",   comprarCdunieco);
             parameters.put("pv_cdramo",     comprarCdramo);
             parameters.put("pv_estado",     "W"); 

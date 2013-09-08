@@ -10,9 +10,9 @@ package mx.com.gseguros.portal.general.util;
  */
 public interface ConstantesCatalogos
 {
-    public static final String CON_CAT_POL_ESTADO       ="1";
-    public static final String CON_CAT_POL_TIPO_POLIZA  ="2";
-    public static final String CON_CAT_POL_TIPO_PAGO    ="3";
+    public static final String CON_CAT_POL_ESTADO       ="STATUSPOL";
+    public static final String CON_CAT_POL_TIPO_POLIZA  ="TIPOPOL";
+    public static final String CON_CAT_POL_TIPO_PAGO    ="TPERPAG";
     public String getCON_CAT_POL_ESTADO();
     public String getCON_CAT_POL_TIPO_POLIZA();
     public String getCON_CAT_POL_TIPO_PAGO();

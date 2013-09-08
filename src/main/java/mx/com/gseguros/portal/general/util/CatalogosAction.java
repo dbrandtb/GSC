@@ -27,23 +27,28 @@ public class CatalogosAction extends PrincipalCoreAction
     
     public String cargar()
     {
-        if(catalogo.equals(ConstantesCatalogos.CON_CAT_POL_ESTADO))
+        try
         {
-            lista.add(new GenericVO("#P","#Poliza"));
-            lista.add(new GenericVO("#W","#Working"));
-            success=true;
+            if(catalogo.equals(ConstantesCatalogos.CON_CAT_POL_ESTADO))
+            {
+                lista=kernelManager.getTmanteni(catalogo);
+                success=true;
+            }
+            else if(catalogo.equals(ConstantesCatalogos.CON_CAT_POL_TIPO_PAGO))
+            {
+                lista=kernelManager.getTmanteni(catalogo);
+                success=true;
+            }
+            else if(catalogo.equals(ConstantesCatalogos.CON_CAT_POL_TIPO_POLIZA))
+            {
+                lista=kernelManager.getTmanteni(catalogo);
+                success=true;
+            }
         }
-        else if(catalogo.equals(ConstantesCatalogos.CON_CAT_POL_TIPO_PAGO))
+        catch(Exception ex)
         {
-            lista.add(new GenericVO("#1",    "#Mensual"));
-            lista.add(new GenericVO("#12",   "#Anual"));
-            success=true;
-        }
-        else if(catalogo.equals(ConstantesCatalogos.CON_CAT_POL_TIPO_POLIZA))
-        {
-            lista.add(new GenericVO("#N","#Nueva"));
-            lista.add(new GenericVO("#R","#Renovación"));
-            success=true;
+            lista=new ArrayList<GenericVO>(0);
+            success=false;
         }
         return SUCCESS;
     }

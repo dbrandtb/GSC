@@ -28,6 +28,7 @@
         {
             $cmp.attr({
                 href:'javascript:LoadPage("/cotizacionVital.action");'
+            	//href:'javascript:LoadPage("/datosComplementarios.action");'
             });
             window.clearInterval(miIntervalCambioLiga);
             window.console&&console.log("STOP");
