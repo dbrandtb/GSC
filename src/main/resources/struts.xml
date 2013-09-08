@@ -131,8 +131,9 @@
 	
 	
 	<include file="struts/config/struts-presiniestros.xml"/>    
-	<include file="struts/config/struts-dctosPresiniestros.xml"/>    
+	<include file="struts/config/struts-dctosPresiniestros.xml"/>   
 	
+	<include file="struts/config/struts-consultas-poliza.xml"/>  
 
 	<!-- Archivos de CIMA -->
     <include file="struts-cima.xml"/>
