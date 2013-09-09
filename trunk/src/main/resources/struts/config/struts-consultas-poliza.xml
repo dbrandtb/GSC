@@ -1,21 +1,49 @@
 <!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
 
 <struts>
-    <include file="struts-default.xml" />
+	<include file="struts-default.xml" />
 
-    <package name="consultasPoliza" extends="json-default" namespace="/consultasPoliza">
+	<package name="consultasPoliza" extends="json-default"
+		namespace="/consultasPoliza">
 
-		<action name="consultaDatosPoliza" class="ConsultasPolizaAction" method="consultaDatosPoliza">
-			<result type="json"><param name="ignoreHierarchy">false</param></result>
+		<action name="consultaDatosPoliza" class="ConsultasPolizaAction"
+			method="consultaDatosPoliza">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					datosPoliza.*
+				</param>
+			</result>
 		</action>
-		<action name="consultaDatosSuplemento" class="ConsultasPolizaAction" method="consultaDatosSuplemento">
-			<result type="json"><param name="ignoreHierarchy">false</param></result>
+		
+		<action name="consultaDatosSuplemento" class="ConsultasPolizaAction"
+			method="consultaDatosSuplemento">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+                    datosSuplemento.*
+                </param>
+			</result>
 		</action>
-		<action name="consultaDatosSituacion" class="ConsultasPolizaAction" method="consultaDatosSituacion">
-			<result type="json"><param name="ignoreHierarchy">false</param></result>
+		
+		<action name="consultaDatosSituacion" class="ConsultasPolizaAction"
+			method="consultaDatosSituacion">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+                    datosSituacion.*
+                </param>
+			</result>
 		</action>
-		<action name="consultaDatosCoberturas" class="ConsultasPolizaAction" method="consultaDatosCoberturas">
-			<result type="json"><param name="ignoreHierarchy">false</param></result>
+		
+		<action name="consultaDatosCoberturas" class="ConsultasPolizaAction"
+			method="consultaDatosCoberturas">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+                    datosCoberturas.*
+                </param>
+			</result>
 		</action>
 
 	</package>
