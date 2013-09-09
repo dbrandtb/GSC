@@ -1,6 +1,7 @@
 package mx.com.gseguros.portal.consultas.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import mx.com.aon.core.ApplicationException;
@@ -23,7 +24,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     private org.apache.log4j.Logger log =org.apache.log4j.Logger.getLogger(ConsultasPolizaAction.class);
 
     private ConsultasPolizaManager consultasPolizaManager;
-    private Map<String,String> parametros;
+    private HashMap<String,String> parametros;
     private String cdunieco;
     private String cdramo;
     private String estado;
@@ -40,7 +41,13 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     	logger.debug(" **** Entrando a Consulta de Poliza ****");
         try {
         	
-        	WrapperResultados result = consultasPolizaManager.consultaPoliza("1", "4", "M", "26", "", "");
+        	
+        	//"1", "4", "M", "26", "", ""
+			WrapperResultados result = consultasPolizaManager.consultaPoliza(
+					parametros.get("cdunieco"), parametros.get("cdramo"),
+					parametros.get("estado"), parametros.get("nmpoliza"),
+					parametros.get("idper"), parametros.get("nmclient"));
+			
         	ArrayList<ConsultaDatosPolizaVO> lista = (ArrayList<ConsultaDatosPolizaVO>) result.getItemList();
         	
         	if(lista!=null && !lista.isEmpty())	datosPoliza = lista.get(0);
@@ -61,7 +68,10 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     	logger.debug(" **** Entrando a consultaDatosSuplemento ****");
     	try {
     		
-    		WrapperResultados result = consultasPolizaManager.consultaSuplemento("1", "4", "M", "26");
+    		WrapperResultados result = consultasPolizaManager.consultaSuplemento(
+					parametros.get("cdunieco"), parametros.get("cdramo"),
+					parametros.get("estado"), parametros.get("nmpoliza"));
+    		
     		ArrayList<ConsultaDatosSuplementoVO> lista = (ArrayList<ConsultaDatosSuplementoVO>) result.getItemList();
     		
     		if(lista!=null && !lista.isEmpty())	datosSuplemento = lista.get(0);
@@ -82,7 +92,11 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     	logger.debug(" **** Entrando a consultaDatosSituacion ****");
     	try {
     		
-    		WrapperResultados result = consultasPolizaManager.consultaSituacion("1", "4", "M", "26", "", "");
+    		WrapperResultados result = consultasPolizaManager.consultaSituacion(
+					parametros.get("cdunieco"), parametros.get("cdramo"),
+					parametros.get("estado"), parametros.get("nmpoliza"),
+					parametros.get("suplemento"), parametros.get("nmsituac"));
+    		
     		ArrayList<ConsultaDatosSituacionVO> lista = (ArrayList<ConsultaDatosSituacionVO>) result.getItemList();
     		
     		if(lista!=null && !lista.isEmpty())	datosSituacion = lista.get(0);
@@ -103,7 +117,11 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     	logger.debug(" **** Entrando a consultaDatosCoberturas ****");
     	try {
     		
-    		WrapperResultados result = consultasPolizaManager.consultaCoberturas("1", "4", "M", "26", "", "");
+    		WrapperResultados result = consultasPolizaManager.consultaCoberturas(
+					parametros.get("cdunieco"), parametros.get("cdramo"),
+					parametros.get("estado"), parametros.get("nmpoliza"),
+					parametros.get("suplemento"), parametros.get("nmsituac"));
+    		
     		ArrayList<ConsultaDatosCoberturasVO> lista = (ArrayList<ConsultaDatosCoberturasVO>) result.getItemList();
     		
     		if(lista!=null && !lista.isEmpty())	datosCoberturas = lista.get(0);
@@ -122,7 +140,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     }
     
 
-    public void setParametros(Map<String, String> parametros) {
+    public void setParametros(HashMap<String, String> parametros) {
         this.parametros = parametros;
     }
 
