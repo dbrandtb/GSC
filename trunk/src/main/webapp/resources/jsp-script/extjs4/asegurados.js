@@ -747,7 +747,9 @@ Ext.onReady(function(){
         allowBlank:false,
         editable:false,
         emptyText:'Seleccione...',
-        labelWidth:250
+        labelWidth:250,
+        value:'S',
+        hidden:true
     });
     
     //12 suma maternidad
@@ -763,7 +765,9 @@ Ext.onReady(function(){
         allowBlank:false,
         editable:false,
         emptyText:'Seleccione...',
-        labelWidth:250
+        labelWidth:250,
+        value:0,
+        hidden:true
     });
     
     //13 tabulador reembolso
@@ -1135,6 +1139,8 @@ Ext.onReady(function(){
                     window.parent.scrollTo(0,0);
                     botonVerCoberturas.setDisabled(true);
                     botonComprar.setDisabled(true);
+                    window.parent.scrollTo(0,0);
+                    campoCodigoPostal.focus();
                 }
             },
             {
@@ -1159,6 +1165,7 @@ Ext.onReady(function(){
                     Ext.getCmp('botonEditarCotiza').show();
                     //Ext.getCmp('botonNuevaCotiza').show();
                     Ext.getCmp('botonImprimir').show();
+                    campoCodigoPostal.focus();
                 }
             },
             {
@@ -1649,6 +1656,7 @@ Ext.onReady(function(){
         }/*http://www.sencha.com/forum/showthread.php?141626-Grid-Validation-with-Error-Indication-%28suggestions-needed%29*/,
 
         onAddClick: function(){
+            window.parent.scrollTo(0,600);
             // Create a model instance
             var rec = new IncisoSalud({
                 rol: new Generic({key:storeRoles.getAt(0).data.key,value:storeRoles.getAt(0).data.value}),
@@ -1928,6 +1936,8 @@ Ext.onReady(function(){
                 formPanel.getForm().reset();
                 storeIncisos.removeAll();
                 storeIncisos.sync();
+                window.parent.scrollTo(0,0);
+                campoCodigoPostal.focus();
             }
         }
     ]
@@ -1966,5 +1976,7 @@ Ext.onReady(function(){
     //////////////////////////////////////////////////////
     ////// Fin de cargador de formulario (sin grid) //////
     //////////////////////////////////////////////////////
+    
+    campoCodigoPostal.focus();
     
 });
