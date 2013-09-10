@@ -17,6 +17,12 @@
             var urlGuardar='<s:url namespace="/" action="guardarDatosComplementarios" />';
             var urlCargar='<s:url namespace="/" action="cargarDatosComplementarios" />';
             var urlCargarCatalogos='<s:url namespace="/flujocotizacion" action="cargarCatalogos" />';
+            var inputCdunieco='<s:property value="cdunieco" />';
+            var inputCdramo='<s:property value="cdramo" />';
+            var inputEstado='<s:property value="estado" />';
+            var inputNmpoliza='<s:property value="nmpoliza" />';
+            var urlEditarAsegurados='<s:url namespace="/" action="editarAsegurados" />';
+            
             Ext.onReady(function(){
                 
                 Ext.define('MiModeloDinamico',{
@@ -113,6 +119,7 @@
                                     fieldLabel:'Estado',
                                     displayField: 'value',
                                     valueField: 'key',
+                                    readOnly:true,
                                     store:Ext.create('Ext.data.Store', {
                                         model:'Generic',
                                         autoLoad:true,
@@ -259,6 +266,12 @@
                                 {
                                     form.setLoading(true);
                                     form.submit({
+                                    	params:{
+                                    		'map1.pv_cdunieco' :  inputCdunieco,
+                                            'map1.pv_cdramo' :    inputCdramo,
+                                            'map1.pv_estado' :    inputEstado,
+                                            'map1.pv_nmpoliza' :  inputNmpoliza
+                                    	},
                                         success:function(){
                                             form.setLoading(false);
                                             Ext.Msg.show({
@@ -291,15 +304,29 @@
                         },
                         {
                             text:'Editar asegurados',
-                            icon: 'resources/extjs4/resources/ext-theme-classic/images/icons/fam/user.png'
+                            icon: 'resources/extjs4/resources/ext-theme-classic/images/icons/fam/user.png',
+                            handler:function(){
+                                Ext.create('Ext.form.Panel').submit({
+                                    url : urlEditarAsegurados,
+                                    standardSubmit:true,
+                                    params:{
+                                        'map1.cdunieco' :  inputCdunieco,
+                                        'map1.cdramo' :    inputCdramo,
+                                        'map1.estado' :    inputEstado,
+                                        'map1.nmpoliza' :  inputNmpoliza
+                                    }
+                                });
+                            }
                         },
                         {
                             text:'Editar agentes',
-                            icon: 'resources/extjs4/resources/ext-theme-classic/images/icons/fam/user_gray.png'
+                            icon: 'resources/extjs4/resources/ext-theme-classic/images/icons/fam/user_gray.png',
+                            disabled:true
                         },
                         {
                             text:'Editar documentos',
-                            icon: 'resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png'
+                            icon: 'resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png',
+                            disabled:true
                         }
                     ]
                 });
@@ -314,10 +341,10 @@
                     proxy:
                     {
                         extraParams:{
-                            cdunieco : '<s:property value="nmpoliza" />',
-                            cdramo :   '<s:property value="cdramo" />',
-                            estado :   '<s:property value="estado" />',
-                            nmpoliza : '<s:property value="nmpoliza" />'
+                            cdunieco :  inputCdunieco,
+                            cdramo :    inputCdramo,
+                            estado :    inputEstado,
+                            nmpoliza :  inputNmpoliza
                         },
                         type:'ajax',
                         url:urlCargar,

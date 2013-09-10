@@ -22,6 +22,7 @@ public class Item
     private Item parent=null;
     private String composedName=null;
     private String composedNameClose=null;
+    private String quotes="'";
     
     public Item()
     {
@@ -158,7 +159,7 @@ public class Item
         {
             if(this.value.getClass().equals(String.class))
             {
-                s=this.key+":'"+this.value+"'";
+                s=this.key+":"+this.quotes+this.value+this.quotes;
             }
             else
             {
@@ -342,5 +343,14 @@ public class Item
     public void setComposedNameClose(String composedNameClose) {
         this.composedNameClose = composedNameClose;
     }
+
+	public String getQuotes() {
+		return quotes;
+	}
+
+	public Item setQuotes(String quotes) {
+		this.quotes = quotes;
+		return this;
+	}
     
 }

@@ -13,7 +13,9 @@ public interface ConstantesCatalogos
     public static final String CON_CAT_POL_ESTADO       ="STATUSPOL";
     public static final String CON_CAT_POL_TIPO_POLIZA  ="TIPOPOL";
     public static final String CON_CAT_POL_TIPO_PAGO    ="TPERPAG";
+    public static final String CON_CAT_POL_ROL    ="TROLES";
     public String getCON_CAT_POL_ESTADO();
     public String getCON_CAT_POL_TIPO_POLIZA();
     public String getCON_CAT_POL_TIPO_PAGO();
+    public String getCON_CAT_POL_ROL();
 }

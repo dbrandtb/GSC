@@ -676,7 +676,7 @@ Ext.onReady(function(){
     {
         id:'comboSumaAsegurada',
         name:'sumaSegurada',
-        fieldLabel: 'Suma asegurada',
+        fieldLabel: 'Beneficio m&aacute;ximo',
         store: storeSumasAseguradas,
         queryMode:'local',
         displayField: 'value',
@@ -783,7 +783,9 @@ Ext.onReady(function(){
         allowBlank:false,
         editable:false,
         emptyText:'Seleccione...',
-        labelWidth:250
+        labelWidth:250,
+        hidden:true,
+        value:"21000"
     });
     
     //14 emergencia extranjero
@@ -1781,18 +1783,26 @@ Ext.onReady(function(){
 
                 var hayTitular=0;
                 var menorDeEdad=false;
+                var mayores69=false;
                 storeIncisos.each(function(record,index){
                 	var rol=typeof record.get('rol')=='string'?record.get('rol'):record.get('rol').get('key');
-                	if(rol=="T")
+                	if(rol=="T"||true)//se agrego true por los mayores69
                 	{
-                		hayTitular++;
                 		var fechaNacimiento = new Date(record.get('fechaNacimiento'));
                 		var hoy = new Date();
                 		var edad = parseInt((hoy/365/24/60/60/1000 -fechaNacimiento/365/24/60/60/1000));
+                		if(edad>69)
+            			{
+                			mayores69=true;
+            			}
                 		//console.log("hoy",parseInt(hoy));
                 		//console.log("fenacimi",parseInt(fechaNacimiento));
                 		//console.log("edad",edad);
-                		menorDeEdad=edad<18;
+                		if(rol=="T")
+            			{
+                			menorDeEdad=edad<18;                			
+                			hayTitular++;
+            			}
                 	}
                 });
                 if (form.isValid())
@@ -1801,101 +1811,110 @@ Ext.onReady(function(){
 		            {
 	                	if(!menorDeEdad)
 	                	{
-		                    var incisosRecords = storeIncisos.getRange();
-		                    if(incisosRecords&&incisosRecords.length>0)
-		                    {
-		                        var incisosJson = [];
-		                        storeIncisos.each(function(record,index){
-	                            incisosJson.push({
-	                                id: record.get('id'),
-	                                rol:
-	                                {
-	                                    key:typeof record.get('rol')=='string'?record.get('rol'):record.get('rol').get('key'),
-	                                    value:''
-	                                },
-	                                fechaNacimiento: record.get('fechaNacimiento'),
-	                                sexo:
-	                                {
-	                                    key:typeof record.get('sexo')=='string'?record.get('sexo'):record.get('sexo').get('key'),
-	                                    value:''
-	                                },
-	                                nombre: record.get('nombre'),
-	                                segundoNombre: record.get('segundoNombre'),
-	                                apellidoPaterno: record.get('apellidoPaterno'),
-	                                apellidoMaterno: record.get('apellidoMaterno')
-	                            });
-	                            });
-	                            /*for (var i in incisosRecords) {
-	                                window.console&&console.log(i);
-	                                incisosJson.push({
-	                                    id: incisosRecords[i].id,
-	                                    rol:
-	                                    {
-	                                        key:typeof incisosRecords[i].rol=='string'?incisosRecords[i].rol:incisosRecords[i].rol.key,
-	                                        value:''
-	                                    },
-	                                    fechaNacimiento: incisosRecords[i].fechaNacimiento,
-	                                    sexo:
-	                                    {
-	                                        key:typeof incisosRecords[i].sexo=='string'?incisosRecords[i].sexo:incisosRecords[i].sexo.key,
-	                                        value:''
-	                                    },
-	                                    nombre: incisosRecords[i].nombre,
-	                                    segundoNombre: incisosRecords[i].segundoNombre,
-	                                    apellidoPaterno: incisosRecords[i].apellidoPaterno,
-	                                    apellidoMaterno: incisosRecords[i].apellidoMaterno
-	                            	});
-	                        	}*/
-	                        	var submitValues=form.getValues();
-	                        	submitValues['incisos']=incisosJson;
-	                        	//window.console&&console.log(submitValues);
-	                        	//Submit the Ajax request and handle the response
-	                        	formPanel.setLoading(true);
-	                        	/*Ext.MessageBox.show({
-	                            	msg: 'Cotizando...',
-	                            	width:300,
-	                            	wait:true,
-	                            	waitConfig:{interval:100}
-	                        	});*/
-	                        	Ext.Ajax.request(
-	                        	{
-	                            	url: _URL_COTIZAR,
-	                            	jsonData:Ext.encode(submitValues),
-	                            	success:function(response,opts)
-	                            	{
-	                                	//Ext.MessageBox.hide();
-	                            		formPanel.setLoading(false);
-	                                	var jsonResp = Ext.decode(response.responseText);
-	                                	//window.console&&console.log(jsonResp);
-	                                	if(jsonResp.success==true)
-	                                	{
-	                                		Ext.getCmp('idCotizacion').setValue(jsonResp.id);
-	                                		mostrarGrid();
-	                                	}
-	                            	},
-	                            	failure:function(response,opts)
-	                            	{
-	                                	//Ext.MessageBox.hide();
-	                                	formPanel.setLoading(false);
-	                                	//window.console&&console.log("error");
-	                                	Ext.Msg.show({
-	                                    	title:'Error',
-	                                    	msg: 'Error de comunicaci&oacute;n',
-	                                    	buttons: Ext.Msg.OK,
-	                                    	icon: Ext.Msg.ERROR
-	                                	});
-	                            	}
-	                        	});
-	                    	}
-	                    	else
-	                    	{
-	                        	Ext.Msg.show({
-	                            	title:'Datos incompletos',
-	                            	msg: 'Favor de introducir al menos un asegurado',
-	                            	buttons: Ext.Msg.OK,
-	                            	icon: Ext.Msg.ERROR
-	                        	});
-	                    	}
+	                		if(!mayores69)
+                			{
+			                    var incisosRecords = storeIncisos.getRange();
+			                    if(incisosRecords&&incisosRecords.length>0)
+			                    {
+			                        var incisosJson = [];
+			                        var nombres=0;
+			                        storeIncisos.each(function(record,index){
+			                        	if(record.get('nombre')
+			                        			&&record.get('nombre').length>0)
+		                        		{
+			                        		nombres++;
+		                        		}
+			                            incisosJson.push({
+			                                id: record.get('id'),
+			                                rol:
+			                                {
+			                                    key:typeof record.get('rol')=='string'?record.get('rol'):record.get('rol').get('key'),
+			                                    value:''
+			                                },
+			                                fechaNacimiento: record.get('fechaNacimiento'),
+			                                sexo:
+			                                {
+			                                    key:typeof record.get('sexo')=='string'?record.get('sexo'):record.get('sexo').get('key'),
+			                                    value:''
+			                                },
+			                                nombre: record.get('nombre'),
+			                                segundoNombre: record.get('segundoNombre'),
+			                                apellidoPaterno: record.get('apellidoPaterno'),
+			                                apellidoMaterno: record.get('apellidoMaterno')
+			                            });
+		                            });
+			                        if(nombres==0||nombres==incisosRecords.length)
+		                        	{
+			                        	var submitValues=form.getValues();
+			                        	submitValues['incisos']=incisosJson;
+			                        	//window.console&&console.log(submitValues);
+			                        	//Submit the Ajax request and handle the response
+			                        	formPanel.setLoading(true);
+			                        	/*Ext.MessageBox.show({
+			                            	msg: 'Cotizando...',
+			                            	width:300,
+			                            	wait:true,
+			                            	waitConfig:{interval:100}
+			                        	});*/
+			                        	Ext.Ajax.request(
+			                        	{
+			                            	url: _URL_COTIZAR,
+			                            	jsonData:Ext.encode(submitValues),
+			                            	success:function(response,opts)
+			                            	{
+			                                	//Ext.MessageBox.hide();
+			                            		formPanel.setLoading(false);
+			                                	var jsonResp = Ext.decode(response.responseText);
+			                                	//window.console&&console.log(jsonResp);
+			                                	if(jsonResp.success==true)
+			                                	{
+			                                		Ext.getCmp('idCotizacion').setValue(jsonResp.id);
+			                                		mostrarGrid();
+			                                	}
+			                            	},
+			                            	failure:function(response,opts)
+			                            	{
+			                                	//Ext.MessageBox.hide();
+			                                	formPanel.setLoading(false);
+			                                	//window.console&&console.log("error");
+			                                	Ext.Msg.show({
+			                                    	title:'Error',
+			                                    	msg: 'Error de comunicaci&oacute;n',
+			                                    	buttons: Ext.Msg.OK,
+			                                    	icon: Ext.Msg.ERROR
+			                                	});
+			                            	}
+			                        	});
+		                        	}
+			                        else
+		                        	{
+			                        	Ext.Msg.show({
+			                            	title:'Datos incompletos',
+			                            	msg: 'Si introduce el nombre de alg&uacute;n asegurado, es requerido introducirlo para el resto de asegurados',
+			                            	buttons: Ext.Msg.OK,
+			                            	icon: Ext.Msg.WARNING
+			                        	});
+		                        	}
+		                    	}
+		                    	else
+		                    	{
+		                        	Ext.Msg.show({
+		                            	title:'Datos incompletos',
+		                            	msg: 'Favor de introducir al menos un asegurado',
+		                            	buttons: Ext.Msg.OK,
+		                            	icon: Ext.Msg.WARNING
+		                        	});
+		                    	}
+                			}
+	                		else
+	                		{
+	                			Ext.Msg.show({
+		                            title:'Datos incompletos',
+		                            msg: 'La edad del asegurado no debe exceder de 69 a&ntilde;os',
+		                            buttons: Ext.Msg.OK,
+		                            icon: Ext.Msg.WARNING
+		                        });
+	                		}
 	                	}
 	                	else
 	                	{
