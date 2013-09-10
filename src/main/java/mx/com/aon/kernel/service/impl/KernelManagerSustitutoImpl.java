@@ -195,4 +195,20 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return lista;
     }
     
+    public List<Map<String, Object>> obtenerAsegurados(Map<String, String> parameters) throws ApplicationException
+    {
+    	log.debug("### kernel sustituto obtenerAsegurados parameters: "+parameters);
+        List<Map<String,Object>> lista= this.getAllBackBoneInvoke(parameters, ProcesoDAO.OBTENER_ASEGURADOS);
+        lista=lista!=null?lista:new ArrayList<Map<String,Object>>(0);
+        log.debug("### kernel sustituto obtenerAsegurados lista size: "+lista.size());
+        return lista;
+    }
+    
+    public Map<String,Object> getInfoMpolizasCompleta(Map<String,String> parameters) throws ApplicationException {
+        log.debug("### kernel sustituto getInfoMpolizasCompleta map: "+parameters);
+        Map<String,Object> map=(Map<String,Object>) this.getBackBoneInvoke(parameters, ProcesoDAO.OBTENER_POLIZA_COMPLETA);
+        log.debug("### kernel sustituto getInfoMpolizasCompleta response map: "+map);
+        return map;
+    }
+    
 }

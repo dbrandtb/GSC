@@ -38,4 +38,6 @@ public interface KernelManagerSustituto {
     public WrapperResultados comprarCotizacion(Map<String,String> parameters) throws ApplicationException;
     public Map<String,Object> getInfoMpolizas(Map<String,Object>parameters) throws ApplicationException;
     public List<GenericVO> getTmanteni(String tabla) throws ApplicationException;
+	public List<Map<String, Object>> obtenerAsegurados(Map<String, String> map1) throws ApplicationException;
+	public Map<String,Object> getInfoMpolizasCompleta(Map<String,String> parameters) throws ApplicationException;
 }

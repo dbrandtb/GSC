@@ -75,6 +75,8 @@ public class ProcesoDAO extends AbstractDAO {
         public static final String COMPRAR_COTIZACION="COMPRAR_COTIZACION";
         public static final String GET_INFO_MPOLIZAS="GET_INFO_MPOLIZAS";
         public static final String OBTENER_TMANTENI="OBTENER_TMANTENI";
+        public static final String OBTENER_ASEGURADOS="OBTENER_ASEGURADOS";
+        public static final String OBTENER_POLIZA_COMPLETA="OBTENER_POLIZA_COMPLETA";
 
 	protected void initDao() throws Exception {
 		addStoredProcedure(PERMISO_EJECUCION_PROCESO,
@@ -102,17 +104,19 @@ public class ProcesoDAO extends AbstractDAO {
 		
 		addStoredProcedure(P_MOV_MPOLIZAS, new InsertaMaestroPolizas(getDataSource()));
 		addStoredProcedure(P_MOV_TVALOSIT, new InsertaValoresSituaciones(getDataSource()));
-                addStoredProcedure(P_MOV_MPOLISIT, new InsertaMPolisit(getDataSource()));
-                addStoredProcedure(P_CLONAR_PERSONAS, new ClonaPersonas(getDataSource()));
+        addStoredProcedure(P_MOV_MPOLISIT, new InsertaMPolisit(getDataSource()));
+        addStoredProcedure(P_CLONAR_PERSONAS, new ClonaPersonas(getDataSource()));
 		addStoredProcedure(OBTENER_RESULTADOS_COTIZACION, new ObtieneResultadosCotiza(getDataSource()));
-                addStoredProcedure(OBTENER_COBERTURAS, new ObtieneCoberturas(getDataSource()));
-                addStoredProcedure(OBTENER_AYUDA_COBERTURA, new ObtieneAyudaCoberturas(getDataSource()));
-                addStoredProcedure(OBTENER_TATRISIT, new ObtieneTatrisit(getDataSource()));
-                addStoredProcedure(OBTENER_DATOS_USUARIO, new ObtieneDatosUsuario(getDataSource()));
-                addStoredProcedure(INSERTAR_DETALLE_SUPLEMEN, new InsertarDetalleSuplemen(getDataSource()));
-                addStoredProcedure(COMPRAR_COTIZACION, new ComprarCotizacion(getDataSource()));
-                addStoredProcedure(GET_INFO_MPOLIZAS, new GetInfoMpolizas(getDataSource()));
-                addStoredProcedure(OBTENER_TMANTENI, new ObtenerTmanteni(getDataSource()));
+        addStoredProcedure(OBTENER_COBERTURAS, new ObtieneCoberturas(getDataSource()));
+        addStoredProcedure(OBTENER_AYUDA_COBERTURA, new ObtieneAyudaCoberturas(getDataSource()));
+        addStoredProcedure(OBTENER_TATRISIT, new ObtieneTatrisit(getDataSource()));
+        addStoredProcedure(OBTENER_DATOS_USUARIO, new ObtieneDatosUsuario(getDataSource()));
+        addStoredProcedure(INSERTAR_DETALLE_SUPLEMEN, new InsertarDetalleSuplemen(getDataSource()));
+        addStoredProcedure(COMPRAR_COTIZACION, new ComprarCotizacion(getDataSource()));
+        addStoredProcedure(GET_INFO_MPOLIZAS, new GetInfoMpolizas(getDataSource()));
+        addStoredProcedure(OBTENER_TMANTENI, new ObtenerTmanteni(getDataSource()));
+        addStoredProcedure(OBTENER_ASEGURADOS, new ObtenerAsegurados(getDataSource()));
+        addStoredProcedure(OBTENER_POLIZA_COMPLETA, new ObtenerPolizaCompleta(getDataSource()));
 	}
 
 	protected class BuscarMatrizAsignacion extends CustomStoredProcedure {
@@ -1373,5 +1377,109 @@ public class ProcesoDAO extends AbstractDAO {
     /*//////////////////////////////////////////*/
     ////// obtiene tablas de catalogos ///////////
     //////////////////////////////////////////////
+    
+    //////////////////////////////////////////////
+    ////// obtiene asegurados de poliza //////////
+    /*//////////////////////////////////////////*/
+    protected class ObtenerAsegurados extends CustomStoredProcedure
+    {
+    	protected ObtenerAsegurados(DataSource dataSource)
+    	{
+    		super(dataSource,"PKG_SATELITES.P_OBT_DATOS_MPOLIPER");
+    		declareParameter(new SqlParameter("pv_cdunieco",    OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("pv_cdramo",      OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("pv_estado",      OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmpoliza",    OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerAseguradosMapper()));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
+		}
+
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+    		WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+    		WrapperResultados wrapperResultados = mapper.build(map);
+    		List result = (List) map.get("pv_registro_o");
+    		wrapperResultados.setItemList(result);
+    		return wrapperResultados;
+    	}
+    }
+
+    protected class ObtenerAseguradosMapper implements RowMapper {
+    	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+    		Map<String,Object> r=new HashMap<String,Object>(0);
+    		/*SELECT distinct a.nmsituac,a.cdrol cdrol,b.fenacimi fenacimi,b.otsexo sexo,
+           a.cdperson cdperson,b.dsnombre nombre,b.dsnombre1 segundo_nombre,b.dsapellido Apellido_Paterno,
+           b.dsapellido1 Apellido_Materno*/
+    		r.put("nmsituac",			rs.getString("nmsituac"));
+    		r.put("cdrol",				rs.getString("cdrol"));
+    		r.put("fenacimi",			rs.getString("fenacimi"));
+    		r.put("sexo",				rs.getString("sexo"));
+    		r.put("cdperson",			rs.getString("cdperson"));
+    		r.put("nombre",				rs.getString("nombre"));
+    		r.put("segundo_nombre",		rs.getString("segundo_nombre"));
+    		r.put("Apellido_Paterno",	rs.getString("Apellido_Paterno"));
+    		r.put("Apellido_Materno",	rs.getString("Apellido_Materno"));
+    		r.put("cdrfc",				rs.getString("cdrfc"));
+    		return r;
+    	}
+    }
+	/*//////////////////////////////////////////*/
+	////// obtiene tablas de catalogos ///////////
+	//////////////////////////////////////////////
+    
+    ///////////////////////////////
+    ////// obtiene   mpoliza //////
+    /*///////////////////////////*/
+    protected class ObtenerPolizaCompleta extends CustomStoredProcedure
+    {
+    	protected ObtenerPolizaCompleta(DataSource dataSource)
+    	{
+    		super(dataSource,"PKG_SATELITES.P_GET_INFO_MPOLIZAS");
+    		declareParameter(new SqlParameter("pv_cdunieco",    OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("pv_cdramo",      OracleTypes.NUMERIC));
+            declareParameter(new SqlParameter("pv_estado",      OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmpoliza",    OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdusuari",    OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerPolizaCompletaMapper()));
+    		declareParameter(new SqlOutParameter("pv_messages_o",   OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
+		}
+
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+    		WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+    		WrapperResultados wrapperResultados = mapper.build(map);
+    		List result = (List) map.get("pv_registro_o");
+    		wrapperResultados.setItemList(result);
+    		return wrapperResultados;
+    	}
+    }
+
+    protected class ObtenerPolizaCompletaMapper implements RowMapper {
+    	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+    		Map<String,Object> m=new HashMap<String,Object>(0);
+    		String columnas[]=new String[]{"status","swestado","nmsolici","feautori","cdmotanu","feanulac",
+    				"swautori","cdmoneda","feinisus","fefinsus",
+    	            "ottempot","feefecto","hhefecto","feproren","fevencim","nmrenova","ferecibo","feultsin","nmnumsin","cdtipcoa",
+    	            "swtarifi","swabrido","feemisio","cdperpag","nmpoliex","nmcuadro","porredau","swconsol","nmpolant","nmpolnva",
+    	            "fesolici","cdramant","cdmejred","nmpoldoc","nmpoliza2","nmrenove","nmsuplee","ttipcamc","ttipcamv","swpatent"};
+    		for(String columna:columnas)
+    		{
+    			if(columna.substring(0,2).equals("fe"))
+    			{
+    				m.put(columna,rs.getDate(columna));
+    			}
+    			else
+    			{
+    				m.put(columna,rs.getString(columna));
+    			}
+    		}
+    		return m;
+    	}
+    }
+    
+    /*///////////////////////////*/
+    ////// obtiene   mpoliza //////
+    ///////////////////////////////
     
 }

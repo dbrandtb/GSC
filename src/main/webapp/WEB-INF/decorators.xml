@@ -104,6 +104,9 @@
             
             <pattern>/subirArchivoMostrarBarra.action</pattern>
             <pattern>/jsp/extjs4/subirArchivoBarra.jsp</pattern>
+            
+            <pattern>/editarAsegurados.action</pattern>
+            <pattern>/jsp/extjs4/editarAsegurados.jsp</pattern>
         </excludes>    	
     	  	
     </decorator>   	
@@ -125,6 +128,9 @@
         
         <pattern>/subirArchivoMostrarBarra.action</pattern>
         <pattern>/jsp/extjs4/subirArchivoBarra.jsp</pattern>
+        
+        <pattern>/editarAsegurados.action</pattern>
+        <pattern>/jsp/extjs4/editarAsegurados.jsp</pattern>
     </decorator>
     
     <!--decorator name="default" page="default.jsp">
