@@ -7,7 +7,7 @@
 
     <display-name>gseguros</display-name>
     
-    <!--servlet>
+    <!-- <servlet>
 		<servlet-name>jsp</servlet-name>
 		<servlet-class>oracle.jsp.runtimev2.JspServlet</servlet-class>
 		<init-param>
@@ -26,7 +26,7 @@
 			<param-name>emit_debuginfo</param-name>
 			<param-value>true</param-value>
 		</init-param>
-    </servlet-->
+    </servlet> -->
 
     <context-param>
         <param-name>webAppRootKey</param-name>
