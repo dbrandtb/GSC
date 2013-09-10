@@ -2,12 +2,9 @@ package mx.com.gseguros.portal.consultas.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.core.web.PrincipalCoreAction;
-import mx.com.aon.kernel.service.KernelManagerSustituto;
-import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosCoberturasVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosPolizaVO;
@@ -21,28 +18,34 @@ import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
  */
 public class ConsultasPolizaAction extends PrincipalCoreAction{
     
-    private org.apache.log4j.Logger log =org.apache.log4j.Logger.getLogger(ConsultasPolizaAction.class);
+    private static final long serialVersionUID = -6321288906841302337L;
 
+	private org.apache.log4j.Logger logger =org.apache.log4j.Logger.getLogger(ConsultasPolizaAction.class);
+	
+    /**
+     * Success property
+     */
+    private boolean success;
+    
     private ConsultasPolizaManager consultasPolizaManager;
+    
     private HashMap<String,String> parametros;
-    private String cdunieco;
-    private String cdramo;
-    private String estado;
-    private String nmpoliza;
+    
     private ConsultaDatosPolizaVO datosPoliza;
-    private ConsultaDatosSuplementoVO datosSuplemento;
-    private ConsultaDatosSituacionVO datosSituacion;
-    private ConsultaDatosCoberturasVO datosCoberturas;
     
+    private List<ConsultaDatosSuplementoVO> datosSuplemento;
     
-    private boolean success=true;
+    private List<ConsultaDatosSituacionVO> datosSituacion;
     
+    private List<ConsultaDatosCoberturasVO> datosCoberturas;
+    
+    /**
+     * Obtiene los datos generales de una p&oacute;liza
+     * @return String result
+     */
     public String consultaDatosPoliza(){
     	logger.debug(" **** Entrando a Consulta de Poliza ****");
         try {
-        	
-        	
-        	//"1", "4", "M", "26", "", ""
 			WrapperResultados result = consultasPolizaManager.consultaPoliza(
 					parametros.get("cdunieco"), parametros.get("cdramo"),
 					parametros.get("estado"), parametros.get("nmpoliza"),
@@ -55,15 +58,19 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
         	logger.debug("Resultado de la consulta de poliza:" + datosPoliza);
         	
         }catch( Exception e){
-            success = false;
             logger.error("Error al obtener los datos de la poliza ",e);
             return SUCCESS;
         }
         
         success = true;
         return SUCCESS;
-    
     }
+    
+    
+    /**
+     * Obtiene los datos de los suplementos de la poliza
+     * @return String result
+     */
     public String consultaDatosSuplemento(){
     	logger.debug(" **** Entrando a consultaDatosSuplemento ****");
     	try {
@@ -72,9 +79,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
 					parametros.get("cdunieco"), parametros.get("cdramo"),
 					parametros.get("estado"), parametros.get("nmpoliza"));
     		
-    		ArrayList<ConsultaDatosSuplementoVO> lista = (ArrayList<ConsultaDatosSuplementoVO>) result.getItemList();
-    		
-    		if(lista!=null && !lista.isEmpty())	datosSuplemento = lista.get(0);
+    		datosSuplemento = (ArrayList<ConsultaDatosSuplementoVO>) result.getItemList();
     		
     		logger.debug("Resultado de la consultaDatosSuplemento:" + datosSuplemento);
     		
@@ -88,6 +93,12 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     	return SUCCESS;
     	
     }
+    
+    
+    /**
+     * Obtiene los datos de las situaciones de la poliza
+     * @return String result
+     */
     public String consultaDatosSituacion(){
     	logger.debug(" **** Entrando a consultaDatosSituacion ****");
     	try {
@@ -97,14 +108,11 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
 					parametros.get("estado"), parametros.get("nmpoliza"),
 					parametros.get("suplemento"), parametros.get("nmsituac"));
     		
-    		ArrayList<ConsultaDatosSituacionVO> lista = (ArrayList<ConsultaDatosSituacionVO>) result.getItemList();
-    		
-    		if(lista!=null && !lista.isEmpty())	datosSituacion = lista.get(0);
+    		datosSituacion = (ArrayList<ConsultaDatosSituacionVO>) result.getItemList();
     		
     		logger.debug("Resultado de la consultaDatosSituacion:" + datosSituacion);
     		
     	}catch( Exception e){
-    		success = false;
     		logger.error("Error al obtener los consultaDatosSituacion ",e);
     		return SUCCESS;
     	}
@@ -113,6 +121,12 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     	return SUCCESS;
     	
     }
+    
+    
+    /**
+     * Obtiene los datos de las coberturas de la poliza
+     * @return String result
+     */
     public String consultaDatosCoberturas(){
     	logger.debug(" **** Entrando a consultaDatosCoberturas ****");
     	try {
@@ -122,14 +136,11 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
 					parametros.get("estado"), parametros.get("nmpoliza"),
 					parametros.get("suplemento"), parametros.get("nmsituac"));
     		
-    		ArrayList<ConsultaDatosCoberturasVO> lista = (ArrayList<ConsultaDatosCoberturasVO>) result.getItemList();
-    		
-    		if(lista!=null && !lista.isEmpty())	datosCoberturas = lista.get(0);
+    		datosCoberturas = (ArrayList<ConsultaDatosCoberturasVO>) result.getItemList();
     		
     		logger.debug("Resultado de la consultaDatosCoberturas:" + datosCoberturas);
     		
     	}catch( Exception e){
-    		success = false;
     		logger.error("Error al obtener los consultaDatosCoberturas ",e);
     		return SUCCESS;
     	}
@@ -138,84 +149,61 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     	return SUCCESS;
     	
     }
+
+
+    //Getters and setters:
     
-
-    public void setParametros(HashMap<String, String> parametros) {
-        this.parametros = parametros;
-    }
-
-    public String getCdunieco() {
-        return cdunieco;
-    }
-
-    public void setCdunieco(String cdunieco) {
-        this.cdunieco = cdunieco;
-    }
-
-    public String getCdramo() {
-        return cdramo;
-    }
-
-    public void setCdramo(String cdramo) {
-        this.cdramo = cdramo;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
-
-    public String getNmpoliza() {
-        return nmpoliza;
-    }
-
-    public void setNmpoliza(String nmpoliza) {
-        this.nmpoliza = nmpoliza;
-    }
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
-
-
-	public void setConsultasPolizaManager(
-			ConsultasPolizaManager consultasPolizaManager) {
-		this.consultasPolizaManager = consultasPolizaManager;
+	public HashMap<String, String> getParametros() {
+		return parametros;
 	}
 
+	public void setParametros(HashMap<String, String> parametros) {
+		this.parametros = parametros;
+	}
 
 	public ConsultaDatosPolizaVO getDatosPoliza() {
 		return datosPoliza;
 	}
 
-
 	public void setDatosPoliza(ConsultaDatosPolizaVO datosPoliza) {
 		this.datosPoliza = datosPoliza;
 	}
-	public ConsultaDatosSuplementoVO getDatosSuplemento() {
+
+	public List<ConsultaDatosSuplementoVO> getDatosSuplemento() {
 		return datosSuplemento;
 	}
-	public void setDatosSuplemento(ConsultaDatosSuplementoVO datosSuplemento) {
+
+	public void setDatosSuplemento(List<ConsultaDatosSuplementoVO> datosSuplemento) {
 		this.datosSuplemento = datosSuplemento;
 	}
-	public ConsultaDatosSituacionVO getDatosSituacion() {
+
+	public List<ConsultaDatosSituacionVO> getDatosSituacion() {
 		return datosSituacion;
 	}
-	public void setDatosSituacion(ConsultaDatosSituacionVO datosSituacion) {
+
+	public void setDatosSituacion(List<ConsultaDatosSituacionVO> datosSituacion) {
 		this.datosSituacion = datosSituacion;
 	}
-	public ConsultaDatosCoberturasVO getDatosCoberturas() {
+
+	public List<ConsultaDatosCoberturasVO> getDatosCoberturas() {
 		return datosCoberturas;
 	}
-	public void setDatosCoberturas(ConsultaDatosCoberturasVO datosCoberturas) {
+
+	public void setDatosCoberturas(List<ConsultaDatosCoberturasVO> datosCoberturas) {
 		this.datosCoberturas = datosCoberturas;
+	}
+
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
+	}
+
+	public void setConsultasPolizaManager(
+			ConsultasPolizaManager consultasPolizaManager) {
+		this.consultasPolizaManager = consultasPolizaManager;
 	}
     
 }
