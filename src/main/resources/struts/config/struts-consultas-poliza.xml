@@ -61,6 +61,17 @@
 			</result>
 		</action>
 
+		<action name="consultaDatosTarifaPoliza" class="ConsultasPolizaAction"
+			method="consultaDatosTarifaPoliza">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+                    datosTarifa.*,
+                    success
+                </param>
+			</result>
+		</action>
+
 	</package>
 
 </struts>
