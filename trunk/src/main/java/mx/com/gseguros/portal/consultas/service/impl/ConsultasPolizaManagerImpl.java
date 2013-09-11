@@ -4,6 +4,7 @@ import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_DA
 import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_DATOS_SUPLEMENTO;
 import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_DATOS_SITUACION;
 import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_DATOS_COBERTURAS;
+import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_POLIZAS_ASEGURADO;
 
 import java.util.HashMap;
 
@@ -70,6 +71,17 @@ public class ConsultasPolizaManagerImpl extends AbstractManagerJdbcTemplateInvok
 		params.put("pv_nmsituac_i", nmsituac);
 		
 		WrapperResultados result = this.returnBackBoneInvoke(params, OBTIENE_DATOS_COBERTURAS);
+		
+		return result;
+	}
+
+	public WrapperResultados obtienePolizasAsegurado(String rfc)
+			throws ApplicationException {
+		
+		HashMap<String,Object> params = new HashMap<String,Object>();  
+		params.put("pv_cdrfc", rfc);
+		
+		WrapperResultados result = this.returnBackBoneInvoke(params, OBTIENE_POLIZAS_ASEGURADO);
 		
 		return result;
 	}

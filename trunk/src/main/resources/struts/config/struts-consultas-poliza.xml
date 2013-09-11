@@ -50,6 +50,17 @@
 			</result>
 		</action>
 
+		<action name="obtienePolizasAsegurado" class="ConsultasPolizaAction"
+			method="obtienePolizasAsegurado">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+                    polizasAsegurado.*,
+                    success
+                </param>
+			</result>
+		</action>
+
 	</package>
 
 </struts>

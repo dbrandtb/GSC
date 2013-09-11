@@ -26,5 +26,6 @@ public interface ConsultasPolizaManager {
 	public WrapperResultados consultaSuplemento(String cdunieco, String cdramo, String estado, String nmpoliza)throws ApplicationException;
 	public WrapperResultados consultaSituacion(String cdunieco, String cdramo, String estado, String nmpoliza, String suplemento, String nmsituac)throws ApplicationException;
 	public WrapperResultados consultaCoberturas(String cdunieco, String cdramo, String estado, String nmpoliza, String suplemento, String nmsituac)throws ApplicationException;
+	public WrapperResultados obtienePolizasAsegurado(String rfc)throws ApplicationException;
 	
 }

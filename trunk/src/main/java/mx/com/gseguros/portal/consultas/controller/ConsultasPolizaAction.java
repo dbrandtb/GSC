@@ -10,6 +10,7 @@ import mx.com.gseguros.portal.consultas.model.ConsultaDatosCoberturasVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosPolizaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosSituacionVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosSuplementoVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 
 /**
@@ -38,6 +39,8 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     private List<ConsultaDatosSituacionVO> datosSituacion;
     
     private List<ConsultaDatosCoberturasVO> datosCoberturas;
+
+    private List<ConsultaPolizaAseguradoVO> polizasAsegurado;
     
     /**
      * Obtiene los datos generales de una p&oacute;liza
@@ -150,6 +153,30 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     	
     }
 
+    /**
+     * Obtiene las polizas del asegurado por rfc
+     * @return String result
+     */
+    public String obtienePolizasAsegurado(){
+    	logger.debug(" **** Entrando a obtienePolizasAsegurado ****");
+    	try {
+    		
+    		WrapperResultados result = consultasPolizaManager.obtienePolizasAsegurado(parametros.get("rfc"));
+    		
+    		polizasAsegurado = (ArrayList<ConsultaPolizaAseguradoVO>) result.getItemList();
+    		
+    		logger.debug("Resultado de la consultaDatosCoberturas:" + polizasAsegurado);
+    		
+    	}catch( Exception e){
+    		logger.error("Error al obtener los obtienePolizasAsegurado ",e);
+    		return SUCCESS;
+    	}
+    	
+    	success = true;
+    	return SUCCESS;
+    	
+    }
+
 
     //Getters and setters:
     
@@ -204,6 +231,16 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
 	public void setConsultasPolizaManager(
 			ConsultasPolizaManager consultasPolizaManager) {
 		this.consultasPolizaManager = consultasPolizaManager;
+	}
+
+
+	public List<ConsultaPolizaAseguradoVO> getPolizasAsegurado() {
+		return polizasAsegurado;
+	}
+
+
+	public void setPolizasAsegurado(List<ConsultaPolizaAseguradoVO> polizasAsegurado) {
+		this.polizasAsegurado = polizasAsegurado;
 	}
     
 }
