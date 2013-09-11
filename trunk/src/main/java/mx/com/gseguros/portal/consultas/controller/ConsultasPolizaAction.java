@@ -10,6 +10,7 @@ import mx.com.gseguros.portal.consultas.model.ConsultaDatosCoberturasVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosPolizaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosSituacionVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosSuplementoVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaDatosTarifaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 
@@ -30,7 +31,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     
     private ConsultasPolizaManager consultasPolizaManager;
     
-    private HashMap<String,String> parametros;
+    private HashMap<String,String> params;
     
     private ConsultaDatosPolizaVO datosPoliza;
     
@@ -41,6 +42,8 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     private List<ConsultaDatosCoberturasVO> datosCoberturas;
 
     private List<ConsultaPolizaAseguradoVO> polizasAsegurado;
+
+    private List<ConsultaDatosTarifaVO> datosTarifa;
     
     /**
      * Obtiene los datos generales de una p&oacute;liza
@@ -50,9 +53,9 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     	logger.debug(" **** Entrando a Consulta de Poliza ****");
         try {
 			WrapperResultados result = consultasPolizaManager.consultaPoliza(
-					parametros.get("cdunieco"), parametros.get("cdramo"),
-					parametros.get("estado"), parametros.get("nmpoliza"),
-					parametros.get("idper"), parametros.get("nmclient"));
+					params.get("cdunieco"), params.get("cdramo"),
+					params.get("estado"), params.get("nmpoliza"),
+					params.get("idper"), params.get("nmclient"));
 			
         	ArrayList<ConsultaDatosPolizaVO> lista = (ArrayList<ConsultaDatosPolizaVO>) result.getItemList();
         	
@@ -79,8 +82,8 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     	try {
     		
     		WrapperResultados result = consultasPolizaManager.consultaSuplemento(
-					parametros.get("cdunieco"), parametros.get("cdramo"),
-					parametros.get("estado"), parametros.get("nmpoliza"));
+					params.get("cdunieco"), params.get("cdramo"),
+					params.get("estado"), params.get("nmpoliza"));
     		
     		datosSuplemento = (ArrayList<ConsultaDatosSuplementoVO>) result.getItemList();
     		
@@ -107,9 +110,9 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     	try {
     		
     		WrapperResultados result = consultasPolizaManager.consultaSituacion(
-					parametros.get("cdunieco"), parametros.get("cdramo"),
-					parametros.get("estado"), parametros.get("nmpoliza"),
-					parametros.get("suplemento"), parametros.get("nmsituac"));
+					params.get("cdunieco"), params.get("cdramo"),
+					params.get("estado"), params.get("nmpoliza"),
+					params.get("suplemento"), params.get("nmsituac"));
     		
     		datosSituacion = (ArrayList<ConsultaDatosSituacionVO>) result.getItemList();
     		
@@ -135,9 +138,9 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     	try {
     		
     		WrapperResultados result = consultasPolizaManager.consultaCoberturas(
-					parametros.get("cdunieco"), parametros.get("cdramo"),
-					parametros.get("estado"), parametros.get("nmpoliza"),
-					parametros.get("suplemento"), parametros.get("nmsituac"));
+					params.get("cdunieco"), params.get("cdramo"),
+					params.get("estado"), params.get("nmpoliza"),
+					params.get("suplemento"), params.get("nmsituac"));
     		
     		datosCoberturas = (ArrayList<ConsultaDatosCoberturasVO>) result.getItemList();
     		
@@ -161,14 +164,41 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     	logger.debug(" **** Entrando a obtienePolizasAsegurado ****");
     	try {
     		
-    		WrapperResultados result = consultasPolizaManager.obtienePolizasAsegurado(parametros.get("rfc"));
+    		WrapperResultados result = consultasPolizaManager.obtienePolizasAsegurado(params.get("rfc"));
     		
     		polizasAsegurado = (ArrayList<ConsultaPolizaAseguradoVO>) result.getItemList();
     		
-    		logger.debug("Resultado de la consultaDatosCoberturas:" + polizasAsegurado);
+    		logger.debug("Resultado de la obtienePolizasAsegurado:" + polizasAsegurado);
     		
     	}catch( Exception e){
     		logger.error("Error al obtener los obtienePolizasAsegurado ",e);
+    		return SUCCESS;
+    	}
+    	
+    	success = true;
+    	return SUCCESS;
+    	
+    }
+    
+    /**
+     * Obtiene los datos de la tarifa de la poliza
+     * @return String result
+     */
+    public String consultaDatosTarifaPoliza(){
+    	logger.debug(" **** Entrando a consultaDatosTarifaPoliza ****");
+    	try {
+    		
+    		WrapperResultados result = consultasPolizaManager.consultaDatosTarifa(
+					params.get("cdunieco"), params.get("cdramo"),
+					params.get("estado"), params.get("nmpoliza"),
+					params.get("suplemento"));
+    		
+    		datosTarifa = (ArrayList<ConsultaDatosTarifaVO>) result.getItemList();
+    		
+    		logger.debug("Resultado de la consultaDatosTarifa:" + datosTarifa);
+    		
+    	}catch( Exception e){
+    		logger.error("Error al obtener los consultaDatosTarifaPoliza ",e);
     		return SUCCESS;
     	}
     	
@@ -180,12 +210,12 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
 
     //Getters and setters:
     
-	public HashMap<String, String> getParametros() {
-		return parametros;
+	public HashMap<String, String> getParams() {
+		return params;
 	}
 
-	public void setParametros(HashMap<String, String> parametros) {
-		this.parametros = parametros;
+	public void setParams(HashMap<String, String> params) {
+		this.params = params;
 	}
 
 	public ConsultaDatosPolizaVO getDatosPoliza() {
@@ -241,6 +271,16 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
 
 	public void setPolizasAsegurado(List<ConsultaPolizaAseguradoVO> polizasAsegurado) {
 		this.polizasAsegurado = polizasAsegurado;
+	}
+
+
+	public List<ConsultaDatosTarifaVO> getDatosTarifa() {
+		return datosTarifa;
+	}
+
+
+	public void setDatosTarifa(List<ConsultaDatosTarifaVO> datosTarifa) {
+		this.datosTarifa = datosTarifa;
 	}
     
 }

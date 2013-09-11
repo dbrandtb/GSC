@@ -15,6 +15,7 @@ import mx.com.gseguros.portal.consultas.model.ConsultaDatosCoberturasVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosPolizaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosSituacionVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosSuplementoVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaDatosTarifaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAseguradoVO;
 import oracle.jdbc.driver.OracleTypes;
 
@@ -32,6 +33,7 @@ public class ConsultasPolizaDAO extends AbstractDAO {
 	public static final String OBTIENE_DATOS_SITUACION = "OBTIENE_DATOS_SITUACION";
 	public static final String OBTIENE_DATOS_COBERTURAS = "OBTIENE_DATOS_COBERTURAS";
 	public static final String OBTIENE_POLIZAS_ASEGURADO = "OBTIENE_POLIZAS_ASEGURADO";
+	public static final String OBTIENE_DATOS_TARIFA = "OBTIENE_DATOS_TARIFA";
 	
 	protected void initDao() throws Exception {
 		addStoredProcedure(OBTIENE_DATOS_POLIZA, new ObtieneDatosPoliza(getDataSource()));
@@ -39,6 +41,7 @@ public class ConsultasPolizaDAO extends AbstractDAO {
 		addStoredProcedure(OBTIENE_DATOS_SITUACION, new ObtieneDatosSituacion(getDataSource()));
 		addStoredProcedure(OBTIENE_DATOS_COBERTURAS, new ObtieneDatosCoberturas(getDataSource()));
 		addStoredProcedure(OBTIENE_POLIZAS_ASEGURADO, new ObtienePolizasAsegurado(getDataSource()));
+		addStoredProcedure(OBTIENE_DATOS_TARIFA, new ObtieneDatosTarifa(getDataSource()));
 	}
 
 	protected class ObtieneDatosPoliza extends CustomStoredProcedure {
@@ -290,6 +293,48 @@ public class ConsultasPolizaDAO extends AbstractDAO {
     		consulta.setEstado(rs.getString("ESTADO"));
     		consulta.setNmpoliza(rs.getString("NMPOLIZA"));
     		consulta.setNombre(rs.getString("NOMBRE"));
+    		
+    		return consulta;
+    	}
+    }
+
+    protected class ObtieneDatosTarifa extends CustomStoredProcedure {
+    	
+    	protected ObtieneDatosTarifa(DataSource dataSource) {
+    		super(dataSource, "PKG_CONSULTA.P_Get_Datos_Tarifa_Pol");
+    		
+    		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DatosTarifaMapper()));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		
+    		compile();
+    		
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+    		WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+    		WrapperResultados wrapperResultados = mapper.build(map);
+    		List result = (List) map.get("pv_registro_o");
+    		wrapperResultados.setItemList(result);
+    		return wrapperResultados;
+    	}
+    }
+    
+    protected class DatosTarifaMapper  implements RowMapper {
+    	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+    		
+    		ConsultaDatosTarifaVO consulta = new ConsultaDatosTarifaVO();
+    		
+    		consulta.setCdgarant(rs.getString("GARANTIA"));
+    		consulta.setDsgarant(rs.getString("NOMBRE_GARANTIA"));
+    		consulta.setSumaAsegurada(rs.getString("SUMA_ASEGURADA"));
+    		consulta.setMontoPrima(rs.getString("MONTO_PRIMA"));
+    		consulta.setMontoComision(rs.getString("MONTO_COMISION"));
     		
     		return consulta;
     	}
