@@ -29,9 +29,9 @@
 <script type="text/javascript" src="${ctx}/resources/scripts/util/AON_utils.js"></script>
 <script type="text/javascript">
     var _CONTEXT = "${ctx}";
-    var _ACTION_ARBOL = "<s:url action='ArbolRolCliente'/>";
-    var _ACTION_PORTAL = "<s:url action='load'/>";
-    var _ACTION_REGRESA= "<s:url action='regresaCodigo' />";
+    var _ACTION_ARBOL = "<s:url action='ArbolRolCliente' namespace='/' />";
+    var _ACTION_PORTAL = "<s:url action='load' namespace='/' />";
+    var _ACTION_REGRESA= "<s:url action='regresaCodigo' namespace='/'/>";
     var _ACTION_VALIDAR_CONFIGURACION_COMPLETA = "<s:url action='validaConfiguracionCompleta' namespace='/principal'/>";
     var _ACTION_LOGIN = "<s:property value='#session.URL_INICIO' />";
 </script>

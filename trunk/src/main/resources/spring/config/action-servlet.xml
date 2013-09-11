@@ -15,7 +15,8 @@
     </bean>
     
     <bean id="autenticacionAction" class="mx.com.aon.portal.web.AutenticacionAction" scope="prototype">
-    	<!--property name="paginaPrincipalManager" ref="paginaPrincipalManager"/-->
+    	<property name="loginManager" ref="loginManager"></property>
+    	<property name="navigationManager" ref="navigationManagerJdbcTemplate"></property>
     </bean>
     
     <bean id="menuAction" class="mx.com.aon.portal.web.MenuAction" scope="prototype">
@@ -23,7 +24,7 @@
     	<property name="menuPrincipalManagerJdbcTemplate" ref="menuPrincipalManagerJdbcTemplate"></property>
     </bean>
      <bean id="loadClientesRolesAction" class="mx.com.aon.portal.web.LoadClientesRolesAction" scope="prototype">
-         <property name="navigationManager" ref="navigationManager"></property>
+         <property name="navigationManager" ref="navigationManagerJdbcTemplate"></property>
 		 <property name="principalManagerJdbcTemplate" ref="principalManagerJdbcTemplate" />
          <property name="usuarioManager" ref="usuarioManager"></property>
     </bean>
