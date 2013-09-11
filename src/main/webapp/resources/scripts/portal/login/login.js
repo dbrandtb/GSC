@@ -1,68 +1,42 @@
 Ext.onReady(function(){
-	Ext.QuickTips.init();
-	Ext.QuickTips.enable();
-	Ext.form.Field.prototype.msgTarget = "side";
 
-	var _URL_VALIDA_USUARIO = _CONTEXT + '/autenticaUsuario.action';
+	var _URL_VALIDA_USUARIO = _CONTEXT + '/seguridad/autenticaUsuario.action';
 	
 	var dsUser = new Ext.form.TextField({
 		id:'user',
-		fieldLabel: 'Usuario', 
-		tooltip: 'Nombre de Usuario',
-		name:'user',
-		mask:'*',
-		allowBlank:false
+		fieldLabel: 'Usuario',
+        name: 'user',
+        allowBlank: false,
+        blankText:'El nombre del usuario es un dato requerido'
 	});
 	
 	var dsPassword = new Ext.form.TextField({
-	    id:'password',   
-	    fieldLabel: 'Contraseña', 
-	    tooltip: 'Contraseña',
-	    name:'password',
-	    allowBlank:false,
-	    inputType: 'password'
+		id:'password',
+    	fieldLabel: 'Contraseña',
+    	inputType: 'password',
+    	name: 'password',
+        allowBlank: false,
+        blankText:'La contraseña es un dato requerido'
 	});
 	  
 	var loginForm = new Ext.form.FormPanel({
 	    el:'formLogin',
 	    id: 'loginForm',
 	    url: _URL_VALIDA_USUARIO,
-	    iconCls:'logo',
-	    bodyStyle:'background:white',
-	    labelAlign: 'top',
+	    title: 'AUTENTICACIÓN DE USUARIO',	    
+	    labelAlign: 'top',	    
 	    frame:true,
-	    labelWidth: 150,
-	    width: 170,
-	    height:200,
-	    autoHeight: true,
-	    items: [{
-	    	layout:'form',
-			border: false,
-			items:[{
-				bodyStyle:'background: white',			        
-	            layout: 'form',
-				frame:true,
-				align:'rigth',
-			    baseCls: '',			       
-			    buttonAlign: "center",
-			    items: [{
-		    		//html:'<span class="x-form-item" style="color:#98012e;font-size:14px;font:Arial,Helvetica, Sans-serif;">B&uacute;squeda</span><br>',
-	    		    layout:'column',
-		 			border:false,
-		 			columnWidth: 1,
-	    		    items:[{
-	    		    	columnWidth:1,
-	            		layout: 'form',
-	            		align:'rigth',
-		                border: false,
-	    		        items:[
-	    		        	dsUser,
-	    		        	dsPassword
-	    		        ]		
-					}]
-	            }]
-			}]
-		}],
+	    height: 150,
+        width: 270,
+        bodyPadding: 5,        
+	    //autoHeight: false,
+	    //standardSubmit: 'true',
+        //type:'json',
+	   items:[
+		        	dsUser,
+		        	dsPassword
+		        ]
+		,
 		buttons: [{
 			text: 'Entrar',
 	        handler: function() {
@@ -70,25 +44,19 @@ Ext.onReady(function(){
 	        		loginForm.form.submit({
 			        	waitMsg:'Procesando...',
 			        	failure: function(form, action) {
-							Ext.MessageBox.alert('Error', action.result.actionErrors[0]);
+			        		Ext.Msg.alert('Error', action.result.errorMessage);
 						},
 						success: function(form, action) {
-							alert("INGRESO!");	    	
+							//Ext.Msg.alert('ENTRA', action.result.errorMessage);
+							self.location.href = _CONTEXT+'/seleccionaRolCliente.action';
 						}
 					});
 				} else {
-					Ext.MessageBox.alert('Error', 'Por favor revise los datos requeridos.!');
+					Ext.MessageBox.alert('Aviso', 'Complete la informaci&oacute;n requerida');
 				}
 			}
 		}]
 	});
 			
 	loginForm.render();
-	
-	function toggleDetails(btn, pressed) {
-	    var view = grid.getView();
-	    view.showPreview = pressed;
-	    view.refresh();
-	}
-	//var store;    
 });

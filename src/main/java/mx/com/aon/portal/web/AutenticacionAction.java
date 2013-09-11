@@ -1,11 +1,31 @@
 package mx.com.aon.portal.web;
 
+import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
+
+import javax.naming.Context;
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.SearchControls;
+import javax.naming.directory.SearchResult;
+import javax.naming.ldap.InitialLdapContext;
+
+import mx.com.aon.portal.model.IsoVO;
+import mx.com.aon.portal.model.RamaVO;
+import mx.com.aon.portal.model.UserVO;
+import mx.com.aon.portal.service.LoginManager;
+import mx.com.aon.portal.service.NavigationManager;
+import mx.com.gseguros.utils.Constantes;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.interceptor.SessionAware;
+import org.jfree.util.Log;
 
 import com.opensymphony.xwork2.ActionSupport;
+
 
 public class AutenticacionAction extends ActionSupport implements SessionAware {
 
@@ -13,9 +33,25 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 	
 	protected final transient Logger logger = Logger.getLogger(AutenticacionAction.class);
 	
-	private String user;
-	
+	private String user;	
 	private String password;
+    private String decimalSeparator;
+    private String dateFormat;
+    private LoginManager loginManager;
+    private NavigationManager navigationManager;
+    private List<RamaVO> listaRolCliente;
+    private boolean success;
+	private String errorMessage;
+	
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+
+
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
+	}
+
 
 	@SuppressWarnings("unchecked")
 	protected Map session;
@@ -27,13 +63,41 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 	
 	
 	public String autenticaUsuario() throws Exception {
-		logger.debug("ENtrando a autenticaUsuario");
-		
-		return INPUT;
+		try {
+			UserVO userVO = null;
+			boolean existeUsuario= validaUsuarioLdap(user,password);
+			if(!existeUsuario) {
+				errorMessage="EL usuario no existe o la clave es incorrecta";				
+			} else {				
+				userVO = new UserVO();	            	
+				userVO.setUser(user);				
+            	userVO = loginManager.obtenerDatosUsuario(user);
+            	userVO.setDecimalSeparator(decimalSeparator);	                
+                IsoVO isoVO = navigationManager.getVariablesIso(userVO.getUser());
+            	userVO.setClientFormatDate(isoVO.getClientDateFormat());
+                userVO.setFormatDate(dateFormat);
+                userVO.setDecimalSeparator(isoVO.getFormatoNumerico());
+                session.put(Constantes.USER, userVO);
+                session.put("userVO", userVO);
+	            session.put("CONTENIDO_USER", userVO.getName());
+	            listaRolCliente = navigationManager.getClientesRoles(userVO.getUser());
+	            
+	            if (listaRolCliente==null || listaRolCliente.isEmpty()) {
+	            	session.clear();
+	                errorMessage="Usted no posee un Rol Asociado por favor contacte al Administrador!";
+	            } else {
+	            	success=true;
+	            	errorMessage="EXITO";
+	            }			
+			}
+			return SUCCESS;
+			
+		}catch(Exception ex) {
+			logger.error("Error en el proceso Interno", ex);
+			errorMessage="Error en el proceso Interno";
+			return SUCCESS;
+		}
 	}
-	
-	
-	
 	
 	public String getUser() {
 		return user;
@@ -60,4 +124,89 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 		this.session = session;		
 	}
 	
+	public boolean validaUsuarioLdap(String user,String password) {
+		 Hashtable env = datosConexionLDAP(Constantes.UsuarioLDAP,Constantes.PasswordLDAP);
+		 boolean existeUsuario = false;
+		 try {
+			  DirContext ctx = new InitialLdapContext(env, null);
+			  SearchControls searchCtls = new SearchControls();
+			  String returnedAtts[] = { "uid","sn","givenName","mail","cn"};
+			  searchCtls.setReturningAttributes(returnedAtts);
+			  searchCtls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+			  String searchFilter = "(cn="+user.toLowerCase()+")";
+			  //String searchBase = "cn=Users,dc=biosnettcs,dc=com";
+			  NamingEnumeration<SearchResult> results = ctx.search(Constantes.SearchBaseLDAP, searchFilter, searchCtls);
+			  while (results.hasMoreElements()) {
+			   SearchResult searchResult = (SearchResult) results.next();
+			   Attributes attrs = searchResult.getAttributes();
+			   //OBTENEMOS LA UNIDAD ORGANIZATIVA DEL UID BUSCADO CON SU UID Y LO COMPLETAMOS CON LA BASE
+			   String dn = searchResult.getName()+","+Constantes.SearchBaseLDAP;
+			   
+			   if (attrs != null)
+			   {
+			       //EL UID EXISTE AHORA VALIDAR PASSWORD
+				   existeUsuario = validarAuth(dn,password);
+			       //SI VALIDO ES false PASSWORD INCORRECTO, SI ES true PASSWORD CORRECTO
+			   }
+			  }
+			  ctx.close();
+			 } catch (NamingException e) {
+			  e.printStackTrace();
+			 }
+		 return existeUsuario;
+	}
+	
+	private boolean validarAuth(String dn,String password){
+	    boolean validadausuario=false;
+	    Hashtable env1 =datosConexionLDAP(dn,password);
+	    try {
+	        DirContext ctx1 = new InitialLdapContext(env1, null);
+	        validadausuario=true;
+	        ctx1.close();
+	    } catch (NamingException e) {
+	    	e.printStackTrace();
+	    }
+	    return validadausuario;
+	}
+	
+	
+	private Hashtable datosConexionLDAP(String user,String pass)
+	{
+		Hashtable<String,String> env = new Hashtable<String,String>();
+		try
+		{
+			//String url = Constantes.URLLDAP;
+			//String contexto = Constantes.ContextoLDAP;
+		    //String tipoAuth = "simple";		    
+			env.put(Context.INITIAL_CONTEXT_FACTORY, Constantes.ContextoLDAP);
+			env.put(Context.SECURITY_AUTHENTICATION, Constantes.TipoAuthLDAP);
+			env.put(Context.SECURITY_PRINCIPAL, user);
+			env.put(Context.SECURITY_CREDENTIALS, pass);
+			env.put(Context.PROVIDER_URL, Constantes.URLLDAP);
+			
+		}catch(Exception e)
+		{
+			Log.debug("Error en el proceso Interno de LDAP");
+		}
+		return env;
+	}
+
+
+	public void setLoginManager(LoginManager loginManager) {
+		this.loginManager = loginManager;
+	}
+
+
+	public void setNavigationManager(NavigationManager navigationManager) {
+		this.navigationManager = navigationManager;
+	}
+	
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
+	}
+
 }

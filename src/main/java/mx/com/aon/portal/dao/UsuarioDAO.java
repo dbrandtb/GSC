@@ -2,11 +2,13 @@ package mx.com.aon.portal.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
 
+import mx.com.aon.portal.model.IsoVO;
 import mx.com.aon.portal.model.UsuarioRolEmpresaVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import oracle.jdbc.driver.OracleTypes;
@@ -110,7 +112,23 @@ public class UsuarioDAO extends AbstractDAO {
 
         public WrapperResultados mapWrapperResultados(Map map) throws Exception {
             WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
-            return (WrapperResultados) mapper.build(map);
+            WrapperResultados wrapperResultados = mapper.build(map);
+            
+    		IsoVO isoVO = new IsoVO();
+    		isoVO.setCdIdioma((String)map.get("LANGCODE"));
+    		isoVO.setCdRegion((String)map.get("REGIONID"));
+    		isoVO.setClientDateFormat((String)map.get("P_DSFORMATOFECHAC"));
+    		isoVO.setFormatoFecha((String)map.get("P_DSFORMATOFECHA"));
+    		isoVO.setFormatoNumerico((String)map.get("P_DSFORMATONUMERICO"));
+    		isoVO.setLanguague((String)map.get("P_LANGUAGUE_ISO"));
+    		isoVO.setPais((String)map.get("P_PAIS"));
+    		
+    		HashMap<String, Object> itemMap = new HashMap<String, Object>();
+    		itemMap.put("isovo", isoVO);
+    		
+    		wrapperResultados.setItemMap(itemMap);
+    		
+            return wrapperResultados;
         }
       }
 

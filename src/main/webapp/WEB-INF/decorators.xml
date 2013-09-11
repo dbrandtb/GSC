@@ -103,12 +103,15 @@
             <pattern>/jsp/extjs4/subirArchivoReceptor.jsp</pattern>
             
             <pattern>/subirArchivoMostrarBarra.action</pattern>
-            <pattern>/jsp/extjs4/subirArchivoBarra.jsp</pattern>
-            
-            <pattern>/editarAsegurados.action</pattern>
+            <pattern>/jsp/extjs4/subirArchivoBarra.jsp</pattern>	
+	    	
+	    	<pattern>/editarAsegurados.action</pattern>
             <pattern>/jsp/extjs4/editarAsegurados.jsp</pattern>
-        </excludes>    	
-    	  	
+            
+            <pattern>/seguridad/*</pattern>
+            <pattern>/jsp/portal/login.jsp</pattern>        
+        </excludes>     
+            
     </decorator>   	
     <decorator name="default4" page="default4.jsp">
         <pattern>/cotizacionVital.action</pattern>
@@ -133,6 +136,11 @@
         <pattern>/jsp/extjs4/editarAsegurados.jsp</pattern>
     </decorator>
     
+    <decorator name="emptytest" page="emptytest.jsp">
+        <pattern>/seguridad/*</pattern>
+        <pattern>/jsp/portal/login.jsp</pattern>    
+    </decorator>
+
     <!--decorator name="default" page="default.jsp">
         <pattern>/*</pattern>
     </decorator-->

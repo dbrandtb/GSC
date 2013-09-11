@@ -33,6 +33,12 @@
         </property>
     </bean>
 
+	<bean id="navigationManagerJdbcTemplate" class="mx.com.aon.portal.service.impl.NavigationManagerJdbcTemplateImpl" parent="abstractManagerJdbcTemplateInvoke">
+        <property name="abstractDAO">
+                <ref bean="usuarioDAO"/>
+        </property>
+    </bean>
+
     <bean id="pagingManager" class="mx.com.aon.test.service.impl.PagingManagerImpl">
         <property name="endpoints">
             <map>

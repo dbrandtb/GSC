@@ -133,13 +133,17 @@
 	<include file="struts/config/struts-presiniestros.xml"/>    
 	<include file="struts/config/struts-dctosPresiniestros.xml"/>   
 	
-	<include file="struts/config/struts-consultas-poliza.xml"/>  
+	<include file="struts/config/struts-consultas-poliza.xml"/>
+	<include file="struts/config/struts-seguridad.xml"/>
 
 	<!-- Archivos de CIMA -->
     <include file="struts-cima.xml"/>
     <include file="struts-catbo.xml"/>
     <package name="default" namespace="/" extends="json-default">
         <interceptors>
+        
+            <interceptor name="authenticationInterceptor" class="authenticationInterceptor" />
+        
             <interceptor-stack name="defaultStack">
                 <interceptor-ref name="exception" />
 				<!--  <interceptor-ref name="alias" />-->
@@ -159,9 +163,20 @@
                     <param name="excludeMethods">input,back,cancel</param>
                 </interceptor-ref>
             </interceptor-stack>
+
+            <interceptor-stack name="secureStack">
+                <interceptor-ref name="authenticationInterceptor" />
+                <interceptor-ref name="defaultStack" />
+            </interceptor-stack>
+            
         </interceptors>
+        
+        <default-interceptor-ref name="secureStack" />
+        
         <global-results>
             <result name="denied">/jsp/extjs4/denegado.jsp</result>
+	    <result name="login">/jsp/portal/login.jsp</result>
+            <result name="datosPoliza">/jsp/portal/login.jsp</result>
         </global-results>
 
 		<action name="index">
@@ -195,15 +210,11 @@
             </result>
         </action>
         
-		<action name="logout">
-			<result>jsp/portal/login.jsp</result>
-		</action>
-		
-		<!-- RBS 20111212 Action para login -->
-		<action name="autenticaUsuario" class="autenticacionAction" method="autenticaUsuario">
-			<result name="success" type="json"><param name="ignoreHierarchy">false</param></result>
-			<result name="input">jsp/portal/login.jsp</result>
-		</action>
+
+        <action name="logout">
+            <result>jsp/portal/login.jsp</result>
+        </action>
+
         <!--  -->
         <action name="seleccionaRolCliente" class="loadClientesRolesAction" method="obtenRolesClientes">
 	    	<exception-mapping result="success" exception="javax.servlet.ServletException">/jsp/portal/treeRolElemento.jsp</exception-mapping>
