@@ -1,20 +1,23 @@
 package mx.com.aon.portal.util;
 
+import java.io.Serializable;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.apache.commons.beanutils.Converter;
 import org.apache.log4j.Logger;
 
-import java.text.SimpleDateFormat;
-import java.text.ParseException;
-import java.util.Date;
-import java.sql.Timestamp;
+public class UserTimestampConverter implements Converter, Serializable {
 
-public class UserTimestampConverter implements Converter {
-
-     public static  String MASCARA_DATE_ddMMYYYY="dd-MM-yyyy";
-     public static  String MASCARA_DATE_ddMMYYYY_B="dd/MM/yyyy";
-     public static  String MASCARA_DATE_YYYYMMdd="yyyy-MM-dd";
-     public static  String MASCARA_TIMESTAMP="dd-MM-yyyy HH:mm:ss";
-     public static  String MASCARA_TIMESTAMP_B="dd/MM/yyyy HH:mm:ss";
+    private static final long serialVersionUID = 4283347706841884222L;
+	
+	public static  String MASCARA_DATE_ddMMYYYY="dd-MM-yyyy";
+    public static  String MASCARA_DATE_ddMMYYYY_B="dd/MM/yyyy";
+    public static  String MASCARA_DATE_YYYYMMdd="yyyy-MM-dd";
+    public static  String MASCARA_TIMESTAMP="dd-MM-yyyy HH:mm:ss";
+    public static  String MASCARA_TIMESTAMP_B="dd/MM/yyyy HH:mm:ss";
 
 
   /**
