@@ -11,7 +11,8 @@
 			<result type="json">
 				<param name="ignoreHierarchy">false</param>
 				<param name="includeProperties">
-					datosPoliza.*
+					datosPoliza.*,
+					success
 				</param>
 			</result>
 		</action>
@@ -21,7 +22,8 @@
 			<result type="json">
 				<param name="ignoreHierarchy">false</param>
 				<param name="includeProperties">
-                    datosSuplemento.*
+                    datosSuplemento.*,
+                    success
                 </param>
 			</result>
 		</action>
@@ -31,7 +33,8 @@
 			<result type="json">
 				<param name="ignoreHierarchy">false</param>
 				<param name="includeProperties">
-                    datosSituacion.*
+                    datosSituacion.*,
+                    success
                 </param>
 			</result>
 		</action>
@@ -41,7 +44,8 @@
 			<result type="json">
 				<param name="ignoreHierarchy">false</param>
 				<param name="includeProperties">
-                    datosCoberturas.*
+                    datosCoberturas.*,
+                    success
                 </param>
 			</result>
 		</action>
