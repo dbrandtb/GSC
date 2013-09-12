@@ -5,7 +5,7 @@
     
     <bean id="cotizacionService" 
     	  class="mx.com.aon.flujos.cotizacion.service.impl.CotizacionServiceImpl" parent="abstractManagerBean">
-        <property name="endpoints">
+        <!-- property name="endpoints">
             <map>
                 <entry key="GET_COMBO_PADRE">
                     <ref bean="GET_COMBO_PADRE" />
@@ -154,7 +154,7 @@
                     <ref bean="OBTIENE_ASEGURADO" />
                 </entry>
             </map>
-        </property>
+        </property-->
     </bean>
     
 </beans>

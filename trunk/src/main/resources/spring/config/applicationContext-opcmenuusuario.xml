@@ -5,7 +5,7 @@
 
     <bean id="opcMenuUsuarioManager"
         class="mx.com.aon.portal.service.impl.opcmenuusuario.OpcMenuUsuarioManagerImpl">
-        <property name="endpoints">
+        <!--property name="endpoints">
             <map>
                 <entry key="OBTIENE_MENU">
                     <ref bean="OBTIENE_MENU" />
@@ -47,6 +47,6 @@
                     <ref bean="BORRA_CONFIG_OPCION_MENU"/>
                 </entry>
             </map>
-        </property>
+        </property-->
     </bean>
 </beans>

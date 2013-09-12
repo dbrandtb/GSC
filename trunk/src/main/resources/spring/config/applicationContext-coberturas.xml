@@ -5,9 +5,9 @@
 	 
   
 	<bean id="CoberturaManager" class="mx.com.aon.catweb.configuracion.producto.service.impl.CoberturaManagerImpl">
- 		<property name="endpoints">
+ 		<!-- property name="endpoints">
 			<map>    
-				<!--  Datos de coberturas -->
+				<!  Datos de coberturas 
             	<entry key="OBTIENE_COBERTURAS">
             		<ref bean="OBTIENE_COBERTURAS"/>            
             	</entry>
@@ -31,7 +31,7 @@
             	</entry>
             	
         	</map>
-    	</property>
+    	</property-->
 	</bean>
 		
 </beans>

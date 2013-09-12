@@ -3,7 +3,7 @@
 <beans>
 
     <bean id="reportesManager" class="mx.com.aon.portal.service.impl.reportes.ReportesManagerImpl"  parent="abstractManagerJdbcTemplateInvoke">
-        <property name="endpoints">
+        <!--property name="endpoints">
             <map>
                 <entry key="P_OBTIENE_MREPORTE">
                     <ref bean="P_OBTIENE_MREPORTE" />
@@ -14,13 +14,13 @@
                 </entry>
 
 
-                <!--<entry key="P_INSERTA_MREPORTE">-->
-                    <!--<ref bean="P_INSERTA_MREPORTE" />-->
-                <!--</entry>-->
+                <!<entry key="P_INSERTA_MREPORTE">>
+                    <!<ref bean="P_INSERTA_MREPORTE" />>
+                <!</entry>>
 
-                <!--<entry key="P_EDITA_MREPORTE">-->
-                    <!--<ref bean="P_EDITA_MREPORTE" />-->
-                <!--</entry>-->
+                <!<entry key="P_EDITA_MREPORTE">>
+                    <!<ref bean="P_EDITA_MREPORTE" />>
+                <!</entry>
 
                 <entry key="P_BORRA_MREPORTE">
                     <ref bean="P_BORRA_MREPORTE" />
@@ -54,13 +54,13 @@
                     <ref bean="P_GUARDAR_REPORTE_AUX" />
                 </entry>
 
-                <!--<entry key="P_INSERTA_GRAFICO">-->
-                    <!--<ref bean="P_INSERTA_GRAFICO" />-->
-                <!--</entry>-->
+                <!<entry key="P_INSERTA_GRAFICO">>
+                    <!<ref bean="P_INSERTA_GRAFICO" />>
+                <!</entry>>
 
-                <!--<entry key="P_EDITA_GRAFICO">
+                <!<entry key="P_EDITA_GRAFICO">
                     <ref bean="P_EDITA_GRAFICO" />
-                </entry>-->
+                </entry>
 
                 <entry key="P_BORRA_GRAFICO">
                     <ref bean="P_BORRA_GRAFICO" />
@@ -70,13 +70,13 @@
                     <ref bean="P_OBTIENE_ATRIBUTOS" />
                 </entry>
 
-                <!--<entry key="P_INSERTA_ATRIBUTO">-->
-                    <!--<ref bean="P_INSERTA_ATRIBUTO" />-->
-                <!--</entry>-->
+                <!<entry key="P_INSERTA_ATRIBUTO">>
+                    <!<ref bean="P_INSERTA_ATRIBUTO" />>
+                <!</entry>>
 
-                <!--<entry key="P_EDITA_ATRIBUTO">-->
-                    <!--<ref bean="P_EDITA_ATRIBUTO" />-->
-                <!--</entry>-->
+                <!<entry key="P_EDITA_ATRIBUTO">>
+                    <!<ref bean="P_EDITA_ATRIBUTO" />>
+                <!</entry>
 
                 <entry key="P_BORRA_ATRIBUTO">
                     <ref bean="P_BORRA_ATRIBUTO" />
@@ -94,9 +94,9 @@
                     <ref bean="P_COMBO_REPORTES_PRODUCTOS" />
                 </entry>
 
-                <!--<entry key="P_INSERTAR_PRODUCTO">
+                <!<entry key="P_INSERTAR_PRODUCTO">
                     <ref bean="P_INSERTAR_PRODUCTO" />
-                </entry>-->
+                </entry>
 
                 <entry key="P_INSERTAR_PRODUCTO_PLANTILLAS">
                     <ref bean="P_INSERTAR_PRODUCTO_PLANTILLAS" />
@@ -123,9 +123,9 @@
                     <ref bean="P_OBTIENE_MPLANTIL" />
                 </entry>
 
-                <!--<entry key="P_GUARDA_MPLANTIL">-->
-                    <!--<ref bean="P_GUARDA_MPLANTIL" />-->
-                <!--</entry>-->
+                <!<entry key="P_GUARDA_MPLANTIL">>
+                    <!<ref bean="P_GUARDA_MPLANTIL" />>
+                <!</entry>
 
                 <entry key="P_BORRA_MPLANTIL">
                     <ref bean="P_BORRA_MPLANTIL" />
@@ -135,13 +135,13 @@
                     <ref bean="P_OBTIENE_TATRIPLA" />
                 </entry>
 
-                <!--<entry key="P_INSERTA_TATRIPLA">-->
-                    <!--<ref bean="P_INSERTA_TATRIPLA" />-->
-                <!--</entry>-->
+                <!<entry key="P_INSERTA_TATRIPLA">>
+                    <!<ref bean="P_INSERTA_TATRIPLA" />>
+                <!</entry>>
 
-                <!--<entry key="P_GUARDA_TATRIPLA">-->
-                    <!--<ref bean="P_GUARDA_TATRIPLA" />-->
-                <!--</entry>-->
+                <!<entry key="P_GUARDA_TATRIPLA">>
+                    <!<ref bean="P_GUARDA_TATRIPLA" />>
+                <!</entry>
 
                 <entry key="P_BORRA_TATRIPLA">
                     <ref bean="P_BORRA_TATRIPLA" />
@@ -179,7 +179,7 @@
                 </entry>
 
             </map>
-        </property>
+        </property-->
 
         <property name="abstractDAO">
             <ref bean="reporteDao" />
@@ -189,7 +189,7 @@
     </bean >
     <bean id="reportesAgregarManager" class="mx.com.aon.portal.service.impl.reportes.ReportesAgregarManagerImpl"
           parent="abstractManagerBean">
-        <property name="endpoints">
+        <!--property name="endpoints">
             <map>
                 <entry key="P_INSERTA_MREPORTE">
                     <ref bean="P_INSERTA_MREPORTE"/>
@@ -197,9 +197,9 @@
                 <entry key="P_EDITA_MREPORTE">
                     <ref bean="P_EDITA_MREPORTE"/>
                 </entry>
-                <!--<entry key="P_BORRA_MREPORTE">
+                <!<entry key="P_BORRA_MREPORTE">
                     <ref bean="P_BORRA_MREPORTE" />
-                </entry>-->
+                </entry>
                 <entry key="P_GUARDA_MPLANTIL">
                     <ref bean="P_GUARDA_MPLANTIL"/>
                 </entry>
@@ -225,6 +225,6 @@
                     <ref bean="P_INSERTAR_PRODUCTO" />
                 </entry>
             </map>
-        </property>
+        </property-->
     </bean>
 </beans>

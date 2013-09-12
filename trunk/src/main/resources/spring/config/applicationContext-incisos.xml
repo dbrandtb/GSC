@@ -5,9 +5,9 @@
 	 
   
 	<bean id="IncisoManager" class="mx.com.aon.catweb.configuracion.producto.service.impl.IncisoManagerImpl" parent="abstractManagerJdbcTemplateInvoke">
- 		<property name="endpoints">
+ 		<!-- property name="endpoints">
 			<map>    
-				<!--  Datos de incisos -->
+				<!  Datos de incisos 
             	<entry key="OBTIENE_INCISOS_DEL_PRODUCTO">
             		<ref bean="OBTIENE_INCISOS_DEL_PRODUCTO"/>            
             	</entry>
@@ -24,7 +24,7 @@
             		<ref bean="ELIMINAR_INCISO"/>            
             	</entry>
         	</map>
-    	</property>
+    	</property-->
     	<property name="abstractDAO">
     		<ref bean="incisoDao" />
     	</property>

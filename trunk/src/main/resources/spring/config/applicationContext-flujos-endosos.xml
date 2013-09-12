@@ -5,7 +5,7 @@
 
     <bean id="endosoManager"
         class="mx.com.aon.flujos.endoso.service.impl.EndosoManagerImpl">
-        <property name="endpoints">
+        <!-- property name="endpoints">
             <map>
             	
             	<entry key="OBTIENE_MENSAJE">
@@ -180,6 +180,6 @@
                     <ref bean="CALCULA_VALOR_ENDOSOS" />
                 </entry>
             </map>
-        </property>
+        </property-->
     </bean>
 </beans>

@@ -7,7 +7,7 @@
 	
         
     <bean id="cacheDAO" class="mx.com.ice.kernel.cache.dao.CacheProductoDAO" >
-        <property name="endpoints">
+        <!-- property name="endpoints">
             <map>
                 <entry key="GENERA_DATOS_CALCULO_CAPLANE">
                     <ref bean="GENERA_DATOS_CALCULO_CAPLANE" />
@@ -207,14 +207,14 @@
  
         
         
-        <!-- FALTA DEFINIR ENDPOINT EN BACKBONE..  -->
-                <!--entry key="OBTENER_DATOS_TRAMOCLA">
+        <! FALTA DEFINIR ENDPOINT EN BACKBONE..  >
+                <!entry key="OBTENER_DATOS_TRAMOCLA">
                     <ref bean="OBTENER_DATOS_TRAMOCLA" />
-                </entry-->
+                </entry
                
                 
             </map>
-        </property>
+        </property-->
     </bean>
 
  

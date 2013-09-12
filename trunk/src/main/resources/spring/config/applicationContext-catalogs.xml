@@ -3,7 +3,7 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
     <bean id="catalogManager" class="mx.com.aon.portal.service.impl.CatalogServiceImpl" parent="abstractManagerBean">
-        <property name="endpoints">
+        <!--property name="endpoints">
             <map>
                 <entry key="OBTIENE_PROCESOS">
                     <ref bean="OBTIENE_PROCESOS" />
@@ -143,7 +143,7 @@
                 
                 
             </map>
-        </property>
+        </property-->
     </bean>
     
     <!-- catalogServiceJdbcTemplate -->

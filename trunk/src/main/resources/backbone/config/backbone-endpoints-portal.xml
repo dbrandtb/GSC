@@ -7,7 +7,7 @@
         <property name="xslModule" value="portal" />
     </bean>
 
-    <bean id="VALIDA_USUARIO" parent="portal-endpoint" >
+<!--     <bean id="VALIDA_USUARIO" parent="portal-endpoint" >
         <property name="templateName" value="ValidaUsuario.vm" />
         <property name="xslName" value="ValidaUsuario.xsl" />
         <property name="unmarshallClass" value="mx.com.aon.portal.model.UserVO" />
@@ -23,7 +23,7 @@
         <property name="templateName" value="ConsultaBarraNavegacion.vm" />
         <property name="xslName" value="ConsultaBarraNavegacion.xsl" />
         <property name="unmarshallClass" value="java.util.ArrayList" />
-    </bean>
+    </bean> -->
     <!--
     Bean definido para cargar los componentes de la pagina principal 
      -->
@@ -42,32 +42,32 @@
     <!--
     Bean definido para cargar el menu y sub-menu principal de la pantalla de inicio. 
      -->
-    <bean id="CARGA_MENU_PRINCIPAL" parent="portal-endpoint">
+    <!-- <bean id="CARGA_MENU_PRINCIPAL" parent="portal-endpoint">
     	<property name="templateName" value="pFormaMenu.vm"/>
     	<property name="xslName" value="menu.xsl"/>
     	<property name="unmarshallClass" value="java.util.ArrayList"/>
-    </bean>
+    </bean> -->
     
     <!--
     Bean definido para cargar el Menu Vertical principal de la pantalla de inicio. 
      -->
-    <bean id="CARGA_MENU_VERTICAL" parent="portal-endpoint">
+    <!-- <bean id="CARGA_MENU_VERTICAL" parent="portal-endpoint">
     	<property name="templateName" value="pFormaMenuVertical.vm"/>
     	<property name="xslName" value="menu.xsl"/>
     	<property name="unmarshallClass" value="java.util.ArrayList"/>
-    </bean>
+    </bean> -->
     
     <!-- Bean definido para cargar los clientes y los roles despues del login.
      -->
-	  <bean id="CARGA_ROLES_CLIENTES" parent="portal-endpoint">
+	 <!--  <bean id="CARGA_ROLES_CLIENTES" parent="portal-endpoint">
     	<property name="templateName" value="obtieneRolesCliente.vm"/>
     	<property name="xslName" value="arbol.xsl"/>
     	<property name="unmarshallClass" value="java.util.ArrayList"/>
-    </bean>
+    </bean> -->
     <!--
     Bean definido para cargar el numero de registros 
      -->
-    <bean id="CARGA_NUMERO_REGISTRO" parent="portal-endpoint">
+    <!-- <bean id="CARGA_NUMERO_REGISTRO" parent="portal-endpoint">
 		<property name="templateName" value="obtieneRegUsuario.vm" />
 		<property name="xslName" value="obtieneRegUsuario.xsl" />
 		<property name="unmarshallClass" value="java.lang.Integer" />
@@ -82,13 +82,13 @@
     	<property name="templateName" value="obtieneRolesCliente.vm"/>
     	<property name="xslName" value="obtieneRolesCliente.xsl"/>
     	<property name="unmarshallClass" value="java.util.ArrayList"/>
-    </bean>
+    </bean> -->
     
     
-<!-- Traduccion de los mensajes de errores -->
-<bean id="OBTIENE_MENSAJE" parent="portal-endpoint" >
-        <property name="templateName" value="ObtieneMensaje.vm" />
-        <property name="xslName" value="ObtieneMensaje.xsl" />
-        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
-</bean>
+	<!-- Traduccion de los mensajes de errores -->
+	<!-- <bean id="OBTIENE_MENSAJE" parent="portal-endpoint" >
+	        <property name="templateName" value="ObtieneMensaje.vm" />
+	        <property name="xslName" value="ObtieneMensaje.xsl" />
+	        <property name="unmarshallClass" value="mx.com.aon.portal.util.WrapperResultados" />
+	</bean> -->
 </beans>

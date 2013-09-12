@@ -7,7 +7,7 @@
 	para poder ser exportados
 	-->
     <bean id="exportModel" class="mx.com.aon.export.impl.ExportModelImpl" scope="prototype">
-        <property name="endpoints">
+        <!-- property name="endpoints">
             <map>
                 <entry key="EXPORT_MENU_USUARIO"><ref bean="EXPORT_MENU_USUARIO"/></entry>
                 <entry key="EXPORT_OPCIONES_MENU"><ref bean="EXPORT_OPCIONES_MENU"/></entry>
@@ -18,7 +18,7 @@
                 <entry key="RENOVACION_OBTIENE_POLIZAS_EXPORTAR"><ref bean="RENOVACION_OBTIENE_POLIZAS_EXPORTAR"/></entry>
                 <entry key="WF_EXPORT"><ref bean="WF_EXPORT"/></entry>
             </map>
-        </property>
+        </property-->
     </bean>
 	
 	<!-- 

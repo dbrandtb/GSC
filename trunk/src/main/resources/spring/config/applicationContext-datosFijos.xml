@@ -5,9 +5,9 @@
 	 
   
 	<bean id="DatosFijosManager" class="mx.com.aon.catweb.configuracion.producto.service.impl.DatosFijosManagerImpl">
- 		<property name="endpoints">
+ 		<!-- property name="endpoints">
 			<map>    
-				<!--  Datos de coberturas -->
+				<!  Datos de coberturas 
             	<entry key="OBTENER_DATOS_FIJOS_PRODUCTO">
             		<ref bean="OBTENER_DATOS_FIJOS_PRODUCTO"/>            
             	</entry>
@@ -21,7 +21,7 @@
             		<ref bean="INSERTAR_DATO_FIJO"/>            
             	</entry>
         	</map>
-    	</property>
+    	</property-->
 	</bean>
 		
 </beans>

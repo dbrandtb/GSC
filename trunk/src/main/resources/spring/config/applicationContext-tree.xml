@@ -3,12 +3,12 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 	
 	<bean id="TreeManager" class="mx.com.aon.catweb.configuracion.producto.service.impl.TreeManagerImpl" parent="abstractManagerJdbcTemplateInvoke">
- 		<property name="endpoints">
+ 		<!--property name="endpoints">
 			<map>    
-				<!--  Consulta de reglas de negocio -->
-            	<!-- <entry key="OBTENER_RAMA_PRODUCTO">
+				<!  Consulta de reglas de negocio >
+            	<! <entry key="OBTENER_RAMA_PRODUCTO">
             		<ref bean="OBTENER_RAMA_PRODUCTO"/>            
-            	</entry> -->
+            	</entry> 
             	<entry key="OBTENER_RAMA_SITUACION">
             		<ref bean="OBTENER_RAMA_SITUACION"/>            
             	</entry>
@@ -40,7 +40,7 @@
                     <ref bean="OBTENER_OBJETOS"/>            
                 </entry>
         	</map>
-    	</property>
+    	</property-->
     	<property name="abstractDAO">
     		<ref bean="productoDao" />
     	</property>

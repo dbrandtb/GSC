@@ -3,9 +3,9 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 	
 	<bean id="RolManager" class="mx.com.aon.catweb.configuracion.producto.service.impl.RolManagerImpl" parent="abstractManagerBean">
- 		<property name="endpoints">
+ 		<!--property name="endpoints">
 			<map>    
-				<!--  Datos de roles -->
+				<!  Datos de roles 
         		<entry key="CATALOGO_ROLES">
             		<ref bean="CATALOGO_ROLES"/>            
             	</entry>  
@@ -43,6 +43,6 @@
             		<ref bean="OBTIENE_ROL_ASOCIADO"/>
             	</entry>
         	</map>
-    	</property>
+    	</property-->
 	</bean>
 </beans>

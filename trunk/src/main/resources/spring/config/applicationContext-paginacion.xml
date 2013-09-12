@@ -5,7 +5,7 @@
 	<!-- Bean al que se le agregaran claves para paginar datos 
 	-->
 	<bean id="pagerManager" class="mx.com.aon.portal.service.impl.PagerManagerImpl">
-        <property name="endpoints">
+        <!--property name="endpoints">
             <map>
             	<entry key="OBTIENE_OPCIONES_CONFIGMENU"><ref bean="OBTIENE_OPCIONES_CONFIGMENU" /></entry>
             	<entry key="BUSCA_CONJUNTOS_PANTALLAS"><ref bean="BUSCA_CONJUNTOS_PANTALLAS" /></entry>
@@ -18,7 +18,7 @@
                     <ref bean="OBTIENE_PASOSXCTA"/>
                 </entry>  
             </map>
-        </property>
+        </property-->
     </bean>
 
 </beans>

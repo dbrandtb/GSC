@@ -5,11 +5,11 @@
 
 
     <bean id="processResultManager" class="mx.com.aon.portal.service.ProcessResultManager">
-        <property name="endpoints">
+        <!-- property name="endpoints">
             <map>
             <entry key="OBTIENE_MENSAJE"><ref bean="OBTIENE_MENSAJE"/></entry>
             </map>
-        </property>
+        </property-->
     </bean>
 
 
@@ -23,7 +23,7 @@
 
 	<bean id="configuradorPantallasManager"
 		class="mx.com.aon.configurador.pantallas.service.impl.ConfiguradorPantallaServiceImpl" parent="abstractManagerBean">
-		<property name="endpoints">
+		<!-- property name="endpoints">
 			<map>
 				<entry key="BUSCA_CONJUNTOS_PANTALLAS">
 					<ref bean="BUSCA_CONJUNTOS_PANTALLAS" />
@@ -62,9 +62,9 @@
 					<ref bean="CARGA_ATRIBUTOS_PANTALLA" />
 				</entry>
 				
-<!--                <entry key="CARGA_ATRIBUTOS_PROPIEDADES">-->
-<!--					<ref bean="CARGA_ATRIBUTOS_PROPIEDADES" />-->
-<!--				</entry>-->
+<!                <entry key="CARGA_ATRIBUTOS_PROPIEDADES">>
+<!					<ref bean="CARGA_ATRIBUTOS_PROPIEDADES" />>
+<!				</entry>
                 
                 <entry key="CARGAR_JSON_PROPERTIES">
                     <ref bean="CARGAR_JSON_PROPERTIES" />
@@ -82,7 +82,7 @@
                         <ref bean="OBTIENE_PANTALLA_VISTA_PREVIA" />
                 </entry>
 			</map>
-		</property>
+		</property-->
 	</bean>
 	
 	<bean id="configuradorPantallasManagerJdbcTemplate" class="mx.com.aon.configurador.pantallas.service.impl.ConfiguradorPantallaServiceJdbcTemplateImpl" parent="abstractManagerJdbcTemplateInvoke">
@@ -93,7 +93,7 @@
 	
 	<bean id="masterTransformer"
 		class="mx.com.aon.configurador.pantallas.util.MasterTrasnformer">
-		<property name="endpoints">
+		<!--property name="endpoints">
 			<map>
 				<entry key="GET_MASTER_BUTTONS">
 					<ref bean="GET_MASTER_BUTTONS" />
@@ -107,7 +107,7 @@
                      <ref bean="GET_COMBO_PADRE" />
                 </entry>
 			</map>
-		</property>
+		</property-->
 	</bean>
 
 </beans>

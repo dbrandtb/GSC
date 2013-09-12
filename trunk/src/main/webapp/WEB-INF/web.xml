@@ -37,6 +37,11 @@
         <param-name>defaultDateFormat</param-name>
         <param-value>dd/MM/yyyy</param-value>
     </context-param>
+    
+    <!--<context-param>
+		<param-name>defaultClientDateFormat</param-name>
+		<param-value>d/m/Y</param-value>
+	</context-param> -->
 
     <context-param>
         <param-name>log4jConfigLocation</param-name>
@@ -46,10 +51,12 @@
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
-            classpath*:/spring/config/daoContext*.xml
-            classpath*:/spring/config/applicationContext*.xml
-            classpath*:/spring/config/action-servlet*.xml
-            classpath*:/backbone/config/backbone*.xml
+            classpath*:/spring/config/daoContext*.xml,
+            classpath*:/spring/config/applicationContext*.xml,
+            classpath*:/spring/config/action-servlet*.xml,
+            classpath*:/backbone/config/backbone-endpoints.xml,
+            classpath*:/backbone/config/backbone-endpoints-portal.xml,
+            classpath*:/backbone/config/backbone-jdbc.xml
         </param-value>
     </context-param>
 
@@ -134,6 +141,7 @@
 
     <!-- Welcome file lists -->
     <welcome-file-list>
+    	<!-- <welcome-file>redirectpage.jsp</welcome-file> -->
         <welcome-file>index.jsp</welcome-file>
         <welcome-file>default.jsp</welcome-file>
         <welcome-file>index.html</welcome-file>
