@@ -50,8 +50,8 @@
 			</result>
 		</action>
 
-		<action name="obtienePolizasAsegurado" class="ConsultasPolizaAction"
-			method="obtienePolizasAsegurado">
+		<action name="consultaPolizasAsegurado" class="ConsultasPolizaAction"
+			method="consultaPolizasAsegurado">
 			<result type="json">
 				<param name="ignoreHierarchy">false</param>
 				<param name="includeProperties">

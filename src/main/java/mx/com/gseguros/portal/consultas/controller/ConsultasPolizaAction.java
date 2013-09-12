@@ -160,7 +160,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
      * Obtiene las polizas del asegurado por rfc
      * @return String result
      */
-    public String obtienePolizasAsegurado(){
+    public String consultaPolizasAsegurado(){
     	logger.debug(" **** Entrando a obtienePolizasAsegurado ****");
     	try {
     		
