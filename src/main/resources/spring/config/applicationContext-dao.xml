@@ -14,6 +14,8 @@
         <property name="defaultAutoCommit" value="true"/>
         -->
     </bean>
+    
+    <!-- <jee:jndi-lookup id="dataSource" jndi-name="jdbc/Aon"/> -->
 
     <!-- Transaction manager for Spring JDBC -->
     <bean id="transactionManager"
