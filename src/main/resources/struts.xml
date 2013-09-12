@@ -222,7 +222,12 @@
 	    	<exception-mapping result="success" exception="java.lang.Exception">/jsp/portal/treeRolElemento.jsp</exception-mapping>
 			<result name="success">/jsp/portal/treeRolElemento.jsp</result>
 			<!--<result name="portal" type="redirect">portal</result>-->
-			<result name="load" type="redirect">load</result>
+			<!-- <result name="load" type="redirect">load</result> -->
+			<result name="load" type="redirectAction">
+	            <param name="actionName">load</param>
+	            <param name="namespace">/</param>
+	        </result>
+			
 		</action>		
 		
 		
