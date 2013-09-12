@@ -5,9 +5,9 @@
 	
 	<bean id="ReglaNegocioManager" 
 		  class="mx.com.aon.catweb.configuracion.producto.service.impl.ReglaNegocioManagerImpl" parent="abstractManagerBean">
- 		<property name="endpoints">
+ 		<!--property name="endpoints">
 			<map>    
-				<!--  Insert reglas de negocio -->
+				<!  Insert reglas de negocio 
         		<entry key="INSERTAR_VARIABLE_TEMPORAL">
             		<ref bean="INSERTAR_VARIABLE_TEMPORAL"/>            
             	</entry>
@@ -24,7 +24,7 @@
             		<ref bean="INSERTAR_CONDICION"/>            
             	</entry>
             	
-            	<!--  Consulta de reglas de negocio -->
+            	<!  Consulta de reglas de negocio 
             	<entry key="OBTENER_VARIABLE_TEMPORAL">
             		<ref bean="OBTENER_VARIABLE_TEMPORAL"/>            
             	</entry>
@@ -45,7 +45,7 @@
             		<ref bean="OBTIENE_TIPO_CONCEPTOS"/>
             	</entry>
             	
-            	<!-- Variables temporales asociadas al producto -->
+            	<! Variables temporales asociadas al producto 
             	<entry key="OBTIENE_VARIABLES_TEMPORALES_PRODUCTO">
             		<ref bean="OBTIENE_VARIABLES_TEMPORALES_PRODUCTO"/>
             	</entry>
@@ -61,6 +61,6 @@
             	</entry>
             	
         	</map>
-    	</property>
+    	</property-->
 	</bean>		
 </beans>

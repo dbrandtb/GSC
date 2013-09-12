@@ -10,12 +10,12 @@
     </bean>
     
     <bean id="serviciosCoberturasDAO" class="mx.com.ice.services.business.dao.ServiciosCoberturasDAO">
-        <property name="endpoints">
+        <!-- property name="endpoints">
             <map>
-                <!-- ENDPOINT QUE SE COMENTA, HASTA DEFINIRSE DEL QUE PROCEDURE INVOCARA.. -->
-                <!--entry key="P_GET_CODATRIBUTO_VARMODELO_COB">
+                <! ENDPOINT QUE SE COMENTA, HASTA DEFINIRSE DEL QUE PROCEDURE INVOCARA.. >
+                <!entry key="P_GET_CODATRIBUTO_VARMODELO_COB">
                     <ref bean="P_GET_CODATRIBUTO_VARMODELO_COB" />
-                </entry-->
+                </entry
                 
                 <entry key="P_GET_DSGARANT">
                     <ref bean="P_GET_DSGARANT" />
@@ -27,7 +27,7 @@
                     <ref bean="P_EXISTE_TGREXCOA" />
                 </entry>
                 
-                <!-- ESTA LLAVE SOLO ESTA EN SERVICIOS COBERTURASDAO..  ... -->
+                <! ESTA LLAVE SOLO ESTA EN SERVICIOS COBERTURASDAO..  ... 
                 <entry key="P_ACT_TGREXCOA">
                     <ref bean="P_ACT_TGREXCOA" />
                 </entry>
@@ -52,7 +52,7 @@
                     <ref bean="P_EXISTEN_GARANTIAS_SIT" />
                 </entry>                
             </map>
-        </property>
+        </property-->
     </bean>
  
     

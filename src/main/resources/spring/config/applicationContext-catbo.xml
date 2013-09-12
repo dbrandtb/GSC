@@ -3,7 +3,7 @@
 <beans> 
 
    <bean id="combosManagerBO" class="mx.com.aon.catbo.service.impl.CombosManagerImpl"  parent="abstractManagerBean">
-        <property name="endpoints">
+        <!--property name="endpoints">
             <map>
            		 <entry key="LISTA_ASEGURADORAS"><ref bean="LISTA_ASEGURADORAS"/></entry>
                  <entry key="OBTIENE_RAMOS"> <ref bean="OBTIENE_RAMOS"/></entry>
@@ -63,38 +63,38 @@
 				 <entry key="OBTIENE_COMBO_ENCUESTA_ENCUESTAS"> <ref bean="OBTIENE_COMBO_ENCUESTA_ENCUESTAS"/></entry>
 				 <entry key="FORMAS_CALCULO_FOLIO"> <ref bean="FORMAS_CALCULO_FOLIO"/></entry>
            </map>
-        </property>
+        </property-->
     </bean>
 
     <bean id="loginManagerBO" class="mx.com.aon.catbo.service.impl.LoginManagerImpl" parent="abstractManagerBean">
-        <property name="endpoints">
+        <!--property name="endpoints">
             <map>
 	            <entry key="LOGIN"><ref bean="LOGIN"/></entry>
             </map>
-        </property>
+        </property-->
     </bean>
 
     <bean id="usuariosManager" class="mx.com.aon.catbo.service.impl.UsuariosManagerImpl" parent="abstractManagerBean">
-        <property name="endpoints">
+        <!--property name="endpoints">
             <map>
 	            <entry key="USUARIOS_OBTENER_USUARIO"><ref bean="USUARIOS_OBTENER_USUARIO"/></entry>
 	            <entry key="USUARIOS_OBTENER_ROLES_USUARIO"><ref bean="USUARIOS_OBTENER_ROLES_USUARIO"/></entry>
 	            <entry key="USUARIOS_USUARIO_EN_GRUPO"><ref bean="USUARIOS_USUARIO_EN_GRUPO"/></entry>
             </map>
-        </property>
+        </property-->
     </bean>
 
     <bean id="rolesManager" class="mx.com.aon.catbo.service.impl.RolesManagerImpl" parent="abstractManagerBean">
-        <property name="endpoints">
+        <!--property name="endpoints">
             <map>
 	            <entry key="ROLES_OBTENER_USUARIOS_POR_ROL"><ref bean="ROLES_OBTENER_USUARIOS_POR_ROL"/></entry>
             </map>
-        </property>
+        </property-->
     </bean>
     
     <!-- Notificaciones -->
     <bean id="notificacionesManager" class="mx.com.aon.catbo.service.impl.NotificacionesManagerImpl" parent="abstractManagerBean">
-        <property name="endpoints">
+        <!--property name="endpoints">
             <map>
                 <entry key="BUSCAR_NOTIFICACIONES"><ref bean="BUSCAR_NOTIFICACIONES"/></entry>
                 <entry key="BORRAR_NOTIFICACION"><ref bean="BORRAR_NOTIFICACION"/></entry>
@@ -108,13 +108,13 @@
                 <entry key="INSERTAR_NOTIFICACIONES_PROCESO"><ref bean="INSERTAR_NOTIFICACIONES_PROCESO"/></entry>
                 <entry key="OBTIENE_VARIABLES_NOTIFI"><ref bean="OBTIENE_VARIABLES_NOTIFI"/></entry>
            </map>
-        </property>
+        </property-->
     </bean>
     <!-- Fin Notificaciones -->
     
     <!-- Formatos Documentos -->
     <bean id="formatosDocumentosManager" class="mx.com.aon.catbo.service.impl.FormatosDocumentosManagerImpl" parent="abstractManagerBean">
-        <property name="endpoints">
+        <!--property name="endpoints">
             <map>
                 <entry key="BUSCAR_FORMATOS_DOCUMENTOS"><ref bean="BUSCAR_FORMATOS_DOCUMENTOS"/></entry>
                 <entry key="BORRAR_FORMATOS_DOCUMENTOS"><ref bean="BORRAR_FORMATOS_DOCUMENTOS"/></entry>
@@ -122,13 +122,13 @@
                 <entry key="GUARDAR_FORMATOS_DOCUMENTOS"><ref bean="GUARDAR_FORMATOS_DOCUMENTOS"/></entry>
                 <entry key="OBTIENE_FORMANTOS_DOCUMENTOS_EXPORT"><ref bean="OBTIENE_FORMANTOS_DOCUMENTOS_EXPORT"/></entry>
            </map>
-        </property>
+        </property-->
     </bean>
     <!-- Fin Formatos Documentos -->
     
 <!-- BEGIN Operaciones CAT -->
    <bean id="operacionCATManager" class="mx.com.aon.catbo.service.impl.OperacionCATManagerImpl" parent="abstractManagerBean">
-        <property name="endpoints">
+        <!--property name="endpoints">
             <map>
                 <entry key="BUSCAR_GUIONES"><ref bean="BUSCAR_GUIONES"/></entry>
                 <entry key="OBTENERREG_GUION"><ref bean="OBTENERREG_GUION"/></entry>
@@ -145,13 +145,13 @@
                 <entry key="OBTENER_ENCUESTAS_PENDIENTES"><ref bean="OBTENER_ENCUESTAS_PENDIENTES"/></entry>      
             
             </map>
-        </property>
+        </property-->
     </bean>
 <!-- END Operaciones CAT -->
 
     <!-- BEGIN Calendario CAT -->
        <bean id="calendarioManager" class="mx.com.aon.catbo.service.impl.CalendarioManagerImpl" parent="abstractManagerBean">
-            <property name="endpoints">
+            <!--property name="endpoints">
                 <map>
                     <entry key="OBTENER_CALENDARIO"><ref bean="OBTENER_CALENDARIO"/></entry>
                     <entry key="OBTENER_DIA_MES"><ref bean="OBTENER_DIA_MES"/></entry>
@@ -161,13 +161,13 @@
                     <entry key="EDITAR_CALENDARIO"><ref bean="EDITAR_CALENDARIO"/></entry>
                    
                      </map>
-            </property>
+            </property-->
         </bean>
     <!-- END Calendario CAT -->
     
     <!-- BEGIN Matriz Asignacion CAT -->
        <bean id="matrizAsignacionManager" class="mx.com.aon.catbo.service.impl.MatrizAsignacionManagerImpl" parent="abstractManagerBean">
-            <property name="endpoints">
+            <!--property name="endpoints">
                 <map>
                     <entry key="OBTENER_MATRIZ"><ref bean="OBTENER_MATRIZ"/></entry>
                     <entry key="BORRAR_MATRIZ"><ref bean="BORRAR_MATRIZ"/></entry>
@@ -185,13 +185,13 @@
                     <entry key="OBTIENE_MATRICES_ASIGNACION_EXPORT"><ref bean="OBTIENE_MATRICES_ASIGNACION_EXPORT"/></entry>  
                     <entry key="VALIDA_RESPONSABLE"><ref bean="VALIDA_RESPONSABLE"/></entry> 
                 </map>
-            </property>
+            </property-->
         </bean>
     <!-- END Matriz Asignacion CAT -->
     
     <!-- BEGIN Administracion de Casos CAT -->
        <bean id="administracionCasosManager" class="mx.com.aon.catbo.service.impl.AdministracionCasosManagerImpl" parent="abstractManagerBean">
-            <property name="endpoints">
+            <!--property name="endpoints">
                 <map>
                     <entry key="OBTENER_NUM_CASOS"><ref bean="OBTENER_NUM_CASOS"/></entry>
                      <entry key="BORRA_NUM_CASOS"><ref bean="BORRA_NUM_CASOS"/></entry>
@@ -249,7 +249,7 @@
                         <entry key="GUARDAR_MOVIMIENTO_CASO"><ref bean="GUARDAR_MOVIMIENTO_CASO"/></entry>
 
                 </map>
-            </property>
+            </property-->
         </bean>
     <!-- END Aministracion de Casos CAT -->   
     
@@ -275,7 +275,7 @@
     
     <!-- Status de Casos -->
     <bean id="statusCasosManager" class="mx.com.aon.catbo.service.impl.StatusCasosManagerImpl" parent="abstractManagerBean">
-        <property name="endpoints">
+        <!--property name="endpoints">
             <map>
                 <entry key="BUSCAR_STATUS_CASOS"><ref bean="BUSCAR_STATUS_CASOS"/></entry>
                 <entry key="BORRAR_STATUS_CASOS"><ref bean="BORRAR_STATUS_CASOS"/></entry>
@@ -287,13 +287,13 @@
                 <entry key="BORRAR_STATUS_CASOS_TAREAS"><ref bean="BORRAR_STATUS_CASOS_TAREAS"/></entry>
                 <entry key="BUSCAR_STATUS_CASOS_TAREAS_PROCESOS"><ref bean="BUSCAR_STATUS_CASOS_TAREAS_PROCESOS"/></entry>
            </map>
-        </property>
+        </property-->
     </bean>
     <!-- Fin Status de Casos -->
 
     <!-- Proceso -->
    <bean id="procesoManager" class="mx.com.aon.catbo.service.impl.ProcesoManagerImpl" parent="abstractManagerBean">
-       <property name="endpoints">
+       <!--property name="endpoints">
            <map>
                <entry key="OBTIENE_FORMATOS"><ref bean="OBTIENE_FORMATOS"/></entry>
                <entry key="OBTIENE_TFPRONEG"><ref bean="OBTIENE_TFPRONEG"/></entry>
@@ -312,13 +312,13 @@
                <entry key="OBTIENE_CASOS_CLIENTE"><ref bean="OBTIENE_CASOS_CLIENTE"/></entry> 
                                                   
           </map>
-       </property>
+       </property-->
    </bean>
    <!-- Fin Proceso-->
 
     <!-- Tareas Cat Bo -->
     <bean id="tareasCatBoManager" class="mx.com.aon.catbo.service.impl.TareasCatBoManagerImpl" parent="abstractManagerBean">
-        <property name="endpoints">
+        <!--property name="endpoints">
             <map>
                 <entry key="BUSCAR_TAREAS_CAT_BO"><ref bean="BUSCAR_TAREAS_CAT_BO"/></entry>
                 <entry key="BORRAR_TAREAS_CAT_BO"><ref bean="BORRAR_TAREAS_CAT_BO"/></entry>
@@ -327,14 +327,14 @@
                 <entry key="OBTIENE_TAREAS_CAT_BO_EXPORT"><ref bean="OBTIENE_TAREAS_CAT_BO_EXPORT"/></entry>
                 <entry key="BUSCAR_TAREAS_CAT_BO_VALIDA"><ref bean="BUSCAR_TAREAS_CAT_BO_VALIDA"/></entry>
            </map>
-        </property>
+        </property-->
     </bean>
     <!-- Fin Tareas Cat Bo --> 
 
 
 <!-- Configurar Encueta -->
     <bean id="configurarEncuestaManager" class="mx.com.aon.catbo.service.impl.ConfigurarEncuestaManagerImpl" parent="abstractManagerBean">
-        <property name="endpoints">
+        <!--property name="endpoints">
             <map>
                 <entry key="OBTIENE_ENCUESTA"><ref bean="OBTIENE_ENCUESTA"/></entry>
                 <entry key="GUARDACONFIGURACION_ENCUESTA"><ref bean="GUARDACONFIGURACION_ENCUESTA"/></entry>
@@ -370,7 +370,7 @@
                 
                 
              </map>
-        </property>        
+        </property-->        
     </bean>
     <!-- Fin Configurar Encueta -->
     
@@ -379,14 +379,14 @@
     
 <!-- Acceso Estructuras -->
     <bean id="accesoEstructuraRolUsuarioManager" class="mx.com.aon.catbo.service.impl.AccesoEstructuraRolUsuarioManagerImpl" parent="abstractManagerBean">
-        <property name="endpoints">
+        <!--property name="endpoints">
             <map>
                 <entry key="ACCESOESTRUCTURAROLUSUARIO_BORRAR"><ref bean="ACCESOESTRUCTURAROLUSUARIO_BORRAR"/></entry>
                 <entry key="ACCESOESTRUCTURAROLUSUARIO_BUSCAR"><ref bean="ACCESOESTRUCTURAROLUSUARIO_BUSCAR"/></entry>
                 <entry key="ACCESOESTRUCTURAROLUSUARIO_GUARDAR"><ref bean="ACCESOESTRUCTURAROLUSUARIO_GUARDAR"/></entry>
                 <entry key="EXPORT_LIST_ACCESO_ESTRUCTURA_ROL_USUARIO"><ref bean="EXPORT_LIST_ACCESO_ESTRUCTURA_ROL_USUARIO"/></entry>
            </map>
-        </property>
+        </property-->
     </bean>
     <!-- Fin Acceso Estructura -->
 
@@ -533,13 +533,13 @@
 
     <!-- Ingreso Encuesta -->
     <bean id="ingresarEncuestaManager" class="mx.com.aon.catbo.service.impl.IngresarEncuestaManagerImpl" parent="abstractManagerBean">
-        <property name="endpoints">
+        <!--property name="endpoints">
             <map>
                 <entry key="OBTENER_PREGUNTA_ENCUESTA"><ref bean="OBTENER_PREGUNTA_ENCUESTA"/></entry>
                 <entry key="OBTENER_PREGUNTA_ENCUESTA_SIGUIENTE"><ref bean="OBTENER_PREGUNTA_ENCUESTA_SIGUIENTE"/></entry>
                 <entry key="GUARDAR_RESPUESTA_ENCUESTA"><ref bean="GUARDAR_RESPUESTA_ENCUESTA"/></entry>
            </map>
-        </property>
+        </property-->
     </bean>
     <!-- Fin Ingreso Encuesta -->
 

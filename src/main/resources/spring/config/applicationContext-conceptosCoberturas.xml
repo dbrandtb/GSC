@@ -3,9 +3,9 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 	
 	<bean id="ConceptosCoberturaManager" class="mx.com.aon.catweb.configuracion.producto.service.impl.ConceptosCoberturaManagerImpl">
- 		<property name="endpoints">
+ 		<!-- property name="endpoints">
 			<map>    
-				<!-- Datos de regla de validaciones -->
+				<! Datos de regla de validaciones 
         		<entry key="OBTIENE_CONCEPTOS_COBERTURA">
             		<ref bean="OBTIENE_CONCEPTOS_COBERTURA"/>            
             	</entry> 
@@ -32,7 +32,7 @@
             	</entry>
   
         	</map>
-    	</property>	
+    	</property-->	
 	</bean>
 		
 </beans>

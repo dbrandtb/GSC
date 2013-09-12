@@ -3,7 +3,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 	
 	<bean id="SumaAseguradaManager" class="mx.com.aon.catweb.configuracion.producto.service.impl.SumaAseguradaManagerImpl">
- 		<property name="endpoints">
+ 		<!--property name="endpoints">
 			<map>    				
         		<entry key="CATALOGO_TIPO_SUMA_ASEGURADA">
             		<ref bean="CATALOGO_TIPO_SUMA_ASEGURADA"/>            
@@ -34,7 +34,7 @@
             	</entry>  
             	        	       		 
         	</map>
-    	</property>	
+    	</property-->	
 	</bean>
 	
 	<bean id="sumaAseguradaDAO" class="mx.com.aon.catweb.configuracion.producto.dao.SumaAseguradaDAO">

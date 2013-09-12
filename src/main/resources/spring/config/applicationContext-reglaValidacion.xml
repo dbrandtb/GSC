@@ -3,9 +3,9 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 	
 	<bean id="ReglaValidacionManager" class="mx.com.aon.catweb.configuracion.producto.service.impl.ReglaValidacionManagerImpl">
- 		<property name="endpoints">
+ 		<!--property name="endpoints">
 			<map>    
-				<!-- Datos de regla de validaciones -->
+				<! Datos de regla de validaciones 
         		<entry key="OBTIENE_REGLAS_DE_VALIDACION">
             		<ref bean="OBTIENE_REGLAS_DE_VALIDACION"/>            
             	</entry> 
@@ -26,7 +26,7 @@
             	</entry>
   
         	</map>
-    	</property>	
+    	</property-->	
 	</bean>
 		
 </beans>

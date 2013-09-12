@@ -7,7 +7,7 @@
         <property name="serviciosIncisosDAO" ref="serviciosIncisosDAO"/>
     </bean>
     <bean id="serviciosIncisosDAO" class="mx.com.ice.services.business.dao.ServiciosIncisosDAO">
-        <property name="endpoints">
+        <!--  property name="endpoints">
             <map>
                 <entry key="P_GET_MINIMO_INCISO">
                     <ref bean="P_GET_MINIMO_INCISO" />
@@ -142,7 +142,7 @@
                     <ref bean="VERIFICAR_CAMBIO_X_INCISO" />
                 </entry>
                 
-                <!-- entry key="P_ACT_AGRUPA_INC">
+                <! entry key="P_ACT_AGRUPA_INC">
                     <ref bean="P_ACT_AGRUPA_INC" />
                 </entry>
                 <entry key="P_DESPLEGAR_IMPORTE_AGRUPADOR">
@@ -151,9 +151,9 @@
                 <entry key="P_GET_INCISOS_AGRUPADOR">
                     <ref bean="P_GET_INCISOS_AGRUPADOR" />
                 </entry>
-                 -->
+                 
             </map>
-        </property>
+        </property-->
     </bean>
     
     

@@ -3,14 +3,14 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 	
     <bean id="AplicacionManager" class="mx.com.aon.catweb.configuracion.producto.service.impl.TablaApoyoManagerImpl">
- 		<property name="endpoints">
+ 		<!--property name="endpoints">
 			<map>    
-				<!--  Datos de tablas de apoyo -->
+				<!  Datos de tablas de apoyo 
         		<entry key="OBTIENE_TABLA_APOYO">
             		<ref bean="OBTIENE_TABLA_APOYO"/>            
             	</entry>
         	</map>
-    	</property>
+    	</property-->
     	<property name="tablaApoyo">
     		<map>
     			<entry key="TIPO_SEGURO">

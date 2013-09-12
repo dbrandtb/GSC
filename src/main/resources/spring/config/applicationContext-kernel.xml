@@ -9,9 +9,9 @@
 		<property name="serviciosGeneralesCargarBloques" ref="serviciosGeneralesCargarBloques"/>
         <property name="serviciosGeneralesDAO" ref="serviciosGeneralesDAO"/>
 
-		<property name="endpoints">
+		<!-- property name="endpoints">
             <map>
-                <!--<entry key="CALCULA_NUMERO_POLIZA">
+                <!<entry key="CALCULA_NUMERO_POLIZA">
                     <ref bean="CALCULA_NUMERO_POLIZA" />
                 </entry>
 
@@ -22,11 +22,11 @@
                 <entry key="GENERA_SUPLEMENTO_LOGICO">
                     <ref bean="GENERA_SUPLEMENTO_LOGICO" />
                 </entry>
-                -->
+                
                 <entry key="GENERA_SUPLEMENTOS">
                     <ref bean="GENERA_SUPLEMENTOS" />
                 </entry>
-                <!--
+                <!
                 <entry key="MOV_T_DESC_SUP">
                     <ref bean="MOV_T_DESC_SUP" />
                 </entry>
@@ -42,7 +42,7 @@
                 <entry key="MOV_MPOLIAGE">
                     <ref bean="MOV_MPOLIAGE" />
                 </entry>
-                -->
+                
                 <entry key="MOV_MPOLAGEN">
                     <ref bean="MOV_MPOLAGEN" />
                 </entry>
@@ -79,7 +79,7 @@
                     <ref bean="EXEC_VALIDADOR" />
                 </entry>
             </map>
-        </property>
+        </property-->
         <property name="abstractDAO">
     		<ref bean="procesosDao" />
     	</property>

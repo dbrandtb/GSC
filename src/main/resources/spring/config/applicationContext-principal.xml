@@ -5,7 +5,7 @@
 
     	<bean id="principalManager"
 		class="mx.com.aon.portal.service.impl.principal.PrincipalManagerImpl" parent="abstractManagerBean">
-		<property name="endpoints">
+		<!--property name="endpoints">
 			<map>
 				<entry key="PRINCIPAL_OBTIENE_ROLES">
 					<ref bean="PRINCIPAL_OBTIENE_ROLES" />
@@ -47,7 +47,7 @@
 					<ref bean="OBTIENE_TIPOS_PAG"/>
 				</entry>
 			</map>
-		</property>
+		</property-->
 	</bean>
 
     	<bean id="principalManagerJdbcTemplate"

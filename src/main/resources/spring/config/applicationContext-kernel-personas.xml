@@ -28,12 +28,12 @@
     </bean>
      -->
     <bean id="serviciosPersonasDAO" class="mx.com.ice.services.business.dao.ServiciosPersonasDAO">
-        <property name="endpoints">
+        <!--  property name="endpoints">
             <map>
-                <!-- bean no definido en este dao..  -->
-                <!--entry key="P_COUNT_PERSONAS">
+                <! bean no definido en este dao..  >
+                <!entry key="P_COUNT_PERSONAS">
                     <ref bean="P_COUNT_PERSONAS" />
-                </entry-->
+                </entry
                 <entry key="P_GET_ATRIB_PERS_FISJUR">
                     <ref bean="P_GET_ATRIB_PERS_FISJUR" />
                 </entry>
@@ -92,10 +92,10 @@
                     <ref bean="P_GET_ROLES_OBLIGAT_INC" />
                 </entry>
                 
-                <!-- VERIFICAR ENDPOINT. YA QUE NO ES LLAMADO DESDE JAVA -->
-                <!--entry key="P_GET_SWDOMICIL">
+                <! VERIFICAR ENDPOINT. YA QUE NO ES LLAMADO DESDE JAVA >
+                <!entry key="P_GET_SWDOMICIL">
                     <ref bean="P_GET_SWDOMICIL" />
-                </entry-->               
+                </entry               
                 
                 <entry key="P_GET_TATRIPER">
                     <ref bean="P_GET_TATRIPER" />
@@ -122,25 +122,25 @@
                     <ref bean="P_VAL_DOMICIL_AGRUPA" />
                 </entry>
                 
-                <!-- VERIFICAR BEAN -->
+                <! VERIFICAR BEAN
                 <entry key="P_VAL_EXISTE_DOMICIL">
                     <ref bean="P_VAL_EXISTE_DOMICIL" />
                 </entry>
                 
-                <!-- VERIFICAR BEAN -->
-                <!--entry key="P_VAL_PERSONAS_CONFIRMA">
+                <! VERIFICAR BEAN >
+                <!entry key="P_VAL_PERSONAS_CONFIRMA">
                     <ref bean="P_VAL_PERSONAS_CONFIRMA" />
-                </entry-->
+                </entry>
                 
-                <!-- VERIFICAR BEAN -->
-                <!--entry key="P_VALIDA_CDCOLONI">
+                <! VERIFICAR BEAN >
+                <!entry key="P_VALIDA_CDCOLONI">
                     <ref bean="P_VALIDA_CDCOLONI" />
-                </entry-->
+                </entry>
                 
-                <!-- VERIFICAR BEAN.. -->
-                <!--entry key="P_VALIDA_CDPOSTAL">
+                <! VERIFICAR BEAN.. >
+                <!entry key="P_VALIDA_CDPOSTAL">
                     <ref bean="P_VALIDA_CDPOSTAL" />
-                </entry-->
+                </entry
                 
                 <entry key="P_VALIDA_PEST_PERSONAS">
                     <ref bean="P_VALIDA_PEST_PERSONAS" />
@@ -184,7 +184,7 @@
                 </entry>
                 
             </map>
-        </property>
+        </property-->
     </bean>
 
 </beans>

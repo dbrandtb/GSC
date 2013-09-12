@@ -5,7 +5,7 @@
 
 	<bean id="emisionManager"
 		class="mx.com.aon.procesos.emision.service.impl.EmisionManagerImpl" parent="abstractManagerBean">
-		<property name="endpoints">
+		<!--property name="endpoints">
 			<map>
 				<entry key="OBTIENE_POLIZAS">
 					<ref bean="OBTIENE_POLIZAS" />
@@ -80,7 +80,7 @@
                     <ref bean="OBTIENE_POLIZA_MAESTRA_EXPORT" />
                 </entry>
 			</map>
-		</property>
+		</property-->
 	</bean>
 	
 	<bean id="PDFGeneratorFormatoOT" class="mx.com.aon.pdfgenerator.PDFGeneratorFormatoOT" parent="abstractManagerJdbcTemplateInvoke">
