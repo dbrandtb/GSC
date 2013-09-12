@@ -3,23 +3,19 @@ package mx.com.aon.portal.service.impl;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.PortalVO;
 import mx.com.aon.portal.service.PaginaPrincipalManager;
+import mx.com.aon.portal.util.WrapperResultados;
 
-import com.wittyconsulting.backbone.endpoint.Endpoint;
-import com.wittyconsulting.backbone.exception.BackboneApplicationException;
-
-public class PaginaPrincipalManagerImpl implements PaginaPrincipalManager {
+public class PaginaPrincipalManagerImpl extends
+AbstractManagerJdbcTemplateInvoke implements PaginaPrincipalManager {
 
 	/**
 	 *Serial Version 
 	 */
 	private static final long serialVersionUID = -6140188280302464695L;
-	@SuppressWarnings("unchecked")
-	private Map endpoints;
 	
 	/*
 	 * (non-Javadoc)
@@ -28,37 +24,28 @@ public class PaginaPrincipalManagerImpl implements PaginaPrincipalManager {
 	@SuppressWarnings("unchecked")
 	public List<PortalVO> getConfiguracionInicial(String rolUsuario, String elemento)throws ApplicationException{
 		
-		Map params = new HashMap<String, String>();
-		params.put("nombreCliente", elemento);
-		params.put("rolCliente", rolUsuario);
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("PV_CDELEMENTO_I", elemento);
+		params.put("PV_CDROL_I", rolUsuario);
 		List<PortalVO> componentes=null;
-		try{
-			Endpoint endpoint = (Endpoint) endpoints.get("CARGA_COMPONENTES");
-			componentes =(List<PortalVO>) endpoint.invoke(params);
+		WrapperResultados res = this.returnBackBoneInvoke(params, "CARGA_COMPONENTES");
+		componentes = (List<PortalVO>)res.getItemList();
 			
-		}catch (BackboneApplicationException bae) {
-			throw new ApplicationException("Error al recuperar la lista de componentes");
-		}
-		return (List<PortalVO>) componentes;
+		return componentes;
 	
 	}
 	
 	@SuppressWarnings("unchecked")
 	public String getUserEmail(String cdUsuario)throws ApplicationException{
 		String email=null;
-		Map params = new HashMap<String, String>();
-		params.put("CDUSUARIO", cdUsuario);
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("pv_CDUSUARI_i", cdUsuario);
 		
-		ArrayList emails;
+		ArrayList<String> emails;
 		
-		try{
-			Endpoint endpoint = (Endpoint) endpoints.get("OBTIENE_EMAIL");
-			emails=(ArrayList) endpoint.invoke(params);
+		WrapperResultados res = this.returnBackBoneInvoke(params, "OBTIENE_EMAIL");
+		emails=(ArrayList<String>) res.getItemList();
 			
-		}catch (BackboneApplicationException bae) {
-			throw new ApplicationException("Error obtener los emails");
-		}
-		
 		if(emails!=null && !emails.isEmpty()){
 			if(emails.get(0)!=null){
 				email= (String) emails.get(0);
@@ -67,9 +54,5 @@ public class PaginaPrincipalManagerImpl implements PaginaPrincipalManager {
 		return email;
 	}
 
-	@SuppressWarnings("unchecked")
-	public void setEndpoints(Map endpoints) {
-		this.endpoints = endpoints;
-	}
 }
 

@@ -46,17 +46,10 @@
             </map>
         </property-->
     </bean>
-    <bean id="paginaPrincipalManager" class="mx.com.aon.portal.service.impl.PaginaPrincipalManagerImpl">
-    	<property name="endpoints">
-    		<map>
-    			<entry key="CARGA_COMPONENTES">
-    				<ref bean="CARGA_COMPONENTES"/>
-    			</entry>
-    			<entry key="OBTIENE_EMAIL">
-    				<ref bean="OBTIENE_EMAIL"/>
-    			</entry>
-    		</map>
-    	</property>
+    <bean id="paginaPrincipalManager" class="mx.com.aon.portal.service.impl.PaginaPrincipalManagerImpl"  parent="abstractManagerJdbcTemplateInvoke">
+    	<property name="abstractDAO">
+                <ref bean="paginaPrincipalDAO"/>
+        </property>
     </bean>
     <bean id="menuPrincipalManager" class="mx.com.aon.portal.service.impl.MenuPrincipalManagerImpl">
     	<!-- property name="endpoints">
