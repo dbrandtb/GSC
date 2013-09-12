@@ -163,7 +163,7 @@
                     </tr>
                 </table>
                 <div id="the-footer">
-                    Copyright &#169; 2008
+                    Copyright &#169; 2013
                 </div>
             </div>
         </div>
