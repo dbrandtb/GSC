@@ -41,6 +41,8 @@ public class AuthenticationInterceptor implements Interceptor {
 		
 		UserVO user = (UserVO) session.get(Constantes.USER);
 		
+		logger.debug("Action intercepted="+ actionInvocation.getProxy().getActionName());
+		
 		//Si el usuario no existe en sesion, detenemos el action y redirigimos al result global INPUT
 		if (user == null) {
 		    return Action.LOGIN;
@@ -52,6 +54,15 @@ public class AuthenticationInterceptor implements Interceptor {
 		        ((UserAware)action).setUser(user);
 		    }
 		    */
+			
+			
+			/* TODO: agregar logica para redireccion del usuario al login, arbol, menu o pagina solicitada
+			if(user.isRolAsignado()){
+				return Action.PORTAL;
+			}else {
+				return Action.TREE_ROLES;
+			}
+			*/
 		    
 		    /*
 		     * We just return the control string from the invoke method.  If we wanted, we could hold the string for
@@ -59,7 +70,6 @@ public class AuthenticationInterceptor implements Interceptor {
 		     * recursive hole, through the higher up interceptors, and finally arrives back at the actionInvocation itself,
 		     * who then fires the result based upon the result string returned.
 		     */
-		    logger.debug("Logged in: interceptor");
 		    return actionInvocation.invoke();
 		}
 
