@@ -29,6 +29,7 @@ var gridIncisos;
 var gridResultados,storeResultados;
 var botonVerCoberturas;
 var botonComprar;
+var botonDetalle;
 
 //window coberturas
 var windowCoberturas;
@@ -126,6 +127,20 @@ function mostrarGrid()
 ///////////////////////////////////////////////////////
 
 Ext.onReady(function(){
+	
+	Ext.define('ModeloDetalleCotizacion',{
+		extend:'Ext.data.Model',
+		fields:
+		[
+		    {name : 'Codigo_Garantia'},
+		    {name : 'Importe',type : 'float'},
+		    {name : 'Nombre_garantia'},
+		    {name : 'cdtipcon'},
+		    {name : 'nmsituac'},
+		    {name : 'orden'},
+		    {name : 'parentesco'}
+	    ]
+	});
     
     //////////////////////////////
     ////// Inicio de stores //////
@@ -545,7 +560,7 @@ Ext.onReady(function(){
         {
             blur:function(el)
             {
-                comboEstados.setLoading(true);
+                //comboEstados.setLoading(true);
                 storeEstados.load({
                     params:
                     {
@@ -567,7 +582,7 @@ Ext.onReady(function(){
                         {
                             comboEstados.clearValue();
                         }
-                        comboEstados.setLoading(false);
+                        //comboEstados.setLoading(false);
                     }
                 });
             }
@@ -840,6 +855,7 @@ Ext.onReady(function(){
     /*/////////////////*/
     botonVerCoberturas=Ext.create('Ext.Button', {
         text: 'Ver coberturas',
+        icon:'resources/fam3icons/icons/table.png',
         disabled:true,
         handler: function()
         {
@@ -865,8 +881,100 @@ Ext.onReady(function(){
         disabled:true,
         handler: detallesCobertura
     });
+    botonDetalle=Ext.create('Ext.Button', {
+        text: 'Detalles',
+        icon:'resources/fam3icons/icons/text_list_numbers.png',
+        disabled:true,
+        handler: function()
+        {
+        	Ext.Ajax.request(
+			{
+				url:urlDetalleCotizacion,
+				params:
+				{
+					'panel1.pv_cdunieco_i' : selected_record.get('cdUnieco'),
+                    'panel1.pv_cdramo_i'   : selected_record.get('cdRamo'),
+                    'panel1.pv_estado_i'   : 'W',
+                    'panel1.pv_nmpoliza_i' : selected_record.get('nmPoliza'),
+                    'panel1.pv_cdplan_i'   : selected_cd_plan,
+                    'panel1.pv_cdperpag_i' : selected_record.get('cdPerpag')
+				},
+				success:function(response,opts)
+                {
+                    var json=Ext.decode(response.responseText);
+                    if(json.success==true)
+                	{
+                    	Ext.create('Ext.window.Window', {
+                    	    title: 'Detalles de cotizaci&oacute;n',
+                    	    height: 400,
+                    	    width: 600,
+                    	    layout: 'fit',
+                    	    modal:true,
+                    	    items:[  // Let's put an empty grid in just to illustrate fit layout
+                    	        Ext.create('Ext.grid.Panel',{
+                    	        	store:Ext.create('Ext.data.Store',{
+                    	        		model:'ModeloDetalleCotizacion',
+                    	        		groupField: 'parentesco',
+                                	    proxy: {
+                                	        type: 'memory',
+                                	        reader: 'json'
+                                	    },
+                    	        		data:json.slist1
+                    	        	}),
+                    	        	columns:
+                	        		[
+                	        		    {
+                	        		    	header    : 'Nombre de la cobertura',
+                	        		    	dataIndex : 'Nombre_garantia',
+                	        		    	flex      : 1,
+                	        		    	summaryType: 'count',
+                	        		        summaryRenderer: function(value){
+                	        		            return Ext.String.format('Total de {0} cobertura{1}', value, value !== 1 ? 's' : '');
+                	        		        }
+                	        		    },
+                	        		    {
+                	        		    	header      : 'Importe por cobertura',
+                	        		    	dataIndex   : 'Importe',
+                	        		    	flex        : 1,
+                	        		    	renderer    : Ext.util.Format.usMoney,
+                	        		    	align       : 'right',
+                	        		    	summaryType : 'sum'
+                	        		    }
+            	        	        ],
+                            	    features: [{
+                	                	groupHeaderTpl: 'Parentezco: {name}',
+                	                	ftype:'groupingsummary',
+                	                	startCollapsed :true
+                	                }]
+                    	        })
+                    	    ]
+                    	}).show();
+                	}
+                    else
+                	{
+                    	Ext.Msg.show({
+                            title:'Error',
+                            msg: 'Error al obtener los detalles',
+                            buttons: Ext.Msg.OK,
+                            icon: Ext.Msg.ERROR
+                        });
+                	}
+				},
+				failure:function()
+				{
+					Ext.Msg.show({
+                        title:'Error',
+                        msg: 'Error de comunicaci&oacute;n',
+                        buttons: Ext.Msg.OK,
+                        icon: Ext.Msg.ERROR
+                    });
+				}
+        	});
+        }
+    });
     botonComprar=Ext.create('Ext.Button', {
         text: 'Comprar',
+        icon:'resources/fam3icons/icons/coins.png',
         disabled:true,
         handler: function()
         {
@@ -894,6 +1002,7 @@ Ext.onReady(function(){
                     {
                         //Ext.MessageBox.hide();
                         //matar botones
+                    	botonDetalle.hide();
                         botonComprar.hide();
                         botonVerCoberturas.hide();
                         botonVerDetalleCobertura.hide();
@@ -910,6 +1019,18 @@ Ext.onReady(function(){
                             msg:'Su poliza ha sido enviada a mesa de control con el n&uacute;mero '+Ext.getCmp('idCotizacion').getValue(),
                             buttons: Ext.Msg.OK
                         });
+                        window.parent.scrollTo(0,0);
+                        /*
+                        Ext.create('Ext.form.Panel').submit({
+                            url : urlDatosComplementarios,
+                            standardSubmit:true,
+                            params:{
+                            	cdunieco:selected_record.get('cdUnieco'),
+                            	cdramo:selected_record.get('cdRamo'),
+                            	estado:"W",
+                            	nmpoliza:selected_record.get('nmPoliza')
+                            }
+                        });*/
                     }
                     else
                     {
@@ -1130,16 +1251,19 @@ Ext.onReady(function(){
         buttons:
         [
             botonComprar,
+            botonDetalle,
             botonVerCoberturas,
             {
                 id:'botonEditarCotiza',
                 text:'Editar cotizaci&oacute;n',
+                icon:'resources/fam3icons/icons/pencil.png',
                 handler:function()
                 {
                     bloquearFormulario(false);
                     gridResultados.hide();
                     window.parent.scrollTo(0,0);
                     botonVerCoberturas.setDisabled(true);
+                    botonDetalle.setDisabled(true);
                     botonComprar.setDisabled(true);
                     window.parent.scrollTo(0,0);
                     campoCodigoPostal.focus();
@@ -1147,6 +1271,7 @@ Ext.onReady(function(){
             },
             {
                 id:'botonNuevaCotiza',
+                icon:'resources/fam3icons/icons/arrow_refresh.png',
                 text:'Nueva cotizaci&oacute;n',
                 handler:function()
                 {
@@ -1157,9 +1282,11 @@ Ext.onReady(function(){
                     storeIncisos.removeAll();
                     storeIncisos.sync();
                     botonVerCoberturas.setDisabled(true);
+                    botonDetalle.setDisabled(true);
                     botonComprar.setDisabled(true);
                     //desbloquear botones
                     botonComprar.show();
+                    botonDetalle.show();
                     botonVerCoberturas.show();
                     botonVerDetalleCobertura.show();
                     Ext.getCmp('botonCotizar').show();
@@ -1172,6 +1299,7 @@ Ext.onReady(function(){
             },
             {
                 id:'botonImprimir',
+                icon:'resources/fam3icons/icons/printer.png',
                 text:'Imprimir',
                 disabled:true,
                 handler:function()
@@ -1209,11 +1337,13 @@ Ext.onReady(function(){
                     //window.console&&console.log(selected_prima,selected_cd_plan,selected_ds_plan,selected_nm_plan,selected_record);
                     botonVerCoberturas.setDisabled(false);
                     botonComprar.setDisabled(false);
+                    botonDetalle.setDisabled(false);
                 }
                 else
                 {
                     botonVerCoberturas.setDisabled(true);
                     botonComprar.setDisabled(true);
+                    botonDetalle.setDisabled(true);
                 }
                 //alert("idplan = " + idplan + " desplan = " + desplan+ "  nmplan="+ nmplan + "  mnPrima=" + mnPrima);
                 
@@ -1434,9 +1564,9 @@ Ext.onReady(function(){
                 columns: 
                 [
                     {
-                        header: 'Rol',
+                        header: 'Tipo de asegurado',
                         dataIndex: 'rol',
-                        flex:1,
+                        flex:2,
                         editor: comboRoles,
                         renderer:function(v)
                         {
@@ -1630,7 +1760,7 @@ Ext.onReady(function(){
             Ext.Array.each(me.columns, function (column)
             {
                 // only validate column with editor
-                if (Ext.isDefined(column.getEditor())&&column.getEditor().allowBlank==false) {
+                if (column.getEditor&&Ext.isDefined(column.getEditor())&&column.getEditor().allowBlank==false) {
                     columnIndexes.push(column.dataIndex);
                 } else {
                     columnIndexes.push(undefined);
@@ -1648,7 +1778,7 @@ Ext.onReady(function(){
                 {
                     var cell=view.getCellByPosition({row: y, column: x});
                     cellValue=record.get(columnIndex);
-                    if((!cellValue)||(cellValue.lenght==0))
+                    if(cell.addCls&&((!cellValue)||(cellValue.lenght==0)))
                     {
                         cell.addCls("custom-x-form-invalid-field");
                     }
@@ -1776,6 +1906,7 @@ Ext.onReady(function(){
         ],
         buttons: [{
             id:'botonCotizar',
+            icon:'resources/fam3icons/icons/calculator.png',
             text: 'Cotizar',
             handler: function() {
                 // The getForm() method returns the Ext.form.Basic instance:
@@ -1791,7 +1922,7 @@ Ext.onReady(function(){
                 		var fechaNacimiento = new Date(record.get('fechaNacimiento'));
                 		var hoy = new Date();
                 		var edad = parseInt((hoy/365/24/60/60/1000 -fechaNacimiento/365/24/60/60/1000));
-                		if(edad>69)
+                		if(edad>64)
             			{
                 			mayores69=true;
             			}
@@ -1910,7 +2041,7 @@ Ext.onReady(function(){
 	                		{
 	                			Ext.Msg.show({
 		                            title:'Datos incompletos',
-		                            msg: 'La edad del asegurado no debe exceder de 69 a&ntilde;os',
+		                            msg: 'La edad del asegurado no debe exceder de 64 a&ntilde;os',
 		                            buttons: Ext.Msg.OK,
 		                            icon: Ext.Msg.WARNING
 		                        });
@@ -1949,6 +2080,7 @@ Ext.onReady(function(){
         },
         {
             text:'Limpiar',
+            icon:'resources/fam3icons/icons/arrow_refresh.png',
             id:'botonLimpiar',
             handler:function()
             {

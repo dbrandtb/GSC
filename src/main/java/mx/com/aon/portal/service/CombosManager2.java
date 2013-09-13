@@ -49,6 +49,8 @@ public interface CombosManager2 {
 	public List comboCondicionInstPago() throws ApplicationException;
 	
 	public List obtenCatalogoSaludVital(String producto, String cdtipsit, String cdatribu, String otval) throws ApplicationException;
+	
+	public List obtenCatalogoPol(String producto, String cdramo, String cdatribu, String otval) throws ApplicationException;
         
         public List obtenCatalogoRoles(String pv_cdramo_i) throws ApplicationException;
         

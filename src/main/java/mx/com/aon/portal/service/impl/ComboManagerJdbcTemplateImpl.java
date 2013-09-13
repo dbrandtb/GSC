@@ -201,6 +201,19 @@ public class ComboManagerJdbcTemplateImpl extends AbstractManagerJdbcTemplateInv
          return  getAllBackBoneInvoke(params, endpointName);
      }
      
+	/////////////////////////////////////////////
+	// jtezva 2013 08 21 catalogos pol         //
+	/////////////////////////////////////////////
+	public List obtenCatalogoPol(String producto, String cdramo, String cdatribu, String otval) throws ApplicationException
+	{
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("pv_cdatribu_i",cdatribu);
+		params.put("pv_cdramo_i",cdramo);
+		params.put("pv_otvalor_i",otval);
+		String endpointName = "CATALOGOS_POL";
+		return  getAllBackBoneInvoke(params, endpointName);
+	}
+     
      public List obtenCatalogoRoles(String pv_cdramo_i) throws ApplicationException
      {
          HashMap<String,Object> params = new HashMap<String,Object>();

@@ -6,6 +6,7 @@ package mx.com.aon.kernel.service;
 
 import java.util.List;
 import java.util.Map;
+
 import mx.com.aon.core.ApplicationException;
 import mx.com.aon.flujos.cotizacion.model.AyudaCoberturaCotizacionVO;
 import mx.com.aon.flujos.cotizacion.model.CoberturaCotizacionVO;
@@ -14,7 +15,7 @@ import mx.com.aon.flujos.cotizacion.model.SituacionVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
-import mx.com.gseguros.portal.cotizacion.model.Tatrisit;
+import mx.com.gseguros.portal.cotizacion.model.Tatri;
 
 /**
  *
@@ -32,7 +33,8 @@ public interface KernelManagerSustituto {
     public List<ResultadoCotizacionVO> obtenerResultadosCotizacion(Map<String,String> parameters) throws ApplicationException;
     public List<CoberturaCotizacionVO> obtenerCoberturas(Map<String,String> parameters) throws ApplicationException;
     public AyudaCoberturaCotizacionVO obtenerAyudaCobertura(String idCobertura,String idRamo,String idCiaAsegurador) throws ApplicationException;
-    public List<Tatrisit> obtenerTatrisit(String cdtipsit) throws ApplicationException;
+    public List<Tatri> obtenerTatrisit(String cdtipsit) throws ApplicationException;
+    public List<Tatri> obtenerTatripol(String[] args) throws ApplicationException;
     public DatosUsuario obtenerDatosUsuario(String cdusuario) throws ApplicationException;
     public WrapperResultados movDetalleSuplemento(Map<String,String> parameters) throws ApplicationException;
     public WrapperResultados comprarCotizacion(Map<String,String> parameters) throws ApplicationException;
@@ -40,4 +42,14 @@ public interface KernelManagerSustituto {
     public List<GenericVO> getTmanteni(String tabla) throws ApplicationException;
 	public List<Map<String, Object>> obtenerAsegurados(Map<String, String> map1) throws ApplicationException;
 	public Map<String,Object> getInfoMpolizasCompleta(Map<String,String> parameters) throws ApplicationException;
+	public WrapperResultados pMovTvalopol(Map<String, String> parameters) throws ApplicationException;
+	//requiere de su propio catch si no hay datos:
+	public Map<String,Object> pGetTvalopol(Map<String,String> parameters) throws ApplicationException;
+	public String generaCdperson() throws ApplicationException;
+	public WrapperResultados movMpersona(Map<String,Object> parameters) throws ApplicationException;
+	public WrapperResultados movMpoliper(Map<String,Object> parameters) throws ApplicationException;
+	public List<Map<String,String>> obtenerCoberturasUsuario(Map<String,String> parametros) throws ApplicationException;
+	public WrapperResultados movPoligar(Map<String, String> param) throws ApplicationException;
+	public WrapperResultados movPolicap(Map<String, String> param) throws ApplicationException;
+	public List<Map<String, String>> obtenerDetallesCotizacion(Map<String, String> params) throws ApplicationException;
 }

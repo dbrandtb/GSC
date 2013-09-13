@@ -40,6 +40,8 @@
             var _URL_COBERTURAS=            '<s:url namespace="/flujocotizacion" action="obtenerCoberturas4" />';
             var _URL_DETALLE_COBERTURA=     '<s:url namespace="/flujocotizacion" action="obtenerAyudaCoberturas4" />';
             var urlComprarCotizacion=       '<s:url namespace="/flujocotizacion" action="comprarCotizacion4" />';
+            var urlDatosComplementarios='<s:url namespace="/" action="datosComplementarios" />';
+            var urlDetalleCotizacion='<s:url namespace="/" action="detalleCotizacion" />';
         </script>
         <script src="${ctx}/resources/jsp-script/extjs4/asegurados.js"></script>
     </head>

@@ -28,14 +28,21 @@
         {
             $cmp.attr({
                 href:'javascript:LoadPage("/cotizacionVital.action");'
-            	//href:'javascript:LoadPage("/datosComplementarios.action");'
             });
+            $cmp.parent().parent().append(
+            		$("<li />").attr({class:"x-menu-list-item"})
+            		.append(
+            		$("<a />")
+            		.attr({href:'javascript:LoadPage("/datosComplementarios.action?nmpoliza="+prompt("Número de poliza:")+"&cdramo=2&cdunieco=1&estado=W")',
+            			class:"x-menu-item"})
+            		.html('<img src="/acw/images/app/default/s.gif" class="x-menu-item-icon ">Datos complementarios')
+            		));
             window.clearInterval(miIntervalCambioLiga);
-            window.console&&console.log("STOP");
+            //window.console&&console.log("STOP");
         }
         else
         {
-            window.console&&console.log("SEARCHING LIGA...");
+            //window.console&&console.log("SEARCHING LIGA...");
         }
     }
     $(document).ready(function(){

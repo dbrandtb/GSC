@@ -35,11 +35,13 @@
                     renderTo:'maindiv',
                     url:urlGuardar,
                     buttonAlign:'center',
+                    //bodyPadding:5,
                     items:[
                         Ext.create('Ext.panel.Panel',{
                             id:'panelDatosGeneralesPoliza',//id2
                             title:'Datos generales de la poliza',
                             style:'margin:5px',
+                            frame:false,
                             collapsible:true,
                             titleCollapse:true,
                             layout: {
@@ -97,6 +99,7 @@
                             id:'panelDatosGenerales',//id5
                             title:'Datos generales',
                             style:'margin:5px',
+                            frame: false,
                             collapsible:true,
                             titleCollapse:true,
                             layout:{
@@ -240,7 +243,7 @@
                                     allowBlank:false
                                 }
                             ]
-                        })<%--,
+                        }),
                         Ext.create('Ext.panel.Panel',{
                             id:'panelDatosAdicionales',//id16
                             title:'Datos adicionales',
@@ -252,7 +255,7 @@
                                 columns: 2
                             },
                             <s:property value="items" />
-                        })--%>
+                        })
                     ],
                     buttons:[
                         {
@@ -379,7 +382,7 @@
         </script>
     </head>
     <body>
-        <div id="maindiv" style="height:1000px;"></div>
+        <div id="maindiv" style="height:400px;"></div>
         <%--////////////////////////////////////
         ////// para el parser de archivos //////
         ////////////////////////////////////--%

@@ -9,16 +9,25 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+
+import oracle.jdbc.driver.OracleTypes;
+
+import org.springframework.jdbc.core.SqlParameter;
+
+import mx.com.aon.catweb.configuracion.producto.model.WrapperResultados;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.flujos.cotizacion4.web.ResultadoCotizacion4Action;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
-import mx.com.aon.portal.util.WrapperResultados;
-import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.cotizacion.model.Tatri;
 import mx.com.gseguros.portal.general.util.ConstantesCatalogos;
+import mx.com.gseguros.portal.general.util.GeneradorCampos;
 
 /**
  * 
@@ -57,6 +66,8 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 	private List<Map<String,Object>> list3;
 	private List<Map<String,Object>> list4;
 	private Map<String,Object> omap1;
+	private String cdperson;
+	private List<Map<String,String>>slist1;
 
 	public String mostrarPantalla()
 	/*
@@ -69,36 +80,25 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 
 	public String mostrarPantallaGeneral() {
 		try {
-			// List<Tatrisit>listaTatrisit=kernelManager.obtenerTatrisit("SL");
-			// GeneradorCampos gc=new GeneradorCampos();
-			// gc.genera(listaTatrisit);
-			// items=gc.getItems();
-			// fields=gc.getFields();
-			fields = new Item("fields", null, Item.ARR);
+			//List<Tatrisit>listaTatrisit=kernelManager.obtenerTatrisit("SL");
+			List<Tatri>listaTatrisit=kernelManager.obtenerTatripol(new String[]{cdramo});
+			GeneradorCampos gc=new GeneradorCampos();
+			gc.genera(listaTatrisit);
+			items=gc.getItems();
+			fields=gc.getFields();
+			//fields = new Item("fields", null, Item.ARR);
 
-			fields.add(Item.crear(null, null, Item.OBJ).add(
-					new Item("name", "panel1.dsciaaseg")));
-			fields.add(Item.crear(null, null, Item.OBJ).add(
-					new Item("name", "panel1.nombreagente")));
-			fields.add(Item.crear(null, null, Item.OBJ).add(
-					new Item("name", "panel1.dsramo")));
-
-			fields.add(Item.crear(null, null, Item.OBJ).add(
-					new Item("name", "panel2.nmpoliza")));
-			fields.add(Item.crear(null, null, Item.OBJ).add(
-					new Item("name", "panel2.estado")));
-			fields.add(Item.crear(null, null, Item.OBJ).add(
-					new Item("name", "panel2.fesolici")));
-			fields.add(Item.crear(null, null, Item.OBJ).add(
-					new Item("name", "panel2.solici")));
-			fields.add(Item.crear(null, null, Item.OBJ).add(
-					new Item("name", "panel2.feefec")));
-			fields.add(Item.crear(null, null, Item.OBJ).add(
-					new Item("name", "panel2.ferenova")));
-			fields.add(Item.crear(null, null, Item.OBJ).add(
-					new Item("name", "panel2.cdtipopol")));
-			fields.add(Item.crear(null, null, Item.OBJ).add(
-					new Item("name", "panel2.cdperpag")));
+			fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel1.dsciaaseg"));
+			fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel1.nombreagente"));
+			fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel1.dsramo"));
+			fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.nmpoliza"));
+			fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.estado"));
+			fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.fesolici"));
+			fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.solici"));
+			fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.feefec"));
+			fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.ferenova"));
+			fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.cdtipopol"));
+			fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.cdperpag"));
 		} catch (Exception ex) {
 			log.error("error al obtener los campos dinamicos", ex);
 			items = null;
@@ -132,15 +132,16 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 				// //// duro //////
 				// ////////////////
 
-			// ///////////////////////////////////
-			// //// Cargar info de mpolizas //////
-			/* ///////////////////////////////// */
+			/////////////////////////////////////
+			////// Cargar info de mpolizas //////
+			/*/////////////////////////////////*/
 			Map<String, Object> parameters = new HashMap<String, Object>(0);
 			parameters.put("pv_cdunieco", cdunieco);
 			parameters.put("pv_cdramo", cdramo);
 			parameters.put("pv_estado", estado);
 			parameters.put("pv_nmpoliza", nmpoliza);
 			parameters.put("pv_cdusuari", usuarioSesion.getUser());
+			
 			Map<String, Object> select = kernelManager
 					.getInfoMpolizas(parameters);
 			panel1.put("dsciaaseg", (String) select.get("dsunieco"));
@@ -157,9 +158,43 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 					renderFechas.format((Date) select.get("feproren")));
 			panel2.put("cdtipopol", (String) select.get("ottempot"));
 			panel2.put("cdperpag", (String) select.get("cdperpag"));
-			/* ///////////////////////////////// */
-			// //// Cargar info de mpolizas //////
-			// ///////////////////////////////////
+			/*/////////////////////////////////*/
+			////// Cargar info de mpolizas //////
+			/////////////////////////////////////
+			
+			/////////////////////////////////
+			//////   cargar tvalopol   //////
+			////// can throw exception //////
+			/*/////////////////////////////*/
+			try
+			{
+				Map<String,String> paramGetValopol=new HashMap<String,String>(0);
+				paramGetValopol.put("pv_cdunieco",cdunieco);
+				paramGetValopol.put("pv_cdramo",cdramo);
+				paramGetValopol.put("pv_estado",estado);
+				paramGetValopol.put("pv_nmpoliza",nmpoliza);
+				parametros=new HashMap<String,String>(0);
+				Map<String,Object>parametrosCargados=kernelManager.pGetTvalopol(paramGetValopol);
+				Iterator it=parametrosCargados.entrySet().iterator();
+				while(it.hasNext())
+				{
+					Entry<String,Object> entry=(Map.Entry<String, Object>) it.next();
+					parametros.put("pv_"+entry.getKey(), (String)entry.getValue());
+				}
+				log.debug("panel1: "+panel1);
+				log.debug("panel2: "+panel2);
+				log.debug("parametros: "+parametros);
+			}
+			catch(Exception ex)
+			{
+				log.error("No hubo valopol X(");
+				parametros=null;
+			}
+			/*/////////////////////////////*/
+			//////   cargar tvalopol   //////
+			////// can throw exception //////
+			/////////////////////////////////
+			
 			success = true;
 		} catch (Exception ex) {
 			panel1 = new HashMap<String, String>(0);
@@ -177,6 +212,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			log.debug("panel1: "+panel1);
 			log.debug("panel2: "+panel2);
 			log.debug("map1: "+map1);
+			log.debug("parametros: "+parametros);
 			
 			UserVO usuarioSesion=(UserVO) session.get("USUARIO");
 			
@@ -249,6 +285,12 @@ public class ComplementariosAction extends PrincipalCoreAction implements
             nuevo.put("pv_swpatent",     (String)anterior.get("swpatent"));
             nuevo.put("pv_accion",       "U");
             kernelManager.insertaMaestroPolizas(nuevo);
+            
+            parametros.putAll(map1);
+            parametros.put("pv_status", "W");
+            parametros.put("pv_nmsuplem", "0");
+            kernelManager.pMovTvalopol(parametros);
+            
 			success = true;
 		}
 		catch(Exception ex)
@@ -274,7 +316,11 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 					.add(Item.crear("name", "cdrol"))
 					.add(Item.crear("type", "Generic"))
 					);
-			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "fenacimi")));
+			item1.add(Item.crear(null, null, Item.OBJ)
+					.add(new Item("name", "fenacimi"))
+					.add(new Item("type", "date"))
+					.add(new Item("dateFormat", "d/m/Y"))
+					);
 			item1.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("name", "sexo"))
 					.add(new Item("type", "Generic"))
@@ -299,18 +345,6 @@ public class ComplementariosAction extends PrincipalCoreAction implements
     		cdrfc*/
 
 			item2 = new Item("columns", null, Item.ARR);// para las columnas del grid
-			item2.add(Item.crear(null, null, Item.OBJ)
-					.add(new Item("header", "nmsituac"))
-					.add(new Item("dataIndex", "nmsituac"))
-					.add(new Item("flex", 1))
-					.add(Item.crear("hidden",true))
-					);
-			item2.add(Item.crear(null, null, Item.OBJ)
-					.add(new Item("header", "cdperson"))
-					.add(new Item("dataIndex", "cdperson"))
-					.add(new Item("flex", 1))
-					.add(Item.crear("hidden",true))
-					);
 			item2.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("header", "Rol"))
 					.add(new Item("dataIndex", "cdrol"))
@@ -358,11 +392,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 					.add(new Item("header", "Fecha de nacimiento"))
 					.add(new Item("dataIndex", "fenacimi"))
 					.add(new Item("flex", 1))
-					.add(Item.crear("editor",null,Item.OBJ)
-							.add("xtype","datefield")
-							.add("allowBlank",false)
-							.add("format","d/m/Y")
-						)
+					.add(Item.crear("editor","editorFecha").setQuotes(""))
 					.add(Item.crear("renderer","Ext.util.Format.dateRenderer('d M Y')").setQuotes(""))
 					);
 			item2.add(Item.crear(null, null, Item.OBJ)
@@ -381,6 +411,58 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 							.add("allowBlank",false)
 						)
 					);
+			/*xtype: 'actioncolumn',
+	                        width: 30,
+	                        sortable: false,
+	                        menuDisabled: true,
+	                        items: [{
+	                            icon:'resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
+	                            //iconCls: 'icon-delete',
+	                            tooltip: 'Quitar inciso',
+	                            scope: this,
+	                            handler: this.onRemoveClick
+	                        }]*/
+			item2.add(Item.crear(null, null, Item.OBJ)
+					.add(new Item("xtype", "actioncolumn"))
+					.add(new Item("width", 60))
+					.add(new Item("menuDisabled", true))
+					.add(new Item("items", null,Item.ARR)
+						.add(Item.crear(null,null,Item.OBJ)
+								.add("icon","resources/fam3icons/icons/text_list_bullets.png")
+								.add("tooltip","Editar coberturas")
+								.add(Item.crear("scope","this").setQuotes(""))
+								.add(Item.crear("handler","this.onEditarClick").setQuotes(""))
+								)
+						.add(Item.crear(null,null,Item.OBJ)
+								.add("icon","resources/fam3icons/icons/report_key.png")
+								.add("tooltip","Editar domicilios")
+								.add(Item.crear("scope","this").setQuotes(""))
+								.add(Item.crear("handler","this.onDomiciliosClick").setQuotes(""))
+								)
+						/*.add(Item.crear(null,null,Item.OBJ)
+								.add("icon","resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png")
+								.add("tooltip","Quitar asegurado")
+								.add(Item.crear("scope","this").setQuotes(""))
+								.add(Item.crear("handler","this.onRemoveClick").setQuotes(""))
+								)*/
+					)
+					.add(Item.crear("editor",null,Item.OBJ)
+							.add("xtype","textfield")
+							.add("allowBlank",false)
+						)
+					);
+			item2.add(Item.crear(null, null, Item.OBJ)
+					.add(new Item("header", "nmsituac"))
+					.add(new Item("dataIndex", "nmsituac"))
+					.add(new Item("flex", 1))
+					.add(Item.crear("hidden",true))
+					);
+			item2.add(Item.crear(null, null, Item.OBJ)
+					.add(new Item("header", "cdperson"))
+					.add(new Item("dataIndex", "cdperson"))
+					.add(new Item("flex", 1))
+					.add(Item.crear("hidden",true))
+					);
 		} catch (Exception ex) {
 			log.error("error al generar los campos dinamicos", ex);
 			item1 = null;
@@ -392,7 +474,26 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 		log.debug("cargarPantallaAsegurados map1: "+map1);
 		try
 		{
-			list1=kernelManager.obtenerAsegurados(map1);
+			list1=kernelManager.obtenerAsegurados(map1);/*
+			Iterator it=list1.iterator();
+			while(it.hasNext())
+			{
+				Map<String,Object>aseg=(Map<String, Object>) it.next();
+				if(aseg.containsKey("fenacimi")&&aseg.get("fenacimi")!=null)
+				{
+					log.debug("DATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATE");
+					log.debug("DATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATE");
+					log.debug("DATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATE");
+					log.debug("DATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATE");
+					log.debug("DATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATE");
+					log.debug("DATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATE");
+					log.debug("DATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATEDATE");
+					log.debug(aseg.get("fenacimi"));
+					Date fenacimi=(Date)aseg.get("fenacimi");
+					aseg.remove("fenacimi");
+					aseg.put("fenacimi",(String)renderFechas.format(fenacimi));
+				}
+			}*/
 			success=true;
 		}
 		catch(Exception ex)
@@ -408,10 +509,117 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 	{
 		log.debug(map1);
 		log.debug(list1);
-		success=true;
+		try
+		{
+			int i=1;
+			for(Map<String,Object>aseg:list1)
+			{
+				Map<String,Object>parametros=new LinkedHashMap<String,Object>(0);
+				/* MODELO RECIBIDO
+				name", "nmsituac")));
+				name", "cdrol"
+				name", "fenacimi")));
+				name", "sexo"))
+				name", "cdperson")));
+				name", "nombre")));
+				name", "segundo_nombre")));
+				name", "Apellido_Paterno")));
+				name", "Apellido_Materno")));
+				name", "cdrfc")));*/
+				parametros.put("pv_cdperson_i",(String)aseg.get("cdperson"));
+				parametros.put("pv_cdtipide_i","1");// 												OracleTypes.VARCHAR));// IN  MPERSONA.cdtipide%TYPE DEFAULT NULL, Valor por default 1
+				parametros.put("pv_cdideper_i", (String)aseg.get("cdrfc"));//						OracleTypes.VARCHAR));// IN  MPERSONA.cdideper%TYPE DEFAULT NULL, Valor de CDRFC
+				parametros.put("pv_dsnombre_i",(String)aseg.get("nombre"));// 						OracleTypes.VARCHAR));// IN  MPERSONA.dsnombre%TYPE DEFAULT NULL,
+				parametros.put("pv_cdtipper_i","1");// 												OracleTypes.VARCHAR));// IN  MPERSONA.cdtipper%TYPE DEFAULT NULL, Valor por default 1
+				parametros.put("pv_otfisjur_i","F");// 												OracleTypes.VARCHAR));// IN  MPERSONA.otfisjur%TYPE DEFAULT NULL, Valor por default F
+				parametros.put("pv_otsexo_i",(String)aseg.get("sexo"));// 							OracleTypes.VARCHAR));// IN  MPERSONA.otsexo%TYPE DEFAULT NULL,
+				parametros.put("pv_fenacimi_i",aseg.get("fenacimi"));//	OracleTypes.VARCHAR));// IN  MPERSONA.fenacimi%TYPE DEFAULT NULL,
+				parametros.put("pv_cdrfc_i",(String)aseg.get("cdrfc"));// 							OracleTypes.VARCHAR));// IN  MPERSONA.cdrfc%TYPE DEFAULT NULL,
+				parametros.put("pv_dsemail_i","");// 		OracleTypes.VARCHAR));// 				IN  MPERSONA.dsemail%TYPE DEFAULT NULL,  Valor de email o nulo,
+				parametros.put("pv_dsnombre1_i",(String)aseg.get("segundo_nombre"));// 				OracleTypes.VARCHAR));// IN  MPERSONA.dsnombre1%TYPE DEFAULT NULL,
+				parametros.put("pv_dsapellido_i",(String)aseg.get("Apellido_Paterno"));// 			OracleTypes.VARCHAR));// IN  MPERSONA.dsapellido%TYPE DEFAULT NULL,
+				parametros.put("pv_dsapellido1_i",(String)aseg.get("Apellido_Materno"));// 			OracleTypes.VARCHAR));// IN  MPERSONA.dsapellido1%TYPE DEFAULT NULL,
+				parametros.put("pv_feingreso_i", renderFechas.format(calendarHoy.getTime()));//		OracleTypes.VARCHAR));// IN  MPERSONA.feingreso%TYPE DEFAULT NULL,  Valor por default SYSDATE
+				parametros.put("pv_accion_i", "I");//												OracleTypes.VARCHAR));//
+				log.debug("#iteracion mov mpersonas "+i);
+				kernelManager.movMpersona(parametros);
+				
+				parametros=new LinkedHashMap<String,Object>(0);
+				parametros.put("pv_cdunieco_i",	map1.get("pv_cdunieco"));
+				parametros.put("pv_cdramo_i",	map1.get("pv_cdramo"));
+				parametros.put("pv_estado_i",	map1.get("pv_estado"));
+				parametros.put("pv_nmpoliza_i",	map1.get("pv_nmpoliza"));
+				parametros.put("pv_nmsituac_i",	(String)aseg.get("nmsituac"));
+				parametros.put("pv_cdrol_i", 	(String)aseg.get("cdrol"));
+				parametros.put("pv_cdperson_i",	(String)aseg.get("cdperson"));
+				parametros.put("pv_nmsuplem_i",	"0");
+				parametros.put("pv_status_i",	"V");
+				parametros.put("pv_nmorddom_i",	"1");
+				parametros.put("pv_swreclam_i",	null);
+				parametros.put("pv_accion_i",	"I");
+				log.debug("#iteracion mov mpoliper "+i);
+				kernelManager.movMpoliper(parametros);
+				
+				i++;
+			}
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			log.error("error al guardar asegurados",ex);
+			success=false;
+		}
 		return SUCCESS;
 	}
 
+	public String generarCdperson()
+	{
+		try
+		{
+			cdperson=kernelManager.generaCdperson();
+			if(session.get("cdpersonciclado")!=null&&((String)session.get("cdpersonciclado")).equals(cdperson))
+			{
+				log.debug("###############################################");
+				log.debug("###############################################");
+				log.debug("##################CICLADO######################");
+				log.debug("###############################################");
+				log.debug("###############################################");
+				return generarCdperson();
+			}
+			else
+			{
+				session.put("cdpersonciclado",cdperson);
+			}
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			log.error("error al generar cdperson",ex);
+			success=false;
+		}
+		return SUCCESS;
+	}
+	
+	public String detalleCotizacion()
+	{
+		try
+		{
+			log.debug("panel1: "+panel1);
+			/*nmsituac,parentesco,orden,Codigo_Garantia, Nombre_garantia, cdtipcon, Importe*/
+			slist1=kernelManager.obtenerDetallesCotizacion(panel1);
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			log.error("Error al obtener el detalle de cotizacion",ex);
+			success=false;
+		}
+		return SUCCESS;
+	}
+	
+	/////////////////////////////////
+	////// getters ans setters //////
+	/*/////////////////////////////*/
 	public Item getItems() {
 		return items;
 	}
@@ -624,6 +832,22 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 
 	public String getCON_CAT_POL_ROL() {
 		return CON_CAT_POL_ROL;
+	}
+
+	public String getCdperson() {
+		return cdperson;
+	}
+
+	public void setCdperson(String cdperson) {
+		this.cdperson = cdperson;
+	}
+
+	public List<Map<String, String>> getSlist1() {
+		return slist1;
+	}
+
+	public void setSlist1(List<Map<String, String>> slist1) {
+		this.slist1 = slist1;
 	}
 
 }
