@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import mx.com.aon.core.ApplicationException;
 import mx.com.aon.flujos.cotizacion.model.AyudaCoberturaCotizacionVO;
 import mx.com.aon.flujos.cotizacion.model.CoberturaCotizacionVO;
@@ -19,7 +20,8 @@ import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
-import mx.com.gseguros.portal.cotizacion.model.Tatrisit;
+import mx.com.gseguros.portal.cotizacion.model.Tatri;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -34,7 +36,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
     public WrapperResultados calculaNumeroPoliza(String pv_cdunieco_i, String pv_cdramo_i, String pv_estado_i) throws ApplicationException
     {
         log.debug("### kernel sustituto calculaNumeroPoliza param: "+pv_cdunieco_i+", "+pv_cdramo_i+", "+pv_estado_i);
-        Map parametros=new HashMap<String,String>(0);
+        Map<String,String> parametros=new HashMap<String,String>(0);
         parametros.put("pv_cdunieco_i", pv_cdunieco_i);
         parametros.put("pv_cdramo_i", pv_cdramo_i);
         parametros.put("pv_estado_i", pv_estado_i);
@@ -148,14 +150,25 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return res;
     }
     
-    public List<Tatrisit> obtenerTatrisit(String cdtipsit) throws ApplicationException
+    public List<Tatri> obtenerTatrisit(String cdtipsit) throws ApplicationException
     {
         Map<String,Object> parameters=new HashMap<String,Object>(0);
         parameters.put("pv_cdtipsit_i",cdtipsit);
         log.debug("### kernel sustituto obtenerTatrisit map: "+parameters);
-        List<Tatrisit> lista= this.getAllBackBoneInvoke(parameters, ProcesoDAO.OBTENER_TATRISIT);
-        lista=lista!=null?lista:new ArrayList<Tatrisit>(0);
+        List<Tatri> lista= this.getAllBackBoneInvoke(parameters, ProcesoDAO.OBTENER_TATRISIT);
+        lista=lista!=null?lista:new ArrayList<Tatri>(0);
         log.debug("### kernel sustituto obtenerTatrisit lista size: "+lista.size());
+        return lista;
+    }
+    
+    public List<Tatri> obtenerTatripol(String args[]) throws ApplicationException
+    {
+        Map<String,Object> parameters=new HashMap<String,Object>(0);
+        parameters.put("pv_cdramo",args[0]);
+        log.debug("### kernel sustituto obtenerTatripol map: "+parameters);
+        List<Tatri> lista= this.getAllBackBoneInvoke(parameters, ProcesoDAO.OBTENER_TATRIPOL);
+        lista=lista!=null?lista:new ArrayList<Tatri>(0);
+        log.debug("### kernel sustituto obtenerTatripol lista size: "+lista.size());
         return lista;
     }
     
@@ -210,5 +223,151 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         log.debug("### kernel sustituto getInfoMpolizasCompleta response map: "+map);
         return map;
     }
+    
+    public WrapperResultados pMovTvalopol(Map<String, String> parameters) throws ApplicationException
+    {
+    	String[] inputKeys=new String[]{
+    			"pv_cdunieco",
+        		"pv_cdramo",
+        		"pv_estado",
+        		"pv_nmpoliza",
+        		"pv_nmsuplem",
+        		"pv_status",
+        		"pv_otvalor01",
+        		"pv_otvalor02",
+        		"pv_otvalor03",
+        		"pv_otvalor04",
+        		"pv_otvalor05",
+        		"pv_otvalor06",
+        		"pv_otvalor07",
+        		"pv_otvalor08",
+        		"pv_otvalor09",
+        		"pv_otvalor10",
+        		"pv_otvalor11",
+        		"pv_otvalor12",
+        		"pv_otvalor13",
+        		"pv_otvalor14",
+        		"pv_otvalor15",
+        		"pv_otvalor16",
+        		"pv_otvalor17",
+        		"pv_otvalor18",
+        		"pv_otvalor19",
+        		"pv_otvalor20",
+        		"pv_otvalor21",
+        		"pv_otvalor22",
+        		"pv_otvalor23",
+        		"pv_otvalor24",
+        		"pv_otvalor25",
+        		"pv_otvalor26",
+        		"pv_otvalor27",
+        		"pv_otvalor28",
+        		"pv_otvalor29",
+        		"pv_otvalor30",
+        		"pv_otvalor31",
+        		"pv_otvalor32",
+        		"pv_otvalor33",
+        		"pv_otvalor34",
+        		"pv_otvalor35",
+        		"pv_otvalor36",
+        		"pv_otvalor37",
+        		"pv_otvalor38",
+        		"pv_otvalor39",
+        		"pv_otvalor40",
+        		"pv_otvalor41",
+        		"pv_otvalor42",
+        		"pv_otvalor43",
+        		"pv_otvalor44",
+        		"pv_otvalor45",
+        		"pv_otvalor46",
+        		"pv_otvalor47",
+        		"pv_otvalor48",
+        		"pv_otvalor49",
+        		"pv_otvalor50",
+    	};
+    	for(String key:inputKeys)
+    	{
+    		if(!parameters.containsKey(key))
+    		{
+    			parameters.put(key, null);
+    		}
+    	}
+    	log.debug("### kernel sustituto pMovTvalopol map: "+parameters);
+        WrapperResultados res=this.returnBackBoneInvoke(parameters, ProcesoDAO.P_MOV_TVALOPOL);
+        log.debug("### kernel sustituto pMovTvalopol id:"+res.getMsgId());
+        log.debug("### kernel sustituto pMovTvalopol mesage:"+res.getMsgText());
+        return res;
+    }
+    
+    //requiere de su propio catch si no hay datos:
+    public Map<String,Object> pGetTvalopol(Map<String,String> parameters) throws ApplicationException {
+        log.debug("### kernel sustituto pGetTvalopol map: "+parameters);
+        Map<String,Object>map=(Map<String,Object>) this.getBackBoneInvoke(parameters, ProcesoDAO.P_GET_TVALOPOL);
+        log.debug("### kernel sustituto pGetTvalopol response map: "+map);
+        return map;
+    }
+    
+    public String generaCdperson() throws ApplicationException
+    {
+        log.debug("### kernel sustituto generaCdperson");
+        WrapperResultados res=this.returnBackBoneInvoke(new HashMap<String,String>(0), ProcesoDAO.GENERA_MPERSON);
+        log.debug("### kernel sustituto generaCdperson cdperson generado:"+res.getItemMap().get("CDPERSON"));
+        log.debug("### kernel sustituto generaCdperson id:"+res.getMsgId());
+        log.debug("### kernel sustituto generaCdperson mesage:"+res.getMsgText());
+        return (String)res.getItemMap().get("CDPERSON");
+    }
+    
+    public WrapperResultados movMpersona(Map<String,Object> parameters) throws ApplicationException
+    {
+    	log.debug("### kernel sustituto movMpersona map: "+parameters);
+        WrapperResultados res=this.returnBackBoneInvoke(parameters, ProcesoDAO.P_MOV_MPERSONA);
+        log.debug("### kernel sustituto movMpersona id:"+res.getMsgId());
+        log.debug("### kernel sustituto movMpersona mesage:"+res.getMsgText());
+        return res;
+    }
+    
+    public WrapperResultados movMpoliper(Map<String,Object> parameters) throws ApplicationException
+    {
+    	log.debug("### kernel sustituto movMpoliper map: "+parameters);
+        WrapperResultados res=this.returnBackBoneInvoke(parameters, ProcesoDAO.P_MOV_MPOLIPER);
+        log.debug("### kernel sustituto movMpoliper id:"+res.getMsgId());
+        log.debug("### kernel sustituto movMpoliper mesage:"+res.getMsgText());
+        return res;
+    }
+    
+    public List<Map<String,String>> obtenerCoberturasUsuario(Map<String,String> parametros) throws ApplicationException
+    {
+    	log.debug("### kernel sustituto obtenerCoberturasUsuario parametros: "+parametros);
+        List<Map<String,String>> lista= this.getAllBackBoneInvoke(parametros, ProcesoDAO.OBTENER_COBERTURAS_USUARIO);
+        lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
+        log.debug("### kernel sustituto obtenerCoberturasUsuario lista size: "+lista.size());
+        return lista;
+    }
+    
+    public WrapperResultados movPoligar(Map<String, String> param) throws ApplicationException
+    {
+    	log.debug("### kernel sustituto movPoligar map: "+param);
+        WrapperResultados res=this.returnBackBoneInvoke(param, ProcesoDAO.P_MOV_MPOLIGAR);
+        log.debug("### kernel sustituto movPoligar id:"+res.getMsgId());
+        log.debug("### kernel sustituto movPoligar mesage:"+res.getMsgText());
+        return res;
+    }
+    
+	public WrapperResultados movPolicap(Map<String, String> param) throws ApplicationException
+	{
+		log.debug("### kernel sustituto movPolicap map: "+param);
+        WrapperResultados res=this.returnBackBoneInvoke(param, ProcesoDAO.P_MOV_MPOLICAP);
+        log.debug("### kernel sustituto movPolicap id:"+res.getMsgId());
+        log.debug("### kernel sustituto movPolicap mesage:"+res.getMsgText());
+        return res;
+	}
+	
+	public List<Map<String, String>> obtenerDetallesCotizacion(Map<String, String> params) throws ApplicationException
+	{
+		log.debug("### kernel sustituto obtenerDetallesCotizacion parametros: "+params);
+        List<Map<String,String>> lista= this.getAllBackBoneInvoke(params, ProcesoDAO.OBTENER_DETALLES_COTIZACION);
+        lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
+        log.debug("### kernel sustituto obtenerDetallesCotizacion lista size: "+lista.size());
+        return lista;
+	}
     
 }

@@ -141,6 +141,9 @@ Ext.define('RowCobertura',{
 /////////////////////////
 
 Ext.onReady(function(){
+	Ext.tip.QuickTipManager.init();
     Ext.util.Format.thousandSeparator = ',';
     Ext.util.Format.decimalSeparator = '.';
+    Ext.grid.RowEditor.prototype.saveBtnText =   "Actualizar";
+    Ext.grid.RowEditor.prototype.cancelBtnText = "Cancelar";
 });

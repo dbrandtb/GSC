@@ -6,7 +6,7 @@ package mx.com.gseguros.portal.general.util;
 
 import java.util.List;
 import mx.com.gseguros.portal.cotizacion.model.Item;
-import mx.com.gseguros.portal.cotizacion.model.Tatrisit;
+import mx.com.gseguros.portal.cotizacion.model.Tatri;
 
 /**
  *
@@ -15,12 +15,12 @@ import mx.com.gseguros.portal.cotizacion.model.Tatrisit;
 public class GeneradorCampos {
     
     public static final String idPrefix="idAutoGenerado";
-    public static final String namePrefix="parametros.otval";
+    public static final String namePrefix="parametros.pv_otvalor";
     private org.apache.log4j.Logger log=org.apache.log4j.Logger.getLogger(GeneradorCampos.class);
     private Item items;
     private Item fields;
     
-    public void genera(List<Tatrisit> lt) throws Exception
+    public void genera(List<Tatri> lt) throws Exception
     {
         items=new Item("items",null,Item.ARR);
         fields=new Item("fields",null,Item.ARR);
@@ -35,7 +35,7 @@ public class GeneradorCampos {
         log.debug(items.toString());
     }
     
-    public void generaCampoYField(List<Tatrisit> lt, Tatrisit ta, Integer idx) throws Exception
+    public void generaCampoYField(List<Tatri> lt, Tatri ta, Integer idx) throws Exception
     {
         Item fi=new Item();
         fi.setType(Item.OBJ);
@@ -73,7 +73,14 @@ public class GeneradorCampos {
             Item proxy=new Item("proxy",null,Item.OBJ);
             store.add(proxy);
             proxy.add("type","ajax");
-            proxy.add("url",UrlConstantes.OBTENER_ATRIBUTOS);
+            if(ta.getType().equals(Tatri.TATRISIT))
+            {
+            	proxy.add("url",UrlConstantes.OBTENER_ATRIBUTOS);
+            }
+            else if(ta.getType().equals(Tatri.TATRIPOL))
+            {
+            	proxy.add("url",UrlConstantes.OBTENER_ATRIBUTOS_POL);
+            }
             proxy.add(
                     Item.crear("extraParams", null, Item.OBJ)
                     .add("cdatribu",ta.getCdatribu())
@@ -88,34 +95,37 @@ public class GeneradorCampos {
             it.add(Item.crear("valueField", "key"));
             it.add(Item.crear("editable", "false"));
             //it.add(Item.crear("emptyText", "Seleccione..."));
-            if(idx>0&&ta.getCdtablj1()!=null&&!ta.getCdtablj1().isEmpty())
+            if(idx<lt.size()-1&&lt.get(idx+1).getCdtablj1()!=null&&!lt.get(idx+1).getCdtablj1().isEmpty())//para el padre anidado
+            {
+            	this.agregarHerencia(lt,it,idx);
+            }	
+            if(idx>0&&ta.getCdtablj1()!=null&&!ta.getCdtablj1().isEmpty())//para el hijo anidado
             {
                 it.add(Item.crear("forceSelection",false));
-                Item heredar=new Item(null,null,Item.OBJ,"heredar:function(){","},"
-                    + "listeners:{"
-                    + "focus:{fn:function(){this.heredar();}},"
-                    + "change:{fn:function(){this.heredar();}}"
-                    + "}");
-                it.add(heredar);
-                Item load=new Item(null,null,Item.OBJ,"this.getStore().load({","})");
-                heredar.add(load);
-                load.add(
-                        Item.crear("params",null,Item.OBJ)
-                        .add(null,null,Item.OBJ,"{idPadre:Ext.getCmp('"+this.idPrefix+(idx-1)+"').getValue(",")}")
-                        );
-                Item callback=Item.crear(null, null, Item.OBJ, "callback:function(){"
-                        + "var thisCmp=Ext.getCmp('"+this.idPrefix+idx+"');"
-                        + "var valorActual=thisCmp.getValue();"
-                        + "var dentro=false;"
-                        + "thisCmp.getStore().each(function(record){"
-                        + "if(valorActual==record.get('key'))dentro=true;"
-                        + "});"
-                        + "if(!dentro)thisCmp.clearValue();", "}");
-                load.add(callback);
-                /*Item listen=new Item("listeners",null,Item.OBJ);
-                it.add(listen);
-                listen.add(Item.crear(null,null,Item.OBJ,"focus:heredar",""));
-                listen.add(Item.crear(null,null,Item.OBJ,"change:heredar",""));*/
+                it.add(Item.crear("heredar",
+                		 "function(remoto){"
+                		+"    if(!this.noEsPrimera||remoto==true)"
+                		+"    {"
+                		+"        this.noEsPrimera=true;"
+                		+"        this.getStore().load({"
+                		+"            params:{"
+                		+"		          idPadre:Ext.getCmp('"+this.idPrefix+(idx-1)+"').getValue()"
+                		+"    		  },"
+                		+"		      callback:function(){"
+                		+"			      var thisCmp=Ext.getCmp('"+this.idPrefix+idx+"');"
+                        +"			      var valorActual=thisCmp.getValue();"
+                        +"			      var dentro=false;"
+                        +"			      thisCmp.getStore().each(function(record){"
+                        +"				      if(valorActual==record.get('key'))dentro=true;"
+                        +"			      });"
+                        +"			      if(!dentro)thisCmp.clearValue();"
+                		+"		      }"
+                		+"	      });"
+                		+"    }"
+                		+"},"
+                		+"listeners:{"
+                		+"	change:{fn:function(){this.heredar();}}"
+                		+"}").setQuotes(""));
             }
         }
         else if(ta.getSwformat().equals("A"))
@@ -130,8 +140,18 @@ public class GeneradorCampos {
             it.add(Item.crear("fieldLabel",ta.getDsatribu()));
             it.add(Item.crear("style","margin:5px"));
             //it.add(Item.crear("emptyText", "Introduzca..."));
-            it.add(Item.crear("minLength", Integer.parseInt(ta.getNmlmin())));
-            it.add(Item.crear("maxLength", Integer.parseInt(ta.getNmlmax())));
+            if(ta.getNmlmin()!=null)
+            {
+            	it.add(Item.crear("minLength", Integer.parseInt(ta.getNmlmin())));
+            }
+            if(ta.getNmlmax()!=null)
+            {
+            	it.add(Item.crear("maxLength", Integer.parseInt(ta.getNmlmax())));
+            }
+            if(idx<lt.size()-1&&lt.get(idx+1).getCdtablj1()!=null&&!lt.get(idx+1).getCdtablj1().isEmpty())
+            {
+            	this.agregarHerencia(lt,it,idx);
+            }
         }
         else if(ta.getSwformat().equals("N")||ta.getSwformat().equals("P"))
         {
@@ -145,8 +165,18 @@ public class GeneradorCampos {
             it.add(Item.crear("fieldLabel",ta.getDsatribu()));
             it.add(Item.crear("style","margin:5px"));
             //it.add(Item.crear("emptyText", "Introduzca..."));
-            it.add(Item.crear("minLength", Integer.parseInt(ta.getNmlmin())));
-            it.add(Item.crear("maxLength", Integer.parseInt(ta.getNmlmax())));
+            if(ta.getNmlmin()!=null)
+            {
+            	it.add(Item.crear("minLength", Integer.parseInt(ta.getNmlmin())));
+            }
+            if(ta.getNmlmax()!=null)
+            {
+            	it.add(Item.crear("maxLength", Integer.parseInt(ta.getNmlmax())));
+            }
+            if(idx<lt.size()-1&&lt.get(idx+1).getCdtablj1()!=null&&!lt.get(idx+1).getCdtablj1().isEmpty())
+            {
+            	this.agregarHerencia(lt,it,idx);
+            }
         }
         else if(ta.getSwformat().equals("F"))
         {
@@ -165,7 +195,17 @@ public class GeneradorCampos {
         fields.add(fi);
     }
 
-    public Item getItems() {
+    private void agregarHerencia(List<Tatri> lt, Item it, Integer idx) throws Exception {//para el padre anidado
+    	it.add(Item.crear("listeners","" +
+    			"{" +
+    			"    blur:{" +
+    			"        fn:function(){Ext.getCmp('"+this.idPrefix+(idx+1)+"').heredar(true);}" +
+    			"    }" +
+    			"}")
+    			.setQuotes(""));
+	}
+
+	public Item getItems() {
         return items;
     }
 

@@ -23,6 +23,9 @@
 	var urlCargarCatalogos='<s:url namespace="/flujocotizacion" action="cargarCatalogos" />';
 	var urlDatosComplementarios='<s:url namespace="/" action="datosComplementarios.action" />';
 	var urlGuardarAsegurados='<s:url namespace="/" action="guardarComplementariosAsegurados" />';
+	var urlCoberturasAsegurado='<s:url namespace="/" action="editarCoberturas" />';
+	var urlGenerarCdPerson='<s:url namespace="/" action="generarCdperson" />';
+	var editorFecha;
 	
     function rendererRol(v)
     {
@@ -93,6 +96,71 @@
         //console.log('return',leyenda);
         return leyenda;
     }
+    
+    function editarDespuesValidaciones(incisosJson)
+    {
+    	var formPanel=Ext.getCmp('form1');
+        var submitValues=formPanel.getForm().getValues();
+        //console.log(submitValues);
+        //console.log("###############################");
+        submitValues['list1']=incisosJson;
+        var map1={
+        'pv_cdunieco':inputCdunieco,
+        'pv_cdramo':inputCdramo,
+        'pv_estado':inputEstado,
+        'pv_nmpoliza':inputNmpoliza};
+        submitValues['map1']=map1;
+        //window.console&&console.log(submitValues);
+        //Submit the Ajax request and handle the response
+        formPanel.setLoading(true);
+        /*Ext.MessageBox.show({
+            msg: 'Cotizando...',
+            width:300,
+            wait:true,
+            waitConfig:{interval:100}
+        });*/
+        Ext.Ajax.request(
+        {
+            url: urlGuardarAsegurados,
+            jsonData:Ext.encode(submitValues),
+            success:function(response,opts)
+            {
+                //Ext.MessageBox.hide();
+                formPanel.setLoading(false);
+                var jsonResp = Ext.decode(response.responseText);
+                //window.console&&console.log(jsonResp);
+                if(jsonResp.success==true)
+                {
+                	Ext.Msg.show({
+                        title:'Asegurados guardados',
+                        msg: 'Se ha guardado la informaci&oacute;n',
+                        buttons: Ext.Msg.OK
+                    });
+                }
+                else
+               	{
+                	Ext.Msg.show({
+                        title:'Error',
+                        msg: 'No se pudo guardar',
+                        buttons: Ext.Msg.OK,
+                        icon: Ext.Msg.ERROR
+                    });
+               	}
+            },
+            failure:function(response,opts)
+            {
+                //Ext.MessageBox.hide();
+                formPanel.setLoading(false);
+                //window.console&&console.log("error");
+                Ext.Msg.show({
+                    title:'Error',
+                    msg: 'Error de comunicaci&oacute;n',
+                    buttons: Ext.Msg.OK,
+                    icon: Ext.Msg.ERROR
+                });
+            }
+        });
+    }
 	
     Ext.onReady(function(){
 		
@@ -136,7 +204,7 @@
 	    storePersonas =new Ext.data.Store(
    	    {
    	        // destroy the store if the grid is destroyed
-   	        autoDestroy: true,
+   	        //autoDestroy: true,
    	        model: 'Modelo1',
    	        autoLoad:true,
    	        proxy:
@@ -155,28 +223,7 @@
 		            type: 'json',
 		            root: 'list1'
 		        }
-   	        }/*,
-   	        data:
-   	        [
-   	            {
-   	                rol:new Generic({'key':'20','value':'Tomador'}),
-   	                fechaNacimiento:new Date(),
-   	                sexo:new Generic({'key':'H','value':'Hombre'}),
-   	                nombre:'Alvaro',
-   	                segundoNombre:'Jair',
-   	                apellidoPaterno:'Mart�nez',
-   	                apellidoMaterno:'Varela'
-   	            },
-   	            {
-   	                rol:new Generic({'key':'20','value':'Tomador'}),
-   	                fechaNacimiento:new Date(),
-   	                sexo:new Generic({'key':'H','value':'Hombre'}),
-   	                nombre:'Ricardo',
-   	                segundoNombre:'',
-   	                apellidoPaterno:'Bautista',
-   	                apellidoMaterno:'Silva'
-   	            }
-   	        ]*/
+   	        }
    	    });
 	    
 	    editorRoles=Ext.create('Ext.form.ComboBox',
@@ -199,6 +246,12 @@
    	        editable:false
    	    });
 	    
+	    editorFecha=Ext.create('Ext.form.field.Date',
+        {
+	    	format:'d/m/Y',
+            allowBlank:false
+        });
+	    
 	    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	    ////// Inicio de declaracion de grid                                                                             //////
 	    ////// http://docs.sencha.com/extjs/4.2.1/extjs-build/examples/build/KitchenSink/ext-theme-neptune/#cell-editing //////
@@ -217,6 +270,10 @@
 
 	        //title: 'Asegurados',
 	        frame: false,
+	        collapsible:true,
+	        titleCollapse:true,
+	        style:'margin:5px;',
+            title:'Asegurados',
 
 	        initComponent: function() {
 	            this.cellEditing = new Ext.grid.plugin.CellEditing({
@@ -369,12 +426,12 @@
 	                selModel: {
 	                    selType: 'cellmodel'
 	                },
-	                tbar: [{
+	                /*tbar: [{
 	                    icon:'resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png',
 	                    text: 'Agregar',
 	                    scope: this,
 	                    handler: this.onAddClick
-	                }],
+	                }],*/
 	                /*http://www.sencha.com/forum/showthread.php?141626-Grid-Validation-with-Error-Indication-%28suggestions-needed%29*/
 	                //valida las celdas y les pone el estilo rojito
 	                listeners:
@@ -383,13 +440,16 @@
 	                    afterrender: function (grid)
 	                    {
 	                        var view = grid.getView();
-	                        // validation on record level through "itemupdate" event
-	                        view.on('itemupdate', function (record, y, node, options)
-	                            {
-	                                this.validateRow(this.getColumnIndexes(),record, y, true);
-	                            },
-	                            grid
-	                        );
+	                     // validation on record level through "itemupdate" event
+	                        view.on('itemupdate', function (record, y, node, options) {
+                        	    this.validateRow(this.getColumnIndexes(), record, y, true);
+	                        }, grid);
+	                    },
+	                    beforeedit: function (grid, e, eOpts)
+	                    {
+	                    	//console.log("beforeedit");
+	                    	//console.log("e.column.xtype",e.column.xtype);
+	                        return e.column.xtype !== 'actioncolumn';//para que no edite sobre actioncolumn
 	                    }
 	                }/*http://www.sencha.com/forum/showthread.php?141626-Grid-Validation-with-Error-Indication-%28suggestions-needed%29*/
 
@@ -428,12 +488,13 @@
 	            Ext.Array.each(me.columns, function (column)
 	            {
 	                // only validate column with editor
-	                if (Ext.isDefined(column.getEditor())&&column.getEditor().allowBlank==false) {
+	                if (column.getEditor&&Ext.isDefined(column.getEditor())&&column.getEditor().allowBlank==false) {
 	                    columnIndexes.push(column.dataIndex);
 	                } else {
 	                    columnIndexes.push(undefined);
 	                }
 	            });
+	            //console.log(columnIndexes);
 	            return columnIndexes;
 	        },
 	        validateRow: function (columnIndexes,record, y)
@@ -446,7 +507,7 @@
 	                {
 	                    var cell=view.getCellByPosition({row: y, column: x});
 	                    cellValue=record.get(columnIndex);
-	                    if((!cellValue)||(cellValue.lenght==0))
+	                    if((cell.addCls)&&((!cellValue)||(cellValue.lenght==0)))
 	                    {
 	                        cell.addCls("custom-x-form-invalid-field");
 	                    }
@@ -455,7 +516,7 @@
 	            return false;
 	        }/*http://www.sencha.com/forum/showthread.php?141626-Grid-Validation-with-Error-Indication-%28suggestions-needed%29*/,
 
-	        onAddClick: function(){
+	        /*onAddClick: function(){
 	            //window.parent.scrollTo(0,600);
 	            // Create a model instance
 	            var rec = new Modelo1({
@@ -473,11 +534,30 @@
 
 	            this.getStore().insert(0, rec);
 	            
+	            this.validateRow(this.getColumnIndexes(), this.getStore().getAt(0), 0, true);
+	            
 	            //para acomodarse en la primer celda para editar
 	            this.cellEditing.startEditByPosition({
 	                row: 0, 
 	                column: 0
 	            });
+	        },*/
+	        
+	        onEditarClick:function(grid,rowIndex)
+	        {
+	        	var record=this.getStore().getAt(rowIndex);
+	        	Ext.create('Ext.form.Panel').submit({
+                    url : urlCoberturasAsegurado,
+                    standardSubmit:true,
+                    params:{
+                    	'smap1.pv_cdunieco':inputCdunieco,
+                        'smap1.pv_cdramo':inputCdramo,
+                        'smap1.pv_estado':inputEstado,
+                        'smap1.pv_nmpoliza':inputNmpoliza,
+                        'smap1.pv_nmsituac':record.get('nmsituac'),
+                        'smap1.pv_cdperson':record.get('cdperson')
+                    }
+                });
 	        },
 
 	        onRemoveClick: function(grid, rowIndex){
@@ -492,11 +572,10 @@
 		
 		Ext.create('Ext.form.Panel',{
 			id:'form1',
-			title:'Asegurados',
 			renderTo:'maindiv',
-			frame:true,
-			collapsible:true,
-			titleCollapse:true,
+			frame:false,
+			//collapsible:true,
+			//titleCollapse:true,
 			buttonAlign:'center',
 			items:[
 			    gridPersonas
@@ -529,85 +608,145 @@
 		            		if(incisosRecords&&incisosRecords.length>0)
 	                        {
 	                            var incisosJson = [];
+	                            var completos=true;
+	                            var sinCdperson=0;
 	                            storePersonas.each(function(record,index)
                            		{
-	                            	console.log(record.raw);
-	                                incisosJson.push(record.raw);
-	                                /**incisosJson.push({
+	                            	//console.log(record);
+	                            	if(
+                            			!record.get("nombre")
+                            			||record.get("nombre").length==0
+                            			||!record.get("Apellido_Paterno")
+                                        ||record.get("Apellido_Paterno").length==0
+                                        ||!record.get("Apellido_Paterno")
+                                        ||record.get("Apellido_Paterno").length==0
+                                        ||!record.get("Apellido_Materno")
+                                        ||record.get("Apellido_Materno").length==0
+                                        ||!record.get("cdrfc")
+                                        ||record.get("cdrfc").length==0
+                            			)
+                            		{
+	                            		//console.log("#incompleto:");
+	                            		//console.log(record);
+	                            	    completos=false;                            		
+                            		}
+	                            	if(!record.get("cdperson")||record.get("cdperson").length==0)
+                            		{
+	                            		sinCdperson++;
+                            		}
+	                                incisosJson.push({
                                         nmsituac:record.get('nmsituac'),
-	                                    cdrol:
-	                                    /*{
-	                                        key:*
-	                                        	typeof record.get('cdrol')=='string'?record.get('cdrol'):record.get('cdrol').get('key'),
-	                                      /*  value:''
-	                                    },*
-	                                    fenacimi: record.get('fenacimi'),
-	                                    sexo:
-	                                    /*{
-	                                        key:*
-	                                        	typeof record.get('sexo')=='string'?record.get('sexo'):record.get('sexo').get('key'),
-	                                        /*value:''
-	                                    },*
+	                                    cdrol:typeof record.get('cdrol')=='string'?record.get('cdrol'):record.get('cdrol').get('key'),
+	                                    fenacimi: typeof record.get('fenacimi')=='string'?record.get('fenacimi'):Ext.Date.format(record.get('fenacimi'), 'd/m/Y'),
+	                                    sexo:typeof record.get('sexo')=='string'?record.get('sexo'):record.get('sexo').get('key'),
 	                                    cdperson:record.get('cdperson'),
 	                                    nombre: record.get('nombre'),
 	                                    segundo_nombre: record.get('segundo_nombre'),
 	                                    Apellido_Paterno: record.get('Apellido_Paterno'),
 	                                    Apellido_Materno: record.get('Apellido_Materno'),
 	                                    cdrfc:record.get('cdrfc')
-	                                });/**/
+	                                });
 	                            });
-	                            var formPanel=Ext.getCmp('form1');
-                                var submitValues=formPanel.getForm().getValues();
-                                submitValues['list1']=incisosJson;
-                                var map1={
-                                'pv_cdunieco':inputCdunieco,
-                                'pv_cdramo':inputCdramo,
-                                'pv_estado':inputEstado,
-                                'pv_nmpoliza':inputNmpoliza};
-                                submitValues['map1']=map1;
-                                //window.console&&console.log(submitValues);
-                                //Submit the Ajax request and handle the response
-                                formPanel.setLoading(true);
-                                /*Ext.MessageBox.show({
-                                    msg: 'Cotizando...',
-                                    width:300,
-                                    wait:true,
-                                    waitConfig:{interval:100}
-                                });*/
-                                Ext.Ajax.request(
-                                {
-                                    url: urlGuardarAsegurados,
-                                    jsonData:Ext.encode(submitValues),
-                                    success:function(response,opts)
-                                    {
-                                        //Ext.MessageBox.hide();
-                                        formPanel.setLoading(false);/*
-                                        var jsonResp = Ext.decode(response.responseText);
-                                        //window.console&&console.log(jsonResp);
-                                        if(jsonResp.success==true)
+	                           //console.log("sin cd person: "+sinCdperson);
+	                            if(completos)
+                            	{
+	                            	if(sinCdperson>0)
+                            		{
+		                            	Ext.getCmp('form1').setLoading(true);
+		                            	//mandar a traer los cdperson de las personas asincrono
+		                            	storePersonas.each(function(record,index)
                                         {
-                                            Ext.getCmp('idCotizacion').setValue(jsonResp.id);
-                                            mostrarGrid();
-                                        }*/
-                                        Ext.Msg.show({
-                                            title:'Datos recibidos',
-                                            msg: 'Datos recibidos',
-                                            buttons: Ext.Msg.OK
+		                            		//console.log(index);
+		                            		setTimeout(function()
+		                            		{
+		                            			//console.log("trigger");
+	                                            Ext.Ajax.request(
+                                                {
+                                                    url: urlGenerarCdPerson,
+                                                    success:function(response,opts)
+                                                    {
+                                                        var jsonResp = Ext.decode(response.responseText);
+                                                        //console.log("respuesta cdperson",jsonResp);
+                                                        //window.console&&console.log(jsonResp);
+                                                        if(jsonResp.success==true)
+                                                        {
+                                                            try
+                                                            {
+                                                                record.data.cdperson=jsonResp.cdperson;
+                                                                sinCdperson--;
+                                                                if(sinCdperson==0)
+                                                                {
+                                                                    //procesar submit
+                                                                    storePersonas.sync();
+                                                                    gridPersonas.getView().refresh();
+                                                                    incisosJson=[];
+                                                                    storePersonas.each(function(record,index)
+                                                                    {
+                                                                        incisosJson.push({
+                                                                            nmsituac:record.get('nmsituac'),
+                                                                            cdrol:typeof record.get('cdrol')=='string'?record.get('cdrol'):record.get('cdrol').get('key'),
+                                                                            fenacimi: typeof record.get('fenacimi')=='string'?record.get('fenacimi'):Ext.Date.format(record.get('fenacimi'), 'd/m/Y'),
+                                                                            sexo:typeof record.get('sexo')=='string'?record.get('sexo'):record.get('sexo').get('key'),
+                                                                            cdperson:record.get('cdperson'),
+                                                                            nombre: record.get('nombre'),
+                                                                            segundo_nombre: record.get('segundo_nombre'),
+                                                                            Apellido_Paterno: record.get('Apellido_Paterno'),
+                                                                            Apellido_Materno: record.get('Apellido_Materno'),
+                                                                            cdrfc:record.get('cdrfc')
+                                                                        });
+                                                                    });                
+                                                                    Ext.getCmp('form1').setLoading(false);
+                                                                    editarDespuesValidaciones(incisosJson);
+                                                                }
+                                                            }
+                                                            catch(e)
+                                                            {
+                                                                //console.log(e);
+                                                                Ext.Msg.show({
+                                                                    title:'Error',
+                                                                    msg: 'Error al procesar la informaci&oacute;n',
+                                                                    buttons: Ext.Msg.OK,
+                                                                    icon: Ext.Msg.ERROR
+                                                                });
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            Ext.Msg.show({
+                                                                title:'Error',
+                                                                msg: 'Error al obtener la informaci&oacute;n',
+                                                                buttons: Ext.Msg.OK,
+                                                                icon: Ext.Msg.ERROR
+                                                            });
+                                                        }
+                                                    },
+                                                    failure:function(response,opts)
+                                                    {
+                                                        Ext.Msg.show({
+                                                            title:'Error',
+                                                            msg: 'Error de comunicaci&oacute;n',
+                                                            buttons: Ext.Msg.OK,
+                                                            icon: Ext.Msg.ERROR
+                                                        });
+                                                    }
+                                                })
+		                            		},(index+1)*500);
                                         });
-                                    },
-                                    failure:function(response,opts)
-                                    {
-                                        //Ext.MessageBox.hide();
-                                        formPanel.setLoading(false);
-                                        //window.console&&console.log("error");
-                                        Ext.Msg.show({
-                                            title:'Error',
-                                            msg: 'Error de comunicaci&oacute;n',
-                                            buttons: Ext.Msg.OK,
-                                            icon: Ext.Msg.ERROR
-                                        });
-                                    }
-                                });
+                            		}
+	                            	else
+                            		{
+	                            		editarDespuesValidaciones(incisosJson);//manda el submit
+                            		}
+                            	}
+	                            else
+                            	{
+	                            	Ext.Msg.show({
+	                                    title:'Datos incompletos',
+	                                    msg: 'El nombre, apellidos y RFC son requeridos',
+	                                    buttons: Ext.Msg.OK,
+	                                    icon: Ext.Msg.WARNING
+	                                });
+                            	}
 	                        }
 		            		else
 	            			{
@@ -632,6 +771,7 @@
 	            }
             ]
 		});
+		
 	});
 	
 </script>

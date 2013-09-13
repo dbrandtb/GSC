@@ -357,6 +357,7 @@
                     <result name="input">/error.jsp</result>
                 </action>
                 <action name="jsonObtenCatalogoGenerico" class="JsonGenericList" method="obtenCatalogo"><result name="success" type="json" /></action>
+                <action name="jsonObtenCatalogoGenericoPol" class="JsonGenericList" method="obtenCatalogoPol"><result name="success" type="json" /></action>
                 <!-- jtezva subir archivo -->
                 <action name="subirArchivoMostrarPanel" class="beanSubirArchivo" method="mostrarPanel">
                     <result name="success">/jsp/portal/testFileUpload.jsp</result>
@@ -395,6 +396,34 @@
                         <param name="ignoreSMDMethodInterfaces">false</param>
                     </interceptor-ref>
                     <result name="success" type="json"/>
+                </action>
+                <action name="editarCoberturas" class="beanDatosComplementariosCoberturas" method="pantallaCoberturas">
+                    <result name="success">/jsp/extjs4/aseguradoCoberturas.jsp</result>
+                </action>
+                <action name="cargarPantallaCoberturas" class="beanDatosComplementariosCoberturas" method="cargarPantallaCoberturas">
+                    <result name="success" type="json" />
+                </action>
+                <action name="generarCdperson" class="beanDatosComplementarios" method="generarCdperson">
+                    <result name="success" type="json" />
+                </action>
+                <action name="detalleCotizacion" class="beanDatosComplementarios" method="detalleCotizacion">
+                    <result name="success" type="json" />
+                </action>
+                <action name="guardarCoberturasUsuario" class="beanDatosComplementariosCoberturas" method="guardarCoberturasUsuario">
+                    <interceptor-ref name="json">
+                        <param name="enableSMD">true</param>
+                        <param name="ignoreSMDMethodInterfaces">false</param>
+                    </interceptor-ref>
+                    <result name="success" type="json" />
+                </action>
+                <action name="obtenerCamposTatrigar" class="beanDatosComplementariosCoberturas" method="obtenerCamposTatrigar">
+                    <result name="success" type="json" />
+                </action>
+                <action name="obtenerValoresTatrigar" class="beanDatosComplementariosCoberturas" method="obtenerValoresTatrigar">
+                    <result name="success" type="json" />
+                </action>
+                <action name="guardarValoresTatrigar" class="beanDatosComplementariosCoberturas" method="guardarValoresTatrigar">
+                    <result name="success" type="json" />
                 </action>
     </package>
 
