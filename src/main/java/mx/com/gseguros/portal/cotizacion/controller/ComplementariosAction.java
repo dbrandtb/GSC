@@ -17,6 +17,7 @@ import java.util.Map.Entry;
 
 import oracle.jdbc.driver.OracleTypes;
 
+import org.apache.struts2.ServletActionContext;
 import org.springframework.jdbc.core.SqlParameter;
 
 import mx.com.aon.catweb.configuracion.producto.model.WrapperResultados;
@@ -82,7 +83,8 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 		try {
 			//List<Tatrisit>listaTatrisit=kernelManager.obtenerTatrisit("SL");
 			List<Tatri>listaTatrisit=kernelManager.obtenerTatripol(new String[]{cdramo});
-			GeneradorCampos gc=new GeneradorCampos();
+			log.debug("ServletActionContext.getServletContext().getServletContextName()$$$$$ "+ServletActionContext.getServletContext().getServletContextName());
+			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			gc.genera(listaTatrisit);
 			items=gc.getItems();
 			fields=gc.getFields();

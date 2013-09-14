@@ -425,6 +425,15 @@
                 <action name="guardarValoresTatrigar" class="beanDatosComplementariosCoberturas" method="guardarValoresTatrigar">
                     <result name="success" type="json" />
                 </action>
+                <action name="pantallaDomicilio" class="beanDatosComplementariosCoberturas" method="pantallaDomicilio">
+                    <result name="success">/jsp/extjs4/aseguradoDomicilio.jsp</result>
+                </action>
+                <action name="cargarPantallaDomicilio" class="beanDatosComplementariosCoberturas" method="cargarPantallaDomicilio">
+                    <result name="success" type="json" />
+                </action>
+                <action name="guardarPantallaDomicilio" class="beanDatosComplementariosCoberturas" method="guardarPantallaDomicilio">
+                    <result name="success" type="json" />
+                </action>
     </package>
 
 </struts>

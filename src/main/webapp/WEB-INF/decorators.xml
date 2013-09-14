@@ -111,6 +111,9 @@
             <pattern>/editarCoberturas.action</pattern>
             <pattern>/jsp/extjs4/aseguradosCoberturas.jsp</pattern>
             
+            <pattern>/pantallaDomicilio.action</pattern>
+            <pattern>/jsp/extjs4/aseguradosDomicilio.jsp</pattern>
+            
             <pattern>/seguridad/*</pattern>
             <pattern>/jsp/portal/login.jsp</pattern> 
         </excludes>    	
@@ -137,6 +140,9 @@
         
         <pattern>/editarAsegurados.action</pattern>
         <pattern>/jsp/extjs4/editarAsegurados.jsp</pattern>
+        
+        <pattern>/pantallaDomicilio.action</pattern>
+        <pattern>/jsp/extjs4/aseguradosDomicilio.jsp</pattern>
         
         <pattern>/editarCoberturas.action</pattern>
         <pattern>/jsp/extjs4/aseguradosCoberturas.jsp</pattern>

@@ -244,5 +244,18 @@ public class ComboManagerJdbcTemplateImpl extends AbstractManagerJdbcTemplateInv
     }
      
      /////////////////////////////////////////////
+    
+	/////////////////////////////////////////////
+	// jtezva 2013 09 13 catalogos gar         //
+	/////////////////////////////////////////////
+	public List obtenCatalogoGar(String producto, String cdramo, String cdatribu, String otval) throws ApplicationException
+	{
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("pv_cdatribu_i",cdatribu);
+		params.put("pv_cdramo_i",cdramo);
+		params.put("pv_otvalor_i",otval);
+		String endpointName = "CATALOGOS_GAR";
+		return  getAllBackBoneInvoke(params, endpointName);
+	}
 	 
 }

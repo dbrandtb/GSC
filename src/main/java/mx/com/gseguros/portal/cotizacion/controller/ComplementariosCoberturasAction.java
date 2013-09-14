@@ -1,18 +1,25 @@
 package mx.com.gseguros.portal.cotizacion.controller;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
 import org.springframework.jdbc.core.SqlParameter;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
+import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.cotizacion.model.Tatri;
+import mx.com.gseguros.portal.general.util.GeneradorCampos;
 
 public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 
@@ -40,6 +47,8 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 	private Logger log=Logger.getLogger(ComplementariosCoberturasAction.class);
 	private boolean success=false;
 	private Map<String,String>parametros;
+	private String str1;
+	private String str2;
 	
 	public String pantallaCoberturas()
 	{
@@ -204,17 +213,252 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 	
 	public String obtenerCamposTatrigar()
 	{
+		log.debug(smap1);
+		try
+		{
+			UserVO usuSes=(UserVO)session.get("USUARIO");
+			DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usuSes.getUser());
+			
+			/*
+			pv_cdramo_i       smap1 ready!
+            pv_cdtipsit_i     NOT!
+            pv_cdgarant_i     smap1 ready!
+			*/
+			smap1.put("pv_cdtipsit_i",datUsu.getCdtipsit());
+			List<Tatri>listTatri=kernelManager.obtenerTatrigar(smap1);
+			GeneradorCampos genCam=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			genCam.genera(listTatri);
+			str1=genCam.getFields().toString();
+			str2=genCam.getItems().toString();
+			// f i e l d s : [ ... ]
+			//0 1 2 3 4 5 6 7
+			str1=str1.substring(7).replace("\n", "");
+			// i t e m s : [ ... ]
+			//0 1 2 3 4 5 6 7
+			str2=str2.substring(6).replace("\n", "");
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			log.error("error al obtener los campos tatrigar",ex);
+			success=false;
+		}
 		return SUCCESS;
 	}
 	
 	public String obtenerValoresTatrigar()
 	{
+		log.debug(smap1);
+		try
+		{
+			/*
+			pv_cdunieco_i      smap1 ready!
+            pv_cdramo_i        smap1 ready!
+            pv_estado_i        smap1 ready!
+            pv_nmpoliza_i      smap1 ready!
+            pv_nmsituac_i      smap1 ready!
+            pv_cdgarant_i      smap1 ready!
+			*/
+			parametros=new HashMap<String,String>(0);
+			Map<String,Object>parametrosCargados=kernelManager.obtenerValoresTatrigar(smap1);
+			Iterator<Entry<String, Object>> it=parametrosCargados.entrySet().iterator();
+			while(it.hasNext())
+			{
+				Entry<String,Object> entry=it.next();
+				parametros.put("pv_"+entry.getKey(), (String)entry.getValue());
+			}
+			log.debug(parametros);
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			log.error("error al obtener los valores de tatrigar",ex);
+			success=true;
+		}
 		return SUCCESS;
 	}
 	
 	public String guardarValoresTatrigar()
 	{
+		log.debug("\n##############################"
+				+ "\n###### Guardar tvalogar ######");
+		try
+		{
+			/*
+			pv_cdunieco  smap1 ready!
+	        pv_cdramo    smap1 ready!
+	        pv_estado    smap1 ready!
+	        pv_nmpoliza  smap1 ready!
+	        pv_nmsituac  smap1 ready!
+	        pv_cdgarant  smap1 ready!
+	        pv_nmsuplem  #0
+	        pv_status    #V
+	        */
+			smap1.putAll(parametros);
+			smap1.put("pv_status", "V");
+			smap1.put("pv_nmsuplem", "0");
+			log.debug("smap1"+smap1);
+	        log.debug("parametros"+parametros);
+	        kernelManager.pMovTvalogar(smap1);
+	        success=true;
+		}
+		catch(Exception ex)
+		{
+			log.error("error al guardar tvalogar",ex);
+			success=false;
+		}
+		log.debug("\n###### Guardar tvalogar ######"
+				+ "\n##############################");
 		return SUCCESS; 
+	}
+	
+	public String pantallaDomicilio()
+	{
+		log.debug("\n###################################"
+				+ "\n###################################"
+				+ "\n###### pantalla de domicilio ######"
+				+ "\n######                       ######"
+				+ "\n######                       ######");
+		log.debug("smap1: "+smap1);
+		ScreenInterceptor scrInt=new ScreenInterceptor();
+		return scrInt.intercept(this, ScreenInterceptor.PANTALLA_COMPLEMENTARIOS_DOMICILIO_ASEGURADO);
+	}
+	
+	public String mostrarPantallaDomicilio()
+	{
+		try
+		{
+			/*List<Tatri>tatriper=kernelManager.obtenerTatriper(smap1);
+			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			gc.genera(tatriper);
+			item1=gc.getFields();
+			item2=gc.getItems();*/
+			item1=Item.crear("fields",null,Item.ARR)//quitame
+					.add(Item.crear(null,null,Item.OBJ).add("name","parametros.pv_otvalor01"))//quitame
+					.add(Item.crear(null,null,Item.OBJ).add("name","parametros.pv_otvalor02"))//quitame
+					.add(Item.crear(null,null,Item.OBJ)//quitame
+							.add("name"       , "parametros.pv_otvalor03")//quitame
+							.add("type"       , "date")//quitame
+							.add("dateFormat" , "d/m/Y")//quitame
+							)//generador campos
+					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.asegurado"))
+					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.rfc"))
+					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.telefono"))
+					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.calle"))
+					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.interior"))
+					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.exterior"))
+					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.colonia"))
+					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.telefono"))
+					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.delegacion"))
+					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.ciudad"))
+					;
+			item2=Item.crear("items",null,Item.ARR)//generador campos
+					.add(Item.crear(null,null,Item.OBJ)//quitame
+							.add("name"       , "parametros.pv_otvalor01")//quitame
+							.add("xtype"       , "textfield")//quitame
+							.add("allowBlank" , false)//quitame
+							)//generador campos
+					.add(Item.crear(null,null,Item.OBJ)//quitame
+							.add("name"       , "parametros.pv_otvalor02")//quitame
+							.add("xtype"       , "textfield")//quitame
+							.add("allowBlank" , true)//quitame
+							)//generador campos
+					.add(Item.crear(null,null,Item.OBJ)//quitame
+							.add("name"       , "parametros.pv_otvalor03")//quitame
+							.add("xtype"       , "datefield")//quitame
+							.add("format"       , "d/m/Y")//quitame
+							.add("allowBlank" , false)//quitame
+							)//generador campos
+					;
+		}
+		catch(Exception ex)
+		{
+			log.error("error al mostrar la pantalla de domicilio",ex);
+		}
+		log.debug("\n######                       ######"
+				+ "\n######                       ######"
+				+ "\n###### pantalla de domicilio ######"
+				+ "\n###################################"
+				+ "\n###################################");
+		return SUCCESS;
+	}
+	
+	public String cargarPantallaDomicilio()
+	{
+		log.debug("\n##########################################"
+				+ "\n##########################################"
+				+ "\n###### cargar pantalla de domicilio ######"
+				+ "\n######                              ######"
+				+ "\n######                              ######");
+		try
+		{
+			log.debug(smap1);
+			/*
+			Map<String,Object>parametrosCargados=kernelManager.obtenerValoresTatriper(smap1);
+			Iterator<Entry<String, Object>> it=parametrosCargados.entrySet().iterator();
+			while(it.hasNext())
+			{
+				Entry<String,Object> entry=it.next();
+				parametros.put("pv_"+entry.getKey(), (String)entry.getValue());
+			}
+			log.debug(parametros);
+			*/
+			parametros=new HashMap<String,String>(0);//quitame
+			parametros.put("pv_otvalor01", "valor1");//quitame
+			parametros.put("pv_otvalor02", "valor2");//quitame
+			parametros.put("pv_otvalor03", "17/08/1990");//quitame
+			
+			smap1=new HashMap<String,String>(0);
+			smap1.put("asegurado" , "Alvaro Jair");
+			smap1.put("rfc"       , "MAVA900817");
+			smap1.put("telefono"  , "012464666589");
+			smap1.put("calle"     , "Zaragoza");
+			smap1.put("interior"  , "3");
+			smap1.put("exterior"  , "B");
+			smap1.put("colonia"   , "Acuitlapilco");
+			smap1.put("delegacion", "tlaxcala");
+			smap1.put("ciudad"    , "Tlaxcala");
+			
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			log.error("error al cargar los datos de domicilio",ex);
+			success=false;
+		}
+		
+		log.debug("\n######                              ######"
+				+ "\n######                              ######"
+				+ "\n###### cargar pantalla de domicilio ######"
+				+ "\n##########################################"
+				+ "\n##########################################");
+		return SUCCESS;
+	}
+	
+	public String guardarPantallaDomicilio()
+	{
+		log.debug("\n###########################################"
+				+ "\n###########################################"
+				+ "\n###### guardar pantalla de domicilio ######"
+				+ "\n######                               ######"
+				+ "\n######                               ######");
+		try
+		{
+			log.debug(smap1);
+			log.debug(parametros);
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			log.error("error al guardar los datos de domicilio",ex);
+			success=false;
+		}
+		log.debug("\n######                               ######"
+				+ "\n######                               ######"
+				+ "\n###### guardar pantalla de domicilio ######"
+				+ "\n###########################################"
+				+ "\n###########################################");
+		return SUCCESS;
 	}
 	
 	/////////////////////////////////
@@ -395,6 +639,22 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 
 	public void setParametros(Map<String, String> parametros) {
 		this.parametros = parametros;
+	}
+
+	public String getStr1() {
+		return str1;
+	}
+
+	public void setStr1(String str1) {
+		this.str1 = str1;
+	}
+
+	public String getStr2() {
+		return str2;
+	}
+
+	public void setStr2(String str2) {
+		this.str2 = str2;
 	}
 	
 }

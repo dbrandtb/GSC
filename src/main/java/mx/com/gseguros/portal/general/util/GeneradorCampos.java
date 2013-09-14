@@ -19,6 +19,12 @@ public class GeneradorCampos {
     private org.apache.log4j.Logger log=org.apache.log4j.Logger.getLogger(GeneradorCampos.class);
     private Item items;
     private Item fields;
+    private String context;
+    
+    public GeneradorCampos(String context)
+    {
+    	this.context=context;
+    }
     
     public void genera(List<Tatri> lt) throws Exception
     {
@@ -75,11 +81,15 @@ public class GeneradorCampos {
             proxy.add("type","ajax");
             if(ta.getType().equals(Tatri.TATRISIT))
             {
-            	proxy.add("url",UrlConstantes.OBTENER_ATRIBUTOS);
+            	proxy.add("url",this.context+"jsonObtenCatalogoGenerico.action");
             }
             else if(ta.getType().equals(Tatri.TATRIPOL))
             {
-            	proxy.add("url",UrlConstantes.OBTENER_ATRIBUTOS_POL);
+            	proxy.add("url",this.context+"jsonObtenCatalogoGenericoPol.action");
+            }
+            else if(ta.getType().equals(Tatri.TATRIGAR))
+            {
+            	proxy.add("url",this.context+"jsonObtenCatalogoGenericoGar.action");
             }
             proxy.add(
                     Item.crear("extraParams", null, Item.OBJ)
