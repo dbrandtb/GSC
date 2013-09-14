@@ -54,6 +54,20 @@ public class JsonGenericList extends PrincipalCoreAction
         }
         return SUCCESS;
     }
+    
+    public String obtenCatalogoGar()
+    {
+        try
+        {
+            lista=combosManager2.obtenCatalogoGar("", "2", cdatribu, idPadre!=null&&idPadre.length()>0?idPadre:null);
+        }
+        catch(Exception ex)
+        {
+            lista=new ArrayList<GenericVO>(0);
+            log.error("No se pudo obtener el catalogo "+cdatribu, ex);
+        }
+        return SUCCESS;
+    }
 
     public List<GenericVO> getLista() {
         return lista;

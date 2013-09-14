@@ -43,6 +43,7 @@ public interface KernelManagerSustituto {
 	public List<Map<String, Object>> obtenerAsegurados(Map<String, String> map1) throws ApplicationException;
 	public Map<String,Object> getInfoMpolizasCompleta(Map<String,String> parameters) throws ApplicationException;
 	public WrapperResultados pMovTvalopol(Map<String, String> parameters) throws ApplicationException;
+	public WrapperResultados pMovTvalogar(Map<String, String> parameters) throws ApplicationException;
 	//requiere de su propio catch si no hay datos:
 	public Map<String,Object> pGetTvalopol(Map<String,String> parameters) throws ApplicationException;
 	public String generaCdperson() throws ApplicationException;
@@ -52,4 +53,9 @@ public interface KernelManagerSustituto {
 	public WrapperResultados movPoligar(Map<String, String> param) throws ApplicationException;
 	public WrapperResultados movPolicap(Map<String, String> param) throws ApplicationException;
 	public List<Map<String, String>> obtenerDetallesCotizacion(Map<String, String> params) throws ApplicationException;
+	public List<Tatri> obtenerTatrigar(Map<String, String> smap1) throws ApplicationException;
+	//requiere de su propio catch si no hay datos:
+	public Map<String, Object> obtenerValoresTatrigar(Map<String, String> param) throws ApplicationException;
+	public List<Tatri> obtenerTatriper(Map<String, String> smap1) throws ApplicationException;
+	public Map<String, Object> obtenerValoresTatriper(Map<String, String> smap1) throws ApplicationException;
 }

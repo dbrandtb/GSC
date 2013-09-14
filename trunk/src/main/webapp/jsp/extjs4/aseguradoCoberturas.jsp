@@ -187,9 +187,7 @@ panelCoberturas=Ext.create('Ext.grid.Panel',
 											if (record.get('SWOBLIGA') == 'N') {
 												if (cellIndex == 2)//load tatri
 												{
-													console
-															.log("click view record "
-																	+ rowIndex);
+													//console.log("click view record "+ rowIndex);
 													panelAdicionales.destroy();
 													Ext.Ajax
 															.request({
@@ -204,8 +202,7 @@ panelCoberturas=Ext.create('Ext.grid.Panel',
 																		opts) {
 																	var json = Ext
 																			.decode(response.responseText);
-																	console
-																			.log(json);
+																	//console.log(json);
 																	if (json.success == true) {
 																		////// crear modelo con campos que vienen de str1 //////
 																		Ext
@@ -225,10 +222,11 @@ panelCoberturas=Ext.create('Ext.grid.Panel',
 																						{
 																							frame : true,
 																							model : 'ModeloAdicionales',
-																							title : 'Datos adicionales',
+																							title : 'Datos adicionales de '+record.get('NOMBRE_GARANTIA'),
 																							collapsible : true,
 																							titleCollapse : true,
 																							bodyPadding : 5,
+																							maxHeight:300,
 																							buttonAlign : 'center',
 																							renderTo : 'pan_usu_cob_divadicionales',
 																							url : urlSaveTatri,
@@ -236,6 +234,7 @@ panelCoberturas=Ext.create('Ext.grid.Panel',
 																									.decode(json.str2),
 																							buttons : [
 																									{
+																										id:'botonGuardarAdicionalesCobertura',
 																										text : 'Guardar cambios',
 																										icon : 'resources/fam3icons/icons/accept.png',
 																										handler : function() {
@@ -300,11 +299,13 @@ panelCoberturas=Ext.create('Ext.grid.Panel',
 																										text : 'Cancelar',
 																										icon : 'resources/fam3icons/icons/cancel.png',
 																										handler : function() {
+																											window.parent.scrollTo(0,0);
 																											panelAdicionales
 																													.destroy();
 																										}
 																									} ]
 																						});
+																		window.parent.scrollTo(0,600);
 																		////// !crear formuario con campos que vienen de str2 //////
 
 																		////// cargar formulario con modelo creado //////
@@ -319,7 +320,7 @@ panelCoberturas=Ext.create('Ext.grid.Panel',
 																								extraParams : {
 																									'smap1.pv_cdunieco_i' : inputCdunieco,
 																									'smap1.pv_cdramo_i' : inputCdramo,
-																									'smap1.pv_cdestado_i' : inputEstado,
+																									'smap1.pv_estado_i' : inputEstado,
 																									'smap1.pv_nmpoliza_i' : inputNmpoliza,
 																									'smap1.pv_nmsituac_i' : inputNmsituac,
 																									'smap1.pv_cdgarant_i' : record
@@ -344,13 +345,16 @@ panelCoberturas=Ext.create('Ext.grid.Panel',
 																												resp);
 																							},
 																							failure : function() {
+																								window.parent.scrollTo(0,100);
+                                                                                                panelAdicionales
+                                                                                                        .destroy();
 																								Ext.Msg
 																										.show({
-																											title : 'Error',
-																											msg : 'Error al cargar',
-																											buttons : Ext.Msg.OK,
-																											icon : Ext.Msg.ERROR
-																										});
+						                                                                                    title : 'Error',
+						                                                                                    msg : 'Error de comunicaci&oacute;n',
+						                                                                                    buttons : Ext.Msg.OK,
+						                                                                                    icon : Ext.Msg.ERROR
+						                                                                                });
 																							}
 																						});
 																		////// !cargar formulario con modelo creado //////
@@ -498,10 +502,10 @@ panelCoberturas=Ext.create('Ext.grid.Panel',
 </script>
 </head>
 <body style="margin:0; padding:0;">
-	<table width="100%" height="500">
-		<tr>
-			<td align="center">
-				<table align="center">
+	<table width="100%" height="600" border="0">
+		<tr height="300">
+			<td align="center" valign="top">
+				<table align="center" style="border:0px solid blue;">
 					<tr>
 						<td><div id="pan_usu_cob_divgrid"></div></td>
 					</tr>
@@ -509,8 +513,8 @@ panelCoberturas=Ext.create('Ext.grid.Panel',
 			</td>
 		</tr>
 		<tr>
-			<td align="center">
-				<table align="center">
+			<td align="center" valign="top">
+				<table align="center" style="border:0px solid yellow;">
 					<tr>
 						<td><div id="pan_usu_cob_divadicionales"></div></td>
 					</tr>

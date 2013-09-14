@@ -1,6 +1,7 @@
 package mx.com.aon.portal.service;
 
 import mx.com.aon.portal.model.ElementoComboBoxVO;
+import mx.com.aon.portal2.web.GenericVO;
 import mx.com.aon.core.ApplicationException;
 
 import java.util.ArrayList;
@@ -52,8 +53,10 @@ public interface CombosManager2 {
 	
 	public List obtenCatalogoPol(String producto, String cdramo, String cdatribu, String otval) throws ApplicationException;
         
-        public List obtenCatalogoRoles(String pv_cdramo_i) throws ApplicationException;
+    public List obtenCatalogoRoles(String pv_cdramo_i) throws ApplicationException;
         
-        public List obtenComboDependienteOverride(String codigoTablaDependiente,String valorTablaPadre,String valantant) throws ApplicationException;
+    public List obtenComboDependienteOverride(String codigoTablaDependiente,String valorTablaPadre,String valantant) throws ApplicationException;
+
+    public List obtenCatalogoGar(String producto, String cdramo, String cdatribu, String otval) throws ApplicationException;
 	
 }

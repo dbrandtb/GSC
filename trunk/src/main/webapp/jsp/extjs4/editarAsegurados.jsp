@@ -25,6 +25,7 @@
 	var urlGuardarAsegurados='<s:url namespace="/" action="guardarComplementariosAsegurados" />';
 	var urlCoberturasAsegurado='<s:url namespace="/" action="editarCoberturas" />';
 	var urlGenerarCdPerson='<s:url namespace="/" action="generarCdperson" />';
+	var urlDomicilio      ='<s:url namespace="/" action="pantallaDomicilio" />';
 	var editorFecha;
 	
     function rendererRol(v)
@@ -551,6 +552,23 @@
                     standardSubmit:true,
                     params:{
                     	'smap1.pv_cdunieco':inputCdunieco,
+                        'smap1.pv_cdramo':inputCdramo,
+                        'smap1.pv_estado':inputEstado,
+                        'smap1.pv_nmpoliza':inputNmpoliza,
+                        'smap1.pv_nmsituac':record.get('nmsituac'),
+                        'smap1.pv_cdperson':record.get('cdperson')
+                    }
+                });
+	        },
+	        
+	        onDomiciliosClick:function(grid,rowIndex)
+	        {
+	        	var record=this.getStore().getAt(rowIndex);
+                Ext.create('Ext.form.Panel').submit({
+                    url : urlDomicilio,
+                    standardSubmit:true,
+                    params:{
+                        'smap1.pv_cdunieco':inputCdunieco,
                         'smap1.pv_cdramo':inputCdramo,
                         'smap1.pv_estado':inputEstado,
                         'smap1.pv_nmpoliza':inputNmpoliza,

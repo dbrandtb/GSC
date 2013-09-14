@@ -1712,6 +1712,100 @@ Ext.onReady(function(){
                 listeners:
                 {
                     // add the validation after render so that validation is not triggered when the record is loaded.
+                	validateedit:function( editor, e)
+                	{
+                		if(e.colIdx==0)
+                		{                			
+                			var nuevo=e.value;
+                			var anterior=e.record.data[e.field];
+                			if((typeof anterior)=="object")
+            				{
+                				anterior=anterior.get('key');
+            				}
+                			//console.log(anterior,nuevo);
+                			if(anterior!=nuevo)
+            				{
+                				if(nuevo=='T'||nuevo=='C')
+            					{
+                					//console.log('hay que revisar');
+                					//console.log(gridIncisos.hayTitular);
+                					//console.log(gridIncisos.hayConyugue);
+                					if(nuevo=='T'&&gridIncisos.hayTitular==true)//titular repetido
+            						{
+                						e.cancel = true;
+                						Ext.Msg.show({
+	                                    	title:'Error',
+	                                    	msg: 'Ya existe un titular',
+	                                    	buttons: Ext.Msg.OK,
+	                                    	icon: Ext.Msg.WARNING
+	                                	});
+            						}
+                					else if(nuevo=='C'&&gridIncisos.hayConyugue==true)//conyugue repetido
+            						{
+                						e.cancel = true;
+                						Ext.Msg.show({
+	                                    	title:'Error',
+	                                    	msg: 'Ya existe un c&oacute;nyugue',
+	                                    	buttons: Ext.Msg.OK,
+	                                    	icon: Ext.Msg.WARNING
+	                                	});
+            						}
+                					else//se acepta el cambio
+            						{
+                						//bloquear titular o conyugue
+                						if(nuevo=='T')
+            							{
+                							//console.log('titular bloqueado');
+                							gridIncisos.hayTitular=true;
+            							}
+                						else if(nuevo=='C')
+            							{
+                							//console.log('conyugue bloqueado');
+            							    gridIncisos.hayConyugue=true;
+            							}
+                						
+                						//desbloquear titular o conyugue
+                						if(anterior=='T')
+            							{
+                							//console.log('titular desbloqueado');
+                							gridIncisos.hayTitular=false;
+            							}
+                						else if(anterior=='C')
+            							{
+                							//console.log('conyugue desbloqueado');
+            							    gridIncisos.hayConyugue=false;
+            							}
+            						}
+            					}
+                				else
+            					{
+                					//bloquear titular o conyugue
+            						if(nuevo=='T')
+        							{
+            							//console.log('titular bloqueado');
+            							gridIncisos.hayTitular=true;
+        							}
+            						else if(nuevo=='C')
+        							{
+            							//console.log('conyugue bloqueado');
+        							    gridIncisos.hayConyugue=true;
+        							}
+            						
+            						//desbloquear titular o conyugue
+            						if(anterior=='T')
+        							{
+            							//console.log('titular desbloqueado');
+            							gridIncisos.hayTitular=false;
+        							}
+            						else if(anterior=='C')
+        							{
+            							//console.log('conyugue desbloqueado');
+        							    gridIncisos.hayConyugue=false;
+        							}
+            					}
+            				}
+            			}
+                	},
                     afterrender: function (grid)
                     {
                         var view = grid.getView();
@@ -1786,12 +1880,48 @@ Ext.onReady(function(){
             });
             return false;
         }/*http://www.sencha.com/forum/showthread.php?141626-Grid-Validation-with-Error-Indication-%28suggestions-needed%29*/,
-
+        
+        hayTitular:false,
+        hayConyugue:false,
+        
         onAddClick: function(){
             window.parent.scrollTo(0,600);
+            var rol;
+            var indexToDelete=-1;
+            
+            if(gridIncisos.hayTitular==false)//si no hay titular, insertar titular
+            {
+                storeRoles.each(function(record,index){
+                	if(record.get('key')=='T')
+            		{
+                		rol=new Generic({key:record.get('key'),value:record.get('value')});
+            		}
+                });
+                gridIncisos.hayTitular=true;
+            }
+            else if(gridIncisos.hayConyugue==false)//hay titular pero no hay conyugue, insertar conyuge
+        	{
+            	storeRoles.each(function(record,index){
+        			if(record.get('key')=='C')
+        			{
+        				rol=new Generic({key:record.get('key'),value:record.get('value')});
+        			}
+        		});
+            	gridIncisos.hayConyugue=true;
+            }
+            else//insertar hijos
+    		{
+        		storeRoles.each(function(record,index){
+        			if(record.get('key')=='H')
+        			{
+        				rol=new Generic({key:record.get('key'),value:record.get('value')});
+        			}
+        		});
+    		}
+            
             // Create a model instance
             var rec = new IncisoSalud({
-                rol: new Generic({key:storeRoles.getAt(0).data.key,value:storeRoles.getAt(0).data.value}),
+                rol: rol,
                 fechaNacimiento: new Date(),
                 sexo: new Generic({key:storeGeneros.getAt(0).data.key,value:storeGeneros.getAt(0).data.value}),
                 nombre: '',
@@ -1800,12 +1930,12 @@ Ext.onReady(function(){
                 apellidoMaterno: ''
             });
 
-            this.getStore().insert(0, rec);
+            this.getStore().add(rec);
             
             //para acomodarse en la primer celda para editar
             this.cellEditing.startEditByPosition({
-                row: 0, 
-                column: 0
+                row: storeIncisos.getRange().length-1, 
+                column: 1
             });
         },
 
