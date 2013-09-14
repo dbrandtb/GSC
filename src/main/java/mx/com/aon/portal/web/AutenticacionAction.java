@@ -121,9 +121,7 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 	public String cotizacionSaludVital() throws Exception {
 		
 		try {
-			creaSesionDeUsuario("PARAMETRIZA1");
-			
-
+			creaSesionDeUsuario(user);
 		} catch (Exception ex) {
 			logger.error("Error en el proceso Interno", ex);
 			errorMessage = "Error en el proceso Interno";
