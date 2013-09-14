@@ -127,6 +127,9 @@ public class LoadClientesRolesAction extends PrincipalCoreAction {
                 usuario.setAuthorizedExport(false);
             }
             complementaUsuario(usuario);
+            /**TODO: **
+             * hacer modificacion para liga directa de GS
+             */
             session.put("USUARIO", usuario);
         }
         return retorno;

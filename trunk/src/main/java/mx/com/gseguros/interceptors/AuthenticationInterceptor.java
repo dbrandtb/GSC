@@ -5,6 +5,7 @@ import java.util.Map;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.utils.Constantes;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.opensymphony.xwork2.Action;
@@ -41,8 +42,6 @@ public class AuthenticationInterceptor implements Interceptor {
 		
 		UserVO user = (UserVO) session.get(Constantes.USER);
 		
-		logger.debug("Action intercepted="+ actionInvocation.getProxy().getActionName());
-		
 		//Si el usuario no existe en sesion, detenemos el action y redirigimos al result global INPUT
 		if (user == null) {
 		    return Action.LOGIN;
@@ -54,15 +53,36 @@ public class AuthenticationInterceptor implements Interceptor {
 		        ((UserAware)action).setUser(user);
 		    }
 		    */
+			logger.debug("Action intercepted="+ actionInvocation.getProxy().getActionName());
 			
-			
-			/* TODO: agregar logica para redireccion del usuario al login, arbol, menu o pagina solicitada
-			if(user.isRolAsignado()){
-				return Action.PORTAL;
-			}else {
-				return Action.TREE_ROLES;
+			if(Action.LOGIN.equalsIgnoreCase(actionInvocation.getInvocationContext().getName())){
+				
+				boolean rolAsignado = false;
+				logger.debug(">---> ROL CONTENIDO <---< : "+user.getRolActivo());
+				if(user.getRolActivo()!=null){
+					logger.debug(">---> ROL OBJETO <---< : "+user.getRolActivo().getObjeto());
+					if(user.getRolActivo().getObjeto()!=null && StringUtils.isNotBlank(user.getRolActivo().getObjeto().getValue()))
+						rolAsignado = true;
+				}
+				
+				if(rolAsignado){
+					logger.debug("-->Rol Asignado<--");
+					return "load";
+				}else{
+					return "tree";
+				}
+				
 			}
-			*/
+			
+			
+			/**TODO: agregar logica para redireccion del usuario al login, arbol, menu o pagina solicitada **/
+//			if(rolAsignado){
+//				
+//				
+//			}else {
+//				
+//			}
+			
 		    
 		    /*
 		     * We just return the control string from the invoke method.  If we wanted, we could hold the string for
