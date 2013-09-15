@@ -80,6 +80,7 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String OBTENER_POLIZA_COMPLETA="OBTENER_POLIZA_COMPLETA";
     public static final String P_MOV_TVALOPOL="P_MOV_TVALOPOL";
     public static final String P_MOV_TVALOGAR="P_MOV_TVALOGAR";
+    public static final String P_MOV_TVALOPER="P_MOV_TVALOPER";
     public static final String P_GET_TVALOPOL="P_GET_TVALOPOL";
     public static final String P_GET_TVALOGAR="P_GET_TVALOGAR";
     public static final String P_GET_TVALOPER="P_GET_TVALOPER";
@@ -129,6 +130,7 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(OBTENER_POLIZA_COMPLETA, new ObtenerPolizaCompleta(getDataSource()));
         addStoredProcedure(P_MOV_TVALOPOL, new PMovTvalopol(getDataSource()));
         addStoredProcedure(P_MOV_TVALOGAR, new PMovTvalogar(getDataSource()));
+        addStoredProcedure(P_MOV_TVALOPER, new PMovTvaloper(getDataSource()));
         addStoredProcedure(P_GET_TVALOPOL, new PGetTvalopol(getDataSource()));
         addStoredProcedure(P_GET_TVALOGAR, new PGetTvalogar(getDataSource()));
         addStoredProcedure(P_GET_TVALOPER, new PGetTvaloper(getDataSource()));
@@ -1261,7 +1263,7 @@ public class ProcesoDAO extends AbstractDAO {
 	{
 		public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
 			Tatri result=new Tatri();
-			result.setType(Tatri.TATRIPOL);
+			result.setType(Tatri.TATRIGAR);
 			result.setCdatribu(rs.getString("CDATRIBU"));
 			result.setSwformat(rs.getString("SWFORMAT"));
 			result.setNmlmin(rs.getString("NMLMIN"));
@@ -1284,10 +1286,10 @@ public class ProcesoDAO extends AbstractDAO {
 	{
 		protected ObtieneTatriper(DataSource dataSource)
 		{
-			super(dataSource,"PKG_LISTAS.P_GET_ATRI_PERSONA");
+			super(dataSource,"PKG_LISTAS.P_GET_ATRI_ROL");
 			declareParameter(new SqlParameter("pv_cdramo_i",      	OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdrol_i",         OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtipsit_i",      OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdgarant_i",      OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtieneTatriperMapper()));
 			declareParameter(new SqlOutParameter("pv_messages_o",   OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
@@ -1307,7 +1309,7 @@ public class ProcesoDAO extends AbstractDAO {
 	{
 		public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
 			Tatri result=new Tatri();
-			result.setType(Tatri.TATRIPOL);
+			result.setType(Tatri.TATRIPER);
 			result.setCdatribu(rs.getString("CDATRIBU"));
 			result.setSwformat(rs.getString("SWFORMAT"));
 			result.setNmlmin(rs.getString("NMLMIN"));
@@ -1825,6 +1827,92 @@ public class ProcesoDAO extends AbstractDAO {
 	/*///////////////////////////////*/
 	///// movimientos de valopol //////
 	///////////////////////////////////
+	
+	///////////////////////////////////
+	///// movimientos de valopol //////
+	/*///////////////////////////////*/
+	protected class PMovTvaloper extends CustomStoredProcedure {
+	
+		protected PMovTvaloper(DataSource dataSource) {
+			super(dataSource,"PKG_SATELITES.P_MOV_TVALOPER");
+	
+			declareParameter(new SqlParameter("pv_cdunieco",  OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_cdramo",    OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_estado",    OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza",  OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_nmsituac",  OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem",  OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_status",    OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdrol",    OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdperson",    OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdatribu",    OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsit",    OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlParameter("pv_otvalor01", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor02", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor03", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor04", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor05", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor06", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor07", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor08", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor09", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor10", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor11", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor12", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor13", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor14", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor15", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor16", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor17", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor18", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor19", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor20", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor21", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor22", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor23", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor24", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor25", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor26", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor27", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor28", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor29", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor30", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor31", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor32", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor33", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor34", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor35", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor36", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor37", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor38", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor39", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor40", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor41", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor42", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor43", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor44", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor45", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor46", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor47", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor48", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor49", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otvalor50", OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("PV_TITLE_O", OracleTypes.VARCHAR));
+	
+			compile();
+		}
+	
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception {	
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			return mapper.build(map);
+		}
+	}
+	/*///////////////////////////////*/
+	///// movimientos de valopol //////
+	///////////////////////////////////
     
 	///////////////////////////////
 	////// obtiene   valopol //////
@@ -1931,13 +2019,26 @@ public class ProcesoDAO extends AbstractDAO {
 	{
 		protected PGetTvaloper(DataSource dataSource)
 		{
+			/*
+			 pv_cdunieco_i
+             pv_cdramo_i
+             pv_estado_i
+             pv_nmpoliza_i
+             pv_nmsituac_i
+             pv_cdrol_i
+             pv_cdperson_i
+            */
 			super(dataSource,"PKG_COTIZA.P_GET_TVALOPER");
 			declareParameter(new SqlParameter("pv_cdunieco_i",    OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_cdramo_i",      OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_estado_i",      OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmpoliza_i",    OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmsituac_i",    OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdgarant_i",    OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i",    OracleTypes.VARCHAR));
+			//declareParameter(new SqlParameter("pv_status_i",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdrol_i",       OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdperson_i",    OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsit_i",    OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_record_o",   OracleTypes.CURSOR, new PGetTvaloperMapper()));
 			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
@@ -1956,7 +2057,7 @@ public class ProcesoDAO extends AbstractDAO {
 		public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
 			Map<String,Object> m=new HashMap<String,Object>(0);
 			String columnas[]=new String[]{
-					"cdunieco","cdramo","estado","nmpoliza","nmsituac","cdgarant","nmsuplem","status",
+					"cdunieco","cdramo","estado","nmpoliza","nmsituac","cdrol","cdperson","nmsuplem",//"status",
 					"otvalor01","otvalor02","otvalor03","otvalor04","otvalor05","otvalor06","otvalor07","otvalor08","otvalor09","otvalor10",
 					"otvalor11","otvalor12","otvalor13","otvalor14","otvalor15","otvalor16","otvalor17","otvalor18","otvalor19","otvalor20",
 					"otvalor21","otvalor22","otvalor23","otvalor24","otvalor25","otvalor26","otvalor27","otvalor28","otvalor29","otvalor30",

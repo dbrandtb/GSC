@@ -8,16 +8,20 @@
 ///////////////////////
 ////// variables //////
 /*///////////////////*/
-var inputCdunieco = '<s:property value="smap1.pv_cdunieco" />';
-var inputCdramo   = '<s:property value="smap1.pv_cdramo" />';
-var inputEstado   = '<s:property value="smap1.pv_estado" />';
-var inputNmpoliza = '<s:property value="smap1.pv_nmpoliza" />';
-var inputNmsituac = '<s:property value="smap1.pv_nmsituac" />';
-var inputCdperson = '<s:property value="smap1.pv_cdperson" />';
-var urlRegresar   = '<s:url namespace="/" action="editarAsegurados" />';
-var urlCargar     = '<s:url namespace="/" action="cargarPantallaDomicilio" />';
-var urlGuardar    = '<s:url namespace="/" action="guardarPantallaDomicilio" />';
+var inputCdunieco        = '<s:property value="smap1.pv_cdunieco" />';
+var inputCdramo          = '<s:property value="smap1.pv_cdramo" />';
+var inputEstado          = '<s:property value="smap1.pv_estado" />';
+var inputNmpoliza        = '<s:property value="smap1.pv_nmpoliza" />';
+var inputNmsituac        = '<s:property value="smap1.pv_nmsituac" />';
+var inputCdperson        = '<s:property value="smap1.pv_cdperson" />';
+var inputCdrol           = '<s:property value="smap1.pv_cdrol" />';
+var inputNombreasegurado = '<s:property value="smap1.nombreAsegurado" escapeHtml="false" />';
+var inputCdrfc           = '<s:property value="smap1.cdrfc" escapeHtml="false" />';
+var urlRegresar          = '<s:url namespace="/" action="editarAsegurados" />';
+var urlCargar            = '<s:url namespace="/" action="cargarPantallaDomicilio" />';
+var urlGuardar           = '<s:url namespace="/" action="guardarPantallaDomicilio" />';
 var formPanel;
+var contexto             = '${ctx}';
 /*///////////////////*/
 ////// variables //////
 ///////////////////////
@@ -140,22 +144,22 @@ Ext.onReady(function(){
                 items           :
                 [
                     {
-                        fieldLabel     : 'Calle',
-                        xtype          : 'textfield',
-                        name           : 'smap1.calle',
-                        allowBlank     : false
+                    	fieldLabel     : 'C&oacute;digo postal',
+                    	xtype          : 'textfield',
+                    	name           : 'smap1.codigoPostal',
+                    	readOnly       : true
                     },
                     {
-                        fieldLabel     : 'Interior',
+                        fieldLabel     : 'Estado / Ciudad',
                         xtype          : 'textfield',
-                        name           : 'smap1.interior',
-                        allowBlank     : true
+                        name           : 'smap1.ciudad',
+                        readOnly       : true
                     },
                     {
-                        fieldLabel     : 'Exterior',
+                        fieldLabel     : 'Delegaci&oacute;n / Municipio',
                         xtype          : 'textfield',
-                        name           : 'smap1.exterior',
-                        allowBlank     : false
+                        name           : 'smap1.delegacion',
+                        readOnly       : true
                     },
                     {
                         fieldLabel     : 'Colonia',
@@ -164,16 +168,22 @@ Ext.onReady(function(){
                         allowBlank     : false
                     },
                     {
-                        fieldLabel     : 'Delegaci&oacute;n / Municipio',
+                        fieldLabel     : 'Calle',
                         xtype          : 'textfield',
-                        name           : 'smap1.delegacion',
+                        name           : 'smap1.calle',
                         allowBlank     : false
                     },
                     {
-                        fieldLabel     : 'Estado / Ciudad',
+                        fieldLabel     : 'Exterior',
                         xtype          : 'textfield',
-                        name           : 'smap1.ciudad',
+                        name           : 'smap1.exterior',
                         allowBlank     : false
+                    },
+                    {
+                        fieldLabel     : 'Interior',
+                        xtype          : 'textfield',
+                        name           : 'smap1.interior',
+                        allowBlank     : true
                     }
                 ]
             }),
@@ -182,7 +192,7 @@ Ext.onReady(function(){
         [
             {
                 text:'Regresar',
-                icon: 'resources/extjs4/resources/ext-theme-neptune/images/toolbar/scroll-left.png',
+                icon: contexto+'/resources/extjs4/resources/ext-theme-neptune/images/toolbar/scroll-left.png',
                 handler:function()
                 {
                     Ext.create('Ext.form.Panel').submit(
@@ -201,7 +211,7 @@ Ext.onReady(function(){
             },
             {
                 text:'Guardar cambios',
-                icon: 'resources/fam3icons/icons/accept.png',
+                icon: contexto+'/resources/fam3icons/icons/accept.png',
                 handler:function()
                 {
                     if(this.up().up().getForm().isValid())
@@ -216,7 +226,8 @@ Ext.onReady(function(){
                                 'smap1.pv_estado'   : inputEstado,
                                 'smap1.pv_nmpoliza' : inputNmpoliza,
                                 'smap1.pv_nmsituac' : inputNmsituac,
-                                'smap1.pv_cdperson' : inputCdperson
+                                'smap1.pv_cdperson' : inputCdperson,
+                                'smap1.pv_cdrol'    : inputCdrol
                             },
                             success:function(response,opts)
                             {
@@ -279,12 +290,15 @@ Ext.onReady(function(){
         {
             extraParams:
             {
-                'smap1.pv_cdunieco' : inputCdunieco,
-                'smap1.pv_cdramo'   : inputCdramo,
-                'smap1.pv_estado'   : inputEstado,
-                'smap1.pv_nmpoliza' : inputNmpoliza,
-                'smap1.pv_nmsituac' : inputNmsituac,
-                'smap1.pv_cdperson' : inputCdperson
+                'smap1.pv_cdunieco_i'   : inputCdunieco,
+                'smap1.pv_cdramo_i'     : inputCdramo,
+                'smap1.pv_estado_i'     : inputEstado,
+                'smap1.pv_nmpoliza_i'   : inputNmpoliza,
+                'smap1.pv_nmsituac_i'   : inputNmsituac,
+                'smap1.pv_cdperson_i'   : inputCdperson,
+                'smap1.pv_cdrol_i'      : inputCdrol,
+                'smap1.nombreAsegurado' : inputNombreasegurado,
+                'smap1.cdrfc'           : inputCdrfc
             },
             type:'ajax',
             url : urlCargar,
@@ -299,6 +313,9 @@ Ext.onReady(function(){
     loaderForm.load(123, {
         success: function(resp) {
             //console.log(resp);
+        	resp.data['smap1.asegurado'] =inputNombreasegurado;
+        	resp.data['smap1.rfc']       =inputCdrfc;
+        	//console.log(resp);
             formPanel.loadRecord(resp);
         },
         failure:function()

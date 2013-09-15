@@ -57,6 +57,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     public static final String cdatribuCobEliPenCamZona             ="15";
     public static final String cdatribuRol                          ="16";
     public static final String SK_COBERTURAS_COTIZACION             ="SK_COBERTURAS_COTIZACION";//llave de sesion
+    public static final String cdatribuMunicipio                    ="17";
     
     //Datos de cotizacion
     private String id;                                            //0
@@ -77,6 +78,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     private String costoEmergenciaExtranjero;                   //14
     private String coberturaEliminacionPenalizacionCambioZona;  //15
     //rol (inciso)                                                16
+    private String municipio;                                   //17
     private String fechaInicioVigencia;
     private String fechaFinVigencia;
     
@@ -317,7 +319,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
                 mapaValositIterado.put("pv_otvalor14",   costoEmergenciaExtranjero);//emergencia extranjero
                 mapaValositIterado.put("pv_otvalor15",   coberturaEliminacionPenalizacionCambioZona);//cob elim pen cambio zona
                 mapaValositIterado.put("pv_otvalor16",   i.getRol().getKey());//parentesco
-                mapaValositIterado.put("pv_otvalor17",   null);
+                mapaValositIterado.put("pv_otvalor17",   municipio);
                 mapaValositIterado.put("pv_otvalor18",   null);
                 mapaValositIterado.put("pv_otvalor19",   null);
                 mapaValositIterado.put("pv_otvalor20",   null);
@@ -734,6 +736,11 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     public String getCdatribuCostoEmergenciaExtranjero() {
         return cdatribuCostoEmergenciaExtranjero;
     }
+    
+    public String getCdatribuMunicipio()
+    {
+    	return cdatribuMunicipio;
+    }
 
     public boolean isSuccess() {
         return success;
@@ -936,5 +943,13 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     public void setComprarCdunieco(String comprarCdunieco) {
         this.comprarCdunieco = comprarCdunieco;
     }
+
+	public String getMunicipio() {
+		return municipio;
+	}
+
+	public void setMunicipio(String municipio) {
+		this.municipio = municipio;
+	}
     
 }

@@ -28,6 +28,7 @@
             var CDATRIBU_COSTO_EMERGENCIA_EXTRANJERO=   '<s:property value="cdatribuCostoEmergenciaExtranjero" />'; //14
             var CDATRIBU_COB_ELIM_PEN_CAMBIO_ZONA=      '<s:property value="cdatribuCobEliPenCamZona" />';          //15
             var CDATRIBU_ROL=                           '<s:property value="cdatribuRol" />';                       //16
+            var CDATRIBU_MUNICIPIO=                     '<s:property value="cdatribuMunicipio" />';                       //17
             /////////////////////////////////////
             ////// fin atributos catalogos //////
             /////////////////////////////////////
@@ -42,6 +43,7 @@
             var urlComprarCotizacion=       '<s:url namespace="/flujocotizacion" action="comprarCotizacion4" />';
             var urlDatosComplementarios='<s:url namespace="/" action="datosComplementarios" />';
             var urlDetalleCotizacion='<s:url namespace="/" action="detalleCotizacion" />';
+            var contexto='${ctx}';
         </script>
         <script src="${ctx}/resources/jsp-script/extjs4/asegurados.js"></script>
     </head>

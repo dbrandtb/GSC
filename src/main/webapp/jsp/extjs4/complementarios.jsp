@@ -22,6 +22,7 @@
             var inputEstado='<s:property value="estado" />';
             var inputNmpoliza='<s:property value="nmpoliza" />';
             var urlEditarAsegurados='<s:url namespace="/" action="editarAsegurados" />';
+            var contexto='${ctx}';
             
             Ext.onReady(function(){
                 
@@ -261,7 +262,7 @@
                     buttons:[
                         {
                             text:'Guardar',
-                            icon: 'resources/extjs4/resources/ext-theme-classic/images/icons/fam/accept.png',
+                            icon: contexto+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/accept.png',
                             handler:function()
                             {
                                 var form=Ext.getCmp('formPanel');
@@ -308,7 +309,7 @@
                         },
                         {
                             text:'Editar asegurados',
-                            icon: 'resources/extjs4/resources/ext-theme-classic/images/icons/fam/user.png',
+                            icon: contexto+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/user.png',
                             handler:function(){
                                 Ext.create('Ext.form.Panel').submit({
                                     url : urlEditarAsegurados,
@@ -324,12 +325,12 @@
                         },
                         {
                             text:'Editar agentes',
-                            icon: 'resources/extjs4/resources/ext-theme-classic/images/icons/fam/user_gray.png',
+                            icon: contexto+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/user_gray.png',
                             disabled:true
                         },
                         {
                             text:'Editar documentos',
-                            icon: 'resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png',
+                            icon: contexto+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png',
                             disabled:true
                         }
                     ]

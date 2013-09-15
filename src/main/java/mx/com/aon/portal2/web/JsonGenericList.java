@@ -26,6 +26,10 @@ public class JsonGenericList extends PrincipalCoreAction
     private String codigoTabla;
     private String idPadre="";
     private static Logger log = Logger.getLogger(JsonGenericList.class);
+    private String cdgarant;
+    private String cdramo;
+    private String cdrol;
+    private String cdtipsit;
     
     public String obtenCatalogo()
     {
@@ -59,7 +63,21 @@ public class JsonGenericList extends PrincipalCoreAction
     {
         try
         {
-            lista=combosManager2.obtenCatalogoGar("", "2", cdatribu, idPadre!=null&&idPadre.length()>0?idPadre:null);
+            lista=combosManager2.obtenCatalogoGar("2", "SL", cdgarant, cdatribu, idPadre!=null&&idPadre.length()>0?idPadre:null);
+        }
+        catch(Exception ex)
+        {
+            lista=new ArrayList<GenericVO>(0);
+            log.error("No se pudo obtener el catalogo "+cdatribu, ex);
+        }
+        return SUCCESS;
+    }
+    
+    public String obtenCatalogoPer()
+    {
+        try
+        {
+            lista=combosManager2.obtenCatalogoPer(cdramo,cdrol,cdatribu,cdtipsit,idPadre);
         }
         catch(Exception ex)
         {
@@ -104,5 +122,37 @@ public class JsonGenericList extends PrincipalCoreAction
     public void setIdPadre(String idPadre) {
         this.idPadre = idPadre;
     }
+
+	public String getCdgarant() {
+		return cdgarant;
+	}
+
+	public void setCdgarant(String cdgarant) {
+		this.cdgarant = cdgarant;
+	}
+
+	public String getCdramo() {
+		return cdramo;
+	}
+
+	public void setCdramo(String cdramo) {
+		this.cdramo = cdramo;
+	}
+
+	public String getCdrol() {
+		return cdrol;
+	}
+
+	public void setCdrol(String cdrol) {
+		this.cdrol = cdrol;
+	}
+
+	public String getCdtipsit() {
+		return cdtipsit;
+	}
+
+	public void setCdtipsit(String cdtipsit) {
+		this.cdtipsit = cdtipsit;
+	}
 }
 /////////////////////////////////////////////////////////////////////////////////

@@ -8,6 +8,7 @@ import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.service.CombosManager2;
 import mx.com.aon.portal.util.ConvertUtil;
 import mx.com.aon.portal2.web.GenericVO;
+
 import org.apache.log4j.Logger;
 
 public class ComboManagerJdbcTemplateImpl extends AbstractManagerJdbcTemplateInvoke implements CombosManager2 {
@@ -248,13 +249,29 @@ public class ComboManagerJdbcTemplateImpl extends AbstractManagerJdbcTemplateInv
 	/////////////////////////////////////////////
 	// jtezva 2013 09 13 catalogos gar         //
 	/////////////////////////////////////////////
-	public List obtenCatalogoGar(String producto, String cdramo, String cdatribu, String otval) throws ApplicationException
+	public List obtenCatalogoGar(String cdramo, String cdtipsit, String cdgarant, String cdatribu, String valant) throws ApplicationException
 	{
 		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("pv_cdramo_i"  ,cdramo);
+		params.put("pv_cdtipsit_i",cdtipsit);
+		params.put("pv_cdgarant_i",cdgarant);
 		params.put("pv_cdatribu_i",cdatribu);
-		params.put("pv_cdramo_i",cdramo);
-		params.put("pv_otvalor_i",otval);
+		params.put("pv_otvalor_i" ,valant);
+		
 		String endpointName = "CATALOGOS_GAR";
+		return  getAllBackBoneInvoke(params, endpointName);
+	}
+	
+	public List obtenCatalogoPer(String cdramo, String cdrol, String cdatribu, String cdtipsit, String valant) throws ApplicationException
+	{
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("pv_cdramo_i"  ,cdramo);
+		params.put("pv_cdrol_i"   ,cdrol);
+		params.put("pv_cdatribu_i",cdatribu);
+		params.put("pv_cdtipsit_i",cdtipsit);
+		params.put("pv_otvalor_i" ,valant);
+		
+		String endpointName = "CATALOGOS_PER";
 		return  getAllBackBoneInvoke(params, endpointName);
 	}
 	 

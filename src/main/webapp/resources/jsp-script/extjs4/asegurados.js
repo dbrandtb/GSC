@@ -19,6 +19,7 @@ var comboBaseTabuladorReembolso,storeBaseTabuladorReembolso;        //13
 var comboCostoEmergenciaExtranjero,storeCostoEmergenciaExtranjero;  //14
 var comboCobElimPenCambioZona,storeCobElimPenCambioZona;            //15
 var comboRoles,storeRoles;                                          //16
+var comboMunicipios,storeMunicipios;                                //17  --- va en el 5
 ///////////////////////////////////////
 ////// fin catalogos de tatrisit //////
 ///////////////////////////////////////
@@ -172,6 +173,30 @@ Ext.onReady(function(){
             type: 'ajax',
             url : _URL_OBTEN_CATALOGO_GENERICO,
             extraParams:{cdatribu:CDATRIBU_ESTADO},
+            reader:
+            {
+                type: 'json',
+                root: 'lista'
+            }
+        }/*,
+        sorters:
+        [
+            {
+                property : 'value',
+                direction: 'ASC'
+            }
+        ]*/
+    });
+    
+  //17 municipios
+    storeMunicipios = new Ext.data.Store({
+        model: 'Generic',
+        autoLoad:false,
+        proxy:
+        {
+            type: 'ajax',
+            url : _URL_OBTEN_CATALOGO_GENERICO,
+            extraParams:{cdatribu:CDATRIBU_MUNICIPIO},
             reader:
             {
                 type: 'json',
@@ -604,38 +629,52 @@ Ext.onReady(function(){
         allowBlank:false,
         editable:false,
         emptyText:'Seleccione...',
-        labelWidth:250/*,
+        labelWidth:250,
         listeners:
         {
-            change:function(record,value)
+            blur:function(el)
             {
-                comboCiudad.setLoading(true, true);
-                storeCiudades.load({
+                storeMunicipios.load({
                     params:
                     {
-                        codigoTabla:'2TMUNI',
-                        idPadre:value
+                        idPadre:el.value
                     },
                     callback: function(records, operation, success)
                     {
-                        var ciudadActual=comboCiudad.getValue();
-                        var actualEnStoreCiudades=false;
-                        storeCiudades.each(function(record)
+                        var estadoActual=comboMunicipios.getValue();
+                        var actualEnStoreEstados=false;
+                        storeMunicipios.each(function(record)
                         {
-                            if(ciudadActual==record.get('key'))
+                            if(estadoActual==record.get('key'))
                             {
-                                actualEnStoreCiudades=true;
+                                actualEnStoreEstados=true;
                             }
                         });
-                        if(!actualEnStoreCiudades)
+                        if(!actualEnStoreEstados)
                         {
-                            comboCiudad.clearValue();
+                            comboMunicipios.clearValue();
                         }
-                        comboCiudad.setLoading(false);
+                        //comboEstados.setLoading(false);
                     }
                 });
             }
-        }*/
+        }
+    });
+    
+    comboMunicipios=Ext.create('Ext.form.ComboBox2',
+    {
+        id:'comboMunicipios',
+        fieldLabel: 'Municipio',
+        name:'municipio',
+        model:'GeMunicipio',
+        store: storeMunicipios,
+        queryMode:'local',
+        displayField: 'value',
+        valueField: 'key',
+        allowBlank:true,
+        editable:false,
+        emptyText:'Seleccione...',
+        labelWidth:250
     });
     
     /*4 ciudad X(
@@ -855,7 +894,7 @@ Ext.onReady(function(){
     /*/////////////////*/
     botonVerCoberturas=Ext.create('Ext.Button', {
         text: 'Ver coberturas',
-        icon:'resources/fam3icons/icons/table.png',
+        icon:contexto+'/resources/fam3icons/icons/table.png',
         disabled:true,
         handler: function()
         {
@@ -883,7 +922,7 @@ Ext.onReady(function(){
     });
     botonDetalle=Ext.create('Ext.Button', {
         text: 'Detalles',
-        icon:'resources/fam3icons/icons/text_list_numbers.png',
+        icon:contexto+'/resources/fam3icons/icons/text_list_numbers.png',
         disabled:true,
         handler: function()
         {
@@ -974,7 +1013,7 @@ Ext.onReady(function(){
     });
     botonComprar=Ext.create('Ext.Button', {
         text: 'Comprar',
-        icon:'resources/fam3icons/icons/coins.png',
+        icon:contexto+'/resources/fam3icons/icons/coins.png',
         disabled:true,
         handler: function()
         {
@@ -1256,7 +1295,7 @@ Ext.onReady(function(){
             {
                 id:'botonEditarCotiza',
                 text:'Editar cotizaci&oacute;n',
-                icon:'resources/fam3icons/icons/pencil.png',
+                icon:contexto+'/resources/fam3icons/icons/pencil.png',
                 handler:function()
                 {
                     bloquearFormulario(false);
@@ -1271,7 +1310,7 @@ Ext.onReady(function(){
             },
             {
                 id:'botonNuevaCotiza',
-                icon:'resources/fam3icons/icons/arrow_refresh.png',
+                icon:contexto+'/resources/fam3icons/icons/arrow_refresh.png',
                 text:'Nueva cotizaci&oacute;n',
                 handler:function()
                 {
@@ -1299,7 +1338,7 @@ Ext.onReady(function(){
             },
             {
                 id:'botonImprimir',
-                icon:'resources/fam3icons/icons/printer.png',
+                icon:contexto+'/resources/fam3icons/icons/printer.png',
                 text:'Imprimir',
                 disabled:true,
                 handler:function()
@@ -1690,7 +1729,7 @@ Ext.onReady(function(){
                         sortable: false,
                         menuDisabled: true,
                         items: [{
-                            icon:'resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
+                            icon:contexto+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
                             //iconCls: 'icon-delete',
                             tooltip: 'Quitar inciso',
                             scope: this,
@@ -1702,7 +1741,7 @@ Ext.onReady(function(){
                     selType: 'cellmodel'
                 },
                 tbar: [{
-                    icon:'resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png',
+                    icon:contexto+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png',
                     text: 'Agregar inciso',
                     scope: this,
                     handler: this.onAddClick
@@ -1978,6 +2017,7 @@ Ext.onReady(function(){
             //fecha nacimiento (inciso)                       2
             campoCodigoPostal,                              //3
             comboEstados,                                   //4
+            comboMunicipios,                               //17
             //comboCiudad,                                    4 X(
             comboDeducible,                                 //5
             comboCopago,                                    //6
@@ -2036,7 +2076,7 @@ Ext.onReady(function(){
         ],
         buttons: [{
             id:'botonCotizar',
-            icon:'resources/fam3icons/icons/calculator.png',
+            icon:contexto+'/resources/fam3icons/icons/calculator.png',
             text: 'Cotizar',
             handler: function() {
                 // The getForm() method returns the Ext.form.Basic instance:
@@ -2210,7 +2250,7 @@ Ext.onReady(function(){
         },
         {
             text:'Limpiar',
-            icon:'resources/fam3icons/icons/arrow_refresh.png',
+            icon:contexto+'/resources/fam3icons/icons/arrow_refresh.png',
             id:'botonLimpiar',
             handler:function()
             {
