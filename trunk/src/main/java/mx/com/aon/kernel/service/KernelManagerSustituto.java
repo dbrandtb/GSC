@@ -60,4 +60,5 @@ public interface KernelManagerSustituto {
 	public List<Tatri> obtenerTatriper(Map<String, String> smap1) throws ApplicationException;
 	//requiere de su propio catch si no hay datos:
 	public Map<String, Object> obtenerValoresTatriper(Map<String, String> smap1) throws ApplicationException;
+	public Map<String, String> obtenerDomicilio(Map<String, String> params) throws ApplicationException;
 }

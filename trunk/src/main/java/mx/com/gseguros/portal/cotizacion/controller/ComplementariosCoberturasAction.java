@@ -355,14 +355,30 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 			item1
 					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.asegurado"))
 					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.rfc"))
-					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.telefono"))
-					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.codigoPostal"))
-					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.ciudad"))
-					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.delegacion"))
-					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.colonia"))
-					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.calle"))
-					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.exterior"))
-					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.interior"))
+					/*
+					map.put("CDPERSON" , rs.getString("CDPERSON"));
+					map.put("NMORDDOM" , rs.getString("NMORDDOM"));
+					map.put("DSDOMICI" , rs.getString("DSDOMICI"));
+					map.put("NMTELEFO" , rs.getString("NMTELEFO"));
+					map.put("CDPOSTAL" , rs.getString("CDPOSTAL"));
+					map.put("CDEDO"    , rs.getString("CDEDO"));
+					map.put("CDMUNICI" , rs.getString("CDMUNICI"));
+					map.put("CDCOLONI" , rs.getString("CDCOLONI"));
+					map.put("NMNUMERO" , rs.getString("NMNUMERO"));
+					map.put("NMNUMINT" , rs.getString("NMNUMINT"));
+					*/
+					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.NMTELEFO"))
+					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.NMORDDOM"))//1ero o segundo o tercero
+					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.DSDOMICI"))
+					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.NMTELEFO"))
+					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.CODPOSTAL"))
+					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.CDEDO"))
+					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.estado"))
+					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.CDMUNICI"))
+					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.Municipio"))
+					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.CDCOLONI"))
+					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.NMNUMERO"))
+					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.NMNUMINT"))
 					;
 			/*
 			item2=Item.crear("items",null,Item.ARR)//generador campos
@@ -421,7 +437,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
             pv_nmsumplem_i #0
             pv_status_i    #V    QUITADO X(
             pv_cdtipsit_i  session
-           */
+            */
 			smap1.put("pv_nmsuplem_i" , "0");
 			//smap1.put("pv_status_i"   , "V");
 			smap1.put("pv_cdtipsit_i" ,  datUsu.getCdtipsit());
@@ -446,7 +462,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 			/*parametros=new HashMap<String,String>(0);//quitame
 			parametros.put("pv_otvalor01", "valor1");//quitame
 			parametros.put("pv_otvalor02", "valor2");//quitame
-			parametros.put("pv_otvalor03", "17/08/1990");//quitame*/
+			parametros.put("pv_otvalor03", "17/08/1990");//quitame
 			
 			String nombreAsegurado = smap1.get("nombreAsegurado");
 			String rfcAsegurado    = smap1.get("cdrfc");
@@ -460,7 +476,45 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 			smap1.put("colonia"      , "Acuitlapilco");
 			smap1.put("calle"        , "Zaragoza");
 			smap1.put("exterior"     , "B");
-			smap1.put("interior"     , "3");
+			smap1.put("interior"     , "3");*/
+			
+			/*
+			pv_cdunieco_i  smap1 ready!
+            pv_cdramo_i    smap1 ready!
+            pv_estado_i    smap1 ready!
+            pv_nmpoliza_i  smap1 ready!
+            pv_nmsituac_i  smap1 ready!
+            pv_cdrol_i     smap1 ready!
+            pv_cdperson_i  smap1 ready!
+            pv_nmsumplem_i #0
+            pv_status_i    #V    QUITADO X(
+            pv_cdtipsit_i  session
+            */
+			
+			/*
+			pv_cdunieco_i  smap1 ready!
+			pv_cdramo_i    smap1 ready!
+			pv_estado_i    smap1 ready!
+			pv_nmpoliza_i  smap1 ready!
+			pv_nmsituac_i  smap1 ready!
+			pv_nmsuplem_i  #0     ->se puso arriba
+			pv_cdperson_i  smap1 ready!
+			pv_cdtipsit_i  session->se puso arriba
+		    */
+			/*
+			map.put("CDPERSON" , rs.getString("CDPERSON"));
+			map.put("NMORDDOM" , rs.getString("NMORDDOM"));
+			map.put("DSDOMICI" , rs.getString("DSDOMICI"));
+			map.put("NMTELEFO" , rs.getString("NMTELEFO"));
+			map.put("CDPOSTAL" , rs.getString("CDPOSTAL"));
+			map.put("CDEDO"    , rs.getString("CDEDO"));
+			map.put("CDMUNICI" , rs.getString("CDMUNICI"));
+			map.put("CDCOLONI" , rs.getString("CDCOLONI"));
+			map.put("NMNUMERO" , rs.getString("NMNUMERO"));
+			map.put("NMNUMINT" , rs.getString("NMNUMINT"));
+			*/
+			smap1=kernelManager.obtenerDomicilio(smap1);
+			
 			
 			success=true;
 		}

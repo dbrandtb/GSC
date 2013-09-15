@@ -101,12 +101,6 @@ Ext.onReady(function(){
                         xtype      : 'textfield',
                         readOnly   : true,
                         name       : 'smap1.rfc'
-                    },
-                    {
-                        fieldLabel : 'Tel&eacute;fono',
-                        xtype      : 'textfield',
-                        readOnly   : false,
-                        name       : 'smap1.telefono'
                     }
                 ]
             }),
@@ -142,47 +136,81 @@ Ext.onReady(function(){
                     columns : 2
                 },
                 items           :
+                /*
+                map.put("CDPERSON" , rs.getString("CDPERSON"));
+                map.put("NMORDDOM" , rs.getString(""));
+                map.put("DSDOMICI" , rs.getString(""));
+                map.put("NMTELEFO" , rs.getString(""));
+                map.put("CDPOSTAL" , rs.getString(""));
+                map.put("CDEDO"    , rs.getString(""));
+                map.put("CDMUNICI" , rs.getString(""));
+                map.put("CDCOLONI" , rs.getString(""));
+                map.put("NMNUMERO" , rs.getString(""));
+                map.put("NMNUMINT" , rs.getString(""));
+                */
                 [
+                    {
+                    	fieldLabel     : 'Consecutivo',
+                    	xtype          : 'numberfield',
+                    	name           : 'smap1.NMORDDOM',
+                    	readOnly       : true
+                    },
                     {
                     	fieldLabel     : 'C&oacute;digo postal',
                     	xtype          : 'textfield',
-                    	name           : 'smap1.codigoPostal',
+                    	name           : 'smap1.CODPOSTAL',
                     	readOnly       : true
+                    },
+                    {
+                        xtype          : 'textfield',
+                        name           : 'smap1.CDEDO',
+                        hidden         : true
                     },
                     {
                         fieldLabel     : 'Estado / Ciudad',
                         xtype          : 'textfield',
-                        name           : 'smap1.ciudad',
+                        name           : 'smap1.estado',
                         readOnly       : true
+                    },
+                    {
+                        xtype          : 'textfield',
+                        name           : 'smap1.CDMUNICI',
+                        hidden         : true
                     },
                     {
                         fieldLabel     : 'Delegaci&oacute;n / Municipio',
                         xtype          : 'textfield',
-                        name           : 'smap1.delegacion',
+                        name           : 'smap1.Municipio',
                         readOnly       : true
+                    },
+                    {
+                    	fieldLabel     : 'Tel&eacute;fono',
+                    	xtype          : 'textfield',
+                    	name           : 'smap1.NMTELEFO',
+                    	allowBlank     : true
                     },
                     {
                         fieldLabel     : 'Colonia',
                         xtype          : 'textfield',
-                        name           : 'smap1.colonia',
+                        name           : 'smap1.CDCOLONI',
                         allowBlank     : false
                     },
                     {
                         fieldLabel     : 'Calle',
                         xtype          : 'textfield',
-                        name           : 'smap1.calle',
+                        name           : 'smap1.DSDOMICI',
                         allowBlank     : false
                     },
                     {
                         fieldLabel     : 'Exterior',
                         xtype          : 'textfield',
-                        name           : 'smap1.exterior',
+                        name           : 'smap1.NMNUMERO',
                         allowBlank     : false
                     },
                     {
                         fieldLabel     : 'Interior',
                         xtype          : 'textfield',
-                        name           : 'smap1.interior',
+                        name           : 'smap1.NMNUMINT',
                         allowBlank     : true
                     }
                 ]
