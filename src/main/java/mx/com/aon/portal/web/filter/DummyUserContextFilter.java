@@ -28,7 +28,7 @@ public class DummyUserContextFilter implements Filter {
     private LoginManager loginManager;
 
     private NavigationManager navigationManager;
-    public static String DAFAULT_DATE_FORMAT_PARAM = "defaultDateFormat";
+    public static String DEFAULT_DATE_FORMAT_PARAM = "defaultDateFormat";
     public static String DEFAULT_DECIMAL_SEPARATOR_PARAM = "defaultDecimalSeparator";
     public static String DEFAULT_DECIMAL_PRECISION_PARAM = "decimalPrecision";
     private String dateFormat;
@@ -37,7 +37,7 @@ public class DummyUserContextFilter implements Filter {
     private FilterConfig filterConfig;
 
     public void init(FilterConfig config) throws ServletException {
-        dateFormat = config.getServletContext().getInitParameter(DAFAULT_DATE_FORMAT_PARAM);
+        dateFormat = config.getServletContext().getInitParameter(DEFAULT_DATE_FORMAT_PARAM);
         decimalSeparator = config.getServletContext().getInitParameter(DEFAULT_DECIMAL_SEPARATOR_PARAM);
         this.servletContext = config.getServletContext();
         filterConfig = config;
