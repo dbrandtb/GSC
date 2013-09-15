@@ -5,9 +5,12 @@ import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.sql.DataSource;
+
 import mx.com.aon.flujos.cotizacion.model.AyudaCoberturaCotizacionVO;
 import mx.com.aon.flujos.cotizacion.model.CoberturaCotizacionVO;
 import mx.com.aon.flujos.cotizacion.model.DatosEntradaCotizaVO;
@@ -18,6 +21,7 @@ import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Tatri;
 import oracle.jdbc.driver.OracleTypes;
+
 import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;
@@ -93,6 +97,7 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String OBTENER_DETALLES_COTIZACION="OBTENER_DETALLES_COTIZACION";
     public static final String OBTENER_TATRIGAR="OBTENER_TATRIGAR";
     public static final String OBTENER_TATRIPER="OBTENER_TATRIPER";
+    public static final String P_GET_DOMICIL="P_GET_DOMICIL";
 
 	protected void initDao() throws Exception {
 		addStoredProcedure(PERMISO_EJECUCION_PROCESO,new PermisoEjecucionProceso(getDataSource()));
@@ -143,6 +148,7 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(OBTENER_DETALLES_COTIZACION, new ObtenerDetallesCotizacion(getDataSource()));
         addStoredProcedure(OBTENER_TATRIGAR, new ObtieneTatrigar(getDataSource()));
         addStoredProcedure(OBTENER_TATRIPER, new ObtieneTatriper(getDataSource()));
+        addStoredProcedure(P_GET_DOMICIL, new ObtenerDomicilio(getDataSource()));
 	}
 
 	protected class BuscarMatrizAsignacion extends CustomStoredProcedure {
@@ -2352,5 +2358,57 @@ public class ProcesoDAO extends AbstractDAO {
 	/*////////////////////////////////////////*/
 	////// obtener detalles de cotizacion //////
 	////////////////////////////////////////////
+	
+	//////////////////////////////////////////////
+	////// obtiene domicilio            //////////
+	/*//////////////////////////////////////////*/
+	protected class ObtenerDomicilio extends CustomStoredProcedure
+	{
+		protected ObtenerDomicilio(DataSource dataSource)
+		{
+			super(dataSource,"PKG_COTIZA.P_GET_MDOMICIL");
+			declareParameter(new SqlParameter("pv_cdunieco_i",    OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_cdramo_i",      OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_estado_i",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i",    OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsituac_i",    OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i",    OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdperson_i",    OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsit_i",    OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_record_o",    OracleTypes.CURSOR, new ObtenerDomicilioMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o",    OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o",     OracleTypes.VARCHAR));
+		}
+	
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			WrapperResultados wrapperResultados = mapper.build(map);
+			List result = (List) map.get("pv_record_o");
+			wrapperResultados.setItemList(result);
+			return wrapperResultados;
+		}
+	}
+	
+	protected class ObtenerDomicilioMapper implements RowMapper {
+		public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+			Map<String,String> map=new LinkedHashMap<String,String>(0);
+			map.put("CDPERSON"  , rs.getString("CDPERSON"));
+			map.put("NMORDDOM"  , rs.getString("NMORDDOM"));
+			map.put("DSDOMICI"  , rs.getString("DSDOMICI"));
+			map.put("NMTELEFO"  , rs.getString("NMTELEFO"));
+			map.put("CODPOSTAL"  , rs.getString("CODPOSTAL"));
+			map.put("CDEDO"     , rs.getString("CDEDO"));
+			map.put("estado"    , rs.getString("estado"));
+			map.put("CDMUNICI"  , rs.getString("CDMUNICI"));
+			map.put("Municipio" , rs.getString("Municipio"));
+			map.put("CDCOLONI"  , rs.getString("CDCOLONI"));
+			map.put("NMNUMERO"  , rs.getString("NMNUMERO"));
+			map.put("NMNUMINT"  , rs.getString("NMNUMINT"));
+			return map;
+		}
+	}
+	/*//////////////////////////////////////////*/
+	////// obtiene domicilio           ///////////
+	//////////////////////////////////////////////
     
 }
