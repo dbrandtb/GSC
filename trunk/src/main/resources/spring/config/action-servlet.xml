@@ -30,8 +30,7 @@
 		 <property name="principalManagerJdbcTemplate" ref="principalManagerJdbcTemplate" />
          <property name="usuarioManager" ref="usuarioManager"></property>
     </bean>
-	
-	
+
 	<bean id="PadreAction" class="mx.com.aon.catweb.configuracion.producto.web.Padre" abstract="true">
 		<property name="tablasManager" ref="AplicacionManager" />
 	</bean>
@@ -42,6 +41,14 @@
     
     <bean id="ArbolProductosAction" class="mx.com.aon.catweb.configuracion.producto.general.ArbolProductosAction" scope="prototype" parent="PadreAction">
 	    <property name="treeManager" ref="TreeManager" />
+    </bean>
+    
+    <!-- Bean que utilizara GS para no pasar por el login -->
+     <bean id="cotizaSaludVitalAction" class="mx.com.gseguros.portal.consultas.controller.CotizaSaludVitalAction" scope="prototype">
+         <property name="navigationManager" ref="navigationManagerJdbcTemplate"></property>
+		 <property name="principalManagerJdbcTemplate" ref="principalManagerJdbcTemplate" />
+         <property name="usuarioManager" ref="usuarioManager"></property>
+         <property name="loginManager" ref="loginManager"></property>
     </bean>
 	
 </beans>

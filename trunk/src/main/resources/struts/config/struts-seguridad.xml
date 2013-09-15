@@ -36,6 +36,11 @@
 		</action>
 		
 		<!-- Actions temporales que utilizara GS para no pasar por el login -->
+		
+		<action name="cotizarSaludVital" class="cotizaSaludVitalAction" method="cotizaSaludVital">
+		  <result name="success">/jsp/extjs4/asegurados.jsp</result>
+        </action>
+		
 		<action name="cotizacionSaludVital" class="autenticacionAction" method="cotizacionSaludVital">
 		  <result name="success" type="redirectAction">
 		      <param name="actionName">seleccionaRolCliente</param>
