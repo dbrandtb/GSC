@@ -10,6 +10,7 @@
 	//////variables //////
 	/*///////////////////*/
 	var storeCoberturas;
+	var storeCoberturasBorrar;
 	var panelCoberturas;
 	var urlRegresar = '<s:url namespace="/" action="editarAsegurados" />';
 	var urlCargarCoberturas = '<s:url namespace="/" action="cargarPantallaCoberturas" />';
@@ -24,6 +25,7 @@
 	var urlTatri = '<s:url namespace="/" action="obtenerCamposTatrigar" />';
 	var urlLoadTatri = '<s:url namespace="/" action="obtenerValoresTatrigar" />';
 	var urlSaveTatri = '<s:url namespace="/" action="guardarValoresTatrigar" />';
+	var contexto = '${ctx}';
 	/*///////////////////*/
 	//////variables //////
 	///////////////////////
@@ -35,27 +37,37 @@
 				/*/////////////////*/
 				Ext.define('Modelo1', {
 					extend : 'Ext.data.Model',
-					fields :
-				    [
-				        {name : 'GARANTIA'        },
-				        {name : 'NOMBRE_GARANTIA' },
-				        {name : 'SWOBLIGA'        },
-				        {name : 'SUMA_ASEGURADA'  },
-				        {name : 'CDCAPITA'        },
-				        {name : 'status'          },
-				        {name : 'cdtipbca'        },
-				        {name : 'ptvalbas'        },
-				        {name : 'swmanual'        },
-				        {name : 'swreas'          },
-				        {name : 'cdagrupa'        },
-				        {name : 'ptreduci'        },
-				        {
-				        	name       : 'fereduci',
-				        	type       : 'date',
-				        	dateFormat : 'd/m/Y' 
-				        },
-				        {name : 'swrevalo'}
-				    ]
+					fields : [ {
+						name : 'GARANTIA'
+					}, {
+						name : 'NOMBRE_GARANTIA'
+					}, {
+						name : 'SWOBLIGA'
+					}, {
+						name : 'SUMA_ASEGURADA'
+					}, {
+						name : 'CDCAPITA'
+					}, {
+						name : 'status'
+					}, {
+						name : 'cdtipbca'
+					}, {
+						name : 'ptvalbas'
+					}, {
+						name : 'swmanual'
+					}, {
+						name : 'swreas'
+					}, {
+						name : 'cdagrupa'
+					}, {
+						name : 'ptreduci'
+					}, {
+						name : 'fereduci',
+						type : 'date',
+						dateFormat : 'd/m/Y'
+					}, {
+						name : 'swrevalo'
+					} ]
 				});
 
 				Ext.define('ModeloAdicionales', {
@@ -87,6 +99,11 @@
 					},
 					autoLoad : true
 				});
+
+				storeCoberturasBorrar = Ext.create('Ext.data.Store', {
+					storeId : 'storeCoberturasBorrar',
+					model : 'Modelo1'
+				});
 				/*////////////////*/
 				////// Stores //////
 				////////////////////
@@ -98,17 +115,18 @@
 					title : 'Datos adicionales',
 					collapsible : true,
 					titleCollapse : true,
-					bodyPadding:5
-});
-/*/////////////////////*/
-////// Componentes //////
-/////////////////////////
-
-///////////////////////
-////// Contenido //////
-/*///////////////////*/
-panelCoberturas=Ext.create('Ext.grid.Panel',
-{
+					bodyPadding : 5
+				});
+				/*/////////////////////*/
+				////// Componentes //////
+				/////////////////////////
+				///////////////////////
+				////// Contenido //////
+				/*///////////////////*/
+				panelCoberturas = Ext
+						.create(
+								'Ext.grid.Panel',
+								{
 									title : 'Coberturas',
 									collapsible : true,
 									titleCollapse : true,
@@ -129,40 +147,40 @@ panelCoberturas=Ext.create('Ext.grid.Panel',
 												editor : {
 													xtype : 'textfield',
 													allowBlank : true
-}
-},
-{
+												}
+											},
+											{
 												menuDisabled : true,
 												dataIndex : 'SWOBLIGA',
 												width : 30,
 												renderer : function(value) {
 													var rvalue = '';
 													if (value == 'N') {
-														rvalue = '<img src="resources/fam3icons/icons/eye.png" data-qtip="Ver datos adicionales" style="cursor:pointer;">';
+														rvalue = '<img src="'+contexto+'/resources/fam3icons/icons/eye.png" data-qtip="Ver datos adicionales" style="cursor:pointer;">';
 													}
 													return rvalue;
-}
-},
-{
+												}
+											},
+											{
 												menuDisabled : true,
 												dataIndex : 'SWOBLIGA',
 												width : 30,
 												renderer : function(value) {
 													var rvalue = '';
 													if (value == 'N') {
-														rvalue = '<img src="resources/fam3icons/icons/pencil.png" data-qtip="Editar suma asegurada" style="cursor:pointer;">';
+														rvalue = '<img src="'+contexto+'/resources/fam3icons/icons/pencil.png" data-qtip="Editar suma asegurada" style="cursor:pointer;">';
 													}
 													return rvalue;
-}
-},
-{
+												}
+											},
+											{
 												menuDisabled : true,
 												dataIndex : 'SWOBLIGA',
 												width : 30,
 												renderer : function(value) {
 													var rvalue = '';
 													if (value == 'N') {
-														rvalue = '<img src="resources/fam3icons/icons/delete.png" data-qtip="Quitar cobertura" style="cursor:pointer;">';
+														rvalue = '<img src="'+contexto+'/resources/fam3icons/icons/delete.png" data-qtip="Quitar cobertura" style="cursor:pointer;">';
 													}
 													return rvalue;
 												}
@@ -175,8 +193,7 @@ panelCoberturas=Ext.create('Ext.grid.Panel',
 									width : 500,
 									height : 300,
 									buttonAlign : 'center',
-									listeners:
-{
+									listeners : {
 										beforeedit : function(grid, e, eOpts) {
 											return e.colIdx == 3
 													&& e.record.get('SWOBLIGA') == 'N';
@@ -222,11 +239,13 @@ panelCoberturas=Ext.create('Ext.grid.Panel',
 																						{
 																							frame : true,
 																							model : 'ModeloAdicionales',
-																							title : 'Datos adicionales de '+record.get('NOMBRE_GARANTIA'),
+																							title : 'Datos adicionales de '
+																									+ record
+																											.get('NOMBRE_GARANTIA'),
 																							collapsible : true,
 																							titleCollapse : true,
 																							bodyPadding : 5,
-																							maxHeight:300,
+																							maxHeight : 300,
 																							buttonAlign : 'center',
 																							renderTo : 'pan_usu_cob_divadicionales',
 																							url : urlSaveTatri,
@@ -234,9 +253,10 @@ panelCoberturas=Ext.create('Ext.grid.Panel',
 																									.decode(json.str2),
 																							buttons : [
 																									{
-																										id:'botonGuardarAdicionalesCobertura',
+																										id : 'botonGuardarAdicionalesCobertura',
 																										text : 'Guardar cambios',
-																										icon : 'resources/fam3icons/icons/accept.png',
+																										icon : contexto
+																												+ '/resources/fam3icons/icons/accept.png',
 																										handler : function() {
 																											if (panelAdicionales
 																													.getForm()
@@ -297,15 +317,22 @@ panelCoberturas=Ext.create('Ext.grid.Panel',
 																									},
 																									{
 																										text : 'Cancelar',
-																										icon : 'resources/fam3icons/icons/cancel.png',
+																										icon : contexto
+																												+ '/resources/fam3icons/icons/cancel.png',
 																										handler : function() {
-																											window.parent.scrollTo(0,0);
+																											window.parent
+																													.scrollTo(
+																															0,
+																															0);
 																											panelAdicionales
 																													.destroy();
 																										}
 																									} ]
 																						});
-																		window.parent.scrollTo(0,600);
+																		window.parent
+																				.scrollTo(
+																						0,
+																						600);
 																		////// !crear formuario con campos que vienen de str2 //////
 
 																		////// cargar formulario con modelo creado //////
@@ -345,16 +372,19 @@ panelCoberturas=Ext.create('Ext.grid.Panel',
 																												resp);
 																							},
 																							failure : function() {
-																								window.parent.scrollTo(0,100);
-                                                                                                panelAdicionales
-                                                                                                        .destroy();
+																								window.parent
+																										.scrollTo(
+																												0,
+																												100);
+																								panelAdicionales
+																										.destroy();
 																								Ext.Msg
 																										.show({
-						                                                                                    title : 'Error',
-						                                                                                    msg : 'Error de comunicaci&oacute;n',
-						                                                                                    buttons : Ext.Msg.OK,
-						                                                                                    icon : Ext.Msg.ERROR
-						                                                                                });
+																											title : 'Error',
+																											msg : 'Error de comunicaci&oacute;n',
+																											buttons : Ext.Msg.OK,
+																											icon : Ext.Msg.ERROR
+																										});
 																							}
 																						});
 																		////// !cargar formulario con modelo creado //////
@@ -383,17 +413,22 @@ panelCoberturas=Ext.create('Ext.grid.Panel',
 															});
 												} else if (cellIndex == 4)//delete
 												{
+													storeCoberturasBorrar
+															.add(grid
+																	.getStore()
+																	.getAt(
+																			rowIndex));
 													grid.getStore().removeAt(
 															rowIndex);
 												}
 											}
 										}
 									},
-									buttons:
-[
-{
+									buttons : [
+											{
 												text : 'Regresar',
-												icon : 'resources/extjs4/resources/ext-theme-neptune/images/toolbar/scroll-left.png',
+												icon : contexto
+														+ '/resources/extjs4/resources/ext-theme-neptune/images/toolbar/scroll-left.png',
 												handler : function() {
 													Ext
 															.create(
@@ -409,38 +444,102 @@ panelCoberturas=Ext.create('Ext.grid.Panel',
 																			'map1.nmpoliza' : inputNmpoliza
 																		}
 																	});
-}
-},
-{
+												}
+											},
+											{
 												text : 'Guardar cambios',
-												icon : 'resources/fam3icons/icons/accept.png',
+												icon : contexto
+														+ '/resources/fam3icons/icons/accept.png',
 												handler : function() {
 													var jsonList = [];
 													storeCoberturas
 															.each(function(
 																	record,
 																	index) {
-																jsonList.push({
-																GARANTIA        : record.get('GARANTIA'),
-																NOMBRE_GARANTIA : record.get('NOMBRE_GARANTIA'),
-																SWOBLIGA        : record.get('SWOBLIGA'),
-																SUMA_ASEGURADA  : record.get('SUMA_ASEGURADA'),
-																CDCAPITA        : record.get('CDCAPITA'),
-																status          : record.get('status'),
-																cdtipbca        : record.get('cdtipbca'),
-																ptvalbas        : record.get('ptvalbas'),
-																swmanual        : record.get('swmanual'),
-																swreas          : record.get('swreas'),
-																cdagrupa        : record.get('cdagrupa'),
-																ptreduci        : record.get('ptreduci'),
-																fereduci        : typeof record.get('fereduci')=='string'?
-																		              record.get('fereduci'):
-																		              Ext.Date.format(record.get('fereduci'), 'd/m/Y'),
-															    swrevalo        : record.get('swrevalo')
+																jsonList
+																		.push({
+																			GARANTIA : record
+																					.get('GARANTIA'),
+																			NOMBRE_GARANTIA : record
+																					.get('NOMBRE_GARANTIA'),
+																			SWOBLIGA : record
+																					.get('SWOBLIGA'),
+																			SUMA_ASEGURADA : record
+																					.get('SUMA_ASEGURADA'),
+																			CDCAPITA : record
+																					.get('CDCAPITA'),
+																			status : record
+																					.get('status'),
+																			cdtipbca : record
+																					.get('cdtipbca'),
+																			ptvalbas : record
+																					.get('ptvalbas'),
+																			swmanual : record
+																					.get('swmanual'),
+																			swreas : record
+																					.get('swreas'),
+																			cdagrupa : record
+																					.get('cdagrupa'),
+																			ptreduci : record
+																					.get('ptreduci'),
+																			fereduci : typeof record
+																					.get('fereduci') == 'string' ? record
+																					.get('fereduci')
+																					: Ext.Date
+																							.format(
+																									record
+																											.get('fereduci'),
+																									'd/m/Y'),
+																			swrevalo : record
+																					.get('swrevalo')
+																		});
 															});
-														});
+													var jsonListBorrar = [];
+													storeCoberturasBorrar
+															.each(function(
+																	record,
+																	index) {
+																jsonListBorrar
+																		.push({
+																			GARANTIA : record
+																					.get('GARANTIA'),
+																			NOMBRE_GARANTIA : record
+																					.get('NOMBRE_GARANTIA'),
+																			SWOBLIGA : record
+																					.get('SWOBLIGA'),
+																			SUMA_ASEGURADA : record
+																					.get('SUMA_ASEGURADA'),
+																			CDCAPITA : record
+																					.get('CDCAPITA'),
+																			status : record
+																					.get('status'),
+																			cdtipbca : record
+																					.get('cdtipbca'),
+																			ptvalbas : record
+																					.get('ptvalbas'),
+																			swmanual : record
+																					.get('swmanual'),
+																			swreas : record
+																					.get('swreas'),
+																			cdagrupa : record
+																					.get('cdagrupa'),
+																			ptreduci : record
+																					.get('ptreduci'),
+																			fereduci : typeof record
+																					.get('fereduci') == 'string' ? record
+																					.get('fereduci')
+																					: Ext.Date
+																							.format(
+																									record
+																											.get('fereduci'),
+																									'd/m/Y'),
+																			swrevalo : record
+																					.get('swrevalo')
+																		});
+															});
 													var post = {};
 													post['slist1'] = jsonList;
+													post['slist2'] = jsonListBorrar;
 													var smap1 = {
 														pv_cdunieco_i : inputCdunieco,
 														pv_cdramo_i : inputCdramo,
@@ -449,7 +548,8 @@ panelCoberturas=Ext.create('Ext.grid.Panel',
 														pv_nmsituac_i : inputNmsituac
 													};
 													post['smap1'] = smap1;
-													panelCoberturas.setLoading(true);
+													panelCoberturas
+															.setLoading(true);
 													//console.log(Ext.encode(post));
 													Ext.Ajax
 															.request({
@@ -459,7 +559,8 @@ panelCoberturas=Ext.create('Ext.grid.Panel',
 																success : function(
 																		response,
 																		opts) {
-																	panelCoberturas.setLoading(false);
+																	panelCoberturas
+																			.setLoading(false);
 																	var json = Ext
 																			.decode(response.responseText);
 																	if (json.success == true) {
@@ -482,7 +583,8 @@ panelCoberturas=Ext.create('Ext.grid.Panel',
 																failure : function(
 																		response,
 																		opts) {
-																	panelCoberturas.setLoading(true);
+																	panelCoberturas
+																			.setLoading(true);
 																	Ext.Msg
 																			.show({
 																				title : 'Error',
@@ -501,11 +603,11 @@ panelCoberturas=Ext.create('Ext.grid.Panel',
 			});
 </script>
 </head>
-<body style="margin:0; padding:0;">
+<body style="margin: 0; padding: 0;">
 	<table width="100%" height="600" border="0">
 		<tr height="300">
 			<td align="center" valign="top">
-				<table align="center" style="border:0px solid blue;">
+				<table align="center" style="border: 0px solid blue;">
 					<tr>
 						<td><div id="pan_usu_cob_divgrid"></div></td>
 					</tr>
@@ -514,7 +616,7 @@ panelCoberturas=Ext.create('Ext.grid.Panel',
 		</tr>
 		<tr>
 			<td align="center" valign="top">
-				<table align="center" style="border:0px solid yellow;">
+				<table align="center" style="border: 0px solid yellow;">
 					<tr>
 						<td><div id="pan_usu_cob_divadicionales"></div></td>
 					</tr>

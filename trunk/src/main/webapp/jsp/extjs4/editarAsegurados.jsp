@@ -27,6 +27,7 @@
 	var urlGenerarCdPerson='<s:url namespace="/" action="generarCdperson" />';
 	var urlDomicilio      ='<s:url namespace="/" action="pantallaDomicilio" />';
 	var editorFecha;
+	var contexto='${ctx}';
 	
     function rendererRol(v)
     {
@@ -551,12 +552,12 @@
                     url : urlCoberturasAsegurado,
                     standardSubmit:true,
                     params:{
-                    	'smap1.pv_cdunieco':inputCdunieco,
-                        'smap1.pv_cdramo':inputCdramo,
-                        'smap1.pv_estado':inputEstado,
-                        'smap1.pv_nmpoliza':inputNmpoliza,
-                        'smap1.pv_nmsituac':record.get('nmsituac'),
-                        'smap1.pv_cdperson':record.get('cdperson')
+                    	'smap1.pv_cdunieco' : inputCdunieco,
+                        'smap1.pv_cdramo'   : inputCdramo,
+                        'smap1.pv_estado'   : inputEstado,
+                        'smap1.pv_nmpoliza' : inputNmpoliza,
+                        'smap1.pv_nmsituac' : record.get('nmsituac'),
+                        'smap1.pv_cdperson' : record.get('cdperson')
                     }
                 });
 	        },
@@ -567,13 +568,17 @@
                 Ext.create('Ext.form.Panel').submit({
                     url : urlDomicilio,
                     standardSubmit:true,
-                    params:{
-                        'smap1.pv_cdunieco':inputCdunieco,
-                        'smap1.pv_cdramo':inputCdramo,
-                        'smap1.pv_estado':inputEstado,
-                        'smap1.pv_nmpoliza':inputNmpoliza,
-                        'smap1.pv_nmsituac':record.get('nmsituac'),
-                        'smap1.pv_cdperson':record.get('cdperson')
+                    params:
+                    {
+                        'smap1.pv_cdunieco'     : inputCdunieco,
+                        'smap1.pv_cdramo'       : inputCdramo,
+                        'smap1.pv_estado'       : inputEstado,
+                        'smap1.pv_nmpoliza'     : inputNmpoliza,
+                        'smap1.pv_nmsituac'     : record.get('nmsituac'),
+                        'smap1.pv_cdperson'     : record.get('cdperson'),
+                        'smap1.pv_cdrol'        : record.get('cdrol'),
+                        'smap1.nombreAsegurado' : record.get('nombre')+' '+record.get('segundo_nombre')+' '+record.get('Apellido_Paterno')+' '+record.get('Apellido_Materno'),
+                        'smap1.cdrfc'           : record.get('cdrfc')
                     }
                 });
 	        },
@@ -601,7 +606,7 @@
 	        buttons:[
 	            {
 	            	text:'Regresar',
-	            	icon: 'resources/extjs4/resources/ext-theme-neptune/images/toolbar/scroll-left.png',
+	            	icon: contexto+'/resources/extjs4/resources/ext-theme-neptune/images/toolbar/scroll-left.png',
 	            	handler:function()
 	            	{
 	            		Ext.create('Ext.form.Panel').submit({
@@ -618,7 +623,7 @@
 	            },
 	            {
 	            	text:'Guardar',
-	            	icon: 'resources/extjs4/resources/ext-theme-classic/images/icons/fam/accept.png',
+	            	icon: contexto+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/accept.png',
 	            	handler:function(){
 	            		if(Ext.getCmp('form1').getForm().isValid())
 	            		{

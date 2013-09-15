@@ -20,6 +20,10 @@ public class GeneradorCampos {
     private Item items;
     private Item fields;
     private String context;
+    private String cdgarant;
+    private String cdramo;
+    private String cdrol;
+    private String cdtipsit;
     
     public GeneradorCampos(String context)
     {
@@ -49,12 +53,15 @@ public class GeneradorCampos {
         String type="string";
         if(ta.getSwformat().equals("A"))
             type="string";
-        else if(ta.getSwformat().equals("N")||ta.getSwformat().equals("P"))
-            type="numeric";
+        else if(ta.getSwformat().equals("N"))
+            type="int";
+        else if(ta.getSwformat().equals("P"))
+        	type="float";
         else if(ta.getSwformat().equals("F"))
             type="date";
-        //fi.add(Item.crear("type", type));
-        //fi.add(Item.crear("type", "string"));
+        fi.add(Item.crear("type", type));
+        if(ta.getSwformat().equals("F"))
+        	fi.add(Item.crear("dateFormat", "d/m/Y"));
         
         Item it=new Item();
         if(ta.getOttabval()!=null&&!ta.getOttabval().isEmpty())
@@ -75,26 +82,46 @@ public class GeneradorCampos {
             Item store=new Item(null,null,Item.OBJ,"store:Ext.create('Ext.data.Store',{","})");
             it.add(store);
             store.add("model","Generic");
-            store.add("autoLoad",true);
+            store.add("autoLoad",true);//debe ser true!
             Item proxy=new Item("proxy",null,Item.OBJ);
             store.add(proxy);
             proxy.add("type","ajax");
             if(ta.getType().equals(Tatri.TATRISIT))
             {
-            	proxy.add("url",this.context+"jsonObtenCatalogoGenerico.action");
+            	proxy.add("url",this.context+"/jsonObtenCatalogoGenerico.action");
+            	proxy.add(
+                        Item.crear("extraParams", null, Item.OBJ)
+                        .add("cdatribu",ta.getCdatribu())
+                        );
             }
             else if(ta.getType().equals(Tatri.TATRIPOL))
             {
-            	proxy.add("url",this.context+"jsonObtenCatalogoGenericoPol.action");
+            	proxy.add("url",this.context+"/jsonObtenCatalogoGenericoPol.action");
+            	proxy.add(
+                        Item.crear("extraParams", null, Item.OBJ)
+                        .add("cdatribu",ta.getCdatribu())
+                        );
             }
             else if(ta.getType().equals(Tatri.TATRIGAR))
             {
-            	proxy.add("url",this.context+"jsonObtenCatalogoGenericoGar.action");
+            	proxy.add("url",this.context+"/jsonObtenCatalogoGenericoGar.action");
+            	proxy.add(
+                        Item.crear("extraParams", null, Item.OBJ)
+                        .add("cdatribu",ta.getCdatribu())
+                        .add("cdgarant",cdgarant)
+                        );
             }
-            proxy.add(
-                    Item.crear("extraParams", null, Item.OBJ)
-                    .add("cdatribu",ta.getCdatribu())
-                    );
+            else if(ta.getType().equals(Tatri.TATRIPER))
+            {
+            	proxy.add("url",this.context+"/jsonObtenCatalogoGenericoPer.action");
+            	proxy.add(
+                        Item.crear("extraParams", null, Item.OBJ)
+                        .add("cdramo"  ,cdramo)
+                        .add("cdrol"   ,cdrol)
+                        .add("cdatribu",ta.getCdatribu())
+                        .add("cdtipsit",cdtipsit)
+                        );
+            }
             proxy.add(
                     Item.crear("reader", null, Item.OBJ)
                     .add("type","json")
@@ -230,5 +257,37 @@ public class GeneradorCampos {
     public void setFields(Item fields) {
         this.fields = fields;
     }
+
+	public String getCdgarant() {
+		return cdgarant;
+	}
+
+	public void setCdgarant(String cdgarant) {
+		this.cdgarant = cdgarant;
+	}
+
+	public String getCdramo() {
+		return cdramo;
+	}
+
+	public void setCdramo(String cdramo) {
+		this.cdramo = cdramo;
+	}
+
+	public String getCdrol() {
+		return cdrol;
+	}
+
+	public void setCdrol(String cdrol) {
+		this.cdrol = cdrol;
+	}
+
+	public String getCdtipsit() {
+		return cdtipsit;
+	}
+
+	public void setCdtipsit(String cdtipsit) {
+		this.cdtipsit = cdtipsit;
+	}
     
 }

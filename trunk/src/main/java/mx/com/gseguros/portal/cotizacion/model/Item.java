@@ -157,14 +157,14 @@ public class Item
         String s=null;
         if(this.type==Item.ATR)//xtype:formfield
         {
-            if(this.value.getClass().equals(String.class))
-            {
-                s=this.key+":"+this.quotes+this.value+this.quotes;
-            }
-            else
-            {
-                s=this.key+":"+this.value;
-            }
+	        if(this.value.getClass().equals(String.class))
+	        {
+	            s=this.key+":"+this.quotes+this.value+this.quotes;
+	        }
+	        else
+	        {
+	            s=this.key+":"+this.value;
+	        }
         }
         else if(this.type==Item.ARR)//items:[...]
         {

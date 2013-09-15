@@ -227,6 +227,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 			smap1.put("pv_cdtipsit_i",datUsu.getCdtipsit());
 			List<Tatri>listTatri=kernelManager.obtenerTatrigar(smap1);
 			GeneradorCampos genCam=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			genCam.setCdgarant(smap1.get("pv_cdgarant_i"));
 			genCam.genera(listTatri);
 			str1=genCam.getFields().toString();
 			str2=genCam.getItems().toString();
@@ -328,30 +329,42 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 	{
 		try
 		{
-			/*List<Tatri>tatriper=kernelManager.obtenerTatriper(smap1);
+			UserVO usuSes=(UserVO) session.get("USUARIO");
+			DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usuSes.getUser());
+			
+			Map<String,String>paramTatriper=new HashMap<String,String>(0);
+			paramTatriper.put("pv_cdramo_i"   , smap1.get("pv_cdramo"));
+			paramTatriper.put("pv_cdrol_i"    , smap1.get("pv_cdrol"));
+			paramTatriper.put("pv_cdtipsit_i" , datUsu.getCdtipsit());
+			List<Tatri>tatriper=kernelManager.obtenerTatriper(paramTatriper);
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			gc.setCdrol(smap1.get("pv_cdrol"));
+			gc.setCdramo(smap1.get("pv_cdramo"));
+			gc.setCdtipsit(datUsu.getCdtipsit());
 			gc.genera(tatriper);
 			item1=gc.getFields();
-			item2=gc.getItems();*/
-			item1=Item.crear("fields",null,Item.ARR)//quitame
+			item2=gc.getItems();
+			/*item1=Item.crear("fields",null,Item.ARR)//quitame
 					.add(Item.crear(null,null,Item.OBJ).add("name","parametros.pv_otvalor01"))//quitame
 					.add(Item.crear(null,null,Item.OBJ).add("name","parametros.pv_otvalor02"))//quitame
 					.add(Item.crear(null,null,Item.OBJ)//quitame
 							.add("name"       , "parametros.pv_otvalor03")//quitame
 							.add("type"       , "date")//quitame
 							.add("dateFormat" , "d/m/Y")//quitame
-							)//generador campos
+							)//generador campos*/
+			item1
 					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.asegurado"))
 					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.rfc"))
 					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.telefono"))
-					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.calle"))
-					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.interior"))
-					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.exterior"))
-					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.colonia"))
-					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.telefono"))
-					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.delegacion"))
+					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.codigoPostal"))
 					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.ciudad"))
+					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.delegacion"))
+					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.colonia"))
+					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.calle"))
+					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.exterior"))
+					.add(Item.crear(null,null,Item.OBJ).add("name","smap1.interior"))
 					;
+			/*
 			item2=Item.crear("items",null,Item.ARR)//generador campos
 					.add(Item.crear(null,null,Item.OBJ)//quitame
 							.add("name"       , "parametros.pv_otvalor01")//quitame
@@ -369,7 +382,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 							.add("format"       , "d/m/Y")//quitame
 							.add("allowBlank" , false)//quitame
 							)//generador campos
-					;
+					;*/
 		}
 		catch(Exception ex)
 		{
@@ -392,9 +405,37 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 				+ "\n######                              ######");
 		try
 		{
+			
+			UserVO usuSes=(UserVO)session.get("USUARIO");
+			DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usuSes.getUser());
+			
 			log.debug(smap1);
 			/*
-			Map<String,Object>parametrosCargados=kernelManager.obtenerValoresTatriper(smap1);
+			pv_cdunieco_i  smap1 ready!
+            pv_cdramo_i    smap1 ready!
+            pv_estado_i    smap1 ready!
+            pv_nmpoliza_i  smap1 ready!
+            pv_nmsituac_i  smap1 ready!
+            pv_cdrol_i     smap1 ready!
+            pv_cdperson_i  smap1 ready!
+            pv_nmsumplem_i #0
+            pv_status_i    #V    QUITADO X(
+            pv_cdtipsit_i  session
+           */
+			smap1.put("pv_nmsuplem_i" , "0");
+			//smap1.put("pv_status_i"   , "V");
+			smap1.put("pv_cdtipsit_i" ,  datUsu.getCdtipsit());
+			Map<String,Object>parametrosCargados=null;
+			try
+			{
+				parametrosCargados=kernelManager.obtenerValoresTatriper(smap1);
+			}
+			catch(Exception ex)
+			{
+				log.debug("no hay valores para tatriper",ex);
+				parametrosCargados=new HashMap<String,Object>(0);
+			}
+			parametros=new HashMap<String,String>(0);
 			Iterator<Entry<String, Object>> it=parametrosCargados.entrySet().iterator();
 			while(it.hasNext())
 			{
@@ -402,22 +443,24 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 				parametros.put("pv_"+entry.getKey(), (String)entry.getValue());
 			}
 			log.debug(parametros);
-			*/
-			parametros=new HashMap<String,String>(0);//quitame
+			/*parametros=new HashMap<String,String>(0);//quitame
 			parametros.put("pv_otvalor01", "valor1");//quitame
 			parametros.put("pv_otvalor02", "valor2");//quitame
-			parametros.put("pv_otvalor03", "17/08/1990");//quitame
+			parametros.put("pv_otvalor03", "17/08/1990");//quitame*/
 			
+			String nombreAsegurado = smap1.get("nombreAsegurado");
+			String rfcAsegurado    = smap1.get("cdrfc");
 			smap1=new HashMap<String,String>(0);
-			smap1.put("asegurado" , "Alvaro Jair");
-			smap1.put("rfc"       , "MAVA900817");
-			smap1.put("telefono"  , "012464666589");
-			smap1.put("calle"     , "Zaragoza");
-			smap1.put("interior"  , "3");
-			smap1.put("exterior"  , "B");
-			smap1.put("colonia"   , "Acuitlapilco");
-			smap1.put("delegacion", "tlaxcala");
-			smap1.put("ciudad"    , "Tlaxcala");
+			smap1.put("asegurado"    , nombreAsegurado);
+			smap1.put("rfc"          , rfcAsegurado);
+			smap1.put("telefono"     , "012464666589");
+			smap1.put("codigoPostal" , "99999");
+			smap1.put("ciudad"       , "Tlaxcala");
+			smap1.put("delegacion"   , "tlaxcala");
+			smap1.put("colonia"      , "Acuitlapilco");
+			smap1.put("calle"        , "Zaragoza");
+			smap1.put("exterior"     , "B");
+			smap1.put("interior"     , "3");
 			
 			success=true;
 		}
@@ -446,6 +489,30 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 		{
 			log.debug(smap1);
 			log.debug(parametros);
+			UserVO usuSes=(UserVO)session.get("USUARIO");
+			DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usuSes.getUser());
+			
+			/*
+			pv_cdunieco    smap1  ready!
+			pv_cdramo      smap1  ready!
+			pv_estado      smap1  ready!
+			pv_nmpoliza    smap1  ready!
+			pv_nmsituac    smap1  ready!
+			pv_nmsuplem    #0
+			pv_status      #V
+			pv_cdrol       smap1  ready!
+			pv_cdperson    smap1  ready!
+			pv_cdatribu    #null
+			pv_cdtipsit    session
+			pv_otvalor01   parametros ready!
+			...
+			*/
+			parametros.putAll(smap1);
+			parametros.put("pv_nmsuplem" , "0");
+			parametros.put("pv_status"   , "0");
+			parametros.put("pv_cdatribu" , null);
+			parametros.put("pv_cdtipsit" , datUsu.getCdtipsit());
+			kernelManager.pMovTvaloper(parametros);
 			success=true;
 		}
 		catch(Exception ex)

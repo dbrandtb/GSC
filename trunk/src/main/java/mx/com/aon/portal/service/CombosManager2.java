@@ -57,6 +57,8 @@ public interface CombosManager2 {
         
     public List obtenComboDependienteOverride(String codigoTablaDependiente,String valorTablaPadre,String valantant) throws ApplicationException;
 
-    public List obtenCatalogoGar(String producto, String cdramo, String cdatribu, String otval) throws ApplicationException;
+    public List obtenCatalogoGar(String cdramo, String cdtipsit, String cdgarant, String cdatribu, String valant) throws ApplicationException;
+    
+    public List obtenCatalogoPer(String cdramo, String cdrol, String cdatribu, String cdtipsit, String valant) throws ApplicationException;
 	
 }

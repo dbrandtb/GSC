@@ -32,6 +32,7 @@ Ext.define('GeBaseTabuladorReembolso',                  {extend:'Generic'});//13
 Ext.define('GeCostoEmergenciaExtranjero',               {extend:'Generic'});//14
 Ext.define('GeCobElimPenCambioZona',                    {extend:'Generic'});//15
 Ext.define('GeRol',                                     {extend:'Generic'});//16
+Ext.define('GeMunicipio',                               {extend:'Generic'});//17
 
 Ext.define('IncisoSalud',
 {

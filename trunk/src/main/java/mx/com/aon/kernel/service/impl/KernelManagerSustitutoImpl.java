@@ -340,6 +340,30 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return res;
     }
     
+    public WrapperResultados pMovTvaloper(Map<String, String> parameters) throws ApplicationException
+    {
+    	String[] inputKeys=new String[]{
+				"pv_cdunieco","pv_cdramo","pv_estado","pv_nmpoliza","pv_nmsituac","pv_nmsuplem","pv_status","pv_cdrol","pv_cdperson","pv_cdatribu","pv_cdtipsit",
+                "pv_otvalor01","pv_otvalor02","pv_otvalor03","pv_otvalor04","pv_otvalor05","pv_otvalor06","pv_otvalor07","pv_otvalor08","pv_otvalor09","pv_otvalor10",
+                "pv_otvalor11","pv_otvalor12","pv_otvalor13","pv_otvalor14","pv_otvalor15","pv_otvalor16","pv_otvalor17","pv_otvalor18","pv_otvalor19","pv_otvalor20",
+                "pv_otvalor21","pv_otvalor22","pv_otvalor23","pv_otvalor24","pv_otvalor25","pv_otvalor26","pv_otvalor27","pv_otvalor28","pv_otvalor29","pv_otvalor30",
+                "pv_otvalor31","pv_otvalor32","pv_otvalor33","pv_otvalor34","pv_otvalor35","pv_otvalor36","pv_otvalor37","pv_otvalor38","pv_otvalor39","pv_otvalor40",
+                "pv_otvalor41","pv_otvalor42","pv_otvalor43","pv_otvalor44","pv_otvalor45","pv_otvalor46","pv_otvalor47","pv_otvalor48","pv_otvalor49","pv_otvalor50"
+		};
+    	for(String key:inputKeys)
+    	{
+    		if(!parameters.containsKey(key))
+    		{
+    			parameters.put(key, null);
+    		}
+    	}
+    	log.debug("### kernel sustituto pMovTvaloper map: "+parameters);
+        WrapperResultados res=this.returnBackBoneInvoke(parameters, ProcesoDAO.P_MOV_TVALOPER);
+        log.debug("### kernel sustituto pMovTvaloper id:"+res.getMsgId());
+        log.debug("### kernel sustituto pMovTvaloper mesage:"+res.getMsgText());
+        return res;
+    }
+    
     //requiere de su propio catch si no hay datos:
     public Map<String,Object> pGetTvalopol(Map<String,String> parameters) throws ApplicationException {
         log.debug("### kernel sustituto pGetTvalopol map: "+parameters);

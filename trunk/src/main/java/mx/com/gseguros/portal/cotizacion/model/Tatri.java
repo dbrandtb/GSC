@@ -4,6 +4,7 @@ public class Tatri {
 	public static final String TATRISIT=	"1";
 	public static final String TATRIPOL=	"2";
 	public static final String TATRIGAR=	"3";
+	public static final String TATRIPER=	"4";
 	private String cdatribu;
     private String swformat;
     private String nmlmin;
