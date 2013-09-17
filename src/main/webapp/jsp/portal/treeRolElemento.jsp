@@ -24,7 +24,7 @@
 <!--<script type="text/javascript" src="${ctx}/resources/extjs/adapter/ext/ext-base.js"></script>
 <script type="text/javascript" src="${ctx}/resources/extjs/ext-all.js"></script><!-- jtezva comentado -->
     
-<link rel="stylesheet" href="${ctx}\resources\extjs4\resources\css\ext-all.css"><!-- jtezva agregado -->
+<link rel="stylesheet" href="${ctx}/resources/extjs4/resources/my-custom-theme/my-custom-theme-all.css"><!-- jtezva agregado -->
 <script type="text/javascript" src="${ctx}/resources/extjs4/ext-all-debug.js"></script><!-- jtezva agregado -->
 <script type="text/javascript" src="${ctx}/resources/scripts/util/AON_utils.js"></script>
 <script type="text/javascript">
