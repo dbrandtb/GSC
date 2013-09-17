@@ -1314,6 +1314,8 @@ Ext.onReady(function(){
                 text:'Nueva cotizaci&oacute;n',
                 handler:function()
                 {
+                	gridIncisos.hayTitular=false;
+                	gridIncisos.hayConyugue=false;
                     bloquearFormulario(false);
                     formPanel.getForm().reset();
                     gridResultados.hide();
@@ -1979,6 +1981,15 @@ Ext.onReady(function(){
         },
 
         onRemoveClick: function(grid, rowIndex){
+        	var record=this.getStore().getAt(rowIndex);
+        	if(record.get('rol')=='T'||(typeof record.get('rol')=='object'&& record.get('rol').get('key')=='T'))
+    		{
+        		gridIncisos.hayTitular=false;
+    		}
+        	else if(record.get('rol')=='C'||(typeof record.get('rol') == 'object'&&record.get('rol').get('key')=='C'))
+    		{
+        		gridIncisos.hayConyugue=false;
+    		}
             this.getStore().removeAt(rowIndex);
         }
     });
