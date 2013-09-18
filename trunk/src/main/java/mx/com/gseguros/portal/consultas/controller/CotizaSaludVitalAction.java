@@ -1,5 +1,7 @@
 package mx.com.gseguros.portal.consultas.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -17,6 +19,10 @@ import mx.com.aon.portal.service.NavigationManager;
 import mx.com.aon.portal.service.UsuarioManager;
 import mx.com.aon.portal.service.principal.PrincipalManager;
 import mx.com.gseguros.utils.Constantes;
+import mx.com.gseguros.ws.client.Ice2sigsWebServices;
+import mx.com.gseguros.ws.client.Ice2sigsWebServices.Operacion;
+import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteSalud;
+import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteSaludRespuesta;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
@@ -33,7 +39,7 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
 	 */
 	private static final long serialVersionUID = 7885456537983878685L;
 
-	private org.apache.log4j.Logger logger =org.apache.log4j.Logger.getLogger(CotizaSaludVitalAction.class);
+	private static org.apache.log4j.Logger logger =org.apache.log4j.Logger.getLogger(CotizaSaludVitalAction.class);
 	
 	
 	public static String DEFAULT_DATE_FORMAT_PARAM = "defaultDateFormat";
@@ -64,6 +70,55 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
     
     private List<RamaVO> listaRolCliente;
     private List<UserVO> userList;
+
+    
+    /**
+     * Obtiene los datos generales de una p&oacute;liza
+     * @return String result
+     */
+    public String pruebaWSweblogic(){
+    	logger.debug(" **** Entrando a pruebaWSweblogic ****");
+    	try {
+    		
+    		Ice2sigsWebServices serv = new Ice2sigsWebServices();
+    		
+    		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(sdf.parse("15/06/1986"));
+			
+			AgenteSalud agente = new AgenteSalud();
+			agente.setClaAge("asd57AJFDG");
+			agente.setConPro("1");
+			agente.setCveFia("AS86A87");
+			agente.setFecIng(cal);
+			agente.setFecReg(cal);
+			agente.setIniFia(cal);
+			agente.setNomFia("nomfia");
+			agente.setNumAge(5656);
+			agente.setOfiAge(54);
+			agente.setProAge(72);
+			agente.setRegAge(8);
+			agente.setSucAge(17);
+			agente.setTerFia(cal);
+			agente.setTipAge(2);
+			agente.setUsrReg("usrreg");
+			
+			AgenteSaludRespuesta resp = serv.ejecutaAgenteSaludGS(Operacion.CONSULTA, agente);
+			
+			logger.debug("Codigo respuesta: "+ resp.getCodigo());
+			logger.debug("Mensaje respuesta: "+ resp.getMensaje());
+			logger.debug("Entidad respuesta: "+ resp.getAgenteSalud().getFecIng().getTime());
+			
+    	}catch( Exception e){
+    		logger.error("Error en pruebaWSweblogic", e);
+    		return SUCCESS;
+    	}
+    	
+    	success = true;
+    	return SUCCESS;
+    }
+    
+    
     /**
      * Obtiene los datos generales de una p&oacute;liza
      * @return String result
