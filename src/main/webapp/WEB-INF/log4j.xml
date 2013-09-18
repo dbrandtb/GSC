@@ -28,7 +28,7 @@
     </appender>
    <appender name="apache" class="org.apache.log4j.DailyRollingFileAppender">
        <param name="File" value="/opt/ice/gseguros/icebroker/logs/APACHE.log" />
-        <param name="Threshold" value="info" />
+        <param name="Threshold" value="debug" />
         <param name="append" value="false" />
         <param name="DatePattern" value="'.'yyyy-MM-dd" />
         <layout class="org.apache.log4j.PatternLayout">
@@ -47,10 +47,11 @@
         <appender-ref ref="stdout" />
     </logger>
     <logger name="org.springframework.jdbc">
-        <level value="debug,info,warn,error,fatal" />
+        <level value="TRACE" />
         <appender-ref ref="app" />
         <appender-ref ref="stdout" />
     </logger>
+
 
     <logger name="org.aspectj.weaver">
         <level value="debug,info,warn,error,fatal" />
@@ -63,9 +64,13 @@
         <appender-ref ref="sql" />
         <appender-ref ref="stdout" />
     </logger>
-    <logger name="org.apache">
-        <level value="debug,info,warn,error,fatal" />
+    <logger name="org.apache" additivity="false">
+        <level value="INFO" />
         <appender-ref ref="apache" />
+    </logger>
+    <logger name="org.apache.axis2">
+        <level value="INFO" />
+        <appender-ref ref="app" />
         <appender-ref ref="stdout" />
     </logger>
   

@@ -295,6 +295,58 @@
             <version>1.4</version>
         </dependency>
 
+
+        <!-- PARA AXIS2 -->
+        <dependency>
+            <groupId>org.apache.axis2</groupId>
+            <artifactId>axis2</artifactId>
+            <version>1.6.2</version>
+        </dependency>
+       
+       <!-- <dependency>
+            <groupId>org.apache.axis2</groupId>
+            <artifactId>axis2-kernel</artifactId>
+            <version>1.6.2</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>servlet-api</artifactId>
+                    <groupId>javax.servlet</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency> -->
+       
+        <dependency>
+            <groupId>org.apache.axis2</groupId>
+            <artifactId>axis2-transport-local</artifactId>
+            <version>1.6.2</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>servlet-api</artifactId>
+                    <groupId>javax.servlet</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.axis2</groupId>
+            <artifactId>axis2-transport-http</artifactId>
+            <version>1.6.2</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.apache.axis2</groupId>
+            <artifactId>axis2-adb</artifactId>
+            <version>1.6.2</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>servlet-api</artifactId>
+                    <groupId>javax.servlet</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        
+        <!-- FIN PARA AXIS2 -->
+
+
         <dependency>
             <groupId>com.wittyconsulting.backbone</groupId>
             <artifactId>backbone-light</artifactId>
