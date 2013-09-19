@@ -1,8 +1,8 @@
-<%@ include file="/taglibs.jsp"%>
+<%@ include file="/taglibs_deprecated.jsp"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
     "http://www.w3.org/TR/html4/loose.dtd">
     
-    <!-- pagina para decorator "default2": -->
+    <!-- pagina para decorator "default2_deprecated": -->
     
 <html>
 <head> 
