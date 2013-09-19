@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.cotizacion.controller;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
@@ -29,14 +30,10 @@ public class ScreenInterceptor {
 			ComplementariosAction a=(ComplementariosAction)action;
 			if(a.getSession()==null
                             ||a.getSession().get("USUARIO")==null
-                            ||a.getCdunieco()==null
-                            ||a.getCdunieco().isEmpty()
-                            ||a.getCdramo()==null
-                            ||a.getCdramo().isEmpty()
-                            ||a.getEstado()==null
-                            ||a.getEstado().isEmpty()
-                            ||a.getNmpoliza()==null
-                            ||a.getNmpoliza().isEmpty()
+                            ||StringUtils.isBlank(a.getCdunieco())
+                            ||StringUtils.isBlank(a.getCdramo())
+                            ||StringUtils.isBlank(a.getEstado())
+                            ||StringUtils.isBlank(a.getNmpoliza())
                             )
 			{
 				return "denied";

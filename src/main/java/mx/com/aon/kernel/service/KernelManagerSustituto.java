@@ -29,6 +29,7 @@ public interface KernelManagerSustituto {
     public List<SituacionVO> clonaSituaciones(Map<String,String> parameters) throws ApplicationException;
     public WrapperResultados coberturas(Map<String,String> parameters) throws ApplicationException;
     public WrapperResultados ejecutaASIGSVALIPOL(Map<String,String> parameters) throws ApplicationException;
+    public WrapperResultados ejecutaASIGSVALIPOL_EMI(Map<String,String> parameters) throws ApplicationException;
     public WrapperResultados clonaPersonas(Map<String,Object> parameters) throws ApplicationException;
     public List<ResultadoCotizacionVO> obtenerResultadosCotizacion(Map<String,String> parameters) throws ApplicationException;
     public List<CoberturaCotizacionVO> obtenerCoberturas(Map<String,String> parameters) throws ApplicationException;
@@ -36,7 +37,7 @@ public interface KernelManagerSustituto {
     public List<Tatri> obtenerTatrisit(String cdtipsit) throws ApplicationException;
     public List<Tatri> obtenerTatripol(String[] args) throws ApplicationException;
     public DatosUsuario obtenerDatosUsuario(String cdusuario) throws ApplicationException;
-    public WrapperResultados movDetalleSuplemento(Map<String,String> parameters) throws ApplicationException;
+    public WrapperResultados movDetalleSuplemento(Map<String,Object> parameters) throws ApplicationException;
     public WrapperResultados comprarCotizacion(Map<String,String> parameters) throws ApplicationException;
     public Map<String,Object> getInfoMpolizas(Map<String,Object>parameters) throws ApplicationException;
     public List<GenericVO> getTmanteni(String tabla) throws ApplicationException;
@@ -61,4 +62,5 @@ public interface KernelManagerSustituto {
 	//requiere de su propio catch si no hay datos:
 	public Map<String, Object> obtenerValoresTatriper(Map<String, String> smap1) throws ApplicationException;
 	public Map<String, String> obtenerDomicilio(Map<String, String> params) throws ApplicationException;
+	public WrapperResultados pMovMdomicil(Map<String, String> paramDomicil) throws ApplicationException;
 }

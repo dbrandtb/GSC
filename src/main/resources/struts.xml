@@ -431,6 +431,9 @@
                 <action name="guardarPantallaDomicilio" class="beanDatosComplementariosCoberturas" method="guardarPantallaDomicilio">
                     <result name="success" type="json" />
                 </action>
+                <action name="recotizar" class="beanDatosComplementarios" method="retarificar">
+                    <result name="success" type="json" />
+                </action>
     </package>
 
 </struts>

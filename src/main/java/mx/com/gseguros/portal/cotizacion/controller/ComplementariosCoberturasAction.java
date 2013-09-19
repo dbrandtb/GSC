@@ -14,6 +14,7 @@ import org.apache.struts2.ServletActionContext;
 import org.springframework.jdbc.core.SqlParameter;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
+import mx.com.aon.kernel.service.KernelManager;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
@@ -201,6 +202,54 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 				
 				i++;
 			}
+			
+			//////////////////////////////////////////////////////
+			////// borrar coberturas que vienen en la lista //////
+			////// de borrar slist2                         //////
+			/*//////////////////////////////////////////////////*/
+			i=1;
+			for(Map<String,String> cob:slist2)
+			{
+				/**poligar
+				PL:
+				pv_cdunieco_i   smap1 ready!
+	            pv_cdramo_i     smap1 ready!
+				pv_estado_i     smap1 ready!
+				pv_nmpoliza_i   smap1 ready!
+				pv_nmsituac_i   smap1 ready!
+				pv_cdgarant_i   iterado GARANTIA
+				pv_nmsuplem_i   #0
+				pv_cdcapita_i   iterado CDCAPITA
+				pv_status_i     iterado status
+				pv_cdtipbca_i   iterado cdtipbca
+				pv_ptvalbas_i   iterado ptvalbas
+				pv_swmanual_i   iterado swmanual
+				pv_swreas_i     iterado swreas
+				pv_cdagrupa_i   iterado cdagrupa
+				PV_ACCION       #I
+				*/
+				Map<String,String>mapPoligarIterado=new HashMap<String,String>(0);
+				mapPoligarIterado.putAll(smap1);
+				mapPoligarIterado.put("pv_cdgarant_i", cob.get("GARANTIA"));
+				mapPoligarIterado.put("pv_nmsuplem_i", "0");
+				mapPoligarIterado.put("pv_cdcapita_i", cob.get("CDCAPITA"));
+				mapPoligarIterado.put("pv_status_i",   cob.get("status"));
+				mapPoligarIterado.put("pv_cdtipbca_i", cob.get("cdtipbca"));
+				mapPoligarIterado.put("pv_ptvalbas_i", cob.get("ptvalbas"));
+				mapPoligarIterado.put("pv_swmanual_i", cob.get("swmanual"));
+				mapPoligarIterado.put("pv_swreas_i",   cob.get("swreas"));
+				mapPoligarIterado.put("pv_cdagrupa_i", cob.get("cdagrupa"));
+				mapPoligarIterado.put("PV_ACCION",     "B");
+				log.debug("Iteracion #"+i+" de movPoligar");
+				kernelManager.movPoligar(mapPoligarIterado);
+				
+				i++;
+			}
+			/*//////////////////////////////////////////////////*/
+			////// borrar coberturas que vienen en la lista //////
+			////// de borrar slist2                         //////
+			//////////////////////////////////////////////////////
+			
 			success=true;
 		}
 		catch(Exception ex)
@@ -567,6 +616,43 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 			parametros.put("pv_cdatribu" , null);
 			parametros.put("pv_cdtipsit" , datUsu.getCdtipsit());
 			kernelManager.pMovTvaloper(parametros);
+			
+			
+			/////////////////////////////////////////
+			////// guardar persona datos fijos //////
+			/*/////////////////////////////////////*/
+			/*
+			pv_cdperson_i smap1.pv_cdperson
+			pv_nmorddom_i smap1.NMORDDOM
+			pv_msdomici_i smap1.DSDOMICI
+			pv_nmtelefo_i smap1.NMTELEFO
+			pv_cdpostal_i smap1.CODPOSTAL
+			pv_cdedo_i    smap1.CDEDO
+			pv_cdmunici_i smap1.CDMUNICI
+			pv_cdcoloni_i smap1.CDCOLONI
+			pv_nmnumero_i smap1.NMNUMERO
+			pv_nmnumint_i smap1.NMNUMINT
+			pv_accion_i   #U
+			pv_msg_id_o   -
+			pv_title_o    -
+			*/
+			Map<String,String>paramDomicil=new LinkedHashMap<String,String>(0);
+			paramDomicil.put("pv_cdperson_i" , smap1.get("pv_cdperson"));
+			paramDomicil.put("pv_nmorddom_i" , smap1.get("NMORDDOM"));
+			paramDomicil.put("pv_msdomici_i" , smap1.get("DSDOMICI"));
+			paramDomicil.put("pv_nmtelefo_i" , smap1.get("NMTELEFO"));
+			paramDomicil.put("pv_cdpostal_i" , smap1.get("CODPOSTAL"));
+        	paramDomicil.put("pv_cdedo_i"    , smap1.get("CDEDO"));
+			paramDomicil.put("pv_cdmunici_i" , smap1.get("CDMUNICI"));
+			paramDomicil.put("pv_cdcoloni_i" , smap1.get("CDCOLONI"));
+			paramDomicil.put("pv_nmnumero_i" , smap1.get("NMNUMERO"));
+			paramDomicil.put("pv_nmnumint_i" , smap1.get("NMNUMINT"));
+			paramDomicil.put("pv_accion_i"   , "U");			
+			kernelManager.pMovMdomicil(paramDomicil);
+			
+			/*/////////////////////////////////////*/
+			////// guardar persona datos fijos //////
+			/////////////////////////////////////////
 			success=true;
 		}
 		catch(Exception ex)

@@ -21,10 +21,15 @@ import org.apache.struts2.ServletActionContext;
 import org.springframework.jdbc.core.SqlParameter;
 
 import mx.com.aon.catweb.configuracion.producto.model.WrapperResultados;
+import mx.com.aon.configurador.pantallas.model.components.GridVO;
 import mx.com.aon.core.web.PrincipalCoreAction;
+import mx.com.aon.flujos.cotizacion.model.ResultadoCotizacionVO;
+import mx.com.aon.flujos.cotizacion.service.impl.CotizacionManagerImpl;
+import mx.com.aon.flujos.cotizacion.web.ResultadoCotizacionAction;
 import mx.com.aon.flujos.cotizacion4.web.ResultadoCotizacion4Action;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.Tatri;
 import mx.com.gseguros.portal.general.util.ConstantesCatalogos;
@@ -69,6 +74,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 	private Map<String,Object> omap1;
 	private String cdperson;
 	private List<Map<String,String>>slist1;
+	private GridVO gridResultados;
 
 	public String mostrarPantalla()
 	/*
@@ -351,8 +357,8 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 					.add(new Item("header", "Rol"))
 					.add(new Item("dataIndex", "cdrol"))
 					.add(new Item("flex", 1))
-					.add(Item.crear("renderer","rendererRol").setQuotes(""))
-					.add(Item.crear("editor","editorRoles").setQuotes(""))
+					.add(Item.crear("renderer","rendererRolp2").setQuotes(""))
+					.add(Item.crear("editor","editorRolesp2").setQuotes(""))
 					);
 			item2.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("header", "Nombre"))
@@ -394,15 +400,15 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 					.add(new Item("header", "Fecha de nacimiento"))
 					.add(new Item("dataIndex", "fenacimi"))
 					.add(new Item("flex", 1))
-					.add(Item.crear("editor","editorFecha").setQuotes(""))
+					.add(Item.crear("editor","editorFechap2").setQuotes(""))
 					.add(Item.crear("renderer","Ext.util.Format.dateRenderer('d M Y')").setQuotes(""))
 					);
 			item2.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("header", "Sexo"))
 					.add(new Item("dataIndex", "sexo"))
 					.add(new Item("flex", 1))
-					.add(Item.crear("renderer","rendererSexo").setQuotes(""))
-					.add(Item.crear("editor","editorGeneros").setQuotes(""))
+					.add(Item.crear("renderer","rendererSexop2").setQuotes(""))
+					.add(Item.crear("editor","editorGenerosp2").setQuotes(""))
 					);
 			item2.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("header", "RFC"))
@@ -616,6 +622,129 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			log.error("Error al obtener el detalle de cotizacion",ex);
 			success=false;
 		}
+		return SUCCESS;
+	}
+	
+	public String retarificar()
+	{
+		log.debug(""
+				+ "\n#########################"
+				+ "\n#########################"
+				+ "\n######             ######"
+				+ "\n###### retarificar ######"
+				+ "\n######             ######"
+				);
+		try
+		{
+			
+			UserVO usuario=(UserVO)session.get("USUARIO");
+			DatosUsuario datosUsuario=kernelManager.obtenerDatosUsuario(usuario.getUser());
+			
+			////////////////////////////////
+			////// retarifica         //////
+			/*////////////////////////////*/
+			Map<String,String> mapaTarificacion=new HashMap<String,String>(0);
+	        mapaTarificacion.put("pv_cdusuari_i",   usuario.getUser());
+	        mapaTarificacion.put("pv_cdelemen_i",   usuario.getEmpresa().getElementoId());
+	        mapaTarificacion.put("pv_cdunieco_i",   datosUsuario.getCdunieco());
+	        mapaTarificacion.put("pv_cdramo_i",     datosUsuario.getCdramo());
+	        mapaTarificacion.put("pv_estado_i",     "W");
+	        mapaTarificacion.put("pv_nmpoliza_i",   panel1.get("nmpoliza"));
+	        mapaTarificacion.put("pv_nmsituac_i",   "0");
+	        mapaTarificacion.put("pv_nmsuplem_i",   "0");
+	        mapaTarificacion.put("pv_cdtipsit_i",   datosUsuario.getCdtipsit());
+	        mx.com.aon.portal.util.WrapperResultados wr4=kernelManager.ejecutaASIGSVALIPOL_EMI(mapaTarificacion);
+	        /*////////////////////////////*/
+	        ////// retarifica         //////
+	        ////////////////////////////////
+	        
+			///////////////////////////////////
+			////// Generacion cotizacion //////
+			/*///////////////////////////////*
+			Map<String,String> mapaDuroResultados=new HashMap<String,String>(0);
+			mapaDuroResultados.put("pv_cdusuari_i", usuario.getUser());
+			mapaDuroResultados.put("pv_cdunieco_i", datosUsuario.getCdunieco());
+			mapaDuroResultados.put("pv_cdramo_i",   datosUsuario.getCdramo());
+			mapaDuroResultados.put("pv_estado_i",   "W");
+			mapaDuroResultados.put("pv_nmpoliza_i", panel1.get("nmpoliza"));
+			mapaDuroResultados.put("pv_cdelemen_i", usuario.getEmpresa().getElementoId());
+			mapaDuroResultados.put("pv_cdtipsit_i", datosUsuario.getCdtipsit());
+			List<ResultadoCotizacionVO> listaResultados=kernelManager.obtenerResultadosCotizacion(mapaDuroResultados);
+			//utilizando logica anterior
+			CotizacionManagerImpl managerAnterior=new CotizacionManagerImpl();
+			gridResultados=managerAnterior.adaptarDatosCotizacion(listaResultados);
+			log.debug("### session poniendo resultados con grid: "+listaResultados.size());
+			session.put(ResultadoCotizacionAction.DATOS_GRID, gridResultados);
+			/*///////////////////////////////*/
+			////// Generacion cotizacion //////
+			///////////////////////////////////
+			
+			////////////////////////////////
+			////// obtener coberturas //////
+	        /*////////////////////////////*/
+			
+			/**
+			OBTENER INFORMACION DE POLIZAS
+			pv_cdunieco
+            pv_cdramo
+            pv_estado
+            pv_nmpoliza
+            pv_cdusuari
+            /**/
+			Map<String,String>paramObtenerPoliza=new LinkedHashMap<String,String>(0);
+			paramObtenerPoliza.put("pv_cdunieco" , datosUsuario.getCdunieco());
+			paramObtenerPoliza.put("pv_cdramo"   , datosUsuario.getCdramo());
+			paramObtenerPoliza.put("pv_estado"   , "W");
+			paramObtenerPoliza.put("pv_nmpoliza" , panel1.get("nmpoliza"));
+			paramObtenerPoliza.put("pv_cdusuari" , usuario.getUser());
+			Map<String,Object>polizaCompleta=kernelManager.getInfoMpolizasCompleta(paramObtenerPoliza);
+			log.debug("poliza a emitir: "+polizaCompleta);
+			/**/
+			
+			/**
+			OBTENER COBERTURAS
+			pv_cdunieco_i
+			pv_cdramo_i
+			pv_estado_i
+			pv_nmpoliza_i
+			pv_cdplan_i
+			pv_cdperpag_i
+			
+			out:
+			status","swestado","nmsolici","feautori","cdmotanu","feanulac",
+			"swautori","cdmoneda","feinisus","fefinsus",
+            "ottempot","feefecto","hhefecto","feproren","fevencim","nmrenova","ferecibo","feultsin","nmnumsin","cdtipcoa",
+            "swtarifi","swabrido","feemisio","cdperpag","nmpoliex","nmcuadro","porredau","swconsol","nmpolant","nmpolnva",
+            "fesolici","cdramant","cdmejred","nmpoldoc","nmpoliza2","nmrenove","nmsuplee","ttipcamc","ttipcamv","swpatent
+			*/
+			Map<String,String>paramDetallePoliza=new LinkedHashMap<String,String>(0);
+			paramDetallePoliza.put("pv_cdunieco_i" , datosUsuario.getCdunieco());
+			paramDetallePoliza.put("pv_cdramo_i"   , datosUsuario.getCdramo());
+			paramDetallePoliza.put("pv_estado_i"   , "W");
+			paramDetallePoliza.put("pv_nmpoliza_i" , panel1.get("nmpoliza"));
+			paramDetallePoliza.put("pv_cdplan_i"   , null);
+			paramDetallePoliza.put("pv_cdperpag_i" , (String) polizaCompleta.get("cdperpag"));
+			slist1=kernelManager.obtenerDetallesCotizacion(paramDetallePoliza);
+			success=true; 
+			/**/
+			/*////////////////////////////*/
+			////// obtener coberturas //////
+			////////////////////////////////
+			
+	        success=true;
+		}
+		catch(Exception ex)
+		{
+			log.debug("error al retarificar",ex);
+			success=false;
+		}
+		log.debug(""
+				+ "\n######             ######"
+				+ "\n###### retarificar ######"
+				+ "\n######             ######"
+				+ "\n#########################"
+				+ "\n#########################"
+				);
 		return SUCCESS;
 	}
 	
@@ -850,6 +979,14 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 
 	public void setSlist1(List<Map<String, String>> slist1) {
 		this.slist1 = slist1;
+	}
+
+	public GridVO getGridResultados() {
+		return gridResultados;
+	}
+
+	public void setGridResultados(GridVO gridResultados) {
+		this.gridResultados = gridResultados;
 	}
 
 }

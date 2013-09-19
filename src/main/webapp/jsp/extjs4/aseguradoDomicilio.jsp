@@ -1,27 +1,29 @@
 <%@ include file="/taglibs.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%--
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+--%>
 <script>
 ///////////////////////
 ////// variables //////
 /*///////////////////*/
-var inputCdunieco        = '<s:property value="smap1.pv_cdunieco" />';
-var inputCdramo          = '<s:property value="smap1.pv_cdramo" />';
-var inputEstado          = '<s:property value="smap1.pv_estado" />';
-var inputNmpoliza        = '<s:property value="smap1.pv_nmpoliza" />';
-var inputNmsituac        = '<s:property value="smap1.pv_nmsituac" />';
-var inputCdperson        = '<s:property value="smap1.pv_cdperson" />';
-var inputCdrol           = '<s:property value="smap1.pv_cdrol" />';
-var inputNombreasegurado = '<s:property value="smap1.nombreAsegurado" escapeHtml="false" />';
-var inputCdrfc           = '<s:property value="smap1.cdrfc" escapeHtml="false" />';
-var urlRegresar          = '<s:url namespace="/" action="editarAsegurados" />';
-var urlCargar            = '<s:url namespace="/" action="cargarPantallaDomicilio" />';
-var urlGuardar           = '<s:url namespace="/" action="guardarPantallaDomicilio" />';
-var formPanel;
-var contexto             = '${ctx}';
+var inputCduniecop4        = '<s:property value="smap1.pv_cdunieco" />';
+var inputCdramop4          = '<s:property value="smap1.pv_cdramo" />';
+var inputEstadop4          = '<s:property value="smap1.pv_estado" />';
+var inputNmpolizap4        = '<s:property value="smap1.pv_nmpoliza" />';
+var inputNmsituacp4        = '<s:property value="smap1.pv_nmsituac" />';
+var inputCdpersonp4        = '<s:property value="smap1.pv_cdperson" />';
+var inputCdrolp4           = '<s:property value="smap1.pv_cdrol" />';
+var inputNombreaseguradop4 = '<s:property value="smap1.nombreAsegurado" escapeHtml="false" />';
+var inputCdrfcp4           = '<s:property value="smap1.cdrfc" escapeHtml="false" />';
+var urlRegresarp4          = '<s:url namespace="/" action="editarAsegurados" />';
+var urlCargarp4            = '<s:url namespace="/" action="cargarPantallaDomicilio" />';
+var urlGuardarp4           = '<s:url namespace="/" action="guardarPantallaDomicilio" />';
+var formPanelp4;
+var contextop4             = '${ctx}';
 /*///////////////////*/
 ////// variables //////
 ///////////////////////
@@ -39,7 +41,7 @@ Ext.onReady(function(){
     /////////////////////
     ////// modelos //////
     /*/////////////////*/
-    Ext.define('Modelo1',{
+    Ext.define('Modelo1p4',{
         extend     : 'Ext.data.Model',
         <s:property value="item1" />
     });
@@ -66,11 +68,12 @@ Ext.onReady(function(){
     ///////////////////////
     ////// contenido //////
     /*///////////////////*/
-    formPanel=Ext.create('Ext.form.Panel',
+    formPanelp4=Ext.create('Ext.form.Panel',
     {
-        renderTo    : 'maindiv',
+        renderTo    : 'maindivp4',
+        border      : 0,
         buttonAlign : 'center',
-        url         : urlGuardar,
+        url         : urlGuardarp4,
         items       :
         [
             Ext.create('Ext.panel.Panel',
@@ -218,6 +221,7 @@ Ext.onReady(function(){
         ],
         buttons:
         [
+            <%--
             {
                 text:'Regresar',
                 icon: contexto+'/resources/extjs4/resources/ext-theme-neptune/images/toolbar/scroll-left.png',
@@ -237,9 +241,10 @@ Ext.onReady(function(){
                     });
                 }
             },
+            --%>
             {
                 text:'Guardar cambios',
-                icon: contexto+'/resources/fam3icons/icons/accept.png',
+                icon: contextop4+'/resources/fam3icons/icons/accept.png',
                 handler:function()
                 {
                     if(this.up().up().getForm().isValid())
@@ -249,17 +254,17 @@ Ext.onReady(function(){
                         {
                             params:
                             {
-                                'smap1.pv_cdunieco' : inputCdunieco,
-                                'smap1.pv_cdramo'   : inputCdramo,
-                                'smap1.pv_estado'   : inputEstado,
-                                'smap1.pv_nmpoliza' : inputNmpoliza,
-                                'smap1.pv_nmsituac' : inputNmsituac,
-                                'smap1.pv_cdperson' : inputCdperson,
-                                'smap1.pv_cdrol'    : inputCdrol
+                                'smap1.pv_cdunieco' : inputCduniecop4,
+                                'smap1.pv_cdramo'   : inputCdramop4,
+                                'smap1.pv_estado'   : inputEstadop4,
+                                'smap1.pv_nmpoliza' : inputNmpolizap4,
+                                'smap1.pv_nmsituac' : inputNmsituacp4,
+                                'smap1.pv_cdperson' : inputCdpersonp4,
+                                'smap1.pv_cdrol'    : inputCdrolp4
                             },
                             success:function(response,opts)
                             {
-                                formPanel.setLoading(false);
+                                formPanelp4.setLoading(false);
                                 var json=Ext.decode(opts.response.responseText);
                                 if(json.success==true)
                                 {
@@ -281,7 +286,7 @@ Ext.onReady(function(){
                             },
                             failure:function(response,opts)
                             {
-                                formPanel.setLoading(false);
+                                formPanelp4.setLoading(false);
                                 Ext.Msg.show({
                                     title:'Error',
                                     msg: 'Error al guardar la informaci&oacute;n',
@@ -311,25 +316,25 @@ Ext.onReady(function(){
     //////////////////////
     ////// cargador //////
     /*//////////////////*/
-    Ext.define('LoaderForm',
+    Ext.define('LoaderFormp4',
     {
-        extend:'Modelo1',
+        extend:'Modelo1p4',
         proxy:
         {
             extraParams:
             {
-                'smap1.pv_cdunieco_i'   : inputCdunieco,
-                'smap1.pv_cdramo_i'     : inputCdramo,
-                'smap1.pv_estado_i'     : inputEstado,
-                'smap1.pv_nmpoliza_i'   : inputNmpoliza,
-                'smap1.pv_nmsituac_i'   : inputNmsituac,
-                'smap1.pv_cdperson_i'   : inputCdperson,
-                'smap1.pv_cdrol_i'      : inputCdrol,
-                'smap1.nombreAsegurado' : inputNombreasegurado,
-                'smap1.cdrfc'           : inputCdrfc
+                'smap1.pv_cdunieco_i'   : inputCduniecop4,
+                'smap1.pv_cdramo_i'     : inputCdramop4,
+                'smap1.pv_estado_i'     : inputEstadop4,
+                'smap1.pv_nmpoliza_i'   : inputNmpolizap4,
+                'smap1.pv_nmsituac_i'   : inputNmsituacp4,
+                'smap1.pv_cdperson_i'   : inputCdpersonp4,
+                'smap1.pv_cdrol_i'      : inputCdrolp4,
+                'smap1.nombreAsegurado' : inputNombreaseguradop4,
+                'smap1.cdrfc'           : inputCdrfcp4
             },
             type:'ajax',
-            url : urlCargar,
+            url : urlCargarp4,
             reader:
             {
                 type:'json'
@@ -337,14 +342,14 @@ Ext.onReady(function(){
         }
     });
 
-    var loaderForm=Ext.ModelManager.getModel('LoaderForm');
-    loaderForm.load(123, {
+    var loaderFormp4=Ext.ModelManager.getModel('LoaderFormp4');
+    loaderFormp4.load(123, {
         success: function(resp) {
             //console.log(resp);
-        	resp.data['smap1.asegurado'] =inputNombreasegurado;
-        	resp.data['smap1.rfc']       =inputCdrfc;
+        	resp.data['smap1.asegurado'] =inputNombreaseguradop4;
+        	resp.data['smap1.rfc']       =inputCdrfcp4;
         	//console.log(resp);
-            formPanel.loadRecord(resp);
+            formPanelp4.loadRecord(resp);
         },
         failure:function()
         {
@@ -362,8 +367,12 @@ Ext.onReady(function(){
 
 });
 </script>
+<%--
     </head>
     <body>
-        <div id="maindiv" height="500"></div>
+--%>
+        <div id="maindivp4"></div>
+<%--
     </body>
 </html>
+--%>

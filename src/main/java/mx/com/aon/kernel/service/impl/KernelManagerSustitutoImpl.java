@@ -101,6 +101,15 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return res;
     }
     
+    public WrapperResultados ejecutaASIGSVALIPOL_EMI(Map<String,String> parameters) throws ApplicationException
+    {
+        log.debug("### kernel sustituto ejecuta asigsvalipol_emi map: "+parameters);
+        WrapperResultados res=this.returnBackBoneInvoke(parameters, ProcesoDAO.EJECUTA_SIGSVALIPOL_EMI);
+        log.debug("### kernel sustituto ejecuta asigsvalipol_emi id:"+res.getMsgId());
+        log.debug("### kernel sustituto ejecuta asigsvalipol_emi mesage:"+res.getMsgText());
+        return res;
+    }
+    
     public WrapperResultados clonaPersonas(Map<String,Object> parameters) throws ApplicationException
     {
         log.debug("### kernel sustituto clonaPersonas map: "+parameters);
@@ -199,7 +208,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return res;
     }
     
-    public WrapperResultados movDetalleSuplemento(Map<String,String> parameters) throws ApplicationException
+    public WrapperResultados movDetalleSuplemento(Map<String,Object> parameters) throws ApplicationException
     {
     	log.debug("### kernel sustituto movDetalleSuplemento map: "+parameters);
         WrapperResultados res=this.returnBackBoneInvoke(parameters, ProcesoDAO.INSERTAR_DETALLE_SUPLEMEN);
@@ -458,6 +467,30 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         Map<String,String>map=(Map<String,String>) this.getBackBoneInvoke(params, ProcesoDAO.P_GET_DOMICIL);
         log.debug("### kernel sustituto obtenerDomicilio response map: "+map);
         return map;
+	}
+	
+	public WrapperResultados pMovMdomicil(Map<String, String> param) throws ApplicationException
+	{
+		/*
+		pv_cdperson_i smap1.pv_cdperson
+		pv_nmorddom_i smap1.NMORDDOM
+		pv_msdomici_i smap1.DSDOMICI qwe
+		pv_nmtelefo_i smap1.NMTELEFO
+		pv_cdpostal_i smap1.CODPOSTAL
+		pv_cdedo_i    smap1.CDEDO
+		pv_cdmunici_i smap1.CDMUNICI
+		pv_cdcoloni_i smap1.CDCOLONI
+		pv_nmnumero_i smap1.NMNUMERO
+		pv_nmnumint_i smap1.NMNUMINT
+		pv_accion_i   #U
+		pv_msg_id_o   -
+		pv_title_o    -
+		*/
+		log.debug("### kernel sustituto pMovMdomicil map: "+param);
+        WrapperResultados res=this.returnBackBoneInvoke(param, ProcesoDAO.P_MOV_MDOMICIL);
+        log.debug("### kernel sustituto pMovMdomicil id:"+res.getMsgId());
+        log.debug("### kernel sustituto pMovMdomicil mesage:"+res.getMsgText());
+        return res;
 	}
 	
 }
