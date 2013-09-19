@@ -210,11 +210,6 @@
             </result>
         </action>
         
-
-        <action name="logout">
-            <result>jsp/portal/login.jsp</result>
-        </action>
-
         <!--  -->
         <action name="seleccionaRolCliente" class="loadClientesRolesAction" method="obtenRolesClientes">
 	    	<exception-mapping result="success" exception="javax.servlet.ServletException">/jsp/portal/treeRolElemento.jsp</exception-mapping>

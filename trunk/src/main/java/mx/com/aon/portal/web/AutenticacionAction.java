@@ -21,9 +21,12 @@ import mx.com.aon.portal.service.NavigationManager;
 import mx.com.gseguros.utils.Constantes;
 
 import org.apache.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.dispatcher.SessionMap;
 import org.apache.struts2.interceptor.SessionAware;
 import org.jfree.util.Log;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 
 public class AutenticacionAction extends ActionSupport implements SessionAware {
@@ -110,6 +113,22 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 		}
 		return exito;
 	}
+	
+	public String logoutUsuario() throws Exception {
+		try {
+			logger.debug(":X :X :X Terminando Session X: X: X:"+ ServletActionContext.getRequest().getSession().getId());
+			
+			//session.clear();
+			((SessionMap) session).invalidate();
+			logger.debug("session="+ ActionContext.getContext().getSession());
+			return SUCCESS;
+		} catch (Exception ex) {
+			logger.error("Error al terminar la sesion", ex);
+			errorMessage = "Error al terminar la sesion";
+			return SUCCESS;
+		}
+	}
+
 
 	/**
 	 * Action temporal para GSeguros, que redirigira a la pantalla de cotizacion
