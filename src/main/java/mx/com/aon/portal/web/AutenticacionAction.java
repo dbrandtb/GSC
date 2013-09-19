@@ -87,17 +87,13 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 		userVO.setUser(usuario);
 		userVO = loginManager.obtenerDatosUsuario(usuario);
 
-		logger.debug("***** DATOS USUARIO *****: " + userVO);
-
 		userVO.setDecimalSeparator(decimalSeparator);
 		IsoVO isoVO = navigationManager.getVariablesIso(userVO.getUser());
 
-		logger.debug("***** DATOS USUARIO222 *****: " + userVO);
 		userVO.setClientFormatDate(isoVO.getClientDateFormat());
 		userVO.setFormatDate(dateFormat);
 		userVO.setDecimalSeparator(isoVO.getFormatoNumerico());
 
-		logger.debug("***** DATOS USUARIO333 *****: " + userVO);
 		session.put(Constantes.USER, userVO);
 		session.put("userVO", userVO);
 		session.put("CONTENIDO_USER", userVO.getName());
