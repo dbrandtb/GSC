@@ -50,10 +50,6 @@
 
 		<pattern>/subirArchivoMostrarBarra.action</pattern>
 		<pattern>/jsp/extjs4/subirArchivoBarra.jsp</pattern>
-
-		<!--<pattern>/editarAsegurados.action</pattern> <pattern>/jsp/extjs4/editarAsegurados.jsp</pattern> -->
-		<!--<pattern>/pantallaDomicilio.action</pattern> <pattern>/jsp/extjs4/aseguradosDomicilio.jsp</pattern> -->
-		<!--<pattern>/editarCoberturas.action</pattern> <pattern>/jsp/extjs4/aseguradosCoberturas.jsp</pattern> -->
 	</decorator>
 	
 	
@@ -63,111 +59,6 @@
         <pattern>/jsp/portal/treeRolElemento.jsp</pattern>
         <pattern>/jsp/portal/index.jsp</pattern>
     </decorator>
-    
-    
-    
-    <decorator name="decmainbody" page="decmainbody.jsp">
-        <pattern>/jsp/portal/mainBody.jsp</pattern>
-    </decorator>
-    
-	<decorator name="empty_deprecated" page="empty_deprecated.jsp">
-		<pattern>/portal.action</pattern>
-		<pattern>/index.action</pattern>
-		<pattern>/test/*.jsp</pattern>
-		<pattern>/flujocotizacion/obtenerAyudaCobertura.action</pattern>
-		<pattern>/procesoemision/ayudaCobertura.action</pattern>
-		<pattern>/procesoemicion/busquedaPoliza.action</pattern>
-		<pattern>*/menuusuario/menuUsuario.action</pattern>
-		<pattern>/menuusuario/*.action</pattern>
-		<!-- <pattern>/bo.action</pattern> -->
-		<!-- <pattern>/*load.action</pattern> -->
-	</decorator>
-	
-	<decorator name="clean_deprecated" page="clean_deprecated.jsp">
-		<pattern>/ArbolRolCliente.action</pattern>
-		<pattern>/seleccionaRolCliente.action</pattern>
-		<pattern>/jsp/portal/treeRolElemento.jsp</pattern>
-		<pattern>/jsp/portal/index.jsp</pattern>
-	</decorator>
-
-	<decorator name="default_deprecated" page="default_deprecated.jsp">
-		<!-- <pattern>/flujocotizacion/*.action</pattern> -->
-		<!-- Se comento para ver si se soluciona la falla del config de pantalla -->
-		<!--pattern>/configmenu/*.action</pattern -->
-
-		<pattern>/menuusuario/*.action</pattern>
-		<pattern>/confbeta/*.action</pattern>
-		<pattern>/mantto/*.action</pattern>
-		<pattern>/principal/*.action</pattern>
-		<pattern>/procesoemision/*.action</pattern>
-		<pattern>/flujoendoso/*.action</pattern>
-		<pattern>/configworkflow/*.action</pattern>
-		<!-- <pattern>/*load.action</pattern> -->
-		<!--pattern>/*</pattern -->
-		<!-- <pattern>/confalfa/*.action</pattern> <pattern>/opcmenuusuario/*.action</pattern> -->
-
-	</decorator>
-
-	<decorator name="default2_deprecated" page="default2_deprecated.jsp">
-		
-		<!-- <pattern>/jsp/*/*.jsp</pattern> 
-		<pattern>/*.action</pattern> -->
-		
-		<pattern>/configmenu/*.action</pattern>
-
-		<!-- Cambios añadidos para solucionar la falla del config de pantalla -->
-		<pattern>*/configuradorpantallas/entrarConfPantallas.action</pattern>
-
-		<pattern>/principal/*.action</pattern>
-		<pattern>/procesos/*.action</pattern>
-		<pattern>/indexWithIframe.jsp</pattern>
-		<pattern>*/procesoemision/detallePoliza.action</pattern>
-		<pattern>*/procesoemision/busquedaPoliza.action</pattern>
-		<pattern>*/procesoemision/irCancelacionManual.action</pattern>
-		<pattern>*/procesoemision/consultaPolizasMaestras.action</pattern>
-		<pattern>*/procesoemision/irPolizasCanceladas.action</pattern>
-		<pattern>*/procesoemision/irAgrupacionPorRol.action</pattern>
-		<pattern>*/procesoemision/irAgrupacionPorGrupoPersona.action</pattern>
-		<pattern>*/procesoemision/irPolizasARenovar.action</pattern>
-		<pattern>*/procesoemision/irPolizasRenovadas.action</pattern>
-		<pattern>*/procesoemision/irAsignarNumero.action</pattern>
-		<pattern>*/flujoendoso/irPolizasRenovadas.action</pattern>
-		<pattern>*/flujoendoso/detallePoliza.action</pattern>
-
-		<excludes>
-			<pattern>/seguridad/cotizarSaludVital.action</pattern>
-			<pattern>/cotizacionVital.action</pattern>
-			<pattern>/jsp/extjs4/asegurados.jsp</pattern>
-
-			<pattern>/dinosaurio.action</pattern>
-			<pattern>/jsp/extjs4/denegado.jsp</pattern>
-
-			<pattern>/datosComplementarios.action</pattern>
-			<pattern>/jsp/extjs4/complementarios.jsp</pattern>
-
-			<pattern>/subirArchivoMostrarPanel.action</pattern>
-			<pattern>/jsp/extjs4/testFileUpload.jsp</pattern>
-
-			<pattern>/subirArchivo.action</pattern>
-			<pattern>/jsp/extjs4/subirArchivoReceptor.jsp</pattern>
-
-			<pattern>/subirArchivoMostrarBarra.action</pattern>
-			<pattern>/jsp/extjs4/subirArchivoBarra.jsp</pattern>
-
-			<pattern>/editarAsegurados.action</pattern>
-			<pattern>/jsp/extjs4/editarAsegurados.jsp</pattern>
-
-			<pattern>/editarCoberturas.action</pattern>
-			<pattern>/jsp/extjs4/aseguradosCoberturas.jsp</pattern>
-
-			<pattern>/pantallaDomicilio.action</pattern>
-			<pattern>/jsp/extjs4/aseguradosDomicilio.jsp</pattern>
-
-			<pattern>/seguridad/*</pattern>
-			<pattern>/jsp/portal/login.jsp</pattern>
-		</excludes>
-
-	</decorator>
 
 
 </decorators>
