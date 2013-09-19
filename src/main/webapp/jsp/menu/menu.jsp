@@ -124,7 +124,7 @@ Ext.onReady(function(){
 				if(!Ext.isEmpty(item.text)){
 					var nuevoTagLI = document.createElement("li");
 					var nuevoLink = document.createElement('a');
-					nuevoLink.setAttribute('href', item.href);
+					nuevoLink.setAttribute('href', "${ctx}" + item.href);
 					nuevoLink.appendChild(document.createTextNode(item.text));
 					nuevoTagLI.appendChild(nuevoLink);
 					tagUL.appendChild(nuevoTagLI);
