@@ -6,9 +6,12 @@ package mx.com.aon.portal.web;
 
 import java.math.BigDecimal;
 import java.util.Map;
+
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.web.model.CotizacionSaludVO;
 import mx.com.aon.portal2.web.GenericVO;
+
+import org.apache.log4j.Logger;
 import org.apache.struts2.interceptor.CookiesAware;
 
 /**
@@ -21,27 +24,32 @@ public class DinosaurioAction extends PrincipalCoreAction implements CookiesAwar
     private Dinosaurio dino;
     private String llave;
     private CotizacionSaludVO cotizacion;
+    public boolean success=false;
+    private Logger log=Logger.getLogger(DinosaurioAction.class);
     
     public String jsoo()
     {
-        cotizacion=new CotizacionSaludVO();
-        cotizacion.setId(                                           6969l);                         //0
-        //sexo (inciso)                                                                               1
-        //fecha nacimiento (inciso)                                                                   2
-        cotizacion.setEstado(                                       new GenericVO("06","lol"));     //3
-        cotizacion.setCiudad(                                       new GenericVO("06001","lol"));  //4
-        cotizacion.setDeducible(                                    new BigDecimal("690000"));      //5
-        cotizacion.setCopago(                                       new GenericVO("10000","lol"));  //6
-        cotizacion.setSumaSegurada(                                 new GenericVO("14000","lol"));  //7
-        cotizacion.setCirculoHospitalario(                          new GenericVO("3","lol"));      //8
-        cotizacion.setCoberturaVacunas(                             new GenericVO("S","lol"));      //9
-        cotizacion.setCoberturaPrevencionEnfermedadesAdultos(       new GenericVO("S","lol"));      //10
-        cotizacion.setMaternidad(                                   new GenericVO("S","lol"));      //11
-        cotizacion.setSumaAseguradaMaternidad(                      new GenericVO("100000","lol")); //12
-        cotizacion.setBaseTabuladorReembolso(                       new GenericVO("35000","lol"));  //13
-        cotizacion.setCostoEmergenciaExtranjero(                    new GenericVO("S","lol"));      //14
-        cotizacion.setCoberturaEliminacionPenalizacionCambioZona(   new GenericVO("N","lol"));      //15
-        //rol (inciso)                                                                                16
+    	log.debug(""
+    			+ "\n########################"
+    			+ "\n########################"
+    			+ "\n######            ######"
+    			+ "\n###### dinosaurio ######"
+    			+ "\n######            ######");
+        try
+        {
+        	success=true;
+        }
+        catch(Exception ex)
+        {
+        	log.debug("error en el dinosaurio",ex);
+        	success=false;
+        }
+        log.debug(""
+        		+ "\n######            ######"
+    			+ "\n######            ######"
+    			+ "\n###### dinosaurio ######"
+    			+ "\n########################"
+    			+ "\n########################");
         return SUCCESS;
     }
     
@@ -76,5 +84,13 @@ public class DinosaurioAction extends PrincipalCoreAction implements CookiesAwar
     public void setCotizacion(CotizacionSaludVO cotizacion) {
         this.cotizacion = cotizacion;
     }
+
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
+	}
     
 }

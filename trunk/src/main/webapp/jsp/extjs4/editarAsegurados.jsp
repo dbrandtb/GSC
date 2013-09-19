@@ -1,42 +1,44 @@
 <%@ include file="/taglibs.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%--
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+--%>
 <script>
-	var inputCdunieco= '<s:property value="map1.cdunieco" />';
-	var inputCdramo=   '<s:property value="map1.cdramo" />';
-	var inputEstado=   '<s:property value="map1.estado" />';
-	var inputNmpoliza= '<s:property value="map1.nmpoliza" />';
-	var _URL_OBTEN_CATALOGO_GENERICO='<s:url action="jsonObtenCatalogoGenerico" namespace="/" />';
-	var CDATRIBU_ROL='<s:property value="cdatribuRol" />';
-	var gridPersonas;
-	var CDATRIBU_SEXO='<s:property value="cdatribuSexo" />';
-	var storeRoles;
-	var storeGeneros;
-	var storePersonas;
-	var gridPersonas;
-	var editorRoles;
-	var editorGeneros;
-	var urlCargarAsegurados='<s:url namespace="/" action="cargarComplementariosAsegurados" />';
-	var urlCargarCatalogos='<s:url namespace="/flujocotizacion" action="cargarCatalogos" />';
-	var urlDatosComplementarios='<s:url namespace="/" action="datosComplementarios.action" />';
-	var urlGuardarAsegurados='<s:url namespace="/" action="guardarComplementariosAsegurados" />';
-	var urlCoberturasAsegurado='<s:url namespace="/" action="editarCoberturas" />';
-	var urlGenerarCdPerson='<s:url namespace="/" action="generarCdperson" />';
-	var urlDomicilio      ='<s:url namespace="/" action="pantallaDomicilio" />';
-	var editorFecha;
-	var contexto='${ctx}';
+	var inputCduniecop2= '<s:property value="map1.cdunieco" />';
+	var inputCdramop2=   '<s:property value="map1.cdramo" />';
+	var inputEstadop2=   '<s:property value="map1.estado" />';
+	var inputNmpolizap2= '<s:property value="map1.nmpoliza" />';
+	var _URL_OBTEN_CATALOGO_GENERICOp2='<s:url action="jsonObtenCatalogoGenerico" namespace="/" />';
+	var CDATRIBU_ROLp2='<s:property value="cdatribuRol" />';
+	var gridPersonasp2;
+	var CDATRIBU_SEXOp2='<s:property value="cdatribuSexo" />';
+	var storeRolesp2;
+	var storeGenerosp2;
+	var storePersonasp2;
+	var gridPersonasp2;
+	var editorRolesp2;
+	var editorGenerosp2;
+	var urlCargarAseguradosp2='<s:url namespace="/" action="cargarComplementariosAsegurados" />';
+	var urlCargarCatalogosp2='<s:url namespace="/flujocotizacion" action="cargarCatalogos" />';
+	var urlDatosComplementariosp2='<s:url namespace="/" action="datosComplementarios.action" />';
+	var urlGuardarAseguradosp2='<s:url namespace="/" action="guardarComplementariosAsegurados" />';
+	var urlCoberturasAseguradop2='<s:url namespace="/" action="editarCoberturas" />';
+	var urlGenerarCdPersonp2='<s:url namespace="/" action="generarCdperson" />';
+	var urlDomiciliop2      ='<s:url namespace="/" action="pantallaDomicilio" />';
+	var editorFechap2;
+	var contextop2='${ctx}';
 	
-    function rendererRol(v)
+    function rendererRolp2(v)
     {
     	var leyenda='';
         if(typeof v == 'string')
 	    		   //tengo solo el indice
         {
 			//window.console&&console.log('string:');
-			storeRoles.each(function(rec){
+			storeRolesp2.each(function(rec){
 				//window.console&&console.log('iterando...',rec.data);
 				if(rec.data.key==v)
 			    {
@@ -64,14 +66,14 @@
 		return leyenda;
 	}
     
-    function rendererSexo(v)
+    function rendererSexop2(v)
     {
         var leyenda='';
         if(typeof v == 'string')
                    //tengo solo el indice
         {
         	//window.console&&console.log('string:');
-            storeGeneros.each(function(rec){
+            storeGenerosp2.each(function(rec){
             	//window.console&&console.log('iterando...',rec.data);
                 if(rec.data.key==v)
                 {
@@ -99,9 +101,9 @@
         return leyenda;
     }
     
-    function editarDespuesValidaciones(incisosJson)
+    function editarDespuesValidacionesp2(incisosJson)
     {
-    	var formPanel=Ext.getCmp('form1');
+    	var formPanel=Ext.getCmp('form1p2');
         var submitValues=formPanel.getForm().getValues();
         //console.log(submitValues);
         //console.log("###############################");
@@ -123,7 +125,7 @@
         });*/
         Ext.Ajax.request(
         {
-            url: urlGuardarAsegurados,
+            url: urlGuardarAseguradosp2,
             jsonData:Ext.encode(submitValues),
             success:function(response,opts)
             {
@@ -166,18 +168,18 @@
 	
     Ext.onReady(function(){
 		
-		Ext.define('Modelo1',{
+		Ext.define('Modelo1p2',{
 			extend:'Ext.data.Model',
 			<s:property value="item1" />
 		});
 		
-		storeRoles = new Ext.data.Store({
+		storeRolesp2 = new Ext.data.Store({
 	        model: 'Generic',
 	        autoLoad:true,
 	        proxy:
 	        {
 	            type: 'ajax',
-	            url : urlCargarCatalogos,
+	            url : urlCargarCatalogosp2,
 	            extraParams:{catalogo:'<s:property value="CON_CAT_POL_ROL" />'},
 	            reader:
 	            {
@@ -187,14 +189,14 @@
 	        }
 	    })
 	    
-	    storeGeneros = new Ext.data.Store({
+	    storeGenerosp2 = new Ext.data.Store({
 	        model: 'Generic',
 	        autoLoad:true,
 	        proxy:
 	        {
 	            type: 'ajax',
-	            url : _URL_OBTEN_CATALOGO_GENERICO,
-	            extraParams:{cdatribu:CDATRIBU_SEXO},
+	            url : _URL_OBTEN_CATALOGO_GENERICOp2,
+	            extraParams:{cdatribu:CDATRIBU_SEXOp2},
 	            reader:
 	            {
 	                type: 'json',
@@ -203,22 +205,22 @@
 	        }
 	    });
 	    
-	    storePersonas =new Ext.data.Store(
+	    storePersonasp2 =new Ext.data.Store(
    	    {
    	        // destroy the store if the grid is destroyed
    	        //autoDestroy: true,
-   	        model: 'Modelo1',
+   	        model: 'Modelo1p2',
    	        autoLoad:true,
    	        proxy:
    	        {
-   	        	url:urlCargarAsegurados,
+   	        	url:urlCargarAseguradosp2,
    	        	type:'ajax',
    	        	extraParams:
    	        	{
-   	        		'map1.pv_cdunieco':inputCdunieco,
-   	        		'map1.pv_cdramo':inputCdramo,
-   	        		'map1.pv_estado':inputEstado,
-   	        		'map1.pv_nmpoliza':inputNmpoliza
+   	        		'map1.pv_cdunieco':inputCduniecop2,
+   	        		'map1.pv_cdramo':inputCdramop2,
+   	        		'map1.pv_estado':inputEstadop2,
+   	        		'map1.pv_nmpoliza':inputNmpolizap2
    	        	},
 		   	    reader:
 		        {
@@ -228,9 +230,9 @@
    	        }
    	    });
 	    
-	    editorRoles=Ext.create('Ext.form.ComboBox',
+	    editorRolesp2=Ext.create('Ext.form.ComboBox',
    	    {
-   	        store: storeRoles,
+   	        store: storeRolesp2,
    	        queryMode:'local',
    	        displayField: 'value',
    	        valueField: 'key',
@@ -238,9 +240,9 @@
    	        editable:false
    	    });
 	    
-	    editorGeneros=Ext.create('Ext.form.ComboBox',
+	    editorGenerosp2=Ext.create('Ext.form.ComboBox',
    	    {
-   	        store: storeGeneros,
+   	        store: storeGenerosp2,
    	        queryMode:'local',
    	        displayField: 'value',
    	        valueField: 'key',
@@ -248,7 +250,7 @@
    	        editable:false
    	    });
 	    
-	    editorFecha=Ext.create('Ext.form.field.Date',
+	    editorFechap2=Ext.create('Ext.form.field.Date',
         {
 	    	format:'d/m/Y',
             allowBlank:false
@@ -258,7 +260,7 @@
 	    ////// Inicio de declaracion de grid                                                                             //////
 	    ////// http://docs.sencha.com/extjs/4.2.1/extjs-build/examples/build/KitchenSink/ext-theme-neptune/#cell-editing //////
 	    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	    Ext.define('EditorIncisos', {
+	    Ext.define('EditorIncisosp2', {
 	        extend: 'Ext.grid.Panel',
 
 	        requires: [
@@ -272,10 +274,10 @@
 
 	        //title: 'Asegurados',
 	        frame: false,
-	        collapsible:true,
-	        titleCollapse:true,
+	        //collapsible:true,
+	        //titleCollapse:true,
 	        style:'margin:5px;',
-            title:'Asegurados',
+            //title:'Asegurados',
 
 	        initComponent: function() {
 	            this.cellEditing = new Ext.grid.plugin.CellEditing({
@@ -286,145 +288,8 @@
 	                //width: 750,
 	                height: 200,
 	                plugins: [this.cellEditing],
-	                store: storePersonas,
+	                store: storePersonasp2,
 	                <s:property value="item2" />,
-	                /*columns: 
-	                [
-	                    {
-	                        header: 'Rol',
-	                        dataIndex: 'rol',
-	                        flex:1,
-	                        editor: comboRoles,
-	                        renderer:function(v)
-	                        {
-	                            var leyenda='';
-	                            if(typeof v == 'string')
-	                            //tengo solo el indice
-	                            {
-	                                //window.console&&console.log('string:');
-	                                storeRoles.each(function(rec){
-	                                    //window.console&&console.log('iterando...');
-	                                    if(rec.data.key==v)
-	                                    {
-	                                        leyenda=rec.data.value;
-	                                    }
-	                                });
-	                                //window.console&&console.log(leyenda);
-	                            }
-	                            else
-	                            //tengo objeto que puede venir como Generic u otro mas complejo
-	                            {
-	                                //window.console&&console.log('object:');
-	                                if(v.key&&v.value)
-	                                //objeto Generic
-	                                {
-	                                    leyenda=v.value;
-	                                }
-	                                else
-	                                {
-	                                    leyenda=v.data.value;
-	                                }
-	                                //window.console&&console.log(leyenda);
-	                            }
-	                            return leyenda;
-	                        }
-	                    },
-	                    {
-	                        header: 'Fecha de nacimiento',
-	                        dataIndex: 'fechaNacimiento',
-	                        flex:2,
-	                        renderer: Ext.util.Format.dateRenderer('d M Y'),
-	                        editor: {
-	                            xtype: 'datefield',
-	                            format: 'd/m/Y',
-	                            editable:true
-	                        }
-	                    },
-	                    {
-	                        header: 'Sexo',
-	                        dataIndex: 'sexo',
-	                        flex:1,
-	                        editor: comboGeneros,
-	                        renderer:function(v)
-	                        {
-	                            var leyenda='';
-	                            if(typeof v == 'string')
-	                            //tengo solo el indice
-	                            {
-	                                //window.console&&console.log('string:');
-	                                storeGeneros.each(function(rec){
-	                                    //window.console&&console.log('iterando...');
-	                                    if(rec.data.key==v)
-	                                    {
-	                                        leyenda=rec.data.value;
-	                                    }
-	                                });
-	                                //window.console&&console.log(leyenda);
-	                            }
-	                            else
-	                            //tengo objeto que puede venir como Generic u otro mas complejo
-	                            {
-	                                //window.console&&console.log('object:');
-	                                if(v.key&&v.value)
-	                                //objeto Generic
-	                                {
-	                                    leyenda=v.value;
-	                                }
-	                                else
-	                                {
-	                                    leyenda=v.data.value;
-	                                }
-	                                //window.console&&console.log(leyenda);
-	                            }
-	                            return leyenda;
-	                        }
-	                    },
-	                    {
-	                        header: 'Nombre',
-	                        dataIndex: 'nombre',
-	                        flex: 1,
-	                        editor: {
-	                            //allowBlank: false
-	                        }
-	                    },
-	                    {
-	                        header: 'Segundo nombre',
-	                        dataIndex: 'segundoNombre',
-	                        flex: 2,
-	                        editor: {
-	                            //allowBlank: false
-	                        }
-	                    },
-	                    {
-	                        header: 'Apellido paterno',
-	                        dataIndex: 'apellidoPaterno',
-	                        flex: 2,
-	                        editor: {
-	                            //allowBlank: false
-	                        }
-	                    },
-	                    {
-	                        header: 'Apellido materno',
-	                        dataIndex: 'apellidoMaterno',
-	                        flex: 2,
-	                        editor: {
-	                            //allowBlank: false
-	                        }
-	                    },
-	                    {
-	                        xtype: 'actioncolumn',
-	                        width: 30,
-	                        sortable: false,
-	                        menuDisabled: true,
-	                        items: [{
-	                            icon:'resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
-	                            //iconCls: 'icon-delete',
-	                            tooltip: 'Quitar inciso',
-	                            scope: this,
-	                            handler: this.onRemoveClick
-	                        }]
-	                    }
-	                ],*/
 	                selModel: {
 	                    selType: 'cellmodel'
 	                },
@@ -464,22 +329,6 @@
 	                single: true
 	            })*/
 	        },
-
-	        /*loadStore: function() {
-	            this.getStore().load({
-	                // store loading is asynchronous, use a load listener or callback to handle results
-	                callback: this.onStoreLoad
-	            });
-	        },
-
-	        onStoreLoad: function(){
-	            Ext.Msg.show({
-	                title: 'Store Load Callback',
-	                msg: 'store was loaded, data available for processing',
-	                icon: Ext.Msg.INFO,
-	                buttons: Ext.Msg.OK
-	            });
-	        },*/
 
 	        /*http://www.sencha.com/forum/showthread.php?141626-Grid-Validation-with-Error-Indication-%28suggestions-needed%29*/
 	        //regresa las columnas con editor que tengan allowBlank=false (requeridas)
@@ -548,39 +397,71 @@
 	        onEditarClick:function(grid,rowIndex)
 	        {
 	        	var record=this.getStore().getAt(rowIndex);
+	        	if(Ext.getCmp('coberturasAccordionEl'))
+	        	{
+	        		Ext.getCmp('coberturasAccordionEl').destroy();
+	        	}
+	            accordion.add(
+       			{
+       				id:'coberturasAccordionEl'
+       				,title:'Coberturas de '+record.get('nombre')+' '+(record.get('segundo_nombre')?record.get('segundo_nombre')+' ':' ')+record.get('Apellido_Paterno')+' '+record.get('Apellido_Materno')
+       				,loader:
+       				{
+	                    url : urlCoberturasAseguradop2
+	                    ,params:{
+	                    	'smap1.pv_cdunieco' : inputCduniecop2,
+	                        'smap1.pv_cdramo'   : inputCdramop2,
+	                        'smap1.pv_estado'   : inputEstadop2,
+	                        'smap1.pv_nmpoliza' : inputNmpolizap2,
+	                        'smap1.pv_nmsituac' : record.get('nmsituac'),
+	                        'smap1.pv_cdperson' : record.get('cdperson')
+	                    }
+       					,autoLoad:true
+       					,scripts:true
+       				}
+       			}).expand();
+	        	/*
 	        	Ext.create('Ext.form.Panel').submit({
-                    url : urlCoberturasAsegurado,
                     standardSubmit:true,
-                    params:{
-                    	'smap1.pv_cdunieco' : inputCdunieco,
-                        'smap1.pv_cdramo'   : inputCdramo,
-                        'smap1.pv_estado'   : inputEstado,
-                        'smap1.pv_nmpoliza' : inputNmpoliza,
-                        'smap1.pv_nmsituac' : record.get('nmsituac'),
-                        'smap1.pv_cdperson' : record.get('cdperson')
-                    }
                 });
+	        	*/
 	        },
 	        
 	        onDomiciliosClick:function(grid,rowIndex)
 	        {
 	        	var record=this.getStore().getAt(rowIndex);
-                Ext.create('Ext.form.Panel').submit({
-                    url : urlDomicilio,
-                    standardSubmit:true,
-                    params:
+	        	if(Ext.getCmp('domicilioAccordionEl'))
+                {
+                    Ext.getCmp('domicilioAccordionEl').destroy();
+                }
+	        	accordion.add(
+                {
+                    id:'domicilioAccordionEl'
+                    ,title:'Domicilio de '+record.get('nombre')+' '+(record.get('segundo_nombre')?record.get('segundo_nombre')+' ':' ')+record.get('Apellido_Paterno')+' '+record.get('Apellido_Materno')
+                    ,loader:
                     {
-                        'smap1.pv_cdunieco'     : inputCdunieco,
-                        'smap1.pv_cdramo'       : inputCdramo,
-                        'smap1.pv_estado'       : inputEstado,
-                        'smap1.pv_nmpoliza'     : inputNmpoliza,
-                        'smap1.pv_nmsituac'     : record.get('nmsituac'),
-                        'smap1.pv_cdperson'     : record.get('cdperson'),
-                        'smap1.pv_cdrol'        : record.get('cdrol'),
-                        'smap1.nombreAsegurado' : record.get('nombre')+' '+record.get('segundo_nombre')+' '+record.get('Apellido_Paterno')+' '+record.get('Apellido_Materno'),
-                        'smap1.cdrfc'           : record.get('cdrfc')
+                    	url : urlDomiciliop2
+                        ,params:
+                        {
+                            'smap1.pv_cdunieco'     : inputCduniecop2,
+                            'smap1.pv_cdramo'       : inputCdramop2,
+                            'smap1.pv_estado'       : inputEstadop2,
+                            'smap1.pv_nmpoliza'     : inputNmpolizap2,
+                            'smap1.pv_nmsituac'     : record.get('nmsituac'),
+                            'smap1.pv_cdperson'     : record.get('cdperson'),
+                            'smap1.pv_cdrol'        : record.get('cdrol'),
+                            'smap1.nombreAsegurado' : record.get('nombre')+' '+(record.get('segundo_nombre')?record.get('segundo_nombre')+' ':' ')+record.get('Apellido_Paterno')+' '+record.get('Apellido_Materno'),
+                            'smap1.cdrfc'           : record.get('cdrfc')
+                        }
+                        ,autoLoad:true
+                        ,scripts:true
                     }
+                }).expand();
+	        	<%--
+                Ext.create('Ext.form.Panel').submit({
+                    standardSubmit:true,
                 });
+                --%>
 	        },
 
 	        onRemoveClick: function(grid, rowIndex){
@@ -591,49 +472,53 @@
 	    ////// Fin de declaracion de grid                                                                                //////
 	    ////// http://docs.sencha.com/extjs/4.2.1/extjs-build/examples/build/KitchenSink/ext-theme-neptune/#cell-editing //////
 	    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	    gridPersonas=new EditorIncisos();
+	    gridPersonasp2=new EditorIncisosp2();
 		
 		Ext.create('Ext.form.Panel',{
-			id:'form1',
-			renderTo:'maindiv',
+			id:'form1p2',
+			renderTo:'maindivasegurados',
 			frame:false,
 			//collapsible:true,
 			//titleCollapse:true,
+			border:0,
 			buttonAlign:'center',
 			items:[
-			    gridPersonas
+			    gridPersonasp2
 	        ],
 	        buttons:[
+	            <%--
 	            {
 	            	text:'Regresar',
-	            	icon: contexto+'/resources/extjs4/resources/ext-theme-neptune/images/toolbar/scroll-left.png',
+	            	hidden:true,
+	            	icon: contextop2+'/resources/extjs4/resources/ext-theme-neptune/images/toolbar/scroll-left.png',
 	            	handler:function()
 	            	{
 	            		Ext.create('Ext.form.Panel').submit({
-                            url : urlDatosComplementarios,
+                            url : urlDatosComplementariosp2,
                             standardSubmit:true,
                             params:{
-                                'cdunieco' :  inputCdunieco,
-                                'cdramo' :    inputCdramo,
-                                'estado' :    inputEstado,
-                                'nmpoliza' :  inputNmpoliza
+                                'cdunieco' :  inputCduniecop2,
+                                'cdramo' :    inputCdramop2,
+                                'estado' :    inputEstadop2,
+                                'nmpoliza' :  inputNmpolizap2
                             }
                         });
 	            	}
 	            },
+	            --%>
 	            {
 	            	text:'Guardar',
-	            	icon: contexto+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/accept.png',
+	            	icon: contextop2+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/accept.png',
 	            	handler:function(){
-	            		if(Ext.getCmp('form1').getForm().isValid())
+	            		if(Ext.getCmp('form1p2').getForm().isValid())
 	            		{
-		            		var incisosRecords = storePersonas.getRange();
+		            		var incisosRecords = storePersonasp2.getRange();
 		            		if(incisosRecords&&incisosRecords.length>0)
 	                        {
 	                            var incisosJson = [];
 	                            var completos=true;
 	                            var sinCdperson=0;
-	                            storePersonas.each(function(record,index)
+	                            storePersonasp2.each(function(record,index)
                            		{
 	                            	//console.log(record);
 	                            	if(
@@ -675,9 +560,9 @@
                             	{
 	                            	if(sinCdperson>0)
                             		{
-		                            	Ext.getCmp('form1').setLoading(true);
+		                            	Ext.getCmp('form1p2').setLoading(true);
 		                            	//mandar a traer los cdperson de las personas asincrono
-		                            	storePersonas.each(function(record,index)
+		                            	storePersonasp2.each(function(record,index)
                                         {
 		                            		//console.log(index);
 		                            		setTimeout(function()
@@ -685,7 +570,7 @@
 		                            			//console.log("trigger");
 	                                            Ext.Ajax.request(
                                                 {
-                                                    url: urlGenerarCdPerson,
+                                                    url: urlGenerarCdPersonp2,
                                                     success:function(response,opts)
                                                     {
                                                         var jsonResp = Ext.decode(response.responseText);
@@ -700,10 +585,10 @@
                                                                 if(sinCdperson==0)
                                                                 {
                                                                     //procesar submit
-                                                                    storePersonas.sync();
-                                                                    gridPersonas.getView().refresh();
+                                                                    storePersonasp2.sync();
+                                                                    gridPersonasp2.getView().refresh();
                                                                     incisosJson=[];
-                                                                    storePersonas.each(function(record,index)
+                                                                    storePersonasp2.each(function(record,index)
                                                                     {
                                                                         incisosJson.push({
                                                                             nmsituac:record.get('nmsituac'),
@@ -718,8 +603,8 @@
                                                                             cdrfc:record.get('cdrfc')
                                                                         });
                                                                     });                
-                                                                    Ext.getCmp('form1').setLoading(false);
-                                                                    editarDespuesValidaciones(incisosJson);
+                                                                    Ext.getCmp('form1p2').setLoading(false);
+                                                                    editarDespuesValidacionesp2(incisosJson);
                                                                 }
                                                             }
                                                             catch(e)
@@ -758,7 +643,7 @@
                             		}
 	                            	else
                             		{
-	                            		editarDespuesValidaciones(incisosJson);//manda el submit
+	                            		editarDespuesValidacionesp2(incisosJson);//manda el submit
                             		}
                             	}
 	                            else
@@ -798,8 +683,12 @@
 	});
 	
 </script>
+<%--
 </head>
 <body>
-<div id="maindiv"></div>
+--%>
+<div id="maindivasegurados"></div>
+<%--
 </body>
 </html>
+--%>

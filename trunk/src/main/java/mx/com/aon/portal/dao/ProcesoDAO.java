@@ -43,7 +43,8 @@ public class ProcesoDAO extends AbstractDAO {
 	public static final String GENERAR_ORDEN_TRABAJO = "GENERAR_ORDEN_TRABAJO";
 	public static final String PROCESO_EMISION_DAO = "PROCESO_EMISION_DAO";
 	public static final String BUSCAR_MATRIZ_ASIGNACION = "BUSCAR_MATRIZ_ASIGNACION";
-	public static final String EJECUTA_SIGSVALIPOL = "EJECUTA_SIGSVALIPOL"; 
+	public static final String EJECUTA_SIGSVALIPOL = "EJECUTA_SIGSVALIPOL";
+	public static final String EJECUTA_SIGSVALIPOL_EMI = "EJECUTA_SIGSVALIPOL_EMI";
 	
 	
 	
@@ -98,6 +99,7 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String OBTENER_TATRIGAR="OBTENER_TATRIGAR";
     public static final String OBTENER_TATRIPER="OBTENER_TATRIPER";
     public static final String P_GET_DOMICIL="P_GET_DOMICIL";
+    public static final String P_MOV_MDOMICIL="P_MOV_MDOMICIL";
 
 	protected void initDao() throws Exception {
 		addStoredProcedure(PERMISO_EJECUCION_PROCESO,new PermisoEjecucionProceso(getDataSource()));
@@ -105,6 +107,7 @@ public class ProcesoDAO extends AbstractDAO {
 		addStoredProcedure(PROCESO_EMISION_DAO, new ProcesoEmision(getDataSource()));
 		addStoredProcedure(BUSCAR_MATRIZ_ASIGNACION, new BuscarMatrizAsignacion(getDataSource()));
 		addStoredProcedure(EJECUTA_SIGSVALIPOL, new EjecutarSIGSVALIPOL(getDataSource()));
+		addStoredProcedure(EJECUTA_SIGSVALIPOL_EMI, new EjecutarSIGSVALIPOL_EMI(getDataSource()));
 		/* PARA EL REMPLAZO DE VELOCITY POR JDBCTEMPLATE */
 		addStoredProcedure(CALCULA_NUMERO_POLIZA, new CalculaNumeroPoliza(getDataSource()));
 		addStoredProcedure(GENERA_SUPLEMENTO_FISICO, new GeneraSuplementoFisico(getDataSource()));
@@ -149,6 +152,7 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(OBTENER_TATRIGAR, new ObtieneTatrigar(getDataSource()));
         addStoredProcedure(OBTENER_TATRIPER, new ObtieneTatriper(getDataSource()));
         addStoredProcedure(P_GET_DOMICIL, new ObtenerDomicilio(getDataSource()));
+        addStoredProcedure(P_MOV_MDOMICIL, new PMovMdomicil(getDataSource()));
 	}
 
 	protected class BuscarMatrizAsignacion extends CustomStoredProcedure {
@@ -371,7 +375,33 @@ public class ProcesoDAO extends AbstractDAO {
         }
 	}
 	
-	
+	protected class EjecutarSIGSVALIPOL_EMI extends CustomStoredProcedure {
+
+		protected EjecutarSIGSVALIPOL_EMI(DataSource dataSource) {
+			super(dataSource, "PKG_COTIZA.P_EJECUTA_SIGSVALIPOL_EMI");
+
+			declareParameter(new SqlParameter("pv_cdusuari_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdelemen_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_nmsituac_i", OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
+
+	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			
+			compile();
+
+		}
+
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+            return mapper.build(map);
+        }
+	}
 	
 	/*
 	 * PARA LOS PROCESOS COMUNES DEL KERNEL MANAGER (migracion de velocity backbone a JdbcTemplate
@@ -1388,10 +1418,10 @@ public class ProcesoDAO extends AbstractDAO {
             declareParameter(new SqlParameter("pv_nmpoliza_i",  OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_nsuplogi_i",  OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdtipsup_i",  OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_feemisio_i",  OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_feemisio_i",  OracleTypes.DATE));
             declareParameter(new SqlParameter("pv_nmsolici_i",  OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_fesolici_i",  OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_ferefere_i",  OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_fesolici_i",  OracleTypes.DATE));
+            declareParameter(new SqlParameter("pv_ferefere_i",  OracleTypes.DATE));
             declareParameter(new SqlParameter("pv_cdseqpol_i",  OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cduser_i",    OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_nusuasus_i",  OracleTypes.VARCHAR));
@@ -2314,6 +2344,55 @@ public class ProcesoDAO extends AbstractDAO {
 	}
 	/*////////////////////////*/
 	////// p mov mpolicap //////
+	////////////////////////////
+	
+	////////////////////////////
+	////// p mov mdomicil //////
+	/*////////////////////////*/
+	protected class PMovMdomicil extends CustomStoredProcedure {
+	
+		protected PMovMdomicil(DataSource dataSource) {
+			super(dataSource,"PKG_SATELITES.P_MOV_MDOMICIL");
+			/*
+			pv_cdperson_i smap1.pv_cdperson
+			pv_nmorddom_i smap1.NMORDDOM
+			pv_msdomici_i smap1.DSDOMICI qwe
+			pv_nmtelefo_i smap1.NMTELEFO
+			pv_cdpostal_i smap1.CODPOSTAL
+			pv_cdedo_i    smap1.CDEDO
+			pv_cdmunici_i smap1.CDMUNICI
+			pv_cdcoloni_i smap1.CDCOLONI
+			pv_nmnumero_i smap1.NMNUMERO
+			pv_nmnumint_i smap1.NMNUMINT
+			pv_accion_i   #U
+			pv_msg_id_o   -
+			pv_title_o    -
+			*/
+			declareParameter(new SqlParameter("pv_cdperson_i", 		OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_nmorddom_i", 		OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_msdomici_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmtelefo_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdpostal_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdedo_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdmunici_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdcoloni_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmnumero_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmnumint_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_accion_i", 		OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_msg_id_o", 	OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o", 		OracleTypes.VARCHAR));
+			
+			compile();
+		}
+	
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			return mapper.build(map);
+		}
+	}
+	/*////////////////////////*/
+	////// p mov mdomicil //////
 	////////////////////////////
 	
 	////////////////////////////////////////////

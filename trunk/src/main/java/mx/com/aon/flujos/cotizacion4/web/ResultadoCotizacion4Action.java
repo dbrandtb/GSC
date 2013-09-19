@@ -539,16 +539,16 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             UserVO usuarioSesion=(UserVO) this.session.get("USUARIO");
             DatosUsuario userData=kernelManagerSustituto.obtenerDatosUsuario(usuarioSesion.getUser());
             
-            Map<String,String>parameters=new HashMap<String,String>(0);
+            Map<String,Object>parameters=new HashMap<String,Object>(0);
             parameters.put("pv_cdunieco_i", comprarCdunieco);
             parameters.put("pv_cdramo_i",   comprarCdramo);
             parameters.put("pv_estado_i",   "W");
             parameters.put("pv_nmpoliza_i", comprarNmpoliza);
             parameters.put("pv_nsuplogi_i", "0");
             parameters.put("pv_cdtipsup_i", "90");
-            parameters.put("pv_feemisio_i", renderFechas.format(calendarHoy.getTime()));
+            parameters.put("pv_feemisio_i", calendarHoy.getTime());
             parameters.put("pv_nmsolici_i", null);
-            parameters.put("pv_fesolici_i", renderFechas.format(calendarHoy.getTime()));
+            parameters.put("pv_fesolici_i", calendarHoy.getTime());
             parameters.put("pv_ferefere_i", null);
             parameters.put("pv_cdseqpol_i", null);
             parameters.put("pv_cduser_i",   usuarioSesion.getUser());
@@ -558,19 +558,19 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             parameters.put("pv_accion_i",   "I");
             kernelManagerSustituto.movDetalleSuplemento(parameters);
             
-            parameters=new HashMap<String,String>(0);
-            parameters.put("pv_cdunieco",   comprarCdunieco);
-            parameters.put("pv_cdramo",     comprarCdramo);
-            parameters.put("pv_estado",     "W"); 
-            parameters.put("pv_nmpoliza",   comprarNmpoliza);
-            parameters.put("pv_nmsituac",   "0");
-            parameters.put("pv_cdelement",  usuarioSesion.getEmpresa().getElementoId());
-            parameters.put("pv_cdperson",   userData.getCdperson());
-            parameters.put("pv_cdasegur",   comprarCdciaaguradora);
-            parameters.put("pv_cdplan",     comprarCdplan);
-            parameters.put("pv_cdperpag",   comprarCdperpag);
-            log.debug("mapa en action: "+parameters);
-            kernelManagerSustituto.comprarCotizacion(parameters);
+            Map<String,String>parameters2=new HashMap<String,String>(0);
+            parameters2.put("pv_cdunieco",   comprarCdunieco);
+            parameters2.put("pv_cdramo",     comprarCdramo);
+            parameters2.put("pv_estado",     "W"); 
+            parameters2.put("pv_nmpoliza",   comprarNmpoliza);
+            parameters2.put("pv_nmsituac",   "0");
+            parameters2.put("pv_cdelement",  usuarioSesion.getEmpresa().getElementoId());
+            parameters2.put("pv_cdperson",   userData.getCdperson());
+            parameters2.put("pv_cdasegur",   comprarCdciaaguradora);
+            parameters2.put("pv_cdplan",     comprarCdplan);
+            parameters2.put("pv_cdperpag",   comprarCdperpag);
+            log.debug("mapa en action: "+parameters2);
+            kernelManagerSustituto.comprarCotizacion(parameters2);
             success=true;
         }
         catch(Exception ex)

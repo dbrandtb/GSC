@@ -1,41 +1,43 @@
 <%@ include file="/taglibs.jsp"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%--
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+--%>
 <script>
 	///////////////////////
 	//////variables //////
 	/*///////////////////*/
-	var storeCoberturas;
-	var storeCoberturasBorrar;
-	var panelCoberturas;
+	var storeCoberturasp3;
+	var storeCoberturasBorrarp3;
+	var panelCoberturasp3;
+	<%--
 	var urlRegresar = '<s:url namespace="/" action="editarAsegurados" />';
-	var urlCargarCoberturas = '<s:url namespace="/" action="cargarPantallaCoberturas" />';
-	var inputCdunieco = '<s:property value="smap1.pv_cdunieco" />';
-	var inputCdramo = '<s:property value="smap1.pv_cdramo" />';
-	var inputEstado = '<s:property value="smap1.pv_estado" />';
-	var inputNmpoliza = '<s:property value="smap1.pv_nmpoliza" />';
-	var inputNmsituac = '<s:property value="smap1.pv_nmsituac" />';
-	var inputCdpersona = '<s:property value="smap1.pv_cdperson" />';
-	var urlGuardarCoberturas = '<s:url namespace="/" action="guardarCoberturasUsuario" />';
-	var panelAdicionales;
-	var urlTatri = '<s:url namespace="/" action="obtenerCamposTatrigar" />';
-	var urlLoadTatri = '<s:url namespace="/" action="obtenerValoresTatrigar" />';
-	var urlSaveTatri = '<s:url namespace="/" action="guardarValoresTatrigar" />';
-	var contexto = '${ctx}';
+	--%>
+	var urlCargarCoberturasp3 = '<s:url namespace="/" action="cargarPantallaCoberturas" />';
+	var inputCduniecop3 = '<s:property value="smap1.pv_cdunieco" />';
+	var inputCdramop3 = '<s:property value="smap1.pv_cdramo" />';
+	var inputEstadop3 = '<s:property value="smap1.pv_estado" />';
+	var inputNmpolizap3 = '<s:property value="smap1.pv_nmpoliza" />';
+	var inputNmsituacp3 = '<s:property value="smap1.pv_nmsituac" />';
+	var inputCdpersonap3 = '<s:property value="smap1.pv_cdperson" />';
+	var urlGuardarCoberturasp3 = '<s:url namespace="/" action="guardarCoberturasUsuario" />';
+	var panelAdicionalesp3;
+	var urlTatrip3 = '<s:url namespace="/" action="obtenerCamposTatrigar" />';
+	var urlLoadTatrip3 = '<s:url namespace="/" action="obtenerValoresTatrigar" />';
+	var urlSaveTatrip3 = '<s:url namespace="/" action="guardarValoresTatrigar" />';
+	var contextop3 = '${ctx}';
 	/*///////////////////*/
 	//////variables //////
 	///////////////////////
-	Ext
-			.onReady(function() {
+	Ext.onReady(function() {
 
 				/////////////////////
 				////// Modelos //////
 				/*/////////////////*/
-				Ext.define('Modelo1', {
+				Ext.define('Modelo1p3', {
 					extend : 'Ext.data.Model',
 					fields : [ {
 						name : 'GARANTIA'
@@ -70,7 +72,7 @@
 					} ]
 				});
 
-				Ext.define('ModeloAdicionales', {
+				Ext.define('ModeloAdicionalesp3', {
 					extend : 'Ext.data.Model'
 				});
 				/*/////////////////*/
@@ -79,18 +81,18 @@
 				////////////////////
 				////// Stores //////
 				/*////////////////*/
-				storeCoberturas = Ext.create('Ext.data.Store', {
-					storeId : 'storeCoberturas',
-					model : 'Modelo1',
+				storeCoberturasp3 = Ext.create('Ext.data.Store', {
+					storeId : 'storeCoberturasp3',
+					model : 'Modelo1p3',
 					proxy : {
 						type : 'ajax',
-						url : urlCargarCoberturas,
+						url : urlCargarCoberturasp3,
 						extraParams : {
-							'smap1.pv_cdunieco_i' : inputCdunieco,
-							'smap1.pv_cdramo_i' : inputCdramo,
-							'smap1.pv_estado_i' : inputEstado,
-							'smap1.pv_nmpoliza_i' : inputNmpoliza,
-							'smap1.pv_nmsituac_i' : inputNmsituac
+							'smap1.pv_cdunieco_i' : inputCduniecop3,
+							'smap1.pv_cdramo_i' : inputCdramop3,
+							'smap1.pv_estado_i' : inputEstadop3,
+							'smap1.pv_nmpoliza_i' : inputNmpolizap3,
+							'smap1.pv_nmsituac_i' : inputNmsituacp3
 						},
 						reader : {
 							type : 'json',
@@ -100,9 +102,9 @@
 					autoLoad : true
 				});
 
-				storeCoberturasBorrar = Ext.create('Ext.data.Store', {
-					storeId : 'storeCoberturasBorrar',
-					model : 'Modelo1'
+				storeCoberturasBorrarp3 = Ext.create('Ext.data.Store', {
+					storeId : 'storeCoberturasBorrarp3',
+					model : 'Modelo1p3'
 				});
 				/*////////////////*/
 				////// Stores //////
@@ -110,7 +112,7 @@
 				/////////////////////////
 				////// Componentes //////
 				/*/////////////////////*/
-				panelAdicionales = Ext.create('Ext.form.Panel', {
+				panelAdicionalesp3 = Ext.create('Ext.form.Panel', {
 					frame : true,
 					title : 'Datos adicionales',
 					collapsible : true,
@@ -123,15 +125,14 @@
 				///////////////////////
 				////// Contenido //////
 				/*///////////////////*/
-				panelCoberturas = Ext
-						.create(
+				panelCoberturasp3 = Ext.create(
 								'Ext.grid.Panel',
 								{
 									title : 'Coberturas',
 									collapsible : true,
 									titleCollapse : true,
 									style : 'margin:5px;',
-									store : storeCoberturas,
+									store : storeCoberturasp3,
 									renderTo : 'pan_usu_cob_divgrid',
 									frame : true,
 									columns : [
@@ -205,81 +206,62 @@
 												if (cellIndex == 2)//load tatri
 												{
 													//console.log("click view record "+ rowIndex);
-													panelAdicionales.destroy();
-													Ext.Ajax
-															.request({
-																url : urlTatri,
+													panelAdicionalesp3.destroy();
+													Ext.Ajax.request({
+																url : urlTatrip3,
 																params : {
-																	'smap1.pv_cdramo_i' : inputCdramo,
-																	'smap1.pv_cdgarant_i' : record
-																			.get('GARANTIA')
+																	'smap1.pv_cdramo_i' : inputCdramop3,
+																	'smap1.pv_cdgarant_i' : record.get('GARANTIA')
 																},
-																success : function(
-																		response,
-																		opts) {
-																	var json = Ext
-																			.decode(response.responseText);
+																success : function(response,opts) {
+																	var json = Ext.decode(response.responseText);
 																	//console.log(json);
 																	if (json.success == true) {
 																		////// crear modelo con campos que vienen de str1 //////
-																		Ext
-																				.define(
-																						'ModeloAdicionales',
+																		Ext.define(
+																						'ModeloAdicionalesp3',
 																						{
 																							extend : 'Ext.data.Model',
-																							fields : Ext
-																									.decode(json.str1)
+																							fields : Ext.decode(json.str1)
 																						});
 																		////// !crear modelo con campos que vienen de str1 //////
 
 																		////// crear formuario con campos que vienen de str2 //////
-																		panelAdicionales = Ext
-																				.create(
+																		panelAdicionalesp3 = Ext.create(
 																						'Ext.form.Panel',
 																						{
 																							frame : true,
-																							model : 'ModeloAdicionales',
-																							title : 'Datos adicionales de '
-																									+ record
-																											.get('NOMBRE_GARANTIA'),
+																							model : 'ModeloAdicionalesp3',
+																							title : 'Datos adicionales de '+ record.get('NOMBRE_GARANTIA'),
 																							collapsible : true,
 																							titleCollapse : true,
 																							bodyPadding : 5,
 																							maxHeight : 300,
 																							buttonAlign : 'center',
 																							renderTo : 'pan_usu_cob_divadicionales',
-																							url : urlSaveTatri,
-																							items : Ext
-																									.decode(json.str2),
+																							url : urlSaveTatrip3,
+																							layout:{type:'table',columns:2},
+																							items : Ext.decode(json.str2),
 																							buttons : [
 																									{
-																										id : 'botonGuardarAdicionalesCobertura',
+																										id : 'botonGuardarAdicionalesCoberturap3',
 																										text : 'Guardar cambios',
-																										icon : contexto
-																												+ '/resources/fam3icons/icons/accept.png',
+																										icon : contextop3+ '/resources/fam3icons/icons/accept.png',
 																										handler : function() {
-																											if (panelAdicionales
-																													.getForm()
-																													.isValid()) {
-																												panelAdicionales
-																														.getForm()
-																														.submit(
+																											if (panelAdicionalesp3.getForm().isValid()) {
+																												panelAdicionalesp3.getForm().submit(
 																																{
 																																	params : {
-																																		'smap1.pv_cdunieco' : inputCdunieco,
-																																		'smap1.pv_cdramo' : inputCdramo,
-																																		'smap1.pv_estado' : inputEstado,
-																																		'smap1.pv_nmpoliza' : inputNmpoliza,
-																																		'smap1.pv_nmsituac' : inputNmsituac,
-																																		'smap1.pv_cdgarant' : record
-																																				.get('GARANTIA')
+																																		'smap1.pv_cdunieco' : inputCduniecop3,
+																																		'smap1.pv_cdramo' : inputCdramop3,
+																																		'smap1.pv_estado' : inputEstadop3,
+																																		'smap1.pv_nmpoliza' : inputNmpolizap3,
+																																		'smap1.pv_nmsituac' : inputNmsituacp3,
+																																		'smap1.pv_cdgarant' : record.get('GARANTIA')
 																																	},
-																																	success : function(
-																																			form,
-																																			action) {
+																																	success : function(form,action) {
 																																		if (action.result.success == true) {
-																																			Ext.Msg
-																																					.show({
+																																			Ext.Msg.show({
 																																						title : 'Datos guardados',
 																																						msg : 'Los datos han sido guardados',
 																																						buttons : Ext.Msg.OK
@@ -317,67 +299,48 @@
 																									},
 																									{
 																										text : 'Cancelar',
-																										icon : contexto
-																												+ '/resources/fam3icons/icons/cancel.png',
+																										icon : contextop3+ '/resources/fam3icons/icons/cancel.png',
 																										handler : function() {
-																											window.parent
-																													.scrollTo(
-																															0,
-																															0);
-																											panelAdicionales
-																													.destroy();
+																											//window.parent.scrollTo(0,0);
+																											panelAdicionalesp3.destroy();
 																										}
 																									} ]
 																						});
-																		window.parent
-																				.scrollTo(
-																						0,
-																						600);
+																		//window.parent.scrollTo(0,600);
 																		////// !crear formuario con campos que vienen de str2 //////
 
 																		////// cargar formulario con modelo creado //////
 																		Ext
 																				.define(
-																						'LoaderModeloAdicionales',
+																						'LoaderModeloAdicionalesp3',
 																						{
-																							extend : 'ModeloAdicionales',
+																							extend : 'ModeloAdicionalesp3',
 																							proxy : {
 																								type : 'ajax',
-																								url : urlLoadTatri,
+																								url : urlLoadTatrip3,
 																								extraParams : {
-																									'smap1.pv_cdunieco_i' : inputCdunieco,
-																									'smap1.pv_cdramo_i' : inputCdramo,
-																									'smap1.pv_estado_i' : inputEstado,
-																									'smap1.pv_nmpoliza_i' : inputNmpoliza,
-																									'smap1.pv_nmsituac_i' : inputNmsituac,
-																									'smap1.pv_cdgarant_i' : record
-																											.get('GARANTIA')
+																									'smap1.pv_cdunieco_i' : inputCduniecop3,
+																									'smap1.pv_cdramo_i' : inputCdramop3,
+																									'smap1.pv_estado_i' : inputEstadop3,
+																									'smap1.pv_nmpoliza_i' : inputNmpolizap3,
+																									'smap1.pv_nmsituac_i' : inputNmsituacp3,
+																									'smap1.pv_cdgarant_i' : record.get('GARANTIA')
 																								},
 																								reader : {
 																									type : 'json'
 																								}
 																							}
 																						});
-																		var loaderAdicionales = Ext.ModelManager
-																				.getModel('LoaderModeloAdicionales');
-																		loaderAdicionales
-																				.load(
+																		var loaderAdicionalesp3 = Ext.ModelManager.getModel('LoaderModeloAdicionalesp3');
+																		loaderAdicionalesp3.load(
 																						123,
 																						{
-																							success : function(
-																									resp) {
-																								panelAdicionales
-																										.getForm()
-																										.loadRecord(
-																												resp);
+																							success : function(resp) {
+																								panelAdicionalesp3.getForm().loadRecord(resp);
 																							},
 																							failure : function() {
-																								window.parent
-																										.scrollTo(
-																												0,
-																												100);
-																								panelAdicionales
-																										.destroy();
+																								//window.parent.scrollTo(0,100);
+																								panelAdicionalesp3.destroy();
 																								Ext.Msg
 																										.show({
 																											title : 'Error',
@@ -413,22 +376,17 @@
 															});
 												} else if (cellIndex == 4)//delete
 												{
-													storeCoberturasBorrar
-															.add(grid
-																	.getStore()
-																	.getAt(
-																			rowIndex));
-													grid.getStore().removeAt(
-															rowIndex);
+													storeCoberturasBorrarp3.add(grid.getStore().getAt(rowIndex));
+													grid.getStore().removeAt(rowIndex);
 												}
 											}
 										}
 									},
 									buttons : [
+									        <%--
 											{
 												text : 'Regresar',
-												icon : contexto
-														+ '/resources/extjs4/resources/ext-theme-neptune/images/toolbar/scroll-left.png',
+												icon : contextop3+ '/resources/extjs4/resources/ext-theme-neptune/images/toolbar/scroll-left.png',
 												handler : function() {
 													Ext
 															.create(
@@ -446,18 +404,14 @@
 																	});
 												}
 											},
+											--%>
 											{
 												text : 'Guardar cambios',
-												icon : contexto
-														+ '/resources/fam3icons/icons/accept.png',
+												icon : contextop3+ '/resources/fam3icons/icons/accept.png',
 												handler : function() {
 													var jsonList = [];
-													storeCoberturas
-															.each(function(
-																	record,
-																	index) {
-																jsonList
-																		.push({
+													storeCoberturasp3.each(function(record,index) {
+																jsonList.push({
 																			GARANTIA : record
 																					.get('GARANTIA'),
 																			NOMBRE_GARANTIA : record
@@ -495,12 +449,8 @@
 																		});
 															});
 													var jsonListBorrar = [];
-													storeCoberturasBorrar
-															.each(function(
-																	record,
-																	index) {
-																jsonListBorrar
-																		.push({
+													storeCoberturasBorrarp3.each(function(record,index) {
+																jsonListBorrar.push({
 																			GARANTIA : record
 																					.get('GARANTIA'),
 																			NOMBRE_GARANTIA : record
@@ -541,26 +491,24 @@
 													post['slist1'] = jsonList;
 													post['slist2'] = jsonListBorrar;
 													var smap1 = {
-														pv_cdunieco_i : inputCdunieco,
-														pv_cdramo_i : inputCdramo,
-														pv_estado_i : inputEstado,
-														pv_nmpoliza_i : inputNmpoliza,
-														pv_nmsituac_i : inputNmsituac
+														pv_cdunieco_i : inputCduniecop3,
+														pv_cdramo_i : inputCdramop3,
+														pv_estado_i : inputEstadop3,
+														pv_nmpoliza_i : inputNmpolizap3,
+														pv_nmsituac_i : inputNmsituacp3
 													};
 													post['smap1'] = smap1;
-													panelCoberturas
-															.setLoading(true);
+													panelCoberturasp3.setLoading(true);
 													//console.log(Ext.encode(post));
 													Ext.Ajax
 															.request({
-																url : urlGuardarCoberturas,
+																url : urlGuardarCoberturasp3,
 																jsonData : Ext
 																		.encode(post),
 																success : function(
 																		response,
 																		opts) {
-																	panelCoberturas
-																			.setLoading(false);
+																	panelCoberturasp3.setLoading(false);
 																	var json = Ext
 																			.decode(response.responseText);
 																	if (json.success == true) {
@@ -583,8 +531,7 @@
 																failure : function(
 																		response,
 																		opts) {
-																	panelCoberturas
-																			.setLoading(true);
+																	panelCoberturasp3.setLoading(true);
 																	Ext.Msg
 																			.show({
 																				title : 'Error',
@@ -602,8 +549,10 @@
 				///////////////////////
 			});
 </script>
+<%--
 </head>
 <body style="margin: 0; padding: 0;">
+--%>
 	<table width="100%" height="600" border="0">
 		<tr height="300">
 			<td align="center" valign="top">
@@ -624,5 +573,7 @@
 			</td>
 		</tr>
 	</table>
+	<%--
 </body>
 </html>
+--%>

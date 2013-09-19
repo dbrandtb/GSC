@@ -140,19 +140,25 @@
         <pattern>/subirArchivoMostrarBarra.action</pattern>
         <pattern>/jsp/extjs4/subirArchivoBarra.jsp</pattern>
         
-        <pattern>/editarAsegurados.action</pattern>
-        <pattern>/jsp/extjs4/editarAsegurados.jsp</pattern>
+        <!--<pattern>/editarAsegurados.action</pattern>
+        <pattern>/jsp/extjs4/editarAsegurados.jsp</pattern>-->
         
-        <pattern>/pantallaDomicilio.action</pattern>
-        <pattern>/jsp/extjs4/aseguradosDomicilio.jsp</pattern>
+        <!--<pattern>/pantallaDomicilio.action</pattern>
+        <pattern>/jsp/extjs4/aseguradosDomicilio.jsp</pattern>-->
         
-        <pattern>/editarCoberturas.action</pattern>
-        <pattern>/jsp/extjs4/aseguradosCoberturas.jsp</pattern>
+        <!--<pattern>/editarCoberturas.action</pattern>
+        <pattern>/jsp/extjs4/aseguradosCoberturas.jsp</pattern>-->
     </decorator>
     
     <decorator name="emptytest" page="emptytest.jsp">
         <pattern>/seguridad/*</pattern>
-        <pattern>/jsp/portal/login.jsp</pattern>    
+        <pattern>/jsp/portal/login.jsp</pattern>
+        <pattern>/editarAsegurados.action</pattern>
+        <pattern>/jsp/extjs4/editarAsegurados.jsp</pattern>
+        <pattern>/editarCoberturas.action</pattern>
+        <pattern>/jsp/extjs4/aseguradosCoberturas.jsp</pattern>
+        <pattern>/pantallaDomicilio.action</pattern>
+        <pattern>/jsp/extjs4/aseguradosDomicilio.jsp</pattern>
     </decorator>
 
     <!--decorator name="default" page="default.jsp">

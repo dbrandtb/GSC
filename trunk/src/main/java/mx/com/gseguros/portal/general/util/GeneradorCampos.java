@@ -5,6 +5,7 @@
 package mx.com.gseguros.portal.general.util;
 
 import java.util.List;
+import org.apache.commons.lang.StringUtils;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.Tatri;
 
@@ -14,7 +15,7 @@ import mx.com.gseguros.portal.cotizacion.model.Tatri;
  */
 public class GeneradorCampos {
     
-    public static final String idPrefix="idAutoGenerado";
+    public String idPrefix="idAutoGenerado";
     public static final String namePrefix="parametros.pv_otvalor";
     private org.apache.log4j.Logger log=org.apache.log4j.Logger.getLogger(GeneradorCampos.class);
     private Item items;
@@ -28,6 +29,7 @@ public class GeneradorCampos {
     public GeneradorCampos(String context)
     {
     	this.context=context;
+    	idPrefix+="_"+System.currentTimeMillis()+"_"+((long)Math.ceil((Math.random()*10000d)))+"_";
     }
     
     public void genera(List<Tatri> lt) throws Exception
@@ -64,7 +66,7 @@ public class GeneradorCampos {
         	fi.add(Item.crear("dateFormat", "d/m/Y"));
         
         Item it=new Item();
-        if(ta.getOttabval()!=null&&!ta.getOttabval().isEmpty())
+        if(StringUtils.isNotBlank(ta.getOttabval()))
         //se alimenta de la base de datos
         {
             it.setType(Item.OBJ);
@@ -132,11 +134,11 @@ public class GeneradorCampos {
             it.add(Item.crear("valueField", "key"));
             it.add(Item.crear("editable", "false"));
             //it.add(Item.crear("emptyText", "Seleccione..."));
-            if(idx<lt.size()-1&&lt.get(idx+1).getCdtablj1()!=null&&!lt.get(idx+1).getCdtablj1().isEmpty())//para el padre anidado
+            if(idx<lt.size()-1&&StringUtils.isNotBlank(lt.get(idx+1).getCdtablj1()))//para el padre anidado
             {
             	this.agregarHerencia(lt,it,idx);
             }	
-            if(idx>0&&ta.getCdtablj1()!=null&&!ta.getCdtablj1().isEmpty())//para el hijo anidado
+            if(idx>0&&StringUtils.isNotBlank(ta.getCdtablj1()))//para el hijo anidado
             {
                 it.add(Item.crear("forceSelection",false));
                 it.add(Item.crear("heredar",
@@ -185,7 +187,7 @@ public class GeneradorCampos {
             {
             	it.add(Item.crear("maxLength", Integer.parseInt(ta.getNmlmax())));
             }
-            if(idx<lt.size()-1&&lt.get(idx+1).getCdtablj1()!=null&&!lt.get(idx+1).getCdtablj1().isEmpty())
+            if(idx<lt.size()-1&&StringUtils.isNotBlank(lt.get(idx+1).getCdtablj1()))
             {
             	this.agregarHerencia(lt,it,idx);
             }
@@ -210,7 +212,7 @@ public class GeneradorCampos {
             {
             	it.add(Item.crear("maxLength", Integer.parseInt(ta.getNmlmax())));
             }
-            if(idx<lt.size()-1&&lt.get(idx+1).getCdtablj1()!=null&&!lt.get(idx+1).getCdtablj1().isEmpty())
+            if(idx<lt.size()-1&&StringUtils.isNotBlank(lt.get(idx+1).getCdtablj1()))
             {
             	this.agregarHerencia(lt,it,idx);
             }
