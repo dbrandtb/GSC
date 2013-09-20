@@ -63,4 +63,5 @@ public interface KernelManagerSustituto {
 	public Map<String, Object> obtenerValoresTatriper(Map<String, String> smap1) throws ApplicationException;
 	public Map<String, String> obtenerDomicilio(Map<String, String> params) throws ApplicationException;
 	public WrapperResultados pMovMdomicil(Map<String, String> paramDomicil) throws ApplicationException;
+	public WrapperResultados emitir(Map<String, Object> paramEmi) throws ApplicationException;
 }

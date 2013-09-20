@@ -113,7 +113,7 @@
 				////// Componentes //////
 				/*/////////////////////*/
 				panelAdicionalesp3 = Ext.create('Ext.form.Panel', {
-					frame : true,
+					frame : false,
 					title : 'Datos adicionales',
 					collapsible : true,
 					titleCollapse : true,
@@ -134,7 +134,7 @@
 									style : 'margin:5px;',
 									store : storeCoberturasp3,
 									renderTo : 'pan_usu_cob_divgrid',
-									frame : true,
+									frame : false,
 									columns : [
 											{
 												header : 'Cobertura',
@@ -191,7 +191,7 @@
 											'Ext.grid.plugin.RowEditing', {
 												clicksToEdit : 1
 											}) ],
-									width : 500,
+									//width : 500,
 									height : 300,
 									buttonAlign : 'center',
 									listeners : {
@@ -230,7 +230,8 @@
 																		panelAdicionalesp3 = Ext.create(
 																						'Ext.form.Panel',
 																						{
-																							frame : true,
+																							frame : false,
+																							style : 'margin:5px;',
 																							model : 'ModeloAdicionalesp3',
 																							title : 'Datos adicionales de '+ record.get('NOMBRE_GARANTIA'),
 																							collapsible : true,
@@ -266,6 +267,7 @@
 																																						msg : 'Los datos han sido guardados',
 																																						buttons : Ext.Msg.OK
 																																					});
+																																			panelAdicionalesp3.destroy();
 																																		} else {
 																																			Ext.Msg
 																																					.show({
@@ -518,6 +520,7 @@
 																					msg : 'Se han guardado las coberturas',
 																					buttons : Ext.Msg.OK
 																				});
+																		expande(2);
 																	} else {
 																		Ext.Msg
 																				.show({
@@ -542,7 +545,15 @@
 																}
 															});
 												}
-											} ]
+											}
+											,{
+												text:'Cancelar',
+												icon : contextop3+ '/resources/fam3icons/icons/cancel.png',
+												handler:function(){
+													expande(2);
+												}
+											}
+											]
 								});
 				/*///////////////////*/
 				////// Contenido //////
@@ -553,12 +564,15 @@
 </head>
 <body style="margin: 0; padding: 0;">
 --%>
+<div id="pan_usu_cob_divgrid" style="height:300px;"></div>
+<div id="pan_usu_cob_divadicionales" style="height:300px;"></div>
+<%--
 	<table width="100%" height="600" border="0">
 		<tr height="300">
 			<td align="center" valign="top">
 				<table align="center" style="border: 0px solid blue;">
 					<tr>
-						<td><div id="pan_usu_cob_divgrid"></div></td>
+						<td></td>
 					</tr>
 				</table>
 			</td>
@@ -567,12 +581,13 @@
 			<td align="center" valign="top">
 				<table align="center" style="border: 0px solid yellow;">
 					<tr>
-						<td><div id="pan_usu_cob_divadicionales"></div></td>
+						<td></td>
 					</tr>
 				</table>
 			</td>
 		</tr>
 	</table>
+	--%>
 	<%--
 </body>
 </html>

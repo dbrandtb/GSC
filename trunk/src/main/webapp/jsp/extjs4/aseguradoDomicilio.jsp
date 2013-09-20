@@ -273,6 +273,7 @@ Ext.onReady(function(){
                                         msg: 'Se han guardado los datos',
                                         buttons: Ext.Msg.OK
                                     });
+                                    expande(2);
                                 }
                                 else
                                 {
@@ -306,6 +307,14 @@ Ext.onReady(function(){
                         });
                     }
                 }
+            }
+            ,{
+            	text:'Cancelar',
+            	icon : contextop2+ '/resources/fam3icons/icons/cancel.png',
+            	handler:function()
+            	{
+            		expande(2);
+            	}
             }
         ]
     });
@@ -371,7 +380,7 @@ Ext.onReady(function(){
     </head>
     <body>
 --%>
-        <div id="maindivp4"></div>
+        <div id="maindivp4" style="height:600px;"></div>
 <%--
     </body>
 </html>

@@ -493,4 +493,13 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return res;
 	}
 	
+	public WrapperResultados emitir(Map<String, Object> param) throws ApplicationException
+	{
+		log.debug("### kernel sustituto emitir map: "+param);
+        WrapperResultados res=this.returnBackBoneInvoke(param, ProcesoDAO.EMITIR);
+        log.debug("### kernel sustituto emitir id:"+res.getMsgId());
+        log.debug("### kernel sustituto emitir mesage:"+res.getMsgText());
+        return res;
+	}
+	
 }

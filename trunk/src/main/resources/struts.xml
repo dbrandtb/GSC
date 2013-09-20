@@ -434,6 +434,9 @@
                 <action name="recotizar" class="beanDatosComplementarios" method="retarificar">
                     <result name="success" type="json" />
                 </action>
+                <action name="emitir" class="beanDatosComplementarios" method="emitir">
+                    <result name="success" type="json" />
+                </action>
     </package>
 
 </struts>

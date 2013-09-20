@@ -100,6 +100,7 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String OBTENER_TATRIPER="OBTENER_TATRIPER";
     public static final String P_GET_DOMICIL="P_GET_DOMICIL";
     public static final String P_MOV_MDOMICIL="P_MOV_MDOMICIL";
+    public static final String EMITIR = "EMITIR";
 
 	protected void initDao() throws Exception {
 		addStoredProcedure(PERMISO_EJECUCION_PROCESO,new PermisoEjecucionProceso(getDataSource()));
@@ -153,6 +154,7 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(OBTENER_TATRIPER, new ObtieneTatriper(getDataSource()));
         addStoredProcedure(P_GET_DOMICIL, new ObtenerDomicilio(getDataSource()));
         addStoredProcedure(P_MOV_MDOMICIL, new PMovMdomicil(getDataSource()));
+        addStoredProcedure(EMITIR, new Emitir(getDataSource()));
 	}
 
 	protected class BuscarMatrizAsignacion extends CustomStoredProcedure {
@@ -2488,6 +2490,49 @@ public class ProcesoDAO extends AbstractDAO {
 	}
 	/*//////////////////////////////////////////*/
 	////// obtiene domicilio           ///////////
+	//////////////////////////////////////////////
+	
+	//////////////////////////////////////////////
+	////// emitir                       //////////
+	/*//////////////////////////////////////////*/
+	protected class Emitir extends CustomStoredProcedure
+	{
+		protected Emitir(DataSource dataSource)
+		{
+			super(dataSource,"PKG_EMISION.P_PROCESO_EMISION_GENERAL");
+			declareParameter(new SqlParameter("pv_cdusuari",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdunieco",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo",        OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado",        OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsituac",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdelement",     OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdcia",         OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdplan",        OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdperpag",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdperson",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_fecha",         OracleTypes.DATE));
+			declareParameter(new SqlOutParameter("pv_nmpoliza_o",   OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_nmpoliex_o",   OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_message",      OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
+		}
+	
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			WrapperResultados wrapperResultados = mapper.build(map);
+			
+			wrapperResultados.setItemMap(new HashMap<String, Object>());
+			wrapperResultados.getItemMap().put("nmpoliza", map.get("pv_nmpoliza_o"));
+			wrapperResultados.getItemMap().put("nmpoliex", map.get("pv_nmpoliex_o"));
+
+			return wrapperResultados;
+		}
+	}
+	/*//////////////////////////////////////////*/
+	////// emitir                      ///////////
 	//////////////////////////////////////////////
     
 }
