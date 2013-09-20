@@ -36,10 +36,12 @@ public class DocumentosPolizaAction extends ActionSupport {
 			logger.debug("idPoliza: " + idPoliza);
 			logger.debug("filename: " + filename);
 
+			logger.debug("Ruta: " + this.getText("ruta.documentos.poliza"));
+
 
 		try {
 			
-			fileInputStream = new FileInputStream(new File("/opt/ice/gseguros/documentos/"+idPoliza+"/"+filename));
+			fileInputStream = new FileInputStream(new File(this.getText("ruta.documentos.poliza")+"/"+idPoliza+"/"+filename));
 
 			String fileType = filename.substring(filename.lastIndexOf(".") + 1,
 					filename.length());
