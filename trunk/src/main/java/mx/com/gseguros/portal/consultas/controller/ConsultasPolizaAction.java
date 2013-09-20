@@ -11,7 +11,9 @@ import mx.com.gseguros.portal.consultas.model.ConsultaDatosPolizaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosSituacionVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosSuplementoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosTarifaVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAgenteVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAseguradoVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaReciboAgenteVO;
 import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 
 /**
@@ -42,6 +44,9 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     private List<ConsultaDatosCoberturasVO> datosCoberturas;
 
     private List<ConsultaPolizaAseguradoVO> polizasAsegurado;
+
+    private List<ConsultaPolizaAgenteVO> polizasAgente;
+    private List<ConsultaReciboAgenteVO> recibosAgente;
 
     private List<ConsultaDatosTarifaVO> datosTarifa;
     
@@ -206,6 +211,57 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     	return SUCCESS;
     	
     }
+    
+    
+    /**
+     * Obtiene las polizas de un Agente
+     * @return String result
+     */
+    public String consultaPolizasAgente(){
+    	logger.debug(" **** Entrando a consultaPolizasAgente ****");
+    	try {
+    		
+    		WrapperResultados result = consultasPolizaManager.consultaPolizasAgente(
+    				params.get("cdagente"));
+    		
+    		polizasAgente = (ArrayList<ConsultaPolizaAgenteVO>) result.getItemList();
+    		
+    		logger.debug("Resultado de la consultaPolizasAgente:" + polizasAgente);
+    		
+    	}catch( Exception e){
+    		logger.error("Error al obtener los consultaPolizasAgente ",e);
+    		return SUCCESS;
+    	}
+    	
+    	success = true;
+    	return SUCCESS;
+    	
+    }
+    /**
+     * Obtiene recibos de la poliza de un agente
+     * @return String result
+     */
+    public String consultaRecibosAgente(){
+    	logger.debug(" **** Entrando a consultaRecibosAgente ****");
+    	try {
+    		
+    		WrapperResultados result = consultasPolizaManager.consultaRecibosAgente(
+    				params.get("cdunieco"), params.get("cdramo"),
+    				params.get("estado"), params.get("nmpoliza"));
+    		
+    		recibosAgente = (ArrayList<ConsultaReciboAgenteVO>) result.getItemList();
+    		
+    		logger.debug("Resultado de la consultaRecibosAgente:" + recibosAgente);
+    		
+    	}catch( Exception e){
+    		logger.error("Error al obtener los consultaRecibosAgente ",e);
+    		return SUCCESS;
+    	}
+    	
+    	success = true;
+    	return SUCCESS;
+    	
+    }
 
 
     //Getters and setters:
@@ -281,6 +337,26 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
 
 	public void setDatosTarifa(List<ConsultaDatosTarifaVO> datosTarifa) {
 		this.datosTarifa = datosTarifa;
+	}
+
+
+	public List<ConsultaPolizaAgenteVO> getPolizasAgente() {
+		return polizasAgente;
+	}
+
+
+	public void setPolizasAgente(List<ConsultaPolizaAgenteVO> polizasAgente) {
+		this.polizasAgente = polizasAgente;
+	}
+
+
+	public List<ConsultaReciboAgenteVO> getRecibosAgente() {
+		return recibosAgente;
+	}
+
+
+	public void setRecibosAgente(List<ConsultaReciboAgenteVO> recibosAgente) {
+		this.recibosAgente = recibosAgente;
 	}
     
 }
