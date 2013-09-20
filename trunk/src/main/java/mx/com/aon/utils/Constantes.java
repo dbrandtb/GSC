@@ -48,6 +48,8 @@ public class Constantes {
      */
     public static final String FORMAT_XLS = "XLS";
 
+    public static final String FORMAT_XLSX = "XLSX";
+
     /**
      * CSV format constant
      */
@@ -67,6 +69,8 @@ public class Constantes {
      * TXT format constant
      */
     public static final String FORMAT_DOC = "DOC";
+
+    public static final String FORMAT_DOCX = "DOCX";
     
     /**
      * TXT format constant
@@ -87,6 +91,8 @@ public class Constantes {
      * TXT format constant
      */
     public static final String FORMAT_JPEG = "JPEG";
+
+    public static final String FORMAT_PNG = "PNG";
     
     /**
      * TXT format constant
