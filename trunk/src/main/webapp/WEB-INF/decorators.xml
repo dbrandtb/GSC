@@ -50,6 +50,8 @@
 
 		<pattern>/subirArchivoMostrarBarra.action</pattern>
 		<pattern>/jsp/extjs4/subirArchivoBarra.jsp</pattern>
+		
+		<pattern>/jsp/consultas/*.jsp</pattern> 
 	</decorator>
 	
 	
@@ -58,6 +60,11 @@
         <pattern>/seleccionaRolCliente.action</pattern>
         <pattern>/jsp/portal/treeRolElemento.jsp</pattern>
         <pattern>/jsp/portal/index.jsp</pattern>
+    </decorator>
+    
+    
+    <decorator name="decmainbody" page="decmainbody.jsp">
+        <pattern>/jsp/portal/mainBody.jsp</pattern>
     </decorator>
 
 
