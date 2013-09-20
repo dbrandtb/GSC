@@ -2265,6 +2265,8 @@ Ext.onReady(function(){
             id:'botonLimpiar',
             handler:function()
             {
+            	gridIncisos.hayTitular=false;
+            	gridIncisos.hayConyugue=false;
                 formPanel.getForm().reset();
                 storeIncisos.removeAll();
                 storeIncisos.sync();

@@ -4,6 +4,14 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <style>
+        div.claseTitulo>div.x-panel-header>div.x-header-body>div.x-box-inner>div.x-box-target>div.x-panel-header-text-container>span.x-header-text
+        {
+            font-size:16px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        </style>
         <%--////////////////////////////////////
         ////// para el parser de archivos //////
         ////////////////////////////////////--%
@@ -25,6 +33,22 @@
             var contexto='${ctx}';
             var urlRecotizar='<s:url namespace="/" action="recotizar" />';
             var accordion;
+            var urlEmitir='<s:url namespace="/" action="emitir" />';
+            
+            function expande(indice)
+            {
+            	var comp;
+            	if(indice==1)
+           		{
+            		comp=Ext.getCmp('formPanel');
+           		}
+            	else if(indice==2)
+           		{
+            	    comp=Ext.getCmp('tabPanelAsegurados');
+           		}
+           		//window.parent.scrollTo(0,150+comp.y);
+          		comp.expand();
+          	}
             
             Ext.onReady(function(){
                 
@@ -61,7 +85,8 @@
                     [
                     /**/
                         Ext.create('Ext.form.Panel',{
-                        	title : 'Datos complementarios',
+                        	title : 'Editar datos complementarios / emitir',
+                        	cls:'claseTitulo',
 		                    id:'formPanel',//id1
 		                    //renderTo:'maindiv',
 		                    url:urlGuardar,
@@ -476,7 +501,45 @@
 		                                                            xtype : 'button'
 		                                                            ,text : 'Emitir'
 		                                                            ,icon : contexto+'/resources/fam3icons/icons/award_star_gold_3.png'
-		                                                            ,disabled : true
+		                                                            //,disabled : true
+		                                                            ,handler:function()
+		                                                            {
+		                                                            	Ext.Ajax.request(
+		                                                            	{
+		                                                            		url     : urlEmitir
+		                                                            		,params :
+		                                                            		{
+		                                                                        'panel1.pv_nmpoliza' : inputNmpoliza
+		                                                            		}
+		                                                            	    ,success:function(response)
+		                                                            	    {
+		                                                            	    	var json=Ext.decode(response.responseText);
+		                                                            	    	console.log(json);
+		                                                            	    	if(json.success==true)
+		                                                            	    	{
+		                                                            	    		
+		                                                            	    	}
+		                                                            	    	else
+		                                                            	    	{
+		                                                            	    		Ext.Msg.show({
+	                                                                                    title:'Error',
+	                                                                                    msg: 'Error al emitir la poliza',
+	                                                                                    buttons: Ext.Msg.OK,
+	                                                                                    icon: Ext.Msg.ERROR
+	                                                                                });
+		                                                            	    	}
+		                                                            	    }
+		                                                            	    ,failure:function()
+		                                                            	    {
+		                                                            	    	Ext.Msg.show({
+		                                                                            title:'Error',
+		                                                                            msg: 'Error de comunicaci&oacute;n',
+		                                                                            buttons: Ext.Msg.OK,
+		                                                                            icon: Ext.Msg.ERROR
+		                                                                        });
+		                                                            	    }
+		                                                            	});
+		                                                            }
 		                                                        }
 		                                                        ,{
 		                                                            xtype     : 'button'
@@ -504,11 +567,20 @@
 		                            }
 		                        }
 		                    ]
+                            ,listeners:
+                            {
+                            	expand:function( p, eOpts )
+                            	{
+                            		window.parent.scrollTo(0,150+p.y);
+                            	}
+                            }
 		                })
                     /**/
                         ,Ext.create('Ext.panel.Panel',
                         {
-                        	title:'Asegurados'
+                        	id:'tabPanelAsegurados'
+                        	,title:'Editar asegurados'
+                        	,cls:'claseTitulo'
                         	,loader:
                         	{
                         		url:urlEditarAsegurados
@@ -521,6 +593,13 @@
                         		,scripts:true
                         		,autoLoad:true
                         	}
+	                        ,listeners:
+	                        {
+	                            expand:function( p, eOpts )
+	                            {
+	                                window.parent.scrollTo(0,150+p.y);
+	                            }
+	                        }
                         })
                     ]
                 });

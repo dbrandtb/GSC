@@ -6,6 +6,13 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 --%>
+<style>
+.x-action-col-icon {
+    height: 16px;
+    width: 16px;
+    margin-right: 8px;
+}
+</style>
 <script>
 	var inputCduniecop2= '<s:property value="map1.cdunieco" />';
 	var inputCdramop2=   '<s:property value="map1.cdramo" />';
@@ -33,7 +40,7 @@
 	
     function rendererRolp2(v)
     {
-    	var leyenda='';
+    	var leyenda='no';
         if(typeof v == 'string')
 	    		   //tengo solo el indice
         {
@@ -68,7 +75,7 @@
     
     function rendererSexop2(v)
     {
-        var leyenda='';
+        var leyenda='no';
         if(typeof v == 'string')
                    //tengo solo el indice
         {
@@ -140,6 +147,7 @@
                         msg: 'Se ha guardado la informaci&oacute;n',
                         buttons: Ext.Msg.OK
                     });
+                	expande(1);
                 }
                 else
                	{
@@ -272,7 +280,7 @@
 	        ],
 	        xtype: 'cell-editing',
 
-	        //title: 'Asegurados',
+	        title: 'Asegurados',
 	        frame: false,
 	        //collapsible:true,
 	        //titleCollapse:true,
@@ -404,7 +412,8 @@
 	            accordion.add(
        			{
        				id:'coberturasAccordionEl'
-       				,title:'Coberturas de '+record.get('nombre')+' '+(record.get('segundo_nombre')?record.get('segundo_nombre')+' ':' ')+record.get('Apellido_Paterno')+' '+record.get('Apellido_Materno')
+       				,title:'Editar coberturas de '+record.get('nombre')+' '+(record.get('segundo_nombre')?record.get('segundo_nombre')+' ':' ')+record.get('Apellido_Paterno')+' '+record.get('Apellido_Materno')
+       				,cls:'claseTitulo'
        				,loader:
        				{
 	                    url : urlCoberturasAseguradop2
@@ -419,6 +428,13 @@
        					,autoLoad:true
        					,scripts:true
        				}
+	       			,listeners:
+	                {
+	                    expand:function( p, eOpts )
+	                    {
+	                        window.parent.scrollTo(0,150+p.y);
+	                    }
+	                }
        			}).expand();
 	        	/*
 	        	Ext.create('Ext.form.Panel').submit({
@@ -437,7 +453,8 @@
 	        	accordion.add(
                 {
                     id:'domicilioAccordionEl'
-                    ,title:'Domicilio de '+record.get('nombre')+' '+(record.get('segundo_nombre')?record.get('segundo_nombre')+' ':' ')+record.get('Apellido_Paterno')+' '+record.get('Apellido_Materno')
+                    ,title:'Editar domicilio de '+record.get('nombre')+' '+(record.get('segundo_nombre')?record.get('segundo_nombre')+' ':' ')+record.get('Apellido_Paterno')+' '+record.get('Apellido_Materno')
+                    ,cls:'claseTitulo'
                     ,loader:
                     {
                     	url : urlDomiciliop2
@@ -456,6 +473,13 @@
                         ,autoLoad:true
                         ,scripts:true
                     }
+	                ,listeners:
+	                {
+	                    expand:function( p, eOpts )
+	                    {
+	                        window.parent.scrollTo(0,150+p.y);
+	                    }
+	                }
                 }).expand();
 	        	<%--
                 Ext.create('Ext.form.Panel').submit({
@@ -585,7 +609,9 @@
                                                                 if(sinCdperson==0)
                                                                 {
                                                                     //procesar submit
-                                                                    storePersonasp2.sync();
+                                                                    //console.log(storePersonasp2.getRange());
+                                                                    //storePersonasp2.sync();
+                                                                    //console.log(storePersonasp2.getRange());
                                                                     gridPersonasp2.getView().refresh();
                                                                     incisosJson=[];
                                                                     storePersonasp2.each(function(record,index)
@@ -677,6 +703,13 @@
             			}
 	            	}
 	            }
+	            ,{
+                    text:'Cancelar',
+                    icon : contextop2+ '/resources/fam3icons/icons/cancel.png',
+                    handler:function(){
+                        expande(1);
+                    }
+                }
             ]
 		});
 		

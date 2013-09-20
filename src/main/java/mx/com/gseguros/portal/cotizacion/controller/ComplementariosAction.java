@@ -432,8 +432,9 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 	                        }]*/
 			item2.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("xtype", "actioncolumn"))
-					.add(new Item("width", 60))
+					.add(new Item("width", 80))
 					.add(new Item("menuDisabled", true))
+					.add(new Item("header", "Acciones"))
 					.add(new Item("items", null,Item.ARR)
 						.add(Item.crear(null,null,Item.OBJ)
 								.add("icon","resources/fam3icons/icons/text_list_bullets.png")
@@ -745,6 +746,87 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 				+ "\n#########################"
 				+ "\n#########################"
 				);
+		return SUCCESS;
+	}
+	
+	public String emitir()
+	{
+		log.debug(""
+				+ "\n########################"
+				+ "\n########################"
+				+ "\n######            ######"
+				+ "\n######   emitir   ######"
+				+ "\n######            ######"
+				+ "");
+		try
+		{
+			log.debug("panel1"+panel1);
+			
+			//obtener usuario y datos de ususario
+			UserVO us=(UserVO)session.get("USUARIO");
+			DatosUsuario datUs=kernelManager.obtenerDatosUsuario(us.getUser());
+			
+			//obtener poliza completa
+            /**/
+			Map<String,String>paramObtenerPoliza=new LinkedHashMap<String,String>(0);
+			paramObtenerPoliza.put("pv_cdunieco" , datUs.getCdunieco());
+			paramObtenerPoliza.put("pv_cdramo"   , datUs.getCdramo());
+			paramObtenerPoliza.put("pv_estado"   , "W");
+			paramObtenerPoliza.put("pv_nmpoliza" , panel1.get("pv_nmpoliza"));
+			paramObtenerPoliza.put("pv_cdusuari" , us.getUser());
+			Map<String,Object>polizaCompleta=kernelManager.getInfoMpolizasCompleta(paramObtenerPoliza);
+			log.debug("poliza a emitir: "+polizaCompleta);
+			/**/
+			
+			/*
+			pv_cdusuari
+            pv_cdunieco
+            pv_cdramo
+            pv_estado
+            pv_nmpoliza
+            pv_nmsituac
+            pv_nmsuplem
+            pv_cdelement
+            pv_cdcia
+            pv_cdplan
+            pv_cdperpag
+            pv_cdperson
+            pv_fecha
+            */
+			Map<String,Object>paramEmi=new LinkedHashMap<String,Object>(0);
+			paramEmi.put("pv_cdusuari"  , us.getUser());
+			paramEmi.put("pv_cdunieco"  , datUs.getCdunieco());
+			paramEmi.put("pv_cdramo"    , datUs.getCdramo());
+			paramEmi.put("pv_estado"    , "W");
+			paramEmi.put("pv_nmpoliza"  , panel1.get("pv_nmpoliza"));
+			paramEmi.put("pv_nmsituac"  , "1");
+			paramEmi.put("pv_nmsuplem"  , "0");
+			paramEmi.put("pv_cdelement" , us.getEmpresa().getElementoId()); 
+			paramEmi.put("pv_cdcia"     , datUs.getCdunieco());
+			paramEmi.put("pv_cdplan"    , null);
+			paramEmi.put("pv_cdperpag"  , (String)polizaCompleta.get("cdperpag"));
+			paramEmi.put("pv_cdperson"  , datUs.getCdperson());
+			paramEmi.put("pv_fecha"     , new Date());
+			mx.com.aon.portal.util.WrapperResultados wr=kernelManager.emitir(paramEmi);
+			log.debug("emision obtenida "+wr.getItemMap());
+			panel2=new HashMap<String,String>(0);
+			panel2.put("nmpoliza",(String)wr.getItemMap().get("nmpoliza"));
+			panel2.put("nmpoliex",(String)wr.getItemMap().get("nmpoliex"));
+			
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			log.debug("Error al emitir",ex);
+			success=false;
+		}
+		log.debug(""
+				+ "\n######            ######"
+				+ "\n######   emitir   ######"
+				+ "\n######            ######"
+				+ "\n########################"
+				+ "\n########################"
+				+ "");
 		return SUCCESS;
 	}
 	
