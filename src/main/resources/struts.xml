@@ -135,6 +135,7 @@
 	
 	<include file="struts/config/struts-consultas-poliza.xml"/>
 	<include file="struts/config/struts-seguridad.xml"/>
+	<include file="struts/config/struts-documentosPoliza.xml"/>
 
 	<!-- Archivos de CIMA -->
     <include file="struts-cima.xml"/>
