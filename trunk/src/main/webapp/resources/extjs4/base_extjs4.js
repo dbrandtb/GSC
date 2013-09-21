@@ -2,6 +2,24 @@
 // ESTE DOCUMENTO ES LA BASE DE TODOS LOS JSP QUE TENGAN EXT JS 4 //
 ////////////////////////////////////////////////////////////////////
 
+///////////////////////
+////// FUNCIONES //////
+/*///////////////////*/
+function debug(a,b,c,d)
+{
+	if(false)
+	{
+	    if(d)
+	        console.log(a,b,c,d);
+	    else if(c)
+	        console.log(a,b,c);
+	    else if(b)
+	        console.log(a,b);
+	    else
+	        console.log(a);
+	}
+}
+
 ////////////////////////////
 ////// INICIO MODELOS //////
 ////////////////////////////
