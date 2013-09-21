@@ -3,7 +3,7 @@
  * ServicioGSServiceCallbackHandler.java
  *
  * This file was auto-generated from WSDL
- * by the Apache Axis2 version: 1.6.2  Built on : Apr 17, 2012 (05:33:49 IST)
+ * by the Apache Axis2 version: 1.5.1  Built on : Oct 19, 2009 (10:59:00 EDT)
  */
 
     package mx.com.gseguros.ws.client.ice2sigs;
@@ -205,22 +205,6 @@
             }
                 
            /**
-            * auto generated Axis2 call back method for comisionReciboAgenteGS method
-            * override this method for handling normal response from comisionReciboAgenteGS operation
-            */
-           public void receiveResultcomisionReciboAgenteGS(
-                    mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ComisionReciboAgenteGSResponseE result
-                        ) {
-           }
-
-          /**
-           * auto generated Axis2 Error handler
-           * override this method for handling error response from comisionReciboAgenteGS operation
-           */
-            public void receiveErrorcomisionReciboAgenteGS(java.lang.Exception e) {
-            }
-                
-           /**
             * auto generated Axis2 call back method for movimientoAseguradoEndosoGS method
             * override this method for handling normal response from movimientoAseguradoEndosoGS operation
             */
@@ -234,6 +218,22 @@
            * override this method for handling error response from movimientoAseguradoEndosoGS operation
            */
             public void receiveErrormovimientoAseguradoEndosoGS(java.lang.Exception e) {
+            }
+                
+           /**
+            * auto generated Axis2 call back method for comisionReciboAgenteGS method
+            * override this method for handling normal response from comisionReciboAgenteGS operation
+            */
+           public void receiveResultcomisionReciboAgenteGS(
+                    mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ComisionReciboAgenteGSResponseE result
+                        ) {
+           }
+
+          /**
+           * auto generated Axis2 Error handler
+           * override this method for handling error response from comisionReciboAgenteGS operation
+           */
+            public void receiveErrorcomisionReciboAgenteGS(java.lang.Exception e) {
             }
                 
 
