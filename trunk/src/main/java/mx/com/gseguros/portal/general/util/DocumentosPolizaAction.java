@@ -3,6 +3,8 @@ package mx.com.gseguros.portal.general.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
 
 import mx.com.aon.utils.Constantes;
 
@@ -21,6 +23,8 @@ public class DocumentosPolizaAction extends ActionSupport {
 	private InputStream fileInputStream;
 	private String filename;
 	private String idPoliza;
+	private Map<String,String>smap1;
+	private List<Map<String,String>>slist1;
 
 	protected boolean success;
 	protected String contentType;
@@ -90,6 +94,26 @@ public class DocumentosPolizaAction extends ActionSupport {
 		return SUCCESS;
 	}
 
+	public String ventanaDocumentosPoliza()
+	{
+		logger.debug(""
+				+ "\n#####################################"
+				+ "\n#####################################"
+				+ "\n###### ventanaDocumentosPoliza ######"
+				+ "\n######                         ######"
+				+ "\n######                         ######"
+				);
+		logger.debug("smap1: "+smap1);
+		logger.debug(""
+				+ "\n######                         ######"
+				+ "\n######                         ######"
+				+ "\n###### ventanaDocumentosPoliza ######"
+				+ "\n#####################################"
+				+ "\n#####################################"
+				);
+		return SUCCESS;
+	}
+	
 	public InputStream getFileInputStream() {
 		return fileInputStream;
 	}
@@ -128,6 +152,22 @@ public class DocumentosPolizaAction extends ActionSupport {
 
 	public void setIdPoliza(String idPoliza) {
 		this.idPoliza = idPoliza;
+	}
+
+	public Map<String, String> getSmap1() {
+		return smap1;
+	}
+
+	public void setSmap1(Map<String, String> smap1) {
+		this.smap1 = smap1;
+	}
+
+	public List<Map<String, String>> getSlist1() {
+		return slist1;
+	}
+
+	public void setSlist1(List<Map<String, String>> slist1) {
+		this.slist1 = slist1;
 	}
 
 }

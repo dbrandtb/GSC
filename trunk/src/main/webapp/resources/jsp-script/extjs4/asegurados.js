@@ -139,7 +139,8 @@ Ext.onReady(function(){
 		    {name : 'cdtipcon'},
 		    {name : 'nmsituac'},
 		    {name : 'orden'},
-		    {name : 'parentesco'}
+		    {name : 'parentesco'},
+		    {name : 'orden_parentesco'}
 	    ]
 	});
     
@@ -943,17 +944,39 @@ Ext.onReady(function(){
                     var json=Ext.decode(response.responseText);
                     if(json.success==true)
                 	{
+                    	var orden=0;
+                    	var parentescoAnterior='qwerty';
+                    	for(var i=0;i<json.slist1.length;i++)
+                		{
+                    		if(json.slist1[i].parentesco!=parentescoAnterior)
+                			{
+                    			orden++;
+                    			parentescoAnterior=json.slist1[i].parentesco;
+                			}
+                		    json.slist1[i].orden_parentesco=orden+'_'+json.slist1[i].parentesco;
+                		}
+                    	//console.log(json.slist1);
                     	Ext.create('Ext.window.Window', {
                     	    title: 'Detalles de cotizaci&oacute;n',
-                    	    height: 400,
-                    	    width: 600,
-                    	    layout: 'fit',
+                    	    maxHeight: 500,
+                    	    width: 700,
+                    	    autoScroll:true,
+                    	    //layout: 'fit',
                     	    modal:true,
                     	    items:[  // Let's put an empty grid in just to illustrate fit layout
                     	        Ext.create('Ext.grid.Panel',{
                     	        	store:Ext.create('Ext.data.Store',{
                     	        		model:'ModeloDetalleCotizacion',
-                    	        		groupField: 'parentesco',
+                    	        		groupField: 'orden_parentesco',
+                    	        		sorters: [{
+                    	        	        sorterFn: function(o1, o2){
+                    	        	            if (o1.get('orden') === o2.get('orden'))
+                    	        	            {
+                    	        	                return 0;
+                    	        	            }
+                    	        	            return o1.get('orden') < o2.get('orden') ? -1 : 1;
+                    	        	        }
+                    	        	    }],
                                 	    proxy: {
                                 	        type: 'memory',
                                 	        reader: 'json'
@@ -981,11 +1004,41 @@ Ext.onReady(function(){
                 	        		    }
             	        	        ],
                             	    features: [{
-                	                	groupHeaderTpl: 'Parentezco: {name}',
+                	                	groupHeaderTpl:
+                	                    [
+                	                        '{name:this.formatName}',
+                	                        {
+                	                        	formatName:function(name)
+                	                        	{
+                	                        		return name.split("_")[1];
+                	                        	}
+                	                        }
+                	                    ],
                 	                	ftype:'groupingsummary',
                 	                	startCollapsed :true
                 	                }]
                     	        })
+                    	        ,Ext.create('Ext.toolbar.Toolbar',{
+                                    buttonAlign:'right'
+                                    ,items:
+                                    [
+                                        '->'
+                                        ,Ext.create('Ext.form.Label',
+                                        {
+                                            style:'color:white;'
+                                            ,initComponent:function()
+                                            {
+                                                var sum=0;
+                                                for(var i=0;i<json.slist1.length;i++)
+                                                {
+                                                    sum+=parseFloat(json.slist1[i].Importe);
+                                                }
+                                                this.setText('Total: '+Ext.util.Format.usMoney(sum));
+                                                this.callParent();
+                                            }
+                                        })
+                                    ]
+                                })
                     	    ]
                     	}).show();
                 	}
@@ -1053,12 +1106,16 @@ Ext.onReady(function(){
                         //!matar botones
                         var jsonResp = Ext.decode(response.responseText);
                         //window.console&&console.log(jsonResp);
-                        Ext.Msg.show({
+                        window.parent.scrollTo(0,0);
+                        var msg=Ext.Msg.show({
                             title:'Cotizaci&oacute;n comprada',
                             msg:'Su poliza ha sido enviada a mesa de control con el n&uacute;mero '+Ext.getCmp('idCotizacion').getValue(),
                             buttons: Ext.Msg.OK
+                            //,x:100
+                            ,y:50
                         });
-                        window.parent.scrollTo(0,0);
+                        msg.setY(50);
+                        //msg.setX(100);
                         /*
                         Ext.create('Ext.form.Panel').submit({
                             url : urlDatosComplementarios,

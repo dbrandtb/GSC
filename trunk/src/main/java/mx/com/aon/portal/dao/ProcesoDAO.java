@@ -82,6 +82,7 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String GET_INFO_MPOLIZAS="GET_INFO_MPOLIZAS";
     public static final String OBTENER_TMANTENI="OBTENER_TMANTENI";
     public static final String OBTENER_ASEGURADOS="OBTENER_ASEGURADOS";
+    public static final String OBTENER_DOCUMENTOS_POLIZA="OBTENER_DOCUMENTOS_POLIZA";
     public static final String OBTENER_POLIZA_COMPLETA="OBTENER_POLIZA_COMPLETA";
     public static final String P_MOV_TVALOPOL="P_MOV_TVALOPOL";
     public static final String P_MOV_TVALOGAR="P_MOV_TVALOGAR";
@@ -101,6 +102,7 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String P_GET_DOMICIL="P_GET_DOMICIL";
     public static final String P_MOV_MDOMICIL="P_MOV_MDOMICIL";
     public static final String EMITIR = "EMITIR";
+    public static final String GUARDAR_ARCHIVO_POLIZA = "GUARDAR_ARCHIVO_POLIZA";
 
 	protected void initDao() throws Exception {
 		addStoredProcedure(PERMISO_EJECUCION_PROCESO,new PermisoEjecucionProceso(getDataSource()));
@@ -136,6 +138,7 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(GET_INFO_MPOLIZAS, new GetInfoMpolizas(getDataSource()));
         addStoredProcedure(OBTENER_TMANTENI, new ObtenerTmanteni(getDataSource()));
         addStoredProcedure(OBTENER_ASEGURADOS, new ObtenerAsegurados(getDataSource()));
+        addStoredProcedure(OBTENER_DOCUMENTOS_POLIZA, new ObtenerDocumentosPoliza(getDataSource()));
         addStoredProcedure(OBTENER_POLIZA_COMPLETA, new ObtenerPolizaCompleta(getDataSource()));
         addStoredProcedure(P_MOV_TVALOPOL, new PMovTvalopol(getDataSource()));
         addStoredProcedure(P_MOV_TVALOGAR, new PMovTvalogar(getDataSource()));
@@ -155,6 +158,7 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(P_GET_DOMICIL, new ObtenerDomicilio(getDataSource()));
         addStoredProcedure(P_MOV_MDOMICIL, new PMovMdomicil(getDataSource()));
         addStoredProcedure(EMITIR, new Emitir(getDataSource()));
+        addStoredProcedure(GUARDAR_ARCHIVO_POLIZA, new GuardarArchivoPoliza(getDataSource()));
 	}
 
 	protected class BuscarMatrizAsignacion extends CustomStoredProcedure {
@@ -1017,6 +1021,7 @@ public class ProcesoDAO extends AbstractDAO {
             declareParameter(new SqlParameter("pv_apellidom",   OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_sexo",        OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_fenacimi",    OracleTypes.DATE));
+            declareParameter(new SqlParameter("pv_parentesco",  OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
             declareParameter(new SqlOutParameter("pv_title_o",  OracleTypes.VARCHAR));
             compile();
@@ -1643,6 +1648,7 @@ public class ProcesoDAO extends AbstractDAO {
     		r.put("Apellido_Paterno",	rs.getString("Apellido_Paterno"));
     		r.put("Apellido_Materno",	rs.getString("Apellido_Materno"));
     		r.put("cdrfc",				rs.getString("cdrfc"));
+    		r.put("Parentesco",		    rs.getString("Parentesco"));
     		return r;
     	}
     }
@@ -2533,6 +2539,109 @@ public class ProcesoDAO extends AbstractDAO {
 	}
 	/*//////////////////////////////////////////*/
 	////// emitir                      ///////////
+	//////////////////////////////////////////////
+	
+	/////////////////////////////
+	////// guardar archivo //////
+	/*/////////////////////////*/
+	protected class GuardarArchivoPoliza extends CustomStoredProcedure
+	{
+	
+		protected GuardarArchivoPoliza(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES.P_MOV_DOCUMENTOS");
+			declareParameter(new SqlParameter("pv_cdunieco_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_feinici_i", 		OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_cddocume_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsdocume_i", 		OracleTypes.VARCHAR));
+	
+			declareParameter(new SqlOutParameter("pv_msg_id_o", 	OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o", 		OracleTypes.VARCHAR));
+	
+			compile();
+		}
+	
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			return mapper.build(map);
+		}
+	}
+	/*/////////////////////////*/
+	////// guardar archivo //////
+	/////////////////////////////
+	
+	//////////////////////////////////////////////
+	////// obtiene documentos de poliza //////////
+	/*//////////////////////////////////////////*/
+	protected class ObtenerDocumentosPoliza extends CustomStoredProcedure
+	{
+		protected ObtenerDocumentosPoliza(DataSource dataSource)
+		{
+			/*
+			pv_cdunieco_i
+			pv_cdramo_i
+			pv_estado_i
+			pv_nmpoliza_i
+			pv_registro_o
+			pv_msg_id_o
+			pv_title_o
+			 */
+			super(dataSource,"PKG_CONSULTA.P_Get_documentos");
+			declareParameter(new SqlParameter("pv_cdunieco_i",    OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i",    OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerDocumentosPolizaMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
+		}
+	
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			WrapperResultados wrapperResultados = mapper.build(map);
+			List result = (List) map.get("pv_registro_o");
+			wrapperResultados.setItemList(result);
+			return wrapperResultados;
+		}
+	}
+	
+	protected class ObtenerDocumentosPolizaMapper implements RowMapper {
+		public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+			String cols[]=new String[]{"nmsolici","cddocume","dsdocume","feinici"};
+			Map<String,String> map=new HashMap<String,String>(0);
+			for(String col:cols)
+			{
+				if(col.substring(0, 2).equals("fe"))
+				{
+					String fecha=rs.getString(col);
+					if(fecha!=null&&fecha.length()>10)
+					{
+						// 1 9 9 0 - 1 2 - 0 1 _ 0 0 : 0 0 : 0 0 . 0 <<CADENA
+	    				//0 1 2 3 4 5 6 7 8 9 k <<INDICE
+	    				String aux="";
+	    				aux+=fecha.substring(8,10);
+	    				aux+="/";
+	    				aux+=fecha.substring(5,7);
+	    				aux+="/";
+	    				aux+=fecha.substring(0,4);
+	    				fecha=aux;
+					}
+					map.put(col,fecha);
+				}
+				else
+				{
+					map.put(col,rs.getString(col));
+				}
+			}
+			return map;
+		}
+	}
+	/*//////////////////////////////////////////*/
+    ////// obtiene documentos de poliza //////////
 	//////////////////////////////////////////////
     
 }
