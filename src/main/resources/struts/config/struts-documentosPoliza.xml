@@ -6,7 +6,7 @@
 
 	<package name="documentos" extends="json-default" namespace="/documentos">
 
-		<action name="descargaDoc" class="documentosPolizaAction" method="descargaDocumento">
+		<action name="descargaDocInline" class="documentosPolizaAction" method="descargaDocumento">
 			<result name="success" type="stream">
 				<param name="contentType">${contentType}</param>
 				<param name="inputName">fileInputStream</param>
@@ -14,6 +14,23 @@
 				<param name="bufferSize">4096</param>
 			</result>
 		</action>
+		
+		<action name="descargaDoc" class="documentosPolizaAction" method="descargaDocumento">
+            <result name="success" type="stream">
+                <param name="contentType">${contentType}</param>
+                <param name="inputName">fileInputStream</param>
+                <param name="contentDisposition">attachment; filename="${filename}"</param>
+                <param name="bufferSize">4096</param>
+            </result>
+        </action>
+		
+		<action name="ventanaDocumentosPoliza" class="documentosPolizaAction" method="ventanaDocumentosPoliza">
+		    <result name="success">/jsp/extjs4/ventanaDocumentosPoliza.jsp</result>
+		</action>
+		
+		<action name="ventanaDocumentosPolizaLoad" class="beanSubirArchivo" method="ventanaDocumentosPolizaLoad">
+            <result name="success" type="json" />
+        </action>
 
 	</package>
 
