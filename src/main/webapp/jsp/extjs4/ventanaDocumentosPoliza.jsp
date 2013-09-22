@@ -88,6 +88,7 @@ Ext.onReady(function()
     {
         extend         : 'Ext.grid.Panel'
         ,store         : panDocStoreDoc
+        ,autoScroll  : true
         //,title         : 'Documentos'
         //,collapsible   : true
         //,titleCollapse : true
