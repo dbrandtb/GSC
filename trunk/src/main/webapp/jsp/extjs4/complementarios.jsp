@@ -499,9 +499,10 @@
 		                                                            ,readOnly   : true
 		                                                        }
 		                                                        ,{
-		                                                            xtype : 'button'
-		                                                            ,text : 'Emitir'
-		                                                            ,icon : contexto+'/resources/fam3icons/icons/award_star_gold_3.png'
+		                                                        	id     : 'botonEmitirPolizaFinal'
+		                                                            ,xtype : 'button'
+		                                                            ,text  : 'Emitir'
+		                                                            ,icon  : contexto+'/resources/fam3icons/icons/award_star_gold_3.png'
 		                                                            //,disabled : true
 		                                                            ,handler:function()
 		                                                            {
@@ -515,10 +516,12 @@
 		                                                            	    ,success:function(response)
 		                                                            	    {
 		                                                            	    	var json=Ext.decode(response.responseText);
-		                                                            	    	console.log(json);
+		                                                            	    	debug(json);
 		                                                            	    	if(json.success==true)
 		                                                            	    	{
-		                                                            	    		
+		                                                            	    		Ext.getCmp('numerofinalpoliza').setValue(json.panel2.nmpoliex);
+		                                                            	    		Ext.getCmp('botonEmitirPolizaFinal').setDisabled(true);
+		                                                            	    		Ext.getCmp('botonImprimirPolizaFinal').setDisabled(false);
 		                                                            	    	}
 		                                                            	    	else
 		                                                            	    	{
@@ -544,9 +547,10 @@
 		                                                        }
 		                                                        ,{
 		                                                            xtype     : 'button'
+		                                                            ,id       : 'botonImprimirPolizaFinal'
 		                                                            ,text     : 'Imprimir'
 		                                                            ,icon     : contexto+'/resources/fam3icons/icons/printer.png'
-		                                                            ,disabled : false
+		                                                            ,disabled : true
 		                                                            ,handler  : function()
 		                                                            {
 		                                                            	Ext.create('Ext.window.Window',
@@ -568,7 +572,7 @@
 		                                                            				'smap1.nmpoliza'   : inputNmpoliza
 		                                                            				,'smap1.cdunieco'  : inputCdunieco
 		                                                            				,'smap1.cdramo'    : inputCdramo
-		                                                            				,'smap1.estado'    : inputEstado
+		                                                            				,'smap1.estado'    : 'M'
 		                                                            				,'smap1.nmsumplem' : 0
 		                                                            			}
 		                                                            		}

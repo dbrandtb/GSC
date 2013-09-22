@@ -1075,6 +1075,8 @@ Ext.onReady(function(){
             //console.log("cdperpag",selected_record.get('cdPerpag'));
             //console.log("cdplan",selected_cd_plan);
             formPanel.setLoading(true);
+            debug(Ext.getCmp('fechaInicioVigencia').getValue());
+            debug(Ext.getCmp('fechaFinVigencia').getValue());
             Ext.Ajax.request(
             {
                 url: urlComprarCotizacion,
@@ -1085,6 +1087,8 @@ Ext.onReady(function(){
                     comprarCdramo:selected_record.get('cdRamo'),
                     comprarCdciaaguradora:selected_record.get('cdCiaaseg'),
                     comprarCdunieco:selected_record.get('cdUnieco')
+                    ,'smap1.fechaInicio'  : Ext.Date.format(Ext.getCmp('fechaInicioVigencia').getValue(), 'd/m/Y')
+                    ,'smap1.fechaFin'     : Ext.Date.format(Ext.getCmp('fechaFinVigencia').getValue(), 'd/m/Y')
                 },
                 success:function(response,opts)
                 {

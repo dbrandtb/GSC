@@ -143,7 +143,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 				pv_swreas_i     iterado swreas
 				pv_cdagrupa_i   iterado cdagrupa
 				PV_ACCION       #I
-				*/
+				*
 				Map<String,String>mapPoligarIterado=new HashMap<String,String>(0);
 				mapPoligarIterado.putAll(smap1);
 				mapPoligarIterado.put("pv_cdgarant_i", cob.get("GARANTIA"));
@@ -158,6 +158,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 				mapPoligarIterado.put("PV_ACCION",     "I");
 				log.debug("Iteracion #"+i+" de movPoligar");
 				kernelManager.movPoligar(mapPoligarIterado);
+				/**/
 				
 				/**policap
 				PL:

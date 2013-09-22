@@ -1,13 +1,16 @@
 package mx.com.aon.flujos.cotizacion4.web;
 
 import com.opensymphony.xwork2.ActionContext;
+
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
 import mx.com.aon.configurador.pantallas.model.components.GridVO;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.flujos.cotizacion.model.AyudaCoberturaCotizacionVO;
@@ -21,6 +24,7 @@ import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal.web.model.IncisoSaludVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import net.sf.json.JSONArray;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -97,6 +101,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     
     //utilitarios
     SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
+    SimpleDateFormat renderHora = new SimpleDateFormat  ("HH:mm");
     Calendar calendarHoy=Calendar.getInstance();
     
     //para obtener la ayuda de cobertura
@@ -112,6 +117,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     private String comprarCdramo;
     private String comprarCdciaaguradora;
     private String comprarCdunieco;
+    private Map<String,String> smap1;
     
     public String entrar()
     {
@@ -559,6 +565,91 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             parameters.put("pv_accion_i",   "I");
             kernelManagerSustituto.movDetalleSuplemento(parameters);
             
+            //2
+            /*
+            pv_cdunieco_i
+            pv_cdramo_i
+            pv_estado_i
+            pv_nmpoliza_i
+            pv_nmsuplem_i
+            pv_feINival_i
+            pv_hhinival_i
+            pv_fefINval_i
+            pv_hhfinval_i
+            pv_swanula_i
+            pv_nsuplogi_i
+            pv_nsupusua_i
+            pv_nsupsess_i
+            pv_fesessio_i
+            pv_swconfir_i
+            pv_nmrenova_i
+            pv_nsuplori_i
+            pv_cdorddoc_i
+            pv_swpolfro_i
+            pv_pocofron_i
+            pv_swpoldec_i
+            pv_tippodec_i
+            pv_accion_i
+            pv_msg_id_o
+            pv_title_o
+            */
+            Map<String,Object>map2=new LinkedHashMap<String,Object>(0);
+            map2.put("pv_cdunieco_i"  , comprarCdunieco);
+            map2.put("pv_cdramo_i"    , comprarCdramo);
+            map2.put("pv_estado_i"    , "W");
+            map2.put("pv_nmpoliza_i"  , comprarNmpoliza);
+            map2.put("pv_nmsuplem_i"  , "0");
+            map2.put("pv_feINival_i"  , renderFechas.parse(smap1.get("fechaInicio")));//date
+            map2.put("pv_hhinival_i"  , renderHora.format(calendarHoy.getTime()));
+            map2.put("pv_fefINval_i"  , renderFechas.parse(smap1.get("fechaFin")));//date
+            map2.put("pv_hhfinval_i"  , renderHora.format(calendarHoy.getTime()));
+            map2.put("pv_swanula_i"   , null);
+            map2.put("pv_nsuplogi_i"  , "0");
+            map2.put("pv_nsupusua_i"  , null);
+            map2.put("pv_nsupsess_i"  , null);
+            map2.put("pv_fesessio_i"  , null);
+            map2.put("pv_swconfir_i"  , null);
+            map2.put("pv_nmrenova_i"  , null);
+            map2.put("pv_nsuplori_i"  , null);
+            map2.put("pv_cdorddoc_i"  , null);
+            map2.put("pv_swpolfro_i"  , null);
+            map2.put("pv_pocofron_i"  , null);
+            map2.put("pv_swpoldec_i"  , null);
+            map2.put("pv_tippodec_i"  , null);
+            map2.put("pv_accion_i"    , "I");
+            kernelManagerSustituto.insertaMaestroHistoricoPoliza(map2);
+            
+            //3
+            /*
+            pv_cdunieco_i
+            pv_cdramo_i
+            pv_estado_i
+            pv_nmpoliza_i
+            pv_cdagente_i
+            pv_nmsuplem_i
+            pv_status_i
+            pv_cdtipoag_i
+            pv_porredau_i
+            pv_nmcuadro_i
+            pv_cdsucurs_i
+            pv_accion_i
+            */
+            Map<String,Object>map3=new LinkedHashMap<String,Object>(0);
+            map3.put("pv_cdunieco_i" , comprarCdunieco);
+            map3.put("pv_cdramo_i"   , comprarCdramo);
+            map3.put("pv_estado_i"   , "W");
+            map3.put("pv_nmpoliza_i" , comprarNmpoliza);
+            map3.put("pv_cdagente_i" , userData.getCdagente());
+            map3.put("pv_nmsuplem_i" , "0");
+            map3.put("pv_status_i"   , "V");
+            map3.put("pv_cdtipoag_i" , "1");
+            map3.put("pv_porredau_i" , "100");
+            map3.put("pv_nmcuadro_i" , userData.getNmcuadro());
+            map3.put("pv_cdsucurs_i" , null);
+            map3.put("pv_accion_i"   , "I");
+            kernelManagerSustituto.movMPoliage(map3);
+            
+            
             Map<String,String>parameters2=new HashMap<String,String>(0);
             parameters2.put("pv_cdunieco",   comprarCdunieco);
             parameters2.put("pv_cdramo",     comprarCdramo);
@@ -951,6 +1042,14 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 
 	public void setMunicipio(String municipio) {
 		this.municipio = municipio;
+	}
+
+	public Map<String, String> getSmap1() {
+		return smap1;
+	}
+
+	public void setSmap1(Map<String, String> smap1) {
+		this.smap1 = smap1;
 	}
     
 }
