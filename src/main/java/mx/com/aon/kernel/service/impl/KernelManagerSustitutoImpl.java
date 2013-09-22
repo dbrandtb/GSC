@@ -529,4 +529,16 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return lista;
 	}
 	
+	public WrapperResultados insertaMaestroHistoricoPoliza(Map<String, Object> param) throws ApplicationException
+	{
+		log.debug("### kernel sustituto insertaMaestroHistoricoPoliza map: "+param);
+        WrapperResultados res=this.returnBackBoneInvoke(param, ProcesoDAO.INSERTA_MAESTRO_HISTORICO_POLIZAS);
+        log.debug("### kernel sustituto insertaMaestroHistoricoPoliza id:"+res.getMsgId());
+        log.debug("### kernel sustituto insertaMaestroHistoricoPoliza mesage:"+res.getMsgText());
+        return res;
+	}
+	
+	
+	
+	
 }
