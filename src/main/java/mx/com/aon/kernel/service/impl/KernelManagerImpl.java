@@ -11,7 +11,6 @@ import static mx.com.aon.portal.dao.ProcesoDAO.CALCULA_NUMERO_POLIZA;
 import static mx.com.aon.portal.dao.ProcesoDAO.GENERA_SUPLEMENTO_FISICO;
 import static mx.com.aon.portal.dao.ProcesoDAO.GENERA_SUPLEMENTO_LOGICO;
 import static mx.com.aon.portal.dao.ProcesoDAO.MOV_T_DESC_SUP;
-import static mx.com.aon.portal.dao.ProcesoDAO.MOV_M_SUPLEME;
 import static mx.com.aon.portal.dao.ProcesoDAO.MOV_MPOLIAGR;
 import static mx.com.aon.portal.dao.ProcesoDAO.MOV_MPOLIAGE;
 import static mx.com.aon.portal.dao.ProcesoDAO.EXEC_VALIDADOR;
@@ -80,7 +79,7 @@ public class KernelManagerImpl extends AbstractManagerJdbcTemplateInvoke impleme
 	private static final String STATUS_ERROR = "O";
 
 	/**
-	 * Atributo inyectado vía spring para utilizar los servicios de negocio
+	 * Atributo inyectado vï¿½a spring para utilizar los servicios de negocio
 	 */
 	private ServiciosGeneralesNegocio serviciosGeneralesNegocio;
 
@@ -98,6 +97,7 @@ public class KernelManagerImpl extends AbstractManagerJdbcTemplateInvoke impleme
 	
 	private static final String PROCESO_EMISION = "2";
 	private static final String PROCESO_COTIZACION = "1";
+	private static final String MOV_M_SUPLEME="MOV_M_SUPLEME";
 
 	public GlobalVariableContainerVO cargaValoresPorDefecto(String idSesion, UserVO user, GlobalVariableContainerVO globalVarVo, String tipSup) throws ApplicationException {
 
@@ -133,7 +133,7 @@ public class KernelManagerImpl extends AbstractManagerJdbcTemplateInvoke impleme
 		// Servicio Generar Suplemento Logico
 		String nSupLogi = String.valueOf(generaSuplLogico(cdUnieco, cdRamo, estado, nmpoliza));
 
-		// calculamos un año a la fecha actual
+		// calculamos un aï¿½o a la fecha actual
 		String fechaEnUnAnnio = dateFormat.format(DateUtils.addYears(hoy, 1)).toString();
 
 		// Servicio MOV_TDESCSUP
@@ -303,7 +303,7 @@ public class KernelManagerImpl extends AbstractManagerJdbcTemplateInvoke impleme
 				}
 			}
 
-			// Asignación de bloque
+			// Asignaciï¿½n de bloque
 			serviciosGeneralesSistema.imprimirBloque(idSesion, ConstantsKernel.BLOQUE_B5B);
 			rt = ExceptionManager.manage(serviciosGeneralesSistema.asignarDatosBloque(idSesion, ConstantsKernel.BLOQUE_B5B,
 					camposModificados, ""));
@@ -862,7 +862,7 @@ public class KernelManagerImpl extends AbstractManagerJdbcTemplateInvoke impleme
 			logger.debug("resultadoValidaciones TITLE=" + resultadoValidaciones.getMsgTitle());
 			if(StringUtils.isNotBlank(resultadoValidaciones.getMsgId())){
 				
-				//Lanzar excepcion con el contenido de msgText, si éste viene vacío, se enviará el msgID
+				//Lanzar excepcion con el contenido de msgText, si ï¿½ste viene vacï¿½o, se enviarï¿½ el msgID
 				String mensajeDeValidacion = resultadoValidaciones.getMsgText();
 				if( StringUtils.isBlank( resultadoValidaciones.getMsgText() ) ){
 					mensajeDeValidacion = resultadoValidaciones.getMsgId();
@@ -1129,7 +1129,7 @@ public class KernelManagerImpl extends AbstractManagerJdbcTemplateInvoke impleme
 		logger.debug("ExecValidador ID=" + resultadoValidaciones.getMsgId());
 		logger.debug("ExecValidador TEXT=" + resultadoValidaciones.getMsgText());
 		if(StringUtils.isNotBlank(resultadoValidaciones.getMsgId())){
-			//Lanzar excepcion con el contenido de msgText, si éste viene vacío, se enviará el msgID
+			//Lanzar excepcion con el contenido de msgText, si ï¿½ste viene vacï¿½o, se enviarï¿½ el msgID
 			String mensajeDeValidacion = resultadoValidaciones.getMsgText();
 			if( StringUtils.isBlank( resultadoValidaciones.getMsgText() ) ){
 				mensajeDeValidacion = resultadoValidaciones.getMsgId();
@@ -1165,7 +1165,7 @@ public class KernelManagerImpl extends AbstractManagerJdbcTemplateInvoke impleme
 			cadenaSolicitudTarifas = crearCadenaSolicitudTarifas(listaDatosEntradaCotiza);
 		}
 
-		//Clonar Situacion TODO: cambiar después la firma para que devuelva void
+		//Clonar Situacion TODO: cambiar despuï¿½s la firma para que devuelva void
 		clonarSituacion(cdElement, cdUnieco, cdRamo, estado, nmpoliza, globalVarVo.getValueVariableGlobal(VariableKernel.NumeroSituacion()),
 				cdTipsit, usuario.getUser(), fechaActual, cadenaSolicitudTarifas);
 
@@ -2180,7 +2180,7 @@ public class KernelManagerImpl extends AbstractManagerJdbcTemplateInvoke impleme
 							// debe estar el numero que queremos
 							String claveNew = arrClave[arrClave.length - 1];
 							if (NumberUtils.isNumber(claveNew)) {
-								// Si es un numero, añadimos un elemento al mapa
+								// Si es un numero, aï¿½adimos un elemento al mapa
 								logger.debug("Clave ====" + clave);
 								String valor = (String) parametrosPantalla.get(clave);
 								logger.debug("valor ====" + valor);
@@ -2320,7 +2320,7 @@ public class KernelManagerImpl extends AbstractManagerJdbcTemplateInvoke impleme
 							}
 
 							// if(NumberUtils.isNumber(claveNew)){
-							// Si es un numero, añadimos un elemento al mapa
+							// Si es un numero, aï¿½adimos un elemento al mapa
 							// if ((clave.startsWith("B19B") &&
 							// "B19B".equals(bloque))|| (clave.startsWith("B18")
 							// && "B18".equals(bloque))){
@@ -2365,7 +2365,7 @@ public class KernelManagerImpl extends AbstractManagerJdbcTemplateInvoke impleme
 							// debe estar el numero que queremos
 							String claveNew = arrClave[arrClave.length - 1];
 							// if (NumberUtils.isNumber(claveNew)) {
-							// Si es un numero, añadimos un elemento al mapa
+							// Si es un numero, aï¿½adimos un elemento al mapa
 							logger.debug("Clave ====" + clave);
 							logger.debug("claveNew ====" + claveNew);
 							String valor = (String) parametrosPantalla.get(clave);
@@ -2403,7 +2403,7 @@ public class KernelManagerImpl extends AbstractManagerJdbcTemplateInvoke impleme
 							// debe estar el numero que queremos
 							String claveNew = arrClave[arrClave.length - 1];
 							// if (NumberUtils.isNumber(claveNew)) {
-							// Si es un numero, añadimos un elemento al mapa
+							// Si es un numero, aï¿½adimos un elemento al mapa
 							logger.debug("Clave ====" + clave);
 							logger.debug("claveNew ====" + claveNew);
 							String valor = (String) parametrosPantalla.get(clave);
@@ -2425,7 +2425,7 @@ public class KernelManagerImpl extends AbstractManagerJdbcTemplateInvoke impleme
 			}
 
 		} else {
-			// Sino, camposModificados tendrá cero elementos
+			// Sino, camposModificados tendrï¿½ cero elementos
 			camposModificados = new Campo[mapaParamsValidos.size()];
 		}
 
@@ -2738,7 +2738,7 @@ public class KernelManagerImpl extends AbstractManagerJdbcTemplateInvoke impleme
 		return rt;
 	}
 
-	// TODO: Generar un xsl específico para obtener un String
+	// TODO: Generar un xsl especï¿½fico para obtener un String
 	public String obtieneDescripcion(String tabla, String valor1) throws ApplicationException {
 		long t0 = System.currentTimeMillis();
 
@@ -2842,7 +2842,7 @@ public class KernelManagerImpl extends AbstractManagerJdbcTemplateInvoke impleme
 		}
 
 		if (STATUS_ERROR.equals(resultado.getEstado())) {
-			throw new ApplicationException("MENSAJEGARANTIA: " + "Hubo un error al eliminar la garantía. " + "Mensaje = "
+			throw new ApplicationException("MENSAJEGARANTIA: " + "Hubo un error al eliminar la garantï¿½a. " + "Mensaje = "
 					+ resultado.getDsError());
 		}
 	}

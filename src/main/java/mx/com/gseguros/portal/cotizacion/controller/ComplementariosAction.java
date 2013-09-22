@@ -4,6 +4,7 @@
  */
 package mx.com.gseguros.portal.cotizacion.controller;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -849,6 +850,26 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 		{
 			log.debug("panel1"+panel1);
 			
+			String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+panel1.get("pv_nmpoliza");
+            File carpeta = new File(rutaCarpeta);
+            if(!carpeta.exists())
+            {
+            	log.debug("no existe la carpeta::: "+rutaCarpeta);
+            	carpeta.mkdir();
+            	if(carpeta.exists())
+            	{
+            		log.debug("carpeta creada");
+            	}
+            	else
+            	{
+            		log.debug("carpeta NO creada");
+            	}
+            }
+            else
+            {
+            	log.debug("existe la carpeta   ::: "+rutaCarpeta);
+            }
+			
 			//obtener usuario y datos de ususario
 			UserVO us=(UserVO)session.get("USUARIO");
 			DatosUsuario datUs=kernelManager.obtenerDatosUsuario(us.getUser());
@@ -916,23 +937,23 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 				String nmsituac=docu.get("nmsituac");
 				String descripc=docu.get("descripc");
 				String descripl=docu.get("descripl");
-				String url="http://201.122.160.245:7777/reports/rwservlet"
-						+ "?destype=file"
+				String url=this.getText("ruta.servidor.reports")
+						+ "?destype=cache"
 						+ "&desformat=PDF"
-						+ "&userid=ice/ice@acwqa"
+						+ "&userid="+this.getText("pass.servidor.reports")
 						+ "&report="+descripl
 						+ "&paramform=no"
 						+ "&p_unieco=1"
 						+ "&p_cdramo=2"
-						+ "&p_estado='W'"
+						+ "&p_estado='M'"
 						+ "&p_poliza="+nmsolici
-						+ "&desname=/opt/ice/avs/pdf/_"+(System.currentTimeMillis())+"_"+nmsolici+"_"+descripc;
+						+ "&desname="+rutaCarpeta+"/"+descripc;
 				log.debug(""
 						+ "\n#################################"
 						+ "\n###### Se solicita reporte ######"
 						+ "\na "+url+""
 						+ "\n#################################");
-				HttpRequestUtil.creaPeticionGet(url);
+				HttpRequestUtil.generaReporte(url,rutaCarpeta+"/"+descripc);
 				log.debug(""
 						+ "\n######                    ######"
 						+ "\n###### reporte solicitado ######"
