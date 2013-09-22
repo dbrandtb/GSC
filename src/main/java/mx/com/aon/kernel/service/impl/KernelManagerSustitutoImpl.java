@@ -501,5 +501,23 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         log.debug("### kernel sustituto emitir mesage:"+res.getMsgText());
         return res;
 	}
+
+	public WrapperResultados guardarArchivo(Map<String, Object> param) throws ApplicationException
+	{
+		log.debug("### kernel sustituto guardarArchivo map: "+param);
+        WrapperResultados res=this.returnBackBoneInvoke(param, ProcesoDAO.GUARDAR_ARCHIVO_POLIZA);
+        log.debug("### kernel sustituto guardarArchivo id:"+res.getMsgId());
+        log.debug("### kernel sustituto guardarArchivo mesage:"+res.getMsgText());
+        return res;
+	}
+	
+	public List<Map<String,String>>obtenerDocumentosPoliza(Map<String,Object>parameters) throws ApplicationException
+	{
+		log.debug("### kernel sustituto obtenerDocumentosPoliza parameters: "+parameters);
+        List<Map<String,String>> lista= this.getAllBackBoneInvoke(parameters, ProcesoDAO.OBTENER_DOCUMENTOS_POLIZA);
+        lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
+        log.debug("### kernel sustituto obtenerDocumentosPoliza lista size: "+lista.size());
+        return lista;
+	}
 	
 }

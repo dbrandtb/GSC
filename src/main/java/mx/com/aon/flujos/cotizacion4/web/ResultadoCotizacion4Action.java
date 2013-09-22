@@ -388,6 +388,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
                 mapaClonPersonaIterado.put("pv_apellidom",      i.getApellidoMaterno());
                 mapaClonPersonaIterado.put("pv_sexo",           i.getSexo().getKey());
                 mapaClonPersonaIterado.put("pv_fenacimi",       i.getFechaNacimiento());
+                mapaClonPersonaIterado.put("pv_parentesco",     i.getRol().getKey());
                 kernelManagerSustituto.clonaPersonas(mapaClonPersonaIterado);
                 contador++;
             }

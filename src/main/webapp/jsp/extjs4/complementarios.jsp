@@ -34,6 +34,7 @@
             var urlRecotizar='<s:url namespace="/" action="recotizar" />';
             var accordion;
             var urlEmitir='<s:url namespace="/" action="emitir" />';
+            var panDatComUrlDoc='<s:url namespace="/documentos" action="ventanaDocumentosPoliza" />';
             
             function expande(indice)
             {
@@ -545,7 +546,45 @@
 		                                                            xtype     : 'button'
 		                                                            ,text     : 'Imprimir'
 		                                                            ,icon     : contexto+'/resources/fam3icons/icons/printer.png'
-		                                                            ,disabled : true
+		                                                            ,disabled : false
+		                                                            ,handler  : function()
+		                                                            {
+		                                                            	Ext.create('Ext.window.Window',
+                                                            			{
+		                                                            		width        : 600
+		                                                            		,height   : 400
+		                                                            		,title       : 'Documentos de la poliza '+inputNmpoliza
+		                                                            		,closable    : false
+		                                                            		,modal       : true
+		                                                            		,buttonAlign : 'center'
+	                                                            	        ,loadingMask   : true
+		                                                            		,loader      :
+		                                                            		{
+		                                                            			url       : panDatComUrlDoc
+		                                                            	        ,scripts  : true
+		                                                            	        ,autoLoad : true
+		                                                            			,params   :
+		                                                            			{
+		                                                            				'smap1.nmpoliza'   : inputNmpoliza
+		                                                            				,'smap1.cdunieco'  : inputCdunieco
+		                                                            				,'smap1.cdramo'    : inputCdramo
+		                                                            				,'smap1.estado'    : inputEstado
+		                                                            				,'smap1.nmsumplem' : 0
+		                                                            			}
+		                                                            		}
+		                                                            	    ,buttons   :
+		                                                            	    [
+		                                                            	    	{
+		                                                            	    		text     : 'Cerrar'
+		                                                            	    		,icon    : contexto+'/resources/fam3icons/icons/cancel.png'
+		                                                            	    		,handler : function()
+		                                                            	    		{
+		                                                            	    			this.up().up().destroy();
+		                                                            	    		}
+		                                                            	    	}
+		                                                            	    ]
+                                                            			}).show();
+		                                                            }
 		                                                        }
 		                                                    ]
 		                                                })

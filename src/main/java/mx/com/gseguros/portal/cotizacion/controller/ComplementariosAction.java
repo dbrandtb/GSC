@@ -339,6 +339,8 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "Apellido_Paterno")));
 			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "Apellido_Materno")));
 			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "cdrfc")));
+			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "estomador")));
+			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "Parentesco")));
 			
 			/*
 			nmsituac
@@ -352,13 +354,91 @@ public class ComplementariosAction extends PrincipalCoreAction implements
     		Apellido_Materno
     		cdrfc*/
 
+			item3 = new Item("columns", null, Item.ARR);// para las columnas del grid
+			item3.add(Item.crear(null, null, Item.OBJ)
+					.add(new Item("header", "Nombre"))
+					.add(new Item("dataIndex", "nombre"))
+					.add(new Item("flex", 1))
+					.add(Item.crear("editor",null,Item.OBJ)
+							.add("xtype","textfield")
+							.add("allowBlank",false)
+						)
+					);
+			item3.add(Item.crear(null, null, Item.OBJ)
+					.add(new Item("header", "Segundo nombre"))
+					.add(new Item("dataIndex", "segundo_nombre"))
+					.add(new Item("flex", 1))
+					.add(Item.crear("editor",null,Item.OBJ)
+							.add("xtype","textfield")
+							.add("allowBlank",true)
+						)
+					);
+			item3.add(Item.crear(null, null, Item.OBJ)
+					.add(new Item("header", "Apellido paterno"))
+					.add(new Item("dataIndex", "Apellido_Paterno"))
+					.add(new Item("flex", 1))
+					.add(Item.crear("editor",null,Item.OBJ)
+							.add("xtype","textfield")
+							.add("allowBlank",false)
+						)
+					);
+			item3.add(Item.crear(null, null, Item.OBJ)
+					.add(new Item("header", "Apellido materno"))
+					.add(new Item("dataIndex", "Apellido_Materno"))
+					.add(new Item("flex", 1))
+					.add(Item.crear("editor",null,Item.OBJ)
+							.add("xtype","textfield")
+							.add("allowBlank",false)
+						)
+					);
+			item3.add(Item.crear(null, null, Item.OBJ)
+					.add(new Item("header", "Fecha de nacimiento"))
+					.add(new Item("dataIndex", "fenacimi"))
+					.add(new Item("flex", 1))
+					.add(Item.crear("editor","editorFechap2").setQuotes(""))
+					.add(Item.crear("renderer","Ext.util.Format.dateRenderer('d M Y')").setQuotes(""))
+					);
+			item3.add(Item.crear(null, null, Item.OBJ)
+					.add(new Item("header", "Sexo"))
+					.add(new Item("dataIndex", "sexo"))
+					.add(new Item("flex", 1))
+					.add(Item.crear("renderer","rendererSexop2").setQuotes(""))
+					.add(Item.crear("editor","editorGenerosp2").setQuotes(""))
+					);
+			item3.add(Item.crear(null, null, Item.OBJ)
+					.add(new Item("header", "RFC"))
+					.add(new Item("dataIndex", "cdrfc"))
+					.add(new Item("flex", 1))
+					.add(Item.crear("editor",null,Item.OBJ)
+							.add("xtype","textfield")
+							.add("allowBlank",false)
+						)
+					);
+			item3.add(Item.crear(null, null, Item.OBJ)
+					.add(new Item("header", "nmsituac"))
+					.add(new Item("dataIndex", "nmsituac"))
+					.add(new Item("flex", 1))
+					.add(Item.crear("hidden",true))
+					);
+			item3.add(Item.crear(null, null, Item.OBJ)
+					.add(new Item("header", "cdperson"))
+					.add(new Item("dataIndex", "cdperson"))
+					.add(new Item("flex", 1))
+					.add(Item.crear("hidden",true))
+					);
+			
 			item2 = new Item("columns", null, Item.ARR);// para las columnas del grid
-			item2.add(Item.crear(null, null, Item.OBJ)
+			/*item2.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("header", "Rol"))
 					.add(new Item("dataIndex", "cdrol"))
 					.add(new Item("flex", 1))
 					.add(Item.crear("renderer","rendererRolp2").setQuotes(""))
 					.add(Item.crear("editor","editorRolesp2").setQuotes(""))
+					);*/
+			item2.add(Item.crear(null, null, Item.OBJ)
+					.add(new Item("header", "Tomador"))
+					.add(new Item("dataIndex", "estomador"))
+					.add(new Item("width", 80))
 					);
 			item2.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("header", "Nombre"))
@@ -449,6 +529,12 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 								.add(Item.crear("handler","this.onDomiciliosClick").setQuotes(""))
 								)
 						/*.add(Item.crear(null,null,Item.OBJ)
+								.add("icon","resources/fam3icons/icons/money.png")
+								.add("tooltip","Es tomador")
+								.add(Item.crear("scope","this").setQuotes(""))
+								.add(Item.crear("handler","this.onTomadorClick").setQuotes(""))
+								)
+						.add(Item.crear(null,null,Item.OBJ)
 								.add("icon","resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png")
 								.add("tooltip","Quitar asegurado")
 								.add(Item.crear("scope","this").setQuotes(""))

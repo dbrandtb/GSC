@@ -152,8 +152,8 @@
                 <interceptor-ref name="prepare" />
                                <!-- <interceptor-ref name="i18n" />
                 <interceptor-ref name="chain" />
-                <interceptor-ref name="modelDriven" />
-                <interceptor-ref name="fileUpload" />-->               
+                <interceptor-ref name="modelDriven" />-->
+                <interceptor-ref name="fileUpload" />              
                 <interceptor-ref name="staticParams" />
                 <interceptor-ref name="params" />
                 <interceptor-ref name="conversionError" />

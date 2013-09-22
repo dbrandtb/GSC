@@ -23,7 +23,7 @@
                         p.updateProgress(jsonResp.progreso,jsonResp.progresoTexto,true);
                         if(jsonResp.progreso==1)
                         {
-                            //console.log("archivo arriba");
+                        	//no hago nada, el otro iframe redirige
                         }
                         else
                         {
@@ -36,9 +36,10 @@
             Ext.onReady(function(){
                 p=Ext.create('Ext.ProgressBar',{
                     renderTo:'maindiv',
-                    width:100
+                    width:450
                 });
-                checarProgreso();
+                if(uploadKey&&uploadKey.length>0)
+                	checarProgreso();
             });
         </script>
     </head>

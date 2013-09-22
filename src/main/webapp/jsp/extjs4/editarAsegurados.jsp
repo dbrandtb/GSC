@@ -25,6 +25,7 @@
 	var storeRolesp2;
 	var storeGenerosp2;
 	var storePersonasp2;
+	var storeTomadorp2;
 	var gridPersonasp2;
 	var editorRolesp2;
 	var editorGenerosp2;
@@ -37,6 +38,8 @@
 	var urlDomiciliop2      ='<s:url namespace="/" action="pantallaDomicilio" />';
 	var editorFechap2;
 	var contextop2='${ctx}';
+	var gridTomadorp2;
+	var recordTomadorp2;
 	
     function rendererRolp2(v)
     {
@@ -236,7 +239,79 @@
 		            root: 'list1'
 		        }
    	        }
+   	        ,listeners:
+   	        {
+   	        	load:function( store, records, successful, eOpts )
+	   	        {
+	   	        	debug('listener load');
+	   	        	var indexTomador;
+   	        		store.each(function(record,index)
+       			    {
+   	        			debug('iterando',record);
+   	        			if('1'==(typeof record.get('cdrol')=='string'?record.get('cdrol'):record.get('cdrol').get('key')))
+        				{
+        				    debug('es tomador en indice '+index);
+        				    indexTomador=index;
+        				}
+   	        			else
+        				{
+        				    debug('no es tomador');
+        				}
+       			    });
+   	        		var record=store.getAt(indexTomador);
+   	        		storeTomadorp2.add(record);
+                    storePersonasp2.remove(record);
+   	        		debug('checar cual asegurado es el tomador');
+   	        		if(!record.get('cdperson')||record.get('cdperson').length==0)
+   	        		{
+   	        			debug('buscar por parentesco T abajo');
+	   	        	    store.each(function(record,index)
+		                {
+		                    debug('iterando',record);
+		                    if(record.get('Parentesco')=='T')
+		                    {
+		                        debug('es el tomador',record);
+		                        record.set('estomador','Si');
+		                        recordTomadorp2=record.copy();
+		                        debug('se puso en sesion recordTomadorp2',recordTomadorp2);
+		                        //gridTomadorp2.setDisabled(true);
+		                    }
+		                    else
+		                    {
+		                        debug('no es el tomador');
+		                    }
+		                });
+   	        		}
+   	        		else
+   	        		{
+   	        			var cdpersonTomador=record.get('cdperson');
+   	        			debug('buscar por cdperson abajo');
+   	        			store.each(function(record,index)
+                        {
+                            debug('iterando',record);
+                            if(record.get('cdperson')==cdpersonTomador)
+                            {
+                                debug('es el tomador',record);
+                                record.set('estomador','Si');
+                                recordTomadorp2=record.copy();
+                                debug('se puso en sesion recordTomadorp2',recordTomadorp2);
+                                //gridTomadorp2.setDisabled(true);
+                            }
+                            else
+                            {
+                                debug('no es el tomador');
+                            }
+                        });
+   	        		}
+   	        		debug('fin de checar cual asegurado es el tomador');
+	   	        }
+   	        }   	        
    	    });
+	    
+	    storeTomadorp2 =new Ext.data.Store(
+        {
+            model     : 'Modelo1p2'
+        });
 	    
 	    editorRolesp2=Ext.create('Ext.form.ComboBox',
    	    {
@@ -263,6 +338,87 @@
 	    	format:'d/m/Y',
             allowBlank:false
         });
+	    
+	    Ext.define('GridTomadorP2',
+   	    {
+	    	extend         : 'Ext.grid.Panel'
+	    	,title         : 'Tomador'
+	    	,store         : storeTomadorp2
+	        ,<s:property value="item3" />
+	        ,frame         : false
+	        ,style         : 'margin:5px'
+        	,selModel      :
+        	{
+                selType: 'cellmodel'
+            }
+        	,requires      :
+       		[
+                'Ext.selection.CellModel',
+                'Ext.grid.*',
+                'Ext.data.*',
+                'Ext.util.*',
+                'Ext.form.*'
+            ]
+	        ,xtype         : 'cell-editing'
+	        ,initComponent : function()
+	        {
+	        	debug('initComponent');
+	        	this.cellEditing = new Ext.grid.plugin.CellEditing({
+                    clicksToEdit: 1
+                });
+	        	Ext.apply(this,
+       			{
+	        	    //plugins : [this.cellEditing]
+	        	    listeners:
+                    {
+                        // add the validation after render so that validation is not triggered when the record is loaded.
+                        afterrender: function (grid)
+                        {
+                            var view = grid.getView();
+                         // validation on record level through "itemupdate" event
+                            view.on('itemupdate', function (record, y, node, options) {
+                                this.validateRow(this.getColumnIndexes(), record, y, true);
+                            }, grid);
+                        }
+                    }
+       			});
+	        	this.callParent();
+	        }
+        	,getColumnIndexes: function () {
+                var me, columnIndexes;
+                me = this;
+                columnIndexes = [];
+                Ext.Array.each(me.columns, function (column)
+                {
+                    // only validate column with editor
+                    if (column.getEditor&&Ext.isDefined(column.getEditor())&&column.getEditor().allowBlank==false) {
+                        columnIndexes.push(column.dataIndex);
+                    } else {
+                        columnIndexes.push(undefined);
+                    }
+                });
+                //console.log(columnIndexes);
+                return columnIndexes;
+            }
+            ,validateRow: function (columnIndexes,record, y)
+            //hace que una celda de columna con allowblank=false tenga el estilo rojito
+            {
+                var view = this.getView();
+                Ext.each(columnIndexes, function (columnIndex, x)
+                {
+                    if(columnIndex)
+                    {
+                        var cell=view.getCellByPosition({row: y, column: x});
+                        cellValue=record.get(columnIndex);
+                        if((cell.addCls)&&((!cellValue)||(cellValue.lenght==0)))
+                        {
+                            cell.addCls("custom-x-form-invalid-field");
+                        }
+                    }
+                });
+                return false;
+            }
+   	    });
 	    
 	    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	    ////// Inicio de declaracion de grid                                                                             //////
@@ -317,8 +473,17 @@
 	                        var view = grid.getView();
 	                     // validation on record level through "itemupdate" event
 	                        view.on('itemupdate', function (record, y, node, options) {
+	                        	if(record.get('estomador'))
+	                            {
+	                                debug('tomador update:',record);
+	                                recordTomadorp2=record.copy();
+	                                debug('se puso en sesion recordTomadorp2',recordTomadorp2);
+	                                storeTomadorp2.removeAll();
+	                                storeTomadorp2.add(recordTomadorp2);
+	                            }
                         	    this.validateRow(this.getColumnIndexes(), record, y, true);
 	                        }, grid);
+	                        
 	                    },
 	                    beforeedit: function (grid, e, eOpts)
 	                    {
@@ -468,7 +633,8 @@
                             'smap1.pv_cdperson'     : record.get('cdperson'),
                             'smap1.pv_cdrol'        : record.get('cdrol'),
                             'smap1.nombreAsegurado' : record.get('nombre')+' '+(record.get('segundo_nombre')?record.get('segundo_nombre')+' ':' ')+record.get('Apellido_Paterno')+' '+record.get('Apellido_Materno'),
-                            'smap1.cdrfc'           : record.get('cdrfc')
+                            'smap1.cdrfc'           : record.get('cdrfc'),
+                            'smap1.botonCopiar'     : record.get('estomador')!='Si'?1:0
                         }
                         ,autoLoad:true
                         ,scripts:true
@@ -491,12 +657,28 @@
 	        onRemoveClick: function(grid, rowIndex){
 	            this.getStore().removeAt(rowIndex);
 	        }
+	        ,onTomadorClick : function(grid,rowIndex)
+	        {
+	            var record=grid.getStore().getAt(rowIndex);
+	            debug('es tomador',record);
+	            //gridTomadorp2.setDisabled(true);
+	            grid.getStore().each(function(rec,idx)
+           		{
+            		rec.set('estomador','');
+           		});
+	            record.set('estomador','Si');
+	            recordTomadorp2=record.copy();
+	            debug('se puso en sesion recordTomadorp2',recordTomadorp2);
+                storeTomadorp2.removeAll();
+                storeTomadorp2.add(recordTomadorp2);
+	        }
 	    });
 	    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	    ////// Fin de declaracion de grid                                                                                //////
 	    ////// http://docs.sencha.com/extjs/4.2.1/extjs-build/examples/build/KitchenSink/ext-theme-neptune/#cell-editing //////
 	    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	    gridPersonasp2=new EditorIncisosp2();
+	    gridTomadorp2=new GridTomadorP2();
 		
 		Ext.create('Ext.form.Panel',{
 			id:'form1p2',
@@ -507,7 +689,8 @@
 			border:0,
 			buttonAlign:'center',
 			items:[
-			    gridPersonasp2
+			    gridTomadorp2
+			    ,gridPersonasp2
 	        ],
 	        buttons:[
 	            <%--
@@ -542,6 +725,7 @@
 	                            var incisosJson = [];
 	                            var completos=true;
 	                            var sinCdperson=0;
+	                            
 	                            storePersonasp2.each(function(record,index)
                            		{
 	                            	//console.log(record);
@@ -566,6 +750,21 @@
                             		{
 	                            		sinCdperson++;
                             		}
+	                                if(record.get('Parentesco')=='T')
+                                	{
+	                                	incisosJson.push({
+		                                	nmsituac:'0',
+	                                        cdrol:'1',
+	                                        fenacimi: typeof record.get('fenacimi')=='string'?record.get('fenacimi'):Ext.Date.format(record.get('fenacimi'), 'd/m/Y'),
+	                                        sexo:typeof record.get('sexo')=='string'?record.get('sexo'):record.get('sexo').get('key'),
+	                                        cdperson:record.get('cdperson'),
+	                                        nombre: record.get('nombre'),
+	                                        segundo_nombre: record.get('segundo_nombre'),
+	                                        Apellido_Paterno: record.get('Apellido_Paterno'),
+	                                        Apellido_Materno: record.get('Apellido_Materno'),
+	                                        cdrfc:record.get('cdrfc')
+	                                	});
+                                	}
 	                                incisosJson.push({
                                         nmsituac:record.get('nmsituac'),
 	                                    cdrol:typeof record.get('cdrol')=='string'?record.get('cdrol'):record.get('cdrol').get('key'),
@@ -579,11 +778,16 @@
 	                                    cdrfc:record.get('cdrfc')
 	                                });
 	                            });
+                                
 	                           //console.log("sin cd person: "+sinCdperson);
 	                            if(completos)
                             	{
-	                            	if(sinCdperson>0)
+	                            	if(sinCdperson==0)
                             		{
+	                            		editarDespuesValidacionesp2(incisosJson);//manda el submit
+                            		}
+	                            	else
+	                            	{
 		                            	Ext.getCmp('form1p2').setLoading(true);
 		                            	//mandar a traer los cdperson de las personas asincrono
 		                            	storePersonasp2.each(function(record,index)
@@ -616,6 +820,21 @@
                                                                     incisosJson=[];
                                                                     storePersonasp2.each(function(record,index)
                                                                     {
+                                                                    	if(record.get('Parentesco')=='T')
+                                                                        {
+                                                                            incisosJson.push({
+                                                                                nmsituac:'0',
+                                                                                cdrol:'1',
+                                                                                fenacimi: typeof record.get('fenacimi')=='string'?record.get('fenacimi'):Ext.Date.format(record.get('fenacimi'), 'd/m/Y'),
+                                                                                sexo:typeof record.get('sexo')=='string'?record.get('sexo'):record.get('sexo').get('key'),
+                                                                                cdperson:record.get('cdperson'),
+                                                                                nombre: record.get('nombre'),
+                                                                                segundo_nombre: record.get('segundo_nombre'),
+                                                                                Apellido_Paterno: record.get('Apellido_Paterno'),
+                                                                                Apellido_Materno: record.get('Apellido_Materno'),
+                                                                                cdrfc:record.get('cdrfc')
+                                                                            });
+                                                                        }
                                                                         incisosJson.push({
                                                                             nmsituac:record.get('nmsituac'),
                                                                             cdrol:typeof record.get('cdrol')=='string'?record.get('cdrol'):record.get('cdrol').get('key'),
@@ -666,10 +885,6 @@
                                                 })
 		                            		},(index+1)*500);
                                         });
-                            		}
-	                            	else
-                            		{
-	                            		editarDespuesValidacionesp2(incisosJson);//manda el submit
                             		}
                             	}
 	                            else
