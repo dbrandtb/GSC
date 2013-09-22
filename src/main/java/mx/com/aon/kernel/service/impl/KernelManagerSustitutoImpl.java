@@ -537,4 +537,13 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         log.debug("### kernel sustituto insertaMaestroHistoricoPoliza mesage:"+res.getMsgText());
         return res;
 	}
+	
+	public WrapperResultados movMPoliage(Map<String, Object> param) throws ApplicationException
+	{
+		log.debug("### kernel Mov Poliage map: "+param);
+        WrapperResultados res=this.returnBackBoneInvoke(param, ProcesoDAO.MOV_MPOLIAGE);
+        log.debug("### kernel sustituto guardarArchivo id:"+res.getMsgId());
+        log.debug("### kernel sustituto guardarArchivo mesage:"+res.getMsgText());
+        return res;
+	}
 }
