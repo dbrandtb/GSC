@@ -879,7 +879,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
             pv_cdperpag
             pv_cdperson
             pv_fecha
-            *
+            */
 			Map<String,Object>paramEmi=new LinkedHashMap<String,Object>(0);
 			paramEmi.put("pv_cdusuari"  , us.getUser());
 			paramEmi.put("pv_cdunieco"  , datUs.getCdunieco());
@@ -904,7 +904,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			Map<String,String>paramsGetDoc=new LinkedHashMap<String,String>(0);
 			paramsGetDoc.put("pv_cdunieco_i" , datUs.getCdunieco());
 			paramsGetDoc.put("pv_cdramo_i"   , datUs.getCdramo());
-			paramsGetDoc.put("pv_estado_i"   , "W");
+			paramsGetDoc.put("pv_estado_i"   , "M");
 			paramsGetDoc.put("pv_nmpoliza_i" , panel1.get("pv_nmpoliza"));
 			paramsGetDoc.put("pv_nmsuplem_i" , "0");
 			List<Map<String,String>>listaDocu=kernelManager.obtenerListaDocumentos(paramsGetDoc);
