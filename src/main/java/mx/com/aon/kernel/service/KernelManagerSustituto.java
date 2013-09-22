@@ -68,4 +68,5 @@ public interface KernelManagerSustituto {
 	public List<Map<String,String>>obtenerDocumentosPoliza(Map<String,Object>params) throws ApplicationException;
 	public List<Map<String, String>> obtenerListaDocumentos(Map<String, String> paramsGetDoc) throws ApplicationException;
 	public WrapperResultados insertaMaestroHistoricoPoliza(Map<String, Object> param) throws ApplicationException;
+	public WrapperResultados movMPoliage(Map<String, Object> param) throws ApplicationException;
 }
