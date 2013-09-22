@@ -55,7 +55,7 @@ public class ProcesoDAO extends AbstractDAO {
 	public static final String GENERA_SUPLEMENTO_LOGICO = "GENERA_SUPLEMENTO_LOGICO";
 	public static final String GENERA_SUPLEMENTOS = "GENERA_SUPLEMENTOS";
 	public static final String MOV_T_DESC_SUP = "MOV_T_DESC_SUP";
-	public static final String MOV_M_SUPLEME = "MOV_M_SUPLEME";
+	public static final String INSERTA_MAESTRO_HISTORICO_POLIZAS = "INSERTA_MAESTRO_HISTORICO_POLIZAS";
 	public static final String MOV_MPOLAGEN = "MOV_MPOLAGEN";
 	public static final String MOV_MPOLIAGR = "MOV_MPOLIAGR";
 	public static final String MOV_MPOLIAGE = "MOV_MPOLIAGE";
@@ -117,7 +117,7 @@ public class ProcesoDAO extends AbstractDAO {
 		addStoredProcedure(GENERA_SUPLEMENTO_FISICO, new GeneraSuplementoFisico(getDataSource()));
 		addStoredProcedure(GENERA_SUPLEMENTO_LOGICO, new GeneraSuplementoLogico(getDataSource()));
 		addStoredProcedure(MOV_T_DESC_SUP, new MovTDescSup(getDataSource()));
-		addStoredProcedure(MOV_M_SUPLEME, new MovMsupleme(getDataSource()));
+		addStoredProcedure(INSERTA_MAESTRO_HISTORICO_POLIZAS, new MovMsupleme(getDataSource()));
 		addStoredProcedure(MOV_MPOLIAGR, new MovMpoliagr(getDataSource()));
 		addStoredProcedure(MOV_MPOLIAGE, new MovMpoliage(getDataSource()));
 		addStoredProcedure(EXEC_VALIDADOR, new EjecutaValidador(getDataSource()));
