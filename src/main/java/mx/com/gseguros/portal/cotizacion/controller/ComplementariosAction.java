@@ -898,6 +898,24 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			panel2=new HashMap<String,String>(0);
 			panel2.put("nmpoliza",(String)wr.getItemMap().get("nmpoliza"));
 			panel2.put("nmpoliex",(String)wr.getItemMap().get("nmpoliex"));
+			/**/
+			
+			Map<String,String>paramsGetDoc=new LinkedHashMap<String,String>(0);
+			paramsGetDoc.put("pv_cdunieco_i" , datUs.getCdunieco());
+			paramsGetDoc.put("pv_cdramo_i"   , datUs.getCdramo());
+			paramsGetDoc.put("pv_estado_i"   , "W");
+			paramsGetDoc.put("pv_nmpoliza_i" , panel1.get("pv_nmpoliza"));
+			paramsGetDoc.put("pv_nmsuplem_i" , "0");
+			List<Map<String,String>>listaDocu=kernelManager.obtenerListaDocumentos(paramsGetDoc);
+			//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
+			for(Map<String,String> docu:listaDocu)
+			{
+				log.debug("docu iterado: "+docu);
+				String nmsolici=docu.get("nmsolici");
+				String nmsituac=docu.get("nmsituac");
+				String descripc=docu.get("descripc");
+				String descripl=docu.get("descripl");
+			}
 			
 			success=true;
 		}
