@@ -34,16 +34,16 @@ public class ProcessResultManagerJdbcTemplate {
 
             if (msgId != null && !msgId.equals("")) {
                 WrapperResultados messageResult = getResultMessage(msgId);
-
-                if (messageResult==null || messageResult.getMsgTitle()== null || messageResult.getMsgTitle().equals("")  ||
-                       messageResult.getMsgText()== null || messageResult.getMsgText().equals("") ) {
-                    logger.error("No se puede procesar el mensaje de error ");
-                    throw new ApplicationException("No se encuentra el mensaje de error asociado");
-                }
                 
                 if(messageResult != null){
                 	logger.debug("MsgTitle=" + messageResult.getMsgTitle());
                     logger.debug("MsgText=" + messageResult.getMsgText());
+                }
+
+                if (messageResult==null || messageResult.getMsgTitle()== null || messageResult.getMsgTitle().equals("")  ||
+                       messageResult.getMsgText()== null || messageResult.getMsgText().equals("") ) {
+                    logger.error("No se encontró el mensaje de respuesta del servicio de datos, verifique los parámetros de salida");
+                    throw new ApplicationException("No se encontró el mensaje de respuesta del servicio de datos, verifique los parámetros de salida");
                 }
 
                 if (messageResult.getMsgTitle().equals(ERROR_MSG_TITLE)) {
@@ -71,11 +71,9 @@ public class ProcessResultManagerJdbcTemplate {
             return res;
 
         } catch (DaoException e) {
-            logger.error("Error inesperado al invocar el procedimiento de lectura del mensaje de error" + ERROR_STORE_PROCEDURE, e);
-            throw new ApplicationException("Error inesperado al invocar el procedimiento de lectura del mensaje de error");
+        	logger.error("Error al invocar el servicio de datos que obtiene el mensaje de respuesta: " + ERROR_STORE_PROCEDURE, e);
+            throw new ApplicationException("Error al invocar el servicio de datos que obtiene el mensaje de respuesta: " + ERROR_STORE_PROCEDURE, e);
         }
-
-
     }
 
 }
