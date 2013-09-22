@@ -66,4 +66,5 @@ public interface KernelManagerSustituto {
 	public WrapperResultados emitir(Map<String, Object> paramEmi) throws ApplicationException;
 	public WrapperResultados guardarArchivo(Map<String, Object> params) throws ApplicationException;
 	public List<Map<String,String>>obtenerDocumentosPoliza(Map<String,Object>params) throws ApplicationException;
+	public List<Map<String, String>> obtenerListaDocumentos(Map<String, String> paramsGetDoc) throws ApplicationException;
 }
