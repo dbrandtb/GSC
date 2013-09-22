@@ -29,6 +29,7 @@ import mx.com.aon.flujos.cotizacion.web.ResultadoCotizacionAction;
 import mx.com.aon.flujos.cotizacion4.web.ResultadoCotizacion4Action;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
+import mx.com.aon.utils.HttpRequestUtil;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.Tatri;
@@ -628,7 +629,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 				parametros.put("pv_cdtipper_i","1");// 												OracleTypes.VARCHAR));// IN  MPERSONA.cdtipper%TYPE DEFAULT NULL, Valor por default 1
 				parametros.put("pv_otfisjur_i","F");// 												OracleTypes.VARCHAR));// IN  MPERSONA.otfisjur%TYPE DEFAULT NULL, Valor por default F
 				parametros.put("pv_otsexo_i",(String)aseg.get("sexo"));// 							OracleTypes.VARCHAR));// IN  MPERSONA.otsexo%TYPE DEFAULT NULL,
-				parametros.put("pv_fenacimi_i",aseg.get("fenacimi"));//	OracleTypes.VARCHAR));// IN  MPERSONA.fenacimi%TYPE DEFAULT NULL,
+				parametros.put("pv_fenacimi_i",renderFechas.parse((String)aseg.get("fenacimi")));//	OracleTypes.VARCHAR));// IN  MPERSONA.fenacimi%TYPE DEFAULT NULL,
 				parametros.put("pv_cdrfc_i",(String)aseg.get("cdrfc"));// 							OracleTypes.VARCHAR));// IN  MPERSONA.cdrfc%TYPE DEFAULT NULL,
 				parametros.put("pv_dsemail_i","");// 		OracleTypes.VARCHAR));// 				IN  MPERSONA.dsemail%TYPE DEFAULT NULL,  Valor de email o nulo,
 				parametros.put("pv_dsnombre1_i",(String)aseg.get("segundo_nombre"));// 				OracleTypes.VARCHAR));// IN  MPERSONA.dsnombre1%TYPE DEFAULT NULL,
@@ -878,7 +879,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
             pv_cdperpag
             pv_cdperson
             pv_fecha
-            */
+            *
 			Map<String,Object>paramEmi=new LinkedHashMap<String,Object>(0);
 			paramEmi.put("pv_cdusuari"  , us.getUser());
 			paramEmi.put("pv_cdunieco"  , datUs.getCdunieco());
@@ -915,6 +916,30 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 				String nmsituac=docu.get("nmsituac");
 				String descripc=docu.get("descripc");
 				String descripl=docu.get("descripl");
+				String url="http://201.122.160.245:7777/reports/rwservlet"
+						+ "?destype=file"
+						+ "&desformat=PDF"
+						+ "&userid=ice/ice@acwqa"
+						+ "&report="+descripl
+						+ "&paramform=no"
+						+ "&p_unieco=1"
+						+ "&p_cdramo=2"
+						+ "&p_estado='W'"
+						+ "&p_poliza="+nmsolici
+						+ "&desname=/opt/ice/avs/pdf/_"+(System.currentTimeMillis())+"_"+nmsolici+"_"+descripc;
+				log.debug(""
+						+ "\n#################################"
+						+ "\n###### Se solicita reporte ######"
+						+ "\na "+url+""
+						+ "\n#################################");
+				HttpRequestUtil.creaPeticionGet(url);
+				log.debug(""
+						+ "\n######                    ######"
+						+ "\n###### reporte solicitado ######"
+						+ "\na "+url+""
+						+ "\n################################"
+						+ "\n################################"
+						+ "");
 			}
 			
 			success=true;

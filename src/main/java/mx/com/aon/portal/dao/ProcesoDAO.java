@@ -2164,7 +2164,7 @@ public class ProcesoDAO extends AbstractDAO {
 			declareParameter(new SqlParameter("pv_cdtipper_i", 		OracleTypes.VARCHAR));// IN  MPERSONA.cdtipper%TYPE DEFAULT NULL, Valor por default 1
 			declareParameter(new SqlParameter("pv_otfisjur_i", 		OracleTypes.VARCHAR));// IN  MPERSONA.otfisjur%TYPE DEFAULT NULL, Valor por default F
 			declareParameter(new SqlParameter("pv_otsexo_i", 		OracleTypes.VARCHAR));// IN  MPERSONA.otsexo%TYPE DEFAULT NULL,
-			declareParameter(new SqlParameter("pv_fenacimi_i", 		OracleTypes.VARCHAR));// IN  MPERSONA.fenacimi%TYPE DEFAULT NULL,
+			declareParameter(new SqlParameter("pv_fenacimi_i", 		OracleTypes.DATE));// IN  MPERSONA.fenacimi%TYPE DEFAULT NULL,
 			declareParameter(new SqlParameter("pv_cdrfc_i", 		OracleTypes.VARCHAR));// IN  MPERSONA.cdrfc%TYPE DEFAULT NULL,
 			declareParameter(new SqlParameter("pv_dsemail_i", 		OracleTypes.VARCHAR));// IN  MPERSONA.dsemail%TYPE DEFAULT NULL,  Valor de email o nulo,
 			declareParameter(new SqlParameter("pv_dsnombre1_i", 	OracleTypes.VARCHAR));// IN  MPERSONA.dsnombre1%TYPE DEFAULT NULL,
