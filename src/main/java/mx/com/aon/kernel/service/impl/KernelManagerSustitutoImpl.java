@@ -537,8 +537,4 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         log.debug("### kernel sustituto insertaMaestroHistoricoPoliza mesage:"+res.getMsgText());
         return res;
 	}
-	
-	
-	
-	
 }
