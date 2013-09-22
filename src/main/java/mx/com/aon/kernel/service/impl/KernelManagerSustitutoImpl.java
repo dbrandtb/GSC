@@ -542,8 +542,8 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 	{
 		log.debug("### kernel Mov Poliage map: "+param);
         WrapperResultados res=this.returnBackBoneInvoke(param, ProcesoDAO.MOV_MPOLIAGE);
-        log.debug("### kernel sustituto guardarArchivo id:"+res.getMsgId());
-        log.debug("### kernel sustituto guardarArchivo mesage:"+res.getMsgText());
+        log.debug("### kernel sustituto guardMov PoliagearArchivo id:"+res.getMsgId());
+        log.debug("### kernel sustituto Mov Poliage mesage:"+res.getMsgText());
         return res;
 	}
 }
