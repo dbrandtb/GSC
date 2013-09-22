@@ -556,28 +556,28 @@ public class ProcesoDAO extends AbstractDAO {
 			super(dataSource, "PKG_SATELITES.P_MOV_MSUPLEME");
 			
 			
-			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_feINival_i", OracleTypes.DATE));
 			declareParameter(new SqlParameter("pv_hhinival_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_fefINval_i", OracleTypes.DATE));
 			declareParameter(new SqlParameter("pv_hhfinval_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_swanula_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nsuplogi_i", OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_nsupusua_i", OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_nsupsess_i", OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_nsuplogi_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nsupusua_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nsupsess_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_fesessio_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_swconfir_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmrenova_i", OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_nsuplori_i", OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_cdorddoc_i", OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_nmrenova_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nsuplori_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdorddoc_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_swpolfro_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_pocofron_i", OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_pocofron_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_swpoldec_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_tippodec_i", OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_tippodec_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_accion_i", OracleTypes.VARCHAR));
 			
 			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
