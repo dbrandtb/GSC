@@ -40,6 +40,7 @@
 	var contextop2='${ctx}';
 	var gridTomadorp2;
 	var recordTomadorp2;
+	var timeoutflagp2;
 	
     function rendererRolp2(v)
     {
@@ -111,7 +112,7 @@
         return leyenda;
     }
     
-    function editarDespuesValidacionesp2(incisosJson)
+    function editarDespuesValidacionesp2(incisosJson,banderaCoberODomici)
     {
     	var formPanel=Ext.getCmp('form1p2');
         var submitValues=formPanel.getForm().getValues();
@@ -145,12 +146,19 @@
                 //window.console&&console.log(jsonResp);
                 if(jsonResp.success==true)
                 {
-                	Ext.Msg.show({
-                        title:'Asegurados guardados',
-                        msg: 'Se ha guardado la informaci&oacute;n',
-                        buttons: Ext.Msg.OK
-                    });
-                	expande(1);
+                	if(banderaCoberODomici&&banderaCoberODomici==true)
+                	{
+                		timeoutflagp2=3;
+                	}
+                	else
+                	{
+	                	Ext.Msg.show({
+	                        title:'Asegurados guardados',
+	                        msg: 'Se ha guardado la informaci&oacute;n',
+	                        buttons: Ext.Msg.OK
+	                    });
+	                	expande(1);
+                	}
                 }
                 else
                	{
@@ -160,6 +168,7 @@
                         buttons: Ext.Msg.OK,
                         icon: Ext.Msg.ERROR
                     });
+                	timeoutflagp2=2;
                	}
             },
             failure:function(response,opts)
@@ -173,8 +182,223 @@
                     buttons: Ext.Msg.OK,
                     icon: Ext.Msg.ERROR
                 });
+                timeoutflagp2=2;
             }
         });
+    }
+    
+    function validarYGuardar()
+    {
+    	debug("validarYGuardar flag:1");
+    	timeoutflagp2=1;
+    	if(Ext.getCmp('form1p2').getForm().isValid())
+        {
+            var incisosRecords = storePersonasp2.getRange();
+            if(incisosRecords&&incisosRecords.length>0)
+            {
+                var incisosJson = [];
+                var completos=true;
+                var sinCdperson=0;
+                
+                storePersonasp2.each(function(record,index)
+                {
+                    //console.log(record);
+                    if(
+                        !record.get("nombre")
+                        ||record.get("nombre").length==0
+                        ||!record.get("Apellido_Paterno")
+                        ||record.get("Apellido_Paterno").length==0
+                        ||!record.get("Apellido_Paterno")
+                        ||record.get("Apellido_Paterno").length==0
+                        ||!record.get("Apellido_Materno")
+                        ||record.get("Apellido_Materno").length==0
+                        ||!record.get("cdrfc")
+                        ||record.get("cdrfc").length==0
+                        )
+                    {
+                        //console.log("#incompleto:");
+                        //console.log(record);
+                        completos=false;                                    
+                    }
+                    if(!record.get("cdperson")||record.get("cdperson").length==0)
+                    {
+                        sinCdperson++;
+                    }
+                    if(record.get('Parentesco')=='T')
+                    {
+                        incisosJson.push({
+                            nmsituac:'0',
+                            cdrol:'1',
+                            fenacimi: typeof record.get('fenacimi')=='string'?record.get('fenacimi'):Ext.Date.format(record.get('fenacimi'), 'd/m/Y'),
+                            sexo:typeof record.get('sexo')=='string'?record.get('sexo'):record.get('sexo').get('key'),
+                            cdperson:record.get('cdperson'),
+                            nombre: record.get('nombre'),
+                            segundo_nombre: record.get('segundo_nombre'),
+                            Apellido_Paterno: record.get('Apellido_Paterno'),
+                            Apellido_Materno: record.get('Apellido_Materno'),
+                            cdrfc:record.get('cdrfc')
+                        });
+                    }
+                    incisosJson.push({
+                        nmsituac:record.get('nmsituac'),
+                        cdrol:typeof record.get('cdrol')=='string'?record.get('cdrol'):record.get('cdrol').get('key'),
+                        fenacimi: typeof record.get('fenacimi')=='string'?record.get('fenacimi'):Ext.Date.format(record.get('fenacimi'), 'd/m/Y'),
+                        sexo:typeof record.get('sexo')=='string'?record.get('sexo'):record.get('sexo').get('key'),
+                        cdperson:record.get('cdperson'),
+                        nombre: record.get('nombre'),
+                        segundo_nombre: record.get('segundo_nombre'),
+                        Apellido_Paterno: record.get('Apellido_Paterno'),
+                        Apellido_Materno: record.get('Apellido_Materno'),
+                        cdrfc:record.get('cdrfc')
+                    });
+                });
+                
+               //console.log("sin cd person: "+sinCdperson);
+                if(completos)
+                {
+                    if(sinCdperson==0)
+                    {
+                    	debug("validarYGuardar ->editar");
+                        editarDespuesValidacionesp2(incisosJson,true);//manda el submit
+                    }
+                    else
+                    {
+                        Ext.getCmp('form1p2').setLoading(true);
+                        //mandar a traer los cdperson de las personas asincrono
+                        storePersonasp2.each(function(record,index)
+                        {
+                            //console.log(index);
+                            setTimeout(function()
+                            {
+                            	debug("validarYGuardar -> gecdperson");
+                                //console.log("trigger");
+                                Ext.Ajax.request(
+                                {
+                                    url: urlGenerarCdPersonp2,
+                                    success:function(response,opts)
+                                    {
+                                        var jsonResp = Ext.decode(response.responseText);
+                                        //console.log("respuesta cdperson",jsonResp);
+                                        //window.console&&console.log(jsonResp);
+                                        if(jsonResp.success==true)
+                                        {
+                                            try
+                                            {
+                                                record.data.cdperson=jsonResp.cdperson;
+                                                sinCdperson--;
+                                                if(sinCdperson==0)
+                                                {
+                                                    //procesar submit
+                                                    //console.log(storePersonasp2.getRange());
+                                                    //storePersonasp2.sync();
+                                                    //console.log(storePersonasp2.getRange());
+                                                    gridPersonasp2.getView().refresh();
+                                                    incisosJson=[];
+                                                    storePersonasp2.each(function(record,index)
+                                                    {
+                                                        if(record.get('Parentesco')=='T')
+                                                        {
+                                                            incisosJson.push({
+                                                                nmsituac:'0',
+                                                                cdrol:'1',
+                                                                fenacimi: typeof record.get('fenacimi')=='string'?record.get('fenacimi'):Ext.Date.format(record.get('fenacimi'), 'd/m/Y'),
+                                                                sexo:typeof record.get('sexo')=='string'?record.get('sexo'):record.get('sexo').get('key'),
+                                                                cdperson:record.get('cdperson'),
+                                                                nombre: record.get('nombre'),
+                                                                segundo_nombre: record.get('segundo_nombre'),
+                                                                Apellido_Paterno: record.get('Apellido_Paterno'),
+                                                                Apellido_Materno: record.get('Apellido_Materno'),
+                                                                cdrfc:record.get('cdrfc')
+                                                            });
+                                                        }
+                                                        incisosJson.push({
+                                                            nmsituac:record.get('nmsituac'),
+                                                            cdrol:typeof record.get('cdrol')=='string'?record.get('cdrol'):record.get('cdrol').get('key'),
+                                                            fenacimi: typeof record.get('fenacimi')=='string'?record.get('fenacimi'):Ext.Date.format(record.get('fenacimi'), 'd/m/Y'),
+                                                            sexo:typeof record.get('sexo')=='string'?record.get('sexo'):record.get('sexo').get('key'),
+                                                            cdperson:record.get('cdperson'),
+                                                            nombre: record.get('nombre'),
+                                                            segundo_nombre: record.get('segundo_nombre'),
+                                                            Apellido_Paterno: record.get('Apellido_Paterno'),
+                                                            Apellido_Materno: record.get('Apellido_Materno'),
+                                                            cdrfc:record.get('cdrfc')
+                                                        });
+                                                    });                
+                                                    Ext.getCmp('form1p2').setLoading(false);
+                                                    debug("validarYGuardar -> editar");
+                                                    editarDespuesValidacionesp2(incisosJson,true);
+                                                }
+                                            }
+                                            catch(e)
+                                            {
+                                                //console.log(e);
+                                                Ext.Msg.show({
+                                                    title:'Error',
+                                                    msg: 'Error al procesar la informaci&oacute;n',
+                                                    buttons: Ext.Msg.OK,
+                                                    icon: Ext.Msg.ERROR
+                                                });
+                                                debug("validarYGuardar flag:2");
+                                                timeoutflagp2=2;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Ext.Msg.show({
+                                                title:'Error',
+                                                msg: 'Error al obtener la informaci&oacute;n',
+                                                buttons: Ext.Msg.OK,
+                                                icon: Ext.Msg.ERROR
+                                            });
+                                            debug("validarYGuardar flag:2");
+                                            timeoutflagp2=2;
+                                        }
+                                    },
+                                    failure:function(response,opts)
+                                    {
+                                        Ext.Msg.show({
+                                            title:'Error',
+                                            msg: 'Error de comunicaci&oacute;n',
+                                            buttons: Ext.Msg.OK,
+                                            icon: Ext.Msg.ERROR
+                                        });
+                                        debug("validarYGuardar flag:2");
+                                        timeoutflagp2=2;
+                                    }
+                                })
+                            },(index+1)*500);
+                        });
+                    }
+                }
+                else
+                {
+                    Ext.Msg.show({
+                        title:'Datos incompletos',
+                        msg: 'El nombre, apellidos y RFC son requeridos',
+                        buttons: Ext.Msg.OK,
+                        icon: Ext.Msg.WARNING
+                    });
+                    debug("validarYGuardar flag:2");
+                    timeoutflagp2=2;
+                }
+            }
+            else
+            {
+                Ext.Msg.show({
+                    title:'Datos incompletos',
+                    msg: 'Favor de introducir al menos un asegurado',
+                    buttons: Ext.Msg.OK,
+                    icon: Ext.Msg.WARNING
+                });
+                debug("validarYGuardar flag:2");
+                timeoutflagp2=2;
+            }
+        }
+    	else
+    	{
+    		debug("validarYGuardar flag:2");
+    		timeoutflagp2=2;
+    	}
     }
 	
     Ext.onReady(function(){
@@ -567,7 +791,36 @@
 	            });
 	        },*/
 	        
+	        onEditarInter:function(grid,rowIndex)
+            {
+                var me=this;
+                debug("interval called");
+                if(timeoutflagp2==1)
+                {
+                    debug("interval: 1");
+                    setTimeout(function(){me.onEditarInter(grid,rowIndex)},500);
+                }
+                else if(timeoutflagp2==3)
+                {
+                    debug("interval: 3 proceder");
+                    me.onEditarSave(grid,rowIndex);
+                }
+                else
+                {
+                    debug("finish: "+timeoutflagp2)
+                }
+            },
+	        
 	        onEditarClick:function(grid,rowIndex)
+	        {
+	        	var me=this;
+                debug("domicilios.click");
+                debug("validarYGuardar");
+                validarYGuardar();
+                setTimeout(function(){me.onEditarInter(grid,rowIndex)},500);
+	        },
+	        
+	        onEditarSave:function(grid,rowIndex)
 	        {
 	        	var record=this.getStore().getAt(rowIndex);
 	        	if(Ext.getCmp('coberturasAccordionEl'))
@@ -608,21 +861,21 @@
 	        	*/
 	        },
 	        
-	        onDomiciliosClick:function(grid,rowIndex)
+	        onDomiciliosSave:function(grid,rowIndex)
 	        {
 	        	var record=this.getStore().getAt(rowIndex);
-	        	if(Ext.getCmp('domicilioAccordionEl'))
+                if(Ext.getCmp('domicilioAccordionEl'))
                 {
                     Ext.getCmp('domicilioAccordionEl').destroy();
                 }
-	        	accordion.add(
+                accordion.add(
                 {
                     id:'domicilioAccordionEl'
                     ,title:'Editar domicilio de '+record.get('nombre')+' '+(record.get('segundo_nombre')?record.get('segundo_nombre')+' ':' ')+record.get('Apellido_Paterno')+' '+record.get('Apellido_Materno')
                     ,cls:'claseTitulo'
                     ,loader:
                     {
-                    	url : urlDomiciliop2
+                        url : urlDomiciliop2
                         ,params:
                         {
                             'smap1.pv_cdunieco'     : inputCduniecop2,
@@ -639,19 +892,43 @@
                         ,autoLoad:true
                         ,scripts:true
                     }
-	                ,listeners:
-	                {
-	                    expand:function( p, eOpts )
-	                    {
-	                        window.parent.scrollTo(0,150+p.y);
-	                    }
-	                }
+                    ,listeners:
+                    {
+                        expand:function( p, eOpts )
+                        {
+                            window.parent.scrollTo(0,150+p.y);
+                        }
+                    }
                 }).expand();
-	        	<%--
-                Ext.create('Ext.form.Panel').submit({
-                    standardSubmit:true,
-                });
-                --%>
+	        },
+	        
+	        onDomiciliosInter:function(grid,rowIndex)
+	        {
+	        	var me=this;
+	        	debug("interval called");
+	        	if(timeoutflagp2==1)
+        		{
+	        		debug("interval: 1");
+	        		setTimeout(function(){me.onDomiciliosInter(grid,rowIndex)},500);
+        		}
+	        	else if(timeoutflagp2==3)
+	        	{
+	        		debug("interval: 3 proceder");
+	        		me.onDomiciliosSave(grid,rowIndex);
+	        	}
+	        	else
+        		{
+        		    debug("finish: "+timeoutflagp2)
+        		}
+	        },
+	        
+	        onDomiciliosClick:function(grid,rowIndex)
+	        {
+	        	var me=this;
+	        	debug("domicilios.click");
+	        	debug("validarYGuardar");
+	        	validarYGuardar();
+	        	setTimeout(function(){me.onDomiciliosInter(grid,rowIndex)},500);
 	        },
 
 	        onRemoveClick: function(grid, rowIndex){

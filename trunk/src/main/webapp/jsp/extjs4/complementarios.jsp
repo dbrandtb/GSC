@@ -506,6 +506,8 @@
 		                                                            //,disabled : true
 		                                                            ,handler:function()
 		                                                            {
+		                                                            	var me=this;
+		                                                            	me.up().up().setLoading(true);
 		                                                            	Ext.Ajax.request(
 		                                                            	{
 		                                                            		url     : urlEmitir
@@ -515,6 +517,7 @@
 		                                                            		}
 		                                                            	    ,success:function(response)
 		                                                            	    {
+		                                                            	    	me.up().up().setLoading(false);
 		                                                            	    	var json=Ext.decode(response.responseText);
 		                                                            	    	debug(json);
 		                                                            	    	if(json.success==true)
@@ -535,6 +538,7 @@
 		                                                            	    }
 		                                                            	    ,failure:function()
 		                                                            	    {
+		                                                            	    	me.up().up().setLoading(false);
 		                                                            	    	Ext.Msg.show({
 		                                                                            title:'Error',
 		                                                                            msg: 'Error de comunicaci&oacute;n',
