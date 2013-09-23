@@ -636,7 +636,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 				parametros.put("pv_dsnombre1_i",(String)aseg.get("segundo_nombre"));// 				OracleTypes.VARCHAR));// IN  MPERSONA.dsnombre1%TYPE DEFAULT NULL,
 				parametros.put("pv_dsapellido_i",(String)aseg.get("Apellido_Paterno"));// 			OracleTypes.VARCHAR));// IN  MPERSONA.dsapellido%TYPE DEFAULT NULL,
 				parametros.put("pv_dsapellido1_i",(String)aseg.get("Apellido_Materno"));// 			OracleTypes.VARCHAR));// IN  MPERSONA.dsapellido1%TYPE DEFAULT NULL,
-				parametros.put("pv_feingreso_i", renderFechas.format(calendarHoy.getTime()));//		OracleTypes.VARCHAR));// IN  MPERSONA.feingreso%TYPE DEFAULT NULL,  Valor por default SYSDATE
+				parametros.put("pv_feingreso_i", calendarHoy.getTime());//		OracleTypes.VARCHAR));// IN  MPERSONA.feingreso%TYPE DEFAULT NULL,  Valor por default SYSDATE
 				parametros.put("pv_accion_i", "I");//												OracleTypes.VARCHAR));//
 				log.debug("#iteracion mov mpersonas "+i);
 				kernelManager.movMpersona(parametros);
