@@ -53,6 +53,7 @@
 		<pattern>/subirArchivoMostrarBarra.action</pattern>
 		<pattern>/jsp/extjs4/subirArchivoBarra.jsp</pattern>
 		
+		<pattern>/flujocotizacion/consultaCotizaciones.action</pattern>
 		<pattern>/jsp/consultas/*.jsp</pattern> 
 	</decorator>
 	
