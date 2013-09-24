@@ -50,6 +50,11 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
 
     private List<ConsultaDatosTarifaVO> datosTarifa;
     
+    
+    public String execute() throws Exception {
+    	return SUCCESS;
+    }
+    
     /**
      * Obtiene los datos generales de una p&oacute;liza
      * @return String result
