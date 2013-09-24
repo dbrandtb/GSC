@@ -276,7 +276,7 @@
                                             </div>
 										</td>
 										<td class="mainbody">
-											<iframe id="bodyFrame" align="middle" name="bodyFrame" scrolling="no" frameborder="0" width="900" height="10" src="" onload="setSizeHeight()">
+											<iframe id="bodyFrame" align="middle" name="bodyFrame" scrolling="no" frameborder="0" width="100%" height="10" src="" onload="setSizeHeight()">
                                             </iframe>
 										</td>
 										<td class="right" id="ContenedorRight">
