@@ -165,6 +165,14 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 	}
 
 	public boolean validaUsuarioLdap(String user, String password) {
+		
+		logger.debug("URLLDAP=" +        this.getText("validacion.ldap.URLLDAP"));
+		logger.debug("ContextoLDAP=" +   this.getText("validacion.ldap.ContextoLDAP"));
+		logger.debug("TipoAuthLDAP=" +   this.getText("validacion.ldap.TipoAuthLDAP"));
+		logger.debug("UsuarioLDAP=" +    this.getText("validacion.ldap.UsuarioLDAP"));
+		logger.debug("PasswordLDAP=" +   this.getText("validacion.ldap.PasswordLDAP"));
+		logger.debug("SearchBaseLDAP=" + this.getText("validacion.ldap.SearchBaseLDAP"));
+		
 		Hashtable env = datosConexionLDAP(this.getText("validacion.ldap.UsuarioLDAP"),
 				this.getText("validacion.ldap.PasswordLDAP"));
 		boolean existeUsuario = false;
