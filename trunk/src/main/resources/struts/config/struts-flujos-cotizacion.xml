@@ -6,7 +6,7 @@
     <package name="flujocotizacion" extends="json-default" namespace="/flujocotizacion">
     
         <interceptors>
-            <interceptor name="cotizacionWorkflowInterceptor" class="mx.com.aon.flujos.cotizacion.web.interceptors.CotizacionWorkflowInterceptor"/>
+            <!-- <interceptor name="cotizacionWorkflowInterceptor" class="mx.com.aon.flujos.cotizacion.web.interceptors.CotizacionWorkflowInterceptor"/> -->
             <interceptor-stack name="defaultStack">
                 <interceptor-ref name="exception" />
                 <interceptor-ref name="alias" />
@@ -99,14 +99,14 @@
          <!-- ######### Ejemplo de demo #####################-->
          
          <action name="capturaCotizacion" class="entradaCotizacion" method="entrar" >
-            <interceptor-ref name="cotizacionWorkflowInterceptor" />
+            <!-- <interceptor-ref name="cotizacionWorkflowInterceptor" /> -->
             <interceptor-ref name="defaultStack" />
             <result name="input" >/jsp/flujos/cotizacion/capturaCotizacion.jsp</result>     
         </action>
         
         <!-- ######### Ejemplo de demo con 2 iframes #####################-->
         <action name="capturaCotizacionFrame" class="entradaCotizacion" method="entrar" >
-            <interceptor-ref name="cotizacionWorkflowInterceptor" />
+            <!-- <interceptor-ref name="cotizacionWorkflowInterceptor" /> -->
             <interceptor-ref name="defaultStack" />
             <result name="input" >/jsp/flujos/cotizacion/capturaCotizacionFrame.jsp</result>     
         </action>
@@ -199,8 +199,8 @@
         
         
         <!-- ######### consultar Cotizacion #####################-->    
-        <action name="consultaCotizaciones" class="consultaCotizacionAction" >
-            <result name="input">/jsp/flujos/cotizacion/consultaCotizaciones.jsp</result>
+        <action name="consultaCotizaciones" class="ConsultasPolizaAction" >
+            <result name="success">/jsp/consultas/dashboard.jsp</result>
         </action>
         <action name="detalleConsultaCotizacion" class="consultaCotizacionAction" method="detalleConsultaCotizacion">
             <result name="success" type="chain">resultCotizacion</result>
