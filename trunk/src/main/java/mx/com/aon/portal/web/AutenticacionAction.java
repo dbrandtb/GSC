@@ -167,8 +167,8 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 	}
 
 	public boolean validaUsuarioLdap(String user, String password) {
-		Hashtable env = datosConexionLDAP(Constantes.UsuarioLDAP,
-				Constantes.PasswordLDAP);
+		Hashtable env = datosConexionLDAP(this.getText("validacion.ldap.UsuarioLDAP"),
+				this.getText("validacion.ldap.PasswordLDAP"));
 		boolean existeUsuario = false;
 		try {
 			DirContext ctx = new InitialLdapContext(env, null);
@@ -179,14 +179,14 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 			String searchFilter = "(cn=" + user.toLowerCase() + ")";
 			// String searchBase = "cn=Users,dc=biosnettcs,dc=com";
 			NamingEnumeration<SearchResult> results = ctx.search(
-					Constantes.SearchBaseLDAP, searchFilter, searchCtls);
+					this.getText("validacion.ldap.SearchBaseLDAP"), searchFilter, searchCtls);
 			while (results.hasMoreElements()) {
 				SearchResult searchResult = (SearchResult) results.next();
 				Attributes attrs = searchResult.getAttributes();
 				// OBTENEMOS LA UNIDAD ORGANIZATIVA DEL UID BUSCADO CON SU UID Y
 				// LO COMPLETAMOS CON LA BASE
 				String dn = searchResult.getName() + ","
-						+ Constantes.SearchBaseLDAP;
+						+ this.getText("validacion.ldap.SearchBaseLDAP");
 
 				if (attrs != null) {
 					// EL UID EXISTE AHORA VALIDAR PASSWORD
@@ -221,11 +221,11 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 			// String url = Constantes.URLLDAP;
 			// String contexto = Constantes.ContextoLDAP;
 			// String tipoAuth = "simple";
-			env.put(Context.INITIAL_CONTEXT_FACTORY, Constantes.ContextoLDAP);
-			env.put(Context.SECURITY_AUTHENTICATION, Constantes.TipoAuthLDAP);
+			env.put(Context.INITIAL_CONTEXT_FACTORY, this.getText("validacion.ldap.ContextoLDAP"));
+			env.put(Context.SECURITY_AUTHENTICATION, this.getText("validacion.ldap.TipoAuthLDAP"));
 			env.put(Context.SECURITY_PRINCIPAL, user);
 			env.put(Context.SECURITY_CREDENTIALS, pass);
-			env.put(Context.PROVIDER_URL, Constantes.URLLDAP);
+			env.put(Context.PROVIDER_URL, this.getText("validacion.ldap.URLLDAP"));
 
 		} catch (Exception e) {
 			Log.debug("Error en el proceso Interno de LDAP");
