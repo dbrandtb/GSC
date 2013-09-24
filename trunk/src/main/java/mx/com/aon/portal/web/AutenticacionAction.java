@@ -24,7 +24,6 @@ import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.SessionMap;
 import org.apache.struts2.interceptor.SessionAware;
-import org.jfree.util.Log;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
@@ -33,8 +32,7 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 
 	private static final long serialVersionUID = 0L;
 
-	protected final transient Logger logger = Logger
-			.getLogger(AutenticacionAction.class);
+	protected final transient Logger logger = Logger.getLogger(AutenticacionAction.class);
 
 	private String user;
 	private String password;
@@ -197,7 +195,7 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 			}
 			ctx.close();
 		} catch (NamingException e) {
-			e.printStackTrace();
+			logger.error("Error en el proceso de validacion de usuario", e);
 		}
 		return existeUsuario;
 	}
@@ -210,7 +208,7 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 			validadausuario = true;
 			ctx1.close();
 		} catch (NamingException e) {
-			e.printStackTrace();
+			logger.error("Error en la validacion LDAP", e);
 		}
 		return validadausuario;
 	}
@@ -228,7 +226,7 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 			env.put(Context.PROVIDER_URL, this.getText("validacion.ldap.URLLDAP"));
 
 		} catch (Exception e) {
-			Log.debug("Error en el proceso Interno de LDAP");
+			logger.error("Error en la creacion de conexion LDAP", e);
 		}
 		return env;
 	}
