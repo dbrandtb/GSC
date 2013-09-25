@@ -112,7 +112,7 @@ Ext.onReady(function() {
 
                 }
             });
-            informacionPoliza.show();
+            panelInfoGralPoliza.show();
             /**Datos para la Tarificación**/ 
             storeTarificacion.load({
                 params: panelBusqueda.down('form').getForm().getValues(),
@@ -232,6 +232,9 @@ Ext.onReady(function() {
                 //Limpiar seleccion de la lista de opciones de consulta
                 listViewOpcionesConsulta.getSelectionModel().deselectAll();
                 listViewOpcionesConsulta.expand();
+				panelInfoGralPoliza.getForm().reset();
+				gridDatosTarificacion.hide();
+				storeTarificacion.removeAll();
                 
                 console.log('model=');
                 console.log(model);
@@ -299,11 +302,12 @@ Ext.onReady(function() {
   });
     
     /**FORMULARIO DATOS DE LA POLIZA **/
-    var informacionPoliza = Ext.create('Ext.form.Panel', {
+    var panelInfoGralPoliza = Ext.create('Ext.form.Panel', {
         id : "formularioPoliza",
         title : 'DATOS DE LA P&Oacute;LIZA',
         model : 'RowDatosPoliza',
-        //width : 1000,
+        width : 820,
+		border : false,
         //height : 280,
         //renderTo : Ext.getBody(),
         defaults : {
@@ -372,10 +376,10 @@ Ext.onReady(function() {
     });
     /**GRID PARA LOS DATOS DE TARIFICACION **/
     var gridDatosTarificacion = Ext.create('Ext.grid.Panel', {
+		width   : 820,
         title   : 'DATOS TARIFICACI&Oacute;N',
         store   : storeTarificacion,
         id      : 'gridDatosTarificacion',
-        width   : 850,
         features:[{
                     ftype:'summary'
                 }],
@@ -383,13 +387,13 @@ Ext.onReady(function() {
                     {
                         text            :'Garant&iacute;a',
                         dataIndex       :'dsgarant',
-                        width           :300,
+                        width           :250,
                         summaryRenderer : function(value){return Ext.String.format('TOTALES');}
                     },
                     {
                         text            :'Suma Asegurada',  
                         dataIndex       :'sumaAsegurada',
-                        width           :150 , 
+                        width           :130 , 
                         align           :'right' , 
                         renderer        :Ext.util.Format.usMoney, 
                         summaryType     :'sum'
@@ -397,7 +401,7 @@ Ext.onReady(function() {
                     {
                         text            :'Monto de la Prima',
                         dataIndex       :'montoPrima',
-                        width           : 200,
+                        width           : 130,
                         align           :'right',        
                         renderer        :Ext.util.Format.usMoney,
                         summaryType     :'sum'
@@ -405,7 +409,7 @@ Ext.onReady(function() {
                     {
                         text            : 'Monto de la Comisi&oacute;n',
                         dataIndex       :'montoComision',
-                        width           : 200,
+                        width           : 130,
                         renderer        :Ext.util.Format.usMoney,
                         align           :'right',        
                         summaryType     :'sum'
@@ -534,15 +538,15 @@ Ext.onReady(function() {
         renderTo: Ext.getBody(),
         layout: {
             type: 'table',
-            columns: 3
+            columns: 2
         },
         autoScroll:true,
         // title : 'PANEL PRINCIPAL',
         // applied to child components
-        defaults: {frame:true, width:200, height: 200, margin : '5'},
+        defaults: {frame:true, width:200, height: 200, margin : '2'},
         items:[{
             title:'Campos de b\u00FAsqueda',
-            colspan:3,
+            colspan:2,
             width:990,
             height:100,
             // //////////////
@@ -709,7 +713,45 @@ Ext.onReady(function() {
 										break;
 									case 2:
 										// Busqueda de polizas por RFC:
-										cargarGridPolizasAsegurado(formBusqueda.getValues());
+										//cargarGridPolizasAsegurado(formBusqueda.getValues());
+										var clbk = function(options, success, response) {
+											console.log('clbk');
+											console.log(options);
+											console.log(success);
+											console.log(response);
+											if(success){
+												var jsonResponse = Ext.decode(response.responseText);
+												console.log(jsonResponse.polizasAsegurado.length);
+												storePolizaAsegurado.setProxy(
+												{
+													type         : 'memory',
+													enablePaging : true,
+													reader       : 'json',
+													data         : jsonResponse.polizasAsegurado
+												
+												});
+												windowPolizas.show();
+												/*storePolizaAsegurado.load({
+													callback: function(records, operation, success) {
+														if(success){
+															windowPolizas.show();
+														}
+													}
+												});*/
+											}else{
+												Ext.Msg.show({
+													 title: 'Error',
+													 msg: 'No existe P&oacute;liza para el asegurado',
+													 buttons: Ext.Msg.OK,
+													 icon: Ext.Msg.ERROR
+												 });
+											}
+										}
+										cargarGridPaginado(storePolizaAsegurado, 
+											_URL_VALIDA_POLIZA_ASEGURADO, 
+											'polizasAsegurado', 
+											formBusqueda.getValues(), 
+											clbk);
 										/*
 										storePolizaAsegurado.load({
 											params: this.up('form').getForm().getValues(),
@@ -743,39 +785,41 @@ Ext.onReady(function() {
                     ]
                 }
             ]
-            ///////////////////////
-        },{
-            title:'Consultas',
-            rowspan: 2,
-            width: 130,
-            height: 550,
-            items: [
-                    listViewOpcionesConsulta
-            ]
-        },{
+        },
+		{
             title:'Hist\u00F3rico de movimientos',
-            width:850,
+            width:990,
             height:150,
             colspan:2,
             items : [
                 gridPanelSuplemento
             ]
-        },{
+        },
+		{
+            title:'Consultas',
+            //rowspan: 2,
+            width: 130,
+            height: 400,
+            items: [
+                listViewOpcionesConsulta
+            ]
+        },
+		{
             //title:'Detalle',
             width:850,
             height:400,
             colspan:2,
             autoScroll:true,
             items : [
-                informacionPoliza, gridDatosTarificacion
+                panelInfoGralPoliza, gridDatosTarificacion
             ]
         }]
     });
     
     
     ////Hide elements
-    if(informacionPoliza.isVisible()) {
-        informacionPoliza.hide();
+    if(panelInfoGralPoliza.isVisible()) {
+        panelInfoGralPoliza.hide();
     }
     if(gridDatosTarificacion.isVisible()) {
         gridDatosTarificacion.hide();
@@ -810,7 +854,31 @@ Ext.onReady(function() {
         });
     }
 	
-	
+		var tabs = Ext.create('Ext.tab.Panel', {
+	    //width: 400,
+	    //height: 200,
+	    renderTo: document.body,
+	    items: [{
+	        title: 'DATOS ASEGURADO',
+	        //html: 'Home',
+	        itemId: 'datosAsegurados',
+	        items:[	                    
+                   {
+                       //layout  :  'hbox',
+                       items   :  [ datosAsegurado]
+                   }
+               ]
+	    }, {
+	        title: 'DATOS TITULAR',
+	        itemId: 'datosTitular',
+	        items:[	                    
+                   {
+                       //layout  :  'hbox',
+                       items   :  [ informacionPoliza]
+                   }
+               ]
+	    }]    
+	});
 
    
 	function cargarGridPolizasAsegurado(p_params) {
@@ -844,6 +912,37 @@ Ext.onReady(function() {
 						 icon: Ext.Msg.ERROR
 					 });
 				}
+			}
+		});
+	}
+	
+	function cargarGridPaginado(_store, _url, _root, _params, _callback) {
+		Ext.Ajax.request(
+		{
+			url       : _url,
+			params    : _params,
+			callback  : _callback,
+			success   : function(response)
+			{
+				var jsonResponse = Ext.decode(response.responseText);
+				_store.setProxy(
+				{
+					type         : 'memory',
+					enablePaging : true,
+					reader       : 'json',
+					data         : jsonResponse[_root]
+				});
+				_store.load();
+			},
+			failure   : function()
+			{
+				Ext.Msg.show(
+				{
+					title   : 'Error',
+					icon    : Ext.Msg.ERROR,
+					msg     : 'Error cargando los datos de ' + _url,
+					buttons : Ext.Msg.OK
+				});
 			}
 		});
 	}
