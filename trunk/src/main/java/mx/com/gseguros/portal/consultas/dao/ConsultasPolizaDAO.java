@@ -22,6 +22,7 @@ import mx.com.gseguros.portal.consultas.model.ConsultaDatosTarifaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAgenteVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaReciboAgenteVO;
+import mx.com.gseguros.utils.Utilerias;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.log4j.Logger;
@@ -427,8 +428,8 @@ public class ConsultasPolizaDAO extends AbstractDAO {
     		ConsultaReciboAgenteVO consulta = new ConsultaReciboAgenteVO();
     		
     		consulta.setNmrecibo(rs.getString("NMRECIBO"));
-    		consulta.setFeinicio(rs.getString("Fecha_inicio"));
-    		consulta.setFefin(rs.getString("Fecha_fin"));
+    		consulta.setFeinicio(Utilerias.formateaFecha(rs.getString("Fecha_inicio")));
+    		consulta.setFefin(Utilerias.formateaFecha(rs.getString("Fecha_fin")));
     		consulta.setDsgarant(rs.getString("DSGARANT"));
     		consulta.setPtimport(rs.getString("PTIMPORT"));
     		
@@ -457,19 +458,18 @@ public class ConsultasPolizaDAO extends AbstractDAO {
             wrapperResultados.setItemList(result);
             return wrapperResultados;
 		}
-		
-	    protected class DatosAgenteMapper  implements RowMapper {
-	        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-	        	ConsultaDatosAgenteVO consulta = new ConsultaDatosAgenteVO();	        	
-	        	consulta.setCdagente(rs.getString("cdagente"));
-	        	consulta.setCdideper(rs.getString("cdideper"));
-	        	consulta.setNombre(rs.getString("nombre"));
-	        	consulta.setFedesde(rs.getDate("fedesde"));
-	        	return consulta;
-	        }
-	    }
 	}
-	
+
+    protected class DatosAgenteMapper  implements RowMapper {
+        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+        	ConsultaDatosAgenteVO consulta = new ConsultaDatosAgenteVO();	        	
+        	consulta.setCdagente(rs.getString("cdagente"));
+        	consulta.setCdideper(rs.getString("cdideper"));
+        	consulta.setNombre(rs.getString("nombre"));
+        	consulta.setFedesde(Utilerias.formateaFecha(rs.getString("fedesde")));
+        	return consulta;
+        }
+    }
     
     protected class ObtieneDatosAsegurado extends CustomStoredProcedure {
     	
