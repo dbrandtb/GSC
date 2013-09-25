@@ -28,8 +28,11 @@
         </interceptors>
         
         <!-- Hace el redireccionamiento al JSP -->
-        <action name="busquedaPoliza" class="emisionAction" method="busquedaPoliza">
+        <!-- <action name="busquedaPoliza" class="emisionAction" method="busquedaPoliza">
             <result name="input">/jsp/procesos/emision/busquedaPoliza.jsp</result>        
+        </action> -->
+        <action name="busquedaPoliza" class="ConsultasPolizaAction" >
+            <result name="success">/jsp/consultas/consultasPolizas.jsp</result>
         </action>
        
         <!-- Busca las Polizas existentes -->

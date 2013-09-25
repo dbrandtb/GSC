@@ -199,8 +199,8 @@
         
         
         <!-- ######### consultar Cotizacion #####################-->    
-        <action name="consultaCotizaciones" class="ConsultasPolizaAction" >
-            <result name="success">/jsp/consultas/consultasPolizas.jsp</result>
+        <action name="consultaCotizaciones" class="consultaCotizacionAction" >
+            <result name="input">/jsp/flujos/cotizacion/consultaCotizaciones.jsp</result>
         </action>
         <action name="detalleConsultaCotizacion" class="consultaCotizacionAction" method="detalleConsultaCotizacion">
             <result name="success" type="chain">resultCotizacion</result>
