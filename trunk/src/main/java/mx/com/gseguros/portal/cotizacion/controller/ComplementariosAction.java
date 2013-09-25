@@ -438,9 +438,9 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 					.add(Item.crear("editor","editorRolesp2").setQuotes(""))
 					);*/
 			item2.add(Item.crear(null, null, Item.OBJ)
-					.add(new Item("header", "Tomador"))
+					.add(new Item("header", "Contratante"))
 					.add(new Item("dataIndex", "estomador"))
-					.add(new Item("width", 80))
+					.add(new Item("width", 90))
 					);
 			item2.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("header", "Nombre"))
@@ -529,6 +529,12 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 								.add("tooltip","Editar domicilios")
 								.add(Item.crear("scope","this").setQuotes(""))
 								.add(Item.crear("handler","this.onDomiciliosClick").setQuotes(""))
+								)
+						.add(Item.crear(null,null,Item.OBJ)
+								.add("icon","resources/fam3icons/icons/lock.png")
+								.add("tooltip","Editar exclusiones")
+								.add(Item.crear("scope","this").setQuotes(""))
+								.add(Item.crear("handler","this.onExclusionClick").setQuotes(""))
 								)
 						/*.add(Item.crear(null,null,Item.OBJ)
 								.add("icon","resources/fam3icons/icons/money.png")
@@ -944,9 +950,9 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 						+ "&report="+descripl
 						+ "&paramform=no"
 						+ "&p_unieco=1"
-						+ "&p_cdramo=2"
+						+ "&p_ramo=2"
 						+ "&p_estado='M'"
-						+ "&p_poliza="+nmsolici
+						+ "&p_poliza="+panel2.get("nmpoliza")
 						+ "&desname="+rutaCarpeta+"/"+descripc;
 				log.debug(""
 						+ "\n#################################"

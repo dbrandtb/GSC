@@ -97,7 +97,7 @@ Ext.onReady(function()
             Ext.create('Ext.window.Window',
             {
                 id           : 'panDocWinPopupAddDoc'
-                ,title       : 'Agregar documento a poliza '+panDocInputNmpoliza
+                ,title       : 'Agregar documento a poliza'//+panDocInputNmpoliza
                 ,closable    : false
                 ,modal       : true
                 ,width       : 500
@@ -118,6 +118,7 @@ Ext.onReady(function()
                                 ,readOnly   : true
                                 ,fieldLabel : 'N&uacute;mero de poliza'
                                 ,name       : 'smap1.nmpoliza'
+                                ,hidden     : true
                             }
                             ,{
                                 xtype       : 'datefield'
@@ -267,6 +268,7 @@ Ext.onReady(function()
                         ]
                     }
                 ]
+                <s:if test='!smap1.containsKey("readOnly")'>
                 ,dockedItems :
                 [
                     {
@@ -283,6 +285,7 @@ Ext.onReady(function()
                         ]
                     }
                 ]
+                </s:if>
             });
             this.callParent();
         }

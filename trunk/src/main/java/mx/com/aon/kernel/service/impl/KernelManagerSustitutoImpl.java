@@ -546,4 +546,66 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         log.debug("### kernel sustituto Mov Poliage mesage:"+res.getMsgText());
         return res;
 	}
+	
+	public List<Map<String, String>> cargarTiposClausulasExclusion() throws ApplicationException
+	{
+		log.debug("### kernel sustituto cargarTiposClausulasExclusion sin parametros");
+        List<Map<String,String>> lista= this.getAllBackBoneInvoke(new HashMap<String,String>(0), ProcesoDAO.OBTENER_TIPOS_CLAUSULAS_EXCLUSION);
+        lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
+        log.debug("### kernel sustituto cargarTiposClausulasExclusion lista size: "+lista.size());
+        return lista;
+	}
+	
+	public List<Map<String, String>> obtenerExclusionesPorTipo(Map<String, String> params) throws ApplicationException
+	{
+		log.debug("### kernel sustituto obtenerExclusionesPorTipo params: "+params);
+        List<Map<String,String>> lista= this.getAllBackBoneInvoke(params, ProcesoDAO.OBTENER_EXCLUSIONES_X_TIPO);
+        lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
+        log.debug("### kernel sustituto obtenerExclusionesPorTipo lista size: "+lista.size());
+        return lista;
+	}
+	
+	public Map<String, String> obtenerHtmlClausula(Map<String, String> params) throws ApplicationException
+	{
+        log.debug("### kernel sustituto obtenerHtmlClausula map: "+params);
+        Map<String,String>map=(Map<String,String>) this.getBackBoneInvoke(params, ProcesoDAO.OBTENER_HTML_CLAUSULA);
+        log.debug("### kernel sustituto obtenerHtmlClausula response map: "+map);
+        return map;
+	}
+	
+	public WrapperResultados PMovMpolicot(Map<String, String> param) throws ApplicationException
+	{
+		log.debug("### kernel PMovMpolicot map: "+param);
+        WrapperResultados res=this.returnBackBoneInvoke(param, ProcesoDAO.P_MOV_MPOLICOT);
+        log.debug("### kernel sustituto PMovMpolicot id:"+res.getMsgId());
+        log.debug("### kernel sustituto PMovMpolicot mesage:"+res.getMsgText());
+        return res;
+	}
+
+	public List<Map<String, String>> obtenerPolicot(Map<String, String> params) throws ApplicationException {
+		
+		log.debug("### kernel sustituto obtenerPolicot params: "+params);
+        List<Map<String,String>> lista= this.getAllBackBoneInvoke(params, ProcesoDAO.OBTENER_POLICOT);
+        lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
+        log.debug("### kernel sustituto obtenerPolicot lista size: "+lista.size());
+        return lista;
+	}
+	
+	public WrapperResultados PMovMesacontrol(Map<String, Object> param) throws ApplicationException
+	{
+		log.debug("### kernel PMovMesacontrol map: "+param);
+        WrapperResultados res=this.returnBackBoneInvoke(param, ProcesoDAO.P_MOV_MESACONTROL);
+        log.debug("### kernel sustituto PMovMesacontrol id:"+res.getMsgId());
+        log.debug("### kernel sustituto PMovMesacontrol mesage:"+res.getMsgText());
+        return res;
+	}
+	
+	public List<Map<String, String>> loadMesaControl() throws ApplicationException
+	{
+		log.debug("### kernel sustituto loadMesaControl sin parametros");
+        List<Map<String,String>> lista= this.getAllBackBoneInvoke(new HashMap<String,String>(0), ProcesoDAO.LOAD_MESA_CONTROL);
+        lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
+        log.debug("### kernel sustituto loadMesaControl lista size: "+lista.size());
+        return lista;
+	}
 }

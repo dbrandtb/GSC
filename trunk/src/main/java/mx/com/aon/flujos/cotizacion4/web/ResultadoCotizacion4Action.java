@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -541,6 +542,13 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     --pv_cdperpag   input
     */
     {
+    	log.debug(""
+    			+ "\n################################"
+    			+ "\n################################"
+    			+ "\n###### comprar cotizacion ######"
+    			+ "\n######                    ######"
+    			);
+    	log.debug("smap1: "+smap1);
         try
         {
             UserVO usuarioSesion=(UserVO) this.session.get("USUARIO");
@@ -663,6 +671,25 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             parameters2.put("pv_cdperpag",   comprarCdperpag);
             log.debug("mapa en action: "+parameters2);
             kernelManagerSustituto.comprarCotizacion(parameters2);
+            
+            Map<String,Object>parMesCon=new LinkedHashMap<String,Object>(0);
+            parMesCon.put("pv_cdunieco_i"   , comprarCdunieco);
+            parMesCon.put("pv_cdramo_i"     , comprarCdramo);
+            parMesCon.put("pv_estado_i"     , "W");
+            parMesCon.put("pv_nmpoliza_i"   , comprarNmpoliza);
+            parMesCon.put("pv_nmsuplem_i"   , "0");
+            parMesCon.put("pv_cdsucadm_i"   , null);
+            parMesCon.put("pv_cdsucdoc_i"   , null);
+            parMesCon.put("pv_cdtiptra_i"   , "1");
+            parMesCon.put("pv_ferecepc_i"   , new Date());
+            parMesCon.put("pv_cdagente_i"   , null);
+            parMesCon.put("pv_referencia_i" , null);
+            parMesCon.put("pv_nombre_i"     , smap1.get("nombreTitular"));
+            parMesCon.put("pv_festatus_i"   , new Date());
+            parMesCon.put("pv_status_i"     , "");
+            parMesCon.put("pv_comments_i"   , "");
+            kernelManagerSustituto.PMovMesacontrol(parMesCon);
+            
             success=true;
         }
         catch(Exception ex)
@@ -670,6 +697,12 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             log.error("error al comprar cotizacion",ex);
             success=false;
         }
+        log.debug(""
+        		+ "\n######                    ######"
+    			+ "\n###### comprar cotizacion ######"
+    			+ "\n################################"
+    			+ "\n################################"
+    			);
         return SUCCESS;
     }
     

@@ -33,9 +33,9 @@
             		$("<li />").attr({class:"x-menu-list-item"})
             		.append(
             		$("<a />")
-            		.attr({href:'javascript:LoadPage("/datosComplementarios.action?nmpoliza="+prompt("Número de poliza:")+"&cdramo=2&cdunieco=1&estado=W")',
+            		.attr({href:'javascript:LoadPage("/mesacontrol/principal.action")',
             			class:"x-menu-item"})
-            		.html('<img src="/acw/images/app/default/s.gif" class="x-menu-item-icon ">Datos complementarios')
+            		.html('<img src="/acw/images/app/default/s.gif" class="x-menu-item-icon ">Mesa de control')
             		));
             window.clearInterval(miIntervalCambioLiga);
             //window.console&&console.log("STOP");
