@@ -9,7 +9,7 @@
         <action name="loadTareas" method="loadTareas" class="MesaControlAction">
             <result name="success" type="json" />
         </action>
-        <action name="obtenerValoresDefectoInsercionManual" method="obtenerValoresDefectoInsercionManual" class="MesaControlAction">
+        <action name="guardarTramiteManual" method="guardarTramiteManual" class="MesaControlAction">
             <result name="success" type="json" />
         </action>
     </package>

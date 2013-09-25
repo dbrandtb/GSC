@@ -1227,4 +1227,20 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 		this.gridResultados = gridResultados;
 	}
 
+	public String getCON_CAT_MESACONTROL_SUCUR_ADMIN() {
+		return CON_CAT_MESACONTROL_SUCUR_ADMIN;
+	}
+
+	public String getCON_CAT_MESACONTROL_SUCUR_DOCU() {
+		return CON_CAT_MESACONTROL_SUCUR_DOCU;
+	}
+
+	public String getCON_CAT_MESACONTROL_TIP_TRAMI() {
+		return CON_CAT_MESACONTROL_TIP_TRAMI;
+	}
+
+	public String getCON_CAT_MESACONTROL_ESTAT_TRAMI() {
+		return CON_CAT_MESACONTROL_ESTAT_TRAMI;
+	}
+
 }

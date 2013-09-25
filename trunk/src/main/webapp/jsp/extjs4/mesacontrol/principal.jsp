@@ -14,12 +14,15 @@
     ///////////////////////
     ////// variables //////
     /*///////////////////*/
-    var mesConUrlLoadTareas = '<s:url namespace="/mesacontrol" action="loadTareas" />';
-    var mesConUrlDocu       = '<s:url namespace="/documentos"  action="ventanaDocumentosPoliza" />';
-    var mesConUrlDatCom     = '<s:url namespace="/"            action="datosComplementarios" />';
-    var mesConUrlInitManual = '<s:url namespace="/mesacontrol" action="obtenerValoresDefectoInsercionManual" />';
+    var mesConUrlLoadTareas = '<s:url namespace="/mesacontrol"     action="loadTareas" />';
+    var mesConUrlDocu       = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza" />';
+    var mesConUrlDatCom     = '<s:url namespace="/"                action="datosComplementarios" />';
+    var mesConUrlInitManual = '<s:url namespace="/mesacontrol"     action="obtenerValoresDefectoInsercionManual" />';
+    var mesConUrlSaveTra    = '<s:url namespace="/mesacontrol"     action="guardarTramiteManual" />';
+    var mesConUrlLoadCatalo = '<s:url namespace="/flujocotizacion" action="cargarCatalogos" />';
     var mesConStoreTareas;
     var mesConGridTareas;
+    var mesConStoreUniAdmin;
     /*///////////////////*/
     ////// variables //////
     ///////////////////////
@@ -76,6 +79,8 @@ Ext.onReady(function(){
         	}
         }
     });
+    
+    mesConStoreUniAdmin=[];
     
     Ext.Ajax.request(
     {
@@ -149,7 +154,7 @@ Ext.onReady(function(){
                     	,width     : 70
                     }
                     ,{
-                        header     : 'Estado<br/>de p&oacute;liza'
+                        header     : 'Estado<br/>de solicitud'
                         ,dataIndex : 'estado'
                         ,renderer  : function(estado)
                         {
@@ -164,7 +169,7 @@ Ext.onReady(function(){
                             }
                             return label;
                         }
-                        ,width     : 80
+                        ,width     : 90
                     }
                     ,{
                     	header     : 'Fecha<br/>de captura'
@@ -300,36 +305,235 @@ Ext.onReady(function(){
         {
         	var grid=button.up().up();
         	debug(grid);
-        	Ext.Ajax.request(
+        	Ext.create('Ext.window.Window',
         	{
-        		url      : mesConUrlInitManual
-        		,success : function(response)
-        		{
-        			var json=Ext.decode(response.responseText);
-        			if(json.success==true)
-        			{
-        				
-        			}
-        			else
-        			{
-        				Ext.Msg.show({
-        	                title: 'Error',
-        	                msg: 'Error al cargar',
-        	                buttons: Ext.Msg.OK,
-        	                icon: Ext.Msg.ERROR
-        	            });
-        			}
-        		}
-        	    ,failure : function()
-        	    {
-        	    	Ext.Msg.show({
-                        title: 'Error',
-                        msg: 'Error de comunicaci&oacute;n',
-                        buttons: Ext.Msg.OK,
-                        icon: Ext.Msg.ERROR
-                    });
-        	    }
-        	});
+        		title        : 'Nuevo tr&aacute;mite'
+        		,width       : 600
+        		,maxHeight   : 400
+        		,modal       : true
+        		,items       :
+        		[
+        		    Ext.create('Ext.form.Panel',
+        		    {
+        		    	id          : 'mesConFormTraManual',
+        		    	buttonAlign : 'center'
+        		    	,url        : mesConUrlSaveTra
+        		    	,border     : 0
+        		    	,layout     :
+        		    	{
+        		    		type     : 'table'
+        		    		,columns : 2
+        		    	}
+        		        ,defaults   :
+        		        {
+        		        	style : 'margin:5px;'
+        		        }
+        		    	,items      :
+        		    	[
+        		    	    Ext.create('Ext.form.field.ComboBox',
+        		    	    {
+        		    	    	fieldLabel : 'Sucursal Administradora'
+        		    	    	,name      : 'smap1.pv_cdsucadm_i'
+        		    	    	,allowBlank : false
+        		    	    	,editable   : false
+        		    	    	,displayField : 'value'
+        		    	    	,valueField   : 'key'
+        		    	    	,forceSelection : true
+        		    	    	,queryMode      :'local'
+        		    	    	,store : Ext.create('Ext.data.Store', {
+                                    model:'Generic',
+                                    autoLoad:true,
+                                    proxy:
+                                    {
+                                        type: 'ajax',
+                                        url:mesConUrlLoadCatalo,
+                                        extraParams:{catalogo:'<s:property value="CON_CAT_MESACONTROL_SUCUR_ADMIN" />'},
+                                        reader:
+                                        {
+                                            type: 'json',
+                                            root: 'lista'
+                                        }
+                                    }
+                                })
+        		    	    })
+        		    	    ,Ext.create('Ext.form.field.ComboBox',
+                            {
+                                fieldLabel : 'Sucursal Documento'
+                                ,name       : 'smap1.pv_cdsucdoc_i'
+                                ,allowBlank : false
+                                ,editable   : false
+                                ,displayField : 'value'
+                                ,valueField   : 'key'
+                                ,forceSelection : true
+                                ,queryMode      :'local'
+                                    ,store : Ext.create('Ext.data.Store', {
+                                        model:'Generic',
+                                        autoLoad:true,
+                                        proxy:
+                                        {
+                                            type: 'ajax',
+                                            url:mesConUrlLoadCatalo,
+                                            extraParams:{catalogo:'<s:property value="CON_CAT_MESACONTROL_SUCUR_DOCU" />'},
+                                            reader:
+                                            {
+                                                type: 'json',
+                                                root: 'lista'
+                                            }
+                                        }
+                                    })
+                            })
+                            /*
+                            ,{
+                                xtype       : 'textfield'
+                                ,fieldLabel : 'Subramo'
+                                ,name       : 'smap1.'
+                            }
+        		    	    */
+                            ,{
+        		    	    	xtype       : 'textfield'
+        		    	    	,fieldLabel : 'P&oacute;liza'
+        		    	    	,name       : 'smap1.pv_nmpoliza_i'
+        		    	    	,allowBlank : false
+        		    	    }
+        		    	    ,{
+        		    	    	xtype       : 'textfield'
+        		    	    	,fieldLabel : 'Agente'
+        		    	    	,name       : 'smap1.pv_cdagente_i'
+        		    	    	,allowBlank : false
+        		    	    }
+        		    	    /*
+        		    	    ,Ext.create('Ext.form.field.ComboBox',
+                            {
+                                fieldLabel : 'Forma de recepci&oacute;n'
+                            })
+                            */
+                            ,Ext.create('Ext.form.field.ComboBox',
+                            {
+                                fieldLabel : 'Tipo de tr&aacute;mite'
+                                ,name       : 'smap1.pv_cdtiptra_i'
+                                ,allowBlank : false
+                                ,editable   : false
+                                ,displayField : 'value'
+                                ,valueField   : 'key'
+                                ,forceSelection : true
+                                ,queryMode      :'local'
+                                    ,store : Ext.create('Ext.data.Store', {
+                                        model:'Generic',
+                                        autoLoad:true,
+                                        proxy:
+                                        {
+                                            type: 'ajax',
+                                            url:mesConUrlLoadCatalo,
+                                            extraParams:{catalogo:'<s:property value="CON_CAT_MESACONTROL_TIP_TRAMI" />'},
+                                            reader:
+                                            {
+                                                type: 'json',
+                                                root: 'lista'
+                                            }
+                                        }
+                                    })
+                            })
+                            ,{
+        		    	    	xtype       : 'textfield'
+                                ,fieldLabel : 'Referencia'
+                                ,name       : 'smap1.pv_referencia_i'
+                                ,allowBlank : false
+                            }
+        		    	    ,{
+        		    	    	xtype       : 'textfield'
+                                ,fieldLabel : 'Asegurado'
+                                ,name       : 'smap1.pv_nombre_i'
+                                ,allowBlank : false
+        		    	    }
+        		    	    ,Ext.create('Ext.form.field.ComboBox',
+                            {
+                                fieldLabel : 'Estatus'
+                                ,name      : 'smap1.pv_status_i'
+                                ,allowBlank : false
+                                ,editable   : false
+                                ,displayField : 'value'
+                                ,valueField   : 'key'
+                                ,forceSelection : true
+                                ,queryMode      :'local'
+                                    ,store : Ext.create('Ext.data.Store', {
+                                        model:'Generic',
+                                        autoLoad:true,
+                                        proxy:
+                                        {
+                                            type: 'ajax',
+                                            url:mesConUrlLoadCatalo,
+                                            extraParams:{catalogo:'<s:property value="CON_CAT_MESACONTROL_ESTAT_TRAMI" />'},
+                                            reader:
+                                            {
+                                                type: 'json',
+                                                root: 'lista'
+                                            }
+                                        }
+                                    })
+                            })
+                            ,{
+                                xtype       : 'textfield'
+                                ,fieldLabel : 'Observaciones'
+                                ,name       : 'smap1.pv_comments_i'
+                                ,allowBlank : false
+                            }
+        		    	]
+        		    	,buttons :
+        		    	[
+        		    	    {
+        		    	    	text     : 'Guardar'
+        		    	    	,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
+        		    	    	,handler : function()
+        		    	    	{
+        		    	    		var form=Ext.getCmp('mesConFormTraManual');
+        		    	    		debug(form);
+        		    	    		if(form.isValid())
+        		    	    		{
+	                                    form.setLoading(true);
+	                                    form.submit(
+	                                    {
+	                                        params :
+	                                        {
+	                                            'smap1.pv_cdunieco_i' : '1',
+	                                            'smap1.pv_cdramo_i'   : '2',
+	                                            'smap1.pv_estado_i'   : 'W',
+	                                            'smap1.pv_nmsuplem_i' : '0'
+	                                        },
+	                                        success:function(){
+	                                            form.setLoading(false);
+	                                            Ext.Msg.show({
+	                                                title:'Cambios guardados',
+	                                                msg: 'Se agreg&oacute; un nuevo tr&aacute;mite',
+	                                                buttons: Ext.Msg.OK
+	                                            });
+	                                            Ext.create('Ext.form.Panel').submit({standardSubmit:true});
+	                                        },
+	                                        failure:function(){
+	                                            form.setLoading(false);
+	                                            Ext.Msg.show({
+	                                                title:'Error',
+	                                                msg: 'Error de comunicaci&oacute;n',
+	                                                buttons: Ext.Msg.OK,
+	                                                icon: Ext.Msg.ERROR
+	                                            });
+	                                        }
+	                                    });
+        		    	    		}
+        		    	    		else
+        		    	    		{
+        		    	    			Ext.Msg.show({
+                                            title:'Error',
+                                            msg: 'Favor de introducir los campos requeridos',
+                                            buttons: Ext.Msg.OK,
+                                            icon: Ext.Msg.WARNING
+                                        });
+        		    	    		}
+        		    	    	}
+        		    	    }
+        		    	]
+        		    })
+        		]
+        	}).show();
         }
     });
     /*/////////////////////*/
