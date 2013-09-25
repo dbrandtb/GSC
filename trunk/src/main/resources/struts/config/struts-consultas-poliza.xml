@@ -72,7 +72,18 @@
 			</result>
 		</action>
 		
-		<action name="consultaPolizasAgente" class="ConsultasPolizaAction"
+        <action name="consultaDatosAgente" class="ConsultasPolizaAction"
+            method="consultaDatosAgente">            
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                     datosAgente.*,
+                     success
+                </param>
+            </result>
+        </action>
+        
+        <action name="consultaPolizasAgente" class="ConsultasPolizaAction"
 			method="consultaPolizasAgente">
 			<result type="json">
 				<param name="ignoreHierarchy">false</param>
@@ -93,6 +104,17 @@
                 </param>
 			</result>
 		</action>
+		
+        <action name="consultaDatosAsegurado" class="ConsultasPolizaAction"
+            method="consultaDatosAsegurado">
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    datosAsegurados.*,
+                    success
+                </param>
+            </result>
+        </action>
 
 	</package>
 
