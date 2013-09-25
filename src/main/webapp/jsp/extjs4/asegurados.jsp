@@ -3,6 +3,13 @@
 <!DOCTYPE html>
 <html>
     <head>
+    <style>
+	.x-action-col-icon {
+	    height: 16px;
+	    width: 16px;
+	    margin-right: 8px;
+	}
+	</style>
         <script type="text/javascript">
             //URL padre de los catalogos
             var _URL_OBTEN_CATALOGO_GENERICO=           '<s:url action="jsonObtenCatalogoGenerico" namespace="/" />';
@@ -44,6 +51,7 @@
             var urlDatosComplementarios='<s:url namespace="/" action="datosComplementarios" />';
             var urlDetalleCotizacion='<s:url namespace="/" action="detalleCotizacion" />';
             var contexto='${ctx}';
+            var urlVentanaDocumentos = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza" />';
         </script>
         <script src="${ctx}/resources/jsp-script/extjs4/asegurados.js"></script>
     </head>

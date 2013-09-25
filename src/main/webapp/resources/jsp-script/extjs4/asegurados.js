@@ -1068,93 +1068,142 @@ Ext.onReady(function(){
         text: 'Comprar',
         icon:contexto+'/resources/fam3icons/icons/coins.png',
         disabled:true,
-        handler: function()
+        handler:function()
         {
-            //console.log("trigger:");
-            //console.log("nmpoliza",selected_record.get('nmPoliza'));
-            //console.log("cdperpag",selected_record.get('cdPerpag'));
-            //console.log("cdplan",selected_cd_plan);
-            formPanel.setLoading(true);
-            debug(Ext.getCmp('fechaInicioVigencia').getValue());
-            debug(Ext.getCmp('fechaFinVigencia').getValue());
-            Ext.Ajax.request(
-            {
-                url: urlComprarCotizacion,
-                params:{
-                    comprarNmpoliza:selected_record.get('nmPoliza'),
-                    comprarCdplan:selected_cd_plan,
-                    comprarCdperpag:selected_record.get('cdPerpag'),
-                    comprarCdramo:selected_record.get('cdRamo'),
-                    comprarCdciaaguradora:selected_record.get('cdCiaaseg'),
-                    comprarCdunieco:selected_record.get('cdUnieco')
-                    ,'smap1.fechaInicio'  : Ext.Date.format(Ext.getCmp('fechaInicioVigencia').getValue(), 'd/m/Y')
-                    ,'smap1.fechaFin'     : Ext.Date.format(Ext.getCmp('fechaFinVigencia').getValue(), 'd/m/Y')
-                },
-                success:function(response,opts)
-                {
-                    formPanel.setLoading(false);
-                    var json=Ext.decode(response.responseText);
-                    if(json.success==true)
-                    {
-                        //Ext.MessageBox.hide();
-                        //matar botones
-                    	botonDetalle.hide();
-                        botonComprar.hide();
-                        botonVerCoberturas.hide();
-                        botonVerDetalleCobertura.hide();
-                        Ext.getCmp('botonCotizar').hide();
-                        Ext.getCmp('botonLimpiar').hide();
-                        Ext.getCmp('botonEditarCotiza').hide();
-                        //Ext.getCmp('botonNuevaCotiza').hide();
-                        Ext.getCmp('botonImprimir').hide();
-                        //!matar botones
-                        var jsonResp = Ext.decode(response.responseText);
-                        //window.console&&console.log(jsonResp);
-                        window.parent.scrollTo(0,0);
-                        var msg=Ext.Msg.show({
-                            title:'Cotizaci&oacute;n comprada',
-                            msg:'Su poliza ha sido enviada a mesa de control con el n&uacute;mero '+Ext.getCmp('idCotizacion').getValue(),
-                            buttons: Ext.Msg.OK
-                            //,x:100
-                            ,y:50
-                        });
-                        msg.setY(50);
-                        //msg.setX(100);
-                        /*
-                        Ext.create('Ext.form.Panel').submit({
-                            url : urlDatosComplementarios,
-                            standardSubmit:true,
-                            params:{
-                            	cdunieco:selected_record.get('cdUnieco'),
-                            	cdramo:selected_record.get('cdRamo'),
-                            	estado:"W",
-                            	nmpoliza:selected_record.get('nmPoliza')
-                            }
-                        });*/
-                    }
-                    else
-                    {
-                        Ext.Msg.show({
-                            title:'Error',
-                            msg: 'Error al comprar la cotizaci&oacute;n '+opts.params.comprarNmpoliza,
-                            buttons: Ext.Msg.OK,
-                            icon: Ext.Msg.ERROR
-                        });
-                    }
-                },
-                failure:function()
-                {
-                    //Ext.MessageBox.hide();
-                    formPanel.setLoading(false);
-                    //window.console&&console.log("error");
-                    Ext.Msg.show({
-                        title:'Error',
-                        msg: 'Error de comunicaci&oacute;n',
-                        buttons: Ext.Msg.OK,
-                        icon: Ext.Msg.ERROR
-                    });
-                }
-            });
+        	debug("comprar");
+        	var nmcotizacion=Ext.getCmp('idCotizacion').getValue();
+        	debug("nmcotizacion",nmcotizacion);
+        	Ext.create('Ext.window.Window',
+			{
+        		width        : 600
+        		,height   : 400
+        		,title       : 'Documentos de la cotizaci&oacute;n '+nmcotizacion
+        		,closable    : false
+        		,modal       : true
+        		,buttonAlign : 'center'
+    	        ,loadingMask   : true
+        		,loader      :
+        		{
+        			url       : urlVentanaDocumentos
+        	        ,scripts  : true
+        	        ,autoLoad : true
+        			,params   :
+        			{
+        				'smap1.nmpoliza'   : nmcotizacion
+        				,'smap1.cdunieco'  : '1'
+        				,'smap1.cdramo'    : '2'
+        				,'smap1.estado'    : 'W'
+        				,'smap1.nmsuplem' : 0
+        			}
+        		}
+        	    ,buttons   :
+        	    [
+        	        {
+        	        	text     : 'Continuar'
+        	        	,icon    : contexto+'/resources/fam3icons/icons/accept.png'
+        	        	,handler  : function(){
+        	        		debug("ahora si comprar");
+        	        		debug("trigger:");
+        	                debug("nmpoliza",selected_record.get('nmPoliza'));
+        	                debug("cdperpag",selected_record.get('cdPerpag'));
+        	                debug("cdplan",selected_cd_plan);
+        	                formPanel.setLoading(true);
+        	                this.up().up().destroy();
+        	                debug(Ext.getCmp('fechaInicioVigencia').getValue());
+        	                debug(Ext.getCmp('fechaFinVigencia').getValue());
+        	                var nombreTitular='';
+        	                storeIncisos.each(function(record)
+        	                {
+        	                	if(record.get('rol')=='T'||(typeof record.get('rol')=='object'&& record.get('rol').get('key')=='T'))
+    	                		{
+    	                		    if(record.get('nombre')&&record.get('nombre').length>0)
+    	                		    {
+        	                	        nombreTitular=record.get('nombre')+' '+
+        	                	        (record.get('segundoNombre')&&record.get('segundoNombre').length>0?(record.get('segundoNombre')+' '):'')
+        	                	        +record.get('apellidoPaterno')+' '+record.get('apellidoMaterno');
+        	                	        debug(nombreTitular);
+    	                		    }
+    	                		}
+        	                });
+        	                Ext.Ajax.request(
+        	                {
+        	                    url: urlComprarCotizacion,
+        	                    params:{
+        	                        comprarNmpoliza:selected_record.get('nmPoliza'),
+        	                        comprarCdplan:selected_cd_plan,
+        	                        comprarCdperpag:selected_record.get('cdPerpag'),
+        	                        comprarCdramo:selected_record.get('cdRamo'),
+        	                        comprarCdciaaguradora:selected_record.get('cdCiaaseg'),
+        	                        comprarCdunieco:selected_record.get('cdUnieco')
+        	                        ,'smap1.fechaInicio'   : Ext.Date.format(Ext.getCmp('fechaInicioVigencia').getValue(), 'd/m/Y')
+        	                        ,'smap1.fechaFin'      : Ext.Date.format(Ext.getCmp('fechaFinVigencia').getValue(), 'd/m/Y')
+        	                        ,'smap1.nombreTitular' : nombreTitular
+        	                    },
+        	                    success:function(response,opts)
+        	                    {
+        	                        formPanel.setLoading(false);
+        	                        var json=Ext.decode(response.responseText);
+        	                        if(json.success==true)
+        	                        {
+        	                            //Ext.MessageBox.hide();
+        	                            //matar botones
+        	                        	botonDetalle.hide();
+        	                            botonComprar.hide();
+        	                            botonVerCoberturas.hide();
+        	                            botonVerDetalleCobertura.hide();
+        	                            Ext.getCmp('botonCotizar').hide();
+        	                            Ext.getCmp('botonLimpiar').hide();
+        	                            Ext.getCmp('botonEditarCotiza').hide();
+        	                            //Ext.getCmp('botonNuevaCotiza').hide();
+        	                            Ext.getCmp('botonImprimir').hide();
+        	                            //!matar botones
+        	                            var jsonResp = Ext.decode(response.responseText);
+        	                            //window.console&&console.log(jsonResp);
+        	                            window.parent.scrollTo(0,0);
+        	                            var msg=Ext.Msg.show({
+        	                                title:'Cotizaci&oacute;n comprada',
+        	                                msg:'Su poliza ha sido enviada a mesa de control con el n&uacute;mero '+Ext.getCmp('idCotizacion').getValue(),
+        	                                buttons: Ext.Msg.OK
+        	                                //,x:100
+        	                                ,y:50
+        	                            });
+        	                            msg.setY(50);
+        	                        }
+        	                        else
+        	                        {
+        	                            Ext.Msg.show({
+        	                                title:'Error',
+        	                                msg: 'Error al comprar la cotizaci&oacute;n '+opts.params.comprarNmpoliza,
+        	                                buttons: Ext.Msg.OK,
+        	                                icon: Ext.Msg.ERROR
+        	                            });
+        	                        }
+        	                    },
+        	                    failure:function()
+        	                    {
+        	                        //Ext.MessageBox.hide();
+        	                        formPanel.setLoading(false);
+        	                        //window.console&&console.log("error");
+        	                        Ext.Msg.show({
+        	                            title:'Error',
+        	                            msg: 'Error de comunicaci&oacute;n',
+        	                            buttons: Ext.Msg.OK,
+        	                            icon: Ext.Msg.ERROR
+        	                        });
+        	                    }
+        	                });
+        	        	}
+        	        }
+        	    	,{
+        	    		text     : 'Cerrar'
+        	    		,icon    : contexto+'/resources/fam3icons/icons/cancel.png'
+        	    		,handler : function()
+        	    		{
+        	    			this.up().up().destroy();
+        	    		}
+        	    	}
+        	    ]
+			}).show();
         }
     });
     /*/////////////////*/

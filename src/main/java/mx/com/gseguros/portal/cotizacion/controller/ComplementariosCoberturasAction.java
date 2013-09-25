@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.cotizacion.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -13,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.jdbc.core.SqlParameter;
 
+import mx.com.aon.catweb.configuracion.producto.model.WrapperResultados;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManager;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
@@ -373,6 +375,243 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 		log.debug("smap1: "+smap1);
 		ScreenInterceptor scrInt=new ScreenInterceptor();
 		return scrInt.intercept(this, ScreenInterceptor.PANTALLA_COMPLEMENTARIOS_DOMICILIO_ASEGURADO);
+	}
+	
+	public String pantallaExclusion()
+	{
+		log.debug("\n###################################"
+				+ "\n###################################"
+				+ "\n###### pantalla de exclusion ######"
+				+ "\n######                       ######"
+				+ "\n######                       ######");
+		log.debug("smap1: "+smap1);
+		ScreenInterceptor scrInt=new ScreenInterceptor();
+		return scrInt.intercept(this, ScreenInterceptor.PANTALLA_COMPLEMENTARIOS_EXCLUSION_ASEGURADO);
+	}
+	
+	public String mostrarPantallaExclusion()
+	{
+		try
+		{
+			
+		}
+		catch(Exception ex)
+		{
+			log.error("error al mostrar la pantalla de exclusion",ex);
+		}
+		log.debug("\n######                       ######"
+				+ "\n######                       ######"
+				+ "\n###### pantalla de exclusion ######"
+				+ "\n###################################"
+				+ "\n###################################");
+		return SUCCESS;
+	}
+	
+	public String cargarPantallaExclusion()
+	{
+		log.debug("\n###################################"
+				+ "\n###################################"
+				+ "\n###### pantalla de exclusion ######"
+				+ "\n###### load                  ######"
+				+ "\n######                       ######");
+		log.debug("smap1: "+smap1);
+		try
+		{
+			slist1=kernelManager.obtenerPolicot(smap1);
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			log.error("error al cargar las excepciones",ex);
+			success=false;
+		}
+		log.debug("slist1: "+slist1);
+		log.debug("\n######                       ######"
+				+ "\n###### load                  ######"
+				+ "\n###### pantalla de exclusion ######"
+				+ "\n###################################"
+				+ "\n###################################");
+		return SUCCESS;
+	}
+	
+	public String agregarExclusion()
+	{
+		log.debug("\n###################################"
+				+ "\n###################################"
+				+ "\n###### pantalla de exclusion ######"
+				+ "\n###### agregar exclusion     ######"
+				+ "\n######                       ######");
+		log.debug("smap1: "+smap1);
+		try
+		{
+			/*Map<String,String>paramObtenerHtml=new HashMap<String,String>(0);
+			paramObtenerHtml.put("pv_cdclausu_i",smap1.get("pv_cdclausu_i"));
+			Map<String,String>clausulaConHtml=kernelManager.obtenerHtmlClausula(paramObtenerHtml);
+			/*
+			pv_cdunieco_i
+            pv_cdramo_i
+            pv_estado_i
+            pv_nmpoliza_i
+            pv_nmsituac_i
+            pv_cdclausu_i
+            pv_nmsuplem_i #0
+            pv_status_i
+            pv_cdtipcla_i
+            pv_swmodi_i   null
+            pv_dslinea_i
+            pv_accion_i   #I
+            */
+			//smap1.put("pv_dslinea_i",clausulaConHtml.get("dslinea"));
+			kernelManager.PMovMpolicot(smap1);
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			log.error("error al agregar la exclusion",ex);
+			success=false;
+		}
+		log.debug("\n######                       ######"
+				+ "\n###### agregar exclusion     ######"
+				+ "\n###### pantalla de exclusion ######"
+				+ "\n###################################"
+				+ "\n###################################");
+		return SUCCESS;
+	}
+	
+	public String obtenerExclusionesPorTipo()
+	{
+		log.debug(""
+				+ "\n####################################################"
+				+ "\n####################################################"
+				+ "\n###### cargar clausulas de exclusion por tipo ######"
+				+ "\n######                                        ######"
+				+ "\n######                                        ######"
+				);
+		log.debug("smap1: "+smap1);
+		try
+		{
+			slist1=kernelManager.obtenerExclusionesPorTipo(smap1);
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			log.error("error al obtener las clausulas de exlusion por tipo",ex);
+			success=false;
+		}
+		log.debug(""
+				+ "\n######                                        ######"
+				+ "\n######                                        ######"
+				+ "\n###### cargar clausulas de exclusion por tipo ######"
+				+ "\n####################################################"
+				+ "\n####################################################"
+				);
+		return SUCCESS;
+	}
+	
+	public String cargarTiposClausulasExclusion()
+	{
+		log.debug(""
+				+ "\n####################################################"
+				+ "\n####################################################"
+				+ "\n###### cargar tipos de clausulas de exclusion ######"
+				+ "\n###### sin parametros de entrada              ######"
+				+ "\n######                                        ######"
+				);
+		try
+		{
+			slist1=kernelManager.cargarTiposClausulasExclusion();
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			log.error("error al cargar los tipos de clausulas de exclusion",ex);
+			success=false;
+		}
+		log.debug(""
+				+ "\n######                                        ######"
+				+ "\n###### cargar tipos de clausulas de exclusion ######"
+				+ "\n###### sin parametros de entrada              ######"
+				+ "\n####################################################"
+				+ "\n####################################################"
+				);
+		return SUCCESS;
+	}
+	
+	public String guardarHtmlExclusion()
+	{
+		log.debug("\n###################################"
+				+ "\n###################################"
+				+ "\n###### pantalla de exclusion ######"
+				+ "\n###### guardarHtmlExclusion  ######"
+				+ "\n######                       ######");
+		log.debug("smap1: "+smap1);
+		try
+		{
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			log.error("error al guardar html de la exclusion",ex);
+			success=false;
+		}
+		log.debug("\n######                       ######"
+				+ "\n###### guardarHtmlExclusion  ######"
+				+ "\n###### pantalla de exclusion ######"
+				+ "\n###################################"
+				+ "\n###################################");
+		return SUCCESS;
+	}
+	
+	public String cargarHtmlExclusion()
+	{
+		log.debug("\n###################################"
+				+ "\n###################################"
+				+ "\n###### pantalla de exclusion ######"
+				+ "\n###### cargar html de exclu  ######"
+				+ "\n######                       ######");
+		log.debug("smap1: "+smap1);
+		try
+		{
+			smap1=kernelManager.obtenerHtmlClausula(smap1);
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			log.error("error al cargar el html de exclusion",ex);
+			success=false;
+		}
+		log.debug("\n######                       ######"
+				+ "\n###### cargar html de exclu  ######"
+				+ "\n###### pantalla de exclusion ######"
+				+ "\n###################################"
+				+ "\n###################################");
+		return SUCCESS;
+	}
+	
+	public String guardarExclusiones()
+	{
+		log.debug("\n###################################"
+				+ "\n###################################"
+				+ "\n###### pantalla de exclusion ######"
+				+ "\n###### save                  ######"
+				+ "\n######                       ######");
+		log.debug("slist1: "+slist1);
+		log.debug("smap1: "+smap1);
+		try
+		{
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			log.debug("error al guardar las excluciones",ex);
+			success=false;
+		}
+		log.debug("\n######                       ######"
+				+ "\n###### save                  ######"
+				+ "\n###### pantalla de exclusion ######"
+				+ "\n###################################"
+				+ "\n###################################");
+		return SUCCESS;
 	}
 	
 	public String mostrarPantallaDomicilio()

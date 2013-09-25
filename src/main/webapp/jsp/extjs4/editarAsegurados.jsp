@@ -36,6 +36,7 @@
 	var urlCoberturasAseguradop2='<s:url namespace="/" action="editarCoberturas" />';
 	var urlGenerarCdPersonp2='<s:url namespace="/" action="generarCdperson" />';
 	var urlDomiciliop2      ='<s:url namespace="/" action="pantallaDomicilio" />';
+	var urlExclusionp2      ='<s:url namespace="/" action="pantallaExclusion" />';
 	var editorFechap2;
 	var contextop2='${ctx}';
 	var gridTomadorp2;
@@ -566,7 +567,7 @@
 	    Ext.define('GridTomadorP2',
    	    {
 	    	extend         : 'Ext.grid.Panel'
-	    	,title         : 'Tomador'
+	    	,title         : 'Contratante'
 	    	,store         : storeTomadorp2
 	        ,<s:property value="item3" />
 	        ,frame         : false
@@ -902,25 +903,86 @@
                 }).expand();
 	        },
 	        
-	        onDomiciliosInter:function(grid,rowIndex)
+	        onExclusionSave:function(grid,rowIndex)
+            {
+                var record=this.getStore().getAt(rowIndex);
+                if(Ext.getCmp('exclusionAccordionEl'))
+                {
+                    Ext.getCmp('exclusionAccordionEl').destroy();
+                }
+                accordion.add(
+                {
+                    id:'exclusionAccordionEl'
+                    ,title:'Editar exclusiones de '+record.get('nombre')+' '+(record.get('segundo_nombre')?record.get('segundo_nombre')+' ':' ')+record.get('Apellido_Paterno')+' '+record.get('Apellido_Materno')
+                    ,cls:'claseTitulo'
+                    ,loader:
+                    {
+                        url : urlExclusionp2
+                        ,params:
+                        {
+                            'smap1.pv_cdunieco'     : inputCduniecop2,
+                            'smap1.pv_cdramo'       : inputCdramop2,
+                            'smap1.pv_estado'       : inputEstadop2,
+                            'smap1.pv_nmpoliza'     : inputNmpolizap2,
+                            'smap1.pv_nmsituac'     : record.get('nmsituac'),
+                            'smap1.pv_cdperson'     : record.get('cdperson'),
+                            'smap1.pv_cdrol'        : record.get('cdrol'),
+                            'smap1.nombreAsegurado' : record.get('nombre')+' '+(record.get('segundo_nombre')?record.get('segundo_nombre')+' ':' ')+record.get('Apellido_Paterno')+' '+record.get('Apellido_Materno'),
+                            'smap1.cdrfc'           : record.get('cdrfc'),
+                            'smap1.botonCopiar'     : record.get('estomador')!='Si'?1:0
+                        }
+                        ,autoLoad:true
+                        ,scripts:true
+                    }
+                    ,listeners:
+                    {
+                        expand:function( p, eOpts )
+                        {
+                            window.parent.scrollTo(0,150+p.y);
+                        }
+                    }
+                }).expand();
+            },
+	        
+	        onExclusionInter:function(grid,rowIndex)
 	        {
 	        	var me=this;
 	        	debug("interval called");
 	        	if(timeoutflagp2==1)
         		{
 	        		debug("interval: 1");
-	        		setTimeout(function(){me.onDomiciliosInter(grid,rowIndex)},500);
+	        		setTimeout(function(){me.onExclusionInter(grid,rowIndex)},500);
         		}
 	        	else if(timeoutflagp2==3)
 	        	{
 	        		debug("interval: 3 proceder");
-	        		me.onDomiciliosSave(grid,rowIndex);
+	        		me.onExclusionSave(grid,rowIndex);
 	        	}
 	        	else
         		{
         		    debug("finish: "+timeoutflagp2)
         		}
 	        },
+	        
+	        onDomiciliosInter:function(grid,rowIndex)
+            {
+                var me=this;
+                debug("interval called");
+                if(timeoutflagp2==1)
+                {
+                    debug("interval: 1");
+                    setTimeout(function(){me.onDomiciliosInter(grid,rowIndex)},500);
+                }
+                else if(timeoutflagp2==3)
+                {
+                    debug("interval: 3 proceder");
+                    me.onDomiciliosSave(grid,rowIndex);
+                }
+                else
+                {
+                    debug("finish: "+timeoutflagp2)
+                }
+            },
 	        
 	        onDomiciliosClick:function(grid,rowIndex)
 	        {
@@ -930,6 +992,15 @@
 	        	validarYGuardar();
 	        	setTimeout(function(){me.onDomiciliosInter(grid,rowIndex)},500);
 	        },
+	        
+	        onExclusionClick:function(grid,rowIndex)
+            {
+                var me=this;
+                debug("onExclusionClick");
+                debug("validarYGuardar");
+                validarYGuardar();
+                setTimeout(function(){me.onExclusionInter(grid,rowIndex)},500);
+            },
 
 	        onRemoveClick: function(grid, rowIndex){
 	            this.getStore().removeAt(rowIndex);

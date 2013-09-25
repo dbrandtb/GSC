@@ -577,7 +577,7 @@
 		                                                            				,'smap1.cdunieco'  : inputCdunieco
 		                                                            				,'smap1.cdramo'    : inputCdramo
 		                                                            				,'smap1.estado'    : 'M'
-		                                                            				,'smap1.nmsumplem' : 0
+		                                                            				,'smap1.nmsuplem' : 0
 		                                                            			}
 		                                                            		}
 		                                                            	    ,buttons   :

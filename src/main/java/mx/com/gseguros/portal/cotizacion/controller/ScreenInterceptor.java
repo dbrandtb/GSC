@@ -11,6 +11,7 @@ public class ScreenInterceptor {
     public static final int PANTALLA_COMPLEMENTARIOS_ASEGURADOS           = 1;
     public static final int PANTALLA_COMPLEMENTARIOS_COBERTURAS_ASEGURADO = 2;
     public static final int PANTALLA_COMPLEMENTARIOS_DOMICILIO_ASEGURADO  = 3;
+    public static final int PANTALLA_COMPLEMENTARIOS_EXCLUSION_ASEGURADO  = 4;
     private Logger log=Logger.getLogger(ScreenInterceptor.class);
 	
 	public String intercept(PrincipalCoreAction action, int screen)
@@ -136,6 +137,29 @@ public class ScreenInterceptor {
 			else
 			{
 				return a.mostrarPantallaDomicilio();
+			}
+		}
+		
+        else if(screen==PANTALLA_COMPLEMENTARIOS_EXCLUSION_ASEGURADO)
+		{
+			ComplementariosCoberturasAction a=(ComplementariosCoberturasAction)action;
+			if(a.getSession()==null
+                            ||a.getSession().get("USUARIO")==null
+                            ||a.getSmap1()==null
+                    		||a.getSmap1().isEmpty()
+                    		||!a.getSmap1().containsKey("pv_cdunieco")
+                            ||!a.getSmap1().containsKey("pv_cdramo")
+                            ||!a.getSmap1().containsKey("pv_estado")
+                            ||!a.getSmap1().containsKey("pv_nmpoliza")
+                            ||!a.getSmap1().containsKey("pv_nmsituac")
+                            ||!a.getSmap1().containsKey("pv_cdperson")
+                            )
+			{
+				return "denied";
+			}
+			else
+			{
+				return a.mostrarPantallaExclusion();
 			}
 		}
 		

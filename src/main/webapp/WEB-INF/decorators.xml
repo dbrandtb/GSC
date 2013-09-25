@@ -28,6 +28,8 @@
 		<pattern>/jsp/extjs4/aseguradosCoberturas.jsp</pattern>
 		<pattern>/pantallaDomicilio.action</pattern>
 		<pattern>/jsp/extjs4/aseguradosDomicilio.jsp</pattern>
+		<pattern>/pantallaExclusion.action</pattern>
+		<pattern>/jsp/extjs4/aseguradosExclusion.jsp</pattern>
 		<pattern>/documentos/ventanaDocumentosPoliza</pattern>
 		<pattern>/jsp/extjs4/ventanaDocumentosPoliza.jsp</pattern>
 	</decorator>
@@ -55,6 +57,11 @@
 		
 		<pattern>/flujocotizacion/consultaCotizaciones.action</pattern>
 		<pattern>/jsp/consultas/*.jsp</pattern> 
+		
+		<!-- mesa de control -->
+		<pattern>/mesacontrol/principal.action</pattern>
+        <pattern>/jsp/extjs4/mesacontrol/principal.jsp</pattern>
+        <!-- fin de mesa de control -->
 	</decorator>
 	
 	

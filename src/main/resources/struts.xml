@@ -136,6 +136,7 @@
 	<include file="struts/config/struts-consultas-poliza.xml"/>
 	<include file="struts/config/struts-seguridad.xml"/>
 	<include file="struts/config/struts-documentosPoliza.xml"/>
+	<include file="struts/config/struts-mesacontrol.xml"/>
 
 	<!-- Archivos de CIMA -->
     <include file="struts-cima.xml"/>
@@ -425,6 +426,34 @@
                 </action>
                 <action name="pantallaDomicilio" class="beanDatosComplementariosCoberturas" method="pantallaDomicilio">
                     <result name="success">/jsp/extjs4/aseguradoDomicilio.jsp</result>
+                </action>
+                <action name="pantallaExclusion" class="beanDatosComplementariosCoberturas" method="pantallaExclusion">
+                    <result name="success">/jsp/extjs4/aseguradoExclusion.jsp</result>
+                </action>
+                <action name="guardarExclusiones" class="beanDatosComplementariosCoberturas" method="guardarExclusiones">
+                    <interceptor-ref name="json">
+                        <param name="enableSMD">true</param>
+                        <param name="ignoreSMDMethodInterfaces">false</param>
+                    </interceptor-ref>
+                    <result name="success" type="json" />
+                </action>
+                <action name="cargarPantallaExclusion" class="beanDatosComplementariosCoberturas" method="cargarPantallaExclusion">
+                    <result name="success" type="json" />
+                </action>
+                <action name="obtenerExclusionesPorTipo" class="beanDatosComplementariosCoberturas" method="obtenerExclusionesPorTipo">
+                    <result name="success" type="json" />
+                </action>
+                <action name="cargarTiposClausulasExclusion" class="beanDatosComplementariosCoberturas" method="cargarTiposClausulasExclusion">
+                    <result name="success" type="json" />
+                </action>
+                <action name="guardarHtmlExclusion" class="beanDatosComplementariosCoberturas" method="guardarHtmlExclusion">
+                    <result name="success" type="json" />
+                </action>
+                <action name="agregarExclusion" class="beanDatosComplementariosCoberturas" method="agregarExclusion">
+                    <result name="success" type="json" />
+                </action>
+                <action name="cargarHtmlExclusion" class="beanDatosComplementariosCoberturas" method="cargarHtmlExclusion">
+                    <result name="success" type="json" />
                 </action>
                 <action name="cargarPantallaDomicilio" class="beanDatosComplementariosCoberturas" method="cargarPantallaDomicilio">
                     <result name="success" type="json" />

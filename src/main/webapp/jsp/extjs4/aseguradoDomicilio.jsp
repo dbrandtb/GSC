@@ -24,6 +24,12 @@ var urlCargarp4            = '<s:url namespace="/" action="cargarPantallaDomicil
 var urlGuardarp4           = '<s:url namespace="/" action="guardarPantallaDomicilio" />';
 var formPanelp4;
 var contextop4             = '${ctx}';
+<s:if test='smap1!=null&&smap1.botonCopiar!=null&&smap1.botonCopiar==1'>
+var esElContratanteP4      = false;
+</s:if>
+<s:else>
+var esElContratanteP4      = true;
+</s:else>
 /*///////////////////*/
 ////// variables //////
 ///////////////////////
@@ -37,6 +43,8 @@ var contextop4             = '${ctx}';
 ///////////////////////
 
 Ext.onReady(function(){
+	
+	debug("esElContratanteP4",esElContratanteP4&&esElContratanteP4==true?'si':'no');
 
     /////////////////////
     ////// modelos //////
@@ -190,31 +198,36 @@ Ext.onReady(function(){
                     	fieldLabel     : 'Tel&eacute;fono',
                     	xtype          : 'textfield',
                     	name           : 'smap1.NMTELEFO',
-                    	allowBlank     : true
+                    	allowBlank     : true,
+                    	readOnly       : !esElContratanteP4
                     },
                     {
                         fieldLabel     : 'Colonia',
                         xtype          : 'textfield',
                         name           : 'smap1.CDCOLONI',
-                        allowBlank     : false
+                        allowBlank     : false,
+                        readOnly       : !esElContratanteP4
                     },
                     {
                         fieldLabel     : 'Calle',
                         xtype          : 'textfield',
                         name           : 'smap1.DSDOMICI',
-                        allowBlank     : false
+                        allowBlank     : false,
+                        readOnly       : !esElContratanteP4
                     },
                     {
                         fieldLabel     : 'Exterior',
                         xtype          : 'textfield',
                         name           : 'smap1.NMNUMERO',
-                        allowBlank     : false
+                        allowBlank     : false,
+                        readOnly       : !esElContratanteP4
                     },
                     {
                         fieldLabel     : 'Interior',
                         xtype          : 'textfield',
                         name           : 'smap1.NMNUMINT',
-                        allowBlank     : true
+                        allowBlank     : true,
+                        readOnly       : !esElContratanteP4
                     }
                 ]
             }),
@@ -316,7 +329,8 @@ Ext.onReady(function(){
             		expande(2);
             	}
             }
-            <s:if test="smap1!=null&&smap1.botonCopiar!=null&&smap1.botonCopiar==1">
+            <%-- Esta parte tiene un FALSE agregado porque ya no se usa --%>
+            <s:if test="false&&(smap1!=null&&smap1.botonCopiar!=null&&smap1.botonCopiar==1)">
             ,{
             	text     : 'Copiar domicilio del titular'
             	,icon    : contextop2+'/resources/fam3icons/icons/house_go.png'
@@ -439,6 +453,71 @@ Ext.onReady(function(){
             });
         }
     });
+    
+    //////usa valores del padre (editarAsegurados.jsp) //////
+    if(!esElContratanteP4)
+    {
+	    storePersonasp2.each(function(record,index)
+	    {
+	        if(record.get('estomador')=='Si')
+	        {
+	            Ext.define('LoaderFormp4',
+	            {
+	                extend:'Modelo1p4',
+	                proxy:
+	                {
+	                    extraParams:
+	                    {
+	                        'smap1.pv_cdunieco_i'   : inputCduniecop4,
+	                        'smap1.pv_cdramo_i'     : inputCdramop4,
+	                        'smap1.pv_estado_i'     : inputEstadop4,
+	                        'smap1.pv_nmpoliza_i'   : inputNmpolizap4,
+	                        'smap1.pv_nmsituac_i'   : record.get('nmsituac'),
+	                        'smap1.pv_cdperson_i'   : record.get('cdperson'),
+	                        'smap1.pv_cdrol_i'      : '2',
+	                        'smap1.nombreAsegurado' : record.get('nombre')+' '+(record.get('segundo_nombre')?record.get('segundo_nombre')+' ':' ')+record.get('Apellido_Paterno')+' '+record.get('Apellido_Materno'),
+	                        'smap1.cdrfc'           : record.get('cdrfc')
+	                    },
+	                    type:'ajax',
+	                    url : urlCargarp4,
+	                    reader:
+	                    {
+	                        type:'json'
+	                    }
+	                }
+	            });
+	
+	            var loaderFormp4=Ext.ModelManager.getModel('LoaderFormp4');
+	            loaderFormp4.load(123, {
+	                success: function(resp) {
+	                    formPanelp4.getForm().setValues(
+	                    {
+	                        'smap1.NMORDDOM':resp.data['smap1.NMORDDOM'],
+	                        'smap1.CODPOSTAL':resp.data['smap1.CODPOSTAL'],
+	                        'smap1.estado':resp.data['smap1.estado'],
+	                        'smap1.Municipio':resp.data['smap1.Municipio'],
+	                        'smap1.NMTELEFO':resp.data['smap1.NMTELEFO'],
+	                        'smap1.CDCOLONI':resp.data['smap1.CDCOLONI'],
+	                        'smap1.DSDOMICI':resp.data['smap1.DSDOMICI'],
+	                        'smap1.NMNUMERO':resp.data['smap1.NMNUMERO'],
+	                        'smap1.NMNUMINT':resp.data['smap1.NMNUMINT']
+	                    });
+	                },
+	                failure:function()
+	                {
+	                    Ext.Msg.show({
+	                        title:'Error',
+	                        icon: Ext.Msg.ERROR,
+	                        msg: 'Error al cargar',
+	                        buttons: Ext.Msg.OK
+	                    });
+	                }
+	            });
+	        }
+	    });
+    }
+    ////// usa valores del padre //////
+    
     /*//////////////////*/
     ////// cargador //////
     //////////////////////

@@ -20,6 +20,7 @@ import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Tatri;
+import mx.com.gseguros.utils.Utilerias;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.log4j.Logger;
@@ -104,6 +105,13 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String P_MOV_MDOMICIL="P_MOV_MDOMICIL";
     public static final String EMITIR = "EMITIR";
     public static final String GUARDAR_ARCHIVO_POLIZA = "GUARDAR_ARCHIVO_POLIZA";
+    public static final String OBTENER_TIPOS_CLAUSULAS_EXCLUSION = "OBTENER_TIPOS_CLAUSULAS_EXCLUSION";
+    public static final String LOAD_MESA_CONTROL = "LOAD_MESA_CONTROL";
+    public static final String OBTENER_EXCLUSIONES_X_TIPO = "OBTENER_EXCLUSIONES_X_TIPO";
+    public static final String OBTENER_HTML_CLAUSULA="OBTENER_HTML_CLAUSULA";
+    public static final String P_MOV_MPOLICOT="P_MOV_MPOLICOT";
+    public static final String OBTENER_POLICOT="OBTENER_POLICOT";
+    public static final String P_MOV_MESACONTROL="P_MOV_MESACONTROL";
 
 	protected void initDao() throws Exception {
 		addStoredProcedure(PERMISO_EJECUCION_PROCESO,new PermisoEjecucionProceso(getDataSource()));
@@ -159,8 +167,15 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(OBTENER_TATRIPER, new ObtieneTatriper(getDataSource()));
         addStoredProcedure(P_GET_DOMICIL, new ObtenerDomicilio(getDataSource()));
         addStoredProcedure(P_MOV_MDOMICIL, new PMovMdomicil(getDataSource()));
+        addStoredProcedure(P_MOV_MPOLICOT, new PMovMpolicot(getDataSource()));
         addStoredProcedure(EMITIR, new Emitir(getDataSource()));
         addStoredProcedure(GUARDAR_ARCHIVO_POLIZA, new GuardarArchivoPoliza(getDataSource()));
+        addStoredProcedure(OBTENER_TIPOS_CLAUSULAS_EXCLUSION, new ObtenerTiposClausulasExclusion(getDataSource()));
+        addStoredProcedure(LOAD_MESA_CONTROL, new ObtenerMesaControl(getDataSource()));
+        addStoredProcedure(OBTENER_EXCLUSIONES_X_TIPO, new ObtenerExclusionesXTipo(getDataSource()));
+        addStoredProcedure(OBTENER_HTML_CLAUSULA, new ObtenerHtmlClausula(getDataSource()));
+        addStoredProcedure(OBTENER_POLICOT, new ObtenerPolicot(getDataSource()));
+        addStoredProcedure(P_MOV_MESACONTROL, new PMovMesacontrol(getDataSource()));
 	}
 
 	protected class BuscarMatrizAsignacion extends CustomStoredProcedure {
@@ -2405,6 +2420,75 @@ public class ProcesoDAO extends AbstractDAO {
 	////// p mov mdomicil //////
 	////////////////////////////
 	
+	////////////////////////////
+	////// p mov mpolicot //////
+	/*////////////////////////*/
+	protected class PMovMpolicot extends CustomStoredProcedure {
+		
+		protected PMovMpolicot(DataSource dataSource) {
+			super(dataSource,"PKG_SATELITES.P_MOV_MPOLICOT");
+			declareParameter(new SqlParameter("pv_cdunieco_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsituac_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdclausu_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_status_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipcla_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_swmodi_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dslinea_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_accion_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", 	OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o", 		OracleTypes.VARCHAR));
+			compile();
+		}
+	
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			return mapper.build(map);
+		}
+	}
+	/*////////////////////////*/
+	////// p mov mpolicot //////
+	////////////////////////////
+	
+	///////////////////////////////
+	////// p mov mesacontrol //////
+	/*///////////////////////////*/
+	protected class PMovMesacontrol extends CustomStoredProcedure {
+		protected PMovMesacontrol(DataSource dataSource) {
+			super(dataSource,"PKG_SATELITES.P_MOV_MESACONTROL");
+			declareParameter(new SqlParameter("pv_cdunieco_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdsucadm_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdsucdoc_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtiptra_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ferecepc_i", 		OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_cdagente_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_referencia_i", 	OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nombre_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_festatus_i",      OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_status_i",        OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_comments_i",      OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_msg_id_o", 	OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o", 		OracleTypes.VARCHAR));
+			compile();
+		}
+	
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			return mapper.build(map);
+		}
+	}
+	/*///////////////////////////*/
+	////// p mov mesacontrol //////
+	///////////////////////////////
+	
 	////////////////////////////////////////////
 	////// obtener detalles de cotizacion //////
 	/*////////////////////////////////////////*/
@@ -2690,5 +2774,219 @@ public class ProcesoDAO extends AbstractDAO {
 	/*//////////////////////////////////////////*/
 	////// obtiene documentos de poliza //////////
 	//////////////////////////////////////////////
+	
+	//////////////////////////////////////////////
+	////// obtiene documentos de poliza //////////
+	/*//////////////////////////////////////////*/
+	protected class ObtenerTiposClausulasExclusion extends CustomStoredProcedure
+	{
+		protected ObtenerTiposClausulasExclusion(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_tipos_clausulas");
+			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerTiposClausulasExclusionMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
+		}
+	
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception
+		{
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			WrapperResultados wrapperResultados = mapper.build(map);
+			List result = (List) map.get("pv_registro_o");
+			wrapperResultados.setItemList(result);
+			return wrapperResultados;
+		}
+	}
+	
+	protected class ObtenerTiposClausulasExclusionMapper implements RowMapper
+	{
+		public Object mapRow(ResultSet rs, int rowNum) throws SQLException
+		{
+			String cols[]=new String[]{"cdtipcla","dstipcla"};
+			Map<String,String> map=new HashMap<String,String>(0);
+			for(String col:cols)
+			{
+				map.put(col,rs.getString(col));
+			}	
+			return map;
+		}
+	}
+	/*//////////////////////////////////////////*/
+	////// obtiene documentos de poliza //////////
+	//////////////////////////////////////////////
+	
+	/////////////////////////////////////////////////////////
+	////// obtiene clausulas de exclusion por tipo //////////
+	/*/////////////////////////////////////////////////////*/
+	protected class ObtenerExclusionesXTipo extends CustomStoredProcedure
+	{
+		protected ObtenerExclusionesXTipo(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_clausulas_x_tipo");
+			declareParameter(new SqlParameter("pv_cdtipcla_i",    OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerExclusionesXTipoMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
+		}
+	
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception
+		{
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			WrapperResultados wrapperResultados = mapper.build(map);
+			List result = (List) map.get("pv_registro_o");
+			wrapperResultados.setItemList(result);
+			return wrapperResultados;
+		}
+	}
+	
+	protected class ObtenerExclusionesXTipoMapper implements RowMapper
+	{
+		public Object mapRow(ResultSet rs, int rowNum) throws SQLException
+		{
+			String cols[]=new String[]{"cdclausu","dsclausu"};
+			Map<String,String> map=new HashMap<String,String>(0);
+			for(String col:cols)
+			{
+				map.put(col,rs.getString(col));
+			}	
+			return map;
+		}
+	}
+	/*/////////////////////////////////////////////////////*/
+	////// obtiene clausulas de exclusion por tipo //////////
+	/////////////////////////////////////////////////////////
+	
+	///////////////////////////////////
+	////// obtener html clausula //////
+	/*///////////////////////////////*/
+	protected class ObtenerHtmlClausula extends CustomStoredProcedure {
+
+		protected ObtenerHtmlClausula(DataSource dataSource) {
+			super(dataSource, "PKG_CONSULTA.P_texto_clausula");
+
+			declareParameter(new SqlParameter("pv_cdclausu_i", OracleTypes.VARCHAR));	
+			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerHtmlClausulaMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
+			compile();
+		}
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception
+		{
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			WrapperResultados wrapperResultados = mapper.build(map);
+			List result = (List) map.get("pv_registro_o");
+			wrapperResultados.setItemList(result);
+			return wrapperResultados;
+		}
+	}
+	protected class ObtenerHtmlClausulaMapper implements RowMapper
+	{
+		public Object mapRow(ResultSet rs, int rowNum) throws SQLException
+		{
+			String cols[]=new String[]{"cdclausu","dsclausu","dslinea"};
+			Map<String,String> map=new HashMap<String,String>(0);
+			for(String col:cols)
+			{
+				map.put(col,rs.getString(col));
+			}	
+			return map;
+		}
+	}
+	/*///////////////////////////////*/
+	////// obtener html clausula //////
+	///////////////////////////////////
     
+	/////////////////////////////
+	////// obtener policot //////
+	/*/////////////////////////*/
+	protected class ObtenerPolicot extends CustomStoredProcedure {
+
+		protected ObtenerPolicot(DataSource dataSource) {
+			super(dataSource, "PKG_SATELITES.P_OBTIENE_MPOLICOT");
+			declareParameter(new SqlParameter("pv_cdunieco", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsituac", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerPolicotMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
+			compile();
+		}
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception
+		{
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			WrapperResultados wrapperResultados = mapper.build(map);
+			List result = (List) map.get("pv_registro_o");
+			wrapperResultados.setItemList(result);
+			return wrapperResultados;
+		}
+	}
+	protected class ObtenerPolicotMapper implements RowMapper
+	{
+		public Object mapRow(ResultSet rs, int rowNum) throws SQLException
+		{
+			String cols[]=new String[]{"cdunieco","cdramo","estado","nmpoliza","nmsituac",
+					"cdclausu","dsclausu","nmsuplem","status","cdtipcla","swmodi","linea_usuario","linea_general"};
+			Map<String,String> map=new HashMap<String,String>(0);
+			for(String col:cols)
+			{
+				map.put(col,rs.getString(col));
+			}
+			logger.debug("return "+map);
+			return map;
+		}
+	}
+	/*/////////////////////////*/
+	////// obtener policot //////
+	/////////////////////////////
+	
+	/////////////////////////////////////
+	////// obtener mesa de control //////
+	/*/////////////////////////////////*/
+	protected class ObtenerMesaControl extends CustomStoredProcedure
+	{
+		protected ObtenerMesaControl(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES.P_OBTIENE_MESACONTROL");
+			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerMesaControlMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
+		}
+	
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception
+		{
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			WrapperResultados wrapperResultados = mapper.build(map);
+			List result = (List) map.get("pv_registro_o");
+			wrapperResultados.setItemList(result);
+			return wrapperResultados;
+		}
+	}
+	
+	protected class ObtenerMesaControlMapper implements RowMapper
+	{
+		public Object mapRow(ResultSet rs, int rowNum) throws SQLException
+		{
+			String cols[]=new String[]{"ntramite","cdunieco","cdramo","estado","nmpoliza",
+					"nmsolici","cdsucadm","cdsucdoc","cdsubram","cdtiptra","ferecepc","cdagente",
+					"Nombre_agente","referencia","nombre","fecstatu","status","comments"};
+			Map<String,String> map=new HashMap<String,String>(0);
+			for(String col:cols)
+			{
+				if(col!=null&&col.substring(0,2).equals("fe"))
+				{
+					map.put(col,Utilerias.formateaFecha(rs.getString(col)));
+				}
+				else
+				{
+					map.put(col,rs.getString(col));
+				}
+			}	
+			return map;
+		}
+	}
+	/*/////////////////////////////////*/
+	////// obtener mesa de control //////
+	/////////////////////////////////////
 }
