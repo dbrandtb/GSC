@@ -1,16 +1,17 @@
 package mx.com.gseguros.portal.cotizacion.controller;
 
-import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
-import mx.com.aon.portal.model.UserVO;
-import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
+import mx.com.gseguros.portal.general.util.ConstantesCatalogos;
 
-public class MesaControlAction extends PrincipalCoreAction
+public class MesaControlAction extends PrincipalCoreAction implements ConstantesCatalogos
 {
 	
 	private static final long serialVersionUID = -3398140781812652316L;
@@ -66,32 +67,37 @@ public class MesaControlAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
-	public String obtenerValoresDefectoInsercionManual()
+	public String guardarTramiteManual()
 	{
 		log.debug(""
 				+ "\n##################################################"
 				+ "\n##################################################"
-				+ "\n###### obtenerValoresDefectoInsercionManual ######"
+				+ "\n###### guardarTramiteManual                 ######"
 				+ "\n######                                      ######"
 				);
-		/*
 		try
 		{
-			UserVO user=(UserVO) session.get("USUARIO");
-			DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(user.getUser());
-			smap1=new LinkedHashMap<String,String>(0);
-			smap1.put("",datUsu.get)
+			Map<String,Object>omap=new LinkedHashMap<String,Object>(0);
+			Iterator it=smap1.entrySet().iterator();
+			while(it.hasNext())
+			{
+				Entry entry=(Entry)it.next();
+				omap.put((String)entry.getKey(),entry.getValue());
+			}
+			omap.put("pv_ferecepc_i",new Date());
+			omap.put("pv_festatus_i",new Date());
+			kernelManager.PMovMesacontrol(omap);
+			
 			success=true;
 		}
 		catch(Exception ex)
 		{
-			log.error("error al obtener valores por defecto",ex);
+			log.error("error al guardar tramite manual",ex);
 			success=false;
 		}
-		*/
 		log.debug(""
 				+ "\n######                                      ######"
-				+ "\n###### obtenerValoresDefectoInsercionManual ######"
+				+ "\n###### guardarTramiteManual                 ######"
 				+ "\n##################################################"
 				+ "\n##################################################"
 				);
@@ -143,6 +149,46 @@ public class MesaControlAction extends PrincipalCoreAction
 
 	public void setSuccess(boolean success) {
 		this.success = success;
+	}
+
+	public String getCON_CAT_POL_ESTADO() {
+		// TODO Auto-generated method stub
+		return CON_CAT_POL_ESTADO;
+	}
+
+	public String getCON_CAT_POL_TIPO_POLIZA() {
+		// TODO Auto-generated method stub
+		return CON_CAT_POL_TIPO_POLIZA;
+	}
+
+	public String getCON_CAT_POL_TIPO_PAGO() {
+		// TODO Auto-generated method stub
+		return CON_CAT_POL_TIPO_PAGO;
+	}
+
+	public String getCON_CAT_POL_ROL() {
+		// TODO Auto-generated method stub
+		return CON_CAT_POL_ROL;
+	}
+
+	public String getCON_CAT_MESACONTROL_SUCUR_ADMIN() {
+		// TODO Auto-generated method stub
+		return CON_CAT_MESACONTROL_SUCUR_ADMIN;
+	}
+
+	public String getCON_CAT_MESACONTROL_SUCUR_DOCU() {
+		// TODO Auto-generated method stub
+		return CON_CAT_MESACONTROL_SUCUR_DOCU;
+	}
+
+	public String getCON_CAT_MESACONTROL_TIP_TRAMI() {
+		// TODO Auto-generated method stub
+		return CON_CAT_MESACONTROL_TIP_TRAMI;
+	}
+
+	public String getCON_CAT_MESACONTROL_ESTAT_TRAMI() {
+		// TODO Auto-generated method stub
+		return CON_CAT_MESACONTROL_ESTAT_TRAMI;
 	}
 	
 }

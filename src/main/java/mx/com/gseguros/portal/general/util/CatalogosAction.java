@@ -49,6 +49,26 @@ public class CatalogosAction extends PrincipalCoreAction
                 lista=kernelManager.getTmanteni(catalogo);
                 success=true;
             }
+            else if(catalogo.equals(ConstantesCatalogos.CON_CAT_MESACONTROL_SUCUR_ADMIN))
+            {
+                lista=kernelManager.getTmanteni(catalogo);
+                success=true;
+            }
+            else if(catalogo.equals(ConstantesCatalogos.CON_CAT_MESACONTROL_SUCUR_DOCU))
+            {
+                lista=kernelManager.getTmanteni(catalogo);
+                success=true;
+            }
+            else if(catalogo.equals(ConstantesCatalogos.CON_CAT_MESACONTROL_TIP_TRAMI))
+            {
+                lista=kernelManager.getTmanteni(catalogo);
+                success=true;
+            }
+            else if(catalogo.equals(ConstantesCatalogos.CON_CAT_MESACONTROL_ESTAT_TRAMI))
+            {
+                lista=kernelManager.getTmanteni(catalogo);
+                success=true;
+            }
         }
         catch(Exception ex)
         {
