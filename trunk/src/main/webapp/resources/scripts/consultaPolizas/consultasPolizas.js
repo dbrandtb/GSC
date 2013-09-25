@@ -122,7 +122,7 @@ Ext.onReady(function() {
                 params: panelBusqueda.down('form').getForm().getValues(),
                 callback: function(records, operation, success){
                     if(success){
-                        if(records.length <= 0){
+                        //if(records.length <= 0){
 							/*
                             Ext.Msg.show({
 								title: 'Error',
@@ -131,10 +131,10 @@ Ext.onReady(function() {
 								icon: Ext.Msg.ERROR
 							});
 							*/
-							gridDatosTarificacion.hide();
-                        }else {
+							//gridDatosTarificacion.hide();
+                        //}else {
 							gridDatosTarificacion.show();
-						}
+						//}
                     }else{
                         Ext.Msg.show({
 							title: 'Error',
@@ -150,18 +150,24 @@ Ext.onReady(function() {
 				params: panelBusqueda.down('form').getForm().getValues(),
 				callback: function(records, operation, success){
 					if(success){
-						if(records.length <= 0){
-							Ext.Msg.show({
-								title: 'Error',
-								msg: 'No existe datos del asegurado',
-								buttons: Ext.Msg.OK,
-								icon: Ext.Msg.ERROR
-							});
-						}
-					}else{
+						
+						//if(records.length <= 0){
+							//gridDatosAsegurado.hide();
+                        //}else {
+							gridDatosAsegurado.show();
+						//}
+						/*
 						Ext.Msg.show({
 							title: 'Error',
 							msg: 'No existe datos del asegurado',
+							buttons: Ext.Msg.OK,
+							icon: Ext.Msg.ERROR
+						});
+						*/
+					}else{
+						Ext.Msg.show({
+							title: 'Error',
+							msg: 'Error al obtener los datos del asegurado',
 							buttons: Ext.Msg.OK,
 							icon: Ext.Msg.ERROR
 						});
@@ -177,7 +183,7 @@ Ext.onReady(function() {
         fields: [
             {name: 'dstipsup'},
             {name: 'feemisio'},
-            {name: 'feinival'},
+            {name: 'feinival', dateFormat: 'd/m/Y'},
             {name: 'nlogisus'},
             {name: 'nmsuplem'},
             {name: 'nsuplogi'},
@@ -226,7 +232,7 @@ Ext.onReady(function() {
         id : 'suplemento-form',
         store : storeSuplemento,
         selType: 'checkboxmodel',
-        //title : 'Hist\u00F3rico de movimietos',
+        //title : 'HISTORICO DE MOVIMIENTOS',
         defaults: {sortable : true, width:120, align : 'right'},
         columns : [{
             id : 'dstipsup',
@@ -353,14 +359,14 @@ Ext.onReady(function() {
             layout : 'hbox',
             items : [ 
                 {xtype:'textfield', name:'titular', fieldLabel: 'Nombre del titular', readOnly: true, labelWidth: 120, width: 400}, 
-                {xtype:'textfield', name:'cdrfc', fieldLabel: 'RFC', readOnly: true, labelWidth: 120}
+                {xtype:'textfield', name:'cdrfc', fieldLabel: 'RFC', readOnly: true, labelWidth: 120, labelAlign: 'right'}
             ]
         }, {
             layout : 'hbox',
             items : [ 
-                {xtype: 'datefield', name: 'feemisio', fieldLabel: 'Fecha emisi&oacute;n',    format: 'd/m/Y', readOnly: true, labelWidth: 120}, 
-                {xtype: 'datefield', name: 'feefecto', fieldLabel: 'Fecha de efecto',         format: 'd/m/Y', readOnly: true, labelWidth: 100, width: 200}, 
-                {xtype: 'datefield', name: 'feproren', fieldLabel: 'Fecha renovaci&oacute;n', format: 'd/m/Y', readOnly: true, labelWidth: 100, width: 200}
+                {xtype: 'datefield', name: 'feemisio', fieldLabel: 'Fecha emisi&oacute;n',    format: 'd/m/Y', readOnly: true, labelWidth: 120, width: 200}, 
+                {xtype: 'datefield', name: 'feefecto', fieldLabel: 'Fecha de efecto',         format: 'd/m/Y', readOnly: true, labelWidth: 100, width: 200, labelAlign: 'right'}, 
+                {xtype: 'datefield', name: 'feproren', fieldLabel: 'Fecha renovaci&oacute;n', format: 'd/m/Y', readOnly: true, labelWidth: 100, width: 200, labelAlign: 'right'}
             ]
         }, {
             layout : 'hbox',
@@ -465,7 +471,7 @@ Ext.onReady(function() {
 			{type:'string',	name:'cdrfc'},
 			{type:'string',	name:'cdrol'},
 			{type:'string',	name:'dsrol'},
-			{type:'date',	name:'fenacimi'},
+			{type:'date',	name:'fenacimi', dateFormat: 'd/m/Y'},
 			{type:'string',	name:'nmsituac'},
 			{type:'string',	name:'sexo'},
 			{type:'string',	name:'titular'}
@@ -550,11 +556,11 @@ Ext.onReady(function() {
 
     /** GRID PARA LOS DATOS DEL ASEGURADO **/
     var gridPolizasAsegurado= Ext.create('Ext.grid.Panel', {
-        title : 'P&Oacute;LIZAS DEL ASEGURADO',
+        title : 'Eliga una p&oacute;liza:',
         store : storePolizaAsegurado,
         id: "gridPolizasAsegurado",
         selType: 'checkboxmodel',
-        width : 470,
+        width : 680,
 		bbar     :
         {
             displayInfo : true,
@@ -565,11 +571,11 @@ Ext.onReady(function() {
            ftype:'summary'
         }],
         columns: [
+			{text: 'Nombre', dataIndex: 'nombre', width: 200},
             {text: 'Descripci&oacute;n', dataIndex: 'descripcion', width: 150},
             {text: 'Ramo', dataIndex:'dsramo', width:150},
-            {text: 'Estado', dataIndex: 'estado', width: 100},
-            {text: 'N&uacute;mero de P&oacute;liza', dataIndex: 'nmpoliza', width: 150},
-            {text: 'Nombre', dataIndex: 'nombre', width: 200}
+            {text: 'Estado', dataIndex: 'estado', width: 70},
+            {text: 'P&oacute;liza', dataIndex: 'nmpoliza', width: 70}
         ]//,
         //renderTo : Ext.getBody()
     });
@@ -577,12 +583,13 @@ Ext.onReady(function() {
     //var windowPolizas = new Ext.Window({
     var windowPolizas= Ext.create('Ext.window.Window', {
         //renderTo: document.body,
-        title: 'P&oacute;lizas',
+        title: 'POLIZAS',
         //height: 400,
+		width : 700,
         closeAction: 'hide',
         items:[gridPolizasAsegurado],
         buttons:[{
-            text: 'aceptar',
+            text: 'Aceptar',
             handler: function(){
                 if (gridPolizasAsegurado.getSelectionModel().hasSelection()) {
                     var rowPoliza = gridPolizasAsegurado.getSelectionModel().getSelection()[0];
@@ -610,14 +617,15 @@ Ext.onReady(function() {
     });
         //-------------------------------------------------------------------------------------------------------------    
     var tabDatosGeneralesPoliza = Ext.create('Ext.tab.Panel', {
-	    width: 820,
+	    width: 830,
 	    //height: 200,
 	    //renderTo: document.body,
 	    items: [{
 	        title : 'DATOS DE LA POLIZA',
 	        //html: 'Home',
 	        //itemId: 'tabDatosGralesPoliza',
-	        items:[	                    
+			border:false,
+	        items:[
                    {
                        //layout  :  'hbox',
                        items   :  [ panelInfoGralPoliza]
@@ -684,7 +692,7 @@ Ext.onReady(function() {
         // applied to child components
         defaults: {frame:true, width:200, height: 200, margin : '2'},
         items:[{
-            title:'Campos de b\u00FAsqueda',
+            title:'BUSQUEDA DE POLIZAS',
             colspan:2,
             width:990,
             height:100,
@@ -926,7 +934,7 @@ Ext.onReady(function() {
             ]
         },
 		{
-            title:'Hist\u00F3rico de movimientos',
+            title:'HISTORICO DE MOVIMIENTOS',
             width:990,
             height:150,
             colspan:2,
@@ -935,7 +943,7 @@ Ext.onReady(function() {
             ]
         },
 		{
-            title:'Consultas',
+            title:'CONSULTAS',
             //rowspan: 2,
             width: 130,
             height: 400,
