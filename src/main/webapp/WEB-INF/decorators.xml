@@ -55,8 +55,8 @@
 		<pattern>/subirArchivoMostrarBarra.action</pattern>
 		<pattern>/jsp/extjs4/subirArchivoBarra.jsp</pattern>
 		
-		<pattern>/flujocotizacion/consultaCotizaciones.action</pattern>
-		<pattern>/jsp/consultas/*.jsp</pattern> 
+		<pattern>/procesoemision/busquedaPoliza.action</pattern>
+		<pattern>/jsp/consultas/*.jsp</pattern>
 		
 		<!-- mesa de control -->
 		<pattern>/mesacontrol/principal.action</pattern>
