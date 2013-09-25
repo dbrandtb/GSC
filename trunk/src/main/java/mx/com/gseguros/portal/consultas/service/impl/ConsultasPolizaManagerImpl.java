@@ -8,6 +8,8 @@ import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_PO
 import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_DATOS_TARIFA;
 import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_POLIZAS_AGENTE;
 import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_RECIBOS_AGENTE;
+import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_DATOS_AGENTE;
+import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_DATOS_ASEGURADO;
 
 import java.util.HashMap;
 
@@ -138,6 +140,34 @@ public class ConsultasPolizaManagerImpl extends
 		WrapperResultados result = this.returnBackBoneInvoke(params,
 				OBTIENE_RECIBOS_AGENTE);
 		
+		return result;
+	}
+
+	public WrapperResultados consultaAgente(String cdagente)
+			throws ApplicationException {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdagente_i", cdagente);
+
+		WrapperResultados result = this.returnBackBoneInvoke(params,OBTIENE_DATOS_AGENTE);
+		return result;
+	}
+
+	
+	
+	
+	public WrapperResultados consultaDatosAsegurado(String cdunieco,
+			String cdramo, String estado, String nmpoliza, String suplemento) throws ApplicationException {
+
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdunieco_i", cdunieco);
+		params.put("pv_cdramo_i", cdramo);
+		params.put("pv_estado_i", estado);
+		params.put("pv_nmpoliza_i", nmpoliza);
+		params.put("pv_nmsuplem_i", suplemento);
+
+		WrapperResultados result = this.returnBackBoneInvoke(params,
+				OBTIENE_DATOS_ASEGURADO);
+
 		return result;
 	}
 
