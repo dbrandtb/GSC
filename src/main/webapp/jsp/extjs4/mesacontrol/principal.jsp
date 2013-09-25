@@ -259,7 +259,6 @@ Ext.onReady(function(){
             			,'smap1.cdramo'   : record.get('cdramo')
             			,'smap1.estado'   : record.get('estado')
             			,'smap1.nmsuplem' : '0'
-            			,'smap1.readOnly' : 'si'
             		}
             		,scripts  : true
             		,autoLoad : true
