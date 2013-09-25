@@ -651,7 +651,7 @@ Ext.onReady(function() {
                ]
 	    }, {
 			id: 'tbDocumentos',
-			title : 'Documentaci&oacute;n',
+			title : 'DOCUMENTACION',
 			width: '350',
 			loader : {
 				url : _URL_DOCUMENTOS,
