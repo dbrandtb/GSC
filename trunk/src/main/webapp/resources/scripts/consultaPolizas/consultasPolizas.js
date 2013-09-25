@@ -765,9 +765,9 @@ Ext.onReady(function() {
                                             name : 'params.cdunieco',
                                             fieldLabel : 'Unidad econ\u00F3mica',
                                             labelWidth : 120,
-                                            width: 180,
-                                            maxLength : 3,
-                                            value: 1
+                                            width: 200,
+                                            maxLength : 3/*,
+                                            value: 1*/
                                         },
                                         {
                                             xtype:'tbspacer',
@@ -778,9 +778,9 @@ Ext.onReady(function() {
                                             name : 'params.cdramo',
                                             fieldLabel : 'Ramo',
                                             maxLength : 3,
-                                            value: 2,//4
+                                            //value: 2,
                                             labelWidth : 50,
-                                            width: 100
+                                            width: 120
                                         },
                                         {
                                             xtype:'tbspacer',
@@ -792,8 +792,8 @@ Ext.onReady(function() {
                                             fieldLabel : 'Estado',
                                             maxLength : 1,
                                             labelWidth : 50,
-                                            width: 100,
-                                            value: 'W'//'M'
+                                            width: 120/*,
+                                            value: 'W'*/
                                         },
                                         {
                                             xtype:'tbspacer',
@@ -807,8 +807,8 @@ Ext.onReady(function() {
                                             width: 200,
                                             minValue : 0,
                                             maxValue : 999999,
-                                            maxLength : 6,
-                                            value: 1250//24
+                                            maxLength : 6/*,
+                                            value: 1250*/
                                         },{
                                             xtype: 'hiddenfield',
                                             name : 'params.suplemento'
@@ -831,8 +831,8 @@ Ext.onReady(function() {
                                             name : 'params.rfc',
                                             fieldLabel : 'RFC',
                                             labelWidth : 20,
-                                            maxLength : 13,
-                                            value: 'PUMC820429B61'
+                                            maxLength : 13/*,
+                                            value: 'PUMC820429B61'*/
                                         }
                                     ]
                                 }
