@@ -21,7 +21,7 @@ public class ConsultaDatosAgenteVO implements Serializable{
 	private String cdagente;
 	private String cdideper;
 	private String nombre;
-	private Date fedesde;
+	private String fedesde;
 	
 
 
@@ -49,11 +49,11 @@ public class ConsultaDatosAgenteVO implements Serializable{
 		this.nombre = nombre;
 	}
 
-	public Date getFedesde() {
+	public String getFedesde() {
 		return fedesde;
 	}
 
-	public void setFedesde(Date date) {
+	public void setFedesde(String date) {
 		this.fedesde = date;
 	}
 
