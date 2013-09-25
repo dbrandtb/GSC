@@ -8,7 +8,7 @@ var panDocInputNmpoliza  = '<s:property value="smap1.nmpoliza" />';
 var panDocInputCdunieco  = '<s:property value="smap1.cdunieco" />';
 var panDocInputCdramo    = '<s:property value="smap1.cdramo" />';
 var panDocInputEstado    = '<s:property value="smap1.estado" />';
-var panDocInputNmsuplem  = '<s:property value="smap1.nmsumplem" />';
+var panDocInputNmsuplem  = '<s:property value="smap1.nmsuplem" />';
 var panDocStoreDoc;
 var panDocUrlCargar      = '<s:url namespace="/documentos" action="ventanaDocumentosPolizaLoad" />';
 var panDocGridDocu;
