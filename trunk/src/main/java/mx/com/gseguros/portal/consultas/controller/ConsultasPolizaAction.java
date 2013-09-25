@@ -6,6 +6,8 @@ import java.util.List;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.portal.consultas.model.ConsultaDatosAgenteVO;
+import mx.com.gseguros.portal.consultas.model.ConsultaDatosAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosCoberturasVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosPolizaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosSituacionVO;
@@ -46,10 +48,14 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     private List<ConsultaPolizaAseguradoVO> polizasAsegurado;
 
     private List<ConsultaPolizaAgenteVO> polizasAgente;
+    
     private List<ConsultaReciboAgenteVO> recibosAgente;
 
     private List<ConsultaDatosTarifaVO> datosTarifa;
     
+    private ConsultaDatosAgenteVO datosAgente;
+    
+    private List<ConsultaDatosAseguradoVO> datosAsegurados;
     
     public String execute() throws Exception {
     	return SUCCESS;
@@ -268,9 +274,69 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     	
     }
 
-
+    /**
+     * Obtiene los datos generales de una p&oacute;liza
+     * @return String result
+     */
+    public String consultaDatosAgente(){
+    	logger.debug(" **** Entrando a Consulta de Agente ****");
+        try {
+        	WrapperResultados result = consultasPolizaManager.consultaAgente(params.get("cdagente"));
+        	ArrayList<ConsultaDatosAgenteVO> lista = (ArrayList<ConsultaDatosAgenteVO>) result.getItemList();
+        	
+        	if(lista!=null && !lista.isEmpty())	datosAgente = lista.get(0);
+        	
+        	logger.debug("Resultado de la consulta de Agente:" + datosAgente);
+        	
+        }catch( Exception e){
+            logger.error("Error al obtener los datos del Agente ",e);
+            return SUCCESS;
+        }
+        
+        success = true;
+        return SUCCESS;
+    }
+    
+    
+    /**
+     * Obtiene los datos del asegurado
+     * @return String result
+     */
+    public String consultaDatosAsegurado(){
+    	logger.debug(" **** Entrando a consultaDatosAsegurado ****");
+    	try {
+    		
+    		WrapperResultados result = consultasPolizaManager.consultaDatosAsegurado(
+    				params.get("cdunieco"), params.get("cdramo"),
+    				params.get("estado"), params.get("nmpoliza"), params.get("nmsuplem"));
+    		
+    		datosAsegurados = (ArrayList<ConsultaDatosAseguradoVO>) result.getItemList();
+    		
+    		logger.debug("Resultado de la consultaDatosAsegurado:" + datosAsegurados);
+    		
+    	}catch( Exception e){
+    		logger.error("Error al obtener los datos del Asegurado ",e);
+    		return SUCCESS;
+    	}
+    	
+    	success = true;
+    	return SUCCESS;
+    	
+    }
+    
+    
     //Getters and setters:
     
+	public List<ConsultaDatosAseguradoVO> getDatosAsegurados() {
+		return datosAsegurados;
+	}
+
+
+	public void setDatosAsegurados(List<ConsultaDatosAseguradoVO> datosAsegurados) {
+		this.datosAsegurados = datosAsegurados;
+	}
+
+
 	public HashMap<String, String> getParams() {
 		return params;
 	}
@@ -362,6 +428,16 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
 
 	public void setRecibosAgente(List<ConsultaReciboAgenteVO> recibosAgente) {
 		this.recibosAgente = recibosAgente;
+	}
+
+
+	public ConsultaDatosAgenteVO getDatosAgente() {
+		return datosAgente;
+	}
+
+
+	public void setDatosAgente(ConsultaDatosAgenteVO datosAgente) {
+		this.datosAgente = datosAgente;
 	}
     
 }
