@@ -83,7 +83,7 @@ Ext.onReady(function() {
         console.log(gridPanelSuplemento.getSelectionModel().hasSelection());
         if (gridPanelSuplemento.getSelectionModel().hasSelection()) {
             var rowSelected = gridPanelSuplemento.getSelectionModel().getSelection()[0];
-            panelBusqueda.down('form').getForm().findField("params.suplemento").setValue(rowSelected.get('nsuplogi'));
+            panelBusqueda.down('form').getForm().findField("params.suplemento").setValue(rowSelected.get('nmsuplem'));
             console.log(rowSelected);
             console.log('Suplemento=' + rowSelected.get('nsuplogi'));
             console.log(panelBusqueda.down('form').getForm());
@@ -354,7 +354,7 @@ Ext.onReady(function() {
         },
         items : [ {
             layout : 'hbox',
-            items : {xtype: 'textfield', name: 'nmsolici', fieldLabel: 'N&uacute;mero de solicitud', width: 250, labelWidth: 120, readOnly: true}
+            items : {xtype: 'textfield', id: 'nmsolici',  name: 'nmsolici', fieldLabel: 'N&uacute;mero de solicitud', width: 250, labelWidth: 120, readOnly: true}
         }, {
             layout : 'hbox',
             items : [ 
@@ -663,7 +663,10 @@ Ext.onReady(function() {
 					tab.loader.load({
 						params : {
 							'smap1.readOnly' :  true,
-							'smap1.nmpoliza' :  panelBusqueda.down('form').getForm().findField("params.nmpoliza").getValue(),
+							'smap1.nmpoliza' :  
+								panelBusqueda.down('form').getForm().findField("params.estado").getValue() == 'M'?
+								Ext.getCmp('nmsolici').getValue() : 
+								panelBusqueda.down('form').getForm().findField("params.nmpoliza").getValue(),
 							'smap1.cdunieco' :  panelBusqueda.down('form').getForm().findField("params.cdunieco").getValue(),
 							'smap1.cdramo' :  panelBusqueda.down('form').getForm().findField("params.cdramo").getValue(),
 							'smap1.estado' :  panelBusqueda.down('form').getForm().findField("params.estado").getValue(),
