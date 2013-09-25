@@ -96,7 +96,7 @@ public class ConsultasPolizaDAO extends AbstractDAO {
         	
 	        //logger.debug("Entrando a debug DAO HHHHHH: "+rs.getString("feemisio"));
         	consulta.setNmsolici(rs.getString("nmsolici"));
-        	consulta.setFeefecto(rs.getString("feefecto"));
+        	consulta.setFeefecto(Utilerias.formateaFecha(rs.getString("feefecto")));
 //        	consulta.setFeinival(rs.getString("feinival"));
 //        	consulta.setNsuplogi(rs.getString("nsuplogi"));
 //        	consulta.setFeemisio(rs.getString("feemisio"));
@@ -106,8 +106,8 @@ public class ConsultasPolizaDAO extends AbstractDAO {
         	consulta.setDsmoneda(rs.getString("dsmoneda"));
         	consulta.setOttempot(rs.getString("ottempot"));
         	consulta.setDstempot(rs.getString("dstempot"));
-        	consulta.setFeproren(rs.getString("feproren"));
-        	consulta.setFevencim(rs.getString("fevencim"));
+        	consulta.setFeproren(Utilerias.formateaFecha(rs.getString("feproren")));
+        	consulta.setFevencim(Utilerias.formateaFecha(rs.getString("fevencim")));
         	consulta.setNmrenova(rs.getString("nmrenova"));
         	consulta.setCdperpag(rs.getString("cdperpag"));
         	consulta.setDsperpag(rs.getString("dsperpag"));
