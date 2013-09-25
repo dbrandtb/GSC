@@ -17,6 +17,9 @@ Ext.onReady(function() {
             
     };
     ///////////////////////////////////////////////
+	
+	
+	
     Ext.define('KeyValueModel', {
         extend: 'Ext.data.Model',
         fields : [{
@@ -113,6 +116,7 @@ Ext.onReady(function() {
                 }
             });
             panelInfoGralPoliza.show();
+			tabDatosGeneralesPoliza.show();
             /**Datos para la Tarificación**/ 
             storeTarificacion.load({
                 params: panelBusqueda.down('form').getForm().getValues(),
@@ -141,18 +145,32 @@ Ext.onReady(function() {
                     }                    
                 }
             });
+			/**Datos para asegurados**/ 
+			storeDatosAsegurado.load({
+				params: panelBusqueda.down('form').getForm().getValues(),
+				callback: function(records, operation, success){
+					if(success){
+						if(records.length <= 0){
+							Ext.Msg.show({
+								title: 'Error',
+								msg: 'No existe datos del asegurado',
+								buttons: Ext.Msg.OK,
+								icon: Ext.Msg.ERROR
+							});
+						}
+					}else{
+						Ext.Msg.show({
+							title: 'Error',
+							msg: 'No existe datos del asegurado',
+							buttons: Ext.Msg.OK,
+							icon: Ext.Msg.ERROR
+						});
+					}        	        
+				}
+			});
         }
-        /*
-        var idx = gridPanelSuplemento.getSelectionModel().getSelection();
-        console.log( 'idx=' );console.log( idx );
-        //gridPanelSuplemento.getSelectionModel().select(idx[0].index);
-        console.log("idx[0].nmsuplem=");console.log( gridPanelSuplemento.getSelectionModel().select(idx[0].data.nmsuplem) );
-        */
     });
     
-    
-    ///////////////////////////////////////////////
-
 
     Ext.define('Suplemento', {
         extend: 'Ext.data.Model',
@@ -175,6 +193,7 @@ Ext.onReady(function() {
         */
     });
     
+	
     var storeSuplemento = new Ext.data.Store({
         model: 'Suplemento',
         //autoLoad:true,
@@ -189,7 +208,19 @@ Ext.onReady(function() {
             }
         }
     });
-    
+	/*
+	var storeSuplemento = Ext.create('Ext.data.Store', {
+        pageSize : 5,
+        autoLoad : true,
+        model: 'Suplemento',
+        proxy    : {
+            enablePaging : true,
+            reader       : 'json',
+            type         : 'memory',
+            data         : []
+        }
+    });
+    */
     // create a grid that will list the dataset items.
     var gridPanelSuplemento = Ext.create('Ext.grid.Panel', {
         id : 'suplemento-form',
@@ -235,6 +266,7 @@ Ext.onReady(function() {
 				panelInfoGralPoliza.getForm().reset();
 				gridDatosTarificacion.hide();
 				storeTarificacion.removeAll();
+				tabDatosGeneralesPoliza.setActiveTab(0);
                 
                 console.log('model=');
                 console.log(model);
@@ -275,9 +307,9 @@ Ext.onReady(function() {
           {type:'string',        name:'nmsolici'      },
           {type:'string',        name:'titular'       },
           {type:'string',        name:'cdrfc'         },
-          {type:'date',        name:'feemisio'      },
-          {type:'date',        name:'feefecto'         },
-          {type:'date',        name:'feproren'      },
+          {type:'date', name:'feemisio', dateFormat: 'd/m/Y'},
+          {type:'date', name:'feefecto', dateFormat: 'd/m/Y'},
+          {type:'date', name:'feproren', dateFormat: 'd/m/Y'},
           {type:'string',        name:'dstarifi'      },
           {type:'string',        name:'dsmoneda'      },
           {type:'string',        name:'nmcuadro'      },
@@ -304,7 +336,7 @@ Ext.onReady(function() {
     /**FORMULARIO DATOS DE LA POLIZA **/
     var panelInfoGralPoliza = Ext.create('Ext.form.Panel', {
         id : "formularioPoliza",
-        title : 'DATOS DE LA P&Oacute;LIZA',
+        //title : 'DATOS DE LA P&Oacute;LIZA',
         model : 'RowDatosPoliza',
         width : 820,
 		border : false,
@@ -326,9 +358,9 @@ Ext.onReady(function() {
         }, {
             layout : 'hbox',
             items : [ 
-                {xtype: 'datefield', name: 'feemisio', fieldLabel: 'Fecha emisi&oacute;n',    dateFormat: 'd/m/Y', readOnly: true, labelWidth: 120}, 
-                {xtype: 'datefield', name: 'feefecto', fieldLabel: 'Fecha de efecto',         dateFormat: 'd/m/Y', readOnly: true, labelWidth: 100, width: 200}, 
-                {xtype: 'datefield', name: 'feproren', fieldLabel: 'Fecha renovaci&oacute;n', dateFormat: 'd/m/Y', readOnly: true, labelWidth: 100, width: 200}
+                {xtype: 'datefield', name: 'feemisio', fieldLabel: 'Fecha emisi&oacute;n',    format: 'd/m/Y', readOnly: true, labelWidth: 120}, 
+                {xtype: 'datefield', name: 'feefecto', fieldLabel: 'Fecha de efecto',         format: 'd/m/Y', readOnly: true, labelWidth: 100, width: 200}, 
+                {xtype: 'datefield', name: 'feproren', fieldLabel: 'Fecha renovaci&oacute;n', format: 'd/m/Y', readOnly: true, labelWidth: 100, width: 200}
             ]
         }, {
             layout : 'hbox',
@@ -377,7 +409,7 @@ Ext.onReady(function() {
     /**GRID PARA LOS DATOS DE TARIFICACION **/
     var gridDatosTarificacion = Ext.create('Ext.grid.Panel', {
 		width   : 820,
-        title   : 'DATOS TARIFICACI&Oacute;N',
+        //title   : 'DATOS TARIFICACI&Oacute;N',
         store   : storeTarificacion,
         id      : 'gridDatosTarificacion',
         features:[{
@@ -423,6 +455,54 @@ Ext.onReady(function() {
             direction   : 'ASC'
         }
     ]);
+	
+	
+	// Modelo
+	Ext.define('RowDatosAsegurado', {
+	    extend: 'Ext.data.Model',
+	    fields: [
+			{type:'string', name:'cdperson'},
+			{type:'string',	name:'cdrfc'},
+			{type:'string',	name:'cdrol'},
+			{type:'string',	name:'dsrol'},
+			{type:'date',	name:'fenacimi'},
+			{type:'string',	name:'nmsituac'},
+			{type:'string',	name:'sexo'},
+			{type:'string',	name:'titular'}
+	    ]
+	});
+	
+	// Store
+	var storeDatosAsegurado = new Ext.data.Store({
+	 model: 'RowDatosAsegurado',
+	 proxy:
+	 {
+		  type: 'ajax',
+		  url : _URL_VALIDA_DATOS_ASEGURADO,
+	  reader:
+	  {
+		   type: 'json',
+		   root: 'datosAsegurados'
+	  }
+	 }
+	});
+	
+	var gridDatosAsegurado = Ext.create('Ext.grid.Panel', {
+	    title   : 'DATOS DE LOS ASEGURADOS',
+	    store   : storeDatosAsegurado,
+	    id      : 'gridDatosAsegurado',
+	    width   : 800,	    
+	    items:[{
+		   xtype:'textfield', name:'cdrfc', fieldLabel: 'RFC', readOnly: true, labelWidth: 120
+		}],
+		columns: [
+			{text:'Rol',dataIndex:'dsrol',width:130 , align:'left'},
+			{text:'Titular',dataIndex:'titular',width:270,align:'left'},
+			{text:'RFC',dataIndex:'cdrfc',width:150,align:'left'},
+			{text:'Sexo',dataIndex:'sexo',width:100 , align:'left'},
+			{text:'Fecha de Nacimiento',dataIndex:'fenacimi',width:150, align:'left',renderer: Ext.util.Format.dateRenderer('d/m/Y')}
+		]
+	});
     
     
     
@@ -529,7 +609,66 @@ Ext.onReady(function() {
         }]
     });
         //-------------------------------------------------------------------------------------------------------------    
-    
+    var tabDatosGeneralesPoliza = Ext.create('Ext.tab.Panel', {
+	    width: 820,
+	    //height: 200,
+	    //renderTo: document.body,
+	    items: [{
+	        title : 'DATOS DE LA POLIZA',
+	        //html: 'Home',
+	        //itemId: 'tabDatosGralesPoliza',
+	        items:[	                    
+                   {
+                       //layout  :  'hbox',
+                       items   :  [ panelInfoGralPoliza]
+                   }
+               ]
+	    }, {
+	        title: 'DATOS TARIFICACION',
+	        itemId: 'tabDatosTarificacion',
+	        items:[	                    
+                   {
+                       //layout  :  'hbox',
+                       items   :  [ gridDatosTarificacion]
+                   }
+               ]
+	    }, {
+	        title: 'ASEGURADOS',
+	        itemId: 'tabDatosAsegurados',
+	        items:[	                    
+                   {
+                       //layout  :  'hbox',
+                       items   :  [ gridDatosAsegurado]
+                   }
+               ]
+	    }, {
+			id: 'tbDocumentos',
+			title : 'Documentaci&oacute;n',
+			width: '350',
+			loader : {
+				url : _URL_DOCUMENTOS,
+				scripts : true,
+				autoLoad : false
+			},
+			listeners : {
+				activate : function(tab) {
+					tab.loader.load({
+						params : {
+							'smap1.readOnly' :  true,
+							'smap1.nmpoliza' :  panelBusqueda.down('form').getForm().findField("params.nmpoliza").getValue(),
+							'smap1.cdunieco' :  panelBusqueda.down('form').getForm().findField("params.cdunieco").getValue(),
+							'smap1.cdramo' :  panelBusqueda.down('form').getForm().findField("params.cdramo").getValue(),
+							'smap1.estado' :  panelBusqueda.down('form').getForm().findField("params.estado").getValue(),
+							'smap1.nmsuplem' :  panelBusqueda.down('form').getForm().findField("params.suplemento").getValue()
+						}
+					});
+				}
+			}
+		}]    
+	});
+	
+	
+	
     // Main Panel
 
     var panelBusqueda = Ext.create('Ext.Panel', {
@@ -811,7 +950,7 @@ Ext.onReady(function() {
             colspan:2,
             autoScroll:true,
             items : [
-                panelInfoGralPoliza, gridDatosTarificacion
+                tabDatosGeneralesPoliza
             ]
         }]
     });
@@ -824,6 +963,9 @@ Ext.onReady(function() {
     if(gridDatosTarificacion.isVisible()) {
         gridDatosTarificacion.hide();
     }
+	if(tabDatosGeneralesPoliza.isVisible()) {
+        tabDatosGeneralesPoliza.hide();
+    }
 
     /**
     * 
@@ -831,7 +973,29 @@ Ext.onReady(function() {
     */
     function cargaStoreSuplemento(params){
         gridPanelSuplemento.setLoading(true);
-        storeSuplemento.load({
+		/*
+		var clbkSuplemento = function(options, success, response) {
+			gridPanelSuplemento.setLoading(false);
+			gridPanelSuplemento.getView().el.focus();
+			if (!success) {
+				setMessage(_MSG_ERROR, _MSG_ERROR_HISTORICO_MOVIMIENTOS, Ext.Msg.OK, Ext.Msg.ERROR);
+			}
+			var jsonResp = Ext.decode(response.responseText);
+			console.log("jsonResp=");
+			console.log(jsonResp);
+			console.log(jsonResp.datosSuplemento.length);
+			if(jsonResp.datosSuplemento.length == 0){
+				setMessage(_MSG_SIN_DATOS, _MSG_SIN_DATOS_HISTORICO_MOVIMIENTOS, Ext.Msg.OK, Ext.Msg.INFO);
+			}
+			
+			//Limpiar seleccion de la lista de opciones de consulta
+			listViewOpcionesConsulta.collapse();
+			listViewOpcionesConsulta.getSelectionModel().deselectAll();
+		}
+        cargarGridPaginado(storeSuplemento, _URL_DATOS_SUPLEMENTO, 'datosSuplemento', params, clbkSuplemento);
+		*/
+		
+		storeSuplemento.load({
             params: params,
             callback: function(records, operation, success) {
                 gridPanelSuplemento.setLoading(false);
@@ -852,33 +1016,10 @@ Ext.onReady(function() {
                 console.log(records.length);
             }
         });
+		
     }
 	
-		var tabs = Ext.create('Ext.tab.Panel', {
-	    //width: 400,
-	    //height: 200,
-	    renderTo: document.body,
-	    items: [{
-	        title: 'DATOS ASEGURADO',
-	        //html: 'Home',
-	        itemId: 'datosAsegurados',
-	        items:[	                    
-                   {
-                       //layout  :  'hbox',
-                       items   :  [ datosAsegurado]
-                   }
-               ]
-	    }, {
-	        title: 'DATOS TITULAR',
-	        itemId: 'datosTitular',
-	        items:[	                    
-                   {
-                       //layout  :  'hbox',
-                       items   :  [ informacionPoliza]
-                   }
-               ]
-	    }]    
-	});
+		
 
    
 	function cargarGridPolizasAsegurado(p_params) {

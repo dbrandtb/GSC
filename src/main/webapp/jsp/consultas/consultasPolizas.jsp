@@ -21,6 +21,8 @@
 	    var _URL_VALIDA_DATOS_POLIZA =       '<s:url action="consultaDatosPoliza" namespace="/consultasPoliza"/>';
 	    var _URL_VALIDA_DATOS_TARIFICACION = '<s:url action="consultaDatosTarifaPoliza" namespace="/consultasPoliza"/>';
 	    var _URL_VALIDA_POLIZA_ASEGURADO =   '<s:url action="consultaPolizasAsegurado" namespace="/consultasPoliza"/>';
+	    var _URL_VALIDA_DATOS_ASEGURADO =   '<s:url action="consultaDatosAsegurado" namespace="/consultasPoliza"/>';
+	    var _URL_DOCUMENTOS = '<s:url namespace="/documentos"  action="ventanaDocumentosPoliza" />';
 	    var _MSG_ERROR = 'Error';
 	    var _MSG_ERROR_HISTORICO_MOVIMIENTOS = 'Ocurri\u00F3 un error al obtener el hist\u00F3rico de movimientos';
 	    var _MSG_SIN_DATOS = 'Sin informaci\u00F3n';
