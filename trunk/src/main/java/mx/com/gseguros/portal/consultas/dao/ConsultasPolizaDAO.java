@@ -133,10 +133,7 @@ public class ConsultasPolizaDAO extends AbstractDAO {
     	protected ObtieneDatosSuplemento(DataSource dataSource) {
     		super(dataSource, "PKG_CONSULTA.p_get_datos_suplem");
     		
-    		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_nmpoliex_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DatosSuplementoMapper()));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
@@ -156,13 +153,17 @@ public class ConsultasPolizaDAO extends AbstractDAO {
     
     protected class DatosSuplementoMapper  implements RowMapper {
     	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+  		
     		
     		ConsultaDatosSuplementoVO consulta = new ConsultaDatosSuplementoVO();
-    		
-    		consulta.setNmsuplem(rs.getString("nmsuplem"));
-    		consulta.setFeinival(rs.getString("feinival"));
+    		consulta.setCdunieco(rs.getString("cdunieco"));
+    		consulta.setCdramo(rs.getString("cdramo"));
+    		consulta.setEstado(rs.getString("estado"));
+    		consulta.setEstado(rs.getString("estado"));
+    		consulta.setNmpoliza(rs.getString("nmpoliza"));
+    		consulta.setFeinival(Utilerias.formateaFecha(rs.getString("feinival")));
     		consulta.setNsuplogi(rs.getString("nsuplogi"));
-    		consulta.setFeemisio(rs.getString("feemisio"));
+    		consulta.setFeemisio(Utilerias.formateaFecha(rs.getString("feemisio")));
     		consulta.setNlogisus(rs.getString("nlogisus"));
     		consulta.setDstipsup(rs.getString("dstipsup"));
     		consulta.setPtpritot(rs.getString("ptpritot"));

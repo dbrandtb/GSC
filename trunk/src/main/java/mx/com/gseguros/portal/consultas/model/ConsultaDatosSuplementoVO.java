@@ -12,11 +12,13 @@ import org.apache.commons.lang.builder.ToStringStyle;
 public class ConsultaDatosSuplementoVO implements Serializable{
 
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8555353864912795413L;
 
+	
+	private String cdunieco;
+	private String cdramo;
+	private String estado;
+	private String nmpoliza;
 	private String nmsuplem;
 	private String feinival;
 	private String nsuplogi;
@@ -67,8 +69,32 @@ public class ConsultaDatosSuplementoVO implements Serializable{
 	}
 	public void setPtpritot(String ptpritot) {
 		this.ptpritot = ptpritot;
-	}
+	}	
 	
+	public String getCdunieco() {
+		return cdunieco;
+	}
+	public void setCdunieco(String cdunieco) {
+		this.cdunieco = cdunieco;
+	}
+	public String getCdramo() {
+		return cdramo;
+	}
+	public void setCdramo(String cdramo) {
+		this.cdramo = cdramo;
+	}
+	public String getEstado() {
+		return estado;
+	}
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+	public String getNmpoliza() {
+		return nmpoliza;
+	}
+	public void setNmpoliza(String nmpoliza) {
+		this.nmpoliza = nmpoliza;
+	}
 	public String toString(){
 		return ToStringBuilder.reflectionToString(this,ToStringStyle.MULTI_LINE_STYLE);
 	}

@@ -97,10 +97,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     	logger.debug(" **** Entrando a consultaDatosSuplemento ****");
     	try {
     		
-    		WrapperResultados result = consultasPolizaManager.consultaSuplemento(
-					params.get("cdunieco"), params.get("cdramo"),
-					params.get("estado"), params.get("nmpoliza"));
-    		
+    		WrapperResultados result = consultasPolizaManager.consultaSuplemento(params.get("nmpoliex"));
     		datosSuplemento = (ArrayList<ConsultaDatosSuplementoVO>) result.getItemList();
     		
     		logger.debug("Resultado de la consultaDatosSuplemento:" + datosSuplemento);
