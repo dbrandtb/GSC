@@ -19,7 +19,7 @@
     
     <bean id="entradaCotizacion" class="mx.com.aon.flujos.cotizacion.web.EntradaCotizacionAction" scope="prototype" parent="principalCotizacion" >
       <property name="cotizacionManager" ref="cotizacionService"/>
-      <property name="kernelManager" ref="kernelManager"/>
+      <!-- <property name="kernelManager" ref="kernelManager"/> -->
       <property name="endosoManager" ref="endosoManager" />
       <property name="cotizacionManagerJdbcTemplate" ref="cotizacionManagerJdbcTemplate"></property> 
    </bean>
@@ -27,8 +27,8 @@
     <bean id="resultadoCotizacion" class="mx.com.aon.flujos.cotizacion.web.ResultadoCotizacionAction" scope="prototype" parent="principalCotizacion">
      <property name="cotizacionManager" ref="cotizacionService"/>
      <property name="cotizacionManagerJdbcTemplate" ref="cotizacionManagerJdbcTemplate"></property>
-     <property name="serviciosGeneralesSistema" ref="servGeneralesSistema"/>
-     <property name="kernelManager" ref="kernelManager"/>
+     <!-- <property name="serviciosGeneralesSistema" ref="servGeneralesSistema"/> -->
+     <!-- <property name="kernelManager" ref="kernelManager"/> -->
     </bean>
     
     <bean id="cotizacionVital" class="mx.com.aon.flujos.cotizacion4.web.ResultadoCotizacion4Action" scope="prototype" parent="principalCotizacion">
@@ -42,15 +42,15 @@
     <bean id="consultaCotizacionAction" class="mx.com.aon.flujos.cotizacion.web.ConsultaCotizacionAction" scope="prototype" parent="principalCotizacion">
          <property name="cotizacionManager" ref="cotizacionService"/>
          <property name="catalogosManager" 	ref="catalogManager"/>
-     	 <property name="serviciosGeneralesSistema" ref="servGeneralesSistema"/>
+     	 <!-- <property name="serviciosGeneralesSistema" ref="servGeneralesSistema"/> -->
          <property name="cotizacionManagerJdbcTemplate" ref="cotizacionManagerJdbcTemplate"></property> 
     </bean>
     
     <bean id="comprarCotizacionAction" class="mx.com.aon.flujos.cotizacion.web.ComprarCotizacionAction" scope="prototype" parent="principalCotizacion">
 		 <property name="cotizacionManager" ref="cotizacionService"/>
          <property name="catalogosManager" 	ref="catalogManager"/>
-         <property name="kernelManager" ref="kernelManager"/>
-         <property name="serviciosGeneralesSistema" ref="servGeneralesSistema"/>
+         <!-- <property name="kernelManager" ref="kernelManager"/> -->
+         <!-- <property name="serviciosGeneralesSistema" ref="servGeneralesSistema"/> -->
          <property name="catalogServiceJdbcTemplate" ref="catalogServiceJdbcTemplate"/>
          <property name="instrumentoPagoManagerJdbcTemplate" ref="instrumentoPagoManager" />
     </bean>
@@ -66,7 +66,7 @@
      -->
     <bean id="valoresPorDefectoCotizacionAction" class="mx.com.aon.flujos.cotizacion.web.ValoresPorDefectoCotizacionAction" scope="prototype" parent="principalCotizacion">
         <property name="cotizacionManager" ref="cotizacionService"/>
-        <property name="kernelManager" ref="kernelManager"/>
+        <!-- <property name="kernelManager" ref="kernelManager"/> -->
     </bean>
     
     <!--
@@ -105,6 +105,10 @@
     
     <bean id="beanDatosComplementariosCoberturas" class="mx.com.gseguros.portal.cotizacion.controller.ComplementariosCoberturasAction" scope="prototype">
         <property name="kernelManager" ref="kernelManagerSustituto"/>
+    </bean>
+    
+    <bean id="JsonGenericList" class="mx.com.aon.portal2.web.JsonGenericList" scope="prototype">
+        <property name="combosManager2" ref="comboManagerJdbcTemplateImpl"/>
     </bean>
     
 </beans>
