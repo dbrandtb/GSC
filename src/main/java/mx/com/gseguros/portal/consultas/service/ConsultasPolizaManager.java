@@ -23,7 +23,7 @@ public interface ConsultasPolizaManager {
 	 */
 	public WrapperResultados consultaPoliza(String cdunieco, String cdramo, String estado, String nmpoliza, String idper, String nmclient)throws ApplicationException;
 
-	public WrapperResultados consultaSuplemento(String cdunieco, String cdramo, String estado, String nmpoliza)throws ApplicationException;
+	public WrapperResultados consultaSuplemento(String nmpoliex) throws ApplicationException;
 	public WrapperResultados consultaSituacion(String cdunieco, String cdramo, String estado, String nmpoliza, String suplemento, String nmsituac)throws ApplicationException;
 	public WrapperResultados consultaCoberturas(String cdunieco, String cdramo, String estado, String nmpoliza, String suplemento, String nmsituac)throws ApplicationException;
 	public WrapperResultados obtienePolizasAsegurado(String rfc)throws ApplicationException;
@@ -33,6 +33,8 @@ public interface ConsultasPolizaManager {
 
 	public WrapperResultados consultaAgente(String cdagente)throws ApplicationException;
 	public WrapperResultados consultaDatosAsegurado(String cdunieco, String cdramo, String estado, String nmpoliza, String suplemento) throws ApplicationException;
+
+	
 
 	
 }

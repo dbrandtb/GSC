@@ -39,21 +39,16 @@ public class ConsultasPolizaManagerImpl extends
 		return result;
 	}
 
-	public WrapperResultados consultaSuplemento(String cdunieco, String cdramo,
-			String estado, String nmpoliza) throws ApplicationException {
-
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("pv_cdunieco_i", cdunieco);
-		params.put("pv_cdramo_i", cdramo);
-		params.put("pv_estado_i", estado);
-		params.put("pv_nmpoliza_i", nmpoliza);
-
-		WrapperResultados result = this.returnBackBoneInvoke(params,
-				OBTIENE_DATOS_SUPLEMENTO);
-
-		return result;
-	}
-
+	public WrapperResultados consultaSuplemento(String nmpoliex) throws ApplicationException {
+			HashMap<String, Object> params = new HashMap<String, Object>();
+			params.put("pv_nmpoliex_i", nmpoliex);
+			
+			WrapperResultados result = this.returnBackBoneInvoke(params,
+					OBTIENE_DATOS_SUPLEMENTO);
+			return result;
+		}
+	
+	
 	public WrapperResultados consultaSituacion(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String suplemento, String nmsituac)
 			throws ApplicationException {
