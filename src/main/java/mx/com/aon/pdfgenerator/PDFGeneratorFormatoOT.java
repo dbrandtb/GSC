@@ -4,10 +4,6 @@ package mx.com.aon.pdfgenerator;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +11,6 @@ import java.util.Map;
 
 import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
-import oracle.jdbc.OracleTypes;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,7 +21,6 @@ import com.lowagie.text.Image;
 import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfWriter;
-import mx.com.ice.kernel.core.PropertyReader;
 
 
 
@@ -36,9 +30,9 @@ public class PDFGeneratorFormatoOT extends AbstractManagerJdbcTemplateInvoke{
 	
 	
 	//TODO FIJAR LOS VALORES CORRESPONDIENTES PARA LOS PATHS Y NOMBRES DE ARCHIVOS
-	private static final String pathPdf = PropertyReader.readProperty("pdf.url.bo");
+	private static final String pathPdf = "/opt/ice/acw/pdf/bo/";
     
-    private static final String pathResources = PropertyReader.readProperty("img.url.resources.pdf");
+    private static final String pathResources = "/opt/ice/acw/images/";
 	private static String nameImagenAON="AON.jpg";
 	private static String nameImagenUniversal="Universal.jpg";
 	

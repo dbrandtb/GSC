@@ -6,31 +6,29 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.Element;
-import com.lowagie.text.Font;
-import com.lowagie.text.Paragraph;
-import com.lowagie.text.Phrase;
-import com.lowagie.text.pdf.PdfPCell;
-import com.lowagie.text.pdf.PdfPTable;
-import com.lowagie.text.pdf.PdfWriter;
-import com.lowagie.text.PageSize;
-import org.apache.log4j.Logger;
-	
 import mx.com.aon.pdfgenerator.dao.PDFServicesJDBC;
 import mx.com.aon.pdfgenerator.services.PDFServices;
 import mx.com.aon.pdfgenerator.util.Campo;
-//import mx.com.aon.pdfgenerator.util.PDFUtil;
-//import mx.com.aon.pdfgenerator.util.PdfMontoUtils;
-//import mx.com.aon.pdfgenerator.util.UtilCampo;
 import mx.com.aon.pdfgenerator.vo.AseguradoVO;
 import mx.com.aon.pdfgenerator.vo.DataAdicionalVO;
 import mx.com.aon.pdfgenerator.vo.DataPolizaVO;
 import mx.com.aon.pdfgenerator.vo.DataVehiculoVO;
 import mx.com.aon.pdfgenerator.vo.DatoLiquidacionVO;
 import mx.com.aon.pdfgenerator.vo.TituloVO;
-import mx.com.ice.kernel.core.PropertyReader;
+
+import org.apache.log4j.Logger;
+
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Element;
+import com.lowagie.text.Font;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
+//import mx.com.aon.pdfgenerator.util.PDFUtil;
+//import mx.com.aon.pdfgenerator.util.PdfMontoUtils;
+//import mx.com.aon.pdfgenerator.util.UtilCampo;
 //import mx.com.  royalsun.kernel.core.PropertyReader;
 
 public class PDFGenerator {
@@ -46,9 +44,9 @@ public class PDFGenerator {
     
     // TODO esta variable debe ser eliminada
     
-    private static final String pathPdf = PropertyReader.readProperty("pdf.url.emision");
-    private static final String pathPdfRecibosEndoso = PropertyReader.readProperty("pdf.url.endoso");
-    private static final String pathResources = PropertyReader.readProperty("img.url.resources.pdf");
+    private static final String pathPdf = "/opt/ice/acw/pdf/emision/";
+    private static final String pathPdfRecibosEndoso = "/opt/ice/acw/pdf/endosos/";
+    private static final String pathResources = "/opt/ice/acw/images/";
     	
     	//"/opt/oracle/product/1013/soa/j2ee/acwintegracion/applications/AON_INTEGRACION/AON-INTEGRADO-qa/resources/";
     ///opt/oracle/product/1013/soa/j2ee/acwintegracion/applications/AON_INTEGRACION/AON-INTEGRADO-qa/resources

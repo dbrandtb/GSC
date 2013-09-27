@@ -1,23 +1,20 @@
 package mx.com.aon.flujos.cotizacion.web;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import mx.com.aon.core.VariableKernel;
+import mx.com.aon.core.ApplicationException;
 import mx.com.aon.flujos.cotizacion.model.CoberturaCotizacionVO;
 import mx.com.aon.flujos.cotizacion.model.ConsultaCotizacionVO;
+import mx.com.aon.flujos.cotizacion.service.CotizacionPrincipalManager;
 import mx.com.aon.flujos.cotizacion.service.CotizacionService;
 import mx.com.aon.portal.model.BaseObjectVO;
 import mx.com.aon.portal.model.CotizacionMasivaVO;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.service.CatalogService;
 import mx.com.aon.portal.service.PagedList;
-import mx.com.ice.services.to.screen.GlobalVariableContainerVO;
-import mx.com.aon.flujos.cotizacion.service.CotizacionPrincipalManager;
-import mx.com.ice.services.business.ServiciosGeneralesSistema;
-import mx.com.aon.core.ApplicationException;
+
 import org.apache.log4j.Logger;
 
 import com.biosnet.ice.ext.elements.form.TextFieldControl;
@@ -37,7 +34,7 @@ public class ConsultaCotizacionAction extends PrincipalCotizacionAction {
     protected int limit = 20;
 	private CotizacionService cotizacionManager;
 	private CatalogService catalogosManager;
-	private ServiciosGeneralesSistema serviciosGeneralesSistema;
+	//private ServiciosGeneralesSistema serviciosGeneralesSistema;
 	
 	private List<ConsultaCotizacionVO> listaConsultaCotizacion;
 	
@@ -174,16 +171,16 @@ public class ConsultaCotizacionAction extends PrincipalCotizacionAction {
         log.debug("entrando a obtieneCoberturas()");
         
         UserVO usuario = (UserVO) session.get("USUARIO");
-        GlobalVariableContainerVO globalVarVO = new GlobalVariableContainerVO();
+//        GlobalVariableContainerVO globalVarVO = new GlobalVariableContainerVO();
         //, numeroSituacion
         //Se sube a sesion la global variable para que se pueda utilizar en flujocotizacion/comprarCotizaciones
-        globalVarVO.addVariableGlobal(VariableKernel.UnidadEconomica(), cdunieco);
-        globalVarVO.addVariableGlobal(VariableKernel.CodigoRamo(), cdramo);
-        globalVarVO.addVariableGlobal(VariableKernel.Estado(), estado);
-        globalVarVO.addVariableGlobal(VariableKernel.NumeroPoliza(), nmpoliza);
-        //TODO: subir a sesion nmsituac sin que afecte al metodo comprarCotizaciones() de ComprarCotizacionAction
-        //globalVarVO.addVariableGlobal(VariableKernel.NumeroSituacion(), nmsituac);
-        session.put("GLOBAL_VARIABLE_CONTAINER", globalVarVO);
+//        globalVarVO.addVariableGlobal(VariableKernel.UnidadEconomica(), cdunieco);
+//        globalVarVO.addVariableGlobal(VariableKernel.CodigoRamo(), cdramo);
+//        globalVarVO.addVariableGlobal(VariableKernel.Estado(), estado);
+//        globalVarVO.addVariableGlobal(VariableKernel.NumeroPoliza(), nmpoliza);
+//        //TODO: subir a sesion nmsituac sin que afecte al metodo comprarCotizaciones() de ComprarCotizacionAction
+//        //globalVarVO.addVariableGlobal(VariableKernel.NumeroSituacion(), nmsituac);
+//        session.put("GLOBAL_VARIABLE_CONTAINER", globalVarVO);
         
         Map<String,String> params = new HashMap<String, String>();
         params.put("USUARIO",  usuario.getUser());
@@ -227,21 +224,21 @@ public class ConsultaCotizacionAction extends PrincipalCotizacionAction {
         parameters.put( "nmsuplem", getNmsuplem() );
         parameters.put( "cdcia", getCdcia() );
         parameters.put( "cdtipsit", getCdtipsit() );
-        GlobalVariableContainerVO globalVarVo = new GlobalVariableContainerVO();
-        UserVO usuario = (UserVO) session.get("USUARIO");
-        if ( session.containsKey("GLOBAL_VARIABLE_CONTAINER") ){
-			globalVarVo = (GlobalVariableContainerVO) session.get("GLOBAL_VARIABLE_CONTAINER");
-        }
-			
-		globalVarVo.addVariableGlobal( VariableKernel.UnidadEconomica(), getCdunieco() );
-		globalVarVo.addVariableGlobal( VariableKernel.CodigoRamo(), getCdramo() );
-		globalVarVo.addVariableGlobal( VariableKernel.Estado(), getEstado() );
-		globalVarVo.addVariableGlobal( VariableKernel.NumeroSituacion(), getNmsituac() );
-		globalVarVo.addVariableGlobal( VariableKernel.NumeroPoliza(), getNmpoliza() );
-		globalVarVo.addVariableGlobal( VariableKernel.CodigoTipoSituacion(), getCdtipsit() );
-		globalVarVo.addVariableGlobal( VariableKernel.UsuarioBD(), usuario.getUser());
-		globalVarVo.addVariableGlobal( VariableKernel.NumeroSuplemento(), "0");
-		session.put("GLOBAL_VARIABLE_CONTAINER", globalVarVo);
+////        GlobalVariableContainerVO globalVarVo = new GlobalVariableContainerVO();
+//        UserVO usuario = (UserVO) session.get("USUARIO");
+//        if ( session.containsKey("GLOBAL_VARIABLE_CONTAINER") ){
+//			globalVarVo = (GlobalVariableContainerVO) session.get("GLOBAL_VARIABLE_CONTAINER");
+//        }
+//			
+//		globalVarVo.addVariableGlobal( VariableKernel.UnidadEconomica(), getCdunieco() );
+//		globalVarVo.addVariableGlobal( VariableKernel.CodigoRamo(), getCdramo() );
+//		globalVarVo.addVariableGlobal( VariableKernel.Estado(), getEstado() );
+//		globalVarVo.addVariableGlobal( VariableKernel.NumeroSituacion(), getNmsituac() );
+//		globalVarVo.addVariableGlobal( VariableKernel.NumeroPoliza(), getNmpoliza() );
+//		globalVarVo.addVariableGlobal( VariableKernel.CodigoTipoSituacion(), getCdtipsit() );
+//		globalVarVo.addVariableGlobal( VariableKernel.UsuarioBD(), usuario.getUser());
+//		globalVarVo.addVariableGlobal( VariableKernel.NumeroSuplemento(), "0");
+//		session.put("GLOBAL_VARIABLE_CONTAINER", globalVarVo);
         
         
         /* 
@@ -493,14 +490,14 @@ public class ConsultaCotizacionAction extends PrincipalCotizacionAction {
 		this.prima = prima;
 	}
 
-	public ServiciosGeneralesSistema getServiciosGeneralesSistema() {
-		return serviciosGeneralesSistema;
-	}
-
-	public void setServiciosGeneralesSistema(
-			ServiciosGeneralesSistema serviciosGeneralesSistema) {
-		this.serviciosGeneralesSistema = serviciosGeneralesSistema;
-	}
+//	public ServiciosGeneralesSistema getServiciosGeneralesSistema() {
+//		return serviciosGeneralesSistema;
+//	}
+//
+//	public void setServiciosGeneralesSistema(
+//			ServiciosGeneralesSistema serviciosGeneralesSistema) {
+//		this.serviciosGeneralesSistema = serviciosGeneralesSistema;
+//	}
 
 	public String getCodigoCotizacionForm() {
 		return codigoCotizacionForm;

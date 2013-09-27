@@ -9,7 +9,6 @@ import mx.com.aon.portal.model.PerfilVO;
 import mx.com.aon.portal.model.PortalVO;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.service.PaginaPrincipalManager;
-import mx.com.ice.kernel.core.PropertyReader;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
@@ -38,7 +37,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 	private String rolCliente;
 	private String nombreCliente;
 	private String cadenaFinal;
-	private String rutaPubImage = PropertyReader.readProperty("img.url.pub.confpagimage");
+	private String rutaPubImage;
 
 	public void limpiaContenido() throws Exception {
 		/*
@@ -123,8 +122,8 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 			cadenaFinal = "\\catweb-configuracion"+cadenaMetodoDos[1];
 			logger.debug("cadenaFinal:"+ cadenaFinal);
 		}else if( StringUtils.isNotBlank(cadena) ){
-			//cadenaFinal = "/resources/images/imagesUser/" + cadena;
-			//cadenaFinal = "/resources/" + cadena;
+			//ruta temporal mapeada a ruta http
+			rutaPubImage = "/acw/images/config_pag/";
 			cadenaFinal = rutaPubImage + cadena;
 			logger.debug("cadenaFinal=" +  cadenaFinal);
 		}else{		

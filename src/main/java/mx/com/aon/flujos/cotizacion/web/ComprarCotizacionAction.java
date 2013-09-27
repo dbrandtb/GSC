@@ -4,24 +4,19 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Iterator;
 
 import javax.servlet.http.HttpServletRequest;
 
-import mx.com.aon.configurador.pantallas.model.PantallaVO;
 import mx.com.aon.configurador.pantallas.model.components.ComboClearOnSelectVO;
 import mx.com.aon.core.ApplicationException;
-import mx.com.aon.core.VariableKernel;
 import mx.com.aon.flujos.cotizacion.model.CoberturaCotizacionVO;
-import mx.com.aon.flujos.cotizacion.model.DatosEntradaCotizaVO;
 import mx.com.aon.flujos.cotizacion.model.MPoliObjVO;
-import mx.com.aon.flujos.cotizacion.model.ReciboVO;
 import mx.com.aon.flujos.cotizacion.model.RolVO;
 import mx.com.aon.flujos.cotizacion.service.CotizacionService;
 import mx.com.aon.kernel.service.KernelManager;
-import mx.com.aon.pdfgenerator.PDFGenerator;
 import mx.com.aon.portal.model.AtributosVariablesInstPagoVO;
 import mx.com.aon.portal.model.BaseObjectVO;
 import mx.com.aon.portal.model.FourValueObjectVO;
@@ -32,20 +27,10 @@ import mx.com.aon.portal.service.CatalogServiceJdbcTemplate;
 import mx.com.aon.portal.service.InstrumentoPagoManager;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.util.WrapperResultados;
-import mx.com.aon.utils.Constantes;
-import mx.com.ice.services.business.ServiciosGeneralesSistema;
-import mx.com.ice.services.to.screen.GlobalVariableContainerVO;
-import net.sf.json.JSONFunction;
-import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
-
-import com.biosnet.ice.ext.elements.form.AbstractMasterModelControl;
-import com.biosnet.ice.ext.elements.form.SimpleCombo;
-import com.biosnet.ice.ext.elements.form.TextFieldControl;
 
 public class ComprarCotizacionAction  extends PrincipalCotizacionAction{
 
@@ -71,7 +56,7 @@ public class ComprarCotizacionAction  extends PrincipalCotizacionAction{
     
 	private CatalogService catalogosManager;
 	private CotizacionService cotizacionManager;
-	private ServiciosGeneralesSistema serviciosGeneralesSistema;
+//	private ServiciosGeneralesSistema serviciosGeneralesSistema;
 	private CatalogServiceJdbcTemplate catalogServiceJdbcTemplate;
 	private InstrumentoPagoManager instrumentoPagoManagerJdbcTemplate;
 	
@@ -327,6 +312,7 @@ public class ComprarCotizacionAction  extends PrincipalCotizacionAction{
 	
 	@SuppressWarnings("unchecked")
 	public String comprarCotizaciones() throws Exception {
+		/*
 		if(session.containsKey("ACCESORIOS_COMPRA"))
 			session.remove("ACCESORIOS_COMPRA");
 		if(session.containsKey("LISTA_COMBOS_FUNCIONES_POLIZA"))
@@ -339,7 +325,7 @@ public class ComprarCotizacionAction  extends PrincipalCotizacionAction{
 			session.remove("LISTA_FUNCIONES_POLIZA_REQUERIDAS");
 				
 		UserVO usuario = (UserVO) session.get("USUARIO");
-		GlobalVariableContainerVO globalVariable = (GlobalVariableContainerVO) session.get("GLOBAL_VARIABLE_CONTAINER");
+//		GlobalVariableContainerVO globalVariable = (GlobalVariableContainerVO) session.get("GLOBAL_VARIABLE_CONTAINER");
 		
 		logger.debug("empresa elemento id" +usuario.getEmpresa().getElementoId());
 		logger.debug("codigo persona" +usuario.getCodigoPersona());
@@ -348,11 +334,11 @@ public class ComprarCotizacionAction  extends PrincipalCotizacionAction{
 		logger.debug("cdPlan" +cdPlan);
 		logger.debug("cdPlan" +cdPerpag);
 		
-		kernelManager.procIncisoDef(globalVariable.getValueVariableGlobal("vg.CdUnieco"), 
-				globalVariable.getValueVariableGlobal("vg.CdRamo"),  
-				globalVariable.getValueVariableGlobal("vg.Estado"), 
-				globalVariable.getValueVariableGlobal("vg.NmPoliza"), numeroSituacion,
-				usuario.getEmpresa().getElementoId(), usuario.getCodigoPersona(),cdCiaaseg,cdPlan,cdPerpag);
+//		kernelManager.procIncisoDef(globalVariable.getValueVariableGlobal("vg.CdUnieco"), 
+//				globalVariable.getValueVariableGlobal("vg.CdRamo"),  
+//				globalVariable.getValueVariableGlobal("vg.Estado"), 
+//				globalVariable.getValueVariableGlobal("vg.NmPoliza"), numeroSituacion,
+//				usuario.getEmpresa().getElementoId(), usuario.getCodigoPersona(),cdCiaaseg,cdPlan,cdPerpag);
 		if(log.isDebugEnabled()){
 		log.debug("ComprarCotizacionAction ==> execute");
 		
@@ -389,35 +375,35 @@ public class ComprarCotizacionAction  extends PrincipalCotizacionAction{
 		//log.debug("cotizacionManager.getRecibos()"+cotizacionManager.getRecibos());
 		//log.debug("cotizacionManager.gerMPoliObj()"+cotizacionManager.gerMPoliObj());
 		}
-		globalVariable.addVariableGlobal("vg.cdCia", cdCiaaseg);
-		globalVariable.addVariableGlobal("vg.cdPlan", cdPlan);
-		globalVariable.addVariableGlobal("vg.cdPerpag", cdPerpag);
-		globalVariable.addVariableGlobal("vg.NmSituac", numeroSituacion);
+//		globalVariable.addVariableGlobal("vg.cdCia", cdCiaaseg);
+//		globalVariable.addVariableGlobal("vg.cdPlan", cdPlan);
+//		globalVariable.addVariableGlobal("vg.cdPerpag", cdPerpag);
+//		globalVariable.addVariableGlobal("vg.NmSituac", numeroSituacion);
 		
-		session.put("GLOBAL_VARIABLE_CONTAINER", globalVariable);
-		/*
+//		session.put("GLOBAL_VARIABLE_CONTAINER", globalVariable);
+		
 		if(session.containsKey("GLOBAL_VARIABLE_CONTAINER")){
 			GlobalVariableContainerVO globalVarVo = (GlobalVariableContainerVO) session.get("GLOBAL_VARIABLE_CONTAINER");
 			globalVarVo = kernelManager.cargaValoresPorDefecto(ServletActionContext.getRequest().getSession().getId(), ((UserVO)session.get("USUARIO")).getName(), globalVarVo);    	
 			session.put("GLOBAL_VARIABLE_CONTAINER", globalVarVo);
-		}*/
+		}
 		
 		
 		Map<String, String> parametersRecibos = new HashMap<String, String>();
-	    parametersRecibos.put("CDUNIECO", 	globalVariable.getValueVariableGlobal("vg.CdUnieco"));
-        parametersRecibos.put("ESTADO", 	globalVariable.getValueVariableGlobal("vg.Estado"));
-        parametersRecibos.put("NMPOLIZA",	globalVariable.getValueVariableGlobal("vg.NmPoliza"));
-        parametersRecibos.put("NMSITUAC",	numeroSituacion);
-        parametersRecibos.put("NMSUPLEM",	globalVariable.getValueVariableGlobal("vg.NmSuplem"));
-        parametersRecibos.put("CDRAMO", 	globalVariable.getValueVariableGlobal("vg.CdRamo"));    
-        
-        
-        log.debug("CdUnieco= " + globalVariable.getValueVariableGlobal("vg.CdUnieco"));		
-		log.debug("Estado = " + globalVariable.getValueVariableGlobal("vg.Estado"));
-		log.debug("NMPOLIZA = " + globalVariable.getValueVariableGlobal("vg.NmPoliza"));
-		log.debug("NMSITUAC = " + numeroSituacion);
-		log.debug("NMSUPLEM = " + globalVariable.getValueVariableGlobal("vg.NmSuplem"));
-		log.debug("CDRAMO = " + globalVariable.getValueVariableGlobal("vg.CdRamo"));		
+//	    parametersRecibos.put("CDUNIECO", 	globalVariable.getValueVariableGlobal("vg.CdUnieco"));
+//        parametersRecibos.put("ESTADO", 	globalVariable.getValueVariableGlobal("vg.Estado"));
+//        parametersRecibos.put("NMPOLIZA",	globalVariable.getValueVariableGlobal("vg.NmPoliza"));
+//        parametersRecibos.put("NMSITUAC",	numeroSituacion);
+//        parametersRecibos.put("NMSUPLEM",	globalVariable.getValueVariableGlobal("vg.NmSuplem"));
+//        parametersRecibos.put("CDRAMO", 	globalVariable.getValueVariableGlobal("vg.CdRamo"));    
+//        
+//        
+//        log.debug("CdUnieco= " + globalVariable.getValueVariableGlobal("vg.CdUnieco"));		
+//		log.debug("Estado = " + globalVariable.getValueVariableGlobal("vg.Estado"));
+//		log.debug("NMPOLIZA = " + globalVariable.getValueVariableGlobal("vg.NmPoliza"));
+//		log.debug("NMSITUAC = " + numeroSituacion);
+//		log.debug("NMSUPLEM = " + globalVariable.getValueVariableGlobal("vg.NmSuplem"));
+//		log.debug("CDRAMO = " + globalVariable.getValueVariableGlobal("vg.CdRamo"));		
 		
         
         
@@ -469,7 +455,7 @@ public class ComprarCotizacionAction  extends PrincipalCotizacionAction{
 			listaFuncionRolReq= new ArrayList<BaseObjectVO>();
 			for(RolVO rol : roles){
 //				Se quito la validación para que siempre sea comboBox				
-/*				if(rol.getNumeroMaximo().equals("2")){
+				if(rol.getNumeroMaximo().equals("2")){
 				//if(contador == 0){
 					AbstractCombo combo = null;
 					combo = new MultiSelectControl();
@@ -490,7 +476,7 @@ public class ComprarCotizacionAction  extends PrincipalCotizacionAction{
 					combo.setWidth(300);
 					funcionesPoliza.add(combo);
 					contador++;
-				}else{*/
+				}else{
 					hidden = new TextFieldControl();
 					hidden.setXtype("hidden");
 					hidden.setId("id-combo-code-buy"+contador);
@@ -631,7 +617,7 @@ public class ComprarCotizacionAction  extends PrincipalCotizacionAction{
 	     //Agregar a sesion para poder utilizarlas en los links de la pantalla.
 	     //session.put("CCCDRAMO", globalVariable.getValueVariableGlobal("vg.CdRamo"));
 	     //session.put("CCCDTIPSIT", globalVariable.getValueVariableGlobal("vg.CdTipSit"));
-	    
+	    */
 		return SUCCESS;
 	}
 	
@@ -641,7 +627,7 @@ public class ComprarCotizacionAction  extends PrincipalCotizacionAction{
 	 * Se ejecuta cuando vamos a Comprar desde la pantalla de COnsulta de Cotizaciones
 	 */
 	public String consultaCotizacionesComprar() throws Exception {
-		
+		/*
 		logger.debug("Entrando a consultaCotizacionesComprar()" );
 		
 		session.remove("TEXT_FIELDS");
@@ -701,16 +687,17 @@ public class ComprarCotizacionAction  extends PrincipalCotizacionAction{
         }
         logger.debug("consultaCotizacionesComprar() TEXT_FIELDS=" + textFields);
         
-        
+        */
 		
 		return SUCCESS;
 	}
 
 	@SuppressWarnings("unchecked")
 	public String obtieneCoberturasList() throws Exception{
+/*
 		UserVO usuario = (UserVO) session.get("USUARIO");
-		GlobalVariableContainerVO globalVariable = (GlobalVariableContainerVO) session.get("GLOBAL_VARIABLE_CONTAINER");
-		
+//		GlobalVariableContainerVO globalVariable = (GlobalVariableContainerVO) session.get("GLOBAL_VARIABLE_CONTAINER");
+//		
 		
 		HttpServletRequest servletReq = ServletActionContext.getRequest();
 
@@ -771,27 +758,27 @@ public class ComprarCotizacionAction  extends PrincipalCotizacionAction{
 	}
 	
 	public String accesoriosList() throws Exception{
-		GlobalVariableContainerVO globalVariable = (GlobalVariableContainerVO) session.get("GLOBAL_VARIABLE_CONTAINER");
-		Map<String, String> parametersMPoliObjVO = new HashMap<String, String>();
-	    parametersMPoliObjVO.put("CDUNIECO", globalVariable.getValueVariableGlobal("vg.CdUnieco"));
-	    parametersMPoliObjVO.put("CDRAMO", 	 globalVariable.getValueVariableGlobal("vg.CdRamo"));
-        parametersMPoliObjVO.put("ESTADO", 	 globalVariable.getValueVariableGlobal("vg.Estado"));
-        parametersMPoliObjVO.put("NMPOLIZA", globalVariable.getValueVariableGlobal("vg.NmPoliza"));
-        parametersMPoliObjVO.put("NMSITUAC", numeroSituacion);
-        parametersMPoliObjVO.put("NMOBJETO", null);
-//	    parametersMPoliObjVO.put("CDUNIECO", "1");
-//	    parametersMPoliObjVO.put("CDRAMO", 	 "120");
-//        parametersMPoliObjVO.put("ESTADO", 	 "M");
-//        parametersMPoliObjVO.put("NMPOLIZA", "1");
-//        parametersMPoliObjVO.put("NMSITUAC", "1");
+//		GlobalVariableContainerVO globalVariable = (GlobalVariableContainerVO) session.get("GLOBAL_VARIABLE_CONTAINER");
+//		Map<String, String> parametersMPoliObjVO = new HashMap<String, String>();
+//	    parametersMPoliObjVO.put("CDUNIECO", globalVariable.getValueVariableGlobal("vg.CdUnieco"));
+//	    parametersMPoliObjVO.put("CDRAMO", 	 globalVariable.getValueVariableGlobal("vg.CdRamo"));
+//        parametersMPoliObjVO.put("ESTADO", 	 globalVariable.getValueVariableGlobal("vg.Estado"));
+//        parametersMPoliObjVO.put("NMPOLIZA", globalVariable.getValueVariableGlobal("vg.NmPoliza"));
+//        parametersMPoliObjVO.put("NMSITUAC", numeroSituacion);
 //        parametersMPoliObjVO.put("NMOBJETO", null);
-		listaMPoliObj = cotizacionManager.gerMPoliObj(parametersMPoliObjVO);
-		log.debug("listaMPoliObj debug = " + listaMPoliObj);
-		
-		if(listaMPoliObj==null)			
-			listaMPoliObj = new ArrayList<MPoliObjVO>();		
-		
-		success = true;
+////	    parametersMPoliObjVO.put("CDUNIECO", "1");
+////	    parametersMPoliObjVO.put("CDRAMO", 	 "120");
+////        parametersMPoliObjVO.put("ESTADO", 	 "M");
+////        parametersMPoliObjVO.put("NMPOLIZA", "1");
+////        parametersMPoliObjVO.put("NMSITUAC", "1");
+////        parametersMPoliObjVO.put("NMOBJETO", null);
+//		listaMPoliObj = cotizacionManager.gerMPoliObj(parametersMPoliObjVO);
+//		log.debug("listaMPoliObj debug = " + listaMPoliObj);
+//		
+//		if(listaMPoliObj==null)			
+//			listaMPoliObj = new ArrayList<MPoliObjVO>();		
+//		
+//		success = true;
 		return SUCCESS;
 	}
 	
@@ -820,7 +807,7 @@ public class ComprarCotizacionAction  extends PrincipalCotizacionAction{
 	public String intrumentoPagoLista() throws Exception{
         
         UserVO usuario = (UserVO) session.get("USUARIO");
-        GlobalVariableContainerVO globalVariable = (GlobalVariableContainerVO) session.get("GLOBAL_VARIABLE_CONTAINER");
+//        GlobalVariableContainerVO globalVariable = (GlobalVariableContainerVO) session.get("GLOBAL_VARIABLE_CONTAINER");
         
         if(logger.isDebugEnabled()){
 	        logger.debug("into  intrumentoPagoLista");
@@ -840,13 +827,13 @@ public class ComprarCotizacionAction  extends PrincipalCotizacionAction{
         }
         
         
-		/*listaIntrumentoPagos = catalogosManager.getItemList("OBTIENE_INTRUMETOS_DE_PAGO");
+		listaIntrumentoPagos = catalogosManager.getItemList("OBTIENE_INTRUMETOS_DE_PAGO");
 		if(listaIntrumentoPagos==null){
 			listaIntrumentoPagos = new ArrayList<FourValueObjectVO>();
 		   logger.debug( "listaIntrumentoPagos != null" );
 		 
-		}*/
-			
+		}
+			*/
 		 success = true;
 		return SUCCESS;
 	}
@@ -1255,9 +1242,9 @@ public class ComprarCotizacionAction  extends PrincipalCotizacionAction{
 	
 	@SuppressWarnings("unchecked")
 	public String listaFuncionRol() throws Exception{
-		GlobalVariableContainerVO globalVariable = (GlobalVariableContainerVO) session.get("GLOBAL_VARIABLE_CONTAINER");
+//		GlobalVariableContainerVO globalVariable = (GlobalVariableContainerVO) session.get("GLOBAL_VARIABLE_CONTAINER");
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("cdramo", globalVariable.getValueVariableGlobal("vg.CdRamo"));
+//		param.put("cdramo", globalVariable.getValueVariableGlobal("vg.CdRamo"));
 		
 		listaFuncionRol = catalogosManager.getItemList("OBTIENE_LISTA_FUNCION_ROL", param);
 		success = true;
@@ -1344,7 +1331,7 @@ public class ComprarCotizacionAction  extends PrincipalCotizacionAction{
         }
         
         UserVO usuario = (UserVO) session.get("USUARIO");
-        GlobalVariableContainerVO globalVariable = (GlobalVariableContainerVO) session.get("GLOBAL_VARIABLE_CONTAINER");
+//        GlobalVariableContainerVO globalVariable = (GlobalVariableContainerVO) session.get("GLOBAL_VARIABLE_CONTAINER");
         
         
         
@@ -1413,15 +1400,15 @@ public class ComprarCotizacionAction  extends PrincipalCotizacionAction{
     	
     	
     	Map paramsFuncionesPoliza = new HashMap();
-		paramsFuncionesPoliza.put("CDUNIECO", 	globalVariable.getValueVariableGlobal("vg.CdUnieco"));
-		paramsFuncionesPoliza.put("CDRAMO", 	globalVariable.getValueVariableGlobal("vg.CdRamo"));
-		paramsFuncionesPoliza.put("ESTADO", 	globalVariable.getValueVariableGlobal("vg.Estado"));
-		paramsFuncionesPoliza.put("NMPOLIZA", 	globalVariable.getValueVariableGlobal("vg.NmPoliza"));
+//		paramsFuncionesPoliza.put("CDUNIECO", 	globalVariable.getValueVariableGlobal("vg.CdUnieco"));
+//		paramsFuncionesPoliza.put("CDRAMO", 	globalVariable.getValueVariableGlobal("vg.CdRamo"));
+//		paramsFuncionesPoliza.put("ESTADO", 	globalVariable.getValueVariableGlobal("vg.Estado"));
+//		paramsFuncionesPoliza.put("NMPOLIZA", 	globalVariable.getValueVariableGlobal("vg.NmPoliza"));
 		paramsFuncionesPoliza.put("NMSITUAC", 	numeroSituacion);
 		
 		
 		
-		paramsFuncionesPoliza.put("NMSUPLEM",  globalVariable.getValueVariableGlobal("vg.NmSuplem"));
+//		paramsFuncionesPoliza.put("NMSUPLEM",  globalVariable.getValueVariableGlobal("vg.NmSuplem"));
 		paramsFuncionesPoliza.put("STATUS", 	"V");
 		paramsFuncionesPoliza.put("ACCION", 	"I");
 		paramsFuncionesPoliza.put("FUNCIONES_POLIZA", funcionesPoliza);
@@ -1456,12 +1443,12 @@ public class ComprarCotizacionAction  extends PrincipalCotizacionAction{
 		if(paramsInstPag != null && !paramsInstPag.isEmpty()){
 			try{
 			Map<String, String> paramsInsPagoPoliza = new HashMap<String,String>();
-			paramsInsPagoPoliza.put("pv_cdunieco", globalVariable.getValueVariableGlobal("vg.CdUnieco"));
-			paramsInsPagoPoliza.put("pv_cdramo", globalVariable.getValueVariableGlobal("vg.CdRamo"));
-			paramsInsPagoPoliza.put("pv_estado", globalVariable.getValueVariableGlobal("vg.Estado"));
-			paramsInsPagoPoliza.put("pv_nmpoliza", globalVariable.getValueVariableGlobal("vg.NmPoliza"));
-			paramsInsPagoPoliza.put("pv_cdunica", cdInsCte);
-			paramsInsPagoPoliza.put("pv_nmsuplem", globalVariable.getValueVariableGlobal("vg.NmSuplem"));
+//			paramsInsPagoPoliza.put("pv_cdunieco", globalVariable.getValueVariableGlobal("vg.CdUnieco"));
+//			paramsInsPagoPoliza.put("pv_cdramo", globalVariable.getValueVariableGlobal("vg.CdRamo"));
+//			paramsInsPagoPoliza.put("pv_estado", globalVariable.getValueVariableGlobal("vg.Estado"));
+//			paramsInsPagoPoliza.put("pv_nmpoliza", globalVariable.getValueVariableGlobal("vg.NmPoliza"));
+//			paramsInsPagoPoliza.put("pv_cdunica", cdInsCte);
+//			paramsInsPagoPoliza.put("pv_nmsuplem", globalVariable.getValueVariableGlobal("vg.NmSuplem"));
 			paramsInsPagoPoliza.put("pv_cdgrupa", null);
 			paramsInsPagoPoliza.put("pv_status", "V");
 			paramsInsPagoPoliza.put("pv_cdforpag", codigoInstrumentoPago);
@@ -1492,12 +1479,12 @@ public class ComprarCotizacionAction  extends PrincipalCotizacionAction{
     	//Guardar movMPOLIAGR2
     	Map paramsMPOLIAGR2 = new HashMap();
     	paramsMPOLIAGR2.put("CD_UNIECO", "1");
-    	paramsMPOLIAGR2.put("CD_RAMO", globalVariable.getValueVariableGlobal(VariableKernel.CodigoRamo() ));
-    	paramsMPOLIAGR2.put("ESTADO", globalVariable.getValueVariableGlobal(VariableKernel.Estado() ));
-    	paramsMPOLIAGR2.put("NMPOLIZA", globalVariable.getValueVariableGlobal(VariableKernel.NumeroPoliza() ));
+//    	paramsMPOLIAGR2.put("CD_RAMO", globalVariable.getValueVariableGlobal(VariableKernel.CodigoRamo() ));
+//    	paramsMPOLIAGR2.put("ESTADO", globalVariable.getValueVariableGlobal(VariableKernel.Estado() ));
+//    	paramsMPOLIAGR2.put("NMPOLIZA", globalVariable.getValueVariableGlobal(VariableKernel.NumeroPoliza() ));
     	
     
-    	paramsMPOLIAGR2.put("NM_SUPLEM", globalVariable.getValueVariableGlobal(VariableKernel.NumeroSuplemento() ));
+//    	paramsMPOLIAGR2.put("NM_SUPLEM", globalVariable.getValueVariableGlobal(VariableKernel.NumeroSuplemento() ));
     	paramsMPOLIAGR2.put("CDPERSON", codigoPersonaUsuario);
     	paramsMPOLIAGR2.put("NMORDDOM", codigoDomicilio);
     	paramsMPOLIAGR2.put("CDFORPAG", codigoInstrumentoPago);
@@ -1509,90 +1496,90 @@ public class ComprarCotizacionAction  extends PrincipalCotizacionAction{
     	
     	
     	//COMPRAR
-    	GlobalVariableContainerVO global;
-    	try {
-    		global = kernelManager.comprar(ServletActionContext.getRequest().getSession().getId(), (GlobalVariableContainerVO)session.get("GLOBAL_VARIABLE_CONTAINER"), parametersValidacion,  usuario);
-    	}catch(mx.com.ice.services.exception.ApplicationException appExcKernel){
-			mensajeValidacion = appExcKernel.getMessage();
-			logger.error("Error al ejecutar validaciones de producto: " + appExcKernel.toString(), appExcKernel);
-			logger.error("mensajeValidacion : " + mensajeValidacion);
-			
-			return ERROR;
-		}
+//    	GlobalVariableContainerVO global;
+//    	try {
+//    		global = kernelManager.comprar(ServletActionContext.getRequest().getSession().getId(), (GlobalVariableContainerVO)session.get("GLOBAL_VARIABLE_CONTAINER"), parametersValidacion,  usuario);
+//    	}catch(mx.com.ice.services.exception.ApplicationException appExcKernel){
+//			mensajeValidacion = appExcKernel.getMessage();
+//			logger.error("Error al ejecutar validaciones de producto: " + appExcKernel.toString(), appExcKernel);
+//			logger.error("mensajeValidacion : " + mensajeValidacion);
+//			
+//			return ERROR;
+//		}
     
         //Mensaje que será mostrado en un alert indicando el resultado del procedure de comprar()
         //meter aqui pdf
         session.put("cdUnieco", cdUnieco);
         
-        String cdRamo= globalVariable.getValueVariableGlobal(VariableKernel.CodigoRamo() );
-        session.put("cdRamo", cdRamo);
-        String estado=globalVariable.getValueVariableGlobal(VariableKernel.Estado() );
-        session.put("estado", estado);
-        String polizaW=globalVariable.getValueVariableGlobal(VariableKernel.NumeroPoliza());
-        session.put("polizaW", polizaW);
-        
-        if (log.isDebugEnabled()) {
-            log.debug("ya confirmo poliza =" + polizaW);
-            log.debug("ya confirmo poliza estadoNew=" + estado);
-        }
+//        String cdRamo= globalVariable.getValueVariableGlobal(VariableKernel.CodigoRamo() );
+//        session.put("cdRamo", cdRamo);
+//        String estado=globalVariable.getValueVariableGlobal(VariableKernel.Estado() );
+//        session.put("estado", estado);
+//        String polizaW=globalVariable.getValueVariableGlobal(VariableKernel.NumeroPoliza());
+//        session.put("polizaW", polizaW);
+//        
+//        if (log.isDebugEnabled()) {
+//            log.debug("ya confirmo poliza =" + polizaW);
+//            log.debug("ya confirmo poliza estadoNew=" + estado);
+//        }
         
         String []encabezado = {"AUTOS", "TARJETA DE IDENTIFICACION", "Automóviles/Camión  Flotilla"};
         
-        mensaje = global.getValueVariableGlobal(VariableKernel.MessageProcess());
+//        mensaje = global.getValueVariableGlobal(VariableKernel.MessageProcess());
         
         
-        if (StringUtils.isBlank(global.getValueVariableGlobal(VariableKernel.OT()))) {
-        	
-        	/*
-        	 * TODO QUITAR LA SIGUENTE VALIDACION, CUANDO YA SE HAYA CONSIDERADO EL CASO DEL CDRAMO PARA LA 
-        	 * 		COTIZACION DE POZOS PETROLEROS, Y TENER UN FORMATO ADECUADO
-        	 */
-        	if(StringUtils.isNotBlank(cdRamo)&& RAMO_POZOS_PETROLEROS.equals(cdRamo)){
-        		
-        		ordenTrabajo = "1";
-        		success = true;
-        		return SUCCESS;
-        		
-        	}
-        		
-        		
-	        if (mensaje!=null && (!"".equals(mensaje))){
-	        	String[] mensajeFinal=mensaje.split(":");
-	            polizaW=mensajeFinal[2];
-	            polizaW=polizaW.trim();
-	            namePdf="reporte_caratula_poliza"+globalVariable.getValueVariableGlobal("vg.CdUnieco")+cdRamo+polizaW + ".pdf";
-	            namePdfRecibo="reporte_recibo_pago"+globalVariable.getValueVariableGlobal("vg.CdUnieco")+cdRamo+polizaW + ".pdf";
-	            
-	            
-	            Map paramsNmsuplem = new HashMap();
-	            paramsNmsuplem.put("CDUNIECO", 	globalVariable.getValueVariableGlobal("vg.CdUnieco"));
-	            paramsNmsuplem.put("CDRAMO", 	globalVariable.getValueVariableGlobal("vg.CdRamo"));
-	            paramsNmsuplem.put("ESTADO", 	"M");
-	            paramsNmsuplem.put("NMPOLIZA", 	polizaW);
-	            
-	            BaseObjectVO numeroSuplemento=cotizacionManager.obtieneNmsuplem(paramsNmsuplem);
-
-	            PDFGenerator.genCaratulaPolizaPdf(globalVariable.getValueVariableGlobal("vg.CdUnieco"), cdRamo, "M", polizaW, encabezado, numeroSituacion,numeroSuplemento.getValue());
-	            
-	            logger.debug(" cdUnieco Recibo: " +globalVariable.getValueVariableGlobal("vg.CdUnieco"));
-	            logger.debug(" cdRamo: " +cdRamo);
-	            logger.debug(" polizaW Recibo: " +polizaW);
-	            logger.debug(" suplem Recibo: " +numeroSuplemento.getValue());
-	            
-	            int reciboGenerado = PDFGenerator.generaReciboPagoPdf("", globalVariable.getValueVariableGlobal("vg.CdUnieco"), cdRamo, "M", polizaW, numeroSuplemento.getValue());
-	            
-	            
-	            if (reciboGenerado == -1)
-	            	recibo = "1";
-	            
-	            //TODO quitar este ejemplo de recibo cuando ya se esten guardando bn los recibos en la tabla 'mrecibos' ya que no le esta guardando nada en el campo 'nmimpres'
-	            //por ello el recibo que se trata de generar con los datos correctos, no es generado.
-	            //PDFGenerator.generaReciboPagoPdf("","1", "500", "M", "7122", "245490912000000000");
-	        }	
-        } else{
-        	ordenTrabajo = "1";
-        }
-		success = true;
+//        if (StringUtils.isBlank(global.getValueVariableGlobal(VariableKernel.OT()))) {
+//        	
+//        	/*
+//        	 * TODO QUITAR LA SIGUENTE VALIDACION, CUANDO YA SE HAYA CONSIDERADO EL CASO DEL CDRAMO PARA LA 
+//        	 * 		COTIZACION DE POZOS PETROLEROS, Y TENER UN FORMATO ADECUADO
+//        	 */
+//        	if(StringUtils.isNotBlank(cdRamo)&& RAMO_POZOS_PETROLEROS.equals(cdRamo)){
+//        		
+//        		ordenTrabajo = "1";
+//        		success = true;
+//        		return SUCCESS;
+//        		
+//        	}
+//        		
+//        		
+//	        if (mensaje!=null && (!"".equals(mensaje))){
+//	        	String[] mensajeFinal=mensaje.split(":");
+//	            polizaW=mensajeFinal[2];
+//	            polizaW=polizaW.trim();
+//	            namePdf="reporte_caratula_poliza"+globalVariable.getValueVariableGlobal("vg.CdUnieco")+cdRamo+polizaW + ".pdf";
+//	            namePdfRecibo="reporte_recibo_pago"+globalVariable.getValueVariableGlobal("vg.CdUnieco")+cdRamo+polizaW + ".pdf";
+//	            
+//	            
+//	            Map paramsNmsuplem = new HashMap();
+//	            paramsNmsuplem.put("CDUNIECO", 	globalVariable.getValueVariableGlobal("vg.CdUnieco"));
+//	            paramsNmsuplem.put("CDRAMO", 	globalVariable.getValueVariableGlobal("vg.CdRamo"));
+//	            paramsNmsuplem.put("ESTADO", 	"M");
+//	            paramsNmsuplem.put("NMPOLIZA", 	polizaW);
+//	            
+//	            BaseObjectVO numeroSuplemento=cotizacionManager.obtieneNmsuplem(paramsNmsuplem);
+//
+//	            PDFGenerator.genCaratulaPolizaPdf(globalVariable.getValueVariableGlobal("vg.CdUnieco"), cdRamo, "M", polizaW, encabezado, numeroSituacion,numeroSuplemento.getValue());
+//	            
+//	            logger.debug(" cdUnieco Recibo: " +globalVariable.getValueVariableGlobal("vg.CdUnieco"));
+//	            logger.debug(" cdRamo: " +cdRamo);
+//	            logger.debug(" polizaW Recibo: " +polizaW);
+//	            logger.debug(" suplem Recibo: " +numeroSuplemento.getValue());
+//	            
+//	            int reciboGenerado = PDFGenerator.generaReciboPagoPdf("", globalVariable.getValueVariableGlobal("vg.CdUnieco"), cdRamo, "M", polizaW, numeroSuplemento.getValue());
+//	            
+//	            
+//	            if (reciboGenerado == -1)
+//	            	recibo = "1";
+//	            
+//	            //TODO quitar este ejemplo de recibo cuando ya se esten guardando bn los recibos en la tabla 'mrecibos' ya que no le esta guardando nada en el campo 'nmimpres'
+//	            //por ello el recibo que se trata de generar con los datos correctos, no es generado.
+//	            //PDFGenerator.generaReciboPagoPdf("","1", "500", "M", "7122", "245490912000000000");
+//	        }	
+//        } else{
+//        	ordenTrabajo = "1";
+//        }
+		//success = true;
 		return SUCCESS;
 	}
 	
@@ -1942,14 +1929,14 @@ public class ComprarCotizacionAction  extends PrincipalCotizacionAction{
 		this.claveNuevaPersona = claveNuevaPersona;
 	}
 
-	public ServiciosGeneralesSistema getServiciosGeneralesSistema() {
-		return serviciosGeneralesSistema;
-	}
-
-	public void setServiciosGeneralesSistema(
-			ServiciosGeneralesSistema serviciosGeneralesSistema) {
-		this.serviciosGeneralesSistema = serviciosGeneralesSistema;
-	}
+//	public ServiciosGeneralesSistema getServiciosGeneralesSistema() {
+//		return serviciosGeneralesSistema;
+//	}
+//
+//	public void setServiciosGeneralesSistema(
+//			ServiciosGeneralesSistema serviciosGeneralesSistema) {
+//		this.serviciosGeneralesSistema = serviciosGeneralesSistema;
+//	}
 
 	/**
 	 * @return the ordenTrabajo

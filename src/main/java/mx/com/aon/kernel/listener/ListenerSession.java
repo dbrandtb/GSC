@@ -5,9 +5,6 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
-import mx.com.ice.kernel.core.Global;
-import mx.com.ice.services.business.ServiciosGeneralesSistema;
-
 import org.apache.log4j.Logger;
 
 /**
@@ -42,34 +39,34 @@ public class ListenerSession extends HttpServlet implements HttpSessionListener{
      */
     public void sessionDestroyed(HttpSessionEvent event) {
         HttpSession session = event.getSession();
-        logger.info(Global.SEPARADOR_PANTALLA+"INICIO :::::  Finalizando Session con Id [" + session.getId() + "]  ::::: ");
+//        logger.info(Global.SEPARADOR_PANTALLA+"INICIO :::::  Finalizando Session con Id [" + session.getId() + "]  ::::: ");
         
-        logger.info(Global.SEPARADOR+"MEMORIA TOTAL="+Runtime.getRuntime().totalMemory());
+//        logger.info(Global.SEPARADOR+"MEMORIA TOTAL="+Runtime.getRuntime().totalMemory());
                      
         
         //Eliminando sesion WEB-Negocio
         //ServiciosGeneralesSistema.salirSesionNegocio(event.getSession().getId());       
         //Remover de la sesion  banderas de status de Pantallas        
         
-        ServiciosGeneralesSistema serviciosGeneralesSistema = new ServiciosGeneralesSistema();
-        serviciosGeneralesSistema.eliminarEntidad(event.getSession().getId());
-        
-        //ManejoSesionesWEBNegocio.imprimirRegistroSesiones();
-        //invokeGC(session);        
-        serviciosGeneralesSistema.limpiarExpresiones(event.getSession().getId());
-
-        serviciosGeneralesSistema.eliminarBloques(event.getSession().getId());
-
-        logger.debug("antes de eliminar sesion");
-        serviciosGeneralesSistema.eliminarSesion(event.getSession().getId());
-        logger.debug("despues de eliminar sesion");
+//        ServiciosGeneralesSistema serviciosGeneralesSistema = new ServiciosGeneralesSistema();
+//        serviciosGeneralesSistema.eliminarEntidad(event.getSession().getId());
+//        
+//        //ManejoSesionesWEBNegocio.imprimirRegistroSesiones();
+//        //invokeGC(session);        
+//        serviciosGeneralesSistema.limpiarExpresiones(event.getSession().getId());
+//
+//        serviciosGeneralesSistema.eliminarBloques(event.getSession().getId());
+//
+//        logger.debug("antes de eliminar sesion");
+//        serviciosGeneralesSistema.eliminarSesion(event.getSession().getId());
+//        logger.debug("despues de eliminar sesion");
         															//userDB, String cdramo
         //CacheLog.cerrarLogExpresiones(event.getSession().getId(), variables[0].getValor(), variables[1].getValor());
 
 
-        if (logger.isInfoEnabled())
-            logger.info(Global.SEPARADOR_PROCESO_TAB + "FIN ::: ELIMINAR DATA DE SESION DE NEGOCIO DE USUARIO " + event.getSession().getId()
-                    + Global.SEPARADOR_PROCESO);
+//        if (logger.isInfoEnabled())
+//            logger.info(Global.SEPARADOR_PROCESO_TAB + "FIN ::: ELIMINAR DATA DE SESION DE NEGOCIO DE USUARIO " + event.getSession().getId()
+//                    + Global.SEPARADOR_PROCESO);
 
         
         
@@ -77,9 +74,9 @@ public class ListenerSession extends HttpServlet implements HttpSessionListener{
         runtime.runFinalization();
         runtime.gc();    
        
-        logger.info(Global.SEPARADOR_TAB+"MEMORIA TOTAL="+Runtime.getRuntime().totalMemory()+Global.SEPARADOR);
+//        logger.info(Global.SEPARADOR_TAB+"MEMORIA TOTAL="+Runtime.getRuntime().totalMemory()+Global.SEPARADOR);
          
-        logger.info(Global.SEPARADOR_PANTALLA+"FIN :::::  Finalizando Session con Id [" + session.getId() + "]  ::::: ");
+//        logger.info(Global.SEPARADOR_PANTALLA+"FIN :::::  Finalizando Session con Id [" + session.getId() + "]  ::::: ");
      
         
      }

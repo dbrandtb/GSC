@@ -25,7 +25,6 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
 
 import com.opensymphony.xwork2.ActionContext;
-import mx.com.ice.kernel.core.PropertyReader;
 
 /**
  * 
@@ -98,9 +97,6 @@ public class ObtieneRolAction extends PrincipalCoreAction {
 	//Para obtener los nombres de los archivos junto con su extension.
 	private String nombreUpload1;
 	private String nombreUpload2;
-    
-	private String rutaPubImage = PropertyReader.readProperty("img.url.pub.confpagimage");
-	//private static String pruebaRuta = PropertyReader.readProperty("xml.url.file.test");
 	
 	
 	/**
@@ -136,9 +132,6 @@ public class ObtieneRolAction extends PrincipalCoreAction {
 		logger.debug("cliente--->" + claveElemento);
 		logger.debug("seccion--->" + seccionForm);
 		logger.debug("numeroFila->"+numeroFila);
-		
-		logger.debug("rutaPubImage ->"+ rutaPubImage );
-		//logger.debug("pruebaRuta ->"+ pruebaRuta);
 		
 		
 	
@@ -563,8 +556,6 @@ public class ObtieneRolAction extends PrincipalCoreAction {
 	
 	public String uploadFiles () throws Exception {
 		logger.debug( "into uploadFiles " );
-		logger.debug("rutaPubImage ->"+ rutaPubImage );
-		//logger.debug("pruebaRuta ->"+ pruebaRuta);
 		
 		ConfiguracionVO configuracionVo = new ConfiguracionVO();
 		String nomParam = null;
@@ -1469,22 +1460,6 @@ public class ObtieneRolAction extends PrincipalCoreAction {
 	public void setPrincipalManagerJdbcTemplate(
 			PrincipalManager principalManagerJdbcTemplate) {
 		this.principalManagerJdbcTemplate = principalManagerJdbcTemplate;
-	}
-
-	/**
-	 * @param rutaPubImage the rutaPubImage to set
-	 */
-	public void setRutaPubImage(String rutaPubImage) {
-		this.rutaPubImage = rutaPubImage;
-	}
-
-	/**
-	 * @return the rutaPubImage
-	 */
-	public String getRutaPubImage() {
-		return rutaPubImage;
-	}
-		
-	
+	}	
 
 }

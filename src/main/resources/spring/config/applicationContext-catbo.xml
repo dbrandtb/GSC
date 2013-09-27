@@ -2,468 +2,110 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans> 
 
-   <bean id="combosManagerBO" class="mx.com.aon.catbo.service.impl.CombosManagerImpl"  parent="abstractManagerBean">
-        <!--property name="endpoints">
-            <map>
-           		 <entry key="LISTA_ASEGURADORAS"><ref bean="LISTA_ASEGURADORAS"/></entry>
-                 <entry key="OBTIENE_RAMOS"> <ref bean="OBTIENE_RAMOS"/></entry>
-                 <entry key="OBTIENE_TIPO_GUION"> <ref bean="OBTIENE_TIPO_GUION"/></entry>
-                 <entry key="OBTIENE_NOTIFICACION_REGION"> <ref bean="OBTIENE_NOTIFICACION_REGION"/></entry>
-                 <entry key="OBTIENE_PROCESOS_CAT"> <ref bean="OBTIENE_PROCESOS_CAT"/></entry>
-                 <entry key="OBTIENE_PROCESOS_CAT_MATRIZ"> <ref bean="OBTIENE_PROCESOS_CAT_MATRIZ"/></entry>
-                 <entry key="OBTIENE_ESTADOS_EJECUTIVO"> <ref bean="OBTIENE_ESTADOS_EJECUTIVO"/></entry>
-                 <entry key="OBTIENE_CLIENTES_CORP_BO"> <ref bean="OBTIENE_CLIENTES_CORP_BO"/></entry>
-                 <entry key="OBTIENE_TIPO_METODO_ENVIO"> <ref bean="OBTIENE_TIPO_METODO_ENVIO"/></entry>                 
-                 <entry key="OBTENER_DATOS_CATALOGO_BO"> <ref bean="OBTENER_DATOS_CATALOGO_BO"/></entry>     
-                 <entry key="DATOS_CATALOGO"> <ref bean="DATOS_CATALOGO"/></entry> 
-                 <entry key="CATALOGO_PRIORIDAD"> <ref bean="CATALOGO_PRIORIDAD"/></entry>
-                 <entry key="OBTIENE_NIVEL_ATENCION"> <ref bean="OBTIENE_NIVEL_ATENCION"/></entry> 
-                 <entry key="OBTIENE_UNIDAD_TIEMPO"> <ref bean="OBTIENE_UNIDAD_TIEMPO"/></entry>  
-                 <entry key="OBTIENE_ROL"> <ref bean="OBTIENE_ROL"/></entry> 
-                 <entry key="OBTIENE_TIPOS_ARCHIVOS"> <ref bean="OBTIENE_TIPOS_ARCHIVOS"/></entry> 
-                 <entry key="OBTIENE_DATOS_CATALOGO"> <ref bean="OBTIENE_DATOS_CATALOGO"/></entry> 
-                 <entry key="MATRIZ_OBTIENE_ROL"> <ref bean="MATRIZ_OBTIENE_ROL"/></entry>
-                 <entry key="MATRIZ_NIVEL_ATENCION"> <ref bean="MATRIZ_NIVEL_ATENCION"/></entry>
-                 <entry key="MATRIZ_UNIDAD_TIEMPO"> <ref bean="MATRIZ_UNIDAD_TIEMPO"/></entry>
-                 <entry key="OBTIENE_INDICADOR_AVISO"> <ref bean="OBTIENE_INDICADOR_AVISO"/></entry>
-                 <entry key="OBTIENE_CDMATRIZ"> <ref bean="OBTIENE_CDMATRIZ"/></entry>
-                 <entry key="OBTIENE_ASEGURADORAS_PRODUCT_CORP"> <ref bean="OBTIENE_ASEGURADORAS_PRODUCT_CORP"/></entry>    
-                 <entry key="MATRIZ_OBTIENE_PRIORIDADES"> <ref bean="MATRIZ_OBTIENE_PRIORIDADES"/></entry> 
-                 <entry key="MATRIZ_OBTIENE_RESPONSABLES"> <ref bean="MATRIZ_OBTIENE_RESPONSABLES"/></entry>
-                 <entry key="OBTIENE_MODULOS"> <ref bean="OBTIENE_MODULOS"/></entry>
-                 <entry key="OBTIENE_DATOS_CATALOGO_CON_DEPENDIENTES"> <ref bean="OBTIENE_DATOS_CATALOGO_CON_DEPENDIENTES"/></entry>
-                 <entry key="OBTIENE_TAREA_PRIORIDAD"> <ref bean="OBTIENE_TAREA_PRIORIDAD"/></entry>                 
-                 <entry key="OBTIENE_TAREA_ESTATUS"> <ref bean="OBTIENE_TAREA_ESTATUS"/></entry>
-                 <entry key="OBTIENE_PLANES_PRODUCTO"> <ref bean="OBTIENE_PLANES_PRODUCTO"/></entry> 
-                 <entry key="INST_PAGO"> <ref bean="INST_PAGO"/></entry>
-                 <entry key="OBTIENE_MONEDAS"> <ref bean="OBTIENE_MONEDAS"/></entry>
-                 <entry key="OBTIENE_PRODUCTOS_POR_ASEGURADORA_Y_CLIENTE"> <ref bean="OBTIENE_PRODUCTOS_POR_ASEGURADORA_Y_CLIENTE"/></entry>
-                 <entry key="OBTIENE_FORMATOS_ORDEN"> <ref bean="OBTIENE_FORMATOS_ORDEN"/></entry>
-                 <entry key="OBTIENE_ASEGURADORA_POR_CLIENTE"> <ref bean="OBTIENE_ASEGURADORA_POR_CLIENTE"/></entry>      
-                 <entry key="OBTIENE_NIVEL_ATENCION_MATRIZ"> <ref bean="OBTIENE_NIVEL_ATENCION_MATRIZ"/></entry>
-                 <entry key="OBTIENE_DATOS_MODULOS"> <ref bean="OBTIENE_DATOS_MODULOS"/></entry>                                                                                                    
-           		 <entry key="ESTATUS_CASO"> <ref bean="ESTATUS_CASO"/></entry>
-           		 <entry key="OBTIENE_ROL_SEG"> <ref bean="OBTIENE_ROL_SEG"/></entry>   
-           		 <entry key="OBTENER_REEMPLAZANTES"><ref bean="OBTENER_REEMPLAZANTES"/></entry>  
-           		 <entry key="OBTENER_USUARIOS"><ref bean="OBTENER_USUARIOS"/></entry>
-           		 <entry key="OBTIENE_COMBO_ENCUESTAS"> <ref bean="OBTIENE_COMBO_ENCUESTAS"/></entry>     
-				 <entry key="OBTIENE_MODULOS_ENCUESTAS"> <ref bean="OBTIENE_MODULOS_ENCUESTAS"/></entry> 
-           		 <entry key="OBTIENE_USUARIOS_ENCUESTAS"> <ref bean="OBTIENE_USUARIOS_ENCUESTAS"/></entry> 
-           	     <entry key="OBTENER_PRODUCTOS_ASEGURADORA_ENCUESTA"><ref bean="OBTENER_PRODUCTOS_ASEGURADORA_ENCUESTA"/></entry>
-           	     <entry key="OBTIENE_COMBO_ENCUESTAS_CAMPAN"> <ref bean="OBTIENE_COMBO_ENCUESTAS_CAMPAN"/></entry>
-           	     <entry key="COMBO_DATOS_GENERICOS"><ref bean="COMBO_DATOS_GENERICOS"/></entry>
-                 <entry key="OBTIENE_COMBO_ENCUESTAS_CAMPAN"> <ref bean="OBTIENE_COMBO_ENCUESTAS_CAMPAN"/></entry>  
-           	     <entry key="COMBO_CLICORPO_ASEGURADORA_PRODUCTO"> <ref bean="COMBO_CLICORPO_ASEGURADORA_PRODUCTO"/></entry>
-           	     <entry key="OBTIENE_PAIS"> <ref bean="OBTIENE_PAIS"/></entry>
-           		 <entry key="OBTIENE_MES"> <ref bean="OBTIENE_MES"/></entry>        		 
-                 <entry key="OBTENER_TABLA_GET_LISTAS"> <ref bean="OBTENER_TABLA_GET_LISTAS"/></entry>    
-				 <entry key="OBTIENE_COMBO_MODULOS_ENCUESTAS"> <ref bean="OBTIENE_COMBO_MODULOS_ENCUESTAS"/></entry>
-				 <entry key="OBTIENE_COMBO_CAMPANHA_ENCUESTAS"> <ref bean="OBTIENE_COMBO_CAMPANHA_ENCUESTAS"/></entry>
-				 <entry key="OBTIENE_COMBO_TEMA_ENCUESTAS"> <ref bean="OBTIENE_COMBO_TEMA_ENCUESTAS"/></entry>
-				 <entry key="OBTIENE_COMBO_ENCUESTA_ENCUESTAS"> <ref bean="OBTIENE_COMBO_ENCUESTA_ENCUESTAS"/></entry>
-				 <entry key="FORMAS_CALCULO_FOLIO"> <ref bean="FORMAS_CALCULO_FOLIO"/></entry>
-           </map>
-        </property-->
+   <!-- <bean id="combosManagerBO" class="mx.com.aon.catbo.service.impl.CombosManagerImpl"  parent="abstractManagerBean">
     </bean>
 
     <bean id="loginManagerBO" class="mx.com.aon.catbo.service.impl.LoginManagerImpl" parent="abstractManagerBean">
-        <!--property name="endpoints">
-            <map>
-	            <entry key="LOGIN"><ref bean="LOGIN"/></entry>
-            </map>
-        </property-->
     </bean>
 
     <bean id="usuariosManager" class="mx.com.aon.catbo.service.impl.UsuariosManagerImpl" parent="abstractManagerBean">
-        <!--property name="endpoints">
-            <map>
-	            <entry key="USUARIOS_OBTENER_USUARIO"><ref bean="USUARIOS_OBTENER_USUARIO"/></entry>
-	            <entry key="USUARIOS_OBTENER_ROLES_USUARIO"><ref bean="USUARIOS_OBTENER_ROLES_USUARIO"/></entry>
-	            <entry key="USUARIOS_USUARIO_EN_GRUPO"><ref bean="USUARIOS_USUARIO_EN_GRUPO"/></entry>
-            </map>
-        </property-->
     </bean>
 
     <bean id="rolesManager" class="mx.com.aon.catbo.service.impl.RolesManagerImpl" parent="abstractManagerBean">
-        <!--property name="endpoints">
-            <map>
-	            <entry key="ROLES_OBTENER_USUARIOS_POR_ROL"><ref bean="ROLES_OBTENER_USUARIOS_POR_ROL"/></entry>
-            </map>
-        </property-->
     </bean>
     
-    <!-- Notificaciones -->
     <bean id="notificacionesManager" class="mx.com.aon.catbo.service.impl.NotificacionesManagerImpl" parent="abstractManagerBean">
-        <!--property name="endpoints">
-            <map>
-                <entry key="BUSCAR_NOTIFICACIONES"><ref bean="BUSCAR_NOTIFICACIONES"/></entry>
-                <entry key="BORRAR_NOTIFICACION"><ref bean="BORRAR_NOTIFICACION"/></entry>
-                <entry key="BORRAR_NOTIFICACION_PROCESO"><ref bean="BORRAR_NOTIFICACION_PROCESO"/></entry>
-                <entry key="OBTENERREG_NOTIFICACION"><ref bean="OBTENERREG_NOTIFICACION"/></entry>
-                <entry key="OBTENERREG_NOTIFICACION_PROCESO"><ref bean="OBTENERREG_NOTIFICACION_PROCESO"/></entry>
-                <entry key="OBTENERREG_PROCESO_NOTIFICACION"><ref bean="OBTENERREG_PROCESO_NOTIFICACION"/></entry>
-                <entry key="OBTIENE_ESTADOS_CASO"><ref bean="OBTIENE_ESTADOS_CASO"/></entry>
-                <entry key="OBTIENE_ESTADOS_NOTIFI"><ref bean="OBTIENE_ESTADOS_NOTIFI"/></entry>                
-                <entry key="INSERTAR_NOTIFICACIONES"><ref bean="INSERTAR_NOTIFICACIONES"/></entry>
-                <entry key="INSERTAR_NOTIFICACIONES_PROCESO"><ref bean="INSERTAR_NOTIFICACIONES_PROCESO"/></entry>
-                <entry key="OBTIENE_VARIABLES_NOTIFI"><ref bean="OBTIENE_VARIABLES_NOTIFI"/></entry>
-           </map>
-        </property-->
     </bean>
-    <!-- Fin Notificaciones -->
     
-    <!-- Formatos Documentos -->
     <bean id="formatosDocumentosManager" class="mx.com.aon.catbo.service.impl.FormatosDocumentosManagerImpl" parent="abstractManagerBean">
-        <!--property name="endpoints">
-            <map>
-                <entry key="BUSCAR_FORMATOS_DOCUMENTOS"><ref bean="BUSCAR_FORMATOS_DOCUMENTOS"/></entry>
-                <entry key="BORRAR_FORMATOS_DOCUMENTOS"><ref bean="BORRAR_FORMATOS_DOCUMENTOS"/></entry>
-                <entry key="OBTIENERREG_FORMATOS_DOCUMENTOS"><ref bean="OBTIENERREG_FORMATOS_DOCUMENTOS"/></entry>
-                <entry key="GUARDAR_FORMATOS_DOCUMENTOS"><ref bean="GUARDAR_FORMATOS_DOCUMENTOS"/></entry>
-                <entry key="OBTIENE_FORMANTOS_DOCUMENTOS_EXPORT"><ref bean="OBTIENE_FORMANTOS_DOCUMENTOS_EXPORT"/></entry>
-           </map>
-        </property-->
     </bean>
-    <!-- Fin Formatos Documentos -->
     
-<!-- BEGIN Operaciones CAT -->
    <bean id="operacionCATManager" class="mx.com.aon.catbo.service.impl.OperacionCATManagerImpl" parent="abstractManagerBean">
-        <!--property name="endpoints">
-            <map>
-                <entry key="BUSCAR_GUIONES"><ref bean="BUSCAR_GUIONES"/></entry>
-                <entry key="OBTENERREG_GUION"><ref bean="OBTENERREG_GUION"/></entry>
-                <entry key="BORRAR_GUION"><ref bean="BORRAR_GUION"/></entry>
-                <entry key="BORRAR_DIALOGO"><ref bean="BORRAR_DIALOGO"/></entry>
-                <entry key="BUSCAR_DIALOGOS_GUION"><ref bean="BUSCAR_DIALOGOS_GUION"/></entry>
-                <entry key="INSERTAR_GUARDAR_GUION"><ref bean="INSERTAR_GUARDAR_GUION"/></entry>
-                <entry key="INSERTAR_GUARDAR_DIALOGO_GUION"><ref bean="INSERTAR_GUARDAR_DIALOGO_GUION"/></entry>
-                <entry key="OBTIENE_GUIONES_EXPORT"><ref bean="OBTIENE_GUIONES_EXPORT"/></entry>    
-                <entry key="OBTENER_GUIONES_DISP"><ref bean="OBTENER_GUIONES_DISP"/></entry>    
-                <entry key="OBTIENE_DIALOGOS_GUION_EXPORT"><ref bean="OBTIENE_DIALOGOS_GUION_EXPORT"/></entry>  
-                <entry key="OBTENER_GUION_SCRIPT_INICIAL"><ref bean="OBTENER_GUION_SCRIPT_INICIAL"/></entry>                 
-                <entry key="GUARDAR_DIALOGO_SCRIPT_OBSERVACION"><ref bean="GUARDAR_DIALOGO_SCRIPT_OBSERVACION"/></entry>                 
-                <entry key="OBTENER_ENCUESTAS_PENDIENTES"><ref bean="OBTENER_ENCUESTAS_PENDIENTES"/></entry>      
-            
-            </map>
-        </property-->
     </bean>
-<!-- END Operaciones CAT -->
 
-    <!-- BEGIN Calendario CAT -->
        <bean id="calendarioManager" class="mx.com.aon.catbo.service.impl.CalendarioManagerImpl" parent="abstractManagerBean">
-            <!--property name="endpoints">
-                <map>
-                    <entry key="OBTENER_CALENDARIO"><ref bean="OBTENER_CALENDARIO"/></entry>
-                    <entry key="OBTENER_DIA_MES"><ref bean="OBTENER_DIA_MES"/></entry>
-                    <entry key="GUARDAR_CALENDARIO"><ref bean="GUARDAR_CALENDARIO"/></entry>
-                    <entry key="BORRAR_CALENDARIO"><ref bean="BORRAR_CALENDARIO"/></entry>
-                    <entry key="OBTENER_CALENDARIO_EXPORT"><ref bean="OBTENER_CALENDARIO_EXPORT"/></entry>
-                    <entry key="EDITAR_CALENDARIO"><ref bean="EDITAR_CALENDARIO"/></entry>
-                   
-                     </map>
-            </property-->
         </bean>
-    <!-- END Calendario CAT -->
     
-    <!-- BEGIN Matriz Asignacion CAT -->
        <bean id="matrizAsignacionManager" class="mx.com.aon.catbo.service.impl.MatrizAsignacionManagerImpl" parent="abstractManagerBean">
-            <!--property name="endpoints">
-                <map>
-                    <entry key="OBTENER_MATRIZ"><ref bean="OBTENER_MATRIZ"/></entry>
-                    <entry key="BORRAR_MATRIZ"><ref bean="BORRAR_MATRIZ"/></entry>
-                    <entry key="OBTENER_REGISTRO"><ref bean="OBTENER_REGISTRO"/></entry>
-                    <entry key="OBTENER_NIVATENCION"><ref bean="OBTENER_NIVATENCION"/></entry>
-                    <entry key="OBTENER_RESPONSABLES"><ref bean="OBTENER_RESPONSABLES"/></entry>                                   
-                    <entry key="OBTENER_TIEMPORESOLUCION"><ref bean="OBTENER_TIEMPORESOLUCION"/></entry>
-                    <entry key="GUARDAR_MATRIZ"><ref bean="GUARDAR_MATRIZ"/></entry>
-                    <entry key="BORRAR_RESPONSABLE"><ref bean="BORRAR_RESPONSABLE"/></entry>
-                	<entry key="BORRAR_TIEMPOS"><ref bean="BORRAR_TIEMPOS"/></entry>
-                	<entry key="GUARDAR_RESPONSABLES"><ref bean="GUARDAR_RESPONSABLES"/></entry>
-                	<entry key="GUARDAR_TIEMPOS"><ref bean="GUARDAR_TIEMPOS"/></entry>
-                    <entry key="GUARDAR_SUPLENTES"><ref bean="GUARDAR_SUPLENTES"/></entry>
-                    <entry key="GET_OBTENER_RESPONSABLES"><ref bean="GET_OBTENER_RESPONSABLES"/></entry>  
-                    <entry key="OBTIENE_MATRICES_ASIGNACION_EXPORT"><ref bean="OBTIENE_MATRICES_ASIGNACION_EXPORT"/></entry>  
-                    <entry key="VALIDA_RESPONSABLE"><ref bean="VALIDA_RESPONSABLE"/></entry> 
-                </map>
-            </property-->
         </bean>
-    <!-- END Matriz Asignacion CAT -->
     
-    <!-- BEGIN Administracion de Casos CAT -->
        <bean id="administracionCasosManager" class="mx.com.aon.catbo.service.impl.AdministracionCasosManagerImpl" parent="abstractManagerBean">
-            <!--property name="endpoints">
-                <map>
-                    <entry key="OBTENER_NUM_CASOS"><ref bean="OBTENER_NUM_CASOS"/></entry>
-                     <entry key="BORRA_NUM_CASOS"><ref bean="BORRA_NUM_CASOS"/></entry>
-                     <entry key="OBTENER_NUM_REGISTRO"><ref bean="OBTENER_NUM_REGISTRO"/></entry>
-                       <entry key="GUARDAR_NUMEROS_CASO"><ref bean="GUARDAR_NUMEROS_CASO"/></entry>
-                        <entry key="OBTENER_NUMERACION_CASOS_EXPORT"><ref bean="OBTENER_NUMERACION_CASOS_EXPORT"/></entry>                       
-                       <entry key="OBTIENE_TAREAS"><ref bean="OBTIENE_TAREAS"/></entry>
-                       <entry key="OBTENER_TAREAS_REGISTRO"><ref bean="OBTENER_TAREAS_REGISTRO"/></entry>
-                       <entry key="BORRA_TAREA"><ref bean="BORRA_TAREA"/></entry>
-                       <entry key="GUARDAR_TAREA"><ref bean="GUARDAR_TAREA"/></entry>
-                       <entry key="GUARDAR_TIEMPO"><ref bean="GUARDAR_TIEMPO"/></entry>
-                       <entry key="BORRA_CASO"><ref bean="BORRA_CASO"/></entry>
-                       <entry key="OBTENER_RESPONSABLE"><ref bean="OBTENER_RESPONSABLE"/></entry>
-                       <entry key="OBTENER_CASOS"><ref bean="OBTENER_CASOS"/></entry>
-                       <entry key="OBTENER_CASO_REG"><ref bean="OBTENER_CASO_REG"/></entry>
-                       <entry key="GUARDAR_COMPRA"><ref bean="GUARDAR_COMPRA"/></entry>
-                       <entry key="VALIDA_COMPRA_TIEMPO"><ref bean="VALIDA_COMPRA_TIEMPO"/></entry>
-                       <entry key="OBTENER_COMPRA"><ref bean="OBTENER_COMPRA"/></entry>
-                        <entry key="OBTENER_ENCABEZADO_MOVIMIENTOS"><ref bean="OBTENER_ENCABEZADO_MOVIMIENTOS"/></entry>
-                        <entry key="OBTENER_MOVIMIENTOS"><ref bean="OBTENER_MOVIMIENTOS"/></entry>
-                        <entry key="BORRA_MOVIMIENTOS"><ref bean="BORRA_MOVIMIENTOS"/></entry>
-                        <entry key="GUARDAR_MOVIMIENTO"><ref bean="GUARDAR_MOVIMIENTO"/></entry>
-                        <entry key="GUARDAR_REASIGNACION"><ref bean="GUARDAR_REASIGNACION"/></entry>
-                        <entry key="OBTENER_MOVIMINETO_CASO"><ref bean="OBTENER_MOVIMINETO_CASO"/></entry>
-                        <entry key="OBTENER_ARCHIVOS_CASO"><ref bean="OBTENER_ARCHIVOS_CASO"/></entry>
-                        <entry key="BORRAR_ARCHIVO_CASO"><ref bean="BORRAR_ARCHIVO_CASO"/></entry>
-                        <entry key="GUARDAR_ARCHIVO_CASO"><ref bean="GUARDAR_ARCHIVO_CASO"/></entry>
-                        <entry key="OBTIENE_RESPONSABLES_CASO"><ref bean="OBTIENE_RESPONSABLES_CASO"/></entry>
-                        <entry key="OBTIENE_POLIZAS_CATBO"><ref bean="OBTIENE_POLIZAS_CATBO"/></entry>
-                        <entry key="GUARDAR_CASOS"><ref bean="GUARDAR_CASOS"/></entry>                       
-                        <entry key="GUARDA_MCASOUSR"><ref bean="GUARDA_MCASOUSR"/></entry>
-                        <entry key="GUARDA_SUPLENTE"><ref bean="GUARDA_SUPLENTE"/></entry>
-                        <entry key="OBTENER_TIEMPO_CASO"><ref bean="OBTENER_TIEMPO_CASO"/></entry>
-                        <entry key="GENERA_TNUMECAS"><ref bean="GENERA_TNUMECAS"/></entry>
-                        <entry key="OBTIENE_CASOS_SOLICITUD_EXPORT"><ref bean="OBTIENE_CASOS_SOLICITUD_EXPORT"/></entry>
-                        <entry key="OBTENER_LISTA_USUARIOS_RESPONSABLES"><ref bean="OBTENER_LISTA_USUARIOS_RESPONSABLES"/></entry>
-                        <entry key="OBTENER_SUFIJO_PREFIJO"><ref bean="OBTENER_SUFIJO_PREFIJO"/></entry>
-                        <entry key="OBTENER_CLIENTES"><ref bean="OBTENER_CLIENTES"/></entry>     
-                        <entry key="OBTENER_ATRIBUTO_SECCION"><ref bean="OBTENER_ATRIBUTO_SECCION"/></entry>
-                        <entry key="OBTENER_ATRIBUTO_SECCION_COMBO_CONTROL"><ref bean="OBTENER_ATRIBUTO_SECCION_COMBO_CONTROL"/></entry>
-                        <entry key="OBTENER_SECCION_ORDEN"><ref bean="OBTENER_SECCION_ORDEN"/></entry>  
-                        <entry key="GET_OBTENER_MOVIMINETO_CASO"><ref bean="GET_OBTENER_MOVIMINETO_CASO"/></entry>  
-                        <entry key="LISTADO_MOVIMIENTO_CASO_EXPORT"><ref bean="LISTADO_MOVIMIENTO_CASO_EXPORT"/></entry>
-                        <entry key="USUARIOS_RESPONSABLES_MOVCASO"><ref bean="USUARIOS_RESPONSABLES_MOVCASO"/></entry>
-						<entry key="GUARDAR_FORMATO_ORDEN"><ref bean="GUARDAR_FORMATO_ORDEN"/></entry>                                           
-                        <entry key="GUARDAR_MOVIM_GENERICO"><ref bean="GUARDAR_MOVIM_GENERICO"/></entry>
-                        <entry key="GUARDA_SUPLENTE"><ref bean="GUARDA_SUPLENTE"/></entry>
-                        <entry key="GUARDAR_REASIGNACION1"><ref bean="GUARDAR_REASIGNACION1"/></entry>
-						<entry key="BUSCAR_REASIGNACION_CASO"><ref bean="BUSCAR_REASIGNACION_CASO"/></entry>                                           
-						<entry key="GUARDAR_REASIGNACION_CASO"><ref bean="GUARDAR_REASIGNACION_CASO"/></entry>  
-                        <entry key="BUSCAR_REASIGNACION_CASO_USR"><ref bean="BUSCAR_REASIGNACION_CASO_USR"/></entry>
-                        <entry key="BUSCAR_REASIGNACION_CASO_USR_RSPNSBL"><ref bean="BUSCAR_REASIGNACION_CASO_USR_RSPNSBL"/></entry>
-                        <entry key="GUARDAR_REASIGNACION_CASO_USR"><ref bean="GUARDAR_REASIGNACION_CASO_USR"/></entry>
-                        <entry key="GUARDAR_REASIGNACION_CASO_USR"><ref bean="GUARDAR_REASIGNACION_CASO_USR"/></entry>
-                        <entry key="GUARDAR_MOVIMIENTO_CASO"><ref bean="GUARDAR_MOVIMIENTO_CASO"/></entry>
+        </bean>
+    
+    
 
-                </map>
-            </property-->
-        </bean>
-    <!-- END Aministracion de Casos CAT -->   
-    
-    
-    <!-- BEGIN ArchivosFaxes CAT 
-       <bean id="archivosFaxesManager" class="mx.com.aon.catbo.service.impl.ArchivosFaxesImpl" parent="abstractManagerBean">
-            <property name="endpoints">
-                <map>
-                    <entry key="OBTENER_ARCHIVOS"><ref bean="OBTENER_ARCHIVOS"/></entry>
-                    <entry key="BORRAR_ARCHIVOS"><ref bean="BORRAR_ARCHIVOS"/></entry>
-                    <entry key="GET_OBTENER_ARCHIVO"><ref bean="GET_OBTENER_ARCHIVO"/></entry>
-                    <entry key="GUARDAR_ARCHIVOS"><ref bean="GUARDAR_ARCHIVOS"/></entry>
-                    <entry key="GET_OBTENER_FAX"><ref bean="GET_OBTENER_FAX"/></entry>                   
-                    <entry key="GUARDAR_FAX"><ref bean="GUARDAR_FAX"/></entry>
-                    <entry key="GUARDAR_VALORES_FAX"><ref bean="GUARDAR_VALORES_FAX"/></entry>
-                    <entry key="OBTENER_ARCHIVOS_INTERFAZ"><ref bean="OBTENER_ARCHIVOS_INTERFAZ"/></entry>
-                    <entry key="VALIDAR_NUMERO_CASO"><ref bean="VALIDAR_NUMERO_CASO"/></entry>
-                     
-                </map>
-            </property>
-        </bean>
-    END ArchivosFaxes CAT -->    
-    
-    <!-- Status de Casos -->
     <bean id="statusCasosManager" class="mx.com.aon.catbo.service.impl.StatusCasosManagerImpl" parent="abstractManagerBean">
-        <!--property name="endpoints">
-            <map>
-                <entry key="BUSCAR_STATUS_CASOS"><ref bean="BUSCAR_STATUS_CASOS"/></entry>
-                <entry key="BORRAR_STATUS_CASOS"><ref bean="BORRAR_STATUS_CASOS"/></entry>
-                <entry key="OBTIENERREG_STATUS_CASOS"><ref bean="OBTIENERREG_STATUS_CASOS"/></entry>
-                <entry key="GUARDAR_STATUS_CASOS"><ref bean="GUARDAR_STATUS_CASOS"/></entry>
-                <entry key="OBTIENE_STATUS_CASOS_EXPORT"><ref bean="OBTIENE_STATUS_CASOS_EXPORT"/></entry>
-                <entry key="BUSCAR_STATUS_CASOS_TAREAS"><ref bean="BUSCAR_STATUS_CASOS_TAREAS"/></entry>
-                <entry key="GUARDAR_STATUS_CASOS_TAREAS"><ref bean="GUARDAR_STATUS_CASOS_TAREAS"/></entry>
-                <entry key="BORRAR_STATUS_CASOS_TAREAS"><ref bean="BORRAR_STATUS_CASOS_TAREAS"/></entry>
-                <entry key="BUSCAR_STATUS_CASOS_TAREAS_PROCESOS"><ref bean="BUSCAR_STATUS_CASOS_TAREAS_PROCESOS"/></entry>
-           </map>
-        </property-->
     </bean>
-    <!-- Fin Status de Casos -->
 
-    <!-- Proceso -->
    <bean id="procesoManager" class="mx.com.aon.catbo.service.impl.ProcesoManagerImpl" parent="abstractManagerBean">
-       <!--property name="endpoints">
-           <map>
-               <entry key="OBTIENE_FORMATOS"><ref bean="OBTIENE_FORMATOS"/></entry>
-               <entry key="OBTIENE_TFPRONEG"><ref bean="OBTIENE_TFPRONEG"/></entry>
-               <entry key="OBTENER_TIEMPO_CASO"><ref bean="OBTENER_TIEMPO_CASO"/></entry>    
-               <entry key="OBTENER_TIEMPO_RESTANTE"><ref bean="OBTENER_TIEMPO_RESTANTE"/></entry>  
-               <entry key="OBTENER_USUARIO_PROCESO"><ref bean="OBTENER_USUARIO_PROCESO"/></entry>  
-               <entry key="GUARADAR_ID_TAREA_INSTANCIA"><ref bean="GUARADAR_ID_TAREA_INSTANCIA"/></entry>  
-               <entry key="GUARDA_ESCALAMIENTO"><ref bean="GUARDA_ESCALAMIENTO"/></entry> 
-               <entry key="VALIDAR_NIVEL_ESCALAMIENTO"><ref bean="VALIDAR_NIVEL_ESCALAMIENTO"/></entry> 
-               <entry key="OBTENER_PARAMETROS"><ref bean="OBTENER_PARAMETROS"/></entry> 
-               <entry key="OBTIENE_TASK_ID"><ref bean="OBTIENE_TASK_ID"/></entry>
-               <entry key="OBTENER_RESONSABLES_DE_ENVIO"><ref bean="OBTENER_RESONSABLES_DE_ENVIO"/></entry>
-               <entry key="OBTENER_MAIL_RESPONSABLES"><ref bean="OBTENER_MAIL_RESPONSABLES"/></entry> 
-               <entry key="OBTENER_MAIL_CLIENTE"><ref bean="OBTENER_MAIL_CLIENTE"/></entry> 
-                                                  
-               <entry key="OBTIENE_CASOS_CLIENTE"><ref bean="OBTIENE_CASOS_CLIENTE"/></entry> 
-                                                  
-          </map>
-       </property-->
    </bean>
-   <!-- Fin Proceso-->
 
-    <!-- Tareas Cat Bo -->
     <bean id="tareasCatBoManager" class="mx.com.aon.catbo.service.impl.TareasCatBoManagerImpl" parent="abstractManagerBean">
-        <!--property name="endpoints">
-            <map>
-                <entry key="BUSCAR_TAREAS_CAT_BO"><ref bean="BUSCAR_TAREAS_CAT_BO"/></entry>
-                <entry key="BORRAR_TAREAS_CAT_BO"><ref bean="BORRAR_TAREAS_CAT_BO"/></entry>
-                <entry key="OBTIENERREG_TAREAS_CAT_BO"><ref bean="OBTIENERREG_TAREAS_CAT_BO"/></entry>
-                <entry key="GUARDAR_TAREAS_CAT_BO"><ref bean="GUARDAR_TAREAS_CAT_BO"/></entry>
-                <entry key="OBTIENE_TAREAS_CAT_BO_EXPORT"><ref bean="OBTIENE_TAREAS_CAT_BO_EXPORT"/></entry>
-                <entry key="BUSCAR_TAREAS_CAT_BO_VALIDA"><ref bean="BUSCAR_TAREAS_CAT_BO_VALIDA"/></entry>
-           </map>
-        </property-->
     </bean>
-    <!-- Fin Tareas Cat Bo --> 
 
 
-<!-- Configurar Encueta -->
     <bean id="configurarEncuestaManager" class="mx.com.aon.catbo.service.impl.ConfigurarEncuestaManagerImpl" parent="abstractManagerBean">
-        <!--property name="endpoints">
-            <map>
-                <entry key="OBTIENE_ENCUESTA"><ref bean="OBTIENE_ENCUESTA"/></entry>
-                <entry key="GUARDACONFIGURACION_ENCUESTA"><ref bean="GUARDACONFIGURACION_ENCUESTA"/></entry>
-                <entry key="OBTENER_ENCUESTAS"><ref bean="OBTENER_ENCUESTAS"/></entry>
-                <entry key="OBTIENE_ENCUESTAS_EXPORT"><ref bean="OBTIENE_ENCUESTAS_EXPORT"/></entry>
-                <entry key="OBTENER_VALOR_ENCUESTA"><ref bean="OBTENER_VALOR_ENCUESTA"/></entry>
-                <entry key="OBTIENE_ENCUESTA_REGISTRO"><ref bean="OBTIENE_ENCUESTA_REGISTRO"/></entry>
-                <entry key="BORRA_ENCUESTA"><ref bean="BORRA_ENCUESTA"/></entry>
-                <entry key="OBTIENER_CATBOTIMEC"><ref bean="OBTIENER_CATBOTIMEC"/></entry>
-                <entry key="GUARDAR_TIEMPO_ENCUESTA"><ref bean="GUARDAR_TIEMPO_ENCUESTA"/></entry>
-                <entry key="BORRA_TIEMPO_ENCUESTA"><ref bean="BORRA_TIEMPO_ENCUESTA"/></entry>    
-                <entry key="GUARDAR_TENCUEST"><ref bean="GUARDAR_TENCUEST"/></entry>
-                <entry key="GUARDAR_TPREGUNTA"><ref bean="GUARDAR_TPREGUNTA"/></entry>
-                <entry key="BORRAR_ASIGNAR_ENCUESTA"><ref bean="BORRAR_ASIGNAR_ENCUESTA"/></entry>   
-                <entry key="BORRAR_TVALENCT"><ref bean="BORRAR_TVALENCT"/></entry>
-                <entry key="BORRAR_TPREGUNT"><ref bean="BORRAR_TPREGUNT"/></entry>
-                <entry key="BORRA_CATBO_TIEMPO_ENCUESTA"><ref bean="BORRA_CATBO_TIEMPO_ENCUESTA"/></entry>
-                <entry key="OBTIENE_CONFIG_ENCUESTAS_EXPORT"><ref bean="OBTIENE_CONFIG_ENCUESTAS_EXPORT"/></entry>
-                <entry key="GUARDA_TVALENCT"><ref bean="GUARDA_TVALENCT"/></entry>
-                <entry key="ASIGNA_ENCUESTA_OBTIENE_ENCUESTA"><ref bean="ASIGNA_ENCUESTA_OBTIENE_ENCUESTA"/></entry>
-                <entry key="ASIGNA_ENCUESTA_OBTIENE_ENCUESTA_EXPORT"><ref bean="ASIGNA_ENCUESTA_OBTIENE_ENCUESTA_EXPORT"/></entry>
-                <entry key="ASIGNA_ENCUESTA_OBTIENE_ENCUESTA_REGISTRO"><ref bean="ASIGNA_ENCUESTA_OBTIENE_ENCUESTA_REGISTRO"/></entry>
-                <entry key="GUARDA_ASIGNACION_ENCUESTA"><ref bean="GUARDA_ASIGNACION_ENCUESTA"/></entry>
-                <entry key="OBTENER_VALORES_ENCUESTA_EXPORT"><ref bean="OBTENER_VALORES_ENCUESTA_EXPORT"/></entry>
-                <entry key="OBTIENE_ENCUESTA_PREGUNTAS"><ref bean="OBTIENE_ENCUESTA_PREGUNTAS"/></entry>   
-                <entry key="OBTENERREG_ENCUESTA_PREGUNTAS"><ref bean="OBTENERREG_ENCUESTA_PREGUNTAS"/></entry>   
-                <entry key="OBTIENE_ENCUESTA_PREGUNTAS_EXPORT"><ref bean="OBTIENE_ENCUESTA_PREGUNTAS_EXPORT"/></entry>   
-                <entry key="GUARDAR_TENCUEST_AGREGAR"><ref bean="GUARDAR_TENCUEST_AGREGAR"/></entry>   
-                <entry key="VALIDA_TCONFIGENCUESTA"><ref bean="P_VALIDA_TCONFIGENCUESTA"/></entry>
-                <entry key="VALIDA_TCONFIGENCUESTA_CLI"><ref bean="VALIDA_TCONFIGENCUESTA_CLI"/></entry>
-                <entry key="OBTENER_TVALENCT_REG"><ref bean="OBTENER_TVALENCT_REG"/></entry>
-                <entry key="OBTENER_TVALENCT_ENC"><ref bean="OBTENER_TVALENCT_ENC"/></entry>
-                
-                
-             </map>
-        </property-->        
     </bean>
-    <!-- Fin Configurar Encueta -->
     
-
-	
-    
-<!-- Acceso Estructuras -->
     <bean id="accesoEstructuraRolUsuarioManager" class="mx.com.aon.catbo.service.impl.AccesoEstructuraRolUsuarioManagerImpl" parent="abstractManagerBean">
-        <!--property name="endpoints">
-            <map>
-                <entry key="ACCESOESTRUCTURAROLUSUARIO_BORRAR"><ref bean="ACCESOESTRUCTURAROLUSUARIO_BORRAR"/></entry>
-                <entry key="ACCESOESTRUCTURAROLUSUARIO_BUSCAR"><ref bean="ACCESOESTRUCTURAROLUSUARIO_BUSCAR"/></entry>
-                <entry key="ACCESOESTRUCTURAROLUSUARIO_GUARDAR"><ref bean="ACCESOESTRUCTURAROLUSUARIO_GUARDAR"/></entry>
-                <entry key="EXPORT_LIST_ACCESO_ESTRUCTURA_ROL_USUARIO"><ref bean="EXPORT_LIST_ACCESO_ESTRUCTURA_ROL_USUARIO"/></entry>
-           </map>
-        </property-->
     </bean>
-    <!-- Fin Acceso Estructura -->
 
-    <!-- Configurar Compra de Tiempo -->
         <bean id="configurarCompraTiempoManager" class="mx.com.aon.catbo.service.impl.ConfigurarCompraTiempoManagerImpl" parent="abstractManagerJdbcTemplateInvoke">
             <property name="abstractDAO">
                 <ref bean="configurarCompraTiempoDAO"/>
             </property>
         </bean>
-        <!-- Fin Acceso Estructura -->
 
-    <!-- Configurar Administracion Archivos -->
         <bean id="archivosManager" class="mx.com.aon.catbo.service.impl.ArchivosManagerImpl" parent="abstractManagerJdbcTemplateInvoke">
             <property name="abstractDAO">
                 <ref bean="archivoDAO"/>
             </property>
         </bean>
-    <!-- Fin Acceso Estructura -->
     
-    <!-- CombosManager2 -->
         <bean id="combosManager2BO" class="mx.com.aon.catbo.service.impl.CombosManager2Impl" parent="abstractManagerJdbcTemplateInvoke">
             <property name="abstractDAO">
                 <ref bean="combosDAO"/>
             </property>
         </bean>
-    <!--CombosManager2 -->
     
     
 
-    <!-- Archivos y Faxes-->
         <bean id="archivosFaxesManager" class="mx.com.aon.catbo.service.impl.ArchivosFaxesImpl" parent="abstractManagerJdbcTemplateInvoke">
             <property name="abstractDAO">
                 <ref bean="archivosFaxesDAO"/>
             </property>
         </bean>
-    <!-- Fin Archivos y Faxes -->
     
-     <!-- Administrar Usuarios por Modelo-->
         <bean id="administrarUsuariosModuloManager" class="mx.com.aon.catbo.service.impl.AdministrarUsuariosModuloImpl" parent="abstractManagerJdbcTemplateInvoke">
             <property name="abstractDAO">
                 <ref bean="administrarUsuariosModuloDAO"/>
             </property>
         </bean>
-    <!-- Fin Administrar Usuarios por Modelo -->
       
       
-       <!-- Alta Caso -->
        <bean id="altaCasosManager" class="mx.com.aon.catbo.service.impl.AltaCasosManagerImpl" parent="abstractManagerJdbcTemplateInvoke">
             <property name="abstractDAO">
                 <ref bean="casosDAO"/>
             </property>
         </bean>
-    <!-- Fin Alta Caso --> 
     
     
-	<!-- Generacion Claves-->
 	<bean id="generacionClavesManager" class="mx.com.aon.catbo.service.impl.GeneracionClavesManagerImpl" parent="abstractManagerJdbcTemplateInvoke">
             <property name="abstractDAO">
                 <ref bean="generacionClavesDAO"/>
             </property>
     </bean>       
-        <!-- FIN Generacion Claves-->
     
-    <!-- Datos Archivos-->
 	<bean id="datosArchivosManager" class="mx.com.aon.catbo.service.impl.DatosArchivosManagerImpl" parent="abstractManagerJdbcTemplateInvoke">
             <property name="abstractDAO">
                 <ref bean="datosArchivosDAO"/>
             </property>
     </bean>       
-    <!--FIN Datos Archivos-->
-    <!-- Guion Llamadas -->
     <bean id="guionLlamadasManager" class="mx.com.aon.catbo.service.impl.GuionLlamadasManagerImpl" parent="abstractManagerJdbcTemplateInvoke">
             <property name="abstractDAO">
                 <ref bean="guionLlamadasDAO"/>
             </property>
     </bean>
-    <!-- Fin Guion Llamadas -->
     
     <bean id="archivosManagerJdbcTemplate" class="mx.com.aon.catbo.service.impl.ArchivosManagerJdbcTemplateImpl" parent="abstractManagerJdbcTemplateInvoke">
         <property name="abstractDAO">
@@ -476,12 +118,6 @@
                 <ref bean="consultarAsigEncuestaDAO"/>
             </property>
     </bean> 
-
-    <!--bean id="mediaDAOJdbc" class="mx.com.aon.catbo.dao.MediaDAOImpl" parent="abstractManagerJdbcTemplateInvoke">
-        <property name="mediaDAO">
-            <ref bean="mediaDAO"/>
-        </property>
-    </bean-->
     
     <bean id="administrarTipoArchivoManager" class="mx.com.aon.catbo.service.impl.AdministrarTipoArchivoManagerImpl" parent="abstractManagerJdbcTemplateInvoke">
             <property name="abstractDAO">
@@ -500,11 +136,6 @@
             </property>
     </bean>
 
-    <!--bean id="envioMailManager" class="mx.com.aon.catbo.service.impl.EnvioMailManagerImpl" parent="abstractManagerJdbcTemplateInvoke">
-            <property name="abstractDAO">
-                <ref bean="envioMailDAO"/>
-            </property>
-    </bean-->
     
     <bean id="configurarEncuestaManager2" class="mx.com.aon.catbo.service.impl.ConfigurarEncuestaManagerImpl2" parent="abstractManagerJdbcTemplateInvoke">
             <property name="abstractDAO">
@@ -531,27 +162,14 @@
    </bean>
 
 
-    <!-- Ingreso Encuesta -->
     <bean id="ingresarEncuestaManager" class="mx.com.aon.catbo.service.impl.IngresarEncuestaManagerImpl" parent="abstractManagerBean">
-        <!--property name="endpoints">
-            <map>
-                <entry key="OBTENER_PREGUNTA_ENCUESTA"><ref bean="OBTENER_PREGUNTA_ENCUESTA"/></entry>
-                <entry key="OBTENER_PREGUNTA_ENCUESTA_SIGUIENTE"><ref bean="OBTENER_PREGUNTA_ENCUESTA_SIGUIENTE"/></entry>
-                <entry key="GUARDAR_RESPUESTA_ENCUESTA"><ref bean="GUARDAR_RESPUESTA_ENCUESTA"/></entry>
-           </map>
-        </property-->
     </bean>
-    <!-- Fin Ingreso Encuesta -->
-
-
-
-
 
    
    <bean id="notificacionMailManager" class="mx.com.aon.catbo.service.impl.NotificacionMailManagerImpl" parent="abstractManagerJdbcTemplateInvoke">
             <property name="abstractDAO">
                 <ref bean="envioMailNotificacionDAO"/>
             </property>
-    </bean>
+    </bean> -->
    
 </beans>

@@ -6,7 +6,6 @@ package mx.com.aon.flujos.cotizacion.web;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -15,12 +14,10 @@ import mx.com.aon.configurador.pantallas.model.PantallaVO;
 import mx.com.aon.configurador.pantallas.model.components.ColumnGridEstandarVO;
 import mx.com.aon.configurador.pantallas.model.components.RecordVO;
 import mx.com.aon.core.ApplicationException;
-import mx.com.aon.core.VariableKernel;
 import mx.com.aon.flujos.cotizacion.model.ConsultaCotizacionVO;
 import mx.com.aon.flujos.cotizacion.model.NameLabelControlVO;
 import mx.com.aon.flujos.cotizacion.service.CotizacionService;
 import mx.com.aon.portal.model.UserVO;
-import mx.com.ice.services.to.screen.GlobalVariableContainerVO;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 import net.sf.json.xml.XMLSerializer;
@@ -34,7 +31,6 @@ import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 
 import com.biosnet.ice.ext.elements.form.ExtElement;
-import com.biosnet.ice.ext.elements.form.TextFieldControl;
 
 /**
  * @author eflores

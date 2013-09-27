@@ -199,10 +199,6 @@
            <result>/jsp/portal/consultarMovimientosCaso.jsp</result>
        </action>
        
-       <action name="ordenDeSolicitud" class="listaConsultaCasosSolicitudAction" method="entrar">
-           <result name="input">/jsp/portal/ordenDeSolicitud.jsp</result>
-       </action>
-       
         <action name="configuracionEncuestas">
            <result>/jsp/portal/configuracionEncuestas.jsp</result>
        </action>

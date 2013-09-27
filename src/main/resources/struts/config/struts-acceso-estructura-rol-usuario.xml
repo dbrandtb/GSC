@@ -6,11 +6,6 @@
 	<include file="struts-default.xml" />
 
 	<package name="accesoEstructuraRolUsuario" extends="json-default" namespace="/accesoEstructuraRolUsuario">
-
-
-    <action name="buscarAccesos" class="listaAccesoEstructuraRolUsuarioAction" method="cmdBuscarClick">
-            <result type="json"><param name="ignoreHierarchy">false</param></result>
-	</action>
     
     <action name="borrarAcceso" class="accesoEstructuraRolUsuarioAction" method="cmdBorrarAcceso">
             <result type="json"><param name="ignoreHierarchy">false</param></result>
@@ -19,16 +14,6 @@
     <action name="guardarAcceso" class="accesoEstructuraRolUsuarioAction" method="cmdGuardarAcceso">
             <result type="json"><param name="ignoreHierarchy">false</param></result>
     </action>
-
-    <action name="exportarAcceso" class="listaAccesoEstructuraRolUsuarioAction" method="cmdExportarEstructuraRolUsuarioClick">
-        <result name="success" type="stream">
-            <param name="contentType">${contentType}</param>
-            <param name="inputName">inputStream</param>
-            <param name="contentDisposition">filename="${filename}"</param>
-            <param name="bufferSize">4096</param>
-        </result>
-    </action>  
-    
 
 	</package>
 

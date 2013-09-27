@@ -15,12 +15,10 @@ import mx.com.aon.configurador.pantallas.model.PantallaVO;
 import mx.com.aon.configurador.pantallas.model.components.ColumnGridEstandarVO;
 import mx.com.aon.configurador.pantallas.model.components.RecordVO;
 import mx.com.aon.core.ApplicationException;
-import mx.com.aon.core.VariableKernel;
 import mx.com.aon.flujos.cotizacion.model.NameLabelControlVO;
 import mx.com.aon.flujos.cotizacion.service.CotizacionService;
 import mx.com.aon.kernel.service.KernelManager;
 import mx.com.aon.portal.model.UserVO;
-import mx.com.ice.services.to.screen.GlobalVariableContainerVO;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 import net.sf.json.xml.XMLSerializer;
@@ -342,19 +340,19 @@ public class ValoresPorDefectoCotizacionAction extends PrincipalCotizacionAction
     	
     	UserVO usuario = (UserVO)session.get("USUARIO");
     	
-    	GlobalVariableContainerVO globalVarVo = new GlobalVariableContainerVO();
-    	globalVarVo.addVariableGlobal(VariableKernel.UnidadEconomica(), "1");
-    	//TODO quitar
-    	globalVarVo.addVariableGlobal(VariableKernel.CodigoRamo(), "500");
-    	globalVarVo.addVariableGlobal(VariableKernel.Estado(), "W");
-    	globalVarVo.addVariableGlobal(VariableKernel.NumeroSuplemento(), "0");
-    	globalVarVo.addVariableGlobal(VariableKernel.UsuarioBD(), usuario.getUser());
-    	globalVarVo.addVariableGlobal(VariableKernel.CodigoTipoSituacion(), tipsit);
-    	globalVarVo.addVariableGlobal(VariableKernel.NumeroSituacion(),"1");
-    	globalVarVo = kernelManager.cargaValoresPorDefecto(ServletActionContext.getRequest().getSession().getId(), usuario, globalVarVo, "90");
-    	
-    	//Subimos a sesion la Global Variable Container
-    	session.put("GLOBAL_VARIABLE_CONTAINER", globalVarVo);
+//    	GlobalVariableContainerVO globalVarVo = new GlobalVariableContainerVO();
+//    	globalVarVo.addVariableGlobal(VariableKernel.UnidadEconomica(), "1");
+//    	//TODO quitar
+//    	globalVarVo.addVariableGlobal(VariableKernel.CodigoRamo(), "500");
+//    	globalVarVo.addVariableGlobal(VariableKernel.Estado(), "W");
+//    	globalVarVo.addVariableGlobal(VariableKernel.NumeroSuplemento(), "0");
+//    	globalVarVo.addVariableGlobal(VariableKernel.UsuarioBD(), usuario.getUser());
+//    	globalVarVo.addVariableGlobal(VariableKernel.CodigoTipoSituacion(), tipsit);
+//    	globalVarVo.addVariableGlobal(VariableKernel.NumeroSituacion(),"1");
+//    	globalVarVo = kernelManager.cargaValoresPorDefecto(ServletActionContext.getRequest().getSession().getId(), usuario, globalVarVo, "90");
+//    	
+//    	//Subimos a sesion la Global Variable Container
+//    	session.put("GLOBAL_VARIABLE_CONTAINER", globalVarVo);
                    
         success = true;
         

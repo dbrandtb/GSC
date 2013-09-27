@@ -63,7 +63,7 @@ Ext.onReady(function() {
             flex: 5,
             dataIndex: 'key'
         },*/{
-            flex: 95,
+            flex: 1,
             dataIndex: 'value'
         }]
     });
@@ -71,110 +71,155 @@ Ext.onReady(function() {
     // little bit of feedback
     listViewOpcionesConsulta.on('selectionchange', function(view, nodes){
         
-//        console.log('view=');
-//        console.log(view);
-//        console.log('nodes=');
-//        console.log(nodes);
+        console.log('view=');
+        console.log(view);
+        console.log('nodes=');
+        console.log(nodes);
         
         var len = nodes.length,
             suffix = len === 1 ? '' : 's',
             str = '({0} item{1} seleccionado{1})</i>';
         listViewOpcionesConsulta.setTitle(Ext.String.format(str, len, suffix));
-        console.log(gridPanelSuplemento.getSelectionModel().hasSelection());
-        if (gridPanelSuplemento.getSelectionModel().hasSelection()) {
-            var rowSelected = gridPanelSuplemento.getSelectionModel().getSelection()[0];
-            panelBusqueda.down('form').getForm().findField("params.suplemento").setValue(rowSelected.get('nmsuplem'));
-            console.log(rowSelected);
-            console.log('Suplemento=' + rowSelected.get('nsuplogi'));
-            console.log(panelBusqueda.down('form').getForm());
-            console.log(panelBusqueda.down('form').getForm().findField("params.nmpoliza").getValue());
-            
-            // Consultar Datos Generales de la Poliza
-            storeDatosPoliza.load({
-                params : panelBusqueda.down('form').getForm().getValues(),
-                callback : function(records, operation, success) {
-                    if (success) {
-                        if (records.length > 0) {
-                            Ext.getCmp("formularioPoliza").getForm().loadRecord(records[0]);
-                        } else {
-                            Ext.Msg.show({
-                                title : 'Error',
-                                msg : 'La P&oacute;iza no existe, verifique sus datos',
-                                buttons : Ext.Msg.OK,
-                                icon : Ext.Msg.ERROR
-                            });
-                        }
-                    } else {
-                        Ext.Msg.show({
-                            title : 'Error',
-                            msg : 'La P&oacute;iza no existe, verifique sus datos',
-                            buttons : Ext.Msg.OK,
-                            icon : Ext.Msg.ERROR
-                        });
-                    }
+        
+		var tipoConsultaSelected = listViewOpcionesConsulta.getSelectionModel().getSelection()[0];
+		
+		//hide all elements:
+		panelInfoGralPoliza.hide();
+		gridDatosAsegurado.hide();
+		tabDatosGeneralesPoliza.hide();
+		
+		
+		switch (tipoConsultaSelected.get('key')) {
+			case 1: //Consulta de Datos generales
+				if (gridPanelSuplemento.getSelectionModel().hasSelection()) {
+					var rowSelected = gridPanelSuplemento.getSelectionModel().getSelection()[0];
+					panelBusqueda.down('form').getForm().findField("params.suplemento").setValue(rowSelected.get('nmsuplem'));
+					console.log(rowSelected);
+					console.log('Suplemento=' + rowSelected.get('nsuplogi'));
+					console.log(panelBusqueda.down('form').getForm());
+					console.log(panelBusqueda.down('form').getForm().findField("params.nmpoliza").getValue());
+					
+					// Consultar Datos Generales de la Poliza
+					storeDatosPoliza.load({
+						params : panelBusqueda.down('form').getForm().getValues(),
+						callback : function(records, operation, success) {
+							if (success) {
+								if (records.length > 0) {
+									Ext.getCmp("formularioPoliza").getForm().loadRecord(records[0]);
+								} else {
+									Ext.Msg.show({
+										title : 'Error',
+										msg : 'La P&oacute;iza no existe, verifique sus datos',
+										buttons : Ext.Msg.OK,
+										icon : Ext.Msg.ERROR
+									});
+								}
+							} else {
+								Ext.Msg.show({
+									title : 'Error',
+									msg : 'La P&oacute;iza no existe, verifique sus datos',
+									buttons : Ext.Msg.OK,
+									icon : Ext.Msg.ERROR
+								});
+							}
 
-                }
-            });
-            panelInfoGralPoliza.show();
-			tabDatosGeneralesPoliza.show();
-            /**Datos para la Tarificación**/ 
-            storeTarificacion.load({
-                params: panelBusqueda.down('form').getForm().getValues(),
-                callback: function(records, operation, success){
-                    if(success){
-                        //if(records.length <= 0){
-							/*
-                            Ext.Msg.show({
-								title: 'Error',
-								msg: 'No existe tarificaci\u00F3n para dicha p\u00F3liza',
-								buttons: Ext.Msg.OK,
-								icon: Ext.Msg.ERROR
-							});
-							*/
-							//gridDatosTarificacion.hide();
-                        //}else {
-							gridDatosTarificacion.show();
-						//}
-                    }else{
-                        Ext.Msg.show({
-							title: 'Error',
-							msg: 'Error al obtener la tarificaci\u00F3n de la p\u00F3liza',
-							buttons: Ext.Msg.OK,
-							icon: Ext.Msg.ERROR
-						});
-                    }                    
-                }
-            });
-			/**Datos para asegurados**/ 
-			storeDatosAsegurado.load({
-				params: panelBusqueda.down('form').getForm().getValues(),
-				callback: function(records, operation, success){
-					if(success){
-						
-						//if(records.length <= 0){
-							//gridDatosAsegurado.hide();
-                        //}else {
-							gridDatosAsegurado.show();
-						//}
-						/*
-						Ext.Msg.show({
-							title: 'Error',
-							msg: 'No existe datos del asegurado',
-							buttons: Ext.Msg.OK,
-							icon: Ext.Msg.ERROR
-						});
-						*/
-					}else{
-						Ext.Msg.show({
-							title: 'Error',
-							msg: 'Error al obtener los datos del asegurado',
-							buttons: Ext.Msg.OK,
-							icon: Ext.Msg.ERROR
-						});
-					}        	        
+						}
+					});
+					panelInfoGralPoliza.show();
+					tabDatosGeneralesPoliza.show();
+					//Datos de Tarificación
+					storeTarificacion.load({
+						params: panelBusqueda.down('form').getForm().getValues(),
+						callback: function(records, operation, success){
+							if(success){
+								//if(records.length <= 0){
+									/*
+									Ext.Msg.show({
+										title: 'Error',
+										msg: 'No existe tarificaci\u00F3n para dicha p\u00F3liza',
+										buttons: Ext.Msg.OK,
+										icon: Ext.Msg.ERROR
+									});
+									*/
+									//gridDatosTarificacion.hide();
+								//}else {
+									gridDatosTarificacion.show();
+								//}
+							}else{
+								Ext.Msg.show({
+									title: 'Error',
+									msg: 'Error al obtener la tarificaci\u00F3n de la p\u00F3liza',
+									buttons: Ext.Msg.OK,
+									icon: Ext.Msg.ERROR
+								});
+							}                    
+						}
+					});					
+					//Datos para asegurados
+					storeDatosAsegurado.load({
+						params: panelBusqueda.down('form').getForm().getValues(),
+						callback: function(records, operation, success){
+							if(success){
+								
+								//if(records.length <= 0){
+									//gridDatosAsegurado.hide();
+								//}else {
+									gridDatosAsegurado.show();
+								//}
+								/*
+								Ext.Msg.show({
+									title: 'Error',
+									msg: 'No existe datos del asegurado',
+									buttons: Ext.Msg.OK,
+									icon: Ext.Msg.ERROR
+								});
+								*/
+							}else{
+								Ext.Msg.show({
+									title: 'Error',
+									msg: 'Error al obtener los datos del asegurado',
+									buttons: Ext.Msg.OK,
+									icon: Ext.Msg.ERROR
+								});
+							}        	        
+						}
+					});
 				}
-			});
-        }
+				break;
+			case 2: //Consulta de Agentes
+				if (gridPanelSuplemento.getSelectionModel().hasSelection()) {
+					storeInfoAgente.load({
+						params: panelBusqueda.down('form').getForm().getValues(),
+						callback: function(records, operation, success) {
+							if(success){
+								if(records.length > 0){
+									panelDatosAgente.getForm().loadRecord(records[0]);  
+								}else {
+									Ext.Msg.show({
+									title: 'Error',
+									msg: 'El Agente no existe, verifique la clave',
+									buttons: Ext.Msg.OK,
+									icon: Ext.Msg.ERROR
+									});
+								}
+							}else {	
+								Ext.Msg.show({
+									title: 'Error',
+									msg: 'El Agente no existe, verifique la clave',
+									buttons: Ext.Msg.OK,
+									icon: Ext.Msg.ERROR
+								});
+							}
+						}
+					});
+					
+					tabPanelAgentes.show();
+				}
+				break;
+			case 3: //Consulta de Recibos
+			
+			break;
+		}
     });
     
 
@@ -206,7 +251,7 @@ Ext.onReady(function() {
         proxy:
         {
             type: 'ajax',
-            url : _URL_DATOS_SUPLEMENTO,
+            url : _URL_CONSULTA_DATOS_SUPLEMENTO,
             reader:
             {
                 type: 'json',
@@ -330,7 +375,7 @@ Ext.onReady(function() {
    proxy:
    {
         type: 'ajax',
-        url : _URL_VALIDA_DATOS_POLIZA,
+        url : _URL_CONSULTA_DATOS_POLIZA,
     reader:
     {
          type: 'json',
@@ -405,7 +450,7 @@ Ext.onReady(function() {
         model: 'RowDatosTarificacion',
         proxy: {
            type: 'ajax',
-           url : _URL_VALIDA_DATOS_TARIFICACION,
+           url : _URL_CONSULTA_DATOS_TARIFA_POLIZA,
             reader: {
                 type: 'json',
                 root: 'datosTarifa'
@@ -484,7 +529,7 @@ Ext.onReady(function() {
 	 proxy:
 	 {
 		  type: 'ajax',
-		  url : _URL_VALIDA_DATOS_ASEGURADO,
+		  url : _URL_CONSULTA_DATOS_ASEGURADO,
 	  reader:
 	  {
 		   type: 'json',
@@ -532,7 +577,7 @@ Ext.onReady(function() {
         model: 'RowPolizaAsegurados',
 		proxy: {
 			type: 'ajax',
-			url : _URL_VALIDA_POLIZA_ASEGURADO,
+			url : _URL_CONSULTA_POLIZAS_ASEGURADO,
 			reader:{
 				type: 'json',
 				root: 'polizasAsegurado'
@@ -654,7 +699,7 @@ Ext.onReady(function() {
 			title : 'DOCUMENTACION',
 			width: '350',
 			loader : {
-				url : _URL_DOCUMENTOS,
+				url : _URL_CONSULTA_DOCUMENTOS,
 				scripts : true,
 				autoLoad : false
 			},
@@ -678,6 +723,83 @@ Ext.onReady(function() {
 		}]    
 	});
 	
+	//--------------------
+	// Modelo
+	Ext.define('ModelInfoAgente', {
+		extend: 'Ext.data.Model',
+		fields: [
+			{type:'string',		name:'cdagente'      },
+			{type:'string',		name:'cdideper'      },
+			{type: 'date',      name: 'fedesde' , dateFormat: 'd/m/Y' },
+			{type:'string',		name:'nombre'        }
+		]
+	});
+	// Store
+	var storeInfoAgente = new Ext.data.Store({
+		model: 'ModelInfoAgente',
+		proxy: {
+			type: 'ajax',
+			url : _URL_CONSULTA_DATOS_AGENTE,
+			reader:{
+				type: 'json',
+				root: 'datosAgente'
+			}
+		}
+	});
+	// Panel Info Agente
+	var panelDatosAgente = Ext.create('Ext.form.Panel', {
+		title   : 'INFORMACION DEL AGENTE',
+		model   : 'ModelInfoAgente',
+		//width      : 750,
+		//height     : 100,
+		defaults: {
+			bodyPadding: 3,
+			border: false
+		},
+		items:[{
+			layout  :  'hbox',
+			items : [
+				{xtype:'textfield', name:'cdideper', fieldLabel: 'RFC del Agente', readOnly: true, labelWidth: 120}, 
+				{xtype:'textfield', name:'nombre', fieldLabel: 'Nombre del Agente', readOnly: true, labelWidth: 120, width: 400}
+			]
+		},{
+			layout  :  'hbox',
+			items : [
+				{xtype: 'datefield', name: 'fedesde', fieldLabel: 'Fecha de ingreso', format: 'd/m/Y', readOnly: true, labelWidth: 120}
+			]
+		}]
+	});
+	
+	var tabPanelAgentes = Ext.create('Ext.tab.Panel', {
+	    width: 830,
+	    //height: 200,
+	    //renderTo: document.body,
+	    items: [{
+	        title : 'DATOS DEL AGENTE',
+	        //itemId: 'tabPanelAgentes',
+			border:false,
+	        items:[{
+				//layout  :  'hbox',
+				items   :  [ panelDatosAgente ]
+               }]
+	    }, {
+	        title: 'POLIZAS DEL AGENTE',
+	        itemId: 'tabPolizasAgente',
+	        items:[	                    
+                   {
+                       //layout  :  'hbox',
+                       //items   :  [ ]
+                   }
+               ]
+	    }, {
+	        title: 'RECIBOS DEL AGENTE',
+	        itemId: 'tabRecibosAgente',
+	        items:[{
+				//layout  :  'hbox',
+				//items   :  [ ]                   
+               }]
+	    }]
+	});
 	
 	
     // Main Panel
@@ -703,7 +825,7 @@ Ext.onReady(function() {
             items: [
                 {
                     xtype: 'form',
-                    url: _URL_DATOS_SUPLEMENTO,
+                    url: _URL_CONSULTA_DATOS_SUPLEMENTO,
                     // title: 'Formulario',
                     border: false,
                     layout: {
@@ -769,8 +891,8 @@ Ext.onReady(function() {
                                             fieldLabel : 'Unidad econ\u00F3mica',
                                             labelWidth : 120,
                                             width: 200,
-                                            maxLength : 3/*,
-                                            value: 1*/
+											value: 1,
+                                            maxLength : 3
                                         },
                                         {
                                             xtype:'tbspacer',
@@ -781,7 +903,7 @@ Ext.onReady(function() {
                                             name : 'params.cdramo',
                                             fieldLabel : 'Ramo',
                                             maxLength : 3,
-                                            //value: 2,
+                                            value: 2,
                                             labelWidth : 50,
                                             width: 120
                                         },
@@ -795,8 +917,8 @@ Ext.onReady(function() {
                                             fieldLabel : 'Estado',
                                             maxLength : 1,
                                             labelWidth : 50,
-                                            width: 120/*,
-                                            value: 'W'*/
+											value: 'M',
+                                            width: 120
                                         },
                                         {
                                             xtype:'tbspacer',
@@ -810,8 +932,8 @@ Ext.onReady(function() {
                                             width: 200,
                                             minValue : 0,
                                             maxValue : 999999,
-                                            maxLength : 6/*,
-                                            value: 1250*/
+											value: 129,
+                                            maxLength : 6
                                         },{
                                             xtype: 'hiddenfield',
                                             name : 'params.suplemento'
@@ -898,7 +1020,7 @@ Ext.onReady(function() {
 											}
 										}
 										cargarGridPaginado(storePolizaAsegurado, 
-											_URL_VALIDA_POLIZA_ASEGURADO, 
+											_URL_CONSULTA_POLIZAS_ASEGURADO, 
 											'polizasAsegurado', 
 											formBusqueda.getValues(), 
 											clbk);
@@ -1003,7 +1125,7 @@ Ext.onReady(function() {
 			listViewOpcionesConsulta.collapse();
 			listViewOpcionesConsulta.getSelectionModel().deselectAll();
 		}
-        cargarGridPaginado(storeSuplemento, _URL_DATOS_SUPLEMENTO, 'datosSuplemento', params, clbkSuplemento);
+        cargarGridPaginado(storeSuplemento, _URL_CONSULTA_DATOS_SUPLEMENTO, 'datosSuplemento', params, clbkSuplemento);
 		*/
 		
 		storeSuplemento.load({
@@ -1035,7 +1157,7 @@ Ext.onReady(function() {
    
 	function cargarGridPolizasAsegurado(p_params) {
 		Ext.Ajax.request({
-			url       : _URL_VALIDA_POLIZA_ASEGURADO,
+			url       : _URL_CONSULTA_POLIZAS_ASEGURADO,
 			params: p_params,			
 			callback: function(options, success, response) {
 				if(success){

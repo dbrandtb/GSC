@@ -2,7 +2,7 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
 
-    <bean id="mediaDAOJdbc" class="mx.com.aon.catbo.dao.MediaDAOImpl">
+    <!-- <bean id="mediaDAOJdbc" class="mx.com.aon.catbo.dao.MediaDAOImpl">
        <property name="dataSource" ref="dataSource" />
         <property name="lobHandler"><ref bean="oracleLobHandler"/></property>
         <property name="processResultManager">
@@ -15,10 +15,6 @@
         <property name="processResultManager">
             <ref bean="processResultManager"/>
         </property>
-	</bean> 
-        
-        <!--property name="abstractDAO">
-            <ref bean="archivosDAO"/>
-        </property-->
+	</bean> -->
     
 </beans>

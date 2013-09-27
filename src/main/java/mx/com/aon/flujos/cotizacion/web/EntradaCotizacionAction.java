@@ -11,7 +11,7 @@ import java.util.Map;
 
 import mx.com.aon.configurador.pantallas.model.PantallaVO;
 import mx.com.aon.configurador.pantallas.model.components.ComboClearOnSelectVO;
-import mx.com.aon.core.VariableKernel;
+import mx.com.aon.core.ApplicationException;
 import mx.com.aon.flujos.cotizacion.service.CotizacionPrincipalManager;
 import mx.com.aon.flujos.cotizacion.service.CotizacionService;
 import mx.com.aon.flujos.endoso.service.EndosoManager;
@@ -19,14 +19,12 @@ import mx.com.aon.flujos.model.TatriParametrosVO;
 import mx.com.aon.kernel.service.KernelManager;
 import mx.com.aon.portal.model.BaseObjectVO;
 import mx.com.aon.portal.model.UserVO;
-import mx.com.ice.services.to.screen.GlobalVariableContainerVO;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 
 import com.biosnet.ice.ext.elements.form.ComboControl;
-import mx.com.aon.core.ApplicationException;
 
 /**
  * 
@@ -309,18 +307,18 @@ public class EntradaCotizacionAction extends PrincipalCotizacionAction {
     		tipsit = ServletActionContext.getRequest().getParameter("CDTIPSIT");
     	}	
     	
-    	GlobalVariableContainerVO globalVarVo = new GlobalVariableContainerVO();
-    	globalVarVo.addVariableGlobal(VariableKernel.UnidadEconomica(), "1");
-    	globalVarVo.addVariableGlobal(VariableKernel.CodigoRamo(), ServletActionContext.getRequest().getParameter("CDRAMO"));
-    	globalVarVo.addVariableGlobal(VariableKernel.Estado(), "W");
-    	globalVarVo.addVariableGlobal(VariableKernel.NumeroSuplemento(), "0");
-    	globalVarVo.addVariableGlobal(VariableKernel.UsuarioBD(), usuario.getUser());
-    	globalVarVo.addVariableGlobal(VariableKernel.CodigoTipoSituacion(), tipsit);
-    	globalVarVo.addVariableGlobal(VariableKernel.NumeroSituacion(),"1");
-    	globalVarVo = kernelManager.cargaValoresPorDefecto(ServletActionContext.getRequest().getSession().getId(), usuario, globalVarVo, TIP_SUP_COBERTURAS);
-    	
+//    	GlobalVariableContainerVO globalVarVo = new GlobalVariableContainerVO();
+//    	globalVarVo.addVariableGlobal(VariableKernel.UnidadEconomica(), "1");
+//    	globalVarVo.addVariableGlobal(VariableKernel.CodigoRamo(), ServletActionContext.getRequest().getParameter("CDRAMO"));
+//    	globalVarVo.addVariableGlobal(VariableKernel.Estado(), "W");
+//    	globalVarVo.addVariableGlobal(VariableKernel.NumeroSuplemento(), "0");
+//    	globalVarVo.addVariableGlobal(VariableKernel.UsuarioBD(), usuario.getUser());
+//    	globalVarVo.addVariableGlobal(VariableKernel.CodigoTipoSituacion(), tipsit);
+//    	globalVarVo.addVariableGlobal(VariableKernel.NumeroSituacion(),"1");
+//    	globalVarVo = kernelManager.cargaValoresPorDefecto(ServletActionContext.getRequest().getSession().getId(), usuario, globalVarVo, TIP_SUP_COBERTURAS);
+//    	
     	//Subimos a sesion la Global Variable Container
-    	session.put("GLOBAL_VARIABLE_CONTAINER", globalVarVo);
+//    	session.put("GLOBAL_VARIABLE_CONTAINER", globalVarVo);
     	
         if (isDebugueable) {
             logger.debug("### Obtener pantalla final...");
@@ -328,8 +326,8 @@ public class EntradaCotizacionAction extends PrincipalCotizacionAction {
         
         Map<String, String> parametersPantallaFinal = new HashMap<String, String>();
         parametersPantallaFinal.put("pv_cdelemento_i", usuario.getEmpresa().getElementoId());
-        parametersPantallaFinal.put("pv_cdramo_i", globalVarVo.getValueVariableGlobal("vg.CdRamo"));
-        parametersPantallaFinal.put("pv_cdtipsit_i",   globalVarVo.getValueVariableGlobal(VariableKernel.CodigoTipoSituacion()));
+//        parametersPantallaFinal.put("pv_cdramo_i", globalVarVo.getValueVariableGlobal("vg.CdRamo"));
+//        parametersPantallaFinal.put("pv_cdtipsit_i",   globalVarVo.getValueVariableGlobal(VariableKernel.CodigoTipoSituacion()));
         parametersPantallaFinal.put("pv_cdtitulo_i", cdTitulo);
         parametersPantallaFinal.put("pv_cdsisrol_i", usuario.getRolActivo().getObjeto().getValue());
         PantallaVO pantalla = new PantallaVO ();
@@ -339,7 +337,7 @@ public class EntradaCotizacionAction extends PrincipalCotizacionAction {
 
         changePropertyEditableCombos();
         
-        modifyOnSelect((String)globalVarVo.getValueVariableGlobal(VariableKernel.CodigoTipoSituacion()));
+//        modifyOnSelect((String)globalVarVo.getValueVariableGlobal(VariableKernel.CodigoTipoSituacion()));
         
         if (isDebugueable){
         	logger.debug("@@CAPTURA_PANTALLA==> "+session.get("CAPTURA_PANTALLA"));
@@ -399,11 +397,11 @@ public class EntradaCotizacionAction extends PrincipalCotizacionAction {
     	 *  Copia de lineas de metodo entrar() para obtener un nuevo numero de poliza
     	 */
     	UserVO usuario = (UserVO)session.get("USUARIO");
-    	GlobalVariableContainerVO globalVarVo = new GlobalVariableContainerVO();
-        globalVarVo = (GlobalVariableContainerVO) session.get("GLOBAL_VARIABLE_CONTAINER");
-        String numeroPolizaAnterior = globalVarVo.getValueVariableGlobal(VariableKernel.NumeroPoliza());//Se almacena el ANTERIOR numero de poliza
-    	globalVarVo = kernelManager.cargaValoresPorDefecto(ServletActionContext.getRequest().getSession().getId(), usuario, globalVarVo, TIP_SUP_COBERTURAS);
-    	String numeroPolizaNueva = globalVarVo.getValueVariableGlobal(VariableKernel.NumeroPoliza());//Se almacena el NUEVO numero de poliza
+//    	GlobalVariableContainerVO globalVarVo = new GlobalVariableContainerVO();
+//        globalVarVo = (GlobalVariableContainerVO) session.get("GLOBAL_VARIABLE_CONTAINER");
+//        String numeroPolizaAnterior = globalVarVo.getValueVariableGlobal(VariableKernel.NumeroPoliza());//Se almacena el ANTERIOR numero de poliza
+//    	globalVarVo = kernelManager.cargaValoresPorDefecto(ServletActionContext.getRequest().getSession().getId(), usuario, globalVarVo, TIP_SUP_COBERTURAS);
+//    	String numeroPolizaNueva = globalVarVo.getValueVariableGlobal(VariableKernel.NumeroPoliza());//Se almacena el NUEVO numero de poliza
     	/*
     	 * Termina copia de lineas
     	 */
@@ -413,11 +411,11 @@ public class EntradaCotizacionAction extends PrincipalCotizacionAction {
     	 * Se clonan los objetos de la poliza anterior hacia la nueva poliza
     	 */
     	Map<String, String> paramsClonaObjetos = new HashMap<String, String>();
-    	paramsClonaObjetos.put("CDUNIECO", globalVarVo.getValueVariableGlobal(VariableKernel.UnidadEconomica()));
-    	paramsClonaObjetos.put("CDRAMO", globalVarVo.getValueVariableGlobal(VariableKernel.CodigoRamo()));
-    	paramsClonaObjetos.put("ESTADO", globalVarVo.getValueVariableGlobal(VariableKernel.Estado()));
-    	paramsClonaObjetos.put("NMPOLIZA", numeroPolizaAnterior);
-    	paramsClonaObjetos.put("NMPOLNVA", numeroPolizaNueva);
+//    	paramsClonaObjetos.put("CDUNIECO", globalVarVo.getValueVariableGlobal(VariableKernel.UnidadEconomica()));
+//    	paramsClonaObjetos.put("CDRAMO", globalVarVo.getValueVariableGlobal(VariableKernel.CodigoRamo()));
+//    	paramsClonaObjetos.put("ESTADO", globalVarVo.getValueVariableGlobal(VariableKernel.Estado()));
+//    	paramsClonaObjetos.put("NMPOLIZA", numeroPolizaAnterior);
+//    	paramsClonaObjetos.put("NMPOLNVA", numeroPolizaNueva);
     	cotizacionManager.clonaObjetos(paramsClonaObjetos);
     	/*
     	 * Termina clonar objetos de la poliza anterior hacia la nueva poliza
@@ -435,8 +433,8 @@ public class EntradaCotizacionAction extends PrincipalCotizacionAction {
         }
         Map<String, String> parametersPantallaFinal = new HashMap<String, String>();
         parametersPantallaFinal.put("CD_ELEMENT", usuario.getEmpresa().getElementoId());
-        parametersPantallaFinal.put("CD_RAMO", globalVarVo.getValueVariableGlobal("vg.CdRamo"));
-        parametersPantallaFinal.put("CD_TIPSIT", globalVarVo.getValueVariableGlobal(VariableKernel.CodigoTipoSituacion()));
+//        parametersPantallaFinal.put("CD_RAMO", globalVarVo.getValueVariableGlobal("vg.CdRamo"));
+//        parametersPantallaFinal.put("CD_TIPSIT", globalVarVo.getValueVariableGlobal(VariableKernel.CodigoTipoSituacion()));
         parametersPantallaFinal.put("CD_TITULO", cdTitulo);
         parametersPantallaFinal.put("CD_SISROL", usuario.getRolActivo().getObjeto().getValue());
         PantallaVO pantalla = new PantallaVO ();
