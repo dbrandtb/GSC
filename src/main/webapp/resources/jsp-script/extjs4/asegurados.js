@@ -1149,6 +1149,7 @@ Ext.onReady(function(){
         	                            //matar botones
         	                        	botonDetalle.hide();
         	                            botonComprar.hide();
+        	                            Ext.getCmp('botonImprimir').hide();
         	                            botonVerCoberturas.hide();
         	                            botonVerDetalleCobertura.hide();
         	                            Ext.getCmp('botonCotizar').hide();
@@ -1162,7 +1163,7 @@ Ext.onReady(function(){
         	                            window.parent.scrollTo(0,0);
         	                            var msg=Ext.Msg.show({
         	                                title:'Cotizaci&oacute;n comprada',
-        	                                msg:'Su poliza ha sido enviada a mesa de control con el n&uacute;mero '+Ext.getCmp('idCotizacion').getValue(),
+        	                                msg:'Su poliza ha sido enviada a mesa de control con el n&uacute;mero de tr&aacute;mite '+json.comprarNmpoliza,
         	                                buttons: Ext.Msg.OK
         	                                //,x:100
         	                                ,y:50
@@ -1414,6 +1415,7 @@ Ext.onReady(function(){
                     botonVerCoberturas.setDisabled(true);
                     botonDetalle.setDisabled(true);
                     botonComprar.setDisabled(true);
+                    Ext.getCmp('botonImprimir').setDisabled(true);
                     window.parent.scrollTo(0,0);
                     campoCodigoPostal.focus();
                 }
@@ -1435,8 +1437,10 @@ Ext.onReady(function(){
                     botonVerCoberturas.setDisabled(true);
                     botonDetalle.setDisabled(true);
                     botonComprar.setDisabled(true);
+                    Ext.getCmp('botonImprimir').setDisabled(true);
                     //desbloquear botones
                     botonComprar.show();
+                    Ext.getCmp('botonImprimir').show();
                     botonDetalle.show();
                     botonVerCoberturas.show();
                     botonVerDetalleCobertura.show();
@@ -1455,7 +1459,20 @@ Ext.onReady(function(){
                 disabled:true,
                 handler:function()
                 {
-                    
+                    var me=this;
+                    window.open(
+                        urlImprimirCotiza+'?p_cdplan='+selected_cd_plan
+                            +"&p_estado='W'"
+                            +'&p_poliza='+Ext.getCmp('idCotizacion').getValue()
+                            +'&p_ramo=2'
+                            +'&p_unieco=1'
+                            +'&destype=cache'
+    						+"&desformat=PDF"
+    						+"&userid="+repSrvUsr
+    						+"&report=COTIZACION.rdf"
+    						+"&paramform=no"
+                        ,'_blank'
+                        ,'width=800,height=600');
                 }
             }
         ],
@@ -1488,12 +1505,14 @@ Ext.onReady(function(){
                     //window.console&&console.log(selected_prima,selected_cd_plan,selected_ds_plan,selected_nm_plan,selected_record);
                     botonVerCoberturas.setDisabled(false);
                     botonComprar.setDisabled(false);
+                    Ext.getCmp('botonImprimir').setDisabled(false);
                     botonDetalle.setDisabled(false);
                 }
                 else
                 {
                     botonVerCoberturas.setDisabled(true);
                     botonComprar.setDisabled(true);
+                    Ext.getCmp('botonImprimir').setDisabled(true);
                     botonDetalle.setDisabled(true);
                 }
                 //alert("idplan = " + idplan + " desplan = " + desplan+ "  nmplan="+ nmplan + "  mnPrima=" + mnPrima);

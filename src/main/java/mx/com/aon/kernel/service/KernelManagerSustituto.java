@@ -51,6 +51,7 @@ public interface KernelManagerSustituto {
 	public String generaCdperson() throws ApplicationException;
 	public WrapperResultados movMpersona(Map<String,Object> parameters) throws ApplicationException;
 	public WrapperResultados movMpoliper(Map<String,Object> parameters) throws ApplicationException;
+	public WrapperResultados borraMpoliper(Map<String,Object> parameters) throws ApplicationException;
 	public List<Map<String,String>> obtenerCoberturasUsuario(Map<String,String> parametros) throws ApplicationException;
 	public WrapperResultados movPoligar(Map<String, String> param) throws ApplicationException;
 	public WrapperResultados movPolicap(Map<String, String> param) throws ApplicationException;

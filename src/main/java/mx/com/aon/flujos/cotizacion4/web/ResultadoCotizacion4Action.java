@@ -688,7 +688,8 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             parMesCon.put("pv_festatus_i"   , new Date());
             parMesCon.put("pv_status_i"     , "");
             parMesCon.put("pv_comments_i"   , "");
-            kernelManagerSustituto.PMovMesacontrol(parMesCon);
+            WrapperResultados mesaContWr=kernelManagerSustituto.PMovMesacontrol(parMesCon);
+            comprarNmpoliza=(String) mesaContWr.getItemMap().get("ntramite");
             
             success=true;
         }

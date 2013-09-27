@@ -24,7 +24,7 @@ var urlCargarp4            = '<s:url namespace="/" action="cargarPantallaDomicil
 var urlGuardarp4           = '<s:url namespace="/" action="guardarPantallaDomicilio" />';
 var formPanelp4;
 var contextop4             = '${ctx}';
-<s:if test='smap1!=null&&smap1.botonCopiar!=null&&smap1.botonCopiar==1'>
+<s:if test='smap1!=null&&smap1.botonCopiar!=null&&smap1.botonCopiar=="1"'>
 var esElContratanteP4      = false;
 </s:if>
 <s:else>
@@ -339,7 +339,7 @@ Ext.onReady(function(){
             		////// usa valores del padre (editarAsegurados.jsp) //////
             		storePersonasp2.each(function(record,index)
        				{
-            			if(record.get('estomador')=='Si')
+            			if(record.get('estomador')==true)
            				{
             				Ext.define('LoaderFormp4',
        					    {
@@ -457,9 +457,10 @@ Ext.onReady(function(){
     //////usa valores del padre (editarAsegurados.jsp) //////
     if(!esElContratanteP4)
     {
-	    storePersonasp2.each(function(record,index)
-	    {
-	        if(record.get('estomador')=='Si')
+	    //storePersonasp2.each(function(record,index)
+	    //{
+	    var record = storePersonasp2.getAt(0);
+	        if(true||record.get('estomador')==true)
 	        {
 	            Ext.define('LoaderFormp4',
 	            {
@@ -514,7 +515,7 @@ Ext.onReady(function(){
 	                }
 	            });
 	        }
-	    });
+	    //});
     }
     ////// usa valores del padre //////
     

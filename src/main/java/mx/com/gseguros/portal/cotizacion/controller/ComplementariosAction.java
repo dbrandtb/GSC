@@ -341,7 +341,10 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "Apellido_Paterno")));
 			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "Apellido_Materno")));
 			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "cdrfc")));
-			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "estomador")));
+			item1.add(Item.crear(null, null, Item.OBJ)
+					.add(new Item("name", "estomador"))
+					.add(new Item("type", "boolean"))
+					);
 			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "Parentesco")));
 			
 			/*
@@ -417,6 +420,19 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 						)
 					);
 			item3.add(Item.crear(null, null, Item.OBJ)
+					.add(new Item("xtype", "actioncolumn"))
+					.add(new Item("width", 80))
+					.add(new Item("menuDisabled", true))
+					.add(new Item("header", "Acciones"))
+					.add(new Item("items", null,Item.ARR)
+						.add(Item.crear(null,null,Item.OBJ)
+								.add("icon","resources/fam3icons/icons/report_key.png")
+								.add("tooltip","Editar domicilios")
+								.add(Item.crear("scope","this").setQuotes(""))
+								.add(Item.crear("handler","this.onDomiciliosClick").setQuotes(""))
+								)
+						));
+			item3.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("header", "nmsituac"))
 					.add(new Item("dataIndex", "nmsituac"))
 					.add(new Item("flex", 1))
@@ -438,6 +454,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 					.add(Item.crear("editor","editorRolesp2").setQuotes(""))
 					);*/
 			item2.add(Item.crear(null, null, Item.OBJ)
+					.add(new Item("xtype", "checkcolumn"))
 					.add(new Item("header", "Contratante"))
 					.add(new Item("dataIndex", "estomador"))
 					.add(new Item("width", 90))
@@ -536,9 +553,10 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 								.add(Item.crear("scope","this").setQuotes(""))
 								.add(Item.crear("handler","this.onExclusionClick").setQuotes(""))
 								)
-						/*.add(Item.crear(null,null,Item.OBJ)
+						/*
+						.add(Item.crear(null,null,Item.OBJ)
 								.add("icon","resources/fam3icons/icons/money.png")
-								.add("tooltip","Es tomador")
+								.add("tooltip","Es el contratante")
 								.add(Item.crear("scope","this").setQuotes(""))
 								.add(Item.crear("handler","this.onTomadorClick").setQuotes(""))
 								)
@@ -661,6 +679,10 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 				parametros.put("pv_swreclam_i",	null);
 				parametros.put("pv_accion_i",	"I");
 				log.debug("#iteracion mov mpoliper "+i);
+				if(((String)aseg.get("nmsituac")).equals("0"))
+				{
+					kernelManager.borraMpoliper(parametros);
+				}
 				kernelManager.movMpoliper(parametros);
 				
 				i++;
