@@ -3,90 +3,13 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
-	<bean id="emisionManager"
-		class="mx.com.aon.procesos.emision.service.impl.EmisionManagerImpl" parent="abstractManagerBean">
-		<!--property name="endpoints">
-			<map>
-				<entry key="OBTIENE_POLIZAS">
-					<ref bean="OBTIENE_POLIZAS" />
-				</entry>
-                <entry key="OBTIENE_POLIZA_DETALLE">
-                    <ref bean="OBTIENE_POLIZA_DETALLE" />
-                </entry>
-                <entry key="OBTIENE_OBJETO_ASEGURABLE">
-                    <ref bean="OBTIENE_OBJETO_ASEGURABLE" />
-                </entry>
-                <entry key="OBTIENE_FUNCION_POLIZA">
-                    <ref bean="OBTIENE_FUNCION_POLIZA" />
-                </entry>
-                <entry key="EMISION_OBTIENE_RECIBOS">
-                    <ref bean="EMISION_OBTIENE_RECIBOS" />
-                </entry>
-                <entry key="OBTIENE_PANTALLA_POLIZA">
-                    <ref bean="OBTIENE_PANTALLA_POLIZA" />
-                </entry>
-                <entry key="OBTIENE_DATOS_ADICIONALES">
-                    <ref bean="OBTIENE_DATOS_ADICIONALES" />
-                </entry>
-                <entry key="EMISION_OBTIENE_DATOS_ROL">
-                    <ref bean="EMISION_OBTIENE_DATOS_ROL" />
-                </entry>
-                <entry key="EMISION_OBTIENE_DATOS_ROL_EXT">
-                    <ref bean="EMISION_OBTIENE_DATOS_ROL_EXT" />
-                </entry>
-                <entry key="EMISION_OBTIENE_DATOS_COBERTURAS">
-                    <ref bean="EMISION_OBTIENE_DATOS_COBERTURAS" />
-                </entry>
-                <entry key="EMISION_OBTIENE_DATOS_ACCESORIOS">
-                    <ref bean="EMISION_OBTIENE_DATOS_ACCESORIOS" />
-                </entry>
-                <entry key="EMISION_DATOS_INCISOS">
-                    <ref bean="EMISION_DATOS_INCISOS" />
-                </entry>
-                <entry key="EMISION_GRID_COBERTURA_INCISOS">
-                    <ref bean="EMISION_GRID_COBERTURA_INCISOS" />
-                </entry>
-                <entry key="EMISION_GRID_ACCESORIOS_INCISOS">
-                    <ref bean="EMISION_GRID_ACCESORIOS_INCISOS" />
-                </entry>
-                <entry key="OBTIENE_MPOLIAGR">
-                    <ref bean="OBTIENE_MPOLIAGR" />
-                </entry>
-                <entry key="OBTIENE_DATOS_ADICIONALES_DETALLE_POLIZA">
-                    <ref bean="OBTIENE_DATOS_ADICIONALES_DETALLE_POLIZA" />
-                </entry>
-                <entry key="EMISION_OBTIENE_RECIBOS_DETALLE">
-                    <ref bean="EMISION_OBTIENE_RECIBOS_DETALLE" />
-                </entry>
-                <entry key="OBTIENE_AYUDA_COBERTURA">
-                    <ref bean="OBTIENE_AYUDA_COBERTURA" />
-                </entry>
-                <entry key="OBTIENE_POLIZA_MAESTRA">
-                    <ref bean="OBTIENE_POLIZA_MAESTRA" />
-                </entry>
-                <entry key="EMISION_GUARDA_POLIZA_MAESTRA">
-                    <ref bean="EMISION_GUARDA_POLIZA_MAESTRA" />
-                </entry>
-                <entry key="OBTIENE_POLIZA_MAESTRA_REG">
-                    <ref bean="OBTIENE_POLIZA_MAESTRA_REG" />
-                </entry>
-                <entry key="VALIDA_ENDOSO_POLIZA">
-                    <ref bean="VALIDA_ENDOSO_POLIZA" />
-                </entry>
-                <entry key="VALIDA_ENDOSO_REHABILITACION">
-                    <ref bean="VALIDA_ENDOSO_REHABILITACION" />
-                </entry>
-                <entry key="OBTIENE_POLIZA_MAESTRA_EXPORT">
-                    <ref bean="OBTIENE_POLIZA_MAESTRA_EXPORT" />
-                </entry>
-			</map>
-		</property-->
+	<bean id="emisionManager" class="mx.com.aon.procesos.emision.service.impl.EmisionManagerImpl" parent="abstractManagerBean">
 	</bean>
 	
-	<bean id="PDFGeneratorFormatoOT" class="mx.com.aon.pdfgenerator.PDFGeneratorFormatoOT" parent="abstractManagerJdbcTemplateInvoke">
+	<!-- <bean id="PDFGeneratorFormatoOT" class="mx.com.aon.pdfgenerator.PDFGeneratorFormatoOT" parent="abstractManagerJdbcTemplateInvoke">
         <property name="abstractDAO">
             <ref bean="formatoOTDao"/>
         </property>
-    </bean>
+    </bean> -->
 	
 </beans>

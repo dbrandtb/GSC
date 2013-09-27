@@ -5,8 +5,6 @@ package mx.com.aon.flujos.renovacion.web;
 
 import java.util.Map;
 
-import mx.com.ice.services.to.screen.GlobalVariableContainerVO;
-
 import org.apache.log4j.Logger;
 import org.apache.struts2.interceptor.RequestAware;
 import org.apache.struts2.interceptor.SessionAware;
@@ -34,7 +32,6 @@ public abstract class PrincipalRenovacionAction extends ActionSupport implements
     
     protected final transient Logger logger = Logger.getLogger(PrincipalRenovacionAction.class);
     
-    protected GlobalVariableContainerVO globalVarVO;
 
     /**
      * Método que actualiza el valor de 'clicBotonRegresar' 
@@ -52,19 +49,6 @@ public abstract class PrincipalRenovacionAction extends ActionSupport implements
 		return;
     }
     
-    /**
-     * @return the globalVarVO
-     */
-    public GlobalVariableContainerVO getGlobalVarVO() {
-        return globalVarVO;
-    }
-
-    /**
-     * @param globalVarVO the globalVarVO to set
-     */
-    public void setGlobalVarVO(GlobalVariableContainerVO globalVarVO) {
-        this.globalVarVO = globalVarVO;
-    }
     
     /**
      * 

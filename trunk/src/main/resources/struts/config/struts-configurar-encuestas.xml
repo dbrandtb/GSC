@@ -11,100 +11,8 @@
     <action name="buscarAsignacionEncuesta" class="listaConsultarAsigEncuestaAction" method="cmdBuscarClick">
     <result type="json"><param name="ignoreHierarchy">false</param></result>
     </action>   
-    
-    
-    <action name="buscarConfiguracionEncuestas" class="listaConfigurarEncuestaAction" method="cmdBuscarClick">
-            <result type="json"><param name="ignoreHierarchy">false</param></result>
-	</action>
 
- <action name="getConfigEncuesta" class="listaConfigurarEncuestaAction" method="cmdGetConfigEncuestaClick">
-            <result type="json"><param name="ignoreHierarchy">false</param></result>
-	</action>
-	
-
-     <action name="guardarConfiguracionEncuesta" class="configurarEncuestaAction" method="cmdGuardarConfiguracionEncuestaClick">
-            <result type="json"><param name="ignoreHierarchy">false</param></result>
-	</action>
-   
-     <action name="guardarConfiguracionEncuestaEditar" class="configurarEncuestaAction" method="cmdGuardarConfiguracionEncuestaEditarClick">
-            <result type="json"><param name="ignoreHierarchy">false</param></result>
-	</action>
-    
-     <action name="guardarAsignacionEncuesta" class="configurarEncuestaAction" method="cmdGuardarAsignacionEncuestaClick">
-            <result type="json"><param name="ignoreHierarchy">false</param></result>
-	</action>
-    
-    
-      <action name="borrarConfigEncuesta" class="configurarEncuestaAction" method="cmdBorrarConfigEncuestaClick">
-            <result type="json"><param name="ignoreHierarchy">false</param></result>
-	</action>
-    
-       <action name="guardarTiempoConfigEncuesta" class="configurarEncuestaAction" method="cmdGuardarTiempoConfigEncuestaClick">
-            <result type="json"><param name="ignoreHierarchy">false</param></result>
-	</action>
-    
-         <action name="getTiempoConfigEncuesta" class="listaConfigurarEncuestaAction" method="cmdGetTiempoConfigEncuestaClick">
-            <result type="json"><param name="ignoreHierarchy">false</param></result>
-	</action>
-    
-    
-        <action name="borrarTiempoConfigEncuesta" class="configurarEncuestaAction" method="cmdBorrarTiempoConfigEncuestaClick">
-            <result type="json"><param name="ignoreHierarchy">false</param></result>
-	</action>
-    
-    
-         <action name="obtenerAsignacionEncuesta" class="listaConfigurarEncuestaAction" method="cmdObtenerAsignacionEncuestaClick">
-            <result type="json"><param name="ignoreHierarchy">false</param></result>
-	</action>
-    
-    
-          <action name="obtenerValoresEncuesta" class="listaConfigurarEncuestaAction" method="cmdObtenerValoresEncuestaClick">
-            <result type="json"><param name="ignoreHierarchy">false</param></result>
-	</action>
-    
-     <action name="borrarValoresEncuesta" class="configurarEncuestaAction" method="cmdBorrarValoresEncuestaClick">
-            <result type="json"><param name="ignoreHierarchy">false</param></result>
-	</action>
-    
-    
-        <action name="getAsignacionEncuesta" class="listaConfigurarEncuestaAction" method="cmdGetAsignacionEncuestaClick">
-            <result type="json"><param name="ignoreHierarchy">false</param></result>
-	</action>
-    
-       <action name="borrarAsignacionEncuesta" class="configurarEncuestaAction" method="cmdBorrarAsignacionEncuestaClick">
-            <result type="json"><param name="ignoreHierarchy">false</param></result>
-	</action>
-    
-    
-    
-     <action name="exportarConfigEncuesta" class="listaConfigurarEncuestaAction" method="cmdExportarConfigEncuestaClick">
-        <result name="success" type="stream">
-           <param name="contentType">${contentType}</param>
-            <param name="inputName">inputStream</param>
-            <param name="contentDisposition">filename="${filename}"</param>
-            <param name="bufferSize">4096</param>
-        </result>
-    </action>  
-
- <action name="exportarAsignacionEncuesta" class="listaConfigurarEncuestaAction" method="cmdExportarAsignacionEncuestaClick">
-        <result name="success" type="stream">
-            <param name="contentType">${contentType}</param>
-            <param name="inputName">inputStream</param>
-            <param name="contentDisposition">filename="${filename}"</param>
-            <param name="bufferSize">4096</param>
-        </result>
-    </action>  
-
-<action name="exportarValoresEncuesta" class="listaConfigurarEncuestaAction" method="cmdExportarValoresEncuestaClick">
-        <result name="success" type="stream">
-            <param name="contentType">${contentType}</param>
-            <param name="inputName">inputStream</param>
-            <param name="contentDisposition">filename="${filename}"</param>
-            <param name="bufferSize">4096</param>
-        </result>
-    </action>  
-
-<action name="exportarAsignacionEncuestaNueva" class="listaConsultarAsigEncuestaAction" method="cmdExportarClick">
+    <action name="exportarAsignacionEncuestaNueva" class="listaConsultarAsigEncuestaAction" method="cmdExportarClick">
         <result name="success" type="stream">
             <param name="contentType">${contentType}</param>
             <param name="inputName">inputStream</param>
@@ -112,27 +20,6 @@
             <param name="bufferSize">4096</param>
         </result>
     </action> 
-
-
-        <action name="getValorEncuesta" class="listaConfigurarEncuestaDinamicoAction" method="cmdGetValorEncuestaClick">
-            <result type="json"><param name="ignoreHierarchy">false</param></result>
-	</action>
-
- 	<action name="getValorEncuestaEnc" class="listaConfigurarEncuestaAction" method="cmdGetValorEncuestaEncClick">
-            <result type="json"><param name="ignoreHierarchy">false</param></result>
-	</action>
-    
-
-	<action name="exportarValorEncuesta" class="exportarIngresarEncuestasEditarAction" method="showPDF">
-	   <result name="success" type="stream">
-	    <param name="contentType">${contentType}</param>
-	    <param name="inputName">inputStream</param>
-	    <param name="contentDisposition">filename="${filename}"</param>
-	    <param name="bufferSize">4096</param>
-	   </result>
-	  </action>
-
-
 
 	</package>
 

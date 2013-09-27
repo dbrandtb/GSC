@@ -2,7 +2,6 @@ package mx.com.aon.pdfgenerator.dao;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -10,11 +9,9 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.apache.log4j.Logger;
-
-import mx.com.aon.pdfgenerator.vo.TituloVO;
-import mx.com.ice.kernel.dao.QuerysBd;
 import oracle.jdbc.OracleTypes;
+
+import org.apache.log4j.Logger;
 
 public class PDFServicesEndososJDBC {
 	private static Logger logger = Logger.getLogger(PDFServicesJDBC.class);
@@ -70,7 +67,8 @@ public class PDFServicesEndososJDBC {
 			
 			
 			// Se realiza la conexión
-			//*/conn = QuerysBd.getConnection();
+			//*/
+			//conn = QuerysBd.getConnection();
 		
 			logger.debug(">>>>>>> antes de llamar a obtenOpcionCaratulaEndosos");
 				
@@ -160,7 +158,7 @@ public class PDFServicesEndososJDBC {
 			
 			*/
 		// Se realiza la conexión
-		conn = QuerysBd.getConnection();
+		//conn = QuerysBd.getConnection();
 		
 				logger.debug(">>>>>>> antes de llamar a P_busca_cam_B");
 				cs = conn.prepareCall("{ call PKG_CARATULAS2.P_busca_cam_B( ?,?,?,?,?,?,? ) }");
@@ -322,7 +320,7 @@ public class PDFServicesEndososJDBC {
 			
 			*/
 		// Se realiza la conexión
-		conn = QuerysBd.getConnection();
+		//conn = QuerysBd.getConnection();
 		
 				logger.debug(">>>>>>> antes de llamar a P_Obtiene_Endosos_AD");
 				cs = conn.prepareCall("{ call PKG_CARATULAS2.P_Obtiene_Endosos_AD( ?,?,?,?,?,?,? ) }");

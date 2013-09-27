@@ -7,12 +7,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.xml.parsers.FactoryConfigurationError;
 
-import mx.com.aon.kernel.cache.CacheSistema;
-import mx.com.ice.kernel.core.Global;
-import mx.com.ice.kernel.core.PropertyReader;
-
 import org.apache.log4j.Logger;
-import org.apache.log4j.xml.DOMConfigurator;
 public class ApplicationInitializer implements ServletContextListener{
 
 	 //Logger

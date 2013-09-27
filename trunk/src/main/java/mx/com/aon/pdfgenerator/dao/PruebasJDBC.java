@@ -6,15 +6,13 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.apache.log4j.Logger;
-
-import mx.com.aon.pdfgenerator.vo.TituloVO;
-import mx.com.ice.kernel.dao.QuerysBd;
 import oracle.jdbc.OracleTypes;
+
+import org.apache.log4j.Logger;
+//import mx.com.ice.kernel.dao.QuerysBd;
 
 public class PruebasJDBC {
 	private static Logger logger = Logger.getLogger(PruebasJDBC.class);

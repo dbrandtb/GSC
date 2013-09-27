@@ -13,21 +13,23 @@
 	    
 	    <!-- Archivos de la aplicacion -->
 	    <script type="text/javascript">
-	    var _CONTEXT = '${ctx}';
-	    //var _URL_DATOS_SUPLEMENTO =          _CONTEXT + '/consultasPoliza/consultaDatosSuplemento.action';
-	    var _URL_DATOS_SUPLEMENTO = '<s:url action="consultaDatosSuplemento" namespace="/consultasPoliza"/>';
-	    var _URL_DATOS_SUPLEMENTO_DUMMY =    _CONTEXT + '/resources/scripts/consultaPolizas/suplementos.json';
-	    var _URL_TIPOS_CONSULTA_DUMMY =      _CONTEXT + '/resources/scripts/consultaPolizas/tiposConsulta.json';
-	    var _URL_VALIDA_DATOS_POLIZA =       '<s:url action="consultaDatosPoliza" namespace="/consultasPoliza"/>';
-	    var _URL_VALIDA_DATOS_TARIFICACION = '<s:url action="consultaDatosTarifaPoliza" namespace="/consultasPoliza"/>';
-	    var _URL_VALIDA_POLIZA_ASEGURADO =   '<s:url action="consultaPolizasAsegurado" namespace="/consultasPoliza"/>';
-	    var _URL_VALIDA_DATOS_ASEGURADO =   '<s:url action="consultaDatosAsegurado" namespace="/consultasPoliza"/>';
-	    var _URL_DOCUMENTOS = '<s:url namespace="/documentos"  action="ventanaDocumentosPoliza" />';
-	    var _MSG_ERROR = 'Error';
-	    var _MSG_ERROR_HISTORICO_MOVIMIENTOS = 'Ocurri\u00F3 un error al obtener el hist\u00F3rico de movimientos';
-	    var _MSG_SIN_DATOS = 'Sin informaci\u00F3n';
-	    var _MSG_SIN_DATOS_HISTORICO_MOVIMIENTOS = 'No se encontraron resultados. Intente cambiar los filtros de b\u00FAsqueda.';
-	    
+		    var _CONTEXT = '${ctx}';
+		    
+		    var _URL_DATOS_SUPLEMENTO_DUMMY =       _CONTEXT + '/resources/scripts/consultaPolizas/suplementos.json';
+	        var _URL_TIPOS_CONSULTA_DUMMY =         _CONTEXT + '/resources/scripts/consultaPolizas/tiposConsulta.json';
+	        
+		    var _URL_CONSULTA_DATOS_POLIZA =        '<s:url action="consultaDatosPoliza"       namespace="/consultasPoliza"/>';
+		    var _URL_CONSULTA_DATOS_SUPLEMENTO =    '<s:url action="consultaDatosSuplemento"   namespace="/consultasPoliza"/>';
+		    var _URL_CONSULTA_DATOS_TARIFA_POLIZA = '<s:url action="consultaDatosTarifaPoliza" namespace="/consultasPoliza"/>';
+		    var _URL_CONSULTA_DATOS_ASEGURADO =     '<s:url action="consultaDatosAsegurado"    namespace="/consultasPoliza"/>';
+		    var _URL_CONSULTA_POLIZAS_ASEGURADO =   '<s:url action="consultaPolizasAsegurado"  namespace="/consultasPoliza"/>';
+		    var _URL_CONSULTA_DOCUMENTOS =          '<s:url action="ventanaDocumentosPoliza"   namespace="/documentos" />';
+		    var _URL_CONSULTA_DATOS_AGENTE =        '<s:url action="ventanaDocumentosPoliza"   namespace="/consultaDatosAgente" />';
+		    
+		    var _MSG_ERROR =                           'Error';
+		    var _MSG_ERROR_HISTORICO_MOVIMIENTOS =     'Ocurri\u00F3 un error al obtener el hist\u00F3rico de movimientos';
+		    var _MSG_SIN_DATOS =                       'Sin informaci\u00F3n';
+		    var _MSG_SIN_DATOS_HISTORICO_MOVIMIENTOS = 'No se encontraron resultados. Intente cambiar los filtros de b\u00FAsqueda.';
 	    
 	    //Funciones comunes
 	    /**

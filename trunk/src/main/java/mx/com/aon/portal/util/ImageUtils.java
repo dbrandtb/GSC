@@ -9,7 +9,6 @@ import org.apache.struts2.ServletActionContext;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
-import mx.com.ice.kernel.core.PropertyReader;
 
 /**
  * sergio.ramirez
@@ -28,10 +27,11 @@ public class ImageUtils  extends ActionSupport{
 	//private static final String DIR_SALIDA = "/opt/oracle/product/1013/soa/Apache/Apache/htdocs/resources/";
 	
 	// ruta de carpeta externa para Prepod
-	//private static final String DIR_SALIDA = "/opt/oracle/product/10.1.3.1/OracleAS_1/Apache/Apache/htdocs/resources/";
+	private static final String DIR_SALIDA = "/opt/oracle/product/10.1.3.1/OracleAS_1/Apache/Apache/htdocs/resources/";
 	
 	
-	private static final String DIR_SALIDA = PropertyReader.readProperty("img.url.confpagimage");
+	//	private static final String DIR_SALIDA = PropertyReader.readProperty("img.url.confpagimage");
+	
    // private static String pruebaRuta = PropertyReader.readProperty("xml.url.file.test");
 	
 	

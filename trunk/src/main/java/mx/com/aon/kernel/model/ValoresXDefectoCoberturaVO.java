@@ -8,8 +8,6 @@ import java.io.Serializable;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
-import mx.com.ice.services.to.Campo;
-
 /**
  * @author eflores
  * @date 26/09/2008

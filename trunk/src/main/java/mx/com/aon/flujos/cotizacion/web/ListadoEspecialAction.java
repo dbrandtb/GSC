@@ -9,7 +9,6 @@ import mx.com.aon.flujos.cotizacion.service.CotizacionPrincipalManager;
 import mx.com.aon.flujos.cotizacion.service.CotizacionService;
 import mx.com.aon.portal.model.BaseObjectVO;
 import mx.com.aon.utils.Constantes;
-import mx.com.ice.services.to.screen.GlobalVariableContainerVO;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
@@ -83,7 +82,7 @@ public class ListadoEspecialAction extends PrincipalCotizacionAction {
 	private int numeroObjeto;
 
 	private TreeMap<String, String> parameters;
-	private GlobalVariableContainerVO containerVO;
+//	private GlobalVariableContainerVO containerVO;
 
 	private boolean condicion;
 	private boolean valido;
@@ -100,6 +99,7 @@ public class ListadoEspecialAction extends PrincipalCotizacionAction {
 	 *             Metodo que carga la etiqueta.
 	 */
 	public String obtieneLabelObjetos() throws Exception {
+		/*
 		if (session.containsKey("GLOBAL_VARIABLE_CONTAINER")) {
 			containerVO = (GlobalVariableContainerVO) session.get("GLOBAL_VARIABLE_CONTAINER");
 			if (containerVO != null) {
@@ -113,7 +113,7 @@ public class ListadoEspecialAction extends PrincipalCotizacionAction {
 		} else {
 			success = false;
 		}
-
+*/
 		return SUCCESS;
 
 	}
@@ -125,7 +125,8 @@ public class ListadoEspecialAction extends PrincipalCotizacionAction {
 	 *             Metodo que carga la lista que llena el grid de Equipos
 	 *             Especiales.
 	 */
-	public String obtieneEquipo() throws Exception {
+	public String obtieneEquipo() throws Exception {/*
+		
 		logger.debug("%%%%%%%%ENTRO AL METODO GETEQUIPO%%%%%%%%");
 		if (session.containsKey("GLOBAL_VARIABLE_CONTAINER")) {
 			containerVO = (GlobalVariableContainerVO) session.get("GLOBAL_VARIABLE_CONTAINER");
@@ -161,6 +162,7 @@ public class ListadoEspecialAction extends PrincipalCotizacionAction {
 		} else {
 			success = false;
 		}
+		*/
 		return SUCCESS;
 	}
 
@@ -172,9 +174,11 @@ public class ListadoEspecialAction extends PrincipalCotizacionAction {
 	 * 
 	 */
 	public String obtieneTipos() throws Exception {
+		
 		/**TODO
 		 * CAMBIAR EL NOMBRE DE ESTE METODO A OBTIENE TIPOS, YA QUE ESTA CAUSANDO CONFLICTOS
 		 */
+		/*
 		logger.debug("Entro al metodo que carga tipos");
 		if (session.containsKey("GLOBAL_VARIABLE_CONTAINER")) {
 			containerVO = (GlobalVariableContainerVO) session.get("GLOBAL_VARIABLE_CONTAINER");
@@ -190,6 +194,7 @@ public class ListadoEspecialAction extends PrincipalCotizacionAction {
 		} else {
 			success = false;
 		}
+		*/
 		return SUCCESS;
 	}
 
@@ -255,6 +260,7 @@ public class ListadoEspecialAction extends PrincipalCotizacionAction {
 	 */
 	@SuppressWarnings("unchecked")
 	public String editAtributosVariables() throws Exception{
+		/*
 		if (session.containsKey("GLOBAL_VARIABLE_CONTAINER")) {
 			containerVO = (GlobalVariableContainerVO) session.get("GLOBAL_VARIABLE_CONTAINER");
 			if (containerVO != null) {
@@ -318,7 +324,7 @@ public class ListadoEspecialAction extends PrincipalCotizacionAction {
 				}
 			}
 		}
-		
+		*/
 		return SUCCESS;
 	}
 	
@@ -385,6 +391,7 @@ public class ListadoEspecialAction extends PrincipalCotizacionAction {
 	}
 
 	public String editarEquipo() throws Exception{
+		/*
 		logger.debug("::ENTRANDO AL METODO QUE EDITA UN EQUIPO::");
 		if (session.containsKey("GLOBAL_VARIABLE_CONTAINER")) {
 			containerVO = (GlobalVariableContainerVO) session.get("GLOBAL_VARIABLE_CONTAINER");
@@ -586,6 +593,7 @@ public class ListadoEspecialAction extends PrincipalCotizacionAction {
 				success = true;					
 			}
 		}
+		*/
 		return SUCCESS;
 	}
 	
@@ -597,7 +605,7 @@ public class ListadoEspecialAction extends PrincipalCotizacionAction {
 	 *             Metodo que guarda un equipo especial.
 	 */
 	public String guardaEquipo() throws Exception {
-
+		/*
 		logger.debug("Entrando al metodo guardaEquipo");
 		if (session.containsKey("GLOBAL_VARIABLE_CONTAINER")) {
 			containerVO = (GlobalVariableContainerVO) session.get("GLOBAL_VARIABLE_CONTAINER");
@@ -817,6 +825,7 @@ public class ListadoEspecialAction extends PrincipalCotizacionAction {
 		} else {
 			success = false;
 		}
+		*/
 		return SUCCESS;
 	}	
 
@@ -1309,21 +1318,6 @@ public class ListadoEspecialAction extends PrincipalCotizacionAction {
 		this.descripcionObjeto = descripcionObjeto;
 	}
 
-	/**
-	 * 
-	 * @return containerVO
-	 */
-	public GlobalVariableContainerVO getContainerVO() {
-		return containerVO;
-	}
-
-	/**
-	 * 
-	 * @param containerVO
-	 */
-	public void setContainerVO(GlobalVariableContainerVO containerVO) {
-		this.containerVO = containerVO;
-	}
 
 	/**
 	 * 

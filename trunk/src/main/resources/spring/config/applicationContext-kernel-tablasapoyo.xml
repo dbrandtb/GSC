@@ -2,77 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
       
-    <bean id="variableTablasApoyo" class="mx.com.ice.kernel.evaluador.VariableTabladeApoyo" scope="prototype">
-        
-        
-        <!-- property name="endpoints">
-            <map>
-                <entry key="P_EJECUTA_QUERY_1CLAVE">
-                    <ref bean="P_EJECUTA_QUERY_1CLAVE" />
-                </entry>
-                <entry key="P_EJECUTA_QUERY_1CLAVE_TRAMOS">
-                    <ref bean="P_EJECUTA_QUERY_1CLAVE_TRAMOS" />
-                </entry>
-                <entry key="P_EJECUTA_QUERY_2CLAVE">
-                    <ref bean="P_EJECUTA_QUERY_2CLAVE" />
-                </entry>
-                <entry key="P_EJECUTA_QUERY_2CLAVE_TRAMOS">
-                    <ref bean="P_EJECUTA_QUERY_2CLAVE_TRAMOS" />
-                </entry>
-                <entry key="P_EJECUTA_QUERY_3CLAVE">
-                    <ref bean="P_EJECUTA_QUERY_3CLAVE" />
-                </entry>
-                <entry key="P_EJECUTA_QUERY_3CLAVE_TRAMOS">
-                    <ref bean="P_EJECUTA_QUERY_3CLAVE_TRAMOS" />
-                </entry>
-                <entry key="P_EJECUTA_QUERY_4CLAVE">
-                    <ref bean="P_EJECUTA_QUERY_4CLAVE" />
-                </entry>
-                <entry key="P_EJECUTA_QUERY_4CLAVE_TRAMOS">
-                    <ref bean="P_EJECUTA_QUERY_4CLAVE_TRAMOS" />
-                </entry>
-                
-                <entry key="P_EJECUTA_QUERY_5CLAVE">
-                    <ref bean="P_EJECUTA_QUERY_5CLAVE" />
-                </entry>
-                <entry key="P_EJECUTA_QUERY_5CLAVE_TRAMOS">
-                    <ref bean="P_EJECUTA_QUERY_5CLAVE_TRAMOS" />
-                </entry>
-                
-                
-                <!entry key="P_EJECUTA_QUERY_TABLAAPOYO">
-                    <ref bean="P_EJECUTA_QUERY_TABLAAPOYO" />
-                </entry
-                
-                <entry key="P_GET_FORMATOS_CLAVES">
-                    <ref bean="P_GET_FORMATOS_CLAVES" />
-                </entry>
-                
-                <! 
-                   ....REVISAR BEAN Y ARCHIVO... 
-                <entry key="P_GET_FORMATOS_CLAVES_VTA">
-                    <ref bean="P_GET_FORMATOS_CLAVES_VTA" />
-                </entry>
-                >
-                <!
-                <entry key="P_GET_NMTABLA_LISTA">
-                    <ref bean="P_GET_NMTABLA_LISTA" />
-                </entry>
-                <entry key="P_GET_TABLADEAPOYO">
-                    <ref bean="P_GET_TABLADEAPOYO" />
-                </entry>
-                
-                
-                <entry key="P_GET_TIPOACCESO">
-                    <ref bean="P_GET_TIPOACCESO" />
-                </entry>
-                <!
-                <entry key="P_TABLA_APOYO_QUERY">
-                    <ref bean="P_TABLA_APOYO_QUERY" />
-                </entry>
-                
-            </map>
-        </property-->
-    </bean>
+    <!-- <bean id="variableTablasApoyo" class="mx.com.ice.kernel.evaluador.VariableTabladeApoyo" scope="prototype">       
+    </bean> -->
 
 </beans>

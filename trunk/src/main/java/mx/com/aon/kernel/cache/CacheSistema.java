@@ -10,19 +10,6 @@
 
 package mx.com.aon.kernel.cache;
 
-import javax.xml.bind.JAXBException;
-
-import mx.com.ice.kernel.cache.CacheBloques;
-import mx.com.ice.kernel.cache.CacheDataTabladeApoyo;
-import mx.com.ice.kernel.cache.CacheProducto;
-import mx.com.ice.kernel.cache.CacheVariablesGlobales;
-import mx.com.ice.kernel.core.PropertyReader;
-import mx.com.ice.kernel.utileriaskernel.ListaFunciones;
-import mx.com.ice.kernel.utileriaskernel.ListaOperadores;
-import mx.com.ice.kernel.utileriaskernel.ListaPrioridades;
-import mx.com.royalsun.newalea.xml.CacheMensajes;
-import mx.com.royalsun.newalea.xml.GeneradorDataTabaladeApoyo;
-
 import org.apache.log4j.Logger;
 
 public class CacheSistema {
@@ -51,7 +38,7 @@ public class CacheSistema {
 
         if ( "TOTAL".equals(idProducto) ){
             try {
-                CacheProducto.cargaTodosLosProductos();            
+//                CacheProducto.cargaTodosLosProductos();            
             }catch (Exception ex) {
                 logger.debug("### exception es " +  ex ); 
                 logger.error(ex.getMessage());
@@ -61,11 +48,11 @@ public class CacheSistema {
         } else {
 
             try {
-                CacheProducto.cargaCacheProducto( idProducto );     
+//                CacheProducto.cargaCacheProducto( idProducto );     
                 logger.info("Se ha cargado el producto " + idProducto );
-            }catch(JAXBException jxbe){
-                logger.error("error "+jxbe);
-                throw new JAXBException(" la carga de la definición del producto al leer el archivo");            
+//            }catch(JAXBException jxbe){
+//                logger.error("error "+jxbe);
+//                throw new JAXBException(" la carga de la definición del producto al leer el archivo");            
             } catch (Exception ex) {
                 logger.error(ex.getMessage()); 
                 //throw new Exception("la carga del producto" );       
@@ -89,20 +76,20 @@ public class CacheSistema {
 
         if ( "TOTAL".equals(idProducto) ){
             try {
-                CacheProducto.generaXMLTodosLosProductos();
+//                CacheProducto.generaXMLTodosLosProductos();
             } catch (Exception ex) {
                 logger.error(ex.getMessage());
                 throw new Exception(ex.getMessage());            
             }          
         } else {
             try {
-                CacheProducto.generarXMLProducto(idProducto);
+//                CacheProducto.generarXMLProducto(idProducto);
                 if( logger.isDebugEnabled() ){
                     logger.info("Se ha generado XML del producto " + idProducto );
                 }
-            }catch(JAXBException jxbe){
-                logger.error("error "+jxbe);
-                throw new JAXBException(" la generacion de la definición del producto al leer el archivo");            
+//            }catch(JAXBException jxbe){
+//                logger.error("error "+jxbe);
+//                throw new JAXBException(" la generacion de la definición del producto al leer el archivo");            
             } catch (Exception ex) {
                 logger.error(ex.getMessage()); 
                 throw new Exception(ex.getMessage() );            
@@ -115,8 +102,8 @@ public class CacheSistema {
      */
     public static void cargarMensajes() throws Exception{
         try{
-            CacheMensajes mensajes = new CacheMensajes();   
-            mensajes.cargaCacheMensajes();
+//            CacheMensajes mensajes = new CacheMensajes();   
+//            mensajes.cargaCacheMensajes();
             logger.info("Se cargó cache de mensajes.");
         } catch (Exception ex) {
             logger.error(ex);
@@ -129,8 +116,8 @@ public class CacheSistema {
      */
     public static void generarMensajes() throws Exception{
         try{
-            CacheMensajes mensajes = new CacheMensajes();   
-            mensajes.creaXMLMensaje();
+//            CacheMensajes mensajes = new CacheMensajes();   
+//            mensajes.creaXMLMensaje();
             logger.info("Se genero xml del cache de mensajes.");
         } catch (Exception ex) {
             logger.error(ex.getMessage());
@@ -155,7 +142,7 @@ public class CacheSistema {
 		}
 		if ("TOTAL".equals(idTabla)) {
 			try {
-				CacheDataTabladeApoyo.loadAll(); // esto momentaneamente
+//				CacheDataTabladeApoyo.loadAll(); // esto momentaneamente
 				// CacheDataTabladeApoyo.load("19");
 				if (logger.isInfoEnabled()) {
 					logger.info("Se han cargado todas las tablas de apoyo");
@@ -166,7 +153,7 @@ public class CacheSistema {
 			}
 		} else {
 			try {
-				CacheDataTabladeApoyo.load(idTabla);
+//				CacheDataTabladeApoyo.load(idTabla);
 				if (logger.isInfoEnabled()) {
 					logger.info("Se ha cargado la tabla " + idTabla);
 				}
@@ -191,10 +178,10 @@ public class CacheSistema {
 		if (logger.isInfoEnabled()) {
 			logger.info("Generando  inicial de la tabla: " + idTabla);
 		}
-		GeneradorDataTabaladeApoyo gDataTabApoyo = new GeneradorDataTabaladeApoyo();
+//		GeneradorDataTabaladeApoyo gDataTabApoyo = new GeneradorDataTabaladeApoyo();
 		if ("TOTAL".equals(idTabla)) {
 			try {
-				gDataTabApoyo.generarXMLDataTabladeApoyo();
+//				gDataTabApoyo.generarXMLDataTabladeApoyo();
 				// GeneradorDataFormatoTabladeApoyo.generarXMLFormatoTabladeApoyo();
 				if (logger.isInfoEnabled()) {
 					logger.info("Se han generado todas las tablas de apoyo");
@@ -206,7 +193,7 @@ public class CacheSistema {
 		} else {
 			try {
 				// GeneradorDataFormatoTabladeApoyo.generarXMLFormatoTabladeApoyo();
-				gDataTabApoyo.generarXMLTabladeApoyo(idTabla);
+//				gDataTabApoyo.generarXMLTabladeApoyo(idTabla);
 				if (logger.isInfoEnabled()) {
 					logger.info("Se ha generado la tabla " + idTabla);
 				}
@@ -226,12 +213,12 @@ public class CacheSistema {
     public static void cargarDefinicionBloques() throws Exception{
         logger.info("Cargando definicion de bloques: ");
         try {
-            CacheBloques.load();   
+//            CacheBloques.load();   
             logger.info("Se ha cargado la definición de los bloques " );
 
-        }catch(JAXBException jxbe){
-            logger.error("error "+jxbe,jxbe);
-            throw new JAXBException("  la carga de la definición de los bloques al leer el archivo");            
+//        }catch(JAXBException jxbe){
+//            logger.error("error "+jxbe,jxbe);
+//            throw new JAXBException("  la carga de la definición de los bloques al leer el archivo");            
         }catch (Exception ex) {
             logger.error(ex);
             throw new Exception(" la carga de la definición de los bloques por " +ex);            
@@ -246,11 +233,11 @@ public class CacheSistema {
     public static void cargarFunciones() throws Exception{
         logger.info("Cargando lista de funciones: ");
         try {
-            ListaFunciones.cargarfunciones();  
+//            ListaFunciones.cargarfunciones();  
             logger.info("Se ha cargado la lista de funciones " );
-        }catch(JAXBException jxbe){
-            logger.error("error "+jxbe);
-            throw new JAXBException(" la carga de la definición de los bloques al leer el archivo");            
+//        }catch(JAXBException jxbe){
+//            logger.error("error "+jxbe);
+//            throw new JAXBException(" la carga de la definición de los bloques al leer el archivo");            
         }catch (Exception ex) {
 
             logger.error(ex);
@@ -266,12 +253,12 @@ public class CacheSistema {
     public static void cargarDefinicionVariablesGlobales() throws Exception{
         logger.info("Cargando definicion de las variables globales: ");
         try {
-            CacheVariablesGlobales.load();   
+//            CacheVariablesGlobales.load();   
             logger.info("Se ha cargado la definición de las variables globales " );
 
-        }catch(JAXBException jxbe){
-            logger.error("error "+jxbe);
-            throw new JAXBException(" la carga de la definición de las variables globales al leer el archivo de variables globales");            
+//        }catch(JAXBException jxbe){
+//            logger.error("error "+jxbe);
+//            throw new JAXBException(" la carga de la definición de las variables globales al leer el archivo de variables globales");            
         }catch (Exception ex) {
             logger.error(ex);
             throw new Exception("la carga de la definicion de las variables globales");            
@@ -285,11 +272,11 @@ public class CacheSistema {
     public static void cargarPrecedencia() throws Exception{
         logger.info("Cargando precedencia de operadores: ");
         try {
-            ListaPrioridades.cargarPrioridades();  
+//            ListaPrioridades.cargarPrioridades();  
             logger.info("Se ha cargado la precedencia de operadores " );
-        }catch(JAXBException jxbe){
-            logger.error("error "+jxbe);
-            throw new JAXBException(" La carga de la definición de los bloques al leer el archivo");            
+//        }catch(JAXBException jxbe){
+//            logger.error("error "+jxbe);
+//            throw new JAXBException(" La carga de la definición de los bloques al leer el archivo");            
         } catch (Exception ex) {
             logger.error(ex);
             throw new Exception("La carga de la precedencia de operadores" +
@@ -305,11 +292,11 @@ public class CacheSistema {
     public static void cargarOperadores() throws Exception{
         logger.info("Cargando operadores: ");
         try {
-            ListaOperadores.cargarOperadores();  
+//            ListaOperadores.cargarOperadores();  
             logger.info("Se han cargado los operadores " );
-        }catch(JAXBException jxbe){
-            logger.error("error "+jxbe);
-            throw new JAXBException("La carga de la definición de los bloques al leer el archivo");            
+//        }catch(JAXBException jxbe){
+//            logger.error("error "+jxbe);
+//            throw new JAXBException("La carga de la definición de los bloques al leer el archivo");            
         }  catch (Exception ex) {
             logger.error(ex);
             throw new Exception("La carga de los operadores" + ex.getMessage());            
@@ -389,11 +376,11 @@ public class CacheSistema {
 
 
 
-        String generarXMLTablaApoyo=PropertyReader.readProperty("CacheSistema.generarXMLTablasApoyo").trim().toLowerCase();
+//        String generarXMLTablaApoyo=PropertyReader.readProperty("CacheSistema.generarXMLTablasApoyo").trim().toLowerCase();
         if(logger.isDebugEnabled())
-            logger.debug("generarXMLTablaApoyo="+Boolean.getBoolean(generarXMLTablaApoyo));
+//            logger.debug("generarXMLTablaApoyo="+Boolean.getBoolean(generarXMLTablaApoyo));
 
-        if(generarXMLTablaApoyo.equals("true")){
+//        if(generarXMLTablaApoyo.equals("true")){
             try{
                 logger.info("Generando XML de Tablas de Apoyo...");
                 CacheSistema.generarTablaApoyo("TOTAL");
@@ -404,13 +391,13 @@ public class CacheSistema {
                     logger.debug("Error al generar XML de Tabla de Apoyo: "+e.getMessage());
                 }
             }
-        }
+//        }
 
 
-        String generarXMLProductos=PropertyReader.readProperty("CacheSistema.generarXMLProductos").trim().toLowerCase();
+//        String generarXMLProductos=PropertyReader.readProperty("CacheSistema.generarXMLProductos").trim().toLowerCase();
         if(logger.isDebugEnabled())
-            logger.debug("generarXMLProductos="+generarXMLProductos);
-        if(generarXMLProductos.equals("true")){
+//            logger.debug("generarXMLProductos="+generarXMLProductos);
+//        if(generarXMLProductos.equals("true")){
             try{
 
                 logger.info("Generando XML de Productos...");
@@ -423,7 +410,7 @@ public class CacheSistema {
                 if(logger.isDebugEnabled())
                     logger.debug("Error al generar XML de Productos: "+e.getMessage());      
             }
-        }
+//        }
 
         System.gc();
     } 

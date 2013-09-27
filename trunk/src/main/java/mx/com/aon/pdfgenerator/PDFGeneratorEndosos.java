@@ -6,35 +6,27 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import mx.com.aon.pdfgenerator.dao.PDFServicesEndososJDBC;
+import mx.com.aon.pdfgenerator.dao.PDFServicesJDBC;
+import mx.com.aon.pdfgenerator.services.PDFServices;
+import mx.com.aon.pdfgenerator.services.PDFServicesEndosos;
+import mx.com.aon.pdfgenerator.vo.AseguradoVO;
+import mx.com.aon.pdfgenerator.vo.DataAdicionalVO;
+import mx.com.aon.pdfgenerator.vo.DataPolizaVO;
+import mx.com.aon.pdfgenerator.vo.DataVehiculoVO;
+import mx.com.aon.pdfgenerator.vo.TituloVO;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
 import com.lowagie.text.Paragraph;
-import com.lowagie.text.Phrase;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
-import com.lowagie.text.PageSize;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-
-import mx.com.aon.pdfgenerator.dao.PDFServicesEndososJDBC;
-import mx.com.aon.pdfgenerator.dao.PDFServicesJDBC;
-import mx.com.aon.pdfgenerator.services.PDFServices;
-import mx.com.aon.pdfgenerator.services.PDFServicesEndosos;
-import mx.com.aon.pdfgenerator.util.Campo;
-import mx.com.aon.pdfgenerator.util.PDFUtil;
-import mx.com.aon.pdfgenerator.util.PdfMontoUtils;
-import mx.com.aon.pdfgenerator.util.UtilCampo;
-import mx.com.aon.pdfgenerator.vo.AseguradoVO;
-import mx.com.aon.pdfgenerator.vo.DataAdicionalVO;
-import mx.com.aon.pdfgenerator.vo.DataPolizaVO;
-import mx.com.aon.pdfgenerator.vo.DataVehiculoVO;
-import mx.com.aon.pdfgenerator.vo.DatoLiquidacionVO;
-import mx.com.aon.pdfgenerator.vo.TituloVO;
-import mx.com.ice.kernel.core.PropertyReader;
 
 public class PDFGeneratorEndosos {
 
@@ -46,8 +38,8 @@ public class PDFGeneratorEndosos {
     // Variables globales para pruebas
     //private static String pathPdf = "C:\\ing_pdf\\endosos\\";
     //private static String pathImage = "C:\\ing_pdf\\ING\\"+ "ing_caratula_poliza.JPG"; 
-    private static String pathPdf = PropertyReader.readProperty("pdf.url.endoso");
-    private static final String pathResources = PropertyReader.readProperty("img.url.resources.pdf");
+    private static String pathPdf = "/opt/ice/acw/pdf/endosos/";
+    private static final String pathResources = "/opt/ice/acw/images/";
     private static String pathImage = pathResources + "ing_caratula_poliza.JPG";
     
     private static String pathImageApoderado =pathResources+ "apoderado.JPG";

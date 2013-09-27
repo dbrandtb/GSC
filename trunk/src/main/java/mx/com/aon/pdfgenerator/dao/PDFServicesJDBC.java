@@ -1,11 +1,14 @@
 package mx.com.aon.pdfgenerator.dao;
 
-import java.sql.*;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import oracle.jdbc.OracleTypes;
 import mx.com.aon.pdfgenerator.util.Campo;
 import mx.com.aon.pdfgenerator.util.UtilCampo;
 import mx.com.aon.pdfgenerator.vo.AseguradoVO;
@@ -15,7 +18,7 @@ import mx.com.aon.pdfgenerator.vo.DataPolizaVO;
 import mx.com.aon.pdfgenerator.vo.DataVehiculoVO;
 import mx.com.aon.pdfgenerator.vo.DatoLiquidacionVO;
 import mx.com.aon.pdfgenerator.vo.TituloVO;
-import mx.com.ice.kernel.dao.QuerysBd;
+import oracle.jdbc.OracleTypes;
 
 import org.apache.log4j.Logger;
 
@@ -65,7 +68,7 @@ public class PDFServicesJDBC {
 		try {
 			logger.debug("Antes de obtener la conexion");
 			try {
-				conn = QuerysBd.getConnection();
+//				conn = QuerysBd.getConnection();
 			}catch (Exception e){
 				logger.debug(e.getMessage());
 			}
@@ -146,7 +149,7 @@ public class PDFServicesJDBC {
 		String[] res = new String[9];
 
 		try {
-			conn = QuerysBd.getConnection();
+//			conn = QuerysBd.getConnection();
 			
 			/*			try {
 							Class.forName(driver);
@@ -309,7 +312,7 @@ public class PDFServicesJDBC {
 		String[] res = new String[16];
 
 		try {
-			conn = QuerysBd.getConnection();
+//			conn = QuerysBd.getConnection();
 			
 			/*			try {
 							Class.forName(driver);
@@ -548,7 +551,7 @@ public class PDFServicesJDBC {
 		String[] res = new String[10];
 
 		try {
-			conn = QuerysBd.getConnection();
+//			conn = QuerysBd.getConnection();
 			
 			/*			try {
 							Class.forName(driver);
@@ -668,7 +671,7 @@ public class PDFServicesJDBC {
 
 		try {
 
-			conn = QuerysBd.getConnection();
+//			conn = QuerysBd.getConnection();
 			
 			/*			try {
 							Class.forName(driver);
@@ -834,7 +837,7 @@ public class PDFServicesJDBC {
 
 		try {
 
-			conn = QuerysBd.getConnection();
+//			conn = QuerysBd.getConnection();
 			
 			/*			try {
 							Class.forName(driver);
@@ -995,7 +998,7 @@ public class PDFServicesJDBC {
 
 		try {
 			// Se realiza la conexión
-			conn = QuerysBd.getConnection();
+//			conn = QuerysBd.getConnection();
 			
 			/*			try {
 							Class.forName(driver);
@@ -1099,7 +1102,7 @@ public class PDFServicesJDBC {
 
 		try {
 			// Se realiza la conexión
-			conn = QuerysBd.getConnection();
+//			conn = QuerysBd.getConnection();
 
 			int poliza = 0;
 			int wcdunieco = Integer.parseInt(cdUnieco);
@@ -1172,7 +1175,7 @@ public class PDFServicesJDBC {
 		try {
 
 			// Se realiza la conexión
-			 conn = QuerysBd.getConnection();
+//			 conn = QuerysBd.getConnection();
 
 			int wcdunieco = Integer.parseInt(cdUnieco);
 			int wcdramo = Integer.parseInt(cdRamo);
@@ -1227,7 +1230,7 @@ public class PDFServicesJDBC {
 		String montoCadena = "";
 		try {
 			// Se realiza la conexión
-			 conn = QuerysBd.getConnection();
+//			 conn = QuerysBd.getConnection();
 	
 			logger.debug("monto="+monto);
 			cs = conn.prepareCall("{ call PKG_CARATULAS2.P_Obtiene_Monto_Escrito( ?,?,? ) }");
@@ -1285,7 +1288,7 @@ public class PDFServicesJDBC {
 		try {
 
 			// Se realiza la conexión
-			conn = QuerysBd.getConnection();
+//			conn = QuerysBd.getConnection();
 			
 			int wcdunieco = Integer.parseInt(cdUnieco);
 			int wcdramo = Integer.parseInt(cdRamo);
@@ -1404,7 +1407,7 @@ public class PDFServicesJDBC {
 
 		try {
 			// Se realiza la conexión
-			conn = QuerysBd.getConnection();
+//			conn = QuerysBd.getConnection();
 					
 			int wcdunieco = Integer.parseInt(cdUnieco);
 			int wcdramo = Integer.parseInt(cdRamo);
@@ -1470,7 +1473,7 @@ public class PDFServicesJDBC {
 
 		try {
 			// Se realiza la conexión
-			conn = QuerysBd.getConnection();
+//			conn = QuerysBd.getConnection();
 
 			int wcdunieco = Integer.parseInt(cdUnieco);
 			int wcdramo = Integer.parseInt(cdRamo);
@@ -1543,7 +1546,7 @@ public class PDFServicesJDBC {
 
 		try {
 			// Se realiza la conexión
-			conn = QuerysBd.getConnection();
+//			conn = QuerysBd.getConnection();
 
 			int wcdunieco = Integer.parseInt(cdUnieco);
 			int wcdramo = Integer.parseInt(cdRamo);

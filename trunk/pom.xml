@@ -374,71 +374,7 @@
             <artifactId>ext-elements</artifactId>
             <version>0.3.6</version>
         </dependency>
-
-
-        <!-- Dependencia para Servicios Kernel -->
-        <dependency>
-            <groupId>mx.com.ice</groupId>
-            <artifactId>ice-kernel</artifactId>
-            <version>1.8</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>spring</artifactId>
-                    <groupId>org.springframework</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>com.sun.xml</groupId>
-            <artifactId>jaxb-xjc</artifactId>
-            <version>1.0.5</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.sun.xml</groupId>
-                    <artifactId>xsdlib</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>com.sun.xml</groupId>
-            <artifactId>relaxngDatatype</artifactId>
-            <version>1.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.sun.msv.datatype.xsd</groupId>
-            <artifactId>xsdlib</artifactId>
-            <version>20060614</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>relaxngDatatype</groupId>
-                    <artifactId>relaxngDatatype</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <!--Dependencia agregada por cima para servicios bpel -->
-        <dependency>
-            <groupId>mx.com.aon.catbo.services</groupId>
-            <artifactId>ProcesoBOBPEL-client-qa</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>mx.com.aon.catbo.services</groupId>
-            <artifactId>worklistService-client-qa</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <!-- Aspetcj -->
-        <dependency>
-            <groupId>mx.com.aon.integracion</groupId>
-            <artifactId>ReporteDeuda-client-qa</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-
-
+        
     </dependencies>
     <build>
         <finalName>gseguros</finalName>

@@ -619,12 +619,6 @@
     </bean>
 	<!-- Fin Atributos Varibles de Persona  -->
 
-    <!-- Acceso Estructura Rol -->
-    <bean id="listaAccesoEstructuraRolUsuarioAction" class="mx.com.aon.portal.web.ListaAccesoEstructuraRolUsuarioAction" scope="prototype">
-    	<property name="exportMediator" ref="exportMediator"/>
-       	<property name="accesoEstructuraRolUsuarioManager" ref="accesoEstructuraRolUsuarioManager"/>
-    </bean>
-
     <bean id="accesoEstructuraRolUsuarioAction" class="mx.com.aon.portal.web.AccesoEstructuraRolUsuarioAction" scope="prototype">
        <property name="accesoEstructuraRolUsuarioManager" ref="accesoEstructuraRolUsuarioManager"/>
     </bean>
