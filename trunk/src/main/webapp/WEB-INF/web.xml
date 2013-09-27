@@ -27,8 +27,8 @@
     </servlet> -->
 
     <context-param>
-        <param-name>webAppRootKey</param-name>
-        <param-value>gseguros.root</param-value>
+        <param-name>log4jExposeWebAppRoot</param-name>
+        <param-value>false</param-value>
     </context-param>
 
     <context-param>
