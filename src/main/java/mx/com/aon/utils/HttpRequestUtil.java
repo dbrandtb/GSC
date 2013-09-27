@@ -95,9 +95,9 @@ public class HttpRequestUtil {
 	}
 
 	public static void main(String[] args) throws Exception {
-		for (int i = 0; i <= 5; i++) {
-			HttpRequestUtil.creaPeticionGet("http://192.168.1.69/request.php?param1=val1&param2=val2");
-		}
+//		for (int i = 0; i <= 5; i++) {
+			HttpRequestUtil.generaReporte("http://201.122.160.245:7777/reports/rwservlet?destype=cache&desformat=PDF&userid=ice/ice@acwqa&report=CARATULA.rdf&paramform=no&p_unieco=1&p_cdramo=2&p_estado='W'&p_poliza=1250&desname=/opt/ice/gseguros/documentos/1250/CARATULA.pdf", "E:\\poliza.pdf");
+//		}
 	}
 
 }
