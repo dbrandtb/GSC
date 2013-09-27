@@ -97,11 +97,8 @@ public class ConsultasPolizaDAO extends AbstractDAO {
 	        //logger.debug("Entrando a debug DAO HHHHHH: "+rs.getString("feemisio"));
         	consulta.setNmsolici(rs.getString("nmsolici"));
         	consulta.setFeefecto(Utilerias.formateaFecha(rs.getString("feefecto")));
-//        	consulta.setFeinival(rs.getString("feinival"));
-//        	consulta.setNsuplogi(rs.getString("nsuplogi"));
-//        	consulta.setFeemisio(rs.getString("feemisio"));
-//        	consulta.setNlogisus(rs.getString("nlogisus"));
-//        	consulta.setDstipsup(rs.getString("dstipsup"));
+        	consulta.setNmpoliex(rs.getString("nmpoliex"));
+        	consulta.setFeemisio(Utilerias.formateaFecha(rs.getString("feemisio")));
         	consulta.setCdmoneda(rs.getString("cdmoneda"));
         	consulta.setDsmoneda(rs.getString("dsmoneda"));
         	consulta.setOttempot(rs.getString("ottempot"));
@@ -124,6 +121,7 @@ public class ConsultasPolizaDAO extends AbstractDAO {
         	consulta.setCdperson(rs.getString("cdperson"));
         	consulta.setTitular(rs.getString("titular"));
         	consulta.setCdrfc(rs.getString("cdrfc"));
+        	consulta.setCdagente(rs.getString("cdagente"));
         	
             return consulta;
         }
@@ -167,6 +165,7 @@ public class ConsultasPolizaDAO extends AbstractDAO {
     		consulta.setNlogisus(rs.getString("nlogisus"));
     		consulta.setDstipsup(rs.getString("dstipsup"));
     		consulta.setPtpritot(rs.getString("ptpritot"));
+    		consulta.setPtpritot(rs.getString("nmsuplem"));
     		
     		
     		return consulta;
@@ -509,7 +508,7 @@ public class ConsultasPolizaDAO extends AbstractDAO {
     		consulta.setDsrol(rs.getString("dsrol"));
     		consulta.setNmsituac(rs.getString("nmsituac"));
     		consulta.setTitular(rs.getString("titular"));
-    		consulta.setFenacimi(rs.getString("fenacimi"));
+    		consulta.setFenacimi(Utilerias.formateaFecha(rs.getString("fenacimi")));
     		consulta.setSexo(rs.getString("Sexo"));
     		
     		

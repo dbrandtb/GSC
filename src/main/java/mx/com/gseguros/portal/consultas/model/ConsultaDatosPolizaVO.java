@@ -16,14 +16,11 @@ public class ConsultaDatosPolizaVO implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = -8555353864912795413L;
-
+	
+	private String nmpoliex;
 	private String nmsolici;
-	private String feefecto;
-	private String feinival;
-	private String nsuplogi;
 	private String feemisio;
-	private String nlogisus;
-	private String dstipsup;
+	private String feefecto;
 	private String cdmoneda;
 	private String dsmoneda;
 	private String ottempot;
@@ -46,6 +43,9 @@ public class ConsultaDatosPolizaVO implements Serializable{
 	private String cdperson;
 	private String titular;
 	private String cdrfc;
+	private String cdagente;
+
+	
 	public String getNmsolici() {
 		return nmsolici;
 	}
@@ -58,36 +58,14 @@ public class ConsultaDatosPolizaVO implements Serializable{
 	public void setFeefecto(String feefecto) {
 		this.feefecto = feefecto;
 	}
-	public String getFeinival() {
-		return feinival;
-	}
-	public void setFeinival(String feinival) {
-		this.feinival = feinival;
-	}
-	public String getNsuplogi() {
-		return nsuplogi;
-	}
-	public void setNsuplogi(String nsuplogi) {
-		this.nsuplogi = nsuplogi;
-	}
+	
 	public String getFeemisio() {
 		return feemisio;
 	}
 	public void setFeemisio(String feemisio) {
 		this.feemisio = feemisio;
 	}
-	public String getNlogisus() {
-		return nlogisus;
-	}
-	public void setNlogisus(String nlogisus) {
-		this.nlogisus = nlogisus;
-	}
-	public String getDstipsup() {
-		return dstipsup;
-	}
-	public void setDstipsup(String dstipsup) {
-		this.dstipsup = dstipsup;
-	}
+	
 	public String getCdmoneda() {
 		return cdmoneda;
 	}
@@ -221,6 +199,18 @@ public class ConsultaDatosPolizaVO implements Serializable{
 		this.cdrfc = cdrfc;
 	}
 	
+	public String getNmpoliex() {
+		return nmpoliex;
+	}
+	public void setNmpoliex(String nmpoliex) {
+		this.nmpoliex = nmpoliex;
+	}
+	public String getCdagente() {
+		return cdagente;
+	}
+	public void setCdagente(String cdagente) {
+		this.cdagente = cdagente;
+	}
 	public String toString(){
 		return ToStringBuilder.reflectionToString(this,ToStringStyle.MULTI_LINE_STYLE);
 	}	
