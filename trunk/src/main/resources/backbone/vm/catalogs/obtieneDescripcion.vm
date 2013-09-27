@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
-<statements>
-	<statement type="stored" name="PKG_LISTAS.P_GET_DESCRIPCION" id="obtenerDescripcion">
-		<param eval="true" name="pi_TABLA" type="VARCHAR"><![CDATA[$!params.get("pi_TABLA")]]></param>
-  		<param eval="true" name="pi_Value1" type="VARCHAR"><![CDATA[$!params.get("pi_Value1")]]></param>
-  		<param eval="true" name="pi_Value2" type="VARCHAR"></param>
-		<outparam id="po_Descrip" type="VARCHAR"/>
-	</statement>
-</statements>

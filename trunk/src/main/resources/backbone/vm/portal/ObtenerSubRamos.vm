@@ -1,7 +1,0 @@
-<statements>
-	<statement type="stored" name="PKG_LISTAS.P_SUBRAMO" id="pObtieneSubRamos">
-		<outparam id="po_resulset" type="CURSOR"></outparam>
-		<outparam id="po_msg_id" type="INTEGER"/>
-        <outparam id="po_title" type="VARCHAR"></outparam>
-	</statement>
-</statements>

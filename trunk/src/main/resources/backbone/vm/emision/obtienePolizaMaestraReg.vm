@@ -1,8 +1,0 @@
-<statements>
-	<statement type="stored" name="PKG_CONFG_CUENTA.P_OBTIENE_POLIZA_MAESTRA_REG" id="obtienePolizaMaestraReg">
-		<param eval="true" name="pv_cdpolmta" type="NUMERIC">$!params.cdpolmta</param>
-		<outparam id="pv_registro_o" type="CURSOR"/>
-		<outparam id="pv_msg_id_o" type="VARCHAR"/>
-		<outparam id="pv_title_o" type="VARCHAR"/>
-	</statement>
-</statements>

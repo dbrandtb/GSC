@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<statements>
-     <statement type="stored" name="PKG_DSCTO.P_BORRA_DET_PROD" id="borraDetProducto">
-        <param eval="true" name="P_CVE_DESCTO" type="INTEGER">$!params.get('cdDscto')</param>
-        <param eval="true" name="P_CVE_DESCTO_DET" type="INTEGER">$!params.get('cdDsctod')</param>
-        <outparam id="pv_msg_id_o" type="NUMERIC"></outparam>
-        <outparam id="pv_title_o" type="VARCHAR"></outparam>
-    </statement>
-</statements>

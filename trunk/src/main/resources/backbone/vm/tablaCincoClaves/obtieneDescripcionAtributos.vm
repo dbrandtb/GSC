@@ -1,9 +1,0 @@
-<statements>
-	<statement type="stored" name="PKG_TABAPOYO.P_OBTIENE_DESC_ATR" id="pObtieneDescAtr">
-		<param eval="true" name="PI_NMTABLA" type="NUMERIC">$!params</param>
-		
-		<outparam id="PV_REGISTRO_O" type="CURSOR"/>
-		<outparam id="PV_MSG_ID_O" type="NUMERIC"/>		
-		<outparam id="PV_TITLE_O" type="VARCHAR"/>	
-	</statement>
-</statements>

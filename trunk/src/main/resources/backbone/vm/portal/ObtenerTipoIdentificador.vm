@@ -1,8 +1,0 @@
-<statements>
-	<statement type="stored" name="PKG_LISTAS.P_TIPO_IDENTIFICADOR" id="pObtieneTipoIdentificador">
-		<param eval="true" name="pv_otfisjur_i" type="VARCHAR">$!params.pv_otfisjur_i</param>
-		<outparam id="pv_registro_o" type="CURSOR"></outparam>
-		<outparam id="pv_msg_id_o" type="NUMERIC"/>
-        <outparam id="pv_title_o" type="VARCHAR"></outparam>
-	</statement>
-</statements>

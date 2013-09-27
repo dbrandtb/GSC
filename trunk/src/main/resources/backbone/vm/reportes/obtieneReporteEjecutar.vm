@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<statements>
-        <statement type="stored" name="PKG_REPORTES.P_OBTIENE_MREPORTE_EJECUTA" id="reportes">
-        <param eval="true" name="p_vdsreporte" type="VARCHAR">$!params.get("dsReporte")</param>
-        <param eval="true" name="pv_cdramo_i" type="VARCHAR">$!params.get("cdRamo")</param>
-        <outparam id="p_cu_reportes" type="CURSOR"/>
-    </statement>
-</statements>

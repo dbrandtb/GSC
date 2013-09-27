@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<statements>
-    <statement type="stored" name="PKG_REPORTES.P_PRODUCTOS" id="COMBOPRODUCTOS">
-        <outparam id="pv_registro_o" type="CURSOR"/>        
-    </statement>
-</statements>

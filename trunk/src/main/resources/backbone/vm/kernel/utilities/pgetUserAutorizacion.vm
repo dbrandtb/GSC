@@ -1,9 +1,0 @@
-<statements>
-    <statement type="stored" name="PACK_NEWALEA_UTILITY.P_GET_USER_AUTORIZAC" id="pgetUserAutorizacion">
-        <param eval="true" name="pi_USUARIO" type="VARCHAR">$!params.get("pi_USUARIO")</param>
-        <outparam id="po_USERNAME" type="VARCHAR"/>
-        <outparam id="po_CDERROR" type="VARCHAR"/>
-        <outparam id="po_DSERROR" type="VARCHAR"/>
-        <outparam id="po_TIPOERROR" type="VARCHAR"/>
-    </statement>
-</statements>

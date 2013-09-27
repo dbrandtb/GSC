@@ -1,9 +1,0 @@
-<statements>
-	<statement type="stored" name="PKG_CARATULAS2.P_Obtiene_suplemento" id="obtieneNmsuplem">		  		
-  		<param eval="true" name="wcdunieco" type="NUMERIC"><![CDATA[$!params.CDUNIECO]]></param>
-  		<param eval="true" name="wcdramo" 	type="NUMERIC"><![CDATA[$!params.CDRAMO]]></param>
-  		<param eval="true" name="westado" 	type="VARCHAR"><![CDATA[$!params.ESTADO]]></param>
-  		<param eval="true" name="wnmpoliza" type="NUMERIC"><![CDATA[$!params.NMPOLIZA]]></param>
-  		<outparam id="cur_datos" type="CURSOR"/>	
-	</statement>
-</statements>

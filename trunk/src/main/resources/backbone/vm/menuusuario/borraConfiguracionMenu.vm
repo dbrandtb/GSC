@@ -1,9 +1,0 @@
-<statements>
-	<statement type="stored" name="PKG_MENU.P_ELIMINA_MENU" id="borraConfiguraMenu">		
-		<param eval="true" name="PV_CDMENU_I" type="NUMERIC">$!params</param>
-		<outparam id="PV_MSG_ID_O" type="NUMERIC"/>
-		<outparam id="PV_TITLE_O" type="NUMERIC"/>
-		<outparam id="PV_TEXT_O" type="VARCHAR"/>
-	</statement>
-</statements>
-

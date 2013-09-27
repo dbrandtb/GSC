@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<statements>
-     <statement type="stored" name="PKG_DSCTO.P_ELIMINA_DET_VOLUMEN" id="eliminaDetProducto">
-        <param eval="true" name="P_CVE_DESCTO" type="NUMERIC">$!params.get('cdDscto')</param>
-        <param eval="true" name="P_CVE_DESCTO_DET" type="NUMERIC">$!params.get('cdDsctod')</param>
-        <outparam id="pv_msg_id_o" type="NUMERIC"></outparam>
-        <outparam id="pv_title_o" type="VARCHAR"></outparam>
-    </statement>
-</statements>

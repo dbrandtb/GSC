@@ -1,9 +1,0 @@
-<statements>
-	<statement type="stored" name="PACK_NEWALEA_DATOS_GENERALES.P_GET_MODELO_CIA" id="pgetModeloCiaCoa">
-		<param eval="true" name="pi_CDMODELO" type="NUMERIC">$!params.get("pi_CDMODELO")</param>
-		<outparam id="rc_cursor" type="CURSOR"/>
-		<outparam id="po_CDERROR" type="VARCHAR"/>
-		<outparam id="po_DSERROR" type="VARCHAR"/>
-		<outparam id="po_TIPOERROR" type="VARCHAR"/>
-	</statement>
-</statements>

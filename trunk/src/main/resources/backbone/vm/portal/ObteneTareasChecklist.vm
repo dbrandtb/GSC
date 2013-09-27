@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<statements>
-	<statement type="stored" name="PKG_AON_CHECKLIST.P_OBTIENE_TAREA" id="obtenerTarea">
-        <param eval="true" name="pi_cve_seccion" type="INTEGER">$!params.get("seccion")</param>
-        <param eval="true" name="pi_cve_tarea" type="INTEGER">$!params.get("tarea")</param>
-        <outparam id="po_existe_tarea" type="INTEGER"></outparam>		
-	</statement>
-</statements>
-

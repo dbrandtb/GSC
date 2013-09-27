@@ -1,6 +1,0 @@
-<statements>
-	<statement type="stored" name="PACK_NEWALEA_FUNCIONES.P_Get_Existe_Moneda" id="valExistMoneda">
-		<outparam id="existeMoneda" type="VARCHAR"/>
-		<param eval="true" name="codigoMoneda" type="VARCHAR">$!params.get("piCdmoneda")</param>
-	</statement>
-</statements>

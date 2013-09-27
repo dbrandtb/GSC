@@ -1,5 +1,0 @@
-<statements>
-	<statement type="stored" name="PACK_NEWALEA_FUNCIONES.P_SEQCUMUL" id="pgetSeqCumulo">
-		<outparam id="rescumulo" type="VARCHAR"/>
-	</statement>
-</statements>

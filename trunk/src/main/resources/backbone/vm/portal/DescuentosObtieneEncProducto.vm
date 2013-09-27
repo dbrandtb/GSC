@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<statements>
-    <statement type="stored" name="PKG_DSCTO.P_OBTIENE_ENC_PROD" id="obtieneEncProd">
-        <param eval="true" name="P_CVE_DESCTO" type="VARCHAR">$!params.get("cdDscto")</param>
-        <outparam id="pv_registro_o" type="CURSOR"></outparam>
-        <outparam id="pv_msg_id_o" type="NUMERIC"></outparam>
-        <outparam id="pv_title_o" type="VARCHAR"></outparam>
-    </statement>
-</statements>

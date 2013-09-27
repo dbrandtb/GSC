@@ -1,6 +1,0 @@
-<statements>
-	<statement type="stored" name="PACK_NEWALEA_FUNCIONES.P_Get_Tipo_Cia" id="pgetTipoCia">
-		<outparam id="esnacext" type="VARCHAR"/>
-		<param eval="true" name="gblCia" type="VARCHAR">$!params.get("piCia")</param>
-	</statement>
-</statements>

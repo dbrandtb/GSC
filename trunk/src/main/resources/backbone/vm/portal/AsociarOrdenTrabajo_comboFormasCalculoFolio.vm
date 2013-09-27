@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
-<statements>
-	<statement type="stored" name="PKG_ORDENT.P_FORMAS_CALCULO_FOLIO" id="formasCalculoFolio">
-		<outparam id="pv_registro_o" type="CURSOR"></outparam>
-		
-		<outparam id="pv_msg_id_o" type="INTEGER"/>
-        <outparam id="pv_title_o" type="VARCHAR"></outparam>
-	</statement>
-</statements>

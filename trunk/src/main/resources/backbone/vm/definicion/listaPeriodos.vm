@@ -1,8 +1,0 @@
-<statements>
-	<statement type="stored" name="PKG_WIZARD.p_loadperdeval" id="pvalSituacionExcluidaCoa">
-		<param eval="true" name="P_CDRAMO" type="NUMERIC">$!params</param>
-		<outparam id="P_REGISTRO" type="CURSOR"/>
-		<outparam id="PO_MSG_ID" type="NUMERIC"/>		
-		<outparam id="PV_TITLE_O" type="VARCHAR"/>
-</statement>
-</statements>

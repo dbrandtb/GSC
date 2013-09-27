@@ -1,9 +1,0 @@
-
-<statements>
-	<statement type="stored" name="PACK_NEWALEA_FUNCIONES.P_Get_Importe_Deposito" id="pgetImporteDeposito">
-		<outparam id="importeDeposito" type="NUMERIC"/>
-		<param eval="true" name="gblPlan" type="VARCHAR">$!params.get("piCdplan")</param>
-		<param eval="true" name="gblPerpla" type="NUMERIC">$!params.get("piCdperpla")</param>
-		<param eval="true" name="gblContre" type="VARCHAR">$!params.get("piCdcontre")</param>
-	</statement>
-</statements>

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<statements>
-    <statement type="stored" name="PKG_REPORTES.P_OBTIENE_TPLANPROD " id="obtiene_Productos_Plantilla">
-         <param eval="true" name="pv_cdplanti_i" type="VARCHAR">$!params.get("cdPlantilla")</param>
-         <outparam id="pv_registro_o" type="CURSOR"/>
-         <outparam id="pv_msg_id_o" type="NUMERIC"/>
-		 <outparam id="pv_title_o" type="VARCHAR"/>	
-    </statement>
-</statements>
