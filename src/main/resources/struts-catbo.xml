@@ -5,88 +5,8 @@
 <struts>
     <!-- Gforrade . Se deshabilita el include de los parametros -->
     <constant name="struts.url.includeParams" value="none" />
-    
 
-     <!--Se  declara la referecnia para el archivo de configuracion de
-    struts para el modulo de planes  -->
-    
-    
-
-    <!--
-    Se declara la referencia al archivo de configuracion de struts
-    para el modulo test de paginacion y exportacion 
-    -->
-    <include file="struts/config/struts-test.xml"/>
-
-    <!-- <include file="struts/config/struts-prueba.xml"/>	-->
-
-    <include file="struts/config/struts-login.xml"/>
-    
-    <include file="struts/config/struts-notificaciones.xml"/>
-    
-    <include file="struts/config/struts-formatos-documentos.xml"/>
-
-   <include file="struts/config/struts-operaciones-cat.xml"/>
-  
-   <include file="struts/config/struts-treeview.xml"/>
-
-   <include file="struts/config/struts-combos-box-catbo.xml"/>
-
-   <include file="struts/config/struts-matriz-asignacion.xml"/>
-    
-   <include file="struts/config/struts-status-casos.xml"/>    
- 
-    <include file="struts/config/struts-tareas-catbo.xml"/>     
-    
-     <include file="struts/config/struts-consultar-casos-solicitud.xml"/> 
-    
-    <include file="struts/config/struts-administracion-de-casos.xml"/>
-    
-    <include file="struts/config/struts-consulta-polizas.xml"/>
-       
-     <include file="struts/config/struts-configurar-encuestas.xml"/>
-	<include file="struts/config/struts-consultar-encuestas.xml"/>
-    
-    <include file="struts/config/struts-encuestas.xml"/>
-    
-    <include file="struts/config/struts-calendario.xml"/>	
-    
     <include file="struts/config/struts-acceso-estructura-rol-usuario.xml"/>
-    
-    <include file="struts/config/struts-configurar-compra-tiempo.xml"/>
-    
-    <include file="struts/config/struts-compra-tiempo.xml" />
-    
-    <include file="struts/config/struts-archivo.xml" />
-    
-   <include file="struts/config/struts-atributo-archivo.xml" />
-    
-   <include file="struts/config/struts-consultar-fax.xml" />
-   
-    <include file="struts/config/struts-administrar-usuarios-modulo.xml" />
-
-	<include file="struts/config/struts-administracion-tipos-fax.xml" />
-	
-	<include file="struts/config/struts-envio-mail.xml"/>
-	
-         <include file="struts/config/struts-alta-de-casos.xml"/>
-
-	<include file="struts/config/struts-generacion-claves.xml" />
-
-	<include file="struts/config/struts-datos-archivos.xml"/>
-	
-	<include file="struts/config/struts-administracion-tipo-archivo.xml"/>
-	
-	
-	<include file="struts/config/struts-guion-llamadas.xml"/>
-
-    <include file="struts/config/struts-administracion-fax.xml"/>
-    
-    <include file="struts/config/struts-cargaArchivos.xml"/>
-    
-    <include file="struts/config/struts-ingresar-encuesta.xml"/>
-
-    <include file="struts/config/struts-instrumento-pago-configuarcion.xml"/>
 
     <package name="catbo" extends="struts-default">
         <interceptors>
@@ -154,8 +74,6 @@
         <action name="configurarMatrizTareaEditar">
            <result>/jsp/portal/configurarMatrizTareaEditar.jsp</result>
        </action>
-       
-
 
        <action name="numeracionCasos">
            <result>/jsp/portal/numeracionCasos.jsp</result>
