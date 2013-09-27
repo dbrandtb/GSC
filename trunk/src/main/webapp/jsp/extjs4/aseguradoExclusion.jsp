@@ -545,4 +545,4 @@ Ext.onReady(function(){
     
 });
 </script>
-<div id="maindiv_scr_exclu"></div>
+<div id="maindiv_scr_exclu" style="height:500px;border:0px solid red;"></div>

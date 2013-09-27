@@ -409,6 +409,15 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return res;
     }
     
+    public WrapperResultados borraMpoliper(Map<String,Object> parameters) throws ApplicationException
+    {
+    	log.debug("### kernel sustituto borraMpoliper map: "+parameters);
+        WrapperResultados res=this.returnBackBoneInvoke(parameters, ProcesoDAO.P_BORRA_MPOLIPER);
+        log.debug("### kernel sustituto borraMpoliper id:"+res.getMsgId());
+        log.debug("### kernel sustituto borraMpoliper mesage:"+res.getMsgText());
+        return res;
+    }
+    
     public List<Map<String,String>> obtenerCoberturasUsuario(Map<String,String> parametros) throws ApplicationException
     {
     	log.debug("### kernel sustituto obtenerCoberturasUsuario parametros: "+parametros);

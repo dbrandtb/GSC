@@ -35,6 +35,7 @@
             var accordion;
             var urlEmitir='<s:url namespace="/" action="emitir" />';
             var panDatComUrlDoc='<s:url namespace="/documentos" action="ventanaDocumentosPoliza" />';
+            var panDatComUrlCotiza='<s:url namespace="/" action="cotizacionVital" />';
             
             function expande(indice)
             {
@@ -421,6 +422,7 @@
 		                                            autoScroll:true,
 		                                            width: 700,
 		                                            modal:true,
+		                                            closable:false,
 		                                            items:[  // Let's put an empty grid in just to illustrate fit layout
 		                                                Ext.create('Ext.grid.Panel',{
 		                                                    store:Ext.create('Ext.data.Store',{
@@ -484,7 +486,7 @@
 		                                                    layout:
 		                                                    {
 		                                                        type    : 'table',
-		                                                        columns : 3
+		                                                        columns : 5
 		                                                    }
 		                                                    ,defaults:
 		                                                    {
@@ -525,6 +527,9 @@
 		                                                            	    		Ext.getCmp('numerofinalpoliza').setValue(json.panel2.nmpoliex);
 		                                                            	    		Ext.getCmp('botonEmitirPolizaFinal').setDisabled(true);
 		                                                            	    		Ext.getCmp('botonImprimirPolizaFinal').setDisabled(false);
+		                                                            	    		//me.up().up().setClosable(false);
+		                                                            	    		Ext.getCmp('venDocVenEmiBotNueCotiza').show();
+		                                                            	    		Ext.getCmp('venDocVenEmiBotCancelar').setDisabled(true);
 		                                                            	    	}
 		                                                            	    	else
 		                                                            	    	{
@@ -560,12 +565,12 @@
 		                                                            	Ext.create('Ext.window.Window',
                                                             			{
 		                                                            		width        : 600
-		                                                            		,height   : 400
+		                                                            		,height      : 400
 		                                                            		,title       : 'Documentos de la poliza '+inputNmpoliza
 		                                                            		,closable    : false
 		                                                            		,modal       : true
 		                                                            		,buttonAlign : 'center'
-	                                                            	        ,loadingMask   : true
+	                                                            	        ,loadingMask : true
 		                                                            		,loader      :
 		                                                            		{
 		                                                            			url       : panDatComUrlDoc
@@ -594,10 +599,37 @@
                                                             			}).show();
 		                                                            }
 		                                                        }
+		                                                        ,{
+		                                                        	xtype    : 'button'
+		                                                            ,id      : 'venDocVenEmiBotNueCotiza'
+		                                                            ,text    : 'Nueva cotizaci&oacute;n'
+		                                                            ,icon    : '${ctx}/resources/fam3icons/icons/page_add.png'
+		                                                            ,handler : function()
+		                                                            {
+		                                                                var me=this;
+		                                                                Ext.create('Ext.form.Panel').submit(
+		                                                                {
+		                                                                    standardSubmit : true
+		                                                                    ,url           : panDatComUrlCotiza
+		                                                                });
+		                                                            }
+		                                                        }
+		                                                        ,{
+		                                                        	xtype    : 'button'
+	                                                                ,id      : 'venDocVenEmiBotCancelar'
+		                                                            ,text    : 'Cancelar'
+		                                                            ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
+		                                                            ,handler : function()
+		                                                            {
+		                                                                var me=this;
+		                                                                me.up().up().destroy();
+		                                                            }
+		                                                        }
 		                                                    ]
 		                                                })
 		                                            ]
 		                                        }).showAt(50,50);
+		                                        Ext.getCmp('venDocVenEmiBotNueCotiza').hide();
 		                                        /**/
 		                                    }
 		                                    ,failure : function()

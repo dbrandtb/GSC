@@ -52,6 +52,8 @@
             var urlDetalleCotizacion='<s:url namespace="/" action="detalleCotizacion" />';
             var contexto='${ctx}';
             var urlVentanaDocumentos = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza" />';
+            var urlImprimirCotiza    = '<s:text name="ruta.servidor.reports" />';
+            var repSrvUsr            = '<s:text name="pass.servidor.reports" />';
         </script>
         <script src="${ctx}/resources/jsp-script/extjs4/asegurados.js"></script>
     </head>

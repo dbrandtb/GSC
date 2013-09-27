@@ -42,6 +42,9 @@
 	var gridTomadorp2;
 	var recordTomadorp2;
 	var timeoutflagp2;
+	var isCopiadop2=false;
+	var respaldoContp2;
+	var isRespaldoContp2=false;
 	
     function rendererRolp2(v)
     {
@@ -115,6 +118,7 @@
     
     function editarDespuesValidacionesp2(incisosJson,banderaCoberODomici)
     {
+    	debug(incisosJson);
     	var formPanel=Ext.getCmp('form1p2');
         var submitValues=formPanel.getForm().getValues();
         //console.log(submitValues);
@@ -188,219 +192,316 @@
         });
     }
     
+    //guardador
     function validarYGuardar()
-    {
-    	debug("validarYGuardar flag:1");
-    	timeoutflagp2=1;
-    	if(Ext.getCmp('form1p2').getForm().isValid())
-        {
-            var incisosRecords = storePersonasp2.getRange();
-            if(incisosRecords&&incisosRecords.length>0)
-            {
-                var incisosJson = [];
-                var completos=true;
-                var sinCdperson=0;
-                
-                storePersonasp2.each(function(record,index)
-                {
-                    //console.log(record);
-                    if(
-                        !record.get("nombre")
-                        ||record.get("nombre").length==0
-                        ||!record.get("Apellido_Paterno")
-                        ||record.get("Apellido_Paterno").length==0
-                        ||!record.get("Apellido_Paterno")
-                        ||record.get("Apellido_Paterno").length==0
-                        ||!record.get("Apellido_Materno")
-                        ||record.get("Apellido_Materno").length==0
-                        ||!record.get("cdrfc")
-                        ||record.get("cdrfc").length==0
-                        )
-                    {
-                        //console.log("#incompleto:");
-                        //console.log(record);
-                        completos=false;                                    
-                    }
-                    if(!record.get("cdperson")||record.get("cdperson").length==0)
-                    {
-                        sinCdperson++;
-                    }
-                    if(record.get('Parentesco')=='T')
-                    {
-                        incisosJson.push({
-                            nmsituac:'0',
-                            cdrol:'1',
-                            fenacimi: typeof record.get('fenacimi')=='string'?record.get('fenacimi'):Ext.Date.format(record.get('fenacimi'), 'd/m/Y'),
-                            sexo:typeof record.get('sexo')=='string'?record.get('sexo'):record.get('sexo').get('key'),
-                            cdperson:record.get('cdperson'),
-                            nombre: record.get('nombre'),
-                            segundo_nombre: record.get('segundo_nombre'),
-                            Apellido_Paterno: record.get('Apellido_Paterno'),
-                            Apellido_Materno: record.get('Apellido_Materno'),
-                            cdrfc:record.get('cdrfc')
-                        });
-                    }
-                    incisosJson.push({
-                        nmsituac:record.get('nmsituac'),
-                        cdrol:typeof record.get('cdrol')=='string'?record.get('cdrol'):record.get('cdrol').get('key'),
-                        fenacimi: typeof record.get('fenacimi')=='string'?record.get('fenacimi'):Ext.Date.format(record.get('fenacimi'), 'd/m/Y'),
-                        sexo:typeof record.get('sexo')=='string'?record.get('sexo'):record.get('sexo').get('key'),
-                        cdperson:record.get('cdperson'),
-                        nombre: record.get('nombre'),
-                        segundo_nombre: record.get('segundo_nombre'),
-                        Apellido_Paterno: record.get('Apellido_Paterno'),
-                        Apellido_Materno: record.get('Apellido_Materno'),
-                        cdrfc:record.get('cdrfc')
-                    });
-                });
-                
-               //console.log("sin cd person: "+sinCdperson);
-                if(completos)
-                {
-                    if(sinCdperson==0)
-                    {
-                    	debug("validarYGuardar ->editar");
-                        editarDespuesValidacionesp2(incisosJson,true);//manda el submit
-                    }
-                    else
-                    {
-                        Ext.getCmp('form1p2').setLoading(true);
-                        //mandar a traer los cdperson de las personas asincrono
-                        storePersonasp2.each(function(record,index)
+{
+    debug("validarYGuardar flag:1");
+    timeoutflagp2=1;
+    if(Ext.getCmp('form1p2').getForm().isValid())
                         {
-                            //console.log(index);
-                            setTimeout(function()
+                            var incisosRecords = storePersonasp2.getRange();
+                            if(incisosRecords&&incisosRecords.length>0)
                             {
-                            	debug("validarYGuardar -> gecdperson");
-                                //console.log("trigger");
-                                Ext.Ajax.request(
+                                var incisosJson = [];
+                                var completos=true;
+                                var storeSinCdperson=Ext.create('Ext.data.Store',{model:'Modelo1p2'});
+                                var sinCdpersonlen=0;
+                                
+                                //ver si el contratante es aparte
+                                var hayContApart=true;
+                                storePersonasp2.each(function(record,index)
                                 {
-                                    url: urlGenerarCdPersonp2,
-                                    success:function(response,opts)
+                                    if(record.get('estomador')==true)
                                     {
-                                        var jsonResp = Ext.decode(response.responseText);
-                                        //console.log("respuesta cdperson",jsonResp);
-                                        //window.console&&console.log(jsonResp);
-                                        if(jsonResp.success==true)
-                                        {
-                                            try
-                                            {
-                                                record.data.cdperson=jsonResp.cdperson;
-                                                sinCdperson--;
-                                                if(sinCdperson==0)
-                                                {
-                                                    //procesar submit
-                                                    //console.log(storePersonasp2.getRange());
-                                                    //storePersonasp2.sync();
-                                                    //console.log(storePersonasp2.getRange());
-                                                    gridPersonasp2.getView().refresh();
-                                                    incisosJson=[];
-                                                    storePersonasp2.each(function(record,index)
-                                                    {
-                                                        if(record.get('Parentesco')=='T')
-                                                        {
-                                                            incisosJson.push({
-                                                                nmsituac:'0',
-                                                                cdrol:'1',
-                                                                fenacimi: typeof record.get('fenacimi')=='string'?record.get('fenacimi'):Ext.Date.format(record.get('fenacimi'), 'd/m/Y'),
-                                                                sexo:typeof record.get('sexo')=='string'?record.get('sexo'):record.get('sexo').get('key'),
-                                                                cdperson:record.get('cdperson'),
-                                                                nombre: record.get('nombre'),
-                                                                segundo_nombre: record.get('segundo_nombre'),
-                                                                Apellido_Paterno: record.get('Apellido_Paterno'),
-                                                                Apellido_Materno: record.get('Apellido_Materno'),
-                                                                cdrfc:record.get('cdrfc')
-                                                            });
-                                                        }
-                                                        incisosJson.push({
-                                                            nmsituac:record.get('nmsituac'),
-                                                            cdrol:typeof record.get('cdrol')=='string'?record.get('cdrol'):record.get('cdrol').get('key'),
-                                                            fenacimi: typeof record.get('fenacimi')=='string'?record.get('fenacimi'):Ext.Date.format(record.get('fenacimi'), 'd/m/Y'),
-                                                            sexo:typeof record.get('sexo')=='string'?record.get('sexo'):record.get('sexo').get('key'),
-                                                            cdperson:record.get('cdperson'),
-                                                            nombre: record.get('nombre'),
-                                                            segundo_nombre: record.get('segundo_nombre'),
-                                                            Apellido_Paterno: record.get('Apellido_Paterno'),
-                                                            Apellido_Materno: record.get('Apellido_Materno'),
-                                                            cdrfc:record.get('cdrfc')
-                                                        });
-                                                    });                
-                                                    Ext.getCmp('form1p2').setLoading(false);
-                                                    debug("validarYGuardar -> editar");
-                                                    editarDespuesValidacionesp2(incisosJson,true);
-                                                }
-                                            }
-                                            catch(e)
-                                            {
-                                                //console.log(e);
-                                                Ext.Msg.show({
-                                                    title:'Error',
-                                                    msg: 'Error al procesar la informaci&oacute;n',
-                                                    buttons: Ext.Msg.OK,
-                                                    icon: Ext.Msg.ERROR
-                                                });
-                                                debug("validarYGuardar flag:2");
-                                                timeoutflagp2=2;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            Ext.Msg.show({
-                                                title:'Error',
-                                                msg: 'Error al obtener la informaci&oacute;n',
-                                                buttons: Ext.Msg.OK,
-                                                icon: Ext.Msg.ERROR
-                                            });
-                                            debug("validarYGuardar flag:2");
-                                            timeoutflagp2=2;
-                                        }
-                                    },
-                                    failure:function(response,opts)
-                                    {
-                                        Ext.Msg.show({
-                                            title:'Error',
-                                            msg: 'Error de comunicaci&oacute;n',
-                                            buttons: Ext.Msg.OK,
-                                            icon: Ext.Msg.ERROR
-                                        });
-                                        debug("validarYGuardar flag:2");
-                                        timeoutflagp2=2;
+                                        hayContApart=false;
                                     }
-                                })
-                            },(index+1)*500);
-                        });
-                    }
-                }
-                else
-                {
-                    Ext.Msg.show({
-                        title:'Datos incompletos',
-                        msg: 'El nombre, apellidos y RFC son requeridos',
-                        buttons: Ext.Msg.OK,
-                        icon: Ext.Msg.WARNING
-                    });
-                    debug("validarYGuardar flag:2");
-                    timeoutflagp2=2;
-                }
-            }
-            else
-            {
-                Ext.Msg.show({
-                    title:'Datos incompletos',
-                    msg: 'Favor de introducir al menos un asegurado',
-                    buttons: Ext.Msg.OK,
-                    icon: Ext.Msg.WARNING
-                });
-                debug("validarYGuardar flag:2");
+                                });
+                                debug('hayContApart',(hayContApart?'true':'false'));
+                                
+                                //para cuando el contratante es aparte
+                                if(hayContApart)
+                                {
+                                    var recordContApart=storeTomadorp2.getAt(0);
+                                    if(
+                                        !recordContApart.get("nombre")
+                                        ||recordContApart.get("nombre").length==0
+                                        ||!recordContApart.get("Apellido_Paterno")
+                                        ||recordContApart.get("Apellido_Paterno").length==0
+                                        ||!recordContApart.get("Apellido_Paterno")
+                                        ||recordContApart.get("Apellido_Paterno").length==0
+                                        ||!recordContApart.get("Apellido_Materno")
+                                        ||recordContApart.get("Apellido_Materno").length==0
+                                        ||!recordContApart.get("cdrfc")
+                                        ||recordContApart.get("cdrfc").length==0
+                                        )
+                                    {
+                                        //console.log("#incompleto:");
+                                        //console.log(record);
+                                        completos=false;                                    
+                                    }
+                                    incisosJson.push({
+                                        nmsituac:'0',
+                                        cdrol:'1',
+                                        fenacimi: typeof recordContApart.get('fenacimi')=='string'?recordContApart.get('fenacimi'):Ext.Date.format(recordContApart.get('fenacimi'), 'd/m/Y'),
+                                        sexo:typeof recordContApart.get('sexo')=='string'?recordContApart.get('sexo'):recordContApart.get('sexo').get('key'),
+                                        cdperson:recordContApart.get('cdperson'),
+                                        nombre: recordContApart.get('nombre'),
+                                        segundo_nombre: recordContApart.get('segundo_nombre'),
+                                        Apellido_Paterno: recordContApart.get('Apellido_Paterno'),
+                                        Apellido_Materno: recordContApart.get('Apellido_Materno'),
+                                        cdrfc:recordContApart.get('cdrfc')
+                                    });
+                                    if(!recordContApart.get("cdperson")||recordContApart.get("cdperson").length==0)
+                                    {
+                                        var recordSinCdperson=recordContApart.copy();
+                                        recordSinCdperson.set('Parentesco','tomador');
+                                        storeSinCdperson.add(recordSinCdperson);
+                                        sinCdpersonlen++;
+                                        //storeTomadorp2.removeAll();
+                                    }
+                                }
+                                debug('f2');
+                                //!para cuando el contratante es aparte
+                                
+                                //revisar asegurados: completo, cdperson y json
+                                storePersonasp2.each(function(recordAsegu,indexAsegu)
+                                {
+                                    //console.log(record);
+                                    if(
+                                        !recordAsegu.get("nombre")
+                                        ||recordAsegu.get("nombre").length==0
+                                        ||!recordAsegu.get("Apellido_Paterno")
+                                        ||recordAsegu.get("Apellido_Paterno").length==0
+                                        ||!recordAsegu.get("Apellido_Paterno")
+                                        ||recordAsegu.get("Apellido_Paterno").length==0
+                                        ||!recordAsegu.get("Apellido_Materno")
+                                        ||recordAsegu.get("Apellido_Materno").length==0
+                                        ||!recordAsegu.get("cdrfc")
+                                        ||recordAsegu.get("cdrfc").length==0
+                                        )
+                                    {
+                                        //console.log("#incompleto:");
+                                        //console.log(record);
+                                        completos=false;                                    
+                                    }
+                                    debug('f3');
+                                    if(!recordAsegu.get("cdperson")||recordAsegu.get("cdperson").length==0)
+                                    {
+                                        var recordSinCdperson=recordAsegu.copy();
+                                        recordSinCdperson.set('Parentesco',indexAsegu);
+                                        storeSinCdperson.add(recordSinCdperson);
+                                        sinCdpersonlen++;
+                                        //storePersonasp2.remove(recordAsegu);
+                                    }
+                                    debug('f4');
+                                    if((!hayContApart)&&recordAsegu.get('estomador'))
+                                    {
+                                        debug('se manda como contratante',recordAsegu);
+                                        incisosJson.push({
+                                            nmsituac:'0',
+                                            cdrol:'1',
+                                            fenacimi: typeof recordAsegu.get('fenacimi')=='string'?recordAsegu.get('fenacimi'):Ext.Date.format(recordAsegu.get('fenacimi'), 'd/m/Y'),
+                                            sexo:typeof recordAsegu.get('sexo')=='string'?recordAsegu.get('sexo'):recordAsegu.get('sexo').get('key'),
+                                            cdperson:recordAsegu.get('cdperson'),
+                                            nombre: recordAsegu.get('nombre'),
+                                            segundo_nombre: recordAsegu.get('segundo_nombre'),
+                                            Apellido_Paterno: recordAsegu.get('Apellido_Paterno'),
+                                            Apellido_Materno: recordAsegu.get('Apellido_Materno'),
+                                            cdrfc:recordAsegu.get('cdrfc')
+                                        });
+                                    }
+                                    debug('f5');
+                                    incisosJson.push({
+                                        nmsituac:recordAsegu.get('nmsituac'),
+                                        cdrol:typeof recordAsegu.get('cdrol')=='string'?recordAsegu.get('cdrol'):recordAsegu.get('cdrol').get('key'),
+                                        fenacimi: typeof recordAsegu.get('fenacimi')=='string'?recordAsegu.get('fenacimi'):Ext.Date.format(recordAsegu.get('fenacimi'), 'd/m/Y'),
+                                        sexo:typeof recordAsegu.get('sexo')=='string'?recordAsegu.get('sexo'):recordAsegu.get('sexo').get('key'),
+                                        cdperson: recordAsegu.get('cdperson'),
+                                        nombre: recordAsegu.get('nombre'),
+                                        segundo_nombre: recordAsegu.get('segundo_nombre'),
+                                        Apellido_Paterno: recordAsegu.get('Apellido_Paterno'),
+                                        Apellido_Materno: recordAsegu.get('Apellido_Materno'),
+                                        cdrfc: recordAsegu.get('cdrfc')
+                                    });
+                                    debug('f6');
+                                });
+                                
+                                //tratar de hacer submit
+                                if(completos)
+                                {
+                                    if(sinCdpersonlen==0)
+                                    {
+                                        editarDespuesValidacionesp2(incisosJson,true);//manda el submit
+                                    }
+                                    else
+                                    {
+                                        Ext.getCmp('form1p2').setLoading(true);
+                                        //mandar a traer los cdperson de las personas asincrono
+                                        storeSinCdperson.each(function(recordIteSinCdperson,index)
+                                        {
+                                            //console.log(index);
+                                            setTimeout(function()
+                                            {
+                                                //console.log("trigger");
+                                                Ext.Ajax.request(
+                                                {
+                                                    url: urlGenerarCdPersonp2,
+                                                    success:function(response,opts)
+                                                    {
+                                                        var jsonResp = Ext.decode(response.responseText);
+                                                        debug("respuesta cdperson",jsonResp);
+                                                        debug(recordIteSinCdperson);
+                                                        //window.console&&console.log(jsonResp);
+                                                        if(jsonResp.success==true)
+                                                        {
+                                                            try
+                                                            {
+                                                                recordIteSinCdperson.set('cdperson',jsonResp.cdperson);
+                                                                
+                                                                sinCdpersonlen--;
+                                                                if(sinCdpersonlen==0)
+                                                                {
+                                                                    //restaurar stores
+                                                                    storeSinCdperson.each(function(recordIteConCdperson)
+                                                                    {
+                                                                        debug('resultado iterando',recordIteConCdperson);
+                                                                        if(recordIteConCdperson.get('Parentesco')=='tomador')
+                                                                        {
+                                                                            storeTomadorp2.getAt(0).set('cdperson',recordIteConCdperson.get('cdperson'));
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            storePersonasp2.getAt(recordIteConCdperson.get('Parentesco')).set('cdperson',recordIteConCdperson.get('cdperson'));
+                                                                        }
+                                                                    });
+                                                                    //procesar submit
+                                                                    //console.log(storePersonasp2.getRange());
+                                                                    //storePersonasp2.sync();
+                                                                    //console.log(storePersonasp2.getRange());
+                                                                    gridPersonasp2.getView().refresh();
+                                                                    incisosJson=[];
+                                                                    if(hayContApart)
+                                                                    {
+                                                                        var recordContApar2=storeTomadorp2.getAt(0);
+                                                                        incisosJson.push({
+                                                                            nmsituac:'0',
+                                                                            cdrol:'1',
+                                                                            fenacimi: typeof recordContApar2.get('fenacimi')=='string'?recordContApar2.get('fenacimi'):Ext.Date.format(recordContApar2.get('fenacimi'), 'd/m/Y'),
+                                                                            sexo:typeof recordContApar2.get('sexo')=='string'?recordContApar2.get('sexo'):recordContApar2.get('sexo').get('key'),
+                                                                            cdperson: recordContApar2.get('cdperson'),
+                                                                            nombre: recordContApar2.get('nombre'),
+                                                                            segundo_nombre: recordContApar2.get('segundo_nombre'),
+                                                                            Apellido_Paterno: recordContApar2.get('Apellido_Paterno'),
+                                                                            Apellido_Materno: recordContApar2.get('Apellido_Materno'),
+                                                                            cdrfc: recordContApar2.get('cdrfc')
+                                                                        });
+                                                                    }
+                                                                    storePersonasp2.each(function(recordAsegu2)
+                                                                    {
+                                                                        if((!hayContApart)&&recordAsegu2.get('estomador'))
+                                                                        {
+                                                                            debug('se manda como contratante',recordAsegu2);
+                                                                            incisosJson.push({
+                                                                                nmsituac:'0',
+                                                                                cdrol:'1',
+                                                                                fenacimi: typeof recordAsegu2.get('fenacimi')=='string'?recordAsegu2.get('fenacimi'):Ext.Date.format(recordAsegu2.get('fenacimi'), 'd/m/Y'),
+                                                                                sexo:typeof recordAsegu2.get('sexo')=='string'?recordAsegu2.get('sexo'):recordAsegu2.get('sexo').get('key'),
+                                                                                cdperson: recordAsegu2.get('cdperson'),
+                                                                                nombre: recordAsegu2.get('nombre'),
+                                                                                segundo_nombre: recordAsegu2.get('segundo_nombre'),
+                                                                                Apellido_Paterno: recordAsegu2.get('Apellido_Paterno'),
+                                                                                Apellido_Materno: recordAsegu2.get('Apellido_Materno'),
+                                                                                cdrfc: recordAsegu2.get('cdrfc')
+                                                                            });
+                                                                        }
+                                                                        incisosJson.push({
+                                                                            nmsituac: recordAsegu2.get('nmsituac'),
+                                                                            cdrol:typeof recordAsegu2.get('cdrol')=='string'?recordAsegu2.get('cdrol'):recordAsegu2.get('cdrol').get('key'),
+                                                                            fenacimi: typeof recordAsegu2.get('fenacimi')=='string'?recordAsegu2.get('fenacimi'):Ext.Date.format(recordAsegu2.get('fenacimi'), 'd/m/Y'),
+                                                                            sexo:typeof recordAsegu2.get('sexo')=='string'?recordAsegu2.get('sexo'):recordAsegu2.get('sexo').get('key'),
+                                                                            cdperson: recordAsegu2.get('cdperson'),
+                                                                            nombre: recordAsegu2.get('nombre'),
+                                                                            segundo_nombre: recordAsegu2.get('segundo_nombre'),
+                                                                            Apellido_Paterno: recordAsegu2.get('Apellido_Paterno'),
+                                                                            Apellido_Materno: recordAsegu2.get('Apellido_Materno'),
+                                                                            cdrfc: recordAsegu2.get('cdrfc')
+                                                                        });
+                                                                    });                
+                                                                    Ext.getCmp('form1p2').setLoading(false);
+                                                                    editarDespuesValidacionesp2(incisosJson,true);
+                                                                }
+                                                            }
+                                                            catch(e)
+                                                            {
+                                                                debug(e);
+                                                                Ext.Msg.show({
+                                                                    title:'Error',
+                                                                    msg: 'Error al procesar la informaci&oacute;n',
+                                                                    buttons: Ext.Msg.OK,
+                                                                    icon: Ext.Msg.ERROR
+                                                                });
+debug("validarYGuardar flag:2");
                 timeoutflagp2=2;
-            }
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            Ext.Msg.show({
+                                                                title:'Error',
+                                                                msg: 'Error al obtener la informaci&oacute;n',
+                                                                buttons: Ext.Msg.OK,
+                                                                icon: Ext.Msg.ERROR
+                                                            });
+debug("validarYGuardar flag:2");
+                timeoutflagp2=2;
+                                                        }
+                                                    },
+                                                    failure:function(response,opts)
+                                                    {
+                                                        Ext.Msg.show({
+                                                            title:'Error',
+                                                            msg: 'Error de comunicaci&oacute;n',
+                                                            buttons: Ext.Msg.OK,
+                                                            icon: Ext.Msg.ERROR
+                                                        });
+debug("validarYGuardar flag:2");
+                timeoutflagp2=2;
+                                                    }
+                                                });
+                                            },(index+1)*500);
+                                        });
+                                    }
+                                }
+                                else
+                                {
+                                    Ext.Msg.show({
+                                        title:'Datos incompletos',
+                                        msg: 'El nombre, apellidos y RFC son requeridos',
+                                        buttons: Ext.Msg.OK,
+                                        icon: Ext.Msg.WARNING
+                                    });
+debug("validarYGuardar flag:2");
+                timeoutflagp2=2;
+                                }
+                            }
+                            else
+                            {
+                                Ext.Msg.show({
+                                    title:'Datos incompletos',
+                                    msg: 'Favor de introducir al menos un asegurado',
+                                    buttons: Ext.Msg.OK,
+                                    icon: Ext.Msg.WARNING
+                                });         
+debug("validarYGuardar flag:2");
+                timeoutflagp2=2;            
+                            }
+}else
+        {
+            debug("validarYGuardar flag:2");
+            timeoutflagp2=2;
         }
-    	else
-    	{
-    		debug("validarYGuardar flag:2");
-    		timeoutflagp2=2;
-    	}
     }
+    //!guardador
 	
     Ext.onReady(function(){
 		
@@ -483,42 +584,27 @@
         				    debug('no es tomador');
         				}
        			    });
-   	        		var record=store.getAt(indexTomador);
-   	        		storeTomadorp2.add(record);
-                    storePersonasp2.remove(record);
-   	        		debug('checar cual asegurado es el tomador');
-   	        		if(!record.get('cdperson')||record.get('cdperson').length==0)
+   	        		var recordContra=store.getAt(indexTomador);
+   	        		storeTomadorp2.add(recordContra);
+                    storePersonasp2.remove(recordContra);
+                    
+   	        		debug('checar cual si un asegurado es el contratante');
+   	        		if(recordContra.get('cdperson')&&recordContra.get('cdperson').length>0)
    	        		{
-   	        			debug('buscar por parentesco T abajo');
-	   	        	    store.each(function(record,index)
-		                {
-		                    debug('iterando',record);
-		                    if(record.get('Parentesco')=='T')
-		                    {
-		                        debug('es el tomador',record);
-		                        record.set('estomador','Si');
-		                        recordTomadorp2=record.copy();
-		                        debug('se puso en sesion recordTomadorp2',recordTomadorp2);
-		                        //gridTomadorp2.setDisabled(true);
-		                    }
-		                    else
-		                    {
-		                        debug('no es el tomador');
-		                    }
-		                });
-   	        		}
-   	        		else
-   	        		{
-   	        			var cdpersonTomador=record.get('cdperson');
-   	        			debug('buscar por cdperson abajo');
-   	        			store.each(function(record,index)
+   	        			debug('el contratante se busca en asegurados con cdperson '+recordContra.get('cdperson'));
+   	        			var cdpersonTomador=recordContra.get('cdperson');
+                        store.each(function(record,index)
                         {
                             debug('iterando',record);
                             if(record.get('cdperson')==cdpersonTomador)
                             {
-                                debug('es el tomador',record);
-                                record.set('estomador','Si');
+                                debug('es el contratante',record);
+                                record.set('estomador',true);
                                 recordTomadorp2=record.copy();
+                                recordTomadorp2.set('cdrol','1');
+                                recordTomadorp2.set('nmsituac','0');
+                                gridTomadorp2.setDisabled(true);
+                                isCopiadop2=true;
                                 debug('se puso en sesion recordTomadorp2',recordTomadorp2);
                                 //gridTomadorp2.setDisabled(true);
                             }
@@ -528,7 +614,11 @@
                             }
                         });
    	        		}
-   	        		debug('fin de checar cual asegurado es el tomador');
+   	        		else
+   	        		{
+   	        			debug('el contratante no tiene cdperson, no se busca en los asegurados');
+   	        		}
+                    debug("load isCopiadop2:"+(isCopiadop2?'true':'false'));
 	   	        }
    	        }   	        
    	    });
@@ -569,7 +659,6 @@
 	    	extend         : 'Ext.grid.Panel'
 	    	,title         : 'Contratante'
 	    	,store         : storeTomadorp2
-	        ,<s:property value="item3" />
 	        ,frame         : false
 	        ,style         : 'margin:5px'
         	,selModel      :
@@ -593,8 +682,9 @@
                 });
 	        	Ext.apply(this,
        			{
-	        	    //plugins : [this.cellEditing]
-	        	    listeners:
+	        	    plugins : [this.cellEditing]
+	                ,<s:property value="item3" />
+	        	    ,listeners:
                     {
                         // add the validation after render so that validation is not triggered when the record is loaded.
                         afterrender: function (grid)
@@ -642,6 +732,73 @@
                     }
                 });
                 return false;
+            }
+            ,onDomiciliosClick:function(grid,rowIndex)
+            {
+                var me=this;
+                debug("domicilios.click");
+                debug("validarYGuardar");
+                validarYGuardar();
+                setTimeout(function(){me.onDomiciliosInter(grid,rowIndex)},500);
+            }
+            ,onDomiciliosInter:function(grid,rowIndex)
+            {
+                var me=this;
+                debug("interval called");
+                if(timeoutflagp2==1)
+                {
+                    debug("interval: 1");
+                    setTimeout(function(){me.onDomiciliosInter(grid,rowIndex)},500);
+                }
+                else if(timeoutflagp2==3)
+                {
+                    debug("interval: 3 proceder");
+                    me.onDomiciliosSave(grid,rowIndex);
+                }
+                else
+                {
+                    debug("finish: "+timeoutflagp2)
+                }
+            }
+            ,onDomiciliosSave:function(grid,rowIndex)
+            {
+                var record=this.getStore().getAt(rowIndex);
+                if(Ext.getCmp('domicilioAccordionEl'))
+                {
+                    Ext.getCmp('domicilioAccordionEl').destroy();
+                }
+                accordion.add(
+                {
+                    id:'domicilioAccordionEl'
+                    ,title:'Editar domicilio de '+record.get('nombre')+' '+(record.get('segundo_nombre')?record.get('segundo_nombre')+' ':' ')+record.get('Apellido_Paterno')+' '+record.get('Apellido_Materno')
+                    ,cls:'claseTitulo'
+                    ,loader:
+                    {
+                        url : urlDomiciliop2
+                        ,params:
+                        {
+                            'smap1.pv_cdunieco'     : inputCduniecop2,
+                            'smap1.pv_cdramo'       : inputCdramop2,
+                            'smap1.pv_estado'       : inputEstadop2,
+                            'smap1.pv_nmpoliza'     : inputNmpolizap2,
+                            'smap1.pv_nmsituac'     : '0',
+                            'smap1.pv_cdperson'     : record.get('cdperson'),
+                            'smap1.pv_cdrol'        : '1',
+                            'smap1.nombreAsegurado' : record.get('nombre')+' '+(record.get('segundo_nombre')?record.get('segundo_nombre')+' ':' ')+record.get('Apellido_Paterno')+' '+record.get('Apellido_Materno'),
+                            'smap1.cdrfc'           : record.get('cdrfc'),
+                            'smap1.botonCopiar'     : '0'
+                        }
+                        ,autoLoad:true
+                        ,scripts:true
+                    }
+                    ,listeners:
+                    {
+                        expand:function( p, eOpts )
+                        {
+                            window.parent.scrollTo(0,150+p.y);
+                        }
+                    }
+                }).expand();
             }
    	    });
 	    
@@ -698,8 +855,47 @@
 	                        var view = grid.getView();
 	                     // validation on record level through "itemupdate" event
 	                        view.on('itemupdate', function (record, y, node, options) {
+	                        	var hayTomador=false;
+	                        	storePersonasp2.each(function(recordI,index)
+                                {
+	                        		if(recordI.get('estomador'))
+	                        		{
+	                        			hayTomador=true;
+	                        		}
+                                });
+	                        	debug('hay tomador '+(hayTomador?'true':'false'));
+	                        	if(!hayTomador)
+	                        	{
+	                        		if(isCopiadop2)
+	                        		{
+	                        			isCopiadop2=false;
+	                        			var recordCont=storeTomadorp2.getAt(0);
+                                        recordCont.set('nombre','');
+                                        recordCont.set('segundo_nombre','');
+                                        recordCont.set('Apellido_Paterno','');
+                                        recordCont.set('Apellido_Materno','');
+                                        recordCont.set('fenacimi','01/01/1990');
+                                        recordCont.set('cdrol','1');
+                                        recordCont.set('nmsituac','0');
+                                        recordCont.set('cdrfc','');
+                                        recordCont.set('cdperson','');
+                                        debug('se reinicia',recordCont);
+	                        		}
+	                        	}
+	                            gridTomadorp2.setDisabled(hayTomador);
 	                        	if(record.get('estomador'))
 	                            {
+	                        		if(!isCopiadop2)
+	                        		{
+	                        			isCopiadop2=true;
+	                        		}	
+	                        		storePersonasp2.each(function(recordI,index)
+                                    {
+                                        if(y!=index)
+                                        {
+                                        	recordI.set('estomador',false);
+                                        }
+                                    });
 	                                debug('tomador update:',record);
 	                                recordTomadorp2=record.copy();
 	                                debug('se puso en sesion recordTomadorp2',recordTomadorp2);
@@ -888,7 +1084,7 @@
                             'smap1.pv_cdrol'        : record.get('cdrol'),
                             'smap1.nombreAsegurado' : record.get('nombre')+' '+(record.get('segundo_nombre')?record.get('segundo_nombre')+' ':' ')+record.get('Apellido_Paterno')+' '+record.get('Apellido_Materno'),
                             'smap1.cdrfc'           : record.get('cdrfc'),
-                            'smap1.botonCopiar'     : record.get('estomador')!='Si'?1:0
+                            'smap1.botonCopiar'     : rowIndex>0?'1':'0'
                         }
                         ,autoLoad:true
                         ,scripts:true
@@ -929,7 +1125,7 @@
                             'smap1.pv_cdrol'        : record.get('cdrol'),
                             'smap1.nombreAsegurado' : record.get('nombre')+' '+(record.get('segundo_nombre')?record.get('segundo_nombre')+' ':' ')+record.get('Apellido_Paterno')+' '+record.get('Apellido_Materno'),
                             'smap1.cdrfc'           : record.get('cdrfc'),
-                            'smap1.botonCopiar'     : record.get('estomador')!='Si'?1:0
+                            'smap1.botonCopiar'     : rowIndex>0?'1':'0'
                         }
                         ,autoLoad:true
                         ,scripts:true
@@ -1012,9 +1208,9 @@
 	            //gridTomadorp2.setDisabled(true);
 	            grid.getStore().each(function(rec,idx)
            		{
-            		rec.set('estomador','');
+            		rec.set('estomador',false);
            		});
-	            record.set('estomador','Si');
+	            record.set('estomador',true);
 	            recordTomadorp2=record.copy();
 	            debug('se puso en sesion recordTomadorp2',recordTomadorp2);
                 storeTomadorp2.removeAll();
@@ -1072,65 +1268,132 @@
 	                        {
 	                            var incisosJson = [];
 	                            var completos=true;
-	                            var sinCdperson=0;
+	                            var storeSinCdperson=Ext.create('Ext.data.Store',{model:'Modelo1p2'});
+	                            var sinCdpersonlen=0;
 	                            
+	                            //ver si el contratante es aparte
+	                            var hayContApart=true;
 	                            storePersonasp2.each(function(record,index)
+                                {
+	                            	if(record.get('estomador')==true)
+	                            	{
+	                            		hayContApart=false;
+	                            	}
+                                });
+	                            debug('hayContApart',(hayContApart?'true':'false'));
+	                            
+	                            //para cuando el contratante es aparte
+	                            if(hayContApart)
+	                            {
+	                            	var recordContApart=storeTomadorp2.getAt(0);
+	                            	if(
+                                        !recordContApart.get("nombre")
+                                        ||recordContApart.get("nombre").length==0
+                                        ||!recordContApart.get("Apellido_Paterno")
+                                        ||recordContApart.get("Apellido_Paterno").length==0
+                                        ||!recordContApart.get("Apellido_Paterno")
+                                        ||recordContApart.get("Apellido_Paterno").length==0
+                                        ||!recordContApart.get("Apellido_Materno")
+                                        ||recordContApart.get("Apellido_Materno").length==0
+                                        ||!recordContApart.get("cdrfc")
+                                        ||recordContApart.get("cdrfc").length==0
+                                        )
+                                    {
+                                        //console.log("#incompleto:");
+                                        //console.log(record);
+                                        completos=false;                                    
+                                    }
+	                            	incisosJson.push({
+                                        nmsituac:'0',
+                                        cdrol:'1',
+                                        fenacimi: typeof recordContApart.get('fenacimi')=='string'?recordContApart.get('fenacimi'):Ext.Date.format(recordContApart.get('fenacimi'), 'd/m/Y'),
+                                        sexo:typeof recordContApart.get('sexo')=='string'?recordContApart.get('sexo'):recordContApart.get('sexo').get('key'),
+                                        cdperson:recordContApart.get('cdperson'),
+                                        nombre: recordContApart.get('nombre'),
+                                        segundo_nombre: recordContApart.get('segundo_nombre'),
+                                        Apellido_Paterno: recordContApart.get('Apellido_Paterno'),
+                                        Apellido_Materno: recordContApart.get('Apellido_Materno'),
+                                        cdrfc:recordContApart.get('cdrfc')
+                                    });
+	                            	if(!recordContApart.get("cdperson")||recordContApart.get("cdperson").length==0)
+                                    {
+	                            		var recordSinCdperson=recordContApart.copy();
+	                            		recordSinCdperson.set('Parentesco','tomador');
+                                        storeSinCdperson.add(recordSinCdperson);
+                                        sinCdpersonlen++;
+                                        //storeTomadorp2.removeAll();
+                                    }
+	                            }
+	                            debug('f2');
+	                            //!para cuando el contratante es aparte
+	                            
+	                            //revisar asegurados: completo, cdperson y json
+	                            storePersonasp2.each(function(recordAsegu,indexAsegu)
                            		{
 	                            	//console.log(record);
 	                            	if(
-                            			!record.get("nombre")
-                            			||record.get("nombre").length==0
-                            			||!record.get("Apellido_Paterno")
-                                        ||record.get("Apellido_Paterno").length==0
-                                        ||!record.get("Apellido_Paterno")
-                                        ||record.get("Apellido_Paterno").length==0
-                                        ||!record.get("Apellido_Materno")
-                                        ||record.get("Apellido_Materno").length==0
-                                        ||!record.get("cdrfc")
-                                        ||record.get("cdrfc").length==0
+                            			!recordAsegu.get("nombre")
+                            			||recordAsegu.get("nombre").length==0
+                            			||!recordAsegu.get("Apellido_Paterno")
+                                        ||recordAsegu.get("Apellido_Paterno").length==0
+                                        ||!recordAsegu.get("Apellido_Paterno")
+                                        ||recordAsegu.get("Apellido_Paterno").length==0
+                                        ||!recordAsegu.get("Apellido_Materno")
+                                        ||recordAsegu.get("Apellido_Materno").length==0
+                                        ||!recordAsegu.get("cdrfc")
+                                        ||recordAsegu.get("cdrfc").length==0
                             			)
                             		{
 	                            		//console.log("#incompleto:");
 	                            		//console.log(record);
 	                            	    completos=false;                            		
                             		}
-	                            	if(!record.get("cdperson")||record.get("cdperson").length==0)
+	                            	debug('f3');
+	                            	if(!recordAsegu.get("cdperson")||recordAsegu.get("cdperson").length==0)
                             		{
-	                            		sinCdperson++;
+	                            		var recordSinCdperson=recordAsegu.copy();
+	                            		recordSinCdperson.set('Parentesco',indexAsegu);
+	                            		storeSinCdperson.add(recordSinCdperson);
+	                            		sinCdpersonlen++;
+	                            		//storePersonasp2.remove(recordAsegu);
                             		}
-	                                if(record.get('Parentesco')=='T')
+	                            	debug('f4');
+	                                if((!hayContApart)&&recordAsegu.get('estomador'))
                                 	{
+	                                	debug('se manda como contratante',recordAsegu);
 	                                	incisosJson.push({
 		                                	nmsituac:'0',
 	                                        cdrol:'1',
-	                                        fenacimi: typeof record.get('fenacimi')=='string'?record.get('fenacimi'):Ext.Date.format(record.get('fenacimi'), 'd/m/Y'),
-	                                        sexo:typeof record.get('sexo')=='string'?record.get('sexo'):record.get('sexo').get('key'),
-	                                        cdperson:record.get('cdperson'),
-	                                        nombre: record.get('nombre'),
-	                                        segundo_nombre: record.get('segundo_nombre'),
-	                                        Apellido_Paterno: record.get('Apellido_Paterno'),
-	                                        Apellido_Materno: record.get('Apellido_Materno'),
-	                                        cdrfc:record.get('cdrfc')
+	                                        fenacimi: typeof recordAsegu.get('fenacimi')=='string'?recordAsegu.get('fenacimi'):Ext.Date.format(recordAsegu.get('fenacimi'), 'd/m/Y'),
+	                                        sexo:typeof recordAsegu.get('sexo')=='string'?recordAsegu.get('sexo'):recordAsegu.get('sexo').get('key'),
+	                                        cdperson:recordAsegu.get('cdperson'),
+	                                        nombre: recordAsegu.get('nombre'),
+	                                        segundo_nombre: recordAsegu.get('segundo_nombre'),
+	                                        Apellido_Paterno: recordAsegu.get('Apellido_Paterno'),
+	                                        Apellido_Materno: recordAsegu.get('Apellido_Materno'),
+	                                        cdrfc:recordAsegu.get('cdrfc')
 	                                	});
                                 	}
+	                                debug('f5');
 	                                incisosJson.push({
-                                        nmsituac:record.get('nmsituac'),
-	                                    cdrol:typeof record.get('cdrol')=='string'?record.get('cdrol'):record.get('cdrol').get('key'),
-	                                    fenacimi: typeof record.get('fenacimi')=='string'?record.get('fenacimi'):Ext.Date.format(record.get('fenacimi'), 'd/m/Y'),
-	                                    sexo:typeof record.get('sexo')=='string'?record.get('sexo'):record.get('sexo').get('key'),
-	                                    cdperson:record.get('cdperson'),
-	                                    nombre: record.get('nombre'),
-	                                    segundo_nombre: record.get('segundo_nombre'),
-	                                    Apellido_Paterno: record.get('Apellido_Paterno'),
-	                                    Apellido_Materno: record.get('Apellido_Materno'),
-	                                    cdrfc:record.get('cdrfc')
+	                                	nmsituac:recordAsegu.get('nmsituac'),
+	                                    cdrol:typeof recordAsegu.get('cdrol')=='string'?recordAsegu.get('cdrol'):recordAsegu.get('cdrol').get('key'),
+	                                    fenacimi: typeof recordAsegu.get('fenacimi')=='string'?recordAsegu.get('fenacimi'):Ext.Date.format(recordAsegu.get('fenacimi'), 'd/m/Y'),
+	                                    sexo:typeof recordAsegu.get('sexo')=='string'?recordAsegu.get('sexo'):recordAsegu.get('sexo').get('key'),
+	                                    cdperson: recordAsegu.get('cdperson'),
+	                                    nombre: recordAsegu.get('nombre'),
+	                                    segundo_nombre: recordAsegu.get('segundo_nombre'),
+	                                    Apellido_Paterno: recordAsegu.get('Apellido_Paterno'),
+	                                    Apellido_Materno: recordAsegu.get('Apellido_Materno'),
+	                                    cdrfc: recordAsegu.get('cdrfc')
 	                                });
+	                                debug('f6');
 	                            });
                                 
-	                           //console.log("sin cd person: "+sinCdperson);
+	                            //tratar de hacer submit
 	                            if(completos)
                             	{
-	                            	if(sinCdperson==0)
+	                            	if(sinCdpersonlen==0)
                             		{
 	                            		editarDespuesValidacionesp2(incisosJson);//manda el submit
                             		}
@@ -1138,7 +1401,7 @@
 	                            	{
 		                            	Ext.getCmp('form1p2').setLoading(true);
 		                            	//mandar a traer los cdperson de las personas asincrono
-		                            	storePersonasp2.each(function(record,index)
+		                            	storeSinCdperson.each(function(recordIteSinCdperson,index)
                                         {
 		                            		//console.log(index);
 		                            		setTimeout(function()
@@ -1150,50 +1413,82 @@
                                                     success:function(response,opts)
                                                     {
                                                         var jsonResp = Ext.decode(response.responseText);
-                                                        //console.log("respuesta cdperson",jsonResp);
+                                                        debug("respuesta cdperson",jsonResp);
+                                                        debug(recordIteSinCdperson);
                                                         //window.console&&console.log(jsonResp);
                                                         if(jsonResp.success==true)
                                                         {
                                                             try
                                                             {
-                                                                record.data.cdperson=jsonResp.cdperson;
-                                                                sinCdperson--;
-                                                                if(sinCdperson==0)
+                                                            	recordIteSinCdperson.set('cdperson',jsonResp.cdperson);
+                                                            	
+                                                                sinCdpersonlen--;
+                                                                if(sinCdpersonlen==0)
                                                                 {
+                                                                	//restaurar stores
+                                                                	storeSinCdperson.each(function(recordIteConCdperson)
+                                                                	{
+                                                                		debug('resultado iterando',recordIteConCdperson);
+                                                                		if(recordIteConCdperson.get('Parentesco')=='tomador')
+                                                                		{
+                                                                			storeTomadorp2.getAt(0).set('cdperson',recordIteConCdperson.get('cdperson'));
+                                                                		}
+                                                                		else
+                                                                		{
+                                                                			storePersonasp2.getAt(recordIteConCdperson.get('Parentesco')).set('cdperson',recordIteConCdperson.get('cdperson'));
+                                                                		}
+                                                                	});
                                                                     //procesar submit
                                                                     //console.log(storePersonasp2.getRange());
                                                                     //storePersonasp2.sync();
                                                                     //console.log(storePersonasp2.getRange());
                                                                     gridPersonasp2.getView().refresh();
                                                                     incisosJson=[];
-                                                                    storePersonasp2.each(function(record,index)
+                                                                    if(hayContApart)
                                                                     {
-                                                                    	if(record.get('Parentesco')=='T')
+                                                                    	var recordContApar2=storeTomadorp2.getAt(0);
+                                                                    	incisosJson.push({
+                                                                            nmsituac:'0',
+                                                                            cdrol:'1',
+                                                                            fenacimi: typeof recordContApar2.get('fenacimi')=='string'?recordContApar2.get('fenacimi'):Ext.Date.format(recordContApar2.get('fenacimi'), 'd/m/Y'),
+                                                                            sexo:typeof recordContApar2.get('sexo')=='string'?recordContApar2.get('sexo'):recordContApar2.get('sexo').get('key'),
+                                                                            cdperson: recordContApar2.get('cdperson'),
+                                                                            nombre: recordContApar2.get('nombre'),
+                                                                            segundo_nombre: recordContApar2.get('segundo_nombre'),
+                                                                            Apellido_Paterno: recordContApar2.get('Apellido_Paterno'),
+                                                                            Apellido_Materno: recordContApar2.get('Apellido_Materno'),
+                                                                            cdrfc: recordContApar2.get('cdrfc')
+                                                                        });
+                                                                    }
+                                                                    storePersonasp2.each(function(recordAsegu2)
+                                                                    {
+                                                                    	if((!hayContApart)&&recordAsegu2.get('estomador'))
                                                                         {
+                                                                    		debug('se manda como contratante',recordAsegu2);
                                                                             incisosJson.push({
                                                                                 nmsituac:'0',
                                                                                 cdrol:'1',
-                                                                                fenacimi: typeof record.get('fenacimi')=='string'?record.get('fenacimi'):Ext.Date.format(record.get('fenacimi'), 'd/m/Y'),
-                                                                                sexo:typeof record.get('sexo')=='string'?record.get('sexo'):record.get('sexo').get('key'),
-                                                                                cdperson:record.get('cdperson'),
-                                                                                nombre: record.get('nombre'),
-                                                                                segundo_nombre: record.get('segundo_nombre'),
-                                                                                Apellido_Paterno: record.get('Apellido_Paterno'),
-                                                                                Apellido_Materno: record.get('Apellido_Materno'),
-                                                                                cdrfc:record.get('cdrfc')
+                                                                                fenacimi: typeof recordAsegu2.get('fenacimi')=='string'?recordAsegu2.get('fenacimi'):Ext.Date.format(recordAsegu2.get('fenacimi'), 'd/m/Y'),
+                                                                                sexo:typeof recordAsegu2.get('sexo')=='string'?recordAsegu2.get('sexo'):recordAsegu2.get('sexo').get('key'),
+                                                                                cdperson: recordAsegu2.get('cdperson'),
+                                                                                nombre: recordAsegu2.get('nombre'),
+                                                                                segundo_nombre: recordAsegu2.get('segundo_nombre'),
+                                                                                Apellido_Paterno: recordAsegu2.get('Apellido_Paterno'),
+                                                                                Apellido_Materno: recordAsegu2.get('Apellido_Materno'),
+                                                                                cdrfc: recordAsegu2.get('cdrfc')
                                                                             });
                                                                         }
                                                                         incisosJson.push({
-                                                                            nmsituac:record.get('nmsituac'),
-                                                                            cdrol:typeof record.get('cdrol')=='string'?record.get('cdrol'):record.get('cdrol').get('key'),
-                                                                            fenacimi: typeof record.get('fenacimi')=='string'?record.get('fenacimi'):Ext.Date.format(record.get('fenacimi'), 'd/m/Y'),
-                                                                            sexo:typeof record.get('sexo')=='string'?record.get('sexo'):record.get('sexo').get('key'),
-                                                                            cdperson:record.get('cdperson'),
-                                                                            nombre: record.get('nombre'),
-                                                                            segundo_nombre: record.get('segundo_nombre'),
-                                                                            Apellido_Paterno: record.get('Apellido_Paterno'),
-                                                                            Apellido_Materno: record.get('Apellido_Materno'),
-                                                                            cdrfc:record.get('cdrfc')
+                                                                            nmsituac: recordAsegu2.get('nmsituac'),
+                                                                            cdrol:typeof recordAsegu2.get('cdrol')=='string'?recordAsegu2.get('cdrol'):recordAsegu2.get('cdrol').get('key'),
+                                                                            fenacimi: typeof recordAsegu2.get('fenacimi')=='string'?recordAsegu2.get('fenacimi'):Ext.Date.format(recordAsegu2.get('fenacimi'), 'd/m/Y'),
+                                                                            sexo:typeof recordAsegu2.get('sexo')=='string'?recordAsegu2.get('sexo'):recordAsegu2.get('sexo').get('key'),
+                                                                            cdperson: recordAsegu2.get('cdperson'),
+                                                                            nombre: recordAsegu2.get('nombre'),
+                                                                            segundo_nombre: recordAsegu2.get('segundo_nombre'),
+                                                                            Apellido_Paterno: recordAsegu2.get('Apellido_Paterno'),
+                                                                            Apellido_Materno: recordAsegu2.get('Apellido_Materno'),
+                                                                            cdrfc: recordAsegu2.get('cdrfc')
                                                                         });
                                                                     });                
                                                                     Ext.getCmp('form1p2').setLoading(false);
@@ -1202,7 +1497,7 @@
                                                             }
                                                             catch(e)
                                                             {
-                                                                //console.log(e);
+                                                                debug(e);
                                                                 Ext.Msg.show({
                                                                     title:'Error',
                                                                     msg: 'Error al procesar la informaci&oacute;n',
@@ -1230,7 +1525,7 @@
                                                             icon: Ext.Msg.ERROR
                                                         });
                                                     }
-                                                })
+                                                });
 		                            		},(index+1)*500);
                                         });
                             		}

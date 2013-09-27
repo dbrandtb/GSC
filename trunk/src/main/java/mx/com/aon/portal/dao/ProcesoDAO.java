@@ -95,6 +95,7 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String GENERA_MPERSON="GENERA_MPERSON";
     public static final String P_MOV_MPERSONA="P_MOV_MPERSONA";
     public static final String P_MOV_MPOLIPER="P_MOV_MPOLIPER";
+    public static final String P_BORRA_MPOLIPER="P_BORRA_MPOLIPER";
     public static final String OBTENER_COBERTURAS_USUARIO="OBTENER_COBERTURAS_USUARIO";
     public static final String P_MOV_MPOLIGAR="P_MOV_MPOLIGAR";
     public static final String P_MOV_MPOLICAP="P_MOV_MPOLICAP";
@@ -176,6 +177,7 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(OBTENER_HTML_CLAUSULA, new ObtenerHtmlClausula(getDataSource()));
         addStoredProcedure(OBTENER_POLICOT, new ObtenerPolicot(getDataSource()));
         addStoredProcedure(P_MOV_MESACONTROL, new PMovMesacontrol(getDataSource()));
+        addStoredProcedure(P_BORRA_MPOLIPER, new PBorraMpoliper(getDataSource()));
 	}
 
 	protected class BuscarMatrizAsignacion extends CustomStoredProcedure {
@@ -2238,6 +2240,41 @@ public class ProcesoDAO extends AbstractDAO {
 	////// p mov mpersona //////
 	////////////////////////////
 	
+	////////////////////////////
+	////// borra mpoliper //////
+	/*////////////////////////*/
+	protected class PBorraMpoliper extends CustomStoredProcedure {
+		
+		protected PBorraMpoliper(DataSource dataSource) {
+			super(dataSource,"PKG_SATELITES.P_BORRA_MPOLIPER");
+			declareParameter(new SqlParameter("pv_cdunieco_i", 		OracleTypes.VARCHAR));// IN  MPOLIPER.cdunieco%TYPE DEFAULT NULL,
+			declareParameter(new SqlParameter("pv_cdramo_i", 		OracleTypes.VARCHAR));// IN  MPOLIPER.cdramo%TYPE   DEFAULT NULL,
+			declareParameter(new SqlParameter("pv_estado_i", 		OracleTypes.VARCHAR));// IN  MPOLIPER.estado%TYPE   DEFAULT NULL,
+			declareParameter(new SqlParameter("pv_nmpoliza_i", 		OracleTypes.VARCHAR));// IN  MPOLIPER.nmpoliza%TYPE DEFAULT NULL,
+			declareParameter(new SqlParameter("pv_nmsituac_i", 		OracleTypes.VARCHAR));// IN  MPOLIPER.nmsituac%TYPE DEFAULT NULL,
+			declareParameter(new SqlParameter("pv_cdrol_i", 		OracleTypes.VARCHAR));// IN  MPOLIPER.cdrol%TYPE   DEFAULT NULL,
+			declareParameter(new SqlParameter("pv_cdperson_i", 		OracleTypes.VARCHAR));// IN  MPOLIPER.cdperson%TYPE DEFAULT NULL,
+			declareParameter(new SqlParameter("pv_nmsuplem_i", 		OracleTypes.VARCHAR));// IN  MPOLIPER.nmsuplem%TYPE DEFAULT NULL,
+			declareParameter(new SqlParameter("pv_status_i", 		OracleTypes.VARCHAR));// IN  MPOLIPER.status%TYPE   DEFAULT NULL,
+			declareParameter(new SqlParameter("pv_nmorddom_i", 		OracleTypes.VARCHAR));// IN  MPOLIPER.nmorddom%TYPE DEFAULT NULL,
+			declareParameter(new SqlParameter("pv_swreclam_i", 		OracleTypes.VARCHAR));// IN  MPOLIPER.swreclam%TYPE DEFAULT NULL,
+			declareParameter(new SqlParameter("pv_accion_i", 		OracleTypes.VARCHAR));//
+	
+			declareParameter(new SqlOutParameter("pv_msg_id_o", 	OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o", 		OracleTypes.VARCHAR));
+			
+			compile();
+		}
+		
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			return mapper.build(map);
+		}
+	}
+	/*////////////////////////*/
+	////// borra mpoliper //////
+	////////////////////////////
+	
 	///////////////////////////////
 	////// obtiene   mpoliza //////
 	/*///////////////////////////*/
@@ -2474,7 +2511,7 @@ public class ProcesoDAO extends AbstractDAO {
 			declareParameter(new SqlParameter("pv_festatus_i",      OracleTypes.DATE));
 			declareParameter(new SqlParameter("pv_status_i",        OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_comments_i",      OracleTypes.VARCHAR));
-			
+			declareParameter(new SqlOutParameter("pv_tramite_o", 	OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o", 	OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o", 		OracleTypes.VARCHAR));
 			compile();
@@ -2482,7 +2519,12 @@ public class ProcesoDAO extends AbstractDAO {
 	
 		public WrapperResultados mapWrapperResultados(Map map) throws Exception {
 			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
-			return mapper.build(map);
+			WrapperResultados wrapperResultados = mapper.build(map);
+			
+			wrapperResultados.setItemMap(new HashMap<String, Object>());
+			wrapperResultados.getItemMap().put("ntramite", map.get("pv_tramite_o"));
+
+			return wrapperResultados;
 		}
 	}
 	/*///////////////////////////*/
