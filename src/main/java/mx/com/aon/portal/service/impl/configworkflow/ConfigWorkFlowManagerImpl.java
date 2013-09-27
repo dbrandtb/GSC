@@ -11,7 +11,7 @@ import mx.com.aon.portal.model.configworkflow.WorkFlowPs1VO;
 import mx.com.aon.portal.model.configworkflow.WorkFlowPs2VO;
 import mx.com.aon.portal.service.configworkflow.ConfigWorkFlowManager;
 import mx.com.aon.portal.service.impl.AbstractManager;
-import com.wittyconsulting.backbone.endpoint.Endpoint;
+import mx.com.aon.tmp.Endpoint;
 
 /**
  * @author Alejandro Garcia

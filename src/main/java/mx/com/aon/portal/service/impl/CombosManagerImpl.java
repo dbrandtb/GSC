@@ -1,16 +1,24 @@
 package mx.com.aon.portal.service.impl;
 
-import mx.com.aon.portal.service.PagedList;
-import mx.com.aon.portal.service.CombosManager;
-import mx.com.aon.portal.model.*;
-import mx.com.aon.core.ApplicationException;
-import org.apache.log4j.Logger;
-import com.wittyconsulting.backbone.endpoint.Endpoint;
-import com.wittyconsulting.backbone.exception.BackboneApplicationException;
-
-import java.util.List;
-import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import mx.com.aon.core.ApplicationException;
+import mx.com.aon.portal.model.AseguradoraVO;
+import mx.com.aon.portal.model.ClientesCorpoVO;
+import mx.com.aon.portal.model.DetallePlanXClienteVO;
+import mx.com.aon.portal.model.ElementoComboBoxVO;
+import mx.com.aon.portal.model.EstadoVO;
+import mx.com.aon.portal.model.SeccionVO;
+import mx.com.aon.portal.model.TiposCoberturasVO;
+import mx.com.aon.portal.model.TiposSituacionVO;
+import mx.com.aon.portal.service.CombosManager;
+import mx.com.aon.portal.service.PagedList;
+import mx.com.aon.tmp.BackboneApplicationException;
+import mx.com.aon.tmp.Endpoint;
+
+import org.apache.log4j.Logger;
 /**
  * Clase que implementa los servicios de la interface CombosManager
  *

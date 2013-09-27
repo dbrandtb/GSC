@@ -17,11 +17,10 @@ import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.PerfilVO;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.service.LoginManager;
+import mx.com.aon.tmp.BackboneApplicationException;
+import mx.com.aon.tmp.Endpoint;
 
 import org.apache.log4j.Logger;
-
-import com.wittyconsulting.backbone.endpoint.Endpoint;
-import com.wittyconsulting.backbone.exception.BackboneApplicationException;
 
 /**
  * LoginManagerImpl

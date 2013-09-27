@@ -1,16 +1,15 @@
 package mx.com.aon.portal.service.impl;
 
-import com.wittyconsulting.backbone.endpoint.Endpoint;
-import mx.com.aon.core.ApplicationException;
+import java.util.HashMap;
+import java.util.Map;
 
+import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.AgrupacionGrupoPersonaVO;
 import mx.com.aon.portal.model.GrupoPersonaVO;
 import mx.com.aon.portal.service.AgrupacionGrupoPersonasManager;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.util.WrapperResultados;
-
-import java.util.HashMap;
-import java.util.Map;
+import mx.com.aon.tmp.Endpoint;
 
 /**
  * Clase que sirve para dar servicios al action que lo invoca.

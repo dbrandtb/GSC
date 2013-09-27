@@ -7,9 +7,8 @@ import java.util.Map;
 import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.MenuPrincipalVO;
 import mx.com.aon.portal.service.MenuPrincipalManager;
-
-import com.wittyconsulting.backbone.endpoint.Endpoint;
-import com.wittyconsulting.backbone.exception.BackboneApplicationException;
+import mx.com.aon.tmp.BackboneApplicationException;
+import mx.com.aon.tmp.Endpoint;
 
 /**
  * 

@@ -7,8 +7,8 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.wittyconsulting.backbone.endpoint.Endpoint;
-import com.wittyconsulting.backbone.exception.BackboneApplicationException;
+import mx.com.aon.tmp.Endpoint;
+import mx.com.aon.tmp.BackboneApplicationException;
 
 import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.ExportModel;

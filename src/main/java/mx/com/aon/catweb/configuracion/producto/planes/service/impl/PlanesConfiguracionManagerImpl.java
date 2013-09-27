@@ -14,8 +14,8 @@ import mx.com.aon.portal.service.impl.AbstractManager;
 import mx.com.aon.portal.util.ConvertUtil;
 import mx.com.aon.portal.util.WrapperResultados;
 
-import com.wittyconsulting.backbone.endpoint.Endpoint;
-import com.wittyconsulting.backbone.exception.BackboneApplicationException;
+import mx.com.aon.tmp.Endpoint;
+import mx.com.aon.tmp.BackboneApplicationException;
 /**
  * 
  * @author sergio.ramirez

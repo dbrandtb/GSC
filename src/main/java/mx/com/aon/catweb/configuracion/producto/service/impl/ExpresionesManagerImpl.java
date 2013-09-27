@@ -1,5 +1,7 @@
 package mx.com.aon.catweb.configuracion.producto.service.impl;
 
+import static mx.com.aon.portal.dao.ExpresionesDAO.OBTIENE_TABLA_CINCO_CLAVES;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,18 +14,15 @@ import mx.com.aon.catweb.configuracion.producto.expresiones.model.RamaVO;
 import mx.com.aon.catweb.configuracion.producto.expresiones.model.VariableVO;
 import mx.com.aon.catweb.configuracion.producto.model.LlaveValorVO;
 import mx.com.aon.catweb.configuracion.producto.service.ExpresionesManager;
+import mx.com.aon.core.ApplicationException;
+import mx.com.aon.portal.service.PagedList;
+import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.aon.tmp.BackboneApplicationException;
+import mx.com.aon.tmp.Endpoint;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import mx.com.aon.portal.service.PagedList;
-import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
-
-import mx.com.aon.core.ApplicationException;
-import com.wittyconsulting.backbone.endpoint.Endpoint;
-import com.wittyconsulting.backbone.exception.BackboneApplicationException;
-
-import static mx.com.aon.portal.dao.ExpresionesDAO.OBTIENE_TABLA_CINCO_CLAVES;
 
 public class ExpresionesManagerImpl extends AbstractManagerJdbcTemplateInvoke implements ExpresionesManager {
 

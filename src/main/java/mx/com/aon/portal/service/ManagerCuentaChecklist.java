@@ -1,12 +1,11 @@
 package mx.com.aon.portal.service;
 
-import com.wittyconsulting.backbone.endpoint.Endpoint;
-import mx.com.aon.core.ApplicationException;
-import mx.com.aon.portal.model.ConfigurarEstructuraVO;
-import mx.com.aon.portal.util.WrapperResultados;
-
 import java.util.ArrayList;
 import java.util.Map;
+
+import mx.com.aon.core.ApplicationException;
+import mx.com.aon.portal.model.ConfigurarEstructuraVO;
+import mx.com.aon.tmp.Endpoint;
 
 /**
  * Interface de servicios para Cuenta Checklist.

@@ -1,8 +1,6 @@
 package mx.com.aon.catweb.configuracion.producto.service.impl;
 
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import mx.com.aon.catweb.configuracion.producto.service.SumaAseguradaManagerJdbcTemplate;
 import mx.com.aon.catweb.configuracion.producto.sumaAsegurada.model.SumaAseguradaIncisoVO;

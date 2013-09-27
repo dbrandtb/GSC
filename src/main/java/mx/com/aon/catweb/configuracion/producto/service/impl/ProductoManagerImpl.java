@@ -34,15 +34,14 @@ import mx.com.aon.kernel.cache.CacheSistema;
 import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
 import mx.com.aon.portal.util.ConvertUtil;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.aon.tmp.BackboneApplicationException;
+import mx.com.aon.tmp.Endpoint;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.support.SqlLobValue;
 import org.springframework.jdbc.support.lob.OracleLobHandler;
 import org.springframework.jdbc.support.nativejdbc.SimpleNativeJdbcExtractor;
-
-import com.wittyconsulting.backbone.endpoint.Endpoint;
-import com.wittyconsulting.backbone.exception.BackboneApplicationException;
 
 /**
  * ProductoManagerImpl

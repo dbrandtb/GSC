@@ -1,11 +1,13 @@
 package mx.com.aon.flujos.cotizacion.service.impl;
 
+import static mx.com.aon.portal.dao.CotizacionDAO.OBTIENE_RESULTADOS;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 import mx.com.aon.configurador.pantallas.model.PantallaVO;
 import mx.com.aon.configurador.pantallas.model.components.ColumnGridVO;
@@ -14,21 +16,16 @@ import mx.com.aon.configurador.pantallas.model.components.GridVO;
 import mx.com.aon.configurador.pantallas.model.components.ItemVO;
 import mx.com.aon.configurador.pantallas.model.components.RecordVO;
 import mx.com.aon.core.ApplicationException;
+import mx.com.aon.flujos.cotizacion.model.ObjetoCotizacionVO;
+import mx.com.aon.flujos.cotizacion.model.ResultadoCotizacionVO;
+import mx.com.aon.flujos.cotizacion.service.CotizacionPrincipalManager;
 import mx.com.aon.portal.model.BaseObjectVO;
 import mx.com.aon.portal.model.CotizacionMasivaVO;
 import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
 import mx.com.aon.portal.util.WrapperResultados;
-import mx.com.aon.flujos.cotizacion.model.ObjetoCotizacionVO;
-import mx.com.aon.flujos.cotizacion.model.ResultadoCotizacionVO;
-import mx.com.aon.flujos.cotizacion.service.CotizacionPrincipalManager;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-
-import com.wittyconsulting.backbone.endpoint.Endpoint;
-import com.wittyconsulting.backbone.exception.BackboneApplicationException;
-
-import static mx.com.aon.portal.dao.CotizacionDAO.OBTIENE_RESULTADOS;
 
 public class CotizacionManagerImpl extends AbstractManagerJdbcTemplateInvoke implements CotizacionPrincipalManager{
 	

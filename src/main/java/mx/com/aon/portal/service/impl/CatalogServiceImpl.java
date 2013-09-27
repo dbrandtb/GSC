@@ -1,18 +1,16 @@
 package mx.com.aon.portal.service.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.MensajesVO;
 import mx.com.aon.portal.service.CatalogService;
+import mx.com.aon.tmp.BackboneApplicationException;
+import mx.com.aon.tmp.Endpoint;
 
 import org.apache.log4j.Logger;
-
-import com.wittyconsulting.backbone.endpoint.Endpoint;
-import com.wittyconsulting.backbone.exception.BackboneApplicationException;
 
 public class CatalogServiceImpl extends AbstractManager implements CatalogService {
 	
