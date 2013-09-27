@@ -1,17 +1,17 @@
 package mx.com.aon.portal.service.impl;
 
-import com.wittyconsulting.backbone.endpoint.Endpoint;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.model.TableModelExport;
 import mx.com.aon.portal.model.RangoRenovacionReporteVO;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.service.RangoRenovacionReporteManager;
 import mx.com.aon.portal.util.WrapperResultados;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import mx.com.aon.tmp.Endpoint;
 
 public class RangoRenovacionReporteManagerImpl extends AbstractManager implements RangoRenovacionReporteManager {
 	

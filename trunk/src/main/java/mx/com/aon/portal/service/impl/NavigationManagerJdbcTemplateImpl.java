@@ -2,22 +2,14 @@ package mx.com.aon.portal.service.impl;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import org.jfree.util.Log;
-
-import com.wittyconsulting.backbone.endpoint.Endpoint;
-import com.wittyconsulting.backbone.exception.BackboneApplicationException;
 
 import mx.com.aon.core.ApplicationException;
-import mx.com.aon.portal.dao.UsuarioDAO;
 import mx.com.aon.portal.model.IsoVO;
 import mx.com.aon.portal.model.ItemVO;
 import mx.com.aon.portal.model.RamaVO;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.service.NavigationManager;
 import mx.com.aon.portal.util.WrapperResultados;
-import mx.com.gseguros.exception.DaoException;
 
 public class NavigationManagerJdbcTemplateImpl extends
 AbstractManagerJdbcTemplateInvoke  implements NavigationManager {

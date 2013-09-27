@@ -6,12 +6,12 @@ package mx.com.aon.portal.service;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
-import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.core.ApplicationException;
-import com.wittyconsulting.backbone.endpoint.Endpoint;
-import com.wittyconsulting.backbone.exception.BackboneApplicationException;
+import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.aon.tmp.BackboneApplicationException;
+import mx.com.aon.tmp.Endpoint;
+
+import org.apache.log4j.Logger;
 
 /**
  * @author eflores

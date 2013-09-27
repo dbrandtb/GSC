@@ -353,25 +353,10 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        
         <!-- FIN PARA AXIS2 -->
-
-
-        <dependency>
-            <groupId>com.wittyconsulting.backbone</groupId>
-            <artifactId>backbone-light</artifactId>
-            <version>0_8-catweb</version>
-            <exclusions>
-            	<exclusion>
-            		<artifactId>xml-apis</artifactId>
-            		<groupId>xml-apis</groupId>
-            	</exclusion>
-            </exclusions>
-        </dependency>
-
-
         
     </dependencies>
+    
     <build>
         <finalName>gseguros</finalName>
         <pluginManagement>

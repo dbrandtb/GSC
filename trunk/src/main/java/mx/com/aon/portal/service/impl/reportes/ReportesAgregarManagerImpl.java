@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 import java.util.Map;
 import java.util.HashMap;
 
-import com.wittyconsulting.backbone.endpoint.Endpoint;
+import mx.com.aon.tmp.Endpoint;
 
 /**
  * Created by IntelliJ IDEA.

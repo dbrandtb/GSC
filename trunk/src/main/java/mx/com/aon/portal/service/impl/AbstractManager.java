@@ -1,17 +1,16 @@
 package mx.com.aon.portal.service.impl;
 
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 import mx.com.aon.core.ApplicationException;
-import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.service.ProcessResultManager;
+import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.aon.tmp.BackboneApplicationException;
+import mx.com.aon.tmp.Endpoint;
 
 import org.apache.log4j.Logger;
-
-import com.wittyconsulting.backbone.endpoint.Endpoint;
-import com.wittyconsulting.backbone.exception.BackboneApplicationException;
 
 public abstract class AbstractManager {
 

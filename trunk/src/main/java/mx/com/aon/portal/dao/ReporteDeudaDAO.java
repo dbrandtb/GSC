@@ -12,7 +12,7 @@ import mx.com.gseguros.exception.DaoException;
 import org.apache.commons.digester.Digester;
 import org.apache.log4j.Logger;
 
-import com.wittyconsulting.backbone.exception.BackboneApplicationException;
+import mx.com.aon.tmp.BackboneApplicationException;
 
 public class ReporteDeudaDAO  extends AbstractDAO {
 

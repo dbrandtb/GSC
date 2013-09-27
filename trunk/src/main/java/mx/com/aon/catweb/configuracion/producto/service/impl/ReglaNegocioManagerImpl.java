@@ -14,11 +14,10 @@ import mx.com.aon.core.DatosInvalidosException;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.service.impl.AbstractManager;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.aon.tmp.BackboneApplicationException;
+import mx.com.aon.tmp.Endpoint;
 
 import org.apache.log4j.Logger;
-
-import com.wittyconsulting.backbone.endpoint.Endpoint;
-import com.wittyconsulting.backbone.exception.BackboneApplicationException;
 
 /**
  * Clase concreta que implementa los metodos de la interface
@@ -49,7 +48,7 @@ public class ReglaNegocioManagerImpl extends AbstractManager implements ReglaNeg
 	/**
 	 * Endpoints para acceder a los VM
 	 */
-	//private Map<String, Endpoint> endpoints;
+	private Map<String, Endpoint> endpoints;
 
 	/**
 	 * Retorna Map de objetos de tipo {@link Endpoint} con los vm que se pueden

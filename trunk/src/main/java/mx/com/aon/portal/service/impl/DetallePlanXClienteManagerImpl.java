@@ -1,7 +1,9 @@
 package mx.com.aon.portal.service.impl;
 
-import com.wittyconsulting.backbone.endpoint.Endpoint;
-import com.wittyconsulting.backbone.exception.BackboneApplicationException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.model.TableModelExport;
 import mx.com.aon.portal.model.AseguradoraVO;
@@ -11,11 +13,10 @@ import mx.com.aon.portal.model.TiposSituacionVO;
 import mx.com.aon.portal.service.DetallePlanXClienteManager;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.util.WrapperResultados;
-import org.apache.log4j.Logger;
+import mx.com.aon.tmp.BackboneApplicationException;
+import mx.com.aon.tmp.Endpoint;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import org.apache.log4j.Logger;
 
 /**
  * clase que implementa los servicios de DetallePlanXClienteManager

@@ -20,21 +20,6 @@
 			<result type="json" />
 		</action>
 
-		<!--  
-		Configuración del Action para la exportación del documentos, se tiene que
-		declarar como tipo de respuesta "stream" y el tipo mime de retorno, asi como
-		el atributo asociado al flujo de datos con el archivo y el nombre del archivo
-		generado, junto con el tamaño del buffer de transferencia
-		--> 
-		<action name="export" class="exportAction">
-			<result name="success" type="stream">
-				<param name="contentType">${contentType}</param>
-				<param name="inputName">inputStream</param>
-				<param name="contentDisposition">filename="${filename}"</param>
-				<param name="bufferSize">4096</param>
-			</result>
-		</action>
-
 	</package>
 
 </struts>

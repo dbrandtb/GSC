@@ -9,11 +9,10 @@ import mx.com.aon.catweb.configuracion.producto.datosFijos.model.DatoFijoVO;
 import mx.com.aon.catweb.configuracion.producto.model.LlaveValorVO;
 import mx.com.aon.catweb.configuracion.producto.service.DatosFijosManager;
 import mx.com.aon.core.ApplicationException;
+import mx.com.aon.tmp.BackboneApplicationException;
+import mx.com.aon.tmp.Endpoint;
 
 import org.apache.log4j.Logger;
-
-import com.wittyconsulting.backbone.endpoint.Endpoint;
-import com.wittyconsulting.backbone.exception.BackboneApplicationException;
 
 public class DatosFijosManagerImpl implements DatosFijosManager {
 	/**

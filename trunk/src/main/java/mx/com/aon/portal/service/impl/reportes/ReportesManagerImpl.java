@@ -28,8 +28,8 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.ArrayList;
 
-import com.wittyconsulting.backbone.endpoint.Endpoint;
-import com.wittyconsulting.backbone.exception.BackboneApplicationException;
+import mx.com.aon.tmp.Endpoint;
+import mx.com.aon.tmp.BackboneApplicationException;
 
 /**
  * Created by IntelliJ IDEA.

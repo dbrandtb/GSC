@@ -8,8 +8,11 @@ package mx.com.aon.portal.service.impl;
  *
  */
 
-import com.wittyconsulting.backbone.endpoint.Endpoint;
-import com.wittyconsulting.backbone.exception.BackboneApplicationException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.model.TableModelExport;
 import mx.com.aon.portal.model.ConfigurarEstructuraVO;
@@ -17,13 +20,10 @@ import mx.com.aon.portal.model.PersonasVO;
 import mx.com.aon.portal.service.ConfigurarEstructuraManager;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.aon.tmp.BackboneApplicationException;
+import mx.com.aon.tmp.Endpoint;
 
 import org.apache.log4j.Logger;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class ConfigurarEstructuraImpl extends AbstractManager implements ConfigurarEstructuraManager {
 	/**

@@ -24,8 +24,8 @@ import mx.com.aon.portal.service.opcmenuusuario.OpcMenuUsuarioManager;
 
 import org.apache.log4j.Logger;
 
-import com.wittyconsulting.backbone.endpoint.Endpoint;
-import com.wittyconsulting.backbone.exception.BackboneApplicationException;
+import mx.com.aon.tmp.Endpoint;
+import mx.com.aon.tmp.BackboneApplicationException;
 
 /**
  * @author eflores

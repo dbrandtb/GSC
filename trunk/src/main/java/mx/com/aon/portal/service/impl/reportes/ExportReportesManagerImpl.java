@@ -9,7 +9,7 @@ import mx.com.aon.export.model.TableModelExport;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.wittyconsulting.backbone.endpoint.Endpoint;
+import mx.com.aon.tmp.Endpoint;
 
 public class ExportReportesManagerImpl implements ExportModel {
 

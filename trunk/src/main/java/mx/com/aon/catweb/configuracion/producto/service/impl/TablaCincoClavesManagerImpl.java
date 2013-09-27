@@ -18,13 +18,12 @@ import mx.com.aon.catweb.configuracion.producto.util.WizardUtils;
 import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.service.impl.AbstractManager;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.aon.tmp.BackboneApplicationException;
+import mx.com.aon.tmp.Endpoint;
 import mx.com.aon.utils.Constantes;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-
-import com.wittyconsulting.backbone.endpoint.Endpoint;
-import com.wittyconsulting.backbone.exception.BackboneApplicationException;
 
 /**
  * 
