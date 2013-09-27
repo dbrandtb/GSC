@@ -1,17 +1,19 @@
 package mx.com.aon.catbo.service.impl;
 
-import mx.com.aon.catbo.model.*;
-import mx.com.aon.catbo.service.CombosManager2;
-import mx.com.aon.catbo.service.ProcesoManager;
-import mx.com.aon.portal.service.PagedList;
-import mx.com.aon.core.ApplicationException;
-import mx.com.aon.portal.service.impl.AbstractManager;
-import mx.com.aon.portal.util.WrapperResultados;
-import mx.biosnet.worklistserviceclient.proxy.types.mx.com.biosnet.servicios.worklistservice.facade.types.ParametroVO;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import mx.com.aon.catbo.model.CasoVO;
+import mx.com.aon.catbo.model.ProcesosVO;
+import mx.com.aon.catbo.model.ReasignacionCasoVO;
+import mx.com.aon.catbo.model.ResultadoGeneraCasoVO;
+import mx.com.aon.catbo.model.SuplentesVO;
+import mx.com.aon.catbo.service.ProcesoManager;
+import mx.com.aon.core.ApplicationException;
+import mx.com.aon.portal.service.PagedList;
+import mx.com.aon.portal.service.impl.AbstractManager;
+import mx.com.aon.portal.util.WrapperResultados;
 
 
 public class ProcesoManagerImpl extends AbstractManager implements ProcesoManager {
@@ -161,40 +163,40 @@ return res.getMsgText();
             //String taskId = obtieneTaskId(idCaso);
         	logger.debug("callingObtieneTaskId con caso: "+listMCasoMovVO.get(0).getNmCaso());
         	String taskId = obtieneTaskId(listMCasoMovVO.get(0).getNmCaso());
-            mx.biosnet.worklistserviceclient.proxy.WorklistServiceWSSoapHttpPortClient myPort = new mx.biosnet.worklistserviceclient.proxy.WorklistServiceWSSoapHttpPortClient();
-            logger.debug("calling: " + myPort.getEndpoint());
+//            mx.biosnet.worklistserviceclient.proxy.WorklistServiceWSSoapHttpPortClient myPort = new mx.biosnet.worklistserviceclient.proxy.WorklistServiceWSSoapHttpPortClient();
+//            logger.debug("calling: " + myPort.getEndpoint());
             logger.debug("Usuario: "+ usuario);
             logger.debug("Status: "+ status);
             logger.debug("taskId: "+ taskId);
             logger.debug("cancelarProceso_dsobservacion: "+listMCasoMovVO.get(0).getObservacion());
 
-            ParametroVO[] parametros = new ParametroVO[3];
-            ParametroVO parametroVO = null;
+//            ParametroVO[] parametros = new ParametroVO[3];
+//            ParametroVO parametroVO = null;
             
-            parametroVO = new ParametroVO();
-            parametroVO.setClave("cdusuario");
-            parametroVO.setValor(usuario);
-            parametros[0] = parametroVO;
-
-
-            parametroVO = new ParametroVO();
-            parametroVO.setClave("cdstatus");
-            parametroVO.setValor(status);
-            parametros[1] = parametroVO;
-            
-            parametroVO = new ParametroVO();
-            parametroVO.setClave("dsobservacion");
-            parametroVO.setValor(listMCasoMovVO.get(0).getObservacion());
-            parametros[2] = parametroVO;
-
-            logger.debug("callCambiarEstado2 con:");
-            logger.debug("Caso: "+listMCasoMovVO.get(0).getCaso());
-            logger.debug("Status: "+status);
-            logger.debug("taskId: "+taskId);
-            logger.debug("parametros:"+parametros[0].getValor()+" - "+parametros[1].getValor()+" - "+parametros[2].getValor());
-            myPort.cambiarEstado2(getUsuarioResponsable(listMCasoMovVO.get(0).getNmCaso()), status, taskId,parametros);
-            logger.debug("se invoco exitosamente el llamado a "+  myPort.getEndpoint());
-            //return ("El caso "+ idCaso +" fue "+ status +" exitosamente");
+//            parametroVO = new ParametroVO();
+//            parametroVO.setClave("cdusuario");
+//            parametroVO.setValor(usuario);
+//            parametros[0] = parametroVO;
+//
+//
+//            parametroVO = new ParametroVO();
+//            parametroVO.setClave("cdstatus");
+//            parametroVO.setValor(status);
+//            parametros[1] = parametroVO;
+//            
+//            parametroVO = new ParametroVO();
+//            parametroVO.setClave("dsobservacion");
+//            parametroVO.setValor(listMCasoMovVO.get(0).getObservacion());
+//            parametros[2] = parametroVO;
+//
+//            logger.debug("callCambiarEstado2 con:");
+//            logger.debug("Caso: "+listMCasoMovVO.get(0).getCaso());
+//            logger.debug("Status: "+status);
+//            logger.debug("taskId: "+taskId);
+//            logger.debug("parametros:"+parametros[0].getValor()+" - "+parametros[1].getValor()+" - "+parametros[2].getValor());
+//            myPort.cambiarEstado2(getUsuarioResponsable(listMCasoMovVO.get(0).getNmCaso()), status, taskId,parametros);
+//            logger.debug("se invoco exitosamente el llamado a "+  myPort.getEndpoint());
+//            //return ("El caso "+ idCaso +" fue "+ status +" exitosamente");
             return ("Operaci&oacute;n realizada con &eacute;xito");
 
         } catch (Exception ex) {
@@ -209,48 +211,48 @@ return res.getMsgText();
 
     public String reasignarCasos(List casos,  String estado) throws ApplicationException{
         try {
-            mx.biosnet.worklistserviceclient.proxy.WorklistServiceWSSoapHttpPortClient myPort = new mx.biosnet.worklistserviceclient.proxy.WorklistServiceWSSoapHttpPortClient();
-            logger.debug("calling: " + myPort.getEndpoint());
+//            mx.biosnet.worklistserviceclient.proxy.WorklistServiceWSSoapHttpPortClient myPort = new mx.biosnet.worklistserviceclient.proxy.WorklistServiceWSSoapHttpPortClient();
+//            logger.debug("calling: " + myPort.getEndpoint());
 
-            ParametroVO parametroVO = null;
+            //ParametroVO parametroVO = null;
 
-                ParametroVO[] parametros = new ParametroVO[4];
+                //ParametroVO[] parametros = new ParametroVO[4];
                 for (int i = 0; i < casos.size(); i++) {
                     CasoVO  casoVO = (CasoVO) casos.get(i);
                     String taskId = obtieneTaskId(casoVO.getNmCaso());
 
-                    parametroVO = new ParametroVO();
-                    parametroVO.setClave("nmcaso");
-                    parametroVO.setValor(casoVO.getNmCaso());
-                    parametros[0] = parametroVO;
+//                    parametroVO = new ParametroVO();
+//                    parametroVO.setClave("nmcaso");
+//                    parametroVO.setValor(casoVO.getNmCaso());
+//                    parametros[0] = parametroVO;
 
                     logger.debug("nmcaso " + casoVO.getNmCaso());
 
 
-                    parametroVO = new ParametroVO();
-                    parametroVO.setClave("usuarioMov");
-                    parametroVO.setValor(casoVO.getCdUsuMov());
-                    parametros[1] = parametroVO;
+//                    parametroVO = new ParametroVO();
+//                    parametroVO.setClave("usuarioMov");
+//                    parametroVO.setValor(casoVO.getCdUsuMov());
+//                    parametros[1] = parametroVO;
                     logger.debug("usuarioMov " + casoVO.getCdUsuMov());
 
-                    parametroVO = new ParametroVO();
-                    parametroVO.setClave("usuarioOld");
-                    parametroVO.setValor(casoVO.getCdUsuarioOld());
-                    parametros[2] = parametroVO;
+//                    parametroVO = new ParametroVO();
+//                    parametroVO.setClave("usuarioOld");
+//                    parametroVO.setValor(casoVO.getCdUsuarioOld());
+//                    parametros[2] = parametroVO;
                     logger.debug("usuarioOld " + casoVO.getCdUsuarioOld());
 
-                    parametroVO = new ParametroVO();
-                    parametroVO.setClave("usuarioNew");
-                    parametroVO.setValor(casoVO.getCdUsuarioNew());
-                    parametros[3] = parametroVO;
+//                    parametroVO = new ParametroVO();
+//                    parametroVO.setClave("usuarioNew");
+//                    parametroVO.setValor(casoVO.getCdUsuarioNew());
+//                    parametros[3] = parametroVO;
                     logger.debug("usuarioNew " + casoVO.getCdUsuarioNew());
 
                     logger.debug("estado: "+ estado);
 
-                    myPort.cambiarEstado2(casoVO.getCdUsuarioOld(), estado, taskId,parametros );
+//                    myPort.cambiarEstado2(casoVO.getCdUsuarioOld(), estado, taskId,parametros );
 
                 }
-            logger.debug("se invoco exitosamente el llamado a "+  myPort.getEndpoint());
+//            logger.debug("se invoco exitosamente el llamado a "+  myPort.getEndpoint());
             //return ("Se invoco  exitosamente la reasignacion de los casos");
             return ("Operaci&oacute;n realizada con &eacute;xito");
 
@@ -264,18 +266,18 @@ return res.getMsgText();
 
     public String guardaReasignacion(String numCaso, String cdUsuarioMov, List<ReasignacionCasoVO> listaReasignacionCasoVO) throws ApplicationException {
         try {
-            mx.biosnet.worklistserviceclient.proxy.WorklistServiceWSSoapHttpPortClient myPort = new mx.biosnet.worklistserviceclient.proxy.WorklistServiceWSSoapHttpPortClient();
-            logger.debug("calling: " + myPort.getEndpoint());
+//            mx.biosnet.worklistserviceclient.proxy.WorklistServiceWSSoapHttpPortClient myPort = new mx.biosnet.worklistserviceclient.proxy.WorklistServiceWSSoapHttpPortClient();
+//            logger.debug("calling: " + myPort.getEndpoint());
 
 
             String taskId = obtieneTaskId(numCaso);
-            ParametroVO parametroVO = null;
-            ParametroVO[] parametros = new ParametroVO[(listaReasignacionCasoVO.size()*2)+3];
-
-            parametroVO = new ParametroVO();
-            parametroVO.setClave("nmcaso");
-            parametroVO.setValor(numCaso);
-            parametros[0] = parametroVO;
+//            ParametroVO parametroVO = null;
+//            ParametroVO[] parametros = new ParametroVO[(listaReasignacionCasoVO.size()*2)+3];
+//
+//            parametroVO = new ParametroVO();
+//            parametroVO.setClave("nmcaso");
+//            parametroVO.setValor(numCaso);
+//            parametros[0] = parametroVO;
             
             logger.debug("listaReasignacionCasoVO.size() = "+listaReasignacionCasoVO.size());
             if(listaReasignacionCasoVO.size()>0){
@@ -298,26 +300,26 @@ return res.getMsgText();
         		}
             }
             
-            parametroVO = new ParametroVO();
-            parametroVO.setClave("cdusumov");
-            parametroVO.setValor(cdUsuarioMov);
-            parametros[1] = parametroVO;
+//            parametroVO = new ParametroVO();
+//            parametroVO.setClave("cdusumov");
+//            parametroVO.setValor(cdUsuarioMov);
+//            parametros[1] = parametroVO;
             
             int j, k , z = 1; 
             StringBuffer buffer = new StringBuffer();
             for (int i = 0; i < listaReasignacionCasoVO.size(); i++) {
                 ReasignacionCasoVO reasignacionCasoVO =  listaReasignacionCasoVO.get(i);
                 k = z+ 1;
-                parametroVO = new ParametroVO();
-                parametroVO.setClave("cdusuario");
-                parametroVO.setValor(reasignacionCasoVO.getCodUsuario());
-                parametros[k] = parametroVO;
+//                parametroVO = new ParametroVO();
+//                parametroVO.setClave("cdusuario");
+//                parametroVO.setValor(reasignacionCasoVO.getCodUsuario());
+//                parametros[k] = parametroVO;
                 
                 z = k +  1;
-                parametroVO = new ParametroVO();
-                parametroVO.setClave("rol");
-                parametroVO.setValor(reasignacionCasoVO.getCodRolMat());
-                parametros[z] = parametroVO;               
+//                parametroVO = new ParametroVO();
+//                parametroVO.setClave("rol");
+//                parametroVO.setValor(reasignacionCasoVO.getCodRolMat());
+//                parametros[z] = parametroVO;               
                 
                 buffer.append(reasignacionCasoVO.getCodUsuario()).append(",");
                 
@@ -325,20 +327,20 @@ return res.getMsgText();
             j = z + 1;
             String lista = buffer.toString();
             if(lista != null && lista.length()>0){
-            	parametroVO = new ParametroVO();
-            	parametroVO.setClave("listausr");
-                parametroVO.setValor(lista.substring(0, lista.length() - 1));
+//            	parametroVO = new ParametroVO();
+//            	parametroVO.setClave("listausr");
+//                parametroVO.setValor(lista.substring(0, lista.length() - 1));
                 logger.debug("listausr en parametros["+j+"]"+lista.substring(0,lista.length()-1));                
             }else{
-            	parametroVO.setValor("");
+//            	parametroVO.setValor("");
                 logger.debug("listausr en parametros["+j+"] se seteo con vacio.");
             }
-            logger.debug("listausr en parametros["+j+"] se seteo con "+parametroVO.getValor());
-            parametros[j] = parametroVO;
+//            logger.debug("listausr en parametros["+j+"] se seteo con "+parametroVO.getValor());
+//            parametros[j] = parametroVO;
             
-            myPort.cambiarEstado2(getUsuarioResponsable(numCaso), "ASIGNARESP", taskId,parametros );
+//            myPort.cambiarEstado2(getUsuarioResponsable(numCaso), "ASIGNARESP", taskId,parametros );
 
-            logger.debug("se invoco exitosamente el llamado a "+  myPort.getEndpoint());
+//            logger.debug("se invoco exitosamente el llamado a "+  myPort.getEndpoint());
             //return ("Se invoco  exitosamente la reasignacion de los casos");
             
             return ("Operaci&oacute;n realizada con &eacute;xito");
@@ -382,60 +384,60 @@ return res.getMsgText();
 	            	
 	              logger.debug("Cantidad de casos "+listaCasos.size());
 	                 
-		            ParametroVO parametroVO= null;
-		            ParametroVO[] parametros = new ParametroVO[6];
+//		            ParametroVO parametroVO= null;
+//		            ParametroVO[] parametros = new ParametroVO[6];
 	                 
 				    for (int i = 0; i < listaCasos.size(); i++) {
 					 
 		   		     String _numCaso  = listaCasos.get(i).getNmCaso();	 
 	                 String taskId = obtieneTaskId(_numCaso);
 	
-	                 parametroVO = new ParametroVO();
-	                 parametroVO.setClave("cdmatriz");
-	                 parametroVO.setValor(cdmatriz);
-	                 parametros[0] = parametroVO;
+//	                 parametroVO = new ParametroVO();
+//	                 parametroVO.setClave("cdmatriz");
+//	                 parametroVO.setValor(cdmatriz);
+//	                 parametros[0] = parametroVO;
 	                 logger.debug("parametroVO[0] - clave: cdmatriz"+" - valor: "+cdmatriz);
 	 
-	                 parametroVO = new ParametroVO();
-	                 parametroVO.setClave("cdnivatn");
-	                 parametroVO.setValor(cdnivatn);
-	                 parametros[1] = parametroVO;
+//	                 parametroVO = new ParametroVO();
+//	                 parametroVO.setClave("cdnivatn");
+//	                 parametroVO.setValor(cdnivatn);
+//	                 parametros[1] = parametroVO;
 	                 logger.debug("parametroVO[1] - clave: cdnivatn"+" - valor: "+cdnivatn);
 	
-	                 parametroVO = new ParametroVO();
-	                 parametroVO.setClave("cdusuario");
-	                 parametroVO.setValor(usuario);
-	                 parametros[2] = parametroVO;
+//	                 parametroVO = new ParametroVO();
+//	                 parametroVO.setClave("cdusuario");
+//	                 parametroVO.setValor(usuario);
+//	                 parametros[2] = parametroVO;
 	                 logger.debug("parametroVO[2] - clave: cdusuario"+" - valor: "+usuario);
 	             
-	                 parametroVO = new ParametroVO();
-	                 parametroVO.setClave("cdusrOld");
-	                 parametroVO.setValor(cdusrOld);
-	                 parametros[3] = parametroVO;
+//	                 parametroVO = new ParametroVO();
+//	                 parametroVO.setClave("cdusrOld");
+//	                 parametroVO.setValor(cdusrOld);
+//	                 parametros[3] = parametroVO;
 	                 logger.debug("parametroVO[3] - clave: cdusrOld"+" - valor: "+cdusrOld);
 	
-	                 parametroVO = new ParametroVO();
-	                 parametroVO.setClave("cdusrNew");
-	                 parametroVO.setValor(cdusrNew);
-	                 parametros[4] = parametroVO;
+//	                 parametroVO = new ParametroVO();
+//	                 parametroVO.setClave("cdusrNew");
+//	                 parametroVO.setValor(cdusrNew);
+//	                 parametros[4] = parametroVO;
 	                 logger.debug("parametroVO[4] - clave: cdusrNew"+" - valor: "+cdusrNew);
 	               
-	                 parametroVO = new ParametroVO();
-	                 parametroVO.setClave("nmcaso");
-	                 parametroVO.setValor(_numCaso);
-	                 parametros[5] = parametroVO;
+//	                 parametroVO = new ParametroVO();
+//	                 parametroVO.setClave("nmcaso");
+//	                 parametroVO.setValor(_numCaso);
+//	                 parametros[5] = parametroVO;
 	                 logger.debug("parametroVO[5] - clave: nmcaso"+" - valor: "+_numCaso);
 	                 
-	                 mx.biosnet.worklistserviceclient.proxy.WorklistServiceWSSoapHttpPortClient myPort = new mx.biosnet.worklistserviceclient.proxy.WorklistServiceWSSoapHttpPortClient();
-	                 logger.debug("calling: " + myPort.getEndpoint());
+//	                 mx.biosnet.worklistserviceclient.proxy.WorklistServiceWSSoapHttpPortClient myPort = new mx.biosnet.worklistserviceclient.proxy.WorklistServiceWSSoapHttpPortClient();
+//	                 logger.debug("calling: " + myPort.getEndpoint());
 	                 logger.debug("callingCambiarEstado2 para iteracion i="+i);
 	                 logger.debug("Usuario responsable: "+getUsuarioResponsable(_numCaso)+" para el caso "+_numCaso);
 	                 logger.debug("Status: SUPLENTE");
 	                 logger.debug("taskId: "+taskId);
-	                 myPort.cambiarEstado2(getUsuarioResponsable(_numCaso), "SUPLENTE", taskId,parametros );
+//	                 myPort.cambiarEstado2(getUsuarioResponsable(_numCaso), "SUPLENTE", taskId,parametros );
 	
 	
-	               logger.debug("se invoco exitosamente el llamado a "+  myPort.getEndpoint());
+//	               logger.debug("se invoco exitosamente el llamado a "+  myPort.getEndpoint());
 	            
 				 }
 	            }//return ("Se invoco  exitosamente el guardar Suplente");
@@ -461,49 +463,49 @@ return res.getMsgText();
         	logger.debug("nmcompra :" + nmcompra);
         	logger.debug("tunidad :" +tunidad );
         	
-            mx.biosnet.worklistserviceclient.proxy.WorklistServiceWSSoapHttpPortClient myPort = new mx.biosnet.worklistserviceclient.proxy.WorklistServiceWSSoapHttpPortClient();
-            logger.debug("calling: " + myPort.getEndpoint());
+//            mx.biosnet.worklistserviceclient.proxy.WorklistServiceWSSoapHttpPortClient myPort = new mx.biosnet.worklistserviceclient.proxy.WorklistServiceWSSoapHttpPortClient();
+//            logger.debug("calling: " + myPort.getEndpoint());
 
 
             String taskId = obtieneTaskId(nmcaso);
-            ParametroVO parametroVO = null;
-            ParametroVO[] parametros = new ParametroVO[6];
+//            ParametroVO parametroVO = null;
+//            ParametroVO[] parametros = new ParametroVO[6];
 
-            parametroVO = new ParametroVO();
-            parametroVO.setClave("nmcaso");
-            parametroVO.setValor(nmcaso);
-            parametros[0] = parametroVO;
-
-            parametroVO = new ParametroVO();
-            parametroVO.setClave("cdproceso");
-            parametroVO.setValor(cdproceso);
-            parametros[1] = parametroVO;
-
-            parametroVO = new ParametroVO();
-            parametroVO.setClave("cdusuario");
-            parametroVO.setValor(cdusuario);
-            parametros[2] = parametroVO;
-
-            parametroVO = new ParametroVO();
-            parametroVO.setClave("cdnivatn");
-            parametroVO.setValor(cdnivatn);
-            parametros[3] = parametroVO;
-
-
-            parametroVO = new ParametroVO();
-            parametroVO.setClave("nmcompra");
-            parametroVO.setValor(nmcompra);
-            parametros[4] = parametroVO;
-
-            parametroVO = new ParametroVO();
-            parametroVO.setClave("tunidad");
-            parametroVO.setValor(tunidad);
-            parametros[5] = parametroVO;
-
-            myPort.cambiarEstado2(getUsuarioResponsable(nmcaso), "COMPRATIEMPO", taskId,parametros );
+//            parametroVO = new ParametroVO();
+//            parametroVO.setClave("nmcaso");
+//            parametroVO.setValor(nmcaso);
+//            parametros[0] = parametroVO;
+//
+//            parametroVO = new ParametroVO();
+//            parametroVO.setClave("cdproceso");
+//            parametroVO.setValor(cdproceso);
+//            parametros[1] = parametroVO;
+//
+//            parametroVO = new ParametroVO();
+//            parametroVO.setClave("cdusuario");
+//            parametroVO.setValor(cdusuario);
+//            parametros[2] = parametroVO;
+//
+//            parametroVO = new ParametroVO();
+//            parametroVO.setClave("cdnivatn");
+//            parametroVO.setValor(cdnivatn);
+//            parametros[3] = parametroVO;
 
 
-            logger.debug("se invoco exitosamente el llamado a "+  myPort.getEndpoint());
+//            parametroVO = new ParametroVO();
+//            parametroVO.setClave("nmcompra");
+//            parametroVO.setValor(nmcompra);
+//            parametros[4] = parametroVO;
+//
+//            parametroVO = new ParametroVO();
+//            parametroVO.setClave("tunidad");
+//            parametroVO.setValor(tunidad);
+//            parametros[5] = parametroVO;
+//
+//            myPort.cambiarEstado2(getUsuarioResponsable(nmcaso), "COMPRATIEMPO", taskId,parametros );
+
+
+//            logger.debug("se invoco exitosamente el llamado a "+  myPort.getEndpoint());
             //return ("Se invoco  exitosamente el guardaCompraTiempo");
             return ("Operaci&oacute;n realizada con &eacute;xito");
 

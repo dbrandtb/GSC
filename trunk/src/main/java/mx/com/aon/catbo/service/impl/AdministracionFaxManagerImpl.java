@@ -3,39 +3,20 @@ package mx.com.aon.catbo.service.impl;
 /*import mx.biosnet.procesobobpelclient.proxy.ProcesoBOBPELPortClient;
 import mx.biosnet.procesobobpelclient.proxy.SvcRequest;
 import mx.biosnet.procesobobpelclient.proxy.SvcResponse;*/
-import mx.com.aon.catbo.model.BackBoneResultVO;
-import mx.com.aon.catbo.model.CalendarioVO;
-import mx.com.aon.catbo.model.CasoDetalleVO;
-import mx.com.aon.catbo.model.CasoVO;
+import java.util.HashMap;
+import java.util.List;
+
 import mx.com.aon.catbo.model.ExtJSAtributosFaxVO;
-import mx.com.aon.catbo.model.ExtJSAtributosVO;
 import mx.com.aon.catbo.model.FaxesVO;
-import mx.com.aon.catbo.model.PolizaFaxVO;
 import mx.com.aon.catbo.model.FormatoOrdenFaxVO;
-import mx.com.aon.catbo.model.FormatoOrdenVO;
 import mx.com.aon.catbo.model.ItemVO;
-import mx.com.aon.catbo.model.OperacionCATVO;
-import mx.com.aon.catbo.model.ReasignacionCasoVO;
-import mx.com.aon.catbo.model.ResultadoGeneraCasoVO;
-import mx.com.aon.catbo.model.StatusCasoVO;
-import mx.com.aon.catbo.service.AdministracionCasosManager;
+import mx.com.aon.catbo.model.PolizaFaxVO;
 import mx.com.aon.catbo.service.AdministracionFaxManager;
+import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.service.PagedList;
-import mx.com.aon.portal.service.impl.AbstractManager;
 import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
 import mx.com.aon.portal.util.ConvertUtil;
 import mx.com.aon.portal.util.WrapperResultados;
-import mx.com.aon.core.ApplicationException;
-
-import mx.com.aon.export.model.TableModelExport;
-import mx.biosnet.procesobobpelclient.proxy.ProcesoBOBPELPortClient;
-import mx.biosnet.procesobobpelclient.proxy.SvcRequest;
-import mx.biosnet.procesobobpelclient.proxy.SvcResponse;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.math.BigInteger;
 
 
 /**

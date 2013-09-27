@@ -17,7 +17,6 @@ import mx.com.aon.portal.dao.AbstractDAO;
 import mx.com.aon.portal.service.ProcessResultManager;
 import mx.com.aon.portal.util.WrapperResultados;
 import oracle.jdbc.driver.OracleTypes;
-import mx.com.ice.kernel.dao.QuerysBd;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;

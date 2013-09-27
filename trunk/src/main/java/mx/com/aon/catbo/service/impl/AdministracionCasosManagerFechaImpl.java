@@ -3,33 +3,18 @@ package mx.com.aon.catbo.service.impl;
 /*import mx.biosnet.procesobobpelclient.proxy.ProcesoBOBPELPortClient;
 import mx.biosnet.procesobobpelclient.proxy.SvcRequest;
 import mx.biosnet.procesobobpelclient.proxy.SvcResponse;*/
-import mx.com.aon.catbo.model.CalendarioVO;
-import mx.com.aon.catbo.model.CasoDetalleVO;
-import mx.com.aon.catbo.model.CasoVO;
-import mx.com.aon.catbo.model.FormatoOrdenVO;
-import mx.com.aon.catbo.model.ReasignacionCasoVO;
-import mx.com.aon.catbo.model.ResultadoGeneraCasoVO;
-import mx.com.aon.catbo.model.StatusCasoVO;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import mx.com.aon.catbo.service.AdministracionCasosManager2;
+import mx.com.aon.core.ApplicationException;
+import mx.com.aon.export.model.TableModelExport;
 import mx.com.aon.portal.service.PagedList;
-import mx.com.aon.portal.service.impl.AbstractManager;
 import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
 import mx.com.aon.portal.util.ConvertUtil;
 import mx.com.aon.portal.util.UserSQLDateConverter;
 import mx.com.aon.portal.util.WrapperResultados;
-import mx.com.aon.core.ApplicationException;
-
-import mx.com.aon.export.model.TableModelExport;
-import mx.biosnet.procesobobpelclient.proxy.ProcesoBOBPELPortClient;
-import mx.biosnet.procesobobpelclient.proxy.SvcRequest;
-import mx.biosnet.procesobobpelclient.proxy.SvcResponse;
-import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
-
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.math.BigInteger;
 
 import org.apache.commons.beanutils.Converter;
 
