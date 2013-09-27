@@ -6,7 +6,6 @@
     <package name="flujocotizacion" extends="json-default" namespace="/flujocotizacion">
     
         <interceptors>
-            <!-- <interceptor name="cotizacionWorkflowInterceptor" class="mx.com.aon.flujos.cotizacion.web.interceptors.CotizacionWorkflowInterceptor"/> -->
             <interceptor-stack name="defaultStack">
                 <interceptor-ref name="exception" />
                 <interceptor-ref name="alias" />
@@ -28,10 +27,6 @@
             </interceptor-stack>
         </interceptors>
         
-       
-        <action name="cotizacionEntrada" class="entradaCotizacion" method="entrar" >
-            <result name="input" >/jsp/flujos/cotizacion/capturaDatosCotizacion.jsp</result>     
-        </action>
         
         
        
@@ -94,29 +89,6 @@
         
         <action name="resultadoCotizacionMatriz">
             <result>/jsp/flujos/cotizacion/resultadoCotizacionMatriz.jsp</result>        
-        </action>
-        
-         <!-- ######### Ejemplo de demo #####################-->
-         
-         <action name="capturaCotizacion" class="entradaCotizacion" method="entrar" >
-            <!-- <interceptor-ref name="cotizacionWorkflowInterceptor" /> -->
-            <interceptor-ref name="defaultStack" />
-            <result name="input" >/jsp/flujos/cotizacion/capturaCotizacion.jsp</result>     
-        </action>
-        
-        <!-- ######### Ejemplo de demo con 2 iframes #####################-->
-        <action name="capturaCotizacionFrame" class="entradaCotizacion" method="entrar" >
-            <!-- <interceptor-ref name="cotizacionWorkflowInterceptor" /> -->
-            <interceptor-ref name="defaultStack" />
-            <result name="input" >/jsp/flujos/cotizacion/capturaCotizacionFrame.jsp</result>     
-        </action>
-        
-        <action name="regresaCapturaCotizacion" class="entradaCotizacion" method="regresar">
-            <result name="input" >/jsp/flujos/cotizacion/capturaCotizacion.jsp</result>     
-        </action>
-        
-        <action name="obtenerRegresar" class="entradaCotizacion" method="obtenerRegresar">
-            <result name="success" type="json" />     
         </action>
         
         <action name="obtenerDatosRegistro" class="resultadoCotizacion" method="obtenerDatosRegistro" >
@@ -311,17 +283,6 @@
         	<result name="input">/jsp/flujos/cotizacion/hogar/cotizacionHogar.jsp</result>
         </action>
 
-		<action name="obtienePantallaConfiguradaTest" class="obtienePantallaConfiguradaTestAction">
-        	<!--result name="success" type="json"/-->
-        	<result name="success">/jsp/flujos/cotizacion/testPantalla.jsp</result>
-        </action>
-        
-        
-        <action name="obtienePantallaParametrosTest" class="obtienePantallaConfiguradaTestAction" method="test">
-        	<!--result name="success" type="json"/-->
-        	<result name="success">/jsp/flujos/cotizacion/testPantalla2.jsp</result>
-        </action>
-        
         <!-- Actions encargados de la cotizacion en base a valores por defecto -->
         <action name="valoresPorDefectoCotizacion" class="valoresPorDefectoCotizacionAction">
             <result name="success" type="json"/>

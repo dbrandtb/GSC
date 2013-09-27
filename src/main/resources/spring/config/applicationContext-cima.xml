@@ -1079,19 +1079,6 @@
     </bean>            
 	<!-- Cancelacion Manual -->
 	
-<!-- Acceso Estructuras -->
-    <bean id="accesoEstructuraRolUsuarioManager" class="mx.com.aon.portal.service.impl.AccesoEstructuraRolUsuarioManagerImpl" parent="abstractManagerBean">
-        <!--property name="endpoints">
-            <map>
-                <entry key="ACCESOESTRUCTURAROLUSUARIO_BORRAR"><ref bean="ACCESOESTRUCTURAROLUSUARIO_BORRAR"/></entry>
-                <entry key="ACCESOESTRUCTURAROLUSUARIO_BUSCAR"><ref bean="ACCESOESTRUCTURAROLUSUARIO_BUSCAR"/></entry>
-                <entry key="ACCESOESTRUCTURAROLUSUARIO_GUARDAR"><ref bean="ACCESOESTRUCTURAROLUSUARIO_GUARDAR"/></entry>
-                <entry key="EXPORT_LIST_ACCESO_ESTRUCTURA_ROL_USUARIO"><ref bean="EXPORT_LIST_ACCESO_ESTRUCTURA_ROL_USUARIO"/></entry>
-           </map>
-        </property-->
-    </bean>
-    <!-- Fin Acceso Estructura -->
-	
 	<!-- Consulta de Polizas a Cancelar y Consulta de Polizas a Canceladas -->
         <bean id="polizasManager" class="mx.com.aon.portal.service.impl.PolizasManagerImpl" parent="abstractManagerJdbcTemplateInvoke">
             <property name="abstractDAO">
@@ -1174,18 +1161,10 @@
         </bean>
     <!--Fin Ejecutivo -->
     
-    <!-- Generacion Claves-->
-	<bean id="generacionClavesManager" class="mx.com.aon.portal.service.impl.GeneracionClavesManagerImpl" parent="abstractManagerJdbcTemplateInvoke">
-            <property name="abstractDAO">
-                <ref bean="generacionClavesDAO"/>
-            </property>
-    </bean>       
-    <!-- FIN Generacion Claves-->
-    
       <bean id="consultaActividadUsuarioManager" class="mx.com.aon.portal.service.impl.ConsultaActividadUsuarioManagerImpl" parent="abstractManagerJdbcTemplateInvoke">
-            <property name="abstractDAO">
+            <!-- <property name="abstractDAO">
                 <ref bean="actividadUsuarioDAO"/>
-            </property>
+            </property> -->
     </bean>       
 
 	<bean id="mecanismoDeTooltipManagerJdbcTemplate" class="mx.com.aon.portal.service.impl.MecanismoDeTooltipManagerJdbcTemplateImpl" parent="abstractManagerJdbcTemplateInvoke">

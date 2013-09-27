@@ -18,7 +18,7 @@
   <bean id="parametrosConjuntoAction" class="mx.com.aon.configurador.pantallas.web.ParametrosConjuntoAction" scope="prototype" parent="principalConfPantallas"/>
    
   <bean id="datosPantallaAction" class="mx.com.aon.configurador.pantallas.web.DatosPantallaAction" scope="prototype" parent="principalConfPantallas">
-  	<property name="masterTransformer" ref="masterTransformer" />
+  	<!-- <property name="masterTransformer" ref="masterTransformer" /> -->
         <property name="configuradorManager" ref="configuradorPantallasManager"/>
   </bean>
 

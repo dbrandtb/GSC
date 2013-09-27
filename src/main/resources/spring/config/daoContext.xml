@@ -59,53 +59,8 @@
     <bean id="expresionesDAO" class="mx.com.aon.portal.dao.ExpresionesDAO">
        <property name="dataSource" ref="dataSource" />
     </bean>
-
-    <!-- beans ingresados de CatBO -->  
-
-    <bean id="configurarCompraTiempoDAO" class="mx.com.aon.catbo.dao.ConfigurarCompraTiempoDAO">
-       <property name="dataSource" ref="dataSource" />
-    </bean>
-
-    <bean id="archivoDAO" class="mx.com.aon.catbo.dao.ArchivoDAO">
-       <property name="dataSource" ref="dataSource" />
-    </bean>
-    
-    <bean id="combosDAO" class="mx.com.aon.catbo.dao.CombosDAO">
-       <property name="dataSource" ref="dataSource" />
-    </bean>
-
-    <bean id="archivosFaxesDAO" class="mx.com.aon.catbo.dao.ArchivosFaxesDAO">
-       <property name="dataSource" ref="dataSource" />
-    </bean>
-    
-    <bean id="administrarUsuariosModuloDAO" class="mx.com.aon.catbo.dao.AdministrarUsuariosModuloDAO">
-       <property name="dataSource" ref="dataSource" />
-    </bean>
-
-    <bean id="casosDAO" class="mx.com.aon.catbo.dao.CasosDAO">
-       <property name="dataSource" ref="dataSource" />
-    </bean>
-    <bean id="datosArchivosDAO" class="mx.com.aon.catbo.dao.DatosArchivosDAO">
-       <property name="dataSource" ref="dataSource" />
-    </bean>
-     <bean id="actividadUsuarioDAO" class="mx.com.aon.catbo.dao.ActividadUsuarioDAO">
-       <property name="dataSource" ref="dataSource" />
-    </bean>
     
     <bean id="principalDAO" class="mx.com.aon.portal.dao.PrincipalDAO">
-       <property name="dataSource" ref="dataSource" />
-    </bean>
-    
-    <bean id="guionLlamadasDAO" class="mx.com.aon.catbo.dao.GuionLlamadasDAO">
-       <property name="dataSource" ref="dataSource" />
-    </bean>
-
-
-    <bean id="archivosDAO" class="mx.com.aon.catbo.dao.ArchivoDAO">
-       <property name="dataSource" ref="dataSource" />
-    </bean>
-    
-    <bean id="consultarAsigEncuestaDAO" class="mx.com.aon.catbo.dao.ConsultarAsigEncuestaDAO">
        <property name="dataSource" ref="dataSource" />
     </bean>
 
@@ -113,19 +68,8 @@
     <bean id="mecanismoDeTooltipDAO" class="mx.com.aon.portal.dao.MecanismoDeTooltipDAO">
        <property name="dataSource" ref="dataSource" />
     </bean>
-    <!--bean id="mediaDAO" class="mx.com.aon.catbo.dao.MediaDAOImpl">
-        <property name="lobHandler"><ref bean="oracleLobHandler"/></property>
-    </bean-->
     
     <bean id="catalogosDAO" class="mx.com.aon.portal.dao.CatalogosDAO">
-       <property name="dataSource" ref="dataSource" />
-    </bean>
-    
-    <bean id="administracionTipoArchivoDAO" class="mx.com.aon.catbo.dao.AdministracionTipoArchivoDAO">
-       <property name="dataSource" ref="dataSource" />
-    </bean>
-            
-    <bean id="administracionFaxDAO" class="mx.com.aon.catbo.dao.AdministracionFaxDAO">
        <property name="dataSource" ref="dataSource" />
     </bean>
 
@@ -155,24 +99,12 @@
 	<bean id="reporteDao" class="mx.com.aon.portal.dao.ReporteDAO">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
-
-    <!--bean id="envioMailDAO" class="mx.com.aon.catbo.dao.EnvioMailDAO">
-       <property name="dataSource" ref="dataSource" />
-    </bean-->
     
      <bean id="administrarCatalogSistemExternoDAO" class="mx.com.aon.portal.dao.AdministrarCatalogSistemExternoDAO">
        <property name="dataSource" ref="dataSource" />
     </bean>
     
     <bean id="administracionDeEquivalenciaDAO" class="mx.com.aon.portal.dao.AdministracionDeEquivalenciaDAO">
-       <property name="dataSource" ref="dataSource" />
-    </bean>
-    
-    <bean id="configurarEncuestaDAO" class="mx.com.aon.catbo.dao.ConfigurarEncuestaDAO">
-       <property name="dataSource" ref="dataSource" />
-    </bean>
-    
-     <bean id="administracionCasosDAO" class="mx.com.aon.catbo.dao.AdministracionCasosDAO">
        <property name="dataSource" ref="dataSource" />
     </bean>
     
@@ -184,11 +116,7 @@
     <bean id="formatoOTDao" class="mx.com.aon.pdfgenerator.dao.FormatoOTDAO">
     	<property name="dataSource" ref="dataSource" />
     </bean>
-    
-    <bean id="envioMailNotificacionDAO" class="mx.com.aon.catbo.dao.EnvioMailNotificacionDAO">
-       <property name="dataSource" ref="dataSource" />
-    </bean>
-    
+        
     <bean id="reporteDeudaDAO" class="mx.com.aon.portal.dao.ReporteDeudaDAO">
         <property name="dataSource" ref="dataSource" />
     </bean>

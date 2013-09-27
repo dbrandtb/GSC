@@ -79,10 +79,5 @@
         <property name="nativeJdbcExtractor"><ref local="nativeJdbcExtractor"/></property>
     </bean>
 
-	<!--bean id="mediaDAO" class="mx.com.aon.catbo.dao.MediaDAOImpl">
-       <property name="dataSource" ref="dataSource" />
-        <property name="lobHandler"><ref bean="oracleLobHandler"/></property>
-    </bean-->
-
 </beans>
 
