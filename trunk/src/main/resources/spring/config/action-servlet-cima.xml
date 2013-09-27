@@ -136,18 +136,6 @@
     </bean>
     
        <!-- Actions de caso de uso consultar asignacion de encuestas-->
-    
-     <bean id="listaConsultarAsigEncuestaAction" class="mx.com.aon.portal.web.ListaConsultarAsigEncuestaAction" scope="prototype">
-        <property name="exportMediator" ref="exportMediator"/>
-        <property name="consultarAsigEncuestaManager" ref="consultarAsigEncuestaManager"/>
-    </bean>
-
-    <bean id="consultarAsigEncuestaAction" class="mx.com.aon.portal.web.ConsultarAsigEncuestaAction" scope="prototype">
-        <property name="consultarAsigEncuestaManager" ref="consultarAsigEncuestaManager"/>
-       
-    </bean>
-    
-    
 
     <!-- Actions de caso de uso de Carrito de Compras-->
    <bean id="listaCarritoComprasAction" class="mx.com.aon.portal.web.ListaCarritoComprasAction" scope="prototype">
@@ -620,7 +608,7 @@
 	<!-- Fin Atributos Varibles de Persona  -->
 
     <bean id="accesoEstructuraRolUsuarioAction" class="mx.com.aon.portal.web.AccesoEstructuraRolUsuarioAction" scope="prototype">
-       <property name="accesoEstructuraRolUsuarioManager" ref="accesoEstructuraRolUsuarioManager"/>
+       <!-- <property name="accesoEstructuraRolUsuarioManager" ref="accesoEstructuraRolUsuarioManager"/> -->
     </bean>
     <!-- Fin Acceso Estructura Rol -->	
 	
@@ -671,11 +659,11 @@
      <!--Generacion Claves -->
     <bean id="listaGeneracionClavesAction" class="mx.com.aon.portal.web.ListaGeneracionClavesAction" scope="prototype">
         <property name="exportMediator" ref="exportMediator"/>
-        <property name="generacionClavesManager" ref="generacionClavesManager"/>
+        <!-- <property name="generacionClavesManager" ref="generacionClavesManager"/> -->
     </bean>
    
     <bean id="generacionClavesAction" class="mx.com.aon.portal.web.GeneracionClavesAction" scope="prototype">
-        <property name="generacionClavesManager" ref="generacionClavesManager"/>
+        <!-- <property name="generacionClavesManager" ref="generacionClavesManager"/> -->
     </bean>
     <!-- Fin Generacion Claves  -->
     

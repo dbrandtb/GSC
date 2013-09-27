@@ -91,9 +91,9 @@
     	</property>
     </bean>
 	
-	<bean id="masterTransformer"
+	<!-- <bean id="masterTransformer"
 		class="mx.com.aon.configurador.pantallas.util.MasterTrasnformer">
-		<!--property name="endpoints">
+		<property name="endpoints">
 			<map>
 				<entry key="GET_MASTER_BUTTONS">
 					<ref bean="GET_MASTER_BUTTONS" />
@@ -107,7 +107,7 @@
                      <ref bean="GET_COMBO_PADRE" />
                 </entry>
 			</map>
-		</property-->
-	</bean>
+		</property>
+	</bean> -->
 
 </beans>

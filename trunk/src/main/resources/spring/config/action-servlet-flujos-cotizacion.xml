@@ -10,26 +10,9 @@
         <property name="catalogServiceJdbcTemplate" ref="catalogServiceJdbcTemplate"/>
    </bean>
     
-    <bean id="cotizarAction" class="mx.com.aon.flujos.cotizacion.web.CotizarAction" scope="prototype" parent="principalCotizacion">
-    	<property name="cotizacionManager" ref="cotizacionService"/>
-    	<property name="cotizacionManagerJdbcTemplate" ref="cotizacionManagerJdbcTemplate"></property> 
-    </bean>
-    
     <bean id="gridAction" class="mx.com.aon.flujos.cotizacion.web.GridTestingAction" scope="prototype" parent="principalCotizacion"/>
-    
-    <bean id="entradaCotizacion" class="mx.com.aon.flujos.cotizacion.web.EntradaCotizacionAction" scope="prototype" parent="principalCotizacion" >
-      <property name="cotizacionManager" ref="cotizacionService"/>
-      <!-- <property name="kernelManager" ref="kernelManager"/> -->
-      <property name="endosoManager" ref="endosoManager" />
-      <property name="cotizacionManagerJdbcTemplate" ref="cotizacionManagerJdbcTemplate"></property> 
-   </bean>
   
-    <bean id="resultadoCotizacion" class="mx.com.aon.flujos.cotizacion.web.ResultadoCotizacionAction" scope="prototype" parent="principalCotizacion">
-     <property name="cotizacionManager" ref="cotizacionService"/>
-     <property name="cotizacionManagerJdbcTemplate" ref="cotizacionManagerJdbcTemplate"></property>
-     <!-- <property name="serviciosGeneralesSistema" ref="servGeneralesSistema"/> -->
-     <!-- <property name="kernelManager" ref="kernelManager"/> -->
-    </bean>
+    <bean id="resultadoCotizacion" class="mx.com.aon.flujos.cotizacion.web.ResultadoCotizacionAction" scope="prototype" parent="principalCotizacion"/>
     
     <bean id="cotizacionVital" class="mx.com.aon.flujos.cotizacion4.web.ResultadoCotizacion4Action" scope="prototype" parent="principalCotizacion">
         <property name="kernelManagerSustituto" ref="kernelManagerSustituto"/>
@@ -37,58 +20,6 @@
     
     <bean id="beanCatalogosAction" class="mx.com.gseguros.portal.general.util.CatalogosAction" scope="prototype" parent="principalCotizacion">
         <property name="kernelManager" ref="kernelManagerSustituto"/>
-    </bean>
-    
-    <bean id="consultaCotizacionAction" class="mx.com.aon.flujos.cotizacion.web.ConsultaCotizacionAction" scope="prototype" parent="principalCotizacion">
-         <property name="cotizacionManager" ref="cotizacionService"/>
-         <property name="catalogosManager" 	ref="catalogManager"/>
-     	 <!-- <property name="serviciosGeneralesSistema" ref="servGeneralesSistema"/> -->
-         <property name="cotizacionManagerJdbcTemplate" ref="cotizacionManagerJdbcTemplate"></property> 
-    </bean>
-    
-    <bean id="comprarCotizacionAction" class="mx.com.aon.flujos.cotizacion.web.ComprarCotizacionAction" scope="prototype" parent="principalCotizacion">
-		 <property name="cotizacionManager" ref="cotizacionService"/>
-         <property name="catalogosManager" 	ref="catalogManager"/>
-         <!-- <property name="kernelManager" ref="kernelManager"/> -->
-         <!-- <property name="serviciosGeneralesSistema" ref="servGeneralesSistema"/> -->
-         <property name="catalogServiceJdbcTemplate" ref="catalogServiceJdbcTemplate"/>
-         <property name="instrumentoPagoManagerJdbcTemplate" ref="instrumentoPagoManager" />
-    </bean>
-    <!--
-    Bean declarado para el action de la pantalla de Consultar cotizacion Hogar 
-     -->
-    <bean id="resultadoCotizacionHogarAction" class="mx.com.aon.flujos.cotizacion.web.ResultadoCotizacionHogarAction" scope="prototype" parent="principalCotizacion">
-     	<property name="cotizacionManager" ref="cotizacionService"/>
-    </bean>
-    
-    <!--
-    Bean declarado para el action de la pantalla de Cotizar a partir de los valores por defecto 
-     -->
-    <bean id="valoresPorDefectoCotizacionAction" class="mx.com.aon.flujos.cotizacion.web.ValoresPorDefectoCotizacionAction" scope="prototype" parent="principalCotizacion">
-        <property name="cotizacionManager" ref="cotizacionService"/>
-        <!-- <property name="kernelManager" ref="kernelManager"/> -->
-    </bean>
-    
-    <!--
-    Bean declarado para el action de la pantalla de Cotizar a partir de los valores por defecto 
-     -->
-    <bean id="muestraResultadosAction" class="mx.com.aon.flujos.cotizacion.web.MuestraResultadosAction" scope="prototype" parent="principalCotizacion">
-        <property name="cotizacionManager" ref="cotizacionService"/>
-    </bean>
-    
-    
-  <!-- 
-  <bean id="detalleCotizacion" class="mx.com.aon.flujos.cotizacion.web.DetalleCotizacionAction" scope="prototype" parent="principalCotizacion"/>
-  -->  
-    <bean id="obtienePantallaConfiguradaTestAction" class="mx.com.aon.flujos.cotizacion.web.TestPantallaAction" scope="prototype" parent="principalCotizacion">
-     	<property name="cotizacionManager" ref="cotizacionService"/>
-    </bean>
-    <!-- 
-      Bean declarado para el action de la pantalla de Equipo 
-     -->
-    <bean id="listadoEspecialAction" class="mx.com.aon.flujos.cotizacion.web.ListadoEspecialAction" scope="prototype" parent="principalCotizacion">
-     	<property name="cotizacionManager" ref="cotizacionService"/>
-     	<property name="cotizacionManagerJdbcTemplate" ref="cotizacionManagerJdbcTemplate"></property>
     </bean>
     
     <bean id="beanSubirArchivo" class="mx.com.gseguros.portal.general.util.SubirArchivoAction" scope="prototype">

@@ -6,10 +6,6 @@
 	
 	<package name="consultarAsigEncuesta" extends="json-default" namespace="/consultarAsigEncuesta">
 
-	<action name="buscarAsignacionEncuesta" class="listaConsultarAsigEncuestaAction" method="cmdBuscarClick">
-    <result type="json"><param name="ignoreHierarchy">false</param></result>
-    </action>
-
     <!-- usado para insert y update -->
     <action name="guardarAsignacionEncuesta" class="consultarAsigEncuestaAction"  method="cmdGuardarClick">
         <result type="json"><param name="ignoreHierarchy">false</param></result>
@@ -18,15 +14,6 @@
     <action name="borrarAsignacionEncuesta" class="consultarAsigEncuestaAction"  method="cmdBorrarClick">
         <result type="json"><param name="ignoreHierarchy">false</param></result>
     </action>
-    
-    <action name="exportarAsignacionEncuesta" class="listaConsultarAsigEncuestaAction" method="cmdExportarClick">
-				<result name="success" type="stream">
-				<param name="contentType">application/binary</param>
-				<param name="inputName">inputStream</param>
-				<param name="contentDisposition">filename="${filename}"</param>
-				<param name="bufferSize">4096</param>
-			</result>
-	</action>       
 
 	</package>
 
