@@ -94,6 +94,11 @@ Ext.onReady(function() {
 				if (gridPanelSuplemento.getSelectionModel().hasSelection()) {
 					var rowSelected = gridPanelSuplemento.getSelectionModel().getSelection()[0];
 					panelBusqueda.down('form').getForm().findField("params.suplemento").setValue(rowSelected.get('nmsuplem'));
+					panelBusqueda.down('form').getForm().findField("params.cdunieco").setValue(rowSelected.get('cdunieco'));
+		            panelBusqueda.down('form').getForm().findField("params.cdramo").setValue(rowSelected.get('cdramo'));
+		            panelBusqueda.down('form').getForm().findField("params.estado").setValue(rowSelected.get('estado'));
+		            panelBusqueda.down('form').getForm().findField("params.nmpoliza").setValue(rowSelected.get('nmpoliza'));
+                    
 					console.log(rowSelected);
 					console.log('Suplemento=' + rowSelected.get('nsuplogi'));
 					console.log(panelBusqueda.down('form').getForm());
@@ -227,11 +232,15 @@ Ext.onReady(function() {
         extend: 'Ext.data.Model',
         fields: [
             {name: 'dstipsup'},
-            {name: 'feemisio'},
+            {name: 'feemisio', dateFormat: 'd/m/Y'},
             {name: 'feinival', dateFormat: 'd/m/Y'},
             {name: 'nlogisus'},
             {name: 'nmsuplem'},
             {name: 'nsuplogi'},
+            {name: 'cdramo'},
+            {name: 'cdunieco'},
+            {name: 'estado'},
+            {name: 'nmpoliza'},
             {name: 'ptpritot', type : 'float'}
         ],
         /*
@@ -281,31 +290,30 @@ Ext.onReady(function() {
         defaults: {sortable : true, width:120, align : 'right'},
         columns : [{
             id : 'dstipsup',
-            text : 'Tipo de suplemento',
+            text : 'Tipo endoso',
             dataIndex : 'dstipsup',
-            width:150
+            width:200
         }, {
             text : 'Fecha de emisi\u00F3n',
             dataIndex : 'feemisio',
-            renderer: Ext.util.Format.dateRenderer('d M Y')
-        }, {
-            text : 'Fecha inicio',
-            dataIndex : 'feinival',
-            renderer: Ext.util.Format.dateRenderer('d M Y')
-        }, {
-            text : 'Nlogisus',
-            dataIndex : 'nlogisus'
-        }, {
-            text : 'N\u00FAmero de suplemento',
-            dataIndex : 'nmsuplem',
+            format: 'd M Y',
+            //renderer: Ext.util.Format.dateRenderer('d M Y'),
             width:150
         }, {
-            text : 'Nsuplogi',
-            dataIndex : 'nsuplogi'
+            text : 'Fecha inicio vigencia',
+            dataIndex : 'feinival',
+            format: 'd M Y',
+            //renderer: Ext.util.Format.dateRenderer('d M Y'), 
+            width:150
         }, {
-            text : 'Ptpritot',
+            text : 'N&uacute;mero de endoso',
+            dataIndex : 'nsuplogi',
+            width:150
+        }, {
+            text : 'Prima total',
             dataIndex : 'ptpritot',
-            renderer : 'usMoney'
+            renderer : 'usMoney',
+            width:150
         }],
 
         listeners : {
@@ -365,7 +373,9 @@ Ext.onReady(function() {
           {type:'string',        name:'dsmoneda'      },
           {type:'string',        name:'nmcuadro'      },
           {type:'string',        name:'dsperpag'      },
-          {type:'string',        name:'dstempot'      }
+          {type:'string',        name:'dstempot'      },
+          {type:'string',        name:'nmpoliex'      },
+          {type:'string',        name:'cdagente'      }
       ]
   });
 
@@ -399,7 +409,10 @@ Ext.onReady(function() {
         },
         items : [ {
             layout : 'hbox',
-            items : {xtype: 'textfield', id: 'nmsolici',  name: 'nmsolici', fieldLabel: 'N&uacute;mero de solicitud', width: 250, labelWidth: 120, readOnly: true}
+            items : [
+                {xtype: 'textfield', name: 'nmpoliex', fieldLabel: 'N&uacute;mero de P&oacute;liza', readOnly: true, labelWidth: 120},
+                {xtype: 'textfield', id: 'nmsolici',  name: 'nmsolici', fieldLabel: 'N&uacute;mero de solicitud', width: 250, labelWidth: 120, readOnly: true}
+            ]
         }, {
             layout : 'hbox',
             items : [ 
@@ -476,7 +489,7 @@ Ext.onReady(function() {
                     {
                         text            :'Suma Asegurada',  
                         dataIndex       :'sumaAsegurada',
-                        width           :130 , 
+                        width           :170 , 
                         align           :'right' , 
                         renderer        :Ext.util.Format.usMoney, 
                         summaryType     :'sum'
@@ -484,7 +497,7 @@ Ext.onReady(function() {
                     {
                         text            :'Monto de la Prima',
                         dataIndex       :'montoPrima',
-                        width           : 130,
+                        width           : 170,
                         align           :'right',        
                         renderer        :Ext.util.Format.usMoney,
                         summaryType     :'sum'
@@ -492,7 +505,7 @@ Ext.onReady(function() {
                     {
                         text            : 'Monto de la Comisi&oacute;n',
                         dataIndex       :'montoComision',
-                        width           : 130,
+                        width           : 170,
                         renderer        :Ext.util.Format.usMoney,
                         align           :'right',        
                         summaryType     :'sum'
@@ -666,7 +679,7 @@ Ext.onReady(function() {
 	    //height: 200,
 	    //renderTo: document.body,
 	    items: [{
-	        title : 'DATOS DE LA POLIZA',
+	        title : 'DATOS DE LA P&Oacute;LIZA',
 	        //html: 'Home',
 	        //itemId: 'tabDatosGralesPoliza',
 			border:false,
@@ -677,7 +690,7 @@ Ext.onReady(function() {
                    }
                ]
 	    }, {
-	        title: 'DATOS TARIFICACION',
+	        title: 'DATOS TARIFICACI&Oacute;N',
 	        itemId: 'tabDatosTarificacion',
 	        items:[	                    
                    {
@@ -696,7 +709,7 @@ Ext.onReady(function() {
                ]
 	    }, {
 			id: 'tbDocumentos',
-			title : 'DOCUMENTACION',
+			title : 'DOCUMENTACI&Oacute;N',
 			width: '350',
 			loader : {
 				url : _URL_CONSULTA_DOCUMENTOS,
@@ -886,57 +899,34 @@ Ext.onReady(function() {
                                     },
                                     items : [
                                         {
-                                            xtype : 'numberfield',
-                                            name : 'params.cdunieco',
-                                            fieldLabel : 'Unidad econ\u00F3mica',
-                                            labelWidth : 120,
-                                            width: 200,
-											value: 1,
-                                            maxLength : 3
-                                        },
-                                        {
-                                            xtype:'tbspacer',
-                                            width: 5
-                                        },
-                                        {
-                                            xtype : 'numberfield',
-                                            name : 'params.cdramo',
-                                            fieldLabel : 'Ramo',
-                                            maxLength : 3,
-                                            value: 2,
-                                            labelWidth : 50,
-                                            width: 120
-                                        },
-                                        {
-                                            xtype:'tbspacer',
-                                            width: 5
-                                        },
-                                        {
                                             xtype : 'textfield',
-                                            name : 'params.estado',
-                                            fieldLabel : 'Estado',
-                                            maxLength : 1,
-                                            labelWidth : 50,
-											value: 'M',
-                                            width: 120
+                                            name : 'params.nmpoliex',
+                                            fieldLabel : 'N&uacute;mero de P&oacute;liza',
+                                            value:'02130001400A',
+                                            labelWidth : 120,
+                                            width: 300,
+                                            maxLength : 40
+                                        },{
+                                            xtype : 'hiddenfield',
+                                            name : 'params.cdunieco'
                                         },
                                         {
-                                            xtype:'tbspacer',
-                                            width:5
+                                            xtype : 'hiddenfield',
+                                            name : 'params.cdramo'
                                         },
                                         {
-                                            xtype: 'numberfield',
-                                            name : 'params.nmpoliza',
-                                            fieldLabel : 'N\u00FAm. de p\u00F3liza',
-                                            labelWidth : 100,
-                                            width: 200,
-                                            minValue : 0,
-                                            maxValue : 999999,
-											value: 129,
-                                            maxLength : 6
+                                            xtype : 'hiddenfield',
+                                            name : 'params.estado'
+                                        },
+                                        {
+                                            xtype: 'hiddenfield',
+                                            name : 'params.nmpoliza'
                                         },{
                                             xtype: 'hiddenfield',
                                             name : 'params.suplemento'
+                                        },{
+                                        	xtype: 'hiddenfield',
+                                            name : 'params.cdagente'
                                         }
                                     ]
                                 },
@@ -956,7 +946,7 @@ Ext.onReady(function() {
                                             name : 'params.rfc',
                                             fieldLabel : 'RFC',
                                             labelWidth : 20,
-                                            maxLength : 13/*,
+                                            maxLength : 13/*, 
                                             value: 'PUMC820429B61'*/
                                         }
                                     ]
