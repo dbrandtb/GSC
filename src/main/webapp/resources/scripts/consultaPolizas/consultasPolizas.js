@@ -7,18 +7,11 @@ Ext.onReady(function() {
         allowDeselect: true
     });
     
-    /*Conversión para el tipo de moneda*/
+    // Conversión para el tipo de moneda
     Ext.util.Format.thousandSeparator = ',';
     Ext.util.Format.decimalSeparator = '.';
 
-    var form = false, selectedRec = false;
-    
-    var consultasJson = {
-            
-    };
-    ///////////////////////////////////////////////
-	
-	
+    //var form = false, selectedRec = false;
 	
     Ext.define('KeyValueModel', {
         extend: 'Ext.data.Model',
@@ -31,12 +24,11 @@ Ext.onReady(function() {
         }]
     });
     
-    
     var storeTiposConsulta = Ext.create('Ext.data.JsonStore', {
         model: 'KeyValueModel',
         proxy: {
             type: 'ajax',
-            url: _URL_TIPOS_CONSULTA_DUMMY,
+            url: _URL_TIPOS_CONSULTA,
             reader: {
                 type: 'json',
                 root: 'tiposConsulta'

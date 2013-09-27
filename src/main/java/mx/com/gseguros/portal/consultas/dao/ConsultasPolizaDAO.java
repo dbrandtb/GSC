@@ -10,7 +10,6 @@ import javax.sql.DataSource;
 import mx.com.aon.portal.dao.AbstractDAO;
 import mx.com.aon.portal.dao.CustomStoredProcedure;
 import mx.com.aon.portal.dao.WrapperResultadosGeneric;
-import mx.com.aon.portal.util.ConvertUtil;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosAgenteVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosAseguradoVO;
@@ -40,12 +39,11 @@ public class ConsultasPolizaDAO extends AbstractDAO {
 	public static final String OBTIENE_DATOS_COBERTURAS = "OBTIENE_DATOS_COBERTURAS";
 	public static final String OBTIENE_POLIZAS_ASEGURADO = "OBTIENE_POLIZAS_ASEGURADO";
 	public static final String OBTIENE_DATOS_TARIFA = "OBTIENE_DATOS_TARIFA";
-
 	public static final String OBTIENE_POLIZAS_AGENTE = "OBTIENE_POLIZAS_AGENTE";
 	public static final String OBTIENE_RECIBOS_AGENTE = "OBTIENE_RECIBOS_AGENTE";
 	public static final String OBTIENE_DATOS_AGENTE = "OBTIENE_DATOS_AGENTE";
-	
 	public static final String OBTIENE_DATOS_ASEGURADO = "OBTIENE_DATOS_ASEGURADO";
+	
 	
 	protected void initDao() throws Exception {
 		addStoredProcedure(OBTIENE_DATOS_POLIZA, new ObtieneDatosPoliza(getDataSource()));
@@ -61,11 +59,13 @@ public class ConsultasPolizaDAO extends AbstractDAO {
 		
 	}
 
+	
 	protected class ObtieneDatosPoliza extends CustomStoredProcedure {
 
 		protected ObtieneDatosPoliza(DataSource dataSource) {
+			
 			super(dataSource, "PKG_CONSULTA.P_Get_Datos_Poliza");
-
+			
 			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
@@ -75,7 +75,6 @@ public class ConsultasPolizaDAO extends AbstractDAO {
 			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DatosPolizaMapper()));
 	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-			
 			compile();
 
 		}
@@ -89,12 +88,12 @@ public class ConsultasPolizaDAO extends AbstractDAO {
 		}
 	}
 
+	
     protected class DatosPolizaMapper  implements RowMapper {
         public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
         	
         	ConsultaDatosPolizaVO consulta = new ConsultaDatosPolizaVO();
         	
-	        //logger.debug("Entrando a debug DAO HHHHHH: "+rs.getString("feemisio"));
         	consulta.setNmsolici(rs.getString("nmsolici"));
         	consulta.setFeefecto(Utilerias.formateaFecha(rs.getString("feefecto")));
         	consulta.setNmpoliex(rs.getString("nmpoliex"));
@@ -126,18 +125,19 @@ public class ConsultasPolizaDAO extends AbstractDAO {
             return consulta;
         }
     }
+    
+    
     protected class ObtieneDatosSuplemento extends CustomStoredProcedure {
     	
     	protected ObtieneDatosSuplemento(DataSource dataSource) {
+    		
     		super(dataSource, "PKG_CONSULTA.p_get_datos_suplem");
     		
     		declareParameter(new SqlParameter("pv_nmpoliex_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DatosSuplementoMapper()));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-    		
     		compile();
-    		
     	}
     	
     	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
@@ -150,8 +150,8 @@ public class ConsultasPolizaDAO extends AbstractDAO {
     }
     
     protected class DatosSuplementoMapper  implements RowMapper {
+    	
     	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-  		
     		
     		ConsultaDatosSuplementoVO consulta = new ConsultaDatosSuplementoVO();
     		consulta.setCdunieco(rs.getString("cdunieco"));
@@ -166,15 +166,15 @@ public class ConsultasPolizaDAO extends AbstractDAO {
     		consulta.setDstipsup(rs.getString("dstipsup"));
     		consulta.setPtpritot(rs.getString("ptpritot"));
     		consulta.setNmsuplem(rs.getString("nmsuplem"));
-    		
-    		
-    		
     		return consulta;
     	}
     }
+    
+    
     protected class ObtieneDatosSituacion extends CustomStoredProcedure {
     	
     	protected ObtieneDatosSituacion(DataSource dataSource) {
+    		
     		super(dataSource, "PKG_CONSULTA.p_get_datos_situac");
     		
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
@@ -186,9 +186,7 @@ public class ConsultasPolizaDAO extends AbstractDAO {
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DatosSituacionMapper()));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-    		
     		compile();
-    		
     	}
     	
     	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
@@ -200,11 +198,12 @@ public class ConsultasPolizaDAO extends AbstractDAO {
     	}
     }
     
+    
     protected class DatosSituacionMapper  implements RowMapper {
+    	
     	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
     		
     		ConsultaDatosSituacionVO consulta = new ConsultaDatosSituacionVO();
-    		
     		consulta.setNmsituac(rs.getString("nmsituac"));
     		consulta.setNmsuplem(rs.getString("nmsuplem"));
     		consulta.setCdtipsit(rs.getString("cdtipsit"));
@@ -219,19 +218,20 @@ public class ConsultasPolizaDAO extends AbstractDAO {
     		consulta.setNmsituaext(rs.getString("nmsituaext"));
     		consulta.setNmsitaux(rs.getString("nmsitaux"));
     		consulta.setNmsbsitext(rs.getString("nmsbsitext"));
-    		
     		consulta.setDsplan(rs.getString("dsplan"));
     		consulta.setInciso(rs.getString("inciso"));
     		consulta.setCduniage(rs.getString("cduniage"));
     		consulta.setCdelemento(rs.getString("cdelemento"));
     		consulta.setDstipsit(rs.getString("dstipsit"));
-    		
     		return consulta;
     	}
     }
+    
+    
     protected class ObtieneDatosCoberturas extends CustomStoredProcedure {
     	
     	protected ObtieneDatosCoberturas(DataSource dataSource) {
+    
     		super(dataSource, "PKG_CONSULTA.P_Get_Datos_Cobert");
     		
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
@@ -243,9 +243,7 @@ public class ConsultasPolizaDAO extends AbstractDAO {
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DatosCoberturasMapper()));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-    		
     		compile();
-    		
     	}
     	
     	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
@@ -257,11 +255,12 @@ public class ConsultasPolizaDAO extends AbstractDAO {
     	}
     }
     
+    
     protected class DatosCoberturasMapper  implements RowMapper {
+
     	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-    		
+    	
     		ConsultaDatosCoberturasVO consulta = new ConsultaDatosCoberturasVO();
-    		
     		consulta.setNmsituac(rs.getString("nmsituac"));
     		consulta.setCdgarant(rs.getString("cdgarant"));
     		consulta.setDsgarant(rs.getString("dsgarant"));
@@ -271,23 +270,22 @@ public class ConsultasPolizaDAO extends AbstractDAO {
     		consulta.setCdtipfra(rs.getString("cdtipfra"));
     		consulta.setDstipfra(rs.getString("dstipfra"));
     		consulta.setPttasa(rs.getString("pttasa"));
-    		
     		return consulta;
     	}
     }
 
+    
     protected class ObtienePolizasAsegurado extends CustomStoredProcedure {
     	
     	protected ObtienePolizasAsegurado(DataSource dataSource) {
+    		
     		super(dataSource, "PKG_CONSULTA.P_Get_Polizas_Asegurado");
     		
     		declareParameter(new SqlParameter("pv_cdrfc", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new PolizaAseguradoMapper()));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-    		
     		compile();
-    		
     	}
     	
     	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
@@ -299,11 +297,11 @@ public class ConsultasPolizaDAO extends AbstractDAO {
     	}
     }
     
+    
     protected class PolizaAseguradoMapper  implements RowMapper {
     	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
     		
     		ConsultaPolizaAseguradoVO consulta = new ConsultaPolizaAseguradoVO();
-    		
     		consulta.setCompania(rs.getString("COMPANIA"));
     		consulta.setDescripcion(rs.getString("DESCRIPCION"));
     		consulta.setCdramo(rs.getString("CODIGO_RAMO"));
@@ -311,14 +309,15 @@ public class ConsultasPolizaDAO extends AbstractDAO {
     		consulta.setEstado(rs.getString("ESTADO"));
     		consulta.setNmpoliza(rs.getString("NMPOLIZA"));
     		consulta.setNombre(rs.getString("NOMBRE"));
-    		
     		return consulta;
     	}
     }
+    
 
     protected class ObtieneDatosTarifa extends CustomStoredProcedure {
     	
     	protected ObtieneDatosTarifa(DataSource dataSource) {
+
     		super(dataSource, "PKG_CONSULTA.P_Get_Datos_Tarifa_Pol");
     		
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
@@ -329,9 +328,7 @@ public class ConsultasPolizaDAO extends AbstractDAO {
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DatosTarifaMapper()));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-    		
     		compile();
-    		
     	}
     	
     	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
@@ -343,33 +340,33 @@ public class ConsultasPolizaDAO extends AbstractDAO {
     	}
     }
     
+    
     protected class DatosTarifaMapper  implements RowMapper {
+    	
     	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
     		
     		ConsultaDatosTarifaVO consulta = new ConsultaDatosTarifaVO();
-    		
     		consulta.setCdgarant(rs.getString("GARANTIA"));
     		consulta.setDsgarant(rs.getString("NOMBRE_GARANTIA"));
     		consulta.setSumaAsegurada(rs.getString("SUMA_ASEGURADA"));
     		consulta.setMontoPrima(rs.getString("MONTO_PRIMA"));
     		consulta.setMontoComision(rs.getString("MONTO_COMISION"));
-    		
     		return consulta;
     	}
     }
 
+    
     protected class ObtienePolizasAgente extends CustomStoredProcedure {
     	
     	protected ObtienePolizasAgente(DataSource dataSource) {
+    		
     		super(dataSource, "PKG_CONSULTA.P_Get_polizas_Agente");
     		
     		declareParameter(new SqlParameter("pv_cdagente_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new PolizasAgenteMapper()));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-    		
     		compile();
-    		
     	}
     	
     	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
@@ -380,26 +377,28 @@ public class ConsultasPolizaDAO extends AbstractDAO {
     		return wrapperResultados;
     	}
     }
+
     
     protected class PolizasAgenteMapper  implements RowMapper {
+
     	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
     		
     		ConsultaPolizaAgenteVO consulta = new ConsultaPolizaAgenteVO();
-    		
     		consulta.setCdunieco(rs.getString("cdunieco"));
     		consulta.setDsunieco(rs.getString("dsunieco"));
     		consulta.setCdramo(rs.getString("cdramo"));
     		consulta.setDsramo(rs.getString("dsramo"));
     		consulta.setNmpoliza(rs.getString("nmpoliza"));
     		consulta.setNmcuadro(rs.getString("nmcuadro"));
-    		
     		return consulta;
     	}
     }
 
+    
     protected class ObtieneRecibosAgente extends CustomStoredProcedure {
     	
     	protected ObtieneRecibosAgente(DataSource dataSource) {
+    
     		super(dataSource, "PKG_CONSULTA.P_Get_recibos_Agente");
     		
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
@@ -409,9 +408,7 @@ public class ConsultasPolizaDAO extends AbstractDAO {
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new RecibosAgenteMapper()));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-    		
     		compile();
-    		
     	}
     	
     	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
@@ -423,20 +420,21 @@ public class ConsultasPolizaDAO extends AbstractDAO {
     	}
     }
     
+    
     protected class RecibosAgenteMapper  implements RowMapper {
+
     	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
     		
     		ConsultaReciboAgenteVO consulta = new ConsultaReciboAgenteVO();
-    		
     		consulta.setNmrecibo(rs.getString("NMRECIBO"));
     		consulta.setFeinicio(Utilerias.formateaFecha(rs.getString("Fecha_inicio")));
     		consulta.setFefin(Utilerias.formateaFecha(rs.getString("Fecha_fin")));
     		consulta.setDsgarant(rs.getString("DSGARANT"));
     		consulta.setPtimport(rs.getString("PTIMPORT"));
-    		
     		return consulta;
     	}
     }
+    
     
 	protected class ObtieneDatosAgente extends CustomStoredProcedure {
 		
@@ -447,9 +445,7 @@ public class ConsultasPolizaDAO extends AbstractDAO {
 			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DatosAgenteMapper()));
 	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
 	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-			
 			compile();
-
 		}
 
 		public WrapperResultados mapWrapperResultados(Map map) throws Exception {
@@ -461,8 +457,10 @@ public class ConsultasPolizaDAO extends AbstractDAO {
 		}
 	}
 
+	
     protected class DatosAgenteMapper  implements RowMapper {
-        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+    
+    	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
         	ConsultaDatosAgenteVO consulta = new ConsultaDatosAgenteVO();	        	
         	consulta.setCdagente(rs.getString("cdagente"));
         	consulta.setCdideper(rs.getString("cdideper"));
@@ -485,9 +483,7 @@ public class ConsultasPolizaDAO extends AbstractDAO {
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DatosDatosAsegurado()));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-    		
     		compile();
-    		
     	}
     	
     	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
@@ -498,8 +494,10 @@ public class ConsultasPolizaDAO extends AbstractDAO {
     		return wrapperResultados;
     	}
     }
+
     
     protected class DatosDatosAsegurado  implements RowMapper {
+    	
     	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
     		
     		ConsultaDatosAseguradoVO consulta = new ConsultaDatosAseguradoVO();
@@ -511,8 +509,6 @@ public class ConsultasPolizaDAO extends AbstractDAO {
     		consulta.setTitular(rs.getString("titular"));
     		consulta.setFenacimi(Utilerias.formateaFecha(rs.getString("fenacimi")));
     		consulta.setSexo(rs.getString("Sexo"));
-    		
-    		
     		return consulta;
     	}
     }
