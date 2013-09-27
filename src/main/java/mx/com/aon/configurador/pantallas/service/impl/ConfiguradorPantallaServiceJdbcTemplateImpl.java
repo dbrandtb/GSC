@@ -6,6 +6,7 @@ import java.util.Map;
 
 import mx.com.aon.configurador.pantallas.model.BackBoneResultVO;
 import mx.com.aon.configurador.pantallas.model.ConjuntoPantallaVO;
+import mx.com.aon.configurador.pantallas.model.MasterWrapperVO;
 import mx.com.aon.configurador.pantallas.model.PantallaVO;
 import mx.com.aon.configurador.pantallas.model.master.MasterVO;
 import mx.com.aon.configurador.pantallas.service.ConfiguradorPantallaService;
@@ -18,9 +19,6 @@ import mx.com.aon.portal.util.WrapperResultados;
 import org.springframework.jdbc.core.support.SqlLobValue;
 import org.springframework.jdbc.support.lob.OracleLobHandler;
 import org.springframework.jdbc.support.nativejdbc.SimpleNativeJdbcExtractor;
-
-import com.biosnet.ice.ext.elements.model.JSONMasterVO;
-import com.biosnet.ice.ext.elements.model.MasterWrapperVO;
 
 /**
  * 
@@ -84,10 +82,10 @@ public class ConfiguradorPantallaServiceJdbcTemplateImpl extends AbstractManager
 		return null;
 	}
 
-	public JSONMasterVO getJSONMaster(String cdTipoMaster, String cdProceso, String tipoMaster, String cdProducto, String claveSituacion) throws ApplicationException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+//	public JSONMasterVO getJSONMaster(String cdTipoMaster, String cdProceso, String tipoMaster, String cdProducto, String claveSituacion) throws ApplicationException {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 
 	public List<?> getMasters(String cdProceso) throws ApplicationException {
 		// TODO Auto-generated method stub

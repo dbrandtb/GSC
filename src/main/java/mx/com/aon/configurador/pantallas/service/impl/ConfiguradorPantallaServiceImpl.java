@@ -7,25 +7,21 @@ import java.util.Map;
 
 import mx.com.aon.configurador.pantallas.model.BackBoneResultVO;
 import mx.com.aon.configurador.pantallas.model.ConjuntoPantallaVO;
-//import com.aon.catweb.configurador.pantallas.model.MasterWrapperVO;
+import mx.com.aon.configurador.pantallas.model.MasterWrapperVO;
 import mx.com.aon.configurador.pantallas.model.PantallaVO;
-
 import mx.com.aon.configurador.pantallas.model.master.MasterVO;
-
 import mx.com.aon.configurador.pantallas.service.ConfiguradorPantallaService;
 import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.model.TableModelExport;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.service.impl.AbstractManager;
 import mx.com.aon.portal.util.WrapperResultados;
-import com.biosnet.ice.ext.elements.model.JSONMasterVO;
-import com.biosnet.ice.ext.elements.model.MasterWrapperVO;
-
 
 import org.apache.log4j.Logger;
 
 import com.wittyconsulting.backbone.endpoint.Endpoint;
 import com.wittyconsulting.backbone.exception.BackboneApplicationException;
+//import com.aon.catweb.configurador.pantallas.model.MasterWrapperVO;
 
 /**
  * 
@@ -416,43 +412,43 @@ public class ConfiguradorPantallaServiceImpl extends AbstractManager implements 
         return masterVo;
 	}
 
-	public JSONMasterVO getJSONMaster(String cdTipoMaster, String cdProceso,
-			String tipoMaster, String cdProducto, String claveSituacion) throws ApplicationException {
-
-		JSONMasterVO jsonMaster = null;
-		Endpoint endpoint = null;
-		
-		if (logger.isDebugEnabled()) {
-			logger.debug(". cdTipoMaster : " + cdTipoMaster);
-			logger.debug(". cdProceso : " + cdProceso);
-		}
-		
-		if (CD_MASTER_COMPRA.equalsIgnoreCase(cdTipoMaster)) {
-			endpoint = (Endpoint) endpoints.get("CARGAR_JSON_PROPERTIES_COMPRA");
-		} else {
-			endpoint = (Endpoint) endpoints.get("CARGAR_JSON_PROPERTIES");
-		}
-		
-		Map<String,String> parameters = new HashMap<String, String>();
-		parameters.put( "cdTipoMaster", cdTipoMaster );
-		parameters.put( "cdProceso", cdProceso);
-		parameters.put( "tipoMaster", tipoMaster);
-		parameters.put( "cdProducto", cdProducto);
-		parameters.put( "claveSituacion", claveSituacion);
-		
-        try {
-        	jsonMaster = (JSONMasterVO) endpoint.invoke(parameters);
-        } catch (BackboneApplicationException e) {
-            throw new ApplicationException("Error intentando cargar atributos propiedades");
-        } catch (Exception e) {
-        	logger.error("Error: " + e, e);
-            throw new ApplicationException("Error intentando cargar atributos propiedades");
-        }
-
-		
-		
-		return jsonMaster;
-	}
+//	public JSONMasterVO getJSONMaster(String cdTipoMaster, String cdProceso,
+//			String tipoMaster, String cdProducto, String claveSituacion) throws ApplicationException {
+//
+//		JSONMasterVO jsonMaster = null;
+//		Endpoint endpoint = null;
+//		
+//		if (logger.isDebugEnabled()) {
+//			logger.debug(". cdTipoMaster : " + cdTipoMaster);
+//			logger.debug(". cdProceso : " + cdProceso);
+//		}
+//		
+//		if (CD_MASTER_COMPRA.equalsIgnoreCase(cdTipoMaster)) {
+//			endpoint = (Endpoint) endpoints.get("CARGAR_JSON_PROPERTIES_COMPRA");
+//		} else {
+//			endpoint = (Endpoint) endpoints.get("CARGAR_JSON_PROPERTIES");
+//		}
+//		
+//		Map<String,String> parameters = new HashMap<String, String>();
+//		parameters.put( "cdTipoMaster", cdTipoMaster );
+//		parameters.put( "cdProceso", cdProceso);
+//		parameters.put( "tipoMaster", tipoMaster);
+//		parameters.put( "cdProducto", cdProducto);
+//		parameters.put( "claveSituacion", claveSituacion);
+//		
+//        try {
+//        	jsonMaster = (JSONMasterVO) endpoint.invoke(parameters);
+//        } catch (BackboneApplicationException e) {
+//            throw new ApplicationException("Error intentando cargar atributos propiedades");
+//        } catch (Exception e) {
+//        	logger.error("Error: " + e, e);
+//            throw new ApplicationException("Error intentando cargar atributos propiedades");
+//        }
+//
+//		
+//		
+//		return jsonMaster;
+//	}
 
 	public TableModelExport getModel(Map<String, String> parameters) throws ApplicationException {
 		try {

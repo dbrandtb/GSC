@@ -3,24 +3,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-import org.apache.struts2.interceptor.SessionAware;
-
-//TODO: CLIENTE CORPO, DEBE MOVERSE A OTRO PAQUET
 import mx.com.aon.configurador.pantallas.model.ClienteCorpoVO;
-
-
-
+import mx.com.aon.configurador.pantallas.model.MasterWrapperVO;
 import mx.com.aon.configurador.pantallas.service.ConfiguradorPantallaService;
 import mx.com.aon.portal.model.BaseObjectVO;
-
 import mx.com.aon.portal.service.CatalogService;
 import mx.com.aon.portal.service.PagerManager;
 
-import com.biosnet.ice.ext.elements.model.MasterWrapperVO;
+import org.apache.log4j.Logger;
+import org.apache.struts2.interceptor.SessionAware;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.Preparable;
+//TODO: CLIENTE CORPO, DEBE MOVERSE A OTRO PAQUET
 
 /**
  * Clase Action padre del configurador
