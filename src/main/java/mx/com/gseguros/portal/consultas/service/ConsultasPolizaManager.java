@@ -46,7 +46,7 @@ public interface ConsultasPolizaManager {
 	 * @return         Wrapper con las situaciones de la poliza solicitada
 	 * @throws         ApplicationException
 	 */
-	public WrapperResultados consultaSituacion(String cdunieco, String cdramo, String estado, String nmpoliza, String suplemento, String nmsituac)throws ApplicationException;
+	public WrapperResultados consultaSituacion(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String nmsituac)throws ApplicationException;
 	
 	
 	/**
