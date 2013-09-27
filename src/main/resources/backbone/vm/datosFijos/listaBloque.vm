@@ -1,7 +1,0 @@
-<statements>
-	<statement type="stored" name="PKG_LISTAS.P_BLOQUES_FIJOS" id="pBloquesFijos">
-		<outparam id="PV_REGISTRO_O" type="CURSOR"/>
-		<outparam id="PO_MSG_ID_O" type="NUMERIC"/>	
-		<outparam id="PV_TITLE_O" type="VARCHAR"/>	
-	</statement>
-</statements>

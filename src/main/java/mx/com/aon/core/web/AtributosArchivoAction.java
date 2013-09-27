@@ -1,23 +1,15 @@
 package mx.com.aon.core.web;
 
-import java.util.Map;
-
-import org.apache.log4j.Logger;
-import org.apache.struts2.interceptor.SessionAware;
-
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.Preparable;
-
 import java.io.InputStream;
 import java.util.List;
 
-import mx.com.aon.catbo.service.ArchivosManager;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.ExportMediator;
 import mx.com.aon.export.ExportView;
 import mx.com.aon.export.model.TableModelExport;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.web.AbstractListAction;
+
+import org.apache.log4j.Logger;
 
 
 
@@ -26,7 +18,7 @@ public class AtributosArchivoAction extends AbstractListAction {
 
     private static Logger logger = Logger.getLogger(AtributosArchivoAction.class);
 
-    private transient ArchivosManager archivosManager;
+//    private transient ArchivosManager archivosManager;
 
     private String cdTipoar;
     private String dsArchivo;
@@ -76,9 +68,9 @@ public class AtributosArchivoAction extends AbstractListAction {
 		mAtributoArchivosList = atributoArchivosList;
 	}
 
-	public void setArchivosManager(ArchivosManager archivosManager) {
-        this.archivosManager = archivosManager;
-    }
+//	public void setArchivosManager(ArchivosManager archivosManager) {
+//        this.archivosManager = archivosManager;
+//    }
     
     public String getCdTipoar() {
 		return cdTipoar;
@@ -174,18 +166,18 @@ public class AtributosArchivoAction extends AbstractListAction {
        // return "";
 
         try{                                                            
-            PagedList pagedList = archivosManager.buscarAtributosArchivos(dsArchivo, start, limit); //dsArchivo
+            PagedList pagedList = null;//archivosManager.buscarAtributosArchivos(dsArchivo, start, limit); //dsArchivo
             mAtributoArchivosList = pagedList.getItemsRangeList();
             totalCount = pagedList.getTotalItems();
             success = true;
             return SUCCESS;
-        }catch(ApplicationException e)
+        }/*catch(ApplicationException e)
         {
             success = false;
             addActionError(e.getMessage());
             return SUCCESS;
 
-        }catch( Exception e){
+        }*/catch( Exception e){
             success = false;
             addActionError(e.getMessage());
             return SUCCESS;
@@ -214,7 +206,7 @@ public class AtributosArchivoAction extends AbstractListAction {
 			ExportView exportFormat = (ExportView)exportMediator.getView(formato); 
 			
 			filename = "Atributos Archivos." + exportFormat.getExtension();
-			TableModelExport model = archivosManager.getModel(dsArchivo);
+			TableModelExport model = null;//archivosManager.getModel(dsArchivo);
 
 			inputStream = exportFormat.export(model);
 			
@@ -264,8 +256,8 @@ public class AtributosArchivoAction extends AbstractListAction {
 		this.inputStream = inputStream;
 	}
 
-	public ArchivosManager obtenArchivosManager() {
-		return archivosManager;
-	}
+//	public ArchivosManager obtenArchivosManager() {
+//		return archivosManager;
+//	}
 	
 }

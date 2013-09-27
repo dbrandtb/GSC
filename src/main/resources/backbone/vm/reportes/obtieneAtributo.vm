@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<statements>
-    <statement type="stored" name="PKG_REPORTES.P_OBTIENE_TATRIREP" id="atributos">
-    <param eval="true" name="p_ncdreporte" type="VARCHAR">$!params.get("cdReporte")</param>
-            <outparam id="p_cu_atributos" type="CURSOR"/>
-    </statement>
-</statements>

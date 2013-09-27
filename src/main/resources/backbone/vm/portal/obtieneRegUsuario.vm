@@ -1,8 +1,0 @@
-<statements>
-	<statement type="stored" name="PKG_CONFPAGINA.P_OBTIENE_REG_USUARIO" id="carga-num-reg">
-		<param eval="true" name="PV_CDUSUARI" type="VARCHAR">$!params.get("user")</param>
-		<outparam id="PV_NOREGISTRO_O" type="NUMERIC"/>
-		<outparam id="PV_MSG_ID_O" type="NUMERIC"/>
-		<outparam id="PV_TITLE_O" type="VARCHAR"/>
-	</statement>
-</statements>

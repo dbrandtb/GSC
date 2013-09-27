@@ -1,8 +1,0 @@
-<statements>
-	<statement type="stored" name="PACK_NEWALEA_PENTRADA.P_GET_USER_SUSCRIPTOR" id="pgetUsuarioSuscriptor">
-		<outparam id="rc_cursor" type="CURSOR"/>
-		<outparam id="po_CDERROR" type="VARCHAR"/>
-		<outparam id="po_DSERROR" type="VARCHAR"/>
-		<outparam id="po_TIPOERROR" type="VARCHAR"/>
-	</statement>
-</statements>

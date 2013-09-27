@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<statements>
-	<statement type="stored" name="PKG_AON_CHECKLIST.P_CONFIGURACION_COMPLETA" id="realizarConfiguracionStatusTarea">
-        <param eval="true" name="pi_cve_config" type="NUMERIC">$!params.get("codigoconfiguracion")</param>
-		<outparam id="po_resultado" type="NUMERIC"></outparam>
-		<outparam id="pv_title_o" type="VARCHAR"></outparam>
-	</statement>
-</statements>

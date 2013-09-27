@@ -1,9 +1,0 @@
-<statements>
-	<statement type="stored" name="PACK_NEWALEA_DATOS_GENERALES.P_ACTUALIZA_TVALOPOL" id="pactTVALOPOL">
-		<param eval="true" name="pi_OTVALOR" type="VARCHAR">$!params.get("pi_OTVALOR")</param>
-		<param eval="true" name="pi_IDENT" type="VARCHAR">$!params.get("pi_IDENT")</param>
-		<outparam id="po_CDERROR" type="VARCHAR"/>
-		<outparam id="po_DSERROR" type="VARCHAR"/>
-		<outparam id="po_TIPOERROR" type="VARCHAR"/>
-	</statement>
-</statements>

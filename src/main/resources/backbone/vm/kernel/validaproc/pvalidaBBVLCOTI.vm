@@ -1,7 +1,0 @@
-<statements>
-	<statement type="stored" name="PACK_NEWALEA_VALIDAPROC.P_VALIDA_BBVLCOTI" id="pvalidaBBVLCOTI">
-		<param eval="true" name="p_idproceso" type="VARCHAR">$!params.get("p_idproceso")</param>
-		<outparam id="p_status" type="NUMERIC"/>
-		<outparam id="p_errormsg" type="VARCHAR"/>
-	</statement>
-</statements>

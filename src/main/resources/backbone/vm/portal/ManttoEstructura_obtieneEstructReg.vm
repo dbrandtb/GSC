@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<statements>
-    <statement type="stored" name="PKG_CONFG_CUENTA.P_OBTIENE_ESTRUCT_REG" id="pObtieneEstructReg">
-        <param eval="true" name="pv_cdestruc_i" type="NUMERIC">$!params.get("codigo")</param>
-        <outparam id="lcur_registros_i" type="CURSOR"></outparam>
-        <outparam id="po_msg_id" type="NUMERIC"></outparam>
-        <outparam id="po_title" type="VARCHAR"></outparam>
-    </statement>
-</statements>

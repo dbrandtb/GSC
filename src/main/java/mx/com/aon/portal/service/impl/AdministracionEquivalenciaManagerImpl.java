@@ -1,26 +1,12 @@
 package mx.com.aon.portal.service.impl;
 
-import mx.com.aon.core.ApplicationException;
-import mx.com.aon.export.model.TableModelExport;
-import mx.com.aon.catbo.model.OperacionCATVO;
-import mx.com.aon.catbo.service.OperacionCATManager;
-import mx.com.aon.portal.model.Tabla_EquivalenciaVO;
-import mx.com.aon.portal.service.PagedList;
-import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
-import mx.com.aon.portal.util.WrapperResultados;
-import mx.com.aon.portal.service.AdministracionEquivalenciaManager;
-
-
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
-import oracle.jdbc.driver.OracleTypes;
-
-import org.springframework.jdbc.core.SqlOutParameter;
-import org.springframework.jdbc.core.SqlParameter;
-
-import mx.com.aon.catbo.service.*;
+import mx.com.aon.core.ApplicationException;
+import mx.com.aon.portal.model.Tabla_EquivalenciaVO;
+import mx.com.aon.portal.service.AdministracionEquivalenciaManager;
+import mx.com.aon.portal.service.PagedList;
+import mx.com.aon.portal.util.WrapperResultados;
 /**
  * Clase que sirve para dar servicios al action que lo invoca.
  * 

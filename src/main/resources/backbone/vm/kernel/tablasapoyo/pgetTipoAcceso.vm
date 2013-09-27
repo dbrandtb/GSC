@@ -1,7 +1,0 @@
-<statements>
-	<statement type="stored" name="PKG_TABLASDE_APOYO.P_GET_TIPOACCESO" id="pgetTipoAcceso">
-		<param eval="true" name="nombretabla" type="VARCHAR">$!params.get("nombretabla")</param>
-		<outparam id="tipoac" type="VARCHAR"/>
-		<outparam id="p_recordset" type="CURSOR"/>
-	</statement>
-</statements>

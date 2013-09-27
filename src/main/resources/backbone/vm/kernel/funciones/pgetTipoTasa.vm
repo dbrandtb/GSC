@@ -1,8 +1,0 @@
-<statements>
-	<statement type="stored" name="PACK_NEWALEA_FUNCIONES.P_Get_Tipo_Tasa" id="pgetTipoTasa">
-		<outparam id="tipoTasa" type="VARCHAR"/>
-		<param eval="true" name="gblPlan" type="VARCHAR">$!params.get("piCdplan")</param>
-		<param eval="true" name="gblPerpla" type="VARCHAR">$!params.get("piCdperpla")</param>
-		<param eval="true" name="gblContre" type="VARCHAR">$!params.get("piCdcontre")</param>
-	</statement>
-</statements>

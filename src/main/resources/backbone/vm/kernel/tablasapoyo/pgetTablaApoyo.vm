@@ -1,9 +1,0 @@
-<statements>
-	<statement type="stored" name="PKG_TABLASDE_APOYO.P_GET_TABLADEAPOYO" id="pgetTablaApoyo">
-		<param eval="true" name="pi_nmtabla" type="VARCHAR">$!params.get("pi_nmtabla")</param>
-		<outparam id="po_CDERROR" type="VARCHAR"/>
-		<outparam id="po_DSERROR" type="VARCHAR"/>
-		<outparam id="po_TIPOERROR" type="VARCHAR"/>
-		<outparam id="po_cursortablaapoyo" type="CURSOR"/>
-	</statement>
-</statements>

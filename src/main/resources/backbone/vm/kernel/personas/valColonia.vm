@@ -1,9 +1,0 @@
-<statements>
-	<statement type="stored" name="PACK_NEWALEA_PERSONAS.P_VALIDA_CDCOLONI" id="valColonia">
-		<param eval="true" name="pi_CDPOSTAL" type="VARCHAR">$!params.get("pi_CDPOSTAL")</param>
-		<param eval="true" name="pi_CDCOLONI" type="VARCHAR">$!params.get("pi_CDCOLONI")</param>
-		<outparam id="po_CDERROR" type="VARCHAR"/>
-		<outparam id="po_DSERROR" type="VARCHAR"/>
-		<outparam id="po_TIPOERROR" type="VARCHAR"/>
-	</statement>
-</statements>

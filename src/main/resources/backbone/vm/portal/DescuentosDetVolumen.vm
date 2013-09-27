@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<statements>
-    <statement type="stored" name="PKG_DSCTO.P_OBTIENE_DET_VOLUMEN" id="obtieneDetVolumen">
-        <param eval="true" name="pv_cve_descto_i" type="NUMERIC">$!params.get("cdDscto")</param>
-        <outparam id="pv_registro_o" type="CURSOR"></outparam>
-        <outparam id="pv_msg_id_o" type="NUMERIC"></outparam>
-        <outparam id="pv_title_o" type="VARCHAR"></outparam>
-    </statement>
-</statements>

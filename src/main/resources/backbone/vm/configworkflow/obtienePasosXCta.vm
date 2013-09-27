@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
-<statements>
-	<statement type="stored" name="PKG_WORKFLOW.P_OBTIENE_PASOSXCTA" id="obtienePasosXCta">
-		    <param eval="true" name="pv_cdprocxcta_i" type="VARCHAR">$!params.cdprocxcta</param>
-        	<outparam id="po_registro" type="CURSOR"/>		
-			<outparam id="PO_MSG_ID" type="NUMERIC"/>
-        	<outparam id="PO_TITLE" type="VARCHAR"/>
-	</statement>
-</statements>

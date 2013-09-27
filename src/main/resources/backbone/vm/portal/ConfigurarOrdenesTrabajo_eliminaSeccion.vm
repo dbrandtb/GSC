@@ -1,9 +1,0 @@
-<statements>
-	<statement type="stored" name="PKG_ORDENT.P_ELIMINA_SECCION_FORMATO" id="eliminaSeccionFormato">
-        <param eval="true" name="pv_cdformatoorden_i" type="INTEGER">$!params.get("cdformatoorden")</param>
-        <param eval="true" name="pv_cdseccion_i" type="INTEGER">$!params.get("cdseccion")</param>
-        
-        <outparam id="pv_msg_id_o" type="NUMERIC"></outparam>
-        <outparam id="pv_title_o" type="VARCHAR"></outparam>		
-	</statement>
-</statements>

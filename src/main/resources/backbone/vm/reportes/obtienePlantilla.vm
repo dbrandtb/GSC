@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<statements>
-    <statement type="stored" name="PKG_REPORTES.P_OBTIENE_MPLANTIL" id="plantillas">
-    <param eval="true" name="p_vdsplantilla" type="VARCHAR">$!params.get("dsPlantilla")</param>
-    <outparam id="p_cu_plantillas" type="CURSOR"/>
-
-    </statement>
-</statements>

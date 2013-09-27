@@ -1,9 +1,0 @@
-<statements>
-	<statement type="stored" name="PKG_WIZARD.p_loadtiporamo" id="pLoadTipoRamo">
-		<param eval="true" name="P_CDTIPRAM" type="VARCHAR"></param>
-		
-		<outparam id="P_REGISTRO" type="CURSOR"/>
-		<outparam id="PO_MSG_ID" type="NUMERIC"/>		
-		<outparam id="PV_TITLE_O" type="VARCHAR"/>
-</statement>
-</statements>

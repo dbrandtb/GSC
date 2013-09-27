@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?> 
-<statements>
-	<statement type="stored" name="PKG_LISTAS.P_PRODUCTOS" id="obtieneProductosCat">
-  		<outparam id="pv_record_o" type="CURSOR"/>
-		<outparam id="pv_msg_id_o" type="NUMERIC"/>
-		<outparam id="pv_title_o" type="VARCHAR"/>
-	</statement>
-</statements>

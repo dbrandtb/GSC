@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
-<statements>
-	<statement type="stored" name="PKG_COTIZA.P_OBTIENE_TIPO_OBJ_ATRIBUTOS" id="atributos-variables">		  		
-  		<param eval="true" name="PV_CDTIPOBJ_I" type="VARCHAR"><![CDATA[$!params.get("cdRamo")]]></param>
-  		<outparam id="PV_REGISTRO_O" type="CURSOR"/>
-		<outparam id="PV_MSG_ID_O" type="NUMERIC"/>
-		<outparam id="PV_TITLE_O" type="VARCHAR"/>		
-	</statement>
-</statements>

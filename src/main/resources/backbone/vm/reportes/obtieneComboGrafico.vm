@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<statements>
-        <statement type="stored" name="PKG_TCATALOG.P_LISTA_TCATALOG" id="Tcatalog">
-        <param eval="true" name="pv_cdtabla_i" type="VARCHAR">$!params.get("comboGrafico")</param>
-        <outparam id="pv_registro_o" type="CURSOR"/>
-        <outparam id="po_msg_id" type="NUMERIC"/>
-		<outparam id="p_out_title" type="VARCHAR"/>	
-    </statement>
-</statements>

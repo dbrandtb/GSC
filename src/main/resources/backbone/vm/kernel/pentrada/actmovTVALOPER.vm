@@ -1,8 +1,0 @@
-<statements>
-	<statement type="stored" name="PACK_NEWALEA_ACTUALIZA_DATOS.P_MOV_TVALOPER" id="actmovTVALOPER">
-		<inoutparam eval="true" name="Gv_Identificador_Error" id="Gv_Identificador_Error" type="VARCHAR"></inoutparam>
-		<param eval="true" name="Gn_CdPerson" type="NUMERIC">$!params.get("pi_CDPERSON")</param>
-		<param eval="true" name="Gn_CdAtribu" type="NUMERIC">$!params.get("pi_CDATRIBU")</param>
-		<param eval="true" name="Gv_OtValor" type="VARCHAR">$!params.get("pi_OTVALOR")</param>
-	</statement>
-</statements>

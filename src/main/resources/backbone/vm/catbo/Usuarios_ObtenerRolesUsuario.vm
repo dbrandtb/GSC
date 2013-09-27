@@ -1,9 +1,0 @@
-<statements>
-	<statement type="stored" name="PKG_USER.P_OBTIENE_ROLES" id="pObtieneRolesUsuario">
-        <param eval="true" name="user" type="VARCHAR">$!params.get("user")</param>
-
-		<outparam id="pv_resultado_o" type="CURSOR"></outparam>
-		<outparam id="pv_msg_id_o" type="NUMERIC"/>
-        <outparam id="pv_title_o" type="VARCHAR"></outparam>
-	</statement>
-</statements>

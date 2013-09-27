@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<statements>
-	<statement type="stored" name="PKG_CANCELA.P_VALIDA_REHABILI" id="pValidaRehabi">
-		<param eval="true" name="pv_cdramo_i" type="NUMERIC">$!params</param>
-		<outparam id="pv_swendoso_o" type="VARCHAR"/>
-		<outparam id="pv_msg_id_o" type="NUMERIC"/>
-		<outparam id="pv_title_o" type="VARCHAR"/>
-	</statement>
-</statements>

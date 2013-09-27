@@ -1,9 +1,0 @@
-<statements>
-	<statement type="stored" name="PKG_CONFPAGINA.P_OBTIENE_ROLES_CLIENTE" id="carga-roles-cliente">
-		<param eval="true" name="PV_CDUSUARIO_I" type="VARCHAR">$!params.get("user")</param>
-		
-		<outparam id="PV_REGISTRO_O" type="CURSOR"/>
-		<outparam id="PV_MSG_ID_O" type="NUMERIC"/>
-		<outparam id="PV_TITLE_O" type="VARCHAR"/>
-	</statement>
-</statements>

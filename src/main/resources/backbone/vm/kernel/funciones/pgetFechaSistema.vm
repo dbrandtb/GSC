@@ -1,6 +1,0 @@
-
-<statements>
-	<statement type="stored" name="PACK_NEWALEA_FUNCIONES.P_Get_Fecha_Sistema" id="pgetFechaSistema">
-		<outparam id="fechaSistema" type="VARCHAR"/>
-	</statement>
-</statements>

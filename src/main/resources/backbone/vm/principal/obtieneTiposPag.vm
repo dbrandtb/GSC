@@ -1,9 +1,0 @@
-<statements>
-	<statement type="stored" name="PKG_TCATALOG.P_LISTA_TCATALOG" id="tiposPag">
-		<param eval="true" name="PV_CDTABLA_I" type="VARCHAR">$!params.get("tabla")</param>
-  
-		<outparam id="PV_REGISTRO_O" type="CURSOR"/>
-		<outparam id="PV_MSG_ID_O" type="NUMERIC"/>  
-		<outparam id="PV_TITLE_O" type="VARCHAR"/> 
-	</statement>
-</statements>

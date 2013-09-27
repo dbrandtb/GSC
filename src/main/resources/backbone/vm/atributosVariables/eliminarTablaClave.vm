@@ -1,7 +1,0 @@
-<statements>	
-	<statement type="stored" name="PKG_TABAPOYO.P_BORRA_TABLA" id="pBorraTabla">
-		<param eval="true" name="pi_nmtabla_i" type="VARCHAR">$!params.NM_TABLA</param>
-		<outparam id="PV_MSG_ID_O" type="NUMERIC"/>  
-		<outparam id="PV_TITLE_O" type="VARCHAR"/>
-	</statement>
-</statements>
