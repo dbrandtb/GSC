@@ -259,7 +259,7 @@
             <groupId>oracle</groupId>
             <artifactId>ojdbc</artifactId>
             <version>1.4</version>
-            <scope>provided</scope>
+            <!-- <scope>provided</scope> -->
         </dependency>
 
 
