@@ -8,27 +8,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import mx.com.aon.configurador.pantallas.model.components.ColumnGridEstandarVO;
+import mx.com.aon.configurador.pantallas.model.BackBoneResultVO;
+import mx.com.aon.configurador.pantallas.model.MasterVO;
+import mx.com.aon.configurador.pantallas.model.PantallaVO;
+import mx.com.aon.configurador.pantallas.model.RamaPantallaVO;
+import mx.com.aon.configurador.pantallas.model.controls.ExtElement;
+import mx.com.aon.configurador.pantallas.util.UtilTransformer;
+import mx.com.aon.core.ApplicationException;
+import mx.com.aon.portal.model.BaseObjectVO;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
-
-import mx.com.aon.configurador.pantallas.model.BackBoneResultVO;
-import mx.com.aon.configurador.pantallas.model.MasterVO;
-import mx.com.aon.configurador.pantallas.model.PantallaVO;
-import mx.com.aon.configurador.pantallas.model.RamaPantallaVO;
-import mx.com.aon.configurador.pantallas.model.components.RecordVO;
-import mx.com.aon.configurador.pantallas.model.master.MasterGrid;
-import mx.com.aon.configurador.pantallas.model.master.NameLabelControlVO;
-import mx.com.aon.configurador.pantallas.util.UtilTransformer;
-import mx.com.aon.core.ApplicationException;
-import mx.com.aon.portal.model.BaseObjectVO;
-import com.biosnet.ice.ext.elements.form.ExtElement;
-import com.biosnet.ice.ext.elements.form.FieldSet;
-import com.biosnet.ice.ext.elements.model.JSONMasterVO;
-import com.biosnet.ice.ext.elements.model.RamaMaster;
 
 /**
  * Clase Action para el control y visualizacion de datos de la seccion de Datos de pantalla
@@ -82,26 +74,26 @@ public class DatosPantallaAction extends PrincipalConfPantallaAction {
     private List<RamaPantallaVO> treePantallas = new ArrayList<RamaPantallaVO>();
     
     
-    /**
-     * 
-     */
-    private List<RamaMaster> treeMaster = new ArrayList<RamaMaster>();
-
-    /**
-     * 
-     * @return
-     */
-    public List<RamaMaster> getTreeMaster() {
-        return treeMaster;
-    }
-
-    /**
-     * 
-     * @param treeMaster
-     */
-    public void setTreeMaster(List<RamaMaster> treeMaster) {
-        this.treeMaster = treeMaster;
-    }
+//    /**
+//     * 
+//     */
+//    private List<RamaMaster> treeMaster = new ArrayList<RamaMaster>();
+//
+//    /**
+//     * 
+//     * @return
+//     */
+//    public List<RamaMaster> getTreeMaster() {
+//        return treeMaster;
+//    }
+//
+//    /**
+//     * 
+//     * @param treeMaster
+//     */
+//    public void setTreeMaster(List<RamaMaster> treeMaster) {
+//        this.treeMaster = treeMaster;
+//    }
 
     /**
      * 
@@ -256,7 +248,7 @@ public class DatosPantallaAction extends PrincipalConfPantallaAction {
         
 //      Map<String,String> paramValues = new HashMap<String, String>();
         
-        logger.debug(" cdTipoMaster  "  + cdTipoMaster);
+/*        logger.debug(" cdTipoMaster  "  + cdTipoMaster);
         logger.debug(" cdProceso  "  +  cdProceso );
         logger.debug(" tipoMaster  " + tipoMaster);
         logger.debug(" cdProducto  "  +  cdProducto);
@@ -359,7 +351,9 @@ public class DatosPantallaAction extends PrincipalConfPantallaAction {
             success = false;
             addActionError(e.getMessage());
             return SUCCESS;
-        }
+        }*/
+        success = true;
+        return SUCCESS;
         
 //        paramValues.put("master", cdTipoMaster);
 //        paramValues.put("proceso", cdProceso);

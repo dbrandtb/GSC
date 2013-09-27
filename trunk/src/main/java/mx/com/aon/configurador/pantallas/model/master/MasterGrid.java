@@ -7,12 +7,10 @@ import java.io.Serializable;
 import java.util.List;
 
 import mx.com.aon.configurador.pantallas.model.components.ColumnGridEstandarVO;
+import mx.com.aon.configurador.pantallas.model.components.RecordVO;
+import mx.com.aon.configurador.pantallas.model.controls.ExtElement;
 
 import org.apache.log4j.Logger;
-
-import mx.com.aon.configurador.pantallas.model.components.RecordVO;
-import com.biosnet.ice.ext.elements.form.ButtonMaster;
-import com.biosnet.ice.ext.elements.form.ExtElement;
 
 /**
  * @author eflores
@@ -34,7 +32,7 @@ public class MasterGrid implements Serializable {
     
     private List<ColumnGridEstandarVO> listColumns;
     
-    private List<ButtonMaster> buttons;
+//    private List<ButtonMaster> buttons;
     
     /**
      *
@@ -114,7 +112,7 @@ public class MasterGrid implements Serializable {
         builder.append("        baseCls:' background:white',");
         builder.append("        cm: cm,");
         builder.append("        buttons:");
-        builder.append(buttons);
+//        builder.append(buttons);
         builder.append("               ,");
         
         /*builder.append("        buttons:[");
@@ -218,17 +216,17 @@ public class MasterGrid implements Serializable {
         this.listRecords = listRecords;
     }
 
-    /**
-     * @return the buttons
-     */
-    public List<ButtonMaster> getButtons() {
-        return buttons;
-    }
-
-    /**
-     * @param buttons the buttons to set
-     */
-    public void setButtons(List<ButtonMaster> buttons) {
-        this.buttons = buttons;
-    }
+//    /**
+//     * @return the buttons
+//     */
+//    public List<ButtonMaster> getButtons() {
+//        return buttons;
+//    }
+//
+//    /**
+//     * @param buttons the buttons to set
+//     */
+//    public void setButtons(List<ButtonMaster> buttons) {
+//        this.buttons = buttons;
+//    }
 }

@@ -5,17 +5,13 @@ import java.util.Map;
 
 import mx.com.aon.configurador.pantallas.model.BackBoneResultVO;
 import mx.com.aon.configurador.pantallas.model.ConjuntoPantallaVO;
-
+import mx.com.aon.configurador.pantallas.model.MasterWrapperVO;
 import mx.com.aon.configurador.pantallas.model.PantallaVO;
-
 import mx.com.aon.configurador.pantallas.model.master.MasterVO;
-
 import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.model.TableModelExport;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.util.WrapperResultados;
-import com.biosnet.ice.ext.elements.model.JSONMasterVO;
-import com.biosnet.ice.ext.elements.model.MasterWrapperVO;
 
 /**
  * 
@@ -165,8 +161,8 @@ public interface ConfiguradorPantallaService {
     MasterWrapperVO getAtributosPropiedades(Map parameters) throws ApplicationException;
     
     
-    JSONMasterVO getJSONMaster(String cdTipoMaster, String cdProceso, String tipoMaster, 
-    		String cdProducto, String claveSituacion) throws ApplicationException;
+//    JSONMasterVO getJSONMaster(String cdTipoMaster, String cdProceso, String tipoMaster, 
+//    		String cdProducto, String claveSituacion) throws ApplicationException;
     
 	public TableModelExport getModel(Map<String, String> parameters) throws ApplicationException;
 
