@@ -1,39 +1,27 @@
 package mx.com.aon.catbo.service.impl;
 
-/*import mx.biosnet.procesobobpelclient.proxy.ProcesoBOBPELPortClient;
-import mx.biosnet.procesobobpelclient.proxy.SvcRequest;
-import mx.biosnet.procesobobpelclient.proxy.SvcResponse;*/
-import mx.com.aon.catbo.model.CalendarioVO;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import mx.com.aon.catbo.model.CasoDetalleVO;
 import mx.com.aon.catbo.model.CasoVO;
 import mx.com.aon.catbo.model.FormatoOrdenVO;
 import mx.com.aon.catbo.model.ItemVO;
 import mx.com.aon.catbo.model.ReasignacionCasoVO;
 import mx.com.aon.catbo.model.ResultadoGeneraCasoVO;
-import mx.com.aon.catbo.model.StatusCasoVO;
 import mx.com.aon.catbo.service.AdministracionCasosManager;
+import mx.com.aon.core.ApplicationException;
+import mx.com.aon.export.model.TableModelExport;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.service.impl.AbstractManager;
 import mx.com.aon.portal.util.WrapperResultados;
-import mx.com.aon.core.ApplicationException;
-
-import mx.com.aon.export.model.TableModelExport;
-import mx.biosnet.procesobobpelclient.proxy.ProcesoBOBPELPortClient;
-import mx.biosnet.procesobobpelclient.proxy.SvcRequest;
-import mx.biosnet.procesobobpelclient.proxy.SvcResponse;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.math.BigInteger;
 
 import com.biosnet.ice.ext.elements.form.ComboControl;
-import com.wittyconsulting.backbone.endpoint.Endpoint;
-import com.wittyconsulting.backbone.exception.BackboneApplicationException;
 
 public class AdministracionCasosManagerImpl extends AbstractManager implements AdministracionCasosManager {
     
-	SvcResponse response = null;
+//	SvcResponse response = null;
 	
 	@SuppressWarnings("unchecked")
 	public PagedList obtenerNumerosCasos(String desmodulo, int start, int limit) throws ApplicationException {
@@ -580,45 +568,45 @@ return res.getMsgText();
 		try {
 			
 	        logger.info("llamo al bpel");		
-			ProcesoBOBPELPortClient myPort = new ProcesoBOBPELPortClient();
-		    logger.debug("Invocando servicio: " + myPort.getEndpoint());	
+//			ProcesoBOBPELPortClient myPort = new ProcesoBOBPELPortClient();
+//		    logger.debug("Invocando servicio: " + myPort.getEndpoint());	
 		    
 		    //SvcResponse response = null;
-			SvcRequest req = new SvcRequest();
+//			SvcRequest req = new SvcRequest();
 
-            req.setCdmatriz(new BigInteger(casoVO.getCdMatriz()));
-            req.setCdperson(casoVO.getCdPerson());
-            req.setCdramo(casoVO.getCdRamo());
-            req.setCdunieco(casoVO.getCdUnieco());
-            req.setCdusuario(casoVO.getCdUsuario());
-            req.setDsmetcontac(casoVO.getDsmetcontac());
-            req.setEstado(casoVO.getEstado());
-            req.setIndPoliza(casoVO.getIndPoliza());
-            req.setNmpoliex(casoVO.getNmpoliex());
-            req.setNmpoliza(casoVO.getNmpoliza());
-            req.setNmsbsitext(casoVO.getNmsbsitext());
-            req.setNmsituaext(casoVO.getNmsituaext());
-            req.setNmsituac(casoVO.getNmsituac());
-            req.setCdprioridad(casoVO.getCdPrioridad());
-            req.setCdproceso(casoVO.getCdProceso());
-            if(casoVO.getDsObservacion() != null && !casoVO.getDsObservacion().equals("")){
-            	req.setDsobservacion(casoVO.getDsObservacion());
-            }else{
-            	req.setDsobservacion("Iniciado desde la pantalla");
-            }
-
-			response = myPort.process(req);
-			logger.info("esta es la response: numero de caso generado: " +
-	                response.getNmCaso() + " numero de orden: " +
-	                response.getNmOrden());
-			
+//            req.setCdmatriz(new BigInteger(casoVO.getCdMatriz()));
+//            req.setCdperson(casoVO.getCdPerson());
+//            req.setCdramo(casoVO.getCdRamo());
+//            req.setCdunieco(casoVO.getCdUnieco());
+//            req.setCdusuario(casoVO.getCdUsuario());
+//            req.setDsmetcontac(casoVO.getDsmetcontac());
+//            req.setEstado(casoVO.getEstado());
+//            req.setIndPoliza(casoVO.getIndPoliza());
+//            req.setNmpoliex(casoVO.getNmpoliex());
+//            req.setNmpoliza(casoVO.getNmpoliza());
+//            req.setNmsbsitext(casoVO.getNmsbsitext());
+//            req.setNmsituaext(casoVO.getNmsituaext());
+//            req.setNmsituac(casoVO.getNmsituac());
+//            req.setCdprioridad(casoVO.getCdPrioridad());
+//            req.setCdproceso(casoVO.getCdProceso());
+//            if(casoVO.getDsObservacion() != null && !casoVO.getDsObservacion().equals("")){
+//            	req.setDsobservacion(casoVO.getDsObservacion());
+//            }else{
+//            	req.setDsobservacion("Iniciado desde la pantalla");
+//            }
+//
+//			response = myPort.process(req);
+//			logger.info("esta es la response: numero de caso generado: " +
+//	                response.getNmCaso() + " numero de orden: " +
+//	                response.getNmOrden());
+//			
 			ResultadoGeneraCasoVO res = new ResultadoGeneraCasoVO();
-			if(response.getNmCaso().equals("0")){				
-				throw new Exception(response.getMessages()[0].getMsgString());
-			}
-			res.setNumCaso(response.getNmCaso());
-			res.setCdOrdenTrabajo(Integer.toString(response.getNmOrden()));
-			logger.debug("Quebien, se genero el caso "+response.getNmCaso());
+//			if(response.getNmCaso().equals("0")){				
+//				throw new Exception(response.getMessages()[0].getMsgString());
+//			}
+//			res.setNumCaso(response.getNmCaso());
+//			res.setCdOrdenTrabajo(Integer.toString(response.getNmOrden()));
+//			logger.debug("Quebien, se genero el caso "+response.getNmCaso());
 		
 			if((res.getCdOrdenTrabajo()!=null && res.getCdOrdenTrabajo()!="") && (res.getNumCaso()!=null && res.getNumCaso()!="")){
 				logger.debug("Quebien, entramos al if para el caso "+res.getNumCaso());
@@ -639,11 +627,11 @@ return res.getMsgText();
 			return res;
 
 		} catch (Exception e) {
-			logger.debug("ExcepcionIniciarCaso. MessageDetail: "+response.getMessages()[0].getMsgDetail());
-			logger.debug("MessageString: "+response.getMessages()[0].getMsgString());
-			if(response.getNmCaso().equals("0")){
-				throw new Exception(response.getMessages()[0].getMsgString());
-			}
+//			logger.debug("ExcepcionIniciarCaso. MessageDetail: "+response.getMessages()[0].getMsgDetail());
+//			logger.debug("MessageString: "+response.getMessages()[0].getMsgString());
+//			if(response.getNmCaso().equals("0")){
+//				throw new Exception(response.getMessages()[0].getMsgString());
+//			}
 			throw new Exception("No se guardaron los atributos variables. Consulte a Soporte");
 		}
 		
