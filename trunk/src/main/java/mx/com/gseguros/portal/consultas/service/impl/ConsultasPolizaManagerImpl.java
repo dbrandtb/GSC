@@ -1,15 +1,15 @@
 package mx.com.gseguros.portal.consultas.service.impl;
 
-import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_DATOS_POLIZA;
-import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_DATOS_SUPLEMENTO;
-import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_DATOS_SITUACION;
-import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_DATOS_COBERTURAS;
-import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_POLIZAS_ASEGURADO;
-import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_DATOS_TARIFA;
-import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_POLIZAS_AGENTE;
-import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_RECIBOS_AGENTE;
 import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_DATOS_AGENTE;
 import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_DATOS_ASEGURADO;
+import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_DATOS_COBERTURAS;
+import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_DATOS_POLIZA;
+import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_DATOS_SITUACION;
+import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_DATOS_SUPLEMENTO;
+import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_DATOS_TARIFA;
+import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_POLIZAS_AGENTE;
+import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_POLIZAS_ASEGURADO;
+import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_RECIBOS_AGENTE;
 
 import java.util.HashMap;
 
@@ -20,6 +20,7 @@ import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 
 public class ConsultasPolizaManagerImpl extends
 		AbstractManagerJdbcTemplateInvoke implements ConsultasPolizaManager {
+	
 
 	public WrapperResultados consultaPoliza(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String idper, String nmclient)
@@ -39,18 +40,19 @@ public class ConsultasPolizaManagerImpl extends
 		return result;
 	}
 
-	public WrapperResultados consultaSuplemento(String nmpoliex) throws ApplicationException {
-			HashMap<String, Object> params = new HashMap<String, Object>();
-			params.put("pv_nmpoliex_i", nmpoliex);
-			
-			WrapperResultados result = this.returnBackBoneInvoke(params,
-					OBTIENE_DATOS_SUPLEMENTO);
-			return result;
-		}
-	
-	
+	public WrapperResultados consultaSuplemento(String nmpoliex)
+			throws ApplicationException {
+
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_nmpoliex_i", nmpoliex);
+
+		WrapperResultados result = this.returnBackBoneInvoke(params,
+				OBTIENE_DATOS_SUPLEMENTO);
+		return result;
+	}
+
 	public WrapperResultados consultaSituacion(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String suplemento, String nmsituac)
+			String estado, String nmpoliza, String nmsuplem, String nmsituac)
 			throws ApplicationException {
 
 		HashMap<String, Object> params = new HashMap<String, Object>();
@@ -58,7 +60,7 @@ public class ConsultasPolizaManagerImpl extends
 		params.put("pv_cdramo_i", cdramo);
 		params.put("pv_estado_i", estado);
 		params.put("pv_nmpoliza_i", nmpoliza);
-		params.put("pv_nmsuplem_i", suplemento);
+		params.put("pv_nmsuplem_i", nmsuplem);
 		params.put("pv_nmsituac_i", nmsituac);
 
 		WrapperResultados result = this.returnBackBoneInvoke(params,
@@ -68,7 +70,7 @@ public class ConsultasPolizaManagerImpl extends
 	}
 
 	public WrapperResultados consultaCoberturas(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String suplemento, String nmsituac)
+			String estado, String nmpoliza, String nmsuplem, String nmsituac)
 			throws ApplicationException {
 
 		HashMap<String, Object> params = new HashMap<String, Object>();
@@ -76,7 +78,7 @@ public class ConsultasPolizaManagerImpl extends
 		params.put("pv_cdramo_i", cdramo);
 		params.put("pv_estado_i", estado);
 		params.put("pv_nmpoliza_i", nmpoliza);
-		params.put("pv_nmsuplem_i", suplemento);
+		params.put("pv_nmsuplem_i", nmsuplem);
 		params.put("pv_nmsituac_i", nmsituac);
 
 		WrapperResultados result = this.returnBackBoneInvoke(params,
@@ -98,67 +100,72 @@ public class ConsultasPolizaManagerImpl extends
 	}
 
 	public WrapperResultados consultaDatosTarifa(String cdunieco,
-			String cdramo, String estado, String nmpoliza, String suplemento) throws ApplicationException {
+			String cdramo, String estado, String nmpoliza, String nmsuplem)
+			throws ApplicationException {
 
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdunieco_i", cdunieco);
 		params.put("pv_cdramo_i", cdramo);
 		params.put("pv_estado_i", estado);
 		params.put("pv_nmpoliza_i", nmpoliza);
-		params.put("pv_nmsuplem_i", suplemento);
+		params.put("pv_nmsuplem_i", nmsuplem);
 
 		WrapperResultados result = this.returnBackBoneInvoke(params,
 				OBTIENE_DATOS_TARIFA);
 
 		return result;
 	}
-	
-	public WrapperResultados consultaPolizasAgente(String cdagente) throws ApplicationException {
-		
+
+	public WrapperResultados consultaPolizasAgente(String cdagente)
+			throws ApplicationException {
+
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdagente_i", cdagente);
-		
+
 		WrapperResultados result = this.returnBackBoneInvoke(params,
 				OBTIENE_POLIZAS_AGENTE);
-		
+
 		return result;
 	}
+
 	public WrapperResultados consultaRecibosAgente(String cdunieco,
-			String cdramo, String estado, String nmpoliza) throws ApplicationException {
-		
+			String cdramo, String estado, String nmpoliza)
+			throws ApplicationException {
+
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdunieco_i", cdunieco);
 		params.put("pv_cdramo_i", cdramo);
 		params.put("pv_estado_i", estado);
 		params.put("pv_nmpoliza_i", nmpoliza);
-		
+
 		WrapperResultados result = this.returnBackBoneInvoke(params,
 				OBTIENE_RECIBOS_AGENTE);
-		
+
 		return result;
 	}
 
 	public WrapperResultados consultaAgente(String cdagente)
 			throws ApplicationException {
+
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdagente_i", cdagente);
 
-		WrapperResultados result = this.returnBackBoneInvoke(params,OBTIENE_DATOS_AGENTE);
+		WrapperResultados result = this.returnBackBoneInvoke(params,
+				OBTIENE_DATOS_AGENTE);
+
 		return result;
 	}
 
-	
-	
-	
 	public WrapperResultados consultaDatosAsegurado(String cdunieco,
-			String cdramo, String estado, String nmpoliza, String suplemento) throws ApplicationException {
+			String cdramo, String estado, String nmpoliza, String nmsuplem)
+			throws ApplicationException {
 
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdunieco_i", cdunieco);
 		params.put("pv_cdramo_i", cdramo);
 		params.put("pv_estado_i", estado);
 		params.put("pv_nmpoliza_i", nmpoliza);
-		params.put("pv_nmsuplem_i", suplemento);
+		params.put("pv_nmsuplem_i", nmsuplem);
 
 		WrapperResultados result = this.returnBackBoneInvoke(params,
 				OBTIENE_DATOS_ASEGURADO);

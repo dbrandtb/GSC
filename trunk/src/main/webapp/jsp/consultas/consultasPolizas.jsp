@@ -15,8 +15,7 @@
 	    <script type="text/javascript">
 		    var _CONTEXT = '${ctx}';
 		    
-		    var _URL_DATOS_SUPLEMENTO_DUMMY =       _CONTEXT + '/resources/scripts/consultaPolizas/suplementos.json';
-	        var _URL_TIPOS_CONSULTA_DUMMY =         _CONTEXT + '/resources/scripts/consultaPolizas/tiposConsulta.json';
+	        var _URL_TIPOS_CONSULTA         =       _CONTEXT + '/resources/scripts/consultaPolizas/tiposConsulta.json';
 	        
 		    var _URL_CONSULTA_DATOS_POLIZA =        '<s:url action="consultaDatosPoliza"       namespace="/consultasPoliza"/>';
 		    var _URL_CONSULTA_DATOS_SUPLEMENTO =    '<s:url action="consultaDatosSuplemento"   namespace="/consultasPoliza"/>';
@@ -31,22 +30,22 @@
 		    var _MSG_SIN_DATOS =                       'Sin informaci\u00F3n';
 		    var _MSG_SIN_DATOS_HISTORICO_MOVIMIENTOS = 'No se encontraron resultados. Intente cambiar los filtros de b\u00FAsqueda.';
 	    
-	    //Funciones comunes
-	    /**
-	     * Muestra un mensaje emergente
-	     * @param title   String
-	     * @param msg     String
-	     * @param buttons Object/Object[]
-	     * @param icon    String 
-	     */
-	    function setMessage(title, msg, buttons, icon){
-	    	Ext.Msg.show({
-                title: title,
-                msg: msg,
-                buttons: buttons,
-                icon: icon
-            });
-	    }
+		    //Funciones comunes
+		    /**
+		     * Muestra un mensaje emergente
+		     * @param title   String
+		     * @param msg     String
+		     * @param buttons Object/Object[]
+		     * @param icon    String 
+		     */
+		    function setMessage(title, msg, buttons, icon){
+		    	Ext.Msg.show({
+	                title: title,
+	                msg: msg,
+	                buttons: buttons,
+	                icon: icon
+	            });
+		    }
 	    
 	    </script>
 	    <script type="text/javascript" src="${ctx}/resources/scripts/consultaPolizas/consultasPolizas.js"></script>
