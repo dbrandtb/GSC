@@ -23,7 +23,7 @@ public class ConsultasPolizaManagerImpl extends
 	
 
 	public WrapperResultados consultaPoliza(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String idper, String nmclient)
+			String estado, String nmpoliza)
 			throws ApplicationException {
 
 		HashMap<String, Object> params = new HashMap<String, Object>();
@@ -31,8 +31,6 @@ public class ConsultasPolizaManagerImpl extends
 		params.put("pv_cdramo_i", cdramo);
 		params.put("pv_estado_i", estado);
 		params.put("pv_nmpoliza_i", nmpoliza);
-		params.put("pv_cdideper_i", idper);
-		params.put("pv_nmclient_i", nmclient);
 
 		WrapperResultados result = this.returnBackBoneInvoke(params,
 				OBTIENE_DATOS_POLIZA);
