@@ -70,8 +70,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
         try {
 			WrapperResultados result = consultasPolizaManager.consultaPoliza(
 					params.get("cdunieco"), params.get("cdramo"),
-					params.get("estado"), params.get("nmpoliza"),
-					params.get("idper"), params.get("nmclient"));
+					params.get("estado"), params.get("nmpoliza"));
 			
         	ArrayList<ConsultaDatosPolizaVO> lista = (ArrayList<ConsultaDatosPolizaVO>) result.getItemList();
         	

@@ -17,13 +17,11 @@ public interface ConsultasPolizaManager {
 	 * @param cdunieco Unidad Economica
 	 * @param cdramo   Ramo
 	 * @param estado   Estado
-	 * @param nmpoliza Poliza
-	 * @param idper    Identificador Persona
-	 * @param nmclient Numero cliente
+	 * @param nmpoliza Numero de poliza
 	 * @return         Wrapper con los datos de la poliza solicitada
 	 * @throws         ApplicationException
 	 */
-	public WrapperResultados consultaPoliza(String cdunieco, String cdramo, String estado, String nmpoliza, String idper, String nmclient)throws ApplicationException;
+	public WrapperResultados consultaPoliza(String cdunieco, String cdramo, String estado, String nmpoliza)throws ApplicationException;
 	
 	
 	/**
