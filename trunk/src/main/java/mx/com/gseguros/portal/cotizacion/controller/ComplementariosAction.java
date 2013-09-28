@@ -1024,7 +1024,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 	private boolean ejecutaWSrecibos(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem){
 		boolean allInserted = true;
 		
-		logger.debug("*** Entrando a metodo Inserta Recibos WS ice2sigs ***");
+		logger.debug("*** Entrando a metodo Inserta Recibos WS ice2sigs, para la poliza: " + nmpoliza + "***");
 		
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdunieco_i", cdunieco);
@@ -1046,9 +1046,9 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 		for(Recibo recibo: recibos){
 			try{
 				ReciboRespuesta resultadoR = ice2sigsWebServices.ejecutaReciboGS(Operacion.INSERTA, recibo, this.getText("url.ws.ice2sigs"));
-				logger.debug("Resultado de insertar el recibo: " + recibo.getRmdbRn()+ " - " + resultadoR.getMensaje());
+				logger.debug("Resultado de insertar el recibo: " + recibo.getNumRec()+ " - " + resultadoR.getMensaje());
 			}catch(Exception e){
-				logger.error("Error al insertar el recibo: " + recibo.getRmdbRn(), e);
+				logger.error("Error al insertar el recibo: " + recibo.getNumRec(), e);
 				allInserted = false;
 			}
 		}
