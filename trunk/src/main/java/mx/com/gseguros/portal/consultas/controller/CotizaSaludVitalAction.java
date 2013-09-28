@@ -56,6 +56,8 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
     private UsuarioManager usuarioManager;
     private transient PrincipalManager principalManagerJdbcTemplate;
 
+    private transient Ice2sigsWebServices ice2sigsWebServices;
+
     
     private HashMap<String,String> params;
     
@@ -80,8 +82,6 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
     	logger.debug(" **** Entrando a pruebaWSweblogic ****");
     	try {
     		
-    		Ice2sigsWebServices serv = new Ice2sigsWebServices();
-    		
     		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(sdf.parse("15/06/1986"));
@@ -103,7 +103,7 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
 			agente.setTipAge(2);
 			agente.setUsrReg("usrreg");
 			
-			AgenteSaludRespuesta resp = serv.ejecutaAgenteSaludGS(Operacion.CONSULTA, agente);
+			AgenteSaludRespuesta resp = ice2sigsWebServices.ejecutaAgenteSaludGS(Operacion.CONSULTA, agente, this.getText("url.ws.ice2sigs"));
 			
 			logger.debug("Codigo respuesta: "+ resp.getCodigo());
 			logger.debug("Mensaje respuesta: "+ resp.getMensaje());
@@ -513,6 +513,11 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
 
 	public void setUser(String user) {
 		this.user = user;
+	}
+
+
+	public void setIce2sigsWebServices(Ice2sigsWebServices ice2sigsWebServices) {
+		this.ice2sigsWebServices = ice2sigsWebServices;
 	}
 
 	

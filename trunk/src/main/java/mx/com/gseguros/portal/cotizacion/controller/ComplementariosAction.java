@@ -21,8 +21,8 @@ import oracle.jdbc.driver.OracleTypes;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.jdbc.core.SqlParameter;
 
-import mx.com.aon.catweb.configuracion.producto.model.WrapperResultados;
 import mx.com.aon.configurador.pantallas.model.components.GridVO;
+import mx.com.aon.core.ApplicationException;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.flujos.cotizacion.model.ResultadoCotizacionVO;
 import mx.com.aon.flujos.cotizacion.service.impl.CotizacionManagerImpl;
@@ -30,12 +30,19 @@ import mx.com.aon.flujos.cotizacion.web.ResultadoCotizacionAction;
 import mx.com.aon.flujos.cotizacion4.web.ResultadoCotizacion4Action;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
+import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.utils.HttpRequestUtil;
+import mx.com.gseguros.portal.consultas.model.ConsultaDatosSuplementoVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.Tatri;
 import mx.com.gseguros.portal.general.util.ConstantesCatalogos;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.ws.client.Ice2sigsWebServices;
+import mx.com.gseguros.ws.client.Ice2sigsWebServices.Operacion;
+
+import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.Recibo;
+import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboRespuesta;
 
 /**
  * 
@@ -49,7 +56,10 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			.getLogger(ComplementariosAction.class);
 	private Item items;
 	private Item fields;
+	
 	private KernelManagerSustituto kernelManager;
+	private transient Ice2sigsWebServices ice2sigsWebServices;
+	
 	private Map<String, String> panel1;
 	private Map<String, String> panel2;
 	private Map<String, String> parametros;
@@ -991,6 +1001,9 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 						+ "");
 			}
 			
+			if(!ejecutaWSrecibos(datUs.getCdunieco(), datUs.getCdramo(), "M", (String)wr.getItemMap().get("nmpoliza"), "0"))
+				logger.error("NO SE HAN INSERTADO TODOS LOS RECIBOS!!! PARA ICE2SIGS, POLIZA: " + (String)wr.getItemMap().get("nmpoliza"));
+			
 			success=true;
 		}
 		catch(Exception ex)
@@ -1007,6 +1020,40 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 				+ "");
 		return SUCCESS;
 	}
+	
+	private boolean ejecutaWSrecibos(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem){
+		boolean allInserted = true;
+		
+		logger.debug("*** Entrando a metodo Inserta Recibos WS ice2sigs ***");
+		
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdunieco_i", cdunieco);
+		params.put("pv_cdramo_i", cdramo);
+		params.put("pv_estado_i", estado);
+		params.put("pv_nmpoliza_i", nmpoliza);
+		params.put("pv_nmsuplem_i", nmsuplem);
+		
+		WrapperResultados result = null;
+		ArrayList<Recibo> recibos =  null;
+		try {
+			result = kernelManager.obtenDatosRecibos(params);
+			recibos = (ArrayList<Recibo>) result.getItemList();
+		} catch (ApplicationException e1) {
+			logger.error("Error en llamar al PL de obtencion de RECIBOS",e1);
+			return false;
+		}
+		 
+		for(Recibo recibo: recibos){
+			try{
+				ReciboRespuesta resultadoR = ice2sigsWebServices.ejecutaReciboGS(Operacion.INSERTA, recibo, this.getText("url.ws.ice2sigs"));
+				logger.debug("Resultado de insertar el recibo: " + recibo.getRmdbRn()+ " - " + resultadoR.getMensaje());
+			}catch(Exception e){
+				logger.error("Error al insertar el recibo: " + recibo.getRmdbRn(), e);
+				allInserted = false;
+			}
+		}
+		return allInserted;
+	} 
 	
 	/////////////////////////////////
 	////// getters ans setters //////
@@ -1263,6 +1310,10 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 
 	public String getCON_CAT_MESACONTROL_ESTAT_TRAMI() {
 		return CON_CAT_MESACONTROL_ESTAT_TRAMI;
+	}
+
+	public void setIce2sigsWebServices(Ice2sigsWebServices ice2sigsWebServices) {
+		this.ice2sigsWebServices = ice2sigsWebServices;
 	}
 
 }
