@@ -10,6 +10,9 @@ Ext.onReady(function() {
     // Conversión para el tipo de moneda
     Ext.util.Format.thousandSeparator = ',';
     Ext.util.Format.decimalSeparator = '.';
+	
+	//TODO: Eliminar esta variable cuando se estructure el codigo de quien la usa
+	var sum=0;
 
     //var form = false, selectedRec = false;
 	
@@ -43,7 +46,6 @@ Ext.onReady(function() {
         collapsible:true,
         collapsed:true,
         //title:'Tipos de consulta',
-        //renderTo: Ext.getBody(),
         store: storeTiposConsulta,
         multiSelect: false,
         hideHeaders:true,
@@ -62,160 +64,154 @@ Ext.onReady(function() {
     
     // little bit of feedback
     listViewOpcionesConsulta.on('selectionchange', function(view, nodes){
-        
-        console.log('view=');
-        console.log(view);
-        console.log('nodes=');
-        console.log(nodes);
-        
-        var len = nodes.length,
-            suffix = len === 1 ? '' : 's',
-            str = '({0} item{1} seleccionado{1})</i>';
-        listViewOpcionesConsulta.setTitle(Ext.String.format(str, len, suffix));
-        
-		var tipoConsultaSelected = listViewOpcionesConsulta.getSelectionModel().getSelection()[0];
+	
+        if (this.getSelectionModel().hasSelection()) {
 		
-		//hide all elements:
-		panelInfoGralPoliza.hide();
-		gridDatosAsegurado.hide();
-		tabDatosGeneralesPoliza.hide();
-		
-		
-		switch (tipoConsultaSelected.get('key')) {
-			case 1: //Consulta de Datos generales
-				if (gridPanelSuplemento.getSelectionModel().hasSelection()) {
-					var rowSelected = gridPanelSuplemento.getSelectionModel().getSelection()[0];
-					panelBusqueda.down('form').getForm().findField("params.suplemento").setValue(rowSelected.get('nmsuplem'));
-					panelBusqueda.down('form').getForm().findField("params.cdunieco").setValue(rowSelected.get('cdunieco'));
-		            panelBusqueda.down('form').getForm().findField("params.cdramo").setValue(rowSelected.get('cdramo'));
-		            panelBusqueda.down('form').getForm().findField("params.estado").setValue(rowSelected.get('estado'));
-		            panelBusqueda.down('form').getForm().findField("params.nmpoliza").setValue(rowSelected.get('nmpoliza'));
-                    
-					console.log(rowSelected);
-					console.log('Suplemento=' + rowSelected.get('nsuplogi'));
-					console.log(panelBusqueda.down('form').getForm());
-					console.log(panelBusqueda.down('form').getForm().findField("params.nmpoliza").getValue());
+			var len = nodes.length,
+				suffix = len === 1 ? '' : 's',
+				str = '({0} item{1} seleccionado{1})</i>';
+			listViewOpcionesConsulta.setTitle(Ext.String.format(str, len, suffix));
+			
+			var tipoConsultaSelected = listViewOpcionesConsulta.getSelectionModel().getSelection()[0];
+			
+			//hide all elements:
+			//// panelInfoGralPoliza.hide();
+			//// gridDatosAsegurado.hide();
+			tabDatosGeneralesPoliza.hide();
+			tabPanelAgentes.hide();
+			
+			
+			switch (tipoConsultaSelected.get('key')) {
+				case 1: //Consulta de Datos generales
+					if (gridPanelSuplemento.getSelectionModel().hasSelection()) {
 					
-					// Consultar Datos Generales de la Poliza
-					storeDatosPoliza.load({
-						params : panelBusqueda.down('form').getForm().getValues(),
-						callback : function(records, operation, success) {
-							if (success) {
-								if (records.length > 0) {
-									Ext.getCmp("formularioPoliza").getForm().loadRecord(records[0]);
-								} else {
+						//Mostrar info general poliza:
+						//// panelInfoGralPoliza.show();
+						tabDatosGeneralesPoliza.show();
+						//Datos de Tarificación
+						storeTarificacion.load({
+							params: panelBusqueda.down('form').getForm().getValues(),
+							callback: function(records, operation, success){
+								if(success){
+									//if(records.length <= 0){
+										/*
+										Ext.Msg.show({
+											title: 'Error',
+											msg: 'No existe tarificaci\u00F3n para dicha p\u00F3liza',
+											buttons: Ext.Msg.OK,
+											icon: Ext.Msg.ERROR
+										});
+										*/
+										//gridDatosTarificacion.hide();
+									//}else {
+										//// gridDatosTarificacion.show();
+									//}
+								}else{
 									Ext.Msg.show({
-										title : 'Error',
-										msg : 'La P&oacute;iza no existe, verifique sus datos',
-										buttons : Ext.Msg.OK,
-										icon : Ext.Msg.ERROR
+										title: 'Error',
+										msg: 'Error al obtener la tarificaci\u00F3n de la p\u00F3liza',
+										buttons: Ext.Msg.OK,
+										icon: Ext.Msg.ERROR
 									});
-								}
-							} else {
-								Ext.Msg.show({
-									title : 'Error',
-									msg : 'La P&oacute;iza no existe, verifique sus datos',
-									buttons : Ext.Msg.OK,
-									icon : Ext.Msg.ERROR
-								});
+								}                    
 							}
-
-						}
-					});
-					panelInfoGralPoliza.show();
-					tabDatosGeneralesPoliza.show();
-					//Datos de Tarificación
-					storeTarificacion.load({
-						params: panelBusqueda.down('form').getForm().getValues(),
-						callback: function(records, operation, success){
-							if(success){
-								//if(records.length <= 0){
+						});					
+						//Datos para asegurados
+						storeDatosAsegurado.load({
+							params: panelBusqueda.down('form').getForm().getValues(),
+							callback: function(records, operation, success){
+								if(success){
+									
+									//if(records.length <= 0){
+										//gridDatosAsegurado.hide();
+									//}else {
+										//// gridDatosAsegurado.show();
+									//}
 									/*
 									Ext.Msg.show({
 										title: 'Error',
-										msg: 'No existe tarificaci\u00F3n para dicha p\u00F3liza',
+										msg: 'No existe datos del asegurado',
 										buttons: Ext.Msg.OK,
 										icon: Ext.Msg.ERROR
 									});
 									*/
-									//gridDatosTarificacion.hide();
-								//}else {
-									gridDatosTarificacion.show();
-								//}
-							}else{
-								Ext.Msg.show({
-									title: 'Error',
-									msg: 'Error al obtener la tarificaci\u00F3n de la p\u00F3liza',
-									buttons: Ext.Msg.OK,
-									icon: Ext.Msg.ERROR
-								});
-							}                    
-						}
-					});					
-					//Datos para asegurados
-					storeDatosAsegurado.load({
-						params: panelBusqueda.down('form').getForm().getValues(),
-						callback: function(records, operation, success){
-							if(success){
-								
-								//if(records.length <= 0){
-									//gridDatosAsegurado.hide();
-								//}else {
-									gridDatosAsegurado.show();
-								//}
-								/*
-								Ext.Msg.show({
-									title: 'Error',
-									msg: 'No existe datos del asegurado',
-									buttons: Ext.Msg.OK,
-									icon: Ext.Msg.ERROR
-								});
-								*/
-							}else{
-								Ext.Msg.show({
-									title: 'Error',
-									msg: 'Error al obtener los datos del asegurado',
-									buttons: Ext.Msg.OK,
-									icon: Ext.Msg.ERROR
-								});
-							}        	        
-						}
-					});
-				}
-				break;
-			case 2: //Consulta de Agentes
-				if (gridPanelSuplemento.getSelectionModel().hasSelection()) {
-					storeInfoAgente.load({
-						params: panelBusqueda.down('form').getForm().getValues(),
-						callback: function(records, operation, success) {
-							if(success){
-								if(records.length > 0){
-									panelDatosAgente.getForm().loadRecord(records[0]);  
-								}else {
+								}else{
 									Ext.Msg.show({
-									title: 'Error',
-									msg: 'El Agente no existe, verifique la clave',
-									buttons: Ext.Msg.OK,
-									icon: Ext.Msg.ERROR
+										title: 'Error',
+										msg: 'Error al obtener los datos del asegurado',
+										buttons: Ext.Msg.OK,
+										icon: Ext.Msg.ERROR
+									});
+								}        	        
+							}
+						});
+					}
+					break;
+				case 2: //Consulta de Agentes
+					tabPanelAgentes.show();
+					if (gridPanelSuplemento.getSelectionModel().hasSelection()) {
+						console.log('Params busqueda de agente=');console.log(panelBusqueda.down('form').getForm().getValues());
+						storeInfoAgente.load({
+							params: panelBusqueda.down('form').getForm().getValues(),
+							callback: function(records, operation, success) {
+								if(success){
+									if(records.length > 0){
+										panelDatosAgente.getForm().loadRecord(records[0]);  
+									}else {
+										Ext.Msg.show({
+										title: 'Error',
+										msg: 'El Agente no existe, verifique la clave',
+										buttons: Ext.Msg.OK,
+										icon: Ext.Msg.ERROR
+										});
+									}
+								}else {	
+									Ext.Msg.show({
+										title: 'Error',
+										msg: 'El Agente no existe, verifique la clave',
+										buttons: Ext.Msg.OK,
+										icon: Ext.Msg.ERROR
 									});
 								}
-							}else {	
-								Ext.Msg.show({
-									title: 'Error',
-									msg: 'El Agente no existe, verifique la clave',
-									buttons: Ext.Msg.OK,
-									icon: Ext.Msg.ERROR
-								});
 							}
-						}
-					});
-					
-					tabPanelAgentes.show();
-				}
+						});
+						
+						//Obtenemos las polizas del agente:
+						cargarGridPaginado(storePolizasAgente, _URL_CONSULTA_POLIZAS_AGENTE, "polizasAgente", panelBusqueda.down('form').getForm().getValues(), null);
+						
+						// Obtenemos los recibos de los agentes:
+						storeRecibosAgente.load({
+							params: panelBusqueda.down('form').getForm().getValues(),
+							callback: function(records, operation, success){
+								if(success){
+									if(records.length <= 0){
+										Ext.Msg.show({
+											title: 'Error',
+											msg: 'No existe p&oacute;lizas de dicho Agente',
+											buttons: Ext.Msg.OK,
+											icon: Ext.Msg.ERROR
+										});
+									}else {            	            	
+										obtieneMontosRecibo(records);
+									}
+								}else{
+									Ext.Msg.show({
+										title: 'Error',
+										msg: 'No existe p&oacute;lizas de dicho Agente',
+										buttons: Ext.Msg.OK,
+										icon: Ext.Msg.ERROR
+									});
+								}        	        
+							}
+						});
+						
+						tabPanelAgentes.show();
+					}
+					break;
+				case 3: //Consulta de Recibos
+				
 				break;
-			case 3: //Consulta de Recibos
-			
-			break;
+			}
 		}
     });
     
@@ -223,16 +219,16 @@ Ext.onReady(function() {
     Ext.define('Suplemento', {
         extend: 'Ext.data.Model',
         fields: [
-            {name: 'dstipsup'},
-            {name: 'feemisio', dateFormat: 'd/m/Y'},
-            {name: 'feinival', dateFormat: 'd/m/Y'},
-            {name: 'nlogisus'},
-            {name: 'nmsuplem'},
-            {name: 'nsuplogi'},
             {name: 'cdramo'},
             {name: 'cdunieco'},
             {name: 'estado'},
             {name: 'nmpoliza'},
+			{name: 'nmsuplem'},
+            {name: 'dstipsup'},
+            {name: 'feemisio', dateFormat: 'd/m/Y'},
+            {name: 'feinival', dateFormat: 'd/m/Y'},
+            {name: 'nlogisus'},
+            {name: 'nsuplogi'},
             {name: 'ptpritot', type : 'float'}
         ],
         /*
@@ -315,35 +311,74 @@ Ext.onReady(function() {
                 listViewOpcionesConsulta.getSelectionModel().deselectAll();
                 listViewOpcionesConsulta.expand();
 				panelInfoGralPoliza.getForm().reset();
-				gridDatosTarificacion.hide();
+				//// gridDatosTarificacion.hide();
 				storeTarificacion.removeAll();
 				tabDatosGeneralesPoliza.setActiveTab(0);
-                
-                console.log('model=');
-                console.log(model);
-                console.log('records=');
-                console.log(records);
-                
-                /*var fields;
-                if (records[0]) {
-                    selectedRec = records[0];
-                    if (!form) {
-                        form = this.up('panel').down('form').getForm();
-                        fields = form.getFields();
-                        fields.each(function(field) {
-                            if (field.name != 'company') {
-                                field.setDisabled(false);
-                            }
-                        });
-                    } else {
-                        fields = form.getFields();
-                    }
+				tabPanelAgentes.setActiveTab(0);
+				
+				if(this.getSelectionModel().hasSelection()) {
+					panelBusqueda.down('form').getForm().reset();
+					console.log('Params busqueda reset=');console.log(panelBusqueda.down('form').getForm().getValues());
+					//Lenar campos de formulario de busqueda:
+					var rowSelected = gridPanelSuplemento.getSelectionModel().getSelection()[0];
+					panelBusqueda.down('form').getForm().findField("params.cdunieco").setValue(rowSelected.get('cdunieco'));
+					panelBusqueda.down('form').getForm().findField("params.cdramo").setValue(rowSelected.get('cdramo'));
+					panelBusqueda.down('form').getForm().findField("params.estado").setValue(rowSelected.get('estado'));
+					panelBusqueda.down('form').getForm().findField("params.nmpoliza").setValue(rowSelected.get('nmpoliza'));
+					panelBusqueda.down('form').getForm().findField("params.suplemento").setValue(rowSelected.get('nmsuplem'));
+					
+					console.log('Params busqueda de datos grales poliza=');console.log(panelBusqueda.down('form').getForm().getValues());
 
-                    // prevent change events from firing
-                    form.suspendEvents();
-                    form.loadRecord(selectedRec);
-                    form.resumeEvents();
-                }*/
+					// Consultar Datos Generales de la Poliza:
+					storeDatosPoliza.load({
+						params : panelBusqueda.down('form').getForm().getValues(),
+						callback : function(records, operation, success) {
+							if (success) {
+								if (records.length > 0) {
+									// Se asigna valor al parametro de busqueda:
+									panelBusqueda.down('form').getForm().findField("params.cdagente").setValue(records[0].get('cdagente'));
+									
+									// Se llenan los datos generales de la poliza elegida
+									Ext.getCmp("formularioPoliza").getForm().loadRecord(records[0]);
+								} else {
+									Ext.Msg.show({
+										title : 'Info',
+										msg : 'No existen datos generales de la p\u00F3liza elegidaLa P&oacute;iza no existe, verifique sus datos',
+										buttons : Ext.Msg.OK,
+										icon : Ext.Msg.ERROR
+									});
+								}
+							} else {
+								Ext.Msg.show({
+									title : 'Error',
+									msg : 'Error al obtener los datos generales de la p\u00F3liza elegida, intente m\u00E1s tarde',
+									buttons : Ext.Msg.OK,
+									icon : Ext.Msg.ERROR
+								});
+							}
+
+						}
+					});					
+					/*var fields;
+					if (records[0]) {
+						selectedRec = records[0];
+						if (!form) {
+							form = this.up('panel').down('form').getForm();
+							fields = form.getFields();
+							fields.each(function(field) {
+								if (field.name != 'company') {
+									field.setDisabled(false);
+								}
+							});
+						} else {
+							fields = form.getFields();
+						}
+						// prevent change events from firing
+						form.suspendEvents();
+						form.loadRecord(selectedRec);
+						form.resumeEvents();
+					}*/
+				}
             }
         }
     });
@@ -394,7 +429,6 @@ Ext.onReady(function() {
         width : 820,
 		border : false,
         //height : 280,
-        //renderTo : Ext.getBody(),
         defaults : {
             bodyPadding : 3,
             border : false
@@ -472,38 +506,37 @@ Ext.onReady(function() {
                     ftype:'summary'
                 }],
         columns: [
-                    {
-                        text            :'Garant&iacute;a',
-                        dataIndex       :'dsgarant',
-                        width           :250,
-                        summaryRenderer : function(value){return Ext.String.format('TOTALES');}
-                    },
-                    {
-                        text            :'Suma Asegurada',  
-                        dataIndex       :'sumaAsegurada',
-                        width           :170 , 
-                        align           :'right' , 
-                        renderer        :Ext.util.Format.usMoney, 
-                        summaryType     :'sum'
-                    },
-                    {
-                        text            :'Monto de la Prima',
-                        dataIndex       :'montoPrima',
-                        width           : 170,
-                        align           :'right',        
-                        renderer        :Ext.util.Format.usMoney,
-                        summaryType     :'sum'
-                    },
-                    {
-                        text            : 'Monto de la Comisi&oacute;n',
-                        dataIndex       :'montoComision',
-                        width           : 170,
-                        renderer        :Ext.util.Format.usMoney,
-                        align           :'right',        
-                        summaryType     :'sum'
-                    }
-                ]//,
-                //renderTo : Ext.getBody()
+			{
+				text            :'Garant&iacute;a',
+				dataIndex       :'dsgarant',
+				width           :250,
+				summaryRenderer : function(value){return Ext.String.format('TOTALES');}
+			},
+			{
+				text            :'Suma Asegurada',  
+				dataIndex       :'sumaAsegurada',
+				width           :170 , 
+				align           :'right' , 
+				renderer        :Ext.util.Format.usMoney, 
+				summaryType     :'sum'
+			},
+			{
+				text            :'Monto de la Prima',
+				dataIndex       :'montoPrima',
+				width           : 170,
+				align           :'right',        
+				renderer        :Ext.util.Format.usMoney,
+				summaryType     :'sum'
+			},
+			{
+				text            : 'Monto de la Comisi&oacute;n',
+				dataIndex       :'montoComision',
+				width           : 170,
+				renderer        :Ext.util.Format.usMoney,
+				align           :'right',        
+				summaryType     :'sum'
+			}
+        ]
     });
     gridDatosTarificacion.store.sort([
         { 
@@ -626,13 +659,11 @@ Ext.onReady(function() {
             {text: 'Ramo', dataIndex:'dsramo', width:150},
             {text: 'Estado', dataIndex: 'estado', width: 70},
             {text: 'P&oacute;liza', dataIndex: 'nmpoliza', width: 70}
-        ]//,
-        //renderTo : Ext.getBody()
+        ]
     });
     
     //var windowPolizas = new Ext.Window({
     var windowPolizas= Ext.create('Ext.window.Window', {
-        //renderTo: document.body,
         title: 'POLIZAS',
         //height: 400,
 		width : 700,
@@ -641,7 +672,7 @@ Ext.onReady(function() {
         buttons:[{
             text: 'Aceptar',
             handler: function(){
-                if (gridPolizasAsegurado.getSelectionModel().hasSelection()) {
+				if (gridPolizasAsegurado.getSelectionModel().hasSelection()) {
                     var rowPoliza = gridPolizasAsegurado.getSelectionModel().getSelection()[0];
                     //Asignar valores de la poliza seleccionada al formulario de busqueda
                     var formBusqueda = panelBusqueda.down('form').getForm();
@@ -649,9 +680,9 @@ Ext.onReady(function() {
                     formBusqueda.findField("params.cdramo").setValue(rowPoliza.get('cdramo'));
                     formBusqueda.findField("params.estado").setValue(rowPoliza.get('estado'));
                     formBusqueda.findField("params.nmpoliza").setValue(rowPoliza.get('nmpoliza'));
-                    
                     gridPolizasAsegurado.getStore().removeAll();
                     windowPolizas.close();
+					
                     // Recargar store con busqueda de historicos de la poliza seleccionada
                     cargaStoreSuplemento(formBusqueda.getValues());
                  }else{                       
@@ -669,7 +700,6 @@ Ext.onReady(function() {
     var tabDatosGeneralesPoliza = Ext.create('Ext.tab.Panel', {
 	    width: 830,
 	    //height: 200,
-	    //renderTo: document.body,
 	    items: [{
 	        title : 'DATOS DE LA P&Oacute;LIZA',
 	        //html: 'Home',
@@ -757,52 +787,155 @@ Ext.onReady(function() {
 		model   : 'ModelInfoAgente',
 		//width      : 750,
 		//height     : 100,
+		border: false,
 		defaults: {
-			bodyPadding: 3,
-			border: false
+			bodyPadding: 5
 		},
-		items:[{
-			layout  :  'hbox',
-			items : [
-				{xtype:'textfield', name:'cdideper', fieldLabel: 'RFC del Agente', readOnly: true, labelWidth: 120}, 
-				{xtype:'textfield', name:'nombre', fieldLabel: 'Nombre del Agente', readOnly: true, labelWidth: 120, width: 400}
-			]
-		},{
-			layout  :  'hbox',
-			items : [
-				{xtype: 'datefield', name: 'fedesde', fieldLabel: 'Fecha de ingreso', format: 'd/m/Y', readOnly: true, labelWidth: 120}
-			]
+		items:[
+			{xtype:'textfield', name:'cdideper', fieldLabel: 'RFC', readOnly: true, labelWidth: 120}, 
+			{xtype:'textfield', name:'nombre',   fieldLabel: 'Nombre', readOnly: true, labelWidth: 120, width: 400},
+			{xtype: 'datefield',name:'fedesde',  fieldLabel: 'Fecha de ingreso', format: 'd/m/Y', readOnly: true, labelWidth: 120}
+		]
+	});
+	
+	
+	/**INFORMACION DEL GRID DE CONSULTA DE POLIZAS DEL AGENTE **/
+	//-------------------------------------------------------------------------------------------------------------	
+	//Modelo
+	Ext.define('RowDatosPolizasAgente',{
+	  extend: 'Ext.data.Model',
+	  fields: [
+			{type:'string',		name:'cdramo'      	},
+			{type:'string',		name:'cdunieco' 	},
+			{type:'string',		name:'dsramo'    	},
+			{type:'string',		name:'dsunieco' 	},
+			{type:'string',		name:'nmcuadro'    	},
+			{type:'string',		name:'nmpoliza' 	}
+	  ]
+	});
+
+	//Store	
+	var storePolizasAgente = new Ext.data.Store({
+		pageSize : 10,
+		autoLoad : true,
+		model: 'RowDatosPolizasAgente',
+		proxy:
+		{
+			 /*type: 'ajax',
+			 url : _URL_CONSULTA_POLIZAS_AGENTE,
+			  reader:
+			  {
+			   type: 'json',
+			   root: 'polizasAgente'
+			  }*/
+			enablePaging : true,
+			reader       : 'json',
+			type         : 'memory',
+			data         : []
+		}
+	});
+	
+	/**GRID PARA LOS DATOS DE POLIZA DEL AGENTE **/
+	var panelDatosPolizaAgente = Ext.create('Ext.grid.Panel', {
+	    title   : 'DATOS DE P&Oacute;LIZA DEL AGENTE',
+	    store   : storePolizasAgente,
+	    //id      : 'panelDatosPolizaAgente',
+	    //width   : 650,	    
+	    columns: [            
+	                {text:'Producto', dataIndex:'dsramo', width:200, align:'left'},
+	                {text:'Unidad econ&oacute;mica', dataIndex:'dsunieco', width:300, align:'left'},
+	                {text:'N&uacutemero de p&oacuteliza', dataIndex:'nmpoliza', width:200, align:'left'}
+		],
+		bbar:new Ext.PagingToolbar({
+			//pageSize: 10,
+			store: storePolizasAgente,
+			displayInfo: true,
+			displayMsg: 'Registros mostrados {0} - {1} de {2}',
+			emptyMsg: 'No hay registros para mostrar',
+			beforePageText: 'P&aacute;gina',
+			afterPageText: 'de {0}'
+		})
+	});
+
+
+	/**INFORMACION DEL GRID DE CONSULTA DE RECIBOS DEL AGENTE **/
+	//-------------------------------------------------------------------------------------------------------------	
+	//Modelo
+	Ext.define('RowDatosRecibosAgente',{
+	extend: 'Ext.data.Model',
+	fields: [
+		{type:'string',	name:'dsgarant'},
+		{type:'date',	name:'fefin',    dateFormat: 'd/m/Y'},
+		{type:'date',	name:'feinicio', dateFormat: 'd/m/Y'},
+		{type:'string',	name:'nmrecibo'},
+		{type:'float',	name:'ptimport'}
+	]
+	});
+
+	//Store	
+	var storeRecibosAgente = new Ext.data.Store({
+		model: 'RowDatosRecibosAgente',
+		groupField: 'dsgarant',
+		proxy: {
+			type: 'ajax',	 
+			url : _URL_CONSULTA_RECIBOS_AGENTE,
+			reader: {
+			    type: 'json',
+			    root: 'recibosAgente'
+			}
+		}
+	});
+	
+	var totalMontoRecibos = Ext.create('Ext.toolbar.Toolbar',{
+		buttonAlign:'center',
+		//width   : 550,
+		items:
+		[
+			{xtype: 'tbtext', text: 'Monto Total '},
+			'->',
+			,Ext.create('Ext.form.Label',{
+				style:'color:white;',
+				initComponent:function()
+				{
+					this.setText(Ext.util.Format.usMoney(sum));
+					this.callParent();
+				}
+			})
+		]
+	});
+		
+	var consultaRecibosAgente = Ext.create('Ext.grid.Panel', {
+		//title   : 'RECIBOS DEL AGENTE',
+		store   : storeRecibosAgente,
+		//id      : 'consultaRecibosAgente',
+		collapsible: true,
+		//width   : 550,	    
+		columns: [	               
+			{header: 'N&uacute;mero de Recibo', dataIndex: 'nmrecibo', width:350 , summaryType: 'count', summaryRenderer: function(value){ return Ext.String.format('Total de Garant&iacute;a{1}: {0}', value, value !== 1 ? 's' : ''); }},
+			{header: 'Importe', dataIndex:'ptimport', width:200 , align:'right', renderer: Ext.util.Format.usMoney, summaryType: 'sum'}
+		],
+		features: [{
+			groupHeaderTpl: 'Tipo Garant&iacute;a: {name}', ftype:'groupingsummary', summaryType: 'sum', startCollapsed :true
 		}]
 	});
 	
+	
 	var tabPanelAgentes = Ext.create('Ext.tab.Panel', {
-	    width: 830,
+	    //width: 830,
 	    //height: 200,
-	    //renderTo: document.body,
 	    items: [{
+			//itemId: 'tabPanelAgentes',
 	        title : 'DATOS DEL AGENTE',
-	        //itemId: 'tabPanelAgentes',
 			border:false,
-	        items:[{
-				//layout  :  'hbox',
-				items   :  [ panelDatosAgente ]
-               }]
+	        items:[panelDatosAgente]
 	    }, {
+			//itemId: 'tabPolizasAgente',
 	        title: 'POLIZAS DEL AGENTE',
-	        itemId: 'tabPolizasAgente',
-	        items:[	                    
-                   {
-                       //layout  :  'hbox',
-                       //items   :  [ ]
-                   }
-               ]
+	        items:[panelDatosPolizaAgente]
 	    }, {
+			//itemId: 'tabRecibosAgente',
 	        title: 'RECIBOS DEL AGENTE',
-	        itemId: 'tabRecibosAgente',
-	        items:[{
-				//layout  :  'hbox',
-				//items   :  [ ]                   
-               }]
+	        items:[totalMontoRecibos, consultaRecibosAgente]
 	    }]
 	});
 	
@@ -891,26 +1024,25 @@ Ext.onReady(function() {
                                     },
                                     items : [
                                         {
+											// Numero de poliza externo
                                             xtype : 'textfield',
                                             name : 'params.nmpoliex',
                                             fieldLabel : 'N&uacute;mero de P&oacute;liza',
                                             value:'02130001400A',
                                             labelWidth : 120,
                                             width: 300,
-                                            maxLength : 40
+                                            maxLength : 40,
+											msgTarget: 'side'
                                         },{
                                             xtype : 'hiddenfield',
                                             name : 'params.cdunieco'
-                                        },
-                                        {
+                                        },{
                                             xtype : 'hiddenfield',
                                             name : 'params.cdramo'
-                                        },
-                                        {
+                                        },{
                                             xtype : 'hiddenfield',
                                             name : 'params.estado'
-                                        },
-                                        {
+                                        },{
                                             xtype: 'hiddenfield',
                                             name : 'params.nmpoliza'
                                         },{
@@ -928,20 +1060,31 @@ Ext.onReady(function() {
                                     align:'stretch',
                                     border: false,
 									hidden: true,
-                                    defaults: {
+									defaults: {
                                         labelAlign: 'right',
-                                        enforceMaxLength: true
+                                        enforceMaxLength: true,
+										msgTarget: 'side'
                                     },
                                     items : [
                                         {
                                             xtype: 'textfield',
                                             name : 'params.rfc',
+											//msgTarget: 'side',
                                             fieldLabel : 'RFC',
-                                            labelWidth : 20,
-                                            maxLength : 13/*, 
-                                            value: 'PUMC820429B61'*/
+                                            //labelWidth : 20,
+                                            maxLength : 13,
+											allowBlank: false
+											//, value: 'PUMC820429B61'
                                         }
-                                    ]
+                                    ]/*
+									,buttons: [{
+										text: 'Save',
+										handler: function() {
+											this.up('form').getForm().findField('params.rfc').isValid();
+											alert('ss');
+											//alert(this.up('form').getForm().isValid());
+										}
+									}]*/
                                 }
                             ]
                         },
@@ -956,26 +1099,26 @@ Ext.onReady(function() {
                             //width: '100',
                             handler: function () {
                                 var formBusqueda = this.up('form').getForm();
-								
-								console.log(formBusqueda.getValues());
-								
 								//Obtenemos el valor elegido en 'groupTipoBusqueda' para elegir el tipo de busqueda a realizar.
                                 switch (formBusqueda.findField('groupTipoBusqueda').getValue().tipoBusqueda) {
 									case 1:
 										// Busqueda por Datos Generales de la poliza:
 										cargaStoreSuplemento(formBusqueda.getValues());
 										break;
+										
 									case 2:
 										// Busqueda de polizas por RFC:
-										//cargarGridPolizasAsegurado(formBusqueda.getValues());
-										var clbk = function(options, success, response) {
-											console.log('clbk');
-											console.log(options);
-											console.log(success);
-											console.log(response);
+										if(!formBusqueda.findField('params.rfc').isValid()){
+											setMessage('', _MSG_RFC_INVALIDO, Ext.Msg.OK, Ext.Msg.INFO);
+											return;
+										}
+										var callbackGetPolizasAsegurado = function(options, success, response) {
 											if(success){
 												var jsonResponse = Ext.decode(response.responseText);
-												console.log(jsonResponse.polizasAsegurado.length);
+												if(jsonResponse.polizasAsegurado && jsonResponse.polizasAsegurado.length == 0) {
+													setMessage(_MSG_SIN_DATOS, _MSG_BUSQUEDA_SIN_DATOS, Ext.Msg.OK, Ext.Msg.INFO);
+													return;
+												}
 												storePolizaAsegurado.setProxy(
 												{
 													type         : 'memory',
@@ -995,7 +1138,7 @@ Ext.onReady(function() {
 											}else{
 												Ext.Msg.show({
 													 title: 'Error',
-													 msg: 'No existe P&oacute;liza para el asegurado',
+													 msg: 'Error al obtener las p&oacute;lizas, intente m\u00E1s tarde.',
 													 buttons: Ext.Msg.OK,
 													 icon: Ext.Msg.ERROR
 												 });
@@ -1005,7 +1148,8 @@ Ext.onReady(function() {
 											_URL_CONSULTA_POLIZAS_ASEGURADO, 
 											'polizasAsegurado', 
 											formBusqueda.getValues(), 
-											clbk);
+											callbackGetPolizasAsegurado);
+											
 										/*
 										storePolizaAsegurado.load({
 											params: this.up('form').getForm().getValues(),
@@ -1065,42 +1209,50 @@ Ext.onReady(function() {
             colspan:2,
             autoScroll:true,
             items : [
-                tabDatosGeneralesPoliza
+                tabDatosGeneralesPoliza,
+				tabPanelAgentes
             ]
         }]
     });
     
     
     ////Hide elements
-    if(panelInfoGralPoliza.isVisible()) {
-        panelInfoGralPoliza.hide();
-    }
-    if(gridDatosTarificacion.isVisible()) {
-        gridDatosTarificacion.hide();
-    }
+    //// if(panelInfoGralPoliza.isVisible()) {
+        //// panelInfoGralPoliza.hide();
+    //// }
+    //// if(gridDatosTarificacion.isVisible()) {
+        //// gridDatosTarificacion.hide();
+    //// }
 	if(tabDatosGeneralesPoliza.isVisible()) {
         tabDatosGeneralesPoliza.hide();
     }
+	if(tabPanelAgentes.isVisible()) {
+        tabPanelAgentes.hide();
+    }
+	
 
     /**
     * 
     * @param String/Object
     */
     function cargaStoreSuplemento(params){
+		
+		console.log('Params busqueda de suplemento=');console.log(params);
+		
         gridPanelSuplemento.setLoading(true);
 		/*
 		var clbkSuplemento = function(options, success, response) {
 			gridPanelSuplemento.setLoading(false);
 			gridPanelSuplemento.getView().el.focus();
 			if (!success) {
-				setMessage(_MSG_ERROR, _MSG_ERROR_HISTORICO_MOVIMIENTOS, Ext.Msg.OK, Ext.Msg.ERROR);
+				setMessage(_MSG_ERROR, _MSG_BUSQUEDA_SIN_DATOS, Ext.Msg.OK, Ext.Msg.ERROR);
 			}
 			var jsonResp = Ext.decode(response.responseText);
 			console.log("jsonResp=");
 			console.log(jsonResp);
 			console.log(jsonResp.datosSuplemento.length);
 			if(jsonResp.datosSuplemento.length == 0){
-				setMessage(_MSG_SIN_DATOS, _MSG_SIN_DATOS_HISTORICO_MOVIMIENTOS, Ext.Msg.OK, Ext.Msg.INFO);
+				setMessage(_MSG_SIN_DATOS, _MSG_BUSQUEDA_SIN_DATOS, Ext.Msg.OK, Ext.Msg.INFO);
 			}
 			
 			//Limpiar seleccion de la lista de opciones de consulta
@@ -1113,64 +1265,30 @@ Ext.onReady(function() {
 		storeSuplemento.load({
             params: params,
             callback: function(records, operation, success) {
+				
                 gridPanelSuplemento.setLoading(false);
+				console.log('gridPanelSuplemento setted false');
                 gridPanelSuplemento.getView().el.focus();
+				console.log('gridPanelSuplemento.getView().el.focus()');
                 if (!success) {
-                    setMessage(_MSG_ERROR, _MSG_ERROR_HISTORICO_MOVIMIENTOS, Ext.Msg.OK, Ext.Msg.ERROR);
+                    setMessage(_MSG_ERROR, _MSG_BUSQUEDA_SIN_DATOS, Ext.Msg.OK, Ext.Msg.ERROR);
                 }
                 if(records.length == 0){
-                    setMessage(_MSG_SIN_DATOS, _MSG_SIN_DATOS_HISTORICO_MOVIMIENTOS, Ext.Msg.OK, Ext.Msg.INFO);
+                    setMessage(_MSG_SIN_DATOS, _MSG_BUSQUEDA_SIN_DATOS, Ext.Msg.OK, Ext.Msg.INFO);
                 }
                 
                 //Limpiar seleccion de la lista de opciones de consulta
                 listViewOpcionesConsulta.collapse();
                 listViewOpcionesConsulta.getSelectionModel().deselectAll();
                 
-                console.log(operation.response.responseText);
-                console.log(records);
-                console.log(records.length);
+                //console.log(operation.response.responseText);
+                //console.log(records);
+                //console.log(records.length);
             }
         });
 		
     }
-	
-		
-
-   
-	function cargarGridPolizasAsegurado(p_params) {
-		Ext.Ajax.request({
-			url       : _URL_CONSULTA_POLIZAS_ASEGURADO,
-			params: p_params,			
-			callback: function(options, success, response) {
-				if(success){
-					var jsonResponse = Ext.decode(response.responseText);
-					console.log(jsonResponse.polizasAsegurado.length);
-					storePolizaAsegurado.setProxy(
-					{
-						type         : 'memory',
-						enablePaging : true,
-						reader       : 'json',
-						data         : jsonResponse.polizasAsegurado
-					
-					});
-					storePolizaAsegurado.load({
-						callback: function(records, operation, success) {
-							if(success){
-								windowPolizas.show();
-							}
-						}
-					});
-				}else{
-					Ext.Msg.show({
-						 title: 'Error',
-						 msg: 'No existe P&oacute;liza para el asegurado',
-						 buttons: Ext.Msg.OK,
-						 icon: Ext.Msg.ERROR
-					 });
-				}
-			}
-		});
-	}
+	 
 	
 	function cargarGridPaginado(_store, _url, _root, _params, _callback) {
 		Ext.Ajax.request(
@@ -1203,6 +1321,12 @@ Ext.onReady(function() {
 		});
 	}
 
-
+	/* FUNCION PARA OBTENER RECIBOS DEL AGENTE */
+	function obtieneMontosRecibo(records) {
+		sum=0;
+    	for(var i=0;i<records.length;i++) {
+            sum+=parseFloat(records[i].get("ptimport"));
+        }
+	}
     
 });
