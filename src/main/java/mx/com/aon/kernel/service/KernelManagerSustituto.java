@@ -4,6 +4,7 @@
  */
 package mx.com.aon.kernel.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -77,4 +78,6 @@ public interface KernelManagerSustituto {
 	public List<Map<String, String>> obtenerPolicot(Map<String, String> smap1) throws ApplicationException;
 	public WrapperResultados PMovMesacontrol(Map<String, Object> parMesCon) throws ApplicationException;
 	public List<Map<String, String>> loadMesaControl() throws ApplicationException;
+	public WrapperResultados obtenDatosRecibos(HashMap<String,Object> params) throws ApplicationException;
+	public WrapperResultados cargaColonias(String codigoPostal) throws ApplicationException;
 }

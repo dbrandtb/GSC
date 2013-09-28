@@ -4,6 +4,8 @@
  */
 package mx.com.aon.kernel.service.impl;
 
+import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_DATOS_ASEGURADO;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -616,5 +618,20 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
         log.debug("### kernel sustituto loadMesaControl lista size: "+lista.size());
         return lista;
+	}
+
+	public WrapperResultados obtenDatosRecibos(HashMap<String,Object> params) throws ApplicationException
+	{
+		WrapperResultados result = this.returnBackBoneInvoke(params,
+				ProcesoDAO.OBTIENE_DATOS_RECIBOS);
+		return result;
+	}
+	public WrapperResultados cargaColonias(String codigoPostal) throws ApplicationException
+	{
+		HashMap<String,Object> params =  new HashMap<String, Object>();
+		params.put("pv_codpostal_i", codigoPostal);
+		WrapperResultados result = this.returnBackBoneInvoke(params,
+				ProcesoDAO.OBTIENE_CATALOGO_COLONIAS);
+		return result;
 	}
 }

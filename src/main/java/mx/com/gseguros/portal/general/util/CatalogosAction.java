@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
+import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal2.web.GenericVO;
 
 /**
@@ -24,6 +25,8 @@ public class CatalogosAction extends PrincipalCoreAction
     //private
     private org.apache.log4j.Logger log=org.apache.log4j.Logger.getLogger(CatalogosAction.class);
     private KernelManagerSustituto kernelManager;
+    
+    private String codigoPostal;
     
     public String cargar()
     {
@@ -78,6 +81,24 @@ public class CatalogosAction extends PrincipalCoreAction
         return SUCCESS;
     }
     
+    public String cargaColonias()
+    {
+        try
+        {
+        	WrapperResultados result = kernelManager.cargaColonias(codigoPostal);
+        	lista = (List<GenericVO>) result.getItemList(); 
+             
+        }
+        catch(Exception ex)
+        {
+            lista=new ArrayList<GenericVO>(0);
+            success=false;
+            logger.error("Error al obtener el catalogo de colonias",ex);
+        }
+        success=true;
+        return SUCCESS;
+    }
+    
     /////////////////////////////////
     ////// getters and setters //////
     /*/////////////////////////////*/
@@ -112,5 +133,13 @@ public class CatalogosAction extends PrincipalCoreAction
     public void setKernelManager(KernelManagerSustituto kernelManager) {
         this.kernelManager = kernelManager;
     }
+
+	public String getCodigoPostal() {
+		return codigoPostal;
+	}
+
+	public void setCodigoPostal(String codigoPostal) {
+		this.codigoPostal = codigoPostal;
+	}
     
 }

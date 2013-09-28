@@ -2,8 +2,11 @@ package mx.com.aon.portal.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -15,6 +18,7 @@ import mx.com.aon.flujos.cotizacion.model.AyudaCoberturaCotizacionVO;
 import mx.com.aon.flujos.cotizacion.model.CoberturaCotizacionVO;
 import mx.com.aon.flujos.cotizacion.model.DatosEntradaCotizaVO;
 import mx.com.aon.flujos.cotizacion.model.ResultadoCotizacionVO;
+import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.Recibo;
 import mx.com.aon.flujos.cotizacion.model.SituacionVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal2.web.GenericVO;
@@ -114,6 +118,9 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String OBTENER_POLICOT="OBTENER_POLICOT";
     public static final String P_MOV_MESACONTROL="P_MOV_MESACONTROL";
 
+    public static final String OBTIENE_DATOS_RECIBOS="OBTIENE_DATOS_RECIBOS";
+    public static final String OBTIENE_CATALOGO_COLONIAS="OBTIENE_CATALOGO_COLONIAS";
+
 	protected void initDao() throws Exception {
 		addStoredProcedure(PERMISO_EJECUCION_PROCESO,new PermisoEjecucionProceso(getDataSource()));
 		addStoredProcedure(GENERAR_ORDEN_TRABAJO, new GenerarOrdenTrabajo(getDataSource()));
@@ -178,6 +185,9 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(OBTENER_POLICOT, new ObtenerPolicot(getDataSource()));
         addStoredProcedure(P_MOV_MESACONTROL, new PMovMesacontrol(getDataSource()));
         addStoredProcedure(P_BORRA_MPOLIPER, new PBorraMpoliper(getDataSource()));
+
+        addStoredProcedure(OBTIENE_DATOS_RECIBOS, new ObtenDatosRecibos(getDataSource()));
+        addStoredProcedure(OBTIENE_CATALOGO_COLONIAS, new ObtenCatalogoColonias(getDataSource()));
 	}
 
 	protected class BuscarMatrizAsignacion extends CustomStoredProcedure {
@@ -3031,4 +3041,145 @@ public class ProcesoDAO extends AbstractDAO {
 	/*/////////////////////////////////*/
 	////// obtener mesa de control //////
 	/////////////////////////////////////
+	
+	protected class ObtenDatosRecibos extends CustomStoredProcedure {
+		
+		protected ObtenDatosRecibos(DataSource dataSource) {
+			super(dataSource, "pkg_consulta.P_cons_recibo_pol");
+
+			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));			
+			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));			
+			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));			
+			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));			
+			declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));			
+			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DatosRecibosMapper()));
+	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+            WrapperResultados wrapperResultados = mapper.build(map);
+            List result = (List) map.get("pv_registro_o");
+            wrapperResultados.setItemList(result);
+            return wrapperResultados;
+		}
+	}
+
+	
+    protected class DatosRecibosMapper  implements RowMapper {
+    
+    	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+        	Recibo recibo = new Recibo();	    
+        	DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT); 
+        	Calendar cal;
+        	
+        	recibo.setActRec(rs.getInt("actRec"));
+        	recibo.setBonific(rs.getDouble("bonific"));
+        	recibo.setComPri(rs.getDouble("comPri"));
+        	recibo.setComRec(rs.getDouble("comRec"));
+        	recibo.setDerecho(rs.getDouble("derecho"));
+        	
+        	try {
+	        	cal = Calendar.getInstance();
+				cal.setTime(df.parse(rs.getString("fecEmi")));
+	        	recibo.setFecEmi(cal);
+        	} catch (Exception e) {
+				logger.error("NO SE PUDO PARSEAR LA FECHA fecEmi !!! " + rs.getString("fecEmi"));
+				recibo.setFecEmi(null);
+			}
+        	
+        	try {
+	        	cal = Calendar.getInstance();
+	        	cal.setTime(df.parse(rs.getString("fecIni")));
+	        	recibo.setFecIni(cal);
+        	} catch (Exception e) {
+				logger.error("NO SE PUDO PARSEAR LA FECHA fecIni !!! " + rs.getString("fecIni"));
+				recibo.setFecIni(null);
+			}
+        	
+	        try {
+	        	cal = Calendar.getInstance();
+	        	cal.setTime(df.parse(rs.getString("fecPag")));
+	        	recibo.setFecPag(cal);
+	        } catch (Exception e) {
+				logger.error("NO SE PUDO PARSEAR LA FECHA fecPag !!! " + rs.getString("fecPag"));
+				recibo.setFecPag(null);
+			}
+	        	
+	        try {
+	        	cal = Calendar.getInstance();
+	        	cal.setTime(df.parse(rs.getString("fecSta")));
+	        	recibo.setFecSta(cal);
+	        } catch (Exception e) {
+				logger.error("NO SE PUDO PARSEAR LA FECHA fecSta !!! " + rs.getString("fecSta"));
+				recibo.setFecSta(null);
+			}
+	        
+	        try {
+	        	cal = Calendar.getInstance();
+	        	cal.setTime(df.parse(rs.getString("fecTer")));
+	        	recibo.setFecTer(cal);
+        	} catch (Exception e) {
+				logger.error("NO SE PUDO PARSEAR LA FECHA fecTer !!! " + rs.getString("fecTer"));
+				recibo.setFecTer(null);
+			}
+	        	
+        	recibo.setIva(rs.getDouble("iva"));
+        	recibo.setNumAgt(rs.getInt("numAgt"));
+        	recibo.setNumCli(rs.getInt("numCli"));
+        	recibo.setNumEnd(rs.getInt("numEnd"));
+        	recibo.setNumMon(rs.getInt("numMon"));
+        	recibo.setNumPol(rs.getInt("numPol"));
+        	recibo.setNumRam(rs.getInt("numRam"));
+        	recibo.setNumRec(rs.getInt("numRec"));
+        	recibo.setNumSuc(rs.getInt("numSuc"));
+        	recibo.setPriCom(rs.getDouble("priCom"));
+        	recibo.setPriDot(rs.getDouble("priDot"));
+        	recibo.setPrima(rs.getDouble("prima"));
+        	recibo.setRecargo(rs.getDouble("recargo"));
+        	recibo.setRmdbRn(rs.getInt("rmdbRn"));
+        	recibo.setSaldo(rs.getDouble("saldo"));
+        	recibo.setStatusr(rs.getString("statusr"));
+        	recibo.setTipEnd(rs.getString("tipEnd"));
+        	recibo.setTipRec(rs.getString("tipRec"));
+        	recibo.setTotRec(rs.getInt("totRec"));
+        	
+        	return recibo;
+        }
+    }
+
+    protected class ObtenCatalogoColonias extends CustomStoredProcedure {
+    	
+    	protected ObtenCatalogoColonias(DataSource dataSource) {
+    		super(dataSource, "PKG_LISTAS.P_GET_COLONIAS");
+    		
+    		declareParameter(new SqlParameter("pv_codpostal_i", OracleTypes.VARCHAR));			
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ColoniasMapper()));
+    		declareParameter(new SqlOutParameter("pv_messages_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+    		WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+    		WrapperResultados wrapperResultados = mapper.build(map);
+    		List result = (List) map.get("pv_registro_o");
+    		wrapperResultados.setItemList(result);
+    		return wrapperResultados;
+    	}
+    }
+    
+    
+    protected class ColoniasMapper  implements RowMapper {
+    	
+    	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+    		GenericVO base = new GenericVO();	    
+    		base.setKey(rs.getString("CODIGO"));
+    		base.setValue(rs.getString("NOMBRE"));
+    		return base;
+    	}
+    }
 }

@@ -22,6 +22,7 @@ var inputCdrfcp4           = '<s:property value="smap1.cdrfc" escapeHtml="false"
 var urlRegresarp4          = '<s:url namespace="/" action="editarAsegurados" />';
 var urlCargarp4            = '<s:url namespace="/" action="cargarPantallaDomicilio" />';
 var urlGuardarp4           = '<s:url namespace="/" action="guardarPantallaDomicilio" />';
+var _ComboColoniasUrl           = '<s:url namespace="/" action="cargaColonias" />';
 var formPanelp4;
 var contextop4             = '${ctx}';
 <s:if test='smap1!=null&&smap1.botonCopiar!=null&&smap1.botonCopiar=="1"'>
@@ -200,13 +201,32 @@ Ext.onReady(function(){
                     	name           : 'smap1.NMTELEFO',
                     	allowBlank     : true,
                     	readOnly       : !esElContratanteP4
-                    },
-                    {
-                        fieldLabel     : 'Colonia',
-                        xtype          : 'textfield',
-                        name           : 'smap1.CDCOLONI',
-                        allowBlank     : false,
-                        readOnly       : !esElContratanteP4
+                    },{
+                        xtype:'combo',
+                        id:'coloniaId',//id
+                        name:'smap1.CDCOLONI',
+                        fieldLabel:'Colonia',
+                        displayField: 'value',
+                        valueField: 'key',
+                        readOnly: !esElContratanteP4,
+                        store:Ext.create('Ext.data.Store', {
+                            model:'Generic',
+                            autoLoad:false,
+                            proxy:
+                            {
+                                type: 'ajax',
+                                url: _ComboColoniasUrl,
+                                reader:
+                                {
+                                    type: 'json',
+                                    root: 'lista'
+                                }
+                            }
+                        }),
+                        editable:false,
+                        queryMode:'local',
+                        style:'margin:5px;',
+                        allowBlank:false
                     },
                     {
                         fieldLabel     : 'Calle',
@@ -382,6 +402,10 @@ Ext.onReady(function(){
 	                                    'smap1.NMNUMERO':resp.data['smap1.NMNUMERO'],
 	                                    'smap1.NMNUMINT':resp.data['smap1.NMNUMINT']
        					            });
+       					            
+	       					        Ext.getCmp('coloniaId').getStore().load({
+	       				                params: {codigoPostal: resp.data['smap1.CODPOSTAL']} 
+	       				            });
        					        },
        					        failure:function()
        					        {
@@ -442,6 +466,10 @@ Ext.onReady(function(){
         	resp.data['smap1.rfc']       =inputCdrfcp4;
         	//console.log(resp);
             formPanelp4.loadRecord(resp);
+            
+            Ext.getCmp('coloniaId').getStore().load({
+                params: {codigoPostal: resp.data['smap1.CODPOSTAL']} 
+            });
         },
         failure:function()
         {
@@ -502,6 +530,9 @@ Ext.onReady(function(){
 	                        'smap1.DSDOMICI':resp.data['smap1.DSDOMICI'],
 	                        'smap1.NMNUMERO':resp.data['smap1.NMNUMERO'],
 	                        'smap1.NMNUMINT':resp.data['smap1.NMNUMINT']
+	                    });
+	                    Ext.getCmp('coloniaId').getStore().load({
+	                        params: {codigoPostal: resp.data['smap1.CODPOSTAL']} 
 	                    });
 	                },
 	                failure:function()
