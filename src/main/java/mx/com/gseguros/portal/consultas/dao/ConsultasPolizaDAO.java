@@ -33,30 +33,29 @@ public class ConsultasPolizaDAO extends AbstractDAO {
 
 	private static Logger logger = Logger.getLogger(ConsultasPolizaDAO.class);
 
-	public static final String OBTIENE_DATOS_POLIZA = "OBTIENE_DATOS_POLIZA";
-	public static final String OBTIENE_DATOS_SUPLEMENTO = "OBTIENE_DATOS_SUPLEMENTO";
-	public static final String OBTIENE_DATOS_SITUACION = "OBTIENE_DATOS_SITUACION";
-	public static final String OBTIENE_DATOS_COBERTURAS = "OBTIENE_DATOS_COBERTURAS";
+	public static final String OBTIENE_DATOS_AGENTE =      "OBTIENE_DATOS_AGENTE";
+	public static final String OBTIENE_DATOS_ASEGURADO =   "OBTIENE_DATOS_ASEGURADO";
+	public static final String OBTIENE_DATOS_COBERTURAS =  "OBTIENE_DATOS_COBERTURAS";
+	public static final String OBTIENE_DATOS_POLIZA =      "OBTIENE_DATOS_POLIZA";
+	public static final String OBTIENE_DATOS_SITUACION =   "OBTIENE_DATOS_SITUACION";
+	public static final String OBTIENE_DATOS_SUPLEMENTO =  "OBTIENE_DATOS_SUPLEMENTO";
+	public static final String OBTIENE_DATOS_TARIFA =      "OBTIENE_DATOS_TARIFA";
+	public static final String OBTIENE_POLIZAS_AGENTE =    "OBTIENE_POLIZAS_AGENTE";
 	public static final String OBTIENE_POLIZAS_ASEGURADO = "OBTIENE_POLIZAS_ASEGURADO";
-	public static final String OBTIENE_DATOS_TARIFA = "OBTIENE_DATOS_TARIFA";
-	public static final String OBTIENE_POLIZAS_AGENTE = "OBTIENE_POLIZAS_AGENTE";
-	public static final String OBTIENE_RECIBOS_AGENTE = "OBTIENE_RECIBOS_AGENTE";
-	public static final String OBTIENE_DATOS_AGENTE = "OBTIENE_DATOS_AGENTE";
-	public static final String OBTIENE_DATOS_ASEGURADO = "OBTIENE_DATOS_ASEGURADO";
+	public static final String OBTIENE_RECIBOS_AGENTE =    "OBTIENE_RECIBOS_AGENTE";
 	
 	
 	protected void initDao() throws Exception {
-		addStoredProcedure(OBTIENE_DATOS_POLIZA, new ObtieneDatosPoliza(getDataSource()));
-		addStoredProcedure(OBTIENE_DATOS_SUPLEMENTO, new ObtieneDatosSuplemento(getDataSource()));
-		addStoredProcedure(OBTIENE_DATOS_SITUACION, new ObtieneDatosSituacion(getDataSource()));
-		addStoredProcedure(OBTIENE_DATOS_COBERTURAS, new ObtieneDatosCoberturas(getDataSource()));
+		addStoredProcedure(OBTIENE_DATOS_AGENTE,      new ObtieneDatosAgente(getDataSource()));
+		addStoredProcedure(OBTIENE_DATOS_ASEGURADO,   new ObtieneDatosAsegurado(getDataSource()));
+		addStoredProcedure(OBTIENE_DATOS_COBERTURAS,  new ObtieneDatosCoberturas(getDataSource()));
+		addStoredProcedure(OBTIENE_DATOS_POLIZA,      new ObtieneDatosPoliza(getDataSource()));
+		addStoredProcedure(OBTIENE_DATOS_SITUACION,   new ObtieneDatosSituacion(getDataSource()));
+		addStoredProcedure(OBTIENE_DATOS_SUPLEMENTO,  new ObtieneDatosSuplemento(getDataSource()));
+		addStoredProcedure(OBTIENE_DATOS_TARIFA,      new ObtieneDatosTarifa(getDataSource()));
+		addStoredProcedure(OBTIENE_POLIZAS_AGENTE,    new ObtienePolizasAgente(getDataSource()));
 		addStoredProcedure(OBTIENE_POLIZAS_ASEGURADO, new ObtienePolizasAsegurado(getDataSource()));
-		addStoredProcedure(OBTIENE_DATOS_TARIFA, new ObtieneDatosTarifa(getDataSource()));
-		addStoredProcedure(OBTIENE_DATOS_AGENTE, new ObtieneDatosAgente(getDataSource()));
-		addStoredProcedure(OBTIENE_POLIZAS_AGENTE, new ObtienePolizasAgente(getDataSource()));
-		addStoredProcedure(OBTIENE_RECIBOS_AGENTE, new ObtieneRecibosAgente(getDataSource()));
-		addStoredProcedure(OBTIENE_DATOS_ASEGURADO, new ObtieneDatosAsegurado(getDataSource()));
-		
+		addStoredProcedure(OBTIENE_RECIBOS_AGENTE,    new ObtieneRecibosAgente(getDataSource()));
 	}
 
 	
