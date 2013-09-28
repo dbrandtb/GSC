@@ -420,7 +420,11 @@
 		                                            title: 'Tarifa final',
 		                                            maxHeight: 400,
 		                                            autoScroll:true,
-		                                            width: 700,
+		                                            width: 560,
+		                                            height: 250,
+		                                            defaults: {
+		                                            	width: 550
+		                                            },
 		                                            modal:true,
 		                                            closable:false,
 		                                            items:[  // Let's put an empty grid in just to illustrate fit layout
