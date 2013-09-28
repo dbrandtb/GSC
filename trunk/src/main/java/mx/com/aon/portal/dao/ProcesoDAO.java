@@ -3104,8 +3104,14 @@ public class ProcesoDAO extends AbstractDAO {
 	        	cal.setTime(df.parse(rs.getString("fecPag")));
 	        	recibo.setFecPag(cal);
 	        } catch (Exception e) {
-				logger.error("NO SE PUDO PARSEAR LA FECHA fecPag !!! " + rs.getString("fecPag"));
-				recibo.setFecPag(null);
+				//logger.error("NO SE PUDO PARSEAR LA FECHA fecPag !!! " + rs.getString("fecPag")+" se manda valor default 01/01/1900");
+				cal = Calendar.getInstance();
+				try {
+					cal.setTime(df.parse("01/01/1900"));
+				} catch (ParseException e1) {
+					logger.error("Error.");
+				}
+	        	recibo.setFecPag(cal);
 			}
 	        	
 	        try {
@@ -3142,7 +3148,11 @@ public class ProcesoDAO extends AbstractDAO {
         	recibo.setRmdbRn(rs.getInt("rmdbRn"));
         	recibo.setSaldo(rs.getDouble("saldo"));
         	recibo.setStatusr(rs.getString("statusr"));
-        	recibo.setTipEnd(rs.getString("tipEnd"));
+        	
+        	String tipoEndoso = rs.getString("tipEnd");
+        	if(tipoEndoso == null)tipoEndoso = "";
+        	recibo.setTipEnd(tipoEndoso);
+        	
         	recibo.setTipRec(rs.getString("tipRec"));
         	recibo.setTotRec(rs.getInt("totRec"));
         	
