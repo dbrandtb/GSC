@@ -306,6 +306,7 @@ public class ConsultasPolizaDAO extends AbstractDAO {
     		consulta.setEstado(rs.getString("ESTADO"));
     		consulta.setNmpoliza(rs.getString("NMPOLIZA"));
     		consulta.setNombre(rs.getString("NOMBRE"));
+    		consulta.setNombre(rs.getString("NMPOLIEX"));
     		return consulta;
     	}
     }
