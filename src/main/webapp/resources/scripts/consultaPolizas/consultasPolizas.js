@@ -187,17 +187,17 @@ Ext.onReady(function() {
 									if(records.length <= 0){
 										Ext.Msg.show({
 											title: 'Error',
-											msg: 'No existe p&oacute;lizas de dicho Agente',
+											msg: 'No existe recibos de dicho Agente',
 											buttons: Ext.Msg.OK,
 											icon: Ext.Msg.ERROR
 										});
 									}else {            	            	
-										obtieneMontosRecibo(records);
+										Ext.getCmp('montoTotalRecibos').setText(obtieneMontosRecibo(records));
 									}
 								}else{
 									Ext.Msg.show({
 										title: 'Error',
-										msg: 'No existe p&oacute;lizas de dicho Agente',
+										msg: 'No existe recibos de dicho Agente',
 										buttons: Ext.Msg.OK,
 										icon: Ext.Msg.ERROR
 									});
@@ -430,14 +430,14 @@ Ext.onReady(function() {
 		border : false,
         //height : 280,
         defaults : {
-            bodyPadding : 3,
+            bodyPadding : 5,
             border : false
         },
         items : [ {
             layout : 'hbox',
             items : [
                 {xtype: 'textfield', name: 'nmpoliex', fieldLabel: 'N&uacute;mero de P&oacute;liza', readOnly: true, labelWidth: 120},
-                {xtype: 'textfield', id: 'nmsolici',  name: 'nmsolici', fieldLabel: 'N&uacute;mero de solicitud', width: 250, labelWidth: 120, readOnly: true}
+                {xtype: 'textfield', id: 'nmsolici',  name: 'nmsolici', fieldLabel: 'N&uacute;mero de solicitud', width: 250, labelWidth: 150, readOnly: true}
             ]
         }, {
             layout : 'hbox',
@@ -448,9 +448,9 @@ Ext.onReady(function() {
         }, {
             layout : 'hbox',
             items : [ 
-                {xtype: 'datefield', name: 'feemisio', fieldLabel: 'Fecha emisi&oacute;n',    format: 'd/m/Y', readOnly: true, labelWidth: 120, width: 200}, 
-                {xtype: 'datefield', name: 'feefecto', fieldLabel: 'Fecha de efecto',         format: 'd/m/Y', readOnly: true, labelWidth: 100, width: 200, labelAlign: 'right'}, 
-                {xtype: 'datefield', name: 'feproren', fieldLabel: 'Fecha renovaci&oacute;n', format: 'd/m/Y', readOnly: true, labelWidth: 100, width: 200, labelAlign: 'right'}
+                {xtype: 'datefield', name: 'feemisio', fieldLabel: 'Fecha emisi&oacute;n',    format: 'd/m/Y', readOnly: true, labelWidth: 120, width: 220}, 
+                {xtype: 'datefield', name: 'feefecto', fieldLabel: 'Fecha de efecto',         format: 'd/m/Y', readOnly: true, labelWidth: 120, width: 220, labelAlign: 'right'}, 
+                {xtype: 'datefield', name: 'feproren', fieldLabel: 'Fecha renovaci&oacute;n', format: 'd/m/Y', readOnly: true, labelWidth: 120, width: 220, labelAlign: 'right'}
             ]
         }, {
             layout : 'hbox',
@@ -480,7 +480,7 @@ Ext.onReady(function() {
               {type:'string',    name:'dsgarant'      },
               {type:'float',    name:'montoComision' },
               {type:'float',    name:'montoPrima'    },
-              {type:'float',    name:'sumaAsegurada' }
+              {type:'string',    name:'sumaAsegurada' }
         ]
     });
     
@@ -501,6 +501,7 @@ Ext.onReady(function() {
 		width   : 820,
         //title   : 'DATOS TARIFICACI&Oacute;N',
         store   : storeTarificacion,
+        autoScroll:true,
         id      : 'gridDatosTarificacion',
         features:[{
                     ftype:'summary'
@@ -516,9 +517,8 @@ Ext.onReady(function() {
 				text            :'Suma Asegurada',  
 				dataIndex       :'sumaAsegurada',
 				width           :170 , 
-				align           :'right' , 
-				renderer        :Ext.util.Format.usMoney, 
-				summaryType     :'sum'
+				align           :'right'  
+				
 			},
 			{
 				text            :'Monto de la Prima',
@@ -580,7 +580,8 @@ Ext.onReady(function() {
 	    title   : 'DATOS DE LOS ASEGURADOS',
 	    store   : storeDatosAsegurado,
 	    id      : 'gridDatosAsegurado',
-	    width   : 800,	    
+	    width   : 800,
+	    autoScroll:true,
 	    items:[{
 		   xtype:'textfield', name:'cdrfc', fieldLabel: 'RFC', readOnly: true, labelWidth: 120
 		}],
@@ -783,7 +784,7 @@ Ext.onReady(function() {
 	});
 	// Panel Info Agente
 	var panelDatosAgente = Ext.create('Ext.form.Panel', {
-		title   : 'INFORMACION DEL AGENTE',
+		title   : 'INFORMACI&Oacute;N DEL AGENTE',
 		model   : 'ModelInfoAgente',
 		//width      : 750,
 		//height     : 100,
@@ -886,42 +887,40 @@ Ext.onReady(function() {
 		}
 	});
 	
+	
 	var totalMontoRecibos = Ext.create('Ext.toolbar.Toolbar',{
 		buttonAlign:'center',
-		//width   : 550,
+		width   : 450,
+		style:'color:white;',
 		items:
 		[
-			{xtype: 'tbtext', text: 'Monto Total '},
+			{xtype: 'label', text: 'Monto Total '},
 			'->',
-			,Ext.create('Ext.form.Label',{
-				style:'color:white;',
-				initComponent:function()
-				{
-					this.setText(Ext.util.Format.usMoney(sum));
-					this.callParent();
-				}
-			})
+			{id:'montoTotalRecibos', xtype: 'label' }
 		]
 	});
+	
 		
 	var consultaRecibosAgente = Ext.create('Ext.grid.Panel', {
-		//title   : 'RECIBOS DEL AGENTE',
+		title   : 'Desglose de cobertura:',
 		store   : storeRecibosAgente,
+		
+		autoScroll :true,
 		//id      : 'consultaRecibosAgente',
+		isExpanded : true,
 		collapsible: true,
-		//width   : 550,	    
+		width   : 450,
+		height: 250,
 		columns: [	               
-			{header: 'N&uacute;mero de Recibo', dataIndex: 'nmrecibo', width:350 , summaryType: 'count', summaryRenderer: function(value){ return Ext.String.format('Total de Garant&iacute;a{1}: {0}', value, value !== 1 ? 's' : ''); }},
-			{header: 'Importe', dataIndex:'ptimport', width:200 , align:'right', renderer: Ext.util.Format.usMoney, summaryType: 'sum'}
+			{header: 'N&uacute;mero de Recibo',dataIndex: 'nmrecibo', width:150},
+			{header: 'Importe', dataIndex:'ptimport', width:250 , align:'right', renderer: Ext.util.Format.usMoney, summaryType: 'sum',summaryRenderer: function(value){ return Ext.String.format('Total     {0}',Ext.util.Format.usMoney( value)); }}
 		],
-		features: [{
-			groupHeaderTpl: 'Tipo Garant&iacute;a: {name}', ftype:'groupingsummary', summaryType: 'sum', startCollapsed :true
-		}]
+		features: [{ groupHeaderTpl: '{name} ({rows.length} Item{[values.rows.length > 1 ? "s" : ""]})', ftype:'groupingsummary', summaryType: 'sum', startCollapsed :true }]
 	});
 	
-	
+		
 	var tabPanelAgentes = Ext.create('Ext.tab.Panel', {
-	    //width: 830,
+	    //width: 843,
 	    //height: 200,
 	    items: [{
 			//itemId: 'tabPanelAgentes',
@@ -929,18 +928,15 @@ Ext.onReady(function() {
 			border:false,
 	        items:[panelDatosAgente]
 	    }, {
-			//itemId: 'tabPolizasAgente',
-	        title: 'POLIZAS DEL AGENTE',
-	        items:[panelDatosPolizaAgente]
-	    }, {
 			//itemId: 'tabRecibosAgente',
 	        title: 'RECIBOS DEL AGENTE',
 	        items:[totalMontoRecibos, consultaRecibosAgente]
+	        
 	    }]
 	});
 	
 	
-    // Main Panel
+    // Main Panel  
 
     var panelBusqueda = Ext.create('Ext.Panel', {
         id:'main-panel',
@@ -985,7 +981,7 @@ Ext.onReady(function() {
                             columns: 1,
                             vertical: true,
                             items: [
-                                {boxLabel: 'Por datos generales', name: 'tipoBusqueda', inputValue: 1, checked: true, width: 140},
+                                {boxLabel: 'Por datos generales', name: 'tipoBusqueda', inputValue: 1, checked: true, width: 160},
                                 {boxLabel: 'Por RFC', name: 'tipoBusqueda', inputValue: 2}
                             ],
                             listeners : {
@@ -1028,7 +1024,7 @@ Ext.onReady(function() {
                                             xtype : 'textfield',
                                             name : 'params.nmpoliex',
                                             fieldLabel : 'N&uacute;mero de P&oacute;liza',
-                                            value:'02130001400A',
+                                            //value:'02130001400A',
                                             labelWidth : 120,
                                             width: 300,
                                             maxLength : 40,
@@ -1323,10 +1319,11 @@ Ext.onReady(function() {
 
 	/* FUNCION PARA OBTENER RECIBOS DEL AGENTE */
 	function obtieneMontosRecibo(records) {
-		sum=0;
+		var sum=0;
     	for(var i=0;i<records.length;i++) {
             sum+=parseFloat(records[i].get("ptimport"));
         }
+		return Ext.util.Format.usMoney(sum);
 	}
     
 });
