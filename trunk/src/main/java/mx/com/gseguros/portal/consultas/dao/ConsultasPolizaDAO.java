@@ -298,16 +298,16 @@ public class ConsultasPolizaDAO extends AbstractDAO {
     protected class PolizaAseguradoMapper  implements RowMapper {
     	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
     		
-    		ConsultaPolizaAseguradoVO consulta = new ConsultaPolizaAseguradoVO();
-    		consulta.setCompania(rs.getString("COMPANIA"));
-    		consulta.setDescripcion(rs.getString("DESCRIPCION"));
-    		consulta.setCdramo(rs.getString("CODIGO_RAMO"));
-    		consulta.setDsramo(rs.getString("DESCRIPCION_RAMO"));
-    		consulta.setEstado(rs.getString("ESTADO"));
-    		consulta.setNmpoliza(rs.getString("NMPOLIZA"));
-    		consulta.setNombre(rs.getString("NOMBRE"));
-    		consulta.setNombre(rs.getString("NMPOLIEX"));
-    		return consulta;
+    		ConsultaPolizaAseguradoVO polizaAsegurado = new ConsultaPolizaAseguradoVO();
+    		polizaAsegurado.setCdramo(rs.getString("codigo_ramo"));
+    		polizaAsegurado.setCdunieco(rs.getString("compania"));
+    		polizaAsegurado.setDsramo(rs.getString("descripcion_ramo"));
+    		polizaAsegurado.setDsunieco(rs.getString("descripcion"));
+    		polizaAsegurado.setEstado(rs.getString("estado"));
+    		polizaAsegurado.setNmpoliex(rs.getString("nmpoliex"));
+    		polizaAsegurado.setNmpoliza(rs.getString("nmpoliza"));
+    		polizaAsegurado.setNombreAsegurado(rs.getString("nombre"));
+    		return polizaAsegurado;
     	}
     }
     

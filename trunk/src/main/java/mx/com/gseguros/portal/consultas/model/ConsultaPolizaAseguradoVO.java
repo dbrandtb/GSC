@@ -9,63 +9,82 @@ import org.apache.commons.lang.builder.ToStringStyle;
  * @author hector.lopez
  *
  */
-public class ConsultaPolizaAseguradoVO implements Serializable{
+public class ConsultaPolizaAseguradoVO implements Serializable {
 
-	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8555353864912795413L;
 
-	private String compania;
-	private String descripcion;
+	private String cdunieco;
+	private String dsunieco;
 	private String cdramo;
 	private String dsramo;
 	private String estado;
 	private String nmpoliza;
-	private String nombre;
+	private String nombreAsegurado;
+	private String nmpoliex;
 	
-	public String getCompania() {
-		return compania;
+	
+	public String getCdunieco() {
+		return cdunieco;
 	}
-	public void setCompania(String compania) {
-		this.compania = compania;
+
+	public void setCdunieco(String cdunieco) {
+		this.cdunieco = cdunieco;
 	}
-	public String getDescripcion() {
-		return descripcion;
+
+	public String getDsunieco() {
+		return dsunieco;
 	}
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
+
+	public void setDsunieco(String dsunieco) {
+		this.dsunieco = dsunieco;
 	}
+
 	public String getCdramo() {
 		return cdramo;
 	}
+
 	public void setCdramo(String cdramo) {
 		this.cdramo = cdramo;
 	}
+
 	public String getDsramo() {
 		return dsramo;
 	}
+
 	public void setDsramo(String dsramo) {
 		this.dsramo = dsramo;
 	}
+
 	public String getEstado() {
 		return estado;
 	}
+
 	public void setEstado(String estado) {
 		this.estado = estado;
 	}
-	public String getNombre() {
-		return nombre;
-	}
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
+
 	public String getNmpoliza() {
 		return nmpoliza;
 	}
+
 	public void setNmpoliza(String nmpoliza) {
 		this.nmpoliza = nmpoliza;
+	}
+
+	public String getNombreAsegurado() {
+		return nombreAsegurado;
+	}
+
+	public void setNombreAsegurado(String nombreAsegurado) {
+		this.nombreAsegurado = nombreAsegurado;
+	}
+
+	public String getNmpoliex() {
+		return nmpoliex;
+	}
+
+	public void setNmpoliex(String nmpoliex) {
+		this.nmpoliex = nmpoliex;
 	}
 
 	public String toString(){
