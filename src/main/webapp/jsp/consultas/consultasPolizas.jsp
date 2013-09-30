@@ -6,24 +6,16 @@
         <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
         <title>Ext JS 4 Dashboard</title>
         
-        <!-- Ext JS Files -->
-        <!-- <link rel="stylesheet" href="extjs4/resources/ext-theme-neptune/ext-theme-neptune-all.css" /> -->
-        <%-- <link rel="stylesheet" href="../resources/extjs4/resources/my-custom-theme/my-custom-theme-all.css" />
-        <script src="../resources/extjs4/ext-all-debug.js"></script> --%>
-        
-        <!-- Archivos de la aplicacion -->
         <script type="text/javascript">
             var _CONTEXT = '${ctx}';
             
             var _URL_TIPOS_CONSULTA         =       _CONTEXT + '/resources/scripts/consultaPolizas/tiposConsulta.json';
-            
             var _URL_CONSULTA_DATOS_POLIZA =        '<s:url namespace="/consultasPoliza" action="consultaDatosPoliza" />';
             var _URL_CONSULTA_DATOS_SUPLEMENTO =    '<s:url namespace="/consultasPoliza" action="consultaDatosSuplemento" />';
             var _URL_CONSULTA_DATOS_TARIFA_POLIZA = '<s:url namespace="/consultasPoliza" action="consultaDatosTarifaPoliza" />';
             var _URL_CONSULTA_DATOS_ASEGURADO =     '<s:url namespace="/consultasPoliza" action="consultaDatosAsegurado" />';
             var _URL_CONSULTA_POLIZAS_ASEGURADO =   '<s:url namespace="/consultasPoliza" action="consultaPolizasAsegurado" />';
             var _URL_CONSULTA_DATOS_AGENTE =        '<s:url namespace="/consultasPoliza" action="consultaDatosAgente" />';
-            var _URL_CONSULTA_POLIZAS_AGENTE =      '<s:url namespace="/consultasPoliza" action="consultaPolizasAgente" />';
             var _URL_CONSULTA_RECIBOS_AGENTE =      '<s:url namespace="/consultasPoliza" action="consultaRecibosAgente" />';
             var _URL_CONSULTA_DOCUMENTOS =          '<s:url namespace="/documentos" action="ventanaDocumentosPoliza" />';
             
@@ -33,25 +25,9 @@
             var _MSG_SIN_DATOS =                       'No hay datos';
             var _MSG_BUSQUEDA_SIN_DATOS = 'No se encontraron datos. Intente cambiar los filtros de b\u00FAsqueda.';
             var _MSG_RFC_INVALIDO = 'Ingrese un RFC v\u00E1lido';
-        
-            //Funciones comunes
-            /**
-             * Muestra un mensaje emergente
-             * @param title   String
-             * @param msg     String
-             * @param buttons Object/Object[]
-             * @param icon    String 
-             */
-            function setMessage(title, msg, buttons, icon){
-                Ext.Msg.show({
-                    title: title,
-                    msg: msg,
-                    buttons: buttons,
-                    icon: icon
-                });
-            }
-        
+            var _MSG_NMPOLIEX_INVALIDO = 'Ingrese un numero de poliza';
         </script>
+        <script type="text/javascript" src="${ctx}/resources/scripts/util/extjs4_utils.js"></script>
         <script type="text/javascript" src="${ctx}/resources/scripts/consultaPolizas/consultasPolizas.js"></script>
         
     </head>
