@@ -132,6 +132,9 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     
     public String cotizar()
     {
+    	long t=System.currentTimeMillis();
+    	log.debug(""
+    			+ "\n######$ Tiempo de inicio: "+t);
         try
         {
             /////////////////////////////////////////////
@@ -159,7 +162,13 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             ///////////////////////////////////////////////////
             ////// obtener datos del usuario //////////////////
             /*///////////////////////////////////////////////*/
+            long t1=System.currentTimeMillis();
+            log.debug("######$ antes de pedir datos usuario: "+t1);
             DatosUsuario datosUsuario=kernelManagerSustituto.obtenerDatosUsuario(usuario.getUser());
+            long t2=System.currentTimeMillis();
+            log.debug("######$ despues de pedir datos usuario: "+t2);
+            log.debug("######$ tiempo pidiendo datos usuario: "+(t2-t1));
+            log.debug("######$ tiempo total: "+(t2-t));
             /*///////////////////////////////////////////////*/
             ////// obtener datos del usuario //////////////////
             ///////////////////////////////////////////////////
@@ -174,9 +183,15 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             }
             else
             {
+            	t1=System.currentTimeMillis();
+            	log.debug("######$ antes de pedir numero de poliza: "+t1);
                 WrapperResultados wrapperNumeroPoliza=kernelManagerSustituto
                         .calculaNumeroPoliza(datosUsuario.getCdunieco(),datosUsuario.getCdramo(),"W");
                 numeroPoliza=(String) wrapperNumeroPoliza.getItemMap().get("NUMERO_POLIZA");
+                t2=System.currentTimeMillis();
+            	log.debug("######$ despues de pedir numero de poliza: "+t2);
+            	log.debug("######$ tiempo pidiendo numero de poliza: "+(t2-t1));
+            	log.debug("######$ tiempo total: "+(t2-t));
             }
             ///////////////////////////////////////////
             ////// fin Crear un numero de poliza //////
@@ -233,7 +248,13 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             mapa.put("pv_swpatent",     null);
             mapa.put("pv_accion",       "U");
             log.debug("### Invocacion de insercion de maestro de poliza map: "+mapa);
+            t1=System.currentTimeMillis();
+            log.debug("######$ tiempo antes de insertar maestro poliza "+t1);
             WrapperResultados wr=kernelManagerSustituto.insertaMaestroPolizas(mapa);
+            t2=System.currentTimeMillis();
+            log.debug("######$ tiempo despues de insertar maestro poliza "+t2);
+            log.debug("######$ tiempo consumido en insertar maestro poliza "+(t2-t1));
+            log.debug("######$ tiempo total consumido "+(t2-t));
             log.debug("### response id "+wr.getMsgId());
             log.debug("### response text "+wr.getMsgText());
             ///////////////////////////////////////////////////////
@@ -293,7 +314,13 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
                 mapaPolisitIterado.put("pv_cdplan_i",      "1");
                 mapaPolisitIterado.put("pv_cdasegur_i",    "30");
                 mapaPolisitIterado.put("pv_accion_i",      "I");
+                t1=System.currentTimeMillis();
+                log.debug("######$ tiempo antes de insertar polisit iterado "+t1);
                 kernelManagerSustituto.insertaPolisit(mapaPolisitIterado);
+                t2=System.currentTimeMillis();
+                log.debug("######$ tiempo despues de insertar polisit iterado "+t2);
+                log.debug("######$ tiempo consumido en insertar polisit iterado "+(t2-t1));
+                log.debug("######$ tiempo total consumido "+(t2-t));
                 //////////////////////////////////
                 ////// fin mpolisit iterado //////
                 //////////////////////////////////
@@ -360,7 +387,13 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
                 mapaValositIterado.put("pv_otvalor48",   null);
                 mapaValositIterado.put("pv_otvalor49",   null);
                 mapaValositIterado.put("pv_otvalor50",   null);
+                t1=System.currentTimeMillis();
+                log.debug("######$ tiempo antes de insertar valosit iterado "+t1);
                 kernelManagerSustituto.insertaValoresSituaciones(mapaValositIterado);
+                t2=System.currentTimeMillis();
+                log.debug("######$ tiempo despues de insertar valosit iterado "+t2);
+                log.debug("######$ tiempo consumido en insertar valosit iterado "+(t2-t1));
+                log.debug("######$ tiempo total consumido "+(t2-t));
                 //////////////////////////////////
                 ////// fin mvalosit iterado //////
                 //////////////////////////////////
@@ -396,7 +429,13 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
                 mapaClonPersonaIterado.put("pv_sexo",           i.getSexo().getKey());
                 mapaClonPersonaIterado.put("pv_fenacimi",       i.getFechaNacimiento());
                 mapaClonPersonaIterado.put("pv_parentesco",     i.getRol().getKey());
+                t1=System.currentTimeMillis();
+                log.debug("######$ tiempo antes de clonar personas iterado "+t1);
                 kernelManagerSustituto.clonaPersonas(mapaClonPersonaIterado);
+                t2=System.currentTimeMillis();
+                log.debug("######$ tiempo despues de clonar personas iterado "+t2);
+                log.debug("######$ tiempo consumido en clonar personas iterado "+(t2-t1));
+                log.debug("######$ tiempo total consumido "+(t2-t));
                 contador++;
             }
             /////////////////////////////////
@@ -414,7 +453,13 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             mapCoberturas.put("pv_nmsituac_i",   "0");
             mapCoberturas.put("pv_nmsuplem_i",   "0");//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             mapCoberturas.put("pv_cdgarant_i",   "TODO");//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+            t1=System.currentTimeMillis();
+            log.debug("######$ tiempo antes de coberturas "+t1);
             kernelManagerSustituto.coberturas(mapCoberturas);
+            t2=System.currentTimeMillis();
+            log.debug("######$ tiempo despues de coberturas "+t2);
+            log.debug("######$ tiempo consumido en coberturas "+(t2-t1));
+            log.debug("######$ tiempo total consumido "+(t2-t));
             /*////////////////////*/
             ////// coberturas //////
             ////////////////////////
@@ -432,7 +477,13 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             mapaTarificacion.put("pv_nmsituac_i",   "0");
             mapaTarificacion.put("pv_nmsuplem_i",   "0");
             mapaTarificacion.put("pv_cdtipsit_i",   datosUsuario.getCdtipsit());
+            t1=System.currentTimeMillis();
+            log.debug("######$ tiempo antes de asigsvalipol "+t1);
             WrapperResultados wr4=kernelManagerSustituto.ejecutaASIGSVALIPOL(mapaTarificacion);
+            t2=System.currentTimeMillis();
+            log.debug("######$ tiempo despues de asigsvalipol "+t2);
+            log.debug("######$ tiempo consumido en asigsvalipol "+(t2-t1));
+            log.debug("######$ tiempo total consumido "+(t2-t));
             /*//////////////////////*/
             ////// TARIFICACION //////
             //////////////////////////
@@ -448,7 +499,13 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             mapaDuroResultados.put("pv_nmpoliza_i", numeroPoliza);
             mapaDuroResultados.put("pv_cdelemen_i", usuario.getEmpresa().getElementoId());
             mapaDuroResultados.put("pv_cdtipsit_i", datosUsuario.getCdtipsit());
+            t1=System.currentTimeMillis();
+            log.debug("######$ tiempo antes de obtener resultados cotizacion "+t1);
             List<ResultadoCotizacionVO> listaResultados=kernelManagerSustituto.obtenerResultadosCotizacion(mapaDuroResultados);
+            t2=System.currentTimeMillis();
+            log.debug("######$ tiempo despues de obtener resultados cotizacion "+t2);
+            log.debug("######$ tiempo consumido en obtener resultados cotizacion "+(t2-t1));
+            log.debug("######$ tiempo total consumido "+(t2-t));
             //utilizando logica anterior
             CotizacionManagerImpl managerAnterior=new CotizacionManagerImpl();
             gridResultados=managerAnterior.adaptarDatosCotizacion(listaResultados);
