@@ -48,7 +48,7 @@
 	
     function rendererRolp2(v)
     {
-    	var leyenda='no';
+    	var leyenda='';
         if(typeof v == 'string')
 	    		   //tengo solo el indice
         {
@@ -83,7 +83,7 @@
     
     function rendererSexop2(v)
     {
-        var leyenda='no';
+        var leyenda='';
         if(typeof v == 'string')
                    //tengo solo el indice
         {
