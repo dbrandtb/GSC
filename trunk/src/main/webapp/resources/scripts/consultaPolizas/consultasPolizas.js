@@ -717,7 +717,7 @@ Ext.onReady(function() {
         baseCls:'x-plain',
         renderTo: Ext.getBody(),
         layout: {
-            type: 'table',
+            type: 'column',
             columns: 2
         },
         autoScroll:true,
