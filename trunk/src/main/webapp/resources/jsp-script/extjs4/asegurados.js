@@ -2300,6 +2300,7 @@ Ext.onReady(function(){
 			                        	Ext.Ajax.request(
 			                        	{
 			                            	url: _URL_COTIZAR,
+			                            	timeout : 120000,
 			                            	jsonData:Ext.encode(submitValues),
 			                            	success:function(response,opts)
 			                            	{
@@ -2311,6 +2312,15 @@ Ext.onReady(function(){
 			                                	{
 			                                		Ext.getCmp('idCotizacion').setValue(jsonResp.id);
 			                                		mostrarGrid();
+			                                	}
+			                                	else
+			                                	{
+				                                	Ext.Msg.show({
+				                                    	title:'Error',
+				                                    	msg: 'Error al cotizar',
+				                                    	buttons: Ext.Msg.OK,
+				                                    	icon: Ext.Msg.ERROR
+				                                	});
 			                                	}
 			                            	},
 			                            	failure:function(response,opts)
