@@ -119,6 +119,17 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     private String comprarCdciaaguradora;
     private String comprarCdunieco;
     private Map<String,String> smap1;
+
+    //para los hilos
+    private int incisosProcesados;
+    private int contador;
+    private DatosUsuario datosUsuario;
+    private String numeroPoliza;
+    private IncisoSaludVO incisoActualIterado;
+    long t;
+    private UserVO usuario;
+    private boolean errorHilos=false;
+    private Exception exceptionHilo;
     
     public String entrar()
     {
@@ -131,6 +142,11 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     }
     
     public String cotizar()
+    {
+    	return this.cotizarOriginal();
+    }
+    
+    public String cotizarOriginal()
     {
     	long t=System.currentTimeMillis();
     	log.debug(""
@@ -525,6 +541,439 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             success=false;
         }
         return SUCCESS;
+    }
+    
+    public String cotizarHilos()
+    {
+    	t=System.currentTimeMillis();
+    	log.debug(""
+    			+ "\n######$ Tiempo de inicio: "+t);
+        try
+        {
+            /////////////////////////////////////////////
+            ////// Obtener el usuario de la sesion //////
+            /////////////////////////////////////////////
+            this.session=ActionContext.getContext().getSession();//porque se uso SMD en struts.xml y eso pierde la sesion
+            usuario=(UserVO) session.get("USUARIO");
+            log.debug("### usuario name: "+usuario.getName());
+            log.debug("### usuario user: "+usuario.getUser());
+            log.debug("### usuario empresa cdelemento id: "+usuario.getEmpresa().getElementoId());
+            log.debug("### usuario codigopersona: "+usuario.getCodigoPersona());
+            /////////////////////////////////////////////
+            
+            ///////////////////////////////////////////////////
+            ////// Calcular un anio a partir de la fecha //////
+            /*///////////////////////////////////////////////*
+            Calendar fechaEnUnAnio=Calendar.getInstance();
+            fechaEnUnAnio.add(Calendar.YEAR, 1);
+            log.debug("### fecha "+renderFechas.format(calendarHoy.getTime()));
+            log.debug("### fecha en un anio: "+renderFechas.format(fechaEnUnAnio.getTime()));*/
+            /*///////////////////////////////////////////////*/
+            ////// Calcular un anio a partir de la fecha //////
+            ///////////////////////////////////////////////////
+            
+            ///////////////////////////////////////////////////
+            ////// obtener datos del usuario //////////////////
+            /*///////////////////////////////////////////////*/
+            long t1=System.currentTimeMillis();
+            log.debug("######$ antes de pedir datos usuario: "+t1);
+            datosUsuario=kernelManagerSustituto.obtenerDatosUsuario(usuario.getUser());
+            long t2=System.currentTimeMillis();
+            log.debug("######$ despues de pedir datos usuario: "+t2);
+            log.debug("######$ tiempo pidiendo datos usuario: "+(t2-t1));
+            log.debug("######$ tiempo total: "+(t2-t));
+            /*///////////////////////////////////////////////*/
+            ////// obtener datos del usuario //////////////////
+            ///////////////////////////////////////////////////
+            
+            ///////////////////////////////////////////
+            ////// ini Crear un numero de poliza //////
+            ///////////////////////////////////////////
+            //String numeroPoliza;
+            if(id!=null&&id.length()>0)
+            {
+                numeroPoliza=id;
+            }
+            else
+            {
+            	t1=System.currentTimeMillis();
+            	log.debug("######$ antes de pedir numero de poliza: "+t1);
+                WrapperResultados wrapperNumeroPoliza=kernelManagerSustituto
+                        .calculaNumeroPoliza(datosUsuario.getCdunieco(),datosUsuario.getCdramo(),"W");
+                numeroPoliza=(String) wrapperNumeroPoliza.getItemMap().get("NUMERO_POLIZA");
+                t2=System.currentTimeMillis();
+            	log.debug("######$ despues de pedir numero de poliza: "+t2);
+            	log.debug("######$ tiempo pidiendo numero de poliza: "+(t2-t1));
+            	log.debug("######$ tiempo total: "+(t2-t));
+            }
+            ///////////////////////////////////////////
+            ////// fin Crear un numero de poliza //////
+            ///////////////////////////////////////////
+            
+            ///////////////////////////////////////////////////////
+            ////// ini Guardar el maestro de poliza nmpoliza //////
+            ///////////////////////////////////////////////////////
+            Map<String,String>mapa=new HashMap<String,String>(0);
+            mapa.put("pv_cdunieco",     datosUsuario.getCdunieco());
+            mapa.put("pv_cdramo",       datosUsuario.getCdramo());
+            mapa.put("pv_estado",       "W");
+            mapa.put("pv_nmpoliza",     numeroPoliza);
+            mapa.put("pv_nmsuplem",     "0");
+            mapa.put("pv_status",       "V");
+            mapa.put("pv_swestado",     "0");
+            mapa.put("pv_nmsolici",     null);
+            mapa.put("pv_feautori",     null);
+            mapa.put("pv_cdmotanu",     null);
+            mapa.put("pv_feanulac",     null);
+            mapa.put("pv_swautori",     "N");
+            mapa.put("pv_cdmoneda",     "001");
+            mapa.put("pv_feinisus",     null);
+            mapa.put("pv_fefinsus",     null);
+            mapa.put("pv_ottempot",     "R");
+            mapa.put("pv_feefecto",     fechaInicioVigencia);//renderFechas.format(calendarHoy.getTime()));
+            mapa.put("pv_hhefecto",     "12:00");
+            mapa.put("pv_feproren",     fechaFinVigencia);//renderFechas.format(fechaEnUnAnio.getTime()));
+            mapa.put("pv_fevencim",     null);
+            mapa.put("pv_nmrenova",     "0");
+            mapa.put("pv_ferecibo",     null);
+            mapa.put("pv_feultsin",     null);
+            mapa.put("pv_nmnumsin",     "0");
+            mapa.put("pv_cdtipcoa",     "N");
+            mapa.put("pv_swtarifi",     "A");
+            mapa.put("pv_swabrido",     null);
+            mapa.put("pv_feemisio",     renderFechas.format(calendarHoy.getTime()));
+            mapa.put("pv_cdperpag",     "12");
+            mapa.put("pv_nmpoliex",     null);
+            mapa.put("pv_nmcuadro",     "P1");
+            mapa.put("pv_porredau",     "100");
+            mapa.put("pv_swconsol",     "S");
+            mapa.put("pv_nmpolant",     null);
+            mapa.put("pv_nmpolnva",     null);
+            mapa.put("pv_fesolici",     renderFechas.format(calendarHoy.getTime()));
+            mapa.put("pv_cdramant",     null);
+            mapa.put("pv_cdmejred",     null);
+            mapa.put("pv_nmpoldoc",     null);
+            mapa.put("pv_nmpoliza2",    null);
+            mapa.put("pv_nmrenove",     null);
+            mapa.put("pv_nmsuplee",     null);
+            mapa.put("pv_ttipcamc",     null);
+            mapa.put("pv_ttipcamv",     null);
+            mapa.put("pv_swpatent",     null);
+            mapa.put("pv_accion",       "U");
+            log.debug("### Invocacion de insercion de maestro de poliza map: "+mapa);
+            t1=System.currentTimeMillis();
+            log.debug("######$ tiempo antes de insertar maestro poliza "+t1);
+            WrapperResultados wr=kernelManagerSustituto.insertaMaestroPolizas(mapa);
+            t2=System.currentTimeMillis();
+            log.debug("######$ tiempo despues de insertar maestro poliza "+t2);
+            log.debug("######$ tiempo consumido en insertar maestro poliza "+(t2-t1));
+            log.debug("######$ tiempo total consumido "+(t2-t));
+            log.debug("### response id "+wr.getMsgId());
+            log.debug("### response text "+wr.getMsgText());
+            ///////////////////////////////////////////////////////
+            ////// fin Guardar el maestro de poliza nmpoliza //////
+            ///////////////////////////////////////////////////////
+            
+            ////////////////////////////////////////
+            ////// ordenar primero al titular //////
+            /*////////////////////////////////////*/
+            int indiceTitular=0;
+            for(int i=0;i<incisos.size();i++)
+            {
+            	if(incisos.get(i).getRol().getKey().equals("T"))
+            	{
+            		indiceTitular=i;
+            	}
+            }
+            List<IncisoSaludVO>listaOrdenada=new ArrayList<IncisoSaludVO>(0);
+            IncisoSaludVO titular=incisos.get(indiceTitular);
+            listaOrdenada.add(titular);
+            incisos.remove(indiceTitular);
+            listaOrdenada.addAll(incisos);
+            incisos=listaOrdenada;
+            /*////////////////////////////////////*/
+			////// ordenar primero al titular //////
+            ////////////////////////////////////////
+            
+            ///////////////////////////////////////////////////////////////////////////////
+            ////// ini Guardar las situaciones (mpolisit y un mvalosit por cada una) //////
+            ///////////////////////////////////////////////////////////////////////////////
+            incisosProcesados=0;
+            contador=1;
+            for(IncisoSaludVO i : incisos)
+            {
+            	incisoActualIterado=i;
+            	new Thread(new Runnable()
+            	{
+            		long t1,t2;
+            	    public void run()
+            	    {
+            	    	try
+            	    	{
+			                log.debug("### Iteracion de polisit y valosit #"+contador);
+			                
+			                //////////////////////////////////
+			                ////// ini mpolisit iterado //////
+			                //////////////////////////////////
+			                Map<String,Object>mapaPolisitIterado=new HashMap<String,Object>(0);
+			                mapaPolisitIterado.put("pv_cdunieco_i",    datosUsuario.getCdunieco());
+			                mapaPolisitIterado.put("pv_cdramo_i",      datosUsuario.getCdramo());
+			                mapaPolisitIterado.put("pv_estado_i",      "W");
+			                mapaPolisitIterado.put("pv_nmpoliza_i",    numeroPoliza);
+			                mapaPolisitIterado.put("pv_nmsituac_i",    contador+"");
+			                mapaPolisitIterado.put("pv_nmsuplem_i",    "0");
+			                mapaPolisitIterado.put("pv_status_i",      "V");
+			                mapaPolisitIterado.put("pv_cdtipsit_i",    datosUsuario.getCdtipsit());
+			                mapaPolisitIterado.put("pv_swreduci_i",    null);
+			                mapaPolisitIterado.put("pv_cdagrupa_i",    "1");
+			                mapaPolisitIterado.put("pv_cdestado_i",    "0");
+			                mapaPolisitIterado.put("pv_fefecsit_i",    calendarHoy.getTime());
+			                mapaPolisitIterado.put("pv_fecharef_i",    calendarHoy.getTime());
+			                mapaPolisitIterado.put("pv_cdgrupo_i",     null);
+			                mapaPolisitIterado.put("pv_nmsituaext_i",  null);
+			                mapaPolisitIterado.put("pv_nmsitaux_i",    null);
+			                mapaPolisitIterado.put("pv_nmsbsitext_i",  null);
+			                mapaPolisitIterado.put("pv_cdplan_i",      "1");
+			                mapaPolisitIterado.put("pv_cdasegur_i",    "30");
+			                mapaPolisitIterado.put("pv_accion_i",      "I");
+			                t1=System.currentTimeMillis();
+			                log.debug("######$ tiempo antes de insertar polisit iterado "+t1);
+			                kernelManagerSustituto.insertaPolisit(mapaPolisitIterado);
+			                t2=System.currentTimeMillis();
+			                log.debug("######$ tiempo despues de insertar polisit iterado "+t2);
+			                log.debug("######$ tiempo consumido en insertar polisit iterado "+(t2-t1));
+			                log.debug("######$ tiempo total consumido "+(t2-t));
+			                //////////////////////////////////
+			                ////// fin mpolisit iterado //////
+			                //////////////////////////////////
+			                
+			                //////////////////////////////////
+			                ////// ini mvalosit iterado //////
+			                //////////////////////////////////
+			                Map<String,String>mapaValositIterado=new HashMap<String,String>(0);
+			                mapaValositIterado.put("pv_cdunieco",    datosUsuario.getCdunieco());
+			                mapaValositIterado.put("pv_cdramo",      datosUsuario.getCdramo());
+			                mapaValositIterado.put("pv_estado",      "W");
+			                mapaValositIterado.put("pv_nmpoliza",    numeroPoliza);
+			                mapaValositIterado.put("pv_nmsituac",    contador+"");
+			                mapaValositIterado.put("pv_nmsuplem",    "0");
+			                mapaValositIterado.put("pv_status",      "V");
+			                mapaValositIterado.put("pv_cdtipsit",    datosUsuario.getCdtipsit());
+			                mapaValositIterado.put("pv_otvalor01",   incisoActualIterado.getSexo().getKey());//sexo
+			                mapaValositIterado.put("pv_otvalor02",   renderFechas.format(incisoActualIterado.getFechaNacimiento()));//f nacimiento
+			                mapaValositIterado.put("pv_otvalor03",   codigoPostal);//codigoPostal
+			                mapaValositIterado.put("pv_otvalor04",   estado);//estado
+			                mapaValositIterado.put("pv_otvalor05",   deducible.toString());//deducible
+			                mapaValositIterado.put("pv_otvalor06",   copago);//copago
+			                mapaValositIterado.put("pv_otvalor07",   sumaSegurada);//suma asegurada
+			                mapaValositIterado.put("pv_otvalor08",   circuloHospitalario);//circulo hospitalario
+			                mapaValositIterado.put("pv_otvalor09",   coberturaVacunas);//cobetura vacunas
+			                mapaValositIterado.put("pv_otvalor10",   coberturaPrevencionEnfermedadesAdultos);//cob prev enf adultos
+			                mapaValositIterado.put("pv_otvalor11",   maternidad);//maternidad
+			                mapaValositIterado.put("pv_otvalor12",   sumaAseguradaMaternidad);//suma aeguarada maternidad
+			                mapaValositIterado.put("pv_otvalor13",   baseTabuladorReembolso);//base tabulador reembolso
+			                mapaValositIterado.put("pv_otvalor14",   costoEmergenciaExtranjero);//emergencia extranjero
+			                mapaValositIterado.put("pv_otvalor15",   coberturaEliminacionPenalizacionCambioZona);//cob elim pen cambio zona
+			                mapaValositIterado.put("pv_otvalor16",   incisoActualIterado.getRol().getKey());//parentesco
+			                mapaValositIterado.put("pv_otvalor17",   municipio);
+			                mapaValositIterado.put("pv_otvalor18",   null);
+			                mapaValositIterado.put("pv_otvalor19",   null);
+			                mapaValositIterado.put("pv_otvalor20",   null);
+			                mapaValositIterado.put("pv_otvalor21",   null);
+			                mapaValositIterado.put("pv_otvalor22",   null);
+			                mapaValositIterado.put("pv_otvalor23",   null);
+			                mapaValositIterado.put("pv_otvalor24",   null);
+			                mapaValositIterado.put("pv_otvalor25",   null);
+			                mapaValositIterado.put("pv_otvalor26",   null);
+			                mapaValositIterado.put("pv_otvalor27",   null);
+			                mapaValositIterado.put("pv_otvalor28",   null);
+			                mapaValositIterado.put("pv_otvalor29",   null);
+			                mapaValositIterado.put("pv_otvalor30",   null);
+			                mapaValositIterado.put("pv_otvalor31",   null);
+			                mapaValositIterado.put("pv_otvalor32",   null);
+			                mapaValositIterado.put("pv_otvalor33",   null);
+			                mapaValositIterado.put("pv_otvalor34",   null);
+			                mapaValositIterado.put("pv_otvalor35",   null);
+			                mapaValositIterado.put("pv_otvalor36",   null);
+			                mapaValositIterado.put("pv_otvalor37",   null);
+			                mapaValositIterado.put("pv_otvalor38",   null);
+			                mapaValositIterado.put("pv_otvalor39",   null);
+			                mapaValositIterado.put("pv_otvalor40",   null);
+			                mapaValositIterado.put("pv_otvalor41",   null);
+			                mapaValositIterado.put("pv_otvalor42",   null);
+			                mapaValositIterado.put("pv_otvalor43",   null);
+			                mapaValositIterado.put("pv_otvalor44",   null);
+			                mapaValositIterado.put("pv_otvalor45",   null);
+			                mapaValositIterado.put("pv_otvalor46",   null);
+			                mapaValositIterado.put("pv_otvalor47",   null);
+			                mapaValositIterado.put("pv_otvalor48",   null);
+			                mapaValositIterado.put("pv_otvalor49",   null);
+			                mapaValositIterado.put("pv_otvalor50",   null);
+			                t1=System.currentTimeMillis();
+			                log.debug("######$ tiempo antes de insertar valosit iterado "+t1);
+			                kernelManagerSustituto.insertaValoresSituaciones(mapaValositIterado);
+			                t2=System.currentTimeMillis();
+			                log.debug("######$ tiempo despues de insertar valosit iterado "+t2);
+			                log.debug("######$ tiempo consumido en insertar valosit iterado "+(t2-t1));
+			                log.debug("######$ tiempo total consumido "+(t2-t));
+			                //////////////////////////////////
+			                ////// fin mvalosit iterado //////
+			                //////////////////////////////////
+			                
+			                /////////////////////////////////////
+			                ////// clonar personas iterado //////
+			                /*/////////////////////////////////*/
+			                log.debug("### Iteracion de clonar personas #"+contador);
+			                Map<String,Object> mapaClonPersonaIterado=new HashMap<String,Object>(0);
+			                mapaClonPersonaIterado.put("pv_cdelemen_i",     usuario.getEmpresa().getElementoId());
+			                mapaClonPersonaIterado.put("pv_cdunieco_i",     datosUsuario.getCdunieco());
+			                mapaClonPersonaIterado.put("pv_cdramo_i",       datosUsuario.getCdramo());
+			                mapaClonPersonaIterado.put("pv_estado_i",       "W");
+			                mapaClonPersonaIterado.put("pv_nmpoliza_i",     numeroPoliza);
+			                mapaClonPersonaIterado.put("pv_nmsituac_i",     contador+"");
+			                mapaClonPersonaIterado.put("pv_cdtipsit_i",     datosUsuario.getCdtipsit());
+			                mapaClonPersonaIterado.put("pv_fecha_i",        calendarHoy.getTime());
+			                mapaClonPersonaIterado.put("pv_cdusuario_i",    usuario.getUser());
+			                mapaClonPersonaIterado.put("pv_p_nombre",       incisoActualIterado.getNombre());
+			                mapaClonPersonaIterado.put("pv_s_nombre",       incisoActualIterado.getSegundoNombre());
+			                mapaClonPersonaIterado.put("pv_apellidop",      incisoActualIterado.getApellidoPaterno());
+			                mapaClonPersonaIterado.put("pv_apellidom",      incisoActualIterado.getApellidoMaterno());
+			                mapaClonPersonaIterado.put("pv_sexo",           incisoActualIterado.getSexo().getKey());
+			                mapaClonPersonaIterado.put("pv_fenacimi",       incisoActualIterado.getFechaNacimiento());
+			                mapaClonPersonaIterado.put("pv_parentesco",     incisoActualIterado.getRol().getKey());
+			                t1=System.currentTimeMillis();
+			                log.debug("######$ tiempo antes de clonar personas iterado "+t1);
+			                kernelManagerSustituto.clonaPersonas(mapaClonPersonaIterado);
+			                t2=System.currentTimeMillis();
+			                log.debug("######$ tiempo despues de clonar personas iterado "+t2);
+			                log.debug("######$ tiempo consumido en clonar personas iterado "+(t2-t1));
+			                log.debug("######$ tiempo total consumido "+(t2-t));
+			                /*/////////////////////////////////*/
+			                ////// clonar personas iterado //////
+			                /////////////////////////////////////
+			                
+			                log.debug("### Fin de iteracion de polisit y valosit y clonado #"+contador);
+			                incisosProcesados++;
+            	    	}
+            	    	catch(Exception ex)
+            	    	{
+            	    		exceptionHilo=ex;
+            	    		errorHilos=true;
+            	    		log.error("error en iteracion en hilo de incisos ",ex);
+            	    	}
+            	    }
+            	}).start();
+                contador++;
+            }
+            
+            //aqui se queda esperando hasta que terminen de trabajar los hilos que se lanzaron
+            while(incisosProcesados<incisos.size()&&errorHilos==false)
+			{
+            	Thread.sleep(100);
+            	log.debug("Esperando hilos...");
+			}
+			if(errorHilos==false)//terminaron bien
+			{
+				log.debug("los hilos han terminado, se continua: ");
+				continuarCotizacion();
+			}
+			else//hubo error en hilos 
+			{
+				log.debug("los hilos han mandado excepcion: ");
+				throw exceptionHilo;
+			}
+            ///////////////////////////////////////////////////////////////////////////////
+            ////// fin Guardar las situaciones (mpolisit y un mvalosit por cada una) //////
+            ///////////////////////////////////////////////////////////////////////////////
+            
+        }
+        catch(Exception ex)
+        {
+            log.error(ex.getMessage(), ex);
+            success=false;
+        }
+        return SUCCESS;
+    }
+    
+    private void continuarCotizacion() throws Exception
+    {
+    	long t1,t2;
+		////////////////////////
+		////// coberturas //////
+		/*////////////////////*/
+		Map<String,String> mapCoberturas=new HashMap<String,String>(0);
+		mapCoberturas.put("pv_cdunieco_i",   datosUsuario.getCdunieco());
+		mapCoberturas.put("pv_cdramo_i",     datosUsuario.getCdramo());
+		mapCoberturas.put("pv_estado_i",     "W");
+		mapCoberturas.put("pv_nmpoliza_i",   numeroPoliza);
+		mapCoberturas.put("pv_nmsituac_i",   "0");
+		mapCoberturas.put("pv_nmsuplem_i",   "0");//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+		mapCoberturas.put("pv_cdgarant_i",   "TODO");//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+		t1=System.currentTimeMillis();
+		log.debug("######$ tiempo antes de coberturas "+t1);
+		kernelManagerSustituto.coberturas(mapCoberturas);
+		t2=System.currentTimeMillis();
+		log.debug("######$ tiempo despues de coberturas "+t2);
+		log.debug("######$ tiempo consumido en coberturas "+(t2-t1));
+		log.debug("######$ tiempo total consumido "+(t2-t));
+		/*////////////////////*/
+		////// coberturas //////
+		////////////////////////
+		
+		//////////////////////////
+		////// TARIFICACION //////
+		/*//////////////////////*/
+		Map<String,String> mapaTarificacion=new HashMap<String,String>(0);
+		mapaTarificacion.put("pv_cdusuari_i",   usuario.getUser());
+		mapaTarificacion.put("pv_cdelemen_i",   usuario.getEmpresa().getElementoId());
+		mapaTarificacion.put("pv_cdunieco_i",   datosUsuario.getCdunieco());
+		mapaTarificacion.put("pv_cdramo_i",     datosUsuario.getCdramo());
+		mapaTarificacion.put("pv_estado_i",     "W");
+		mapaTarificacion.put("pv_nmpoliza_i",   numeroPoliza);
+		mapaTarificacion.put("pv_nmsituac_i",   "0");
+		mapaTarificacion.put("pv_nmsuplem_i",   "0");
+		mapaTarificacion.put("pv_cdtipsit_i",   datosUsuario.getCdtipsit());
+		t1=System.currentTimeMillis();
+		log.debug("######$ tiempo antes de asigsvalipol "+t1);
+		WrapperResultados wr4=kernelManagerSustituto.ejecutaASIGSVALIPOL(mapaTarificacion);
+		t2=System.currentTimeMillis();
+		log.debug("######$ tiempo despues de asigsvalipol "+t2);
+		log.debug("######$ tiempo consumido en asigsvalipol "+(t2-t1));
+		log.debug("######$ tiempo total consumido "+(t2-t));
+		/*//////////////////////*/
+		////// TARIFICACION //////
+		//////////////////////////
+		
+		///////////////////////////////////
+		////// Generacion cotizacion //////
+		/*///////////////////////////////*/
+		Map<String,String> mapaDuroResultados=new HashMap<String,String>(0);
+		mapaDuroResultados.put("pv_cdusuari_i", usuario.getUser());
+		mapaDuroResultados.put("pv_cdunieco_i", datosUsuario.getCdunieco());
+		mapaDuroResultados.put("pv_cdramo_i",   datosUsuario.getCdramo());
+		mapaDuroResultados.put("pv_estado_i",   "W");
+		mapaDuroResultados.put("pv_nmpoliza_i", numeroPoliza);
+		mapaDuroResultados.put("pv_cdelemen_i", usuario.getEmpresa().getElementoId());
+		mapaDuroResultados.put("pv_cdtipsit_i", datosUsuario.getCdtipsit());
+		t1=System.currentTimeMillis();
+		log.debug("######$ tiempo antes de obtener resultados cotizacion "+t1);
+		List<ResultadoCotizacionVO> listaResultados=kernelManagerSustituto.obtenerResultadosCotizacion(mapaDuroResultados);
+		t2=System.currentTimeMillis();
+		log.debug("######$ tiempo despues de obtener resultados cotizacion "+t2);
+		log.debug("######$ tiempo consumido en obtener resultados cotizacion "+(t2-t1));
+		log.debug("######$ tiempo total consumido "+(t2-t));
+		//utilizando logica anterior
+		CotizacionManagerImpl managerAnterior=new CotizacionManagerImpl();
+		gridResultados=managerAnterior.adaptarDatosCotizacion(listaResultados);
+		log.debug("### session poniendo resultados con grid: "+listaResultados.size());
+		session.put(ResultadoCotizacionAction.DATOS_GRID, gridResultados);
+		/*///////////////////////////////*/
+		////// Generacion cotizacion //////
+		///////////////////////////////////
+		
+		id=numeroPoliza;
+		
+		success=true;
     }
     
     public String obtenerResultadosCotizacion()
