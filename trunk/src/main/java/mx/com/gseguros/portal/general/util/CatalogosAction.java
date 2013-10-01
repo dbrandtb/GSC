@@ -72,6 +72,16 @@ public class CatalogosAction extends PrincipalCoreAction
                 lista=kernelManager.getTmanteni(catalogo);
                 success=true;
             }
+            else if(catalogo.equals(ConstantesCatalogos.CON_CAT_TPERSONA))
+            {
+                lista=kernelManager.getTmanteni(catalogo);
+                success=true;
+            }
+            else if(catalogo.equals(ConstantesCatalogos.CON_CAT_NACIONALIDAD))
+            {
+                lista=kernelManager.getTmanteni(catalogo);
+                success=true;
+            }
         }
         catch(Exception ex)
         {
