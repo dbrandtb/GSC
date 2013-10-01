@@ -1678,6 +1678,8 @@ public class ProcesoDAO extends AbstractDAO {
     		r.put("Apellido_Materno",	rs.getString("Apellido_Materno"));
     		r.put("cdrfc",				rs.getString("cdrfc"));
     		r.put("Parentesco",		    rs.getString("Parentesco"));
+    		r.put("tpersona",           rs.getString("otfisjur"));
+    		r.put("nacional",           rs.getString("cdnacion"));
     		return r;
     	}
     }
@@ -2199,7 +2201,7 @@ public class ProcesoDAO extends AbstractDAO {
 			declareParameter(new SqlParameter("pv_dsapellido1_i", 	OracleTypes.VARCHAR));// IN  MPERSONA.dsapellido1%TYPE DEFAULT NULL,
 			declareParameter(new SqlParameter("pv_feingreso_i", 	OracleTypes.DATE));// IN  MPERSONA.feingreso%TYPE DEFAULT NULL,  Valor por default SYSDATE
 			declareParameter(new SqlParameter("pv_accion_i", 		OracleTypes.VARCHAR));//
-    		
+    		//qwe
     		declareParameter(new SqlOutParameter("pv_msg_id_o", 	OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o", 		OracleTypes.VARCHAR));
     		
@@ -2428,7 +2430,7 @@ public class ProcesoDAO extends AbstractDAO {
 			/*
 			pv_cdperson_i smap1.pv_cdperson
 			pv_nmorddom_i smap1.NMORDDOM
-			pv_msdomici_i smap1.DSDOMICI qwe
+			pv_msdomici_i smap1.DSDOMICI
 			pv_nmtelefo_i smap1.NMTELEFO
 			pv_cdpostal_i smap1.CODPOSTAL
 			pv_cdedo_i    smap1.CDEDO
@@ -2659,6 +2661,7 @@ public class ProcesoDAO extends AbstractDAO {
 			declareParameter(new SqlParameter("pv_fecha",         OracleTypes.DATE));
 			declareParameter(new SqlOutParameter("pv_nmpoliza_o",   OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_nmpoliex_o",   OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_nmsuplem_o",   OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_message",      OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
@@ -2671,6 +2674,7 @@ public class ProcesoDAO extends AbstractDAO {
 			wrapperResultados.setItemMap(new HashMap<String, Object>());
 			wrapperResultados.getItemMap().put("nmpoliza", map.get("pv_nmpoliza_o"));
 			wrapperResultados.getItemMap().put("nmpoliex", map.get("pv_nmpoliex_o"));
+			wrapperResultados.getItemMap().put("nmsuplem", map.get("pv_nmsuplem_o"));
 
 			return wrapperResultados;
 		}
