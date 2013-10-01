@@ -135,10 +135,10 @@ public static ResultSetMetaData cursorResultSetMetaData(ResultSet rs, String pl 
 			
 			rs = (ResultSet) cs.getObject(j-2);
 			
-			logger.debug(">>>>>>> SALIDA ::: out :::");
+			logger.debug(">>>>>>> SALIDA <<<<<<<<<");
 			//logger.debug(">>>>>>> numero  ::: out ::: = "+numero);
-			logger.debug(">>>>>>> id  ::: out ::: = "+id);
-			logger.debug(">>>>>>> msg  ::: out ::: = "+msg);
+			logger.debug(">>>>>>> id out ::: = "+id);
+			logger.debug(">>>>>>> msg out ::: = "+msg);
 			
 			
 			
@@ -347,11 +347,11 @@ public static void pruebasJDBCok(){
 		 *PARA CURSORES
 		 rs = (ResultSet) cs.getObject(j-2);*/
 		
-		logger.debug(">>>>>>> SALIDA ::: out :::");
+		logger.debug(">>>>>>> SALIDA <<<<<<<<");
 		
-		logger.debug(">>>>>>> msgAux0  ::: out ::: = "+msgAux0);
-		logger.debug(">>>>>>> id  ::: out ::: = "+id);
-		logger.debug(">>>>>>> msg/title  ::: out ::: = "+msg);
+		logger.debug(">>>>>>> msgAux0 out ::: = "+msgAux0);
+		logger.debug(">>>>>>> id out ::: = "+id);
+		logger.debug(">>>>>>> msg/title out ::: = "+msg);
 		/*
 		 *PARA CURSORES 
 		ResultSetMetaData metaData=cursorResultSetMetaData(rs, ".P_OBTIENE_MNOTIFIC_REG( ?,?,?,?,?,? )" );
@@ -413,19 +413,19 @@ public static void pruebasJDBCok(){
 			}
 			conn = DriverManager.getConnection("jdbc:oracle:thin:@" + host+ ":" + puerto + ":" + SID, user, pass);
 			
-			logger.debug(">>>>>>> antes de llamar a PKG_NOTIFICACIONES_CATBO.P_OBTIENE_TNOTPROC_PROCESOS( ?,?,?,?,?,? )");
+			logger.debug(">>>>>>> antes de llamar a pkg_consulta.P_cons_recibo_pol(?, ?, ?, ?, ?, ?, ?, ?)");
 			String nulo="";
 			
 			
-			cs = conn.prepareCall("{ call PKG_COTIZA.P_GEN_TARIFICACION(?, ?, ?, ?, ?, ?, ?, ?, ?, ?) }");
+			cs = conn.prepareCall("{ call pkg_consulta.P_cons_recibo_pol(?, ?, ?, ?, ?, ?, ?, ?) }");
 			int j=1;
-			cs.setString(j++, "PARAMETRIZA1");
 			cs.setString(j++, "1");
-			cs.setString(j++, "500");
-			cs.setString(j++, "W");
-			cs.setString(j++, "4518");
-			cs.setString(j++, "6117");
-			cs.setString(j++, "1");
+			cs.setString(j++, "2");
+			cs.setString(j++, "M");
+			cs.setString(j++, "121");
+			cs.setString(j++, "0");
+//			cs.setString(j++, "6117");
+//			cs.setString(j++, "1");
 			
 			cs.registerOutParameter(j++, OracleTypes.CURSOR);
 			cs.registerOutParameter(j++, OracleTypes.NUMERIC);
@@ -438,12 +438,12 @@ public static void pruebasJDBCok(){
 			 
 			rs = (ResultSet) cs.getObject(j-2);
 			
-			logger.debug(">>>>>>> SALIDA ::: out :::");
+			logger.debug(">>>>>>> SALIDA <<<<<<<<");
 			
-			logger.debug(">>>>>>> id  ::: out ::: = "+id);
-			logger.debug(">>>>>>> msg/title  ::: out ::: = "+msg);
+			logger.debug(">>>>>>> id out ::: = "+id);
+			logger.debug(">>>>>>> msg/title out ::: = "+msg);
 			
-			ResultSetMetaData metaData=cursorResultSetMetaData(rs, ".P_OBTIENE_MNOTIFIC_REG( ?,?,?,?,?,? )" );
+			ResultSetMetaData metaData=cursorResultSetMetaData(rs, "pkg_consulta.P_cons_recibo_pol(?, ?, ?, ?, ?, ?, ?, ?)" );
 			int numCols=metaData.getColumnCount();
 			
 			

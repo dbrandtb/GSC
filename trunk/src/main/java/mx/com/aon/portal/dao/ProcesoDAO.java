@@ -18,6 +18,7 @@ import mx.com.aon.flujos.cotizacion.model.AyudaCoberturaCotizacionVO;
 import mx.com.aon.flujos.cotizacion.model.CoberturaCotizacionVO;
 import mx.com.aon.flujos.cotizacion.model.DatosEntradaCotizaVO;
 import mx.com.aon.flujos.cotizacion.model.ResultadoCotizacionVO;
+import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSalud;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.Recibo;
 import mx.com.aon.flujos.cotizacion.model.SituacionVO;
 import mx.com.aon.portal.util.WrapperResultados;
@@ -120,6 +121,7 @@ public class ProcesoDAO extends AbstractDAO {
 
     public static final String OBTIENE_DATOS_RECIBOS="OBTIENE_DATOS_RECIBOS";
     public static final String OBTIENE_CATALOGO_COLONIAS="OBTIENE_CATALOGO_COLONIAS";
+    public static final String OBTIENE_DATOS_CLIENTE="OBTIENE_DATOS_CLIENTE";
 
 	protected void initDao() throws Exception {
 		addStoredProcedure(PERMISO_EJECUCION_PROCESO,new PermisoEjecucionProceso(getDataSource()));
@@ -188,6 +190,7 @@ public class ProcesoDAO extends AbstractDAO {
 
         addStoredProcedure(OBTIENE_DATOS_RECIBOS, new ObtenDatosRecibos(getDataSource()));
         addStoredProcedure(OBTIENE_CATALOGO_COLONIAS, new ObtenCatalogoColonias(getDataSource()));
+        addStoredProcedure(OBTIENE_DATOS_CLIENTE, new ObtenDatosCliente(getDataSource()));
 	}
 
 	protected class BuscarMatrizAsignacion extends CustomStoredProcedure {
@@ -3205,6 +3208,98 @@ public class ProcesoDAO extends AbstractDAO {
     		base.setKey(rs.getString("CODIGO"));
     		base.setValue(rs.getString("NOMBRE"));
     		return base;
+    	}
+    }
+
+    
+    protected class ObtenDatosCliente extends CustomStoredProcedure {
+    	
+    	protected ObtenDatosCliente(DataSource dataSource) {
+    		super(dataSource, "PKG_CONSULTA.P_cons_sal_cli");
+    		
+    		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));			
+    		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));			
+    		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));			
+    		declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));			
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ClienteMapper()));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+    		WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+    		WrapperResultados wrapperResultados = mapper.build(map);
+    		List result = (List) map.get("pv_registro_o");
+    		wrapperResultados.setItemList(result);
+    		return wrapperResultados;
+    	}
+    }
+    
+    
+    protected class ClienteMapper  implements RowMapper {
+    	
+    	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+    		ClienteSalud cliente = new ClienteSalud();
+    		DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT); 
+        	Calendar cal;
+    		
+    		cliente.setAgrupaCli(rs.getInt("agrupaCli"));
+    		cliente.setApellidomCli(rs.getString("apellidomCli"));
+    		cliente.setApellidopCli(rs.getString("apellidopCli"));
+    		cliente.setBannomCli(rs.getString("bannomCli"));
+    		cliente.setCallecarCli(rs.getString("callecarCli"));
+    		cliente.setCalleCli(rs.getString("calleCli"));
+    		cliente.setCanconCli(rs.getInt("canconCli"));
+    		cliente.setCelularCli(rs.getString("celularCli"));
+    		cliente.setCheqdevCli(rs.getInt("cheqdevCli"));
+    		cliente.setClaveCli(rs.getInt("claveCli"));
+    		cliente.setCodcarCli(rs.getInt("codcarCli"));
+    		cliente.setCodposCli(rs.getInt("codposCli"));
+    		cliente.setColcarCli(rs.getString("colcarCli"));
+    		cliente.setColoniaCli(rs.getString("coloniaCli"));
+    		cliente.setEdocarCli(rs.getInt("edocarCli"));
+    		cliente.setEdocivilCli(rs.getInt("edocivilCli"));
+    		cliente.setEstadoCli(rs.getInt("estadoCli"));
+    		cliente.setFaxCli(rs.getString("faxCli"));
+
+    		try {
+	        	cal = Calendar.getInstance();
+				cal.setTime(df.parse(rs.getString("fecaltaCli")));
+				cliente.setFecaltaCli(cal);
+        	} catch (Exception e) {
+				logger.error("NO SE PUDO PARSEAR LA FECHA fecaltaCli !!! " + rs.getString("fecaltaCli"));
+				cliente.setFecaltaCli(null);
+			}
+        	
+        	try {
+	        	cal = Calendar.getInstance();
+	        	cal.setTime(df.parse(rs.getString("fecnacCli")));
+	        	cliente.setFecnacCli(cal);
+        	} catch (Exception e) {
+				logger.error("NO SE PUDO PARSEAR LA FECHA fecnacCli !!! " + rs.getString("fecnacCli"));
+				cliente.setFecnacCli(null);
+			}
+    		
+    		cliente.setFismorCli(rs.getInt("fismorCli"));
+    		cliente.setGiroCli(rs.getInt("giroCli"));
+    		cliente.setMuncarCli(rs.getString("muncarCli"));
+    		cliente.setMunicipioCli(rs.getString("municipioCli"));
+    		cliente.setNombreCli(rs.getString("nombreCli"));
+    		cliente.setNumcarCli(rs.getString("numcarCli"));
+    		cliente.setNumeroCli(rs.getString("numeroCli"));
+    		cliente.setPobcarCli(rs.getString("pobcarCli"));
+    		cliente.setPoblacionCli(rs.getString("poblacionCli"));
+    		cliente.setRfcCli(rs.getString("rfcCli"));
+    		cliente.setRmdbRn(rs.getInt("rmdbRn"));
+    		cliente.setSexoCli(rs.getInt("sexoCli"));
+    		cliente.setSinocurCli(rs.getInt("sinocurCli"));
+    		cliente.setSucursalCli(rs.getInt("sucursalCli"));
+    		cliente.setTelefonoCli(rs.getString("telefonoCli"));
+    		cliente.setTituloCli(rs.getString("tituloCli"));
+    		cliente.setTitulonobCli(rs.getString("titulonobCli"));
+    		
+    		return cliente;
     	}
     }
 }
