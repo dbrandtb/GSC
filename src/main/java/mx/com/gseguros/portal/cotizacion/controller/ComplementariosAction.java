@@ -40,7 +40,6 @@ import mx.com.gseguros.portal.general.util.ConstantesCatalogos;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.ws.client.Ice2sigsWebServices;
 import mx.com.gseguros.ws.client.Ice2sigsWebServices.Operacion;
-
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.Recibo;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboRespuesta;
 
@@ -351,6 +350,8 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "Apellido_Paterno")));
 			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "Apellido_Materno")));
 			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "cdrfc")));
+			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "tpersona")));
+			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "nacional")));
 			item1.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("name", "estomador"))
 					.add(new Item("type", "boolean"))
@@ -428,6 +429,20 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 							.add("xtype","textfield")
 							.add("allowBlank",false)
 						)
+					);
+			item3.add(Item.crear(null, null, Item.OBJ)
+					.add(new Item("header", "T. Persona"))
+					.add(new Item("dataIndex", "tpersona"))
+					.add(new Item("flex", 1))
+					.add(Item.crear("renderer","rendererTpersonap2").setQuotes(""))
+					.add(Item.crear("editor","editorTpersonap2").setQuotes(""))
+					);
+			item3.add(Item.crear(null, null, Item.OBJ)
+					.add(new Item("header", "Nacionalidad"))
+					.add(new Item("dataIndex", "nacional"))
+					.add(new Item("flex", 1))
+					.add(Item.crear("renderer","rendererNacionesp2").setQuotes(""))
+					.add(Item.crear("editor","editorNacionesp2").setQuotes(""))
 					);
 			item3.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("xtype", "actioncolumn"))
@@ -520,6 +535,13 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 					.add(Item.crear("editor","editorGenerosp2").setQuotes(""))
 					);
 			item2.add(Item.crear(null, null, Item.OBJ)
+					.add(new Item("header", "T. Persona"))
+					.add(new Item("dataIndex", "tpersona"))
+					.add(new Item("flex", 1))
+					.add(Item.crear("renderer","rendererTpersonap2").setQuotes(""))
+					.add(Item.crear("editor","editorTpersonap2").setQuotes(""))
+					);
+			item2.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("header", "RFC"))
 					.add(new Item("dataIndex", "cdrfc"))
 					.add(new Item("flex", 1))
@@ -527,6 +549,13 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 							.add("xtype","textfield")
 							.add("allowBlank",false)
 						)
+					);
+			item2.add(Item.crear(null, null, Item.OBJ)
+					.add(new Item("header", "Nacionalidad"))
+					.add(new Item("dataIndex", "nacional"))
+					.add(new Item("flex", 1))
+					.add(Item.crear("renderer","rendererNacionesp2").setQuotes(""))
+					.add(Item.crear("editor","editorNacionesp2").setQuotes(""))
 					);
 			/*xtype: 'actioncolumn',
 	                        width: 30,
@@ -662,7 +691,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 				parametros.put("pv_cdideper_i", (String)aseg.get("cdrfc"));//						OracleTypes.VARCHAR));// IN  MPERSONA.cdideper%TYPE DEFAULT NULL, Valor de CDRFC
 				parametros.put("pv_dsnombre_i",(String)aseg.get("nombre"));// 						OracleTypes.VARCHAR));// IN  MPERSONA.dsnombre%TYPE DEFAULT NULL,
 				parametros.put("pv_cdtipper_i","1");// 												OracleTypes.VARCHAR));// IN  MPERSONA.cdtipper%TYPE DEFAULT NULL, Valor por default 1
-				parametros.put("pv_otfisjur_i","F");// 												OracleTypes.VARCHAR));// IN  MPERSONA.otfisjur%TYPE DEFAULT NULL, Valor por default F
+				parametros.put("pv_otfisjur_i",(String)aseg.get("tpersona"));// 												OracleTypes.VARCHAR));// IN  MPERSONA.otfisjur%TYPE DEFAULT NULL, Valor por default F
 				parametros.put("pv_otsexo_i",(String)aseg.get("sexo"));// 							OracleTypes.VARCHAR));// IN  MPERSONA.otsexo%TYPE DEFAULT NULL,
 				parametros.put("pv_fenacimi_i",renderFechas.parse((String)aseg.get("fenacimi")));//	OracleTypes.VARCHAR));// IN  MPERSONA.fenacimi%TYPE DEFAULT NULL,
 				parametros.put("pv_cdrfc_i",(String)aseg.get("cdrfc"));// 							OracleTypes.VARCHAR));// IN  MPERSONA.cdrfc%TYPE DEFAULT NULL,
@@ -671,6 +700,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 				parametros.put("pv_dsapellido_i",(String)aseg.get("Apellido_Paterno"));// 			OracleTypes.VARCHAR));// IN  MPERSONA.dsapellido%TYPE DEFAULT NULL,
 				parametros.put("pv_dsapellido1_i",(String)aseg.get("Apellido_Materno"));// 			OracleTypes.VARCHAR));// IN  MPERSONA.dsapellido1%TYPE DEFAULT NULL,
 				parametros.put("pv_feingreso_i", calendarHoy.getTime());//		OracleTypes.VARCHAR));// IN  MPERSONA.feingreso%TYPE DEFAULT NULL,  Valor por default SYSDATE
+				parametros.put("pv_cdnacion_i",(String)aseg.get("nacional"));
 				parametros.put("pv_accion_i", "I");//												OracleTypes.VARCHAR));//
 				log.debug("#iteracion mov mpersonas "+i);
 				kernelManager.movMpersona(parametros);
@@ -1314,6 +1344,10 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 
 	public void setIce2sigsWebServices(Ice2sigsWebServices ice2sigsWebServices) {
 		this.ice2sigsWebServices = ice2sigsWebServices;
+	}
+
+	public String getCON_CAT_TPERSONA() {
+		return CON_CAT_TPERSONA;
 	}
 
 }
