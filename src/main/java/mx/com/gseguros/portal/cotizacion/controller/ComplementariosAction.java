@@ -1350,4 +1350,8 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 		return CON_CAT_TPERSONA;
 	}
 
+	public String getCON_CAT_NACIONALIDAD() {
+		return CON_CAT_NACIONALIDAD;
+	}
+
 }
