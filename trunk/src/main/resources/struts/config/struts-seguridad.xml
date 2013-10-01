@@ -28,10 +28,7 @@
 		
 		<action name="logout" class="autenticacionAction"
             method="logoutUsuario">
-            <result name="success" type="redirectAction">
-                <param name="actionName">login</param>
-                <param name="namespace">/seguridad</param>
-            </result>
+            <result name="success">/jsp/portal/login.jsp</result>
         </action>
 
 		<!--<action name="datosPoliza"> <result>/jsp/ConsultaDatos/consultaDatosPoliza.jsp</result> 
