@@ -344,19 +344,26 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 					.add(new Item("name", "sexo"))
 					.add(new Item("type", "Generic"))
 					);
+			item1.add(Item.crear(null, null, Item.OBJ)
+					.add(new Item("name", "tpersona"))
+					.add(new Item("type", "Generic"))
+					);
+			item1.add(Item.crear(null, null, Item.OBJ)
+					.add(new Item("name", "nacional"))
+					.add(new Item("type", "Generic"))
+					);
 			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "cdperson")));
 			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "nombre")));
 			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "segundo_nombre")));
 			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "Apellido_Paterno")));
 			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "Apellido_Materno")));
 			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "cdrfc")));
-			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "tpersona")));
-			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "nacional")));
 			item1.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("name", "estomador"))
 					.add(new Item("type", "boolean"))
 					);
 			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "Parentesco")));
+			log.debug("Modelo armado para persona: "+item1.toString());
 			
 			/*
 			nmsituac
@@ -422,15 +429,6 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 					.add(Item.crear("editor","editorGenerosp2").setQuotes(""))
 					);
 			item3.add(Item.crear(null, null, Item.OBJ)
-					.add(new Item("header", "RFC"))
-					.add(new Item("dataIndex", "cdrfc"))
-					.add(new Item("flex", 1))
-					.add(Item.crear("editor",null,Item.OBJ)
-							.add("xtype","textfield")
-							.add("allowBlank",false)
-						)
-					);
-			item3.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("header", "T. Persona"))
 					.add(new Item("dataIndex", "tpersona"))
 					.add(new Item("flex", 1))
@@ -443,6 +441,15 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 					.add(new Item("flex", 1))
 					.add(Item.crear("renderer","rendererNacionesp2").setQuotes(""))
 					.add(Item.crear("editor","editorNacionesp2").setQuotes(""))
+					);
+			item3.add(Item.crear(null, null, Item.OBJ)
+					.add(new Item("header", "RFC"))
+					.add(new Item("dataIndex", "cdrfc"))
+					.add(new Item("flex", 1))
+					.add(Item.crear("editor",null,Item.OBJ)
+							.add("xtype","textfield")
+							.add("allowBlank",false)
+							)
 					);
 			item3.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("xtype", "actioncolumn"))
@@ -542,6 +549,13 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 					.add(Item.crear("editor","editorTpersonap2").setQuotes(""))
 					);
 			item2.add(Item.crear(null, null, Item.OBJ)
+					.add(new Item("header", "Nacionalidad"))
+					.add(new Item("dataIndex", "nacional"))
+					.add(new Item("flex", 1))
+					.add(Item.crear("renderer","rendererNacionesp2").setQuotes(""))
+					.add(Item.crear("editor","editorNacionesp2").setQuotes(""))
+					);
+			item2.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("header", "RFC"))
 					.add(new Item("dataIndex", "cdrfc"))
 					.add(new Item("flex", 1))
@@ -549,13 +563,6 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 							.add("xtype","textfield")
 							.add("allowBlank",false)
 						)
-					);
-			item2.add(Item.crear(null, null, Item.OBJ)
-					.add(new Item("header", "Nacionalidad"))
-					.add(new Item("dataIndex", "nacional"))
-					.add(new Item("flex", 1))
-					.add(Item.crear("renderer","rendererNacionesp2").setQuotes(""))
-					.add(Item.crear("editor","editorNacionesp2").setQuotes(""))
 					);
 			/*xtype: 'actioncolumn',
 	                        width: 30,
