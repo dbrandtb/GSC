@@ -80,4 +80,5 @@ public interface KernelManagerSustituto {
 	public List<Map<String, String>> loadMesaControl() throws ApplicationException;
 	public WrapperResultados obtenDatosRecibos(HashMap<String,Object> params) throws ApplicationException;
 	public WrapperResultados cargaColonias(String codigoPostal) throws ApplicationException;
+	public WrapperResultados obtenDatosClienteWS(HashMap<String,Object> params) throws ApplicationException;
 }

@@ -626,6 +626,14 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 				ProcesoDAO.OBTIENE_DATOS_RECIBOS);
 		return result;
 	}
+
+	public WrapperResultados obtenDatosClienteWS(HashMap<String,Object> params) throws ApplicationException
+	{
+		WrapperResultados result = this.returnBackBoneInvoke(params,
+				ProcesoDAO.OBTIENE_DATOS_CLIENTE);
+		return result;
+	}
+	
 	public WrapperResultados cargaColonias(String codigoPostal) throws ApplicationException
 	{
 		HashMap<String,Object> params =  new HashMap<String, Object>();

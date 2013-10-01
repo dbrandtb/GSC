@@ -40,6 +40,9 @@ import mx.com.gseguros.portal.general.util.ConstantesCatalogos;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.ws.client.Ice2sigsWebServices;
 import mx.com.gseguros.ws.client.Ice2sigsWebServices.Operacion;
+
+import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSalud;
+import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSaludRespuesta;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.Recibo;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboRespuesta;
 
@@ -914,6 +917,12 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 	
 	public String emitir()
 	{
+		/**
+		 * TODO: Poner variable el cdTipSit de la poliza y la sucursal
+		 */
+		String cdtipsit = "213";
+		String sucursal = "1000";
+		
 		log.debug(""
 				+ "\n########################"
 				+ "\n########################"
@@ -1038,7 +1047,10 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 						+ "");
 			}
 			
-			if(!ejecutaWSrecibos(datUs.getCdunieco(), datUs.getCdramo(), "M", (String)wr.getItemMap().get("nmpoliza"), "0"))
+			
+			//if(!ejecutaWSclienteSalud(datUs.getCdunieco(), datUs.getCdramo(), "M", (String)wr.getItemMap().get("nmpoliza"), (String)wr.getItemMap().get("nmsuplem")))
+				//logger.error("NO SE HA EJECUTADO CORRECTAMENTE EL WS DE CLIENTE SALUD!!!, POLIZA:" + (String)wr.getItemMap().get("nmpoliza"));
+			if(!ejecutaWSrecibos(datUs.getCdunieco(), datUs.getCdramo(), "M", (String)wr.getItemMap().get("nmpoliza"), (String)wr.getItemMap().get("nmsuplem"), rutaCarpeta, cdtipsit, sucursal))
 				logger.error("NO SE HAN INSERTADO TODOS LOS RECIBOS!!! PARA ICE2SIGS, POLIZA: " + (String)wr.getItemMap().get("nmpoliza"));
 			
 			success=true;
@@ -1058,7 +1070,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 		return SUCCESS;
 	}
 	
-	private boolean ejecutaWSrecibos(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem){
+	private boolean ejecutaWSrecibos(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String rutaPoliza, String cdtipsit, String sucursal){
 		boolean allInserted = true;
 		
 		logger.debug("*** Entrando a metodo Inserta Recibos WS ice2sigs, para la poliza: " + nmpoliza + "***");
@@ -1068,7 +1080,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 		params.put("pv_cdramo_i", cdramo);
 		params.put("pv_estado_i", estado);
 		params.put("pv_nmpoliza_i", nmpoliza);
-		params.put("pv_nmsuplem_i", nmsuplem);
+		params.put("pv_nmsuplem_i", nmsuplem);//0
 		
 		WrapperResultados result = null;
 		ArrayList<Recibo> recibos =  null;
@@ -1089,7 +1101,78 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 				allInserted = false;
 			}
 		}
+		
+		/**
+		 * PARA EL GUARDADO CADA PDF DE RECIBO
+		 */
+		logger.debug("Empieza Grabado de Pdfs de Recibos en: "+rutaPoliza);
+		for(Recibo recibo: recibos){
+			try{
+//				Parámetro1:  9999: Recibo
+//				Parámetro2:  Siempre va en 0
+//				Parámetro3:  Sucursal
+//				Parámetro4:  Ramo (213 o 214)
+//				Parámetro5:  Póliza
+//				Parámetro6:  Trámite(poner 0)
+//				Parámetro7:  Número de endoso (Cuando es póliza nueva poner 0)
+//				Parámetro8:  Tipo de endoso (Si es vacío no enviar nada en otro caso poner A o D según sea el caso)
+//				Parámetro9:  Número de recibo (1,2,3…..según la forma de pago) Para nuestro caso es siempre el 1
+				//if("1".equals(recibo.getNumRec())){
+					String parametros = "?9999,0,"+sucursal+","+cdtipsit+","+nmpoliza+",0,0,,"+recibo.getNumRec();
+					logger.debug("URL Generada para Recibo: "+ this.getText("url.imp.recibos")+parametros);
+					//HttpRequestUtil.generaReporte(this.getText("url.imp.recibos")+parametros, rutaPoliza+"/Recibo_"+recibo.getRmdbRn()+"_"+recibo.getNumRec()+".pdf");
+					
+					HashMap<String, Object> paramsR =  new HashMap<String, Object>();
+					paramsR.put("pv_cdunieco_i", cdunieco);
+					paramsR.put("pv_cdramo_i", cdramo);
+					paramsR.put("pv_estado_i", estado);
+					paramsR.put("pv_nmpoliza_i", nmpoliza);
+					paramsR.put("pv_nmsuplem_i", nmsuplem);
+					paramsR.put("pv_feinici_i", new Date());
+					paramsR.put("pv_cddocume_i", this.getText("url.imp.recibos")+parametros);
+					paramsR.put("pv_dsdocume_i", "Recibo"+recibo.getNumRec());
+					
+					kernelManager.guardarArchivo(paramsR);
+				//}
+			}catch(Exception e){
+				logger.error("Error al guardar el PDF del recibo: " + recibo.getRmdbRn(), e);
+			}
+		}
+
 		return allInserted;
+	} 
+
+	private boolean ejecutaWSclienteSalud(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem){
+		boolean exito = true;
+		
+		logger.debug("*** Entrando a metodo ejecutaWSclienteSalud ***");
+		
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdunieco_i", cdunieco);
+		params.put("pv_cdramo_i", cdramo);
+		params.put("pv_estado_i", estado);
+		params.put("pv_nmpoliza_i", nmpoliza);
+//		params.put("pv_nmsuplem_i", nmsuplem);
+		
+		WrapperResultados result = null;
+		ClienteSalud cliente =  null;
+		try {
+			result = kernelManager.obtenDatosClienteWS(params);
+			cliente = ((ArrayList<ClienteSalud>) result.getItemList()).get(0);
+		} catch (ApplicationException e1) {
+			logger.error("Error en llamar al PL de obtencion de ejecutaWSclienteSalud",e1);
+			return false;
+		}
+		
+		try{
+			ClienteSaludRespuesta resultadoR = ice2sigsWebServices.ejecutaClienteSaludGS(Operacion.INSERTA, cliente, this.getText("url.ws.ice2sigs"));
+			logger.debug("Resultado de insertar el cliente salud: " + cliente.getClaveCli()+ " - " + resultadoR.getMensaje());
+		}catch(Exception e){
+			logger.error("Error al insertar el cliente: " + cliente.getClaveCli(), e);
+			exito = false;
+		}
+
+		return exito;
 	} 
 	
 	/////////////////////////////////
