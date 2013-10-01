@@ -10,14 +10,15 @@ package mx.com.gseguros.portal.general.util;
  */
 public interface ConstantesCatalogos
 {
-    public static final String CON_CAT_POL_ESTADO       ="STATUSPOL";
-    public static final String CON_CAT_POL_TIPO_POLIZA  ="TIPOPOL";
-    public static final String CON_CAT_POL_TIPO_PAGO    ="TPERPAG";
-    public static final String CON_CAT_POL_ROL    ="TROLES";
+    public static final String CON_CAT_POL_ESTADO              = "STATUSPOL";
+    public static final String CON_CAT_POL_TIPO_POLIZA         = "TIPOPOL";
+    public static final String CON_CAT_POL_TIPO_PAGO           = "TPERPAG";
+    public static final String CON_CAT_POL_ROL                 = "TROLES";
     public static final String CON_CAT_MESACONTROL_SUCUR_ADMIN = "TUNIDECO";
     public static final String CON_CAT_MESACONTROL_SUCUR_DOCU  = "TUNIDECO";
     public static final String CON_CAT_MESACONTROL_TIP_TRAMI   = "TRAMITES";
     public static final String CON_CAT_MESACONTROL_ESTAT_TRAMI = "STATUSTRA";
+    public static final String CON_CAT_TPERSONA                = "TTIPOPERSONA";
     public String getCON_CAT_POL_ESTADO();
     public String getCON_CAT_POL_TIPO_POLIZA();
     public String getCON_CAT_POL_TIPO_PAGO();
@@ -26,4 +27,5 @@ public interface ConstantesCatalogos
     public String getCON_CAT_MESACONTROL_SUCUR_DOCU();
     public String getCON_CAT_MESACONTROL_TIP_TRAMI();
     public String getCON_CAT_MESACONTROL_ESTAT_TRAMI();
+    public String getCON_CAT_TPERSONA();
 }
