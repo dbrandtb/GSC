@@ -850,12 +850,15 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 			pv_otvalor01   parametros ready!
 			...
 			*/
-			parametros.putAll(smap1);
-			parametros.put("pv_nmsuplem" , "0");
-			parametros.put("pv_status"   , "0");
-			parametros.put("pv_cdatribu" , null);
-			parametros.put("pv_cdtipsit" , datUsu.getCdtipsit());
-			kernelManager.pMovTvaloper(parametros);
+			if(parametros!=null&&parametros.size()>0)
+			{
+				parametros.putAll(smap1);
+				parametros.put("pv_nmsuplem" , "0");
+				parametros.put("pv_status"   , "0");
+				parametros.put("pv_cdatribu" , null);
+				parametros.put("pv_cdtipsit" , datUsu.getCdtipsit());
+				kernelManager.pMovTvaloper(parametros);
+			}
 			
 			
 			/////////////////////////////////////////
