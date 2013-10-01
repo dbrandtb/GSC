@@ -19,6 +19,7 @@ public interface ConstantesCatalogos
     public static final String CON_CAT_MESACONTROL_TIP_TRAMI   = "TRAMITES";
     public static final String CON_CAT_MESACONTROL_ESTAT_TRAMI = "STATUSTRA";
     public static final String CON_CAT_TPERSONA                = "TTIPOPERSONA";
+    public static final String CON_CAT_NACIONALIDAD            = "TNACIONALIDAD";
     public String getCON_CAT_POL_ESTADO();
     public String getCON_CAT_POL_TIPO_POLIZA();
     public String getCON_CAT_POL_TIPO_PAGO();
@@ -28,4 +29,5 @@ public interface ConstantesCatalogos
     public String getCON_CAT_MESACONTROL_TIP_TRAMI();
     public String getCON_CAT_MESACONTROL_ESTAT_TRAMI();
     public String getCON_CAT_TPERSONA();
+    public String getCON_CAT_NACIONALIDAD();
 }
