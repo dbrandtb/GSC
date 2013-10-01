@@ -190,5 +190,13 @@ public class MesaControlAction extends PrincipalCoreAction implements Constantes
 		// TODO Auto-generated method stub
 		return CON_CAT_MESACONTROL_ESTAT_TRAMI;
 	}
+
+	public String getCON_CAT_TPERSONA() {
+		return CON_CAT_TPERSONA;
+	}
+
+	public String getCON_CAT_NACIONALIDAD() {
+		return CON_CAT_NACIONALIDAD;
+	}
 	
 }
