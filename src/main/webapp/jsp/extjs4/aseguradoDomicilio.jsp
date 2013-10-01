@@ -122,6 +122,7 @@ Ext.onReady(function(){
                 titleCollapse   : true,
                 style           : 'margin:5px;',
                 maxHeight       : 200,
+                autoScroll      : true,
                 defaults        :
                 {
                     style : 'margin:5px;'
