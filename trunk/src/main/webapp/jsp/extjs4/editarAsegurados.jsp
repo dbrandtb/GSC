@@ -26,9 +26,12 @@
 	var storeGenerosp2;
 	var storePersonasp2;
 	var storeTomadorp2;
+	var storeTpersonasp2;
+	var storeNacionesp2;
 	var gridPersonasp2;
 	var editorRolesp2;
 	var editorGenerosp2;
+	var editorNacionesp2;
 	var urlCargarAseguradosp2='<s:url namespace="/" action="cargarComplementariosAsegurados" />';
 	var urlCargarCatalogosp2='<s:url namespace="/flujocotizacion" action="cargarCatalogos" />';
 	var urlDatosComplementariosp2='<s:url namespace="/" action="datosComplementarios.action" />';
@@ -101,6 +104,76 @@
         //tengo objeto que puede venir como Generic u otro mas complejo
         {
         	//window.console&&console.log('object:');
+            if(v.key&&v.value)
+            //objeto Generic
+            {
+                leyenda=v.value;
+            }
+            else
+            {
+                leyenda=v.data.value;
+            }
+            //window.console&&console.log(leyenda);
+        }
+        //console.log('return',leyenda);
+        return leyenda;
+    }
+    
+    function rendererTpersonap2(v)
+    {
+    	var leyenda='';
+        if(typeof v == 'string')
+                   //tengo solo el indice
+        {
+            //window.console&&console.log('string:');
+            storeTpersonasp2.each(function(rec){
+                //window.console&&console.log('iterando...',rec.data);
+                if(rec.data.key==v)
+                {
+                    leyenda=rec.data.value; 
+                }
+            });
+            //window.console&&console.log(leyenda);
+        }
+        else
+        //tengo objeto que puede venir como Generic u otro mas complejo
+        {
+            //window.console&&console.log('object:');
+            if(v.key&&v.value)
+            //objeto Generic
+            {
+                leyenda=v.value;
+            }
+            else
+            {
+                leyenda=v.data.value;
+            }
+            //window.console&&console.log(leyenda);
+        }
+        //console.log('return',leyenda);
+        return leyenda;
+    }
+    
+    function rendererNacionesp2(v)
+    {
+        var leyenda='';
+        if(typeof v == 'string')
+                   //tengo solo el indice
+        {
+            //window.console&&console.log('string:');
+            storeNacionesp2.each(function(rec){
+                //window.console&&console.log('iterando...',rec.data);
+                if(rec.data.key==v)
+                {
+                    leyenda=rec.data.value; 
+                }
+            });
+            //window.console&&console.log(leyenda);
+        }
+        else
+        //tengo objeto que puede venir como Generic u otro mas complejo
+        {
+            //window.console&&console.log('object:');
             if(v.key&&v.value)
             //objeto Generic
             {
@@ -249,7 +322,9 @@
                                         segundo_nombre: recordContApart.get('segundo_nombre'),
                                         Apellido_Paterno: recordContApart.get('Apellido_Paterno'),
                                         Apellido_Materno: recordContApart.get('Apellido_Materno'),
-                                        cdrfc:recordContApart.get('cdrfc')
+                                        cdrfc:recordContApart.get('cdrfc'),
+                                        tpersona : typeof recordContApart.get('tpersona')=='string'?recordContApart.get('tpersona'):recordContApart.get('tpersona').get('key'),
+                                        nacional : typeof recordContApart.get('nacional')=='string'?recordContApart.get('nacional'):recordContApart.get('nacional').get('key')
                                     });
                                     if(!recordContApart.get("cdperson")||recordContApart.get("cdperson").length==0)
                                     {
@@ -307,7 +382,9 @@
                                             segundo_nombre: recordAsegu.get('segundo_nombre'),
                                             Apellido_Paterno: recordAsegu.get('Apellido_Paterno'),
                                             Apellido_Materno: recordAsegu.get('Apellido_Materno'),
-                                            cdrfc:recordAsegu.get('cdrfc')
+                                            cdrfc:recordAsegu.get('cdrfc'),
+                                            tpersona : typeof recordAsegu.get('tpersona')=='string'?recordAsegu.get('tpersona'):recordAsegu.get('tpersona').get('key'),
+                                            nacional : typeof recordAsegu.get('nacional')=='string'?recordAsegu.get('nacional'):recordAsegu.get('nacional').get('key')
                                         });
                                     }
                                     debug('f5');
@@ -321,7 +398,9 @@
                                         segundo_nombre: recordAsegu.get('segundo_nombre'),
                                         Apellido_Paterno: recordAsegu.get('Apellido_Paterno'),
                                         Apellido_Materno: recordAsegu.get('Apellido_Materno'),
-                                        cdrfc: recordAsegu.get('cdrfc')
+                                        cdrfc: recordAsegu.get('cdrfc'),
+                                        tpersona : typeof recordAsegu.get('tpersona')=='string'?recordAsegu.get('tpersona'):recordAsegu.get('tpersona').get('key'),
+                                        nacional : typeof recordAsegu.get('nacional')=='string'?recordAsegu.get('nacional'):recordAsegu.get('nacional').get('key')
                                     });
                                     debug('f6');
                                 });
@@ -393,7 +472,9 @@
                                                                             segundo_nombre: recordContApar2.get('segundo_nombre'),
                                                                             Apellido_Paterno: recordContApar2.get('Apellido_Paterno'),
                                                                             Apellido_Materno: recordContApar2.get('Apellido_Materno'),
-                                                                            cdrfc: recordContApar2.get('cdrfc')
+                                                                            cdrfc: recordContApar2.get('cdrfc'),
+                                                                            tpersona : typeof recordContApar2.get('tpersona')=='string'?recordContApar2.get('tpersona'):recordContApar2.get('tpersona').get('key'),
+                                                                            nacional : typeof recordContApar2.get('nacional')=='string'?recordContApar2.get('nacional'):recordContApar2.get('nacional').get('key')
                                                                         });
                                                                     }
                                                                     storePersonasp2.each(function(recordAsegu2)
@@ -411,7 +492,9 @@
                                                                                 segundo_nombre: recordAsegu2.get('segundo_nombre'),
                                                                                 Apellido_Paterno: recordAsegu2.get('Apellido_Paterno'),
                                                                                 Apellido_Materno: recordAsegu2.get('Apellido_Materno'),
-                                                                                cdrfc: recordAsegu2.get('cdrfc')
+                                                                                cdrfc: recordAsegu2.get('cdrfc'),
+                                                                                tpersona : typeof recordAsegu2.get('tpersona')=='string'?recordAsegu2.get('tpersona'):recordAsegu2.get('tpersona').get('key'),
+                                                                                nacional : typeof recordAsegu2.get('nacional')=='string'?recordAsegu2.get('nacional'):recordAsegu2.get('nacional').get('key')
                                                                             });
                                                                         }
                                                                         incisosJson.push({
@@ -424,7 +507,9 @@
                                                                             segundo_nombre: recordAsegu2.get('segundo_nombre'),
                                                                             Apellido_Paterno: recordAsegu2.get('Apellido_Paterno'),
                                                                             Apellido_Materno: recordAsegu2.get('Apellido_Materno'),
-                                                                            cdrfc: recordAsegu2.get('cdrfc')
+                                                                            cdrfc: recordAsegu2.get('cdrfc'),
+                                                                            tpersona : typeof recordAsegu2.get('tpersona')=='string'?recordAsegu2.get('tpersona'):recordAsegu2.get('tpersona').get('key'),
+                                                                            nacional : typeof recordAsegu2.get('nacional')=='string'?recordAsegu2.get('nacional'):recordAsegu2.get('nacional').get('key')
                                                                         });
                                                                     });                
                                                                     Ext.getCmp('form1p2').setLoading(false);
@@ -542,6 +627,38 @@ debug("validarYGuardar flag:2");
 	        }
 	    });
 	    
+		storeNacionesp2 = new Ext.data.Store({
+            model:'Generic',
+            autoLoad:true,
+            proxy:
+            {
+                type: 'ajax',
+                url : urlCargarCatalogosp2,
+                extraParams:{catalogo:'<s:property value="CON_CAT_NACIONALIDAD" />'},
+                reader:
+                {
+                    type: 'json',
+                    root: 'lista'
+                }
+            }
+        });
+		
+		storeTpersonasp2 = new Ext.data.Store({
+            model:'Generic',
+            autoLoad:true,
+            proxy:
+            {
+                type: 'ajax',
+                url : urlCargarCatalogosp2,
+                extraParams:{catalogo:'<s:property value="CON_CAT_TPERSONA" />'},
+                reader:
+                {
+                    type: 'json',
+                    root: 'lista'
+                }
+            }
+        });
+		
 	    storePersonasp2 =new Ext.data.Store(
    	    {
    	        // destroy the store if the grid is destroyed
@@ -647,6 +764,26 @@ debug("validarYGuardar flag:2");
    	        allowBlank:false,
    	        editable:false
    	    });
+	    
+	    editorTpersonap2=Ext.create('Ext.form.ComboBox',
+        {
+            store: storeTpersonasp2,
+            queryMode:'local',
+            displayField: 'value',
+            valueField: 'key',
+            allowBlank:false,
+            editable:false
+        });
+	    
+	    editorNacionesp2=Ext.create('Ext.form.ComboBox',
+        {
+            store: storeNacionesp2,
+            queryMode:'local',
+            displayField: 'value',
+            valueField: 'key',
+            allowBlank:false,
+            editable:false
+        });
 	    
 	    editorFechap2=Ext.create('Ext.form.field.Date',
         {
@@ -1313,7 +1450,9 @@ debug("validarYGuardar flag:2");
                                         segundo_nombre: recordContApart.get('segundo_nombre'),
                                         Apellido_Paterno: recordContApart.get('Apellido_Paterno'),
                                         Apellido_Materno: recordContApart.get('Apellido_Materno'),
-                                        cdrfc:recordContApart.get('cdrfc')
+                                        cdrfc:recordContApart.get('cdrfc'),
+                                        tpersona : typeof recordContApart.get('tpersona')=='string'?recordContApart.get('tpersona'):recordContApart.get('tpersona').get('key'),
+                                        nacional : typeof recordContApart.get('nacional')=='string'?recordContApart.get('nacional'):recordContApart.get('nacional').get('key')
                                     });
 	                            	if(!recordContApart.get("cdperson")||recordContApart.get("cdperson").length==0)
                                     {
@@ -1371,7 +1510,9 @@ debug("validarYGuardar flag:2");
 	                                        segundo_nombre: recordAsegu.get('segundo_nombre'),
 	                                        Apellido_Paterno: recordAsegu.get('Apellido_Paterno'),
 	                                        Apellido_Materno: recordAsegu.get('Apellido_Materno'),
-	                                        cdrfc:recordAsegu.get('cdrfc')
+	                                        cdrfc:recordAsegu.get('cdrfc'),
+	                                        tpersona : typeof recordAsegu.get('tpersona')=='string'?recordAsegu.get('tpersona'):recordAsegu.get('tpersona').get('key'),
+	                                        nacional : typeof recordAsegu.get('nacional')=='string'?recordAsegu.get('nacional'):recordAsegu.get('nacional').get('key')
 	                                	});
                                 	}
 	                                debug('f5');
@@ -1385,7 +1526,9 @@ debug("validarYGuardar flag:2");
 	                                    segundo_nombre: recordAsegu.get('segundo_nombre'),
 	                                    Apellido_Paterno: recordAsegu.get('Apellido_Paterno'),
 	                                    Apellido_Materno: recordAsegu.get('Apellido_Materno'),
-	                                    cdrfc: recordAsegu.get('cdrfc')
+	                                    cdrfc: recordAsegu.get('cdrfc'),
+                                        tpersona : typeof recordAsegu.get('tpersona')=='string'?recordAsegu.get('tpersona'):recordAsegu.get('tpersona').get('key'),
+                                        nacional : typeof recordAsegu.get('nacional')=='string'?recordAsegu.get('nacional'):recordAsegu.get('nacional').get('key')
 	                                });
 	                                debug('f6');
 	                            });
@@ -1457,7 +1600,9 @@ debug("validarYGuardar flag:2");
                                                                             segundo_nombre: recordContApar2.get('segundo_nombre'),
                                                                             Apellido_Paterno: recordContApar2.get('Apellido_Paterno'),
                                                                             Apellido_Materno: recordContApar2.get('Apellido_Materno'),
-                                                                            cdrfc: recordContApar2.get('cdrfc')
+                                                                            cdrfc: recordContApar2.get('cdrfc'),
+                                                                            tpersona : typeof recordContApar2.get('tpersona')=='string'?recordContApar2.get('tpersona'):recordContApar2.get('tpersona').get('key'),
+                                                                            nacional : typeof recordContApar2.get('nacional')=='string'?recordContApar2.get('nacional'):recordContApar2.get('nacional').get('key')
                                                                         });
                                                                     }
                                                                     storePersonasp2.each(function(recordAsegu2)
@@ -1475,7 +1620,9 @@ debug("validarYGuardar flag:2");
                                                                                 segundo_nombre: recordAsegu2.get('segundo_nombre'),
                                                                                 Apellido_Paterno: recordAsegu2.get('Apellido_Paterno'),
                                                                                 Apellido_Materno: recordAsegu2.get('Apellido_Materno'),
-                                                                                cdrfc: recordAsegu2.get('cdrfc')
+                                                                                cdrfc: recordAsegu2.get('cdrfc'),
+                                                                                tpersona : typeof recordAsegu2.get('tpersona')=='string'?recordAsegu2.get('tpersona'):recordAsegu2.get('tpersona').get('key'),
+                                                                                nacional : typeof recordAsegu2.get('nacional')=='string'?recordAsegu2.get('nacional'):recordAsegu2.get('nacional').get('key')
                                                                             });
                                                                         }
                                                                         incisosJson.push({
@@ -1488,7 +1635,9 @@ debug("validarYGuardar flag:2");
                                                                             segundo_nombre: recordAsegu2.get('segundo_nombre'),
                                                                             Apellido_Paterno: recordAsegu2.get('Apellido_Paterno'),
                                                                             Apellido_Materno: recordAsegu2.get('Apellido_Materno'),
-                                                                            cdrfc: recordAsegu2.get('cdrfc')
+                                                                            cdrfc: recordAsegu2.get('cdrfc'),
+                                                                            tpersona : typeof recordAsegu2.get('tpersona')=='string'?recordAsegu2.get('tpersona'):recordAsegu2.get('tpersona').get('key'),
+                                                                            nacional : typeof recordAsegu2.get('nacional')=='string'?recordAsegu2.get('nacional'):recordAsegu2.get('nacional').get('key')
                                                                         });
                                                                     });                
                                                                     Ext.getCmp('form1p2').setLoading(false);

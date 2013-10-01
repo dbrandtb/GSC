@@ -1667,6 +1667,16 @@ public class ProcesoDAO extends AbstractDAO {
     				fenacimi=aux;
     			}
     		}
+    		String otfisjur=rs.getString("otfisjur");
+    		if(otfisjur==null||otfisjur.length()==0)
+    		{
+    			otfisjur="F";
+    		}
+    		String cdnacion=rs.getString("cdnacion");
+    		if(cdnacion==null||cdnacion.length()==0)
+    		{
+    			cdnacion="001";
+    		}
     		r.put("nmsituac",			rs.getString("nmsituac"));
     		r.put("cdrol",				rs.getString("cdrol"));
     		r.put("fenacimi",			fenacimi);
@@ -1678,8 +1688,8 @@ public class ProcesoDAO extends AbstractDAO {
     		r.put("Apellido_Materno",	rs.getString("Apellido_Materno"));
     		r.put("cdrfc",				rs.getString("cdrfc"));
     		r.put("Parentesco",		    rs.getString("Parentesco"));
-    		r.put("tpersona",           rs.getString("otfisjur"));
-    		r.put("nacional",           rs.getString("cdnacion"));
+    		r.put("tpersona",           otfisjur);
+    		r.put("nacional",           cdnacion);
     		return r;
     	}
     }
