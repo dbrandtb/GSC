@@ -134,10 +134,6 @@ public class UserContextFilter implements Filter {
 	            /**/
 	
 	            session.setAttribute("USUARIO", userVO);
-	
-	            /*Esta session debe ser borrada*/
-	            session.setAttribute("CONTENIDO_USER", userVO.getName());
-	
 	        }
 	        
 	        logger.debug("seteando el userVO en el ThreadLocal");

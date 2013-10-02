@@ -176,8 +176,6 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
 		logger.debug("***** DATOS USUARIO333 *****: " + userVO);
 		session.put(Constantes.USER, userVO);
 		session.put("userVO", userVO);
-		session.put("CONTENIDO_USER", userVO.getName());
-
 		
 		exito = true;
 		return exito;

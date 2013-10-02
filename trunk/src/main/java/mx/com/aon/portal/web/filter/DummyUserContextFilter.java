@@ -1,29 +1,31 @@
 package mx.com.aon.portal.web.filter;
 
+import java.io.IOException;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import mx.com.aon.core.ApplicationException;
+import mx.com.aon.portal.model.IsoVO;
+import mx.com.aon.portal.model.UserVO;
+import mx.com.aon.portal.service.ConsultaActividadUsuarioManager;
+import mx.com.aon.portal.service.LoginManager;
+import mx.com.aon.portal.service.NavigationManager;
+import mx.com.aon.portal.util.ConnectionCallInterceptor;
+
 import org.apache.log4j.Logger;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import javax.servlet.*;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpServletRequest;
-
-import mx.com.aon.portal.service.LoginManager;
-import mx.com.aon.portal.service.ConsultaActividadUsuarioManager;
-import mx.com.aon.portal.service.NavigationManager;
-import mx.com.aon.portal.model.IsoVO;
-import mx.com.aon.portal.model.UserVO;
-import mx.com.aon.portal.util.ConnectionCallInterceptor;
-import mx.com.aon.core.ApplicationException;
-
-import java.io.IOException;
-import java.security.Principal;
-import java.util.Enumeration;
-
 public class DummyUserContextFilter implements Filter {
 
-    @SuppressWarnings("unused")
     private Logger logger = Logger.getLogger(DummyUserContextFilter.class);
     private LoginManager loginManager;
 
@@ -81,11 +83,6 @@ public class DummyUserContextFilter implements Filter {
     		            /**/
     		
     		            session.setAttribute("USUARIO", userVO);
-    		            session.setAttribute("contextUserVO", userVO);
-    		
-    		            /*Esta session debe ser borrada*/
-    		            session.setAttribute("CONTENIDO_USER", userVO.getName());
-    		
     		        }
     		        logger.debug("seteando el userVO en el ThreadLocal");
     		        ThreadLocal<UserVO> tl = ConnectionCallInterceptor.getLocalUser();
