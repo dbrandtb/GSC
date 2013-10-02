@@ -5,12 +5,12 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.DescuentoDetVolumenVO;
 import mx.com.aon.portal.model.DescuentoVO;
 import mx.com.aon.portal.service.DescuentosManager;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * Clase Action que atiende requerimientos de abm de descuentos por volumenes que vienen del cliente.

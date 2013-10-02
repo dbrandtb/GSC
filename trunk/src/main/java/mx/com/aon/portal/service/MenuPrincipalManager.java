@@ -2,8 +2,8 @@ package mx.com.aon.portal.service;
 
 import java.util.List;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.MenuPrincipalVO;
+import mx.com.gseguros.exception.ApplicationException;
 /**
  * 
  * @author sergio.ramirez

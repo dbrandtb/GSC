@@ -3,9 +3,10 @@ package mx.com.aon.portal.web;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.log4j.Logger;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.AlertaUsuarioVO;
 import mx.com.aon.portal.service.AlertasUsuarioManager;
+import mx.com.gseguros.exception.ApplicationException;
+
 import com.opensymphony.xwork2.ActionSupport;
 
 /**

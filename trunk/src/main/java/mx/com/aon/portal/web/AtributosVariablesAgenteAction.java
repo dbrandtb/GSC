@@ -1,9 +1,9 @@
 
 package mx.com.aon.portal.web;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.AtributoVaribleAgenteVO;
 import mx.com.aon.portal.service.AtributosVariablesAgenteManager;
+import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.log4j.Logger;
 import com.opensymphony.xwork2.ActionSupport;

@@ -5,7 +5,8 @@ import mx.com.aon.portal.model.ItemVO;
 import mx.com.aon.portal.model.MecanismoDeTooltipVO;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.ConnectionCallInterceptor;
-import mx.com.aon.core.ApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
+
 import org.apache.log4j.Logger;
 
 import java.util.List;

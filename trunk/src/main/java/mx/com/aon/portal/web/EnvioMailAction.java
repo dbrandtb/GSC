@@ -8,8 +8,9 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;*/
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.service.EnvioMailManager;
+import mx.com.gseguros.exception.ApplicationException;
+
 import com.opensymphony.xwork2.ActionSupport;
 
 

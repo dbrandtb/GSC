@@ -8,11 +8,11 @@ import mx.com.aon.portal.model.FuncionalidadVO;
 import mx.com.aon.portal.service.CarritoComprasManager;
 import mx.com.aon.portal.service.FuncionalidadManager;
 import mx.com.aon.portal.util.WrapperResultados;
-import mx.com.aon.core.ApplicationException;
 import org.apache.log4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import mx.com.aon.portal.service.PagedList;
+import mx.com.gseguros.exception.ApplicationException;
 
 import com.opensymphony.xwork2.ActionSupport;
 

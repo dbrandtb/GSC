@@ -7,10 +7,10 @@ import org.apache.log4j.Logger;
 
 import com.opensymphony.xwork2.ActionSupport;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.ConfigurarSeccionOrdenVO;
 import mx.com.aon.portal.service.ConfigurarSeccionOrdenManager;
 import mx.com.aon.portal.service.PagedList;
+import mx.com.gseguros.exception.ApplicationException;
 
 public class ConfigurarSeccionOrdenAction extends ActionSupport{
 

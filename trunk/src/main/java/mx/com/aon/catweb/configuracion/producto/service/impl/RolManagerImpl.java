@@ -9,12 +9,12 @@ import mx.com.aon.catweb.configuracion.producto.model.LlaveValorVO;
 import mx.com.aon.catweb.configuracion.producto.rol.model.RolAtributoVariableVO;
 import mx.com.aon.catweb.configuracion.producto.rol.model.RolVO;
 import mx.com.aon.catweb.configuracion.producto.service.RolManager;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.MensajesVO;
 import mx.com.aon.portal.service.impl.AbstractManager;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.tmp.BackboneApplicationException;
 import mx.com.aon.tmp.Endpoint;
+import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.log4j.Logger;
 

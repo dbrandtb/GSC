@@ -9,7 +9,6 @@ import java.util.Map;
 import mx.com.aon.catweb.configuracion.producto.atributosVariables.model.AtributosVariablesVO;
 import mx.com.aon.configurador.pantallas.model.ClienteCorpoVO;
 import mx.com.aon.configurador.pantallas.model.components.ComboClearOnSelectVO;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.flujos.presinietros.model.DocumentoVO;
 import mx.com.aon.flujos.presinietros.service.DctosPresiniestrosManager;
 import mx.com.aon.portal.model.AtributosVariablesInstPagoVO;
@@ -20,6 +19,7 @@ import mx.com.aon.portal.service.CatalogService;
 import mx.com.aon.portal.service.InstrumentoPagoManager;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;

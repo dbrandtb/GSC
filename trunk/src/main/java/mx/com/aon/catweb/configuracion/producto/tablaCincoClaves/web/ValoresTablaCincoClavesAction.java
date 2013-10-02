@@ -13,9 +13,9 @@ import mx.com.aon.catweb.configuracion.producto.tablaCincoClaves.model.Descripci
 import mx.com.aon.catweb.configuracion.producto.tablaCincoClaves.model.ValoresCincoClavesVO;
 import mx.com.aon.catweb.configuracion.producto.util.WizardUtils;
 import mx.com.aon.catweb.configuracion.producto.web.Padre;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.utils.FormatoFecha;
+import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;

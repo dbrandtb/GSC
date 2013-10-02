@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.model.TableModelExport;
 import mx.com.aon.portal.model.CampoCatalogoVO;
 import mx.com.aon.portal.model.ExtJSFieldVO;
@@ -13,6 +12,7 @@ import mx.com.aon.portal.model.ValoresCamposCatalogosSimplesVO;
 import mx.com.aon.portal.service.ConfiguradorCatalogosCompuestosManager;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 
 public class ConfiguradorCatalogosCompuestosManagerImpl extends AbstractManager implements
 		ConfiguradorCatalogosCompuestosManager {

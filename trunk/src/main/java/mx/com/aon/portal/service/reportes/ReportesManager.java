@@ -2,8 +2,8 @@ package mx.com.aon.portal.service.reportes;
 
 import mx.com.aon.portal.model.reporte.*;
 import mx.com.aon.portal.service.PagedList;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.model.TableModelExport;
+import mx.com.gseguros.exception.ApplicationException;
 
 import java.util.List;
 

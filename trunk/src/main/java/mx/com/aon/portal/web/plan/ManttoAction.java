@@ -2,10 +2,10 @@ package mx.com.aon.portal.web.plan;
 
 import java.util.List;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.plan.PlanVO;
 import mx.com.aon.portal.service.plan.ManttoManager;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * @author sergio.ramirez

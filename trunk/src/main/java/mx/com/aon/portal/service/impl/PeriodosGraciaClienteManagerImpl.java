@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.model.TableModelExport;
 import mx.com.aon.portal.model.PeriodoGraciaClienteVO;
 import mx.com.aon.portal.service.PeriodosGraciaClienteManager;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * Clase que sirve para dar servicios al action que lo invoca.

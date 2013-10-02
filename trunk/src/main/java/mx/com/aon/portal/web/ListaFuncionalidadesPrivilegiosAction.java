@@ -8,11 +8,11 @@ import mx.com.aon.portal.service.AgrupacionPolizasManager;
 import mx.com.aon.portal.model.AgrupacionPolizaVO;
 import mx.com.aon.portal.model.ConfigurarEstructuraVO;
 import mx.com.aon.portal.model.FuncionalidadVO;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.ExportMediator;
 import mx.com.aon.export.ExportView;
 import mx.com.aon.export.model.TableModelExport;
 import mx.com.aon.portal.util.Util;
+import mx.com.gseguros.exception.ApplicationException;
 
 import java.io.InputStream;
 import java.util.ArrayList;

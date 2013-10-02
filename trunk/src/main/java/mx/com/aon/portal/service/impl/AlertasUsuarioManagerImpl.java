@@ -1,28 +1,17 @@
 package mx.com.aon.portal.service.impl;
 
-import static mx.com.aon.portal.dao.AlertaDAO.OBTIENE_ALERTAS_EMAIL;
-import static mx.com.aon.portal.util.UserSQLDateConverter.MASCARA_DATE_ddMMYYYY_B;
-
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import javax.mail.MessagingException;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.AlertaUsuarioVO;
 import mx.com.aon.portal.model.EmailVO;
 import mx.com.aon.portal.service.AlertasUsuarioManager;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.util.ConvertUtil;
-import mx.com.aon.portal.util.UserSQLDateConverter;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.utils.MailUtil;
-
-import org.apache.commons.beanutils.Converter;
-import org.apache.commons.lang.time.DateFormatUtils;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * Clase que implementa la interface AlertasUsuarioManager para los servicios de Alertas de usuarios.
@@ -211,5 +200,20 @@ public class AlertasUsuarioManagerImpl extends AbstractManagerJdbcTemplateInvoke
 		
 		
 		System.out.println("EXECUTING QUARTZ JOB");*/
-	}	
+	}
+	
+	public static void main(String[] args) {
+		EmailVO emal = new EmailVO();
+		emal.setAsunto("Test");
+		emal.setTo("dricardok1@hotmail.com");
+		emal.setMensaje("mensaje de prueba");
+		
+		MailUtil mailUtil = new MailUtil();
+		mailUtil.setEmail(emal);
+		try {
+			mailUtil.send();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

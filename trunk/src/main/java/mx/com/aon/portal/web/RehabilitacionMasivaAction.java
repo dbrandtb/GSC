@@ -5,10 +5,10 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.ConsultaPolizasCanceladasVO;
 import mx.com.aon.portal.service.RehabilitacionMasivaManager;
 import mx.com.aon.portal.service.PolizasManager;
+import mx.com.gseguros.exception.ApplicationException;
 
 
 public class RehabilitacionMasivaAction extends AbstractListAction {

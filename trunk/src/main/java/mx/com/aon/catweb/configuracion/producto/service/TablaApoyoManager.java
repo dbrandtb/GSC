@@ -4,7 +4,7 @@ import java.util.List;
 
 import mx.com.aon.catweb.configuracion.producto.model.LlaveValorVO;
 import mx.com.aon.catweb.configuracion.producto.service.impl.TablaApoyoManagerImpl;
-import mx.com.aon.core.ApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * interface que contien los metodos expuestos por uno de los Manager para la

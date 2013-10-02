@@ -6,7 +6,6 @@ package mx.com.aon.portal.service.opcmenuusuario;
 import java.util.ArrayList;
 import java.util.Map;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.MensajesVO;
 import mx.com.aon.portal.model.menuusuario.MenuVO;
 import mx.com.aon.portal.model.opcmenuusuario.ConfigOpcionMenuVO;
@@ -18,6 +17,7 @@ import mx.com.aon.portal.model.principal.ClienteVO;
 import mx.com.aon.portal.model.principal.RolVO;
 import mx.com.aon.portal.model.principal.TipoVO;
 import mx.com.aon.portal.service.PagedList;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * @author eflores

@@ -12,13 +12,13 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.IsoVO;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.service.ConsultaActividadUsuarioManager;
 import mx.com.aon.portal.service.LoginManager;
 import mx.com.aon.portal.service.NavigationManager;
 import mx.com.aon.portal.util.ConnectionCallInterceptor;
+import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.log4j.Logger;
 import org.springframework.web.context.WebApplicationContext;

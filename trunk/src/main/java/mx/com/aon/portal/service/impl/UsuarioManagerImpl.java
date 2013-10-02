@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import mx.com.aon.portal.model.*;
 import mx.com.aon.portal.service.UsuarioManager;
 import mx.com.aon.portal.util.WrapperResultados;
-import mx.com.aon.core.ApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
 
 public class UsuarioManagerImpl extends AbstractManagerJdbcTemplateInvoke implements UsuarioManager {
 

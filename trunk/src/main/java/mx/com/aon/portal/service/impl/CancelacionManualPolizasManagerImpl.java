@@ -3,11 +3,11 @@ package mx.com.aon.portal.service.impl;
 import java.util.HashMap;
 import java.util.List;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.RehabilitacionManual_PolizaVO;
 import mx.com.aon.portal.service.CancelacionManualPolizasManager;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 
 public class CancelacionManualPolizasManagerImpl extends AbstractManager
 		implements CancelacionManualPolizasManager {

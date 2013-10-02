@@ -4,7 +4,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.ExportMediator;
 import mx.com.aon.export.ExportView;
 import mx.com.aon.export.model.TableModelExport;
@@ -12,6 +11,7 @@ import mx.com.aon.portal.model.AdministraCatalogoVO;
 import mx.com.aon.portal.service.AdministrarCatalogSistemaExternoManager;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.util.Util;
+import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.log4j.Logger;
 

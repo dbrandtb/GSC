@@ -5,9 +5,9 @@ import java.util.List;
 import mx.com.aon.catweb.configuracion.producto.model.LlaveValorVO;
 import mx.com.aon.catweb.configuracion.producto.rol.model.RolAtributoVariableVO;
 import mx.com.aon.catweb.configuracion.producto.rol.model.RolVO;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.MensajesVO;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 
 public interface RolManager {
 	public abstract List<RolAtributoVariableVO> atributosVariablesJson(

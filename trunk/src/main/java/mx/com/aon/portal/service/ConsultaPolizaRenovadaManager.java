@@ -1,12 +1,12 @@
 package mx.com.aon.portal.service;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.DatosMovPolizasVO;
 import mx.com.aon.portal.model.DatosVarRolVO;
 import mx.com.aon.portal.model.DatosVblesObjAsegurablesVO;
 import mx.com.aon.portal.model.EncabezadoPolizaVO;
 import mx.com.aon.portal.model.MovTValoPolVO;
 import mx.com.aon.portal.model.NuevaCoberturaVO;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**Interface de servicios para Consulta de Poliza Renovada
  * 

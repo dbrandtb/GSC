@@ -8,11 +8,11 @@ import mx.com.aon.portal.model.presiniestros.PreSiniestroVO;
 import mx.com.aon.portal.model.presiniestros.AutomovilVO;
 import mx.com.aon.portal.model.presiniestros.BeneficioVO;
 import mx.com.aon.portal.model.presiniestros.DanoVO;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.model.TableModelExport;
 import mx.com.aon.flujos.presinietros.model.DocumentoVO;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 
 public interface PresiniestrosManager {
 	

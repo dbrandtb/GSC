@@ -13,7 +13,8 @@ package mx.com.aon.portal.web;
 import mx.com.aon.portal.model.MecanismoDeTooltipVO;
 import mx.com.aon.portal.service.MecanismoDeTooltipManager;
 import mx.com.aon.portal.web.tooltip.ToolTipBean;
-import mx.com.aon.core.ApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
+
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import mx.com.aon.portal.service.SeccionesManager;
 import mx.com.aon.portal.model.SeccionVO;
-import mx.com.aon.core.ApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * Action que atiende las peticiones de abm la pantalla de secciones.

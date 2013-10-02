@@ -9,7 +9,6 @@ import oracle.jdbc.driver.OracleTypes;
 
 import org.springframework.jdbc.core.SqlParameter;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.model.TableModelExport;
 import mx.com.aon.portal.model.DescuentoDetVolumenVO;
 import mx.com.aon.portal.model.DescuentoProductoVO;
@@ -20,6 +19,7 @@ import mx.com.aon.portal.service.DescuentosManager;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal.model.AdministraCatalogoVO;
+import mx.com.gseguros.exception.ApplicationException;
 
 
 /**

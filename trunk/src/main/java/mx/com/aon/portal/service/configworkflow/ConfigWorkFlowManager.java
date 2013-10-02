@@ -6,8 +6,8 @@ package mx.com.aon.portal.service.configworkflow;
 import java.util.ArrayList;
 import java.util.Map;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.configworkflow.WorkFlowPs1VO;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * @author Alejandro Garcia

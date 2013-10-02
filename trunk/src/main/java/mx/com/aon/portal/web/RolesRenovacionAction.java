@@ -5,10 +5,10 @@ import java.util.List;
 
 import com.opensymphony.xwork2.ActionSupport;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.ConsultaConfiguracionRenovacionVO;
 import mx.com.aon.portal.model.RolRenovacionVO;
 import mx.com.aon.portal.service.RolesRenovacionManager;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  *   Action que atiende las peticiones de que vienen de la pantalla Roles de Renovacion

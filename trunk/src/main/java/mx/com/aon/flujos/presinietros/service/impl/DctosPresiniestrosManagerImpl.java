@@ -3,11 +3,11 @@ package mx.com.aon.flujos.presinietros.service.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.flujos.presinietros.service.DctosPresiniestrosManager;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 
 public class DctosPresiniestrosManagerImpl extends AbstractManagerJdbcTemplateInvoke implements DctosPresiniestrosManager{
 

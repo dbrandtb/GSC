@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 import mx.com.aon.portal.service.ConfigurarFormaCalculoAtributosVariablesManager;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal.model.ConfigurarFormaCalculoAtributoVariableVO;
-import mx.com.aon.core.ApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  *   Action que atiende las peticiones de que vienen de la pantalla Configurar Forma de Calculo Variables

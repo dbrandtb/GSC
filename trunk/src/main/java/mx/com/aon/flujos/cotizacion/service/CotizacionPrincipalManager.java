@@ -6,10 +6,10 @@ import java.util.Map;
 import mx.com.aon.configurador.pantallas.model.PantallaVO;
 import mx.com.aon.configurador.pantallas.model.components.ComboClearOnSelectVO;
 import mx.com.aon.configurador.pantallas.model.components.GridVO;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.flujos.cotizacion.model.ObjetoCotizacionVO;
 import mx.com.aon.portal.model.BaseObjectVO;
 import mx.com.aon.portal.model.CotizacionMasivaVO;
+import mx.com.gseguros.exception.ApplicationException;
 
 public interface CotizacionPrincipalManager {
 	

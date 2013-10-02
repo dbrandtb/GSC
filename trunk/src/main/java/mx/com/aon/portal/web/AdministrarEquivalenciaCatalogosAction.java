@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 import mx.com.aon.portal.service.AdministrarEquivalenciaCatalogosManager;
 import mx.com.aon.portal.service.AgrupacionPolizasManager;
 import mx.com.aon.portal.model.EquivalenciaCatalogosVO;
-import mx.com.aon.core.ApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  *   Action que atiende las peticiones de abm que vienen de la pantalla Administrar Equivalencia de Catálogos.

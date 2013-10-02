@@ -4,9 +4,9 @@ import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.FormulaMetodoCancelacionVO;
 import mx.com.aon.portal.service.FormulaMetodoCancelacionManager;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * Implementa la interfaz de servicios para Formula del Metodo de Cancelacion

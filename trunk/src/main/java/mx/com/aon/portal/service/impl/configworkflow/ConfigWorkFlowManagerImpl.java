@@ -6,12 +6,12 @@ package mx.com.aon.portal.service.impl.configworkflow;
 import java.util.ArrayList;
 import java.util.Map;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.configworkflow.WorkFlowPs1VO;
 import mx.com.aon.portal.model.configworkflow.WorkFlowPs2VO;
 import mx.com.aon.portal.service.configworkflow.ConfigWorkFlowManager;
 import mx.com.aon.portal.service.impl.AbstractManager;
 import mx.com.aon.tmp.Endpoint;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * @author Alejandro Garcia

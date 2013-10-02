@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.model.TableModelExport;
 import mx.com.aon.portal.model.ConfigurarEstructuraVO;
 import mx.com.aon.portal.model.PersonasVO;
@@ -22,6 +21,7 @@ import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.tmp.BackboneApplicationException;
 import mx.com.aon.tmp.Endpoint;
+import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.log4j.Logger;
 

@@ -5,12 +5,12 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.CotizacionMasivaVO;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.service.CombosManager;
 import mx.com.aon.portal.service.CotizacionManager;
 import mx.com.aon.portal.service.PagedList;
+import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;

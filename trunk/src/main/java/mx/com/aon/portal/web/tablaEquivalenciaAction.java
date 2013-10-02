@@ -59,11 +59,11 @@ import com.lowagie.text.pdf.PdfTemplate;
 import com.opensymphony.xwork2.ActionSupport;
 
 import mx.com.aon.portal.util.WrapperResultados;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.pdfgenerator.services.PDFServices;
 import mx.com.aon.portal.service.AdministracionEquivalenciaManager;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.model.Tabla_EquivalenciaVO;
+import mx.com.gseguros.exception.ApplicationException;
 /**
  *   Action que atiende las peticiones de la pantalla administracion de equivalencia.
  * 

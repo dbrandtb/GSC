@@ -3,11 +3,11 @@ package mx.com.aon.portal.service.impl;
 
 import java.util.HashMap;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.AtributoVaribleAgenteVO;
 import mx.com.aon.portal.service.AtributosVariablesAgenteManager;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal.service.PagedList;
+import mx.com.gseguros.exception.ApplicationException;
 
 
 /**

@@ -6,9 +6,9 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.opensymphony.xwork2.ActionSupport;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.ConfiguracionClienteVO;
 import mx.com.aon.portal.service.ConfiguracionRenovacionManager;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * 

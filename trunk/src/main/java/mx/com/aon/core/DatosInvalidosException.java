@@ -1,5 +1,7 @@
 package mx.com.aon.core;
 
+import mx.com.gseguros.exception.ApplicationException;
+
 public class DatosInvalidosException extends ApplicationException {
 
 	private static final long serialVersionUID = 7290723179683594952L;

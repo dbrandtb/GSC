@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.plan.PlanVO;
 import mx.com.aon.portal.model.plan.ProductoVO;
 import mx.com.aon.portal.service.plan.ManttoManager;
@@ -14,6 +13,7 @@ import org.apache.log4j.Logger;
 
 import mx.com.aon.tmp.Endpoint;
 import mx.com.aon.tmp.BackboneApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
 /**
  * 
  * @author sergio.ramirez

@@ -9,7 +9,7 @@ import mx.com.aon.catweb.configuracion.producto.tablaCincoClaves.model.DatosClav
 import mx.com.aon.catweb.configuracion.producto.tablaCincoClaves.model.DescripcionCincoClavesVO;
 import mx.com.aon.catweb.configuracion.producto.tablaCincoClaves.model.DescripcionVeinticincoAtributosVO;
 import mx.com.aon.catweb.configuracion.producto.tablaCincoClaves.model.ValoresCincoClavesVO;
-import mx.com.aon.core.ApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * TablaCincoClavesManager

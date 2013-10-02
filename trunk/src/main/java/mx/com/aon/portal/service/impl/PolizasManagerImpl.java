@@ -8,10 +8,10 @@ import mx.com.aon.portal.util.ConvertUtil;
 import mx.com.aon.portal.model.ConsultaPolizasCanceladasVO;
 import mx.com.aon.portal.model.RehabilitacionManual_PolizaVO;
 import mx.com.aon.procesos.emision.model.PolizaMaestraVO;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.model.TableModelExport;
 
 import mx.com.aon.portal.util.UserSQLDateConverter;
+import mx.com.gseguros.exception.ApplicationException;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.commons.beanutils.Converter;

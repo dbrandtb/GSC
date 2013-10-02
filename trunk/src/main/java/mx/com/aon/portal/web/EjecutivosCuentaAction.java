@@ -5,7 +5,8 @@ import mx.com.aon.portal.model.EjecutivoCuentaVO;
 import mx.com.aon.portal.service.EjecutivoManager;
 import mx.com.aon.portal.service.EjecutivosCuentaManager;
 import mx.com.aon.portal.service.MantenimientoEjecutivosCuentaManager;
-import mx.com.aon.core.ApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
+
 import org.apache.log4j.Logger;
 import java.util.ArrayList;
 import java.util.List;

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import org.apache.log4j.Logger;
 import mx.com.aon.portal.service.RequisitosRehabilitacionManager;
 import mx.com.aon.portal.model.RequisitoRehabilitacionVO;
-import mx.com.aon.core.ApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  *   Action que atiende las peticiones de que vienen de la pantalla Requisitos de rehabilitacion

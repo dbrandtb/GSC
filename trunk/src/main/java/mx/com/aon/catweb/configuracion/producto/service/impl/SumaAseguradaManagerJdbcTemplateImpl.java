@@ -4,10 +4,10 @@ import java.util.HashMap;
 
 import mx.com.aon.catweb.configuracion.producto.service.SumaAseguradaManagerJdbcTemplate;
 import mx.com.aon.catweb.configuracion.producto.sumaAsegurada.model.SumaAseguradaIncisoVO;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
 import mx.com.aon.portal.util.ConvertUtil;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 
 public class SumaAseguradaManagerJdbcTemplateImpl extends AbstractManagerJdbcTemplateInvoke implements SumaAseguradaManagerJdbcTemplate {
 

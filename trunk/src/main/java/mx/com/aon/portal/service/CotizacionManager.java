@@ -2,8 +2,8 @@ package mx.com.aon.portal.service;
 
 import java.io.File;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.utils.ServerConfigurationException;
+import mx.com.gseguros.exception.ApplicationException;
 
 public interface CotizacionManager {
 

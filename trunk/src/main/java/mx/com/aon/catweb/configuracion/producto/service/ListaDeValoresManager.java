@@ -7,8 +7,8 @@ import mx.com.aon.catweb.configuracion.producto.model.ClavesVO;
 import mx.com.aon.catweb.configuracion.producto.model.ListaDeValoresVO;
 import mx.com.aon.catweb.configuracion.producto.model.LlaveValorVO;
 import mx.com.aon.catweb.configuracion.producto.tablaCincoClaves.model.DatosClaveAtributoVO;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.service.PagedList;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * ListaDeValoresManager

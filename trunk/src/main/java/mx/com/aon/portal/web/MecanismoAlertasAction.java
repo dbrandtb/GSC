@@ -4,11 +4,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.MecanismoAlertaVO;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.service.MecanismosAlertasManager;
 import mx.com.aon.portal.service.PagedList;
+import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.log4j.Logger;
 

@@ -1,10 +1,10 @@
 package mx.com.aon.portal.web;
 
 import java.util.List;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.AlertaUsuarioVO;
 import mx.com.aon.portal.service.AlertasUsuarioManager;
 import mx.com.aon.portal.service.PagedList;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  *   Action que atiende la peticion de informacion para la consulta de datos de 

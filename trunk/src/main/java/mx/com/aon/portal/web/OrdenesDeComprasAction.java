@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 
 import mx.com.aon.portal.service.OrdenesDeComprasManager;
 import mx.com.aon.portal.model.OrdenDeCompraEncOrdenVO;
-import mx.com.aon.core.ApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
 
 
 /**

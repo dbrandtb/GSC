@@ -7,11 +7,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.configmenu.OpcionVO;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.service.configmenu.ConfigMenuManager;
 import mx.com.aon.portal.web.AbstractListAction;
+import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

@@ -3,10 +3,10 @@ package mx.com.aon.catweb.configuracion.producto.service.impl;
 import java.util.HashMap;
 
 import mx.com.aon.catweb.configuracion.producto.service.TablaCincoClavesManagerJdbcTemplate;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.commons.lang.StringUtils;
 

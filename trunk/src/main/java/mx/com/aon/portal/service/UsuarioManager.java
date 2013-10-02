@@ -4,8 +4,8 @@ import mx.com.aon.portal.model.EstructuraVO;
 import mx.com.aon.portal.model.RamaVO;
 import mx.com.aon.portal.model.IsoVO;
 import mx.com.aon.portal.model.UserVO;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.model.TableModelExport;
+import mx.com.gseguros.exception.ApplicationException;
 
 import java.util.List;
 

@@ -3,7 +3,6 @@ package mx.com.aon.portal.service.impl.reportes;
 import mx.com.aon.portal.service.reportes.JasperManager;
 import mx.com.aon.portal.model.reporte.ReporteVO;
 import mx.com.aon.portal.model.reporte.AtributosVO;
-import mx.com.aon.core.ApplicationException;
 import org.apache.log4j.Logger;
 
 import java.util.Map;
@@ -13,6 +12,7 @@ import java.util.ArrayList;
 
 import mx.com.aon.tmp.Endpoint;
 import mx.com.aon.tmp.BackboneApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
 
 
 

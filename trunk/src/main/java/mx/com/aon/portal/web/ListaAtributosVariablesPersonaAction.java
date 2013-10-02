@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.AtributosVariablesPersonaVO;
 import mx.com.aon.portal.service.AtributosVariablesPersonaManager;
 import mx.com.aon.portal.service.PagedList;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  *   Action que atiende las peticiones de abm que vienen de la pantalla Atributos Variables por Persona.

@@ -1,8 +1,8 @@
 package mx.com.aon.portal.web;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.PolizasRenovacionVO;
 import mx.com.aon.portal.service.SeleccionPolizasRenovacionManager;
+import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.log4j.Logger;
 

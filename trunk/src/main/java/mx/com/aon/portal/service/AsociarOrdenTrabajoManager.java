@@ -1,7 +1,7 @@
 package mx.com.aon.portal.service;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.AsociarOrdenTrabajoVO;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * Interface con servicios de abm para la pantalla de Asociar orden de trabajo.

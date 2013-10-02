@@ -4,7 +4,7 @@ import java.util.List;
 
 import mx.com.aon.catweb.configuracion.producto.model.LlaveValorVO;
 import mx.com.aon.catweb.configuracion.producto.reglaValidacion.model.ReglaValidacionVO;
-import mx.com.aon.core.ApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
 
 public interface ReglaValidacionManager {
 

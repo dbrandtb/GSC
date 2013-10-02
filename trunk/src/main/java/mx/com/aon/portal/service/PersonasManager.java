@@ -2,7 +2,6 @@ package mx.com.aon.portal.service;
 
 import java.util.List;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.model.TableModelExport;
 import mx.com.aon.portal.model.BackBoneResultVO;
 import mx.com.aon.portal.model.DomicilioVO;
@@ -13,6 +12,7 @@ import mx.com.aon.portal.model.PersonaVO;
 import mx.com.aon.portal.model.RelacionesPersonaVO;
 import mx.com.aon.portal.model.TelefonoVO;
 import mx.com.aon.portal.model.UsuarioClaveVO;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * Interface de servicios para datos de la persona

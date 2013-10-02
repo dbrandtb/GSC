@@ -1,12 +1,12 @@
 
 package mx.com.aon.portal.service.impl;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.model.TableModelExport;
 import mx.com.aon.portal.model.ConfiguracionAlertasAutomaticoVO;
 import mx.com.aon.portal.service.ConfiguracionAlertasAutomaticoManager2;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.util.*;
+import mx.com.gseguros.exception.ApplicationException;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.commons.beanutils.Converter;

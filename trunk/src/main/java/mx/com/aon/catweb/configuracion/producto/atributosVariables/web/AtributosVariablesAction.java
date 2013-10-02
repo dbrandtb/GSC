@@ -11,11 +11,11 @@ import mx.com.aon.catweb.configuracion.producto.model.LlaveValorVO;
 import mx.com.aon.catweb.configuracion.producto.reglanegocio.model.ReglaNegocioVO;
 import mx.com.aon.catweb.configuracion.producto.service.AtributosVariablesManager;
 import mx.com.aon.catweb.configuracion.producto.web.ExpresionesPadre;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.MensajesVO;
 import mx.com.aon.portal.service.CatalogService;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.utils.Constantes;
+import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;

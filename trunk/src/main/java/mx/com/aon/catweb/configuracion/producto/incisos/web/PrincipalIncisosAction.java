@@ -6,8 +6,8 @@ import mx.com.aon.catweb.configuracion.producto.expresiones.model.RamaVO;
 import mx.com.aon.catweb.configuracion.producto.incisos.model.IncisoVO;
 import mx.com.aon.catweb.configuracion.producto.service.IncisoManager;
 import mx.com.aon.catweb.configuracion.producto.web.Padre;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

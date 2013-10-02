@@ -4,10 +4,10 @@ package mx.com.aon.portal.web;
 import mx.com.aon.portal.model.ConfigurarFormaCalculoAtributoVariableVO;
 import mx.com.aon.portal.service.ConfigurarFormaCalculoAtributosVariablesManager;
 import mx.com.aon.portal.service.PagedList;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.ExportMediator;
 import mx.com.aon.export.ExportView;
 import mx.com.aon.export.model.TableModelExport;
+import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.log4j.Logger;
 

@@ -5,7 +5,8 @@ import java.util.List;
 
 import mx.com.aon.portal.model.DetallePlanXClienteVO;
 import mx.com.aon.portal.service.DetallePlanXClienteManager;
-import mx.com.aon.core.ApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
+
 import org.apache.log4j.Logger;
 
 /**

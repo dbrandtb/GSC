@@ -1,12 +1,13 @@
 package mx.com.aon.portal.web.reportes;
 
 import com.opensymphony.xwork2.ActionSupport;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.MensajeErrorVO;
 import mx.com.aon.portal.model.reporte.ComboGraficoVo;
 import mx.com.aon.portal.service.MensajesErrorManager;
 import mx.com.aon.portal.service.reportes.ReportesAgregarManager;
 import mx.com.aon.portal.service.reportes.ReportesManager;
+import mx.com.gseguros.exception.ApplicationException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

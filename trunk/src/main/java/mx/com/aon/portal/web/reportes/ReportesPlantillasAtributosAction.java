@@ -1,7 +1,6 @@
 package mx.com.aon.portal.web.reportes;
 
 import com.opensymphony.xwork2.ActionSupport;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.ExportMediator;
 import mx.com.aon.export.ExportModel;
 import mx.com.aon.export.ExportView;
@@ -12,6 +11,8 @@ import mx.com.aon.portal.model.MensajeErrorVO;
 import mx.com.aon.portal.service.reportes.ReportesManager;
 import mx.com.aon.portal.service.reportes.ReportesAgregarManager;
 import mx.com.aon.portal.service.MensajesErrorManager;
+import mx.com.gseguros.exception.ApplicationException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.interceptor.SessionAware;

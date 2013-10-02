@@ -2,11 +2,11 @@ package mx.com.aon.portal.service;
 
 import java.util.List;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.model.TableModelExport;
 import mx.com.aon.portal.model.ElementoComboBoxVO;
 import mx.com.aon.portal.model.ExtJSFieldVO;
 import mx.com.aon.portal.model.ValoresCamposCatalogosSimplesVO;
+import mx.com.gseguros.exception.ApplicationException;
 
 public interface ConfiguradorCatalogosManager {
 

@@ -7,7 +7,6 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import mx.com.aon.tmp.Endpoint;
 import mx.com.aon.tmp.BackboneApplicationException;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.principal.ClienteVO;
 import mx.com.aon.portal.model.principal.ConfiguracionVO;
 import mx.com.aon.portal.model.principal.PaginaVO;
@@ -19,6 +18,7 @@ import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.service.impl.AbstractManager;
 import mx.com.aon.portal.service.principal.PrincipalManager;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 /**
  * 
  * @author sergio.ramirez

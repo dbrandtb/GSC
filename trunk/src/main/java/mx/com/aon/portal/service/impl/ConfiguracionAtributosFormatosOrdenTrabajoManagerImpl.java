@@ -4,7 +4,8 @@ import mx.com.aon.portal.service.ConfiguracionAtributosFormatosOrdenTrabajoManag
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.model.ConfiguracionAtributoFormatoOrdenTrabajoVO;
 import mx.com.aon.portal.util.WrapperResultados;
-import mx.com.aon.core.ApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
+
 import java.util.HashMap;
 
 /**

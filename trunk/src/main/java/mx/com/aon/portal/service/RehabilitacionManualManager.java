@@ -1,8 +1,8 @@
 package mx.com.aon.portal.service;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.RehabilitacionManual_PolizaVO;
 import mx.com.aon.portal.model.RehabilitacionManual_RequisitosVO;
+import mx.com.gseguros.exception.ApplicationException;
 
 public interface RehabilitacionManualManager {
 	/**
