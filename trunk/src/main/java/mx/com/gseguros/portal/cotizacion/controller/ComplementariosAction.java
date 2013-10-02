@@ -1048,9 +1048,9 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			}
 			
 			
-			//if(!ejecutaWSclienteSalud(datUs.getCdunieco(), datUs.getCdramo(), "M", (String)wr.getItemMap().get("nmpoliza"), (String)wr.getItemMap().get("nmsuplem")))
-				//logger.error("NO SE HA EJECUTADO CORRECTAMENTE EL WS DE CLIENTE SALUD!!!, POLIZA:" + (String)wr.getItemMap().get("nmpoliza"));
-			if(!ejecutaWSrecibos(datUs.getCdunieco(), datUs.getCdramo(), "M", (String)wr.getItemMap().get("nmpoliza"), (String)wr.getItemMap().get("nmsuplem"), rutaCarpeta, cdtipsit, sucursal))
+			if(!ejecutaWSclienteSalud(datUs.getCdunieco(), datUs.getCdramo(), "M", (String)wr.getItemMap().get("nmpoliza"), (String)wr.getItemMap().get("nmsuplem")))
+				logger.error("NO SE HA EJECUTADO CORRECTAMENTE EL WS DE CLIENTE SALUD!!!, POLIZA:" + (String)wr.getItemMap().get("nmpoliza"));
+			if(!ejecutaWSrecibos(datUs.getCdunieco(), datUs.getCdramo(), "M", (String)wr.getItemMap().get("nmpoliza"), (String)wr.getItemMap().get("nmsuplem"), rutaCarpeta, cdtipsit, sucursal, panel1.get("pv_nmpoliza")))
 				logger.error("NO SE HAN INSERTADO TODOS LOS RECIBOS!!! PARA ICE2SIGS, POLIZA: " + (String)wr.getItemMap().get("nmpoliza"));
 			
 			success=true;
@@ -1070,7 +1070,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 		return SUCCESS;
 	}
 	
-	private boolean ejecutaWSrecibos(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String rutaPoliza, String cdtipsit, String sucursal){
+	private boolean ejecutaWSrecibos(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String rutaPoliza, String cdtipsit, String sucursal, String nmsolici){
 		boolean allInserted = true;
 		
 		logger.debug("*** Entrando a metodo Inserta Recibos WS ice2sigs, para la poliza: " + nmpoliza + "***");
@@ -1126,11 +1126,11 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 					paramsR.put("pv_cdunieco_i", cdunieco);
 					paramsR.put("pv_cdramo_i", cdramo);
 					paramsR.put("pv_estado_i", estado);
-					paramsR.put("pv_nmpoliza_i", nmpoliza);
+					paramsR.put("pv_nmpoliza_i", nmsolici);
 					paramsR.put("pv_nmsuplem_i", nmsuplem);
 					paramsR.put("pv_feinici_i", new Date());
 					paramsR.put("pv_cddocume_i", this.getText("url.imp.recibos")+parametros);
-					paramsR.put("pv_dsdocume_i", "Recibo"+recibo.getNumRec());
+					paramsR.put("pv_dsdocume_i", "Recibo "+recibo.getNumRec());
 					
 					kernelManager.guardarArchivo(paramsR);
 				//}
@@ -1159,7 +1159,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 		try {
 			result = kernelManager.obtenDatosClienteWS(params);
 			cliente = ((ArrayList<ClienteSalud>) result.getItemList()).get(0);
-		} catch (ApplicationException e1) {
+		} catch (Exception e1) {
 			logger.error("Error en llamar al PL de obtencion de ejecutaWSclienteSalud",e1);
 			return false;
 		}

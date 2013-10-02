@@ -3283,6 +3283,9 @@ public class ProcesoDAO extends AbstractDAO {
     		
     		cliente.setFismorCli(rs.getInt("fismorCli"));
     		cliente.setGiroCli(rs.getInt("giroCli"));
+    		
+    		logger.debug("cliente.getGiroCli(): "+cliente.getGiroCli());
+    		
     		cliente.setMuncarCli(rs.getString("muncarCli"));
     		cliente.setMunicipioCli(rs.getString("municipioCli"));
     		cliente.setNombreCli(rs.getString("nombreCli"));
