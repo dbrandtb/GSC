@@ -81,6 +81,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 	private String cdperson;
 	private List<Map<String,String>>slist1;
 	private GridVO gridResultados;
+	private String mensajeRespuesta;
 
 	public String mostrarPantalla()
 	/*
@@ -1040,10 +1041,16 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			}
 			
 			
-			if(!ejecutaWSclienteSalud(datUs.getCdunieco(), datUs.getCdramo(), "M", (String)wr.getItemMap().get("nmpoliza"), (String)wr.getItemMap().get("nmsuplem")))
+			if(!ejecutaWSclienteSalud(datUs.getCdunieco(), datUs.getCdramo(), "M", (String)wr.getItemMap().get("nmpoliza"), (String)wr.getItemMap().get("nmsuplem"))){
 				logger.error("NO SE HA EJECUTADO CORRECTAMENTE EL WS DE CLIENTE SALUD!!!, POLIZA:" + (String)wr.getItemMap().get("nmpoliza"));
-			if(!ejecutaWSrecibos(datUs.getCdunieco(), datUs.getCdramo(), "M", (String)wr.getItemMap().get("nmpoliza"), (String)wr.getItemMap().get("nmsuplem"), rutaCarpeta, cdtipsit, sucursal, panel1.get("pv_nmpoliza")))
+				mensajeRespuesta = "No se ha ejecutado correctamente el WS para el guardado del ClienteSalud";
+			}
+				
+			if(!ejecutaWSrecibos(datUs.getCdunieco(), datUs.getCdramo(), "M", (String)wr.getItemMap().get("nmpoliza"), (String)wr.getItemMap().get("nmsuplem"), rutaCarpeta, cdtipsit, sucursal, panel1.get("pv_nmpoliza"))){
 				logger.error("NO SE HAN INSERTADO TODOS LOS RECIBOS!!! EN ICE2SIGS, DE LA POLIZA: " + (String)wr.getItemMap().get("nmpoliza"));
+				mensajeRespuesta = "No se han ejecutado correctamente los WS para el guardado de los recibos";
+			}
+				
 			
 			success=true;
 		}
@@ -1434,6 +1441,14 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 
 	public String getCON_CAT_NACIONALIDAD() {
 		return CON_CAT_NACIONALIDAD;
+	}
+
+	public String getMensajeRespuesta() {
+		return mensajeRespuesta;
+	}
+
+	public void setMensajeRespuesta(String mensajeRespuesta) {
+		this.mensajeRespuesta = mensajeRespuesta;
 	}
 
 }
