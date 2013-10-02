@@ -16,35 +16,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import oracle.jdbc.driver.OracleTypes;
-
-import org.apache.struts2.ServletActionContext;
-import org.springframework.jdbc.core.SqlParameter;
-
 import mx.com.aon.configurador.pantallas.model.components.GridVO;
 import mx.com.aon.core.ApplicationException;
 import mx.com.aon.core.web.PrincipalCoreAction;
-import mx.com.aon.flujos.cotizacion.model.ResultadoCotizacionVO;
-import mx.com.aon.flujos.cotizacion.service.impl.CotizacionManagerImpl;
-import mx.com.aon.flujos.cotizacion.web.ResultadoCotizacionAction;
 import mx.com.aon.flujos.cotizacion4.web.ResultadoCotizacion4Action;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
-import mx.com.aon.utils.HttpRequestUtil;
-import mx.com.gseguros.portal.consultas.model.ConsultaDatosSuplementoVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.Tatri;
 import mx.com.gseguros.portal.general.util.ConstantesCatalogos;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.ws.client.Ice2sigsWebServices;
 import mx.com.gseguros.ws.client.Ice2sigsWebServices.Operacion;
-
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSalud;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSaludRespuesta;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.Recibo;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboRespuesta;
+
+import org.apache.struts2.ServletActionContext;
 
 /**
  * 
@@ -1037,7 +1029,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 						+ "\n###### Se solicita reporte ######"
 						+ "\na "+url+""
 						+ "\n#################################");
-				HttpRequestUtil.generaReporte(url,rutaCarpeta+"/"+descripc);
+				HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
 				log.debug(""
 						+ "\n######                    ######"
 						+ "\n###### reporte solicitado ######"
