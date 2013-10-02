@@ -121,7 +121,7 @@ Ext.onReady(function(){
     	extend         : 'Ext.grid.Panel'
         ,title         : 'Tareas'
         //,width         : 600
-        ,height        : 400
+        ,height        : 410
         ,buttonAlign   : 'center'
         ,store         : mesConStoreTareas
         ,bbar     :
@@ -140,18 +140,18 @@ Ext.onReady(function(){
                     {
                         header     : 'Tr&aacute;mite'
                         ,dataIndex : 'ntramite'
-                        ,width     : 70 
+                        ,width     : 60 
                     }
                     ,
                     {
                     	header     : 'Sucursal'
                     	,dataIndex : "cdsucdoc"
-                    	,width     : 70
+                    	,width     : 60
                     }
                     ,{
                     	header     : 'Subramo'
                     	,dataIndex : "cdsubram"
-                    	,width     : 70
+                    	,width     : 60
                     }
                     ,{
                         header     : 'Estado<br/>de solicitud'
@@ -169,26 +169,31 @@ Ext.onReady(function(){
                             }
                             return label;
                         }
-                        ,width     : 90
+                        ,width     : 80
                     }
                     ,{
                     	header     : 'Fecha<br/>de captura'
                     	,dataIndex : 'ferecepc'
-                    	,width     : 95
+                    	,width     : 90
                     	,renderer  : Ext.util.Format.dateRenderer('d M Y')
                     }
                     ,{
                         header     : 'Fecha<br/>de estatus'
                         ,dataIndex : 'fecstatu'
-                        ,width     : 95
+                        ,width     : 90
                         ,renderer  : Ext.util.Format.dateRenderer('d M Y')
                     }
                     ,{
-                        header     : 'P&oacute;liza<br/>/Tr&aacute;mite'
+                        header     : 'P&oacute;liza'
                         ,dataIndex : 'nmpoliza'
-                        ,width     : 80
+                        ,width     : 70
                     }
                     ,{
+                        header     : 'Cotizaci&oacute;n'
+                            ,dataIndex : 'nmsolici'
+                            ,width     : 70
+                     }
+                     ,{
                     	header     : 'Estado'
                     	,dataIndex : 'status'
                     	,width     : 90
@@ -206,13 +211,13 @@ Ext.onReady(function(){
                     		return res;
                     	}
                     }
-                    /*
+                    
                     ,{
-                        header     : 'Observaciones'
-                        ,dataIndex : 'comments'
-                        ,width     : 130
+                        header     : 'Responsable'
+                        ,dataIndex : 'Nombre_agente'
+                        ,width     : 190
                     }
-                    */
+                    
                     ,{
                         xtype         : 'actioncolumn'
                         ,menuDisabled : true
