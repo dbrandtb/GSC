@@ -4,7 +4,8 @@ package mx.com.aon.portal.web;
 
 import mx.com.aon.portal.model.DesglosePolizasVO;
 import mx.com.aon.portal.service.DesglosePolizasManager;
-import mx.com.aon.core.ApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
+
 import org.apache.log4j.Logger;
 import java.util.ArrayList;
 import java.util.List;

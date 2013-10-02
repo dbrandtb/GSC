@@ -2,7 +2,7 @@ package mx.com.aon.portal.service;
 
 import java.util.Map;
 
-import mx.com.aon.core.ApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
 
 public interface InstrumentoPagoManager {
 	

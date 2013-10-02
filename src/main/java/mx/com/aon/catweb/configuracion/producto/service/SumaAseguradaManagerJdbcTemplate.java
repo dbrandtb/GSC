@@ -1,7 +1,7 @@
 package mx.com.aon.catweb.configuracion.producto.service;
 
 import mx.com.aon.catweb.configuracion.producto.sumaAsegurada.model.SumaAseguradaIncisoVO;
-import mx.com.aon.core.ApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
 
 
 /**

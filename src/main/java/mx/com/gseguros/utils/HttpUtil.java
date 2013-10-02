@@ -30,7 +30,7 @@ public class HttpUtil {
 	public static boolean generaArchivo(String urlOrigen, String rutaDestino) {
 		
 		logger.debug("Entrando a generaReporte()");
-		logger.debug("urlInicio=" + urlOrigen);
+		logger.debug("urlOrigen=" + urlOrigen);
 		logger.debug("rutaDestino=" + rutaDestino);
 		boolean isArchivoGenerado = false;
 		

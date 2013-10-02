@@ -8,7 +8,7 @@ import mx.com.aon.portal.model.ClavesVO;
 import mx.com.aon.portal.service.GeneracionClavesManager;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.util.WrapperResultados;
-import mx.com.aon.core.ApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
 
 
 import java.util.ArrayList;

@@ -12,10 +12,10 @@ import java.util.Map;
 
 import mx.com.aon.catweb.configuracion.producto.expresiones.model.RamaVO;
 import mx.com.aon.catweb.configuracion.producto.service.TreeManager;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
 import mx.com.aon.tmp.BackboneApplicationException;
 import mx.com.aon.tmp.Endpoint;
+import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.log4j.Logger;
 

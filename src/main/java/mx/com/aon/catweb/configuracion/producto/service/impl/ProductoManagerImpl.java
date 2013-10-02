@@ -29,13 +29,13 @@ import mx.com.aon.catweb.configuracion.producto.definicion.model.TipoPoliza;
 import mx.com.aon.catweb.configuracion.producto.model.LlaveValorVO;
 import mx.com.aon.catweb.configuracion.producto.service.ProductoManager;
 import mx.com.aon.catweb.configuracion.producto.util.WizardUtils;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.kernel.cache.CacheSistema;
 import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
 import mx.com.aon.portal.util.ConvertUtil;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.tmp.BackboneApplicationException;
 import mx.com.aon.tmp.Endpoint;
+import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;

@@ -11,7 +11,6 @@ import org.apache.struts2.interceptor.SessionAware;
 import com.opensymphony.xwork2.ActionSupport;
 
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.BackBoneResultVO;
 import mx.com.aon.portal.model.DomicilioVO;
 import mx.com.aon.portal.model.ExtJSDateFieldVO;
@@ -28,6 +27,7 @@ import mx.com.aon.portal.model.TelefonoVO;
 import mx.com.aon.portal.model.UsuarioClaveVO;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.service.PersonasManager;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  *   Action que atiende las peticiones de que vienen de la pantalla de Administracion de Personas

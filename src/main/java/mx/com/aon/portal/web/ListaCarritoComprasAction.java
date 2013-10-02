@@ -7,7 +7,7 @@ import mx.com.aon.portal.model.CarritoComprasRolesVO;
 import mx.com.aon.portal.service.CarritoComprasManager;
 
 import mx.com.aon.portal.service.PagedList;
-import mx.com.aon.core.ApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
 
 
 import org.apache.log4j.Logger;

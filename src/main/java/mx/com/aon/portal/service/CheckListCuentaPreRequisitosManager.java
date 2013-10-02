@@ -2,8 +2,8 @@ package mx.com.aon.portal.service;
 
 import java.util.List;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.CheckListCuentaPreRequisitosVO;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * Interface de servicios para la configuracion de los pre-requisitos de configuracion de cuenta.

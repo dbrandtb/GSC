@@ -1,10 +1,10 @@
 package mx.com.aon.portal.web;
 
 import com.opensymphony.xwork2.ActionSupport;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.ObtienetareaVO;
 import mx.com.aon.portal.service.EstructuraManagerTareasChecklist;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.log4j.Logger;
 

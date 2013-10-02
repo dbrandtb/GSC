@@ -3,7 +3,6 @@ package mx.com.aon.portal.web;
 import java.util.ArrayList;
 import java.util.List;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.CheckListCuentaPreRequisitosVO;
 import mx.com.aon.portal.model.CheckListXCuentaSeccion;
 import mx.com.aon.portal.model.ClienteVO;
@@ -12,6 +11,7 @@ import mx.com.aon.portal.model.ErrorVO;
 import mx.com.aon.portal.model.TareaChecklistVO;
 import mx.com.aon.portal.service.CheckListCuentaPreRequisitosManager;
 import mx.com.aon.portal.service.PagedList;
+import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.log4j.Logger;
 

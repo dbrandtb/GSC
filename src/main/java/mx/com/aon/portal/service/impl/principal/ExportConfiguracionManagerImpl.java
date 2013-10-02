@@ -10,9 +10,9 @@ import org.apache.commons.logging.LogFactory;
 import mx.com.aon.tmp.Endpoint;
 import mx.com.aon.tmp.BackboneApplicationException;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.ExportModel;
 import mx.com.aon.export.model.TableModelExport;
+import mx.com.gseguros.exception.ApplicationException;
 /**
  * 
  * @author sergio.ramirez

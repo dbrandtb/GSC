@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.CoberturaPolAntVO;
 import mx.com.aon.portal.model.ExtJSComboBoxVO;
 import mx.com.aon.portal.model.ExtJSDateFieldVO;
@@ -16,6 +15,7 @@ import mx.com.aon.portal.model.ReciboPolizaVO;
 import mx.com.aon.portal.model.TValoObjVO;
 import mx.com.aon.portal.service.ConsultaPolizaRenovadaManager;
 import mx.com.aon.portal.service.PagedList;
+import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.interceptor.SessionAware;

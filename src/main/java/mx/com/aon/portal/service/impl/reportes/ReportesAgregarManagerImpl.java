@@ -3,13 +3,13 @@ package mx.com.aon.portal.service.impl.reportes;
 import mx.com.aon.portal.service.reportes.ReportesAgregarManager;
 import mx.com.aon.portal.service.impl.AbstractManager;
 import mx.com.aon.portal.util.WrapperResultados;
-import mx.com.aon.core.ApplicationException;
 import org.apache.log4j.Logger;
 
 import java.util.Map;
 import java.util.HashMap;
 
 import mx.com.aon.tmp.Endpoint;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * Created by IntelliJ IDEA.

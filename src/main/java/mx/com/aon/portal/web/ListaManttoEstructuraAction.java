@@ -12,7 +12,6 @@ package mx.com.aon.portal.web;
 
 import java.io.InputStream;
 import java.util.List;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.ExportMediator;
 import mx.com.aon.export.ExportView;
 import mx.com.aon.export.model.TableModelExport;
@@ -20,6 +19,7 @@ import mx.com.aon.portal.model.EstructuraVO;
 import mx.com.aon.portal.service.EstructuraManager;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.util.Util;
+import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;

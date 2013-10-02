@@ -2,9 +2,9 @@ package mx.com.aon.portal.service;
 
 import java.util.HashMap;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.dao.AbstractDAO;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.exception.DaoException;
 
 import org.apache.log4j.Logger;

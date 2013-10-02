@@ -3,9 +3,9 @@ package mx.com.aon.portal.service.impl;
 import java.util.HashMap;
 import java.util.List;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.MenuPrincipalVO;
 import mx.com.aon.portal.service.MenuPrincipalManager;
+import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.log4j.Logger;
 

@@ -5,7 +5,7 @@ import java.util.List;
 import mx.com.aon.catweb.configuracion.producto.model.LlaveValorVO;
 import mx.com.aon.catweb.configuracion.producto.sumaAsegurada.model.SumaAseguradaIncisoVO;
 import mx.com.aon.catweb.configuracion.producto.sumaAsegurada.model.SumaAseguradaVO;
-import mx.com.aon.core.ApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
 
 public interface SumaAseguradaManager {
 

@@ -8,11 +8,11 @@ import java.util.Map;
 
 import mx.com.aon.catweb.configuracion.producto.incisos.model.IncisoVO;
 import mx.com.aon.catweb.configuracion.producto.service.IncisoManager;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.tmp.BackboneApplicationException;
 import mx.com.aon.tmp.Endpoint;
+import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.log4j.Logger;
 /**

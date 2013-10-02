@@ -1,13 +1,14 @@
 package mx.com.aon.portal.web.reportes;
 
 import com.opensymphony.xwork2.ActionSupport;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.model.reporte.ComboGraficoVo;
 import mx.com.aon.portal.model.reporte.GraficoVO;
 import mx.com.aon.portal.model.reporte.ReporteVO;
 import mx.com.aon.portal.model.reporte.AtributosVO;
 import mx.com.aon.portal.service.reportes.ReportesManager;
+import mx.com.gseguros.exception.ApplicationException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.interceptor.SessionAware;

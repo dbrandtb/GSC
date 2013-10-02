@@ -8,10 +8,10 @@
 
 package mx.com.aon.portal.web.jasper;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.service.reportes.ReportesManager;
 import mx.com.aon.portal.model.reporte.JasperVO;
 import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.exception.ApplicationException;
 
 import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.interceptor.SessionAware;

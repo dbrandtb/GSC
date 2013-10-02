@@ -1,8 +1,8 @@
 package mx.com.aon.portal.service.impl;
 
 import org.apache.log4j.Logger;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.service.EnvioMailManager;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * Clase que implementa la interfaz EnvioMailManager.

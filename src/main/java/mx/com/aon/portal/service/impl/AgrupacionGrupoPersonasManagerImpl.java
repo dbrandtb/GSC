@@ -3,13 +3,13 @@ package mx.com.aon.portal.service.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.AgrupacionGrupoPersonaVO;
 import mx.com.aon.portal.model.GrupoPersonaVO;
 import mx.com.aon.portal.service.AgrupacionGrupoPersonasManager;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.tmp.Endpoint;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * Clase que sirve para dar servicios al action que lo invoca.

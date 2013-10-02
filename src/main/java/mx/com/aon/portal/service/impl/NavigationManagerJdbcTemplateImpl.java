@@ -3,13 +3,13 @@ package mx.com.aon.portal.service.impl;
 import java.util.HashMap;
 import java.util.List;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.IsoVO;
 import mx.com.aon.portal.model.ItemVO;
 import mx.com.aon.portal.model.RamaVO;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.service.NavigationManager;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 
 public class NavigationManagerJdbcTemplateImpl extends
 AbstractManagerJdbcTemplateInvoke  implements NavigationManager {

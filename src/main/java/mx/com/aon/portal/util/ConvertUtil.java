@@ -1,7 +1,7 @@
 package mx.com.aon.portal.util;
 
 import mx.com.aon.portal.model.UserVO;
-import mx.com.aon.core.ApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
 
 import java.sql.Date;
 import java.sql.Timestamp;

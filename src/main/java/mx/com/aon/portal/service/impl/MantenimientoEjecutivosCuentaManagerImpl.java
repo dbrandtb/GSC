@@ -6,12 +6,12 @@ import java.util.List;
 
 import com.opensymphony.module.sitemesh.Page;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.model.TableModelExport;
 import mx.com.aon.portal.model.EjecutivoCuentaVO;
 import mx.com.aon.portal.service.MantenimientoEjecutivosCuentaManager;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 
 public class MantenimientoEjecutivosCuentaManagerImpl extends AbstractManager implements MantenimientoEjecutivosCuentaManager {
 

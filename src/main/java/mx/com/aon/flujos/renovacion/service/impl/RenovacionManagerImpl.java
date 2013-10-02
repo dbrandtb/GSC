@@ -11,7 +11,6 @@ import java.util.HashMap;
 import mx.com.aon.tmp.Endpoint;
 import mx.com.aon.tmp.BackboneApplicationException;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.model.TableModelExport;
 import mx.com.aon.flujos.renovacion.service.RenovacionManager;
 import mx.com.aon.portal.model.BaseObjectVO;
@@ -19,6 +18,7 @@ import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.service.impl.AbstractManager;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.utils.Constantes;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * @author Alejandro García

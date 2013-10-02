@@ -7,8 +7,8 @@ import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.service.PolizasManager;
 import mx.com.aon.portal.model.AgrupacionPolizaVO;
 import mx.com.aon.portal.model.ConsultaPolizasCanceladasVO;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.ExportMediator;
+import mx.com.gseguros.exception.ApplicationException;
 
 import java.io.InputStream;
 import java.util.HashMap;

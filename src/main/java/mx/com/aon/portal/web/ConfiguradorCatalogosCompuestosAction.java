@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.ExportMediator;
 import mx.com.aon.export.ExportView;
 import mx.com.aon.export.model.TableModelExport;
@@ -22,6 +21,7 @@ import mx.com.aon.portal.service.ConfiguradorCatalogosCompuestosManager;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.util.Util;
 import mx.com.aon.portal.web.tooltip.ToolTipBean;
+import mx.com.gseguros.exception.ApplicationException;
 import net.sf.json.JSONFunction;
 import net.sf.json.JSONObject;
 

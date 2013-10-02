@@ -6,7 +6,7 @@ import org.apache.log4j.Logger;
 import com.opensymphony.xwork2.ActionSupport;
 
 import mx.com.aon.portal.service.RazonesCancelacionProductoManager;
-import mx.com.aon.core.ApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * Action que atiende las peticiones de abm la pantalla de razones de cancelacion.

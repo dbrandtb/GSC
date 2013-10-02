@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.apache.commons.beanutils.Converter;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.model.TableModelExport;
 import mx.com.aon.portal.model.BackBoneResultVO;
 import mx.com.aon.portal.model.DomicilioVO;
@@ -22,6 +21,7 @@ import mx.com.aon.portal.service.PersonasManager;
 import mx.com.aon.portal.util.UserSQLDateConverter;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal.util.ConvertUtil;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * Clase que sirve para dar servicios al action que lo invoca.

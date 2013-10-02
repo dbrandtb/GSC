@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.ExportMediator;
 import mx.com.aon.export.ExportView;
 import mx.com.aon.export.model.TableModelExport;
@@ -14,6 +13,7 @@ import mx.com.aon.portal.model.UsuarioClaveVO;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.service.PersonasManager;
 import mx.com.aon.portal.util.Util;
+import mx.com.gseguros.exception.ApplicationException;
 
 
 /**

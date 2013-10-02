@@ -4,7 +4,7 @@ import java.util.List;
 
 import mx.com.aon.catweb.configuracion.producto.datosFijos.model.DatoFijoVO;
 import mx.com.aon.catweb.configuracion.producto.model.LlaveValorVO;
-import mx.com.aon.core.ApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
 
 public interface DatosFijosManager {
 	List<DatoFijoVO> listaDatosFijos(String codigoRamo) throws ApplicationException;

@@ -10,8 +10,8 @@
  */
 package mx.com.aon.export;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.model.TableModelExport;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * ExportModel

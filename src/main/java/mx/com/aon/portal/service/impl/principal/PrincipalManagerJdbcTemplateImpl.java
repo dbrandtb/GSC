@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.dao.WrapperResultadosGeneric;
 import mx.com.aon.portal.model.principal.ClienteVO;
 import mx.com.aon.portal.model.principal.ConfiguracionVO;
@@ -16,6 +15,7 @@ import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
 import mx.com.aon.portal.service.principal.PrincipalManager;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 
 public class PrincipalManagerJdbcTemplateImpl extends
 		AbstractManagerJdbcTemplateInvoke implements PrincipalManager {

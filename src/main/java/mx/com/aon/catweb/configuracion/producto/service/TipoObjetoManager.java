@@ -5,8 +5,8 @@ import java.util.List;
 import mx.com.aon.catweb.configuracion.producto.model.LlaveValorVO;
 import mx.com.aon.catweb.configuracion.producto.tipoObjeto.model.DatoVariableObjetoVO;
 import mx.com.aon.catweb.configuracion.producto.tipoObjeto.model.TipoObjetoVO;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.MensajesVO;
+import mx.com.gseguros.exception.ApplicationException;
 
 public interface TipoObjetoManager {
 

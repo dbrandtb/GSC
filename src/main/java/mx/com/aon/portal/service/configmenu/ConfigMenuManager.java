@@ -5,9 +5,9 @@ package mx.com.aon.portal.service.configmenu;
 
 import java.util.List;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.configmenu.OpcionVO;
 import mx.com.aon.portal.service.PagedList;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * @author eflores

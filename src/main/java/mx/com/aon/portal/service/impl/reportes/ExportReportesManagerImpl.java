@@ -2,7 +2,6 @@ package mx.com.aon.portal.service.impl.reportes;
 
 import java.util.Map;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.ExportModel;
 import mx.com.aon.export.model.TableModelExport;
 
@@ -10,6 +9,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import mx.com.aon.tmp.Endpoint;
+import mx.com.gseguros.exception.ApplicationException;
 
 public class ExportReportesManagerImpl implements ExportModel {
 

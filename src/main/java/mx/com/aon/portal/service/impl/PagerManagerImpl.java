@@ -2,9 +2,9 @@ package mx.com.aon.portal.service.impl;
 
 import org.apache.log4j.Logger;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.service.PagerManager;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * PagerManagerImpl
@@ -29,7 +29,7 @@ public class PagerManagerImpl extends AbstractManager implements PagerManager {
 	 * @param limit cantidad de registros a ser consultados
 	 * @return Lista con los bean's obtenidos de la consulta
 	 * @throws ApplicationException Excepcion con la informacion y descripción del problema en la ejecución
-	 * @throws mx.com.aon.core.ApplicationException 
+	 * @throws mx.com.gseguros.exception.ApplicationException 
 	 */
 	public PagedList getPagedData(Object arg, String endpointName, int start, int limit) throws ApplicationException{
 		

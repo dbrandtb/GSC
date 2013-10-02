@@ -3,7 +3,8 @@ package mx.com.aon.portal.service.impl;
 import mx.com.aon.portal.service.AsociarOrdenTrabajoManager;
 import mx.com.aon.portal.model.AsociarOrdenTrabajoVO;
 import mx.com.aon.portal.util.WrapperResultados;
-import mx.com.aon.core.ApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
+
 import org.apache.log4j.Logger;
 import java.util.HashMap;
 

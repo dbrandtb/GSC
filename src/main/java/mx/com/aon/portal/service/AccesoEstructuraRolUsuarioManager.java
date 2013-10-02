@@ -1,7 +1,7 @@
 package mx.com.aon.portal.service;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.model.TableModelExport;
+import mx.com.gseguros.exception.ApplicationException;
 
 public interface AccesoEstructuraRolUsuarioManager {
 	public PagedList buscarAccesos (String dsNivel, String dsRol, String dsUsuario, String dsNombre, String dsEstao, int start, int limit) throws ApplicationException;

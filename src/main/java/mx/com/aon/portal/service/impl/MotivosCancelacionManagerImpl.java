@@ -3,7 +3,6 @@
  */
 package mx.com.aon.portal.service.impl;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.model.TableModelExport;
 
 import mx.com.aon.portal.model.BackBoneResultVO;
@@ -12,6 +11,7 @@ import mx.com.aon.portal.model.RequisitoCancelacionVO;
 import mx.com.aon.portal.service.MotivosCancelacionManager;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.log4j.Logger;
 

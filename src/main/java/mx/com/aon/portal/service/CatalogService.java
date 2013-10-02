@@ -3,8 +3,8 @@ package mx.com.aon.portal.service;
 import java.util.List;
 import java.util.Map;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.MensajesVO;
+import mx.com.gseguros.exception.ApplicationException;
 
 
 /**

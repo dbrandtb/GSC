@@ -5,7 +5,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.flujos.cotizacion4.web.ResultadoCotizacion4Action;
 import mx.com.aon.portal.model.BaseObjectVO;
@@ -18,6 +17,7 @@ import mx.com.aon.portal.service.LoginManager;
 import mx.com.aon.portal.service.NavigationManager;
 import mx.com.aon.portal.service.UsuarioManager;
 import mx.com.aon.portal.service.principal.PrincipalManager;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.ws.client.Ice2sigsWebServices;
 import mx.com.gseguros.ws.client.Ice2sigsWebServices.Operacion;

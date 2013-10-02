@@ -18,8 +18,8 @@ import mx.com.aon.catweb.configuracion.producto.definicion.model.ClausulaVO;
 import mx.com.aon.catweb.configuracion.producto.definicion.model.PeriodoVO;
 import mx.com.aon.catweb.configuracion.producto.definicion.model.ProductoVO;
 import mx.com.aon.catweb.configuracion.producto.model.LlaveValorVO;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * ProductManager

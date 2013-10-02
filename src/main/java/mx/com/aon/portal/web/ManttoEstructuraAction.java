@@ -3,7 +3,8 @@ package mx.com.aon.portal.web;
 import com.opensymphony.xwork2.ActionSupport;
 import mx.com.aon.portal.model.EstructuraVO;
 import mx.com.aon.portal.service.EstructuraManager;
-import mx.com.aon.core.ApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
+
 import java.util.List;
 import java.util.ArrayList;
 import org.apache.commons.lang.StringEscapeUtils;

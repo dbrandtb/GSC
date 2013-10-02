@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.ExportModel;
 import mx.com.aon.export.model.TableModelExport;
 
@@ -12,6 +11,7 @@ import org.apache.log4j.Logger;
 
 import mx.com.aon.tmp.Endpoint;
 import mx.com.aon.tmp.BackboneApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
 
 
 public class ExportModelImpl implements ExportModel{

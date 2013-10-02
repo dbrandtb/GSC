@@ -8,9 +8,9 @@ import mx.com.aon.catweb.configuracion.producto.model.LlaveValorVO;
 import mx.com.aon.catweb.configuracion.producto.service.SumaAseguradaManager;
 import mx.com.aon.catweb.configuracion.producto.sumaAsegurada.model.SumaAseguradaIncisoVO;
 import mx.com.aon.catweb.configuracion.producto.sumaAsegurada.model.SumaAseguradaVO;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.tmp.BackboneApplicationException;
 import mx.com.aon.tmp.Endpoint;
+import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.log4j.Logger;
 

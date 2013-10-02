@@ -5,13 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.model.TableModelExport;
 import mx.com.aon.portal.model.RangoRenovacionReporteVO;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.service.RangoRenovacionReporteManager;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.tmp.Endpoint;
+import mx.com.gseguros.exception.ApplicationException;
 
 public class RangoRenovacionReporteManagerImpl extends AbstractManager implements RangoRenovacionReporteManager {
 	

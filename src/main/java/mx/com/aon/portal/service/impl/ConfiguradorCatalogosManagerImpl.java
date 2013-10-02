@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.apache.commons.beanutils.DynaProperty;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.model.TableModelExport;
 import mx.com.aon.portal.model.CampoCatalogoVO;
 import mx.com.aon.portal.model.ElementoComboBoxVO;
@@ -15,6 +14,7 @@ import mx.com.aon.portal.model.ValoresCamposCatalogosSimplesVO;
 import mx.com.aon.portal.service.ConfiguradorCatalogosManager;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 
 public class ConfiguradorCatalogosManagerImpl extends AbstractManager implements
 		ConfiguradorCatalogosManager {

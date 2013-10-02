@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 
 import mx.com.aon.portal.service.PeriodosGraciaManager;
 import mx.com.aon.portal.model.PeriodosGraciaVO;
-import mx.com.aon.core.ApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  *   Action que atiende las peticiones de que vienen de la pantalla Periodos de Gracia 

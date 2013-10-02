@@ -10,7 +10,7 @@ import mx.com.aon.catweb.configuracion.producto.service.ListaDeValoresManager;
 import mx.com.aon.catweb.configuracion.producto.service.TablaCincoClavesManager;
 import mx.com.aon.catweb.configuracion.producto.tablaCincoClaves.model.DatosClaveAtributoVO;
 import mx.com.aon.catweb.configuracion.producto.web.Padre;
-import mx.com.aon.core.ApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;

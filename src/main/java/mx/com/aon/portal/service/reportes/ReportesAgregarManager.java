@@ -1,6 +1,6 @@
 package mx.com.aon.portal.service.reportes;
 
-import mx.com.aon.core.ApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * Created by IntelliJ IDEA.

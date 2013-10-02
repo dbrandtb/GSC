@@ -7,7 +7,8 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.service.CombosManager;
 import mx.com.aon.portal.service.CombosManager2;
 import mx.com.aon.portal.service.PagedList;
-import mx.com.aon.core.ApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
+
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;

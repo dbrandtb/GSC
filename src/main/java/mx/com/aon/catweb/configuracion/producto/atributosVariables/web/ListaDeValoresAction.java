@@ -13,8 +13,8 @@ import mx.com.aon.catweb.configuracion.producto.service.impl.ListaDeValoresManag
 import mx.com.aon.catweb.configuracion.producto.tablaCincoClaves.model.DatosClaveAtributoVO;
 import mx.com.aon.catweb.configuracion.producto.tablaCincoClaves.model.DescripcionCincoClavesVO;
 import mx.com.aon.catweb.configuracion.producto.web.Padre;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.service.PagedList;
+import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;

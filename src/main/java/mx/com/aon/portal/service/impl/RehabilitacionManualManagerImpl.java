@@ -2,12 +2,12 @@ package mx.com.aon.portal.service.impl;
 
 import java.util.HashMap;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.RehabilitacionManual_PolizaVO;
 import mx.com.aon.portal.model.RehabilitacionManual_RequisitosVO;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.service.RehabilitacionManualManager;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 
 public class RehabilitacionManualManagerImpl extends AbstractManager implements
 		RehabilitacionManualManager {

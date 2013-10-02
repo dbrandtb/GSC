@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 import mx.com.aon.portal.model.ConfigurarAccionRenovacionVO;
 import mx.com.aon.portal.model.ConsultaConfiguracionRenovacionVO;
 import mx.com.aon.portal.service.ConfigurarAccionesRenovacionManager;
-import mx.com.aon.core.ApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  *   Action que atiende las peticiones de que vienen de la pantalla Configurar Acciones de Renovacion

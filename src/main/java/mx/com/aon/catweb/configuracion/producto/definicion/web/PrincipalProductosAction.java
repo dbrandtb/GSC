@@ -24,9 +24,9 @@ import mx.com.aon.catweb.configuracion.producto.service.ProductoManager;
 import mx.com.aon.catweb.configuracion.producto.service.TreeManager;
 import mx.com.aon.catweb.configuracion.producto.util.WizardUtils;
 import mx.com.aon.catweb.configuracion.producto.web.Padre;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;

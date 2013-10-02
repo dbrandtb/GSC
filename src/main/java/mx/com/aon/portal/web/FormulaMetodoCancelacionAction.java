@@ -3,9 +3,9 @@ package mx.com.aon.portal.web;
 import java.util.ArrayList;
 import java.util.List;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.FormulaMetodoCancelacionVO;
 import mx.com.aon.portal.service.FormulaMetodoCancelacionManager;
+import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.log4j.Logger;
 

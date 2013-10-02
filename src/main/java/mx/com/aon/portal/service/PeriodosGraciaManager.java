@@ -1,8 +1,8 @@
 package mx.com.aon.portal.service;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.model.TableModelExport;
 import mx.com.aon.portal.model.PeriodosGraciaVO;
+import mx.com.gseguros.exception.ApplicationException;
 /**
  * Interface de servicios para el Peridos de Gracia
  *

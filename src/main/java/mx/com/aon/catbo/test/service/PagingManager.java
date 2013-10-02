@@ -10,8 +10,8 @@
  */
 package mx.com.aon.catbo.test.service;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.catbo.test.model.ReciboVO;
+import mx.com.gseguros.exception.ApplicationException;
 
 import java.util.List;
 

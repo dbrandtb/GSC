@@ -3,12 +3,12 @@ package mx.com.aon.portal.service.impl;
 import java.util.List;
 import java.util.Map;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.service.ProcessResultManager;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.tmp.BackboneApplicationException;
 import mx.com.aon.tmp.Endpoint;
+import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.log4j.Logger;
 
@@ -249,7 +249,7 @@ public abstract class AbstractManager {
      *
      * @param WrapperResultados que tiene en su propiedad msgId el codigo del mensaje a procesar 
      * @return instancia de WrapperResultados cargado con el msgTitle, msgText procesados por el msgId enviado
-     * @throws mx.com.aon.core.ApplicationException
+     * @throws mx.com.gseguros.exception.ApplicationException
      */
     @SuppressWarnings("unchecked")
     public WrapperResultados returnProcessResultMessageId(WrapperResultados res) throws ApplicationException {

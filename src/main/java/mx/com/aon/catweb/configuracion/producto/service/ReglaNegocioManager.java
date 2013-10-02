@@ -6,9 +6,9 @@ import mx.com.aon.catweb.configuracion.producto.model.LlaveValorVO;
 import mx.com.aon.catweb.configuracion.producto.reglanegocio.model.ReglaNegocioVO;
 import mx.com.aon.catweb.configuracion.producto.service.impl.ReglaNegocioManagerImpl;
 import mx.com.aon.catweb.configuracion.producto.util.ReglaNegocio;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.core.DatosInvalidosException;
 import mx.com.aon.portal.service.PagedList;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * interface que contien los metodos expuestos por uno de los Manager para la

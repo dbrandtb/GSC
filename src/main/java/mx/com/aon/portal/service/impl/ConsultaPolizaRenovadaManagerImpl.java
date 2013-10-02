@@ -3,7 +3,6 @@ package mx.com.aon.portal.service.impl;
 import java.util.HashMap;
 
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.DatosMovPolizasVO;
 import mx.com.aon.portal.model.DatosVarRolVO;
 import mx.com.aon.portal.model.DatosVblesObjAsegurablesVO;
@@ -13,6 +12,7 @@ import mx.com.aon.portal.model.NuevaCoberturaVO;
 import mx.com.aon.portal.service.ConsultaPolizaRenovadaManager;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 
 public class ConsultaPolizaRenovadaManagerImpl extends AbstractManager implements ConsultaPolizaRenovadaManager {
 	

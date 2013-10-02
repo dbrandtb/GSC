@@ -10,13 +10,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.service.CotizacionManager;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.util.ConvertUtil;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.utils.FTPUtil;
 import mx.com.aon.utils.ServerConfigurationException;
+import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.Logger;

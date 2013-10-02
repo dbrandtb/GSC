@@ -8,10 +8,10 @@ import mx.com.aon.catweb.configuracion.producto.expresiones.model.RamaVO;
 import mx.com.aon.catweb.configuracion.producto.model.LlaveValorVO;
 import mx.com.aon.catweb.configuracion.producto.planes.service.PlanesConfiguracionManager;
 import mx.com.aon.catweb.configuracion.producto.web.Padre;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.MensajesVO;
 import mx.com.aon.portal.model.PlanesMPlanProVO;
 import mx.com.aon.portal.service.CatalogService;
+import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;

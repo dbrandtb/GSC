@@ -2,11 +2,11 @@ package mx.com.aon.portal.service.impl;
 
 import java.util.List;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.dao.AbstractDAO;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.service.ProcessResultManagerJdbcTemplate;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.exception.DaoException;
 
 import org.apache.log4j.Logger;
@@ -45,7 +45,7 @@ public abstract class AbstractManagerJdbcTemplateInvoke {
 	 * @param start  desde , paginacion
 	 * @param limit  hasta , paginacion
 	 * @return instancia de WrapperResultados cargado con los id de msgs de respuesta y resultados
-	 * @throws mx.com.aon.core.ApplicationException
+	 * @throws mx.com.gseguros.exception.ApplicationException
      */
 	@SuppressWarnings("unchecked")
 	public PagedList pagedBackBoneInvoke(Object arg,String endpointName ,int start,int limit) throws ApplicationException {
@@ -111,7 +111,7 @@ public abstract class AbstractManagerJdbcTemplateInvoke {
 	 * @param start  desde , paginacion
 	 * @param limit  hasta , paginacion
 	 * @return instancia de WrapperResultados cargado con los id de msgs de respuesta y resultados
-	 * @throws mx.com.aon.core.ApplicationException
+	 * @throws mx.com.gseguros.exception.ApplicationException
      */
 	@SuppressWarnings("unchecked")
 	public PagedList returnAllPagedBackBoneInvoke(Object arg,String endpointName ,int start,int limit) throws ApplicationException {
@@ -170,7 +170,7 @@ public abstract class AbstractManagerJdbcTemplateInvoke {
      * @param arg Object a pasar a metodo invoke de backbone
      * @param endpointName nombre del endpoint a invocar
      * @return instancia de WrapperResultados cargado con los id de msgs de respuesta y resultados
-     * @throws mx.com.aon.core.ApplicationException
+     * @throws mx.com.gseguros.exception.ApplicationException
      */
     @SuppressWarnings("unchecked")
     public Object getBackBoneInvoke(Object arg,String endpointName ) throws ApplicationException {
@@ -211,7 +211,7 @@ public abstract class AbstractManagerJdbcTemplateInvoke {
      * @param arg Object a pasar a metodo invoke de backbone
      * @param endpointName nombre del endpoint a invocar
      * @return instancia de WrapperResultados cargado con los id de msgs de respuesta y resultados
-     * @throws mx.com.aon.core.ApplicationException
+     * @throws mx.com.gseguros.exception.ApplicationException
      */
     @SuppressWarnings("unchecked")
     public void voidReturnBackBoneInvoke(Object arg,String endpointName ) throws ApplicationException {
@@ -237,7 +237,7 @@ public abstract class AbstractManagerJdbcTemplateInvoke {
      * @param arg Object a pasar a metodo invoke de backbone
      * @param endpointName nombre del endpoint a invocar
      * @return instancia de WrapperResultados cargado con los id de msgs de respuesta y resultados
-     * @throws mx.com.aon.core.ApplicationException
+     * @throws mx.com.gseguros.exception.ApplicationException
      */
     @SuppressWarnings("unchecked")
     public WrapperResultados returnBackBoneInvoke(Object arg,String endpointName ) throws ApplicationException {
@@ -264,7 +264,7 @@ public abstract class AbstractManagerJdbcTemplateInvoke {
      * @param arg Object a pasar a metodo invoke de backbone
      * @param endpointName nombre del endpoint a invocar
      * @return instancia de WrapperResultados cargado con los id de msgs de respuesta y resultados
-     * @throws mx.com.aon.core.ApplicationException
+     * @throws mx.com.gseguros.exception.ApplicationException
      */
     @SuppressWarnings("unchecked")
     public WrapperResultados returnResult(Object arg,String endpointName ) throws ApplicationException {
@@ -343,7 +343,7 @@ public abstract class AbstractManagerJdbcTemplateInvoke {
      *
      * @param WrapperResultados que tiene en su propiedad msgId el codigo del mensaje a procesar 
      * @return instancia de WrapperResultados cargado con el msgTitle, msgText procesados por el msgId enviado
-     * @throws mx.com.aon.core.ApplicationException
+     * @throws mx.com.gseguros.exception.ApplicationException
      */
     @SuppressWarnings("unchecked")
     public WrapperResultados returnProcessResultMessageId(WrapperResultados res) throws ApplicationException {

@@ -13,7 +13,7 @@ import mx.com.aon.portal.service.LoginManager;
 import mx.com.aon.portal.service.ConsultaActividadUsuarioManager;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.ConnectionCallInterceptor;
-import mx.com.aon.core.ApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
 
 import java.io.IOException;
 

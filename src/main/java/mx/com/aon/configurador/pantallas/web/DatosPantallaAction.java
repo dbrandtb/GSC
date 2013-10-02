@@ -14,8 +14,8 @@ import mx.com.aon.configurador.pantallas.model.PantallaVO;
 import mx.com.aon.configurador.pantallas.model.RamaPantallaVO;
 import mx.com.aon.configurador.pantallas.model.controls.ExtElement;
 import mx.com.aon.configurador.pantallas.util.UtilTransformer;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.BaseObjectVO;
+import mx.com.gseguros.exception.ApplicationException;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 

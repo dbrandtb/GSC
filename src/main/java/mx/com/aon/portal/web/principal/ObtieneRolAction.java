@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.principal.ClienteVO;
 import mx.com.aon.portal.model.principal.ConfiguracionVO;
@@ -18,6 +17,7 @@ import mx.com.aon.portal.model.principal.TipoVO;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.service.principal.PrincipalManager;
 import mx.com.aon.portal.util.ImageUtils;
+import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;

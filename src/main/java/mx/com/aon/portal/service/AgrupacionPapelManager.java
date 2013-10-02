@@ -1,7 +1,7 @@
 package mx.com.aon.portal.service;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.AgrupacionPapel_AgrupacionVO;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * Interfaz de servicios que atiende requerimientos de los Action de

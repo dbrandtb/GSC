@@ -3,8 +3,8 @@ package mx.com.aon.catweb.configuracion.producto.service;
 import java.util.List;
 
 import mx.com.aon.catweb.configuracion.producto.incisos.model.IncisoVO;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * IncisoManager

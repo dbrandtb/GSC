@@ -5,12 +5,12 @@ import java.util.List;
 
 import org.apache.commons.beanutils.Converter;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.MecanismoAlertaVO;
 import mx.com.aon.portal.service.MecanismosAlertasManager;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.util.ConvertUtil;
 import mx.com.aon.portal.util.UserSQLDateConverter;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * Clase que implementa la interface AlertasUsuarioManager para los servicios de Alertas de usuarios.

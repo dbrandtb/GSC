@@ -4,12 +4,13 @@
 package mx.com.aon.portal.service.impl;
 
 import mx.com.aon.tmp.Endpoint;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.model.TableModelExport;
 import mx.com.aon.portal.model.MecanismoDeTooltipVO;
 import mx.com.aon.portal.service.MecanismoDeTooltipManager;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

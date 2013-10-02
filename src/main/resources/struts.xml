@@ -470,6 +470,12 @@
                 <action name="cargaColonias" class="beanCatalogosAction" method="cargaColonias">
                     <result name="success" type="json" />
                 </action>
+                
+                
+                <action name="enviaCorreo" class="mailAction" method="enviaCorreo">
+                    <result name="success" type="json" />
+                </action>
+                
     </package>
 
 </struts>

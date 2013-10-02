@@ -4,8 +4,9 @@ import mx.com.aon.portal.service.SeccionesManager;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.model.SeccionVO;
 import mx.com.aon.portal.util.WrapperResultados;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.model.TableModelExport;
+import mx.com.gseguros.exception.ApplicationException;
+
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;

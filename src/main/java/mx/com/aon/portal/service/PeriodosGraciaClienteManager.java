@@ -1,8 +1,8 @@
 package mx.com.aon.portal.service;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.model.TableModelExport;
 import mx.com.aon.portal.model.PeriodoGraciaClienteVO;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * Interface con servicios de abm para la pantalla de Periodos de gracias Cliente

@@ -4,8 +4,9 @@ import mx.com.aon.portal.service.RequisitosRehabilitacionManager;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.model.RequisitoRehabilitacionVO;
 import mx.com.aon.portal.util.WrapperResultados;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.model.TableModelExport;
+import mx.com.gseguros.exception.ApplicationException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

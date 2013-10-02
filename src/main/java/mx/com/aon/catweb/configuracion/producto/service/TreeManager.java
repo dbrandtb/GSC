@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mx.com.aon.catweb.configuracion.producto.expresiones.model.RamaVO;
-import mx.com.aon.core.ApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
 
 public interface TreeManager {
 

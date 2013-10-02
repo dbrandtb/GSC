@@ -16,10 +16,10 @@ import mx.com.aon.portal.model.presiniestros.DanoVO;
 import mx.com.aon.flujos.presinietros.model.DocumentoVO;
 import mx.com.aon.export.model.TableModelExport;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal.service.PagedList;
+import mx.com.gseguros.exception.ApplicationException;
 
 import oracle.jdbc.driver.OracleTypes;
 

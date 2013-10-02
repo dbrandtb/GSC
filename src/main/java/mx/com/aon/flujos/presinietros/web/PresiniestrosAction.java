@@ -7,7 +7,6 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import java.io.InputStream;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.util.Util;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.flujos.presinietros.model.DocumentoVO;
@@ -25,6 +24,7 @@ import mx.com.aon.portal.model.BaseObjectVO;
 import org.apache.log4j.Logger;
 import org.apache.struts2.interceptor.SessionAware;
 import mx.com.aon.portal.service.PagedList;
+import mx.com.gseguros.exception.ApplicationException;
 
 import com.opensymphony.xwork2.ActionSupport;
 

@@ -10,7 +10,6 @@ import org.apache.commons.lang.StringUtils;
 
 import mx.com.aon.configurador.pantallas.model.ClienteCorpoVO;
 import mx.com.aon.configurador.pantallas.model.ConjuntoPantallaVO;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.ExportMediator;
 import mx.com.aon.export.ExportView;
 import mx.com.aon.export.model.TableModelExport;
@@ -18,6 +17,7 @@ import mx.com.aon.portal.model.BaseObjectVO;
 import mx.com.aon.portal.service.GridPagerManager;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.util.Util;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * Clase Action para el control y visualizacion de datos para la pantalla de busqueda de conjuntos

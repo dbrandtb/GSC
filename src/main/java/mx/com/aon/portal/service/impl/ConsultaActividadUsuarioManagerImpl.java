@@ -4,7 +4,6 @@ package mx.com.aon.portal.service.impl;
 
 import mx.com.aon.catbo.model.ActividadUsuarioVO;
 import mx.com.aon.catbo.model.FormatoTimeStampVO;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.model.TableModelExport;
 
 import mx.com.aon.portal.service.ConsultaActividadUsuarioManager;
@@ -13,6 +12,7 @@ import mx.com.aon.portal.service.ProcessResultManagerJdbcTemplate;
 import mx.com.aon.portal.util.UserSQLDateConverter;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal.util.ConvertUtil;
+import mx.com.gseguros.exception.ApplicationException;
 
 import java.util.ArrayList;
 import java.util.HashMap;

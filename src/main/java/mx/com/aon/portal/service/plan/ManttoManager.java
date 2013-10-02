@@ -3,9 +3,9 @@ package mx.com.aon.portal.service.plan;
 import java.util.ArrayList;
 import java.util.List;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.plan.PlanVO;
 import mx.com.aon.portal.model.plan.ProductoVO;
+import mx.com.gseguros.exception.ApplicationException;
 /**
  * 
  * @author sergio.ramirez

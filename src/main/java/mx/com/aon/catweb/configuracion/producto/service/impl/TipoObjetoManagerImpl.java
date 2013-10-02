@@ -7,10 +7,10 @@ import mx.com.aon.catweb.configuracion.producto.model.LlaveValorVO;
 import mx.com.aon.catweb.configuracion.producto.service.TipoObjetoManager;
 import mx.com.aon.catweb.configuracion.producto.tipoObjeto.model.DatoVariableObjetoVO;
 import mx.com.aon.catweb.configuracion.producto.tipoObjeto.model.TipoObjetoVO;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.MensajesVO;
 import mx.com.aon.tmp.BackboneApplicationException;
 import mx.com.aon.tmp.Endpoint;
+import mx.com.gseguros.exception.ApplicationException;
 
 import org.apache.log4j.Logger;
 

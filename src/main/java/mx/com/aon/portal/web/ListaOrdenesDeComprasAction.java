@@ -4,7 +4,7 @@ package mx.com.aon.portal.web;
 import mx.com.aon.portal.model.OrdenDeCompraVO;
 import mx.com.aon.portal.service.OrdenesDeComprasManager;
 import mx.com.aon.portal.service.PagedList;
-import mx.com.aon.core.ApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
 
 
 

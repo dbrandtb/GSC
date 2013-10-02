@@ -8,7 +8,7 @@ import mx.com.aon.portal.util.ConnectionCallInterceptor;
 import mx.com.aon.portal.service.LoginManager;
 import mx.com.aon.portal.service.ConsultaActividadUsuarioManager;
 import mx.com.aon.portal.service.NavigationManager;
-import mx.com.aon.core.ApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
 
 import javax.servlet.*;
 import javax.servlet.http.Cookie;

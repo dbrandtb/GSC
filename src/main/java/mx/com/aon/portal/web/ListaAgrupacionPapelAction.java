@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.AgrupacionPapel_AgrupacionVO;
 import mx.com.aon.portal.service.AgrupacionPapelManager;
 import mx.com.aon.portal.service.PagedList;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  *   Action que atiende la peticion de informacion para la consulta de datos de 

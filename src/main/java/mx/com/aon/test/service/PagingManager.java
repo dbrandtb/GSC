@@ -12,8 +12,8 @@ package mx.com.aon.test.service;
 
 import java.util.List;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.test.model.ReciboVO;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * PagingManager

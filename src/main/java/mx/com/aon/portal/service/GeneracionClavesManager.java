@@ -2,9 +2,9 @@ package mx.com.aon.portal.service;
 
 import java.util.List;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.model.TableModelExport;
 import mx.com.aon.portal.model.ClavesVO;
+import mx.com.gseguros.exception.ApplicationException;
 
 
 /**

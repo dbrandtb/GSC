@@ -6,7 +6,8 @@ import mx.com.aon.portal.model.CarritoComprasGuardarVO;
 import mx.com.aon.portal.model.CarritoComprasVO;
 import mx.com.aon.portal.service.CarritoComprasManager;
 import mx.com.aon.portal.util.WrapperResultados;
-import mx.com.aon.core.ApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
+
 import org.apache.log4j.Logger;
 import java.util.ArrayList;
 import java.util.List;

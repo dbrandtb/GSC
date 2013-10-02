@@ -14,7 +14,8 @@ import mx.com.aon.portal.model.ConfigurarEstructuraVO;
 import mx.com.aon.portal.model.PersonasVO;
 import mx.com.aon.portal.service.ConfigurarEstructuraManager;
 import mx.com.aon.portal.service.EstructuraManager;
-import mx.com.aon.core.ApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
+
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;

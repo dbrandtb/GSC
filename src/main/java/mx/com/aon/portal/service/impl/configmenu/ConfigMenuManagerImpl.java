@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.List;
 
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.MensajesVO;
 import mx.com.aon.portal.model.configmenu.OpcionVO;
 import mx.com.aon.portal.service.PagedList;
@@ -22,6 +21,7 @@ import org.apache.commons.logging.LogFactory;
 
 import mx.com.aon.tmp.Endpoint;
 import mx.com.aon.tmp.BackboneApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * @author eflores

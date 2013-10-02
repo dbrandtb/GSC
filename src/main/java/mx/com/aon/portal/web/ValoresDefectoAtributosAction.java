@@ -3,9 +3,9 @@ package mx.com.aon.portal.web;
 import java.util.ArrayList;
 import java.util.List;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.ValorDefectoAtributosOrdenVO;
 import mx.com.aon.portal.service.ValoresDefectoAtributosManager;
+import mx.com.gseguros.exception.ApplicationException;
 
 public class ValoresDefectoAtributosAction extends AbstractListAction{
 	

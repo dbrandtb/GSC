@@ -8,8 +8,8 @@ import mx.com.aon.catweb.configuracion.producto.model.LlaveValorVO;
 import mx.com.aon.catweb.configuracion.producto.tablaCincoClaves.model.DatosClaveAtributoVO;
 import mx.com.aon.catweb.configuracion.producto.tablaCincoClaves.model.DescripcionCincoClavesVO;
 import mx.com.aon.catweb.configuracion.producto.tablaCincoClaves.model.DescripcionVeinticincoAtributosVO;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.service.PagedList;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * Metodo paraq 

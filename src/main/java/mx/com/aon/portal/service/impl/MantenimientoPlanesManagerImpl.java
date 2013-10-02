@@ -1,10 +1,11 @@
 package mx.com.aon.portal.service.impl;
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.export.model.TableModelExport;
 import mx.com.aon.portal.model.PlanesMPlanProVO;
 import mx.com.aon.portal.service.MantenimientoPlanesManager;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
+
 import org.apache.log4j.Logger;
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -3,9 +3,9 @@ package mx.com.aon.portal.service;
 import java.util.ArrayList;
 import java.util.Map;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.ConfigurarEstructuraVO;
 import mx.com.aon.tmp.Endpoint;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * Interface de servicios para Cuenta Checklist.

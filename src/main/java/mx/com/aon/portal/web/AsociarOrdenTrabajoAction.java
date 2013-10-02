@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 
 import mx.com.aon.portal.service.AsociarOrdenTrabajoManager;
 import mx.com.aon.portal.model.AsociarOrdenTrabajoVO;
-import mx.com.aon.core.ApplicationException;
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * Action que atiende las solicitudes de abm para la pantalla de Asociar Orden de Trabajo

@@ -2,11 +2,11 @@ package mx.com.aon.portal.service;
 
 import java.util.List;
 
-import mx.com.aon.core.ApplicationException;
 import mx.com.aon.portal.model.IsoVO;
 import mx.com.aon.portal.model.ItemVO;
 import mx.com.aon.portal.model.RamaVO;
 import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.exception.ApplicationException;
 
 public interface NavigationManager {
 
