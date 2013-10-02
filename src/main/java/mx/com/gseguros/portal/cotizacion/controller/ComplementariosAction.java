@@ -1117,7 +1117,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 //				Parámetro7:  Número de endoso (Cuando es póliza nueva poner 0)
 //				Parámetro8:  Tipo de endoso (Si es vacío no enviar nada en otro caso poner A o D según sea el caso)
 //				Parámetro9:  Número de recibo (1,2,3…..según la forma de pago) Para nuestro caso es siempre el 1
-				//if("1".equals(recibo.getNumRec())){
+				//if( 1 == recibo.getNumRec()){
 					String parametros = "?9999,0,"+sucursal+","+cdtipsit+","+nmpoliza+",0,0,,"+recibo.getNumRec();
 					logger.debug("URL Generada para Recibo: "+ this.getText("url.imp.recibos")+parametros);
 					//HttpRequestUtil.generaReporte(this.getText("url.imp.recibos")+parametros, rutaPoliza+"/Recibo_"+recibo.getRmdbRn()+"_"+recibo.getNumRec()+".pdf");
