@@ -46,6 +46,7 @@ Ext.onReady(function()
             ,'cddocume'
             ,'dsdocume'
             ,{name:'feinici',type:'date',dateFormat:'d/m/Y'}
+            ,'liga'
         ]
     });
     /*//////////////////////*/
@@ -247,6 +248,51 @@ Ext.onReady(function()
                         ,renderer  : Ext.util.Format.dateRenderer('d M Y')
                     }
                     ,{
+                    	dataIndex     : 'liga'
+                    	,width        : 30
+                    	,renderer     : function(value)
+                    	{
+                    		debug(value);
+                    		var res='';
+                            var splited=value.split('#_#');//nombre#_#descripcion
+                            debug(splited);
+                            var nom=splited[0];
+                            var desc=splited[1];
+                            if(nom&&nom.length>4)
+                            {
+                                var http=nom.substr(0,4);
+                                if(true||http!='http')
+                                {
+                                    res='<img src="${ctx}/resources/fam3icons/icons/eye.png" data-qtip="Ver en línea" style="cursor:pointer;" />';
+                                }
+                            }
+                            return res;
+                    	}
+                    }
+                    ,{
+                        dataIndex     : 'liga'
+                        ,width        : 30
+                        ,renderer     : function(value)
+                        {
+                            debug(value);
+                            var res='';
+                            var splited=value.split('#_#');//nombre#_#descripcion
+                            debug(splited);
+                            var nom=splited[0];
+                            var desc=splited[1];
+                            if(nom&&nom.length>4)
+                            {
+                                var http=nom.substr(0,4);
+                                if(http!='http')
+                                {
+                                    res='<img src="${ctx}/resources/fam3icons/icons/page_white_put.png" data-qtip="Descargar" style="cursor:pointer;" />';
+                                }
+                            }
+                            return res;
+                        }
+                    }
+                    /*
+                    ,{
                         header        : 'Acciones'
                         ,xtype        : 'actioncolumn'
                         //,dataIndex    : 'cddocume'
@@ -255,18 +301,19 @@ Ext.onReady(function()
                         ,items:
                         [
                             {
-                            	icon     : panDocContexto+'/resources/fam3icons/icons/eye.png'
-                            	,tooltip : 'Abrir en l&iacute;nea' 
-                            	,handler : this.onViewClick
+                                icon     : panDocContexto+'/resources/fam3icons/icons/eye.png'
+                                ,tooltip : 'Abrir en l&iacute;nea' 
+                                ,handler : this.onViewClick
                             }
                             ,
                             {
-                            	icon     : panDocContexto+'/resources/fam3icons/icons/page_white_put.png'
+                                icon     : panDocContexto+'/resources/fam3icons/icons/page_white_put.png'
                                 ,tooltip : 'Descargar' 
                                 ,handler : this.onDownloadClick
                             }
                         ]
                     }
+                    */
                 ]
                 <s:if test='!smap1.containsKey("readOnly")'>
                 ,dockedItems :
@@ -286,10 +333,49 @@ Ext.onReady(function()
                     }
                 ]
                 </s:if>
+                ,listeners:
+                {
+                	cellclick : function(grid, td,
+                            cellIndex, record, tr,
+                            rowIndex, e, eOpts)
+                	{
+                		debug( cellIndex+'x', rowIndex+'y' , record );
+                		if(cellIndex==2)//ver
+                		{
+                			debug($(td).find('img').length);
+                			if($(td).find('img').length>0)//si hay accion
+                			{
+                				var nom=record.get('cddocume');
+                				var salida=false;
+                                if(nom&&nom.length>4)
+                                {
+                                    var http=nom.substr(0,4);
+                                    if(http=='http')
+                                    {
+                                    	salida=true;
+                                        window.open(nom,'_blank','width=800,height=600');
+                                    }
+                                }
+                                if(!salida)
+                                {
+                                    this.onViewClick(grid,rowIndex,cellIndex);
+                                }
+                			}
+                		}
+                		else if(cellIndex==3)//descargar
+                		{
+                			debug($(td).find('img').length);
+                			if($(td).find('img').length>0)//si hay accion
+               				{
+                				this.onDownloadClick(grid,rowIndex,cellIndex);
+               				}
+                		}
+                	}
+                }
             });
             this.callParent();
         }
-        ,onDownloadClick:function(grid,rowIndex,colIndex)
+        , onDownloadClick : function(grid,rowIndex,colIndex)
         {
         	debug(rowIndex,colIndex);
         	var record=grid.getStore().getAt(rowIndex);
