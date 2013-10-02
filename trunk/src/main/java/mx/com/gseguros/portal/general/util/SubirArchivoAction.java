@@ -172,6 +172,20 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 				paramGetDocu.put((String)e.getKey(),e.getValue());
 			}
 			slist1=kernelManager.obtenerDocumentosPoliza(paramGetDocu);
+			if(slist1!=null&&slist1.size()>0)
+			{
+				for(int i=0;i<slist1.size();i++)
+				{
+					String nombre=slist1.get(i).get("cddocume");
+					String descripcion=slist1.get(i).get("dsdocume");
+					if(descripcion==null||descripcion.length()==0)
+					{
+						descripcion="(no especificado)";
+					}
+					String mezcla=nombre+"#_#"+descripcion;
+					slist1.get(i).put("liga",mezcla);
+				}
+			}
 			success=true;
 		}
 		catch(Exception ex)

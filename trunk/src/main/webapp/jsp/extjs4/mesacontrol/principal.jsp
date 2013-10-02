@@ -254,6 +254,7 @@ Ext.onReady(function(){
             	,buttonAlign : 'center'
             	,width       : 600
             	,height      : 400
+            	,autoScroll  : true
             	,loader      :
             	{
             		url       : mesConUrlDocu
