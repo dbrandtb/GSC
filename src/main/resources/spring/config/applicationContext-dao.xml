@@ -17,7 +17,7 @@
         -->
     </bean>
     
-    <!-- <jee:jndi-lookup id="dataSource" jndi-name="jdbc/Aon"/> -->
+    <!-- <jee:jndi-lookup id="dataSource" jndi-name="jdbc/gseguros"/> -->
 
     <!-- Transaction manager for Spring JDBC -->
     <bean id="transactionManager"
