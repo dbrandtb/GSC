@@ -95,7 +95,6 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 
 		session.put(Constantes.USER, userVO);
 		session.put("userVO", userVO);
-		session.put("CONTENIDO_USER", userVO.getName());
 
 		listaRolCliente = navigationManager.getClientesRoles(userVO.getUser());
 

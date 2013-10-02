@@ -100,13 +100,6 @@ public class LoginAction extends ActionSupport implements SessionAware {
 		session.put("USUARIO", userVO);
 		UserVO userVO2 = (UserVO) session.get("userVO");
 */
-
-		
-		
-		/*Esta session debe ser borrada*/
-//		session.put("CONTENIDO_USER", userVO2.getName());
-		/*Esta session debe ser borrada**/
-		
 		
 		success = true;
 		return SUCCESS;
