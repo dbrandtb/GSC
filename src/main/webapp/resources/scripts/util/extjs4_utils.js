@@ -21,7 +21,25 @@ function showMessage(title, msg, buttons, icon){
 }
 
 /**
- * Carga un Store y pagina sus datos de forma local
+** Funcion para implementar Paginacion,
+** carga un Store y pagina sus datos de forma local.
+** Se debe de tener un Store con un proxy 
+** de la siguiente forma:
+
+var store=Ext.create('Ext.data.Store',
+    {
+        pageSize : 10,
+        autoLoad : true,
+        model    : 'modelPersonalizado',
+        proxy    :
+        {
+            enablePaging : true,
+            reader       : 'json',
+            type         : 'memory',
+            data         : []
+        }
+    });
+
  * @param _store
  * @param _url
  * @param _root
