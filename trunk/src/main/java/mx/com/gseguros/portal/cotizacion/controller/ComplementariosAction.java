@@ -1051,7 +1051,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			if(!ejecutaWSclienteSalud(datUs.getCdunieco(), datUs.getCdramo(), "M", (String)wr.getItemMap().get("nmpoliza"), (String)wr.getItemMap().get("nmsuplem")))
 				logger.error("NO SE HA EJECUTADO CORRECTAMENTE EL WS DE CLIENTE SALUD!!!, POLIZA:" + (String)wr.getItemMap().get("nmpoliza"));
 			if(!ejecutaWSrecibos(datUs.getCdunieco(), datUs.getCdramo(), "M", (String)wr.getItemMap().get("nmpoliza"), (String)wr.getItemMap().get("nmsuplem"), rutaCarpeta, cdtipsit, sucursal, panel1.get("pv_nmpoliza")))
-				logger.error("NO SE HAN INSERTADO TODOS LOS RECIBOS!!! PARA ICE2SIGS, POLIZA: " + (String)wr.getItemMap().get("nmpoliza"));
+				logger.error("NO SE HAN INSERTADO TODOS LOS RECIBOS!!! EN ICE2SIGS, DE LA POLIZA: " + (String)wr.getItemMap().get("nmpoliza"));
 			
 			success=true;
 		}
@@ -1105,7 +1105,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 		/**
 		 * PARA EL GUARDADO CADA PDF DE RECIBO
 		 */
-		logger.debug("Empieza Grabado de Pdfs de Recibos en: "+rutaPoliza);
+		logger.debug("*** Empieza generacion de URLs para Recibos ***");
 		for(Recibo recibo: recibos){
 			try{
 //				Parámetro1:  9999: Recibo
