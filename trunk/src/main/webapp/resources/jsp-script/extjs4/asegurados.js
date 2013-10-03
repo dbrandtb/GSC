@@ -104,6 +104,7 @@ function bloquearFormulario(isBloqueado)
     Ext.getCmp('botonLimpiar').setDisabled(isBloqueado);
     Ext.getCmp('botonCotizar').setDisabled(isBloqueado);
     Ext.getCmp('idCotizacion').setReadOnly(true);
+    Ext.getCmp('ntramite').setReadOnly(true);
     Ext.getCmp('fechaFinVigencia').setReadOnly(true);
     gridIncisos.setDisabled(isBloqueado);
 }
@@ -1065,147 +1066,161 @@ Ext.onReady(function(){
         }
     });
     botonComprar=Ext.create('Ext.Button', {
-        text: 'Comprar',
-        icon:contexto+'/resources/fam3icons/icons/coins.png',
+        text: hayTramiteCargado?'Actualizar tr&aacute;mite '+ntramiteCargado:'Generar tr&aacute;mite',
+        icon:contexto+'/resources/fam3icons/icons/book_next.png',
         disabled:true,
-        handler:function()
-        {
-        	debug("comprar");
-        	var nmcotizacion=Ext.getCmp('idCotizacion').getValue();
-        	debug("nmcotizacion",nmcotizacion);
-        	Ext.create('Ext.window.Window',
-			{
-        		width        : 600
-        		,height   : 400
-        		,title       : 'Documentos de la cotizaci&oacute;n '+nmcotizacion
-        		,closable    : false
-        		,modal       : true
-        		,buttonAlign : 'center'
-    	        ,loadingMask   : true
-        		,loader      :
+        handler : function(){
+    		debug("ahora si comprar");
+    		debug("trigger:");
+            debug("nmpoliza",selected_record.get('nmPoliza'));
+            debug("cdperpag",selected_record.get('cdPerpag'));
+            debug("cdplan",selected_cd_plan);
+            formPanel.setLoading(true);
+            //this.up().up().destroy();
+            debug(Ext.getCmp('fechaInicioVigencia').getValue());
+            debug(Ext.getCmp('fechaFinVigencia').getValue());
+            var nombreTitular='';
+            storeIncisos.each(function(record)
+            {
+            	if(record.get('rol')=='T'||(typeof record.get('rol')=='object'&& record.get('rol').get('key')=='T'))
         		{
-        			url       : urlVentanaDocumentos
-        	        ,scripts  : true
-        	        ,autoLoad : true
-        			,params   :
-        			{
-        				'smap1.nmpoliza'   : nmcotizacion
-        				,'smap1.cdunieco'  : '1'
-        				,'smap1.cdramo'    : '2'
-        				,'smap1.estado'    : 'W'
-        				,'smap1.nmsuplem' : 0
-        			}
+        		    if(record.get('nombre')&&record.get('nombre').length>0)
+        		    {
+            	        nombreTitular=record.get('nombre')+' '+
+            	        (record.get('segundoNombre')&&record.get('segundoNombre').length>0?(record.get('segundoNombre')+' '):'')
+            	        +record.get('apellidoPaterno')+' '+record.get('apellidoMaterno');
+            	        debug(nombreTitular);
+        		    }
         		}
-        	    ,buttons   :
-        	    [
-        	        {
-        	        	text     : 'Continuar'
-        	        	,icon    : contexto+'/resources/fam3icons/icons/accept.png'
-        	        	,handler  : function(){
-        	        		debug("ahora si comprar");
-        	        		debug("trigger:");
-        	                debug("nmpoliza",selected_record.get('nmPoliza'));
-        	                debug("cdperpag",selected_record.get('cdPerpag'));
-        	                debug("cdplan",selected_cd_plan);
-        	                formPanel.setLoading(true);
-        	                this.up().up().destroy();
-        	                debug(Ext.getCmp('fechaInicioVigencia').getValue());
-        	                debug(Ext.getCmp('fechaFinVigencia').getValue());
-        	                var nombreTitular='';
-        	                storeIncisos.each(function(record)
-        	                {
-        	                	if(record.get('rol')=='T'||(typeof record.get('rol')=='object'&& record.get('rol').get('key')=='T'))
-    	                		{
-    	                		    if(record.get('nombre')&&record.get('nombre').length>0)
-    	                		    {
-        	                	        nombreTitular=record.get('nombre')+' '+
-        	                	        (record.get('segundoNombre')&&record.get('segundoNombre').length>0?(record.get('segundoNombre')+' '):'')
-        	                	        +record.get('apellidoPaterno')+' '+record.get('apellidoMaterno');
-        	                	        debug(nombreTitular);
-    	                		    }
-    	                		}
-        	                });
-        	                Ext.Ajax.request(
-        	                {
-        	                    url: urlComprarCotizacion,
-        	                    params:{
-        	                        comprarNmpoliza:selected_record.get('nmPoliza'),
-        	                        comprarCdplan:selected_cd_plan,
-        	                        comprarCdperpag:selected_record.get('cdPerpag'),
-        	                        comprarCdramo:selected_record.get('cdRamo'),
-        	                        comprarCdciaaguradora:selected_record.get('cdCiaaseg'),
-        	                        comprarCdunieco:selected_record.get('cdUnieco')
-        	                        ,'smap1.fechaInicio'   : Ext.Date.format(Ext.getCmp('fechaInicioVigencia').getValue(), 'd/m/Y')
-        	                        ,'smap1.fechaFin'      : Ext.Date.format(Ext.getCmp('fechaFinVigencia').getValue(), 'd/m/Y')
-        	                        ,'smap1.nombreTitular' : nombreTitular
-        	                    },
-        	                    success:function(response,opts)
-        	                    {
-        	                        formPanel.setLoading(false);
-        	                        var json=Ext.decode(response.responseText);
-        	                        if(json.success==true)
-        	                        {
-        	                            //Ext.MessageBox.hide();
-        	                            //matar botones
-        	                        	botonDetalle.hide();
-        	                            botonComprar.hide();
-        	                            Ext.getCmp('botonImprimir').hide();
-        	                            botonVerCoberturas.hide();
-        	                            botonVerDetalleCobertura.hide();
-        	                            Ext.getCmp('botonCotizar').hide();
-        	                            Ext.getCmp('botonLimpiar').hide();
-        	                            Ext.getCmp('botonEditarCotiza').hide();
-        	                            //Ext.getCmp('botonNuevaCotiza').hide();
-        	                            Ext.getCmp('botonImprimir').hide();
-        	                            //!matar botones
-        	                            var jsonResp = Ext.decode(response.responseText);
-        	                            //window.console&&console.log(jsonResp);
-        	                            window.parent.scrollTo(0,0);
-        	                            var msg=Ext.Msg.show({
-        	                                title:'Cotizaci&oacute;n comprada',
-        	                                msg:'Su poliza ha sido enviada a mesa de control con el n&uacute;mero de tr&aacute;mite '+json.comprarNmpoliza,
-        	                                buttons: Ext.Msg.OK
-        	                                //,x:100
-        	                                ,y:50
-        	                            });
-        	                            msg.setY(50);
-        	                        }
-        	                        else
-        	                        {
-        	                            Ext.Msg.show({
-        	                                title:'Error',
-        	                                msg: 'Error al comprar la cotizaci&oacute;n '+opts.params.comprarNmpoliza,
-        	                                buttons: Ext.Msg.OK,
-        	                                icon: Ext.Msg.ERROR
-        	                            });
-        	                        }
-        	                    },
-        	                    failure:function()
-        	                    {
-        	                        //Ext.MessageBox.hide();
-        	                        formPanel.setLoading(false);
-        	                        //window.console&&console.log("error");
-        	                        Ext.Msg.show({
-        	                            title:'Error',
-        	                            msg: 'Error de comunicaci&oacute;n',
-        	                            buttons: Ext.Msg.OK,
-        	                            icon: Ext.Msg.ERROR
-        	                        });
-        	                    }
-        	                });
-        	        	}
-        	        }
-        	    	,{
-        	    		text     : 'Cerrar'
-        	    		,icon    : contexto+'/resources/fam3icons/icons/cancel.png'
-        	    		,handler : function()
-        	    		{
-        	    			this.up().up().destroy();
-        	    		}
-        	    	}
-        	    ]
-			}).show();
-        }
+            });
+            Ext.Ajax.request(
+            {
+                url: urlComprarCotizacion,
+                params:{
+                    comprarNmpoliza:selected_record.get('nmPoliza'),
+                    comprarCdplan:selected_cd_plan,
+                    comprarCdperpag:selected_record.get('cdPerpag'),
+                    comprarCdramo:selected_record.get('cdRamo'),
+                    comprarCdciaaguradora:selected_record.get('cdCiaaseg'),
+                    comprarCdunieco:selected_record.get('cdUnieco')
+                    ,'smap1.fechaInicio'   : Ext.Date.format(Ext.getCmp('fechaInicioVigencia').getValue(), 'd/m/Y')
+                    ,'smap1.fechaFin'      : Ext.Date.format(Ext.getCmp('fechaFinVigencia').getValue(), 'd/m/Y')
+                    ,'smap1.nombreTitular' : nombreTitular
+                    ,'smap1.ntramite'      : Ext.getCmp('ntramite').getValue()
+                },
+                success:function(response,opts)
+                {
+                    formPanel.setLoading(false);
+                    var json=Ext.decode(response.responseText);
+                    if(json.success==true)
+                    {
+                        //Ext.MessageBox.hide();
+                        //matar botones
+                    	botonDetalle.hide();
+                        botonComprar.hide();
+                        Ext.getCmp('botonImprimir').hide();
+                        Ext.getCmp('botonEmail').hide();
+                        botonVerCoberturas.hide();
+                        botonVerDetalleCobertura.hide();
+                        Ext.getCmp('botonCotizar').hide();
+                        Ext.getCmp('botonLimpiar').hide();
+                        Ext.getCmp('botonEditarCotiza').hide();
+                        //Ext.getCmp('botonClonarCotiza').hide();
+                        //Ext.getCmp('botonNuevaCotiza').hide();
+                        Ext.getCmp('botonImprimir').hide();
+                        Ext.getCmp('botonEmail').hide();
+                        //!matar botones
+                        var jsonResp = Ext.decode(response.responseText);
+                        //window.console&&console.log(jsonResp);
+                        window.parent.scrollTo(0,0);
+                        //
+                        debug("mostrar documentos");
+                    	var ntramite=json.comprarNmpoliza;
+                    	debug("ntramite",ntramite);
+                    	if(!hayTramiteCargado)
+                    	{
+                    		Ext.create('Ext.window.Window',
+                    				{
+                    			width        : 600
+                    			,height      : 400
+                    			,title       : 'Subir documentos de tu tr&aacute;mite'
+                    				,closable    : false
+                    				,modal       : true
+                    				,buttonAlign : 'center'
+                    					,loadingMask   : true
+                    					,loader      :
+                    					{
+                    						url       : urlVentanaDocumentos
+                    						,scripts  : true
+                    						,autoLoad : true
+                    						,params   :
+                    						{
+                    							'smap1.cdunieco'   : '1',
+                    							'smap1.cdramo'     : '2',
+                    							'smap1.estado'     : 'W',
+                    							'smap1.nmpoliza'   : Ext.getCmp('idCotizacion').getValue(),
+                    							'smap1.nmsuplem'   : '0',
+                    							'smap1.ntramite'   : ntramite
+                    						}
+                    					}
+                    		,buttons   :
+                    			[
+                    			 {
+                    				 text     : 'Aceptar'
+                    					 ,icon    : contexto+'/resources/fam3icons/icons/accept.png'
+                    					 ,handler : function()
+                    					 {
+                    						 this.up().up().destroy();
+                    					 }
+                    			 }
+                    			 ]
+                    				}).show();
+                    		//
+                    		var msg=Ext.Msg.show({
+                    			title:'Solicitud enviada',
+                    			msg:'Su solicitud ha sido enviada a mesa de control con el n&uacute;mero de tr&aacute;mite '+json.comprarNmpoliza+', ahora puede subir los documentos del trámite',
+                    			buttons: Ext.Msg.OK
+                    			//,x:100
+                    			,y:50
+                    		});
+                    		msg.setY(50);
+                    	}
+                    	else
+                    	{
+                    		var msg=Ext.Msg.show({
+                    			title:'Tr&aacute;mite actualizado',
+                    			msg:'La cotizaci&oacute;n se guard&oacute; para el tr&aacute;mite '+ntramiteCargado,
+                    			buttons: Ext.Msg.OK
+                    			//,x:100
+                    			,y:50
+                    		});
+                    		msg.setY(50);
+                    	}
+                    }
+                    else
+                    {
+                        Ext.Msg.show({
+                            title:'Error',
+                            msg: 'Error al comprar la cotizaci&oacute;n '+opts.params.comprarNmpoliza,
+                            buttons: Ext.Msg.OK,
+                            icon: Ext.Msg.ERROR
+                        });
+                    }
+                },
+                failure:function()
+                {
+                    //Ext.MessageBox.hide();
+                    formPanel.setLoading(false);
+                    //window.console&&console.log("error");
+                    Ext.Msg.show({
+                        title:'Error',
+                        msg: 'Error de comunicaci&oacute;n',
+                        buttons: Ext.Msg.OK,
+                        icon: Ext.Msg.ERROR
+                    });
+                }
+            });
+    	}
     });
     /*/////////////////*/
     ////// Botones //////
@@ -1405,7 +1420,7 @@ Ext.onReady(function(){
             botonVerCoberturas,
             {
                 id:'botonEditarCotiza',
-                text:'Editar cotizaci&oacute;n',
+                text:'Editar',
                 icon:contexto+'/resources/fam3icons/icons/pencil.png',
                 handler:function()
                 {
@@ -1416,14 +1431,46 @@ Ext.onReady(function(){
                     botonDetalle.setDisabled(true);
                     botonComprar.setDisabled(true);
                     Ext.getCmp('botonImprimir').setDisabled(true);
+                    Ext.getCmp('botonEmail').setDisabled(true);
                     window.parent.scrollTo(0,0);
                     campoCodigoPostal.focus();
                 }
             },
             {
+                id:'botonClonarCotiza',
+                text:'Clonar',
+                icon:contexto+'/resources/fam3icons/icons/control_repeat_blue.png',
+                handler:function()
+                {
+                    bloquearFormulario(false);
+                    gridResultados.hide();
+                    botonVerCoberturas.setDisabled(true);
+                    botonDetalle.setDisabled(true);
+                    botonComprar.setDisabled(true);
+                    Ext.getCmp('botonImprimir').setDisabled(true);
+                    Ext.getCmp('botonEmail').setDisabled(true);
+                    window.parent.scrollTo(0,0);
+                    Ext.getCmp('idCotizacion').setValue('');
+                    campoCodigoPostal.focus();
+                    //desbloquear botones
+                    botonComprar.show();
+                    Ext.getCmp('botonImprimir').show();
+                    Ext.getCmp('botonEmail').show();
+                    botonDetalle.show();
+                    botonVerCoberturas.show();
+                    botonVerDetalleCobertura.show();
+                    Ext.getCmp('botonCotizar').show();
+                    Ext.getCmp('botonLimpiar').show();
+                    Ext.getCmp('botonEditarCotiza').show();
+                    Ext.getCmp('botonClonarCotiza').show();
+                    Ext.getCmp('botonImprimir').show();
+                    Ext.getCmp('botonEmail').show();
+                }
+            },
+            {
                 id:'botonNuevaCotiza',
                 icon:contexto+'/resources/fam3icons/icons/arrow_refresh.png',
-                text:'Nueva cotizaci&oacute;n',
+                text:'Nueva',
                 handler:function()
                 {
                 	gridIncisos.hayTitular=false;
@@ -1432,23 +1479,29 @@ Ext.onReady(function(){
                     formPanel.getForm().reset();
                     gridResultados.hide();
                     window.parent.scrollTo(0,0);
-                    storeIncisos.removeAll();
-                    storeIncisos.sync();
+                    gridIncisos.getSelectionModel().deselectAll();
+                    storeIncisos.remove(storeIncisos.getRange());
+                    debug("gridIncisos.getSelectionModel().deselectAll();storeIncisos.remove(storeIncisos.getRange());");
+                    //storeIncisos.sync();
                     botonVerCoberturas.setDisabled(true);
                     botonDetalle.setDisabled(true);
                     botonComprar.setDisabled(true);
                     Ext.getCmp('botonImprimir').setDisabled(true);
+                    Ext.getCmp('botonEmail').setDisabled(true);
                     //desbloquear botones
                     botonComprar.show();
                     Ext.getCmp('botonImprimir').show();
+                    Ext.getCmp('botonEmail').show();
                     botonDetalle.show();
                     botonVerCoberturas.show();
                     botonVerDetalleCobertura.show();
                     Ext.getCmp('botonCotizar').show();
                     Ext.getCmp('botonLimpiar').show();
                     Ext.getCmp('botonEditarCotiza').show();
+                    Ext.getCmp('botonClonarCotiza').show();
                     //Ext.getCmp('botonNuevaCotiza').show();
                     Ext.getCmp('botonImprimir').show();
+                    Ext.getCmp('botonEmail').show();
                     campoCodigoPostal.focus();
                 }
             },
@@ -1474,6 +1527,124 @@ Ext.onReady(function(){
                         ,'_blank'
                         ,'width=800,height=600');
                 }
+            }
+            ,{
+            	id       : 'botonEmail'
+			    ,disabled : true
+            	,text    : 'Enviar'
+            	,icon    : contexto+'/resources/fam3icons/icons/email.png'
+            	,handler : function()
+            	{
+            		Ext.create('Ext.window.Window',
+            		{
+            			title        : 'Enviar cotizaci&oacute;n'
+            			,width       : 400
+            			,modal       : true
+            			,height      : 150
+            			,buttonAlign : 'center'
+            			,bodyPadding : 5
+            			,items       :
+            			[
+            			    {
+            			    	xtype       : 'textfield'
+            			    	,id         : 'idInputCorreos'
+            			    	,fieldLabel : 'Correo(s)'
+            			    	,emptyText  : 'Correo(s) separados por ;'
+            			    	,allowBlank : false
+            			    	,blankText  : 'Introducir correo(s) separados por ;'
+            			    	,width      : 350
+            			    }
+            			]
+            			,buttons     :
+            			[
+            			    {
+            			    	text     : 'Enviar'
+            			    	,icon    : contexto+'/resources/fam3icons/icons/accept.png'
+            			    	,handler : function()
+            			    	{
+            			    		var me=this;
+            			    		if(Ext.getCmp('idInputCorreos').getValue().length>0
+            			    				&&Ext.getCmp('idInputCorreos').getValue()!='Correo(s) separados por ;')
+            			    		{
+            			    			debug('Se va a enviar cotizacion');
+            			    			me.up().up().setLoading(true);
+            			    			Ext.Ajax.request
+            			    			({
+            			    				url       : urlEnviarCorreo
+            			    				,params   :
+            			    				{
+            			    					to        : Ext.getCmp('idInputCorreos').getValue()
+            			    					,archivos : urlImprimirCotiza+'?p_cdplan='+selected_cd_plan
+            		                            +"&p_estado='W'"
+            		                            +'&p_poliza='+Ext.getCmp('idCotizacion').getValue()
+            		                            +'&p_ramo=2'
+            		                            +'&p_unieco=1'
+            		                            +'&destype=cache'
+            		    						+"&desformat=PDF"
+            		    						+"&userid="+repSrvUsr
+            		    						+"&report=COTIZACION.rdf"
+            		    						+"&paramform=no"
+            			    				}
+            			    				,callback : function(options,success,response)
+            			    				{
+            			    					me.up().up().setLoading(false);
+            			    					if(success)
+            			    					{
+            			    						var json=Ext.decode(response.responseText);
+            			    						if(json.success==true)
+            			    						{
+            			    							me.up().up().destroy();
+            			    							Ext.Msg.show({
+                	                                    	title:'Correo enviado',
+                	                                    	msg: 'El correo ha sido enviado',
+                	                                    	buttons: Ext.Msg.OK
+                	                                	});
+            			    						}
+            			    						else
+            			    						{
+            			    							Ext.Msg.show({
+                	                                    	title:'Error',
+                	                                    	msg: 'Error al enviar',
+                	                                    	buttons: Ext.Msg.OK,
+                	                                    	icon: Ext.Msg.ERROR
+                	                                	});
+            			    						}
+            			    					}
+            			    					else
+            			    					{
+            			    						Ext.Msg.show({
+            	                                    	title:'Error',
+            	                                    	msg: 'Error de comunicaci&oacute;n',
+            	                                    	buttons: Ext.Msg.OK,
+            	                                    	icon: Ext.Msg.ERROR
+            	                                	});
+            			    					}
+            			    				}
+            			    			});
+            			    		}
+            			    		else
+            			    		{
+            			    			Ext.Msg.show({
+	                                    	title:'Error',
+	                                    	msg: 'Introduzca al menos un correo',
+	                                    	buttons: Ext.Msg.OK,
+	                                    	icon: Ext.Msg.WARNING
+	                                	});
+            			    		}
+            			    	}
+            			    }
+            			    ,{
+            			    	text     : 'Cancelar'
+            			    	,icon    : contexto+'/resources/fam3icons/icons/cancel.png'
+            			    	,handler : function()
+            			    	{
+            			    		this.up().up().destroy();
+            			    	}
+            			    }
+            			]
+            		}).show();
+            		Ext.getCmp('idInputCorreos').focus();
+            	}
             }
         ],
         listeners:
@@ -1506,6 +1677,7 @@ Ext.onReady(function(){
                     botonVerCoberturas.setDisabled(false);
                     botonComprar.setDisabled(false);
                     Ext.getCmp('botonImprimir').setDisabled(false);
+                    Ext.getCmp('botonEmail').setDisabled(false);
                     botonDetalle.setDisabled(false);
                 }
                 else
@@ -1513,6 +1685,7 @@ Ext.onReady(function(){
                     botonVerCoberturas.setDisabled(true);
                     botonComprar.setDisabled(true);
                     Ext.getCmp('botonImprimir').setDisabled(true);
+                    Ext.getCmp('botonEmail').setDisabled(true);
                     botonDetalle.setDisabled(true);
                 }
                 //alert("idplan = " + idplan + " desplan = " + desplan+ "  nmplan="+ nmplan + "  mnPrima=" + mnPrima);
@@ -2145,6 +2318,16 @@ Ext.onReady(function(){
         model:'CotizacionSalud',
         items:
         [
+            {
+            	id:'ntramite'
+                ,xtype      : 'textfield'
+            	,fieldLabel : 'N&uacute;mero de tr&aacute;mite'
+            	,readOnly   : true
+            	,labelWidth : 250
+            	,name       : 'ntramite'
+            	,hidden     : !hayTramiteCargado
+            	,value      : ntramiteCargado
+            },
             {//0
                 id: 'idCotizacion',
                 name: 'id',
@@ -2312,6 +2495,10 @@ Ext.onReady(function(){
 			                                	{
 			                                		Ext.getCmp('idCotizacion').setValue(jsonResp.id);
 			                                		mostrarGrid();
+			                                		if(hayTramiteCargado)
+			                                		{
+			                                			Ext.getCmp('botonClonarCotiza').hide();
+			                                		}
 			                                	}
 			                                	else
 			                                	{
@@ -2405,12 +2592,19 @@ Ext.onReady(function(){
             handler:function()
             {
             	gridIncisos.hayTitular=false;
+            	debug("gridIncisos.hayTitular=false;");
             	gridIncisos.hayConyugue=false;
+            	debug("gridIncisos.hayConyugue=false;");
                 formPanel.getForm().reset();
-                storeIncisos.removeAll();
-                storeIncisos.sync();
+                debug("formPanel.getForm().reset();");
                 window.parent.scrollTo(0,0);
                 campoCodigoPostal.focus();
+                debug("window.parent.scrollTo(0,0);campoCodigoPostal.focus();");
+                gridIncisos.getSelectionModel().deselectAll();
+                debug("gridIncisos.getSelectionModel().deselectAll();");
+                storeIncisos.remove(storeIncisos.getRange());
+                //storeIncisos.sync();
+                debug("storeIncisos.remove(storeIncisos.getRange());");
             }
         }
     ]

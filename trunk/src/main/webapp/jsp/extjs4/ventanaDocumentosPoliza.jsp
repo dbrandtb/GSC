@@ -10,6 +10,7 @@ var panDocInputCdramo    = '<s:property value="smap1.cdramo" />';
 var panDocInputEstado    = '<s:property value="smap1.estado" />';
 var panDocInputNmsuplem  = '<s:property value="smap1.nmsuplem" />';
 var panDocInputNtramite  = '<s:property value="smap1.ntramite" />';
+var panDocInputNmsolici  = '<s:property value="smap1.nmsolici" />';
 var panDocStoreDoc;
 var panDocUrlCargar      = '<s:url namespace="/documentos" action="ventanaDocumentosPolizaLoad" />';
 var panDocGridDocu;
@@ -48,6 +49,7 @@ Ext.onReady(function()
             ,'dsdocume'
             ,{name:'feinici',type:'date',dateFormat:'d/m/Y'}
             ,'liga'
+            ,'ntramite'
         ]
     });
     /*//////////////////////*/
@@ -91,7 +93,7 @@ Ext.onReady(function()
     {
         extend         : 'Ext.grid.Panel'
         ,store         : panDocStoreDoc
-        ,autoScroll  : true
+        //,autoScroll  : true
         //,title         : 'Documentos'
         //,collapsible   : true
         //,titleCollapse : true
@@ -213,6 +215,8 @@ Ext.onReady(function()
                                         	,'smap1.cdramo'   : panDocInputCdramo
                                         	,'smap1.estado'   : panDocInputEstado
                                         	,'smap1.nmsuplem' : panDocInputNmsuplem
+                                        	,'smap1.nmpoliza' : panDocInputNmpoliza
+                                        	,'smap1.nmsolici' : panDocInputNmsolici
                                        	}
                                     });
                                 }
@@ -265,7 +269,7 @@ Ext.onReady(function()
                                 var http=nom.substr(0,4);
                                 if(true||http!='http')
                                 {
-                                    res='<img src="${ctx}/resources/fam3icons/icons/eye.png" data-qtip="Ver en línea" style="cursor:pointer;" />';
+                                    res='<img src="${ctx}/resources/fam3icons/icons/eye.png" data-qtip="Abrir en línea" style="cursor:pointer;" />';
                                 }
                             }
                             return res;
@@ -388,7 +392,7 @@ Ext.onReady(function()
                 , target         : '_blank'
                 , params         :
                 {
-                    idPoliza  : record.get('nmsolici')
+                    idPoliza  : record.get('ntramite')
                     ,filename : record.get('cddocume') 
                 }
             });
@@ -397,7 +401,7 @@ Ext.onReady(function()
         {
         	debug(rowIndex,colIndex);
         	var record=grid.getStore().getAt(rowIndex);
-        	window.open(panDocUrlViewDoc+'?idPoliza='+record.get('nmsolici')+'&filename='+record.get('cddocume'),'_blank','width=800,height=600');
+        	window.open(panDocUrlViewDoc+'?idPoliza='+record.get('ntramite')+'&filename='+record.get('cddocume'),'_blank','width=800,height=600');
         }
     });
     /*//////////////////////*/

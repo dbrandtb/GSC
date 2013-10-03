@@ -37,7 +37,7 @@ public class DocumentosPolizaAction extends ActionSupport {
 	 */
 	public String descargaDocumento() {
 			logger.debug("Parametros de entrada para la descarga del archivo");
-			logger.debug("idPoliza: " + idPoliza);
+			logger.debug("ntramite: " + idPoliza);
 			logger.debug("filename: " + filename);
 
 			logger.debug("Ruta: " + this.getText("ruta.documentos.poliza"));
