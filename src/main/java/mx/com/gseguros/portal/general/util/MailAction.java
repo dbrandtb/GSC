@@ -32,7 +32,7 @@ public class MailAction extends ActionSupport {
 	
 	private String mensaje;
 	
-	private List<String> archivo;
+	private String archivos;
 	
 	private MailMail mailMail;
 	
@@ -40,10 +40,18 @@ public class MailAction extends ActionSupport {
 	public String enviaCorreo() throws Exception {
 		
 		try{
-			//Se obtienen los documentos a enviar como adjuntos:
-			List<String> listaDocumentos = new ArrayList<String>();
 			UrlValidator urlValidator = new UrlValidator();
-			for(String ruta : archivo) {
+			//Obtenemos el nombre del archivo:
+			String [] aux = archivos.split("/");
+			String nombreArchivo = aux[aux.length-1];
+			String nombreCompletoArchivo = this.getText("ruta.documentos.poliza")+ "/" + nombreArchivo;
+			if(HttpUtil.generaArchivo(archivos, nombreCompletoArchivo)){
+				success = true;
+			}
+				
+			//Si el arhivo fue generado, almacenamos la ruta y nombre del archivo:
+			/*
+			for(String ruta : archivos) {
 				if( StringUtils.isNotBlank(ruta) ) {
 					//Si la referencia al archivo es una URL, entonces lo creamos en el servidor:
 					if(urlValidator.isValid(ruta)) {
@@ -62,8 +70,9 @@ public class MailAction extends ActionSupport {
 					}
 				}
 			}
+			*/
 			//Se realiza el envío de correo:
-			mailMail.sendMail(to, cc, bcc, asunto, mensaje, archivo);
+			mailMail.sendMail(to, cc, bcc, asunto, mensaje, nombreCompletoArchivo);
 			success = true;
 			
 		} catch(Exception e) {
@@ -134,13 +143,13 @@ public class MailAction extends ActionSupport {
 	}
 	
 	
-	public List<String> getArchivo() {
-		return archivo;
+	public String getArchivos() {
+		return archivos;
 	}
 
 
-	public void setArchivo(List<String> archivo) {
-		this.archivo = archivo;
+	public void setArchivos(String archivos) {
+		this.archivos = archivos;
 	}
 
 

@@ -31,7 +31,7 @@ public class MailMail {
 	 * @param mensaje
 	 * @param rutaArchivo
 	 */
-	public void sendMail(String to, String cc, String bcc, String asunto, String mensaje, List<String>rutaArchivo) {
+	public void sendMail(String to, String cc, String bcc, String asunto, String mensaje, String rutaArchivo) {
 		
 		MimeMessage message = mailSender.createMimeMessage();
 		
@@ -49,12 +49,18 @@ public class MailMail {
 			}
 			helper.setSubject( StringUtils.isBlank(asunto) ? simpleMailMessage.getSubject() : asunto );
 			helper.setText( StringUtils.isBlank(mensaje) ? simpleMailMessage.getText() : mensaje );
+			FileSystemResource file = new FileSystemResource(rutaArchivo);
+			logger.debug("before attaching the document " + rutaArchivo);
+			helper.addAttachment(file.getFilename(), file);
+			logger.debug("after attaching the document " + rutaArchivo);
+			/*
 			for(String ruta: rutaArchivo) {
 				FileSystemResource file = new FileSystemResource(ruta);
 				logger.debug("before attaching the document " + ruta);
 				helper.addAttachment(file.getFilename(), file);
 				logger.debug("after attaching the document " + ruta);
 			}
+			*/
 			mailSender.send(message);
 			
 		//}catch (MessagingException e) {
