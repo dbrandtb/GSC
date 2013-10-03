@@ -46,6 +46,8 @@ public class MailAction extends ActionSupport {
 			String nombreArchivo = aux[aux.length-1];
 			String nombreCompletoArchivo = this.getText("ruta.documentos.poliza")+ "/" + nombreArchivo;
 			if(HttpUtil.generaArchivo(archivos, nombreCompletoArchivo)){
+				//Se realiza el envío de correo:
+				mailMail.sendMail(to, cc, bcc, asunto, mensaje, nombreCompletoArchivo);
 				success = true;
 			}
 				
@@ -71,9 +73,7 @@ public class MailAction extends ActionSupport {
 				}
 			}
 			*/
-			//Se realiza el envío de correo:
-			mailMail.sendMail(to, cc, bcc, asunto, mensaje, nombreCompletoArchivo);
-			success = true;
+			
 			
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
