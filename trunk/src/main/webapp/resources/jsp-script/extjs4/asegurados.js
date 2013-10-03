@@ -1203,7 +1203,7 @@ Ext.onReady(function(){
         		            	,standardSubmit : true
         		            	,params         :
         		            	{
-        		            		cdunieco  : '0'
+        		            		cdunieco  : '1'
         		            		,cdramo   : '2'
         		            		,estado   : 'W'
         		            		,nmpoliza : Ext.getCmp('idCotizacion').getValue()
