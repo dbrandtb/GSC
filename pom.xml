@@ -116,12 +116,10 @@
             <artifactId>spring-web</artifactId>
             <version>${spring.version}</version>
         </dependency>
-        
-        <!-- Eliminar dependencia cuando se eliminen las clases que usen el paquete org.springframework.mail.javamail -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
-            <version>3.0.5.RELEASE</version>
+            <version>${spring.version}</version>
         </dependency>
                     
                 
@@ -288,6 +286,11 @@
                 <exclusion>
                 	<artifactId>xmlParserAPIs</artifactId>
                 	<groupId>xerces</groupId>
+                </exclusion>
+                <!-- Se excluye por conflictos con Spring Mail (spring context support): -->
+                <exclusion>
+                	<artifactId>geronimo-javamail_1.4_spec</artifactId>
+                	<groupId>org.apache.geronimo.specs</groupId>
                 </exclusion>
             </exclusions>
         </dependency>
