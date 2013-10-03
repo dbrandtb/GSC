@@ -128,7 +128,7 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
 			
 			
 			MimeMessage message = new MimeMessage(session);
-		    message.setFrom(new InternetAddress(username));
+		    message.setFrom(new InternetAddress(username,"Manuel Torres Castillo"));
 		    message.addRecipient(Message.RecipientType.TO,new InternetAddress(toEmails));
 		    message.setSubject(asunto);
 		    
