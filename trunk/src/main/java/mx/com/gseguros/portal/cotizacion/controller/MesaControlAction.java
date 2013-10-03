@@ -22,6 +22,7 @@ public class MesaControlAction extends PrincipalCoreAction implements Constantes
 	private Map<String,String>smap2;
 	private List<Map<String,String>>slist1;
 	private List<Map<String,String>>slist2;
+	private String msgResult;
 	private boolean success;
 	
 	public String principal()
@@ -109,10 +110,10 @@ public class MesaControlAction extends PrincipalCoreAction implements Constantes
 			}
 			omap.put("pv_ferecepc_i",new Date());
 			omap.put("pv_festatus_i",new Date());
-			WrapperResultados wr = kernelManager.PMovMesacontrol(omap);
-			smap2=new LinkedHashMap<String,String>(0);
-			smap2.put("ntramite",(String)wr.getItemMap().get("ntramite"));
-			
+			WrapperResultados res = kernelManager.PMovMesacontrol(omap);
+			if(res.getItemMap() == null)log.error("Sin mensaje respuesta de nmtramite!!");
+			else msgResult = (String) res.getItemMap().get("ntramite");
+					log.debug("TRAMITE RESULTADO: "+msgResult);
 			success=true;
 		}
 		catch(Exception ex)
@@ -222,6 +223,14 @@ public class MesaControlAction extends PrincipalCoreAction implements Constantes
 
 	public String getCON_CAT_NACIONALIDAD() {
 		return CON_CAT_NACIONALIDAD;
+	}
+
+	public String getMsgResult() {
+		return msgResult;
+	}
+
+	public void setMsgResult(String msgResult) {
+		this.msgResult = msgResult;
 	}
 	
 }

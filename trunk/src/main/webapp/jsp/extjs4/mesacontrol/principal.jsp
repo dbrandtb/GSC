@@ -337,6 +337,32 @@ Ext.onReady(function(){
         		    	,items      :
         		    	[
         		    	    Ext.create('Ext.form.field.ComboBox',
+                            {
+                                fieldLabel : 'Tipo de tr&aacute;mite'
+                                ,name       : 'smap1.pv_cdtiptra_i'
+                                ,allowBlank : false
+                                ,editable   : false
+                                ,displayField : 'value'
+                                ,valueField   : 'key'
+                                ,forceSelection : true
+                                ,queryMode      :'local'
+                                    ,store : Ext.create('Ext.data.Store', {
+                                        model:'Generic',
+                                        autoLoad:true,
+                                        proxy:
+                                        {
+                                            type: 'ajax',
+                                            url:mesConUrlLoadCatalo,
+                                            extraParams:{catalogo:'<s:property value="CON_CAT_MESACONTROL_TIP_TRAMI" />'},
+                                            reader:
+                                            {
+                                                type: 'json',
+                                                root: 'lista'
+                                            }
+                                        }
+                                    })
+                            })
+                            ,Ext.create('Ext.form.field.ComboBox',
         		    	    {
         		    	    	fieldLabel : 'Sucursal Administradora'
         		    	    	,name      : 'smap1.pv_cdsucadm_i'
@@ -402,6 +428,12 @@ Ext.onReady(function(){
         		    	    	,allowBlank : false
         		    	    }
         		    	    ,{
+                                xtype       : 'textfield'
+                                ,fieldLabel : 'Cotizaci&oacute;n'
+                                ,name       : 'smap1.pv_nmsolici_i'
+                                ,allowBlank : false
+                            }
+        		    	    ,{
         		    	    	xtype       : 'textfield'
         		    	    	,fieldLabel : 'Agente'
         		    	    	,name       : 'smap1.pv_cdagente_i'
@@ -413,32 +445,6 @@ Ext.onReady(function(){
                                 fieldLabel : 'Forma de recepci&oacute;n'
                             })
                             */
-                            ,Ext.create('Ext.form.field.ComboBox',
-                            {
-                                fieldLabel : 'Tipo de tr&aacute;mite'
-                                ,name       : 'smap1.pv_cdtiptra_i'
-                                ,allowBlank : false
-                                ,editable   : false
-                                ,displayField : 'value'
-                                ,valueField   : 'key'
-                                ,forceSelection : true
-                                ,queryMode      :'local'
-                                    ,store : Ext.create('Ext.data.Store', {
-                                        model:'Generic',
-                                        autoLoad:true,
-                                        proxy:
-                                        {
-                                            type: 'ajax',
-                                            url:mesConUrlLoadCatalo,
-                                            extraParams:{catalogo:'<s:property value="CON_CAT_MESACONTROL_TIP_TRAMI" />'},
-                                            reader:
-                                            {
-                                                type: 'json',
-                                                root: 'lista'
-                                            }
-                                        }
-                                    })
-                            })
                             ,{
         		    	    	xtype       : 'textfield'
                                 ,fieldLabel : 'Referencia'
@@ -505,14 +511,17 @@ Ext.onReady(function(){
 	                                            'smap1.pv_estado_i'   : 'W',
 	                                            'smap1.pv_nmsuplem_i' : '0'
 	                                        },
-	                                        success:function(){
+	                                        success:function(form2, action){
 	                                            form.setLoading(false);
 	                                            Ext.Msg.show({
 	                                                title:'Cambios guardados',
-	                                                msg: 'Se agreg&oacute; un nuevo tr&aacute;mite',
-	                                                buttons: Ext.Msg.OK
+	                                                msg: 'Se agreg&oacute; un nuevo tr&aacute;mite con n&uacute;mero: '+ action.result.msgResult,
+	                                                buttons: Ext.Msg.OK,
+	                                                fn: function(){
+	                                                	Ext.create('Ext.form.Panel').submit({standardSubmit:true});
+	                                                }
 	                                            });
-	                                            Ext.create('Ext.form.Panel').submit({standardSubmit:true});
+	                                            
 	                                        },
 	                                        failure:function(){
 	                                            form.setLoading(false);
