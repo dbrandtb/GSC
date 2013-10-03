@@ -1,13 +1,12 @@
 package mx.com.gseguros.portal.general.util;
 
 
-import java.util.ArrayList;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.utils.MailMail;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.validator.UrlValidator;
@@ -42,8 +41,12 @@ public class MailAction extends ActionSupport {
 		try{
 			UrlValidator urlValidator = new UrlValidator();
 			//Obtenemos el nombre del archivo:
-			String [] aux = archivos.split("/");
-			String nombreArchivo = aux[aux.length-1];
+			//String [] aux = archivos.split("/");
+			//String nombreArchivo = aux[aux.length-1];
+			
+			Date date = new Date();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_hmmss");
+			String nombreArchivo = "cotizacion_" + sdf.format(date) + ".pdf";
 			String nombreCompletoArchivo = this.getText("ruta.documentos.poliza")+ "/" + nombreArchivo;
 			if(HttpUtil.generaArchivo(archivos, nombreCompletoArchivo)){
 				//Se realiza el envío de correo:
