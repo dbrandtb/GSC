@@ -447,7 +447,7 @@ Ext.onReady(function(){
                             }
         		    	    ,{
         		    	    	xtype       : 'textfield'
-                                ,fieldLabel : 'Asegurado'
+                                ,fieldLabel : 'Prospecto'
                                 ,name       : 'smap1.pv_nombre_i'
                                 ,allowBlank : false
         		    	    }
