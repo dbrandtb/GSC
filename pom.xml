@@ -186,7 +186,7 @@
         <dependency>
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
-            <version>1.4.5</version>
+            <version>1.4.7</version>
         </dependency>
         <dependency>
             <groupId>javax.activation</groupId>
@@ -204,6 +204,12 @@
             <groupId>com.lowagie</groupId>
             <artifactId>itext</artifactId>
             <version>4.2.0</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>bcmail-jdk14</artifactId>
+                    <groupId>org.bouncycastle</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
 
@@ -239,11 +245,6 @@
             <version>3.2.1</version>
         </dependency>
         <!-- Envio de mails -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-email</artifactId>
-            <version>1.3.1</version>
-        </dependency>
 
         <!-- Jasper Reports -->
         <dependency>
@@ -251,10 +252,10 @@
             <artifactId>jasperreports</artifactId>
             <version>5.1.0</version>
             <exclusions>
-            	<exclusion>
-            		<artifactId>xml-apis</artifactId>
-            		<groupId>xml-apis</groupId>
-            	</exclusion>
+                <exclusion>
+                    <artifactId>xml-apis</artifactId>
+                    <groupId>xml-apis</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -284,12 +285,22 @@
                     <groupId>javax.servlet</groupId>
                 </exclusion>
                 <exclusion>
-                	<artifactId>xmlParserAPIs</artifactId>
-                	<groupId>xerces</groupId>
+                    <artifactId>xmlParserAPIs</artifactId>
+                    <groupId>xerces</groupId>
                 </exclusion>
                 <exclusion>
-                	<artifactId>geronimo-javamail_1.4_spec</artifactId>
-                	<groupId>org.apache.geronimo.specs</groupId>
+                    <artifactId>geronimo-javamail_1.4_spec</artifactId>
+                    <groupId>org.apache.geronimo.specs</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>
+                        geronimo-activation_1.1_spec
+                    </artifactId>
+                    <groupId>org.apache.geronimo.specs</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>mail</artifactId>
+                    <groupId>javax.mail</groupId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -303,12 +314,22 @@
                     <artifactId>servlet-api</artifactId>
                     <groupId>javax.servlet</groupId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>mail</artifactId>
+                    <groupId>javax.mail</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.axis2</groupId>
             <artifactId>axis2-transport-http</artifactId>
             <version>${axis2.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>mail</artifactId>
+                    <groupId>javax.mail</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         
         <dependency>
@@ -319,6 +340,16 @@
                 <exclusion>
                     <artifactId>servlet-api</artifactId>
                     <groupId>javax.servlet</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>
+                        geronimo-activation_1.1_spec
+                    </artifactId>
+                    <groupId>org.apache.geronimo.specs</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>mail</artifactId>
+                    <groupId>javax.mail</groupId>
                 </exclusion>
             </exclusions>
         </dependency>

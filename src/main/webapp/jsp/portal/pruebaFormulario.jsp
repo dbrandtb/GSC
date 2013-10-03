@@ -12,7 +12,7 @@
 <body>
     <s:form action="enviaCorreo" namespace="/">
         <s:textfield name="to" label="Para"/>
-        <s:textfield name="archivos" label="Ruta de archivo 1" />
+        <s:textfield name="archivos" label="Ruta de archivo" />
         <s:submit label="Enviar Correo"/>
     </s:form>
 </body>
