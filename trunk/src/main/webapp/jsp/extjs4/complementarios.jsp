@@ -520,6 +520,7 @@
 		                                                            	Ext.Ajax.request(
 		                                                            	{
 		                                                            		url     : urlEmitir
+		                                                            		,timeout : 180000
 		                                                            		,params :
 		                                                            		{
 		                                                                        'panel1.pv_nmpoliza' : inputNmpoliza
@@ -540,6 +541,15 @@
 		                                                            	    		//me.up().up().setClosable(false);
 		                                                            	    		Ext.getCmp('venDocVenEmiBotNueCotiza').show();
 		                                                            	    		Ext.getCmp('venDocVenEmiBotCancelar').setDisabled(true);
+		                                                            	    		if(json.mensajeRespuesta&&json.mensajeRespuesta.length>0)
+		                                                            	    		{
+		                                                            	    			Ext.Msg.show({
+	                                                                                        title:'Aviso del sistema',
+	                                                                                        msg: json.mensajeRespuesta,
+	                                                                                        buttons: Ext.Msg.OK,
+	                                                                                        icon: Ext.Msg.WARNING
+	                                                                                    });
+		                                                            	    		}
 		                                                            	    	}
 		                                                            	    	else
 		                                                            	    	{
