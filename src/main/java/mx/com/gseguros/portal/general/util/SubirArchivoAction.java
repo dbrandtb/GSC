@@ -82,13 +82,13 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
         try
         {
         	String nombreArchivo=System.currentTimeMillis()+"_"+((long)(Math.random()*10000l))+"."+fileFileName.substring(fileFileName.indexOf(".")+1);
-        	String nuevaRuta=this.getText("ruta.documentos.poliza")+"/"+smap1.get("nmpoliza")+"/"
+        	String nuevaRuta=this.getText("ruta.documentos.poliza")+"/"+smap1.get("ntramite")+"/"
                 +nombreArchivo;
         	String antiguaRuta=file.getAbsolutePath();
         	log.debug("se movera desde::: "+antiguaRuta);
             log.debug("se movera a    ::: "+nuevaRuta);
             
-            String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+smap1.get("nmpoliza");
+            String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+smap1.get("ntramite");
             File carpeta = new File(rutaCarpeta);
             if(!carpeta.exists())
             {
@@ -131,6 +131,7 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
             paramMovDocu.put("pv_estado_i"   , smap1.get("estado"));
             paramMovDocu.put("pv_nmpoliza_i" , smap1.get("nmpoliza"));
             paramMovDocu.put("pv_nmsuplem_i" , smap1.get("nmsuplem"));
+            paramMovDocu.put("pv_ntramite_i" , smap1.get("ntramite"));
             paramMovDocu.put("pv_feinici_i"  , renderFechas.parse(smap1.get("fecha")));
             paramMovDocu.put("pv_cddocume_i" , nombreArchivo);
             paramMovDocu.put("pv_dsdocume_i" , smap1.get("descripcion"));

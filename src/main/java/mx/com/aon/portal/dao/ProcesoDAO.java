@@ -2714,6 +2714,7 @@ public class ProcesoDAO extends AbstractDAO {
 			declareParameter(new SqlParameter("pv_estado_i", 		OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmpoliza_i", 		OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmsuplem_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ntramite_i", 		OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_feinici_i", 		OracleTypes.DATE));
 			declareParameter(new SqlParameter("pv_cddocume_i", 		OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_dsdocume_i", 		OracleTypes.VARCHAR));
@@ -2754,6 +2755,7 @@ public class ProcesoDAO extends AbstractDAO {
 			declareParameter(new SqlParameter("pv_cdramo_i",      OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i",      OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmpoliza_i",    OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ntramite_i",    OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerDocumentosPolizaMapper()));
 			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
