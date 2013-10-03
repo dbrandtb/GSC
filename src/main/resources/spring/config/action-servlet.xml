@@ -49,7 +49,6 @@
 		 <property name="principalManagerJdbcTemplate" ref="principalManagerJdbcTemplate" />
          <property name="usuarioManager" ref="usuarioManager"></property>
          <property name="loginManager" ref="loginManager"></property>
-         <property name="ice2sigsWebServices" ref="ice2sigsWebServices"></property>
     </bean>
 	
 </beans>
