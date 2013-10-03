@@ -927,7 +927,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 		{
 			log.debug("panel1"+panel1);
 			
-			String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+panel1.get("pv_nmpoliza");
+			String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+panel1.get("pv_ntramite");
             File carpeta = new File(rutaCarpeta);
             if(!carpeta.exists())
             {
@@ -1003,8 +1003,9 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			paramsGetDoc.put("pv_cdunieco_i" , datUs.getCdunieco());
 			paramsGetDoc.put("pv_cdramo_i"   , datUs.getCdramo());
 			paramsGetDoc.put("pv_estado_i"   , "M");
-			paramsGetDoc.put("pv_nmpoliza_i" , panel1.get("pv_nmpoliza"));
+			paramsGetDoc.put("pv_nmpoliza_i" , panel2.get("nmpoliza"));
 			paramsGetDoc.put("pv_nmsuplem_i" , "0");
+			paramsGetDoc.put("pv_ntramite_i" , panel1.get("pv_ntramite"));
 			List<Map<String,String>>listaDocu=kernelManager.obtenerListaDocumentos(paramsGetDoc);
 			//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
 			for(Map<String,String> docu:listaDocu)
@@ -1046,7 +1047,11 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 				mensajeRespuesta = "No se ha ejecutado correctamente el WS para el guardado del ClienteSalud";
 			}
 				
-			if(!ejecutaWSrecibos(datUs.getCdunieco(), datUs.getCdramo(), "M", (String)wr.getItemMap().get("nmpoliza"), (String)wr.getItemMap().get("nmsuplem"), rutaCarpeta, cdtipsit, sucursal, panel1.get("pv_nmpoliza"))){
+			if(!ejecutaWSrecibos(datUs.getCdunieco(), datUs.getCdramo(),
+					"M", (String)wr.getItemMap().get("nmpoliza"),
+					(String)wr.getItemMap().get("nmsuplem"), rutaCarpeta,
+					cdtipsit, sucursal, panel1.get("pv_nmpoliza"),panel1.get("pv_ntramite")
+					)){
 				logger.error("NO SE HAN INSERTADO TODOS LOS RECIBOS!!! EN ICE2SIGS, DE LA POLIZA: " + (String)wr.getItemMap().get("nmpoliza"));
 				mensajeRespuesta = "No se han ejecutado correctamente los WS para el guardado de los recibos";
 			}
@@ -1069,7 +1074,8 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 		return SUCCESS;
 	}
 	
-	private boolean ejecutaWSrecibos(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String rutaPoliza, String cdtipsit, String sucursal, String nmsolici){
+	private boolean ejecutaWSrecibos(String cdunieco, String cdramo, String estado, String nmpoliza,
+			String nmsuplem, String rutaPoliza, String cdtipsit, String sucursal, String nmsolici,String ntramite){
 		boolean allInserted = true;
 		
 		logger.debug("*** Entrando a metodo Inserta Recibos WS ice2sigs, para la poliza: " + nmpoliza + "***");
@@ -1125,11 +1131,13 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 					paramsR.put("pv_cdunieco_i", cdunieco);
 					paramsR.put("pv_cdramo_i", cdramo);
 					paramsR.put("pv_estado_i", estado);
-					paramsR.put("pv_nmpoliza_i", nmsolici);
+					paramsR.put("pv_nmpoliza_i", nmpoliza);
 					paramsR.put("pv_nmsuplem_i", nmsuplem);
 					paramsR.put("pv_feinici_i", new Date());
 					paramsR.put("pv_cddocume_i", this.getText("url.imp.recibos")+parametros);
 					paramsR.put("pv_dsdocume_i", "Recibo "+recibo.getNumRec());
+					paramsR.put("pv_nmsolici_i", nmsolici);
+					paramsR.put("pv_ntramite_i", ntramite);
 					
 					kernelManager.guardarArchivo(paramsR);
 				//}

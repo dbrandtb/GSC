@@ -65,6 +65,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     public static final String cdatribuMunicipio                    ="17";
     
     //Datos de cotizacion
+    private String ntramite;
     private String id;                                            //0
     //sexo (inciso)                                               1
     //fecha nacimiento (inciso)                                   2
@@ -1178,24 +1179,37 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             log.debug("mapa en action: "+parameters2);
             kernelManagerSustituto.comprarCotizacion(parameters2);
             
-            Map<String,Object>parMesCon=new LinkedHashMap<String,Object>(0);
-            parMesCon.put("pv_cdunieco_i"   , comprarCdunieco);
-            parMesCon.put("pv_cdramo_i"     , comprarCdramo);
-            parMesCon.put("pv_estado_i"     , "W");
-            parMesCon.put("pv_nmpoliza_i"   , comprarNmpoliza);
-            parMesCon.put("pv_nmsuplem_i"   , "0");
-            parMesCon.put("pv_cdsucadm_i"   , null);
-            parMesCon.put("pv_cdsucdoc_i"   , null);
-            parMesCon.put("pv_cdtiptra_i"   , "1");
-            parMesCon.put("pv_ferecepc_i"   , new Date());
-            parMesCon.put("pv_cdagente_i"   , null);
-            parMesCon.put("pv_referencia_i" , null);
-            parMesCon.put("pv_nombre_i"     , smap1.get("nombreTitular"));
-            parMesCon.put("pv_festatus_i"   , new Date());
-            parMesCon.put("pv_status_i"     , "");
-            parMesCon.put("pv_comments_i"   , "");
-            WrapperResultados mesaContWr=kernelManagerSustituto.PMovMesacontrol(parMesCon);
-            comprarNmpoliza=(String) mesaContWr.getItemMap().get("ntramite");
+            if(smap1!=null&&smap1.containsKey("ntramite")&&smap1.get("ntramite")!=null&&smap1.get("ntramite").length()>0)
+            //se va a actualizar un tramite que no tenia poliza
+            {
+            	String ntramite=smap1.get("ntramite");
+            	log.debug("se actualiza el tramite "+ntramite);
+            	WrapperResultados mesaContWr=kernelManagerSustituto.mesaControlUpdateSolici(ntramite, comprarNmpoliza);
+            }
+            else
+            //se compra un tramite nuevo
+            {
+            	log.debug("se inserta tramite nuevo");
+            	Map<String,Object>parMesCon=new LinkedHashMap<String,Object>(0);
+            	parMesCon.put("pv_cdunieco_i"   , comprarCdunieco);
+            	parMesCon.put("pv_cdramo_i"     , comprarCdramo);
+            	parMesCon.put("pv_estado_i"     , "W");
+            	parMesCon.put("pv_nmpoliza_i"   , "");
+            	parMesCon.put("pv_nmsuplem_i"   , "0");
+            	parMesCon.put("pv_cdsucadm_i"   , null);
+            	parMesCon.put("pv_cdsucdoc_i"   , null);
+            	parMesCon.put("pv_cdtiptra_i"   , "1");
+            	parMesCon.put("pv_ferecepc_i"   , new Date());
+            	parMesCon.put("pv_cdagente_i"   , null);
+            	parMesCon.put("pv_referencia_i" , null);
+            	parMesCon.put("pv_nombre_i"     , smap1.get("nombreTitular"));
+            	parMesCon.put("pv_festatus_i"   , new Date());
+            	parMesCon.put("pv_status_i"     , "");
+            	parMesCon.put("pv_comments_i"   , "");
+            	parMesCon.put("pv_nmsolici_i"   , comprarNmpoliza);
+            	WrapperResultados mesaContWr=kernelManagerSustituto.PMovMesacontrol(parMesCon);
+            	comprarNmpoliza=(String) mesaContWr.getItemMap().get("ntramite");
+            }
             
             success=true;
         }
@@ -1590,6 +1604,14 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 
 	public void setSmap1(Map<String, String> smap1) {
 		this.smap1 = smap1;
+	}
+
+	public String getNtramite() {
+		return ntramite;
+	}
+
+	public void setNtramite(String ntramite) {
+		this.ntramite = ntramite;
 	}
     
 }

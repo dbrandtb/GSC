@@ -29,6 +29,8 @@
             var inputCdramo='<s:property value="cdramo" />';
             var inputEstado='<s:property value="estado" />';
             var inputNmpoliza='<s:property value="nmpoliza" />';
+            var inputNtramite='<s:property value="map1.ntramite" />';
+            debug("inputNtramite",inputNtramite);
             var urlEditarAsegurados='<s:url namespace="/" action="editarAsegurados" />';
             var contexto='${ctx}';
             var urlRecotizar='<s:url namespace="/" action="recotizar" />';
@@ -36,6 +38,7 @@
             var urlEmitir='<s:url namespace="/" action="emitir" />';
             var panDatComUrlDoc='<s:url namespace="/documentos" action="ventanaDocumentosPoliza" />';
             var panDatComUrlCotiza='<s:url namespace="/" action="cotizacionVital" />';
+            var datComPolizaMaestra;
             
             function expande(indice)
             {
@@ -520,6 +523,7 @@
 		                                                            		,params :
 		                                                            		{
 		                                                                        'panel1.pv_nmpoliza' : inputNmpoliza
+		                                                                        ,'panel1.pv_ntramite'   : inputNtramite
 		                                                            		}
 		                                                            	    ,success:function(response)
 		                                                            	    {
@@ -528,6 +532,8 @@
 		                                                            	    	debug(json);
 		                                                            	    	if(json.success==true)
 		                                                            	    	{
+		                                                            	    		datComPolizaMaestra=json.panel2.nmpoliza;
+		                                                            	    		debug("datComPolizaMaestra",datComPolizaMaestra);
 		                                                            	    		Ext.getCmp('numerofinalpoliza').setValue(json.panel2.nmpoliex);
 		                                                            	    		Ext.getCmp('botonEmitirPolizaFinal').setDisabled(true);
 		                                                            	    		Ext.getCmp('botonImprimirPolizaFinal').setDisabled(false);
@@ -575,6 +581,7 @@
 		                                                            		,modal       : true
 		                                                            		,buttonAlign : 'center'
 	                                                            	        ,loadingMask : true
+	                                                            	        ,autoScroll  : true
 		                                                            		,loader      :
 		                                                            		{
 		                                                            			url       : panDatComUrlDoc
@@ -582,11 +589,12 @@
 		                                                            	        ,autoLoad : true
 		                                                            			,params   :
 		                                                            			{
-		                                                            				'smap1.nmpoliza'   : inputNmpoliza
+		                                                            				'smap1.nmpoliza'   : datComPolizaMaestra
 		                                                            				,'smap1.cdunieco'  : inputCdunieco
 		                                                            				,'smap1.cdramo'    : inputCdramo
 		                                                            				,'smap1.estado'    : 'M'
-		                                                            				,'smap1.nmsuplem' : 0
+		                                                            				,'smap1.nmsuplem'  : 0
+		                                                            				,'smap1.ntramite'  : inputNtramite
 		                                                            			}
 		                                                            		}
 		                                                            	    ,buttons   :

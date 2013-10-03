@@ -202,11 +202,19 @@ Ext.onReady(function(){
                     		var res=value;
                     		if(value=='1')
                     		{
+                    			res='Revisión';
+                    		}
+                    		else if(value=='2')
+                    		{
                     			res='Pendiente';
                     		}
                     		else if(value=='3')
                     		{
-                    			res='Confirmado';
+                    			res='Confirmada';
+                    		}
+                    		else if(value=='4')
+                    		{
+                    			res='Rechazado';
                     		}
                     		return res;
                     	}
@@ -265,11 +273,13 @@ Ext.onReady(function(){
             		url       : mesConUrlDocu
             		,params   :
             		{
-            			'smap1.nmpoliza'  : record.get('nmsolici')
+            			'smap1.nmpoliza'  : record.get('nmpoliza')&&record.get('nmpoliza').length>0?record.get('nmpoliza'):'0'
             			,'smap1.cdunieco' : record.get('cdunieco')
             			,'smap1.cdramo'   : record.get('cdramo')
             			,'smap1.estado'   : record.get('estado')
             			,'smap1.nmsuplem' : '0'
+            			,'smap1.ntramite' : record.get('ntramite')
+            			,'smap1.nmsolici' : record.get('nmsolici')&&record.get('nmsolici').length>0?record.get('nmsolici'):'0'
             		}
             		,scripts  : true
             		,autoLoad : true
@@ -292,7 +302,8 @@ Ext.onReady(function(){
 	            		cdunieco  : record.get('cdunieco')
 	            		,cdramo   : record.get('cdramo')
 	            		,estado   : record.get('estado')
-	            		,nmpoliza : record.get('nmpoliza')
+	            		,nmpoliza : record.get('nmsolici')
+	            		,'map1.ntramite' : record.get('ntramite')
 	            	}
 	            });
             }

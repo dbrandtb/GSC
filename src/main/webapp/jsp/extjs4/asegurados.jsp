@@ -54,6 +54,18 @@
             var urlVentanaDocumentos = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza" />';
             var urlImprimirCotiza    = '<s:text name="ruta.servidor.reports" />';
             var repSrvUsr            = '<s:text name="pass.servidor.reports" />';
+            var urlEnviarCorreo      = '<s:url namespace="/" action="enviaCorreo" />';
+            <s:if test="ntramite!=null&&ntramite.length()>0">
+                var hayTramiteCargado=true;
+                var ntramiteCargado='<s:property value="ntramite" />';
+            </s:if>
+            <s:else>
+                var hayTramiteCargado=false;
+                var ntramiteCargado='';
+            </s:else>
+            debug('hayTramiteCargado '+(hayTramiteCargado?'true':'false'));
+            debug('ntramiteCargado: '+ntramiteCargado);
+            
         </script>
         <script src="${ctx}/resources/jsp-script/extjs4/asegurados.js"></script>
     </head>

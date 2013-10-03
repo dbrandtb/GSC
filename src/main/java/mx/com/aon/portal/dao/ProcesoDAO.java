@@ -2714,10 +2714,11 @@ public class ProcesoDAO extends AbstractDAO {
 			declareParameter(new SqlParameter("pv_estado_i", 		OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmpoliza_i", 		OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmsuplem_i", 		OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_ntramite_i", 		OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_feinici_i", 		OracleTypes.DATE));
 			declareParameter(new SqlParameter("pv_cddocume_i", 		OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_dsdocume_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ntramite_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsolici_i", 		OracleTypes.VARCHAR));
 	
 			declareParameter(new SqlOutParameter("pv_msg_id_o", 	OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o", 		OracleTypes.VARCHAR));
@@ -2772,7 +2773,7 @@ public class ProcesoDAO extends AbstractDAO {
 	
 	protected class ObtenerDocumentosPolizaMapper implements RowMapper {
 		public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-			String cols[]=new String[]{"nmsolici","cddocume","dsdocume","feinici"};
+			String cols[]=new String[]{"nmsolici","cddocume","dsdocume","feinici","ntramite"};
 			Map<String,String> map=new HashMap<String,String>(0);
 			for(String col:cols)
 			{
@@ -2818,6 +2819,7 @@ public class ProcesoDAO extends AbstractDAO {
 			declareParameter(new SqlParameter("pv_estado_i",      OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmpoliza_i",    OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmsuplem_i",    OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ntramite_i",    OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerListDocPolizaNuevaMapper()));
 			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));

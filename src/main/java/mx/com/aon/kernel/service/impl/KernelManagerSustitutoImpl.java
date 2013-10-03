@@ -642,4 +642,17 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 				ProcesoDAO.OBTIENE_CATALOGO_COLONIAS);
 		return result;
 	}
+
+	public WrapperResultados mesaControlUpdateSolici(String ntramite,String nmsolici) throws ApplicationException
+	{
+		HashMap<String,Object> params =  new HashMap<String, Object>();
+		params.put("pv_ntramite_i", ntramite);
+		params.put("pv_nmsolici_i", nmsolici);
+		log.debug("### kernel mesaControlUpdateSolici map: "+params);
+		WrapperResultados res = this.returnBackBoneInvoke(params,ProcesoDAO.MESACONTROL_UPDATE_SOLICI);
+        log.debug("### kernel sustituto mesaControlUpdateSolici id:"+res.getMsgId());
+        log.debug("### kernel sustituto mesaControlUpdateSolici mesage:"+res.getMsgText());
+		return res;
+		
+	}
 }
