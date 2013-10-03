@@ -43,6 +43,8 @@
         <property name="combosManager2" ref="comboManagerJdbcTemplateImpl"/>
     </bean>
     
-    <bean id="mailAction" class="mx.com.gseguros.portal.general.util.MailAction" scope="prototype"/>
+    <bean id="mailAction" class="mx.com.gseguros.portal.general.util.MailAction" scope="prototype">
+        <property name="mailMail" ref="mailMail"/>
+    </bean>
     
 </beans>

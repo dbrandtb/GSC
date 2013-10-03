@@ -1,18 +1,9 @@
 package mx.com.gseguros.utils;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
-import mx.com.gseguros.exception.ApplicationException;
-
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.mail.EmailAttachment;
-import org.apache.commons.mail.EmailException;
-import org.apache.commons.mail.HtmlEmail;
 
 public class MailUtil {
 
@@ -142,14 +133,14 @@ public class MailUtil {
 	 * @param rutasAdjuntos Rutas donde cada fichero a adjuntar
 	 * @throws EmailException
 	 */
-	
+	/*
 	public static boolean sendEmail(String to, String asunto, String mensaje, List<String> rutasAdjuntos)
 	throws EmailException {
 		
 		boolean exito = false;
 		
 		// Create the email message
-		HtmlEmail email =  new HtmlEmail();
+		MultiPartEmail email =  new MultiPartEmail();
 		email.setHostName(host);
 		email.setAuthentication(user, pass);
 		//email.setSmtpPort(port);
@@ -164,7 +155,7 @@ public class MailUtil {
 			
 			email.setFrom(from);
 			email.setSubject(asunto);
-			email.setHtmlMsg(mensaje);
+			email.setMsg(mensaje);
 			//email.setMsg(mensaje);
 			
 			String nombreFichero;
@@ -203,7 +194,7 @@ public class MailUtil {
 		try {
 			List<String> listaURLs = new ArrayList<String>();
 			List<String> listaDocumentos = new ArrayList<String>();
-			String RUTA_DOUMENTOS = "E:\\tmp";
+			String RUTA_DOUMENTOS = "/tmp";
 			
 			listaURLs.add("http://201.122.160.245:7777/reports/rwservlet?destype=cache&desformat=PDF&userid=ice/ice@acwqa&report=CARATULA.rdf&paramform=no&p_unieco=1&p_ramo=2&p_estado='M'&p_poliza=241&desname=/opt/ice/gseguros/documentos/2128/CARATULA.pdf");
 			listaURLs.add("http://201.122.160.245:7777/reports/rwservlet?destype=cache&desformat=PDF&userid=ice/ice@acwqa&report=CREDENCIAL.rdf&paramform=no&p_unieco=1&p_ramo=2&p_estado='M'&p_poliza=241&desname=/opt/ice/gseguros/documentos/2128/CREDENCIAL.pdf");
@@ -225,12 +216,12 @@ public class MailUtil {
 			}
 			
 			
-			new MailUtil().sendEmail("ricardo.bautista@biosnettcs.com", "Prueba", "Prueba", listaDocumentos);
+			MailUtil.sendEmail("ricardo.bautista@biosnettcs.com", "Prueba", "Prueba", listaDocumentos);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+	*/
 	
 	
 	/**
@@ -242,6 +233,7 @@ public class MailUtil {
 	 * @return
 	 * @throws EmailException
 	 */
+	/*
 	public static boolean enviaCorreo(String to, String cc, String bcc, String asunto, String mensaje, List<String> rutasAdjuntos) throws ApplicationException {
 				
 		boolean exito = false;
@@ -320,6 +312,6 @@ public class MailUtil {
 			logger.error("Error al enviar email: "  + e.getMessage(), e);
 		}
 		return exito;
-	}
+	}*/
 	
 }

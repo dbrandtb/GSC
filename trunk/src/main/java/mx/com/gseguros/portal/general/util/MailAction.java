@@ -1,15 +1,16 @@
 package mx.com.gseguros.portal.general.util;
 
-import java.io.File;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import mx.com.gseguros.utils.HttpUtil;
-import mx.com.gseguros.utils.MailUtil;
+import mx.com.gseguros.utils.MailMail;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.validator.UrlValidator;
 
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -27,91 +28,43 @@ public class MailAction extends ActionSupport {
 	
 	private String bcc;
 	
-	private List<String> archivos;
+	private String asunto;
+	
+	private String mensaje;
+	
+	private List<String> archivo;
+	
+	private MailMail mailMail;
 	
 	
 	public String enviaCorreo() throws Exception {
 		
 		try{
-			/*
-			String asunto = "Cotización General de Seguros";
-			String mensaje = "Estimado usuario, <br/><br/>anexamos la cotizaci&oacute;n realizada.";
-			
-			List<String> listaURLs = new ArrayList<String>();
+			//Se obtienen los documentos a enviar como adjuntos:
 			List<String> listaDocumentos = new ArrayList<String>();
-			String RUTA_DOUMENTOS = "E:\\tmp";
-			for(String urlOrigen: archivos) {
-				if(StringUtils.isNotBlank(urlOrigen)) {
-					//Obtenemos el nombre del archivo:
-					String [] aux = urlOrigen.split("/");
-					String nombreArchivo = aux[aux.length-1];
-					String nombreCompletoArchivo = RUTA_DOUMENTOS+ File.separator + nombreArchivo;
-					System.out.println("nombreArchivo=" + nombreArchivo);
-					System.out.println("nombreCompletoArchivo=" + nombreCompletoArchivo);
-					
-					boolean isArchivoGenerado = HttpUtil.generaArchivo(urlOrigen, nombreCompletoArchivo);
-					//Si el arhivo fue generado, almacenamos la ruta y nombre del archivo:
-					if(isArchivoGenerado) {
-						listaDocumentos.add(nombreCompletoArchivo);
+			UrlValidator urlValidator = new UrlValidator();
+			for(String ruta : archivo) {
+				if( StringUtils.isNotBlank(ruta) ) {
+					//Si la referencia al archivo es una URL, entonces lo creamos en el servidor:
+					if(urlValidator.isValid(ruta)) {
+						//TODO: arreglar para que sea independiente del SO
+						//Obtenemos el nombre del archivo:
+						String [] aux = ruta.split("/");
+						String nombreArchivo = aux[aux.length-1];
+						String nombreCompletoArchivo = this.getText("ruta.documentos.poliza")+ "/" + nombreArchivo;
+						boolean isArchivoGenerado = HttpUtil.generaArchivo(ruta, nombreCompletoArchivo);
+						//Si el arhivo fue generado, almacenamos la ruta y nombre del archivo:
+						if(isArchivoGenerado) {
+							listaDocumentos.add(nombreCompletoArchivo);
+						}
+					} else {
+						listaDocumentos.add(ruta);
 					}
 				}
 			}
-			
-			
-			success = MailUtil.sendEmail("ricardo.bautista@biosnettcs.com", "Prueba", "Prueba", listaDocumentos);
-			*/
-			/*
-			List<String> listaDocumentos = new ArrayList<String>();
-			String RUTA_DOUMENTOS = "E:\\tmp";
-			if( archivos != null ) {
-				logger.debug("archivos=" + archivos);
-				logger.debug("# archivos:" + archivos.size());
-			}
-			
-			for(String urlOrigen: archivos) {
-				//Obtenemos el nombre del archivo:
-				String [] aux = urlOrigen.split("/");
-				String nombreArchivo = aux[aux.length-1];
-				String nombreCompletoArchivo = RUTA_DOUMENTOS+ File.separator + nombreArchivo;
-				
-				boolean isArchivoGenerado = HttpUtil.generaArchivo(urlOrigen, nombreCompletoArchivo);
-				//Si el arhivo fue generado, almacenamos la ruta y nombre del archivo:
-				if(isArchivoGenerado) {
-					listaDocumentos.add(nombreCompletoArchivo);
-				}
-			}
-			
-			logger.debug("listaDocumentos=" + listaDocumentos);
-			
-			MailUtil.sendEmail("ricardo.bautista@biosnettcs.com", "Prueba", "Prueba", listaDocumentos);
-			*/
-			
-			
-				List<String> listaURLs = new ArrayList<String>();
-				List<String> listaDocumentos = new ArrayList<String>();
-				String RUTA_DOUMENTOS = "/tmp";
-				
-				listaURLs.add("http://201.122.160.245:7777/reports/rwservlet?destype=cache&desformat=PDF&userid=ice/ice@acwqa&report=CARATULA.rdf&paramform=no&p_unieco=1&p_ramo=2&p_estado='M'&p_poliza=241&desname=/opt/ice/gseguros/documentos/2128/CARATULA.pdf");
-				//listaURLs.add("http://201.122.160.245:7777/reports/rwservlet?destype=cache&desformat=PDF&userid=ice/ice@acwqa&report=CREDENCIAL.rdf&paramform=no&p_unieco=1&p_ramo=2&p_estado='M'&p_poliza=241&desname=/opt/ice/gseguros/documentos/2128/CREDENCIAL.pdf");
-				//listaURLs.add("http://201.122.160.245:7777/reports/rwservlet?destype=cache&desformat=PDF&userid=ice/ice@acwqa&report=ENDOSOS_EPZ.rdf&paramform=no&p_unieco=1&p_ramo=2&p_estado='M'&p_poliza=241&desname=/opt/ice/gseguros/documentos/2128/ENDOSOS_EPZ.pdf");
-				//listaURLs.add("http://201.122.160.245:7777/reports/rwservlet?destype=cache&desformat=PDF&userid=ice/ice@acwqa&report=ENDOSOS_EXC.rdf&paramform=no&p_unieco=1&p_ramo=2&p_estado='M'&p_poliza=241&desname=/opt/ice/gseguros/documentos/2128/ENDOSOS_EXC.pdf");
-				//listaURLs.add("http://201.122.160.245:7777/reports/rwservlet?destype=cache&desformat=PDF&userid=ice/ice@acwqa&report=ENDOSOS_POL_100.rdf&paramform=no&p_unieco=1&p_ramo=2&p_estado='M'&p_poliza=241&desname=/opt/ice/gseguros/documentos/2128/ENDOSOS_POL_100.pdf");			
-				
-				for(String urlOrigen: listaURLs) {
-					//Obtenemos el nombre del archivo:
-					String [] aux = urlOrigen.split("/");
-					String nombreArchivo = aux[aux.length-1];
-					String nombreCompletoArchivo = RUTA_DOUMENTOS+ File.separator + nombreArchivo;
-					
-					boolean isArchivoGenerado = HttpUtil.generaArchivo(urlOrigen, nombreCompletoArchivo);
-					//Si el arhivo fue generado, almacenamos la ruta y nombre del archivo:
-					if(isArchivoGenerado) {
-						listaDocumentos.add(nombreCompletoArchivo);
-					}
-				}
-				
-				
-				new MailUtil().sendEmail("ricardo.bautista@biosnettcs.com", "Prueba", "Prueba", listaDocumentos);
+			//Se realiza el envío de correo:
+			mailMail.sendMail(to, cc, bcc, asunto, mensaje, archivo);
+			success = true;
 			
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
@@ -161,14 +114,38 @@ public class MailAction extends ActionSupport {
 	}
 
 
-	public List<String> getArchivos() {
-		return archivos;
+	public String getAsunto() {
+		return asunto;
 	}
 
 
-	public void setArchivos(List<String> archivos) {
-		this.archivos = archivos;
+	public void setAsunto(String asunto) {
+		this.asunto = asunto;
 	}
-		
 
+
+	public String getMensaje() {
+		return mensaje;
+	}
+
+
+	public void setMensaje(String mensaje) {
+		this.mensaje = mensaje;
+	}
+	
+	
+	public List<String> getArchivo() {
+		return archivo;
+	}
+
+
+	public void setArchivo(List<String> archivo) {
+		this.archivo = archivo;
+	}
+
+
+	public void setMailMail(MailMail mailMail) {
+		this.mailMail = mailMail;
+	}
+	
 }

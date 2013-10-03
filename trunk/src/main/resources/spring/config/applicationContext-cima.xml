@@ -454,12 +454,13 @@
 	       </map>
 		</property>
 		-->
-        <property name="abstractDAO">
+		
+        <!-- <property name="abstractDAO">
             <ref bean="alertaDAOPortal"/>
         </property>
         <property name="mailUtil">
             <ref bean="mailUtil"/>
-        </property>
+        </property> -->
         
 	</bean>
 	<!-- Fin Alertas Por Usuario -->
