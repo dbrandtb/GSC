@@ -55,6 +55,7 @@
             var urlImprimirCotiza    = '<s:text name="ruta.servidor.reports" />';
             var repSrvUsr            = '<s:text name="pass.servidor.reports" />';
             var urlEnviarCorreo      = '<s:url namespace="/" action="enviaCorreo" />';
+            var urlDatosComplementarios = '<s:url namespace="/" action="datosComplementarios" />';
             <s:if test="ntramite!=null&&ntramite.length()>0">
                 var hayTramiteCargado=true;
                 var ntramiteCargado='<s:property value="ntramite" />';

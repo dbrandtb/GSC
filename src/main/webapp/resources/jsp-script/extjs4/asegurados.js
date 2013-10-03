@@ -1066,7 +1066,7 @@ Ext.onReady(function(){
         }
     });
     botonComprar=Ext.create('Ext.Button', {
-        text: hayTramiteCargado?'Actualizar tr&aacute;mite '+ntramiteCargado:'Generar tr&aacute;mite',
+        text: hayTramiteCargado?'Complementar tr&aacute;mite '+ntramiteCargado:'Generar tr&aacute;mite',
         icon:contexto+'/resources/fam3icons/icons/book_next.png',
         disabled:true,
         handler : function(){
@@ -1187,6 +1187,7 @@ Ext.onReady(function(){
                     	}
                     	else
                     	{
+                    		/*
                     		var msg=Ext.Msg.show({
                     			title:'Tr&aacute;mite actualizado',
                     			msg:'La cotizaci&oacute;n se guard&oacute; para el tr&aacute;mite '+ntramiteCargado,
@@ -1195,6 +1196,20 @@ Ext.onReady(function(){
                     			,y:50
                     		});
                     		msg.setY(50);
+                    		*/
+                    		Ext.create('Ext.form.Panel').submit(
+        		            {
+        		            	url             : urlDatosComplementarios
+        		            	,standardSubmit : true
+        		            	,params         :
+        		            	{
+        		            		cdunieco  : '0'
+        		            		,cdramo   : '2'
+        		            		,estado   : 'W'
+        		            		,nmpoliza : Ext.getCmp('idCotizacion').getValue()
+        		            		,'map1.ntramite' : ntramiteCargado
+        		            	}
+        		            });
                     	}
                     }
                     else
