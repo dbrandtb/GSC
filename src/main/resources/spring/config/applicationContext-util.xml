@@ -9,7 +9,68 @@
         </property>
     </bean>
     
-	<bean id="mailUtil" class="mx.com.aon.utils.MailUtil">
+    
+    
+    <!-- <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="smtp.bizmail.yahoo.com" />
+        <property name="port" value="587" />
+        <property name="username" value="ventasavs.sza@biosnettcs.com" />
+        <property name="password" value="avsbiosnet2013" />
+        
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.auth">false</prop>
+                <prop key="mail.smtp.starttls.enable">false</prop>
+            </props>
+        </property>
+        
+    </bean> -->
+    
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="smtp.gmail.com" />
+        <property name="port" value="587" />
+        <property name="username" value="biosnettcs@gmail.com" />
+        <property name="password" value="biosnettcs2013" />
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.auth">true</prop>
+                <prop key="mail.smtp.starttls.enable">true</prop>
+                <prop key="mail.smtp.starttls.required">true</prop>
+            </props>
+        </property>
+    </bean>
+    
+    <bean id="mailMail" class="mx.com.gseguros.utils.MailMail">
+        <property name="mailSender" ref="mailSender" />
+        <property name="simpleMailMessage" ref="cotizacionMailMessage" />
+        <property name="fromAlias" value="General de Seguros" />
+    </bean>
+    
+    <bean id="cotizacionMailMessage" class="org.springframework.mail.SimpleMailMessage">
+        <property name="from" value="dricardok@gmail.com" />
+        <!-- <property name="to" value="" /> -->
+        <property name="subject">
+            <value><![CDATA[ Cotizaci&oacute;n solicitada ]]></value>
+        </property>
+        <property name="text">
+            <value>
+                <![CDATA[
+                    Estimado(a) cliente,<br/><br/>
+                    anexamos a este e-mail la cotizaci&oacute; solicitada y nos ponemos a sus apreciables &oacuute;rdenes.
+                    <p>
+                    Atte:
+                    General de Seguros.
+                    </p>
+                    <img src="http://www.generaldeseguros.mx/images/GeneraldeSeguros.png" alt="General de Seguros,S.A.B" border="0">
+                ]]>
+            </value>
+       </property>
+    </bean>
+    
+    
+    
+    <!-- Spring Mail -->
+	<!-- <bean id="mailUtil" class="mx.com.aon.utils.MailUtil">
 		<property name="sender"><ref bean="mailSender"/></property>
 		<property name="abstractDAO">
                 <ref bean="parametroGeneralDAO"/>
@@ -17,7 +78,7 @@
 	</bean>
 	
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-	</bean>
+	</bean> -->
 
 
     <!-- Quartz -->

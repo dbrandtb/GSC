@@ -473,8 +473,10 @@
                 
                 
                 <action name="enviaCorreo" class="mailAction" method="enviaCorreo">
-                    <result name="success" type="json" />
-                </action>
+		            <result name="success" type="json" />
+        		</action>
+        
+                
                 
     </package>
 

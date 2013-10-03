@@ -14,7 +14,9 @@
         <s:textfield name="to" label="Para"/>
         <s:textfield name="cc" label="CC"/>
         <s:textfield name="bcc" label="BCC"/>
-        <s:textfield name="archivos" label="Ruta de archivo 1" />
+        <s:textfield name="archivo" label="Ruta de archivo 1" />
+        <s:textfield name="archivo" label="Ruta de archivo 1" />
+        <s:textfield name="archivo" label="Ruta de archivo 3" />
         <s:submit label="Enviar Correo"/>
     </s:form>
 </body>
