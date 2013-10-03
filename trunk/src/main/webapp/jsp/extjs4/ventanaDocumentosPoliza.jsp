@@ -9,6 +9,7 @@ var panDocInputCdunieco  = '<s:property value="smap1.cdunieco" />';
 var panDocInputCdramo    = '<s:property value="smap1.cdramo" />';
 var panDocInputEstado    = '<s:property value="smap1.estado" />';
 var panDocInputNmsuplem  = '<s:property value="smap1.nmsuplem" />';
+var panDocInputNtramite  = '<s:property value="smap1.ntramite" />';
 var panDocStoreDoc;
 var panDocUrlCargar      = '<s:url namespace="/documentos" action="ventanaDocumentosPolizaLoad" />';
 var panDocGridDocu;
@@ -69,6 +70,7 @@ Ext.onReady(function()
                 ,'smap1.pv_cdunieco_i' : panDocInputCdunieco
                 ,'smap1.pv_cdramo_i'   : panDocInputCdramo
                 ,'smap1.pv_estado_i'   : panDocInputEstado
+                ,'smap1.pv_ntramite_i' : panDocInputNtramite
             }
             ,type        : 'ajax'
             ,reader      :
@@ -115,10 +117,10 @@ Ext.onReady(function()
                         [
                             {
                                 xtype       : 'textfield'
-                                ,value      : panDocInputNmpoliza
+                                ,value      : panDocInputNtramite
                                 ,readOnly   : true
-                                ,fieldLabel : 'N&uacute;mero de poliza'
-                                ,name       : 'smap1.nmpoliza'
+                                ,fieldLabel : 'N&uacute;mero de tramite'
+                                ,name       : 'smap1.ntramite'
                                 ,hidden     : true
                             }
                             ,{
