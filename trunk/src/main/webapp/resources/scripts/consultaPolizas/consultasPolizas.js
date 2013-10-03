@@ -583,13 +583,12 @@ Ext.onReady(function() {
 						params : {
 							'smap1.readOnly' :  true,
 							'smap1.nmpoliza' :  
-								panelBusqueda.down('form').getForm().findField("params.estado").getValue() == 'M'?
-								Ext.getCmp('nmsolici').getValue() : 
-								panelBusqueda.down('form').getForm().findField("params.nmpoliza").getValue(),
+							panelBusqueda.down('form').getForm().findField("params.nmpoliza").getValue(),
 							'smap1.cdunieco' :  panelBusqueda.down('form').getForm().findField("params.cdunieco").getValue(),
 							'smap1.cdramo' :  panelBusqueda.down('form').getForm().findField("params.cdramo").getValue(),
 							'smap1.estado' :  panelBusqueda.down('form').getForm().findField("params.estado").getValue(),
-							'smap1.nmsuplem' :  panelBusqueda.down('form').getForm().findField("params.suplemento").getValue()
+							'smap1.nmsuplem' :  panelBusqueda.down('form').getForm().findField("params.suplemento").getValue(),
+							'smap1.ntramite' : ""
 						}
 					});
 				}
