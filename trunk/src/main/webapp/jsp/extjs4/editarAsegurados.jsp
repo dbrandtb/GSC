@@ -1218,7 +1218,7 @@ debug("validarYGuardar flag:2");
                             'smap1.pv_nmpoliza'     : inputNmpolizap2,
                             'smap1.pv_nmsituac'     : record.get('nmsituac'),
                             'smap1.pv_cdperson'     : record.get('cdperson'),
-                            'smap1.pv_cdrol'        : record.get('cdrol'),
+                            'smap1.pv_cdrol'        : record.get('estomador')==true?'1':record.get('cdrol'),
                             'smap1.nombreAsegurado' : record.get('nombre')+' '+(record.get('segundo_nombre')?record.get('segundo_nombre')+' ':' ')+record.get('Apellido_Paterno')+' '+record.get('Apellido_Materno'),
                             'smap1.cdrfc'           : record.get('cdrfc'),
                             'smap1.botonCopiar'     : rowIndex>0?'1':'0'
