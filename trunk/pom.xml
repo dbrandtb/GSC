@@ -287,7 +287,6 @@
                 	<artifactId>xmlParserAPIs</artifactId>
                 	<groupId>xerces</groupId>
                 </exclusion>
-                <!-- Se excluye por conflictos con Spring Mail (spring context support): -->
                 <exclusion>
                 	<artifactId>geronimo-javamail_1.4_spec</artifactId>
                 	<groupId>org.apache.geronimo.specs</groupId>
