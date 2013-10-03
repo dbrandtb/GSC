@@ -20,6 +20,7 @@
     var mesConUrlInitManual = '<s:url namespace="/mesacontrol"     action="obtenerValoresDefectoInsercionManual" />';
     var mesConUrlSaveTra    = '<s:url namespace="/mesacontrol"     action="guardarTramiteManual" />';
     var mesConUrlLoadCatalo = '<s:url namespace="/flujocotizacion" action="cargarCatalogos" />';
+    var mesConUrlCotizar    = '<s:url namespace="/" action="cotizacionVital" />';
     var mesConStoreTareas;
     var mesConGridTareas;
     var mesConStoreUniAdmin;
@@ -240,7 +241,7 @@ Ext.onReady(function(){
                             }
                             ,{
                             	icon     : '${ctx}/resources/fam3icons/icons/folder.png'
-                                ,tooltip : 'Datos complementarios'
+                                ,tooltip : 'Complementar'
                                 ,handler : this.onComplementariosClick
                             }
                         ]
@@ -293,19 +294,35 @@ Ext.onReady(function(){
             debug(record);
             if(record.get('estado')=='W')
             {
-	            Ext.create('Ext.form.Panel').submit(
-	            {
-	            	url             : mesConUrlDatCom
-	            	,standardSubmit : true
-	            	,params         :
-	            	{
-	            		cdunieco  : record.get('cdunieco')
-	            		,cdramo   : record.get('cdramo')
-	            		,estado   : record.get('estado')
-	            		,nmpoliza : record.get('nmsolici')
-	            		,'map1.ntramite' : record.get('ntramite')
-	            	}
-	            });
+            	if(record.get('nmsolici')&&record.get('nmsolici').length>0&&record.get('nmsolici')>0)
+            	{
+		            Ext.create('Ext.form.Panel').submit(
+		            {
+		            	url             : mesConUrlDatCom
+		            	,standardSubmit : true
+		            	,params         :
+		            	{
+		            		cdunieco  : record.get('cdunieco')
+		            		,cdramo   : record.get('cdramo')
+		            		,estado   : record.get('estado')
+		            		,nmpoliza : record.get('nmsolici')
+		            		,'map1.ntramite' : record.get('ntramite')
+		            	}
+		            });
+            	}
+            	else
+            	{
+            		debug('cotizar');
+            		Ext.create('Ext.form.Panel').submit(
+                    {
+                        url             : mesConUrlCotizar
+                        ,standardSubmit : true
+                        ,params         :
+                        {
+                            ntramite : record.get('ntramite')
+                        }
+                    });
+            	}
             }
             else
             {

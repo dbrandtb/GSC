@@ -78,7 +78,7 @@
                 
                 accordion=Ext.create('Ext.panel.Panel',
                 {
-                	title:'Poliza '+inputNmpoliza,
+                	title:'Cotizaci&oacute;n '+inputNmpoliza,
                 	renderTo : 'maindiv'
                 	,layout   :
                		{
@@ -423,10 +423,10 @@
 		                                            title: 'Tarifa final',
 		                                            maxHeight: 400,
 		                                            autoScroll:true,
-		                                            width: 560,
+		                                            width: 660,
 		                                            height: 250,
 		                                            defaults: {
-		                                            	width: 550
+		                                            	width: 650
 		                                            },
 		                                            modal:true,
 		                                            closable:false,
