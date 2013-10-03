@@ -4,7 +4,7 @@
     
      
     <bean id="ftpUtil" class="mx.com.aon.utils.FTPUtil">
-    	<property name="abstractDAO">
+        <property name="abstractDAO">
                 <ref bean="parametroGeneralDAO"/>
         </property>
     </bean>
@@ -26,7 +26,7 @@
         
     </bean> -->
     
-    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+    <!-- <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
         <property name="host" value="smtp.gmail.com" />
         <property name="port" value="587" />
         <property name="username" value="biosnettcs@gmail.com" />
@@ -38,6 +38,21 @@
                 <prop key="mail.smtp.starttls.required">true</prop>
             </props>
         </property>
+    </bean> -->
+    
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="smtp.bizmail.yahoo.com" />
+        <!-- <property name="port" value="587" /> -->
+        <property name="username" value="ventasavs.sza@biosnettcs.com" />
+        <property name="password" value="avsbiosnet2013" />
+        
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.auth">true</prop>
+                <prop key="mail.smtp.starttls.enable">false</prop>
+            </props>
+        </property>
+        
     </bean>
     
     <bean id="mailMail" class="mx.com.gseguros.utils.MailMail">
@@ -47,7 +62,7 @@
     </bean>
     
     <bean id="cotizacionMailMessage" class="org.springframework.mail.SimpleMailMessage">
-        <property name="from" value="dricardok@gmail.com" />
+        <property name="from" value="ventasavs.sza@biosnettcs.com" />
         <!-- <property name="to" value="" /> -->
         <property name="subject">
             <value><![CDATA[ Cotización solicitada ]]></value>
@@ -68,35 +83,35 @@
     
     
     <!-- Spring Mail -->
-	<!-- <bean id="mailUtil" class="mx.com.aon.utils.MailUtil">
-		<property name="sender"><ref bean="mailSender"/></property>
-		<property name="abstractDAO">
+    <!-- <bean id="mailUtil" class="mx.com.aon.utils.MailUtil">
+        <property name="sender"><ref bean="mailSender"/></property>
+        <property name="abstractDAO">
                 <ref bean="parametroGeneralDAO"/>
         </property>
-	</bean>
-	
+    </bean>
+    
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-	</bean> -->
+    </bean> -->
 
 
     <!-- Quartz -->
-	<!-- <bean id="alertaJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-		<property name="targetObject" ref="alertasUsuarioManager" />
-  		<property name="targetMethod" value="getAlertasEmail" />
-	</bean>
+    <!-- <bean id="alertaJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="alertasUsuarioManager" />
+        <property name="targetMethod" value="getAlertasEmail" />
+    </bean>
     
     <bean id="cronTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
-		<property name="jobDetail" ref="alertaJobDetail"/>
- 		<property name="startDelay" value="10000" />
-    	<property name="repeatInterval" value="1000" />
-	</bean>
+        <property name="jobDetail" ref="alertaJobDetail"/>
+        <property name="startDelay" value="10000" />
+        <property name="repeatInterval" value="1000" />
+    </bean>
     
     <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
         <list>
-			<ref bean="cronTrigger" />
-		</list>
-		</property>
-	</bean> -->
+            <ref bean="cronTrigger" />
+        </list>
+        </property>
+    </bean> -->
     
 </beans>
