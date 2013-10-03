@@ -89,13 +89,13 @@ public class MailAction extends ActionSupport {
 			
 				List<String> listaURLs = new ArrayList<String>();
 				List<String> listaDocumentos = new ArrayList<String>();
-				String RUTA_DOUMENTOS = "E:\\tmp";
+				String RUTA_DOUMENTOS = "/tmp";
 				
 				listaURLs.add("http://201.122.160.245:7777/reports/rwservlet?destype=cache&desformat=PDF&userid=ice/ice@acwqa&report=CARATULA.rdf&paramform=no&p_unieco=1&p_ramo=2&p_estado='M'&p_poliza=241&desname=/opt/ice/gseguros/documentos/2128/CARATULA.pdf");
-				listaURLs.add("http://201.122.160.245:7777/reports/rwservlet?destype=cache&desformat=PDF&userid=ice/ice@acwqa&report=CREDENCIAL.rdf&paramform=no&p_unieco=1&p_ramo=2&p_estado='M'&p_poliza=241&desname=/opt/ice/gseguros/documentos/2128/CREDENCIAL.pdf");
-				listaURLs.add("http://201.122.160.245:7777/reports/rwservlet?destype=cache&desformat=PDF&userid=ice/ice@acwqa&report=ENDOSOS_EPZ.rdf&paramform=no&p_unieco=1&p_ramo=2&p_estado='M'&p_poliza=241&desname=/opt/ice/gseguros/documentos/2128/ENDOSOS_EPZ.pdf");
-				listaURLs.add("http://201.122.160.245:7777/reports/rwservlet?destype=cache&desformat=PDF&userid=ice/ice@acwqa&report=ENDOSOS_EXC.rdf&paramform=no&p_unieco=1&p_ramo=2&p_estado='M'&p_poliza=241&desname=/opt/ice/gseguros/documentos/2128/ENDOSOS_EXC.pdf");
-				listaURLs.add("http://201.122.160.245:7777/reports/rwservlet?destype=cache&desformat=PDF&userid=ice/ice@acwqa&report=ENDOSOS_POL_100.rdf&paramform=no&p_unieco=1&p_ramo=2&p_estado='M'&p_poliza=241&desname=/opt/ice/gseguros/documentos/2128/ENDOSOS_POL_100.pdf");			
+				//listaURLs.add("http://201.122.160.245:7777/reports/rwservlet?destype=cache&desformat=PDF&userid=ice/ice@acwqa&report=CREDENCIAL.rdf&paramform=no&p_unieco=1&p_ramo=2&p_estado='M'&p_poliza=241&desname=/opt/ice/gseguros/documentos/2128/CREDENCIAL.pdf");
+				//listaURLs.add("http://201.122.160.245:7777/reports/rwservlet?destype=cache&desformat=PDF&userid=ice/ice@acwqa&report=ENDOSOS_EPZ.rdf&paramform=no&p_unieco=1&p_ramo=2&p_estado='M'&p_poliza=241&desname=/opt/ice/gseguros/documentos/2128/ENDOSOS_EPZ.pdf");
+				//listaURLs.add("http://201.122.160.245:7777/reports/rwservlet?destype=cache&desformat=PDF&userid=ice/ice@acwqa&report=ENDOSOS_EXC.rdf&paramform=no&p_unieco=1&p_ramo=2&p_estado='M'&p_poliza=241&desname=/opt/ice/gseguros/documentos/2128/ENDOSOS_EXC.pdf");
+				//listaURLs.add("http://201.122.160.245:7777/reports/rwservlet?destype=cache&desformat=PDF&userid=ice/ice@acwqa&report=ENDOSOS_POL_100.rdf&paramform=no&p_unieco=1&p_ramo=2&p_estado='M'&p_poliza=241&desname=/opt/ice/gseguros/documentos/2128/ENDOSOS_POL_100.pdf");			
 				
 				for(String urlOrigen: listaURLs) {
 					//Obtenemos el nombre del archivo:
