@@ -1,11 +1,25 @@
 package mx.com.gseguros.portal.consultas.controller;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
 
-import mx.com.aon.core.web.PrincipalCoreAction;
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.mail.BodyPart;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+
 import mx.com.aon.flujos.cotizacion4.web.ResultadoCotizacion4Action;
 import mx.com.aon.portal.model.BaseObjectVO;
 import mx.com.aon.portal.model.EmpresaVO;
@@ -19,10 +33,6 @@ import mx.com.aon.portal.service.UsuarioManager;
 import mx.com.aon.portal.service.principal.PrincipalManager;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.utils.Constantes;
-import mx.com.gseguros.ws.client.Ice2sigsWebServices;
-import mx.com.gseguros.ws.client.Ice2sigsWebServices.Operacion;
-import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteSalud;
-import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteSaludRespuesta;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
@@ -56,8 +66,6 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
     private UsuarioManager usuarioManager;
     private transient PrincipalManager principalManagerJdbcTemplate;
 
-    private transient Ice2sigsWebServices ice2sigsWebServices;
-
     
     private HashMap<String,String> params;
     
@@ -80,36 +88,80 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
      */
     public String pruebaWSweblogic(){
     	logger.debug(" **** Entrando a pruebaWSweblogic ****");
-    	try {
-    		
-    		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(sdf.parse("15/06/1986"));
+    	
+    	try {final String username = "hectlop@gmail.com";
+		final String password = "heymanBlorhopeGoogle1";
+ 
+		Properties props = new Properties();
+		props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.starttls.enable", "true");
+		props.put("mail.smtp.host", "smtp.gmail.com");
+		props.put("mail.smtp.port", "587");
+		
+		String toEmails = "hmlt_86@hotmail.com";
+		String asunto = "Asunto de mi email";
+		String mensaje = "El R es un .... etc";
+		
+		File attachFile = new File("/info.pdf"); 
+		String filename = "/info.pdf";//change accordingly
+ 
+		Session session = Session.getInstance(props,
+		  new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(username, password);
+			}
+		  });
+ 
+		try {
+ /*
+			Message message = new MimeMessage(session);
+			message.setFrom(new InternetAddress(username));
+			message.setRecipients(Message.RecipientType.TO,
+				InternetAddress.parse(toEmails));
+			message.setSubject(asunto);
+			message.setText(mensaje);
 			
-			AgenteSalud agente = new AgenteSalud();
-			agente.setClaAge("asd57AJFDG");
-			agente.setConPro("1");
-			agente.setCveFia("AS86A87");
-			agente.setFecIng(cal);
-			agente.setFecReg(cal);
-			agente.setIniFia(cal);
-			agente.setNomFia("nomfia");
-			agente.setNumAge(5656);
-			agente.setOfiAge(54);
-			agente.setProAge(72);
-			agente.setRegAge(8);
-			agente.setSucAge(17);
-			agente.setTerFia(cal);
-			agente.setTipAge(2);
-			agente.setUsrReg("usrreg");
+			Transport.send(message);
+ 
+			System.out.println("Done");*/
+		
 			
-			AgenteSaludRespuesta resp = ice2sigsWebServices.ejecutaAgenteSaludGS(Operacion.CONSULTA, agente, this.getText("url.ws.ice2sigs"));
 			
-			logger.debug("Codigo respuesta: "+ resp.getCodigo());
-			logger.debug("Mensaje respuesta: "+ resp.getMensaje());
-			logger.debug("Entidad respuesta: "+ resp.getAgenteSalud().getFecIng().getTime());
+			MimeMessage message = new MimeMessage(session);
+		    message.setFrom(new InternetAddress(username));
+		    message.addRecipient(Message.RecipientType.TO,new InternetAddress(toEmails));
+		    message.setSubject(asunto);
+		    
+		    //3) create MimeBodyPart object and set your message content    
+		    BodyPart messageBodyPart1 = new MimeBodyPart();
+		    messageBodyPart1.setText("This is message body");
+		    
+		    //4) create new MimeBodyPart object and set DataHandler object to this object    
+		    MimeBodyPart messageBodyPart2 = new MimeBodyPart();
+
+		    //String filename = "SendAttachment.java";//change accordingly
+		    DataSource source = new FileDataSource(filename);
+		    messageBodyPart2.setDataHandler(new DataHandler(source));
+		    messageBodyPart2.setFileName(filename);
+		   
+		   
+		    //5) create Multipart object and add MimeBodyPart objects to this object    
+		    Multipart multipart = new MimeMultipart();
+		    multipart.addBodyPart(messageBodyPart1);
+		    multipart.addBodyPart(messageBodyPart2);
+
+		    //6) set the multiplart object to the message object
+		    message.setContent(multipart);
+		   
+		    //7) send message
+		    Transport.send(message);
 			
-    	}catch( Exception e){
+			
+ 
+		} catch (MessagingException e) {
+			throw new RuntimeException(e);
+		}
+}catch( Exception e){
     		logger.error("Error en pruebaWSweblogic", e);
     		return SUCCESS;
     	}
@@ -513,11 +565,5 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
 		this.user = user;
 	}
 
-
-	public void setIce2sigsWebServices(Ice2sigsWebServices ice2sigsWebServices) {
-		this.ice2sigsWebServices = ice2sigsWebServices;
-	}
-
-	
     
 }
