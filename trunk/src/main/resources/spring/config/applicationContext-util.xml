@@ -50,18 +50,16 @@
         <property name="from" value="dricardok@gmail.com" />
         <!-- <property name="to" value="" /> -->
         <property name="subject">
-            <value><![CDATA[ Cotizaci&oacute;n solicitada ]]></value>
+            <value><![CDATA[ Cotización solicitada ]]></value>
         </property>
         <property name="text">
             <value>
                 <![CDATA[
-                    Estimado(a) cliente,<br/><br/>
-                    anexamos a este e-mail la cotizaci&oacute; solicitada y nos ponemos a sus apreciables &oacuute;rdenes.
-                    <p>
+                    Estimado(a) cliente,
+                    anexamos a este e-mail la cotización solicitada y nos ponemos a sus apreciables órdenes.
+                    
                     Atte:
-                    General de Seguros.
-                    </p>
-                    <img src="http://www.generaldeseguros.mx/images/GeneraldeSeguros.png" alt="General de Seguros,S.A.B" border="0">
+                    General de Seguros
                 ]]>
             </value>
        </property>
