@@ -1086,7 +1086,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 		try {
 			result = kernelManager.obtenDatosRecibos(params);
 			recibos = (ArrayList<Recibo>) result.getItemList();
-		} catch (ApplicationException e1) {
+		} catch (Exception e1) {
 			logger.error("Error en llamar al PL de obtencion de RECIBOS",e1);
 			return false;
 		}
@@ -1107,15 +1107,15 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 		logger.debug("*** Empieza generacion de URLs para Recibos ***");
 		for(Recibo recibo: recibos){
 			try{
-//				Parámetro1:  9999: Recibo
-//				Parámetro2:  Siempre va en 0
-//				Parámetro3:  Sucursal
-//				Parámetro4:  Ramo (213 o 214)
-//				Parámetro5:  Póliza
-//				Parámetro6:  Trámite(poner 0)
-//				Parámetro7:  Número de endoso (Cuando es póliza nueva poner 0)
-//				Parámetro8:  Tipo de endoso (Si es vacío no enviar nada en otro caso poner A o D según sea el caso)
-//				Parámetro9:  Número de recibo (1,2,3…..según la forma de pago) Para nuestro caso es siempre el 1
+//				Parï¿½metro1:  9999: Recibo
+//				Parï¿½metro2:  Siempre va en 0
+//				Parï¿½metro3:  Sucursal
+//				Parï¿½metro4:  Ramo (213 o 214)
+//				Parï¿½metro5:  Pï¿½liza
+//				Parï¿½metro6:  Trï¿½mite(poner 0)
+//				Parï¿½metro7:  Nï¿½mero de endoso (Cuando es pï¿½liza nueva poner 0)
+//				Parï¿½metro8:  Tipo de endoso (Si es vacï¿½o no enviar nada en otro caso poner A o D segï¿½n sea el caso)
+//				Parï¿½metro9:  Nï¿½mero de recibo (1,2,3ï¿½..segï¿½n la forma de pago) Para nuestro caso es siempre el 1
 				//if( 1 == recibo.getNumRec()){
 					String parametros = "?9999,0,"+sucursal+","+cdtipsit+","+nmpoliza+",0,0,,"+recibo.getNumRec();
 					logger.debug("URL Generada para Recibo: "+ this.getText("url.imp.recibos")+parametros);
