@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
+import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.portal.general.util.ConstantesCatalogos;
 
 public class MesaControlAction extends PrincipalCoreAction implements ConstantesCatalogos
@@ -51,6 +52,28 @@ public class MesaControlAction extends PrincipalCoreAction implements Constantes
 		try
 		{
 			slist1=kernelManager.loadMesaControl();
+			if(slist1!=null&&slist1.size()>0)
+			{
+				for(int i=0;i<slist1.size();i++)
+				{
+					String unieco = slist1.get(i).get("cdunieco");
+					String ramo   = slist1.get(i).get("cdramo");
+					String estado = slist1.get(i).get("estado");
+					String poliza = slist1.get(i).get("nmpoliza");
+					String solici = slist1.get(i).get("nmsolici");
+					if(unieco==null||unieco.length()==0)
+						unieco="x";
+					if(ramo==null||ramo.length()==0)
+						ramo="x";
+					if(estado==null||estado.length()==0)
+						estado="x";
+					if(poliza==null||poliza.length()==0)
+						poliza="x";
+					if(solici==null||solici.length()==0)
+						solici="x";
+					slist1.get(i).put("merged",unieco+"#_#"+ramo+"#_#"+estado+"#_#"+poliza+"#_#"+solici);
+				}
+			}
 			success=true;
 		}
 		catch(Exception ex)
@@ -86,7 +109,9 @@ public class MesaControlAction extends PrincipalCoreAction implements Constantes
 			}
 			omap.put("pv_ferecepc_i",new Date());
 			omap.put("pv_festatus_i",new Date());
-			kernelManager.PMovMesacontrol(omap);
+			WrapperResultados wr = kernelManager.PMovMesacontrol(omap);
+			smap2=new LinkedHashMap<String,String>(0);
+			smap2.put("ntramite",(String)wr.getItemMap().get("ntramite"));
 			
 			success=true;
 		}
