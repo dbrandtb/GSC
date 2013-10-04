@@ -93,6 +93,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 	}
 
 	public String mostrarPantallaGeneral() {
+		log.debug("map1: "+map1);
 		try {
 			//List<Tatrisit>listaTatrisit=kernelManager.obtenerTatrisit("SL");
 			List<Tatri>listaTatrisit=kernelManager.obtenerTatripol(new String[]{cdramo});
@@ -124,7 +125,8 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			{
 			    dsrol=usu.getRolActivo().getObjeto().getValue();
 			}
-			map1=new LinkedHashMap<String,String>(0);
+			if(map1==null)
+				map1=new LinkedHashMap<String,String>(0);
 			map1.put("sesiondsrol",dsrol);
 		} catch (Exception ex) {
 			log.error("error al obtener los campos dinamicos", ex);
