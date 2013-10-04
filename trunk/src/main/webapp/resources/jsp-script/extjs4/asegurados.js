@@ -1187,29 +1187,29 @@ Ext.onReady(function(){
                     	}
                     	else
                     	{
-                    		/*
                     		var msg=Ext.Msg.show({
                     			title:'Tr&aacute;mite actualizado',
-                    			msg:'La cotizaci&oacute;n se guard&oacute; para el tr&aacute;mite '+ntramiteCargado,
+                    			msg:'La cotizaci&oacute;n se guard&oacute; para el tr&aacute;mite '+ntramiteCargado+'<br/>y no podr&aacute; ser modificada posteriormente',
                     			buttons: Ext.Msg.OK
                     			//,x:100
-                    			,y:50
+                    			,y:50,
+                    			fn:function(){
+                    				Ext.create('Ext.form.Panel').submit(
+                		            {
+                		            	url             : urlDatosComplementarios
+                		            	,standardSubmit : true
+                		            	,params         :
+                		            	{
+                		            		cdunieco  : '1'
+                		            		,cdramo   : '2'
+                		            		,estado   : 'W'
+                		            		,nmpoliza : Ext.getCmp('idCotizacion').getValue()
+                		            		,'map1.ntramite' : ntramiteCargado
+                		            	}
+                		            });
+                    			}
                     		});
                     		msg.setY(50);
-                    		*/
-                    		Ext.create('Ext.form.Panel').submit(
-        		            {
-        		            	url             : urlDatosComplementarios
-        		            	,standardSubmit : true
-        		            	,params         :
-        		            	{
-        		            		cdunieco  : '1'
-        		            		,cdramo   : '2'
-        		            		,estado   : 'W'
-        		            		,nmpoliza : Ext.getCmp('idCotizacion').getValue()
-        		            		,'map1.ntramite' : ntramiteCargado
-        		            	}
-        		            });
                     	}
                     }
                     else
@@ -2415,7 +2415,7 @@ Ext.onReady(function(){
         buttons: [{
             id:'botonCotizar',
             icon:contexto+'/resources/fam3icons/icons/calculator.png',
-            text: 'Cotizar',
+            text: hayTramiteCargado?'Precaptura':'Cotizar',
             handler: function() {
                 // The getForm() method returns the Ext.form.Basic instance:
                 var form = this.up('form').getForm();
@@ -2660,5 +2660,37 @@ Ext.onReady(function(){
     //////////////////////////////////////////////////////
     
     campoCodigoPostal.focus();
+    
+    if(hayTramiteCargado)
+    {
+    	Ext.create('Ext.window.Window',
+		{
+	        title           : 'Documentos del tr&aacute;mite '+ntramiteCargado
+	        ,closable       : false
+	        ,width          : 300
+	        ,height         : 300
+	        ,autoScroll     : true
+	        ,collapsible    : true
+	        ,titleCollapse  : true
+	        ,startCollapsed : true
+	        ,resizable      : false
+	        ,loader         :
+	        {
+	        	scripts   : true
+	        	,autoLoad : true
+	        	,url      : urlDocumentosTramite
+	        	,params   :
+	        	{
+	        		'smap1.cdunieco'  : '1'
+	        		,'smap1.cdramo'   : '2'
+	        		,'smap1.estado'   : 'W'
+	        		,'smap1.nmpoliza' : '0'
+	        		,'smap1.nmsuplem' : '0'
+	        		,'smap1.nmsolici' : '0'
+	        		,'smap1.ntramite' : ntramiteCargado
+	        	}
+	        }
+		}).showAt(450,50);
+    }
     
 });

@@ -114,6 +114,18 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.ferenova"));
 			fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.cdtipopol"));
 			fields.add(Item.crear(null, null, Item.OBJ).add("name", "panel2.cdperpag"));
+			
+			UserVO usu = (UserVO) session.get("USUARIO");
+			String dsrol="";
+			if(usu!=null
+			    &&usu.getRolActivo()!=null
+			    &&usu.getRolActivo().getObjeto()!=null
+			    &&usu.getRolActivo().getObjeto().getValue()!=null)
+			{
+			    dsrol=usu.getRolActivo().getObjeto().getValue();
+			}
+			map1=new LinkedHashMap<String,String>(0);
+			map1.put("sesiondsrol",dsrol);
 		} catch (Exception ex) {
 			log.error("error al obtener los campos dinamicos", ex);
 			items = null;

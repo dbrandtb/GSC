@@ -39,6 +39,10 @@
             var panDatComUrlDoc='<s:url namespace="/documentos" action="ventanaDocumentosPoliza" />';
             var panDatComUrlCotiza='<s:url namespace="/" action="cotizacionVital" />';
             var datComPolizaMaestra;
+            var sesionDsrol='<s:property value="map1.sesiondsrol" />';
+            var datComUrlMCUpdateStatus='<s:url namespace="/mesacontrol" action="actualizarStatusTramite" />';
+            var datComUrlMC            ='<s:url namespace="/mesacontrol" action="principal" />';
+            debug(sesionDsrol);
             
             function expande(indice)
             {
@@ -78,7 +82,7 @@
                 
                 accordion=Ext.create('Ext.panel.Panel',
                 {
-                	title:'Cotizaci&oacute;n '+inputNmpoliza,
+                	title:'Tr&aacute;mite '+inputNtramite,
                 	renderTo : 'maindiv'
                 	,layout   :
                		{
@@ -174,8 +178,16 @@
 		                                    name:'panel2.nmpoliza',
 		                                    readOnly:true,
 		                                    fieldLabel:'Poliza',
-		                                    style:'margin:5px;'
+		                                    style:'margin:5px;',
+		                                    hidden:true
 		                                },
+		                                {                        //<<maquillado
+		                                	xtype:'textfield',   //<<maquillado  
+                                            readOnly:true,       //<<maquillado
+                                            fieldLabel:'Poliza', //<<maquillado
+                                            value:'0',           //<<maquillado
+                                            style:'margin:5px;', //<<maquillado
+		                                },                       //<<maquillado
 		                                {
 		                                    xtype:'combo',
 		                                    id:'estadoPoliza',//id8
@@ -205,6 +217,15 @@
 		                                    allowBlank:false
 		                                },
 		                                {
+		                                    xtype:'numberfield',
+		                                    id:'solicitud',//id10
+		                                    name:'panel2.solici',
+		                                    fieldLabel:'Cotizaci&oacute;n',
+		                                    style:'margin:5px;',
+		                                    allowBlank:false,
+		                                    readOnly:true
+		                                },
+		                                {
 		                                    xtype:'datefield',
 		                                    id:'fechaSolicitud',//id9
 		                                    name:'panel2.fesolici',
@@ -214,18 +235,10 @@
 		                                    format:'d/m/Y'
 		                                },
 		                                {
-		                                    xtype:'numberfield',
-		                                    id:'solicitud',//id10
-		                                    name:'panel2.solici',
-		                                    fieldLabel:'Solicitud',
-		                                    style:'margin:5px;',
-		                                    allowBlank:false
-		                                },
-		                                {
 		                                    xtype:'datefield',
 		                                    id:'fechaEfectividad',//id11
 		                                    name:'panel2.feefec',
-		                                    fieldLabel:'Fecha de efectividad',
+		                                    fieldLabel:'Fecha de inicio de vigencia',
 		                                    allowBlank:false,
 		                                    style:'margin:5px;',
 		                                    format:'d/m/Y',
@@ -243,7 +256,7 @@
 		                                    xtype:'datefield',
 		                                    id:'fechaRenovacion',//id14
 		                                    name:'panel2.ferenova',
-		                                    fieldLabel:'Fecha de renovaci&oacute;n',
+		                                    fieldLabel:'Fecha de t&eacute;rmino de vigencia',
 		                                    allowBlank:false,
 		                                    style:'margin:5px;',
 		                                    format:'d/m/Y',
@@ -399,8 +412,9 @@
 		                            hidden:true
 		                        },
 		                        {
-		                            text     : 'Continuar'
+		                            text     : 'Emitir'
 		                            ,icon    : contexto+'/resources/fam3icons/icons/key.png'
+		                            ,hidden  : (!sesionDsrol)||sesionDsrol!='SUSCRIPTOR'
 		                            ,handler : function()
 		                            {
 		                                var form=Ext.getCmp('formPanel');
@@ -667,6 +681,170 @@
 		                                });
 		                            }
 		                        }
+		                        ,{
+		                        	text     : 'Guardar y enviar a revisión médica'
+		                        	,icon    : '${ctx}/resources/fam3icons/icons/heart_add.png'
+		                        	,hidden  : (!sesionDsrol)||sesionDsrol!='MESADECONTROL'
+		                        	,handler:function()
+                                    {
+                                        var form=Ext.getCmp('formPanel');
+                                        //console.log(form.getValues());
+                                        if(form.isValid())
+                                        {
+                                            form.setLoading(true);
+                                            form.submit({
+                                                params:{
+                                                    'map1.pv_cdunieco' :  inputCdunieco,
+                                                    'map1.pv_cdramo' :    inputCdramo,
+                                                    'map1.pv_estado' :    inputEstado,
+                                                    'map1.pv_nmpoliza' :  inputNmpoliza
+                                                },
+                                                success:function(){
+                                                    form.setLoading(false);
+                                                    Ext.Ajax.request
+                                                    ({
+                                                    	url     : datComUrlMCUpdateStatus
+                                                    	,params : 
+                                                    	{
+                                                    		'smap1.ntramite' : inputNtramite
+                                                    		,'smap1.status'  : '1'//en revision medica
+                                                    	}
+                                                        ,success : function(response)
+                                                        {
+                                                        	var json=Ext.decode(response.responseText);
+                                                        	if(json.success==true)
+                                                        	{
+	                                                        	Ext.create('Ext.form.Panel').submit
+	                                                        	({
+	                                                        		url             : datComUrlMC
+	                                                        		,standardSubmit : true
+	                                                        	});
+                                                        	}
+                                                        	else
+                                                       		{
+                                                        		Ext.Msg.show({
+                                                                    title:'Error',
+                                                                    msg: 'Error al enviar a revisi&oacute;n m&eacute;dica',
+                                                                    buttons: Ext.Msg.OK,
+                                                                    icon: Ext.Msg.ERROR
+                                                                });
+                                                       		}
+                                                        }
+                                                        ,failure : function()
+                                                        {
+                                                        	Ext.Msg.show({
+                                                                title:'Error',
+                                                                msg: 'Error de comunicaci&oacute;n',
+                                                                buttons: Ext.Msg.OK,
+                                                                icon: Ext.Msg.ERROR
+                                                            });
+                                                        }
+                                                    });
+                                                },
+                                                failure:function(){
+                                                    form.setLoading(false);
+                                                    Ext.Msg.show({
+                                                        title:'Error',
+                                                        msg: 'Error de comunicaci&oacute;n',
+                                                        buttons: Ext.Msg.OK,
+                                                        icon: Ext.Msg.ERROR
+                                                    });
+                                                }
+                                            });
+                                        }
+                                        else
+                                        {
+                                            Ext.Msg.show({
+                                                title:'Datos incompletos',
+                                                msg: 'Favor de introducir todos los campos requeridos',
+                                                buttons: Ext.Msg.OK,
+                                                icon: Ext.Msg.WARNING
+                                            });
+                                        }
+                                    }
+		                        }
+		                        ,{
+                                    text     : 'Guardar y dar Vo. Bo.'
+                                    ,icon    : '${ctx}/resources/fam3icons/icons/heart_add.png'
+                                    ,hidden  : (!sesionDsrol)||sesionDsrol!='MEDICO'
+                                    ,handler:function()
+                                    {
+                                        var form=Ext.getCmp('formPanel');
+                                        //console.log(form.getValues());
+                                        if(form.isValid())
+                                        {
+                                            form.setLoading(true);
+                                            form.submit({
+                                                params:{
+                                                    'map1.pv_cdunieco' :  inputCdunieco,
+                                                    'map1.pv_cdramo' :    inputCdramo,
+                                                    'map1.pv_estado' :    inputEstado,
+                                                    'map1.pv_nmpoliza' :  inputNmpoliza
+                                                },
+                                                success:function(){
+                                                    form.setLoading(false);
+                                                    Ext.Ajax.request
+                                                    ({
+                                                        url     : datComUrlMCUpdateStatus
+                                                        ,params : 
+                                                        {
+                                                            'smap1.ntramite' : inputNtramite
+                                                            ,'smap1.status'  : '5'//Vo.Bo.Medico
+                                                        }
+                                                        ,success : function(response)
+                                                        {
+                                                            var json=Ext.decode(response.responseText);
+                                                            if(json.success==true)
+                                                            {
+                                                                Ext.create('Ext.form.Panel').submit
+                                                                ({
+                                                                    url             : datComUrlMC
+                                                                    ,standardSubmit : true
+                                                                });
+                                                            }
+                                                            else
+                                                            {
+                                                                Ext.Msg.show({
+                                                                    title:'Error',
+                                                                    msg: 'Error al guardar Vo. Bo.',
+                                                                    buttons: Ext.Msg.OK,
+                                                                    icon: Ext.Msg.ERROR
+                                                                });
+                                                            }
+                                                        }
+                                                        ,failure : function()
+                                                        {
+                                                            Ext.Msg.show({
+                                                                title:'Error',
+                                                                msg: 'Error de comunicaci&oacute;n',
+                                                                buttons: Ext.Msg.OK,
+                                                                icon: Ext.Msg.ERROR
+                                                            });
+                                                        }
+                                                    });
+                                                },
+                                                failure:function(){
+                                                    form.setLoading(false);
+                                                    Ext.Msg.show({
+                                                        title:'Error',
+                                                        msg: 'Error de comunicaci&oacute;n',
+                                                        buttons: Ext.Msg.OK,
+                                                        icon: Ext.Msg.ERROR
+                                                    });
+                                                }
+                                            });
+                                        }
+                                        else
+                                        {
+                                            Ext.Msg.show({
+                                                title:'Datos incompletos',
+                                                msg: 'Favor de introducir todos los campos requeridos',
+                                                buttons: Ext.Msg.OK,
+                                                icon: Ext.Msg.WARNING
+                                            });
+                                        }
+                                    }
+                                }
 		                    ]
                             ,listeners:
                             {
@@ -704,6 +882,38 @@
                         })
                     ]
                 });
+                
+                //para ver documentos en vivo
+                var venDocuTramite=Ext.create('Ext.window.Window',
+		        {
+		            title           : 'Documentos del tr&aacute;mite '+inputNtramite
+		            ,closable       : false
+		            ,width          : 300
+		            ,height         : 300
+		            ,autoScroll     : true
+		            ,collapsible    : true
+		            ,titleCollapse  : true
+		            ,startCollapsed : true
+		            ,resizable      : false
+		            ,loader         :
+		            {
+		                scripts   : true
+		                ,autoLoad : true
+		                ,url      : panDatComUrlDoc
+		                ,params   :
+		                {
+		                    'smap1.cdunieco'  : inputCdunieco
+		                    ,'smap1.cdramo'   : inputCdramo
+		                    ,'smap1.estado'   : inputEstado
+		                    ,'smap1.nmpoliza' : '0'
+		                    ,'smap1.nmsuplem' : '0'
+		                    ,'smap1.nmsolici' : ''
+		                    ,'smap1.ntramite' : inputNtramite
+		                }
+		            }
+		        }).showAt(650,40);
+                venDocuTramite.collapse();
+                //para ver documentos en vivo
                 
                 ///////////////////////////////////////////////
                 ////// Cargador de formulario (sin grid) //////

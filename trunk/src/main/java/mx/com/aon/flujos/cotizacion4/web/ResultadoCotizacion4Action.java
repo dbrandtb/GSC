@@ -1204,7 +1204,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             	parMesCon.put("pv_referencia_i" , null);
             	parMesCon.put("pv_nombre_i"     , smap1.get("nombreTitular"));
             	parMesCon.put("pv_festatus_i"   , new Date());
-            	parMesCon.put("pv_status_i"     , "");
+            	parMesCon.put("pv_status_i"     , "2");
             	parMesCon.put("pv_comments_i"   , "");
             	parMesCon.put("pv_nmsolici_i"   , comprarNmpoliza);
             	WrapperResultados mesaContWr=kernelManagerSustituto.PMovMesacontrol(parMesCon);

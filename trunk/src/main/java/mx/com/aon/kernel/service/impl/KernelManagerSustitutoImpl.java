@@ -8,6 +8,7 @@ import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_DA
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -611,10 +612,12 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return res;
 	}
 	
-	public List<Map<String, String>> loadMesaControl() throws ApplicationException
+	public List<Map<String, String>> loadMesaControl(String dsrol) throws ApplicationException
 	{
-		log.debug("### kernel sustituto loadMesaControl sin parametros");
-        List<Map<String,String>> lista= this.getAllBackBoneInvoke(new HashMap<String,String>(0), ProcesoDAO.LOAD_MESA_CONTROL);
+		Map<String,String>param=new LinkedHashMap<String,String>(0);
+		param.put("pv_dsrol_i",dsrol);
+		log.debug("### kernel sustituto loadMesaControl map: "+param);
+        List<Map<String,String>> lista= this.getAllBackBoneInvoke(param, ProcesoDAO.LOAD_MESA_CONTROL);
         lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
         log.debug("### kernel sustituto loadMesaControl lista size: "+lista.size());
         return lista;
@@ -652,6 +655,19 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 		WrapperResultados res = this.returnBackBoneInvoke(params,ProcesoDAO.MESACONTROL_UPDATE_SOLICI);
         log.debug("### kernel sustituto mesaControlUpdateSolici id:"+res.getMsgId());
         log.debug("### kernel sustituto mesaControlUpdateSolici mesage:"+res.getMsgText());
+		return res;
+		
+	}
+	
+	public WrapperResultados mesaControlUpdateStatus(String ntramite,String status) throws ApplicationException
+	{
+		HashMap<String,Object> params =  new HashMap<String, Object>();
+		params.put("pv_ntramite_i", ntramite);
+		params.put("pv_status_i", status);
+		log.debug("### kernel mesaControlUpdateStatus map: "+params);
+		WrapperResultados res = this.returnBackBoneInvoke(params,ProcesoDAO.MESACONTROL_UPDATE_STATUS);
+        log.debug("### kernel sustituto mesaControlUpdateStatus id:"+res.getMsgId());
+        log.debug("### kernel sustituto mesaControlUpdateStatus mesage:"+res.getMsgText());
 		return res;
 		
 	}
