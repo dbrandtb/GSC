@@ -543,7 +543,7 @@ Ext.onReady(function(){
 	                                            form.setLoading(false);
 	                                            Ext.Msg.show({
 	                                                title:'Cambios guardados',
-	                                                msg: 'Se agreg&oacute; un nuevo tr&aacute;mite con n&uacute;mero: '+ action.result.msgResult,
+	                                                msg: 'Se agreg&oacute; un nuevo tr&aacute;mite</br> N&uacute;mero: '+ action.result.msgResult,
 	                                                buttons: Ext.Msg.OK,
 	                                                fn: function(){
 	                                                	Ext.create('Ext.form.Panel').submit({standardSubmit:true});
