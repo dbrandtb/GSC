@@ -29,7 +29,7 @@
             var inputCdramo='<s:property value="cdramo" />';
             var inputEstado='<s:property value="estado" />';
             var inputNmpoliza='<s:property value="nmpoliza" />';
-            var inputNtramite='<s:property value="map1.ntramite" />';
+            var inputNtramite='<s:property value='map1.ntramite' />';
             debug("inputNtramite",inputNtramite);
             var urlEditarAsegurados='<s:url namespace="/" action="editarAsegurados" />';
             var contexto='${ctx}';
