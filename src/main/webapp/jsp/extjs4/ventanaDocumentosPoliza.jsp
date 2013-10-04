@@ -99,7 +99,7 @@ Ext.onReady(function()
         //,titleCollapse : true
         ,onAddClick : function(button,e)
         {
-            Ext.create('Ext.window.Window',
+            var windowAgregarDocu=Ext.create('Ext.window.Window',
             {
                 id           : 'panDocWinPopupAddDoc'
                 ,title       : 'Agregar documento a poliza'//+panDocInputNmpoliza
@@ -234,6 +234,7 @@ Ext.onReady(function()
                     })
                 ]
             }).show();
+            windowAgregarDocu.center();
         }
         ,initComponent   : function()
         {
@@ -359,7 +360,28 @@ Ext.onReady(function()
                                     if(http=='http')
                                     {
                                     	salida=true;
-                                        window.open(nom,'_blank','width=800,height=600');
+                                    	var numRand=Math.floor((Math.random()*100000)+1);
+                                        debug(numRand);
+                                    	var windowVerDocu=Ext.create('Ext.window.Window',
+                                        {
+                                            title          : record.get('dsdocume')
+                                            ,width         : 700
+                                            ,height        : 500
+                                            ,collapsible   : true
+                                            ,titleCollapse : true
+                                            ,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
+                                                             +'src="'+nom+'">'
+                                                             +'</iframe>'
+                                            ,listeners     :
+                                            {
+                                                resize : function(win,width,height,opt){
+                                                    debug(width,height);
+                                                    $('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
+                                                }
+                                            }
+                                        }).show();
+                                        windowVerDocu.center();
+                                        //window.open(,'_blank','width=800,height=600');
                                     }
                                 }
                                 if(!salida)
@@ -400,8 +422,29 @@ Ext.onReady(function()
         ,onViewClick:function(grid,rowIndex,colIndex)
         {
         	debug(rowIndex,colIndex);
+        	var numRand=Math.floor((Math.random()*100000)+1);
+        	debug(numRand);
         	var record=grid.getStore().getAt(rowIndex);
-        	window.open(panDocUrlViewDoc+'?idPoliza='+record.get('ntramite')+'&filename='+record.get('cddocume'),'_blank','width=800,height=600');
+        	var windowVerDocu=Ext.create('Ext.window.Window',
+        	{
+        		title          : record.get('dsdocume')
+        		,width         : 700
+        		,height        : 500
+        		,collapsible   : true
+        		,titleCollapse : true
+        		,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
+        		                 +'src="'+panDocUrlViewDoc+'?idPoliza='+record.get('ntramite')+'&filename='+record.get('cddocume')+'">'
+        		                 +'</iframe>'
+        		,listeners     :
+        		{
+        			resize : function(win,width,height,opt){
+                        debug(width,height);
+                        $('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
+                    }
+        		}
+        	}).show();
+        	windowVerDocu.center();
+        	//window.open(,'_blank','width=800,height=600');
         }
     });
     /*//////////////////////*/

@@ -64,7 +64,7 @@ Ext.onReady(function(){
         pageSize : 10,
         autoLoad : true,
         model    : 'Tarea',
-        sorters:[{sorterFn:function(o1,o2){return o1.get('ntramite')<o2.get('ntramite')}}],
+        //sorters:[{sorterFn:function(o1,o2){return o1.get('ntramite')<o2.get('ntramite')}}],
         proxy    :
         {
             enablePaging : true,
@@ -203,7 +203,7 @@ Ext.onReady(function(){
                     		var res=value;
                     		if(value=='1')
                     		{
-                    			res='Revisión';
+                    			res='En revisión médica';
                     		}
                     		else if(value=='2')
                     		{
@@ -215,7 +215,11 @@ Ext.onReady(function(){
                     		}
                     		else if(value=='4')
                     		{
-                    			res='Rechazado';
+                    			res='RechazadA';
+                    		}
+                    		else if(value=='5')
+                    		{
+                    			res='Vo. Bo. Médico';
                     		}
                     		return res;
                     	}

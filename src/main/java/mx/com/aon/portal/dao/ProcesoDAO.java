@@ -123,6 +123,7 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String OBTIENE_CATALOGO_COLONIAS="OBTIENE_CATALOGO_COLONIAS";
     public static final String OBTIENE_DATOS_CLIENTE="OBTIENE_DATOS_CLIENTE";
     public static final String MESACONTROL_UPDATE_SOLICI="MESACONTROL_UPDATE_SOLICI";
+    public static final String MESACONTROL_UPDATE_STATUS="MESACONTROL_UPDATE_STATUS";
 
 	protected void initDao() throws Exception {
 		addStoredProcedure(PERMISO_EJECUCION_PROCESO,new PermisoEjecucionProceso(getDataSource()));
@@ -193,6 +194,7 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(OBTIENE_CATALOGO_COLONIAS, new ObtenCatalogoColonias(getDataSource()));
         addStoredProcedure(OBTIENE_DATOS_CLIENTE, new ObtenDatosCliente(getDataSource()));
         addStoredProcedure(MESACONTROL_UPDATE_SOLICI, new MesaControlUpdateSolici(getDataSource()));
+        addStoredProcedure(MESACONTROL_UPDATE_STATUS, new MesaControlUpdateStatus(getDataSource()));
 	}
 
 	protected class BuscarMatrizAsignacion extends CustomStoredProcedure {
@@ -3026,6 +3028,7 @@ public class ProcesoDAO extends AbstractDAO {
 		protected ObtenerMesaControl(DataSource dataSource)
 		{
 			super(dataSource,"PKG_SATELITES.P_OBTIENE_MESACONTROL");
+			declareParameter(new SqlParameter("pv_dsrol_i",      OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerMesaControlMapper()));
 			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
@@ -3341,5 +3344,35 @@ public class ProcesoDAO extends AbstractDAO {
     }
     /*///////////////////////////////////////////////////////*/
 	////// actualizar solici de tarea de mesa de control //////
+    ///////////////////////////////////////////////////////////
+    
+    ///////////////////////////////////////////////////////////
+    ////// actualizar status de tarea de mesa de control //////
+    /*///////////////////////////////////////////////////////*/
+    protected class MesaControlUpdateStatus extends CustomStoredProcedure {
+    	/*
+	    PROCEDURE P_UPDATE_NMSOLICI(pv_ntramite_i IN TDOCUPOL.NTRAMITE%TYPE,
+	    pv_nmsolici_i IN TDOCUPOL.NMSOLICI%TYPE,
+	    pv_msg_id_o   OUT GB_MESSAGES.msg_id%TYPE,
+	    pv_title_o 
+        */
+    	protected MesaControlUpdateStatus(DataSource dataSource) {
+    		super(dataSource,"PKG_SATELITES.P_UPDATE_STATUS_MC");
+    		
+    		declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_status_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("PV_TITLE_O", OracleTypes.VARCHAR));
+    		
+    		compile();
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			return mapper.build(map);
+		}
+    }
+    /*///////////////////////////////////////////////////////*/
+	////// actualizar status de tarea de mesa de control //////
     ///////////////////////////////////////////////////////////
 }

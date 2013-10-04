@@ -12,6 +12,9 @@
         <action name="guardarTramiteManual" method="guardarTramiteManual" class="MesaControlAction">
             <result name="success" type="json" />
         </action>
+        <action name="actualizarStatusTramite" method="actualizarStatusTramite" class="MesaControlAction">
+            <result name="success" type="json" />
+        </action>
     </package>
 
 </struts>

@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
+import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.portal.general.util.ConstantesCatalogos;
 
@@ -52,7 +53,20 @@ public class MesaControlAction extends PrincipalCoreAction implements Constantes
 				);
 		try
 		{
-			slist1=kernelManager.loadMesaControl();
+			//obtener el rol activo
+			UserVO usu=(UserVO) session.get("USUARIO");
+			String dsrol="";
+			if(usu!=null
+			    &&usu.getRolActivo()!=null
+			    &&usu.getRolActivo().getObjeto()!=null
+			    &&usu.getRolActivo().getObjeto().getValue()!=null)
+			{
+			    dsrol=usu.getRolActivo().getObjeto().getValue();
+			}
+			log.debug("rol activo: "+dsrol);
+			//!obtener el rol activo
+			
+			slist1=kernelManager.loadMesaControl(dsrol);
 			if(slist1!=null&&slist1.size()>0)
 			{
 				for(int i=0;i<slist1.size();i++)
@@ -129,6 +143,40 @@ public class MesaControlAction extends PrincipalCoreAction implements Constantes
 				);
 		return SUCCESS;
 	}
+	
+	////////////////////////////////////////////////
+	////// actualizar status de tramite de mc //////
+	/*////////////////////////////////////////////*/
+	public String actualizarStatusTramite()
+	{
+		log.debug(""
+				+ "\n##################################################"
+				+ "\n##################################################"
+				+ "\n###### actualizarStatusTramite              ######"
+				+ "\n######                                      ######"
+				);
+		log.debug("smap1: "+smap1);
+		try
+		{
+			kernelManager.mesaControlUpdateStatus(smap1.get("ntramite"),smap1.get("status"));
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			success=false;
+			log.error("error al actualizar status de tramite de mesa de control",ex);
+		}
+		log.debug(""
+				+ "\n######                                      ######"
+				+ "\n###### actualizarStatusTramite              ######"
+				+ "\n##################################################"
+				+ "\n##################################################"
+				);
+		return SUCCESS;
+	}
+	/*////////////////////////////////////////////*/
+	////// actualizar status de tramite de mc //////
+	////////////////////////////////////////////////
 	
 	/////////////////////////////////
 	////// getters ans setters //////
