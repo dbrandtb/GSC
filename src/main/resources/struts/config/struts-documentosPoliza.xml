@@ -28,6 +28,10 @@
 		    <result name="success">/jsp/extjs4/ventanaDocumentosPoliza.jsp</result>
 		</action>
 		
+		<action name="ventanaDocumentosPolizaClon" class="documentosPolizaAction" method="ventanaDocumentosPoliza">
+            <result name="success">/jsp/extjs4/ventanaDocumentosPoliza.jsp</result>
+        </action>
+		
 		<action name="ventanaDocumentosPolizaLoad" class="beanSubirArchivo" method="ventanaDocumentosPolizaLoad">
             <result name="success" type="json" />
         </action>
