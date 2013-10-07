@@ -106,7 +106,7 @@ Ext.onReady(function()
                 ,closable    : false
                 ,modal       : true
                 ,width       : 500
-                ,maxHeight   : 400
+                //,maxHeight   : 400
                 ,bodyPadding : 5
                 ,items       :
                 [
