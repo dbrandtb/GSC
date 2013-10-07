@@ -36,7 +36,8 @@
             var urlRecotizar='<s:url namespace="/" action="recotizar" />';
             var accordion;
             var urlEmitir='<s:url namespace="/" action="emitir" />';
-            var panDatComUrlDoc='<s:url namespace="/documentos" action="ventanaDocumentosPoliza" />';
+            var panDatComUrlDoc= '<s:url namespace="/documentos" action="ventanaDocumentosPoliza" />';
+            var panDatComUrlDoc2='<s:url namespace="/documentos" action="ventanaDocumentosPolizaClon" />';
             var panDatComUrlCotiza='<s:url namespace="/" action="cotizacionVital" />';
             var datComPolizaMaestra;
             var sesionDsrol='<s:property value="map1.sesiondsrol" />';
@@ -596,43 +597,32 @@
 		                                                            ,disabled : true
 		                                                            ,handler  : function()
 		                                                            {
+		                                                            	venDocuTramite.destroy();
 		                                                            	Ext.create('Ext.window.Window',
-                                                            			{
-		                                                            		width        : 600
-		                                                            		,height      : 400
-		                                                            		,title       : 'Documentos de la poliza '+inputNmpoliza
-		                                                            		,closable    : false
-		                                                            		,modal       : true
-		                                                            		,buttonAlign : 'center'
-	                                                            	        ,loadingMask : true
-	                                                            	        ,autoScroll  : true
-		                                                            		,loader      :
-		                                                            		{
-		                                                            			url       : panDatComUrlDoc
-		                                                            	        ,scripts  : true
-		                                                            	        ,autoLoad : true
-		                                                            			,params   :
-		                                                            			{
-		                                                            				'smap1.nmpoliza'   : datComPolizaMaestra
-		                                                            				,'smap1.cdunieco'  : inputCdunieco
-		                                                            				,'smap1.cdramo'    : inputCdramo
-		                                                            				,'smap1.estado'    : 'M'
-		                                                            				,'smap1.nmsuplem'  : 0
-		                                                            				,'smap1.ntramite'  : inputNtramite
-		                                                            			}
-		                                                            		}
-		                                                            	    ,buttons   :
-		                                                            	    [
-		                                                            	    	{
-		                                                            	    		text     : 'Cerrar'
-		                                                            	    		,icon    : contexto+'/resources/fam3icons/icons/cancel.png'
-		                                                            	    		,handler : function()
-		                                                            	    		{
-		                                                            	    			this.up().up().destroy();
-		                                                            	    		}
-		                                                            	    	}
-		                                                            	    ]
-                                                            			}).show();
+                                                                        {
+                                                                            title        : 'Documentos del tr&aacute;mite '+inputNtramite
+                                                                            ,modal       : true
+                                                                            ,buttonAlign : 'center'
+                                                                            ,width       : 600
+                                                                            ,height      : 400
+                                                                            ,autoScroll  : true
+                                                                            ,loader      :
+                                                                            {
+                                                                                url       : panDatComUrlDoc2
+                                                                                ,params   :
+                                                                                {
+                                                                                	'smap1.nmpoliza'  : datComPolizaMaestra
+                                                                                    ,'smap1.cdunieco' : inputCdunieco
+                                                                                    ,'smap1.cdramo'   : inputCdramo
+                                                                                    ,'smap1.estado'   : 'M'
+                                                                                    ,'smap1.nmsuplem' : '0'
+                                                                                    ,'smap1.ntramite' : inputNtramite
+                                                                                    ,'smap1.nmsolici' : inputNmpoliza
+                                                                                }
+                                                                                ,scripts  : true
+                                                                                ,autoLoad : true
+                                                                            }
+                                                                        }).show();
 		                                                            }
 		                                                        }
 		                                                        ,{
