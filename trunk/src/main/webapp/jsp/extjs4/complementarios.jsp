@@ -411,8 +411,90 @@
 		                            icon: contexto+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/book.png',
 		                            disabled:true,
 		                            hidden:true
-		                        },
-		                        {
+		                        }
+		                        ,{
+                                    text     : 'Guardar y enviar a revisión médica'
+                                    ,icon    : '${ctx}/resources/fam3icons/icons/heart_add.png'
+                                    ,hidden  : (!sesionDsrol)||sesionDsrol!='SUSCRIPTOR'
+                                    ,handler:function()
+                                    {
+                                        var form=Ext.getCmp('formPanel');
+                                        //console.log(form.getValues());
+                                        if(form.isValid())
+                                        {
+                                            form.setLoading(true);
+                                            form.submit({
+                                                params:{
+                                                    'map1.pv_cdunieco' :  inputCdunieco,
+                                                    'map1.pv_cdramo' :    inputCdramo,
+                                                    'map1.pv_estado' :    inputEstado,
+                                                    'map1.pv_nmpoliza' :  inputNmpoliza
+                                                },
+                                                success:function(){
+                                                    form.setLoading(false);
+                                                    Ext.Ajax.request
+                                                    ({
+                                                        url     : datComUrlMCUpdateStatus
+                                                        ,params : 
+                                                        {
+                                                            'smap1.ntramite' : inputNtramite
+                                                            ,'smap1.status'  : '1'//en revision medica
+                                                        }
+                                                        ,success : function(response)
+                                                        {
+                                                            var json=Ext.decode(response.responseText);
+                                                            if(json.success==true)
+                                                            {
+                                                                Ext.create('Ext.form.Panel').submit
+                                                                ({
+                                                                    url             : datComUrlMC
+                                                                    ,standardSubmit : true
+                                                                });
+                                                            }
+                                                            else
+                                                            {
+                                                                Ext.Msg.show({
+                                                                    title:'Error',
+                                                                    msg: 'Error al enviar a revisi&oacute;n m&eacute;dica',
+                                                                    buttons: Ext.Msg.OK,
+                                                                    icon: Ext.Msg.ERROR
+                                                                });
+                                                            }
+                                                        }
+                                                        ,failure : function()
+                                                        {
+                                                            Ext.Msg.show({
+                                                                title:'Error',
+                                                                msg: 'Error de comunicaci&oacute;n',
+                                                                buttons: Ext.Msg.OK,
+                                                                icon: Ext.Msg.ERROR
+                                                            });
+                                                        }
+                                                    });
+                                                },
+                                                failure:function(){
+                                                    form.setLoading(false);
+                                                    Ext.Msg.show({
+                                                        title:'Error',
+                                                        msg: 'Error de comunicaci&oacute;n',
+                                                        buttons: Ext.Msg.OK,
+                                                        icon: Ext.Msg.ERROR
+                                                    });
+                                                }
+                                            });
+                                        }
+                                        else
+                                        {
+                                            Ext.Msg.show({
+                                                title:'Datos incompletos',
+                                                msg: 'Favor de introducir todos los campos requeridos',
+                                                buttons: Ext.Msg.OK,
+                                                icon: Ext.Msg.WARNING
+                                            });
+                                        }
+                                    }
+                                }
+		                        ,{
 		                            text     : 'Emitir'
 		                            ,icon    : contexto+'/resources/fam3icons/icons/key.png'
 		                            ,hidden  : (!sesionDsrol)||sesionDsrol!='SUSCRIPTOR'
@@ -670,88 +752,6 @@
 		                                    }
 		                                });
 		                            }
-		                        }
-		                        ,{
-		                        	text     : 'Guardar y enviar a revisión médica'
-		                        	,icon    : '${ctx}/resources/fam3icons/icons/heart_add.png'
-		                        	,hidden  : (!sesionDsrol)||sesionDsrol!='MESADECONTROL'
-		                        	,handler:function()
-                                    {
-                                        var form=Ext.getCmp('formPanel');
-                                        //console.log(form.getValues());
-                                        if(form.isValid())
-                                        {
-                                            form.setLoading(true);
-                                            form.submit({
-                                                params:{
-                                                    'map1.pv_cdunieco' :  inputCdunieco,
-                                                    'map1.pv_cdramo' :    inputCdramo,
-                                                    'map1.pv_estado' :    inputEstado,
-                                                    'map1.pv_nmpoliza' :  inputNmpoliza
-                                                },
-                                                success:function(){
-                                                    form.setLoading(false);
-                                                    Ext.Ajax.request
-                                                    ({
-                                                    	url     : datComUrlMCUpdateStatus
-                                                    	,params : 
-                                                    	{
-                                                    		'smap1.ntramite' : inputNtramite
-                                                    		,'smap1.status'  : '1'//en revision medica
-                                                    	}
-                                                        ,success : function(response)
-                                                        {
-                                                        	var json=Ext.decode(response.responseText);
-                                                        	if(json.success==true)
-                                                        	{
-	                                                        	Ext.create('Ext.form.Panel').submit
-	                                                        	({
-	                                                        		url             : datComUrlMC
-	                                                        		,standardSubmit : true
-	                                                        	});
-                                                        	}
-                                                        	else
-                                                       		{
-                                                        		Ext.Msg.show({
-                                                                    title:'Error',
-                                                                    msg: 'Error al enviar a revisi&oacute;n m&eacute;dica',
-                                                                    buttons: Ext.Msg.OK,
-                                                                    icon: Ext.Msg.ERROR
-                                                                });
-                                                       		}
-                                                        }
-                                                        ,failure : function()
-                                                        {
-                                                        	Ext.Msg.show({
-                                                                title:'Error',
-                                                                msg: 'Error de comunicaci&oacute;n',
-                                                                buttons: Ext.Msg.OK,
-                                                                icon: Ext.Msg.ERROR
-                                                            });
-                                                        }
-                                                    });
-                                                },
-                                                failure:function(){
-                                                    form.setLoading(false);
-                                                    Ext.Msg.show({
-                                                        title:'Error',
-                                                        msg: 'Error de comunicaci&oacute;n',
-                                                        buttons: Ext.Msg.OK,
-                                                        icon: Ext.Msg.ERROR
-                                                    });
-                                                }
-                                            });
-                                        }
-                                        else
-                                        {
-                                            Ext.Msg.show({
-                                                title:'Datos incompletos',
-                                                msg: 'Favor de introducir todos los campos requeridos',
-                                                buttons: Ext.Msg.OK,
-                                                icon: Ext.Msg.WARNING
-                                            });
-                                        }
-                                    }
 		                        }
 		                        ,{
                                     text     : 'Guardar y dar Vo. Bo.'
