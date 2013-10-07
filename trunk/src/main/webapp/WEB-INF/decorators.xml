@@ -31,6 +31,7 @@
 		<pattern>/pantallaExclusion.action</pattern>
 		<pattern>/jsp/extjs4/aseguradoExclusion.jsp</pattern>
 		<pattern>/documentos/ventanaDocumentosPoliza</pattern>
+		<pattern>/documentos/ventanaDocumentosPolizaClon</pattern>
 		<pattern>/jsp/extjs4/ventanaDocumentosPoliza.jsp</pattern>
 	</decorator>
     
