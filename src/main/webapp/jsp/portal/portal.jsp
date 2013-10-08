@@ -158,11 +158,11 @@
 <script type="text/javascript" src="${ctx}/resources/extjs/adapter/ext/ext-base.js"></script>
 <script type="text/javascript" src="${ctx}/resources/extjs/ext-all.js"></script>
 <script type="text/javascript" src="${ctx}/resources/scripts/portal/loadPortal.js"></script>
-<script type="text/javascript" src="${ctx}/resources/scripts/portal/mecanismoAlerta/mecanismoAlerta.js"></script>
-<script type="text/javascript" src="${ctx}/resources/scripts/portal/mecanismoAlerta/mecanismoAlertaPantalla.js"></script>
+<%-- <script type="text/javascript" src="${ctx}/resources/scripts/portal/mecanismoAlerta/mecanismoAlerta.js"></script>
+<script type="text/javascript" src="${ctx}/resources/scripts/portal/mecanismoAlerta/mecanismoAlertaPantalla.js"></script> --%>
 
 <jsp:include page="/jsp/menu/menu.jsp" flush="true" />
-<jsp:include page="/jsp/alertas/alertaPopUp.jsp" flush="true"/>
+<%-- <jsp:include page="/jsp/alertas/alertaPopUp.jsp" flush="true"/> --%>
 
 </head>
 <body id="page_bg" class="w-wide f-default header-light toolbar-magenta footer-magenta" onunload="cerrar()">
