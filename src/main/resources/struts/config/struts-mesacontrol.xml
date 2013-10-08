@@ -15,6 +15,12 @@
         <action name="actualizarStatusTramite" method="actualizarStatusTramite" class="MesaControlAction">
             <result name="success" type="json" />
         </action>
+        <action name="obtenerDetallesTramite" method="obtenerDetallesTramite" class="MesaControlAction">
+            <result name="success" type="json" />
+        </action>
+        <action name="finalizarDetalleTramiteMC" method="finalizarDetalleTramiteMC" class="MesaControlAction">
+            <result name="success" type="json" />
+        </action>
     </package>
 
 </struts>

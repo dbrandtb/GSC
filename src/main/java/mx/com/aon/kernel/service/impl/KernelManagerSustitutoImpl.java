@@ -7,10 +7,13 @@ package mx.com.aon.kernel.service.impl;
 import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_DATOS_ASEGURADO;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import mx.com.aon.flujos.cotizacion.model.AyudaCoberturaCotizacionVO;
 import mx.com.aon.flujos.cotizacion.model.CoberturaCotizacionVO;
@@ -612,6 +615,15 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return res;
 	}
 	
+	public WrapperResultados movDmesacontrol(Map<String, Object> params) throws ApplicationException
+	{
+		log.debug("### kernel movDmesacontrol map: "+params);
+        WrapperResultados res=this.returnBackBoneInvoke(params, ProcesoDAO.P_MOV_DMESACONTROL);
+        log.debug("### kernel sustituto movDmesacontrol id:"+res.getMsgId());
+        log.debug("### kernel sustituto movDmesacontrol mesage:"+res.getMsgText());
+        return res;
+	}
+	
 	public List<Map<String, String>> loadMesaControl(String dsrol) throws ApplicationException
 	{
 		Map<String,String>param=new LinkedHashMap<String,String>(0);
@@ -620,6 +632,15 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         List<Map<String,String>> lista= this.getAllBackBoneInvoke(param, ProcesoDAO.LOAD_MESA_CONTROL);
         lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
         log.debug("### kernel sustituto loadMesaControl lista size: "+lista.size());
+        return lista;
+	}
+	
+	public List<Map<String, String>> obtenerDetalleMC(Map<String, String> param) throws ApplicationException
+	{
+		log.debug("### kernel sustituto obtenerDetalleMC map: "+param);
+        List<Map<String,String>> lista= this.getAllBackBoneInvoke(param, ProcesoDAO.LOAD_DETALLE_MESA_CONTROL);
+        lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
+        log.debug("### kernel sustituto obtenerDetalleMC lista size: "+lista.size());
         return lista;
 	}
 
@@ -669,6 +690,22 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         log.debug("### kernel sustituto mesaControlUpdateStatus id:"+res.getMsgId());
         log.debug("### kernel sustituto mesaControlUpdateStatus mesage:"+res.getMsgText());
 		return res;
-		
+	}
+	
+	public WrapperResultados mesaControlFinalizarDetalle(Map<String, String> smap1) throws ApplicationException
+	{
+		Iterator it=smap1.entrySet().iterator();
+		HashMap<String,Object> params =  new HashMap<String, Object>();
+		while(it.hasNext())
+		{
+			Entry en=(Entry) it.next();
+			params.put((String)en.getKey(),(String)en.getValue());
+		}
+		params.put("pv_fechafin_i",new Date());
+		log.debug("### kernel mesaControlFinalizarDetalle map: "+params);
+		WrapperResultados res = this.returnBackBoneInvoke(params,ProcesoDAO.MESACONTROL_FINALIZAR_DETALLE);
+        log.debug("### kernel sustituto mesaControlFinalizarDetalle id:"+res.getMsgId());
+        log.debug("### kernel sustituto mesaControlFinalizarDetalle mesage:"+res.getMsgText());
+		return res;
 	}
 }

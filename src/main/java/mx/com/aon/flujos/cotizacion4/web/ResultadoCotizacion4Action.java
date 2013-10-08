@@ -1185,6 +1185,15 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             	String ntramite=smap1.get("ntramite");
             	log.debug("se actualiza el tramite "+ntramite);
             	WrapperResultados mesaContWr=kernelManagerSustituto.mesaControlUpdateSolici(ntramite, comprarNmpoliza);
+            	
+            	log.debug("se inserta detalle nuevo");
+            	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
+            	parDmesCon.put("pv_ntramite_i"   , ntramite);
+            	parDmesCon.put("pv_feinicio_i"   , new Date());
+            	parDmesCon.put("pv_cdclausu_i"   , null);
+            	parDmesCon.put("pv_comments_i"   , "Se guardó una cotización nueva para el trámite");
+            	parDmesCon.put("pv_cdusuari_i"   , userData.getCdusuari());
+            	kernelManagerSustituto.movDmesacontrol(parDmesCon);
             }
             else
             //se compra un tramite nuevo
@@ -1200,7 +1209,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             	parMesCon.put("pv_cdsucdoc_i"   , null);
             	parMesCon.put("pv_cdtiptra_i"   , "1");
             	parMesCon.put("pv_ferecepc_i"   , new Date());
-            	parMesCon.put("pv_cdagente_i"   , null);
+            	parMesCon.put("pv_cdagente_i"   , userData.getCdagente());
             	parMesCon.put("pv_referencia_i" , null);
             	parMesCon.put("pv_nombre_i"     , smap1.get("nombreTitular"));
             	parMesCon.put("pv_festatus_i"   , new Date());
@@ -1209,6 +1218,15 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             	parMesCon.put("pv_nmsolici_i"   , comprarNmpoliza);
             	WrapperResultados mesaContWr=kernelManagerSustituto.PMovMesacontrol(parMesCon);
             	comprarNmpoliza=(String) mesaContWr.getItemMap().get("ntramite");
+            	
+            	log.debug("se inserta detalle nuevo");
+            	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
+            	parDmesCon.put("pv_ntramite_i"   , comprarCdunieco);
+            	parDmesCon.put("pv_feinicio_i"   , new Date());
+            	parDmesCon.put("pv_cdclausu_i"   , null);
+            	parDmesCon.put("pv_comments_i"   , "Se guardó un nuevo trámite en mesa de control desde cotización de agente");
+            	parDmesCon.put("pv_cdusuari_i"   , userData.getCdusuari());
+            	kernelManagerSustituto.movDmesacontrol(parDmesCon);
             }
             
             success=true;

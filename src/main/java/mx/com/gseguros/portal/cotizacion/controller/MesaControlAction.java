@@ -11,6 +11,7 @@ import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.general.util.ConstantesCatalogos;
 
 public class MesaControlAction extends PrincipalCoreAction implements ConstantesCatalogos
@@ -115,6 +116,9 @@ public class MesaControlAction extends PrincipalCoreAction implements Constantes
 				);
 		try
 		{
+			UserVO usu=(UserVO)session.get("USUARIO");
+			DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usu.getUser());
+			
 			Map<String,Object>omap=new LinkedHashMap<String,Object>(0);
 			Iterator it=smap1.entrySet().iterator();
 			while(it.hasNext())
@@ -128,6 +132,16 @@ public class MesaControlAction extends PrincipalCoreAction implements Constantes
 			if(res.getItemMap() == null)log.error("Sin mensaje respuesta de nmtramite!!");
 			else msgResult = (String) res.getItemMap().get("ntramite");
 					log.debug("TRAMITE RESULTADO: "+msgResult);
+					
+			log.debug("se inserta detalle nuevo");
+        	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
+        	parDmesCon.put("pv_ntramite_i"   , res.getItemMap().get("ntramite"));
+        	parDmesCon.put("pv_feinicio_i"   , new Date());
+        	parDmesCon.put("pv_cdclausu_i"   , null);
+        	parDmesCon.put("pv_comments_i"   , "Se guardó un nuevo trámite manual desde mesa de control");
+        	parDmesCon.put("pv_cdusuari_i"   , datUsu.getCdusuari());
+        	kernelManager.movDmesacontrol(parDmesCon);
+					
 			success=true;
 		}
 		catch(Exception ex)
@@ -158,7 +172,37 @@ public class MesaControlAction extends PrincipalCoreAction implements Constantes
 		log.debug("smap1: "+smap1);
 		try
 		{
-			kernelManager.mesaControlUpdateStatus(smap1.get("ntramite"),smap1.get("status"));
+			UserVO usu=(UserVO)session.get("USUARIO");
+			DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usu.getUser());
+			
+			String statusNuevo=smap1.get("status");
+			String ntramite=smap1.get("ntramite");
+			String comments=smap1.get("comments");
+			kernelManager.mesaControlUpdateStatus(ntramite,statusNuevo);
+			
+			if(statusNuevo.equals("1"))
+			{
+				log.debug("se inserta detalle nuevo");
+            	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
+            	parDmesCon.put("pv_ntramite_i"   , ntramite);
+            	parDmesCon.put("pv_feinicio_i"   , new Date());
+            	parDmesCon.put("pv_cdclausu_i"   , null);
+            	parDmesCon.put("pv_comments_i"   , "<p>El trámite fue turnado a revisión médica con las siguientes observaciones:</p>"+comments);
+            	parDmesCon.put("pv_cdusuari_i"   , datUsu.getCdusuari());
+            	kernelManager.movDmesacontrol(parDmesCon);
+			}
+			else if(statusNuevo.equals("5"))
+			{
+				log.debug("se inserta detalle nuevo");
+            	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
+            	parDmesCon.put("pv_ntramite_i"   , ntramite);
+            	parDmesCon.put("pv_feinicio_i"   , new Date());
+            	parDmesCon.put("pv_cdclausu_i"   , null);
+            	parDmesCon.put("pv_comments_i"   , "<p>El médico revisó el trámite con las siguientes observaciones:</p>"+comments);
+            	parDmesCon.put("pv_cdusuari_i"   , datUsu.getCdusuari());
+            	kernelManager.movDmesacontrol(parDmesCon);
+			}
+			
 			success=true;
 		}
 		catch(Exception ex)
@@ -177,6 +221,76 @@ public class MesaControlAction extends PrincipalCoreAction implements Constantes
 	/*////////////////////////////////////////////*/
 	////// actualizar status de tramite de mc //////
 	////////////////////////////////////////////////
+	
+	////////////////////////////////////////////////
+	////// obtener los detalles de un tramite //////
+	/*////////////////////////////////////////////*/
+	public String obtenerDetallesTramite()
+	{
+		log.debug(""
+				+ "\n################################################"
+				+ "\n################################################"
+				+ "\n###### obtener los detalles de un tramite ######"
+				+ "\n######                                    ######"
+				);
+		log.debug("smap1: "+smap1);
+		try
+		{
+			slist1=kernelManager.obtenerDetalleMC(smap1);
+		}
+		catch(Exception ex)
+		{
+			log.error("error al obtener el detalle de mesa de control",ex);
+		}
+		log.debug(""
+				+ "\n######                                    ######"
+				+ "\n###### obtener los detalles de un tramite ######"
+				+ "\n################################################"
+				+ "\n################################################"
+				);
+		success=true;
+		return SUCCESS;
+	}
+	/*////////////////////////////////////////////*/
+	////// obtener los detalles de un tramite //////
+	////////////////////////////////////////////////
+	
+	////////////////////////////////////////////////////////////////
+	////// finalizar un detalle de tramite de mesa de control //////
+	/*////////////////////////////////////////////////////////////*/
+	public String finalizarDetalleTramiteMC()
+	{
+		log.debug(""
+				+ "\n################################################################"
+				+ "\n################################################################"
+				+ "\n###### finalizar un detalle de tramite de mesa de control ######"
+				+ "\n######                                                    ######"
+				);
+		log.debug("smap1: "+smap1);
+		try
+		{
+			UserVO usu=(UserVO)session.get("USUARIO");
+			DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usu.getUser());
+			smap1.put("pv_cdusuari_fin_i",datUsu.getCdusuari());
+			kernelManager.mesaControlFinalizarDetalle(smap1);
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			log.error("error al finalizar detalle de tramite de mesa de control",ex);
+			success=false;
+		}
+		log.debug(""
+				+ "\n######                                                    ######"
+				+ "\n###### finalizar un detalle de tramite de mesa de control ######"
+				+ "\n################################################################"
+				+ "\n################################################################"
+				);
+		return SUCCESS;
+	}
+	/*////////////////////////////////////////////////////////////*/
+	////// finalizar un detalle de tramite de mesa de control //////
+	////////////////////////////////////////////////////////////////
 	
 	/////////////////////////////////
 	////// getters ans setters //////
