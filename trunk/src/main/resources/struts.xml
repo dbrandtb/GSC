@@ -8,139 +8,30 @@
     <!-- jtezva agregado para monitorear el progreso de subir archivo -->
     
     <constant name="struts.devMode" value="true"/>
-
-	<!-- Includes para el wizard -->
-
-	<include file="struts/config/struts-definicion.xml"/>
-
-    <include file="struts/config/struts-rol.xml"/>
-    <include file="struts/config/struts-incisos.xml"/>
-    <include file="struts/config/struts-atributosVariables.xml"/>
-    <include file="struts/config/struts-expresiones.xml"/>
-    <include file="struts/config/struts-tablaCincoClaves.xml"/>
-    <include file="struts/config/struts-librerias.xml"/>
-    <include file="struts/config/struts-coberturas.xml"/>
-    <include file="struts/config/struts-datosFijos.xml"/>
-    <include file="struts/config/struts-tipoObjeto.xml"/>
-    <include file="struts/config/struts-sumaAsegurada.xml"/>
-    <include file="struts/config/struts-reglaValidacion.xml"/>
-    <include file="struts/config/struts-conceptosCobertura.xml"/>
-    <include file="struts/config/struts-planes.xml"/>
-
-    <!--include file="struts/config/struts-configurador-beta.xml"/-->
-
-    <include file="struts/config/struts-portal.xml"/>
     
-    <!--
-    Se declara la referencia al archivo de configuracion de struts
-    para el modulo test de paginacion y exportacion 
-    -->
-    
-    <include file="struts/config/struts-test.xml"/>
-    
-    <!--
-    Se declara la referencia del archivo de configuracion de struts
-    para el modulo Mantenimiento de Planes.*SE MANTIENE PENDIENTE EL 
-    MECANISMO DE EXPORTACION * 
-     -->
-     
-    <include file="struts/config/struts-mantto.xml"/>
-    
-     <!--Modulo para configuracion de pantallas  -->
-     
-    <include file="struts/config/struts-conf-pantallas.xml"/>
-
-
+    <!-- TODO: revisar funcionalidad de actions -->
     <!--Modulo para configuracion de reportes  -->
-
-    <include file="struts/config/struts-reportes.xml"/>
-    
-    <!--include file="struts/config/struts-builder.xml"/-->
-
-     <!--Modulo para configuracion de Jaspers  -->
-
-    <include file="struts/config/struts-jaspers.xml"/>
-    
+    <!-- <include file="struts/config/struts-reportes.xml"/> -->
     <!--Modulo para configuracion del Menu -->
-    
-    <include file="struts/config/struts-configmenu.xml"/>
-    
+    <!-- <include file="struts/config/struts-configmenu.xml"/> -->
     <!--Modulo para configuracion del Menu Usuario -->
-    
-    <include file="struts/config/struts-menuusuario.xml"/>
-    
-    <!--Modulo para configuracion del Menu Usuario -->
-    
-    <include file="struts/config/struts-opcmenuusuario.xml"/>
-    
-    <!--
-    Se declara la referencia del archivo de configuracion de struts
-    para el modulo Configuracion de Página Principal.
-    -->
-    
+    <!-- <include file="struts/config/struts-menuusuario.xml"/> -->
+
+	<include file="struts/config/struts-consultas-poliza.xml"/>
+	
+	<include file="struts/config/struts-documentosPoliza.xml"/>
+	
     <include file="struts/config/struts-flujos-cotizacion.xml"/>
     
-    <!--
-    Se declara la referencia del archivo de configuracion de struts
-    para el modulo Flujos Cotizacion.
-    -->
-    
-    <include file="struts/config/struts-flujos-endoso.xml"/>
-    
-    <!--
-    Se declara la referencia del archivo de configuracion de struts
-    para el modulo Flujos Endoso.
-    -->
-    
-    
-    <include file="struts/config/struts-principal.xml"/>
-    <include file="struts/config/struts-configurador-pantallas.xml"/>
-    <include file="struts/config/struts-config-workflow.xml"/>
-    
-    <!--
-    Se declara la referencia del archivo de configuracion de struts
-    para el modulo Procesos Emision.
-    -->
     <include file="struts/config/struts-flujos-emision.xml"/>
     
-    <include file="struts/config/struts-configurador-alfa.xml"/>
-    
-    <!--
-    Se declara la referencia del archivo de configuracion de struts
-    para el modulo Procesos Emision.
-    -->
-    <include file="struts/config/struts-flujos-renovacion.xml"/>
-    
-     <!--
-    Se declara la referencia del archivo de configuracion de struts
-    para el modulo wizard de parametrización.
-    -->
-    <include file="struts/config/struts-atributosVariables.xml"/>
-    
-    <!--
-    Se declara la referencia del archivo de configuracion de struts
-    para procesos criticos.
-    -->
-    <include file="struts/config/struts-procesos-criticos.xml"/>
-    
-    <!--
-    Se declara la referencia del archivo de configuracion de struts
-    para Instrumentos de Pago por Cliente
-    -->
-	<include file="struts/config/struts-instrumentosDePago.xml"/>    
-	
-	
-	<include file="struts/config/struts-presiniestros.xml"/>    
-	<include file="struts/config/struts-dctosPresiniestros.xml"/>   
-	
-	<include file="struts/config/struts-consultas-poliza.xml"/>
-	<include file="struts/config/struts-seguridad.xml"/>
-	<include file="struts/config/struts-documentosPoliza.xml"/>
 	<include file="struts/config/struts-mesacontrol.xml"/>
+	
+	<include file="struts/config/struts-portal.xml"/>
+	
+	<include file="struts/config/struts-seguridad.xml"/>
+	
 
-	<!-- Archivos de CIMA -->
-    <include file="struts-cima.xml"/>
-    <include file="struts-catbo.xml"/>
     <package name="default" namespace="/" extends="json-default">
         <interceptors>
         

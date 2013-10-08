@@ -35,7 +35,9 @@ public class AuthenticationInterceptor implements Interceptor {
 
 	public String intercept(ActionInvocation actionInvocation) throws Exception {
 
-		logger.debug("Action intercepted="+ actionInvocation.getProxy().getActionName());
+		logger.debug(new StringBuilder("Intercepted[ActionName=")
+				.append(actionInvocation.getProxy().getActionName())
+				.append(" Namespace=").append(actionInvocation.getProxy().getNamespace()).append("]"));
 		
 		//Obtenemos la sesion por medio del ActionInvocation
 		Map session = actionInvocation.getInvocationContext().getSession();

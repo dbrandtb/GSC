@@ -39,9 +39,9 @@
         <property name="expresionesManager" ref="ExpresionesManager"/>
     </bean>
     
-    <bean id="ArbolProductosAction" class="mx.com.aon.catweb.configuracion.producto.general.ArbolProductosAction" scope="prototype" parent="PadreAction">
+    <!-- <bean id="ArbolProductosAction" class="mx.com.aon.catweb.configuracion.producto.general.ArbolProductosAction" scope="prototype" parent="PadreAction">
 	    <property name="treeManager" ref="TreeManager" />
-    </bean>
+    </bean> -->
     
     <!-- Bean que utilizara GS para no pasar por el login -->
      <bean id="cotizaSaludVitalAction" class="mx.com.gseguros.portal.consultas.controller.CotizaSaludVitalAction" scope="prototype">
