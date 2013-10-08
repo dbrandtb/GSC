@@ -2,7 +2,14 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
 
-    <bean id="estructuraDAO" class="mx.com.aon.portal.dao.EstructuraDAO">
+    
+
+    <!-- Para consultas de Poliza -->
+    <bean id="consultasPolizaDAO" class="mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <!-- <bean id="estructuraDAO" class="mx.com.aon.portal.dao.EstructuraDAO">
        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="processResultDAO" class="mx.com.aon.portal.dao.ProcessResultDAO">
@@ -16,11 +23,11 @@
     </bean>
     <bean id="funcionalidadDAO" class="mx.com.aon.portal.dao.FuncionalidadDAO">
        <property name="dataSource" ref="dataSource" />
-    </bean>
+    </bean>-->
     <bean id="combosDAOPortal" class="mx.com.aon.portal.dao.CombosDAO">
        <property name="dataSource" ref="dataSource" />
     </bean>
-    <bean id="alertaDAOPortal" class="mx.com.aon.portal.dao.AlertaDAO">
+    <!-- <bean id="alertaDAOPortal" class="mx.com.aon.portal.dao.AlertaDAO">
        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="carritoComprasDAO" class="mx.com.aon.portal.dao.CarritoComprasDAO">
@@ -29,14 +36,14 @@
 
     <bean id="personaDAO" class="mx.com.aon.portal.dao.PersonaDAO">
        <property name="dataSource" ref="dataSource" />
-    </bean>
+    </bean> -->
     <bean id="usuarioDAO" class="mx.com.aon.portal.dao.UsuarioDAO">
        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="paginaPrincipalDAO" class="mx.com.aon.portal.dao.PaginaPrincipalDAO">
        <property name="dataSource" ref="dataSource" />
     </bean>
-	  <bean id="mecanismoAlertaDAO" class="mx.com.aon.portal.dao.MecanismoAlertaDAO">
+	<!--   <bean id="mecanismoAlertaDAO" class="mx.com.aon.portal.dao.MecanismoAlertaDAO">
        <property name="dataSource" ref="dataSource" />
     </bean>
        
@@ -58,14 +65,18 @@
 
     <bean id="expresionesDAO" class="mx.com.aon.portal.dao.ExpresionesDAO">
        <property name="dataSource" ref="dataSource" />
-    </bean>
+    </bean>-->
     
     <bean id="principalDAO" class="mx.com.aon.portal.dao.PrincipalDAO">
        <property name="dataSource" ref="dataSource" />
     </bean>
+    
+    <bean id="procesosDao" class="mx.com.aon.portal.dao.ProcesoDAO">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
 
 
-    <bean id="mecanismoDeTooltipDAO" class="mx.com.aon.portal.dao.MecanismoDeTooltipDAO">
+    <!--  <bean id="mecanismoDeTooltipDAO" class="mx.com.aon.portal.dao.MecanismoDeTooltipDAO">
        <property name="dataSource" ref="dataSource" />
     </bean>
     
@@ -75,87 +86,6 @@
 
     <bean id="equivalenciaCatalogosDAO" class="mx.com.aon.portal.dao.EquivalenciaCatalogosDAO">
        <property name="dataSource" ref="dataSource" />
-    </bean>
-	<!-- PARAMETRIZACION PRODUCTO -->
-
-	<bean id="atributosVariablesDao" class="mx.com.aon.catweb.configuracion.producto.dao.AtributoDAO">
-		<property name="dataSource" ref="dataSource" />
-	</bean>
-	
-	<bean id="productoDao" class="mx.com.aon.catweb.configuracion.producto.dao.ProductoDAO">
-		<property name="dataSource" ref="dataSource" />
-	</bean>
-	
-	<bean id="incisoDao" class="mx.com.aon.catweb.configuracion.producto.dao.IncisoDAO">
-		<property name="dataSource" ref="dataSource" />
-	</bean>
-	
-	<bean id="ListaValoresDAO" class="mx.com.aon.catweb.configuracion.producto.dao.ListaValoresDAO">
-        <property name="dataSource" ref="dataSource" />
-    </bean>	
-	
-	<!-- REPORTES -->
-	
-	<bean id="reporteDao" class="mx.com.aon.portal.dao.ReporteDAO">
-		<property name="dataSource" ref="dataSource" />
-	</bean>
-    
-     <bean id="administrarCatalogSistemExternoDAO" class="mx.com.aon.portal.dao.AdministrarCatalogSistemExternoDAO">
-       <property name="dataSource" ref="dataSource" />
-    </bean>
-    
-    <bean id="administracionDeEquivalenciaDAO" class="mx.com.aon.portal.dao.AdministracionDeEquivalenciaDAO">
-       <property name="dataSource" ref="dataSource" />
-    </bean>
-    
-    <!-- PROCESO NEGOCIO -->
-    
-    <bean id="procesosDao" class="mx.com.aon.portal.dao.ProcesoDAO">
-    	<property name="dataSource" ref="dataSource" />
-    </bean>
-    <bean id="formatoOTDao" class="mx.com.aon.pdfgenerator.dao.FormatoOTDAO">
-    	<property name="dataSource" ref="dataSource" />
-    </bean>
-        
-    <bean id="reporteDeudaDAO" class="mx.com.aon.portal.dao.ReporteDeudaDAO">
-        <property name="dataSource" ref="dataSource" />
-    </bean>
-    
-    
-    <!--  Pantalla nueva: Consultar Segmentacion -->
-    
-       <bean id="segmentacionDAO" class="mx.com.aon.portal.dao.SegmentacionDAO">
-        <property name="dataSource" ref="dataSource" />
-    </bean>
-    
-     <!-- Instrumento de Pago-->
-      <bean id="instrumentoPagoDAO" class="mx.com.aon.portal.dao.InstrumentoPagoDAO">
-        <property name="dataSource" ref="dataSource" />
-      </bean>
-      
-      <!-- Configurador de pantallas -->
-      <bean id="configuradorPantallasDAO" class="mx.com.aon.portal.dao.ConfiguradorPantallasDAO">
-        <property name="dataSource" ref="dataSource" />
-      </bean>
-      
-      <!-- Presiniestros -->
-      <bean id="presiniestrosDAO" class="mx.com.aon.portal.dao.PresiniestrosDAO">
-        <property name="dataSource" ref="dataSource" />
-      </bean>
-      
-      <bean id="dctosPresiniestrosDAO" class="mx.com.aon.portal.dao.DctosPresiniestrosDAO">
-        <property name="dataSource" ref="dataSource" />
-      </bean>
-      
-      <!-- Para la tabla de Cinco Claves -->
-      <bean id="tablaCincoClavesDAO" class="mx.com.aon.catweb.configuracion.producto.dao.TablaCincoClavesDAO">
-        <property name="dataSource" ref="dataSource" />
-      </bean>
-
-      <!-- Para consultas de Poliza -->
-      <bean id="consultasPolizaDAO" class="mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO">
-        <property name="dataSource" ref="dataSource" />
-      </bean>
-      
+    </bean> -->
       
 </beans>

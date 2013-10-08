@@ -5,14 +5,14 @@
     
     <bean id="principalCotizacion" class="mx.com.aon.flujos.cotizacion.web.PrincipalCotizacionAction" abstract="true"/>
   
-    <bean id="comboAction" class="mx.com.aon.flujos.cotizacion.web.ComboAction" scope="prototype" parent="principalCotizacion">
+    <!-- <bean id="comboAction" class="mx.com.aon.flujos.cotizacion.web.ComboAction" scope="prototype" parent="principalCotizacion">
         <property name="catalogManager" ref="catalogManager"/>
         <property name="catalogServiceJdbcTemplate" ref="catalogServiceJdbcTemplate"/>
    </bean>
     
     <bean id="gridAction" class="mx.com.aon.flujos.cotizacion.web.GridTestingAction" scope="prototype" parent="principalCotizacion"/>
   
-    <bean id="resultadoCotizacion" class="mx.com.aon.flujos.cotizacion.web.ResultadoCotizacionAction" scope="prototype" parent="principalCotizacion"/>
+    <bean id="resultadoCotizacion" class="mx.com.aon.flujos.cotizacion.web.ResultadoCotizacionAction" scope="prototype" parent="principalCotizacion"/> -->
     
     <bean id="cotizacionVital" class="mx.com.aon.flujos.cotizacion4.web.ResultadoCotizacion4Action" scope="prototype" parent="principalCotizacion">
         <property name="kernelManagerSustituto" ref="kernelManagerSustituto"/>

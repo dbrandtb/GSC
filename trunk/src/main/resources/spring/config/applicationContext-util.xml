@@ -3,11 +3,11 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">  
     
      
-    <bean id="ftpUtil" class="mx.com.aon.utils.FTPUtil">
+    <!-- <bean id="ftpUtil" class="mx.com.aon.utils.FTPUtil">
         <property name="abstractDAO">
                 <ref bean="parametroGeneralDAO"/>
         </property>
-    </bean>
+    </bean> -->
     
     
     

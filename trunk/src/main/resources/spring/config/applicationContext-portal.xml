@@ -2,6 +2,22 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
+    <!-- CombosManager2 -->
+        <bean id="comboManagerJdbcTemplateImpl" class="mx.com.aon.portal.service.impl.ComboManagerJdbcTemplateImpl" parent="abstractManagerJdbcTemplateInvoke">
+            <property name="abstractDAO">
+                <ref bean="combosDAOPortal"/>
+            </property>
+        </bean>
+    <!--CombosManager2 -->
+
+    <!-- UsuarioManager -->
+    <bean id="usuarioManager" class="mx.com.aon.portal.service.impl.UsuarioManagerImpl" parent="abstractManagerJdbcTemplateInvoke">
+        <property name="abstractDAO">
+            <ref bean="usuarioDAO"/>
+        </property>
+    </bean>
+    <!--UsuarioManager -->
+
     <bean id="loginManager" class="mx.com.aon.portal.service.impl.LoginManagerImpl">
         <!--  property name="endpoints">
             <map>
@@ -96,4 +112,11 @@
                 <ref bean="menuPrincipalDAO"/>
             </property>
 	</bean>
+	
+	<bean id="principalManagerJdbcTemplate"
+        class="mx.com.aon.portal.service.impl.principal.PrincipalManagerJdbcTemplateImpl" parent="abstractManagerJdbcTemplateInvoke">
+        <property name="abstractDAO">
+            <ref bean="principalDAO"/>
+        </property>
+    </bean>
 </beans>

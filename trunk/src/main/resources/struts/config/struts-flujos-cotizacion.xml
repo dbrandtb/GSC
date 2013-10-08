@@ -31,7 +31,7 @@
         
        
        
-       <action name="generaCotizacion" class="cotizarAction" method="cotizar" >
+       <!-- <action name="generaCotizacion" class="cotizarAction" method="cotizar" >
             <result name="success" type="json" />
         </action>
         
@@ -69,11 +69,11 @@
         
         <action name="obtenerListaComboOttabval" class="comboAction"  method="loadOttabval" >
             <result name="success" type="json" />
-        </action>
+        </action> -->
         
         <!-- ######### Ejemplo de un grid Editable #####################-->
         
-        <action name="resultadoCotizacionEditable">
+        <!-- <action name="resultadoCotizacionEditable">
             <result>/jsp/flujos/cotizacion/resultadoCotizacionEditable.jsp</result>        
         </action>
         
@@ -81,13 +81,13 @@
         
         <action name="obtenerDatosGrid" class="resultadoCotizacion" method="obtenerDatosGrid" >
             <result name="success" type="json" />
-        </action>
+        </action> -->
         
         <!-- ######### Ejemplo de un grid MATRIZ #####################-->
         
         
         
-        <action name="resultadoCotizacionMatriz">
+        <!-- <action name="resultadoCotizacionMatriz">
             <result>/jsp/flujos/cotizacion/resultadoCotizacionMatriz.jsp</result>        
         </action>
         
@@ -98,7 +98,7 @@
         <action name="resultCotizacion" class="resultadoCotizacion" method="entrar">
             <result  name="input">/jsp/flujos/cotizacion/resultCotizacion.jsp</result>        
             <result  name="error">/jsp/flujos/cotizacion/capturaCotizacion.jsp</result>
-        </action>
+        </action> -->
         
         <action name="obtenCotizacion4" class="cotizacionVital" method="obtenerResultadosCotizacion">
             <result name="success" type="json" />
@@ -118,7 +118,7 @@
             <!--<result  name="error">/jsp/flujos/cotizacion/capturaCotizacion.jsp</result>-->
         </action>
         
-        <action name="validaCamposEntrada" class="resultadoCotizacion" method="validaCamposEntrada">
+        <!-- <action name="validaCamposEntrada" class="resultadoCotizacion" method="validaCamposEntrada">
             <result name="input" type="json" />
             <result name="error" type="json" />
         </action>
@@ -130,7 +130,7 @@
         
          <action name="obtenerCoberturas" class="resultadoCotizacion" method="obtieneCoberturas" >
               <result name="success" type="json" />
-        </action>
+        </action> -->
         
         <!-- jtezva agregado -->
         <action name="obtenerCoberturas4" class="cotizacionVital" method="obtenerCoberturas">
@@ -141,20 +141,20 @@
         </action>
         <!-- jtezva agregado -->
         
-        <action name="obtenerAyudaCobertura" class="resultadoCotizacion" method="obtieneAyudaCobertura" >
-              <!--  <result name="input">/jsp/flujos/cotizacion/ayudaCobertura.jsp</result>  -->
+        <!-- <action name="obtenerAyudaCobertura" class="resultadoCotizacion" method="obtieneAyudaCobertura" >
+               <result name="input">/jsp/flujos/cotizacion/ayudaCobertura.jsp</result> 
               <result name="success" type="json" /> 
         </action>
         
         <action name="comprar" class="resultadoCotizacion" method="comprar" >
               <result name="success" type="json" />
-        </action>
+        </action> -->
         
         
         
-        <action name="guardaCotizacion" class="resultadoCotizacion" method="guardaCotizacion">
+        <!-- <action name="guardaCotizacion" class="resultadoCotizacion" method="guardaCotizacion">
         	<result name="success" type="json"/>
-        </action>
+        </action> -->
         
         <!-- ######### Ejemplo de componentes de EXTJS #####################-->
         <action name="ejemploComponentes" class="cotizarAction" method="entrarEjemplo" >
@@ -171,7 +171,7 @@
         
         
         <!-- ######### consultar Cotizacion #####################-->    
-        <action name="consultaCotizaciones" class="consultaCotizacionAction" >
+        <!-- <action name="consultaCotizaciones" class="consultaCotizacionAction" >
             <result name="input">/jsp/flujos/cotizacion/consultaCotizaciones.jsp</result>
         </action>
         <action name="detalleConsultaCotizacion" class="consultaCotizacionAction" method="detalleConsultaCotizacion">
@@ -199,22 +199,22 @@
         
         <action name="obtieneTvalositCotiza" class="consultaCotizacionAction" method="obtieneTvalositCotiza" >
             <result name="success" type="json" />
-        </action>
+        </action> -->
         
         
         
         
         
         <!-- ######### comprar Cotizacion #####################-->
-        <action name="comprarCotizaciones" class="comprarCotizacionAction" method="comprarCotizaciones">
+        <!-- <action name="comprarCotizaciones" class="comprarCotizacionAction" method="comprarCotizaciones">
             <result name="success" type="chain">entrarComprarCotizaciones</result>
         </action>        
         <action name="entrarComprarCotizaciones" class="comprarCotizacionAction">
             <result name="input">/jsp/flujos/cotizacion/comprarCotizacion.jsp</result>
-        </action>        
+        </action> -->        
         
         <!-- action llamado cuando se va a Comprar desde Consulta Cotizaciones -->
-        <action name="consultaCotizacionesComprar" class="comprarCotizacionAction" method="consultaCotizacionesComprar">
+        <!-- <action name="consultaCotizacionesComprar" class="comprarCotizacionAction" method="consultaCotizacionesComprar">
             <result name="success" type="chain">comprarCotizaciones</result>
         </action>
         
@@ -257,44 +257,44 @@
         <action name="comprarCotizacionCompras" class="comprarCotizacionAction" method="comprarCotizacionCompra">
             <result name="success" type="json" />
             <result name="error" type="json" />
-        </action> 
+        </action>  -->
         <!-- action consultar cotizacion hogar -->
         
-        <action name="cotizarHogar" class="resultadoCotizacionHogarAction">
+        <!-- <action name="cotizarHogar" class="resultadoCotizacionHogarAction">
 			<result name="success">/jsp/flujos/cotizacion/hogar/cotizacionHogar.jsp</result>
             <result name="input">/jsp/flujos/cotizacion/hogar/cotizacionHogar.jsp</result>
-        </action>
+        </action> -->
         
         <!--Action que recupera la lista de cotizacion de hogar-->
-        <action name="cotizacionHogar" class="resultadoCotizacionHogarAction" method="cargaDatosCotizacion">
+        <!-- <action name="cotizacionHogar" class="resultadoCotizacionHogarAction" method="cargaDatosCotizacion">
         	<result name="success" type="json"/>
         	<result name="input">/jsp/flujos/cotizacion/hogar/cotizacionHogar.jsp</result>
-        </action>
+        </action> -->
         
         <!-- Action que se encarga de sumar todas las primas anuales y mensuales -->
-        <action name="cargarSumaTotal" class="resultadoCotizacionHogarAction" method="cargaSumas">
+        <!-- <action name="cargarSumaTotal" class="resultadoCotizacionHogarAction" method="cargaSumas">
         	<result name="success" type="json"/>
         	<result name="input">/jsp/flujos/cotizacion/hogar/cotizacionHogar.jsp</result>
-        </action>
+        </action> -->
         
         <!-- Action que recupera los datos editados de la lista -->
-        <action name="obtieneModificados" class="resultadoCotizacionHogarAction" method="recuperaModificados">
+        <!-- <action name="obtieneModificados" class="resultadoCotizacionHogarAction" method="recuperaModificados">
         	<result name="success" type="json"/>
         	<result name="input">/jsp/flujos/cotizacion/hogar/cotizacionHogar.jsp</result>
-        </action>
+        </action> -->
 
         <!-- Actions encargados de la cotizacion en base a valores por defecto -->
-        <action name="valoresPorDefectoCotizacion" class="valoresPorDefectoCotizacionAction">
+        <!-- <action name="valoresPorDefectoCotizacion" class="valoresPorDefectoCotizacionAction">
             <result name="success" type="json"/>
             <result name="input">/jsp/flujos/cotizacion/valoresPorDefectoCotizacion.jsp</result>
         </action>
         
         <action name="agregaIncisos" class="valoresPorDefectoCotizacionAction" method="agregaIncisosJson">
 			<result name="success" type="json" />
-		</action>
+		</action> -->
         
         <!-- Actions encargados de mostrar resultados en grid -->
-        <action name="muestraResultadosAction" class="muestraResultadosAction">
+        <!-- <action name="muestraResultadosAction" class="muestraResultadosAction">
             <result name="success" type="json"/>
             <result name="input">/jsp/flujos/cotizacion/muestraResultados.jsp</result>
         </action>
@@ -373,7 +373,7 @@
         
         <action name="atributosVariablesInstrumetosPago" class="comprarCotizacionAction" method="atributosVariablesInstrumetosPago">
           <result name="success" type="json" />
-        </action>
+        </action> -->
         
         <action name="cargarCatalogos" class="beanCatalogosAction" method="cargar">
           <result name="success" type="json" />
