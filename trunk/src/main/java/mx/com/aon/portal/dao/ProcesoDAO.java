@@ -113,17 +113,19 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String GUARDAR_ARCHIVO_POLIZA = "GUARDAR_ARCHIVO_POLIZA";
     public static final String OBTENER_TIPOS_CLAUSULAS_EXCLUSION = "OBTENER_TIPOS_CLAUSULAS_EXCLUSION";
     public static final String LOAD_MESA_CONTROL = "LOAD_MESA_CONTROL";
+    public static final String LOAD_DETALLE_MESA_CONTROL = "LOAD_DETALLE_MESA_CONTROL";
     public static final String OBTENER_EXCLUSIONES_X_TIPO = "OBTENER_EXCLUSIONES_X_TIPO";
     public static final String OBTENER_HTML_CLAUSULA="OBTENER_HTML_CLAUSULA";
     public static final String P_MOV_MPOLICOT="P_MOV_MPOLICOT";
     public static final String OBTENER_POLICOT="OBTENER_POLICOT";
     public static final String P_MOV_MESACONTROL="P_MOV_MESACONTROL";
-
+    public static final String P_MOV_DMESACONTROL="P_MOV_DMESACONTROL";
     public static final String OBTIENE_DATOS_RECIBOS="OBTIENE_DATOS_RECIBOS";
     public static final String OBTIENE_CATALOGO_COLONIAS="OBTIENE_CATALOGO_COLONIAS";
     public static final String OBTIENE_DATOS_CLIENTE="OBTIENE_DATOS_CLIENTE";
     public static final String MESACONTROL_UPDATE_SOLICI="MESACONTROL_UPDATE_SOLICI";
     public static final String MESACONTROL_UPDATE_STATUS="MESACONTROL_UPDATE_STATUS";
+    public static final String MESACONTROL_FINALIZAR_DETALLE="MESACONTROL_FINALIZAR_DETALLE";
 
 	protected void initDao() throws Exception {
 		addStoredProcedure(PERMISO_EJECUCION_PROCESO,new PermisoEjecucionProceso(getDataSource()));
@@ -184,10 +186,12 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(GUARDAR_ARCHIVO_POLIZA, new GuardarArchivoPoliza(getDataSource()));
         addStoredProcedure(OBTENER_TIPOS_CLAUSULAS_EXCLUSION, new ObtenerTiposClausulasExclusion(getDataSource()));
         addStoredProcedure(LOAD_MESA_CONTROL, new ObtenerMesaControl(getDataSource()));
+        addStoredProcedure(LOAD_DETALLE_MESA_CONTROL, new ObtenerDetalleMesaControl(getDataSource()));
         addStoredProcedure(OBTENER_EXCLUSIONES_X_TIPO, new ObtenerExclusionesXTipo(getDataSource()));
         addStoredProcedure(OBTENER_HTML_CLAUSULA, new ObtenerHtmlClausula(getDataSource()));
         addStoredProcedure(OBTENER_POLICOT, new ObtenerPolicot(getDataSource()));
         addStoredProcedure(P_MOV_MESACONTROL, new PMovMesacontrol(getDataSource()));
+        addStoredProcedure(P_MOV_DMESACONTROL, new PMovDmesacontrol(getDataSource()));
         addStoredProcedure(P_BORRA_MPOLIPER, new PBorraMpoliper(getDataSource()));
 
         addStoredProcedure(OBTIENE_DATOS_RECIBOS, new ObtenDatosRecibos(getDataSource()));
@@ -195,6 +199,7 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(OBTIENE_DATOS_CLIENTE, new ObtenDatosCliente(getDataSource()));
         addStoredProcedure(MESACONTROL_UPDATE_SOLICI, new MesaControlUpdateSolici(getDataSource()));
         addStoredProcedure(MESACONTROL_UPDATE_STATUS, new MesaControlUpdateStatus(getDataSource()));
+        addStoredProcedure(MESACONTROL_FINALIZAR_DETALLE, new MesaControlFinalizarDetalle(getDataSource()));
 	}
 
 	protected class BuscarMatrizAsignacion extends CustomStoredProcedure {
@@ -2562,6 +2567,37 @@ public class ProcesoDAO extends AbstractDAO {
 	////// p mov mesacontrol //////
 	///////////////////////////////
 	
+	/////////////////////////////////
+	////// p mov d mesacontrol //////
+	/*/////////////////////////////*/
+	protected class PMovDmesacontrol extends CustomStoredProcedure {
+		protected PMovDmesacontrol(DataSource dataSource) {
+			super(dataSource,"PKG_SATELITES.P_MOV_DMESACONTROL");
+			declareParameter(new SqlParameter("pv_ntramite_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_feinicio_i", 		OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_cdclausu_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_comments_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdusuari_i", 		OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_msg_id_o", 	OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o", 		OracleTypes.VARCHAR));
+			compile();
+		}
+	
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			WrapperResultados wrapperResultados = mapper.build(map);
+			
+			wrapperResultados.setItemMap(new HashMap<String, Object>());
+			//wrapperResultados.getItemMap().put("ntramite", map.get("pv_tramite_o"));
+
+			return wrapperResultados;
+		}
+	}
+	/*/////////////////////////////*/
+	////// p mov d mesacontrol //////
+	/////////////////////////////////
+	
 	////////////////////////////////////////////
 	////// obtener detalles de cotizacion //////
 	/*////////////////////////////////////////*/
@@ -2903,6 +2939,7 @@ public class ProcesoDAO extends AbstractDAO {
 		{
 			super(dataSource,"PKG_CONSULTA.P_clausulas_x_tipo");
 			declareParameter(new SqlParameter("pv_cdtipcla_i",    OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_descrip_i",    OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerExclusionesXTipoMapper()));
 			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
@@ -3012,6 +3049,7 @@ public class ProcesoDAO extends AbstractDAO {
 			{
 				map.put(col,rs.getString(col));
 			}
+			map.put("merged",rs.getString("cdtipcla")+"#_#"+rs.getString("cdclausu")+"#_#"+rs.getString("dsclausu")+"#_#"+rs.getString("linea_usuario")+"#_#"+rs.getString("linea_general"));
 			logger.debug("return "+map);
 			return map;
 		}
@@ -3069,6 +3107,55 @@ public class ProcesoDAO extends AbstractDAO {
 	/*/////////////////////////////////*/
 	////// obtener mesa de control //////
 	/////////////////////////////////////
+	
+	/////////////////////////////////////////////////////////////////
+	////// obtener detalles de tramite(s) para mesa de control //////
+	/*/////////////////////////////////////////////////////////////*/
+	protected class ObtenerDetalleMesaControl extends CustomStoredProcedure
+	{
+		protected ObtenerDetalleMesaControl(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA. P_cons_det_mesactrl");
+			declareParameter(new SqlParameter("pv_ntramite_i",      OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerDetalleMesaControlMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
+		}
+	
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception
+		{
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			WrapperResultados wrapperResultados = mapper.build(map);
+			List result = (List) map.get("pv_registro_o");
+			wrapperResultados.setItemList(result);
+			return wrapperResultados;
+		}
+	}
+	
+	protected class ObtenerDetalleMesaControlMapper implements RowMapper
+	{
+		public Object mapRow(ResultSet rs, int rowNum) throws SQLException
+		{
+			String cols[]=new String[]{"NTRAMITE","NMORDINA","CDTIPTRA","CDCLAUSU","FECHAINI","FECHAFIN",
+					"COMMENTS","CDUSUARI_INI","CDUSUARI_FIN"};
+			Map<String,String> map=new HashMap<String,String>(0);
+			for(String col:cols)
+			{
+				if(col!=null&&col.substring(0,2).equalsIgnoreCase("fe"))
+				{
+					map.put(col,Utilerias.formateaFecha(rs.getString(col)));
+				}
+				else
+				{
+					map.put(col,rs.getString(col));
+				}
+			}	
+			return map;
+		}
+	}
+	/*/////////////////////////////////////////////////////////////*/
+	////// obtener detalles de tramite(s) para mesa de control //////
+	/////////////////////////////////////////////////////////////////
 	
 	protected class ObtenDatosRecibos extends CustomStoredProcedure {
 		
@@ -3363,6 +3450,33 @@ public class ProcesoDAO extends AbstractDAO {
     		declareParameter(new SqlParameter("pv_status_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("PV_TITLE_O", OracleTypes.VARCHAR));
+    		
+    		compile();
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			return mapper.build(map);
+		}
+    }
+    /*///////////////////////////////////////////////////////*/
+	////// actualizar status de tarea de mesa de control //////
+    ///////////////////////////////////////////////////////////
+    
+    ///////////////////////////////////////////////////////////
+    ////// actualizar status de tarea de mesa de control //////
+    /*///////////////////////////////////////////////////////*/
+    protected class MesaControlFinalizarDetalle extends CustomStoredProcedure {
+    	protected MesaControlFinalizarDetalle(DataSource dataSource) {
+    		super(dataSource,"PKG_SATELITES.P_UPDATE_TDMESA");
+    		
+    		declareParameter(new SqlParameter("pv_nmordina_i",     OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_ntramite_i",     OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdusuari_fin_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_comments_i",     OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_fechafin_i",     OracleTypes.DATE));
+    		declareParameter(new SqlOutParameter("PV_MSG_ID_O",    OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("PV_TITLE_O",     OracleTypes.VARCHAR));
     		
     		compile();
     	}

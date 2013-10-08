@@ -420,78 +420,116 @@
                                     {
                                         var form=Ext.getCmp('formPanel');
                                         //console.log(form.getValues());
-                                        if(form.isValid())
+                                        Ext.create('Ext.window.Window',
                                         {
-                                            form.setLoading(true);
-                                            form.submit({
-                                                params:{
-                                                    'map1.pv_cdunieco' :  inputCdunieco,
-                                                    'map1.pv_cdramo' :    inputCdramo,
-                                                    'map1.pv_estado' :    inputEstado,
-                                                    'map1.pv_nmpoliza' :  inputNmpoliza
-                                                },
-                                                success:function(){
-                                                    form.setLoading(false);
-                                                    Ext.Ajax.request
-                                                    ({
-                                                        url     : datComUrlMCUpdateStatus
-                                                        ,params : 
+                                        	title        : 'Observaciones para el m&eacute;dico'
+                                        	,width       : 600
+                                        	,height      : 400
+                                        	,buttonAlign : 'center'
+                                        	,modal       : true
+                                        	,closable    : false
+                                        	,autoScroll  : true
+                                        	,items       :
+                                        	[
+												Ext.create('Ext.form.HtmlEditor', {
+												    id        : 'inputTextareaCommentsToMedico'
+												    ,width  : 570
+												    ,height : 300
+												})
+                                        	]
+                                        	,buttons    :
+                                        	[
+                                        	    {
+                                        	    	text     : 'Guardar y enviar a revisión médica'
+                                                    ,icon    : '${ctx}/resources/fam3icons/icons/heart_add.png'
+                                        	    	,handler : function()
+                                        	    	{
+                                        	    		if(form.isValid())
                                                         {
-                                                            'smap1.ntramite' : inputNtramite
-                                                            ,'smap1.status'  : '1'//en revision medica
-                                                        }
-                                                        ,success : function(response)
-                                                        {
-                                                            var json=Ext.decode(response.responseText);
-                                                            if(json.success==true)
-                                                            {
-                                                                Ext.create('Ext.form.Panel').submit
-                                                                ({
-                                                                    url             : datComUrlMC
-                                                                    ,standardSubmit : true
-                                                                });
-                                                            }
-                                                            else
-                                                            {
-                                                                Ext.Msg.show({
-                                                                    title:'Error',
-                                                                    msg: 'Error al enviar a revisi&oacute;n m&eacute;dica',
-                                                                    buttons: Ext.Msg.OK,
-                                                                    icon: Ext.Msg.ERROR
-                                                                });
-                                                            }
-                                                        }
-                                                        ,failure : function()
-                                                        {
-                                                            Ext.Msg.show({
-                                                                title:'Error',
-                                                                msg: 'Error de comunicaci&oacute;n',
-                                                                buttons: Ext.Msg.OK,
-                                                                icon: Ext.Msg.ERROR
+                                        	    			var window=this.up().up();
+                                                            window.setLoading(true);
+                                                            form.submit({
+                                                                params:{
+                                                                    'map1.pv_cdunieco' :  inputCdunieco,
+                                                                    'map1.pv_cdramo' :    inputCdramo,
+                                                                    'map1.pv_estado' :    inputEstado,
+                                                                    'map1.pv_nmpoliza' :  inputNmpoliza
+                                                                },
+                                                                success:function(){
+                                                                    Ext.Ajax.request
+                                                                    ({
+                                                                        url     : datComUrlMCUpdateStatus
+                                                                        ,params : 
+                                                                        {
+                                                                            'smap1.ntramite' : inputNtramite
+                                                                            ,'smap1.status'  : '1'//en revision medica
+                                                                            ,'smap1.comments' : Ext.getCmp('inputTextareaCommentsToMedico').getValue()
+                                                                        }
+                                                                        ,success : function(response)
+                                                                        {
+                                                                            var json=Ext.decode(response.responseText);
+                                                                            if(json.success==true)
+                                                                            {
+                                                                                Ext.create('Ext.form.Panel').submit
+                                                                                ({
+                                                                                    url             : datComUrlMC
+                                                                                    ,standardSubmit : true
+                                                                                });
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                            	window.setLoading(false);
+                                                                                Ext.Msg.show({
+                                                                                    title:'Error',
+                                                                                    msg: 'Error al enviar a revisi&oacute;n m&eacute;dica',
+                                                                                    buttons: Ext.Msg.OK,
+                                                                                    icon: Ext.Msg.ERROR
+                                                                                });
+                                                                            }
+                                                                        }
+                                                                        ,failure : function()
+                                                                        {
+                                                                            Ext.Msg.show({
+                                                                                title:'Error',
+                                                                                msg: 'Error de comunicaci&oacute;n',
+                                                                                buttons: Ext.Msg.OK,
+                                                                                icon: Ext.Msg.ERROR
+                                                                            });
+                                                                        }
+                                                                    });
+                                                                },
+                                                                failure:function(){
+                                                                	window.setLoading(false);
+                                                                    Ext.Msg.show({
+                                                                        title:'Error',
+                                                                        msg: 'Error de comunicaci&oacute;n',
+                                                                        buttons: Ext.Msg.OK,
+                                                                        icon: Ext.Msg.ERROR
+                                                                    });
+                                                                }
                                                             });
                                                         }
-                                                    });
-                                                },
-                                                failure:function(){
-                                                    form.setLoading(false);
-                                                    Ext.Msg.show({
-                                                        title:'Error',
-                                                        msg: 'Error de comunicaci&oacute;n',
-                                                        buttons: Ext.Msg.OK,
-                                                        icon: Ext.Msg.ERROR
-                                                    });
-                                                }
-                                            });
-                                        }
-                                        else
-                                        {
-                                            Ext.Msg.show({
-                                                title:'Datos incompletos',
-                                                msg: 'Favor de introducir todos los campos requeridos',
-                                                buttons: Ext.Msg.OK,
-                                                icon: Ext.Msg.WARNING
-                                            });
-                                        }
+                                                        else
+                                                        {
+                                                            Ext.Msg.show({
+                                                                title:'Datos incompletos',
+                                                                msg: 'Favor de introducir todos los campos requeridos',
+                                                                buttons: Ext.Msg.OK,
+                                                                icon: Ext.Msg.WARNING
+                                                            });
+                                                        }
+                                        	    	}
+                                        	    }
+                                        	    ,{
+                                        	    	text  : 'Cancelar'
+                                        	    	,icon : '${ctx}/resources/fam3icons/icons/cancel.png'
+                                        	    	,handler : function()
+                                        	    	{
+                                        	    		this.up().up().destroy();
+                                        	    	}
+                                        	    }
+                                        	]
+                                        }).show();
                                     }
                                 }
 		                        ,{
@@ -759,80 +797,120 @@
                                     ,hidden  : (!sesionDsrol)||sesionDsrol!='MEDICO'
                                     ,handler:function()
                                     {
-                                        var form=Ext.getCmp('formPanel');
-                                        //console.log(form.getValues());
-                                        if(form.isValid())
+                                    	Ext.create('Ext.window.Window',
                                         {
-                                            form.setLoading(true);
-                                            form.submit({
-                                                params:{
-                                                    'map1.pv_cdunieco' :  inputCdunieco,
-                                                    'map1.pv_cdramo' :    inputCdramo,
-                                                    'map1.pv_estado' :    inputEstado,
-                                                    'map1.pv_nmpoliza' :  inputNmpoliza
-                                                },
-                                                success:function(){
-                                                    form.setLoading(false);
-                                                    Ext.Ajax.request
-                                                    ({
-                                                        url     : datComUrlMCUpdateStatus
-                                                        ,params : 
-                                                        {
-                                                            'smap1.ntramite' : inputNtramite
-                                                            ,'smap1.status'  : '5'//Vo.Bo.Medico
-                                                        }
-                                                        ,success : function(response)
-                                                        {
-                                                            var json=Ext.decode(response.responseText);
-                                                            if(json.success==true)
-                                                            {
-                                                                Ext.create('Ext.form.Panel').submit
-                                                                ({
-                                                                    url             : datComUrlMC
-                                                                    ,standardSubmit : true
-                                                                });
-                                                            }
-                                                            else
-                                                            {
-                                                                Ext.Msg.show({
-                                                                    title:'Error',
-                                                                    msg: 'Error al guardar Vo. Bo.',
-                                                                    buttons: Ext.Msg.OK,
-                                                                    icon: Ext.Msg.ERROR
-                                                                });
-                                                            }
-                                                        }
-                                                        ,failure : function()
-                                                        {
-                                                            Ext.Msg.show({
-                                                                title:'Error',
-                                                                msg: 'Error de comunicaci&oacute;n',
-                                                                buttons: Ext.Msg.OK,
-                                                                icon: Ext.Msg.ERROR
-                                                            });
-                                                        }
-                                                    });
-                                                },
-                                                failure:function(){
-                                                    form.setLoading(false);
-                                                    Ext.Msg.show({
-                                                        title:'Error',
-                                                        msg: 'Error de comunicaci&oacute;n',
-                                                        buttons: Ext.Msg.OK,
-                                                        icon: Ext.Msg.ERROR
-                                                    });
+                                            title        : 'Dictamen para mesa de control'
+                                            ,width       : 600
+                                            ,height      : 400
+                                            ,buttonAlign : 'center'
+                                            ,modal       : true
+                                            ,closable    : false
+                                            ,autoScroll  : true
+                                            ,items       :
+                                            [
+												Ext.create('Ext.form.HtmlEditor', {
+												    id        : 'inputTextareaCommentsToMCFromMedico'
+											    	,width  : 570
+                                                    ,height : 300
+												})
+                                            ]
+                                            ,buttons    :
+                                            [
+                                                {
+                                                    text     : 'Guardar y dar Vo. Bo.'
+                                                    ,icon    : '${ctx}/resources/fam3icons/icons/heart_add.png'
+                                                    ,handler : function()
+                                                    {
+				                                        var form=Ext.getCmp('formPanel');
+				                                        var window=this.up().up();
+				                                        //console.log(form.getValues());
+				                                        if(form.isValid())
+				                                        {
+				                                        	window.setLoading(true);
+				                                            form.submit({
+				                                                params:{
+				                                                    'map1.pv_cdunieco' :  inputCdunieco,
+				                                                    'map1.pv_cdramo' :    inputCdramo,
+				                                                    'map1.pv_estado' :    inputEstado,
+				                                                    'map1.pv_nmpoliza' :  inputNmpoliza
+				                                                },
+				                                                success:function(){
+				                                                    Ext.Ajax.request
+				                                                    ({
+				                                                        url     : datComUrlMCUpdateStatus
+				                                                        ,params : 
+				                                                        {
+				                                                            'smap1.ntramite'   : inputNtramite
+				                                                            ,'smap1.status'    : '5'//Vo.Bo.Medico
+				                                                            ,'smap1.comments' : Ext.getCmp('inputTextareaCommentsToMCFromMedico').getValue() 
+				                                                        }
+				                                                        ,success : function(response)
+				                                                        {
+				                                                            var json=Ext.decode(response.responseText);
+				                                                            if(json.success==true)
+				                                                            {
+				                                                                Ext.create('Ext.form.Panel').submit
+				                                                                ({
+				                                                                    url             : datComUrlMC
+				                                                                    ,standardSubmit : true
+				                                                                });
+				                                                            }
+				                                                            else
+				                                                            {
+				                                                            	window.setLoading(false);
+				                                                                Ext.Msg.show({
+				                                                                    title:'Error',
+				                                                                    msg: 'Error al guardar Vo. Bo.',
+				                                                                    buttons: Ext.Msg.OK,
+				                                                                    icon: Ext.Msg.ERROR
+				                                                                });
+				                                                            }
+				                                                        }
+				                                                        ,failure : function()
+				                                                        {
+				                                                        	window.setLoading(false);
+				                                                            Ext.Msg.show({
+				                                                                title:'Error',
+				                                                                msg: 'Error de comunicaci&oacute;n',
+				                                                                buttons: Ext.Msg.OK,
+				                                                                icon: Ext.Msg.ERROR
+				                                                            });
+				                                                        }
+				                                                    });
+				                                                },
+				                                                failure:function(){
+				                                                	window.setLoading(false);
+				                                                    Ext.Msg.show({
+				                                                        title:'Error',
+				                                                        msg: 'Error de comunicaci&oacute;n',
+				                                                        buttons: Ext.Msg.OK,
+				                                                        icon: Ext.Msg.ERROR
+				                                                    });
+				                                                }
+				                                            });
+				                                        }
+				                                        else
+				                                        {
+				                                            Ext.Msg.show({
+				                                                title:'Datos incompletos',
+				                                                msg: 'Favor de introducir todos los campos requeridos',
+				                                                buttons: Ext.Msg.OK,
+				                                                icon: Ext.Msg.WARNING
+				                                            });
+				                                        }
+                                                    }
                                                 }
-                                            });
-                                        }
-                                        else
-                                        {
-                                            Ext.Msg.show({
-                                                title:'Datos incompletos',
-                                                msg: 'Favor de introducir todos los campos requeridos',
-                                                buttons: Ext.Msg.OK,
-                                                icon: Ext.Msg.WARNING
-                                            });
-                                        }
+                                                ,
+                                                {
+                                                	text  : 'Cancelar'
+                                                    ,icon : '${ctx}/resources/fam3icons/icons/cancel.png'
+                                                    ,handler : function()
+                                                    {
+                                                        this.up().up().destroy();
+                                                    }
+                                                }
+                                            ]
+                                        }).show();
                                     }
                                 }
 		                    ]

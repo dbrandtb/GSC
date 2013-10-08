@@ -24,6 +24,7 @@
 	var venExcluStoreDisp;
 	var venExcluStoreUsa;
 	var venExcluStoreTipos;
+	var loadExcluTimeoutVar;
 	/*///////////////////*/
 	////// variables //////
 	///////////////////////
@@ -43,7 +44,7 @@ Ext.onReady(function(){
     /*/////////////////*/
     Ext.define('ModeloExclusion',{
         extend:'Ext.data.Model',
-        fields:['cdclausu','dsclausu','linea_usuario','cdtipcla','linea_general']
+        fields:['cdclausu','dsclausu','linea_usuario','cdtipcla','linea_general','merged']
     });
     
     Ext.define('ModeloTipoClausula',
@@ -133,28 +134,78 @@ Ext.onReady(function(){
     	,renderTo : 'maindiv_scr_exclu'
     	,items    :
     	[
-    	    Ext.create('Ext.form.field.ComboBox',
+    	    Ext.create('Ext.panel.Panel',
     	    {
-    	    	id              : 'idComboTipCla'
-    	    	,store          : venExcluStoreTipos
-    	    	,displayField   : 'dstipcla'
-    	    	,valueField     : 'cdtipcla'
-    	    	,editable       : false
-    	    	,forceSelection : true
-    	    	,style          : 'margin:5px'
-    	    	,fieldLabel     : 'Tipo de cl&aacute;usula'
-    	    	,width          : 400
-    	    	,listeners      :
+    	    	border  : 0
+    	    	,layout :
     	    	{
-    	    		change : function(me,value)
-    	    		{
-    	    			debug(value);
-    	    			venExcluStoreDisp.load(
-    	    			{
-    	    				params : { 'smap1.pv_cdtipcla_i' : ''+value}
-    	    			});
-    	    		}
+    	    		type     : 'table'
+    	    		,columns : 2
     	    	}
+    	        ,defaults : 
+    	        {
+    	        	style : 'margin:5px;'
+    	        }
+    	    	,items :
+    	    	[
+		    	    Ext.create('Ext.form.field.ComboBox',
+		    	    {
+		    	    	id              : 'idComboTipCla'
+		    	    	,store          : venExcluStoreTipos
+		    	    	,displayField   : 'dstipcla'
+		    	    	,valueField     : 'cdtipcla'
+		    	    	,editable       : false
+		    	    	,forceSelection : true
+		    	    	,style          : 'margin:5px'
+		    	    	,fieldLabel     : 'Tipo de cl&aacute;usula'
+		    	    	,width          : 400
+		    	    	,listeners      :
+		    	    	{
+		    	    		change : function(me,value)
+		    	    		{
+		    	    			debug(value);
+		    	    			if(Ext.getCmp('idComboTipCla').getValue()&&Ext.getCmp('idComboTipCla').getValue().length>0)
+		    	    			{
+		    	    				venExcluStoreDisp.load(
+			    	    			{
+			    	    				params :
+			    	    				{
+			    	    					'smap1.pv_cdtipcla_i' : Ext.getCmp('idComboTipCla').getValue()+''
+			    	    					,'smap1.pv_descrip_i' : Ext.getCmp('idfiltrocoberinput').getValue()+''
+			    	    				}
+			    	    			});
+		    	    			}
+		    	    		}
+		    	    	}
+		    	    })
+		    	    ,{
+		    	    	xtype : 'textfield'
+		    	    	,fieldLabel : 'Filtro'
+		    	    	,id         : 'idfiltrocoberinput'
+	    	    		,listeners  :
+                        {
+                            change : function(me,value)
+                            {
+                                debug(value);
+                                if(Ext.getCmp('idComboTipCla').getValue()&&Ext.getCmp('idComboTipCla').getValue().length>0)
+                                {
+                                	clearTimeout(loadExcluTimeoutVar);
+                                	loadExcluTimeoutVar=setTimeout(function()
+                                	{
+		                                venExcluStoreDisp.load(
+		                                {
+		                                    params :
+		                                    {
+		                                        'smap1.pv_cdtipcla_i' : Ext.getCmp('idComboTipCla').getValue()+''
+		                                        ,'smap1.pv_descrip_i' : Ext.getCmp('idfiltrocoberinput').getValue()+''
+		                                    }
+		                                });
+                                	},500);
+                                }
+                            }
+                        }
+		    	    }
+    	    	]
     	    })
     	    ,Ext.create('Ext.grid.Panel',
     	    {
@@ -346,6 +397,21 @@ Ext.onReady(function(){
                         ,flex      : 1
                     }
                     ,{
+                    	dataIndex     : 'merged'
+                    	,width        : 30
+                    	,menuDisabled : true
+                    	,renderer     : function(value)
+                    	{
+                    		if(true)
+                    		{
+                    			value='<img src="${ctx}/resources/fam3icons/icons/pencil.png" data-qtip="Editar detalle" style="cursor:pointer;" />';
+                    		}
+                    		debug(value);
+                    		return value;
+                    	}
+                    }
+                    /*
+                    ,{
                         menuDisabled : true
                         ,xtype       : 'actioncolumn'
                         ,width       : 30
@@ -357,120 +423,12 @@ Ext.onReady(function(){
                                 ,handler : function(me,rowIndex)
                                 {
                                     debug(rowIndex);
-                                    var record=venExcluStoreUsa.getAt(rowIndex);
-                                    debug(record);
-                                    Ext.create('Ext.window.Window',
-                                    {
-                                        title        : 'Detalle de '+record.get('dsclausu')
-                                        ,modal       : true
-                                        ,buttonAlign : 'center'
-                                        ,width       : 600
-                                        ,height      : 400
-                                        ,items       :
-                                        [
-                                            Ext.create('Ext.form.HtmlEditor', {
-                                                id        : 'venExcluHtmlInputEdit'
-                                                ,width    : 580
-                                                ,height   : 380
-                                                ,value    : record.get('linea_usuario')&&record.get('linea_usuario').length>0?
-                                                		record.get('linea_usuario'):record.get('linea_general')
-                                                ,readOnly : true
-                                            })
-                                            ,{
-                                                id      : 'venExcluHidenInputEdit'
-                                                ,xtype  : 'textfield'
-                                                ,hidden : true
-                                                ,value  : '0'
-                                            }
-                                        ]
-                                        ,buttons     :
-                                        [
-                                            {
-                                                text     : 'Editar'
-                                                ,icon    : venExcluContexto+'/resources/fam3icons/icons/pencil.png'
-                                                ,handler : function(me)
-                                                {
-                                                    debug(me);
-                                                    me.setDisabled(true);
-                                                    Ext.getCmp('venExcluHidenInputEdit').setValue('1');
-                                                    Ext.getCmp('venExcluHtmlInputEdit').setReadOnly(false);
-                                                }
-                                            }
-                                            ,{
-                                                text     : 'Guardar'
-                                                ,icon    : venExcluContexto+'/resources/fam3icons/icons/disk.png'
-                                                ,handler : function(me)
-                                                {
-                                                    debug(me);
-                                                    if(Ext.getCmp('venExcluHidenInputEdit').getValue()=='1')
-                                                    {
-	                                                    me.up().up().setLoading(true);
-	                                                    Ext.Ajax.request(
-	                                                    {
-	                                                        url     : venExcluUrlAddExclu
-	                                                        ,params : 
-	                                                        {
-	                                                            'smap1.pv_cdunieco_i'  : inputCduniecopx
-	                                                            ,'smap1.pv_cdramo_i'   : inputCdramopx
-	                                                            ,'smap1.pv_estado_i'   : inputEstadopx
-	                                                            ,'smap1.pv_nmpoliza_i' : inputNmpolizapx
-	                                                            ,'smap1.pv_nmsituac_i' : inputNmsituacpx
-	                                                            ,'smap1.pv_cdclausu_i' : record.get('cdclausu')
-	                                                            ,'smap1.pv_nmsuplem_i' : '0'
-	                                                            ,'smap1.pv_status_i'   : 'V'
-	                                                            ,'smap1.pv_cdtipcla_i' : record.get('cdtipcla')
-	                                                            ,'smap1.pv_swmodi_i'   : ''
-	                                                            ,'smap1.pv_accion_i'   : 'U'
-	                                                            ,'smap1.pv_dslinea_i'  :
-	                                                                Ext.getCmp('venExcluHidenInputEdit').getValue()=='1'?
-	                                                                        Ext.getCmp('venExcluHtmlInputEdit').getValue():''
-	                                                        }
-	                                                        ,success : function (response)
-	                                                        {
-	                                                            var json=Ext.decode(response.responseText);
-	                                                            if(json.success==true)
-	                                                            {
-	                                                                me.up().up().destroy();
-	                                                                venExcluStoreDisp.remove(record)
-	                                                                venExcluStoreUsa.load();
-	                                                                //venExcluStoreUsa.add(record);
-	                                                                //Ext.getCmp('venExcluGridUsaId').getView().refresh();
-	                                                            }
-	                                                            else
-	                                                            {
-	                                                                me.up().up().setLoading(false);
-	                                                                Ext.Msg.show({
-	                                                                    title:'Error',
-	                                                                    msg: 'Error al agregar cl&aacute;usula',
-	                                                                    buttons: Ext.Msg.OK,
-	                                                                    icon: Ext.Msg.ERROR
-	                                                                });
-	                                                            }
-	                                                        }
-	                                                        ,failure : function ()
-	                                                        {
-	                                                            me.up().up().setLoading(false);
-	                                                            Ext.Msg.show({
-	                                                                title:'Error',
-	                                                                msg: 'Error de comunicaci&oacute;n',
-	                                                                buttons: Ext.Msg.OK,
-	                                                                icon: Ext.Msg.ERROR
-	                                                            });
-	                                                        }
-	                                                    });
-                                                    }
-                                                    else
-                                                    {
-                                                    	me.up().up().destroy();
-                                                    }
-                                                }
-                                            }
-                                        ]
-                                    }).show();
+                                    
                                 }
                             }
                         ]
                     }
+                    */
                 ]
     	        ,buttons:
     	        [
@@ -529,6 +487,131 @@ Ext.onReady(function(){
                         }
                     }
     	        ]
+                ,listeners :
+                {
+                	cellclick : function(grid, td,
+                            cellIndex, record, tr,
+                            rowIndex, e, eOpts)
+                    {
+                		debug(rowIndex,cellIndex);
+               			if($(td).find('img').length>0)//si hay accion
+                        {
+	                		if(cellIndex==1)
+	                		{
+	                		    var record=venExcluStoreUsa.getAt(rowIndex);
+                                debug(record);
+                                Ext.create('Ext.window.Window',
+                                {
+                                    title        : 'Detalle de '+record.get('dsclausu')
+                                    ,modal       : true
+                                    ,buttonAlign : 'center'
+                                    ,width       : 600
+                                    ,height      : 400
+                                    ,items       :
+                                    [
+                                        Ext.create('Ext.form.HtmlEditor', {
+                                            id        : 'venExcluHtmlInputEdit'
+                                            ,width    : 580
+                                            ,height   : 380
+                                            ,value    : record.get('linea_usuario')&&record.get('linea_usuario').length>0?
+                                                    record.get('linea_usuario'):record.get('linea_general')
+                                            ,readOnly : true
+                                        })
+                                        ,{
+                                            id      : 'venExcluHidenInputEdit'
+                                            ,xtype  : 'textfield'
+                                            ,hidden : true
+                                            ,value  : '0'
+                                        }
+                                    ]
+                                    ,buttons     :
+                                    [
+                                        {
+                                            text     : 'Editar'
+                                            ,icon    : venExcluContexto+'/resources/fam3icons/icons/pencil.png'
+                                            ,handler : function(me)
+                                            {
+                                                debug(me);
+                                                me.setDisabled(true);
+                                                Ext.getCmp('venExcluHidenInputEdit').setValue('1');
+                                                Ext.getCmp('venExcluHtmlInputEdit').setReadOnly(false);
+                                            }
+                                        }
+                                        ,{
+                                            text     : 'Guardar'
+                                            ,icon    : venExcluContexto+'/resources/fam3icons/icons/disk.png'
+                                            ,handler : function(me)
+                                            {
+                                                debug(me);
+                                                if(Ext.getCmp('venExcluHidenInputEdit').getValue()=='1')
+                                                {
+                                                    me.up().up().setLoading(true);
+                                                    Ext.Ajax.request(
+                                                    {
+                                                        url     : venExcluUrlAddExclu
+                                                        ,params : 
+                                                        {
+                                                            'smap1.pv_cdunieco_i'  : inputCduniecopx
+                                                            ,'smap1.pv_cdramo_i'   : inputCdramopx
+                                                            ,'smap1.pv_estado_i'   : inputEstadopx
+                                                            ,'smap1.pv_nmpoliza_i' : inputNmpolizapx
+                                                            ,'smap1.pv_nmsituac_i' : inputNmsituacpx
+                                                            ,'smap1.pv_cdclausu_i' : record.get('cdclausu')
+                                                            ,'smap1.pv_nmsuplem_i' : '0'
+                                                            ,'smap1.pv_status_i'   : 'V'
+                                                            ,'smap1.pv_cdtipcla_i' : record.get('cdtipcla')
+                                                            ,'smap1.pv_swmodi_i'   : ''
+                                                            ,'smap1.pv_accion_i'   : 'U'
+                                                            ,'smap1.pv_dslinea_i'  :
+                                                                Ext.getCmp('venExcluHidenInputEdit').getValue()=='1'?
+                                                                        Ext.getCmp('venExcluHtmlInputEdit').getValue():''
+                                                        }
+                                                        ,success : function (response)
+                                                        {
+                                                            var json=Ext.decode(response.responseText);
+                                                            if(json.success==true)
+                                                            {
+                                                                me.up().up().destroy();
+                                                                venExcluStoreDisp.remove(record)
+                                                                venExcluStoreUsa.load();
+                                                                //venExcluStoreUsa.add(record);
+                                                                //Ext.getCmp('venExcluGridUsaId').getView().refresh();
+                                                            }
+                                                            else
+                                                            {
+                                                                me.up().up().setLoading(false);
+                                                                Ext.Msg.show({
+                                                                    title:'Error',
+                                                                    msg: 'Error al agregar cl&aacute;usula',
+                                                                    buttons: Ext.Msg.OK,
+                                                                    icon: Ext.Msg.ERROR
+                                                                });
+                                                            }
+                                                        }
+                                                        ,failure : function ()
+                                                        {
+                                                            me.up().up().setLoading(false);
+                                                            Ext.Msg.show({
+                                                                title:'Error',
+                                                                msg: 'Error de comunicaci&oacute;n',
+                                                                buttons: Ext.Msg.OK,
+                                                                icon: Ext.Msg.ERROR
+                                                            });
+                                                        }
+                                                    });
+                                                }
+                                                else
+                                                {
+                                                    me.up().up().destroy();
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }).show();
+	                		}//end if cell index = 1
+                		}//end if find img
+                    }
+                }
             })
     	]
     });
