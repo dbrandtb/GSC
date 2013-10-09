@@ -74,16 +74,6 @@
 
 		<action name="index">
 			<result>/index.jsp</result>
-		<!-- 
-			<result>/jsp/portal/index.jsp</result>
-			 -->
-			
-		</action>
-				<!-- <action name="portal">
-			<result>/jsp/portal/portal.jsp</result>
-			<result type="redirect">load</result>
-		</action>
-		 -->
 		
 		<action name="load" class="paginaPrincipalAction" method="obtenPaginaPrincipal">
 			<result>/jsp/portal/portal.jsp</result>
@@ -103,21 +93,16 @@
             </result>
         </action>
         
-        <!--  -->
         <action name="seleccionaRolCliente" class="loadClientesRolesAction" method="obtenRolesClientes">
 	    	<exception-mapping result="success" exception="javax.servlet.ServletException">/jsp/portal/treeRolElemento.jsp</exception-mapping>
 	    	<exception-mapping result="success" exception="java.sql.SQLException">/jsp/portal/treeRolElemento.jsp</exception-mapping>
 	    	<exception-mapping result="success" exception="java.lang.Exception">/jsp/portal/treeRolElemento.jsp</exception-mapping>
 			<result name="success">/jsp/portal/treeRolElemento.jsp</result>
-			<!--<result name="portal" type="redirect">portal</result>-->
-			<!-- <result name="load" type="redirect">load</result> -->
 			<result name="load" type="redirectAction">
 	            <param name="actionName">load</param>
 	            <param name="namespace">/</param>
 	        </result>
-			
 		</action>		
-		
 		
 		<action name="ArbolRolCliente" class="loadClientesRolesAction" method="jsonObtenRolesClientes">
 			<result name="success" type="json">			
@@ -131,104 +116,10 @@
 			<result name="confcompleta" type="json"><param name="ignoreHierarchy">false</param></result>
 		</action>
 		
-		<action name="consultaPolizasRenovar" class="renovacionAction" method="obtienePantallaPolizasRenovar">
-           <result name="input">/jsp/flujos/renovacion/consultaPolizasRenovar.jsp</result>
-       </action>
-		
-		 <action name="detallePoliza">
-           <result>/resources/jsp-script/procesos/emision/detallePoliza-script.jsp</result>
-       </action>
-	   
-	   <!-- Wizard -->
-	   <action name="LayoutBrowser">
-			<result>/WEB-INF/jsp/productos/layoutBrowser/layoutBrowser.jsp</result>
-		</action>
-		<action name="ArbolListaProductos" class="ArbolProductosAction" method="listaProductosJson">
-			<result name="success" type="json">
-				<param name="root">listaProductos</param>
-			</result>
-		</action>
-		<action name="LlenandoProductos" class="ArbolProductosAction" method="llenandoEstructuraProducto">
-			<result name="success" type="json"/>
-		</action>
-		<action name="SubirCodigosASession" class="ArbolProductosAction" method="subirCodigosASession">
-			<result name="success" type="json"/>
-		</action>
-		<action name="VistaProductos" class="ArbolProductosAction" method="vistaPantallasJson">
-			<result name="success" type="json">
-				<param name="root">listaFuncionesJson</param>
-			</result>
-		</action>
-		<action name="Redireccionate">
-			<result>/indexWithIframe.jsp</result>
-		</action>
-		
-		<action name="RemueveCosasDeSessionEnLibrerias" class="PrincipalLibreriasAction" method="remueveCosasDeSessionEnLibrerias">
-            <result name="success" type="json"/>      
-		</action>
 		
 		
-		<!-- TODO: quitar actions, son para que se ejecute la funcionalidad de 'Expresiones' en Numeracion de Polizas(buscar otra forma de no repetirlos): -->
-    	<action name="ObtenerCodigoExpresion" class="AtributosVariablesAction" method="obtenerCodigoExpresion">
-			<result name="success" type="json"/>      
-		</action>
-    	<action name="Expresiones" class="ExpresionesAction">
-			<result name="input">/WEB-INF/jsp/productos/expresiones/expresiones.jsp</result>
-		</action>
-		<action name="ExpresionesWindow" class="ExpresionesAction">		
-			 <result name="input">/WEB-INF/jsp/productos/expresiones/expresionesDiv.jsp</result>			 
-		</action>
-		<action name="Complex" class="ExpresionesAction">
-			<result name="input">/WEB-INF/jsp/productos/expresiones/complex.jsp</result>
-		</action>
-		<action name="ValidarExpresion" class="ExpresionesAction" method="validarExpresion">
-			<result name="success" type="json"/>				
-		</action>
-		<action name="Test" class="ExpresionesAction" method="test">
-			<result name="success" type="json"/>				
-		</action>
-		<action name="FuncionesArbol" class="ExpresionesAction" method="funcionesArbolJSON">
-			<result name="success" type="json">
-				<param name="root">listaFuncionesJson</param>
-			</result>
-		</action>
-		<action name="VariablesTemporalesArbol" class="ExpresionesAction" method=" variablesTemporalesArbolJSON">
-			<result name="success" type="json">
-				<param name="root">listaVariablesTemporalesJson</param>
-			</result>
-		</action>
-		<action name="CamposDelProductoArbol" class="ExpresionesAction" method="camposDelProductoArbolJSON">
-			<result name="success" type="json">
-				<param name="root">listaCamposDelProductoJson</param>
-			</result>
-		</action>
-		<action name="ComboVariables" class="ExpresionesAction" method="listaComboVariablesJSON">
-			<result name="success" type="json"/>				
-		</action>
-		<action name="ComboTabla" class="ExpresionesAction" method="listaTablaJSON">
-			<result name="success" type="json"/>				
-		</action>
-		<action name="ComboColumna" class="ExpresionesAction" method="listaColumnaJSON">
-			<result name="success" type="json"/>				
-		</action>
-		<action name="ComboClave" class="ExpresionesAction" method="listaClaveJSON">
-			<result name="success" type="json"/>				
-		</action>
-		<action name="AgregarClave" class="ExpresionesAction" method="llenarClave">
-			<result name="success" type="json"/>				
-		</action>
-		<action name="AgregarVariable" class="ExpresionesAction" method="agregarVariable">
-			<result name="success" type="json"/>				
-		</action>
-		<action name="AgregarExpresion" class="ExpresionesAction" method="agregarExpresion">
-			<result name="success" type="json"/>				
-		</action>
-		<action name="EditarExpresion" class="ExpresionesAction" method="editarExpresion">
-			<result name="success" type="json"/>				
-		</action>
-		<action name="EliminarVariable" class="ExpresionesAction" method="eliminarVariable">
-			<result name="success" type="json"/>				
-		</action>
+		<!-- NUEVOS -->
+		
                 <action name="dinosaurio" class="mx.com.aon.portal.web.DinosaurioAction" method="jsoo">
                     <result name="success">/jsp/portal/testFileUpload.jsp</result>
                 </action>
@@ -239,7 +130,9 @@
                     </interceptor-ref>
                     <result name="success" type="json"/>
                 </action>
-		<!-- TODO: FIN de quitar actions, son para que se ejecute lo de Expresiones en Numeracion de Polizas -->
+
+
+                
                 <action name="cotizacionVital" class="cotizacionVital" method="entrar">
                     <result name="success">/jsp/extjs4/asegurados.jsp</result>
                     <result name="input">/error.jsp</result>
@@ -362,12 +255,9 @@
                     <result name="success" type="json" />
                 </action>
                 
-                
                 <action name="enviaCorreo" class="mailAction" method="enviaCorreo">
 		            <result name="success" type="json" />
         		</action>
-        
-                
                 
     </package>
 
