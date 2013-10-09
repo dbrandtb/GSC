@@ -19,6 +19,7 @@ var panDocUrlUploadDoc   = '<s:url namespace="/" action="subirArchivo" />';
 var panDocUrlUploadPro   = '<s:url namespace="/" action="subirArchivoMostrarBarra" />';
 var panDocUrlDownload    = '<s:url namespace ="/documentos" action="descargaDoc" />';
 var panDocUrlViewDoc     = '<s:url namespace ="/documentos" action="descargaDocInline" />';
+var venDocUrlImpConrec   = '<s:url namespace ="/documentos" action="generarContrarecibo" />';
 /*//////////////////////*/
 ////// variables    //////
 //////////////////////////
@@ -50,6 +51,7 @@ Ext.onReady(function()
             ,{name:'feinici',type:'date',dateFormat:'d/m/Y'}
             ,'liga'
             ,'ntramite'
+            ,{name:'selected',type:'boolean'}
         ]
     });
     /*//////////////////////*/
@@ -97,6 +99,86 @@ Ext.onReady(function()
         //,title         : 'Documentos'
         //,collapsible   : true
         //,titleCollapse : true
+        ,onContrareciboClick : function(button,e)
+        {
+        	var window=button.up().up();
+        	debug('contrarecibo');
+        	/*var docConRec=[];
+        	panDocStoreDoc.each(function(record)
+            {
+                if(record.get('selected')==true)
+                {
+                    docConRec.push
+                    ({
+                    	pv_ntramite_i  : record.get('ntramite')
+                    	,pv_cddocume_i : record.get('cddocume')
+                    	,pv_dsdocume_i : record.get('dsdocume')
+                    });
+                }
+            });
+        	var jsonParams={};
+        	jsonParams['slist1']=docConRec;
+        	debug(jsonParams);*/
+        	window.setLoading(true);
+        	Ext.Ajax.request
+        	({
+        		url       : venDocUrlImpConrec
+        		//,jsonData : Ext.encode(jsonParams)
+        		,params   :
+        		{
+        			'smap1.ntramite' : panDocInputNtramite
+        		}
+        		,success  : function(response)
+        		{
+        			var json=Ext.decode(response.responseText);
+        			if(json.success==true)
+        			{
+        				window.setLoading(false);
+        				var numRand=Math.floor((Math.random()*100000)+1);
+        	            debug(numRand);
+        	            var windowVerDocu=Ext.create('Ext.window.Window',
+        	            {
+        	                title          : 'Contrarecibo'
+        	                ,width         : 700
+        	                ,height        : 500
+        	                ,collapsible   : true
+        	                ,titleCollapse : true
+        	                ,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
+        	                                 +'src="'+panDocUrlViewDoc+'?idPoliza='+panDocInputNtramite+'&filename='+json.uploadKey+'">'
+        	                                 +'</iframe>'
+        	                ,listeners     :
+        	                {
+        	                    resize : function(win,width,height,opt){
+        	                        debug(width,height);
+        	                        $('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
+        	                    }
+        	                }
+        	            }).show();
+        	            windowVerDocu.center();
+        			}
+        			else
+        			{
+        				window.setLoading(false);
+        				Ext.Msg.show({
+                            title:'Error',
+                            msg: 'Error al generar contrarecibo',
+                            buttons: Ext.Msg.OK,
+                            icon: Ext.Msg.ERROR
+                        });
+        			}
+        		}
+        		,failure  : function()
+        		{
+        			window.setLoading(false);
+        			Ext.Msg.show({
+                        title:'Error',
+                        msg: 'Error de comunicaci&oacute;n',
+                        buttons: Ext.Msg.OK,
+                        icon: Ext.Msg.ERROR
+                    });
+        		}
+        	});
+        }
         ,onAddClick : function(button,e)
         {
             var windowAgregarDocu=Ext.create('Ext.window.Window',
@@ -106,7 +188,7 @@ Ext.onReady(function()
                 ,closable    : false
                 ,modal       : true
                 ,width       : 500
-                //,maxHeight   : 400
+                //,height   : 700
                 ,bodyPadding : 5
                 ,items       :
                 [
@@ -243,7 +325,35 @@ Ext.onReady(function()
             {
                 columns :
                 [
-                    {
+                    /*{
+                    	width      : 30
+                    	,dataIndex : 'selected'
+                    	,xtype     : 'checkcolumn'
+                    	,listeners :
+                    	{
+                    		checkchange : function( me, rowIndex, checked, eOpts )
+	                    	{
+	                    		debug('checkchange');
+	                    		var haySelected=false;
+	                            panDocStoreDoc.each(function(record)
+	                            {
+	                                if(record.get('selected')==true)
+	                                {
+	                                    haySelected=true;
+	                                }
+	                            });
+	                            if(haySelected==true)
+	                            {
+	                                Ext.getCmp('venDocMenuSupBotGenConrec').show();
+	                            }
+	                            else
+	                            {
+	                            	Ext.getCmp('venDocMenuSupBotGenConrec').hide();
+	                            }
+	                    	}
+                    	}
+                    }
+                    ,*/{
                         header     : 'Descripci&oacute;n'
                         ,dataIndex : 'dsdocume'
                         ,flex      : 2
@@ -322,7 +432,6 @@ Ext.onReady(function()
                     }
                     */
                 ]
-                <s:if test='!smap1.containsKey("readOnly")'>
                 ,dockedItems :
                 [
                     {
@@ -330,16 +439,24 @@ Ext.onReady(function()
                         ,dock  : 'top'
                         ,items :
                         [
+			                <s:if test='!smap1.containsKey("readOnly")'>
                             {
                                 xtype    : 'button'
                                 ,text    : 'Agregar'
                                 ,icon    : panDocContexto+'/resources/fam3icons/icons/add.png'
                                 ,handler : this.onAddClick
+                            },
+			                </s:if>
+                            {
+                            	xtype    : 'button'
+                            	,id      : 'venDocMenuSupBotGenConrec'
+	                            ,text    : 'Generar contrarecibo'
+	                            ,icon    : '${ctx}/resources/fam3icons/icons/page_attach.png'
+	                            ,handler : this.onContrareciboClick
                             }
                         ]
                     }
                 ]
-                </s:if>
                 ,listeners:
                 {
                 	cellclick : function(grid, td,
@@ -347,7 +464,7 @@ Ext.onReady(function()
                             rowIndex, e, eOpts)
                 	{
                 		debug( cellIndex+'x', rowIndex+'y' , record );
-                		if(cellIndex==2)//ver
+                		if(cellIndex==3)//ver
                 		{
                 			debug($(td).find('img').length);
                 			if($(td).find('img').length>0)//si hay accion
@@ -390,7 +507,7 @@ Ext.onReady(function()
                                 }
                 			}
                 		}
-                		else if(cellIndex==3)//descargar
+                		else if(cellIndex==4)//descargar
                 		{
                 			debug($(td).find('img').length);
                 			if($(td).find('img').length>0)//si hay accion
@@ -456,6 +573,7 @@ Ext.onReady(function()
     /*//////////////////////*/
     panDocGridDocu=new PanDocGridDocu();
     panDocGridDocu.render('pan_doc_maindiv');
+    //Ext.getCmp('venDocMenuSupBotGenConrec').hide();
     /*//////////////////////*/
     ////// contenido    //////
     //////////////////////////

@@ -86,4 +86,5 @@ public interface KernelManagerSustituto {
 	public WrapperResultados movDmesacontrol(Map<String, Object> params) throws ApplicationException;
 	public List<Map<String, String>> obtenerDetalleMC(Map<String, String> smap1) throws ApplicationException;
 	public WrapperResultados mesaControlFinalizarDetalle(Map<String, String> smap1) throws ApplicationException;
+	public WrapperResultados preparaContrarecibo(Map<String, String> docu) throws ApplicationException;
 }
