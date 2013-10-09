@@ -364,6 +364,24 @@ Ext.onReady(function(){
         		            		return value;
         		            	}
         		            }
+        		            ,{
+                                width         : 30
+                                ,menuDisabled : true
+                                ,dataIndex    : 'CDCLAUSU'
+                                ,renderer     : function(value)
+                                {
+                                    debug(value);
+                                    if(value&&value!=null&&value.length>0)
+                                    {
+                                        value='<img src="${ctx}/resources/fam3icons/icons/printer.png" style="cursor:pointer;" data-qtip="Imprimir" />';
+                                    }
+                                    else
+                                    {
+                                        value='';
+                                    }
+                                    return value;
+                                }
+                            }
         		        ]
         		        ,listeners :
         		        {
@@ -462,6 +480,10 @@ Ext.onReady(function(){
         		        			        }
         		        			    ]
         		        			}).show();
+        		        		}
+        		        		else if(cellIndex==5&&$(td).find('img').length>0)
+        		        		{
+        		        			debug("APRETASTE EL BOTON IMPRIMIR PARA EL RECORD:",record);
         		        		}
                             }
         		        }
