@@ -19,34 +19,6 @@
     <!--UsuarioManager -->
 
     <bean id="loginManager" class="mx.com.aon.portal.service.impl.LoginManagerImpl">
-        <!--  property name="endpoints">
-            <map>
-            <entry key="VALIDA_USUARIO"><ref bean="VALIDA_USUARIO"/></entry>
-            <entry key="CONSULTA_PERFIL"><ref bean="CONSULTA_PERFIL"/></entry>
-            </map>
-        </property-->
-    </bean>
-
-    <bean id="navigationManager" class="mx.com.aon.portal.service.impl.NavigationManagerImpl">
-        <!-- property name="endpoints">
-            <map>
-            	<entry key="CARGA_NAVEGACION">
-            		<ref bean="CARGA_NAVEGACION"/>
-            	</entry>
-            	<entry key="CARGA_ROLES_CLIENTES">
-	            	<ref bean="CARGA_ROLES_CLIENTES"/>
-            	</entry>
-            	<entry key="CARGA_NUMERO_REGISTRO">
-	            	<ref bean="CARGA_NUMERO_REGISTRO"/>
-            	</entry>            	
-            	<entry key="CARGA_VARIABLES_USER_ISO">
-	            	<ref bean="CARGA_VARIABLES_USER_ISO"/>
-            	</entry>
-            	<entry key="CARGA_ROLES_CLIENTES_USER">
-	            	<ref bean="CARGA_ROLES_CLIENTES_USER"/>
-            	</entry>      
-            </map>
-        </property-->
     </bean>
 
 	<bean id="navigationManagerJdbcTemplate" class="mx.com.aon.portal.service.impl.NavigationManagerJdbcTemplateImpl" parent="abstractManagerJdbcTemplateInvoke">
@@ -60,30 +32,10 @@
                 <ref bean="paginaPrincipalDAO"/>
         </property>
     </bean>
-    <bean id="menuPrincipalManager" class="mx.com.aon.portal.service.impl.MenuPrincipalManagerImpl">
-    	<!-- property name="endpoints">
-    		<map>
-    			<entry key="CARGA_MENU_PRINCIPAL">
-    				<ref bean="CARGA_MENU_PRINCIPAL"/>
-    			</entry>
-    			<entry key="CARGA_MENU_VERTICAL">
-    				<ref bean="CARGA_MENU_VERTICAL"/>
-    			</entry>
-    		</map>
-    	</property-->
-    </bean>
-    
-    
     
     <!-- Beans utilizados para JdbcTemplates: -->
     <bean id="processResultManager" class="mx.com.aon.portal.service.ProcessResultManager">
-        <!-- property name="endpoints">
-            <map>
-            <entry key="OBTIENE_MENSAJE"><ref bean="OBTIENE_MENSAJE"/></entry>
-            </map>
-        </property-->
     </bean>
-
 
     <bean id="abstractManagerBean" abstract="true" class="mx.com.aon.portal.service.impl.AbstractManager">
         <property name="processResultManager">

@@ -108,7 +108,7 @@ public class UserContextFilter implements Filter {
 	            ServletContext servletContext  = session.getServletContext();
 	            WebApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(servletContext);
 	            loginManager = (LoginManager) context.getBean("loginManager");
-	            navigationManager = (NavigationManager) context.getBean("navigationManager");
+	            navigationManager = (NavigationManager) context.getBean("navigationManagerJdbcTemplate");
 	            try {
 	                logger.debug("Obteniendo los datos adicionales del usuario");
 	                userVO = loginManager.obtenerDatosUsuario(user);
