@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.cotizacion.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -905,6 +906,39 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 		return SUCCESS;
 	}
 	
+	
+	
+	public String agregarExclusionDetalle()
+	{
+		log.debug("\n#############################################"
+				+ "\n#############################################"
+				+ "\n###### pantalla de exclusion Detalle   ######"
+				+ "\n###### agregar exclusion   Detalle     ######"
+				+ "\n######                                 ######");
+		log.debug("smap1: "+smap1);
+		try
+		{
+			UserVO usuarioSesion=(UserVO) this.session.get("USUARIO");
+            DatosUsuario userData=kernelManager.obtenerDatosUsuario(usuarioSesion.getUser());
+            log.debug("se inserta detalle nuevo");
+            omap1.put("pv_feinicio_i"   , new Date());
+            omap1.put("pv_cdusuari_i"   , userData.getCdusuari());
+            kernelManager.movDmesacontrol(omap1);
+            
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			log.error("error al agregar la exclusion",ex);
+			success=false;
+		}
+		log.debug("\n######                                ######"
+				+ "\n###### agregar exclusion  Detalle     ######"
+				+ "\n###### pantalla de exclusion  Detalle ######"
+				+ "\n############################################"
+				+ "\n############################################");
+		return SUCCESS;
+	}
 	/////////////////////////////////
 	////// getters and setters //////
 	/*/////////////////////////////*/

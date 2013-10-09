@@ -252,6 +252,10 @@
                     <result name="success" type="json" />
                 </action>
                 
+                <action name="agregarExclusionDetalle" class="beanDatosComplementariosCoberturas" method="agregarExclusionDetalle">
+                    <result name="success" type="json" />
+                </action>
+                
                 <action name="enviaCorreo" class="mailAction" method="enviaCorreo">
 		            <result name="success" type="json" />
         		</action>

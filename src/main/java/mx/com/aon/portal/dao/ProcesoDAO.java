@@ -1659,7 +1659,7 @@ public class ProcesoDAO extends AbstractDAO {
     		/**
     		 * Problema:
     		 * Cuando cargo asegurados su fenacimi puede venir como 01/12/1990 o como 1990-12-01 00:00:00.0
-    		 * SoluciÃ³n:
+    		 * Solución:
     		 * Hacer este if
     		 */
     		String fenacimi=rs.getString("fenacimi");
@@ -2917,7 +2917,7 @@ public class ProcesoDAO extends AbstractDAO {
 	{
 		public Object mapRow(ResultSet rs, int rowNum) throws SQLException
 		{
-			String cols[]=new String[]{"cdtipcla","dstipcla"};
+			String cols[]=new String[]{"cdtipcla","dstipcla","swgrapol"};
 			Map<String,String> map=new HashMap<String,String>(0);
 			for(String col:cols)
 			{
