@@ -364,7 +364,7 @@ Ext.onReady(function(){
         		            		return value;
         		            	}
         		            }
-        		            ,{
+        		            /*,{
                                 width         : 30
                                 ,menuDisabled : true
                                 ,dataIndex    : 'CDCLAUSU'
@@ -381,7 +381,7 @@ Ext.onReady(function(){
                                     }
                                     return value;
                                 }
-                            }
+                            }*/
         		        ]
         		        ,listeners :
         		        {
@@ -481,10 +481,10 @@ Ext.onReady(function(){
         		        			    ]
         		        			}).show();
         		        		}
-        		        		else if(cellIndex==5&&$(td).find('img').length>0)
+        		        		/*else if(cellIndex==5&&$(td).find('img').length>0)
         		        		{
         		        			debug("APRETASTE EL BOTON IMPRIMIR PARA EL RECORD:",record);
-        		        		}
+        		        		}*/
                             }
         		        }
         		    })
