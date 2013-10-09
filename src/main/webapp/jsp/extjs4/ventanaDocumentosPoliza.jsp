@@ -464,7 +464,7 @@ Ext.onReady(function()
                             rowIndex, e, eOpts)
                 	{
                 		debug( cellIndex+'x', rowIndex+'y' , record );
-                		if(cellIndex==3)//ver
+                		if(cellIndex==2)//ver
                 		{
                 			debug($(td).find('img').length);
                 			if($(td).find('img').length>0)//si hay accion
@@ -507,7 +507,7 @@ Ext.onReady(function()
                                 }
                 			}
                 		}
-                		else if(cellIndex==4)//descargar
+                		else if(cellIndex==3)//descargar
                 		{
                 			debug($(td).find('img').length);
                 			if($(td).find('img').length>0)//si hay accion

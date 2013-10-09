@@ -941,6 +941,9 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 		{
 			log.debug("panel1"+panel1);
 			
+			UserVO usu=(UserVO)session.get("USUARIO");
+			DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usu.getUser());
+			
 			String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+panel1.get("pv_ntramite");
             File carpeta = new File(rutaCarpeta);
             if(!carpeta.exists())
@@ -1085,7 +1088,14 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 				}
 			}
 				
-				
+			log.debug("se inserta detalle nuevo para emision");
+        	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
+        	parDmesCon.put("pv_ntramite_i"   , panel1.get("pv_ntramite"));
+        	parDmesCon.put("pv_feinicio_i"   , new Date());
+        	parDmesCon.put("pv_cdclausu_i"   , null);
+        	parDmesCon.put("pv_comments_i"   , "El trámite se emitió");
+        	parDmesCon.put("pv_cdusuari_i"   , datUsu.getCdusuari());
+        	kernelManager.movDmesacontrol(parDmesCon);
 			
 			success=true;
 		}
