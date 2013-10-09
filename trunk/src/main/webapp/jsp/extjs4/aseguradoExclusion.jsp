@@ -362,14 +362,14 @@ Ext.onReady(function(){
                                                                 }
                                                                 else
                                                                 {
-                                                                    Ext.Ajax.request(
+                                                                	Ext.Ajax.request(
                                                                             {
                                                                                 url     : venExcluUrlAddExcluDetalle
                                                                                 ,params : 
                                                                                 {
-                                                                                    'omap1.pv_ntramite_i'  : inputNtramite
-                                                                                    ,'omap1.pv_cdclausu_i' : record.get('cdclausu')
-                                                                                    ,'omap1.pv_comments_i' : Ext.getCmp('venExcluHtmlInputCopy').getValue()
+                                                                                    'smap1.pv_ntramite_i'  : inputNtramite
+                                                                                    ,'smap1.pv_cdclausu_i' : record.get('cdclausu')
+                                                                                    ,'smap1.pv_comments_i' : Ext.getCmp('venExcluHtmlInputCopy').getValue()
                                                                                 }
                                                                                 ,success : function (response)
                                                                                 {
@@ -409,10 +409,7 @@ Ext.onReady(function(){
                                                                                     });
                                                                                 }
                                                                             });
-                                                                }
-                                                                //---
-
-                                                                //---
+                                                                }                                                                
                                                             }
                                                         }
                                                     ]
