@@ -915,12 +915,23 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 				+ "\n###### pantalla de exclusion Detalle   ######"
 				+ "\n###### agregar exclusion   Detalle     ######"
 				+ "\n######                                 ######");
-		log.debug("smap1: "+smap1);
+		log.debug("omap1: "+omap1);
 		try
 		{
 			UserVO usuarioSesion=(UserVO) this.session.get("USUARIO");
             DatosUsuario userData=kernelManager.obtenerDatosUsuario(usuarioSesion.getUser());
             log.debug("se inserta detalle nuevo");
+            log.debug(omap1);
+            
+            Iterator<Entry<String,String >> it=smap1.entrySet().iterator();
+            omap1= new HashMap<String,Object>(0);
+			while(it.hasNext())
+			{
+				Entry<String,String> entry=it.next();
+				omap1.put(entry.getKey(), entry.getValue());
+			}
+			
+			
             omap1.put("pv_feinicio_i"   , new Date());
             omap1.put("pv_cdusuari_i"   , userData.getCdusuari());
             kernelManager.movDmesacontrol(omap1);
