@@ -1,6 +1,5 @@
 package mx.com.gseguros.portal.cotizacion.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -8,21 +7,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import oracle.jdbc.driver.OracleTypes;
-
-import org.apache.log4j.Logger;
-import org.apache.struts2.ServletActionContext;
-import org.springframework.jdbc.core.SqlParameter;
-
-import mx.com.aon.catweb.configuracion.producto.model.WrapperResultados;
 import mx.com.aon.core.web.PrincipalCoreAction;
-import mx.com.aon.kernel.service.KernelManager;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.Tatri;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+
+import org.apache.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
 
 public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 
