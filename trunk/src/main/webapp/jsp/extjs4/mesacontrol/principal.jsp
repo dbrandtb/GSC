@@ -406,7 +406,7 @@ Ext.onReady(function(){
         		        		{
         		        		    Ext.getCmp('inputReadDetalleHtmlVisor').setValue(record.get('COMMENTS'));
         		        		}
-        		        		else if(cellIndex==4&&$(td).find('img').length>0)
+        		        		else if(cellIndex==6&&$(td).find('img').length>0)
         		        		{
         		        			debug('finalizar');
         		        			Ext.create('Ext.window.Window',
