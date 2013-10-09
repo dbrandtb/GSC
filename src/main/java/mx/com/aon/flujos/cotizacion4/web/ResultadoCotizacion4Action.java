@@ -1221,7 +1221,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             	
             	log.debug("se inserta detalle nuevo");
             	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
-            	parDmesCon.put("pv_ntramite_i"   , comprarCdunieco);
+            	parDmesCon.put("pv_ntramite_i"   , comprarNmpoliza);
             	parDmesCon.put("pv_feinicio_i"   , new Date());
             	parDmesCon.put("pv_cdclausu_i"   , null);
             	parDmesCon.put("pv_comments_i"   , "Se guardó un nuevo trámite en mesa de control desde cotización de agente");
