@@ -6,6 +6,7 @@ package mx.com.gseguros.portal.general.util;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -16,8 +17,13 @@ import javax.servlet.http.HttpServletRequest;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
+import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
+import mx.com.gseguros.utils.HttpUtil;
 
 import org.apache.struts2.interceptor.ServletRequestAware;
+
+import com.opensymphony.xwork2.ActionContext;
 
 /**
  *
@@ -204,6 +210,73 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 		return SUCCESS;
 	}
     
+	////////////////////////////////////////////////
+	////// generar contrarecibo de documentos //////
+	/*////////////////////////////////////////////*/
+	public String generarContrarecibo()
+	{
+		logger.debug(""
+				+ "\n#################################"
+				+ "\n#################################"
+				+ "\n###### generarContrarecibo ######"
+				+ "\n######                     ######"
+				);
+		logger.debug("smap1: "+smap1);
+		
+		SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
+	    Calendar calendarHoy=Calendar.getInstance();
+		
+		try
+		{
+			UserVO usu=(UserVO)session.get("USUARIO");
+			DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usu.getUser());
+			
+			long timestamp=System.currentTimeMillis();
+			String random=((long)(Math.random()*10000l))+"";
+			/*String claveReciboTabla="contrarecibo_"+slist1.get(0).get("pv_ntramite_i")+"_"+timestamp+"_"+random;
+			logger.debug("la clave para guardar en BD es: "+claveReciboTabla);
+			for(Map<String,String> docu:slist1)
+			{
+				docu.put("pv_cdconrec_i",claveReciboTabla);
+				kernelManager.preparaContrarecibo(docu);
+			}*/
+			String filePath=this.getText("ruta.documentos.poliza")+"/"+smap1.get("ntramite")+"/contrarecibo_"+timestamp+"_"+random+".pdf";
+			String requestUrl=this.getText("ruta.servidor.reports")
+					+ "?destype=cache"
+					+ "&desformat=PDF"
+					+ "&userid="+this.getText("pass.servidor.reports")
+					+ "&report=CONTRA_RECIBO.rdf"
+					+ "&paramform=no"
+					+ "&p_fecha="+renderFechas.format(calendarHoy.getTime())
+					+ "&p_tramite="+smap1.get("ntramite")
+					+ "&p_usuario="+datUsu.getCdusuari()
+					+ "&desname="+filePath;
+			logger.debug("se pide el contrarecibo a: "+requestUrl);
+			logger.debug("se guardara el contrarecibo en: "+filePath);
+			HttpUtil.generaArchivo(requestUrl, filePath);
+			uploadKey="contrarecibo_"+timestamp+"_"+random+".pdf";
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			logger.error("error al generar contrarecibo",ex);
+			success=false;
+		}
+		logger.debug(""
+				+ "\n######                     ######"
+				+ "\n###### generarContrarecibo ######"
+				+ "\n#################################"
+				+ "\n#################################"
+				);
+		return SUCCESS;
+	}
+	/*////////////////////////////////////////////*/
+	////// generar contrarecibo de documentos //////
+	////////////////////////////////////////////////
+	
+	/////////////////////////////////
+	////// getters and setters //////
+	/*/////////////////////////////*/
     public void setServletRequest(HttpServletRequest hsr) {
         this.servletRequest=hsr;
     }

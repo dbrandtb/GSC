@@ -35,6 +35,10 @@
 		<action name="ventanaDocumentosPolizaLoad" class="beanSubirArchivo" method="ventanaDocumentosPolizaLoad">
             <result name="success" type="json" />
         </action>
+        
+        <action name="generarContrarecibo" class="beanSubirArchivo" method="generarContrarecibo">
+            <result name="success" type="json" />
+        </action>
 
 	</package>
 

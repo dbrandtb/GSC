@@ -126,6 +126,7 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String MESACONTROL_UPDATE_SOLICI="MESACONTROL_UPDATE_SOLICI";
     public static final String MESACONTROL_UPDATE_STATUS="MESACONTROL_UPDATE_STATUS";
     public static final String MESACONTROL_FINALIZAR_DETALLE="MESACONTROL_FINALIZAR_DETALLE";
+    public static final String DOCUMENTOS_PREPARAR_CONTRARECIBO="DOCUMENTOS_PREPARAR_CONTRARECIBO";
 
 	protected void initDao() throws Exception {
 		addStoredProcedure(PERMISO_EJECUCION_PROCESO,new PermisoEjecucionProceso(getDataSource()));
@@ -200,6 +201,7 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(MESACONTROL_UPDATE_SOLICI, new MesaControlUpdateSolici(getDataSource()));
         addStoredProcedure(MESACONTROL_UPDATE_STATUS, new MesaControlUpdateStatus(getDataSource()));
         addStoredProcedure(MESACONTROL_FINALIZAR_DETALLE, new MesaControlFinalizarDetalle(getDataSource()));
+        addStoredProcedure(DOCUMENTOS_PREPARAR_CONTRARECIBO, new DocumentosPrepararContrarecibo(getDataSource()));
 	}
 
 	protected class BuscarMatrizAsignacion extends CustomStoredProcedure {
@@ -1659,7 +1661,7 @@ public class ProcesoDAO extends AbstractDAO {
     		/**
     		 * Problema:
     		 * Cuando cargo asegurados su fenacimi puede venir como 01/12/1990 o como 1990-12-01 00:00:00.0
-    		 * Solución:
+    		 * Soluciï¿½n:
     		 * Hacer este if
     		 */
     		String fenacimi=rs.getString("fenacimi");
@@ -3137,7 +3139,7 @@ public class ProcesoDAO extends AbstractDAO {
 		public Object mapRow(ResultSet rs, int rowNum) throws SQLException
 		{
 			String cols[]=new String[]{"NTRAMITE","NMORDINA","CDTIPTRA","CDCLAUSU","FECHAINI","FECHAFIN",
-					"COMMENTS","CDUSUARI_INI","CDUSUARI_FIN"};
+					"COMMENTS","CDUSUARI_INI","CDUSUARI_FIN","usuario_ini","usuario_fin"};
 			Map<String,String> map=new HashMap<String,String>(0);
 			for(String col:cols)
 			{
@@ -3488,5 +3490,31 @@ public class ProcesoDAO extends AbstractDAO {
     }
     /*///////////////////////////////////////////////////////*/
 	////// actualizar status de tarea de mesa de control //////
+    ///////////////////////////////////////////////////////////
+    
+    ///////////////////////////////////////////////////////////
+    ////// insertar documento para imprimir contrarecibo //////
+    /*///////////////////////////////////////////////////////*/
+    protected class DocumentosPrepararContrarecibo extends CustomStoredProcedure {
+    	protected DocumentosPrepararContrarecibo(DataSource dataSource) {
+    		super(dataSource,"PKG_SATELITES.P_PREPARA_CONTRARECIBO");
+    		
+    		declareParameter(new SqlParameter("pv_cdconrec_i",     OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_ntramite_i",     OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cddocume_i",     OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_dsdocume_i",     OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("PV_MSG_ID_O",    OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("PV_TITLE_O",     OracleTypes.VARCHAR));
+    		
+    		compile();
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			return mapper.build(map);
+		}
+    }
+    /*///////////////////////////////////////////////////////*/
+    //////insertar documento para imprimir contrarecibo //////
     ///////////////////////////////////////////////////////////
 }

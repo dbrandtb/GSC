@@ -708,4 +708,13 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         log.debug("### kernel sustituto mesaControlFinalizarDetalle mesage:"+res.getMsgText());
 		return res;
 	}
+	
+	public WrapperResultados preparaContrarecibo(Map<String, String> params) throws ApplicationException
+	{
+		log.debug("### kernel preparaContrarecibo map: "+params);
+		WrapperResultados res = this.returnBackBoneInvoke(params,ProcesoDAO.DOCUMENTOS_PREPARAR_CONTRARECIBO);
+        log.debug("### kernel sustituto preparaContrarecibo id:"+res.getMsgId());
+        log.debug("### kernel sustituto preparaContrarecibo mesage:"+res.getMsgText());
+		return res;
+	}
 }

@@ -68,6 +68,8 @@ Ext.onReady(function(){
             ,"COMMENTS"
             ,"CDUSUARI_INI"
             ,"CDUSUARI_FIN"
+            ,"usuario_ini"
+            ,"usuario_fin"
         ]
     });
     /*/////////////////*/
@@ -292,7 +294,7 @@ Ext.onReady(function(){
         		title        : 'Detalles del tr&aacute;mite '+record.get('ntramite')
         		,modal       : true
         		,buttonAlign : 'center'
-        		,width       : 600
+        		,width       : 700
         		,height      : 400
         		
         		,items       :
@@ -337,14 +339,24 @@ Ext.onReady(function(){
         		            	,xtype     : 'datecolumn'
         		            	,dataIndex : 'FECHAINI'
         		            	,format    : 'd M Y'
-       		            		,flex      : 1
+       		            		,width     : 90
+        		            }
+        		            ,{
+        		            	header     : 'Usuario inicio'
+        		            	,dataIndex : 'usuario_ini'
+        		            	,width     : 150
         		            }
         		            ,{
                                 header     : 'Fecha de fin'
                                 ,xtype     : 'datecolumn'
                                 ,dataIndex : 'FECHAFIN'
                                 ,format    : 'd M Y'
-                                ,flex      : 1
+                                ,width     : 90
+                            }
+        		            ,{
+                                header     : 'Usuario fin'
+                                ,dataIndex : 'usuario_fin'
+                                ,width     : 150
                             }
         		            ,{
         		            	width         : 30
@@ -491,7 +503,7 @@ Ext.onReady(function(){
         		    ,Ext.create('Ext.form.HtmlEditor',
         		    {
                         id        : 'inputReadDetalleHtmlVisor'
-                        ,width    : 590
+                        ,width    : 690
                         ,height   : 200
                         ,readOnly : true
                     })
