@@ -50,8 +50,9 @@ public class MailAction extends ActionSupport {
 			String nombreCompletoArchivo = this.getText("ruta.documentos.poliza")+ "/" + nombreArchivo;
 			if(HttpUtil.generaArchivo(archivos, nombreCompletoArchivo)){
 				//Se realiza el envío de correo:
-				mailMail.sendMail(to, cc, bcc, asunto, mensaje, nombreCompletoArchivo);
-				success = true;
+				//TODO: modificar nombre de metodo de action y modificar funcionalidad para subir más de un archivo
+				success = mailMail.sendMail(to.split(";"), null,
+						null, asunto, mensaje, new String[]{nombreCompletoArchivo});
 			}
 				
 			//Si el arhivo fue generado, almacenamos la ruta y nombre del archivo:

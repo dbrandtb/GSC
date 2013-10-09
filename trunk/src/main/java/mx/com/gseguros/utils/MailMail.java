@@ -1,7 +1,5 @@
 package mx.com.gseguros.utils;
 
-import java.util.List;
-
 import javax.mail.internet.MimeMessage;
 
 import org.apache.commons.lang.StringUtils;
@@ -30,44 +28,43 @@ public class MailMail {
 	 * @param asunto
 	 * @param mensaje
 	 * @param rutaArchivo
+	 * @return
 	 */
-	public void sendMail(String to, String cc, String bcc, String asunto, String mensaje, String rutaArchivo) {
+	public boolean sendMail(String[] to, String[] cc, String[] bcc, String asunto, String mensaje, String[] rutasAdjuntos) {
 		
+		boolean exito = false;
 		MimeMessage message = mailSender.createMimeMessage();
 		
 		try {
 			
 			MimeMessageHelper helper = new MimeMessageHelper(message, true);
 			helper.setFrom(simpleMailMessage.getFrom(), fromAlias);
-			helper.setTo(to);
-			//helper.setTo(simpleMailMessage.getTo());
-			if(StringUtils.isNotBlank(cc)) {
+			if(to != null && to.length > 0) {
+				helper.setTo(to);				
+			}
+			if(cc != null && cc.length > 0) {
 				helper.setCc(cc);
 			}
-			if(StringUtils.isNotBlank(bcc)) {
+			if(bcc != null && bcc.length > 0) {
 				helper.setBcc(bcc);
 			}
 			helper.setSubject( StringUtils.isBlank(asunto) ? simpleMailMessage.getSubject() : asunto );
 			helper.setText( StringUtils.isBlank(mensaje) ? simpleMailMessage.getText() : mensaje );
-			FileSystemResource file = new FileSystemResource(rutaArchivo);
-			logger.debug("before attaching the document " + rutaArchivo);
-			helper.addAttachment(file.getFilename(), file);
-			logger.debug("after attaching the document " + rutaArchivo);
-			/*
-			for(String ruta: rutaArchivo) {
-				FileSystemResource file = new FileSystemResource(ruta);
-				logger.debug("before attaching the document " + ruta);
-				helper.addAttachment(file.getFilename(), file);
-				logger.debug("after attaching the document " + ruta);
+			if(rutasAdjuntos != null && rutasAdjuntos.length > 0){
+				for(String rutaAdjunto: rutasAdjuntos){
+					FileSystemResource file = new FileSystemResource(rutaAdjunto);
+					logger.debug("before attaching the document " + rutaAdjunto);
+					helper.addAttachment(file.getFilename(), file);
+					logger.debug("after attaching the document " + rutaAdjunto);
+				}
 			}
-			*/
 			mailSender.send(message);
+			exito = true;
 			
-		//}catch (MessagingException e) {
-		//	throw new MailParseException(e);
 		}catch(Exception e){
 			logger.error("Error al enviar correo", e);
 		}
+		return exito;
 	}
 
 	
