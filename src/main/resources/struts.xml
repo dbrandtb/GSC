@@ -72,9 +72,6 @@
             <result name="datosPoliza">/jsp/portal/login.jsp</result>
         </global-results>
 
-		<action name="index">
-			<result>/index.jsp</result>
-		
 		<action name="load" class="paginaPrincipalAction" method="obtenPaginaPrincipal">
 			<result>/jsp/portal/portal.jsp</result>
 		</action>
