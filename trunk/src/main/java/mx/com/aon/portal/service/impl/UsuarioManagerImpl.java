@@ -1,18 +1,24 @@
 package mx.com.aon.portal.service.impl;
 
-import org.apache.log4j.Logger;
-import java.util.List;
-import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
-import mx.com.aon.portal.model.*;
+import mx.com.aon.portal.model.BaseObjectVO;
+import mx.com.aon.portal.model.EmpresaVO;
+import mx.com.aon.portal.model.RamaVO;
+import mx.com.aon.portal.model.RolVO;
+import mx.com.aon.portal.model.UserVO;
+import mx.com.aon.portal.model.UsuarioRolEmpresaVO;
 import mx.com.aon.portal.service.UsuarioManager;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.exception.ApplicationException;
 
+import org.apache.log4j.Logger;
+
 public class UsuarioManagerImpl extends AbstractManagerJdbcTemplateInvoke implements UsuarioManager {
 
-	private static Logger logger = Logger.getLogger(NavigationManagerImpl.class);
+	private static Logger logger = Logger.getLogger(UsuarioManagerImpl.class);
 
 
 

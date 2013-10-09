@@ -60,7 +60,7 @@ public class DummyUserContextFilter implements Filter {
     		            ServletContext servletContext  = session.getServletContext();
     		            WebApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(servletContext);
     		            loginManager = (LoginManager) context.getBean("loginManager");
-    		            navigationManager = (NavigationManager) context.getBean("navigationManager");
+    		            navigationManager = (NavigationManager) context.getBean("navigationManagerJdbcTemplate");
     		            try {
     		                userVO = loginManager.obtenerDatosUsuario(user);
     		                userVO.setDecimalSeparator(decimalSeparator);

@@ -6,9 +6,10 @@ package mx.com.aon.portal2.web;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import mx.com.aon.core.web.PrincipalCoreAction;
-import mx.com.aon.portal.dao.CatalogosDAO;
 import mx.com.aon.portal.service.CombosManager2;
+
 import org.apache.log4j.Logger;
 
 /**

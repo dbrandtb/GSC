@@ -17,7 +17,7 @@ public abstract class AbstractManager {
     /**
 	 * Logger de la clase para monitoreo y registro de comportamiento
 	 */
-	protected static Logger logger = Logger.getLogger(EstructuraManagerImpl.class);
+	protected static Logger logger = Logger.getLogger(AbstractManager.class);
 	/**
 	 * Mapa en el cual se introducen los Manager's para ser extraidos y utilizados como servicios
 	 */
