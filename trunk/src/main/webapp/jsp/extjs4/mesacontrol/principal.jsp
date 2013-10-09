@@ -402,7 +402,7 @@ Ext.onReady(function(){
                                     rowIndex, e, eOpts)
                             {
         		        		debug(record);
-        		        		if(cellIndex<4)
+        		        		if(cellIndex<6)
         		        		{
         		        		    Ext.getCmp('inputReadDetalleHtmlVisor').setValue(record.get('COMMENTS'));
         		        		}
