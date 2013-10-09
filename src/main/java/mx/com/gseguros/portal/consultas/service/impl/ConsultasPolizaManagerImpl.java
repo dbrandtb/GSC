@@ -1,15 +1,6 @@
 package mx.com.gseguros.portal.consultas.service.impl;
 
-import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_DATOS_AGENTE;
-import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_DATOS_ASEGURADO;
-import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_DATOS_COBERTURAS;
-import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_DATOS_POLIZA;
-import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_DATOS_SITUACION;
-import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_DATOS_SUPLEMENTO;
-import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_DATOS_TARIFA;
-import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_POLIZAS_AGENTE;
-import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_POLIZAS_ASEGURADO;
-import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_RECIBOS_AGENTE;
+import mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO;
 
 import java.util.HashMap;
 
@@ -20,11 +11,9 @@ import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 
 public class ConsultasPolizaManagerImpl extends
 		AbstractManagerJdbcTemplateInvoke implements ConsultasPolizaManager {
-	
 
 	public WrapperResultados consultaPoliza(String cdunieco, String cdramo,
-			String estado, String nmpoliza)
-			throws ApplicationException {
+			String estado, String nmpoliza) throws ApplicationException {
 
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdunieco_i", cdunieco);
@@ -33,7 +22,7 @@ public class ConsultasPolizaManagerImpl extends
 		params.put("pv_nmpoliza_i", nmpoliza);
 
 		WrapperResultados result = this.returnBackBoneInvoke(params,
-				OBTIENE_DATOS_POLIZA);
+				ConsultasPolizaDAO.OBTIENE_DATOS_POLIZA);
 
 		return result;
 	}
@@ -45,7 +34,7 @@ public class ConsultasPolizaManagerImpl extends
 		params.put("pv_nmpoliex_i", nmpoliex);
 
 		WrapperResultados result = this.returnBackBoneInvoke(params,
-				OBTIENE_DATOS_SUPLEMENTO);
+				ConsultasPolizaDAO.OBTIENE_DATOS_SUPLEMENTO);
 		return result;
 	}
 
@@ -62,7 +51,7 @@ public class ConsultasPolizaManagerImpl extends
 		params.put("pv_nmsituac_i", nmsituac);
 
 		WrapperResultados result = this.returnBackBoneInvoke(params,
-				OBTIENE_DATOS_SITUACION);
+				ConsultasPolizaDAO.OBTIENE_DATOS_SITUACION);
 
 		return result;
 	}
@@ -80,7 +69,7 @@ public class ConsultasPolizaManagerImpl extends
 		params.put("pv_nmsituac_i", nmsituac);
 
 		WrapperResultados result = this.returnBackBoneInvoke(params,
-				OBTIENE_DATOS_COBERTURAS);
+				ConsultasPolizaDAO.OBTIENE_DATOS_COBERTURAS);
 
 		return result;
 	}
@@ -92,7 +81,7 @@ public class ConsultasPolizaManagerImpl extends
 		params.put("pv_cdrfc", rfc);
 
 		WrapperResultados result = this.returnBackBoneInvoke(params,
-				OBTIENE_POLIZAS_ASEGURADO);
+				ConsultasPolizaDAO.OBTIENE_POLIZAS_ASEGURADO);
 
 		return result;
 	}
@@ -109,7 +98,7 @@ public class ConsultasPolizaManagerImpl extends
 		params.put("pv_nmsuplem_i", nmsuplem);
 
 		WrapperResultados result = this.returnBackBoneInvoke(params,
-				OBTIENE_DATOS_TARIFA);
+				ConsultasPolizaDAO.OBTIENE_DATOS_TARIFA);
 
 		return result;
 	}
@@ -121,7 +110,7 @@ public class ConsultasPolizaManagerImpl extends
 		params.put("pv_cdagente_i", cdagente);
 
 		WrapperResultados result = this.returnBackBoneInvoke(params,
-				OBTIENE_POLIZAS_AGENTE);
+				ConsultasPolizaDAO.OBTIENE_POLIZAS_AGENTE);
 
 		return result;
 	}
@@ -137,7 +126,7 @@ public class ConsultasPolizaManagerImpl extends
 		params.put("pv_nmpoliza_i", nmpoliza);
 
 		WrapperResultados result = this.returnBackBoneInvoke(params,
-				OBTIENE_RECIBOS_AGENTE);
+				ConsultasPolizaDAO.OBTIENE_RECIBOS_AGENTE);
 
 		return result;
 	}
@@ -149,7 +138,7 @@ public class ConsultasPolizaManagerImpl extends
 		params.put("pv_cdagente_i", cdagente);
 
 		WrapperResultados result = this.returnBackBoneInvoke(params,
-				OBTIENE_DATOS_AGENTE);
+				ConsultasPolizaDAO.OBTIENE_DATOS_AGENTE);
 
 		return result;
 	}
@@ -166,7 +155,19 @@ public class ConsultasPolizaManagerImpl extends
 		params.put("pv_nmsuplem_i", nmsuplem);
 
 		WrapperResultados result = this.returnBackBoneInvoke(params,
-				OBTIENE_DATOS_ASEGURADO);
+				ConsultasPolizaDAO.OBTIENE_DATOS_ASEGURADO);
+
+		return result;
+	}
+
+	public WrapperResultados consultaClausulas(String cdclause, String dsclausu)
+			throws ApplicationException {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdcla_i", cdclause);
+		params.put("pv_descrip_i", dsclausu);
+
+		WrapperResultados result = this.returnBackBoneInvoke(params,
+				ConsultasPolizaDAO.OBTIENE_CLAUSULAS);
 
 		return result;
 	}

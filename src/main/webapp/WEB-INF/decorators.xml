@@ -63,6 +63,10 @@
 		<pattern>/mesacontrol/principal.action</pattern>
         <pattern>/jsp/extjs4/mesacontrol/principal.jsp</pattern>
         <!-- fin de mesa de control -->
+        
+        <pattern>/catalogos/clausulas.action</pattern>
+        <pattern>/jsp/consultas/consultaClausulas.jsp</pattern>
+        
 	</decorator>
 	
 	
