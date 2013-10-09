@@ -30,6 +30,8 @@
 	<include file="struts/config/struts-portal.xml"/>
 	
 	<include file="struts/config/struts-seguridad.xml"/>
+
+	<include file="struts/config/struts-catalogos.xml"/>
 	
 
     <package name="default" namespace="/" extends="json-default">
