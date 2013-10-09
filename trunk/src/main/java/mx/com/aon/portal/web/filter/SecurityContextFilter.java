@@ -1,21 +1,20 @@
 package mx.com.aon.portal.web.filter;
 
-import org.apache.log4j.Logger;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
+import java.io.IOException;
 
-import javax.servlet.*;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
-import mx.com.aon.portal.service.LoginManager;
-import mx.com.aon.portal.service.ConsultaActividadUsuarioManager;
 import mx.com.aon.portal.model.UserVO;
-import mx.com.aon.portal.util.ConnectionCallInterceptor;
-import mx.com.gseguros.exception.ApplicationException;
+import mx.com.aon.portal.service.LoginManager;
 
-import java.io.IOException;
+import org.apache.log4j.Logger;
 
 public class SecurityContextFilter implements Filter {
 

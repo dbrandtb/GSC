@@ -14,7 +14,6 @@ import javax.servlet.http.HttpSession;
 
 import mx.com.aon.portal.model.IsoVO;
 import mx.com.aon.portal.model.UserVO;
-import mx.com.aon.portal.service.ConsultaActividadUsuarioManager;
 import mx.com.aon.portal.service.LoginManager;
 import mx.com.aon.portal.service.NavigationManager;
 import mx.com.aon.portal.util.ConnectionCallInterceptor;
@@ -105,7 +104,7 @@ public class DummyUserContextFilter implements Filter {
                 logger.debug("Obteniendo consultaActividadUsuarioManager en el servletContext");
                 ServletContext servletContext  = session.getServletContext();
                 WebApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(servletContext);
-                ConsultaActividadUsuarioManager consultaActividadUsuarioManager = (ConsultaActividadUsuarioManager) context.getBean("consultaActividadUsuarioManager");
+                //ConsultaActividadUsuarioManager consultaActividadUsuarioManager = (ConsultaActividadUsuarioManager) context.getBean("consultaActividadUsuarioManager");
 
                 String requestUri = ((HttpServletRequest)request).getRequestURI();
                 if (requestUri.indexOf(".action")>0) {
@@ -120,10 +119,10 @@ public class DummyUserContextFilter implements Filter {
                     logger.debug("url invocado "+ requestUri);
                     logger.debug("method "+ method);
 
-                    String rolActivo = (userVO.getRolActivo() != null)?userVO.getRolActivo().getObjeto().getValue():null;
-                    consultaActividadUsuarioManager.insertarActividadesUsuario(reqid,requestUri,method,userVO.getUser(), rolActivo);
+                    //String rolActivo = (userVO.getRolActivo() != null)?userVO.getRolActivo().getObjeto().getValue():null;
+                    //consultaActividadUsuarioManager.insertarActividadesUsuario(reqid,requestUri,method,userVO.getUser(), rolActivo);
                 }            	
-        } catch (ApplicationException ex) {
+        } catch (Exception ex) {
             logger.error("Fallo al ejecutar el obtenerDatosUsuario.",ex);
             throw new ServletException("Error al invocar el filtro contexto de Usuario",ex);
         }

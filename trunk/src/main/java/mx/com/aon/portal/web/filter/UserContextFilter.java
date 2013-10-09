@@ -1,26 +1,30 @@
 package mx.com.aon.portal.web.filter;
 
-import mx.com.aon.portal.model.IsoVO;
-import mx.com.aon.portal.model.UserVO;
-import mx.com.aon.portal.model.RolVO;
-import mx.com.aon.portal.model.BaseObjectVO;
-import mx.com.aon.portal.util.ConnectionCallInterceptor;
-import mx.com.aon.portal.service.LoginManager;
-import mx.com.aon.portal.service.ConsultaActividadUsuarioManager;
-import mx.com.aon.portal.service.NavigationManager;
-import mx.com.gseguros.exception.ApplicationException;
+import java.io.IOException;
 
-import javax.servlet.*;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import mx.com.aon.portal.model.BaseObjectVO;
+import mx.com.aon.portal.model.IsoVO;
+import mx.com.aon.portal.model.UserVO;
+import mx.com.aon.portal.service.LoginManager;
+import mx.com.aon.portal.service.NavigationManager;
+import mx.com.aon.portal.util.ConnectionCallInterceptor;
+import mx.com.gseguros.exception.ApplicationException;
+
 import org.apache.log4j.Logger;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-
-import java.io.IOException;
 
 public class UserContextFilter implements Filter {
 
@@ -158,7 +162,7 @@ public class UserContextFilter implements Filter {
             logger.debug("Obteniendo consultaActividadUsuarioManager en el servletContext");
             ServletContext servletContext  = session.getServletContext();
             WebApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(servletContext);
-            ConsultaActividadUsuarioManager consultaActividadUsuarioManager = (ConsultaActividadUsuarioManager) context.getBean("consultaActividadUsuarioManager");
+            //ConsultaActividadUsuarioManager consultaActividadUsuarioManager = (ConsultaActividadUsuarioManager) context.getBean("consultaActividadUsuarioManager");
 
             String requestUri = ((HttpServletRequest)request).getRequestURI();
             if (requestUri.indexOf(".action")>0) {
@@ -174,12 +178,12 @@ public class UserContextFilter implements Filter {
                 logger.debug("method "+ method);
 
                 String rolActivo = (userVO.getRolActivo() != null)?userVO.getRolActivo().getObjeto().getValue():null;
-                consultaActividadUsuarioManager.insertarActividadesUsuario(reqid,requestUri,method,userVO.getUser(), rolActivo);
+                //consultaActividadUsuarioManager.insertarActividadesUsuario(reqid,requestUri,method,userVO.getUser(), rolActivo);
             }
 
 
 
-        } catch (ApplicationException ex) {
+        } catch (Exception ex) {
             logger.error("Fallo al ejecutar el obtenerDatosUsuario.",ex);
             throw new ServletException("Error al invocar el filtro contexto de Usuario",ex);
         }
