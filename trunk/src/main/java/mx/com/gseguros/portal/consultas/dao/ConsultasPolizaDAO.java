@@ -2,6 +2,7 @@ package mx.com.gseguros.portal.consultas.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +25,7 @@ import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaReciboAgenteVO;
 import mx.com.gseguros.utils.Utilerias;
 import oracle.jdbc.driver.OracleTypes;
+import oracle.sql.CLOB;
 
 import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
@@ -46,6 +48,9 @@ public class ConsultasPolizaDAO extends AbstractDAO {
 	public static final String OBTIENE_RECIBOS_AGENTE =    "OBTIENE_RECIBOS_AGENTE";
 
 	public static final String OBTIENE_CLAUSULAS =    "OBTIENE_CLAUSULAS";
+	public static final String INSERTA_CLAUSULA =    "INSERTA_CLAUSULA";
+	public static final String ACTUALIZA_CLAUSULA =    "ACTUALIZA_CLAUSULA";
+	public static final String CONSULTA_CLAUSULA_DETALLE =    "CONSULTA_CLAUSULA_DETALLE";
 	
 	
 	protected void initDao() throws Exception {
@@ -61,6 +66,9 @@ public class ConsultasPolizaDAO extends AbstractDAO {
 		addStoredProcedure(OBTIENE_RECIBOS_AGENTE,    new ObtieneRecibosAgente(getDataSource()));
 
 		addStoredProcedure(OBTIENE_CLAUSULAS,    new ObtieneClausulas(getDataSource()));
+		addStoredProcedure(INSERTA_CLAUSULA,    new InsertaClausula(getDataSource()));
+		addStoredProcedure(ACTUALIZA_CLAUSULA,    new ActualizaClausula(getDataSource()));
+		addStoredProcedure(CONSULTA_CLAUSULA_DETALLE,    new ConsultaDetalleClausula(getDataSource()));
 	}
 
 	
@@ -550,5 +558,66 @@ public class ConsultasPolizaDAO extends AbstractDAO {
     		return consulta;
     	}
     }
+
+    protected class InsertaClausula extends CustomStoredProcedure {
+    	
+    	protected InsertaClausula(DataSource dataSource) {
+    		super(dataSource, "PKG_CONSULTA.P_INSERTA_CLAUSU");
+    		
+    		declareParameter(new SqlParameter("pv_descrip_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_conten_i", OracleTypes.CLOB));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+    		WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+    		return mapper.build(map);
+    	}
+    }
+
+    protected class ActualizaClausula extends CustomStoredProcedure {
+    	
+    	protected ActualizaClausula(DataSource dataSource) {
+    		super(dataSource, "PKG_CONSULTA.P_ACTUALIZA_CLAUSU");
+    		
+    		declareParameter(new SqlParameter("pv_cdtipcla_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_descrip_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_conten_i", OracleTypes.CLOB));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+    		WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+    		return mapper.build(map);
+    	}
+    }
+    
+    protected class ConsultaDetalleClausula extends CustomStoredProcedure {
+    	
+    	protected ConsultaDetalleClausula(DataSource dataSource) {
+    		super(dataSource, "PKG_CONSULTA.P_obtiene_detalle_clausula");
+    		
+    		declareParameter(new SqlParameter("pv_cdcla_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("vDslinea", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+    		WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+    		WrapperResultados wrapperResultados = mapper.build(map);
+    		String clbStr = (String) map.get("vDslinea");
+    		
+    		wrapperResultados.setItemMap(new HashMap<String, Object>());
+			wrapperResultados.getItemMap().put("DETALLE_CLAUSU", clbStr);
+    		return wrapperResultados;
+    	}
+    }
+    
     
 }

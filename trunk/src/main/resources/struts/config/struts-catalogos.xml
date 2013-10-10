@@ -30,6 +30,32 @@
             </result>
         </action>
 
+        <action name="insertaClausula" class="ConsultasPolizaAction" method="insertaClausula">
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    success
+                </param>
+            </result>
+        </action>
+        <action name="consultaClausulaDetalle" class="ConsultasPolizaAction" method="consultaClausulaDetalle">
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    msgResult.*,
+                    success
+                </param>
+            </result>
+        </action>
+        <action name="actualizaClausula" class="ConsultasPolizaAction" method="actualizaClausula">
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    success
+                </param>
+            </result>
+        </action>
+
 	</package>
 
 </struts>
