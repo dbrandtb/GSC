@@ -235,7 +235,7 @@ Ext.onReady(function(){
                     		}
                     		else if(value=='4')
                     		{
-                    			res='RechazadA';
+                    			res='Rechazada';
                     		}
                     		else if(value=='5')
                     		{
@@ -548,7 +548,7 @@ Ext.onReady(function(){
         	debug(rowIndex);
             var record=grid.getStore().getAt(rowIndex);
             debug(record);
-            if(record.get('estado')=='W')
+            if(record.get('estado')=='W'&&record.get('status')!='4')
             {
             	if(record.get('nmsolici')&&record.get('nmsolici').length>0&&record.get('nmsolici')>0)
             	{
@@ -584,7 +584,7 @@ Ext.onReady(function(){
             {
             	var msg=Ext.Msg.show({
                     title: 'Error',
-                    msg: 'Esta p&oacute;liza ya fue emitida',
+                    msg: 'Esta p&oacute;liza ya no puede editarse',
                     buttons: Ext.Msg.OK,
                     icon: Ext.Msg.WARNING
                 });
@@ -749,7 +749,9 @@ Ext.onReady(function(){
                                 ,editable   : false
                                 ,displayField : 'value'
                                 ,valueField   : 'key'
-                                ,forceSelection : true
+                                //,forceSelection : true
+                                ,value          : '2'
+                                ,readOnly       : true
                                 ,queryMode      :'local'
                                     ,store : Ext.create('Ext.data.Store', {
                                         model:'Generic',
