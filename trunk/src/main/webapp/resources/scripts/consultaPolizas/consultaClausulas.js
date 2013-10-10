@@ -91,11 +91,25 @@ Ext.onReady(function() {
     	                	text: "Buscar"
 	                		,icon:_CONTEXT+'/resources/fam3icons/icons/magnifier.png'
     	                	,handler: function(){
+
+    	                		storGridClau.removeAll();
+    	                		
     	                		var params = {
 	                				'params.cdclausu' : Ext.getCmp('idComboClau').getValue(),
 	                				'params.dsclausu' : Ext.getCmp('idFiltroDes').getValue()
 	                			};
-    	                		cargaStorePaginadoLocal(storGridClau, _URL_CONSULTA_CLAUSU, 'listaGenerica', params, null);
+    	                		cargaStorePaginadoLocal(storGridClau, _URL_CONSULTA_CLAUSU, 'listaGenerica', params, function(options, success, response){
+    	                			if(success){
+										var jsonResponse = Ext.decode(response.responseText);
+										if(jsonResponse.listaGenerica && jsonResponse.listaGenerica.length == 0) {
+											showMessage("Aviso", "No se encontraron datos.", Ext.Msg.OK, Ext.Msg.INFO);
+											return;
+										}
+									}else{
+										showMessage('Error', 'Error al obtener los datos', 
+											Ext.Msg.OK, Ext.Msg.ERROR);
+									}
+    	                		});
     	                	}	
     	                },{
     	                	text: "Limpiar"
