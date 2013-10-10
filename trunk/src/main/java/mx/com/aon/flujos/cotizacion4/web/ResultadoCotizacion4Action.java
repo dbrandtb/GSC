@@ -1191,7 +1191,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             	parDmesCon.put("pv_ntramite_i"   , ntramite);
             	parDmesCon.put("pv_feinicio_i"   , new Date());
             	parDmesCon.put("pv_cdclausu_i"   , null);
-            	parDmesCon.put("pv_comments_i"   , "Se guardó una cotización nueva para el trámite");
+            	parDmesCon.put("pv_comments_i"   , "Se guard&oacute; una cotizaci&oacute;n nueva para el tr&aacute;mite");
             	parDmesCon.put("pv_cdusuari_i"   , userData.getCdusuari());
             	kernelManagerSustituto.movDmesacontrol(parDmesCon);
             }
@@ -1224,7 +1224,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             	parDmesCon.put("pv_ntramite_i"   , comprarNmpoliza);
             	parDmesCon.put("pv_feinicio_i"   , new Date());
             	parDmesCon.put("pv_cdclausu_i"   , null);
-            	parDmesCon.put("pv_comments_i"   , "Se guardó un nuevo trámite en mesa de control desde cotización de agente");
+            	parDmesCon.put("pv_comments_i"   , "Se guard&oacute; un nuevo tr&aacute;mite en mesa de control desde cotizaci&oacute;n de agente");
             	parDmesCon.put("pv_cdusuari_i"   , userData.getCdusuari());
             	kernelManagerSustituto.movDmesacontrol(parDmesCon);
             }
