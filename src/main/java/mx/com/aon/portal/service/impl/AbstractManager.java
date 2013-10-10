@@ -6,9 +6,9 @@ import java.util.Map;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.portal.service.ProcessResultManager;
 import mx.com.aon.portal.util.WrapperResultados;
-import mx.com.aon.tmp.BackboneApplicationException;
 import mx.com.aon.tmp.Endpoint;
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.exception.DaoException;
 
 import org.apache.log4j.Logger;
 
@@ -55,7 +55,7 @@ public abstract class AbstractManager {
 			res = (WrapperResultados) endpoint.invoke(arg);
 			logger.debug("Resultado endpoint invoke :"+ res);
 			logger.debug("Resultado msgId :"+ res.getMsgId());
-		} catch (BackboneApplicationException e) {
+		} catch (DaoException e) {
 			logger.error("No se puedo ejecutar pagedBackBoneInvoke para el endpoint " + endpointName, e);
 			throw new ApplicationException("No se puedo ejecutar pagedBackBoneInvoke para el endpoint " + endpointName,e);
 		}
@@ -115,7 +115,7 @@ public abstract class AbstractManager {
 
             res = (WrapperResultados) endpoint.invoke(arg);
 
-        } catch (BackboneApplicationException e) {
+        } catch (DaoException e) {
             logger.error("No se puedo ejecutar pagedBackBoneInvoke para el endpoint " + endpointName, e);
             throw new ApplicationException("No se puedo ejecutar pagedBackBoneInvoke para el endpoint " + endpointName,e);
         }
@@ -153,7 +153,7 @@ public abstract class AbstractManager {
 
             res = (WrapperResultados) endpoint.invoke(arg);
 
-        } catch (BackboneApplicationException e) {
+        } catch (DaoException e) {
             logger.error("No se puedo ejecutar pagedBackBoneInvoke para el endpoint " + endpointName, e);
             throw new ApplicationException("No se puedo ejecutar pagedBackBoneInvoke para el endpoint " + endpointName,e);
         }
@@ -180,7 +180,7 @@ public abstract class AbstractManager {
 
             res = (WrapperResultados) endpoint.invoke(arg);
 
-        } catch (BackboneApplicationException e) {
+        } catch (DaoException e) {
             logger.error("No se puedo ejecutar pagedBackBoneInvoke para el endpoint " + endpointName, e);
             throw new ApplicationException("No se puedo ejecutar pagedBackBoneInvoke para el endpoint " + endpointName,e);
         }
@@ -199,7 +199,7 @@ public abstract class AbstractManager {
 
             res = (WrapperResultados) endpoint.invoke(arg);
 
-        } catch (BackboneApplicationException e) {
+        } catch (DaoException e) {
             logger.error("No se puedo ejecutar pagedBackBoneInvoke para el endpoint " + endpointName, e);
             throw new ApplicationException("No se puedo ejecutar pagedBackBoneInvoke para el endpoint " + endpointName,e);
         }
@@ -226,7 +226,7 @@ public abstract class AbstractManager {
 
             res = (WrapperResultados) endpoint.invoke(arg);
 
-        } catch (BackboneApplicationException e) {
+        } catch (DaoException e) {
             logger.error("No se puedo ejecutar pagedBackBoneInvoke para el endpoint " + endpointName, e);
             return null;
         }
