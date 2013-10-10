@@ -191,6 +191,17 @@ public class MesaControlAction extends PrincipalCoreAction implements Constantes
             	parDmesCon.put("pv_cdusuari_i"   , datUsu.getCdusuari());
             	kernelManager.movDmesacontrol(parDmesCon);
 			}
+			else if(statusNuevo.equals("4"))
+			{
+				log.debug("se inserta detalle nuevo");
+            	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
+            	parDmesCon.put("pv_ntramite_i"   , ntramite);
+            	parDmesCon.put("pv_feinicio_i"   , new Date());
+            	parDmesCon.put("pv_cdclausu_i"   , null);
+            	parDmesCon.put("pv_comments_i"   , "<p>La póliza fue rechazada con los siguientes detalles:</p>"+comments);
+            	parDmesCon.put("pv_cdusuari_i"   , datUsu.getCdusuari());
+            	kernelManager.movDmesacontrol(parDmesCon);
+			}
 			else if(statusNuevo.equals("5"))
 			{
 				log.debug("se inserta detalle nuevo");
