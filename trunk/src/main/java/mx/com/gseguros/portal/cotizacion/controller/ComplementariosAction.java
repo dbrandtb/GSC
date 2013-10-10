@@ -1009,6 +1009,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			paramEmi.put("pv_cdperpag"  , (String)polizaCompleta.get("cdperpag"));
 			paramEmi.put("pv_cdperson"  , datUs.getCdperson());
 			paramEmi.put("pv_fecha"     , new Date());
+			paramEmi.put("pv_ntramite"  , panel1.get("pv_ntramite"));
 			mx.com.aon.portal.util.WrapperResultados wr=kernelManager.emitir(paramEmi);
 			log.debug("emision obtenida "+wr.getItemMap());
 			panel2=new HashMap<String,String>(0);
