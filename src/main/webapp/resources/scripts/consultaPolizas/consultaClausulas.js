@@ -162,8 +162,6 @@ Ext.onReady(function() {
 		                		,handler: function(){
 	    	                		if(Ext.getCmp('clausulasGridId').getSelectionModel().hasSelection()){
 	    	                			var rowSelected = Ext.getCmp('clausulasGridId').getSelectionModel().getSelection()[0];
-	    	                			console.log(rowSelected.get('key'));
-	    	                			console.log(rowSelected.get('value'));
 	    	                			edicionActualizacionClausulas(rowSelected.get('key'),rowSelected.get('value'),1);
 	    	                		}else {
 	    	                			Ext.Msg.alert('Aviso', 'Debe de seleccionar una cl&aacute;usula para realizar la edici&oacute;n');
@@ -181,7 +179,7 @@ Ext.onReady(function() {
     	//Editar  	   --> 1
     	if(bandera==0)
 		{
-        	var modificacionClausula = Ext.create('Ext.window.Window',
+        	modificacionClausula = Ext.create('Ext.window.Window',
         	        {
         	            title        : 'CL&Aacute;USULA'
         	            ,modal       : true
@@ -253,12 +251,12 @@ Ext.onReady(function() {
         				    			}
         				    		}
         				    	},{
-        				    		text: 'Limpiar',
-        				    		icon:_CONTEXT+'/resources/fam3icons/icons/arrow_refresh.png',
-        				    		buttonAlign : 'center',
-        				            handler: function() {
-        				            	panelClausula.form.reset();
-        				    		}
+        				    	    text: 'Cancelar',
+        				    	    icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+        				    	    buttonAlign : 'center',
+        				    	    handler: function() {
+        				    	        modificacionClausula.close();
+        				    	    }
         				    	}
         				    	]
         				    })
@@ -280,8 +278,7 @@ Ext.onReady(function() {
     				    {
     				    	var json=Ext.decode(response.responseText);
     				    	txtContenido =json.msgResult;
-    				    	console.log(json.msgResult);
-    			    		var modificacionClausula = Ext.create('Ext.window.Window',
+    				    	modificacionClausula = Ext.create('Ext.window.Window',
     			    		        {
     			    		            title        : 'CL&Aacute;USULA'
     			    		            ,modal       : true
@@ -328,7 +325,7 @@ Ext.onReady(function() {
     			    		    	            			,value: txtContenido
     			    					    	        }],
     			    					    	buttons: [{
-    			    					    		text: 'Guardar',
+    			    					    		text: 'Actualizar',
     			    					    		icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
     			    					    		buttonAlign : 'center',
     			    					    		handler: function() {
@@ -360,6 +357,14 @@ Ext.onReady(function() {
     			    					    	               });
     			    					    			}
     			    					    		}
+    			    					    	},
+    			    					    	{
+    			    					    	    text: 'Cancelar',
+    			    					    	    icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+    			    					    	    buttonAlign : 'center',
+    			    					    	    handler: function() {
+    			    					    	        modificacionClausula.close();
+    			    					    	    }
     			    					    	}
     			    					    	]
     			    					    })
