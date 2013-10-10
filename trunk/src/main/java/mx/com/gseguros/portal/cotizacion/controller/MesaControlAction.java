@@ -138,7 +138,7 @@ public class MesaControlAction extends PrincipalCoreAction implements Constantes
         	parDmesCon.put("pv_ntramite_i"   , res.getItemMap().get("ntramite"));
         	parDmesCon.put("pv_feinicio_i"   , new Date());
         	parDmesCon.put("pv_cdclausu_i"   , null);
-        	parDmesCon.put("pv_comments_i"   , "Se guardó un nuevo trámite manual desde mesa de control");
+        	parDmesCon.put("pv_comments_i"   , "Se guard&oacute; un nuevo tr&aacute;mite manual desde mesa de control");
         	parDmesCon.put("pv_cdusuari_i"   , datUsu.getCdusuari());
         	kernelManager.movDmesacontrol(parDmesCon);
 					
@@ -187,7 +187,7 @@ public class MesaControlAction extends PrincipalCoreAction implements Constantes
             	parDmesCon.put("pv_ntramite_i"   , ntramite);
             	parDmesCon.put("pv_feinicio_i"   , new Date());
             	parDmesCon.put("pv_cdclausu_i"   , null);
-            	parDmesCon.put("pv_comments_i"   , "<p>El trámite fue turnado a revisión médica con las siguientes observaciones:</p>"+comments);
+            	parDmesCon.put("pv_comments_i"   , "<p>El tr&aacute;mite fue turnado a revisi&oacute;n m&eacute;dica con las siguientes observaciones:</p>"+comments);
             	parDmesCon.put("pv_cdusuari_i"   , datUsu.getCdusuari());
             	kernelManager.movDmesacontrol(parDmesCon);
 			}
@@ -198,7 +198,7 @@ public class MesaControlAction extends PrincipalCoreAction implements Constantes
             	parDmesCon.put("pv_ntramite_i"   , ntramite);
             	parDmesCon.put("pv_feinicio_i"   , new Date());
             	parDmesCon.put("pv_cdclausu_i"   , null);
-            	parDmesCon.put("pv_comments_i"   , "<p>La póliza fue rechazada con los siguientes detalles:</p>"+comments);
+            	parDmesCon.put("pv_comments_i"   , "<p>La p&oacute;liza fue rechazada con los siguientes detalles:</p>"+comments);
             	parDmesCon.put("pv_cdusuari_i"   , datUsu.getCdusuari());
             	kernelManager.movDmesacontrol(parDmesCon);
 			}
@@ -209,7 +209,7 @@ public class MesaControlAction extends PrincipalCoreAction implements Constantes
             	parDmesCon.put("pv_ntramite_i"   , ntramite);
             	parDmesCon.put("pv_feinicio_i"   , new Date());
             	parDmesCon.put("pv_cdclausu_i"   , null);
-            	parDmesCon.put("pv_comments_i"   , "<p>El médico revisó el trámite con las siguientes observaciones:</p>"+comments);
+            	parDmesCon.put("pv_comments_i"   , "<p>El m&eacute;dico revis&oacute; el tr&aacute;mite con las siguientes observaciones:</p>"+comments);
             	parDmesCon.put("pv_cdusuari_i"   , datUsu.getCdusuari());
             	kernelManager.movDmesacontrol(parDmesCon);
 			}
