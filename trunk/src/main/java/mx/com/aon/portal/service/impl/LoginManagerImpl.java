@@ -16,7 +16,7 @@ import java.util.Map;
 import mx.com.aon.portal.model.PerfilVO;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.service.LoginManager;
-import mx.com.aon.tmp.BackboneApplicationException;
+
 import mx.com.aon.tmp.Endpoint;
 import mx.com.gseguros.exception.ApplicationException;
 
@@ -70,7 +70,7 @@ public class LoginManagerImpl implements LoginManager {
 			manager = (Endpoint)endpoints.get("CONSULTA_PERFIL");
 			userVO.setFuentesPerfil( (PerfilVO)manager.invoke(userVO.getPerfil()) );
 
-		} catch (BackboneApplicationException bae) {
+		} catch (Exception bae) {
 			logger.error("Exception in invoke 'Validacion usuario'",bae);
 			throw new ApplicationException("Error al validar al usuario en el sistema");
 		}
@@ -97,7 +97,7 @@ public class LoginManagerImpl implements LoginManager {
         mapa.put("user", user);
 
         UserVO userVO = null;
-        //try {
+        try {
             if( user == null || user.equals("") ){
                 throw new ApplicationException("Usuario y/o password no validos");
             }
@@ -143,10 +143,10 @@ public class LoginManagerImpl implements LoginManager {
             //Endpoint manager = (Endpoint)endpoints.get("CONSULTA_PERFIL");
             userVO.setFuentesPerfil(perfil);
 
-        //} catch (BackboneApplicationException bae) {
-          //  logger.error("Exception in invoke 'Validacion usuario'",bae);
-           // throw new ApplicationException("Error al validar al usuario en el sistema");
-        //}
+        } catch (Exception e) {
+            logger.error("Exception in invoke 'Validacion usuario'", e);
+            throw new ApplicationException("Error al validar al usuario en el sistema", e);
+        }
 
         return userVO;
     }

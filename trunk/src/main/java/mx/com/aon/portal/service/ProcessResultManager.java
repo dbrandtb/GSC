@@ -7,9 +7,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import mx.com.aon.portal.util.WrapperResultados;
-import mx.com.aon.tmp.BackboneApplicationException;
 import mx.com.aon.tmp.Endpoint;
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.exception.DaoException;
 
 import org.apache.log4j.Logger;
 
@@ -73,7 +73,7 @@ public class ProcessResultManager {
             res = (WrapperResultados) endpoint.invoke(map);
             return res;
 
-        } catch (BackboneApplicationException e) {
+        } catch (DaoException e) {
             logger.error("Error inesperado al invocar el procedimiento de lectura del mensaje de error" + ERROR_STORE_PROCEDURE, e);
             throw new ApplicationException("Error inesperado al invocar el procedimiento de lectura del mensaje de error");
         }
