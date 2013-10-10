@@ -172,4 +172,40 @@ public class ConsultasPolizaManagerImpl extends
 		return result;
 	}
 
+	public WrapperResultados insertaClausula(String dsclausu, String contenido)
+			throws ApplicationException {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_descrip_i", dsclausu);
+		params.put("pv_conten_i", contenido);
+		
+		WrapperResultados result = this.returnBackBoneInvoke(params,
+				ConsultasPolizaDAO.INSERTA_CLAUSULA);
+		
+		return result;
+	}
+
+	public WrapperResultados actualizaClausula(String cdclausu, String dsclausu, String contenido)
+			throws ApplicationException {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdtipcla_i", cdclausu);
+		params.put("pv_descrip_i", dsclausu);
+		params.put("pv_conten_i", contenido);
+		
+		WrapperResultados result = this.returnBackBoneInvoke(params,
+				ConsultasPolizaDAO.ACTUALIZA_CLAUSULA);
+		
+		return result;
+	}
+
+	public WrapperResultados consultaClausulaDetalle(String cdclausu)
+			throws ApplicationException {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdcla_i", cdclausu);
+		
+		WrapperResultados result = this.returnBackBoneInvoke(params,
+				ConsultasPolizaDAO.CONSULTA_CLAUSULA_DETALLE);
+		
+		return result;
+	}
+
 }

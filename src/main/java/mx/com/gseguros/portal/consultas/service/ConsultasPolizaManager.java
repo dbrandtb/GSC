@@ -126,6 +126,9 @@ public interface ConsultasPolizaManager {
 
 	
 	public WrapperResultados consultaClausulas(String cdclause, String dsclausu) throws ApplicationException;
+	public WrapperResultados insertaClausula(String dsclausu, String contenido) throws ApplicationException;
+	public WrapperResultados actualizaClausula(String cdclausu, String dsclausu, String contenido) throws ApplicationException;
+	public WrapperResultados consultaClausulaDetalle(String cdclausu) throws ApplicationException;
 	
 	
 }

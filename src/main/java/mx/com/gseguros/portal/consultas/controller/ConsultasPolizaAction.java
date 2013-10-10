@@ -59,7 +59,9 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     private List<ConsultaDatosAseguradoVO> datosAsegurados;
     
     private List<GenericVO> listaGenerica;
-    
+
+    private String msgResult;
+
     public String execute() throws Exception {
     	return SUCCESS;
     }
@@ -368,6 +370,50 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     	return SUCCESS;
     	
     }
+
+    public String insertaClausula(){
+    	logger.debug(" **** Entrando a insertaClausula ****");
+    	try {
+    		consultasPolizaManager.insertaClausula(params.get("descripcion"), params.get("contenido"));
+    	}catch( Exception e){
+    		logger.error("Error al insertaClausula ",e);
+    		return SUCCESS;
+    	}
+    	
+    	success = true;
+    	return SUCCESS;
+    	
+    }
+    
+    public String consultaClausulaDetalle(){
+    	logger.debug(" **** Entrando a consultaClausulaDetalle ****");
+    	try {
+    		WrapperResultados result = consultasPolizaManager.consultaClausulaDetalle(params.get("cdclausu"));
+    		msgResult = (String) result.getItemMap().get("DETALLE_CLAUSU");
+    		
+    	}catch( Exception e){
+    		logger.error("Error al consultaClausulaDetalle ",e);
+    		return SUCCESS;
+    	}
+    	
+    	success = true;
+    	return SUCCESS;
+    	
+    }
+
+   public String actualizaClausula(){
+    	logger.debug(" **** Entrando a actualizaClausula ****");
+    	try {
+    		consultasPolizaManager.actualizaClausula(params.get("cdclausu"), params.get("descripcion"), params.get("contenido"));
+    	}catch( Exception e){
+    		logger.error("Error al actualizaClausula ",e);
+    		return SUCCESS;
+    	}
+    	
+    	success = true;
+    	return SUCCESS;
+    	
+    }
     
     //Getters and setters:
     
@@ -491,5 +537,14 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
 	public void setListaGenerica(List<GenericVO> listaGenerica) {
 		this.listaGenerica = listaGenerica;
 	}
+
+	public String getMsgResult() {
+		return msgResult;
+	}
+
+	public void setMsgResult(String msgResult) {
+		this.msgResult = msgResult;
+	}
+
     
 }
