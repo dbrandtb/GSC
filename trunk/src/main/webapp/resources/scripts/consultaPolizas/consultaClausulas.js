@@ -6,32 +6,27 @@ Ext.onReady(function() {
         mode: 'SINGLE',
         allowDeselect: true
     });
-    
-    // Conversión para el tipo de moneda
-    Ext.util.Format.thousandSeparator = ',';
-    Ext.util.Format.decimalSeparator = '.';
-	
-    
+
     Ext.define('modelClau',
-    	    {
-    	        extend:'Ext.data.Model',
-    	        fields:['key','value']
-    	    });
+    {
+        extend:'Ext.data.Model',
+        fields:['key','value']
+    });
     
     var storeClavesClausulas = new Ext.data.Store(
-    	    {
-    	        model      : 'modelClau'
-    	        ,autoLoad  : true
-    	        ,proxy     :
-    	        {
-    	            url     : _URL_CARGA_CLAVES_CLAU
-    	            ,type   : 'ajax'
-    	            ,reader :
-    	            {
-    	                type  : 'json'
-    	                ,root : 'listaGenerica'
-    	            }
-    	        }
+    {
+        model      : 'modelClau'
+        ,autoLoad  : true
+        ,proxy     :
+        {
+            url     : _URL_CARGA_CLAVES_CLAU
+            ,type   : 'ajax'
+            ,reader :
+            {
+                type  : 'json'
+                ,root : 'listaGenerica'
+            }
+        }
     });
     
     Ext.define('modeloGridClau',{
@@ -40,17 +35,17 @@ Ext.onReady(function() {
     });
     
     var storGridClau = new Ext.data.Store(
-    	    {
-    	    	pageSize : 10
-    	        ,model      : 'modeloGridClau'
-    	        ,autoLoad  : false
-    	        ,proxy     :
-    	        {
-    	            enablePaging : true,
-    	            reader       : 'json',
-    	            type         : 'memory',
-    	            data         : []
-    	        }
+    {
+    	pageSize : 10
+        ,model      : 'modeloGridClau'
+        ,autoLoad  : false
+        ,proxy     :
+        {
+            enablePaging : true,
+            reader       : 'json',
+            type         : 'memory',
+            data         : []
+        }
     });
     
     Ext.create('Ext.panel.Panel',
@@ -94,6 +89,7 @@ Ext.onReady(function() {
     	                ,buttonAlign: 'center'
     	                ,buttons : [{
     	                	text: "Buscar"
+	                		,icon:_CONTEXT+'/resources/fam3icons/icons/magnifier.png'
     	                	,handler: function(){
     	                		var params = {
 	                				'params.cdclausu' : Ext.getCmp('idComboClau').getValue(),
@@ -103,6 +99,7 @@ Ext.onReady(function() {
     	                	}	
     	                },{
     	                	text: "Limpiar"
+    	                		,icon:_CONTEXT+'/resources/fam3icons/icons/arrow_refresh.png'
         	                	,handler: function(){
         	                			Ext.getCmp('idComboClau').reset();
         	                			Ext.getCmp('idFiltroDes').reset();
@@ -117,7 +114,7 @@ Ext.onReady(function() {
     	                ,collapsible   : true
     	                ,titleCollapse : true
     	                ,style         : 'margin:5px'
-    	                ,height        : 200
+    	                ,height        : 400
     	                ,columns       :
     	                [
     	                    {
@@ -141,14 +138,18 @@ Ext.onReady(function() {
     	            	,buttonAlign: 'center'
 		                ,buttons : [{
 		                	text: "Agregar"
+		                	,icon:_CONTEXT+'/resources/fam3icons/icons/application_add.png'
 		                	,handler: function(){
 		                		edicionActualizacionClausulas(null,null,0);
 		                	}	
 		                },{
 		                	text: "Editar"
-	    	                	,handler: function(){
+		                		,icon:_CONTEXT+'/resources/fam3icons/icons/application_edit.png'
+		                		,handler: function(){
 	    	                		if(Ext.getCmp('clausulasGridId').getSelectionModel().hasSelection()){
 	    	                			var rowSelected = Ext.getCmp('clausulasGridId').getSelectionModel().getSelection()[0];
+	    	                			console.log(rowSelected.get('key'));
+	    	                			console.log(rowSelected.get('value'));
 	    	                			edicionActualizacionClausulas(rowSelected.get('key'),rowSelected.get('value'),1);
 	    	                		}else {
 	    	                			Ext.Msg.alert('Aviso', 'Debe de seleccionar una cl&aacute;usula para realizar la edici&oacute;n');
@@ -158,5 +159,214 @@ Ext.onReady(function() {
     	            })
     	        ]
     	    });
+    
+    /*Funcion para la actualizacion y modificación de cláusulas*/
+    function edicionActualizacionClausulas(idClausula,descripcion,bandera)
+    {
+    	//AgregarNuevo --> 0
+    	//Editar  	   --> 1
+    	if(bandera==0)
+		{
+        	var modificacionClausula = Ext.create('Ext.window.Window',
+        	        {
+        	            title        : 'CL&Aacute;USULA'
+        	            ,modal       : true
+        	            ,buttonAlign : 'center'
+        	            ,width		 : 810
+        	            ,height      : 410
+        	            ,items       :
+        	            [
+        				    panelClausula= Ext.create('Ext.form.Panel', {
+        				        id: 'panelClausula',
+        				        width: 800,
+        				        url: _URL_INSERTA_CLAUSU,
+        				        bodyPadding: 5,
+        				        renderTo: Ext.getBody(),
+        				        items: [
+        				               {
+        				                	 xtype:'textfield'
+        			                		,name:'params.descripcion'
+        		                			,fieldLabel: 'Nombre de la Cl&aacute;usula'
+        	                				,labelWidth: 150
+        	                				,width: 750
+        	                				//,value: descripcion
+        	                				,allowBlank: false
+        	                				,blankText:'El nombre de la cl&aacute;usula es un dato requerido'
+        				            	}
+        				    	        ,{
+        				    	            xtype: 'htmleditor'
+        			    	            	,fieldLabel: 'Descripci&oacute;n'
+        		    	            		,labelWidth: 150
+        		    	            		,width: 750
+        		    	            		,name:'params.contenido'
+        	    	            			,height: 250
+        	    	            			,allowBlank: false
+        	    	            			,blankText:'La descripci&oacute;n es un dato requerido'
+        				    	        }],
+        				    	buttons: [{
+        				    		text: 'Guardar'
+        				    		,icon:_CONTEXT+'/resources/fam3icons/icons/accept.png'
+        				    		,buttonAlign : 'center',
+        				    		handler: function() {
+        				    	    	if (panelClausula.form.isValid()) {
+        				    	    		panelClausula.form.submit({
+        				    		        	waitMsg:'Procesando...',			        	
+        				    		        	failure: function(form, action) {
+        				    		        		Ext.Msg.show({
+        				    	   	                    title: 'ERROR',
+        				    	   	                    msg: action.result.errorMessage,
+        				    	   	                    buttons: Ext.Msg.OK,
+        				    	   	                    icon: Ext.Msg.ERROR
+        				    	   	                });
+        				    					},
+        				    					success: function(form, action) {
+        				    						Ext.Msg.show({
+        				    	   	                    title: '&Eacute;XITO',
+        				    	   	                    msg: "La cl&aacute;usula se guardo correctamente",
+        				    	   	                    buttons: Ext.Msg.OK
+        				    	   	                });
+        				    						panelClausula.form.reset();
+        				    						
+        				    					}
+        				    				});
+        				    			} else {
+        				    				Ext.Msg.show({
+        				    	                   title: 'Aviso',
+        				    	                   msg: 'Complete la informaci&oacute;n requerida',
+        				    	                   buttons: Ext.Msg.OK,
+        				    	                   icon: Ext.Msg.WARNING
+        				    	               });
+        				    			}
+        				    		}
+        				    	},{
+        				    		text: 'Limpiar',
+        				    		icon:_CONTEXT+'/resources/fam3icons/icons/arrow_refresh.png',
+        				    		buttonAlign : 'center',
+        				            handler: function() {
+        				            	panelClausula.form.reset();
+        				    		}
+        				    	}
+        				    	]
+        				    })
+        	        ]
+        	        });
+        	    	modificacionClausula.show();
+		}
+    	else
+		{
+    		var txtContenido="";
+    		Ext.Ajax.request(
+    				{
+    				    url     : _URL_CONSULTA_CLAUSU_DETALLE
+    				    ,params : 
+    				    {
+    				        'params.cdclausu'  : idClausula
+    				    }
+    				    ,success : function (response)
+    				    {
+    				    	var json=Ext.decode(response.responseText);
+    				    	txtContenido =json.msgResult;
+    				    	console.log(json.msgResult);
+    			    		var modificacionClausula = Ext.create('Ext.window.Window',
+    			    		        {
+    			    		            title        : 'CL&Aacute;USULA'
+    			    		            ,modal       : true
+    			    		            ,buttonAlign : 'center'
+    			    		            ,width		 : 810
+    			    		            ,height      : 410
+    			    		            ,items       :
+    			    		            [
+    			    					    panelClausula= Ext.create('Ext.form.Panel', {
+    			    					        id: 'panelClausula',
+    			    					        width: 800,
+    			    					        url: _URL_ACTUALIZA_CLAUSU,
+    			    					        bodyPadding: 5,
+    			    					        renderTo: Ext.getBody(),
+    			    					        items: [
+    			    					                {
+    			    					                	 xtype:'hiddenfield'
+    			    				                		,name:'params.cdclausu'
+    			    			                			,fieldLabel: 'Id Clave'
+    			    		                				,labelWidth: 150
+    			    		                				,width: 750
+    			    		                				,value: idClausula
+    			    					            	}
+    			    					            	,{
+    			    					                	 xtype:'textfield'
+    			    				                		,name:'params.descripcion'
+    			    			                			,fieldLabel: 'Nombre de la Cl&aacute;usula'
+    			    		                				,labelWidth: 150
+    			    		                				,width: 750
+    			    		                				,value: descripcion
+    			    		                				,allowBlank: false
+    			    		                				,blankText:'El nombre de la cl&aacute;usula es un dato requerido'
+    			    					            	}
+    			    					    	        ,{
+    			    					    	            xtype: 'htmleditor'
+    			    					    	            ,id:"idContenido"	
+    			    				    	            	,fieldLabel: 'Descripci&oacute;n'
+    			    			    	            		,labelWidth: 150
+    			    			    	            		,width: 750
+    			    			    	            		,name:'params.contenido'
+    			    		    	            			,height: 250
+    			    		    	            			,allowBlank: false
+    			    		    	            			,blankText:'La descripci&oacute;n es un dato requerido'
+    			    		    	            			,value: txtContenido
+    			    					    	        }],
+    			    					    	buttons: [{
+    			    					    		text: 'Guardar',
+    			    					    		icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
+    			    					    		buttonAlign : 'center',
+    			    					    		handler: function() {
+    			    					    	    	if (panelClausula.form.isValid()) {
+    			    					    	    		panelClausula.form.submit({
+    			    					    		        	waitMsg:'Procesando...',			        	
+    			    					    		        	failure: function(form, action) {
+    			    					    		        		Ext.Msg.show({
+    			    					    	   	                    title: 'ERROR',
+    			    					    	   	                    msg: action.result.errorMessage,
+    			    					    	   	                    buttons: Ext.Msg.OK,
+    			    					    	   	                    icon: Ext.Msg.ERROR
+    			    					    	   	                });
+    			    					    					},
+    			    					    					success: function(form, action) {
+    			    					    						Ext.Msg.show({
+    			    					    	   	                    title: '&Eacute;XITO',
+    			    					    	   	                    msg: "La cl&aacute;usula se modific&oacute; correctamente",
+    			    					    	   	                    buttons: Ext.Msg.OK
+    			    					    	   	                });    			    					    						
+    			    					    					}
+    			    					    				});
+    			    					    			} else {
+    			    					    				Ext.Msg.show({
+    			    					    	                   title: 'Aviso',
+    			    					    	                   msg: 'Complete la informaci&oacute;n requerida',
+    			    					    	                   buttons: Ext.Msg.OK,
+    			    					    	                   icon: Ext.Msg.WARNING
+    			    					    	               });
+    			    					    			}
+    			    					    		}
+    			    					    	}
+    			    					    	]
+    			    					    })
+    			    		        ]
+    			    		        });
+    			    		    	modificacionClausula.show(); 
+    				    	
+    				    },
+    				    failure : function ()
+    				    {
+    				        me.up().up().setLoading(false);
+    				        Ext.Msg.show({
+    				            title:'Error',
+    				            msg: 'Error de comunicaci&oacute;n',
+    				            buttons: Ext.Msg.OK,
+    				            icon: Ext.Msg.ERROR
+    				        });
+    				    }
+    				});
+    		}
+    }
+   
     
 });
