@@ -241,12 +241,16 @@ Ext.onReady(function(){
                     		{
                     			res='Vo. Bo. Médico';
                     		}
+                    		else if(value=='6')
+                            {
+                                res='Esperando información cliente';
+                            }
                     		return res;
                     	}
                     }
                     
                     ,{
-                        header     : 'Responsable'
+                        header     : 'Agente'
                         ,dataIndex : 'Nombre_agente'
                         ,width     : 190
                     }
