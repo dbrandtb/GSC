@@ -209,6 +209,7 @@ Ext.onReady(function()
                             }
                             ,{
                                 xtype       : 'datefield'
+                                ,readOnly   : true
                                 ,format     : 'd/m/Y'
                                 ,name       : 'smap1.fecha'
                                 ,value      : new Date()
