@@ -57,6 +57,8 @@ Ext.onReady(function() {
     	            Ext.create('Ext.panel.Panel',
     	            {
     	                border  : 0
+    	                ,title: 'Busqueda de Cl&aacute;usulas'
+    	                ,style         : 'margin:5px'
     	                ,layout :
     	                {
     	                    type     : 'table'
@@ -74,6 +76,7 @@ Ext.onReady(function() {
     	                        ,store          : storeClavesClausulas
     	                        ,displayField   : 'key'
     	                        ,valueField     : 'key'
+    	                        ,labelWidth: 150
     	                        ,editable       : true
     	                        ,forceSelection : false
     	                        ,style          : 'margin:5px'
@@ -82,6 +85,7 @@ Ext.onReady(function() {
     	                    })
     	                    ,{
     	                        xtype : 'textfield'
+    	                        ,labelWidth: 150
     	                        ,fieldLabel : 'Filtro Descripci&oacute;n'
     	                        ,id         : 'idFiltroDes'
     	                    }

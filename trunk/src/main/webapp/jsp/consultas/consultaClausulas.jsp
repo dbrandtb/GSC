@@ -21,7 +21,8 @@
         
     </head>
     <body>
-    
-    <div id="div_clau"></div>
+    <div style="height:500px;">
+            <div id="div_clau"></div>
+   </div>
     </body>
 </html>
