@@ -1011,7 +1011,7 @@ debug("validarYGuardar flag:2");
                                         recordCont.set('segundo_nombre','');
                                         recordCont.set('Apellido_Paterno','');
                                         recordCont.set('Apellido_Materno','');
-                                        recordCont.set('fenacimi','01/01/1990');
+                                        recordCont.set('fenacimi',Ext.Date.format(new Date(), 'd/m/Y'));
                                         recordCont.set('cdrol','1');
                                         recordCont.set('nmsituac','0');
                                         recordCont.set('cdrfc','');
