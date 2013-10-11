@@ -103,7 +103,7 @@ Ext.onReady(function(){
                 items:
                 [
                     {
-                        fieldLabel : 'Asegurado',
+                        fieldLabel : inputNmsituacp4>0?'Asegurado':'Contratante',
                         xtype      : 'textfield',
                         readOnly   : true,
                         name       : 'smap1.asegurado'
