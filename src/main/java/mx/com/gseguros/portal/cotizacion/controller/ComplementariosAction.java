@@ -940,9 +940,14 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 		try
 		{
 			log.debug("panel1"+panel1);
+			log.debug("panel2"+panel2);
 			
 			UserVO usu=(UserVO)session.get("USUARIO");
 			DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usu.getUser());
+			
+			/*list1=kernelManager.obtenerAsegurados(panel2);
+			log.debug("asegurados para iterar reportes:");
+			log.debug(list1);*/
 			
 			String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+panel1.get("pv_ntramite");
             File carpeta = new File(rutaCarpeta);
