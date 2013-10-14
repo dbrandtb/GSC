@@ -2,7 +2,6 @@ package mx.com.aon.portal.util;
 
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -18,11 +17,6 @@ public class WrapperResultados implements Serializable {
 	 
 	 /** identificador del mensaje resultante de la operacion **/
 	 private String msgId;
-	 
-	 /**
-	  * @deprecated se quitara msg, el mensaje puede ser obtenido usando el msgId
-	  */
-	 private String msg;
 	 
 	 /** Tipo de mensaje o error, resultante de la operacion **/
 	 private String msgTitle;
@@ -45,24 +39,6 @@ public class WrapperResultados implements Serializable {
 
      // utiilado en algunos plsql ej: validar_existe_tarea
      private String resultado;
-
-//usado para P_OBTIENE_MONTOS_CARRITO
-     @SuppressWarnings("unchecked")
-	private ArrayList resultados;
-     
-     
-//usado en CALCULA_DESCUENTO_CARRITO_COMPRAS
-     
-     private String descuento;
-     private String subTotal;
- 	 private String totalFn;
-     
-//usado en GUARDAR_EDITA_CONFIGURACION
- 	 private String actPadre;
- 	 private String actHijo;
- 	 
-//usado en OBTENER_PREGUNTA_ENCUESTA
-     private String cdSecuenciaPro;
      
      /**
 	  * Permite saber si el mensaje recibido fue de error
@@ -144,14 +120,6 @@ public class WrapperResultados implements Serializable {
 		this.msgTitle = msgTitle;
 	}
 
-	public String getMsg() {
-		return msg;
-	}
-
-	public void setMsg(String msg) {
-		this.msg = msg;
-	}
-
 	public int getNotPagedTotalItems() {
 		return notPagedTotalItems;
 	}
@@ -177,67 +145,4 @@ public class WrapperResultados implements Serializable {
     public void setMsgText(String msgText) {
         this.msgText = msgText;
     }
-	@SuppressWarnings("unchecked")
-	public ArrayList getResultados() {
-		return resultados;
-	}
-	@SuppressWarnings("unchecked")
-	public void setResultados(ArrayList resultados) {
-		this.resultados = resultados;
-	}
-	/**
-	 * @return the descuento
-	 */
-	public String getDescuento() {
-		return descuento;
-	}
-	/**
-	 * @param descuento the descuento to set
-	 */
-	public void setDescuento(String descuento) {
-		this.descuento = descuento;
-	}
-	/**
-	 * @return the subTotal
-	 */
-	public String getSubTotal() {
-		return subTotal;
-	}
-	/**
-	 * @param subTotal the subTotal to set
-	 */
-	public void setSubTotal(String subTotal) {
-		this.subTotal = subTotal;
-	}
-	/**
-	 * @return the totalFn
-	 */
-	public String getTotalFn() {
-		return totalFn;
-	}
-	/**
-	 * @param totalFn the totalFn to set
-	 */
-	public void setTotalFn(String totalFn) {
-		this.totalFn = totalFn;
-	}
-	public String getActPadre() {
-		return actPadre;
-	}
-	public void setActPadre(String actPadre) {
-		this.actPadre = actPadre;
-	}
-	public String getActHijo() {
-		return actHijo;
-	}
-	public void setActHijo(String actHijo) {
-		this.actHijo = actHijo;
-	}
-	public String getCdSecuenciaPro() {
-		return cdSecuenciaPro;
-	}
-	public void setCdSecuenciaPro(String cdSecuenciaPro) {
-		this.cdSecuenciaPro = cdSecuenciaPro;
-	}
-	
 }
