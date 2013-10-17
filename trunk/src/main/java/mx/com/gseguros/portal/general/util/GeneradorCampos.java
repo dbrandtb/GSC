@@ -49,11 +49,12 @@ public class GeneradorCampos {
     
     public void generaCampoYField(List<Tatri> lt, Tatri ta, Integer idx) throws Exception
     {
+    	boolean listeners=false;
         Item fi=new Item();
         fi.setType(Item.OBJ);
         fi.add(Item.crear("name", this.namePrefix+(ta.getCdatribu().length()>1?ta.getCdatribu():"0"+ta.getCdatribu())));
         String type="string";
-        if(ta.getSwformat().equals("A"))
+        if(ta.getSwformat().equals("A")||StringUtils.isNotBlank(ta.getOttabval()))//si es combo solo pone strings
             type="string";
         else if(ta.getSwformat().equals("N"))
             type="int";
@@ -136,15 +137,25 @@ public class GeneradorCampos {
             //it.add(Item.crear("emptyText", "Seleccione..."));
             if(idx<lt.size()-1&&StringUtils.isNotBlank(lt.get(idx+1).getCdtablj1()))//para el padre anidado
             {
-            	this.agregarHerencia(lt,it,idx);
+            	if(idx>0&&StringUtils.isNotBlank(ta.getCdtablj1()))//es padre e hijo a la vez
+            	{
+            		this.agregarHerencia2(lt,it,idx);
+            	}
+            	else
+            	{
+            		this.agregarHerencia(lt,it,idx);
+            	}
+            	listeners=true;
             }	
             if(idx>0&&StringUtils.isNotBlank(ta.getCdtablj1()))//para el hijo anidado
             {
                 it.add(Item.crear("forceSelection",false));
                 it.add(Item.crear("heredar",
                 		 "function(remoto){"
+                		+"    debug('heredar');"
                 		+"    if(!this.noEsPrimera||remoto==true)"
                 		+"    {"
+                		+"        debug('no es primera o es remoto');"
                 		+"        this.noEsPrimera=true;"
                 		+"        this.getStore().load({"
                 		+"            params:{"
@@ -161,10 +172,11 @@ public class GeneradorCampos {
                 		+"		      }"
                 		+"	      });"
                 		+"    }"
-                		+"},"
+                		+"}"
+                		+(listeners?"":","
                 		+"listeners:{"
                 		+"	change:{fn:function(){this.heredar();}}"
-                		+"}").setQuotes(""));
+                		+"}")).setQuotes(""));
             }
         }
         else if(ta.getSwformat().equals("A"))
@@ -238,7 +250,20 @@ public class GeneradorCampos {
     	it.add(Item.crear("listeners","" +
     			"{" +
     			"    blur:{" +
-    			"        fn:function(){Ext.getCmp('"+this.idPrefix+(idx+1)+"').heredar(true);}" +
+    			"        fn:function(){debug('blur');Ext.getCmp('"+this.idPrefix+(idx+1)+"').heredar(true);}" +
+    			"    }" +
+    			"}")
+    			.setQuotes(""));
+	}
+    
+    private void agregarHerencia2(List<Tatri> lt, Item it, Integer idx) throws Exception {//para el padre anidado
+    	it.add(Item.crear("listeners","" +
+    			"{" +
+    			"    blur:{" +
+    			"        fn:function(){debug('blur');Ext.getCmp('"+this.idPrefix+(idx+1)+"').heredar(true);}" +
+    			"    }," +
+    			"    change:{" +
+    			"        fn:function(){this.heredar();}" +
     			"    }" +
     			"}")
     			.setQuotes(""));
