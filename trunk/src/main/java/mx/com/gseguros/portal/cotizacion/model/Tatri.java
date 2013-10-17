@@ -14,6 +14,7 @@ public class Tatri {
     private String ottabval;
     private String cdtablj1;
     private String type="";
+    private String swsuscri;
 
     public String getCdatribu() {
         return cdatribu;
@@ -85,5 +86,13 @@ public class Tatri {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getSwsuscri() {
+		return swsuscri;
+	}
+
+	public void setSwsuscri(String swsuscri) {
+		this.swsuscri = swsuscri;
 	}
 }
