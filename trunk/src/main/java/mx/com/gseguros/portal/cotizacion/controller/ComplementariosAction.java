@@ -587,6 +587,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 	                        }]*/
 			item2.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("xtype", "actioncolumn"))
+					//.add(new Item("width", 110))
 					.add(new Item("width", 80))
 					.add(new Item("menuDisabled", true))
 					.add(new Item("header", "Acciones"))
@@ -609,6 +610,13 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 								.add(Item.crear("scope","this").setQuotes(""))
 								.add(Item.crear("handler","this.onExclusionClick").setQuotes(""))
 								)
+						/*.add(Item.crear(null,null,Item.OBJ)
+								.add("icon","resources/fam3icons/icons/user_edit.png")
+								.add("tooltip","Datos de situaci&oacute;n asegurado")
+								.add(Item.crear("scope","this").setQuotes(""))
+								.add(Item.crear("handler","this.onValositClick").setQuotes(""))
+								)
+						*/
 						/*
 						.add(Item.crear(null,null,Item.OBJ)
 								.add("icon","resources/fam3icons/icons/money.png")
@@ -1049,6 +1057,12 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 						+ "&p_estado='M'"
 						+ "&p_poliza="+panel2.get("nmpoliza")
 						+ "&desname="+rutaCarpeta+"/"+descripc;
+				if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
+				{
+					// C R E D E N C I A L _ X X X X X X . P D F
+					//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+					url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("."));
+				}
 				log.debug(""
 						+ "\n#################################"
 						+ "\n###### Se solicita reporte ######"
