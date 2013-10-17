@@ -2448,7 +2448,7 @@ Ext.onReady(function(){
                 {
 	                if(hayTitular==1)
 		            {
-	                	if(!menorDeEdad)
+	                	if(!menorDeEdad||true)
 	                	{
 	                		if(!mayores69)
                 			{
