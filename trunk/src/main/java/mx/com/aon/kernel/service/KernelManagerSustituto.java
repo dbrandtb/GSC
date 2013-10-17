@@ -27,6 +27,7 @@ public interface KernelManagerSustituto {
     public WrapperResultados insertaMaestroPolizas(Map<String, String> parameters) throws ApplicationException;
     public WrapperResultados insertaPolisit(Map<String, Object> parameters) throws ApplicationException;
     public WrapperResultados insertaValoresSituaciones(Map<String, String> parameters) throws ApplicationException;
+    public WrapperResultados actualizaValoresSituaciones(Map<String, String> parameters) throws ApplicationException;
     public List<SituacionVO> clonaSituaciones(Map<String,String> parameters) throws ApplicationException;
     public WrapperResultados coberturas(Map<String,String> parameters) throws ApplicationException;
     public WrapperResultados ejecutaASIGSVALIPOL(Map<String,String> parameters) throws ApplicationException;
@@ -87,4 +88,5 @@ public interface KernelManagerSustituto {
 	public List<Map<String, String>> obtenerDetalleMC(Map<String, String> smap1) throws ApplicationException;
 	public WrapperResultados mesaControlFinalizarDetalle(Map<String, String> smap1) throws ApplicationException;
 	public WrapperResultados preparaContrarecibo(Map<String, String> docu) throws ApplicationException;
+	public Map<String, Object> obtieneValositSituac(Map<String, String> params) throws ApplicationException;
 }

@@ -80,6 +80,15 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return res;
     }
     
+    public WrapperResultados actualizaValoresSituaciones(Map<String, String> parameters) throws ApplicationException
+    {
+        log.debug("### kernel sustituto actualizaValoresSituaciones map: "+parameters);
+        WrapperResultados res=this.returnBackBoneInvoke(parameters, ProcesoDAO.P_UPD_TVALOSIT);
+        log.debug("### kernel sustituto actualizaValoresSituaciones id:"+res.getMsgId());
+        log.debug("### kernel sustituto actualizaValoresSituaciones mesage:"+res.getMsgText());
+        return res;
+    }
+    
     public List<SituacionVO> clonaSituaciones(Map<String,String> parameters) throws ApplicationException
     {
         log.debug("### kernel sustituto clonaSituaciones map: "+parameters);
@@ -716,5 +725,13 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         log.debug("### kernel sustituto preparaContrarecibo id:"+res.getMsgId());
         log.debug("### kernel sustituto preparaContrarecibo mesage:"+res.getMsgText());
 		return res;
+	}
+	
+	public Map<String, Object> obtieneValositSituac(Map<String, String> params) throws ApplicationException
+	{
+		log.debug("### kernel sustituto obtieneValositSituac map: "+params);
+        Map<String,Object> map=(Map<String,Object>) this.getBackBoneInvoke(params, ProcesoDAO.OBTIENE_VALOSIT_SITUAC);
+        log.debug("### kernel sustituto obtieneValositSituac response map: "+map);
+        return map;
 	}
 }
