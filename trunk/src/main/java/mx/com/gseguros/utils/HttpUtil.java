@@ -63,7 +63,7 @@ public class HttpUtil {
 			logger.debug("Archivo creado: " + rutaDestino);
 
 		} catch (Exception e) {
-			logger.error("Error al generar el reporte en " + rutaDestino, e);
+			logger.error("Error al generar el archivo en " + rutaDestino, e);
 			isArchivoGenerado = false;
 		} finally {
 			if (inputStream != null) {
@@ -84,6 +84,39 @@ public class HttpUtil {
 			}
 		}
 		return isArchivoGenerado;
+	}
+	
+	
+	/**
+	 * Obtiene un flujo archivo a partir de una URL
+	 * @param urlOrigen   URL de donde se obtendrá el flujo de datos 
+	 * @return InputStream o null en caso de que no existan datos
+	 */
+	public static InputStream obtenInputStream(String urlOrigen) {
+		
+		logger.debug("Entrando a obtenInputStream()");
+		logger.debug("urlOrigen=" + urlOrigen);
+		
+		InputStream inputStream = null;
+		
+		try {
+			
+			URL obj = new URL(urlOrigen);
+			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+			con.setRequestMethod(GET);
+	
+			int responseCode = con.getResponseCode();
+			logger.debug("Codigo de Respuesta : " + responseCode);
+			if (responseCode != CODIGO_RESPUESTA_OK) {
+				throw new Exception("Codigo de respuesta erroneo: " + responseCode);
+			}
+			
+			inputStream = con.getInputStream();
+
+		} catch (Exception e) {
+			logger.error("Error al obtener los datos " , e);
+		}
+		return inputStream;
 	}
 
 	
