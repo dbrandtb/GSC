@@ -1528,6 +1528,7 @@ Ext.onReady(function(){
                 handler:function()
                 {
                     var me=this;
+                    /*
                     window.open(
                         urlImprimirCotiza+'?p_cdplan='+selected_cd_plan
                             +"&p_estado='W'"
@@ -1541,6 +1542,39 @@ Ext.onReady(function(){
     						+"&paramform=no"
                         ,'_blank'
                         ,'width=800,height=600');
+                    */
+                    var urlRequestImpCotiza=urlImprimirCotiza+'?p_cdplan='+selected_cd_plan
+                    +'&p_estado=W'
+                    +'&p_poliza='+Ext.getCmp('idCotizacion').getValue()
+                    +'&p_ramo=2'
+                    +'&p_unieco=1'
+                    +'&destype=cache'
+					+"&desformat=PDF"
+					+"&userid="+repSrvUsr
+					+"&report=COTIZACION.rdf"
+					+"&paramform=no";
+                    debug(urlRequestImpCotiza);
+                    var numRand=Math.floor((Math.random()*100000)+1);
+    	            debug(numRand);
+    	            var windowVerDocu=Ext.create('Ext.window.Window',
+    	            {
+    	                title          : 'Cotizaci&oacute;n'
+    	                ,width         : 700
+    	                ,height        : 500
+    	                ,collapsible   : true
+    	                ,titleCollapse : true
+    	                ,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
+    	                                 +'src="'+panDocUrlViewDoc+"?contentType='application/pdf'&url='"+encodeURIComponent(urlRequestImpCotiza)+"'\">"
+    	                                 +'</iframe>'
+    	                ,listeners     :
+    	                {
+    	                    resize : function(win,width,height,opt){
+    	                        debug(width,height);
+    	                        $('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
+    	                    }
+    	                }
+    	            }).show();
+    	            windowVerDocu.center();
                 }
             }
             ,{
