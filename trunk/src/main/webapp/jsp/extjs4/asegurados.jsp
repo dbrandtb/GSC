@@ -57,6 +57,7 @@
             var urlEnviarCorreo      = '<s:url namespace="/" action="enviaCorreo" />';
             var urlDatosComplementarios = '<s:url namespace="/" action="datosComplementarios" />';
             var urlDocumentosTramite = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza" />';
+            var panDocUrlViewDoc     = '<s:url namespace ="/documentos"     action="descargaDocInline" />';
             <s:if test="ntramite!=null&&ntramite.length()>0">
                 var hayTramiteCargado=true;
                 var ntramiteCargado='<s:property value="ntramite" />';
