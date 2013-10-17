@@ -1564,7 +1564,7 @@ Ext.onReady(function(){
     	                ,collapsible   : true
     	                ,titleCollapse : true
     	                ,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
-    	                                 +'src="'+panDocUrlViewDoc+"?contentType='application/pdf'&url='"+encodeURIComponent(urlRequestImpCotiza)+"'\">"
+    	                                 +'src="'+panDocUrlViewDoc+"?contentType=application/pdf&url="+encodeURIComponent(urlRequestImpCotiza)+"\">"
     	                                 +'</iframe>'
     	                ,listeners     :
     	                {
