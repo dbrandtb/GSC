@@ -40,6 +40,7 @@
 	var urlGenerarCdPersonp2='<s:url namespace="/" action="generarCdperson" />';
 	var urlDomiciliop2      ='<s:url namespace="/" action="pantallaDomicilio" />';
 	var urlExclusionp2      ='<s:url namespace="/" action="pantallaExclusion" />';
+	var urlValositp2        ='<s:url namespace="/" action="pantallaValosit" />';
 	var editorFechap2;
 	var contextop2='${ctx}';
 	var gridTomadorp2;
@@ -295,15 +296,21 @@
                                 if(hayContApart)
                                 {
                                     var recordContApart=storeTomadorp2.getAt(0);
-                                    if(
+                                   	if(
                                         !recordContApart.get("nombre")
                                         ||recordContApart.get("nombre").length==0
-                                        ||!recordContApart.get("Apellido_Paterno")
-                                        ||recordContApart.get("Apellido_Paterno").length==0
-                                        ||!recordContApart.get("Apellido_Paterno")
+                                        ||(
+                                        (typeof recordContApart.get('tpersona')=='string' ?
+                                                recordContApart.get('tpersona')           : 
+                                                recordContApart.get('tpersona').get('key')
+                                                )=='F'&&
+                                        (
+                                        !recordContApart.get("Apellido_Paterno")
                                         ||recordContApart.get("Apellido_Paterno").length==0
                                         ||!recordContApart.get("Apellido_Materno")
                                         ||recordContApart.get("Apellido_Materno").length==0
+                                        )
+                                        )
                                         ||!recordContApart.get("cdrfc")
                                         ||recordContApart.get("cdrfc").length==0
                                         )
@@ -687,11 +694,11 @@ debug("validarYGuardar flag:2");
    	        	load:function( store, records, successful, eOpts )
 	   	        {
 	   	        	debug('listener load');
-	   	        	var indexTomador;
+	   	        	var indexTomador=-1;
    	        		store.each(function(record,index)
        			    {
    	        			debug('iterando',record);
-   	        			if('1'==(typeof record.get('cdrol')=='string'?record.get('cdrol'):record.get('cdrol').get('key')))
+   	        			if('1'==(typeof record.get('cdrol')=='string'?record.get('cdrol'):record.get('cdrol').get('key'))&&indexTomador==-1)
         				{
         				    debug('es tomador en indice '+index);
         				    indexTomador=index;
@@ -864,7 +871,7 @@ debug("validarYGuardar flag:2");
                         cellValue=record.get(columnIndex);
                         if((cell.addCls)&&((!cellValue)||(cellValue.lenght==0)))
                         {
-                            cell.addCls("custom-x-form-invalid-field");
+                            //cell.addCls("custom-x-form-invalid-field");
                         }
                     }
                 });
@@ -1353,6 +1360,44 @@ debug("validarYGuardar flag:2");
                 storeTomadorp2.removeAll();
                 storeTomadorp2.add(recordTomadorp2);
 	        }
+            ,onValositClick : function(grid,rowIndex)
+            {
+                var record=grid.getStore().getAt(rowIndex);
+                debug(record);
+                if(Ext.getCmp('valositAccordionEl'))
+                {
+                    Ext.getCmp('valositAccordionEl').destroy();
+                }
+                accordion.add(
+                {
+                    id:'valositAccordionEl'
+                    ,title:'Editar situación de '+record.get('nombre')+' '+(record.get('segundo_nombre')?record.get('segundo_nombre')+' ':' ')+record.get('Apellido_Paterno')+' '+record.get('Apellido_Materno')
+                    ,cls:'claseTitulo'
+                    ,loader:
+                    {
+                        url : urlValositp2
+                        ,params   :
+                        {
+                            'smap1.cdunieco'  : inputCduniecop2
+                            ,'smap1.cdramo'   : inputCdramop2
+                            ,'smap1.estado'   : inputEstadop2
+                            ,'smap1.nmpoliza' : inputNmpolizap2
+                            ,'smap1.cdtipsit' : 'SL'
+                            ,'smap1.agrupado' : 'no'
+                            ,'smap1.nmsituac' : record.get('nmsituac')
+                        }
+                        ,autoLoad:true
+                        ,scripts:true
+                    }
+                    ,listeners:
+                    {
+                        expand:function( p, eOpts )
+                        {
+                            window.parent.scrollTo(0,150+p.y);
+                        }
+                    }
+                }).expand();
+            }
 	    });
 	    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	    ////// Fin de declaracion de grid                                                                                //////
@@ -1426,12 +1471,18 @@ debug("validarYGuardar flag:2");
 	                            	if(
                                         !recordContApart.get("nombre")
                                         ||recordContApart.get("nombre").length==0
-                                        ||!recordContApart.get("Apellido_Paterno")
-                                        ||recordContApart.get("Apellido_Paterno").length==0
-                                        ||!recordContApart.get("Apellido_Paterno")
+                                        ||(
+                                        (typeof recordContApart.get('tpersona')=='string' ?
+                                        		recordContApart.get('tpersona')           : 
+                                        		recordContApart.get('tpersona').get('key')
+                                        		)=='F'&&
+                                        (
+                                        !recordContApart.get("Apellido_Paterno")
                                         ||recordContApart.get("Apellido_Paterno").length==0
                                         ||!recordContApart.get("Apellido_Materno")
                                         ||recordContApart.get("Apellido_Materno").length==0
+                                        )
+                                        )
                                         ||!recordContApart.get("cdrfc")
                                         ||recordContApart.get("cdrfc").length==0
                                         )
