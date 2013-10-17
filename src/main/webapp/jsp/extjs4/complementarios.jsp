@@ -41,8 +41,9 @@
             var panDatComUrlCotiza='<s:url namespace="/" action="cotizacionVital" />';
             var datComPolizaMaestra;
             var sesionDsrol='<s:property value="map1.sesiondsrol" />';
-            var datComUrlMCUpdateStatus='<s:url namespace="/mesacontrol" action="actualizarStatusTramite" />';
-            var datComUrlMC            ='<s:url namespace="/mesacontrol" action="principal" />';
+            var datComUrlMCUpdateStatus= '<s:url namespace="/mesacontrol" action="actualizarStatusTramite" />';
+            var datComUrlMC            = '<s:url namespace="/mesacontrol" action="principal" />';
+            var urlPantallaValosit     = '<s:url namespace="/"            action="pantallaValosit" />';
             debug(sesionDsrol);
             
             function expande(indice)
@@ -1194,6 +1195,34 @@
 	                            }
 	                        }
                         })
+                        /*,Ext.create('Ext.panel.Panel',
+                        {
+                            id:'tabPanelValosit'
+                            ,title:'Datos de cotizaci&oacute;n'
+                            ,cls:'claseTitulo'
+                            ,loader:
+                            {
+                                url       : urlPantallaValosit
+                                ,params   :
+                                {
+                                    'smap1.cdunieco'  : inputCdunieco
+                                    ,'smap1.cdramo'   : inputCdramo
+                                    ,'smap1.estado'   : inputEstado
+                                    ,'smap1.nmpoliza' : inputNmpoliza
+                                    ,'smap1.cdtipsit' : 'SL'
+                                    ,'smap1.agrupado' : 'si'
+                                }
+                                ,scripts  : true
+                                ,autoLoad : true
+                            }
+                            ,listeners:
+                            {
+                                expand:function( p, eOpts )
+                                {
+                                    window.parent.scrollTo(0,150+p.y);
+                                }
+                            }
+                        })*/
                     ]
                 });
                 
