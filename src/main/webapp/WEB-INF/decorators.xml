@@ -30,6 +30,8 @@
 		<pattern>/jsp/extjs4/aseguradoDomicilio.jsp</pattern>
 		<pattern>/pantallaExclusion.action</pattern>
 		<pattern>/jsp/extjs4/aseguradoExclusion.jsp</pattern>
+		<pattern>/pantallaValosit.action</pattern>
+        <pattern>/jsp/extjs4/pantallaValosit.jsp</pattern>
 		<pattern>/documentos/ventanaDocumentosPoliza</pattern>
 		<pattern>/documentos/ventanaDocumentosPolizaClon</pattern>
 		<pattern>/jsp/extjs4/ventanaDocumentosPoliza.jsp</pattern>
