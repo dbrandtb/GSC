@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.cotizacion.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -7,7 +8,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
@@ -15,7 +15,6 @@ import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.Tatri;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
-
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 
@@ -950,6 +949,288 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 				+ "\n############################################");
 		return SUCCESS;
 	}
+	
+	public String pantallaValosit()
+	{
+		log.debug(""
+				+ "\n##############################"
+				+ "\n##############################"
+				+ "\n###### pantalla valosit ######"
+				+ "\n######                  ######"
+				);
+		try
+		{
+			log.debug("smap1: "+smap1);
+			smap1.put("timestamp",""+System.currentTimeMillis());
+			List<Tatri>tatrisit=kernelManager.obtenerTatrisit(smap1.get("cdtipsit"));
+			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			List<Tatri>tatriTemp=new ArrayList<Tatri>(0);
+			boolean agrupado=smap1.containsKey("agrupado")&&smap1.get("agrupado").equalsIgnoreCase("SI");
+			for(Tatri t:tatrisit)
+			//si es agrupado solo dejar los atributos con N, si es individual solo los que tengan S
+			{
+				if(agrupado)
+				{
+					if(t.getSwsuscri().equalsIgnoreCase("N"))//N=Agrupado
+					{
+						tatriTemp.add(t);
+					}
+				}
+				else
+				{
+					if(t.getSwsuscri().equalsIgnoreCase("S"))//S=individual
+					{
+						tatriTemp.add(t);
+					}
+				}
+			}
+			tatrisit=tatriTemp;
+			if(agrupado)
+			//reordenar cp, estado, municipio
+			{
+				List<Tatri>tatriTemp2=new ArrayList<Tatri>(0);
+				//buscar cp
+				for(Tatri t:tatrisit) if(t.getCdatribu().equals("3")) tatriTemp2.add(t);
+				//buscar estado
+				for(Tatri t:tatrisit) if(t.getCdatribu().equals("4")) tatriTemp2.add(t);
+				//buscar municipio
+				for(Tatri t:tatrisit) if(t.getCdatribu().equals("17")) tatriTemp2.add(t);
+				//agregar todos los demas
+				for(Tatri t:tatrisit)
+				{
+					if(!t.getCdatribu().equals("3")&&!t.getCdatribu().equals("4")&&!t.getCdatribu().equals("17"))
+					{
+						tatriTemp2.add(t);
+					}
+				}
+				tatrisit=tatriTemp2;
+			}
+			gc.genera(tatrisit);
+			item1=gc.getFields();
+			item2=gc.getItems();
+		}
+		catch(Exception ex)
+		{
+			log.error("error al mostrar la pantalla de valosit",ex);
+		}
+		log.debug(""
+				+ "\n######                  ######"
+				+ "\n###### pantalla valosit ######"
+				+ "\n##############################"
+				+ "\n##############################"
+				);
+		return SUCCESS;
+	}
+	
+	///////////////////////////////////////////////////////
+	////// cargar valosit para datos complementarios //////
+	/*///////////////////////////////////////////////////*/
+	public String pantallaValositLoad()
+	{
+		log.debug(""
+				+ "\n###################################"
+				+ "\n###################################"
+				+ "\n###### pantalla valosit load ######"
+				+ "\n######                       ######"
+				);
+		try
+		{
+			log.debug("smap1: "+smap1);
+			omap1=kernelManager.obtieneValositSituac(smap1);
+			parametros=new LinkedHashMap<String,String>(0);
+			Iterator it=omap1.entrySet().iterator();
+			while(it.hasNext())
+			{
+				Entry en=(Entry)it.next();
+				parametros.put("pv_"+(String)en.getKey(),(String)en.getValue());
+			}
+			omap1=null;
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			log.error("error al cargar valosit",ex);
+			success=false;
+		}
+		log.debug(""
+				+ "\n######                       ######"
+				+ "\n###### pantalla valosit load ######"
+				+ "\n###################################"
+				+ "\n###################################"
+				);
+		return SUCCESS;
+	}
+	/*///////////////////////////////////////////////////*/
+	////// cargar valosit para datos complementarios //////
+	///////////////////////////////////////////////////////
+	
+	/////////////////////////////////////////////
+	////// guardar valosit situac o grupal //////
+	/*/////////////////////////////////////////*/
+	public String pantallaValositSave()
+	{
+		log.debug(""
+				+ "\n###################################"
+				+ "\n###################################"
+				+ "\n###### pantalla valosit save ######"
+				+ "\n######                       ######"
+				);
+		try
+		{
+			log.debug("smap1: "+smap1);
+			log.debug("parametros: "+parametros);
+			
+			if(smap1.get("agrupado").equalsIgnoreCase("si"))
+			//actualizar todos
+			{
+				log.debug("se tienen agrupados");
+				Map<String,String>paramsAsegurados=new LinkedHashMap<String,String>(0);
+				paramsAsegurados.put("pv_cdunieco", smap1.get("cdunieco"));
+				paramsAsegurados.put("pv_cdramo",   smap1.get("cdramo"));
+				paramsAsegurados.put("pv_estado",   smap1.get("estado"));
+				paramsAsegurados.put("pv_nmpoliza", smap1.get("nmpoliza"));
+				log.debug("paramsAsegurados: "+paramsAsegurados);
+				List<Map<String, Object>>asegurados=kernelManager.obtenerAsegurados(paramsAsegurados);
+				log.debug("asegurados: "+asegurados);
+				int i=1;
+				for(Map<String,Object> asegurado:asegurados)
+				{
+					log.debug("iterando asegurado "+i+": ");
+					log.debug("asegurado: "+asegurado);
+					if((Integer)Integer.parseInt((String)asegurado.get("nmsituac"))>0)
+					{
+						log.debug("es asegurado (situac>0)");
+						Map<String,String>paramsValositAseguradoIterado=new LinkedHashMap<String,String>(0);
+						paramsValositAseguradoIterado.put("pv_cdunieco_i", smap1.get("cdunieco"));
+						paramsValositAseguradoIterado.put("pv_nmpoliza_i", smap1.get("nmpoliza"));
+						paramsValositAseguradoIterado.put("pv_cdramo_i",   smap1.get("cdramo"));
+						paramsValositAseguradoIterado.put("pv_estado_i",   smap1.get("estado"));
+						paramsValositAseguradoIterado.put("pv_nmsituac_i", (String)asegurado.get("nmsituac"));
+						log.debug("paramsValositAseguradoIterado: "+paramsValositAseguradoIterado);
+						Map<String,Object>valositAseguradoIterado=kernelManager.obtieneValositSituac(paramsValositAseguradoIterado);
+						log.debug("valositAseguradoIterado: "+valositAseguradoIterado);
+						
+						Map<String,Object>valositAseguradoIteradoTemp=new LinkedHashMap<String,Object>(0);
+						//poner pv_ a los leidos
+						Iterator it=valositAseguradoIterado.entrySet().iterator();
+						while(it.hasNext())
+						{
+							Entry en=(Entry)it.next();
+							valositAseguradoIteradoTemp.put("pv_"+(String)en.getKey(),en.getValue());//agregar pv_ a los anteriores
+						}
+						valositAseguradoIterado=valositAseguradoIteradoTemp;
+						log.debug("se puso pv_");
+						
+						//agregar los del form a los leidos
+						Iterator it2=parametros.entrySet().iterator();
+						while(it2.hasNext())
+						{
+							Entry en=(Entry)it2.next();
+							valositAseguradoIterado.put((String)en.getKey(),en.getValue());//tienen pv_ los del form
+							//ya agregamos todos los nuevos en el mapa
+						}
+						log.debug("se agregaron los nuevos");
+						
+						//convertir a string el total
+						Map<String,String>paramsNuevos=new LinkedHashMap<String,String>(0);
+						it=valositAseguradoIterado.entrySet().iterator();
+						while(it.hasNext())
+						{
+							Entry en=(Entry)it.next();
+							paramsNuevos.put((String)en.getKey(),(String)en.getValue());
+						}
+						log.debug("se pasaron a string");
+						
+						paramsNuevos.put("pv_cdunieco", smap1.get("cdunieco"));
+						paramsNuevos.put("pv_nmpoliza", smap1.get("nmpoliza"));
+						paramsNuevos.put("pv_cdramo",   smap1.get("cdramo"));
+						paramsNuevos.put("pv_estado",   smap1.get("estado"));
+						paramsNuevos.put("pv_nmsituac", (String)asegurado.get("nmsituac"));
+						log.debug("los actualizados seran: "+paramsNuevos);
+						
+						kernelManager.actualizaValoresSituaciones(paramsNuevos);
+						
+					}
+					else
+					{
+						log.debug("no es asegurado (situac<=0)");
+					}
+					i++;
+				}
+			}
+			else
+			//actualizar uno
+			{
+				log.debug("se tiene individual");
+				Map<String,String>paramsValositAsegurado=new LinkedHashMap<String,String>(0);
+				paramsValositAsegurado.put("pv_cdunieco_i", smap1.get("cdunieco"));
+				paramsValositAsegurado.put("pv_nmpoliza_i", smap1.get("nmpoliza"));
+				paramsValositAsegurado.put("pv_cdramo_i",   smap1.get("cdramo"));
+				paramsValositAsegurado.put("pv_estado_i",   smap1.get("estado"));
+				paramsValositAsegurado.put("pv_nmsituac_i", smap1.get("nmsituac"));
+				log.debug("paramsValositAsegurado: "+paramsValositAsegurado);
+				Map<String,Object>valositAsegurado=kernelManager.obtieneValositSituac(paramsValositAsegurado);
+				log.debug("valositAsegurado: "+valositAsegurado);
+				
+				Map<String,Object>valositAseguradoIterado=new LinkedHashMap<String,Object>(0);
+				//poner pv_ al leido
+				Iterator it=valositAsegurado.entrySet().iterator();
+				while(it.hasNext())
+				{
+					Entry en=(Entry)it.next();
+					valositAseguradoIterado.put("pv_"+(String)en.getKey(),en.getValue());//agregar pv_ a los anteriores
+				}
+				valositAsegurado=valositAseguradoIterado;
+				log.debug("se puso pv_");
+				
+				//agregar los del form al leido
+				Iterator it2=parametros.entrySet().iterator();
+				while(it2.hasNext())
+				{
+					Entry en=(Entry)it2.next();
+					valositAsegurado.put((String)en.getKey(),en.getValue());//tienen pv_ los del form
+					//ya agregamos todos los nuevos en el mapa
+				}
+				log.debug("se agregaron los nuevos");
+				
+				//convertir a string el total
+				Map<String,String>paramsNuevos=new LinkedHashMap<String,String>(0);
+				it=valositAsegurado.entrySet().iterator();
+				while(it.hasNext())
+				{
+					Entry en=(Entry)it.next();
+					paramsNuevos.put((String)en.getKey(),(String)en.getValue());
+				}
+				log.debug("se pasaron a string");
+				
+				paramsNuevos.put("pv_cdunieco", smap1.get("cdunieco"));
+				paramsNuevos.put("pv_nmpoliza", smap1.get("nmpoliza"));
+				paramsNuevos.put("pv_cdramo",   smap1.get("cdramo"));
+				paramsNuevos.put("pv_estado",   smap1.get("estado"));
+				paramsNuevos.put("pv_nmsituac", smap1.get("nmsituac"));
+				log.debug("los actualizados seran: "+paramsNuevos);
+				
+				kernelManager.actualizaValoresSituaciones(paramsNuevos);
+			}
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			log.error("error al guardar valosit",ex);
+			success=false;
+		}
+		log.debug(""
+				+ "\n######                       ######"
+				+ "\n###### pantalla valosit save ######"
+				+ "\n###################################"
+				+ "\n###################################"
+				);
+		return SUCCESS;
+	}
+	/*/////////////////////////////////////////*/
+	////// guardar valosit situac o grupal //////
+	/////////////////////////////////////////////
+	
 	/////////////////////////////////
 	////// getters and setters //////
 	/*/////////////////////////////*/
