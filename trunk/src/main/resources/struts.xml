@@ -213,6 +213,15 @@
                 <action name="pantallaExclusion" class="beanDatosComplementariosCoberturas" method="pantallaExclusion">
                     <result name="success">/jsp/extjs4/aseguradoExclusion.jsp</result>
                 </action>
+                <action name="pantallaValosit" class="beanDatosComplementariosCoberturas" method="pantallaValosit">
+                    <result name="success">/jsp/extjs4/pantallaValosit.jsp</result>
+                </action>
+                <action name="pantallaValositLoad" class="beanDatosComplementariosCoberturas" method="pantallaValositLoad">
+                    <result name="success" type="json" />
+                </action>
+                <action name="pantallaValositSave" class="beanDatosComplementariosCoberturas" method="pantallaValositSave">
+                    <result name="success" type="json" />
+                </action>
                 <action name="guardarExclusiones" class="beanDatosComplementariosCoberturas" method="guardarExclusiones">
                     <interceptor-ref name="json">
                         <param name="enableSMD">true</param>
