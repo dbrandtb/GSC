@@ -486,6 +486,12 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 					.add(new Item("flex", 1))
 					.add(Item.crear("hidden",true))
 					);
+			item3.add(Item.crear(null, null, Item.OBJ)
+					.add(new Item("header", "cdrol"))
+					.add(new Item("dataIndex", "cdrol"))
+					.add(new Item("flex", 1))
+					.add(Item.crear("hidden",true))
+					);
 			
 			item2 = new Item("columns", null, Item.ARR);// para las columnas del grid
 			/*item2.add(Item.crear(null, null, Item.OBJ)
@@ -587,8 +593,8 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 	                        }]*/
 			item2.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("xtype", "actioncolumn"))
-					//.add(new Item("width", 110))
-					.add(new Item("width", 80))
+					.add(new Item("width", 110))
+					//.add(new Item("width", 80))
 					.add(new Item("menuDisabled", true))
 					.add(new Item("header", "Acciones"))
 					.add(new Item("items", null,Item.ARR)
@@ -610,13 +616,12 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 								.add(Item.crear("scope","this").setQuotes(""))
 								.add(Item.crear("handler","this.onExclusionClick").setQuotes(""))
 								)
-						/*.add(Item.crear(null,null,Item.OBJ)
+						.add(Item.crear(null,null,Item.OBJ)
 								.add("icon","resources/fam3icons/icons/user_edit.png")
 								.add("tooltip","Datos de situaci&oacute;n asegurado")
 								.add(Item.crear("scope","this").setQuotes(""))
 								.add(Item.crear("handler","this.onValositClick").setQuotes(""))
 								)
-						*/
 						/*
 						.add(Item.crear(null,null,Item.OBJ)
 								.add("icon","resources/fam3icons/icons/money.png")
@@ -645,6 +650,12 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			item2.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("header", "cdperson"))
 					.add(new Item("dataIndex", "cdperson"))
+					.add(new Item("flex", 1))
+					.add(Item.crear("hidden",true))
+					);
+			item2.add(Item.crear(null, null, Item.OBJ)
+					.add(new Item("header", "cdrol"))
+					.add(new Item("dataIndex", "cdrol"))
 					.add(new Item("flex", 1))
 					.add(Item.crear("hidden",true))
 					);
