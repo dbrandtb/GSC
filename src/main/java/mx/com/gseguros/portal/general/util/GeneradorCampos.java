@@ -79,7 +79,7 @@ public class GeneradorCampos {
             it.add(Item.crear("allowBlank",ta.getSwobliga()!=null&&ta.getSwobliga().equals("N")));
             it.add(Item.crear("fieldLabel",ta.getDsatribu()));
             it.add(Item.crear("style","margin:5px"));
-            it.add(Item.crear("forceSelection",true));
+            it.add(Item.crear("forceSelection",false));
             it.add(Item.crear("typeAhead",true));
             it.add(Item.crear("matchFieldWidth",true));
             Item store=new Item(null,null,Item.OBJ,"store:Ext.create('Ext.data.Store',{","})");
