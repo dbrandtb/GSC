@@ -1195,7 +1195,7 @@
 	                            }
 	                        }
                         })
-                        /*,Ext.create('Ext.panel.Panel',
+                        ,Ext.create('Ext.panel.Panel',
                         {
                             id:'tabPanelValosit'
                             ,title:'Datos de cotizaci&oacute;n'
@@ -1222,7 +1222,7 @@
                                     window.parent.scrollTo(0,150+p.y);
                                 }
                             }
-                        })*/
+                        })
                     ]
                 });
                 
