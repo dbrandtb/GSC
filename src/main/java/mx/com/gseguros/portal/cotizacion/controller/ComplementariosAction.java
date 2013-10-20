@@ -1063,6 +1063,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 						+ "&userid="+this.getText("pass.servidor.reports")
 						+ "&report="+descripl
 						+ "&paramform=no"
+						+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
 						+ "&p_unieco=1"
 						+ "&p_ramo=2"
 						+ "&p_estado='M'"
