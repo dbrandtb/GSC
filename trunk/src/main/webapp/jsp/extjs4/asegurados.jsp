@@ -11,6 +11,9 @@
 	}
 	</style>
         <script type="text/javascript">
+        
+            var _NOMBRE_REPORTE_COTIZACION =            '<s:text name="reporte.cotizacion.nombre"/>';
+        
             //URL padre de los catalogos
             var _URL_OBTEN_CATALOGO_GENERICO=           '<s:url action="jsonObtenCatalogoGenerico" namespace="/" />';
             //URL que obtiene una cotizacion
