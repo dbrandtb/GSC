@@ -1551,7 +1551,7 @@ Ext.onReady(function(){
                     +'&destype=cache'
 					+"&desformat=PDF"
 					+"&userid="+repSrvUsr
-					+"&report=COTIZACION.rdf"
+					+"&report="+_NOMBRE_REPORTE_COTIZACION
 					+"&paramform=no";
                     debug(urlRequestImpCotiza);
                     var numRand=Math.floor((Math.random()*100000)+1);
