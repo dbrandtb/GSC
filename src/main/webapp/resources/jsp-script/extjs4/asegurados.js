@@ -1538,7 +1538,8 @@ Ext.onReady(function(){
                             +'&destype=cache'
     						+"&desformat=PDF"
     						+"&userid="+repSrvUsr
-    						+"&report=COTIZACION.rdf"
+    						+"&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+    						+"&report="+_NOMBRE_REPORTE_COTIZACION
     						+"&paramform=no"
                         ,'_blank'
                         ,'width=800,height=600');
@@ -1551,6 +1552,7 @@ Ext.onReady(function(){
                     +'&destype=cache'
 					+"&desformat=PDF"
 					+"&userid="+repSrvUsr
+					+"&ACCESSIBLE=YES" //parametro que habilita salida en PDF
 					+"&report="+_NOMBRE_REPORTE_COTIZACION
 					+"&paramform=no";
                     debug(urlRequestImpCotiza);
@@ -1631,7 +1633,8 @@ Ext.onReady(function(){
             		                            +'&destype=cache'
             		    						+"&desformat=PDF"
             		    						+"&userid="+repSrvUsr
-            		    						+"&report=COTIZACION.rdf"
+            		    						+"&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+            		    						+"&report="+_NOMBRE_REPORTE_COTIZACION
             		    						+"&paramform=no"
             			    				}
             			    				,callback : function(options,success,response)
