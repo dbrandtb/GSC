@@ -315,6 +315,9 @@ public class ComplementariosAction extends PrincipalCoreAction implements
             nuevo.put("pv_accion",       "U");
             kernelManager.insertaMaestroPolizas(nuevo);
             
+            if(parametros==null){
+            	parametros = new HashMap<String, String>();
+            }
             parametros.putAll(map1);
             parametros.put("pv_status", "W");
             parametros.put("pv_nmsuplem", "0");
