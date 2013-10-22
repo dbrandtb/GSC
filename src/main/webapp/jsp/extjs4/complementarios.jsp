@@ -564,7 +564,7 @@
 		                                            defaults: {
 		                                            	width: 650
 		                                            },
-		                                            modal:true,
+		                                            modal:false,
 		                                            closable:false,
 		                                            items:[  // Let's put an empty grid in just to illustrate fit layout
 		                                                Ext.create('Ext.grid.Panel',{
