@@ -557,10 +557,10 @@
 		                                        Ext.create('Ext.window.Window',
 		                                        {
 		                                            title: 'Tarifa final',
-		                                            maxHeight: 400,
+		                                            //maxHeight: 400,
 		                                            autoScroll:true,
 		                                            width: 660,
-		                                            height: 250,
+		                                            height: 400,
 		                                            defaults: {
 		                                            	width: 650
 		                                            },
