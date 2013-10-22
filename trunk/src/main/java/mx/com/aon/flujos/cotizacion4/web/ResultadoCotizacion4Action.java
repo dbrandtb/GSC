@@ -1190,6 +1190,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             kernelManagerSustituto.comprarCotizacion(parameters2);
             
             String ntramite=null;
+            String nmPolizaOriginal = comprarNmpoliza;
             if(smap1!=null&&smap1.containsKey("ntramite")&&smap1.get("ntramite")!=null&&smap1.get("ntramite").length()>0)
             //se va a actualizar un tramite que no tenia poliza
             {
@@ -1266,7 +1267,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             					+ getText("ruta.servidor.reports")
                                 + "?p_cdplan="+comprarCdplan
                                 + "&p_estado='W'"
-                                + "&p_poliza="+comprarNmpoliza
+                                + "&p_poliza="+nmPolizaOriginal
                                 + "&p_ramo="+comprarCdramo
                                 + "&p_unieco="+comprarCdunieco
                                 + "&destype=cache"
@@ -1288,13 +1289,13 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             mapArchivo.put("pv_cdunieco_i" , comprarCdunieco);
             mapArchivo.put("pv_cdramo_i"   , comprarCdramo);
             mapArchivo.put("pv_estado_i"   , "W");
-            mapArchivo.put("pv_nmpoliza_i" , "");
+            mapArchivo.put("pv_nmpoliza_i" , "0");
             mapArchivo.put("pv_nmsuplem_i" , "0");
             mapArchivo.put("pv_feinici_i"  , new Date());
             mapArchivo.put("pv_cddocume_i" , nombreArchivoCotizacion);
-            mapArchivo.put("pv_dsdocume_i" , "COTIZACION");
+            mapArchivo.put("pv_dsdocume_i" , "COTIZACI&Oacute;N");
             mapArchivo.put("pv_ntramite_i" , ntramite);
-            mapArchivo.put("pv_nmsolici_i" , comprarNmpoliza);
+            mapArchivo.put("pv_nmsolici_i" , nmPolizaOriginal);
             kernelManagerSustituto.guardarArchivo(mapArchivo);
             //!agregar cotizacion.pdf
             //////////////////////////////////
