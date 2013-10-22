@@ -1264,11 +1264,11 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             mapArchivo.put("pv_cdunieco_i" , comprarCdunieco);
             mapArchivo.put("pv_cdramo_i"   , comprarCdramo);
             mapArchivo.put("pv_estado_i"   , "W");
-            mapArchivo.put("pv_nmpoliza_i" , comprarNmpoliza);
+            mapArchivo.put("pv_nmpoliza_i" , "");
             mapArchivo.put("pv_nmsuplem_i" , "0");
             mapArchivo.put("pv_feinici_i"  , new Date());
             mapArchivo.put("pv_cddocume_i" , nombreArchivoCotizacion);
-            mapArchivo.put("pv_dsdocume_i" , "COTIZACIÓN");
+            mapArchivo.put("pv_dsdocume_i" , "COTIZACION");
             mapArchivo.put("pv_ntramite_i" , ntramite);
             mapArchivo.put("pv_nmsolici_i" , comprarNmpoliza);
             kernelManagerSustituto.guardarArchivo(mapArchivo);
