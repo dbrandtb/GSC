@@ -165,4 +165,8 @@ Ext.onReady(function(){
     Ext.util.Format.decimalSeparator = '.';
     Ext.grid.RowEditor.prototype.saveBtnText =   "Actualizar";
     Ext.grid.RowEditor.prototype.cancelBtnText = "Cancelar";
+    //Se sobreescribe el componente TextField para que solo acepte mayúsculas
+    Ext.override(Ext.form.TextField, {
+    	fieldStyle: 'text-transform:uppercase',
+	});
 });
