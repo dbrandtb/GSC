@@ -259,6 +259,9 @@
                 <action name="emitir" class="beanDatosComplementarios" method="emitir">
                     <result name="success" type="json" />
                 </action>
+                <action name="manualWS" class="beanDatosComplementarios" method="ejecutaWSManual">
+                    <result name="success" type="json" />
+                </action>
                 <action name="cargaColonias" class="beanCatalogosAction" method="cargaColonias">
                     <result name="success" type="json" />
                 </action>
