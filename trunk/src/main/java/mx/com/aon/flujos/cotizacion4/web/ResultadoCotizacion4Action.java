@@ -1,5 +1,6 @@
 package mx.com.aon.flujos.cotizacion4.web;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
 import mx.com.aon.configurador.pantallas.model.components.GridVO;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.flujos.cotizacion.model.AyudaCoberturaCotizacionVO;
@@ -23,7 +25,9 @@ import mx.com.aon.portal.web.model.IncisoSaludVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.utils.HttpUtil;
 import net.sf.json.JSONArray;
+
 import org.apache.log4j.Logger;
+
 import com.opensymphony.xwork2.ActionContext;
 
 /**
@@ -1237,7 +1241,27 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             	kernelManagerSustituto.movDmesacontrol(parDmesCon);
             }
             
+            //////////////////////////////////
             //agregar cotizacion.pdf
+            File carpeta=new File(getText("ruta.documentos.poliza")+"/"+ntramite);
+            if(!carpeta.exists())
+            {
+            	log.debug("no existe la carpeta::: "+ntramite);
+            	carpeta.mkdir();
+            	if(carpeta.exists())
+            	{
+            		log.debug("carpeta creada");
+            	}
+            	else
+            	{
+            		log.debug("carpeta NO creada");
+            	}
+            }
+            else
+            {
+            	log.debug("existe la carpeta   ::: "+ntramite);
+            }
+            
             String urlReporteCotizacion=""
             					+ getText("ruta.servidor.reports")
                                 + "?p_cdplan="+comprarCdplan
@@ -1273,6 +1297,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             mapArchivo.put("pv_nmsolici_i" , comprarNmpoliza);
             kernelManagerSustituto.guardarArchivo(mapArchivo);
             //!agregar cotizacion.pdf
+            //////////////////////////////////
             
             success=true;
         }
