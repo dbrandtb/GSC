@@ -1162,6 +1162,14 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             map3.put("pv_nmcuadro_i" , userData.getNmcuadro());
             map3.put("pv_cdsucurs_i" , null);
             map3.put("pv_accion_i"   , "I");
+            if(smap1!=null&&smap1.containsKey("ntramite")&&smap1.get("ntramite")!=null&&smap1.get("ntramite").length()>0)
+            {
+            	map3.put("pv_ntramite_i" , smap1.get("ntramite"));
+            }
+            else
+            {
+            	map3.put("pv_ntramite_i" , null);
+            }
             kernelManagerSustituto.movMPoliage(map3);
             
             
