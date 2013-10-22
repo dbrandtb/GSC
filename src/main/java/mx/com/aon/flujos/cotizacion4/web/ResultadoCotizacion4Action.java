@@ -1,7 +1,5 @@
 package mx.com.aon.flujos.cotizacion4.web;
 
-import com.opensymphony.xwork2.ActionContext;
-
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -11,7 +9,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
 import mx.com.aon.configurador.pantallas.model.components.GridVO;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.flujos.cotizacion.model.AyudaCoberturaCotizacionVO;
@@ -24,9 +21,10 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal.web.model.IncisoSaludVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
+import mx.com.gseguros.utils.HttpUtil;
 import net.sf.json.JSONArray;
-
 import org.apache.log4j.Logger;
+import com.opensymphony.xwork2.ActionContext;
 
 /**
  *
@@ -1187,10 +1185,11 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             log.debug("mapa en action: "+parameters2);
             kernelManagerSustituto.comprarCotizacion(parameters2);
             
+            String ntramite=null;
             if(smap1!=null&&smap1.containsKey("ntramite")&&smap1.get("ntramite")!=null&&smap1.get("ntramite").length()>0)
             //se va a actualizar un tramite que no tenia poliza
             {
-            	String ntramite=smap1.get("ntramite");
+            	ntramite=smap1.get("ntramite");
             	log.debug("se actualiza el tramite "+ntramite);
             	WrapperResultados mesaContWr=kernelManagerSustituto.mesaControlUpdateSolici(ntramite, comprarNmpoliza);
             	
@@ -1226,6 +1225,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             	parMesCon.put("pv_nmsolici_i"   , comprarNmpoliza);
             	WrapperResultados mesaContWr=kernelManagerSustituto.PMovMesacontrol(parMesCon);
             	comprarNmpoliza=(String) mesaContWr.getItemMap().get("ntramite");
+            	ntramite=comprarNmpoliza;
             	
             	log.debug("se inserta detalle nuevo");
             	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
@@ -1236,6 +1236,43 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             	parDmesCon.put("pv_cdusuari_i"   , userData.getCdusuari());
             	kernelManagerSustituto.movDmesacontrol(parDmesCon);
             }
+            
+            //agregar cotizacion.pdf
+            String urlReporteCotizacion=""
+            					+ getText("ruta.servidor.reports")
+                                + "?p_cdplan="+comprarCdplan
+                                + "&p_estado='W'"
+                                + "&p_poliza="+comprarNmpoliza
+                                + "&p_ramo="+comprarCdramo
+                                + "&p_unieco="+comprarCdunieco
+                                + "&destype=cache"
+                                + "&desformat=PDF"
+                                + "&userid="+getText("pass.servidor.reports")
+                                + "&ACCESSIBLE=YES"
+                                + "&report="+getText("reporte.cotizacion.nombre")
+                                + "&paramform=no"
+                                ;
+            String nombreArchivoCotizacion="cotizacion.pdf";
+            String pathArchivoCotizacion=""
+            					+ getText("ruta.documentos.poliza")
+            					+ "/"+ntramite
+            					+ "/"+nombreArchivoCotizacion
+            					;
+            HttpUtil.generaArchivo(urlReporteCotizacion, pathArchivoCotizacion);
+            
+            Map<String,Object>mapArchivo=new LinkedHashMap<String,Object>(0);
+            mapArchivo.put("pv_cdunieco_i" , comprarCdunieco);
+            mapArchivo.put("pv_cdramo_i"   , comprarCdramo);
+            mapArchivo.put("pv_estado_i"   , "W");
+            mapArchivo.put("pv_nmpoliza_i" , comprarNmpoliza);
+            mapArchivo.put("pv_nmsuplem_i" , "0");
+            mapArchivo.put("pv_feinici_i"  , new Date());
+            mapArchivo.put("pv_cddocume_i" , nombreArchivoCotizacion);
+            mapArchivo.put("pv_dsdocume_i" , "COTIZACIÓN");
+            mapArchivo.put("pv_ntramite_i" , ntramite);
+            mapArchivo.put("pv_nmsolici_i" , comprarNmpoliza);
+            kernelManagerSustituto.guardarArchivo(mapArchivo);
+            //!agregar cotizacion.pdf
             
             success=true;
         }
