@@ -23,6 +23,7 @@
     var mesConUrlCotizar      = '<s:url namespace="/"                action="cotizacionVital" />';
     var mesConUrlDetMC        = '<s:url namespace="/mesacontrol"     action="obtenerDetallesTramite" />';
     var mesConUrlFinDetalleMC ='<s:url namespace="/mesacontrol"      action="finalizarDetalleTramiteMC" />';
+    var urlAgentes            ='<s:url namespace="/mesacontrol"      action="obtieneAgentes" />';
     var mesConStoreTareas;
     var mesConGridTareas;
     var mesConStoreUniAdmin;
@@ -721,12 +722,39 @@ Ext.onReady(function(){
                                 ,name       : 'smap1.pv_nmsolici_i'
                                 ,allowBlank : false
                             }
-        		    	    ,{
+        		    	    /*,{
         		    	    	xtype       : 'textfield'
         		    	    	,fieldLabel : 'Agente'
         		    	    	,name       : 'smap1.pv_cdagente_i'
         		    	    	,allowBlank : false
-        		    	    }
+        		    	    }*/
+                            ///////////
+                            ,Ext.create('Ext.form.field.ComboBox',
+                            {
+                                fieldLabel : 'Agente'
+                                ,name      : 'smap1.pv_cdagente_i'
+                                ,allowBlank: false
+                                ,displayField : 'value'
+                                ,valueField   : 'key'
+                                ,forceSelection : true
+                                ,matchFieldWidth: false
+                                ,minChars  : 3
+                                ,queryMode :'remote'
+                                ,queryParam: 'smap1.pv_cdagente_i'
+                                ,store : Ext.create('Ext.data.Store', {
+                                    model:'Generic',
+                                    autoLoad:false,
+                                    proxy: {
+                                        type: 'ajax',
+                                        url : urlAgentes,
+                                        reader: {
+                                            type: 'json',
+                                            root: 'lista'
+                                        }
+                                    }
+                                })
+                            })
+                            ///////////
         		    	    /*
         		    	    ,Ext.create('Ext.form.field.ComboBox',
                             {

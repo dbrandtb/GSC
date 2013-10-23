@@ -129,6 +129,7 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String MESACONTROL_FINALIZAR_DETALLE="MESACONTROL_FINALIZAR_DETALLE";
     public static final String DOCUMENTOS_PREPARAR_CONTRARECIBO="DOCUMENTOS_PREPARAR_CONTRARECIBO";
     public static final String OBTIENE_VALOSIT_SITUAC="OBTIENE_VALOSIT_SITUAC";
+    public static final String OBTIENE_AGENTES="OBTIENE_AGENTES";
 
 	protected void initDao() throws Exception {
 		addStoredProcedure(PERMISO_EJECUCION_PROCESO,new PermisoEjecucionProceso(getDataSource()));
@@ -206,6 +207,7 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(MESACONTROL_FINALIZAR_DETALLE, new MesaControlFinalizarDetalle(getDataSource()));
         addStoredProcedure(DOCUMENTOS_PREPARAR_CONTRARECIBO, new DocumentosPrepararContrarecibo(getDataSource()));
         addStoredProcedure(OBTIENE_VALOSIT_SITUAC,new ObtieneValositSituac(getDataSource()));
+        addStoredProcedure(OBTIENE_AGENTES,new ObtieneAgentes(getDataSource()));
 	}
 
 	protected class BuscarMatrizAsignacion extends CustomStoredProcedure {
@@ -3657,4 +3659,46 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     /*///////////////////////////////////////////////////////*/
     //////insertar documento para imprimir contrarecibo //////
     ///////////////////////////////////////////////////////////
+    
+    
+	/*//////////////////////////////////////////*/
+	////// obtiene documentos de poliza //////////
+	//////////////////////////////////////////////
+	
+	/////////////////////////////////////////////////////////
+	////// obtiene agentes //////////
+	/*/////////////////////////////////////////////////////*/
+	protected class ObtieneAgentes extends CustomStoredProcedure
+	{
+		protected ObtieneAgentes(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_OBTIENE_AGENTES");
+			declareParameter(new SqlParameter("pv_nombre_i",    OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerAgentesMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
+		}
+	
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception
+		{
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			WrapperResultados wrapperResultados = mapper.build(map);
+			List result = (List) map.get("pv_registro_o");
+			wrapperResultados.setItemList(result);
+			return wrapperResultados;
+		}
+	}
+	
+	protected class ObtenerAgentesMapper implements RowMapper {
+		public Object mapRow(ResultSet rs, int rowNum) throws SQLException{
+			GenericVO generic=new GenericVO();
+            generic.setKey(rs.getString("CDAGENTE"));
+            generic.setValue(rs.getString("Nombre_agente"));
+            return generic;
+		}
+	}
+	/*/////////////////////////////////////////////////////*/
+	////// obtiene agentes //////////////////////////////////
+	/////////////////////////////////////////////////////////
+    
 }
