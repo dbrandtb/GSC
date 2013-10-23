@@ -247,6 +247,7 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 					+ "&userid="+this.getText("pass.servidor.reports")
 					+ "&report=CONTRA_RECIBO.rdf"
 					+ "&paramform=no"
+					+ "&ACCESSIBLE=YES"
 					+ "&p_fecha="+renderFechas.format(calendarHoy.getTime())
 					+ "&p_tramite="+smap1.get("ntramite")
 					+ "&p_usuario="+datUsu.getCdusuari()
