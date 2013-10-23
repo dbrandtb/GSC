@@ -472,6 +472,20 @@ Ext.onReady(function(){
                             return value;
                         }
                     }
+                    ,{
+                        dataIndex     : 'merged'
+                        ,width        : 30
+                        ,menuDisabled : true
+                        ,renderer     : function(value)
+                        {
+                            if(true)
+                            {
+                                value='<img src="${ctx}/resources/fam3icons/icons/delete.png" data-qtip="Quitar cl&aacute;usula" style="cursor:pointer;" />';
+                            }
+                            debug(value);
+                            return value;
+                        }
+                    }
                     /*
                     ,{
                         menuDisabled : true
@@ -671,6 +685,60 @@ Ext.onReady(function(){
                                     ]
                                 }).show();
                             }//end if cell index = 1
+                            else if(cellIndex==2)
+                            {
+                                var record=venExcluStoreUsa.getAt(rowIndex);
+                            	debug(record);
+                            	grid.setLoading(true);
+                            	Ext.Ajax.request(
+	                            {
+	                                url     : venExcluUrlAddExclu
+	                                ,params : 
+	                                {
+	                                    'smap1.pv_cdunieco_i'  : inputCduniecopx
+	                                    ,'smap1.pv_cdramo_i'   : inputCdramopx
+	                                    ,'smap1.pv_estado_i'   : inputEstadopx
+	                                    ,'smap1.pv_nmpoliza_i' : inputNmpolizapx
+	                                    ,'smap1.pv_nmsituac_i' : inputNmsituacpx
+	                                    ,'smap1.pv_cdclausu_i' : record.get('cdclausu')
+	                                    ,'smap1.pv_nmsuplem_i' : '0'
+	                                    ,'smap1.pv_status_i'   : ''
+	                                    ,'smap1.pv_cdtipcla_i' : ''
+	                                    ,'smap1.pv_swmodi_i'   : ''
+	                                    ,'smap1.pv_accion_i'   : 'D'
+	                                    ,'smap1.pv_dslinea_i'  : ''
+	                                }
+	                                ,success : function (response)
+	                                {
+	                                    var json=Ext.decode(response.responseText);
+	                                    if(json.success==true)
+	                                    {
+	                                    	grid.setLoading(false);
+	                                        venExcluStoreUsa.remove(record);
+	                                    }
+	                                    else
+	                                    {
+	                                    	grid.setLoading(false);
+	                                        Ext.Msg.show({
+	                                            title:'Error',
+	                                            msg: 'Error al quitar la cl&aacute;usula',
+	                                            buttons: Ext.Msg.OK,
+	                                            icon: Ext.Msg.ERROR
+	                                        });
+	                                    }
+	                                }
+	                                ,failure : function ()
+	                                {
+	                                	grid.setLoading(false);
+	                                    Ext.Msg.show({
+	                                        title:'Error',
+	                                        msg: 'Error de comunicaci&oacute;n',
+	                                        buttons: Ext.Msg.OK,
+	                                        icon: Ext.Msg.ERROR
+	                                    });
+	                                }
+	                            });
+                            }//end if cell index = 2
                         }//end if find img
                     }
                 }
