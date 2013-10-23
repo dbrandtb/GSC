@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.cotizacion.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -11,6 +12,7 @@ import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.general.util.ConstantesCatalogos;
 
@@ -24,6 +26,7 @@ public class MesaControlAction extends PrincipalCoreAction implements Constantes
 	private Map<String,String>smap2;
 	private List<Map<String,String>>slist1;
 	private List<Map<String,String>>slist2;
+	private List<GenericVO> lista;
 	private String msgResult;
 	private boolean success;
 	
@@ -314,6 +317,28 @@ public class MesaControlAction extends PrincipalCoreAction implements Constantes
 	////// finalizar un detalle de tramite de mesa de control //////
 	////////////////////////////////////////////////////////////////
 	
+	
+	////////////////////////////////////////////////////////////////
+	////// obtiene agentes por codigo o nombre                //////
+	/*////////////////////////////////////////////////////////////*/
+	public String obtieneAgentes(){
+        try {
+        	WrapperResultados result = kernelManager.obtieneAgentes(smap1.get("pv_cdagente_i"));
+        	lista = (List<GenericVO>) result.getItemList(); 
+             
+        } catch(Exception ex) {
+        	lista=new ArrayList<GenericVO>(0);
+            success=false;
+            logger.error("Error al obtener los agentes",ex);
+        }
+        success=true;
+        return SUCCESS;
+    }
+	////////////////////////////////////////////////////////////////
+	////// obtiene agentes por codigo o nombre                //////
+	/*////////////////////////////////////////////////////////////*/
+	
+	
 	/////////////////////////////////
 	////// getters ans setters //////
 	/*/////////////////////////////*/
@@ -415,6 +440,14 @@ public class MesaControlAction extends PrincipalCoreAction implements Constantes
 
 	public void setMsgResult(String msgResult) {
 		this.msgResult = msgResult;
+	}
+
+	public List<GenericVO> getLista() {
+		return lista;
+	}
+
+	public void setLista(List<GenericVO> lista) {
+		this.lista = lista;
 	}
 	
 }
