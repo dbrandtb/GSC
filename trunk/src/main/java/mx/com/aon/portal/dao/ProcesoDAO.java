@@ -3332,7 +3332,8 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     
     	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
         	Recibo recibo = new Recibo();	    
-        	DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT); 
+        	//DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT); 
+        	SimpleDateFormat spdf = new SimpleDateFormat("dd/MM/yyyy");
         	Calendar cal;
         	
         	recibo.setActRec(rs.getInt("actRec"));
@@ -3342,8 +3343,10 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
         	recibo.setDerecho(rs.getDouble("derecho"));
         	
         	try {
+        		logger.debug("--> Parseando fecha rs.getString(fecEmi) -->> "+ rs.getString("fecEmi"));
 	        	cal = Calendar.getInstance();
-				cal.setTime(df.parse(rs.getString("fecEmi")));
+				cal.setTime(spdf.parse(rs.getString("fecEmi")));
+				logger.debug("--> Calendario obtenido -->> "+ cal);
 	        	recibo.setFecEmi(cal);
         	} catch (Exception e) {
 				logger.error("NO SE PUDO PARSEAR LA FECHA fecEmi !!! " + rs.getString("fecEmi"));
@@ -3351,8 +3354,10 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			}
         	
         	try {
+        		logger.debug("--> Parseando fecha rs.getString(fecIni) -->> "+ rs.getString("fecIni"));
 	        	cal = Calendar.getInstance();
-	        	cal.setTime(df.parse(rs.getString("fecIni")));
+	        	cal.setTime(spdf.parse(rs.getString("fecIni")));
+	        	logger.debug("--> Calendario obtenido -->> "+ cal);
 	        	recibo.setFecIni(cal);
         	} catch (Exception e) {
 				logger.error("NO SE PUDO PARSEAR LA FECHA fecIni !!! " + rs.getString("fecIni"));
@@ -3360,23 +3365,27 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			}
         	
 	        try {
+	        	logger.debug("--> Parseando fecha rs.getString(fecPag) -->> "+ rs.getString("fecPag"));
 	        	cal = Calendar.getInstance();
-	        	cal.setTime(df.parse(rs.getString("fecPag")));
+	        	cal.setTime(spdf.parse(rs.getString("fecPag")));
 	        	recibo.setFecPag(cal);
 	        } catch (Exception e) {
 				//logger.error("NO SE PUDO PARSEAR LA FECHA fecPag !!! " + rs.getString("fecPag")+" se manda valor default 01/01/1900");
 				cal = Calendar.getInstance();
 				try {
-					cal.setTime(df.parse("01/01/1900"));
+					cal.setTime(spdf.parse("01/01/1900"));
 				} catch (ParseException e1) {
 					logger.error("Error.");
 				}
+				logger.debug("--> Calendario obtenido -->> "+ cal);
 	        	recibo.setFecPag(cal);
 			}
 	        	
 	        try {
+	        	logger.debug("--> Parseando fecha rs.getString(fecSta) -->> "+ rs.getString("fecSta"));
 	        	cal = Calendar.getInstance();
-	        	cal.setTime(df.parse(rs.getString("fecSta")));
+	        	cal.setTime(spdf.parse(rs.getString("fecSta")));
+	        	logger.debug("--> Calendario obtenido -->> "+ cal);
 	        	recibo.setFecSta(cal);
 	        } catch (Exception e) {
 				logger.error("NO SE PUDO PARSEAR LA FECHA fecSta !!! " + rs.getString("fecSta"));
@@ -3384,8 +3393,10 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			}
 	        
 	        try {
+	        	logger.debug("--> Parseando fecha rs.getString(fecTer) -->> "+ rs.getString("fecTer"));
 	        	cal = Calendar.getInstance();
-	        	cal.setTime(df.parse(rs.getString("fecTer")));
+	        	cal.setTime(spdf.parse(rs.getString("fecTer")));
+	        	logger.debug("--> Calendario obtenido -->> "+ cal);
 	        	recibo.setFecTer(cal);
         	} catch (Exception e) {
 				logger.error("NO SE PUDO PARSEAR LA FECHA fecTer !!! " + rs.getString("fecTer"));

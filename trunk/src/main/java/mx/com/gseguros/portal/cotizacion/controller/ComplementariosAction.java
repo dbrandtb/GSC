@@ -1172,17 +1172,16 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 		// String nmsolici = "2540";
 		// String nmtramite = "10";
 
-		String cdunieco = "1";
-		String cdramo = "2";
-		String estado = "M";
-		String nmpoliza = "11";
-		String nmsuplem = "245658212000000000";
-		String cdtipsitGS = "213";
-		String sucursal = "1000";// -- est es administrativ
-		// 1015 es la documento
+		String cdunieco = map1.get("cdunieco");
+		String cdramo = map1.get("cdramo");
+		String estado = map1.get("estado");
+		String nmpoliza = map1.get("nmpoliza");
+		String nmsuplem = map1.get("nmsuplem");
+		String cdtipsitGS = map1.get("subramo");
+		String sucursal = map1.get("sucursal");
 
-		String nmsolici = "2683";
-		String nmtramite = "32";
+		String nmsolici = map1.get("nmsolici");
+		String nmtramite = map1.get("nmtramite");
 
 		if (!ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem)) {
 			logger.error("NO SE HA EJECUTADO CORRECTAMENTE EL WS DE CLIENTE SALUD!!! PRIMER INTENTO");
@@ -1224,16 +1223,16 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 
 	public String ejecutaWSManualRecibos() {
 
-		String cdunieco = "1";
-		String cdramo = "2";
-		String estado = "M";
-		String nmpoliza = "11";
-		String nmsuplem = "245658212000000000";
-		String cdtipsitGS = "213";
-		String sucursal = "1000";
+		String cdunieco = map1.get("cdunieco");
+		String cdramo = map1.get("cdramo");
+		String estado = map1.get("estado");
+		String nmpoliza = map1.get("nmpoliza");
+		String nmsuplem = map1.get("nmsuplem");
+		String cdtipsitGS = map1.get("subramo");
+		String sucursal = map1.get("sucursal");
 
-		String nmsolici = "2683";
-		String nmtramite = "32";
+		String nmsolici = map1.get("nmsolici");
+		String nmtramite = map1.get("nmtramite");
 
 		if (!ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem,
 				null, cdtipsitGS, sucursal, nmsolici, nmtramite)) {

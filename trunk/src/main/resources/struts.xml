@@ -259,7 +259,10 @@
                 <action name="emitir" class="beanDatosComplementarios" method="emitir">
                     <result name="success" type="json" />
                 </action>
-                <action name="manualWS" class="beanDatosComplementarios" method="ejecutaWSManual">
+                <action name="manualWScliente" class="beanDatosComplementarios" method="ejecutaWSManualCliente">
+                    <result name="success" type="json" />
+                </action>
+                <action name="manualWSrecibos" class="beanDatosComplementarios" method="ejecutaWSManualRecibos">
                     <result name="success" type="json" />
                 </action>
                 <action name="cargaColonias" class="beanCatalogosAction" method="cargaColonias">
