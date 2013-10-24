@@ -1271,11 +1271,13 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			try{
 				ReciboRespuesta resultadoR = ice2sigsWebServices.ejecutaReciboGS(Operacion.INSERTA, recibo, this.getText("url.ws.ice2sigs"));
 				logger.debug("WS Resultado de insertar el recibo: " + recibo.getNumRec()+ " - " + resultadoR.getMensaje());
+				if( 0 != resultadoR.getCodigo()) allInserted = false;
 			}catch(Exception e){
 				logger.error("WS PRIMER INTENTO Error al insertar el recibo: " + recibo.getNumRec(), e);
 				try{
 					ReciboRespuesta resultadoR = ice2sigsWebServices.ejecutaReciboGS(Operacion.INSERTA, recibo, this.getText("url.ws.ice2sigs"));
 					logger.debug("WS Resultado de insertar el recibo: " + recibo.getNumRec()+ " - " + resultadoR.getMensaje());
+					if( 0 != resultadoR.getCodigo()) allInserted = false;
 				}catch(Exception e2){
 					logger.error("WS SEGUNDO INTENTO Error al insertar el recibo: " + recibo.getNumRec(), e2);
 					allInserted = false;
