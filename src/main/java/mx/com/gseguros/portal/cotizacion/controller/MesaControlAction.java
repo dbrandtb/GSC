@@ -120,7 +120,7 @@ public class MesaControlAction extends PrincipalCoreAction implements Constantes
 		try
 		{
 			UserVO usu=(UserVO)session.get("USUARIO");
-			DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usu.getUser());
+			//DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usu.getUser());
 			
 			Map<String,Object>omap=new LinkedHashMap<String,Object>(0);
 			Iterator it=smap1.entrySet().iterator();
@@ -142,7 +142,7 @@ public class MesaControlAction extends PrincipalCoreAction implements Constantes
         	parDmesCon.put("pv_feinicio_i"   , new Date());
         	parDmesCon.put("pv_cdclausu_i"   , null);
         	parDmesCon.put("pv_comments_i"   , "Se guard&oacute; un nuevo tr&aacute;mite manual desde mesa de control");
-        	parDmesCon.put("pv_cdusuari_i"   , datUsu.getCdusuari());
+        	parDmesCon.put("pv_cdusuari_i"   , usu.getUser());
         	kernelManager.movDmesacontrol(parDmesCon);
 					
 			success=true;
