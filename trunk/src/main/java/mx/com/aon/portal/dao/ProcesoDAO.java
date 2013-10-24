@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -3482,7 +3483,8 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     	
     	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
     		ClienteSalud cliente = new ClienteSalud();
-    		DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT); 
+    		//DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT); 
+    		SimpleDateFormat spdf = new SimpleDateFormat("dd/MM/yyyy");
         	Calendar cal;
     		
     		cliente.setAgrupaCli(rs.getInt("agrupaCli"));
@@ -3505,8 +3507,10 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		cliente.setFaxCli(rs.getString("faxCli"));
 
     		try {
+    			logger.debug("--> Parseando fecha rs.getString(fecaltaCli) -->> "+ rs.getString("fecaltaCli"));
 	        	cal = Calendar.getInstance();
-				cal.setTime(df.parse(rs.getString("fecaltaCli")));
+				cal.setTime(spdf.parse(rs.getString("fecaltaCli")));
+				logger.debug("--> Calendario obtenido -->> "+ cal);
 				cliente.setFecaltaCli(cal);
         	} catch (Exception e) {
 				logger.error("NO SE PUDO PARSEAR LA FECHA fecaltaCli !!! " + rs.getString("fecaltaCli"));
@@ -3514,8 +3518,10 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			}
         	
         	try {
+        		logger.debug("--> Parseando fecha rs.getString(fecnacCli) -->> "+ rs.getString("fecnacCli"));
 	        	cal = Calendar.getInstance();
-	        	cal.setTime(df.parse(rs.getString("fecnacCli")));
+	        	cal.setTime(spdf.parse(rs.getString("fecnacCli")));
+	        	logger.debug("--> Calendario obtenido -->> "+ cal);
 	        	cliente.setFecnacCli(cal);
         	} catch (Exception e) {
 				logger.error("NO SE PUDO PARSEAR LA FECHA fecnacCli !!! " + rs.getString("fecnacCli"));
