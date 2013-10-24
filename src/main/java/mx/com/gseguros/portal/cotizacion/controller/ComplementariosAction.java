@@ -1160,62 +1160,88 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 		return SUCCESS;
 	}
 	
-	public String ejecutaWSManual(){
-//		String cdunieco = "1";
-//		String cdramo = "2";
-//		String estado = "M";
-//		String nmpoliza = "4";
-//		String nmsuplem = "245658212000000000";
-//		String cdtipsitGS = "213";
-//		String sucursal = "1000";
-//
-//		String nmsolici = "2540";
-//		String nmtramite = "10";
-		
-		String cdunieco = "1";
-		  String cdramo = "2";
-		  String estado = "M";
-		  String nmpoliza = "11";
-		  String nmsuplem = "245658212000000000";
-		  String cdtipsitGS = "213";
-		  String sucursal = "1000";// -- est es  administrativ
-		   //1015 es la documento
+	public String ejecutaWSManualCliente() {
+		// String cdunieco = "1";
+		// String cdramo = "2";
+		// String estado = "M";
+		// String nmpoliza = "4";
+		// String nmsuplem = "245658212000000000";
+		// String cdtipsitGS = "213";
+		// String sucursal = "1000";
+		//
+		// String nmsolici = "2540";
+		// String nmtramite = "10";
 
-		  String nmsolici = "2683";
-		  String nmtramite = "32";
-		
-		if(!ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem)){
+		String cdunieco = "1";
+		String cdramo = "2";
+		String estado = "M";
+		String nmpoliza = "11";
+		String nmsuplem = "245658212000000000";
+		String cdtipsitGS = "213";
+		String sucursal = "1000";// -- est es administrativ
+		// 1015 es la documento
+
+		String nmsolici = "2683";
+		String nmtramite = "32";
+
+		if (!ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem)) {
 			logger.error("NO SE HA EJECUTADO CORRECTAMENTE EL WS DE CLIENTE SALUD!!! PRIMER INTENTO");
-		
-			if(!ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem)){
+
+			if (!ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza,
+					nmsuplem)) {
 				logger.error("NO SE HA EJECUTADO CORRECTAMENTE EL WS DE CLIENTE SALUD!!! SEGUNDO INTENTO");
 				mensajeRespuesta = "No se ha ejecutado correctamente el WS para el guardado del ClienteSalud";
 			}
-			else{
-				if(!ejecutaWSrecibos(cdunieco, cdramo,
-						estado, nmpoliza,
-						nmsuplem, null,
-						cdtipsitGS, sucursal, nmsolici, nmtramite
-						)){
-					logger.error("NO SE HAN INSERTADO TODOS LOS RECIBOS!!! EN ICE2SIGS");
-					mensajeRespuesta = "No se han ejecutado correctamente los WS para el guardado de los recibos";
-				}
-			}
-		
+			// else{
+			// if(!ejecutaWSrecibos(cdunieco, cdramo,
+			// estado, nmpoliza,
+			// nmsuplem, null,
+			// cdtipsitGS, sucursal, nmsolici, nmtramite
+			// )){
+			// logger.error("NO SE HAN INSERTADO TODOS LOS RECIBOS!!! EN ICE2SIGS");
+			// mensajeRespuesta =
+			// "No se han ejecutado correctamente los WS para el guardado de los recibos";
+			// }
+			// }
+
 		}
-		else{
-			
-			if(!ejecutaWSrecibos(cdunieco, cdramo,
-					estado, nmpoliza,
-					nmsuplem, null,
-					cdtipsitGS, sucursal, nmsolici, nmtramite
-					)){
-				logger.error("NO SE HAN INSERTADO TODOS LOS RECIBOS!!! EN ICE2SIGS");
-				mensajeRespuesta = "No se han ejecutado correctamente los WS para el guardado de los recibos";
-			}
+		// else{
+		//
+		// if(!ejecutaWSrecibos(cdunieco, cdramo,
+		// estado, nmpoliza,
+		// nmsuplem, null,
+		// cdtipsitGS, sucursal, nmsolici, nmtramite
+		// )){
+		// logger.error("NO SE HAN INSERTADO TODOS LOS RECIBOS!!! EN ICE2SIGS");
+		// mensajeRespuesta =
+		// "No se han ejecutado correctamente los WS para el guardado de los recibos";
+		// }
+		// }
+
+		success = true;
+		return SUCCESS;
+	}
+
+	public String ejecutaWSManualRecibos() {
+
+		String cdunieco = "1";
+		String cdramo = "2";
+		String estado = "M";
+		String nmpoliza = "11";
+		String nmsuplem = "245658212000000000";
+		String cdtipsitGS = "213";
+		String sucursal = "1000";
+
+		String nmsolici = "2683";
+		String nmtramite = "32";
+
+		if (!ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem,
+				null, cdtipsitGS, sucursal, nmsolici, nmtramite)) {
+			logger.error("NO SE HAN INSERTADO TODOS LOS RECIBOS!!! EN ICE2SIGS");
+			mensajeRespuesta = "No se han ejecutado correctamente los WS para el guardado de los recibos";
 		}
-		
-		success=true;
+
+		success = true;
 		return SUCCESS;
 	}
 	
