@@ -1352,6 +1352,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 		try{
 			ClienteSaludRespuesta resultadoR = ice2sigsWebServices.ejecutaClienteSaludGS(Operacion.INSERTA, cliente, this.getText("url.ws.ice2sigs"));
 			logger.debug("Resultado de insertar el cliente salud: " + cliente.getClaveCli()+ " - " + resultadoR.getMensaje());
+			if( 0 != resultadoR.getCodigo()) exito = false;
 		}catch(Exception e){
 			logger.error("Error al insertar el cliente: " + cliente.getClaveCli(), e);
 			exito = false;
