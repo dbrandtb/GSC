@@ -166,32 +166,26 @@ Ext.onReady(function(){
     Ext.grid.RowEditor.prototype.saveBtnText =   "Actualizar";
     Ext.grid.RowEditor.prototype.cancelBtnText = "Cancelar";
     //Se sobreescribe el componente TextField para que solo acepte may�sculas
-    Ext.override(Ext.form.TextField, {
-    	fieldStyle:'text-transform:uppercase'
-    	,initComponent:function(){
-    		try
+    Ext.override(Ext.form.TextField,
+    {
+    	initComponent:function()
+    	{
+    		if(this.xtype=='textfield')
     		{
-    			if(this.column)
-    			{
-    				Ext.apply(this,
+    			this.on("change",
+				function()
+				{
+    				try
     				{
-    					listeners:
-    					{
-    						'change':function()
-    						{
-    						    //debug(this);
-    						    //debug(this.xtype);
-    							if(this.getValue() && this.xtype=='textfield')
-    							{
-    								debug('mayus de '+this.getValue());
-    								this.setValue(this.getValue().toUpperCase());
-    							}
-    						}
-    					}
-    				});
-    			}
+	    				if('string' == typeof this.getValue())
+	    				{
+	    					debug('mayus de '+this.getValue());
+	    					this.setValue(this.getValue().toUpperCase());
+	    				}
+    				}
+    				catch(e){}
+				},this);
     		}
-    		catch(e){}
     		return this.callParent();
     	}
 	});
