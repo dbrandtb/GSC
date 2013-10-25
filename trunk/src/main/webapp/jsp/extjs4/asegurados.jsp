@@ -69,9 +69,13 @@
                 var hayTramiteCargado=false;
                 var ntramiteCargado='';
             </s:else>
+            var cotizacionUserSoloCotiza=false;
+            <s:if test='%{user!=null&&user.equalsIgnoreCase("biosnet1")}'>
+                cotizacionUserSoloCotiza=true;
+            </s:if>
             debug('hayTramiteCargado '+(hayTramiteCargado?'true':'false'));
             debug('ntramiteCargado: '+ntramiteCargado);
-            
+            debug('solo cotiza: '+cotizacionUserSoloCotiza);
         </script>
         <script src="${ctx}/resources/jsp-script/extjs4/asegurados.js"></script>
     </head>
