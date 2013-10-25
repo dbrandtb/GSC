@@ -1069,6 +1069,7 @@ Ext.onReady(function(){
         text: hayTramiteCargado?'Complementar tr&aacute;mite '+ntramiteCargado:'Generar tr&aacute;mite',
         icon:contexto+'/resources/fam3icons/icons/book_next.png',
         disabled:true,
+        hidden : cotizacionUserSoloCotiza,
         handler : function(){
     		debug("ahora si comprar");
     		debug("trigger:");
@@ -1468,7 +1469,8 @@ Ext.onReady(function(){
                     Ext.getCmp('idCotizacion').setValue('');
                     campoCodigoPostal.focus();
                     //desbloquear botones
-                    botonComprar.show();
+                    if(!cotizacionUserSoloCotiza)
+                    	botonComprar.show();
                     Ext.getCmp('botonImprimir').show();
                     Ext.getCmp('botonEmail').show();
                     botonDetalle.show();
@@ -1504,7 +1506,8 @@ Ext.onReady(function(){
                     Ext.getCmp('botonImprimir').setDisabled(true);
                     Ext.getCmp('botonEmail').setDisabled(true);
                     //desbloquear botones
-                    botonComprar.show();
+                    if(!cotizacionUserSoloCotiza)
+                        botonComprar.show();
                     Ext.getCmp('botonImprimir').show();
                     Ext.getCmp('botonEmail').show();
                     botonDetalle.show();
