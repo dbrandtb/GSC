@@ -369,22 +369,8 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
         {
             logger.debug("Salida metodo getCodigoTree");
             logger.debug("CODIGO VALIDO: " + codigoValido);
-            //Seteamos  si tiene permisos para exportar
             UserVO usuario = (UserVO) session.get("USUARIO");
-            try
-            {
-                usuario.setAuthorizedExport(usuarioManager.isAuthorizedExport(usuario.getUser(), usuario.getRolActivo().getObjeto().getValue(), usuario.getEmpresa().getElementoId()));
-                logger.debug("EL usuario " + usuario.getUser() + (usuario.isAuthorizedExport() ? " SI " : " NO ") + "esta autorizado a Exportar");
-            }
-            catch (Exception ex)
-            {
-                logger.error("No se pudo setear si el usuario " + usuario.getUser() + " esta autorizado a exportar", ex);
-                usuario.setAuthorizedExport(false);
-            }
             complementaUsuario(usuario);
-            /**TODO: **
-             * hacer modificacion para liga directa de GS
-             */
             session.put("USUARIO", usuario);
         }
         return retorno;

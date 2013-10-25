@@ -32,7 +32,7 @@ public class SecurityContextFilter implements Filter {
         UserVO userVO = (UserVO)session.getAttribute("USUARIO");
         if (userVO != null) {
 
-            doCheckSecurity(userVO,request);
+            //doCheckSecurity(userVO,request);
 
         } else {
             logger.error("Usuario logueado es Nulo.");
@@ -46,6 +46,7 @@ public class SecurityContextFilter implements Filter {
     public void destroy() {
     }
 
+    /*
     public void doCheckSecurity(UserVO userVO, ServletRequest request) throws IOException, ServletException {
             String requestUri = ((HttpServletRequest)request).getRequestURI();
             if (requestUri.indexOf(".action")>0) {
@@ -61,6 +62,6 @@ public class SecurityContextFilter implements Filter {
                 }
 
             }
-    }
+    }*/
 
 }
