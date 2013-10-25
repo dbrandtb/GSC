@@ -70,9 +70,6 @@ public class UserVO implements Serializable {
     private Converter converterStringToTimestamp;
     private String currentUrl;
     private String method;
-    private boolean authorizedExport=false;
-
-    
 
     public UserVO () {
     	this.setFormatDate(formatDate);
@@ -348,19 +345,6 @@ public class UserVO implements Serializable {
 
     public void setMethod(String method) {
         this.method = method;
-    }
-
-
-    public boolean isAuthorizedExport() {
-        return authorizedExport;
-    }
-
-    public void setAuthorizedExport(boolean authorizedExport) {
-        this.authorizedExport = authorizedExport;
-    }
-
-    public String getAuthorizedExport() {
-        return (authorizedExport ?"true":"false");
     }
 
 	public String getDecimalSeparator() {
