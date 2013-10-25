@@ -16,6 +16,4 @@ public interface UsuarioManager {
 
     public List<UserVO> getAttributesUser(String user) throws ApplicationException;
 
-    public boolean isAuthorizedExport(String user, String cdSisrol, String cdElemento)	throws ApplicationException;
-
 }

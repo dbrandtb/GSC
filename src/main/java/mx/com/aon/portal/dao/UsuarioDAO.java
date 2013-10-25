@@ -26,7 +26,6 @@ public class UsuarioDAO extends AbstractDAO {
     protected void initDao() throws Exception {
         addStoredProcedure("CARGA_ROLES_CLIENTES",new CargaRolesClientes(getDataSource()));
         addStoredProcedure("CARGA_ROLES_CLIENTES_USER",new CargaRolesClientes(getDataSource()));
-        addStoredProcedure("AUTHORIZED_EXPORT",new AuthorizedUserExport(getDataSource()));
         addStoredProcedure("OBTIENE_VARIABLES_ISO",new ObtieneVariablesIso(getDataSource()));
     }
 
@@ -52,33 +51,6 @@ public class UsuarioDAO extends AbstractDAO {
             return wrapperResultados;
         }
     }
-
-
-    protected class AuthorizedUserExport extends CustomStoredProcedure {
-
-      protected AuthorizedUserExport(DataSource dataSource) {
-          super(dataSource, "Pkg_SEGURIDAD.P_AUTHORIZED_EXPORT");
-          declareParameter(new SqlParameter("pv_cdelemento_i", OracleTypes.NUMERIC));
-          declareParameter(new SqlParameter("pv_cdsisrol_i", OracleTypes.VARCHAR));
-          declareParameter(new SqlParameter("pv_cdusuario_i", OracleTypes.VARCHAR));
-          declareParameter(new SqlOutParameter("pv_resultado_o", OracleTypes.INTEGER));
-          declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
-          declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-          compile();
-        }
-
-
-
-        public WrapperResultados mapWrapperResultados(Map map) throws Exception {
-            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
-            WrapperResultados wrapperResultados = mapper.build(map);
-            Integer  resultado = (Integer) map.get("pv_resultado_o");
-            wrapperResultados.setResultado(resultado.intValue() > 0?"true":"false");
-            return wrapperResultados;
-        }
-    }
-
-
 
     protected class UsuarioRolEmpresaMapper  implements RowMapper {
         public Object mapRow(ResultSet rs, int rowNum) throws SQLException {

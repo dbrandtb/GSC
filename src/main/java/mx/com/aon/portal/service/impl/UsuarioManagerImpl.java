@@ -176,15 +176,4 @@ public class UsuarioManagerImpl extends AbstractManagerJdbcTemplateInvoke implem
         return listaUsuarios;
 	}
 
-    public boolean isAuthorizedExport(String user, String cdSisrol, String cdElemento)	throws ApplicationException {
-        HashMap map = new HashMap();
-        map.put("pv_cdelemento_i", cdElemento);
-        map.put("pv_cdsisrol_i", cdSisrol);
-        map.put("pv_cdusuario_i", user);
-        String endpointName = "AUTHORIZED_EXPORT";
-        WrapperResultados wrapperResultados = returnBackBoneInvoke(map, endpointName);
-        return (wrapperResultados.getResultado() != null && wrapperResultados.getResultado().equals("true"));
-
-    }
-
 }
