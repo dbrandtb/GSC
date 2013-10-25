@@ -87,85 +87,6 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
      * @return String result
      */
     public String pruebaWSweblogic(){
-    	logger.debug(" **** Entrando a pruebaWSweblogic ****");
-    	
-    	try {final String username = "hectlop@gmail.com";
-		final String password = "heymanBlorhopeGoogle1";
- 
-		Properties props = new Properties();
-		props.put("mail.smtp.auth", "true");
-		props.put("mail.smtp.starttls.enable", "true");
-		props.put("mail.smtp.host", "smtp.gmail.com");
-		props.put("mail.smtp.port", "587");
-		
-		String toEmails = "hmlt_86@hotmail.com";
-		String asunto = "Asunto de mi email";
-		String mensaje = "El R es un .... etc";
-		
-		File attachFile = new File("/info.pdf"); 
-		String filename = "/info.pdf";//change accordingly
- 
-		Session session = Session.getInstance(props,
-		  new javax.mail.Authenticator() {
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(username, password);
-			}
-		  });
- 
-		try {
- /*
-			Message message = new MimeMessage(session);
-			message.setFrom(new InternetAddress(username));
-			message.setRecipients(Message.RecipientType.TO,
-				InternetAddress.parse(toEmails));
-			message.setSubject(asunto);
-			message.setText(mensaje);
-			
-			Transport.send(message);
- 
-			System.out.println("Done");*/
-		
-			
-			
-			MimeMessage message = new MimeMessage(session);
-		    message.setFrom(new InternetAddress(username,"Manuel Torres Castillo"));
-		    message.addRecipient(Message.RecipientType.TO,new InternetAddress(toEmails));
-		    message.setSubject(asunto);
-		    
-		    //3) create MimeBodyPart object and set your message content    
-		    BodyPart messageBodyPart1 = new MimeBodyPart();
-		    messageBodyPart1.setText("This is message body");
-		    
-		    //4) create new MimeBodyPart object and set DataHandler object to this object    
-		    MimeBodyPart messageBodyPart2 = new MimeBodyPart();
-
-		    //String filename = "SendAttachment.java";//change accordingly
-		    DataSource source = new FileDataSource(filename);
-		    messageBodyPart2.setDataHandler(new DataHandler(source));
-		    messageBodyPart2.setFileName(filename);
-		   
-		   
-		    //5) create Multipart object and add MimeBodyPart objects to this object    
-		    Multipart multipart = new MimeMultipart();
-		    multipart.addBodyPart(messageBodyPart1);
-		    multipart.addBodyPart(messageBodyPart2);
-
-		    //6) set the multiplart object to the message object
-		    message.setContent(multipart);
-		   
-		    //7) send message
-		    Transport.send(message);
-			
-			
- 
-		} catch (MessagingException e) {
-			throw new RuntimeException(e);
-		}
-}catch( Exception e){
-    		logger.error("Error en pruebaWSweblogic", e);
-    		return SUCCESS;
-    	}
-    	
     	success = true;
     	return SUCCESS;
     }
@@ -175,6 +96,7 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
      * Obtiene los datos generales de una p&oacute;liza
      * @return String result
      */
+    @Deprecated
     public String cotizaSaludVital(){
     	logger.debug(" **** Entrando a cotizaSaludVital ****");
         try {
@@ -201,6 +123,50 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
         
         success = true;
         return SUCCESS;
+    }
+    
+    /**
+     * Obtiene los datos generales de una p&oacute;liza
+     * @return String result
+     */
+    public boolean instanciaUsuarioLigaDirecta(){
+    	logger.debug(" **** Entrando a instanciar usuario para Liga Directa ****");
+        try {
+        	creaSesionDeUsuario(user);
+        
+        	obtenRolesClientes();
+			
+			setCodigoCliente(codigoCliente);
+			setCodigoRol(codigoRol);
+//			setCodigoCliente("6442");
+//			setCodigoRol("EJECUTIVOCUENTA");
+			
+			obtenCodigoTree();
+			
+			UserVO usuario=(UserVO) session.get("USUARIO");
+	        logger.debug("### usuario name: "+usuario.getName());
+	        logger.debug("### usuario user: "+usuario.getUser());
+	        logger.debug("### usuario empresa cdelemento id: "+usuario.getEmpresa().getElementoId());
+	        logger.debug("### usuario codigopersona: "+usuario.getCodigoPersona());
+        }catch( Exception e){
+            logger.error("Error en el proceso Interno", e);
+            return false;
+        }
+        return true;
+    }
+    
+    public String accesoDirecto() throws Exception {
+    	
+    	String acceso = (String)params.get("acceso");
+    	logger.debug(" >>>>>>>> Entrando a Acceso Directo para usuario: " + user + " acceso: " + acceso);
+    	
+    	if("cotizadorSaludVital".equals(acceso) || "consultasSaludVital".equals(acceso)){
+    		instanciaUsuarioLigaDirecta();
+    	} else {
+    		acceso= "error";
+    	}
+    	
+    	return acceso;
     }
     
     
