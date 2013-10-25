@@ -22,7 +22,6 @@
 
 <script language="javascript">
     var _CONTEXT = "${ctx}";
-    var _AUTHORIZED_EXPORT = "${authorizedExport}";
 
 	// Se inicializan las fuentes de la pantalla para la carga
     var sourceForPanel = new Array();

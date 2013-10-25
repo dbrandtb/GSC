@@ -8,7 +8,6 @@
 <head> 
 <script language="javascript">
 
-    var _AUTHORIZED_EXPORT = "${authorizedExport}";
     var _URL_AYUDA = "";
     var _NUM_REGISTROS = "";
     var _ALTO_GRILLA = "";

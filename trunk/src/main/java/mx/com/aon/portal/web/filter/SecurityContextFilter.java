@@ -46,22 +46,4 @@ public class SecurityContextFilter implements Filter {
     public void destroy() {
     }
 
-    /*
-    public void doCheckSecurity(UserVO userVO, ServletRequest request) throws IOException, ServletException {
-            String requestUri = ((HttpServletRequest)request).getRequestURI();
-            if (requestUri.indexOf(".action")>0) {
-                if (requestUri.indexOf("export")>0) {
-                    logger.debug("action de exportar : "+ requestUri);
-                    if (userVO.isAuthorizedExport()) {
-                        logger.debug("el usuario "+ userVO.getUser() + "esta autorizado a ejecutar la accion de exportar : "+ requestUri);
-                    }
-                    else {
-                        logger.debug("el usuario "+ userVO.getUser() + " NO esta autorizado a ejecutar la accion de exportar : "+ requestUri);
-                        throw new ServletException("el usuario "+ userVO.getUser() + " NO esta autorizado a ejecutar la accion de exportar : "+ requestUri);
-                    }
-                }
-
-            }
-    }*/
-
 }

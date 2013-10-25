@@ -26,10 +26,6 @@ var windowExport;
 /**********************mexico**************************/
 
 function showExportDialog(action){
-	if (_AUTHORIZED_EXPORT == "false") {
-        Ext.MessageBox.alert(getLabelFromMap('400000',helpMap,'Aviso'),getLabelFromMap('300008',helpMap,'Usuario NO autorizado a realizar la Exportacion'));
-        return false;
-    }
 	if (Ext.isIE){
 	//return function(btn, pressed){
         if(!windowExport){

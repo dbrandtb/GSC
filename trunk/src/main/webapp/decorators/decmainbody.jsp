@@ -6,14 +6,6 @@
     
 <html>
 <head> 
-<script language="javascript">
-
-    var _AUTHORIZED_EXPORT = "${authorizedExport}";
-
-	if (window.location.href.indexOf("login.html") != -1) {
-		window.parent.location.href = "http://acw.biosnettcs.com:7778/login/login.html";
-	}
-</script>    
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<link href="${ctx}/resources/css/header_light.css" rel="stylesheet" type="text/css" />
 	<link href="${ctx}/resources/css/toolbar_magenta.css" rel="stylesheet" type="text/css" />
