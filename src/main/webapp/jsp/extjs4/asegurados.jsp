@@ -70,7 +70,7 @@
                 var ntramiteCargado='';
             </s:else>
             var cotizacionUserSoloCotiza=false;
-            <s:if test='%{user!=null&&user.equalsIgnoreCase("biosnet1")}'>
+            <s:if test='%{user!=null&&user.equalsIgnoreCase(getText("usuario.solo.cotiza"))}'>
                 cotizacionUserSoloCotiza=true;
             </s:if>
             debug('hayTramiteCargado '+(hayTramiteCargado?'true':'false'));
