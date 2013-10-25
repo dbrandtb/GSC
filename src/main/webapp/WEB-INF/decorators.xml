@@ -39,6 +39,7 @@
     
     
 	<decorator name="clean" page="clean.jsp">
+		<pattern>/seguridad/accesoDirecto.action</pattern>
 		<pattern>/seguridad/cotizarSaludVital.action</pattern>
 		<pattern>/cotizacionVital.action</pattern>
 		<pattern>/jsp/extjs4/asegurados.jsp</pattern>
