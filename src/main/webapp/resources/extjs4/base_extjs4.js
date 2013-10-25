@@ -165,8 +165,34 @@ Ext.onReady(function(){
     Ext.util.Format.decimalSeparator = '.';
     Ext.grid.RowEditor.prototype.saveBtnText =   "Actualizar";
     Ext.grid.RowEditor.prototype.cancelBtnText = "Cancelar";
-    //Se sobreescribe el componente TextField para que solo acepte mayúsculas
+    //Se sobreescribe el componente TextField para que solo acepte mayï¿½sculas
     Ext.override(Ext.form.TextField, {
-    	fieldStyle: 'text-transform:uppercase',
+    	fieldStyle:'text-transform:uppercase'
+    	,initComponent:function(){
+    		try
+    		{
+    			if(this.column)
+    			{
+    				Ext.apply(this,
+    				{
+    					listeners:
+    					{
+    						'change':function()
+    						{
+    						    //debug(this);
+    						    //debug(this.xtype);
+    							if(this.getValue() && this.xtype=='textfield')
+    							{
+    								debug('mayus de '+this.getValue());
+    								this.setValue(this.getValue().toUpperCase());
+    							}
+    						}
+    					}
+    				});
+    			}
+    		}
+    		catch(e){}
+    		return this.callParent();
+    	}
 	});
 });
