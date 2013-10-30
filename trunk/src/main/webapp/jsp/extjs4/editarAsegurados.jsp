@@ -38,6 +38,7 @@
 	var urlGuardarAseguradosp2='<s:url namespace="/" action="guardarComplementariosAsegurados" />';
 	var urlCoberturasAseguradop2='<s:url namespace="/" action="editarCoberturas" />';
 	var urlGenerarCdPersonp2='<s:url namespace="/" action="generarCdperson" />';
+	var urlAutoRFCp2        ='<s:url namespace="/" action="buscarPersonasRepetidas" />';
 	var urlDomiciliop2      ='<s:url namespace="/" action="pantallaDomicilio" />';
 	var urlExclusionp2      ='<s:url namespace="/" action="pantallaExclusion" />';
 	var urlValositp2        ='<s:url namespace="/" action="pantallaValosit" />';
@@ -49,6 +50,14 @@
 	var isCopiadop2=false;
 	var respaldoContp2;
 	var isRespaldoContp2=false;
+	var editorRFCAp2;
+	var editorRFCBp2;
+	
+	Ext.define('RFCPersona',
+	{
+		extend  : 'Ext.data.Model'
+		,fields : ["RFCCLI","NOMBRECLI","FENACIMICLI","DIRECCIONCLI","CLAVECLI","DISPLAY"]
+	});
 	
     function rendererRolp2(v)
     {
@@ -796,6 +805,91 @@ debug("validarYGuardar flag:2");
         {
 	    	format:'d/m/Y',
             allowBlank:false
+        });
+	    
+	    editorRFCAp2=Ext.create('Ext.form.ComboBox',
+        {
+             displayField    : 'DISPLAY'
+            ,valueField      : 'RFCCLI'
+            ,matchFieldWidth : false
+            ,minChars        : 10
+            ,hideTrigger     : true
+            ,queryMode       : 'remote'
+            ,queryParam      : 'map1.pv_rfc_i'
+            ,store           : Ext.create('Ext.data.Store',
+            {
+                model     : 'RFCPersona'
+                ,autoLoad : false
+                ,proxy    :
+                {
+                    type    : 'ajax'
+                    ,url    : urlAutoRFCp2
+                    ,reader :
+                    {
+                        type  : 'json'
+                        ,root : 'slist1'
+                    }
+                }
+            })
+            ,listeners :
+            {
+                'blur' : function( combo, newValue, oldValue, eOpts )
+                {
+                    var record=combo.findRecordByDisplay(combo.rawValue);
+                    debug("record:",record);
+                    debug("is cdperson",record?'si':'no');
+                    if(record)
+                    {
+                    	gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdperson",record.get("CLAVECLI"));
+                    }
+                    else
+                    {
+                    	gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdperson","");
+                    }
+                }
+            }
+        });
+	    editorRFCBp2=Ext.create('Ext.form.ComboBox',
+        {
+             displayField    : 'DISPLAY'
+            ,valueField      : 'RFCCLI'
+            ,matchFieldWidth : false
+            ,minChars        : 10
+            ,hideTrigger     : true
+            ,queryMode       : 'remote'
+            ,queryParam      : 'map1.pv_rfc_i'
+            ,store           : Ext.create('Ext.data.Store',
+            {
+                model     : 'RFCPersona'
+                ,autoLoad : false
+                ,proxy    :
+                {
+                    type    : 'ajax'
+                    ,url    : urlAutoRFCp2
+                    ,reader :
+                    {
+                        type  : 'json'
+                        ,root : 'slist1'
+                    }
+                }
+            })
+            ,listeners :
+            {
+            	'blur' : function( combo, newValue, oldValue, eOpts )
+            	{
+            		var record=combo.findRecordByDisplay(combo.rawValue);
+            		debug("record:",record);
+            		debug("is cdperson",record?'si':'no');
+            		if(record)
+            		{
+            			gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdperson",record.get("CLAVECLI"));
+            		}
+            		else
+            		{
+            			gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdperson","");
+            		}
+            	}
+            }
         });
 	    
 	    Ext.define('GridTomadorP2',
