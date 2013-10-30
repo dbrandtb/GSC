@@ -22,6 +22,7 @@ import mx.com.aon.flujos.cotizacion4.web.ResultadoCotizacion4Action;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
@@ -458,11 +459,8 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			item3.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("header", "RFC"))
 					.add(new Item("dataIndex", "cdrfc"))
-					.add(new Item("flex", 1))
-					.add(Item.crear("editor",null,Item.OBJ)
-							.add("xtype","textfield")
-							.add("allowBlank",false)
-							)
+					.add(new Item("width", 120))
+					.add(Item.crear("editor","editorRFCAp2").setQuotes(""))
 					);
 			item3.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("xtype", "actioncolumn"))
@@ -577,11 +575,8 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			item2.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("header", "RFC"))
 					.add(new Item("dataIndex", "cdrfc"))
-					.add(new Item("flex", 1))
-					.add(Item.crear("editor",null,Item.OBJ)
-							.add("xtype","textfield")
-							.add("allowBlank",false)
-						)
+					.add(new Item("width", 120))
+					.add(Item.crear("editor","editorRFCBp2").setQuotes(""))
 					);
 			/*xtype: 'actioncolumn',
 	                        width: 30,
@@ -1361,6 +1356,37 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 		return exito;
 	} 
 	
+	public String buscarPersonasRepetidas()
+	{
+		log.debug(""
+				+ "#######################################\n"
+				+ "#######################################\n"
+				+ "###### buscar personas repetidas ######\n"
+				+ "######                           ######"
+				);
+		log.debug("map1: "+map1);
+		try
+		{
+		    slist1=kernelManager.buscarRFC(map1);
+		    for(Map<String,String>rfc:slist1)
+		    {
+		    	rfc.put("DISPLAY",rfc.get("RFCCLI")+"<br/>"+rfc.get("NOMBRECLI")+"<br/>"+rfc.get("DIRECCIONCLI"));
+		    }
+		    success=true;
+		}
+		catch(Exception ex)
+		{
+			log.error("error al buscar rfc",ex);
+			success=false;
+		}
+		log.debug(""
+				+ "######                           ######\n"
+				+ "###### buscar personas repetidas ######\n"
+				+ "#######################################\n"
+				+ "#######################################"
+				);
+		return SUCCESS;
+	}
 	/////////////////////////////////
 	////// getters ans setters //////
 	/*/////////////////////////////*/
