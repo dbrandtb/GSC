@@ -131,6 +131,7 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String DOCUMENTOS_PREPARAR_CONTRARECIBO="DOCUMENTOS_PREPARAR_CONTRARECIBO";
     public static final String OBTIENE_VALOSIT_SITUAC="OBTIENE_VALOSIT_SITUAC";
     public static final String OBTIENE_AGENTES="OBTIENE_AGENTES";
+    public static final String BUSCAR_RFC="BUSCAR_RFC";
 
 	protected void initDao() throws Exception {
 		addStoredProcedure(PERMISO_EJECUCION_PROCESO,new PermisoEjecucionProceso(getDataSource()));
@@ -209,6 +210,7 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(DOCUMENTOS_PREPARAR_CONTRARECIBO, new DocumentosPrepararContrarecibo(getDataSource()));
         addStoredProcedure(OBTIENE_VALOSIT_SITUAC,new ObtieneValositSituac(getDataSource()));
         addStoredProcedure(OBTIENE_AGENTES,new ObtieneAgentes(getDataSource()));
+        addStoredProcedure(BUSCAR_RFC,new BuscarRFC(getDataSource()));
 	}
 
 	protected class BuscarMatrizAsignacion extends CustomStoredProcedure {
@@ -3717,5 +3719,52 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	/*/////////////////////////////////////////////////////*/
 	////// obtiene agentes //////////////////////////////////
 	/////////////////////////////////////////////////////////
+	
+	////////////////////////
+	////// buscar rfc //////
+	/*////////////////////*/
+	public class BuscarRFC extends CustomStoredProcedure
+	{
+		protected BuscarRFC(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_VALIDA_RFC");
+			declareParameter(new SqlParameter("pv_rfc_i",    OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new BuscarRFCMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
+		}
+	
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception
+		{
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			WrapperResultados wrapperResultados = mapper.build(map);
+			List result = (List) map.get("pv_registro_o");
+			wrapperResultados.setItemList(result);
+			return wrapperResultados;
+		}
+	}
+	
+	protected class BuscarRFCMapper implements RowMapper {
+		public Object mapRow(ResultSet rs, int rowNum) throws SQLException
+		{
+			String cols[]=new String[]{"RFCCLI","NOMBRECLI","FENACIMICLI","DIRECCIONCLI","CLAVECLI"};
+			Map<String,String> map=new HashMap<String,String>(0);
+			for(String col:cols)
+			{
+				if(col!=null&&col.substring(0,2).equalsIgnoreCase("fe"))
+				{
+					map.put(col,Utilerias.formateaFecha(rs.getString(col)));
+				}
+				else
+				{
+					map.put(col,rs.getString(col));
+				}
+			}	
+			return map;
+		}
+	}
+	/*////////////////////*/
+	////// buscar rfc //////
+	////////////////////////
     
 }
