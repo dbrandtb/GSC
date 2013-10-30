@@ -276,6 +276,10 @@
                 <action name="enviaCorreo" class="mailAction" method="enviaCorreo">
 		            <result name="success" type="json" />
         		</action>
+        		
+        		<action name="buscarPersonasRepetidas" class="beanDatosComplementarios" method="buscarPersonasRepetidas">
+        		    <result name="success" type="json" />
+        		</action>
                 
     </package>
 
