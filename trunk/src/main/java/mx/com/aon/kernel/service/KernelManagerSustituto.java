@@ -90,4 +90,5 @@ public interface KernelManagerSustituto {
 	public WrapperResultados preparaContrarecibo(Map<String, String> docu) throws ApplicationException;
 	public Map<String, Object> obtieneValositSituac(Map<String, String> params) throws ApplicationException;
 	public WrapperResultados obtieneAgentes(String claveNombreAgente) throws ApplicationException;
+	public List<Map<String, String>> buscarRFC(Map<String,String> params) throws ApplicationException;
 }
