@@ -746,11 +746,19 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 	
 	public List<Map<String, String>> buscarRFC(Map<String,String> params) throws ApplicationException
 	{
-
 		log.debug("### kernel sustituto buscarRFC map: "+params);
         List<Map<String,String>> lista= this.getAllBackBoneInvoke(params, ProcesoDAO.BUSCAR_RFC);
         lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
         log.debug("### kernel sustituto buscarRFC lista size: "+lista.size());
         return lista;
+	}
+	
+	public WrapperResultados borrarMpoliper(Map<String, String> param) throws ApplicationException
+	{
+		log.debug("### kernel borrarMpersona map: "+param);
+		WrapperResultados res = this.returnBackBoneInvoke(param,ProcesoDAO.BORRAR_MPERSONA);
+        log.debug("### kernel borrarMpersona id:"+res.getMsgId());
+        log.debug("### kernel borrarMpersona mesage:"+res.getMsgText());
+		return res;
 	}
 }
