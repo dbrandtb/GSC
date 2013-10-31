@@ -132,6 +132,7 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String OBTIENE_VALOSIT_SITUAC="OBTIENE_VALOSIT_SITUAC";
     public static final String OBTIENE_AGENTES="OBTIENE_AGENTES";
     public static final String BUSCAR_RFC="BUSCAR_RFC";
+    public static final String BORRAR_MPERSONA="BORRAR_MPERSONA";
 
 	protected void initDao() throws Exception {
 		addStoredProcedure(PERMISO_EJECUCION_PROCESO,new PermisoEjecucionProceso(getDataSource()));
@@ -211,6 +212,7 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(OBTIENE_VALOSIT_SITUAC,new ObtieneValositSituac(getDataSource()));
         addStoredProcedure(OBTIENE_AGENTES,new ObtieneAgentes(getDataSource()));
         addStoredProcedure(BUSCAR_RFC,new BuscarRFC(getDataSource()));
+        addStoredProcedure(BORRAR_MPERSONA,new BorrarMPoliper(getDataSource()));
 	}
 
 	protected class BuscarMatrizAsignacion extends CustomStoredProcedure {
@@ -3766,5 +3768,33 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	/*////////////////////*/
 	////// buscar rfc //////
 	////////////////////////
-    
+	
+	/////////////////////////////
+	////// borrar mpoliper //////
+	/*/////////////////////////*/
+	protected class BorrarMPoliper extends CustomStoredProcedure
+	{
+		protected BorrarMPoliper(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES.P_BORRA_MPOLIPER");
+			declareParameter(new SqlParameter("pv_cdunieco_i",    OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i",    OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
+		}
+	
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception
+		{
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			WrapperResultados wrapperResultados = mapper.build(map);
+			List result = (List) map.get("pv_registro_o");
+			wrapperResultados.setItemList(result);
+			return wrapperResultados;
+		}
+	}
+	/*/////////////////////////*/
+	////// borrar mpoliper //////
+	/////////////////////////////
 }
