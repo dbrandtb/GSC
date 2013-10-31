@@ -416,7 +416,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 					.add(new Item("flex", 1))
 					.add(Item.crear("editor",null,Item.OBJ)
 							.add("xtype","textfield")
-							.add("allowBlank",false)
+							.add("allowBlank",true)
 						)
 					);
 			item3.add(Item.crear(null, null, Item.OBJ)
@@ -425,7 +425,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 					.add(new Item("flex", 1))
 					.add(Item.crear("editor",null,Item.OBJ)
 							.add("xtype","textfield")
-							.add("allowBlank",false)
+							.add("allowBlank",true)
 						)
 					);
 			item3.add(Item.crear(null, null, Item.OBJ)
@@ -705,10 +705,23 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 		log.debug(list1);
 		try
 		{
+			///////////////////////////////////////////////
+			////// para borrar los mpoliper anterior //////
+			/*///////////////////////////////////////////*/
+			Map<String,String> param=new LinkedHashMap<String,String>(0);
+			param.put("pv_cdunieco_i",	map1.get("pv_cdunieco"));
+			param.put("pv_cdramo_i",	map1.get("pv_cdramo"));
+			param.put("pv_estado_i",	map1.get("pv_estado"));
+			param.put("pv_nmpoliza_i",	map1.get("pv_nmpoliza"));
+			kernelManager.borrarMpoliper(param);
+			/*///////////////////////////////////////////*/
+			////// para borrar los mpoliper anterior //////
+			///////////////////////////////////////////////
+			
 			int i=1;
 			for(Map<String,Object>aseg:list1)
 			{
-				Map<String,Object>parametros=new LinkedHashMap<String,Object>(0);
+				Map<String,Object> parametros=new LinkedHashMap<String,Object>(0);
 				/* MODELO RECIBIDO
 				name", "nmsituac")));
 				name", "cdrol"
