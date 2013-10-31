@@ -52,6 +52,7 @@
 	var isRespaldoContp2=false;
 	var editorRFCAp2;
 	var editorRFCBp2;
+	var timeoutBuscarRFCBp2;
 	
 	Ext.define('RFCPersona',
 	{
@@ -807,87 +808,225 @@ debug("validarYGuardar flag:2");
             allowBlank:false
         });
 	    
-	    editorRFCAp2=Ext.create('Ext.form.ComboBox',
+	    editorRFCAp2=Ext.create('Ext.form.TextField',
         {
-             displayField    : 'DISPLAY'
-            ,valueField      : 'RFCCLI'
-            ,matchFieldWidth : false
-            ,minChars        : 10
-            ,hideTrigger     : true
-            ,queryMode       : 'remote'
-            ,queryParam      : 'map1.pv_rfc_i'
-            ,store           : Ext.create('Ext.data.Store',
-            {
-                model     : 'RFCPersona'
-                ,autoLoad : false
-                ,proxy    :
-                {
-                    type    : 'ajax'
-                    ,url    : urlAutoRFCp2
-                    ,reader :
-                    {
-                        type  : 'json'
-                        ,root : 'slist1'
-                    }
-                }
-            })
+            allowBlank : false
             ,listeners :
             {
-                'blur' : function( combo, newValue, oldValue, eOpts )
+                'change' : function( field )
                 {
-                    var record=combo.findRecordByDisplay(combo.rawValue);
-                    debug("record:",record);
-                    debug("is cdperson",record?'si':'no');
-                    if(record)
+                    if(field.getValue().length>9)
                     {
-                    	gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdperson",record.get("CLAVECLI"));
-                    }
-                    else
-                    {
-                    	gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdperson","");
+                        clearTimeout(timeoutBuscarRFCBp2);
+                        timeoutBuscarRFCBp2=setTimeout(function()
+                        {
+                        	gridTomadorp2.setLoading(true);
+                            Ext.Ajax.request
+                            ({
+                                url     : urlAutoRFCp2
+                                ,params :
+                                {
+                                    'map1.pv_rfc_i' : field.getValue()
+                                }
+                                ,success:function(response)
+                                {
+                                	gridTomadorp2.setLoading(false);
+                                    var json=Ext.decode(response.responseText);
+                                    debug(json);
+                                    if(json&&json.slist1&&json.slist1.length>0)
+                                    {
+                                        Ext.create('Ext.window.Window',
+                                        {
+                                            width        : 600
+                                            ,height      : 400
+                                            ,modal       : true
+                                            ,autoScroll  : true
+                                            ,title       : 'Coincidencias'
+                                            ,items       : Ext.create('Ext.grid.Panel',
+                                                           {
+                                                               store    : Ext.create('Ext.data.Store',
+                                                                          {
+                                                                              model     : 'RFCPersona'
+                                                                              ,autoLoad : true
+                                                                              ,proxy :
+                                                                              {
+                                                                                  type    : 'memory'
+                                                                                  ,reader : 'json'
+                                                                                  ,data   : json['slist1']
+                                                                              }
+                                                                          })
+                                                               ,columns :
+                                                               [
+                                                                   {
+                                                                       xtype         : 'actioncolumn'
+                                                                       ,menuDisabled : true
+                                                                       ,width        : 30
+                                                                       ,items        :
+                                                                       [
+                                                                           {
+                                                                               icon     : '${ctx}/resources/fam3icons/icons/accept.png'
+                                                                               ,tooltip : 'Seleccionar usuario'
+                                                                               ,handler : function(grid, rowIndex, colIndex) {
+                                                                                   var record = grid.getStore().getAt(rowIndex);
+                                                                                   debug(record);
+                                                                                   gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdrfc",record.get("RFCCLI"));
+                                                                                   gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdperson",record.get("CLAVECLI"));
+                                                                                   grid.up().up().destroy();
+                                                                               }
+                                                                           }
+                                                                       ]
+                                                                   },{
+                                                                       header     : 'RFC'
+                                                                       ,dataIndex : 'RFCCLI'
+                                                                       ,flex      : 1
+                                                                   }
+                                                                   ,{
+                                                                       header     : 'Nombre'
+                                                                       ,dataIndex : 'NOMBRECLI'
+                                                                       ,flex      : 1
+                                                                   }
+                                                                   ,{
+                                                                       header     : 'Direcci&oacute;n'
+                                                                       ,dataIndex : 'DIRECCIONCLI'
+                                                                       ,flex      : 3
+                                                                   }
+                                                               ]
+                                                           })
+                                        }).show();
+                                    }
+                                    else
+                                    {
+                                        Ext.Msg.show({
+                                            title:'Sin coincidencias',
+                                            msg: 'No hay coincidencias de RFC',
+                                            buttons: Ext.Msg.OK
+                                        });
+                                    }
+                                }
+                                ,failure:function()
+                                {
+                                	gridTomadorp2.setLoading(false);
+                                    Ext.Msg.show({
+                                        title:'Error',
+                                        msg: 'Error de comunicaci&oacute;n',
+                                        buttons: Ext.Msg.OK,
+                                        icon: Ext.Msg.ERROR
+                                    });
+                                }
+                            });
+                        },500);
                     }
                 }
             }
         });
-	    editorRFCBp2=Ext.create('Ext.form.ComboBox',
+	    editorRFCBp2=Ext.create('Ext.form.TextField',
         {
-             displayField    : 'DISPLAY'
-            ,valueField      : 'RFCCLI'
-            ,matchFieldWidth : false
-            ,minChars        : 10
-            ,hideTrigger     : true
-            ,queryMode       : 'remote'
-            ,queryParam      : 'map1.pv_rfc_i'
-            ,store           : Ext.create('Ext.data.Store',
-            {
-                model     : 'RFCPersona'
-                ,autoLoad : false
-                ,proxy    :
-                {
-                    type    : 'ajax'
-                    ,url    : urlAutoRFCp2
-                    ,reader :
-                    {
-                        type  : 'json'
-                        ,root : 'slist1'
-                    }
-                }
-            })
+            allowBlank : false
             ,listeners :
             {
-            	'blur' : function( combo, newValue, oldValue, eOpts )
+            	'change' : function( field )
             	{
-            		var record=combo.findRecordByDisplay(combo.rawValue);
-            		debug("record:",record);
-            		debug("is cdperson",record?'si':'no');
-            		if(record)
+            		if(field.getValue().length>9)
             		{
-            			gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdperson",record.get("CLAVECLI"));
-            		}
-            		else
-            		{
-            			gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdperson","");
-            		}
+            			clearTimeout(timeoutBuscarRFCBp2);
+            			timeoutBuscarRFCBp2=setTimeout(function()
+            			{
+		            		gridPersonasp2.setLoading(true);
+		            		Ext.Ajax.request
+		            		({
+		            			url     : urlAutoRFCp2
+		            			,params :
+		            			{
+		            				'map1.pv_rfc_i' : field.getValue()
+		            			}
+		            		    ,success:function(response)
+		            		    {
+		            		    	gridPersonasp2.setLoading(false);
+		            		    	var json=Ext.decode(response.responseText);
+		            		    	debug(json);
+		            		    	if(json&&json.slist1&&json.slist1.length>0)
+		            		    	{
+		            		    		Ext.create('Ext.window.Window',
+		            		    		{
+		            		    			width        : 600
+		            		    			,height      : 400
+		            		    			,modal       : true
+		                                    ,autoScroll  : true
+		            		    			,title       : 'Coincidencias'
+		            		    		    ,items       : Ext.create('Ext.grid.Panel',
+		            		    		    		       {
+		            		    		    	               store    : Ext.create('Ext.data.Store',
+		            		                                              {
+					            		    		    	                  model     : 'RFCPersona'
+					            		    		    	                  ,autoLoad : true
+		            		    		    	                        	  ,proxy :
+		            		    		    	                        	  {
+		            		    		    	                        		  type    : 'memory'
+		            		    		    	                        		  ,reader : 'json'
+		            		    		    	                        		  ,data   : json['slist1']
+		            		    		    	                        	  }
+		            		    		    	                          })
+		            		    		    	               ,columns :
+		            		    		    	               [
+		            		    		    	                   {
+		            		    		    	                	   xtype         : 'actioncolumn'
+		            		    		    	                	   ,menuDisabled : true
+		            		    		    	                	   ,width        : 30
+		            		    		    	                	   ,items        :
+		            		    		    	                	   [
+		            		    		    	                	       {
+			            		    		    	                           icon     : '${ctx}/resources/fam3icons/icons/accept.png'
+			            		    		    	                           ,tooltip : 'Seleccionar usuario'
+			            		    		    	                           ,handler : function(grid, rowIndex, colIndex) {
+			            		    		    	                               var record = grid.getStore().getAt(rowIndex);
+			            		    		    	                               debug(record);
+			            		    		    	                               gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdrfc",record.get("RFCCLI"));
+			            		    		    	                               gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdperson",record.get("CLAVECLI"));
+			            		    		    	                               grid.up().up().destroy();
+			            		    		    	                           }
+		            		    		    	                           }
+		            		    		    	                	   ]
+		            		    		    		               },{
+		            		    		    	                	   header     : 'RFC'
+		            		    		    	                	   ,dataIndex : 'RFCCLI'
+		            		    		    	                	   ,flex      : 1
+		            		    		    	                   }
+		            		    		    	                   ,{
+		            		    		    	                	   header     : 'Nombre'
+		            		    		    	                	   ,dataIndex : 'NOMBRECLI'
+		           		    		    	                		   ,flex      : 1
+		            		    		    	                   }
+		            		    		    	                   ,{
+		            		    		    	                	   header     : 'Direcci&oacute;n'
+		            		    		    	                	   ,dataIndex : 'DIRECCIONCLI'
+		           		    		    	                		   ,flex      : 3
+		            		    		    	                   }
+		            		    		    	               ]
+		            		    		    		       })
+		            		    		}).show();
+		            		    	}
+		            		    	else
+		            		    	{
+		            		    		Ext.Msg.show({
+		                                    title:'Sin coincidencias',
+		                                    msg: 'No hay coincidencias de RFC',
+		                                    buttons: Ext.Msg.OK
+		                                });
+		            		    	}
+		            		    }
+		            		    ,failure:function()
+		            		    {
+		            		    	gridPersonasp2.setLoading(false);
+		            		    	Ext.Msg.show({
+		                                title:'Error',
+		                                msg: 'Error de comunicaci&oacute;n',
+		                                buttons: Ext.Msg.OK,
+		                                icon: Ext.Msg.ERROR
+		                            });
+		            		    }
+		            		});
+            			},500);
+                    }
             	}
             }
         });
