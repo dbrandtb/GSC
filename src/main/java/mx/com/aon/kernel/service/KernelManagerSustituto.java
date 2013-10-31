@@ -91,4 +91,5 @@ public interface KernelManagerSustituto {
 	public Map<String, Object> obtieneValositSituac(Map<String, String> params) throws ApplicationException;
 	public WrapperResultados obtieneAgentes(String claveNombreAgente) throws ApplicationException;
 	public List<Map<String, String>> buscarRFC(Map<String,String> params) throws ApplicationException;
+	public WrapperResultados borrarMpoliper(Map<String, String> param) throws ApplicationException;
 }
