@@ -46,7 +46,7 @@
         }
     }
     $(document).ready(function(){
-        miIntervalCambioLiga=setInterval(reemplazaLiga,500);
+        //miIntervalCambioLiga=setInterval(reemplazaLiga,500);
     });
 </script>
 <!-- FIN ESTE BLOQUE IMPORTA jQUERY Y REEMPLAZA LA LIGA a cotizacion vital 2 -->
