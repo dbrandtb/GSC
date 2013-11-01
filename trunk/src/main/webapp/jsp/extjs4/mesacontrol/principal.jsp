@@ -24,6 +24,8 @@
     var mesConUrlDetMC        = '<s:url namespace="/mesacontrol"     action="obtenerDetallesTramite" />';
     var mesConUrlFinDetalleMC ='<s:url namespace="/mesacontrol"      action="finalizarDetalleTramiteMC" />';
     var urlAgentes            ='<s:url namespace="/mesacontrol"      action="obtieneAgentes" />';
+    var mesConUrlLoadRamos    ='<s:url namespace="/"                 action="obtenerRamos" />';
+    var mesConUrlLoadTipsit   ='<s:url namespace="/"                 action="obtenerTipsit" />';
     var mesConStoreTareas;
     var mesConGridTareas;
     var mesConStoreUniAdmin;
@@ -52,7 +54,7 @@ Ext.onReady(function(){
         [
 			"ntramite","cdunieco","cdramo","estado","nmpoliza",
 			"nmsolici","cdsucadm","cdsucdoc","cdsubram","cdtiptra",{name:"ferecepc",type:"date",dateFormat:"d/m/Y"},"cdagente",
-			"Nombre_agente","referencia","nombre",{name:"fecstatu",type:"date",dateFormat:"d/m/Y"},"status","comments"
+			"Nombre_agente","referencia","nombre",{name:"fecstatu",type:"date",dateFormat:"d/m/Y"},"status","comments","cdtipsit"
         ]
     });
     
@@ -73,6 +75,25 @@ Ext.onReady(function(){
             ,"usuario_fin"
         ]
     });
+    
+    Ext.define('Ramo',{
+        extend:'Ext.data.Model',
+        fields:
+        [
+            "cdramo"
+            ,"dsramo"
+        ]
+    });
+    
+    Ext.define('Tipsit',{
+        extend:'Ext.data.Model',
+        fields:
+        [
+            "CDTIPSIT"
+            ,"DSTIPSIT"
+        ]
+    });
+    
     /*/////////////////*/
     ////// modelos //////
     /////////////////////
@@ -568,6 +589,7 @@ Ext.onReady(function(){
 		            		,estado   : record.get('estado')
 		            		,nmpoliza : record.get('nmsolici')
 		            		,'map1.ntramite' : record.get('ntramite')
+		            		,cdtipsit : record.get('cdtipsit')
 		            	}
 		            });
             	}
@@ -580,7 +602,10 @@ Ext.onReady(function(){
                         ,standardSubmit : true
                         ,params         :
                         {
-                            ntramite : record.get('ntramite')
+                            ntramite  : record.get('ntramite')
+                            ,cdunieco : record.get('cdunieco')
+                            ,cdramo   : record.get('cdramo')
+                            ,cdtipsit : record.get('cdtipsit')
                         }
                     });
             	}
@@ -687,18 +712,84 @@ Ext.onReady(function(){
                                 ,valueField   : 'key'
                                 ,forceSelection : true
                                 ,queryMode      :'local'
+                                ,store : Ext.create('Ext.data.Store', {
+                                    model:'Generic',
+                                    autoLoad:true,
+                                    proxy:
+                                    {
+                                        type: 'ajax',
+                                        url:mesConUrlLoadCatalo,
+                                        extraParams:{catalogo:'<s:property value="CON_CAT_MESACONTROL_SUCUR_DOCU" />'},
+                                        reader:
+                                        {
+                                            type: 'json',
+                                            root: 'lista'
+                                        }
+                                    }
+                                })
+                                ,listeners : 
+                                {
+                                	'change' : function ()
+                                	{
+                                		Ext.getCmp('mesConNueTraComboRamos').getStore().load({params:{'map1.cdunieco':this.getValue()}});
+                                	}
+                                }
+                            })
+                            ,Ext.create('Ext.form.field.ComboBox',
+                            {
+                                fieldLabel : 'Producto'
+                                ,id         : 'mesConNueTraComboRamos'
+                                ,name       : 'smap1.pv_cdramo_i'
+                                ,allowBlank : false
+                                ,editable   : false
+                                ,valueField   : 'cdramo'
+                                ,displayField : 'dsramo'
+                                ,forceSelection : true
+                                ,queryMode      :'local'
+                                ,store : Ext.create('Ext.data.Store', {
+                                    model:'Ramo',
+                                    autoLoad : false,
+                                    proxy:
+                                    {
+                                        type: 'ajax',
+                                        url : mesConUrlLoadRamos,
+                                        reader:
+                                        {
+                                            type: 'json',
+                                            root: 'slist1'
+                                        }
+                                    }
+                                })
+                                ,listeners : 
+                                {
+                                    'change' : function ()
+                                    {
+                                        Ext.getCmp('mesConNueTraComboTipsit').getStore().load({params:{'map1.cdramo':this.getValue()}});
+                                    }
+                                }
+                            })
+                            ,Ext.create('Ext.form.field.ComboBox',
+                            {
+                                fieldLabel  : 'Modalidad'
+                                ,id         : 'mesConNueTraComboTipsit'
+                                ,name       : 'smap1.pv_cdtipsit_i'
+                                ,allowBlank : false
+                                ,editable   : false
+                                ,valueField   : 'CDTIPSIT'
+                                ,displayField : 'DSTIPSIT'
+                                ,forceSelection : true
+                                ,queryMode      :'local'
                                     ,store : Ext.create('Ext.data.Store', {
-                                        model:'Generic',
-                                        autoLoad:true,
+                                        model:'Tipsit',
+                                        autoLoad : false,
                                         proxy:
                                         {
                                             type: 'ajax',
-                                            url:mesConUrlLoadCatalo,
-                                            extraParams:{catalogo:'<s:property value="CON_CAT_MESACONTROL_SUCUR_DOCU" />'},
+                                            url : mesConUrlLoadTipsit,
                                             reader:
                                             {
                                                 type: 'json',
-                                                root: 'lista'
+                                                root: 'slist1'
                                             }
                                         }
                                     })
@@ -738,6 +829,7 @@ Ext.onReady(function(){
                                 ,valueField   : 'key'
                                 ,forceSelection : true
                                 ,matchFieldWidth: false
+                                ,hideTrigger : true
                                 ,minChars  : 3
                                 ,queryMode :'remote'
                                 ,queryParam: 'smap1.pv_cdagente_i'
@@ -824,8 +916,8 @@ Ext.onReady(function(){
 	                                    {
 	                                        params :
 	                                        {
-	                                            'smap1.pv_cdunieco_i' : '1',
-	                                            'smap1.pv_cdramo_i'   : '2',
+	                                            //'smap1.pv_cdunieco_i' : '1',
+	                                            //'smap1.pv_cdramo_i'   : '2',
 	                                            'smap1.pv_estado_i'   : 'W',
 	                                            'smap1.pv_nmsuplem_i' : '0'
 	                                        },
