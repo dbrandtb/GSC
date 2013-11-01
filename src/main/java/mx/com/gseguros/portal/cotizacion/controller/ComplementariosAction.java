@@ -851,13 +851,16 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			Map<String,String> mapaTarificacion=new HashMap<String,String>(0);
 	        mapaTarificacion.put("pv_cdusuari_i",   usuario.getUser());
 	        mapaTarificacion.put("pv_cdelemen_i",   usuario.getEmpresa().getElementoId());
-	        mapaTarificacion.put("pv_cdunieco_i",   datosUsuario.getCdunieco());
-	        mapaTarificacion.put("pv_cdramo_i",     datosUsuario.getCdramo());
+	        //mapaTarificacion.put("pv_cdunieco_i",   datosUsuario.getCdunieco());
+	        //mapaTarificacion.put("pv_cdramo_i",     datosUsuario.getCdramo());
+	        mapaTarificacion.put("pv_cdunieco_i",   cdunieco);
+	        mapaTarificacion.put("pv_cdramo_i",     cdramo);
 	        mapaTarificacion.put("pv_estado_i",     "W");
 	        mapaTarificacion.put("pv_nmpoliza_i",   panel1.get("nmpoliza"));
 	        mapaTarificacion.put("pv_nmsituac_i",   "0");
 	        mapaTarificacion.put("pv_nmsuplem_i",   "0");
-	        mapaTarificacion.put("pv_cdtipsit_i",   datosUsuario.getCdtipsit());
+	        //mapaTarificacion.put("pv_cdtipsit_i",   datosUsuario.getCdtipsit());
+	        mapaTarificacion.put("pv_cdtipsit_i",   cdtipsit);
 	        mx.com.aon.portal.util.WrapperResultados wr4=kernelManager.ejecutaASIGSVALIPOL_EMI(mapaTarificacion);
 	        /*////////////////////////////*/
 	        ////// retarifica         //////
@@ -897,8 +900,10 @@ public class ComplementariosAction extends PrincipalCoreAction implements
             pv_cdusuari
             /**/
 			Map<String,String>paramObtenerPoliza=new LinkedHashMap<String,String>(0);
-			paramObtenerPoliza.put("pv_cdunieco" , datosUsuario.getCdunieco());
-			paramObtenerPoliza.put("pv_cdramo"   , datosUsuario.getCdramo());
+			//paramObtenerPoliza.put("pv_cdunieco" , datosUsuario.getCdunieco());
+			//paramObtenerPoliza.put("pv_cdramo"   , datosUsuario.getCdramo());
+			paramObtenerPoliza.put("pv_cdunieco" , cdunieco);
+			paramObtenerPoliza.put("pv_cdramo"   , cdramo);
 			paramObtenerPoliza.put("pv_estado"   , "W");
 			paramObtenerPoliza.put("pv_nmpoliza" , panel1.get("nmpoliza"));
 			paramObtenerPoliza.put("pv_cdusuari" , usuario.getUser());
@@ -923,8 +928,10 @@ public class ComplementariosAction extends PrincipalCoreAction implements
             "fesolici","cdramant","cdmejred","nmpoldoc","nmpoliza2","nmrenove","nmsuplee","ttipcamc","ttipcamv","swpatent
 			*/
 			Map<String,String>paramDetallePoliza=new LinkedHashMap<String,String>(0);
-			paramDetallePoliza.put("pv_cdunieco_i" , datosUsuario.getCdunieco());
-			paramDetallePoliza.put("pv_cdramo_i"   , datosUsuario.getCdramo());
+			//paramDetallePoliza.put("pv_cdunieco_i" , datosUsuario.getCdunieco());
+			//paramDetallePoliza.put("pv_cdramo_i"   , datosUsuario.getCdramo());
+			paramDetallePoliza.put("pv_cdunieco_i" , cdunieco);
+			paramDetallePoliza.put("pv_cdramo_i"   , cdramo);
 			paramDetallePoliza.put("pv_estado_i"   , "W");
 			paramDetallePoliza.put("pv_nmpoliza_i" , panel1.get("nmpoliza"));
 			paramDetallePoliza.put("pv_cdplan_i"   , null);
@@ -1001,8 +1008,10 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			//obtener poliza completa
             /**/
 			Map<String,String>paramObtenerPoliza=new LinkedHashMap<String,String>(0);
-			paramObtenerPoliza.put("pv_cdunieco" , datUs.getCdunieco());
-			paramObtenerPoliza.put("pv_cdramo"   , datUs.getCdramo());
+			//paramObtenerPoliza.put("pv_cdunieco" , datUs.getCdunieco());
+			//paramObtenerPoliza.put("pv_cdramo"   , datUs.getCdramo());
+			paramObtenerPoliza.put("pv_cdunieco" , panel2.get("pv_cdunieco"));
+			paramObtenerPoliza.put("pv_cdramo"   , panel2.get("pv_cdramo"));
 			paramObtenerPoliza.put("pv_estado"   , "W");
 			paramObtenerPoliza.put("pv_nmpoliza" , panel1.get("pv_nmpoliza"));
 			paramObtenerPoliza.put("pv_cdusuari" , us.getUser());
@@ -1027,14 +1036,16 @@ public class ComplementariosAction extends PrincipalCoreAction implements
             */
 			Map<String,Object>paramEmi=new LinkedHashMap<String,Object>(0);
 			paramEmi.put("pv_cdusuari"  , us.getUser());
-			paramEmi.put("pv_cdunieco"  , datUs.getCdunieco());
-			paramEmi.put("pv_cdramo"    , datUs.getCdramo());
+			//paramEmi.put("pv_cdunieco"  , datUs.getCdunieco());
+			//paramEmi.put("pv_cdramo"    , datUs.getCdramo());
+			paramEmi.put("pv_cdunieco"  , panel2.get("pv_cdunieco"));
+			paramEmi.put("pv_cdramo"    , panel2.get("pv_cdramo"));
 			paramEmi.put("pv_estado"    , "W");
 			paramEmi.put("pv_nmpoliza"  , panel1.get("pv_nmpoliza"));
 			paramEmi.put("pv_nmsituac"  , "1");
 			paramEmi.put("pv_nmsuplem"  , "0");
 			paramEmi.put("pv_cdelement" , us.getEmpresa().getElementoId()); 
-			paramEmi.put("pv_cdcia"     , datUs.getCdunieco());
+			paramEmi.put("pv_cdcia"     , panel2.get("pv_cdunieco"));
 			paramEmi.put("pv_cdplan"    , null);
 			paramEmi.put("pv_cdperpag"  , (String)polizaCompleta.get("cdperpag"));
 			paramEmi.put("pv_cdperson"  , datUs.getCdperson());
@@ -1042,14 +1053,16 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			paramEmi.put("pv_ntramite"  , panel1.get("pv_ntramite"));
 			mx.com.aon.portal.util.WrapperResultados wr=kernelManager.emitir(paramEmi);
 			log.debug("emision obtenida "+wr.getItemMap());
-			panel2=new HashMap<String,String>(0);
+			//panel2=new HashMap<String,String>(0);
 			panel2.put("nmpoliza",(String)wr.getItemMap().get("nmpoliza"));
 			panel2.put("nmpoliex",(String)wr.getItemMap().get("nmpoliex"));
 			/**/
 			
 			Map<String,String>paramsGetDoc=new LinkedHashMap<String,String>(0);
-			paramsGetDoc.put("pv_cdunieco_i" , datUs.getCdunieco());
-			paramsGetDoc.put("pv_cdramo_i"   , datUs.getCdramo());
+			//paramsGetDoc.put("pv_cdunieco_i" , datUs.getCdunieco());
+			//paramsGetDoc.put("pv_cdramo_i"   , datUs.getCdramo());panel2.get("pv_cdunieco")
+			paramsGetDoc.put("pv_cdunieco_i" , panel2.get("pv_cdunieco"));
+			paramsGetDoc.put("pv_cdramo_i"   , panel2.get("pv_cdramo"));
 			paramsGetDoc.put("pv_estado_i"   , "M");
 			paramsGetDoc.put("pv_nmpoliza_i" , panel2.get("nmpoliza"));
 			paramsGetDoc.put("pv_nmsuplem_i" , "0");
@@ -1070,8 +1083,8 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 						+ "&report="+descripl
 						+ "&paramform=no"
 						+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
-						+ "&p_unieco=1"
-						+ "&p_ramo=2"
+						+ "&p_unieco="+panel2.get("pv_cdunieco")
+						+ "&p_ramo="+panel2.get("pv_cdramo")
 						+ "&p_estado='M'"
 						+ "&p_poliza="+panel2.get("nmpoliza")
 						+ "&desname="+rutaCarpeta+"/"+descripc;
@@ -1102,6 +1115,11 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			String cdtipsitGS = "213";
 			String sucursal = "1000";
 			String edoPoliza = "M";
+			
+			//parche para que no cambie el codigo de hector
+			datUs.setCdunieco("1");
+			datUs.setCdramo("2");
+			//
 			
 			logger.debug(">>>>>>>>>>>>>>>>>>>>>>>>>> Parametros para WS de cliente y recibos: <<<<<<<<<<<<<<<<<<<<<<< ");
 			logger.debug(">>>>>>>>>> cdunieco: "+ datUs.getCdunieco());
