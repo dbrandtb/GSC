@@ -280,6 +280,14 @@
         		<action name="buscarPersonasRepetidas" class="beanDatosComplementarios" method="buscarPersonasRepetidas">
         		    <result name="success" type="json" />
         		</action>
+        		
+        		<action name="obtenerRamos" class="beanDatosComplementarios" method="obtenerRamos">
+                    <result name="success" type="json" />
+                </action>
+                
+                <action name="obtenerTipsit" class="beanDatosComplementarios" method="obtenerTipsit">
+                    <result name="success" type="json" />
+                </action>
                 
     </package>
 
