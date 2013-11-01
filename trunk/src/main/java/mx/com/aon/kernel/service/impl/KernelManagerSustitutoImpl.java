@@ -761,4 +761,26 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         log.debug("### kernel borrarMpersona mesage:"+res.getMsgText());
 		return res;
 	}
+	
+	public List<Map<String, String>> obtenerRamos(String cdunieco) throws ApplicationException
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>(0);
+		params.put("pv_cdunieco_i",cdunieco);
+		log.debug("### kernel sustituto obtenerRamos map: "+params);
+        List<Map<String,String>> lista= this.getAllBackBoneInvoke(params, ProcesoDAO.OBTENER_RAMOS);
+        lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
+        log.debug("### kernel sustituto obtenerRamos lista size: "+lista.size());
+        return lista;
+	}
+	
+	public List<Map<String, String>> obtenerTipsit(String cdramo) throws ApplicationException
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>(0);
+		params.put("pv_cdramo_i",cdramo);
+		log.debug("### kernel sustituto obtenerTipsit map: "+params);
+        List<Map<String,String>> lista= this.getAllBackBoneInvoke(params, ProcesoDAO.OBTENER_TIPSIT);
+        lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
+        log.debug("### kernel sustituto obtenerTipsit lista size: "+lista.size());
+        return lista;
+	}
 }
