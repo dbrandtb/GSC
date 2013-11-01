@@ -18,6 +18,7 @@
 	var inputCdramop2=   '<s:property value="map1.cdramo" />';
 	var inputEstadop2=   '<s:property value="map1.estado" />';
 	var inputNmpolizap2= '<s:property value="map1.nmpoliza" />';
+	var inputCdtipsitp2= '<s:property value="map1.cdtipsit" />';
 	var _URL_OBTEN_CATALOGO_GENERICOp2='<s:url action="jsonObtenCatalogoGenerico" namespace="/" />';
 	var CDATRIBU_ROLp2='<s:property value="cdatribuRol" />';
 	var gridPersonasp2;
@@ -1615,7 +1616,7 @@ debug("validarYGuardar flag:2");
                             ,'smap1.cdramo'   : inputCdramop2
                             ,'smap1.estado'   : inputEstadop2
                             ,'smap1.nmpoliza' : inputNmpolizap2
-                            ,'smap1.cdtipsit' : 'SL'
+                            ,'smap1.cdtipsit' : inputCdtipsitp2
                             ,'smap1.agrupado' : 'no'
                             ,'smap1.nmsituac' : record.get('nmsituac')
                         }
