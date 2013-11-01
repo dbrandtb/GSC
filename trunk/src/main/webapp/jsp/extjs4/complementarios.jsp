@@ -120,7 +120,7 @@
 		                                Ext.create('Ext.form.TextField', {
 		                                    id:'companiaAseguradora',//id3
 		                                    name:'panel1.dsciaaseg',
-		                                    fieldLabel: 'Compa&ntilde;&iacute;a aseguradora',
+		                                    fieldLabel: 'Sucursal',
 		                                    /*store:Ext.create('Ext.data.Store', {
 		                                        model: 'Generic',
 		                                        data : [{key:'20',value:'General de seguros'}]
