@@ -36,7 +36,7 @@ public class JsonGenericList extends PrincipalCoreAction
     {
         try
         {
-            lista=combosManager2.obtenCatalogoSaludVital("", "SL", cdatribu, idPadre!=null&&idPadre.length()>0?idPadre:null);
+            lista=combosManager2.obtenCatalogoSaludVital("", cdtipsit, cdatribu, idPadre!=null&&idPadre.length()>0?idPadre:null);
         }
         catch(Exception ex)
         {
