@@ -157,7 +157,7 @@ Ext.onReady(function(){
         {
             type: 'ajax',
             url : _URL_OBTEN_CATALOGO_GENERICO,
-            extraParams:{cdatribu:CDATRIBU_SEXO},
+            extraParams:{cdatribu:CDATRIBU_SEXO,cdtipsit:inputCdtipsit},
             reader:
             {
                 type: 'json',
@@ -174,7 +174,7 @@ Ext.onReady(function(){
         {
             type: 'ajax',
             url : _URL_OBTEN_CATALOGO_GENERICO,
-            extraParams:{cdatribu:CDATRIBU_ESTADO},
+            extraParams:{cdatribu:CDATRIBU_ESTADO,cdtipsit:inputCdtipsit},
             reader:
             {
                 type: 'json',
@@ -198,7 +198,7 @@ Ext.onReady(function(){
         {
             type: 'ajax',
             url : _URL_OBTEN_CATALOGO_GENERICO,
-            extraParams:{cdatribu:CDATRIBU_MUNICIPIO},
+            extraParams:{cdatribu:CDATRIBU_MUNICIPIO,cdtipsit:inputCdtipsit},
             reader:
             {
                 type: 'json',
@@ -245,7 +245,7 @@ Ext.onReady(function(){
         {
             type: 'ajax',
             url : _URL_OBTEN_CATALOGO_GENERICO,
-            extraParams:{cdatribu:CDATRIBU_DEDUCIBLE},
+            extraParams:{cdatribu:CDATRIBU_DEDUCIBLE,cdtipsit:inputCdtipsit},
             reader:
             {
                 type: 'json',
@@ -262,7 +262,7 @@ Ext.onReady(function(){
         {
             type: 'ajax',
             url : _URL_OBTEN_CATALOGO_GENERICO,
-            extraParams:{cdatribu:CDATRIBU_COPAGO},
+            extraParams:{cdatribu:CDATRIBU_COPAGO,cdtipsit:inputCdtipsit},
             reader:
             {
                 type: 'json',
@@ -279,7 +279,7 @@ Ext.onReady(function(){
         {
             type: 'ajax',
             url : _URL_OBTEN_CATALOGO_GENERICO,
-            extraParams:{cdatribu:CDATRIBU_SUMA_ASEGURADA},
+            extraParams:{cdatribu:CDATRIBU_SUMA_ASEGURADA,cdtipsit:inputCdtipsit},
             reader:
             {
                 type: 'json',
@@ -296,7 +296,7 @@ Ext.onReady(function(){
         {
             type: 'ajax',
             url : _URL_OBTEN_CATALOGO_GENERICO,
-            extraParams:{cdatribu:CDATRIBU_CIRCULO_HOSPITALARIO},
+            extraParams:{cdatribu:CDATRIBU_CIRCULO_HOSPITALARIO,cdtipsit:inputCdtipsit},
             reader:
             {
                 type: 'json',
@@ -320,7 +320,7 @@ Ext.onReady(function(){
         {
             type: 'ajax',
             url : _URL_OBTEN_CATALOGO_GENERICO,
-            extraParams:{cdatribu:CDATRIBU_COBERTURA_VACUNAS},
+            extraParams:{cdatribu:CDATRIBU_COBERTURA_VACUNAS,cdtipsit:inputCdtipsit},
             reader:
             {
                 type: 'json',
@@ -337,7 +337,7 @@ Ext.onReady(function(){
         {
             type: 'ajax',
             url : _URL_OBTEN_CATALOGO_GENERICO,
-            extraParams:{cdatribu:CDATRIBU_COBERTURA_PREV_ENF_ADULTOS},
+            extraParams:{cdatribu:CDATRIBU_COBERTURA_PREV_ENF_ADULTOS,cdtipsit:inputCdtipsit},
             reader:
             {
                 type: 'json',
@@ -354,7 +354,7 @@ Ext.onReady(function(){
         {
             type: 'ajax',
             url : _URL_OBTEN_CATALOGO_GENERICO,
-            extraParams:{cdatribu:CDATRIBU_MATERNIDAD},
+            extraParams:{cdatribu:CDATRIBU_MATERNIDAD,cdtipsit:inputCdtipsit},
             reader:
             {
                 type: 'json',
@@ -371,7 +371,7 @@ Ext.onReady(function(){
         {
             type: 'ajax',
             url : _URL_OBTEN_CATALOGO_GENERICO,
-            extraParams:{cdatribu:CDATRIBU_SUMA_ASEGUARADA_MATERNIDAD},
+            extraParams:{cdatribu:CDATRIBU_SUMA_ASEGUARADA_MATERNIDAD,cdtipsit:inputCdtipsit},
             reader:
             {
                 type: 'json',
@@ -388,7 +388,7 @@ Ext.onReady(function(){
         {
             type: 'ajax',
             url : _URL_OBTEN_CATALOGO_GENERICO,
-            extraParams:{cdatribu:CDATRIBU_BASE_TABULADOR_REEMBOLSO},
+            extraParams:{cdatribu:CDATRIBU_BASE_TABULADOR_REEMBOLSO,cdtipsit:inputCdtipsit},
             reader:
             {
                 type: 'json',
@@ -405,7 +405,7 @@ Ext.onReady(function(){
         {
             type: 'ajax',
             url : _URL_OBTEN_CATALOGO_GENERICO,
-            extraParams:{cdatribu:CDATRIBU_COSTO_EMERGENCIA_EXTRANJERO},
+            extraParams:{cdatribu:CDATRIBU_COSTO_EMERGENCIA_EXTRANJERO,cdtipsit:inputCdtipsit},
             reader:
             {
                 type: 'json',
@@ -422,7 +422,7 @@ Ext.onReady(function(){
         {
             type: 'ajax',
             url : _URL_OBTEN_CATALOGO_GENERICO,
-            extraParams:{cdatribu:CDATRIBU_COB_ELIM_PEN_CAMBIO_ZONA},
+            extraParams:{cdatribu:CDATRIBU_COB_ELIM_PEN_CAMBIO_ZONA,cdtipsit:inputCdtipsit},
             reader:
             {
                 type: 'json',
@@ -439,7 +439,7 @@ Ext.onReady(function(){
         {
             type: 'ajax',
             url : _URL_OBTEN_CATALOGO_GENERICO,
-            extraParams:{cdatribu:CDATRIBU_ROL},
+            extraParams:{cdatribu:CDATRIBU_ROL,cdtipsit:inputCdtipsit},
             reader:
             {
                 type: 'json',
@@ -1103,7 +1103,8 @@ Ext.onReady(function(){
                     comprarCdperpag:selected_record.get('cdPerpag'),
                     comprarCdramo:selected_record.get('cdRamo'),
                     comprarCdciaaguradora:selected_record.get('cdCiaaseg'),
-                    comprarCdunieco:selected_record.get('cdUnieco')
+                    comprarCdunieco:selected_record.get('cdUnieco'),
+                    cdtipsit:inputCdtipsit
                     ,'smap1.fechaInicio'   : Ext.Date.format(Ext.getCmp('fechaInicioVigencia').getValue(), 'd/m/Y')
                     ,'smap1.fechaFin'      : Ext.Date.format(Ext.getCmp('fechaFinVigencia').getValue(), 'd/m/Y')
                     ,'smap1.nombreTitular' : nombreTitular
@@ -1156,8 +1157,8 @@ Ext.onReady(function(){
                     						,autoLoad : true
                     						,params   :
                     						{
-                    							'smap1.cdunieco'   : '1',
-                    							'smap1.cdramo'     : '2',
+                    							'smap1.cdunieco'   : inputCdunieco,
+                    							'smap1.cdramo'     : inputCdramo,
                     							'smap1.estado'     : 'W',
                     							'smap1.nmpoliza'   : Ext.getCmp('idCotizacion').getValue(),
                     							'smap1.nmsuplem'   : '0',
@@ -1201,11 +1202,12 @@ Ext.onReady(function(){
                 		            	,standardSubmit : true
                 		            	,params         :
                 		            	{
-                		            		cdunieco  : '1'
-                		            		,cdramo   : '2'
+                		            		cdunieco  : inputCdunieco
+                		            		,cdramo   : inputCdramo
                 		            		,estado   : 'W'
                 		            		,nmpoliza : Ext.getCmp('idCotizacion').getValue()
                 		            		,'map1.ntramite' : ntramiteCargado
+                		            		,cdtipsit : inputCdtipsit
                 		            	}
                 		            });
                     			}
@@ -1550,8 +1552,8 @@ Ext.onReady(function(){
                     var urlRequestImpCotiza=urlImprimirCotiza+'?p_cdplan='+selected_cd_plan
                     +'&p_estado=W'
                     +'&p_poliza='+Ext.getCmp('idCotizacion').getValue()
-                    +'&p_ramo=2'
-                    +'&p_unieco=1'
+                    +'&p_unieco='+inputCdunieco
+                    +'&p_ramo='+inputCdramo
                     +'&destype=cache'
 					+"&desformat=PDF"
 					+"&userid="+repSrvUsr
@@ -1631,8 +1633,8 @@ Ext.onReady(function(){
             			    					,archivos : urlImprimirCotiza+'?p_cdplan='+selected_cd_plan
             		                            +"&p_estado='W'"
             		                            +'&p_poliza='+Ext.getCmp('idCotizacion').getValue()
-            		                            +'&p_ramo=2'
-            		                            +'&p_unieco=1'
+            		                            +'&p_unieco='+inputCdunieco
+            		                            +'&p_ramo='+inputCdramo
             		                            +'&destype=cache'
             		    						+"&desformat=PDF"
             		    						+"&userid="+repSrvUsr
@@ -2373,7 +2375,25 @@ Ext.onReady(function(){
         model:'CotizacionSalud',
         items:
         [
-            {
+			{
+				xtype   : 'textfield'
+			    ,name   : 'cdunieco'
+				,value  : inputCdunieco
+				,hidden : true
+			}
+            ,{
+            	xtype   : 'textfield'
+            	,name   : 'cdramo'
+            	,value  : inputCdramo
+            	,hidden : true
+            }
+            ,{
+            	xtype   : 'textfield'
+        		,name   : 'cdtipsit'
+    			,value  : inputCdtipsit
+    			,hidden : true
+            }
+            ,{
             	id:'ntramite'
                 ,xtype      : 'textfield'
             	,fieldLabel : 'N&uacute;mero de tr&aacute;mite'
@@ -2721,8 +2741,8 @@ Ext.onReady(function(){
 	        	,url      : urlDocumentosTramite
 	        	,params   :
 	        	{
-	        		'smap1.cdunieco'  : '1'
-	        		,'smap1.cdramo'   : '2'
+	        		'smap1.cdunieco'  : inputCdunieco
+	        		,'smap1.cdramo'   : inputCdramo
 	        		,'smap1.estado'   : 'W'
 	        		,'smap1.nmpoliza' : '0'
 	        		,'smap1.nmsuplem' : '0'
