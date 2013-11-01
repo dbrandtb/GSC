@@ -62,6 +62,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 	private String cdramo;
 	private String estado;
 	private String nmpoliza;
+	private String cdtipsit;
 	private boolean success = true;
 	private ScreenInterceptor scrInt = new ScreenInterceptor();
 	SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
@@ -1400,6 +1401,35 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 				);
 		return SUCCESS;
 	}
+	
+	public String obtenerRamos()
+	{
+		try
+		{
+			slist1=kernelManager.obtenerRamos(map1.get("cdunieco"));
+		}
+		catch(Exception ex)
+		{
+			log.error("error al obtener los ramos",ex);
+		}
+		success=true;
+		return SUCCESS;
+	}
+	
+	public String obtenerTipsit()
+	{
+		try
+		{
+			slist1=kernelManager.obtenerTipsit(map1.get("cdramo"));
+		}
+		catch(Exception ex)
+		{
+			log.error("error al obtener los tipsit",ex);
+		}
+		success=true;
+		return SUCCESS;
+	}
+	
 	/////////////////////////////////
 	////// getters ans setters //////
 	/*/////////////////////////////*/
@@ -1675,6 +1705,14 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 
 	public void setMensajeRespuesta(String mensajeRespuesta) {
 		this.mensajeRespuesta = mensajeRespuesta;
+	}
+
+	public String getCdtipsit() {
+		return cdtipsit;
+	}
+
+	public void setCdtipsit(String cdtipsit) {
+		this.cdtipsit = cdtipsit;
 	}
 
 }
