@@ -30,6 +30,7 @@
             var inputEstado='<s:property value="estado" />';
             var inputNmpoliza='<s:property value="nmpoliza" />';
             var inputNtramite='<s:property value='map1.ntramite' />';
+            var inputCdtipsit='<s:property value='cdtipsit' />';
             debug("inputNtramite",inputNtramite);
             var urlEditarAsegurados='<s:url namespace="/" action="editarAsegurados" />';
             var contexto='${ctx}';
@@ -1184,7 +1185,8 @@
                                     'map1.cdunieco' :  inputCdunieco,
                                     'map1.cdramo' :    inputCdramo,
                                     'map1.estado' :    inputEstado,
-                                    'map1.nmpoliza' :  inputNmpoliza
+                                    'map1.nmpoliza' :  inputNmpoliza,
+                                    'map1.cdtipsit' :  inputCdtipsit
                                 }
                         		,scripts:true
                         		,autoLoad:true
@@ -1211,7 +1213,7 @@
                                     ,'smap1.cdramo'   : inputCdramo
                                     ,'smap1.estado'   : inputEstado
                                     ,'smap1.nmpoliza' : inputNmpoliza
-                                    ,'smap1.cdtipsit' : 'SL'
+                                    ,'smap1.cdtipsit' : inputCdtipsit
                                     ,'smap1.agrupado' : 'si'
                                 }
                                 ,scripts  : true
