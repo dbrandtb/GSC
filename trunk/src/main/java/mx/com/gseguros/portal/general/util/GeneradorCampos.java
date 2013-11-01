@@ -95,6 +95,7 @@ public class GeneradorCampos {
             	proxy.add(
                         Item.crear("extraParams", null, Item.OBJ)
                         .add("cdatribu",ta.getCdatribu())
+                        .add("cdtipsit",cdtipsit)
                         );
             }
             else if(ta.getType().equals(Tatri.TATRIPOL))
