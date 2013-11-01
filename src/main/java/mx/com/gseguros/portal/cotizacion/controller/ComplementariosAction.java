@@ -709,12 +709,19 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			///////////////////////////////////////////////
 			////// para borrar los mpoliper anterior //////
 			/*///////////////////////////////////////////*/
-			Map<String,String> param=new LinkedHashMap<String,String>(0);
-			param.put("pv_cdunieco_i",	map1.get("pv_cdunieco"));
-			param.put("pv_cdramo_i",	map1.get("pv_cdramo"));
-			param.put("pv_estado_i",	map1.get("pv_estado"));
-			param.put("pv_nmpoliza_i",	map1.get("pv_nmpoliza"));
-			kernelManager.borrarMpoliper(param);
+			try
+			{
+				Map<String,String> param=new LinkedHashMap<String,String>(0);
+				param.put("pv_cdunieco_i",	map1.get("pv_cdunieco"));
+				param.put("pv_cdramo_i",	map1.get("pv_cdramo"));
+				param.put("pv_estado_i",	map1.get("pv_estado"));
+				param.put("pv_nmpoliza_i",	map1.get("pv_nmpoliza"));
+				kernelManager.borrarMpoliper(param);
+			}
+			catch(Exception ex)
+			{
+				log.error("error cachado, no hay personas que borrar, pero no afecta.",ex);
+			}
 			/*///////////////////////////////////////////*/
 			////// para borrar los mpoliper anterior //////
 			///////////////////////////////////////////////
