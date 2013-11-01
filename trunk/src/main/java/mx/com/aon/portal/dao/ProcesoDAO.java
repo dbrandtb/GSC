@@ -133,6 +133,8 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String OBTIENE_AGENTES="OBTIENE_AGENTES";
     public static final String BUSCAR_RFC="BUSCAR_RFC";
     public static final String BORRAR_MPERSONA="BORRAR_MPERSONA";
+    public static final String OBTENER_RAMOS="OBTENER_RAMOS";
+    public static final String OBTENER_TIPSIT="OBTENER_TIPSIT";
 
 	protected void initDao() throws Exception {
 		addStoredProcedure(PERMISO_EJECUCION_PROCESO,new PermisoEjecucionProceso(getDataSource()));
@@ -213,6 +215,8 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(OBTIENE_AGENTES,new ObtieneAgentes(getDataSource()));
         addStoredProcedure(BUSCAR_RFC,new BuscarRFC(getDataSource()));
         addStoredProcedure(BORRAR_MPERSONA,new BorrarMPoliper(getDataSource()));
+        addStoredProcedure(OBTENER_RAMOS,new ObtenerRamos(getDataSource()));
+        addStoredProcedure(OBTENER_TIPSIT,new ObtenerTipsit(getDataSource()));
 	}
 
 	protected class BuscarMatrizAsignacion extends CustomStoredProcedure {
@@ -2695,6 +2699,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			declareParameter(new SqlParameter("pv_status_i",        OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_comments_i",      OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmsolici_i",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsit_i",      OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_tramite_o", 	OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o", 	OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o", 		OracleTypes.VARCHAR));
@@ -3237,7 +3242,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 		{
 			String cols[]=new String[]{"ntramite","cdunieco","cdramo","estado","nmpoliza",
 					"nmsolici","cdsucadm","cdsucdoc","cdsubram","cdtiptra","ferecepc","cdagente",
-					"Nombre_agente","referencia","nombre","fecstatu","status","comments"};
+					"Nombre_agente","referencia","nombre","fecstatu","status","comments","cdtipsit"};
 			Map<String,String> map=new HashMap<String,String>(0);
 			for(String col:cols)
 			{
@@ -3797,4 +3802,98 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	/*/////////////////////////*/
 	////// borrar mpoliper //////
 	/////////////////////////////
+	
+	//////////////////////////////////////
+	////// obtener ramos x cdunieco //////
+	/*//////////////////////////////////*/
+	public class ObtenerRamos extends CustomStoredProcedure
+	{
+		protected ObtenerRamos(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_OBT_RAMO_X_CDUNIECO");
+			declareParameter(new SqlParameter("pv_cdunieco_i",    OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerRamosMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
+		}
+	
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception
+		{
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			WrapperResultados wrapperResultados = mapper.build(map);
+			List result = (List) map.get("pv_registro_o");
+			wrapperResultados.setItemList(result);
+			return wrapperResultados;
+		}
+	}
+	
+	protected class ObtenerRamosMapper implements RowMapper {
+		public Object mapRow(ResultSet rs, int rowNum) throws SQLException
+		{
+			String cols[]=new String[]{"cdramo","dsramo"};
+			Map<String,String> map=new HashMap<String,String>(0);
+			for(String col:cols)
+			{
+				if(col!=null&&col.substring(0,2).equalsIgnoreCase("fe"))
+				{
+					map.put(col,Utilerias.formateaFecha(rs.getString(col)));
+				}
+				else
+				{
+					map.put(col,rs.getString(col));
+				}
+			}	
+			return map;
+		}
+	}
+	/*//////////////////////////////////*/
+	////// obtener ramos x cdunieco //////
+	//////////////////////////////////////
+	
+	///////////////////////////////////
+	////// obtener tipsit x ramo //////
+	/*///////////////////////////////*/
+	public class ObtenerTipsit extends CustomStoredProcedure
+	{
+		protected ObtenerTipsit(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_OBTIENE_SITUACION");
+			declareParameter(new SqlParameter("pv_cdramo_i",    OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerTipsitMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
+		}
+	
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception
+		{
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			WrapperResultados wrapperResultados = mapper.build(map);
+			List result = (List) map.get("pv_registro_o");
+			wrapperResultados.setItemList(result);
+			return wrapperResultados;
+		}
+	}
+	
+	protected class ObtenerTipsitMapper implements RowMapper {
+		public Object mapRow(ResultSet rs, int rowNum) throws SQLException
+		{
+			String cols[]=new String[]{"CDTIPSIT","DSTIPSIT"};
+			Map<String,String> map=new HashMap<String,String>(0);
+			for(String col:cols)
+			{
+				if(col!=null&&col.substring(0,2).equalsIgnoreCase("fe"))
+				{
+					map.put(col,Utilerias.formateaFecha(rs.getString(col)));
+				}
+				else
+				{
+					map.put(col,rs.getString(col));
+				}
+			}	
+			return map;
+		}
+	}
+	/*///////////////////////////////*/
+	////// obtener tipsit x ramo //////
+	///////////////////////////////////
 }
