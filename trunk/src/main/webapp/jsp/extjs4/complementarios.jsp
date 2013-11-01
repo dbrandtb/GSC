@@ -548,6 +548,9 @@
 		                                    ,params :
 		                                    {
 		                                        'panel1.nmpoliza' : inputNmpoliza
+		                                        ,cdunieco         : inputCdunieco
+		                                        ,cdramo           : inputCdramo
+		                                        ,cdtipsit         : inputCdtipsit
 		                                    }
 		                                    ,success : function(response)
 		                                    {
@@ -668,6 +671,7 @@
 		                                                                        ,'panel2.pv_cdunieco' : inputCdunieco
 		                                                                        ,'panel2.pv_estado'   : inputEstado
 		                                                                        ,'panel2.pv_nmpoliza' : inputNmpoliza
+		                                                                        ,'panel2.pv_cdtipsit' : inputCdtipsit
 		                                                            		}
 		                                                            	    ,success:function(response)
 		                                                            	    {
