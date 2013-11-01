@@ -131,6 +131,7 @@ public class MesaControlAction extends PrincipalCoreAction implements Constantes
 			}
 			omap.put("pv_ferecepc_i",new Date());
 			omap.put("pv_festatus_i",new Date());
+			omap.put("pv_cdunieco_i",omap.get("pv_cdsucdoc_i"));
 			WrapperResultados res = kernelManager.PMovMesacontrol(omap);
 			if(res.getItemMap() == null)log.error("Sin mensaje respuesta de nmtramite!!");
 			else msgResult = (String) res.getItemMap().get("ntramite");
