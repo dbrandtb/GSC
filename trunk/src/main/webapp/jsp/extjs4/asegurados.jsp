@@ -73,6 +73,10 @@
             <s:if test='%{user!=null&&user.equalsIgnoreCase(getText("usuario.solo.cotiza"))}'>
                 cotizacionUserSoloCotiza=true;
             </s:if>
+            var inputCdunieco='<s:property value="cdunieco" />';
+            var inputCdramo  ='<s:property value="cdramo" />';
+            var inputCdtipsit='<s:property value="cdtipsit" />';
+            debug('cdunieco,cdramo,cdtipsit',inputCdunieco,inputCdramo,inputCdtipsit);
             debug('hayTramiteCargado '+(hayTramiteCargado?'true':'false'));
             debug('ntramiteCargado: '+ntramiteCargado);
             debug('solo cotiza: '+cotizacionUserSoloCotiza);
