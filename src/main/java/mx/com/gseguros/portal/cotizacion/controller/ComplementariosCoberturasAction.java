@@ -964,6 +964,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 			smap1.put("timestamp",""+System.currentTimeMillis());
 			List<Tatri>tatrisit=kernelManager.obtenerTatrisit(smap1.get("cdtipsit"));
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			gc.setCdtipsit(smap1.get("cdtipsit"));
 			List<Tatri>tatriTemp=new ArrayList<Tatri>(0);
 			boolean agrupado=smap1.containsKey("agrupado")&&smap1.get("agrupado").equalsIgnoreCase("SI");
 			for(Tatri t:tatrisit)
