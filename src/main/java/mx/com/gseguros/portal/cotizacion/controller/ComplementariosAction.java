@@ -1123,14 +1123,16 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			String sucursal = "1000";
 			String edoPoliza = "M";
 			
+			String _cdunieco = panel2.get("pv_cdunieco");
+			String _cdramo = panel2.get("pv_cdramo");
+			
 			//parche para que no cambie el codigo de hector
-			datUs.setCdunieco("1");
-			datUs.setCdramo("2");
-			//
+//			datUs.setCdunieco("1");
+//			datUs.setCdramo("2");
 			
 			logger.debug(">>>>>>>>>>>>>>>>>>>>>>>>>> Parametros para WS de cliente y recibos: <<<<<<<<<<<<<<<<<<<<<<< ");
-			logger.debug(">>>>>>>>>> cdunieco: "+ datUs.getCdunieco());
-			logger.debug(">>>>>>>>>> cdramo: "+ datUs.getCdramo());
+			logger.debug(">>>>>>>>>> cdunieco: "+ _cdunieco);
+			logger.debug(">>>>>>>>>> cdramo: "+ _cdramo);
 			logger.debug(">>>>>>>>>> estado: "+ edoPoliza);
 			logger.debug(">>>>>>>>>> nmpoliza: "+ (String)wr.getItemMap().get("nmpoliza"));
 			logger.debug(">>>>>>>>>> suplemento: "+ (String)wr.getItemMap().get("nmsuplem"));
@@ -1139,34 +1141,25 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			logger.debug(">>>>>>>>>> nmsolici: "+ panel1.get("pv_nmpoliza"));
 			logger.debug(">>>>>>>>>> nmtramite: "+ panel1.get("pv_ntramite"));
 			
-			if(!ejecutaWSclienteSalud(datUs.getCdunieco(), datUs.getCdramo(), edoPoliza, (String)wr.getItemMap().get("nmpoliza"), (String)wr.getItemMap().get("nmsuplem"))){
+			if(!ejecutaWSclienteSalud(_cdunieco, _cdramo, edoPoliza, (String)wr.getItemMap().get("nmpoliza"), (String)wr.getItemMap().get("nmsuplem"))){
 				logger.error("NO SE HA EJECUTADO CORRECTAMENTE EL WS DE CLIENTE SALUD!!! PRIMER INTENTO, POLIZA:" + (String)wr.getItemMap().get("nmpoliza"));
 			
-				if(!ejecutaWSclienteSalud(datUs.getCdunieco(), datUs.getCdramo(), edoPoliza, (String)wr.getItemMap().get("nmpoliza"), (String)wr.getItemMap().get("nmsuplem"))){
+				if(!ejecutaWSclienteSalud(_cdunieco, _cdramo, edoPoliza, (String)wr.getItemMap().get("nmpoliza"), (String)wr.getItemMap().get("nmsuplem"))){
 					logger.error("NO SE HA EJECUTADO CORRECTAMENTE EL WS DE CLIENTE SALUD!!! SEGUNDO INTENTO, POLIZA:" + (String)wr.getItemMap().get("nmpoliza"));
 					mensajeRespuesta = "No se ha ejecutado correctamente el WS para el guardado del ClienteSalud";
-				}else{
-					if(!ejecutaWSrecibos(datUs.getCdunieco(), datUs.getCdramo(),
-							edoPoliza, (String)wr.getItemMap().get("nmpoliza"),
-							(String)wr.getItemMap().get("nmsuplem"), rutaCarpeta,
-							cdtipsitGS, sucursal, panel1.get("pv_nmpoliza"),panel1.get("pv_ntramite")
-							)){
-						logger.error("NO SE HAN INSERTADO TODOS LOS RECIBOS!!! EN ICE2SIGS, DE LA POLIZA: " + (String)wr.getItemMap().get("nmpoliza"));
-						mensajeRespuesta = "No se han ejecutado correctamente los WS para el guardado de los recibos";
-					}
 				}
 			
-			}else{
-				
-				if(!ejecutaWSrecibos(datUs.getCdunieco(), datUs.getCdramo(),
-						edoPoliza, (String)wr.getItemMap().get("nmpoliza"),
-						(String)wr.getItemMap().get("nmsuplem"), rutaCarpeta,
-						cdtipsitGS, sucursal, panel1.get("pv_nmpoliza"),panel1.get("pv_ntramite")
-						)){
-					logger.error("NO SE HAN INSERTADO TODOS LOS RECIBOS!!! EN ICE2SIGS, DE LA POLIZA: " + (String)wr.getItemMap().get("nmpoliza"));
-					mensajeRespuesta = "No se han ejecutado correctamente los WS para el guardado de los recibos";
-				}
 			}
+				
+			if(!ejecutaWSrecibos(_cdunieco, _cdramo,
+					edoPoliza, (String)wr.getItemMap().get("nmpoliza"),
+					(String)wr.getItemMap().get("nmsuplem"), rutaCarpeta,
+					cdtipsitGS, sucursal, panel1.get("pv_nmpoliza"),panel1.get("pv_ntramite")
+					)){
+				logger.error("NO SE HAN INSERTADO TODOS LOS RECIBOS!!! EN ICE2SIGS, DE LA POLIZA: " + (String)wr.getItemMap().get("nmpoliza"));
+				mensajeRespuesta = "No se han ejecutado correctamente los WS para el guardado de los recibos";
+			}
+			
 				
 			log.debug("se inserta detalle nuevo para emision");
         	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
@@ -1377,19 +1370,25 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 		ClienteSalud cliente =  null;
 		try {
 			result = kernelManager.obtenDatosClienteWS(params);
-			cliente = ((ArrayList<ClienteSalud>) result.getItemList()).get(0);
+			if(result.getItemList() != null && result.getItemList().size() > 0){
+				cliente = ((ArrayList<ClienteSalud>) result.getItemList()).get(0);
+			}
+			
 		} catch (Exception e1) {
 			logger.error("Error en llamar al PL de obtencion de ejecutaWSclienteSalud",e1);
 			return false;
 		}
 		
-		try{
-			ClienteSaludRespuesta resultadoR = ice2sigsWebServices.ejecutaClienteSaludGS(Operacion.INSERTA, cliente, this.getText("url.ws.ice2sigs"));
-			logger.debug("Resultado de insertar el cliente salud: " + cliente.getClaveCli()+ " - " + resultadoR.getMensaje());
-			if( 0 != resultadoR.getCodigo()) exito = false;
-		}catch(Exception e){
-			logger.error("Error al insertar el cliente: " + cliente.getClaveCli(), e);
-			exito = false;
+		
+		if(cliente != null){
+			try{
+				ClienteSaludRespuesta resultadoR = ice2sigsWebServices.ejecutaClienteSaludGS(Operacion.INSERTA, cliente, this.getText("url.ws.ice2sigs"));
+				logger.debug("Resultado de insertar el cliente salud: " + cliente.getClaveCli()+ " - " + resultadoR.getMensaje());
+				if( 0 != resultadoR.getCodigo()) exito = false;
+			}catch(Exception e){
+				logger.error("Error al insertar el cliente: " + cliente.getClaveCli(), e);
+				exito = false;
+			}
 		}
 
 		return exito;
