@@ -45,10 +45,15 @@
 		<action name="cotizarSaludVital" class="cotizaSaludVitalAction" method="cotizaSaludVital">
 		  <result name="success">/jsp/extjs4/asegurados.jsp</result>
         </action>
+        
         <action name="accesoDirecto" class="cotizaSaludVitalAction" method="accesoDirecto">
-		  <result name="cotizadorSaludVital">/jsp/extjs4/asegurados.jsp</result>
-		  <result name="consultasSaludVital">/jsp/consultas/containerConsultasPolizas.jsp</result>
-		  <result name="error">/jsp/portal/login.jsp</result>
+		    <result name="cotizadorSaludVital" type="redirectAction">
+                <param name="actionName">cotizacionVital</param>
+                <param name="namespace">/</param>
+                <param name="cdtipsit">${cdtipsit}</param>
+            </result>
+		    <result name="consultasSaludVital">/jsp/consultas/containerConsultasPolizas.jsp</result>
+		    <result name="error">/jsp/portal/login.jsp</result>
         </action>
 
 		<action name="pruebaWSweblogic" class="cotizaSaludVitalAction" method="pruebaWSweblogic">
