@@ -1120,7 +1120,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
 			 */
 			String cdtipsitGS = "213";
-			String sucursal = "1000";
+			String sucursal = panel2.get("pv_cdunieco");
 			String edoPoliza = "M";
 			
 			String _cdunieco = panel2.get("pv_cdunieco");
