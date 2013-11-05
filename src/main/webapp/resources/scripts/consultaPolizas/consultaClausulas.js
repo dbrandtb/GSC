@@ -210,7 +210,7 @@ Ext.onReady(function() {
         	                				,blankText:'El nombre de la cl&aacute;usula es un dato requerido'
         				            	}
         				    	        ,{
-        				    	            xtype: 'htmleditor'
+        				    	            xtype: 'textarea'
         			    	            	,fieldLabel: 'Descripci&oacute;n'
         		    	            		,labelWidth: 150
         		    	            		,width: 750
@@ -317,7 +317,7 @@ Ext.onReady(function() {
     			    		                				,blankText:'El nombre de la cl&aacute;usula es un dato requerido'
     			    					            	}
     			    					    	        ,{
-    			    					    	            xtype: 'htmleditor'
+    			    					    	            xtype: 'textarea'
     			    					    	            ,id:"idContenido"	
     			    				    	            	,fieldLabel: 'Descripci&oacute;n'
     			    			    	            		,labelWidth: 150
