@@ -260,7 +260,7 @@ Ext.onReady(function(){
                                                     ,height      : 400
                                                     ,items       :
                                                     [
-                                                        Ext.create('Ext.form.HtmlEditor', {
+                                                        Ext.create('Ext.form.field.TextArea', {
                                                             id        : 'venExcluHtmlInputCopy'
                                                             ,width    : 580
                                                             ,height   : 380
@@ -585,7 +585,7 @@ Ext.onReady(function(){
                                     ,height      : 400
                                     ,items       :
                                     [
-                                        Ext.create('Ext.form.HtmlEditor', {
+                                        Ext.create('Ext.form.field.TextArea', {
                                             id        : 'venExcluHtmlInputEdit'
                                             ,width    : 580
                                             ,height   : 380
