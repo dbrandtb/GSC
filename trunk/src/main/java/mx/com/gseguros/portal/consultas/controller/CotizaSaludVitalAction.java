@@ -75,6 +75,7 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
     private String _codigoCliente = null;
     private boolean codigoValido;
     private int numReg;
+    private String cdtipsit;
 
 
     
@@ -516,6 +517,18 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
 	public void setUser(String user) {
 		this.user = user;
 	}
+
+
+	public String getCdtipsit() {
+		return cdtipsit;
+	}
+
+
+	public void setCdtipsit(String cdtipsit) {
+		this.cdtipsit = cdtipsit;
+	}
+	
+	
 
     
 }
