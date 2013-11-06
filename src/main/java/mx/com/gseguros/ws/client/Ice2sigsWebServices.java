@@ -42,6 +42,22 @@ public interface Ice2sigsWebServices {
 		}
 
 	}
+	
+	public enum Estatus {
+		
+		EXITO(0), LLAVE_DUPLICADA(1);
+		
+		private int estatus;
+		
+		private Estatus(int estatus) {
+			this.estatus = estatus;
+		}
+		
+		public int getEstatus() {
+			return estatus;
+		}
+		
+	}
 
 	public PolizaRespuesta ejecutaPolizaGS(Operacion operacion,
 			Poliza poliza, String endpoint) throws Exception;
