@@ -880,7 +880,7 @@ debug("validarYGuardar flag:2");
                                                                                    debug(record);
                                                                                    gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdrfc",record.get("RFCCLI"));
                                                                                    gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdperson",record.get("CLAVECLI"));
-                                                                                   gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("swexiper",'Y');
+                                                                                   gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("swexiper",'S');
                                                                                    grid.up().up().destroy();
                                                                                }
                                                                            }
@@ -994,7 +994,7 @@ debug("validarYGuardar flag:2");
 			            		    		    	                               debug(record);
 			            		    		    	                               gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdrfc",record.get("RFCCLI"));
 			            		    		    	                               gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdperson",record.get("CLAVECLI"));
-			            		    		    	                               gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("swexiper",'Y');
+			            		    		    	                               gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("swexiper",'S');
 			            		    		    	                               grid.up().up().destroy();
 			            		    		    	                           }
 		            		    		    	                           }
