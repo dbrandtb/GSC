@@ -34,14 +34,6 @@
     </bean>
     
     <!-- Beans utilizados para JdbcTemplates: -->
-    <bean id="processResultManager" class="mx.com.aon.portal.service.ProcessResultManager">
-    </bean>
-
-    <bean id="abstractManagerBean" abstract="true" class="mx.com.aon.portal.service.impl.AbstractManager">
-        <property name="processResultManager">
-            <ref bean="processResultManager"/>
-        </property>
-    </bean>
 
     <bean id="processResultManagerJdbcTemplate" class="mx.com.aon.portal.service.ProcessResultManagerJdbcTemplate">
         <property name="abstractDAO">
