@@ -47,14 +47,14 @@ public interface Ice2sigsWebServices {
 		
 		EXITO(0), LLAVE_DUPLICADA(1);
 		
-		private int estatus;
+		private int codigo;
 		
-		private Estatus(int estatus) {
-			this.estatus = estatus;
+		private Estatus(int codigo) {
+			this.codigo = codigo;
 		}
-		
-		public int getEstatus() {
-			return estatus;
+
+		public int getCodigo() {
+			return codigo;
 		}
 		
 	}
