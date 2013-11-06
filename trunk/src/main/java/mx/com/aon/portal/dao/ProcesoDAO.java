@@ -1855,6 +1855,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		r.put("Parentesco",		    rs.getString("Parentesco"));
     		r.put("tpersona",           otfisjur);
     		r.put("nacional",           cdnacion);
+    		r.put("swexiper",           rs.getString("swexiper"));
     		return r;
     	}
     }
@@ -2411,6 +2412,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			declareParameter(new SqlParameter("pv_nmorddom_i", 		OracleTypes.VARCHAR));// IN  MPOLIPER.nmorddom%TYPE DEFAULT NULL,
 			declareParameter(new SqlParameter("pv_swreclam_i", 		OracleTypes.VARCHAR));// IN  MPOLIPER.swreclam%TYPE DEFAULT NULL,
 			declareParameter(new SqlParameter("pv_accion_i", 		OracleTypes.VARCHAR));//
+			declareParameter(new SqlParameter("pv_swexiper_i", 		OracleTypes.VARCHAR));//
 	
 			declareParameter(new SqlOutParameter("pv_msg_id_o", 	OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o", 		OracleTypes.VARCHAR));
