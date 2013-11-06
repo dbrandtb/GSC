@@ -336,6 +336,7 @@
                                         fenacimi: typeof recordContApart.get('fenacimi')=='string'?recordContApart.get('fenacimi'):Ext.Date.format(recordContApart.get('fenacimi'), 'd/m/Y'),
                                         sexo:typeof recordContApart.get('sexo')=='string'?recordContApart.get('sexo'):recordContApart.get('sexo').get('key'),
                                         cdperson:recordContApart.get('cdperson'),
+                                        swexiper:recordContApart.get('swexiper'),
                                         nombre: recordContApart.get('nombre'),
                                         segundo_nombre: recordContApart.get('segundo_nombre'),
                                         Apellido_Paterno: recordContApart.get('Apellido_Paterno'),
@@ -396,6 +397,7 @@
                                             fenacimi: typeof recordAsegu.get('fenacimi')=='string'?recordAsegu.get('fenacimi'):Ext.Date.format(recordAsegu.get('fenacimi'), 'd/m/Y'),
                                             sexo:typeof recordAsegu.get('sexo')=='string'?recordAsegu.get('sexo'):recordAsegu.get('sexo').get('key'),
                                             cdperson:recordAsegu.get('cdperson'),
+                                            swexiper:recordAsegu.get('swexiper'),
                                             nombre: recordAsegu.get('nombre'),
                                             segundo_nombre: recordAsegu.get('segundo_nombre'),
                                             Apellido_Paterno: recordAsegu.get('Apellido_Paterno'),
@@ -412,6 +414,7 @@
                                         fenacimi: typeof recordAsegu.get('fenacimi')=='string'?recordAsegu.get('fenacimi'):Ext.Date.format(recordAsegu.get('fenacimi'), 'd/m/Y'),
                                         sexo:typeof recordAsegu.get('sexo')=='string'?recordAsegu.get('sexo'):recordAsegu.get('sexo').get('key'),
                                         cdperson: recordAsegu.get('cdperson'),
+                                        swexiper: recordAsegu.get('swexiper'),
                                         nombre: recordAsegu.get('nombre'),
                                         segundo_nombre: recordAsegu.get('segundo_nombre'),
                                         Apellido_Paterno: recordAsegu.get('Apellido_Paterno'),
@@ -486,6 +489,7 @@
                                                                             fenacimi: typeof recordContApar2.get('fenacimi')=='string'?recordContApar2.get('fenacimi'):Ext.Date.format(recordContApar2.get('fenacimi'), 'd/m/Y'),
                                                                             sexo:typeof recordContApar2.get('sexo')=='string'?recordContApar2.get('sexo'):recordContApar2.get('sexo').get('key'),
                                                                             cdperson: recordContApar2.get('cdperson'),
+                                                                            swexiper: recordContApar2.get('swexiper'),
                                                                             nombre: recordContApar2.get('nombre'),
                                                                             segundo_nombre: recordContApar2.get('segundo_nombre'),
                                                                             Apellido_Paterno: recordContApar2.get('Apellido_Paterno'),
@@ -506,6 +510,7 @@
                                                                                 fenacimi: typeof recordAsegu2.get('fenacimi')=='string'?recordAsegu2.get('fenacimi'):Ext.Date.format(recordAsegu2.get('fenacimi'), 'd/m/Y'),
                                                                                 sexo:typeof recordAsegu2.get('sexo')=='string'?recordAsegu2.get('sexo'):recordAsegu2.get('sexo').get('key'),
                                                                                 cdperson: recordAsegu2.get('cdperson'),
+                                                                                swexiper: recordAsegu2.get('swexiper'),
                                                                                 nombre: recordAsegu2.get('nombre'),
                                                                                 segundo_nombre: recordAsegu2.get('segundo_nombre'),
                                                                                 Apellido_Paterno: recordAsegu2.get('Apellido_Paterno'),
@@ -521,6 +526,7 @@
                                                                             fenacimi: typeof recordAsegu2.get('fenacimi')=='string'?recordAsegu2.get('fenacimi'):Ext.Date.format(recordAsegu2.get('fenacimi'), 'd/m/Y'),
                                                                             sexo:typeof recordAsegu2.get('sexo')=='string'?recordAsegu2.get('sexo'):recordAsegu2.get('sexo').get('key'),
                                                                             cdperson: recordAsegu2.get('cdperson'),
+                                                                            swexiper: recordAsegu2.get('swexiper'),
                                                                             nombre: recordAsegu2.get('nombre'),
                                                                             segundo_nombre: recordAsegu2.get('segundo_nombre'),
                                                                             Apellido_Paterno: recordAsegu2.get('Apellido_Paterno'),
@@ -816,6 +822,8 @@ debug("validarYGuardar flag:2");
             {
                 'change' : function( field )
                 {
+                	gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdperson",'');
+                	gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("swexiper",'N');
                     if(field.getValue().length>9)
                     {
                         clearTimeout(timeoutBuscarRFCBp2);
@@ -872,6 +880,7 @@ debug("validarYGuardar flag:2");
                                                                                    debug(record);
                                                                                    gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdrfc",record.get("RFCCLI"));
                                                                                    gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdperson",record.get("CLAVECLI"));
+                                                                                   gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("swexiper",'Y');
                                                                                    grid.up().up().destroy();
                                                                                }
                                                                            }
@@ -927,6 +936,8 @@ debug("validarYGuardar flag:2");
             {
             	'change' : function( field )
             	{
+            		gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdperson",'');
+            		gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("swexiper",'N');
             		if(field.getValue().length>9)
             		{
             			clearTimeout(timeoutBuscarRFCBp2);
@@ -983,6 +994,7 @@ debug("validarYGuardar flag:2");
 			            		    		    	                               debug(record);
 			            		    		    	                               gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdrfc",record.get("RFCCLI"));
 			            		    		    	                               gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdperson",record.get("CLAVECLI"));
+			            		    		    	                               gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("swexiper",'Y');
 			            		    		    	                               grid.up().up().destroy();
 			            		    		    	                           }
 		            		    		    	                           }
@@ -1257,6 +1269,7 @@ debug("validarYGuardar flag:2");
                                         recordCont.set('nmsituac','0');
                                         recordCont.set('cdrfc','');
                                         recordCont.set('cdperson','');
+                                        recordCont.set('swexiper','N');
                                         debug('se reinicia',recordCont);
 	                        		}
 	                        	}
@@ -1731,6 +1744,7 @@ debug("validarYGuardar flag:2");
                                         fenacimi: typeof recordContApart.get('fenacimi')=='string'?recordContApart.get('fenacimi'):Ext.Date.format(recordContApart.get('fenacimi'), 'd/m/Y'),
                                         sexo:typeof recordContApart.get('sexo')=='string'?recordContApart.get('sexo'):recordContApart.get('sexo').get('key'),
                                         cdperson:recordContApart.get('cdperson'),
+                                        swexiper:recordContApart.get('swexiper'),
                                         nombre: recordContApart.get('nombre'),
                                         segundo_nombre: recordContApart.get('segundo_nombre'),
                                         Apellido_Paterno: recordContApart.get('Apellido_Paterno'),
@@ -1791,6 +1805,7 @@ debug("validarYGuardar flag:2");
 	                                        fenacimi: typeof recordAsegu.get('fenacimi')=='string'?recordAsegu.get('fenacimi'):Ext.Date.format(recordAsegu.get('fenacimi'), 'd/m/Y'),
 	                                        sexo:typeof recordAsegu.get('sexo')=='string'?recordAsegu.get('sexo'):recordAsegu.get('sexo').get('key'),
 	                                        cdperson:recordAsegu.get('cdperson'),
+	                                        swexiper:recordAsegu.get('swexiper'),
 	                                        nombre: recordAsegu.get('nombre'),
 	                                        segundo_nombre: recordAsegu.get('segundo_nombre'),
 	                                        Apellido_Paterno: recordAsegu.get('Apellido_Paterno'),
@@ -1807,6 +1822,7 @@ debug("validarYGuardar flag:2");
 	                                    fenacimi: typeof recordAsegu.get('fenacimi')=='string'?recordAsegu.get('fenacimi'):Ext.Date.format(recordAsegu.get('fenacimi'), 'd/m/Y'),
 	                                    sexo:typeof recordAsegu.get('sexo')=='string'?recordAsegu.get('sexo'):recordAsegu.get('sexo').get('key'),
 	                                    cdperson: recordAsegu.get('cdperson'),
+	                                    swexiper: recordAsegu.get('swexiper'),
 	                                    nombre: recordAsegu.get('nombre'),
 	                                    segundo_nombre: recordAsegu.get('segundo_nombre'),
 	                                    Apellido_Paterno: recordAsegu.get('Apellido_Paterno'),
@@ -1881,6 +1897,7 @@ debug("validarYGuardar flag:2");
                                                                             fenacimi: typeof recordContApar2.get('fenacimi')=='string'?recordContApar2.get('fenacimi'):Ext.Date.format(recordContApar2.get('fenacimi'), 'd/m/Y'),
                                                                             sexo:typeof recordContApar2.get('sexo')=='string'?recordContApar2.get('sexo'):recordContApar2.get('sexo').get('key'),
                                                                             cdperson: recordContApar2.get('cdperson'),
+                                                                            swexiper: recordContApar2.get('swexiper'),
                                                                             nombre: recordContApar2.get('nombre'),
                                                                             segundo_nombre: recordContApar2.get('segundo_nombre'),
                                                                             Apellido_Paterno: recordContApar2.get('Apellido_Paterno'),
@@ -1901,6 +1918,7 @@ debug("validarYGuardar flag:2");
                                                                                 fenacimi: typeof recordAsegu2.get('fenacimi')=='string'?recordAsegu2.get('fenacimi'):Ext.Date.format(recordAsegu2.get('fenacimi'), 'd/m/Y'),
                                                                                 sexo:typeof recordAsegu2.get('sexo')=='string'?recordAsegu2.get('sexo'):recordAsegu2.get('sexo').get('key'),
                                                                                 cdperson: recordAsegu2.get('cdperson'),
+                                                                                swexiper: recordAsegu2.get('swexiper'),
                                                                                 nombre: recordAsegu2.get('nombre'),
                                                                                 segundo_nombre: recordAsegu2.get('segundo_nombre'),
                                                                                 Apellido_Paterno: recordAsegu2.get('Apellido_Paterno'),
@@ -1916,6 +1934,7 @@ debug("validarYGuardar flag:2");
                                                                             fenacimi: typeof recordAsegu2.get('fenacimi')=='string'?recordAsegu2.get('fenacimi'):Ext.Date.format(recordAsegu2.get('fenacimi'), 'd/m/Y'),
                                                                             sexo:typeof recordAsegu2.get('sexo')=='string'?recordAsegu2.get('sexo'):recordAsegu2.get('sexo').get('key'),
                                                                             cdperson: recordAsegu2.get('cdperson'),
+                                                                            swexiper: recordAsegu2.get('swexiper'),
                                                                             nombre: recordAsegu2.get('nombre'),
                                                                             segundo_nombre: recordAsegu2.get('segundo_nombre'),
                                                                             Apellido_Paterno: recordAsegu2.get('Apellido_Paterno'),
