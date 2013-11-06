@@ -378,8 +378,8 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 					.add(new Item("type", "boolean"))
 					);
 			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "Parentesco")));
+			item1.add(Item.crear(null, null, Item.OBJ).add(new Item("name", "swexiper")));
 			log.debug("Modelo armado para persona: "+item1.toString());
-			
 			/*
 			nmsituac
     		cdrol
@@ -491,6 +491,12 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			item3.add(Item.crear(null, null, Item.OBJ)
 					.add(new Item("header", "cdrol"))
 					.add(new Item("dataIndex", "cdrol"))
+					.add(new Item("flex", 1))
+					.add(Item.crear("hidden",true))
+					);
+			item3.add(Item.crear(null, null, Item.OBJ)
+					.add(new Item("header", "swexiper"))
+					.add(new Item("dataIndex", "swexiper"))
 					.add(new Item("flex", 1))
 					.add(Item.crear("hidden",true))
 					);
@@ -658,6 +664,12 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 					.add(new Item("flex", 1))
 					.add(Item.crear("hidden",true))
 					);
+			item2.add(Item.crear(null, null, Item.OBJ)
+					.add(new Item("header", "swexiper"))
+					.add(new Item("dataIndex", "swexiper"))
+					.add(new Item("flex", 1))
+					.add(Item.crear("hidden",true))
+					);
 		} catch (Exception ex) {
 			log.error("error al generar los campos dinamicos", ex);
 			item1 = null;
@@ -773,6 +785,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 				parametros.put("pv_nmorddom_i",	"1");
 				parametros.put("pv_swreclam_i",	null);
 				parametros.put("pv_accion_i",	"I");
+				parametros.put("pv_swexiper_i", (String)aseg.get("swexiper"));
 				log.debug("#iteracion mov mpoliper "+i);
 				if(((String)aseg.get("nmsituac")).equals("0"))
 				{
