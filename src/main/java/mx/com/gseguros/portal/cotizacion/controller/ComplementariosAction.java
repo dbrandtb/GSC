@@ -31,6 +31,7 @@ import mx.com.gseguros.portal.general.util.ConstantesCatalogos;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.ws.client.Ice2sigsWebServices;
+import mx.com.gseguros.ws.client.Ice2sigsWebServices.Estatus;
 import mx.com.gseguros.ws.client.Ice2sigsWebServices.Operacion;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSalud;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSaludRespuesta;
@@ -1311,13 +1312,13 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			try{
 				ReciboRespuesta resultadoR = ice2sigsWebServices.ejecutaReciboGS(Operacion.INSERTA, recibo, this.getText("url.ws.ice2sigs"));
 				logger.debug("WS Resultado de insertar el recibo: " + recibo.getNumRec()+ " - " + resultadoR.getMensaje());
-				if( 0 != resultadoR.getCodigo()) allInserted = false;
+				if( Estatus.EXITO.getEstatus() != resultadoR.getCodigo()) allInserted = false;
 			}catch(Exception e){
 				logger.error("WS PRIMER INTENTO Error al insertar el recibo: " + recibo.getNumRec(), e);
 				try{
 					ReciboRespuesta resultadoR = ice2sigsWebServices.ejecutaReciboGS(Operacion.INSERTA, recibo, this.getText("url.ws.ice2sigs"));
 					logger.debug("WS Resultado de insertar el recibo: " + recibo.getNumRec()+ " - " + resultadoR.getMensaje());
-					if( 0 != resultadoR.getCodigo()) allInserted = false;
+					if( Estatus.EXITO.getEstatus() != resultadoR.getCodigo()) allInserted = false;
 				}catch(Exception e2){
 					logger.error("WS SEGUNDO INTENTO Error al insertar el recibo: " + recibo.getNumRec(), e2);
 					allInserted = false;
@@ -1397,7 +1398,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			try{
 				ClienteSaludRespuesta resultadoR = ice2sigsWebServices.ejecutaClienteSaludGS(Operacion.INSERTA, cliente, this.getText("url.ws.ice2sigs"));
 				logger.debug("Resultado de insertar el cliente salud: " + cliente.getClaveCli()+ " - " + resultadoR.getMensaje());
-				if( 0 != resultadoR.getCodigo()) exito = false;
+				if( Estatus.EXITO.getEstatus() != resultadoR.getCodigo() && Estatus.LLAVE_DUPLICADA.getEstatus() != resultadoR.getCodigo()) exito = false;
 			}catch(Exception e){
 				logger.error("Error al insertar el cliente: " + cliente.getClaveCli(), e);
 				exito = false;
