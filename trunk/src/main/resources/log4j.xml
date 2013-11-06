@@ -12,7 +12,7 @@
 	<appender name="app" class="org.apache.log4j.DailyRollingFileAppender">
 		<param name="File" value="/u01/wlserver/wllogs/gseguros/application.log" />
 		<param name="Threshold" value="TRACE" />
-		<param name="append" value="false" />
+		<param name="append" value="true" />
 		<param name="DatePattern" value="'.'yyyy-MM-dd" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%d{HH:mm:ss,SSS} [%6.6t] %5.5p %18C{1} %X - %m%n" />
@@ -22,7 +22,7 @@
 	<appender name="sql" class="org.apache.log4j.DailyRollingFileAppender">
 		<param name="File" value="/u01/wlserver/wllogs/gseguros/sql.log" />
 		<param name="Threshold" value="ERROR" />
-		<param name="append" value="false" />
+		<param name="append" value="true" />
 		<param name="DatePattern" value="'.'yyyy-MM-dd" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%d{HH:mm:ss,SSS} [%6.6t] %5.5p %C %X - %m%n" />
