@@ -642,7 +642,7 @@ debug("validarYGuardar flag:2");
 	        {
 	            type: 'ajax',
 	            url : _URL_OBTEN_CATALOGO_GENERICOp2,
-	            extraParams:{cdatribu:CDATRIBU_SEXOp2},
+	            extraParams:{cdatribu:CDATRIBU_SEXOp2,cdtipsit:inputCdtipsitp2},
 	            reader:
 	            {
 	                type: 'json',
@@ -789,6 +789,16 @@ debug("validarYGuardar flag:2");
    	        editable:false
    	    });
 	    
+	    editorGenerosBp2=Ext.create('Ext.form.ComboBox',
+        {
+            store: storeGenerosp2,
+            queryMode:'local',
+            displayField: 'value',
+            valueField: 'key',
+            allowBlank:false,
+            editable:false
+        });
+	    
 	    editorTpersonap2=Ext.create('Ext.form.ComboBox',
         {
             store: storeTpersonasp2,
@@ -799,7 +809,27 @@ debug("validarYGuardar flag:2");
             editable:false
         });
 	    
+	    editorTpersonaBp2=Ext.create('Ext.form.ComboBox',
+        {
+            store: storeTpersonasp2,
+            queryMode:'local',
+            displayField: 'value',
+            valueField: 'key',
+            allowBlank:false,
+            editable:false
+        });
+	    
 	    editorNacionesp2=Ext.create('Ext.form.ComboBox',
+        {
+            store: storeNacionesp2,
+            queryMode:'local',
+            displayField: 'value',
+            valueField: 'key',
+            allowBlank:false,
+            editable:false
+        });
+	    
+	    editorNacionesBp2=Ext.create('Ext.form.ComboBox',
         {
             store: storeNacionesp2,
             queryMode:'local',
