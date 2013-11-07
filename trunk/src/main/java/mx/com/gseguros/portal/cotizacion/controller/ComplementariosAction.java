@@ -36,6 +36,7 @@ import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSaludResp
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.Recibo;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboRespuesta;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 
 /**
@@ -1133,6 +1134,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			 */
 			String cdtipsitGS = "213";
 			String sucursal = panel2.get("pv_cdunieco");
+			if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 			String edoPoliza = "M";
 			
 			String _cdunieco = panel2.get("pv_cdunieco");
