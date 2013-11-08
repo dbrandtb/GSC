@@ -771,7 +771,9 @@ Ext.onReady(function(){
         allowBlank:false,
         editable:false,
         emptyText:'Seleccione...',
-        labelWidth:250
+        labelWidth:250,
+        value:inputCdtipsit=='SN'?'N':'',
+        hidden:inputCdtipsit=='SN'
     });
     
     //10 enfermedades adultos
@@ -787,7 +789,9 @@ Ext.onReady(function(){
         allowBlank:false,
         editable:false,
         emptyText:'Seleccione...',
-        labelWidth:250
+        labelWidth:250,
+        value:inputCdtipsit=='SN'?'N':'',
+        hidden:inputCdtipsit=='SN'
     });
     
     //11 maternidad
@@ -873,7 +877,9 @@ Ext.onReady(function(){
         allowBlank:false,
         editable:false,
         emptyText:'Seleccione...',
-        labelWidth:250
+        labelWidth:250,
+        value:inputCdtipsit=='SN'?'N':'',
+        hidden:inputCdtipsit=='SN'
     });
     
     //16 rol (GRID)
@@ -1554,6 +1560,8 @@ Ext.onReady(function(){
                     +'&p_poliza='+Ext.getCmp('idCotizacion').getValue()
                     +'&p_unieco='+inputCdunieco
                     +'&p_ramo='+inputCdramo
+                    +'&p_cdusuari='+sesionUsuarioUser
+                    +'&p_ntramite='+ntramiteCargado
                     +'&destype=cache'
 					+"&desformat=PDF"
 					+"&userid="+repSrvUsr
@@ -1635,6 +1643,8 @@ Ext.onReady(function(){
             		                            +'&p_poliza='+Ext.getCmp('idCotizacion').getValue()
             		                            +'&p_unieco='+inputCdunieco
             		                            +'&p_ramo='+inputCdramo
+            		                            +'&p_cdusuari='+sesionUsuarioUser
+            		                            +'&p_ntramite='+ntramiteCargado
             		                            +'&destype=cache'
             		    						+"&desformat=PDF"
             		    						+"&userid="+repSrvUsr
