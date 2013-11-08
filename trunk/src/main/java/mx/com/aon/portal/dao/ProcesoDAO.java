@@ -135,6 +135,7 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String BORRAR_MPERSONA="BORRAR_MPERSONA";
     public static final String OBTENER_RAMOS="OBTENER_RAMOS";
     public static final String OBTENER_TIPSIT="OBTENER_TIPSIT";
+    public static final String P_MOV_TBITACOBROS="P_MOV_TBITACOBROS";
 
 	protected void initDao() throws Exception {
 		addStoredProcedure(PERMISO_EJECUCION_PROCESO,new PermisoEjecucionProceso(getDataSource()));
@@ -217,6 +218,7 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(BORRAR_MPERSONA,new BorrarMPoliper(getDataSource()));
         addStoredProcedure(OBTENER_RAMOS,new ObtenerRamos(getDataSource()));
         addStoredProcedure(OBTENER_TIPSIT,new ObtenerTipsit(getDataSource()));
+        addStoredProcedure(P_MOV_TBITACOBROS,new MovBitacobros(getDataSource()));
 	}
 
 	protected class BuscarMatrizAsignacion extends CustomStoredProcedure {
@@ -2721,6 +2723,32 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	/*///////////////////////////*/
 	////// p mov mesacontrol //////
 	///////////////////////////////
+	
+	////////////////////////////////////
+	////// movimientos bitacobros //////
+	/*////////////////////////////////*/
+	protected class MovBitacobros extends CustomStoredProcedure {
+		protected MovBitacobros(DataSource dataSource) {
+			super(dataSource,"PKG_SATELITES.P_MOV_TBITACOBROS");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdcodigo_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_mensaje_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			return mapper.build(map);
+		}
+	}
+	////////////////////////////////////
+	////// movimientos bitacobros //////
+	/*////////////////////////////////*/
 	
 	/////////////////////////////////
 	////// p mov d mesacontrol //////
