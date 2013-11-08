@@ -73,6 +73,7 @@
             <s:if test='%{user!=null&&user.equalsIgnoreCase(getText("usuario.solo.cotiza"))}'>
                 cotizacionUserSoloCotiza=true;
             </s:if>
+            var sesionUsuarioUser = '<s:property value='%{session.get("USUARIO").getUser()}' />';
             var inputCdunieco='<s:property value="cdunieco" />';
             var inputCdramo  ='<s:property value="cdramo" />';
             var inputCdtipsit='<s:property value="cdtipsit" />';
@@ -80,6 +81,7 @@
             debug('hayTramiteCargado '+(hayTramiteCargado?'true':'false'));
             debug('ntramiteCargado: '+ntramiteCargado);
             debug('solo cotiza: '+cotizacionUserSoloCotiza);
+            debug('sesionUsuarioUser: '+sesionUsuarioUser);
         </script>
         <script src="${ctx}/resources/jsp-script/extjs4/asegurados.js"></script>
     </head>
