@@ -2,8 +2,8 @@ package mx.com.gseguros.ws.client.impl;
 
 import java.rmi.RemoteException;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 
 import mx.com.gseguros.ws.client.Ice2sigsWebServices;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub;
@@ -67,6 +67,7 @@ import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboGS;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboGSE;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboGSResponseE;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboRespuesta;
+import mx.com.gseguros.ws.client.ice2sigs.callback.ServicioGSServiceCallbackHandlerImpl;
 
 import org.apache.axis2.AxisFault;
 
@@ -74,7 +75,7 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 	private static org.apache.log4j.Logger logger = org.apache.log4j.Logger
 			.getLogger(Ice2sigsWebServicesImpl.class);
 
-	private static final long WS_TIMEOUT =  40000;
+	private static final long WS_TIMEOUT =  20000;
 	
 	/*public enum Operacion {
 
@@ -182,7 +183,7 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 	}
 
 	public ReciboRespuesta ejecutaReciboGS(Operacion operacion,
-			Recibo recibo, String endpoint) throws Exception {
+			Recibo recibo, String endpoint, HashMap<String, Object> params, boolean async) throws Exception {
 		
 		ReciboRespuesta resultado = null;
 		ServicioGSServiceStub stubGS = null;
@@ -206,8 +207,14 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 		reciboE.setReciboGS(reciboS);
 		
 		try {
-			RespuestaGS = stubGS.reciboGS(reciboE);
-			resultado = RespuestaGS.getReciboGSResponse().get_return();
+			if(async){
+				ServicioGSServiceCallbackHandlerImpl callback = new ServicioGSServiceCallbackHandlerImpl(params);
+				stubGS.startreciboGS(reciboE, callback);
+			} else {
+				RespuestaGS = stubGS.reciboGS(reciboE);
+				resultado = RespuestaGS.getReciboGSResponse().get_return();
+				logger.debug("Resultado sincrono para primer ejecucion de WS: "+resultado.getCodigo()+" - "+resultado.getMensaje());
+			}
 		} catch (RemoteException re) {
 			logger.error(re);
 			throw new Exception("Error de conexion: " + re.getMessage());
@@ -322,7 +329,7 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 	}
 	
 	public ClienteSaludRespuesta ejecutaClienteSaludGS(Operacion operacion,
-			ClienteSalud cliente, String endpoint) throws Exception {
+			ClienteSalud cliente, String endpoint, HashMap<String, Object> params, boolean async) throws Exception {
 		
 		ClienteSaludRespuesta resultado = null;
 		ServicioGSServiceStub stubGS = null;
@@ -346,8 +353,14 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 		clienteE.setClienteSaludGS(clienteS);
 		
 		try {
-			RespuestaGS = stubGS.clienteSaludGS(clienteE);
-			resultado = RespuestaGS.getClienteSaludGSResponse().get_return();
+			if(async){
+				ServicioGSServiceCallbackHandlerImpl callback = new ServicioGSServiceCallbackHandlerImpl(params);
+				stubGS.startclienteSaludGS(clienteE, callback);
+			} else {
+				RespuestaGS = stubGS.clienteSaludGS(clienteE);
+				resultado = RespuestaGS.getClienteSaludGSResponse().get_return();
+				logger.debug("Resultado sincrono para primer ejecucion de WS: "+resultado.getCodigo()+" - "+resultado.getMensaje());
+			}
 		} catch (RemoteException re) {
 			logger.error(re);
 			throw new Exception("Error de conexion: " + re.getMessage());

@@ -1,5 +1,7 @@
 package mx.com.gseguros.ws.client;
 
+import java.util.HashMap;
+
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.Agente;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteRespuesta;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteSalud;
@@ -63,7 +65,7 @@ public interface Ice2sigsWebServices {
 			Poliza poliza, String endpoint) throws Exception;
 
 	public ReciboRespuesta ejecutaReciboGS(Operacion operacion,
-			Recibo recibo, String endpoint) throws Exception;
+			Recibo recibo, String endpoint, HashMap<String, Object> params, boolean async) throws Exception;
 
 	public AgenteRespuesta ejecutaAgenteGS(Operacion operacion,
 			Agente agente, String endpoint) throws Exception;
@@ -75,7 +77,7 @@ public interface Ice2sigsWebServices {
 			Cliente cliente, String endpoint) throws Exception;
 	
 	public ClienteSaludRespuesta ejecutaClienteSaludGS(Operacion operacion,
-			ClienteSalud cliente, String endpoint) throws Exception;
+			ClienteSalud cliente, String endpoint, HashMap<String, Object> params, boolean async) throws Exception;
 			
 	public CcomisionRespuesta ejecutaComisionReciboAgenteGS(Operacion operacion,
 			Ccomision comisionReciboAgente, String endpoint) throws Exception;
