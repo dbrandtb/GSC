@@ -27,8 +27,10 @@ import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Tatri;
+import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.log4j.Logger;
+import org.springframework.jdbc.core.SqlParameter;
 
 /**
  *
@@ -229,6 +231,22 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         WrapperResultados res=this.returnBackBoneInvoke(parameters, ProcesoDAO.INSERTAR_DETALLE_SUPLEMEN);
         log.debug("### kernel sustituto movDetalleSuplemento id:"+res.getMsgId());
         log.debug("### kernel sustituto movDetalleSuplemento mesage:"+res.getMsgText());
+        return res;
+    }
+    
+    public WrapperResultados movBitacobro(String cdunieco,String cdramo,String estado,String poliza,String codigo,String mensaje) throws ApplicationException
+    {
+    	Map<String,String>parameters=new LinkedHashMap<String,String>(0);
+    	parameters.put("pv_cdunieco_i" , cdunieco);
+    	parameters.put("pv_cdramo_i"   , cdramo);
+    	parameters.put("pv_estado_i"   , estado);
+    	parameters.put("pv_nmpoliza_i" , poliza);
+    	parameters.put("pv_cdcodigo_i" , codigo);
+    	parameters.put("pv_mensaje_i"  , mensaje);
+    	log.debug("### kernel sustituto movBitacobro map: "+parameters);
+        WrapperResultados res=this.returnBackBoneInvoke(parameters, ProcesoDAO.P_MOV_TBITACOBROS);
+        log.debug("### kernel sustituto movBitacobro id:"+res.getMsgId());
+        log.debug("### kernel sustituto movBitacobro mesage:"+res.getMsgText());
         return res;
     }
 
