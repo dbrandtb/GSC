@@ -28,7 +28,7 @@ public class ServicioGSServiceCallbackHandlerImpl extends
 	@Override
 	public void receiveErrorclienteSaludGS(Exception e) {
 		logger.error("Error en WS clienteSalud: " + e.getMessage()
-				+ " Guardando en bitacora el error, getCause: " + e.getCause());
+				+ " Guardando en bitacora el error, getCause: " + e.getCause(),e);
 
 		HashMap<String, Object> params = (HashMap<String, Object>) this.clientData;
 
@@ -71,7 +71,7 @@ public class ServicioGSServiceCallbackHandlerImpl extends
 
 	@Override
 	public void receiveErrorreciboGS(Exception e) {
-		logger.error("Error en WS Recibo: " + e.getMessage() + " Guardando en bitacora el error, getCause: " + e.getCause());
+		logger.error("Error en WS Recibo: " + e.getMessage() + " Guardando en bitacora el error, getCause: " + e.getCause(),e);
 
 		HashMap<String, Object> params = (HashMap<String, Object>) this.clientData;
 
@@ -83,7 +83,7 @@ public class ServicioGSServiceCallbackHandlerImpl extends
 					(String) params.get("pv_estado_i"),
 					(String) params.get("pv_nmpoliza_i"),
 					"ErrWSrecCx",
-					"Error en Recibo " + (String) params.get("NumRec")
+					"Error en Recibo " + params.get("NumRec")
 							+ " Msg: " + e.getMessage() + " ***Cause: "
 							+ e.getCause());
 		} catch (Exception e1) {
@@ -108,7 +108,7 @@ public class ServicioGSServiceCallbackHandlerImpl extends
 						(String) params.get("pv_cdramo_i"),
 						(String) params.get("pv_estado_i"),
 						(String) params.get("pv_nmpoliza_i"), "ErrWSrec",
-						"Error en Recibo " + (String) params.get("NumRec")
+						"Error en Recibo " + params.get("NumRec")
 								+ " >>> " + respuesta.getCodigo() + " - "
 								+ respuesta.getMensaje());
 			} catch (ApplicationException e1) {
