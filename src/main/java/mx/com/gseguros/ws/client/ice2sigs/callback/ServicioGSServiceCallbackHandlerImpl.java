@@ -95,13 +95,14 @@ public class ServicioGSServiceCallbackHandlerImpl extends
 	public void receiveResultreciboGS(ReciboGSResponseE result) {
 		logger.debug("Comunicacion exitosa WS Recibo Salud");
 		ReciboRespuesta respuesta = result.getReciboGSResponse().get_return();
-		logger.debug("Resultado al ejecutar el WS Recibo: " + respuesta.getRecibo().getNumRec() + " >>>"
+		HashMap<String, Object> params = (HashMap<String, Object>) this.clientData;
+		
+		logger.debug("Resultado al ejecutar el WS Recibo: " + params.get("NumRec") + " >>>"
 				+ respuesta.getCodigo() + " - " + respuesta.getMensaje());
 
 		if (Estatus.EXITO.getCodigo() != respuesta.getCodigo()) {
 			logger.error("Guardando en bitacora el estatus");
 
-			HashMap<String, Object> params = (HashMap<String, Object>) this.clientData;
 			KernelManagerSustitutoImpl manager = (KernelManagerSustitutoImpl) params.get("MANAGER");
 			try {
 				manager.movBitacobro((String) params.get("pv_cdunieco_i"),
