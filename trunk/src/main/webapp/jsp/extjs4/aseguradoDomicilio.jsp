@@ -448,7 +448,8 @@ Ext.onReady(function(){
                 'smap1.pv_cdperson_i'   : inputCdpersonp4,
                 'smap1.pv_cdrol_i'      : inputCdrolp4,
                 'smap1.nombreAsegurado' : inputNombreaseguradop4,
-                'smap1.cdrfc'           : inputCdrfcp4
+                'smap1.cdrfc'           : inputCdrfcp4,
+                'smap1.pv_cdtipsit_i'   : inputCdtipsit
             },
             type:'ajax',
             url : urlCargarp4,
@@ -506,7 +507,8 @@ Ext.onReady(function(){
 	                        'smap1.pv_cdperson_i'   : record.get('cdperson'),
 	                        'smap1.pv_cdrol_i'      : '2',
 	                        'smap1.nombreAsegurado' : record.get('nombre')+' '+(record.get('segundo_nombre')?record.get('segundo_nombre')+' ':' ')+record.get('Apellido_Paterno')+' '+record.get('Apellido_Materno'),
-	                        'smap1.cdrfc'           : record.get('cdrfc')
+	                        'smap1.cdrfc'           : record.get('cdrfc'),
+	                        'smap1.pv_cdtipsit_i'   : inputCdtipsit
 	                    },
 	                    type:'ajax',
 	                    url : urlCargarp4,
