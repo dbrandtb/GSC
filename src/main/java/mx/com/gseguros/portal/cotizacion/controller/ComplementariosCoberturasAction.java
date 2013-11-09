@@ -723,7 +723,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
             */
 			smap1.put("pv_nmsuplem_i" , "0");
 			//smap1.put("pv_status_i"   , "V");
-			smap1.put("pv_cdtipsit_i" ,  datUsu.getCdtipsit());
+			//smap1.put("pv_cdtipsit_i" ,  datUsu.getCdtipsit());
 			Map<String,Object>parametrosCargados=null;
 			try
 			{
