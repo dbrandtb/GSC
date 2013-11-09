@@ -79,7 +79,8 @@
                         {name : 'cdtipcon'},
                         {name : 'nmsituac'},
                         {name : 'orden'},
-                        {name : 'parentesco'}
+                        {name : 'parentesco'},
+                        {name : 'orden_parentesco'}
                     ]
                 });
                 
@@ -558,6 +559,17 @@
 		                                        var json=Ext.decode(response.responseText);
 		                                        //console.log(json);
 		                                        /**/
+		                                        var orden=0;
+							                    var parentescoAnterior='qwerty';
+							                    for(var i=0;i<json.slist1.length;i++)
+							                    {
+							                        if(json.slist1[i].parentesco!=parentescoAnterior)
+							                        {
+							                            orden++;
+							                            parentescoAnterior=json.slist1[i].parentesco;
+							                        }
+							                        json.slist1[i].orden_parentesco=orden+'_'+json.slist1[i].parentesco;
+							                    }
 		                                        Ext.create('Ext.window.Window',
 		                                        {
 		                                            title: 'Tarifa final',
@@ -576,7 +588,16 @@
 		                                                Ext.create('Ext.grid.Panel',{
 		                                                    store:Ext.create('Ext.data.Store',{
 		                                                        model:'ModeloDetalleCotizacion',
-		                                                        groupField: 'parentesco',
+		                                                        groupField: 'orden_parentesco',
+		                                                        sorters: [{
+		                                                            sorterFn: function(o1, o2){
+		                                                                if (o1.get('orden') === o2.get('orden'))
+		                                                                {
+		                                                                    return 0;
+		                                                                }
+		                                                                return o1.get('orden') < o2.get('orden') ? -1 : 1;
+		                                                            }
+		                                                        }],
 		                                                        proxy: {
 		                                                            type: 'memory',
 		                                                            reader: 'json'
@@ -604,7 +625,16 @@
 		                                                        }
 		                                                    ],
 		                                                    features: [{
-		                                                        groupHeaderTpl: 'Parentezco: {name}',
+		                                                    	groupHeaderTpl:
+		                                                            [
+		                                                                '{name:this.formatName}',
+		                                                                {
+		                                                                    formatName:function(name)
+		                                                                    {
+		                                                                        return name.split("_")[1];
+		                                                                    }
+		                                                                }
+		                                                            ],
 		                                                        ftype:'groupingsummary',
 		                                                        startCollapsed :true
 		                                                    }]
