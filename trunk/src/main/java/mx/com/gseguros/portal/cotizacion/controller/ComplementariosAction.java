@@ -1248,7 +1248,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 		params.put("pv_cdramo_i", cdramo);
 		params.put("pv_estado_i", estado);
 		params.put("pv_nmpoliza_i", nmpoliza);
-		params.put("pv_nmsuplem_i", nmsuplem);//0
+		params.put("pv_nmsuplem_i", nmsuplem);
 		
 		WrapperResultados result = null;
 		ArrayList<Recibo> recibos =  null;
@@ -1263,8 +1263,11 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 		params.put("MANAGER", kernelManager);
 		for(Recibo recibo: recibos){
 			try{
-				params.put("NumRec", recibo.getNumRec());
-				ice2sigsWebServices.ejecutaReciboGS(Operacion.INSERTA, recibo, this.getText("url.ws.ice2sigs"), params, true);
+				// Se crea un HashMap por cada invocacion asincrona del WS, para evitar issue (sobreescritura de valores):
+				HashMap<String, Object> paramsBitacora = new HashMap<String, Object>();
+				paramsBitacora.putAll(params);
+				paramsBitacora.put("NumRec", recibo.getNumRec());
+				ice2sigsWebServices.ejecutaReciboGS(Operacion.INSERTA, recibo, this.getText("url.ws.ice2sigs"), paramsBitacora, true);
 			}catch(Exception e){
 				logger.error("Error al insertar recibo: "+recibo.getNumRec()+" tramite: "+ntramite);
 			}
