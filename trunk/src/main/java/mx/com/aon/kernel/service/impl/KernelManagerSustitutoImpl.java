@@ -802,4 +802,14 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         log.debug("### kernel sustituto obtenerTipsit lista size: "+lista.size());
         return lista;
 	}
+	
+	public List<Map<String, String>> PValInfoPersonas(Map<String,String> params) throws ApplicationException
+	{
+		log.debug("### kernel sustituto PValInfoPersonas map: "+params);
+        List<Map<String,String>> lista= this.getAllBackBoneInvoke(params, ProcesoDAO.P_VAL_INFO_PERSONAS);
+        lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
+        log.debug("### kernel sustituto PValInfoPersonas lista size: "+lista.size());
+        return lista;
+	}
+	
 }
