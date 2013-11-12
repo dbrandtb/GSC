@@ -801,15 +801,15 @@
 			                                                        ,{
 			                                                        	xtype    : 'button'
 			                                                            ,id      : 'venDocVenEmiBotNueCotiza'
-			                                                            ,text    : 'Nueva cotizaci&oacute;n'
-			                                                            ,icon    : '${ctx}/resources/fam3icons/icons/page_add.png'
+			                                                            ,text    : 'Regresar a mesa de control'
+			                                                            ,icon    : '${ctx}/resources/fam3icons/icons/house.png'
 			                                                            ,handler : function()
 			                                                            {
 			                                                                var me=this;
 			                                                                Ext.create('Ext.form.Panel').submit(
 			                                                                {
 			                                                                    standardSubmit : true
-			                                                                    ,url           : panDatComUrlCotiza
+			                                                                    ,url           : datComUrlMC
 			                                                                });
 			                                                            }
 			                                                        }
