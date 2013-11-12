@@ -1735,12 +1735,20 @@ Ext.onReady(function(){
                     {
                         pos='Plus1000';
                     }
+                    
+                    ////// parche para cuando el producto es SN //////
+                    if(inputCdtipsit=='SN')
+                    {
+                    	pos='Plus1000';
+                    }
+                    //////////////////////////////////////////////////
+                    
                     selected_prima=record.get(pos);
                     selected_cd_plan=record.get('CD'+pos);
                     selected_ds_plan=record.get('DS'+pos);
                     selected_nm_plan=record.get('NM'+pos);
                     selected_record=record;
-                    //window.console&&console.log(selected_prima,selected_cd_plan,selected_ds_plan,selected_nm_plan,selected_record);
+                    debug('debug(selected_prima,selected_cd_plan,selected_ds_plan);',selected_prima,selected_cd_plan,selected_ds_plan);
                     botonVerCoberturas.setDisabled(false);
                     botonComprar.setDisabled(false);
                     Ext.getCmp('botonImprimir').setDisabled(false);
