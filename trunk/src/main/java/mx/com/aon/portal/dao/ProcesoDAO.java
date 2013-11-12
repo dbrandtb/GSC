@@ -136,6 +136,7 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String OBTENER_RAMOS="OBTENER_RAMOS";
     public static final String OBTENER_TIPSIT="OBTENER_TIPSIT";
     public static final String P_MOV_TBITACOBROS="P_MOV_TBITACOBROS";
+    public static final String P_VAL_INFO_PERSONAS="P_VAL_INFO_PERSONAS";
 
 	protected void initDao() throws Exception {
 		addStoredProcedure(PERMISO_EJECUCION_PROCESO,new PermisoEjecucionProceso(getDataSource()));
@@ -219,6 +220,7 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(OBTENER_RAMOS,new ObtenerRamos(getDataSource()));
         addStoredProcedure(OBTENER_TIPSIT,new ObtenerTipsit(getDataSource()));
         addStoredProcedure(P_MOV_TBITACOBROS,new MovBitacobros(getDataSource()));
+        addStoredProcedure(P_VAL_INFO_PERSONAS,new PValInfoPersonas(getDataSource()));
 	}
 
 	protected class BuscarMatrizAsignacion extends CustomStoredProcedure {
@@ -3927,4 +3929,57 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	/*///////////////////////////////*/
 	////// obtener tipsit x ramo //////
 	///////////////////////////////////
+	
+	//////////////////////////////
+	////// PValInfoPersonas //////
+	/*//////////////////////////*/
+	public class PValInfoPersonas extends CustomStoredProcedure
+	{
+		protected PValInfoPersonas(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES.P_VAL_INFO_PERSONAS");
+			declareParameter(new SqlParameter("pv_cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza" , OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new PValInfoPersonasMapper()));
+			declareParameter(new SqlOutParameter("pv_messages_o",   OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
+		}
+	
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception
+		{
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			WrapperResultados wrapperResultados = mapper.build(map);
+			List result = (List) map.get("pv_registro_o");
+			wrapperResultados.setItemList(result);
+			return wrapperResultados;
+		}
+	}
+	
+	protected class PValInfoPersonasMapper implements RowMapper {
+		public Object mapRow(ResultSet rs, int rowNum) throws SQLException
+		{
+			String cols[]=new String[]{"cdperson","nombre"};
+			Map<String,String> map=new HashMap<String,String>(0);
+			for(String col:cols)
+			{
+				if(col!=null&&col.substring(0,2).equalsIgnoreCase("fe"))
+				{
+					map.put(col,Utilerias.formateaFecha(rs.getString(col)));
+				}
+				else
+				{
+					map.put(col,rs.getString(col));
+				}
+			}	
+			return map;
+		}
+	}
+	//////////////////////////////
+	////// PValInfoPersonas //////
+	/*//////////////////////////*/
+	
 }
