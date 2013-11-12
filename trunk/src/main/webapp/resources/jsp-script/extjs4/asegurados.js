@@ -1423,7 +1423,7 @@ Ext.onReady(function(){
         hidden:true,
         frame:true,
         store:storeResultados,
-        height: 275,
+        height: 300,
         width: 800,
         title: 'Resultados',
         selType: 'cellmodel',
