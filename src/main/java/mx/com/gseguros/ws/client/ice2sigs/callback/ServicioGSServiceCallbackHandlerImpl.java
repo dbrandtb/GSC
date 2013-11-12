@@ -34,12 +34,15 @@ public class ServicioGSServiceCallbackHandlerImpl extends
 
 		KernelManagerSustitutoImpl manager = (KernelManagerSustitutoImpl) params
 				.get("MANAGER");
+		String usuario = (String) params.get("USUARIO");
+		
 		try {
 			manager.movBitacobro((String) params.get("pv_cdunieco_i"),
 					(String) params.get("pv_cdramo_i"),
 					(String) params.get("pv_estado_i"),
 					(String) params.get("pv_nmpoliza_i"), "ErrWScliCx", "Msg: "
-							+ e.getMessage() + " ***Cause: " + e.getCause());
+							+ e.getMessage() + " ***Cause: " + e.getCause(),
+					 usuario);
 		} catch (Exception e1) {
 			logger.error("Error en llamado a PL", e1);
 		}
@@ -56,12 +59,15 @@ public class ServicioGSServiceCallbackHandlerImpl extends
 
 			HashMap<String, Object> params = (HashMap<String, Object>) this.clientData;
 			KernelManagerSustitutoImpl manager = (KernelManagerSustitutoImpl) params.get("MANAGER");
+			String usuario = (String) params.get("USUARIO");
+			
 			try {
 				manager.movBitacobro((String) params.get("pv_cdunieco_i"),
 						(String) params.get("pv_cdramo_i"),
 						(String) params.get("pv_estado_i"),
 						(String) params.get("pv_nmpoliza_i"), "ErrWScli",
-						respuesta.getCodigo() + " - " + respuesta.getMensaje());
+						respuesta.getCodigo() + " - " + respuesta.getMensaje(),
+						 usuario);
 			} catch (Exception e1) {
 				logger.error("Error en llamado a PL", e1);
 			}
@@ -76,6 +82,8 @@ public class ServicioGSServiceCallbackHandlerImpl extends
 		HashMap<String, Object> params = (HashMap<String, Object>) this.clientData;
 
 		KernelManagerSustitutoImpl manager = (KernelManagerSustitutoImpl) params.get("MANAGER");
+		String usuario = (String) params.get("USUARIO");
+		
 		try {
 			manager.movBitacobro(
 					(String) params.get("pv_cdunieco_i"),
@@ -85,7 +93,8 @@ public class ServicioGSServiceCallbackHandlerImpl extends
 					"ErrWSrecCx",
 					"Error en Recibo " + params.get("NumRec")
 							+ " Msg: " + e.getMessage() + " ***Cause: "
-							+ e.getCause());
+							+ e.getCause(),
+					 usuario);
 		} catch (Exception e1) {
 			logger.error("Error en llamado a PL", e1);
 		}
@@ -104,6 +113,8 @@ public class ServicioGSServiceCallbackHandlerImpl extends
 			logger.error("Guardando en bitacora el estatus");
 
 			KernelManagerSustitutoImpl manager = (KernelManagerSustitutoImpl) params.get("MANAGER");
+			String usuario = (String) params.get("USUARIO");
+			
 			try {
 				manager.movBitacobro((String) params.get("pv_cdunieco_i"),
 						(String) params.get("pv_cdramo_i"),
@@ -111,7 +122,8 @@ public class ServicioGSServiceCallbackHandlerImpl extends
 						(String) params.get("pv_nmpoliza_i"), "ErrWSrec",
 						"Error en Recibo " + params.get("NumRec")
 								+ " >>> " + respuesta.getCodigo() + " - "
-								+ respuesta.getMensaje());
+								+ respuesta.getMensaje(),
+						 usuario);
 			} catch (ApplicationException e1) {
 				logger.error("Error en llamado a PL", e1);
 			}

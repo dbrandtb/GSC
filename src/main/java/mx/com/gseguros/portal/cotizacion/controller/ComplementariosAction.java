@@ -1259,8 +1259,16 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			logger.error("Error en llamar al PL de obtencion de RECIBOS",e1);
 			return false;
 		}
+
+		String usuario = "SIN USUARIO";
+		if(session.containsKey("USUARIO") && session.get("USUARIO") != null){
+			UserVO usuarioSesion=(UserVO) session.get("USUARIO");
+			usuario = usuarioSesion.getUser();
+		}
 		
 		params.put("MANAGER", kernelManager);
+		params.put("USUARIO", usuario);
+		
 		for(Recibo recibo: recibos){
 			try{
 				// Se crea un HashMap por cada invocacion asincrona del WS, para evitar issue (sobreescritura de valores):
@@ -1342,6 +1350,15 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 		
 		
 		if(cliente != null){
+			
+			String usuario = "SIN USUARIO";
+			if(session.containsKey("USUARIO") && session.get("USUARIO") != null){
+				UserVO usuarioSesion=(UserVO) session.get("USUARIO");
+				usuario = usuarioSesion.getUser();
+			}
+			
+			params.put("USUARIO", usuario);
+			
 			try{
 				logger.debug("Ejecutando WS TEST para WS Cliente");
 				ice2sigsWebServices.ejecutaClienteSaludGS(Operacion.INSERTA, null, this.getText("url.ws.ice2sigs"), params, false);

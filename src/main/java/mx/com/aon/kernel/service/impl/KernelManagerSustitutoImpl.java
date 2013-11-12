@@ -234,7 +234,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return res;
     }
     
-    public WrapperResultados movBitacobro(String cdunieco,String cdramo,String estado,String poliza,String codigo,String mensaje) throws ApplicationException
+    public WrapperResultados movBitacobro(String cdunieco,String cdramo,String estado,String poliza,String codigo,String mensaje, String usuario) throws ApplicationException
     {
     	Map<String,String>parameters=new LinkedHashMap<String,String>(0);
     	parameters.put("pv_cdunieco_i" , cdunieco);
@@ -243,6 +243,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
     	parameters.put("pv_nmpoliza_i" , poliza);
     	parameters.put("pv_cdcodigo_i" , codigo);
     	parameters.put("pv_mensaje_i"  , mensaje);
+    	parameters.put("pv_usuario_i"  , usuario);
     	log.debug("### kernel sustituto movBitacobro map: "+parameters);
         WrapperResultados res=this.returnBackBoneInvoke(parameters, ProcesoDAO.P_MOV_TBITACOBROS);
         log.debug("### kernel sustituto movBitacobro id:"+res.getMsgId());
