@@ -328,7 +328,7 @@
 		                            style:'margin:5px',
 		                            collapsible:true,
 		                            titleCollapse:true,
-		                            maxHeight:200,
+		                            maxHeight:300,
 		                            layout:{
 		                                type: 'table',
 		                                columns: 2
