@@ -1423,7 +1423,7 @@ Ext.onReady(function(){
         hidden:true,
         frame:true,
         store:storeResultados,
-        height: 250,
+        height: 275,
         width: 800,
         title: 'Resultados',
         selType: 'cellmodel',
@@ -1839,7 +1839,7 @@ Ext.onReady(function(){
             {
                 dataIndex: "Plus100",
                 header: "Plus 100",
-                hidden: false,
+                hidden: inputCdtipsit=='SN',
                 id: "Plus100",
                 sortable: false,
                 flex:1,
@@ -1872,7 +1872,7 @@ Ext.onReady(function(){
             {
                 dataIndex: "Plus500",
                 header: "Plus 500",
-                hidden: false,
+                hidden: inputCdtipsit=='SN',
                 id: "Plus500",
                 sortable: false,
                 flex:1,
