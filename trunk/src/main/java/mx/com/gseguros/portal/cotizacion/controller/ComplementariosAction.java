@@ -862,6 +862,37 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 		try
 		{
 			
+			//////////////////////////////////////////
+			////// validar que tengan direccion //1548
+			List<Map<String,String>>lisUsuSinDir=null;
+			try
+			{
+				Map<String,String>paramValidar=new LinkedHashMap<String,String>(0);
+				paramValidar.put("pv_cdunieco" , cdunieco);
+				paramValidar.put("pv_cdramo"   , cdramo);
+				paramValidar.put("pv_estado"   , "W");
+				paramValidar.put("pv_nmpoliza" , panel1.get("nmpoliza"));
+				lisUsuSinDir=kernelManager.PValInfoPersonas(paramValidar);
+			}
+			catch(Exception ex)
+			{
+				log.error("Error sin impacto funcional al validar: ",ex);
+				lisUsuSinDir=null;
+			}
+			
+			if(lisUsuSinDir!=null&&lisUsuSinDir.size()>0)
+			{
+				mensajeRespuesta="Favor de verificar la direcci&oacute;n de los siguientes asegurados:<br/>";
+				for(int i=0;i<lisUsuSinDir.size();i++)
+				{
+					mensajeRespuesta+=lisUsuSinDir.get(i).get("nombre")+"<br/>";
+				}
+				log.debug("Se va a terminar el proceso porque faltan direcciones");
+				return SUCCESS;
+			}
+			////// validar que tengan direccion //1548
+			//////////////////////////////////////////
+			
 			UserVO usuario=(UserVO)session.get("USUARIO");
 			DatosUsuario datosUsuario=kernelManager.obtenerDatosUsuario(usuario.getUser());
 			
