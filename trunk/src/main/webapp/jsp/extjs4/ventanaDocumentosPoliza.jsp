@@ -234,7 +234,7 @@ Ext.onReady(function()
                                     change : function(me)
                                     {
                                         var indexofPeriod = me.getValue().lastIndexOf("."),
-                                        uploadedExtension = me.getValue().substr(indexofPeriod + 1, me.getValue().length - indexofPeriod);
+                                        uploadedExtension = me.getValue().substr(indexofPeriod + 1, me.getValue().length - indexofPeriod).toLowerCase();
                                         if (!Ext.Array.contains(this.cAccept, uploadedExtension))
                                         {
                                             Ext.MessageBox.show(
