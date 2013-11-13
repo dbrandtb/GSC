@@ -2501,6 +2501,8 @@ Ext.onReady(function(){
                 var hayTitular=0;
                 var menorDeEdad=false;
                 var mayores69=false;
+                var fueraDeGuanajuato=inputCdtipsit=='SN'&&(campoCodigoPostal.getValue()<36000||campoCodigoPostal.getValue()>38998);
+                debug('fueraDeGuanajuato',fueraDeGuanajuato?'si':'no');
                 storeIncisos.each(function(record,index){
                 	var rol=typeof record.get('rol')=='string'?record.get('rol'):record.get('rol').get('key');
                 	if(rol=="T"||true)//se agrego true por los mayores69
@@ -2533,99 +2535,111 @@ Ext.onReady(function(){
 			                    var incisosRecords = storeIncisos.getRange();
 			                    if(incisosRecords&&incisosRecords.length>0)
 			                    {
-			                        var incisosJson = [];
-			                        var nombres=0;
-			                        storeIncisos.each(function(record,index){
-			                        	if(record.get('nombre')
-			                        			&&record.get('nombre').length>0)
-		                        		{
-			                        		nombres++;
-		                        		}
-			                            incisosJson.push({
-			                                id: record.get('id'),
-			                                rol:
-			                                {
-			                                    key:typeof record.get('rol')=='string'?record.get('rol'):record.get('rol').get('key'),
-			                                    value:''
-			                                },
-			                                fechaNacimiento: record.get('fechaNacimiento'),
-			                                sexo:
-			                                {
-			                                    key:typeof record.get('sexo')=='string'?record.get('sexo'):record.get('sexo').get('key'),
-			                                    value:''
-			                                },
-			                                nombre: record.get('nombre'),
-			                                segundoNombre: record.get('segundoNombre'),
-			                                apellidoPaterno: record.get('apellidoPaterno'),
-			                                apellidoMaterno: record.get('apellidoMaterno')
+			                    	if(!fueraDeGuanajuato)
+			                    	{
+				                        var incisosJson = [];
+				                        var nombres=0;
+				                        storeIncisos.each(function(record,index){
+				                        	if(record.get('nombre')
+				                        			&&record.get('nombre').length>0)
+			                        		{
+				                        		nombres++;
+			                        		}
+				                            incisosJson.push({
+				                                id: record.get('id'),
+				                                rol:
+				                                {
+				                                    key:typeof record.get('rol')=='string'?record.get('rol'):record.get('rol').get('key'),
+				                                    value:''
+				                                },
+				                                fechaNacimiento: record.get('fechaNacimiento'),
+				                                sexo:
+				                                {
+				                                    key:typeof record.get('sexo')=='string'?record.get('sexo'):record.get('sexo').get('key'),
+				                                    value:''
+				                                },
+				                                nombre: record.get('nombre'),
+				                                segundoNombre: record.get('segundoNombre'),
+				                                apellidoPaterno: record.get('apellidoPaterno'),
+				                                apellidoMaterno: record.get('apellidoMaterno')
+				                            });
 			                            });
-		                            });
-			                        if(nombres==0||nombres==incisosRecords.length)
-		                        	{
-			                        	var submitValues=form.getValues();
-			                        	submitValues['incisos']=incisosJson;
-			                        	//window.console&&console.log(submitValues);
-			                        	//Submit the Ajax request and handle the response
-			                        	formPanel.setLoading(true);
-			                        	/*Ext.MessageBox.show({
-			                            	msg: 'Cotizando...',
-			                            	width:300,
-			                            	wait:true,
-			                            	waitConfig:{interval:100}
-			                        	});*/
-			                        	Ext.Ajax.request(
+				                        if(nombres==0||nombres==incisosRecords.length)
 			                        	{
-			                            	url: _URL_COTIZAR,
-			                            	timeout : 120000,
-			                            	jsonData:Ext.encode(submitValues),
-			                            	success:function(response,opts)
-			                            	{
-			                                	//Ext.MessageBox.hide();
-			                            		formPanel.setLoading(false);
-			                                	var jsonResp = Ext.decode(response.responseText);
-			                                	//window.console&&console.log(jsonResp);
-			                                	if(jsonResp.success==true)
-			                                	{
-			                                		Ext.getCmp('idCotizacion').setValue(jsonResp.id);
-			                                		mostrarGrid();
-			                                		if(hayTramiteCargado)
-			                                		{
-			                                			Ext.getCmp('botonClonarCotiza').hide();
-			                                		}
-			                                	}
-			                                	else
-			                                	{
+				                        	var submitValues=form.getValues();
+				                        	submitValues['incisos']=incisosJson;
+				                        	//window.console&&console.log(submitValues);
+				                        	//Submit the Ajax request and handle the response
+				                        	formPanel.setLoading(true);
+				                        	/*Ext.MessageBox.show({
+				                            	msg: 'Cotizando...',
+				                            	width:300,
+				                            	wait:true,
+				                            	waitConfig:{interval:100}
+				                        	});*/
+				                        	Ext.Ajax.request(
+				                        	{
+				                            	url: _URL_COTIZAR,
+				                            	timeout : 120000,
+				                            	jsonData:Ext.encode(submitValues),
+				                            	success:function(response,opts)
+				                            	{
+				                                	//Ext.MessageBox.hide();
+				                            		formPanel.setLoading(false);
+				                                	var jsonResp = Ext.decode(response.responseText);
+				                                	//window.console&&console.log(jsonResp);
+				                                	if(jsonResp.success==true)
+				                                	{
+				                                		Ext.getCmp('idCotizacion').setValue(jsonResp.id);
+				                                		mostrarGrid();
+				                                		if(hayTramiteCargado)
+				                                		{
+				                                			Ext.getCmp('botonClonarCotiza').hide();
+				                                		}
+				                                	}
+				                                	else
+				                                	{
+					                                	Ext.Msg.show({
+					                                    	title:'Error',
+					                                    	msg: 'Error al cotizar',
+					                                    	buttons: Ext.Msg.OK,
+					                                    	icon: Ext.Msg.ERROR
+					                                	});
+				                                	}
+				                            	},
+				                            	failure:function(response,opts)
+				                            	{
+				                                	//Ext.MessageBox.hide();
+				                                	formPanel.setLoading(false);
+				                                	//window.console&&console.log("error");
 				                                	Ext.Msg.show({
 				                                    	title:'Error',
-				                                    	msg: 'Error al cotizar',
+				                                    	msg: 'Error de comunicaci&oacute;n',
 				                                    	buttons: Ext.Msg.OK,
 				                                    	icon: Ext.Msg.ERROR
 				                                	});
-			                                	}
-			                            	},
-			                            	failure:function(response,opts)
-			                            	{
-			                                	//Ext.MessageBox.hide();
-			                                	formPanel.setLoading(false);
-			                                	//window.console&&console.log("error");
-			                                	Ext.Msg.show({
-			                                    	title:'Error',
-			                                    	msg: 'Error de comunicaci&oacute;n',
-			                                    	buttons: Ext.Msg.OK,
-			                                    	icon: Ext.Msg.ERROR
-			                                	});
-			                            	}
-			                        	});
-		                        	}
-			                        else
-		                        	{
-			                        	Ext.Msg.show({
-			                            	title:'Datos incompletos',
-			                            	msg: 'Si introduce el nombre de alg&uacute;n asegurado, es requerido introducirlo para el resto de asegurados',
-			                            	buttons: Ext.Msg.OK,
-			                            	icon: Ext.Msg.WARNING
-			                        	});
-		                        	}
+				                            	}
+				                        	});
+			                        	}
+				                        else
+			                        	{
+				                        	Ext.Msg.show({
+				                            	title:'Datos incompletos',
+				                            	msg: 'Si introduce el nombre de alg&uacute;n asegurado, es requerido introducirlo para el resto de asegurados',
+				                            	buttons: Ext.Msg.OK,
+				                            	icon: Ext.Msg.WARNING
+				                        	});
+			                        	}
+			                    	}
+		                		    else
+		                			{
+		                		    	Ext.Msg.show({
+				                            title:'Datos inv&aacute;lidos',
+				                            msg: 'El c&oacute;digo postal no corresponde al producto',
+				                            buttons: Ext.Msg.OK,
+				                            icon: Ext.Msg.WARNING
+				                        });
+		                			}
 		                    	}
 		                    	else
 		                    	{
