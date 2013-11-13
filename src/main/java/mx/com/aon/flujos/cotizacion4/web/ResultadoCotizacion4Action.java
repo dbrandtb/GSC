@@ -774,7 +774,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             map3.put("pv_nmsuplem_i" , "0");
             map3.put("pv_status_i"   , "V");
             map3.put("pv_cdtipoag_i" , "1");
-            map3.put("pv_porredau_i" , "100");
+            map3.put("pv_porredau_i" , "0");
             map3.put("pv_nmcuadro_i" , userData.getNmcuadro());
             map3.put("pv_cdsucurs_i" , null);
             map3.put("pv_accion_i"   , "I");
