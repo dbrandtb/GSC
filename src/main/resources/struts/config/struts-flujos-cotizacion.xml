@@ -379,6 +379,41 @@
           <result name="success" type="json" />
         </action>
         
+        <!-- pantalla inicial -->
+        <action name="principal" class="agentesAction" method="principal">
+            <result name="success">/jsp/consultas/agentes/consultaAgentes.jsp</result>
+        </action>
+        
+        <action name="consultaDatosPolizaAgente" class="agentesAction"
+			method="obtieneAgentesPolizas">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+                    datosPolizaAgente.*,
+                    success
+                </param>
+			</result>
+		</action>
+        
+
+		 <action name="consultaGeneralAgente" class="agentesAction"
+			method="obtieneTiposAgente">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+                    datosGeneralesAgente.*,
+                    success
+                </param>
+			</result>
+		</action>
+                
+		<action name="guardaPorcentajeAgentes" class="agentesAction" method="guardaPorcentajeAgentes">
+	        <interceptor-ref name="json">
+	            <param name="enableSMD">true</param>
+	            <param name="ignoreSMDMethodInterfaces">false</param>
+	        </interceptor-ref>
+	        <result name="success" type="json"/>
+		</action>
         </package>
 
 </struts>

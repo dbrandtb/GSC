@@ -21,6 +21,7 @@ import mx.com.aon.flujos.cotizacion.model.ResultadoCotizacionVO;
 import mx.com.aon.flujos.cotizacion.model.SituacionVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal2.web.GenericVO;
+import mx.com.gseguros.portal.cotizacion.model.ConsultaDatosPolizaAgenteVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Tatri;
 import mx.com.gseguros.utils.Utilerias;
@@ -126,7 +127,10 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String OBTENER_RAMOS="OBTENER_RAMOS";
     public static final String OBTENER_TIPSIT="OBTENER_TIPSIT";
     public static final String P_MOV_TBITACOBROS="P_MOV_TBITACOBROS";
-    public static final String P_VAL_INFO_PERSONAS="P_VAL_INFO_PERSONAS";
+    public static final String P_VAL_INFO_PERSONAS="P_VAL_INFO_PERSONAS";    
+    public static final String OBTIENE_DATOS_POLIZA_AGENTE =    "OBTIENE_DATOS_POLIZA_AGENTE";
+	public static final String OBTIENE_DATOS_GENERAL_AGENTE =	"OBTIENE_DATOS_GENERAL_AGENTE";
+	public static final String GUARDA_PORCENTAJE_POLIZA =	"GUARDA_PORCENTAJE_POLIZA";
 
 	protected void initDao() throws Exception {
 		addStoredProcedure(EJECUTA_SIGSVALIPOL, new EjecutarSIGSVALIPOL(getDataSource()));
@@ -206,6 +210,10 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(OBTENER_TIPSIT,new ObtenerTipsit(getDataSource()));
         addStoredProcedure(P_MOV_TBITACOBROS,new MovBitacobros(getDataSource()));
         addStoredProcedure(P_VAL_INFO_PERSONAS,new PValInfoPersonas(getDataSource()));
+        
+        addStoredProcedure(OBTIENE_DATOS_POLIZA_AGENTE,      new ObtieneDatosPolizaAgente(getDataSource()));
+		addStoredProcedure(OBTIENE_DATOS_GENERAL_AGENTE,      new ObtieneDatosGeneralAgente(getDataSource()));
+		addStoredProcedure(GUARDA_PORCENTAJE_POLIZA, new GuardarPorcentajePoliza(getDataSource()));
 	}
 	
 	
@@ -3771,4 +3779,108 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	////// PValInfoPersonas //////
 	/*//////////////////////////*/
 	
+    protected class ObtieneDatosPolizaAgente extends CustomStoredProcedure {
+    	
+    	protected ObtieneDatosPolizaAgente(DataSource dataSource) {
+    		
+    		super(dataSource, "PKG_SATELITES.P_OBTIENE_MPOLIAGE_PORCENTAJES");
+    		declareParameter(new SqlParameter("pi_CDUNIECO", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_CDRAMO", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_ESTADO", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_NMPOLIZA", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("po_rc_cursor", OracleTypes.CURSOR, new DatosPolizaAgente()));
+    		declareParameter(new SqlOutParameter("po_CDERROR", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("po_DSERROR", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("po_TIPOERROR", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+    		WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+    		WrapperResultados wrapperResultados = mapper.build(map);
+    		List result = (List) map.get("po_rc_cursor");
+    		wrapperResultados.setItemList(result);
+    		return wrapperResultados;
+    	}
+    }
+    
+    protected class DatosPolizaAgente  implements RowMapper {
+    	
+    	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+    		
+    		ConsultaDatosPolizaAgenteVO consulta = new ConsultaDatosPolizaAgenteVO();
+    		consulta.setCdagente(rs.getString("cdagente"));
+    		consulta.setCdtipoAg(rs.getString("cdtipoag"));
+    		consulta.setDescripl(rs.getString("descripl"));
+    		consulta.setPorparti(rs.getString("porparti"));
+    		consulta.setPorredau(rs.getString("porredau"));
+    		consulta.setNmsuplem(rs.getString("nmsuplem"));
+    		consulta.setNmcuadro(rs.getString("nmcuadro"));
+    		consulta.setCdsucurs(rs.getString("cdsucurs"));
+    		return consulta;
+    	}
+    }
+    
+    
+    protected class ObtieneDatosGeneralAgente extends CustomStoredProcedure {
+    	
+    	protected ObtieneDatosGeneralAgente(DataSource dataSource) {
+    		
+    		super(dataSource, "PKG_LISTAS.P_OBTIENE_TTIPOAGE");
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DatosGeneralAgente()));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o ", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+    		WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+    		WrapperResultados wrapperResultados = mapper.build(map);
+    		List result = (List) map.get("pv_registro_o");
+    		wrapperResultados.setItemList(result);
+    		return wrapperResultados;
+    	}
+    }
+    
+    protected class DatosGeneralAgente  implements RowMapper {
+    	
+    	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+    		
+    		GenericVO consulta = new GenericVO();
+    		consulta.setKey(rs.getString("codigo"));
+    		consulta.setValue(rs.getString("descripl"));
+    		return consulta;
+    	}
+    }
+    
+    protected class GuardarPorcentajePoliza extends CustomStoredProcedure {
+    	
+    	protected GuardarPorcentajePoliza(DataSource dataSource) {
+    		
+    		super(dataSource, "PKG_SATELITES.P_MOV_MPOLIAGE_PORCENTAJES");
+    		declareParameter(new SqlParameter("pi_CDUNIECO", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_CDRAMO", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_ESTADO", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_NMPOLIZA", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_CDAGENTE_NVO", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_CDAGENTE", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_NMSUPLEM", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_CDTIPOAG", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_PORREDAU", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_NMCUADRO", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_CDSUCURS", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pi_PORPARTI", OracleTypes.VARCHAR));
+    		
+    		declareParameter(new SqlOutParameter("po_CDERROR", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("po_DSERROR", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("po_TIPOERROR", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			return mapper.build(map);
+		}   	
+
+    }
 }

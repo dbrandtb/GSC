@@ -47,4 +47,9 @@
         <property name="mailMail" ref="mailMail"/>
     </bean>
     
+    <!-- datos de Agentes -->
+    <bean id="agentesAction" class="mx.com.gseguros.portal.cotizacion.controller.AgentesAction" scope="prototype">
+        <property name="kernelManager" ref="kernelManagerSustituto"/>
+    </bean>
+    
 </beans>

@@ -95,5 +95,8 @@ public interface KernelManagerSustituto {
 	public List<Map<String, String>> obtenerRamos(String cdunieco) throws ApplicationException;
 	public List<Map<String, String>> obtenerTipsit(String cdunieco) throws ApplicationException;
 	public WrapperResultados movBitacobro(String cdunieco,String cdramo,String estado,String poliza,String codigo,String mensaje, String usuario) throws ApplicationException;
-	public List<Map<String, String>> PValInfoPersonas(Map<String,String> params) throws ApplicationException;
+	public List<Map<String, String>> PValInfoPersonas(Map<String,String> params) throws ApplicationException;	
+	public WrapperResultados obtenerAgentePoliza(String cdunieco, String cdramo, String estado, String nmpoliza)throws ApplicationException;
+	public WrapperResultados obtenerTiposAgente()throws ApplicationException;
+	public WrapperResultados guardarPorcentajeAgentes(Map<String, Object> params) throws ApplicationException;
 }
