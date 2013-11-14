@@ -57,7 +57,7 @@ Ext.onReady(function() {
     
     var storeTiposAgente = Ext.create('Ext.data.Store', {
         model:'Generic',
-        autoLoad:false,
+        autoLoad:true,
         proxy: {
             type: 'ajax',
             url : _URL_GENERAL_AGENTES,
@@ -106,7 +106,7 @@ Ext.onReady(function() {
                 ,valueField   : 'key'
                 ,forceSelection : false
                 ,matchFieldWidth: false
-                ,queryMode :'remote'
+                ,queryMode :'local'
                 ,store : storeTiposAgente
                 ,triggerAction: 'all'
                 	
