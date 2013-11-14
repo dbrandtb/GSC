@@ -42,9 +42,10 @@
             var panDatComUrlCotiza='<s:url namespace="/" action="cotizacionVital" />';
             var datComPolizaMaestra;
             var sesionDsrol='<s:property value="map1.sesiondsrol" />';
-            var datComUrlMCUpdateStatus= '<s:url namespace="/mesacontrol" action="actualizarStatusTramite" />';
-            var datComUrlMC            = '<s:url namespace="/mesacontrol" action="principal" />';
-            var urlPantallaValosit     = '<s:url namespace="/"            action="pantallaValosit" />';
+            var datComUrlMCUpdateStatus= '<s:url namespace="/mesacontrol"     action="actualizarStatusTramite" />';
+            var datComUrlMC            = '<s:url namespace="/mesacontrol"     action="principal" />';
+            var urlPantallaValosit     = '<s:url namespace="/"                action="pantallaValosit" />';
+            var urlPantallaAgentes     = '<s:url namespace="/flujocotizacion" action="principal" />';
             debug(sesionDsrol);
             
             function expande(indice)
@@ -1262,6 +1263,34 @@
                                     ,'smap1.cdtipsit' : inputCdtipsit
                                     ,'smap1.agrupado' : 'si'
                                 }
+                                ,scripts  : true
+                                ,autoLoad : true
+                            }
+                            ,listeners:
+                            {
+                                expand:function( p, eOpts )
+                                {
+                                    window.parent.scrollTo(0,150+p.y);
+                                }
+                            }
+                        })
+                        ,Ext.create('Ext.panel.Panel',
+                        {
+                            id:'tabPanelAgentes'
+                            ,title:'Agentes'
+                            ,cls:'claseTitulo'
+                            ,loader:
+                            {
+                                url       : urlPantallaAgentes
+                                /*,params   :
+                                {
+                                    'smap1.cdunieco'  : inputCdunieco
+                                    ,'smap1.cdramo'   : inputCdramo
+                                    ,'smap1.estado'   : inputEstado
+                                    ,'smap1.nmpoliza' : inputNmpoliza
+                                    ,'smap1.cdtipsit' : inputCdtipsit
+                                    ,'smap1.agrupado' : 'si'
+                                }*/
                                 ,scripts  : true
                                 ,autoLoad : true
                             }
