@@ -117,7 +117,7 @@ Ext.onReady(function() {
                 xtype : 'numberfield',
                 id:'participacion',
                 name:'participacion',
-                fieldLabel: 'Paticipaci&oacute;n',
+                fieldLabel: 'Participaci&oacute;n',
                 labelWidth: 170,
                 width:         500,
                 allowBlank: false,
@@ -268,7 +268,7 @@ Ext.onReady(function() {
                         xtype : 'textfield',
                         id:'unieco',
                         name:'params.cdunieco',
-                        fieldLabel: 'Cï¿½digo de Unidad Econï¿½mica',
+                        fieldLabel: 'C&oacute;digo de Unidad Econ&oacute;mica',
                         value: inputCdunieco,
                         allowBlank:false,
                         hidden:true
@@ -285,7 +285,7 @@ Ext.onReady(function() {
                     },
                     {
                         xtype : 'textfield'
-                            ,fieldLabel: 'Estado del la pï¿½liza',
+                            ,fieldLabel: 'Estado del la p&oacute;liza',
                             id:'estado',
                             name:'params.estado',
                             value: inputEstado,
@@ -293,7 +293,7 @@ Ext.onReady(function() {
                     },
                     {
                         xtype : 'textfield',
-                        fieldLabel: 'Numero de Pï¿½liza',
+                        fieldLabel: 'Numero de P&oacute;liza',
                         id:'poliza',
                         name:'params.nmpoliza',
                         value: inputNmpoliza,
@@ -317,7 +317,7 @@ Ext.onReady(function() {
                 ,columns       :
                 [                         
                     {    header     : 'Clave Agente',                        dataIndex : 'cdagente',        flex      : 1    },
-                    {    header     : 'Id Agente',                           dataIndex : 'cdtipoAg',        flex      : 1    },
+                    {    header     : 'Agente',                              dataIndex : 'cdtipoAg',        flex      : 1    },
                     {    header     : 'Tipo de Agente',                      dataIndex : 'descripl',        flex      : 1    },
                     {    header     : 'Participaci&oacute;n',                dataIndex : 'porparti',        flex      : 1    },
                     {   header      : 'Cesi&oacute;n de comisi&oacute;n',    dataIndex : 'porredau',        flex      : 1    }
@@ -358,10 +358,8 @@ Ext.onReady(function() {
                 ,
                 handler: function() {
                     var arr = [];
-                    
-                    contadorGral=0;
                     guardarRegistros= [];
-                    datosInternos = [];
+                    
                     
                     storGridClau.each(function(record) {
                         arr.push(record.data);
@@ -369,6 +367,17 @@ Ext.onReady(function() {
                    
                     resultado = 0;
                     validaTipoAgente=0;
+                    contadorAgente=0;
+                    /* veificar que el Id del Agente no se repita */
+                    for(var i = 0; i < arr.length; i++)
+        	        {
+        	        	for (var j = i + 1; j < arr.length; j++)
+        	        	{
+        	        		if(arr[i].cdagente == arr[j].cdagente){
+        	        			contadorAgente++;
+        	        		}
+        	        	}
+        	        }
                     
                     for(var i=0;i < arr.length;i++)
                     {
@@ -385,7 +394,7 @@ Ext.onReady(function() {
                             validaTipoAgente++;
                         }
                     }
-                    if (resultado == 100 && validaTipoAgente==1) {
+                    if (resultado == 100 && validaTipoAgente==1 && contadorAgente == 0) {
                         var submitValues={};
                         var formulario=menuPrincipal.form.getValues(); // Obtiene el valor del formulario
                         formulario['cdunieco']=formulario['params.cdunieco'];
@@ -393,7 +402,7 @@ Ext.onReady(function() {
                         formulario['ramo']=formulario['params.ramo'];
                         formulario['estado']=formulario['params.estado'];
                         submitValues['params']=formulario;
-                        submitValues['datosPorcentajeAgente']=guardarRegistros; // guardamos la informaciï¿½n del grid, dependiendo del numero
+                        submitValues['datosPorcentajeAgente']=guardarRegistros; // guardamos la información del grid, dependiendo del numero
                         menuPrincipal.setLoading(true);
                         Ext.Ajax.request(
                                 {
@@ -404,6 +413,8 @@ Ext.onReady(function() {
                                         menuPrincipal.setLoading(false);
                                         var jsonResp = Ext.decode(response.responseText);
                                         if(jsonResp.success==true){
+                                        	contadorGral=0;
+                                            datosInternos = [];
                                             Ext.Msg.show({
                                                 title:'Guardado',
                                                 msg: 'Se modificaron los datos de los agentes',
@@ -432,14 +443,75 @@ Ext.onReady(function() {
                                     }
                                 });
                     } else {
-                        Ext.Msg.show({
+                    	
+                    	var mensaje='';
+                    	if(resultado < 100 ||resultado > 100)
+                		{
+                    		mensaje= 'La sumatoria de los porcentaje de participaci&oacute;n debe de ser igual a 100';
+                		}
+                    	if(validaTipoAgente!=1)
+                		{
+                    		mensaje= 'Debe de existir solo un tipo de agente principal';
+                		}
+                    	if(contadorAgente > 0)
+                		{
+                    		mensaje= 'El agente no se puede repetir';
+                		}
+                    	Ext.Msg.show({
                                title: 'Aviso',
-                               msg: 'La sumatoria de todos los agentes deber ser igual a 100 y debe de haber un solo agente principal',
+                               msg: mensaje,
                                buttons: Ext.Msg.OK,
                                icon: Ext.Msg.WARNING
                            });
                     }
                 }    
+            },
+            {
+                text: "Recargar"
+                ,id:'btnRecargar'
+                ,disabled:true
+                ,icon:_CONTEXT+'/resources/fam3icons/icons/arrow_refresh.png'
+                , handler: function() {
+                    storGridClau.removeAll();
+                    var params = {
+                        'params.cdunieco' : Ext.getCmp('unieco').getValue(),
+                        'params.cdramo' : Ext.getCmp('ramo').getValue(),
+                        'params.estado' : Ext.getCmp('estado').getValue(),
+                        'params.nmpoliza' : Ext.getCmp('poliza').getValue(),
+                    };
+                    contadorGral=0;
+                    datosInternos = [];
+                    storGridClau.load({
+                        params: params,
+                        callback: function(records, operation, success){
+                            if(success){
+                                if(records.length <= 0){
+                                    Ext.getCmp('btnAgregarAgente').disable();
+                                    Ext.getCmp('btnRecargar').disable();
+                                    Ext.Msg.show({
+                                         title: 'Aviso',
+                                         msg: 'No se encontraron datos',
+                                         buttons: Ext.Msg.OK,
+                                         icon: Ext.Msg.ERROR
+                                     });
+                                }else{
+                                    Ext.getCmp('btnAgregarAgente').enable();
+                                    Ext.getCmp('btnRecargar').enable();
+                                }
+                            }else{
+                                Ext.getCmp('btnAgregarAgente').disable();
+                                Ext.getCmp('btnRecargar').disable();
+                                Ext.Msg.show({
+                                     title: 'Error',
+                                     msg: 'Error al obtener los datos',
+                                     buttons: Ext.Msg.OK,
+                                     icon: Ext.Msg.ERROR
+                                 });
+                            }
+                        }
+                    });
+                }
+            	
             }]
     });
 
@@ -494,6 +566,7 @@ Ext.onReady(function() {
             if(success){
                 if(records.length <= 0){
                     Ext.getCmp('btnAgregarAgente').disable();
+                    Ext.getCmp('btnRecargar').disable();
                     Ext.Msg.show({
                          title: 'Aviso',
                          msg: 'No se encontraron datos',
@@ -502,9 +575,11 @@ Ext.onReady(function() {
                      });
                 }else{
                     Ext.getCmp('btnAgregarAgente').enable();
+                    Ext.getCmp('btnRecargar').enable();
                 }
             }else{
                 Ext.getCmp('btnAgregarAgente').disable();
+                Ext.getCmp('btnRecargar').disable();
                 Ext.Msg.show({
                      title: 'Error',
                      msg: 'Error al obtener los datos',
