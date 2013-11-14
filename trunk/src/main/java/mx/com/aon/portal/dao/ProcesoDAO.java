@@ -236,11 +236,7 @@ public class ProcesoDAO extends AbstractDAO {
             return mapper.build(map);
         }
 	}
-	protected class MatrizAsignacion implements RowMapper {
-        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-        	return rs.getString("cdmatriz");
-        }
-	}
+	
 	
 	protected class EjecutarSIGSVALIPOL_EMI extends CustomStoredProcedure {
 
@@ -269,12 +265,6 @@ public class ProcesoDAO extends AbstractDAO {
             return mapper.build(map);
         }
 	}
-	
-	/*
-	 * PARA LOS PROCESOS COMUNES DEL KERNEL MANAGER (migracion de velocity backbone a JdbcTemplate
-	 * 
-	 */
-	
 	
 	
 	protected class CalculaNumeroPoliza extends CustomStoredProcedure {
