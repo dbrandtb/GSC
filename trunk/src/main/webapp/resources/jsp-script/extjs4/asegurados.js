@@ -588,30 +588,46 @@ Ext.onReady(function(){
             blur:function(el)
             {
                 //comboEstados.setLoading(true);
-                storeEstados.load({
-                    params:
-                    {
-                        //codigoTabla:'2TMUNI',
-                        idPadre:el.value
-                    },
-                    callback: function(records, operation, success)
-                    {
-                        var estadoActual=comboEstados.getValue();
-                        var actualEnStoreEstados=false;
-                        storeEstados.each(function(record)
+            	if(inputCdtipsit=='SN'&&(campoCodigoPostal.getValue()<36000||campoCodigoPostal.getValue()>38998))
+            	{
+            		Ext.Msg.show({
+                        title:'Datos inv&aacute;lidos',
+                        msg: 'C&oacute;digo postal no v&aacute;lido para este producto',
+                        buttons: Ext.Msg.OK,
+                        icon: Ext.Msg.WARNING,
+                        fn:function()
                         {
-                            if(estadoActual==record.get('key'))
-                            {
-                                actualEnStoreEstados=true;
-                            }
-                        });
-                        if(!actualEnStoreEstados)
-                        {
-                            comboEstados.clearValue();
+                        	campoCodigoPostal.focus();
                         }
-                        //comboEstados.setLoading(false);
-                    }
-                });
+                    });
+            	}
+            	else
+            	{
+            		storeEstados.load({
+            			params:
+            			{
+            				//codigoTabla:'2TMUNI',
+            				idPadre:el.value
+            			},
+            			callback: function(records, operation, success)
+            			{
+            				var estadoActual=comboEstados.getValue();
+            				var actualEnStoreEstados=false;
+            				storeEstados.each(function(record)
+            						{
+            					if(estadoActual==record.get('key'))
+            					{
+            						actualEnStoreEstados=true;
+            					}
+            						});
+            				if(!actualEnStoreEstados)
+            				{
+            					comboEstados.clearValue();
+            				}
+            				//comboEstados.setLoading(false);
+            			}
+            		});
+            	}
             }
         },
         labelWidth: 250
@@ -2635,7 +2651,7 @@ Ext.onReady(function(){
 		                			{
 		                		    	Ext.Msg.show({
 				                            title:'Datos inv&aacute;lidos',
-				                            msg: 'El c&oacute;digo postal no corresponde al producto',
+				                            msg: 'C&oacute;digo postal no v&aacute;lido para este producto',
 				                            buttons: Ext.Msg.OK,
 				                            icon: Ext.Msg.WARNING
 				                        });
