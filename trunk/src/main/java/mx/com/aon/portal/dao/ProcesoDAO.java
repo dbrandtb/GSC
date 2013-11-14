@@ -2,7 +2,6 @@ package mx.com.aon.portal.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -19,14 +18,14 @@ import mx.com.aon.flujos.cotizacion.model.AyudaCoberturaCotizacionVO;
 import mx.com.aon.flujos.cotizacion.model.CoberturaCotizacionVO;
 import mx.com.aon.flujos.cotizacion.model.DatosEntradaCotizaVO;
 import mx.com.aon.flujos.cotizacion.model.ResultadoCotizacionVO;
-import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSalud;
-import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.Recibo;
 import mx.com.aon.flujos.cotizacion.model.SituacionVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Tatri;
 import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSalud;
+import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.Recibo;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.log4j.Logger;
@@ -46,17 +45,8 @@ public class ProcesoDAO extends AbstractDAO {
 
 	private static Logger logger = Logger.getLogger(ProcesoDAO.class);
 
-	public static final String PERMISO_EJECUCION_PROCESO = "PERMISO_EJECUCION_PROCESO";
-	public static final String GENERAR_ORDEN_TRABAJO = "GENERAR_ORDEN_TRABAJO";
-	public static final String PROCESO_EMISION_DAO = "PROCESO_EMISION_DAO";
-	public static final String BUSCAR_MATRIZ_ASIGNACION = "BUSCAR_MATRIZ_ASIGNACION";
 	public static final String EJECUTA_SIGSVALIPOL = "EJECUTA_SIGSVALIPOL";
 	public static final String EJECUTA_SIGSVALIPOL_EMI = "EJECUTA_SIGSVALIPOL_EMI";
-	
-	
-	
-	/* PARA EL REMPLAZO DE VELOCITY POR JDBCTEMPLATE */
-	
 	public static final String CALCULA_NUMERO_POLIZA = "CALCULA_NUMERO_POLIZA";
 	public static final String GENERA_SUPLEMENTO_FISICO = "GENERA_SUPLEMENTO_FISICO";
 	public static final String GENERA_SUPLEMENTO_LOGICO = "GENERA_SUPLEMENTO_LOGICO";
@@ -139,13 +129,8 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String P_VAL_INFO_PERSONAS="P_VAL_INFO_PERSONAS";
 
 	protected void initDao() throws Exception {
-		addStoredProcedure(PERMISO_EJECUCION_PROCESO,new PermisoEjecucionProceso(getDataSource()));
-		addStoredProcedure(GENERAR_ORDEN_TRABAJO, new GenerarOrdenTrabajo(getDataSource()));
-		addStoredProcedure(PROCESO_EMISION_DAO, new ProcesoEmision(getDataSource()));
-		addStoredProcedure(BUSCAR_MATRIZ_ASIGNACION, new BuscarMatrizAsignacion(getDataSource()));
 		addStoredProcedure(EJECUTA_SIGSVALIPOL, new EjecutarSIGSVALIPOL(getDataSource()));
 		addStoredProcedure(EJECUTA_SIGSVALIPOL_EMI, new EjecutarSIGSVALIPOL_EMI(getDataSource()));
-		/* PARA EL REMPLAZO DE VELOCITY POR JDBCTEMPLATE */
 		addStoredProcedure(CALCULA_NUMERO_POLIZA, new CalculaNumeroPoliza(getDataSource()));
 		addStoredProcedure(GENERA_SUPLEMENTO_FISICO, new GeneraSuplementoFisico(getDataSource()));
 		addStoredProcedure(GENERA_SUPLEMENTO_LOGICO, new GeneraSuplementoLogico(getDataSource()));
@@ -221,192 +206,6 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(OBTENER_TIPSIT,new ObtenerTipsit(getDataSource()));
         addStoredProcedure(P_MOV_TBITACOBROS,new MovBitacobros(getDataSource()));
         addStoredProcedure(P_VAL_INFO_PERSONAS,new PValInfoPersonas(getDataSource()));
-	}
-
-	protected class BuscarMatrizAsignacion extends CustomStoredProcedure {
-		
-		protected BuscarMatrizAsignacion(DataSource dataSource) {
-			super(dataSource, "PKG_CATBO.P_OBTIENE_CDMATRIZ");
-			
-			
-            declareParameter(new SqlParameter("pv_cdunieco_i",
-					OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_cdramo_i",
-					OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_cdelemento_i",
-					OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_cdproceso_i",
-					OracleTypes.NUMERIC));
-
-			declareParameter(new SqlOutParameter("pv_registro_o",
-					OracleTypes.CURSOR, new MatrizAsignacion()));
-			declareParameter(new SqlOutParameter("pv_msg_id_o",
-					OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o",
-					OracleTypes.VARCHAR));
-            
-            
-			compile();
-		}
-		
-		@Override
-		public WrapperResultados mapWrapperResultados(Map map) throws Exception {
-			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
-			WrapperResultados wrapperResultados = mapper.build(map);
-			List result = (List) map.get("pv_registro_o");
-            wrapperResultados.setItemList(result);
-			return wrapperResultados;
-		}
-	}
-	
-	protected class PermisoEjecucionProceso extends CustomStoredProcedure {
-
-		protected PermisoEjecucionProceso(DataSource dataSource) {
-			super(dataSource, "PKG_CATBO.P_Valida_TFPRONEG");
-
-			declareParameter(new SqlParameter("pv_CDUNIECO_i",
-					OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_CDRAMO_i",
-					OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_CDELEMENTO_i",
-					OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_CDPROCESO_i",
-					OracleTypes.NUMERIC));
-
-			declareParameter(new SqlOutParameter("pv_registro_o",
-					OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_msg_id_o",
-					OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o",
-					OracleTypes.VARCHAR));
-
-			compile();
-		}
-
-		@Override
-		public WrapperResultados mapWrapperResultados(Map map) throws Exception {
-			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
-			WrapperResultados wrapperResultados = mapper.build(map);
-			String _pvRegistro = ((map.get("pv_registro_o")) == null) ? ""
-					: (map.get("pv_registro_o")).toString();
-			wrapperResultados.setResultado(_pvRegistro);
-
-			return wrapperResultados;
-		}
-	}
-
-	protected class GenerarOrdenTrabajo extends CustomStoredProcedure {
-
-		protected GenerarOrdenTrabajo(DataSource dataSource) {
-			super(dataSource, "PKG_CATBO.P_GUARDA_CASOS_AUTOMATICOS");
-
-			declareParameter(new SqlParameter("pv_CDELEMENTO_i",
-					OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_CDUNIECO_i",
-					OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_CDUNIAGE_i",
-					OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_CDRAMO_i",
-					OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_ESTADO_i",
-					OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_NMPOLIZA_i",
-					OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_NMSUPLEM_i",
-					OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_CDTIPSIT_i",
-					OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_NMSITUAC_i",
-					OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_CDPROCESO_i",
-					OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_CDUSUARI_i",
-					OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_CDPERSON_i",
-					OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_NMCASO_i",
-					OracleTypes.VARCHAR));
-
-			declareParameter(new SqlOutParameter("pv_msg_id_o",
-					OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o",
-					OracleTypes.VARCHAR));
-
-			compile();
-		}
-
-		@Override
-		public WrapperResultados mapWrapperResultados(Map map) throws Exception {
-			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
-			return mapper.build(map);
-		}
-	}
-
-	protected class ProcesoEmision extends CustomStoredProcedure {
-		
-		protected ProcesoEmision(DataSource dataSource) {
-			super(dataSource, "PKG_EMISION.P_PROCESO_EMISION");
-			
-            declareParameter(new SqlParameter("pv_cdusuari",
-					OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdunieco",
-					OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_cdramo",
-					OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_estado",
-					OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmpoliza",
-					OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_nmsituac",
-					OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_nmsuplem",
-					OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdelement",
-					OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_cdcia",
-					OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_cdplan",
-					OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdperpag",
-					OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_cdperson",
-					OracleTypes.NUMERIC));
-			declareParameter(new SqlParameter("pv_fecha",
-					OracleTypes.VARCHAR));
-
-			declareParameter(new SqlOutParameter("pv_nmpoliza_o",
-					OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_nmpoliex_o",
-					OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_message",
-					OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_msg_id_o",
-					OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o",
-					OracleTypes.VARCHAR));
-			
-			compile();
-		}
-
-		@Override
-		public WrapperResultados mapWrapperResultados(Map map) throws Exception {
-			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
-			WrapperResultados wrapperResultados = mapper.build(map);
-			
-			String numeroPolizaInterno = map.get("pv_nmpoliza_o").toString();
-			String numeroPolizaExterno = map.get("pv_nmpoliex_o").toString();
-			
-			wrapperResultados.setItemMap(new HashMap<String, Object>());
-			wrapperResultados.getItemMap().put("NUMERO_EXTERNO", numeroPolizaExterno);
-			wrapperResultados.getItemMap().put("NUMERO_INTERNO", numeroPolizaInterno);
-			
-			String _pvRegistro = ((map.get("pv_message")) == null) ? ""
-					: (map.get("pv_message")).toString();
-			wrapperResultados.setResultado(_pvRegistro);
-
-			return wrapperResultados;
-		}
-		
 	}
 	
 	
