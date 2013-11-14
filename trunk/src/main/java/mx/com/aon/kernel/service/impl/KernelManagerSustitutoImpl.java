@@ -811,5 +811,34 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         log.debug("### kernel sustituto PValInfoPersonas lista size: "+lista.size());
         return lista;
 	}
+
+
+	public WrapperResultados obtenerAgentePoliza(String cdunieco,
+			String cdramo, String estado, String nmpoliza)
+			throws ApplicationException {		
+			HashMap<String, Object> params = new HashMap<String, Object>();
+			params.put("pi_CDUNIECO", cdunieco);
+			params.put("pi_CDRAMO", cdramo);
+			params.put("pi_ESTADO", estado);
+			params.put("pi_NMPOLIZA", nmpoliza);
+	
+			WrapperResultados result = this.returnBackBoneInvoke(params,
+					ProcesoDAO.OBTIENE_DATOS_POLIZA_AGENTE);
+			return result;
+	}
+
+	public WrapperResultados obtenerTiposAgente() throws ApplicationException {
+		HashMap<String, Object> params = new HashMap<String, Object>();		
+		WrapperResultados result = this.returnBackBoneInvoke(params,
+				ProcesoDAO.OBTIENE_DATOS_GENERAL_AGENTE);
+		return result;
+	}
+
+	public WrapperResultados guardarPorcentajeAgentes(Map<String, Object> params)
+			throws ApplicationException {
+		WrapperResultados result = this.returnBackBoneInvoke(params,
+				ProcesoDAO.GUARDA_PORCENTAJE_POLIZA);
+		return result;
+	}
 	
 }
