@@ -159,7 +159,7 @@ Ext.onReady(function() {
                   handler: function() {
                         if (panelModificacionInsercion.form.isValid()) {
                             var datos=panelModificacionInsercion.form.getValues();
-                            if(parseFloat(datos.sesionComision) >= parseFloat(datos.participacion)){
+                            if(parseFloat(datos.sesionComision) > parseFloat(datos.participacion)){
                                 Ext.Msg.show({
                                     title:'Error',
                                     msg: 'El valor de la partici&oacute;n debe ser mayor a Cesi&oacute;n de comisi&oacute;n',
@@ -268,7 +268,7 @@ Ext.onReady(function() {
                         xtype : 'textfield',
                         id:'unieco',
                         name:'params.cdunieco',
-                        fieldLabel: 'Código de Unidad Económica',
+                        fieldLabel: 'Cï¿½digo de Unidad Econï¿½mica',
                         value: inputCdunieco,
                         allowBlank:false,
                         hidden:true
@@ -285,7 +285,7 @@ Ext.onReady(function() {
                     },
                     {
                         xtype : 'textfield'
-                            ,fieldLabel: 'Estado del la póliza',
+                            ,fieldLabel: 'Estado del la pï¿½liza',
                             id:'estado',
                             name:'params.estado',
                             value: inputEstado,
@@ -293,7 +293,7 @@ Ext.onReady(function() {
                     },
                     {
                         xtype : 'textfield',
-                        fieldLabel: 'Numero de Póliza',
+                        fieldLabel: 'Numero de Pï¿½liza',
                         id:'poliza',
                         name:'params.nmpoliza',
                         value: inputNmpoliza,
@@ -393,7 +393,7 @@ Ext.onReady(function() {
                         formulario['ramo']=formulario['params.ramo'];
                         formulario['estado']=formulario['params.estado'];
                         submitValues['params']=formulario;
-                        submitValues['datosPorcentajeAgente']=guardarRegistros; // guardamos la información del grid, dependiendo del numero
+                        submitValues['datosPorcentajeAgente']=guardarRegistros; // guardamos la informaciï¿½n del grid, dependiendo del numero
                         menuPrincipal.setLoading(true);
                         Ext.Ajax.request(
                                 {
