@@ -131,6 +131,7 @@ public class ConsultasPolizaDAO extends AbstractDAO {
         	consulta.setTitular(rs.getString("titular"));
         	consulta.setCdrfc(rs.getString("cdrfc"));
         	consulta.setCdagente(rs.getString("cdagente"));
+        	consulta.setStatuspoliza(rs.getString("status_poliza"));
         	
             return consulta;
         }
@@ -520,6 +521,7 @@ public class ConsultasPolizaDAO extends AbstractDAO {
     		consulta.setTitular(rs.getString("titular"));
     		consulta.setFenacimi(Utilerias.formateaFecha(rs.getString("fenacimi")));
     		consulta.setSexo(rs.getString("Sexo"));
+    		consulta.setStatus(rs.getString("status"));
     		return consulta;
     	}
     }
