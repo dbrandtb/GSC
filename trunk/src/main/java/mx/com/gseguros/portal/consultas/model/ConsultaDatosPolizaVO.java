@@ -44,6 +44,7 @@ public class ConsultaDatosPolizaVO implements Serializable{
 	private String titular;
 	private String cdrfc;
 	private String cdagente;
+	private String statuspoliza;
 
 	
 	public String getNmsolici() {
@@ -210,6 +211,12 @@ public class ConsultaDatosPolizaVO implements Serializable{
 	}
 	public void setCdagente(String cdagente) {
 		this.cdagente = cdagente;
+	}
+	public String getStatuspoliza() {
+		return statuspoliza;
+	}
+	public void setStatuspoliza(String statuspoliza) {
+		this.statuspoliza = statuspoliza;
 	}
 	public String toString(){
 		return ToStringBuilder.reflectionToString(this,ToStringStyle.MULTI_LINE_STYLE);
