@@ -1317,6 +1317,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 		 */
 		logger.debug("*** Empieza generacion de URLs para Recibos ***");
 		for(Recibo recibo: recibos){
+			if( 1 != recibo.getNumRec()) continue;
 			try{
 //				Parametro1:  9999: Recibo
 //				Parametro2:  Siempre va en 0
