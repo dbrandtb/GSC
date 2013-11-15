@@ -271,7 +271,8 @@ Ext.onReady(function() {
 			{type:'string', name:'dsperpag'},
 			{type:'string', name:'dstempot'},
 			{type:'string', name:'nmpoliex'},
-			{type:'string', name:'cdagente'}
+			{type:'string', name:'cdagente'},
+			{type:'string', name:'statuspoliza'}
 		]
 	});
 
@@ -332,7 +333,11 @@ Ext.onReady(function() {
         }, {
             layout : 'hbox',
             items : {xtype: 'textfield', name: 'dstempot', fieldLabel: 'Tipo de P&oacute;liza', readOnly: true, labelWidth: 120}
-        } ]
+        }, {
+            layout : 'hbox',
+            items : {xtype: 'textfield', name: 'statuspoliza', fieldLabel: 'ESTATUS', readOnly: true, labelWidth: 120}
+        }   
+        ]
     });
     
     
@@ -422,7 +427,8 @@ Ext.onReady(function() {
 			{type:'date',	name:'fenacimi', dateFormat: 'd/m/Y'},
 			{type:'string',	name:'nmsituac'},
 			{type:'string',	name:'sexo'},
-			{type:'string',	name:'titular'}
+			{type:'string',	name:'titular'},
+			{type:'string',	name:'status'}
 	    ]
 	});
 	
@@ -452,10 +458,11 @@ Ext.onReady(function() {
 		}],
 		columns: [
 			{text:'Rol',dataIndex:'dsrol',width:130 , align:'left'},
-			{text:'Titular',dataIndex:'titular',width:270,align:'left'},
-			{text:'RFC',dataIndex:'cdrfc',width:150,align:'left'},
-			{text:'Sexo',dataIndex:'sexo',width:100 , align:'left'},
-			{text:'Fecha de Nacimiento',dataIndex:'fenacimi',width:150, align:'left',renderer: Ext.util.Format.dateRenderer('d/m/Y')}
+			{text:'Nombre',dataIndex:'titular',width:270,align:'left'},
+			{text:'Estatus',dataIndex:'status',width:100,align:'left'},
+			{text:'RFC',dataIndex:'cdrfc',width:120,align:'left'},
+			{text:'Sexo',dataIndex:'sexo',width:80 , align:'left'},
+			{text:'Fecha Nac.',dataIndex:'fenacimi',width:100, align:'left',renderer: Ext.util.Format.dateRenderer('d/m/Y')}
 		]
 	});
     
@@ -632,7 +639,8 @@ Ext.onReady(function() {
 			bodyPadding: 5
 		},
 		items:[
-			{xtype:'textfield', name:'cdideper', fieldLabel: 'RFC', readOnly: true, labelWidth: 120}, 
+			{xtype:'textfield', name:'cdideper', fieldLabel: 'RFC', readOnly: true, labelWidth: 120},
+			{xtype:'textfield', name:'cdagente', fieldLabel: 'C&oacute;digo', readOnly: true, labelWidth: 120},
 			{xtype:'textfield', name:'nombre',   fieldLabel: 'Nombre', readOnly: true, labelWidth: 120, width: 400},
 			{xtype: 'datefield',name:'fedesde',  fieldLabel: 'Fecha de ingreso', format: 'd/m/Y', readOnly: true, labelWidth: 120}
 		]
