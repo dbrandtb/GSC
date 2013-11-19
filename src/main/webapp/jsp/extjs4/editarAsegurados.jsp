@@ -33,6 +33,7 @@
 	var editorRolesp2;
 	var editorGenerosp2;
 	var editorNacionesp2;
+	var editorNombreContratantep2;
 	var urlCargarAseguradosp2='<s:url namespace="/" action="cargarComplementariosAsegurados" />';
 	var urlCargarCatalogosp2='<s:url namespace="/flujocotizacion" action="cargarCatalogos" />';
 	var urlDatosComplementariosp2='<s:url namespace="/" action="datosComplementarios.action" />';
@@ -769,6 +770,32 @@ debug("validarYGuardar flag:2");
             model     : 'Modelo1p2'
         });
 	    
+	    editorNombreContratantep2=Ext.create('Ext.form.field.Text',
+	    {
+	    	allowBlank  : false
+	    	,fieldWidth : 300
+	    });
+	    
+	    editorNombreContratantep2.on('focus',function()
+        {
+            debug('focus en contratante');
+            $('.grid_tomador_p2_id_help').remove();
+            $('#grid_tomador_p2_id').after('<span class="grid_tomador_p2_id_help">'+this.value+'</span>');
+        });
+	    
+	    editorNombreContratantep2.on('change',function()
+	    {
+	    	debug('cambio en contratante');
+	    	$('.grid_tomador_p2_id_help').remove();
+	    	$('#grid_tomador_p2_id').after('<span class="grid_tomador_p2_id_help">'+this.value+'</span>');
+	    });
+	    
+	    editorNombreContratantep2.on('blur',function()
+        {
+            debug('blur en contratante');
+            $('.grid_tomador_p2_id_help').remove();
+        });
+	    
 	    editorRolesp2=Ext.create('Ext.form.ComboBox',
    	    {
    	        store: storeRolesp2,
@@ -1077,6 +1104,7 @@ debug("validarYGuardar flag:2");
 	    Ext.define('GridTomadorP2',
    	    {
 	    	extend         : 'Ext.grid.Panel'
+	    	,id            : 'grid_tomador_p2_id'
 	    	,title         : 'Contratante'
 	    	,store         : storeTomadorp2
 	        ,frame         : false
