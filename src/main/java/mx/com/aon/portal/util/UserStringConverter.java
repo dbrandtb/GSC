@@ -4,12 +4,15 @@ import org.apache.log4j.Logger;
 import org.apache.commons.beanutils.Converter;
 
 import java.text.SimpleDateFormat;
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 
-public class UserStringConverter implements Converter {
-  private static Logger logger = Logger.getLogger(UserStringConverter.class);
+public class UserStringConverter implements Converter, Serializable {
+	
+	private static final long serialVersionUID = 3171706196483683019L;
 
+	private static Logger logger = Logger.getLogger(UserStringConverter.class);
 
   public static  String TABLA_CANAL_PRODUCTO="SAV_CANAL_PRODUCTOS";
   public static  String MASCARA_DATE_ddMMYYYY="dd-MM-yyyy";
