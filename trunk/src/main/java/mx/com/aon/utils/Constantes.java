@@ -104,14 +104,4 @@ public class Constantes {
      */
     public static final String FORMAT_TIF = "TIF";
     
-
-    /**
-     * Mensaje Atributo Variable cuando tiene hijos asociados
-     */
-    public static final String MESSAGE_ATRIBUTO_CON_HIJOS_ASOCIADOS = "El atributo tiene hijos asociados, si se elimina también se eliminarán esas asociaciones. ¿Desea continuar?";
-    
-    /**
-     * Codigo de Registro duplicado en BD 
-     */
-    public static final String REGISTRO_DUPLICADO = "100006";
 }
