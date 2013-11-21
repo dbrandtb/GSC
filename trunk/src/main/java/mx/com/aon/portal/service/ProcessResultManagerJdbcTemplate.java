@@ -9,6 +9,7 @@ import mx.com.gseguros.exception.DaoException;
 
 import org.apache.log4j.Logger;
 
+@Deprecated
 public class ProcessResultManagerJdbcTemplate {
 
     @SuppressWarnings("unused")

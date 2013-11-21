@@ -7,7 +7,7 @@ import mx.com.aon.portal.util.WrapperResultados;
 import javax.sql.DataSource;
 import java.util.Map;
 
-
+@Deprecated
 public abstract class CustomStoredProcedure extends StoredProcedure {
 
 

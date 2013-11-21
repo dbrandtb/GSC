@@ -4,7 +4,7 @@ import mx.com.aon.portal.util.WrapperResultados;
 
 import java.util.Map;
 import java.sql.SQLException;
-
+@Deprecated
 public class WrapperResultadosGeneric implements WrapperResultadosBuilder {
 
 	public static String MSG_ID_OK = "200000";
