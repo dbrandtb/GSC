@@ -862,6 +862,33 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 				);
 		try
 		{
+			///////////////////////////////////
+			////// validar la extraprima //////
+			/*///////////////////////////////*/
+			String statusValidacionExtraprimas="S";
+			try
+			{
+				Map<String,String>paramValExtraprima=new LinkedHashMap<String,String>(0);
+				paramValExtraprima.put("pv_cdunieco_i" , cdunieco);
+				paramValExtraprima.put("pv_cdramo_i"   , cdramo);
+				paramValExtraprima.put("pv_estado_i"   , "W");
+				paramValExtraprima.put("pv_nmpoliza_i" , panel1.get("nmpoliza"));
+				statusValidacionExtraprimas=(String) kernelManager.validarExtraprima(paramValExtraprima).getItemMap().get("status");
+				log.debug("tiene status la extraprima: "+statusValidacionExtraprimas);
+			}
+			catch(Exception ex)
+			{
+				log.error("Error sin impacto funcional al validar extraprimas: ",ex);
+				statusValidacionExtraprimas="S";
+			}
+			if(statusValidacionExtraprimas.equalsIgnoreCase("N"))
+			{
+				mensajeRespuesta="Favor de verificar las extraprimas y los endosos de extraprima";
+				return SUCCESS;
+			}
+			/*///////////////////////////////*/
+			////// validar la extraprima //////
+			///////////////////////////////////
 			
 			//////////////////////////////////////////
 			////// validar que tengan direccion //1548
@@ -877,7 +904,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			}
 			catch(Exception ex)
 			{
-				log.error("Error sin impacto funcional al validar: ",ex);
+				log.error("Error sin impacto funcional al validar domicilios: ",ex);
 				lisUsuSinDir=null;
 			}
 			
