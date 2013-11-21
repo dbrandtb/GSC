@@ -6,7 +6,7 @@ import java.util.Map;
 import mx.com.gseguros.exception.DaoException;
 
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
-
+@Deprecated
 public abstract class AbstractDAO  extends JdbcDaoSupport {
 
 	/**

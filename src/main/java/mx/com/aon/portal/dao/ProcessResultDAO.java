@@ -18,6 +18,7 @@ import java.util.Map;
  * Time: 1:06:38 AM
  * To change this template use File | Settings | File Templates.
  */
+@Deprecated
 public class ProcessResultDAO extends AbstractDAO {
 
     private static Logger logger = Logger.getLogger(ProcessResultDAO.class);
