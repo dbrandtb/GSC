@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:jee="http://www.springframework.org/schema/jee"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+    http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.0.xsd">
+    
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+        <property name="url" value="jdbc:oracle:thin:@10.1.1.133:6521:GSEGUROS"/>
+        <property name="username" value="ice"/>
+        <property name="password" value="ice"/>
+        <!--
+        <property name="maxActive" value="30"/>
+        <property name="maxIdle" value="10"/>
+        <property name="maxWait" value="1000"/>
+        <property name="defaultAutoCommit" value="true"/>
+        -->
+    </bean>
+    
+    <!-- <jee:jndi-lookup id="dataSource" jndi-name="jdbc/gseguros"/> -->
+
+    
+    <!-- Transaction manager for Spring JDBC -->
+    <!-- <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean> -->
+    <!-- <bean id="nativeJdbcExtractor" class="org.springframework.jdbc.support.nativejdbc.SimpleNativeJdbcExtractor" lazy-init="true"/> -->
+    <!-- LobHandler for Oracle JDBC drivers
+        (refers to the NativeJdbcExtractor above to get access to native OracleConnections) -->
+    <!-- <bean id="oracleLobHandler" class="org.springframework.jdbc.support.lob.OracleLobHandler" lazy-init="true">
+        <property name="nativeJdbcExtractor"><ref local="nativeJdbcExtractor"/></property>
+    </bean> -->
+    
+
+    <!-- Agregado para setear el contexto de VPD -->
+    <bean class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+        <property name="beanNames">
+            <list>
+                <value>dataSource</value>
+            </list>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <value>dataAccessInterceptor</value>
+            </list>
+        </property>
+        <property name="proxyTargetClass" value="false"/>
+    </bean>
+
+    <bean id="dataAccessInterceptor" class="mx.com.aon.portal.util.ConnectionCallInterceptor"/>
+    <!-- Fin Agregado para setear el contexto de VPD -->
+
+
+    <!-- Beans utilizados para Spring JDBC: -->
+    <bean id="processResultDAO" class="mx.com.aon.portal.dao.ProcessResultDAO">
+       <property name="dataSource" ref="dataSource" />
+    </bean>
+    
+    <bean id="processResultManagerJdbcTemplate" class="mx.com.aon.portal.service.ProcessResultManagerJdbcTemplate">
+        <property name="abstractDAO">
+            <ref bean="processResultDAO"/>
+        </property>
+    </bean>
+
+    <bean id="abstractManagerJdbcTemplateInvoke" abstract="true" class="mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke">
+        <property name="processResultManager">
+            <ref bean="processResultManagerJdbcTemplate"/>
+        </property>
+    </bean>
+    
+    <!-- Nuevo patron de Spring JDBC: -->
+    <bean id="abstractJdbcDAO" abstract="true" class="org.springframework.jdbc.core.support.JdbcDaoSupport">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    
+    <bean id="procesoResultadoDAO" class="mx.com.gseguros.portal.dao.impl.ProcesoResultadoDAOImpl" parent="abstractManagerDAO"/>
+    
+    <bean id="abstractManagerDAO" abstract="true" class="mx.com.gseguros.portal.dao.AbstractManagerDAO" parent="abstractJdbcDAO">
+        <property name="procesoResultadoDAO" ref="procesoResultadoDAO"/>
+    </bean>
+    <!-- Fin de Beans utilizados para Spring JDBC: -->
+    
+</beans>
