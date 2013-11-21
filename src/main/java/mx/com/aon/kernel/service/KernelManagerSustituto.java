@@ -99,4 +99,5 @@ public interface KernelManagerSustituto {
 	public WrapperResultados obtenerAgentePoliza(String cdunieco, String cdramo, String estado, String nmpoliza)throws ApplicationException;
 	public WrapperResultados obtenerTiposAgente()throws ApplicationException;
 	public WrapperResultados guardarPorcentajeAgentes(Map<String, Object> params) throws ApplicationException;
+	public WrapperResultados validarExtraprima(Map<String, String> params) throws ApplicationException;
 }
