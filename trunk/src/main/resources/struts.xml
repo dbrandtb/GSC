@@ -21,9 +21,13 @@
 	
 	<include file="struts/config/struts-documentosPoliza.xml"/>
 	
+	<include file="struts/config/struts-flujos-cancelacion.xml"/>
+	
     <include file="struts/config/struts-flujos-cotizacion.xml"/>
     
     <include file="struts/config/struts-flujos-emision.xml"/>
+    
+    <include file="struts/config/struts-flujos-rehabilitacion.xml"/>
     
 	<include file="struts/config/struts-mesacontrol.xml"/>
 	
