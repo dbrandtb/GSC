@@ -29,6 +29,8 @@
     
     <include file="struts/config/struts-flujos-rehabilitacion.xml"/>
     
+    <include file="struts/config/struts-flujos-siniestros.xml"/>
+    
 	<include file="struts/config/struts-mesacontrol.xml"/>
 	
 	<include file="struts/config/struts-portal.xml"/>
