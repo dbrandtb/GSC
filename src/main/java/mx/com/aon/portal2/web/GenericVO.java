@@ -1,16 +1,16 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package mx.com.aon.portal2.web;
+
+import java.io.Serializable;
 
 /**
  *
  * @author Jair
  */
-public class GenericVO {
+public class GenericVO implements Serializable {
     
-    private String key;
+	private static final long serialVersionUID = -5060990997960225913L;
+	
+	private String key;
     private String value;
     
     public GenericVO(){}
