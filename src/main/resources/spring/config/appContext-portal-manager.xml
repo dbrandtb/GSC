@@ -3,11 +3,11 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
     <!-- CombosManager2 -->
-        <bean id="comboManagerJdbcTemplateImpl" class="mx.com.aon.portal.service.impl.ComboManagerJdbcTemplateImpl" parent="abstractManagerJdbcTemplateInvoke">
-            <property name="abstractDAO">
-                <ref bean="combosDAOPortal"/>
-            </property>
-        </bean>
+    <bean id="comboManagerJdbcTemplateImpl" class="mx.com.aon.portal.service.impl.ComboManagerJdbcTemplateImpl" parent="abstractManagerJdbcTemplateInvoke">
+        <property name="abstractDAO">
+            <ref bean="combosDAO"/>
+        </property>
+    </bean>
     <!--CombosManager2 -->
 
     <!-- UsuarioManager -->
@@ -23,42 +23,24 @@
 
 	<bean id="navigationManagerJdbcTemplate" class="mx.com.aon.portal.service.impl.NavigationManagerJdbcTemplateImpl" parent="abstractManagerJdbcTemplateInvoke">
         <property name="abstractDAO">
-                <ref bean="usuarioDAO"/>
+            <ref bean="usuarioDAO"/>
         </property>
     </bean>
 
     <bean id="paginaPrincipalManager" class="mx.com.aon.portal.service.impl.PaginaPrincipalManagerImpl"  parent="abstractManagerJdbcTemplateInvoke">
     	<property name="abstractDAO">
-                <ref bean="paginaPrincipalDAO"/>
+            <ref bean="paginaPrincipalDAO"/>
         </property>
     </bean>
     
-    <!-- Beans utilizados para JdbcTemplates: -->
-
-    <bean id="processResultManagerJdbcTemplate" class="mx.com.aon.portal.service.ProcessResultManagerJdbcTemplate">
-        <property name="abstractDAO">
-            <ref bean="processResultDAO"/>
-        </property>
-    </bean>
-
-
-    <bean id="abstractManagerJdbcTemplateInvoke" abstract="true" class="mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke">
-        <property name="processResultManager">
-            <ref bean="processResultManagerJdbcTemplate"/>
-        </property>
-    </bean>
-    <!-- FIN de beans utilizados para JdbcTemplates -->
-    
-    
-    <!-- bean utilizado para acceder a BD utilizando JdbcTemplates -->
     <bean id="menuPrincipalManagerJdbcTemplate" class="mx.com.aon.portal.service.impl.MenuPrincipalManagerJdbcTemplateImpl" parent="abstractManagerJdbcTemplateInvoke">
-            <property name="abstractDAO">
-                <ref bean="menuPrincipalDAO"/>
-            </property>
+	    <property name="abstractDAO">
+	        <ref bean="menuPrincipalDAO"/>
+	    </property>
 	</bean>
 	
-	<bean id="principalManagerJdbcTemplate"
-        class="mx.com.aon.portal.service.impl.principal.PrincipalManagerJdbcTemplateImpl" parent="abstractManagerJdbcTemplateInvoke">
+	<bean id="principalManagerJdbcTemplate" class="mx.com.aon.portal.service.impl.principal.PrincipalManagerJdbcTemplateImpl" 
+	   parent="abstractManagerJdbcTemplateInvoke">
         <property name="abstractDAO">
             <ref bean="principalDAO"/>
         </property>
