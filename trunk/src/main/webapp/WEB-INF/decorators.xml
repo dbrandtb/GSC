@@ -74,8 +74,8 @@
         <pattern>/catalogos/clausulas.action</pattern>
         <pattern>/jsp/consultas/consultaClausulas.jsp</pattern>
         
-        
-		
+        <pattern>/cancelacion/pantallaCancelar.action</pattern>
+        <pattern>/jsp-script/proceso/cancelacion/pantallaCancelar.jsp</pattern>
         
 	</decorator>
 	
