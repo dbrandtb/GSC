@@ -77,6 +77,9 @@
         <pattern>/cancelacion/pantallaCancelar.action</pattern>
         <pattern>/jsp-script/proceso/cancelacion/pantallaCancelar.jsp</pattern>
         
+        <pattern>/cancelacion/principal.action</pattern>
+        <pattern>/jsp-script/proceso/cancelacion/marcoCancelacion.jsp</pattern>
+        
 	</decorator>
 	
 	
