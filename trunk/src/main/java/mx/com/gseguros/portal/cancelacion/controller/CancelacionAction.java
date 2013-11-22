@@ -1,8 +1,9 @@
 package mx.com.gseguros.portal.cancelacion.controller;
 
+import java.util.List;
 import java.util.Map;
-
 import mx.com.aon.core.web.PrincipalCoreAction;
+import mx.com.gseguros.portal.cancelacion.service.CancelacionManager;
 import mx.com.gseguros.portal.general.util.ConstantesCatalogos;
 
 public class CancelacionAction extends PrincipalCoreAction implements ConstantesCatalogos
@@ -10,6 +11,10 @@ public class CancelacionAction extends PrincipalCoreAction implements Constantes
 	
 	private static final long serialVersionUID = 3337342608259982346L;
 	private static org.apache.log4j.Logger log=org.apache.log4j.Logger.getLogger(CancelacionAction.class);
+	private Map<String,String>smap1;
+	private boolean success=false;
+	private CancelacionManager cancelacionManager;
+	private List<Map<String,String>>slist1;
 	
 	//////////////////////////////////
 	////// marco de cancelacion //////
@@ -57,6 +62,44 @@ public class CancelacionAction extends PrincipalCoreAction implements Constantes
 	////// manda a la pantalla de cancelar //////
 	/////////////////////////////////////////////
 
+	////////////////////////////
+	////// buscar polizas //////
+	/*////////////////////////*/
+	public String buscarPolizas()
+	{
+		log.debug(""
+				+ "\n###########################"
+				+ "\n###########################"
+				+ "\n###### buscarPolizas ######"
+				+ "\n######               ######"
+				);
+		log.debug("smap1: "+smap1);
+		try
+		{
+			slist1=cancelacionManager.buscarPolizas(smap1);
+		}
+		catch(Exception ex)
+		{
+			log.error("error al obtener polizas",ex);
+			slist1=null;
+			success=false;
+		}
+		success=true;
+		log.debug(""
+				+ "\n######               ######"
+				+ "\n###### buscarPolizas ######"
+				+ "\n###########################"
+				+ "\n###########################"
+				);
+		return SUCCESS;
+	}
+	/*////////////////////////*/
+	////// buscar polizas //////
+	////////////////////////////
+	
+	/////////////////////////////////
+	////// getters and setters //////
+	/*/////////////////////////////*/
 	@Override
 	public String getCON_CAT_POL_ESTADO() {
 		// TODO Auto-generated method stub
@@ -115,6 +158,34 @@ public class CancelacionAction extends PrincipalCoreAction implements Constantes
 	public String getCON_CAT_NACIONALIDAD() {
 		// TODO Auto-generated method stub
 		return CON_CAT_NACIONALIDAD;
+	}
+
+	public Map<String, String> getSmap1() {
+		return smap1;
+	}
+
+	public void setSmap1(Map<String, String> smap1) {
+		this.smap1 = smap1;
+	}
+
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
+	}
+
+	public void setCancelacionManager(CancelacionManager cancelacionManager) {
+		this.cancelacionManager = cancelacionManager;
+	}
+
+	public List<Map<String, String>> getSlist1() {
+		return slist1;
+	}
+
+	public void setSlist1(List<Map<String, String>> slist1) {
+		this.slist1 = slist1;
 	}
 		
 }
