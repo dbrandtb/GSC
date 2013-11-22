@@ -8,8 +8,9 @@
     ///////////////////////
     ////// variables //////
     /*///////////////////*/
-    var panCanUrlCat     = '<s:url namespace="/flujocotizacion"  action="cargarCatalogos" />';
-    var panCanUrlAgentes = '<s:url namespace="/mesacontrol"      action="obtieneAgentes" />';
+    var panCanUrlCat       = '<s:url namespace="/flujocotizacion"  action="cargarCatalogos" />';
+    var panCanUrlAgentes   = '<s:url namespace="/mesacontrol"      action="obtieneAgentes" />';
+    var panCanUrlLoadRamos = '<s:url namespace="/"                 action="obtenerRamos" />';
     /*///////////////////*/
     ////// variables //////
     ///////////////////////
@@ -27,10 +28,14 @@ Ext.onReady(function()
     
     /////////////////////
     ////// modelos //////
-    /*/////////////////*
-    Ext.define('Modelo1',
-    {
-        extend:'Ext.data.Model'
+    /*/////////////////*/
+    Ext.define('Ramo',{
+        extend:'Ext.data.Model',
+        fields:
+        [
+            "cdramo"
+            ,"dsramo"
+        ]
     });
     /*/////////////////*/
     ////// modelos //////
@@ -80,7 +85,15 @@ Ext.onReady(function()
     {
     	renderTo     : 'panCanDivPri'
     	,title       : 'Cancelaci&oacute;n'
-    	,bodyPadding : 5
+    	,layout      :
+    	{
+    		type     : 'table'
+    		,columns : 2
+    	}
+    	,defaults    :
+    	{
+    		style : 'margin:5px;'
+    	}
     	,items       :
     	[
     	    Ext.create('Ext.form.field.ComboBox',
@@ -109,6 +122,19 @@ Ext.onReady(function()
 	                    }
 	                }
 	            })
+	            ,listeners    :
+	            {
+	            	'change' : function()
+	            	{
+	            		Ext.getCmp('panCanComboRamos').getStore().load(
+	            		{
+	            			params :
+	            			{
+	            				'map1.cdunieco' : this.getValue()
+	            			}
+	            		});
+	            	}
+	            }
 	        })
 	        ,Ext.create('Ext.form.field.ComboBox',
             {
@@ -135,6 +161,32 @@ Ext.onReady(function()
                         {
                             type  : 'json'
                             ,root : 'lista'
+                        }
+                    }
+                })
+            })
+            ,Ext.create('Ext.form.field.ComboBox',
+            {
+                fieldLabel      : 'Producto'
+                ,id             : 'panCanComboRamos'
+                ,name           : 'smap1.pv_cdramo_i'
+                ,allowBlank     : false
+                ,editable       : false
+                ,valueField     : 'cdramo'
+                ,displayField   : 'dsramo'
+                ,forceSelection : true
+                ,queryMode      :'local'
+                ,store          : Ext.create('Ext.data.Store', {
+                    model     : 'Ramo'
+                    ,autoLoad : false
+                    ,proxy    :
+                    {
+                        type         : 'ajax'
+                        ,url         : panCanUrlLoadRamos
+                        ,reader      :
+                        {
+                            type  : 'json'
+                            ,root : 'slist1'
                         }
                     }
                 })

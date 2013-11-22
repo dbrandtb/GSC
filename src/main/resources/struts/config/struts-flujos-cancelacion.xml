@@ -4,6 +4,10 @@
     
     <package name="cancelacion" extends="json-default" namespace="/cancelacion">
         
+        <action name="principal" class="CancelacionAction" method="marcoCancelacion">
+            <result name="success">/jsp-script/proceso/cancelacion/marcoCancelacion.jsp</result>
+        </action>
+        
         <action name="pantallaCancelar" class="CancelacionAction" method="pantallaCancelar">
             <result name="success">/jsp-script/proceso/cancelacion/pantallaCancelar.jsp</result>
         </action>

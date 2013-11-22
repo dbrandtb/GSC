@@ -11,6 +11,29 @@ public class CancelacionAction extends PrincipalCoreAction implements Constantes
 	private static final long serialVersionUID = 3337342608259982346L;
 	private static org.apache.log4j.Logger log=org.apache.log4j.Logger.getLogger(CancelacionAction.class);
 	
+	//////////////////////////////////
+	////// marco de cancelacion //////
+	/*//////////////////////////////*/
+	public String marcoCancelacion()
+	{
+		log.debug(""
+				+ "\n##############################"
+				+ "\n##############################"
+				+ "\n###### marcoCancelacion ######"
+				+ "\n######                  ######"
+				);
+		log.debug(""
+				+ "\n######                  ######"
+				+ "\n###### marcoCancelacion ######"
+				+ "\n##############################"
+				+ "\n##############################"
+				);
+		return SUCCESS;
+	}
+	/*//////////////////////////////*/
+	////// marco de cancelacion //////
+	//////////////////////////////////
+	
 	/////////////////////////////////////////////
 	////// manda a la pantalla de cancelar //////
 	/*/////////////////////////////////////////*/
