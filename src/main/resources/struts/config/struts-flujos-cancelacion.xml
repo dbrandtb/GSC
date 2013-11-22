@@ -12,6 +12,10 @@
             <result name="success">/jsp-script/proceso/cancelacion/pantallaCancelar.jsp</result>
         </action>
         
+        <action name="buscarPolizas" class="CancelacionAction" method="buscarPolizas">
+            <result name="success" type="json" />
+        </action>
+        
     </package>
 
 </struts>

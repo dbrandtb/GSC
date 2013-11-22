@@ -11,6 +11,7 @@
     var marcanurlcata      = '<s:url namespace="/flujocotizacion" action="cargarCatalogos" />';
     var marcanurlramos     = '<s:url namespace="/"                action="obtenerRamos" />';
     var marcanStorePolizas;
+    var marcanUrlFiltro    = '<s:url namespace="/cancelacion"     action="buscarPolizas" />'
     /*///////////////////*/
     ////// variables //////
     ///////////////////////
@@ -77,7 +78,7 @@ Ext.onReady(function()
     ////////////////////
     ////// stores //////
     /*////////////////*/
-    marcanStorePolizas=Ext.create('Ext.data.Store',
+    marcanStorePolizas = Ext.create('Ext.data.Store',
     {
         pageSize  : 10
         ,autoLoad : true
@@ -90,6 +91,7 @@ Ext.onReady(function()
             ,data         : []
         }
     });
+    
     /*////////////////*/
     ////// stores //////
     ////////////////////
@@ -126,7 +128,7 @@ Ext.onReady(function()
     ///////////////////////
     ////// contenido //////
     /*///////////////////*/
-    Ext.create('Ext.form.Panel',
+    Ext.create('Ext.panel.Panel',
     {
     	renderTo  : 'marcoCancelacionDiv'
     	,title    : 'Cancelaci&oacute;n'
@@ -140,6 +142,7 @@ Ext.onReady(function()
     	    {
     	    	title          : 'B&uacute;squeda'
     	    	,width         : 1000
+    	    	,url           : marcanUrlFiltro
     	    	,layout        :
     	    	{
     	    		type     : 'table'
@@ -153,28 +156,6 @@ Ext.onReady(function()
     	    	,titleCollapse : true
     	    	,buttonAlign   : 'center'
     	    	,frame         : true
-    	    	,tbar          :
-    	    	[
-    	    		{
-    	    			text  : 'Tipo de b&uacute;squeda'
-    	    			,icon : '${ctx}/resources/fam3icons/icons/cog.png'
-   	    				,menu :
-   	                    {
-   	                        xtype     : 'menu'
-   	                        ,items    :
-   	                        [
-   	                            {
-   	                                text     : 'General'
-   	                                ,handler : function(){marcanMostrarControlesFiltro(1);}
-   	                            }
-   	                            ,{
-   	                                text     : 'P&oacute;liza'
-	                                ,handler : function(){marcanMostrarControlesFiltro(2);}
-   	                            }
-   	                        ]
-   	                    }
-    	    		}
-    	    	]
     	    	,items         :
     	    	[
     	    	    {
@@ -279,15 +260,75 @@ Ext.onReady(function()
                         ,id         : 'marcanFilNmpoliex'
                         ,name       : 'smap1.pv_nmpoliex_i'
                         ,fieldLabel : 'N&uacute;mero de p&oacute;liza'
-                        ,allowBlank : false
+                        ,allowBlank : true
                     }
     	    	]
     	    	,buttons       :
     	    	[
-    	    		{
-    	    			text  : 'B&uacute;squeda general'
-    	    			,id   : 'marcanFilBotGen'
-    	    			,icon : '${ctx}/resources/fam3icons/icons/zoom.png'
+					{
+					    text  : 'Tipo de b&uacute;squeda'
+					    ,icon : '${ctx}/resources/fam3icons/icons/cog.png'
+					    ,menu :
+					    {
+					        xtype     : 'menu'
+					        ,items    :
+					        [
+					            {
+					                text     : 'General'
+					                ,handler : function(){marcanMostrarControlesFiltro(1);}
+					            }
+					            ,{
+					                text     : 'P&oacute;liza'
+					                ,handler : function(){marcanMostrarControlesFiltro(2);}
+					            }
+					        ]
+					    }
+					}
+    	    		,{
+    	    			text     : 'B&uacute;squeda general'
+    	    			,id      : 'marcanFilBotGen'
+    	    			,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
+    	    			,handler : function()
+    	    		    {
+    	    				if(this.up().up().isValid())
+    	    				{
+	    	    				this.up().up().submit(
+	    	    				{
+	    	    					success  : function(form,action)
+	    	    					{
+	    	    						debug(action);
+	    	    						var json = Ext.decode(action.response.responseText);
+	    	    						debug(json);
+	    	    						var msg=Ext.Msg.show(
+	                                    {
+	                                        title   : 'OK',
+	                                        msg     : 'OK: '+json.success,
+	                                        buttons : Ext.Msg.OK
+	                                    });
+	    	    					}
+	    	    				    ,failure : function()
+	    	    				    {
+	    	    				    	Ext.Msg.show(
+	    				                {
+	    				                    title   : 'Error',
+	    				                    icon    : Ext.Msg.ERROR,
+	    				                    msg     : 'Error de comunicaci&oacute;n',
+	    				                    buttons : Ext.Msg.OK
+	    				                });
+	    	    				    }
+	    	    				});
+    	    				}
+    	    				else
+    	    				{
+    	    					Ext.Msg.show(
+                                {
+                                    title   : 'Datos imcompletos',
+                                    icon    : Ext.Msg.WARNING,
+                                    msg     : 'Favor de llenar los campos requeridos',
+                                    buttons : Ext.Msg.OK
+                                });
+    	    				}
+    	    		    }
     	    		}
     	    		,{
     	    			text    : 'B&uacute;squeda por p&oacute;liza'
@@ -324,16 +365,23 @@ Ext.onReady(function()
     	    	[
     	    	    Ext.create('Ext.panel.Panel',
     	    	    {
-    	    	    	title      : 'Operaciones'
-    	    	    	,style     : 'margin-right : 5px;'
-    	    	    	,width     : 150
-    	    	    	,minHeight : 150
-    	    	    	,frame     : true
+    	    	    	style        : 'margin-right : 5px;'
+    	    	    	,width       : 180
+    	    	    	,minHeight   : 150
+    	    	    	,frame       : true
+    	    	    	,items       :
+    	    	    	[
+    	    	    	    {
+    	    	    	    	xtype  : 'button'
+	    	    	    	    ,text  : 'Cancelaci&oacute;n &uacute;nica'
+	    	    	    	    ,width : 169
+    	    	    	    }
+    	    	    	]
     	    	    })
     	    	    ,Ext.create('Ext.panel.Panel',
     	    	    {
     	    	    	frame      : true
-    	    	    	,width     : 845
+    	    	    	,minWidth  : 815
     	    	    	,minHeight : 150
     	    	    })
     	    	]
