@@ -25,9 +25,6 @@
             var inputNmpoliza='<s:property value="nmpoliza" />';
             --%>
         </script>
-        <%--
-        <script type="text/javascript" src="${ctx}/resources/scripts/util/extjs4_utils.js"></script>
-        --%>
         <script type="text/javascript" src="${ctx}/js/consultas/agentes/consultaAgentes.js"></script>
         <%--
     </head>
