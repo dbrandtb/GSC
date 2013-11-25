@@ -67,7 +67,7 @@ public abstract class AbstractManagerDAO extends JdbcDaoSupport {
         	BaseVO mensajeRespuesta = procesoResultadoDAO.obtieneMensaje(msgId, "0", null, null);
         	
         	if (mensajeRespuesta == null || StringUtils.isBlank(mensajeRespuesta.getKey()) || StringUtils.isBlank(mensajeRespuesta.getValue())) {
-				String msgException = "No se encontrï¿½ el mensaje de respuesta del servicio de datos, verifique los parï¿½metros de salida";
+				String msgException = "No se encontró el mensaje de respuesta del servicio de datos, verifique los parámetros de salida";
 				logger.error(msgException);
 				throw new ApplicationException(msgException);
 			}
