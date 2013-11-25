@@ -72,7 +72,7 @@
         <!-- fin de mesa de control -->
         
         <pattern>/catalogos/clausulas.action</pattern>
-        <pattern>/jsp/consultas/consultaClausulas.jsp</pattern>
+        <pattern>/jsp/catalogos/clausulas.jsp</pattern>
         
         <pattern>/cancelacion/pantallaCancelar.action</pattern>
         <pattern>/jsp-script/proceso/cancelacion/pantallaCancelar.jsp</pattern>

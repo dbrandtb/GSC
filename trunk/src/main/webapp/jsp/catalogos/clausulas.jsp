@@ -16,8 +16,7 @@
             var _URL_ACTUALIZA_CLAUSU =      '<s:url namespace="/catalogos" action="actualizaClausula" />';
             
         </script>
-        <script type="text/javascript" src="${ctx}/resources/scripts/util/extjs4_utils.js"></script>
-        <script type="text/javascript" src="${ctx}/resources/scripts/consultaPolizas/consultaClausulas.js"></script>
+        <script type="text/javascript" src="${ctx}/js/catalogos/clausulas.js"></script>
         
     </head>
     <body>

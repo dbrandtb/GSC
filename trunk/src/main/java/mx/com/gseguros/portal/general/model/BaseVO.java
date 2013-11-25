@@ -36,4 +36,8 @@ public class BaseVO implements Serializable {
 		this.value = value;
 	}
 	
+	@Override
+	public String toString() {
+		return new StringBuilder().append("key:").append(key).append(" value:").append(value).toString();
+	}
 }

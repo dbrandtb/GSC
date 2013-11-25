@@ -6,7 +6,6 @@ import java.util.List;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.util.WrapperResultados;
-import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosAgenteVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosCoberturasVO;
@@ -57,10 +56,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     private ConsultaDatosAgenteVO datosAgente;
     
     private List<ConsultaDatosAseguradoVO> datosAsegurados;
-    
-    private List<GenericVO> listaGenerica;
 
-    private String msgResult;
 
     public String execute() throws Exception {
     	return SUCCESS;
@@ -249,6 +245,8 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     	return SUCCESS;
     	
     }
+    
+    
     /**
      * Obtiene recibos de la poliza de un agente
      * @return String result
@@ -323,97 +321,9 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     	success = true;
     	return SUCCESS;
     	
-    }
-    
-    public String entraClausulas(){
-    	logger.debug("Entrando a consulta de Clausulas");
-    	return SUCCESS;
-    }
+    }    
 
-    public String cargaClausulas(){
-    	logger.debug(" **** Entrando a cargaClausulas ****");
-    	try {
-    		
-    		WrapperResultados result = consultasPolizaManager.consultaClausulas(null,null);
-    		
-    		listaGenerica = (List<GenericVO>) result.getItemList();
-    		
-    		logger.debug("Resultado de cargaClausulas:" + listaGenerica);
-    		
-    	}catch( Exception e){
-    		logger.error("Error al obtener cargaClausulas ",e);
-    		return SUCCESS;
-    	}
-    	
-    	success = true;
-    	return SUCCESS;
-    	
-    }
     
-    public String consultaClausulas(){
-    	logger.debug(" **** Entrando a consultaClausulas ****");
-    	try {
-    		
-    		WrapperResultados result = consultasPolizaManager.consultaClausulas(
-    				params.get("cdclausu"), params.get("dsclausu"));
-    		
-    		listaGenerica = (List<GenericVO>) result.getItemList();
-    		
-    		logger.debug("Resultado de consultaClausulas:" + listaGenerica);
-    		
-    	}catch( Exception e){
-    		logger.error("Error al obtener consultaClausulas ",e);
-    		return SUCCESS;
-    	}
-    	
-    	success = true;
-    	return SUCCESS;
-    	
-    }
-
-    public String insertaClausula(){
-    	logger.debug(" **** Entrando a insertaClausula ****");
-    	try {
-    		consultasPolizaManager.insertaClausula(params.get("descripcion"), params.get("contenido"));
-    	}catch( Exception e){
-    		logger.error("Error al insertaClausula ",e);
-    		return SUCCESS;
-    	}
-    	
-    	success = true;
-    	return SUCCESS;
-    	
-    }
-    
-    public String consultaClausulaDetalle(){
-    	logger.debug(" **** Entrando a consultaClausulaDetalle ****");
-    	try {
-    		WrapperResultados result = consultasPolizaManager.consultaClausulaDetalle(params.get("cdclausu"));
-    		msgResult = (String) result.getItemMap().get("DETALLE_CLAUSU");
-    		
-    	}catch( Exception e){
-    		logger.error("Error al consultaClausulaDetalle ",e);
-    		return SUCCESS;
-    	}
-    	
-    	success = true;
-    	return SUCCESS;
-    	
-    }
-
-   public String actualizaClausula(){
-    	logger.debug(" **** Entrando a actualizaClausula ****");
-    	try {
-    		consultasPolizaManager.actualizaClausula(params.get("cdclausu"), params.get("descripcion"), params.get("contenido"));
-    	}catch( Exception e){
-    		logger.error("Error al actualizaClausula ",e);
-    		return SUCCESS;
-    	}
-    	
-    	success = true;
-    	return SUCCESS;
-    	
-    }
     
     //Getters and setters:
     
@@ -421,11 +331,9 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
 		return datosAsegurados;
 	}
 
-
 	public void setDatosAsegurados(List<ConsultaDatosAseguradoVO> datosAsegurados) {
 		this.datosAsegurados = datosAsegurados;
 	}
-
 
 	public HashMap<String, String> getParams() {
 		return params;
@@ -480,71 +388,44 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
 		this.consultasPolizaManager = consultasPolizaManager;
 	}
 
-
 	public List<ConsultaPolizaAseguradoVO> getPolizasAsegurado() {
 		return polizasAsegurado;
 	}
-
 
 	public void setPolizasAsegurado(List<ConsultaPolizaAseguradoVO> polizasAsegurado) {
 		this.polizasAsegurado = polizasAsegurado;
 	}
 
-
 	public List<ConsultaDatosTarifaVO> getDatosTarifa() {
 		return datosTarifa;
 	}
-
 
 	public void setDatosTarifa(List<ConsultaDatosTarifaVO> datosTarifa) {
 		this.datosTarifa = datosTarifa;
 	}
 
-
 	public List<ConsultaPolizaAgenteVO> getPolizasAgente() {
 		return polizasAgente;
 	}
-
 
 	public void setPolizasAgente(List<ConsultaPolizaAgenteVO> polizasAgente) {
 		this.polizasAgente = polizasAgente;
 	}
 
-
 	public List<ConsultaReciboAgenteVO> getRecibosAgente() {
 		return recibosAgente;
 	}
-
 
 	public void setRecibosAgente(List<ConsultaReciboAgenteVO> recibosAgente) {
 		this.recibosAgente = recibosAgente;
 	}
 
-
 	public ConsultaDatosAgenteVO getDatosAgente() {
 		return datosAgente;
 	}
-
 
 	public void setDatosAgente(ConsultaDatosAgenteVO datosAgente) {
 		this.datosAgente = datosAgente;
 	}
 
-	public List<GenericVO> getListaGenerica() {
-		return listaGenerica;
-	}
-
-	public void setListaGenerica(List<GenericVO> listaGenerica) {
-		this.listaGenerica = listaGenerica;
-	}
-
-	public String getMsgResult() {
-		return msgResult;
-	}
-
-	public void setMsgResult(String msgResult) {
-		this.msgResult = msgResult;
-	}
-
-    
 }

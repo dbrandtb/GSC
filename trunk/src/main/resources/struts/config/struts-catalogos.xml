@@ -3,14 +3,13 @@
 <struts>
 	<include file="struts-default.xml" />
 
-	<package name="catalogos" extends="json-default"
-		namespace="/catalogos">
+	<package name="catalogos" extends="json-default" namespace="/catalogos">
 
-        <action name="clausulas" class="ConsultasPolizaAction" method="entraClausulas">
-          <result name="success">/jsp/consultas/consultaClausulas.jsp</result>
+        <action name="clausulas">
+          <result>/jsp/catalogos/clausulas.jsp</result>
         </action>
 
-        <action name="cargaClausulas" class="ConsultasPolizaAction" method="cargaClausulas">
+        <action name="cargaClausulas" class="clausuladoAction" method="cargaClausulas">
             <result type="json">
                 <param name="ignoreHierarchy">false</param>
                 <param name="includeProperties">
@@ -20,7 +19,7 @@
             </result>
         </action>
 
-        <action name="consultaClausulas" class="ConsultasPolizaAction" method="consultaClausulas">
+        <action name="consultaClausulas" class="clausuladoAction" method="consultaClausulas">
             <result type="json">
                 <param name="ignoreHierarchy">false</param>
                 <param name="includeProperties">
@@ -30,7 +29,7 @@
             </result>
         </action>
 
-        <action name="insertaClausula" class="ConsultasPolizaAction" method="insertaClausula">
+        <action name="insertaClausula" class="clausuladoAction" method="insertaClausula">
             <result type="json">
                 <param name="ignoreHierarchy">false</param>
                 <param name="includeProperties">
@@ -38,7 +37,7 @@
                 </param>
             </result>
         </action>
-        <action name="consultaClausulaDetalle" class="ConsultasPolizaAction" method="consultaClausulaDetalle">
+        <action name="consultaClausulaDetalle" class="clausuladoAction" method="consultaClausulaDetalle">
             <result type="json">
                 <param name="ignoreHierarchy">false</param>
                 <param name="includeProperties">
@@ -47,7 +46,7 @@
                 </param>
             </result>
         </action>
-        <action name="actualizaClausula" class="ConsultasPolizaAction" method="actualizaClausula">
+        <action name="actualizaClausula" class="clausuladoAction" method="actualizaClausula">
             <result type="json">
                 <param name="ignoreHierarchy">false</param>
                 <param name="includeProperties">
