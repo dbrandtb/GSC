@@ -27,7 +27,6 @@
             var _MSG_RFC_INVALIDO = 'Ingrese un RFC v\u00E1lido';
             var _MSG_NMPOLIEX_INVALIDO = 'Ingrese un numero de poliza';
         </script>
-        <script type="text/javascript" src="${ctx}/resources/scripts/util/extjs4_utils.js"></script>
         <script type="text/javascript" src="${ctx}/resources/scripts/consultaPolizas/consultasPolizas.js"></script>
         
     </head>
