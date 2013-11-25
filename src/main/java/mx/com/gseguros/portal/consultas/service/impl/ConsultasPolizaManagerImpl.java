@@ -1,12 +1,11 @@
 package mx.com.gseguros.portal.consultas.service.impl;
 
-import mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO;
-
 import java.util.HashMap;
 
 import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO;
 import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 
 public class ConsultasPolizaManagerImpl extends
@@ -157,54 +156,6 @@ public class ConsultasPolizaManagerImpl extends
 		WrapperResultados result = this.returnBackBoneInvoke(params,
 				ConsultasPolizaDAO.OBTIENE_DATOS_ASEGURADO);
 
-		return result;
-	}
-
-	public WrapperResultados consultaClausulas(String cdclause, String dsclausu)
-			throws ApplicationException {
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("pv_cdcla_i", cdclause);
-		params.put("pv_descrip_i", dsclausu);
-
-		WrapperResultados result = this.returnBackBoneInvoke(params,
-				ConsultasPolizaDAO.OBTIENE_CLAUSULAS);
-
-		return result;
-	}
-
-	public WrapperResultados insertaClausula(String dsclausu, String contenido)
-			throws ApplicationException {
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("pv_descrip_i", dsclausu);
-		params.put("pv_conten_i", contenido);
-		
-		WrapperResultados result = this.returnBackBoneInvoke(params,
-				ConsultasPolizaDAO.INSERTA_CLAUSULA);
-		
-		return result;
-	}
-
-	public WrapperResultados actualizaClausula(String cdclausu, String dsclausu, String contenido)
-			throws ApplicationException {
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("pv_cdtipcla_i", cdclausu);
-		params.put("pv_descrip_i", dsclausu);
-		params.put("pv_conten_i", contenido);
-		
-		WrapperResultados result = this.returnBackBoneInvoke(params,
-				ConsultasPolizaDAO.ACTUALIZA_CLAUSULA);
-		
-		return result;
-	}
-
-	public WrapperResultados consultaClausulaDetalle(String cdclausu)
-			throws ApplicationException {
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("pv_cdcla_i", cdclausu);
-		
-		WrapperResultados result = this.returnBackBoneInvoke(params,
-				ConsultasPolizaDAO.CONSULTA_CLAUSULA_DETALLE);
-		
 		return result;
 	}
 
