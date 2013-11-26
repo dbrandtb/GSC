@@ -981,7 +981,7 @@ debug("validarYGuardar flag:2");
                                     });
                                 }
                             });
-                        },500);
+                        },2000);
                     }
                 }
             }
@@ -1095,7 +1095,7 @@ debug("validarYGuardar flag:2");
 		                            });
 		            		    }
 		            		});
-            			},500);
+            			},2000);
                     }
             	}
             }
