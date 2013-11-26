@@ -33,7 +33,6 @@
     var _ACTION_PORTAL = "<s:url action='load' namespace='/' />";
     var _ACTION_REGRESA= "<s:url action='regresaCodigo' namespace='/'/>";
     var _ACTION_VALIDAR_CONFIGURACION_COMPLETA = "<s:url action='validaConfiguracionCompleta' namespace='/principal'/>";
-    var _ACTION_LOGIN = "<s:property value='#session.URL_INICIO' />";
 </script>
 <script type="text/javascript">
 Ext.onReady(function(){
@@ -46,7 +45,6 @@ Ext.onReady(function(){
         {
     %>
             Ext.Msg.alert('Error', '<%=session.getAttribute("MessageConf")%>', function () {
-                //window.location.href = _ACTION_LOGIN;
                 window.location.replace(_CONTEXT);
             });	
     <%
