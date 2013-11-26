@@ -12,7 +12,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import mx.com.aon.utils.Constantes;
+import mx.com.gseguros.utils.Constantes;
+
 
 /**
  * @author eflores
