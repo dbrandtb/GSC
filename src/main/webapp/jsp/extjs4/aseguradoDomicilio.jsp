@@ -224,7 +224,7 @@ Ext.onReady(function(){
                                 }
                             }
                         }),
-                        editable:false,
+                        editable:true,
                         queryMode:'local',
                         style:'margin:5px;',
                         allowBlank:false
