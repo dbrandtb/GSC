@@ -3,6 +3,7 @@ package mx.com.gseguros.portal.cancelacion.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import mx.com.gseguros.portal.cancelacion.dao.CancelacionDAO;
 import mx.com.gseguros.portal.cancelacion.service.CancelacionManager;
 
@@ -24,6 +25,15 @@ public class CancelacionManagerImpl implements CancelacionManager
 	public void setCancelacionDAO(CancelacionDAO cancelacionDAO)
 	{
 		this.cancelacionDAO=cancelacionDAO;
+	}
+
+	@Override
+	public Map<String, String> obtenerDetalleCancelacion(Map<String, String> params) throws Exception
+	{
+		log.debug("CancelacionManager obtenerDetalleCancelacion params: "+params);
+		Map<String,String> res=cancelacionDAO.obtenerDetalleCancelacion(params);
+		log.debug("CancelacionManager obtenerDetalleCancelacion: "+res);
+		return res;
 	}
 
 }
