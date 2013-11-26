@@ -18,7 +18,17 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 
 	protected class BuscarPolizas extends StoredProcedure
 	{
-		String[] columnas=new String[]{"NOMBRE", "FEMISION", "FEINICOV", "FEFINIV", "PRITOTAL"};
+		String[] columnas=new String[]{"NOMBRE", "FEMISION", "FEINICOV", "FEFINIV", "PRITOTAL","DSRAMO"
+	            ,"CDRAMO"
+	            ,"DSTIPSIT"
+	            ,"CDTIPSIT"
+	            ,"DSUNIECO"
+	            ,"CDUNIECO"
+	            ,"NMPOLIZA"
+	            ,"NMPOLIEX"
+	            ,"NMSOLICI"
+	            ,"ESTADO"
+	            ,"FERECIBO"};
 
 		protected BuscarPolizas(DataSource dataSource) {
 			super(dataSource, "PKG_CONSULTA.P_CONSUL_POLIZA");
@@ -27,6 +37,8 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 			declareParameter(new SqlParameter("pv_estado_i"      , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmpoliza_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmpoliex_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdagente_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_fereferen_i"  , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(columnas)));
             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 	        declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));

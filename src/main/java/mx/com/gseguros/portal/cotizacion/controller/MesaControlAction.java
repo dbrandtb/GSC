@@ -450,5 +450,9 @@ public class MesaControlAction extends PrincipalCoreAction implements Constantes
 	public void setLista(List<GenericVO> lista) {
 		this.lista = lista;
 	}
+
+	public String getCON_CAT_CANCELA_MOTIVOS() {
+		return CON_CAT_CANCELA_MOTIVOS;
+	}
 	
 }
