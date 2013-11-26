@@ -2,6 +2,7 @@ package mx.com.gseguros.portal.cancelacion.controller;
 
 import java.util.List;
 import java.util.Map;
+
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.gseguros.portal.cancelacion.service.CancelacionManager;
 import mx.com.gseguros.portal.general.util.ConstantesCatalogos;
@@ -97,6 +98,80 @@ public class CancelacionAction extends PrincipalCoreAction implements Constantes
 	////// buscar polizas //////
 	////////////////////////////
 	
+	/////////////////////////////////////////
+	////// cancelacion unica de poliza //////
+	/*/////////////////////////////////////*/
+	public String cancelacionUnica()
+	{
+		log.debug(""
+				+ "\n##############################"
+				+ "\n##############################"
+				+ "\n###### cancelacionUnica ######"
+				+ "\n######                  ######"
+				);
+		log.debug("smap1: "+smap1);
+		success=true;
+		log.debug(""
+				+ "\n######                  ######"
+				+ "\n###### cancelacionUnica ######"
+				+ "\n##############################"
+				+ "\n##############################"
+				);
+		return SUCCESS;
+	}
+	/*/////////////////////////////////////*/
+	////// cancelacion unica de poliza //////
+	/////////////////////////////////////////
+	
+	////////////////////////////////////////////////
+	////// pantalla de cancelacion automatica //////
+	/*////////////////////////////////////////////*/
+	public String pantallaCancelarAuto()
+	{
+		log.debug(""
+				+ "\n##################################"
+				+ "\n##################################"
+				+ "\n###### pantallaCancelarAuto ######"
+				+ "\n######                      ######"
+				);
+		log.debug("slist1 :"+slist1);
+		log.debug(""
+				+ "\n######                      ######"
+				+ "\n###### pantallaCancelarAuto ######"
+				+ "\n##################################"
+				+ "\n##################################"
+				);
+		return SUCCESS;
+	}
+	/*////////////////////////////////////////////*/
+	////// pantalla de cancelacion automatica //////
+	////////////////////////////////////////////////
+	
+	//////////////////////////////////////////////////////
+	////// proceso de cancelacion automatica manual //////
+	/*//////////////////////////////////////////////////*/
+	public String cancelacionAutoManual()
+	{
+		log.debug(""
+				+ "\n###################################"
+				+ "\n###################################"
+				+ "\n###### cancelacionAutoManual ######"
+				+ "\n######                       ######"
+				);
+		log.debug("slist1: "+slist1);
+		success=true;
+		log.debug(""
+				+ "\n######                       ######"
+				+ "\n###### cancelacionAutoManual ######"
+				+ "\n###################################"
+				+ "\n###################################"
+				);
+		return SUCCESS;
+	}
+	////// proceso de cancelacion automatica manual //////
+	/*//////////////////////////////////////////////////*/
+	//////////////////////////////////////////////////////
+	
 	/////////////////////////////////
 	////// getters and setters //////
 	/*/////////////////////////////*/
@@ -186,6 +261,10 @@ public class CancelacionAction extends PrincipalCoreAction implements Constantes
 
 	public void setSlist1(List<Map<String, String>> slist1) {
 		this.slist1 = slist1;
+	}
+
+	public String getCON_CAT_CANCELA_MOTIVOS() {
+		return CON_CAT_CANCELA_MOTIVOS;
 	}
 		
 }

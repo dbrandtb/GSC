@@ -1782,4 +1782,8 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 		this.cdtipsit = cdtipsit;
 	}
 
+	public String getCON_CAT_CANCELA_MOTIVOS() {
+		return CON_CAT_CANCELA_MOTIVOS;
+	}
+
 }
