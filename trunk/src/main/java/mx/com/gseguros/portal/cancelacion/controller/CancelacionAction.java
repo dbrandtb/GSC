@@ -78,6 +78,7 @@ public class CancelacionAction extends PrincipalCoreAction implements Constantes
 		try
 		{
 			slist1=cancelacionManager.buscarPolizas(smap1);
+			success=true;
 		}
 		catch(Exception ex)
 		{
@@ -85,7 +86,6 @@ public class CancelacionAction extends PrincipalCoreAction implements Constantes
 			slist1=null;
 			success=false;
 		}
-		success=true;
 		log.debug(""
 				+ "\n######               ######"
 				+ "\n###### buscarPolizas ######"
@@ -171,6 +171,41 @@ public class CancelacionAction extends PrincipalCoreAction implements Constantes
 	////// proceso de cancelacion automatica manual //////
 	/*//////////////////////////////////////////////////*/
 	//////////////////////////////////////////////////////
+	
+	/////////////////////////////////////////////
+	////// obtener detalles de cancelacion //////
+	/*/////////////////////////////////////////*/
+	public String obtenerDetalleCancelacion()
+	{
+		log.debug(""
+				+ "\n#######################################"
+				+ "\n#######################################"
+				+ "\n###### obtenerDetalleCancelacion ######"
+				+ "\n######                           ######"
+				);
+		log.debug("smap1: "+smap1);
+		try
+		{
+			smap1.putAll(cancelacionManager.obtenerDetalleCancelacion(smap1)); 
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			log.error("error al obtener detalle de una cancelacion",ex);
+			success=false;
+		}
+		log.debug(""
+				+ "\n######                           ######"
+				+ "\n###### obtenerDetalleCancelacion ######"
+				+ "\n#######################################"
+				+ "\n#######################################"
+				);
+		return SUCCESS;
+	}
+	/*/////////////////////////////////////////*/
+	////// obtener detalles de cancelacion //////
+	/////////////////////////////////////////////
+	
 	
 	/////////////////////////////////
 	////// getters and setters //////

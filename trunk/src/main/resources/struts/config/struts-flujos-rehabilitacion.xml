@@ -4,7 +4,21 @@
     
     <package name="rehabilitacion" extends="json-default" namespace="/rehabilitacion">
         
+        <action name="principal" class="RehabilitacionAction" method="marco">
+            <result name="success">/jsp-script/proceso/rehabilitacion/marcoRehabilitacion.jsp</result>
+        </action>
         
+        <action name="buscarPolizas" class="RehabilitacionAction" method="buscarPolizas">
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="pantallaRehabilitacionUnica" class="RehabilitacionAction" method="pantallaRehabilitacionUnica">
+            <result name="success">/jsp-script/proceso/rehabilitacion/pantallaRehabilitacionUnica.jsp</result>
+        </action>
+
+        <action name="rehabilitacionUnica" class="RehabilitacionAction" method="rehabilitacionUnica">
+            <result name="success" type="json" />
+        </action>
         
     </package>
 
