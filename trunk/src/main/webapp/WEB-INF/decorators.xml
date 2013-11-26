@@ -35,10 +35,12 @@
 		<pattern>/documentos/ventanaDocumentosPoliza</pattern>
 		<pattern>/documentos/ventanaDocumentosPolizaClon</pattern>
 		<pattern>/jsp/extjs4/ventanaDocumentosPoliza.jsp</pattern>
-		
 		<pattern>/flujocotizacion/principal.action</pattern>
         <pattern>/jsp/consultas/agentes/consultaAgentes.jsp</pattern>
-				
+        <pattern>/cancelacion/pantallaCancelar.action</pattern>
+        <pattern>/jsp-script/proceso/cancelacion/pantallaCancelar.jsp</pattern>
+        <pattern>/cancelacion/pantallaCancelarAuto.action</pattern>
+        <pattern>/jsp-script/proceso/cancelacion/pantallaCancelarAuto.jsp</pattern>
 	</decorator>
     
     
@@ -73,9 +75,6 @@
         
         <pattern>/catalogos/clausulas.action</pattern>
         <pattern>/jsp/catalogos/clausulas.jsp</pattern>
-        
-        <pattern>/cancelacion/pantallaCancelar.action</pattern>
-        <pattern>/jsp-script/proceso/cancelacion/pantallaCancelar.jsp</pattern>
         
         <pattern>/cancelacion/principal.action</pattern>
         <pattern>/jsp-script/proceso/cancelacion/marcoCancelacion.jsp</pattern>
