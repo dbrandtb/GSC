@@ -159,7 +159,7 @@ Ext.onReady(function()
     	    	,fieldLabel : 'Comentarios'
     	    	,allowBlank : true
     	    	,colspan    : 2
-    	    	,width      : 450
+    	    	,width      : 520
     	    }
     	]
     	,buttonAlign : 'center'
