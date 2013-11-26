@@ -24,6 +24,7 @@ import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.cotizacion.model.ConsultaDatosPolizaAgenteVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Tatri;
+import mx.com.gseguros.portal.emision.model.DatosRecibosDxNVO;
 import mx.com.gseguros.utils.Utilerias;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSalud;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.Recibo;
@@ -131,6 +132,9 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String OBTIENE_DATOS_POLIZA_AGENTE =    "OBTIENE_DATOS_POLIZA_AGENTE";
 	public static final String OBTIENE_DATOS_GENERAL_AGENTE =	"OBTIENE_DATOS_GENERAL_AGENTE";
 	public static final String GUARDA_PORCENTAJE_POLIZA =	"GUARDA_PORCENTAJE_POLIZA";
+	public static final String OBTIENE_DATOS_RECIBOS_DxN =	"OBTIENE_DATOS_RECIBOS_DxN";
+	public static final String GUARDA_PERIODOS_DXN =	"GUARDA_PERIODOS_DXN";
+	public static final String LANZA_PROCESO_DXN =	"LANZA_PROCESO_DXN";
 	public static final String VALIDAR_EXTRAPRIMA       =	"VALIDAR_EXTRAPRIMA";
 
 	protected void initDao() throws Exception {
@@ -215,6 +219,10 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(OBTIENE_DATOS_POLIZA_AGENTE,      new ObtieneDatosPolizaAgente(getDataSource()));
 		addStoredProcedure(OBTIENE_DATOS_GENERAL_AGENTE,      new ObtieneDatosGeneralAgente(getDataSource()));
 		addStoredProcedure(GUARDA_PORCENTAJE_POLIZA, new GuardarPorcentajePoliza(getDataSource()));
+
+		addStoredProcedure(OBTIENE_DATOS_RECIBOS_DxN, new ObtenDatosRecibosDxN(getDataSource()));
+		addStoredProcedure(GUARDA_PERIODOS_DXN, new GuardaPeriodosDxN(getDataSource()));
+		addStoredProcedure(LANZA_PROCESO_DXN, new LanzaProcesoDxN(getDataSource()));
 		addStoredProcedure(VALIDAR_EXTRAPRIMA, new ValidarExtraprima(getDataSource()));
 	}
 	
@@ -2703,6 +2711,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			declareParameter(new SqlOutParameter("pv_nmpoliza_o",   OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_nmpoliex_o",   OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_nmsuplem_o",   OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_esdxn_o",   OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_message",      OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
@@ -2716,6 +2725,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			wrapperResultados.getItemMap().put("nmpoliza", map.get("pv_nmpoliza_o"));
 			wrapperResultados.getItemMap().put("nmpoliex", map.get("pv_nmpoliex_o"));
 			wrapperResultados.getItemMap().put("nmsuplem", map.get("pv_nmsuplem_o"));
+			wrapperResultados.getItemMap().put("esdxn", map.get("pv_esdxn_o"));
 
 			return wrapperResultados;
 		}
@@ -3272,6 +3282,115 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
         }
     }
 
+    protected class ObtenDatosRecibosDxN extends CustomStoredProcedure {
+    	
+    	protected ObtenDatosRecibosDxN(DataSource dataSource) {
+    		super(dataSource, "PKG_CONSULTA.P_CONS_DXN_RECIBOS");
+    		
+    		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));			
+    		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));			
+    		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));			
+    		declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));			
+    		declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));			
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DatosRecibosDxNMapper()));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+    		WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+    		WrapperResultados wrapperResultados = mapper.build(map);
+    		List result = (List) map.get("pv_registro_o");
+    		wrapperResultados.setItemList(result);
+    		return wrapperResultados;
+    	}
+    }
+    
+    
+    protected class DatosRecibosDxNMapper  implements RowMapper {
+    	
+    	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+    		DatosRecibosDxNVO datos =  new DatosRecibosDxNVO();
+    		datos.setAdministradoraEmp(rs.getString("administradoraEmp"));
+    		datos.setClaveEmp(rs.getString("claveEmp"));
+    		datos.setCurpEmp(rs.getString("curpEmp"));
+    		datos.setDepartamentoEmp(rs.getString("departamentoEmp"));
+    		datos.setMaternoEmp(rs.getString("maternoEmp"));
+    		datos.setNombreEmp(rs.getString("nombreEmp"));
+    		datos.setPaternoEmp(rs.getString("paternoEmp"));
+    		datos.setRetenedoraEmp(rs.getString("retenedoraEmp"));
+    		datos.setRfcEmp(rs.getString("rfcEmp"));
+    		datos.setClaveDescuento(rs.getString("claveDescuento"));
+    		datos.setImpCob(rs.getString("impCob"));
+    		datos.setNumPag(rs.getString("numPag"));
+    		datos.setNumRel(rs.getString("numRel"));
+    		datos.setNumeroAgente(rs.getString("numeroAgente"));
+    		datos.setNumeroApoderado(rs.getString("numeroApoderado"));
+    		datos.setPolizaEmi(rs.getString("polizaEmi"));
+    		datos.setRamoEmi(rs.getString("ramoEmi"));
+    		datos.setRenovacionAutomatica(rs.getString("renovacionAutomatica"));
+    		datos.setSucursalEmi(rs.getString("sucursalEmi"));
+    		
+    		return datos;
+    	}
+    }
+
+    protected class GuardaPeriodosDxN extends CustomStoredProcedure {
+    	
+    	protected GuardaPeriodosDxN(DataSource dataSource) {
+    		super(dataSource, "PKG_SATELITES.P_INSERTA_CALENDARIO_DXN");
+    		
+    		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));			
+    		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));			
+    		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));			
+    		declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));			
+    		declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
+    		
+    		declareParameter(new SqlParameter("pi_ADMINISTRADORA", OracleTypes.VARCHAR));			
+    		declareParameter(new SqlParameter("pi_ANIO", OracleTypes.VARCHAR));			
+    		declareParameter(new SqlParameter("pi_ESTATUS", OracleTypes.VARCHAR));			
+    		declareParameter(new SqlParameter("Pi_FECHACORTE", OracleTypes.VARCHAR));			
+    		declareParameter(new SqlParameter("pi_FECHAEMISION", OracleTypes.VARCHAR));	
+    		declareParameter(new SqlParameter("pi_FECHASTATUS", OracleTypes.VARCHAR));	
+    		declareParameter(new SqlParameter("pi_FECHAINICIO", OracleTypes.VARCHAR));	
+    		declareParameter(new SqlParameter("pi_FECHATERMINO", OracleTypes.VARCHAR));	
+    		declareParameter(new SqlParameter("pi_HORAEMISION", OracleTypes.VARCHAR));	
+    		declareParameter(new SqlParameter("pi_PERIODO", OracleTypes.VARCHAR));	
+    		declareParameter(new SqlParameter("pi_RETENEDORA", OracleTypes.VARCHAR));	
+    		
+    		declareParameter(new SqlOutParameter("po_CDERROR", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("Po_DSERROR", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("po_TIPOERROR", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			return mapper.build(map);
+		}
+    }
+
+    protected class LanzaProcesoDxN extends CustomStoredProcedure {
+    	
+    	protected LanzaProcesoDxN(DataSource dataSource) {
+    		super(dataSource, "P_CALC_RECIBOS_DXN");
+    		
+    		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));			
+    		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));			
+    		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));			
+    		declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));			
+    		declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
+    		
+    		compile();
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+    		WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+    		return mapper.build(map);
+    	}
+    }
+    
     protected class ObtenCatalogoColonias extends CustomStoredProcedure {
     	
     	protected ObtenCatalogoColonias(DataSource dataSource) {

@@ -26,9 +26,12 @@ import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.PolizaMovimiento
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.PolizaRespuesta;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.Recibo;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboRespuesta;
+import mx.com.gseguros.ws.client.recibossigs.GeneradorReciboDxnWsServiceStub.Empleado;
+import mx.com.gseguros.ws.client.recibossigs.GeneradorReciboDxnWsServiceStub.GeneradorRecibosDxnRespuesta;
+import mx.com.gseguros.ws.client.recibossigs.GeneradorReciboDxnWsServiceStub.PolizaEntidad;
 
 public interface Ice2sigsWebServices {
-	
+
 	public enum Operacion {
 
 		INSERTA(1), ACTUALIZA(2), CONSULTA(3);
@@ -44,13 +47,13 @@ public interface Ice2sigsWebServices {
 		}
 
 	}
-	
+
 	public enum Estatus {
-		
+
 		EXITO(0), LLAVE_DUPLICADA(1);
-		
+
 		private int codigo;
-		
+
 		private Estatus(int codigo) {
 			this.codigo = codigo;
 		}
@@ -58,44 +61,55 @@ public interface Ice2sigsWebServices {
 		public int getCodigo() {
 			return codigo;
 		}
-		
+
 	}
 
-	public PolizaRespuesta ejecutaPolizaGS(Operacion operacion,
-			Poliza poliza, String endpoint) throws Exception;
+	public PolizaRespuesta ejecutaPolizaGS(Operacion operacion, Poliza poliza,
+			String endpoint) throws Exception;
 
-	public ReciboRespuesta ejecutaReciboGS(Operacion operacion,
-			Recibo recibo, String endpoint, HashMap<String, Object> params, boolean async) throws Exception;
+	public ReciboRespuesta ejecutaReciboGS(Operacion operacion, Recibo recibo,
+			String endpoint, HashMap<String, Object> params, boolean async)
+			throws Exception;
 
-	public AgenteRespuesta ejecutaAgenteGS(Operacion operacion,
-			Agente agente, String endpoint) throws Exception;
-	
+	public AgenteRespuesta ejecutaAgenteGS(Operacion operacion, Agente agente,
+			String endpoint) throws Exception;
+
 	public AgenteSaludRespuesta ejecutaAgenteSaludGS(Operacion operacion,
 			AgenteSalud agente, String endpoint) throws Exception;
 
 	public ClienteRespuesta ejecutaClienteGS(Operacion operacion,
 			Cliente cliente, String endpoint) throws Exception;
-	
+
 	public ClienteSaludRespuesta ejecutaClienteSaludGS(Operacion operacion,
-			ClienteSalud cliente, String endpoint, HashMap<String, Object> params, boolean async) throws Exception;
-			
-	public CcomisionRespuesta ejecutaComisionReciboAgenteGS(Operacion operacion,
-			Ccomision comisionReciboAgente, String endpoint) throws Exception;
-	
-	
-	public MovimientoAgenteRespuesta ejecutaMovimientoAgenteGS(Operacion operacion,
-			PolizaMovimientoAgente movimientoAgente, String endpoint) throws Exception;
+			ClienteSalud cliente, String endpoint,
+			HashMap<String, Object> params, boolean async) throws Exception;
+
+	public CcomisionRespuesta ejecutaComisionReciboAgenteGS(
+			Operacion operacion, Ccomision comisionReciboAgente, String endpoint)
+			throws Exception;
+
+	public MovimientoAgenteRespuesta ejecutaMovimientoAgenteGS(
+			Operacion operacion, PolizaMovimientoAgente movimientoAgente,
+			String endpoint) throws Exception;
 
 	public AseguradoRespuesta ejecutaMovimientoAseguradoGS(Operacion operacion,
-			PolizaMovimientoAsegurado movimientoAsegurado, String endpoint) throws Exception;
+			PolizaMovimientoAsegurado movimientoAsegurado, String endpoint)
+			throws Exception;
 
-	public MovimientoAseguradoCoberturaRespuesta ejecutaMovimientoAseguradoCoberturaGS(Operacion operacion,
-			PolizaMovimientoAseguradoCobertura movimientoAseguradoCobertura, String endpoint) throws Exception;
+	public MovimientoAseguradoCoberturaRespuesta ejecutaMovimientoAseguradoCoberturaGS(
+			Operacion operacion,
+			PolizaMovimientoAseguradoCobertura movimientoAseguradoCobertura,
+			String endpoint) throws Exception;
 
-	public MovimientoAseguradoEndosoRespuesta ejecutaMovimientoAseguradoEndosoGS(Operacion operacion,
-			PolizaMovimientoAseguradoEndoso movimientoAseguradoEndoso, String endpoint) throws Exception;
+	public MovimientoAseguradoEndosoRespuesta ejecutaMovimientoAseguradoEndosoGS(
+			Operacion operacion,
+			PolizaMovimientoAseguradoEndoso movimientoAseguradoEndoso,
+			String endpoint) throws Exception;
 
 	public MovimientoRespuesta ejecutaMovimientoGS(Operacion operacion,
 			PolizaMovimiento movimiento, String endpoint) throws Exception;
 
+	public GeneradorRecibosDxnRespuesta generarRecibosDxNGS(Empleado empleado,
+			PolizaEntidad polizaEntidad, String endpoint,
+			HashMap<String, Object> params, boolean async) throws Exception;
 }

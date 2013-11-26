@@ -679,6 +679,13 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 		return result;
 	}
 
+	public WrapperResultados obtenDatosRecibosDxN(HashMap<String,Object> params) throws ApplicationException
+	{
+		WrapperResultados result = this.returnBackBoneInvoke(params,
+				ProcesoDAO.OBTIENE_DATOS_RECIBOS_DxN);
+		return result;
+	}
+
 	public WrapperResultados obtenDatosClienteWS(HashMap<String,Object> params) throws ApplicationException
 	{
 		WrapperResultados result = this.returnBackBoneInvoke(params,
@@ -838,6 +845,20 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 			throws ApplicationException {
 		WrapperResultados result = this.returnBackBoneInvoke(params,
 				ProcesoDAO.GUARDA_PORCENTAJE_POLIZA);
+		return result;
+	}
+
+	public WrapperResultados guardaPeriodosDxN(Map<String, Object> params)
+			throws ApplicationException {
+		WrapperResultados result = this.returnBackBoneInvoke(params,
+				ProcesoDAO.GUARDA_PERIODOS_DXN);
+		return result;
+	}
+
+	public WrapperResultados lanzaProcesoDxN(Map<String, Object> params)
+			throws ApplicationException {
+		WrapperResultados result = this.returnBackBoneInvoke(params,
+				ProcesoDAO.LANZA_PROCESO_DXN);
 		return result;
 	}
 	

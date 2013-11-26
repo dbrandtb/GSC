@@ -68,6 +68,14 @@ import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboGSE;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboGSResponseE;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboRespuesta;
 import mx.com.gseguros.ws.client.ice2sigs.callback.ServicioGSServiceCallbackHandlerImpl;
+import mx.com.gseguros.ws.client.recibossigs.GeneradorReciboDxnWsServiceStub;
+import mx.com.gseguros.ws.client.recibossigs.GeneradorReciboDxnWsServiceStub.Empleado;
+import mx.com.gseguros.ws.client.recibossigs.GeneradorReciboDxnWsServiceStub.GeneraRecDxn;
+import mx.com.gseguros.ws.client.recibossigs.GeneradorReciboDxnWsServiceStub.GeneraRecDxnE;
+import mx.com.gseguros.ws.client.recibossigs.GeneradorReciboDxnWsServiceStub.GeneraRecDxnResponseE;
+import mx.com.gseguros.ws.client.recibossigs.GeneradorReciboDxnWsServiceStub.GeneradorRecibosDxnRespuesta;
+import mx.com.gseguros.ws.client.recibossigs.GeneradorReciboDxnWsServiceStub.PolizaEntidad;
+import mx.com.gseguros.ws.client.recibossigs.callback.GeneradorReciboDxnWsServiceCallbackHandlerImpl;
 
 import org.apache.axis2.AxisFault;
 
@@ -572,6 +580,47 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 		try {
 			RespuestaGS = stubGS.movimientoGS(movimientoE);
 			resultado = RespuestaGS.getMovimientoGSResponse().get_return();
+		} catch (RemoteException re) {
+			logger.error(re);
+			throw new Exception("Error de conexion: " + re.getMessage());
+		}
+		
+		return resultado;
+	}
+	
+	public GeneradorRecibosDxnRespuesta generarRecibosDxNGS(Empleado empleado, PolizaEntidad polizaEntidad, String endpoint, HashMap<String, Object> params, boolean async) throws Exception {
+		
+		GeneradorRecibosDxnRespuesta resultado = null;
+		GeneradorReciboDxnWsServiceStub stubGS = null;
+		
+		try {
+			stubGS = new GeneradorReciboDxnWsServiceStub(endpoint);
+		} catch (AxisFault e) {
+			logger.error(e);
+			throw new Exception("Error de preparacion de Axis2: "
+					+ e.getMessage());
+		}
+		stubGS._getServiceClient().getOptions().setTimeOutInMilliSeconds(WS_TIMEOUT);
+		
+		GeneraRecDxnResponseE RespuestaGS = null;
+		
+		GeneraRecDxn generaRecDxn =  new GeneraRecDxn();
+		generaRecDxn.setArg0(empleado);
+		generaRecDxn.setArg1(polizaEntidad);
+		
+		GeneraRecDxnE generaRecDxnE = new GeneraRecDxnE(); 
+		generaRecDxnE.setGeneraRecDxn(generaRecDxn);
+		
+		
+		try {
+			if(async){
+				GeneradorReciboDxnWsServiceCallbackHandlerImpl callback = new GeneradorReciboDxnWsServiceCallbackHandlerImpl(params);
+				stubGS.startgeneraRecDxn(generaRecDxnE, callback);
+			} else {
+				RespuestaGS = stubGS.generaRecDxn(generaRecDxnE);
+				resultado = RespuestaGS.getGeneraRecDxnResponse().get_return();
+				logger.debug("Resultado sincrono para primer ejecucion de WS: "+resultado.getCodigo()+" - "+resultado.getMensaje());
+			}
 		} catch (RemoteException re) {
 			logger.error(re);
 			throw new Exception("Error de conexion: " + re.getMessage());
