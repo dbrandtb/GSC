@@ -80,6 +80,7 @@ public interface KernelManagerSustituto {
 	public WrapperResultados PMovMesacontrol(Map<String, Object> parMesCon) throws ApplicationException;
 	public List<Map<String, String>> loadMesaControl(String dsrol) throws ApplicationException;
 	public WrapperResultados obtenDatosRecibos(HashMap<String,Object> params) throws ApplicationException;
+	public WrapperResultados obtenDatosRecibosDxN(HashMap<String,Object> params) throws ApplicationException;
 	public WrapperResultados cargaColonias(String codigoPostal) throws ApplicationException;
 	public WrapperResultados obtenDatosClienteWS(HashMap<String,Object> params) throws ApplicationException;
 	public WrapperResultados mesaControlUpdateSolici(String ntramite,String nmsolici) throws ApplicationException;
@@ -100,4 +101,6 @@ public interface KernelManagerSustituto {
 	public WrapperResultados obtenerTiposAgente()throws ApplicationException;
 	public WrapperResultados guardarPorcentajeAgentes(Map<String, Object> params) throws ApplicationException;
 	public WrapperResultados validarExtraprima(Map<String, String> params) throws ApplicationException;
+	public WrapperResultados guardaPeriodosDxN(Map<String, Object> params) throws ApplicationException;
+	public WrapperResultados lanzaProcesoDxN(Map<String, Object> params) throws ApplicationException;
 }

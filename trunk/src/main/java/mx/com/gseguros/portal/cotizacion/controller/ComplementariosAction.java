@@ -20,11 +20,14 @@ import mx.com.aon.configurador.pantallas.model.components.GridVO;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.flujos.cotizacion4.web.ResultadoCotizacion4Action;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
+import mx.com.aon.kernel.service.impl.KernelManagerSustitutoImpl;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.Tatri;
+import mx.com.gseguros.portal.emision.model.DatosRecibosDxNVO;
 import mx.com.gseguros.portal.general.util.ConstantesCatalogos;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.utils.HttpUtil;
@@ -35,6 +38,10 @@ import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSalud;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSaludRespuesta;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.Recibo;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboRespuesta;
+import mx.com.gseguros.ws.client.recibossigs.GeneradorReciboDxnWsServiceStub.CalendarioEntidad;
+import mx.com.gseguros.ws.client.recibossigs.GeneradorReciboDxnWsServiceStub.Empleado;
+import mx.com.gseguros.ws.client.recibossigs.GeneradorReciboDxnWsServiceStub.GeneradorRecibosDxnRespuesta;
+import mx.com.gseguros.ws.client.recibossigs.GeneradorReciboDxnWsServiceStub.PolizaEntidad;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
@@ -1137,6 +1144,53 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			panel2.put("nmpoliex",(String)wr.getItemMap().get("nmpoliex"));
 			/**/
 			
+			
+			/**
+			 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
+			 */
+			String _cdunieco = panel2.get("pv_cdunieco");
+			String _cdramo = panel2.get("pv_cdramo");
+			String edoPoliza = "M";
+			String _nmpoliza = (String)wr.getItemMap().get("nmpoliza");
+			String _nmsuplem = (String)wr.getItemMap().get("nmsuplem");
+			
+			String cdtipsitGS = "213";
+			String sucursal = panel2.get("pv_cdunieco");
+			if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
+			
+			String esDxN = (String)wr.getItemMap().get("esdxn");
+			
+			logger.debug(">>>>>>>>>>>>>>>>>>>>>>>>>> Parametros para WS de cliente y recibos: <<<<<<<<<<<<<<<<<<<<<<< ");
+			logger.debug(">>>>>>>>>> cdunieco: "+ _cdunieco);
+			logger.debug(">>>>>>>>>> cdramo: "+ _cdramo);
+			logger.debug(">>>>>>>>>> estado: "+ edoPoliza);
+			logger.debug(">>>>>>>>>> nmpoliza: "+ _nmpoliza);
+			logger.debug(">>>>>>>>>> suplemento: "+ _nmsuplem);
+			logger.debug(">>>>>>>>>> subramoGS: "+ cdtipsitGS);
+			logger.debug(">>>>>>>>>> sucursal: "+ sucursal);
+			logger.debug(">>>>>>>>>> nmsolici: "+ panel1.get("pv_nmpoliza"));
+			logger.debug(">>>>>>>>>> nmtramite: "+ panel1.get("pv_ntramite"));
+			
+			ejecutaWSclienteSalud(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem);
+			
+			if(StringUtils.isNotBlank(esDxN) && "S".equalsIgnoreCase(esDxN)){
+				ejecutaWSrecibos(_cdunieco, _cdramo,
+						edoPoliza, _nmpoliza,
+						_nmsuplem, rutaCarpeta,
+						cdtipsitGS, sucursal, panel1.get("pv_nmpoliza"),panel1.get("pv_ntramite"),
+						false
+						);
+				obtenRecibosDxN(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem);
+			}else{
+				
+				ejecutaWSrecibos(_cdunieco, _cdramo,
+						edoPoliza, _nmpoliza,
+						_nmsuplem, rutaCarpeta,
+						cdtipsitGS, sucursal, panel1.get("pv_nmpoliza"),panel1.get("pv_ntramite"),
+						true
+						);
+			}
+			
 			Map<String,String>paramsGetDoc=new LinkedHashMap<String,String>(0);
 			//paramsGetDoc.put("pv_cdunieco_i" , datUs.getCdunieco());
 			//paramsGetDoc.put("pv_cdramo_i"   , datUs.getCdramo());panel2.get("pv_cdunieco")
@@ -1188,40 +1242,6 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 						+ "");
 			}
 			
-			/**
-			 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
-			 */
-			String cdtipsitGS = "213";
-			String sucursal = panel2.get("pv_cdunieco");
-			if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
-			String edoPoliza = "M";
-			
-			String _cdunieco = panel2.get("pv_cdunieco");
-			String _cdramo = panel2.get("pv_cdramo");
-			
-			//parche para que no cambie el codigo de hector
-//			datUs.setCdunieco("1");
-//			datUs.setCdramo("2");
-			
-			logger.debug(">>>>>>>>>>>>>>>>>>>>>>>>>> Parametros para WS de cliente y recibos: <<<<<<<<<<<<<<<<<<<<<<< ");
-			logger.debug(">>>>>>>>>> cdunieco: "+ _cdunieco);
-			logger.debug(">>>>>>>>>> cdramo: "+ _cdramo);
-			logger.debug(">>>>>>>>>> estado: "+ edoPoliza);
-			logger.debug(">>>>>>>>>> nmpoliza: "+ (String)wr.getItemMap().get("nmpoliza"));
-			logger.debug(">>>>>>>>>> suplemento: "+ (String)wr.getItemMap().get("nmsuplem"));
-			logger.debug(">>>>>>>>>> subramoGS: "+ cdtipsitGS);
-			logger.debug(">>>>>>>>>> sucursal: "+ sucursal);
-			logger.debug(">>>>>>>>>> nmsolici: "+ panel1.get("pv_nmpoliza"));
-			logger.debug(">>>>>>>>>> nmtramite: "+ panel1.get("pv_ntramite"));
-			
-			ejecutaWSclienteSalud(_cdunieco, _cdramo, edoPoliza, (String)wr.getItemMap().get("nmpoliza"), (String)wr.getItemMap().get("nmsuplem"));
-			
-			ejecutaWSrecibos(_cdunieco, _cdramo,
-					edoPoliza, (String)wr.getItemMap().get("nmpoliza"),
-					(String)wr.getItemMap().get("nmsuplem"), rutaCarpeta,
-					cdtipsitGS, sucursal, panel1.get("pv_nmpoliza"),panel1.get("pv_ntramite")
-					);
-				
 			log.debug("se inserta detalle nuevo para emision");
         	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
         	parDmesCon.put("pv_ntramite_i"   , panel1.get("pv_ntramite"));
@@ -1290,14 +1310,14 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 		String nmsolici = map1.get("nmsolici");
 		String nmtramite = map1.get("nmtramite");
 
-		ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, null, cdtipsitGS, sucursal, nmsolici, nmtramite);
+		ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, null, cdtipsitGS, sucursal, nmsolici, nmtramite, true);
 
 		success = true;
 		return SUCCESS;
 	}
 	
 	private boolean ejecutaWSrecibos(String cdunieco, String cdramo, String estado, String nmpoliza,
-			String nmsuplem, String rutaPoliza, String cdtipsitGS, String sucursal, String nmsolici,String ntramite){
+			String nmsuplem, String rutaPoliza, String cdtipsitGS, String sucursal, String nmsolici,String ntramite, boolean async){
 		boolean allInserted = true;
 		
 		logger.debug("*** Entrando a metodo Inserta Recibos WS ice2sigs, para la poliza: " + nmpoliza + " sucursal: " + sucursal + "***");
@@ -1325,18 +1345,58 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			usuario = usuarioSesion.getUser();
 		}
 		
-		params.put("MANAGER", kernelManager);
-		params.put("USUARIO", usuario);
+		if(async){
+			params.put("MANAGER", kernelManager);
+			params.put("USUARIO", usuario);
+		}
 		
 		for(Recibo recibo: recibos){
 			try{
-				// Se crea un HashMap por cada invocacion asincrona del WS, para evitar issue (sobreescritura de valores):
-				HashMap<String, Object> paramsBitacora = new HashMap<String, Object>();
-				paramsBitacora.putAll(params);
-				paramsBitacora.put("NumRec", recibo.getNumRec());
-				ice2sigsWebServices.ejecutaReciboGS(Operacion.INSERTA, recibo, this.getText("url.ws.ice2sigs"), paramsBitacora, true);
+				if(async){
+					// Se crea un HashMap por cada invocacion asincrona del WS, para evitar issue (sobreescritura de valores):
+					HashMap<String, Object> paramsBitacora = new HashMap<String, Object>();
+					paramsBitacora.putAll(params);
+					paramsBitacora.put("NumRec", recibo.getNumRec());
+					
+					ice2sigsWebServices.ejecutaReciboGS(Operacion.INSERTA, recibo, this.getText("url.ws.ice2sigs"), paramsBitacora, async);
+				}else{
+					ReciboRespuesta respuesta = ice2sigsWebServices.ejecutaReciboGS(Operacion.INSERTA, recibo, this.getText("url.ws.ice2sigs"), null, async);
+					logger.debug("Resultado al ejecutar el WS Recibo: " + recibo.getNumRec() + " >>>"
+							+ respuesta.getCodigo() + " - " + respuesta.getMensaje());
+
+					if (Estatus.EXITO.getCodigo() != respuesta.getCodigo()) {
+						logger.error("Guardando en bitacora el estatus");
+
+						try {
+							kernelManager.movBitacobro((String) params.get("pv_cdunieco_i"),
+									(String) params.get("pv_cdramo_i"),
+									(String) params.get("pv_estado_i"),
+									(String) params.get("pv_nmpoliza_i"), "ErrWSrec",
+									"Error en Recibo " + params.get("NumRec")
+											+ " >>> " + respuesta.getCodigo() + " - "
+											+ respuesta.getMensaje(),
+									 usuario);
+						} catch (ApplicationException e1) {
+							logger.error("Error en llamado a PL", e1);
+						}
+					}
+				}
 			}catch(Exception e){
 				logger.error("Error al insertar recibo: "+recibo.getNumRec()+" tramite: "+ntramite);
+				try {
+					kernelManager.movBitacobro(
+							(String) params.get("pv_cdunieco_i"),
+							(String) params.get("pv_cdramo_i"),
+							(String) params.get("pv_estado_i"),
+							(String) params.get("pv_nmpoliza_i"),
+							"ErrWSrecCx",
+							"Error en Recibo " + recibo.getNumRec()
+									+ " Msg: " + e.getMessage() + " ***Cause: "
+									+ e.getCause(),
+							 usuario);
+				} catch (Exception e1) {
+					logger.error("Error en llamado a PL", e1);
+				}
 			}
 		}
 		
@@ -1436,6 +1496,128 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 
 		return exito;
 	} 
+	
+	public boolean obtenRecibosDxN(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem){
+		logger.debug("*** Entrando a metodo Genera Recibos DxN, para la poliza: " + nmpoliza + " cdunieco: " + cdunieco + "***");
+		
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdunieco_i", cdunieco);
+		params.put("pv_cdramo_i", cdramo);
+		params.put("pv_estado_i", estado);
+		params.put("pv_nmpoliza_i", nmpoliza);
+		params.put("pv_nmsuplem_i", nmsuplem);
+		
+		WrapperResultados result = null;
+		DatosRecibosDxNVO datosRecDxN = null;
+		
+		try {
+			result = kernelManager.obtenDatosRecibosDxN(params);
+			ArrayList<DatosRecibosDxNVO> listDatos = (ArrayList<DatosRecibosDxNVO>) result.getItemList();
+			datosRecDxN = listDatos.get(0);
+		} catch (Exception e1) {
+			logger.error("Error en llamar al PL de obtencion de Datos para recibos DxN",e1);
+			return false;
+		}
+		
+		GeneradorRecibosDxnRespuesta calendarios = null;
+		
+		try{
+			Empleado empleado =  new Empleado(); 
+			empleado.setAdministradoraEmp(Integer.parseInt(datosRecDxN.getAdministradoraEmp()));
+			empleado.setClaveEmp(datosRecDxN.getClaveEmp());
+			empleado.setCurpEmp(datosRecDxN.getCurpEmp());
+			empleado.setDepartamentoEmp(Integer.parseInt(datosRecDxN.getDepartamentoEmp()));
+			empleado.setMaternoEmp(datosRecDxN.getMaternoEmp());
+			empleado.setNombreEmp(datosRecDxN.getNombreEmp());
+			empleado.setPaternoEmp(datosRecDxN.getPaternoEmp());
+			empleado.setRetenedoraEmp(Integer.parseInt(datosRecDxN.getRetenedoraEmp()));
+			empleado.setRfcEmp(datosRecDxN.getRfcEmp());
+			
+			PolizaEntidad polizaEnt = new PolizaEntidad();
+			polizaEnt.setAdministradoraEmp(Integer.parseInt(datosRecDxN.getAdministradoraEmp()));
+			polizaEnt.setClaveDescuento(datosRecDxN.getClaveDescuento());
+			polizaEnt.setClaveEmp(datosRecDxN.getClaveEmp());
+			polizaEnt.setImpCob(Double.parseDouble(datosRecDxN.getImpCob()));
+			polizaEnt.setNumeroAgente(Integer.parseInt(datosRecDxN.getNumeroAgente()));
+			polizaEnt.setNumeroApoderado(Integer.parseInt(datosRecDxN.getNumeroApoderado()));
+			polizaEnt.setNumPag(datosRecDxN.getNumPag());
+			polizaEnt.setNumRel(Integer.parseInt(datosRecDxN.getNumRel()));
+			polizaEnt.setPolizaEmi(Integer.parseInt(datosRecDxN.getPolizaEmi()));
+			polizaEnt.setRenovacionAutomatica(datosRecDxN.getRenovacionAutomatica());
+			polizaEnt.setRetenedoraEmp(Integer.parseInt(datosRecDxN.getRetenedoraEmp()));
+			polizaEnt.setSucursalEmi(Integer.parseInt(datosRecDxN.getSucursalEmi()));
+			
+			calendarios = ice2sigsWebServices.generarRecibosDxNGS(empleado, polizaEnt, this.getText("url.ws.ice2sigs.recdxn"), null, false);
+			
+		}catch(Exception e){
+			logger.error("Error al generar los datos de Recibos DxN: " + e.getMessage()
+					+ " Guardando en bitacora el error, getCause: " + e.getCause(),e);
+			
+			try {
+				UserVO usuario = (UserVO) session.get("USUARIO");
+				
+				kernelManager.movBitacobro((String) params.get("pv_cdunieco_i"),
+						(String) params.get("pv_cdramo_i"),
+						(String) params.get("pv_estado_i"),
+						(String) params.get("pv_nmpoliza_i"), "ErrWsDXNCx", "Msg: "
+								+ e.getMessage() + " ***Cause: " + e.getCause(),
+						 usuario.getUser());
+			} catch (Exception e1) {
+				logger.error("Error en llamado a PL", e1);
+			}
+			
+			return false;
+		}
+		
+		
+		if (Estatus.EXITO.getCodigo() != calendarios.getCodigo()) {
+			logger.error("Guardando en bitacora el estatus");
+
+			UserVO usuario = (UserVO) session.get("USUARIO");
+			
+			try {
+				kernelManager.movBitacobro((String) params.get("pv_cdunieco_i"),
+						(String) params.get("pv_cdramo_i"),
+						(String) params.get("pv_estado_i"),
+						(String) params.get("pv_nmpoliza_i"), "ErrWsDXN",
+						calendarios.getCodigo() + " - " + calendarios.getMensaje(),
+						 usuario.getUser());
+			} catch (Exception e1) {
+				logger.error("Error en llamado a PL", e1);
+			}
+			return false;
+		}else{
+			for(CalendarioEntidad cal : calendarios.getCalendariosEntidad()){
+				logger.debug(">>>Calendario: "+cal.getPeriodo());	
+				
+				params.put("pi_ADMINISTRADORA", cal.getAdministradora());
+				params.put("pi_ANIO", cal.getAnho());
+				params.put("pi_ESTATUS", cal.getEstatus());
+				params.put("Pi_FECHACORTE", cal.getFechaCorte());
+				params.put("pi_FECHAEMISION", cal.getFechaEmision());
+				params.put("pi_FECHASTATUS", cal.getFechaEstatus());
+				params.put("pi_FECHAINICIO", cal.getFechaIncio());
+				params.put("pi_FECHATERMINO", cal.getFechaTermino());
+				params.put("pi_HORAEMISION", cal.getHoraEmision());
+				params.put("pi_PERIODO", cal.getPeriodo());
+				params.put("pi_RETENEDORA", cal.getRetenedora());
+				
+				try {
+					kernelManager.guardaPeriodosDxN(params);
+				} catch (Exception e) {
+					logger.error("Error en llamado a PL", e);
+				}
+			}
+			
+			try {
+				kernelManager.lanzaProcesoDxN(params);
+			} catch (Exception e) {
+				logger.error("Error en llamado a PL", e);
+			}
+		}
+		
+		return true;
+	}
 	
 	public String buscarPersonasRepetidas()
 	{
