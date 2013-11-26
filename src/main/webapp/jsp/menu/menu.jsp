@@ -23,9 +23,6 @@
 				    <s:if test="%{#session.containsKey('USUARIO')}">
 					   <s:property value="%{#session['USUARIO'].name}" />
 				    </s:if>
-				    <s:if test="%{#session.containsKey('USUARIO')}">
-				        <s:property value="%{#sesion['USUARIO'].}"/>
-				    </s:if>
 				</font>
             	<div>            		
             		<div>
