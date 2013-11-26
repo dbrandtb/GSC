@@ -162,15 +162,6 @@ public class LoadClientesRolesAction extends PrincipalCoreAction {
     public String obtenRolesClientes() throws Exception {
 
         String retorno=SUCCESS;
-        
-        //////////////////////////////////////////////////
-        ////// Guardar en la sesion la url de login //////
-        //////////////////////////////////////////////////
-        String urlInicio = new StringBuilder().append("http://").append(ServletActionContext.getRequest().getLocalName())
-                .append(":").append(ServletActionContext.getRequest().getLocalPort())
-                .append(Constantes.URL_LOGIN).toString();
-        session.put("URL_INICIO", urlInicio);
-        //////////////////////////////////////////////////
 
         ///////////////////////////////////////////////////////////////////////////////
         ////// Crear un usuario y complementar su propiedades:                   //////
