@@ -12,6 +12,7 @@
     var marcanurlramos     = '<s:url namespace="/"                action="obtenerRamos" />';
     var marcanStorePolizas;
     var marcanUrlFiltro    = '<s:url namespace="/cancelacion"     action="buscarPolizas" />'
+    var marcanUrlAgentes   = '<s:url namespace="/mesacontrol"     action="obtieneAgentes" />';
     /*///////////////////*/
     ////// variables //////
     ///////////////////////
@@ -21,6 +22,7 @@
     /*///////////////////*/
     function marcanMostrarControlesFiltro(tipo)
     {
+    	Ext.getCmp('marcanFilForm').getForm().reset();
     	debug('marcanMostrarControlesFiltro',tipo);
     	if(tipo==1)
     	{
@@ -28,10 +30,9 @@
 	        Ext.getCmp('marcanFilRamo').show();
 	        Ext.getCmp('marcanFilEstado').show();
 	        Ext.getCmp('marcanFilNmpoliza').show();
-	        Ext.getCmp('marcanFilBotGen').show();
-	        
-	        Ext.getCmp('marcanFilBotPol').hide();
 	        Ext.getCmp('marcanFilNmpoliex').hide();
+	        Ext.getCmp('marcanFilAgente').hide();
+	        Ext.getCmp('marcanFilFereferen').hide();
     	}
     	else if (tipo==2)
     	{
@@ -39,13 +40,114 @@
             Ext.getCmp('marcanFilRamo').hide();
             Ext.getCmp('marcanFilEstado').hide();
             Ext.getCmp('marcanFilNmpoliza').hide();
-            Ext.getCmp('marcanFilBotGen').hide();
-            
-            Ext.getCmp('marcanFilBotPol').show();
             Ext.getCmp('marcanFilNmpoliex').show();
+            Ext.getCmp('marcanFilAgente').hide();
+            Ext.getCmp('marcanFilFereferen').hide();
     	}
-        
-        
+    	else if (tipo==3)
+        {
+            Ext.getCmp('marcanFilUnieco').show();
+            Ext.getCmp('marcanFilRamo').hide();
+            Ext.getCmp('marcanFilEstado').hide();
+            Ext.getCmp('marcanFilNmpoliza').hide();
+            Ext.getCmp('marcanFilNmpoliex').hide();
+            Ext.getCmp('marcanFilAgente').show();
+            Ext.getCmp('marcanFilFereferen').show();
+        }
+    }
+    
+    function validaOperacion(recordOperacion)
+    {
+    	if(recordOperacion.get('funcion')=='cancelacionunica')
+   		{
+   		    debug('cancelacion unica');
+   		    var nRecordsActivos=0;
+   		    var recordActivo;
+   		    marcanStorePolizas.each(function(record)
+   		    {
+   		    	if(record.get('activo')==true)
+   		    	{
+   		    		nRecordsActivos=nRecordsActivos+1;
+   		    		recordActivo=record;
+   		    	}
+   		    });
+   		    if(nRecordsActivos==1)
+   		    {
+   		    	debug('continuar');
+   		    	Ext.getCmp('marcanMenuOperaciones').collapse();
+   		    	Ext.getCmp('marcanLoaderFrame').setTitle(recordOperacion.get('texto'));
+   		    	Ext.getCmp('marcanLoaderFrame').getLoader().load(
+   		    	{
+   		    		url       : recordOperacion.get('liga')
+                    ,scripts  : true
+                    ,autoLoad : true
+                    ,params   :
+                    {
+                    	'smap1.cdunieco'  : recordActivo.get('CDUNIECO')
+                    	,'smap1.cdramo'   : recordActivo.get('CDRAMO')
+                    	,'smap1.cdtipsit' : recordActivo.get('CDTIPSIT')
+                   		,'smap1.estado'   : recordActivo.get('ESTADO')
+                   		,'smap1.nmpoliza' : recordActivo.get('NMPOLIZA')
+                   		,'smap1.dsunieco' : recordActivo.get('DSUNIECO')
+                        ,'smap1.dsramo'   : recordActivo.get('DSRAMO')
+                        ,'smap1.dstipsit' : recordActivo.get('DSTIPSIT')
+                        ,'smap1.nmpoliex' : recordActivo.get('NMPOLIEX')
+                    }
+   		    	});
+   		    }
+   		    else
+   		    {
+   		    	Ext.Msg.show(
+                {
+                    title   : 'Error',
+                    icon    : Ext.Msg.WARNING,
+                    msg     : 'Seleccione solo una p&oacute;liza',
+                    buttons : Ext.Msg.OK
+                });
+   		    }
+   		}
+    	else if(recordOperacion.get('funcion')=='cancelacionauto')
+        {
+            debug('cancelacion automatica');
+            var nRecordsActivos  = 0;
+            var recordsActivos   = [];
+            var jsonObject       = {};
+            jsonObject['slist1'] = [];
+            marcanStorePolizas.each(function(record)
+            {
+                if(record.get('activo')==true)
+                {
+                    nRecordsActivos=nRecordsActivos+1;
+                    recordsActivos.push(record);
+                    jsonObject['slist1'].push(record.raw);
+                }
+            });
+            debug('records activos: ',recordsActivos);
+            debug('json object: ',jsonObject);
+            if(nRecordsActivos>0)
+            {
+                debug('continuar');
+                Ext.getCmp('marcanMenuOperaciones').collapse();
+                Ext.getCmp('marcanLoaderFrame').setTitle(recordOperacion.get('texto'));
+                Ext.getCmp('marcanLoaderFrame').getLoader().load(
+                {
+                    url       : recordOperacion.get('liga')
+                    ,scripts  : true
+                    ,autoLoad : true
+                    ,jsonData : jsonObject
+                });
+            }
+            else
+            {
+                Ext.Msg.show(
+                {
+                    title   : 'Error',
+                    icon    : Ext.Msg.WARNING,
+                    msg     : 'Seleccione al menos una p&oacute;liza',
+                    buttons : Ext.Msg.OK
+                });
+            }
+        }
     }
     /*///////////////////*/
     ////// funciones //////
@@ -69,7 +171,60 @@ Ext.onReady(function()
     
     Ext.define('MarCanPoliza',
     {
-        extend : 'Ext.data.Model'
+        extend  : 'Ext.data.Model'
+        ,fields :
+        [
+            {
+        	    name        : "FEMISION"
+            	,type       : "date"
+            	,dateFormat : "d/m/Y"
+            }
+            ,{
+                name        : "FEINICOV"
+                ,type       : "date"
+                ,dateFormat : "d/m/Y"
+            }
+            ,{
+                name        : "FEFINIV"
+                ,type       : "date"
+                ,dateFormat : "d/m/Y"
+            }
+            ,{
+                name        : "PRITOTAL"
+                ,type       : "float"
+            }
+            ,"NOMBRE"
+            ,"DSRAMO"
+            ,"CDRAMO"
+            ,"DSTIPSIT"
+            ,"CDTIPSIT"
+            ,"DSUNIECO"
+            ,"CDUNIECO"
+            ,"NMPOLIZA"
+            ,"NMPOLIEX"
+            ,"NMSOLICI"
+            ,"ESTADO"
+            ,{
+            	name  : 'activo'
+            	,type : 'boolean'
+            }
+            ,{
+                name        : "FERECIBO"
+                ,type       : "date"
+                ,dateFormat : "d/m/Y"
+            }
+        ]
+    });
+    
+    Ext.define('Liga',
+    {
+        extend  : 'Ext.data.Model'
+        ,fields :
+        [
+            "texto"
+            ,"liga"
+            ,"funcion"
+        ]
     });
     /*/////////////////*/
     ////// modelos //////
@@ -89,6 +244,31 @@ Ext.onReady(function()
             ,reader       : 'json'
             ,type         : 'memory'
             ,data         : []
+        }
+    });
+    
+    marcanStoreLigas = Ext.create('Ext.data.Store',
+    {
+        autoLoad  : true
+        ,model    : 'Liga'
+        ,proxy    :
+        {
+            enablePaging  : true
+            ,reader       : 'json'
+            ,type         : 'memory'
+            ,data         :
+            [
+                {
+                	texto    : 'Cancelaci&oacute;n &uacute;nica'
+                	,liga    : '<s:url namespace="/cancelacion"     action="pantallaCancelar" />'
+                	,funcion : 'cancelacionunica'
+                }
+                ,{
+                    texto    : 'Cancelaci&oacute;n autom&aacute;tica'
+                    ,liga    : '<s:url namespace="/cancelacion"     action="pantallaCancelarAuto" />'
+                    ,funcion : 'cancelacionauto'
+                }
+            ]
         }
     });
     
@@ -141,7 +321,8 @@ Ext.onReady(function()
     	    Ext.create('Ext.form.Panel',
     	    {
     	    	title          : 'B&uacute;squeda'
-    	    	,width         : 1000
+    	    	,id            : 'marcanFilForm'
+    	    	//,width         : 1000
     	    	,url           : marcanUrlFiltro
     	    	,layout        :
     	    	{
@@ -165,7 +346,6 @@ Ext.onReady(function()
 			            ,name           : 'smap1.pv_cdunieco_i'
 			            ,displayField   : 'value'
 			            ,valueField     : 'key'
-			            ,allowBlank     : false
 			            ,forceSelection : true
 			            ,queryMode      :'local'
 			            ,store          : Ext.create('Ext.data.Store',
@@ -202,7 +382,6 @@ Ext.onReady(function()
                         ,name           : 'smap1.pv_cdramo_i'
                         ,valueField     : 'cdramo'
                         ,displayField   : 'dsramo'
-                        ,allowBlank     : false
                         ,forceSelection : true
                         ,queryMode      :'local'
                         ,store          : Ext.create('Ext.data.Store',
@@ -228,7 +407,6 @@ Ext.onReady(function()
                         ,name           : 'smap1.pv_estado_i'
                         ,displayField   : 'value'
                         ,valueField     : 'key'
-                       	,allowBlank     : false
                         ,forceSelection : true
                         ,queryMode      :'local'
                         ,store          : Ext.create('Ext.data.Store',
@@ -253,15 +431,48 @@ Ext.onReady(function()
 			        	,id         : 'marcanFilNmpoliza'
 			        	,name       : 'smap1.pv_nmpoliza_i'
 			        	,fieldLabel : 'P&oacute;liza/Cotizaci&oacute;n'
-			        	,allowBlank : false
 			        }
 			        ,{
                         xtype       : 'textfield'
                         ,id         : 'marcanFilNmpoliex'
                         ,name       : 'smap1.pv_nmpoliex_i'
                         ,fieldLabel : 'N&uacute;mero de p&oacute;liza'
-                        ,allowBlank : true
                     }
+			        ,Ext.create('Ext.form.field.ComboBox',
+                    {
+                        fieldLabel : 'Agente'
+                        ,id        : 'marcanFilAgente'
+                        ,name      : 'smap1.pv_cdagente_i'
+                        ,displayField : 'value'
+                        ,valueField   : 'key'
+                        ,forceSelection : true
+                        ,matchFieldWidth: false
+                        ,hideTrigger : true
+                        ,minChars  : 3
+                        ,queryMode :'remote'
+                        ,queryParam: 'smap1.pv_cdagente_i'
+                        ,store : Ext.create('Ext.data.Store', {
+                            model:'Generic',
+                            autoLoad:false,
+                            proxy: {
+                                type: 'ajax',
+                                url : marcanUrlAgentes,
+                                reader:
+                                {
+                                    type: 'json',
+                                    root: 'lista'
+                                }
+                            }
+                        })
+                    })
+                    ,{
+			        	xtype       : 'datefield'
+			        	,id         : 'marcanFilFereferen'
+			        	,format     : 'd/m/Y'
+			        	,fieldLabel : 'Fecha de referencia'
+			        	,name       : 'smap1.pv_fereferen_i'
+			        	,value      : new Date()
+			        }
     	    	]
     	    	,buttons       :
     	    	[
@@ -278,14 +489,18 @@ Ext.onReady(function()
 					                ,handler : function(){marcanMostrarControlesFiltro(1);}
 					            }
 					            ,{
-					                text     : 'P&oacute;liza'
+					                text     : 'Por p&oacute;liza'
 					                ,handler : function(){marcanMostrarControlesFiltro(2);}
 					            }
+					            ,{
+                                    text     : 'Por agente'
+                                    ,handler : function(){marcanMostrarControlesFiltro(3);}
+                                }
 					        ]
 					    }
 					}
     	    		,{
-    	    			text     : 'B&uacute;squeda general'
+    	    			text     : 'Buscar'
     	    			,id      : 'marcanFilBotGen'
     	    			,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
     	    			,handler : function()
@@ -299,12 +514,22 @@ Ext.onReady(function()
 	    	    						debug(action);
 	    	    						var json = Ext.decode(action.response.responseText);
 	    	    						debug(json);
-	    	    						var msg=Ext.Msg.show(
-	                                    {
-	                                        title   : 'OK',
-	                                        msg     : 'OK: '+json.success,
-	                                        buttons : Ext.Msg.OK
-	                                    });
+	    	    						if(json.success==true&&json.slist1&&json.slist1.length>0)
+	    	    						{
+	    	    							marcanStorePolizas.removeAll();
+	    	    							marcanStorePolizas.add(json.slist1);
+	    	    							debug(marcanStorePolizas);
+	    	    						}
+	    	    						else
+	    	    						{
+	    	    							Ext.Msg.show(
+   	                                        {
+   	                                            title    : 'Sin resultados'
+   	                                            ,msg     : 'No hay resultados'
+   	                                            ,icon    : Ext.Msg.WARNING
+   	                                            ,buttons : Ext.Msg.OK
+   	                                        });
+	    	    						}
 	    	    					}
 	    	    				    ,failure : function()
 	    	    				    {
@@ -330,59 +555,142 @@ Ext.onReady(function()
     	    				}
     	    		    }
     	    		}
-    	    		,{
-    	    			text    : 'B&uacute;squeda por p&oacute;liza'
-                        ,id     : 'marcanFilBotPol'
-                        ,icon   : '${ctx}/resources/fam3icons/icons/zoom.png'
-    	    		}
     	    	]
     	    })
     	    ,Ext.create('Ext.grid.Panel',
     	    {
-    	    	title          : 'Hist&oacute;rico de movimientos'
-   	    		,width         : 1000
+    	    	title          : 'P&oacute;lizas'
+   	    		//,width         : 1000
     	    	,collapsible   : true
     	    	,titleCollapse : true
-    	    	,height        : 150
+    	    	,height        : 200
     	    	,store         : marcanStorePolizas
     	    	,frame         : true
+    	    	,tbar          :
+    	    	[
+    	    	    {
+    	    	    	text     : 'Marcar/desmarcar'
+    	    	    	,icon    : '${ctx}/resources/fam3icons/icons/table_lightning.png'
+    	    	    	,handler : function()
+    	    	    	{
+    	    	    		var nRecordsActivos=0;
+    	    	            marcanStorePolizas.each(function(record)
+    	    	            {
+    	    	                if(record.get('activo')==true)
+    	    	                {
+    	    	                    nRecordsActivos=nRecordsActivos+1;
+    	    	                }
+    	    	            });
+    	    	            marcanStorePolizas.each(function(record)
+                            {
+                                record.set('activo',nRecordsActivos!=marcanStorePolizas.getCount());
+                            });
+    	    	    	}
+    	    	    }
+    	    	]
     	    	,columns       :
     	    	[
     	    	    {
-    	    	    	header : 'Col 1'
+    	    	    	dataIndex     : 'activo'
+    	    	    	,xtype        : 'checkcolumn'
+    	    	    	,width        : 30
+    	    	    	,menuDisabled : true
     	    	    }
+    	    	    ,{
+    	    	    	header     : "Sucursal"
+    	    	    	,dataIndex : "DSUNIECO"
+    	    	    	,flex      : 1
+    	    	    }
+    	    	    ,{
+                        header     : "Producto"
+                        ,dataIndex : "DSRAMO"
+                        ,flex      : 1
+                    }
+    	    	    ,{
+                        header     : "P&oacute;liza"
+                        ,dataIndex : "NMPOLIEX"
+                        ,flex      : 1
+                    }
+    	    	    ,{
+    	    	    	header     : 'Inicio de vigencia'
+    	    	    	,dataIndex : 'FEINICOV'
+    	    	    	,xtype     : 'datecolumn'
+    	    	    	,format    : 'd M Y'
+    	    	    	,flex      : 1
+    	    	    }
+    	    	    ,{
+                        header     : 'Fin de vigencia'
+                        ,dataIndex : 'FEFINIV'
+                        ,xtype     : 'datecolumn'
+                        ,format    : 'd M Y'
+                        ,flex      : 1
+                    }
+    	    	    ,{
+                        header     : 'Fecha de recibo'
+                        ,dataIndex : 'FERECIBO'
+                        ,xtype     : 'datecolumn'
+                        ,format    : 'd M Y'
+                        ,flex      : 1
+                    }
+    	    	    ,{
+    	    	    	header     : 'Cliente'
+    	    	    	,dataIndex : 'NOMBRE'
+    	    	    	,flex      : 1
+    	    	    }
+    	    	    ,{
+                        header     : 'Prima total'
+                        ,dataIndex : 'PRITOTAL'
+                        ,renderer  : Ext.util.Format.usMoney
+                        ,flex      : 1
+                    }
     	    	]
     	    })
     	    ,Ext.create('Ext.panel.Panel',
     	    {
-    	    	layout    :
-    	    	{
-    	    		type     : 'table'
-    	    		,columns : 2
-    	    	}
+    	    	id        : 'marcanLoaderFrameParent'
+    	    	,layout   : 'border'
+    	    	//,width    : 1000
+    	    	,height   : 1000
     	        ,border   : 0
     	    	,items    : 
     	    	[
-    	    	    Ext.create('Ext.panel.Panel',
+    	    	    Ext.create('Ext.grid.Panel',
     	    	    {
     	    	    	style        : 'margin-right : 5px;'
+    	    	    	,id          : 'marcanMenuOperaciones'
     	    	    	,width       : 180
-    	    	    	,minHeight   : 150
-    	    	    	,frame       : true
-    	    	    	,items       :
+    	    	    	,region      : 'west'
+    	    	    	,collapsible : true
+    	    	    	,margins     : '0 5 0 0'
+    	    	    	,layout      : 'fit'
+    	    	    	,frame       : false
+    	    	    	,title       : 'Operaciones'
+    	    	    	,store       : marcanStoreLigas
+    	    	    	,hideHeaders : true
+    	    	    	,columns     :
     	    	    	[
     	    	    	    {
-    	    	    	    	xtype  : 'button'
-	    	    	    	    ,text  : 'Cancelaci&oacute;n &uacute;nica'
-	    	    	    	    ,width : 169
+    	    	    	    	dataIndex : 'texto'
+    	    	    	    	,flex     : 1
     	    	    	    }
     	    	    	]
+    	    	    	,listeners   :
+    	    	    	{
+                            'cellclick' : function(grid, td, cellIndex, record)
+                            {
+                            	validaOperacion(record);
+                            }
+    	    	        }
     	    	    })
     	    	    ,Ext.create('Ext.panel.Panel',
     	    	    {
     	    	    	frame      : true
-    	    	    	,minWidth  : 815
-    	    	    	,minHeight : 150
+    	    	    	,region    : 'center'
+    	    	    	,id        : 'marcanLoaderFrame'
+    	    	    	,loader    :
+    	    	    	{
+    	    	    		autoLoad: false
+    	    	    	}
     	    	    })
     	    	]
     	    })
