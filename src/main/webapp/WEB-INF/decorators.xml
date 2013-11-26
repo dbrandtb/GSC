@@ -41,6 +41,8 @@
         <pattern>/jsp-script/proceso/cancelacion/pantallaCancelar.jsp</pattern>
         <pattern>/cancelacion/pantallaCancelarAuto.action</pattern>
         <pattern>/jsp-script/proceso/cancelacion/pantallaCancelarAuto.jsp</pattern>
+        <pattern>/rehabilitacion/pantallaRehabilitacionUnica.action</pattern>
+        <pattern>/jsp-script/proceso/rehabilitacion/pantallaRehabilitacionUnica.jsp</pattern>
 	</decorator>
     
     
@@ -78,6 +80,8 @@
         
         <pattern>/cancelacion/principal.action</pattern>
         <pattern>/jsp-script/proceso/cancelacion/marcoCancelacion.jsp</pattern>
+        <pattern>/rehabilitacion/principal.action</pattern>
+        <pattern>/jsp-script/proceso/rehabilitacion/marcoRehabilitacion.jsp</pattern>
         
 	</decorator>
 	
