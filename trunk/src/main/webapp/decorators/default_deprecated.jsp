@@ -14,7 +14,7 @@
 <link href="${ctx}/resources/css/toolbar_magenta.css" rel="stylesheet" type="text/css" />
 <link href="${ctx}/resources/css/footer_magenta.css" rel="stylesheet" type="text/css" />
 
-<!-- Estilos para extJs default.jsp-->
+<!-- Estilos para extJs default_deprecated-->
 
 <link rel="stylesheet" type="text/css" href="${ctx}/resources/extjs/resources/css/ext-all.css" />
 <link rel="stylesheet" type="text/css" href="${ctx}/resources/extjs/resources/css/xtheme-gray.css" />
@@ -59,7 +59,7 @@
 	}
 </script>
 <link rel="shortcut icon" href="${ctx}/resources/images/favicon.ico" />
-<!-- Links para extJs default.jsp-->
+<!-- Links para extJs default_deprecated-->
 
 <script type="text/javascript" src="${ctx}/resources/extjs/adapter/ext/ext-base.js"></script>
 

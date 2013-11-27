@@ -19,7 +19,7 @@
 	</excludes>
 
 
-	<decorator name="empty" page="empty.jsp">
+	<decorator name="empty" page="decorator_empty.jsp">
 		<pattern>/seguridad/*</pattern>
 		<pattern>/jsp/portal/login.jsp</pattern>
 		<pattern>/editarAsegurados.action</pattern>
@@ -46,7 +46,7 @@
 	</decorator>
     
     
-	<decorator name="clean" page="clean.jsp">
+	<decorator name="default" page="decorator_default.jsp">
 		<pattern>/seguridad/accesoDirecto.action</pattern>
 		<pattern>/seguridad/cotizarSaludVital.action</pattern>
 		<pattern>/cotizacionVital.action</pattern>
@@ -88,15 +88,14 @@
 	</decorator>
 	
 	
-	<decorator name="default" page="default.jsp">
+	<decorator name="roles" page="decorator_roles.jsp">
         <pattern>/ArbolRolCliente.action</pattern>
         <pattern>/seleccionaRolCliente.action</pattern>
         <pattern>/jsp/portal/treeRolElemento.jsp</pattern>
-        <pattern>/jsp/portal/index.jsp</pattern>
     </decorator>
     
     
-    <decorator name="decmainbody" page="decmainbody.jsp">
+    <decorator name="mainbody" page="decorator_mainbody.jsp">
         <pattern>/jsp/portal/mainBody.jsp</pattern>
     </decorator>
 
