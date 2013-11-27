@@ -4,7 +4,13 @@
     
     <package name="endosos" extends="json-default" namespace="/endosos">
         
+        <action name="principal" class="EndososAction" method="marco">
+            <result name="success">/jsp-script/proceso/endosos/marcoEndosos.jsp</result>
+        </action>
         
+        <action name="obtenerEndosos" class="EndososAction" method="obtenerEndosos">
+            <result name="success" type="json" />
+        </action>
         
     </package>
 

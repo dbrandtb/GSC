@@ -56,7 +56,7 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 
 	protected class ObtenerDetalleCancelacion extends StoredProcedure
 	{
-		String[] columnas=new String[]{"CDMOTANU", "DSMOTANU", "FEANULAC"};
+		String[] columnas=new String[]{"CDMOTANU", "DSMOTANU", "FEANULAC", "DSCANCEL"};
 
 		protected ObtenerDetalleCancelacion(DataSource dataSource)
 		{
