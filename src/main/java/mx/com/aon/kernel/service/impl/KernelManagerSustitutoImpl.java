@@ -681,7 +681,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 				}
 				else
 				{
-					omap.put(en.getKey()+"",en.getValue());//poner el nulo o cadena vacia
+					omap.put(en.getKey()+"",null);//poner el nulo o cadena vacia
 				}
 			}
 			else
