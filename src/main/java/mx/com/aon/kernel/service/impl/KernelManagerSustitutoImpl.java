@@ -6,6 +6,7 @@ package mx.com.aon.kernel.service.impl;
 
 import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_DATOS_ASEGURADO;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -655,7 +656,43 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 	public List<Map<String, String>> loadMesaControl(Map<String,String> param) throws ApplicationException
 	{
 		log.debug("### kernel sustituto loadMesaControl map: "+param);
-        List<Map<String,String>> lista= this.getAllBackBoneInvoke(param, ProcesoDAO.LOAD_MESA_CONTROL);
+		/////////////////////////////////////////////////////////////////
+		////// transformacion de mapa de strings a mapa de objetos //////
+		/*/////////////////////////////////////////////////////////////*/
+		Map<String,Object>omap=new LinkedHashMap<String,Object>(0);
+		SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
+		Iterator it=param.entrySet().iterator();
+		while(it.hasNext())
+		{
+			Entry en=(Entry)it.next();
+			if(en.getKey().equals("pv_fedesde_i")||en.getKey().equals("pv_fehasta_i"))
+			{
+				if(en.getValue()!=null&&((String)en.getValue()).length()>0)
+				{
+					try
+					{
+						omap.put(en.getKey()+"",renderFechas.parse((String)en.getValue()));//poner fecha
+					}
+					catch(Exception ex)
+					{
+						log.error("error al convertir cadena a fecha",ex);
+						omap.put(en.getKey()+"",null);
+					}
+				}
+				else
+				{
+					omap.put(en.getKey()+"",en.getValue());//poner el nulo o cadena vacia
+				}
+			}
+			else
+			{
+				omap.put(en.getKey()+"",en.getValue());//poner cadena
+			}
+		}
+		/*/////////////////////////////////////////////////////////////*/
+		////// transformacion de mapa de strings a mapa de objetos //////
+		/////////////////////////////////////////////////////////////////
+        List<Map<String,String>> lista= this.getAllBackBoneInvoke(omap, ProcesoDAO.LOAD_MESA_CONTROL);
         lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
         log.debug("### kernel sustituto loadMesaControl lista size: "+lista.size());
         return lista;
