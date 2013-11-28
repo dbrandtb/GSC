@@ -46,6 +46,10 @@
             var datComUrlMC            = '<s:url namespace="/mesacontrol"     action="principal" />';
             var urlPantallaValosit     = '<s:url namespace="/"                action="pantallaValosit" />';
             var urlPantallaAgentes     = '<s:url namespace="/flujocotizacion" action="principal" />';
+            var urlServidorReports      = '<s:text name="ruta.servidor.reports" />';
+            var _NOMBRE_REPORTE_CARATULA = '<s:text name="reporte.caratula.nombre" />';
+            var complerepSrvUsr            = '<s:text name="pass.servidor.reports" />';
+            var compleUrlViewDoc     = '<s:url namespace ="/documentos"     action="descargaDocInline" />';
             debug(sesionDsrol);
             
             function expande(indice)
@@ -761,6 +765,48 @@
 			                                                                        });
 			                                                            	    }
 			                                                            	});
+			                                                            }
+			                                                        }
+			                                                        ,{
+			                                                        	xtype    : 'button'
+			                                                        	,text    : 'Vista previa'
+			                                                        	,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
+			                                                        	,handler : function()
+			                                                            {
+			                                                                var me=this;
+			                                                                var urlRequestImpCotiza=urlServidorReports
+			                                                                +'?destype=cache'
+			                                                                +"&desformat=PDF"
+			                                                                +"&report="+_NOMBRE_REPORTE_CARATULA
+			                                                                +"&paramform=no"
+			                                                                +"&userid="+complerepSrvUsr
+			                                                                +"&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+			                                                                +'&p_unieco='+inputCdunieco
+			                                                                +'&p_estado=W'
+			                                                                +'&p_ramo='+inputCdramo
+			                                                                +'&p_poliza='+inputNmpoliza
+			                                                                debug(urlRequestImpCotiza);
+			                                                                var numRand=Math.floor((Math.random()*100000)+1);
+			                                                                debug(numRand);
+			                                                                var windowVerDocu=Ext.create('Ext.window.Window',
+			                                                                {
+			                                                                    title          : 'Vista previa'
+			                                                                    ,width         : 700
+			                                                                    ,height        : 500
+			                                                                    ,collapsible   : true
+			                                                                    ,titleCollapse : true
+			                                                                    ,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
+			                                                                                     +'src="'+compleUrlViewDoc+"?contentType=application/pdf&url="+encodeURIComponent(urlRequestImpCotiza)+"\">"
+			                                                                                     +'</iframe>'
+			                                                                    ,listeners     :
+			                                                                    {
+			                                                                        resize : function(win,width,height,opt){
+			                                                                            debug(width,height);
+			                                                                            $('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
+			                                                                        }
+			                                                                    }
+			                                                                }).show();
+			                                                                windowVerDocu.center();
 			                                                            }
 			                                                        }
 			                                                        ,{
