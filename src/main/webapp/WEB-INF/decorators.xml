@@ -43,6 +43,10 @@
         <pattern>/jsp-script/proceso/cancelacion/pantallaCancelarAuto.jsp</pattern>
         <pattern>/rehabilitacion/pantallaRehabilitacionUnica.action</pattern>
         <pattern>/jsp-script/proceso/rehabilitacion/pantallaRehabilitacionUnica.jsp</pattern>
+        <pattern>/endosos/pantallaEndosoCoberturas.action</pattern>
+        <pattern>/jsp-script/proceso/endosos/endosoCoberturas.jsp</pattern>
+        <pattern>/endosos/pantallaEndosoDomicilio.action</pattern>
+        <pattern>/jsp-script/proceso/endosos/endosoDomicilio.jsp</pattern>
 	</decorator>
     
     
@@ -84,7 +88,8 @@
         <pattern>/jsp-script/proceso/rehabilitacion/marcoRehabilitacion.jsp</pattern>
         <pattern>/endosos/principal.action</pattern>
         <pattern>/jsp-script/proceso/endosos/marcoEndosos.jsp</pattern>
-        
+        <pattern>/mesacontrol/supervisor.action</pattern>
+        <pattern>/jsp/extjs4/mesacontrol/marcoSupervisor.jsp</pattern>
 	</decorator>
 	
 	
