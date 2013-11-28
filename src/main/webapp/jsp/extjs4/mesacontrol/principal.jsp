@@ -14,21 +14,38 @@
     ///////////////////////
     ////// variables //////
     /*///////////////////*/
-    var mesConUrlLoadTareas   = '<s:url namespace="/mesacontrol"     action="loadTareas" />';
-    var mesConUrlDocu         = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza" />';
-    var mesConUrlDatCom       = '<s:url namespace="/"                action="datosComplementarios" />';
-    var mesConUrlInitManual   = '<s:url namespace="/mesacontrol"     action="obtenerValoresDefectoInsercionManual" />';
-    var mesConUrlSaveTra      = '<s:url namespace="/mesacontrol"     action="guardarTramiteManual" />';
-    var mesConUrlLoadCatalo   = '<s:url namespace="/flujocotizacion" action="cargarCatalogos" />';
-    var mesConUrlCotizar      = '<s:url namespace="/"                action="cotizacionVital" />';
-    var mesConUrlDetMC        = '<s:url namespace="/mesacontrol"     action="obtenerDetallesTramite" />';
-    var mesConUrlFinDetalleMC ='<s:url namespace="/mesacontrol"      action="finalizarDetalleTramiteMC" />';
-    var urlAgentes            ='<s:url namespace="/mesacontrol"      action="obtieneAgentes" />';
-    var mesConUrlLoadRamos    ='<s:url namespace="/"                 action="obtenerRamos" />';
-    var mesConUrlLoadTipsit   ='<s:url namespace="/"                 action="obtenerTipsit" />';
+    var mesConUrlLoadTareas    = '<s:url namespace="/mesacontrol"     action="loadTareas" />';
+    var mesConUrlDocu          = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza" />';
+    var mesConUrlDatCom        = '<s:url namespace="/"                action="datosComplementarios" />';
+    var mesConUrlInitManual    = '<s:url namespace="/mesacontrol"     action="obtenerValoresDefectoInsercionManual" />';
+    var mesConUrlSaveTra       = '<s:url namespace="/mesacontrol"     action="guardarTramiteManual" />';
+    var mesConUrlLoadCatalo    = '<s:url namespace="/flujocotizacion" action="cargarCatalogos" />';
+    var mesConUrlCotizar       = '<s:url namespace="/"                action="cotizacionVital" />';
+    var mesConUrlDetMC         = '<s:url namespace="/mesacontrol"     action="obtenerDetallesTramite" />';
+    var mesConUrlFinDetalleMC  = '<s:url namespace="/mesacontrol"      action="finalizarDetalleTramiteMC" />';
+    var urlAgentes             = '<s:url namespace="/mesacontrol"      action="obtieneAgentes" />';
+    var mesConUrlLoadRamos     = '<s:url namespace="/"                 action="obtenerRamos" />';
+    var mesConUrlLoadTipsit    = '<s:url namespace="/"                 action="obtenerTipsit" />';
+    var marmesconurlcata       = '<s:url namespace="/flujocotizacion"   action="cargarCatalogos" />';
+    var marmesconurlramos      = '<s:url namespace="/"                  action="obtenerRamos" />';
+    var marmesconUrlLoadTipsit = '<s:url namespace="/"                  action="obtenerTipsit" />';
+    var marmesconurlAgentes    = '<s:url namespace="/mesacontrol"       action="obtieneAgentes" />';
+    var marmesconurlcargar     = '<s:url namespace="/mesacontrol"       action="loadTareasSuper" />';
     var mesConStoreTareas;
     var mesConGridTareas;
     var mesConStoreUniAdmin;
+    var mesconInput            = [];
+    mesconInput['cdunieco']    = '<s:property value="smap1.pv_cdunieco_i" />';
+    mesconInput['ntramite']    = '<s:property value="smap1.pv_ntramite_i" />';
+    mesconInput['cdramo']      = '<s:property value="smap1.pv_cdramo_i"   />';
+    mesconInput['nmpoliza']    = '<s:property value="smap1.pv_nmpoliza_i" />';
+    mesconInput['estado']      = '<s:property value="smap1.pv_estado_i"   />';
+    mesconInput['cdagente']    = '<s:property value="smap1.pv_cdagente_i" />';
+    mesconInput['status']      = '<s:property value="smap1.pv_status_i"   />';
+    mesconInput['cdtipsit']    = '<s:property value="smap1.pv_cdtipsit_i" />';
+    mesconInput['fedesde']     = '<s:property value="smap1.pv_fedesde_i"  />';
+    mesconInput['fehasta']     = '<s:property value="smap1.pv_fehasta_i"  />';
+    debug('mesConInput',mesconInput);
     /*///////////////////*/
     ////// variables //////
     ///////////////////////
@@ -128,6 +145,19 @@ Ext.onReady(function(){
     Ext.Ajax.request(
     {
     	url      : mesConUrlLoadTareas
+    	,params  :
+    	{
+    		'smap1.pv_cdunieco_i'   : mesconInput['cdunieco']
+             ,'smap1.pv_ntramite_i' : mesconInput['ntramite']
+             ,'smap1.pv_cdramo_i'   : mesconInput['cdramo']
+             ,'smap1.pv_nmpoliza_i' : mesconInput['nmpoliza']
+             ,'smap1.pv_estado_i'   : mesconInput['estado']
+             ,'smap1.pv_cdagente_i' : mesconInput['cdagente']
+             ,'smap1.pv_status_i'   : mesconInput['status']
+             ,'smap1.pv_cdtipsit_i' : mesconInput['cdtipsit']
+             ,'smap1.pv_fedesde_i'  : mesconInput['fedesde']
+             ,'smap1.pv_fehasta_i'  : mesconInput['fehasta']
+    	}
     	,success : function(response)
     	{
     		var jsonResponse = Ext.decode(response.responseText);
@@ -969,7 +999,302 @@ Ext.onReady(function(){
     ////// contenido //////
     /*///////////////////*/
     mesConGridTareas = new GridTareas();
-    mesConGridTareas.render('mesconprimain');
+    //mesConGridTareas.render('mesconprimain');
+    Ext.create('Ext.panel.Panel',{
+    	defaults  :
+    	{
+    		style : 'margin : 5px;'
+    	}
+        ,renderTo : 'mesconprimain'
+        ,border   : 0
+        ,items    : 
+        [
+	        Ext.create('Ext.form.Panel',
+	        {
+	            title      : 'Filtro'
+	            ,frame     : true
+	            ,url       : ''
+	            ,collapsible : true
+	            ,titleCollapse : true
+	            ,layout    :
+	            {
+	                type     : 'table'
+	                ,columns : 3
+	            }
+	            ,defaults    : 
+	            {
+	                style       : 'margin : 5px;'
+                    ,labelWidth : 80
+	            }
+	            ,buttonAlign : 'center'
+	            ,buttons     :
+	            [
+	                {
+	                    text     : 'Limpiar'
+	                    ,icon    : '${ctx}/resources/fam3icons/icons/control_repeat_blue.png'
+	                    ,handler : function()
+	                    {
+	                    	var recordLimpio={};
+	                    	this.up().up().getForm().getFields().each(function(item)
+	                    	{
+	                    		item.setValue('');
+	                    	});
+	                    }
+	                }
+	                ,{
+	                    text     : 'Filtrar'
+	                    ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
+	                    ,handler : function()
+	                    {
+	                        debug('buscar');
+	                        var form =this.up().up();
+	                        if(form.isValid())
+	                        {
+	                            form.submit(
+	                            {
+	                            	standardSubmit : true
+	                            });
+	                        }
+	                        else
+	                        {
+	                            Ext.Msg.show(
+	                            {
+	                                title   : 'Datos imcompletos',
+	                                icon    : Ext.Msg.WARNING,
+	                                msg     : 'Favor de llenar los campos requeridos',
+	                                buttons : Ext.Msg.OK
+	                            });
+	                        }
+	                    }
+	                }
+	            ]
+	            ,items       :
+	            [
+	                {
+	                    xtype           : 'combo'
+	                    ,id             : 'marmesconFilUnieco'
+	                    ,fieldLabel     : 'Sucursal'
+	                    ,name           : 'smap1.pv_cdunieco_i'
+	                    ,displayField   : 'value'
+	                    ,valueField     : 'key'
+	                    ,queryMode      :'local'
+	                    ,value          : mesconInput['cdunieco']
+	                    ,store          : Ext.create('Ext.data.Store',
+	                    {
+	                        model     : 'Generic'
+	                        ,autoLoad : true
+	                        ,proxy    :
+	                        {
+	                            type         : 'ajax'
+	                            ,url         : marmesconurlcata
+	                            ,extraParams : {catalogo:'<s:property value="CON_CAT_MESACONTROL_SUCUR_DOCU" />'}
+	                            ,reader      :
+	                            {
+	                                type  : 'json'
+	                                ,root : 'lista'
+	                            }
+	                        }
+	                    })
+	                    ,listeners      :
+	                    {
+	                        'change' : function()
+	                        {
+	                        	debug('change');
+	                            Ext.getCmp('marmesconFilRamo').getStore().load(
+	                            {
+	                                params : {'map1.cdunieco':this.getValue()}
+	                            });
+	                        }
+	                        ,'afterrender' : function()
+	                        {
+	                        	Ext.getCmp('marmesconFilRamo').getStore().load(
+                                {
+                                    params : {'map1.cdunieco':this.getValue()}
+                                });
+	                        }
+	                    }
+	                }
+	                ,{
+	                    xtype           : 'combo'
+	                    ,id             : 'marmesconFilRamo'
+	                    ,fieldLabel     : 'Producto'
+	                    ,name           : 'smap1.pv_cdramo_i'
+	                    ,valueField     : 'cdramo'
+	                    ,displayField   : 'dsramo'
+	                    ,forceSelection : false
+	                    ,value          : mesconInput['cdramo']
+	                    ,queryMode      :'local'
+	                    ,store          : Ext.create('Ext.data.Store',
+	                    {
+	                        model     : 'Ramo'
+	                        ,autoLoad : false
+	                        ,proxy    :
+	                        {
+	                            type    : 'ajax'
+	                            ,url    : marmesconurlramos
+	                            ,reader :
+	                            {
+	                                type  : 'json'
+	                                ,root : 'slist1'
+	                            }
+	                        }
+	                    })
+	                    ,listeners      :
+	                    {
+	                        'change' : function()
+	                        {
+	                            Ext.getCmp('marmesconFilTipsit').getStore().load(
+	                            {
+	                                params : {'map1.cdramo':this.getValue()}
+	                            });
+	                        }
+	                        ,'afterrender' : function()
+	                        {
+	                        	Ext.getCmp('marmesconFilTipsit').getStore().load(
+                                {
+                                    params : {'map1.cdramo':this.getValue()}
+                                });
+	                        }
+	                    }
+	                }
+	                ,{
+	                    fieldLabel  : 'Modalidad'
+	                    ,xtype      : 'combo'
+	                    ,id         : 'marmesconFilTipsit'
+	                    ,name       : 'smap1.pv_cdtipsit_i'
+	                    ,value      : mesconInput['cdtipsit']
+	                    ,valueField   : 'CDTIPSIT'
+	                    ,displayField : 'DSTIPSIT'
+	                    ,forceSelection : false
+	                    ,queryMode      :'local'
+	                    ,store : Ext.create('Ext.data.Store', {
+	                        model:'Tipsit',
+	                        autoLoad : false,
+	                        proxy:
+	                        {
+	                            type: 'ajax',
+	                            url : marmesconUrlLoadTipsit,
+	                            reader:
+	                            {
+	                                type: 'json',
+	                                root: 'slist1'
+	                            }
+	                        }
+	                    })
+	                }
+	                ,{
+	                    xtype           : 'combo'
+	                    ,id             : 'marmesconFilEstado'
+	                    ,fieldLabel     : 'Estado'
+	                    ,name           : 'smap1.pv_estado_i'
+	                    ,value          : mesconInput['estado']
+	                    ,displayField   : 'value'
+	                    ,valueField     : 'key'
+	                    ,forceSelection : false
+	                    ,queryMode      :'local'
+	                    ,store          : Ext.create('Ext.data.Store',
+	                    {
+	                        model     : 'Generic'
+	                        ,autoLoad : true
+	                        ,proxy    :
+	                        {
+	                            type         : 'ajax'
+	                            ,url         : marmesconurlcata
+	                            ,extraParams : {catalogo:'<s:property value="CON_CAT_POL_ESTADO" />'}
+	                            ,reader      :
+	                            {
+	                                type  : 'json'
+	                                ,root : 'lista'
+	                            }
+	                        }
+	                    })
+	                }
+	                ,{
+	                    xtype       : 'textfield'
+	                    ,fieldLabel : 'P&oacute;liza'
+	                    ,name       : 'smap1.pv_nmpoliza_i'
+	                    ,value      : mesconInput['nmpoliza']
+	                }
+	                ,{
+	                    fieldLabel : 'Agente'
+	                    ,xtype     : 'combo'
+	                    ,name      : 'smap1.pv_cdagente_i'
+	                    ,value     : mesconInput['cdagente']
+	                    ,displayField : 'value'
+	                    ,valueField   : 'key'
+	                    ,forceSelection : false
+	                    ,matchFieldWidth: false
+	                    ,hideTrigger : true
+	                    ,minChars  : 3
+	                    ,queryMode :'remote'
+	                    ,queryParam: 'smap1.pv_cdagente_i'
+	                    ,store : Ext.create('Ext.data.Store', {
+	                        model:'Generic',
+	                        autoLoad:false,
+	                        proxy: {
+	                            type: 'ajax',
+	                            url : marmesconurlAgentes,
+	                            reader: {
+	                                type: 'json',
+	                                root: 'lista'
+	                            }
+	                        }
+	                    })
+	                }
+	                ,{
+	                    xtype       : 'numberfield'
+	                    ,fieldLabel : 'Tr&aacute;mite'
+	                    ,name       : 'smap1.pv_ntramite_i'
+	                    ,value      : mesconInput['ntramite']
+	                }
+	                ,{
+	                    fieldLabel      : 'Estatus'
+	                    ,xtype          : 'combo'
+	                    ,name           : 'smap1.pv_status_i'
+	                    ,value          : mesconInput['status']
+	                    ,displayField   : 'value'
+	                    ,valueField     : 'key'
+	                    ,forceSelection : false
+	                    ,queryMode      :'local'
+	                    ,store          : Ext.create('Ext.data.Store',
+	                    {
+	                        model     : 'Generic'
+	                        ,autoLoad : true
+	                        ,proxy    :
+	                        {
+	                            type         : 'ajax'
+	                            ,url         : marmesconurlcata
+	                            ,extraParams : {catalogo:'<s:property value="CON_CAT_MESACONTROL_ESTAT_TRAMI" />'}
+	                            ,reader      :
+	                            {
+	                                type  : 'json'
+	                                ,root : 'lista'
+	                            }
+	                        }
+	                    })
+	                }
+	                ,{
+	                	xtype : 'label'
+	                }
+	                ,{
+	                	xtype       : 'datefield'
+	                	,fieldLabel : 'Desde'
+	                	,format     : 'd/m/Y'
+	                	,name       : 'smap1.pv_fedesde_i'
+	                	,value      : mesconInput['fedesde']
+	                }
+	                ,{
+                        xtype       : 'datefield'
+                        ,fieldLabel : 'Hasta'
+                        ,format     : 'd/m/Y'
+                        ,name       : 'smap1.pv_fehasta_i'
+                        ,value      : mesconInput['fehasta']
+                    }
+	            ]
+	        })
+	        ,mesConGridTareas
+	    ]
+    });
     /*///////////////////*/
     ////// contenido //////
     ///////////////////////

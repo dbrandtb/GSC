@@ -3065,7 +3065,17 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 		protected ObtenerMesaControl(DataSource dataSource)
 		{
 			super(dataSource,"PKG_SATELITES.P_OBTIENE_MESACONTROL");
-			declareParameter(new SqlParameter("pv_dsrol_i",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdunieco_i",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ntramite_i",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i",        OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i",        OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdagente_i",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_status_i",        OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsit_i",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_fedesde_i",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_fehasta_i",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsrol_i",         OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerMesaControlMapper()));
 			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
