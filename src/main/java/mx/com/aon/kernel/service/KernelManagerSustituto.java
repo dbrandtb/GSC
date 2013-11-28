@@ -79,6 +79,7 @@ public interface KernelManagerSustituto {
 	public List<Map<String, String>> obtenerPolicot(Map<String, String> smap1) throws ApplicationException;
 	public WrapperResultados PMovMesacontrol(Map<String, Object> parMesCon) throws ApplicationException;
 	public List<Map<String, String>> loadMesaControl(String dsrol) throws ApplicationException;
+	public List<Map<String, String>> loadMesaControlSuper(Map<String,String>params) throws ApplicationException;
 	public WrapperResultados obtenDatosRecibos(HashMap<String,Object> params) throws ApplicationException;
 	public WrapperResultados obtenDatosRecibosDxN(HashMap<String,Object> params) throws ApplicationException;
 	public WrapperResultados cargaColonias(String codigoPostal) throws ApplicationException;

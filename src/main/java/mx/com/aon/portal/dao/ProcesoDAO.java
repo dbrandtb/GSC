@@ -24,6 +24,7 @@ import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.cotizacion.model.ConsultaDatosPolizaAgenteVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Tatri;
+import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.emision.model.DatosRecibosDxNVO;
 import mx.com.gseguros.utils.Utilerias;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSalud;
@@ -136,6 +137,7 @@ public class ProcesoDAO extends AbstractDAO {
 	public static final String GUARDA_PERIODOS_DXN =	"GUARDA_PERIODOS_DXN";
 	public static final String LANZA_PROCESO_DXN =	"LANZA_PROCESO_DXN";
 	public static final String VALIDAR_EXTRAPRIMA       =	"VALIDAR_EXTRAPRIMA";
+	public static final String P_OBTIENE_MESACONTROL_SUPER = "P_OBTIENE_MESACONTROL_SUPER";
 
 	protected void initDao() throws Exception {
 		addStoredProcedure(EJECUTA_SIGSVALIPOL, new EjecutarSIGSVALIPOL(getDataSource()));
@@ -192,6 +194,7 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(GUARDAR_ARCHIVO_POLIZA, new GuardarArchivoPoliza(getDataSource()));
         addStoredProcedure(OBTENER_TIPOS_CLAUSULAS_EXCLUSION, new ObtenerTiposClausulasExclusion(getDataSource()));
         addStoredProcedure(LOAD_MESA_CONTROL, new ObtenerMesaControl(getDataSource()));
+        addStoredProcedure(P_OBTIENE_MESACONTROL_SUPER, new ObtenerMesaControlSuper(getDataSource()));
         addStoredProcedure(LOAD_DETALLE_MESA_CONTROL, new ObtenerDetalleMesaControl(getDataSource()));
         addStoredProcedure(OBTENER_EXCLUSIONES_X_TIPO, new ObtenerExclusionesXTipo(getDataSource()));
         addStoredProcedure(OBTENER_HTML_CLAUSULA, new ObtenerHtmlClausula(getDataSource()));
@@ -4028,5 +4031,56 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 		}   	
 
     }
+    
+    protected class ObtenerMesaControlSuper extends CustomStoredProcedure
+	{
+    	
+    	String columnas[]=new String[]{
+    			"NTRAMITE" 
+    		    ,"CDUNIECO" 
+    		    ,"CDRAMO" 
+    		    ,"ESTADO" 
+    		    ,"NMPOLIZA" 
+    		    ,"NMSOLICI" 
+    		    ,"CDSUCADM" 
+    		    ,"CDSUCDOC" 
+    		    ,"CDSUBRAM" 
+    		    ,"CDTIPTRA" 
+    		    ,"FERECEPC" 
+    		    ,"CDAGENTE" 
+    		    ,"NOMBRE_AGENTE" 
+    		    ,"REFERENCIA" 
+    		    ,"NOMBRE" 
+    		    ,"FECSTATU" 
+    		    ,"STATUS" 
+    		    ,"COMMENTS" 
+    		    ,"CDTIPSIT"
+    		    };
+    	
+		protected ObtenerMesaControlSuper(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES.P_OBTIENE_MESACONTROL_SUPER");
+			declareParameter(new SqlParameter("pv_cdunieco_i",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ntramite_i",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i",        OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i",        OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdagente_i",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_status_i",        OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsit_i",      OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new GenericMapper(columnas)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
+		}
+	
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception
+		{
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			WrapperResultados wrapperResultados = mapper.build(map);
+			List result = (List) map.get("pv_registro_o");
+			wrapperResultados.setItemList(result);
+			return wrapperResultados;
+		}
+	}
     
 }
