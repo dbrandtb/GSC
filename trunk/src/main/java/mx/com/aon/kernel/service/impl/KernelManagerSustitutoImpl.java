@@ -652,10 +652,8 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return res;
 	}
 	
-	public List<Map<String, String>> loadMesaControl(String dsrol) throws ApplicationException
+	public List<Map<String, String>> loadMesaControl(Map<String,String> param) throws ApplicationException
 	{
-		Map<String,String>param=new LinkedHashMap<String,String>(0);
-		param.put("pv_dsrol_i",dsrol);
 		log.debug("### kernel sustituto loadMesaControl map: "+param);
         List<Map<String,String>> lista= this.getAllBackBoneInvoke(param, ProcesoDAO.LOAD_MESA_CONTROL);
         lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);

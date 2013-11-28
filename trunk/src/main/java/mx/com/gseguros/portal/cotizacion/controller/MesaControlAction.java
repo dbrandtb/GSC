@@ -55,6 +55,7 @@ public class MesaControlAction extends PrincipalCoreAction implements Constantes
 				+ "\n###### mesa de control loadTareas ######"
 				+ "\n######                            ######"
 				);
+		log.debug("smap1: "+smap1);
 		try
 		{
 			//obtener el rol activo
@@ -70,7 +71,19 @@ public class MesaControlAction extends PrincipalCoreAction implements Constantes
 			log.debug("rol activo: "+dsrol);
 			//!obtener el rol activo
 			
-			slist1=kernelManager.loadMesaControl(dsrol);
+			/////////////////////////////////////////////////////////
+			////// para la nueva lectura de tareas con filtros //////
+			/*/////////////////////////////////////////////////////*/
+			if(smap1==null)
+			{
+				smap1=new LinkedHashMap<String,String>(0);
+			}
+			smap1.put("pv_dsrol_i",dsrol);
+			/*/////////////////////////////////////////////////////*/
+			////// para la nueva lectura de tareas con filtros //////
+			/////////////////////////////////////////////////////////
+			
+			slist1=kernelManager.loadMesaControl(smap1);
 			if(slist1!=null&&slist1.size()>0)
 			{
 				for(int i=0;i<slist1.size();i++)

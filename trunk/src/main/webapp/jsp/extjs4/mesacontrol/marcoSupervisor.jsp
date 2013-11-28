@@ -154,7 +154,7 @@ Ext.create('Ext.panel.Panel',
 	    	    	}
 	    	    }
 	    	    ,{
-	    	    	text     : 'Buscar'
+	    	    	text     : 'Filtrar'
 	    	    	,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
 	    	    	,handler : function()
 	    	    	{
@@ -398,6 +398,17 @@ Ext.create('Ext.panel.Panel',
                 })
 	    	]
 	    })
+	    ,Ext.create('Ext.panel.Panel',
+        {
+            frame      : true
+            ,region    : 'center'
+            ,id        : 'marmesconLoaderFrame'
+            ,loader    :
+            {
+                autoLoad: false
+            }
+        })
+	    /*
 	    ,Ext.create('Ext.grid.Panel',
 	    {
             frame    : true
@@ -484,6 +495,7 @@ Ext.create('Ext.panel.Panel',
                 }
             ]
         })
+        */
 	]
 });
 /*///////////////////*/
