@@ -4,7 +4,8 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
     
     <bean id="EndososAction" class="mx.com.gseguros.portal.endosos.controller.EndososAction" scope="prototype">
-        <property name="endososManager" ref="endososManagerImpl"></property>
+        <property name="endososManager" ref="endososManagerImpl" />
+        <property name="kernelManager" ref="kernelManagerSustituto"/>
     </bean>
     
 </beans>

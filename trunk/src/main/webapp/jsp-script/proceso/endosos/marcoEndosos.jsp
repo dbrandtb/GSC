@@ -8,11 +8,13 @@
     ///////////////////////
     ////// variables //////
     /*///////////////////*/
-    var marendurlcata      = '<s:url namespace="/flujocotizacion"   action="cargarCatalogos" />';
-    var marendurlramos     = '<s:url namespace="/"                  action="obtenerRamos" />';
+    var marendurlcata             = '<s:url namespace="/flujocotizacion"   action="cargarCatalogos" />';
+    var marendurlramos            = '<s:url namespace="/"                  action="obtenerRamos" />';
+    var marendUrlFiltro           = '<s:url namespace="/endosos"           action="obtenerEndosos" />'
+    var marendUrlAgentes          = '<s:url namespace="/mesacontrol"       action="obtieneAgentes" />';
+    var marenUrlObtenerAsegurados = '<s:url namespace="/"                  action="cargarComplementariosAsegurados" />';
     var marendStorePolizas;
-    var marendUrlFiltro    = '<s:url namespace="/endosos"           action="obtenerEndosos" />'
-    var marendUrlAgentes   = '<s:url namespace="/mesacontrol"       action="obtieneAgentes" />';
+    var marendStoreAsegurados;
     /*///////////////////*/
     ////// variables //////
     ///////////////////////
@@ -46,25 +48,81 @@
     {
     	if(recordOperacion.get('funcion')=='endososcoberturas')
     	{
-    		debug('endososcoberturas')
+    		debug('endososcoberturas');
+    		var nAsegActivos=0;
+    		var recordActivo;
+    		marendStoreAsegurados.each(function(record)
+	        {
+	            if(record.get('activo')==true)
+	            {
+	            	nAsegActivos=nAsegActivos+1;
+	            	recordActivo=record;
+	            }
+	        });
+    		if(nAsegActivos==1)
+    		{
+    			if(recordActivo.get('cdrol')==2)
+    			{
+    				Ext.getCmp('marendMenuOperaciones').collapse();
+                    Ext.getCmp('marendLoaderFrame').setTitle(recordOperacion.get('texto'));
+	    			Ext.getCmp('marendLoaderFrame').getLoader().load(
+	                {
+	                    url       : recordOperacion.get('liga')
+	                    ,scripts  : true
+	                    ,autoLoad : true
+	                    ,params   :
+	                    {
+	                    	'smap1.pv_cdunieco'      : recordActivo.get('CDUNIECO')
+	                    	,'smap1.pv_cdramo'       : recordActivo.get('CDRAMO')
+	                    	,'smap1.pv_estado'       : recordActivo.get('ESTADO')
+	                    	,'smap1.pv_nmpoliza'     : recordActivo.get('NMPOLIZA')
+	                    	,'smap1.pv_nmsituac'     : recordActivo.get('nmsituac')
+	                    	,'smap1.pv_cdperson'     : recordActivo.get('cdperson')
+	                    	,'smap1.cdrfc'           : recordActivo.get('cdrfc')
+	                    	,'smap1.pv_cdrol'        : recordActivo.get('cdrol')
+	                    	,'smap1.nombreAsegurado' : recordActivo.get('nombrecompleto')
+	                    	,'smap1.botonCopiar'     : '0'
+	                    }
+	                });
+    			}
+    			else
+   				{
+    				Ext.Msg.show(
+	                {
+	                    title    : 'Error'
+	                    ,icon    : Ext.Msg.WARNING
+	                    ,msg     : 'No hay coberturas para el cliente, por favor seleccione un asegurado'
+	                    ,buttons : Ext.Msg.OK
+	                });
+   				}
+    		}
+    		else
+    		{
+    			Ext.Msg.show(
+                {
+                    title    : 'Error'
+                    ,icon    : Ext.Msg.WARNING
+                    ,msg     : 'Seleccione un asegurado'
+                    ,buttons : Ext.Msg.OK
+                });
+    		}
     	}
-        else if(recordOperacion.get('funcion')=='endososcoberturas2')
-        {
-            debug('rehabilitacion unica');
-            var nRecordsActivos=0;
+    	else if(recordOperacion.get('funcion')=='endosodomicilio')
+    	{
+    		debug('endoso domicilio');
+    		var nAsegActivos=0;
             var recordActivo;
-            marendStorePolizas.each(function(record)
+            marendStoreAsegurados.each(function(record)
             {
                 if(record.get('activo')==true)
                 {
-                    nRecordsActivos=nRecordsActivos+1;
+                    nAsegActivos=nAsegActivos+1;
                     recordActivo=record;
                 }
             });
-            if(nRecordsActivos==1)
+            if(nAsegActivos==1)
             {
-                debug('continuar');
-                Ext.getCmp('marendMenuOperaciones').collapse();
+            	Ext.getCmp('marendMenuOperaciones').collapse();
                 Ext.getCmp('marendLoaderFrame').setTitle(recordOperacion.get('texto'));
                 Ext.getCmp('marendLoaderFrame').getLoader().load(
                 {
@@ -73,15 +131,17 @@
                     ,autoLoad : true
                     ,params   :
                     {
-                        'smap1.cdunieco'  : recordActivo.get('CDUNIECO')
-                        ,'smap1.cdramo'   : recordActivo.get('CDRAMO')
-                        ,'smap1.cdtipsit' : recordActivo.get('CDTIPSIT')
-                        ,'smap1.estado'   : recordActivo.get('ESTADO')
-                        ,'smap1.nmpoliza' : recordActivo.get('NMPOLIZA')
-                        ,'smap1.dsunieco' : recordActivo.get('DSUNIECO')
-                        ,'smap1.dsramo'   : recordActivo.get('DSRAMO')
-                        ,'smap1.dstipsit' : recordActivo.get('DSTIPSIT')
-                        ,'smap1.nmpoliex' : recordActivo.get('NMPOLIEX')
+                        'smap1.pv_cdunieco'      : recordActivo.get('CDUNIECO')
+                        ,'smap1.pv_cdramo'       : recordActivo.get('CDRAMO')
+                        ,'smap1.pv_estado'       : recordActivo.get('ESTADO')
+                        ,'smap1.pv_nmpoliza'     : recordActivo.get('NMPOLIZA')
+                        ,'smap1.pv_nmsituac'     : recordActivo.get('nmsituac')
+                        ,'smap1.pv_cdperson'     : recordActivo.get('cdperson')
+                        ,'smap1.cdrfc'           : recordActivo.get('cdrfc')
+                        ,'smap1.pv_cdrol'        : recordActivo.get('cdrol')
+                        ,'smap1.nombreAsegurado' : recordActivo.get('nombrecompleto')
+                        ,'smap1.botonCopiar'     : recordActivo.get('cdrol')==1?'0':'1'//es asegurado? 
+                        ,'smap1.cdtipsit'        : recordActivo.get('CDTIPSIT')
                     }
                 });
             }
@@ -89,13 +149,13 @@
             {
                 Ext.Msg.show(
                 {
-                    title   : 'Error',
-                    icon    : Ext.Msg.WARNING,
-                    msg     : 'Seleccione solo una p&oacute;liza',
-                    buttons : Ext.Msg.OK
+                    title    : 'Error'
+                    ,icon    : Ext.Msg.WARNING
+                    ,msg     : 'Seleccione un asegurado'
+                    ,buttons : Ext.Msg.OK
                 });
             }
-        }
+    	}
     }
     /*///////////////////*/
     ////// funciones //////
@@ -160,6 +220,44 @@ Ext.onReady(function()
             ,"funcion"
         ]
     });
+    
+    Ext.define('MarEndAsegurado',
+    {
+    	extend  : 'Ext.data.Model'
+    	,fields :
+    	[
+            "nmsituac"
+            ,"cdrol"
+            ,{
+            	name        : 'fenacimi'
+            	,type       : 'date'
+            	,dateFormat : 'd/m/Y'
+            }
+            ,"sexo"
+            ,"cdperson"
+            ,"nombre"
+            ,"segundo_nombre"
+            ,"Apellido_Paterno"
+            ,"Apellido_Materno"
+            ,"cdrfc"
+            ,"Parentesco"
+            ,"tpersona"
+            ,"nacional"
+            ,"swexiper"
+            ,{
+            	name  : 'activo'
+            	,type : 'boolean'
+            }
+            ,'nombrecompleto'
+            ,'CDUNIECO'
+            ,'CDRAMO'
+            ,'ESTADO'
+            ,'NMPOLIZA'
+            ,'NMPOLIEX'
+            ,'NSUPLOGI'
+            ,'CDTIPSIT'
+    	]
+    });
     /*/////////////////*/
     ////// modelos //////
     /////////////////////
@@ -181,6 +279,22 @@ Ext.onReady(function()
         }
     });
     
+    marendStoreAsegurados = Ext.create('Ext.data.Store',
+    {
+    	autoLoad : false
+    	,model   : 'MarEndAsegurado'
+    	,proxy   :
+    	{
+    		type    : 'ajax'
+    		,url    : marenUrlObtenerAsegurados
+    		,reader :
+    		{
+    			type  : 'json'
+    			,root : 'list1'
+    		}
+    	}
+    });
+    
     marendStoreLigas = Ext.create('Ext.data.Store',
     {
         autoLoad  : true
@@ -194,8 +308,13 @@ Ext.onReady(function()
             [
                 {
                     texto    : 'Endoso de suma asegurada'
-                    ,liga    : '<s:url namespace="/endosos" action="pantallaCoberturas" />'
+                    ,liga    : '<s:url namespace="/endosos" action="pantallaEndosoCoberturas" />'
                     ,funcion : 'endososcoberturas'
+                }
+                ,{
+                	texto    : 'Endoso de domicilio'
+                	,liga    : '<s:url namespace="/endosos" action="pantallaEndosoDomicilio" />'
+                	,funcion : 'endosodomicilio'
                 }
             ]
         }
@@ -548,6 +667,169 @@ Ext.onReady(function()
                         ,dataIndex : 'PRIMA_TOTAL'
                         ,renderer  : Ext.util.Format.usMoney
                         ,flex      : 1
+                    }
+                ]
+                ,listeners     :
+                {
+                	'cellclick' : function(grid, td, cellIndex, record)
+                    {
+                        debug(record);
+                        marendStoreAsegurados.load(
+                        {
+                        	params    :
+                        	{
+                        		'map1.pv_cdunieco'  : record.get('CDUNIECO')
+                        		,'map1.pv_cdramo'   : record.get('CDRAMO')
+                        		,'map1.pv_estado'   : record.get('ESTADO')
+                        		,'map1.pv_nmpoliza' : record.get('NMPOLIZA')
+                        	}
+                            ,callback : function(records)
+                            {
+                            	debug('callback',records);
+                            	if(records)
+                            	{
+                            		for(i=0;i<records.length;i++)
+                            		{
+                            			records[i].set('nombrecompleto',
+                            					records[i].get('nombre')
+                            					+' '+(records[i].get('segundo_nombre')?records[i].get('segundo_nombre'):'')
+                            					+' '+records[i].get('Apellido_Paterno')
+                            					+' '+records[i].get('Apellido_Materno')
+                            					);
+                            			records[i].set('CDUNIECO' , record.get('CDUNIECO'));
+                            			records[i].set('CDRAMO'   , record.get('CDRAMO'));
+                            			records[i].set('ESTADO'   , record.get('ESTADO'));
+                            			records[i].set('NMPOLIZA' , record.get('NMPOLIZA'));
+                            			records[i].set('NMPOLIEX' , record.get('NMPOLIEX'));
+                            			records[i].set('NSUPLOGI' , record.get('NSUPLOGI'));
+                            			records[i].set('CDTIPSIT' , record.get('CDTIPSIT'));
+                            		}
+                            	}
+                            }
+                        });
+                    }
+                }
+            })
+            ,Ext.create('Ext.grid.Panel',
+            {
+            	id             : 'marendGridAsegurados'
+            	,title         : 'Cliente y asegurados'
+            	,frame         : true
+            	,store         : marendStoreAsegurados
+            	,height        : 200
+            	,titleCollapse : true
+            	,collapsible   : true
+            	,columns       :
+            	[
+					{
+					    dataIndex     : 'activo'
+					    ,xtype        : 'checkcolumn'
+					    ,width        : 30
+					    ,menuDisabled : true
+					}
+					,{
+						header     : 'P&oacute;liza'
+						,dataIndex : 'NMPOLIEX'
+						,flex      : 1
+					}
+					,{
+                        header     : 'Endoso'
+                        ,dataIndex : 'NSUPLOGI'
+                        ,flex      : 1
+                    }
+            	    ,{
+            	    	header     : 'Rol'
+            	    	,dataIndex : 'nmsituac'
+            	    	,flex      : 1
+            	    	,renderer  : function(value)
+            	    	{
+            	    		var text='Cliente';
+            	    		if(value>0)
+            	    		{
+            	    			text='Asegurado';
+            	    		}
+            	    		return text;
+            	    	}
+            	    }
+            	    ,{
+            	    	header     : 'Parentesco'
+            	    	,dataIndex : 'Parentesco'
+            	    	,flex      : 1
+            	    	,renderer  : function(value)
+            	    	{
+            	    		var text='';
+            	    		if(value=='T')
+            	    		{
+            	    			text='Titular'
+            	    		}
+            	    		else if(value=='C')
+                            {
+                                text='C&oacute;nyugue'
+                            }
+            	    		else if(value=='H')
+                            {
+                                text='Hijo'
+                            }
+            	    		else if(value=='P')
+                            {
+                                text='Padre'
+                            }
+            	    		return text;
+            	    	}
+            	    }
+            	    ,{
+            	    	header     : 'Nombre'
+            	    	,dataIndex : 'nombrecompleto'
+            	    	,flex      : 2
+            	    }
+            	    ,{
+                        header     : 'RFC'
+                        ,dataIndex : 'cdrfc'
+                        ,flex      : 1
+                    }
+            	    ,{
+                        header     : 'Tipo de persona'
+                        ,dataIndex : 'tpersona'
+                        ,flex      : 1
+                        ,renderer  : function(value)
+                        {
+                        	var text='';
+                        	if(value=='M')
+                        	{
+                        		text='Moral';
+                        	}
+                        	else if(value=='F')
+                       		{
+                        		text='F&iacute;sica';
+                       		}
+                        	else if(value=='S')
+                            {
+                        		text='Simplificado';
+                            }
+                        	return text;
+                        }
+                    }
+            	]
+                ,tbar          :
+                [
+                    {
+                        text     : 'Marcar/desmarcar'
+                        ,icon    : '${ctx}/resources/fam3icons/icons/table_lightning.png'
+                        ,handler : function()
+                        {
+                            var nRecordsActivos=0;
+                            marendStoreAsegurados.each(function(record)
+                            {
+                                if(record.get('activo')==true)
+                                {
+                                    nRecordsActivos=nRecordsActivos+1;
+                                }
+                            });
+                            marendStoreAsegurados.each(function(record)
+                            {
+                                record.set('activo',nRecordsActivos!=marendStoreAsegurados.getCount());
+                            });
+                        }
                     }
                 ]
             })

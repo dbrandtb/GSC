@@ -24,6 +24,12 @@
         <action name="finalizarDetalleTramiteMC" method="finalizarDetalleTramiteMC" class="MesaControlAction">
             <result name="success" type="json" />
         </action>
+        <action name="supervisor" method="marcoSupervisor" class="MesaControlAction">
+            <result name="success">/jsp/extjs4/mesacontrol/marcoSupervisor.jsp</result>
+        </action>
+        <action name="loadTareasSuper" method="loadTareasSuper" class="MesaControlAction">
+            <result name="success" type="json" />
+        </action>
     </package>
 
 </struts>

@@ -12,6 +12,14 @@
             <result name="success" type="json" />
         </action>
         
+        <action name="pantallaEndosoCoberturas" class="EndososAction" method="pantallaEndosoCoberturas">
+            <result name="success">/jsp-script/proceso/endosos/endosoCoberturas.jsp</result>
+        </action>
+        
+        <action name="pantallaEndosoDomicilio" class="EndososAction" method="pantallaEndosoDomicilio">
+            <result name="success">/jsp-script/proceso/endosos/endosoDomicilio.jsp</result>
+        </action>
+        
     </package>
 
 </struts>

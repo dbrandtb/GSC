@@ -17,7 +17,7 @@ public class GeneradorCampos {
     
     public String idPrefix="idAutoGenerado";
     public static final String namePrefix="parametros.pv_otvalor";
-    private org.apache.log4j.Logger log=org.apache.log4j.Logger.getLogger(GeneradorCampos.class);
+    private static org.apache.log4j.Logger log=org.apache.log4j.Logger.getLogger(GeneradorCampos.class);
     private Item items;
     private Item fields;
     private String context;
@@ -28,7 +28,8 @@ public class GeneradorCampos {
     
     public GeneradorCampos(String context)
     {
-    	this.context=context;
+    	this.context="/"+context;
+    	log.debug("contexto para el generador de campos: "+this.context);
     	idPrefix+="_"+System.currentTimeMillis()+"_"+((long)Math.ceil((Math.random()*10000d)))+"_";
     }
     

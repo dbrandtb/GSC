@@ -1,6 +1,9 @@
 package mx.com.gseguros.portal.endosos.controller;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
+import mx.com.aon.kernel.service.KernelManagerSustituto;
+import mx.com.gseguros.portal.cotizacion.controller.ComplementariosCoberturasAction;
+import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.util.ConstantesCatalogos;
 
@@ -17,6 +20,9 @@ public class EndososAction extends PrincipalCoreAction implements ConstantesCata
 	private Map<String,String>       smap1;
 	private boolean                  success          = false;
 	private EndososManager           endososManager;
+	private KernelManagerSustituto   kernelManager;
+	private Item                     item1;
+	private Item                     item2;
 
 	//////////////////////////////
 	////// marco de endosos //////
@@ -75,7 +81,63 @@ public class EndososAction extends PrincipalCoreAction implements ConstantesCata
 	/*/////////////////////////*/
 	////// obtener endosos //////
 	/////////////////////////////
+	
+	//////////////////////////////////////////////
+	////// pantalla de endoso de coberturas //////
+	/*//////////////////////////////////////////*/
+	public String pantallaEndosoCoberturas()
+	{
+		log.debug(""
+				+ "\n######################################"
+				+ "\n######################################"
+				+ "\n###### pantallaEndosoCoberturas ######"
+				+ "\n######                          ######"
+				);
+		log.debug("smap1: "+smap1);
+		log.debug(""
+				+ "\n######                          ######"
+				+ "\n###### pantallaEndosoCoberturas ######"
+				+ "\n######################################"
+				+ "\n######################################"
+				);
+		return SUCCESS;
+	}
+	/*//////////////////////////////////////////*/
+	////// pantalla de endoso de coberturas //////
+	//////////////////////////////////////////////
 
+	//////////////////////////////////////////////
+	////// pantalla de endoso de domicilio  //////
+	/*//////////////////////////////////////////*/
+	public String pantallaEndosoDomicilio()
+	{
+		log.debug(""
+				+ "\n#####################################"
+				+ "\n#####################################"
+				+ "\n###### pantallaEndosoDomicilio ######"
+				+ "\n######                         ######"
+				);
+		log.debug("smap1: "+smap1);
+		log.debug("session: "+session);
+		ComplementariosCoberturasAction actionDomicilio=new ComplementariosCoberturasAction();
+		actionDomicilio.setSession(session);
+		actionDomicilio.setSmap1(smap1);
+		actionDomicilio.setKernelManager(kernelManager);
+		actionDomicilio.mostrarPantallaDomicilio();
+		item1=actionDomicilio.getItem1();
+		item2=actionDomicilio.getItem2();
+		log.debug(""
+				+ "\n######                         ######"
+				+ "\n###### pantallaEndosoDomicilio ######"
+				+ "\n#####################################"
+				+ "\n#####################################"
+				);
+		return SUCCESS;
+	}
+	/*//////////////////////////////////////////*/
+	////// pantalla de endoso de domicilio  //////
+	//////////////////////////////////////////////
+	
 	///////////////////////////////
 	////// getters y setters //////
 	/*///////////////////////////*/
@@ -160,6 +222,26 @@ public class EndososAction extends PrincipalCoreAction implements ConstantesCata
 	public String getCON_CAT_CANCELA_MOTIVOS() {
 		// TODO Auto-generated method stub
 		return CON_CAT_CANCELA_MOTIVOS;
+	}
+
+	public Item getItem1() {
+		return item1;
+	}
+
+	public void setItem1(Item item1) {
+		this.item1 = item1;
+	}
+
+	public Item getItem2() {
+		return item2;
+	}
+
+	public void setItem2(Item item2) {
+		this.item2 = item2;
+	}
+
+	public void setKernelManager(KernelManagerSustituto kernelManager) {
+		this.kernelManager = kernelManager;
 	}
 	
 }

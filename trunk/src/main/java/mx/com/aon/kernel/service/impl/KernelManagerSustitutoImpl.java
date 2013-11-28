@@ -663,6 +663,15 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return lista;
 	}
 	
+	public List<Map<String, String>> loadMesaControlSuper(Map<String,String>params) throws ApplicationException
+	{
+		log.debug("### kernel sustituto loadMesaControlSuper map: "+params);
+        List<Map<String,String>> lista= this.getAllBackBoneInvoke(params, ProcesoDAO.P_OBTIENE_MESACONTROL_SUPER);
+        lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
+        log.debug("### kernel sustituto loadMesaControlSuper lista size: "+lista.size());
+        return lista;
+	}
+	
 	public List<Map<String, String>> obtenerDetalleMC(Map<String, String> param) throws ApplicationException
 	{
 		log.debug("### kernel sustituto obtenerDetalleMC map: "+param);
