@@ -658,7 +658,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 		log.debug("### kernel sustituto loadMesaControl map: "+param);
 		/////////////////////////////////////////////////////////////////
 		////// transformacion de mapa de strings a mapa de objetos //////
-		/*/////////////////////////////////////////////////////////////*/
+		/*/////////////////////////////////////////////////////////////*
 		Map<String,Object>omap=new LinkedHashMap<String,Object>(0);
 		SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
 		Iterator it=param.entrySet().iterator();
@@ -692,7 +692,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 		/*/////////////////////////////////////////////////////////////*/
 		////// transformacion de mapa de strings a mapa de objetos //////
 		/////////////////////////////////////////////////////////////////
-        List<Map<String,String>> lista= this.getAllBackBoneInvoke(omap, ProcesoDAO.LOAD_MESA_CONTROL);
+        List<Map<String,String>> lista= this.getAllBackBoneInvoke(param, ProcesoDAO.LOAD_MESA_CONTROL);
         lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
         log.debug("### kernel sustituto loadMesaControl lista size: "+lista.size());
         return lista;
