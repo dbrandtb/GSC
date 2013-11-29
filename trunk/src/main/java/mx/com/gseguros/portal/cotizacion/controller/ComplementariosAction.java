@@ -1543,6 +1543,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			polizaEnt.setNumPag(datosRecDxN.getNumPag());
 			polizaEnt.setNumRel(Integer.parseInt(datosRecDxN.getNumRel()));
 			polizaEnt.setPolizaEmi(Integer.parseInt(datosRecDxN.getPolizaEmi()));
+			polizaEnt.setRamoEmi(Integer.parseInt(datosRecDxN.getRamoEmi()));
 			polizaEnt.setRenovacionAutomatica(datosRecDxN.getRenovacionAutomatica());
 			polizaEnt.setRetenedoraEmp(Integer.parseInt(datosRecDxN.getRetenedoraEmp()));
 			polizaEnt.setSucursalEmi(Integer.parseInt(datosRecDxN.getSucursalEmi()));
