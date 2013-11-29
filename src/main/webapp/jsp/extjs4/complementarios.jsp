@@ -730,6 +730,7 @@
 			                                                            	    		debug("datComPolizaMaestra",datComPolizaMaestra);
 			                                                            	    		Ext.getCmp('numerofinalpoliza').setValue(json.panel2.nmpoliex);
 			                                                            	    		Ext.getCmp('botonEmitirPolizaFinal').setDisabled(true);
+			                                                            	    		Ext.getCmp('botonEmitirPolizaFinalPreview').setDisabled(true);
 			                                                            	    		Ext.getCmp('botonImprimirPolizaFinal').setDisabled(false);
 			                                                            	    		//me.up().up().setClosable(false);
 			                                                            	    		Ext.getCmp('venDocVenEmiBotNueCotiza').show();
@@ -769,6 +770,7 @@
 			                                                        }
 			                                                        ,{
 			                                                        	xtype    : 'button'
+			                                                        	,id      : 'botonEmitirPolizaFinalPreview'
 			                                                        	,text    : 'Vista previa'
 			                                                        	,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
 			                                                        	,handler : function()

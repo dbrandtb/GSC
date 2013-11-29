@@ -1,3 +1,4 @@
+<%@ include file="/taglibs.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <html>
 <head>
@@ -179,11 +180,11 @@
                 json['slist1']=arrayEditados;
                 var smap1=
                     {
-                        'pv_cdunieco'      : recordActivo.get('CDUNIECO')
-                        ,'pv_cdramo'       : recordActivo.get('CDRAMO')
-                        ,'cdtipsit'        : recordActivo.get('CDTIPSIT')
-                        ,'pv_estado'       : recordActivo.get('ESTADO')
-                        ,'pv_nmpoliza'     : recordActivo.get('NMPOLIZA') 
+                        'cdunieco'  : recordActivo.get('CDUNIECO')
+                        ,'cdramo'   : recordActivo.get('CDRAMO')
+                        ,'cdtipsit' : recordActivo.get('CDTIPSIT')
+                        ,'estado'   : recordActivo.get('ESTADO')
+                        ,'nmpoliza' : recordActivo.get('NMPOLIZA') 
                     };
                 json['smap1']=smap1;
                 debug(json);

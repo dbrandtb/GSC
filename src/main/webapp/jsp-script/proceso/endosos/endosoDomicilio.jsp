@@ -20,10 +20,10 @@ var inputCdrolp4           = '<s:property value="smap1.pv_cdrol" />';
 var inputNombreaseguradop4 = '<s:property value="smap1.nombreAsegurado" escapeHtml="false" />';
 var inputCdrfcp4           = '<s:property value="smap1.cdrfc" escapeHtml="false" />';
 var inputCdtipsit          = '<s:property value="smap1.cdtipsit" />';
-var urlRegresarp4          = '<s:url namespace="/" action="editarAsegurados" />';
-var urlCargarp4            = '<s:url namespace="/" action="cargarPantallaDomicilio" />';
-var urlGuardarp4           = '<s:url namespace="/" action="guardarPantallaDomicilio" />';
-var _ComboColoniasUrl      = '<s:url namespace="/" action="cargaColonias" />';
+var urlRegresarp4          = '<s:url namespace="/"        action="editarAsegurados" />';
+var urlCargarp4            = '<s:url namespace="/"        action="cargarPantallaDomicilio" />';
+var urlGuardarp4           = '<s:url namespace="/endosos" action="guardarEndosoDomicilio" />';
+var _ComboColoniasUrl      = '<s:url namespace="/"        action="cargaColonias" />';
 var formPanelp4;
 <s:if test='smap1!=null&&smap1.botonCopiar!=null&&smap1.botonCopiar=="1"'>
 var esElContratanteP4      = false;
@@ -144,7 +144,8 @@ Ext.onReady(function(){
                 },
                 <s:property value="item2" />
             }),
-            Ext.create('Ext.panel.Panel',{
+            Ext.create('Ext.panel.Panel',
+            {
                 title           : 'Direcci&oacute;n',
                 collapsible     : true,
                 titleCollapse   : true,
@@ -261,13 +262,38 @@ Ext.onReady(function(){
                         readOnly       : !esElContratanteP4
                     }
                 ]
-            }),
+            })
+            ,Ext.create('Ext.panel.Panel',
+            {
+            	title     : 'Informaci&oacute;n del endoso'
+            	,style    : 'margin : 5px;'
+            	,defaults :
+            	{
+            		style : 'margin : 5px;'
+            	}
+            	,layout   :
+            	{
+            		type     : 'table'
+            		,columns : 2
+            	}
+            	,items    :
+            	[
+					{
+					    xtype       : 'datefield'
+					    ,fieldLabel : 'Fecha de inicio'
+					    ,format     : 'd/m/Y'
+					    ,value      : new Date()
+					    ,allowBlank : false
+					    ,name       : 'smap2.pv_fecha_i'
+					}
+            	]
+            })
         ],
         buttons:
         [
             {
-                text:'Guardar cambios',
-                icon: '${ctx}/resources/fam3icons/icons/accept.png',
+                text:'Generar endoso',
+                icon: '${ctx}/resources/fam3icons/icons/key.png',
                 handler:function()
                 {
                     if(this.up().up().getForm().isValid())
@@ -283,7 +309,8 @@ Ext.onReady(function(){
                                 'smap1.pv_nmpoliza' : inputNmpolizap4,
                                 'smap1.pv_nmsituac' : inputNmsituacp4,
                                 'smap1.pv_cdperson' : inputCdpersonp4,
-                                'smap1.pv_cdrol'    : inputCdrolp4
+                                'smap1.pv_cdrol'    : inputCdrolp4,
+                                'smap2.cdtipsit'    : inputCdtipsit
                             },
                             success:function(response,opts)
                             {
@@ -292,11 +319,11 @@ Ext.onReady(function(){
                                 if(json.success==true)
                                 {
                                     Ext.Msg.show({
-                                        title:'Datos guardados',
-                                        msg: 'Se han guardado los datos',
+                                        title:'Endoso generado',
+                                        msg: json.mensaje,
                                         buttons: Ext.Msg.OK
                                     });
-                                    expande(2);
+                                    //expande(2);
                                 }
                                 else
                                 {
@@ -329,14 +356,6 @@ Ext.onReady(function(){
                             icon: Ext.Msg.WARNING
                         });
                     }
-                }
-            }
-            ,{
-                text:'Cancelar',
-                icon : '${ctx}/resources/fam3icons/icons/cancel.png',
-                handler:function()
-                {
-                    expande(2);
                 }
             }
         ]

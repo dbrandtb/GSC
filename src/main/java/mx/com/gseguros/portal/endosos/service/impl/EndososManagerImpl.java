@@ -24,6 +24,36 @@ public class EndososManagerImpl implements EndososManager
 		return lista;
 	}
 	
+	@Override
+	public Map<String, String> guardarEndosoNombres(Map<String, Object> params) throws Exception
+	{
+		log.debug("EndososManager guardarEndosoNombres params: "+params);
+		Map<String,String> mapa=endososDAO.guardarEndosoNombres(params);
+		log.debug("EndososManager guardarEndosoNombres response map: "+mapa);
+        return mapa;
+	}
+	
+	@Override
+	public Map<String, String> confirmarEndosoB(Map<String, String> params) throws Exception
+	{
+		log.debug("EndososManager confirmarEndosoB params: "+params);
+		Map<String,String> mapa=endososDAO.confirmarEndosoB(params);
+		log.debug("EndososManager confirmarEndosoB response map: "+mapa);
+        return mapa;
+	}
+	
+	@Override
+	public Map<String, String> guardarEndosoDomicilio(Map<String, Object> params) throws Exception
+	{
+		log.debug("EndososManager guardarEndosoDomicilio params: "+params);
+		Map<String,String> mapa=endososDAO.guardarEndosoNombres(params);
+		log.debug("EndososManager guardarEndosoDomicilio response map: "+mapa);
+        return mapa;
+	}
+	
+	/////////////////////////////////
+	////// getters and setters //////
+	/*/////////////////////////////*/
 	public void setEndososDAO(EndososDAO endososDAO) {
 		this.endososDAO = endososDAO;
 	}
