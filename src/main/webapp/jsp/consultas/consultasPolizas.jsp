@@ -26,6 +26,8 @@
             var _MSG_BUSQUEDA_SIN_DATOS = 'No se encontraron datos. Intente cambiar los filtros de b\u00FAsqueda.';
             var _MSG_RFC_INVALIDO = 'Ingrese un RFC v\u00E1lido';
             var _MSG_NMPOLIEX_INVALIDO = 'Ingrese un numero de poliza';
+            var _MSG_CDPERSON_INVALIDO = 'Ingrese un c\u00F3digo de persona';
+            var _MSG_NOMBRE_INVALIDO   = 'Ingrese el nombre';
         </script>
         <script type="text/javascript" src="${ctx}/resources/scripts/consultaPolizas/consultasPolizas.js"></script>
         

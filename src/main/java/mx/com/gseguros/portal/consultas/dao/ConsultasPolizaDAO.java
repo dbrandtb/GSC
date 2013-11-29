@@ -279,6 +279,8 @@ public class ConsultasPolizaDAO extends AbstractDAO {
     		super(dataSource, "PKG_CONSULTA.P_Get_Polizas_Asegurado");
     		
     		declareParameter(new SqlParameter("pv_cdrfc", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdperson", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_nombre", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new PolizaAseguradoMapper()));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));

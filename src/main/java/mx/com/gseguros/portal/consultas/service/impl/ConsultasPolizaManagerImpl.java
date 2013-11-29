@@ -73,11 +73,13 @@ public class ConsultasPolizaManagerImpl extends
 		return result;
 	}
 
-	public WrapperResultados obtienePolizasAsegurado(String rfc)
+	public WrapperResultados obtienePolizasAsegurado(String rfc, String cdPerson, String nombre)
 			throws ApplicationException {
 
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdrfc", rfc);
+		params.put("pv_cdperson", cdPerson);
+		params.put("pv_nombre", nombre);
 
 		WrapperResultados result = this.returnBackBoneInvoke(params,
 				ConsultasPolizaDAO.OBTIENE_POLIZAS_ASEGURADO);

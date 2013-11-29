@@ -59,14 +59,17 @@ public interface ConsultasPolizaManager {
 	 * @throws         ApplicationException
 	 */
 	public WrapperResultados consultaCoberturas(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String nmsituac)throws ApplicationException;
+
 	
 	/**
 	 * Obtiene las polizas de un asegurado de acuerdo a su RFC 
 	 * @param rfc RFC del asegurado
-	 * @return    Wrapper con las polizas del asegurado solicitado
-	 * @throws    ApplicationException
+	 * @param cdPerson codigo de la persona
+	 * @param nombre nombre de la persona
+	 * @return Wrapper con las polizas del asegurado solicitado
+	 * @throws ApplicationException
 	 */
-	public WrapperResultados obtienePolizasAsegurado(String rfc)throws ApplicationException;
+	public WrapperResultados obtienePolizasAsegurado(String rfc, String cdPerson, String nombre)throws ApplicationException;
 	
 	
 	/**
