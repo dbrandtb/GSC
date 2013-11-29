@@ -177,7 +177,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     	logger.debug(" **** Entrando a obtienePolizasAsegurado ****");
     	try {
     		
-    		WrapperResultados result = consultasPolizaManager.obtienePolizasAsegurado(params.get("rfc"));
+    		WrapperResultados result = consultasPolizaManager.obtienePolizasAsegurado(params.get("rfc"), params.get("cdperson"), params.get("nombre"));
     		
     		polizasAsegurado = (ArrayList<ConsultaPolizaAseguradoVO>) result.getItemList();
     		
