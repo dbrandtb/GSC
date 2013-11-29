@@ -8,14 +8,10 @@
 		<pattern>/styles/*</pattern>
 		<pattern>/scripts/*</pattern>
 		<pattern>/images/*</pattern>
-		<pattern>/dojo/*</pattern>
 		<pattern>/struts/*</pattern>
 		<pattern>/jsp/portal/portal.jsp</pattern>
 		<pattern>/jsp/menu/menu.jsp</pattern>
-		<pattern>/jsp/alertas/*.jsp</pattern>
 		<pattern>/load.action</pattern>
-		<pattern>/administracionCasos/obtenerAtributosVariablesCasos*
-		</pattern>
 	</excludes>
 
 
