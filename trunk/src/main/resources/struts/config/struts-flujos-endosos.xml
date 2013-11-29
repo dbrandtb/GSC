@@ -36,6 +36,10 @@
             <result name="success" type="json" />
         </action>
         
+        <action name="guardarEndosoDomicilio" class="EndososAction" method="guardarEndosoDomicilio">
+            <result name="success" type="json" />
+        </action>
+        
     </package>
 
 </struts>

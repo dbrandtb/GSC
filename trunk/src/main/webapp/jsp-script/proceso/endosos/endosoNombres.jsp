@@ -1,3 +1,4 @@
+<%@ include file="/taglibs.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <script>
 ///////////////////////
@@ -5,6 +6,13 @@
 /*///////////////////*/
 var endnomStoreAseg;
 var endnomUrlGuardar = '<s:url namespace="/endosos" action="guardarEndosoNombres" />';
+var endnomInput      = [];
+endnomInput['cdunieco'] = '<s:property value="smap1.cdunieco" />';
+endnomInput['cdramo']   = '<s:property value="smap1.cdramo" />';
+endnomInput['cdtipsit'] = '<s:property value="smap1.cdtipsit" />';
+endnomInput['estado']   = '<s:property value="smap1.estado" />';
+endnomInput['nmpoliza'] = '<s:property value="smap1.nmpoliza" />';
+debug('endnomInput',endnomInput);
 /*///////////////////*/
 ////// variables //////
 ///////////////////////
@@ -255,7 +263,7 @@ Ext.onReady(function(){
                         ,format     : 'd/m/Y'
                         ,value      : new Date()
                         ,allowBlank : false
-                        ,name       : 'feinicio'
+                        ,name       : 'pv_fecha_i'
                     }
                 ]
                 ,buttons     :
@@ -269,9 +277,14 @@ Ext.onReady(function(){
                     		var form=this.up().up();
                     		if(form.isValid())
                     		{
+                    			debug(endnomStoreAseg.getAt(0));
                     			form.setLoading(true);
                     			var json={};
-                    		    json['smap1']=form.getValues();
+                    		    json['omap1']=form.getValues();
+                    		    json['omap1']['pv_cdunieco_i'] = endnomInput['cdunieco'];
+                    		    json['omap1']['pv_cdramo_i']   = endnomInput['cdramo'];
+                    		    json['omap1']['pv_estado_i']   = endnomInput['estado'];
+                    		    json['omap1']['pv_nmpoliza_i'] = endnomInput['nmpoliza'];
                     			var slist1=[];
                     			endnomStoreAseg.each(function(record)
                     			{
@@ -301,7 +314,7 @@ Ext.onReady(function(){
                     						Ext.Msg.show(
                                             {
                                                 title   : 'Endoso generado',
-                                                msg     : 'Endoso generado correctamente',
+                                                msg     : json.mensaje,
                                                 buttons : Ext.Msg.OK
                                             });
                     					}
