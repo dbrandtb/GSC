@@ -1,4 +1,3 @@
-<%@ include file="/taglibs.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <html>
 <head>
@@ -156,6 +155,57 @@
                 });
             }
     	}
+    	else if(recordOperacion.get('funcion')=='endosonombres')
+    	{
+    		debug('endosonombres');
+    		var nAsegActivos=0;
+            var recordActivo;
+            var arrayEditados=[];
+            marendStoreAsegurados.each(function(record)
+            {
+                if(record.get('activo')==true)
+                {
+                    nAsegActivos=nAsegActivos+1;
+                    recordActivo=record;//solo para tener una referencia de los datos de poliza
+                    arrayEditados.push(record.raw);
+                }
+            });
+            if(nAsegActivos>0)
+            {
+            	debug(arrayEditados);
+                Ext.getCmp('marendMenuOperaciones').collapse();
+                Ext.getCmp('marendLoaderFrame').setTitle(recordOperacion.get('texto'));
+                var json={};
+                json['slist1']=arrayEditados;
+                var smap1=
+                    {
+                        'pv_cdunieco'      : recordActivo.get('CDUNIECO')
+                        ,'pv_cdramo'       : recordActivo.get('CDRAMO')
+                        ,'cdtipsit'        : recordActivo.get('CDTIPSIT')
+                        ,'pv_estado'       : recordActivo.get('ESTADO')
+                        ,'pv_nmpoliza'     : recordActivo.get('NMPOLIZA') 
+                    };
+                json['smap1']=smap1;
+                debug(json);
+                Ext.getCmp('marendLoaderFrame').getLoader().load(
+                {
+                    url       : recordOperacion.get('liga')
+                    ,scripts  : true
+                    ,autoLoad : true
+                    ,jsonData : json
+                });
+            }
+            else
+            {
+                Ext.Msg.show(
+                {
+                    title    : 'Error'
+                    ,icon    : Ext.Msg.WARNING
+                    ,msg     : 'Seleccione al menos un asegurado'
+                    ,buttons : Ext.Msg.OK
+                });
+            }
+    	}
     }
     /*///////////////////*/
     ////// funciones //////
@@ -306,10 +356,17 @@ Ext.onReady(function()
             ,type         : 'memory'
             ,data         :
             [
+                /*
                 {
                     texto    : 'Endoso de suma asegurada'
                     ,liga    : '<s:url namespace="/endosos" action="pantallaEndosoCoberturas" />'
                     ,funcion : 'endososcoberturas'
+                }
+                */
+                {
+                	texto    : 'Endoso de nombres'
+                	,liga    : '<s:url namespace="/endosos" action="pantallaEndosoNombres" />'
+                	,funcion : 'endosonombres'
                 }
                 ,{
                 	texto    : 'Endoso de domicilio'

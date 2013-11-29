@@ -138,6 +138,57 @@ public class EndososAction extends PrincipalCoreAction implements ConstantesCata
 	////// pantalla de endoso de domicilio  //////
 	//////////////////////////////////////////////
 	
+	///////////////////////////////////////////
+	////// pantalla de endoso de nombres //////
+	/*///////////////////////////////////////*/
+	public String pantallaEndosoNombres()
+	{
+		log.debug(""
+				+ "\n###################################"
+				+ "\n###################################"
+				+ "\n###### pantallaEndosoNombres ######"
+				+ "\n######                       ######"
+				);
+		log.debug("smap1: "+smap1);
+		log.debug("slist1: "+slist1);
+		log.debug(""
+				+ "\n######                       ######"
+				+ "\n###### pantallaEndosoNombres ######"
+				+ "\n###################################"
+				+ "\n###################################"
+				);
+		return SUCCESS;
+	}
+	/*///////////////////////////////////////*/
+	////// pantalla de endoso de nombres //////
+	///////////////////////////////////////////
+	
+	////////////////////////////////////////////////////
+	////// generar el endoso de cambio de nombres //////
+	/*////////////////////////////////////////////////*/
+	public String guardarEndosoNombres()
+	{
+		log.debug(""
+				+ "\n##################################"
+				+ "\n##################################"
+				+ "\n###### guardarEndosoNombres ######"
+				+ "\n######                      ######"
+				);
+		log.debug("smap1: "+smap1);
+		log.debug("slist1: "+slist1);
+		success=true;
+		log.debug(""
+				+ "\n######                      ######"
+				+ "\n###### guardarEndosoNombres ######"
+				+ "\n##################################"
+				+ "\n##################################"
+				);
+		return SUCCESS;
+	}
+	/*////////////////////////////////////////////////*/
+	////// generar el endoso de cambio de nombres //////
+	////////////////////////////////////////////////////
+	
 	///////////////////////////////
 	////// getters y setters //////
 	/*///////////////////////////*/

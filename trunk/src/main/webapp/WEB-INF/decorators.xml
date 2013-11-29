@@ -47,6 +47,8 @@
         <pattern>/jsp-script/proceso/endosos/endosoCoberturas.jsp</pattern>
         <pattern>/endosos/pantallaEndosoDomicilio.action</pattern>
         <pattern>/jsp-script/proceso/endosos/endosoDomicilio.jsp</pattern>
+        <pattern>/endosos/pantallaEndosoNombres.action</pattern>
+        <pattern>/jsp-script/proceso/endosos/endosoNombres.jsp</pattern>
 	</decorator>
     
     
