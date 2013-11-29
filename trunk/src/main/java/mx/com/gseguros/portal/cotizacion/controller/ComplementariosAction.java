@@ -1588,17 +1588,21 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			}
 			return false;
 		}else{
+			
+			logger.debug("********* Total de calendarios *********** : "+calendarios.getCalendariosEntidad().length);
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
 			for(CalendarioEntidad cal : calendarios.getCalendariosEntidad()){
-				logger.debug(">>>Calendario: "+cal.getPeriodo());	
+				logger.debug(">>>Calendario: "+cal.getPeriodo());
 				
 				params.put("pi_ADMINISTRADORA", cal.getAdministradora());
 				params.put("pi_ANIO", cal.getAnho());
 				params.put("pi_ESTATUS", cal.getEstatus());
-				params.put("Pi_FECHACORTE", cal.getFechaCorte());
-				params.put("pi_FECHAEMISION", cal.getFechaEmision());
-				params.put("pi_FECHASTATUS", cal.getFechaEstatus());
-				params.put("pi_FECHAINICIO", cal.getFechaIncio());
-				params.put("pi_FECHATERMINO", cal.getFechaTermino());
+				params.put("Pi_FECHACORTE", cal.getFechaCorte() == null ? null : sdf.format(cal.getFechaCorte().getTime()));
+				params.put("pi_FECHAEMISION", cal.getFechaEmision() == null ? null : sdf.format(cal.getFechaEmision().getTime()));
+				params.put("pi_FECHASTATUS", cal.getFechaEstatus() == null ? null : sdf.format(cal.getFechaEstatus().getTime()));
+				params.put("pi_FECHAINICIO", cal.getFechaIncio() == null ? null : sdf.format(cal.getFechaIncio().getTime()));
+				params.put("pi_FECHATERMINO", cal.getFechaTermino() == null ? null : sdf.format(cal.getFechaTermino().getTime()));
 				params.put("pi_HORAEMISION", cal.getHoraEmision());
 				params.put("pi_PERIODO", cal.getPeriodo());
 				params.put("pi_RETENEDORA", cal.getRetenedora());
