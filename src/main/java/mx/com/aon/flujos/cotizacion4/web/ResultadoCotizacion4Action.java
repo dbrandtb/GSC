@@ -683,7 +683,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             parameters.put("pv_estado_i",   "W");
             parameters.put("pv_nmpoliza_i", comprarNmpoliza);
             parameters.put("pv_nsuplogi_i", "0");
-            parameters.put("pv_cdtipsup_i", "90");
+            parameters.put("pv_cdtipsup_i", "1");
             parameters.put("pv_feemisio_i", calendarHoy.getTime());
             parameters.put("pv_nmsolici_i", null);
             parameters.put("pv_fesolici_i", calendarHoy.getTime());
