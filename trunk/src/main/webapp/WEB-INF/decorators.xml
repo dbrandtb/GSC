@@ -12,6 +12,12 @@
 		<pattern>/jsp/portal/portal.jsp</pattern>
 		<pattern>/jsp/menu/menu.jsp</pattern>
 		<pattern>/load.action</pattern>
+		<pattern>/cancelacion/pantallaCancelar.action</pattern>
+        <pattern>/cancelacion/pantallaCancelarAuto.action</pattern>
+        <pattern>/rehabilitacion/pantallaRehabilitacionUnica.action</pattern>
+        <pattern>/endosos/pantallaEndosoCoberturas.action</pattern>
+        <pattern>/endosos/pantallaEndosoDomicilio.action</pattern>
+        <pattern>/endosos/pantallaEndosoNombres.action</pattern>
 	</excludes>
 
 
@@ -33,18 +39,6 @@
 		<pattern>/jsp/extjs4/ventanaDocumentosPoliza.jsp</pattern>
 		<pattern>/flujocotizacion/principal.action</pattern>
         <pattern>/jsp/consultas/agentes/consultaAgentes.jsp</pattern>
-        <pattern>/cancelacion/pantallaCancelar.action</pattern>
-        <pattern>/jsp-script/proceso/cancelacion/pantallaCancelar.jsp</pattern>
-        <pattern>/cancelacion/pantallaCancelarAuto.action</pattern>
-        <pattern>/jsp-script/proceso/cancelacion/pantallaCancelarAuto.jsp</pattern>
-        <pattern>/rehabilitacion/pantallaRehabilitacionUnica.action</pattern>
-        <pattern>/jsp-script/proceso/rehabilitacion/pantallaRehabilitacionUnica.jsp</pattern>
-        <pattern>/endosos/pantallaEndosoCoberturas.action</pattern>
-        <pattern>/jsp-script/proceso/endosos/endosoCoberturas.jsp</pattern>
-        <pattern>/endosos/pantallaEndosoDomicilio.action</pattern>
-        <pattern>/jsp-script/proceso/endosos/endosoDomicilio.jsp</pattern>
-        <pattern>/endosos/pantallaEndosoNombres.action</pattern>
-        <pattern>/jsp-script/proceso/endosos/endosoNombres.jsp</pattern>
 	</decorator>
     
     
@@ -80,14 +74,9 @@
         <pattern>/catalogos/clausulas.action</pattern>
         <pattern>/jsp/catalogos/clausulas.jsp</pattern>
         
-        <pattern>/cancelacion/principal.action</pattern>
-        <pattern>/jsp-script/proceso/cancelacion/marcoCancelacion.jsp</pattern>
-        <pattern>/rehabilitacion/principal.action</pattern>
-        <pattern>/jsp-script/proceso/rehabilitacion/marcoRehabilitacion.jsp</pattern>
-        <pattern>/endosos/principal.action</pattern>
-        <pattern>/jsp-script/proceso/endosos/marcoEndosos.jsp</pattern>
-        <pattern>/mesacontrol/supervisor.action</pattern>
-        <pattern>/jsp/extjs4/mesacontrol/marcoSupervisor.jsp</pattern>
+        <pattern>/cancelacion/*.action</pattern>
+        <pattern>/rehabilitacion/*.action</pattern>
+        <pattern>/endosos/*.action</pattern>
 	</decorator>
 	
 	
