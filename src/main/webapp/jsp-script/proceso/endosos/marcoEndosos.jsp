@@ -990,6 +990,6 @@ Ext.onReady(function()
 </script>
 </head>
 <body>
-<div id="marcoEndososDiv"></div>
+<div id="marcoEndososDiv" style="height:1500px;"></div>
 </body>
 </html>
