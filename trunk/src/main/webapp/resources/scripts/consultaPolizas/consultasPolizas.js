@@ -7,7 +7,7 @@ Ext.onReady(function() {
         allowDeselect: true
     });
     
-    // Conversión para el tipo de moneda
+    // Conversiï¿½n para el tipo de moneda
     Ext.util.Format.thousandSeparator = ',';
     Ext.util.Format.decimalSeparator = '.';
     
@@ -64,7 +64,7 @@ Ext.onReady(function() {
                                 //Mostrar session de datos generales:
                                 tabDatosGeneralesPoliza.show();
                                 
-                                //Datos de Tarificación
+                                //Datos de Tarificaciï¿½n
                                 storeDatosTarificacion.load({
                                     params: panelBusqueda.down('form').getForm().getValues(),
                                     callback: function(records, operation, success){
@@ -517,7 +517,7 @@ Ext.onReady(function() {
             {text: 'Nombre del asegurado', dataIndex: 'nombreAsegurado', width: 200},
             {text: 'Producto', dataIndex: 'dsramo', width:200},
             {text: 'Estado', dataIndex: 'estado', width: 100}
-            //{text: 'Compañía', dataIndex: 'dsunieco', width: 150},
+            //{text: 'Compaï¿½ï¿½a', dataIndex: 'dsunieco', width: 150},
             //,{text: '# poliza', dataIndex: 'nmpoliza', width: 70}
         ]
     });
@@ -595,7 +595,8 @@ Ext.onReady(function() {
                             'smap1.cdramo' :  panelBusqueda.down('form').getForm().findField("params.cdramo").getValue(),
                             'smap1.estado' :  panelBusqueda.down('form').getForm().findField("params.estado").getValue(),
                             'smap1.nmsuplem' :  panelBusqueda.down('form').getForm().findField("params.suplemento").getValue(),
-                            'smap1.ntramite' : ""
+                            'smap1.ntramite' : "",
+                            'smap1.tipomov'  : 'Usuario'
                         }
                     });
                 }
