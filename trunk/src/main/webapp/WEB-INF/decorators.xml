@@ -78,11 +78,12 @@
         <pattern>/catalogos/clausulas.action</pattern>
         <pattern>/jsp/catalogos/clausulas.jsp</pattern>
         
-        <pattern>/cancelacion/principal.action</pattern>
+        <pattern>/cancelacion/*.action</pattern>
+        <pattern>/jsp-script/proceso/cancelacion/*.jsp</pattern>
         <pattern>/rehabilitacion/*.action</pattern>
         <pattern>/jsp-script/proceso/rehabilitacion/*.jsp</pattern>
-        
-        <pattern>/jsp-script/proceso/endosos/marcoEndosos.jsp</pattern>
+        <pattern>/endosos/*.action</pattern>
+        <pattern>/jsp-script/proceso/endosos/*.jsp</pattern>
 	</decorator>
 	
 	
