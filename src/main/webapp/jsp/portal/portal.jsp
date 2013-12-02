@@ -13,8 +13,6 @@
 <link href="${ctx}/resources/css/toolbar_magenta.css" rel="stylesheet" type="text/css" />
 <link href="${ctx}/resources/css/footer_magenta.css" rel="stylesheet" type="text/css" />
 
-<!-- gabriel F Estilos para extJs portal.jsp-->
-
 <link rel="stylesheet" type="text/css" href="${ctx}/resources/extjs/resources/css/ext-all.css" />
 <link rel="stylesheet" type="text/css" href="${ctx}/resources/extjs/resources/css/xtheme-gray.css" />	
 <!-- ESTE BLOQUE IMPORTA jQUERY Y REEMPLAZA LA LIGA a cotizacion vital 2 -->
@@ -158,11 +156,8 @@
 <script type="text/javascript" src="${ctx}/resources/extjs/adapter/ext/ext-base.js"></script>
 <script type="text/javascript" src="${ctx}/resources/extjs/ext-all.js"></script>
 <script type="text/javascript" src="${ctx}/resources/scripts/portal/loadPortal.js"></script>
-<%-- <script type="text/javascript" src="${ctx}/resources/scripts/portal/mecanismoAlerta/mecanismoAlerta.js"></script>
-<script type="text/javascript" src="${ctx}/resources/scripts/portal/mecanismoAlerta/mecanismoAlertaPantalla.js"></script> --%>
 
 <jsp:include page="/jsp/menu/menu.jsp" flush="true" />
-<%-- <jsp:include page="/jsp/alertas/alertaPopUp.jsp" flush="true"/> --%>
 
 </head>
 <body id="page_bg" class="w-wide f-default header-light toolbar-magenta footer-magenta" onunload="cerrar()">
