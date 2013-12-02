@@ -593,6 +593,7 @@ Ext.onReady(function(){
             			,'smap1.nmsuplem' : '0'
             			,'smap1.ntramite' : record.get('ntramite')
             			,'smap1.nmsolici' : record.get('nmsolici')&&record.get('nmsolici').length>0?record.get('nmsolici'):'0'
+            			,'smap1.tipomov'  : 'Usuario'
             		}
             		,scripts  : true
             		,autoLoad : true
