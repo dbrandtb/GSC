@@ -2,6 +2,7 @@
 
 <decorators defaultdir="/decorators">
 
+    <!-- URLs que no usaran decorator -->
 	<excludes>
 		<pattern>/nodecorate/*</pattern>
 		<pattern>/resources/*</pattern>
@@ -12,6 +13,7 @@
 		<pattern>/jsp/portal/portal.jsp</pattern>
 		<pattern>/jsp/menu/menu.jsp</pattern>
 		<pattern>/load.action</pattern>
+		
 		<pattern>/cancelacion/pantallaCancelar.action</pattern>
         <pattern>/cancelacion/pantallaCancelarAuto.action</pattern>
         <pattern>/rehabilitacion/pantallaRehabilitacionUnica.action</pattern>
@@ -21,7 +23,8 @@
 	</excludes>
 
 
-	<decorator name="empty" page="decorator_empty.jsp">
+    <!-- decorator que solo contiene la estructura HTML, HEAD y BODY -->
+	<decorator name="clean" page="decorator_clean.jsp">
 		<pattern>/seguridad/*</pattern>
 		<pattern>/jsp/portal/login.jsp</pattern>
 		<pattern>/editarAsegurados.action</pattern>
@@ -42,6 +45,7 @@
 	</decorator>
     
     
+    <!-- decorator que incluye taglibs, framework UI, utilerias JS -->
 	<decorator name="default" page="decorator_default.jsp">
 		<pattern>/seguridad/accesoDirecto.action</pattern>
 		<pattern>/seguridad/cotizarSaludVital.action</pattern>
@@ -74,9 +78,11 @@
         <pattern>/catalogos/clausulas.action</pattern>
         <pattern>/jsp/catalogos/clausulas.jsp</pattern>
         
-        <pattern>/cancelacion/*.action</pattern>
+        <pattern>/cancelacion/principal.action</pattern>
         <pattern>/rehabilitacion/*.action</pattern>
-        <pattern>/endosos/*.action</pattern>
+        <pattern>/jsp-script/proceso/rehabilitacion/*.jsp</pattern>
+        <pattern>/endosos/principal.action</pattern>
+        <pattern>/jsp-script/proceso/endosos/marcoEndosos.jsp</pattern>
 	</decorator>
 	
 	
