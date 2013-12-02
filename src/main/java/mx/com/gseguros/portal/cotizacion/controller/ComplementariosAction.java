@@ -1198,7 +1198,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			paramsGetDoc.put("pv_cdramo_i"   , panel2.get("pv_cdramo"));
 			paramsGetDoc.put("pv_estado_i"   , "M");
 			paramsGetDoc.put("pv_nmpoliza_i" , panel2.get("nmpoliza"));
-			paramsGetDoc.put("pv_nmsuplem_i" , "0");
+			paramsGetDoc.put("pv_nmsuplem_i" , _nmsuplem);
 			paramsGetDoc.put("pv_ntramite_i" , panel1.get("pv_ntramite"));
 			List<Map<String,String>>listaDocu=kernelManager.obtenerListaDocumentos(paramsGetDoc);
 			//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
