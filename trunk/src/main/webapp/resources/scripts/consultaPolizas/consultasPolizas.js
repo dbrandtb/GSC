@@ -873,7 +873,7 @@ Ext.onReady(function() {
                                             xtype: 'textfield',
                                             name : 'params.cdperson',
                                             fieldLabel : 'C\u00F3digo de persona',
-                                            maxLength : 6,
+                                            maxLength : 9,
                                             allowBlank: false
                                         }
                                     ]
