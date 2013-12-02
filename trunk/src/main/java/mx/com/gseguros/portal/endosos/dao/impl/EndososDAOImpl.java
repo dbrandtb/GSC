@@ -65,6 +65,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		protected GuardarEndosoNombres(DataSource dataSource)
 		{
 			super(dataSource, "PKG_GENERA_USUARIO.P_ENDOSO_INICIA");
+			/*
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -74,6 +75,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("pv_cdusuari_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_proceso_i"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtipsup_i" , OracleTypes.VARCHAR));
+			*/
 			
 			declareParameter(new SqlOutParameter("pv_nmsuplem_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_nsuplogi_o" , OracleTypes.VARCHAR));
