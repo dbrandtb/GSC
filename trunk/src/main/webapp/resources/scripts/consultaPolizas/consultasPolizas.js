@@ -7,7 +7,7 @@ Ext.onReady(function() {
         allowDeselect: true
     });
     
-    // Conversi�n para el tipo de moneda
+    // Conversión para el tipo de moneda
     Ext.util.Format.thousandSeparator = ',';
     Ext.util.Format.decimalSeparator = '.';
     
@@ -64,7 +64,7 @@ Ext.onReady(function() {
                                 //Mostrar session de datos generales:
                                 tabDatosGeneralesPoliza.show();
                                 
-                                //Datos de Tarificaci�n
+                                //Datos de Tarificación
                                 storeDatosTarificacion.load({
                                     params: panelBusqueda.down('form').getForm().getValues(),
                                     callback: function(records, operation, success){
@@ -517,7 +517,7 @@ Ext.onReady(function() {
             {text: 'Nombre del asegurado', dataIndex: 'nombreAsegurado', width: 200},
             {text: 'Producto', dataIndex: 'dsramo', width:200},
             {text: 'Estado', dataIndex: 'estado', width: 100}
-            //{text: 'Compa��a', dataIndex: 'dsunieco', width: 150},
+            //{text: 'Compañía', dataIndex: 'dsunieco', width: 150},
             //,{text: '# poliza', dataIndex: 'nmpoliza', width: 70}
         ]
     });
