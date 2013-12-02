@@ -81,7 +81,7 @@
         <pattern>/cancelacion/principal.action</pattern>
         <pattern>/rehabilitacion/*.action</pattern>
         <pattern>/jsp-script/proceso/rehabilitacion/*.jsp</pattern>
-        <pattern>/endosos/principal.action</pattern>
+        
         <pattern>/jsp-script/proceso/endosos/marcoEndosos.jsp</pattern>
 	</decorator>
 	
