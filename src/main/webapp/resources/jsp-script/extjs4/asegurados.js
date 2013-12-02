@@ -1184,7 +1184,8 @@ Ext.onReady(function(){
                     							'smap1.estado'     : 'W',
                     							'smap1.nmpoliza'   : Ext.getCmp('idCotizacion').getValue(),
                     							'smap1.nmsuplem'   : '0',
-                    							'smap1.ntramite'   : ntramite
+                    							'smap1.ntramite'   : ntramite,
+                    							'smap1.tipomov'    : 'Usuario'
                     						}
                     					}
                     		,buttons   :
@@ -2796,6 +2797,7 @@ Ext.onReady(function(){
 	        		,'smap1.nmsuplem' : '0'
 	        		,'smap1.nmsolici' : '0'
 	        		,'smap1.ntramite' : ntramiteCargado
+	        		,'smap1.tipomov'  : 'Usuario'
 	        	}
 	        }
 		}).showAt(450,50);

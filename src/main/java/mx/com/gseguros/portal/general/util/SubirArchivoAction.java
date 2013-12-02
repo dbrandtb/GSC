@@ -142,6 +142,7 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
             paramMovDocu.put("pv_feinici_i"  , renderFechas.parse(smap1.get("fecha")));
             paramMovDocu.put("pv_cddocume_i" , nombreArchivo);
             paramMovDocu.put("pv_dsdocume_i" , smap1.get("descripcion"));
+            paramMovDocu.put("pv_tipmov_i"   , smap1.get("tipomov"));
             kernelManager.guardarArchivo(paramMovDocu);
         }
         
@@ -186,12 +187,15 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 				{
 					String nombre=slist1.get(i).get("cddocume");
 					String descripcion=slist1.get(i).get("dsdocume");
+					String tipmov     =slist1.get(i).get("tipmov");
+					String nmsuplem   =slist1.get(i).get("nmsuplem");
 					if(descripcion==null||descripcion.length()==0)
 					{
 						descripcion="(no especificado)";
 					}
 					String mezcla=nombre+"#_#"+descripcion;
 					slist1.get(i).put("liga",mezcla);
+					slist1.get(i).put("orden",nmsuplem+"#_#"+tipmov);
 				}
 			}
 			success=true;

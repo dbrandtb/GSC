@@ -840,6 +840,7 @@
 	                                                                                    ,'smap1.nmsuplem' : '0'
 	                                                                                    ,'smap1.ntramite' : inputNtramite
 	                                                                                    ,'smap1.nmsolici' : inputNmpoliza
+	                                                                                    ,'smap1.tipomov'  : 'Usuario'
 	                                                                                }
 	                                                                                ,scripts  : true
 	                                                                                ,autoLoad : true
@@ -1379,6 +1380,7 @@
 		                    ,'smap1.nmsuplem' : '0'
 		                    ,'smap1.nmsolici' : ''
 		                    ,'smap1.ntramite' : inputNtramite
+		                    ,'smap1.tipomov'  : 'Usuario'
 		                }
 		            }
 		        }).showAt(650,40);

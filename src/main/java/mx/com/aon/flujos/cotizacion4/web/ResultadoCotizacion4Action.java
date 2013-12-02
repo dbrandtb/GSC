@@ -911,6 +911,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             mapArchivo.put("pv_dsdocume_i" , "COTIZACI&Oacute;N");
             mapArchivo.put("pv_ntramite_i" , ntramite);
             mapArchivo.put("pv_nmsolici_i" , nmPolizaOriginal);
+            mapArchivo.put("pv_tipmov_i"   , "EMISION");
             kernelManagerSustituto.guardarArchivo(mapArchivo);
             //!agregar cotizacion.pdf
             //////////////////////////////////

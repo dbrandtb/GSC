@@ -11,6 +11,7 @@ var panDocInputEstado    = '<s:property value="smap1.estado" />';
 var panDocInputNmsuplem  = '<s:property value="smap1.nmsuplem" />';
 var panDocInputNtramite  = '<s:property value="smap1.ntramite" />';
 var panDocInputNmsolici  = '<s:property value="smap1.nmsolici" />';
+var panDocInputTipoMov   = '<s:property value="smap1.tipomov" />';
 var panDocStoreDoc;
 var panDocUrlCargar      = '<s:url namespace="/documentos" action="ventanaDocumentosPolizaLoad" />';
 var panDocGridDocu;
@@ -52,6 +53,9 @@ Ext.onReady(function()
             ,'liga'
             ,'ntramite'
             ,{name:'selected',type:'boolean'}
+            ,'tipmov'
+            ,'nmsuplem'
+            ,'orden'
         ]
     });
     /*//////////////////////*/
@@ -64,6 +68,7 @@ Ext.onReady(function()
     panDocStoreDoc=Ext.create('Ext.data.Store',
     {
         model       : 'Documento'
+        ,groupField : 'orden'
         ,autoLoad   : true
         ,proxy      :
         {
@@ -300,6 +305,7 @@ Ext.onReady(function()
                                         	,'smap1.nmsuplem' : panDocInputNmsuplem
                                         	,'smap1.nmpoliza' : panDocInputNmpoliza
                                         	,'smap1.nmsolici' : panDocInputNmsolici
+                                        	,'smap1.tipomov'  : panDocInputTipoMov
                                        	}
                                     });
                                 }
@@ -433,6 +439,20 @@ Ext.onReady(function()
                     }
                     */
                 ]
+	            ,features: [{
+	                groupHeaderTpl:
+	                    [
+	                        '{name:this.formatName}',
+	                        {
+	                            formatName:function(name)
+	                            {
+	                                return name.split("#_#")[1];
+	                            }
+	                        }
+	                    ],
+	                ftype:'groupingsummary',
+	                startCollapsed :true
+	            }]
                 ,dockedItems :
                 [
                     {
