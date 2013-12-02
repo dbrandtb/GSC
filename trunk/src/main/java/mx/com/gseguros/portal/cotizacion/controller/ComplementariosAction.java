@@ -1600,7 +1600,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 				params.put("pi_ESTATUS", cal.getEstatus());
 				params.put("Pi_FECHACORTE", cal.getFechaCorte() == null ? null : sdf.format(cal.getFechaCorte().getTime()));
 				params.put("pi_FECHAEMISION", cal.getFechaEmision() == null ? null : sdf.format(cal.getFechaEmision().getTime()));
-				params.put("pi_FECHASTATUS", cal.getFechaEstatus() == null ? null : sdf.format(cal.getFechaEstatus().getTime()));
+				params.put("pi_FECHASTATUS", cal.getFechaEstatus() == null ? "01/01/1999" : sdf.format(cal.getFechaEstatus().getTime()));
 				params.put("pi_FECHAINICIO", cal.getFechaIncio() == null ? null : sdf.format(cal.getFechaIncio().getTime()));
 				params.put("pi_FECHATERMINO", cal.getFechaTermino() == null ? null : sdf.format(cal.getFechaTermino().getTime()));
 				params.put("pi_HORAEMISION", cal.getHoraEmision());
