@@ -2756,6 +2756,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			declareParameter(new SqlParameter("pv_dsdocume_i", 		OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_ntramite_i", 		OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmsolici_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_tipmov_i", 		OracleTypes.VARCHAR));
 	
 			declareParameter(new SqlOutParameter("pv_msg_id_o", 	OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o", 		OracleTypes.VARCHAR));
@@ -2810,7 +2811,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	
 	protected class ObtenerDocumentosPolizaMapper implements RowMapper {
 		public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-			String cols[]=new String[]{"nmsolici","cddocume","dsdocume","feinici","ntramite"};
+			String cols[]=new String[]{"nmsolici","cddocume","dsdocume","feinici","ntramite","tipmov","nmsuplem"};
 			Map<String,String> map=new HashMap<String,String>(0);
 			for(String col:cols)
 			{
