@@ -619,7 +619,7 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 			} else {
 				RespuestaGS = stubGS.generaRecDxn(generaRecDxnE);
 				resultado = RespuestaGS.getGeneraRecDxnResponse().get_return();
-				logger.debug("Resultado sincrono para primer ejecucion de WS: "+resultado.getCodigo()+" - "+resultado.getMensaje());
+				logger.debug("Resultado para ejecucion de WS generarRecibosDxNGS: "+resultado.getCodigo()+" - "+resultado.getMensaje());
 			}
 		} catch (RemoteException re) {
 			logger.error(re);
