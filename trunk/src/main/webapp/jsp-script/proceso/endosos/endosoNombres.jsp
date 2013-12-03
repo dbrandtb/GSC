@@ -313,6 +313,13 @@ Ext.onReady(function(){
                     					debug(json);
                     					if(json.success==true)
                     					{
+                    						//////////////////////////////////
+                    						////// usa codigo del padre //////
+                    						/*//////////////////////////////*/
+                    						marendStoreAsegurados.removeAll();
+                                            /*//////////////////////////////*/
+                                            ////// usa codigo del padre //////
+                    						//////////////////////////////////
                     						Ext.Msg.show(
                                             {
                                                 title   : 'Endoso generado',
