@@ -51,6 +51,16 @@ public class EndososManagerImpl implements EndososManager
         return mapa;
 	}
 	
+	@Override
+	public List<Map<String, String>> reimprimeDocumentos(Map<String, String> params) throws Exception
+	{
+		log.debug("EndososManager reimprimeDocumentos params: "+params);
+		List<Map<String,String>> lista=endososDAO.reimprimeDocumentos(params);
+		lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
+		log.debug("EndososManager reimprimeDocumentos lista size: "+lista.size());
+		return lista;
+	}
+	
 	/////////////////////////////////
 	////// getters and setters //////
 	/*/////////////////////////////*/

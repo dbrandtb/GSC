@@ -2093,6 +2093,7 @@ Ext.onReady(function(){
                         flex: 1,
                         editor: {
                             //allowBlank: false
+                        	maxLength : 90
                         }
                     },
                     {
@@ -2101,6 +2102,7 @@ Ext.onReady(function(){
                         flex: 2,
                         editor: {
                             //allowBlank: false
+                        	maxLength : 30
                         }
                     },
                     {
@@ -2109,6 +2111,7 @@ Ext.onReady(function(){
                         flex: 2,
                         editor: {
                             //allowBlank: false
+                        	maxLength : 30
                         }
                     },
                     {
@@ -2117,6 +2120,7 @@ Ext.onReady(function(){
                         flex: 2,
                         editor: {
                             //allowBlank: false
+                        	maxLength : 30
                         }
                     },
                     {

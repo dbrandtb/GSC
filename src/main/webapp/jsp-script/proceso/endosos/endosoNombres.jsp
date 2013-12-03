@@ -5,13 +5,15 @@
 ////// variables //////
 /*///////////////////*/
 var endnomStoreAseg;
-var endnomUrlGuardar = '<s:url namespace="/endosos" action="guardarEndosoNombres" />';
-var endnomInput      = [];
+var endnomUrlGuardar    = '<s:url namespace="/endosos" action="guardarEndosoNombres" />';
+var endnomUrlDoc        = '<s:url namespace="/documentos" action="ventanaDocumentosPolizaClon" />';
+var endnomInput         = [];
 endnomInput['cdunieco'] = '<s:property value="smap1.cdunieco" />';
 endnomInput['cdramo']   = '<s:property value="smap1.cdramo" />';
 endnomInput['cdtipsit'] = '<s:property value="smap1.cdtipsit" />';
 endnomInput['estado']   = '<s:property value="smap1.estado" />';
 endnomInput['nmpoliza'] = '<s:property value="smap1.nmpoliza" />';
+endnomInput['ntramite'] = '<s:property value="smap1.ntramite" />';
 debug('endnomInput',endnomInput);
 /*///////////////////*/
 ////// variables //////
@@ -353,6 +355,39 @@ Ext.onReady(function(){
                                 });
                     		}
                     	}
+                    }
+                    ,{
+                    	text     : 'Documentos'
+                    	,icon    : '${ctx}/resources/fam3icons/icons/printer.png'
+                    	,handler : function()
+                        {
+                    		Ext.create('Ext.window.Window',
+                            {
+                                title        : 'Documentos del tr&aacute;mite '+endnomInput['ntramite']
+                                ,modal       : true
+                                ,buttonAlign : 'center'
+                                ,width       : 600
+                                ,height      : 400
+                                ,autoScroll  : true
+                                ,loader      :
+                                {
+                                    url       : endnomUrlDoc
+                                    ,params   :
+                                    {
+                                        'smap1.nmpoliza'  : endnomInput['nmpoliza']
+                                        ,'smap1.cdunieco' : endnomInput['cdunieco']
+                                        ,'smap1.cdramo'   : endnomInput['cdramo']
+                                        ,'smap1.estado'   : endnomInput['estado']
+                                        ,'smap1.nmsuplem' : '0'
+                                        ,'smap1.ntramite' : endnomInput['ntramite']
+                                        ,'smap1.nmsolici' : ''
+                                        ,'smap1.tipomov'  : 'Usuario'
+                                    }
+                                    ,scripts  : true
+                                    ,autoLoad : true
+                                }
+                            }).show();
+                        }
                     }
                 ]
             })

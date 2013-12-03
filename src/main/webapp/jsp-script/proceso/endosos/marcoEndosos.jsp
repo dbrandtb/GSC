@@ -142,6 +142,7 @@
                         ,'smap1.nombreAsegurado' : recordActivo.get('nombrecompleto')
                         ,'smap1.botonCopiar'     : recordActivo.get('cdrol')==1?'0':'1'//es asegurado? 
                         ,'smap1.cdtipsit'        : recordActivo.get('CDTIPSIT')
+                        ,'smap1.ntramite'        : recordActivo.get('NTRAMITE')
                     }
                 });
             }
@@ -185,6 +186,7 @@
                         ,'cdtipsit' : recordActivo.get('CDTIPSIT')
                         ,'estado'   : recordActivo.get('ESTADO')
                         ,'nmpoliza' : recordActivo.get('NMPOLIZA') 
+                        ,'ntramite' : recordActivo.get('NTRAMITE')
                     };
                 json['smap1']=smap1;
                 debug(json);
@@ -244,6 +246,7 @@ Ext.onReady(function()
 			,"CDTIPSIT" 
 			,"DSTIPSIT" 
 			,"PRIMA_TOTAL"
+			,"NTRAMITE"
 			,{
                 name        : "FEEMISIO"
                 ,type       : "date"
@@ -307,6 +310,7 @@ Ext.onReady(function()
             ,'NMPOLIEX'
             ,'NSUPLOGI'
             ,'CDTIPSIT'
+            ,'NTRAMITE'
     	]
     });
     /*/////////////////*/
@@ -682,6 +686,11 @@ Ext.onReady(function()
                 ,"PRIMA_TOTAL"
                     */
                     ,{
+                        header     : 'Tr&aacute;mite'
+                        ,dataIndex : 'NTRAMITE'
+                        ,width     : 70
+                    }
+                    ,{
                     	header     : 'Sucursal'
                     	,dataIndex : 'CDUNIECO'
                     	,flex      : 1
@@ -761,6 +770,7 @@ Ext.onReady(function()
                             			records[i].set('NMPOLIEX' , record.get('NMPOLIEX'));
                             			records[i].set('NSUPLOGI' , record.get('NSUPLOGI'));
                             			records[i].set('CDTIPSIT' , record.get('CDTIPSIT'));
+                            			records[i].set('NTRAMITE' , record.get('NTRAMITE'));
                             		}
                             	}
                             }
