@@ -1487,6 +1487,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 				logger.error("Error al ejecutar WS TEST para cliente: " + cliente.getClaveCli(), e);
 			}
 			try{
+				logger.debug(">>>>>>> Enviando el Cliente: " + cliente.getClaveCli());
 				params.put("MANAGER", kernelManager);
 				ice2sigsWebServices.ejecutaClienteSaludGS(Operacion.INSERTA, cliente, this.getText("url.ws.ice2sigs"), params, true);
 			}catch(Exception e){
