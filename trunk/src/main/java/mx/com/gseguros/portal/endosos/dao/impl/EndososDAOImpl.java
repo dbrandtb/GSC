@@ -65,8 +65,9 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected GuardarEndosoNombres(DataSource dataSource)
 		{
-			super(dataSource, "PKG_GENERA_USUARIO.P_ENDOSO_INICIA");
 			/*
+			super(dataSource, "PKG_GENERA_USUARIO.P_ENDOSO_INICIA");
+			
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -76,7 +77,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("pv_cdusuari_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_proceso_i"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtipsup_i" , OracleTypes.VARCHAR));
-			*/
+			
 			
 			declareParameter(new SqlOutParameter("pv_nmsuplem_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_nsuplogi_o" , OracleTypes.VARCHAR));
@@ -84,6 +85,17 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlOutParameter("pv_feinival_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+			*/
+			super(dataSource, "PKG_CONSULTA.P_GET_ENDOSOS_G");
+			declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_fereferen_i"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new GenericMapper(new String[]{})));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+	        declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
 		}
 	}
