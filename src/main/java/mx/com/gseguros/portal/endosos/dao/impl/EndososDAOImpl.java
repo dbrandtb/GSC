@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.endosos.dao.impl;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -89,7 +90,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	
 	public Map<String, String> guardarEndosoNombres(Map<String, Object> params) throws Exception
 	{
-		Map<String,Object> resultadoMap=this.ejecutaSP(new GuardarEndosoNombres(this.getDataSource()), params);
+		Map<String,Object> resultadoMap=this.ejecutaSP(new GuardarEndosoNombres(this.getDataSource()), new HashMap<String,String>(0));
 		Map<String,String>map=new LinkedHashMap<String,String>(0);
 		for(Entry en:resultadoMap.entrySet())
 		{
