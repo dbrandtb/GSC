@@ -1,6 +1,5 @@
 package mx.com.gseguros.portal.endosos.dao.impl;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +36,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	            ,"CDTIPSIT" 
 	            ,"DSTIPSIT" 
                 ,"PRIMA_TOTAL"
+                ,"NTRAMITE"
 		};
 
 		protected ObtenerEndosos(DataSource dataSource)
@@ -86,6 +86,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		}
 	}
 	
+	@Override
 	public Map<String, String> guardarEndosoNombres(Map<String, Object> params) throws Exception
 	{
 		Map<String,Object> resultadoMap=this.ejecutaSP(new GuardarEndosoNombres(this.getDataSource()), params);
@@ -130,6 +131,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		}
 	}
 	
+	@Override
 	public Map<String, String> guardarEndosoDomicilio(Map<String, Object> params) throws Exception
 	{
 		Map<String,Object> resultadoMap=this.ejecutaSP(new GuardarEndosoNombres(this.getDataSource()), params);
@@ -180,6 +182,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		}
 	}
 	
+	@Override
 	public Map<String, String> confirmarEndosoB(Map<String, String> params) throws Exception
 	{
 		Map<String,Object> resultadoMap=this.ejecutaSP(new ConfirmarEndosoB(this.getDataSource()), params);
@@ -197,6 +200,37 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			}
 		}
 		return map;
+	}
+	
+	protected class ReimprimeDocumentos extends StoredProcedure
+	{
+		String columnas[]=new String[]{
+				"nmsolici"
+				,"nmsituac"
+				,"descripc"
+				,"descripl"
+				,"ntramite"
+		};
+		protected ReimprimeDocumentos(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_reImp_documentos");
+			declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_tipmov_i"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(columnas)));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+		}
+	}
+	
+	@Override
+	public List<Map<String,String>> reimprimeDocumentos(Map<String,String>params) throws Exception
+	{
+		Map<String,Object> resultadoMap=this.ejecutaSP(new ReimprimeDocumentos(this.getDataSource()), params);
+		return (List<Map<String, String>>) resultadoMap.get("pv_registro_o");
 	}
 
 }

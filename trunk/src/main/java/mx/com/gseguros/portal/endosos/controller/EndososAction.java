@@ -8,6 +8,7 @@ import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.util.ConstantesCatalogos;
+import mx.com.gseguros.utils.HttpUtil;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.log4j.Logger;
@@ -254,21 +255,65 @@ public class EndososAction extends PrincipalCoreAction implements ConstantesCata
 			paramConfirmarEndosoB.put("pv_cdtipsup_i" , "2");
 			paramConfirmarEndosoB.put("pv_dscoment_i" , "");
 		    endososManager.confirmarEndosoB(paramConfirmarEndosoB);
-			
-			/*
-			Map<String,Object>paramsArchivo=new LinkedHashMap<String,Object>(0);
-			paramsArchivo.put("pv_cdunieco_i" , omap1.get("pv_cdunieco_i"));
-			paramsArchivo.put("pv_cdramo_i"   , omap1.get("pv_cdramo_i"));
-			paramsArchivo.put("pv_estado_i"   , omap1.get("pv_estado_i"));
-			paramsArchivo.put("pv_nmpoliza_i" , omap1.get("pv_nmpoliza_i"));
-			paramsArchivo.put("pv_nmsuplem_i" , respuestaEndosoNombres.get("pv_nmsuplem_o"));
-			paramsArchivo.put("pv_feinici_i"  , omap1.get("pv_fecha_i"));
-			paramsArchivo.put("pv_cddocume_i" , "123456789");
-			paramsArchivo.put("pv_dsdocume_i" , "qwerty");
-			paramsArchivo.put("pv_ntramite_i" , "0");
-			paramsArchivo.put("pv_nmsolici_i" , "0");
-			kernelManager.guardarArchivo(paramsArchivo);
-			*/
+		    
+		    ///////////////////////////////////////
+		    ////// re generar los documentos //////
+		    /*///////////////////////////////////*/
+		    Map<String,String>paramsGetDoc=new LinkedHashMap<String,String>(0);
+			paramsGetDoc.put("pv_cdunieco_i" , (String)omap1.get("pv_cdunieco_i"));
+			paramsGetDoc.put("pv_cdramo_i"   , (String)omap1.get("pv_cdramo_i"));
+			paramsGetDoc.put("pv_estado_i"   , (String)omap1.get("pv_estado_i"));
+			paramsGetDoc.put("pv_nmpoliza_i" , (String)omap1.get("pv_nmpoliza_i"));
+			paramsGetDoc.put("pv_nmsuplem_i" , respuestaEndosoNombres.get("pv_nmsuplem_o"));
+			paramsGetDoc.put("pv_tipmov_i"   , getText("endoso.tipo.nombres"));
+		    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(paramsGetDoc);
+		    log.debug("documentos que se regeneran: "+listaDocu);
+		    
+		    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+listaDocu.get(0).get("ntramite");
+		    
+			//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
+			for(Map<String,String> docu:listaDocu)
+			{
+				log.debug("docu iterado: "+docu);
+				String nmsolici=docu.get("nmsolici");
+				String nmsituac=docu.get("nmsituac");
+				String descripc=docu.get("descripc");
+				String descripl=docu.get("descripl");
+				String url=this.getText("ruta.servidor.reports")
+						+ "?destype=cache"
+						+ "&desformat=PDF"
+						+ "&userid="+this.getText("pass.servidor.reports")
+						+ "&report="+descripl
+						+ "&paramform=no"
+						+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+						+ "&p_unieco="+(String)omap1.get("pv_cdunieco_i")
+						+ "&p_ramo="+(String)omap1.get("pv_cdramo_i")
+						+ "&p_estado="+(String)omap1.get("pv_estado_i")
+						+ "&p_poliza="+(String)omap1.get("pv_nmpoliza_i")
+						+ "&desname="+rutaCarpeta+"/"+descripc;
+				if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
+				{
+					// C R E D E N C I A L _ X X X X X X . P D F
+					//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+					url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("_"));
+				}
+				log.debug(""
+						+ "\n#################################"
+						+ "\n###### Se solicita reporte ######"
+						+ "\na "+url+""
+						+ "\n#################################");
+				HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
+				log.debug(""
+						+ "\n######                    ######"
+						+ "\n###### reporte solicitado ######"
+						+ "\na "+url+""
+						+ "\n################################"
+						+ "\n################################"
+						+ "");
+			}
+		    /*///////////////////////////////////*/
+			////// re generar los documentos //////
+		    ///////////////////////////////////////
 			
 			mensaje="Se ha guardado el endozo con n&uacute;mero "+respuestaEndosoNombres.get("pv_nsuplogi_o");
 			success=true;
@@ -428,6 +473,65 @@ public class EndososAction extends PrincipalCoreAction implements ConstantesCata
 			paramConfirmarEndosoB.put("pv_cdtipsup_i" , "3");
 			paramConfirmarEndosoB.put("pv_dscoment_i" , "");
 		    endososManager.confirmarEndosoB(paramConfirmarEndosoB);
+		    
+		    ///////////////////////////////////////
+		    ////// re generar los documentos //////
+		    /*///////////////////////////////////*/
+		    Map<String,String>paramsGetDoc=new LinkedHashMap<String,String>(0);
+			paramsGetDoc.put("pv_cdunieco_i" , smap1.get("pv_cdunieco"));
+			paramsGetDoc.put("pv_cdramo_i"   , smap1.get("pv_cdramo"));
+			paramsGetDoc.put("pv_estado_i"   , smap1.get("pv_estado"));
+			paramsGetDoc.put("pv_nmpoliza_i" , smap1.get("pv_nmpoliza"));
+			paramsGetDoc.put("pv_nmsuplem_i" , resEndDomi.get("pv_nmsuplem_o"));
+			paramsGetDoc.put("pv_tipmov_i"   , getText("endoso.tipo.domicilio"));
+		    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(paramsGetDoc);
+		    log.debug("documentos que se regeneran: "+listaDocu);
+		    
+		    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+listaDocu.get(0).get("ntramite");
+		    
+			//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
+			for(Map<String,String> docu:listaDocu)
+			{
+				log.debug("docu iterado: "+docu);
+				String nmsolici=docu.get("nmsolici");
+				String nmsituac=docu.get("nmsituac");
+				String descripc=docu.get("descripc");
+				String descripl=docu.get("descripl");
+				String url=this.getText("ruta.servidor.reports")
+						+ "?destype=cache"
+						+ "&desformat=PDF"
+						+ "&userid="+this.getText("pass.servidor.reports")
+						+ "&report="+descripl
+						+ "&paramform=no"
+						+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+						+ "&p_unieco="+smap1.get("pv_cdunieco")
+						+ "&p_ramo="+smap1.get("pv_cdramo")
+						+ "&p_estado="+smap1.get("pv_estado")
+						+ "&p_poliza="+smap1.get("pv_nmpoliza")
+						+ "&desname="+rutaCarpeta+"/"+descripc;
+				if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
+				{
+					// C R E D E N C I A L _ X X X X X X . P D F
+					//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+					url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("_"));
+				}
+				log.debug(""
+						+ "\n#################################"
+						+ "\n###### Se solicita reporte ######"
+						+ "\na "+url+""
+						+ "\n#################################");
+				HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
+				log.debug(""
+						+ "\n######                    ######"
+						+ "\n###### reporte solicitado ######"
+						+ "\na "+url+""
+						+ "\n################################"
+						+ "\n################################"
+						+ "");
+			}
+		    /*///////////////////////////////////*/
+			////// re generar los documentos //////
+		    ///////////////////////////////////////
 			
 		    mensaje="Se ha guardado el endozo con n&uacute;mero "+resEndDomi.get("pv_nsuplogi_o");
 			success=true;

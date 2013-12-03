@@ -1,6 +1,43 @@
 <%@ include file="/taglibs.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <script>
+///////////////////////
+////// overrides //////
+/*///////////////////*/
+Ext.define('App.overrides.view.Table',
+{
+    override: 'Ext.view.Table',
+    getRecord: function (node) {
+        node = this.getNode(node);
+        if (node) {
+            //var recordIndex = node.getAttribute('data-recordIndex');
+            //if (recordIndex) {
+            //    recordIndex = parseInt(recordIndex, 10);
+            //    if (recordIndex > -1) {
+            //        // The index is the index in the original Store, not in a GroupStore
+            //        // The Grouping Feature increments the index to skip over unrendered records in collapsed groups
+            //        return this.store.data.getAt(recordIndex);
+            //    }
+            //}
+            return this.dataSource.data.get(node.getAttribute('data-recordId'));
+        }
+    },
+    indexInStore: function (node) {
+        node = this.getNode(node, true);
+        if (!node && node !== 0) {
+            return -1;
+        }
+        //var recordIndex = node.getAttribute('data-recordIndex');
+        //if (recordIndex) {
+        //    return parseInt(recordIndex, 10);
+        //}
+        return this.dataSource.indexOf(this.getRecord(node));
+    }
+});
+/*///////////////////*/
+////// overrides //////
+///////////////////////
+	
 //////////////////////////
 ////// variables    //////
 /*//////////////////////*/
@@ -446,7 +483,13 @@ Ext.onReady(function()
 	                        {
 	                            formatName:function(name)
 	                            {
-	                                return name.split("#_#")[1];
+	                            	var splited=name.split("#_#");
+	                                return splited[1]+
+	                                (
+	                                		(splited[1].substr(0,3).toUpperCase()=='END')?
+	                                						(' ('+splited[0].substr(12)+')')
+	                                						:''
+	                                );
 	                            }
 	                        }
 	                    ],
@@ -484,13 +527,14 @@ Ext.onReady(function()
                             cellIndex, record, tr,
                             rowIndex, e, eOpts)
                 	{
-                		debug( cellIndex+'x', rowIndex+'y' , record );
+                		debug( cellIndex+'x', rowIndex+'y' , record.raw );
                 		if(cellIndex==2)//ver
                 		{
                 			debug($(td).find('img').length);
                 			if($(td).find('img').length>0)//si hay accion
                 			{
                 				var nom=record.get('cddocume');
+                				debug(nom);
                 				var salida=false;
                                 if(nom&&nom.length>4)
                                 {
@@ -499,7 +543,7 @@ Ext.onReady(function()
                                     {
                                     	salida=true;
                                     	var numRand=Math.floor((Math.random()*100000)+1);
-                                        debug(numRand);
+                                        debug('numRand b: ',numRand);
                                     	var windowVerDocu=Ext.create('Ext.window.Window',
                                         {
                                             title          : record.get('dsdocume')
@@ -561,7 +605,7 @@ Ext.onReady(function()
         {
         	debug(rowIndex,colIndex);
         	var numRand=Math.floor((Math.random()*100000)+1);
-        	debug(numRand);
+        	debug('numRand a: ',numRand);
         	var record=grid.getStore().getAt(rowIndex);
         	var windowVerDocu=Ext.create('Ext.window.Window',
         	{

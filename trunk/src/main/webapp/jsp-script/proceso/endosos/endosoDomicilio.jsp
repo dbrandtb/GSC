@@ -20,9 +20,11 @@ var inputCdrolp4           = '<s:property value="smap1.pv_cdrol" />';
 var inputNombreaseguradop4 = '<s:property value="smap1.nombreAsegurado" escapeHtml="false" />';
 var inputCdrfcp4           = '<s:property value="smap1.cdrfc" escapeHtml="false" />';
 var inputCdtipsit          = '<s:property value="smap1.cdtipsit" />';
+var inputNtramite          = '<s:property value="smap1.ntramite" />';
 var urlRegresarp4          = '<s:url namespace="/"        action="editarAsegurados" />';
 var urlCargarp4            = '<s:url namespace="/"        action="cargarPantallaDomicilio" />';
 var urlGuardarp4           = '<s:url namespace="/endosos" action="guardarEndosoDomicilio" />';
+var enddomUrlDoc           = '<s:url namespace="/documentos" action="ventanaDocumentosPolizaClon" />';
 var _ComboColoniasUrl      = '<s:url namespace="/"        action="cargaColonias" />';
 var formPanelp4;
 <s:if test='smap1!=null&&smap1.botonCopiar!=null&&smap1.botonCopiar=="1"'>
@@ -41,6 +43,7 @@ debug('inputCdrolp4'           ,inputCdrolp4);
 debug('inputNombreaseguradop4' ,inputNombreaseguradop4);
 debug('inputCdrfcp4'           ,inputCdrfcp4);
 debug('inputCdtipsit'          ,inputCdtipsit);
+debug('inputNtramite'          ,inputNtramite);
 /*///////////////////*/
 ////// variables //////
 ///////////////////////
@@ -356,6 +359,39 @@ Ext.onReady(function(){
                             icon: Ext.Msg.WARNING
                         });
                     }
+                }
+            }
+            ,{
+                text     : 'Documentos'
+                ,icon    : '${ctx}/resources/fam3icons/icons/printer.png'
+                ,handler : function()
+                {
+                    Ext.create('Ext.window.Window',
+                    {
+                        title        : 'Documentos del tr&aacute;mite '+inputNtramite
+                        ,modal       : true
+                        ,buttonAlign : 'center'
+                        ,width       : 600
+                        ,height      : 400
+                        ,autoScroll  : true
+                        ,loader      :
+                        {
+                            url       : enddomUrlDoc
+                            ,params   :
+                            {
+                                'smap1.nmpoliza'  : inputNmpolizap4
+                                ,'smap1.cdunieco' : inputCduniecop4
+                                ,'smap1.cdramo'   : inputCdramop4
+                                ,'smap1.estado'   : inputEstadop4
+                                ,'smap1.nmsuplem' : '0'
+                                ,'smap1.ntramite' : inputNtramite
+                                ,'smap1.nmsolici' : ''
+                                ,'smap1.tipomov'  : 'Usuario'
+                            }
+                            ,scripts  : true
+                            ,autoLoad : true
+                        }
+                    }).show();
                 }
             }
         ]
