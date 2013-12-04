@@ -64,6 +64,7 @@ Ext.onReady(function() {
                                 //Mostrar session de datos generales:
                                 tabDatosGeneralesPoliza.show();
                                 
+                                /*
                                 //Datos de Tarificación
                                 storeDatosTarificacion.load({
                                     params: panelBusqueda.down('form').getForm().getValues(),
@@ -73,7 +74,20 @@ Ext.onReady(function() {
                                                 Ext.Msg.OK, Ext.Msg.ERROR)
                                         }              
                                     }
-                                });                    
+                                });
+                                */
+                                
+                                //Datos de Copagos de poliza
+                                storeCopagosPoliza.load({
+                                    params: panelBusqueda.down('form').getForm().getValues(),
+                                    callback: function(records, operation, success){
+                                        if(!success){
+                                            showMessage('Error', 'Error al obtener los copagos de la p\u00F3liza', 
+                                                Ext.Msg.OK, Ext.Msg.ERROR)
+                                        }              
+                                    }
+                                });
+                                
                                 //Datos para asegurados
                                 storeAsegurados.load({
                                     params: panelBusqueda.down('form').getForm().getValues(),
@@ -416,6 +430,68 @@ Ext.onReady(function() {
     ]);
     
     
+    /**INFORMACION DEL GRID DE COPAGOS**/
+    //-------------------------------------------------------------------------------------------------------------    
+    //Modelo
+    Ext.define('CopagosPolizaModel',{
+        extend: 'Ext.data.Model',
+        fields: [
+              {type:'int',    name:'orden'      },
+              {type:'string',    name:'descripcion' },
+              {type:'string',    name:'valor' }
+        ]
+    });
+    // Store
+    var storeCopagosPoliza = new Ext.data.Store({
+        model: 'CopagosPolizaModel',
+        proxy: {
+           type: 'ajax',
+           url : _URL_CONSULTA_COPAGOS_POLIZA,
+            reader: {
+                type: 'json',
+                root: 'datosCopagosPoliza'
+            }
+        }
+    });
+    // GRID PARA LOS DATOS DE COPAGOS
+    var gridCopagosPoliza = Ext.create('Ext.grid.Panel', {
+        width   : 820,
+        viewConfig: {
+            stripeRows: false,
+            enableTextSelection: true
+        },
+        //title   : 'DATOS COPAGOS',
+        store   : storeCopagosPoliza,
+        autoScroll:true,
+        id      : 'gridCopagosPoliza',
+        columns: [
+            {text:'Orden',            dataIndex:'orden',       width:250, sortable:false, hidden:true},
+            {text:'Descripci\u00F3n', dataIndex:'descripcion', width:300, align:'left', sortable:false},
+            {text:'Valor',            dataIndex:'valor',       width:150, align:'left', sortable:false}
+        ]
+        /*,features: [{*/
+            /*groupHeaderTpl:
+                [
+                    '{name:this.formatName}',
+                    {
+                        formatName:function(name)
+                        {
+                            return name.split("#_#")[1];
+                        }
+                    }
+                ],*/
+            /*ftype:'groupingsummary',
+            startCollapsed :false
+        }]*/
+    });
+    gridCopagosPoliza.store.sort([
+        { 
+            property    : 'orden',
+            direction   : 'ASC'
+        }
+    ]);
+    
+    
     // Modelo
     Ext.define('AseguradosModel', {
         extend: 'Ext.data.Model',
@@ -507,7 +583,8 @@ Ext.onReady(function() {
         {
             displayInfo : true,
             store       : storePolizaAsegurado,
-            xtype       : 'pagingtoolbar'
+            xtype       : 'pagingtoolbar',
+            id          : 'paginadorPolizasAsegurado'
         },
         features:[{
            ftype:'summary'
@@ -563,11 +640,13 @@ Ext.onReady(function() {
                    
             }]
         }, {
-            title: 'DATOS TARIFICACION',
-            itemId: 'tabDatosTarificacion',
+            //title: 'DATOS TARIFICACION',
+        	title: 'COPAGOS',
+            //itemId: 'tabDatosTarificacion',
+        	itemId: 'tabDatosCopagosPoliza',
             items:[{
-                items: [gridDatosTarificacion]
-                   
+                //items: [gridDatosTarificacion]
+            	items: [gridCopagosPoliza]
             }]
         }, {
             title: 'ASEGURADOS',
@@ -1041,7 +1120,8 @@ Ext.onReady(function() {
     
     function limpiaSeccionInformacionPrincipal() {
         panelDatosPoliza.getForm().reset();
-        gridDatosTarificacion.getStore().removeAll();
+        //gridDatosTarificacion.getStore().removeAll();
+        gridCopagosPoliza.getStore().removeAll();
         gridDatosAsegurado.getStore().removeAll();
         tabDatosGeneralesPoliza.setActiveTab(0);
         tabPanelAgentes.setActiveTab(0);
@@ -1055,6 +1135,11 @@ Ext.onReady(function() {
     }
     
     function cargaPolizasAsegurado(formBusqueda) {
+    	//console.log('before remove all and move first');
+    	gridPolizasAsegurado.getStore().removeAll();
+    	gridPolizasAsegurado.getStore().sync();
+    	Ext.getCmp('paginadorPolizasAsegurado').moveFirst();
+    	//console.log('after remove all and move first');
     	var callbackGetPolizasAsegurado = function(options, success, response) {
             if(success){
                 var jsonResponse = Ext.decode(response.responseText);

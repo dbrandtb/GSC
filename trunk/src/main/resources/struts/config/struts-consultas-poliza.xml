@@ -115,6 +115,18 @@
                 </param>
             </result>
         </action>
+        
+        <action name="consultaCopagosPoliza" class="ConsultasPolizaAction"
+            method="consultaCopagosPoliza">
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    datosCopagosPoliza.*,
+                    success
+                </param>
+            </result>
+        </action>
+        
 
 	</package>
 
