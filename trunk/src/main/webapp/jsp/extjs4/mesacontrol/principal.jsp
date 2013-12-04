@@ -1272,6 +1272,14 @@ Ext.onReady(function(){
 	                                ,root : 'lista'
 	                            }
 	                        }
+	                        ,listeners :
+	                        {
+	                            load : function(records)
+	                            {
+	                                debug('records',records);
+	                                records.add({key : '%', value : 'Todos'});
+	                            }
+	                        }
 	                    })
 	                }
 	                ,{
