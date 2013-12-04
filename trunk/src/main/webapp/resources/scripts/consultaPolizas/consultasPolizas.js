@@ -438,12 +438,14 @@ Ext.onReady(function() {
         fields: [
               {type:'int',    name:'orden'      },
               {type:'string',    name:'descripcion' },
-              {type:'string',    name:'valor' }
+              {type:'string',    name:'valor' },
+              {type:'string',    name:'agrupador' }
         ]
     });
     // Store
     var storeCopagosPoliza = new Ext.data.Store({
         model: 'CopagosPolizaModel',
+        groupField : 'agrupador',
         proxy: {
            type: 'ajax',
            url : _URL_CONSULTA_COPAGOS_POLIZA,
@@ -455,7 +457,7 @@ Ext.onReady(function() {
     });
     // GRID PARA LOS DATOS DE COPAGOS
     var gridCopagosPoliza = Ext.create('Ext.grid.Panel', {
-        width   : 820,
+        width   : 500,
         viewConfig: {
             stripeRows: false,
             enableTextSelection: true
@@ -465,24 +467,15 @@ Ext.onReady(function() {
         autoScroll:true,
         id      : 'gridCopagosPoliza',
         columns: [
-            {text:'Orden',            dataIndex:'orden',       width:250, sortable:false, hidden:true},
+            //{text:'Orden',            dataIndex:'orden',       width:50, sortable:false, hidden:true},
             {text:'Descripci\u00F3n', dataIndex:'descripcion', width:300, align:'left', sortable:false},
-            {text:'Valor',            dataIndex:'valor',       width:150, align:'left', sortable:false}
+            {text:'Valor',            dataIndex:'valor',       width:200, align:'left', sortable:false}
         ]
-        /*,features: [{*/
-            /*groupHeaderTpl:
-                [
-                    '{name:this.formatName}',
-                    {
-                        formatName:function(name)
-                        {
-                            return name.split("#_#")[1];
-                        }
-                    }
-                ],*/
-            /*ftype:'groupingsummary',
-            startCollapsed :false
-        }]*/
+        ,features: [{
+            groupHeaderTpl: '{name}',
+            ftype:          'grouping',
+            startCollapsed: false
+        }]
     });
     gridCopagosPoliza.store.sort([
         { 
@@ -578,7 +571,7 @@ Ext.onReady(function() {
     var gridPolizasAsegurado= Ext.create('Ext.grid.Panel', {
         store : storePolizaAsegurado,
         selType: 'checkboxmodel',
-        width : 650,
+        width : 850,
         bbar     :
         {
             displayInfo : true,
@@ -590,11 +583,11 @@ Ext.onReady(function() {
            ftype:'summary'
         }],
         columns: [
-            {text: 'P&oacute;liza', dataIndex: 'nmpoliex', width: 150},
-            {text: 'Nombre del asegurado', dataIndex: 'nombreAsegurado', width: 200},
-            {text: 'Producto', dataIndex: 'dsramo', width:200},
+            {text: 'P&oacute;liza', dataIndex: 'nmpoliex', width: 160},
+            {text: 'Nombre del asegurado', dataIndex: 'nombreAsegurado', width: 220},
+            {text: 'Sucursal', dataIndex: 'dsunieco', width: 180},
+            {text: 'Producto', dataIndex: 'dsramo', width:180},
             {text: 'Estado', dataIndex: 'estado', width: 100}
-            //{text: 'Compañía', dataIndex: 'dsunieco', width: 150},
             //,{text: '# poliza', dataIndex: 'nmpoliza', width: 70}
         ]
     });
@@ -604,7 +597,7 @@ Ext.onReady(function() {
         title : 'Elija una p&oacute;liza:',
         //height: 400,
         modal:true,
-        width : 660,
+        //width : 660,
         closeAction: 'hide',
         items:[gridPolizasAsegurado],
         buttons:[{
@@ -836,7 +829,7 @@ Ext.onReady(function() {
                             items: [
                                 {boxLabel: 'Por n\u00FAmero de p\u00F3liza', name: 'tipoBusqueda', inputValue: 1, checked: true, width: 160},
                                 {boxLabel: 'Por RFC', name: 'tipoBusqueda', inputValue: 2},
-                                {boxLabel: 'Por afiliado', name: 'tipoBusqueda', inputValue: 3},
+                                {boxLabel: 'Por clave de asegurado', name: 'tipoBusqueda', inputValue: 3},
                                 {boxLabel: 'Por nombre', name: 'tipoBusqueda', inputValue: 4}
                                 
                             ],
@@ -952,9 +945,10 @@ Ext.onReady(function() {
                                         {
                                             xtype: 'numberfield',
                                             name : 'params.cdperson',
-                                            fieldLabel : 'C\u00F3digo de persona',
+                                            fieldLabel : 'Clave de asegurado',
                                             maxLength : 9,
-                                            allowBlank: false
+                                            allowBlank: false,
+                                            minValue: 0
                                         }
                                     ]
                                 },
