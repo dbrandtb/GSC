@@ -2,6 +2,7 @@ package mx.com.gseguros.portal.cotizacion.controller;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -38,6 +39,27 @@ public class MesaControlAction extends PrincipalCoreAction implements Constantes
 				+ "\n###### mesa de control principal ######"
 				+ "\n######                           ######"
 				);
+		UserVO usu=(UserVO) session.get("USUARIO");
+		String dsrol="";
+		if(usu!=null
+		    &&usu.getRolActivo()!=null
+		    &&usu.getRolActivo().getObjeto()!=null
+		    &&usu.getRolActivo().getObjeto().getValue()!=null)
+		{
+		    dsrol=usu.getRolActivo().getObjeto().getValue();
+		}
+		if(dsrol.equalsIgnoreCase("mesadecontrol"))
+		{
+			if(smap1==null)
+			{
+				smap1=new HashMap<String,String>(0);
+			}
+			if((!smap1.containsKey("pv_status_i"))||smap1.get("pv_status_i").length()==0)
+			{
+				log.debug("pv_status_i: "+smap1.get("pv_status_i"));
+				smap1.put("pv_status_i","2");
+			}
+		}
 		log.debug(""
 				+ "\n######                           ######"
 				+ "\n###### mesa de control principal ######"
