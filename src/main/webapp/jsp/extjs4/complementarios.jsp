@@ -1434,7 +1434,7 @@
         </script>
     </head>
     <body>
-        <div id="maindiv" style="height:600px;"></div>
+        <div id="maindiv" style="height:800px;"></div>
         <%--////////////////////////////////////
         ////// para el parser de archivos //////
         ////////////////////////////////////--%

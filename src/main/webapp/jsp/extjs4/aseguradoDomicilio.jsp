@@ -278,6 +278,8 @@ Ext.onReady(function(){
             --%>
             {
                 text:'Guardar cambios',
+                id       : 'idbotonguardardireccion',
+                disabled : true,
                 icon: contextop4+'/resources/fam3icons/icons/accept.png',
                 handler:function()
                 {
@@ -522,6 +524,8 @@ Ext.onReady(function(){
 	            var loaderFormp4=Ext.ModelManager.getModel('LoaderFormp4');
 	            loaderFormp4.load(123, {
 	                success: function(resp) {
+	                	debug('se desbloquea el boton porque ya copio del cliente');
+	                	Ext.getCmp('idbotonguardardireccion').setDisabled(false);
 	                    formPanelp4.getForm().setValues(
 	                    {
 	                        'smap1.NMORDDOM':resp.data['smap1.NMORDDOM'],
@@ -550,6 +554,11 @@ Ext.onReady(function(){
 	            });
 	        }
 	    //});
+    }
+    else
+    {
+    	debug('se desbloquea el boton porque es el cliente');
+    	Ext.getCmp('idbotonguardardireccion').setDisabled(false);
     }
     ////// usa valores del padre //////
     
