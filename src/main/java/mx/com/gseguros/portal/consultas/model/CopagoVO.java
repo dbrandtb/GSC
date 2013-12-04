@@ -2,6 +2,9 @@ package mx.com.gseguros.portal.consultas.model;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
+
 public class CopagoVO implements Serializable {
 	
 	private static final long serialVersionUID = -57318621458532287L;
@@ -10,11 +13,12 @@ public class CopagoVO implements Serializable {
 		super();
 	}
 	
-	public CopagoVO(int orden, String descripcion, String valor) {
+	public CopagoVO(int orden, String descripcion, String valor, String agrupador) {
 		super();
 		this.orden = orden;
 		this.descripcion = descripcion;
 		this.valor = valor;
+		this.agrupador = agrupador;
 	}
 
 	private int orden;
@@ -22,6 +26,8 @@ public class CopagoVO implements Serializable {
 	private String descripcion;
 	
 	private String valor;
+	
+	private String agrupador;
 
 	public int getOrden() {
 		return orden;
@@ -46,5 +52,17 @@ public class CopagoVO implements Serializable {
 	public void setValor(String valor) {
 		this.valor = valor;
 	}
+
+	public String getAgrupador() {
+		return agrupador;
+	}
+
+	public void setAgrupador(String agrupador) {
+		this.agrupador = agrupador;
+	}
 	
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+	}
 }

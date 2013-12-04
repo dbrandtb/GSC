@@ -1,12 +1,17 @@
 package mx.com.gseguros.portal.consultas.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO;
+import mx.com.gseguros.portal.consultas.model.CopagoVO;
 import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
+
+import org.apache.commons.lang.StringUtils;
 
 public class ConsultasPolizaManagerImpl extends
 		AbstractManagerJdbcTemplateInvoke implements ConsultasPolizaManager {
@@ -174,6 +179,22 @@ public class ConsultasPolizaManagerImpl extends
 		
 		WrapperResultados result = this.returnBackBoneInvoke(params,
 				ConsultasPolizaDAO.OBTIENE_COPAGOS);
+		
+		//Agregamos un campo que agrupe los resultados:
+		ArrayList<CopagoVO> copagos = (ArrayList<CopagoVO>) result.getItemList();
+		String agrupador = null;
+		
+		Iterator<CopagoVO> itCopagos = copagos.iterator();
+		while (itCopagos.hasNext()) {
+			CopagoVO copagoVO = itCopagos.next();
+			if( StringUtils.isBlank(agrupador) || StringUtils.isBlank(copagoVO.getValor()) ) {
+				agrupador = copagoVO.getDescripcion();
+			}
+			if(StringUtils.isBlank(copagoVO.getValor())) {
+				itCopagos.remove();
+			}
+			copagoVO.setAgrupador(agrupador);
+		}
 
 		return result;
 	}
