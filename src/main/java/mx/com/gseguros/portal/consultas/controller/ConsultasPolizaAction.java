@@ -16,6 +16,7 @@ import mx.com.gseguros.portal.consultas.model.ConsultaDatosTarifaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAgenteVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaReciboAgenteVO;
+import mx.com.gseguros.portal.consultas.model.CopagoVO;
 import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 
 /**
@@ -56,6 +57,8 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     private ConsultaDatosAgenteVO datosAgente;
     
     private List<ConsultaDatosAseguradoVO> datosAsegurados;
+    
+    private List<CopagoVO> datosCopagosPoliza;
 
 
     public String execute() throws Exception {
@@ -324,6 +327,32 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     }    
 
     
+    /**
+     * Obtiene los copagos de una poliza
+     * @return String result
+     */
+    public String consultaCopagosPoliza(){
+    	logger.debug(" **** Entrando a consultaCopagosPoliza ****");
+    	try {
+    		
+    		WrapperResultados result = consultasPolizaManager.consultaCopagosPoliza(
+    				params.get("cdunieco"), params.get("cdramo"),
+    				params.get("estado"), params.get("nmpoliza"), params.get("suplemento"));
+    		
+    		datosCopagosPoliza = (ArrayList<CopagoVO>) result.getItemList();
+    		
+    		logger.debug("Resultado de consultaCopagosPoliza:" + datosCopagosPoliza);
+    		
+    	}catch( Exception e){
+    		logger.error("Error al obtener los copagos de la poliza ",e);
+    		return SUCCESS;
+    	}
+    	
+    	success = true;
+    	return SUCCESS;
+    	
+    }
+    
     
     //Getters and setters:
     
@@ -426,6 +455,14 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
 
 	public void setDatosAgente(ConsultaDatosAgenteVO datosAgente) {
 		this.datosAgente = datosAgente;
+	}
+
+	public List<CopagoVO> getDatosCopagosPoliza() {
+		return datosCopagosPoliza;
+	}
+
+	public void setDatosCopagosPoliza(List<CopagoVO> datosCopagosPoliza) {
+		this.datosCopagosPoliza = datosCopagosPoliza;
 	}
 
 }

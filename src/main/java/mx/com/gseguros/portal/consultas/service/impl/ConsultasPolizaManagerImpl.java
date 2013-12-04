@@ -160,5 +160,22 @@ public class ConsultasPolizaManagerImpl extends
 
 		return result;
 	}
+	
+	public WrapperResultados consultaCopagosPoliza(String cdunieco,
+			String cdramo, String estado, String nmpoliza, String nmsuplem)
+			throws ApplicationException {
+		
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdunieco_i", cdunieco);
+		params.put("pv_cdramo_i", cdramo);
+		params.put("pv_estado_i", estado);
+		params.put("pv_nmpoliza_i", nmpoliza);
+		params.put("pv_nmsuplem_i", nmsuplem);
+		
+		WrapperResultados result = this.returnBackBoneInvoke(params,
+				ConsultasPolizaDAO.OBTIENE_COPAGOS);
+
+		return result;
+	}
 
 }

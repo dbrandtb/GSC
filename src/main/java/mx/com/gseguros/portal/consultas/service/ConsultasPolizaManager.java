@@ -127,4 +127,18 @@ public interface ConsultasPolizaManager {
 	 */
 	public WrapperResultados consultaDatosAsegurado(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem) throws ApplicationException;
 	
+	
+	/**
+	 * Obtiene los copagos asociados a una poliza 
+	 * @param cdunieco Unidad economica
+	 * @param cdramo   Ramo del producto
+	 * @param estado   Estado de la poliza
+	 * @param nmpoliza Numero de poliza
+	 * @param nmsuplem Numero de suplemento
+	 * @return         Wrapper con los datos de los copagos asociados a la poliza
+	 * @throws         ApplicationException
+	 */
+	public WrapperResultados consultaCopagosPoliza(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem) throws ApplicationException;
+	
+	
 }

@@ -21,6 +21,7 @@ import mx.com.gseguros.portal.consultas.model.ConsultaDatosTarifaVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAgenteVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaReciboAgenteVO;
+import mx.com.gseguros.portal.consultas.model.CopagoVO;
 import mx.com.gseguros.utils.Utilerias;
 import oracle.jdbc.driver.OracleTypes;
 
@@ -42,7 +43,8 @@ public class ConsultasPolizaDAO extends AbstractDAO {
 	public static final String OBTIENE_DATOS_TARIFA =      "OBTIENE_DATOS_TARIFA";
 	public static final String OBTIENE_POLIZAS_AGENTE =    "OBTIENE_POLIZAS_AGENTE";
 	public static final String OBTIENE_POLIZAS_ASEGURADO = "OBTIENE_POLIZAS_ASEGURADO";
-	public static final String OBTIENE_RECIBOS_AGENTE =    "OBTIENE_RECIBOS_AGENTE";	
+	public static final String OBTIENE_RECIBOS_AGENTE =    "OBTIENE_RECIBOS_AGENTE";
+	public static final String OBTIENE_COPAGOS =           "OBTIENE_COPAGOS";
 	
 	protected void initDao() throws Exception {
 		addStoredProcedure(OBTIENE_DATOS_AGENTE,      new ObtieneDatosAgente(getDataSource()));
@@ -55,6 +57,7 @@ public class ConsultasPolizaDAO extends AbstractDAO {
 		addStoredProcedure(OBTIENE_POLIZAS_AGENTE,    new ObtienePolizasAgente(getDataSource()));
 		addStoredProcedure(OBTIENE_POLIZAS_ASEGURADO, new ObtienePolizasAsegurado(getDataSource()));
 		addStoredProcedure(OBTIENE_RECIBOS_AGENTE,    new ObtieneRecibosAgente(getDataSource()));
+		addStoredProcedure(OBTIENE_COPAGOS,           new ObtieneCopagos(getDataSource()));
 	}
 
 	
@@ -511,6 +514,45 @@ public class ConsultasPolizaDAO extends AbstractDAO {
     		consulta.setSexo(rs.getString("Sexo"));
     		consulta.setStatus(rs.getString("status"));
     		return consulta;
+    	}
+    }
+    
+    
+    protected class ObtieneCopagos extends CustomStoredProcedure {
+    	
+    	protected ObtieneCopagos(DataSource dataSource) {
+    		super(dataSource, "PKG_CONSULTA.P_GET_COPAGOS");
+    		
+    		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ObtieneCopagosMapper()));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+    		WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+    		WrapperResultados wrapperResultados = mapper.build(map);
+    		List result = (List) map.get("pv_registro_o");
+    		wrapperResultados.setItemList(result);
+    		return wrapperResultados;
+    	}
+    }
+    
+    protected class ObtieneCopagosMapper implements RowMapper {
+    	
+    	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+    		
+    		CopagoVO copago = new CopagoVO();
+    		copago.setOrden(rs.getInt("ORDEN"));
+    		copago.setDescripcion(rs.getString("DESCRIPCION"));
+    		copago.setValor(rs.getString("VALOR"));
+    		
+    		return copago;
     	}
     }
     
