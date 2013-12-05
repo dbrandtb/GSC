@@ -10,4 +10,6 @@ public interface EndososDAO
     public Map<String, String>      confirmarEndosoB(Map<String, String> params) throws Exception;
     public Map<String, String>      guardarEndosoDomicilio(Map<String, Object> params) throws Exception;
     public List<Map<String,String>> reimprimeDocumentos(Map<String,String>params) throws Exception;
+    public List<Map<String,String>> obtieneCoberturasDisponibles(Map<String,String>params) throws Exception;
+    public Map<String, String>      guardarEndosoCoberturas(Map<String, Object> params) throws Exception;
 }

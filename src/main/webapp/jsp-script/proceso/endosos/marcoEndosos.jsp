@@ -81,6 +81,7 @@
 	                    	,'smap1.cdrfc'           : recordActivo.get('cdrfc')
 	                    	,'smap1.pv_cdrol'        : recordActivo.get('cdrol')
 	                    	,'smap1.nombreAsegurado' : recordActivo.get('nombrecompleto')
+	                    	,'smap1.ntramite'        : recordActivo.get('NTRAMITE')
 	                    	,'smap1.botonCopiar'     : '0'
 	                    }
 	                });
@@ -361,13 +362,6 @@ Ext.onReady(function()
             ,type         : 'memory'
             ,data         :
             [
-                /*
-                {
-                    texto    : 'Endoso de suma asegurada'
-                    ,liga    : '<s:url namespace="/endosos" action="pantallaEndosoCoberturas" />'
-                    ,funcion : 'endososcoberturas'
-                }
-                */
                 {
                 	texto    : 'Endoso de nombres'
                 	,liga    : '<s:url namespace="/endosos" action="pantallaEndosoNombres" />'
@@ -377,6 +371,11 @@ Ext.onReady(function()
                 	texto    : 'Endoso de domicilio'
                 	,liga    : '<s:url namespace="/endosos" action="pantallaEndosoDomicilio" />'
                 	,funcion : 'endosodomicilio'
+                }
+                ,{
+                    texto    : 'Endoso de coberturas'
+                    ,liga    : '<s:url namespace="/endosos" action="pantallaEndosoCoberturas" />'
+                    ,funcion : 'endososcoberturas'
                 }
             ]
         }
