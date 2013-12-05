@@ -61,6 +61,25 @@ public class EndososManagerImpl implements EndososManager
 		return lista;
 	}
 	
+	@Override
+	public List<Map<String, String>> obtieneCoberturasDisponibles(Map<String, String> params) throws Exception
+	{
+		log.debug("EndososManager obtieneCoberturasDisponibles params: "+params);
+		List<Map<String,String>> lista=endososDAO.obtieneCoberturasDisponibles(params);
+		lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
+		log.debug("EndososManager obtieneCoberturasDisponibles lista size: "+lista.size());
+		return lista;
+	}
+	
+	@Override
+	public Map<String, String> guardarEndosoCoberturas(Map<String, Object> params) throws Exception
+	{
+		log.debug("EndososManager guardarEndosoCoberturas params: "+params);
+		Map<String,String> mapa=endososDAO.guardarEndosoCoberturas(params);
+		log.debug("EndososManager guardarEndosoCoberturas response map: "+mapa);
+        return mapa;
+	}
+	
 	/////////////////////////////////
 	////// getters and setters //////
 	/*/////////////////////////////*/
