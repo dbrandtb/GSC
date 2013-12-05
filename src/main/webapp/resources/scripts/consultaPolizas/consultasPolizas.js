@@ -162,7 +162,7 @@ Ext.onReady(function() {
             {name: 'feemisio', dateFormat: 'd/m/Y'},
             {name: 'feinival', dateFormat: 'd/m/Y'},
             {name: 'nlogisus'},
-            {name: 'nsuplogi'},
+            {name: 'nsuplogi', type:'int'},
             {name: 'ptpritot', type : 'float'}
         ],
     });
@@ -184,17 +184,17 @@ Ext.onReady(function() {
         id : 'suplemento-form',
         store : storeSuplementos,
         selType: 'checkboxmodel',
-        autoScroll:true,
+        //autoScroll:true,
         defaults: {sortable : true, width:120, align : 'right'},
         columns : [{
-            text : 'N&uacute;mero de endoso',
+            text : '#',
             dataIndex : 'nsuplogi',
-            width:150
+            width:50
         }, {
             id : 'dstipsup',
             text : 'Tipo de endoso',
             dataIndex : 'dstipsup',
-            width:200
+            width:250
         }, {
             text : 'Fecha de emisi\u00F3n',
             dataIndex : 'feemisio',
@@ -268,6 +268,12 @@ Ext.onReady(function() {
             }
         }
     });
+    gridSuplementos.store.sort([
+        { 
+        	property    : 'nsuplogi',
+        	direction   : 'DESC'
+        }
+    ]);
     
     // Modelo
     Ext.define('DatosPolizaModel', {
@@ -1036,6 +1042,7 @@ Ext.onReady(function() {
             width:990,
             height:150,
             colspan:2,
+            autoScroll:true,
             items : [
                 gridSuplementos
             ]
@@ -1085,7 +1092,7 @@ Ext.onReady(function() {
             callback: function(records, operation, success) {
                 
                 gridSuplementos.setLoading(false);
-                gridSuplementos.getView().el.focus();
+                //gridSuplementos.getView().el.focus();
                 
                 //Limpiar seleccion de la lista de opciones de consulta
                 limpiaSeleccionTiposConsulta();
