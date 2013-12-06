@@ -46,7 +46,7 @@
     
     function marendValidaOperacion(recordOperacion)
     {
-    	if(recordOperacion.get('funcion')=='endososcoberturas')
+    	if(recordOperacion.get('funcion')=='endosocoberturasalta')
     	{
     		debug('endososcoberturas');
     		var nAsegActivos=0;
@@ -83,6 +83,8 @@
 	                    	,'smap1.nombreAsegurado' : recordActivo.get('nombrecompleto')
 	                    	,'smap1.ntramite'        : recordActivo.get('NTRAMITE')
 	                    	,'smap1.botonCopiar'     : '0'
+	                    	,'smap1.altabaja'        : 'alta'
+	                    	,'smap1.cdtipsit'        : recordActivo.get('CDTIPSIT')
 	                    }
 	                });
     			}
@@ -108,6 +110,70 @@
                 });
     		}
     	}
+    	else if(recordOperacion.get('funcion')=='endosocoberturasbaja')
+        {
+            debug('endososcoberturas');
+            var nAsegActivos=0;
+            var recordActivo;
+            marendStoreAsegurados.each(function(record)
+            {
+                if(record.get('activo')==true)
+                {
+                    nAsegActivos=nAsegActivos+1;
+                    recordActivo=record;
+                }
+            });
+            if(nAsegActivos==1)
+            {
+                if(recordActivo.get('cdrol')==2)
+                {
+                    Ext.getCmp('marendMenuOperaciones').collapse();
+                    Ext.getCmp('marendLoaderFrame').setTitle(recordOperacion.get('texto'));
+                    Ext.getCmp('marendLoaderFrame').getLoader().load(
+                    {
+                        url       : recordOperacion.get('liga')
+                        ,scripts  : true
+                        ,autoLoad : true
+                        ,params   :
+                        {
+                            'smap1.pv_cdunieco'      : recordActivo.get('CDUNIECO')
+                            ,'smap1.pv_cdramo'       : recordActivo.get('CDRAMO')
+                            ,'smap1.pv_estado'       : recordActivo.get('ESTADO')
+                            ,'smap1.pv_nmpoliza'     : recordActivo.get('NMPOLIZA')
+                            ,'smap1.pv_nmsituac'     : recordActivo.get('nmsituac')
+                            ,'smap1.pv_cdperson'     : recordActivo.get('cdperson')
+                            ,'smap1.cdrfc'           : recordActivo.get('cdrfc')
+                            ,'smap1.pv_cdrol'        : recordActivo.get('cdrol')
+                            ,'smap1.nombreAsegurado' : recordActivo.get('nombrecompleto')
+                            ,'smap1.ntramite'        : recordActivo.get('NTRAMITE')
+                            ,'smap1.botonCopiar'     : '0'
+                            ,'smap1.altabaja'        : 'baja'
+                            ,'smap1.cdtipsit'        : recordActivo.get('CDTIPSIT')
+                        }
+                    });
+                }
+                else
+                {
+                    Ext.Msg.show(
+                    {
+                        title    : 'Error'
+                        ,icon    : Ext.Msg.WARNING
+                        ,msg     : 'No hay coberturas para el cliente, por favor seleccione un asegurado'
+                        ,buttons : Ext.Msg.OK
+                    });
+                }
+            }
+            else
+            {
+                Ext.Msg.show(
+                {
+                    title    : 'Error'
+                    ,icon    : Ext.Msg.WARNING
+                    ,msg     : 'Seleccione un asegurado'
+                    ,buttons : Ext.Msg.OK
+                });
+            }
+        }
     	else if(recordOperacion.get('funcion')=='endosodomicilio')
     	{
     		debug('endoso domicilio');
@@ -438,9 +504,14 @@ Ext.onReady(function()
                     ,funcion : 'endosovalositbasico'
                 }
                 ,{
-                    texto    : 'Endoso de coberturas'
+                    texto    : 'Endoso de alta de coberturas'
                     ,liga    : '<s:url namespace="/endosos" action="pantallaEndosoCoberturas" />'
-                    ,funcion : 'endososcoberturas'
+                    ,funcion : 'endosocoberturasalta'
+                }
+                ,{
+                    texto    : 'Endoso de baja de coberturas'
+                    ,liga    : '<s:url namespace="/endosos" action="pantallaEndosoCoberturas" />'
+                    ,funcion : 'endosocoberturasbaja'
                 }
             ]
         }
