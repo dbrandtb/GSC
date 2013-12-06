@@ -1171,14 +1171,14 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			logger.debug(">>>>>>>>>> nmsolici: "+ panel1.get("pv_nmpoliza"));
 			logger.debug(">>>>>>>>>> nmtramite: "+ panel1.get("pv_ntramite"));
 			
-			ejecutaWSclienteSalud(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem);
+			ejecutaWSclienteSalud(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, "INSERTA");
 			
 			if(StringUtils.isNotBlank(esDxN) && "S".equalsIgnoreCase(esDxN)){
 				ejecutaWSrecibos(_cdunieco, _cdramo,
 						edoPoliza, _nmpoliza,
 						_nmsuplem, rutaCarpeta,
 						cdtipsitGS, sucursal, panel1.get("pv_nmpoliza"),panel1.get("pv_ntramite"),
-						false
+						false, "INSERTA"
 						);
 				obtenRecibosDxN(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem);
 			}else{
@@ -1187,7 +1187,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 						edoPoliza, _nmpoliza,
 						_nmsuplem, rutaCarpeta,
 						cdtipsitGS, sucursal, panel1.get("pv_nmpoliza"),panel1.get("pv_ntramite"),
-						true
+						true, "INSERTA"
 						);
 			}
 			
@@ -1290,8 +1290,9 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 
 		String nmsolici = map1.get("nmsolici");
 		String nmtramite = map1.get("nmtramite");
+		String operacion = map1.get("operacion");
 
-		ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+		ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, operacion);
 		
 		success = true;
 		return SUCCESS;
@@ -1310,14 +1311,16 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 		String nmsolici = map1.get("nmsolici");
 		String nmtramite = map1.get("nmtramite");
 
-		ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, null, cdtipsitGS, sucursal, nmsolici, nmtramite, true);
+		String operacion = map1.get("operacion");
+
+		ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, null, cdtipsitGS, sucursal, nmsolici, nmtramite, true, operacion);
 
 		success = true;
 		return SUCCESS;
 	}
 	
 	private boolean ejecutaWSrecibos(String cdunieco, String cdramo, String estado, String nmpoliza,
-			String nmsuplem, String rutaPoliza, String cdtipsitGS, String sucursal, String nmsolici,String ntramite, boolean async){
+			String nmsuplem, String rutaPoliza, String cdtipsitGS, String sucursal, String nmsolici,String ntramite, boolean async, String Op){
 		boolean allInserted = true;
 		
 		logger.debug("*** Entrando a metodo Inserta Recibos WS ice2sigs, para la poliza: " + nmpoliza + " sucursal: " + sucursal + "***");
@@ -1328,6 +1331,9 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 		params.put("pv_estado_i", estado);
 		params.put("pv_nmpoliza_i", nmpoliza);
 		params.put("pv_nmsuplem_i", nmsuplem);
+		
+		if(StringUtils.isBlank(Op)) Op = "INSERTA";
+		Operacion Operation = Operacion.valueOf(Op);
 		
 		WrapperResultados result = null;
 		ArrayList<Recibo> recibos =  null;
@@ -1358,9 +1364,9 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 					paramsBitacora.putAll(params);
 					paramsBitacora.put("NumRec", recibo.getNumRec());
 					
-					ice2sigsWebServices.ejecutaReciboGS(Operacion.INSERTA, recibo, this.getText("url.ws.ice2sigs"), paramsBitacora, async);
+					ice2sigsWebServices.ejecutaReciboGS(Operation, recibo, this.getText("url.ws.ice2sigs"), paramsBitacora, async);
 				}else{
-					ReciboRespuesta respuesta = ice2sigsWebServices.ejecutaReciboGS(Operacion.INSERTA, recibo, this.getText("url.ws.ice2sigs"), null, async);
+					ReciboRespuesta respuesta = ice2sigsWebServices.ejecutaReciboGS(Operation, recibo, this.getText("url.ws.ice2sigs"), null, async);
 					logger.debug("Resultado al ejecutar el WS Recibo: " + recibo.getNumRec() + " >>>"
 							+ respuesta.getCodigo() + " - " + respuesta.getMensaje());
 
@@ -1444,7 +1450,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 		return allInserted;
 	} 
 
-	private boolean ejecutaWSclienteSalud(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem){
+	private boolean ejecutaWSclienteSalud(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String Op){
 		boolean exito = true;
 		
 		logger.debug("********************* Entrando a Ejecuta WSclienteSalud ******************************");
@@ -1455,6 +1461,9 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 		params.put("pv_estado_i", estado);
 		params.put("pv_nmpoliza_i", nmpoliza);
 //		params.put("pv_nmsuplem_i", nmsuplem);
+		
+		if(StringUtils.isBlank(Op)) Op = "INSERTA";
+		Operacion Operation = Operacion.valueOf(Op);
 		
 		WrapperResultados result = null;
 		ClienteSalud cliente =  null;
@@ -1489,7 +1498,7 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 			try{
 				logger.debug(">>>>>>> Enviando el Cliente: " + cliente.getClaveCli());
 				params.put("MANAGER", kernelManager);
-				ice2sigsWebServices.ejecutaClienteSaludGS(Operacion.INSERTA, cliente, this.getText("url.ws.ice2sigs"), params, true);
+				ice2sigsWebServices.ejecutaClienteSaludGS(Operation, cliente, this.getText("url.ws.ice2sigs"), params, true);
 			}catch(Exception e){
 				logger.error("Error al insertar el cliente: " + cliente.getClaveCli(), e);
 				exito = false;
