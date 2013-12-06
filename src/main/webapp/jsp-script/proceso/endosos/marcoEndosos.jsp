@@ -158,6 +158,65 @@
                 });
             }
     	}
+    	else if(recordOperacion.get('funcion')=='endosovalositbasico')
+        {
+            debug('endoso valosit basico');
+            var nAsegActivos=0;
+            var recordActivo;
+            marendStoreAsegurados.each(function(record)
+            {
+                if(record.get('activo')==true)
+                {
+                    nAsegActivos=nAsegActivos+1;
+                    recordActivo=record;
+                }
+            });
+            if(nAsegActivos==1)
+            {
+            	if(recordActivo.get('cdrol')==2)
+            	{
+	                Ext.getCmp('marendMenuOperaciones').collapse();
+	                Ext.getCmp('marendLoaderFrame').setTitle(recordOperacion.get('texto'));
+	                Ext.getCmp('marendLoaderFrame').getLoader().load(
+	                {
+	                    url       : recordOperacion.get('liga')
+	                    ,scripts  : true
+	                    ,autoLoad : true
+	                    ,params   :
+	                    {
+	                        'smap1.cdunieco'  : recordActivo.get('CDUNIECO')
+	                        ,'smap1.cdramo'   : recordActivo.get('CDRAMO')
+	                        ,'smap1.estado'   : recordActivo.get('ESTADO')
+	                        ,'smap1.nmpoliza' : recordActivo.get('NMPOLIZA')
+	                        ,'smap1.cdtipsit' : recordActivo.get('CDTIPSIT')
+	                        ,'smap1.nmsituac' : recordActivo.get('nmsituac') 
+	                        ,'smap1.ntramite' : recordActivo.get('NTRAMITE')
+	                        ,'smap1.nmsuplem' : recordActivo.get('NMSUPLEM')
+	                    }
+	                });
+            	}
+            	else
+            	{
+            		Ext.Msg.show(
+                    {
+                        title    : 'Error'
+                        ,icon    : Ext.Msg.WARNING
+                        ,msg     : 'El cliente no puede ser seleccionado'
+                        ,buttons : Ext.Msg.OK
+                    });
+            	}
+            }
+            else
+            {
+                Ext.Msg.show(
+                {
+                    title    : 'Error'
+                    ,icon    : Ext.Msg.WARNING
+                    ,msg     : 'Seleccione solo un asegurado'
+                    ,buttons : Ext.Msg.OK
+                });
+            }
+        }
     	else if(recordOperacion.get('funcion')=='endosonombres')
     	{
     		debug('endosonombres');
@@ -312,6 +371,7 @@ Ext.onReady(function()
             ,'NSUPLOGI'
             ,'CDTIPSIT'
             ,'NTRAMITE'
+            ,'NMSUPLEM'
     	]
     });
     /*/////////////////*/
@@ -371,6 +431,11 @@ Ext.onReady(function()
                 	texto    : 'Endoso de domicilio'
                 	,liga    : '<s:url namespace="/endosos" action="pantallaEndosoDomicilio" />'
                 	,funcion : 'endosodomicilio'
+                }
+                ,{
+                    texto    : 'Endoso de correcci&oacute;n de asegurado'
+                    ,liga    : '<s:url namespace="/endosos" action="endosoValositBasico" />'
+                    ,funcion : 'endosovalositbasico'
                 }
                 ,{
                     texto    : 'Endoso de coberturas'
@@ -734,6 +799,12 @@ Ext.onReady(function()
                         ,renderer  : Ext.util.Format.usMoney
                         ,flex      : 1
                     }
+                    ,{
+                    	header     : 'nmsuplem'
+                    	,dataIndex : 'NMSUPLEM'
+                    	,width     : 150
+                    	,hidden    : true
+                    }
                 ]
                 ,listeners     :
                 {
@@ -748,6 +819,7 @@ Ext.onReady(function()
                         		,'map1.pv_cdramo'   : record.get('CDRAMO')
                         		,'map1.pv_estado'   : record.get('ESTADO')
                         		,'map1.pv_nmpoliza' : record.get('NMPOLIZA')
+                        		,'map1.pv_nmsuplem' : record.get('NMSUPLEM')
                         	}
                             ,callback : function(records)
                             {
@@ -770,6 +842,7 @@ Ext.onReady(function()
                             			records[i].set('NSUPLOGI' , record.get('NSUPLOGI'));
                             			records[i].set('CDTIPSIT' , record.get('CDTIPSIT'));
                             			records[i].set('NTRAMITE' , record.get('NTRAMITE'));
+                            			records[i].set('NMSUPLEM' , record.get('NMSUPLEM'));
                             		}
                             	}
                             }
@@ -913,7 +986,7 @@ Ext.onReady(function()
                     {
                         style        : 'margin-right : 5px;'
                         ,id          : 'marendMenuOperaciones'
-                        ,width       : 180
+                        ,width       : 230
                         ,region      : 'west'
                         ,collapsible : true
                         ,margins     : '0 5 0 0'

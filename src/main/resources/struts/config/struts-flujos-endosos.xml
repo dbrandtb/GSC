@@ -52,6 +52,14 @@
             <result name="success" type="json" />
         </action>
         
+        <action name="endosoValositBasico" class="EndososAction" method="endosoValositBasico">
+            <result name="success">/jsp-script/proceso/endosos/endosoValositBasico.jsp</result>
+        </action>
+        
+        <action name="guardarEndosoValositBasico" class="EndososAction" method="guardarEndosoValositBasico">
+            <result name="success" type="json" />
+        </action>
+        
     </package>
 
 </struts>

@@ -15,6 +15,8 @@ public class Tatri {
     private String cdtablj1;
     private String type="";
     private String swsuscri;
+    private boolean readOnly=false;
+    private String swtarifi;
 
     public String getCdatribu() {
         return cdatribu;
@@ -94,5 +96,21 @@ public class Tatri {
 
 	public void setSwsuscri(String swsuscri) {
 		this.swsuscri = swsuscri;
+	}
+
+	public boolean isReadOnly() {
+		return readOnly;
+	}
+
+	public void setReadOnly(boolean readOnly) {
+		this.readOnly = readOnly;
+	}
+
+	public String getSwtarifi() {
+		return swtarifi;
+	}
+
+	public void setSwtarifi(String swtarifi) {
+		this.swtarifi = swtarifi;
 	}
 }

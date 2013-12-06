@@ -48,7 +48,7 @@ public class MesaControlAction extends PrincipalCoreAction implements Constantes
 		{
 		    dsrol=usu.getRolActivo().getObjeto().getValue();
 		}
-		if(dsrol.equalsIgnoreCase("mesadecontrol"))
+		if(dsrol.equalsIgnoreCase("mesadecontrol")||dsrol.equalsIgnoreCase("suscriptor"))
 		{
 			if(smap1==null)
 			{

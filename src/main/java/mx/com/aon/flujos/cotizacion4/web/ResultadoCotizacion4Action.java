@@ -442,6 +442,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
                 mapaValositIterado.put("pv_otvalor48",   null);
                 mapaValositIterado.put("pv_otvalor49",   null);
                 mapaValositIterado.put("pv_otvalor50",   null);
+                mapaValositIterado.put("pv_accion_i",   "I");
                 t1=System.currentTimeMillis();
                 log.debug("######$ tiempo antes de insertar valosit iterado "+t1);
                 kernelManagerSustituto.insertaValoresSituaciones(mapaValositIterado);

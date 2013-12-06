@@ -20,6 +20,7 @@
         <pattern>/endosos/pantallaEndosoCoberturas.action</pattern>
         <pattern>/endosos/pantallaEndosoDomicilio.action</pattern>
         <pattern>/endosos/pantallaEndosoNombres.action</pattern>
+        <pattern>/endosos/endosoValositBasico.action</pattern>
 	</excludes>
 
 

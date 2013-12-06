@@ -907,6 +907,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		declareParameter(new SqlParameter("pv_otvalor48", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_otvalor49", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_otvalor50", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_accion_i", OracleTypes.VARCHAR));
     		
     		declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("PV_TITLE_O", OracleTypes.VARCHAR));
@@ -1183,6 +1184,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
             result.setOttabval(rs.getString("OTTABVAL"));
             result.setCdtablj1(rs.getString("CDTABLJ1"));
             result.setSwsuscri(rs.getString("SWSUSCRI"));
+            result.setSwtarifi(rs.getString("SWTARIFI"));
             return result;
         }
     }
@@ -1603,6 +1605,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
             declareParameter(new SqlParameter("pv_cdramo",      OracleTypes.NUMERIC));
             declareParameter(new SqlParameter("pv_estado",      OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_nmpoliza",    OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmsuplem",    OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerAseguradosMapper()));
     		declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
