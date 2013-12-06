@@ -77,6 +77,7 @@ public class GeneradorCampos {
             it.add(Item.crear("id", this.idPrefix+idx));
             it.add(Item.crear("name", this.namePrefix+(ta.getCdatribu().length()>1?ta.getCdatribu():"0"+ta.getCdatribu())));
             it.add(Item.crear("cdatribu", ta.getCdatribu()));
+            it.add(Item.crear("readOnly", ta.isReadOnly()));
             it.add(Item.crear("allowBlank",ta.getSwobliga()!=null&&ta.getSwobliga().equals("N")));
             it.add(Item.crear("fieldLabel",ta.getDsatribu()));
             it.add(Item.crear("style","margin:5px"));
@@ -189,6 +190,7 @@ public class GeneradorCampos {
             it.add(Item.crear("id", this.idPrefix+idx));
             it.add(Item.crear("name", this.namePrefix+(ta.getCdatribu().length()>1?ta.getCdatribu():"0"+ta.getCdatribu())));
             it.add(Item.crear("cdatribu", ta.getCdatribu()));
+            it.add(Item.crear("readOnly", ta.isReadOnly()));
             it.add(Item.crear("allowBlank",ta.getSwobliga()!=null&&ta.getSwobliga().equals("N")));
             it.add(Item.crear("fieldLabel",ta.getDsatribu()));
             it.add(Item.crear("style","margin:5px"));
@@ -214,6 +216,7 @@ public class GeneradorCampos {
             it.add(Item.crear("id", this.idPrefix+idx));
             it.add(Item.crear("name", this.namePrefix+(ta.getCdatribu().length()>1?ta.getCdatribu():"0"+ta.getCdatribu())));
             it.add(Item.crear("cdatribu", ta.getCdatribu()));
+            it.add(Item.crear("readOnly", ta.isReadOnly()));
             it.add(Item.crear("allowBlank",ta.getSwobliga()!=null&&ta.getSwobliga().equals("N")));
             it.add(Item.crear("fieldLabel",ta.getDsatribu()));
             it.add(Item.crear("style","margin:5px"));
@@ -239,6 +242,7 @@ public class GeneradorCampos {
             it.add(Item.crear("id", this.idPrefix+idx));
             it.add(Item.crear("name", this.namePrefix+(ta.getCdatribu().length()>1?ta.getCdatribu():"0"+ta.getCdatribu())));
             it.add(Item.crear("cdatribu", ta.getCdatribu()));
+            it.add(Item.crear("readOnly", ta.isReadOnly()));
             it.add(Item.crear("allowBlank",ta.getSwobliga()!=null&&ta.getSwobliga().equals("N")));
             it.add(Item.crear("fieldLabel",ta.getDsatribu()));
             it.add(Item.crear("style","margin:5px"));

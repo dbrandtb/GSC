@@ -1,20 +1,28 @@
 package mx.com.gseguros.portal.endosos.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.cotizacion.controller.ComplementariosCoberturasAction;
 import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.cotizacion.model.Tatri;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.util.ConstantesCatalogos;
+import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.utils.HttpUtil;
+import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
+import org.springframework.jdbc.core.SqlParameter;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -652,7 +660,7 @@ public class EndososAction extends PrincipalCoreAction implements ConstantesCata
 				pv_swrevalo_i
 				pv_cdagrupa_i
 				pv_accion_i
-				*/
+				*
 				Map<String,String>paramAgregaCober=new LinkedHashMap<String,String>(0);
 				paramAgregaCober.put("pv_cdunieco_i" , (String)omap1.get("pv_cdunieco_i"));
 				paramAgregaCober.put("pv_cdramo_i"   , (String)omap1.get("pv_cdramo_i"));
@@ -669,6 +677,42 @@ public class EndososAction extends PrincipalCoreAction implements ConstantesCata
 				paramAgregaCober.put("pv_cdagrupa_i" , nuevo.get("cdagrupa"));
 				paramAgregaCober.put("pv_accion_i"   , "I");
 				kernelManager.movPolicap(paramAgregaCober);
+				/**/
+				
+				/*
+				pv_cdunieco_i
+			    pv_cdramo_i
+			    pv_estado_i
+			    pv_nmpoliza_i
+			    pv_nmsituac_i
+			    pv_cdgarant_i
+			    pv_nmsuplem_i
+			    pv_cdcapita_i
+			    pv_status_i
+			    pv_cdtipbca_i
+			    pv_ptvalbas_i
+			    pv_swmanual_i
+			    pv_swreas_i
+			    pv_cdagrupa_i
+			    PV_ACCION
+				*/
+				Map<String,String>paramQuitaCober=new LinkedHashMap<String,String>(0);
+				paramQuitaCober.put("pv_cdunieco_i" , (String)omap1.get("pv_cdunieco_i"));
+				paramQuitaCober.put("pv_cdramo_i"   , (String)omap1.get("pv_cdramo_i"));
+				paramQuitaCober.put("pv_estado_i"   , (String)omap1.get("pv_estado_i"));
+				paramQuitaCober.put("pv_nmpoliza_i" , (String)omap1.get("pv_nmpoliza_i"));
+				paramQuitaCober.put("pv_nmsituac_i" , smap1.get("nmsituac"));
+				paramQuitaCober.put("pv_cdgarant_i" , nuevo.get("garantia"));
+				paramQuitaCober.put("pv_nmsuplem_i" , respEndCob.get("pv_nmsuplem_o"));
+				paramQuitaCober.put("pv_cdcapita_i" , nuevo.get("cdcapita"));
+				paramQuitaCober.put("pv_status_i"   , nuevo.get("status"));
+				paramQuitaCober.put("pv_cdtipbca_i" , nuevo.get("cdtipbca"));
+				paramQuitaCober.put("pv_ptvalbas_i" , nuevo.get("ptvalbas"));
+				paramQuitaCober.put("pv_swmanual_i" , nuevo.get("swmanual"));
+				paramQuitaCober.put("pv_swreas_i"   , nuevo.get("swreas"));
+				paramQuitaCober.put("pv_cdagrupa_i" , nuevo.get("cdagrupa"));
+				paramQuitaCober.put("PV_ACCION"     , "I");
+				kernelManager.movPoligar(paramQuitaCober);
 			}
 			
 			for(Map<String,String> borrar:slist1)
@@ -705,7 +749,7 @@ public class EndososAction extends PrincipalCoreAction implements ConstantesCata
 				paramQuitaCober.put("pv_swmanual_i" , borrar.get("swmanual"));
 				paramQuitaCober.put("pv_swreas_i"   , borrar.get("swreas"));
 				paramQuitaCober.put("pv_cdagrupa_i" , borrar.get("cdagrupa"));
-				paramQuitaCober.put("PV_ACCION"   , "B");
+				paramQuitaCober.put("PV_ACCION"     , "B");
 				kernelManager.movPoligar(paramQuitaCober);
 			}
 			
@@ -799,6 +843,276 @@ public class EndososAction extends PrincipalCoreAction implements ConstantesCata
 	/*/////////////////////////////////*/
 	////// guardarEndosoCoberturas //////
 	/////////////////////////////////////
+	
+	/////////////////////////////////
+	////// endoso B de valosit //////
+	////// smap1:              //////
+	//////     cdunieco        //////
+	//////     cdramo          //////
+	//////     estado          //////
+	//////     nmpoliza        //////
+	//////     cdtipsit        //////
+	//////     nmsituac        //////
+	//////     ntramite        //////
+	//////     nmsuplem        //////
+	/*/////////////////////////////*/
+	public String endosoValositBasico()
+	{
+		log.debug(""
+				+ "\n#################################"
+				+ "\n#################################"
+				+ "\n###### endosoValositBasico ######"
+				+ "\n######                     ######"
+				);
+		try
+		{
+			log.debug("smap1: "+smap1);
+			List<Tatri>tatrisit=kernelManager.obtenerTatrisit(smap1.get("cdtipsit"));
+			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			gc.setCdtipsit(smap1.get("cdtipsit"));
+			List<Tatri>tatriTemp=new ArrayList<Tatri>(0);
+			for(Tatri t:tatrisit)
+			//si es agrupado solo dejar los atributos con N, si es individual solo los que tengan S
+			{
+				if(t.getSwsuscri().equalsIgnoreCase("S")&&t.getSwtarifi().equalsIgnoreCase("N"))//S=individual
+				{
+					tatriTemp.add(t);
+				}
+			}
+			tatrisit=tatriTemp;
+			gc.genera(tatrisit);
+			item1=gc.getFields();
+			item2=gc.getItems();
+		}
+		catch(Exception ex)
+		{
+			log.error("error al mostrar la pantalla de valosit",ex);
+		}
+		log.debug(""
+				+ "\n######                     ######"
+				+ "\n###### endosoValositBasico ######"
+				+ "\n#################################"
+				+ "\n#################################"
+				);
+		return SUCCESS;
+	}
+	/*/////////////////////////////*/
+	////// endoso B de valosit //////
+	/////////////////////////////////
+	
+	///////////////////////////////////////////
+	////// guardar endoso valosit basico //////
+	////// smap1:                        //////
+	//////     fecha_endoso              //////
+	//////     cdunieco                  //////
+	//////     cdramo                    //////
+	//////     estado                    //////
+	//////     nmpoliza                  //////
+	//////     cdtipsit                  //////
+	//////     nmsituac                  //////
+	//////     confirmar                 //////
+	////// parametros: tvalosit          //////
+	/*///////////////////////////////////////*/
+	public String guardarEndosoValositBasico()
+	{
+		log.debug(""
+				+ "\n########################################"
+				+ "\n########################################"
+				+ "\n###### guardarEndosoValositBasico ######"
+				+ "\n######                            ######"
+				);
+		log.debug("smap1: "+smap1);
+		log.debug("parametros: "+parametros);
+		
+		try
+		{
+			UserVO usuario=(UserVO)session.get("USUARIO");
+			/*
+			 * pv_cdunieco_i
+			 * pv_cdramo_i
+			 * pv_estado_i
+			 * pv_nmpoliza_i
+			 * pv_fecha_i
+			 * pv_cdelemen_i
+			 * pv_cdusuari_i
+			 * pv_proceso_i
+			 * pv_cdtipsup_i
+			 */
+			omap1=new LinkedHashMap<String,Object>();
+			omap1.put("pv_cdunieco_i" , smap1.get("cdunieco"));
+			omap1.put("pv_cdramo_i"   , smap1.get("cdramo"));
+			omap1.put("pv_estado_i"   , smap1.get("estado"));
+			omap1.put("pv_nmpoliza_i" , smap1.get("nmpoliza"));
+			omap1.put("pv_fecha_i"    , renderFechas.parse(smap1.get("fecha_endoso")));
+			omap1.put("pv_cdelemen_i" , usuario.getEmpresa().getElementoId());
+			omap1.put("pv_cdusuari_i" , usuario.getUser());
+			omap1.put("pv_proceso_i"  , "END");
+			omap1.put("pv_cdtipsup_i" , "4");
+			Map<String,String> respEnd=endososManager.guardarEndosoCoberturas(omap1);
+
+			//cargar anterior valosit
+			Map<String,String>paramsValositAsegurado=new LinkedHashMap<String,String>(0);
+			paramsValositAsegurado.put("pv_cdunieco_i", smap1.get("cdunieco"));
+			paramsValositAsegurado.put("pv_cdramo_i",   smap1.get("cdramo"));
+			paramsValositAsegurado.put("pv_estado_i",   smap1.get("estado"));
+			paramsValositAsegurado.put("pv_nmpoliza_i", smap1.get("nmpoliza"));
+			paramsValositAsegurado.put("pv_nmsituac_i", smap1.get("nmsituac"));
+			Map<String,Object>valositAsegurado=kernelManager.obtieneValositSituac(paramsValositAsegurado);
+			log.debug("valosit anterior: "+valositAsegurado);
+			
+			//poner pv_ al anterior
+			Map<String,Object>valositAseguradoIterado=new LinkedHashMap<String,Object>(0);
+			Iterator it=valositAsegurado.entrySet().iterator();
+			while(it.hasNext())
+			{
+				Entry en=(Entry)it.next();
+				valositAseguradoIterado.put("pv_"+(String)en.getKey(),en.getValue());//agregar pv_ a los anteriores
+			}
+			valositAsegurado=valositAseguradoIterado;
+			log.debug("se puso pv_ en el anterior");
+			
+			//agregar los del form al leido
+			Iterator it2=parametros.entrySet().iterator();
+			while(it2.hasNext())
+			{
+				Entry en=(Entry)it2.next();
+				valositAsegurado.put((String)en.getKey(),en.getValue());//tienen pv_ los del form
+				//ya agregamos todos los nuevos en el mapa
+			}
+			log.debug("se agregaron los nuevos");
+			
+			//convertir a string el total
+			Map<String,String>paramsNuevos=new LinkedHashMap<String,String>(0);
+			it=valositAsegurado.entrySet().iterator();
+			while(it.hasNext())
+			{
+				Entry en=(Entry)it.next();
+				paramsNuevos.put((String)en.getKey(),(String)en.getValue());
+			}
+			log.debug("se pasaron a string");
+			
+			/*
+			pv_cdunieco
+    		pv_cdramo
+    		pv_estado
+    		pv_nmpoliza
+    		pv_nmsituac
+    		pv_nmsuplem
+    		pv_status
+    		pv_cdtipsit
+    		...pv_otvalor[01-50]
+    		pv_accion_i
+			*/
+			paramsNuevos.put("pv_cdunieco" , smap1.get("cdunieco"));
+			paramsNuevos.put("pv_cdramo"   , smap1.get("cdramo"));
+			paramsNuevos.put("pv_estado"   , smap1.get("estado"));
+			paramsNuevos.put("pv_nmpoliza" , smap1.get("nmpoliza"));
+			paramsNuevos.put("pv_nmsituac" , smap1.get("nmsituac"));
+			paramsNuevos.put("pv_nmsuplem" , respEnd.get("pv_nmsuplem_o"));
+			paramsNuevos.put("pv_status"   , "V");
+			paramsNuevos.put("pv_cdtipsit" , smap1.get("cdtipsit"));
+			paramsNuevos.put("pv_accion_i" , "I");
+			log.debug("los actualizados seran: "+paramsNuevos);
+			kernelManager.insertaValoresSituaciones(paramsNuevos);
+			
+			if(smap1.get("confirmar").equalsIgnoreCase("si"))
+			{
+				Map<String,String>paramConfirmarEndosoB=new LinkedHashMap<String,String>(0);
+				paramConfirmarEndosoB.put("pv_cdunieco_i" , smap1.get("cdunieco"));
+				paramConfirmarEndosoB.put("pv_cdramo_i"   , smap1.get("cdramo"));
+				paramConfirmarEndosoB.put("pv_estado_i"   , smap1.get("estado"));
+				paramConfirmarEndosoB.put("pv_nmpoliza_i" , smap1.get("nmpoliza"));
+				paramConfirmarEndosoB.put("pv_nmsuplem_i" , respEnd.get("pv_nmsuplem_o"));
+				paramConfirmarEndosoB.put("pv_nsuplogi_i" , respEnd.get("pv_nsuplogi_o"));
+				paramConfirmarEndosoB.put("pv_cdtipsup_i" , "4");
+				paramConfirmarEndosoB.put("pv_dscoment_i" , "");
+				endososManager.confirmarEndosoB(paramConfirmarEndosoB);		    
+		    
+			    ///////////////////////////////////////
+			    ////// re generar los documentos //////
+			    /*///////////////////////////////////*/
+			    Map<String,String>paramsGetDoc=new LinkedHashMap<String,String>(0);
+				paramsGetDoc.put("pv_cdunieco_i" , smap1.get("cdunieco"));
+				paramsGetDoc.put("pv_cdramo_i"   , smap1.get("cdramo"));
+				paramsGetDoc.put("pv_estado_i"   , smap1.get("estado"));
+				paramsGetDoc.put("pv_nmpoliza_i" , smap1.get("nmpoliza"));
+				paramsGetDoc.put("pv_nmsuplem_i" , respEnd.get("pv_nmsuplem_o"));
+				paramsGetDoc.put("pv_tipmov_i"   , getText("endoso.tipo.valosit.basico"));
+			    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(paramsGetDoc);
+			    log.debug("documentos que se regeneran: "+listaDocu);
+			    
+			    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+listaDocu.get(0).get("ntramite");
+			    
+				//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
+				for(Map<String,String> docu:listaDocu)
+				{
+					log.debug("docu iterado: "+docu);
+					String nmsolici=docu.get("nmsolici");
+					String nmsituac=docu.get("nmsituac");
+					String descripc=docu.get("descripc");
+					String descripl=docu.get("descripl");
+					String url=this.getText("ruta.servidor.reports")
+							+ "?destype=cache"
+							+ "&desformat=PDF"
+							+ "&userid="+this.getText("pass.servidor.reports")
+							+ "&report="+descripl
+							+ "&paramform=no"
+							+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+							+ "&p_unieco="+smap1.get("cdunieco")
+							+ "&p_ramo="+smap1.get("cdramo")
+							+ "&p_estado="+smap1.get("estado")
+							+ "&p_poliza="+smap1.get("nmpoliza")
+							+ "&desname="+rutaCarpeta+"/"+descripc;
+					if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
+					{
+						// C R E D E N C I A L _ X X X X X X . P D F
+						//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+						url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("_"));
+					}
+					log.debug(""
+							+ "\n#################################"
+							+ "\n###### Se solicita reporte ######"
+							+ "\na "+url+""
+							+ "\n#################################");
+					HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
+					log.debug(""
+							+ "\n######                    ######"
+							+ "\n###### reporte solicitado ######"
+							+ "\na "+url+""
+							+ "\n################################"
+							+ "\n################################"
+							+ "");
+				}
+			    /*///////////////////////////////////*/
+				////// re generar los documentos //////
+			    ///////////////////////////////////////
+				
+				mensaje="Se ha confirmado el endozo con n&uacute;mero "+respEnd.get("pv_nsuplogi_o");
+				
+			}
+			else
+			{				
+				mensaje="Se ha guardado el endozo con n&uacute;mero "+respEnd.get("pv_nsuplogi_o");
+			}
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			log.error("error al guardar endosos de valosit basico",ex);
+			success=false;
+		}
+		
+		log.debug(""
+				+ "\n######                            ######"
+				+ "\n###### guardarEndosoValositBasico ######"
+				+ "\n########################################"
+				+ "\n########################################"
+				);
+		return SUCCESS;
+	}
+	/*///////////////////////////////////////*/
+	////// guardar endoso valosit basico //////
+	///////////////////////////////////////////
 	
 	///////////////////////////////
 	////// getters y setters //////
