@@ -21,6 +21,8 @@
     var inputNmsituacp3 = '<s:property value="smap1.pv_nmsituac" />';
     var inputCdpersonap3 = '<s:property value="smap1.pv_cdperson" />';
     var inputNtramitep3  = '<s:property value="smap1.ntramite" />';
+    var inputAltabajap3  = '<s:property value="smap1.altabaja" />';
+    var inputCdtipsitp3  = '<s:property value="smap1.cdtipsit" />';
     var urlGuardarCoberturasp3 = '<s:url namespace="/" action="guardarCoberturasUsuario" />';
     var urlTatrip3 = '<s:url namespace="/" action="obtenerCamposTatrigar" />';
     var urlLoadTatrip3 = '<s:url namespace="/" action="obtenerValoresTatrigar" />';
@@ -34,6 +36,8 @@
     debug('inputNmsituacp3',inputNmsituacp3);
     debug('inputCdpersonap3',inputCdpersonap3);
     debug('inputNtramitep3',inputNtramitep3);
+    debug('inputAltabajap3',inputAltabajap3);
+    debug('inputCdtipsitp3',inputCdtipsitp3);
     /*///////////////////*/
     //////variables //////
     ///////////////////////
@@ -202,7 +206,7 @@
                                     ,renderer    : function(value)
                                     {
                                         var rvalue = '';
-                                        if (value == 'N')
+                                        if (value == 'N'&&inputAltabajap3=='baja')
                                         {
                                             rvalue = '<img src="${ctx}/resources/fam3icons/icons/delete.png" data-qtip="Eliminar" style="cursor:pointer;">';
                                         }
@@ -215,7 +219,7 @@
                         		cellclick : function(grid, td, cellIndex, record)
                         		{
                         			debug('cellclick');
-                        		    if(cellIndex==2&&record.get('SWOBLIGA')=='N')
+                        		    if(cellIndex==2&&record.get('SWOBLIGA')=='N'&&inputAltabajap3=='baja')
                         		    {
                         		    	storeCoberturasBorrarp3.add(record);
                         		    	storeCoberturasp3.remove(record)
@@ -229,6 +233,7 @@
                             ,icon          : '${ctx}/resources/fam3icons/icons/delete.png'
                             ,store         : storeCoberturasBorrarp3
                             ,buttonAlign   : 'center'
+                            ,hidden        : inputAltabajap3=='alta'
                             ,titleCollapse : true
                             ,collapsible   : false
                             ,tools         :
@@ -281,6 +286,7 @@
                         	,icon          : '${ctx}/resources/fam3icons/icons/zoom.png'
                         	,titleCollapse : true
                         	,collapsible   : false
+                        	,hidden        : inputAltabajap3=='baja'
                         	,tools         :
                             [
                                {
@@ -308,7 +314,7 @@
                                     ,width       : 30
                                     ,renderer    : function(value)
                                     {
-                                        return '<img src="${ctx}/resources/fam3icons/icons/add.png" data-qtip="Agregar" style="cursor:pointer;">';
+                                    	return '<img src="${ctx}/resources/fam3icons/icons/add.png" data-qtip="Agregar" style="cursor:pointer;">';
                                     }
                                 }
                              ]
@@ -331,8 +337,10 @@
                             ,icon          : '${ctx}/resources/fam3icons/icons/add.png'
                             ,store         : storeCoberturasAgregarp3
                             ,buttonAlign   : 'center'
+                            ,colspan       : inputAltabajap3=='alta'?2:1
                             ,titleCollapse : true
                             ,collapsible   : false
+                            ,hidden        : inputAltabajap3=='baja'
                             ,height        : 250
                             ,width         : 350
                             ,tools         :
@@ -462,13 +470,16 @@
                                             });
                                             json['slist2']=slist2;
                                             json['smap1']={};
-                                            json['smap1']['nmsituac']=inputNmsituacp3;
-                                            json['smap1']['cdperson']=inputCdpersonap3;
+                                            json['smap1']['nmsituac'] = inputNmsituacp3;
+                                            json['smap1']['cdperson'] = inputCdpersonap3;
+                                            json['smap1']['altabaja'] = inputAltabajap3;
+                                            json['smap1']['cdtipsit'] = inputCdtipsitp3;
                                             debug(json);
                                             Ext.Ajax.request(
                                             {
                                                 url       : endcobUrlGuardar
                                                 ,jsonData : json
+                                                ,timeout  : 180000
                                                 ,success  : function(response)
                                                 {
                                                     form.setLoading(false);

@@ -596,6 +596,8 @@ public class EndososAction extends PrincipalCoreAction implements ConstantesCata
 	////// smap1:                  //////
 	//////     nmsituac            //////
 	//////     cdperson            //////
+    //////     altabaja            //////
+	//////     cdtipsit            //////
 	////// omap1:                  //////
 	//////     pv_cdunieco_i       //////
 	//////     pv_cdramo_i         //////
@@ -640,7 +642,14 @@ public class EndososAction extends PrincipalCoreAction implements ConstantesCata
 			omap1.put("pv_cdelemen_i" , usuario.getEmpresa().getElementoId());
 			omap1.put("pv_cdusuari_i" , usuario.getUser());
 			omap1.put("pv_proceso_i"  , "END");
-			omap1.put("pv_cdtipsup_i" , "6");
+			if(smap1.get("altabaja").equalsIgnoreCase("alta"))
+			{
+				omap1.put("pv_cdtipsup_i" , "6");
+			}
+			else
+			{
+				omap1.put("pv_cdtipsup_i" , "7");
+			}
 			Map<String,String> respEndCob=endososManager.guardarEndosoCoberturas(omap1);
 			
 			for(Map<String,String> nuevo:slist2)
@@ -713,6 +722,26 @@ public class EndososAction extends PrincipalCoreAction implements ConstantesCata
 				paramQuitaCober.put("pv_cdagrupa_i" , nuevo.get("cdagrupa"));
 				paramQuitaCober.put("PV_ACCION"     , "I");
 				kernelManager.movPoligar(paramQuitaCober);
+				/**/
+				
+				/*
+				pv_cdunieco_i
+	    		pv_cdramo_i
+	    		pv_estado_i
+	    		pv_nmpoliza_i
+	    		pv_nmsituac_i
+	    		pv_nmsuplem_i
+	    		pv_cdgarant_i
+	    		*/
+				Map<String,String>paramSigsvdef=new LinkedHashMap<String,String>(0);
+				paramSigsvdef.put("pv_cdunieco_i" , (String)omap1.get("pv_cdunieco_i"));
+				paramSigsvdef.put("pv_cdramo_i"   , (String)omap1.get("pv_cdramo_i"));
+				paramSigsvdef.put("pv_estado_i"   , (String)omap1.get("pv_estado_i"));
+				paramSigsvdef.put("pv_nmpoliza_i" , (String)omap1.get("pv_nmpoliza_i"));
+				paramSigsvdef.put("pv_nmsituac_i" , smap1.get("nmsituac"));
+				paramSigsvdef.put("pv_nmsuplem_i" , respEndCob.get("pv_nmsuplem_o"));
+				paramSigsvdef.put("pv_cdgarant_i" , nuevo.get("garantia"));
+				kernelManager.coberturas(paramSigsvdef);
 			}
 			
 			for(Map<String,String> borrar:slist1)
@@ -753,6 +782,29 @@ public class EndososAction extends PrincipalCoreAction implements ConstantesCata
 				kernelManager.movPoligar(paramQuitaCober);
 			}
 			
+			/*
+			pv_cdusuari_i
+			pv_cdelemen_i
+			pv_cdunieco_i
+			pv_cdramo_i
+			pv_estado_i
+			pv_nmpoliza_i
+			pv_nmsituac_i
+			pv_nmsuplem_i
+			pv_cdtipsit_i
+			*/
+			Map<String,String>paramSigsvdefEmi=new LinkedHashMap<String,String>(0);
+			paramSigsvdefEmi.put("pv_cdusuari_i" , usuario.getEmpresa().getElementoId());
+			paramSigsvdefEmi.put("pv_cdelemen_i" , usuario.getUser());
+			paramSigsvdefEmi.put("pv_cdunieco_i" , (String)omap1.get("pv_cdunieco_i"));
+			paramSigsvdefEmi.put("pv_cdramo_i"   , (String)omap1.get("pv_cdramo_i"));
+			paramSigsvdefEmi.put("pv_estado_i"   , (String)omap1.get("pv_estado_i"));
+			paramSigsvdefEmi.put("pv_nmpoliza_i" , (String)omap1.get("pv_nmpoliza_i"));
+			paramSigsvdefEmi.put("pv_nmsituac_i" , smap1.get("nmsituac"));
+			paramSigsvdefEmi.put("pv_nmsuplem_i" , respEndCob.get("pv_nmsuplem_o"));
+			paramSigsvdefEmi.put("pv_cdtipsit_i" , smap1.get("cdtipsit"));
+			kernelManager.ejecutaASIGSVALIPOL_EMI(paramSigsvdefEmi);
+			
 			Map<String,String>paramConfirmarEndosoB=new LinkedHashMap<String,String>(0);
 			paramConfirmarEndosoB.put("pv_cdunieco_i" , (String)omap1.get("pv_cdunieco_i"));
 			paramConfirmarEndosoB.put("pv_cdramo_i"   , (String)omap1.get("pv_cdramo_i"));
@@ -760,7 +812,14 @@ public class EndososAction extends PrincipalCoreAction implements ConstantesCata
 			paramConfirmarEndosoB.put("pv_nmpoliza_i" , (String)omap1.get("pv_nmpoliza_i"));
 			paramConfirmarEndosoB.put("pv_nmsuplem_i" , respEndCob.get("pv_nmsuplem_o"));
 			paramConfirmarEndosoB.put("pv_nsuplogi_i" , respEndCob.get("pv_nsuplogi_o"));
-			paramConfirmarEndosoB.put("pv_cdtipsup_i" , "6");
+			if(smap1.get("altabaja").equalsIgnoreCase("alta"))
+			{
+				paramConfirmarEndosoB.put("pv_cdtipsup_i" , "6");
+			}
+			else
+			{
+				paramConfirmarEndosoB.put("pv_cdtipsup_i" , "7");
+			}
 			paramConfirmarEndosoB.put("pv_dscoment_i" , "");
 		    endososManager.confirmarEndosoB(paramConfirmarEndosoB);
 		    
@@ -773,7 +832,14 @@ public class EndososAction extends PrincipalCoreAction implements ConstantesCata
 			paramsGetDoc.put("pv_estado_i"   , (String)omap1.get("pv_estado_i"));
 			paramsGetDoc.put("pv_nmpoliza_i" , (String)omap1.get("pv_nmpoliza_i"));
 			paramsGetDoc.put("pv_nmsuplem_i" , respEndCob.get("pv_nmsuplem_o"));
-			paramsGetDoc.put("pv_tipmov_i"   , getText("endoso.tipo.coberturas"));
+			if(smap1.get("altabaja").equalsIgnoreCase("alta"))
+			{
+				paramsGetDoc.put("pv_tipmov_i"   , getText("endoso.tipo.coberturas.alta"));
+			}
+			else
+			{
+				paramsGetDoc.put("pv_tipmov_i"   , getText("endoso.tipo.coberturas.baja"));
+			}
 		    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(paramsGetDoc);
 		    log.debug("documentos que se regeneran: "+listaDocu);
 		    
