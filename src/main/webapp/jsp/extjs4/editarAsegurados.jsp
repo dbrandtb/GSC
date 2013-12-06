@@ -700,6 +700,7 @@ debug("validarYGuardar flag:2");
    	        		'map1.pv_cdramo':inputCdramop2,
    	        		'map1.pv_estado':inputEstadop2,
    	        		'map1.pv_nmpoliza':inputNmpolizap2
+   	        		,'map1.pv_nmsuplem':0
    	        	},
 		   	    reader:
 		        {
