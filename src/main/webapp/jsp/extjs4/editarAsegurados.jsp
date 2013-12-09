@@ -628,7 +628,6 @@ debug("validarYGuardar flag:2");
 	        {
 	            type: 'ajax',
 	            url : urlCargarCatalogosp2,
-	            <%-- extraParams:{catalogo:'<s:property value="CON_CAT_POL_ROL" />'}, --%>
 	            extraParams:{catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@ROLES_POLIZA"/>'},
 	            reader:
 	            {
@@ -661,7 +660,6 @@ debug("validarYGuardar flag:2");
             {
                 type: 'ajax',
                 url : urlCargarCatalogosp2,
-                <%-- extraParams:{catalogo:'<s:property value="CON_CAT_NACIONALIDAD" />'},--%>
                 extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@NACIONALIDAD"/>'},
                 reader:
                 {
@@ -678,7 +676,6 @@ debug("validarYGuardar flag:2");
             {
                 type: 'ajax',
                 url : urlCargarCatalogosp2,
-                <%-- extraParams:{catalogo:'<s:property value="CON_CAT_TPERSONA" />'}, --%>
                 extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPOS_PERSONA"/>'},
                 reader:
                 {

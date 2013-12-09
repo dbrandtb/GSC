@@ -15,9 +15,8 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
-import mx.com.gseguros.portal.general.util.ConstantesCatalogos;
 
-public class MesaControlAction extends PrincipalCoreAction implements ConstantesCatalogos
+public class MesaControlAction extends PrincipalCoreAction
 {
 	
 	private static final long serialVersionUID = -3398140781812652316L;
@@ -501,54 +500,6 @@ public class MesaControlAction extends PrincipalCoreAction implements Constantes
 		this.success = success;
 	}
 
-	public String getCON_CAT_POL_ESTADO() {
-		// TODO Auto-generated method stub
-		return CON_CAT_POL_ESTADO;
-	}
-
-	public String getCON_CAT_POL_TIPO_POLIZA() {
-		// TODO Auto-generated method stub
-		return CON_CAT_POL_TIPO_POLIZA;
-	}
-
-	public String getCON_CAT_POL_TIPO_PAGO() {
-		// TODO Auto-generated method stub
-		return CON_CAT_POL_TIPO_PAGO;
-	}
-
-	public String getCON_CAT_POL_ROL() {
-		// TODO Auto-generated method stub
-		return CON_CAT_POL_ROL;
-	}
-
-	public String getCON_CAT_MESACONTROL_SUCUR_ADMIN() {
-		// TODO Auto-generated method stub
-		return CON_CAT_MESACONTROL_SUCUR_ADMIN;
-	}
-
-	public String getCON_CAT_MESACONTROL_SUCUR_DOCU() {
-		// TODO Auto-generated method stub
-		return CON_CAT_MESACONTROL_SUCUR_DOCU;
-	}
-
-	public String getCON_CAT_MESACONTROL_TIP_TRAMI() {
-		// TODO Auto-generated method stub
-		return CON_CAT_MESACONTROL_TIP_TRAMI;
-	}
-
-	public String getCON_CAT_MESACONTROL_ESTAT_TRAMI() {
-		// TODO Auto-generated method stub
-		return CON_CAT_MESACONTROL_ESTAT_TRAMI;
-	}
-
-	public String getCON_CAT_TPERSONA() {
-		return CON_CAT_TPERSONA;
-	}
-
-	public String getCON_CAT_NACIONALIDAD() {
-		return CON_CAT_NACIONALIDAD;
-	}
-
 	public String getMsgResult() {
 		return msgResult;
 	}
@@ -563,10 +514,6 @@ public class MesaControlAction extends PrincipalCoreAction implements Constantes
 
 	public void setLista(List<GenericVO> lista) {
 		this.lista = lista;
-	}
-
-	public String getCON_CAT_CANCELA_MOTIVOS() {
-		return CON_CAT_CANCELA_MOTIVOS;
 	}
 	
 }

@@ -213,7 +213,6 @@
 		                                        {
 		                                            type: 'ajax',
 		                                            url:urlCargarCatalogos,
-		                                            <%-- extraParams:{catalogo:'<s:property value="CON_CAT_POL_ESTADO" />'}, --%>
 		                                            extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@STATUS_POLIZA"/>'},
 		                                            reader:
 		                                            {
@@ -287,7 +286,6 @@
 		                                        {
 		                                            type: 'ajax',
 		                                            url:urlCargarCatalogos,
-		                                            <%-- extraParams:{catalogo:'<s:property value="CON_CAT_POL_TIPO_POLIZA" />'}, --%>
 		                                            extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPOS_POLIZA"/>'},
 		                                            reader:
 		                                            {
@@ -315,7 +313,6 @@
 		                                        {
 		                                            type: 'ajax',
 		                                            url:urlCargarCatalogos,
-		                                            <%-- extraParams:{catalogo:'<s:property value="CON_CAT_POL_TIPO_PAGO" />'}, --%>
 		                                            extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPOS_PAGO_POLIZA"/>'},
 		                                            reader:
 		                                            {

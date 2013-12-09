@@ -357,7 +357,6 @@ Ext.onReady(function()
 			                {
 			                    type         : 'ajax'
 			                    ,url         : marcanurlcata
-			                    <%-- ,extraParams : {catalogo:'<s:property value="CON_CAT_MESACONTROL_SUCUR_DOCU" />'} --%>
 			                    ,extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_SUCURSALES_DOCUMENTO"/>'}
 			                    ,reader      :
 			                    {
@@ -419,7 +418,6 @@ Ext.onReady(function()
                             {
                                 type         : 'ajax'
                                 ,url         : marcanurlcata
-                                <%-- ,extraParams : {catalogo:'<s:property value="CON_CAT_POL_ESTADO" />'} --%>
                                 ,extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@STATUS_POLIZA"/>'}
                                 ,reader      :
                                 {

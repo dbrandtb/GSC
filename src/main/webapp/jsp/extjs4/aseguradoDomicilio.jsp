@@ -22,7 +22,7 @@ var inputCdrfcp4           = '<s:property value="smap1.cdrfc" escapeHtml="false"
 var urlRegresarp4          = '<s:url namespace="/" action="editarAsegurados" />';
 var urlCargarp4            = '<s:url namespace="/" action="cargarPantallaDomicilio" />';
 var urlGuardarp4           = '<s:url namespace="/" action="guardarPantallaDomicilio" />';
-var _ComboColoniasUrl           = '<s:url namespace="/" action="cargaColonias" />';
+var _ComboColoniasUrl      = '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
 var formPanelp4;
 var contextop4             = '${ctx}';
 <s:if test='smap1!=null&&smap1.botonCopiar!=null&&smap1.botonCopiar=="1"'>
@@ -407,7 +407,7 @@ Ext.onReady(function(){
        					            });
        					            
 	       					        Ext.getCmp('coloniaId').getStore().load({
-	       				                params: {codigoPostal: resp.data['smap1.CODPOSTAL']} 
+	       				                params: {'params.cp': resp.data['smap1.CODPOSTAL']}
 	       				            });
        					        },
        					        failure:function()
@@ -472,7 +472,11 @@ Ext.onReady(function(){
             formPanelp4.loadRecord(resp);
             
             Ext.getCmp('coloniaId').getStore().load({
-                params: {codigoPostal: resp.data['smap1.CODPOSTAL']} 
+            	params:
+            	{
+            		'params.cp' : resp.data['smap1.CODPOSTAL']
+                    ,'catalogo' : '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@COLONIAS"/>'
+                }
             });
         },
         failure:function()

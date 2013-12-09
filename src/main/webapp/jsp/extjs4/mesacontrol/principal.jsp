@@ -700,7 +700,6 @@ Ext.onReady(function(){
                                         {
                                             type: 'ajax',
                                             url:mesConUrlLoadCatalo,
-                                            <%-- extraParams:{catalogo:'<s:property value="CON_CAT_MESACONTROL_TIP_TRAMI" />'}, --%>
                                             extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_TIPOS_TRAMITE"/>'},
                                             reader:
                                             {
@@ -727,7 +726,6 @@ Ext.onReady(function(){
                                     {
                                         type: 'ajax',
                                         url:mesConUrlLoadCatalo,
-                                        <%-- extraParams:{catalogo:'<s:property value="CON_CAT_MESACONTROL_SUCUR_ADMIN" />'}, --%>
                                         extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_SUCURSALES_ADMIN"/>'},
                                         reader:
                                         {
@@ -754,7 +752,6 @@ Ext.onReady(function(){
                                     {
                                         type: 'ajax',
                                         url:mesConUrlLoadCatalo,
-                                        <%-- extraParams:{catalogo:'<s:property value="CON_CAT_MESACONTROL_SUCUR_DOCU" />'}, --%>
                                         extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_SUCURSALES_DOCUMENTO"/>'},
                                         reader:
                                         {
@@ -920,7 +917,6 @@ Ext.onReady(function(){
                                         {
                                             type: 'ajax',
                                             url:mesConUrlLoadCatalo,
-                                            <%-- extraParams:{catalogo:'<s:property value="CON_CAT_MESACONTROL_ESTAT_TRAMI" />'}, --%>
                                             extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_ESTATUS_TRAMITE"/>'},
                                             reader:
                                             {
@@ -1094,7 +1090,6 @@ Ext.onReady(function(){
 	                        {
 	                            type         : 'ajax'
 	                            ,url         : marmesconurlcata
-	                            <%-- ,extraParams : {catalogo:'<s:property value="CON_CAT_MESACONTROL_SUCUR_DOCU" />'} --%>
 	                            ,extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_SUCURSALES_DOCUMENTO"/>'}
 	                            ,reader      :
 	                            {
@@ -1208,7 +1203,6 @@ Ext.onReady(function(){
 	                        {
 	                            type         : 'ajax'
 	                            ,url         : marmesconurlcata
-	                            <%-- ,extraParams : {catalogo:'<s:property value="CON_CAT_POL_ESTADO" />'} --%>
 	                            ,extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@STATUS_POLIZA"/>'}
 	                            ,reader      :
 	                            {
@@ -1273,7 +1267,6 @@ Ext.onReady(function(){
 	                        {
 	                            type         : 'ajax'
 	                            ,url         : marmesconurlcata
-	                            <%-- ,extraParams : {catalogo:'<s:property value="CON_CAT_MESACONTROL_ESTAT_TRAMI" />'} --%>
 	                            ,extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_ESTATUS_TRAMITE"/>'}
 	                            ,reader      :
 	                            {
