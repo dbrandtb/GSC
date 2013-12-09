@@ -17,6 +17,7 @@ public class Tatri {
     private String swsuscri;
     private boolean readOnly=false;
     private String swtarifi;
+    private boolean money=true;
 
     public String getCdatribu() {
         return cdatribu;
@@ -112,5 +113,13 @@ public class Tatri {
 
 	public void setSwtarifi(String swtarifi) {
 		this.swtarifi = swtarifi;
+	}
+
+	public boolean isMoney() {
+		return money;
+	}
+
+	public void setMoney(boolean money) {
+		this.money = money;
 	}
 }
