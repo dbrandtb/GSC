@@ -168,7 +168,17 @@ public class Item
         }
         else if(this.type==Item.ARR)//items:[...]
         {
-            s=this.key+":[\n";
+        	s="";
+        	/////////////////////////////////////////////////
+        	////// habilita que se impriman solo hijos //////
+        	//////                                     //////
+        	if(this.key!=null)
+        	{
+                s+=this.key+":[\n";
+        	}
+        	//////                                     //////
+        	////// habilita que se impriman solo hijos //////
+        	/////////////////////////////////////////////////
             if(this.value!=null)
             {
                 for(int i=0;i<((ArrayList)this.value).size();i++)
@@ -182,7 +192,16 @@ public class Item
                     s+="\n";
                 }
             }
-            s+="]";
+            /////////////////////////////////////////////////
+        	////// habilita que se impriman solo hijos //////
+        	//////                                     //////
+        	if(this.key!=null)
+        	{
+        		s+="]";
+        	}
+        	//////                                     //////
+        	////// habilita que se impriman solo hijos //////
+        	/////////////////////////////////////////////////
         }
         else if(this.type==Item.OBJ)
         {
