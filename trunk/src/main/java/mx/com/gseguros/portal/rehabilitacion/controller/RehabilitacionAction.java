@@ -4,11 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
-import mx.com.gseguros.portal.cancelacion.service.CancelacionManager;
-import mx.com.gseguros.portal.general.util.ConstantesCatalogos;
 import mx.com.gseguros.portal.rehabilitacion.service.RehabilitacionManager;
 
-public class RehabilitacionAction extends PrincipalCoreAction implements ConstantesCatalogos
+public class RehabilitacionAction extends PrincipalCoreAction
 {
 
 	private static final long              serialVersionUID      = 5306848466443116067L;
@@ -130,73 +128,6 @@ public class RehabilitacionAction extends PrincipalCoreAction implements Constan
 	/////////////////////////////////
 	////// getters and setters //////
 	/*/////////////////////////////*/
-	
-	@Override
-	public String getCON_CAT_POL_ESTADO() {
-		// TODO Auto-generated method stub
-		return CON_CAT_POL_ESTADO;
-	}
-
-	@Override
-	public String getCON_CAT_POL_TIPO_POLIZA() {
-		// TODO Auto-generated method stub
-		return CON_CAT_POL_TIPO_POLIZA;
-	}
-
-	@Override
-	public String getCON_CAT_POL_TIPO_PAGO() {
-		// TODO Auto-generated method stub
-		return CON_CAT_POL_TIPO_PAGO;
-	}
-
-	@Override
-	public String getCON_CAT_POL_ROL() {
-		// TODO Auto-generated method stub
-		return CON_CAT_POL_ROL;
-	}
-
-	@Override
-	public String getCON_CAT_MESACONTROL_SUCUR_ADMIN() {
-		// TODO Auto-generated method stub
-		return CON_CAT_MESACONTROL_SUCUR_ADMIN;
-	}
-
-	@Override
-	public String getCON_CAT_MESACONTROL_SUCUR_DOCU() {
-		// TODO Auto-generated method stub
-		return CON_CAT_MESACONTROL_SUCUR_DOCU;
-	}
-
-	@Override
-	public String getCON_CAT_MESACONTROL_TIP_TRAMI() {
-		// TODO Auto-generated method stub
-		return CON_CAT_MESACONTROL_TIP_TRAMI;
-	}
-
-	@Override
-	public String getCON_CAT_MESACONTROL_ESTAT_TRAMI() {
-		// TODO Auto-generated method stub
-		return CON_CAT_MESACONTROL_ESTAT_TRAMI;
-	}
-
-	@Override
-	public String getCON_CAT_TPERSONA() {
-		// TODO Auto-generated method stub
-		return CON_CAT_TPERSONA;
-	}
-
-	@Override
-	public String getCON_CAT_NACIONALIDAD() {
-		// TODO Auto-generated method stub
-		return CON_CAT_NACIONALIDAD;
-	}
-
-	@Override
-	public String getCON_CAT_CANCELA_MOTIVOS() {
-		// TODO Auto-generated method stub
-		return CON_CAT_CANCELA_MOTIVOS;
-	}
-
 	public Map<String, String> getSmap1() {
 		return smap1;
 	}

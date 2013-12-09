@@ -66,7 +66,7 @@ public class CatalogosAction extends ActionSupport {
 				case TIPOS_POLIZA:
 					lista = catalogosManager.getTmanteni(nombreCatalogo);
 	                break;
-				case CODIGOS_POSTALES:
+				case COLONIAS:
 					lista = catalogosManager.obtieneColonias(params.get("cp"));
 					break;
 					

@@ -15,18 +15,15 @@ import mx.com.gseguros.portal.cotizacion.controller.ComplementariosCoberturasAct
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.Tatri;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
-import mx.com.gseguros.portal.general.util.ConstantesCatalogos;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.utils.HttpUtil;
-import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
-import org.springframework.jdbc.core.SqlParameter;
 
 import com.opensymphony.xwork2.ActionContext;
 
-public class EndososAction extends PrincipalCoreAction implements ConstantesCatalogos
+public class EndososAction extends PrincipalCoreAction
 {
 	private static final long        serialVersionUID = 84257834070419933L;
 	private static Logger            log              = Logger.getLogger(EndososAction.class);
@@ -1209,61 +1206,6 @@ public class EndososAction extends PrincipalCoreAction implements ConstantesCata
 
 	public void setEndososManager(EndososManager endososManager) {
 		this.endososManager = endososManager;
-	}
-	@Override
-	public String getCON_CAT_POL_ESTADO() {
-		// TODO Auto-generated method stub
-		return CON_CAT_POL_ESTADO;
-	}
-	@Override
-	public String getCON_CAT_POL_TIPO_POLIZA() {
-		// TODO Auto-generated method stub
-		return CON_CAT_POL_TIPO_POLIZA;
-	}
-	@Override
-	public String getCON_CAT_POL_TIPO_PAGO() {
-		// TODO Auto-generated method stub
-		return CON_CAT_POL_TIPO_PAGO;
-	}
-	@Override
-	public String getCON_CAT_POL_ROL() {
-		// TODO Auto-generated method stub
-		return CON_CAT_POL_ROL;
-	}
-	@Override
-	public String getCON_CAT_MESACONTROL_SUCUR_ADMIN() {
-		// TODO Auto-generated method stub
-		return CON_CAT_MESACONTROL_SUCUR_ADMIN;
-	}
-	@Override
-	public String getCON_CAT_MESACONTROL_SUCUR_DOCU() {
-		// TODO Auto-generated method stub
-		return CON_CAT_MESACONTROL_SUCUR_DOCU;
-	}
-	@Override
-	public String getCON_CAT_MESACONTROL_TIP_TRAMI() {
-		// TODO Auto-generated method stub
-		return CON_CAT_MESACONTROL_TIP_TRAMI;
-	}
-	@Override
-	public String getCON_CAT_MESACONTROL_ESTAT_TRAMI() {
-		// TODO Auto-generated method stub
-		return CON_CAT_MESACONTROL_ESTAT_TRAMI;
-	}
-	@Override
-	public String getCON_CAT_TPERSONA() {
-		// TODO Auto-generated method stub
-		return CON_CAT_TPERSONA;
-	}
-	@Override
-	public String getCON_CAT_NACIONALIDAD() {
-		// TODO Auto-generated method stub
-		return CON_CAT_NACIONALIDAD;
-	}
-	@Override
-	public String getCON_CAT_CANCELA_MOTIVOS() {
-		// TODO Auto-generated method stub
-		return CON_CAT_CANCELA_MOTIVOS;
 	}
 
 	public Item getItem1() {

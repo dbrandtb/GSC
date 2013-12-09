@@ -20,7 +20,6 @@ import mx.com.aon.configurador.pantallas.model.components.GridVO;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.flujos.cotizacion4.web.ResultadoCotizacion4Action;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
-import mx.com.aon.kernel.service.impl.KernelManagerSustitutoImpl;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.exception.ApplicationException;
@@ -28,14 +27,12 @@ import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.Tatri;
 import mx.com.gseguros.portal.emision.model.DatosRecibosDxNVO;
-import mx.com.gseguros.portal.general.util.ConstantesCatalogos;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.ws.client.Ice2sigsWebServices;
 import mx.com.gseguros.ws.client.Ice2sigsWebServices.Estatus;
 import mx.com.gseguros.ws.client.Ice2sigsWebServices.Operacion;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSalud;
-import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSaludRespuesta;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.Recibo;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboRespuesta;
 import mx.com.gseguros.ws.client.recibossigs.GeneradorReciboDxnWsServiceStub.CalendarioEntidad;
@@ -50,8 +47,8 @@ import org.apache.struts2.ServletActionContext;
  * 
  * @author Jair
  */
-public class ComplementariosAction extends PrincipalCoreAction implements
-		ConstantesCatalogos {
+public class ComplementariosAction extends PrincipalCoreAction
+{
 
 	private static final long serialVersionUID = -1269892388621564059L;
 	private org.apache.log4j.Logger log = org.apache.log4j.Logger
@@ -1782,18 +1779,6 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 		this.success = success;
 	}
 
-	public String getCON_CAT_POL_ESTADO() {
-		return CON_CAT_POL_ESTADO;
-	}
-
-	public String getCON_CAT_POL_TIPO_POLIZA() {
-		return CON_CAT_POL_TIPO_POLIZA;
-	}
-
-	public String getCON_CAT_POL_TIPO_PAGO() {
-		return CON_CAT_POL_TIPO_PAGO;
-	}
-
 	public Item getItem1() {
 		return item1;
 	}
@@ -1908,10 +1893,6 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 		this.omap1 = omap1;
 	}
 
-	public String getCON_CAT_POL_ROL() {
-		return CON_CAT_POL_ROL;
-	}
-
 	public String getCdperson() {
 		return cdperson;
 	}
@@ -1936,32 +1917,8 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 		this.gridResultados = gridResultados;
 	}
 
-	public String getCON_CAT_MESACONTROL_SUCUR_ADMIN() {
-		return CON_CAT_MESACONTROL_SUCUR_ADMIN;
-	}
-
-	public String getCON_CAT_MESACONTROL_SUCUR_DOCU() {
-		return CON_CAT_MESACONTROL_SUCUR_DOCU;
-	}
-
-	public String getCON_CAT_MESACONTROL_TIP_TRAMI() {
-		return CON_CAT_MESACONTROL_TIP_TRAMI;
-	}
-
-	public String getCON_CAT_MESACONTROL_ESTAT_TRAMI() {
-		return CON_CAT_MESACONTROL_ESTAT_TRAMI;
-	}
-
 	public void setIce2sigsWebServices(Ice2sigsWebServices ice2sigsWebServices) {
 		this.ice2sigsWebServices = ice2sigsWebServices;
-	}
-
-	public String getCON_CAT_TPERSONA() {
-		return CON_CAT_TPERSONA;
-	}
-
-	public String getCON_CAT_NACIONALIDAD() {
-		return CON_CAT_NACIONALIDAD;
 	}
 
 	public String getMensajeRespuesta() {
@@ -1978,10 +1935,6 @@ public class ComplementariosAction extends PrincipalCoreAction implements
 
 	public void setCdtipsit(String cdtipsit) {
 		this.cdtipsit = cdtipsit;
-	}
-
-	public String getCON_CAT_CANCELA_MOTIVOS() {
-		return CON_CAT_CANCELA_MOTIVOS;
 	}
 
 }

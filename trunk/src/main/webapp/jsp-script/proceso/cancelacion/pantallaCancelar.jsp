@@ -137,7 +137,6 @@ Ext.onReady(function()
 	                {
 	                    type         : 'ajax'
 	                    ,url         : panCanUrlCat
-	                    <%-- ,extraParams : {catalogo:'<s:property value="CON_CAT_CANCELA_MOTIVOS" />'} --%>
 	                    ,extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MOTIVOS_CANCELACION"/>'}
 	                    ,reader      :
 	                    {
