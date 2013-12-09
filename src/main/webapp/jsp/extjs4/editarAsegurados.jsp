@@ -35,7 +35,8 @@
 	var editorNacionesp2;
 	var editorNombreContratantep2;
 	var urlCargarAseguradosp2='<s:url namespace="/" action="cargarComplementariosAsegurados" />';
-	var urlCargarCatalogosp2='<s:url namespace="/flujocotizacion" action="cargarCatalogos" />';
+	//var urlCargarCatalogosp2='<s:url namespace="/flujocotizacion" action="cargarCatalogos" />';
+	var urlCargarCatalogosp2='<s:url namespace="/catalogos"       action="obtieneCatalogo" />';
 	var urlDatosComplementariosp2='<s:url namespace="/" action="datosComplementarios.action" />';
 	var urlGuardarAseguradosp2='<s:url namespace="/" action="guardarComplementariosAsegurados" />';
 	var urlCoberturasAseguradop2='<s:url namespace="/" action="editarCoberturas" />';
@@ -627,7 +628,8 @@ debug("validarYGuardar flag:2");
 	        {
 	            type: 'ajax',
 	            url : urlCargarCatalogosp2,
-	            extraParams:{catalogo:'<s:property value="CON_CAT_POL_ROL" />'},
+	            <%-- extraParams:{catalogo:'<s:property value="CON_CAT_POL_ROL" />'}, --%>
+	            extraParams:{catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@ROLES_POLIZA"/>'},
 	            reader:
 	            {
 	                type: 'json',
@@ -659,7 +661,8 @@ debug("validarYGuardar flag:2");
             {
                 type: 'ajax',
                 url : urlCargarCatalogosp2,
-                extraParams:{catalogo:'<s:property value="CON_CAT_NACIONALIDAD" />'},
+                <%-- extraParams:{catalogo:'<s:property value="CON_CAT_NACIONALIDAD" />'},--%>
+                extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@NACIONALIDAD"/>'},
                 reader:
                 {
                     type: 'json',
@@ -675,7 +678,8 @@ debug("validarYGuardar flag:2");
             {
                 type: 'ajax',
                 url : urlCargarCatalogosp2,
-                extraParams:{catalogo:'<s:property value="CON_CAT_TPERSONA" />'},
+                <%-- extraParams:{catalogo:'<s:property value="CON_CAT_TPERSONA" />'}, --%>
+                extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPOS_PERSONA"/>'},
                 reader:
                 {
                     type: 'json',

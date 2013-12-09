@@ -4,7 +4,8 @@
     ///////////////////////
     ////// variables //////
     /*///////////////////*/
-    var panCanUrlCat        = '<s:url namespace="/flujocotizacion"  action="cargarCatalogos" />';
+    //var panCanUrlCat        = '<s:url namespace="/flujocotizacion"  action="cargarCatalogos" />';
+    var panCanUrlCat        = '<s:url namespace="/catalogos"        action="obtieneCatalogo" />';
     var panCanUrlCancelar   = '<s:url namespace="/cancelacion"      action="cancelacionUnica" />';
     var panCanInput         = [];
     panCanInput['cdunieco'] = '<s:property value="smap1.cdunieco" />';
@@ -136,7 +137,8 @@ Ext.onReady(function()
 	                {
 	                    type         : 'ajax'
 	                    ,url         : panCanUrlCat
-	                    ,extraParams : {catalogo:'<s:property value="CON_CAT_CANCELA_MOTIVOS" />'}
+	                    <%-- ,extraParams : {catalogo:'<s:property value="CON_CAT_CANCELA_MOTIVOS" />'} --%>
+	                    ,extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MOTIVOS_CANCELACION"/>'}
 	                    ,reader      :
 	                    {
 	                        type  : 'json'

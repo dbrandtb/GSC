@@ -4,6 +4,16 @@
 	<include file="struts-default.xml" />
 
 	<package name="catalogos" extends="json-default" namespace="/catalogos">
+	
+	   <action name="obtieneCatalogo" class="catalogoAction" method="obtieneCatalogo">
+	       <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    lista.*,
+                    success
+                </param>
+            </result>
+	   </action>
 
         <action name="clausulas">
           <result>/jsp/catalogos/clausulas.jsp</result>
@@ -53,6 +63,10 @@
                     success
                 </param>
             </result>
+        </action>
+        
+        <action name="personas">
+          <result>/jsp/catalogos/personas.jsp</result>
         </action>
 
 	</package>

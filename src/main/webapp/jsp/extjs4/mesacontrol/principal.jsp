@@ -19,14 +19,16 @@
     var mesConUrlDatCom        = '<s:url namespace="/"                action="datosComplementarios" />';
     var mesConUrlInitManual    = '<s:url namespace="/mesacontrol"     action="obtenerValoresDefectoInsercionManual" />';
     var mesConUrlSaveTra       = '<s:url namespace="/mesacontrol"     action="guardarTramiteManual" />';
-    var mesConUrlLoadCatalo    = '<s:url namespace="/flujocotizacion" action="cargarCatalogos" />';
+    //var mesConUrlLoadCatalo    = '<s:url namespace="/flujocotizacion" action="cargarCatalogos" />';
+    var mesConUrlLoadCatalo    = '<s:url namespace="/catalogos"       action="obtieneCatalogo" />';
     var mesConUrlCotizar       = '<s:url namespace="/"                action="cotizacionVital" />';
     var mesConUrlDetMC         = '<s:url namespace="/mesacontrol"     action="obtenerDetallesTramite" />';
     var mesConUrlFinDetalleMC  = '<s:url namespace="/mesacontrol"      action="finalizarDetalleTramiteMC" />';
     var urlAgentes             = '<s:url namespace="/mesacontrol"      action="obtieneAgentes" />';
     var mesConUrlLoadRamos     = '<s:url namespace="/"                 action="obtenerRamos" />';
     var mesConUrlLoadTipsit    = '<s:url namespace="/"                 action="obtenerTipsit" />';
-    var marmesconurlcata       = '<s:url namespace="/flujocotizacion"   action="cargarCatalogos" />';
+    //var marmesconurlcata       = '<s:url namespace="/flujocotizacion"   action="cargarCatalogos" />';
+    var marmesconurlcata       = '<s:url namespace="/catalogos"         action="obtieneCatalogo" />';
     var marmesconurlramos      = '<s:url namespace="/"                  action="obtenerRamos" />';
     var marmesconUrlLoadTipsit = '<s:url namespace="/"                  action="obtenerTipsit" />';
     var marmesconurlAgentes    = '<s:url namespace="/mesacontrol"       action="obtieneAgentes" />';
@@ -698,7 +700,8 @@ Ext.onReady(function(){
                                         {
                                             type: 'ajax',
                                             url:mesConUrlLoadCatalo,
-                                            extraParams:{catalogo:'<s:property value="CON_CAT_MESACONTROL_TIP_TRAMI" />'},
+                                            <%-- extraParams:{catalogo:'<s:property value="CON_CAT_MESACONTROL_TIP_TRAMI" />'}, --%>
+                                            extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_TIPOS_TRAMITE"/>'},
                                             reader:
                                             {
                                                 type: 'json',
@@ -724,7 +727,8 @@ Ext.onReady(function(){
                                     {
                                         type: 'ajax',
                                         url:mesConUrlLoadCatalo,
-                                        extraParams:{catalogo:'<s:property value="CON_CAT_MESACONTROL_SUCUR_ADMIN" />'},
+                                        <%-- extraParams:{catalogo:'<s:property value="CON_CAT_MESACONTROL_SUCUR_ADMIN" />'}, --%>
+                                        extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_SUCURSALES_ADMIN"/>'},
                                         reader:
                                         {
                                             type: 'json',
@@ -750,7 +754,8 @@ Ext.onReady(function(){
                                     {
                                         type: 'ajax',
                                         url:mesConUrlLoadCatalo,
-                                        extraParams:{catalogo:'<s:property value="CON_CAT_MESACONTROL_SUCUR_DOCU" />'},
+                                        <%-- extraParams:{catalogo:'<s:property value="CON_CAT_MESACONTROL_SUCUR_DOCU" />'}, --%>
+                                        extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_SUCURSALES_DOCUMENTO"/>'},
                                         reader:
                                         {
                                             type: 'json',
@@ -915,7 +920,8 @@ Ext.onReady(function(){
                                         {
                                             type: 'ajax',
                                             url:mesConUrlLoadCatalo,
-                                            extraParams:{catalogo:'<s:property value="CON_CAT_MESACONTROL_ESTAT_TRAMI" />'},
+                                            <%-- extraParams:{catalogo:'<s:property value="CON_CAT_MESACONTROL_ESTAT_TRAMI" />'}, --%>
+                                            extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_ESTATUS_TRAMITE"/>'},
                                             reader:
                                             {
                                                 type: 'json',
@@ -1088,7 +1094,8 @@ Ext.onReady(function(){
 	                        {
 	                            type         : 'ajax'
 	                            ,url         : marmesconurlcata
-	                            ,extraParams : {catalogo:'<s:property value="CON_CAT_MESACONTROL_SUCUR_DOCU" />'}
+	                            <%-- ,extraParams : {catalogo:'<s:property value="CON_CAT_MESACONTROL_SUCUR_DOCU" />'} --%>
+	                            ,extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_SUCURSALES_DOCUMENTO"/>'}
 	                            ,reader      :
 	                            {
 	                                type  : 'json'
@@ -1201,7 +1208,8 @@ Ext.onReady(function(){
 	                        {
 	                            type         : 'ajax'
 	                            ,url         : marmesconurlcata
-	                            ,extraParams : {catalogo:'<s:property value="CON_CAT_POL_ESTADO" />'}
+	                            <%-- ,extraParams : {catalogo:'<s:property value="CON_CAT_POL_ESTADO" />'} --%>
+	                            ,extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@STATUS_POLIZA"/>'}
 	                            ,reader      :
 	                            {
 	                                type  : 'json'
@@ -1265,7 +1273,8 @@ Ext.onReady(function(){
 	                        {
 	                            type         : 'ajax'
 	                            ,url         : marmesconurlcata
-	                            ,extraParams : {catalogo:'<s:property value="CON_CAT_MESACONTROL_ESTAT_TRAMI" />'}
+	                            <%-- ,extraParams : {catalogo:'<s:property value="CON_CAT_MESACONTROL_ESTAT_TRAMI" />'} --%>
+	                            ,extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_ESTATUS_TRAMITE"/>'}
 	                            ,reader      :
 	                            {
 	                                type  : 'json'

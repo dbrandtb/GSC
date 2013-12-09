@@ -24,7 +24,8 @@
         <script>
             var urlGuardar='<s:url namespace="/" action="guardarDatosComplementarios" />';
             var urlCargar='<s:url namespace="/" action="cargarDatosComplementarios" />';
-            var urlCargarCatalogos='<s:url namespace="/flujocotizacion" action="cargarCatalogos" />';
+            //var urlCargarCatalogos='<s:url namespace="/flujocotizacion" action="cargarCatalogos" />';
+            var urlCargarCatalogos='<s:url namespace="/catalogos" action="obtieneCatalogo" />';
             var inputCdunieco='<s:property value="cdunieco" />';
             var inputCdramo='<s:property value="cdramo" />';
             var inputEstado='<s:property value="estado" />';
@@ -212,7 +213,8 @@
 		                                        {
 		                                            type: 'ajax',
 		                                            url:urlCargarCatalogos,
-		                                            extraParams:{catalogo:'<s:property value="CON_CAT_POL_ESTADO" />'},
+		                                            <%-- extraParams:{catalogo:'<s:property value="CON_CAT_POL_ESTADO" />'}, --%>
+		                                            extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@STATUS_POLIZA"/>'},
 		                                            reader:
 		                                            {
 		                                                type: 'json',
@@ -285,7 +287,8 @@
 		                                        {
 		                                            type: 'ajax',
 		                                            url:urlCargarCatalogos,
-		                                            extraParams:{catalogo:'<s:property value="CON_CAT_POL_TIPO_POLIZA" />'},
+		                                            <%-- extraParams:{catalogo:'<s:property value="CON_CAT_POL_TIPO_POLIZA" />'}, --%>
+		                                            extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPOS_POLIZA"/>'},
 		                                            reader:
 		                                            {
 		                                                type: 'json',
@@ -312,7 +315,8 @@
 		                                        {
 		                                            type: 'ajax',
 		                                            url:urlCargarCatalogos,
-		                                            extraParams:{catalogo:'<s:property value="CON_CAT_POL_TIPO_PAGO" />'},
+		                                            <%-- extraParams:{catalogo:'<s:property value="CON_CAT_POL_TIPO_PAGO" />'}, --%>
+		                                            extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPOS_PAGO_POLIZA"/>'},
 		                                            reader:
 		                                            {
 		                                                type: 'json',

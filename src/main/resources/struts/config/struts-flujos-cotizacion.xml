@@ -67,9 +67,9 @@
             <result name="success" type="json" />
         </action>
         
-        <action name="cargarCatalogos" class="beanCatalogosAction" method="cargar">
+        <!-- <action name="cargarCatalogos" class="beanCatalogosAction" method="cargar">
           <result name="success" type="json" />
-        </action>
+        </action> -->
         
         <!-- pantalla inicial -->
         <action name="principal" class="agentesAction" method="principal">
