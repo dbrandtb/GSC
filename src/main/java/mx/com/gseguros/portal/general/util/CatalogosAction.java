@@ -69,9 +69,17 @@ public class CatalogosAction extends ActionSupport {
 				case COLONIAS:
 					lista = catalogosManager.obtieneColonias(params.get("cp"));
 					break;
-					
-				default:
+				case TATRISIT:
 					break;
+				case TATRIPOL:
+					break;
+				case TATRIGAR:
+					break;
+				case TATRIPER:
+					break;
+				default:
+					throw new Exception("catalogo no existente: "+nombreCatalogo);
+					//break;
 			}
         	success = true;
         } catch(Exception ex) {

@@ -91,41 +91,45 @@ public class GeneradorCampos {
             Item proxy=new Item("proxy",null,Item.OBJ);
             store.add(proxy);
             proxy.add("type","ajax");
+            proxy.add("url",this.context+"/catalogos/obtieneCatalogo.action");
             if(ta.getType().equals(Tatri.TATRISIT))
             {
-            	proxy.add("url",this.context+"/jsonObtenCatalogoGenerico.action");
             	proxy.add(
                         Item.crear("extraParams", null, Item.OBJ)
-                        .add("cdatribu",ta.getCdatribu())
-                        .add("cdtipsit",cdtipsit)
+                        .add("'params.cdatribu'",ta.getCdatribu())
+                        .add("'params.cdtipsit'",cdtipsit)
+                        .add("catalogo",Catalogos.TATRISIT.getCdTabla())
                         );
             }
             else if(ta.getType().equals(Tatri.TATRIPOL))
             {
-            	proxy.add("url",this.context+"/jsonObtenCatalogoGenericoPol.action");
+            	//proxy.add("url",this.context+"/jsonObtenCatalogoGenericoPol.action");
             	proxy.add(
                         Item.crear("extraParams", null, Item.OBJ)
-                        .add("cdatribu",ta.getCdatribu())
+                        .add("'params.cdatribu'",ta.getCdatribu())
+                        .add("catalogo",Catalogos.TATRIPOL.getCdTabla())
                         );
             }
             else if(ta.getType().equals(Tatri.TATRIGAR))
             {
-            	proxy.add("url",this.context+"/jsonObtenCatalogoGenericoGar.action");
+            	//proxy.add("url",this.context+"/jsonObtenCatalogoGenericoGar.action");
             	proxy.add(
                         Item.crear("extraParams", null, Item.OBJ)
-                        .add("cdatribu",ta.getCdatribu())
-                        .add("cdgarant",cdgarant)
+                        .add("'params.cdatribu'",ta.getCdatribu())
+                        .add("'params.cdgarant'",cdgarant)
+                        .add("catalogo",Catalogos.TATRIGAR.getCdTabla())
                         );
             }
             else if(ta.getType().equals(Tatri.TATRIPER))
             {
-            	proxy.add("url",this.context+"/jsonObtenCatalogoGenericoPer.action");
+            	//proxy.add("url",this.context+"/jsonObtenCatalogoGenericoPer.action");
             	proxy.add(
                         Item.crear("extraParams", null, Item.OBJ)
-                        .add("cdramo"  ,cdramo)
-                        .add("cdrol"   ,cdrol)
-                        .add("cdatribu",ta.getCdatribu())
-                        .add("cdtipsit",cdtipsit)
+                        .add("'params.cdramo'"  ,cdramo)
+                        .add("'params.cdrol'"   ,cdrol)
+                        .add("'params.cdatribu'",ta.getCdatribu())
+                        .add("'params.cdtipsit'",cdtipsit)
+                        .add("catalogo",Catalogos.TATRIPER.getCdTabla())
                         );
             }
             proxy.add(
@@ -162,7 +166,7 @@ public class GeneradorCampos {
                 		+"        this.noEsPrimera=true;"
                 		+"        this.getStore().load({"
                 		+"            params:{"
-                		+"		          idPadre:Ext.getCmp('"+this.idPrefix+(idx-1)+"').getValue()"
+                		+"		          'params.idPadre':Ext.getCmp('"+this.idPrefix+(idx-1)+"').getValue()"
                 		+"    		  },"
                 		+"		      callback:function(){"
                 		+"			      var thisCmp=Ext.getCmp('"+this.idPrefix+idx+"');"
