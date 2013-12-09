@@ -8,7 +8,8 @@
     ///////////////////////
     ////// variables //////
     /*///////////////////*/
-    var marcanurlcata      = '<s:url namespace="/flujocotizacion" action="cargarCatalogos" />';
+    //var marcanurlcata      = '<s:url namespace="/flujocotizacion" action="cargarCatalogos" />';
+    var marcanurlcata      = '<s:url namespace="/catalogos"       action="obtieneCatalogo" />';
     var marcanurlramos     = '<s:url namespace="/"                action="obtenerRamos" />';
     var marcanStorePolizas;
     var marcanUrlFiltro    = '<s:url namespace="/cancelacion"     action="buscarPolizas" />'
@@ -356,7 +357,8 @@ Ext.onReady(function()
 			                {
 			                    type         : 'ajax'
 			                    ,url         : marcanurlcata
-			                    ,extraParams : {catalogo:'<s:property value="CON_CAT_MESACONTROL_SUCUR_DOCU" />'}
+			                    <%-- ,extraParams : {catalogo:'<s:property value="CON_CAT_MESACONTROL_SUCUR_DOCU" />'} --%>
+			                    ,extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_SUCURSALES_DOCUMENTO"/>'}
 			                    ,reader      :
 			                    {
 			                        type  : 'json'
@@ -417,7 +419,8 @@ Ext.onReady(function()
                             {
                                 type         : 'ajax'
                                 ,url         : marcanurlcata
-                                ,extraParams : {catalogo:'<s:property value="CON_CAT_POL_ESTADO" />'}
+                                <%-- ,extraParams : {catalogo:'<s:property value="CON_CAT_POL_ESTADO" />'} --%>
+                                ,extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@STATUS_POLIZA"/>'}
                                 ,reader      :
                                 {
                                     type  : 'json'

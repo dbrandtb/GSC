@@ -19,9 +19,9 @@
         <property name="kernelManagerSustituto" ref="kernelManagerSustituto"/>
     </bean>
     
-    <bean id="beanCatalogosAction" class="mx.com.gseguros.portal.general.util.CatalogosAction" scope="prototype" parent="principalCotizacion">
+    <!-- <bean id="beanCatalogosAction" class="mx.com.gseguros.portal.general.util.CatalogosAction" scope="prototype" parent="principalCotizacion">
         <property name="kernelManager" ref="kernelManagerSustituto"/>
-    </bean>
+    </bean> -->
     
     <bean id="beanSubirArchivo" class="mx.com.gseguros.portal.general.util.SubirArchivoAction" scope="prototype">
         <property name="kernelManager" ref="kernelManagerSustituto"/>

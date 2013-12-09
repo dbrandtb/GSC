@@ -1,160 +1,121 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package mx.com.gseguros.portal.general.util;
 
 import java.util.ArrayList;
 import java.util.List;
-import mx.com.aon.core.web.PrincipalCoreAction;
-import mx.com.aon.kernel.service.KernelManagerSustituto;
-import mx.com.aon.portal.util.WrapperResultados;
+import java.util.Map;
+
 import mx.com.aon.portal2.web.GenericVO;
+import mx.com.gseguros.portal.general.service.CatalogosManager;
+
+import org.apache.log4j.Logger;
+
+import com.opensymphony.xwork2.ActionSupport;
 
 /**
+ * 
+ * @author Ricardo
  *
- * @author jair
  */
-public class CatalogosAction extends PrincipalCoreAction
-{
-    //input
+public class CatalogosAction extends ActionSupport {
+	
+	private static final long serialVersionUID = 384960409053296809L;
+
+	private Logger logger = Logger.getLogger(CatalogosAction.class);
+	
+	private CatalogosManager catalogosManager;
+    
+    private boolean success;
+    
+    /**
+     * Nombre del catalogo a obtener
+     */
     private String catalogo;
-    //output
-    private List<GenericVO> lista=new ArrayList<GenericVO>(0);
-    private boolean success=false;
-    //private
-    private org.apache.log4j.Logger log=org.apache.log4j.Logger.getLogger(CatalogosAction.class);
-    private KernelManagerSustituto kernelManager;
     
-    private String codigoPostal;
+    /**
+     * Lista con los objetos a devolver
+     */
+    private List<GenericVO> lista = new ArrayList<GenericVO>(0);
     
-    public String cargar()
-    {
-        try
-        {
-            if(catalogo.equals(ConstantesCatalogos.CON_CAT_POL_ESTADO))
-            {
-                lista=kernelManager.getTmanteni(catalogo);
-                success=true;
-            }
-            else if(catalogo.equals(ConstantesCatalogos.CON_CAT_POL_TIPO_PAGO))
-            {
-                lista=kernelManager.getTmanteni(catalogo);
-                success=true;
-            }
-            else if(catalogo.equals(ConstantesCatalogos.CON_CAT_POL_TIPO_POLIZA))
-            {
-                lista=kernelManager.getTmanteni(catalogo);
-                success=true;
-            }
-            else if(catalogo.equals(ConstantesCatalogos.CON_CAT_POL_ROL))
-            {
-                lista=kernelManager.getTmanteni(catalogo);
-                success=true;
-            }
-            else if(catalogo.equals(ConstantesCatalogos.CON_CAT_MESACONTROL_SUCUR_ADMIN))
-            {
-                lista=kernelManager.getTmanteni(catalogo);
-                success=true;
-            }
-            else if(catalogo.equals(ConstantesCatalogos.CON_CAT_MESACONTROL_SUCUR_DOCU))
-            {
-                lista=kernelManager.getTmanteni(catalogo);
-                success=true;
-            }
-            else if(catalogo.equals(ConstantesCatalogos.CON_CAT_MESACONTROL_TIP_TRAMI))
-            {
-                lista=kernelManager.getTmanteni(catalogo);
-                success=true;
-            }
-            else if(catalogo.equals(ConstantesCatalogos.CON_CAT_MESACONTROL_ESTAT_TRAMI))
-            {
-                lista=kernelManager.getTmanteni(catalogo);
-                success=true;
-            }
-            else if(catalogo.equals(ConstantesCatalogos.CON_CAT_TPERSONA))
-            {
-                lista=kernelManager.getTmanteni(catalogo);
-                success=true;
-            }
-            else if(catalogo.equals(ConstantesCatalogos.CON_CAT_NACIONALIDAD))
-            {
-                lista=kernelManager.getTmanteni(catalogo);
-                success=true;
-            }
-            else if(catalogo.equals(ConstantesCatalogos.CON_CAT_CANCELA_MOTIVOS))
-            {
-                lista=kernelManager.getTmanteni(catalogo);
-                success=true;
-            }
-        }
-        catch(Exception ex)
-        {
+    /**
+     * Parametros enviados a los catalogos
+     */
+    private Map<String, String> params;
+
+    
+    /**
+     * Obtiene el catalogo solicitado en forma de una lista de VOs con llave y valor
+     * @return
+     * @throws Exception
+     */
+    public String obtieneCatalogo() throws Exception {
+    	logger.debug("catalogo=" + catalogo);
+        try {
+        	Catalogos nombreCatalogo = Catalogos.valueOf(catalogo);
+        	switch(nombreCatalogo) {
+        	
+				case MC_ESTATUS_TRAMITE:
+				case MC_SUCURSALES_ADMIN:
+				case MC_SUCURSALES_DOCUMENTO:
+				case MC_TIPOS_TRAMITE:
+				case MOTIVOS_CANCELACION:
+				case NACIONALIDAD:
+				case ROLES_POLIZA:
+				case STATUS_POLIZA:
+				case TIPOS_PAGO_POLIZA:
+				case TIPOS_PERSONA:
+				case TIPOS_POLIZA:
+					lista = catalogosManager.getTmanteni(nombreCatalogo);
+	                break;
+				case CODIGOS_POSTALES:
+					lista = catalogosManager.obtieneColonias(params.get("cp"));
+					break;
+					
+				default:
+					break;
+			}
+        	success = true;
+        } catch(Exception ex) {
             lista=new ArrayList<GenericVO>(0);
-            success=false;
         }
         return SUCCESS;
-    }
-    
-    public String cargaColonias()
-    {
-        try
-        {
-        	WrapperResultados result = kernelManager.cargaColonias(codigoPostal);
-        	lista = (List<GenericVO>) result.getItemList(); 
-             
-        }
-        catch(Exception ex)
-        {
-            lista=new ArrayList<GenericVO>(0);
-            success=false;
-            logger.error("Error al obtener el catalogo de colonias",ex);
-        }
-        success=true;
-        return SUCCESS;
-    }
-    
-    /////////////////////////////////
-    ////// getters and setters //////
-    /*/////////////////////////////*/
-    public String getCatalogo() {
-        return catalogo;
-    }
-
-    public void setCatalogo(String catalogo) {
-        this.catalogo = catalogo;
-    }
-
-    public List<GenericVO> getLista() {
-        return lista;
-    }
-
-    /*public void setLista(List<GenericVO> lista) {
-        this.lista = lista;
-    }*/
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    /*public void setSuccess(boolean success) {
-        this.success = success;
-    }*/
-
-    /*public KernelManagerSustituto getKernelManager() {
-        return kernelManager;
-    }*/
-
-    public void setKernelManager(KernelManagerSustituto kernelManager) {
-        this.kernelManager = kernelManager;
-    }
-
-	public String getCodigoPostal() {
-		return codigoPostal;
-	}
-
-	public void setCodigoPostal(String codigoPostal) {
-		this.codigoPostal = codigoPostal;
 	}
     
+    
+    // Getters and setters
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
+	}
+
+	public String getCatalogo() {
+		return catalogo;
+	}
+
+	public void setCatalogo(String catalogo) {
+		this.catalogo = catalogo;
+	}
+
+	public List<GenericVO> getLista() {
+		return lista;
+	}
+
+	public void setLista(List<GenericVO> lista) {
+		this.lista = lista;
+	}
+
+	public Map<String, String> getParams() {
+		return params;
+	}
+
+	public void setParams(Map<String, String> params) {
+		this.params = params;
+	}
+
+	public void setCatalogosManager(CatalogosManager catalogosManager) {
+		this.catalogosManager = catalogosManager;
+	}
+	
 }

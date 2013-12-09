@@ -8,7 +8,8 @@
     ///////////////////////
     ////// variables //////
     /*///////////////////*/
-    var marendurlcata             = '<s:url namespace="/flujocotizacion"   action="cargarCatalogos" />';
+    //var marendurlcata           = '<s:url namespace="/flujocotizacion"   action="cargarCatalogos" />';
+    var marendurlcata             = '<s:url namespace="/catalogos"         action="obtieneCatalogo" />';
     var marendurlramos            = '<s:url namespace="/"                  action="obtenerRamos" />';
     var marendUrlFiltro           = '<s:url namespace="/endosos"           action="obtenerEndosos" />'
     var marendUrlAgentes          = '<s:url namespace="/mesacontrol"       action="obtieneAgentes" />';
@@ -601,7 +602,8 @@ Ext.onReady(function()
                             {
                                 type         : 'ajax'
                                 ,url         : marendurlcata
-                                ,extraParams : {catalogo:'<s:property value="CON_CAT_MESACONTROL_SUCUR_DOCU" />'}
+                                <%-- ,extraParams : {catalogo:'<s:property value="CON_CAT_MESACONTROL_SUCUR_DOCU" />'} --%>
+                                ,extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_SUCURSALES_DOCUMENTO"/>'}
                                 ,reader      :
                                 {
                                     type  : 'json'
@@ -662,7 +664,8 @@ Ext.onReady(function()
                             {
                                 type         : 'ajax'
                                 ,url         : marendurlcata
-                                ,extraParams : {catalogo:'<s:property value="CON_CAT_POL_ESTADO" />'}
+		                        <%-- ,extraParams : {catalogo:'<s:property value="CON_CAT_POL_ESTADO" />'} --%>
+		                        ,extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@STATUS_POLIZA"/>'}
                                 ,reader      :
                                 {
                                     type  : 'json'

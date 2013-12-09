@@ -254,9 +254,9 @@
         <action name="manualWSrecibos" class="beanDatosComplementarios" method="ejecutaWSManualRecibos">
             <result name="success" type="json" />
         </action>
-        <action name="cargaColonias" class="beanCatalogosAction" method="cargaColonias">
+        <!-- <action name="cargaColonias" class="beanCatalogosAction" method="cargaColonias">
             <result name="success" type="json" />
-        </action>
+        </action> -->
         
         <action name="agregarExclusionDetalle" class="beanDatosComplementariosCoberturas" method="agregarExclusionDetalle">
             <result name="success" type="json" />
