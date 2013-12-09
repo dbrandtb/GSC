@@ -20,6 +20,7 @@ public class GeneradorCampos {
     private static org.apache.log4j.Logger log=org.apache.log4j.Logger.getLogger(GeneradorCampos.class);
     private Item items;
     private Item fields;
+    private Item columns;
     private String context;
     private String cdgarant;
     private String cdramo;
@@ -37,18 +38,20 @@ public class GeneradorCampos {
     {
         items=new Item("items",null,Item.ARR);
         fields=new Item("fields",null,Item.ARR);
+        columns=new Item(null,null,Item.ARR);
         if(lt!=null&&!lt.isEmpty())
         {
             for(int i=0;i<lt.size();i++)
             {
-                this.generaCampoYField(lt, lt.get(i), i);
+                this.generaCampoYFieldYColumn(lt, lt.get(i), i);
             }
         }
         log.debug(fields.toString());
         log.debug(items.toString());
+        log.debug(columns.toString());
     }
     
-    public void generaCampoYField(List<Tatri> lt, Tatri ta, Integer idx) throws Exception
+    public void generaCampoYFieldYColumn(List<Tatri> lt, Tatri ta, Integer idx) throws Exception
     {
     	boolean listeners=false;
         Item fi=new Item();
@@ -66,6 +69,17 @@ public class GeneradorCampos {
         fi.add(Item.crear("type", type));
         if(ta.getSwformat().equals("F"))
         	fi.add(Item.crear("dateFormat", "d/m/Y"));
+        
+        Item col=new Item();
+        col.setType(Item.OBJ);
+        col.add("dataIndex",this.namePrefix+(ta.getCdatribu().length()>1?ta.getCdatribu():"0"+ta.getCdatribu()));
+        col.add("header",ta.getDsatribu());
+        col.add("flex",1);
+        if(type.equals("date"))
+        {
+        	col.add("xtype"  , "datecolumn");
+        	col.add("format" , "d/m/Y");
+        }
         
         Item it=new Item();
         if(StringUtils.isNotBlank(ta.getOttabval()))
@@ -254,6 +268,7 @@ public class GeneradorCampos {
         }
         items.add(it);
         fields.add(fi);
+        columns.add(col);
     }
 
     private void agregarHerencia(List<Tatri> lt, Item it, Integer idx) throws Exception {//para el padre anidado
@@ -325,6 +340,14 @@ public class GeneradorCampos {
 
 	public void setCdtipsit(String cdtipsit) {
 		this.cdtipsit = cdtipsit;
+	}
+
+	public Item getColumns() {
+		return columns;
+	}
+
+	public void setColumns(Item columns) {
+		this.columns = columns;
 	}
     
 }
