@@ -37,6 +37,7 @@ public class EndososAction extends PrincipalCoreAction
 	private KernelManagerSustituto   kernelManager;
 	private Item                     item1;
 	private Item                     item2;
+	private Item                     item3;
 	private SimpleDateFormat         renderFechas     = new SimpleDateFormat("dd/MM/yyyy");
 	private String                   mensaje;
 	private Map<String,String>       parametros;
@@ -318,7 +319,7 @@ public class EndososAction extends PrincipalCoreAction
 			////// re generar los documentos //////
 		    ///////////////////////////////////////
 			
-			mensaje="Se ha guardado el endozo con n&uacute;mero "+respuestaEndosoNombres.get("pv_nsuplogi_o");
+			mensaje="Se ha guardado el endoso con n&uacute;mero "+respuestaEndosoNombres.get("pv_nsuplogi_o");
 			success=true;
 		}
 		catch(Exception ex)
@@ -536,7 +537,7 @@ public class EndososAction extends PrincipalCoreAction
 			////// re generar los documentos //////
 		    ///////////////////////////////////////
 			
-		    mensaje="Se ha guardado el endozo con n&uacute;mero "+resEndDomi.get("pv_nsuplogi_o");
+		    mensaje="Se ha guardado el endoso con n&uacute;mero "+resEndDomi.get("pv_nsuplogi_o");
 			success=true;
 		}
 		catch(Exception ex)
@@ -886,7 +887,7 @@ public class EndososAction extends PrincipalCoreAction
 			////// re generar los documentos //////
 		    ///////////////////////////////////////
 		    
-		    mensaje="Se ha guardado el endozo con n&uacute;mero "+respEndCob.get("pv_nsuplogi_o");
+		    mensaje="Se ha guardado el endoso con n&uacute;mero "+respEndCob.get("pv_nsuplogi_o");
 			
 			success=true;
 		}
@@ -1150,12 +1151,12 @@ public class EndososAction extends PrincipalCoreAction
 				////// re generar los documentos //////
 			    ///////////////////////////////////////
 				
-				mensaje="Se ha confirmado el endozo con n&uacute;mero "+respEnd.get("pv_nsuplogi_o");
+				mensaje="Se ha confirmado el endoso con n&uacute;mero "+respEnd.get("pv_nsuplogi_o");
 				
 			}
 			else
 			{				
-				mensaje="Se ha guardado el endozo con n&uacute;mero "+respEnd.get("pv_nsuplogi_o");
+				mensaje="Se ha guardado el endoso con n&uacute;mero "+respEnd.get("pv_nsuplogi_o");
 			}
 			success=true;
 		}
@@ -1176,6 +1177,88 @@ public class EndososAction extends PrincipalCoreAction
 	/*///////////////////////////////////////*/
 	////// guardar endoso valosit basico //////
 	///////////////////////////////////////////
+	
+	////////////////////////////////
+	////// pantalla de alvaro //////
+	/*////////////////////////////*/
+	public String pantallaAlvaro()
+	{
+		log.debug(""
+				+ "\n############################"
+				+ "\n############################"
+				+ "\n###### pantallaAlvaro ######"
+				+ "\n######                ######"
+				);
+		try
+		{
+			List<Tatri>lt=endososManager.obtPantallaAlvaro(null,null,null,null,null,null,"MUESTRA",null,null,null);
+			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			gc.generaParcial(lt);
+			item1=gc.getItems();
+		}
+		catch(Exception ex)
+		{
+			log.error("error al cargar la pantalla de alvaro",ex);
+		}
+		log.debug(""
+				+ "\n######                ######"
+				+ "\n###### pantallaAlvaro ######"
+				+ "\n############################"
+				+ "\n############################"
+				);
+		return SUCCESS;
+	}
+	/*////////////////////////////*/
+	////// pantalla de alvaro //////
+	////////////////////////////////
+	
+	////////////////////////////////
+	////// visor de pantallas //////
+	/*////////////////////////////*/
+	public String visorPantallas()
+	{
+		log.debug(""
+				+ "\n############################"
+				+ "\n############################"
+				+ "\n###### visorPantallas ######"
+				+ "\n######                ######"
+				);
+		log.debug("parametros: "+parametros);
+		try
+		{
+			List<Tatri>lt=endososManager.obtPantallaAlvaro(
+					parametros.get("pv_otvalor01")
+					,parametros.get("pv_otvalor02")
+					,parametros.get("pv_otvalor03")
+					,parametros.get("pv_otvalor04")
+					,parametros.get("pv_otvalor05")
+					,parametros.get("pv_otvalor06")
+					,parametros.get("pv_otvalor07")
+					,parametros.get("pv_otvalor08")
+					,parametros.get("pv_otvalor09")
+					,parametros.get("pv_otvalor10")
+					);
+			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			gc.generaParcial(lt);
+			item1=gc.getFields();
+			item2=gc.getItems();
+			item3=gc.getColumns();
+		}
+		catch(Exception ex)
+		{
+			log.error("error al visualizar pantalla",ex);
+		}
+		log.debug(""
+				+ "\n######                ######"
+				+ "\n###### visorPantallas ######"
+				+ "\n############################"
+				+ "\n############################"
+				);
+		return SUCCESS;
+	}
+	/*////////////////////////////*/
+	////// visor de pantallas //////
+	////////////////////////////////
 	
 	///////////////////////////////
 	////// getters y setters //////
@@ -1266,6 +1349,14 @@ public class EndososAction extends PrincipalCoreAction
 
 	public void setSlist2(List<Map<String, String>> slist2) {
 		this.slist2 = slist2;
+	}
+
+	public Item getItem3() {
+		return item3;
+	}
+
+	public void setItem3(Item item3) {
+		this.item3 = item3;
 	}
 	
 }

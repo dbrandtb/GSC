@@ -27,6 +27,8 @@ public class GeneradorCampos {
     private String cdrol;
     private String cdtipsit;
     
+    private boolean parcial=false;
+    
     public GeneradorCampos(String context)
     {
     	this.context="/"+context;
@@ -34,10 +36,16 @@ public class GeneradorCampos {
     	idPrefix+="_"+System.currentTimeMillis()+"_"+((long)Math.ceil((Math.random()*10000d)))+"_";
     }
     
+    public void generaParcial(List<Tatri> lt) throws Exception
+    {
+        this.parcial=true;
+        this.genera(lt);
+    }
+    
     public void genera(List<Tatri> lt) throws Exception
     {
-        items=new Item("items",null,Item.ARR);
-        fields=new Item("fields",null,Item.ARR);
+        items=new Item(parcial?null:"items",null,Item.ARR);
+        fields=new Item(parcial?null:"fields",null,Item.ARR);
         columns=new Item(null,null,Item.ARR);
         if(lt!=null&&!lt.isEmpty())
         {
@@ -80,6 +88,35 @@ public class GeneradorCampos {
         	col.add("xtype"  , "datecolumn");
         	col.add("format" , "d/m/Y");
         }
+        if(ta.getType()==Tatri.TATRIGEN)
+        {
+        	String visible=ta.getMapa().get("OTVALOR08");
+        	if(visible.equalsIgnoreCase("N"))
+        	{
+        		col=null;
+        	}
+        	else if(visible.equalsIgnoreCase("H"))
+        	{
+        		col.add("hidden",true);
+        	}
+        	
+        	if(col!=null)
+        	{
+	        	String renderer=ta.getMapa().get("OTVALOR09");
+	        	if(renderer.equalsIgnoreCase("N"))
+	        	{
+	        		//sin renderer
+	        	}
+	        	else if(renderer.equalsIgnoreCase("MONEY"))
+	        	{
+	        		col.add(Item.crear("renderer","Ext.util.Format.usMoney").setQuotes(""));
+	        	}
+	        	else if(renderer.length()>0)
+	        	{
+	        		col.add(Item.crear("renderer",renderer).setQuotes(""));
+	        	}
+        	}
+        }
         
         Item it=new Item();
         if(StringUtils.isNotBlank(ta.getOttabval()))
@@ -117,7 +154,6 @@ public class GeneradorCampos {
             }
             else if(ta.getType().equals(Tatri.TATRIPOL))
             {
-            	//proxy.add("url",this.context+"/jsonObtenCatalogoGenericoPol.action");
             	proxy.add(
                         Item.crear("extraParams", null, Item.OBJ)
                         .add("'params.cdatribu'",ta.getCdatribu())
@@ -126,7 +162,6 @@ public class GeneradorCampos {
             }
             else if(ta.getType().equals(Tatri.TATRIGAR))
             {
-            	//proxy.add("url",this.context+"/jsonObtenCatalogoGenericoGar.action");
             	proxy.add(
                         Item.crear("extraParams", null, Item.OBJ)
                         .add("'params.cdatribu'",ta.getCdatribu())
@@ -136,7 +171,6 @@ public class GeneradorCampos {
             }
             else if(ta.getType().equals(Tatri.TATRIPER))
             {
-            	//proxy.add("url",this.context+"/jsonObtenCatalogoGenericoPer.action");
             	proxy.add(
                         Item.crear("extraParams", null, Item.OBJ)
                         .add("'params.cdramo'"  ,cdramo)
@@ -145,6 +179,27 @@ public class GeneradorCampos {
                         .add("'params.cdtipsit'",cdtipsit)
                         .add("catalogo",Catalogos.TATRIPER.getCdTabla())
                         );
+            }
+            else if(ta.getType().equals(Tatri.TATRIGEN))
+            {
+            	Item extraParams=Item.crear("extraParams", null, Item.OBJ)
+                        .add("catalogo",ta.getMapa().get("OTVALOR03"));
+            	//////////////////////////////////////////////////////
+            	////// del 31 al 50 son parametros para lectura //////
+            	////// 31:llave 32:valor...                     //////
+            	for(int i=31;i<=49;i+=2)
+            	{
+            		if(ta.getMapa().get("OTVALOR"+i)!=null&&ta.getMapa().get("OTVALOR"+i).length()>0)
+            		{
+            			extraParams.add(
+            					Item.crear(ta.getMapa().get("OTVALOR"+i),ta.getMapa().get("OTVALOR"+(i+1)))
+            					.setQuotes("")
+            					);
+            		}
+            	}
+            	////// del 31 al 50 son parametros para lectura //////
+            	//////////////////////////////////////////////////////
+            	proxy.add(extraParams);
             }
             proxy.add(
                     Item.crear("reader", null, Item.OBJ)
@@ -268,7 +323,10 @@ public class GeneradorCampos {
         }
         items.add(it);
         fields.add(fi);
-        columns.add(col);
+        if(col!=null)
+        {
+        	columns.add(col);
+        }
     }
 
     private void agregarHerencia(List<Tatri> lt, Item it, Integer idx) throws Exception {//para el padre anidado

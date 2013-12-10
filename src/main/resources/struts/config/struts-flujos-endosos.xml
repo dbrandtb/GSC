@@ -60,6 +60,14 @@
             <result name="success" type="json" />
         </action>
         
+        <action name="pantallaAlvaro" class="EndososAction" method="pantallaAlvaro">
+            <result name="success">/jsp-script/proceso/endosos/pantallaAlvaro.jsp</result>
+        </action>
+        
+        <action name="visorPantallas" class="EndososAction" method="visorPantallas">
+            <result name="success">/jsp-script/proceso/endosos/visorPantallas.jsp</result>
+        </action>
+        
     </package>
 
 </struts>
