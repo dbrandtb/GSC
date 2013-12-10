@@ -187,33 +187,6 @@ public class ComboManagerJdbcTemplateImpl extends AbstractManagerJdbcTemplateInv
 	        return  getAllBackBoneInvoke(map, endpointName);
 
 	    }
-	 
-     /////////////////////////////////////////////
-     // jtezva 2013 08 21 catalogos salud vital //
-     /////////////////////////////////////////////
-     public List obtenCatalogoSaludVital(String producto, String cdtipsit, String cdatribu, String otval) throws ApplicationException
-     {
-         HashMap<String,Object> params = new HashMap<String,Object>();
-         params.put("pv_cdatribu_i",cdatribu);
-         params.put("pv_cdtipsit_i",cdtipsit);
-         params.put("pv_otvalor_i",otval);
-         params.put("producto",producto);
-         String endpointName = "CATALOGOS_COTIZA_SALUD";
-         return  getAllBackBoneInvoke(params, endpointName);
-     }
-     
-	/////////////////////////////////////////////
-	// jtezva 2013 08 21 catalogos pol         //
-	/////////////////////////////////////////////
-	public List obtenCatalogoPol(String producto, String cdramo, String cdatribu, String otval) throws ApplicationException
-	{
-		HashMap<String,Object> params = new HashMap<String,Object>();
-		params.put("pv_cdatribu_i",cdatribu);
-		params.put("pv_cdramo_i",cdramo);
-		params.put("pv_otvalor_i",otval);
-		String endpointName = "CATALOGOS_POL";
-		return  getAllBackBoneInvoke(params, endpointName);
-	}
      
      public List obtenCatalogoRoles(String pv_cdramo_i) throws ApplicationException
      {
@@ -244,35 +217,4 @@ public class ComboManagerJdbcTemplateImpl extends AbstractManagerJdbcTemplateInv
         return lista;
     }
      
-     /////////////////////////////////////////////
-    
-	/////////////////////////////////////////////
-	// jtezva 2013 09 13 catalogos gar         //
-	/////////////////////////////////////////////
-	public List obtenCatalogoGar(String cdramo, String cdtipsit, String cdgarant, String cdatribu, String valant) throws ApplicationException
-	{
-		HashMap<String,Object> params = new HashMap<String,Object>();
-		params.put("pv_cdramo_i"  ,cdramo);
-		params.put("pv_cdtipsit_i",cdtipsit);
-		params.put("pv_cdgarant_i",cdgarant);
-		params.put("pv_cdatribu_i",cdatribu);
-		params.put("pv_otvalor_i" ,valant);
-		
-		String endpointName = "CATALOGOS_GAR";
-		return  getAllBackBoneInvoke(params, endpointName);
-	}
-	
-	public List obtenCatalogoPer(String cdramo, String cdrol, String cdatribu, String cdtipsit, String valant) throws ApplicationException
-	{
-		HashMap<String,Object> params = new HashMap<String,Object>();
-		params.put("pv_cdramo_i"  ,cdramo);
-		params.put("pv_cdrol_i"   ,cdrol);
-		params.put("pv_cdatribu_i",cdatribu);
-		params.put("pv_cdtipsit_i",cdtipsit);
-		params.put("pv_otvalor_i" ,valant);
-		
-		String endpointName = "CATALOGOS_PER";
-		return  getAllBackBoneInvoke(params, endpointName);
-	}
-	 
 }
