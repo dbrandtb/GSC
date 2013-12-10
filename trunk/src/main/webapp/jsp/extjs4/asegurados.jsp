@@ -15,7 +15,7 @@
             var _NOMBRE_REPORTE_COTIZACION =            '<s:text name="reporte.cotizacion.nombre"/>';
         
             //URL padre de los catalogos
-            var _URL_OBTEN_CATALOGO_GENERICO=           '<s:url action="jsonObtenCatalogoGenerico" namespace="/" />';
+            var _URL_OBTEN_CATALOGO_GENERICO=           '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
             //URL que obtiene una cotizacion
             var _URL_CARGAR_COTIZACION=                 '<s:url action="dinosaurio2" namespace="/" />';
             
@@ -39,6 +39,7 @@
             var CDATRIBU_COB_ELIM_PEN_CAMBIO_ZONA=      '<s:property value="cdatribuCobEliPenCamZona" />';          //15
             var CDATRIBU_ROL=                           '<s:property value="cdatribuRol" />';                       //16
             var CDATRIBU_MUNICIPIO=                     '<s:property value="cdatribuMunicipio" />';                       //17
+            var constanteTatrisitPantallaCotiza       = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TATRISIT"/>';
             /////////////////////////////////////
             ////// fin atributos catalogos //////
             /////////////////////////////////////
