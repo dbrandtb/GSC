@@ -47,14 +47,6 @@ public class CombosDAO extends AbstractDAO{
         addStoredProcedure("COMBO_LISTA_VALORES_INST_PAGO",new ObtenerListaValores(getDataSource()));
         addStoredProcedure("COMBO_CONDICION_INST_PAGO",new ObtenerCondicionInstrPago(getDataSource()));
         
-        //////////////////////////
-        //jtezva 2013 08 21     //
-        //combos de salud vital //
-        //////////////////////////
-        addStoredProcedure("CATALOGO_ROLES_SALUD",new CatalogoRolesSalud(getDataSource()));
-        addStoredProcedure("P_GET_LISTAS_OVERRIDE",new CatalogoDependienteOverride(getDataSource()));
-        //////////////////////////
-        
     }
 
 
@@ -714,89 +706,6 @@ public class CombosDAO extends AbstractDAO{
    	        	
    	            return condicionCoberturaVO;
    	        }
-   	    }  
-
-    
-    ///////////////////////////////////
-    // jtezva 2013 08 21             //
-    // Combo de roles de salud vital //
-    ///////////////////////////////////
-    protected class CatalogoRolesSalud extends CustomStoredProcedure {
-
-        protected CatalogoRolesSalud(DataSource dataSource) {
-            /*pv_cdramo_i   IN TRAMOS.cdramo%TYPE,
-             pv_registro_o OUT TRefTipoError,
-             pv_msg_id_o   OUT GB_MESSAGES.msg_id%TYPE,
-             pv_title_o    OUT GB_MESSAGES.title%TYPE*/
-            super(dataSource, "PKG_LISTAS.P_ROL_RAMO");
-            declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new CatalogoRolesSaludMapper()));
-            declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-
-            compile();
-        }
-
-        public WrapperResultados mapWrapperResultados(Map map) throws Exception {
-            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
-            WrapperResultados wrapperResultados = mapper.build(map);
-            List result = (List) map.get("pv_registro_o");
-            wrapperResultados.setItemList(result);
-            return wrapperResultados;
-        }
-    }
-
-    protected class CatalogoRolesSaludMapper implements RowMapper {
-
-        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new GenericVO(rs.getString("cdrol"), rs.getString("dsrol"));
-        }
-    }
-    ///////////////////////////////////
-    
-    ////////////////////////////////////////////
-    ////// jtezva 2013 08 21              //////
-    ////// Combo dependiente sobreescrito //////
-    /*////////////////////////////////////////*/
-    protected class CatalogoDependienteOverride extends CustomStoredProcedure
-    {
-        protected CatalogoDependienteOverride(DataSource dataSource)
-        {
-            /*pv_cdramo_i   IN TRAMOS.cdramo%TYPE,
-             pv_registro_o OUT TRefTipoError,
-             pv_msg_id_o   OUT GB_MESSAGES.msg_id%TYPE,
-             pv_title_o    OUT GB_MESSAGES.title%TYPE*/
-            super(dataSource, "PKG_LISTAS.P_GET_LISTAS");
-            declareParameter(new SqlParameter(      "pv_cdtabla_i",     OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter(      "pv_valanter_i",    OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter(      "pv_valantant_i",   OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter(   "po_registro",      OracleTypes.CURSOR, new CatalogoDependienteOverrideMapper()));
-            declareParameter(new SqlOutParameter(   "po_msg_id",        OracleTypes.NUMERIC));
-            declareParameter(new SqlOutParameter(   "p_out_title",      OracleTypes.VARCHAR));
-            compile();
-        }
-
-        public WrapperResultados mapWrapperResultados(Map map) throws Exception
-        {
-            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
-            WrapperResultados wrapperResultados = mapper.build(map);
-            List result = (List) map.get("po_registro");
-            wrapperResultados.setItemList(result);
-            return wrapperResultados;
-        }
-    }
-
-    protected class CatalogoDependienteOverrideMapper implements RowMapper
-    {
-        public Object mapRow(ResultSet rs, int rowNum) throws SQLException
-        {
-            System.out.println("#############################################");
-            return new GenericVO(rs.getString("CD"), rs.getString("DS"));
-        }
-    }
-    /*////////////////////////////////////////*/
-    ////// jtezva 2013 08 21              //////
-    ////// Combo dependiente sobreescrito //////
-    ////////////////////////////////////////////
+   	    }
     
 }

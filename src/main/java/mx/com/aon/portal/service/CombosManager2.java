@@ -43,9 +43,5 @@ public interface CombosManager2 {
 	public List comboListaValores (String ottipotb) throws ApplicationException;
 	
 	public List comboCondicionInstPago() throws ApplicationException;
-        
-    public List obtenCatalogoRoles(String pv_cdramo_i) throws ApplicationException;
-        
-    public List obtenComboDependienteOverride(String codigoTablaDependiente,String valorTablaPadre,String valantant) throws ApplicationException;
 	
 }

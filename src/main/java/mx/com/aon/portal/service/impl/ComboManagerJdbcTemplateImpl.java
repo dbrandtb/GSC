@@ -188,33 +188,4 @@ public class ComboManagerJdbcTemplateImpl extends AbstractManagerJdbcTemplateInv
 
 	    }
      
-     public List obtenCatalogoRoles(String pv_cdramo_i) throws ApplicationException
-     {
-         HashMap<String,Object> params = new HashMap<String,Object>();
-         params.put("pv_cdramo_i",pv_cdramo_i);
-         String endpointName = "CATALOGO_ROLES_SALUD";
-         return  getAllBackBoneInvoke(params, endpointName);
-     }
-     
-    public List obtenComboDependienteOverride(String codigoTablaDependiente,String valorTablaPadre,String valantant) throws ApplicationException
-    {
-        HashMap<String,Object> map = new HashMap<String,Object>(0);
-        map.put("pv_cdtabla_i", codigoTablaDependiente);
-        map.put("pv_valanter_i", valorTablaPadre);
-        ////////////////////////////////////////////
-        ////// ERRROR LA DUPLIQUE Y FUNCIONO! //////
-        /*////////////////////////////////////////*/
-        map.put("pv_valantant_i", valorTablaPadre);
-        /*////////////////////////////////////////*/
-        ////// ERRROR LA DUPLIQUE Y FUNCIONO! //////
-        ////////////////////////////////////////////
-        log.debug("### obtenComboDependienteOverride map: "+map);
-        //return getAllBackBoneInvoke(map,"OBTIENE_DATOS_CATALOGO_CON_DEPENDIENTES");
-        String endpointName = "P_GET_LISTAS_OVERRIDE";
-        List lista=getAllBackBoneInvoke(map, endpointName);
-        lista=lista!=null?lista:new ArrayList<GenericVO>(0);
-        log.debug("### obtenComboDependienteOverride lista.size(): "+lista.size());
-        return lista;
-    }
-     
 }

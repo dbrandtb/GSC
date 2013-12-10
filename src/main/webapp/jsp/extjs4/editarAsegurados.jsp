@@ -19,7 +19,6 @@
 	var inputEstadop2=   '<s:property value="map1.estado" />';
 	var inputNmpolizap2= '<s:property value="map1.nmpoliza" />';
 	var inputCdtipsitp2= '<s:property value="map1.cdtipsit" />';
-	var _URL_OBTEN_CATALOGO_GENERICOp2='<s:url action="jsonObtenCatalogoGenerico" namespace="/" />';
 	var CDATRIBU_ROLp2='<s:property value="cdatribuRol" />';
 	var gridPersonasp2;
 	var CDATRIBU_SEXOp2='<s:property value="cdatribuSexo" />';
@@ -35,7 +34,6 @@
 	var editorNacionesp2;
 	var editorNombreContratantep2;
 	var urlCargarAseguradosp2='<s:url namespace="/" action="cargarComplementariosAsegurados" />';
-	//var urlCargarCatalogosp2='<s:url namespace="/flujocotizacion" action="cargarCatalogos" />';
 	var urlCargarCatalogosp2='<s:url namespace="/catalogos"       action="obtieneCatalogo" />';
 	var urlDatosComplementariosp2='<s:url namespace="/" action="datosComplementarios.action" />';
 	var urlGuardarAseguradosp2='<s:url namespace="/" action="guardarComplementariosAsegurados" />';
@@ -643,8 +641,8 @@ debug("validarYGuardar flag:2");
 	        proxy:
 	        {
 	            type: 'ajax',
-	            url : _URL_OBTEN_CATALOGO_GENERICOp2,
-	            extraParams:{cdatribu:CDATRIBU_SEXOp2,cdtipsit:inputCdtipsitp2},
+	            url : urlCargarCatalogosp2,
+	            extraParams:{'params.cdatribu':CDATRIBU_SEXOp2,'params.cdtipsit':inputCdtipsitp2,catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TATRISIT"/>'},
 	            reader:
 	            {
 	                type: 'json',
