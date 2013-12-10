@@ -58,6 +58,7 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	public List<GenericVO> obtieneAtributosRol(String cdAtribu,
 			String cdTipSit, String cdRamo, String valAnt, String cdRol)
 			throws Exception {
+		valAnt = StringUtils.isNotBlank(valAnt) ? valAnt : null;
 		return catalogosDAO.obtieneAtributosRol(cdAtribu, cdTipSit, cdRamo, valAnt, cdRol);
 	}
 	

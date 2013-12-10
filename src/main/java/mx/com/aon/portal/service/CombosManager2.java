@@ -8,6 +8,7 @@ import mx.com.gseguros.exception.ApplicationException;
  * Interface con servicios para todos los combos del proyecto.
  *
  */
+@Deprecated
 public interface CombosManager2 {
 
 	public List comboRolFuncionalidades (String pv_cdelemento_i) throws ApplicationException;
