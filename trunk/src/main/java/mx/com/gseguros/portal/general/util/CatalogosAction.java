@@ -4,25 +4,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.aon.core.web.PrincipalCoreAction;
+import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
 
 import org.apache.log4j.Logger;
-
-import com.opensymphony.xwork2.ActionSupport;
 
 /**
  * 
  * @author Ricardo
  *
  */
-public class CatalogosAction extends ActionSupport {
+public class CatalogosAction extends PrincipalCoreAction {
 	
 	private static final long serialVersionUID = 384960409053296809L;
 
 	private Logger logger = Logger.getLogger(CatalogosAction.class);
 	
-	private CatalogosManager catalogosManager;
+	private CatalogosManager       catalogosManager;
+	private KernelManagerSustituto kernelManager;
     
     private boolean success;
     
@@ -81,13 +82,29 @@ public class CatalogosAction extends ActionSupport {
 				case TATRIPER:
 			        lista = catalogosManager.obtieneAtributosRol(params.get("cdatribu"), params.get("cdtipsit"), params.get("cdramo"), params.get("idPadre"), params.get("cdrol"));
 					break;
+				case RAMOS:
+					List<Map<String,String>>ramos=kernelManager.obtenerRamos(params!=null?params.get("idPadre"):null);
+					lista=new ArrayList<GenericVO>(0);
+					for(Map<String,String> ramo:ramos)
+					{
+						lista.add(new GenericVO(ramo.get("cdramo"), ramo.get("dsramo")));
+					}
+					break;
+				case TIPSIT:
+					List<Map<String,String>>tipsits=kernelManager.obtenerTipsit(params!=null?params.get("idPadre"):null);
+					lista=new ArrayList<GenericVO>(0);
+					for(Map<String,String> tipsit:tipsits)
+					{
+						lista.add(new GenericVO(tipsit.get("CDTIPSIT"), tipsit.get("DSTIPSIT")));
+					}
+					break;
 				default:
-					throw new Exception("Catálogo no existente: " + nombreCatalogo);
+					throw new Exception("Catï¿½logo no existente: " + nombreCatalogo);
 					//break;
 			}
         	success = true;
         } catch(Exception e) {
-        	logger.error("No se pudo obtener el catálogo para " + catalogo, e);
+        	logger.error("No se pudo obtener el catï¿½logo para " + catalogo, e);
             lista=new ArrayList<GenericVO>(0);
         }
         return SUCCESS;
@@ -129,6 +146,10 @@ public class CatalogosAction extends ActionSupport {
 
 	public void setCatalogosManager(CatalogosManager catalogosManager) {
 		this.catalogosManager = catalogosManager;
+	}
+
+	public void setKernelManager(KernelManagerSustituto kernelManager) {
+		this.kernelManager = kernelManager;
 	}
 	
 }

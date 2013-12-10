@@ -1,5 +1,7 @@
 package mx.com.gseguros.portal.endosos.dao.impl;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,12 +9,14 @@ import java.util.Map.Entry;
 
 import javax.sql.DataSource;
 
+import mx.com.gseguros.portal.cotizacion.model.Tatri;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.utils.Utilerias;
 import oracle.jdbc.driver.OracleTypes;
 
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.StoredProcedure;
@@ -304,6 +308,68 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			}
 		}
 		return map;
+	}
+
+	protected class ObtPantallaAlvaro extends StoredProcedure
+	{
+		
+		protected ObtPantallaAlvaro(DataSource dataSource)
+		{
+			super(dataSource,"ALVARO_PKG.P_GET_ALVARO");
+			
+			declareParameter(new SqlParameter("PV_CDUNO_I"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDDOS_I"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDTRES_I"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDCUATRO_I" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDCINCO_I"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDSEIS_I"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDSIETE_I"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDOCHO_I"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDNUEVE_I"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDDIEZ_I"   , OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new TatriAlvaroMapper()));
+			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
+		}
+	}
+	
+	protected class TatriAlvaroMapper implements RowMapper
+	{
+		public Object mapRow(ResultSet rs, int rowNum) throws SQLException
+		{
+			Tatri result=new Tatri();
+			result.setType(Tatri.TATRIGEN);
+			result.setCdatribu(rs.getString("CDATRIBU"));
+			result.setSwformat(rs.getString("SWFORMAT"));
+			result.setNmlmin(rs.getString("NMLMIN"));
+			result.setNmlmax(rs.getString("NMLMAX"));
+			result.setSwobliga(rs.getString("SWOBLIGA"));
+			result.setDsatribu(rs.getString("DSATRIBU"));
+			result.setOttabval(rs.getString("OTTABVAL"));
+			result.setCdtablj1(rs.getString("CDTABLJ1"));
+			Map<String,String>mapa=new LinkedHashMap<String,String>(0);
+			String cols[]=new String[]{
+					"OTVALOR01","OTVALOR02","OTVALOR03","OTVALOR04","OTVALOR05","OTVALOR06","OTVALOR07","OTVALOR08","OTVALOR09","OTVALOR10"
+					,"OTVALOR11","OTVALOR12","OTVALOR13","OTVALOR14","OTVALOR15","OTVALOR16","OTVALOR17","OTVALOR18","OTVALOR19","OTVALOR20"
+					,"OTVALOR21","OTVALOR22","OTVALOR23","OTVALOR24","OTVALOR25","OTVALOR26","OTVALOR27","OTVALOR28","OTVALOR29","OTVALOR30"
+					,"OTVALOR31","OTVALOR32","OTVALOR33","OTVALOR34","OTVALOR35","OTVALOR36","OTVALOR37","OTVALOR38","OTVALOR39","OTVALOR40"
+					,"OTVALOR41","OTVALOR42","OTVALOR43","OTVALOR44","OTVALOR45","OTVALOR46","OTVALOR47","OTVALOR48","OTVALOR49","OTVALOR50"
+			};
+			for(String col:cols)
+			{
+				mapa.put(col,rs.getString(col));
+			}
+			result.setMapa(mapa);
+			return result;
+		}
+	}
+	
+	@Override
+	public List<Tatri> obtPantallaAlvaro(Map<String, Object> params) throws Exception
+	{
+		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtPantallaAlvaro(this.getDataSource()), params);
+		return (List<Tatri>) resultadoMap.get("PV_REGISTRO_O");
 	}
 
 }

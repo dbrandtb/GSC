@@ -1,6 +1,9 @@
 package mx.com.gseguros.portal.cotizacion.model;
 
+import java.util.Map;
+
 public class Tatri {
+	public static final String TATRIGEN=	"0";
 	public static final String TATRISIT=	"1";
 	public static final String TATRIPOL=	"2";
 	public static final String TATRIGAR=	"3";
@@ -18,6 +21,7 @@ public class Tatri {
     private boolean readOnly=false;
     private String swtarifi;
     private boolean money=true;
+    private Map<String,String>mapa;
 
     public String getCdatribu() {
         return cdatribu;
@@ -121,5 +125,13 @@ public class Tatri {
 
 	public void setMoney(boolean money) {
 		this.money = money;
+	}
+
+	public Map<String, String> getMapa() {
+		return mapa;
+	}
+
+	public void setMapa(Map<String, String> mapa) {
+		this.mapa = mapa;
 	}
 }
