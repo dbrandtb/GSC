@@ -1,27 +1,27 @@
 package mx.com.aon.portal.dao;
 
-import org.apache.log4j.Logger;
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.core.SqlOutParameter;
-import org.springframework.jdbc.core.RowMapper;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
-import oracle.jdbc.driver.OracleTypes;
-import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal.model.AtributosVariablesInstPagoVO;
 import mx.com.aon.portal.model.BaseObjectVO;
 import mx.com.aon.portal.model.CondicionCoberturaVO;
-import mx.com.aon.portal.model.ItemVO;
-import mx.com.aon.portal.model.FuncionalidadVO;
 import mx.com.aon.portal.model.ElementoComboBoxVO;
+import mx.com.aon.portal.model.FuncionalidadVO;
+import mx.com.aon.portal.model.ItemVO;
 import mx.com.aon.portal.model.Tabla_EquivalenciaVO;
-
-import java.util.Map;
-import java.util.List;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal2.web.GenericVO;
+import oracle.jdbc.driver.OracleTypes;
+
+import org.apache.log4j.Logger;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.SqlOutParameter;
+import org.springframework.jdbc.core.SqlParameter;
 
 public class CombosDAO extends AbstractDAO{
 
@@ -51,12 +51,8 @@ public class CombosDAO extends AbstractDAO{
         //jtezva 2013 08 21     //
         //combos de salud vital //
         //////////////////////////
-        addStoredProcedure("CATALOGOS_COTIZA_SALUD",new CatalogosCotizaSalud(getDataSource()));
         addStoredProcedure("CATALOGO_ROLES_SALUD",new CatalogoRolesSalud(getDataSource()));
         addStoredProcedure("P_GET_LISTAS_OVERRIDE",new CatalogoDependienteOverride(getDataSource()));
-        addStoredProcedure("CATALOGOS_POL",new CatalogosPol(getDataSource()));
-        addStoredProcedure("CATALOGOS_GAR",new CatalogosGar(getDataSource()));
-        addStoredProcedure("CATALOGOS_PER",new CatalogosPer(getDataSource()));
         //////////////////////////
         
     }
@@ -719,84 +715,7 @@ public class CombosDAO extends AbstractDAO{
    	            return condicionCoberturaVO;
    	        }
    	    }  
-    	 
-     //////////////////////////////////////
-     // jtezva 2013 08 21                //
-     // Combos de cotizacion salud vital //
-     //////////////////////////////////////
-     protected class CatalogosCotizaSalud extends CustomStoredProcedure {
 
-        protected CatalogosCotizaSalud(DataSource dataSource)
-        {
-            super(dataSource, "PKG_LISTAS.P_GET_ATRIBUTOS_SIT");
-            declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_cdatribu_i", OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_otvalor_i", OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new CatalogosCotizaSaludMapper()));
-            declareParameter(new SqlOutParameter("pv_messages_o", OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-            
-            compile();
-        }
-
-        public WrapperResultados mapWrapperResultados(Map map) throws Exception
-        {
-            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
-            WrapperResultados wrapperResultados = mapper.build(map);
-            List result = (List) map.get("pv_registro_o");
-            wrapperResultados.setItemList(result);
-            return wrapperResultados;
-        }
-    }
-
-    protected class CatalogosCotizaSaludMapper implements RowMapper
-    {
-        public Object mapRow(ResultSet rs, int rowNum) throws SQLException
-        {
-            return new GenericVO(rs.getString("CODIGO"),rs.getString("DESCRIPCION"));
-        }
-    }
-    //////////////////////////////////////
-    
-	//////////////////////////////////////
-	// jtezva 2013 08 21                //
-	// Combos de cotizacion salud vital //
-	//////////////////////////////////////
-	protected class CatalogosPol extends CustomStoredProcedure {
-	
-		protected CatalogosPol(DataSource dataSource)
-		{
-			super(dataSource, "PKG_LISTAS.P_GET_ATRIBUTOS_POL");
-			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdatribu_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new CatalogosPolMapper()));
-			declareParameter(new SqlOutParameter("pv_messages_o", OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-			
-			compile();
-		}
-		
-		public WrapperResultados mapWrapperResultados(Map map) throws Exception
-		{
-			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
-			WrapperResultados wrapperResultados = mapper.build(map);
-			List result = (List) map.get("pv_registro_o");
-			wrapperResultados.setItemList(result);
-			return wrapperResultados;
-		}
-	}
-	
-	protected class CatalogosPolMapper implements RowMapper
-	{
-		public Object mapRow(ResultSet rs, int rowNum) throws SQLException
-		{
-			return new GenericVO(rs.getString("CODIGO"),rs.getString("DESCRIPCION"));
-		}
-	}
-	//////////////////////////////////////
     
     ///////////////////////////////////
     // jtezva 2013 08 21             //
@@ -879,89 +798,5 @@ public class CombosDAO extends AbstractDAO{
     ////// jtezva 2013 08 21              //////
     ////// Combo dependiente sobreescrito //////
     ////////////////////////////////////////////
-    
-	//////////////////////////////////////
-	// jtezva 2013 08 21                //
-	// Combos de cotizacion salud vital //
-	//////////////////////////////////////
-	protected class CatalogosGar extends CustomStoredProcedure {
-	
-		protected CatalogosGar(DataSource dataSource)
-		{
-			super(dataSource, "PKG_LISTAS.P_GET_ATRIBUTOS_GAR");
-			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdgarant_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdatribu_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor_i", OracleTypes.VARCHAR));
-			
-			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new CatalogosGarMapper()));
-			declareParameter(new SqlOutParameter("pv_messages_o", OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-			
-			compile();
-		}
-	
-		public WrapperResultados mapWrapperResultados(Map map) throws Exception
-		{
-			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
-			WrapperResultados wrapperResultados = mapper.build(map);
-			List result = (List) map.get("pv_registro_o");
-			wrapperResultados.setItemList(result);
-			return wrapperResultados;
-		}
-	}
-	
-	protected class CatalogosGarMapper implements RowMapper
-	{
-		public Object mapRow(ResultSet rs, int rowNum) throws SQLException
-		{
-			return new GenericVO(rs.getString("CODIGO"),rs.getString("DESCRIPCION"));
-		}
-	}
-	//////////////////////////////////////
-	
-	//////////////////////////////////////
-	// jtezva 2013 08 21                //
-	// Combos de cotizacion salud vital //
-	//////////////////////////////////////
-	protected class CatalogosPer extends CustomStoredProcedure {
-	
-		protected CatalogosPer(DataSource dataSource)
-		{
-			super(dataSource, "PKG_LISTAS.P_GET_ATRIBUTOS_ROL");
-			declareParameter(new SqlParameter("pv_cdramo_i",   OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdrol_i",    OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdatribu_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_otvalor_i",  OracleTypes.VARCHAR));
-			
-			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new CatalogosPerMapper()));
-			declareParameter(new SqlOutParameter("pv_messages_o", OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-			
-			compile();
-		}
-	
-		public WrapperResultados mapWrapperResultados(Map map) throws Exception
-		{
-			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
-			WrapperResultados wrapperResultados = mapper.build(map);
-			List result = (List) map.get("pv_registro_o");
-			wrapperResultados.setItemList(result);
-			return wrapperResultados;
-		}
-	}
-	
-	protected class CatalogosPerMapper implements RowMapper
-	{
-		public Object mapRow(ResultSet rs, int rowNum) throws SQLException
-		{
-			return new GenericVO(rs.getString("CODIGO"),rs.getString("DESCRIPCION"));
-		}
-	}
-	//////////////////////////////////////
     
 }

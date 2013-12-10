@@ -70,19 +70,24 @@ public class CatalogosAction extends ActionSupport {
 					lista = catalogosManager.obtieneColonias(params.get("cp"));
 					break;
 				case TATRISIT:
+		            lista = catalogosManager.obtieneAtributosSituacion(params.get("cdatribu"), params.get("cdtipsit"), params.get("idPadre"));
 					break;
 				case TATRIPOL:
+			        lista = catalogosManager.obtieneAtributosPoliza(params.get("cdatribu"), "2", params.get("idPadre"));
 					break;
 				case TATRIGAR:
+					lista = catalogosManager.obtieneAtributosGarantia(params.get("cdatribu"), "SL", "2", params.get("idPadre"), params.get("cdgarant"));
 					break;
 				case TATRIPER:
+			        lista = catalogosManager.obtieneAtributosRol(params.get("cdatribu"), params.get("cdtipsit"), params.get("cdramo"), params.get("idPadre"), params.get("cdrol"));
 					break;
 				default:
-					throw new Exception("catalogo no existente: "+nombreCatalogo);
+					throw new Exception("Catálogo no existente: " + nombreCatalogo);
 					//break;
 			}
         	success = true;
-        } catch(Exception ex) {
+        } catch(Exception e) {
+        	logger.error("No se pudo obtener el catálogo para " + catalogo, e);
             lista=new ArrayList<GenericVO>(0);
         }
         return SUCCESS;

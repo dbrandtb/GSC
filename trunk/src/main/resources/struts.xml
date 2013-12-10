@@ -125,10 +125,7 @@
             <result name="success">/jsp/extjs4/asegurados.jsp</result>
             <result name="input">/error.jsp</result>
         </action>
-        <action name="jsonObtenCatalogoGenerico" class="JsonGenericList" method="obtenCatalogo"><result name="success" type="json" /></action>
-        <action name="jsonObtenCatalogoGenericoPol" class="JsonGenericList" method="obtenCatalogoPol"><result name="success" type="json" /></action>
-        <action name="jsonObtenCatalogoGenericoGar" class="JsonGenericList" method="obtenCatalogoGar"><result name="success" type="json" /></action>
-        <action name="jsonObtenCatalogoGenericoPer" class="JsonGenericList" method="obtenCatalogoPer"><result name="success" type="json" /></action>
+        
         <!-- jtezva subir archivo -->
         <action name="subirArchivoMostrarPanel" class="beanSubirArchivo" method="mostrarPanel">
             <result name="success">/jsp/portal/testFileUpload.jsp</result>

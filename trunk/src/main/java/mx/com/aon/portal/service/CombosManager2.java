@@ -1,18 +1,14 @@
 package mx.com.aon.portal.service;
 
-import mx.com.aon.portal.model.ElementoComboBoxVO;
-import mx.com.aon.portal2.web.GenericVO;
-import mx.com.gseguros.exception.ApplicationException;
-
-import java.util.ArrayList;
 import java.util.List;
+
+import mx.com.gseguros.exception.ApplicationException;
 
 /**
  * Interface con servicios para todos los combos del proyecto.
  *
  */
 public interface CombosManager2 {
-
 
 	public List comboRolFuncionalidades (String pv_cdelemento_i) throws ApplicationException;
 
@@ -23,7 +19,6 @@ public interface CombosManager2 {
     public List comboTiposActividad () throws ApplicationException;
     
     public List comboObtieneAlgoritmos () throws ApplicationException;
-    
     
     public List obtienePais() throws ApplicationException;
 	
@@ -48,17 +43,9 @@ public interface CombosManager2 {
 	public List comboListaValores (String ottipotb) throws ApplicationException;
 	
 	public List comboCondicionInstPago() throws ApplicationException;
-	
-	public List obtenCatalogoSaludVital(String producto, String cdtipsit, String cdatribu, String otval) throws ApplicationException;
-	
-	public List obtenCatalogoPol(String producto, String cdramo, String cdatribu, String otval) throws ApplicationException;
         
     public List obtenCatalogoRoles(String pv_cdramo_i) throws ApplicationException;
         
     public List obtenComboDependienteOverride(String codigoTablaDependiente,String valorTablaPadre,String valantant) throws ApplicationException;
-
-    public List obtenCatalogoGar(String cdramo, String cdtipsit, String cdgarant, String cdatribu, String valant) throws ApplicationException;
-    
-    public List obtenCatalogoPer(String cdramo, String cdrol, String cdatribu, String cdtipsit, String valant) throws ApplicationException;
 	
 }
