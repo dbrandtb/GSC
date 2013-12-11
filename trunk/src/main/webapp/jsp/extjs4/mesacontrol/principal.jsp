@@ -1279,7 +1279,8 @@ Ext.onReady(function(){
 	                            load : function(records)
 	                            {
 	                                debug('records',records);
-	                                records.add({key : '%', value : 'Todos'});
+	                                records.add({key : '-1', value : ''});
+	                                records.add({key : '', value : 'Todos'});
 	                            }
 	                        }
 	                    })
