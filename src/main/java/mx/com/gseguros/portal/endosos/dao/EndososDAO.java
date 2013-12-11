@@ -15,4 +15,5 @@ public interface EndososDAO
     public List<Map<String,String>> obtieneCoberturasDisponibles(Map<String,String>params) throws Exception;
     public Map<String, String>      guardarEndosoCoberturas(Map<String, Object> params) throws Exception;
 	public List<Tatri>              obtPantallaAlvaro(Map<String, Object> params) throws Exception;
+	public List<Map<String,String>> obtenerAtributosCoberturas(Map<String, String> params) throws Exception;
 }

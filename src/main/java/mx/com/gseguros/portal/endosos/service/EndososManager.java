@@ -16,4 +16,5 @@ public interface EndososManager
     public Map<String,String>        guardarEndosoCoberturas(Map<String,Object>params) throws Exception;
 	public List<Tatri>               obtPantallaAlvaro(Object cduno,Object cddos,Object cdtres,Object cdcuatro,Object cdcinco
 			                             ,Object cdseis,Object cdsiete,Object cdocho,Object cdnueve,Object cddiez) throws Exception;
+	public List<Map<String, String>> obtenerAtributosCoberturas(Map<String, String> params) throws Exception;
 }

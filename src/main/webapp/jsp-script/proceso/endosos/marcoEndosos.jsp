@@ -692,7 +692,6 @@ Ext.onReady(function()
                     {
                         text    : 'Tipo de b&uacute;squeda'
                         ,icon   : '${ctx}/resources/fam3icons/icons/cog.png'
-                        ,hidden : true
                         ,menu   :
                         {
                             xtype  : 'menu'
