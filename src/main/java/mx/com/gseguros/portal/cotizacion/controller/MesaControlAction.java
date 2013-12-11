@@ -47,16 +47,16 @@ public class MesaControlAction extends PrincipalCoreAction
 		{
 		    dsrol=usu.getRolActivo().getObjeto().getValue();
 		}
-		if(dsrol.equalsIgnoreCase("mesadecontrol")||dsrol.equalsIgnoreCase("suscriptor"))
+		if(dsrol.equalsIgnoreCase("mesadecontrol")||dsrol.equalsIgnoreCase("suscriptor")||dsrol.equalsIgnoreCase("medico"))
 		{
 			if(smap1==null)
 			{
 				smap1=new HashMap<String,String>(0);
 			}
-			if((!smap1.containsKey("pv_status_i"))||smap1.get("pv_status_i").length()==0)
+			if((!smap1.containsKey("pv_status_i")))
 			{
 				log.debug("pv_status_i: "+smap1.get("pv_status_i"));
-				smap1.put("pv_status_i","2");
+				smap1.put("pv_status_i","-1");//valor default
 			}
 		}
 		log.debug(""
