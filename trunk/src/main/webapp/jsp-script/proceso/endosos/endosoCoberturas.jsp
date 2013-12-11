@@ -41,6 +41,128 @@
     /*///////////////////*/
     //////variables //////
     ///////////////////////
+    
+    ///////////////////////
+    ////// funciones //////
+    /*///////////////////*/
+    function endcobSumit(form,confirmar)
+    {
+        debug('generar endoso');
+        //var form=this.up().up();
+        if(form.isValid())
+        {
+            form.setLoading(true);
+            var json={};
+            json['omap1']=form.getValues();
+            json['omap1']['pv_cdunieco_i'] = inputCduniecop3;
+            json['omap1']['pv_cdramo_i']   = inputCdramop3;
+            json['omap1']['pv_estado_i']   = inputEstadop3;
+            json['omap1']['pv_nmpoliza_i'] = inputNmpolizap3;
+            var slist1=[];
+            storeCoberturasBorrarp3.each(function(record)
+            {
+                slist1.push(
+                {
+                    garantia  : record.get('GARANTIA')
+                    ,cdcapita : record.get('CDCAPITA')
+                    ,status   : record.get('status')
+                    ,ptcapita : record.get('SUMA_ASEGURADA')
+                    ,ptreduci : record.get('ptreduci')
+                    ,fereduci : record.get('fereduci')
+                    ,swrevalo : record.get('swrevalo')
+                    ,cdagrupa : record.get('cdagrupa')
+                    ,cdtipbca : record.get('cdtipbca')
+                    ,ptvalbas : record.get('ptvalbas')
+                    ,swmanual : record.get('swmanual')
+                    ,swreas   : record.get('swreas')
+                });
+            });
+            json['slist1']=slist1;
+            var slist2=[];
+            storeCoberturasAgregarp3.each(function(record)
+            {
+                slist2.push(
+                {
+                    garantia  : record.get('GARANTIA')
+                    ,cdcapita : record.get('CDCAPITA')
+                    ,status   : record.get('status')
+                    ,ptcapita : record.get('SUMA_ASEGURADA')
+                    ,ptreduci : record.get('ptreduci')
+                    ,fereduci : record.get('fereduci')
+                    ,swrevalo : record.get('swrevalo')
+                    ,cdagrupa : record.get('cdagrupa')
+                    ,cdtipbca : record.get('cdtipbca')
+                    ,ptvalbas : record.get('ptvalbas')
+                    ,swmanual : record.get('swmanual')
+                    ,swreas   : record.get('swreas')
+                });
+            });
+            json['slist2']=slist2;
+            json['smap1']={};
+            json['smap1']['nmsituac']  = inputNmsituacp3;
+            json['smap1']['cdperson']  = inputCdpersonap3;
+            json['smap1']['altabaja']  = inputAltabajap3;
+            json['smap1']['cdtipsit']  = inputCdtipsitp3;
+            json['smap1']['confirmar'] = confirmar;
+            debug(json);
+            Ext.Ajax.request(
+            {
+                url       : endcobUrlGuardar
+                ,jsonData : json
+                ,timeout  : 180000
+                ,success  : function(response)
+                {
+                    form.setLoading(false);
+                    json=Ext.decode(response.responseText);
+                    debug(json);
+                    if(json.success==true)
+                    {
+                        Ext.Msg.show(
+                        {
+                            title   : 'Endoso generado',
+                            msg     : json.mensaje,
+                            buttons : Ext.Msg.OK
+                        });
+                    }
+                    else
+                    {
+                        Ext.Msg.show(
+                        {
+                            title   : 'Error',
+                            icon    : Ext.Msg.ERROR,
+                            msg     : 'Error al generar el endoso',
+                            buttons : Ext.Msg.OK
+                        });
+                    }
+                }
+                ,failure  : function()
+                {
+                    form.setLoading(false);
+                    Ext.Msg.show(
+                    {
+                        title   : 'Error',
+                        icon    : Ext.Msg.ERROR,
+                        msg     : 'Error de comunicaci&oacute;n',
+                        buttons : Ext.Msg.OK
+                    });
+                }
+            });
+        }
+        else
+        {
+            Ext.Msg.show(
+            {
+                title   : 'Datos imcompletos',
+                icon    : Ext.Msg.WARNING,
+                msg     : 'Favor de llenar los campos requeridos',
+                buttons : Ext.Msg.OK
+            });
+        }
+    }
+    /*///////////////////*/
+    ////// funciones //////
+    ///////////////////////
+    
     Ext.onReady(function() {
 
                 /////////////////////
@@ -413,123 +535,24 @@
                             ]
                             ,buttons     :
                             [
-                                {
-                                    text     : 'Generar endoso'
-                                    ,icon    : '${ctx}/resources/fam3icons/icons/key.png' 
-                                    ,handler : function()
-                                    {
-                                        debug('generar endoso');
-                                        var form=this.up().up();
-                                        if(form.isValid())
-                                        {
-                                            form.setLoading(true);
-                                            var json={};
-                                            json['omap1']=form.getValues();
-                                            json['omap1']['pv_cdunieco_i'] = inputCduniecop3;
-                                            json['omap1']['pv_cdramo_i']   = inputCdramop3;
-                                            json['omap1']['pv_estado_i']   = inputEstadop3;
-                                            json['omap1']['pv_nmpoliza_i'] = inputNmpolizap3;
-                                            var slist1=[];
-                                            storeCoberturasBorrarp3.each(function(record)
-                                            {
-                                                slist1.push(
-                                        		{
-                                                    garantia  : record.get('GARANTIA')
-                                                    ,cdcapita : record.get('CDCAPITA')
-                                                    ,status   : record.get('status')
-                                                    ,ptcapita : record.get('SUMA_ASEGURADA')
-                                                    ,ptreduci : record.get('ptreduci')
-                                                    ,fereduci : record.get('fereduci')
-                                                    ,swrevalo : record.get('swrevalo')
-                                                    ,cdagrupa : record.get('cdagrupa')
-                                                    ,cdtipbca : record.get('cdtipbca')
-                                                    ,ptvalbas : record.get('ptvalbas')
-                                                    ,swmanual : record.get('swmanual')
-                                                    ,swreas   : record.get('swreas')
-                                                });
-                                            });
-                                            json['slist1']=slist1;
-                                            var slist2=[];
-                                            storeCoberturasAgregarp3.each(function(record)
-                                            {
-                                                slist2.push(
-                                                {
-                                                    garantia  : record.get('GARANTIA')
-                                                    ,cdcapita : record.get('CDCAPITA')
-                                                    ,status   : record.get('status')
-                                                    ,ptcapita : record.get('SUMA_ASEGURADA')
-                                                    ,ptreduci : record.get('ptreduci')
-                                                    ,fereduci : record.get('fereduci')
-                                                    ,swrevalo : record.get('swrevalo')
-                                                    ,cdagrupa : record.get('cdagrupa')
-                                                    ,cdtipbca : record.get('cdtipbca')
-                                                    ,ptvalbas : record.get('ptvalbas')
-                                                    ,swmanual : record.get('swmanual')
-                                                    ,swreas   : record.get('swreas')
-                                                });
-                                            });
-                                            json['slist2']=slist2;
-                                            json['smap1']={};
-                                            json['smap1']['nmsituac'] = inputNmsituacp3;
-                                            json['smap1']['cdperson'] = inputCdpersonap3;
-                                            json['smap1']['altabaja'] = inputAltabajap3;
-                                            json['smap1']['cdtipsit'] = inputCdtipsitp3;
-                                            debug(json);
-                                            Ext.Ajax.request(
-                                            {
-                                                url       : endcobUrlGuardar
-                                                ,jsonData : json
-                                                ,timeout  : 180000
-                                                ,success  : function(response)
-                                                {
-                                                    form.setLoading(false);
-                                                    json=Ext.decode(response.responseText);
-                                                    debug(json);
-                                                    if(json.success==true)
-                                                    {
-                                                        Ext.Msg.show(
-                                                        {
-                                                            title   : 'Endoso generado',
-                                                            msg     : json.mensaje,
-                                                            buttons : Ext.Msg.OK
-                                                        });
-                                                    }
-                                                    else
-                                                    {
-                                                        Ext.Msg.show(
-                                                        {
-                                                            title   : 'Error',
-                                                            icon    : Ext.Msg.ERROR,
-                                                            msg     : 'Error al generar el endoso',
-                                                            buttons : Ext.Msg.OK
-                                                        });
-                                                    }
-                                                }
-                                                ,failure  : function()
-                                                {
-                                                    form.setLoading(false);
-                                                    Ext.Msg.show(
-                                                    {
-                                                        title   : 'Error',
-                                                        icon    : Ext.Msg.ERROR,
-                                                        msg     : 'Error de comunicaci&oacute;n',
-                                                        buttons : Ext.Msg.OK
-                                                    });
-                                                }
-                                            });
-                                        }
-                                        else
-                                        {
-                                            Ext.Msg.show(
-                                            {
-                                                title   : 'Datos imcompletos',
-                                                icon    : Ext.Msg.WARNING,
-                                                msg     : 'Favor de llenar los campos requeridos',
-                                                buttons : Ext.Msg.OK
-                                            });
-                                        }
-                                    }
-                                }
+								{
+								    text     : 'Guardar endoso'
+								    ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
+								    ,handler : function(me)
+								    {
+								        var form=me.up().up();
+								        endcobSumit(form,'no');
+								    }
+								}
+								,{
+								    text     : 'Confirmar endoso'
+								    ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
+								    ,handler : function(me)
+								    {
+								        var form=me.up().up();
+								        endcobSumit(form,'si');
+								    }
+								}
                                 ,{
                                     text     : 'Documentos'
                                     ,icon    : '${ctx}/resources/fam3icons/icons/printer.png'

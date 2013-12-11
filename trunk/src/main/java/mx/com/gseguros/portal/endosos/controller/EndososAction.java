@@ -596,6 +596,7 @@ public class EndososAction extends PrincipalCoreAction
 	//////     cdperson            //////
     //////     altabaja            //////
 	//////     cdtipsit            //////
+	//////     confirmar           //////
 	////// omap1:                  //////
 	//////     pv_cdunieco_i       //////
 	//////     pv_cdramo_i         //////
@@ -803,91 +804,189 @@ public class EndososAction extends PrincipalCoreAction
 			paramSigsvdefEmi.put("pv_cdtipsit_i" , smap1.get("cdtipsit"));
 			kernelManager.ejecutaASIGSVALIPOL_EMI(paramSigsvdefEmi);
 			
-			Map<String,String>paramConfirmarEndosoB=new LinkedHashMap<String,String>(0);
-			paramConfirmarEndosoB.put("pv_cdunieco_i" , (String)omap1.get("pv_cdunieco_i"));
-			paramConfirmarEndosoB.put("pv_cdramo_i"   , (String)omap1.get("pv_cdramo_i"));
-			paramConfirmarEndosoB.put("pv_estado_i"   , (String)omap1.get("pv_estado_i"));
-			paramConfirmarEndosoB.put("pv_nmpoliza_i" , (String)omap1.get("pv_nmpoliza_i"));
-			paramConfirmarEndosoB.put("pv_nmsuplem_i" , respEndCob.get("pv_nmsuplem_o"));
-			paramConfirmarEndosoB.put("pv_nsuplogi_i" , respEndCob.get("pv_nsuplogi_o"));
-			if(smap1.get("altabaja").equalsIgnoreCase("alta"))
+			/*
+			pv_cdunieco_i
+			pv_cdramo_i
+	        pv_estado_i
+	        pv_nmpoliza_i
+	        pv_nmsuplem_i
+			 */
+			Map<String,String>paramsObtAtriCober=new LinkedHashMap<String,String>(0);
+			paramsObtAtriCober.put("pv_cdunieco_i" , (String)omap1.get("pv_cdunieco_i"));
+			paramsObtAtriCober.put("pv_cdramo_i"   , (String)omap1.get("pv_cdramo_i"));
+	        paramsObtAtriCober.put("pv_estado_i"   , (String)omap1.get("pv_estado_i"));
+	        paramsObtAtriCober.put("pv_nmpoliza_i" , (String)omap1.get("pv_nmpoliza_i"));
+	        paramsObtAtriCober.put("pv_nmsuplem_i" , respEndCob.get("pv_nmsuplem_o"));
+	        List<Map<String,String>>listaTempAtributosCober=endososManager.obtenerAtributosCoberturas(paramsObtAtriCober);
+	        Map<String,String>atriCober=listaTempAtributosCober.get(0);
+
+        	//cargar anterior valosit
+			Map<String,String>paramsValositAsegurado=new LinkedHashMap<String,String>(0);
+			paramsValositAsegurado.put("pv_cdunieco_i" , (String)omap1.get("pv_cdunieco_i"));
+			paramsValositAsegurado.put("pv_cdramo_i"   , (String)omap1.get("pv_cdramo_i"));
+			paramsValositAsegurado.put("pv_estado_i"   , (String)omap1.get("pv_estado_i"));
+			paramsValositAsegurado.put("pv_nmpoliza_i" , (String)omap1.get("pv_nmpoliza_i"));
+			paramsValositAsegurado.put("pv_nmsituac_i" , smap1.get("nmsituac"));
+			Map<String,Object>valositAsegurado=kernelManager.obtieneValositSituac(paramsValositAsegurado);
+			log.debug("valosit anterior: "+valositAsegurado);
+			
+			//poner pv_ al anterior
+			Map<String,Object>valositAseguradoIterado=new LinkedHashMap<String,Object>(0);
+			Iterator it=valositAsegurado.entrySet().iterator();
+			while(it.hasNext())
 			{
-				paramConfirmarEndosoB.put("pv_cdtipsup_i" , "6");
+				Entry en=(Entry)it.next();
+				valositAseguradoIterado.put("pv_"+(String)en.getKey(),en.getValue());//agregar pv_ a los anteriores
 			}
-			else
+			valositAsegurado=valositAseguradoIterado;
+			log.debug("se puso pv_ en el anterior");
+			
+			//agregar los nuevos al leido
+			if(atriCober.get("OTVALOR09")!=null&&atriCober.get("OTVALOR09").length()>0)
 			{
-				paramConfirmarEndosoB.put("pv_cdtipsup_i" , "7");
+				valositAsegurado.put("pv_otvalor09",atriCober.get("OTVALOR09"));
 			}
-			paramConfirmarEndosoB.put("pv_dscoment_i" , "");
-		    endososManager.confirmarEndosoB(paramConfirmarEndosoB);
-		    
-		    ///////////////////////////////////////
-		    ////// re generar los documentos //////
-		    /*///////////////////////////////////*/
-		    Map<String,String>paramsGetDoc=new LinkedHashMap<String,String>(0);
-			paramsGetDoc.put("pv_cdunieco_i" , (String)omap1.get("pv_cdunieco_i"));
-			paramsGetDoc.put("pv_cdramo_i"   , (String)omap1.get("pv_cdramo_i"));
-			paramsGetDoc.put("pv_estado_i"   , (String)omap1.get("pv_estado_i"));
-			paramsGetDoc.put("pv_nmpoliza_i" , (String)omap1.get("pv_nmpoliza_i"));
-			paramsGetDoc.put("pv_nmsuplem_i" , respEndCob.get("pv_nmsuplem_o"));
-			if(smap1.get("altabaja").equalsIgnoreCase("alta"))
+			if(atriCober.get("OTVALOR10")!=null&&atriCober.get("OTVALOR10").length()>0)
 			{
-				paramsGetDoc.put("pv_tipmov_i"   , getText("endoso.tipo.coberturas.alta"));
+				valositAsegurado.put("pv_otvalor10",atriCober.get("OTVALOR10"));
 			}
-			else
+			if(atriCober.get("OTVALOR14")!=null&&atriCober.get("OTVALOR14").length()>0)
 			{
-				paramsGetDoc.put("pv_tipmov_i"   , getText("endoso.tipo.coberturas.baja"));
+				valositAsegurado.put("pv_otvalor14",atriCober.get("OTVALOR14"));
 			}
-		    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(paramsGetDoc);
-		    log.debug("documentos que se regeneran: "+listaDocu);
-		    
-		    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+listaDocu.get(0).get("ntramite");
-		    
-			//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
-			for(Map<String,String> docu:listaDocu)
+			if(atriCober.get("OTVALOR15")!=null&&atriCober.get("OTVALOR15").length()>0)
 			{
-				log.debug("docu iterado: "+docu);
-				String nmsolici=docu.get("nmsolici");
-				String nmsituac=docu.get("nmsituac");
-				String descripc=docu.get("descripc");
-				String descripl=docu.get("descripl");
-				String url=this.getText("ruta.servidor.reports")
-						+ "?destype=cache"
-						+ "&desformat=PDF"
-						+ "&userid="+this.getText("pass.servidor.reports")
-						+ "&report="+descripl
-						+ "&paramform=no"
-						+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
-						+ "&p_unieco="+(String)omap1.get("pv_cdunieco_i")
-						+ "&p_ramo="+(String)omap1.get("pv_cdramo_i")
-						+ "&p_estado="+(String)omap1.get("pv_estado_i")
-						+ "&p_poliza="+(String)omap1.get("pv_nmpoliza_i")
-						+ "&desname="+rutaCarpeta+"/"+descripc;
-				if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
+				valositAsegurado.put("pv_otvalor15",atriCober.get("OTVALOR15"));
+			}
+			log.debug("se agregaron los nuevos");
+			
+			//convertir a string el total que es object
+			Map<String,String>paramsNuevos=new LinkedHashMap<String,String>(0);
+			it=valositAsegurado.entrySet().iterator();
+			while(it.hasNext())
+			{
+				Entry en=(Entry)it.next();
+				paramsNuevos.put((String)en.getKey(),(String)en.getValue());
+			}
+			log.debug("se pasaron a string");
+			
+			/*
+			pv_cdunieco
+    		pv_cdramo
+    		pv_estado
+    		pv_nmpoliza
+    		pv_nmsituac
+    		pv_nmsuplem
+    		pv_status
+    		pv_cdtipsit
+    		...pv_otvalor[01-50]
+    		pv_accion_i
+			*/
+			paramsNuevos.put("pv_cdunieco" , (String)omap1.get("pv_cdunieco_i"));
+			paramsNuevos.put("pv_cdramo"   , (String)omap1.get("pv_cdramo_i"));
+			paramsNuevos.put("pv_estado"   , (String)omap1.get("pv_estado_i"));
+			paramsNuevos.put("pv_nmpoliza" , (String)omap1.get("pv_nmpoliza_i"));
+			paramsNuevos.put("pv_nmsituac" , smap1.get("nmsituac"));
+			
+			paramsNuevos.put("pv_nmsuplem" , respEndCob.get("pv_nmsuplem_o"));
+			paramsNuevos.put("pv_status"   , "V");
+			paramsNuevos.put("pv_cdtipsit" , smap1.get("cdtipsit"));
+			paramsNuevos.put("pv_accion_i" , "I");
+			log.debug("los actualizados seran: "+paramsNuevos);
+			kernelManager.insertaValoresSituaciones(paramsNuevos);
+			
+			if(smap1.get("confirmar").equalsIgnoreCase("si"))
+			{
+				Map<String,String>paramConfirmarEndosoB=new LinkedHashMap<String,String>(0);
+				paramConfirmarEndosoB.put("pv_cdunieco_i" , (String)omap1.get("pv_cdunieco_i"));
+				paramConfirmarEndosoB.put("pv_cdramo_i"   , (String)omap1.get("pv_cdramo_i"));
+				paramConfirmarEndosoB.put("pv_estado_i"   , (String)omap1.get("pv_estado_i"));
+				paramConfirmarEndosoB.put("pv_nmpoliza_i" , (String)omap1.get("pv_nmpoliza_i"));
+				paramConfirmarEndosoB.put("pv_nmsuplem_i" , respEndCob.get("pv_nmsuplem_o"));
+				paramConfirmarEndosoB.put("pv_nsuplogi_i" , respEndCob.get("pv_nsuplogi_o"));
+				if(smap1.get("altabaja").equalsIgnoreCase("alta"))
 				{
-					// C R E D E N C I A L _ X X X X X X . P D F
-					//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-					url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("_"));
+					paramConfirmarEndosoB.put("pv_cdtipsup_i" , "6");
 				}
-				log.debug(""
-						+ "\n#################################"
-						+ "\n###### Se solicita reporte ######"
-						+ "\na "+url+""
-						+ "\n#################################");
-				HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
-				log.debug(""
-						+ "\n######                    ######"
-						+ "\n###### reporte solicitado ######"
-						+ "\na "+url+""
-						+ "\n################################"
-						+ "\n################################"
-						+ "");
+				else
+				{
+					paramConfirmarEndosoB.put("pv_cdtipsup_i" , "7");
+				}
+				paramConfirmarEndosoB.put("pv_dscoment_i" , "");
+			    endososManager.confirmarEndosoB(paramConfirmarEndosoB);
+			    
+			    ///////////////////////////////////////
+			    ////// re generar los documentos //////
+			    /*///////////////////////////////////*/
+			    Map<String,String>paramsGetDoc=new LinkedHashMap<String,String>(0);
+				paramsGetDoc.put("pv_cdunieco_i" , (String)omap1.get("pv_cdunieco_i"));
+				paramsGetDoc.put("pv_cdramo_i"   , (String)omap1.get("pv_cdramo_i"));
+				paramsGetDoc.put("pv_estado_i"   , (String)omap1.get("pv_estado_i"));
+				paramsGetDoc.put("pv_nmpoliza_i" , (String)omap1.get("pv_nmpoliza_i"));
+				paramsGetDoc.put("pv_nmsuplem_i" , respEndCob.get("pv_nmsuplem_o"));
+				if(smap1.get("altabaja").equalsIgnoreCase("alta"))
+				{
+					paramsGetDoc.put("pv_tipmov_i"   , getText("endoso.tipo.coberturas.alta"));
+				}
+				else
+				{
+					paramsGetDoc.put("pv_tipmov_i"   , getText("endoso.tipo.coberturas.baja"));
+				}
+			    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(paramsGetDoc);
+			    log.debug("documentos que se regeneran: "+listaDocu);
+			    
+			    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+listaDocu.get(0).get("ntramite");
+			    
+				//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
+				for(Map<String,String> docu:listaDocu)
+				{
+					log.debug("docu iterado: "+docu);
+					String nmsolici=docu.get("nmsolici");
+					String nmsituac=docu.get("nmsituac");
+					String descripc=docu.get("descripc");
+					String descripl=docu.get("descripl");
+					String url=this.getText("ruta.servidor.reports")
+							+ "?destype=cache"
+							+ "&desformat=PDF"
+							+ "&userid="+this.getText("pass.servidor.reports")
+							+ "&report="+descripl
+							+ "&paramform=no"
+							+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+							+ "&p_unieco="+(String)omap1.get("pv_cdunieco_i")
+							+ "&p_ramo="+(String)omap1.get("pv_cdramo_i")
+							+ "&p_estado="+(String)omap1.get("pv_estado_i")
+							+ "&p_poliza="+(String)omap1.get("pv_nmpoliza_i")
+							+ "&desname="+rutaCarpeta+"/"+descripc;
+					if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
+					{
+						// C R E D E N C I A L _ X X X X X X . P D F
+						//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+						url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("_"));
+					}
+					log.debug(""
+							+ "\n#################################"
+							+ "\n###### Se solicita reporte ######"
+							+ "\na "+url+""
+							+ "\n#################################");
+					HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
+					log.debug(""
+							+ "\n######                    ######"
+							+ "\n###### reporte solicitado ######"
+							+ "\na "+url+""
+							+ "\n################################"
+							+ "\n################################"
+							+ "");
+				}
+			    /*///////////////////////////////////*/
+				////// re generar los documentos //////
+			    ///////////////////////////////////////
+				
+				mensaje="Se ha confirmado el endoso con n&uacute;mero "+respEndCob.get("pv_nsuplogi_o");
 			}
-		    /*///////////////////////////////////*/
-			////// re generar los documentos //////
-		    ///////////////////////////////////////
-		    
-		    mensaje="Se ha guardado el endoso con n&uacute;mero "+respEndCob.get("pv_nsuplogi_o");
+		    else
+			{
+				mensaje="Se ha guardado el endoso con n&uacute;mero "+respEndCob.get("pv_nsuplogi_o");
+			}
 			
 			success=true;
 		}

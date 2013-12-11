@@ -371,5 +371,44 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtPantallaAlvaro(this.getDataSource()), params);
 		return (List<Tatri>) resultadoMap.get("PV_REGISTRO_O");
 	}
+	
+	protected class ObtenerAtributosCoberturas extends StoredProcedure
+	{
+		
+		String columnas[]=new String[]{
+				 "OTVALOR09"
+				,"OTVALOR10"      
+				,"OTVALOR14"      
+				,"OTVALOR15"};
+		
+		/*
+		pv_cdunieco_i
+		pv_cdramo_i
+        pv_estado_i
+        pv_nmpoliza_i
+        pv_nmsuplem_i
+		 */
+		protected ObtenerAtributosCoberturas(DataSource dataSource)
+		{
+			super(dataSource,"PKG_SATELITES.P_GET_ATRI_COBER");
+			declareParameter(new SqlParameter("pv_cdunieco_i"    , OracleTypes.VARCHAR));			
+			declareParameter(new SqlParameter("pv_cdramo_i"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(columnas)));
+			declareParameter(new SqlOutParameter("pv_messages_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			
+		}
+	}
+	
+	@Override
+	public List<Map<String,String>> obtenerAtributosCoberturas(Map<String, String> params) throws Exception
+	{
+		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerAtributosCoberturas(this.getDataSource()), params);
+		return (List<Map<String,String>>) resultadoMap.get("pv_registro_o");
+	}
 
 }
