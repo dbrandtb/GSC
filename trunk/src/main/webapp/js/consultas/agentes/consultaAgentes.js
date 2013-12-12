@@ -159,7 +159,7 @@ Ext.onReady(function() {
                   handler: function() {
                         if (panelModificacionInsercion.form.isValid()) {
                             var datos=panelModificacionInsercion.form.getValues();
-                            if(parseFloat(datos.sesionComision) >= parseFloat(datos.participacion)){
+                            if(parseFloat(datos.sesionComision) > parseFloat(datos.participacion)){
                                 Ext.Msg.show({
                                     title:'Error',
                                     msg: 'El valor de la partici&oacute;n debe ser mayor a Cesi&oacute;n de comisi&oacute;n',
