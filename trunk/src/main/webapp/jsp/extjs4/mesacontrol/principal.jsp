@@ -297,7 +297,7 @@ Ext.onReady(function(){
                     		}
                     		else if(value=='6')
                             {
-                                res='Esperando información cliente';
+                                res='Solicitud médica';
                             }
                     		return res;
                     	}
