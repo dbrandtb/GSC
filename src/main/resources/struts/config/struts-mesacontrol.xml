@@ -18,9 +18,9 @@
         <action name="obtenerDetallesTramite" method="obtenerDetallesTramite" class="MesaControlAction">
             <result name="success" type="json" />
         </action>
-        <action name="obtieneAgentes" method="obtieneAgentes" class="MesaControlAction">
+        <!-- <action name="obtieneAgentes" method="obtieneAgentes" class="MesaControlAction">
             <result name="success" type="json" />
-        </action>
+        </action> -->
         <action name="finalizarDetalleTramiteMC" method="finalizarDetalleTramiteMC" class="MesaControlAction">
             <result name="success" type="json" />
         </action>

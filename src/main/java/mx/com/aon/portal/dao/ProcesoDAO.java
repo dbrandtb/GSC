@@ -123,7 +123,6 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String MESACONTROL_FINALIZAR_DETALLE="MESACONTROL_FINALIZAR_DETALLE";
     public static final String DOCUMENTOS_PREPARAR_CONTRARECIBO="DOCUMENTOS_PREPARAR_CONTRARECIBO";
     public static final String OBTIENE_VALOSIT_SITUAC="OBTIENE_VALOSIT_SITUAC";
-    public static final String OBTIENE_AGENTES="OBTIENE_AGENTES";
     public static final String BUSCAR_RFC="BUSCAR_RFC";
     public static final String BORRAR_MPERSONA="BORRAR_MPERSONA";
     public static final String OBTENER_RAMOS="OBTENER_RAMOS";
@@ -211,7 +210,6 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(MESACONTROL_FINALIZAR_DETALLE, new MesaControlFinalizarDetalle(getDataSource()));
         addStoredProcedure(DOCUMENTOS_PREPARAR_CONTRARECIBO, new DocumentosPrepararContrarecibo(getDataSource()));
         addStoredProcedure(OBTIENE_VALOSIT_SITUAC,new ObtieneValositSituac(getDataSource()));
-        addStoredProcedure(OBTIENE_AGENTES,new ObtieneAgentes(getDataSource()));
         addStoredProcedure(BUSCAR_RFC,new BuscarRFC(getDataSource()));
         addStoredProcedure(BORRAR_MPERSONA,new BorrarMPoliper(getDataSource()));
         addStoredProcedure(OBTENER_RAMOS,new ObtenerRamos(getDataSource()));
@@ -3659,41 +3657,6 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	////// obtiene documentos de poliza //////////
 	//////////////////////////////////////////////
 	
-	/////////////////////////////////////////////////////////
-	////// obtiene agentes //////////
-	/*/////////////////////////////////////////////////////*/
-	protected class ObtieneAgentes extends CustomStoredProcedure
-	{
-		protected ObtieneAgentes(DataSource dataSource)
-		{
-			super(dataSource,"PKG_CONSULTA.P_OBTIENE_AGENTES");
-			declareParameter(new SqlParameter("pv_nombre_i",    OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerAgentesMapper()));
-			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
-		}
-	
-		public WrapperResultados mapWrapperResultados(Map map) throws Exception
-		{
-			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
-			WrapperResultados wrapperResultados = mapper.build(map);
-			List result = (List) map.get("pv_registro_o");
-			wrapperResultados.setItemList(result);
-			return wrapperResultados;
-		}
-	}
-	
-	protected class ObtenerAgentesMapper implements RowMapper {
-		public Object mapRow(ResultSet rs, int rowNum) throws SQLException{
-			GenericVO generic=new GenericVO();
-            generic.setKey(rs.getString("CDAGENTE"));
-            generic.setValue(rs.getString("Nombre_agente"));
-            return generic;
-		}
-	}
-	/*/////////////////////////////////////////////////////*/
-	////// obtiene agentes //////////////////////////////////
-	/////////////////////////////////////////////////////////
 	
 	////////////////////////
 	////// buscar rfc //////

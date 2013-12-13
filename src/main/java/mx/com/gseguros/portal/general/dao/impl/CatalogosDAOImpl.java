@@ -253,5 +253,65 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			return new GenericVO(rs.getString("CODIGO"),rs.getString("DESCRIPCION"));
 		}
 	}
+
+
+	@Override
+	public List<GenericVO> obtieneRolesSistema() throws DaoException {
+		Map<String, Object> resultado = ejecutaSP(new ObtieneRolesSistema(getDataSource()), new HashMap<String,Object>());
+		return (List<GenericVO>) resultado.get("PV_REGISTRO_O");
+	}
+	
+	protected class ObtieneRolesSistema extends StoredProcedure {
+		protected ObtieneRolesSistema(DataSource dataSource) {
+			super(dataSource, "PKG_GENERA_USUARIO.P_BUSCA_ROL");
+			declareParameter(new SqlOutParameter("PV_REGISTRO_O", OracleTypes.CURSOR, new ObtieneRolesSistemaMapper()));
+			declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("PV_TITLE_O", OracleTypes.VARCHAR));
+		}
+	}
+	
+	protected class ObtieneRolesSistemaMapper implements RowMapper {
+		
+    	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+    		return new GenericVO(rs.getString("CDSISROL"), rs.getString("DSSISROL"));
+    	}
+    }
+
+
+	@Override
+	public List<GenericVO> obtieneAgentes(String claveONombre) throws DaoException {
+		try {
+			HashMap<String,Object> params =  new HashMap<String, Object>();
+			params.put("pv_nombre_i", claveONombre);
+    		
+    		Map<String, Object> resultado = ejecutaSP(new ObtieneAgentes(getDataSource()), params);
+    		return (List<GenericVO>) resultado.get("pv_registro_o");
+		} catch (Exception e) {
+			throw new DaoException(e.getMessage(), e);
+		}
+	}
+	
+	protected class ObtieneAgentes extends StoredProcedure
+	{
+		protected ObtieneAgentes(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_OBTIENE_AGENTES");
+			declareParameter(new SqlParameter("pv_nombre_i",    OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerAgentesMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
+		}
+	}
+	
+	protected class ObtenerAgentesMapper implements RowMapper {
+		public Object mapRow(ResultSet rs, int rowNum) throws SQLException{
+			GenericVO generic=new GenericVO();
+            generic.setKey(rs.getString("CDAGENTE"));
+            generic.setValue(rs.getString("Nombre_agente"));
+            return generic;
+		}
+	}
+	
+	
 	
 }

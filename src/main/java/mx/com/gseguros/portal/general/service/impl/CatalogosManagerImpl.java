@@ -63,6 +63,17 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	}
 	
 	
+	@Override
+	public List<GenericVO> obtieneRolesSistema() throws Exception {
+		return catalogosDAO.obtieneRolesSistema();
+	}
+	
+	
+	@Override
+	public List<GenericVO> obtieneAgentes(String claveONombre) throws Exception {
+		return catalogosDAO.obtieneAgentes(claveONombre);
+	}
+	
 	public void setCatalogosDAO(CatalogosDAO catalogosDAO) {
 		this.catalogosDAO = catalogosDAO;
 	}

@@ -19,19 +19,15 @@
     var mesConUrlDatCom        = '<s:url namespace="/"                action="datosComplementarios" />';
     var mesConUrlInitManual    = '<s:url namespace="/mesacontrol"     action="obtenerValoresDefectoInsercionManual" />';
     var mesConUrlSaveTra       = '<s:url namespace="/mesacontrol"     action="guardarTramiteManual" />';
-    //var mesConUrlLoadCatalo    = '<s:url namespace="/flujocotizacion" action="cargarCatalogos" />';
     var mesConUrlLoadCatalo    = '<s:url namespace="/catalogos"       action="obtieneCatalogo" />';
     var mesConUrlCotizar       = '<s:url namespace="/"                action="cotizacionVital" />';
     var mesConUrlDetMC         = '<s:url namespace="/mesacontrol"     action="obtenerDetallesTramite" />';
     var mesConUrlFinDetalleMC  = '<s:url namespace="/mesacontrol"      action="finalizarDetalleTramiteMC" />';
-    var urlAgentes             = '<s:url namespace="/mesacontrol"      action="obtieneAgentes" />';
     var mesConUrlLoadRamos     = '<s:url namespace="/"                 action="obtenerRamos" />';
     var mesConUrlLoadTipsit    = '<s:url namespace="/"                 action="obtenerTipsit" />';
-    //var marmesconurlcata       = '<s:url namespace="/flujocotizacion"   action="cargarCatalogos" />';
     var marmesconurlcata       = '<s:url namespace="/catalogos"         action="obtieneCatalogo" />';
     var marmesconurlramos      = '<s:url namespace="/"                  action="obtenerRamos" />';
     var marmesconUrlLoadTipsit = '<s:url namespace="/"                  action="obtenerTipsit" />';
-    var marmesconurlAgentes    = '<s:url namespace="/mesacontrol"       action="obtieneAgentes" />';
     var marmesconurlcargar     = '<s:url namespace="/mesacontrol"       action="loadTareasSuper" />';
     var mesConStoreTareas;
     var mesConGridTareas;
@@ -855,7 +851,7 @@ Ext.onReady(function(){
                             ///////////
                             ,Ext.create('Ext.form.field.ComboBox',
                             {
-                                fieldLabel : 'Agente'
+                                fieldLabel : 'Agente*'
                                 ,name      : 'smap1.pv_cdagente_i'
                                 ,allowBlank: false
                                 ,displayField : 'value'
@@ -865,13 +861,14 @@ Ext.onReady(function(){
                                 ,hideTrigger : true
                                 ,minChars  : 3
                                 ,queryMode :'remote'
-                                ,queryParam: 'smap1.pv_cdagente_i'
+                                ,queryParam: 'params.agente'
                                 ,store : Ext.create('Ext.data.Store', {
                                     model:'Generic',
                                     autoLoad:false,
                                     proxy: {
                                         type: 'ajax',
-                                        url : urlAgentes,
+                                        url : mesConUrlLoadCatalo,
+                                        extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@AGENTES"/>'},
                                         reader: {
                                             type: 'json',
                                             root: 'lista'
@@ -1219,7 +1216,7 @@ Ext.onReady(function(){
 	                    ,value      : mesconInput['nmpoliza']
 	                }
 	                ,{
-	                    fieldLabel : 'Agente'
+	                    fieldLabel : 'Agente**'
 	                    ,xtype     : 'combo'
 	                    ,name      : 'smap1.pv_cdagente_i'
 	                    ,value     : mesconInput['cdagente']
@@ -1230,13 +1227,14 @@ Ext.onReady(function(){
 	                    ,hideTrigger : true
 	                    ,minChars  : 3
 	                    ,queryMode :'remote'
-	                    ,queryParam: 'smap1.pv_cdagente_i'
+	                    ,queryParam: 'params.agente'
 	                    ,store : Ext.create('Ext.data.Store', {
 	                        model:'Generic',
 	                        autoLoad:false,
 	                        proxy: {
 	                            type: 'ajax',
-	                            url : marmesconurlAgentes,
+	                            url : mesConUrlLoadCatalo,
+	                            extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@AGENTES"/>'},
 	                            reader: {
 	                                type: 'json',
 	                                root: 'lista'

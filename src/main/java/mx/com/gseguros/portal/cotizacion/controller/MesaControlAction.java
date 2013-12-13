@@ -352,27 +352,6 @@ public class MesaControlAction extends PrincipalCoreAction
 	////// finalizar un detalle de tramite de mesa de control //////
 	////////////////////////////////////////////////////////////////
 	
-	
-	////////////////////////////////////////////////////////////////
-	////// obtiene agentes por codigo o nombre                //////
-	/*////////////////////////////////////////////////////////////*/
-	public String obtieneAgentes(){
-        try {
-        	WrapperResultados result = kernelManager.obtieneAgentes(smap1.get("pv_cdagente_i"));
-        	lista = (List<GenericVO>) result.getItemList(); 
-             
-        } catch(Exception ex) {
-        	lista=new ArrayList<GenericVO>(0);
-            success=false;
-            logger.error("Error al obtener los agentes",ex);
-        }
-        success=true;
-        return SUCCESS;
-    }
-	////////////////////////////////////////////////////////////////
-	////// obtiene agentes por codigo o nombre                //////
-	/*////////////////////////////////////////////////////////////*/
-	
 	//////////////////////////////////
 	////// marco del supervisor //////
 	/*//////////////////////////////*/
