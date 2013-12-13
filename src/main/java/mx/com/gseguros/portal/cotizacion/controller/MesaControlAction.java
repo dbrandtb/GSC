@@ -1,6 +1,5 @@
 package mx.com.gseguros.portal.cotizacion.controller;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -352,29 +351,6 @@ public class MesaControlAction extends PrincipalCoreAction
 	////// finalizar un detalle de tramite de mesa de control //////
 	////////////////////////////////////////////////////////////////
 	
-	//////////////////////////////////
-	////// marco del supervisor //////
-	/*//////////////////////////////*/
-	public String marcoSupervisor()
-	{
-		log.debug(""
-				+ "\n####################################################"
-				+ "\n####################################################"
-				+ "\n###### marco de supervisor de mesa de control ######"
-				+ "\n######                                        ######"
-				);
-		success=true;
-		log.debug(""
-				+ "\n######                                        ######"
-				+ "\n###### marco de supervisor de mesa de control ######"
-				+ "\n####################################################"
-				+ "\n####################################################"
-				);
-		return SUCCESS;
-	}
-	//////////////////////////////////
-	////// marco del supervisor //////
-	/*//////////////////////////////*/
 	
 	/////////////////////////////////////////////
 	////// cargar tramites para supervisor //////
