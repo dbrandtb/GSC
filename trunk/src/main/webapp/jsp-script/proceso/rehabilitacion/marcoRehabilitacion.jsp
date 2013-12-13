@@ -8,12 +8,10 @@
     ///////////////////////
     ////// variables //////
     /*///////////////////*/
-    //var marrehurlcata      = '<s:url namespace="/flujocotizacion"   action="cargarCatalogos" />';
     var marrehurlcata      = '<s:url namespace="/catalogos"         action="obtieneCatalogo" />';
     var marrehurlramos     = '<s:url namespace="/"                  action="obtenerRamos" />';
     var marrehStorePolizas;
     var marrehUrlFiltro    = '<s:url namespace="/rehabilitacion"    action="buscarPolizas" />'
-    var marrehUrlAgentes   = '<s:url namespace="/mesacontrol"       action="obtieneAgentes" />';
     /*///////////////////*/
     ////// variables //////
     ///////////////////////
@@ -391,14 +389,15 @@ Ext.onReady(function()
                         ,hideTrigger     : true
                         ,minChars        : 3
                         ,queryMode       : 'remote'
-                        ,queryParam      : 'smap1.pv_cdagente_i'
+                        ,queryParam      : 'params.agente'
                         ,store           : Ext.create('Ext.data.Store', {
                             model     : 'Generic'
                             ,autoLoad : false
                             ,proxy    :
                             {
                                 type    : 'ajax'
-                                ,url    : marrehUrlAgentes
+                                ,url    : marrehurlcata
+                                ,extraParams: {catalogo: '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@AGENTES"/>'}
                                 ,reader :
                                 {
                                     type  : 'json'

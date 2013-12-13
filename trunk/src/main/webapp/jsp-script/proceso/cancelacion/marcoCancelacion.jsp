@@ -8,12 +8,10 @@
     ///////////////////////
     ////// variables //////
     /*///////////////////*/
-    //var marcanurlcata      = '<s:url namespace="/flujocotizacion" action="cargarCatalogos" />';
     var marcanurlcata      = '<s:url namespace="/catalogos"       action="obtieneCatalogo" />';
     var marcanurlramos     = '<s:url namespace="/"                action="obtenerRamos" />';
     var marcanStorePolizas;
     var marcanUrlFiltro    = '<s:url namespace="/cancelacion"     action="buscarPolizas" />'
-    var marcanUrlAgentes   = '<s:url namespace="/mesacontrol"     action="obtieneAgentes" />';
     /*///////////////////*/
     ////// variables //////
     ///////////////////////
@@ -451,15 +449,15 @@ Ext.onReady(function()
                         ,hideTrigger : true
                         ,minChars  : 3
                         ,queryMode :'remote'
-                        ,queryParam: 'smap1.pv_cdagente_i'
+                        ,queryParam: 'params.agente'
                         ,store : Ext.create('Ext.data.Store', {
                             model:'Generic',
                             autoLoad:false,
                             proxy: {
                                 type: 'ajax',
-                                url : marcanUrlAgentes,
-                                reader:
-                                {
+                                url : marcanurlcata,
+                                extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@AGENTES"/>'},
+                                reader: {
                                     type: 'json',
                                     root: 'lista'
                                 }

@@ -14,7 +14,7 @@
             var _CONTEXT = '${ctx}';
             var _URL_VALIDA_DATOS_SITUACION =    '<s:url namespace="/flujocotizacion" 	action="consultaDatosPolizaAgente" />'; 
             var _URL_GENERAL_AGENTES        =    '<s:url namespace="/flujocotizacion"   action="consultaGeneralAgente" />';
-            var _URL_AGENTES          		=	 '<s:url namespace="/mesacontrol"       action="obtieneAgentes" />';
+            var _URL_CATALOGOS          	=	 '<s:url namespace="/catalogos"         action="obtieneCatalogo" />';
             var _URL_GUARDA_PORCENTAJE      =    '<s:url namespace="/flujocotizacion" 	action="guardaPorcentajeAgentes" />';
             
             <%--

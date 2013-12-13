@@ -54,6 +54,12 @@ public class CatalogosAction extends PrincipalCoreAction {
         	Catalogos nombreCatalogo = Catalogos.valueOf(catalogo);
         	switch(nombreCatalogo) {
         	
+        		case AGENTES:
+        			lista = catalogosManager.obtieneAgentes(params.get("agente"));
+        			break;
+        		case COLONIAS:
+					lista = catalogosManager.obtieneColonias(params.get("cp"));
+					break;
 				case MC_ESTATUS_TRAMITE:
 				case MC_SUCURSALES_ADMIN:
 				case MC_SUCURSALES_DOCUMENTO:
@@ -67,9 +73,6 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case TIPOS_POLIZA:
 					lista = catalogosManager.getTmanteni(nombreCatalogo);
 	                break;
-				case COLONIAS:
-					lista = catalogosManager.obtieneColonias(params.get("cp"));
-					break;
 				case TATRISIT:
 		            lista = catalogosManager.obtieneAtributosSituacion(params.get("cdatribu"), params.get("cdtipsit"), params.get("idPadre"));
 					break;
@@ -85,26 +88,27 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case RAMOS:
 					List<Map<String,String>>ramos=kernelManager.obtenerRamos(params!=null?params.get("idPadre"):null);
 					lista=new ArrayList<GenericVO>(0);
-					for(Map<String,String> ramo:ramos)
-					{
+					for(Map<String,String> ramo:ramos) {
 						lista.add(new GenericVO(ramo.get("cdramo"), ramo.get("dsramo")));
 					}
 					break;
 				case TIPSIT:
 					List<Map<String,String>>tipsits=kernelManager.obtenerTipsit(params!=null?params.get("idPadre"):null);
 					lista=new ArrayList<GenericVO>(0);
-					for(Map<String,String> tipsit:tipsits)
-					{
+					for(Map<String,String> tipsit:tipsits) {
 						lista.add(new GenericVO(tipsit.get("CDTIPSIT"), tipsit.get("DSTIPSIT")));
 					}
 					break;
+				case ROLES_SISTEMA:
+					lista = catalogosManager.obtieneRolesSistema();
+					break;
 				default:
-					throw new Exception("Cat�logo no existente: " + nombreCatalogo);
+					throw new Exception("Catalogo no existente: " + nombreCatalogo);
 					//break;
 			}
         	success = true;
         } catch(Exception e) {
-        	logger.error("No se pudo obtener el cat�logo para " + catalogo, e);
+        	logger.error("No se pudo obtener el catalogo para " + catalogo, e);
             lista=new ArrayList<GenericVO>(0);
         }
         return SUCCESS;

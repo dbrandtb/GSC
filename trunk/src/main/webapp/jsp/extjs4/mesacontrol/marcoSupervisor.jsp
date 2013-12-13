@@ -9,11 +9,9 @@
 ///////////////////////
 ////// variables //////
 /*///////////////////*/
-//var marmesconurlcata       = '<s:url namespace="/flujocotizacion"   action="cargarCatalogos" />';
 var marmesconurlcata       = '<s:url namespace="/catalogos"         action="obtieneCatalogo" />';
 var marmesconurlramos      = '<s:url namespace="/"                  action="obtenerRamos" />';
 var marmesconUrlLoadTipsit = '<s:url namespace="/"                  action="obtenerTipsit" />';
-var marmesconurlAgentes    = '<s:url namespace="/mesacontrol"       action="obtieneAgentes" />';
 var marmesconurlcargar     = '<s:url namespace="/mesacontrol"       action="loadTareasSuper" />';
 var marmesconStoreTramites;
 /*///////////////////*/
@@ -349,7 +347,7 @@ Ext.create('Ext.panel.Panel',
 				}
 				,Ext.create('Ext.form.field.ComboBox',
                 {
-                    fieldLabel : 'Agente'
+                    fieldLabel : 'Agente***'
                     ,name      : 'smap1.pv_cdagente_i'
                     ,displayField : 'value'
                     ,valueField   : 'key'
@@ -358,13 +356,14 @@ Ext.create('Ext.panel.Panel',
                     ,hideTrigger : true
                     ,minChars  : 3
                     ,queryMode :'remote'
-                    ,queryParam: 'smap1.pv_cdagente_i'
+                    ,queryParam: 'params.agente'
                     ,store : Ext.create('Ext.data.Store', {
                         model:'Generic',
                         autoLoad:false,
                         proxy: {
                             type: 'ajax',
-                            url : marmesconurlAgentes,
+                            url : marmesconurlcata,
+                            extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@AGENTES"/>'},
                             reader: {
                                 type: 'json',
                                 root: 'lista'

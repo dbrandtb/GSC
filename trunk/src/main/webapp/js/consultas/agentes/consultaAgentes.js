@@ -47,7 +47,8 @@ Ext.onReady(function() {
         autoLoad:false,
         proxy: {
             type: 'ajax',
-            url : _URL_AGENTES,
+            url : _URL_CATALOGOS,
+            extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@AGENTES"/>'},
             reader: {
                 type: 'json',
                 root: 'lista'
@@ -526,10 +527,11 @@ Ext.onReady(function() {
         {
             Ext.Ajax.request(
             {
-                url     : _URL_AGENTES
+                url     : _URL_CATALOGOS
                 ,params : 
                 {
-                    'smap1.pv_cdagente_i'  : claveAgente
+                    'params.agente'  : claveAgente,
+                    catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@AGENTES"/>'
                 }
                 ,success : function (response)
                 {

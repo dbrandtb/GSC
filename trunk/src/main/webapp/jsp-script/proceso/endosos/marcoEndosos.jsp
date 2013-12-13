@@ -8,11 +8,9 @@
     ///////////////////////
     ////// variables //////
     /*///////////////////*/
-    //var marendurlcata           = '<s:url namespace="/flujocotizacion"   action="cargarCatalogos" />';
     var marendurlcata             = '<s:url namespace="/catalogos"         action="obtieneCatalogo" />';
     var marendurlramos            = '<s:url namespace="/"                  action="obtenerRamos" />';
     var marendUrlFiltro           = '<s:url namespace="/endosos"           action="obtenerEndosos" />'
-    var marendUrlAgentes          = '<s:url namespace="/mesacontrol"       action="obtieneAgentes" />';
     var marenUrlObtenerAsegurados = '<s:url namespace="/"                  action="cargarComplementariosAsegurados" />';
     var marendStorePolizas;
     var marendStoreAsegurados;

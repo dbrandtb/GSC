@@ -805,15 +805,6 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return map;
 	}
 	
-	public WrapperResultados obtieneAgentes(String claveNombreAgente) throws ApplicationException
-	{
-        HashMap<String,Object> params =  new HashMap<String, Object>();
-		params.put("pv_nombre_i", claveNombreAgente);
-		logger.debug("Filtro por clave o nombre de agente=" + claveNombreAgente);
-		WrapperResultados result = this.returnBackBoneInvoke(params, ProcesoDAO.OBTIENE_AGENTES);
-		return result;
-	}
-	
 	public List<Map<String, String>> buscarRFC(Map<String,String> params) throws ApplicationException
 	{
 		log.debug("### kernel sustituto buscarRFC map: "+params);
