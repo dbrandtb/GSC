@@ -29,19 +29,31 @@
         debug('marendMostrarControlesFiltro',tipo);
         if(tipo==1)
         {
-            Ext.getCmp('marendFilUnieco').show();
-            Ext.getCmp('marendFilRamo').show();
-            Ext.getCmp('marendFilEstado').show();
-            Ext.getCmp('marendFilNmpoliza').show();
-            Ext.getCmp('marendFilFereferen').show();
+        	Ext.getCmp('marendFilNmpoliex').show();
+        	Ext.getCmp('marendFilRfc').hide();
+        	Ext.getCmp('marendFilCdperson').hide();
+        	Ext.getCmp('marendFilNombre').hide();
         }
         else if(tipo==2)
         {
-            Ext.getCmp('marendFilUnieco').hide();
-            Ext.getCmp('marendFilRamo').hide();
-            Ext.getCmp('marendFilEstado').hide();
-            Ext.getCmp('marendFilNmpoliza').hide();
-            Ext.getCmp('marendFilFereferen').show();
+            Ext.getCmp('marendFilNmpoliex').hide();
+            Ext.getCmp('marendFilRfc').show();
+            Ext.getCmp('marendFilCdperson').hide();
+            Ext.getCmp('marendFilNombre').hide();
+        }
+        else if(tipo==3)
+        {
+            Ext.getCmp('marendFilNmpoliex').hide();
+            Ext.getCmp('marendFilRfc').hide();
+            Ext.getCmp('marendFilCdperson').show();
+            Ext.getCmp('marendFilNombre').hide();
+        }
+        else if(tipo==4)
+        {
+            Ext.getCmp('marendFilNmpoliex').hide();
+            Ext.getCmp('marendFilRfc').hide();
+            Ext.getCmp('marendFilCdperson').hide();
+            Ext.getCmp('marendFilNombre').show();
         }
     }
     
@@ -586,105 +598,28 @@ Ext.onReady(function()
                 ,items         :
                 [
                     {
-                        xtype           : 'combo'
-                        ,id             : 'marendFilUnieco'
-                        ,fieldLabel     : 'Sucursal'
-                        ,name           : 'smap1.pv_cdunieco_i'
-                        ,displayField   : 'value'
-                        ,valueField     : 'key'
-                        ,forceSelection : true
-                        ,queryMode      :'local'
-                        ,store          : Ext.create('Ext.data.Store',
-                        {
-                            model     : 'Generic'
-                            ,autoLoad : true
-                            ,proxy    :
-                            {
-                                type         : 'ajax'
-                                ,url         : marendurlcata
-                                ,extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_SUCURSALES_DOCUMENTO"/>'}
-                                ,reader      :
-                                {
-                                    type  : 'json'
-                                    ,root : 'lista'
-                                }
-                            }
-                        })
-                        ,listeners      :
-                        {
-                            'change' : function()
-                            {
-                                Ext.getCmp('marendFilRamo').getStore().load(
-                                {
-                                    params : {'map1.cdunieco':this.getValue()}
-                                });
-                            }
-                        }
+                    	xtype : 'numberfield'
+                    	,id   : 'marendFilNmpoliex'
+                    	,fieldLabel : 'N&uacute;mero de p&oacute;liza'
+                    	,name       : 'smap1.pv_nmpoliex_i'
                     }
                     ,{
-                        xtype           : 'combo'
-                        ,id             : 'marendFilRamo'
-                        ,fieldLabel     : 'Producto'
-                        ,name           : 'smap1.pv_cdramo_i'
-                        ,valueField     : 'cdramo'
-                        ,displayField   : 'dsramo'
-                        ,forceSelection : true
-                        ,queryMode      :'local'
-                        ,store          : Ext.create('Ext.data.Store',
-                        {
-                            model     : 'Ramo'
-                            ,autoLoad : false
-                            ,proxy    :
-                            {
-                                type    : 'ajax'
-                                ,url    : marendurlramos
-                                ,reader :
-                                {
-                                    type  : 'json'
-                                    ,root : 'slist1'
-                                }
-                            }
-                        })
+                        xtype : 'textfield'
+                        ,id   : 'marendFilRfc'
+                        ,fieldLabel : 'RFC'
+                        ,name       : 'smap1.pv_cdrfc_i'
                     }
                     ,{
-                        xtype           : 'combo'
-                        ,id             : 'marendFilEstado'
-                        ,fieldLabel     : 'Estado'
-                        ,name           : 'smap1.pv_estado_i'
-                        ,displayField   : 'value'
-                        ,valueField     : 'key'
-                        ,forceSelection : true
-                        ,queryMode      :'local'
-                        ,store          : Ext.create('Ext.data.Store',
-                        {
-                            model     : 'Generic'
-                            ,autoLoad : true
-                            ,proxy    :
-                            {
-                                type         : 'ajax'
-                                ,url         : marendurlcata
-		                        ,extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@STATUS_POLIZA"/>'}
-                                ,reader      :
-                                {
-                                    type  : 'json'
-                                    ,root : 'lista'
-                                }
-                            }
-                        })
+                        xtype : 'numberfield'
+                        ,id   : 'marendFilCdperson'
+                        ,fieldLabel : 'Clave de asegurado'
+                        ,name       : 'smap1.pv_cdperson_i'
                     }
                     ,{
-                        xtype       : 'numberfield'
-                        ,id         : 'marendFilNmpoliza'
-                        ,name       : 'smap1.pv_nmpoliza_i'
-                        ,fieldLabel : 'P&oacute;liza/Cotizaci&oacute;n'
-                    }
-                    ,{
-                        xtype       : 'datefield'
-                        ,id         : 'marendFilFereferen'
-                        ,format     : 'd/m/Y'
-                        ,fieldLabel : 'Fecha de referencia'
-                        ,name       : 'smap1.pv_fereferen_i'
-                        ,value      : new Date()
+                        xtype : 'textfield'
+                        ,id   : 'marendFilNombre'
+                        ,fieldLabel : 'Nombre'
+                        ,name       : 'smap1.pv_nombre_i'
                     }
                 ]
                 ,buttons       :
@@ -698,12 +633,20 @@ Ext.onReady(function()
                             ,items :
                             [
                                 {
-                                    text     : 'General'
+                                    text     : 'Por p&oacute;liza'
                                     ,handler : function(){marendMostrarControlesFiltro(1);}
                                 }
                                 ,{
-                                    text     : 'Por p&oacute;liza'
+                                    text     : 'Por RFC'
                                     ,handler : function(){marendMostrarControlesFiltro(2);}
+                                }
+                                ,{
+                                    text     : 'Por clave de asegurado'
+                                    ,handler : function(){marendMostrarControlesFiltro(3);}
+                                }
+                                ,{
+                                    text     : 'Por nombre'
+                                    ,handler : function(){marendMostrarControlesFiltro(4);}
                                 }
                             ]
                         }
