@@ -851,7 +851,7 @@ Ext.onReady(function(){
                             ///////////
                             ,Ext.create('Ext.form.field.ComboBox',
                             {
-                                fieldLabel : 'Agente*'
+                                fieldLabel : 'Agente'
                                 ,name      : 'smap1.pv_cdagente_i'
                                 ,allowBlank: false
                                 ,displayField : 'value'
@@ -1216,7 +1216,7 @@ Ext.onReady(function(){
 	                    ,value      : mesconInput['nmpoliza']
 	                }
 	                ,{
-	                    fieldLabel : 'Agente**'
+	                    fieldLabel : 'Agente'
 	                    ,xtype     : 'combo'
 	                    ,name      : 'smap1.pv_cdagente_i'
 	                    ,value     : mesconInput['cdagente']
