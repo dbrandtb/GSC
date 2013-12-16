@@ -64,7 +64,14 @@ public class GeneradorCampos {
     	boolean listeners=false;
         Item fi=new Item();
         fi.setType(Item.OBJ);
-        fi.add(Item.crear("name", this.namePrefix+(ta.getCdatribu().length()>1?ta.getCdatribu():"0"+ta.getCdatribu())));
+        if(!ta.getType().equalsIgnoreCase(Tatri.TATRIGEN))
+        {            	
+        	fi.add(Item.crear("name", this.namePrefix+(ta.getCdatribu().length()>1?ta.getCdatribu():"0"+ta.getCdatribu())));
+        }
+        else
+        {
+        	fi.add(Item.crear("name", ta.getMapa().get("OTVALOR10")));
+        }
         String type="string";
         if(ta.getSwformat().equals("A")||StringUtils.isNotBlank(ta.getOttabval()))//si es combo solo pone strings
             type="string";
@@ -80,7 +87,14 @@ public class GeneradorCampos {
         
         Item col=new Item();
         col.setType(Item.OBJ);
-        col.add("dataIndex",this.namePrefix+(ta.getCdatribu().length()>1?ta.getCdatribu():"0"+ta.getCdatribu()));
+        if(!ta.getType().equalsIgnoreCase(Tatri.TATRIGEN))
+        {            	
+        	col.add("dataIndex",this.namePrefix+(ta.getCdatribu().length()>1?ta.getCdatribu():"0"+ta.getCdatribu()));
+        }
+        else
+        {
+        	col.add("dataIndex",ta.getMapa().get("OTVALOR10"));
+        }
         col.add("header",ta.getDsatribu());
         col.add("flex",1);
         if(type.equals("date"))
@@ -126,7 +140,6 @@ public class GeneradorCampos {
             it.setComposedName("Ext.create('Ext.form.ComboBox',{");
             it.setComposedNameClose("})");
             it.add(Item.crear("id", this.idPrefix+idx));
-            it.add(Item.crear("name", this.namePrefix+(ta.getCdatribu().length()>1?ta.getCdatribu():"0"+ta.getCdatribu())));
             it.add(Item.crear("cdatribu", ta.getCdatribu()));
             it.add(Item.crear("readOnly", ta.isReadOnly()));
             it.add(Item.crear("allowBlank",ta.getSwobliga()!=null&&ta.getSwobliga().equals("N")));
@@ -135,6 +148,7 @@ public class GeneradorCampos {
             it.add(Item.crear("forceSelection",false));
             it.add(Item.crear("typeAhead",true));
             it.add(Item.crear("matchFieldWidth",true));
+            it.add(Item.crear("queryMode", "local"));
             Item store=new Item(null,null,Item.OBJ,"store:Ext.create('Ext.data.Store',{","})");
             it.add(store);
             store.add("model","Generic");
@@ -182,11 +196,11 @@ public class GeneradorCampos {
             }
             else if(ta.getType().equals(Tatri.TATRIGEN))
             {
-            	Item extraParams=Item.crear("extraParams", null, Item.OBJ)
-                        .add("catalogo",ta.getMapa().get("OTVALOR03"));
             	//////////////////////////////////////////////////////
             	////// del 31 al 50 son parametros para lectura //////
             	////// 31:llave 32:valor...                     //////
+            	Item extraParams=Item.crear("extraParams", null, Item.OBJ)
+                        .add("catalogo",ta.getMapa().get("OTVALOR03"));
             	for(int i=31;i<=49;i+=2)
             	{
             		if(ta.getMapa().get("OTVALOR"+i)!=null&&ta.getMapa().get("OTVALOR"+i).length()>0)
@@ -197,16 +211,65 @@ public class GeneradorCampos {
             					);
             		}
             	}
+            	proxy.add(extraParams);
             	////// del 31 al 50 son parametros para lectura //////
             	//////////////////////////////////////////////////////
-            	proxy.add(extraParams);
+            	
+            	//////////////////////////////////////////////
+            	////// cuando el combo es autocompleter //////
+            	////// otvalor12 = queryParam           //////
+            	if(ta.getMapa().get("OTVALOR12")!=null&&ta.getMapa().get("OTVALOR12").length()>0)
+            	{
+            		it.add(Item.crear("hideTrigger" , true));
+            		it.add(Item.crear("minChars"    , 3));
+            		it.add(Item.crear("queryMode"   , "remote"));
+            		it.add(Item.crear("queryParam"  , ta.getMapa().get("OTVALOR12")));
+            		store.add("autoLoad",false);
+            	}
+            	////// cuando el combo es autocompleter //////
+            	//////////////////////////////////////////////
+            	
+            	////////////////////////////////
+            	////// para valor inicial //////
+            	////// otvalor13          //////
+            	if(ta.getMapa().get("OTVALOR13")!=null&&ta.getMapa().get("OTVALOR13").length()>0)
+            	{
+            		it.add(Item.crear("value" , ta.getMapa().get("OTVALOR13")).setQuotes(""));
+            	}
+            	////// para valor inicial //////
+            	////////////////////////////////
+            	
+            	/////////////////////////////////////
+            	////// para saber si es hidden //////
+            	if(ta.getMapa().get("OTVALOR14")!=null&&ta.getMapa().get("OTVALOR14").equalsIgnoreCase("S"))
+            	{
+            		it.add(Item.crear("hidden" , true));
+            	}
+            	////// para saber si es hidden //////
+            	/////////////////////////////////////
+            	
+            	/////////////////////////////////////
+            	////// para saber si es hidden //////
+            	if(ta.getMapa().get("OTVALOR14")!=null&&ta.getMapa().get("OTVALOR14").equalsIgnoreCase("S"))
+            	{
+            		it.add(Item.crear("hidden" , true));
+            	}
+            	////// para saber si es hidden //////
+            	/////////////////////////////////////
+            }
+            if(!ta.getType().equalsIgnoreCase(Tatri.TATRIGEN))
+            {
+            	it.add(Item.crear("name", this.namePrefix+(ta.getCdatribu().length()>1?ta.getCdatribu():"0"+ta.getCdatribu())));
+            }
+            else
+            {
+            	it.add(Item.crear("name", ta.getMapa().get("OTVALOR10")));
             }
             proxy.add(
                     Item.crear("reader", null, Item.OBJ)
                     .add("type","json")
                     .add("root","lista")
                     );
-            it.add(Item.crear("queryMode", "local"));
             it.add(Item.crear("displayField", "value"));
             it.add(Item.crear("valueField", "key"));
             it.add(Item.crear("editable", "false"));
@@ -261,7 +324,6 @@ public class GeneradorCampos {
             it.setComposedName("Ext.create('Ext.form.TextField',{");
             it.setComposedNameClose("})");
             it.add(Item.crear("id", this.idPrefix+idx));
-            it.add(Item.crear("name", this.namePrefix+(ta.getCdatribu().length()>1?ta.getCdatribu():"0"+ta.getCdatribu())));
             it.add(Item.crear("cdatribu", ta.getCdatribu()));
             it.add(Item.crear("readOnly", ta.isReadOnly()));
             it.add(Item.crear("allowBlank",ta.getSwobliga()!=null&&ta.getSwobliga().equals("N")));
@@ -279,6 +341,33 @@ public class GeneradorCampos {
             if(idx<lt.size()-1&&StringUtils.isNotBlank(lt.get(idx+1).getCdtablj1()))
             {
             	this.agregarHerencia(lt,it,idx);
+            }
+            if(!ta.getType().equalsIgnoreCase(Tatri.TATRIGEN))
+            {
+            	it.add(Item.crear("name", this.namePrefix+(ta.getCdatribu().length()>1?ta.getCdatribu():"0"+ta.getCdatribu())));
+            }
+            else
+            {
+            	it.add(Item.crear("name", ta.getMapa().get("OTVALOR10")));
+            	
+            	////////////////////////////////
+            	////// para valor inicial //////
+            	////// otvalor13          //////
+            	if(ta.getMapa().get("OTVALOR13")!=null&&ta.getMapa().get("OTVALOR13").length()>0)
+            	{
+            		it.add(Item.crear("value" , ta.getMapa().get("OTVALOR13")).setQuotes(""));
+            	}
+            	////// para valor inicial //////
+            	////////////////////////////////
+            	
+            	/////////////////////////////////////
+            	////// para saber si es hidden //////
+            	if(ta.getMapa().get("OTVALOR14")!=null&&ta.getMapa().get("OTVALOR14").equalsIgnoreCase("S"))
+            	{
+            		it.add(Item.crear("hidden" , true));
+            	}
+            	////// para saber si es hidden //////
+            	/////////////////////////////////////
             }
         }
         else if(ta.getSwformat().equals("N")||ta.getSwformat().equals("P"))
@@ -287,7 +376,6 @@ public class GeneradorCampos {
             it.setComposedName("Ext.create('Ext.form.NumberField',{");
             it.setComposedNameClose("})");
             it.add(Item.crear("id", this.idPrefix+idx));
-            it.add(Item.crear("name", this.namePrefix+(ta.getCdatribu().length()>1?ta.getCdatribu():"0"+ta.getCdatribu())));
             it.add(Item.crear("cdatribu", ta.getCdatribu()));
             it.add(Item.crear("readOnly", ta.isReadOnly()));
             it.add(Item.crear("allowBlank",ta.getSwobliga()!=null&&ta.getSwobliga().equals("N")));
@@ -306,6 +394,33 @@ public class GeneradorCampos {
             {
             	this.agregarHerencia(lt,it,idx);
             }
+            if(!ta.getType().equalsIgnoreCase(Tatri.TATRIGEN))
+            {
+            	it.add(Item.crear("name", this.namePrefix+(ta.getCdatribu().length()>1?ta.getCdatribu():"0"+ta.getCdatribu())));
+            }
+            else
+            {
+            	it.add(Item.crear("name", ta.getMapa().get("OTVALOR10")));
+            	
+            	////////////////////////////////
+            	////// para valor inicial //////
+            	////// otvalor13          //////
+            	if(ta.getMapa().get("OTVALOR13")!=null&&ta.getMapa().get("OTVALOR13").length()>0)
+            	{
+            		it.add(Item.crear("value" , ta.getMapa().get("OTVALOR13")).setQuotes(""));
+            	}
+            	////// para valor inicial //////
+            	////////////////////////////////
+            	
+            	/////////////////////////////////////
+            	////// para saber si es hidden //////
+            	if(ta.getMapa().get("OTVALOR14")!=null&&ta.getMapa().get("OTVALOR14").equalsIgnoreCase("S"))
+            	{
+            		it.add(Item.crear("hidden" , true));
+            	}
+            	////// para saber si es hidden //////
+            	/////////////////////////////////////
+            }
         }
         else if(ta.getSwformat().equals("F"))
         {
@@ -313,13 +428,39 @@ public class GeneradorCampos {
             it.setComposedName("Ext.create('Ext.form.DateField',{");
             it.setComposedNameClose("})");
             it.add(Item.crear("id", this.idPrefix+idx));
-            it.add(Item.crear("name", this.namePrefix+(ta.getCdatribu().length()>1?ta.getCdatribu():"0"+ta.getCdatribu())));
             it.add(Item.crear("cdatribu", ta.getCdatribu()));
             it.add(Item.crear("readOnly", ta.isReadOnly()));
             it.add(Item.crear("allowBlank",ta.getSwobliga()!=null&&ta.getSwobliga().equals("N")));
             it.add(Item.crear("fieldLabel",ta.getDsatribu()));
             it.add(Item.crear("style","margin:5px"));
             it.add(Item.crear("format","d/m/Y"));
+            if(!ta.getType().equalsIgnoreCase(Tatri.TATRIGEN))
+            {
+            	it.add(Item.crear("name", this.namePrefix+(ta.getCdatribu().length()>1?ta.getCdatribu():"0"+ta.getCdatribu())));
+            }
+            else
+            {
+            	it.add(Item.crear("name", ta.getMapa().get("OTVALOR10")));
+            	
+            	////////////////////////////////
+            	////// para valor inicial //////
+            	////// otvalor13          //////
+            	if(ta.getMapa().get("OTVALOR13")!=null&&ta.getMapa().get("OTVALOR13").length()>0)
+            	{
+            		it.add(Item.crear("value" , ta.getMapa().get("OTVALOR13")).setQuotes(""));
+            	}
+            	////// para valor inicial //////
+            	////////////////////////////////
+            	
+            	/////////////////////////////////////
+            	////// para saber si es hidden //////
+            	if(ta.getMapa().get("OTVALOR14")!=null&&ta.getMapa().get("OTVALOR14").equalsIgnoreCase("S"))
+            	{
+            		it.add(Item.crear("hidden" , true));
+            	}
+            	////// para saber si es hidden //////
+            	/////////////////////////////////////
+            }
         }
         items.add(it);
         fields.add(fi);

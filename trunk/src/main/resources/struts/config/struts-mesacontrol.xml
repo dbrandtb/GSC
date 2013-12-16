@@ -12,6 +12,9 @@
         <action name="guardarTramiteManual" method="guardarTramiteManual" class="MesaControlAction">
             <result name="success" type="json" />
         </action>
+        <action name="guardarTramiteDinamico" method="guardarTramiteManual" class="guardarTramiteDinamico">
+            <result name="success" type="json" />
+        </action>
         <action name="actualizarStatusTramite" method="actualizarStatusTramite" class="MesaControlAction">
             <result name="success" type="json" />
         </action>
@@ -23,6 +26,9 @@
         </action>
         <action name="loadTareasSuper" method="loadTareasSuper" class="MesaControlAction">
             <result name="success" type="json" />
+        </action>
+        <action name="mcdinamica" class="MesaControlAction" method="mcdinamica">
+            <result name="success">/jsp/extjs4/mesacontrol/mcdinamica.jsp</result>
         </action>
     </package>
 

@@ -793,6 +793,7 @@ public class EndososAction extends PrincipalCoreAction
 			paramsObtAtriCober.put("pv_cdramo_i"   , (String)omap1.get("pv_cdramo_i"));
 	        paramsObtAtriCober.put("pv_estado_i"   , (String)omap1.get("pv_estado_i"));
 	        paramsObtAtriCober.put("pv_nmpoliza_i" , (String)omap1.get("pv_nmpoliza_i"));
+	        paramsObtAtriCober.put("pv_nmsituac_i" , smap1.get("nmsituac"));
 	        paramsObtAtriCober.put("pv_nmsuplem_i" , respEndCob.get("pv_nmsuplem_o"));
 	        List<Map<String,String>>listaTempAtributosCober=endososManager.obtenerAtributosCoberturas(paramsObtAtriCober);
 	        Map<String,String>atriCober=listaTempAtributosCober.get(0);
