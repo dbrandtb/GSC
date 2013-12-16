@@ -349,6 +349,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			result.setDsatribu(rs.getString("DSATRIBU"));
 			result.setOttabval(rs.getString("OTTABVAL"));
 			result.setCdtablj1(rs.getString("CDTABLJ1"));
+			result.setReadOnly(rs.getString("OTVALOR11")!=null&&rs.getString("OTVALOR11").equalsIgnoreCase("S"));
 			Map<String,String>mapa=new LinkedHashMap<String,String>(0);
 			String cols[]=new String[]{
 					"OTVALOR01","OTVALOR02","OTVALOR03","OTVALOR04","OTVALOR05","OTVALOR06","OTVALOR07","OTVALOR08","OTVALOR09","OTVALOR10"
@@ -396,6 +397,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("pv_cdramo_i"      , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"      , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmpoliza_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsituac_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmsuplem_i"    , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new GenericMapper(columnas)));
 			declareParameter(new SqlOutParameter("pv_messages_o" , OracleTypes.VARCHAR));

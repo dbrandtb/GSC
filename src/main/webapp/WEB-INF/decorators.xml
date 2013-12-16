@@ -75,6 +75,8 @@
 		<!-- mesa de control -->
 		<pattern>/mesacontrol/principal.action</pattern>
         <pattern>/jsp/extjs4/mesacontrol/principal.jsp</pattern>
+        <pattern>/mesacontrol/mcdinamica.action</pattern>
+        <pattern>/jsp/extjs4/mesacontrol/mcdinamica.jsp</pattern>
         <!-- fin de mesa de control -->
         
         <pattern>/catalogos/*.action</pattern>

@@ -34,6 +34,7 @@
     
     <bean id="MesaControlAction" class="mx.com.gseguros.portal.cotizacion.controller.MesaControlAction" scope="prototype">
         <property name="kernelManager" ref="kernelManagerSustituto"/>
+        <property name="endososManager" ref="endososManagerImpl"/>
     </bean>
     
     <bean id="beanDatosComplementariosCoberturas" class="mx.com.gseguros.portal.cotizacion.controller.ComplementariosCoberturasAction" scope="prototype">

@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.cotizacion.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -8,26 +9,35 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.struts2.ServletActionContext;
+
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
+import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.cotizacion.model.Tatri;
+import mx.com.gseguros.portal.endosos.service.EndososManager;
+import mx.com.gseguros.portal.general.util.GeneradorCampos;
 
 public class MesaControlAction extends PrincipalCoreAction
 {
 	
-	private static final long serialVersionUID = -3398140781812652316L;
-	private static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(MesaControlAction.class);
-	private KernelManagerSustituto kernelManager;
-	private Map<String,String>smap1;
-	private Map<String,String>smap2;
-	private List<Map<String,String>>slist1;
-	private List<Map<String,String>>slist2;
-	private List<GenericVO> lista;
-	private String msgResult;
-	private boolean success;
+	private static final long              serialVersionUID = -3398140781812652316L;
+	private static org.apache.log4j.Logger log              = org.apache.log4j.Logger.getLogger(MesaControlAction.class);
+	private static SimpleDateFormat        renderFechas     = new SimpleDateFormat("dd/MM/yyyy");
+	private KernelManagerSustituto         kernelManager;
+	private Map<String,String>             smap1;
+	private Map<String,String>             smap2;
+	private List<Map<String,String>>       slist1;
+	private List<Map<String,String>>       slist2;
+	private List<GenericVO>                lista;
+	private String                         msgResult;
+	private boolean                        success;
+	private Map<String,Item>               imap1;
+	private EndososManager                 endososManager;
 	
 	public String principal()
 	{
@@ -408,6 +418,155 @@ public class MesaControlAction extends PrincipalCoreAction
 	////// cargar tramites para supervisor //////
 	/////////////////////////////////////////////
 	
+	/////////////////////////////////////////////////
+	//////      mesa de control dinamica       //////
+	////// smap1:                              //////
+	//////     cddos     : ramo                //////
+	//////     cdtres    : situacion           //////
+	//////     cdsite    : proceso             //////
+	//////     gridTitle : titulo para el grid //////
+	/*/////////////////////////////////////////////*/
+	public String mcdinamica()
+	{
+		log.debug(""
+				+ "\n######################################"
+				+ "\n######################################"
+				+ "\n###### mesa de control dinamica ######"
+				+ "\n######                          ######"
+				);
+		log.debug("smap1: "+smap1);
+		
+		try
+		{
+			UserVO usuario=(UserVO) this.session.get("USUARIO");
+			
+			List<Tatri>ltForm1=endososManager.obtPantallaAlvaro(
+					smap1.get("cduno")
+					,smap1.get("cddos")
+					,smap1.get("cdtres")
+					,smap1.get("cdcuatro")
+					,smap1.get("cdcinco")
+					,smap1.get("cdseis")
+					,smap1.get("cdsiete")
+					,usuario.getRolActivo().getObjeto().getValue()
+					,smap1.get("cdnueve")
+					,"FORM1");
+			
+			List<Tatri>ltgrid1=endososManager.obtPantallaAlvaro(
+					smap1.get("cduno")
+					,smap1.get("cddos")
+					,smap1.get("cdtres")
+					,smap1.get("cdcuatro")
+					,smap1.get("cdcinco")
+					,smap1.get("cdseis")
+					,smap1.get("cdsiete")
+					,usuario.getRolActivo().getObjeto().getValue()
+					,smap1.get("cdnueve")
+					,"GRID1");
+			
+			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			
+			gc.generaParcial(ltgrid1);
+			
+			imap1=new HashMap<String,Item>(0);
+			imap1.put("modelFields",gc.getFields());
+			imap1.put("gridColumns",gc.getColumns());
+			
+			gc.generaParcial(ltForm1);
+			imap1.put("formItems",gc.getItems());
+			
+		}
+		catch(Exception ex)
+		{
+			log.error("error al cargar mesa de control dinamica");
+		}
+		
+		log.debug(""
+				+ "\n######                          ######"
+				+ "\n###### mesa de control dinamica ######"
+				+ "\n######################################"
+				+ "\n######################################"
+				);
+		return SUCCESS;
+	}
+	/*/////////////////////////////////////////////*/ 
+	//////       mesa de control dinamica      //////
+	/////////////////////////////////////////////////
+	
+	/////////////////////////////////////////////
+	////// guardar tramite manual dinamico //////
+	/*/////////////////////////////////////////*/
+	public String guardarTramiteDinamico()
+	{
+		log.debug(""
+				+ "\n####################################"
+				+ "\n####################################"
+				+ "\n###### guardarTramiteDinamico ######"
+				+ "\n######                        ######"
+				);
+		try
+		{
+			//////////////////////////////////
+			////// Se guarda el tramite //////
+			Map<String,Object>omap=new LinkedHashMap<String,Object>(0);
+			for(Entry<String,String> entry:smap1.entrySet())
+			{
+				omap.put((String)entry.getKey(),entry.getValue());//se pasa de smap1 a omap
+			}
+			omap.put("pv_cdunieco_i",smap1.get("pv_cdsucdom_i"));//se parcha porque requiere el mismo valor
+			omap.put("pv_ferecepc_i",renderFechas.parse((String)omap.get("pv_ferecepc_i")));//se convierte String a Date
+			omap.put("pv_festatus_i",renderFechas.parse((String)omap.get("pv_festatus_i")));//se convierte String a Date
+			WrapperResultados res = kernelManager.PMovMesacontrol(omap);
+			////// Se guarda el tramite //////
+			//////////////////////////////////
+			
+			////////////////////////////////////////////
+			////// se verifica que se guarde bien //////
+			if(res.getItemMap() == null)
+			{
+				log.error("Sin mensaje respuesta de nmtramite!!");
+			}
+			else
+			{
+				msgResult = (String) res.getItemMap().get("ntramite");
+			}
+			log.debug("TRAMITE RESULTADO: "+msgResult);
+			////// se verifica que se guarde bien //////
+			////////////////////////////////////////////
+
+			//////////////////////////////////
+			////// se guarda el detalle //////
+			UserVO usu=(UserVO)session.get("USUARIO");
+			log.debug("se inserta detalle nuevo");
+        	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
+        	parDmesCon.put("pv_ntramite_i"   , res.getItemMap().get("ntramite"));
+        	parDmesCon.put("pv_feinicio_i"   , new Date());
+        	parDmesCon.put("pv_cdclausu_i"   , null);
+        	parDmesCon.put("pv_comments_i"   , "Se guard&oacute; un nuevo tr&aacute;mite manual desde mesa de control");
+        	parDmesCon.put("pv_cdusuari_i"   , usu.getUser());
+        	kernelManager.movDmesacontrol(parDmesCon);
+			////// se guarda el detalle //////
+        	//////////////////////////////////
+					
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			log.error("error al guardar tramite manual",ex);
+			success=false;
+		}
+		log.debug(""
+				+ "\n######                        ######"
+				+ "\n###### guardarTramiteDinamico ######"
+				+ "\n####################################"
+				+ "\n####################################"
+				);
+		return SUCCESS;
+	}
+	/*/////////////////////////////////////////*/
+	////// guardar tramite manual dinamico //////
+	/////////////////////////////////////////////
+	
 	/////////////////////////////////
 	////// getters ans setters //////
 	/*/////////////////////////////*/
@@ -469,6 +628,22 @@ public class MesaControlAction extends PrincipalCoreAction
 
 	public void setLista(List<GenericVO> lista) {
 		this.lista = lista;
+	}
+
+	public Map<String, Item> getImap1() {
+		return imap1;
+	}
+
+	public void setImap1(Map<String, Item> imap1) {
+		this.imap1 = imap1;
+	}
+
+	public EndososManager getEndososManager() {
+		return endososManager;
+	}
+
+	public void setEndososManager(EndososManager endososManager) {
+		this.endososManager = endososManager;
 	}
 	
 }
