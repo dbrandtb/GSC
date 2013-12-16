@@ -12,7 +12,7 @@
         <action name="guardarTramiteManual" method="guardarTramiteManual" class="MesaControlAction">
             <result name="success" type="json" />
         </action>
-        <action name="guardarTramiteDinamico" method="guardarTramiteManual" class="guardarTramiteDinamico">
+        <action name="guardarTramiteDinamico" method="guardarTramiteDinamico" class="MesaControlAction">
             <result name="success" type="json" />
         </action>
         <action name="actualizarStatusTramite" method="actualizarStatusTramite" class="MesaControlAction">
