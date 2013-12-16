@@ -782,29 +782,6 @@ public class EndososAction extends PrincipalCoreAction
 			}
 			
 			/*
-			pv_cdusuari_i
-			pv_cdelemen_i
-			pv_cdunieco_i
-			pv_cdramo_i
-			pv_estado_i
-			pv_nmpoliza_i
-			pv_nmsituac_i
-			pv_nmsuplem_i
-			pv_cdtipsit_i
-			*/
-			Map<String,String>paramSigsvdefEmi=new LinkedHashMap<String,String>(0);
-			paramSigsvdefEmi.put("pv_cdusuari_i" , usuario.getEmpresa().getElementoId());
-			paramSigsvdefEmi.put("pv_cdelemen_i" , usuario.getUser());
-			paramSigsvdefEmi.put("pv_cdunieco_i" , (String)omap1.get("pv_cdunieco_i"));
-			paramSigsvdefEmi.put("pv_cdramo_i"   , (String)omap1.get("pv_cdramo_i"));
-			paramSigsvdefEmi.put("pv_estado_i"   , (String)omap1.get("pv_estado_i"));
-			paramSigsvdefEmi.put("pv_nmpoliza_i" , (String)omap1.get("pv_nmpoliza_i"));
-			paramSigsvdefEmi.put("pv_nmsituac_i" , smap1.get("nmsituac"));
-			paramSigsvdefEmi.put("pv_nmsuplem_i" , respEndCob.get("pv_nmsuplem_o"));
-			paramSigsvdefEmi.put("pv_cdtipsit_i" , smap1.get("cdtipsit"));
-			kernelManager.ejecutaASIGSVALIPOL_EMI(paramSigsvdefEmi);
-			
-			/*
 			pv_cdunieco_i
 			pv_cdramo_i
 	        pv_estado_i
@@ -894,6 +871,38 @@ public class EndososAction extends PrincipalCoreAction
 			paramsNuevos.put("pv_accion_i" , "I");
 			log.debug("los actualizados seran: "+paramsNuevos);
 			kernelManager.insertaValoresSituaciones(paramsNuevos);
+			
+			/*
+			pv_cdusuari_i
+			pv_cdelemen_i
+			pv_cdunieco_i
+			pv_cdramo_i
+			pv_estado_i
+			pv_nmpoliza_i
+			pv_nmsituac_i
+			pv_nmsuplem_i
+			pv_cdtipsit_i
+			*/
+			Map<String,String>paramSigsvdefEnd=new LinkedHashMap<String,String>(0);
+			paramSigsvdefEnd.put("pv_cdusuari_i" , usuario.getEmpresa().getElementoId());
+			paramSigsvdefEnd.put("pv_cdelemen_i" , usuario.getUser());
+			paramSigsvdefEnd.put("pv_cdunieco_i" , (String)omap1.get("pv_cdunieco_i"));
+			paramSigsvdefEnd.put("pv_cdramo_i"   , (String)omap1.get("pv_cdramo_i"));
+			paramSigsvdefEnd.put("pv_estado_i"   , (String)omap1.get("pv_estado_i"));
+			paramSigsvdefEnd.put("pv_nmpoliza_i" , (String)omap1.get("pv_nmpoliza_i"));
+			paramSigsvdefEnd.put("pv_nmsituac_i" , smap1.get("nmsituac"));
+			paramSigsvdefEnd.put("pv_nmsuplem_i" , respEndCob.get("pv_nmsuplem_o"));
+			paramSigsvdefEnd.put("pv_cdtipsit_i" , smap1.get("cdtipsit"));
+			if(smap1.get("altabaja").equalsIgnoreCase("alta"))
+			{
+				paramSigsvdefEnd.put("pv_cdtipsup_i" , "6");
+			}
+			else
+			{
+				paramSigsvdefEnd.put("pv_cdtipsup_i" , "7");
+			}
+			paramSigsvdefEnd.put("pv_cdtipsup_i" , "");
+			endososManager.sigsvalipolEnd(paramSigsvdefEnd);
 			
 			if(smap1.get("confirmar").equalsIgnoreCase("si"))
 			{

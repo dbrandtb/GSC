@@ -9,6 +9,8 @@ import java.util.Map.Entry;
 
 import javax.sql.DataSource;
 
+import mx.com.aon.portal.dao.WrapperResultadosGeneric;
+import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.portal.cotizacion.model.Tatri;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
@@ -408,6 +410,44 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerAtributosCoberturas(this.getDataSource()), params);
 		return (List<Map<String,String>>) resultadoMap.get("pv_registro_o");
+	}
+	
+	protected class EjecutarSIGSVALIPOL_END extends StoredProcedure
+	{
+
+		protected EjecutarSIGSVALIPOL_END(DataSource dataSource)
+		{
+			super(dataSource, "PKG_COTIZA.P_EJECUTA_SIGSVALIPOL_END");
+
+			declareParameter(new SqlParameter("pv_cdusuari_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdelemen_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_nmsituac_i" , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsit_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsup_i" , OracleTypes.VARCHAR));
+
+	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			
+			compile();
+		}
+
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception
+		{
+            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+            return mapper.build(map);
+        }
+	}
+	
+	@Override
+	public Map<String,Object> sigsvalipolEnd(Map<String, String> params) throws Exception
+	{
+		Map<String,Object> resultadoMap=this.ejecutaSP(new EjecutarSIGSVALIPOL_END(this.getDataSource()), params);
+		return resultadoMap;
 	}
 
 }

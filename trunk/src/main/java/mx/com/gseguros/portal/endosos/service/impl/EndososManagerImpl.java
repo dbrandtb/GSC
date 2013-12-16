@@ -127,6 +127,15 @@ public class EndososManagerImpl implements EndososManager
 		return lista;
 	}
 	
+	@Override
+	public Map<String,Object> sigsvalipolEnd(Map<String, String> params) throws Exception
+	{
+		log.debug("EndososManager sigsvalipolEnd params: "+params);
+		Map<String,Object> mapa=endososDAO.sigsvalipolEnd(params);
+		log.debug("EndososManager sigsvalipolEnd response map: "+mapa);
+        return mapa;
+	}
+	
 	/////////////////////////////////
 	////// getters and setters //////
 	/*/////////////////////////////*/
