@@ -34,5 +34,6 @@
         
     </head>
     <body>
+        <div id="dvConsultasPolizas" style="height:710px"></div>
     </body>
 </html>
