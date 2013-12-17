@@ -7,11 +7,25 @@
 ///////////////////////
 ////// variables //////
 /*///////////////////*/
-var mcdinInput    = [];
-var mcdinUrlNuevo = '<s:url namespace="/mesacontrol" action="guardarTramiteDinamico" />';
+var mcdinInput     = [];
+var mcdinUrlNuevo  = '<s:url namespace="/mesacontrol" action="guardarTramiteDinamico" />';
+var mcdinUrlCargar = '<s:url namespace="/mesacontrol" action="loadTareasDinamico" />';
+
+mcdinInput['cdunieco'] = '<s:property value="smap2.pv_cdunieco_i" />';
+mcdinInput['ntramite'] = '<s:property value="smap2.pv_ntramite_i" />';
+mcdinInput['cdramo']   = '<s:property value="smap2.pv_cdramo_i"   />';
+mcdinInput['nmpoliza'] = '<s:property value="smap2.pv_nmpoliza_i" />';
+mcdinInput['estado']   = '<s:property value="smap2.pv_estado_i"   />';
+mcdinInput['cdagente'] = '<s:property value="smap2.pv_cdagente_i" />';
+mcdinInput['status']   = '<s:property value="smap2.pv_status_i"   />';
+mcdinInput['cdtipsit'] = '<s:property value="smap2.pv_cdtipsit_i" />';
+mcdinInput['fedesde']  = '<s:property value="smap2.pv_fedesde_i"  />';
+mcdinInput['fehasta']  = '<s:property value="smap2.pv_fehasta_i"  />';
+mcdinInput['tiptra']   = '<s:property value="smap2.pv_cdtiptra_i" />';
 debug('mcdinInput: ',mcdinInput);
 
 var mcdinGrid;
+var mcdinStore;
 /*///////////////////*/
 ////// variables //////
 ///////////////////////
@@ -136,6 +150,27 @@ Ext.onReady(function()
     ////////////////////
     ////// stores //////
     /*////////////////*/
+    mcdinStore = Ext.create('Ext.data.Store',
+    {
+        pageSize : 10,
+        autoLoad : true,
+        model    : 'McdinModelo',
+        //sorters:[{sorterFn:function(o1,o2){return o1.get('ntramite')<o2.get('ntramite')}}],
+        proxy    :
+        {
+            enablePaging : true,
+            reader       : 'json',
+            type         : 'memory',
+            data         : []
+        }
+        ,listeners :
+        {
+            load : function (action,records)
+            {
+                debug("records",records);
+            }
+        }
+    });
     /*////////////////*/
     ////// stores //////
     ////////////////////
@@ -152,6 +187,7 @@ Ext.onReady(function()
     		Ext.apply(this,
     		{
     			title    : '<s:property value="smap1.gridTitle" />'
+    			,store   : mcdinStore
     			,columns :
     			[
     			    {
@@ -171,6 +207,12 @@ Ext.onReady(function()
     					,handler : mcdinAgregarTramiteManual
     				}
     			]
+    			,bbar     :
+    	        {
+    	            displayInfo : true
+    	            ,store      : mcdinStore
+    	            ,xtype      : 'pagingtoolbar'
+    	        }
     		});
     		this.callParent();
     	}
@@ -191,6 +233,47 @@ Ext.onReady(function()
     //////////////////////
     ////// cargador //////
     /*//////////////////*/
+    Ext.Ajax.request(
+    {
+        url      : mcdinUrlCargar
+        ,params  :
+        {
+            'smap1.pv_cdunieco_i'   : mcdinInput['cdunieco']
+             ,'smap1.pv_ntramite_i' : mcdinInput['ntramite']
+             ,'smap1.pv_cdramo_i'   : mcdinInput['cdramo']
+             ,'smap1.pv_nmpoliza_i' : mcdinInput['nmpoliza']
+             ,'smap1.pv_estado_i'   : mcdinInput['estado']
+             ,'smap1.pv_cdagente_i' : mcdinInput['cdagente']
+             ,'smap1.pv_status_i'   : mcdinInput['status']
+             ,'smap1.pv_cdtipsit_i' : mcdinInput['cdtipsit']
+             ,'smap1.pv_fedesde_i'  : mcdinInput['fedesde']
+             ,'smap1.pv_fehasta_i'  : mcdinInput['fehasta']
+             ,'smap1.pv_cdtiptra_i' : mcdinInput['tiptra']
+        }
+        ,success : function(response)
+        {
+            var jsonResponse = Ext.decode(response.responseText);
+            debug(jsonResponse);
+            mcdinStore.setProxy(
+            {
+                type         : 'memory',
+                enablePaging : true,
+                reader       : 'json',
+                data         : jsonResponse.slist1
+            });
+            mcdinStore.load();
+        }
+        ,failure : function()
+        {
+            var msg=Ext.Msg.show(
+            {
+                title   : 'Error',
+                icon    : Ext.Msg.ERROR,
+                msg     : 'Error de comunicaci&oacute;n',
+                buttons : Ext.Msg.OK
+            });
+        }
+    });
     /*//////////////////*/
     ////// cargador //////
     //////////////////////

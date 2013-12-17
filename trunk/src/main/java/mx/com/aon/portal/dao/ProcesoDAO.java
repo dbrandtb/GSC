@@ -3078,6 +3078,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			declareParameter(new SqlParameter("pv_fedesde_i",      OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_fehasta_i",      OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_dsrol_i",         OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtiptra_i",         OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerMesaControlMapper()));
 			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
