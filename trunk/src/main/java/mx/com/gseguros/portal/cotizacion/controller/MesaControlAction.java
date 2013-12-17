@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.struts2.ServletActionContext;
-
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
@@ -21,6 +19,8 @@ import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.Tatri;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+
+import org.apache.struts2.ServletActionContext;
 
 public class MesaControlAction extends PrincipalCoreAction
 {
@@ -47,26 +47,14 @@ public class MesaControlAction extends PrincipalCoreAction
 				+ "\n###### mesa de control principal ######"
 				+ "\n######                           ######"
 				);
-		UserVO usu=(UserVO) session.get("USUARIO");
-		String dsrol="";
-		if(usu!=null
-		    &&usu.getRolActivo()!=null
-		    &&usu.getRolActivo().getObjeto()!=null
-		    &&usu.getRolActivo().getObjeto().getValue()!=null)
+		if(smap1==null)
 		{
-		    dsrol=usu.getRolActivo().getObjeto().getValue();
+			smap1=new HashMap<String,String>(0);
 		}
-		if(dsrol.equalsIgnoreCase("mesadecontrol")||dsrol.equalsIgnoreCase("suscriptor")||dsrol.equalsIgnoreCase("medico"))
+		if((!smap1.containsKey("pv_status_i")))
 		{
-			if(smap1==null)
-			{
-				smap1=new HashMap<String,String>(0);
-			}
-			if((!smap1.containsKey("pv_status_i")))
-			{
-				log.debug("pv_status_i: "+smap1.get("pv_status_i"));
-				smap1.put("pv_status_i","-1");//valor default
-			}
+			log.debug("pv_status_i: "+smap1.get("pv_status_i"));
+			smap1.put("pv_status_i","-1");//valor default
 		}
 		log.debug(""
 				+ "\n######                           ######"
@@ -113,6 +101,12 @@ public class MesaControlAction extends PrincipalCoreAction
 			////// para la nueva lectura de tareas con filtros //////
 			/////////////////////////////////////////////////////////
 			
+			//////////////////////////////////////////////
+			////// para filtrar solo polizas nuevas //////
+			smap1.put("pv_cdtiptra_i","1");
+			////// para filtrar solo polizas nuevas //////
+			//////////////////////////////////////////////
+			
 			slist1=kernelManager.loadMesaControl(smap1);
 			if(slist1!=null&&slist1.size()>0)
 			{
@@ -151,6 +145,55 @@ public class MesaControlAction extends PrincipalCoreAction
 				);
 		return SUCCESS;
 	}
+	
+	////////////////////////////////
+	////// loadTareasDinamico //////
+	////// smap1:             //////
+	//////     pv_cdunieco_i  //////
+	//////     pv_ntramite_i  //////
+	//////     pv_cdramo_i    //////
+	//////     pv_nmpoliza_i  //////
+	//////     pv_estado_i    //////
+	//////     pv_cdagente_i  //////
+	//////     pv_status_i    //////
+	//////     pv_cdtipsit_i  //////
+	//////     pv_fedesde_i   //////
+	//////     pv_fehasta_i   //////
+	//////     pv_cdtiptra_i  //////
+	/*////////////////////////////*/
+	public String loadTareasDinamico()
+	{
+		log.debug(""
+				+ "\n################################################"
+				+ "\n################################################"
+				+ "\n###### mesa de control loadTareasDinamico ######"
+				+ "\n######                                    ######"
+				);
+		log.debug("smap1: "+smap1);
+		try
+		{
+			UserVO usu=(UserVO) session.get("USUARIO");
+			smap1.put("pv_dsrol_i",usu.getRolActivo().getObjeto().getValue());
+			slist1=kernelManager.loadMesaControl(smap1);
+	
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			success=false;
+			log.error("error al load tareas dinamico",ex);
+		}
+		log.debug(""
+				+ "\n######                                    ######"
+				+ "\n###### mesa de control loadTareasDinamico ######"
+				+ "\n################################################"
+				+ "\n################################################"
+				);
+		return SUCCESS;
+	}
+	/*////////////////////////////*/
+	////// loadTareasDinamico //////
+	////////////////////////////////
 	
 	public String guardarTramiteManual()
 	{
@@ -420,11 +463,23 @@ public class MesaControlAction extends PrincipalCoreAction
 	
 	/////////////////////////////////////////////////
 	//////      mesa de control dinamica       //////
-	////// smap1:                              //////
+	////// smap1 :                             //////
 	//////     cddos     : ramo                //////
 	//////     cdtres    : situacion           //////
 	//////     cdsite    : proceso             //////
 	//////     gridTitle : titulo para el grid //////
+	////// smap2 :                             //////
+	//////     pv_cdunieco_i                   //////
+	//////     pv_ntramite_i                   //////
+	//////     pv_cdramo_i                     //////
+	//////     pv_nmpoliza_i                   //////
+	//////     pv_estado_i                     //////
+	//////     pv_cdagente_i                   //////
+	//////     pv_status_i                     //////
+	//////     pv_cdtipsit_i                   //////
+	//////     pv_fedesde_i                    //////
+	//////     pv_fehasta_i                    //////
+	//////     pv_cdtiptra_i                   //////
 	/*/////////////////////////////////////////////*/
 	public String mcdinamica()
 	{
@@ -435,6 +490,7 @@ public class MesaControlAction extends PrincipalCoreAction
 				+ "\n######                          ######"
 				);
 		log.debug("smap1: "+smap1);
+		log.debug("smap2: "+smap2);
 		
 		try
 		{
@@ -489,9 +545,9 @@ public class MesaControlAction extends PrincipalCoreAction
 				);
 		return SUCCESS;
 	}
-	/*/////////////////////////////////////////////*/ 
-	//////       mesa de control dinamica      //////
-	/////////////////////////////////////////////////
+	/*/////////////////////////////////////////////////*/ 
+	//////         mesa de control dinamica        //////
+	/////////////////////////////////////////////////////
 	
 	/////////////////////////////////////////////
 	////// guardar tramite manual dinamico //////
