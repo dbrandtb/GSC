@@ -3,7 +3,7 @@
 <%@ include file="/taglibs.jsp"%>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-<title>ICE BROKER</title>
+<title>ICE</title>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <!-- Styles ExtJs without changes menu.jsp-->
 <link rel="stylesheet" type="text/css" href="${ctx}/resources/extjs/resources/css/ext-all.css" />
