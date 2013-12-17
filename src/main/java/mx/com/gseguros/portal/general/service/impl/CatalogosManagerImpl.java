@@ -1,6 +1,7 @@
 package mx.com.gseguros.portal.general.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -76,6 +77,12 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	
 	public void setCatalogosDAO(CatalogosDAO catalogosDAO) {
 		this.catalogosDAO = catalogosDAO;
+	}
+	
+	@Override
+	public List<GenericVO> obtieneStatusTramite(Map<String,String> params) throws Exception
+	{
+		return catalogosDAO.obtieneStatusTramite(params);
 	}
 
 }

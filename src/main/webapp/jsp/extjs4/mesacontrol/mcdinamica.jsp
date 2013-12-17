@@ -26,6 +26,8 @@ debug('mcdinInput: ',mcdinInput);
 
 var mcdinGrid;
 var mcdinStore;
+var mcdinFiltro;
+var mcdinFormNuevo;
 /*///////////////////*/
 ////// variables //////
 ///////////////////////
@@ -33,94 +35,6 @@ var mcdinStore;
 ///////////////////////
 ////// funciones //////
 /*///////////////////*/
-function mcdinAgregarTramiteManual()
-{
-	debug('mcdinAgregarTramiteManual');
-	Ext.create('Ext.window.Window',
-	{
-		title   : 'Nuevo/Agregar'
-		,icon   : '${ctx}/resources/fam3icons/icons/page.png'
-		,width  : 600
-		,modal  : true
-		,height : 400
-		,items  :
-		[
-	    	Ext.create('Ext.form.Panel',
-	    	{
-	    		buttonAlign : 'center'
-	    		,border     : 0
-	    		,url        : mcdinUrlNuevo
-	    		,layout     :
-	    		{
-	    			type     : 'table'
-	    			,columns : 2
-	    		}
-	    	    ,defaults   :
-	    	    {
-	    	    	style : 'margin : 5px;'
-	    	    }
-	    		,items      :
-	    		[
-                       <s:property value="imap1.formItems" />
-	    		]
-	    		,buttons    :
-	    		[
-	    			{
-	    				text     : 'Guardar'
-	    				,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
-	    				,handler : function()
-	    				{
-	    					var form=this.up().up();
-	    					debug(form.getForm().getValues());
-	    					if(form.isValid())
-	    					{
-	    						form.setLoading(true);
-	    						form.submit(
-	    						{
-	    							success  : function(form2, action)
-	    						    {
-                                        form.setLoading(false);
-                                        Ext.Msg.show(
-                                        {
-                                            title    : 'Cambios guardados'
-                                            ,msg     : 'Se agreg&oacute; un nuevo tr&aacute;mite</br> N&uacute;mero: '+ action.result.msgResult
-                                            ,buttons : Ext.Msg.OK
-                                            ,fn      : function()
-                                            {
-                                                Ext.create('Ext.form.Panel').submit({standardSubmit:true});
-                                            }
-                                        });    
-                                    }
-                                    ,failure : function()
-                                    {
-                                        form.setLoading(false);
-                                        Ext.Msg.show(
-                                        {
-                                            title    : 'Error'
-                                            ,msg     : 'Error de comunicaci&oacute;n'
-                                            ,buttons : Ext.Msg.OK
-                                            ,icon    : Ext.Msg.ERROR
-                                        });
-                                    }
-	    						});
-	    					}
-	    					else
-	    					{
-	    						Ext.Msg.show(
-	    						{
-                                    title    : 'Error'
-                                    ,msg     : 'Favor de introducir los campos requeridos'
-                                    ,buttons : Ext.Msg.OK
-                                    ,icon    : Ext.Msg.WARNING
-                                });
-	    					}
-	    				}
-	    			}
-	    		]
-	    	})
-		]
-	}).show();
-}
 /*///////////////////*/
 ////// funciones //////
 ///////////////////////
@@ -204,7 +118,10 @@ Ext.onReady(function()
     				{
     					text     : 'Nuevo/Agregar'
     					,icon    : '${ctx}/resources/fam3icons/icons/page.png'
-    					,handler : mcdinAgregarTramiteManual
+    					,handler : function()
+    				    {
+    						mcdinFormNuevo.show();
+    				    }
     				}
     			]
     			,bbar     :
@@ -217,6 +134,138 @@ Ext.onReady(function()
     		this.callParent();
     	}
     });
+    
+    Ext.define('McdinFiltro',
+    {
+    	extend         : 'Ext.form.Panel'
+    	,initComponent : function()
+    	{
+    		debug('initComponent instance of McdinFiltro');
+    		Ext.apply(this,
+    		{
+		    	title          : 'Filtro'
+		    	,icon          : '${ctx}/resources/fam3icons/icons/zoom.png'
+		    	,buttonAlign   : 'center'
+		    	,collapsible   : true
+		    	,titleCollapse : true
+		    	,layout        :
+		    	{
+		    		type     : 'table'
+		    		,columns : 3
+		    	}
+		    	,defaults      :
+		    	{
+		    		style : 'margin : 5px;'
+		    	}
+		    	,items         :
+		    	[
+		    	    <s:property value="imap1.itemsFiltro" />
+		    	]
+		    	,buttons       :
+		    	[
+		    	    {
+		    	    	text     : 'Buscar'
+		    	    	,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
+		    	    	,handler : function()
+		    	    	{
+		    	    		this.up().up().submit(
+		    	    		{
+		    	    			standardSubmit : true
+		    	    		});
+		    	    	}
+		    	    }
+		    	]
+    		});
+    		this.callParent();
+    	}
+    });
+    
+    Ext.define('McdinFormNuevo',
+    {
+    	extend       : 'Ext.window.Window'
+        ,title       : 'Nuevo/Agregar'
+        ,icon        : '${ctx}/resources/fam3icons/icons/page.png'
+        ,width       : 600
+        ,modal       : true
+        ,height      : 400
+        ,closeAction : 'hide'
+        ,items       :
+        [
+            Ext.create('Ext.form.Panel',
+            {
+                buttonAlign : 'center'
+                ,border     : 0
+                ,url        : mcdinUrlNuevo
+                ,layout     :
+                {
+                    type     : 'table'
+                    ,columns : 2
+                }
+                ,defaults   :
+                {
+                    style : 'margin : 5px;'
+                }
+                ,items      :
+                [
+                    <s:property value="imap1.formItems" />
+                ]
+                ,buttons    :
+                [
+                    {
+                        text     : 'Guardar'
+                        ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
+                        ,handler : function()
+                        {
+                            var form=this.up().up();
+                            debug(form.getForm().getValues());
+                            if(form.isValid())
+                            {
+                                form.setLoading(true);
+                                form.submit(
+                                {
+                                    success  : function(form2, action)
+                                    {
+                                        form.setLoading(false);
+                                        Ext.Msg.show(
+                                        {
+                                            title    : 'Cambios guardados'
+                                            ,msg     : 'Se agreg&oacute; un nuevo tr&aacute;mite</br> N&uacute;mero: '+ action.result.msgResult
+                                            ,buttons : Ext.Msg.OK
+                                            ,fn      : function()
+                                            {
+                                                Ext.create('Ext.form.Panel').submit({standardSubmit:true});
+                                            }
+                                        });    
+                                    }
+                                    ,failure : function()
+                                    {
+                                        form.setLoading(false);
+                                        Ext.Msg.show(
+                                        {
+                                            title    : 'Error'
+                                            ,msg     : 'Error de comunicaci&oacute;n'
+                                            ,buttons : Ext.Msg.OK
+                                            ,icon    : Ext.Msg.ERROR
+                                        });
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                Ext.Msg.show(
+                                {
+                                    title    : 'Error'
+                                    ,msg     : 'Favor de introducir los campos requeridos'
+                                    ,buttons : Ext.Msg.OK
+                                    ,icon    : Ext.Msg.WARNING
+                                });
+                            }
+                        }
+                    }
+                ]
+            })
+        ]
+    });
     /*/////////////////////*/
     ////// componentes //////
     /////////////////////////
@@ -224,8 +273,24 @@ Ext.onReady(function()
     ///////////////////////
     ////// contenido //////
     /*///////////////////*/
-    mcdinGrid=new McdinGrid();
-    mcdinGrid.render('mcdinDivPri');
+    mcdinGrid      = new McdinGrid();
+    mcdinFiltro    = new McdinFiltro();
+    mcdinFormNuevo = new McdinFormNuevo();
+    
+    Ext.create('Ext.panel.Panel',
+    {
+    	border    : 0
+    	,renderTo : 'mcdinDivPri'
+    	,defaults :
+    	{
+    		style : 'margin : 5px;'
+    	}
+    	,items    :
+    	[
+    	    mcdinFiltro,
+    	    mcdinGrid
+    	]
+    });
     /*///////////////////*/
     ////// contenido //////
     ///////////////////////

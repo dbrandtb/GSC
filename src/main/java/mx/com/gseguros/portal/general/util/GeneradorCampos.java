@@ -15,7 +15,7 @@ import mx.com.gseguros.portal.cotizacion.model.Tatri;
  */
 public class GeneradorCampos {
     
-    public String idPrefix="idAutoGenerado";
+    public String idPrefix;
     public static final String namePrefix="parametros.pv_otvalor";
     private static org.apache.log4j.Logger log=org.apache.log4j.Logger.getLogger(GeneradorCampos.class);
     private Item items;
@@ -33,7 +33,6 @@ public class GeneradorCampos {
     {
     	this.context="/"+context;
     	log.debug("contexto para el generador de campos: "+this.context);
-    	idPrefix+="_"+System.currentTimeMillis()+"_"+((long)Math.ceil((Math.random()*10000d)))+"_";
     }
     
     public void generaParcial(List<Tatri> lt) throws Exception
@@ -44,6 +43,7 @@ public class GeneradorCampos {
     
     public void genera(List<Tatri> lt) throws Exception
     {
+    	idPrefix="idAutoGenerado_"+System.currentTimeMillis()+"_"+((long)Math.ceil((Math.random()*10000d)))+"_";
         items=new Item(parcial?null:"items",null,Item.ARR);
         fields=new Item(parcial?null:"fields",null,Item.ARR);
         columns=new Item(null,null,Item.ARR);

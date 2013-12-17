@@ -496,6 +496,7 @@ public class MesaControlAction extends PrincipalCoreAction
 		{
 			UserVO usuario=(UserVO) this.session.get("USUARIO");
 			
+			////// obtener valores del formulario //////
 			List<Tatri>ltForm1=endososManager.obtPantallaAlvaro(
 					smap1.get("cduno")
 					,smap1.get("cddos")
@@ -508,6 +509,7 @@ public class MesaControlAction extends PrincipalCoreAction
 					,smap1.get("cdnueve")
 					,"FORM1");
 			
+			////// obtener valores del grid //////
 			List<Tatri>ltgrid1=endososManager.obtPantallaAlvaro(
 					smap1.get("cduno")
 					,smap1.get("cddos")
@@ -520,17 +522,47 @@ public class MesaControlAction extends PrincipalCoreAction
 					,smap1.get("cdnueve")
 					,"GRID1");
 			
+			////// obtener valores del filtro //////
+			List<Tatri>ltfiltro=endososManager.obtPantallaAlvaro(
+					smap1.get("cduno")
+					,smap1.get("cddos")
+					,smap1.get("cdtres")
+					,smap1.get("cdcuatro")
+					,smap1.get("cdcinco")
+					,smap1.get("cdseis")
+					,smap1.get("cdsiete")
+					,usuario.getRolActivo().getObjeto().getValue()
+					,smap1.get("cdnueve")
+					,"FORM2");
+			
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			
+			////// generar grid //////
 			gc.generaParcial(ltgrid1);
-			
 			imap1=new HashMap<String,Item>(0);
 			imap1.put("modelFields",gc.getFields());
 			imap1.put("gridColumns",gc.getColumns());
 			
+			////// generar formulario //////
 			gc.generaParcial(ltForm1);
 			imap1.put("formItems",gc.getItems());
 			
+			////// generar filtro //////
+			gc.generaParcial(ltfiltro);
+			imap1.put("itemsFiltro",gc.getItems());
+			
+			///////////////////////////////////////
+			////// para poner -1 por defecto //////
+			if(smap2==null)
+			{
+				smap2=new HashMap<String,String>(0);
+			}
+			if((!smap2.containsKey("pv_status_i")))
+			{
+				smap2.put("pv_status_i","-1");
+			}
+			////// para poner -1 por defecto //////
+			///////////////////////////////////////
 		}
 		catch(Exception ex)
 		{
@@ -569,7 +601,7 @@ public class MesaControlAction extends PrincipalCoreAction
 			{
 				omap.put((String)entry.getKey(),entry.getValue());//se pasa de smap1 a omap
 			}
-			omap.put("pv_cdunieco_i",smap1.get("pv_cdsucdom_i"));//se parcha porque requiere el mismo valor
+			omap.put("pv_cdunieco_i",smap1.get("pv_cdsucdoc_i"));//se parcha porque requiere el mismo valor
 			omap.put("pv_ferecepc_i",renderFechas.parse((String)omap.get("pv_ferecepc_i")));//se convierte String a Date
 			omap.put("pv_festatus_i",renderFechas.parse((String)omap.get("pv_festatus_i")));//se convierte String a Date
 			WrapperResultados res = kernelManager.PMovMesacontrol(omap);

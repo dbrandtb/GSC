@@ -312,6 +312,23 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 		}
 	}
 	
+	@Override
+	public List<GenericVO> obtieneStatusTramite(Map<String,String> params) throws Exception
+	{
+		Map<String, Object> resultado = ejecutaSP(new ObtieneStatusTramite(getDataSource()), params);
+		return (List<GenericVO>) resultado.get("pv_registro_o");
+	}
 	
+	protected class ObtieneStatusTramite extends StoredProcedure
+	{
+    	protected ObtieneStatusTramite(DataSource dataSource)
+    	{
+            super(dataSource,"PKG_CONSULTA.P_GET_STATUS_TRAMITE");
+            declareParameter(new SqlParameter(   "pv_cdtiptra_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new ObtenerTmanteniMapper()));
+            declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+    	}
+    }
 	
 }
