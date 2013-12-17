@@ -801,7 +801,7 @@ Ext.onReady(function() {
     var panelBusqueda = Ext.create('Ext.Panel', {
         id:'main-panel',
         baseCls:'x-plain',
-        renderTo: Ext.getBody(),
+        renderTo: 'dvConsultasPolizas',
         layout: {
             type: 'column',
             columns: 2
