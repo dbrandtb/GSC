@@ -117,7 +117,7 @@ public class GeneradorCampos {
         	if(col!=null)
         	{
 	        	String renderer=ta.getMapa().get("OTVALOR09");
-	        	if(renderer.equalsIgnoreCase("N"))
+	        	if(renderer==null||renderer.length()==0||renderer.equalsIgnoreCase("N"))
 	        	{
 	        		//sin renderer
 	        	}
@@ -142,7 +142,7 @@ public class GeneradorCampos {
             it.add(Item.crear("id", this.idPrefix+idx));
             it.add(Item.crear("cdatribu", ta.getCdatribu()));
             it.add(Item.crear("readOnly", ta.isReadOnly()));
-            it.add(Item.crear("allowBlank",ta.getSwobliga()!=null&&ta.getSwobliga().equals("N")));
+            it.add(Item.crear("allowBlank",ta.getSwobliga()==null||!ta.getSwobliga().equalsIgnoreCase("S")));
             it.add(Item.crear("fieldLabel",ta.getDsatribu()));
             it.add(Item.crear("style","margin:5px"));
             it.add(Item.crear("forceSelection",false));
@@ -326,7 +326,7 @@ public class GeneradorCampos {
             it.add(Item.crear("id", this.idPrefix+idx));
             it.add(Item.crear("cdatribu", ta.getCdatribu()));
             it.add(Item.crear("readOnly", ta.isReadOnly()));
-            it.add(Item.crear("allowBlank",ta.getSwobliga()!=null&&ta.getSwobliga().equals("N")));
+            it.add(Item.crear("allowBlank",ta.getSwobliga()==null||!ta.getSwobliga().equalsIgnoreCase("S")));
             it.add(Item.crear("fieldLabel",ta.getDsatribu()));
             it.add(Item.crear("style","margin:5px"));
             //it.add(Item.crear("emptyText", "Introduzca..."));
@@ -378,7 +378,7 @@ public class GeneradorCampos {
             it.add(Item.crear("id", this.idPrefix+idx));
             it.add(Item.crear("cdatribu", ta.getCdatribu()));
             it.add(Item.crear("readOnly", ta.isReadOnly()));
-            it.add(Item.crear("allowBlank",ta.getSwobliga()!=null&&ta.getSwobliga().equals("N")));
+            it.add(Item.crear("allowBlank",ta.getSwobliga()==null||!ta.getSwobliga().equalsIgnoreCase("S")));
             it.add(Item.crear("fieldLabel",ta.getDsatribu()));
             it.add(Item.crear("style","margin:5px"));
             //it.add(Item.crear("emptyText", "Introduzca..."));
@@ -430,7 +430,7 @@ public class GeneradorCampos {
             it.add(Item.crear("id", this.idPrefix+idx));
             it.add(Item.crear("cdatribu", ta.getCdatribu()));
             it.add(Item.crear("readOnly", ta.isReadOnly()));
-            it.add(Item.crear("allowBlank",ta.getSwobliga()!=null&&ta.getSwobliga().equals("N")));
+            it.add(Item.crear("allowBlank",ta.getSwobliga()==null||!ta.getSwobliga().equalsIgnoreCase("S")));
             it.add(Item.crear("fieldLabel",ta.getDsatribu()));
             it.add(Item.crear("style","margin:5px"));
             it.add(Item.crear("format","d/m/Y"));

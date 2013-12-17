@@ -30,6 +30,9 @@
         <action name="mcdinamica" class="MesaControlAction" method="mcdinamica">
             <result name="success">/jsp/extjs4/mesacontrol/mcdinamica.jsp</result>
         </action>
+        <action name="loadTareasDinamico" method="loadTareasDinamico" class="MesaControlAction">
+            <result name="success" type="json" />
+        </action>
     </package>
 
 </struts>
