@@ -60,7 +60,6 @@ public class CatalogosAction extends PrincipalCoreAction {
         		case COLONIAS:
 					lista = catalogosManager.obtieneColonias(params.get("cp"));
 					break;
-				case MC_ESTATUS_TRAMITE:
 				case MC_SUCURSALES_ADMIN:
 				case MC_SUCURSALES_DOCUMENTO:
 				case MC_TIPOS_TRAMITE:
@@ -73,6 +72,9 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case TIPOS_POLIZA:
 					lista = catalogosManager.getTmanteni(nombreCatalogo);
 	                break;
+				case MC_ESTATUS_TRAMITE:
+					lista = catalogosManager.obtieneStatusTramite(params);
+					break;
 				case TATRISIT:
 		            lista = catalogosManager.obtieneAtributosSituacion(params.get("cdatribu"), params.get("cdtipsit"), params.get("idPadre"));
 					break;

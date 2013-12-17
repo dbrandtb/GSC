@@ -1,6 +1,7 @@
 package mx.com.gseguros.portal.general.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.DaoException;
@@ -22,5 +23,7 @@ public interface CatalogosDAO {
 	public List<GenericVO> obtieneColonias(String codigoPostal) throws DaoException;
 	
 	public List<GenericVO> obtieneRolesSistema() throws DaoException;
+	
+	public List<GenericVO> obtieneStatusTramite(Map<String,String> params) throws Exception;
 
 }

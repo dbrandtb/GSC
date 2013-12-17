@@ -1265,13 +1265,14 @@ Ext.onReady(function(){
 	                        {
 	                            type         : 'ajax'
 	                            ,url         : marmesconurlcata
-	                            ,extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_ESTATUS_TRAMITE"/>'}
+	                            ,extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_ESTATUS_TRAMITE"/>','params.pv_cdtiptra_i':'1'}
 	                            ,reader      :
 	                            {
 	                                type  : 'json'
 	                                ,root : 'lista'
 	                            }
 	                        }
+	                        /*
 	                        ,listeners :
 	                        {
 	                            load : function(records)
@@ -1281,6 +1282,7 @@ Ext.onReady(function(){
 	                                records.add({key : '0', value : 'Todos'});
 	                            }
 	                        }
+	                        */
 	                    })
 	                }
 	                ,{
