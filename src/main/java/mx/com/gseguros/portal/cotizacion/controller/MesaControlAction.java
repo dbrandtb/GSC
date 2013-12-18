@@ -38,6 +38,7 @@ public class MesaControlAction extends PrincipalCoreAction
 	private boolean                        success;
 	private Map<String,Item>               imap1;
 	private EndososManager                 endososManager;
+	private String                         username;
 	
 	public String principal()
 	{
@@ -468,6 +469,8 @@ public class MesaControlAction extends PrincipalCoreAction
 	//////     cdtres    : situacion           //////
 	//////     cdsite    : proceso             //////
 	//////     gridTitle : titulo para el grid //////
+	//////     editable  : presente si es      //////
+	//////                 editable            //////
 	////// smap2 :                             //////
 	//////     pv_cdunieco_i                   //////
 	//////     pv_ntramite_i                   //////
@@ -495,9 +498,10 @@ public class MesaControlAction extends PrincipalCoreAction
 		try
 		{
 			UserVO usuario=(UserVO) this.session.get("USUARIO");
+			username=usuario.getUser();
 			
 			////// obtener valores del formulario //////
-			List<Tatri>ltForm1=endososManager.obtPantallaAlvaro(
+			List<Tatri>ltFormulario=endososManager.obtPantallaAlvaro(
 					smap1.get("cduno")
 					,smap1.get("cddos")
 					,smap1.get("cdtres")
@@ -507,10 +511,10 @@ public class MesaControlAction extends PrincipalCoreAction
 					,smap1.get("cdsiete")
 					,usuario.getRolActivo().getObjeto().getValue()
 					,smap1.get("cdnueve")
-					,"FORM1");
+					,"FORMULARIO");
 			
 			////// obtener valores del grid //////
-			List<Tatri>ltgrid1=endososManager.obtPantallaAlvaro(
+			List<Tatri>ltgridpanel=endososManager.obtPantallaAlvaro(
 					smap1.get("cduno")
 					,smap1.get("cddos")
 					,smap1.get("cdtres")
@@ -520,7 +524,7 @@ public class MesaControlAction extends PrincipalCoreAction
 					,smap1.get("cdsiete")
 					,usuario.getRolActivo().getObjeto().getValue()
 					,smap1.get("cdnueve")
-					,"GRID1");
+					,"GRIDPANEL");
 			
 			////// obtener valores del filtro //////
 			List<Tatri>ltfiltro=endososManager.obtPantallaAlvaro(
@@ -533,18 +537,18 @@ public class MesaControlAction extends PrincipalCoreAction
 					,smap1.get("cdsiete")
 					,usuario.getRolActivo().getObjeto().getValue()
 					,smap1.get("cdnueve")
-					,"FORM2");
+					,"FILTRO");
 			
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			
 			////// generar grid //////
-			gc.generaParcial(ltgrid1);
+			gc.generaParcial(ltgridpanel);
 			imap1=new HashMap<String,Item>(0);
 			imap1.put("modelFields",gc.getFields());
 			imap1.put("gridColumns",gc.getColumns());
 			
 			////// generar formulario //////
-			gc.generaParcial(ltForm1);
+			gc.generaParcial(ltFormulario);
 			imap1.put("formItems",gc.getItems());
 			
 			////// generar filtro //////
@@ -732,6 +736,14 @@ public class MesaControlAction extends PrincipalCoreAction
 
 	public void setEndososManager(EndososManager endososManager) {
 		this.endososManager = endososManager;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 	
 }
