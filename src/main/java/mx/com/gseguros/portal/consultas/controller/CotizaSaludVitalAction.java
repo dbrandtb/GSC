@@ -1,24 +1,7 @@
 package mx.com.gseguros.portal.consultas.controller;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
-
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
-import javax.mail.BodyPart;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 
 import mx.com.aon.flujos.cotizacion4.web.ResultadoCotizacion4Action;
 import mx.com.aon.portal.model.BaseObjectVO;
@@ -29,9 +12,9 @@ import mx.com.aon.portal.model.RolVO;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.service.LoginManager;
 import mx.com.aon.portal.service.NavigationManager;
-import mx.com.aon.portal.service.UsuarioManager;
 import mx.com.aon.portal.service.principal.PrincipalManager;
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.portal.general.service.UsuarioManager;
 import mx.com.gseguros.utils.Constantes;
 
 import org.apache.commons.lang.StringUtils;
