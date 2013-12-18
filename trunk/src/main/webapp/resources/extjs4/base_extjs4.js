@@ -159,34 +159,13 @@ Ext.define('RowCobertura',{
 ////// FIN MODELOS //////
 /////////////////////////
 
-Ext.onReady(function(){
+var extjs_custom_override_mayusculas=true;
+
+Ext.onReady(function()
+{
 	Ext.tip.QuickTipManager.init();
     Ext.util.Format.thousandSeparator = ',';
     Ext.util.Format.decimalSeparator = '.';
     Ext.grid.RowEditor.prototype.saveBtnText =   "Actualizar";
     Ext.grid.RowEditor.prototype.cancelBtnText = "Cancelar";
-    //Se sobreescribe el componente TextField para que solo acepte may�sculas
-    Ext.override(Ext.form.TextField,
-    {
-    	initComponent:function()
-    	{
-    		if(this.xtype=='textfield')
-    		{
-    			this.on("change",
-				function()
-				{
-    				try
-    				{
-	    				if('string' == typeof this.getValue())
-	    				{
-	    					debug('mayus de '+this.getValue());
-	    					this.setValue(this.getValue().toUpperCase());
-	    				}
-    				}
-    				catch(e){}
-				},this);
-    		}
-    		return this.callParent();
-    	}
-	});
 });
