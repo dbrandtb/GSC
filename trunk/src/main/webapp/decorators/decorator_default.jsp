@@ -13,6 +13,7 @@
         <script type="text/javascript" src="${ctx}/resources/extjs4/base_extjs4.js"></script>
         <script type="text/javascript" src="${ctx}/resources/scripts/util/extjs4_utils.js"></script>
         <decorator:head />
+        <script type="text/javascript" src="${ctx}/resources/scripts/util/custom_overrides.js"></script>
     </head>
     <body>
         <decorator:body />
