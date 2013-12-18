@@ -79,7 +79,7 @@ Ext.onReady(function()
             	,layout   :
             	{
             		type     : 'table'
-            		,columns : 2
+            		,columns : 3
             	}
             	,items    :
             	[

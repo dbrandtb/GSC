@@ -1,5 +1,4 @@
-Ext.onReady(function()
-{
+//Ext.onReady(function(){
     if(extjs_custom_override_mayusculas==true)
     {
     	debug('extjs_custom_override_mayusculas ENCENDIDO');
@@ -32,4 +31,4 @@ Ext.onReady(function()
     {
     	debug('extjs_custom_override_mayusculas APAGADO');
     }
-});
+//});

@@ -368,6 +368,6 @@ Ext.onReady(function()
 </script>
 </head>
 <body>
-<div id="mcdinDivPri"></div>
+<div id="mcdinDivPri" style="height:1000px;"></div>
 </body>
 </html>
