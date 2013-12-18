@@ -41,6 +41,7 @@ public class EndososAction extends PrincipalCoreAction
 	private SimpleDateFormat         renderFechas     = new SimpleDateFormat("dd/MM/yyyy");
 	private String                   mensaje;
 	private Map<String,String>       parametros;
+	private Map<String,Item>         imap1;
 
 	//////////////////////////////
 	////// marco de endosos //////
@@ -1332,20 +1333,20 @@ public class EndososAction extends PrincipalCoreAction
 				+ "\n###### visorPantallas ######"
 				+ "\n######                ######"
 				);
-		log.debug("parametros: "+parametros);
+		log.debug("smap1: "+smap1);
 		try
 		{
 			List<Tatri>lt=endososManager.obtPantallaAlvaro(
-					parametros.get("pv_otvalor01")
-					,parametros.get("pv_otvalor02")
-					,parametros.get("pv_otvalor03")
-					,parametros.get("pv_otvalor04")
-					,parametros.get("pv_otvalor05")
-					,parametros.get("pv_otvalor06")
-					,parametros.get("pv_otvalor07")
-					,parametros.get("pv_otvalor08")
-					,parametros.get("pv_otvalor09")
-					,parametros.get("pv_otvalor10")
+					smap1.get("cduno")
+					,smap1.get("cddos")
+					,smap1.get("cdtres")
+					,smap1.get("cdcuatro")
+					,smap1.get("cdcinco")
+					,smap1.get("cdseis")
+					,smap1.get("cdsiete")
+					,smap1.get("cdocho")
+					,smap1.get("cdnueve")
+					,smap1.get("cddiez")
 					);
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			gc.generaParcial(lt);
@@ -1368,6 +1369,147 @@ public class EndososAction extends PrincipalCoreAction
 	/*////////////////////////////*/
 	////// visor de pantallas //////
 	////////////////////////////////
+	
+	/////////////////////////////////
+	////// editor de pantallas //////
+	/*/////////////////////////////*/
+	public String editorPantallas()
+	{
+		log.debug(""
+				+ "\n#############################"
+				+ "\n#############################"
+				+ "\n###### editorPantallas ######"
+				+ "\n######                 ######"
+				);
+		try
+		{
+			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			
+			imap1=new LinkedHashMap<String,Item>(0);
+			
+			List<Tatri>tatriFiltro=endososManager.obtPantallaAlvaro(null,null,null,null,null,null,"EDITORPANTALLAS",null,null,"FILTRO");
+			gc.generaParcial(tatriFiltro);
+			imap1.put("itemsFiltro" , gc.getItems());
+			
+			List<Tatri>tatriModelo=endososManager.obtPantallaAlvaro(null,null,null,null,null,null,"EDITORPANTALLAS",null,null,"MODELO");
+			gc.generaParcial(tatriModelo);
+			imap1.put("itemsModelo"   , gc.getItems());
+			imap1.put("fieldsModelo"  , gc.getFields());
+			imap1.put("columnsModelo" , gc.getColumns());
+		}
+		catch(Exception ex)
+		{
+			log.error("error al cargar la pantalla de alvaro",ex);
+		}
+		log.debug(""
+				+ "\n######                 ######"
+				+ "\n###### editorPantallas ######"
+				+ "\n#############################"
+				+ "\n#############################"
+				);
+		return SUCCESS;
+	}
+	/*/////////////////////////////*/
+	////// editor de pantallas //////
+	/////////////////////////////////
+	
+	////////////////////////////////////////
+	////// obtener campos de pantalla //////
+	/*////////////////////////////////////*/
+	public String obtenerCamposPantalla()
+	{
+		log.debug(""
+				+ "\n###################################"
+				+ "\n###################################"
+				+ "\n###### obtenerCamposPantalla ######"
+				+ "\n######                       ######"
+				);
+		log.debug("smap 1: "+smap1);
+		try
+		{
+			slist1=endososManager.obtenerCamposPantalla(
+					smap1.get("cduno")
+					,smap1.get("cddos")
+					,smap1.get("cdtres")
+					,smap1.get("cdcuatro")
+					,smap1.get("cdcinco")
+					,smap1.get("cdseis")
+					,smap1.get("cdsiete")
+					,smap1.get("cdocho")
+					,smap1.get("cdnueve")
+					,smap1.get("cddiez")
+					);
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			log.error("error al obtener campos pantalla",ex);
+			success=false;
+		}
+		log.debug(""
+				+ "\n######                       ######"
+				+ "\n###### obtenerCamposPantalla ######"
+				+ "\n###################################"
+				+ "\n###################################"
+				);
+		return SUCCESS;
+	}
+	/*////////////////////////////////////*/
+	////// obtener campos de pantalla //////
+	////////////////////////////////////////
+	
+	////////////////////////////////////////
+	////// guardar campos de pantalla //////
+	/*////////////////////////////////////*/
+	public String guardarCamposPantalla()
+	{
+		log.debug(""
+				+ "\n###################################"
+				+ "\n###################################"
+				+ "\n###### guardarCamposPantalla ######"
+				+ "\n######                       ######"
+				);
+		log.debug("smap1: "+smap1);
+		log.debug("slist1: "+slist1);
+		try
+		{
+			if(slist1!=null)
+			{
+				endososManager.borrarCamposPantalla(
+				smap1.get("cduno")
+				,smap1.get("cddos")
+				,smap1.get("cdtres")
+				,smap1.get("cdcuatro")
+				,smap1.get("cdcinco")
+				,smap1.get("cdseis")
+				,smap1.get("cdsiete")
+				,smap1.get("cdocho")
+				,smap1.get("cdnueve")
+				,smap1.get("cddiez")
+						);
+				for(Map<String,String>nuevo:slist1)
+				{
+					endososManager.insertarCampoPantalla(nuevo);
+				}
+			}
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			log.error("error al guardar campos pantalla",ex);
+			success=false;
+		}
+		log.debug(""
+				+ "\n######                       ######"
+				+ "\n###### guardarCamposPantalla ######"
+				+ "\n###################################"
+				+ "\n###################################"
+				);
+		return SUCCESS;
+	}
+	/*////////////////////////////////////*/
+	////// guardar campos de pantalla //////
+	////////////////////////////////////////
 	
 	///////////////////////////////
 	////// getters y setters //////
@@ -1466,6 +1608,14 @@ public class EndososAction extends PrincipalCoreAction
 
 	public void setItem3(Item item3) {
 		this.item3 = item3;
+	}
+
+	public Map<String, Item> getImap1() {
+		return imap1;
+	}
+
+	public void setImap1(Map<String, Item> imap1) {
+		this.imap1 = imap1;
 	}
 	
 }

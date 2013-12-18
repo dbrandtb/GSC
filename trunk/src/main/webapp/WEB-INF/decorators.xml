@@ -21,7 +21,6 @@
         <pattern>/endosos/pantallaEndosoDomicilio.action</pattern>
         <pattern>/endosos/pantallaEndosoNombres.action</pattern>
         <pattern>/endosos/endosoValositBasico.action</pattern>
-        <pattern>/endosos/visorPantallas.action</pattern>
 	</excludes>
 
 

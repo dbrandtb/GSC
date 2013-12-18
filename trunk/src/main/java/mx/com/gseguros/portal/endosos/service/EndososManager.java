@@ -18,4 +18,9 @@ public interface EndososManager
 			                             ,Object cdseis,Object cdsiete,Object cdocho,Object cdnueve,Object cddiez) throws Exception;
 	public List<Map<String, String>> obtenerAtributosCoberturas(Map<String, String> params) throws Exception;
 	public Map<String,Object>        sigsvalipolEnd(Map<String, String> params) throws Exception;
+	public List<Map<String, String>> obtenerCamposPantalla(Object cduno,Object cddos,Object cdtres,Object cdcuatro,Object cdcinco
+            ,Object cdseis,Object cdsiete,Object cdocho,Object cdnueve,Object cddiez) throws Exception;
+	public void                      borrarCamposPantalla(Object cduno,Object cddos,Object cdtres,Object cdcuatro,Object cdcinco
+            ,Object cdseis,Object cdsiete,Object cdocho,Object cdnueve,Object cddiez) throws Exception;
+	public void                      insertarCampoPantalla(Map<String,String> params) throws Exception;
 }

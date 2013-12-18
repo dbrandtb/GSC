@@ -68,6 +68,22 @@
             <result name="success">/jsp-script/proceso/endosos/visorPantallas.jsp</result>
         </action>
         
+        <action name="editorPantallas" class="EndososAction" method="editorPantallas">
+            <result name="success">/jsp-script/proceso/endosos/editorPantallas.jsp</result>
+        </action>
+        
+        <action name="obtenerCamposPantalla" class="EndososAction" method="obtenerCamposPantalla">
+            <result name="success" type="json" />
+        </action>
+        
+        <action name="guardarCamposPantalla" class="EndososAction" method="guardarCamposPantalla">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+        </action>
+        
     </package>
 
 </struts>

@@ -13,6 +13,7 @@ import mx.com.aon.portal.dao.WrapperResultadosGeneric;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.portal.cotizacion.model.Tatri;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
+import mx.com.gseguros.portal.dao.impl.DinamicMapper;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.utils.Utilerias;
@@ -372,6 +373,145 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtPantallaAlvaro(this.getDataSource()), params);
 		return (List<Tatri>) resultadoMap.get("PV_REGISTRO_O");
+	}
+	
+	protected class ObtenerCamposPantalla extends StoredProcedure
+	{
+		
+		protected ObtenerCamposPantalla(DataSource dataSource)
+		{
+			super(dataSource,"ALVARO_PKG.P_GET_ALVARO");
+			
+			declareParameter(new SqlParameter("PV_CDUNO_I"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDDOS_I"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDTRES_I"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDCUATRO_I" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDCINCO_I"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDSEIS_I"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDSIETE_I"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDOCHO_I"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDNUEVE_I"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDDIEZ_I"   , OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new DinamicMapper()));
+			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
+		}
+	}
+	
+	@Override
+	public List<Map<String,String>> obtenerCamposPantalla(Map<String, Object> params) throws Exception
+	{
+		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerCamposPantalla(this.getDataSource()), params);
+		return (List<Map<String,String>>) resultadoMap.get("PV_REGISTRO_O");
+	}
+	
+	protected class BorrarCamposPantalla extends StoredProcedure
+	{
+		
+		protected BorrarCamposPantalla(DataSource dataSource)
+		{
+			super(dataSource,"ALVARO_PKG.P_BORRAR_ALVARO");
+			
+			declareParameter(new SqlParameter("PV_CDUNO_I"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDDOS_I"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDTRES_I"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDCUATRO_I" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDCINCO_I"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDSEIS_I"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDSIETE_I"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDOCHO_I"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDNUEVE_I"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDDIEZ_I"   , OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
+		}
+	}
+	
+	@Override
+	public void borrarCamposPantalla(Map<String, Object> params) throws Exception
+	{
+		Map<String,Object> resultadoMap=this.ejecutaSP(new BorrarCamposPantalla(this.getDataSource()), params);
+	}
+	
+	protected class InsertarCampoPantalla extends StoredProcedure
+	{
+		
+		protected InsertarCampoPantalla(DataSource dataSource)
+		{
+			super(dataSource,"ALVARO_PKG.P_INSERTA_ALVARO");
+			
+			declareParameter(new SqlParameter("CDUNO"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("CDDOS"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("CDTRES"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("CDCUATRO" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("CDCINCO"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("CDSEIS"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("CDSIETE"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("CDOCHO"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("CDNUEVE"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("CDDIEZ"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("OTVALOR01"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR02"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR03"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR04"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR05"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR06"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR07"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR08"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR09"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR10"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR11"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR12"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR13"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR14"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR15"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR16"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR17"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR18"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR19"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR20"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR21"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR22"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR23"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR24"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR25"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR26"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR27"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR28"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR29"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR30"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR31"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR32"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR33"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR34"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR35"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR36"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR37"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR38"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR39"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR40"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR41"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR42"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR43"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR44"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR45"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR46"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR47"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR48"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR49"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("OTVALOR50"  , OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
+		}
+	}
+	
+	@Override
+	public void insertarCampoPantalla(Map<String, String> params) throws Exception
+	{
+		Map<String,Object> resultadoMap=this.ejecutaSP(new InsertarCampoPantalla(this.getDataSource()), params);
 	}
 	
 	protected class ObtenerAtributosCoberturas extends StoredProcedure

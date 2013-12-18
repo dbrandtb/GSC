@@ -105,7 +105,7 @@ public class GeneradorCampos {
         if(ta.getType()==Tatri.TATRIGEN)
         {
         	String visible=ta.getMapa().get("OTVALOR08");
-        	if(visible.equalsIgnoreCase("N"))
+        	if(visible==null||visible.length()==0||visible.equalsIgnoreCase("N"))
         	{
         		col=null;
         	}
