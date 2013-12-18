@@ -66,6 +66,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case MOTIVOS_CANCELACION:
 				case NACIONALIDAD:
 				case ROLES_POLIZA:
+				case SEXO:
 				case STATUS_POLIZA:
 				case TIPOS_PAGO_POLIZA:
 				case TIPOS_PERSONA:
