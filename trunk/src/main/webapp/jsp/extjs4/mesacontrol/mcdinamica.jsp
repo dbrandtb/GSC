@@ -8,6 +8,7 @@
 ////// variables //////
 /*///////////////////*/
 var mcdinInput     = [];
+var mcdinSesion    = [];
 var mcdinUrlNuevo  = '<s:url namespace="/mesacontrol" action="guardarTramiteDinamico" />';
 var mcdinUrlCargar = '<s:url namespace="/mesacontrol" action="loadTareasDinamico" />';
 
@@ -23,6 +24,9 @@ mcdinInput['fedesde']  = '<s:property value="smap2.pv_fedesde_i"  />';
 mcdinInput['fehasta']  = '<s:property value="smap2.pv_fehasta_i"  />';
 mcdinInput['tiptra']   = '<s:property value="smap2.pv_cdtiptra_i" />';
 debug('mcdinInput: ',mcdinInput);
+
+mcdinSesion['username'] = '<s:property value="username" />';
+debug('mcdinSesion: ',mcdinSesion);
 
 var mcdinGrid;
 var mcdinStore;
@@ -100,9 +104,10 @@ Ext.onReady(function()
     		debug('initComponent instance of McdinGrid');
     		Ext.apply(this,
     		{
-    			title    : '<s:property value="smap1.gridTitle" />'
-    			,store   : mcdinStore
-    			,columns :
+    			title      : '<s:property value="smap1.gridTitle" />'
+    			,store     : mcdinStore
+    			,minHeight : 200
+    			,columns   :
     			[
     			    {
     			    	xtype         : 'checkcolumn'
@@ -113,7 +118,8 @@ Ext.onReady(function()
     			    }
     			    ,<s:property value="imap1.gridColumns" />
     			]
-    			,tbar    :
+    			<s:if test='%{getSmap1().get("editable")!=null}'>
+    			,tbar      :
     			[
     				{
     					text     : 'Nuevo/Agregar'
@@ -124,7 +130,8 @@ Ext.onReady(function()
     				    }
     				}
     			]
-    			,bbar     :
+    			</s:if>
+    			,bbar       :
     	        {
     	            displayInfo : true
     	            ,store      : mcdinStore
@@ -147,6 +154,7 @@ Ext.onReady(function()
 		    	,icon          : '${ctx}/resources/fam3icons/icons/zoom.png'
 		    	,buttonAlign   : 'center'
 		    	,collapsible   : true
+		    	,minHeight     : 200
 		    	,titleCollapse : true
 		    	,layout        :
 		    	{
@@ -168,10 +176,23 @@ Ext.onReady(function()
 		    	    	,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
 		    	    	,handler : function()
 		    	    	{
-		    	    		this.up().up().submit(
+		    	    		if(this.up().up().isValid())
 		    	    		{
-		    	    			standardSubmit : true
-		    	    		});
+			    	    		this.up().up().submit(
+			    	    		{
+			    	    			standardSubmit : true
+			    	    		});
+		    	    		}
+		    	    		else
+		    	    		{
+		    	    			Ext.Msg.show(
+                                {
+                                    title    : 'Error'
+                                    ,msg     : 'Favor de introducir los campos requeridos'
+                                    ,buttons : Ext.Msg.OK
+                                    ,icon    : Ext.Msg.WARNING
+                                });
+		    	    		}
 		    	    	}
 		    	    }
 		    	]

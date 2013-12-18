@@ -3100,7 +3100,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 		{
 			String cols[]=new String[]{"ntramite","cdunieco","cdramo","estado","nmpoliza",
 					"nmsolici","cdsucadm","cdsucdoc","cdsubram","cdtiptra","ferecepc","cdagente",
-					"Nombre_agente","referencia","nombre","fecstatu","status","comments","cdtipsit"};
+					"Nombre_agente","referencia","nombre","fecstatu","status","comments","cdtipsit","comi","prima_neta","prima_total"};
 			Map<String,String> map=new HashMap<String,String>(0);
 			for(String col:cols)
 			{
