@@ -2,6 +2,7 @@ package mx.com.aon.portal.web;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.BaseObjectVO;
 import mx.com.aon.portal.model.EmpresaVO;
@@ -10,13 +11,11 @@ import mx.com.aon.portal.model.RamaVO;
 import mx.com.aon.portal.model.RolVO;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.service.NavigationManager;
-import mx.com.aon.portal.service.UsuarioManager;
 import mx.com.aon.portal.service.principal.PrincipalManager;
-import mx.com.aon.utils.Constantes;
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.portal.general.service.UsuarioManager;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.struts2.ServletActionContext;
 
 /**
  *
