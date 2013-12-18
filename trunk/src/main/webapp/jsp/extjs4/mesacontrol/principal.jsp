@@ -914,7 +914,7 @@ Ext.onReady(function(){
                                         {
                                             type: 'ajax',
                                             url:mesConUrlLoadCatalo,
-                                            extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_ESTATUS_TRAMITE"/>'},
+                                            extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_ESTATUS_TRAMITE"/>','params.pv_cdtiptra_i':'1'},
                                             reader:
                                             {
                                                 type: 'json',
