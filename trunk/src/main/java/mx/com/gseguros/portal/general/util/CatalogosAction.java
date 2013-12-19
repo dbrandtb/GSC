@@ -55,7 +55,7 @@ public class CatalogosAction extends PrincipalCoreAction {
         	switch(nombreCatalogo) {
         	
         		case AGENTES:
-        			lista = catalogosManager.obtieneAgentes(params.get("agente"));
+        			lista = catalogosManager.obtieneAgentes(params!=null?params.get("agente"):null);
         			break;
         		case COLONIAS:
 					lista = catalogosManager.obtieneColonias(params.get("cp"));
