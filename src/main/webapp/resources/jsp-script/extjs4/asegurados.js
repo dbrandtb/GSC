@@ -3122,7 +3122,101 @@ Ext
 												// storeIncisos.sync();
 												debug("storeIncisos.remove(storeIncisos.getRange());");
 											}
-										} ]
+										}
+										// agregado para cancelar un tramite {
+										,{
+		                                    text     : 'Rechazar'
+		                                    ,icon    : contexto+'/resources/fam3icons/icons/cancel.png'
+		                                    ,hidden  : !hayTramiteCargado
+		                                    ,handler : function()
+		                                    {
+		                                        //console.log(form.getValues());
+		                                        Ext.create('Ext.window.Window',
+		                                        {
+		                                            title        : 'Guardar detalle'
+		                                            ,width       : 600
+		                                            ,height      : 400
+		                                            ,buttonAlign : 'center'
+		                                            ,modal       : true
+		                                            ,closable    : false
+		                                            ,autoScroll  : true
+		                                            ,items       :
+		                                            [
+		                                                Ext.create('Ext.form.HtmlEditor',
+		                                                {
+		                                                    id        : 'inputTextareaCommentsToRechazo'
+		                                                    ,width  : 570
+		                                                    ,height : 300
+		                                                })
+		                                            ]
+		                                            ,buttons    :
+		                                            [
+		                                                {
+		                                                    text     : 'Rechazar'
+		                                                    ,icon    : contexto+'/resources/fam3icons/icons/cancel.png'
+		                                                    ,handler : function()
+		                                                    {
+		                                                    	debug('rechazar');
+		                                                        var window=this.up().up();
+		                                                        window.setLoading(true);
+		                                                        Ext.Ajax.request
+                                                                ({
+                                                                    url     : datComUrlMCUpdateStatus
+                                                                    ,params : 
+                                                                    {
+                                                                        'smap1.ntramite' : ntramiteCargado
+                                                                        ,'smap1.status'  : '4'//rechazado
+                                                                        ,'smap1.comments' : Ext.getCmp('inputTextareaCommentsToRechazo').getValue()
+                                                                    }
+                                                                    ,success : function(response)
+                                                                    {
+                                                                    	window.setLoading(false);
+                                                                        var json=Ext.decode(response.responseText);
+                                                                        if(json.success==true)
+                                                                        {
+                                                                            Ext.create('Ext.form.Panel').submit
+                                                                            ({
+                                                                                url             : datComUrlMC
+                                                                                ,standardSubmit : true
+                                                                            });
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            Ext.Msg.show({
+                                                                                title:'Error',
+                                                                                msg: 'Error al rechazar',
+                                                                                buttons: Ext.Msg.OK,
+                                                                                icon: Ext.Msg.ERROR
+                                                                            });
+                                                                        }
+                                                                    }
+                                                                    ,failure : function()
+                                                                    {
+                                                                    	window.setLoading(false);
+                                                                        Ext.Msg.show({
+                                                                            title:'Error',
+                                                                            msg: 'Error de comunicaci&oacute;n',
+                                                                            buttons: Ext.Msg.OK,
+                                                                            icon: Ext.Msg.ERROR
+                                                                        });
+                                                                    }
+                                                                });
+		                                                    }
+		                                                }
+		                                                ,{
+		                                                    text  : 'Cancelar'
+		                                                    ,icon : contexto+'/resources/fam3icons/icons/cancel.png'
+		                                                    ,handler : function()
+		                                                    {
+		                                                        this.up().up().destroy();
+		                                                    }
+		                                                }
+		                                            ]
+		                                        }).show();
+		                                    }
+		                                }
+										// agregado para cancelar un tramite }
+										]
 							});
 			// //////////////////////////
 			// //// Fin formulario //////

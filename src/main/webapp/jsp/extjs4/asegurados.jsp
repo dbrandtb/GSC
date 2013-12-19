@@ -62,6 +62,8 @@
             var urlDatosComplementarios = '<s:url namespace="/" action="datosComplementarios" />';
             var urlDocumentosTramite = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza" />';
             var panDocUrlViewDoc     = '<s:url namespace ="/documentos"     action="descargaDocInline" />';
+            var datComUrlMCUpdateStatus= '<s:url namespace="/mesacontrol"     action="actualizarStatusTramite" />';
+            var datComUrlMC            = '<s:url namespace="/mesacontrol"     action="principal" />';
             <s:if test="ntramite!=null&&ntramite.length()>0">
                 var hayTramiteCargado=true;
                 var ntramiteCargado='<s:property value="ntramite" />';
