@@ -225,6 +225,15 @@ Ext.onReady(function()
             ,"funcion"
         ]
     });
+    
+    Ext.define('MarcanCandidatas',
+    {
+    	extend  : 'Ext.data.Model'
+    	,fields :
+    	[
+    	    <s:property value="imap.fieldsCandidata" />
+    	]
+    });
     /*/////////////////*/
     ////// modelos //////
     /////////////////////
@@ -236,7 +245,7 @@ Ext.onReady(function()
     {
         pageSize  : 10
         ,autoLoad : true
-        ,model    : 'MarCanPoliza'
+        ,model    : 'MarcanCandidatas'
         ,proxy    :
         {
             enablePaging  : true
@@ -319,7 +328,7 @@ Ext.onReady(function()
     	[
     	    Ext.create('Ext.form.Panel',
     	    {
-    	    	title          : 'B&uacute;squeda'
+    	    	title          : 'B&uacute;squeda de p&oacute;lizas candidatas a cancelar'
     	    	,id            : 'marcanFilForm'
     	    	//,width         : 1000
     	    	,url           : marcanUrlFiltro
@@ -338,6 +347,8 @@ Ext.onReady(function()
     	    	,frame         : true
     	    	,items         :
     	    	[
+    	    	    <s:property value="imap.itemsFiltro" />
+    	    	    /*
     	    	    {
 			        	xtype           : 'combo'
 			        	,id             : 'marcanFilUnieco'
@@ -472,10 +483,11 @@ Ext.onReady(function()
 			        	,name       : 'smap1.pv_fereferen_i'
 			        	,value      : new Date()
 			        }
+			        */
     	    	]
     	    	,buttons       :
     	    	[
-					{
+					/*{
 					    text  : 'Tipo de b&uacute;squeda'
 					    ,icon : '${ctx}/resources/fam3icons/icons/cog.png'
 					    ,menu :
@@ -498,7 +510,7 @@ Ext.onReady(function()
 					        ]
 					    }
 					}
-    	    		,{
+    	    		,*/{
     	    			text     : 'Buscar'
     	    			,id      : 'marcanFilBotGen'
     	    			,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
@@ -558,7 +570,7 @@ Ext.onReady(function()
     	    })
     	    ,Ext.create('Ext.grid.Panel',
     	    {
-    	    	title          : 'P&oacute;lizas'
+    	    	title          : 'P&oacute;lizas candidatas a cancelar'
    	    		//,width         : 1000
     	    	,collapsible   : true
     	    	,titleCollapse : true
@@ -594,7 +606,10 @@ Ext.onReady(function()
     	    	    	,xtype        : 'checkcolumn'
     	    	    	,width        : 30
     	    	    	,menuDisabled : true
+    	    	    	,sortable     : false
     	    	    }
+    	    	    ,<s:property value="imap.columnsCandidata" />
+    	    	    /*
     	    	    ,{
     	    	    	header     : "Sucursal"
     	    	    	,dataIndex : "DSUNIECO"
@@ -642,6 +657,7 @@ Ext.onReady(function()
                         ,renderer  : Ext.util.Format.usMoney
                         ,flex      : 1
                     }
+    	    	    */
     	    	]
     	    })
     	    ,Ext.create('Ext.panel.Panel',
@@ -737,7 +753,7 @@ Ext.onReady(function()
     ////// cargador //////
     //////////////////////
     
-    marcanMostrarControlesFiltro(1);
+    //marcanMostrarControlesFiltro(1);
     
 });
 </script>

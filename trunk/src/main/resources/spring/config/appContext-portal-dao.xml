@@ -27,4 +27,8 @@
        <property name="dataSource" ref="dataSource" />
     </bean>
     
+    <bean id="pantallasDAOImpl" class="mx.com.gseguros.portal.general.dao.impl.PantallasDAOImpl" parent="abstractManagerDAO">
+       <property name="dataSource" ref="dataSource" />
+    </bean>
+    
 </beans>

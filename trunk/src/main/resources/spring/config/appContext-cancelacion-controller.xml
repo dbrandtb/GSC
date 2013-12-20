@@ -5,6 +5,7 @@
     
     <bean id="CancelacionAction" class="mx.com.gseguros.portal.cancelacion.controller.CancelacionAction" scope="prototype">
         <property name="cancelacionManager" ref="cancelacionManagerImpl"></property>
+        <property name="pantallasManager" ref="pantallasManagerImpl"></property>
     </bean>
     
 </beans>

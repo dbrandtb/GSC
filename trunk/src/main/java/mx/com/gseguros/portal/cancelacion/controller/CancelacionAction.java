@@ -1,20 +1,28 @@
 package mx.com.gseguros.portal.cancelacion.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.gseguros.portal.cancelacion.service.CancelacionManager;
+import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.general.service.PantallasManager;
+import mx.com.gseguros.portal.general.util.GeneradorCampos;
+
+import org.apache.struts2.ServletActionContext;
 
 public class CancelacionAction extends PrincipalCoreAction
 {
+	private static final long              serialVersionUID   = 3337342608259982346L;
+	private static org.apache.log4j.Logger log                = org.apache.log4j.Logger.getLogger(CancelacionAction.class);
+	private boolean                        success            = false;
 	
-	private static final long serialVersionUID = 3337342608259982346L;
-	private static org.apache.log4j.Logger log=org.apache.log4j.Logger.getLogger(CancelacionAction.class);
-	private Map<String,String>smap1;
-	private boolean success=false;
-	private CancelacionManager cancelacionManager;
-	private List<Map<String,String>>slist1;
+	private CancelacionManager       cancelacionManager;
+	private PantallasManager         pantallasManager;
+	private Map<String,String>       smap1;
+	private List<Map<String,String>> slist1;
+	private Map<String,Item>         imap;
 	
 	//////////////////////////////////
 	////// marco de cancelacion //////
@@ -27,6 +35,34 @@ public class CancelacionAction extends PrincipalCoreAction
 				+ "\n###### marcoCancelacion ######"
 				+ "\n######                  ######"
 				);
+		try
+		{
+			imap=new HashMap<String,Item>(0);
+			
+			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			
+			gc.generaParcial(pantallasManager.obtenerCamposPantalla(
+					 null,null,null
+					,null,null,null
+					,"MARCOCANCELACION",null,null
+					,"FILTRO"));
+			
+			imap.put("itemsFiltro",gc.getItems());
+			
+			gc.generaParcial(pantallasManager.obtenerCamposPantalla(
+					 null,null,null
+					,null,null,null
+					,"MARCOCANCELACION",null,null
+					,"MODELOCANDIDATA"));
+			
+			imap.put("fieldsCandidata",gc.getFields());
+			imap.put("columnsCandidata",gc.getColumns());
+			
+		}
+		catch(Exception ex)
+		{
+			log.error("error al generar el marco de cancelacion");
+		}
 		log.debug(""
 				+ "\n######                  ######"
 				+ "\n###### marcoCancelacion ######"
@@ -76,7 +112,9 @@ public class CancelacionAction extends PrincipalCoreAction
 		log.debug("smap1: "+smap1);
 		try
 		{
-			slist1=cancelacionManager.buscarPolizas(smap1);
+			smap1.put("pv_cdunieco_i",smap1.get("pv_dsuniage_i"));
+			cancelacionManager.seleccionaPolizas(smap1);
+			slist1=cancelacionManager.obtenerPolizasCandidatas(smap1);
 			success=true;
 		}
 		catch(Exception ex)
@@ -235,6 +273,17 @@ public class CancelacionAction extends PrincipalCoreAction
 
 	public void setSlist1(List<Map<String, String>> slist1) {
 		this.slist1 = slist1;
+	}
+
+	public Map<String, Item> getImap() {
+		return imap;
+	}
+
+	public void setImap(Map<String, Item> imap) {
+		this.imap = imap;
+	}
+	public void setPantallasManager(PantallasManager pantallasManager) {
+		this.pantallasManager = pantallasManager;
 	}
 		
 }

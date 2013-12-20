@@ -16,8 +16,8 @@ var edipanEditor;
 var edipanStore;
 var edipanIndexEditado;
 
-var edipanUrlLoad = '<s:url namespace="/endosos" action="obtenerCamposPantalla" />';
-var edipanUrlSave = '<s:url namespace="/endosos" action="guardarCamposPantalla" />';
+var edipanUrlLoad = '<s:url namespace="/endosos" action="obtenerParametrosPantalla" />';
+var edipanUrlSave = '<s:url namespace="/endosos" action="guardarParametrosPantalla" />';
 var edipanUrlView = '<s:url namespace="/endosos" action="visorPantallas"        />';
 /*///////////////////*/
 ////// variables //////
@@ -137,7 +137,7 @@ Ext.onReady(function()
 				title        : 'Campos'
 				,store       : edipanStore
                 ,collapsible : true
-				,height      : 300
+				,height      : 400
 				,columns     :
 				[
                     <s:property value="imap1.columnsModelo" />
@@ -310,16 +310,19 @@ Ext.onReady(function()
                     	{
                     		debug(this.up().up().getValues());
                     		
-                    		edipanStore.removeAt(edipanIndexEditado);
-                    		edipanStore.insert(edipanIndexEditado,this.up().up().getValues());
-                    		
-                    		edipanFiltro.setDisabled(true);
-                            edipanGrid.setDisabled(false);
-                            edipanEditor.setDisabled(true);
-                            
-                            edipanFiltro.collapse();
-                            edipanGrid.expand();
-                            edipanEditor.collapse();
+                    		if(this.up().up().isValid())
+                    		{
+	                    		edipanStore.removeAt(edipanIndexEditado);
+	                    		edipanStore.insert(edipanIndexEditado,this.up().up().getValues());
+	                    		
+	                    		edipanFiltro.setDisabled(true);
+	                            edipanGrid.setDisabled(false);
+	                            edipanEditor.setDisabled(true);
+	                            
+	                            edipanFiltro.collapse();
+	                            edipanGrid.expand();
+	                            edipanEditor.collapse();
+                    		}
                     	}
                     }
                     ,{
