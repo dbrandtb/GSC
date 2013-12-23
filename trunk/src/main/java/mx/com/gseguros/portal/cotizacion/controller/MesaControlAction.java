@@ -17,7 +17,7 @@ import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.Tatri;
-import mx.com.gseguros.portal.endosos.service.EndososManager;
+import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 
 import org.apache.struts2.ServletActionContext;
@@ -37,8 +37,8 @@ public class MesaControlAction extends PrincipalCoreAction
 	private String                         msgResult;
 	private boolean                        success;
 	private Map<String,Item>               imap1;
-	private EndososManager                 endososManager;
 	private String                         username;
+	private PantallasManager               pantallasManager;
 	
 	public String principal()
 	{
@@ -501,7 +501,7 @@ public class MesaControlAction extends PrincipalCoreAction
 			username=usuario.getUser();
 			
 			////// obtener valores del formulario //////
-			List<Tatri>ltFormulario=endososManager.obtPantallaAlvaro(
+			List<Tatri>ltFormulario=pantallasManager.obtenerCamposPantalla(
 					smap1.get("cduno")
 					,smap1.get("cddos")
 					,smap1.get("cdtres")
@@ -514,7 +514,7 @@ public class MesaControlAction extends PrincipalCoreAction
 					,"FORMULARIO");
 			
 			////// obtener valores del grid //////
-			List<Tatri>ltgridpanel=endososManager.obtPantallaAlvaro(
+			List<Tatri>ltgridpanel=pantallasManager.obtenerCamposPantalla(
 					smap1.get("cduno")
 					,smap1.get("cddos")
 					,smap1.get("cdtres")
@@ -527,7 +527,7 @@ public class MesaControlAction extends PrincipalCoreAction
 					,"GRIDPANEL");
 			
 			////// obtener valores del filtro //////
-			List<Tatri>ltfiltro=endososManager.obtPantallaAlvaro(
+			List<Tatri>ltfiltro=pantallasManager.obtenerCamposPantalla(
 					smap1.get("cduno")
 					,smap1.get("cddos")
 					,smap1.get("cdtres")
@@ -730,20 +730,16 @@ public class MesaControlAction extends PrincipalCoreAction
 		this.imap1 = imap1;
 	}
 
-	public EndososManager getEndososManager() {
-		return endososManager;
-	}
-
-	public void setEndososManager(EndososManager endososManager) {
-		this.endososManager = endososManager;
-	}
-
 	public String getUsername() {
 		return username;
 	}
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public void setPantallasManager(PantallasManager pantallasManager) {
+		this.pantallasManager = pantallasManager;
 	}
 	
 }
