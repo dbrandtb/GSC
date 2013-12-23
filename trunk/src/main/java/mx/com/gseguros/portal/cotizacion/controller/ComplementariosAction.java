@@ -1457,7 +1457,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		params.put("pv_cdramo_i", cdramo);
 		params.put("pv_estado_i", estado);
 		params.put("pv_nmpoliza_i", nmpoliza);
-//		params.put("pv_nmsuplem_i", nmsuplem);
+		params.put("pv_nmsuplem_i", nmsuplem);
 		
 		if(StringUtils.isBlank(Op)) Op = "INSERTA";
 		Operacion Operation = Operacion.valueOf(Op);
