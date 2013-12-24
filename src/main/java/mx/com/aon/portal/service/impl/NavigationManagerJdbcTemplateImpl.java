@@ -10,7 +10,7 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.service.NavigationManager;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.exception.ApplicationException;
-
+@Deprecated
 public class NavigationManagerJdbcTemplateImpl extends
 AbstractManagerJdbcTemplateInvoke  implements NavigationManager {
 	
