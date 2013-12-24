@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
-
+@Deprecated
 public class UsuarioDAO extends AbstractDAO {
 
     private static Logger logger = Logger.getLogger(UsuarioDAO.class);
