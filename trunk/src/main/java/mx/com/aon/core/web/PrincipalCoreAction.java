@@ -11,39 +11,35 @@ import com.opensymphony.xwork2.Preparable;
 
 public abstract class PrincipalCoreAction extends ActionSupport implements SessionAware, Preparable {
 
+	private static final long serialVersionUID = -7975229967003917194L;
+
 	protected final transient Logger logger = Logger.getLogger(PrincipalCoreAction.class);
 	
-	@SuppressWarnings("unchecked")
-	protected Map session;
+	protected Map<String,Object> session;
 	
-	@SuppressWarnings("unchecked")
+	/*
+	@SuppressWarnings("rawtypes")
 	protected Map request;
-	/**
-	 * Constante que se utiliza para redireccionar a la pagina del portal.
-	 */
-	public static final String PORTAL = "portal";
-		
-    public void prepare() throws Exception {
-        // TODO Auto-generated method stub
-
-    }
     
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public void setRequest(Map request) {
         this.request = request;
     }
-    
-	@SuppressWarnings("unchecked")
-	public void setSession(Map session) {
-		this.session = session;		
+    */
+	
+	@Override
+	public void prepare() throws Exception {
+			
 	}
 
-	public Map<String,Object> getSession()
-	{
+	public Map<String,Object> getSession() {
 		return session;
 	}
 	
+	@Override
+	public void setSession(Map<String, Object> session) {
+		this.session = session;
+		
+	}
 	
-
-
 }
