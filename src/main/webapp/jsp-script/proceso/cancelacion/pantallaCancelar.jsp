@@ -7,17 +7,22 @@
     //var panCanUrlCat        = '<s:url namespace="/flujocotizacion"  action="cargarCatalogos" />';
     var panCanUrlCat        = '<s:url namespace="/catalogos"        action="obtieneCatalogo" />';
     var panCanUrlCancelar   = '<s:url namespace="/cancelacion"      action="cancelacionUnica" />';
+    /*
     var panCanInput         = [];
     panCanInput['cdunieco'] = '<s:property value="smap1.cdunieco" />';
     panCanInput['cdramo']   = '<s:property value="smap1.cdramo"   />';
     panCanInput['cdtipsit'] = '<s:property value="smap1.cdtipsit" />';
     panCanInput['estado']   = '<s:property value="smap1.estado"   />';
-    panCanInput['nmpoliza'] = '<s:property value="smap1.nmpoliza" />';
+    panCanInput['nmpoliza'] = '<s:property value="smap1.NMPOLIZA" />';
     panCanInput['dsunieco'] = '<s:property value="smap1.dsunieco" />';
     panCanInput['dsramo']   = '<s:property value="smap1.dsramo"   />';
     panCanInput['dstipsit'] = '<s:property value="smap1.dstipsit" />';
     panCanInput['nmpoliex'] = '<s:property value="smap1.nmpoliex" />';
     debug('panCanInput:',panCanInput);
+    */
+    
+    var pancanInSmap1=<s:property value='%{getSmap1().toString().replace("=",":\'").replace(",","\',").replace("}","\'}")}' />;
+    debug('pancanInSmap1',pancanInSmap1);
     /*///////////////////*/
     ////// variables //////
     ///////////////////////
@@ -96,6 +101,8 @@ Ext.onReady(function()
     	}
     	,items       :
     	[
+    	    <s:property value="imap.itemsMarcocancelacionModelocandidata" />
+    	    /*
     	    {
     	    	xtype       : 'textfield'
     	    	,fieldLabel : 'Sucursal'
@@ -162,6 +169,7 @@ Ext.onReady(function()
     	    	,colspan    : 2
     	    	,width      : 520
     	    }
+    	    */
     	]
     	,buttonAlign : 'center'
     	,buttons     :
@@ -177,6 +185,7 @@ Ext.onReady(function()
     	    			form.setLoading(true);
     	    			form.submit(
     	    			{
+    	    				/*
     	    				params   :
     	    				{
     	    					'smap1.cdunieco'  : panCanInput['cdunieco']
@@ -185,7 +194,9 @@ Ext.onReady(function()
     	    			        ,'smap1.estado'   : panCanInput['estado']
     	    			        ,'smap1.nmpoliza' : panCanInput['nmpoliza']
     	    				}
-    	    				,success : function(formu,action)
+    	    				,
+    	    				*/
+    	    				success : function(formu,action)
                             {
     	    					form.setLoading(false);
                                 debug(action);

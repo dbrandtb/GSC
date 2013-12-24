@@ -134,6 +134,7 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 	////////////////////////////////////////
 	////// grabar polizas en tagrucan //////
 	/*////////////////////////////////////*/
+	@Override
 	public void seleccionaPolizas(Map<String,String> params) throws Exception
 	{
 		ejecutaSP(new SeleccionaPolizas(this.getDataSource()), params);
@@ -155,5 +156,126 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 	/*////////////////////////////////////*/
 	////// grabar polizas en tagrucan //////
 	////////////////////////////////////////
+	
+	/////////////////////////////
+	////// cancelar poliza //////
+	/*/////////////////////////*/
+	@Override
+	public void cancelaPoliza (Map<String,String> params) throws Exception
+	{
+		ejecutaSP(new CancelaPoliza(getDataSource()),params);
+	}
+	
+	protected class CancelaPoliza extends StoredProcedure
+	{
+		public CancelaPoliza(DataSource dataSource)
+		{
+			super(dataSource, "pkg_cancela.p_cancela_poliza");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cduniage_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsituac_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdrazon_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_comenta_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_feefecto_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_fevencim_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_fecancel_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_usuario_i"  , OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_texto_o"  , OracleTypes.VARCHAR));
+					
+		}
+	}
+	/*/////////////////////////*/
+	////// cancelar poliza //////
+	/////////////////////////////
+	
+	/////////////////////////////////////////////
+	////// grabar poliza unica en tagrucan //////
+	/*/////////////////////////////////////////*/
+	@Override
+	public void seleccionaPolizaUnica(Map<String,String> params) throws Exception
+	{
+		ejecutaSP(new SeleccionaPolizaUnica(this.getDataSource()), params);
+	}
+	
+	protected class SeleccionaPolizaUnica extends StoredProcedure
+	{
+		public SeleccionaPolizaUnica(DataSource dataSource)
+		{
+			super(dataSource, "pkg_cancela.p_selecciona_poliza_unica");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_agencia_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_fechapro_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	/*/////////////////////////////////////////*/
+	////// grabar poliza unica en tagrucan //////
+	/////////////////////////////////////////////
+	
+	////////////////////////////////////////////
+	////// actualizar polizas en tagrucan //////
+	/*////////////////////////////////////////*/
+	@Override
+	public void actualizarTagrucan(Map<String,String> params) throws Exception
+	{
+		ejecutaSP(new ActualizarTagrucan(this.getDataSource()), params);
+	}
+	
+	protected class ActualizarTagrucan extends StoredProcedure
+	{
+		public ActualizarTagrucan(DataSource dataSource)
+		{
+			super(dataSource, "pkg_cancela.p_actualiza_tagrucan");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_swcancel_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_texto_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	/*////////////////////////////////////////*/
+	////// actualizar polizas en tagrucan //////
+	////////////////////////////////////////////
+	
+	//////////////////////////////////////////
+	////// cancelar polizas en tagrucan //////
+	/*//////////////////////////////////////*/
+	@Override
+	public void cancelacionMasiva(Map<String,String> params) throws Exception
+	{
+		ejecutaSP(new CancelacionMasiva(this.getDataSource()), params);
+	}
+	
+	protected class CancelacionMasiva extends StoredProcedure
+	{
+		public CancelacionMasiva(DataSource dataSource)
+		{
+			super(dataSource, "pkg_cancela.p_cancelacion_masiva");
+			declareParameter(new SqlParameter("pv_id_proceso_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_fecha_carga_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_usuario_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_texto_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	/*//////////////////////////////////////*/
+	////// cancelar polizas en tagrucan //////
+	//////////////////////////////////////////
 
 }
