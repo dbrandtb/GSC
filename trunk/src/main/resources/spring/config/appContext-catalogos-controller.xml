@@ -11,6 +11,9 @@
         <property name="clausuladoManager" ref="clausuladoManagerImpl"/>
     </bean>
     
+    <bean id="usuarioAction" class="mx.com.gseguros.portal.catalogos.controller.UsuarioAction" scope="prototype">
+        <property name="usuarioManager" ref="usuarioManagerImpl"></property>
+    </bean>
     
     
 </beans>

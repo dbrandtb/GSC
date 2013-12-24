@@ -65,8 +65,18 @@
             </result>
         </action>
         
-        <action name="personas">
-          <result>/jsp/catalogos/personas.jsp</result>
+        <action name="usuarios">
+            <result>/jsp/catalogos/usuarios.jsp</result>
+        </action>
+        
+        <action name="guardaUsuario" class="usuarioAction" method="guardaUsuario">
+            <result type="json">
+                <!-- <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    msgResult.*,
+                    success
+                </param> -->
+            </result>
         </action>
 
 	</package>

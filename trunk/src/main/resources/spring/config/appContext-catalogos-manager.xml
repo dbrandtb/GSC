@@ -10,6 +10,8 @@
         <property name="clausuladoDAO" ref="clausuladoDAOImpl"/>
     </bean>
     
-    
+    <bean id="usuarioManagerImpl" class="mx.com.gseguros.portal.general.service.impl.UsuarioManagerImpl">
+        <property name="usuarioDAO" ref="usuarioDAOImpl"/>
+    </bean>
     
 </beans>
