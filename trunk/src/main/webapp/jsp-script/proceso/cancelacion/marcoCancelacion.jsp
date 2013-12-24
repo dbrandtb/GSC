@@ -75,22 +75,15 @@
    		    	debug('continuar');
    		    	Ext.getCmp('marcanMenuOperaciones').collapse();
    		    	Ext.getCmp('marcanLoaderFrame').setTitle(recordOperacion.get('texto'));
+   		    	debug('recordActivo.getData()',recordActivo.getData());
    		    	Ext.getCmp('marcanLoaderFrame').getLoader().load(
    		    	{
    		    		url       : recordOperacion.get('liga')
                     ,scripts  : true
                     ,autoLoad : true
-                    ,params   :
+                    ,jsonData :
                     {
-                    	'smap1.cdunieco'  : recordActivo.get('CDUNIECO')
-                    	,'smap1.cdramo'   : recordActivo.get('CDRAMO')
-                    	,'smap1.cdtipsit' : recordActivo.get('CDTIPSIT')
-                   		,'smap1.estado'   : recordActivo.get('ESTADO')
-                   		,'smap1.nmpoliza' : recordActivo.get('NMPOLIZA')
-                   		,'smap1.dsunieco' : recordActivo.get('DSUNIECO')
-                        ,'smap1.dsramo'   : recordActivo.get('DSRAMO')
-                        ,'smap1.dstipsit' : recordActivo.get('DSTIPSIT')
-                        ,'smap1.nmpoliex' : recordActivo.get('NMPOLIEX')
+                    	'smap1' : recordActivo.getData()
                     }
    		    	});
    		    }
@@ -266,12 +259,12 @@ Ext.onReady(function()
             ,type         : 'memory'
             ,data         :
             [
-                {
+                /*{
                 	texto    : 'Cancelaci&oacute;n &uacute;nica'
                 	,liga    : '<s:url namespace="/cancelacion"     action="pantallaCancelar" />'
                 	,funcion : 'cancelacionunica'
                 }
-                ,{
+                ,*/{
                     texto    : 'Cancelaci&oacute;n autom&aacute;tica'
                     ,liga    : '<s:url namespace="/cancelacion"     action="pantallaCancelarAuto" />'
                     ,funcion : 'cancelacionauto'
@@ -516,12 +509,15 @@ Ext.onReady(function()
     	    			,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
     	    			,handler : function()
     	    		    {
-    	    				if(this.up().up().isValid())
+    	    				var form1=this.up().up();
+    	    				if(form1.isValid())
     	    				{
-	    	    				this.up().up().submit(
+    	    					form1.setLoading(true);
+	    	    				form1.submit(
 	    	    				{
 	    	    					success  : function(form,action)
 	    	    					{
+	    	    						form1.setLoading(false);
 	    	    						debug(action);
 	    	    						var json = Ext.decode(action.response.responseText);
 	    	    						debug(json);
@@ -529,6 +525,7 @@ Ext.onReady(function()
 	    	    						{
 	    	    							marcanStorePolizas.removeAll();
 	    	    							marcanStorePolizas.add(json.slist1);
+	    	    							Ext.getCmp('marcanBotCheck').handler();
 	    	    							debug(marcanStorePolizas);
 	    	    						}
 	    	    						else
@@ -544,6 +541,7 @@ Ext.onReady(function()
 	    	    					}
 	    	    				    ,failure : function()
 	    	    				    {
+	    	    				    	form1.setLoading(false);
 	    	    				    	Ext.Msg.show(
 	    				                {
 	    				                    title   : 'Error',
@@ -574,13 +572,14 @@ Ext.onReady(function()
    	    		//,width         : 1000
     	    	,collapsible   : true
     	    	,titleCollapse : true
-    	    	,height        : 200
+    	    	,height        : 350
     	    	,store         : marcanStorePolizas
     	    	,frame         : true
     	    	,tbar          :
     	    	[
     	    	    {
     	    	    	text     : 'Marcar/desmarcar'
+    	    	    	,id      : 'marcanBotCheck'
     	    	    	,icon    : '${ctx}/resources/fam3icons/icons/table_lightning.png'
     	    	    	,handler : function()
     	    	    	{

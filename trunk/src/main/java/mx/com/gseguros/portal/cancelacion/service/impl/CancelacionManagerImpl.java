@@ -56,5 +56,37 @@ public class CancelacionManagerImpl implements CancelacionManager
 		cancelacionDAO.seleccionaPolizas(params);
 		log.debug("CancelacionManager seleccionaPolizas end");
 	}
+	
+	@Override
+	public void cancelaPoliza (Map<String,String> params) throws Exception
+	{
+		log.debug("CancelacionManager cancelaPoliza params: "+params);
+		cancelacionDAO.cancelaPoliza(params);
+		log.debug("CancelacionManager cancelaPoliza end");
+	}
+	
+	@Override
+	public void seleccionaPolizaUnica (Map<String,String> params) throws Exception
+	{
+		log.debug("CancelacionManager seleccionaPolizaUnica params: "+params);
+		cancelacionDAO.seleccionaPolizaUnica(params);
+		log.debug("CancelacionManager seleccionaPolizaUnica end");
+	}
+	
+	@Override
+	public void actualizarTagrucan (Map<String,String> params) throws Exception
+	{
+		log.debug("CancelacionManager actualizarTagrucan params: "+params);
+		cancelacionDAO.actualizarTagrucan(params);
+		log.debug("CancelacionManager actualizarTagrucan end");
+	}
+	
+	@Override
+	public void cancelacionMasiva (Map<String,String> params) throws Exception
+	{
+		log.debug("CancelacionManager cancelacionMasiva params: "+params);
+		cancelacionDAO.cancelacionMasiva(params);
+		log.debug("CancelacionManager cancelacionMasiva end");
+	}
 
 }

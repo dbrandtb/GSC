@@ -318,10 +318,17 @@ public class GeneradorCampos {
                 		+"}")).setQuotes(""));
             }
         }
-        else if(ta.getSwformat().equals("A"))
+        else if(ta.getSwformat().equals("A")||ta.getSwformat().equals("T"))//textfield y textarea
         {
             it.setType(Item.OBJ);
-            it.setComposedName("Ext.create('Ext.form.TextField',{");
+            if(ta.getSwformat().equals("A"))
+            {
+            	it.setComposedName("Ext.create('Ext.form.TextField',{");
+            }
+            else
+            {
+            	it.setComposedName("Ext.create('Ext.form.TextArea',{");
+            }
             it.setComposedNameClose("})");
             it.add(Item.crear("id", this.idPrefix+idx));
             it.add(Item.crear("cdatribu", ta.getCdatribu()));

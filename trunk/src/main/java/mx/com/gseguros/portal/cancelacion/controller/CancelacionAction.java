@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
+import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.cancelacion.service.CancelacionManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.service.PantallasManager;
@@ -86,6 +87,26 @@ public class CancelacionAction extends PrincipalCoreAction
 				+ "\n###### pantallaCancelar ######"
 				+ "\n######                  ######"
 				);
+		log.debug("smap1: "+smap1);
+		try
+		{
+			imap=new HashMap<String,Item>(0);
+			
+			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			
+			gc.generaParcial(pantallasManager.obtenerCamposPantalla(
+					 null,null,null
+					,null,null,null
+					,"PANTALLACANCELARUNICA",null,null
+					,"FORM"));
+			
+			imap.put("itemsMarcocancelacionModelocandidata",gc.getItems());
+			
+		}
+		catch(Exception ex)
+		{
+			log.error("error al crear la pantalla de cancelacion unica",ex);
+		}
 		log.debug(""
 				+ "\n######                  ######"
 				+ "\n###### pantallaCancelar ######"
@@ -113,7 +134,15 @@ public class CancelacionAction extends PrincipalCoreAction
 		try
 		{
 			smap1.put("pv_cdunieco_i",smap1.get("pv_dsuniage_i"));
-			cancelacionManager.seleccionaPolizas(smap1);
+			smap1.put("pv_cdramo_i",smap1.get("pv_dsramo_i"));
+			if(smap1.get("pv_nmpoliza_i")!=null&&smap1.get("pv_nmpoliza_i").length()>0)
+			{
+				cancelacionManager.seleccionaPolizaUnica(smap1);
+			}
+			else
+			{
+				cancelacionManager.seleccionaPolizas(smap1);
+			}
 			slist1=cancelacionManager.obtenerPolizasCandidatas(smap1);
 			success=true;
 		}
@@ -147,7 +176,16 @@ public class CancelacionAction extends PrincipalCoreAction
 				+ "\n######                  ######"
 				);
 		log.debug("smap1: "+smap1);
-		success=true;
+		try
+		{
+			cancelacionManager.cancelaPoliza(smap1);
+			success=true;			
+		}
+		catch(Exception ex)
+		{
+			log.error("error al cancelar poliza unica",ex);
+			success=true;
+		}
 		log.debug(""
 				+ "\n######                  ######"
 				+ "\n###### cancelacionUnica ######"
@@ -172,6 +210,45 @@ public class CancelacionAction extends PrincipalCoreAction
 				+ "\n######                      ######"
 				);
 		log.debug("slist1 :"+slist1);
+		try
+		{
+			imap=new HashMap<String,Item>(0);
+			
+			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			
+			gc.generaParcial(pantallasManager.obtenerCamposPantalla(
+					 null,null,null
+					,null,null,null
+					,"MARCOCANCELACION",null,null
+					,"MODELOCANDIDATA"));
+			
+			imap.put("fieldsMarcocancelacionModelocandidata",gc.getFields());
+			imap.put("columnsMarcocancelacionModelocandidata",gc.getColumns());
+			
+			Map<String,String>todasN=new HashMap<String,String>(0);
+			todasN.put("pv_cdunieco_i" , null);
+			todasN.put("pv_cdramo_i"   , null);
+			todasN.put("pv_estado_i"   , null);
+			todasN.put("pv_nmpoliza_i" , null);
+			todasN.put("pv_swcancel_i" , "N");
+			cancelacionManager.actualizarTagrucan(todasN);
+			
+			for(Map<String,String>selec:slist1)
+			{
+				Map<String,String>iterada=new HashMap<String,String>(0);
+				iterada.put("pv_cdunieco_i" , selec.get("CDUNIAGE"));
+				iterada.put("pv_cdramo_i"   , selec.get("CDRAMO"));
+				iterada.put("pv_estado_i"   , null);
+				iterada.put("pv_nmpoliza_i" , selec.get("NMPOLIZA"));
+				iterada.put("pv_swcancel_i" , "S");
+				cancelacionManager.actualizarTagrucan(iterada);
+			}
+			
+		}
+		catch(Exception ex)
+		{
+			log.error("error al cargar pantalla de cancelacion automatica",ex);
+		}
 		log.debug(""
 				+ "\n######                      ######"
 				+ "\n###### pantallaCancelarAuto ######"
@@ -195,8 +272,22 @@ public class CancelacionAction extends PrincipalCoreAction
 				+ "\n###### cancelacionAutoManual ######"
 				+ "\n######                       ######"
 				);
-		log.debug("slist1: "+slist1);
-		success=true;
+		try
+		{
+			UserVO usuario=(UserVO) session.get("USUARIO");
+			
+			Map<String,String>params=new HashMap<String,String>(0);
+			params.put("pv_id_proceso_i"  , "1");
+			params.put("pv_fecha_carga_i" , null);
+			params.put("pv_usuario_i"     , usuario.getUser());
+			cancelacionManager.cancelacionMasiva(params);
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			log.error("error al cancelar las polizas",ex);
+			success=false;
+		}
 		log.debug(""
 				+ "\n######                       ######"
 				+ "\n###### cancelacionAutoManual ######"
@@ -205,8 +296,8 @@ public class CancelacionAction extends PrincipalCoreAction
 				);
 		return SUCCESS;
 	}
-	////// proceso de cancelacion automatica manual //////
 	/*//////////////////////////////////////////////////*/
+	////// proceso de cancelacion automatica manual //////
 	//////////////////////////////////////////////////////
 	
 	/////////////////////////////////////////////

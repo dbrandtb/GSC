@@ -20,6 +20,8 @@ Ext.onReady(function()
         extend  : 'Ext.data.Model'
         ,fields :
         [
+            <s:property value="imap.fieldsMarcocancelacionModelocandidata" />
+            /*
             {
                 name        : "FEMISION"
                 ,type       : "date"
@@ -59,6 +61,7 @@ Ext.onReady(function()
                 ,type       : "date"
                 ,dateFormat : "d/m/Y"
             }
+            */
         ]
     });
     /*/////////////////*/
@@ -81,10 +84,12 @@ Ext.onReady(function()
             ,data         :
             [
                 <s:set name="contador" value="0" />
-                <s:iterator value="slist1" var="mapa">
+                <s:iterator value="slist1">
                 <s:if test="#contador>0">
                 ,
                 </s:if>
+                <s:property value='%{getSlist1().get(#contador).toString().replace("=",":\'").replace(",","\',").replace("}","\'}")}' />
+                /*
                 {
                 	FEMISION  : '<s:property value='%{getSlist1().get(#contador).get("FEMISION")}' />'
                 	,FEINICOV : '<s:property value='%{getSlist1().get(#contador).get("FEINICOV")}' />'
@@ -104,6 +109,7 @@ Ext.onReady(function()
                     ,activo   : false
                     ,FERECIBO : '<s:property value='%{getSlist1().get(#contador).get("FERECIBO")}' />'
                 }
+                */
                 <s:set name="contador" value="#contador+1" />
                 </s:iterator>
             ]
@@ -130,18 +136,21 @@ Ext.onReady(function()
 		    	,icon    : '${ctx}/resources/fam3icons/icons/key.png'
 		    	,handler : function()
 		    	{
+		    		/*
 		    		var jsonObject       = {};
 		    		jsonObject['slist1'] = [];
-		    		var grid             = this.up().up();
 		    		panCanAutoStorePolizas.each(function(record)
 		    		{
 		    			jsonObject['slist1'].push(record.raw);
 		    		});
+		    		*/
+		    		var boton=this;
+		    		var grid = this.up().up();
 		    		grid.setLoading(true);
 		    		Ext.Ajax.request(
 		    		{
 		    			url       : panCanAutoUrlCancelar
-		    			,jsonData : jsonObject
+		    			//,jsonData : jsonObject
 		    			,success  : function(response,opts)
                         {
 		    				grid.setLoading(false);
@@ -149,6 +158,12 @@ Ext.onReady(function()
 		    				if(json.success==true)
 		    				{
 		    					debug('ok');
+		    					Ext.Msg.show({
+                                    title    : 'Cancelaci&oacute;n exitosa'
+                                    ,msg     : 'Se han cancelado las p&oacute;lizas'
+                                    ,buttons : Ext.Msg.OK
+                                });
+		    					boton.hide();
 		    				}
 		    				else
 		    				{
@@ -176,6 +191,8 @@ Ext.onReady(function()
 		]
 		,columns     :
 		[
+		    <s:property value="imap.columnsMarcocancelacionModelocandidata" />
+		    /*
 		    {
 		    	header     : 'Sucursal'
 		    	,dataIndex : 'DSUNIECO'
@@ -208,6 +225,7 @@ Ext.onReady(function()
                 ,xtype     : 'datecolumn'
                 ,format    : 'd M Y'
             }
+		    */
 		]
 	});
 	
