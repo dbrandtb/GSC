@@ -15,4 +15,5 @@ public interface EndososManager
 	public List<Map<String, String>> obtenerAtributosCoberturas(Map<String, String> params) throws Exception;
 	public Map<String,Object>        sigsvalipolEnd(Map<String, String> params) throws Exception;
 	public Map<String,String>        guardarEndosoClausulas(Map<String,Object>params) throws Exception;
+	public Map<String,String>        calcularValorEndoso(Map<String,Object>params) throws Exception;
 }
