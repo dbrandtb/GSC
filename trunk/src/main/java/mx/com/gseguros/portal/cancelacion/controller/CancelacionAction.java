@@ -211,7 +211,7 @@ public class CancelacionAction extends PrincipalCoreAction
 		catch(Exception ex)
 		{
 			log.error("error al cancelar poliza unica",ex);
-			success=true;
+			success=false;
 		}
 		log.debug(""
 				+ "\n######                  ######"
