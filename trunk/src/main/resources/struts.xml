@@ -21,6 +21,21 @@
     <include file="struts/config/struts-mesacontrol.xml"/>
     <include file="struts/config/struts-portal.xml"/>
     <include file="struts/config/struts-seguridad.xml"/>
+    
+    <include file="struts/config/struts-wizard.xml"/>
+	<include file="struts/config/struts-wizard-atributosVariables.xml"/>
+	<include file="struts/config/struts-wizard-definicion.xml"/>
+	<include file="struts/config/struts-wizard-planes.xml"/>
+	<include file="struts/config/struts-wizard-incisos.xml"/>
+	<include file="struts/config/struts-wizard-librerias.xml"/>
+	<include file="struts/config/struts-wizard-conceptosCobertura.xml"/>
+	<include file="struts/config/struts-wizard-sumaAsegurada.xml"/>
+	<include file="struts/config/struts-wizard-rol.xml"/>
+	<include file="struts/config/struts-wizard-tipoObjeto.xml"/>
+	<include file="struts/config/struts-wizard-datosFijos.xml"/>
+	<include file="struts/config/struts-wizard-reglaValidacion.xml"/>
+	<include file="struts/config/struts-wizard-expresiones.xml"/>
+	<include file="struts/config/struts-wizard-tablaCincoClaves.xml"/>
 	
     
     <package name="default" namespace="/" extends="json-default">
@@ -274,6 +289,12 @@
         <action name="obtenerTipsit" class="beanDatosComplementarios" method="obtenerTipsit">
             <result name="success" type="json" />
         </action>
+        
+        <!-- PARA WIZARD DE PARAMETRIZACION -->
+		<action name="parametrizador" class="ExpresionesAction" method="entrarWizard">
+			<result name="success">/jsp/wizard/indexWithIframe.jsp</result>
+		</action>
+		<!-- PARA WIZARD DE PARAMETRIZACION -->
                 
     </package>
 
