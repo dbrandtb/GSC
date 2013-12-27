@@ -730,8 +730,8 @@
 			                                                            	    		datComPolizaMaestra=json.panel2.nmpoliza;
 			                                                            	    		debug("datComPolizaMaestra",datComPolizaMaestra);
 			                                                            	    		Ext.getCmp('numerofinalpoliza').setValue(json.panel2.nmpoliex);
-			                                                            	    		Ext.getCmp('botonEmitirPolizaFinal').setDisabled(true);
-			                                                            	    		Ext.getCmp('botonEmitirPolizaFinalPreview').setDisabled(true);
+			                                                            	    		Ext.getCmp('botonEmitirPolizaFinal').hide();
+			                                                            	    		Ext.getCmp('botonEmitirPolizaFinalPreview').hide();
 			                                                            	    		Ext.getCmp('botonImprimirPolizaFinal').setDisabled(false);
 			                                                            	    		//me.up().up().setClosable(false);
 			                                                            	    		Ext.getCmp('venDocVenEmiBotNueCotiza').show();
