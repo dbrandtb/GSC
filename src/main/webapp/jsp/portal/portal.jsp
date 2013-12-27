@@ -33,7 +33,7 @@
             		$("<a />")
             		.attr({href:'javascript:LoadPage("/mesacontrol/principal.action")',
             			class:"x-menu-item"})
-            		.html('<img src="/acw/images/app/default/s.gif" class="x-menu-item-icon ">Mesa de control')
+            		.html('<img src="${ctx}/resources/images/default/s.gif" class="x-menu-item-icon ">Mesa de control')
             		));
             window.clearInterval(miIntervalCambioLiga);
             //window.console&&console.log("STOP");

@@ -14,7 +14,7 @@
 */
 
 /* Ext.BLANK_IMAGE_URL */
-Ext.BLANK_IMAGE_URL = '/acw/images/app/default/s.gif';
+Ext.BLANK_IMAGE_URL = '/gseguros/resources/images/default/s.gif';
 
 /* Modify Field to have an prefix/suffix */
 
