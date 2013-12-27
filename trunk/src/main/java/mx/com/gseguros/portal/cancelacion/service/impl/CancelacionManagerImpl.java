@@ -50,7 +50,7 @@ public class CancelacionManagerImpl implements CancelacionManager
 	}
 	
 	@Override
-	public void seleccionaPolizas (Map<String,String> params) throws Exception
+	public void seleccionaPolizas (Map<String,Object> params) throws Exception
 	{
 		log.debug("CancelacionManager seleccionaPolizas params: "+params);
 		cancelacionDAO.seleccionaPolizas(params);
