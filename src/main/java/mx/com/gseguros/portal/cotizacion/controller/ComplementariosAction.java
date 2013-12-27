@@ -1435,7 +1435,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 					paramsR.put("pv_dsdocume_i", "Recibo "+recibo.getNumRec());
 					paramsR.put("pv_nmsolici_i", nmsolici);
 					paramsR.put("pv_ntramite_i", ntramite);
-					paramsR.put("pv_tipmov_i", "EMISION");
+					paramsR.put("pv_tipmov_i", "1");
 					
 					kernelManager.guardarArchivo(paramsR);
 				//}

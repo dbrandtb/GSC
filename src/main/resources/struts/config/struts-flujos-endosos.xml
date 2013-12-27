@@ -80,6 +80,14 @@
             <result name="success" type="json" />
         </action>
         
+        <action name="pantallaEndosoClausulas" class="EndososAction" method="pantallaEndosoClausulas">
+            <result name="success">/jsp-script/proceso/endosos/pantallaEndosoClausulas.jsp</result>
+        </action>
+        
+        <action name="guardarEndosoClausulaPaso" class="EndososAction" method="guardarEndosoClausulaPaso">
+            <result name="success" type="json" />
+        </action>
+        
     </package>
 
 </struts>

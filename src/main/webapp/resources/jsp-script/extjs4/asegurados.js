@@ -1283,7 +1283,7 @@ Ext
 																								.getValue(),
 																						'smap1.nmsuplem' : '0',
 																						'smap1.ntramite' : ntramite,
-																						'smap1.tipomov' : 'Usuario'
+																						'smap1.tipomov' : '0'
 																					}
 																				},
 																				buttons : [ {
@@ -3264,7 +3264,7 @@ Ext
 							'smap1.nmsuplem' : '0',
 							'smap1.nmsolici' : '0',
 							'smap1.ntramite' : ntramiteCargado,
-							'smap1.tipomov' : 'Usuario'
+							'smap1.tipomov' : '0'
 						}
 					}
 				}).showAt(450, 50);

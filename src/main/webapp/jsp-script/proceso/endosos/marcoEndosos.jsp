@@ -346,6 +346,65 @@
                 });
             }
     	}
+    	else if(recordOperacion.get('funcion')=='endosoclausulas')
+   		{
+    		debug('endosoclausulas');
+            var nAsegActivos=0;
+            var recordActivo;
+            marendStoreAsegurados.each(function(record)
+            {
+                if(record.get('activo')==true)
+                {
+                    nAsegActivos=nAsegActivos+1;
+                    recordActivo=record;
+                }
+            });
+            if(nAsegActivos==1)
+            {
+                if(recordActivo.get('cdrol')==2)
+                {
+                    Ext.getCmp('marendMenuOperaciones').collapse();
+                    Ext.getCmp('marendLoaderFrame').setTitle(recordOperacion.get('texto'));
+                    Ext.getCmp('marendLoaderFrame').getLoader().load(
+                    {
+                        url       : recordOperacion.get('liga')
+                        ,scripts  : true
+                        ,autoLoad : true
+                        ,params   :
+                        {
+                             'smap1.cdunieco' : recordActivo.get('CDUNIECO')
+                            ,'smap1.cdramo'   : recordActivo.get('CDRAMO')
+                            ,'smap1.estado'   : recordActivo.get('ESTADO')
+                            ,'smap1.nmpoliza' : recordActivo.get('NMPOLIZA')
+                            ,'smap1.cdtipsit' : recordActivo.get('CDTIPSIT')
+                            ,'smap1.nmsituac' : recordActivo.get('nmsituac') 
+                            ,'smap1.ntramite' : recordActivo.get('NTRAMITE')
+                            ,'smap1.nmsuplem' : recordActivo.get('NMSUPLEM')
+                        }
+                    });
+                }
+                else
+                {
+                    Ext.Msg.show(
+                    {
+                        title    : 'Error'
+                        ,icon    : Ext.Msg.WARNING
+                        ,msg     : 'El cliente no puede ser seleccionado'
+                        ,buttons : Ext.Msg.OK
+                    });
+                }
+            }
+            else
+            {
+                Ext.Msg.show(
+                {
+                    title    : 'Error'
+                    ,icon    : Ext.Msg.WARNING
+                    ,msg     : 'Seleccione solo un asegurado'
+                    ,buttons : Ext.Msg.OK
+                });
+            }
+   		}
     }
     /*///////////////////*/
     ////// funciones //////
@@ -523,6 +582,11 @@ Ext.onReady(function()
                     texto    : 'Endoso de baja de coberturas'
                     ,liga    : '<s:url namespace="/endosos" action="pantallaEndosoCoberturas" />'
                     ,funcion : 'endosocoberturasbaja'
+                }
+                ,{
+                    texto    : 'Endoso de cl&aacute;usulas'
+                    ,liga    : '<s:url namespace="/endosos" action="pantallaEndosoClausulas" />'
+                    ,funcion : 'endosoclausulas'
                 }
             ]
         }

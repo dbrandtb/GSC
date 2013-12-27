@@ -14,4 +14,5 @@ public interface EndososDAO
     public Map<String, String>      guardarEndosoCoberturas(Map<String, Object> params) throws Exception;
 	public List<Map<String,String>> obtenerAtributosCoberturas(Map<String, String> params) throws Exception;
 	public Map<String,Object>       sigsvalipolEnd(Map<String, String> params) throws Exception;
+	public Map<String, String>      guardarEndosoClausulas(Map<String, Object> params) throws Exception;
 }

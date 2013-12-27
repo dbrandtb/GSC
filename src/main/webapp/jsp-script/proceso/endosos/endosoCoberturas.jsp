@@ -578,7 +578,7 @@
                                                     ,'smap1.nmsuplem' : '0'
                                                     ,'smap1.ntramite' : inputNtramitep3
                                                     ,'smap1.nmsolici' : ''
-                                                    ,'smap1.tipomov'  : 'Usuario'
+                                                    ,'smap1.tipomov'  : '0'
                                                 }
                                                 ,scripts  : true
                                                 ,autoLoad : true
