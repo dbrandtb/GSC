@@ -1,10 +1,16 @@
 package mx.com.gseguros.utils;
 
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.apache.log4j.Logger;
 
 public class Utilerias {
 	
-	private static Logger logger = Logger.getLogger(Utilerias.class);
+	private static Logger logger          = Logger.getLogger(Utilerias.class);
+	private static SimpleDateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
 	
 	/**
 	 * Formatea un string con el contenido de una fecha
@@ -25,6 +31,41 @@ public class Utilerias {
 			fecha=aux;
 		}
 		return fecha;
+	}
+	
+	/**
+	 * RECIBE UN MAPA DE TIPO STRING Y PONE TODAS LAS LLAVES QUE ENPIECEN CON "FE" Y "PV_FE" COMO TIPO DATE
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
+	public static Map<String,Object> ponFechas(Map<String,String>params) throws Exception
+	{
+		Map<String,Object> omap=new HashMap<String,Object>(0);
+		if(params!=null)
+		{
+			for(Entry<String,String> en:params.entrySet())
+			{
+				String llave=(String)en.getKey();
+				if((llave.length()>=2&&llave.substring(0,2).equalsIgnoreCase("fe"))||(llave.length()>=5&&llave.substring(0,5).equalsIgnoreCase("pv_fe")))
+				{
+					String fecha=en.getValue();
+					if(fecha!=null&&fecha.length()>0)
+					{
+						omap.put(llave,renderFechas.parse(fecha));
+					}
+					else
+					{
+						omap.put(llave,null);
+					}
+				}
+				else
+				{
+					omap.put(llave,en.getValue());
+				}
+			}
+		}
+		return omap;
 	}
 
 }

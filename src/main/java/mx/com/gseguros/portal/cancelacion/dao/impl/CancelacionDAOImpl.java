@@ -9,6 +9,7 @@ import mx.com.gseguros.portal.cancelacion.dao.CancelacionDAO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.DinamicMapper;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
+import mx.com.gseguros.utils.Utilerias;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.springframework.jdbc.core.SqlOutParameter;
@@ -163,7 +164,7 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 	@Override
 	public void cancelaPoliza (Map<String,String> params) throws Exception
 	{
-		ejecutaSP(new CancelaPoliza(getDataSource()),params);
+		ejecutaSP(new CancelaPoliza(getDataSource()),Utilerias.ponFechas(params));
 	}
 	
 	protected class CancelaPoliza extends StoredProcedure
@@ -179,9 +180,9 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 			declareParameter(new SqlParameter("pv_nmsituac_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdrazon_i"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_comenta_i"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_feefecto_i" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_fevencim_i" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_fecancel_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_feefecto_i" , OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_fevencim_i" , OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_fecancel_i" , OracleTypes.DATE));
 			declareParameter(new SqlParameter("pv_usuario_i"  , OracleTypes.VARCHAR));
 			
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
