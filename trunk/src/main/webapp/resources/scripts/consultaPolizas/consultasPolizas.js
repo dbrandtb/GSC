@@ -7,7 +7,7 @@ Ext.onReady(function() {
         allowDeselect: true
     });
     
-    // Conversión para el tipo de moneda
+    // Conversiï¿½n para el tipo de moneda
     Ext.util.Format.thousandSeparator = ',';
     Ext.util.Format.decimalSeparator = '.';
     
@@ -65,7 +65,7 @@ Ext.onReady(function() {
                                 tabDatosGeneralesPoliza.show();
                                 
                                 /*
-                                //Datos de Tarificación
+                                //Datos de Tarificaciï¿½n
                                 storeDatosTarificacion.load({
                                     params: panelBusqueda.down('form').getForm().getValues(),
                                     callback: function(records, operation, success){
@@ -674,7 +674,7 @@ Ext.onReady(function() {
                             'smap1.estado' :  panelBusqueda.down('form').getForm().findField("params.estado").getValue(),
                             'smap1.nmsuplem' :  panelBusqueda.down('form').getForm().findField("params.suplemento").getValue(),
                             'smap1.ntramite' : "",
-                            'smap1.tipomov'  : 'Usuario'
+                            'smap1.tipomov'  : '0'
                         }
                     });
                 }

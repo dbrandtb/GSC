@@ -100,6 +100,15 @@ public class EndososManagerImpl implements EndososManager
         return mapa;
 	}
 	
+	@Override
+	public Map<String, String> guardarEndosoClausulas(Map<String, Object> params) throws Exception
+	{
+		log.debug("EndososManager guardarEndosoClausulas params: "+params);
+		Map<String,String> mapa=endososDAO.guardarEndosoClausulas(params);
+		log.debug("EndososManager guardarEndosoClausulas response map: "+mapa);
+        return mapa;
+	}
+	
 	/////////////////////////////////
 	////// getters and setters //////
 	/*/////////////////////////////*/

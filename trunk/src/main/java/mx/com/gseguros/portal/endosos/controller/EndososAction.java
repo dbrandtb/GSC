@@ -2,6 +2,7 @@ package mx.com.gseguros.portal.endosos.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -273,7 +274,7 @@ public class EndososAction extends PrincipalCoreAction
 			paramsGetDoc.put("pv_estado_i"   , (String)omap1.get("pv_estado_i"));
 			paramsGetDoc.put("pv_nmpoliza_i" , (String)omap1.get("pv_nmpoliza_i"));
 			paramsGetDoc.put("pv_nmsuplem_i" , respuestaEndosoNombres.get("pv_nmsuplem_o"));
-			paramsGetDoc.put("pv_tipmov_i"   , getText("endoso.tipo.nombres"));
+			paramsGetDoc.put("pv_tipmov_i"   , "2");
 		    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(paramsGetDoc);
 		    log.debug("documentos que se regeneran: "+listaDocu);
 		    
@@ -342,6 +343,173 @@ public class EndososAction extends PrincipalCoreAction
 	/*////////////////////////////////////////////////*/
 	////// generar el endoso de cambio de nombres //////
 	////////////////////////////////////////////////////
+	
+	//////////////////////////////////////////
+	////// guardar endosos de clausulas //////
+	//////                              //////
+	////// smap1.pv_cdunieco_i          //////
+    ////// smap1.pv_cdramo_i            //////
+    ////// smap1.pv_estado_i            //////
+    ////// smap1.pv_nmpoliza_i          //////
+    ////// smap1.pv_nmsituac_i          //////
+    ////// smap1.pv_cdclausu_i          //////
+    ////// smap1.pv_nmsuplem_i          //////
+    ////// smap1.pv_ntramite_i          //////
+    ////// smap1.pv_cdtipsit_i          //////
+    ////// smap1.pv_status_i            //////
+    ////// smap1.pv_cdtipcla_i          //////
+    ////// smap1.pv_swmodi_i            //////
+    ////// smap1.pv_accion_i            //////
+    ////// smap1.confirmar              //////
+    ////// smap1.pv_dslinea_i           //////
+	/*//////////////////////////////////////*/
+	public String guardarEndosoClausulaPaso()
+	{
+		log.debug(""
+				+ "\n#######################################"
+				+ "\n#######################################"
+				+ "\n###### guardarEndosoClausulaPaso ######"
+				+ "\n######                           ######"
+				);
+		log.debug("smap1: "+smap1);
+		try
+		{
+			UserVO usuario=(UserVO)session.get("USUARIO");
+			
+			////////////////////////////
+			////// iniciar endoso //////
+			/*
+			 * pv_cdunieco_i-
+			 * pv_cdramo_i-
+			 * pv_estado_i-
+			 * pv_nmpoliza_i-
+			 * pv_fecha_i
+			 * pv_cdelemen_i
+			 * pv_cdusuari_i
+			 * pv_proceso_i
+			 * pv_cdtipsup_i
+			 */
+			omap1=new LinkedHashMap<String,Object>(0);
+			omap1.put("pv_cdunieco_i" , smap1.get("pv_cdunieco_i"));
+			omap1.put("pv_cdramo_i"   , smap1.get("pv_cdramo_i"));
+			omap1.put("pv_estado_i"   , smap1.get("pv_estado_i"));
+			omap1.put("pv_nmpoliza_i" , smap1.get("pv_nmpoliza_i"));
+			omap1.put("pv_fecha_i"    , new Date());
+			omap1.put("pv_cdelemen_i" , usuario.getEmpresa().getElementoId());
+			omap1.put("pv_cdusuari_i" , usuario.getUser());
+			omap1.put("pv_proceso_i"  , "END");
+			omap1.put("pv_cdtipsup_i" , "8");
+			
+			Map<String,String> resEnd=endososManager.guardarEndosoClausulas(omap1);
+			////// iniciar endoso //////
+			////////////////////////////
+			
+			if(!(smap1.get("confirmar")!=null&&smap1.get("confirmar").equalsIgnoreCase("si")))
+			{
+				
+				/////////////////////////////////
+				////// modificar clausulas //////
+				kernelManager.PMovMpolicot(smap1);
+				////// modificar clausulas //////
+				/////////////////////////////////
+			
+			}
+			else
+			{
+				//////////////////////////////
+				////// confirmar endoso //////
+				Map<String,String>paramConfirmarEndosoB=new LinkedHashMap<String,String>(0);
+				paramConfirmarEndosoB.put("pv_cdunieco_i" , smap1.get("pv_cdunieco_i"));
+				paramConfirmarEndosoB.put("pv_cdramo_i"   , smap1.get("pv_cdramo_i"));
+				paramConfirmarEndosoB.put("pv_estado_i"   , smap1.get("pv_estado_i"));
+				paramConfirmarEndosoB.put("pv_nmpoliza_i" , smap1.get("pv_nmpoliza_i"));
+				paramConfirmarEndosoB.put("pv_nmsuplem_i" , resEnd.get("pv_nmsuplem_o"));
+				paramConfirmarEndosoB.put("pv_nsuplogi_i" , resEnd.get("pv_nsuplogi_o"));
+				paramConfirmarEndosoB.put("pv_cdtipsup_i" , "8");
+				paramConfirmarEndosoB.put("pv_dscoment_i" , "");
+			    endososManager.confirmarEndosoB(paramConfirmarEndosoB);
+			    
+			    ///////////////////////////////////////
+			    ////// re generar los documentos //////
+			    /*///////////////////////////////////*/
+			    Map<String,String>paramsGetDoc=new LinkedHashMap<String,String>(0);
+				paramsGetDoc.put("pv_cdunieco_i" , smap1.get("pv_cdunieco_i"));
+				paramsGetDoc.put("pv_cdramo_i"   , smap1.get("pv_cdramo_i"));
+				paramsGetDoc.put("pv_estado_i"   , smap1.get("pv_estado_i"));
+				paramsGetDoc.put("pv_nmpoliza_i" , smap1.get("pv_nmpoliza_i"));
+				paramsGetDoc.put("pv_nmsuplem_i" , resEnd.get("pv_nmsuplem_o"));
+				paramsGetDoc.put("pv_tipmov_i"   , "8");
+			    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(paramsGetDoc);
+			    log.debug("documentos que se regeneran: "+listaDocu);
+			    
+			    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+listaDocu.get(0).get("ntramite");
+			    
+				//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
+				for(Map<String,String> docu:listaDocu)
+				{
+					log.debug("docu iterado: "+docu);
+					String nmsolici=docu.get("nmsolici");
+					String nmsituac=docu.get("nmsituac");
+					String descripc=docu.get("descripc");
+					String descripl=docu.get("descripl");
+					String url=this.getText("ruta.servidor.reports")
+							+ "?destype=cache"
+							+ "&desformat=PDF"
+							+ "&userid="+this.getText("pass.servidor.reports")
+							+ "&report="+descripl
+							+ "&paramform=no"
+							+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+							+ "&p_unieco="+smap1.get("pv_cdunieco_i")
+							+ "&p_ramo="+smap1.get("pv_cdramo_i")
+							+ "&p_estado="+smap1.get("pv_estado_i")
+							+ "&p_poliza="+smap1.get("pv_nmpoliza_i")
+							+ "&desname="+rutaCarpeta+"/"+descripc;
+					if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
+					{
+						// C R E D E N C I A L _ X X X X X X . P D F
+						//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+						url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("_"));
+					}
+					log.debug(""
+							+ "\n#################################"
+							+ "\n###### Se solicita reporte ######"
+							+ "\na "+url+""
+							+ "\n#################################");
+					HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
+					log.debug(""
+							+ "\n######                    ######"
+							+ "\n###### reporte solicitado ######"
+							+ "\na "+url+""
+							+ "\n################################"
+							+ "\n################################"
+							+ "");
+				}
+			    /*///////////////////////////////////*/
+				////// re generar los documentos //////
+			    ///////////////////////////////////////
+				
+				////// confirmar endoso //////
+				//////////////////////////////
+			}
+			
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			log.error("error al guardar endoso de clausula paso",ex);
+			success=false;
+		}
+		log.debug(""
+				+ "\n######                           ######"
+				+ "\n###### guardarEndosoClausulaPaso ######"
+				+ "\n#######################################"
+				+ "\n#######################################"
+				);
+		return SUCCESS;
+	}
+	/*//////////////////////////////////////*/
+	////// guardar endosos de clausulas //////
+	//////////////////////////////////////////
 	
 	//////////////////////////////////////////////////////
 	////// generar el endoso de cambio de domicilio //////
@@ -491,7 +659,7 @@ public class EndososAction extends PrincipalCoreAction
 			paramsGetDoc.put("pv_estado_i"   , smap1.get("pv_estado"));
 			paramsGetDoc.put("pv_nmpoliza_i" , smap1.get("pv_nmpoliza"));
 			paramsGetDoc.put("pv_nmsuplem_i" , resEndDomi.get("pv_nmsuplem_o"));
-			paramsGetDoc.put("pv_tipmov_i"   , getText("endoso.tipo.domicilio"));
+			paramsGetDoc.put("pv_tipmov_i"   , "3");
 		    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(paramsGetDoc);
 		    log.debug("documentos que se regeneran: "+listaDocu);
 		    
@@ -940,11 +1108,11 @@ public class EndososAction extends PrincipalCoreAction
 				paramsGetDoc.put("pv_nmsuplem_i" , respEndCob.get("pv_nmsuplem_o"));
 				if(smap1.get("altabaja").equalsIgnoreCase("alta"))
 				{
-					paramsGetDoc.put("pv_tipmov_i"   , getText("endoso.tipo.coberturas.alta"));
+					paramsGetDoc.put("pv_tipmov_i"   , "6");
 				}
 				else
 				{
-					paramsGetDoc.put("pv_tipmov_i"   , getText("endoso.tipo.coberturas.baja"));
+					paramsGetDoc.put("pv_tipmov_i"   , "7");
 				}
 			    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(paramsGetDoc);
 			    log.debug("documentos que se regeneran: "+listaDocu);
@@ -1214,7 +1382,7 @@ public class EndososAction extends PrincipalCoreAction
 				paramsGetDoc.put("pv_estado_i"   , smap1.get("estado"));
 				paramsGetDoc.put("pv_nmpoliza_i" , smap1.get("nmpoliza"));
 				paramsGetDoc.put("pv_nmsuplem_i" , respEnd.get("pv_nmsuplem_o"));
-				paramsGetDoc.put("pv_tipmov_i"   , getText("endoso.tipo.valosit.basico"));
+				paramsGetDoc.put("pv_tipmov_i"   , "4");
 			    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(paramsGetDoc);
 			    log.debug("documentos que se regeneran: "+listaDocu);
 			    
@@ -1479,6 +1647,38 @@ public class EndososAction extends PrincipalCoreAction
 	/*////////////////////////////////////////*/
 	////// guardar parametros de pantalla //////
 	////////////////////////////////////////////
+	
+	//////////////////////////////////////////////
+	////// pantalla de endosos de clausulas //////
+	/*//////////////////////////////////////////*/
+	public String pantallaEndosoClausulas()
+	{
+		log.debug(""
+				+ "\n##############################################"
+				+ "\n##############################################"
+				+ "\n###### pantalla de endosos de clausulas ######"
+				+ "\n######                                  ######"
+				);
+		log.debug("smap1: "+smap1);
+		try
+		{
+			
+		}
+		catch(Exception ex)
+		{
+			log.error("error al mostrar la pantalla de endoso de clausulas",ex);
+		}
+		log.debug(""
+				+ "\n######                                  ######"
+				+ "\n###### pantalla de endosos de clausulas ######"
+				+ "\n##############################################"
+				+ "\n##############################################"
+				);
+		return SUCCESS;
+	}
+	/*//////////////////////////////////////////*/
+	////// pantalla de endosos de clausulas //////
+	//////////////////////////////////////////////
 	
 	///////////////////////////////
 	////// getters y setters //////

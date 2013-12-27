@@ -179,6 +179,7 @@ Ext.onReady(function()
     	    	,icon    : '${ctx}/resources/fam3icons/icons/key.png'
     	    	,handler : function()
     	    	{
+    	    		var boton=this;
     	    		var form=this.up().up();
     	    		if(form.isValid())
     	    		{
@@ -205,6 +206,12 @@ Ext.onReady(function()
                                 if(json.success==true)
                                 {
                                     debug('ok');
+                                    Ext.Msg.show({
+                                        title    : 'Cancelaci&oacute;n exitosa'
+                                        ,msg     : 'Se ha cancelado la p&oacute;liza'
+                                        ,buttons : Ext.Msg.OK
+                                    });
+                                    boton.hide();
                                 }
                                 else
                                 {

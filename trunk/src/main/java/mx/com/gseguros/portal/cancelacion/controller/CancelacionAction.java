@@ -178,6 +178,8 @@ public class CancelacionAction extends PrincipalCoreAction
 		log.debug("smap1: "+smap1);
 		try
 		{
+			UserVO usuario=(UserVO)session.get("USUARIO");
+			smap1.put("pv_usuario_i",usuario.getUser());
 			cancelacionManager.cancelaPoliza(smap1);
 			success=true;			
 		}
