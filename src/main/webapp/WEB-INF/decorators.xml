@@ -97,6 +97,14 @@
         <pattern>/jsp/portal/treeRolElemento.jsp</pattern>
     </decorator>
     
+    <decorator name="extjs2" page="default2_deprecated.jsp">
+		<!-- Wizard de Parametrizacion -->
+        <pattern>/parametrizador.action</pattern>
+        <pattern>/jsp/wizard/indexWithIframe.jsp</pattern>		
+        <pattern>/jsp/wizard/agregarCoberturas.jsp</pattern>
+        <pattern>/indexWithIframe.jsp</pattern>		
+	</decorator>
+    
     
     <decorator name="mainbody" page="decorator_mainbody.jsp">
         <pattern>/jsp/portal/mainBody.jsp</pattern>
