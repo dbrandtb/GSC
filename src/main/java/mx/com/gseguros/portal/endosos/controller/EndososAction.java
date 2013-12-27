@@ -1087,7 +1087,14 @@ public class EndososAction extends PrincipalCoreAction
 				paramCalcValorEndoso.put("pv_nmsituac_i" , smap1.get("nmsituac"));
 				paramCalcValorEndoso.put("pv_nmsuplem_i" , respEndCob.get("pv_nmsuplem_o"));
 				paramCalcValorEndoso.put("pv_feinival_i" , (Date)omap1.get("pv_fecha_i"));
-				paramCalcValorEndoso.put("pv_cdtipsup_i" , smap1.get("cdtipsit"));
+				if(smap1.get("altabaja").equalsIgnoreCase("alta"))
+				{
+					paramCalcValorEndoso.put("pv_cdtipsup_i" , "6");
+				}
+				else
+				{
+					paramCalcValorEndoso.put("pv_cdtipsup_i" , "7");
+				}
 				endososManager.calcularValorEndoso(paramCalcValorEndoso);
 				
 				Map<String,String>paramConfirmarEndosoB=new LinkedHashMap<String,String>(0);

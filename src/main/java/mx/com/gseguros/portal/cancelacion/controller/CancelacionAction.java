@@ -136,26 +136,36 @@ public class CancelacionAction extends PrincipalCoreAction
 		log.debug("smap1: "+smap1);
 		try
 		{
+			//////////////////////
+			////// completa //////
 			smap1.put("pv_cdunieco_i",smap1.get("pv_dsuniage_i"));
 			smap1.put("pv_cdramo_i",smap1.get("pv_dsramo_i"));
+			////// completa //////
+			//////////////////////
+			
+			/////////////////////////////////
+			////// transforma a object //////
+			Map<String,Object>omap=new HashMap<String,Object>(0);
+			for(Entry en:smap1.entrySet())
+			{
+				if(((String)en.getKey()).substring(0,5).equalsIgnoreCase("pv_fe"))
+				{
+					omap.put((String)en.getKey(),renderFechas.parse((String)en.getValue()));
+				}
+				else
+				{
+					omap.put((String)en.getKey(),(String)en.getValue());
+				}
+			}
+			////// transforma a object //////
+			/////////////////////////////////
+			
 			if(smap1.get("pv_nmpoliza_i")!=null&&smap1.get("pv_nmpoliza_i").length()>0)
 			{
-				cancelacionManager.seleccionaPolizaUnica(smap1);
+				cancelacionManager.seleccionaPolizaUnica(omap);
 			}
 			else
 			{
-				Map<String,Object>omap=new HashMap<String,Object>(0);
-				for(Entry en:smap1.entrySet())
-				{
-					if(((String)en.getKey()).substring(0,5).equalsIgnoreCase("pv_fe"))
-					{
-						omap.put((String)en.getKey(),renderFechas.parse((String)en.getValue()));
-					}
-					else
-					{
-						omap.put((String)en.getKey(),(String)en.getValue());
-					}
-				}
 				cancelacionManager.seleccionaPolizas(omap);
 			}
 			slist1=cancelacionManager.obtenerPolizasCandidatas(smap1);
