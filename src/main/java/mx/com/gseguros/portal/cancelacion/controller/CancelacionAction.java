@@ -1,8 +1,10 @@
 package mx.com.gseguros.portal.cancelacion.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
@@ -18,6 +20,7 @@ public class CancelacionAction extends PrincipalCoreAction
 	private static final long              serialVersionUID   = 3337342608259982346L;
 	private static org.apache.log4j.Logger log                = org.apache.log4j.Logger.getLogger(CancelacionAction.class);
 	private boolean                        success            = false;
+	private SimpleDateFormat               renderFechas       = new SimpleDateFormat("dd/MM/yyyy");
 	
 	private CancelacionManager       cancelacionManager;
 	private PantallasManager         pantallasManager;
@@ -141,7 +144,19 @@ public class CancelacionAction extends PrincipalCoreAction
 			}
 			else
 			{
-				cancelacionManager.seleccionaPolizas(smap1);
+				Map<String,Object>omap=new HashMap<String,Object>(0);
+				for(Entry en:smap1.entrySet())
+				{
+					if(((String)en.getKey()).substring(0,5).equalsIgnoreCase("pv_fe"))
+					{
+						omap.put((String)en.getKey(),renderFechas.parse((String)en.getValue()));
+					}
+					else
+					{
+						omap.put((String)en.getKey(),(String)en.getValue());
+					}
+				}
+				cancelacionManager.seleccionaPolizas(omap);
 			}
 			slist1=cancelacionManager.obtenerPolizasCandidatas(smap1);
 			success=true;

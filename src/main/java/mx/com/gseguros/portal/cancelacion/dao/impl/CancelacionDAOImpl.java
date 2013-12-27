@@ -135,7 +135,7 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 	////// grabar polizas en tagrucan //////
 	/*////////////////////////////////////*/
 	@Override
-	public void seleccionaPolizas(Map<String,String> params) throws Exception
+	public void seleccionaPolizas(Map<String,Object> params) throws Exception
 	{
 		ejecutaSP(new SeleccionaPolizas(this.getDataSource()), params);
 	}
@@ -147,7 +147,7 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 			super(dataSource, "pkg_cancela.p_selecciona_polizas");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_agencia_i"  , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_fechapro_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_fechapro_i" , OracleTypes.DATE));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
