@@ -198,7 +198,7 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 	////// grabar poliza unica en tagrucan //////
 	/*/////////////////////////////////////////*/
 	@Override
-	public void seleccionaPolizaUnica(Map<String,String> params) throws Exception
+	public void seleccionaPolizaUnica(Map<String,Object> params) throws Exception
 	{
 		ejecutaSP(new SeleccionaPolizaUnica(this.getDataSource()), params);
 	}
