@@ -429,5 +429,45 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public Map<String,String> calcularValorEndoso(Map<String, Object> params) throws Exception
+	{
+		Map<String,Object> resultadoMap=this.ejecutaSP(new CalcularValorEndoso(this.getDataSource()), params);
+		Map<String,String>map=new LinkedHashMap<String,String>(0);
+		for(Entry en:resultadoMap.entrySet())
+		{
+			String col=(String) en.getKey();
+			if(col!=null&&col.substring(0,5).equalsIgnoreCase("pv_fe"))
+			{
+				map.put(col,Utilerias.formateaFecha(en.getValue()+""));
+			}
+			else
+			{
+				map.put(col,en.getValue()+"");
+			}
+		}
+		return map;
+	}
+	
+	protected class CalcularValorEndoso extends StoredProcedure
+	{
+		protected CalcularValorEndoso(DataSource dataSource)
+		{
+			super(dataSource, "PKG_ENDOSOS.P_CALC_VALOR_ENDOSO"); 
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsituac_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_feinival_i" , OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_cdtipsup_i" , OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 
 }

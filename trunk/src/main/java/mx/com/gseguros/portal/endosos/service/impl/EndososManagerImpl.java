@@ -109,6 +109,15 @@ public class EndososManagerImpl implements EndososManager
         return mapa;
 	}
 	
+	@Override
+	public Map<String,String> calcularValorEndoso(Map<String,Object>params) throws Exception
+	{
+		log.debug("EndososManager calcularValorEndoso params: "+params);
+		Map<String,String> mapa=endososDAO.calcularValorEndoso(params);
+		log.debug("EndososManager calcularValorEndoso response map: "+mapa);
+        return mapa;
+	}
+	
 	/////////////////////////////////
 	////// getters and setters //////
 	/*/////////////////////////////*/
