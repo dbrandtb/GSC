@@ -5,6 +5,7 @@
     
     <bean id="RehabilitacionAction" class="mx.com.gseguros.portal.rehabilitacion.controller.RehabilitacionAction" scope="prototype">
         <property name="rehabilitacionManager" ref="rehabilitacionManagerImpl"></property>
+        <property name="pantallasManager" ref="pantallasManagerImpl"></property>
     </bean>
     
 </beans>

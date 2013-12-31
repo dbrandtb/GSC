@@ -23,8 +23,19 @@ public class RehabilitacionManagerImpl implements RehabilitacionManager
 		return lista;
 	}
 
+	@Override
+	public void rehabilitarPoliza(Map<String, String> params) throws Exception
+	{
+		log.debug("RehabilitacionManager rehabilitarPoliza params: "+params);
+		rehabilitacionDAO.rehabilitarPoliza(params);
+		log.debug("RehabilitacionManager rehabilitarPoliza end");
+	}
+	
+	/////////////////////////////////
+	////// getters and setters //////
+	/*/////////////////////////////*/
 	public void setRehabilitacionDAO(RehabilitacionDAO rehabilitacionDAO) {
 		this.rehabilitacionDAO = rehabilitacionDAO;
 	}
-
+	
 }

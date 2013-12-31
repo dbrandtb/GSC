@@ -1,9 +1,15 @@
 package mx.com.gseguros.portal.rehabilitacion.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.struts2.ServletActionContext;
+
 import mx.com.aon.core.web.PrincipalCoreAction;
+import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.general.service.PantallasManager;
+import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.rehabilitacion.service.RehabilitacionManager;
 
 public class RehabilitacionAction extends PrincipalCoreAction
@@ -15,6 +21,8 @@ public class RehabilitacionAction extends PrincipalCoreAction
 	private List<Map<String,String>>       slist1;
 	private boolean                        success               = false;
 	private RehabilitacionManager          rehabilitacionManager;
+	private Map<String,Item>               imap;
+	private PantallasManager               pantallasManager;
 	
 	/////////////////////////////
 	////// marco principal //////
@@ -27,7 +35,37 @@ public class RehabilitacionAction extends PrincipalCoreAction
 				+ "\n###### marco de rehabilitacion ######"
 				+ "\n######                         ######"
 				);
-		success=true;
+		try
+		{
+
+			imap=new HashMap<String,Item>(0);
+			
+			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			
+			gc.generaParcial(pantallasManager.obtenerCamposPantalla(
+					 null,null,null
+					,null,null,null
+					,"MARCOREHABILITACION",null,null
+					,"FILTRO"));
+			
+			imap.put("itemsFiltro" , gc.getItems());
+			
+			gc.generaParcial(pantallasManager.obtenerCamposPantalla(
+					 null,null,null
+					,null,null,null
+					,"MARCOREHABILITACION",null,null
+					,"MODELO"));
+			
+			imap.put("fieldsModelo" , gc.getFields());
+			imap.put("columnsGrid"  , gc.getColumns());
+			
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			log.error("error al cargar el marco de endosos",ex);
+			success=false;
+		}
 		log.debug(""
 				+ "\n######                         ######"
 				+ "\n###### marco de rehabilitacion ######"
@@ -87,6 +125,24 @@ public class RehabilitacionAction extends PrincipalCoreAction
 				+ "\n######                               ######"
 				);
 		log.debug("smap1: "+smap1);
+		try
+		{
+			imap=new HashMap<String,Item>(0);
+			
+			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			
+			gc.generaParcial(pantallasManager.obtenerCamposPantalla(
+					 null,null,null
+					,null,null,null
+					,"PANTALLAREHABILITARUNICA",null,null
+					,"FORM"));
+			
+			imap.put("itemsForm" , gc.getItems());
+		}
+		catch(Exception ex)
+		{
+			log.error("error al mostrar pantalla de rehabilitacion unica",ex);
+		}
 		log.debug(""
 				+ "\n######                               ######"
 				+ "\n###### pantalla rehabilitacion unica ######"
@@ -111,7 +167,16 @@ public class RehabilitacionAction extends PrincipalCoreAction
 				+ "\n######                              ######"
 				);
 		log.debug("smap1: "+smap1);
-		success=true;
+		try
+		{
+			rehabilitacionManager.rehabilitarPoliza(smap1);
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			log.error("error al rehabilitar poliza",ex);
+			success=false;
+		}
 		log.debug(""
 				+ "\n######                              ######"
 				+ "\n###### rehabilitacion unica proceso ######"
@@ -154,6 +219,18 @@ public class RehabilitacionAction extends PrincipalCoreAction
 
 	public void setRehabilitacionManager(RehabilitacionManager rehabilitacionManager) {
 		this.rehabilitacionManager = rehabilitacionManager;
+	}
+
+	public Map<String, Item> getImap() {
+		return imap;
+	}
+
+	public void setImap(Map<String, Item> imap) {
+		this.imap = imap;
+	}
+
+	public void setPantallasManager(PantallasManager pantallasManager) {
+		this.pantallasManager = pantallasManager;
 	}
 
 }
