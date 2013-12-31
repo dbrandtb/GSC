@@ -19,27 +19,6 @@
     ///////////////////////
     ////// funciones //////
     /*///////////////////*/
-    function marrehMostrarControlesFiltro(tipo)
-    {
-        Ext.getCmp('marrehFilForm').getForm().reset();
-        debug('marrehMostrarControlesFiltro',tipo);
-        if(tipo==1)
-        {
-            Ext.getCmp('marrehFilUnieco').show();
-            Ext.getCmp('marrehFilRamo').show();
-            Ext.getCmp('marrehFilEstado').show();
-            Ext.getCmp('marrehFilNmpoliza').show();
-            Ext.getCmp('marrehFilNmpoliex').hide();
-        }
-        else if(tipo==2)
-        {
-        	Ext.getCmp('marrehFilUnieco').hide();
-            Ext.getCmp('marrehFilRamo').hide();
-            Ext.getCmp('marrehFilEstado').hide();
-            Ext.getCmp('marrehFilNmpoliza').hide();
-            Ext.getCmp('marrehFilNmpoliex').show();
-        }
-    }
     
     function marRehValidaOperacion(recordOperacion)
     {
@@ -66,17 +45,9 @@
                     url       : recordOperacion.get('liga')
                     ,scripts  : true
                     ,autoLoad : true
-                    ,params   :
+                    ,jsonData :
                     {
-                        'smap1.cdunieco'  : recordActivo.get('CDUNIECO')
-                        ,'smap1.cdramo'   : recordActivo.get('CDRAMO')
-                        ,'smap1.cdtipsit' : recordActivo.get('CDTIPSIT')
-                        ,'smap1.estado'   : recordActivo.get('ESTADO')
-                        ,'smap1.nmpoliza' : recordActivo.get('NMPOLIZA')
-                        ,'smap1.dsunieco' : recordActivo.get('DSUNIECO')
-                        ,'smap1.dsramo'   : recordActivo.get('DSRAMO')
-                        ,'smap1.dstipsit' : recordActivo.get('DSTIPSIT')
-                        ,'smap1.nmpoliex' : recordActivo.get('NMPOLIEX')
+                    	'smap1' : recordActivo.raw
                     }
                 });
             }
@@ -102,59 +73,15 @@ Ext.onReady(function()
     /////////////////////
     ////// modelos //////
     /*/////////////////*/
-    Ext.define('Ramo',
-    {
-        extend  : 'Ext.data.Model'
-        ,fields :
-        [
-            "cdramo"
-            ,"dsramo"
-        ]
-    });
-    
     Ext.define('MarRehPoliza',
     {
         extend  : 'Ext.data.Model'
         ,fields :
         [
-            {
-                name        : "FEMISION"
-                ,type       : "date"
-                ,dateFormat : "d/m/Y"
-            }
+            <s:property value="imap.fieldsModelo" />
             ,{
-                name        : "FEINICOV"
-                ,type       : "date"
-                ,dateFormat : "d/m/Y"
-            }
-            ,{
-                name        : "FEFINIV"
-                ,type       : "date"
-                ,dateFormat : "d/m/Y"
-            }
-            ,{
-                name        : "PRITOTAL"
-                ,type       : "float"
-            }
-            ,"NOMBRE"
-            ,"DSRAMO"
-            ,"CDRAMO"
-            ,"DSTIPSIT"
-            ,"CDTIPSIT"
-            ,"DSUNIECO"
-            ,"CDUNIECO"
-            ,"NMPOLIZA"
-            ,"NMPOLIEX"
-            ,"NMSOLICI"
-            ,"ESTADO"
-            ,{
-                name  : 'activo'
-                ,type : 'boolean'
-            }
-            ,{
-                name        : "FERECIBO"
-                ,type       : "date"
-                ,dateFormat : "d/m/Y"
+            	name  : 'activo'
+            	,type : 'boolean'
             }
         ]
     });
@@ -260,8 +187,6 @@ Ext.onReady(function()
             {
                 title          : 'B&uacute;squeda'
                 ,id            : 'marrehFilForm'
-                //,width         : 1000
-                ,url           : marrehUrlFiltro
                 ,layout        :
                 {
                     type     : 'table'
@@ -277,180 +202,31 @@ Ext.onReady(function()
                 ,frame         : true
                 ,items         :
                 [
-                    {
-                        xtype           : 'combo'
-                        ,id             : 'marrehFilUnieco'
-                        ,fieldLabel     : 'Sucursal'
-                        ,name           : 'smap1.pv_cdunieco_i'
-                        ,displayField   : 'value'
-                        ,valueField     : 'key'
-                        ,forceSelection : true
-                        ,queryMode      :'local'
-                        ,store          : Ext.create('Ext.data.Store',
-                        {
-                            model     : 'Generic'
-                            ,autoLoad : true
-                            ,proxy    :
-                            {
-                                type         : 'ajax'
-                                ,url         : marrehurlcata
-                                ,extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_SUCURSALES_DOCUMENTO"/>'}
-                                ,reader      :
-                                {
-                                    type  : 'json'
-                                    ,root : 'lista'
-                                }
-                            }
-                        })
-                        ,listeners      :
-                        {
-                            'change' : function()
-                            {
-                                Ext.getCmp('marrehFilRamo').getStore().load(
-                                {
-                                    params : {'map1.cdunieco':this.getValue()}
-                                });
-                            }
-                        }
-                    }
-                    ,{
-                        xtype           : 'combo'
-                        ,id             : 'marrehFilRamo'
-                        ,fieldLabel     : 'Producto'
-                        ,name           : 'smap1.pv_cdramo_i'
-                        ,valueField     : 'cdramo'
-                        ,displayField   : 'dsramo'
-                        ,forceSelection : true
-                        ,queryMode      :'local'
-                        ,store          : Ext.create('Ext.data.Store',
-                        {
-                            model     : 'Ramo'
-                            ,autoLoad : false
-                            ,proxy    :
-                            {
-                                type    : 'ajax'
-                                ,url    : marrehurlramos
-                                ,reader :
-                                {
-                                    type  : 'json'
-                                    ,root : 'slist1'
-                                }
-                            }
-                        })
-                    }
-                    ,{
-                        xtype           : 'combo'
-                        ,id             : 'marrehFilEstado'
-                        ,fieldLabel     : 'Estado'
-                        ,name           : 'smap1.pv_estado_i'
-                        ,displayField   : 'value'
-                        ,valueField     : 'key'
-                        ,forceSelection : true
-                        ,queryMode      :'local'
-                        ,store          : Ext.create('Ext.data.Store',
-                        {
-                            model     : 'Generic'
-                            ,autoLoad : true
-                            ,proxy    :
-                            {
-                                type         : 'ajax'
-                                ,url         : marrehurlcata
-                                ,extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@STATUS_POLIZA"/>'}
-                                ,reader      :
-                                {
-                                    type  : 'json'
-                                    ,root : 'lista'
-                                }
-                            }
-                        })
-                    }
-                    ,{
-                        xtype       : 'numberfield'
-                        ,id         : 'marrehFilNmpoliza'
-                        ,name       : 'smap1.pv_nmpoliza_i'
-                        ,fieldLabel : 'P&oacute;liza/Cotizaci&oacute;n'
-                    }
-                    ,{
-                        xtype       : 'textfield'
-                        ,id         : 'marrehFilNmpoliex'
-                        ,name       : 'smap1.pv_nmpoliex_i'
-                        ,fieldLabel : 'N&uacute;mero de p&oacute;liza'
-                    }
-                    ,Ext.create('Ext.form.field.ComboBox',
-                    {
-                        fieldLabel       : 'Agente'
-                        ,id              : 'marrehFilAgente'
-                        ,name            : 'smap1.pv_cdagente_i'
-                        ,displayField    : 'value'
-                        ,valueField      : 'key'
-                        ,forceSelection  : true
-                        ,matchFieldWidth : false
-                        ,hidden          : true
-                        ,hideTrigger     : true
-                        ,minChars        : 3
-                        ,queryMode       : 'remote'
-                        ,queryParam      : 'params.agente'
-                        ,store           : Ext.create('Ext.data.Store', {
-                            model     : 'Generic'
-                            ,autoLoad : false
-                            ,proxy    :
-                            {
-                                type    : 'ajax'
-                                ,url    : marrehurlcata
-                                ,extraParams: {catalogo: '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@AGENTES"/>'}
-                                ,reader :
-                                {
-                                    type  : 'json'
-                                    ,root : 'lista'
-                                }
-                            }
-                        })
-                    })
-                    ,{
-                        xtype       : 'datefield'
-                        ,id         : 'marrehFilFereferen'
-                        ,format     : 'd/m/Y'
-                        ,fieldLabel : 'Fecha de referencia'
-                        ,name       : 'smap1.pv_fereferen_i'
-                        ,value      : new Date()
-                        ,hidden     : true
-                    }
+                    <s:property value="imap.itemsFiltro" />
                 ]
                 ,buttons       :
                 [
-					{
-					    text  : 'Tipo de b&uacute;squeda'
-					    ,icon : '${ctx}/resources/fam3icons/icons/cog.png'
-					    ,menu :
-					    {
-					        xtype     : 'menu'
-					        ,items    :
-					        [
-					            {
-					                text     : 'General'
-					                ,handler : function(){marrehMostrarControlesFiltro(1);}
-					            }
-					            ,{
-					                text     : 'Por p&oacute;liza'
-					                ,handler : function(){marrehMostrarControlesFiltro(2);}
-					            }
-					        ]
-					    }
-					}
-                    ,{
+                    {
                         text     : 'Buscar'
                         ,id      : 'marrehFilBotGen'
                         ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
                         ,handler : function()
                         {
-                            if(this.up().up().isValid())
+                        	var form=this.up().up();
+                            if(form.isValid())
                             {
-                                this.up().up().submit(
+                            	form.setLoading(true);
+                                Ext.Ajax.request(
                                 {
-                                    success  : function(form,action)
+                                	url       : marrehUrlFiltro
+                                	,jsonData :
+                                	{
+                                		'smap1' : this.up().up().getValues()
+                                	}
+                                    ,success  : function(response)
                                     {
-                                        debug(action);
-                                        var json = Ext.decode(action.response.responseText);
+                                    	form.setLoading(false);
+                                        var json = Ext.decode(response.responseText);
                                         debug(json);
                                         if(json.success==true&&json.slist1&&json.slist1.length>0)
                                         {
@@ -471,12 +247,13 @@ Ext.onReady(function()
                                     }
                                     ,failure : function()
                                     {
+                                    	form.setLoading(false);
                                         Ext.Msg.show(
                                         {
-                                            title   : 'Error',
-                                            icon    : Ext.Msg.ERROR,
-                                            msg     : 'Error de comunicaci&oacute;n',
-                                            buttons : Ext.Msg.OK
+                                            title    : 'Error'
+                                            ,icon    : Ext.Msg.ERROR
+                                            ,msg     : 'Error de comunicaci&oacute;n'
+                                            ,buttons : Ext.Msg.OK
                                         });
                                     }
                                 });
@@ -485,10 +262,10 @@ Ext.onReady(function()
                             {
                                 Ext.Msg.show(
                                 {
-                                    title   : 'Datos imcompletos',
-                                    icon    : Ext.Msg.WARNING,
-                                    msg     : 'Favor de llenar los campos requeridos',
-                                    buttons : Ext.Msg.OK
+                                    title    : 'Datos imcompletos'
+                                    ,icon    : Ext.Msg.WARNING
+                                    ,msg     : 'Favor de llenar los campos requeridos'
+                                    ,buttons : Ext.Msg.OK
                                 });
                             }
                         }
@@ -528,59 +305,14 @@ Ext.onReady(function()
                 ]
                 ,columns       :
                 [
-                    {
-                        dataIndex     : 'activo'
-                        ,xtype        : 'checkcolumn'
-                        ,width        : 30
-                        ,menuDisabled : true
-                    }
-                    ,{
-                        header     : "Sucursal"
-                        ,dataIndex : "DSUNIECO"
-                        ,flex      : 1
-                    }
-                    ,{
-                        header     : "Producto"
-                        ,dataIndex : "DSRAMO"
-                        ,flex      : 1
-                    }
-                    ,{
-                        header     : "P&oacute;liza"
-                        ,dataIndex : "NMPOLIEX"
-                        ,flex      : 1
-                    }
-                    ,{
-                        header     : 'Inicio de vigencia'
-                        ,dataIndex : 'FEINICOV'
-                        ,xtype     : 'datecolumn'
-                        ,format    : 'd M Y'
-                        ,flex      : 1
-                    }
-                    ,{
-                        header     : 'Fin de vigencia'
-                        ,dataIndex : 'FEFINIV'
-                        ,xtype     : 'datecolumn'
-                        ,format    : 'd M Y'
-                        ,flex      : 1
-                    }
-                    ,{
-                        header     : 'Fecha de recibo'
-                        ,dataIndex : 'FERECIBO'
-                        ,xtype     : 'datecolumn'
-                        ,format    : 'd M Y'
-                        ,flex      : 1
-                    }
-                    ,{
-                        header     : 'Cliente'
-                        ,dataIndex : 'NOMBRE'
-                        ,flex      : 1
-                    }
-                    ,{
-                        header     : 'Prima total'
-                        ,dataIndex : 'PRITOTAL'
-                        ,renderer  : Ext.util.Format.usMoney
-                        ,flex      : 1
-                    }
+					{
+					    dataIndex     : 'activo'
+					    ,xtype        : 'checkcolumn'
+					    ,width        : 30
+					    ,menuDisabled : true
+					    ,sortable     : false
+					}
+                    ,<s:property value="imap.columnsGrid" />
                 ]
             })
             ,Ext.create('Ext.panel.Panel',
@@ -675,8 +407,6 @@ Ext.onReady(function()
     /*//////////////////*/
     ////// cargador //////
     //////////////////////
-    
-    marrehMostrarControlesFiltro(1);
     
 });
 </script>
