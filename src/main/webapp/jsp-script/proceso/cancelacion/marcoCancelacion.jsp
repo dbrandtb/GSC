@@ -758,6 +758,6 @@ Ext.onReady(function()
 </script>
 </head>
 <body>
-<div id="marcoCancelacionDiv"></div>
+<div id="marcoCancelacionDiv" style="height:1000px;"></div>
 </body>
 </html>
