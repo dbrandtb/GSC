@@ -69,7 +69,6 @@
 <script type="text/javascript" src="${ctx}/js/wizard/catalogos/tablasDeApoyo/tablaApoyoTabla5Claves.js"></script>
 <script type="text/javascript" src="${ctx}/js/wizard/catalogos/tablasDeApoyo/tablaApoyoListaDeValores.js"></script>
 
-<script type="text/javascript" src="${ctx}/js/wizard/layouts/application-layout-browser.js"></script>
 <script type="text/javascript" src="${ctx}/js/wizard/productos/definicion/principalProductosAON.js"></script>
 <script type="text/javascript" src="${ctx}/js/wizard/productos/incisos/principalInciso.js"></script>
 <script type="text/javascript" src="${ctx}/js/wizard/productos/atributosVariables/atributosVariables.js"></script>
@@ -81,6 +80,8 @@
 
 
 <script type="text/javascript" src="${ctx}/js/wizard/productos/planes/planes.js"></script>
+<script type="text/javascript" src="${ctx}/js/wizard/layouts/application-layout-browser.js"></script>
+
 <jsp:include page="/jsp/wizard/agregarCoberturas.jsp" flush="true"/>
 
 <!-- jsp que carga el menu-->

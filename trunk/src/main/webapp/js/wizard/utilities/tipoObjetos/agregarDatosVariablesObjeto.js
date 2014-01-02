@@ -115,7 +115,7 @@ if(row!=null){
                 			/*Ext.getCmp('hidden-formato-atributos-variables').setValue(recAtributosVariables.get('formato'));
                 			Ext.getCmp('hidden-lista-valores-atributo').setValue(recAtributosVariables.get('codigoTabla'));
                 			Ext.getCmp('combo-lista-de-valores-atributos').setValue(recAtributosVariables.get('descripcionTabla'));
-                			Ext.getCmp('hidden-codigo-expresion-atributos-variables').setValue(recAtributosVariables.get('codigoExpresion'));
+                			Ext.getCmp('hidden-codigo-expresion-atributos-variables-obj').setValue(recAtributosVariables.get('codigoExpresion'));
 							Ext.getCmp('id-descripcion-atributos-variables').disable();*/
 							/*sErGiO*/
 							Ext.getCmp('combo-condicion-atributos-variables-arbol-objeto').setValue(rec.get('condicion'));
@@ -617,12 +617,12 @@ if(row!=null){
         		    id: "hidden-formato-atributos-variables-objeto"
                 },{
                 	xtype:'hidden',                	
-                	id:'hidden-valor-defecto-atributos-variables',
+                	id:'hidden-valor-defecto-atributos-variables-obj',
 		            name: "valorDefecto"      		    
         		 
                 },{
                 	xtype:'hidden',                	
-                	id:'hidden-codigo-expresion-atributos-variables',
+                	id:'hidden-codigo-expresion-atributos-variables-obj',
 		            name: "codigoExpresion"      		    
         		 
                 },{
@@ -855,19 +855,19 @@ if(row!=null){
         buttons: [{
 	            	text: 'Valor por Defecto',
 	            	handler:function(){
-	            		if(Ext.getCmp('hidden-valor-defecto-atributos-variables').getValue()!="undefined" 
-	            		&& Ext.getCmp('hidden-valor-defecto-atributos-variables').getValue()!=""
-	            		&& Ext.getCmp('hidden-valor-defecto-atributos-variables').getValue()!="0"
-	            		&& Ext.getCmp('hidden-valor-defecto-atributos-variables').getValue()!=null ){
-							ExpresionesVentana2(Ext.getCmp('hidden-valor-defecto-atributos-variables').getValue(),Ext.getCmp('hidden-codigo-expresion-session-atributos-variables-objeto').getValue());
+	            		if(Ext.getCmp('hidden-valor-defecto-atributos-variables-obj').getValue()!="undefined" 
+	            		&& Ext.getCmp('hidden-valor-defecto-atributos-variables-obj').getValue()!=""
+	            		&& Ext.getCmp('hidden-valor-defecto-atributos-variables-obj').getValue()!="0"
+	            		&& Ext.getCmp('hidden-valor-defecto-atributos-variables-obj').getValue()!=null ){
+							ExpresionesVentana2(Ext.getCmp('hidden-valor-defecto-atributos-variables-obj').getValue(),Ext.getCmp('hidden-codigo-expresion-session-atributos-variables-objeto').getValue());
 	            		}else{
 	            			var connect = new Ext.data.Connection();
 						    connect.request ({
 								url:'atributosVariables/ObtenerCodigoExpresion.action',
 								callback: function (options, success, response) {				   
 									//alert(Ext.util.JSON.decode(response.responseText).codigoExpresion);
-									Ext.getCmp('hidden-valor-defecto-atributos-variables').setValue(Ext.util.JSON.decode(response.responseText).codigoExpresion);
-									ExpresionesVentana2(Ext.getCmp('hidden-valor-defecto-atributos-variables').getValue(),Ext.getCmp('hidden-codigo-expresion-session-atributos-variables-objeto').getValue());
+									Ext.getCmp('hidden-valor-defecto-atributos-variables-obj').setValue(Ext.util.JSON.decode(response.responseText).codigoExpresion);
+									ExpresionesVentana2(Ext.getCmp('hidden-valor-defecto-atributos-variables-obj').getValue(),Ext.getCmp('hidden-codigo-expresion-session-atributos-variables-objeto').getValue());
 								}
 					   		});            		
 	            		}
