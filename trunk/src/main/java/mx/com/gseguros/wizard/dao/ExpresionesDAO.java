@@ -1,29 +1,30 @@
 package mx.com.gseguros.wizard.dao;
 
-import org.apache.log4j.Logger;
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.core.SqlOutParameter;
-import org.springframework.jdbc.core.RowMapper;
-
-import javax.sql.DataSource;
-
-import oracle.jdbc.driver.OracleTypes;
-
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.List;
-import java.sql.SQLException;
-import java.sql.ResultSet;
+import java.util.Map;
+
+import javax.sql.DataSource;
 
 import mx.com.aon.portal.dao.AbstractDAO;
 import mx.com.aon.portal.dao.CustomStoredProcedure;
 import mx.com.aon.portal.dao.WrapperResultadosGeneric;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.wizard.configuracion.producto.expresiones.model.ClaveVO;
+import mx.com.gseguros.wizard.configuracion.producto.expresiones.model.ComposerVariableVOClaveVO;
 import mx.com.gseguros.wizard.configuracion.producto.expresiones.model.ExpresionVO;
 import mx.com.gseguros.wizard.configuracion.producto.expresiones.model.HojaVO;
+import mx.com.gseguros.wizard.configuracion.producto.expresiones.model.VariableVO;
 import mx.com.gseguros.wizard.configuracion.producto.model.LlaveValorVO;
+import oracle.jdbc.driver.OracleTypes;
+
+import org.apache.log4j.Logger;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.SqlOutParameter;
+import org.springframework.jdbc.core.SqlParameter;
 
 public class ExpresionesDAO extends AbstractDAO{
 	
@@ -321,24 +322,82 @@ public class ExpresionesDAO extends AbstractDAO{
     	
     	@SuppressWarnings("unchecked")
     	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+    		
     		WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
     		WrapperResultados wrapperResultados = mapper.build(map);
-    		List<LlaveValorVO> result = (List<LlaveValorVO>) map.get("pv_registro_o");
-    		wrapperResultados.setItemList(result);
-    		return wrapperResultados;
+    		
+	    	try {
+	    			
+	    		List<ComposerVariableVOClaveVO> lstComposerVariableClave = (List<ComposerVariableVOClaveVO>) map.get("pv_registro_o");
+	    		// Lista que contendrá el agrupamiento final de todos los elementos:
+	    		List<VariableVO> listaFinalVariableVO = new ArrayList<VariableVO>();
+	    		List<ClaveVO> listaTmpClaveVO = new ArrayList<ClaveVO>();
+	    		for(ComposerVariableVOClaveVO composer : lstComposerVariableClave) {
+	    			//Llenamos la lista de VariableVO sin repetir:
+	    			if(composer.getVariableVO() != null 
+	    					&& !listaFinalVariableVO.contains( composer.getVariableVO() )) {
+	    				listaFinalVariableVO.add( composer.getVariableVO() );
+	    			}
+	    			//Creamos la lista de ClaveVO sin repetir:
+	    			if(composer.getClaveVO() != null
+	    					&& !listaTmpClaveVO.contains( composer.getClaveVO() )) {
+	    				listaTmpClaveVO.add( composer.getClaveVO() );
+	    			}
+	    			
+	    		}
+	    		// Se agrupan y agregan los objetos ClaveVO como elementos hijos de los objetos VariableVO:
+	    		for(ComposerVariableVOClaveVO composer : lstComposerVariableClave) {
+	    			
+	    			ClaveVO cveVO = composer.getClaveVO();
+	    			int indexVarVO = listaFinalVariableVO.indexOf( composer.getVariableVO() );
+	    			VariableVO varVO = listaFinalVariableVO.get( indexVarVO );
+	    			// Si el elemento no existe en la lista, lo agregamos
+					if(cveVO != null) {
+						if( varVO.getClaves() != null && !varVO.getClaves().contains(cveVO) ) {
+							listaFinalVariableVO.get( indexVarVO ).getClaves().add(cveVO);
+						} else {
+							List<ClaveVO> lstCveVO = new ArrayList<ClaveVO>();
+							lstCveVO.add(cveVO);
+							listaFinalVariableVO.get( indexVarVO ).setClaves(lstCveVO);
+						}
+					}
+	    		}
+	    		
+				wrapperResultados.setItemList(listaFinalVariableVO);
+				
+	    	} catch(Exception e) {
+    			logger.error(e.getMessage(), e);
+    			throw e;
+    		}
+	    	return wrapperResultados;
     	}
-    	
     }
     
     protected class VarExpresionMapper  implements RowMapper {
     	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-    		ExpresionVO llaveValorVO = new ExpresionVO();
     		
-    		llaveValorVO.setCodigoExpresion(rs.getInt("CDEXPRES"));
-    		llaveValorVO.setOtExpresion(rs.getString("OTEXPRES"));
-    		llaveValorVO.setSwitchRecalcular(rs.getString("SWRECALC"));
+    		ComposerVariableVOClaveVO composerVariableClave = new ComposerVariableVOClaveVO();
     		
-    		return llaveValorVO;
+    		VariableVO varVO = new VariableVO();
+    		varVO.setCodigoExpresion(rs.getInt("CDEXPRES"));
+    		varVO.setCodigoVariable(rs.getString("CDVARIAB"));
+    		varVO.setTabla(rs.getString("OTTABLA"));
+    		varVO.setDescripcionTabla(rs.getString("DSTABLA"));
+    		varVO.setDescripcionColumna(rs.getString("OTSELECT"));
+    		varVO.setSwitchFormato(rs.getString("SWFORMAT"));
+    		
+    		composerVariableClave.setVariableVO(varVO);
+    		
+    		ClaveVO claveVO = new ClaveVO();
+    		claveVO.setCodigoExpresionKey(rs.getString("CDEXPRES_KEY"));
+    		claveVO.setClave(rs.getString("DSCLAVE"));
+    		claveVO.setCodigoSecuencia(rs.getString("OTSECUEN"));
+    		claveVO.setExpresion(rs.getString("OTEXPRES"));
+    		claveVO.setRecalcular(rs.getString("SWRECALC"));
+    		
+    		composerVariableClave.setClaveVO(claveVO);
+    		
+    		return composerVariableClave;
     	}
     }
 

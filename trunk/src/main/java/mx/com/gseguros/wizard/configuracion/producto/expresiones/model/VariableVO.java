@@ -3,6 +3,7 @@ package mx.com.gseguros.wizard.configuracion.producto.expresiones.model;
 import java.io.Serializable;
 import java.util.List;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
@@ -121,6 +122,25 @@ public class VariableVO implements Serializable{
 	
 	public String toString(){
 		return ToStringBuilder.reflectionToString(this,ToStringStyle.MULTI_LINE_STYLE);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) {
+            return true;
+        }
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+
+        VariableVO varVO = (VariableVO) obj;
+        return codigoVariable.equals(varVO.codigoVariable);
+
+	}
+	
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(17, 31).append(codigoExpresion).toHashCode();
 	}
 
 }
