@@ -1,10 +1,16 @@
 package mx.com.gseguros.wizard.configuracion.producto.service.impl;
 
+import static mx.com.gseguros.wizard.dao.ExpresionesDAO.OBTIENE_TABLA_CINCO_CLAVES;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.aon.portal.service.PagedList;
+import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
+import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.wizard.configuracion.producto.expresiones.model.ClaveVO;
 import mx.com.gseguros.wizard.configuracion.producto.expresiones.model.ExpresionVO;
 import mx.com.gseguros.wizard.configuracion.producto.expresiones.model.HojaVO;
@@ -12,16 +18,9 @@ import mx.com.gseguros.wizard.configuracion.producto.expresiones.model.RamaVO;
 import mx.com.gseguros.wizard.configuracion.producto.expresiones.model.VariableVO;
 import mx.com.gseguros.wizard.configuracion.producto.model.LlaveValorVO;
 import mx.com.gseguros.wizard.configuracion.producto.service.ExpresionesManager;
-import mx.com.aon.portal.util.WrapperResultados;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import mx.com.aon.portal.service.PagedList;
-import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
-
-import mx.com.gseguros.exception.ApplicationException;
-
-import static mx.com.gseguros.wizard.dao.ExpresionesDAO.OBTIENE_TABLA_CINCO_CLAVES;
 
 public class ExpresionesManagerImpl extends AbstractManagerJdbcTemplateInvoke implements ExpresionesManager {
 
@@ -369,22 +368,7 @@ public class ExpresionesManagerImpl extends AbstractManagerJdbcTemplateInvoke im
 			params.put("PV_CDEXPRES_I", codigoExpresion);
 			
 			WrapperResultados res = returnBackBoneInvoke(params, "OBTIENE_VARIABLE_EXPRESION");
-			
-			/**
-			 * TODO: Terminar esta llamada ya que en el xsl agrupa subelementos y hay que ver como se necesita la informacion
-			 */
-			listaVariableExpresion = (ArrayList<VariableVO>) res.getItemList();
-			
-			if(listaVariableExpresion!=null && !listaVariableExpresion.isEmpty()){
-				for(VariableVO v:listaVariableExpresion){
-					List<LlaveValorVO> listaColumnas = listaColumna(v.getTabla());
-					for(LlaveValorVO columna : listaColumnas){
-						if(columna.getValue().equals(v.getDescripcionColumna())){
-							v.setColumna(Integer.parseInt(columna.getKey()));
-						}
-					}
-				}
-			}
+			listaVariableExpresion = res.getItemList();
 				
 		}catch (Exception e) {
 			e.printStackTrace();

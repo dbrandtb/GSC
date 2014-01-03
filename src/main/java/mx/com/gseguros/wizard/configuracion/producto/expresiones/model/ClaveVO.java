@@ -2,6 +2,7 @@ package mx.com.gseguros.wizard.configuracion.producto.expresiones.model;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
@@ -111,5 +112,23 @@ public class ClaveVO implements Serializable{
 	}
 	public void setCodigoVariable(String codigoVariable) {
 		this.codigoVariable = codigoVariable;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) {
+            return true;
+        }
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+
+        ClaveVO cveVO = (ClaveVO) obj;
+        return codigoVariable == cveVO.codigoExpresionKey;
+	}
+	
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(17, 31).append(codigoExpresionKey).toHashCode();
 	}
 }
