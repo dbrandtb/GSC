@@ -45,7 +45,7 @@ public class ReportesAction extends ActionSupport {
 			params.put("pv_codusr_i", "ICE");
 			
 			fileInputStream = reportesManager.obtieneReporteExcel(params);
-			logger.debug("Este es el InputStream: "+ fileInputStream);
+			//logger.debug("Este es el InputStream: "+ fileInputStream);
 			
 		} catch (Exception e) {
 			logger.error("Error al ejecutar obtieneReporte",e);
