@@ -7,6 +7,10 @@
     <bean id="documentosPolizaAction" class="mx.com.gseguros.portal.general.util.DocumentosPolizaAction" scope="prototype">
     </bean>
     
+    <bean id="ReportesAction" class="mx.com.gseguros.portal.general.util.ReportesAction" scope="prototype" >
+	    <property name="reportesManager" ref="ReportesManager" />
+    </bean>
+    
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
         <property name="host" value="smtp.bizmail.yahoo.com" />
         <!-- <property name="port" value="587" /> -->
