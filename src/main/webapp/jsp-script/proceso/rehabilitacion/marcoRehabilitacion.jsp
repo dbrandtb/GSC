@@ -412,6 +412,6 @@ Ext.onReady(function()
 </script>
 </head>
 <body>
-<div id="marcoRehabilitacionDiv" style="height:1000px;"></div>
+<div id="marcoRehabilitacionDiv" style="height:1500px;"></div>
 </body>
 </html>
