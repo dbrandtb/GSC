@@ -96,6 +96,10 @@
             <result name="success">/jsp-script/proceso/endosos/pantallaEndosoAltaBajaAsegurado.jsp</result>
         </action>
         
+        <action name="testpantalla" class="EndososAction" method="testpantalla">
+            <result name="success">/jsp-script/proceso/endosos/testpantalla.jsp</result>
+        </action>
+        
     </package>
 
 </struts>

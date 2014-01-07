@@ -1799,6 +1799,37 @@ public class EndososAction extends PrincipalCoreAction
 	////// pantalla de endoso de alta y/o baja de asegurados //////
 	///////////////////////////////////////////////////////////////
 	
+	/////////////////////////////////////////
+	////// prueba de pantalla dinamica //////
+	/*/////////////////////////////////////*/
+	public String testpantalla()
+	{
+		try
+		{
+			UserVO usuario=(UserVO)session.get("USUARIO");
+			
+			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			
+			gc.generaParcial(pantallasManager.obtenerCamposPantalla(
+					 null,null,null
+					,null,null,null
+					,"TESTPANTALLA",usuario.getRolActivo().getObjeto().getValue(),null
+					,"TEST"));
+			
+			item1=gc.getFields();
+			item2=gc.getColumns();
+			item3=gc.getItems();
+		}
+		catch(Exception ex)
+		{
+			log.error("error en la prueba de pantalla dinamica",ex);
+		}
+		return SUCCESS;
+	}
+	/*/////////////////////////////////////*/
+	////// prueba de pantalla dinamica //////
+	/////////////////////////////////////////
+	
 	private boolean ejecutaWSrecibosEndoso(String cdunieco, String cdramo, String estado, String nmpoliza,
 			String nmsuplem, String numendoso, String rutaPoliza, String cdtipsitGS, String sucursal, String nmsolici,String ntramite, boolean async, String Op){
 		boolean allInserted = true;
