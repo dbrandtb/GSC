@@ -7,7 +7,7 @@
 var panendabaseguGridAsegu;
 var panendabaseguStoreAsegu;
 var panendabaseguPanelLectura;
-var PanendabaseguPanelPrincipal;
+var panendabaseguPanelPrincipal;
 
 var panendabaseguUrlLoadAsegu = '<s:url namespace="/" action="cargarComplementariosAsegurados" />';
 var panendabaseguInputSmap1   = <s:property value='%{getSmap1().toString().replace("=",":\'").replace(",","\',").replace("}","\'}")}' />;
