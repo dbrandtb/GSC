@@ -7,6 +7,7 @@
         <property name="endososManager"   ref="endososManagerImpl" />
         <property name="kernelManager"    ref="kernelManagerSustituto"/>
         <property name="pantallasManager" ref="pantallasManagerImpl"/>
+        <property name="ice2sigsWebServices" ref="ice2sigsWebServices"></property>
     </bean>
     
 </beans>
