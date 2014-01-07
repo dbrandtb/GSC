@@ -927,6 +927,7 @@ public class EndososAction extends PrincipalCoreAction
 				paramSigsvdef.put("pv_nmsituac_i" , smap1.get("nmsituac"));
 				paramSigsvdef.put("pv_nmsuplem_i" , respEndCob.get("pv_nmsuplem_o"));
 				paramSigsvdef.put("pv_cdgarant_i" , nuevo.get("garantia"));
+				paramSigsvdef.put("pv_cdtipsup_i" , "6");
 				kernelManager.coberturas(paramSigsvdef);
 			}
 			
@@ -1761,6 +1762,7 @@ public class EndososAction extends PrincipalCoreAction
 			 * FEEMISIO=27/12/2013,
 			 * CDRAMO=2
 			 */
+			String cdtipsit=smap1.get("CDTIPSIT");
 			
 			imap1=new HashMap<String,Item>();
 			
@@ -1782,6 +1784,36 @@ public class EndososAction extends PrincipalCoreAction
 					,"PANELLECTURA"));
 			
 			imap1.put("panelLectura" , gc.getItems());
+			
+			////////////////////////////////////////////////
+			////// campos de tatrisit para individual //////
+			List<Tatri>tatrisit=kernelManager.obtenerTatrisit(cdtipsit);
+			gc.setCdtipsit(cdtipsit);
+			
+			List<Tatri>tatriTemp=new ArrayList<Tatri>(0);
+			for(Tatri t:tatrisit)
+			//solo dejar los atributos si es individual, los que tengan S
+			{
+				if(t.getSwsuscri().equalsIgnoreCase("S"))//S=individual
+				{
+					tatriTemp.add(t);
+				}
+			}
+			tatrisit=tatriTemp;
+			
+			tatriTemp=pantallasManager.obtenerCamposPantalla(
+					 null,null,null
+					,null,null,null
+					,"ENDOSOABASEGU",null,null
+					,"FORMULARIO");
+			tatriTemp.addAll(tatrisit);
+			tatrisit=tatriTemp;
+			
+			gc.generaParcial(tatrisit);
+			
+			imap1.put("formulario" , gc.getItems());
+			////// campos de tatrisit para individual //////
+			////////////////////////////////////////////////
 		}
 		catch(Exception ex)
 		{
@@ -1798,6 +1830,41 @@ public class EndososAction extends PrincipalCoreAction
 	/*///////////////////////////////////////////////////////////*/
 	////// pantalla de endoso de alta y/o baja de asegurados //////
 	///////////////////////////////////////////////////////////////
+	
+	/////////////////////////////////////////////////////////
+	////// guardar endoso de alta o baja de asegurados //////
+	/*/////////////////////////////////////////////////////*/
+	public String guardarEndosoAltaBajaAsegurado()
+	{
+		log.debug("\n"
+				+ "\n############################################"
+				+ "\n############################################"				
+				+ "\n###### guardarEndosoAltaBajaAsegurado ######"
+				+ "\n######                                ######"
+				);
+		log.debug("smap1: "+smap1);
+		log.debug("smap2: "+smap2);
+		log.debug("parametros: "+parametros);
+		try
+		{
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			log.error("error al guardar endoso de alta o baja de asegurado", ex);
+			success=false;
+		}
+		log.debug("\n"
+				+ "\n######                                ######"
+				+ "\n###### guardarEndosoAltaBajaAsegurado ######"
+				+ "\n############################################"
+				+ "\n############################################"				
+				);
+		return SUCCESS;
+	}
+	/*/////////////////////////////////////////////////////*/
+	////// guardar endoso de alta o baja de asegurados //////
+	/////////////////////////////////////////////////////////
 	
 	/////////////////////////////////////////
 	////// prueba de pantalla dinamica //////

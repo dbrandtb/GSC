@@ -100,6 +100,14 @@
             <result name="success">/jsp-script/proceso/endosos/testpantalla.jsp</result>
         </action>
         
+        <action name="guardarEndosoAltaBajaAsegurado" class="EndososAction" method="guardarEndosoAltaBajaAsegurado">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+        </action>
+        
     </package>
 
 </struts>
