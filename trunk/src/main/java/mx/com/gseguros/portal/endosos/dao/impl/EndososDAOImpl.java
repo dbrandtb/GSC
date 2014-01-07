@@ -111,7 +111,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	{
 		protected GuardarEndosoDomicilio(DataSource dataSource)
 		{
-			super(dataSource, "PKG_ENDOSOS.P_INICIA_ENDOSO");
+			super(dataSource, "PKG_ENDOSOS.P_ENDOSO_INICIA");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
