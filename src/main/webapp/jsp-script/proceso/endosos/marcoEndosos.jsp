@@ -405,6 +405,45 @@
                 });
             }
    		}
+    	else if(recordOperacion.get('funcion')=='endosoaltabajaasegurado')
+        {
+            debug('endosoaltabajaasegurado');
+            var nPolizasActivas=0;
+            var polizaActiva;
+            marendStorePolizas.each(function(record)
+            {
+                if(record.get('activo')==true)
+                {
+                	nPolizasActivas=nPolizasActivas+1;
+                	polizaActiva=record;
+                }
+            });
+            if(nPolizasActivas==1)
+            {
+                Ext.getCmp('marendMenuOperaciones').collapse();
+                Ext.getCmp('marendLoaderFrame').setTitle(recordOperacion.get('texto'));
+                Ext.getCmp('marendLoaderFrame').getLoader().load(
+                {
+                    url       : recordOperacion.get('liga')
+                    ,scripts  : true
+                    ,autoLoad : true
+                    ,jsonData :
+                    {
+                    	'smap1' : polizaActiva.raw
+                    }
+                });
+            }
+            else
+            {
+                Ext.Msg.show(
+                {
+                    title    : 'Error'
+                    ,icon    : Ext.Msg.WARNING
+                    ,msg     : 'Seleccione la p&oacute;liza'
+                    ,buttons : Ext.Msg.OK
+                });
+            }
+        }
     }
     /*///////////////////*/
     ////// funciones //////
@@ -587,6 +626,11 @@ Ext.onReady(function()
                     texto    : 'Endoso de cl&aacute;usulas'
                     ,liga    : '<s:url namespace="/endosos" action="pantallaEndosoClausulas" />'
                     ,funcion : 'endosoclausulas'
+                }
+                ,{
+                    texto    : 'Endoso de alta o baja de asegurado'
+                    ,liga    : '<s:url namespace="/endosos" action="pantallaEndosoAltaBajaAsegurado" />'
+                    ,funcion : 'endosoaltabajaasegurado'
                 }
             ]
         }

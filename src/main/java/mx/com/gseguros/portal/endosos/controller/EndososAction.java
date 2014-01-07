@@ -1731,6 +1731,73 @@ public class EndososAction extends PrincipalCoreAction
 	////// pantalla de endosos de clausulas //////
 	//////////////////////////////////////////////
 	
+	///////////////////////////////////////////////////////////////
+	////// pantalla de endoso de alta y/o baja de asegurados //////
+	/*///////////////////////////////////////////////////////////*/
+	public String pantallaEndosoAltaBajaAsegurado()
+	{
+		this.session=ActionContext.getContext().getSession();
+		log.debug("\n"
+				+ "\n###############################################################"
+				+ "\n###############################################################"
+				+ "\n###### pantalla de endoso de alta y/o baja de asegurados ######"
+				+ "\n######                                                   ######"
+				);
+		try
+		{
+			log.debug("smap1: "+smap1);
+			/* NMSUPLEM=245665412050000000,
+			 * DSTIPSIT=SALUD VITAL,
+			 * FEINIVAL=27/12/2013,
+			 * NMPOLIZA=1,
+			 * PRIMA_TOTAL=10830.45,
+			 * NMPOLIEX=1904213000001000000,
+			 * NSUPLOGI=0,
+			 * DSCOMENT=EMISIÒN DE LA POLIZA,
+			 * ESTADO=M,
+			 * CDTIPSIT=SL,
+			 * NTRAMITE=396,
+			 * CDUNIECO=1904,
+			 * FEEMISIO=27/12/2013,
+			 * CDRAMO=2
+			 */
+			
+			imap1=new HashMap<String,Item>();
+			
+			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			
+			gc.generaParcial(pantallasManager.obtenerCamposPantalla(
+					 null,null,null
+					,null,null,null
+					,"ENDOSOABASEGU",null,null
+					,"MODELO"));
+			
+			imap1.put("modelo"   , gc.getFields());
+			imap1.put("columnas" , gc.getColumns());
+			
+			gc.generaParcial(pantallasManager.obtenerCamposPantalla(
+					 null,null,null
+					,null,null,null
+					,"ENDOSOABASEGU",null,null
+					,"PANELLECTURA"));
+			
+			imap1.put("panelLectura" , gc.getItems());
+		}
+		catch(Exception ex)
+		{
+			log.error("error al mostrar pantalla de alta y/o baja de asegurados",ex);
+		}
+		log.debug("\n"
+				+ "\n###### pantalla de endoso de alta y/o baja de asegurados ######"
+				+ "\n######                                                   ######"
+				+ "\n###############################################################"
+				+ "\n###############################################################"
+				);
+		return SUCCESS;
+	}
+	/*///////////////////////////////////////////////////////////*/
+	////// pantalla de endoso de alta y/o baja de asegurados //////
+	///////////////////////////////////////////////////////////////
 	
 	private boolean ejecutaWSrecibosEndoso(String cdunieco, String cdramo, String estado, String nmpoliza,
 			String nmsuplem, String numendoso, String rutaPoliza, String cdtipsitGS, String sucursal, String nmsolici,String ntramite, boolean async, String Op){
