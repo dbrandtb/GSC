@@ -683,6 +683,7 @@ public class ProcesoDAO extends AbstractDAO {
     		declareParameter(new SqlParameter("pv_nmsituac_i", OracleTypes.NUMERIC));
     		declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdgarant_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdtipsup_i", OracleTypes.VARCHAR));
     		
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
