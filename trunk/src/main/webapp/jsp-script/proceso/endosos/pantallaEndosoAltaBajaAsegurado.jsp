@@ -216,8 +216,8 @@ Ext.onReady(function()
 			            ,buttons     :
 			            [
 			                {
-			                	text     : 'Guardar'
-			                	,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
+			                	text     : 'Agregar'
+			                	,icon    : '${ctx}/resources/fam3icons/icons/add.png'
 			                	,handler : function()
 			                	{
 			                		var form=this.up().up();
@@ -488,6 +488,12 @@ Ext.onReady(function()
 	    				if(json.success==true)
 	    				{
 	    					Ext.getCmp('panEndAltBajAseBotConfirmar').hide();
+	    					Ext.Msg.show(
+                            {
+                                title    : 'Endoso confirmado'
+                                ,msg     : 'Se ha confirmado el endoso'
+                                ,buttons : Ext.Msg.OK
+                            });
 	    				}
 	    				else
 	    				{

@@ -1856,11 +1856,12 @@ public class EndososAction extends PrincipalCoreAction
         tpersona,
         rfc,
         apat,
+        cdnacion,
         parametros.pv_otvalor01, //generico
-        parametros.pv_otvalor19, //generico
+        parametros.pv_otvalor02, //generico
         parametros.pv_otvalor16, //generico
         parametros.pv_otvalor18, //generico
-        parametros.pv_otvalor02  //generico
+        parametros.pv_otvalor19  //generico
     smap2:
         NMSUPLEM,
         DSTIPSIT,
@@ -1900,23 +1901,272 @@ public class EndososAction extends PrincipalCoreAction
 			String cdramo   = smap2.get("CDRAMO");
 			String estado   = smap2.get("ESTADO");
 			String nmpoliza = smap2.get("NMPOLIZA");
+			String cdtipsit = smap2.get("CDTIPSIT");
+			String nmsituac = smap1.get("nmsituac");
+			String rfc      = smap1.get("rfc");
+			String nombre   = smap1.get("nombre");
+			String nombre2  = smap1.get("nombre2");
+			String tpersona = smap1.get("tpersona");
+			String sexo     = smap1.get("parametros.pv_otvalor01");
+			String fenacimi = smap1.get("parametros.pv_otvalor02");
+			String apat     = smap1.get("apat");
+			String amat     = smap1.get("amat");
+			String cdnacion = smap1.get("cdnacion");
 			String cdelemen = usuario.getEmpresa().getElementoId();
-			String usuari   = usuario.getUser();
+			String cdusuari = usuario.getUser();
+			Date fechaHoy   = new Date();
 			
 			Map<String,String>paramsIniciarEndoso=new HashMap<String,String>(0);
 			paramsIniciarEndoso.put("pv_cdunieco_i" , cdunieco);
 			paramsIniciarEndoso.put("pv_cdramo_i"   , cdramo);
 			paramsIniciarEndoso.put("pv_estado_i"   , estado);
 			paramsIniciarEndoso.put("pv_nmpoliza_i" , nmpoliza);
-			paramsIniciarEndoso.put("pv_fecha_i"    , renderFechas.format(new Date()));
+			paramsIniciarEndoso.put("pv_fecha_i"    , renderFechas.format(fechaHoy));
 			paramsIniciarEndoso.put("pv_cdelemen_i" , cdelemen);
-			paramsIniciarEndoso.put("pv_cdusuari_i" , usuari);
+			paramsIniciarEndoso.put("pv_cdusuari_i" , cdusuari);
 			paramsIniciarEndoso.put("pv_proceso_i"  , "END");
 			paramsIniciarEndoso.put("pv_cdtipsup_i" , alta?"9":"10");
 			Map<String,String>respuestaIniciarEndoso=endososManager.iniciarEndoso(paramsIniciarEndoso);
 			
 			String nmsuplem=respuestaIniciarEndoso.get("pv_nmsuplem_o");
 			String nsuplogi=respuestaIniciarEndoso.get("pv_nsuplogi_o");
+			
+			if(alta)
+			{
+				//////////////////////
+        		////// cdperson //////
+				String cdperson=kernelManager.generaCdperson();
+				////// cdperson //////
+				//////////////////////
+				
+				/////////////////////
+				////// polisit //////
+				Map<String,Object>mapaPolisit=new HashMap<String,Object>(0);
+                mapaPolisit.put("pv_cdunieco_i",    cdunieco);
+                mapaPolisit.put("pv_cdramo_i",      cdramo);
+                mapaPolisit.put("pv_estado_i",      estado);
+                mapaPolisit.put("pv_nmpoliza_i",    nmpoliza);
+                mapaPolisit.put("pv_nmsituac_i",    nmsituac);
+                mapaPolisit.put("pv_nmsuplem_i",    nmsuplem);
+                mapaPolisit.put("pv_status_i",      "V");
+                mapaPolisit.put("pv_cdtipsit_i",    cdtipsit);
+                mapaPolisit.put("pv_swreduci_i",    null);
+                mapaPolisit.put("pv_cdagrupa_i",    "1");
+                mapaPolisit.put("pv_cdestado_i",    "0");
+                mapaPolisit.put("pv_fefecsit_i",    fechaHoy);
+                mapaPolisit.put("pv_fecharef_i",    fechaHoy);
+                mapaPolisit.put("pv_cdgrupo_i",     null);
+                mapaPolisit.put("pv_nmsituaext_i",  null);
+                mapaPolisit.put("pv_nmsitaux_i",    null);
+                mapaPolisit.put("pv_nmsbsitext_i",  null);
+                mapaPolisit.put("pv_cdplan_i",      "1");
+                mapaPolisit.put("pv_cdasegur_i",    "30");
+                mapaPolisit.put("pv_accion_i",      "I");
+                kernelManager.insertaPolisit(mapaPolisit);
+				////// polisit //////
+                /////////////////////
+                
+                /////////////////////
+                ////// valosit //////                
+                
+                ////// 1. mapa valosit base //////
+                Map<String,String>mapaValosit=new HashMap<String,String>(0);
+                mapaValosit.put("pv_cdunieco",    cdunieco);
+                mapaValosit.put("pv_cdramo",      cdramo);
+                mapaValosit.put("pv_estado",      estado);
+                mapaValosit.put("pv_nmpoliza",    nmpoliza);
+                mapaValosit.put("pv_nmsituac",    nmsituac);
+                mapaValosit.put("pv_nmsuplem",    nmsuplem);
+                mapaValosit.put("pv_status",      "V");
+                mapaValosit.put("pv_cdtipsit",    cdtipsit);
+                mapaValosit.put("pv_accion_i",   "I");
+                ////// 1. mapa valosit base //////
+                
+                ////// 2. obtener el titular //////
+                Map<String,String>mapaObtenerValosit=new HashMap<String,String>(0);
+                mapaObtenerValosit.put("pv_cdunieco_i" , cdunieco);
+                mapaObtenerValosit.put("pv_nmpoliza_i" , nmpoliza);
+                mapaObtenerValosit.put("pv_cdramo_i"   , cdramo);
+                mapaObtenerValosit.put("pv_estado_i"   , estado);
+                mapaObtenerValosit.put("pv_nmsituac_i" , "1");
+                Map<String,Object>valositTitular=kernelManager.obtieneValositSituac(mapaObtenerValosit);
+                ////// 2. obtener el titular //////
+                
+                ////// 3. copiar los otvalor del titular a la base //////
+                for(Entry<String,Object> en:valositTitular.entrySet())
+                {
+                	String key=en.getKey();
+                	if(key.substring(0,3).equalsIgnoreCase("otv"))
+                	{
+                		mapaValosit.put("pv_"+key,(String)en.getValue());
+                	}
+                }
+                ////// 3. copiar los otvalor del titular a la base //////
+                
+                ////// 4. sustituir los otvalor por los nuevos del form //////
+                for(Entry<String,String> en:smap2.entrySet())
+                {
+                	String key=en.getKey();
+                	if(key.substring(0,3).equalsIgnoreCase("par"))
+                	{
+                		// p a r a m e t r o s . pv_otvalorXX
+                		//0 1 2 3 4 5 6 7 8 9 0 1
+                		mapaValosit.put(key.substring(11),en.getValue());
+                	}
+                }
+                ////// 4. sustituir los otvalor por los nuevos del form //////
+                
+                kernelManager.insertaValoresSituaciones(mapaValosit);
+                
+                ////// valosit //////
+                /////////////////////
+                
+                //////////////////////
+                ////// mpersona //////
+                Map<String,Object> mapaMpersona=new LinkedHashMap<String,Object>(0);
+				mapaMpersona.put("pv_cdperson_i"    , cdperson); 
+				mapaMpersona.put("pv_cdtipide_i"    , "1");
+				mapaMpersona.put("pv_cdideper_i"    , rfc);
+				mapaMpersona.put("pv_dsnombre_i"    , nombre);
+				mapaMpersona.put("pv_cdtipper_i"    , "1");
+				mapaMpersona.put("pv_otfisjur_i"    , tpersona);
+				mapaMpersona.put("pv_otsexo_i"      , sexo);
+				mapaMpersona.put("pv_fenacimi_i"    , renderFechas.parse(fenacimi));
+				mapaMpersona.put("pv_cdrfc_i"       , rfc);
+				mapaMpersona.put("pv_dsemail_i"     , "");
+				mapaMpersona.put("pv_dsnombre1_i"   , nombre2);
+				mapaMpersona.put("pv_dsapellido_i"  , apat);
+				mapaMpersona.put("pv_dsapellido1_i" , amat);
+				mapaMpersona.put("pv_feingreso_i"   , fechaHoy);
+				mapaMpersona.put("pv_cdnacion_i"    , cdnacion);
+				mapaMpersona.put("pv_accion_i"      , "I");
+				kernelManager.movMpersona(mapaMpersona);
+                ////// mpersona //////
+                //////////////////////
+				
+				//////////////////////
+				////// mpoliper //////
+				Map<String,Object>mapaMpoliper=new LinkedHashMap<String,Object>(0);
+				mapaMpoliper.put("pv_cdunieco_i" , cdunieco);
+				mapaMpoliper.put("pv_cdramo_i"   , cdramo);
+				mapaMpoliper.put("pv_estado_i"   , estado);
+				mapaMpoliper.put("pv_nmpoliza_i" , nmpoliza);
+				mapaMpoliper.put("pv_nmsituac_i" , nmsituac);
+				mapaMpoliper.put("pv_cdrol_i"    , "2");
+				mapaMpoliper.put("pv_cdperson_i" , cdperson);
+				mapaMpoliper.put("pv_nmsuplem_i" , nmsuplem);
+				mapaMpoliper.put("pv_status_i"   , "V");
+				mapaMpoliper.put("pv_nmorddom_i" , "1");
+				mapaMpoliper.put("pv_swreclam_i" , null);
+				mapaMpoliper.put("pv_accion_i"   , "I");
+				mapaMpoliper.put("pv_swexiper_i" , "N");
+				kernelManager.movMpoliper(mapaMpoliper);
+				////// mpoliper //////
+				//////////////////////
+                
+				///////////////////////
+				////// domicilio //////
+				
+				////// 1. obtener asegurados //////
+				Map<String,String> mapaObtenerAsegurados=new HashMap<String,String>(0);
+				mapaObtenerAsegurados.put("pv_cdunieco" , cdunieco);
+				mapaObtenerAsegurados.put("pv_cdramo"   , cdramo);
+				mapaObtenerAsegurados.put("pv_estado"   , estado);
+				mapaObtenerAsegurados.put("pv_nmpoliza" , nmpoliza);
+				mapaObtenerAsegurados.put("pv_nmsuplem" , nmsuplem);
+				List<Map<String,Object>>asegurados=kernelManager.obtenerAsegurados(mapaObtenerAsegurados);
+				////// 1. obtener asegurados //////
+				
+				////// 2. obtener cdperson titular //////
+				String cdpersonTitular = "";
+				for(Map<String,Object>aseguradoIterado:asegurados)
+				{
+					if(((String)aseguradoIterado.get("nmsituac")).equalsIgnoreCase("0"))
+					{
+						cdpersonTitular=(String)aseguradoIterado.get("cdperson");
+					}
+				}
+				////// 2. obtener cdperson titular //////
+				
+				////// 3. obtener el domicilio del titular //////
+				Map<String,String> mapaObtenerDomicilio=new HashMap<String,String>(0);
+				mapaObtenerDomicilio.put("pv_cdunieco_i" , cdunieco);
+				mapaObtenerDomicilio.put("pv_cdramo_i"   , cdramo);
+				mapaObtenerDomicilio.put("pv_estado_i"   , estado);
+				mapaObtenerDomicilio.put("pv_nmpoliza_i" , nmpoliza);
+				mapaObtenerDomicilio.put("pv_nmsituac_i" , nmsituac);
+				mapaObtenerDomicilio.put("pv_nmsuplem_i" , nmsuplem);
+				mapaObtenerDomicilio.put("pv_cdperson_i" , cdpersonTitular);
+				mapaObtenerDomicilio.put("pv_cdtipsit_i" , cdtipsit);
+				Map<String,String>domicilioTitular=kernelManager.obtenerDomicilio(mapaObtenerDomicilio);
+				////// 3. obtener el domicilio del titular //////
+				
+				////// 4. mdomicil //////
+				Map<String,String>mapaDomicilio=new HashMap<String,String>(0);
+				mapaDomicilio.put("pv_cdperson_i" , cdperson);
+				mapaDomicilio.put("pv_nmorddom_i" , domicilioTitular.get("NMORDDOM"));
+				mapaDomicilio.put("pv_msdomici_i" , domicilioTitular.get("DSDOMICI"));
+				mapaDomicilio.put("pv_nmtelefo_i" , domicilioTitular.get("NMTELEFO"));
+				mapaDomicilio.put("pv_cdpostal_i" , domicilioTitular.get("CODPOSTAL"));
+				mapaDomicilio.put("pv_cdedo_i"    , domicilioTitular.get("CDEDO"));
+				mapaDomicilio.put("pv_cdmunici_i" , domicilioTitular.get("CDMUNICI"));
+				mapaDomicilio.put("pv_cdcoloni_i" , domicilioTitular.get("CDCOLONI"));
+				mapaDomicilio.put("pv_nmnumero_i" , domicilioTitular.get("NMNUMERO"));
+				mapaDomicilio.put("pv_nmnumint_i" , domicilioTitular.get("NMNUMINT"));
+				mapaDomicilio.put("pv_accion_i"   , "I");
+				kernelManager.pMovMdomicil(mapaDomicilio);
+				////// 4. mdomicil //////
+				
+				////// domicilio //////
+				///////////////////////
+				
+                /////////////////////////////////
+                ////// valores por defecto //////
+                Map<String,String> mapaCoberturas=new HashMap<String,String>(0);
+                mapaCoberturas.put("pv_cdunieco_i",   cdunieco);//se agrega desde el formulario
+                mapaCoberturas.put("pv_cdramo_i",     cdramo);//se agrega desde el formulario
+                mapaCoberturas.put("pv_estado_i",     estado);
+                mapaCoberturas.put("pv_nmpoliza_i",   nmpoliza);
+                mapaCoberturas.put("pv_nmsituac_i",   nmsituac);
+                mapaCoberturas.put("pv_nmsuplem_i",   nmsuplem);
+                mapaCoberturas.put("pv_cdgarant_i",   "TODO");
+                mapaCoberturas.put("pv_cdtipsup_i",   "9");
+                kernelManager.coberturas(mapaCoberturas);
+                ////// valores por defecto //////
+                /////////////////////////////////
+                
+                //////////////////////////
+                ////// tarificacion //////
+                Map<String,String>mapaSigsvalipolEnd=new LinkedHashMap<String,String>(0);
+    			mapaSigsvalipolEnd.put("pv_cdusuari_i" , cdusuari);
+    			mapaSigsvalipolEnd.put("pv_cdelemen_i" , cdelemen);
+    			mapaSigsvalipolEnd.put("pv_cdunieco_i" , cdunieco);
+    			mapaSigsvalipolEnd.put("pv_cdramo_i"   , cdramo);
+    			mapaSigsvalipolEnd.put("pv_estado_i"   , estado);
+    			mapaSigsvalipolEnd.put("pv_nmpoliza_i" , nmpoliza);
+    			mapaSigsvalipolEnd.put("pv_nmsituac_i" , nmsituac);
+    			mapaSigsvalipolEnd.put("pv_nmsuplem_i" , nmsuplem);
+    			mapaSigsvalipolEnd.put("pv_cdtipsit_i" , cdtipsit);
+    			mapaSigsvalipolEnd.put("pv_cdtipsup_i" , "9");
+    			endososManager.sigsvalipolEnd(mapaSigsvalipolEnd);
+                ////// tarificacion //////
+    			//////////////////////////
+    			
+    			//////////////////////////
+    			////// valor endoso //////
+    			Map<String,Object>mapaValorEndoso=new LinkedHashMap<String,Object>(0);
+				mapaValorEndoso.put("pv_cdunieco_i" , cdunieco);
+				mapaValorEndoso.put("pv_cdramo_i"   , cdramo);
+				mapaValorEndoso.put("pv_estado_i"   , estado);
+				mapaValorEndoso.put("pv_nmpoliza_i" , nmpoliza);
+				mapaValorEndoso.put("pv_nmsituac_i" , nmsituac);
+				mapaValorEndoso.put("pv_nmsuplem_i" , nmsuplem);
+				mapaValorEndoso.put("pv_feinival_i" , fechaHoy);
+				mapaValorEndoso.put("pv_cdtipsup_i" , "9");
+				endososManager.calcularValorEndoso(mapaValorEndoso);
+    			////// valor endoso //////
+    			//////////////////////////
+			}
 			
 			Map<String,String>paramConfirmarEndoso=new LinkedHashMap<String,String>(0);
 			paramConfirmarEndoso.put("pv_cdunieco_i" , cdunieco);
