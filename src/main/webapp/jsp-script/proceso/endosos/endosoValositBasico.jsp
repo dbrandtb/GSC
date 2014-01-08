@@ -77,6 +77,16 @@ function endvalbasSumit(form,confirmar)
                         msg     : json.mensaje,
                         buttons : Ext.Msg.OK
                     });
+                    if(confirmar=='si')
+                    {
+                    	//////////////////////////////////
+                        ////// usa codigo del padre //////
+                        /*//////////////////////////////*/
+                        marendNavegacion(2);
+                        /*//////////////////////////////*/
+                        ////// usa codigo del padre //////
+                        //////////////////////////////////
+                    }
                 },
                 failure:function(){
                     form.setLoading(false);

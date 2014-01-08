@@ -8,10 +8,11 @@
     ///////////////////////
     ////// variables //////
     /*///////////////////*/
-    var marendurlcata             = '<s:url namespace="/catalogos"         action="obtieneCatalogo" />';
-    var marendurlramos            = '<s:url namespace="/"                  action="obtenerRamos" />';
-    var marendUrlFiltro           = '<s:url namespace="/endosos"           action="obtenerEndosos" />'
-    var marenUrlObtenerAsegurados = '<s:url namespace="/"                  action="cargarComplementariosAsegurados" />';
+    var marendurlcata             = '<s:url namespace="/catalogos"  action="obtieneCatalogo" />';
+    var marendurlramos            = '<s:url namespace="/"           action="obtenerRamos" />';
+    var marendUrlFiltro           = '<s:url namespace="/endosos"    action="obtenerEndosos" />'
+    var marenUrlObtenerAsegurados = '<s:url namespace="/"           action="cargarComplementariosAsegurados" />';
+    var marendUrlDoc              = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza" />';
     var marendStorePolizas;
     var marendStoreAsegurados;
     /*///////////////////*/
@@ -445,6 +446,25 @@
             }
         }
     }
+    
+    function marendNavegacion(nivel)
+    {
+    	debug('marendNavegacion:',nivel);
+    	if(nivel<=2)
+    	{
+	    	marendStorePolizas.removeAll();
+    	}
+    	if(nivel<=3)
+    	{
+    		marendStoreAsegurados.removeAll();
+    	}
+    	if(nivel<=4)
+    	{
+    		Ext.getCmp('marendMenuOperaciones').expand();
+    		Ext.getCmp('marendLoaderFrame').setTitle();
+    		Ext.getCmp('marendLoaderFrame').update('');
+    	}
+    }
     /*///////////////////*/
     ////// funciones //////
     ///////////////////////
@@ -763,8 +783,10 @@ Ext.onReady(function()
                         ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
                         ,handler : function()
                         {
+                        	
                             if(this.up().up().isValid())
                             {
+                            	marendNavegacion(2);
                                 this.up().up().submit(
                                 {
                                     success  : function(form,action)
@@ -831,6 +853,7 @@ Ext.onReady(function()
                         ,icon    : '${ctx}/resources/fam3icons/icons/table_lightning.png'
                         ,handler : function()
                         {
+                        	marendNavegacion(3);
                             var nRecordsActivos=0;
                             marendStorePolizas.each(function(record)
                             {
@@ -853,6 +876,14 @@ Ext.onReady(function()
                         ,xtype        : 'checkcolumn'
                         ,width        : 30
                         ,menuDisabled : true
+                        ,listeners    :
+                        {
+                        	checkchange : function(column, recordIndex, checked)
+                        	{
+                        		debug('checkchange');
+                        	    marendNavegacion(3);
+                        	}
+                        }
                     }
                     /*
                     "CDUNIECO" 
@@ -925,11 +956,51 @@ Ext.onReady(function()
                     	,width     : 150
                     	,hidden    : true
                     }
+                    ,{
+                    	xtype         : 'actioncolumn'
+                    	,width        : 30
+                    	,icon         : '${ctx}/resources/fam3icons/icons/printer.png'
+                    	,menuDisabled : true
+                    	,tooltip      : 'Documentos'
+                    	,sortable     : false
+                    	,handler      : function(grid,rowIndex)
+                    	{
+                    		var record=grid.getStore().getAt(rowIndex);
+                    		debug(record);
+                    		Ext.create('Ext.window.Window',
+                            {
+                                title        : 'Documentos del tr&aacute;mite '+record.get('NTRAMITE')
+                                ,modal       : true
+                                ,buttonAlign : 'center'
+                                ,width       : 600
+                                ,height      : 400
+                                ,autoScroll  : true
+                                ,loader      :
+                                {
+                                    url       : marendUrlDoc
+                                    ,params   :
+                                    {
+                                        'smap1.nmpoliza'  : record.get('NMPOLIZA')
+                                        ,'smap1.cdunieco' : record.get('CDUNIECO')
+                                        ,'smap1.cdramo'   : record.get('CDRAMO')
+                                        ,'smap1.estado'   : record.get('ESTADO')
+                                        ,'smap1.nmsuplem' : '0'
+                                        ,'smap1.ntramite' : record.get('NTRAMITE')
+                                        ,'smap1.nmsolici' : ''
+                                        ,'smap1.tipomov'  : '0'
+                                    }
+                                    ,scripts  : true
+                                    ,autoLoad : true
+                                }
+                            }).show();
+                    	}
+                    }
                 ]
                 ,listeners     :
                 {
                 	'cellclick' : function(grid, td, cellIndex, record)
                     {
+                		marendNavegacion(3);
                         debug(record);
                         marendStoreAsegurados.load(
                         {
@@ -986,6 +1057,14 @@ Ext.onReady(function()
 					    ,xtype        : 'checkcolumn'
 					    ,width        : 30
 					    ,menuDisabled : true
+                        ,listeners    :
+                        {
+                            checkchange : function(column, recordIndex, checked)
+                            {
+                                debug('checkchange');
+                                marendNavegacion(4);
+                            }
+                        }
 					}
 					,{
 						header     : 'P&oacute;liza'
@@ -1077,6 +1156,7 @@ Ext.onReady(function()
                         ,icon    : '${ctx}/resources/fam3icons/icons/table_lightning.png'
                         ,handler : function()
                         {
+                        	marendNavegacion(4);
                             var nRecordsActivos=0;
                             marendStoreAsegurados.each(function(record)
                             {
@@ -1092,6 +1172,13 @@ Ext.onReady(function()
                         }
                     }
                 ]
+                ,listeners :
+                {
+                	cellclick : function()
+                	{
+                		marendNavegacion(4);
+                	}
+                }
             })
             ,Ext.create('Ext.panel.Panel',
             {
@@ -1126,6 +1213,7 @@ Ext.onReady(function()
                         {
                             'cellclick' : function(grid, td, cellIndex, record)
                             {
+                            	marendNavegacion(4);
                                 marendValidaOperacion(record);
                             }
                         }

@@ -2813,7 +2813,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	
 	protected class ObtenerDocumentosPolizaMapper implements RowMapper {
 		public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-			String cols[]=new String[]{"nmsolici","cddocume","dsdocume","feinici","ntramite","tipmov","nmsuplem"};
+			String cols[]=new String[]{"nmsolici","cddocume","dsdocume","feinici","ntramite","tipmov","nmsuplem","nsuplogi"};
 			Map<String,String> map=new HashMap<String,String>(0);
 			for(String col:cols)
 			{

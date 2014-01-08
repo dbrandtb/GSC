@@ -189,13 +189,14 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 					String descripcion=slist1.get(i).get("dsdocume");
 					String tipmov     =slist1.get(i).get("tipmov");
 					String nmsuplem   =slist1.get(i).get("nmsuplem");
+					String nsuplogi   =slist1.get(i).get("nsuplogi");
 					if(descripcion==null||descripcion.length()==0)
 					{
 						descripcion="(no especificado)";
 					}
 					String mezcla=nombre+"#_#"+descripcion;
 					slist1.get(i).put("liga",mezcla);
-					slist1.get(i).put("orden",nmsuplem+"#_#"+tipmov);
+					slist1.get(i).put("orden",nmsuplem+"#_#"+tipmov+"#_#"+nsuplogi);
 				}
 			}
 			success=true;

@@ -494,6 +494,13 @@ Ext.onReady(function()
                                 ,msg     : 'Se ha confirmado el endoso'
                                 ,buttons : Ext.Msg.OK
                             });
+	    					//////////////////////////////////
+                            ////// usa codigo del padre //////
+                            /*//////////////////////////////*/
+                            marendNavegacion(2);
+                            /*//////////////////////////////*/
+                            ////// usa codigo del padre //////
+                            //////////////////////////////////
 	    				}
 	    				else
 	    				{
