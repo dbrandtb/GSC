@@ -4,8 +4,10 @@
     
     <package name="siniestros" extends="json-default" namespace="/siniestros">
         
-        
-        
+        <action name="autorizacionServicios">
+    		<result>/jsp-script/proceso/siniestros/autorizacionServicios.jsp</result>
+		</action>
+			
     </package>
 
 </struts>
