@@ -450,7 +450,8 @@ Ext.onReady(function() {
 		 	});
 		 	return columnIndexes;
 	 	},*/
-	 	onAddClick: function(){	 		
+	 	onAddClick: function(btn, e){
+	 		ventanaConceptosAutorizado.animateTarget=btn;
 	 		ventanaConceptosAutorizado.show();
 	 	},
 	 	onRemoveClick: function(grid, rowIndex){
@@ -536,7 +537,8 @@ Ext.onReady(function() {
 			});
 			return columnIndexes;
 		},*/		
-		onAddClick: function(){	 		
+		onAddClick: function(btn, e){
+			ventanaEqQuirurgicoBase.animateTarget=btn;
 			ventanaEqQuirurgicoBase.show();
 		},
 		onRemoveClick: function(grid, rowIndex){
@@ -617,7 +619,8 @@ Ext.onReady(function() {
 			});
 			return columnIndexes;
 		},*/		
-		onAddClick: function(){	 		
+		onAddClick: function(btn, e){
+			ventanaEqQuirurgico.animateTarget=btn;
 			ventanaEqQuirurgico.show();
 		},
 		onRemoveClick: function(grid, rowIndex){
