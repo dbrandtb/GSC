@@ -25,7 +25,7 @@ var urlRegresarp4          = '<s:url namespace="/"        action="editarAsegurad
 var urlCargarp4            = '<s:url namespace="/"        action="cargarPantallaDomicilio" />';
 var urlGuardarp4           = '<s:url namespace="/endosos" action="guardarEndosoDomicilio" />';
 var enddomUrlDoc           = '<s:url namespace="/documentos" action="ventanaDocumentosPolizaClon" />';
-var _ComboColoniasUrl      = '<s:url namespace="/"        action="cargaColonias" />';
+var _ComboColoniasUrl      = '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
 var formPanelp4;
 <s:if test='smap1!=null&&smap1.botonCopiar!=null&&smap1.botonCopiar=="1"'>
 var esElContratanteP4      = false;
@@ -321,12 +321,18 @@ Ext.onReady(function(){
                                 var json=Ext.decode(opts.response.responseText);
                                 if(json.success==true)
                                 {
+                                	//////////////////////////////////
+                                    ////// usa codigo del padre //////
+                                    /*//////////////////////////////*/
+                                    marendNavegacion(2);
+                                    /*//////////////////////////////*/
+                                    ////// usa codigo del padre //////
+                                    //////////////////////////////////
                                     Ext.Msg.show({
                                         title:'Endoso generado',
                                         msg: json.mensaje,
                                         buttons: Ext.Msg.OK
                                     });
-                                    //expande(2);
                                 }
                                 else
                                 {
@@ -440,7 +446,7 @@ Ext.onReady(function(){
             formPanelp4.loadRecord(resp);
             
             Ext.getCmp('coloniaId').getStore().load({
-                params: {codigoPostal: resp.data['smap1.CODPOSTAL']} 
+                params: {catalogo:'COLONIAS','params.cp': resp.data['smap1.CODPOSTAL']}
             });
         },
         failure:function()
@@ -503,7 +509,7 @@ Ext.onReady(function(){
                         'smap1.NMNUMINT':resp.data['smap1.NMNUMINT']
                     });
                     Ext.getCmp('coloniaId').getStore().load({
-                        params: {codigoPostal: resp.data['smap1.CODPOSTAL']} 
+                        params: {catalogo:'COLONIAS','params.cp': resp.data['smap1.CODPOSTAL']}
                     });
                 },
                 failure:function()

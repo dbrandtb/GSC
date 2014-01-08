@@ -316,7 +316,7 @@ Ext.onReady(function(){
                     						//////////////////////////////////
                     						////// usa codigo del padre //////
                     						/*//////////////////////////////*/
-                    						marendStoreAsegurados.removeAll();
+                    						marendNavegacion(2);
                                             /*//////////////////////////////*/
                                             ////// usa codigo del padre //////
                     						//////////////////////////////////

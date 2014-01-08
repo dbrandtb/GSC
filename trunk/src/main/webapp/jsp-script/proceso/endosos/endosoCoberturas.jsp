@@ -117,12 +117,169 @@
                     debug(json);
                     if(json.success==true)
                     {
-                        Ext.Msg.show(
+                    	Ext.Msg.show(
                         {
                             title   : 'Endoso generado',
                             msg     : json.mensaje,
                             buttons : Ext.Msg.OK
                         });
+                    	if(confirmar=='si')
+                    	{
+                    		//////////////////////////////////
+                            ////// usa codigo del padre //////
+                            /*//////////////////////////////*/
+                            marendNavegacion(2);
+                            /*//////////////////////////////*/
+                            ////// usa codigo del padre //////
+                            //////////////////////////////////
+                    	}
+                        //zxc
+                        /*
+                        form.setLoading(true);
+                        Ext.Ajax.request(
+                        {
+                            url     : urlRecotizar
+                            ,params :
+                            {
+                                'panel1.nmpoliza' : inputNmpoliza
+                                ,cdunieco         : inputCdunieco
+                                ,cdramo           : inputCdramo
+                                ,cdtipsit         : inputCdtipsit
+                            }
+                            ,success : function(response)
+                            {
+                                form.setLoading(false);
+                                var json=Ext.decode(response.responseText);
+                                //console.log(json);
+                                if(json.mensajeRespuesta&&json.mensajeRespuesta.length>0)
+                                {
+                                    Ext.Msg.show({
+                                        title:'Verificar datos',
+                                        msg: json.mensajeRespuesta,
+                                        buttons: Ext.Msg.OK,
+                                        icon: Ext.Msg.WARNING
+                                    });
+                                }
+                                else
+                                {
+                                    var orden=0;
+                                    var parentescoAnterior='qwerty';
+                                    for(var i=0;i<json.slist1.length;i++)
+                                    {
+                                        if(json.slist1[i].parentesco!=parentescoAnterior)
+                                        {
+                                            orden++;
+                                            parentescoAnterior=json.slist1[i].parentesco;
+                                        }
+                                        json.slist1[i].orden_parentesco=orden+'_'+json.slist1[i].parentesco;
+                                    }
+                                    Ext.create('Ext.window.Window',
+                                    {
+                                        title: 'Tarifa final',
+                                        //maxHeight: 400,
+                                        autoScroll:true,
+                                        width: 660,
+                                        height: 400,
+                                        defaults: {
+                                            width: 650
+                                        },
+                                        modal:false,
+                                        closable:false,
+                                        collapsible:true,
+                                        titleCollapse:true,
+                                        items:[  // Let's put an empty grid in just to illustrate fit layout
+                                            Ext.create('Ext.grid.Panel',{
+                                                store:Ext.create('Ext.data.Store',{
+                                                    model:'ModeloDetalleCotizacion',
+                                                    groupField: 'orden_parentesco',
+                                                    sorters: [{
+                                                        sorterFn: function(o1, o2){
+                                                            if (o1.get('orden') === o2.get('orden'))
+                                                            {
+                                                                return 0;
+                                                            }
+                                                            return o1.get('orden') < o2.get('orden') ? -1 : 1;
+                                                        }
+                                                    }],
+                                                    proxy: {
+                                                        type: 'memory',
+                                                        reader: 'json'
+                                                    },
+                                                    data:json.slist1
+                                                }),
+                                                columns:
+                                                [
+                                                    {
+                                                        header    : 'Nombre de la cobertura',
+                                                        dataIndex : 'Nombre_garantia',
+                                                        flex      : 2,
+                                                        summaryType: 'count',
+                                                        summaryRenderer: function(value){
+                                                            return Ext.String.format('Total de {0} cobertura{1}', value, value !== 1 ? 's' : '');
+                                                        }
+                                                    },
+                                                    {
+                                                        header      : 'Importe por cobertura',
+                                                        dataIndex   : 'Importe',
+                                                        flex        : 1,
+                                                        renderer    : Ext.util.Format.usMoney,
+                                                        align       : 'right',
+                                                        summaryType : 'sum'
+                                                    }
+                                                ],
+                                                features: [{
+                                                    groupHeaderTpl:
+                                                        [
+                                                            '{name:this.formatName}',
+                                                            {
+                                                                formatName:function(name)
+                                                                {
+                                                                    return name.split("_")[1];
+                                                                }
+                                                            }
+                                                        ],
+                                                    ftype:'groupingsummary',
+                                                    startCollapsed :true
+                                                }]
+                                            })
+                                            ,Ext.create('Ext.toolbar.Toolbar',{
+                                                buttonAlign:'right'
+                                                ,items:
+                                                [
+                                                    '->'
+                                                    ,Ext.create('Ext.form.Label',
+                                                    {
+                                                        style:'color:white;'
+                                                        ,initComponent:function()
+                                                        {
+                                                            var sum=0;
+                                                            for(var i=0;i<json.slist1.length;i++)
+                                                            {
+                                                                sum+=parseFloat(json.slist1[i].Importe);
+                                                            }
+                                                            this.setText('Total: '+Ext.util.Format.usMoney(sum));
+                                                            this.callParent();
+                                                        }
+                                                    })
+                                                ]
+                                            })
+                                        ]
+                                    }).show();
+                                }
+                            }
+                            ,failure : function()
+                            {
+                                form.setLoading(false);
+                                Ext.Msg.show({
+                                    title:'Error',
+                                    msg: 'Error de comunicaci&oacute;n',
+                                    buttons: Ext.Msg.OK,
+                                    icon: Ext.Msg.ERROR
+                                });
+                            }
+                        });
+                        */
+                        //zxc
                     }
                     else
                     {

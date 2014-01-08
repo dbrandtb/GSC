@@ -93,6 +93,7 @@ Ext.onReady(function()
             ,'tipmov'
             ,'nmsuplem'
             ,'orden'
+            ,'nsuplogi'
         ]
     });
     /*//////////////////////*/
@@ -105,7 +106,27 @@ Ext.onReady(function()
     panDocStoreDoc=Ext.create('Ext.data.Store',
     {
         model       : 'Documento'
-        ,groupField : 'orden'
+        //,groupField : 'orden'
+        ,groupers   :
+        [
+            {
+            	property  : 'orden'
+            	,sorterFn : function(recordA,recordB)
+            	{
+            		var nmsuplemA=recordA.get('nsuplogi')*1;
+            		var nmsuplemB=recordB.get('nsuplogi')*1;
+            		var r=0;
+            		if(nmsuplemA>nmsuplemB)
+            			r=-1;
+            		else if(nmsuplemA==nmsuplemB)
+            			r=0;
+            		else
+            			r=1;
+            		//debug(nmsuplemA,nmsuplemB,r);
+            		return r;
+            	}
+            }
+        ]
         ,autoLoad   : true
         ,proxy      :
         {
@@ -484,12 +505,7 @@ Ext.onReady(function()
 	                            formatName:function(name)
 	                            {
 	                            	var splited=name.split("#_#");
-	                                return splited[1]+
-	                                (
-	                                		(splited[1].substr(0,3).toUpperCase()=='END')?
-	                                						(' ('+splited[0].substr(12)+')')
-	                                						:''
-	                                );
+	                                return splited[1]+(splited[2]*1>0?(' ('+splited[2]+')'):'');
 	                            }
 	                        }
 	                    ],

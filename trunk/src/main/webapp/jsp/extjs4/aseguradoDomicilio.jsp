@@ -407,7 +407,7 @@ Ext.onReady(function(){
        					            });
        					            
 	       					        Ext.getCmp('coloniaId').getStore().load({
-	       				                params: {'params.cp': resp.data['smap1.CODPOSTAL']}
+	       				                params: {catalogo:'COLONIAS','params.cp': resp.data['smap1.CODPOSTAL']}
 	       				            });
        					        },
        					        failure:function()
@@ -543,7 +543,7 @@ Ext.onReady(function(){
 	                        'smap1.NMNUMINT':resp.data['smap1.NMNUMINT']
 	                    });
 	                    Ext.getCmp('coloniaId').getStore().load({
-	                        params: {codigoPostal: resp.data['smap1.CODPOSTAL']} 
+	                        params: {catalogo:'COLONIAS','params.cp': resp.data['smap1.CODPOSTAL']}
 	                    });
 	                },
 	                failure:function()
