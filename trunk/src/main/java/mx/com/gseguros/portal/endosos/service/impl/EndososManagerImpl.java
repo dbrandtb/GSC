@@ -118,6 +118,15 @@ public class EndososManagerImpl implements EndososManager
         return mapa;
 	}
 	
+	@Override
+	public Map<String,String> iniciarEndoso(Map<String, String> params) throws Exception
+	{
+		log.debug("EndososManager iniciarEndoso params: "+params);
+		Map<String,String> mapa=endososDAO.iniciarEndoso(params);
+		log.debug("EndososManager iniciarEndoso response map: "+mapa);
+        return mapa;
+	}
+	
 	/////////////////////////////////
 	////// getters and setters //////
 	/*/////////////////////////////*/

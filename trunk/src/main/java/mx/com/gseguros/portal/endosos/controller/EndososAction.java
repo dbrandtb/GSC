@@ -1090,7 +1090,6 @@ public class EndososAction extends PrincipalCoreAction
 			{
 				paramSigsvdefEnd.put("pv_cdtipsup_i" , "7");
 			}
-			paramSigsvdefEnd.put("pv_cdtipsup_i" , "");
 			endososManager.sigsvalipolEnd(paramSigsvdefEnd);
 			
 			if(smap1.get("confirmar").equalsIgnoreCase("si"))
@@ -1833,9 +1832,56 @@ public class EndososAction extends PrincipalCoreAction
 	
 	/////////////////////////////////////////////////////////
 	////// guardar endoso de alta o baja de asegurados //////
+	/*
+	smap1: (cuando es por baja)
+	    cdrfc,
+	    cdperson,
+	    fenacimi,
+        sexo=H,
+        swexiper,
+        Apellido_Materno,
+        nacional,
+        nombre,
+        nmsituac,
+        cdrol,
+        segundo_nombre,
+        Parentesco=T,
+        tpersona=F,
+        Apellido_Paterno
+    smap1: (cuando es por alta)
+        amat,
+        nmsituac,
+        nombre,
+        nombre2,
+        tpersona,
+        rfc,
+        apat,
+        parametros.pv_otvalor01, //generico
+        parametros.pv_otvalor19, //generico
+        parametros.pv_otvalor16, //generico
+        parametros.pv_otvalor18, //generico
+        parametros.pv_otvalor02  //generico
+    smap2:
+        NMSUPLEM,
+        DSTIPSIT,
+        FEINIVAL,
+        NMPOLIZA,
+        PRIMA_TOTAL,
+        NMPOLIEX,
+        NSUPLOGI,
+        DSCOMENT,
+        ESTADO,
+        CDTIPSIT,
+        NTRAMITE,
+        FEEMISIO,
+        CDRAMO,
+        CDUNIECO
+	*/
 	/*/////////////////////////////////////////////////////*/
 	public String guardarEndosoAltaBajaAsegurado()
 	{
+		this.session=ActionContext.getContext().getSession();
+		
 		log.debug("\n"
 				+ "\n############################################"
 				+ "\n############################################"				
@@ -1844,9 +1890,45 @@ public class EndososAction extends PrincipalCoreAction
 				);
 		log.debug("smap1: "+smap1);
 		log.debug("smap2: "+smap2);
-		log.debug("parametros: "+parametros);
 		try
 		{
+			UserVO usuario=(UserVO) session.get("USUARIO");
+			
+			boolean alta=smap1.containsKey("apat");
+			
+			String cdunieco = smap2.get("CDUNIECO");
+			String cdramo   = smap2.get("CDRAMO");
+			String estado   = smap2.get("ESTADO");
+			String nmpoliza = smap2.get("NMPOLIZA");
+			String cdelemen = usuario.getEmpresa().getElementoId();
+			String usuari   = usuario.getUser();
+			
+			Map<String,String>paramsIniciarEndoso=new HashMap<String,String>(0);
+			paramsIniciarEndoso.put("pv_cdunieco_i" , cdunieco);
+			paramsIniciarEndoso.put("pv_cdramo_i"   , cdramo);
+			paramsIniciarEndoso.put("pv_estado_i"   , estado);
+			paramsIniciarEndoso.put("pv_nmpoliza_i" , nmpoliza);
+			paramsIniciarEndoso.put("pv_fecha_i"    , renderFechas.format(new Date()));
+			paramsIniciarEndoso.put("pv_cdelemen_i" , cdelemen);
+			paramsIniciarEndoso.put("pv_cdusuari_i" , usuari);
+			paramsIniciarEndoso.put("pv_proceso_i"  , "END");
+			paramsIniciarEndoso.put("pv_cdtipsup_i" , alta?"9":"10");
+			Map<String,String>respuestaIniciarEndoso=endososManager.iniciarEndoso(paramsIniciarEndoso);
+			
+			String nmsuplem=respuestaIniciarEndoso.get("pv_nmsuplem_o");
+			String nsuplogi=respuestaIniciarEndoso.get("pv_nsuplogi_o");
+			
+			Map<String,String>paramConfirmarEndoso=new LinkedHashMap<String,String>(0);
+			paramConfirmarEndoso.put("pv_cdunieco_i" , cdunieco);
+			paramConfirmarEndoso.put("pv_cdramo_i"   , cdramo);
+			paramConfirmarEndoso.put("pv_estado_i"   , estado);
+			paramConfirmarEndoso.put("pv_nmpoliza_i" , nmpoliza);
+			paramConfirmarEndoso.put("pv_nmsuplem_i" , nmsuplem);
+			paramConfirmarEndoso.put("pv_nsuplogi_i" , nsuplogi);
+			paramConfirmarEndoso.put("pv_cdtipsup_i" , alta?"9":"10");
+			paramConfirmarEndoso.put("pv_dscoment_i" , "");
+		    endososManager.confirmarEndosoB(paramConfirmarEndoso);
+			
 			success=true;
 		}
 		catch(Exception ex)
