@@ -414,5 +414,30 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public void insertarTworksupEnd(Map<String, String> params) throws Exception
+	{
+		this.ejecutaSP(new InsertarTworksupEnd(this.getDataSource()), Utilerias.ponFechas(params));
+	}
+	
+	protected class InsertarTworksupEnd extends StoredProcedure
+	{
+		protected InsertarTworksupEnd(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SATELITES.P_INSERTA_TWORKSUP_END");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsup_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsituac_i" , OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 
 }
