@@ -178,7 +178,7 @@ Ext.onReady(function(){
 	        
             Ext.create('Ext.grid.Panel',
 		    {
-		        title     : 'Usuarios seleccionados'
+		        title     : 'Asegurados seleccionados'
 		        ,store    : endnomStoreAseg
 		        ,height   : 200
 		        ,selType  : 'cellmodel'

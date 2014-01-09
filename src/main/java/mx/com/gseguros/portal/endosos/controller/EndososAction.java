@@ -337,7 +337,7 @@ public class EndososAction extends PrincipalCoreAction
 			
 			ejecutaWSclienteSaludEndoso((String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"), (String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"), respuestaEndosoNombres.get("pv_nmsuplem_o"), "ACTUALIZA");
 			
-			mensaje="Se ha guardado el endoso con n&uacute;mero "+respuestaEndosoNombres.get("pv_nsuplogi_o");
+			mensaje="Se ha guardado el endoso "+respuestaEndosoNombres.get("pv_nsuplogi_o");
 			success=true;
 		}
 		catch(Exception ex)
@@ -724,7 +724,7 @@ public class EndososAction extends PrincipalCoreAction
 			
 			ejecutaWSclienteSaludEndoso(smap1.get("pv_cdunieco"), smap1.get("pv_cdramo"), smap1.get("pv_estado"), smap1.get("pv_nmpoliza"), resEndDomi.get("pv_nmsuplem_o"), "ACTUALIZA");
 			
-		    mensaje="Se ha guardado el endoso con n&uacute;mero "+resEndDomi.get("pv_nsuplogi_o");
+		    mensaje="Se ha guardado el endoso "+resEndDomi.get("pv_nsuplogi_o");
 			success=true;
 		}
 		catch(Exception ex)
@@ -1218,11 +1218,11 @@ public class EndososAction extends PrincipalCoreAction
 						true, "ACTUALIZA", tipomov );
 				
 				
-				mensaje="Se ha confirmado el endoso con n&uacute;mero "+respEndCob.get("pv_nsuplogi_o");
+				mensaje="Se ha confirmado el endoso "+respEndCob.get("pv_nsuplogi_o");
 			}
 		    else
 			{
-				mensaje="Se ha guardado el endoso con n&uacute;mero "+respEndCob.get("pv_nsuplogi_o");
+				mensaje="Se ha guardado el endoso "+respEndCob.get("pv_nsuplogi_o");
 			}
 			
 			success=true;
@@ -1487,12 +1487,12 @@ public class EndososAction extends PrincipalCoreAction
 				////// re generar los documentos //////
 			    ///////////////////////////////////////
 				
-				mensaje="Se ha confirmado el endoso con n&uacute;mero "+respEnd.get("pv_nsuplogi_o");
+				mensaje="Se ha confirmado el endoso "+respEnd.get("pv_nsuplogi_o");
 				
 			}
 			else
 			{				
-				mensaje="Se ha guardado el endoso con n&uacute;mero "+respEnd.get("pv_nsuplogi_o");
+				mensaje="Se ha guardado el endoso "+respEnd.get("pv_nsuplogi_o");
 			}
 			success=true;
 		}
@@ -2146,7 +2146,7 @@ public class EndososAction extends PrincipalCoreAction
                 mapaTworksupEnd.put("pv_cdramo_i"   , cdramo);
                 mapaTworksupEnd.put("pv_estado_i"   , estado);
                 mapaTworksupEnd.put("pv_nmpoliza_i" , nmpoliza);
-                mapaTworksupEnd.put("pv_cdtipsup_i" , alta?"9":"10");
+                mapaTworksupEnd.put("pv_cdtipsup_i" , "9");
                 mapaTworksupEnd.put("pv_nmsuplem_i" , nmsuplem);
                 mapaTworksupEnd.put("pv_nmsituac_i" , nmsituac);
                 endososManager.insertarTworksupEnd(mapaTworksupEnd);
@@ -2213,6 +2213,20 @@ public class EndososAction extends PrincipalCoreAction
                 kernelManager.insertaPolisit(mapaPolisit);
 				////// polisit muerto //////
                 ////////////////////////////
+                
+                //////////////////////////////
+                ////// inserta tworksup //////
+                Map<String,String>mapaTworksupEnd=new LinkedHashMap<String,String>(0);
+                mapaTworksupEnd.put("pv_cdunieco_i" , cdunieco);
+                mapaTworksupEnd.put("pv_cdramo_i"   , cdramo);
+                mapaTworksupEnd.put("pv_estado_i"   , estado);
+                mapaTworksupEnd.put("pv_nmpoliza_i" , nmpoliza);
+                mapaTworksupEnd.put("pv_cdtipsup_i" , "10");
+                mapaTworksupEnd.put("pv_nmsuplem_i" , nmsuplem);
+                mapaTworksupEnd.put("pv_nmsituac_i" , nmsituac);
+                endososManager.insertarTworksupEnd(mapaTworksupEnd);
+                ////// inserta tworksup //////
+                //////////////////////////////
                 
                 //////////////////////////
 		        ////// tarificacion //////
