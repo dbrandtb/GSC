@@ -1206,12 +1206,16 @@ public class EndososAction extends PrincipalCoreAction
 				String nmsolici = listaDocu.get(0).get("nmsolici");
 				String nmtramite = listaDocu.get(0).get("ntramite");
 				
+				String tipomov = "";
+				if(smap1.get("altabaja").equalsIgnoreCase("alta")) tipomov = "6";
+				else tipomov = "7";
+				
+				
 				ejecutaWSrecibosEndoso((String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"),
 						(String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"),
 						respEndCob.get("pv_nmsuplem_o"), respEndCob.get("pv_nsuplogi_o"), rutaCarpeta,
 						cdtipsitGS, sucursal, nmsolici, nmtramite,
-						true, "ACTUALIZA"
-						);
+						true, "ACTUALIZA", tipomov );
 				
 				
 				mensaje="Se ha confirmado el endoso con n&uacute;mero "+respEndCob.get("pv_nsuplogi_o");
@@ -2230,7 +2234,7 @@ public class EndososAction extends PrincipalCoreAction
 	/////////////////////////////////////////
 	
 	private boolean ejecutaWSrecibosEndoso(String cdunieco, String cdramo, String estado, String nmpoliza,
-			String nmsuplem, String numendoso, String rutaPoliza, String cdtipsitGS, String sucursal, String nmsolici,String ntramite, boolean async, String Op){
+			String nmsuplem, String numendoso, String rutaPoliza, String cdtipsitGS, String sucursal, String nmsolici,String ntramite, boolean async, String Op, String tipoMov){
 		boolean allInserted = true;
 		
 		logger.debug("*** Entrando a metodo Actualiza Recibos WS ice2sigs ENDOSO, para la poliza: " + nmpoliza + " sucursal: " + sucursal + "***");
@@ -2348,7 +2352,7 @@ public class EndososAction extends PrincipalCoreAction
 					paramsR.put("pv_dsdocume_i", "Recibo "+recibo.getNumRec()+" Endoso "+numendoso);
 					paramsR.put("pv_nmsolici_i", nmsolici);
 					paramsR.put("pv_ntramite_i", ntramite);
-					paramsR.put("pv_tipmov_i", "1");
+					paramsR.put("pv_tipmov_i", tipoMov);
 					
 					kernelManager.guardarArchivo(paramsR);
 				//}
