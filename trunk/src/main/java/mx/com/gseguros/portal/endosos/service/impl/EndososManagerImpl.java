@@ -127,6 +127,14 @@ public class EndososManagerImpl implements EndososManager
         return mapa;
 	}
 	
+	@Override
+	public void insertarTworksupEnd(Map<String, String> params) throws Exception
+	{
+		log.debug("EndososManager insertarTworksupEnd params: "+params);
+		endososDAO.insertarTworksupEnd(params);
+		log.debug("EndososManager insertarTworksupEnd end");
+	}
+	
 	/////////////////////////////////
 	////// getters and setters //////
 	/*/////////////////////////////*/

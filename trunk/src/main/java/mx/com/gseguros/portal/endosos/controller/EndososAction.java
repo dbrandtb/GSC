@@ -2139,6 +2139,20 @@ public class EndososAction extends PrincipalCoreAction
                 ////// valores por defecto //////
                 /////////////////////////////////
                 
+                //////////////////////////////
+                ////// inserta tworksup //////
+                Map<String,String>mapaTworksupEnd=new LinkedHashMap<String,String>(0);
+                mapaTworksupEnd.put("pv_cdunieco_i" , cdunieco);
+                mapaTworksupEnd.put("pv_cdramo_i"   , cdramo);
+                mapaTworksupEnd.put("pv_estado_i"   , estado);
+                mapaTworksupEnd.put("pv_nmpoliza_i" , nmpoliza);
+                mapaTworksupEnd.put("pv_cdtipsup_i" , alta?"9":"10");
+                mapaTworksupEnd.put("pv_nmsuplem_i" , nmsuplem);
+                mapaTworksupEnd.put("pv_nmsituac_i" , nmsituac);
+                endososManager.insertarTworksupEnd(mapaTworksupEnd);
+                ////// inserta tworksup //////
+                //////////////////////////////
+                
                 //////////////////////////
                 ////// tarificacion //////
                 Map<String,String>mapaSigsvalipolEnd=new LinkedHashMap<String,String>(0);
@@ -2170,6 +2184,67 @@ public class EndososAction extends PrincipalCoreAction
 				endososManager.calcularValorEndoso(mapaValorEndoso);
     			////// valor endoso //////
     			//////////////////////////
+			}
+			else
+			{
+				////////////////////////////
+				////// polisit muerto //////
+				Map<String,Object>mapaPolisit=new HashMap<String,Object>(0);
+                mapaPolisit.put("pv_cdunieco_i",    cdunieco);
+                mapaPolisit.put("pv_cdramo_i",      cdramo);
+                mapaPolisit.put("pv_estado_i",      estado);
+                mapaPolisit.put("pv_nmpoliza_i",    nmpoliza);
+                mapaPolisit.put("pv_nmsituac_i",    nmsituac);
+                mapaPolisit.put("pv_nmsuplem_i",    nmsuplem);
+                mapaPolisit.put("pv_status_i",      "V");
+                mapaPolisit.put("pv_cdtipsit_i",    cdtipsit);
+                mapaPolisit.put("pv_swreduci_i",    null);
+                mapaPolisit.put("pv_cdagrupa_i",    "1");
+                mapaPolisit.put("pv_cdestado_i",    "0");
+                mapaPolisit.put("pv_fefecsit_i",    fechaHoy);
+                mapaPolisit.put("pv_fecharef_i",    fechaHoy);
+                mapaPolisit.put("pv_cdgrupo_i",     null);
+                mapaPolisit.put("pv_nmsituaext_i",  null);
+                mapaPolisit.put("pv_nmsitaux_i",    null);
+                mapaPolisit.put("pv_nmsbsitext_i",  null);
+                mapaPolisit.put("pv_cdplan_i",      "1");
+                mapaPolisit.put("pv_cdasegur_i",    "30");
+                mapaPolisit.put("pv_accion_i",      "D");
+                kernelManager.insertaPolisit(mapaPolisit);
+				////// polisit muerto //////
+                ////////////////////////////
+                
+                //////////////////////////
+		        ////// tarificacion //////
+		        Map<String,String>mapaSigsvalipolEnd=new LinkedHashMap<String,String>(0);
+				mapaSigsvalipolEnd.put("pv_cdusuari_i" , cdusuari);
+				mapaSigsvalipolEnd.put("pv_cdelemen_i" , cdelemen);
+				mapaSigsvalipolEnd.put("pv_cdunieco_i" , cdunieco);
+				mapaSigsvalipolEnd.put("pv_cdramo_i"   , cdramo);
+				mapaSigsvalipolEnd.put("pv_estado_i"   , estado);
+				mapaSigsvalipolEnd.put("pv_nmpoliza_i" , nmpoliza);
+				mapaSigsvalipolEnd.put("pv_nmsituac_i" , nmsituac);
+				mapaSigsvalipolEnd.put("pv_nmsuplem_i" , nmsuplem);
+				mapaSigsvalipolEnd.put("pv_cdtipsit_i" , cdtipsit);
+				mapaSigsvalipolEnd.put("pv_cdtipsup_i" , "10");
+				endososManager.sigsvalipolEnd(mapaSigsvalipolEnd);
+		        ////// tarificacion //////
+				//////////////////////////
+				
+				//////////////////////////
+				////// valor endoso //////
+				Map<String,Object>mapaValorEndoso=new LinkedHashMap<String,Object>(0);
+				mapaValorEndoso.put("pv_cdunieco_i" , cdunieco);
+				mapaValorEndoso.put("pv_cdramo_i"   , cdramo);
+				mapaValorEndoso.put("pv_estado_i"   , estado);
+				mapaValorEndoso.put("pv_nmpoliza_i" , nmpoliza);
+				mapaValorEndoso.put("pv_nmsituac_i" , nmsituac);
+				mapaValorEndoso.put("pv_nmsuplem_i" , nmsuplem);
+				mapaValorEndoso.put("pv_feinival_i" , fechaHoy);
+				mapaValorEndoso.put("pv_cdtipsup_i" , "10");
+				endososManager.calcularValorEndoso(mapaValorEndoso);
+				////// valor endoso //////
+				//////////////////////////
 			}
 			
 			Map<String,String>paramConfirmarEndoso=new LinkedHashMap<String,String>(0);
