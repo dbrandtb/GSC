@@ -335,7 +335,7 @@ public class EndososAction extends PrincipalCoreAction
 			////// re generar los documentos //////
 		    ///////////////////////////////////////
 			
-			ejecutaWSclienteSaludEndoso((String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"), (String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"), respuestaEndosoNombres.get("pv_nmsuplem_o"), "ACTUALIZA");
+			ejecutaWSclienteSaludEndoso((String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"), (String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"), respuestaEndosoNombres.get("pv_nmsuplem_o"), "INSERTA");
 			
 			mensaje="Se ha guardado el endoso "+respuestaEndosoNombres.get("pv_nsuplogi_o");
 			success=true;
@@ -722,7 +722,7 @@ public class EndososAction extends PrincipalCoreAction
 			////// re generar los documentos //////
 		    ///////////////////////////////////////
 			
-			ejecutaWSclienteSaludEndoso(smap1.get("pv_cdunieco"), smap1.get("pv_cdramo"), smap1.get("pv_estado"), smap1.get("pv_nmpoliza"), resEndDomi.get("pv_nmsuplem_o"), "ACTUALIZA");
+			ejecutaWSclienteSaludEndoso(smap1.get("pv_cdunieco"), smap1.get("pv_cdramo"), smap1.get("pv_estado"), smap1.get("pv_nmpoliza"), resEndDomi.get("pv_nmsuplem_o"), "INSERTA");
 			
 		    mensaje="Se ha guardado el endoso "+resEndDomi.get("pv_nsuplogi_o");
 			success=true;
@@ -1215,7 +1215,7 @@ public class EndososAction extends PrincipalCoreAction
 						(String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"),
 						respEndCob.get("pv_nmsuplem_o"), respEndCob.get("pv_nsuplogi_o"), rutaCarpeta,
 						cdtipsitGS, sucursal, nmsolici, nmtramite,
-						true, "ACTUALIZA", tipomov );
+						true, "INSERTA", tipomov );
 				
 				
 				mensaje="Se ha confirmado el endoso "+respEndCob.get("pv_nsuplogi_o");
@@ -2335,7 +2335,7 @@ public class EndososAction extends PrincipalCoreAction
 		params.put("pv_nmpoliza_i", nmpoliza);
 		params.put("pv_nmsuplem_i", nmsuplem);
 		
-		if(StringUtils.isBlank(Op)) Op = "ACTUALIZA";
+		if(StringUtils.isBlank(Op)) Op = "INSERTA";
 		Operacion Operation = Operacion.valueOf(Op);
 		
 		WrapperResultados result = null;
@@ -2391,7 +2391,7 @@ public class EndososAction extends PrincipalCoreAction
 					}
 				}
 			}catch(Exception e){
-				logger.error("Error al actualizar recibo: "+recibo.getNumRec()+" tramite: "+ntramite);
+				logger.error("Error al insertar endoso recibo: "+recibo.getNumRec()+" tramite: "+ntramite);
 				try {
 					kernelManager.movBitacobro(
 							(String) params.get("pv_cdunieco_i"),
@@ -2465,7 +2465,7 @@ public class EndososAction extends PrincipalCoreAction
 		params.put("pv_nmpoliza_i", nmpoliza);
 		params.put("pv_nmsuplem_i", nmsuplem);
 		
-		if(StringUtils.isBlank(Op)) Op = "ACTUALIZA";
+		if(StringUtils.isBlank(Op)) Op = "INSERTA";
 		Operacion Operation = Operacion.valueOf(Op);
 		
 		WrapperResultados result = null;
@@ -2503,7 +2503,7 @@ public class EndososAction extends PrincipalCoreAction
 				params.put("MANAGER", kernelManager);
 				ice2sigsWebServices.ejecutaClienteSaludGS(Operation, cliente, this.getText("url.ws.ice2sigs"), params, true);
 			}catch(Exception e){
-				logger.error("Error al actualizar el cliente: " + cliente.getClaveCli(), e);
+				logger.error("Error al insertar endoso del cliente: " + cliente.getClaveCli(), e);
 				exito = false;
 			}
 		}
