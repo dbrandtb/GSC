@@ -1935,8 +1935,19 @@ public class EndososAction extends PrincipalCoreAction
 			String nmsuplem=respuestaIniciarEndoso.get("pv_nmsuplem_o");
 			String nsuplogi=respuestaIniciarEndoso.get("pv_nsuplogi_o");
 			
+			Map<String,String>paramsObtenerDatosMpolisit=new HashMap<String,String>();
+			paramsObtenerDatosMpolisit.put("pv_cdunieco_i" , cdunieco);
+			paramsObtenerDatosMpolisit.put("pv_cdramo_i"   , cdramo);
+			paramsObtenerDatosMpolisit.put("pv_estado_i"   , estado);
+			paramsObtenerDatosMpolisit.put("pv_nmpoliza_i" , nmpoliza);
+			Map<String,String>respuestaObtenerDatosMpolisit=endososManager.obtieneDatosMpolisit(paramsObtenerDatosMpolisit);
+			String nmsituacNuevo=respuestaObtenerDatosMpolisit.get("pv_nmsituac_o");
+			String cdplan=respuestaObtenerDatosMpolisit.get("pv_cdplan_o");
+			
 			if(alta)
 			{
+				nmsituac=nmsituacNuevo;
+				
 				//////////////////////
         		////// cdperson //////
 				String cdperson=kernelManager.generaCdperson();
@@ -1963,7 +1974,7 @@ public class EndososAction extends PrincipalCoreAction
                 mapaPolisit.put("pv_nmsituaext_i",  null);
                 mapaPolisit.put("pv_nmsitaux_i",    null);
                 mapaPolisit.put("pv_nmsbsitext_i",  null);
-                mapaPolisit.put("pv_cdplan_i",      "1");
+                mapaPolisit.put("pv_cdplan_i",      cdplan);
                 mapaPolisit.put("pv_cdasegur_i",    "30");
                 mapaPolisit.put("pv_accion_i",      "I");
                 kernelManager.insertaPolisit(mapaPolisit);
@@ -2187,6 +2198,8 @@ public class EndososAction extends PrincipalCoreAction
 			}
 			else
 			{
+				String cdperson = smap1.get("cdperson");
+				
 				////////////////////////////
 				////// polisit muerto //////
 				Map<String,Object>mapaPolisit=new HashMap<String,Object>(0);
@@ -2207,12 +2220,74 @@ public class EndososAction extends PrincipalCoreAction
                 mapaPolisit.put("pv_nmsituaext_i",  null);
                 mapaPolisit.put("pv_nmsitaux_i",    null);
                 mapaPolisit.put("pv_nmsbsitext_i",  null);
-                mapaPolisit.put("pv_cdplan_i",      "1");
+                mapaPolisit.put("pv_cdplan_i",      cdplan);
                 mapaPolisit.put("pv_cdasegur_i",    "30");
                 mapaPolisit.put("pv_accion_i",      "D");
                 kernelManager.insertaPolisit(mapaPolisit);
 				////// polisit muerto //////
                 ////////////////////////////
+                
+                ////////////////////////////
+                ////// valosit muerto //////                
+                
+                ////// 1. mapa valosit base //////
+                Map<String,String>mapaValosit=new HashMap<String,String>(0);
+                mapaValosit.put("pv_cdunieco",    cdunieco);
+                mapaValosit.put("pv_cdramo",      cdramo);
+                mapaValosit.put("pv_estado",      estado);
+                mapaValosit.put("pv_nmpoliza",    nmpoliza);
+                mapaValosit.put("pv_nmsituac",    nmsituac);
+                mapaValosit.put("pv_nmsuplem",    nmsuplem);
+                mapaValosit.put("pv_status",      "V");
+                mapaValosit.put("pv_cdtipsit",    cdtipsit);
+                mapaValosit.put("pv_accion_i",   "D");
+                ////// 1. mapa valosit base //////
+                
+                ////// 2. obtener el original //////
+                Map<String,String>mapaObtenerValosit=new HashMap<String,String>(0);
+                mapaObtenerValosit.put("pv_cdunieco_i" , cdunieco);
+                mapaObtenerValosit.put("pv_nmpoliza_i" , nmpoliza);
+                mapaObtenerValosit.put("pv_cdramo_i"   , cdramo);
+                mapaObtenerValosit.put("pv_estado_i"   , estado);
+                mapaObtenerValosit.put("pv_nmsituac_i" , nmsituac);
+                Map<String,Object>valositOriginal=kernelManager.obtieneValositSituac(mapaObtenerValosit);
+                ////// 2. obtener el original //////
+                
+                ////// 3. copiar los otvalor del original a la base //////
+                for(Entry<String,Object> en:valositOriginal.entrySet())
+                {
+                	String key=en.getKey();
+                	if(key.substring(0,3).equalsIgnoreCase("otv"))
+                	{
+                		mapaValosit.put("pv_"+key,(String)en.getValue());
+                	}
+                }
+                ////// 3. copiar los otvalor del original a la base //////
+                
+                kernelManager.insertaValoresSituaciones(mapaValosit);
+                
+                ////// valosit muerto//////
+                ///////////////////////////
+                
+                /////////////////////////////
+				////// mpoliper muerto //////
+				Map<String,Object>mapaMpoliper=new LinkedHashMap<String,Object>(0);
+				mapaMpoliper.put("pv_cdunieco_i" , cdunieco);
+				mapaMpoliper.put("pv_cdramo_i"   , cdramo);
+				mapaMpoliper.put("pv_estado_i"   , estado);
+				mapaMpoliper.put("pv_nmpoliza_i" , nmpoliza);
+				mapaMpoliper.put("pv_nmsituac_i" , nmsituac);
+				mapaMpoliper.put("pv_cdrol_i"    , "2");
+				mapaMpoliper.put("pv_cdperson_i" , cdperson);
+				mapaMpoliper.put("pv_nmsuplem_i" , nmsuplem);
+				mapaMpoliper.put("pv_status_i"   , "V");
+				mapaMpoliper.put("pv_nmorddom_i" , "1");
+				mapaMpoliper.put("pv_swreclam_i" , null);
+				mapaMpoliper.put("pv_accion_i"   , "D");
+				mapaMpoliper.put("pv_swexiper_i" , "N");
+				kernelManager.movMpoliper(mapaMpoliper);
+				////// mpoliper muerto //////
+				/////////////////////////////
                 
                 //////////////////////////////
                 ////// inserta tworksup //////

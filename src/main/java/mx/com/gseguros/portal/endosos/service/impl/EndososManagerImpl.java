@@ -135,6 +135,15 @@ public class EndososManagerImpl implements EndososManager
 		log.debug("EndososManager insertarTworksupEnd end");
 	}
 	
+	@Override
+	public Map<String, String> obtieneDatosMpolisit(Map<String, String> params) throws Exception
+	{
+		log.debug("EndososManager obtieneDatosMpolisit params: "+params);
+		Map<String,String> mapa=endososDAO.obtieneDatosMpolisit(params);
+		log.debug("EndososManager obtieneDatosMpolisit response map: "+mapa);
+        return mapa;
+	}
+	
 	/////////////////////////////////
 	////// getters and setters //////
 	/*/////////////////////////////*/
