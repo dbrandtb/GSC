@@ -82,14 +82,14 @@
 			<result>/jsp/portal/portal.jsp</result>
 		</action>
         
-        <action name="menuPrueba" class="menuAction" method="llenadoMenuPrincipal">
+        <action name="obtieneMenuPrincipal" class="menuAction" method="llenadoMenuPrincipal">
             <result name="input">/jsp/menu/menu.jsp</result>
             <result name="success" type="json">
                 <param name="root">listaMenu</param>
             </result>
         </action>
         
-        <action name="menuVertical" class="menuAction" method="llenadoMenuPrincipal">
+        <action name="obtieneMenuVertical" class="menuAction" method="llenadoMenuPrincipal">
             <result name="input">/jsp/menu/menu.jsp</result>
             <result name="success" type="json">
                 <param name="root">listaMenuVertical</param>
