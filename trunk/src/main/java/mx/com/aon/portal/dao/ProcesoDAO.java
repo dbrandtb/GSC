@@ -3272,9 +3272,13 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			}
 	        	
         	recibo.setIva(rs.getDouble("iva"));
+        	logger.debug(">>>>>  Valor de iva: " +rs.getDouble("iva"));
+        	
         	recibo.setNumAgt(rs.getInt("numAgt"));
         	recibo.setNumCli(rs.getInt("numCli"));
         	recibo.setNumEnd(rs.getInt("numEnd"));
+        	logger.debug(">>>>>  Valor de numEnd: " +rs.getInt("numEnd"));
+        	
         	recibo.setNumMon(rs.getInt("numMon"));
         	recibo.setNumPol(rs.getInt("numPol"));
         	recibo.setNumRam(rs.getInt("numRam"));
@@ -3283,12 +3287,16 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
         	recibo.setPriCom(rs.getDouble("priCom"));
         	recibo.setPriDot(rs.getDouble("priDot"));
         	recibo.setPrima(rs.getDouble("prima"));
+        	logger.debug(">>>>>  Valor de prima: " +rs.getDouble("prima"));
+        	
         	recibo.setRecargo(rs.getDouble("recargo"));
         	recibo.setRmdbRn(rs.getInt("rmdbRn"));
         	recibo.setSaldo(rs.getDouble("saldo"));
         	recibo.setStatusr(rs.getString("statusr"));
         	
         	String tipoEndoso = rs.getString("tipEnd");
+        	logger.debug(">>>>>  Valor de tipEnd: " +rs.getString("tipEnd"));
+        	
         	if(tipoEndoso == null)tipoEndoso = "";
         	recibo.setTipEnd(tipoEndoso);
         	
