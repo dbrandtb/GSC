@@ -20,6 +20,112 @@ function debug(a,b,c,d)
 	}
 }
 
+function validarRFC(rfc,tper)
+{
+	debug('validarRFC',rfc,tper);
+	var valido=rfc&&rfc.length>0&&tper&&tper.length>0;
+	if(valido)
+	{
+		var regexLetras=/^[a-zA-Z]*$/;
+		var regexNumeros=/^[0-9]*$/;
+		var regexLetrasNumeros=/^[a-zA-Z0-9]*$/;
+		if(tper=='F'||tper=='S')
+		{
+			valido=rfc.length==10||rfc.length==13;
+			if(valido)
+			{
+				// M A V A 9 0 0 8 1 7 J 3 6
+				//0 1 2 3 4 5 6 7 8 9 0 1 2 3
+				var letras    = rfc.substring(0,4);
+				var anio      = rfc.substring(4,6);
+				var mes       = rfc.substring(6,8);
+				var dia       = rfc.substring(8,10);
+				var homoclave = rfc.length==13?rfc.substring(10,13):false;
+				debug(letras,anio,mes,dia);
+				valido=valido&&regexLetras.test(letras);
+				debug('letras',valido);
+				valido=valido&&regexNumeros.test(anio);
+				debug('anio',valido);
+				valido=valido&&regexNumeros.test(mes);
+				debug('mes',valido);
+				valido=valido&&regexNumeros.test(dia);
+				debug('dia',valido);
+				if(homoclave)
+				{
+					valido=valido&&regexLetrasNumeros.test(homoclave);
+					debug('homoclave',valido);
+				}
+				if(valido)
+				{
+					valido=valido&&mes*1<13;
+					debug('mes<13',valido);
+					valido=valido&&dia*1<32;
+					debug('dia<32',valido);
+				}
+			}
+		}
+		else if(tper=='M')
+		{
+			valido=rfc.length==9;
+			if(valido)
+			{
+				// A B C 9 0 0 8 1 7
+				//0 1 2 3 4 5 6 7 8 9
+				var letras    = rfc.substring(0,3);
+				var anio      = rfc.substring(3,5);
+				var mes       = rfc.substring(5,7);
+				var dia       = rfc.substring(7,9);
+				debug(letras,anio,mes,dia);
+				valido=valido&&regexLetras.test(letras);
+				debug('letras',valido);
+				valido=valido&&regexNumeros.test(anio);
+				debug('anio',valido);
+				valido=valido&&regexNumeros.test(mes);
+				debug('mes',valido);
+				valido=valido&&regexNumeros.test(dia);
+				debug('dia',valido);
+				if(valido)
+				{
+					valido=valido&&mes*1<13;
+					debug('mes<13',valido);
+					valido=valido&&dia*1<32;
+					debug('dia<32',valido);
+				}
+			}
+		}
+	}
+	if(!valido)
+	{
+		Ext.create('Ext.window.Window',
+		{
+			title        : 'Error'
+			,height      : 130
+			,width       : 300
+			,modal       : true
+			,padding     : 5
+			,items       :
+			[
+			    {
+			    	xtype : 'label'
+			    	,text : 'El RFC "'+rfc+'" no es válido para persona '+(tper=='F'?'Física':(tper=='M'?'Moral':'tipo régimen simplificado'))
+			    }
+			]
+		    ,buttonAlign : 'center'
+		    ,buttons     :
+		    [
+		        {
+		        	text     : 'Aceptar'
+		        	,handler : function()
+		        	{
+		        		this.up().up().destroy();
+		        	}
+		        }
+		    ]
+		}).show();
+	}
+	return valido;
+}
+
 ////////////////////////////
 ////// INICIO MODELOS //////
 ////////////////////////////

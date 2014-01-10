@@ -325,7 +325,7 @@ public class ComplementariosAction extends PrincipalCoreAction
             	parametros = new HashMap<String, String>();
             }
             parametros.putAll(map1);
-            parametros.put("pv_status", "W");
+            parametros.put("pv_status", "V");
             parametros.put("pv_nmsuplem", "0");
             kernelManager.pMovTvalopol(parametros);
             

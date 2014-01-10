@@ -322,8 +322,7 @@
                                         ||recordContApart.get("Apellido_Materno").length==0
                                         )
                                         )
-                                        ||!recordContApart.get("cdrfc")
-                                        ||recordContApart.get("cdrfc").length==0
+                                        ||!validarRFC(recordContApart.get("cdrfc"),recordContApart.get("tpersona"))
                                         )
                                     {
                                         //console.log("#incompleto:");
@@ -370,8 +369,7 @@
                                         ||recordAsegu.get("Apellido_Paterno").length==0
                                         ||!recordAsegu.get("Apellido_Materno")
                                         ||recordAsegu.get("Apellido_Materno").length==0
-                                        ||!recordAsegu.get("cdrfc")
-                                        ||recordAsegu.get("cdrfc").length==0
+                                        ||!validarRFC(recordAsegu.get("cdrfc"),recordAsegu.get("tpersona"))
                                         )
                                     {
                                         //console.log("#incompleto:");
@@ -881,7 +879,7 @@ debug("validarYGuardar flag:2");
                 {
                 	gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdperson",'');
                 	gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("swexiper",'N');
-                    if(field.getValue().length>9)
+                    if(field.getValue().length>8)
                     {
                         clearTimeout(timeoutBuscarRFCBp2);
                         timeoutBuscarRFCBp2=setTimeout(function()
@@ -995,7 +993,7 @@ debug("validarYGuardar flag:2");
             	{
             		gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdperson",'');
             		gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("swexiper",'N');
-            		if(field.getValue().length>9)
+            		if(field.getValue().length>8)
             		{
             			clearTimeout(timeoutBuscarRFCBp2);
             			timeoutBuscarRFCBp2=setTimeout(function()
@@ -1788,8 +1786,7 @@ debug("validarYGuardar flag:2");
                                         ||recordContApart.get("Apellido_Materno").length==0
                                         )
                                         )
-                                        ||!recordContApart.get("cdrfc")
-                                        ||recordContApart.get("cdrfc").length==0
+                                        ||!validarRFC(recordContApart.get("cdrfc"),recordContApart.get("tpersona"))
                                         )
                                     {
                                         //console.log("#incompleto:");
@@ -1836,8 +1833,7 @@ debug("validarYGuardar flag:2");
                                         ||recordAsegu.get("Apellido_Paterno").length==0
                                         ||!recordAsegu.get("Apellido_Materno")
                                         ||recordAsegu.get("Apellido_Materno").length==0
-                                        ||!recordAsegu.get("cdrfc")
-                                        ||recordAsegu.get("cdrfc").length==0
+                                        ||!validarRFC(recordAsegu.get("cdrfc"),recordAsegu.get("tpersona"))
                             			)
                             		{
 	                            		//console.log("#incompleto:");
