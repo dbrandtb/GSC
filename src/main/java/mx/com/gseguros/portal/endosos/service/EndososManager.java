@@ -19,4 +19,5 @@ public interface EndososManager
 	public Map<String,String>        iniciarEndoso(Map<String,String>params) throws Exception;
 	public void                      insertarTworksupEnd(Map<String,String>params) throws Exception;
 	public Map<String, String>       obtieneDatosMpolisit(Map<String, String> params) throws Exception;
+	public List<Map<String, String>> obtenerNombreEndosos() throws Exception;
 }
