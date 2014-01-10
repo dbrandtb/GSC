@@ -54,6 +54,7 @@
 		<pattern>/seguridad/cotizarSaludVital.action</pattern>
 		<pattern>/cotizacionVital.action</pattern>
 		<pattern>/jsp/extjs4/asegurados.jsp</pattern>
+		<pattern>/jsp/extjs4/aseguradosGB.jsp</pattern>
 
 		<pattern>/dinosaurio.action</pattern>
 		<pattern>/jsp/extjs4/denegado.jsp</pattern>
