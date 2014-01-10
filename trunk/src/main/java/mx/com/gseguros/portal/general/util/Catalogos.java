@@ -22,7 +22,8 @@ public enum Catalogos {
 	TIPOS_POLIZA("TIPOPOL"),
 	TIPSIT("TIPSIT"),
 	RAMOS("RAMOS"),
-	ROLES_SISTEMA("");
+	ROLES_SISTEMA(""),
+	ENDOSOS("ENDOSOS");
 
 	private String cdTabla;
 

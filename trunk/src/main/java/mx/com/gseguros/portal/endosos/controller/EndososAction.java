@@ -2019,7 +2019,7 @@ public class EndososAction extends PrincipalCoreAction
                 ////// 3. copiar los otvalor del titular a la base //////
                 
                 ////// 4. sustituir los otvalor por los nuevos del form //////
-                for(Entry<String,String> en:smap2.entrySet())
+                for(Entry<String,String> en:smap1.entrySet())
                 {
                 	String key=en.getKey();
                 	if(key.substring(0,3).equalsIgnoreCase("par"))

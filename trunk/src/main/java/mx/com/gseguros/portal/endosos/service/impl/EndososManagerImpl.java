@@ -144,6 +144,16 @@ public class EndososManagerImpl implements EndososManager
         return mapa;
 	}
 	
+	@Override
+	public List<Map<String, String>> obtenerNombreEndosos() throws Exception
+	{
+		log.debug("EndososManager obtenerNombreEndosos");
+		List<Map<String,String>> lista=endososDAO.obtenerNombreEndosos();
+		lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
+		log.debug("EndososManager obtenerNombreEndosos lista size: "+lista.size());
+		return lista;
+	}
+	
 	/////////////////////////////////
 	////// getters and setters //////
 	/*/////////////////////////////*/

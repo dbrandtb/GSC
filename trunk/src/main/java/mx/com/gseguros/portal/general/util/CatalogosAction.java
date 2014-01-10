@@ -7,6 +7,7 @@ import java.util.Map;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal2.web.GenericVO;
+import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
 
 import org.apache.log4j.Logger;
@@ -24,6 +25,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 	
 	private CatalogosManager       catalogosManager;
 	private KernelManagerSustituto kernelManager;
+	private EndososManager         endososManager;
     
     private boolean success;
     
@@ -105,6 +107,13 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case ROLES_SISTEMA:
 					lista = catalogosManager.obtieneRolesSistema();
 					break;
+				case ENDOSOS:
+					List<Map<String,String>>nombresEndosos=endososManager.obtenerNombreEndosos();
+					lista=new ArrayList<GenericVO>(0);
+					for(Map<String,String> nombre:nombresEndosos) {
+						lista.add(new GenericVO(nombre.get("CDTIPSUP"), nombre.get("DSTIPSUP")));
+					}
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + nombreCatalogo);
 					//break;
@@ -157,6 +166,10 @@ public class CatalogosAction extends PrincipalCoreAction {
 
 	public void setKernelManager(KernelManagerSustituto kernelManager) {
 		this.kernelManager = kernelManager;
+	}
+
+	public void setEndososManager(EndososManager endososManager) {
+		this.endososManager = endososManager;
 	}
 	
 }

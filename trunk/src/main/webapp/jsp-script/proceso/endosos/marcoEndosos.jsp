@@ -15,6 +15,7 @@
     var marendUrlDoc              = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza" />';
     var marendStorePolizas;
     var marendStoreAsegurados;
+    var marendStoreLigas;
     /*///////////////////*/
     ////// variables //////
     ///////////////////////
@@ -618,41 +619,77 @@ Ext.onReady(function()
             ,data         :
             [
                 {
-                	texto    : 'Endoso de nombres'
+                	texto    : '2'//nombres
                 	,liga    : '<s:url namespace="/endosos" action="pantallaEndosoNombres" />'
                 	,funcion : 'endosonombres'
                 }
                 ,{
-                	texto    : 'Endoso de domicilio'
+                	texto    : '3'//domicilio
                 	,liga    : '<s:url namespace="/endosos" action="pantallaEndosoDomicilio" />'
                 	,funcion : 'endosodomicilio'
                 }
                 ,{
-                    texto    : 'Endoso de correcci&oacute;n de asegurado'
+                    texto    : '4'//valosit
                     ,liga    : '<s:url namespace="/endosos" action="endosoValositBasico" />'
                     ,funcion : 'endosovalositbasico'
                 }
                 ,{
-                    texto    : 'Endoso de alta de coberturas'
+                    texto    : '6'//alta coberturas
                     ,liga    : '<s:url namespace="/endosos" action="pantallaEndosoCoberturas" />'
                     ,funcion : 'endosocoberturasalta'
                 }
                 ,{
-                    texto    : 'Endoso de baja de coberturas'
+                    texto    : '7'//baja coberturas
                     ,liga    : '<s:url namespace="/endosos" action="pantallaEndosoCoberturas" />'
                     ,funcion : 'endosocoberturasbaja'
                 }
                 ,{
-                    texto    : 'Endoso de cl&aacute;usulas'
+                    texto    : '8'//clausulas
                     ,liga    : '<s:url namespace="/endosos" action="pantallaEndosoClausulas" />'
                     ,funcion : 'endosoclausulas'
                 }
                 ,{
-                    texto    : 'Endoso de alta o baja de asegurado'
+                    texto    : '9'//alta asegurado
                     ,liga    : '<s:url namespace="/endosos" action="pantallaEndosoAltaBajaAsegurado" />'
                     ,funcion : 'endosoaltabajaasegurado'
                 }
             ]
+        }
+        ,listeners : 
+        {
+        	load : function()
+        	{
+
+        	    Ext.Ajax.request(
+        	    {
+        	        url      : marendurlcata
+        	        ,params  :
+        	        {
+        	            catalogo : 'ENDOSOS'
+        	        }
+        	        ,success : function(response)
+        	        {
+        	            var json=Ext.decode(response.responseText);
+        	            debug(json);
+        	            for(var i=0;i<json.lista.length;i++)
+        	            {
+        	                var cdtipsup=json.lista[i].key*1;
+        	                var dstipsup=json.lista[i].value;
+        	                debug('buscando ',cdtipsup,dstipsup);
+        	                var contador=0;
+        	                marendStoreLigas.each(function(liga)
+        	                {
+        	                    debug('->en ',liga.get('texto'));
+        	                    if(liga.get('texto')==cdtipsup)
+        	                    {
+        	                        liga.set('texto',dstipsup);
+        	                    }
+        	                });
+        	            }
+        	        }
+        	        
+        	    });
+        	}
         }
     });
     
@@ -1113,6 +1150,10 @@ Ext.onReady(function()
                             {
                                 text='Padre'
                             }
+            	    		else if(value=='D')
+                            {
+                                text='Dependiente'
+                            }
             	    		return text;
             	    	}
             	    }
@@ -1193,7 +1234,7 @@ Ext.onReady(function()
                     {
                         style        : 'margin-right : 5px;'
                         ,id          : 'marendMenuOperaciones'
-                        ,width       : 230
+                        ,width       : 450
                         ,region      : 'west'
                         ,collapsible : true
                         ,margins     : '0 5 0 0'
@@ -1238,38 +1279,7 @@ Ext.onReady(function()
     
     //////////////////////
     ////// cargador //////
-    /*//////////////////*
-    Ext.define('LoaderForm',
-    {
-        extend:'Modelo1',
-        proxy:
-        {
-            extraParams:{
-            },
-            type:'ajax',
-            url : urlCargar,
-            reader:{
-                type:'json'
-            }
-        }
-    });
-
-    var loaderForm=Ext.ModelManager.getModel('LoaderForm');
-    loaderForm.load(123, {
-        success: function(resp) {
-            //console.log(resp);
-            formPanel.loadRecord(resp);
-        },
-        failure:function()
-        {
-            Ext.Msg.show({
-                title:'Error',
-                icon: Ext.Msg.ERROR,
-                msg: 'Error al cargar',
-                buttons: Ext.Msg.OK
-            });
-        }
-    });
+    /*//////////////////*/
     /*//////////////////*/
     ////// cargador //////
     //////////////////////

@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.endosos.dao.impl;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import javax.sql.DataSource;
 import mx.com.aon.portal.dao.WrapperResultadosGeneric;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
+import mx.com.gseguros.portal.dao.impl.DinamicMapper;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
 import mx.com.gseguros.utils.Utilerias;
@@ -472,6 +474,27 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			
 			declareParameter(new SqlOutParameter("pv_nmsituac_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_cdplan_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String,String>> obtenerNombreEndosos() throws Exception
+	{
+		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerNombreEndosos(this.getDataSource()), new HashMap<String,String>());
+		return (List<Map<String,String>>) resultadoMap.get("pv_registro_o");
+	}
+	
+	protected class ObtenerNombreEndosos extends StoredProcedure
+	{
+		protected ObtenerNombreEndosos(DataSource dataSource)
+		{
+			super(dataSource, "PKG_LISTAS.P_GET_TTIPSUPL");
+			
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			declareParameter(new SqlOutParameter("pv_messages_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
