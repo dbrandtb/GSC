@@ -15,39 +15,6 @@
 
 <link rel="stylesheet" type="text/css" href="${ctx}/resources/extjs/resources/css/ext-all.css" />
 <link rel="stylesheet" type="text/css" href="${ctx}/resources/extjs/resources/css/xtheme-gray.css" />	
-<!-- ESTE BLOQUE IMPORTA jQUERY Y REEMPLAZA LA LIGA a cotizacion vital 2 -->
-<script src="${ctx}/resources/extjs4/jquery-1.10.2.min.js" ></script>
-<script>
-    var miIntervalCambioLiga;
-    function reemplazaLiga()
-    {
-        var $cmp=$("li a[href*='null?CDTITULO']");
-        if($cmp.length>0)
-        {
-            $cmp.attr({
-                href:'javascript:LoadPage("/cotizacionVital.action");'
-            });
-            $cmp.parent().parent().append(
-            		$("<li />").attr({class:"x-menu-list-item"})
-            		.append(
-            		$("<a />")
-            		.attr({href:'javascript:LoadPage("/mesacontrol/principal.action")',
-            			class:"x-menu-item"})
-            		.html('<img src="${ctx}/resources/images/default/s.gif" class="x-menu-item-icon ">Mesa de control')
-            		));
-            window.clearInterval(miIntervalCambioLiga);
-            //window.console&&console.log("STOP");
-        }
-        else
-        {
-            //window.console&&console.log("SEARCHING LIGA...");
-        }
-    }
-    $(document).ready(function(){
-        //miIntervalCambioLiga=setInterval(reemplazaLiga,500);
-    });
-</script>
-<!-- FIN ESTE BLOQUE IMPORTA jQUERY Y REEMPLAZA LA LIGA a cotizacion vital 2 -->
 
 <!-- Estilo para algunos elementos de las secciones -->
 <link href="${ctx}/resources/css/secciones.css" rel="stylesheet" type="text/css" />
