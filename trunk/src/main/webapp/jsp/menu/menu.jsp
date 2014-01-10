@@ -90,7 +90,7 @@ Ext.onReady(function(){
 	//Cargar Contenido para el Menu Horizontal		
 	var conn = new Ext.data.Connection();
 	conn.request({
-		url: 'menuPrueba.action',
+		url: 'obtieneMenuPrincipal.action',
 		success: function(a){
 			var tb = new Ext.Toolbar({
 				items: Ext.util.JSON.decode(a.responseText),
@@ -117,7 +117,7 @@ Ext.onReady(function(){
 	//Cargar Contenido para el Menu Vertical
 	var conn2 = new Ext.data.Connection();
 	conn2.request({
-		url: 'menuVertical.action',
+		url: 'obtieneMenuVertical.action',
 		success: function(a){
 			//Se crea el nodo del menu vertical:
 			var tagUL = document.createElement("ul");
