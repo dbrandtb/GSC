@@ -1,24 +1,14 @@
 ///////////////////////////////////////
 ////// ini catalogos de tatrisit //////
 ///////////////////////////////////////
-var comboGeneros, storeGeneros; // 1
 // fecha nacimiento 2
-var campoCodigoPostal; // 3
 var comboEstados, storeEstados; // 4
 // var comboCiudad,storeCiudades; //4 X(
 var comboDeducible, storeDeducible; // 5
-var comboCopago, storeCopagos; // 6
-var comboSumaAsegurada, storeSumasAseguradas; // 7
-var comboCirculoHospitalario, storeCirculoHospitalario; // 8
-var comboCoberturaVacunas, storeCoberturaVacunas; // 9
-var comboCoberturaPrevencionEnfermedadesAdultos, storeCoberturaPrevencionEnfermedadesAdultos; // 10
-var comboMaternidad, storeMaternidad; // 11
-var comboSumaAseguradaMaternidad, storeSumaAseguradaMaternidad; // 12
-var comboBaseTabuladorReembolso, storeBaseTabuladorReembolso; // 13
-var comboCostoEmergenciaExtranjero, storeCostoEmergenciaExtranjero; // 14
-var comboCobElimPenCambioZona, storeCobElimPenCambioZona; // 15
+var comboCoberturaOrganos, storeCoberturaOrganos; // 9
+var comboCoberturaEmbarazo, storeCoberturaEmbarazo; // 10
+var comboCoberturaCongenitos, storeCoberturaCongenitos; // 14
 var comboRoles, storeRoles; // 16
-var comboMunicipios, storeMunicipios; // 17 --- va en el 5
 // /////////////////////////////////////
 // //// fin catalogos de tatrisit //////
 // /////////////////////////////////////
@@ -150,13 +140,31 @@ Ext
 					name : 'orden_parentesco'
 				} ]
 			});
+			
+			Ext.define('IncisoSaludGB',
+					{
+					    extend:'Ext.data.Model',
+					    fields:
+					    [
+					        {name:'id',                 type:'numeric'},
+					        {name:'rol',                type:'GeRol'},
+					        {name:'fechaNacimiento',    type:'numeric'},
+					        {name:'sexo',               type:'GeSexo'},
+					        {name:'nombre',             type:'string'},
+					        {name:'segundoNombre',      type:'string'},
+					        {name:'apellidoPaterno',    type:'string'},
+					        {name:'apellidoMaterno',    type:'string'}
+					    ]
+					});
 
 			// ////////////////////////////
 			// //// Inicio de stores //////
 			// ////////////////////////////
 
-			// 1 sexo (GRID)
-			storeGeneros = new Ext.data.Store(
+			
+
+			// 4 estados
+			storeEstados = new Ext.data.Store(
 					{
 						model : 'Generic',
 						autoLoad : true,
@@ -165,50 +173,7 @@ Ext
 							url : _URL_OBTEN_CATALOGO_GENERICO,
 							extraParams : {
 								catalogo : constanteTatrisitPantallaCotiza,
-								'params.cdatribu' : CDATRIBU_SEXO,
-								'params.cdtipsit' : inputCdtipsit
-							},
-							reader : {
-								type : 'json',
-								root : 'lista'
-							}
-						}
-					});
-
-			// 4 estados
-			storeEstados = new Ext.data.Store(
-					{
-						model : 'Generic',
-						autoLoad : false,
-						proxy : {
-							type : 'ajax',
-							url : _URL_OBTEN_CATALOGO_GENERICO,
-							extraParams : {
-								catalogo : constanteTatrisitPantallaCotiza,
-								'params.cdatribu' : CDATRIBU_ESTADO,
-								'params.cdtipsit' : inputCdtipsit
-							},
-							reader : {
-								type : 'json',
-								root : 'lista'
-							}
-						}
-					/*
-					 * , sorters: [ { property : 'value', direction: 'ASC' } ]
-					 */
-					});
-
-			// 17 municipios
-			storeMunicipios = new Ext.data.Store(
-					{
-						model : 'Generic',
-						autoLoad : false,
-						proxy : {
-							type : 'ajax',
-							url : _URL_OBTEN_CATALOGO_GENERICO,
-							extraParams : {
-								catalogo : constanteTatrisitPantallaCotiza,
-								'params.cdatribu' : CDATRIBU_MUNICIPIO,
+								'params.cdatribu' : 3,
 								'params.cdtipsit' : inputCdtipsit
 							},
 							reader : {
@@ -239,7 +204,7 @@ Ext
 							url : _URL_OBTEN_CATALOGO_GENERICO,
 							extraParams : {
 								catalogo : constanteTatrisitPantallaCotiza,
-								'params.cdatribu' : CDATRIBU_DEDUCIBLE,
+								'params.cdatribu' : 4,
 								'params.cdtipsit' : inputCdtipsit
 							},
 							reader : {
@@ -249,71 +214,11 @@ Ext
 						}
 					});
 
-			// 6 copago
-			storeCopagos = new Ext.data.Store(
-					{
-						model : 'Generic',
-						autoLoad : true,
-						proxy : {
-							type : 'ajax',
-							url : _URL_OBTEN_CATALOGO_GENERICO,
-							extraParams : {
-								catalogo : constanteTatrisitPantallaCotiza,
-								'params.cdatribu' : CDATRIBU_COPAGO,
-								'params.cdtipsit' : inputCdtipsit
-							},
-							reader : {
-								type : 'json',
-								root : 'lista'
-							}
-						}
-					});
+			
 
-			// 7 suma asegurada
-			storeSumasAseguradas = new Ext.data.Store(
-					{
-						model : 'Generic',
-						autoLoad : true,
-						proxy : {
-							type : 'ajax',
-							url : _URL_OBTEN_CATALOGO_GENERICO,
-							extraParams : {
-								catalogo : constanteTatrisitPantallaCotiza,
-								'params.cdatribu' : CDATRIBU_SUMA_ASEGURADA,
-								'params.cdtipsit' : inputCdtipsit
-							},
-							reader : {
-								type : 'json',
-								root : 'lista'
-							}
-						}
-					});
-
-			// 8 circulo hospitalario
-			storeCirculoHospitalario = new Ext.data.Store(
-					{
-						model : 'Generic',
-						autoLoad : true,
-						proxy : {
-							type : 'ajax',
-							url : _URL_OBTEN_CATALOGO_GENERICO,
-							extraParams : {
-								catalogo : constanteTatrisitPantallaCotiza,
-								'params.cdatribu' : CDATRIBU_CIRCULO_HOSPITALARIO,
-								'params.cdtipsit' : inputCdtipsit
-							},
-							reader : {
-								type : 'json',
-								root : 'lista'
-							}
-						}
-					/*
-					 * , sorters: [ { property : 'value', direction: 'ASC' } ]
-					 */
-					});
 
 			// 9 cobertura vacunas
-			storeCoberturaVacunas = new Ext.data.Store(
+			storeCoberturaOrganos = new Ext.data.Store(
 					{
 						model : 'Generic',
 						autoLoad : true,
@@ -322,7 +227,7 @@ Ext
 							url : _URL_OBTEN_CATALOGO_GENERICO,
 							extraParams : {
 								catalogo : constanteTatrisitPantallaCotiza,
-								'params.cdatribu' : CDATRIBU_COBERTURA_VACUNAS,
+								'params.cdatribu' : 5,
 								'params.cdtipsit' : inputCdtipsit
 							},
 							reader : {
@@ -333,7 +238,7 @@ Ext
 					});
 
 			// 10 enfemedades adultos
-			storeCoberturaPrevencionEnfermedadesAdultos = new Ext.data.Store(
+			storeCoberturaEmbarazo = new Ext.data.Store(
 					{
 						model : 'Generic',
 						autoLoad : true,
@@ -342,7 +247,7 @@ Ext
 							url : _URL_OBTEN_CATALOGO_GENERICO,
 							extraParams : {
 								catalogo:constanteTatrisitPantallaCotiza,
-								'params.cdatribu' : CDATRIBU_COBERTURA_PREV_ENF_ADULTOS,
+								'params.cdatribu' : 6,
 								'params.cdtipsit' : inputCdtipsit
 							},
 							reader : {
@@ -351,67 +256,9 @@ Ext
 							}
 						}
 					});
-
-			// 11 maternidad
-			storeMaternidad = new Ext.data.Store({
-				model : 'Generic',
-				autoLoad : true,
-				proxy : {
-					type : 'ajax',
-					url : _URL_OBTEN_CATALOGO_GENERICO,
-					extraParams : {
-						catalogo:constanteTatrisitPantallaCotiza,
-						'params.cdatribu' : CDATRIBU_MATERNIDAD,
-						'params.cdtipsit' : inputCdtipsit
-					},
-					reader : {
-						type : 'json',
-						root : 'lista'
-					}
-				}
-			});
-
-			// 12 suma maternidad
-			storeSumaAseguradaMaternidad = new Ext.data.Store(
-					{
-						model : 'Generic',
-						autoLoad : true,
-						proxy : {
-							type : 'ajax',
-							url : _URL_OBTEN_CATALOGO_GENERICO,
-							extraParams : {
-								catalogo:constanteTatrisitPantallaCotiza,
-								'params.cdatribu' : CDATRIBU_SUMA_ASEGUARADA_MATERNIDAD,
-								'params.cdtipsit' : inputCdtipsit
-							},
-							reader : {
-								type : 'json',
-								root : 'lista'
-							}
-						}
-					});
-
-			// 13 base tabulador reembolso
-			storeBaseTabuladorReembolso = new Ext.data.Store({
-				model : 'Generic',
-				autoLoad : true,
-				proxy : {
-					type : 'ajax',
-					url : _URL_OBTEN_CATALOGO_GENERICO,
-					extraParams : {
-						catalogo:constanteTatrisitPantallaCotiza,
-						'params.cdatribu' : CDATRIBU_BASE_TABULADOR_REEMBOLSO,
-						'params.cdtipsit' : inputCdtipsit
-					},
-					reader : {
-						type : 'json',
-						root : 'lista'
-					}
-				}
-			});
 
 			// 14 emergencia extranjero
-			storeCostoEmergenciaExtranjero = new Ext.data.Store(
+			storeCoberturaCongenitos = new Ext.data.Store(
 					{
 						model : 'Generic',
 						autoLoad : true,
@@ -420,7 +267,7 @@ Ext
 							url : _URL_OBTEN_CATALOGO_GENERICO,
 							extraParams : {
 								catalogo:constanteTatrisitPantallaCotiza,
-								'params.cdatribu' : CDATRIBU_COSTO_EMERGENCIA_EXTRANJERO,
+								'params.cdatribu' : 7,
 								'params.cdtipsit' : inputCdtipsit
 							},
 							reader : {
@@ -429,25 +276,6 @@ Ext
 							}
 						}
 					});
-
-			// 15 cobertura eliminacion penalizaacion cambio zona
-			storeCobElimPenCambioZona = new Ext.data.Store({
-				model : 'Generic',
-				autoLoad : true,
-				proxy : {
-					type : 'ajax',
-					url : _URL_OBTEN_CATALOGO_GENERICO,
-					extraParams : {
-						catalogo:constanteTatrisitPantallaCotiza,
-						'params.cdatribu' : CDATRIBU_COB_ELIM_PEN_CAMBIO_ZONA,
-						'params.cdtipsit' : inputCdtipsit
-					},
-					reader : {
-						type : 'json',
-						root : 'lista'
-					}
-				}
-			});
 
 			// 16 roles (GRID)
 			storeRoles = new Ext.data.Store({
@@ -458,7 +286,7 @@ Ext
 					url : _URL_OBTEN_CATALOGO_GENERICO,
 					extraParams : {
 						catalogo:constanteTatrisitPantallaCotiza,
-						'params.cdatribu' : CDATRIBU_ROL,
+						'params.cdatribu' : 1,
 						'params.cdtipsit' : inputCdtipsit
 					},
 					reader : {
@@ -471,7 +299,7 @@ Ext
 			storeIncisos = new Ext.data.Store({
 				// destroy the store if the grid is destroyed
 				autoDestroy : true,
-				model : 'IncisoSalud'/*
+				model : 'IncisoSaludGB'/*
 										 * , data: [ { rol:new
 										 * Generic({'key':'20','value':'Tomador'}),
 										 * fechaNacimiento:new Date(), sexo:new
@@ -570,80 +398,6 @@ Ext
 			// //////
 			// ////////////////////////////////////////////////////////////////////
 
-			// 1 sexo (GRID)
-			comboGeneros = Ext.create('Ext.form.ComboBox', {
-				id : 'comboGeneros',
-				store : storeGeneros,
-				queryMode : 'local',
-				displayField : 'value',
-				valueField : 'key',
-				allowBlank : false,
-				editable : false
-			});
-
-			// 3 codigo postal
-			campoCodigoPostal = Ext
-					.create(
-							'Ext.form.field.Text',
-							{
-								fieldLabel : 'C&oacute;digo postal',
-								name : 'codigoPostal',
-								allowBlank : false,
-								maskRe : /[0-9]/,
-								regex : /[0-9]/,
-								listeners : {
-									blur : function(el) {
-										// comboEstados.setLoading(true);
-										if (inputCdtipsit == 'SN'
-												&& (campoCodigoPostal
-														.getValue() < 36000 || campoCodigoPostal
-														.getValue() > 38998)) {
-											Ext.Msg
-													.show({
-														title : 'Datos inv&aacute;lidos',
-														msg : 'C&oacute;digo postal no v&aacute;lido para este producto',
-														buttons : Ext.Msg.OK,
-														icon : Ext.Msg.WARNING,
-														fn : function() {
-															campoCodigoPostal
-																	.focus();
-														}
-													});
-										} else {
-											storeEstados
-													.load({
-														params : {
-															// codigoTabla:'2TMUNI',
-															'params.idPadre' : el.value
-														},
-														callback : function(
-																records,
-																operation,
-																success) {
-															var estadoActual = comboEstados
-																	.getValue();
-															var actualEnStoreEstados = false;
-															storeEstados
-																	.each(function(
-																			record) {
-																		if (estadoActual == record
-																				.get('key')) {
-																			actualEnStoreEstados = true;
-																		}
-																	});
-															if (!actualEnStoreEstados) {
-																comboEstados
-																		.clearValue();
-															}
-															// comboEstados.setLoading(false);
-														}
-													});
-										}
-									}
-								},
-								labelWidth : 250
-							});
-
 			// 4 estado
 			comboEstados = Ext.create('Ext.form.ComboBox2', {
 				id : 'comboEstados',
@@ -655,43 +409,6 @@ Ext
 				displayField : 'value',
 				valueField : 'key',
 				allowBlank : false,
-				editable : false,
-				emptyText : 'Seleccione...',
-				labelWidth : 250,
-				listeners : {
-					blur : function(el) {
-						storeMunicipios.load({
-							params : {
-								'params.idPadre' : el.value
-							},
-							callback : function(records, operation, success) {
-								var estadoActual = comboMunicipios.getValue();
-								var actualEnStoreEstados = false;
-								storeMunicipios.each(function(record) {
-									if (estadoActual == record.get('key')) {
-										actualEnStoreEstados = true;
-									}
-								});
-								if (!actualEnStoreEstados) {
-									comboMunicipios.clearValue();
-								}
-								// comboEstados.setLoading(false);
-							}
-						});
-					}
-				}
-			});
-
-			comboMunicipios = Ext.create('Ext.form.ComboBox2', {
-				id : 'comboMunicipios',
-				fieldLabel : 'Municipio',
-				name : 'municipio',
-				model : 'GeMunicipio',
-				store : storeMunicipios,
-				queryMode : 'local',
-				displayField : 'value',
-				valueField : 'key',
-				allowBlank : true,
 				editable : false,
 				emptyText : 'Seleccione...',
 				labelWidth : 250
@@ -720,56 +437,14 @@ Ext
 				labelWidth : 250
 			});
 
-			// 6 copago
-			comboCopago = Ext.create('Ext.form.ComboBox2', {
-				id : 'comboCopago',
-				name : 'copago',
-				fieldLabel : 'Copago',
-				store : storeCopagos,
-				queryMode : 'local',
-				displayField : 'value',
-				valueField : 'key',
-				allowBlank : false,
-				editable : false,
-				emptyText : 'Seleccione...',
-				labelWidth : 250
-			});
-
-			// 7 suma asegurada
-			comboSumaAsegurada = Ext.create('Ext.form.ComboBox2', {
-				id : 'comboSumaAsegurada',
-				name : 'sumaSegurada',
-				fieldLabel : 'Beneficio m&aacute;ximo',
-				store : storeSumasAseguradas,
-				queryMode : 'local',
-				displayField : 'value',
-				valueField : 'key',
-				allowBlank : false,
-				editable : false,
-				emptyText : 'Seleccione...',
-				labelWidth : 250
-			});
-
-			// 8 circulo hospitalario
-			comboCirculoHospitalario = Ext.create('Ext.form.ComboBox2', {
-				id : 'comboCirculoHospitalario',
-				name : 'circuloHospitalario',
-				fieldLabel : 'C&iacute;rculo hospitalario',
-				store : storeCirculoHospitalario,
-				queryMode : 'local',
-				displayField : 'value',
-				valueField : 'key',
-				allowBlank : false,
-				editable : false,
-				emptyText : 'Seleccione...'
-			});
+			
 
 			// 9 cobertura vacunas
-			comboCoberturaVacunas = Ext.create('Ext.form.ComboBox2', {
-				id : 'comboCoberturaVacunas',
+			comboCoberturaOrganos = Ext.create('Ext.form.ComboBox2', {
+				id : 'comboCoberturaOrganos',
 				name : 'coberturaVacunas',
-				fieldLabel : 'Cobertura de vacunas',
-				store : storeCoberturaVacunas,
+				fieldLabel : 'Transplante de &oacute;rganos',
+				store : storeCoberturaOrganos,
 				queryMode : 'local',
 				displayField : 'value',
 				valueField : 'key',
@@ -782,14 +457,14 @@ Ext
 			});
 
 			// 10 enfermedades adultos
-			comboCoberturaPrevencionEnfermedadesAdultos = Ext
+			comboCoberturaEmbarazo = Ext
 					.create(
 							'Ext.form.ComboBox2',
 							{
-								id : 'comboCoberturaPrevencionEnfermedadesAdultos',
+								id : 'comboCoberturaEmbarazo',
 								name : 'coberturaPrevencionEnfermedadesAdultos',
-								fieldLabel : 'Cobertura de prevenci&oacute;n de enfermedades en adultos',
-								store : storeCoberturaPrevencionEnfermedadesAdultos,
+								fieldLabel : 'Complicaciones del embarazo',
+								store : storeCoberturaEmbarazo,
 								queryMode : 'local',
 								displayField : 'value',
 								valueField : 'key',
@@ -801,63 +476,12 @@ Ext
 								hidden : inputCdtipsit == 'SN'
 							});
 
-			// 11 maternidad
-			comboMaternidad = Ext.create('Ext.form.ComboBox2', {
-				id : 'comboMaternidad',
-				name : 'maternidad',
-				fieldLabel : 'Maternidad',
-				store : storeMaternidad,
-				queryMode : 'local',
-				displayField : 'value',
-				valueField : 'key',
-				allowBlank : false,
-				editable : false,
-				emptyText : 'Seleccione...',
-				labelWidth : 250,
-				value : 'S',
-				hidden : true
-			});
-
-			// 12 suma maternidad
-			comboSumaAseguradaMaternidad = Ext.create('Ext.form.ComboBox2', {
-				id : 'comboSumaAseguradaMaternidad',
-				name : 'sumaAseguradaMaternidad',
-				fieldLabel : 'Suma asegurada maternidad',
-				store : storeSumaAseguradaMaternidad,
-				queryMode : 'local',
-				displayField : 'value',
-				valueField : 'key',
-				allowBlank : false,
-				editable : false,
-				emptyText : 'Seleccione...',
-				labelWidth : 250,
-				value : 0,
-				hidden : true
-			});
-
-			// 13 tabulador reembolso
-			comboBaseTabuladorReembolso = Ext.create('Ext.form.ComboBox2', {
-				id : 'comboBaseTabuladorReembolso',
-				name : 'baseTabuladorReembolso',
-				fieldLabel : 'Base de tabulador de reembolso',
-				store : storeBaseTabuladorReembolso,
-				queryMode : 'local',
-				displayField : 'value',
-				valueField : 'key',
-				allowBlank : false,
-				editable : false,
-				emptyText : 'Seleccione...',
-				labelWidth : 250,
-				hidden : true,
-				value : "21000"
-			});
-
 			// 14 emergencia extranjero
-			comboCostoEmergenciaExtranjero = Ext.create('Ext.form.ComboBox2', {
-				id : 'comboCostoEmergenciaExtranjero',
+			comboCoberturaCongenitos = Ext.create('Ext.form.ComboBox2', {
+				id : 'comboCoberturaCongenitos',
 				name : 'costoEmergenciaExtranjero',
-				fieldLabel : 'Costo de emergencia en el extranjero',
-				store : storeCostoEmergenciaExtranjero,
+				fieldLabel : 'Padecimientos cong&eacute;nitos',
+				store : storeCoberturaCongenitos,
 				queryMode : 'local',
 				displayField : 'value',
 				valueField : 'key',
@@ -865,23 +489,6 @@ Ext
 				editable : false,
 				emptyText : 'Seleccione...',
 				labelWidth : 250
-			});
-
-			// 15 combo cobertura eliminacion penalizacion cambio zona
-			comboCobElimPenCambioZona = Ext.create('Ext.form.ComboBox2', {
-				id : 'comboCobEiPenCamZona',
-				name : 'coberturaEliminacionPenalizacionCambioZona',
-				fieldLabel : 'Cobertura de elim. de pen. de cambio de zona',
-				store : storeCobElimPenCambioZona,
-				queryMode : 'local',
-				displayField : 'value',
-				valueField : 'key',
-				allowBlank : false,
-				editable : false,
-				emptyText : 'Seleccione...',
-				labelWidth : 250,
-				value : inputCdtipsit == 'SN' ? 'N' : '',
-				hidden : inputCdtipsit == 'SN'
 			});
 
 			// 16 rol (GRID)
@@ -1573,7 +1180,7 @@ Ext
 												Ext.getCmp('botonEmail')
 														.setDisabled(true);
 												window.parent.scrollTo(0, 0);
-												campoCodigoPostal.focus();
+												comboEstados.focus();
 											}
 										},
 										{
@@ -1595,7 +1202,7 @@ Ext
 												window.parent.scrollTo(0, 0);
 												Ext.getCmp('idCotizacion')
 														.setValue('');
-												campoCodigoPostal.focus();
+												comboEstados.focus();
 												// desbloquear botones
 												if (!cotizacionUserSoloCotiza)
 													botonComprar.show();
@@ -1666,7 +1273,7 @@ Ext
 												Ext.getCmp('botonImprimir')
 														.show();
 												Ext.getCmp('botonEmail').show();
-												campoCodigoPostal.focus();
+												comboEstados.focus();
 											}
 										},
 										{
@@ -2178,7 +1785,7 @@ Ext
 														store : storeIncisos,
 														columns : [
 																{
-																	header : 'Tipo de asegurado',
+																	header : 'Parentesco',
 																	dataIndex : 'rol',
 																	flex : 2,
 																	editor : comboRoles,
@@ -2230,67 +1837,12 @@ Ext
 																	}
 																},
 																{
-																	header : 'Fecha de nacimiento',
+																	header : 'Edad',
 																	dataIndex : 'fechaNacimiento',
 																	flex : 2,
-																	renderer : Ext.util.Format
-																			.dateRenderer('d M Y'),
 																	editor : {
-																		xtype : 'datefield',
-																		format : 'd/m/Y',
+																		xtype : 'numberfield',
 																		editable : true
-																	}
-																},
-																{
-																	header : 'Sexo',
-																	dataIndex : 'sexo',
-																	flex : 1,
-																	editor : comboGeneros,
-																	renderer : function(
-																			v) {
-																		var leyenda = '';
-																		if (typeof v == 'string')
-																		// tengo
-																		// solo
-																		// el
-																		// indice
-																		{
-																			// window.console&&console.log('string:');
-																			storeGeneros
-																					.each(function(
-																							rec) {
-																						// window.console&&console.log('iterando...');
-																						if (rec.data.key == v) {
-																							leyenda = rec.data.value;
-																						}
-																					});
-																			// window.console&&console.log(leyenda);
-																		} else
-																		// tengo
-																		// objeto
-																		// que
-																		// puede
-																		// venir
-																		// como
-																		// Generic
-																		// u
-																		// otro
-																		// mas
-																		// complejo
-																		{
-																			// window.console&&console.log('object:');
-																			if (v.key
-																					&& v.value)
-																			// objeto
-																			// Generic
-																			{
-																				leyenda = v.value;
-																			} else {
-																				leyenda = v.data.value;
-																			}
-																			// window.console&&console.log(leyenda);
-																		}
-																		return leyenda;
 																	}
 																},
 																{
@@ -2651,17 +2203,11 @@ Ext
 									}
 
 									// Create a model instance
-									var rec = new IncisoSalud(
+									var rec = new IncisoSaludGB(
 											{
 												rol : rol,
-												fechaNacimiento : new Date(),
-												sexo : new Generic(
-														{
-															key : storeGeneros
-																	.getAt(0).data.key,
-															value : storeGeneros
-																	.getAt(0).data.value
-														}),
+												fechaNacimiento : 18,
+												sexo : new Generic('Hombre','H'),
 												nombre : '',
 												segundoNombre : '',
 												apellidoPaterno : '',
@@ -2758,21 +2304,13 @@ Ext
 										},
 										// sexo (inciso) 1
 										// fecha nacimiento (inciso) 2
-										campoCodigoPostal, // 3
 										comboEstados, // 4
-										comboMunicipios, // 17
 										// comboCiudad, 4 X(
 										comboDeducible, // 5
-										comboCopago, // 6
-										comboSumaAsegurada, // 7
 										// comboCirculoHospitalario, //8
-										comboCoberturaVacunas, // 9
-										comboCoberturaPrevencionEnfermedadesAdultos, // 10
-										comboMaternidad, // 11
-										comboSumaAseguradaMaternidad, // 12
-										comboBaseTabuladorReembolso, // 13
-										comboCostoEmergenciaExtranjero, // 14
-										comboCobElimPenCambioZona, // 15
+										comboCoberturaOrganos, // 9
+										comboCoberturaEmbarazo, // 10
+										comboCoberturaCongenitos, // 14
 										// rol (inciso) 16
 										{
 											xtype : 'panel',
@@ -2842,10 +2380,7 @@ Ext
 												var hayTitular = 0;
 												var menorDeEdad = false;
 												var mayores69 = false;
-												var fueraDeGuanajuato = inputCdtipsit == 'SN'
-														&& (campoCodigoPostal
-																.getValue() < 36000 || campoCodigoPostal
-																.getValue() > 38998);
+												var fueraDeGuanajuato = false;
 												debug(
 														'fueraDeGuanajuato',
 														fueraDeGuanajuato ? 'si'
@@ -2868,21 +2403,7 @@ Ext
 																					// los
 																					// mayores69
 															{
-																var fechaNacimiento = new Date(
-																		record
-																				.get('fechaNacimiento'));
-																var hoy = new Date();
-																var edad = parseInt((hoy
-																		/ 365
-																		/ 24
-																		/ 60
-																		/ 60
-																		/ 1000 - fechaNacimiento
-																		/ 365
-																		/ 24
-																		/ 60
-																		/ 60
-																		/ 1000));
+																var edad = record.get('fechaNacimiento');
 																if (edad > 64) {
 																	mayores69 = true;
 																}
@@ -2920,30 +2441,24 @@ Ext
 																							.push({
 																								id : record
 																										.get('id'),
-																								rol : {
-																									key : typeof record
-																											.get('rol') == 'string' ? record
-																											.get('rol')
-																											: record
-																													.get(
-																															'rol')
-																													.get(
-																															'key'),
-																									value : ''
-																								},
+																								rol : typeof record
+																								.get('rol') == 'string' ? record
+																										.get('rol')
+																										: record
+																												.get(
+																														'rol')
+																												.get(
+																														'key'),
 																								fechaNacimiento : record
 																										.get('fechaNacimiento'),
-																								sexo : {
-																									key : typeof record
-																											.get('sexo') == 'string' ? record
-																											.get('sexo')
-																											: record
-																													.get(
-																															'sexo')
-																													.get(
-																															'key'),
-																									value : ''
-																								},
+																								sexo : typeof record
+																								.get('sexo') == 'string' ? record
+																										.get('sexo')
+																										: record
+																												.get(
+																														'sexo')
+																												.get(
+																														'key'),
 																								nombre : record
 																										.get('nombre'),
 																								segundoNombre : record
@@ -2958,7 +2473,7 @@ Ext
 																				|| nombres == incisosRecords.length) {
 																			var submitValues = form
 																					.getValues();
-																			submitValues['incisos'] = incisosJson;
+																			submitValues['slist1'] = incisosJson;
 																			// window.console&&console.log(submitValues);
 																			// Submit
 																			// the
@@ -3111,8 +2626,7 @@ Ext
 												formPanel.getForm().reset();
 												debug("formPanel.getForm().reset();");
 												window.parent.scrollTo(0, 0);
-												campoCodigoPostal.focus();
-												debug("window.parent.scrollTo(0,0);campoCodigoPostal.focus();");
+												comboEstados.focus();
 												gridIncisos.getSelectionModel()
 														.deselectAll();
 												debug("gridIncisos.getSelectionModel().deselectAll();");
@@ -3239,26 +2753,8 @@ Ext
 			// ////////////////////////////////////////////////////
 			// //// Fin de cargador de formulario (sin grid) //////
 			// ////////////////////////////////////////////////////
-			campoCodigoPostal.focus();
+			comboEstados.focus();
 			
-			if(inputCdtipsit=='SL')
-			{
-				Ext.create('Ext.window.Window', {
-					closable : false,
-					width : 153,
-					header : false,
-					border : false,
-					height : 340,
-					resizable : false,
-					items :
-					[
-					    {
-					    	xtype : 'image'
-					    	,src  : contexto+'/images/proceso/emision/imagencotizador.PNG'
-					    }
-					]
-				}).showAt(638, 40);
-			}
 
 			if (hayTramiteCargado) {
 				Ext.create('Ext.window.Window', {

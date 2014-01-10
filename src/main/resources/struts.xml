@@ -137,6 +137,7 @@
 
         
         <action name="cotizacionVital" class="cotizacionVital" method="entrar">
+            <result name="gb">/jsp/extjs4/aseguradosGB.jsp</result>
             <result name="success">/jsp/extjs4/asegurados.jsp</result>
             <result name="input">/error.jsp</result>
         </action>
