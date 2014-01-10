@@ -513,6 +513,7 @@ public class ConsultasPolizaDAO extends AbstractDAO {
     		consulta.setFenacimi(Utilerias.formateaFecha(rs.getString("fenacimi")));
     		consulta.setSexo(rs.getString("Sexo"));
     		consulta.setStatus(rs.getString("status"));
+    		consulta.setParentesco(rs.getString("parentesco"));
     		return consulta;
     	}
     }

@@ -328,7 +328,7 @@ Ext.onReady(function() {
         }, {
             layout : 'hbox',
             items : [ 
-                {xtype:'textfield', name:'titular', fieldLabel: 'Nombre del titular', readOnly: true, labelWidth: 120, width: 400}, 
+                {xtype:'textfield', name:'titular', fieldLabel: 'Nombre del contratante', readOnly: true, labelWidth: 120, width: 400}, 
                 {xtype:'textfield', name:'cdrfc', fieldLabel: 'RFC', readOnly: true, labelWidth: 120, labelAlign: 'right'}
             ]
         }, {
@@ -503,7 +503,8 @@ Ext.onReady(function() {
             {type:'string',    name:'nmsituac'},
             {type:'string',    name:'sexo'},
             {type:'string',    name:'titular'},
-            {type:'string',    name:'status'}
+            {type:'string',    name:'status'},
+            {type:'string',    name:'parentesco'}
         ]
     });
     
@@ -526,17 +527,18 @@ Ext.onReady(function() {
         title   : 'DATOS DE LOS ASEGURADOS',
         store   : storeAsegurados,
         id      : 'gridDatosAsegurado',
-        width   : 800,
+        width   : 830,
         autoScroll:true,
         items:[{
            xtype:'textfield', name:'cdrfc', fieldLabel: 'RFC', readOnly: true, labelWidth: 120
         }],
         columns: [
-            {text:'Rol',dataIndex:'dsrol',width:130 , align:'left'},
-            {text:'Nombre',dataIndex:'titular',width:270,align:'left'},
+            //{text:'Rol',dataIndex:'dsrol',width:130 , align:'left'},
+            {text:'Tipo de asegurado',dataIndex:'parentesco',width:130 , align:'left'},
+            {text:'Nombre',dataIndex:'titular',width:280,align:'left'},
             {text:'Estatus',dataIndex:'status',width:100,align:'left'},
-            {text:'RFC',dataIndex:'cdrfc',width:120,align:'left'},
-            {text:'Sexo',dataIndex:'sexo',width:80 , align:'left'},
+            {text:'RFC',dataIndex:'cdrfc',width:130,align:'left'},
+            {text:'Sexo',dataIndex:'sexo',width:90 , align:'left'},
             {text:'Fecha Nac.',dataIndex:'fenacimi',width:100, align:'left',renderer: Ext.util.Format.dateRenderer('d/m/Y')}
         ]
     });
