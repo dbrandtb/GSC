@@ -3240,6 +3240,22 @@ Ext
 			// //// Fin de cargador de formulario (sin grid) //////
 			// ////////////////////////////////////////////////////
 			campoCodigoPostal.focus();
+			
+			Ext.create('Ext.window.Window', {
+				closable : false,
+				width : 153,
+				header : false,
+				border : false,
+				height : 340,
+				resizable : false,
+				items :
+				[
+				    {
+				    	xtype : 'image'
+				    	,src  : contexto+'/images/proceso/emision/imagencotizador.PNG'
+				    }
+				]
+			}).showAt(638, 40);
 
 			if (hayTramiteCargado) {
 				Ext.create('Ext.window.Window', {
