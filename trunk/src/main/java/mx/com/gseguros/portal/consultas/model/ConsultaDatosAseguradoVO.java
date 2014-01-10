@@ -27,6 +27,7 @@ public class ConsultaDatosAseguradoVO implements Serializable{
 	private String Sexo;
 	private String fenacimi;
 	private String status;
+	private String parentesco;
 
 		
 	public String getSexo() {
@@ -115,6 +116,15 @@ public class ConsultaDatosAseguradoVO implements Serializable{
 	public void setStatus(String status) {
 		this.status = status;
 	}
+	
+	public String getParentesco() {
+		return parentesco;
+	}
+
+	public void setParentesco(String parentesco) {
+		this.parentesco = parentesco;
+	}
+
 
 	public String toString(){
 		return ToStringBuilder.reflectionToString(this,ToStringStyle.MULTI_LINE_STYLE);
