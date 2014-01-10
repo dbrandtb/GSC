@@ -612,18 +612,15 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 	{
 		try
 		{
-			UserVO usuSes=(UserVO) session.get("USUARIO");
-			DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usuSes.getUser());
-			
 			Map<String,String>paramTatriper=new HashMap<String,String>(0);
 			paramTatriper.put("pv_cdramo_i"   , smap1.get("pv_cdramo"));
 			paramTatriper.put("pv_cdrol_i"    , smap1.get("pv_cdrol"));
-			paramTatriper.put("pv_cdtipsit_i" , datUsu.getCdtipsit());
+			paramTatriper.put("pv_cdtipsit_i" , smap1.get("cdtipsit"));
 			List<Tatri>tatriper=kernelManager.obtenerTatriper(paramTatriper);
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			gc.setCdrol(smap1.get("pv_cdrol"));
 			gc.setCdramo(smap1.get("pv_cdramo"));
-			gc.setCdtipsit(datUsu.getCdtipsit());
+			gc.setCdtipsit(smap1.get("cdtipsit"));
 			gc.genera(tatriper);
 			item1=gc.getFields();
 			item2=gc.getItems();
