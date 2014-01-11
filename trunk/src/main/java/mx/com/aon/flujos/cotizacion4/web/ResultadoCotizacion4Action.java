@@ -605,7 +605,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	                mapaValositIterado.put("pv_otvalor13",   null);//base tabulador reembolso
 	                mapaValositIterado.put("pv_otvalor14",   null);//emergencia extranjero
 	                mapaValositIterado.put("pv_otvalor15",   null);//cob elim pen cambio zona
-	                mapaValositIterado.put("pv_otvalor16",   null);//parentesco
+	                mapaValositIterado.put("pv_otvalor16",   i.get("rol"));//parentesco
 	                mapaValositIterado.put("pv_otvalor17",   null);
 	                mapaValositIterado.put("pv_otvalor18",   null);
 	                mapaValositIterado.put("pv_otvalor19",   null);

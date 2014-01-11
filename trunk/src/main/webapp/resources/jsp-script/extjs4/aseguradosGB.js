@@ -156,6 +156,49 @@ Ext
 					        {name:'apellidoMaterno',    type:'string'}
 					    ]
 					});
+			
+			Ext.define('RowCotizacionGB', {
+			    extend: 'Ext.data.Model',
+			    fields: [
+			        {type:'string',name:'cdIdentifica'      },
+			        {type:'string',name:'cdUnieco'          },
+			        {type:'string',name:'cdRamo'            },
+			        {type:'string',name:'estado'            },
+			        {type:'string',name:'nmPoliza'          },
+			        {type:'string',name:'nmSuplem'          },
+			        {type:'string',name:'status'            },
+			        {type:'string',name:'cdPlan'            },
+			        {type:'string',name:'dsPlan'            },
+			        {type:'string',name:'mnPrima'           },
+			        {type:'string',name:'cdCiaaseg'         },
+			        {type:'string',name:'dsUnieco'          },
+			        {type:'string',name:'cdPerpag'          },
+			        {type:'string',name:'dsPerpag'          },
+			        {type:'string',name:'cdTipsit'          },
+			        {type:'string',name:'dsTipsit'          },
+			        {type:'string',name:'numeroSituacion'   },
+			        {type:'string',name:'cdGarant'          },
+			        {type:'string',name:'dsGarant'          },
+			        {type:'string',name:'swOblig'           },
+			        {type:'string',name:'sumaAseg'          },
+			        {type:'string',name:'nMimpfpg'          },
+			        {type:'string',name:'primaFormap'       },
+			        {type:'string',name:'feEmisio'          },
+			        {type:'string',name:'feVencim'          },
+			        {type:'string',name:'Diamond'          },
+			        {type:'string',name:'CDDiamond'        },
+			        {type:'string',name:'DSDiamond'        },
+			        {type:'string',name:'NMDiamond'        },
+			        {type:'string',name:'Advantage'           },
+			        {type:'string',name:'CDAdvantage'         },
+			        {type:'string',name:'DSAdvantage'         },
+			        {type:'string',name:'NMAdvantage'         },
+			        {type:'string',name:'Complete'           },
+			        {type:'string',name:'CDComplete'         },
+			        {type:'string',name:'DSComplete'         },
+			        {type:'string',name:'NMComplete'         }
+			    ]
+			});
 
 			// ////////////////////////////
 			// //// Inicio de stores //////
@@ -327,7 +370,7 @@ Ext
 					cfg = cfg || {};
 					me.callParent([ Ext.apply({
 						autoLoad : false,
-						model : 'RowCotizacion',
+						model : 'RowCotizacionGB',
 						storeId : 'StoreResultados',
 						// groupField: 'dsUnieco',
 						proxy : {
@@ -1541,11 +1584,11 @@ Ext
 										if (x > 0) {
 											var pos = '';
 											if (x == 1) {
-												pos = 'Plus100';
+												pos = 'Diamond';
 											} else if (x == 2) {
-												pos = 'Plus500';
+												pos = 'Complete';
 											} else {
-												pos = 'Plus1000';
+												pos = 'Advantage';
 											}
 
 											// //// parche para cuando el
@@ -1657,90 +1700,90 @@ Ext
 								},
 								/* generadas */
 								{
-									dataIndex : "Plus100",
-									header : "Plus 100",
+									dataIndex : "Diamond",
+									header : "Diamond",
 									hidden : inputCdtipsit == 'SN',
-									id : "Plus100",
+									id : "Diamond",
 									sortable : false,
 									flex : 1,
 									renderer : Ext.util.Format.usMoney
 								}, {
-									dataIndex : "CDPlus100",
-									header : "CDPlus100",
+									dataIndex : "CDDiamond",
+									header : "CDDiamond",
 									hidden : true,
-									id : "CDPlus100",
+									id : "CDDiamond",
 									sortable : false,
 									width : 100
 								}, {
-									dataIndex : "DSPlus100",
-									header : "DSPlus100",
+									dataIndex : "DSDiamond",
+									header : "DSDiamond",
 									hidden : true,
-									id : "DSPlus100",
+									id : "DSDiamond",
 									sortable : false,
 									width : 100
 								}, {
-									dataIndex : "NMPlus100",
-									header : "NMPlus100",
+									dataIndex : "NMDiamond",
+									header : "NMDiamond",
 									hidden : true,
-									id : "NMPlus100",
+									id : "NMDiamond",
 									sortable : false,
 									width : 100
 								}, {
-									dataIndex : "Plus500",
-									header : "Plus 500",
+									dataIndex : "Complete",
+									header : "Complete",
 									hidden : inputCdtipsit == 'SN',
-									id : "Plus500",
+									id : "Complete",
 									sortable : false,
 									flex : 1,
 									renderer : Ext.util.Format.usMoney
 								}, {
-									dataIndex : "CDPlus500",
-									header : "CDPlus500",
+									dataIndex : "CDComplete",
+									header : "CDComplete",
 									hidden : true,
-									id : "CDPlus500",
+									id : "CDComplete",
 									sortable : false,
 									width : 100
 								}, {
-									dataIndex : "DSPlus500",
-									header : "DSPlus500",
+									dataIndex : "DSComplete",
+									header : "DSComplete",
 									hidden : true,
-									id : "DSPlus500",
+									id : "DSComplete",
 									sortable : false,
 									width : 100
 								}, {
-									dataIndex : "NMPlus500",
-									header : "NMPlus500",
+									dataIndex : "NMComplete",
+									header : "NMComplete",
 									hidden : true,
-									id : "NMPlus500",
+									id : "NMComplete",
 									sortable : false,
 									width : 100
 								}, {
-									dataIndex : "Plus1000",
-									header : "Plus 1000",
+									dataIndex : "Advantage",
+									header : "Advantage",
 									hidden : false,
-									id : "Plus1000",
+									id : "Advantage",
 									sortable : false,
 									flex : 1,
 									renderer : Ext.util.Format.usMoney
 								}, {
-									dataIndex : "CDPlus1000",
-									header : "CDPlus1000",
+									dataIndex : "CDAdvantage",
+									header : "CDAdvantage",
 									hidden : true,
-									id : "CDPlus1000",
+									id : "CDAdvantage",
 									sortable : false,
 									width : 100
 								}, {
-									dataIndex : "DSPlus1000",
-									header : "DSPlus1000",
+									dataIndex : "DSAdvantage",
+									header : "DSAdvantage",
 									hidden : true,
-									id : "DSPlus1000",
+									id : "DSAdvantage",
 									sortable : false,
 									width : 100
 								}, {
-									dataIndex : "NMPlus1000",
-									header : "NMPlus1000",
+									dataIndex : "NMAdvantage",
+									header : "NMAdvantage",
 									hidden : true,
-									id : "NMPlus1000",
+									id : "NMAdvantage",
 									sortable : false,
 									width : 100
 								} ]
