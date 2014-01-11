@@ -1041,14 +1041,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
             result.setFeEmisio(rs.getString("FEEMISIO"));
             result.setFeVencim(rs.getString("FEVENCIM"));
             result.setNumeroSituacion(rs.getString("NMSITUAC"));
-            try{
-                //if(logger.isDebugEnabled())logger.debug("Antes de parseo mnprima: " + rs.getDouble("MNPRIMA"));
-                result.setMnPrima(formatter.format(rs.getDouble("MNPRIMA")));
-                //if(logger.isDebugEnabled())logger.debug("Despues de parseo mnprima: " + result.getMnPrima());
-            }catch(NumberFormatException nfe){
-                logger.error("Error al parsear el valor de la mnprima "+ rs.getString("MNPRIMA"), nfe);
-                result.setMnPrima(rs.getString("MNPRIMA"));
-            }
+            result.setMnPrima(Utilerias.formateaNumero(rs.getString("MNPRIMA")));
             return result;
         }
     }
