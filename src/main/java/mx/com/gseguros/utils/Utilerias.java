@@ -33,6 +33,38 @@ public class Utilerias {
 		return fecha;
 	}
 	
+	public static String formateaNumero(String numero)
+	{
+		String num="";
+		if(numero!=null)
+		{
+			int l=numero.length();
+			for(int p=l-1,i=0;p>=0;p--,i++)
+			{
+				//p es posicion
+				//i es iteracion
+				String digito=numero.substring(p, p+1);
+				String regex="\\d";
+				if(digito.matches(regex))//copiar digito
+				{
+					num+=digito;
+				}
+				else if(i<=2)//0 ó 1 ó 2
+				{
+					num+=".";
+				}
+			}
+			String tmp="";
+			for(int i=num.length()-1;i>=0;i--)
+			{
+				tmp+=num.charAt(i);
+			}
+			num=tmp;
+		}
+		logger.debug("formateaNumero entrada: "+numero+", salida:"+num);
+		return num;
+	}
+	
 	/**
 	 * RECIBE UN MAPA DE TIPO STRING Y PONE TODAS LAS LLAVES QUE ENPIECEN CON "FE" Y "PV_FE" COMO TIPO DATE
 	 * @param params
