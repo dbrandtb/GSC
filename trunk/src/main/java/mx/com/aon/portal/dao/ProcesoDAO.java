@@ -1021,7 +1021,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     
     protected class ResultadosCotizaMapper implements RowMapper {
         public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-            DecimalFormat formatter = new DecimalFormat("#,##0.00");
+            //DecimalFormat formatter = new DecimalFormat("#,##0.00");
             ResultadoCotizacionVO result = new ResultadoCotizacionVO();
             result.setCdIdentifica(rs.getString("CDIDENTIFICA"));
             result.setCdUnieco(rs.getString("CDUNIECO"));
@@ -1041,7 +1041,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
             result.setFeEmisio(rs.getString("FEEMISIO"));
             result.setFeVencim(rs.getString("FEVENCIM"));
             result.setNumeroSituacion(rs.getString("NMSITUAC"));
-            result.setMnPrima(Utilerias.formateaNumero(rs.getString("MNPRIMA")));
+            result.setMnPrima(rs.getString("MNPRIMA"));
             logger.debug("ResultadoCotizacionVO=" + result);
             return result;
         }
