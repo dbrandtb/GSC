@@ -220,7 +220,7 @@
                         ,'smap1.cdrfc'           : recordActivo.get('cdrfc')
                         ,'smap1.pv_cdrol'        : recordActivo.get('cdrol')
                         ,'smap1.nombreAsegurado' : recordActivo.get('nombrecompleto')
-                        ,'smap1.botonCopiar'     : recordActivo.get('cdrol')==1?'0':'1'//es asegurado? 
+                        ,'smap1.botonCopiar'     : '0'//recordActivo.get('cdrol')==1?'0':'1'//es asegurado? 
                         ,'smap1.cdtipsit'        : recordActivo.get('CDTIPSIT')
                         ,'smap1.ntramite'        : recordActivo.get('NTRAMITE')
                     }
@@ -407,7 +407,7 @@
                 });
             }
    		}
-    	else if(recordOperacion.get('funcion')=='endosoaltabajaasegurado')
+    	else if(recordOperacion.get('funcion')=='endosoaltaasegurado'||recordOperacion.get('funcion')=='endosobajaasegurado')
         {
             debug('endosoaltabajaasegurado');
             var nPolizasActivas=0;
@@ -431,7 +431,11 @@
                     ,autoLoad : true
                     ,jsonData :
                     {
-                    	'smap1' : polizaActiva.raw
+                    	'smap1'  : polizaActiva.raw
+                    	,'smap2' :
+                    	{
+                    		alta : recordOperacion.get('funcion')=='endosoaltaasegurado'?'si':'no'
+                    	}
                     }
                 });
             }
@@ -651,7 +655,12 @@ Ext.onReady(function()
                 ,{
                     texto    : '9'//alta asegurado
                     ,liga    : '<s:url namespace="/endosos" action="pantallaEndosoAltaBajaAsegurado" />'
-                    ,funcion : 'endosoaltabajaasegurado'
+                    ,funcion : 'endosoaltaasegurado'
+                }
+                ,{
+                    texto    : '10'//baja asegurado
+                    ,liga    : '<s:url namespace="/endosos" action="pantallaEndosoAltaBajaAsegurado" />'
+                    ,funcion : 'endosobajaasegurado'
                 }
             ]
         }
