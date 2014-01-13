@@ -2346,6 +2346,63 @@ public class EndososAction extends PrincipalCoreAction
 			paramConfirmarEndoso.put("pv_cdtipsup_i" , alta?"9":"10");
 			paramConfirmarEndoso.put("pv_dscoment_i" , "");
 		    endososManager.confirmarEndosoB(paramConfirmarEndoso);
+		    
+		    ///////////////////////////////////////
+		    ////// re generar los documentos //////
+		    /*///////////////////////////////////*/
+		    Map<String,String>paramsGetDoc=new LinkedHashMap<String,String>(0);
+			paramsGetDoc.put("pv_cdunieco_i" , cdunieco);
+			paramsGetDoc.put("pv_cdramo_i"   , cdramo);
+			paramsGetDoc.put("pv_estado_i"   , estado);
+			paramsGetDoc.put("pv_nmpoliza_i" , nmpoliza);
+			paramsGetDoc.put("pv_nmsuplem_i" , nmsuplem);
+			paramsGetDoc.put("pv_tipmov_i"   , alta?"9":"10");
+		    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(paramsGetDoc);
+		    log.debug("documentos que se regeneran: "+listaDocu);
+		    
+		    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+listaDocu.get(0).get("ntramite");
+		    
+			//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
+			for(Map<String,String> docu:listaDocu)
+			{
+				log.debug("docu iterado: "+docu);
+				String descripc=docu.get("descripc");
+				String descripl=docu.get("descripl");
+				String url=this.getText("ruta.servidor.reports")
+						+ "?destype=cache"
+						+ "&desformat=PDF"
+						+ "&userid="+this.getText("pass.servidor.reports")
+						+ "&report="+descripl
+						+ "&paramform=no"
+						+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+						+ "&p_unieco="+cdunieco
+						+ "&p_ramo="+cdramo
+						+ "&p_estado="+estado
+						+ "&p_poliza="+nmpoliza
+						+ "&desname="+rutaCarpeta+"/"+descripc;
+				if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
+				{
+					// C R E D E N C I A L _ X X X X X X . P D F
+					//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+					url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("_"));
+				}
+				log.debug(""
+						+ "\n#################################"
+						+ "\n###### Se solicita reporte ######"
+						+ "\na "+url+""
+						+ "\n#################################");
+				HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
+				log.debug(""
+						+ "\n######                    ######"
+						+ "\n###### reporte solicitado ######"
+						+ "\na "+url+""
+						+ "\n################################"
+						+ "\n################################"
+						+ "");
+			}
+		    /*///////////////////////////////////*/
+			////// re generar los documentos //////
+		    ///////////////////////////////////////
 			
 			success=true;
 		}
