@@ -142,6 +142,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         log.debug("### kernel sustituto obtenerResultadosCotizacion map: "+parameters);
         List<ResultadoCotizacionVO> lista= this.getAllBackBoneInvoke(parameters, ProcesoDAO.OBTENER_RESULTADOS_COTIZACION);
         lista=lista!=null?lista:new ArrayList<ResultadoCotizacionVO>(0);
+        log.debug("### kernel sustituto obtenerResultadosCotizacion lista="+lista);
         log.debug("### kernel sustituto obtenerResultadosCotizacion lista size: "+lista.size());
         return lista;
     }

@@ -1042,6 +1042,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
             result.setFeVencim(rs.getString("FEVENCIM"));
             result.setNumeroSituacion(rs.getString("NMSITUAC"));
             result.setMnPrima(Utilerias.formateaNumero(rs.getString("MNPRIMA")));
+            logger.debug("ResultadoCotizacionVO=" + result);
             return result;
         }
     }
