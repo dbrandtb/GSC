@@ -18,10 +18,12 @@ var panEndAltBajAseValues='cadena';
 
 var panendabaseguUrlLoadAsegu = '<s:url namespace="/" action="cargarComplementariosAsegurados" />';
 var panendabaseguInputSmap1   = <s:property value='%{getSmap1().toString().replace("=",":\'").replace(",","\',").replace("}","\'}")}' />;
+var panendabaseguInputSmap2   = <s:property value='%{getSmap2().toString().replace("=",":\'").replace(",","\',").replace("}","\'}")}' />;
 var panendabaseguUrlSave      = '<s:url namespace="/endosos" action="guardarEndosoAltaBajaAsegurado" />';
 var panEndAltBajAseUrlDoc     = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza" />';
 
 debug('panendabaseguInputSmap1',panendabaseguInputSmap1);
+debug('panendabaseguInputSmap2',panendabaseguInputSmap2);
 /*///////////////////*/
 ////// variables //////
 ///////////////////////
@@ -90,7 +92,7 @@ function panendabaseguFunQuitar()
    	        {
    	            title    : 'Error'
    	            ,icon    : Ext.Msg.WARNING
-   	            ,msg     : 'No se puede quitar el contratante'
+   	            ,msg     : 'No se puede quitar el cliente'
    	            ,buttons : Ext.Msg.OK
    	        });
         }
@@ -273,6 +275,7 @@ Ext.onReady(function()
                 ,icon      : '${ctx}/resources/fam3icons/icons/add.png'
                 ,store     : panEndAltBajAseStoreAltas
                 ,minHeight : 100
+                ,hidden    : panendabaseguInputSmap2.alta=='no'
                 ,columns   :
                 [
                     <s:property value="imap1.columnas" />
@@ -306,6 +309,7 @@ Ext.onReady(function()
                 ,icon      : '${ctx}/resources/fam3icons/icons/delete.png'
                 ,store     : panEndAltBajAseStoreBajas
                 ,minHeight : 100
+                ,hidden    : panendabaseguInputSmap2.alta=='si'
                 ,columns   :
                 [
                     <s:property value="imap1.columnas" />
@@ -369,11 +373,13 @@ Ext.onReady(function()
 				    	text     : 'Agregar'
 				    	,icon    : '${ctx}/resources/fam3icons/icons/add.png'
 				    	,handler : panendabaseguFunAgregar
+				    	,hidden  : panendabaseguInputSmap2.alta=='no'
 				    }
 				    ,{
                         text     : 'Quitar'
                         ,icon    : '${ctx}/resources/fam3icons/icons/delete.png'
                         ,handler : panendabaseguFunQuitar
+                        ,hidden  : panendabaseguInputSmap2.alta=='si'
                     }
 				]
 				,columns :
