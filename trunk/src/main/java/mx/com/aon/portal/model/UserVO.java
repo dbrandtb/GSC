@@ -19,6 +19,7 @@ import java.util.List;
 import mx.com.aon.portal.util.UserSQLDateConverter;
 import mx.com.aon.portal.util.UserStringConverter;
 import mx.com.aon.portal.util.UserTimestampConverter;
+import mx.com.gseguros.portal.general.model.RolVO;
 
 /**
  * UserVO
