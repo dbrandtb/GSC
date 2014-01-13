@@ -1,7 +1,10 @@
-package mx.com.aon.portal.model;
+package mx.com.gseguros.portal.general.model;
 
 import java.io.Serializable;
 import java.util.List;
+
+import mx.com.aon.portal.model.BaseObjectVO;
+import mx.com.aon.portal.model.EmpresaVO;
 
 /**
  * Rol

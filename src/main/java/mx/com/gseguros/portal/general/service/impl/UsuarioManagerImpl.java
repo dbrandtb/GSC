@@ -7,13 +7,13 @@ import java.util.Map;
 import mx.com.aon.portal.model.BaseObjectVO;
 import mx.com.aon.portal.model.EmpresaVO;
 import mx.com.aon.portal.model.RamaVO;
-import mx.com.aon.portal.model.RolVO;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.model.UsuarioRolEmpresaVO;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.general.dao.UsuarioDAO;
 import mx.com.gseguros.portal.general.dao.impl.UsuarioDAOImpl;
+import mx.com.gseguros.portal.general.model.RolVO;
 import mx.com.gseguros.portal.general.service.UsuarioManager;
 
 import org.apache.log4j.Logger;

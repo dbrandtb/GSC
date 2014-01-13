@@ -6,7 +6,6 @@ import java.util.List;
 import mx.com.aon.portal.model.principal.ClienteVO;
 import mx.com.aon.portal.model.principal.ConfiguracionVO;
 import mx.com.aon.portal.model.principal.PaginaVO;
-import mx.com.aon.portal.model.principal.RolVO;
 import mx.com.aon.portal.model.principal.RolesVO;
 import mx.com.aon.portal.model.principal.SeccionVO;
 import mx.com.aon.portal.model.principal.TipoVO;
