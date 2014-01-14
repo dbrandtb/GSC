@@ -18,21 +18,26 @@ public class Utilerias {
 	 * @return
 	 */
 	public static String formateaFecha(String fecha) {
-		logger.debug("#debugfecha="+fecha);
-		if(fecha!=null && fecha.length()>10) {
-			// 1 9 9 0 - 1 2 - 0 1 _ 0 0 : 0 0 : 0 0 . 0 <<CADENA
-			//0 1 2 3 4 5 6 7 8 9 k <<INDICE
-			String aux="";
-			aux+=fecha.substring(8,10);
-			aux+="/";
-			aux+=fecha.substring(5,7);
-			aux+="/";
-			aux+=fecha.substring(0,4);
-			fecha=aux;
+		StringBuilder strBuilder = new StringBuilder();
+		try {
+			if(fecha!=null && fecha.length() > 10) {
+				// 1990-12-01_00:00:00.0 <<CADENA
+				// 0123456789k           <<INDICE
+				strBuilder.append(fecha.substring(8, 10)).append("/")
+						.append(fecha.substring(5, 7)).append("/")
+						.append(fecha.substring(0, 4));
+			} else {
+				strBuilder.append(fecha);
+			}
+		} catch (Exception e) {
+			logger.error("Error al formatear la fecha", e);
 		}
-		return fecha;
+		//logger.debug("#debug fecha="+strBuilder);
+		return strBuilder.toString();
 	}
 	
+	
+	/*
 	public static String formateaNumero(String numero)
 	{
 		String num="";
@@ -64,6 +69,7 @@ public class Utilerias {
 		logger.debug("formateaNumero entrada: "+numero+", salida:"+num);
 		return num;
 	}
+	*/
 	
 	/**
 	 * RECIBE UN MAPA DE TIPO STRING Y PONE TODAS LAS LLAVES QUE ENPIECEN CON "FE" Y "PV_FE" COMO TIPO DATE
