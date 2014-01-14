@@ -78,6 +78,15 @@
                 </param> -->
             </result>
         </action>
+        <action name="obtieneUsuarios" class="usuarioAction" method="obtieneUsuarios">
+            <result type="json">
+            </result>
+        </action>
+
+        <action name="obtieneRolesUsuario" class="usuarioAction" method="obtieneRolesUsuario">
+            <result type="json">
+            </result>
+        </action>
 
 	</package>
 

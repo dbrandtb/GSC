@@ -14,6 +14,7 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.general.dao.UsuarioDAO;
 import mx.com.gseguros.portal.general.dao.impl.UsuarioDAOImpl;
 import mx.com.gseguros.portal.general.model.RolVO;
+import mx.com.gseguros.portal.general.model.UsuarioVO;
 import mx.com.gseguros.portal.general.service.UsuarioManager;
 
 import org.apache.log4j.Logger;
@@ -29,6 +30,16 @@ public class UsuarioManagerImpl implements UsuarioManager {
 	@Override
 	public GenericVO guardaUsuario(Map<String, String> params) throws Exception {
 		return usuarioDAO.guardaUsuario(params);
+	}
+
+	@Override
+	public List<UsuarioVO> obtieneUsuarios(Map<String, String> params) throws Exception {
+		return usuarioDAO.obtieneUsuarios(params);
+	}
+
+	@Override
+	public List<RolVO> obtieneRolesUsuario(Map<String, String> params) throws Exception {
+		return usuarioDAO.obtieneRolesUsuario(params);
 	}
 	
 	

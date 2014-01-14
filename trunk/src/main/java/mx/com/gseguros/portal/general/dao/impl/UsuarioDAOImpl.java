@@ -14,6 +14,8 @@ import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.general.dao.UsuarioDAO;
+import mx.com.gseguros.portal.general.model.RolVO;
+import mx.com.gseguros.portal.general.model.UsuarioVO;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.log4j.Logger;
@@ -154,7 +156,75 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
             compile();
         }
     }
+ 
+    @Override
+	public List<UsuarioVO> obtieneUsuarios(Map params) throws DaoException {
+		Map<String, Object> resultado = ejecutaSP(new ObtieneUsuarios(getDataSource()), params);
+		return (List<UsuarioVO>) resultado.get("PV_REGISTRO_O");
+	}
+	
+	protected class ObtieneUsuarios extends StoredProcedure {
+
+		protected ObtieneUsuarios(DataSource dataSource) {
+			super(dataSource, "PKG_GENERA_USUARIO.p_get_usuarios");
+			declareParameter(new SqlParameter("PV_NOMBRE_I", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDSISROL_I", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDRFC_I", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_DSEMAIL_I", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("PV_REGISTRO_O", OracleTypes.CURSOR, new ObtieneUsuariosMapper()));
+			declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("PV_TITLE_O", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+    protected class ObtieneUsuariosMapper implements RowMapper {
+		public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+			UsuarioVO usuarioVO = new UsuarioVO();
+			usuarioVO.setCdUsuario(rs.getString("CDUSUARI"));
+			usuarioVO.setDsUsuario(rs.getString("DSUSUARI"));
+			usuarioVO.setDsNombre(rs.getString("DSNOMBRE"));
+			usuarioVO.setDsNombre1(rs.getString("DSNOMBRE1"));
+			usuarioVO.setDsApellido(rs.getString("DSAPELLIDO"));
+			usuarioVO.setDsApellido1(rs.getString("DSAPELLIDO1"));
+			usuarioVO.setOtSexo(rs.getString("OTSEXO"));
+			usuarioVO.setdSexo(rs.getString("DSEXO"));
+			usuarioVO.setFeNacimi(rs.getString("FENACIMI"));
+			usuarioVO.setCdrfc(rs.getString("CDRFC"));
+			usuarioVO.setDsEmail(rs.getString("DSEMAIL"));
+			
+			
+			return usuarioVO;
+        }
+    }
+
     
+    @Override
+    public List<RolVO> obtieneRolesUsuario(Map params) throws DaoException {
+    	Map<String, Object> resultado = ejecutaSP(new ObtieneRolesUsuario(getDataSource()), params);
+    	return (List<RolVO>) resultado.get("PV_REGISTRO_O");
+    }
     
+    protected class ObtieneRolesUsuario extends StoredProcedure {
+    	
+    	protected ObtieneRolesUsuario(DataSource dataSource) {
+    		super(dataSource, "PKG_GENERA_USUARIO.P_GET_ROLES_USUARIO");
+    		declareParameter(new SqlParameter("PV_CDUSUARI_I", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("PV_REGISTRO_O", OracleTypes.CURSOR, new ObtieneRolesUsuarioMapper()));
+    		declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("PV_TITLE_O", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
+    
+    protected class ObtieneRolesUsuarioMapper implements RowMapper {
+    	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+    		RolVO rol =  new RolVO();
+    		rol.setCodigoRol(rs.getString("CDSISROL"));
+    		rol.setDescripcionRol(rs.getString("DSSISROL"));
+    		
+    		return rol;
+    	}
+    }
 
 }

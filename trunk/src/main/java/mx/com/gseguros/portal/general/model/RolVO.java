@@ -3,6 +3,9 @@ package mx.com.gseguros.portal.general.model;
 import java.io.Serializable;
 import java.util.List;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
+
 import mx.com.aon.portal.model.BaseObjectVO;
 import mx.com.aon.portal.model.EmpresaVO;
 
@@ -28,6 +31,9 @@ public class RolVO implements Serializable {
 	 */
 	private static final long serialVersionUID = -6843784051408138330L;
 
+	private String codigoRol;
+	private String descripcionRol;
+	
 	private BaseObjectVO objeto;
 	private String condicion;
 	private boolean activado;
@@ -73,5 +79,28 @@ public class RolVO implements Serializable {
 	public void setActivado(boolean activado) {
 		this.activado = activado;
 	}
+
+	public String getCodigoRol() {
+		return codigoRol;
+	}
+
+	public void setCodigoRol(String codigoRol) {
+		this.codigoRol = codigoRol;
+	}
+
+	public String getDescripcionRol() {
+		return descripcionRol;
+	}
+
+	public void setDescripcionRol(String descripcionRol) {
+		this.descripcionRol = descripcionRol;
+	}
+	
+	/**
+     * @return String
+     */
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
+    }
 	
 }
