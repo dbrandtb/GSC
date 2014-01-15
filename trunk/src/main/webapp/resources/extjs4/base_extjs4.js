@@ -126,6 +126,46 @@ function validarRFC(rfc,tper)
 	return valido;
 }
 
+function datosIncompletos()
+{
+	Ext.Msg.show({
+        title    : 'Datos incompletos'
+        ,icon    : Ext.Msg.WARNING
+        ,msg     : 'Favor de capturar todos los campos requeridos'
+        ,buttons : Ext.Msg.OK
+    });
+}
+
+function errorComunicacion()
+{
+	Ext.Msg.show({
+        title    : 'Error'
+        ,icon    : Ext.Msg.ERROR
+        ,msg     : 'Error de comunicaci&oacute;n'
+        ,buttons : Ext.Msg.OK
+    });
+}
+
+function mensajeWarning(mensaje)
+{
+	Ext.Msg.show({
+		title    : 'Error'
+        ,icon    : Ext.Msg.WARNING
+        ,msg     : mensaje
+        ,buttons : Ext.Msg.OK
+    });
+}
+
+function mensajeError(mensaje)
+{
+	Ext.Msg.show({
+		title    : 'Error'
+        ,icon    : Ext.Msg.ERROR
+        ,msg     : mensaje
+        ,buttons : Ext.Msg.OK
+    });
+}
+
 ////////////////////////////
 ////// INICIO MODELOS //////
 ////////////////////////////

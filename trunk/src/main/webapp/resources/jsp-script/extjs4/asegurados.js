@@ -3257,7 +3257,7 @@ Ext
 					    	,src  : contexto+'/images/proceso/emision/imagencotizador.PNG'
 					    }
 					]
-				}).showAt(638, 40);
+				}).showAt(610, 50);
 			}
 
 			if (hayTramiteCargado) {

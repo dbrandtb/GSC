@@ -9,4 +9,21 @@
         </action>
        
     </package>
+    
+    <package name="emision" extends="json-default" namespace="/emision">
+        
+        <action name="cotizacion" class="CotizacionAction" method="pantallaCotizacion">
+            <result name="success">/jsp-script/proceso/emision/cotizacion.jsp</result>
+        </action>
+        
+        <action name="cotizar" class="CotizacionAction" method="cotizar">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+        </action>
+       
+    </package>
+    
 </struts>

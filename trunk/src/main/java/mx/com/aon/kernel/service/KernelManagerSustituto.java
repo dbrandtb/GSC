@@ -34,6 +34,7 @@ public interface KernelManagerSustituto {
     public WrapperResultados ejecutaASIGSVALIPOL_EMI(Map<String,String> parameters) throws ApplicationException;
     public WrapperResultados clonaPersonas(Map<String,Object> parameters) throws ApplicationException;
     public List<ResultadoCotizacionVO> obtenerResultadosCotizacion(Map<String,String> parameters) throws ApplicationException;
+    public List<Map<String,String>>    obtenerResultadosCotizacion2(Map<String,String> params) throws ApplicationException;
     public List<CoberturaCotizacionVO> obtenerCoberturas(Map<String,String> parameters) throws ApplicationException;
     public AyudaCoberturaCotizacionVO obtenerAyudaCobertura(String idCobertura,String idRamo,String idCiaAsegurador) throws ApplicationException;
     public List<Tatri> obtenerTatrisit(String cdtipsit) throws ApplicationException;
