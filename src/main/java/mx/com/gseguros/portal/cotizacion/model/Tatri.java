@@ -22,7 +22,28 @@ public class Tatri {
     private String swtarifi;
     private boolean money=true;
     private Map<String,String>mapa;
+    private String swpresen;
 
+    @Override
+    public String toString()
+    {
+    	String s="";
+    	s+="dsatribu: " + dsatribu            + ", ";
+    	s+="cdatribu: " + cdatribu            + ", ";
+    	s+="swformat: " + swformat            + ", ";
+    	s+="nmlmin: "   + nmlmin              + ", ";
+    	s+="nmlmax: "   + nmlmax              + ", ";
+    	s+="swobliga: " + swobliga            + ", ";
+    	s+="ottabval: " + ottabval            + ", ";
+    	s+="cdtablj1: " + cdtablj1            + ", ";
+    	s+="type: "     + type                + ", ";
+    	s+="swsuscri: " + swsuscri            + ", ";
+    	s+="readOnly: " + (readOnly?"si":"no")+ ", ";
+    	s+="swtarifi: " + swtarifi            + ", ";
+    	s+="money: "    + money;
+    	return s;
+    }
+    
     public String getCdatribu() {
         return cdatribu;
     }
@@ -133,5 +154,13 @@ public class Tatri {
 
 	public void setMapa(Map<String, String> mapa) {
 		this.mapa = mapa;
+	}
+
+	public String getSwpresen() {
+		return swpresen;
+	}
+
+	public void setSwpresen(String swpresen) {
+		this.swpresen = swpresen;
 	}
 }

@@ -90,6 +90,8 @@
         <pattern>/jsp-script/proceso/rehabilitacion/*.jsp</pattern>
         <pattern>/endosos/*.action</pattern>
         <pattern>/jsp-script/proceso/endosos/*.jsp</pattern>
+        <pattern>/emision/*.action</pattern>
+        <pattern>/jsp-script/proceso/emision/*.jsp</pattern>
         
         <pattern>/siniestros/autorizacionServicios.action</pattern>
         <pattern>/jsp-script/proceso/siniestros/autorizacionServicios.jsp</pattern>

@@ -23,6 +23,7 @@ import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.cotizacion.model.ConsultaDatosPolizaAgenteVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Tatri;
+import mx.com.gseguros.portal.dao.impl.DinamicMapper;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.emision.model.DatosRecibosDxNVO;
 import mx.com.gseguros.utils.Utilerias;
@@ -72,6 +73,7 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String P_UPD_TVALOSIT = "P_UPD_TVALOSIT";
     public static final String P_CLONAR_PERSONAS="P_CLONAR_PERSONAS";
     public static final String OBTENER_RESULTADOS_COTIZACION="OBTENER_RESULTADOS_COTIZACION";
+    public static final String OBTENER_RESULTADOS_COTIZACION2="OBTENER_RESULTADOS_COTIZACION2";
     public static final String OBTENER_COBERTURAS="OBTENER_COBERTURAS";
     public static final String OBTENER_AYUDA_COBERTURA="OBTENER_AYUDA_COBERTURA";
     public static final String OBTENER_TATRISIT="OBTENER_TATRISIT";
@@ -157,6 +159,7 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(P_MOV_MPOLISIT, new InsertaMPolisit(getDataSource()));
         addStoredProcedure(P_CLONAR_PERSONAS, new ClonaPersonas(getDataSource()));
 		addStoredProcedure(OBTENER_RESULTADOS_COTIZACION, new ObtieneResultadosCotiza(getDataSource()));
+		addStoredProcedure(OBTENER_RESULTADOS_COTIZACION2, new ObtieneResultadosCotiza2(getDataSource()));
         addStoredProcedure(OBTENER_COBERTURAS, new ObtieneCoberturas(getDataSource()));
         addStoredProcedure(OBTENER_AYUDA_COBERTURA, new ObtieneAyudaCoberturas(getDataSource()));
         addStoredProcedure(OBTENER_TATRISIT, new ObtieneTatrisit(getDataSource()));
@@ -1049,6 +1052,40 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     ////// Override de obtener cotizacion //////
     ////////////////////////////////////////////
     
+    ////////////////////////////////////////////////////
+    ////// Obtener resultados cotizacion con mapa //////
+    /*////////////////////////////////////////////////*/
+    protected class ObtieneResultadosCotiza2 extends CustomStoredProcedure
+    {
+    	protected ObtieneResultadosCotiza2(DataSource dataSource)
+        {
+            super(dataSource,"PKG_COTIZA.P_GEN_TARIFICACION");
+            declareParameter(new SqlParameter("pv_cdusuari_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdelemen_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdtipsit_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_record_o" , OracleTypes.CURSOR, new DinamicMapper()));
+            declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+            compile();
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception
+    	{
+            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+            WrapperResultados wrapperResultados = mapper.build(map);
+            List result = (List) map.get("pv_record_o");
+            wrapperResultados.setItemList(result);
+            return wrapperResultados;
+    	}
+    }
+    /*////////////////////////////////////////////////*/
+    ////// Obtener resultados cotizacion con mapa //////
+    ////////////////////////////////////////////////////
+    
     ////////////////////////////////////////////
     ////// Override de obtener coberturas //////
     /*////////////////////////////////////////*/
@@ -1177,6 +1214,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
             result.setCdtablj1(rs.getString("CDTABLJ1"));
             result.setSwsuscri(rs.getString("SWSUSCRI"));
             result.setSwtarifi(rs.getString("SWTARIFI"));
+            result.setSwpresen(rs.getString("SWPRESEN"));
             return result;
         }
     }

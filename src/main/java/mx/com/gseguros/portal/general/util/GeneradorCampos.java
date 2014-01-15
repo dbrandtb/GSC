@@ -28,6 +28,7 @@ public class GeneradorCampos {
     private String cdtipsit;
     
     private boolean parcial=false;
+    private boolean conEditor=false;
     
     public GeneradorCampos(String context)
     {
@@ -41,12 +42,25 @@ public class GeneradorCampos {
         this.genera(lt);
     }
     
+    public void generaConEditor(List<Tatri> lt) throws Exception
+    {
+    	this.conEditor=true;
+    	this.genera(lt);
+    }
+    
+    public void generaParcialConEditor(List<Tatri> lt) throws Exception
+    {
+    	this.parcial=true;
+    	this.conEditor=true;
+    	this.genera(lt);
+    }
+    
     public void genera(List<Tatri> lt) throws Exception
     {
     	idPrefix="idAutoGenerado_"+System.currentTimeMillis()+"_"+((long)Math.ceil((Math.random()*10000d)))+"_";
         items=new Item(parcial?null:"items",null,Item.ARR);
         fields=new Item(parcial?null:"fields",null,Item.ARR);
-        columns=new Item(null,null,Item.ARR);
+        columns=new Item(parcial?null:"columns",null,Item.ARR);
         if(lt!=null&&!lt.isEmpty())
         {
             for(int i=0;i<lt.size();i++)
@@ -59,79 +73,12 @@ public class GeneradorCampos {
         log.debug(columns.toString());
     }
     
-    public void generaCampoYFieldYColumn(List<Tatri> lt, Tatri ta, Integer idx) throws Exception
+    private Item generaItem(List<Tatri> lt, Tatri ta, Integer idx, boolean esEditor) throws Exception
     {
     	boolean listeners=false;
-        Item fi=new Item();
-        fi.setType(Item.OBJ);
-        if(!ta.getType().equalsIgnoreCase(Tatri.TATRIGEN))
-        {            	
-        	fi.add(Item.crear("name", this.namePrefix+(ta.getCdatribu().length()>1?ta.getCdatribu():"0"+ta.getCdatribu())));
-        }
-        else
-        {
-        	fi.add(Item.crear("name", ta.getMapa().get("OTVALOR10")));
-        }
-        String type="string";
-        if(ta.getSwformat().equals("A")||StringUtils.isNotBlank(ta.getOttabval()))//si es combo solo pone strings
-            type="string";
-        else if(ta.getSwformat().equals("N"))
-            type="int";
-        else if(ta.getSwformat().equals("P"))
-        	type="float";
-        else if(ta.getSwformat().equals("F"))
-            type="date";
-        fi.add(Item.crear("type", type));
-        if(ta.getSwformat().equals("F"))
-        	fi.add(Item.crear("dateFormat", "d/m/Y"));
-        
-        Item col=new Item();
-        col.setType(Item.OBJ);
-        if(!ta.getType().equalsIgnoreCase(Tatri.TATRIGEN))
-        {            	
-        	col.add("dataIndex",this.namePrefix+(ta.getCdatribu().length()>1?ta.getCdatribu():"0"+ta.getCdatribu()));
-        }
-        else
-        {
-        	col.add("dataIndex",ta.getMapa().get("OTVALOR10"));
-        }
-        col.add("header",ta.getDsatribu());
-        col.add("flex",1);
-        if(type.equals("date"))
-        {
-        	col.add("xtype"  , "datecolumn");
-        	col.add("format" , "d/m/Y");
-        }
-        if(ta.getType()==Tatri.TATRIGEN)
-        {
-        	String visible=ta.getMapa().get("OTVALOR08");
-        	if(visible==null||visible.length()==0||visible.equalsIgnoreCase("N"))
-        	{
-        		col=null;
-        	}
-        	else if(visible.equalsIgnoreCase("H"))
-        	{
-        		col.add("hidden",true);
-        	}
-        	
-        	if(col!=null)
-        	{
-	        	String renderer=ta.getMapa().get("OTVALOR09");
-	        	if(renderer==null||renderer.length()==0||renderer.equalsIgnoreCase("N"))
-	        	{
-	        		//sin renderer
-	        	}
-	        	else if(renderer.equalsIgnoreCase("MONEY"))
-	        	{
-	        		col.add(Item.crear("renderer","Ext.util.Format.usMoney").setQuotes(""));
-	        	}
-	        	else if(renderer.length()>0)
-	        	{
-	        		col.add(Item.crear("renderer",renderer).setQuotes(""));
-	        	}
-        	}
-        }
-        
+    	
+    	//////////////////
+        ////// item //////
         Item it=new Item();
         if(StringUtils.isNotBlank(ta.getOttabval()))
         //se alimenta de la base de datos
@@ -139,11 +86,11 @@ public class GeneradorCampos {
             it.setType(Item.OBJ);
             it.setComposedName("Ext.create('Ext.form.ComboBox',{");
             it.setComposedNameClose("})");
-            it.add(Item.crear("id", this.idPrefix+idx));
+            it.add(Item.crear("id", this.idPrefix+(esEditor?"editor_":"")+idx));
             it.add(Item.crear("cdatribu", ta.getCdatribu()));
             it.add(Item.crear("readOnly", ta.isReadOnly()));
             it.add(Item.crear("allowBlank",ta.getSwobliga()==null||!ta.getSwobliga().equalsIgnoreCase("S")));
-            it.add(Item.crear("fieldLabel",ta.getDsatribu()));
+            it.add(Item.crear("fieldLabel",!esEditor?ta.getDsatribu():""));
             it.add(Item.crear("style","margin:5px"));
             it.add(Item.crear("forceSelection",false));
             it.add(Item.crear("typeAhead",true));
@@ -278,11 +225,11 @@ public class GeneradorCampos {
             {
             	if(idx>0&&StringUtils.isNotBlank(ta.getCdtablj1()))//es padre e hijo a la vez
             	{
-            		this.agregarHerencia2(lt,it,idx);
+            		this.agregarHerencia2(lt,it,idx,esEditor);
             	}
             	else
             	{
-            		this.agregarHerencia(lt,it,idx);
+            		this.agregarHerencia(lt,it,idx,esEditor);
             	}
             	listeners=true;
             }	
@@ -298,10 +245,10 @@ public class GeneradorCampos {
                 		+"        this.noEsPrimera=true;"
                 		+"        this.getStore().load({"
                 		+"            params:{"
-                		+"		          'params.idPadre':Ext.getCmp('"+this.idPrefix+(idx-1)+"').getValue()"
+                		+"		          'params.idPadre':Ext.getCmp('"+this.idPrefix+(esEditor?"editor_":"")+(idx-1)+"').getValue()"
                 		+"    		  },"
                 		+"		      callback:function(){"
-                		+"			      var thisCmp=Ext.getCmp('"+this.idPrefix+idx+"');"
+                		+"			      var thisCmp=Ext.getCmp('"+this.idPrefix+(esEditor?"editor_":"")+idx+"');"
                         +"			      var valorActual=thisCmp.getValue();"
                         +"			      var dentro=false;"
                         +"			      thisCmp.getStore().each(function(record){"
@@ -330,11 +277,11 @@ public class GeneradorCampos {
             	it.setComposedName("Ext.create('Ext.form.TextArea',{");
             }
             it.setComposedNameClose("})");
-            it.add(Item.crear("id", this.idPrefix+idx));
+            it.add(Item.crear("id", this.idPrefix+(esEditor?"editor_":"")+idx));
             it.add(Item.crear("cdatribu", ta.getCdatribu()));
             it.add(Item.crear("readOnly", ta.isReadOnly()));
             it.add(Item.crear("allowBlank",ta.getSwobliga()==null||!ta.getSwobliga().equalsIgnoreCase("S")));
-            it.add(Item.crear("fieldLabel",ta.getDsatribu()));
+            it.add(Item.crear("fieldLabel",!esEditor?ta.getDsatribu():""));
             it.add(Item.crear("style","margin:5px"));
             //it.add(Item.crear("emptyText", "Introduzca..."));
             if(ta.getNmlmin()!=null)
@@ -347,7 +294,7 @@ public class GeneradorCampos {
             }
             if(idx<lt.size()-1&&StringUtils.isNotBlank(lt.get(idx+1).getCdtablj1()))
             {
-            	this.agregarHerencia(lt,it,idx);
+            	this.agregarHerencia(lt,it,idx,esEditor);
             }
             if(!ta.getType().equalsIgnoreCase(Tatri.TATRIGEN))
             {
@@ -382,11 +329,11 @@ public class GeneradorCampos {
             it.setType(Item.OBJ);
             it.setComposedName("Ext.create('Ext.form.NumberField',{");
             it.setComposedNameClose("})");
-            it.add(Item.crear("id", this.idPrefix+idx));
+            it.add(Item.crear("id", this.idPrefix+(esEditor?"editor_":"")+idx));
             it.add(Item.crear("cdatribu", ta.getCdatribu()));
             it.add(Item.crear("readOnly", ta.isReadOnly()));
             it.add(Item.crear("allowBlank",ta.getSwobliga()==null||!ta.getSwobliga().equalsIgnoreCase("S")));
-            it.add(Item.crear("fieldLabel",ta.getDsatribu()));
+            it.add(Item.crear("fieldLabel",!esEditor?ta.getDsatribu():""));
             it.add(Item.crear("style","margin:5px"));
             //it.add(Item.crear("emptyText", "Introduzca..."));
             if(ta.getNmlmin()!=null)
@@ -399,7 +346,7 @@ public class GeneradorCampos {
             }
             if(idx<lt.size()-1&&StringUtils.isNotBlank(lt.get(idx+1).getCdtablj1()))
             {
-            	this.agregarHerencia(lt,it,idx);
+            	this.agregarHerencia(lt,it,idx,esEditor);
             }
             if(!ta.getType().equalsIgnoreCase(Tatri.TATRIGEN))
             {
@@ -434,11 +381,11 @@ public class GeneradorCampos {
             it.setType(Item.OBJ);
             it.setComposedName("Ext.create('Ext.form.DateField',{");
             it.setComposedNameClose("})");
-            it.add(Item.crear("id", this.idPrefix+idx));
+            it.add(Item.crear("id", this.idPrefix+(esEditor?"editor_":"")+idx));
             it.add(Item.crear("cdatribu", ta.getCdatribu()));
             it.add(Item.crear("readOnly", ta.isReadOnly()));
             it.add(Item.crear("allowBlank",ta.getSwobliga()==null||!ta.getSwobliga().equalsIgnoreCase("S")));
-            it.add(Item.crear("fieldLabel",ta.getDsatribu()));
+            it.add(Item.crear("fieldLabel",!esEditor?ta.getDsatribu():""));
             it.add(Item.crear("style","margin:5px"));
             it.add(Item.crear("format","d/m/Y"));
             if(!ta.getType().equalsIgnoreCase(Tatri.TATRIGEN))
@@ -469,29 +416,130 @@ public class GeneradorCampos {
             	/////////////////////////////////////
             }
         }
+        ////// item //////
+        //////////////////
+        
+        return it;
+    }
+    
+    public void generaCampoYFieldYColumn(List<Tatri> lt, Tatri ta, Integer idx) throws Exception
+    {
+    	///////////////////
+    	////// field //////
+        Item fi=new Item();
+        fi.setType(Item.OBJ);
+        if(!ta.getType().equalsIgnoreCase(Tatri.TATRIGEN))
+        {            	
+        	fi.add(Item.crear("name", this.namePrefix+(ta.getCdatribu().length()>1?ta.getCdatribu():"0"+ta.getCdatribu())));
+        }
+        else
+        {
+        	fi.add(Item.crear("name", ta.getMapa().get("OTVALOR10")));
+        }
+        String type="string";
+        if(ta.getSwformat().equals("A")||StringUtils.isNotBlank(ta.getOttabval()))//si es combo solo pone strings
+            type="string";
+        else if(ta.getSwformat().equals("N"))
+            type="int";
+        else if(ta.getSwformat().equals("P"))
+        	type="float";
+        else if(ta.getSwformat().equals("F"))
+            type="date";
+        fi.add(Item.crear("type", type));
+        if(ta.getSwformat().equals("F"))
+        	fi.add(Item.crear("dateFormat", "d/m/Y"));
+    	////// field //////
+        ///////////////////
+        
+        ////////////////////
+        ////// column //////
+        Item col=new Item();
+        col.setType(Item.OBJ);
+        if(!ta.getType().equalsIgnoreCase(Tatri.TATRIGEN))
+        {            	
+        	col.add("dataIndex",this.namePrefix+(ta.getCdatribu().length()>1?ta.getCdatribu():"0"+ta.getCdatribu()));
+        }
+        else
+        {
+        	col.add("dataIndex",ta.getMapa().get("OTVALOR10"));
+        }
+        col.add("header",ta.getDsatribu());
+        col.add("flex",1);
+        if(type.equals("date"))
+        {
+        	col.add("xtype"  , "datecolumn");
+        	col.add("format" , "d/m/Y");
+        }
+        if(ta.getType()==Tatri.TATRIGEN)
+        {
+        	String visible=ta.getMapa().get("OTVALOR08");
+        	if(visible==null||visible.length()==0||visible.equalsIgnoreCase("N"))
+        	{
+        		col=null;
+        	}
+        	else if(visible.equalsIgnoreCase("H"))
+        	{
+        		col.add("hidden",true);
+        	}
+        	
+        	if(col!=null)
+        	{
+	        	String renderer=ta.getMapa().get("OTVALOR09");
+	        	if(renderer==null||renderer.length()==0||renderer.equalsIgnoreCase("N"))
+	        	{
+	        		//sin renderer
+	        	}
+	        	else if(renderer.equalsIgnoreCase("MONEY"))
+	        	{
+	        		col.add(Item.crear("renderer","Ext.util.Format.usMoney").setQuotes(""));
+	        	}
+	        	else if(renderer.length()>0)
+	        	{
+	        		col.add(Item.crear("renderer",renderer).setQuotes(""));
+	        	}
+        	}
+        }
+        ////// column //////
+        ////////////////////
+        
+        ///////////////////////////
+        ////// item y editor //////
+        Item it=this.generaItem(lt, ta, idx, false);
+        Item editor=null;
+        if(conEditor)
+        {
+        	editor=this.generaItem(lt, ta, idx, true);
+        }
+        ////// item y editor //////
+        ///////////////////////////
+        
         items.add(it);
         fields.add(fi);
         if(col!=null)
         {
+        	if(conEditor)
+        	{
+        		col.add("editor",editor);
+        	}
         	columns.add(col);
         }
     }
 
-    private void agregarHerencia(List<Tatri> lt, Item it, Integer idx) throws Exception {//para el padre anidado
+    private void agregarHerencia(List<Tatri> lt, Item it, Integer idx, boolean editor) throws Exception {//para el padre anidado
     	it.add(Item.crear("listeners","" +
     			"{" +
     			"    blur:{" +
-    			"        fn:function(){debug('blur');Ext.getCmp('"+this.idPrefix+(idx+1)+"').heredar(true);}" +
+    			"        fn:function(){debug('blur');Ext.getCmp('"+this.idPrefix+(editor?"editor_":"")+(idx+1)+"').heredar(true);}" +
     			"    }" +
     			"}")
     			.setQuotes(""));
 	}
     
-    private void agregarHerencia2(List<Tatri> lt, Item it, Integer idx) throws Exception {//para el padre anidado
+    private void agregarHerencia2(List<Tatri> lt, Item it, Integer idx, boolean editor) throws Exception {//para el padre anidado
     	it.add(Item.crear("listeners","" +
     			"{" +
     			"    blur:{" +
-    			"        fn:function(){debug('blur');Ext.getCmp('"+this.idPrefix+(idx+1)+"').heredar(true);}" +
+    			"        fn:function(){debug('blur');Ext.getCmp('"+this.idPrefix+(editor?"editor_":"")+(idx+1)+"').heredar(true);}" +
     			"    }," +
     			"    change:{" +
     			"        fn:function(){this.heredar();}" +
