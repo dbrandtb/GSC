@@ -10,20 +10,19 @@
     <bean id="ReportesAction" class="mx.com.gseguros.portal.general.util.ReportesAction" scope="prototype" >
 	    <property name="reportesManager" ref="ReportesManager" />
     </bean>
-    
+
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-        <property name="host" value="smtp.bizmail.yahoo.com" />
-        <!-- <property name="port" value="587" /> -->
-        <property name="username" value="ventasavs.sza@biosnettcs.com" />
-        <property name="password" value="avsbiosnet2013" />
-        
+       <property name="host" value="${mail.host}" />
+        <property name="port" value="${mail.port}" />
+        <property name="username" value="${mail.username}" />
+        <property name="password" value="${mail.password}" />
         <property name="javaMailProperties">
             <props>
-                <prop key="mail.smtp.auth">true</prop>
-                <prop key="mail.smtp.starttls.enable">false</prop>
+                <prop key="mail.debug">${mail.debug}</prop>
+                <prop key="mail.smtp.auth">${mail.smtp.auth}</prop>
+                <prop key="mail.smtp.starttls.enable">${mail.smtp.starttls.enable}</prop>
             </props>
         </property>
-        
     </bean>
     
     <bean id="mailMail" class="mx.com.gseguros.utils.MailMail">
@@ -33,7 +32,7 @@
     </bean>
     
     <bean id="cotizacionMailMessage" class="org.springframework.mail.SimpleMailMessage">
-        <property name="from" value="ventasavs.sza@biosnettcs.com" />
+        <property name="from" value="${mail.from}" />
         <!-- <property name="to" value="" /> -->
         <property name="subject">
             <value><![CDATA[ Cotización solicitada ]]></value>
