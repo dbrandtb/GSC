@@ -915,9 +915,18 @@ public class ComplementariosAction extends PrincipalCoreAction
 			if(lisUsuSinDir!=null&&lisUsuSinDir.size()>0)
 			{
 				mensajeRespuesta="Favor de verificar la direcci&oacute;n de los siguientes asegurados:<br/>";
-				for(int i=0;i<lisUsuSinDir.size();i++)
+				// f a v o r
+				//0 1 2 3 4 5
+				if(lisUsuSinDir.get(0).get("nombre").substring(0,5).equalsIgnoreCase("favor"))
 				{
-					mensajeRespuesta+=lisUsuSinDir.get(i).get("nombre")+"<br/>";
+					mensajeRespuesta=lisUsuSinDir.get(0).get("nombre");
+				}
+				else
+				{
+					for(int i=0;i<lisUsuSinDir.size();i++)
+					{
+						mensajeRespuesta+=lisUsuSinDir.get(i).get("nombre")+"<br/>";
+					}					
 				}
 				log.debug("Se va a terminar el proceso porque faltan direcciones");
 				return SUCCESS;

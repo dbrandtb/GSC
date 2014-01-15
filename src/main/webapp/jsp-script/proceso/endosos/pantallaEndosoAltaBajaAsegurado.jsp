@@ -231,14 +231,14 @@ Ext.onReady(function()
 			                			panEndAltBajAseStoreAltas.add(
 			                			{
 			                				nmsituac          : panEndAltBajAseNmsituac
-			                				,nombre           : panEndAltBajAseValues['smap1.nombre']
-			                				,segundo_nombre   : panEndAltBajAseValues['smap1.nombre2']
-			                			    ,Apellido_Paterno : panEndAltBajAseValues['smap1.apat']
-			                			    ,Apellido_Materno : panEndAltBajAseValues['smap1.amat']
+			                				,nombre           : panEndAltBajAseValues['nombre']
+			                				,segundo_nombre   : panEndAltBajAseValues['nombre2']
+			                			    ,Apellido_Paterno : panEndAltBajAseValues['apat']
+			                			    ,Apellido_Materno : panEndAltBajAseValues['amat']
 			                			    ,cdrol            : 2
 			                			    ,Parentesco       : panEndAltBajAseValues['parametros.pv_otvalor16']
-			                			    ,cdrfc            : panEndAltBajAseValues['smap1.rfc']
-			                			    ,tpersona         : panEndAltBajAseValues['smap1.tpersona']
+			                			    ,cdrfc            : panEndAltBajAseValues['rfc']
+			                			    ,tpersona         : panEndAltBajAseValues['tpersona']
 			                			    ,sexo             : panEndAltBajAseValues['parametros.pv_otvalor01']
 			                			    ,fenacimi         : panEndAltBajAseValues['parametros.pv_otvalor19']
 			                			});

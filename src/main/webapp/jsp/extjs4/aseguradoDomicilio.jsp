@@ -240,6 +240,7 @@ Ext.onReady(function(){
                         fieldLabel     : 'Exterior',
                         xtype          : 'textfield',
                         name           : 'smap1.NMNUMERO',
+                        maxLength      : 10,
                         allowBlank     : false,
                         readOnly       : !esElContratanteP4
                     },
@@ -247,6 +248,7 @@ Ext.onReady(function(){
                         fieldLabel     : 'Interior',
                         xtype          : 'textfield',
                         name           : 'smap1.NMNUMINT',
+                        maxLength      : 10,
                         allowBlank     : true,
                         readOnly       : !esElContratanteP4
                     }

@@ -403,7 +403,7 @@ Ext.onReady(function() {
                         formulario['ramo']=formulario['params.ramo'];
                         formulario['estado']=formulario['params.estado'];
                         submitValues['params']=formulario;
-                        submitValues['datosPorcentajeAgente']=guardarRegistros; // guardamos la información del grid, dependiendo del numero
+                        submitValues['datosPorcentajeAgente']=guardarRegistros; // guardamos la informaciï¿½n del grid, dependiendo del numero
                         menuPrincipal.setLoading(true);
                         Ext.Ajax.request(
                                 {
@@ -422,6 +422,7 @@ Ext.onReady(function() {
                                                 buttons: Ext.Msg.OK,
                                                 icon: Ext.Msg.OK
                                             });
+                                            expande(2);
                                         }
                                         else{
                                             Ext.Msg.show({

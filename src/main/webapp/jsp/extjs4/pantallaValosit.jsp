@@ -109,6 +109,7 @@ Ext.onReady(function()
                                     msg: 'Sus cambios han sido guardados',
                                     buttons: Ext.Msg.OK
                                 });
+                                expande(2);
                             },
                             failure:function(){
                                 form.setLoading(false);
