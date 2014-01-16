@@ -337,7 +337,7 @@ public class EndososAction extends PrincipalCoreAction
 			////// re generar los documentos //////
 		    ///////////////////////////////////////
 			
-			ejecutaWSclienteSaludEndoso((String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"), (String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"), respuestaEndosoNombres.get("pv_nmsuplem_o"), "INSERTA");
+			ejecutaWSclienteSaludEndoso((String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"), (String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"), respuestaEndosoNombres.get("pv_nmsuplem_o"), "ACTUALIZA");
 			
 			/**
 			 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
@@ -758,7 +758,7 @@ public class EndososAction extends PrincipalCoreAction
 		    ///////////////////////////////////////
 			
 			
-			ejecutaWSclienteSaludEndoso(smap1.get("pv_cdunieco"), smap1.get("pv_cdramo"), smap1.get("pv_estado"), smap1.get("pv_nmpoliza"), resEndDomi.get("pv_nmsuplem_o"), "INSERTA");
+			ejecutaWSclienteSaludEndoso(smap1.get("pv_cdunieco"), smap1.get("pv_cdramo"), smap1.get("pv_estado"), smap1.get("pv_nmpoliza"), resEndDomi.get("pv_nmsuplem_o"), "ACTUALIZA");
 			
 			/**
 			 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
@@ -2686,7 +2686,7 @@ public class EndososAction extends PrincipalCoreAction
 		params.put("pv_nmpoliza_i", nmpoliza);
 		params.put("pv_nmsuplem_i", nmsuplem);
 		
-		if(StringUtils.isBlank(Op)) Op = "INSERTA";
+		if(StringUtils.isBlank(Op)) Op = "ACTUALIZA";
 		Operacion Operation = Operacion.valueOf(Op);
 		
 		WrapperResultados result = null;
@@ -3086,7 +3086,7 @@ public class EndososAction extends PrincipalCoreAction
 			////// re generar los documentos //////
 		    ///////////////////////////////////////
 			
-			ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "INSERTA");
+			ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
 			
 			mensaje="Endoso confirmado "+nsuplogi;
 			success=true;
@@ -3457,7 +3457,7 @@ public class EndososAction extends PrincipalCoreAction
 			////// re generar los documentos //////
 		    ///////////////////////////////////////
 			
-			ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "INSERTA");
+			ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
 			
 			mensaje="Endoso confirmado "+nsuplogi;
 			success=true;
