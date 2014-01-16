@@ -28,17 +28,127 @@
     var venExcluStoreUsa;
     var venExcluStoreTipos;
     var loadExcluTimeoutVar;
+    var _2_form;
     /*///////////////////*/
     ////// variables //////
     ///////////////////////
     
-    ///////////////////////
-    ////// funciones //////
-    /*///////////////////*/
+///////////////////////
+////// funciones //////
+/*///////////////////*/
+function _2_documentos()
+{
+	Ext.create('Ext.window.Window',
+    {
+        title        : 'Documentos del tr&aacute;mite '+panendExInput['ntramite']
+        ,modal       : true
+        ,buttonAlign : 'center'
+        ,width       : 600
+        ,height      : 400
+        ,autoScroll  : true
+        ,loader      :
+        {
+            url       : endnomUrlDoc
+            ,params   :
+            {
+                 'smap1.cdunieco' : inputCduniecopx
+                ,'smap1.cdramo'   : inputCdramopx
+                ,'smap1.estado'   : inputEstadopx
+                ,'smap1.nmpoliza' : inputNmpolizapx
+                ,'smap1.nmsuplem' : '0'
+                ,'smap1.ntramite' : panendExInput['ntramite']
+                ,'smap1.nmsolici' : ''
+                ,'smap1.tipomov'  : '0'
+            }
+            ,scripts  : true
+            ,autoLoad : true
+        }
+    }).show();
+}
     
-    /*///////////////////*/
-    ////// funciones //////
-    ///////////////////////
+function _2_confirmar()
+{
+	var boton=this;
+	
+	var valido=true;
+	
+	if(valido)
+	{
+		valido=_2_form.isValid();
+		if(!valido)
+		{
+			datosIncompletos();
+		}
+	}
+	
+    if(valido)
+    {
+    	boton.setLoading(true);
+	    Ext.Ajax.request(
+	    {
+	        url     : venExcluUrlAddExclu
+	        ,timeout : 180000
+	        ,params : 
+	        {
+	            'smap1.pv_cdunieco_i'  : inputCduniecopx
+	            ,'smap1.pv_cdramo_i'   : inputCdramopx
+	            ,'smap1.pv_estado_i'   : inputEstadopx
+	            ,'smap1.pv_nmpoliza_i' : inputNmpolizapx
+	            ,'smap1.pv_nmsituac_i' : inputNmsituacpx
+	            ,'smap1.pv_nmsuplem_i' : panendExInput['nmsuplem']
+	            ,'smap1.pv_ntramite_i' : panendExInput['ntramite']
+	            ,'smap1.pv_cdtipsit_i' : panendExInput['cdtipsit']
+	            ,'smap1.confirmar'     : 'si'
+	            ,'smap1.fecha_endoso'  : Ext.Date.format(Ext.getCmp('_2_fieldFechaId').getValue(),'d/m/Y')
+	        }
+	        ,success : function (response)
+	        {
+	            debug('success');
+	            boton.setLoading(false);
+	            var json=Ext.decode(response.responseText);
+	            if(json.success==true)
+	            {
+	                Ext.Msg.show({
+	                    title:'Endoso confirmando',
+	                    msg: 'Endoso confirmado correctamente',
+	                    buttons: Ext.Msg.OK
+	                });
+	                //////////////////////////////////
+	                ////// usa codigo del padre //////
+	                /*//////////////////////////////*/
+	                marendNavegacion(2);
+	                /*//////////////////////////////*/
+	                ////// usa codigo del padre //////
+	                //////////////////////////////////
+	            }
+	            else
+	            {
+	                me.up().up().setLoading(false);
+	                Ext.Msg.show({
+	                    title:'Error',
+	                    msg: 'Error al confirmar endoso',
+	                    buttons: Ext.Msg.OK,
+	                    icon: Ext.Msg.ERROR
+	                });
+	            }
+	        }
+	        ,failure : function ()
+	        {
+	            boton.setLoading(false);
+	            me.up().up().setLoading(false);
+	            Ext.Msg.show({
+	                title:'Error',
+	                msg: 'Error de comunicaci&oacute;n',
+	                buttons: Ext.Msg.OK,
+	                icon: Ext.Msg.ERROR
+	            });
+	        }
+	    });
+    }
+}
+/*///////////////////*/
+////// funciones //////
+///////////////////////
     
 Ext.onReady(function(){
     
@@ -124,6 +234,49 @@ Ext.onReady(function(){
     /////////////////////////
     ////// componentes //////
     /*/////////////////////*/
+    Ext.define('_2_Form',
+    {
+        extend         : 'Ext.form.Panel'
+        ,initComponent : function()
+        {
+            debug('_2_Form initComponent');
+            Ext.apply(this,
+            {
+                title        : 'Datos del endoso'
+                ,items       :
+                [
+                    {
+                        xtype       : 'datefield'
+                        ,id         : '_2_fieldFechaId'
+                        ,format     : 'd/m/Y'
+                        ,fieldLabel : 'Fecha'
+                        ,allowBlank : false
+                        ,value      : new Date()
+                        ,name       : 'fecha_endoso'
+                    }
+                ]
+                ,defaults    : 
+                {
+                    style : 'margin : 5px;'
+                }
+                ,buttonAlign : 'center'
+                ,buttons     :
+                              [
+                                  {
+                                      text     : 'Confirmar'
+                                      ,icon    : '${ctx}/resources/fam3icons/icons/key.png'
+                                      ,handler : _2_confirmar
+                                  }
+                                  ,{
+                                	  text     : 'Documentos'
+                                      ,icon    : '${ctx}/resources/fam3icons/icons/printer.png'
+                                      ,handler : _2_documentos
+                                  }
+                              ]
+            });
+            this.callParent();
+        }
+    });
     /*/////////////////////*/
     ////// componentes //////
     /////////////////////////
@@ -131,10 +284,16 @@ Ext.onReady(function(){
     ///////////////////////
     ////// contenido //////
     /*///////////////////*/
+    _2_form=new _2_Form();
+    
     Ext.create('Ext.panel.Panel',
     {
         border    : 0
         ,renderTo : 'maindiv_scr_exclu'
+        ,defaults :
+        {
+        	style : 'margin : 5px;'
+        }
         ,items    :
         [
             Ext.create('Ext.panel.Panel',
@@ -452,7 +611,6 @@ Ext.onReady(function(){
                 ,titleCollapse : true
                 ,style         : 'margin:5px'
                 ,height        : 200
-                ,buttonAlign   : 'center'
                 ,columns       :
                 [
                     {
@@ -486,110 +644,6 @@ Ext.onReady(function(){
                             }
                             debug(value);
                             return value;
-                        }
-                    }
-                ]
-                ,buttons:
-                [
-                    {
-                        text     : 'Confirmar'
-                        ,icon    : venExcluContexto+'/resources/fam3icons/icons/key.png'
-                        ,handler : function()
-                        {
-                        	var boton=this;
-                        	boton.setLoading(true);
-                        	Ext.Ajax.request(
-                            {
-                                url     : venExcluUrlAddExclu
-                                ,timeout : 180000
-                                ,params : 
-                                {
-                                    'smap1.pv_cdunieco_i'  : inputCduniecopx
-                                    ,'smap1.pv_cdramo_i'   : inputCdramopx
-                                    ,'smap1.pv_estado_i'   : inputEstadopx
-                                    ,'smap1.pv_nmpoliza_i' : inputNmpolizapx
-                                    ,'smap1.pv_nmsituac_i' : inputNmsituacpx
-                                    ,'smap1.pv_nmsuplem_i' : panendExInput['nmsuplem']
-                                    ,'smap1.pv_ntramite_i' : panendExInput['ntramite']
-                                    ,'smap1.pv_cdtipsit_i' : panendExInput['cdtipsit']
-                                    ,'smap1.confirmar'     : 'si'
-                                }
-                                ,success : function (response)
-                                {
-                                	debug('success');
-                                	boton.setLoading(false);
-                                    var json=Ext.decode(response.responseText);
-                                    if(json.success==true)
-                                    {
-                                        Ext.Msg.show({
-                                            title:'Endoso confirmando',
-                                            msg: 'Endoso confirmado correctamente',
-                                            buttons: Ext.Msg.OK
-                                        });
-                                        //////////////////////////////////
-		                                ////// usa codigo del padre //////
-		                                /*//////////////////////////////*/
-		                                marendNavegacion(2);
-		                                /*//////////////////////////////*/
-		                                ////// usa codigo del padre //////
-		                                //////////////////////////////////
-                                    }
-                                    else
-                                    {
-                                        me.up().up().setLoading(false);
-                                        Ext.Msg.show({
-                                            title:'Error',
-                                            msg: 'Error al confirmar endoso',
-                                            buttons: Ext.Msg.OK,
-                                            icon: Ext.Msg.ERROR
-                                        });
-                                    }
-                                }
-                                ,failure : function ()
-                                {
-                                	boton.setLoading(false);
-                                    me.up().up().setLoading(false);
-                                    Ext.Msg.show({
-                                        title:'Error',
-                                        msg: 'Error de comunicaci&oacute;n',
-                                        buttons: Ext.Msg.OK,
-                                        icon: Ext.Msg.ERROR
-                                    });
-                                }
-                            });
-                        }
-                    }
-                    ,{
-                        text     : 'Documentos'
-                        ,icon    : '${ctx}/resources/fam3icons/icons/printer.png'
-                        ,handler : function()
-                        {
-                            Ext.create('Ext.window.Window',
-                            {
-                                title        : 'Documentos del tr&aacute;mite '+panendExInput['ntramite']
-                                ,modal       : true
-                                ,buttonAlign : 'center'
-                                ,width       : 600
-                                ,height      : 400
-                                ,autoScroll  : true
-                                ,loader      :
-                                {
-                                    url       : endnomUrlDoc
-                                    ,params   :
-                                    {
-                                         'smap1.cdunieco' : inputCduniecopx
-                                        ,'smap1.cdramo'   : inputCdramopx
-                                        ,'smap1.estado'   : inputEstadopx
-                                        ,'smap1.nmpoliza' : inputNmpolizapx
-                                        ,'smap1.nmsuplem' : '0'
-                                        ,'smap1.ntramite' : panendExInput['ntramite']
-                                        ,'smap1.nmsolici' : ''
-                                        ,'smap1.tipomov'  : '0'
-                                    }
-                                    ,scripts  : true
-                                    ,autoLoad : true
-                                }
-                            }).show();
                         }
                     }
                 ]
@@ -779,6 +833,7 @@ Ext.onReady(function(){
                     }
                 }
             })
+            ,_2_form
         ]
     });
     /*///////////////////*/

@@ -424,6 +424,8 @@
             {
                 Ext.getCmp('marendMenuOperaciones').collapse();
                 Ext.getCmp('marendLoaderFrame').setTitle(recordOperacion.get('texto'));
+                var smap1 = polizaActiva.raw;
+                smap1['DSCOMENT']='';
                 Ext.getCmp('marendLoaderFrame').getLoader().load(
                 {
                     url       : recordOperacion.get('liga')
@@ -431,7 +433,7 @@
                     ,autoLoad : true
                     ,jsonData :
                     {
-                    	'smap1'  : polizaActiva.raw
+                    	'smap1'  : smap1
                     	,'smap2' :
                     	{
                     		alta : recordOperacion.get('funcion')=='endosoaltaasegurado'?'si':'no'

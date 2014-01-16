@@ -46,6 +46,7 @@ public class EndososAction extends PrincipalCoreAction
 	private List<Map<String,String>> slist2;
 	private Map<String,String>       smap1;
 	private Map<String,String>       smap2;
+	private Map<String,String>       smap3;
 	private Map<String,Object>       omap1;
 	private EndososManager           endososManager;
 	private KernelManagerSustituto   kernelManager;
@@ -376,6 +377,7 @@ public class EndososAction extends PrincipalCoreAction
     ////// smap1.pv_accion_i            //////
     ////// smap1.confirmar              //////
     ////// smap1.pv_dslinea_i           //////
+    ////// smap1.fecha_endoso           //////
 	/*//////////////////////////////////////*/
 	public String guardarEndosoClausulaPaso()
 	{
@@ -389,6 +391,9 @@ public class EndososAction extends PrincipalCoreAction
 		try
 		{
 			UserVO usuario=(UserVO)session.get("USUARIO");
+			
+			String fechaEndoso  = smap1.get("fecha_endoso");
+			Date   fechaEndosoD = renderFechas.parse(fechaEndoso);
 			
 			////////////////////////////
 			////// iniciar endoso //////
@@ -408,7 +413,7 @@ public class EndososAction extends PrincipalCoreAction
 			omap1.put("pv_cdramo_i"   , smap1.get("pv_cdramo_i"));
 			omap1.put("pv_estado_i"   , smap1.get("pv_estado_i"));
 			omap1.put("pv_nmpoliza_i" , smap1.get("pv_nmpoliza_i"));
-			omap1.put("pv_fecha_i"    , new Date());
+			omap1.put("pv_fecha_i"    , fechaEndosoD);
 			omap1.put("pv_cdelemen_i" , usuario.getEmpresa().getElementoId());
 			omap1.put("pv_cdusuari_i" , usuario.getUser());
 			omap1.put("pv_proceso_i"  , "END");
@@ -1896,6 +1901,8 @@ public class EndososAction extends PrincipalCoreAction
 				);
 		log.debug("smap1: "+smap1);
 		log.debug("smap2: "+smap2);
+		log.debug("smap3: "+smap3);
+		
 		try
 		{
 			UserVO usuario=(UserVO) session.get("USUARIO");
@@ -1921,12 +1928,15 @@ public class EndososAction extends PrincipalCoreAction
 			String cdusuari = usuario.getUser();
 			Date fechaHoy   = new Date();
 			
+			String fechaEndoso  = smap3.get("fecha_endoso");
+			Date   fechaEndosoD = renderFechas.parse(fechaEndoso);
+			
 			Map<String,String>paramsIniciarEndoso=new HashMap<String,String>(0);
 			paramsIniciarEndoso.put("pv_cdunieco_i" , cdunieco);
 			paramsIniciarEndoso.put("pv_cdramo_i"   , cdramo);
 			paramsIniciarEndoso.put("pv_estado_i"   , estado);
 			paramsIniciarEndoso.put("pv_nmpoliza_i" , nmpoliza);
-			paramsIniciarEndoso.put("pv_fecha_i"    , renderFechas.format(fechaHoy));
+			paramsIniciarEndoso.put("pv_fecha_i"    , fechaEndoso);
 			paramsIniciarEndoso.put("pv_cdelemen_i" , cdelemen);
 			paramsIniciarEndoso.put("pv_cdusuari_i" , cdusuari);
 			paramsIniciarEndoso.put("pv_proceso_i"  , "END");
@@ -2191,7 +2201,7 @@ public class EndososAction extends PrincipalCoreAction
 				mapaValorEndoso.put("pv_nmpoliza_i" , nmpoliza);
 				mapaValorEndoso.put("pv_nmsituac_i" , nmsituac);
 				mapaValorEndoso.put("pv_nmsuplem_i" , nmsuplem);
-				mapaValorEndoso.put("pv_feinival_i" , fechaHoy);
+				mapaValorEndoso.put("pv_feinival_i" , fechaEndosoD);
 				mapaValorEndoso.put("pv_cdtipsup_i" , "9");
 				endososManager.calcularValorEndoso(mapaValorEndoso);
     			////// valor endoso //////
@@ -2330,7 +2340,7 @@ public class EndososAction extends PrincipalCoreAction
 				mapaValorEndoso.put("pv_nmpoliza_i" , nmpoliza);
 				mapaValorEndoso.put("pv_nmsituac_i" , nmsituac);
 				mapaValorEndoso.put("pv_nmsuplem_i" , nmsuplem);
-				mapaValorEndoso.put("pv_feinival_i" , fechaHoy);
+				mapaValorEndoso.put("pv_feinival_i" , fechaEndosoD);
 				mapaValorEndoso.put("pv_cdtipsup_i" , "10");
 				endososManager.calcularValorEndoso(mapaValorEndoso);
 				////// valor endoso //////
@@ -3529,6 +3539,14 @@ public class EndososAction extends PrincipalCoreAction
 
 	public void setError(String error) {
 		this.error = error;
+	}
+
+	public Map<String, String> getSmap3() {
+		return smap3;
+	}
+
+	public void setSmap3(Map<String, String> smap3) {
+		this.smap3 = smap3;
 	}
 	
 }
