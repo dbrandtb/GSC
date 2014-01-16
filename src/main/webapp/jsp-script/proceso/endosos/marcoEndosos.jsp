@@ -470,7 +470,7 @@
                     }
                 }
             });
-            if(nAsegActivos>0)
+            if(nAsegActivos==1)
             {
             	if(!hayCliente)
             	{
@@ -506,7 +506,107 @@
             }
             else
             {
-                mensajeWarning('Seleccione al menos un asegurado');
+                mensajeWarning('Seleccione solo un asegurado');
+            }
+        }
+    	else if(recordOperacion.get('funcion')=='endosohombremujer'||recordOperacion.get('funcion')=='endosomujerhombre')
+        {
+            debug(recordOperacion.get('funcion'));
+            var nAsegActivos=0;
+            var recordActivo;
+            var arrayEditados=[];
+            var hayCliente=false;
+            marendStoreAsegurados.each(function(record)
+            {
+                if(record.get('activo')==true)
+                {
+                    nAsegActivos=nAsegActivos+1;
+                    recordActivo=record;//solo para tener una referencia de los datos de poliza
+                    arrayEditados.push(record.raw);
+                    if(record.get("nmsituac")==0)
+                    {
+                        hayCliente=true;
+                    }
+                }
+            });
+            var valido=true;
+            
+            if(valido)
+            {
+            	valido=nAsegActivos==1;
+            	if(!valido)
+            	{
+            		mensajeWarning('Seleccione solo un asegurado');
+            	}
+            }
+            
+            if(valido)
+            {
+            	valido=!hayCliente;
+            	if(!valido)
+            	{
+            		mensajeWarning('No se puede seleccionar el cliente');
+            	}
+            }
+            
+            if(valido)
+            {
+            	var nHombres=0;
+            	var nMujeres=0;
+            	marendStoreAsegurados.each(function(record)
+                {
+                    if(record.get('activo')==true)
+                    {
+                        if(record.get("sexo")=="H")
+                        {
+                        	nHombres=nHombres+1;
+                        }
+                        else
+                        {
+                        	nMujeres=nMujeres+1;
+                        }
+                    }
+                });
+            	if(recordOperacion.get('funcion')=='endosohombremujer')
+            	{
+            		valido=nHombres>0&&nMujeres==0;
+            	}
+            	else
+                {
+                    valido=nHombres==0&&nMujeres>0;
+                }
+            	if(!valido)
+            	{
+            		mensajeWarning('Solo puede seleccionar: '+(recordOperacion.get('funcion')=='endosohombremujer'?'hombre':'mujer'));
+            	}
+            }
+            
+            if(valido)
+            {
+            	debug(arrayEditados);
+                Ext.getCmp('marendMenuOperaciones').collapse();
+                Ext.getCmp('marendLoaderFrame').setTitle(recordOperacion.get('texto'));
+                var json={};
+                json['slist1']=arrayEditados;
+                var smap1=
+                {
+                    'cdunieco'     : recordActivo.get('CDUNIECO')
+                    ,'cdramo'      : recordActivo.get('CDRAMO')
+                    ,'cdtipsit'    : recordActivo.get('CDTIPSIT')
+                    ,'estado'      : recordActivo.get('ESTADO')
+                    ,'nmpoliza'    : recordActivo.get('NMPOLIZA')
+                    ,'ntramite'    : recordActivo.get('NTRAMITE')
+                    ,'hombremujer' : recordOperacion.get('funcion')=='endosohombremujer'?'si':'no'
+                };
+                json['smap1']=smap1;
+                debug(json);
+                Ext.getCmp('marendLoaderFrame').getLoader().load(
+                {
+                    url       : recordOperacion.get('liga')
+                    ,scripts  : true
+                    ,autoLoad : true
+                    ,jsonData : json
+                });
             }
         }
     }
@@ -730,6 +830,16 @@ Ext.onReady(function()
                     texto    : '16'//baja asegurado
                     ,liga    : '<s:url namespace="/endosos" action="endosoEdad" />'
                     ,funcion : 'endosomenosedad'
+                }
+                ,{
+                    texto    : '20'//baja asegurado
+                    ,liga    : '<s:url namespace="/endosos" action="endosoSexo" />'
+                    ,funcion : 'endosohombremujer'
+                }
+                ,{
+                    texto    : '21'//baja asegurado
+                    ,liga    : '<s:url namespace="/endosos" action="endosoSexo" />'
+                    ,funcion : 'endosomujerhombre'
                 }
             ]
         }
@@ -1267,6 +1377,11 @@ Ext.onReady(function()
                         	return text;
                         }
                     }
+            	    ,{
+            	    	header     : 'Sexo'
+            	    	,dataIndex : 'sexo'
+            	    	,width     : 60
+            	    }
             	]
                 ,tbar          :
                 [

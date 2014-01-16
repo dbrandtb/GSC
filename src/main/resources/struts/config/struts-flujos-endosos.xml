@@ -124,6 +124,22 @@
             <result name="success" type="json" />
         </action>
         
+        <action name="endosoSexo" class="EndososAction" method="endosoSexo">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success">/jsp-script/proceso/endosos/endosoSexo.jsp</result>
+        </action>
+        
+        <action name="guardarEndosoSexo" class="EndososAction" method="guardarEndosoSexo">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+        </action>
+        
     </package>
 
 </struts>
