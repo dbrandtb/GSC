@@ -2405,6 +2405,26 @@ public class EndososAction extends PrincipalCoreAction
 			////// re generar los documentos //////
 		    ///////////////////////////////////////
 			
+			
+			/**
+			 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
+			 */
+			String cdtipsitGS = "213";
+			String sucursal = cdunieco;
+			if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
+			
+			String nmsolici = listaDocu.get(0).get("nmsolici");
+			String nmtramite = listaDocu.get(0).get("ntramite");
+			
+			String tipomov = alta?"9":"10";
+			
+			
+			ejecutaWSrecibosEndoso((String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"),
+					(String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"),
+					nmsuplem, nsuplogi, rutaCarpeta,
+					cdtipsitGS, sucursal, nmsolici, nmtramite,
+					true, "INSERTA", tipomov );
+			
 			success=true;
 		}
 		catch(Exception ex)
