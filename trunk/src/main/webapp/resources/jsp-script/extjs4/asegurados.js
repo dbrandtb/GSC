@@ -2710,7 +2710,7 @@ Ext
 					.create(
 							'Ext.form.Panel',
 							{
-								title : 'Cotizaci&oacute;n de salud vital',
+								title : '<span style="font-size: 16px;">Cotizaci&oacute;n de Salud Vital</span>',
 								overflowY : 'auto',
 								overflowX : 'auto',
 								bodyPadding : 10,
@@ -3257,10 +3257,10 @@ Ext
 					    	,src  : contexto+'/images/proceso/emision/imagencotizador.PNG'
 					    }
 					]
-				}).showAt(610, 50);
+				}).showAt(610, 45);
 			}
 
-			if (hayTramiteCargado) {
+			if (hayTramiteCargado) {qwe
 				Ext.create('Ext.window.Window', {
 					title : 'Documentos del tr&aacute;mite ' + ntramiteCargado,
 					closable : false,
@@ -3286,7 +3286,7 @@ Ext
 							'smap1.tipomov' : '0'
 						}
 					}
-				}).showAt(450, 50);
+				}).showAt(450, 45);
 			}
 
 		});

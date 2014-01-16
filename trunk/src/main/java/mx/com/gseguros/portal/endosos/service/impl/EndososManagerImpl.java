@@ -162,6 +162,14 @@ public class EndososManagerImpl implements EndososManager
 		log.debug("EndososManager actualizarFenacimi end");
 	}
 	
+	@Override
+	public void actualizarSexo(Map<String, String> params) throws Exception
+	{
+		log.debug("EndososManager actualizarSexo params: "+params);
+		endososDAO.actualizarSexo(params);
+		log.debug("EndososManager actualizarSexo end");
+	}
+	
 	/////////////////////////////////
 	////// getters and setters //////
 	/*/////////////////////////////*/

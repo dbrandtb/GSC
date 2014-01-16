@@ -520,5 +520,25 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public void actualizarSexo(Map<String, String> params) throws Exception
+	{
+		this.ejecutaSP(new ActualizarSexo(this.getDataSource()), params);
+	}
+	
+	protected class ActualizarSexo extends StoredProcedure
+	{
+		protected ActualizarSexo(DataSource dataSource)
+		{
+			super(dataSource, "PKG_ENDOSOS.P_UPD_SEXO");
+			declareParameter(new SqlParameter("pv_cdperson_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_sexo_i"     , OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 
 }

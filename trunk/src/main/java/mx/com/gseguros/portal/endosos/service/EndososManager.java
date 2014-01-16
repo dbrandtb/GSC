@@ -21,4 +21,5 @@ public interface EndososManager
 	public Map<String, String>       obtieneDatosMpolisit(Map<String, String> params) throws Exception;
 	public List<Map<String, String>> obtenerNombreEndosos() throws Exception;
 	public void actualizarFenacimi(Map<String, String> params) throws Exception;
+	public void actualizarSexo(Map<String, String> params) throws Exception;
 }
