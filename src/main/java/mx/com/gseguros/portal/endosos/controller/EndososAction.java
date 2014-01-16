@@ -339,6 +339,35 @@ public class EndososAction extends PrincipalCoreAction
 			
 			ejecutaWSclienteSaludEndoso((String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"), (String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"), respuestaEndosoNombres.get("pv_nmsuplem_o"), "INSERTA");
 			
+			/**
+			 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
+			 */
+			String cdtipsitGS = "213";
+			String sucursal = (String)omap1.get("pv_cdunieco_i");
+			if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
+			
+			String nmsolici = listaDocu.get(0).get("nmsolici");
+			String nmtramite = listaDocu.get(0).get("ntramite");
+			
+			String parametros = "?9999,0,"+sucursal+","+cdtipsitGS+","+(String)omap1.get("pv_nmpoliza_i")+",0,0,,1";
+			logger.debug("URL Generada para Recibo: "+ this.getText("url.imp.recibos")+parametros);
+			//HttpRequestUtil.generaReporte(this.getText("url.imp.recibos")+parametros, rutaPoliza+"/Recibo_"+recibo.getRmdbRn()+"_"+recibo.getNumRec()+".pdf");
+			
+			HashMap<String, Object> paramsR =  new HashMap<String, Object>();
+			paramsR.put("pv_cdunieco_i", (String)omap1.get("pv_cdunieco_i"));
+			paramsR.put("pv_cdramo_i", (String)omap1.get("pv_cdramo_i"));
+			paramsR.put("pv_estado_i", (String)omap1.get("pv_estado_i"));
+			paramsR.put("pv_nmpoliza_i", (String)omap1.get("pv_nmpoliza_i"));
+			paramsR.put("pv_nmsuplem_i", respuestaEndosoNombres.get("pv_nmsuplem_o"));
+			paramsR.put("pv_feinici_i", new Date());
+			paramsR.put("pv_cddocume_i", this.getText("url.imp.recibos")+parametros);
+			paramsR.put("pv_dsdocume_i", "Recibo 1");
+			paramsR.put("pv_nmsolici_i", nmsolici);
+			paramsR.put("pv_ntramite_i", nmtramite);
+			paramsR.put("pv_tipmov_i", "2");
+			
+			kernelManager.guardarArchivo(paramsR);
+			
 			mensaje="Se ha guardado el endoso "+respuestaEndosoNombres.get("pv_nsuplogi_o");
 			success=true;
 		}
@@ -728,7 +757,37 @@ public class EndososAction extends PrincipalCoreAction
 			////// re generar los documentos //////
 		    ///////////////////////////////////////
 			
+			
 			ejecutaWSclienteSaludEndoso(smap1.get("pv_cdunieco"), smap1.get("pv_cdramo"), smap1.get("pv_estado"), smap1.get("pv_nmpoliza"), resEndDomi.get("pv_nmsuplem_o"), "INSERTA");
+			
+			/**
+			 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
+			 */
+			String cdtipsitGS = "213";
+			String sucursal = smap1.get("pv_cdunieco");
+			if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
+			
+			String nmsolici = listaDocu.get(0).get("nmsolici");
+			String nmtramite = listaDocu.get(0).get("ntramite");
+			
+			String parametros = "?9999,0,"+sucursal+","+cdtipsitGS+","+smap1.get("pv_nmpoliza")+",0,0,,1";
+			logger.debug("URL Generada para Recibo: "+ this.getText("url.imp.recibos")+parametros);
+			//HttpRequestUtil.generaReporte(this.getText("url.imp.recibos")+parametros, rutaPoliza+"/Recibo_"+recibo.getRmdbRn()+"_"+recibo.getNumRec()+".pdf");
+			
+			HashMap<String, Object> paramsR =  new HashMap<String, Object>();
+			paramsR.put("pv_cdunieco_i", smap1.get("pv_cdunieco"));
+			paramsR.put("pv_cdramo_i", smap1.get("pv_cdramo"));
+			paramsR.put("pv_estado_i", smap1.get("pv_estado"));
+			paramsR.put("pv_nmpoliza_i", smap1.get("pv_nmpoliza"));
+			paramsR.put("pv_nmsuplem_i", resEndDomi.get("pv_nmsuplem_o"));
+			paramsR.put("pv_feinici_i", new Date());
+			paramsR.put("pv_cddocume_i", this.getText("url.imp.recibos")+parametros);
+			paramsR.put("pv_dsdocume_i", "Recibo 1");
+			paramsR.put("pv_nmsolici_i", nmsolici);
+			paramsR.put("pv_ntramite_i", nmtramite);
+			paramsR.put("pv_tipmov_i", "3");
+			
+			kernelManager.guardarArchivo(paramsR);
 			
 		    mensaje="Se ha guardado el endoso "+resEndDomi.get("pv_nsuplogi_o");
 			success=true;
@@ -2428,9 +2487,8 @@ public class EndososAction extends PrincipalCoreAction
 			
 			String tipomov = alta?"9":"10";
 			
-			
-			ejecutaWSrecibosEndoso((String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"),
-					(String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"),
+			ejecutaWSrecibosEndoso(cdunieco, cdramo,
+					estado, nmpoliza,
 					nmsuplem, nsuplogi, rutaCarpeta,
 					cdtipsitGS, sucursal, nmsolici, nmtramite,
 					true, "INSERTA", tipomov );
@@ -3028,6 +3086,8 @@ public class EndososAction extends PrincipalCoreAction
 			////// re generar los documentos //////
 		    ///////////////////////////////////////
 			
+			ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "INSERTA");
+			
 			mensaje="Endoso confirmado "+nsuplogi;
 			success=true;
 		}
@@ -3396,6 +3456,8 @@ public class EndososAction extends PrincipalCoreAction
 		    /*///////////////////////////////////*/
 			////// re generar los documentos //////
 		    ///////////////////////////////////////
+			
+			ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "INSERTA");
 			
 			mensaje="Endoso confirmado "+nsuplogi;
 			success=true;
