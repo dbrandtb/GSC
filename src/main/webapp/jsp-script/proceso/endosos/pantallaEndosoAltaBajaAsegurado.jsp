@@ -15,6 +15,7 @@ var panEndAltBajAseGridBajas;
 var panEndAltBajAseWindowAsegu;
 var panEndAltBajAseNmsituac;
 var panEndAltBajAseValues='cadena';
+var _3_form;
 
 var panendabaseguUrlLoadAsegu = '<s:url namespace="/" action="cargarComplementariosAsegurados" />';
 var panendabaseguInputSmap1   = <s:property value='%{getSmap1().toString().replace("=",":\'").replace(",","\',").replace("}","\'}")}' />;
@@ -188,6 +189,36 @@ Ext.onReady(function()
 	/////////////////////////
 	////// componentes //////
 	/*/////////////////////*/
+	Ext.define('_3_Form',
+    {
+        extend         : 'Ext.form.Panel'
+        ,initComponent : function()
+        {
+            debug('_3_Form initComponent');
+            Ext.apply(this,
+            {
+                title     : 'Datos del endoso'
+                ,items    :
+                [
+                    {
+                        xtype       : 'datefield'
+                        ,id         : '_3_fieldFechaId'
+                        ,format     : 'd/m/Y'
+                        ,fieldLabel : 'Fecha'
+                        ,allowBlank : false
+                        ,value      : new Date()
+                        ,name       : 'fecha_endoso'
+                    }
+                ]
+                ,defaults : 
+                {
+                    style : 'margin : 5px;'
+                }
+            });
+            this.callParent();
+        }
+    });
+	
 	Ext.define('PanEndAltBajAseWindowAsegu',
 	{
 		extend         : 'Ext.window.Window'
@@ -416,6 +447,7 @@ Ext.onReady(function()
                     ,panendabaseguGridAsegu
                     ,panEndAltBajAseGridAltas
                     ,panEndAltBajAseGridBajas
+                    ,_3_form
                 ]
                 ,renderTo    : 'panendabaseDivPri'
                 ,buttonAlign : 'center'
@@ -467,7 +499,28 @@ Ext.onReady(function()
 	    ,onConfirmarClick : function()
 	    {
 	    	debug('onConfirmarClick');
-	    	if(panEndAltBajAseStoreAltas.getCount()+panEndAltBajAseStoreBajas.getCount()==1)
+	    	
+	    	var valido=true;
+	    	
+	    	if(valido)
+	    	{
+	    		valido=panEndAltBajAseStoreAltas.getCount()+panEndAltBajAseStoreBajas.getCount()==1;
+	    		if(!valido)
+	    		{
+	    			mensajeWarning('No hay alta ni baja de asegurados');
+	    		}
+	    	}
+	    	
+	    	if(valido)
+	    	{
+	    		valido=_3_form.isValid();
+	    		if(!valido)
+	    		{
+	    			datosIncompletos();
+	    		}
+	    	}
+	    	
+	    	if(valido)
 	    	{
 	    		var json={};
 	    		if(panEndAltBajAseStoreAltas.getCount()==1)
@@ -479,7 +532,8 @@ Ext.onReady(function()
 	    		{
 	    			json['smap1']=panEndAltBajAseStoreBajas.getAt(0).raw;
 	    		}
-	    		json['smap2']          = panendabaseguInputSmap1;
+	    		json['smap2'] = panendabaseguInputSmap1;
+	    		json['smap3'] = _3_form.getValues(); 
 	    		debug('json:',json);
 	    		panendabaseguPanelPrincipal.setLoading(true);
 	    		Ext.Ajax.request(
@@ -532,16 +586,6 @@ Ext.onReady(function()
 	    		    }
 	    		});
 	    	}
-	    	else
-	    	{
-	    		Ext.Msg.show(
-   		        {
-   		            title    : 'Error'
-   		            ,icon    : Ext.Msg.WARNING
-   		            ,msg     : 'No hay alta ni baja de asegurados'
-   		            ,buttons : Ext.Msg.OK
-   		        });
-	    	}
 	    }
     });
 	/*/////////////////////*/
@@ -551,6 +595,7 @@ Ext.onReady(function()
 	///////////////////////
 	////// contenido //////
 	/*///////////////////*/
+	_3_form                     = new _3_Form();
 	panEndAltBajAseGridAltas    = new PanEndAltBajAseGridAltas();
 	panEndAltBajAseGridBajas    = new PanEndAltBajAseGridBajas();
 	panendabaseguGridAsegu      = new PanendabaseguGridAsegu();
