@@ -154,6 +154,14 @@ public class EndososManagerImpl implements EndososManager
 		return lista;
 	}
 	
+	@Override
+	public void actualizarFenacimi(Map<String, String> params) throws Exception
+	{
+		log.debug("EndososManager actualizarFenacimi params: "+params);
+		endososDAO.actualizarFenacimi(params);
+		log.debug("EndososManager actualizarFenacimi end");
+	}
+	
 	/////////////////////////////////
 	////// getters and setters //////
 	/*/////////////////////////////*/

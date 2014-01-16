@@ -500,5 +500,25 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			compile();
 		}
 	}
+	
+	@Override
+	public void actualizarFenacimi(Map<String, String> params) throws Exception
+	{
+		this.ejecutaSP(new ActualizarFenacimi(this.getDataSource()), Utilerias.ponFechas(params));
+	}
+	
+	protected class ActualizarFenacimi extends StoredProcedure
+	{
+		protected ActualizarFenacimi(DataSource dataSource)
+		{
+			super(dataSource, "PKG_ENDOSOS.P_UPD_FENACIMI");
+			declareParameter(new SqlParameter("pv_cdperson_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_fenacimi_i"   , OracleTypes.DATE));
+			
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 
 }
