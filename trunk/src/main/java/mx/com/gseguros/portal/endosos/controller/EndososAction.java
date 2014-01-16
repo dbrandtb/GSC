@@ -57,6 +57,7 @@ public class EndososAction extends PrincipalCoreAction
 	private String                   mensaje;
 	private Map<String,String>       parametros;
 	private Map<String,Item>         imap1;
+	private String                   error;
 
 	//////////////////////////////
 	////// marco de endosos //////
@@ -2643,6 +2644,378 @@ public class EndososAction extends PrincipalCoreAction
 		return exito;
 	} 
 	
+	////////////////////////////
+	////// endoso de edad //////
+	/*
+	smap1:
+	    'cdunieco' , 'cdramo'   , 'cdtipsit'
+	    ,'estado'  , 'nmpoliza' , 'ntramite'
+	    ,'masedad(si,no)
+	*/
+	/*////////////////////////*/
+	public String endosoEdad()
+	{
+		this.session=ActionContext.getContext().getSession();
+		log.debug("\n"
+				+ "\n############################"
+				+ "\n############################"
+				+ "\n###### endoso de edad ######"
+				+ "\n######                ######"
+				);
+		log.debug("smap1: "+smap1);
+		log.debug("slist1: "+slist1);
+		
+		try
+		{
+			imap1=new HashMap<String,Item>();
+			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			gc.generaParcial(pantallasManager.obtenerCamposPantalla(
+					null,null,null
+					,null,null,null
+					,"ENDOSO_EDAD",null,null
+					,"MODELO"
+					));
+			imap1.put("modelo"   , gc.getFields());
+			imap1.put("columnas" , gc.getColumns());
+		}
+		catch(Exception ex)
+		{
+			log.error("error al cargar la pantalla de endoso de edad",ex);
+		}
+		
+		log.debug("\n"
+				+ "\n######                ######"
+				+ "\n###### endoso de edad ######"
+				+ "\n############################"
+				+ "\n############################"
+				);
+		return SUCCESS;
+	}
+	/*////////////////////////*/
+	////// endoso de edad //////
+	////////////////////////////
+	
+	////////////////////////////////////
+	////// guardar endoso de edad //////
+	/*
+	smap1: {cdramo=2, nmpoliza=23, estado=M, masedad=si, cdtipsit=SL, ntramite=480, cdunieco=1205}
+	smap2: {fecha_endoso=15/01/2014}
+	slist1: [{cdperson=511783, nmsituac=1, fenacimi=01/01/1969}
+	        ,{cdperson=511782, nmsituac=2, fenacimi=01/01/1974}
+	        ,{cdperson=511785, nmsituac=3, fenacimi=01/01/1996}
+	        ,{cdperson=511786, nmsituac=4, fenacimi=01/01/1950}]
+	*/
+	/*////////////////////////////////*/
+	public String guardarEndosoEdad()
+	{
+		this.session=ActionContext.getContext().getSession();
+		log.debug("\n"
+				+ "\n####################################"
+				+ "\n####################################"
+				+ "\n###### guardar endoso de edad ######"
+				+ "\n######                        ######"
+				);
+		log.debug("smap1: "+smap1);
+		log.debug("smap2: "+smap2);
+		log.debug("slist1: "+slist1);
+		try
+		{
+			String  cdunieco    = smap1.get("cdunieco");
+			String  cdramo      = smap1.get("cdramo");
+			String  cdtipsit    = smap1.get("cdtipsit");
+			String  estado      = smap1.get("estado");
+			String  nmpoliza    = smap1.get("nmpoliza");
+			String  ntramite    = smap1.get("ntramite");
+			String  cdelemen    = ((UserVO)session.get("USUARIO")).getEmpresa().getElementoId();
+			String  cdusuari    = ((UserVO)session.get("USUARIO")).getUser();
+			Date    fechaHoy    = new Date();
+			String  fechaEndoso = smap2.get("fecha_endoso");
+			boolean incremento  = smap1.get("masedad").equalsIgnoreCase("si");
+			String  cdtipsup    = incremento?"15":"16";
+			
+			Map<String,String>paramsIniciarEndoso=new HashMap<String,String>(0);
+			paramsIniciarEndoso.put("pv_cdunieco_i" , cdunieco);
+			paramsIniciarEndoso.put("pv_cdramo_i"   , cdramo);
+			paramsIniciarEndoso.put("pv_estado_i"   , estado);
+			paramsIniciarEndoso.put("pv_nmpoliza_i" , nmpoliza);
+			paramsIniciarEndoso.put("pv_fecha_i"    , fechaEndoso);
+			paramsIniciarEndoso.put("pv_cdelemen_i" , cdelemen);
+			paramsIniciarEndoso.put("pv_cdusuari_i" , cdusuari);
+			paramsIniciarEndoso.put("pv_proceso_i"  , "END");
+			paramsIniciarEndoso.put("pv_cdtipsup_i" , cdtipsup);
+			Map<String,String>respuestaIniciarEndoso=endososManager.iniciarEndoso(paramsIniciarEndoso);
+			
+			String nmsuplem=respuestaIniciarEndoso.get("pv_nmsuplem_o");
+			String nsuplogi=respuestaIniciarEndoso.get("pv_nsuplogi_o");
+
+			Map<String,String>paramsObtenerDatosMpolisit=new HashMap<String,String>();
+			paramsObtenerDatosMpolisit.put("pv_cdunieco_i" , cdunieco);
+			paramsObtenerDatosMpolisit.put("pv_cdramo_i"   , cdramo);
+			paramsObtenerDatosMpolisit.put("pv_estado_i"   , estado);
+			paramsObtenerDatosMpolisit.put("pv_nmpoliza_i" , nmpoliza);
+			Map<String,String>respuestaObtenerDatosMpolisit=endososManager.obtieneDatosMpolisit(paramsObtenerDatosMpolisit);
+			String cdplan=respuestaObtenerDatosMpolisit.get("pv_cdplan_o");
+			
+			for(Map<String,String>inciso:slist1)
+			{
+				String nmsituacIte=inciso.get("nmsituac");
+				String cdpersonIte=inciso.get("cdperson");
+				String fenacimiIte=inciso.get("fenacimi");
+				
+				Map<String,Object>mapaPolisit=new HashMap<String,Object>(0);
+                mapaPolisit.put("pv_cdunieco_i",    cdunieco);
+                mapaPolisit.put("pv_cdramo_i",      cdramo);
+                mapaPolisit.put("pv_estado_i",      estado);
+                mapaPolisit.put("pv_nmpoliza_i",    nmpoliza);
+                mapaPolisit.put("pv_nmsituac_i",    nmsituacIte);
+                mapaPolisit.put("pv_nmsuplem_i",    nmsuplem);
+                mapaPolisit.put("pv_status_i",      "V");
+                mapaPolisit.put("pv_cdtipsit_i",    cdtipsit);
+                mapaPolisit.put("pv_swreduci_i",    null);
+                mapaPolisit.put("pv_cdagrupa_i",    "1");
+                mapaPolisit.put("pv_cdestado_i",    "0");
+                mapaPolisit.put("pv_fefecsit_i",    fechaHoy);
+                mapaPolisit.put("pv_fecharef_i",    fechaHoy);
+                mapaPolisit.put("pv_cdgrupo_i",     null);
+                mapaPolisit.put("pv_nmsituaext_i",  null);
+                mapaPolisit.put("pv_nmsitaux_i",    null);
+                mapaPolisit.put("pv_nmsbsitext_i",  null);
+                mapaPolisit.put("pv_cdplan_i",      cdplan);
+                mapaPolisit.put("pv_cdasegur_i",    "30");
+                mapaPolisit.put("pv_accion_i",      "I");
+                kernelManager.insertaPolisit(mapaPolisit);
+                
+                /////////////////////
+                ////// valosit //////
+                
+                ////// 1. mapa valosit base //////
+                Map<String,String>mapaValosit=new HashMap<String,String>(0);
+                mapaValosit.put("pv_cdunieco",    cdunieco);
+                mapaValosit.put("pv_cdramo",      cdramo);
+                mapaValosit.put("pv_estado",      estado);
+                mapaValosit.put("pv_nmpoliza",    nmpoliza);
+                mapaValosit.put("pv_nmsituac",    nmsituacIte);
+                mapaValosit.put("pv_nmsuplem",    nmsuplem);
+                mapaValosit.put("pv_status",      "V");
+                mapaValosit.put("pv_cdtipsit",    cdtipsit);
+                mapaValosit.put("pv_accion_i",   "I");
+                ////// 1. mapa valosit base //////
+                
+                ////// 2. obtener el original //////
+                Map<String,String>mapaObtenerValosit=new HashMap<String,String>(0);
+                mapaObtenerValosit.put("pv_cdunieco_i" , cdunieco);
+                mapaObtenerValosit.put("pv_nmpoliza_i" , nmpoliza);
+                mapaObtenerValosit.put("pv_cdramo_i"   , cdramo);
+                mapaObtenerValosit.put("pv_estado_i"   , estado);
+                mapaObtenerValosit.put("pv_nmsituac_i" , nmsituacIte);
+                Map<String,Object>valositOriginal=kernelManager.obtieneValositSituac(mapaObtenerValosit);
+                ////// 2. obtener el original //////
+                
+                ////// 3. copiar los otvalor del original a la base //////
+                for(Entry<String,Object> en:valositOriginal.entrySet())
+                {
+                	String key=en.getKey();
+                	if(key.substring(0,3).equalsIgnoreCase("otv"))
+                	{
+                		mapaValosit.put("pv_"+key,(String)en.getValue());
+                	}
+                }
+                ////// 3. copiar los otvalor del original a la base //////
+                
+                ////// 4. sustituir los otvalor por los nuevos del form //////
+                mapaValosit.put("pv_otvalor02",fenacimiIte);
+                ////// 4. sustituir los otvalor por los nuevos del form //////
+                
+                kernelManager.insertaValoresSituaciones(mapaValosit);
+                
+                ////// valosit //////
+                /////////////////////
+                
+                //////////////////////
+                ////// mpersona //////
+                Map<String,String> mapaMpersona=new LinkedHashMap<String,String>(0);
+				mapaMpersona.put("pv_cdperson_i" , cdpersonIte); 
+				mapaMpersona.put("pv_fenacimi_i" , fenacimiIte);
+				endososManager.actualizarFenacimi(mapaMpersona);
+                ////// mpersona //////
+                //////////////////////
+
+				//////////////////////
+				////// mpoliper //////
+				Map<String,Object>mapaMpoliper=new LinkedHashMap<String,Object>(0);
+				mapaMpoliper.put("pv_cdunieco_i" , cdunieco);
+				mapaMpoliper.put("pv_cdramo_i"   , cdramo);
+				mapaMpoliper.put("pv_estado_i"   , estado);
+				mapaMpoliper.put("pv_nmpoliza_i" , nmpoliza);
+				mapaMpoliper.put("pv_nmsituac_i" , nmsituacIte);
+				mapaMpoliper.put("pv_cdrol_i"    , "2");
+				mapaMpoliper.put("pv_cdperson_i" , cdpersonIte);
+				mapaMpoliper.put("pv_nmsuplem_i" , nmsuplem);
+				mapaMpoliper.put("pv_status_i"   , "V");
+				mapaMpoliper.put("pv_nmorddom_i" , "1");
+				mapaMpoliper.put("pv_swreclam_i" , null);
+				mapaMpoliper.put("pv_accion_i"   , "I");
+				mapaMpoliper.put("pv_swexiper_i" , "Y");
+				kernelManager.movMpoliper(mapaMpoliper);
+				////// mpoliper //////
+				//////////////////////
+				
+				/////////////////////////////////
+                ////// valores por defecto //////
+                Map<String,String> mapaCoberturas=new HashMap<String,String>(0);
+                mapaCoberturas.put("pv_cdunieco_i",   cdunieco);//se agrega desde el formulario
+                mapaCoberturas.put("pv_cdramo_i",     cdramo);//se agrega desde el formulario
+                mapaCoberturas.put("pv_estado_i",     estado);
+                mapaCoberturas.put("pv_nmpoliza_i",   nmpoliza);
+                mapaCoberturas.put("pv_nmsituac_i",   nmsituacIte);
+                mapaCoberturas.put("pv_nmsuplem_i",   nmsuplem);
+                mapaCoberturas.put("pv_cdgarant_i",   "TODO");
+                mapaCoberturas.put("pv_cdtipsup_i",   cdtipsup);
+                kernelManager.coberturas(mapaCoberturas);
+                ////// valores por defecto //////
+                /////////////////////////////////
+                
+                //////////////////////////////
+                ////// inserta tworksup //////
+                Map<String,String>mapaTworksupEnd=new LinkedHashMap<String,String>(0);
+                mapaTworksupEnd.put("pv_cdunieco_i" , cdunieco);
+                mapaTworksupEnd.put("pv_cdramo_i"   , cdramo);
+                mapaTworksupEnd.put("pv_estado_i"   , estado);
+                mapaTworksupEnd.put("pv_nmpoliza_i" , nmpoliza);
+                mapaTworksupEnd.put("pv_cdtipsup_i" , cdtipsup);
+                mapaTworksupEnd.put("pv_nmsuplem_i" , nmsuplem);
+                mapaTworksupEnd.put("pv_nmsituac_i" , nmsituacIte);
+                endososManager.insertarTworksupEnd(mapaTworksupEnd);
+                ////// inserta tworksup //////
+                //////////////////////////////
+                
+                //////////////////////////
+                ////// tarificacion //////
+                Map<String,String>mapaSigsvalipolEnd=new LinkedHashMap<String,String>(0);
+    			mapaSigsvalipolEnd.put("pv_cdusuari_i" , cdusuari);
+    			mapaSigsvalipolEnd.put("pv_cdelemen_i" , cdelemen);
+    			mapaSigsvalipolEnd.put("pv_cdunieco_i" , cdunieco);
+    			mapaSigsvalipolEnd.put("pv_cdramo_i"   , cdramo);
+    			mapaSigsvalipolEnd.put("pv_estado_i"   , estado);
+    			mapaSigsvalipolEnd.put("pv_nmpoliza_i" , nmpoliza);
+    			mapaSigsvalipolEnd.put("pv_nmsituac_i" , nmsituacIte);
+    			mapaSigsvalipolEnd.put("pv_nmsuplem_i" , nmsuplem);
+    			mapaSigsvalipolEnd.put("pv_cdtipsit_i" , cdtipsit);
+    			mapaSigsvalipolEnd.put("pv_cdtipsup_i" , cdtipsup);
+    			endososManager.sigsvalipolEnd(mapaSigsvalipolEnd);
+                ////// tarificacion //////
+    			//////////////////////////
+    			
+    			//////////////////////////
+    			////// valor endoso //////
+    			Map<String,Object>mapaValorEndoso=new LinkedHashMap<String,Object>(0);
+    			mapaValorEndoso.put("pv_cdunieco_i" , cdunieco);
+    			mapaValorEndoso.put("pv_cdramo_i"   , cdramo);
+    			mapaValorEndoso.put("pv_estado_i"   , estado);
+    			mapaValorEndoso.put("pv_nmpoliza_i" , nmpoliza);
+    			mapaValorEndoso.put("pv_nmsituac_i" , nmsituacIte);
+    			mapaValorEndoso.put("pv_nmsuplem_i" , nmsuplem);
+    			mapaValorEndoso.put("pv_feinival_i" , renderFechas.parse(fechaEndoso));
+    			mapaValorEndoso.put("pv_cdtipsup_i" , cdtipsup);
+    			endososManager.calcularValorEndoso(mapaValorEndoso);
+    			////// valor endoso //////
+    			//////////////////////////
+			}
+			
+			//////////////////////////////
+			////// confirmar endoso //////
+			/*//////////////////////////*/
+			Map<String,String>paramConfirmarEndoso=new LinkedHashMap<String,String>(0);
+			paramConfirmarEndoso.put("pv_cdunieco_i" , cdunieco);
+			paramConfirmarEndoso.put("pv_cdramo_i"   , cdramo);
+			paramConfirmarEndoso.put("pv_estado_i"   , estado);
+			paramConfirmarEndoso.put("pv_nmpoliza_i" , nmpoliza);
+			paramConfirmarEndoso.put("pv_nmsuplem_i" , nmsuplem);
+			paramConfirmarEndoso.put("pv_nsuplogi_i" , nsuplogi);
+			paramConfirmarEndoso.put("pv_cdtipsup_i" , cdtipsup);
+			paramConfirmarEndoso.put("pv_dscoment_i" , "");
+		    endososManager.confirmarEndosoB(paramConfirmarEndoso);
+		    /*//////////////////////////*/
+		    ////// confirmar endoso //////
+		    //////////////////////////////
+		    
+		    ///////////////////////////////////////
+		    ////// re generar los documentos //////
+		    /*///////////////////////////////////*/
+		    Map<String,String>paramsGetDoc=new LinkedHashMap<String,String>(0);
+			paramsGetDoc.put("pv_cdunieco_i" , cdunieco);
+			paramsGetDoc.put("pv_cdramo_i"   , cdramo);
+			paramsGetDoc.put("pv_estado_i"   , estado);
+			paramsGetDoc.put("pv_nmpoliza_i" , nmpoliza);
+			paramsGetDoc.put("pv_nmsuplem_i" , nmsuplem);
+			paramsGetDoc.put("pv_tipmov_i"   , cdtipsup);
+		    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(paramsGetDoc);
+		    log.debug("documentos que se regeneran: "+listaDocu);
+		    
+		    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
+		    
+			//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
+			for(Map<String,String> docu:listaDocu)
+			{
+				log.debug("docu iterado: "+docu);
+				String descripc=docu.get("descripc");
+				String descripl=docu.get("descripl");
+				String url=this.getText("ruta.servidor.reports")
+						+ "?destype=cache"
+						+ "&desformat=PDF"
+						+ "&userid="+this.getText("pass.servidor.reports")
+						+ "&report="+descripl
+						+ "&paramform=no"
+						+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+						+ "&p_unieco="+cdunieco
+						+ "&p_ramo="+cdramo
+						+ "&p_estado="+estado
+						+ "&p_poliza="+nmpoliza
+						+ "&desname="+rutaCarpeta+"/"+descripc;
+				if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
+				{
+					// C R E D E N C I A L _ X X X X X X . P D F
+					//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+					url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("_"));
+				}
+				log.debug(""
+						+ "\n#################################"
+						+ "\n###### Se solicita reporte ######"
+						+ "\na "+url+""
+						+ "\n#################################");
+				HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
+				log.debug(""
+						+ "\n######                    ######"
+						+ "\n###### reporte solicitado ######"
+						+ "\na "+url+""
+						+ "\n################################"
+						+ "\n################################"
+						+ "");
+			}
+		    /*///////////////////////////////////*/
+			////// re generar los documentos //////
+		    ///////////////////////////////////////
+			
+			mensaje="Endoso confirmado "+nsuplogi;
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			log.debug("error al guardar endoso de edad",ex);
+			success=false;
+			error=ex.toString();
+		}
+		log.debug("\n"
+				+ "\n######                        ######"
+				+ "\n###### guardar endoso de edad ######"
+				+ "\n####################################"
+				+ "\n####################################"
+				);
+		return SUCCESS;
+	}
+	/*////////////////////////////////*/
+	////// guardar endoso de edad //////
+	////////////////////////////////////
 	
 	///////////////////////////////
 	////// getters y setters //////
@@ -2757,6 +3130,14 @@ public class EndososAction extends PrincipalCoreAction
 	
 	public void setIce2sigsWebServices(Ice2sigsWebServices ice2sigsWebServices) {
 		this.ice2sigsWebServices = ice2sigsWebServices;
+	}
+
+	public String getError() {
+		return error;
+	}
+
+	public void setError(String error) {
+		this.error = error;
 	}
 	
 }

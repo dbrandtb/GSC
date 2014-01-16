@@ -23,6 +23,7 @@
         <pattern>/endosos/endosoValositBasico.action</pattern>
         <pattern>/endosos/pantallaEndosoClausulas.action</pattern>
         <pattern>/endosos/pantallaEndosoAltaBajaAsegurado.action</pattern>
+        <pattern>/endosos/endosoEdad.action</pattern>
 	</excludes>
 
 

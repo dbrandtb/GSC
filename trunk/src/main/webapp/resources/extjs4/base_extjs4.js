@@ -166,6 +166,15 @@ function mensajeError(mensaje)
     });
 }
 
+function mensajeCorrecto(titulo,mensaje)
+{
+	Ext.Msg.show({
+		title    : titulo
+        ,msg     : mensaje
+        ,buttons : Ext.Msg.OK
+    });
+}
+
 ////////////////////////////
 ////// INICIO MODELOS //////
 ////////////////////////////

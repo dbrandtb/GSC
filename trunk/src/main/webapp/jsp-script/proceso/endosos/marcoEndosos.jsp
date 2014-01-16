@@ -450,6 +450,65 @@
                 });
             }
         }
+    	else if(recordOperacion.get('funcion')=='endosomasedad'||recordOperacion.get('funcion')=='endosomenosedad')
+        {
+            debug(recordOperacion.get('funcion'));
+            var nAsegActivos=0;
+            var recordActivo;
+            var arrayEditados=[];
+            var hayCliente=false;
+            marendStoreAsegurados.each(function(record)
+            {
+                if(record.get('activo')==true)
+                {
+                    nAsegActivos=nAsegActivos+1;
+                    recordActivo=record;//solo para tener una referencia de los datos de poliza
+                    arrayEditados.push(record.raw);
+                    if(record.get("nmsituac")==0)
+                    {
+                    	hayCliente=true;
+                    }
+                }
+            });
+            if(nAsegActivos>0)
+            {
+            	if(!hayCliente)
+            	{
+	                debug(arrayEditados);
+	                Ext.getCmp('marendMenuOperaciones').collapse();
+	                Ext.getCmp('marendLoaderFrame').setTitle(recordOperacion.get('texto'));
+	                var json={};
+	                json['slist1']=arrayEditados;
+	                var smap1=
+	                    {
+	                        'cdunieco'  : recordActivo.get('CDUNIECO')
+	                        ,'cdramo'   : recordActivo.get('CDRAMO')
+	                        ,'cdtipsit' : recordActivo.get('CDTIPSIT')
+	                        ,'estado'   : recordActivo.get('ESTADO')
+	                        ,'nmpoliza' : recordActivo.get('NMPOLIZA')
+	                        ,'ntramite' : recordActivo.get('NTRAMITE')
+	                        ,'masedad'  : recordOperacion.get('funcion')=='endosomasedad'?'si':'no'
+	                    };
+	                json['smap1']=smap1;
+	                debug(json);
+	                Ext.getCmp('marendLoaderFrame').getLoader().load(
+	                {
+	                    url       : recordOperacion.get('liga')
+	                    ,scripts  : true
+	                    ,autoLoad : true
+	                    ,jsonData : json
+	                });
+            	}
+            	else
+           		{
+            		mensajeWarning('No se puede seleccionar el cliente');
+           		}
+            }
+            else
+            {
+                mensajeWarning('Seleccione al menos un asegurado');
+            }
+        }
     }
     
     function marendNavegacion(nivel)
@@ -661,6 +720,16 @@ Ext.onReady(function()
                     texto    : '10'//baja asegurado
                     ,liga    : '<s:url namespace="/endosos" action="pantallaEndosoAltaBajaAsegurado" />'
                     ,funcion : 'endosobajaasegurado'
+                }
+                ,{
+                    texto    : '15'//baja asegurado
+                    ,liga    : '<s:url namespace="/endosos" action="endosoEdad" />'
+                    ,funcion : 'endosomasedad'
+                }
+                ,{
+                    texto    : '16'//baja asegurado
+                    ,liga    : '<s:url namespace="/endosos" action="endosoEdad" />'
+                    ,funcion : 'endosomenosedad'
                 }
             ]
         }
