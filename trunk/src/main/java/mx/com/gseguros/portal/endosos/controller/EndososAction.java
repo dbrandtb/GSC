@@ -1451,6 +1451,46 @@ public class EndososAction extends PrincipalCoreAction
 			omap1.put("pv_cdtipsup_i" , "4");
 			Map<String,String> respEnd=endososManager.guardarEndosoCoberturas(omap1);
 
+			//////////////////////////
+			////// datos poliza //////
+			Map<String,String>paramsObtenerDatosMpolisit=new HashMap<String,String>();
+			paramsObtenerDatosMpolisit.put("pv_cdunieco_i" , smap1.get("cdunieco"));
+			paramsObtenerDatosMpolisit.put("pv_cdramo_i"   , smap1.get("cdramo"));
+			paramsObtenerDatosMpolisit.put("pv_estado_i"   , smap1.get("estado"));
+			paramsObtenerDatosMpolisit.put("pv_nmpoliza_i" , smap1.get("nmpoliza"));
+			Map<String,String>respuestaObtenerDatosMpolisit=endososManager.obtieneDatosMpolisit(paramsObtenerDatosMpolisit);
+			//String nmsituacNuevo=respuestaObtenerDatosMpolisit.get("pv_nmsituac_o");
+			String cdplan=respuestaObtenerDatosMpolisit.get("pv_cdplan_o");
+			////// datos poliza //////
+			//////////////////////////
+			
+			/////////////////////
+			////// polisit //////
+			Map<String,Object>mapaPolisit=new HashMap<String,Object>(0);
+            mapaPolisit.put("pv_cdunieco_i",    smap1.get("cdunieco"));
+            mapaPolisit.put("pv_cdramo_i",      smap1.get("cdramo"));
+            mapaPolisit.put("pv_estado_i",      smap1.get("estado"));
+            mapaPolisit.put("pv_nmpoliza_i",    smap1.get("nmpoliza"));
+            mapaPolisit.put("pv_nmsituac_i",    smap1.get("nmsituac"));
+            mapaPolisit.put("pv_nmsuplem_i",    respEnd.get("pv_nmsuplem_o"));
+            mapaPolisit.put("pv_status_i",      "V");
+            mapaPolisit.put("pv_cdtipsit_i",    smap1.get("cdtipsit"));
+            mapaPolisit.put("pv_swreduci_i",    null);
+            mapaPolisit.put("pv_cdagrupa_i",    "1");
+            mapaPolisit.put("pv_cdestado_i",    "0");
+            mapaPolisit.put("pv_fefecsit_i",    renderFechas.parse(smap1.get("fecha_endoso")));
+            mapaPolisit.put("pv_fecharef_i",    renderFechas.parse(smap1.get("fecha_endoso")));
+            mapaPolisit.put("pv_cdgrupo_i",     null);
+            mapaPolisit.put("pv_nmsituaext_i",  null);
+            mapaPolisit.put("pv_nmsitaux_i",    null);
+            mapaPolisit.put("pv_nmsbsitext_i",  null);
+            mapaPolisit.put("pv_cdplan_i",      cdplan);
+            mapaPolisit.put("pv_cdasegur_i",    "30");
+            mapaPolisit.put("pv_accion_i",      "I");
+            kernelManager.insertaPolisit(mapaPolisit);
+			////// polisit //////
+            /////////////////////
+			
 			//cargar anterior valosit
 			Map<String,String>paramsValositAsegurado=new LinkedHashMap<String,String>(0);
 			paramsValositAsegurado.put("pv_cdunieco_i", smap1.get("cdunieco"));
@@ -1515,6 +1555,38 @@ public class EndososAction extends PrincipalCoreAction
 			paramsNuevos.put("pv_accion_i" , "I");
 			log.debug("los actualizados seran: "+paramsNuevos);
 			kernelManager.insertaValoresSituaciones(paramsNuevos);
+            
+			//////////////////////
+			////// cdperson //////
+			Map<String,String>mapCdperson=new HashMap<String,String>(0);
+			mapCdperson.put("pv_cdunieco" , smap1.get("cdunieco"));
+			mapCdperson.put("pv_cdramo"   , smap1.get("cdramo"));
+			mapCdperson.put("pv_estado"   , smap1.get("estado"));
+			mapCdperson.put("pv_nmpoliza" , smap1.get("nmpoliza"));
+			mapCdperson.put("pv_nmsituac" , smap1.get("nmsituac"));
+			List<Map<String,String>>listCdperson=endososManager.obtenerCdpersonMpoliper(mapCdperson);
+			////// cdperson //////
+			//////////////////////
+			
+            //////////////////////
+			////// mpoliper //////
+			Map<String,Object>mapaMpoliper=new LinkedHashMap<String,Object>(0);
+			mapaMpoliper.put("pv_cdunieco_i" , smap1.get("cdunieco"));
+			mapaMpoliper.put("pv_cdramo_i"   , smap1.get("cdramo"));
+			mapaMpoliper.put("pv_estado_i"   , smap1.get("estado"));
+			mapaMpoliper.put("pv_nmpoliza_i" , smap1.get("nmpoliza"));
+			mapaMpoliper.put("pv_nmsituac_i" , smap1.get("nmsituac"));
+			mapaMpoliper.put("pv_cdrol_i"    , "2");
+			mapaMpoliper.put("pv_cdperson_i" , listCdperson.get(0).get("CDPERSON"));
+			mapaMpoliper.put("pv_nmsuplem_i" , respEnd.get("pv_nmsuplem_o"));
+			mapaMpoliper.put("pv_status_i"   , "V");
+			mapaMpoliper.put("pv_nmorddom_i" , "1");
+			mapaMpoliper.put("pv_swreclam_i" , null);
+			mapaMpoliper.put("pv_accion_i"   , "I");
+			mapaMpoliper.put("pv_swexiper_i" , "N");
+			kernelManager.movMpoliper(mapaMpoliper);
+			////// mpoliper //////
+			//////////////////////
 			
 			if(smap1.get("confirmar").equalsIgnoreCase("si"))
 			{
@@ -2034,6 +2106,7 @@ public class EndososAction extends PrincipalCoreAction
 			String cdelemen = usuario.getEmpresa().getElementoId();
 			String cdusuari = usuario.getUser();
 			Date fechaHoy   = new Date();
+			String ntramite = smap2.get("NTRAMITE");
 			
 			String fechaEndoso  = smap3.get("fecha_endoso");
 			Date   fechaEndosoD = renderFechas.parse(fechaEndoso);
@@ -2482,7 +2555,7 @@ public class EndososAction extends PrincipalCoreAction
 			    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(paramsGetDoc);
 			    log.debug("documentos que se regeneran: "+listaDocu);
 			    
-			    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+listaDocu.get(0).get("ntramite");
+			    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
 			    
 				//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
 				for(Map<String,String> docu:listaDocu)
@@ -2533,15 +2606,15 @@ public class EndososAction extends PrincipalCoreAction
 				String sucursal = cdunieco;
 				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 				
-				String nmsolici = listaDocu.get(0).get("nmsolici");
-				String nmtramite = listaDocu.get(0).get("ntramite");
+				String nmsolici = listaDocu.size()>0?listaDocu.get(0).get("nmsolici"):nmpoliza;
+				//String nmtramite = listaDocu.get(0).get("ntramite");
 				
 				String tipomov = alta?"9":"10";
 				
 				ejecutaWSrecibosEndoso(cdunieco, cdramo,
 						estado, nmpoliza,
 						nmsuplem, nsuplogi, rutaCarpeta,
-						cdtipsitGS, sucursal, nmsolici, nmtramite,
+						cdtipsitGS, sucursal, nmsolici, ntramite,
 						true, "INSERTA", tipomov );
 				
 				mensaje="Se ha guardado el endoso "+nsuplogi;

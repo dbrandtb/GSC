@@ -170,6 +170,16 @@ public class EndososManagerImpl implements EndososManager
 		log.debug("EndososManager actualizarSexo end");
 	}
 	
+	@Override
+	public List<Map<String, String>> obtenerCdpersonMpoliper(Map<String, String> params) throws Exception
+	{
+		log.debug("EndososManager obtenerCdpersonMpoliper params: "+params);
+		List<Map<String,String>> lista=endososDAO.obtenerCdpersonMpoliper(params);
+		lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
+		log.debug("EndososManager obtenerCdpersonMpoliper lista size: "+lista.size());
+		return lista;
+	}
+	
 	/////////////////////////////////
 	////// getters and setters //////
 	/*/////////////////////////////*/
