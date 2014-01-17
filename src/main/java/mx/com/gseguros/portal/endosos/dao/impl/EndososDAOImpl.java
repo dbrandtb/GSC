@@ -541,4 +541,38 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		}
 	}
 
+	@Override
+	public List<Map<String,String>> obtenerCdpersonMpoliper(Map<String, String> params) throws Exception
+	{
+		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerCdpersonMpoliper(this.getDataSource()), params);
+		return (List<Map<String,String>>) resultadoMap.get("pv_registro_o");
+	}
+	
+	protected class ObtenerCdpersonMpoliper extends StoredProcedure
+	{
+
+		protected ObtenerCdpersonMpoliper(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SATELITES.P_OBTIENE_CDPERSON_POLIPER");
+
+			declareParameter(new SqlParameter("pv_cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsituac" , OracleTypes.VARCHAR));
+
+			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DinamicMapper()));
+	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			
+			compile();
+		}
+
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception
+		{
+            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+            return mapper.build(map);
+        }
+	}
+	
 }
