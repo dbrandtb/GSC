@@ -65,7 +65,7 @@ function _1_confirmar()
                 json=Ext.decode(response.responseText);
                 if(json.success==true)
                 {
-                    mensajeCorrecto('Endoso generado',json.mensaje);
+                    mensajeCorrecto('Guardar endoso',json.mensaje);
                     //////////////////////////////
                     ////// usa codigo padre //////
                     marendNavegacion(2);
