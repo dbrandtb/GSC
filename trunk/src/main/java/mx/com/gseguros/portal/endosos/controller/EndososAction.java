@@ -338,7 +338,7 @@ public class EndososAction extends PrincipalCoreAction
 				////// re generar los documentos //////
 			    ///////////////////////////////////////
 				
-				ejecutaWSclienteSaludEndoso((String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"), (String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"), respuestaEndosoNombres.get("pv_nmsuplem_o"), "INSERTA");
+				ejecutaWSclienteSaludEndoso((String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"), (String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"), respuestaEndosoNombres.get("pv_nmsuplem_o"), "ACTUALIZA");
 				
 				/**
 				 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
@@ -781,7 +781,7 @@ public class EndososAction extends PrincipalCoreAction
 				////// re generar los documentos //////
 			    ///////////////////////////////////////
 				
-				ejecutaWSclienteSaludEndoso(smap1.get("pv_cdunieco"), smap1.get("pv_cdramo"), smap1.get("pv_estado"), smap1.get("pv_nmpoliza"), resEndDomi.get("pv_nmsuplem_o"), "INSERTA");
+				ejecutaWSclienteSaludEndoso(smap1.get("pv_cdunieco"), smap1.get("pv_cdramo"), smap1.get("pv_estado"), smap1.get("pv_nmpoliza"), resEndDomi.get("pv_nmsuplem_o"), "ACTUALIZA");
 				
 				/**
 				 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
@@ -3728,7 +3728,7 @@ public class EndososAction extends PrincipalCoreAction
 						estado,
 						nmpoliza,
 						nmsuplem,
-						"INSERTA");
+						"ACTUALIZA");
 			}
 			else if(cdtipsup.equals("3"))//domicilio
 			{
@@ -3738,7 +3738,7 @@ public class EndososAction extends PrincipalCoreAction
 						estado,
 						nmpoliza,
 						nmsuplem,
-						"INSERTA");
+						"ACTUALIZA");
 			}
 			else if(cdtipsup.equals("6")||cdtipsup.equals("7"))//coberturas
 			{
