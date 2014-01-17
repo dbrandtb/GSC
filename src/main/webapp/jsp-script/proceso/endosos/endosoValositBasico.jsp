@@ -219,6 +219,7 @@ Ext.onReady(function()
                     var form=me.up().up();
                     endvalbasSumit(form,'no');
                 }
+                ,hidden   : true // TODO:Quitar propiedad cuando se arregle duplicidad de PKG_SATELITES.P_MOV_MPOLISIT
             }
             ,{
                 text     : 'Confirmar endoso'
