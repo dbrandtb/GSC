@@ -140,6 +140,10 @@
             <result name="success" type="json" />
         </action>
         
+        <action name="autorizarEndoso" class="EndososAction" method="autorizarEndoso">
+            <result name="success" type="json" />
+        </action>
+        
     </package>
 
 </struts>

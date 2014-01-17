@@ -548,12 +548,7 @@ Ext.onReady(function()
 	    				if(json.success==true)
 	    				{
 	    					Ext.getCmp('panEndAltBajAseBotConfirmar').hide();
-	    					Ext.Msg.show(
-                            {
-                                title    : 'Endoso confirmado'
-                                ,msg     : 'Se ha confirmado el endoso'
-                                ,buttons : Ext.Msg.OK
-                            });
+	    					mensajeCorrecto('Confirmar endoso',json.mensaje);
 	    					//////////////////////////////////
                             ////// usa codigo del padre //////
                             /*//////////////////////////////*/

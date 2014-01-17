@@ -32,10 +32,25 @@ var mcdinGrid;
 var mcdinStore;
 var mcdinFiltro;
 var mcdinFormNuevo;
+
+var _4_botones=
+{
+	xtype         : 'actioncolumn'
+	,hidden       : false
+	,width        : 30
+	,menuDisabled : true
+	,sortable     : false
+};
 /*///////////////////*/
 ////// variables //////
 ///////////////////////
+</script>
 
+<s:if test='%{getSmap2().get("pv_cdtiptra_i").equalsIgnoreCase("15")}'>
+    <%@ include file="/jsp-script/proceso/endosos/scriptMesaAutorizacionEndosos.jsp"%>
+</s:if>
+
+<script>
 ///////////////////////
 ////// funciones //////
 /*///////////////////*/
@@ -117,6 +132,7 @@ Ext.onReady(function()
     			    	,sortable     : false
     			    }
     			    ,<s:property value="imap1.gridColumns" />
+    			    ,_4_botones
     			]
     			<s:if test='%{getSmap1().get("editable")!=null}'>
     			,tbar      :

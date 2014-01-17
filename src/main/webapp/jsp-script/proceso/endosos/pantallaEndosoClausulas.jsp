@@ -108,11 +108,7 @@ function _2_confirmar()
 	            var json=Ext.decode(response.responseText);
 	            if(json.success==true)
 	            {
-	                Ext.Msg.show({
-	                    title:'Endoso confirmando',
-	                    msg: 'Endoso confirmado correctamente',
-	                    buttons: Ext.Msg.OK
-	                });
+	                mensajeCorrecto('Confirmar endoso',json.mensaje);
 	                //////////////////////////////////
 	                ////// usa codigo del padre //////
 	                /*//////////////////////////////*/
