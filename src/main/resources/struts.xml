@@ -21,6 +21,7 @@
     <include file="struts/config/struts-mesacontrol.xml"/>
     <include file="struts/config/struts-portal.xml"/>
     <include file="struts/config/struts-seguridad.xml"/>
+    <include file="struts/config/struts-confpantallas.xml"/>
     
     <include file="struts/config/struts-wizard.xml"/>
 	<include file="struts/config/struts-wizard-atributosVariables.xml"/>

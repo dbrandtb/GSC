@@ -1,0 +1,46 @@
+<!DOCTYPE struts PUBLIC
+"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+"http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+    <package name="default" extends="struts-default" namespace="/confpantallas">
+		<action name="grabapanel" class="mx.com.gseguros.confpantallas.action.GrabaPanel">
+			<result name="SUCCESS">/jsp/confpantallas/success.jsp</result>
+		</action>
+		<action name="cargainfo" class="mx.com.gseguros.confpantallas.action.CargaInfo">
+			<result name="SUCCESS">/jsp/confpantallas/comboresp.jsp</result>
+		</action>
+		<action name="pintapanel" class="mx.com.gseguros.confpantallas.action.PintaPanel">
+			<result name="SUCCESS">/jsp/confpantallas/commonJson.jsp</result>
+		</action>
+		<action name="pintatreepanel" class="mx.com.gseguros.confpantallas.action.PintaTreePanel">
+			<result name="success">/jsp/confpantallas/treepanel.jsp</result>
+		</action>
+		<action name="buscacontrol" class="mx.com.gseguros.confpantallas.action.BuscaControl">
+			<result name="SUCCESS">/jsp/confpantallas/data.jsp</result>
+		</action>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+    </package>
+</struts>
