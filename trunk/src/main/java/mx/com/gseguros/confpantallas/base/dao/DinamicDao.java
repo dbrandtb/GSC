@@ -246,7 +246,7 @@ public class DinamicDao {
 					+ "AND B.CDTABLJ1   = D.CDTABLA AND D.NMTABLA    = PADRE.NMTABLA AND C.CDTABLA    = B.CDTABLJ2 "
 					+ "AND C.NMTABLA    = REL.NMTABLA AND REL.OTCLAVE1 = PADRE.OTCLAVE     AND REL.OTCLAVE2 = HIJO.OTCLAVE "
 					+ "AND REL.OTCLAVE1 = '"+mapa.get("valor")+"' GROUP BY HIJO.OTCLAVE, HIJO.OTVALOR "
-					+ "ORDER BY VALUE DESC;";
+					+ "ORDER BY VALUE DESC";
 		}else if(qry.equals("IdPanel")){
 			rgs = "SELECT IDPANEL, IDPADRE FROM DNC_PANELES WHERE NAME_PANEL = '"+mapa.get("panel")+"' ORDER BY ORDEN";
 		}else if(qry.equals("AttrPanel")){
