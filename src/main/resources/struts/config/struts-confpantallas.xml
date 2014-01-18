@@ -3,7 +3,7 @@
 "http://struts.apache.org/dtds/struts-2.0.dtd">
 
 <struts>
-    <package name="default" extends="struts-default" namespace="/confpantallas">
+    <package name="confpantallas" extends="struts-default" namespace="/confpantallas">
 		<action name="grabapanel" class="mx.com.gseguros.confpantallas.action.GrabaPanel">
 			<result name="SUCCESS">/jsp/confpantallas/success.jsp</result>
 		</action>
