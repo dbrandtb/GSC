@@ -1996,13 +1996,31 @@ public class EndososAction extends PrincipalCoreAction
 			List<Tatri>tatrisit=kernelManager.obtenerTatrisit(cdtipsit);
 			gc.setCdtipsit(cdtipsit);
 			
+			List<String>exclusiones=new ArrayList<String>();
+			if(cdtipsit.equals("SL")||cdtipsit.equals("SN"))
+			{
+				exclusiones.add("3");//codigo postal
+				exclusiones.add("4");//,"estado");
+				exclusiones.add("5");//,"deducible");
+				exclusiones.add("6");//,"copago");
+				exclusiones.add("7");//,"suma asegurada");
+				exclusiones.add("17");//,"municipio");
+			}
+			log.debug("exclusiones: "+exclusiones);
+			
 			List<Tatri>tatriTemp=new ArrayList<Tatri>(0);
 			for(Tatri t:tatrisit)
 			//solo dejar los atributos si es individual, los que tengan S
 			{
-				if(t.getSwsuscri().equalsIgnoreCase("S"))//S=individual
+				if(true||t.getSwsuscri().equalsIgnoreCase("S"))//S=individual
 				{
-					tatriTemp.add(t);
+					String name=t.getCdatribu();
+					log.debug("se busca "+name+" en excluciones");
+					if(!exclusiones.contains(name))
+					{
+						log.debug("no encontrado");
+						tatriTemp.add(t);
+					}
 				}
 			}
 			tatrisit=tatriTemp;
@@ -2099,7 +2117,7 @@ public class EndososAction extends PrincipalCoreAction
 		log.debug("smap1: "+smap1);
 		log.debug("smap2: "+smap2);
 		log.debug("smap3: "+smap3);
-		
+		log.debug("slist1: "+slist1);
 		try
 		{
 			UserVO usuario=(UserVO) session.get("USUARIO");
