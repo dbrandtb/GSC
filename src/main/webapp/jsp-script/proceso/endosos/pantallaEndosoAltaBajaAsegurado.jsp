@@ -16,12 +16,21 @@ var panEndAltBajAseWindowAsegu;
 var panEndAltBajAseNmsituac;
 var panEndAltBajAseValues='cadena';
 var _3_form;
+var _3_storeClaDisp;
+var _3_storeClaTipos;
+var loadExcluTimeoutVar;
+var _3_panelCla;
+var _3_storeClaUsa;
 
-var panendabaseguUrlLoadAsegu = '<s:url namespace="/" action="cargarComplementariosAsegurados" />';
 var panendabaseguInputSmap1   = <s:property value='%{getSmap1().toString().replace("=",":\'").replace(",","\',").replace("}","\'}")}' />;
 var panendabaseguInputSmap2   = <s:property value='%{getSmap2().toString().replace("=",":\'").replace(",","\',").replace("}","\'}")}' />;
-var panendabaseguUrlSave      = '<s:url namespace="/endosos" action="guardarEndosoAltaBajaAsegurado" />';
+
+var panendabaseguUrlLoadAsegu = '<s:url namespace="/"           action="cargarComplementariosAsegurados" />';
+var panendabaseguUrlSave      = '<s:url namespace="/endosos"    action="guardarEndosoAltaBajaAsegurado" />';
 var panEndAltBajAseUrlDoc     = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza" />';
+var _3_urlCargarClaDisp       = '<s:url namespace="/"           action="obtenerExclusionesPorTipo" />';
+var _3_urlCargarClaTipos      = '<s:url namespace="/"           action="cargarTiposClausulasExclusion" />';
+var _3_urlLoadHtml            = '<s:url namespace="/"           action="cargarHtmlExclusion" />';
 
 debug('panendabaseguInputSmap1',panendabaseguInputSmap1);
 debug('panendabaseguInputSmap2',panendabaseguInputSmap2);
@@ -32,6 +41,17 @@ debug('panendabaseguInputSmap2',panendabaseguInputSmap2);
 ///////////////////////
 ////// funciones //////
 /*///////////////////*/
+function _3_cellclick(grid, td, index)
+{
+	debug('_3_itemclick');
+	var nCols=grid.headerCt.getGridColumns().length;
+	debug('columns length: ',nCols,'index: ',index);
+	if(index!=nCols-1)
+	{
+		panEndAltBajAseWindowAsegu.show();
+	}
+}
+
 function panendabaseguFunAgregar()
 {
 	debug('panendabaseguFunAgregar');
@@ -39,7 +59,7 @@ function panendabaseguFunAgregar()
     {
 		panEndAltBajAseNmsituac = panendabaseguStoreAsegu.getCount();
         debug('panEndAltBajAseNmsituac:',panEndAltBajAseNmsituac);
-        panEndAltBajAseWindowAsegu=new PanEndAltBajAseWindowAsegu();
+        Ext.getCmp('_3_formNuevo').getForm().reset();
         panEndAltBajAseWindowAsegu.show();
     }
     else
@@ -118,6 +138,17 @@ Ext.onReady(function()
 	/////////////////////
 	////// modelos //////
 	/*/////////////////*/
+	Ext.define('ModeloExclusion',{
+        extend:'Ext.data.Model',
+        fields:['cdclausu','dsclausu','linea_usuario','cdtipcla','linea_general','merged']
+    });
+    
+    Ext.define('ModeloTipoClausula',
+    {
+        extend:'Ext.data.Model',
+        fields:['cdtipcla','dstipcla','swgrapol']
+    });
+    
 	Ext.define('panendabaseguModelo',
 	{
 		extend  : 'Ext.data.Model'
@@ -137,6 +168,48 @@ Ext.onReady(function()
 	////////////////////
 	////// stores //////
 	/*////////////////*/
+	_3_storeClaUsa = new Ext.data.Store(
+    {
+        model  : 'ModeloExclusion'
+        ,proxy :
+        {
+            type    : 'memory'
+            ,reader : 'json'
+            ,data   : []
+        }
+    });
+	
+	_3_storeClaTipos = new Ext.data.Store(
+    {
+        model      : 'ModeloTipoClausula'
+        ,autoLoad  : true
+        ,proxy     :
+        {
+            url     : _3_urlCargarClaTipos
+            ,type   : 'ajax'
+            ,reader :
+            {
+                type  : 'json'
+                ,root : 'slist1'
+            }
+        }
+    });
+    
+    _3_storeClaDisp = new Ext.data.Store(
+    {
+        model      : 'ModeloExclusion'
+        ,autoLoad  : false
+        ,proxy     :
+        {
+            url     : _3_urlCargarClaDisp
+            ,type   : 'ajax'
+            ,reader :
+            {
+                type  : 'json'
+                ,root : 'slist1'
+            }
+        }
+    });
 	panendabaseguStoreAsegu = Ext.create('Ext.data.Store',
     {
         autoLoad : true
@@ -189,6 +262,354 @@ Ext.onReady(function()
 	/////////////////////////
 	////// componentes //////
 	/*/////////////////////*/
+	Ext.define('_3_PanelCla',
+    {
+		extend    : 'Ext.panel.Panel'
+		,hidden   : panendabaseguInputSmap2.alta=='no'
+        ,border   : 0
+        ,defaults :
+        {
+            style : 'margin : 5px;'
+        }
+	    ,layout   :
+	    {
+	    	type     : 'table'
+	    	,columns : 2
+	    }
+        ,items    :
+        [
+            Ext.create('Ext.panel.Panel',
+            {
+                border   : 0
+                ,colspan : 2
+                ,layout  :
+                {
+                    type     : 'table'
+                    ,columns : 2
+                }
+                ,defaults : 
+                {
+                    style : 'margin:5px;'
+                }
+                ,items :
+                [
+                    Ext.create('Ext.form.field.ComboBox',
+                    {
+                        id              : 'idComboTipCla'
+                        ,store          : _3_storeClaTipos
+                        ,displayField   : 'dstipcla'
+                        ,valueField     : 'cdtipcla'
+                        ,editable       : false
+                        ,forceSelection : true
+                        ,style          : 'margin:5px'
+                        ,fieldLabel     : 'Tipo de cl&aacute;usula'
+                        ,width          : 350
+                        ,queryMode      : 'local'
+                        ,listeners      :
+                        {
+                            change : function(me,value)
+                            {
+                                debug(value);
+                                if(Ext.getCmp('idComboTipCla').getValue()&&Ext.getCmp('idComboTipCla').getValue().length>0)
+                                {
+                                    _3_storeClaDisp.load(
+                                    {
+                                        params :
+                                        {
+                                            'smap1.pv_cdtipcla_i' : Ext.getCmp('idComboTipCla').getValue()+''
+                                            ,'smap1.pv_descrip_i' : Ext.getCmp('idfiltrocoberinput').getValue()+''
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    })
+                    ,{
+                        xtype : 'textfield'
+                        ,fieldLabel : 'Filtro'
+                        ,id         : 'idfiltrocoberinput'
+                        ,width      : 350
+                        ,listeners  :
+                        {
+                            change : function(me,value)
+                            {
+                                debug(value);
+                                if(Ext.getCmp('idComboTipCla').getValue()&&Ext.getCmp('idComboTipCla').getValue().length>0)
+                                {
+                                    clearTimeout(loadExcluTimeoutVar);
+                                    loadExcluTimeoutVar=setTimeout(function()
+                                    {
+                                        _3_storeClaDisp.load(
+                                        {
+                                            params :
+                                            {
+                                                'smap1.pv_cdtipcla_i' : Ext.getCmp('idComboTipCla').getValue()+''
+                                                ,'smap1.pv_descrip_i' : Ext.getCmp('idfiltrocoberinput').getValue()+''
+                                            }
+                                        });
+                                    },500);
+                                }
+                            }
+                        }
+                    }
+                ]
+            })
+            ,Ext.create('Ext.grid.Panel',
+            {
+                id             : 'venExcluGridDisp'
+                ,title         : 'Cl&aacute;usulas disponibles'
+                ,store         : _3_storeClaDisp
+                ,collapsible   : true
+                ,titleCollapse : true
+                ,style         : 'margin:5px'
+                ,height        : 200
+                ,columns       :
+                [
+                    {
+                        header     : 'Nombre'
+                        ,dataIndex : 'dsclausu'
+                        ,flex      : 1
+                    }
+                    ,{
+                        menuDisabled : true
+                        ,xtype       : 'actioncolumn'
+                        ,width       : 30
+                        ,items       :
+                        [
+                            {
+                                icon     : '${ctx}/resources/fam3icons/icons/add.png'
+                                ,tooltip : 'Agregar cl&aacute;usula'
+                                ,handler : function(me,rowIndex)
+                                {
+                                    debug(rowIndex);
+                                    var record=_3_storeClaDisp.getAt(rowIndex);
+                                    debug('clausula a agregar:',record);
+                                    Ext.Ajax.request(
+                                    {
+                                        url     : _3_urlLoadHtml
+                                        ,params :
+                                        {
+                                            'smap1.pv_cdclausu_i' : record.get('cdclausu')
+                                        }
+                                        ,success : function(response)
+                                        {
+                                            var json=Ext.decode(response.responseText);
+                                            if(json.success==true)
+                                            {
+                                                var exclu=json.smap1;
+                                                debug(exclu);
+                                                Ext.create('Ext.window.Window',
+                                                {
+                                                    title        : 'Detalle de '+exclu.dsclausu
+                                                    ,modal       : true
+                                                    ,buttonAlign : 'center'
+                                                    ,width       : 600
+                                                    ,height      : 400
+                                                    ,items       :
+                                                    [
+                                                        Ext.create('Ext.form.field.TextArea', {
+                                                            id        : 'venExcluHtmlInputCopy'
+                                                            ,width    : 580
+                                                            ,height   : 380
+                                                            ,value    : exclu.dslinea//viene del lector individual con dslinea
+                                                            ,readOnly : true
+                                                        })
+                                                        ,{
+                                                            id      : 'venExcluHidenInputCopy'
+                                                            ,xtype  : 'textfield'
+                                                            ,hidden : true
+                                                            ,value  : '0'
+                                                        }
+                                                    ]
+                                                    ,buttons     :
+                                                    [
+                                                        {
+                                                            id       : 'venExcluHtmlCopyWindowBoton1'
+                                                            ,text    : 'Editar'
+                                                            ,icon    : '${ctx}/resources/fam3icons/icons/pencil.png'
+                                                            ,handler : function(me)
+                                                            {
+                                                                debug(me);
+                                                                me.setDisabled(true);
+                                                                Ext.getCmp('venExcluHidenInputCopy').setValue('1');
+                                                                Ext.getCmp('venExcluHtmlInputCopy').setReadOnly(false);
+                                                            }
+                                                        }
+                                                        ,{
+                                                            id       : 'venExcluHtmlCopyWindowBoton2'
+                                                            ,text    : 'Agregar'
+                                                            ,icon    : '${ctx}/resources/fam3icons/icons/add.png'
+                                                            ,handler : function(me)
+                                                            {
+                                                                debug(me);
+                                                                //me.up().up().setLoading(true);
+                                                                debug(Ext.getCmp("idComboTipCla").getValue());
+                                                                var swgrapol;
+                                                                Ext.getCmp("idComboTipCla").getStore().each(function(record){
+                                                                    if (record.get("cdtipcla") == Ext.getCmp("idComboTipCla").getValue())
+                                                                        {swgrapol=record.get("swgrapol");}
+                                                                    });
+                                                                debug(swgrapol);
+                                                                
+                                                                if(swgrapol == "S")
+                                                                {
+                                                                	record.set('linea_usuario',Ext.getCmp('venExcluHidenInputCopy').getValue()=='1'?
+                                                                            Ext.getCmp('venExcluHtmlInputCopy').getValue():'');
+                                                                	record.set('linea_general',Ext.getCmp('venExcluHidenInputCopy').getValue()=='0'?
+                                                                            Ext.getCmp('venExcluHtmlInputCopy').getValue():'');
+                                                                	_3_storeClaUsa.add(record);
+                                                                	_3_storeClaDisp.remove(record);
+                                                                	me.up().up().destroy();
+                                                                	debug('clausula agregada:',record);
+                                                                }                                                               
+                                                            }
+                                                        }
+                                                    ]
+                                                }).show();
+                                            }
+                                            else
+                                            {
+                                            	mensajeError('Error al cargar');
+                                            }
+                                        }
+                                        ,failure : errorComunicacion
+                                    });
+                                }
+                            }
+                        ]
+                    }
+                ]
+            })
+            ,Ext.create('Ext.grid.Panel',
+            {
+                title          : 'Cl&aacute;usulas indicadas'
+                ,id            : 'venExcluGridUsaId' 
+                ,store         : _3_storeClaUsa
+                ,collapsible   : true
+                ,titleCollapse : true
+                ,style         : 'margin:5px'
+                ,height        : 200
+                ,columns       :
+                [
+                    {
+                        header     : 'Nombre'
+                        ,dataIndex : 'dsclausu'
+                        ,flex      : 1
+                    }
+                    ,{
+                        dataIndex     : 'merged'
+                        ,width        : 30
+                        ,menuDisabled : true
+                        ,renderer     : function(value)
+                        {
+                            if(true)
+                            {
+                                value='<img src="${ctx}/resources/fam3icons/icons/pencil.png" data-qtip="Editar detalle" style="cursor:pointer;" />';
+                            }
+                            debug(value);
+                            return value;
+                        }
+                    }
+                    ,{
+                        dataIndex     : 'merged'
+                        ,width        : 30
+                        ,menuDisabled : true
+                        ,renderer     : function(value)
+                        {
+                            if(true)
+                            {
+                                value='<img src="${ctx}/resources/fam3icons/icons/delete.png" data-qtip="Quitar cl&aacute;usula" style="cursor:pointer;" />';
+                            }
+                            debug(value);
+                            return value;
+                        }
+                    }
+                ]
+                ,listeners :
+                {
+                    cellclick : function(grid, td,
+                            cellIndex, record, tr,
+                            rowIndex, e, eOpts)
+                    {
+                        debug(rowIndex,cellIndex);
+                        if($(td).find('img').length>0)//si hay accion
+                        {
+                            if(cellIndex==1)
+                            {
+                                var record=_3_storeClaUsa.getAt(rowIndex);
+                                debug('clausula a editar:',record);
+                                Ext.create('Ext.window.Window',
+                                {
+                                    title        : 'Detalle de '+record.get('dsclausu')
+                                    ,modal       : true
+                                    ,buttonAlign : 'center'
+                                    ,width       : 600
+                                    ,height      : 400
+                                    ,items       :
+                                    [
+                                        Ext.create('Ext.form.field.TextArea', {
+                                            id        : 'venExcluHtmlInputEdit'
+                                            ,width    : 580
+                                            ,height   : 380
+                                            ,value    : record.get('linea_usuario')&&record.get('linea_usuario').length>0?
+                                                    record.get('linea_usuario'):record.get('linea_general')
+                                            ,readOnly : true
+                                        })
+                                        ,{
+                                            id      : 'venExcluHidenInputEdit'
+                                            ,xtype  : 'textfield'
+                                            ,hidden : true
+                                            ,value  : '0'
+                                        }
+                                    ]
+                                    ,buttons     :
+                                    [
+                                        {
+                                            text     : 'Editar'
+                                            ,icon    : '${ctx}/resources/fam3icons/icons/pencil.png'
+                                            ,handler : function(me)
+                                            {
+                                                debug(me);
+                                                me.setDisabled(true);
+                                                Ext.getCmp('venExcluHidenInputEdit').setValue('1');
+                                                Ext.getCmp('venExcluHtmlInputEdit').setReadOnly(false);
+                                            }
+                                        }
+                                        ,{
+                                            text     : 'Guardar'
+                                            ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
+                                            ,handler : function(me)
+                                            {
+                                                debug(me);
+                                                if(Ext.getCmp('venExcluHidenInputEdit').getValue()=='1')
+                                                {
+                                                	record.set('linea_usuario',Ext.getCmp('venExcluHtmlInputEdit').getValue());
+                                                	debug('clausula editada:',record);
+                                                	me.up().up().destroy();
+                                                }
+                                                else
+                                                {
+                                                	debug('sin cambios');
+                                                    me.up().up().destroy();
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }).show();
+                            }//end if cell index = 1
+                            else if(cellIndex==2)
+                            {
+                                var record=_3_storeClaUsa.getAt(rowIndex);
+                                debug('clausula eliminada:',record);
+                                _3_storeClaUsa.remove(record);
+                            }//end if cell index = 2
+                        }//end if find img
+                    }
+                }
+            })
+        ]
+    });
+	
 	Ext.define('_3_Form',
     {
         extend         : 'Ext.form.Panel'
@@ -227,16 +648,19 @@ Ext.onReady(function()
 			debug('PanEndAltBajAseWindowAsegu initComponent');
 			Ext.apply(this,
 			{
-				title   : 'Agregar asegurado'
-		        ,icon   : '${ctx}/resources/fam3icons/icons/add.png'
-		        ,width  : 700
-		        ,modal  : true
-		        ,height : 400
-		        ,items  :
+				title        : 'Agregar asegurado'
+		        ,icon        : '${ctx}/resources/fam3icons/icons/add.png'
+		        ,width       : 700
+		        ,modal       : true
+		        ,height      : 400
+		        ,autoScroll  : true
+		        ,closeAction : 'hide'
+		        ,items       :
 		        [
 			        Ext.create('Ext.form.Panel',
 			        {
-			        	items        :
+			        	id           : '_3_formNuevo'
+			        	,items       :
 			        	[
 			        	    <s:property value="imap1.formulario" />
 			        	]
@@ -249,7 +673,7 @@ Ext.onReady(function()
 			            ,buttons     :
 			            [
 			                {
-			                	text     : 'Agregar'
+			                	text     : 'Aceptar'
 			                	,icon    : '${ctx}/resources/fam3icons/icons/add.png'
 			                	,handler : function()
 			                	{
@@ -259,6 +683,7 @@ Ext.onReady(function()
 			                		{
 			                			panEndAltBajAseValues=form.getValues();
 			                			debug('panEndAltBajAseValues',panEndAltBajAseValues);
+			                			panEndAltBajAseStoreAltas.removeAll();
 			                			panEndAltBajAseStoreAltas.add(
 			                			{
 			                				nmsituac          : panEndAltBajAseNmsituac
@@ -273,7 +698,7 @@ Ext.onReady(function()
 			                			    ,sexo             : panEndAltBajAseValues['parametros.pv_otvalor01']
 			                			    ,fenacimi         : panEndAltBajAseValues['parametros.pv_otvalor19']
 			                			});
-			                			_window.destroy();
+			                			_window.hide();
 			                		}
 			                		else
 			                		{
@@ -320,6 +745,10 @@ Ext.onReady(function()
                     	,handler      : this.onDeleteClick
                     }
                 ]
+                ,listeners :
+                {
+                	cellclick : _3_cellclick
+                }
             });
             this.callParent();
         }
@@ -446,6 +875,7 @@ Ext.onReady(function()
                     panendabaseguPanelLectura
                     ,panendabaseguGridAsegu
                     ,panEndAltBajAseGridAltas
+                    ,_3_panelCla
                     ,panEndAltBajAseGridBajas
                     ,_3_form
                 ]
@@ -533,7 +963,14 @@ Ext.onReady(function()
 	    			json['smap1']=panEndAltBajAseStoreBajas.getAt(0).raw;
 	    		}
 	    		json['smap2'] = panendabaseguInputSmap1;
-	    		json['smap3'] = _3_form.getValues(); 
+	    		json['smap3'] = _3_form.getValues();
+	    		
+	    		json['slist1'] = [];
+	    		_3_storeClaUsa.each(function(record)
+	    		{
+	    			json['slist1'].push(record.getData());
+	    		});
+	    		
 	    		debug('json:',json);
 	    		panendabaseguPanelPrincipal.setLoading(true);
 	    		Ext.Ajax.request(
@@ -590,6 +1027,13 @@ Ext.onReady(function()
 	///////////////////////
 	////// contenido //////
 	/*///////////////////*/
+	if(panEndAltBajAseWindowAsegu)
+	{
+		debug('destroy panEndAltBajAseWindowAsegu anterior');
+		panEndAltBajAseWindowAsegu.destroy();
+	}
+	_3_panelCla                 = new _3_PanelCla();
+	panEndAltBajAseWindowAsegu  = new PanEndAltBajAseWindowAsegu();
 	_3_form                     = new _3_Form();
 	panEndAltBajAseGridAltas    = new PanEndAltBajAseGridAltas();
 	panEndAltBajAseGridBajas    = new PanEndAltBajAseGridBajas();
