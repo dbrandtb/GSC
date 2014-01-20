@@ -3860,7 +3860,7 @@ public class EndososAction extends PrincipalCoreAction
 					break;
 	
 				default:
-					log.error("**** NO HAY WEB SERVICE PARA CDTIPSUP " + cdtipsup + " ******");
+					log.debug("**** NO HAY WEB SERVICE PARA CDTIPSUP " + cdtipsup + " ******");
 					break;
 			}
 			
