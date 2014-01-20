@@ -485,6 +485,7 @@ Ext.onReady(function(){
                                                                                     ,'smap1.pv_dslinea_i'  :
                                                                                         Ext.getCmp('venExcluHidenInputCopy').getValue()=='1'?
                                                                                                 Ext.getCmp('venExcluHtmlInputCopy').getValue():''
+                                                                                    ,'smap1.fecha_endoso'  : Ext.Date.format(Ext.getCmp('_2_fieldFechaId').getValue(),'d/m/Y')
                                                                                 }
                                                                                 ,success : function (response)
                                                                                 {
@@ -724,6 +725,7 @@ Ext.onReady(function(){
                                                             ,'smap1.pv_dslinea_i'  :
                                                                 Ext.getCmp('venExcluHidenInputEdit').getValue()=='1'?
                                                                         Ext.getCmp('venExcluHtmlInputEdit').getValue():''
+                                                            ,'smap1.fecha_endoso'  : Ext.Date.format(Ext.getCmp('_2_fieldFechaId').getValue(),'d/m/Y')
                                                         }
                                                         ,success : function (response)
                                                         {
@@ -793,6 +795,7 @@ Ext.onReady(function(){
                                         ,'smap1.pv_accion_i'   : 'B'
                                         ,'smap1.pv_dslinea_i'  : ''
                                         ,'smap1.confirmar'     : ''
+                                        ,'smap1.fecha_endoso'  : Ext.Date.format(Ext.getCmp('_2_fieldFechaId').getValue(),'d/m/Y')
                                     }
                                     ,success : function (response)
                                     {
