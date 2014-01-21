@@ -691,7 +691,7 @@ Ext
 				queryMode : 'local',
 				displayField : 'value',
 				valueField : 'key',
-				allowBlank : true,
+				allowBlank : false,
 				editable : false,
 				emptyText : 'Seleccione...',
 				labelWidth : 250
