@@ -584,8 +584,7 @@ Ext.onReady(function() {
         {
             displayInfo : true,
             store       : storePolizaAsegurado,
-            xtype       : 'pagingtoolbar',
-            id          : 'paginadorPolizasAsegurado'
+            xtype       : 'pagingtoolbar'
         },
         features:[{
            ftype:'summary'
@@ -991,7 +990,7 @@ Ext.onReady(function() {
                             xtype : 'button',
                             flex:10,
                             text: 'Buscar',
-                            handler: function () {
+                            handler: function(btn, e) {
                                 var formBusqueda = this.up('form').getForm();
                                 //Obtenemos el valor elegido en 'groupTipoBusqueda' para elegir el tipo de busqueda a realizar.
                                 switch (formBusqueda.findField('groupTipoBusqueda').getValue().tipoBusqueda) {
@@ -1010,7 +1009,7 @@ Ext.onReady(function() {
                                             showMessage('', _MSG_RFC_INVALIDO, Ext.Msg.OK, Ext.Msg.INFO);
                                             return;
                                         } 
-                                        cargaPolizasAsegurado(formBusqueda);
+                                        cargaPolizasAsegurado(formBusqueda, btn);
                                     break;
                                     
                                     case 3:
@@ -1019,7 +1018,7 @@ Ext.onReady(function() {
                                             showMessage('', _MSG_CDPERSON_INVALIDO, Ext.Msg.OK, Ext.Msg.INFO);
                                             return;
                                         }
-                                        cargaPolizasAsegurado(formBusqueda);
+                                        cargaPolizasAsegurado(formBusqueda, btn);
                                         
                                     break;
                                     
@@ -1029,7 +1028,7 @@ Ext.onReady(function() {
                                             showMessage('', _MSG_NOMBRE_INVALIDO, Ext.Msg.OK, Ext.Msg.INFO);
                                             return;
                                         }
-                                        cargaPolizasAsegurado(formBusqueda);
+                                        cargaPolizasAsegurado(formBusqueda, btn);
                                         
                                     break;
                                 }
@@ -1137,12 +1136,8 @@ Ext.onReady(function() {
         listViewOpcionesConsulta.collapse();
     }
     
-    function cargaPolizasAsegurado(formBusqueda) {
-    	//console.log('before remove all and move first');
-    	gridPolizasAsegurado.getStore().removeAll();
-    	gridPolizasAsegurado.getStore().sync();
-    	Ext.getCmp('paginadorPolizasAsegurado').moveFirst();
-    	//console.log('after remove all and move first');
+    function cargaPolizasAsegurado(formBusqueda, btn) {
+    	gridPolizasAsegurado.down('pagingtoolbar').moveFirst();
     	var callbackGetPolizasAsegurado = function(options, success, response) {
             if(success){
                 var jsonResponse = Ext.decode(response.responseText);
@@ -1150,14 +1145,7 @@ Ext.onReady(function() {
                     showMessage(_MSG_SIN_DATOS, _MSG_BUSQUEDA_SIN_DATOS, Ext.Msg.OK, Ext.Msg.INFO);
                     return;
                 }
-                storePolizaAsegurado.setProxy(
-                {
-                    type         : 'memory',
-                    enablePaging : true,
-                    reader       : 'json',
-                    data         : jsonResponse.polizasAsegurado
-                
-                });
+                windowPolizas.animateTarget= btn;
                 windowPolizas.show();
             }else{
                 showMessage('Error', 'Error al obtener las p&oacute;lizas, intente m\u00E1s tarde.', 
