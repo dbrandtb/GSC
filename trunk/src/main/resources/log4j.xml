@@ -2,16 +2,10 @@
 
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
 
-	<appender name="stdout" class="org.apache.log4j.ConsoleAppender">
-		<param name="Threshold" value="TRACE" />
-		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%d{HH:mm:ss,SSS} [%6.6t] %5.5p %18C{1} %X - %m%n" />
-		</layout>
-	</appender>
-	
+    <!-- Application appender -->
 	<appender name="app" class="org.apache.log4j.DailyRollingFileAppender">
-		<param name="File" value="/u01/wlserver/wllogs/gseguros/application.log" />
-		<param name="Threshold" value="TRACE" />
+		<param name="Threshold" value="INFO" />
+        <param name="File" value="/u01/wlserver/wllogs/gseguros/application.log" />
 		<param name="append" value="true" />
 		<param name="DatePattern" value="'.'yyyy-MM-dd" />
 		<layout class="org.apache.log4j.PatternLayout">
@@ -19,51 +13,64 @@
 		</layout>
 	</appender>
 	
-	<appender name="sql" class="org.apache.log4j.DailyRollingFileAppender">
-		<param name="File" value="/u01/wlserver/wllogs/gseguros/sql.log" />
-		<param name="Threshold" value="ERROR" />
+	<!-- Developer Appender -->
+	<appender name="dev" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="Threshold" value="TRACE" />
+        <param name="File" value="/u01/wlserver/wllogs/gseguros/dev.log" />
 		<param name="append" value="true" />
 		<param name="DatePattern" value="'.'yyyy-MM-dd" />
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%d{HH:mm:ss,SSS} [%6.6t] %5.5p %C %X - %m%n" />
+			<param name="ConversionPattern" value="%d{HH:mm:ss,SSS} [%6.6t] %5.5p %18C{1} %X - %m%n" />
 		</layout>
 	</appender>
+	
+	<!-- SQL Appender -->
+    <appender name="sql" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="Threshold" value="TRACE" />
+        <param name="File" value="/u01/wlserver/wllogs/gseguros/sql.log" />
+        <param name="append" value="true" />
+        <param name="DatePattern" value="'.'yyyy-MM-dd" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{HH:mm:ss,SSS} [%6.6t] %5.5p %18C{1} %X - %m%n" />
+        </layout>
+    </appender>
+	
+	<!-- Console Appender -->
+	<appender name="stdout" class="org.apache.log4j.ConsoleAppender">
+        <param name="Threshold" value="TRACE" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{HH:mm:ss,SSS} [%6.6t] %5.5p %18C{1} %X - %m%n" />
+        </layout>
+    </appender>
+    
 
 	<logger name="mx">
-		<level value="DEBUG" />
-		<appender-ref ref="app" />
-		<appender-ref ref="stdout" />
-	</logger>
+        <level value="DEBUG" />
+        <appender-ref ref="app" />
+        <appender-ref ref="dev" />
+        <appender-ref ref="stdout" />
+    </logger>
 	
-	<logger name="com.wittyconsulting.backbone.service.support.jdbc">
-		<level value="DEBUG" />
-		<appender-ref ref="app" />
-		<appender-ref ref="stdout" />
-	</logger>
+	<logger name="org.apache">
+        <level value="INFO" />
+        <appender-ref ref="app" />
+        <appender-ref ref="dev" />
+        <appender-ref ref="stdout" />
+    </logger>
 	
 	<logger name="org.springframework.jdbc.core">
 		<level value="TRACE" />
 		<appender-ref ref="app" />
+		<appender-ref ref="dev" />
 		<appender-ref ref="sql" />
-		<appender-ref ref="stdout" />
-	</logger>
-
-	<logger name="org.aspectj.weaver">
-		<level value="DEBUG" />
-		<appender-ref ref="app" />
 		<appender-ref ref="stdout" />
 	</logger>
 
 	<logger name="java.sql">
 		<level value="DEBUG" />
-		<appender-ref ref="sql" />
+		<appender-ref ref="app" />
+		<appender-ref ref="dev" />
 		<appender-ref ref="stdout" />
 	</logger>
 	
-	<logger name="org.apache">
-		<level value="INFO" />
-		<appender-ref ref="app" />
-        <appender-ref ref="stdout" />
-	</logger>
-
 </log4j:configuration>
