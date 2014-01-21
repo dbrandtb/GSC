@@ -1997,6 +1997,7 @@ public class EndososAction extends PrincipalCoreAction
 			gc.setCdtipsit(cdtipsit);
 			
 			List<String>exclusiones=new ArrayList<String>();
+			/*
 			if(cdtipsit.equals("SL")||cdtipsit.equals("SN"))
 			{
 				exclusiones.add("3");//codigo postal
@@ -2007,12 +2008,13 @@ public class EndososAction extends PrincipalCoreAction
 				exclusiones.add("17");//,"municipio");
 			}
 			log.debug("exclusiones: "+exclusiones);
+			*/
 			
 			List<Tatri>tatriTemp=new ArrayList<Tatri>(0);
 			for(Tatri t:tatrisit)
 			//solo dejar los atributos si es individual, los que tengan S
 			{
-				if(true||t.getSwsuscri().equalsIgnoreCase("S"))//S=individual
+				if(t.getSwsuscri().equalsIgnoreCase("S"))//S=individual
 				{
 					String name=t.getCdatribu();
 					log.debug("se busca "+name+" en excluciones");
@@ -2102,6 +2104,9 @@ public class EndososAction extends PrincipalCoreAction
         FEEMISIO,
         CDRAMO,
         CDUNIECO
+    slist1:[
+        {dsclausu=ENDOSO LIBRE, linea_usuario=TEXTO LIBREasd, linea_general=, cdclausu=END215, merged=, cdtipcla=}
+        ]
 	*/
 	/*/////////////////////////////////////////////////////*/
 	public String guardarEndosoAltaBajaAsegurado()
@@ -2309,6 +2314,55 @@ public class EndososAction extends PrincipalCoreAction
 				////// mpoliper //////
 				//////////////////////
                 
+				///////////////////////
+				////// clausulas //////
+				/*///////////////////*/
+				for(Map<String,String>cla:slist1)
+				{
+					//{dsclausu=ENDOSO LIBRE, linea_usuario=TEXTO LIBREasd, linea_general=, cdclausu=END215, merged=, cdtipcla=}
+					String cdclausu = cla.get("cdclausu");
+					String dslinea  = cla.get("linea_usuario");
+					String cdtipcla = cla.get("cdtipcla");					
+					
+					Map<String,String>policot=new HashMap<String,String>();
+					policot.put("pv_cdunieco_i" , cdunieco);
+					policot.put("pv_cdramo_i"   , cdramo);
+					policot.put("pv_estado_i"   , estado);
+					policot.put("pv_nmpoliza_i" , nmpoliza);
+					policot.put("pv_nmsituac_i" , nmsituac);
+					policot.put("pv_cdclausu_i" , cdclausu);
+					policot.put("pv_nmsuplem_i" , nmsuplem);
+					policot.put("pv_status_i"   , "V");
+					policot.put("pv_cdtipcla_i" , cdtipcla);
+					policot.put("pv_swmodi_i"   , null);
+					policot.put("pv_dslinea_i"  , dslinea);
+					policot.put("pv_accion_i"   , "I");
+					kernelManager.PMovMpolicot(policot);
+				}
+				/*///////////////////*/
+				////// clausulas //////
+				///////////////////////
+				
+				///////////////////////////////////
+				////// validacion extraprima //////
+				/*///////////////////////////////*/
+				Map<String,String>paramValExtraprima=new LinkedHashMap<String,String>(0);
+				paramValExtraprima.put("pv_cdunieco_i" , cdunieco);
+				paramValExtraprima.put("pv_cdramo_i"   , cdramo);
+				paramValExtraprima.put("pv_estado_i"   , estado);
+				paramValExtraprima.put("pv_nmpoliza_i" , nmpoliza);
+				paramValExtraprima.put("pv_nmsituac_i" , nmsituac);
+				String statusValidacionExtraprimas=(String) kernelManager.validarExtraprimaSituac(paramValExtraprima).getItemMap().get("status");
+				log.debug("tiene status la extraprima: "+statusValidacionExtraprimas);
+				if(statusValidacionExtraprimas.equalsIgnoreCase("N"))
+				{
+					error="Favor de verificar las extraprimas y los endosos de extraprima";
+					throw new Exception(error);
+				}
+				/*///////////////////////////////*/
+				////// validacion extraprima //////
+				///////////////////////////////////
+				
 				///////////////////////
 				////// domicilio //////
 				
@@ -3771,6 +3825,7 @@ public class EndososAction extends PrincipalCoreAction
 			String cdtipsup = smap1.get("cdtipsup");
 			String ntramite = smap1.get("ntramite");
 			String status   = smap1.get("status");
+			String coment   = smap1.get("observacion");
 			
 			kernelManager.mesaControlUpdateStatus(ntramite, status);
 			
@@ -3782,7 +3837,7 @@ public class EndososAction extends PrincipalCoreAction
 			paramConfirmarEndosoB.put("pv_nmsuplem_i" , nmsuplem);
 			paramConfirmarEndosoB.put("pv_nsuplogi_i" , nsuplogi);
 			paramConfirmarEndosoB.put("pv_cdtipsup_i" , cdtipsup);
-			paramConfirmarEndosoB.put("pv_dscoment_i" , "");
+			paramConfirmarEndosoB.put("pv_dscoment_i" , coment);
 			endososManager.confirmarEndosoB(paramConfirmarEndosoB);
 			
 			///////////////////////////////////////

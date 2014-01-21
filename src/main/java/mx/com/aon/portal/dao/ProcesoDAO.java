@@ -137,6 +137,7 @@ public class ProcesoDAO extends AbstractDAO {
 	public static final String GUARDA_PERIODOS_DXN =	"GUARDA_PERIODOS_DXN";
 	public static final String LANZA_PROCESO_DXN =	"LANZA_PROCESO_DXN";
 	public static final String VALIDAR_EXTRAPRIMA       =	"VALIDAR_EXTRAPRIMA";
+	public static final String VALIDAR_EXTRAPRIMA_SITUAC       =	"VALIDAR_EXTRAPRIMA_SITUAC";
 	public static final String P_OBTIENE_MESACONTROL_SUPER = "P_OBTIENE_MESACONTROL_SUPER";
 
 	protected void initDao() throws Exception {
@@ -227,6 +228,7 @@ public class ProcesoDAO extends AbstractDAO {
 		addStoredProcedure(GUARDA_PERIODOS_DXN, new GuardaPeriodosDxN(getDataSource()));
 		addStoredProcedure(LANZA_PROCESO_DXN, new LanzaProcesoDxN(getDataSource()));
 		addStoredProcedure(VALIDAR_EXTRAPRIMA, new ValidarExtraprima(getDataSource()));
+		addStoredProcedure(VALIDAR_EXTRAPRIMA_SITUAC, new ValidarExtraprimaSituac(getDataSource()));
 	}
 	
 	
@@ -4035,6 +4037,31 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_status_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o ", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			WrapperResultados wrapperResultados=mapper.build(map);
+			wrapperResultados.setItemMap(new HashMap<String, Object>());
+			wrapperResultados.getItemMap().put("status", map.get("pv_status_o"));
+			return wrapperResultados;
+		}   	
+
+    }
+    
+    protected class ValidarExtraprimaSituac extends CustomStoredProcedure {
+    	
+    	protected ValidarExtraprimaSituac(DataSource dataSource) {
+    		super(dataSource, "pkg_satelites.valida_extraprima_situac");
+    		declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsituac_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_status_o", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_title_o ", OracleTypes.VARCHAR));
