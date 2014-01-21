@@ -584,7 +584,7 @@ Ext.onReady(function()
                                 }
                                 if(!salida)
                                 {
-                                    this.onViewClick(grid,rowIndex,cellIndex);
+                                    this.onViewClick(record);
                                 }
                 			}
                 		}
@@ -593,7 +593,7 @@ Ext.onReady(function()
                 			debug($(td).find('img').length);
                 			if($(td).find('img').length>0)//si hay accion
                				{
-                				this.onDownloadClick(grid,rowIndex,cellIndex);
+                				this.onDownloadClick(record);
                				}
                 		}
                 	}
@@ -601,7 +601,7 @@ Ext.onReady(function()
             });
             this.callParent();
         }
-        , onDownloadClick : function(grid,rowIndex,colIndex)
+        , onDownloadClick : function(record)
         {
         	debug(rowIndex,colIndex);
         	var record=grid.getStore().getAt(rowIndex);
@@ -617,12 +617,10 @@ Ext.onReady(function()
                 }
             });
         }
-        ,onViewClick:function(grid,rowIndex,colIndex)
+        ,onViewClick:function(record)
         {
-        	debug(rowIndex,colIndex);
         	var numRand=Math.floor((Math.random()*100000)+1);
         	debug('numRand a: ',numRand);
-        	var record=grid.getStore().getAt(rowIndex);
         	var windowVerDocu=Ext.create('Ext.window.Window',
         	{
         		title          : record.get('dsdocume')
