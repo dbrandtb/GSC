@@ -875,7 +875,7 @@ debug("validarYGuardar flag:2");
             allowBlank : false
             ,listeners :
             {
-                'change' : function( field )
+                'blur' : function( field )
                 {
                 	gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdperson",'');
                 	gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("swexiper",'N');
@@ -979,7 +979,7 @@ debug("validarYGuardar flag:2");
                                     });
                                 }
                             });
-                        },2000);
+                        },0);
                     }
                 }
             }
@@ -989,7 +989,7 @@ debug("validarYGuardar flag:2");
             allowBlank : false
             ,listeners :
             {
-            	'change' : function( field )
+            	'blur' : function( field )
             	{
             		gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdperson",'');
             		gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("swexiper",'N');
@@ -1093,7 +1093,7 @@ debug("validarYGuardar flag:2");
 		                            });
 		            		    }
 		            		});
-            			},2000);
+            			},0);
                     }
             	}
             }
