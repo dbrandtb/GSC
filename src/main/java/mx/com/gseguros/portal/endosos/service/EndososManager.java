@@ -23,4 +23,5 @@ public interface EndososManager
 	public void actualizarFenacimi(Map<String, String> params) throws Exception;
 	public void actualizarSexo(Map<String, String> params) throws Exception;
 	public List<Map<String, String>> obtenerCdpersonMpoliper(Map<String, String> params) throws Exception;
+	public String                    obtenerNtramiteEmision(String cdunieco,String cdramo,String estado,String nmpoliza) throws Exception;
 }

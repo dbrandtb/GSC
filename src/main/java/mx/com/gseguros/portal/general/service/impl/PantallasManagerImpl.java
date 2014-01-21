@@ -105,6 +105,16 @@ public class PantallasManagerImpl implements PantallasManager
 		pantallasDAO.insertarParametrosPantalla(params);
 		log.debug("EndososManager insertarParametrosPantalla end");
 	}
+	
+	@Override
+	public List<Map<String, String>> obtenerArbol() throws Exception
+    {
+		log.debug("EndososManager obtenerArbol inicio");
+		List<Map<String,String>> lista=pantallasDAO.obtenerArbol();
+		lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
+		log.debug("EndososManager obtenerArbol lista size: "+lista.size());
+		return lista;
+    }
 
 	///////////////////////////////
 	////// getters y setters //////

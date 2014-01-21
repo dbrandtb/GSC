@@ -1,6 +1,7 @@
 package mx.com.gseguros.portal.endosos.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -178,6 +179,23 @@ public class EndososManagerImpl implements EndososManager
 		lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
 		log.debug("EndososManager obtenerCdpersonMpoliper lista size: "+lista.size());
 		return lista;
+	}
+	
+	@Override
+	public String obtenerNtramiteEmision(String cdunieco,String cdramo,String estado,String nmpoliza) throws Exception
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		log.debug("EndososManager obtenerNtramiteEmision params: "+params);
+		List<Map<String,String>> lista=endososDAO.obtenerNtramiteEmision(params);
+		lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
+		log.debug("EndososManager obtenerNtramiteEmision lista: "+lista);
+		String ntramite=lista.size()>0?lista.get(0).get("NTRAMITE"):"";
+		log.debug("EndososManager obtenerNtramiteEmision ntramite: "+ntramite);
+		return ntramite;
 	}
 	
 	/////////////////////////////////

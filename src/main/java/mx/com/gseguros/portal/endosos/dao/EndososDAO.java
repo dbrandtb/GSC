@@ -23,4 +23,5 @@ public interface EndososDAO
 	public void                     actualizarFenacimi(Map<String, String> params) throws Exception;
 	public void                     actualizarSexo(Map<String, String> params) throws Exception;
 	public List<Map<String,String>> obtenerCdpersonMpoliper(Map<String, String> params) throws Exception;
+	public List<Map<String,String>> obtenerNtramiteEmision(Map<String, String> params) throws Exception;
 }

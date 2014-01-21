@@ -575,4 +575,37 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
         }
 	}
 	
+	@Override
+	public List<Map<String,String>> obtenerNtramiteEmision(Map<String, String> params) throws Exception
+	{
+		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerNtramiteEmision(this.getDataSource()), params);
+		return (List<Map<String,String>>) resultadoMap.get("pv_registro_o");
+	}
+	
+	protected class ObtenerNtramiteEmision extends StoredProcedure
+	{
+
+		protected ObtenerNtramiteEmision(DataSource dataSource)
+		{
+			super(dataSource, "PKG_CONSULTA.P_GET_NTRAMITE_EMISION");
+
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+
+			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DinamicMapper()));//ntramite
+	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			
+			compile();
+		}
+
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception
+		{
+            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+            return mapper.build(map);
+        }
+	}
+	
 }

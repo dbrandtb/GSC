@@ -101,28 +101,32 @@ function _1_validar()
 		for(var i=0;i<_1_slist1.length;i++)
 		{
 			if(_1_slist1[i].nmsituac==nmsituac)
-				o=new Date(_1_slist1[i].fenacimi);
+			{
+				debug('registro: ',_1_slist1[i]);
+				o=Ext.Date.parse(_1_slist1[i].fenacimi,'d/m/Y');
+			}
 		}
+		debug('new',n,'old',o);
 		var oms=o.getTime();
 		var nms=n.getTime();
 		if(mas)
 		{
 			debug('revisar no menor');
 			debug('nueva fecha',nms,'fecha original',oms);
-			if(n<o)
+			if(n>o)
 			{
 				record.set('fenacimi',o);
-				mensajeWarning('La fecha no puede ser menor');
+				mensajeWarning('La fecha no puede ser mayor');
 			}
 		}
 		else
 		{
 			debug('revisar no mayor');
             debug('nueva fecha',nms,'fecha original',oms);
-            if(n>o)
+            if(n<o)
             {
                 record.set('fenacimi',o);
-                mensajeWarning('La fecha no puede ser mayor');
+                mensajeWarning('La fecha no puede ser menor');
             }
 		}
 	});
