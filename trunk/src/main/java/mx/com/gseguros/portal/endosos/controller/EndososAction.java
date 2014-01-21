@@ -278,7 +278,9 @@ public class EndososAction extends PrincipalCoreAction
 					//"2",//TODO:Eliminar
 					TipoEndoso.CORRECCION_NOMBRE_Y_RFC.getCdTipSup().toString(),
 					"",
-					(Date)omap1.get("pv_fecha_i"),"SL");
+					(Date)omap1.get("pv_fecha_i"),
+					"SL"
+					);
 		    
 			if(confirmado==null||confirmado.length()==0)
 			{
@@ -488,7 +490,8 @@ public class EndososAction extends PrincipalCoreAction
 						TipoEndoso.CAMBIO_ENDOSOS_EXCLUSION_O_TEXTOS.getCdTipSup().toString(),
 						"",
 						fechaEndosoD,
-						smap1.get("pv_cdtipsit_i"));
+						smap1.get("pv_cdtipsit_i")
+						);
 			    
 				if(tramiteGenerado==null||tramiteGenerado.length()==0)
 				{
@@ -724,7 +727,8 @@ public class EndososAction extends PrincipalCoreAction
 					TipoEndoso.CAMBIO_DOMICILIO.getCdTipSup().toString(),
 					"",
 					renderFechas.parse((String)smap2.get("pv_fecha_i")),
-					smap2.get("cdtipsit"));
+					smap2.get("cdtipsit")
+					);
 		    
 			if(tramiteGenerado==null||tramiteGenerado.length()==0)
 			{
@@ -1235,7 +1239,8 @@ public class EndososAction extends PrincipalCoreAction
 							: TipoEndoso.BAJA_COBERTURAS.getCdTipSup().toString(),
 						"", 
 						(Date)omap1.get("pv_fecha_i"), 
-						smap1.get("cdtipsit"));
+						smap1.get("cdtipsit")
+						);
 			    
 				if(tramiteGenerado==null||tramiteGenerado.length()==0)
 				{
@@ -1619,7 +1624,8 @@ public class EndososAction extends PrincipalCoreAction
 						TipoEndoso.CORRECCION_ANTIGUEDAD_Y_PARENTESCO.getCdTipSup().toString(),
 						"",
 						renderFechas.parse(smap1.get("fecha_endoso")),
-						smap1.get("cdtipsit"));	    
+						smap1.get("cdtipsit")
+						);	    
 		    
 				if(tramiteGenerado==null||tramiteGenerado.length()==0)
 				{
@@ -3737,9 +3743,11 @@ public class EndososAction extends PrincipalCoreAction
 	////// confirmar endoso //////
 	/*//////////////////////////*/
 	private String confirmarEndoso(String cdunieco,String cdramo,String estado,String nmpoliza,
-			String nmsuplem, String nsuplogi, String cdtipsup, String dscoment, Date fechaEndoso, String cdtipsit)throws Exception
+			String nmsuplem, String nsuplogi, String cdtipsup, String dscoment, Date fechaEndoso,
+			String cdtipsit)throws Exception
 	{
-		String ntramite="0";
+		String ntramiteEndoso="0";
+		String ntramite=endososManager.obtenerNtramiteEmision(cdunieco, cdramo, estado, nmpoliza);
 		
 		Date fechaHoy=new Date();
 		long hoym=fechaHoy.getTime();
@@ -3767,7 +3775,7 @@ public class EndososAction extends PrincipalCoreAction
 			paramsMesaControl.put("pv_nmpoliza_i"   , nmpoliza);
 			paramsMesaControl.put("pv_nmsuplem_i"   , nmsuplem);
 			paramsMesaControl.put("pv_cdsucadm_i"   , cdunieco);
-			paramsMesaControl.put("pv_cdsucdoc_i"   , cdunieco);
+			paramsMesaControl.put("pv_cdsucdoc_i"   , ntramite);
 			paramsMesaControl.put("pv_cdtiptra_i"   , "15");
 			paramsMesaControl.put("pv_ferecepc_i"   , fechaEndoso);
 			paramsMesaControl.put("pv_cdagente_i"   , "100");
@@ -3779,7 +3787,7 @@ public class EndososAction extends PrincipalCoreAction
 			paramsMesaControl.put("pv_nmsolici_i"   , nsuplogi);
 			paramsMesaControl.put("pv_cdtipsit_i"   , cdtipsit);
 			WrapperResultados wr=kernelManager.PMovMesacontrol(paramsMesaControl);
-			ntramite=(String) wr.getItemMap().get("ntramite");
+			ntramiteEndoso=(String) wr.getItemMap().get("ntramite");
 		}
 		else
 		{
@@ -3793,10 +3801,10 @@ public class EndososAction extends PrincipalCoreAction
 			paramConfirmarEndosoB.put("pv_cdtipsup_i" , cdtipsup);
 			paramConfirmarEndosoB.put("pv_dscoment_i" , dscoment);
 			endososManager.confirmarEndosoB(paramConfirmarEndosoB);
-			ntramite="";
+			ntramiteEndoso="";
 		}
 	    
-	    return ntramite;
+	    return ntramiteEndoso;
 	}
 	/*//////////////////////////*/
 	////// confirmar endoso //////
@@ -3816,18 +3824,19 @@ public class EndososAction extends PrincipalCoreAction
 		log.debug("smap1: "+smap1);
 		try
 		{
-			String cdunieco = smap1.get("cdunieco");
-			String cdramo   = smap1.get("cdramo");
-			String estado   = smap1.get("estado");
-			String nmpoliza = smap1.get("nmpoliza");
-			String nmsuplem = smap1.get("nmsuplem");
-			String nsuplogi = smap1.get("nsuplogi");
-			String cdtipsup = smap1.get("cdtipsup");
-			String ntramite = smap1.get("ntramite");
-			String status   = smap1.get("status");
-			String coment   = smap1.get("observacion");
+			String cdunieco    = smap1.get("cdunieco");
+			String cdramo      = smap1.get("cdramo");
+			String estado      = smap1.get("estado");
+			String nmpoliza    = smap1.get("nmpoliza");
+			String nmsuplem    = smap1.get("nmsuplem");
+			String nsuplogi    = smap1.get("nsuplogi");
+			String cdtipsup    = smap1.get("cdtipsup");
+			String ntramiteEmi = smap1.get("ntramiteemi");
+			String ntramiteEnd = smap1.get("ntramiteend");
+			String status      = smap1.get("status");
+			String coment      = smap1.get("observacion");
 			
-			kernelManager.mesaControlUpdateStatus(ntramite, status);
+			kernelManager.mesaControlUpdateStatus(ntramiteEnd, status);
 			
 			Map<String,String>paramConfirmarEndosoB=new LinkedHashMap<String,String>(0);
 			paramConfirmarEndosoB.put("pv_cdunieco_i" , cdunieco);
@@ -3853,7 +3862,7 @@ public class EndososAction extends PrincipalCoreAction
 		    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(paramsGetDoc);
 		    log.debug("documentos que se regeneran: "+listaDocu);
 		    
-		    String rutaCarpeta = this.getText("ruta.documentos.poliza")+"/"+ntramite;
+		    String rutaCarpeta = this.getText("ruta.documentos.poliza")+"/"+ntramiteEmi;
 		    String nmsolici    = listaDocu.size()>0?listaDocu.get(0).get("nmsolici"):nmpoliza;
 		    
 			//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
@@ -3922,7 +3931,7 @@ public class EndososAction extends PrincipalCoreAction
 				case ALTA_ASEGURADOS:
 				case BAJA_ASEGURADOS:
 					ejecutaWSrecibosEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, 
-							rutaCarpeta, cdtipsitGS, sucursal, nmsolici, ntramite, true, "INSERTA", cdtipsup);
+							rutaCarpeta, cdtipsitGS, sucursal, nmsolici, ntramiteEmi, true, "INSERTA", cdtipsup);
 					break;
 					
 				case INCREMENTO_EDAD_ASEGURADO:

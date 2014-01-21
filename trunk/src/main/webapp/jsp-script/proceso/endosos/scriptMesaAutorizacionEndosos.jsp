@@ -64,7 +64,7 @@ function _4_authEndosoDocumentos(grid,rowIndex,colIndex)
                 ,'smap1.cdramo'   : record.get('cdramo')
                 ,'smap1.estado'   : record.get('estado')
                 ,'smap1.nmsuplem' : record.get('nmsuplem')
-                ,'smap1.ntramite' : record.get('ntramite')
+                ,'smap1.ntramite' : record.get('cdsucdoc')
                 ,'smap1.nmsolici' : ''
                 ,'smap1.tipomov'  : record.get('nombre')
             }
@@ -112,7 +112,8 @@ function _4_autorizarEndoso()
 			url       : _4_urlAutorizarEndoso
 			,params   :
 			{
-				'smap1.ntramite'     : record.get('ntramite')
+				'smap1.ntramiteemi'  : record.get('cdsucdoc')
+				,'smap1.ntramiteend' : record.get('ntramite')
 	            ,'smap1.cdunieco'    : record.get('cdunieco')
 	            ,'smap1.cdramo'      : record.get('cdramo')
 	            ,'smap1.estado'      : record.get('estado')

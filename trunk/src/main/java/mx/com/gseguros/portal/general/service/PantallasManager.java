@@ -31,5 +31,6 @@ public interface PantallasManager
 			,Object cdnueve , Object cddiez
 			) throws Exception;
 	
-	public void insertarParametrosPantalla(Map<String,String> params) throws Exception;
+	public void                     insertarParametrosPantalla (Map<String,String> params) throws Exception;
+	public List<Map<String,String>> obtenerArbol               ()                          throws Exception;
 }

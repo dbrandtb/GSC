@@ -2,6 +2,7 @@ package mx.com.gseguros.portal.general.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -210,5 +211,29 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 	/*/////////////////////////////////////////*/
 	////// insertar parametros de pantalla //////
 	/////////////////////////////////////////////
+	
+	///////////////////////////
+	////// obtener arbol //////
+	/*///////////////////////*/
+	@Override
+	public List<Map<String,String>> obtenerArbol() throws Exception
+	{
+		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerArbol(this.getDataSource()), new HashMap<String,String>());
+		return (List<Map<String,String>>) resultadoMap.get("PV_REGISTRO_O");
+	}
+	
+	protected class ObtenerArbol extends StoredProcedure
+	{
+		protected ObtenerArbol(DataSource dataSource)
+		{
+			super(dataSource,"ALVARO_PKG.P_OBT_ARBOL");
+			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new DinamicMapper()));//CDSIETE,CDDIEZ
+			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
+		}
+	}
+	/*///////////////////////*/
+	////// obtener arbol //////
+	///////////////////////////
 	
 }
