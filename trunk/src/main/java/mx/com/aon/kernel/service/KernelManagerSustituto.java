@@ -102,6 +102,7 @@ public interface KernelManagerSustituto {
 	public WrapperResultados obtenerTiposAgente()throws ApplicationException;
 	public WrapperResultados guardarPorcentajeAgentes(Map<String, Object> params) throws ApplicationException;
 	public WrapperResultados validarExtraprima(Map<String, String> params) throws ApplicationException;
+	public WrapperResultados validarExtraprimaSituac(Map<String, String> params) throws ApplicationException;
 	public WrapperResultados guardaPeriodosDxN(Map<String, Object> params) throws ApplicationException;
 	public WrapperResultados lanzaProcesoDxN(Map<String, Object> params) throws ApplicationException;
 }

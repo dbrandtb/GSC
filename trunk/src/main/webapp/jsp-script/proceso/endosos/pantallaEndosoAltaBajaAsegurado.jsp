@@ -319,6 +319,15 @@ Ext.onReady(function()
                                             'smap1.pv_cdtipcla_i' : Ext.getCmp('idComboTipCla').getValue()+''
                                             ,'smap1.pv_descrip_i' : Ext.getCmp('idfiltrocoberinput').getValue()+''
                                         }
+	                                    ,callback: function(records, operation, success)
+	                                    {
+	                                        debug('records cargados:',records);
+	                                        for(var i=0;i<records.length;i++)
+	                                        {
+	                                        	records[i].set('cdtipcla',Ext.getCmp('idComboTipCla').getValue());
+	                                        }
+	                                        debug('records cargados editados:',records);
+	                                    }
                                     });
                                 }
                             }
@@ -346,6 +355,15 @@ Ext.onReady(function()
                                                 'smap1.pv_cdtipcla_i' : Ext.getCmp('idComboTipCla').getValue()+''
                                                 ,'smap1.pv_descrip_i' : Ext.getCmp('idfiltrocoberinput').getValue()+''
                                             }
+	                                        ,callback: function(records, operation, success)
+	                                        {
+	                                            debug('records cargados:',records);
+	                                            for(var i=0;i<records.length;i++)
+	                                            {
+	                                                records[i].set('cdtipcla',Ext.getCmp('idComboTipCla').getValue());
+	                                            }
+	                                            debug('records cargados editados:',records);
+	                                        }
                                         });
                                     },500);
                                 }
@@ -466,10 +484,6 @@ Ext.onReady(function()
                                                         }
                                                     ]
                                                 }).show();
-                                            }
-                                            else
-                                            {
-                                            	mensajeError('Error al cargar');
                                             }
                                         }
                                         ,failure : errorComunicacion
@@ -827,6 +841,7 @@ Ext.onReady(function()
 		        ,icon    : '${ctx}/resources/fam3icons/icons/user.png'
 				,store   : panendabaseguStoreAsegu
 				,minHeight : 100
+				,maxHeight : 350
 				,tbar    :
 				[
 				    {
@@ -996,25 +1011,20 @@ Ext.onReady(function()
 	    				}
 	    				else
 	    				{
-	    					Ext.Msg.show(
-   	                        {
-   	                            title    : 'Error'
-   	                            ,icon    : Ext.Msg.ERROR
-   	                            ,msg     : 'Error de comunicaci&oacute;n'
-   	                            ,buttons : Ext.Msg.OK
-   	                        });
+	    					if(json.error&&json.error.length>0)
+                            {
+                                mensajeError(json.error);
+                            }
+                            else
+                            {
+                            	errorComunicacion();
+                            }
 	    				}
 		            }
 	    		    ,failure  : function()
 	    		    {
 	    		    	panendabaseguPanelPrincipal.setLoading(false);
-	    		    	Ext.Msg.show(
-   		                {
-   		                    title    : 'Error'
-   		                    ,icon    : Ext.Msg.ERROR
-   		                    ,msg     : 'Error de comunicaci&oacute;n'
-   		                    ,buttons : Ext.Msg.OK
-   		                });
+	    		    	errorComunicacion();
 	    		    }
 	    		});
 	    	}

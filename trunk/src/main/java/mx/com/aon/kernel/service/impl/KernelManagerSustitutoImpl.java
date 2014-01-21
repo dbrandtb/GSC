@@ -917,4 +917,14 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 		return res;
 	}
 	
+	public WrapperResultados validarExtraprimaSituac(Map<String, String> params) throws ApplicationException
+	{
+		log.debug("### kernel validarExtraprimaSituac map: "+params);
+		WrapperResultados res = this.returnBackBoneInvoke(params,ProcesoDAO.VALIDAR_EXTRAPRIMA_SITUAC);
+		log.debug("### kernel sustituto validarExtraprimaSituac status:"+res.getItemMap().get("status"));
+        log.debug("### kernel sustituto validarExtraprimaSituac id:"+res.getMsgId());
+        log.debug("### kernel sustituto validarExtraprimaSituac mesage:"+res.getMsgText());
+		return res;
+	}
+	
 }
