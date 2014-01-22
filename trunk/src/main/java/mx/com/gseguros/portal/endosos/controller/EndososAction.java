@@ -22,6 +22,7 @@ import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
+import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.ws.client.Ice2sigsWebServices;
 import mx.com.gseguros.ws.client.Ice2sigsWebServices.Estatus;
@@ -237,7 +238,6 @@ public class EndososAction extends PrincipalCoreAction
 			omap1.put("pv_cdelemen_i" , usuario.getEmpresa().getElementoId());
 			omap1.put("pv_cdusuari_i" , usuario.getUser());
 			omap1.put("pv_proceso_i"  , "END");
-			//omap1.put("pv_cdtipsup_i" , "2"); //TODO:Eliminar
 			omap1.put("pv_cdtipsup_i", TipoEndoso.CORRECCION_NOMBRE_Y_RFC.getCdTipSup().toString());
 			
 			/*
@@ -275,7 +275,6 @@ public class EndososAction extends PrincipalCoreAction
 					(String)omap1.get("pv_nmpoliza_i"),
 					respuestaEndosoNombres.get("pv_nmsuplem_o"),
 					respuestaEndosoNombres.get("pv_nsuplogi_o"),
-					//"2",//TODO:Eliminar
 					TipoEndoso.CORRECCION_NOMBRE_Y_RFC.getCdTipSup().toString(),
 					"",
 					(Date)omap1.get("pv_fecha_i"),
@@ -293,7 +292,7 @@ public class EndososAction extends PrincipalCoreAction
 				paramsGetDoc.put("pv_estado_i"   , (String)omap1.get("pv_estado_i"));
 				paramsGetDoc.put("pv_nmpoliza_i" , (String)omap1.get("pv_nmpoliza_i"));
 				paramsGetDoc.put("pv_nmsuplem_i" , respuestaEndosoNombres.get("pv_nmsuplem_o"));
-				paramsGetDoc.put("pv_tipmov_i"   , "2");
+				paramsGetDoc.put("pv_tipmov_i"   , TipoEndoso.CORRECCION_NOMBRE_Y_RFC.getCdTipSup().toString());
 			    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(paramsGetDoc);
 			    log.debug("documentos que se regeneran: "+listaDocu);
 			    
@@ -371,7 +370,7 @@ public class EndososAction extends PrincipalCoreAction
 				paramsR.put("pv_dsdocume_i", "Recibo 1");
 				paramsR.put("pv_nmsolici_i", nmsolici);
 				paramsR.put("pv_ntramite_i", nmtramite);
-				paramsR.put("pv_tipmov_i", "2");
+				paramsR.put("pv_tipmov_i", TipoEndoso.CORRECCION_NOMBRE_Y_RFC.getCdTipSup().toString());
 				
 				kernelManager.guardarArchivo(paramsR);
 				
@@ -460,7 +459,6 @@ public class EndososAction extends PrincipalCoreAction
 			omap1.put("pv_cdelemen_i" , usuario.getEmpresa().getElementoId());
 			omap1.put("pv_cdusuari_i" , usuario.getUser());
 			omap1.put("pv_proceso_i"  , "END");
-			//omap1.put("pv_cdtipsup_i" , "8"); //TODO:Eliminar
 			omap1.put("pv_cdtipsup_i", TipoEndoso.CAMBIO_ENDOSOS_EXCLUSION_O_TEXTOS.getCdTipSup().toString());
 			
 			Map<String,String> resEnd=endososManager.guardarEndosoClausulas(omap1);
@@ -487,7 +485,6 @@ public class EndososAction extends PrincipalCoreAction
 						smap1.get("pv_nmpoliza_i"), 
 						resEnd.get("pv_nmsuplem_o"), 
 						resEnd.get("pv_nsuplogi_o"), 
-						//"8",//TODO:Eliminar
 						TipoEndoso.CAMBIO_ENDOSOS_EXCLUSION_O_TEXTOS.getCdTipSup().toString(),
 						"",
 						fechaEndosoD,
@@ -506,7 +503,7 @@ public class EndososAction extends PrincipalCoreAction
 					paramsGetDoc.put("pv_estado_i"   , smap1.get("pv_estado_i"));
 					paramsGetDoc.put("pv_nmpoliza_i" , smap1.get("pv_nmpoliza_i"));
 					paramsGetDoc.put("pv_nmsuplem_i" , resEnd.get("pv_nmsuplem_o"));
-					paramsGetDoc.put("pv_tipmov_i"   , "8");
+					paramsGetDoc.put("pv_tipmov_i"   , TipoEndoso.CAMBIO_ENDOSOS_EXCLUSION_O_TEXTOS.getCdTipSup().toString());
 				    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(paramsGetDoc);
 				    log.debug("documentos que se regeneran: "+listaDocu);
 				    
@@ -653,7 +650,6 @@ public class EndososAction extends PrincipalCoreAction
 			mapGuaEnd.put("pv_cdelemen_i" , usuario.getEmpresa().getElementoId());
 			mapGuaEnd.put("pv_cdusuari_i" , usuario.getUser());
 			mapGuaEnd.put("pv_proceso_i"  , "END");
-			//mapGuaEnd.put("pv_cdtipsup_i" , "3"); //TODO: Eliminar
 			mapGuaEnd.put("pv_cdtipsup_i", TipoEndoso.CAMBIO_DOMICILIO.getCdTipSup().toString());
 			Map<String,String> resEndDomi=endososManager.guardarEndosoNombres(mapGuaEnd);
 			
@@ -725,7 +721,6 @@ public class EndososAction extends PrincipalCoreAction
 					(String)mapGuaEnd.get("pv_nmpoliza_i"),
 					resEndDomi.get("pv_nmsuplem_o"),
 					resEndDomi.get("pv_nsuplogi_o"),
-					//"3",//TODO:Eliminar
 					TipoEndoso.CAMBIO_DOMICILIO.getCdTipSup().toString(),
 					"",
 					renderFechas.parse((String)smap2.get("pv_fecha_i")),
@@ -744,7 +739,7 @@ public class EndososAction extends PrincipalCoreAction
 				paramsGetDoc.put("pv_estado_i"   , smap1.get("pv_estado"));
 				paramsGetDoc.put("pv_nmpoliza_i" , smap1.get("pv_nmpoliza"));
 				paramsGetDoc.put("pv_nmsuplem_i" , resEndDomi.get("pv_nmsuplem_o"));
-				paramsGetDoc.put("pv_tipmov_i"   , "3");
+				paramsGetDoc.put("pv_tipmov_i"   , TipoEndoso.CAMBIO_DOMICILIO.getCdTipSup().toString());
 			    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(paramsGetDoc);
 			    log.debug("documentos que se regeneran: "+listaDocu);
 			    
@@ -823,7 +818,7 @@ public class EndososAction extends PrincipalCoreAction
 				paramsR.put("pv_dsdocume_i", "Recibo 1");
 				paramsR.put("pv_nmsolici_i", nmsolici);
 				paramsR.put("pv_ntramite_i", nmtramite);
-				paramsR.put("pv_tipmov_i", "3");
+				paramsR.put("pv_tipmov_i", TipoEndoso.CAMBIO_DOMICILIO.getCdTipSup().toString());
 				
 				kernelManager.guardarArchivo(paramsR);
 				
@@ -962,12 +957,10 @@ public class EndososAction extends PrincipalCoreAction
 			omap1.put("pv_proceso_i"  , "END");
 			if(smap1.get("altabaja").equalsIgnoreCase("alta"))
 			{
-				//omap1.put("pv_cdtipsup_i" , "6");//TODO:Eliminar
 				omap1.put("pv_cdtipsup_i", TipoEndoso.ALTA_COBERTURAS.getCdTipSup().toString());
 			}
 			else
 			{
-				//omap1.put("pv_cdtipsup_i" , "7");//TODO: Eliminar
 				omap1.put("pv_cdtipsup_i", TipoEndoso.BAJA_COBERTURAS.getCdTipSup().toString());
 			}
 			Map<String,String> respEndCob=endososManager.guardarEndosoCoberturas(omap1);
@@ -1061,7 +1054,6 @@ public class EndososAction extends PrincipalCoreAction
 				paramSigsvdef.put("pv_nmsituac_i" , smap1.get("nmsituac"));
 				paramSigsvdef.put("pv_nmsuplem_i" , respEndCob.get("pv_nmsuplem_o"));
 				paramSigsvdef.put("pv_cdgarant_i" , nuevo.get("garantia"));
-				//paramSigsvdef.put("pv_cdtipsup_i" , "6");//TODO:Eliminar
 				paramSigsvdef.put("pv_cdtipsup_i", TipoEndoso.ALTA_COBERTURAS.getCdTipSup().toString());
 				kernelManager.coberturas(paramSigsvdef);
 			}
@@ -1219,12 +1211,10 @@ public class EndososAction extends PrincipalCoreAction
 			paramSigsvdefEnd.put("pv_cdtipsit_i" , smap1.get("cdtipsit"));
 			if(smap1.get("altabaja").equalsIgnoreCase("alta"))
 			{
-				//paramSigsvdefEnd.put("pv_cdtipsup_i" , "6");//TODO:Eliminar
 				paramSigsvdefEnd.put("pv_cdtipsup_i", TipoEndoso.ALTA_COBERTURAS.getCdTipSup().toString());
 			}
 			else
 			{
-				//paramSigsvdefEnd.put("pv_cdtipsup_i" , "7");//TODO:Eliminar
 				paramSigsvdefEnd.put("pv_cdtipsup_i", TipoEndoso.BAJA_COBERTURAS.getCdTipSup().toString());
 			}
 			endososManager.sigsvalipolEnd(paramSigsvdefEnd);
@@ -1241,12 +1231,10 @@ public class EndososAction extends PrincipalCoreAction
 				paramCalcValorEndoso.put("pv_feinival_i" , (Date)omap1.get("pv_fecha_i"));
 				if(smap1.get("altabaja").equalsIgnoreCase("alta"))
 				{
-					//paramCalcValorEndoso.put("pv_cdtipsup_i" , "6");//TODO:Eliminar
 					paramCalcValorEndoso.put("pv_cdtipsup_i", TipoEndoso.ALTA_COBERTURAS.getCdTipSup().toString());
 				}
 				else
 				{
-					//paramCalcValorEndoso.put("pv_cdtipsup_i" , "7");//TODO:Eliminar
 					paramCalcValorEndoso.put("pv_cdtipsup_i", TipoEndoso.BAJA_COBERTURAS.getCdTipSup().toString());
 				}
 				endososManager.calcularValorEndoso(paramCalcValorEndoso);
@@ -1258,7 +1246,6 @@ public class EndososAction extends PrincipalCoreAction
 						(String)omap1.get("pv_nmpoliza_i"), 
 						respEndCob.get("pv_nmsuplem_o"), 
 						respEndCob.get("pv_nsuplogi_o"), 
-						//smap1.get("altabaja").equalsIgnoreCase("alta")?"6":"7",//TODO:Eliminar
 						smap1.get("altabaja").equalsIgnoreCase("alta")
 							? TipoEndoso.ALTA_COBERTURAS.getCdTipSup().toString()
 							: TipoEndoso.BAJA_COBERTURAS.getCdTipSup().toString(),
@@ -1281,11 +1268,11 @@ public class EndososAction extends PrincipalCoreAction
 					paramsGetDoc.put("pv_nmsuplem_i" , respEndCob.get("pv_nmsuplem_o"));
 					if(smap1.get("altabaja").equalsIgnoreCase("alta"))
 					{
-						paramsGetDoc.put("pv_tipmov_i"   , "6");
+						paramsGetDoc.put("pv_tipmov_i"   , TipoEndoso.ALTA_COBERTURAS.getCdTipSup().toString());
 					}
 					else
 					{
-						paramsGetDoc.put("pv_tipmov_i"   , "7");
+						paramsGetDoc.put("pv_tipmov_i"   , TipoEndoso.BAJA_COBERTURAS.getCdTipSup().toString());
 					}
 				    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(paramsGetDoc);
 				    log.debug("documentos que se regeneran: "+listaDocu);
@@ -1495,7 +1482,6 @@ public class EndososAction extends PrincipalCoreAction
 			omap1.put("pv_cdelemen_i" , usuario.getEmpresa().getElementoId());
 			omap1.put("pv_cdusuari_i" , usuario.getUser());
 			omap1.put("pv_proceso_i"  , "END");
-			//omap1.put("pv_cdtipsup_i" , "4");//TODO:Eliminar
 			omap1.put("pv_cdtipsup_i", TipoEndoso.CORRECCION_ANTIGUEDAD_Y_PARENTESCO.getCdTipSup().toString());
 			Map<String,String> respEnd=endososManager.guardarEndosoCoberturas(omap1);
 
@@ -1631,7 +1617,7 @@ public class EndososAction extends PrincipalCoreAction
 			mapaMpoliper.put("pv_nmorddom_i" , "1");
 			mapaMpoliper.put("pv_swreclam_i" , null);
 			mapaMpoliper.put("pv_accion_i"   , "I");
-			mapaMpoliper.put("pv_swexiper_i" , "Y");
+			mapaMpoliper.put("pv_swexiper_i" , Constantes.SI);
 			kernelManager.movMpoliper(mapaMpoliper);
 			////// mpoliper //////
 			//////////////////////
@@ -1646,7 +1632,6 @@ public class EndososAction extends PrincipalCoreAction
 						smap1.get("nmpoliza"),
 						respEnd.get("pv_nmsuplem_o"),
 						respEnd.get("pv_nsuplogi_o"),
-						//"4",//TODO:Eliminar
 						TipoEndoso.CORRECCION_ANTIGUEDAD_Y_PARENTESCO.getCdTipSup().toString(),
 						"",
 						renderFechas.parse(smap1.get("fecha_endoso")),
@@ -1665,7 +1650,7 @@ public class EndososAction extends PrincipalCoreAction
 					paramsGetDoc.put("pv_estado_i"   , smap1.get("estado"));
 					paramsGetDoc.put("pv_nmpoliza_i" , smap1.get("nmpoliza"));
 					paramsGetDoc.put("pv_nmsuplem_i" , respEnd.get("pv_nmsuplem_o"));
-					paramsGetDoc.put("pv_tipmov_i"   , "4");
+					paramsGetDoc.put("pv_tipmov_i"   , TipoEndoso.CORRECCION_ANTIGUEDAD_Y_PARENTESCO.getCdTipSup().toString());
 				    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(paramsGetDoc);
 				    log.debug("documentos que se regeneran: "+listaDocu);
 				    
@@ -2197,7 +2182,6 @@ public class EndososAction extends PrincipalCoreAction
 			paramsIniciarEndoso.put("pv_cdelemen_i" , cdelemen);
 			paramsIniciarEndoso.put("pv_cdusuari_i" , cdusuari);
 			paramsIniciarEndoso.put("pv_proceso_i"  , "END");
-			//paramsIniciarEndoso.put("pv_cdtipsup_i" , alta?"9":"10");//TODO:Eliminar
 			paramsIniciarEndoso.put("pv_cdtipsup_i", alta 
 					? TipoEndoso.ALTA_ASEGURADOS.getCdTipSup().toString()
 					: TipoEndoso.BAJA_ASEGURADOS.getCdTipSup().toString());
@@ -2345,7 +2329,7 @@ public class EndososAction extends PrincipalCoreAction
 				mapaMpoliper.put("pv_nmorddom_i" , "1");
 				mapaMpoliper.put("pv_swreclam_i" , null);
 				mapaMpoliper.put("pv_accion_i"   , "I");
-				mapaMpoliper.put("pv_swexiper_i" , "N");
+				mapaMpoliper.put("pv_swexiper_i" , Constantes.NO);
 				kernelManager.movMpoliper(mapaMpoliper);
 				////// mpoliper //////
 				//////////////////////
@@ -2465,7 +2449,6 @@ public class EndososAction extends PrincipalCoreAction
                 mapaCoberturas.put("pv_nmsituac_i",   nmsituac);
                 mapaCoberturas.put("pv_nmsuplem_i",   nmsuplem);
                 mapaCoberturas.put("pv_cdgarant_i",   "TODO");
-                //mapaCoberturas.put("pv_cdtipsup_i",   "9");//TODO:Eliminar
 				mapaCoberturas.put("pv_cdtipsup_i", TipoEndoso.ALTA_ASEGURADOS.getCdTipSup().toString());
                 kernelManager.coberturas(mapaCoberturas);
                 ////// valores por defecto //////
@@ -2478,7 +2461,6 @@ public class EndososAction extends PrincipalCoreAction
                 mapaTworksupEnd.put("pv_cdramo_i"   , cdramo);
                 mapaTworksupEnd.put("pv_estado_i"   , estado);
                 mapaTworksupEnd.put("pv_nmpoliza_i" , nmpoliza);
-                //mapaTworksupEnd.put("pv_cdtipsup_i" , "9");//TODO:Eliminar
                 mapaTworksupEnd.put("pv_cdtipsup_i", TipoEndoso.ALTA_ASEGURADOS.getCdTipSup().toString());
                 mapaTworksupEnd.put("pv_nmsuplem_i" , nmsuplem);
                 mapaTworksupEnd.put("pv_nmsituac_i" , nmsituac);
@@ -2498,7 +2480,6 @@ public class EndososAction extends PrincipalCoreAction
     			mapaSigsvalipolEnd.put("pv_nmsituac_i" , nmsituac);
     			mapaSigsvalipolEnd.put("pv_nmsuplem_i" , nmsuplem);
     			mapaSigsvalipolEnd.put("pv_cdtipsit_i" , cdtipsit);
-    			//mapaSigsvalipolEnd.put("pv_cdtipsup_i" , "9");//TODO:Eliminar
     			mapaSigsvalipolEnd.put("pv_cdtipsup_i" , TipoEndoso.ALTA_ASEGURADOS.getCdTipSup().toString());
     			endososManager.sigsvalipolEnd(mapaSigsvalipolEnd);
                 ////// tarificacion //////
@@ -2514,7 +2495,6 @@ public class EndososAction extends PrincipalCoreAction
 				mapaValorEndoso.put("pv_nmsituac_i" , nmsituac);
 				mapaValorEndoso.put("pv_nmsuplem_i" , nmsuplem);
 				mapaValorEndoso.put("pv_feinival_i" , fechaEndosoD);
-				//mapaValorEndoso.put("pv_cdtipsup_i" , "9");//TODO:Eliminar
 				mapaValorEndoso.put("pv_cdtipsup_i" , TipoEndoso.ALTA_ASEGURADOS.getCdTipSup().toString());
 				endososManager.calcularValorEndoso(mapaValorEndoso);
     			////// valor endoso //////
@@ -2608,7 +2588,7 @@ public class EndososAction extends PrincipalCoreAction
 				mapaMpoliper.put("pv_nmorddom_i" , "1");
 				mapaMpoliper.put("pv_swreclam_i" , null);
 				mapaMpoliper.put("pv_accion_i"   , "D");
-				mapaMpoliper.put("pv_swexiper_i" , "Y");
+				mapaMpoliper.put("pv_swexiper_i" , Constantes.SI);
 				kernelManager.movMpoliper(mapaMpoliper);
 				////// mpoliper muerto //////
 				/////////////////////////////
@@ -2620,7 +2600,6 @@ public class EndososAction extends PrincipalCoreAction
                 mapaTworksupEnd.put("pv_cdramo_i"   , cdramo);
                 mapaTworksupEnd.put("pv_estado_i"   , estado);
                 mapaTworksupEnd.put("pv_nmpoliza_i" , nmpoliza);
-                //mapaTworksupEnd.put("pv_cdtipsup_i" , "10");//TODO:Eliminar
                 mapaTworksupEnd.put("pv_cdtipsup_i" , TipoEndoso.BAJA_ASEGURADOS.getCdTipSup().toString());
                 mapaTworksupEnd.put("pv_nmsuplem_i" , nmsuplem);
                 mapaTworksupEnd.put("pv_nmsituac_i" , nmsituac);
@@ -2640,7 +2619,6 @@ public class EndososAction extends PrincipalCoreAction
 				mapaSigsvalipolEnd.put("pv_nmsituac_i" , nmsituac);
 				mapaSigsvalipolEnd.put("pv_nmsuplem_i" , nmsuplem);
 				mapaSigsvalipolEnd.put("pv_cdtipsit_i" , cdtipsit);
-				//mapaSigsvalipolEnd.put("pv_cdtipsup_i" , "10");//TODO:Eliminar
 				mapaSigsvalipolEnd.put("pv_cdtipsup_i" , TipoEndoso.BAJA_ASEGURADOS.getCdTipSup().toString());
 				endososManager.sigsvalipolEnd(mapaSigsvalipolEnd);
 		        ////// tarificacion //////
@@ -2656,7 +2634,6 @@ public class EndososAction extends PrincipalCoreAction
 				mapaValorEndoso.put("pv_nmsituac_i" , nmsituac);
 				mapaValorEndoso.put("pv_nmsuplem_i" , nmsuplem);
 				mapaValorEndoso.put("pv_feinival_i" , fechaEndosoD);
-				//mapaValorEndoso.put("pv_cdtipsup_i" , "10");//TODO:Eliminar
 				mapaValorEndoso.put("pv_cdtipsup_i" , TipoEndoso.BAJA_ASEGURADOS.getCdTipSup().toString());
 				endososManager.calcularValorEndoso(mapaValorEndoso);
 				////// valor endoso //////
@@ -2689,7 +2666,9 @@ public class EndososAction extends PrincipalCoreAction
 				paramsGetDoc.put("pv_estado_i"   , estado);
 				paramsGetDoc.put("pv_nmpoliza_i" , nmpoliza);
 				paramsGetDoc.put("pv_nmsuplem_i" , nmsuplem);
-				paramsGetDoc.put("pv_tipmov_i"   , alta?"9":"10");
+				paramsGetDoc.put("pv_tipmov_i"   , alta 
+						? TipoEndoso.ALTA_ASEGURADOS.getCdTipSup().toString()
+						: TipoEndoso.BAJA_ASEGURADOS.getCdTipSup().toString());
 			    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(paramsGetDoc);
 			    log.debug("documentos que se regeneran: "+listaDocu);
 			    
@@ -3092,7 +3071,6 @@ public class EndososAction extends PrincipalCoreAction
 			Date    fechaHoy    = new Date();
 			String  fechaEndoso = smap2.get("fecha_endoso");
 			boolean incremento  = smap1.get("masedad").equalsIgnoreCase("si");
-			//String  cdtipsup    = incremento?"15":"16";//TODO:Eliminar
 			String cdtipsup = incremento 
 					? TipoEndoso.INCREMENTO_EDAD_ASEGURADO.getCdTipSup().toString()
 					: TipoEndoso.DECREMENTO_EDAD_ASEGURADO.getCdTipSup().toString();
@@ -3220,7 +3198,7 @@ public class EndososAction extends PrincipalCoreAction
 				mapaMpoliper.put("pv_nmorddom_i" , "1");
 				mapaMpoliper.put("pv_swreclam_i" , null);
 				mapaMpoliper.put("pv_accion_i"   , "I");
-				mapaMpoliper.put("pv_swexiper_i" , "Y");
+				mapaMpoliper.put("pv_swexiper_i" , Constantes.SI);
 				kernelManager.movMpoliper(mapaMpoliper);
 				*/
 				////// mpoliper //////
@@ -3489,7 +3467,6 @@ public class EndososAction extends PrincipalCoreAction
 			Date    fechaHoy    = new Date();
 			String  fechaEndoso = smap2.get("fecha_endoso");
 			boolean hombremujer = smap1.get("hombremujer").equalsIgnoreCase("si");
-			//String  cdtipsup    = hombremujer?"20":"21";//TODO:Eliminar
 			String cdtipsup = hombremujer 
 					? TipoEndoso.MODIFICACION_SEXO_H_A_M.getCdTipSup().toString()
 					: TipoEndoso.MODIFICACION_SEXO_M_A_H.getCdTipSup().toString();
@@ -3617,7 +3594,7 @@ public class EndososAction extends PrincipalCoreAction
 				mapaMpoliper.put("pv_nmorddom_i" , "1");
 				mapaMpoliper.put("pv_swreclam_i" , null);
 				mapaMpoliper.put("pv_accion_i"   , "I");
-				mapaMpoliper.put("pv_swexiper_i" , "Y");
+				mapaMpoliper.put("pv_swexiper_i" , Constantes.SI);
 				kernelManager.movMpoliper(mapaMpoliper);
 				*/
 				////// mpoliper //////
