@@ -31,6 +31,7 @@ import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.Recibo;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboRespuesta;
 
 import org.apache.commons.lang.StringUtils;
+import mx.com.gseguros.utils.Constantes;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 
@@ -794,6 +795,7 @@ public class EndososAction extends PrincipalCoreAction
 				
 				ejecutaWSclienteSaludEndoso(smap1.get("pv_cdunieco"), smap1.get("pv_cdramo"), smap1.get("pv_estado"), smap1.get("pv_nmpoliza"), resEndDomi.get("pv_nmsuplem_o"), "ACTUALIZA");
 				
+
 				/**
 				 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
 				 */
@@ -822,6 +824,27 @@ public class EndososAction extends PrincipalCoreAction
 				paramsR.put("pv_tipmov_i", "3");
 				
 				kernelManager.guardarArchivo(paramsR);
+				
+			
+				
+				/*if(Constantes.NMSITUAC_TITULAR.equals(smap1.get("pv_nmsituac"))){
+					
+					String cdtipsitGS = "213";
+					String sucursal = smap1.get("pv_cdunieco");
+					if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
+					
+					String nmsolici = listaDocu.get(0).get("nmsolici");
+					String nmtramite = listaDocu.get(0).get("ntramite");
+					
+					String tipomov = "3";
+					
+					ejecutaWSrecibosEndoso(smap1.get("pv_cdunieco"), smap1.get("pv_cdramo"),
+							smap1.get("pv_estado"), smap1.get("pv_nmpoliza"),
+							resEndDomi.get("pv_nmsuplem_o"), resEndDomi.get("pv_nsuplogi_o"), rutaCarpeta,
+							cdtipsitGS, sucursal, nmsolici, nmtramite,
+							true, "INSERTA", tipomov );
+				}else{}*/
+					
 				
 			    mensaje="Se ha guardado el endoso "+resEndDomi.get("pv_nsuplogi_o");
 			    
@@ -3330,6 +3353,22 @@ public class EndososAction extends PrincipalCoreAction
 			    ///////////////////////////////////////
 				
 				ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
+				
+				/**
+				 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
+				 */
+				String cdtipsitGS = "213";
+				String sucursal = cdunieco;
+				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
+				
+				String nmsolici = listaDocu.get(0).get("nmsolici");
+				String nmtramite = listaDocu.get(0).get("ntramite");
+				
+				ejecutaWSrecibosEndoso(cdunieco, cdramo,
+				estado, nmpoliza,
+				nmsuplem, nsuplogi, rutaCarpeta,
+						cdtipsitGS, sucursal, nmsolici, nmtramite,
+						true, "INSERTA", cdtipsup );
 			
 				mensaje="Endoso confirmado "+nsuplogi;
 			}
@@ -3711,6 +3750,22 @@ public class EndososAction extends PrincipalCoreAction
 				
 				ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
 				
+				/**
+				 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
+				 */
+				String cdtipsitGS = "213";
+				String sucursal = cdunieco;
+				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
+				
+				String nmsolici = listaDocu.get(0).get("nmsolici");
+				String nmtramite = listaDocu.get(0).get("ntramite");
+				
+				ejecutaWSrecibosEndoso(cdunieco, cdramo,
+				estado, nmpoliza,
+				nmsuplem, nsuplogi, rutaCarpeta,
+						cdtipsitGS, sucursal, nmsolici, nmtramite,
+						true, "INSERTA", cdtipsup );
+				
 				mensaje="Endoso confirmado "+nsuplogi;
 			}
 			else
@@ -3921,30 +3976,58 @@ public class EndososAction extends PrincipalCoreAction
 			}
 			
 			switch (enumTipoEndoso) {
-				case CORRECCION_NOMBRE_Y_RFC:
-				case CAMBIO_DOMICILIO:
-					ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
-					break;
-								
-				case ALTA_COBERTURAS:
-				case BAJA_COBERTURAS:
-				case ALTA_ASEGURADOS:
-				case BAJA_ASEGURADOS:
-					ejecutaWSrecibosEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, 
-							rutaCarpeta, cdtipsitGS, sucursal, nmsolici, ntramiteEmi, true, "INSERTA", cdtipsup);
-					break;
-					
-				case INCREMENTO_EDAD_ASEGURADO:
-				case DECREMENTO_EDAD_ASEGURADO:
-				case MODIFICACION_SEXO_H_A_M:
-				case MODIFICACION_SEXO_M_A_H:
-					ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
-					break;
-	
-				default:
-					log.debug("**** NO HAY WEB SERVICE PARA CDTIPSUP " + cdtipsup + " ******");
-					break;
-			}
+			case CORRECCION_NOMBRE_Y_RFC:
+			case CAMBIO_DOMICILIO:
+				
+				ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
+				
+				String parametros = "?9999,0,"+sucursal+","+cdtipsitGS+","+smap1.get("pv_nmpoliza")+",0,0,,1";
+				logger.debug("URL Generada para Recibo: "+ this.getText("url.imp.recibos")+parametros);
+				
+				HashMap<String, Object> paramsR =  new HashMap<String, Object>();
+				paramsR.put("pv_cdunieco_i", cdunieco);
+				paramsR.put("pv_cdramo_i", cdramo);
+				paramsR.put("pv_estado_i", estado);
+				paramsR.put("pv_nmpoliza_i", nmpoliza);
+				paramsR.put("pv_nmsuplem_i", nmsuplem);
+				paramsR.put("pv_feinici_i", new Date());
+				paramsR.put("pv_cddocume_i", this.getText("url.imp.recibos")+parametros);
+				paramsR.put("pv_dsdocume_i", "Recibo 1");
+				paramsR.put("pv_nmsolici_i", nmsolici);
+				paramsR.put("pv_ntramite_i", ntramiteEmi);
+				paramsR.put("pv_tipmov_i", cdtipsup);
+				
+				kernelManager.guardarArchivo(paramsR);
+				
+				break;
+							
+			case ALTA_COBERTURAS:
+			case BAJA_COBERTURAS:
+			case ALTA_ASEGURADOS:
+			case BAJA_ASEGURADOS:
+				ejecutaWSrecibosEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, 
+						rutaCarpeta, cdtipsitGS, sucursal, nmsolici, ntramiteEmi, true, "INSERTA", cdtipsup);
+				break;
+				
+			case INCREMENTO_EDAD_ASEGURADO:
+			case DECREMENTO_EDAD_ASEGURADO:
+			case MODIFICACION_SEXO_H_A_M:
+			case MODIFICACION_SEXO_M_A_H:
+				
+				ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
+				
+				ejecutaWSrecibosEndoso(cdunieco, cdramo,
+				estado, nmpoliza,
+				nmsuplem, nsuplogi, rutaCarpeta,
+						cdtipsitGS, sucursal, nmsolici, ntramiteEmi,
+						true, "INSERTA", cdtipsup );
+				
+				break;
+
+			default:
+				log.debug("**** NO HAY WEB SERVICE PARA CDTIPSUP " + cdtipsup + " ******");
+				break;
+		}
 			
 			success=true;
 		}
