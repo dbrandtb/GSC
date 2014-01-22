@@ -34,10 +34,9 @@ public class AuthenticationInterceptor implements Interceptor {
 	}
 
 	public String intercept(ActionInvocation actionInvocation) throws Exception {
-
-		logger.debug(new StringBuilder("Intercepted[ActionName=")
-				.append(actionInvocation.getProxy().getActionName())
-				.append(" Namespace=").append(actionInvocation.getProxy().getNamespace()).append("]"));
+		
+		logger.info(new StringBuilder("Intercepted[Namespace=").append(actionInvocation.getProxy().getNamespace())
+				.append(" ActionName=").append(actionInvocation.getProxy().getActionName()).append("]"));
 		
 		//Obtenemos la sesion por medio del ActionInvocation
 		Map session = actionInvocation.getInvocationContext().getSession();
@@ -62,13 +61,13 @@ public class AuthenticationInterceptor implements Interceptor {
 				boolean rolAsignado = false;
 				
 				if(user.getRolActivo()!=null){
-					logger.debug("Rol Activo: "+user.getRolActivo().getObjeto());
+					logger.info("Rol Activo: "+user.getRolActivo().getObjeto());
 					if(user.getRolActivo().getObjeto()!=null && StringUtils.isNotBlank(user.getRolActivo().getObjeto().getValue()))
 						rolAsignado = true;
 				}
 				
 				if(rolAsignado){
-					logger.debug("-->Ya Contiene un Rol Asignado<--");
+					logger.info("-->Ya Contiene un Rol Asignado<--");
 					return "load";
 				}else{
 					return "tree";
