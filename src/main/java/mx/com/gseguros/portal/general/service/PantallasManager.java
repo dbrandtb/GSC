@@ -3,6 +3,7 @@ package mx.com.gseguros.portal.general.service;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.Tatri;
 
 public interface PantallasManager
@@ -32,5 +33,5 @@ public interface PantallasManager
 			) throws Exception;
 	
 	public void                     insertarParametrosPantalla (Map<String,String> params) throws Exception;
-	public List<Map<String,String>> obtenerArbol               ()                          throws Exception;
+	public Item                     obtenerArbol               ()                          throws Exception;
 }

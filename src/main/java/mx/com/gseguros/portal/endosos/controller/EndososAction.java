@@ -1765,13 +1765,16 @@ public class EndososAction extends PrincipalCoreAction
 			
 			List<Tatri>tatriFiltro=pantallasManager.obtenerCamposPantalla(null,null,null,null,null,null,"EDITORPANTALLAS",null,null,"FILTRO");
 			gc.generaParcial(tatriFiltro);
-			imap1.put("itemsFiltro" , gc.getItems());
+			imap1.put("itemsFiltro"  , gc.getItems());
+			imap1.put("fieldsFiltro" , gc.getFields());
 			
 			List<Tatri>tatriModelo=pantallasManager.obtenerCamposPantalla(null,null,null,null,null,null,"EDITORPANTALLAS",null,null,"MODELO");
 			gc.generaParcial(tatriModelo);
 			imap1.put("itemsModelo"   , gc.getItems());
 			imap1.put("fieldsModelo"  , gc.getFields());
 			imap1.put("columnsModelo" , gc.getColumns());
+			
+			imap1.put("storeArbol",pantallasManager.obtenerArbol());
 		}
 		catch(Exception ex)
 		{

@@ -15,10 +15,12 @@ var edipanGrid;
 var edipanEditor;
 var edipanStore;
 var edipanIndexEditado;
+var edipanStoreArbol;
+var edipanPanelArbol;
 
 var edipanUrlLoad = '<s:url namespace="/endosos" action="obtenerParametrosPantalla" />';
 var edipanUrlSave = '<s:url namespace="/endosos" action="guardarParametrosPantalla" />';
-var edipanUrlView = '<s:url namespace="/endosos" action="visorPantallas"        />';
+var edipanUrlView = '<s:url namespace="/endosos" action="visorPantallas"            />';
 /*///////////////////*/
 ////// variables //////
 ///////////////////////
@@ -43,6 +45,15 @@ Ext.onReady(function()
 			<s:property value="imap1.fieldsModelo" />
 		]
 	});
+	
+	Ext.define('EdipanModeloFiltro',
+    {
+        extend  : 'Ext.data.Model'
+        ,fields :
+        [
+            <s:property value="imap1.fieldsFiltro" />
+        ]
+    });
 	/*/////////////////*/
 	////// modelos //////
 	/////////////////////
@@ -50,6 +61,8 @@ Ext.onReady(function()
 	////////////////////
 	////// stores //////
 	/*////////////////*/
+	edipanStoreArbol = Ext.create('Ext.data.TreeStore', { <s:property value="imap1.storeArbol" /> });
+	
 	edipanStore=Ext.create('Ext.data.Store',
 	{
 		model     : 'EdipanModelo'
@@ -72,6 +85,54 @@ Ext.onReady(function()
 	/////////////////////////
 	////// componentes //////
 	/*/////////////////////*/
+	Ext.define('EdipanPanelArbol',
+	{
+		extend         : 'Ext.tree.Panel'
+		,initComponent : function()
+		{
+			debug('EdipanPanelArbol initComponent');
+			Ext.apply(this,
+			{
+				title        : 'Pantallas'
+				,region      : 'west'
+		        ,width       : 250
+		        ,height      : 500
+		        ,store       : edipanStoreArbol
+		        ,rootVisible : false
+		        ,listeners   :
+		        {
+		        	itemclick : function( panel, record, item, index, e, eOpts )
+		        	{
+		        		debug('record',record);
+		        		var isLeaf = record.get('leaf');
+		        		var text   = record.get('text');
+		        		debug('isLeaf',isLeaf,'text',text);
+		        		if(isLeaf)
+		        		{
+		        			edipanFiltro.loadRecord(
+	                            Ext.create('EdipanModeloFiltro',
+	                            {
+	                            	'smap1.cdsiete' : record.parentNode.get('text') 
+	                                ,'smap1.cddiez' : text
+	                            })
+	                        );
+		        		}
+		        		else
+		        		{
+		        			edipanFiltro.loadRecord(
+			        			Ext.create('EdipanModeloFiltro',
+			        			{
+			        				'smap1.cdsiete' : text
+			        			})
+		        			);
+		        		}
+		        	}
+		        }
+			});
+			this.callParent();
+		}
+	});
+	
 	Ext.define('EdipanFiltro',
 	{
 		extend         : 'Ext.form.Panel'
@@ -81,6 +142,7 @@ Ext.onReady(function()
 			Ext.apply(this,
 			{
 				title        : 'Filtro'
+				,model       : 'EdipanModeloFiltro'
 				,collapsible : true
 				,layout      :
 				{
@@ -110,6 +172,7 @@ Ext.onReady(function()
 				    			});
 				    			
 				    			edipanFiltro.setDisabled(true);
+				    			edipanPanelArbol.setDisabled(true);
 				    			edipanGrid.setDisabled(false);
 				    			edipanEditor.setDisabled(true);
 				    			
@@ -191,6 +254,7 @@ Ext.onReady(function()
 					    			if(jsonres.success==true)
 					    			{
 						    			edipanFiltro.setDisabled(false);
+						    			edipanPanelArbol.setDisabled(false);
 			                            edipanGrid.setDisabled(true);
 			                            edipanEditor.setDisabled(true);
 			                            
@@ -248,6 +312,7 @@ Ext.onReady(function()
 			        	,handler : function()
 			        	{
 			        		edipanFiltro.setDisabled(false);
+			        		edipanPanelArbol.setDisabled(false);
                             edipanGrid.setDisabled(true);
                             edipanEditor.setDisabled(true);
                             
@@ -267,6 +332,7 @@ Ext.onReady(function()
 			    		edipanEditor.loadRecord(record);
 			    		
 			    		edipanFiltro.setDisabled(true);
+			    		edipanPanelArbol.setDisabled(true);
                         edipanGrid.setDisabled(true);
                         edipanEditor.setDisabled(false);
                         
@@ -316,6 +382,7 @@ Ext.onReady(function()
 	                    		edipanStore.insert(edipanIndexEditado,this.up().up().getValues());
 	                    		
 	                    		edipanFiltro.setDisabled(true);
+	                    		edipanPanelArbol.setDisabled(true);
 	                            edipanGrid.setDisabled(false);
 	                            edipanEditor.setDisabled(true);
 	                            
@@ -335,6 +402,7 @@ Ext.onReady(function()
                             edipanStore.add(this.up().up().getValues());
                             
                             edipanFiltro.setDisabled(true);
+                            edipanPanelArbol.setDisabled(true);
                             edipanGrid.setDisabled(false);
                             edipanEditor.setDisabled(true);
                             
@@ -353,6 +421,7 @@ Ext.onReady(function()
                             edipanStore.removeAt(edipanIndexEditado);
                             
                             edipanFiltro.setDisabled(true);
+                            edipanPanelArbol.setDisabled(true);
                             edipanGrid.setDisabled(false);
                             edipanEditor.setDisabled(true);
                             
@@ -367,6 +436,7 @@ Ext.onReady(function()
                         ,handler : function()
                         {
                             edipanFiltro.setDisabled(true);
+                            edipanPanelArbol.setDisabled(true);
                             edipanGrid.setDisabled(false);
                             edipanEditor.setDisabled(true);
                             
@@ -387,9 +457,10 @@ Ext.onReady(function()
 	///////////////////////
 	////// contenido //////
 	/*///////////////////*/
-	edipanFiltro = new EdipanFiltro();
-	edipanGrid   = new EdipanGrid();
-	edipanEditor = new EdipanEditor();
+	edipanPanelArbol = new EdipanPanelArbol();
+	edipanFiltro     = new EdipanFiltro();
+	edipanGrid       = new EdipanGrid();
+	edipanEditor     = new EdipanEditor();
 	
 	Ext.create('Ext.panel.Panel',
 	{
@@ -399,11 +470,25 @@ Ext.onReady(function()
 		{
 			style       : 'margin : 5px;'
 		}
+	    ,layout   : 'border'
+	    ,height   : 900
 		,items    :
 		[
-            edipanFiltro
-            ,edipanGrid
-            ,edipanEditor
+		    edipanPanelArbol
+		    ,Ext.create('Ext.panel.Panel',
+		    {
+		    	region    : 'center'
+		    	,defaults :
+		    	{
+		    		style : 'margin : 5px;'
+		    	}
+		    	,items    : 
+		    	[
+					edipanFiltro
+					,edipanGrid
+					,edipanEditor
+		    	]
+		    })
 		]
 	});
 	/*///////////////////*/
