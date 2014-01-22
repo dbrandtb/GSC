@@ -37,8 +37,8 @@ public class ProcessResultManagerJdbcTemplate {
                 WrapperResultados messageResult = getResultMessage(msgId);
                 
                 if(messageResult != null){
-                	logger.debug("MsgTitle=" + messageResult.getMsgTitle());
-                    logger.debug("MsgText=" + messageResult.getMsgText());
+                	logger.info("MsgTitle=" + messageResult.getMsgTitle());
+                    logger.info("MsgText=" + messageResult.getMsgText());
                 }
 
                 if (messageResult==null || messageResult.getMsgTitle()== null || messageResult.getMsgTitle().equals("")  ||

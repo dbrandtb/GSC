@@ -35,8 +35,8 @@ public abstract class AbstractManagerDAO extends JdbcDaoSupport {
 	        BaseVO mensajeRespuesta = traduceMensaje(mapResult);
 	        mapResult.put("msg_id", mensajeRespuesta.getKey());
 	        mapResult.put("msg_title", mensajeRespuesta.getValue());
-	        logger.debug("MsgTitle="+ mensajeRespuesta.getKey());
-	        logger.debug("MsgText="+  mensajeRespuesta.getValue());
+	        logger.info("MsgTitle="+ mensajeRespuesta.getKey());
+	        logger.info("MsgText="+  mensajeRespuesta.getValue());
 	        
 	        return mapResult;
 	        
@@ -60,7 +60,7 @@ public abstract class AbstractManagerDAO extends JdbcDaoSupport {
     	// Buscar el mensaje en la BD si la clave no se encuentra en el properties:
     	ActionSupport actionSupport = new ActionSupport();
         if (actionSupport.getText(msgId) != null) {
-        	//logger.debug("property " + msgId + "=" + actionSupport.getText(msgId));
+        	//logger.info("property " + msgId + "=" + actionSupport.getText(msgId));
         	return new BaseVO(msgId, actionSupport.getText(msgId));
         } else {
         	
