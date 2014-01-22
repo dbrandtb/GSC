@@ -25,6 +25,9 @@
         <pattern>/endosos/pantallaEndosoAltaBajaAsegurado.action</pattern>
         <pattern>/endosos/endosoEdad.action</pattern>
         <pattern>/endosos/endosoSexo.action</pattern>
+
+        <pattern>/catalogos/agregaUsuarios.action</pattern>
+        <pattern>/jsp/catalogos/agregaUsuarios.jsp</pattern>
 	</excludes>
 
 

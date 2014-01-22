@@ -65,8 +65,21 @@
             </result>
         </action>
         
-        <action name="usuarios">
-            <result>/jsp/catalogos/usuarios.jsp</result>
+        <action name="agregaUsuarios">
+            <result>/jsp/catalogos/agregaUsuarios.jsp</result>
+        </action>
+
+        <action name="gestionUsuarios" class="usuarioAction" method="cargaPantallaUsuarios">
+            <result>/jsp-script/catalogos/usuarios.jsp</result>
+        </action>
+        <action name="busquedaUsuarios" class="usuarioAction" method="obtieneUsuarios">
+   			<result type="json">
+            </result>
+        </action>
+        
+        <action name="obtieneRolesUsuario" class="usuarioAction" method="obtieneRolesUsuario">
+            <result type="json">
+            </result>
         </action>
         
         <action name="guardaUsuario" class="usuarioAction" method="guardaUsuario">
@@ -76,15 +89,6 @@
                     msgResult.*,
                     success
                 </param> -->
-            </result>
-        </action>
-        <action name="obtieneUsuarios" class="usuarioAction" method="obtieneUsuarios">
-            <result type="json">
-            </result>
-        </action>
-
-        <action name="obtieneRolesUsuario" class="usuarioAction" method="obtieneRolesUsuario">
-            <result type="json">
             </result>
         </action>
 
