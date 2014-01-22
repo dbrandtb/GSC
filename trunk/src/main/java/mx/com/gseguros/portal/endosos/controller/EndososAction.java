@@ -31,7 +31,6 @@ import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.Recibo;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboRespuesta;
 
 import org.apache.commons.lang.StringUtils;
-import mx.com.gseguros.utils.Constantes;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 
@@ -1628,7 +1627,7 @@ public class EndososAction extends PrincipalCoreAction
 			mapaMpoliper.put("pv_nmorddom_i" , "1");
 			mapaMpoliper.put("pv_swreclam_i" , null);
 			mapaMpoliper.put("pv_accion_i"   , "I");
-			mapaMpoliper.put("pv_swexiper_i" , "N");
+			mapaMpoliper.put("pv_swexiper_i" , "Y");
 			kernelManager.movMpoliper(mapaMpoliper);
 			////// mpoliper //////
 			//////////////////////
@@ -2604,7 +2603,7 @@ public class EndososAction extends PrincipalCoreAction
 				mapaMpoliper.put("pv_nmorddom_i" , "1");
 				mapaMpoliper.put("pv_swreclam_i" , null);
 				mapaMpoliper.put("pv_accion_i"   , "D");
-				mapaMpoliper.put("pv_swexiper_i" , "N");
+				mapaMpoliper.put("pv_swexiper_i" , "Y");
 				kernelManager.movMpoliper(mapaMpoliper);
 				////// mpoliper muerto //////
 				/////////////////////////////
