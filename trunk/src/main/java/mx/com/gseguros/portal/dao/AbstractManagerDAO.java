@@ -41,7 +41,7 @@ public abstract class AbstractManagerDAO extends JdbcDaoSupport {
 	        return mapResult;
 	        
 		} catch (Exception ex) {
-			throw new DaoException("Error inesperado en el acceso a los datos", ex);
+			throw new DaoException(ex.getMessage(), ex);
 		}
     }
     
@@ -53,13 +53,12 @@ public abstract class AbstractManagerDAO extends JdbcDaoSupport {
      * @throws Exception
      */
     private BaseVO traduceMensaje(Map<String, Object> mapResult) throws Exception {
-
     	String msgId = mapResult.get("pv_msg_id_o") != null ? mapResult.get("pv_msg_id_o").toString() : Constantes.MSG_ID_OK;  
         String msgTitle = mapResult.get("pv_title_o")  != null ? mapResult.get("pv_title_o").toString()  : Constantes.MSG_TITLE_OK;
     	
     	// Buscar el mensaje en la BD si la clave no se encuentra en el properties:
     	ActionSupport actionSupport = new ActionSupport();
-        if (actionSupport.getText(msgId) != null) {
+        if (!actionSupport.getText(msgId).equals(msgId)) {
         	//logger.info("property " + msgId + "=" + actionSupport.getText(msgId));
         	return new BaseVO(msgId, actionSupport.getText(msgId));
         } else {
@@ -67,13 +66,13 @@ public abstract class AbstractManagerDAO extends JdbcDaoSupport {
         	BaseVO mensajeRespuesta = procesoResultadoDAO.obtieneMensaje(msgId, "0", null, null);
         	
         	if (mensajeRespuesta == null || StringUtils.isBlank(mensajeRespuesta.getKey()) || StringUtils.isBlank(mensajeRespuesta.getValue())) {
-				String msgException = "No se encontró el mensaje de respuesta del servicio de datos, verifique los parámetros de salida";
+				String msgException = "No se encontrï¿½ el mensaje de respuesta del servicio de datos, verifique los parï¿½metros de salida";
 				logger.error(msgException);
 				throw new ApplicationException(msgException);
 			}
 			if (mensajeRespuesta.getKey().equals(Constantes.MSG_TITLE_ERROR)) {
-				String msgException = "Error de SP: " + mensajeRespuesta.getValue(); 
-				logger.error(msgException);
+				String msgException = mensajeRespuesta.getValue(); 
+				logger.error("Error de SP: " + msgException);
 				throw new ApplicationException(msgException);
 			}
 			return new BaseVO(mensajeRespuesta.getKey(), mensajeRespuesta.getValue());
