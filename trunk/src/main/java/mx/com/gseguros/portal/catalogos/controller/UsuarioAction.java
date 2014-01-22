@@ -3,15 +3,19 @@ package mx.com.gseguros.portal.catalogos.controller;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.aon.core.web.PrincipalCoreAction;
+import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.RolVO;
 import mx.com.gseguros.portal.general.model.UsuarioVO;
+import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.service.UsuarioManager;
+import mx.com.gseguros.portal.general.util.GeneradorCampos;
 
 import org.apache.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
 
-import com.opensymphony.xwork2.ActionSupport;
-
-public class UsuarioAction extends ActionSupport {
+public class UsuarioAction extends PrincipalCoreAction{
 
 	private static final long serialVersionUID = -7264510862184393230L;
 	
@@ -22,10 +26,58 @@ public class UsuarioAction extends ActionSupport {
 	private String errorMessage;
 	
 	private UsuarioManager usuarioManager;
+	private PantallasManager pantallasManager;
 	
 	private Map<String,String> params;
+	
+	private Item fields;
+	private Item columns;
+	private Item items;
+	
+	private List<UsuarioVO> usuarios;
 
-    public String guardaUsuario() throws Exception {
+	public String cargaPantallaUsuarios() throws Exception{
+		try
+		{
+			
+			logger.debug("... generando pantalla para gestion de usuarios");
+			UserVO usuario=(UserVO)session.get("USUARIO");
+			
+			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			
+			gc.generaParcial(pantallasManager.obtenerCamposPantalla(
+					 null,null,null
+					,null,null,null
+					,"PANTALLA_USUARIOS",usuario.getRolActivo().getObjeto().getValue(),null
+					,"BUSQUEDA"));
+			
+			items   = gc.getItems();
+			
+			gc.generaParcial(pantallasManager.obtenerCamposPantalla(
+					null,null,null
+					,null,null,null
+					,"PANTALLA_USUARIOS",usuario.getRolActivo().getObjeto().getValue(),null
+					,"MODEL"));
+			
+			fields  = gc.getFields();
+			
+			gc.generaParcial(pantallasManager.obtenerCamposPantalla(
+					 null,null,null
+					,null,null,null
+					,"PANTALLA_USUARIOS",usuario.getRolActivo().getObjeto().getValue(),null
+					,"COLUMNMODEL"));
+			
+			columns = gc.getColumns();
+			
+		}
+		catch(Exception ex)
+		{
+			logger.error("Error en pantalla de Usuarios",ex);
+		}
+		return SUCCESS;
+	}
+	
+	public String guardaUsuario() throws Exception {
     	try{
         	usuarioManager.guardaUsuario(params);
         	success=true;
@@ -37,7 +89,6 @@ public class UsuarioAction extends ActionSupport {
     }
     public String obtieneUsuarios() throws Exception {
     	
-    	List<UsuarioVO> usuarios = null;
     	try{
     		usuarios = usuarioManager.obtieneUsuarios(params);
     		success=true;
@@ -91,6 +142,42 @@ public class UsuarioAction extends ActionSupport {
 	
 	public void setUsuarioManager(UsuarioManager usuarioManager) {
 		this.usuarioManager = usuarioManager;
+	}
+
+	public void setPantallasManager(PantallasManager pantallasManager) {
+		this.pantallasManager = pantallasManager;
+	}
+
+	public Item getFields() {
+		return fields;
+	}
+
+	public void setFields(Item fields) {
+		this.fields = fields;
+	}
+
+	public Item getColumns() {
+		return columns;
+	}
+
+	public void setColumns(Item columns) {
+		this.columns = columns;
+	}
+
+	public Item getItems() {
+		return items;
+	}
+
+	public void setItems(Item items) {
+		this.items = items;
+	}
+
+	public List<UsuarioVO> getUsuarios() {
+		return usuarios;
+	}
+
+	public void setUsuarios(List<UsuarioVO> usuarios) {
+		this.usuarios = usuarios;
 	}
 	
 }
