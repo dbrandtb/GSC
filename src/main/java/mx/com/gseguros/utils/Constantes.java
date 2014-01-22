@@ -43,4 +43,6 @@ public interface Constantes {
     public static final String MESSAGE_ATRIBUTO_CON_HIJOS_ASOCIADOS = "El atributo tiene hijos asociados, si se elimina también se eliminarán esas asociaciones. ¿Desea continuar?";
     
     public static final String REGISTRO_DUPLICADO = "100006";
+    
+    public static final String NMSITUAC_TITULAR = "1";
 }
