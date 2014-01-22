@@ -824,25 +824,32 @@ Ext.onReady(function()
                     ,funcion : 'endosobajaasegurado'
                 }
                 ,{
-                    texto    : '15'//baja asegurado
+                    texto    : '15'//mas edad
                     ,liga    : '<s:url namespace="/endosos" action="endosoEdad" />'
                     ,funcion : 'endosomasedad'
                 }
                 ,{
-                    texto    : '16'//baja asegurado
+                    texto    : '16'//menos edad
                     ,liga    : '<s:url namespace="/endosos" action="endosoEdad" />'
                     ,funcion : 'endosomenosedad'
                 }
                 ,{
-                    texto    : '20'//baja asegurado
+                    texto    : '20'//hombre -> mujer
                     ,liga    : '<s:url namespace="/endosos" action="endosoSexo" />'
                     ,funcion : 'endosohombremujer'
                 }
                 ,{
-                    texto    : '21'//baja asegurado
+                    texto    : '21'//mujer -> hombre
                     ,liga    : '<s:url namespace="/endosos" action="endosoSexo" />'
                     ,funcion : 'endosomujerhombre'
                 }
+                /*
+                ,{
+                    texto    : '31'//domicilio full
+                    ,liga    : '<s:url namespace="/endosos" action="endosoDomicilioFull" />'
+                    ,funcion : 'endosodomiciliofull'
+                }
+                */
             ]
         }
         ,listeners : 
