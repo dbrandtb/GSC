@@ -318,6 +318,7 @@ public class EndososAction extends PrincipalCoreAction
 							+ "&p_ramo="+(String)omap1.get("pv_cdramo_i")
 							+ "&p_estado="+(String)omap1.get("pv_estado_i")
 							+ "&p_poliza="+(String)omap1.get("pv_nmpoliza_i")
+							+ "&p_suplem="+respuestaEndosoNombres.get("pv_nmsuplem_o")
 							+ "&desname="+rutaCarpeta+"/"+descripc;
 					if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
 					{
@@ -530,6 +531,7 @@ public class EndososAction extends PrincipalCoreAction
 								+ "&p_ramo="+smap1.get("pv_cdramo_i")
 								+ "&p_estado="+smap1.get("pv_estado_i")
 								+ "&p_poliza="+smap1.get("pv_nmpoliza_i")
+								+ "&p_suplem="+resEnd.get("pv_nmsuplem_o")
 								+ "&desname="+rutaCarpeta+"/"+descripc;
 						if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
 						{
@@ -767,6 +769,7 @@ public class EndososAction extends PrincipalCoreAction
 							+ "&p_ramo="+smap1.get("pv_cdramo")
 							+ "&p_estado="+smap1.get("pv_estado")
 							+ "&p_poliza="+smap1.get("pv_nmpoliza")
+							+ "&p_suplem="+resEndDomi.get("pv_nmsuplem_o")
 							+ "&desname="+rutaCarpeta+"/"+descripc;
 					if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
 					{
@@ -1308,6 +1311,7 @@ public class EndososAction extends PrincipalCoreAction
 								+ "&p_ramo="+(String)omap1.get("pv_cdramo_i")
 								+ "&p_estado="+(String)omap1.get("pv_estado_i")
 								+ "&p_poliza="+(String)omap1.get("pv_nmpoliza_i")
+								+ "&p_suplem="+respEndCob.get("pv_nmsuplem_o")
 								+ "&desname="+rutaCarpeta+"/"+descripc;
 						if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
 						{
@@ -1686,6 +1690,7 @@ public class EndososAction extends PrincipalCoreAction
 								+ "&p_ramo="+smap1.get("cdramo")
 								+ "&p_estado="+smap1.get("estado")
 								+ "&p_poliza="+smap1.get("nmpoliza")
+								+ "&p_suplem="+respEnd.get("pv_nmsuplem_o")
 								+ "&desname="+rutaCarpeta+"/"+descripc;
 						if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
 						{
@@ -2707,6 +2712,7 @@ public class EndososAction extends PrincipalCoreAction
 							+ "&p_ramo="+cdramo
 							+ "&p_estado="+estado
 							+ "&p_poliza="+nmpoliza
+							+ "&p_suplem="+nmsuplem
 							+ "&desname="+rutaCarpeta+"/"+descripc;
 					if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
 					{
@@ -3329,6 +3335,7 @@ public class EndososAction extends PrincipalCoreAction
 							+ "&p_ramo="+cdramo
 							+ "&p_estado="+estado
 							+ "&p_poliza="+nmpoliza
+							+ "&p_suplem="+nmsuplem
 							+ "&desname="+rutaCarpeta+"/"+descripc;
 					if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
 					{
@@ -3725,6 +3732,7 @@ public class EndososAction extends PrincipalCoreAction
 							+ "&p_ramo="+cdramo
 							+ "&p_estado="+estado
 							+ "&p_poliza="+nmpoliza
+							+ "&p_suplem="+nmsuplem
 							+ "&desname="+rutaCarpeta+"/"+descripc;
 					if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
 					{
@@ -3939,6 +3947,7 @@ public class EndososAction extends PrincipalCoreAction
 						+ "&p_ramo="+cdramo
 						+ "&p_estado="+estado
 						+ "&p_poliza="+nmpoliza
+						+ "&p_suplem="+nmsuplem
 						+ "&desname="+rutaCarpeta+"/"+descripc;
 				if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
 				{

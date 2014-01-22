@@ -1226,6 +1226,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						+ "&p_ramo="+panel2.get("pv_cdramo")
 						+ "&p_estado='M'"
 						+ "&p_poliza="+panel2.get("nmpoliza")
+						+ "&p_suplem="+_nmsuplem
 						+ "&desname="+rutaCarpeta+"/"+descripc;
 				if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
 				{
