@@ -137,6 +137,14 @@ public class EndososManagerImpl implements EndososManager
 	}
 	
 	@Override
+	public void insertarTworksupSitTodas(Map<String, String> params) throws Exception
+	{
+		log.debug("EndososManager insertarTworksupSitTodas params: "+params);
+		endososDAO.insertarTworksupSitTodas(params);
+		log.debug("EndososManager insertarTworksupSitTodas end");
+	}
+	
+	@Override
 	public Map<String, String> obtieneDatosMpolisit(Map<String, String> params) throws Exception
 	{
 		log.debug("EndososManager obtieneDatosMpolisit params: "+params);
@@ -196,6 +204,14 @@ public class EndososManagerImpl implements EndososManager
 		String ntramite=lista.size()>0?lista.get(0).get("NTRAMITE"):"";
 		log.debug("EndososManager obtenerNtramiteEmision ntramite: "+ntramite);
 		return ntramite;
+	}
+	
+	@Override
+	public void validaEndosoAnterior(Map<String, String> params) throws Exception
+	{
+		log.debug("EndososManager validaEndosoAnterior params: "+params);
+		endososDAO.validaEndosoAnterior(params);
+		log.debug("EndososManager validaEndosoAnterior end");
 	}
 	
 	/////////////////////////////////

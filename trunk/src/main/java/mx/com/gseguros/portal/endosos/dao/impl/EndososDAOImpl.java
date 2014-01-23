@@ -443,6 +443,30 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	}
 	
 	@Override
+	public void insertarTworksupSitTodas(Map<String, String> params) throws Exception
+	{
+		this.ejecutaSP(new InsertarTworksupSitTodas(this.getDataSource()), Utilerias.ponFechas(params));
+	}
+	
+	protected class InsertarTworksupSitTodas extends StoredProcedure
+	{
+		protected InsertarTworksupSitTodas(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SATELITES.P_INSERTA_TWORKSUP_SIT_TODAS");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsup_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
 	public Map<String, String> obtieneDatosMpolisit(Map<String, String> params) throws Exception
 	{
 		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtieneDatosMpolisit(this.getDataSource()), params);
@@ -606,6 +630,29 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
             WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
             return mapper.build(map);
         }
+	}
+	
+	@Override
+	public void validaEndosoAnterior(Map<String, String> params) throws Exception
+	{
+		this.ejecutaSP(new ValidaEndosoAnterior(this.getDataSource()), params);
+	}
+	
+	protected class ValidaEndosoAnterior extends StoredProcedure
+	{
+		protected ValidaEndosoAnterior(DataSource dataSource)
+		{
+			super(dataSource, "PKG_ENDOSOS.P_VALIDA_ENDOSO_ANTERIOR");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsup_i" , OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
 	}
 	
 }
