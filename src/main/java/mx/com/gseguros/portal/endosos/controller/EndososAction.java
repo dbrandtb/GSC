@@ -122,6 +122,21 @@ public class EndososAction extends PrincipalCoreAction
 	
 	//////////////////////////////////////////////
 	////// pantalla de endoso de coberturas //////
+	/*
+	smap1.pv_cdunieco:1006
+	smap1.pv_cdramo:2
+	smap1.pv_estado:M
+	smap1.pv_nmpoliza:18
+	smap1.pv_nmsituac:2
+	smap1.pv_cdperson:512022
+	smap1.cdrfc:MAVA900817
+	smap1.pv_cdrol:2
+	smap1.nombreAsegurado:NOMBRE  PATERNO MATERNO
+	smap1.ntramite:662
+	smap1.botonCopiar:0
+	smap1.altabaja:alta
+	smap1.cdtipsit:SL
+	*/
 	/*//////////////////////////////////////////*/
 	public String pantallaEndosoCoberturas()
 	{
@@ -132,13 +147,21 @@ public class EndososAction extends PrincipalCoreAction
 				+ "\n######                          ######"
 				);
 		log.debug("smap1: "+smap1);
+		String respuesta=this.validaEndosoAnterior(
+				smap1.get("pv_cdunieco")
+				,smap1.get("pv_cdramo")
+				,smap1.get("pv_estado")
+				,smap1.get("pv_nmpoliza")
+				,smap1.get("altabaja").equalsIgnoreCase("alta")?
+						TipoEndoso.ALTA_COBERTURAS.getCdTipSup().toString():
+						TipoEndoso.BAJA_COBERTURAS.getCdTipSup().toString());
 		log.debug(""
 				+ "\n######                          ######"
 				+ "\n###### pantallaEndosoCoberturas ######"
 				+ "\n######################################"
 				+ "\n######################################"
 				);
-		return SUCCESS;
+		return respuesta;
 	}
 	/*//////////////////////////////////////////*/
 	////// pantalla de endoso de coberturas //////
@@ -146,6 +169,20 @@ public class EndososAction extends PrincipalCoreAction
 
 	//////////////////////////////////////////////
 	////// pantalla de endoso de domicilio  //////
+	/*
+	smap1.pv_cdunieco:1006
+	smap1.pv_cdramo:2
+	smap1.pv_estado:M
+	smap1.pv_nmpoliza:18
+	smap1.pv_nmsituac:2
+	smap1.pv_cdperson:512022
+	smap1.cdrfc:MAVA900817
+	smap1.pv_cdrol:2
+	smap1.nombreAsegurado:NOMBRE  PATERNO MATERNO
+	smap1.botonCopiar:0
+	smap1.cdtipsit:SL
+	smap1.ntramite:662
+	*/
 	/*//////////////////////////////////////////*/
 	public String pantallaEndosoDomicilio()
 	{
@@ -157,20 +194,29 @@ public class EndososAction extends PrincipalCoreAction
 				);
 		log.debug("smap1: "+smap1);
 		log.debug("session: "+session);
-		ComplementariosCoberturasAction actionDomicilio=new ComplementariosCoberturasAction();
-		actionDomicilio.setSession(session);
-		actionDomicilio.setSmap1(smap1);
-		actionDomicilio.setKernelManager(kernelManager);
-		actionDomicilio.mostrarPantallaDomicilio();
-		item1=actionDomicilio.getItem1();
-		item2=actionDomicilio.getItem2();
+		String respuesta=this.validaEndosoAnterior(
+				smap1.get("pv_cdunieco")
+				,smap1.get("pv_cdramo")
+				,smap1.get("pv_estado")
+				,smap1.get("pv_nmpoliza")
+				,TipoEndoso.CAMBIO_DOMICILIO.getCdTipSup().toString());
+		if(respuesta.equals(SUCCESS))
+		{
+			ComplementariosCoberturasAction actionDomicilio=new ComplementariosCoberturasAction();
+			actionDomicilio.setSession(session);
+			actionDomicilio.setSmap1(smap1);
+			actionDomicilio.setKernelManager(kernelManager);
+			actionDomicilio.mostrarPantallaDomicilio();
+			item1=actionDomicilio.getItem1();
+			item2=actionDomicilio.getItem2();
+		}
 		log.debug(""
 				+ "\n######                         ######"
 				+ "\n###### pantallaEndosoDomicilio ######"
 				+ "\n#####################################"
 				+ "\n#####################################"
 				);
-		return SUCCESS;
+		return respuesta;
 	}
 	/*//////////////////////////////////////////*/
 	////// pantalla de endoso de domicilio  //////
@@ -178,6 +224,30 @@ public class EndososAction extends PrincipalCoreAction
 	
 	///////////////////////////////////////////
 	////// pantalla de endoso de nombres //////
+	/*
+	smap1:
+		cdramo: "2"
+		cdtipsit: "SL"
+		cdunieco: "1006"
+		estado: "M"
+		nmpoliza: "18"
+		ntramite: "662"
+	slist1:
+		[{Apellido_Materno: "MATERNO"
+		Apellido_Paterno: "PATERNO"
+		Parentesco: "D"
+		cdperson: "512022"
+		cdrfc: "MAVA900817"
+		cdrol: "2"
+		fenacimi: "17/08/1990"
+		nacional: "001"
+		nmsituac: "2"
+		nombre: "NOMBRE"
+		segundo_nombre: null
+		sexo: "M"
+		swexiper: "S"
+		tpersona: "F"}]
+	*/
 	/*///////////////////////////////////////*/
 	public String pantallaEndosoNombres()
 	{
@@ -189,13 +259,19 @@ public class EndososAction extends PrincipalCoreAction
 				);
 		log.debug("smap1: "+smap1);
 		log.debug("slist1: "+slist1);
+		String respuesta=this.validaEndosoAnterior(
+				smap1.get("cdunieco")
+				,smap1.get("cdramo")
+				,smap1.get("estado")
+				,smap1.get("nmpoliza")
+				,TipoEndoso.CORRECCION_NOMBRE_Y_RFC.getCdTipSup().toString());
 		log.debug(""
 				+ "\n######                       ######"
 				+ "\n###### pantallaEndosoNombres ######"
 				+ "\n###################################"
 				+ "\n###################################"
 				);
-		return SUCCESS;
+		return respuesta;
 	}
 	/*///////////////////////////////////////*/
 	////// pantalla de endoso de nombres //////
@@ -1405,29 +1481,38 @@ public class EndososAction extends PrincipalCoreAction
 				+ "\n###### endosoValositBasico ######"
 				+ "\n######                     ######"
 				);
-		try
+		log.debug("smap1: "+smap1);
+		String respuesta=this.validaEndosoAnterior(
+				smap1.get("cdunieco")
+				,smap1.get("cdramo")
+				,smap1.get("estado")
+				,smap1.get("nmpoliza")
+				,TipoEndoso.CORRECCION_ANTIGUEDAD_Y_PARENTESCO.getCdTipSup().toString());
+		if(respuesta.equals(SUCCESS))
 		{
-			log.debug("smap1: "+smap1);
-			List<Tatri>tatrisit=kernelManager.obtenerTatrisit(smap1.get("cdtipsit"));
-			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-			gc.setCdtipsit(smap1.get("cdtipsit"));
-			List<Tatri>tatriTemp=new ArrayList<Tatri>(0);
-			for(Tatri t:tatrisit)
-			//si es agrupado solo dejar los atributos con N, si es individual solo los que tengan S
+			try
 			{
-				if(t.getSwsuscri().equalsIgnoreCase("S")&&t.getSwtarifi().equalsIgnoreCase("N"))//S=individual
+				List<Tatri>tatrisit=kernelManager.obtenerTatrisit(smap1.get("cdtipsit"));
+				GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+				gc.setCdtipsit(smap1.get("cdtipsit"));
+				List<Tatri>tatriTemp=new ArrayList<Tatri>(0);
+				for(Tatri t:tatrisit)
+				//si es agrupado solo dejar los atributos con N, si es individual solo los que tengan S
 				{
-					tatriTemp.add(t);
+					if(t.getSwsuscri().equalsIgnoreCase("S")&&t.getSwtarifi().equalsIgnoreCase("N"))//S=individual
+					{
+						tatriTemp.add(t);
+					}
 				}
+				tatrisit=tatriTemp;
+				gc.genera(tatrisit);
+				item1=gc.getFields();
+				item2=gc.getItems();
 			}
-			tatrisit=tatriTemp;
-			gc.genera(tatrisit);
-			item1=gc.getFields();
-			item2=gc.getItems();
-		}
-		catch(Exception ex)
-		{
-			log.error("error al mostrar la pantalla de valosit",ex);
+			catch(Exception ex)
+			{
+				log.error("error al mostrar la pantalla de valosit",ex);
+			}
 		}
 		log.debug(""
 				+ "\n######                     ######"
@@ -1435,7 +1520,7 @@ public class EndososAction extends PrincipalCoreAction
 				+ "\n#################################"
 				+ "\n#################################"
 				);
-		return SUCCESS;
+		return respuesta;
 	}
 	/*/////////////////////////////*/
 	////// endoso B de valosit //////
@@ -1936,6 +2021,16 @@ public class EndososAction extends PrincipalCoreAction
 	
 	//////////////////////////////////////////////
 	////// pantalla de endosos de clausulas //////
+	/*
+	smap1.cdunieco:1006
+	smap1.cdramo:2
+	smap1.estado:M
+	smap1.nmpoliza:18
+	smap1.cdtipsit:SL
+	smap1.nmsituac:2
+	smap1.ntramite:662
+	smap1.nmsuplem:245668011510000012
+	*/
 	/*//////////////////////////////////////////*/
 	public String pantallaEndosoClausulas()
 	{
@@ -1946,21 +2041,19 @@ public class EndososAction extends PrincipalCoreAction
 				+ "\n######                                  ######"
 				);
 		log.debug("smap1: "+smap1);
-		try
-		{
-			
-		}
-		catch(Exception ex)
-		{
-			log.error("error al mostrar la pantalla de endoso de clausulas",ex);
-		}
+		String respuesta=this.validaEndosoAnterior(
+				smap1.get("cdunieco")
+				,smap1.get("cdramo")
+				,smap1.get("estado")
+				,smap1.get("nmpoliza")
+				,TipoEndoso.CAMBIO_ENDOSOS_EXCLUSION_O_TEXTOS.getCdTipSup().toString()); 
 		log.debug(""
 				+ "\n######                                  ######"
 				+ "\n###### pantalla de endosos de clausulas ######"
 				+ "\n##############################################"
 				+ "\n##############################################"
 				);
-		return SUCCESS;
+		return respuesta;
 	}
 	/*//////////////////////////////////////////*/
 	////// pantalla de endosos de clausulas //////
@@ -1968,6 +2061,25 @@ public class EndososAction extends PrincipalCoreAction
 	
 	///////////////////////////////////////////////////////////////
 	////// pantalla de endoso de alta y/o baja de asegurados //////
+	/*
+	smap1:
+		NMSUPLEM=245665412050000000,
+		DSTIPSIT=SALUD VITAL,
+		FEINIVAL=27/12/2013,
+		NMPOLIZA=1,
+		PRIMA_TOTAL=10830.45,
+		NMPOLIEX=1904213000001000000,
+		NSUPLOGI=0,
+		DSCOMENT=EMISIÒN DE LA POLIZA,
+		ESTADO=M,
+		CDTIPSIT=SL,
+		NTRAMITE=396,
+		CDUNIECO=1904,
+		FEEMISIO=27/12/2013,
+		CDRAMO=2
+	smap2
+		alta=si
+	*/
 	/*///////////////////////////////////////////////////////////*/
 	public String pantallaEndosoAltaBajaAsegurado()
 	{
@@ -1978,100 +2090,96 @@ public class EndososAction extends PrincipalCoreAction
 				+ "\n###### pantalla de endoso de alta y/o baja de asegurados ######"
 				+ "\n######                                                   ######"
 				);
-		try
+		log.debug("smap1: "+smap1);
+		String respuesta=this.validaEndosoAnterior(
+				smap1.get("CDUNIECO")
+				,smap1.get("CDRAMO")
+				,smap1.get("ESTADO")
+				,smap1.get("NMPOLIZA")
+				,smap2.get("alta").equalsIgnoreCase("si")?
+						TipoEndoso.ALTA_ASEGURADOS.getCdTipSup().toString():
+						TipoEndoso.BAJA_ASEGURADOS.getCdTipSup().toString());
+		if(respuesta.equals(SUCCESS))
 		{
-			log.debug("smap1: "+smap1);
-			/* NMSUPLEM=245665412050000000,
-			 * DSTIPSIT=SALUD VITAL,
-			 * FEINIVAL=27/12/2013,
-			 * NMPOLIZA=1,
-			 * PRIMA_TOTAL=10830.45,
-			 * NMPOLIEX=1904213000001000000,
-			 * NSUPLOGI=0,
-			 * DSCOMENT=EMISIÒN DE LA POLIZA,
-			 * ESTADO=M,
-			 * CDTIPSIT=SL,
-			 * NTRAMITE=396,
-			 * CDUNIECO=1904,
-			 * FEEMISIO=27/12/2013,
-			 * CDRAMO=2
-			 */
-			String cdtipsit=smap1.get("CDTIPSIT");
-			
-			imap1=new HashMap<String,Item>();
-			
-			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-			
-			gc.generaParcial(pantallasManager.obtenerCamposPantalla(
-					 null,null,null
-					,null,null,null
-					,"ENDOSOABASEGU",null,null
-					,"MODELO"));
-			
-			imap1.put("modelo"   , gc.getFields());
-			imap1.put("columnas" , gc.getColumns());
-			
-			gc.generaParcial(pantallasManager.obtenerCamposPantalla(
-					 null,null,null
-					,null,null,null
-					,"ENDOSOABASEGU",null,null
-					,"PANELLECTURA"));
-			
-			imap1.put("panelLectura" , gc.getItems());
-			
-			////////////////////////////////////////////////
-			////// campos de tatrisit para individual //////
-			List<Tatri>tatrisit=kernelManager.obtenerTatrisit(cdtipsit);
-			gc.setCdtipsit(cdtipsit);
-			
-			List<String>exclusiones=new ArrayList<String>();
-			/*
-			if(cdtipsit.equals("SL")||cdtipsit.equals("SN"))
+			try
 			{
-				exclusiones.add("3");//codigo postal
-				exclusiones.add("4");//,"estado");
-				exclusiones.add("5");//,"deducible");
-				exclusiones.add("6");//,"copago");
-				exclusiones.add("7");//,"suma asegurada");
-				exclusiones.add("17");//,"municipio");
-			}
-			log.debug("exclusiones: "+exclusiones);
-			*/
-			
-			List<Tatri>tatriTemp=new ArrayList<Tatri>(0);
-			for(Tatri t:tatrisit)
-			//solo dejar los atributos si es individual, los que tengan S
-			{
-				if(t.getSwsuscri().equalsIgnoreCase("S"))//S=individual
+				String cdtipsit=smap1.get("CDTIPSIT");
+				
+				imap1=new HashMap<String,Item>();
+				
+				GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+				
+				gc.generaParcial(pantallasManager.obtenerCamposPantalla(
+						 null,null,null
+						,null,null,null
+						,"ENDOSOABASEGU",null,null
+						,"MODELO"));
+				
+				imap1.put("modelo"   , gc.getFields());
+				imap1.put("columnas" , gc.getColumns());
+				
+				gc.generaParcial(pantallasManager.obtenerCamposPantalla(
+						 null,null,null
+						,null,null,null
+						,"ENDOSOABASEGU",null,null
+						,"PANELLECTURA"));
+				
+				imap1.put("panelLectura" , gc.getItems());
+				
+				////////////////////////////////////////////////
+				////// campos de tatrisit para individual //////
+				List<Tatri>tatrisit=kernelManager.obtenerTatrisit(cdtipsit);
+				gc.setCdtipsit(cdtipsit);
+				
+				List<String>exclusiones=new ArrayList<String>();
+				/*
+				if(cdtipsit.equals("SL")||cdtipsit.equals("SN"))
 				{
-					String name=t.getCdatribu();
-					log.debug("se busca "+name+" en excluciones");
-					if(!exclusiones.contains(name))
+					exclusiones.add("3");//codigo postal
+					exclusiones.add("4");//,"estado");
+					exclusiones.add("5");//,"deducible");
+					exclusiones.add("6");//,"copago");
+					exclusiones.add("7");//,"suma asegurada");
+					exclusiones.add("17");//,"municipio");
+				}
+				log.debug("exclusiones: "+exclusiones);
+				*/
+				
+				List<Tatri>tatriTemp=new ArrayList<Tatri>(0);
+				for(Tatri t:tatrisit)
+				//solo dejar los atributos si es individual, los que tengan S
+				{
+					if(t.getSwsuscri().equalsIgnoreCase("S"))//S=individual
 					{
-						log.debug("no encontrado");
-						tatriTemp.add(t);
+						String name=t.getCdatribu();
+						log.debug("se busca "+name+" en excluciones");
+						if(!exclusiones.contains(name))
+						{
+							log.debug("no encontrado");
+							tatriTemp.add(t);
+						}
 					}
 				}
+				tatrisit=tatriTemp;
+				
+				tatriTemp=pantallasManager.obtenerCamposPantalla(
+						 null,null,null
+						,null,null,null
+						,"ENDOSOABASEGU",null,null
+						,"FORMULARIO");
+				tatriTemp.addAll(tatrisit);
+				tatrisit=tatriTemp;
+				
+				gc.generaParcial(tatrisit);
+				
+				imap1.put("formulario" , gc.getItems());
+				////// campos de tatrisit para individual //////
+				////////////////////////////////////////////////
 			}
-			tatrisit=tatriTemp;
-			
-			tatriTemp=pantallasManager.obtenerCamposPantalla(
-					 null,null,null
-					,null,null,null
-					,"ENDOSOABASEGU",null,null
-					,"FORMULARIO");
-			tatriTemp.addAll(tatrisit);
-			tatrisit=tatriTemp;
-			
-			gc.generaParcial(tatrisit);
-			
-			imap1.put("formulario" , gc.getItems());
-			////// campos de tatrisit para individual //////
-			////////////////////////////////////////////////
-		}
-		catch(Exception ex)
-		{
-			log.error("error al mostrar pantalla de alta y/o baja de asegurados",ex);
+			catch(Exception ex)
+			{
+				log.error("error al mostrar pantalla de alta y/o baja de asegurados",ex);
+			}
 		}
 		log.debug("\n"
 				+ "\n###### pantalla de endoso de alta y/o baja de asegurados ######"
@@ -2079,7 +2187,7 @@ public class EndososAction extends PrincipalCoreAction
 				+ "\n###############################################################"
 				+ "\n###############################################################"
 				);
-		return SUCCESS;
+		return respuesta;
 	}
 	/*///////////////////////////////////////////////////////////*/
 	////// pantalla de endoso de alta y/o baja de asegurados //////
@@ -3012,32 +3120,41 @@ public class EndososAction extends PrincipalCoreAction
 				);
 		log.debug("smap1: "+smap1);
 		log.debug("slist1: "+slist1);
-		
-		try
+		String respuesta=this.validaEndosoAnterior(
+				smap1.get("cdunieco")
+				,smap1.get("cdramo")
+				,smap1.get("estado")
+				,smap1.get("nmpoliza")
+				,smap1.get("masedad").equalsIgnoreCase("si")?
+						TipoEndoso.INCREMENTO_EDAD_ASEGURADO.getCdTipSup().toString():
+						TipoEndoso.DECREMENTO_EDAD_ASEGURADO.getCdTipSup().toString());
+		if(respuesta.equals(SUCCESS))
 		{
-			imap1=new HashMap<String,Item>();
-			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-			gc.generaParcial(pantallasManager.obtenerCamposPantalla(
-					null,null,null
-					,null,null,null
-					,"ENDOSO_EDAD",null,null
-					,"MODELO"
-					));
-			imap1.put("modelo"   , gc.getFields());
-			imap1.put("columnas" , gc.getColumns());
+			try
+			{
+				imap1=new HashMap<String,Item>();
+				GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+				gc.generaParcial(pantallasManager.obtenerCamposPantalla(
+						null,null,null
+						,null,null,null
+						,"ENDOSO_EDAD",null,null
+						,"MODELO"
+						));
+				imap1.put("modelo"   , gc.getFields());
+				imap1.put("columnas" , gc.getColumns());
+			}
+			catch(Exception ex)
+			{
+				log.error("error al cargar la pantalla de endoso de edad",ex);
+			}
 		}
-		catch(Exception ex)
-		{
-			log.error("error al cargar la pantalla de endoso de edad",ex);
-		}
-		
 		log.debug("\n"
 				+ "\n######                ######"
 				+ "\n###### endoso de edad ######"
 				+ "\n############################"
 				+ "\n############################"
 				);
-		return SUCCESS;
+		return respuesta;
 	}
 	/*////////////////////////*/
 	////// endoso de edad //////
@@ -3396,6 +3513,16 @@ public class EndososAction extends PrincipalCoreAction
 	
 	//////////////////////////////////////
 	////// endoso de cambio de sexo //////
+	/*
+	smap1:
+		cdramo: "2"
+		cdtipsit: "SL"
+		cdunieco: "1006"
+		estado: "M"
+		hombremujer: "no"
+		nmpoliza: "18"
+		ntramite: "662"
+	*/
 	/*//////////////////////////////////*/
 	public String endosoSexo()
 	{
@@ -3409,22 +3536,33 @@ public class EndososAction extends PrincipalCoreAction
 		log.debug("smap1: "+smap1);
 		log.debug("smap2: "+smap2);
 		log.debug("slist1: "+slist1);
-		try
+		String respuesta=this.validaEndosoAnterior(
+				smap1.get("cdunieco")
+				,smap1.get("cdramo")
+				,smap1.get("estado")
+				,smap1.get("nmpoliza")
+				,smap1.get("hombremujer").equalsIgnoreCase("si")?
+						TipoEndoso.MODIFICACION_SEXO_H_A_M.getCdTipSup().toString():
+						TipoEndoso.MODIFICACION_SEXO_M_A_H.getCdTipSup().toString());
+		if(respuesta.equals(SUCCESS))
 		{
-			imap1=new HashMap<String,Item>();
-			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-			gc.generaParcial(pantallasManager.obtenerCamposPantalla(
-					null,null,null
-					,null,null,null
-					,"ENDOSO_SEXO",null,null
-					,"MODELO"
-					));
-			imap1.put("modelo"   , gc.getFields());
-			imap1.put("columnas" , gc.getColumns());
-		}
-		catch(Exception ex)
-		{
-			log.error("error al mostrar pantalla de endoso de cambio de sexo",ex);
+			try
+			{
+				imap1=new HashMap<String,Item>();
+				GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+				gc.generaParcial(pantallasManager.obtenerCamposPantalla(
+						null,null,null
+						,null,null,null
+						,"ENDOSO_SEXO",null,null
+						,"MODELO"
+						));
+				imap1.put("modelo"   , gc.getFields());
+				imap1.put("columnas" , gc.getColumns());
+			}
+			catch(Exception ex)
+			{
+				log.error("error al mostrar pantalla de endoso de cambio de sexo",ex);
+			}
 		}
 		log.debug("\n"
 				+ "\n######                           ######"
@@ -3432,7 +3570,7 @@ public class EndososAction extends PrincipalCoreAction
 				+ "\n#######################################"
 				+ "\n#######################################"
 				);
-		return SUCCESS;
+		return respuesta;
 	}
 	/*//////////////////////////////////*/
 	////// endoso de cambio de sexo //////
@@ -4087,51 +4225,60 @@ public class EndososAction extends PrincipalCoreAction
 				+ "\n######                     ######"
 				);
 		log.debug("smap1: "+smap1);
-		try
+		String respuesta=this.validaEndosoAnterior(
+				smap1.get("CDUNIECO")
+				,smap1.get("CDRAMO")
+				,smap1.get("ESTADO")
+				,smap1.get("NMPOLIZA")
+				,TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.getCdTipSup().toString());
+		if(respuesta.equals(SUCCESS))
 		{
-			UserVO usuario=(UserVO)session.get("USUARIO");
-			
-			String cdunieco = smap1.get("CDUNIECO");
-			String cdramo   = smap1.get("CDRAMO");
-			String cdtipsit = smap1.get("CDTIPSIT");
-			String estado   = smap1.get("ESTADO");
-			String nmpoliza = smap1.get("NMPOLIZA");
-			String nmsuplem = smap1.get("NMSUPLEM");
-			String rol      = usuario.getRolActivo().getObjeto().getValue();
-			String rolAsegu = smap1.get("cdrol");
-			
-			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-			
-			imap1=new HashMap<String,Item>();
-			
-			gc.generaParcial(pantallasManager.obtenerCamposPantalla(
-					cdunieco  , cdramo                  , cdtipsit , estado , nmpoliza
-					,nmsuplem , "ENDOSO_DOMICILIO_FULL" , rol      , null   , "PANEL_LECTURA"));
-						
-			imap1.put("itemsLectura",gc.getItems());
-			
-			gc.generaParcial(pantallasManager.obtenerCamposPantalla(
-					cdunieco  , cdramo                  , cdtipsit , estado , nmpoliza
-					,nmsuplem , "ENDOSO_DOMICILIO_FULL" , rol      , null   , "ITEMS_DOMICIL"));
-			
-			imap1.put("itemsDomicil"  , gc.getItems());
-			imap1.put("fieldsDomicil" , gc.getFields());
-			
-			Map<String,String>mapaTatriper=new HashMap<String,String>();
-			mapaTatriper.put("pv_cdramo_i"   , cdramo);
-			mapaTatriper.put("pv_cdrol_i"    , rolAsegu);
-			mapaTatriper.put("pv_cdtipsit_i" , cdtipsit);
-			gc.setCdramo(cdramo);
-			gc.setCdrol(rolAsegu);
-			gc.setCdtipsit(cdtipsit);
-			gc.generaParcial(kernelManager.obtenerTatriper(mapaTatriper));
-			
-			imap1.put("itemsTatriper",gc.getItems());
-			
-		}
-		catch(Exception ex)
-		{
-			log.error("error al cargar la pantalla de domicilio full",ex);
+			try
+			{
+				UserVO usuario=(UserVO)session.get("USUARIO");
+				
+				String cdunieco = smap1.get("CDUNIECO");
+				String cdramo   = smap1.get("CDRAMO");
+				String cdtipsit = smap1.get("CDTIPSIT");
+				String estado   = smap1.get("ESTADO");
+				String nmpoliza = smap1.get("NMPOLIZA");
+				String nmsuplem = smap1.get("NMSUPLEM");
+				String rol      = usuario.getRolActivo().getObjeto().getValue();
+				String rolAsegu = smap1.get("cdrol");
+				
+				GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+				
+				imap1=new HashMap<String,Item>();
+				
+				gc.generaParcial(pantallasManager.obtenerCamposPantalla(
+						cdunieco  , cdramo                  , cdtipsit , estado , nmpoliza
+						,nmsuplem , "ENDOSO_DOMICILIO_FULL" , rol      , null   , "PANEL_LECTURA"));
+							
+				imap1.put("itemsLectura",gc.getItems());
+				
+				gc.generaParcial(pantallasManager.obtenerCamposPantalla(
+						cdunieco  , cdramo                  , cdtipsit , estado , nmpoliza
+						,nmsuplem , "ENDOSO_DOMICILIO_FULL" , rol      , null   , "ITEMS_DOMICIL"));
+				
+				imap1.put("itemsDomicil"  , gc.getItems());
+				imap1.put("fieldsDomicil" , gc.getFields());
+				
+				Map<String,String>mapaTatriper=new HashMap<String,String>();
+				mapaTatriper.put("pv_cdramo_i"   , cdramo);
+				mapaTatriper.put("pv_cdrol_i"    , rolAsegu);
+				mapaTatriper.put("pv_cdtipsit_i" , cdtipsit);
+				gc.setCdramo(cdramo);
+				gc.setCdrol(rolAsegu);
+				gc.setCdtipsit(cdtipsit);
+				gc.generaParcial(kernelManager.obtenerTatriper(mapaTatriper));
+				
+				imap1.put("itemsTatriper",gc.getItems());
+				
+			}
+			catch(Exception ex)
+			{
+				log.error("error al cargar la pantalla de domicilio full",ex);
+			}
 		}
 		log.debug("\n"
 				+ "\n######                     ######"
@@ -4139,7 +4286,7 @@ public class EndososAction extends PrincipalCoreAction
 				+ "\n#################################"
 				+ "\n#################################"
 				);
-		return SUCCESS;
+		return respuesta;
 	}
 	///////////////////////////////////
 	////// endoso domicilio full //////
@@ -4282,6 +4429,51 @@ public class EndososAction extends PrincipalCoreAction
 			/*//////////////////*/
 			////// mdomicil //////
 			//////////////////////
+			
+			//////////////////////////////
+            ////// inserta tworksup //////
+            Map<String,String>mapaTworksupEnd=new LinkedHashMap<String,String>(0);
+            mapaTworksupEnd.put("pv_cdunieco_i" , cdunieco);
+            mapaTworksupEnd.put("pv_cdramo_i"   , cdramo);
+            mapaTworksupEnd.put("pv_estado_i"   , estado);
+            mapaTworksupEnd.put("pv_nmpoliza_i" , nmpoliza);
+            mapaTworksupEnd.put("pv_cdtipsup_i" , TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.getCdTipSup().toString());
+            mapaTworksupEnd.put("pv_nmsuplem_i" , nmsuplem);
+            endososManager.insertarTworksupSitTodas(mapaTworksupEnd);
+            ////// inserta tworksup //////
+            //////////////////////////////
+            
+            //////////////////////////
+            ////// tarificacion //////
+            Map<String,String>mapaSigsvalipolEnd=new LinkedHashMap<String,String>(0);
+			mapaSigsvalipolEnd.put("pv_cdusuari_i" , cdusuari);
+			mapaSigsvalipolEnd.put("pv_cdelemen_i" , cdelemento);
+			mapaSigsvalipolEnd.put("pv_cdunieco_i" , cdunieco);
+			mapaSigsvalipolEnd.put("pv_cdramo_i"   , cdramo);
+			mapaSigsvalipolEnd.put("pv_estado_i"   , estado);
+			mapaSigsvalipolEnd.put("pv_nmpoliza_i" , nmpoliza);
+			mapaSigsvalipolEnd.put("pv_nmsituac_i" , "0");
+			mapaSigsvalipolEnd.put("pv_nmsuplem_i" , nmsuplem);
+			mapaSigsvalipolEnd.put("pv_cdtipsit_i" , cdtipsit);
+			mapaSigsvalipolEnd.put("pv_cdtipsup_i" , TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.getCdTipSup().toString());
+			endososManager.sigsvalipolEnd(mapaSigsvalipolEnd);
+            ////// tarificacion //////
+			//////////////////////////
+			
+			//////////////////////////
+			////// valor endoso //////
+			Map<String,Object>mapaValorEndoso=new LinkedHashMap<String,Object>(0);
+			mapaValorEndoso.put("pv_cdunieco_i" , cdunieco);
+			mapaValorEndoso.put("pv_cdramo_i"   , cdramo);
+			mapaValorEndoso.put("pv_estado_i"   , estado);
+			mapaValorEndoso.put("pv_nmpoliza_i" , nmpoliza);
+			mapaValorEndoso.put("pv_nmsituac_i" , "1");
+			mapaValorEndoso.put("pv_nmsuplem_i" , nmsuplem);
+			mapaValorEndoso.put("pv_feinival_i" , dFechaEndoso);
+			mapaValorEndoso.put("pv_cdtipsup_i" , TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.getCdTipSup().toString());
+			endososManager.calcularValorEndoso(mapaValorEndoso);
+			////// valor endoso //////
+			//////////////////////////
 			
 			String tramiteGenerado=this.confirmarEndoso(
 					cdunieco,
@@ -4439,6 +4631,29 @@ public class EndososAction extends PrincipalCoreAction
 	/*////////////////////////////////////*/
 	////// guardarEndosoDomicilioFull //////
 	////////////////////////////////////////
+	
+	private String validaEndosoAnterior(String cdunieco,String cdramo,String estado,String nmpoliza,String cdtipsup)
+	{
+		String respuesta=ERROR;
+		try
+		{
+			Map<String,String>params=new HashMap<String,String>();
+			params.put("pv_cdunieco_i" , cdunieco);
+			params.put("pv_cdramo_i"   , cdramo);
+			params.put("pv_estado_i"   , estado);
+			params.put("pv_nmpoliza_i" , nmpoliza);
+			params.put("pv_cdtipsup_i" , cdtipsup);
+			endososManager.validaEndosoAnterior(params);
+			respuesta=SUCCESS;
+		}
+		catch(Exception ex)
+		{
+			log.error("error tratando de acceder a pantalla de endoso: "+cdtipsup,ex);
+			error=ex.getMessage();
+			respuesta=ERROR;
+		}
+		return respuesta;
+	}
 	
 	///////////////////////////////
 	////// getters y setters //////

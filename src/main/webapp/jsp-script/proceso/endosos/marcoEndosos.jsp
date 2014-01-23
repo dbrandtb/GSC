@@ -890,13 +890,11 @@ Ext.onReady(function()
                     ,liga    : '<s:url namespace="/endosos" action="endosoSexo" />'
                     ,funcion : 'endosomujerhombre'
                 }
-                /*
                 ,{
                     texto    : '31'//domicilio full
                     ,liga    : '<s:url namespace="/endosos" action="endosoDomicilioFull" />'
                     ,funcion : 'endosodomiciliofull'
                 }
-                */
             ]
         }
         ,listeners : 

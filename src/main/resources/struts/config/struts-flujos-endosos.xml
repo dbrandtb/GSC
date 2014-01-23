@@ -13,11 +13,13 @@
         </action>
         
         <action name="pantallaEndosoCoberturas" class="EndososAction" method="pantallaEndosoCoberturas">
-            <result name="success">/jsp-script/proceso/endosos/endosoCoberturas.jsp</result>
+            <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
+            <result name="success">/jsp-script/proceso/endosos/endosoCoberturas.jsp   </result>
         </action>
         
         <action name="pantallaEndosoDomicilio" class="EndososAction" method="pantallaEndosoDomicilio">
-            <result name="success">/jsp-script/proceso/endosos/endosoDomicilio.jsp</result>
+            <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
+            <result name="success">/jsp-script/proceso/endosos/endosoDomicilio.jsp    </result>
         </action>
         
         <action name="pantallaEndosoNombres" class="EndososAction" method="pantallaEndosoNombres">
@@ -25,7 +27,8 @@
                 <param name="enableSMD">true</param>
                 <param name="ignoreSMDMethodInterfaces">false</param>
             </interceptor-ref>
-            <result name="success">/jsp-script/proceso/endosos/endosoNombres.jsp</result>
+            <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
+            <result name="success">/jsp-script/proceso/endosos/endosoNombres.jsp      </result>
         </action>
         
         <action name="guardarEndosoNombres" class="EndososAction" method="guardarEndosoNombres">
@@ -53,6 +56,7 @@
         </action>
         
         <action name="endosoValositBasico" class="EndososAction" method="endosoValositBasico">
+            <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
             <result name="success">/jsp-script/proceso/endosos/endosoValositBasico.jsp</result>
         </action>
         
@@ -81,6 +85,7 @@
         </action>
         
         <action name="pantallaEndosoClausulas" class="EndososAction" method="pantallaEndosoClausulas">
+            <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp    </result>
             <result name="success">/jsp-script/proceso/endosos/pantallaEndosoClausulas.jsp</result>
         </action>
         
@@ -93,6 +98,7 @@
                 <param name="enableSMD">true</param>
                 <param name="ignoreSMDMethodInterfaces">false</param>
             </interceptor-ref>
+            <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp            </result>
             <result name="success">/jsp-script/proceso/endosos/pantallaEndosoAltaBajaAsegurado.jsp</result>
         </action>
         
@@ -113,7 +119,8 @@
                 <param name="enableSMD">true</param>
                 <param name="ignoreSMDMethodInterfaces">false</param>
             </interceptor-ref>
-            <result name="success">/jsp-script/proceso/endosos/endosoEdad.jsp</result>
+            <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
+            <result name="success">/jsp-script/proceso/endosos/endosoEdad.jsp         </result>
         </action>
         
         <action name="guardarEndosoEdad" class="EndososAction" method="guardarEndosoEdad">
@@ -129,7 +136,8 @@
                 <param name="enableSMD">true</param>
                 <param name="ignoreSMDMethodInterfaces">false</param>
             </interceptor-ref>
-            <result name="success">/jsp-script/proceso/endosos/endosoSexo.jsp</result>
+            <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
+            <result name="success">/jsp-script/proceso/endosos/endosoSexo.jsp         </result>
         </action>
         
         <action name="guardarEndosoSexo" class="EndososAction" method="guardarEndosoSexo">
@@ -149,6 +157,7 @@
                 <param name="enableSMD">true</param>
                 <param name="ignoreSMDMethodInterfaces">false</param>
             </interceptor-ref>
+            <result name="error">  /jsp-script/proceso/endosos/errorEndosoAnterior.jsp</result>
             <result name="success">/jsp-script/proceso/endosos/endosoDomicilioFull.jsp</result>
         </action>
         
