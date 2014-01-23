@@ -900,26 +900,6 @@ public class EndososAction extends PrincipalCoreAction
 				
 				kernelManager.guardarArchivo(paramsR);
 				
-			
-				
-				/*if(Constantes.NMSITUAC_TITULAR.equals(smap1.get("pv_nmsituac"))){
-					
-					String cdtipsitGS = "213";
-					String sucursal = smap1.get("pv_cdunieco");
-					if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
-					
-					String nmsolici = listaDocu.get(0).get("nmsolici");
-					String nmtramite = listaDocu.get(0).get("ntramite");
-					
-					String tipomov = "3";
-					
-					ejecutaWSrecibosEndoso(smap1.get("pv_cdunieco"), smap1.get("pv_cdramo"),
-							smap1.get("pv_estado"), smap1.get("pv_nmpoliza"),
-							resEndDomi.get("pv_nmsuplem_o"), resEndDomi.get("pv_nsuplogi_o"), rutaCarpeta,
-							cdtipsitGS, sucursal, nmsolici, nmtramite,
-							true, "INSERTA", tipomov );
-				}else{}*/
-					
 				
 			    mensaje="Se ha guardado el endoso "+resEndDomi.get("pv_nsuplogi_o");
 			    
@@ -4147,6 +4127,7 @@ public class EndososAction extends PrincipalCoreAction
 			case DECREMENTO_EDAD_ASEGURADO:
 			case MODIFICACION_SEXO_H_A_M:
 			case MODIFICACION_SEXO_M_A_H:
+			case CAMBIO_DOMICILIO_ASEGURADO_TITULAR:
 				
 				ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
 				
@@ -4553,54 +4534,23 @@ public class EndososAction extends PrincipalCoreAction
 				////// re generar los documentos //////
 			    ///////////////////////////////////////
 				
-				/*
-				ejecutaWSclienteSaludEndoso(smap1.get("pv_cdunieco"), smap1.get("pv_cdramo"), smap1.get("pv_estado"), smap1.get("pv_nmpoliza"), resEndDomi.get("pv_nmsuplem_o"), "ACTUALIZA");
+				ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
 				
 				String cdtipsitGS = "213";
-				String sucursal = smap1.get("pv_cdunieco");
+				String sucursal = cdunieco;
 				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 				
 				String nmsolici = listaDocu.get(0).get("nmsolici");
 				String nmtramite = listaDocu.get(0).get("ntramite");
 				
-				String parametros = "?9999,0,"+sucursal+","+cdtipsitGS+","+smap1.get("pv_nmpoliza")+",0,0,,1";
-				logger.debug("URL Generada para Recibo: "+ this.getText("url.imp.recibos")+parametros);
-				//HttpRequestUtil.generaReporte(this.getText("url.imp.recibos")+parametros, rutaPoliza+"/Recibo_"+recibo.getRmdbRn()+"_"+recibo.getNumRec()+".pdf");
+				String tipomov = TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.getCdTipSup().toString();
 				
-				HashMap<String, Object> paramsR =  new HashMap<String, Object>();
-				paramsR.put("pv_cdunieco_i", smap1.get("pv_cdunieco"));
-				paramsR.put("pv_cdramo_i", smap1.get("pv_cdramo"));
-				paramsR.put("pv_estado_i", smap1.get("pv_estado"));
-				paramsR.put("pv_nmpoliza_i", smap1.get("pv_nmpoliza"));
-				paramsR.put("pv_nmsuplem_i", resEndDomi.get("pv_nmsuplem_o"));
-				paramsR.put("pv_feinici_i", new Date());
-				paramsR.put("pv_cddocume_i", this.getText("url.imp.recibos")+parametros);
-				paramsR.put("pv_dsdocume_i", "Recibo 1");
-				paramsR.put("pv_nmsolici_i", nmsolici);
-				paramsR.put("pv_ntramite_i", nmtramite);
-				paramsR.put("pv_tipmov_i", "3");
+				ejecutaWSrecibosEndoso(cdunieco, cdramo,
+						estado, nmpoliza,
+						nmsuplem, nsuplogi, rutaCarpeta,
+						cdtipsitGS, sucursal, nmsolici, nmtramite,
+						true, "INSERTA", tipomov );
 				
-				kernelManager.guardarArchivo(paramsR);
-				*/
-				
-				/*if(Constantes.NMSITUAC_TITULAR.equals(smap1.get("pv_nmsituac"))){
-					
-					String cdtipsitGS = "213";
-					String sucursal = smap1.get("pv_cdunieco");
-					if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
-					
-					String nmsolici = listaDocu.get(0).get("nmsolici");
-					String nmtramite = listaDocu.get(0).get("ntramite");
-					
-					String tipomov = "3";
-					
-					ejecutaWSrecibosEndoso(smap1.get("pv_cdunieco"), smap1.get("pv_cdramo"),
-							smap1.get("pv_estado"), smap1.get("pv_nmpoliza"),
-							resEndDomi.get("pv_nmsuplem_o"), resEndDomi.get("pv_nsuplogi_o"), rutaCarpeta,
-							cdtipsitGS, sucursal, nmsolici, nmtramite,
-							true, "INSERTA", tipomov );
-				}else{}*/
-					
 				
 			    mensaje="Se ha guardado el endoso "+nsuplogi;
 			    
