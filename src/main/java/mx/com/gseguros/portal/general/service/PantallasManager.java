@@ -9,28 +9,28 @@ import mx.com.gseguros.portal.cotizacion.model.Tatri;
 public interface PantallasManager
 {
 	public List<Tatri> obtenerCamposPantalla(
-			 Object cduno   , Object cddos
-	        ,Object cdtres  , Object cdcuatro
-			,Object cdcinco , Object cdseis
-			,Object cdsiete , Object cdocho
-			,Object cdnueve , Object cddiez
+			 Object cdunieco , Object cdramo
+	        ,Object cdtipsit , Object estado
+			,Object nmpoliza , Object nmsuplem
+			,Object pantalla , Object rol
+			,Object orden    , Object componente
            ) throws Exception;
 	
 	public List<Map<String, String>> obtenerParametrosPantalla(
-			 Object cduno   , Object cddos
-			,Object cdtres  , Object cdcuatro
-			,Object cdcinco , Object cdseis
-			,Object cdsiete , Object cdocho
-			,Object cdnueve , Object cddiez
+			 Object cdunieco , Object cdramo
+	        ,Object cdtipsit , Object estado
+			,Object nmpoliza , Object nmsuplem
+			,Object pantalla , Object rol
+			,Object orden    , Object componente
            ) throws Exception;
 	
 	public void borrarParametrosPantalla(
-			 Object cduno   , Object cddos
-			,Object cdtres  , Object cdcuatro
-			,Object cdcinco , Object cdseis
-			,Object cdsiete , Object cdocho
-			,Object cdnueve , Object cddiez
-			) throws Exception;
+			 Object cdunieco , Object cdramo
+	        ,Object cdtipsit , Object estado
+			,Object nmpoliza , Object nmsuplem
+			,Object pantalla , Object rol
+			,Object orden    , Object componente
+           ) throws Exception;
 	
 	public void                     insertarParametrosPantalla (Map<String,String> params) throws Exception;
 	public Item                     obtenerArbol               ()                          throws Exception;

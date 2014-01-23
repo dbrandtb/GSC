@@ -321,40 +321,24 @@ Ext.onReady(function(){
                             {
                                 formPanelp4.setLoading(false);
                                 var json=Ext.decode(opts.response.responseText);
-                                if(json.success==true)
-                                {
-                                	//////////////////////////////////
-                                    ////// usa codigo del padre //////
-                                    /*//////////////////////////////*/
-                                    marendNavegacion(2);
-                                    /*//////////////////////////////*/
-                                    ////// usa codigo del padre //////
-                                    //////////////////////////////////
-                                    Ext.Msg.show({
-                                        title:'Endoso generado',
-                                        msg: json.mensaje,
-                                        buttons: Ext.Msg.OK
-                                    });
-                                }
-                                else
-                                {
-                                    Ext.Msg.show({
-                                        title:'Error',
-                                        msg: 'Error al guardar la informaci&oacute;n',
-                                        buttons: Ext.Msg.OK,
-                                        icon: Ext.Msg.ERROR
-                                    });
-                                }
+                            	//////////////////////////////////
+                                ////// usa codigo del padre //////
+                                /*//////////////////////////////*/
+                                marendNavegacion(2);
+                                /*//////////////////////////////*/
+                                ////// usa codigo del padre //////
+                                //////////////////////////////////
+                                Ext.Msg.show({
+                                    title:'Endoso generado',
+                                    msg: json.mensaje,
+                                    buttons: Ext.Msg.OK
+                                });
                             },
                             failure:function(response,opts)
                             {
                                 formPanelp4.setLoading(false);
-                                Ext.Msg.show({
-                                    title:'Error',
-                                    msg: 'Error al guardar la informaci&oacute;n',
-                                    buttons: Ext.Msg.OK,
-                                    icon: Ext.Msg.ERROR
-                                });
+                            	var json=Ext.decode(opts.response.responseText);
+                                mensajeError(json.error);
                             }
                         });
                     }

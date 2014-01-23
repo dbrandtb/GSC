@@ -119,13 +119,7 @@ function _2_confirmar()
 	            }
 	            else
 	            {
-	                me.up().up().setLoading(false);
-	                Ext.Msg.show({
-	                    title:'Error',
-	                    msg: 'Error al confirmar endoso',
-	                    buttons: Ext.Msg.OK,
-	                    icon: Ext.Msg.ERROR
-	                });
+	                mensajeError(json.error);
 	            }
 	        }
 	        ,failure : function ()

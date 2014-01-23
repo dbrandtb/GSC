@@ -8,6 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
@@ -15,6 +16,8 @@ import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.Tatri;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.portal.general.util.TipoEndoso;
+
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 
@@ -237,6 +240,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 				mapPoligarIterado.put("pv_swreas_i",   cob.get("swreas"));
 				mapPoligarIterado.put("pv_cdagrupa_i", cob.get("cdagrupa"));
 				mapPoligarIterado.put("PV_ACCION",     "B");
+				mapPoligarIterado.put("pv_cdtipsup_i", TipoEndoso.EMISION_POLIZA.getCdTipSup().toString());
 				log.debug("Iteracion #"+i+" de movPoligar");
 				kernelManager.movPoligar(mapPoligarIterado);
 				
