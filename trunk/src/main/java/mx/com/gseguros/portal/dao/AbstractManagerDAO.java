@@ -35,8 +35,6 @@ public abstract class AbstractManagerDAO extends JdbcDaoSupport {
 	        BaseVO mensajeRespuesta = traduceMensaje(mapResult);
 	        mapResult.put("msg_id", mensajeRespuesta.getKey());
 	        mapResult.put("msg_title", mensajeRespuesta.getValue());
-	        logger.info("MsgTitle="+ mensajeRespuesta.getKey());
-	        logger.info("MsgText="+  mensajeRespuesta.getValue());
 	        
 	        return mapResult;
 	        
@@ -53,13 +51,15 @@ public abstract class AbstractManagerDAO extends JdbcDaoSupport {
      * @throws Exception
      */
     private BaseVO traduceMensaje(Map<String, Object> mapResult) throws Exception {
+    	
     	String msgId = mapResult.get("pv_msg_id_o") != null ? mapResult.get("pv_msg_id_o").toString() : Constantes.MSG_ID_OK;  
         String msgTitle = mapResult.get("pv_title_o")  != null ? mapResult.get("pv_title_o").toString()  : Constantes.MSG_TITLE_OK;
+        logger.info(new StringBuilder("MsgId=").append(msgId).append(" ").append("MsgTitle=").append(msgTitle));
     	
     	// Buscar el mensaje en la BD si la clave no se encuentra en el properties:
     	ActionSupport actionSupport = new ActionSupport();
         if (!actionSupport.getText(msgId).equals(msgId)) {
-        	//logger.info("property " + msgId + "=" + actionSupport.getText(msgId));
+        	logger.info( new StringBuilder("MsgText=").append(actionSupport.getText(msgId)) );
         	return new BaseVO(msgId, actionSupport.getText(msgId));
         } else {
         	
@@ -70,6 +70,7 @@ public abstract class AbstractManagerDAO extends JdbcDaoSupport {
 				logger.error(msgException);
 				throw new ApplicationException(msgException);
 			}
+        	logger.info( new StringBuilder("MsgText=").append(mensajeRespuesta.getValue()) );
 			if (mensajeRespuesta.getKey().equals(Constantes.MSG_TITLE_ERROR)) {
 				String msgException = mensajeRespuesta.getValue(); 
 				logger.error("Error de SP: " + msgException);

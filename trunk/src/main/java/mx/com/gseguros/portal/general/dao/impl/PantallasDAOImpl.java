@@ -53,6 +53,7 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new TatriPantallaMapper()));
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
+			compile();
 		}
 	}
 	
@@ -123,6 +124,7 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new DinamicMapper()));
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
+			compile();
 		}
 	}
 	/*///////////////////////////////////////////////*/
@@ -158,6 +160,7 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 			
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
+			compile();
 		}
 	}
 	/*//////////////////////////////////////////////*/
@@ -206,6 +209,7 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 			
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
+			compile();
 		}
 	}
 	/*/////////////////////////////////////////*/
@@ -230,6 +234,7 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new DinamicMapper()));//CDSIETE,CDDIEZ
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
+			compile();
 		}
 	}
 	/*///////////////////////*/

@@ -42,7 +42,7 @@ public class ProcessResultManagerJdbcTemplate {
     public WrapperResultados processResultMessageId(WrapperResultados res) throws ApplicationException {
 
     	String msgId = res.getMsgId();
-    	logger.info("MsgTitle=" + res.getMsgTitle());
+    	logger.info(new StringBuilder("MsgId=").append(res.getMsgId()).append(" ").append("MsgTitle=").append(res.getMsgTitle()));
         if (StringUtils.isNotBlank(msgId)) {
         	String msgText = null;
         	// Buscar el mensaje en la BD si la clave no se encuentra en el properties:
@@ -52,7 +52,7 @@ public class ProcessResultManagerJdbcTemplate {
 	        } else {
 	        	msgText = getResultMessage(msgId);
 	        }
-        	logger.info("MsgText=" + msgText);
+        	logger.info(new StringBuilder("MsgText=").append(msgText));
 
             if (StringUtils.isBlank(msgText)) {
             	String msgException = "No se encontró el mensaje de respuesta del servicio de datos, verifique los parámetros de salida";
@@ -61,7 +61,7 @@ public class ProcessResultManagerJdbcTemplate {
             }
 
             if (res.getMsgTitle().equals(Constantes.MSG_TITLE_ERROR)) {
-				logger.error("Error de SP: " + msgText);
+				logger.error(new StringBuilder("Error de SP: ").append(msgText));
 				throw new ApplicationException(msgText);
             }
             
@@ -95,8 +95,9 @@ public class ProcessResultManagerJdbcTemplate {
             	result = (WrapperResultados) abstractDAO.invoke(ERROR_STORE_PROCEDURE,map);
             	msgText = result.getMsgText();
             } catch (DaoException e) {
-            	logger.error("Error al invocar el servicio de datos que obtiene el mensaje de respuesta: " + ERROR_STORE_PROCEDURE, e);
-                throw new ApplicationException("Error al invocar el servicio de datos que obtiene el mensaje de respuesta: " + ERROR_STORE_PROCEDURE, e);
+            	StringBuilder msgExc = new StringBuilder("Error al invocar el servicio de datos que obtiene el mensaje de respuesta: ").append(ERROR_STORE_PROCEDURE); 
+            	logger.error(msgExc, e);
+                throw new ApplicationException(msgExc.toString(), e);
             }
         }
     	return msgText;

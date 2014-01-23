@@ -44,6 +44,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
             declareParameter(new SqlOutParameter("pv_messages_o", OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.NUMERIC));
             declareParameter(new SqlOutParameter("pv_title_o",    OracleTypes.VARCHAR));
+            compile();
     	}
     }
     
@@ -267,6 +268,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			declareParameter(new SqlOutParameter("PV_REGISTRO_O", OracleTypes.CURSOR, new ObtieneRolesSistemaMapper()));
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("PV_TITLE_O", OracleTypes.VARCHAR));
+			compile();
 		}
 	}
 	
@@ -300,6 +302,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerAgentesMapper()));
 			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
+			compile();
 		}
 	}
 	
@@ -328,6 +331,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
             declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new ObtenerTmanteniMapper()));
             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
             declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+            compile();
     	}
     }
 	
