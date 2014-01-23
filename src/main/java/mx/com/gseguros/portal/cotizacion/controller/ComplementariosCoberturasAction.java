@@ -1091,6 +1091,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 				paramsAsegurados.put("pv_cdramo",   smap1.get("cdramo"));
 				paramsAsegurados.put("pv_estado",   smap1.get("estado"));
 				paramsAsegurados.put("pv_nmpoliza", smap1.get("nmpoliza"));
+				paramsAsegurados.put("pv_nmsuplem", "0");
 				log.debug("paramsAsegurados: "+paramsAsegurados);
 				List<Map<String, Object>>asegurados=kernelManager.obtenerAsegurados(paramsAsegurados);
 				log.debug("asegurados: "+asegurados);
