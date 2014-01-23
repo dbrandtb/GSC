@@ -52,8 +52,9 @@ public abstract class AbstractManagerJdbcTemplateInvoke {
             res = (WrapperResultados) abstractDAO.invoke(endpointName,arg);
 
         } catch (DaoException e) {
-            logger.error("No se puedo ejecutar pagedBackBoneInvoke para el endpoint " + endpointName, e);
-            throw new ApplicationException("No se puedo ejecutar pagedBackBoneInvoke para el endpoint " + endpointName,e);
+        	StringBuilder msgExc = new StringBuilder("No se pudo ejecutar getBackBoneInvoke para el endpoint ").append(endpointName);
+			logger.error(msgExc, e);
+			throw new ApplicationException(msgExc.toString(), e);
         }
 
         res = processResultManager.processResultMessageId(res);
@@ -93,8 +94,9 @@ public abstract class AbstractManagerJdbcTemplateInvoke {
             res = (WrapperResultados) abstractDAO.invoke(endpointName,arg);
 
         } catch (DaoException e) {
-            logger.error("No se puedo ejecutar pagedBackBoneInvoke para el endpoint " + endpointName, e);
-            throw new ApplicationException("No se puedo ejecutar pagedBackBoneInvoke para el endpoint " + endpointName,e);
+        	StringBuilder msgExc = new StringBuilder("No se pudo ejecutar returnBackBoneInvoke para el endpoint ").append(endpointName);
+			logger.error(msgExc, e);
+			throw new ApplicationException(msgExc.toString(), e);
         }
 
         res = processResultManager.processResultMessageId(res);
@@ -120,8 +122,9 @@ public abstract class AbstractManagerJdbcTemplateInvoke {
             res = (WrapperResultados) abstractDAO.invoke(endpointName,arg);
 
         } catch (DaoException e) {
-            logger.error("No se puedo ejecutar pagedBackBoneInvoke para el endpoint " + endpointName, e);
-            throw new ApplicationException("No se puedo ejecutar pagedBackBoneInvoke para el endpoint " + endpointName,e);
+        	StringBuilder msgExc = new StringBuilder("No se pudo ejecutar returnResult para el endpoint ").append(endpointName);
+			logger.error(msgExc, e);
+			throw new ApplicationException(msgExc.toString(), e);
         }
 
         //res = processResultManager.processResultMessageId(res);
@@ -139,8 +142,9 @@ public abstract class AbstractManagerJdbcTemplateInvoke {
             res = (WrapperResultados) abstractDAO.invoke(endpointName,arg);
 
         } catch (DaoException e) {
-            logger.error("No se puedo ejecutar pagedBackBoneInvoke para el endpoint " + endpointName, e);
-            throw new ApplicationException("No se puedo ejecutar pagedBackBoneInvoke para el endpoint " + endpointName,e);
+        	StringBuilder msgExc = new StringBuilder("No se pudo ejecutar getAllBackBoneInvoke para el endpoint ").append(endpointName);
+			logger.error(msgExc, e);
+			throw new ApplicationException(msgExc.toString(), e);
         }
 
         if (res.getItemList()==null) {
@@ -178,8 +182,9 @@ public abstract class AbstractManagerJdbcTemplateInvoke {
             res = (WrapperResultados) abstractDAO.invoke(endpointName,arg);
 
         } catch (Exception e) {
-			logger.error("No se puedo ejecutar pagedBackBoneInvoke para el endpoint " + endpointName, e);
-			throw new ApplicationException("No se puedo ejecutar pagedBackBoneInvoke para el endpoint " + endpointName,e);
+        	StringBuilder msgExc = new StringBuilder("No se pudo ejecutar pagedBackBoneInvoke para el endpoint ").append(endpointName);
+			logger.error(msgExc, e);
+			throw new ApplicationException(msgExc.toString(), e);
 		}
         
         PagedList pagedList = new PagedList();
