@@ -2,6 +2,7 @@ package mx.com.gseguros.portal.general.util;
 
 public enum TipoEndoso {
 	
+	EMISION_POLIZA(1),
 	CORRECCION_NOMBRE_Y_RFC(2),
 	CAMBIO_DOMICILIO(3),
 	CORRECCION_ANTIGUEDAD_Y_PARENTESCO(4),
