@@ -40,12 +40,14 @@ public class GeneradorCampos {
     {
         this.parcial=true;
         this.genera(lt);
+        this.parcial=false;
     }
     
     public void generaConEditor(List<Tatri> lt) throws Exception
     {
     	this.conEditor=true;
     	this.genera(lt);
+    	this.conEditor=false;
     }
     
     public void generaParcialConEditor(List<Tatri> lt) throws Exception
@@ -53,6 +55,8 @@ public class GeneradorCampos {
     	this.parcial=true;
     	this.conEditor=true;
     	this.genera(lt);
+    	this.parcial=false;
+    	this.conEditor=false;
     }
     
     public void genera(List<Tatri> lt) throws Exception

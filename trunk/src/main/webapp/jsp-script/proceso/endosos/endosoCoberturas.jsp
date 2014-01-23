@@ -132,16 +132,17 @@
                             /*//////////////////////////////*/
                             ////// usa codigo del padre //////
                             //////////////////////////////////
-                    	} else 
+                    	}
+                    	else
                     	{
-                            //////////////////////////////////
+                    		//////////////////////////////////
                             ////// usa codigo del padre //////
                             /*//////////////////////////////*/
                             marendNavegacion(4);
                             /*//////////////////////////////*/
                             ////// usa codigo del padre //////
                             //////////////////////////////////
-                        }
+                    	}
                         //zxc
                         /*
                         form.setLoading(true);
@@ -292,13 +293,7 @@
                     }
                     else
                     {
-                        Ext.Msg.show(
-                        {
-                            title   : 'Error',
-                            icon    : Ext.Msg.ERROR,
-                            msg     : 'Error al generar el endoso',
-                            buttons : Ext.Msg.OK
-                        });
+                        mensajeError(json.error);
                     }
                 }
                 ,failure  : function()

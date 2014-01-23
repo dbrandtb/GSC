@@ -329,13 +329,7 @@ Ext.onReady(function(){
                     					}
                     					else
                     					{
-                    						Ext.Msg.show(
-                                            {
-                                                title   : 'Error',
-                                                icon    : Ext.Msg.ERROR,
-                                                msg     : 'Error al generar el endoso',
-                                                buttons : Ext.Msg.OK
-                                            });
+                    						mensajeError(json.error);
                     					}
                     			    }
                     			    ,failure  : function()

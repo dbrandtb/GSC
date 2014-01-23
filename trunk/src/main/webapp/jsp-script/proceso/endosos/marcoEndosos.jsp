@@ -611,6 +611,53 @@
                 });
             }
         }
+    	else if(recordOperacion.get('funcion')=='endosodomiciliofull')
+        {
+            debug(recordOperacion.get('funcion'));
+            var nAsegActivos=0;
+            var recordActivo;
+            var hayTitular=false;
+            marendStoreAsegurados.each(function(record)
+            {
+                if(record.get('activo')==true)
+                {
+                    nAsegActivos=nAsegActivos+1;
+                    recordActivo=record;
+                    if(record.get("nmsituac")==1)
+                    {
+                        hayTitular=true;
+                    }
+                }
+            });
+            var valido=true;
+            
+            if(valido)
+            {
+                valido=nAsegActivos==1&&hayTitular;
+                if(!valido)
+                {
+                    mensajeWarning('Seleccione solo al titular');
+                }
+            }
+            
+            if(valido)
+            {
+                debug(recordActivo);
+                Ext.getCmp('marendMenuOperaciones').collapse();
+                Ext.getCmp('marendLoaderFrame').setTitle(recordOperacion.get('texto'));
+                var json={
+                	smap1 : recordActivo.getData()
+                };
+                debug(json);
+                Ext.getCmp('marendLoaderFrame').getLoader().load(
+                {
+                    url       : recordOperacion.get('liga')
+                    ,scripts  : true
+                    ,autoLoad : true
+                    ,jsonData : json
+                });
+            }
+        }
     }
     
     function marendNavegacion(nivel)

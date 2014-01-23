@@ -88,14 +88,11 @@ function endvalbasSumit(form,confirmar)
                         //////////////////////////////////
                     }
                 },
-                failure:function(){
+                failure:function(action,response)
+                {
                     form.setLoading(false);
-                    Ext.Msg.show({
-                        title:'Error',
-                        msg: 'Error de comunicaci&oacute;n',
-                        buttons: Ext.Msg.OK,
-                        icon: Ext.Msg.ERROR
-                    });
+                	var json=Ext.decode(response.response.responseText);
+                    mensajeError(json.error);
                 }
             });
         }
