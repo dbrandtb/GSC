@@ -4918,6 +4918,255 @@ public class EndososAction extends PrincipalCoreAction
 	////// guardarEndosoDeducible //////
 	////////////////////////////////////
 	
+	//////////////////////////
+	////// endosoCopago //////
+	/*
+	smap1:
+		CDRAMO: "2"
+		CDTIPSIT: "SL"
+		CDUNIECO: "1006"
+		DSCOMENT: ""
+		DSTIPSIT: "SALUD VITAL"
+		ESTADO: "M"
+		FEEMISIO: "22/01/2014"
+		FEINIVAL: "22/01/2014"
+		NMPOLIEX: "1006213000024000000"
+		NMPOLIZA: "24"
+		NMSUPLEM: "245668019180000000"
+		NSUPLOGI: "1"
+		NTRAMITE: "678"
+		PRIMA_TOTAL: "12207.37"
+	smap2:
+		mascopago: "si"
+	*/
+	/*//////////////////////*/
+	public String endosoCopago()
+	{
+		this.session=ActionContext.getContext().getSession();
+		log.debug("\n"
+				+ "\n##########################"
+				+ "\n##########################"
+				+ "\n###### endosoCopago ######"
+				+ "\n######              ######"
+				);
+		log.debug("smap1: "+smap1);
+		log.debug("smap2: "+smap2);
+		
+		String cdunieco = smap1.get("CDUNIECO");
+		String cdramo   = smap1.get("CDRAMO");
+		String estado   = smap1.get("ESTADO");
+		String nmpoliza = smap1.get("NMPOLIZA");
+		String cdtipsit = smap1.get("CDTIPSIT");
+		String cdtipsup = smap2.get("mascopago").equalsIgnoreCase("si")?
+				TipoEndoso.COPAGO_MAS.getCdTipSup().toString():
+				TipoEndoso.COPAGO_MENOS.getCdTipSup().toString();
+				
+		UserVO usuario    = (UserVO)session.get("USUARIO");
+		String cdelemento = usuario.getEmpresa().getElementoId();
+		String cdusuari   = usuario.getUser();
+		String rol        = usuario.getRolActivo().getObjeto().getValue();
+		
+		String respuesta=this.validaEndosoAnterior(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
+		
+		String nmsituacTitular = "1";
+		String llaveCopago     = "";
+		String cdatribuCopago  = "";
+		
+		String nombreItemCopagoOriginal = "COPAGO ORIGINAL";
+		String nombreItemNuevoCopago    = "NUEVO COPAGO";
+		
+		String llaveItemCopagoOriginal = "itemCopagoLectura";
+		String llaveItemNuevoCopago    = "itemCopago";
+		String llavePanelLectura          = "itemsLectura";
+		
+		String pantalla = "ENDOSO_COPAGO";
+		
+		if(cdtipsit.equals("SL")||cdtipsit.equals("SN"))
+		{
+			llaveCopago    = "otvalor06";
+			cdatribuCopago = "6";
+		}
+		
+		if(respuesta.equals(SUCCESS))
+		{
+			try
+			{
+				Map<String,Object>valositTitular=kernelManager.obtieneValositSituac(cdunieco,cdramo,estado,nmpoliza,nmsituacTitular);
+				if(llaveCopago.length()>0
+						&&valositTitular.containsKey(llaveCopago)
+						&&((String)valositTitular.get(llaveCopago))!=null)
+				{
+					String copago=(String)valositTitular.get(llaveCopago);
+					log.debug("copago de la poliza: "+copago);
+					smap1.put("copago"    , copago);
+					smap1.put("mascopago" , smap2.get("mascopago"));
+				}
+				else
+				{
+					throw new Exception("No hay copago definido para este producto");
+				}
+				
+				List<Tatri>tatrisit = kernelManager.obtenerTatrisit(cdtipsit);
+				List<Tatri>temp     = new ArrayList<Tatri>();
+				for(Tatri tatrisitIte:tatrisit)
+				{
+					if(tatrisitIte.getCdatribu().equalsIgnoreCase(cdatribuCopago))
+					{
+						temp.add(tatrisitIte);
+					}
+				}
+				tatrisit=temp;
+				
+				GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+				gc.setCdtipsit(cdtipsit);
+				
+				imap1=new HashMap<String,Item>();
+				tatrisit.get(0).setDsatribu(nombreItemNuevoCopago);
+				
+				gc.generaParcial(tatrisit);
+				
+				imap1.put(llaveItemNuevoCopago,gc.getItems());
+				
+				tatrisit.get(0).setReadOnly(true);
+				tatrisit.get(0).setDsatribu(nombreItemCopagoOriginal);
+				
+				gc.generaParcial(tatrisit);
+				
+				imap1.put(llaveItemCopagoOriginal,gc.getItems());
+				
+				gc.generaParcial(pantallasManager.obtenerCamposPantalla(
+						cdunieco  , cdramo
+						,cdtipsit , estado
+						,nmpoliza , null
+						,pantalla , rol
+						,null     , "PANEL_LECTURA"));
+				
+				imap1.put(llavePanelLectura,gc.getItems());
+				
+			}
+			catch(Exception ex)
+			{
+				log.error("error al mostrar pantalla endoso copago",ex);
+				error=ex.getMessage();
+				respuesta=ERROR;
+			}
+		}
+		
+		log.debug("\n"
+				+ "\n######              ######"
+				+ "\n###### endosoCopago ######"
+				+ "\n##########################"
+				+ "\n##########################"
+				);
+		return respuesta;
+	}
+	/*//////////////////////*/
+	////// endosoCopago //////
+	//////////////////////////
+	
+	/////////////////////////////////
+	////// guardarEndosoCopago //////
+	/*
+	smap1:
+		NMSUPLEM=245668111370000000,
+		DSTIPSIT=SALUD VITAL,
+		FEINIVAL=23/01/2014,
+		NMPOLIZA=24,
+		copago=10000,
+		PRIMA_TOTAL=16039.29,
+		NMPOLIEX=1006213000024000000,
+		NSUPLOGI=2,
+		DSCOMENT=,
+		ESTADO=M,
+		mascopago=si,
+		CDTIPSIT=SL,
+		NTRAMITE=678,
+		CDUNIECO=1006,
+		FEEMISIO=22/01/2014,
+		CDRAMO=2
+	smap2:
+		copago=10000,
+		fecha_endoso=23/01/2014
+	*/
+	/*////////////////////////////////*/
+	public String guardarEndosoCopago()
+	{
+		this.session=ActionContext.getContext().getSession();
+		log.debug("\n"
+				+ "\n#################################"
+				+ "\n#################################"
+				+ "\n###### guardarEndosoCopago ######"
+				+ "\n######                     ######"
+				);
+		log.debug("smap1:"+smap1);
+		log.debug("smap2:"+smap2);
+		
+		try
+		{
+			UserVO usuario    = (UserVO)session.get("USUARIO");
+			String cdunieco   = smap1.get("CDUNIECO");
+			String cdramo     = smap1.get("CDRAMO");
+			String estado     = smap1.get("ESTADO");
+			String nmpoliza   = smap1.get("NMPOLIZA");
+			String fecha      = smap2.get("fecha_endoso");
+			Date   dFecha     = renderFechas.parse(fecha);
+			String cdelemento = usuario.getEmpresa().getElementoId();
+			String cdusuari   = usuario.getUser();
+			String proceso    = "END";
+			String cdtipsup   = smap1.get("mascopago").equalsIgnoreCase("si")?
+					TipoEndoso.COPAGO_MAS.getCdTipSup().toString():
+					TipoEndoso.COPAGO_MENOS.getCdTipSup().toString();
+			String copago     = smap2.get("copago");
+			String cdtipsit   = smap1.get("CDTIPSIT");
+			String ntramite   = smap1.get("NTRAMITE");
+			
+			//PKG_ENDOSOS.P_ENDOSO_INICIA
+			Map<String,String>resIniEnd=endososManager.iniciarEndoso(cdunieco, cdramo, estado, nmpoliza, fecha, cdelemento, cdusuari, proceso, cdtipsup);
+			
+			String nmsuplem = resIniEnd.get("pv_nmsuplem_o");
+			String nsuplogi = resIniEnd.get("pv_nsuplogi_o");
+			
+			//PKG_ENDOSOS.P_INS_NEW_COPAGO_TVALOSIT
+			endososManager.actualizaCopagoValosit(cdunieco, cdramo, estado, nmpoliza, nmsuplem, copago);
+			
+			//+- 30 dias ? PKG_SATELITES.P_MOV_MESACONTROL : PKG_ENDOSOS.P_CONFIRMAR_ENDOSOB
+			String tramiteGenerado=this.confirmarEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, cdtipsup, "", dFecha, cdtipsit);
+			
+			if(tramiteGenerado==null||tramiteGenerado.length()==0)
+			{
+				//PKG_CONSULTA.P_reImp_documentos
+				this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite);
+				
+				mensaje="Se ha guardado el endoso "+nsuplogi;
+			}
+			else
+			{
+				mensaje="El endoso "+nsuplogi
+						+" se guard&oacute; en mesa de control para autorizaci&oacute;n "
+						+ "con n&uacute;mero de tr&aacute;mite "+tramiteGenerado;
+			}
+			
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			error=ex.getMessage();
+			success=false;
+			log.error("error al guardar endoso de copago",ex);
+		}
+		
+		log.debug("\n"
+				+ "\n######                     ######"
+				+ "\n###### guardarEndosoCopago ######"
+				+ "\n#################################"
+				+ "\n#################################"
+				);
+		return SUCCESS;
+	}
+	/*/////////////////////////////*/
+	////// guardarEndosoCopago //////
+	/////////////////////////////////
+	
 	/////////////////////////////////
 	////// regenera documentos //////
 	/*/////////////////////////////*/

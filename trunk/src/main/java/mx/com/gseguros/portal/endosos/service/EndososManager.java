@@ -50,4 +50,11 @@ public interface EndososManager
 			,String nmpoliza
 			,String nmsuplem
 			,String deducible) throws Exception;
+	public void                      actualizaCopagoValosit(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String deducible) throws Exception;
 }

@@ -27,4 +27,5 @@ public interface EndososDAO
 	public List<Map<String,String>> obtenerNtramiteEmision(Map<String, String> params)      throws Exception;
 	public void                     validaEndosoAnterior(Map<String, String> params)        throws Exception;
 	public void                     actualizaDeducibleValosit(Map<String, String> params)   throws Exception;
+	public void                     actualizaCopagoValosit(Map<String, String> params)      throws Exception;
 }

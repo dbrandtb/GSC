@@ -280,6 +280,28 @@ public class EndososManagerImpl implements EndososManager
 		log.debug("EndososManager actualizaDeducibleValosit end");
 	}
 	
+	//PKG_ENDOSOS.P_INS_NEW_DEDUCIBLE_TVALOSIT
+	@Override
+	public void actualizaCopagoValosit(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String deducible) throws Exception
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("pv_cdunieco_i"  , cdunieco);
+		params.put("pv_cdramo_i"    , cdramo);
+		params.put("pv_estado_i"    , estado);
+		params.put("pv_nmpoliza_i"  , nmpoliza);
+		params.put("pv_nmsuplem_i"  , nmsuplem);
+		params.put("pv_deducible_i" , deducible);
+		log.debug("EndososManager actualizaCopagoValosit params: "+params);
+		endososDAO.actualizaCopagoValosit(params);
+		log.debug("EndososManager actualizaCopagoValosit end");
+	}
+	
 	/////////////////////////////////
 	////// getters and setters //////
 	/*/////////////////////////////*/
