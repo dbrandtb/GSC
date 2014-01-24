@@ -362,8 +362,8 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 	                mapaPolisitIterado.put("pv_swreduci_i",    null);
 	                mapaPolisitIterado.put("pv_cdagrupa_i",    "1");
 	                mapaPolisitIterado.put("pv_cdestado_i",    "0");
-	                mapaPolisitIterado.put("pv_fefecsit_i",    calendarHoy.getTime());
-	                mapaPolisitIterado.put("pv_fecharef_i",    calendarHoy.getTime());
+	                mapaPolisitIterado.put("pv_fefecsit_i",    renderFechas.parse(fechaInicioVigencia));
+	                mapaPolisitIterado.put("pv_fecharef_i",    renderFechas.parse(fechaInicioVigencia));
 	                mapaPolisitIterado.put("pv_cdgrupo_i",     null);
 	                mapaPolisitIterado.put("pv_nmsituaext_i",  null);
 	                mapaPolisitIterado.put("pv_nmsitaux_i",    null);
