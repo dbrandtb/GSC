@@ -431,24 +431,8 @@ public class EndososAction extends PrincipalCoreAction
 				String nmsolici = listaDocu.get(0).get("nmsolici");
 				String nmtramite = listaDocu.get(0).get("ntramite");
 				
-				String parametros = "?9999,0,"+sucursal+","+cdtipsitGS+","+(String)omap1.get("pv_nmpoliza_i")+",0,0,,1";
-				logger.debug("URL Generada para Recibo: "+ this.getText("url.imp.recibos")+parametros);
-				//HttpRequestUtil.generaReporte(this.getText("url.imp.recibos")+parametros, rutaPoliza+"/Recibo_"+recibo.getRmdbRn()+"_"+recibo.getNumRec()+".pdf");
-				
-				HashMap<String, Object> paramsR =  new HashMap<String, Object>();
-				paramsR.put("pv_cdunieco_i", (String)omap1.get("pv_cdunieco_i"));
-				paramsR.put("pv_cdramo_i", (String)omap1.get("pv_cdramo_i"));
-				paramsR.put("pv_estado_i", (String)omap1.get("pv_estado_i"));
-				paramsR.put("pv_nmpoliza_i", (String)omap1.get("pv_nmpoliza_i"));
-				paramsR.put("pv_nmsuplem_i", respuestaEndosoNombres.get("pv_nmsuplem_o"));
-				paramsR.put("pv_feinici_i", new Date());
-				paramsR.put("pv_cddocume_i", this.getText("url.imp.recibos")+parametros);
-				paramsR.put("pv_dsdocume_i", "Recibo 1");
-				paramsR.put("pv_nmsolici_i", nmsolici);
-				paramsR.put("pv_ntramite_i", nmtramite);
-				paramsR.put("pv_tipmov_i", TipoEndoso.CORRECCION_NOMBRE_Y_RFC.getCdTipSup().toString());
-				
-				kernelManager.guardarArchivo(paramsR);
+				insertaURLrecibosEndoso((String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"), (String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"), respuestaEndosoNombres.get("pv_nmsuplem_o"), cdtipsitGS, sucursal, 
+						nmsolici, nmtramite, TipoEndoso.CORRECCION_NOMBRE_Y_RFC.getCdTipSup().toString());
 				
 				mensaje="Se ha guardado el endoso "+respuestaEndosoNombres.get("pv_nsuplogi_o");
 			}
@@ -881,24 +865,8 @@ public class EndososAction extends PrincipalCoreAction
 				String nmsolici = listaDocu.get(0).get("nmsolici");
 				String nmtramite = listaDocu.get(0).get("ntramite");
 				
-				String parametros = "?9999,0,"+sucursal+","+cdtipsitGS+","+smap1.get("pv_nmpoliza")+",0,0,,1";
-				logger.debug("URL Generada para Recibo: "+ this.getText("url.imp.recibos")+parametros);
-				//HttpRequestUtil.generaReporte(this.getText("url.imp.recibos")+parametros, rutaPoliza+"/Recibo_"+recibo.getRmdbRn()+"_"+recibo.getNumRec()+".pdf");
-				
-				HashMap<String, Object> paramsR =  new HashMap<String, Object>();
-				paramsR.put("pv_cdunieco_i", smap1.get("pv_cdunieco"));
-				paramsR.put("pv_cdramo_i", smap1.get("pv_cdramo"));
-				paramsR.put("pv_estado_i", smap1.get("pv_estado"));
-				paramsR.put("pv_nmpoliza_i", smap1.get("pv_nmpoliza"));
-				paramsR.put("pv_nmsuplem_i", resEndDomi.get("pv_nmsuplem_o"));
-				paramsR.put("pv_feinici_i", new Date());
-				paramsR.put("pv_cddocume_i", this.getText("url.imp.recibos")+parametros);
-				paramsR.put("pv_dsdocume_i", "Recibo 1");
-				paramsR.put("pv_nmsolici_i", nmsolici);
-				paramsR.put("pv_ntramite_i", nmtramite);
-				paramsR.put("pv_tipmov_i", TipoEndoso.CAMBIO_DOMICILIO.getCdTipSup().toString());
-				
-				kernelManager.guardarArchivo(paramsR);
+				insertaURLrecibosEndoso(smap1.get("pv_cdunieco"), smap1.get("pv_cdramo"), smap1.get("pv_estado"), 
+						smap1.get("pv_nmpoliza"), resEndDomi.get("pv_nmsuplem_o"), cdtipsitGS, sucursal, nmsolici, nmtramite, TipoEndoso.CAMBIO_DOMICILIO.getCdTipSup().toString());
 				
 				
 			    mensaje="Se ha guardado el endoso "+resEndDomi.get("pv_nsuplogi_o");
@@ -2982,8 +2950,12 @@ public class EndososAction extends PrincipalCoreAction
 		 * PARA EL GUARDADO CADA PDF DE RECIBO
 		 */
 		logger.debug("*** Empieza generacion de URLs para Recibos ***");
+		
+		String visible = null;
 		for(Recibo recibo: recibos){
-			if( 1 != recibo.getNumRec()) continue;
+			
+			visible = (1 == recibo.getNumRec()) ? Constantes.SI : Constantes.NO;
+			
 			try{
 //				Parametro1:  9999: Recibo
 //				Parametro2:  Siempre va en 0
@@ -3011,6 +2983,79 @@ public class EndososAction extends PrincipalCoreAction
 					paramsR.put("pv_nmsolici_i", nmsolici);
 					paramsR.put("pv_ntramite_i", ntramite);
 					paramsR.put("pv_tipmov_i", tipoMov);
+					paramsR.put("pv_swvisible_i", visible);
+					
+					kernelManager.guardarArchivo(paramsR);
+				//}
+			}catch(Exception e){
+				logger.error("Error al guardar indexaxion de recibo: " + recibo.getRmdbRn(), e);
+			}
+		}
+
+		return allInserted;
+	}
+	
+	private boolean insertaURLrecibosEndoso(String cdunieco, String cdramo, String estado, String nmpoliza,
+			String nmsuplem, String cdtipsitGS, String sucursal, String nmsolici,String ntramite, String tipoMov){
+		boolean allInserted = true;
+		
+		logger.debug("*** Entrando a metodo Insertar TDOCUPOL para Recibos ENDOSO, para la poliza: " + nmpoliza + " sucursal: " + sucursal + "***");
+		
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdunieco_i", cdunieco);
+		params.put("pv_cdramo_i", cdramo);
+		params.put("pv_estado_i", estado);
+		params.put("pv_nmpoliza_i", nmpoliza);
+		params.put("pv_nmsuplem_i", nmsuplem);
+		
+		WrapperResultados result = null;
+		ArrayList<Recibo> recibos =  null;
+		try {
+			result = kernelManager.obtenDatosRecibos(params);
+			recibos = (ArrayList<Recibo>) result.getItemList();
+		} catch (Exception e1) {
+			logger.error("Error en llamar al PL de obtencion de RECIBOS",e1);
+			return false;
+		}
+
+
+		/**
+		 * PARA EL GUARDADO CADA PDF DE RECIBO
+		 */
+		logger.debug("*** Empieza generacion de URLs para Recibos ***");
+		
+		String visible = null;
+		for(Recibo recibo: recibos){
+			
+			visible = (1 == recibo.getNumRec()) ? Constantes.SI : Constantes.NO;
+			
+			try{
+//				Parametro1:  9999: Recibo
+//				Parametro2:  Siempre va en 0
+//				Parametro3:  Sucursal
+//				Parametro4:  Ramo (213 o 214)
+//				Parametro5:  Poliza
+//				Parametro6:  Tramite(poner 0)
+//				Parametro7:  Numero de endoso (Cuando es poliza nueva poner 0)
+//				Parametro8:  Tipo de endoso (Si es vacio no enviar nada en otro caso poner A o D segun sea el caso)
+//				Parametro9:  Numero de recibo (1,2,3..segun la forma de pago) Para nuestro caso es siempre el 1
+				//if( 1 == recibo.getNumRec()){
+					String parametros = "?9999,0,"+sucursal+","+cdtipsitGS+","+nmpoliza+",0,"+recibo.getNumEnd()+","+recibo.getTipEnd()+","+recibo.getNumRec();
+					logger.debug("URL Generada para Recibo: "+ this.getText("url.imp.recibos")+parametros);
+					
+					HashMap<String, Object> paramsR =  new HashMap<String, Object>();
+					paramsR.put("pv_cdunieco_i", cdunieco);
+					paramsR.put("pv_cdramo_i", cdramo);
+					paramsR.put("pv_estado_i", estado);
+					paramsR.put("pv_nmpoliza_i", nmpoliza);
+					paramsR.put("pv_nmsuplem_i", nmsuplem);
+					paramsR.put("pv_feinici_i", new Date());
+					paramsR.put("pv_cddocume_i", this.getText("url.imp.recibos")+parametros);
+					paramsR.put("pv_dsdocume_i", "Recibo "+recibo.getNumRec());
+					paramsR.put("pv_nmsolici_i", nmsolici);
+					paramsR.put("pv_ntramite_i", ntramite);
+					paramsR.put("pv_tipmov_i", tipoMov);
+					paramsR.put("pv_swvisible_i", visible);
 					
 					kernelManager.guardarArchivo(paramsR);
 				//}
@@ -4095,23 +4140,7 @@ public class EndososAction extends PrincipalCoreAction
 				
 				ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
 				
-				String parametros = "?9999,0,"+sucursal+","+cdtipsitGS+","+smap1.get("pv_nmpoliza")+",0,0,,1";
-				logger.debug("URL Generada para Recibo: "+ this.getText("url.imp.recibos")+parametros);
-				
-				HashMap<String, Object> paramsR =  new HashMap<String, Object>();
-				paramsR.put("pv_cdunieco_i", cdunieco);
-				paramsR.put("pv_cdramo_i", cdramo);
-				paramsR.put("pv_estado_i", estado);
-				paramsR.put("pv_nmpoliza_i", nmpoliza);
-				paramsR.put("pv_nmsuplem_i", nmsuplem);
-				paramsR.put("pv_feinici_i", new Date());
-				paramsR.put("pv_cddocume_i", this.getText("url.imp.recibos")+parametros);
-				paramsR.put("pv_dsdocume_i", "Recibo 1");
-				paramsR.put("pv_nmsolici_i", nmsolici);
-				paramsR.put("pv_ntramite_i", ntramiteEmi);
-				paramsR.put("pv_tipmov_i", cdtipsup);
-				
-				kernelManager.guardarArchivo(paramsR);
+				insertaURLrecibosEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsitGS, sucursal, nmsolici, ntramiteEmi, cdtipsup);
 				
 				break;
 							
