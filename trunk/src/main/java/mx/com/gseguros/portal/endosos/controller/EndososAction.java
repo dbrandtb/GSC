@@ -4149,6 +4149,8 @@ public class EndososAction extends PrincipalCoreAction
 			case BAJA_COBERTURAS:
 			case ALTA_ASEGURADOS:
 			case BAJA_ASEGURADOS:
+			case DEDUCIBLE_MAS:
+			case DEDUCIBLE_MENOS:
 				ejecutaWSrecibosEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, 
 						rutaCarpeta, cdtipsitGS, sucursal, nmsolici, ntramiteEmi, true, "INSERTA", cdtipsup);
 				break;
@@ -4870,7 +4872,21 @@ public class EndososAction extends PrincipalCoreAction
 			if(tramiteGenerado==null||tramiteGenerado.length()==0)
 			{
 				//PKG_CONSULTA.P_reImp_documentos
-				this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite);
+				String nmsolici = this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite);
+				
+				String cdtipsitGS = "213";
+				String sucursal = cdunieco;
+				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
+				
+				String nmtramite = ntramite;
+				
+				String tipomov = TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.getCdTipSup().toString();
+				
+				ejecutaWSrecibosEndoso(cdunieco, cdramo,
+						estado, nmpoliza,
+						nmsuplem, nsuplogi, null,
+						cdtipsitGS, sucursal, nmsolici, nmtramite,
+						true, "INSERTA", tipomov );
 				
 				mensaje="Se ha guardado el endoso "+nsuplogi;
 			}
@@ -4905,7 +4921,7 @@ public class EndososAction extends PrincipalCoreAction
 	/////////////////////////////////
 	////// regenera documentos //////
 	/*/////////////////////////////*/
-	private void regeneraDocumentos(
+	private String regeneraDocumentos(
 			String cdunieco
 			,String cdramo
 			,String estado
@@ -4914,6 +4930,7 @@ public class EndososAction extends PrincipalCoreAction
 			,String cdtipsup
 			,String ntramite) throws Exception
 	{
+		String nmsolici = null;
 		///////////////////////////////////////
 	    ////// re generar los documentos //////
 	    /*///////////////////////////////////*/
@@ -4934,6 +4951,7 @@ public class EndososAction extends PrincipalCoreAction
 		for(Map<String,String> docu:listaDocu)
 		{
 			log.debug("docu iterado: "+docu);
+			nmsolici = docu.get("nmsolici");
 			String descripc=docu.get("descripc");
 			String descripl=docu.get("descripl");
 			String url=this.getText("ruta.servidor.reports")
@@ -4969,6 +4987,8 @@ public class EndososAction extends PrincipalCoreAction
 					+ "\n################################"
 					+ "");
 		}
+		
+		return nmsolici;
 	    /*///////////////////////////////////*/
 		////// re generar los documentos //////
 	    ///////////////////////////////////////
