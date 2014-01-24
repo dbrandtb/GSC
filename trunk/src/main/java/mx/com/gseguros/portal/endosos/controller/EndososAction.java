@@ -423,7 +423,7 @@ public class EndososAction extends PrincipalCoreAction
 				
 				/**
 				 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
-				 */
+				 
 				String cdtipsitGS = "213";
 				String sucursal = (String)omap1.get("pv_cdunieco_i");
 				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
@@ -433,7 +433,7 @@ public class EndososAction extends PrincipalCoreAction
 				
 				insertaURLrecibosEndoso((String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"), (String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"), respuestaEndosoNombres.get("pv_nmsuplem_o"), cdtipsitGS, sucursal, 
 						nmsolici, nmtramite, TipoEndoso.CORRECCION_NOMBRE_Y_RFC.getCdTipSup().toString());
-				
+				*/
 				mensaje="Se ha guardado el endoso "+respuestaEndosoNombres.get("pv_nsuplogi_o");
 			}
 			else
@@ -857,7 +857,7 @@ public class EndososAction extends PrincipalCoreAction
 
 				/**
 				 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
-				 */
+				 
 				String cdtipsitGS = "213";
 				String sucursal = smap1.get("pv_cdunieco");
 				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
@@ -867,7 +867,7 @@ public class EndososAction extends PrincipalCoreAction
 				
 				insertaURLrecibosEndoso(smap1.get("pv_cdunieco"), smap1.get("pv_cdramo"), smap1.get("pv_estado"), 
 						smap1.get("pv_nmpoliza"), resEndDomi.get("pv_nmsuplem_o"), cdtipsitGS, sucursal, nmsolici, nmtramite, TipoEndoso.CAMBIO_DOMICILIO.getCdTipSup().toString());
-				
+				*/
 				
 			    mensaje="Se ha guardado el endoso "+resEndDomi.get("pv_nsuplogi_o");
 			    
@@ -2995,6 +2995,7 @@ public class EndososAction extends PrincipalCoreAction
 		return allInserted;
 	}
 	
+	@Deprecated
 	private boolean insertaURLrecibosEndoso(String cdunieco, String cdramo, String estado, String nmpoliza,
 			String nmsuplem, String cdtipsitGS, String sucursal, String nmsolici,String ntramite, String tipoMov){
 		boolean allInserted = true;
@@ -4140,7 +4141,7 @@ public class EndososAction extends PrincipalCoreAction
 				
 				ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
 				
-				insertaURLrecibosEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsitGS, sucursal, nmsolici, ntramiteEmi, cdtipsup);
+				//insertaURLrecibosEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsitGS, sucursal, nmsolici, ntramiteEmi, cdtipsup);
 				
 				break;
 							
