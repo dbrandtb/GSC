@@ -4868,6 +4868,54 @@ public class EndososAction extends PrincipalCoreAction
 			//PKG_ENDOSOS.P_INS_NEW_DEDUCIBLE_TVALOSIT
 			endososManager.actualizaDeducibleValosit(cdunieco, cdramo, estado, nmpoliza, nmsuplem, deducible);
 			
+			//////////////////////////////
+            ////// inserta tworksup //////
+			//PKG_SATELITES.P_INSERTA_TWORKSUP_SIT_TODAS
+            Map<String,String>mapaTworksupEnd=new LinkedHashMap<String,String>(0);
+            mapaTworksupEnd.put("pv_cdunieco_i" , cdunieco);
+            mapaTworksupEnd.put("pv_cdramo_i"   , cdramo);
+            mapaTworksupEnd.put("pv_estado_i"   , estado);
+            mapaTworksupEnd.put("pv_nmpoliza_i" , nmpoliza);
+            mapaTworksupEnd.put("pv_cdtipsup_i" , cdtipsup);
+            mapaTworksupEnd.put("pv_nmsuplem_i" , nmsuplem);
+            endososManager.insertarTworksupSitTodas(mapaTworksupEnd);
+            ////// inserta tworksup //////
+            //////////////////////////////
+            
+            //////////////////////////
+            ////// tarificacion //////
+            //PKG_COTIZA.P_EJECUTA_SIGSVALIPOL_END
+            Map<String,String>mapaSigsvalipolEnd=new LinkedHashMap<String,String>(0);
+			mapaSigsvalipolEnd.put("pv_cdusuari_i" , cdusuari);
+			mapaSigsvalipolEnd.put("pv_cdelemen_i" , cdelemento);
+			mapaSigsvalipolEnd.put("pv_cdunieco_i" , cdunieco);
+			mapaSigsvalipolEnd.put("pv_cdramo_i"   , cdramo);
+			mapaSigsvalipolEnd.put("pv_estado_i"   , estado);
+			mapaSigsvalipolEnd.put("pv_nmpoliza_i" , nmpoliza);
+			mapaSigsvalipolEnd.put("pv_nmsituac_i" , "0");
+			mapaSigsvalipolEnd.put("pv_nmsuplem_i" , nmsuplem);
+			mapaSigsvalipolEnd.put("pv_cdtipsit_i" , cdtipsit);
+			mapaSigsvalipolEnd.put("pv_cdtipsup_i" , cdtipsup);
+			endososManager.sigsvalipolEnd(mapaSigsvalipolEnd);
+            ////// tarificacion //////
+			//////////////////////////
+			
+			//////////////////////////
+			////// valor endoso //////
+			//PKG_ENDOSOS.P_CALC_VALOR_ENDOSO
+			Map<String,Object>mapaValorEndoso=new LinkedHashMap<String,Object>(0);
+			mapaValorEndoso.put("pv_cdunieco_i" , cdunieco);
+			mapaValorEndoso.put("pv_cdramo_i"   , cdramo);
+			mapaValorEndoso.put("pv_estado_i"   , estado);
+			mapaValorEndoso.put("pv_nmpoliza_i" , nmpoliza);
+			mapaValorEndoso.put("pv_nmsituac_i" , "1");
+			mapaValorEndoso.put("pv_nmsuplem_i" , nmsuplem);
+			mapaValorEndoso.put("pv_feinival_i" , dFecha);
+			mapaValorEndoso.put("pv_cdtipsup_i" , cdtipsup);
+			endososManager.calcularValorEndoso(mapaValorEndoso);
+			////// valor endoso //////
+			//////////////////////////
+			
 			//+- 30 dias ? PKG_SATELITES.P_MOV_MESACONTROL : PKG_ENDOSOS.P_CONFIRMAR_ENDOSOB
 			String tramiteGenerado=this.confirmarEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, cdtipsup, "", dFecha, cdtipsit);
 			
@@ -5126,6 +5174,54 @@ public class EndososAction extends PrincipalCoreAction
 			
 			//PKG_ENDOSOS.P_INS_NEW_COPAGO_TVALOSIT
 			endososManager.actualizaCopagoValosit(cdunieco, cdramo, estado, nmpoliza, nmsuplem, copago);
+			
+			//////////////////////////////
+            ////// inserta tworksup //////
+			//PKG_SATELITES.P_INSERTA_TWORKSUP_SIT_TODAS
+            Map<String,String>mapaTworksupEnd=new LinkedHashMap<String,String>(0);
+            mapaTworksupEnd.put("pv_cdunieco_i" , cdunieco);
+            mapaTworksupEnd.put("pv_cdramo_i"   , cdramo);
+            mapaTworksupEnd.put("pv_estado_i"   , estado);
+            mapaTworksupEnd.put("pv_nmpoliza_i" , nmpoliza);
+            mapaTworksupEnd.put("pv_cdtipsup_i" , cdtipsup);
+            mapaTworksupEnd.put("pv_nmsuplem_i" , nmsuplem);
+            endososManager.insertarTworksupSitTodas(mapaTworksupEnd);
+            ////// inserta tworksup //////
+            //////////////////////////////
+            
+            //////////////////////////
+            ////// tarificacion //////
+            //PKG_COTIZA.P_EJECUTA_SIGSVALIPOL_END
+            Map<String,String>mapaSigsvalipolEnd=new LinkedHashMap<String,String>(0);
+			mapaSigsvalipolEnd.put("pv_cdusuari_i" , cdusuari);
+			mapaSigsvalipolEnd.put("pv_cdelemen_i" , cdelemento);
+			mapaSigsvalipolEnd.put("pv_cdunieco_i" , cdunieco);
+			mapaSigsvalipolEnd.put("pv_cdramo_i"   , cdramo);
+			mapaSigsvalipolEnd.put("pv_estado_i"   , estado);
+			mapaSigsvalipolEnd.put("pv_nmpoliza_i" , nmpoliza);
+			mapaSigsvalipolEnd.put("pv_nmsituac_i" , "0");
+			mapaSigsvalipolEnd.put("pv_nmsuplem_i" , nmsuplem);
+			mapaSigsvalipolEnd.put("pv_cdtipsit_i" , cdtipsit);
+			mapaSigsvalipolEnd.put("pv_cdtipsup_i" , cdtipsup);
+			endososManager.sigsvalipolEnd(mapaSigsvalipolEnd);
+            ////// tarificacion //////
+			//////////////////////////
+			
+			//////////////////////////
+			////// valor endoso //////
+			//PKG_ENDOSOS.P_CALC_VALOR_ENDOSO
+			Map<String,Object>mapaValorEndoso=new LinkedHashMap<String,Object>(0);
+			mapaValorEndoso.put("pv_cdunieco_i" , cdunieco);
+			mapaValorEndoso.put("pv_cdramo_i"   , cdramo);
+			mapaValorEndoso.put("pv_estado_i"   , estado);
+			mapaValorEndoso.put("pv_nmpoliza_i" , nmpoliza);
+			mapaValorEndoso.put("pv_nmsituac_i" , "1");
+			mapaValorEndoso.put("pv_nmsuplem_i" , nmsuplem);
+			mapaValorEndoso.put("pv_feinival_i" , dFecha);
+			mapaValorEndoso.put("pv_cdtipsup_i" , cdtipsup);
+			endososManager.calcularValorEndoso(mapaValorEndoso);
+			////// valor endoso //////
+			//////////////////////////
 			
 			//+- 30 dias ? PKG_SATELITES.P_MOV_MESACONTROL : PKG_ENDOSOS.P_CONFIRMAR_ENDOSOB
 			String tramiteGenerado=this.confirmarEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, cdtipsup, "", dFecha, cdtipsit);
