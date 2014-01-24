@@ -1526,6 +1526,7 @@ public class EndososAction extends PrincipalCoreAction
 
 			//////////////////////////
 			////// datos poliza //////
+			/*
 			Map<String,String>paramsObtenerDatosMpolisit=new HashMap<String,String>();
 			paramsObtenerDatosMpolisit.put("pv_cdunieco_i" , smap1.get("cdunieco"));
 			paramsObtenerDatosMpolisit.put("pv_cdramo_i"   , smap1.get("cdramo"));
@@ -1534,11 +1535,13 @@ public class EndososAction extends PrincipalCoreAction
 			Map<String,String>respuestaObtenerDatosMpolisit=endososManager.obtieneDatosMpolisit(paramsObtenerDatosMpolisit);
 			//String nmsituacNuevo=respuestaObtenerDatosMpolisit.get("pv_nmsituac_o");
 			String cdplan=respuestaObtenerDatosMpolisit.get("pv_cdplan_o");
+			*/
 			////// datos poliza //////
 			//////////////////////////
 			
 			/////////////////////
 			////// polisit //////
+			/*
 			Map<String,Object>mapaPolisit=new HashMap<String,Object>(0);
             mapaPolisit.put("pv_cdunieco_i",    smap1.get("cdunieco"));
             mapaPolisit.put("pv_cdramo_i",      smap1.get("cdramo"));
@@ -1561,6 +1564,7 @@ public class EndososAction extends PrincipalCoreAction
             mapaPolisit.put("pv_cdasegur_i",    "30");
             mapaPolisit.put("pv_accion_i",      "I");
             kernelManager.insertaPolisit(mapaPolisit);
+            */
 			////// polisit //////
             /////////////////////
 			
@@ -3241,6 +3245,7 @@ public class EndososAction extends PrincipalCoreAction
 			String nmsuplem=respuestaIniciarEndoso.get("pv_nmsuplem_o");
 			String nsuplogi=respuestaIniciarEndoso.get("pv_nsuplogi_o");
 
+			/*
 			Map<String,String>paramsObtenerDatosMpolisit=new HashMap<String,String>();
 			paramsObtenerDatosMpolisit.put("pv_cdunieco_i" , cdunieco);
 			paramsObtenerDatosMpolisit.put("pv_cdramo_i"   , cdramo);
@@ -3248,6 +3253,7 @@ public class EndososAction extends PrincipalCoreAction
 			paramsObtenerDatosMpolisit.put("pv_nmpoliza_i" , nmpoliza);
 			Map<String,String>respuestaObtenerDatosMpolisit=endososManager.obtieneDatosMpolisit(paramsObtenerDatosMpolisit);
 			String cdplan=respuestaObtenerDatosMpolisit.get("pv_cdplan_o");
+			*/
 			
 			for(Map<String,String>inciso:slist1)
 			{
@@ -3255,6 +3261,7 @@ public class EndososAction extends PrincipalCoreAction
 				String cdpersonIte=inciso.get("cdperson");
 				String fenacimiIte=inciso.get("fenacimi");
 				
+				/*
 				Map<String,Object>mapaPolisit=new HashMap<String,Object>(0);
                 mapaPolisit.put("pv_cdunieco_i",    cdunieco);
                 mapaPolisit.put("pv_cdramo_i",      cdramo);
@@ -3277,6 +3284,7 @@ public class EndososAction extends PrincipalCoreAction
                 mapaPolisit.put("pv_cdasegur_i",    "30");
                 mapaPolisit.put("pv_accion_i",      "I");
                 kernelManager.insertaPolisit(mapaPolisit);
+                */
                 
                 /////////////////////
                 ////// valosit //////
@@ -3659,6 +3667,7 @@ public class EndososAction extends PrincipalCoreAction
 			String nmsuplem=respuestaIniciarEndoso.get("pv_nmsuplem_o");
 			String nsuplogi=respuestaIniciarEndoso.get("pv_nsuplogi_o");
 
+			/*
 			Map<String,String>paramsObtenerDatosMpolisit=new HashMap<String,String>();
 			paramsObtenerDatosMpolisit.put("pv_cdunieco_i" , cdunieco);
 			paramsObtenerDatosMpolisit.put("pv_cdramo_i"   , cdramo);
@@ -3666,12 +3675,14 @@ public class EndososAction extends PrincipalCoreAction
 			paramsObtenerDatosMpolisit.put("pv_nmpoliza_i" , nmpoliza);
 			Map<String,String>respuestaObtenerDatosMpolisit=endososManager.obtieneDatosMpolisit(paramsObtenerDatosMpolisit);
 			String cdplan=respuestaObtenerDatosMpolisit.get("pv_cdplan_o");
+			*/
 			
 			for(Map<String,String>inciso:slist1)
 			{
 				String nmsituacIte=inciso.get("nmsituac");
 				String cdpersonIte=inciso.get("cdperson");
 				
+				/*
 				Map<String,Object>mapaPolisit=new HashMap<String,Object>(0);
                 mapaPolisit.put("pv_cdunieco_i",    cdunieco);
                 mapaPolisit.put("pv_cdramo_i",      cdramo);
@@ -3694,6 +3705,7 @@ public class EndososAction extends PrincipalCoreAction
                 mapaPolisit.put("pv_cdasegur_i",    "30");
                 mapaPolisit.put("pv_accion_i",      "I");
                 kernelManager.insertaPolisit(mapaPolisit);
+                */
                 
                 /////////////////////
                 ////// valosit //////
@@ -4399,6 +4411,7 @@ public class EndososAction extends PrincipalCoreAction
 			String nsuplogi = resIniEnd.get("pv_nsuplogi_o");
 			
 			//PKG_SATELITES.P_OBTIENE_DATOS_MPOLISIT
+			/*
 			Map<String,String>datosMpolisit=endososManager.obtieneDatosMpolisit(cdunieco,cdramo,estado,nmpoliza);
 			
 			String cdplan=datosMpolisit.get("pv_cdplan_o");
@@ -4407,6 +4420,7 @@ public class EndososAction extends PrincipalCoreAction
 			kernelManager.insertaPolisit(cdunieco,cdramo,estado,nmpoliza,nmsituac
 					,nmsuplem,Constantes.STATUS_VIVO,cdtipsit,null,"1","0",dFechaEndoso
 					,dFechaEndoso,null,null,null,null,cdplan,"30",Constantes.INSERT_MODE);
+			*/
 			
 			//PKG_COTIZA.P_OBTIENE_TVALOSIT
 			Map<String,Object>valositOriginal=kernelManager.obtieneValositSituac(cdunieco, cdramo, estado, nmpoliza, nmsituac);
@@ -5349,6 +5363,92 @@ public class EndososAction extends PrincipalCoreAction
 	/*/////////////////////////////*/
 	////// regenera documentos //////
 	/////////////////////////////////
+	
+	////////////////////////////////
+	////// endosoReexpedicion //////
+	/*
+	smap1:
+		CDRAMO: "2"
+		CDTIPSIT: "SL"
+		CDUNIECO: "1006"
+		DSCOMENT: ""
+		DSTIPSIT: "SALUD VITAL"
+		ESTADO: "M"
+		FEEMISIO: "22/01/2014"
+		FEINIVAL: "22/01/2014"
+		NMPOLIEX: "1006213000024000000"
+		NMPOLIZA: "24"
+		NMSUPLEM: "245668019180000000"
+		NSUPLOGI: "1"
+		NTRAMITE: "678"
+		PRIMA_TOTAL: "12207.37"
+	*/
+	/*////////////////////////////*/
+	public String endosoReexpedicion()
+	{
+		this.session=ActionContext.getContext().getSession();
+		log.debug("\n"
+				+ "\n################################"
+				+ "\n################################"
+				+ "\n###### endosoReexpedicion ######"
+				+ "\n######                    ######"
+				);
+		log.debug("smap1: "+smap1);
+		
+		String cdunieco = smap1.get("CDUNIECO");
+		String cdramo   = smap1.get("CDRAMO");
+		String estado   = smap1.get("ESTADO");
+		String nmpoliza = smap1.get("NMPOLIZA");
+		String cdtipsit = smap1.get("CDTIPSIT");
+		String cdtipsup = TipoEndoso.CANCELACION_POR_REEXPEDICION.getCdTipSup().toString();
+		
+		String cdPantalla           = "ENDOSO_REEXPEDICION";
+		String cdPanelLectura       = "PANEL_LECTURA";
+		String keyItemsPanelLectura = "itemsPanelLectura";
+				
+		UserVO usuario    = (UserVO)session.get("USUARIO");
+		String cdelemento = usuario.getEmpresa().getElementoId();
+		String cdusuari   = usuario.getUser();
+		String rol        = usuario.getRolActivo().getObjeto().getValue();
+		
+		String respuesta=this.validaEndosoAnterior(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
+		
+		if(respuesta.equals(SUCCESS))
+		{
+			try
+			{	
+				GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+				imap1=new HashMap<String,Item>();
+				
+				gc.generaParcial(pantallasManager.obtenerCamposPantalla(
+						cdunieco    , cdramo
+						,cdtipsit   , estado
+						,nmpoliza   , null
+						,cdPantalla , rol
+						,null       , cdPanelLectura));
+				
+				imap1.put(keyItemsPanelLectura,gc.getItems());				
+				
+			}
+			catch(Exception ex)
+			{
+				log.error("error al mostrar pantalla endoso reexpedicion",ex);
+				error=ex.getMessage();
+				respuesta=ERROR;
+			}
+		}
+		
+		log.debug("\n"
+				+ "\n######                    ######"
+				+ "\n###### endosoReexpedicion ######"
+				+ "\n################################"
+				+ "\n################################"
+				);
+		return respuesta;
+	}
+	/*////////////////////////////*/
+	////// endosoReexpedicion //////
+	////////////////////////////////
 	
 	///////////////////////////////
 	////// getters y setters //////
