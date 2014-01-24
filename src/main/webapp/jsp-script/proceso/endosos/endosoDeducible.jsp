@@ -196,11 +196,6 @@ Ext.onReady(function()
             	,icon    : '${ctx}/resources/fam3icons/icons/key.png'
             	,handler : _6_confirmar
             }
-            ,{
-            	text     : 'Documentos'
-                ,icon    : '${ctx}/resources/fam3icons/icons/printer.png'
-                ,handler : _6_documentos
-            }
         ]
         ,items       :
         [
@@ -276,11 +271,6 @@ function _6_confirmar()
 		    }
 		});
 	}
-};
-
-function _6_documentos()
-{
-	debug('_6_documentos');
 };
 ////// funciones //////
 ///////////////////////
