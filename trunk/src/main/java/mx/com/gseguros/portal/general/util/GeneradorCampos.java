@@ -103,7 +103,14 @@ public class GeneradorCampos {
             Item store=new Item(null,null,Item.OBJ,"store:Ext.create('Ext.data.Store',{","})");
             it.add(store);
             store.add("model","Generic");
-            store.add("autoLoad",true);//debe ser true!
+            if(idx>0&&StringUtils.isNotBlank(ta.getCdtablj1()))//para el hijo anidado
+            {
+            	store.add("autoLoad",false);
+            }
+            else
+            {
+            	store.add("autoLoad",true);//debe ser true!
+            }
             Item proxy=new Item("proxy",null,Item.OBJ);
             store.add(proxy);
             proxy.add("type","ajax");
@@ -229,44 +236,71 @@ public class GeneradorCampos {
             {
             	if(idx>0&&StringUtils.isNotBlank(ta.getCdtablj1()))//es padre e hijo a la vez
             	{
-            		this.agregarHerencia2(lt,it,idx,esEditor);
+            		this.agregarHerenciaPadreHijo(lt,it,idx,esEditor);
             	}
             	else
             	{
-            		this.agregarHerencia(lt,it,idx,esEditor);
+            		this.agregarHerenciaPadre(lt,it,idx,esEditor);
             	}
             	listeners=true;
             }	
             if(idx>0&&StringUtils.isNotBlank(ta.getCdtablj1()))//para el hijo anidado
             {
                 it.add(Item.crear("forceSelection",false));
-                it.add(Item.crear("heredar",
-                		 "function(remoto){"
-                		+"    debug('heredar');"
-                		+"    if(!this.noEsPrimera||remoto==true)"
-                		+"    {"
-                		+"        debug('no es primera o es remoto');"
-                		+"        this.noEsPrimera=true;"
-                		+"        this.getStore().load({"
-                		+"            params:{"
-                		+"		          'params.idPadre':Ext.getCmp('"+this.idPrefix+(esEditor?"editor_":"")+(idx-1)+"').getValue()"
-                		+"    		  },"
-                		+"		      callback:function(){"
-                		+"			      var thisCmp=Ext.getCmp('"+this.idPrefix+(esEditor?"editor_":"")+idx+"');"
-                        +"			      var valorActual=thisCmp.getValue();"
-                        +"			      var dentro=false;"
-                        +"			      thisCmp.getStore().each(function(record){"
-                        +"				      if(valorActual==record.get('key'))dentro=true;"
-                        +"			      });"
-                        +"			      if(!dentro)thisCmp.clearValue();"
-                		+"		      }"
-                		+"	      });"
-                		+"    }"
-                		+"}"
-                		+(listeners?"":","
-                		+"listeners:{"
-                		+"	change:{fn:function(){this.heredar();}}"
-                		+"}")).setQuotes(""));
+                it.add(Item.crear(""
+                		+ "heredar",
+                		  "function(remoto)"
+                		+ "{"
+                		+ "    debug('Heredar "+(ta.getType()==Tatri.TATRIGEN?
+                				ta.getMapa().get("OTVALOR10"):
+                				this.namePrefix+(ta.getCdatribu().length()>1?ta.getCdatribu():"0"+ta.getCdatribu()))+"');"
+                		+ "    if(!this.noEsPrimera||remoto==true)"
+                		+ "    {"
+                		+ "        debug('Hereda por primera vez o porque la invoca el padre');"
+                		+ "        this.noEsPrimera=true;"
+                		+ "        this.getStore().load("
+                		+ "        {"
+                		+ "            params    :"
+                		+ "            {"
+                		+ "                'params.idPadre':Ext.getCmp('"+this.idPrefix+(esEditor?"editor_":"")+(idx-1)+"').getValue()"
+                		+ "            }"
+                		+ "            ,callback : function()"
+                		+ "            {"
+                		+ "                var thisCmp=Ext.getCmp('"+this.idPrefix+(esEditor?"editor_":"")+idx+"');"
+                		+ "                var valorActual=thisCmp.getValue();"
+                		+ "                var dentro=false;"
+                		+ "                thisCmp.getStore().each(function(record)"
+                		+ "                {"
+                		+ "                    if(valorActual==record.get('key'))"
+                		+ "                    {"
+                		+ "                        dentro=true;"
+                		+ "                    }"
+                		+ "                });"
+                		+ "                if(!dentro)"
+                		+ "                {"
+                		+ "                    thisCmp.clearValue();"
+                		+ "                }"
+                		+ "            }"
+                		+ "        });"
+                		+ "    }"
+                		+ "    else"
+                		+ "    {"
+                		+ "        debug('No hereda porque es un change repetitivo');"
+                		+ "    }"
+                		+ "}"
+                		+ (listeners?
+                		  "":
+                		  ",listeners:"
+                		+ "{"
+                		+ "    change       :"
+                		+ "    {"
+                		+ "        fn:function()"
+                		+ "        {"
+                		+ "            this.heredar();"
+                		+ "        }"
+                		+ "    }"
+                		+ "}")
+                		).setQuotes(""));
             }
         }
         else if(ta.getSwformat().equals("A")||ta.getSwformat().equals("T"))//textfield y textarea
@@ -298,7 +332,7 @@ public class GeneradorCampos {
             }
             if(idx<lt.size()-1&&StringUtils.isNotBlank(lt.get(idx+1).getCdtablj1()))
             {
-            	this.agregarHerencia(lt,it,idx,esEditor);
+            	this.agregarHerenciaPadre(lt,it,idx,esEditor);
             }
             if(!ta.getType().equalsIgnoreCase(Tatri.TATRIGEN))
             {
@@ -350,7 +384,7 @@ public class GeneradorCampos {
             }
             if(idx<lt.size()-1&&StringUtils.isNotBlank(lt.get(idx+1).getCdtablj1()))
             {
-            	this.agregarHerencia(lt,it,idx,esEditor);
+            	this.agregarHerenciaPadre(lt,it,idx,esEditor);
             }
             if(!ta.getType().equalsIgnoreCase(Tatri.TATRIGEN))
             {
@@ -529,29 +563,70 @@ public class GeneradorCampos {
         }
     }
 
-    private void agregarHerencia(List<Tatri> lt, Item it, Integer idx, boolean editor) throws Exception {//para el padre anidado
-    	it.add(Item.crear("listeners","" +
-    			"{" +
-    			"    blur:{" +
-    			"        fn:function(){debug('blur');Ext.getCmp('"+this.idPrefix+(editor?"editor_":"")+(idx+1)+"').heredar(true);}" +
-    			"    }" +
-    			"}")
+    /**
+     * Agrega escuchadores.
+     * blur : invoca herencia de su hijo.
+     * @param lt
+     * @param it
+     * @param idx
+     * @param editor
+     * @throws Exception
+     */
+    private void agregarHerenciaPadre(List<Tatri> lt, Item it, Integer idx, boolean editor) throws Exception
+    {
+    	it.add(Item.crear(""
+    			+ "listeners",
+    			  "{"
+    			+ "    blur:"
+    			+ "    {"
+    			+ "        fn:function()"
+    			+ "        {"
+    			+ "            debug('blur');"
+    			+ "            Ext.getCmp('"+this.idPrefix+(editor?"editor_":"")+(idx+1)+"').heredar(true);"
+    			+ "        }"
+    			+ "    }"
+    			+ "}")
     			.setQuotes(""));
 	}
     
-    private void agregarHerencia2(List<Tatri> lt, Item it, Integer idx, boolean editor) throws Exception {//para el padre anidado
-    	it.add(Item.crear("listeners","" +
-    			"{" +
-    			"    blur:{" +
-    			"        fn:function(){debug('blur');Ext.getCmp('"+this.idPrefix+(editor?"editor_":"")+(idx+1)+"').heredar(true);}" +
-    			"    }," +
-    			"    change:{" +
-    			"        fn:function(){this.heredar();}" +
-    			"    }" +
-    			"}")
+    /**
+     * Agrega escuchadores.
+     * blur        : invoca herencia de su hijo.
+     * change      : invoca su propia herencia.
+     * afterrender : invoca su propia herencia.
+     * @param lt
+     * @param it
+     * @param idx
+     * @param editor
+     * @throws Exception
+     */
+    private void agregarHerenciaPadreHijo(List<Tatri> lt, Item it, Integer idx, boolean editor) throws Exception
+    {
+    	it.add(Item.crear(""
+    			+ "listeners",
+    			  "{"
+    			+ "    blur         :"
+    			+ "    {"
+    			+ "        fn:function()"
+    			+ "        {"
+    			+ "            debug('blur');"
+    			+ "            Ext.getCmp('"+this.idPrefix+(editor?"editor_":"")+(idx+1)+"').heredar(true);"
+    			+ "        }"
+    			+ "    }"
+    			+ "    ,change      :"
+    			+ "    {"
+    			+ "        fn : function()"
+    			+ "        {"
+    			+ "            this.heredar();"
+    			+ "        }"
+    			+ "    }"
+    			+ "}")
     			.setQuotes(""));
 	}
 
+    /////////////////////////////////
+    ////// getters and setters //////
+    /*/////////////////////////////*/
 	public Item getItems() {
         return items;
     }

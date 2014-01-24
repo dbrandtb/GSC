@@ -132,7 +132,12 @@ public class Item
             }
             else if(this.value.getClass().equals(Item.class))
             {
-                Item aux=new Item(((Item)this.value).getKey(),((Item)this.value).getValue());
+                Item aux=Item.crear(
+                		((Item)this.value).getKey(),
+                		((Item)this.value).getValue(),
+                		((Item)this.value).getType(),
+                		((Item)this.value).getComposedName(),
+                		((Item)this.value).getComposedNameClose()).setQuotes(((Item)this.value).getQuotes());
                 this.value=new ArrayList<Item>(0);
                 ((ArrayList)this.value).add(aux);
                 ((ArrayList)this.value).add(item);

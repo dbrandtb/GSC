@@ -4,9 +4,6 @@
  */
 package mx.com.aon.kernel.service.impl;
 
-import static mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO.OBTIENE_DATOS_ASEGURADO;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -28,10 +25,8 @@ import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Tatri;
-import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.log4j.Logger;
-import org.springframework.jdbc.core.SqlParameter;
 
 /**
  *
@@ -65,6 +60,8 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return res;
     }
     
+    //PKG_SATELITES.P_MOV_MPOLISIT
+    @Override
     public WrapperResultados insertaPolisit(Map<String, Object> parameters) throws ApplicationException
     {
         log.debug("### kernel sustituto insertaPolisit map: "+parameters);
@@ -74,6 +71,56 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return res;
     }
     
+    //PKG_SATELITES.P_MOV_MPOLISIT
+    @Override
+    public WrapperResultados insertaPolisit(
+    		String cdunieco
+    		,String cdramo
+    		,String estado
+    		,String nmpoliza
+    		,String nmsituac
+    		,String nmsuplem
+    		,String status
+    		,String cdtipsit
+    		,String swreduci
+    		,String cdagrupa
+    		,String cdestado
+    		,Date   fefecsit
+    		,Date   fecharef
+    		,String cdgrupo
+    		,String nmsituaext
+    		,String nmsitaux
+    		,String nmsbsitext
+    		,String cdplan
+    		,String cdasegur
+    		,String accion) throws ApplicationException
+	{
+    	Map<String,Object>params = new HashMap<String,Object>();
+    	params.put("pv_cdunieco_i"   , cdunieco);
+    	params.put("pv_cdramo_i"     , cdramo);
+    	params.put("pv_estado_i"     , estado);
+    	params.put("pv_nmpoliza_i"   , nmpoliza);
+    	params.put("pv_nmsituac_i"   , nmsituac);
+    	params.put("pv_nmsuplem_i"   , nmsuplem);
+    	params.put("pv_status_i"     , status);
+    	params.put("pv_cdtipsit_i"   , cdtipsit);
+    	params.put("pv_swreduci_i"   , swreduci);
+    	params.put("pv_cdagrupa_i"   , cdagrupa);
+    	params.put("pv_cdestado_i"   , cdestado);
+    	params.put("pv_fefecsit_i"   , fefecsit);
+    	params.put("pv_fecharef_i"   , fecharef);
+    	params.put("pv_cdgrupo_i"    , cdgrupo);
+    	params.put("pv_nmsituaext_i" , nmsituaext);
+    	params.put("pv_nmsitaux_i"   , nmsitaux);
+    	params.put("pv_nmsbsitext_i" , nmsbsitext);
+    	params.put("pv_cdplan_i"     , cdplan);
+    	params.put("pv_cdasegur_i"   , cdasegur);
+    	params.put("pv_accion_i"     , accion);
+    	return this.insertaPolisit(params);
+	}
+    
+    //PKG_SATELITES.P_MOV_TVALOSIT
+    @Override
     public WrapperResultados insertaValoresSituaciones(Map<String, String> parameters) throws ApplicationException
     {
         log.debug("### kernel sustituto insertaValoresSituaciones map: "+parameters);
@@ -81,6 +128,34 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         log.debug("### kernel sustituto insertaValoresSituaciones id:"+res.getMsgId());
         log.debug("### kernel sustituto insertaValoresSituaciones mesage:"+res.getMsgText());
         return res;
+    }
+    
+    //PKG_SATELITES.P_MOV_TVALOSIT
+    @Override
+    public WrapperResultados insertaValoresSituaciones(
+    		String cdunieco
+    		,String cdramo
+    		,String estado
+    		,String nmpoliza
+    		,String nmsituac
+    		,String nmsuplem
+    		,String status
+    		,String cdtipsit
+    		,String accion
+    		,Map<String, String> otvalorValosit) throws ApplicationException
+    {
+    	Map<String,String>params=new HashMap<String,String>();
+    	params.put("pv_cdunieco" , cdunieco);
+		params.put("pv_cdramo"   , cdramo);
+		params.put("pv_estado"   , estado);
+		params.put("pv_nmpoliza" , nmpoliza);
+		params.put("pv_nmsituac" , nmsituac);
+		params.put("pv_nmsuplem" , nmsuplem);
+		params.put("pv_status"   , status);
+		params.put("pv_cdtipsit" , cdtipsit);
+    	params.put("pv_accion_i" , accion);
+    	params.putAll(otvalorValosit);
+    	return this.insertaValoresSituaciones(params);
     }
     
     public WrapperResultados actualizaValoresSituaciones(Map<String, String> parameters) throws ApplicationException
@@ -807,12 +882,30 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 		return res;
 	}
 	
+	//PKG_COTIZA.P_OBTIENE_TVALOSIT
 	public Map<String, Object> obtieneValositSituac(Map<String, String> params) throws ApplicationException
 	{
 		log.debug("### kernel sustituto obtieneValositSituac map: "+params);
         Map<String,Object> map=(Map<String,Object>) this.getBackBoneInvoke(params, ProcesoDAO.OBTIENE_VALOSIT_SITUAC);
         log.debug("### kernel sustituto obtieneValositSituac response map: "+map);
         return map;
+	}
+	
+	//PKG_COTIZA.P_OBTIENE_TVALOSIT
+	public Map<String, Object> obtieneValositSituac(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac) throws ApplicationException
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("pv_cdunieco_i" , cdunieco);
+        params.put("pv_cdramo_i"   , cdramo);
+        params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_nmsituac_i" , nmsituac);
+		return this.obtieneValositSituac(params);
 	}
 	
 	public List<Map<String, String>> buscarRFC(Map<String,String> params) throws ApplicationException

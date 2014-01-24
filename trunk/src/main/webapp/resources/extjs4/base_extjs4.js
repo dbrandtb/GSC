@@ -175,6 +175,23 @@ function mensajeCorrecto(titulo,mensaje)
     });
 }
 
+/**
+ * Busca todos los combos anidados que tengan la funcion heredar() y los carga
+ * @param formPanel
+ */
+function heredarPanel(formPanel)
+{
+	debug('heredarPanel');
+	for(var i=0;i<formPanel.items.items.length;i++)
+	{
+		if(formPanel.items.items[i].heredar)
+		{
+			debug('heredarPanel>heredar');
+			formPanel.items.items[i].heredar(true);
+		}
+	}
+}
+
 ////////////////////////////
 ////// INICIO MODELOS //////
 ////////////////////////////

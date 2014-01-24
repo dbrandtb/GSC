@@ -17,9 +17,24 @@ public interface EndososManager
 	public Map<String,String>        guardarEndosoClausulas(Map<String,Object>params)         throws Exception;
 	public Map<String,String>        calcularValorEndoso(Map<String,Object>params)            throws Exception;
 	public Map<String,String>        iniciarEndoso(Map<String,String>params)                  throws Exception;
+	public Map<String,String> iniciarEndoso(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String fecha
+			,String cdelemento
+			,String cdusuari
+			,String proceso
+			,String cdtipsup) throws Exception;
 	public void                      insertarTworksupEnd(Map<String,String>params)            throws Exception;
 	public void                      insertarTworksupSitTodas(Map<String,String>params)       throws Exception;
 	public Map<String, String>       obtieneDatosMpolisit(Map<String, String> params)         throws Exception;
+	public Map<String, String>       obtieneDatosMpolisit(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza)         throws Exception;
 	public List<Map<String, String>> obtenerNombreEndosos()                                   throws Exception;
 	public void                      actualizarFenacimi(Map<String, String> params)           throws Exception;
 	public void                      actualizarSexo(Map<String, String> params)               throws Exception;
@@ -28,4 +43,11 @@ public interface EndososManager
 			                             String cdunieco,String cdramo,
 			                             String estado,String nmpoliza)                       throws Exception;
 	public void                      validaEndosoAnterior(Map<String, String> params)         throws Exception;
+	public void                      actualizaDeducibleValosit(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String deducible) throws Exception;
 }

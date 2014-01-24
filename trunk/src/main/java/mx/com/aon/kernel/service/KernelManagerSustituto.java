@@ -4,6 +4,7 @@
  */
 package mx.com.aon.kernel.service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,39 @@ public interface KernelManagerSustituto {
     public WrapperResultados calculaNumeroPoliza(String pv_cdunieco_i, String pv_cdramo_i, String pv_estado_i) throws ApplicationException;
     public WrapperResultados insertaMaestroPolizas(Map<String, String> parameters) throws ApplicationException;
     public WrapperResultados insertaPolisit(Map<String, Object> parameters) throws ApplicationException;
+    public WrapperResultados insertaPolisit(
+    		String cdunieco
+    		,String cdramo
+    		,String estado
+    		,String nmpoliza
+    		,String nmsituac
+    		,String nmsuplem
+    		,String status
+    		,String cdtipsit
+    		,String swreduci
+    		,String cdagrupa
+    		,String cdestado
+    		,Date   fefecsit
+    		,Date   fecharef
+    		,String cdgrupo
+    		,String nmsituaext
+    		,String nmsitaux
+    		,String nmsbsitext
+    		,String cdplan
+    		,String cdasegur
+    		,String accion) throws ApplicationException;
     public WrapperResultados insertaValoresSituaciones(Map<String, String> parameters) throws ApplicationException;
+    public WrapperResultados insertaValoresSituaciones(
+    		String cdunieco
+    		,String cdramo
+    		,String estado
+    		,String nmpoliza
+    		,String nmsituac
+    		,String nmsuplem
+    		,String status
+    		,String cdtipsit
+    		,String accion
+    		,Map<String, String> otvalorValosit) throws ApplicationException;
     public WrapperResultados actualizaValoresSituaciones(Map<String, String> parameters) throws ApplicationException;
     public List<SituacionVO> clonaSituaciones(Map<String,String> parameters) throws ApplicationException;
     public WrapperResultados coberturas(Map<String,String> parameters) throws ApplicationException;
@@ -92,6 +125,12 @@ public interface KernelManagerSustituto {
 	public WrapperResultados mesaControlFinalizarDetalle(Map<String, String> smap1) throws ApplicationException;
 	public WrapperResultados preparaContrarecibo(Map<String, String> docu) throws ApplicationException;
 	public Map<String, Object> obtieneValositSituac(Map<String, String> params) throws ApplicationException;
+	public Map<String, Object> obtieneValositSituac(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac) throws ApplicationException;
 	public List<Map<String, String>> buscarRFC(Map<String,String> params) throws ApplicationException;
 	public WrapperResultados borrarMpoliper(Map<String, String> param) throws ApplicationException;
 	public List<Map<String, String>> obtenerRamos(String cdunieco) throws ApplicationException;

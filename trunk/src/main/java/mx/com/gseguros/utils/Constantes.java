@@ -36,11 +36,14 @@ public interface Constantes {
     public static final String FORMAT_PNG = "PNG";
     public static final String FORMAT_BMP = "BMP";
     public static final String FORMAT_TIF = "TIF";
+    
+    public static final String STATUS_VIVO   = "V";
+    public static final String STATUS_MUERTO = "M";
 	
     /**
      * Mensaje Atributo Variable cuando tiene hijos asociados
      */
-    public static final String MESSAGE_ATRIBUTO_CON_HIJOS_ASOCIADOS = "El atributo tiene hijos asociados, si se elimina también se eliminarán esas asociaciones. ¿Desea continuar?";
+    public static final String MESSAGE_ATRIBUTO_CON_HIJOS_ASOCIADOS = "El atributo tiene hijos asociados, si se elimina tambiï¿½n se eliminarï¿½n esas asociaciones. ï¿½Desea continuar?";
     
     public static final String REGISTRO_DUPLICADO = "100006";
     
