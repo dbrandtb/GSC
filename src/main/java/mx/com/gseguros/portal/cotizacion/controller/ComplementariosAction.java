@@ -28,6 +28,7 @@ import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.Tatri;
 import mx.com.gseguros.portal.emision.model.DatosRecibosDxNVO;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.ws.client.Ice2sigsWebServices;
 import mx.com.gseguros.ws.client.Ice2sigsWebServices.Estatus;
@@ -1417,8 +1418,12 @@ public class ComplementariosAction extends PrincipalCoreAction
 		 * PARA EL GUARDADO CADA PDF DE RECIBO
 		 */
 		logger.debug("*** Empieza generacion de URLs para Recibos ***");
+		
+		String visible = null;
 		for(Recibo recibo: recibos){
-			if( 1 != recibo.getNumRec()) continue;
+			
+			visible = (1 == recibo.getNumRec()) ? Constantes.SI : Constantes.NO;
+			
 			try{
 //				Parametro1:  9999: Recibo
 //				Parametro2:  Siempre va en 0
@@ -1446,6 +1451,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 					paramsR.put("pv_nmsolici_i", nmsolici);
 					paramsR.put("pv_ntramite_i", ntramite);
 					paramsR.put("pv_tipmov_i", "1");
+					paramsR.put("pv_swvisible_i", visible);
 					
 					kernelManager.guardarArchivo(paramsR);
 				//}

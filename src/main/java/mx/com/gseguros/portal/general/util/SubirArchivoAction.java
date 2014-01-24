@@ -143,6 +143,7 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
             paramMovDocu.put("pv_cddocume_i" , nombreArchivo);
             paramMovDocu.put("pv_dsdocume_i" , smap1.get("descripcion"));
             paramMovDocu.put("pv_tipmov_i"   , smap1.get("tipomov"));
+            paramMovDocu.put("pv_swvisible_i"   , null);
             kernelManager.guardarArchivo(paramMovDocu);
         }
         
