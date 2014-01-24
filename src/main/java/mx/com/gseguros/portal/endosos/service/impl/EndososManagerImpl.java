@@ -119,6 +119,7 @@ public class EndososManagerImpl implements EndososManager
         return mapa;
 	}
 	
+	//PKG_ENDOSOS.P_ENDOSO_INICIA
 	@Override
 	public Map<String,String> iniciarEndoso(Map<String, String> params) throws Exception
 	{
@@ -126,6 +127,32 @@ public class EndososManagerImpl implements EndososManager
 		Map<String,String> mapa=endososDAO.iniciarEndoso(params);
 		log.debug("EndososManager iniciarEndoso response map: "+mapa);
         return mapa;
+	}
+	
+	//PKG_ENDOSOS.P_ENDOSO_INICIA
+	@Override
+	public Map<String,String> iniciarEndoso(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String fecha
+			,String cdelemento
+			,String cdusuari
+			,String proceso
+			,String cdtipsup) throws Exception
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_fecha_i"    , fecha);
+		params.put("pv_cdelemen_i" , cdelemento);
+		params.put("pv_cdusuari_i" , cdusuari);
+		params.put("pv_proceso_i"  , proceso);
+		params.put("pv_cdtipsup_i" , cdtipsup);
+        return this.iniciarEndoso(params);
 	}
 	
 	@Override
@@ -144,6 +171,7 @@ public class EndososManagerImpl implements EndososManager
 		log.debug("EndososManager insertarTworksupSitTodas end");
 	}
 	
+	//PKG_SATELITES.P_OBTIENE_DATOS_MPOLISIT
 	@Override
 	public Map<String, String> obtieneDatosMpolisit(Map<String, String> params) throws Exception
 	{
@@ -151,6 +179,22 @@ public class EndososManagerImpl implements EndososManager
 		Map<String,String> mapa=endososDAO.obtieneDatosMpolisit(params);
 		log.debug("EndososManager obtieneDatosMpolisit response map: "+mapa);
         return mapa;
+	}
+	
+	//PKG_SATELITES.P_OBTIENE_DATOS_MPOLISIT
+	@Override
+	public Map<String, String> obtieneDatosMpolisit(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza) throws Exception
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+        return this.obtieneDatosMpolisit(params);
 	}
 	
 	@Override
@@ -212,6 +256,28 @@ public class EndososManagerImpl implements EndososManager
 		log.debug("EndososManager validaEndosoAnterior params: "+params);
 		endososDAO.validaEndosoAnterior(params);
 		log.debug("EndososManager validaEndosoAnterior end");
+	}
+	
+	//PKG_ENDOSOS.P_INS_NEW_DEDUCIBLE_TVALOSIT
+	@Override
+	public void actualizaDeducibleValosit(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String deducible) throws Exception
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("pv_cdunieco_i"  , cdunieco);
+		params.put("pv_cdramo_i"    , cdramo);
+		params.put("pv_estado_i"    , estado);
+		params.put("pv_nmpoliza_i"  , nmpoliza);
+		params.put("pv_nmsuplem_i"  , nmsuplem);
+		params.put("pv_deducible_i" , deducible);
+		log.debug("EndososManager actualizaDeducibleValosit params: "+params);
+		endososDAO.actualizaDeducibleValosit(params);
+		log.debug("EndososManager actualizaDeducibleValosit end");
 	}
 	
 	/////////////////////////////////

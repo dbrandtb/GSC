@@ -655,4 +655,28 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		}
 	}
 	
+	@Override
+	public void actualizaDeducibleValosit(Map<String, String> params) throws Exception
+	{
+		this.ejecutaSP(new ActualizaDeducibleValosit(this.getDataSource()), params);
+	}
+	
+	protected class ActualizaDeducibleValosit extends StoredProcedure
+	{
+		protected ActualizaDeducibleValosit(DataSource dataSource)
+		{
+			super(dataSource, "PKG_ENDOSOS.P_INS_NEW_DEDUCIBLE_TVALOSIT");
+			declareParameter(new SqlParameter("pv_cdunieco_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_deducible_i" , OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 }

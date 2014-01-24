@@ -27,6 +27,7 @@
         <pattern>/endosos/endosoSexo.action</pattern>
         <pattern>/endosos/endosoDomicilioFull.action</pattern>
         <pattern>/endosos/errorEndosoAnterior.action</pattern>
+        <pattern>/endosos/endosoDeducible.action</pattern>
         
         <pattern>/catalogos/agregaUsuarios.action</pattern>
         <pattern>/jsp/catalogos/agregaUsuarios.jsp</pattern>

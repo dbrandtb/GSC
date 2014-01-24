@@ -658,6 +658,45 @@
                 });
             }
         }
+    	else if(recordOperacion.get('funcion')=='masdeducible'||recordOperacion.get('funcion')=='menosdeducible')
+        {
+            debug('masdeducible|menosdeducible');
+            var nPolizasActivas=0;
+            var polizaActiva;
+            marendStorePolizas.each(function(record)
+            {
+                if(record.get('activo')==true)
+                {
+                    nPolizasActivas=nPolizasActivas+1;
+                    polizaActiva=record;
+                }
+            });
+            if(nPolizasActivas==1)
+            {
+                Ext.getCmp('marendMenuOperaciones').collapse();
+                Ext.getCmp('marendLoaderFrame').setTitle(recordOperacion.get('texto'));
+                var smap1 = polizaActiva.raw;
+                smap1['DSCOMENT']='';
+                Ext.getCmp('marendLoaderFrame').getLoader().load(
+                {
+                    url       : recordOperacion.get('liga')
+                    ,scripts  : true
+                    ,autoLoad : true
+                    ,jsonData :
+                    {
+                        'smap1'  : smap1
+                        ,'smap2' :
+                        {
+                            masdeducible : recordOperacion.get('funcion')=='masdeducible'?'si':'no'
+                        }
+                    }
+                });
+            }
+            else
+            {
+                mensajeError('Seleccione la p&oacute;liza');
+            }
+        }
     }
     
     function marendNavegacion(nivel)
@@ -894,6 +933,16 @@ Ext.onReady(function()
                     texto    : '31'//domicilio full
                     ,liga    : '<s:url namespace="/endosos" action="endosoDomicilioFull" />'
                     ,funcion : 'endosodomiciliofull'
+                }
+                ,{
+                    texto    : '17'//domicilio full
+                    ,liga    : '<s:url namespace="/endosos" action="endosoDeducible" />'
+                    ,funcion : 'masdeducible'
+                }
+                ,{
+                    texto    : '18'//domicilio full
+                    ,liga    : '<s:url namespace="/endosos" action="endosoDeducible" />'
+                    ,funcion : 'menosdeducible'
                 }
             ]
         }

@@ -4274,6 +4274,7 @@ public class EndososAction extends PrincipalCoreAction
 				imap1.put("itemsDomicil"  , gc.getItems());
 				imap1.put("fieldsDomicil" , gc.getFields());
 				
+				/*
 				Map<String,String>mapaTatriper=new HashMap<String,String>();
 				mapaTatriper.put("pv_cdramo_i"   , cdramo);
 				mapaTatriper.put("pv_cdrol_i"    , rolAsegu);
@@ -4284,6 +4285,7 @@ public class EndososAction extends PrincipalCoreAction
 				gc.generaParcial(kernelManager.obtenerTatriper(mapaTatriper));
 				
 				imap1.put("itemsTatriper",gc.getItems());
+				*/
 				
 			}
 			catch(Exception ex)
@@ -4381,45 +4383,65 @@ public class EndososAction extends PrincipalCoreAction
 			String cdcoloni     = smap2.get("CDCOLONI");
 			String nmnumext     = smap2.get("NMNUMERO");
 			String nmnumint     = smap2.get("NMNUMINT");
+			String cdtipsup     = TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.getCdTipSup().toString();
+			String proceso      = "END";
+			String ntramite     = smap1.get("NTRAMITE");
 			
-			Map<String,String> mapGuaEnd=new LinkedHashMap<String,String>(0);
-			mapGuaEnd.put("pv_cdunieco_i" , cdunieco);
-			mapGuaEnd.put("pv_cdramo_i"   , cdramo);
-			mapGuaEnd.put("pv_estado_i"   , estado);
-			mapGuaEnd.put("pv_nmpoliza_i" , nmpoliza);
-			mapGuaEnd.put("pv_fecha_i"    , sFechaEndoso);
-			mapGuaEnd.put("pv_cdelemen_i" , cdelemento);
-			mapGuaEnd.put("pv_cdusuari_i" , cdusuari);
-			mapGuaEnd.put("pv_proceso_i"  , "END");
-			mapGuaEnd.put("pv_cdtipsup_i", TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.getCdTipSup().toString());
-			Map<String,String> resIniEnd=endososManager.iniciarEndoso(mapGuaEnd);
+			//PKG_ENDOSOS.P_ENDOSO_INICIA
+			Map<String,String> resIniEnd=endososManager.iniciarEndoso(cdunieco, cdramo, estado
+					,nmpoliza, sFechaEndoso, cdelemento, cdusuari, proceso, cdtipsup);
 			
 			String nmsuplem = resIniEnd.get("pv_nmsuplem_o");
 			String nsuplogi = resIniEnd.get("pv_nsuplogi_o");
 			
-			if(parametros!=null&&parametros.size()>0)
+			//PKG_SATELITES.P_OBTIENE_DATOS_MPOLISIT
+			Map<String,String>datosMpolisit=endososManager.obtieneDatosMpolisit(cdunieco,cdramo,estado,nmpoliza);
+			
+			String cdplan=datosMpolisit.get("pv_cdplan_o");
+			
+			//PKG_SATELITES.P_MOV_MPOLISIT
+			kernelManager.insertaPolisit(cdunieco,cdramo,estado,nmpoliza,nmsituac
+					,nmsuplem,Constantes.STATUS_VIVO,cdtipsit,null,"1","0",dFechaEndoso
+					,dFechaEndoso,null,null,null,null,cdplan,"30",Constantes.INSERT_MODE);
+			
+			//PKG_COTIZA.P_OBTIENE_TVALOSIT
+			Map<String,Object>valositOriginal=kernelManager.obtieneValositSituac(cdunieco, cdramo, estado, nmpoliza, nmsituac);
+			/*
+			"otvalor01" ... "otvalor50",
+			"nmsuplem",
+			"status",
+			"cdtipsit"
+			*/
+			
+			//otvalor05 -> pv_otvalor05
+			Map<String,String>otvalorValosit=new HashMap<String,String>();
+			for(Entry<String,Object>en:valositOriginal.entrySet())
 			{
-				Map<String,String>temp=new HashMap<String,String>();
-				for(Entry<String,String>en:parametros.entrySet())
+				String key   = en.getKey();
+				String value = (String)en.getValue();
+				
+				if(key.substring(0,5).equalsIgnoreCase("otval"))
 				{
-					//0 1 2 3 4 5 6 7 8 9 0 1 2 3
-					// p a r a m e t r o s . p v
-					temp.put(en.getKey().substring(11),en.getValue());
+					otvalorValosit.put("pv_"+key,value);
 				}
-				parametros.putAll(temp);
-				parametros.put("pv_cdunieco" , cdunieco);
-				parametros.put("pv_cdramo"   , cdramo);
-				parametros.put("pv_estado"   , estado);
-				parametros.put("pv_nmpoliza" , nmpoliza);
-				parametros.put("pv_nmsituac" , nmsituac);
-				parametros.put("pv_nmsuplem" , nmsuplem);
-				parametros.put("pv_status"   , "V");
-				parametros.put("pv_cdrol"    , cdrol);
-				parametros.put("pv_cdperson" , cdperson);
-				parametros.put("pv_cdatribu" , null);
-				parametros.put("pv_cdtipsit" , cdtipsit);
-				kernelManager.pMovTvaloper(parametros);
 			}
+			
+			String keyCodPostal = "";
+			String keyEstado    = "";
+			String keyMunicipio = "";
+			if(cdtipsit.equalsIgnoreCase("SL")||cdtipsit.equalsIgnoreCase("SN"))
+			{
+				keyCodPostal = "pv_otvalor03";
+				keyEstado    = "pv_otvalor04";
+				keyMunicipio = "pv_otvalor17";
+			}
+			otvalorValosit.put(keyCodPostal , cdpostal);
+			otvalorValosit.put(keyEstado    , cdestado);
+			otvalorValosit.put(keyMunicipio , cdmunici);
+			
+			//PKG_SATELITES.P_MOV_TVALOSIT
+			kernelManager.insertaValoresSituaciones(cdunieco, cdramo, estado, nmpoliza
+					,nmsituac, nmsuplem, Constantes.STATUS_VIVO, cdtipsit, Constantes.INSERT_MODE, otvalorValosit);
 			
 			//////////////////////
 			////// mdomicil //////
@@ -4435,7 +4457,7 @@ public class EndososAction extends PrincipalCoreAction
 			paramDomicil.put("pv_cdcoloni_i" , cdcoloni);
 			paramDomicil.put("pv_nmnumero_i" , nmnumext);
 			paramDomicil.put("pv_nmnumint_i" , nmnumint);
-			paramDomicil.put("pv_accion_i"   , "U");			
+			paramDomicil.put("pv_accion_i"   , Constantes.UPDATE_MODE);			
 			kernelManager.pMovMdomicil(paramDomicil);
 			/*//////////////////*/
 			////// mdomicil //////
@@ -4448,7 +4470,7 @@ public class EndososAction extends PrincipalCoreAction
             mapaTworksupEnd.put("pv_cdramo_i"   , cdramo);
             mapaTworksupEnd.put("pv_estado_i"   , estado);
             mapaTworksupEnd.put("pv_nmpoliza_i" , nmpoliza);
-            mapaTworksupEnd.put("pv_cdtipsup_i" , TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.getCdTipSup().toString());
+            mapaTworksupEnd.put("pv_cdtipsup_i" , cdtipsup);
             mapaTworksupEnd.put("pv_nmsuplem_i" , nmsuplem);
             endososManager.insertarTworksupSitTodas(mapaTworksupEnd);
             ////// inserta tworksup //////
@@ -4466,7 +4488,7 @@ public class EndososAction extends PrincipalCoreAction
 			mapaSigsvalipolEnd.put("pv_nmsituac_i" , "0");
 			mapaSigsvalipolEnd.put("pv_nmsuplem_i" , nmsuplem);
 			mapaSigsvalipolEnd.put("pv_cdtipsit_i" , cdtipsit);
-			mapaSigsvalipolEnd.put("pv_cdtipsup_i" , TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.getCdTipSup().toString());
+			mapaSigsvalipolEnd.put("pv_cdtipsup_i" , cdtipsup);
 			endososManager.sigsvalipolEnd(mapaSigsvalipolEnd);
             ////// tarificacion //////
 			//////////////////////////
@@ -4481,7 +4503,7 @@ public class EndososAction extends PrincipalCoreAction
 			mapaValorEndoso.put("pv_nmsituac_i" , "1");
 			mapaValorEndoso.put("pv_nmsuplem_i" , nmsuplem);
 			mapaValorEndoso.put("pv_feinival_i" , dFechaEndoso);
-			mapaValorEndoso.put("pv_cdtipsup_i" , TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.getCdTipSup().toString());
+			mapaValorEndoso.put("pv_cdtipsup_i" , cdtipsup);
 			endososManager.calcularValorEndoso(mapaValorEndoso);
 			////// valor endoso //////
 			//////////////////////////
@@ -4493,7 +4515,7 @@ public class EndososAction extends PrincipalCoreAction
 					nmpoliza,
 					nmsuplem,
 					nsuplogi,
-					TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.getCdTipSup().toString(),
+					cdtipsup,
 					"",
 					dFechaEndoso,
 					cdtipsit
@@ -4501,8 +4523,7 @@ public class EndososAction extends PrincipalCoreAction
 		    
 			if(tramiteGenerado==null||tramiteGenerado.length()==0)
 			{
-				
-			    ///////////////////////////////////////
+				///////////////////////////////////////
 			    ////// re generar los documentos //////
 			    /*///////////////////////////////////*/
 			    Map<String,String>paramsGetDoc=new LinkedHashMap<String,String>(0);
@@ -4514,8 +4535,6 @@ public class EndososAction extends PrincipalCoreAction
 				paramsGetDoc.put("pv_tipmov_i"   , TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.getCdTipSup().toString());
 			    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(paramsGetDoc);
 			    log.debug("documentos que se regeneran: "+listaDocu);
-			    
-			    String ntramite=listaDocu.get(0).get("ntramite");
 			    
 			    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
 			    
@@ -4563,7 +4582,7 @@ public class EndososAction extends PrincipalCoreAction
 			    /*///////////////////////////////////*/
 				////// re generar los documentos //////
 			    ///////////////////////////////////////
-				
+
 				ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
 				
 				String cdtipsitGS = "213";
@@ -4571,7 +4590,7 @@ public class EndososAction extends PrincipalCoreAction
 				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 				
 				String nmsolici = listaDocu.get(0).get("nmsolici");
-				String nmtramite = listaDocu.get(0).get("ntramite");
+				String nmtramite = ntramite;
 				
 				String tipomov = TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.getCdTipSup().toString();
 				
@@ -4580,7 +4599,6 @@ public class EndososAction extends PrincipalCoreAction
 						nmsuplem, nsuplogi, rutaCarpeta,
 						cdtipsitGS, sucursal, nmsolici, nmtramite,
 						true, "INSERTA", tipomov );
-				
 				
 			    mensaje="Se ha guardado el endoso "+nsuplogi;
 			    
@@ -4634,6 +4652,330 @@ public class EndososAction extends PrincipalCoreAction
 		}
 		return respuesta;
 	}
+	
+	/////////////////////////////
+	////// endosoDeducible //////
+	/*
+	smap1:
+		CDRAMO: "2"
+		CDTIPSIT: "SL"
+		CDUNIECO: "1006"
+		DSCOMENT: ""
+		DSTIPSIT: "SALUD VITAL"
+		ESTADO: "M"
+		FEEMISIO: "22/01/2014"
+		FEINIVAL: "22/01/2014"
+		NMPOLIEX: "1006213000024000000"
+		NMPOLIZA: "24"
+		NMSUPLEM: "245668019180000000"
+		NSUPLOGI: "1"
+		NTRAMITE: "678"
+		PRIMA_TOTAL: "12207.37"
+	smap2:
+		masdeducible: "si"
+	*/
+	/*/////////////////////////*/
+	public String endosoDeducible()
+	{
+		this.session=ActionContext.getContext().getSession();
+		log.debug("\n"
+				+ "\n#############################"
+				+ "\n#############################"
+				+ "\n###### endosoDeducible ######"
+				+ "\n######                 ######"
+				);
+		log.debug("smap1: "+smap1);
+		log.debug("smap2: "+smap2);
+		
+		String cdunieco = smap1.get("CDUNIECO");
+		String cdramo   = smap1.get("CDRAMO");
+		String estado   = smap1.get("ESTADO");
+		String nmpoliza = smap1.get("NMPOLIZA");
+		String cdtipsit = smap1.get("CDTIPSIT");
+		String cdtipsup = smap2.get("masdeducible").equalsIgnoreCase("si")?
+				TipoEndoso.DEDUCIBLE_MAS.getCdTipSup().toString():
+				TipoEndoso.DEDUCIBLE_MENOS.getCdTipSup().toString();
+				
+		UserVO usuario    = (UserVO)session.get("USUARIO");
+		String cdelemento = usuario.getEmpresa().getElementoId();
+		String cdusuari   = usuario.getUser();
+		String rol        = usuario.getRolActivo().getObjeto().getValue();
+		
+		String respuesta=this.validaEndosoAnterior(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
+		
+		String nmsituacTitular   = "1";
+		String llaveDeducible    = "";
+		String cdatribuDeducible = "";
+		
+		String nombreItemDeducibleOriginal = "DEDUCIBLE ORIGINAL";
+		String nombreItemNuevoDeducible    = "NUEVO DEDUCIBLE";
+		
+		String llaveItemDeducibleOriginal = "itemDeducibleLectura";
+		String llaveItemNuevoDeducible    = "itemDeducible";
+		String llavePanelLectura          = "itemsLectura";
+		
+		String pantalla = "ENDOSO_DEDUCIBLE";
+		
+		if(cdtipsit.equals("SL")||cdtipsit.equals("SN"))
+		{
+			llaveDeducible    = "otvalor05";
+			cdatribuDeducible = "5";
+		}
+		
+		if(respuesta.equals(SUCCESS))
+		{
+			try
+			{
+				Map<String,Object>valositTitular=kernelManager.obtieneValositSituac(cdunieco,cdramo,estado,nmpoliza,nmsituacTitular);
+				if(llaveDeducible.length()>0
+						&&valositTitular.containsKey(llaveDeducible)
+						&&((String)valositTitular.get(llaveDeducible))!=null)
+				{
+					String deducible=(String)valositTitular.get(llaveDeducible);
+					log.debug("deducible de la poliza: "+deducible);
+					smap1.put("deducible"    , deducible);
+					smap1.put("masdeducible" , smap2.get("masdeducible"));
+				}
+				else
+				{
+					throw new Exception("No hay deducible definido para este producto");
+				}
+				
+				List<Tatri>tatrisit = kernelManager.obtenerTatrisit(cdtipsit);
+				List<Tatri>temp     = new ArrayList<Tatri>();
+				for(Tatri tatrisitIte:tatrisit)
+				{
+					if(tatrisitIte.getCdatribu().equalsIgnoreCase(cdatribuDeducible))
+					{
+						temp.add(tatrisitIte);
+					}
+				}
+				tatrisit=temp;
+				
+				GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+				gc.setCdtipsit(cdtipsit);
+				
+				imap1=new HashMap<String,Item>();
+				tatrisit.get(0).setDsatribu(nombreItemNuevoDeducible);
+				
+				gc.generaParcial(tatrisit);
+				
+				imap1.put(llaveItemNuevoDeducible,gc.getItems());
+				
+				tatrisit.get(0).setReadOnly(true);
+				tatrisit.get(0).setDsatribu(nombreItemDeducibleOriginal);
+				
+				gc.generaParcial(tatrisit);
+				
+				imap1.put(llaveItemDeducibleOriginal,gc.getItems());
+				
+				gc.generaParcial(pantallasManager.obtenerCamposPantalla(
+						cdunieco  , cdramo
+						,cdtipsit , estado
+						,nmpoliza , null
+						,pantalla , rol
+						,null     , "PANEL_LECTURA"));
+				
+				imap1.put(llavePanelLectura,gc.getItems());
+				
+			}
+			catch(Exception ex)
+			{
+				log.error("error al mostrar pantalla endoso deducible",ex);
+				error=ex.getMessage();
+				respuesta=ERROR;
+			}
+		}
+		
+		log.debug("\n"
+				+ "\n######                 ######"
+				+ "\n###### endosoDeducible ######"
+				+ "\n#############################"
+				+ "\n#############################"
+				);
+		return respuesta;
+	}
+	/*/////////////////////////*/
+	////// endosoDeducible //////
+	/////////////////////////////
+	
+	////////////////////////////////////
+	////// guardarEndosoDeducible //////
+	/*
+	smap1:
+		NMSUPLEM=245668111370000000,
+		DSTIPSIT=SALUD VITAL,
+		FEINIVAL=23/01/2014,
+		NMPOLIZA=24,
+		deducible=10000,
+		PRIMA_TOTAL=16039.29,
+		NMPOLIEX=1006213000024000000,
+		NSUPLOGI=2,
+		DSCOMENT=,
+		ESTADO=M,
+		masdeducible=si,
+		CDTIPSIT=SL,
+		NTRAMITE=678,
+		CDUNIECO=1006,
+		FEEMISIO=22/01/2014,
+		CDRAMO=2
+	smap2:
+		deducible=10000,
+		fecha_endoso=23/01/2014
+	*/
+	/*////////////////////////////////*/
+	public String guardarEndosoDeducible()
+	{
+		this.session=ActionContext.getContext().getSession();
+		log.debug("\n"
+				+ "\n####################################"
+				+ "\n####################################"
+				+ "\n###### guardarEndosoDeducible ######"
+				+ "\n######                        ######"
+				);
+		log.debug("smap1:"+smap1);
+		log.debug("smap2:"+smap2);
+		
+		try
+		{
+			UserVO usuario    = (UserVO)session.get("USUARIO");
+			String cdunieco   = smap1.get("CDUNIECO");
+			String cdramo     = smap1.get("CDRAMO");
+			String estado     = smap1.get("ESTADO");
+			String nmpoliza   = smap1.get("NMPOLIZA");
+			String fecha      = smap2.get("fecha_endoso");
+			Date   dFecha     = renderFechas.parse(fecha);
+			String cdelemento = usuario.getEmpresa().getElementoId();
+			String cdusuari   = usuario.getUser();
+			String proceso    = "END";
+			String cdtipsup   = smap1.get("masdeducible").equalsIgnoreCase("si")?
+					TipoEndoso.DEDUCIBLE_MAS.getCdTipSup().toString():
+					TipoEndoso.DEDUCIBLE_MENOS.getCdTipSup().toString();
+			String deducible  = smap2.get("deducible");
+			String cdtipsit   = smap1.get("CDTIPSIT");
+			String ntramite   = smap1.get("NTRAMITE");
+			
+			//PKG_ENDOSOS.P_ENDOSO_INICIA
+			Map<String,String>resIniEnd=endososManager.iniciarEndoso(cdunieco, cdramo, estado, nmpoliza, fecha, cdelemento, cdusuari, proceso, cdtipsup);
+			
+			String nmsuplem = resIniEnd.get("pv_nmsuplem_o");
+			String nsuplogi = resIniEnd.get("pv_nsuplogi_o");
+			
+			//PKG_ENDOSOS.P_INS_NEW_DEDUCIBLE_TVALOSIT
+			endososManager.actualizaDeducibleValosit(cdunieco, cdramo, estado, nmpoliza, nmsuplem, deducible);
+			
+			//+- 30 dias ? PKG_SATELITES.P_MOV_MESACONTROL : PKG_ENDOSOS.P_CONFIRMAR_ENDOSOB
+			String tramiteGenerado=this.confirmarEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, cdtipsup, "", dFecha, cdtipsit);
+			
+			if(tramiteGenerado==null||tramiteGenerado.length()==0)
+			{
+				//PKG_CONSULTA.P_reImp_documentos
+				this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite);
+				
+				mensaje="Se ha guardado el endoso "+nsuplogi;
+			}
+			else
+			{
+				mensaje="El endoso "+nsuplogi
+						+" se guard&oacute; en mesa de control para autorizaci&oacute;n "
+						+ "con n&uacute;mero de tr&aacute;mite "+tramiteGenerado;
+			}
+			
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			error=ex.getMessage();
+			success=false;
+			log.error("error al guardar endoso de deducible",ex);
+		}
+		
+		log.debug("\n"
+				+ "\n######                        ######"
+				+ "\n###### guardarEndosoDeducible ######"
+				+ "\n####################################"
+				+ "\n####################################"
+				);
+		return SUCCESS;
+	}
+	/*////////////////////////////////*/
+	////// guardarEndosoDeducible //////
+	////////////////////////////////////
+	
+	/////////////////////////////////
+	////// regenera documentos //////
+	/*/////////////////////////////*/
+	private void regeneraDocumentos(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdtipsup
+			,String ntramite) throws Exception
+	{
+		///////////////////////////////////////
+	    ////// re generar los documentos //////
+	    /*///////////////////////////////////*/
+	    Map<String,String>paramsGetDoc=new LinkedHashMap<String,String>(0);
+		paramsGetDoc.put("pv_cdunieco_i" , cdunieco);
+		paramsGetDoc.put("pv_cdramo_i"   , cdramo);
+		paramsGetDoc.put("pv_estado_i"   , estado);
+		paramsGetDoc.put("pv_nmpoliza_i" , nmpoliza);
+		paramsGetDoc.put("pv_nmsuplem_i" , nmsuplem);
+		paramsGetDoc.put("pv_tipmov_i"   , cdtipsup);
+		
+	    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(paramsGetDoc);
+	    log.debug("documentos que se regeneran: "+listaDocu);
+	    
+	    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
+	    
+		//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
+		for(Map<String,String> docu:listaDocu)
+		{
+			log.debug("docu iterado: "+docu);
+			String descripc=docu.get("descripc");
+			String descripl=docu.get("descripl");
+			String url=this.getText("ruta.servidor.reports")
+					+ "?destype=cache"
+					+ "&desformat=PDF"
+					+ "&userid="+this.getText("pass.servidor.reports")
+					+ "&report="+descripl
+					+ "&paramform=no"
+					+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+					+ "&p_unieco="+cdunieco
+					+ "&p_ramo="+cdramo
+					+ "&p_estado="+estado
+					+ "&p_poliza="+nmpoliza
+					+ "&p_suplem="+nmsuplem
+					+ "&desname="+rutaCarpeta+"/"+descripc;
+			if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
+			{
+				// C R E D E N C I A L _ X X X X X X . P D F
+				//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+				url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("_"));
+			}
+			log.debug(""
+					+ "\n#################################"
+					+ "\n###### Se solicita reporte ######"
+					+ "\na "+url+""
+					+ "\n#################################");
+			HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
+			log.debug(""
+					+ "\n######                    ######"
+					+ "\n###### reporte solicitado ######"
+					+ "\na "+url+""
+					+ "\n################################"
+					+ "\n################################"
+					+ "");
+		}
+	    /*///////////////////////////////////*/
+		////// re generar los documentos //////
+	    ///////////////////////////////////////
+	}
+	/*/////////////////////////////*/
+	////// regenera documentos //////
+	/////////////////////////////////
 	
 	///////////////////////////////
 	////// getters y setters //////

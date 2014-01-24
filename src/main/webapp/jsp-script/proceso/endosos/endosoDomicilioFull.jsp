@@ -39,7 +39,7 @@ var _5_urlGuardar      = '<s:url namespace="/endosos" action="guardarEndosoDomic
 var _5_panelLectura;
 var _5_formDomicil;
 var _5_panelEndoso;
-var _5_panelTatriper;
+//var _5_panelTatriper;
 var _5_fieldFechaEndoso;
 var _5_panelPri;
 
@@ -66,6 +66,7 @@ Ext.onReady(function()
 	
 	/////////////////////////
 	////// componentes //////
+	/*
 	Ext.define('_5_PanelTatriper',
 	{
 		extend         : 'Ext.form.Panel'
@@ -80,11 +81,12 @@ Ext.onReady(function()
                 	type     : 'table'
                 	,columns : 2
                 }
-                ,items  : [ <s:property value="imap1.itemsTatriper" /> ]
+                ,items  : [ property value="imap1.itemsTatriper" ]
             });
             this.callParent();
         }
 	});
+    */
 	
 	Ext.define('_5_PanelEndoso',
     {
@@ -137,13 +139,17 @@ Ext.onReady(function()
 			debug('_5_PanelLectura initComponent');
 			Ext.apply(this,
 			{
-				title   : 'Datos de p&oacute;liza'
-				,layout :
+				title      : 'Datos de p&oacute;liza'
+				,layout    :
                 {
                     type     : 'table'
                     ,columns : 2
                 }
-				,items  : [ <s:property value="imap1.itemsLectura" /> ]
+				,items     : [ <s:property value="imap1.itemsLectura" /> ]
+				,listeners :
+				{
+					afterrender : heredarPanel
+				}
 			});
 			this.callParent();
 		}
@@ -164,7 +170,7 @@ Ext.onReady(function()
 	_5_panelLectura  = new _5_PanelLectura();
 	_5_formDomicil   = new _5_FormDomicil();
 	_5_panelEndoso   = new _5_PanelEndoso();
-	_5_panelTatriper = new _5_PanelTatriper();
+	//_5_panelTatriper = new _5_PanelTatriper();
 	
 	_5_panelPri=Ext.create('Ext.panel.Panel',
 	{
@@ -178,7 +184,7 @@ Ext.onReady(function()
 	    [
 	        _5_panelLectura
 	        ,_5_formDomicil
-	        ,_5_panelTatriper
+	        //,_5_panelTatriper
 	        ,_5_panelEndoso
 	    ]
 	    ,buttonAlign : 'center'
@@ -308,7 +314,7 @@ function _5_confirmar(boton)
 	
 	if(valido)
 	{
-		valido=_5_formDomicil.isValid()&&_5_panelTatriper.isValid()&&_5_panelEndoso.isValid();
+		valido=_5_formDomicil.isValid()&&_5_panelEndoso.isValid();//&&_5_panelTatriper.isValid()
 		if(!valido)
 		{
 			datosIncompletos();
@@ -325,7 +331,7 @@ function _5_confirmar(boton)
 			{
 				fecha_endoso : Ext.Date.format(_5_fieldFechaEndoso.getValue(),'d/m/Y')
 			}
-			,parametros : _5_panelTatriper.getValues()
+			//,parametros : _5_panelTatriper.getValues()
 		};
 		debug('datos a enviar:',json);
 		_5_panelPri.setLoading(true);
