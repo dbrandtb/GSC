@@ -4151,6 +4151,8 @@ public class EndososAction extends PrincipalCoreAction
 			case BAJA_ASEGURADOS:
 			case DEDUCIBLE_MAS:
 			case DEDUCIBLE_MENOS:
+			case COPAGO_MAS:
+			case COPAGO_MENOS:
 				ejecutaWSrecibosEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, 
 						rutaCarpeta, cdtipsitGS, sucursal, nmsolici, ntramiteEmi, true, "INSERTA", cdtipsup);
 				break;
@@ -4878,15 +4880,11 @@ public class EndososAction extends PrincipalCoreAction
 				String sucursal = cdunieco;
 				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 				
-				String nmtramite = ntramite;
-				
-				String tipomov = TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.getCdTipSup().toString();
-				
 				ejecutaWSrecibosEndoso(cdunieco, cdramo,
 						estado, nmpoliza,
 						nmsuplem, nsuplogi, null,
-						cdtipsitGS, sucursal, nmsolici, nmtramite,
-						true, "INSERTA", tipomov );
+						cdtipsitGS, sucursal, nmsolici, ntramite,
+						true, "INSERTA", cdtipsup );
 				
 				mensaje="Se ha guardado el endoso "+nsuplogi;
 			}
@@ -5135,7 +5133,17 @@ public class EndososAction extends PrincipalCoreAction
 			if(tramiteGenerado==null||tramiteGenerado.length()==0)
 			{
 				//PKG_CONSULTA.P_reImp_documentos
-				this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite);
+				String nmsolici = this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite);
+				
+				String cdtipsitGS = "213";
+				String sucursal = cdunieco;
+				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
+				
+				ejecutaWSrecibosEndoso(cdunieco, cdramo,
+						estado, nmpoliza,
+						nmsuplem, nsuplogi, null,
+						cdtipsitGS, sucursal, nmsolici, ntramite,
+						true, "INSERTA", cdtipsup );
 				
 				mensaje="Se ha guardado el endoso "+nsuplogi;
 			}
