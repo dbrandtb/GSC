@@ -92,6 +92,7 @@ public class EndososManagerImpl implements EndososManager
 		return lista;
 	}
 	
+	//PKG_COTIZA.P_EJECUTA_SIGSVALIPOL_END
 	@Override
 	public Map<String,Object> sigsvalipolEnd(Map<String, String> params) throws Exception
 	{
@@ -110,6 +111,7 @@ public class EndososManagerImpl implements EndososManager
         return mapa;
 	}
 	
+	//PKG_ENDOSOS.P_CALC_VALOR_ENDOSO
 	@Override
 	public Map<String,String> calcularValorEndoso(Map<String,Object>params) throws Exception
 	{
@@ -163,6 +165,7 @@ public class EndososManagerImpl implements EndososManager
 		log.debug("EndososManager insertarTworksupEnd end");
 	}
 	
+	//PKG_SATELITES.P_INSERTA_TWORKSUP_SIT_TODAS
 	@Override
 	public void insertarTworksupSitTodas(Map<String, String> params) throws Exception
 	{
