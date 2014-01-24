@@ -2979,7 +2979,7 @@ public class EndososAction extends PrincipalCoreAction
 					paramsR.put("pv_nmsuplem_i", nmsuplem);
 					paramsR.put("pv_feinici_i", new Date());
 					paramsR.put("pv_cddocume_i", this.getText("url.imp.recibos")+parametros);
-					paramsR.put("pv_dsdocume_i", "Recibo "+recibo.getNumRec()+" Endoso "+numendoso);
+					paramsR.put("pv_dsdocume_i", "Recibo "+recibo.getNumRec());
 					paramsR.put("pv_nmsolici_i", nmsolici);
 					paramsR.put("pv_ntramite_i", ntramite);
 					paramsR.put("pv_tipmov_i", tipoMov);
