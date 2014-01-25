@@ -703,4 +703,43 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		}
 	}
 	
+	@Override
+	public Map<String, String> pClonarPolizaReexped(Map<String, String> params) throws Exception
+	{
+		Map<String,Object> resultadoMap=this.ejecutaSP(new PClonarPolizaReexped(this.getDataSource()), Utilerias.ponFechas(params));
+		Map<String,String>map=new LinkedHashMap<String,String>(0);
+		for(Entry en:resultadoMap.entrySet())
+		{
+			String col=(String) en.getKey();
+			if(col!=null&&col.substring(0,5).equalsIgnoreCase("pv_fe"))
+			{
+				map.put(col,Utilerias.formateaFecha(en.getValue()+""));
+			}
+			else
+			{
+				map.put(col,en.getValue()+"");
+			}
+		}
+		return map;
+	}
+	
+	protected class PClonarPolizaReexped extends StoredProcedure
+	{
+		protected PClonarPolizaReexped(DataSource dataSource)
+		{
+			super(dataSource, "P_CLONAR_POLIZA_REEXPED");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_feinival"   , OracleTypes.DATE));
+			
+			declareParameter(new SqlOutParameter("pv_nmpolnew_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_ntramite_o" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 }

@@ -305,6 +305,27 @@ public class EndososManagerImpl implements EndososManager
 		log.debug("EndososManager actualizaCopagoValosit end");
 	}
 	
+	//P_CLONAR_POLIZA_REEXPED
+	@Override
+	public Map<String,String>        pClonarPolizaReexped(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String fecha) throws Exception
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_feinival"   , fecha);
+		log.debug("EndososManager pClonarPolizaReexped params: "+params);
+		Map<String,String> mapa=endososDAO.pClonarPolizaReexped(params);
+		log.debug("EndososManager pClonarPolizaReexped response map: "+mapa);
+        return mapa;
+	}
+	
 	/////////////////////////////////
 	////// getters and setters //////
 	/*/////////////////////////////*/

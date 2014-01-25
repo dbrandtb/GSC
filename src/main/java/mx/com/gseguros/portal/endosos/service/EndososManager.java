@@ -57,4 +57,10 @@ public interface EndososManager
 			,String nmpoliza
 			,String nmsuplem
 			,String deducible) throws Exception;
+	public Map<String,String>        pClonarPolizaReexped(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String fecha) throws Exception;
 }

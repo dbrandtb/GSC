@@ -28,4 +28,5 @@ public interface EndososDAO
 	public void                     validaEndosoAnterior(Map<String, String> params)        throws Exception;
 	public void                     actualizaDeducibleValosit(Map<String, String> params)   throws Exception;
 	public void                     actualizaCopagoValosit(Map<String, String> params)      throws Exception;
+	public Map<String, String>      pClonarPolizaReexped(Map<String, String> params)        throws Exception;
 }
