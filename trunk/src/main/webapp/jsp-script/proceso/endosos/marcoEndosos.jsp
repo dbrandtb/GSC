@@ -736,6 +736,41 @@
                 mensajeError('Seleccione la p&oacute;liza');
             }
         }
+    	else if(recordOperacion.get('funcion')=='reexpedicion')
+        {
+            debug('reexpedicion');
+            var nPolizasActivas=0;
+            var polizaActiva;
+            marendStorePolizas.each(function(record)
+            {
+                if(record.get('activo')==true)
+                {
+                    nPolizasActivas=nPolizasActivas+1;
+                    polizaActiva=record;
+                }
+            });
+            if(nPolizasActivas==1)
+            {
+                Ext.getCmp('marendMenuOperaciones').collapse();
+                Ext.getCmp('marendLoaderFrame').setTitle(recordOperacion.get('texto'));
+                var smap1 = polizaActiva.raw;
+                smap1['DSCOMENT']='';
+                Ext.getCmp('marendLoaderFrame').getLoader().load(
+                {
+                    url       : recordOperacion.get('liga')
+                    ,scripts  : true
+                    ,autoLoad : true
+                    ,jsonData :
+                    {
+                        'smap1'  : smap1
+                    }
+                });
+            }
+            else
+            {
+                mensajeError('Seleccione la p&oacute;liza');
+            }
+        }
     }
     
     function marendNavegacion(nivel)
@@ -974,24 +1009,29 @@ Ext.onReady(function()
                     ,funcion : 'endosodomiciliofull'
                 }
                 ,{
-                    texto    : '17'//domicilio full
+                    texto    : '17'
                     ,liga    : '<s:url namespace="/endosos" action="endosoDeducible" />'
                     ,funcion : 'masdeducible'
                 }
                 ,{
-                    texto    : '18'//domicilio full
+                    texto    : '18'
                     ,liga    : '<s:url namespace="/endosos" action="endosoDeducible" />'
                     ,funcion : 'menosdeducible'
                 }
                 ,{
-                    texto    : '11'//domicilio full
+                    texto    : '11'
                     ,liga    : '<s:url namespace="/endosos" action="endosoCopago" />'
                     ,funcion : 'mascopago'
                 }
                 ,{
-                    texto    : '12'//domicilio full
+                    texto    : '12'
                     ,liga    : '<s:url namespace="/endosos" action="endosoCopago" />'
                     ,funcion : 'menoscopago'
+                }
+                ,{
+                    texto    : '24'
+                    ,liga    : '<s:url namespace="/endosos" action="endosoReexpedicion" />'
+                    ,funcion : 'reexpedicion'
                 }
             ]
         }

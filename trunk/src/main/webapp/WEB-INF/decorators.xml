@@ -29,6 +29,7 @@
         <pattern>/endosos/errorEndosoAnterior.action</pattern>
         <pattern>/endosos/endosoDeducible.action</pattern>
         <pattern>/endosos/endosoCopago.action</pattern>
+        <pattern>/endosos/endosoReexpedicion.action</pattern>
         
         <pattern>/catalogos/agregaUsuarios.action</pattern>
         <pattern>/jsp/catalogos/agregaUsuarios.jsp</pattern>

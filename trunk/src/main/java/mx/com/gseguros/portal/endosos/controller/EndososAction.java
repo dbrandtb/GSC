@@ -15,6 +15,7 @@ import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.portal.cancelacion.service.CancelacionManager;
 import mx.com.gseguros.portal.cotizacion.controller.ComplementariosCoberturasAction;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.Tatri;
@@ -61,6 +62,7 @@ public class EndososAction extends PrincipalCoreAction
 	private Map<String,String>       parametros;
 	private Map<String,Item>         imap1;
 	private String                   error;
+	private CancelacionManager       cancelacionManager;
 
 	//////////////////////////////
 	////// marco de endosos //////
@@ -5402,9 +5404,10 @@ public class EndososAction extends PrincipalCoreAction
 		String cdtipsit = smap1.get("CDTIPSIT");
 		String cdtipsup = TipoEndoso.CANCELACION_POR_REEXPEDICION.getCdTipSup().toString();
 		
-		String cdPantalla           = "ENDOSO_REEXPEDICION";
-		String cdPanelLectura       = "PANEL_LECTURA";
-		String keyItemsPanelLectura = "itemsPanelLectura";
+		String cdPantalla            = "ENDOSO_REEXPEDICION";
+		String cdPanelLectura        = "PANEL_LECTURA";
+		String keyItemsPanelLectura  = "itemsPanelLectura";
+		String keyFieldsPanelLectura = "fieldsFormLectura";
 				
 		UserVO usuario    = (UserVO)session.get("USUARIO");
 		String cdelemento = usuario.getEmpresa().getElementoId();
@@ -5427,8 +5430,8 @@ public class EndososAction extends PrincipalCoreAction
 						,cdPantalla , rol
 						,null       , cdPanelLectura));
 				
-				imap1.put(keyItemsPanelLectura,gc.getItems());				
-				
+				imap1.put(keyItemsPanelLectura,gc.getItems());
+				imap1.put(keyFieldsPanelLectura,gc.getFields());
 			}
 			catch(Exception ex)
 			{
@@ -5449,6 +5452,134 @@ public class EndososAction extends PrincipalCoreAction
 	/*////////////////////////////*/
 	////// endosoReexpedicion //////
 	////////////////////////////////
+	
+	///////////////////////////////////////
+	////// guardarEndosoReexpedicion //////
+	/*
+	smap1:
+		NMSUPLEM=245668111370000000,
+		DSTIPSIT=SALUD VITAL,
+		FEINIVAL=23/01/2014,
+		NMPOLIZA=24,
+		copago=10000,
+		PRIMA_TOTAL=16039.29,
+		NMPOLIEX=1006213000024000000,
+		NSUPLOGI=2,
+		DSCOMENT=,
+		ESTADO=M,
+		mascopago=si,
+		CDTIPSIT=SL,
+		NTRAMITE=678,
+		CDUNIECO=1006,
+		FEEMISIO=22/01/2014,
+		CDRAMO=2
+	smap2:
+		fecha_endoso
+	smap3:
+		cdrfc=FLOR881209,
+		cdperson=512043,
+		dstempot=RENOVABLE,
+		cdagente=11000,
+		nmsolici=4225,
+		dscuadro=SALUD VITAL 18%,
+		feemisio=23/01/2014,
+		porredau=100,
+		feproren=23/01/2015,
+		feefecto=23/01/2014,
+		dsperpag=ANUAL,
+		dsmoneda=PESOS,
+		titular=TITULAR  FLORES FLORES,
+		nmpoliex=1006213000025000000
+	*/
+	/*//////////////////////////////////////*/
+	public String guardarEndosoReexpedicion()
+	{
+		this.session=ActionContext.getContext().getSession();
+		log.debug("\n"
+				+ "\n#######################################"
+				+ "\n#######################################"
+				+ "\n###### guardarEndosoReexpedicion ######"
+				+ "\n######                           ######"
+				);
+		log.debug("smap1:"+smap1);
+		log.debug("smap2:"+smap2);
+		log.debug("smap3:"+smap3);
+		try
+		{
+			UserVO usuario        = (UserVO)session.get("USUARIO");
+			String cdunieco       = smap1.get("CDUNIECO");
+			String cdramo         = smap1.get("CDRAMO");
+			String estado         = smap1.get("ESTADO");
+			String nmpoliza       = smap1.get("NMPOLIZA");
+			String sFecha         = smap2.get("fecha_endoso");
+			Date   dFecha         = renderFechas.parse(sFecha);
+			String cdelemento     = usuario.getEmpresa().getElementoId();
+			String cdusuari       = usuario.getUser();
+			String proceso        = "END";
+			String cdtipsup       = TipoEndoso.CANCELACION_POR_REEXPEDICION.getCdTipSup().toString();
+			String cdtipsit       = smap1.get("CDTIPSIT");
+			String ntramite       = smap1.get("NTRAMITE");
+			String feIniVig       = smap3.get("feefecto");
+			String feFinvig       = smap3.get("feproren");
+			String cdrazonCancela = "9";
+			String comentaCancela = "Se cancela por reexpedicion";
+			
+			//PKG_ENDOSOS.P_ENDOSO_INICIA
+			Map<String,String>resIniEnd=endososManager.iniciarEndoso(cdunieco, cdramo, estado, nmpoliza, sFecha, cdelemento, cdusuari, proceso, cdtipsup);
+			
+			String nmsuplem = resIniEnd.get("pv_nmsuplem_o");
+			String nsuplogi = resIniEnd.get("pv_nsuplogi_o");
+			
+			//P_CLONAR_POLIZA_REEXPED
+			Map<String,String>resReexped=endososManager.pClonarPolizaReexped(cdunieco, cdramo, estado, nmpoliza, sFecha);
+			String nmpolizaNuevaPoliza = resReexped.get("pv_nmpolnew_o");
+			String ntramiteNuevaPoliza = resReexped.get("pv_ntramite_o");
+			
+			//pkg_cancela.p_selecciona_poliza_unica
+			cancelacionManager.seleccionaPolizaUnica(cdunieco, cdramo, nmpoliza, cdunieco, dFecha);
+			
+			//pkg_cancela.p_cancela_poliza
+			cancelacionManager.cancelaPoliza(cdunieco, cdramo, cdunieco, estado, nmpoliza, null
+					,cdrazonCancela, comentaCancela, feIniVig, feFinvig, sFecha, cdusuari);
+			
+			//+- 30 dias ? PKG_SATELITES.P_MOV_MESACONTROL : PKG_ENDOSOS.P_CONFIRMAR_ENDOSOB
+			String tramiteGenerado=this.confirmarEndoso(cdunieco, cdramo, estado, nmpoliza
+					,nmsuplem, nsuplogi, cdtipsup, "", dFecha, cdtipsit);
+			
+			if(tramiteGenerado==null||tramiteGenerado.length()==0)
+			{
+				mensaje="Se ha generado la p&oacute;liza "+nmpolizaNuevaPoliza
+						+" con n&uacute;mero de tr&aacute;mite "+ntramiteNuevaPoliza;
+			}
+			else
+			{
+				mensaje="El endoso "+nsuplogi
+						+" se guard&oacute; en mesa de control para autorizaci&oacute;n "
+						+ "con n&uacute;mero de tr&aacute;mite "+tramiteGenerado+". "
+						+ "La p&oacute;liza reexpedida es "+nmpolizaNuevaPoliza+" con tr&aacutamite "
+						+ "de emisi&oacute;n "+ntramiteNuevaPoliza;
+			}
+			
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			error=ex.getMessage();
+			success=false;
+			log.error("error al guardar endoso de reexpedicion",ex);
+		}
+		
+		log.debug("\n"
+				+ "\n######                           ######"
+				+ "\n###### guardarEndosoReexpedicion ######"
+				+ "\n#######################################"
+				+ "\n#######################################"
+				);
+		return SUCCESS;
+	}
+	/*///////////////////////////////////*/
+	////// guardarEndosoReexpedicion //////
+	///////////////////////////////////////
 	
 	///////////////////////////////
 	////// getters y setters //////
@@ -5579,6 +5710,10 @@ public class EndososAction extends PrincipalCoreAction
 
 	public void setSmap3(Map<String, String> smap3) {
 		this.smap3 = smap3;
+	}
+
+	public void setCancelacionManager(CancelacionManager cancelacionManager) {
+		this.cancelacionManager = cancelacionManager;
 	}
 	
 }

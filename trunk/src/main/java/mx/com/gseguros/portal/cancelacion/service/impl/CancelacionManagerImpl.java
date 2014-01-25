@@ -1,6 +1,8 @@
 package mx.com.gseguros.portal.cancelacion.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -57,6 +59,7 @@ public class CancelacionManagerImpl implements CancelacionManager
 		log.debug("CancelacionManager seleccionaPolizas end");
 	}
 	
+	//pkg_cancela.p_cancela_poliza
 	@Override
 	public void cancelaPoliza (Map<String,String> params) throws Exception
 	{
@@ -65,12 +68,31 @@ public class CancelacionManagerImpl implements CancelacionManager
 		log.debug("CancelacionManager cancelaPoliza end");
 	}
 	
+	//pkg_cancela.p_selecciona_poliza_unica
 	@Override
 	public void seleccionaPolizaUnica (Map<String,Object> params) throws Exception
 	{
 		log.debug("CancelacionManager seleccionaPolizaUnica params: "+params);
 		cancelacionDAO.seleccionaPolizaUnica(params);
 		log.debug("CancelacionManager seleccionaPolizaUnica end");
+	}
+	
+	//pkg_cancela.p_selecciona_poliza_unica
+	@Override
+	public void seleccionaPolizaUnica (
+			String cdunieco
+			,String cdramo
+			,String nmpoliza
+			,String agencia
+			,Date   fecha) throws Exception
+	{
+		Map<String,Object>params=new HashMap<String,Object>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_agencia_i"  , agencia);
+		params.put("pv_fechapro_i" , fecha);
+		this.seleccionaPolizaUnica(params);
 	}
 	
 	@Override
@@ -87,6 +109,38 @@ public class CancelacionManagerImpl implements CancelacionManager
 		log.debug("CancelacionManager cancelacionMasiva params: "+params);
 		cancelacionDAO.cancelacionMasiva(params);
 		log.debug("CancelacionManager cancelacionMasiva end");
+	}
+	
+	//pkg_cancela.p_cancela_poliza
+	@Override
+	public void                     cancelaPoliza             (
+			String cdunieco
+			,String cdramo
+			,String cduniage
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String cdrazon
+			,String comenta
+			,String feefecto
+			,String fevencim
+			,String fecancel
+			,String cdusuari) throws Exception
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_cduniage_i" , cduniage);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_nmsituac_i" , nmsituac);
+		params.put("pv_cdrazon_i"  , cdrazon);
+		params.put("pv_comenta_i"  , comenta);
+		params.put("pv_feefecto_i" , feefecto);
+		params.put("pv_fevencim_i" , fevencim);
+		params.put("pv_fecancel_i" , fecancel);
+		params.put("pv_usuario_i"  , cdusuari);
+		this.cancelaPoliza(params);
 	}
 
 }
