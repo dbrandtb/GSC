@@ -129,6 +129,12 @@ Ext.onReady(function()
 		,title       : 'Confirmar cancelaciones'
 		,store       : panCanAutoStorePolizas
 		,buttonAlign : 'center'
+		,bbar        :
+        {
+            displayInfo : true
+            ,store      : panCanAutoStorePolizas
+            ,xtype      : 'pagingtoolbar'
+        }
 		,buttons     :
 		[
 		    {
