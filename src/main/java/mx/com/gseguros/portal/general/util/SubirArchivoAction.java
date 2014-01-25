@@ -21,9 +21,8 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.utils.HttpUtil;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.interceptor.ServletRequestAware;
-
-import com.opensymphony.xwork2.ActionContext;
 
 /**
  *
@@ -277,9 +276,25 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 				);
 		return SUCCESS;
 	}
-	/*////////////////////////////////////////////*/
-	////// generar contrarecibo de documentos //////
-	////////////////////////////////////////////////
+
+	public String habilitaSigRecibo(){
+		logger.debug("Entrando a habilitar siguiente recibo");
+		try{
+			progresoTexto = kernelManager.habilitaSigRecibo(smap1);
+			if(StringUtils.isBlank(progresoTexto))progresoTexto="Error al habilitar el recibo subsecuente.";
+			else progresoTexto="Se ha habilitado el recibo subsecuente.";
+			
+			success=true;
+		}catch(Exception ex){
+			logger.error("error al  habilitar siguiente recibo",ex);
+			progresoTexto = ex.getMessage();
+			success=false;
+		}
+		
+		
+		return SUCCESS;
+	}
+	
 	
 	/////////////////////////////////
 	////// getters and setters //////

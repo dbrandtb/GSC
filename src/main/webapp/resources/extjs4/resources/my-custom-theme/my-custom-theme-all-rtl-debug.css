@@ -14847,6 +14847,7 @@ textarea.x-form-empty-field {
 /* line 13, ../../../../ext/packages/ext-theme-neutral/sass/src/window/MessageBox.scss */
 .x-message-box-info,
 .x-message-box-warning,
+.x-message-box-ok,
 .x-message-box-question,
 .x-message-box-error {
   background-position: top left;
@@ -14854,7 +14855,7 @@ textarea.x-form-empty-field {
 }
 
 /* line 23, ../../../../ext/packages/ext-theme-neutral/sass/src/window/MessageBox.scss */
-.x-rtl.x-message-box-info, .x-rtl.x-message-box-warning, .x-rtl.x-message-box-question, .x-rtl.x-message-box-error {
+.x-rtl.x-message-box-info, .x-rtl.x-message-box-warning, .x-rtl.x-message-box-ok, .x-rtl.x-message-box-question, .x-rtl.x-message-box-error {
   background-position: top left;
 }
 
@@ -14866,6 +14867,10 @@ textarea.x-form-empty-field {
 /* line 33, ../../../../ext/packages/ext-theme-neutral/sass/src/window/MessageBox.scss */
 .x-message-box-warning {
   background-image: url(images/shared/icon-warning.png);
+}
+
+.x-message-box-ok {
+  background-image: url(images/shared/icon-ok.png);
 }
 
 /* line 37, ../../../../ext/packages/ext-theme-neutral/sass/src/window/MessageBox.scss */

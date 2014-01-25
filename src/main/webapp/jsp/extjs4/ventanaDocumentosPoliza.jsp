@@ -58,6 +58,8 @@ var panDocUrlUploadPro   = '<s:url namespace="/" action="subirArchivoMostrarBarr
 var panDocUrlDownload    = '<s:url namespace ="/documentos" action="descargaDoc" />';
 var panDocUrlViewDoc     = '<s:url namespace ="/documentos" action="descargaDocInline" />';
 var venDocUrlImpConrec   = '<s:url namespace ="/documentos" action="generarContrarecibo" />';
+
+var _URLhabilitaSigRec   = '<s:url namespace ="/documentos" action="habilitaSigRec" />';
 /*//////////////////////*/
 ////// variables    //////
 //////////////////////////
@@ -533,6 +535,65 @@ Ext.onReady(function()
 	                            ,text    : 'Generar contrarecibo'
 	                            ,icon    : '${ctx}/resources/fam3icons/icons/page_attach.png'
 	                            ,handler : this.onContrareciboClick
+                            },
+                            '-',
+                            { xtype: 'tbspacer', width: 50 }, 
+                            {
+                            	xtype    : 'button'
+                            	,id      : 'habilitaRec'
+	                            ,text    : 'Habilitar siguiente Recibo'
+	                            ,icon    : '${ctx}/resources/fam3icons/icons/table_go.png'
+	                            ,handler : function (button, evt){
+	                            	var window=button.up().up();
+	                            	
+	                            	window.setLoading(true);
+	                            	Ext.Ajax.request({
+	                            		url       : _URLhabilitaSigRec
+	                            		//,jsonData : Ext.encode(jsonParams)
+	                            		,params   : {
+	                            			'smap1.pv_cdunieco_i' : panDocInputCdunieco,
+	                            			'smap1.pv_cdramo_i'   : panDocInputCdramo,
+	                            			'smap1.pv_estado_i'   : panDocInputEstado,
+	                            			'smap1.pv_nmpoliza_i' : panDocInputNmpoliza,
+	                            			
+	                            		}
+	                            		,success  : function(response){
+	                            			window.setLoading(false);
+	                            			
+	                            			var json=Ext.decode(response.responseText);
+	                            			
+	                            			if(json.success==true)
+	                            			{
+	                            				panDocStoreDoc.load();
+	                            				Ext.Msg.show({
+	                                                title:'Aviso',
+	                                                msg: json.progresoTexto,
+	                                                buttons: Ext.Msg.OK,
+	                                                icon:'x-message-box-ok'  
+	                                            });
+	                            			}
+	                            			else
+	                            			{
+	                            				Ext.Msg.show({
+	                                                title:'Error',
+	                                                msg: json.progresoTexto,
+	                                                buttons: Ext.Msg.OK,
+	                                                icon: Ext.Msg.ERROR
+	                                            });
+	                            			}
+	                            		}
+	                            		,failure  : function()
+	                            		{
+	                            			window.setLoading(false);
+	                            			Ext.Msg.show({
+	                                            title:'Error',
+	                                            msg: 'Error de comunicaci&oacute;n',
+	                                            buttons: Ext.Msg.OK,
+	                                            icon: Ext.Msg.ERROR
+	                                        });
+	                            		}
+	                            	});
+	                            }
                             }
                         ]
                     }

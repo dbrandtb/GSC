@@ -144,4 +144,5 @@ public interface KernelManagerSustituto {
 	public WrapperResultados validarExtraprimaSituac(Map<String, String> params) throws ApplicationException;
 	public WrapperResultados guardaPeriodosDxN(Map<String, Object> params) throws ApplicationException;
 	public WrapperResultados lanzaProcesoDxN(Map<String, Object> params) throws ApplicationException;
+	public String habilitaSigRecibo(Map<String, String> params) throws ApplicationException;
 }
