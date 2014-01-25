@@ -1019,5 +1019,10 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         log.debug("### kernel sustituto validarExtraprimaSituac mesage:"+res.getMsgText());
 		return res;
 	}
+
+	public String habilitaSigRecibo(Map<String, String> params) throws ApplicationException{
+		WrapperResultados res = this.returnBackBoneInvoke(params,ProcesoDAO.HABILITA_SIG_RECIBO);
+		return res.getMsgTitle();
+	}
 	
 }

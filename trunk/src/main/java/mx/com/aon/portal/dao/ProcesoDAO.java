@@ -139,6 +139,7 @@ public class ProcesoDAO extends AbstractDAO {
 	public static final String VALIDAR_EXTRAPRIMA       =	"VALIDAR_EXTRAPRIMA";
 	public static final String VALIDAR_EXTRAPRIMA_SITUAC       =	"VALIDAR_EXTRAPRIMA_SITUAC";
 	public static final String P_OBTIENE_MESACONTROL_SUPER = "P_OBTIENE_MESACONTROL_SUPER";
+	public static final String HABILITA_SIG_RECIBO = "HABILITA_SIG_RECIBO";
 
 	protected void initDao() throws Exception {
 		addStoredProcedure(EJECUTA_SIGSVALIPOL, new EjecutarSIGSVALIPOL(getDataSource()));
@@ -229,6 +230,7 @@ public class ProcesoDAO extends AbstractDAO {
 		addStoredProcedure(LANZA_PROCESO_DXN, new LanzaProcesoDxN(getDataSource()));
 		addStoredProcedure(VALIDAR_EXTRAPRIMA, new ValidarExtraprima(getDataSource()));
 		addStoredProcedure(VALIDAR_EXTRAPRIMA_SITUAC, new ValidarExtraprimaSituac(getDataSource()));
+		addStoredProcedure(HABILITA_SIG_RECIBO, new HabilitaSigRecibo(getDataSource()));
 	}
 	
 	
@@ -4078,6 +4080,27 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			return wrapperResultados;
 		}   	
 
+    }
+
+    protected class HabilitaSigRecibo extends CustomStoredProcedure {
+    	
+    	protected HabilitaSigRecibo(DataSource dataSource) {
+    		super(dataSource, "PKG_SATELITES.P_HABILITAR_SIG_RECSUB");
+    		declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+    		WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+    		WrapperResultados wrapperResultados=mapper.build(map);
+    		return wrapperResultados;
+    	}   	
+    	
     }
     
     protected class ObtenerMesaControlSuper extends CustomStoredProcedure
