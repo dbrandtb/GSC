@@ -5602,6 +5602,321 @@ public class EndososAction extends PrincipalCoreAction
 	////// guardarEndosoReexpedicion //////
 	///////////////////////////////////////
 	
+	//////////////////////////////
+	////// endosoExtraprima //////
+	/*
+	smap1:
+		cdrfc=MAVA900817001,
+		cdperson=511965,
+		fenacimi=1990-08-17T00:00:00,
+		sexo=H,
+		Apellido_Materno=MAT,
+		nombre=NOMBRE1,
+		nombrecompleto=NOMBRE1  PAT MAT,
+		nmsituac=1,
+		segundo_nombre=null,
+		Parentesco=T,
+		CDTIPSIT=SL,
+		NTRAMITE=615,
+		CDUNIECO=1006,
+		CDRAMO=2,
+		NMSUPLEM=245667912520000001,
+		NMPOLIZA=14,
+		swexiper=S,
+		NMPOLIEX=1006213000014000000,
+		nacional=001,
+		activo=true,
+		NSUPLOGI=4,
+		ESTADO=M,
+		cdrol=2,
+		tpersona=F,
+		Apellido_Paterno=PAT
+	smap2:
+		masextraprima: "si"
+	*/
+	/*//////////////////////*/
+	public String endosoExtraprima()
+	{
+		this.session=ActionContext.getContext().getSession();
+		log.debug("\n"
+				+ "\n##############################"
+				+ "\n##############################"
+				+ "\n###### endosoExtraprima ######"
+				+ "\n######                  ######"
+				);
+		log.debug("smap1: "+smap1);
+		log.debug("smap2: "+smap2);
+		
+		String cdunieco = smap1.get("CDUNIECO");
+		String cdramo   = smap1.get("CDRAMO");
+		String estado   = smap1.get("ESTADO");
+		String nmpoliza = smap1.get("NMPOLIZA");
+		String cdtipsit = smap1.get("CDTIPSIT");
+		String nmsituac = smap1.get("nmsituac");
+		String cdtipsup = smap2.get("masextraprima").equalsIgnoreCase("si")?
+				TipoEndoso.EXTRAPRIMA_MAS.getCdTipSup().toString():
+				TipoEndoso.EXTRAPRIMA_MENOS.getCdTipSup().toString();
+				
+		UserVO usuario    = (UserVO)session.get("USUARIO");
+		String cdelemento = usuario.getEmpresa().getElementoId();
+		String cdusuari   = usuario.getUser();
+		String rol        = usuario.getRolActivo().getObjeto().getValue();
+		
+		String respuesta=this.validaEndosoAnterior(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
+		
+		String llaveExtraprima     = "";
+		String cdatribuExtraprima  = "";
+		
+		String nombreItemExtraprimaOriginal = "EXTRAPRIMA ORIGINAL";
+		String nombreItemNuevaExtraprima    = "NUEVA EXTRAPRIMA";
+		
+		String llaveItemExtraprimaOriginal = "itemExtraprimaLectura";
+		String llaveItemNuevaExtraprima    = "itemExtraprima";
+		String llavePanelLectura           = "itemsLectura";
+		
+		String pantalla = "ENDOSO_EXTRAPRIMA";
+		
+		if(cdtipsit.equals("SL")||cdtipsit.equals("SN"))
+		{
+			llaveExtraprima    = "otvalor18";
+			cdatribuExtraprima = "18";
+		}
+		
+		if(respuesta.equals(SUCCESS))
+		{
+			try
+			{
+				Map<String,Object>valosit=kernelManager.obtieneValositSituac(cdunieco,cdramo,estado,nmpoliza,nmsituac);
+				if(llaveExtraprima.length()>0
+						&&valosit.containsKey(llaveExtraprima))
+				{
+					String extraprima=(String)valosit.get(llaveExtraprima);
+					if(StringUtils.isBlank(extraprima))
+					{
+						extraprima="0";
+					}
+					log.debug("extraprima del asegurado: "+extraprima);
+					smap1.put("extraprima"    , extraprima);
+					smap1.put("masextraprima" , smap2.get("masextraprima"));
+				}
+				else
+				{
+					throw new Exception("No hay extraprima definida para este producto");
+				}
+				
+				List<Tatri>tatrisit = kernelManager.obtenerTatrisit(cdtipsit);
+				List<Tatri>temp     = new ArrayList<Tatri>();
+				for(Tatri tatrisitIte:tatrisit)
+				{
+					if(tatrisitIte.getCdatribu().equalsIgnoreCase(cdatribuExtraprima))
+					{
+						temp.add(tatrisitIte);
+					}
+				}
+				tatrisit=temp;
+				
+				GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+				gc.setCdtipsit(cdtipsit);
+				
+				imap1=new HashMap<String,Item>();
+				tatrisit.get(0).setDsatribu(nombreItemNuevaExtraprima);
+				
+				gc.generaParcial(tatrisit);
+				
+				imap1.put(llaveItemNuevaExtraprima,gc.getItems());
+				
+				tatrisit.get(0).setReadOnly(true);
+				tatrisit.get(0).setDsatribu(nombreItemExtraprimaOriginal);
+				
+				gc.generaParcial(tatrisit);
+				
+				imap1.put(llaveItemExtraprimaOriginal,gc.getItems());
+				
+				gc.generaParcial(pantallasManager.obtenerCamposPantalla(
+						cdunieco  , cdramo
+						,cdtipsit , estado
+						,nmpoliza , null
+						,pantalla , rol
+						,null     , "PANEL_LECTURA"));
+				
+				imap1.put(llavePanelLectura,gc.getItems());
+				
+			}
+			catch(Exception ex)
+			{
+				log.error("error al mostrar pantalla endoso extraprima",ex);
+				error=ex.getMessage();
+				respuesta=ERROR;
+			}
+		}
+		
+		log.debug("\n"
+				+ "\n######                  ######"
+				+ "\n###### endosoExtraprima ######"
+				+ "\n##############################"
+				+ "\n##############################"
+				);
+		return respuesta;
+	}
+	/*//////////////////////////*/
+	////// endosoExtraprima //////
+	//////////////////////////////
+	
+	/////////////////////////////////////
+	////// guardarEndosoExtraprima //////
+	/*
+	smap1:
+		cdrfc:'MAVA900817001',
+	    cdperson:'511965',
+	    masextraprima:'si',
+	    fenacimi:'1990-08-17T00:00:00',
+	    sexo:'H',
+	    Apellido_Materno:'MAT',
+	    nombre:'NOMBRE1',
+	    nombrecompleto:'NOMBRE1  PAT MAT',
+	    nmsituac:'1',
+	    segundo_nombre:'null',
+	    Parentesco:'T',
+	    CDTIPSIT:'SL',
+	    NTRAMITE:'615',
+	    CDUNIECO:'1006',
+	    CDRAMO:'2',
+	    extraprima:'0',
+	    NMSUPLEM:'245668512050000001',
+	    NMPOLIZA:'14',
+	    swexiper:'S',
+	    NMPOLIEX:'1006213000014000000',
+	    nacional:'001',
+	    activo:'true',
+	    NSUPLOGI:'10',
+	    ESTADO:'M',
+	    cdrol:'2',
+	    tpersona:'F',
+	    Apellido_Paterno:'PAT'
+	smap2:
+		extraprima=10000,
+		fecha_endoso=23/01/2014
+	slist1:[
+	    {
+	    dsclausu=ENDOSO LIBRE,
+	    linea_usuario=TEXTO LIBRE lel,
+	    linea_general=,
+	    cdclausu=END215,
+	    merged=,
+	    cdtipcla=3
+	    }]
+	*/
+	/*/////////////////////////////////*/
+	public String guardarEndosoExtraprima()
+	{
+		this.session=ActionContext.getContext().getSession();
+		log.debug("\n"
+				+ "\n#####################################"
+				+ "\n#####################################"
+				+ "\n###### guardarEndosoExtraprima ######"
+				+ "\n######                         ######"
+				);
+		log.debug("smap1:"+smap1);
+		log.debug("smap2:"+smap2);
+		log.debug("slist1:"+slist1);
+		try
+		{
+			UserVO usuario    = (UserVO)session.get("USUARIO");
+			String cdunieco   = smap1.get("CDUNIECO");
+			String cdramo     = smap1.get("CDRAMO");
+			String estado     = smap1.get("ESTADO");
+			String nmpoliza   = smap1.get("NMPOLIZA");
+			String nmsituac   = smap1.get("nmsituac");
+			String cdtipsit   = smap1.get("CDTIPSIT");
+			String ntramite   = smap1.get("NTRAMITE");
+			String cdtipsup   = smap1.get("masextraprima").equalsIgnoreCase("si")?
+					TipoEndoso.EXTRAPRIMA_MAS.getCdTipSup().toString():
+						TipoEndoso.EXTRAPRIMA_MENOS.getCdTipSup().toString();
+			String extraprima = smap2.get("extraprima");
+			String fecha      = smap2.get("fecha_endoso");
+			Date   dFecha     = renderFechas.parse(fecha);
+			String cdelemento = usuario.getEmpresa().getElementoId();
+			String cdusuari   = usuario.getUser();
+			String proceso    = "END";
+			
+			//PKG_ENDOSOS.P_ENDOSO_INICIA
+			Map<String,String>resIniEnd=endososManager.iniciarEndoso(cdunieco, cdramo, estado, nmpoliza, fecha, cdelemento, cdusuari, proceso, cdtipsup);
+			
+			String nmsuplem = resIniEnd.get("pv_nmsuplem_o");
+			String nsuplogi = resIniEnd.get("pv_nsuplogi_o");
+			
+			//PKG_ENDOSOS.P_INS_NEW_EXTRAPRIMA_TVALOSIT
+			endososManager.actualizaExtraprimaValosit(cdunieco, cdramo, estado, nmpoliza, nmsituac, nmsuplem, extraprima);
+			
+			//Iteracion
+			for(Map<String,String>cla:slist1)
+			{
+				String cdclausu = cla.get("cdclausu");
+				String dslinea  = cla.get("linea_usuario");
+				String cdtipcla = cla.get("cdtipcla");					
+				
+				//PKG_SATELITES.P_MOV_MPOLICOT
+				kernelManager.PMovMpolicot(cdunieco, cdramo, estado, nmpoliza, nmsituac,
+						cdclausu, nmsuplem, Constantes.STATUS_VIVO, cdtipcla, null, dslinea, Constantes.INSERT_MODE);
+			}
+			
+			//pkg_satelites.valida_extraprima_situac_read
+			String statusValidacionExtraprimas=(String)kernelManager.validarExtraprimaSituacRead(
+					cdunieco,cdramo, estado, nmpoliza, nmsituac).getItemMap().get("status");
+			log.debug("tiene status la extraprima: "+statusValidacionExtraprimas);
+			if(statusValidacionExtraprimas.equalsIgnoreCase("N"))
+			{
+				error="Favor de verificar las extraprimas y los endosos de extraprima";
+				throw new Exception(error);
+			}
+			
+			//PKG_SATELITES.P_INSERTA_TWORKSUP_END
+			endososManager.insertarTworksupEnd(cdunieco, cdramo, estado, nmpoliza, cdtipsup, nmsuplem, nmsituac);
+
+            //PKG_COTIZA.P_EJECUTA_SIGSVALIPOL_END
+            endososManager.sigsvalipolEnd(cdusuari, cdelemento, cdunieco, cdramo, estado, nmpoliza, nmsituac, nmsuplem, cdtipsit, cdtipsup);
+			
+			//PKG_ENDOSOS.P_CALC_VALOR_ENDOSO
+			endososManager.calcularValorEndoso(cdunieco, cdramo, estado, nmpoliza, nmsituac, nmsuplem, dFecha, cdtipsup);
+			
+			//+- 30 dias ? PKG_SATELITES.P_MOV_MESACONTROL : PKG_ENDOSOS.P_CONFIRMAR_ENDOSOB
+			String tramiteGenerado=this.confirmarEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, cdtipsup, "", dFecha, cdtipsit);
+			
+			if(StringUtils.isBlank(tramiteGenerado))
+			{
+				//PKG_CONSULTA.P_reImp_documentos
+				String nmsolici = this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite);
+				
+				mensaje="Se ha guardado el endoso "+nsuplogi;
+			}
+			else
+			{
+				mensaje="El endoso "+nsuplogi
+						+" se guard&oacute; en mesa de control para autorizaci&oacute;n "
+						+ "con n&uacute;mero de tr&aacute;mite "+tramiteGenerado;
+			}
+			
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			error=ex.getMessage();
+			success=false;
+			log.error("error al guardar endoso de extraprima",ex);
+		}
+		
+		log.debug("\n"
+				+ "\n######                         ######"
+				+ "\n###### guardarEndosoExtraprima ######"
+				+ "\n#####################################"
+				+ "\n#####################################"
+				);
+		return SUCCESS;
+	}
+	/*/////////////////////////////////*/
+	////// guardarEndosoExtraprima //////
+	/////////////////////////////////////
+	
 	///////////////////////////////
 	////// getters y setters //////
 	/*///////////////////////////*/

@@ -29,6 +29,7 @@ var _6_formLectura;
 var _6_formDeducible;
 var _6_panelPri;
 var _6_panelEndoso;
+var _6_fieldFechaEndoso;
 
 var _6_urlGuardar = '<s:url namespace="/endosos" action="guardarEndosoDeducible" />';
 

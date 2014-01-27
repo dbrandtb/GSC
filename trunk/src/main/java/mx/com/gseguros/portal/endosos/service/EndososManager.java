@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.endosos.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -13,9 +14,42 @@ public interface EndososManager
     public List<Map<String, String>> obtieneCoberturasDisponibles(Map<String, String> params) throws Exception;
     public Map<String,String>        guardarEndosoCoberturas(Map<String,Object>params)        throws Exception;
 	public List<Map<String, String>> obtenerAtributosCoberturas(Map<String, String> params)   throws Exception;
+	/**
+	 * PKG_COTIZA.P_EJECUTA_SIGSVALIPOL_END
+	 */
 	public Map<String,Object>        sigsvalipolEnd(Map<String, String> params)               throws Exception;
+	/**
+	 * PKG_COTIZA.P_EJECUTA_SIGSVALIPOL_END
+	 */
+	public Map<String,Object>        sigsvalipolEnd(
+			String cdusuari
+			,String cdelemento
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			,String cdtipsit
+			,String cdtipsup
+			) throws Exception;
 	public Map<String,String>        guardarEndosoClausulas(Map<String,Object>params)         throws Exception;
+	/**
+	 * PKG_ENDOSOS.P_CALC_VALOR_ENDOSO
+	 */
 	public Map<String,String>        calcularValorEndoso(Map<String,Object>params)            throws Exception;
+	/**
+	 * PKG_ENDOSOS.P_CALC_VALOR_ENDOSO
+	 */
+	public Map<String,String>        calcularValorEndoso(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			,Date   feinival
+			,String cdtipsup) throws Exception;
 	public Map<String,String>        iniciarEndoso(Map<String,String>params)                  throws Exception;
 	public Map<String,String>        iniciarEndoso(
 			String cdunieco
@@ -27,7 +61,21 @@ public interface EndososManager
 			,String cdusuari
 			,String proceso
 			,String cdtipsup) throws Exception;
+	/**
+	 * PKG_SATELITES.P_INSERTA_TWORKSUP_END
+	 */
 	public void                      insertarTworksupEnd(Map<String,String>params)            throws Exception;
+	/**
+	 * PKG_SATELITES.P_INSERTA_TWORKSUP_END
+	 */
+	public void                      insertarTworksupEnd(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdtipsup
+			,String nmsuplem
+			,String nmsituac) throws Exception;
 	public void                      insertarTworksupSitTodas(Map<String,String>params)       throws Exception;
 	public Map<String, String>       obtieneDatosMpolisit(Map<String, String> params)         throws Exception;
 	public Map<String, String>       obtieneDatosMpolisit(
@@ -69,4 +117,15 @@ public interface EndososManager
 			,String estado
 			,String nmpoliza
 			,String nmsuplem) throws Exception;
+	/**
+	 * PKG_ENDOSOS.P_INS_NEW_EXTRAPRIMA_TVALOSIT
+	 */
+	public void                      actualizaExtraprimaValosit(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			,String extraprima) throws Exception;
 }
