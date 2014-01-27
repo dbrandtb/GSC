@@ -355,6 +355,8 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return lista;
     }
     
+    //PKG_SATELITES.P_OBT_DATOS_MPOLIPER
+    @Override
     public List<Map<String, Object>> obtenerAsegurados(Map<String, String> parameters) throws ApplicationException
     {
     	log.debug("### kernel sustituto obtenerAsegurados parameters: "+parameters);
@@ -362,6 +364,40 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         lista=lista!=null?lista:new ArrayList<Map<String,Object>>(0);
         log.debug("### kernel sustituto obtenerAsegurados lista size: "+lista.size());
         return lista;
+    }
+    
+    //PKG_SATELITES.P_OBT_DATOS_MPOLIPER
+    /*
+    nmsituac
+	,cdrol
+	,fenacimi
+	,sexo
+	,cdperson
+	,nombre
+	,segundo_nombre
+	,Apellido_Paterno
+	,Apellido_Materno
+	,cdrfc
+	,Parentesco
+	,tpersona
+	,nacional
+	,swexiper
+	*/
+    @Override
+    public List<Map<String, Object>> obtenerAsegurados(
+    		String cdunieco
+    		,String cdramo
+    		,String estado
+    		,String nmpoliza
+    		,String nmsuplem) throws ApplicationException
+    {
+    	Map<String,String>parameters=new HashMap<String,String>();
+    	parameters.put("pv_cdunieco" , cdunieco);
+    	parameters.put("pv_cdramo"   , cdramo);
+    	parameters.put("pv_estado"   , estado);
+    	parameters.put("pv_nmpoliza" , nmpoliza);
+    	parameters.put("pv_nmsuplem" , nmsuplem);
+        return this.obtenerAsegurados(parameters);
     }
     
     public Map<String,Object> getInfoMpolizasCompleta(Map<String,String> parameters) throws ApplicationException {

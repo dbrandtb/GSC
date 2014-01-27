@@ -4424,28 +4424,6 @@ public class EndososAction extends PrincipalCoreAction
 					,dFechaEndoso,null,null,null,null,cdplan,"30",Constantes.INSERT_MODE);
 			*/
 			
-			//PKG_COTIZA.P_OBTIENE_TVALOSIT
-			Map<String,Object>valositOriginal=kernelManager.obtieneValositSituac(cdunieco, cdramo, estado, nmpoliza, nmsituac);
-			/*
-			"otvalor01" ... "otvalor50",
-			"nmsuplem",
-			"status",
-			"cdtipsit"
-			*/
-			
-			//otvalor05 -> pv_otvalor05
-			Map<String,String>otvalorValosit=new HashMap<String,String>();
-			for(Entry<String,Object>en:valositOriginal.entrySet())
-			{
-				String key   = en.getKey();
-				String value = (String)en.getValue();
-				
-				if(key.substring(0,5).equalsIgnoreCase("otval"))
-				{
-					otvalorValosit.put("pv_"+key,value);
-				}
-			}
-			
 			String keyCodPostal = "";
 			String keyEstado    = "";
 			String keyMunicipio = "";
@@ -4454,34 +4432,77 @@ public class EndososAction extends PrincipalCoreAction
 				keyCodPostal = "pv_otvalor03";
 				keyEstado    = "pv_otvalor04";
 				keyMunicipio = "pv_otvalor17";
+
 			}
-			otvalorValosit.put(keyCodPostal , cdpostal);
-			otvalorValosit.put(keyEstado    , cdestado);
-			otvalorValosit.put(keyMunicipio , cdmunici);
+			//PKG_CONSULTA.P_OBT_VALOSIT_POR_NMSUPLEM
+			List<Map<String,String>>valositsPoliza=endososManager.obtenerValositPorNmsuplem(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+			/*
+			CDUNIECO,CDRAMO,ESTADO,NMPOLIZA,NMSITUAC,NMSUPLEM,STATUS,CDTIPSIT,OTVALOR01,OTVALOR02
+			,OTVALOR03,OTVALOR04,OTVALOR05,OTVALOR06,OTVALOR07,OTVALOR08,OTVALOR09,OTVALOR10,OTVALOR11
+			,OTVALOR12,OTVALOR13,OTVALOR14,OTVALOR15,OTVALOR16,OTVALOR17,OTVALOR18,OTVALOR19,OTVALOR20
+			,OTVALOR21,OTVALOR22,OTVALOR23,OTVALOR24,OTVALOR25,OTVALOR26,OTVALOR27,OTVALOR28,OTVALOR29
+			,OTVALOR30,OTVALOR31,OTVALOR32,OTVALOR33,OTVALOR34,OTVALOR35,OTVALOR36,OTVALOR37,OTVALOR38
+			,OTVALOR39,OTVALOR40,OTVALOR41,OTVALOR42,OTVALOR43,OTVALOR44,OTVALOR45,OTVALOR46,OTVALOR47
+			,OTVALOR48,OTVALOR49,OTVALOR50
+			*/
 			
-			//PKG_SATELITES.P_MOV_TVALOSIT
-			kernelManager.insertaValoresSituaciones(cdunieco, cdramo, estado, nmpoliza
-					,nmsituac, nmsuplem, Constantes.STATUS_VIVO, cdtipsit, Constantes.INSERT_MODE, otvalorValosit);
+			for(Map<String,String>valositIte:valositsPoliza)
+			{
+				String nmsituacIte=valositIte.get("NMSITUAC");
+				
+				//otvalor05 -> pv_otvalor05
+				Map<String,String>otvalorValositIte=new HashMap<String,String>();
+				for(Entry<String,String>en:valositIte.entrySet())
+				{
+					String key   = en.getKey();
+					String value = en.getValue();
+					
+					if(key.substring(0,5).equalsIgnoreCase("otval"))
+					{
+						otvalorValositIte.put("pv_"+(key.toLowerCase()),value);
+					}
+				}
+				
+				otvalorValositIte.put(keyCodPostal , cdpostal);
+				otvalorValositIte.put(keyEstado    , cdestado);
+				otvalorValositIte.put(keyMunicipio , cdmunici);
+				
+				//PKG_SATELITES.P_MOV_TVALOSIT
+				kernelManager.insertaValoresSituaciones(cdunieco, cdramo, estado, nmpoliza
+						,nmsituacIte, nmsuplem, Constantes.STATUS_VIVO, cdtipsit, Constantes.INSERT_MODE, otvalorValositIte);
+			}
 			
-			//////////////////////
-			////// mdomicil //////
-			/*//////////////////*/
-			Map<String,String>paramDomicil=new LinkedHashMap<String,String>(0);
-			paramDomicil.put("pv_cdperson_i" , cdperson);
-			paramDomicil.put("pv_nmorddom_i" , nmordom);
-			paramDomicil.put("pv_msdomici_i" , dsdomici);
-			paramDomicil.put("pv_nmtelefo_i" , nmtelefo);
-			paramDomicil.put("pv_cdpostal_i" , cdpostal);
-	    	paramDomicil.put("pv_cdedo_i"    , cdestado);
-			paramDomicil.put("pv_cdmunici_i" , cdmunici);
-			paramDomicil.put("pv_cdcoloni_i" , cdcoloni);
-			paramDomicil.put("pv_nmnumero_i" , nmnumext);
-			paramDomicil.put("pv_nmnumint_i" , nmnumint);
-			paramDomicil.put("pv_accion_i"   , Constantes.UPDATE_MODE);			
-			kernelManager.pMovMdomicil(paramDomicil);
-			/*//////////////////*/
-			////// mdomicil //////
-			//////////////////////
+			//PKG_SATELITES.P_OBT_DATOS_MPOLIPER
+			/* nmsituac,cdrol,fenacimi,sexo,cdperson,nombre
+			 * ,segundo_nombre,Apellido_Paterno ,Apellido_Materno
+			 * ,cdrfc,Parentesco,tpersona,nacional,swexiper
+			 */
+			List<Map<String,Object>>mpoliperPoliza=kernelManager.obtenerAsegurados(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+			for(Map<String,Object>mpoliperIte:mpoliperPoliza)
+			{
+				String cdpersonIte=(String)mpoliperIte.get("cdperson");
+				
+				//////////////////////
+				////// mdomicil //////
+				//PKG_SATELITES.P_MOV_MDOMICIL
+				/*//////////////////*/
+				Map<String,String>paramDomicilIte=new LinkedHashMap<String,String>(0);
+				paramDomicilIte.put("pv_cdperson_i" , cdpersonIte);
+				paramDomicilIte.put("pv_nmorddom_i" , nmordom);
+				paramDomicilIte.put("pv_msdomici_i" , dsdomici);
+				paramDomicilIte.put("pv_nmtelefo_i" , nmtelefo);
+				paramDomicilIte.put("pv_cdpostal_i" , cdpostal);
+				paramDomicilIte.put("pv_cdedo_i"    , cdestado);
+				paramDomicilIte.put("pv_cdmunici_i" , cdmunici);
+				paramDomicilIte.put("pv_cdcoloni_i" , cdcoloni);
+				paramDomicilIte.put("pv_nmnumero_i" , nmnumext);
+				paramDomicilIte.put("pv_nmnumint_i" , nmnumint);
+				paramDomicilIte.put("pv_accion_i"   , Constantes.UPDATE_MODE);			
+				kernelManager.pMovMdomicil(paramDomicilIte);
+				/*//////////////////*/
+				////// mdomicil //////
+				//////////////////////
+			}
 			
 			//////////////////////////////
             ////// inserta tworksup //////

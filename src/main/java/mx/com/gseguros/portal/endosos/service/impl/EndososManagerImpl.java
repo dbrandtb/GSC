@@ -307,7 +307,7 @@ public class EndososManagerImpl implements EndososManager
 	
 	//P_CLONAR_POLIZA_REEXPED
 	@Override
-	public Map<String,String>        pClonarPolizaReexped(
+	public Map<String,String> pClonarPolizaReexped(
 			String cdunieco
 			,String cdramo
 			,String estado
@@ -324,6 +324,37 @@ public class EndososManagerImpl implements EndososManager
 		Map<String,String> mapa=endososDAO.pClonarPolizaReexped(params);
 		log.debug("EndososManager pClonarPolizaReexped response map: "+mapa);
         return mapa;
+	}
+	
+	//PKG_CONSULTA.P_OBT_VALOSIT_POR_NMSUPLEM
+	/*
+	CDUNIECO,CDRAMO,ESTADO,NMPOLIZA,NMSITUAC,NMSUPLEM,STATUS,CDTIPSIT,OTVALOR01,OTVALOR02
+	,OTVALOR03,OTVALOR04,OTVALOR05,OTVALOR06,OTVALOR07,OTVALOR08,OTVALOR09,OTVALOR10,OTVALOR11
+	,OTVALOR12,OTVALOR13,OTVALOR14,OTVALOR15,OTVALOR16,OTVALOR17,OTVALOR18,OTVALOR19,OTVALOR20
+	,OTVALOR21,OTVALOR22,OTVALOR23,OTVALOR24,OTVALOR25,OTVALOR26,OTVALOR27,OTVALOR28,OTVALOR29
+	,OTVALOR30,OTVALOR31,OTVALOR32,OTVALOR33,OTVALOR34,OTVALOR35,OTVALOR36,OTVALOR37,OTVALOR38
+	,OTVALOR39,OTVALOR40,OTVALOR41,OTVALOR42,OTVALOR43,OTVALOR44,OTVALOR45,OTVALOR46,OTVALOR47
+	,OTVALOR48,OTVALOR49,OTVALOR50
+	*/
+	@Override
+	public List<Map<String, String>> obtenerValositPorNmsuplem(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem) throws Exception
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("PV_CDUNIECO_I" , cdunieco);
+		params.put("PV_CDRAMO_I"   , cdramo);
+		params.put("PV_ESTADO_I"   , estado);
+		params.put("PV_NMPOLIZA_I" , nmpoliza);
+		params.put("PV_NMSUPLEM_I" , nmsuplem);
+		log.debug("EndososManager obtenerValositPorNmsuplem params: "+params);
+		List<Map<String,String>> lista=endososDAO.obtenerValositPorNmsuplem(params);
+		lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
+		log.debug("EndososManager obtenerValositPorNmsuplem lista size: "+lista.size());
+		return lista;
 	}
 	
 	/////////////////////////////////

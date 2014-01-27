@@ -17,7 +17,7 @@ public interface EndososManager
 	public Map<String,String>        guardarEndosoClausulas(Map<String,Object>params)         throws Exception;
 	public Map<String,String>        calcularValorEndoso(Map<String,Object>params)            throws Exception;
 	public Map<String,String>        iniciarEndoso(Map<String,String>params)                  throws Exception;
-	public Map<String,String> iniciarEndoso(
+	public Map<String,String>        iniciarEndoso(
 			String cdunieco
 			,String cdramo
 			,String estado
@@ -63,4 +63,10 @@ public interface EndososManager
 			,String estado
 			,String nmpoliza
 			,String fecha) throws Exception;
+	public List<Map<String, String>> obtenerValositPorNmsuplem(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem) throws Exception;
 }

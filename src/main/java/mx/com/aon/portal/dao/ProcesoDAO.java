@@ -1629,6 +1629,22 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     
     //////////////////////////////////////////////
     ////// obtiene asegurados de poliza //////////
+    /*
+	nmsituac
+	,cdrol
+	,fenacimi
+	,sexo
+	,cdperson
+	,nombre
+	,segundo_nombre
+	,Apellido_Paterno
+	,Apellido_Materno
+	,cdrfc
+	,Parentesco
+	,tpersona
+	,nacional
+	,swexiper
+     */
     /*//////////////////////////////////////////*/
     protected class ObtenerAsegurados extends CustomStoredProcedure
     {
