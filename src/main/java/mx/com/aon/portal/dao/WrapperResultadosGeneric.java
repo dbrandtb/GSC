@@ -1,24 +1,27 @@
 package mx.com.aon.portal.dao;
 
-import mx.com.aon.portal.util.WrapperResultados;
-
-import java.util.Map;
 import java.sql.SQLException;
+import java.util.Map;
+
+import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.portal.dao.AbstractManagerDAO;
+
+import org.apache.log4j.Logger;
 @Deprecated
 public class WrapperResultadosGeneric implements WrapperResultadosBuilder {
 
-	public static String MSG_ID_OK = "200000";
-	public static String TITLE_OK = "2";
-
+	private static Logger logger = Logger.getLogger(AbstractManagerDAO.class);
+	
     public WrapperResultados build(Map map) throws SQLException {
         WrapperResultados wrapperResultados = new WrapperResultados();
-        // en caso de que no venga ningun valor, retornamos por default el valor exitoso
-        String msgId = MSG_ID_OK;
-        String title = TITLE_OK;
+        String msgId = "";
+        String title = "";
 
          if (map.get("pv_msg_id_o") != null && map.get("pv_title_o") != null) {
               msgId = (map.get("pv_msg_id_o")).toString();
               title = (map.get("pv_title_o")).toString();
+         } else {
+        	 logger.info("Parametros de estatus de salida vacios");
          }
 
          wrapperResultados.setMsgId(msgId);
