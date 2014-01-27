@@ -288,7 +288,7 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 			if(StringUtils.isBlank(progresoTexto)){
 				progresoTexto="Error al habilitar el recibo subsecuente.";
 			} else if("3".equals(progresoTexto)){
-				progresoTexto = "No existen mas recibos por habilitar.";
+				progresoTexto = "No existen recibos por habilitar.";
 			} else {
 				progresoTexto="Se ha habilitado el recibo subsecuente.";
 				success=true;
