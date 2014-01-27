@@ -283,6 +283,8 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 			progresoTexto = kernelManager.habilitaSigRecibo(smap1);
 			success=false;
 			
+			logger.debug("Mensaje de habilitar recibos: " + progresoTexto);
+			
 			if(StringUtils.isBlank(progresoTexto)){
 				progresoTexto="Error al habilitar el recibo subsecuente.";
 			} else if("3".equals(progresoTexto)){
