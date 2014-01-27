@@ -29,6 +29,7 @@ var _7_formLectura;
 var _7_formCopago;
 var _7_panelPri;
 var _7_panelEndoso;
+var _7_fieldFechaEndoso;
 
 var _7_urlGuardar = '<s:url namespace="/endosos" action="guardarEndosoCopago" />';
 

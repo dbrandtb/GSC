@@ -771,6 +771,66 @@
                 mensajeError('Seleccione la p&oacute;liza');
             }
         }
+    	else if(recordOperacion.get('funcion')=='masextraprima'||recordOperacion.get('funcion')=='menosextraprima')
+        {
+    		debug(recordOperacion.get('funcion'));
+            var nAsegActivos=0;
+            var recordActivo;
+            var hayCliente=false;
+            marendStoreAsegurados.each(function(record)
+            {
+                if(record.get('activo')==true)
+                {
+                    nAsegActivos=nAsegActivos+1;
+                    recordActivo=record;
+                    if(record.get("nmsituac")==0)
+                    {
+                        hayCliente=true;
+                    }
+                }
+            });
+            var valido=true;
+            
+            if(valido)
+            {
+                valido=nAsegActivos==1;
+                if(!valido)
+                {
+                    mensajeWarning('Seleccione solo un asegurado');
+                }
+            }
+            
+            if(valido)
+            {
+            	valido=!hayCliente;
+            	if(!valido)
+            	{
+            		mensajeWarning('No se puede seleccionar al cliente');
+            	}
+            }
+            
+            if(valido)
+            {
+                debug(recordActivo);
+                Ext.getCmp('marendMenuOperaciones').collapse();
+                Ext.getCmp('marendLoaderFrame').setTitle(recordOperacion.get('texto'));
+                var json={
+                    smap1  : recordActivo.getData()
+                    ,smap2 :
+                    {
+                    	masextraprima : recordOperacion.get('funcion')=='masextraprima'?'si':'no'
+                    }
+                };
+                debug(json);
+                Ext.getCmp('marendLoaderFrame').getLoader().load(
+                {
+                    url       : recordOperacion.get('liga')
+                    ,scripts  : true
+                    ,autoLoad : true
+                    ,jsonData : json
+                });
+            }
+        }
     }
     
     function marendNavegacion(nivel)
@@ -1032,6 +1092,16 @@ Ext.onReady(function()
                     texto    : '24'
                     ,liga    : '<s:url namespace="/endosos" action="endosoReexpedicion" />'
                     ,funcion : 'reexpedicion'
+                }
+                ,{
+                    texto    : '13'
+                    ,liga    : '<s:url namespace="/endosos" action="endosoExtraprima" />'
+                    ,funcion : 'masextraprima'
+                }
+                ,{
+                    texto    : '14'
+                    ,liga    : '<s:url namespace="/endosos" action="endosoExtraprima" />'
+                    ,funcion : 'menosextraprima'
                 }
             ]
         }

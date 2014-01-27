@@ -1,7 +1,9 @@
 package mx.com.gseguros.portal.endosos.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -103,6 +105,34 @@ public class EndososManagerImpl implements EndososManager
 	}
 	
 	@Override
+	public Map<String,Object> sigsvalipolEnd(
+			String cdusuari
+			,String cdelemento
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			,String cdtipsit
+			,String cdtipsup
+			) throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>(0);
+		params.put("pv_cdusuari_i" , cdusuari);
+		params.put("pv_cdelemen_i" , cdelemento);
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_nmsituac_i" , nmsituac);
+		params.put("pv_nmsuplem_i" , nmsuplem);
+		params.put("pv_cdtipsit_i" , cdtipsit);
+		params.put("pv_cdtipsup_i" , cdtipsup);
+		return this.sigsvalipolEnd(params);
+	}
+	
+	@Override
 	public Map<String, String> guardarEndosoClausulas(Map<String, Object> params) throws Exception
 	{
 		log.debug("EndososManager guardarEndosoClausulas params: "+params);
@@ -119,6 +149,29 @@ public class EndososManagerImpl implements EndososManager
 		Map<String,String> mapa=endososDAO.calcularValorEndoso(params);
 		log.debug("EndososManager calcularValorEndoso response map: "+mapa);
         return mapa;
+	}
+	
+	@Override
+	public Map<String,String> calcularValorEndoso(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			,Date   feinival
+			,String cdtipsup) throws Exception
+	{
+		Map<String,Object>params=new HashMap<String,Object>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_nmsituac_i" , nmsituac);
+		params.put("pv_nmsuplem_i" , nmsuplem);
+		params.put("pv_feinival_i" , feinival);
+		params.put("pv_cdtipsup_i" , cdtipsup);
+        return this.calcularValorEndoso(params);
 	}
 	
 	//PKG_ENDOSOS.P_ENDOSO_INICIA
@@ -163,6 +216,27 @@ public class EndososManagerImpl implements EndososManager
 		log.debug("EndososManager insertarTworksupEnd params: "+params);
 		endososDAO.insertarTworksupEnd(params);
 		log.debug("EndososManager insertarTworksupEnd end");
+	}
+	
+	@Override
+	public void insertarTworksupEnd(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdtipsup
+			,String nmsuplem
+			,String nmsituac) throws Exception
+	{
+		Map<String,String>params=new LinkedHashMap<String,String>(0);
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_cdtipsup_i" , cdtipsup);
+		params.put("pv_nmsuplem_i" , nmsuplem);
+		params.put("pv_nmsituac_i" , nmsituac);
+        this.insertarTworksupEnd(params);
 	}
 	
 	//PKG_SATELITES.P_INSERTA_TWORKSUP_SIT_TODAS
@@ -362,6 +436,30 @@ public class EndososManagerImpl implements EndososManager
 	/*/////////////////////////////*/
 	public void setEndososDAO(EndososDAO endososDAO) {
 		this.endososDAO = endososDAO;
+	}
+	
+	//PKG_ENDOSOS.P_INS_NEW_EXTRAPRIMA_TVALOSIT
+	@Override
+	public void actualizaExtraprimaValosit(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsituac
+			,String nmsuplem
+			,String extraprima) throws Exception
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("pv_cdunieco_i"   , cdunieco);
+		params.put("pv_cdramo_i"     , cdramo);
+		params.put("pv_estado_i"     , estado);
+		params.put("pv_nmpoliza_i"   , nmpoliza);
+		params.put("pv_nmsituac_i"   , nmsituac);
+		params.put("pv_nmsuplem_i"   , nmsuplem);
+		params.put("pv_extraprima_i" , extraprima);
+		log.debug("EndososManager actualizaExtraprimaValosit params: "+params);
+		endososDAO.actualizaExtraprimaValosit(params);
+		log.debug("EndososManager actualizaExtraprimaValosit end");
 	}
 	
 }

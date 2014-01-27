@@ -786,4 +786,29 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
         }
 	}
 	
+	@Override
+	public void actualizaExtraprimaValosit(Map<String, String> params) throws Exception
+	{
+		this.ejecutaSP(new ActualizaExtraprimaValosit(this.getDataSource()), params);
+	}
+	
+	protected class ActualizaExtraprimaValosit extends StoredProcedure
+	{
+		protected ActualizaExtraprimaValosit(DataSource dataSource)
+		{
+			super(dataSource, "PKG_ENDOSOS.P_INS_NEW_EXTRAPRIMA_TVALOSIT");
+			declareParameter(new SqlParameter("pv_cdunieco_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsituac_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_extraprima_i" , OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 }
