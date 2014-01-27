@@ -99,6 +99,9 @@ public interface KernelManagerSustituto {
 	//requiere de su propio catch si no hay datos:
 	public Map<String, Object> obtenerValoresTatriper(Map<String, String> smap1) throws ApplicationException;
 	public Map<String, String> obtenerDomicilio(Map<String, String> params) throws ApplicationException;
+	/**
+	 * PKG_SATELITES.P_MOV_MDOMICIL
+	 */
 	public WrapperResultados pMovMdomicil(Map<String, String> paramDomicil) throws ApplicationException;
 	public WrapperResultados emitir(Map<String, Object> paramEmi) throws ApplicationException;
 	public WrapperResultados guardarArchivo(Map<String, Object> params) throws ApplicationException;
@@ -145,4 +148,21 @@ public interface KernelManagerSustituto {
 	public WrapperResultados guardaPeriodosDxN(Map<String, Object> params) throws ApplicationException;
 	public WrapperResultados lanzaProcesoDxN(Map<String, Object> params) throws ApplicationException;
 	public String habilitaSigRecibo(Map<String, String> params) throws ApplicationException;
+	/**
+	 * PKG_SATELITES.P_OBT_DATOS_MPOLIPER
+	 * @param cdunieco
+	 * @param cdramo
+	 * @param estado
+	 * @param nmpoliza
+	 * @param nmsuplem
+	 * @return nmsituac,cdrol,fenacimi,sexo,cdperson,nombre,segundo_nombre,Apellido_Paterno
+	 * ,Apellido_Materno,cdrfc,Parentesco,tpersona,nacional,swexiper
+	 * @throws ApplicationException
+	 */
+    public List<Map<String, Object>> obtenerAsegurados(
+    		String cdunieco
+    		,String cdramo
+    		,String estado
+    		,String nmpoliza
+    		,String nmsuplem) throws ApplicationException;
 }

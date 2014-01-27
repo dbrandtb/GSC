@@ -742,4 +742,48 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		}
 	}
 	
+	//PKG_CONSULTA.P_OBT_VALOSIT_POR_NMSUPLEM
+	@Override
+	public List<Map<String,String>> obtenerValositPorNmsuplem(Map<String, String> params) throws Exception
+	{
+		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerValositPorNmsuplem(this.getDataSource()), params);
+		return (List<Map<String,String>>) resultadoMap.get("PV_REGISTRO_O");
+	}
+	
+	protected class ObtenerValositPorNmsuplem extends StoredProcedure
+	{
+
+		protected ObtenerValositPorNmsuplem(DataSource dataSource)
+		{
+			super(dataSource, "PKG_CONSULTA.P_OBT_VALOSIT_POR_NMSUPLEM");
+
+			declareParameter(new SqlParameter("PV_CDUNIECO_I" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDRAMO_I"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_ESTADO_I"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_NMPOLIZA_I" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_NMSUPLEM_I" , OracleTypes.VARCHAR));
+
+			declareParameter(new SqlOutParameter("PV_REGISTRO_O", OracleTypes.CURSOR, new DinamicMapper()));
+			/*
+			CDUNIECO,CDRAMO,ESTADO,NMPOLIZA,NMSITUAC,NMSUPLEM,STATUS,CDTIPSIT,OTVALOR01,OTVALOR02
+			,OTVALOR03,OTVALOR04,OTVALOR05,OTVALOR06,OTVALOR07,OTVALOR08,OTVALOR09,OTVALOR10,OTVALOR11
+			,OTVALOR12,OTVALOR13,OTVALOR14,OTVALOR15,OTVALOR16,OTVALOR17,OTVALOR18,OTVALOR19,OTVALOR20
+			,OTVALOR21,OTVALOR22,OTVALOR23,OTVALOR24,OTVALOR25,OTVALOR26,OTVALOR27,OTVALOR28,OTVALOR29
+			,OTVALOR30,OTVALOR31,OTVALOR32,OTVALOR33,OTVALOR34,OTVALOR35,OTVALOR36,OTVALOR37,OTVALOR38
+			,OTVALOR39,OTVALOR40,OTVALOR41,OTVALOR42,OTVALOR43,OTVALOR44,OTVALOR45,OTVALOR46,OTVALOR47
+			,OTVALOR48,OTVALOR49,OTVALOR50
+			 */
+	        declareParameter(new SqlOutParameter("pv_msg_id_o"  , OracleTypes.NUMERIC));
+	        declareParameter(new SqlOutParameter("pv_title_o"   , OracleTypes.VARCHAR));
+			
+			compile();
+		}
+
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception
+		{
+            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+            return mapper.build(map);
+        }
+	}
+	
 }
