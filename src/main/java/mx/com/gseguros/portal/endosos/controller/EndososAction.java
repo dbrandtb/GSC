@@ -5862,7 +5862,7 @@ public class EndososAction extends PrincipalCoreAction
 			
 			//pkg_satelites.valida_extraprima_situac_read
 			String statusValidacionExtraprimas=(String)kernelManager.validarExtraprimaSituacRead(
-					cdunieco,cdramo, estado, nmpoliza, nmsituac).getItemMap().get("status");
+					cdunieco,cdramo, estado, nmpoliza, nmsituac, nmsuplem).getItemMap().get("status");
 			log.debug("tiene status la extraprima: "+statusValidacionExtraprimas);
 			if(statusValidacionExtraprimas.equalsIgnoreCase("N"))
 			{
