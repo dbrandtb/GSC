@@ -19,6 +19,7 @@ import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
+import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
 
 import org.apache.commons.lang.StringUtils;
@@ -290,7 +291,7 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 				success =  true;
 			} else if("3".equals(progresoTexto)){
 				progresoTexto = "No existen recibos por habilitar.";
-			} else if("1".equals(progresoTexto)){
+			} else if(Constantes.MSG_TITLE_ERROR.equals(progresoTexto)){
 				progresoTexto = "Error en la Operaci&oacute;n";
 			} else {
 				progresoTexto="Se ha habilitado el recibo subsecuente.";
