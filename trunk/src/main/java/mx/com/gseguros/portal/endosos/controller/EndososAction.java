@@ -4167,6 +4167,8 @@ public class EndososAction extends PrincipalCoreAction
 			case DEDUCIBLE_MENOS:
 			case COPAGO_MAS:
 			case COPAGO_MENOS:
+			case EXTRAPRIMA_MAS:
+			case EXTRAPRIMA_MENOS:
 				ejecutaWSrecibosEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, 
 						rutaCarpeta, cdtipsitGS, sucursal, nmsolici, ntramiteEmi, true, "INSERTA", cdtipsup);
 				break;
