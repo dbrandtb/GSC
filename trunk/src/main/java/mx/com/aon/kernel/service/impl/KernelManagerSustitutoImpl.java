@@ -1112,7 +1112,8 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 			,String cdramo
 			,String estado
 			,String nmpoliza
-			,String nmsituac) throws ApplicationException
+			,String nmsituac
+			,String nmsuplem) throws ApplicationException
 	{
 		Map<String,String>params=new HashMap<String,String>();
 		params.put("pv_cdunieco_i" , cdunieco);
@@ -1120,6 +1121,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 		params.put("pv_estado_i"   , estado);
 		params.put("pv_nmpoliza_i" , nmpoliza);
 		params.put("pv_nmsituac_i" , nmsituac);
+		params.put("pv_nmsuplem_i" , nmsuplem);
 		
 		log.debug("### kernel validarExtraprimaSituacRead map: "+params);
 		WrapperResultados res = this.returnBackBoneInvoke(params,ProcesoDAO.VALIDAR_EXTRAPRIMA_SITUAC_READ);

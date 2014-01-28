@@ -187,7 +187,8 @@ public interface KernelManagerSustituto {
 			,String cdramo
 			,String estado
 			,String nmpoliza
-			,String nmsituac) throws ApplicationException;
+			,String nmsituac
+			,String nmsuplem) throws ApplicationException;
 	public WrapperResultados guardaPeriodosDxN(Map<String, Object> params) throws ApplicationException;
 	public WrapperResultados lanzaProcesoDxN(Map<String, Object> params) throws ApplicationException;
 	public String habilitaSigRecibo(Map<String, String> params) throws ApplicationException;
