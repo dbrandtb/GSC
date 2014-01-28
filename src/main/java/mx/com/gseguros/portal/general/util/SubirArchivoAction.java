@@ -287,7 +287,7 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 			logger.debug("Mensaje de habilitar recibos: " + progresoTexto);
 			
 			if(StringUtils.isBlank(progresoTexto)){
-				progresoTexto="Operaci&oacute;n Exitosa.";
+				progresoTexto="Se ha habilitado el recibo subsecuente.";
 				success =  true;
 			} else if("3".equals(progresoTexto)){
 				progresoTexto = "No existen recibos por habilitar.";
