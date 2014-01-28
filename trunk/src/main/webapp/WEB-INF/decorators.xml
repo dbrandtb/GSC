@@ -56,6 +56,9 @@
 		<pattern>/jsp/extjs4/ventanaDocumentosPoliza.jsp</pattern>
 		<pattern>/flujocotizacion/principal.action</pattern>
         <pattern>/jsp/consultas/agentes/consultaAgentes.jsp</pattern>
+        
+        <pattern>/siniestros/historialReclamaciones.action</pattern>
+        <pattern>/siniestros/verCoberturas.action</pattern>
 	</decorator>
     
     
@@ -104,8 +107,38 @@
         <pattern>/emision/*.action</pattern>
         <pattern>/jsp-script/proceso/emision/*.jsp</pattern>
         
-        <pattern>/siniestros/autorizacionServicios.action</pattern>
-        <pattern>/jsp-script/proceso/siniestros/autorizacionServicios.jsp</pattern>
+        
+        <pattern>/siniestros/principal.action</pattern>
+        <pattern>/jsp-script/proceso/siniestros/principal.jsp</pattern>
+        
+        <pattern>/siniestros/principalCordinadorAR.action</pattern>
+        <pattern>/jsp-script/proceso/siniestros/principalCordinadorAR.jsp</pattern>
+        
+        <pattern>/siniestros/afiliadosAfectados.action</pattern>
+        <pattern>/jsp-script/proceso/siniestros/afiliadosAfectados.jsp</pattern>
+        
+		 <pattern>/siniestros/rechazoReclamaciones.action</pattern>
+         <pattern>/jsp-script/proceso/siniestros/rechazoReclamaciones.jsp</pattern>
+         
+         <pattern>/siniestros/detalleAfiliadosAfectados.action</pattern>
+         <pattern>/jsp-script/proceso/siniestros/detalleAfiliadosAfectados.jsp</pattern>
+         
+         <pattern>/siniestros/autorizacionServicios.action</pattern>
+         <pattern>/jsp-script/proceso/siniestros/autorizacionServicios.jsp</pattern>
+         
+         
+         
+         <pattern>/siniestros/revisionDocumentos.action</pattern>
+         <pattern>/jsp-script/proceso/siniestros/revisionDocumentos.jsp</pattern>
+         
+         <pattern>/siniestros/seleccionCobertura.action</pattern>
+         <pattern>/jsp-script/proceso/siniestros/seleccionCobertura.jsp</pattern>
+         
+         <pattern>/siniestros/tipoAutorizacion.action</pattern>
+         <pattern>/jsp-script/proceso/siniestros/tipoAutorizacion.jsp</pattern>
+         
+         <pattern>/siniestros/asignarReclamaciones.action</pattern>
+         <pattern>/jsp-script/proceso/siniestros/asignarReclamaciones.jsp</pattern>
          
 	</decorator>
 	
