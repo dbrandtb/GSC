@@ -8,18 +8,21 @@
         
         <script type="text/javascript">
             var _CONTEXT = '${ctx}';
-            var _URL_CONSULTA_DATOS_TARIFA_POLIZA = '<s:url namespace="/consultasPoliza" action="consultaDatosTarifaPoliza" />';
-            //var _URL_TIPOS_CPT= _CONTEXT + '/js/proceso/siniestros/tiposCPT.json';
-            //var _URL_TIPOS_HCPT= _CONTEXT + '/js/proceso/siniestros/tiposHCPT.json';
-            //var _URL_TIPOS_ICD= _CONTEXT + '/js/proceso/siniestros/tiposICD.json';
-            //var _URL_TIPOS_UB= _CONTEXT + '/js/proceso/siniestros/tiposUB.json';
+            var mesConUrlLoadCatalo    				= '<s:url namespace="/catalogos"       action="obtieneCatalogo" />';
+            var _URL_TIPOS_PENALIZACION				= _CONTEXT + '/js/proceso/siniestros/tiposPenalizacion.json';
+            var _CAT_AUTORIZACION				    = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_SUCURSALES_ADMIN"/>';
+            var _URL_TIPO_AUTORIZACION				= _CONTEXT + '/js/proceso/siniestros/tiposAutorizacion.json';
+            var _HISTORIAL_RECLAMACIONES    		= '<s:url namespace="/siniestros"      	action="historialReclamaciones" />';
+            var _VER_COBERTURAS		    			= '<s:url namespace="/siniestros"      	action="verCoberturas" />';
+            var _URL_LISTADO_ASEGURADO          	= '<s:url namespace="/siniestros"       action="consultaListaAsegurado" />';
+            var _URL_CONSULTA_LISTADO_AUTORIZACION 	= '<s:url namespace="/siniestros" 		action="consultaListaAutorizacion" />';
+            var _URL_CONSULTA_AUTORIZACION_ESP 		= '<s:url namespace="/siniestros" 		action="consultaAutorizacionServicio" />';
+            var _URL_CONSULTA_PROVEEDOR_MEDICO		= '<s:url namespace="/siniestros" 		action="consultaListaProvMedico" />';
+            var _URL_CAUSA_SINIESTRO 				= '<s:url namespace="/siniestros" 		action="consultaListaCausuaSiniestro" />';
+            var _URL_LISTA_COBERTURA 				= '<s:url namespace="/siniestros" 		action="consultaListaCoberturaPoliza" />';
+            var _URL_LISTA_SUBCOBERTURA				= '<s:url namespace="/siniestros" action="consultaListaSubcobertura" />';
+            var _URL_LISTA_CPTICD					= '<s:url namespace="/siniestros" action="consultaListaCPTICD" />';
             
-            
-            //var _URL_CARGA_CLAVES_CLAU =    '<s:url namespace="/catalogos" action="cargaClausulas" />';
-            //var _URL_CONSULTA_CLAUSU =      '<s:url namespace="/catalogos" action="consultaClausulas" />';
-            //var _URL_CONSULTA_CLAUSU_DETALLE =      '<s:url namespace="/catalogos" action="consultaClausulaDetalle" />';
-            //var _URL_INSERTA_CLAUSU =      '<s:url namespace="/catalogos" action="insertaClausula" />';
-            //var _URL_ACTUALIZA_CLAUSU =      '<s:url namespace="/catalogos" action="actualizaClausula" />';
             
         </script>
         <!-- <script type="text/javascript" src="${ctx}/resources/scripts/util/extjs4_utils.js"></script>-->
@@ -32,7 +35,7 @@
    </div>-->
     	<div style="height:10px;">
             <div id="div_clau"></div>
-            <div id="divResultados" style="margin-top:10px;"></div>
+            <!-- <div id="divResultados" style="margin-top:10px;"></div>-->
         </div> 
    </body>
 </html>

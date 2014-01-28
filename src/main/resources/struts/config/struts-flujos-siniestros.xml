@@ -4,10 +4,169 @@
     
     <package name="siniestros" extends="json-default" namespace="/siniestros">
         
-        <action name="autorizacionServicios">
+        
+        <action name="consultaAutorizacionServicio" class="siniestrosAction"
+			method="consultaAutorizacionServicio">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					datosAutorizacionEsp.*,
+					success
+				</param>
+			</result>
+		</action>
+		
+		<action name="consultaListaAsegurado" class="siniestrosAction"
+			method="consultaListaAsegurado">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					listaAsegurado.*,
+					success
+				</param>
+			</result>
+		</action>
+		
+		<action name="consultaListaAutorizacion" class="siniestrosAction"
+			method="consultaListaAutorizacion">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					listaAutorizacion.*,
+					success
+				</param>
+			</result>
+		</action>
+		
+		<action name="consultaListaProvMedico" class="siniestrosAction"
+			method="consultaListaProvMedico">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					listaProvMedico.*,
+					success
+				</param>
+			</result>
+		</action>
+		
+		<action name="consultaListaCausuaSiniestro" class="siniestrosAction"
+			method="consultaListaCausuaSiniestro">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					listaCausaSiniestro.*,
+					success
+				</param>
+			</result>
+		</action>
+		
+		<action name="consultaListaCoberturaPoliza" class="siniestrosAction"
+			method="consultaListaCoberturaPoliza">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					listaCoberturaPoliza.*,
+					success
+				</param>
+			</result>
+		</action>
+		
+		<action name="consultaListaDatSubGeneral" class="siniestrosAction"
+			method="consultaListaDatSubGeneral">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					listaDatosSiniestro.*,
+					success
+				</param>
+			</result>
+		</action>
+		
+		<action name="consultaListaSubcobertura" class="siniestrosAction"
+			method="consultaListaSubcobertura">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					listaSubcobertura.*,
+					success
+				</param>
+			</result>
+		</action>
+		
+		<action name="consultaListaCPTICD" class="siniestrosAction"
+			method="consultaListaCPTICD">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					listaCPTICD.*,
+					success
+				</param>
+			</result>
+		</action>
+		
+		<action name="guardaAutorizacionServicio" class="siniestrosAction"
+			method="guardaAutorizacionServicio">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					numeroAutorizacion.*,
+					success
+				</param>
+			</result>
+		</action>
+		
+        <action name="principal" class="MesaControlAction" method="principal">
+            <result name="success">/jsp-script/proceso/siniestros/principal.jsp</result>
+        </action>
+        
+		<action name="principalCordinadorAR">
+    		<result>/jsp-script/proceso/siniestros/principalCordinadorAR.jsp</result>
+		</action>
+		
+		<action name="afiliadosAfectados">
+    		<result>/jsp-script/proceso/siniestros/afiliadosAfectados.jsp</result>
+		</action>
+		
+		<action name="detalleAfiliadosAfectados">
+    		<result>/jsp-script/proceso/siniestros/detalleAfiliadosAfectados.jsp</result>
+		</action>
+        
+        <action name="altaTramite">
+    		<result>/jsp-script/proceso/siniestros/altaTramite.jsp</result>
+		</action>
+		
+		<action name="autorizacionServicios">
     		<result>/jsp-script/proceso/siniestros/autorizacionServicios.jsp</result>
 		</action>
-			
+		
+		<action name="tipoAutorizacion">
+    		<result>/jsp-script/proceso/siniestros/tipoAutorizacion.jsp</result>
+		</action>
+		
+		
+		<action name="rechazoReclamaciones">
+    		<result>/jsp-script/proceso/siniestros/rechazoReclamaciones.jsp</result>
+		</action>
+		
+		<action name="historialReclamaciones">
+    		<result>/jsp-script/proceso/siniestros/historialReclamaciones.jsp</result>
+		</action>
+		
+		<action name="verCoberturas">
+    		<result>/jsp-script/proceso/siniestros/verCoberturas.jsp</result>
+		</action>
+		
+		<action name="revisionDocumentos">
+    		<result>/jsp-script/proceso/siniestros/revisionDocumentos.jsp</result>
+		</action>
+		
+		<action name="seleccionCobertura">
+    		<result>/jsp-script/proceso/siniestros/seleccionCobertura.jsp</result>
+		</action>
+		
+		<action name="asignarReclamaciones">
+    		<result>/jsp-script/proceso/siniestros/asignarReclamaciones.jsp</result>
+		</action>
     </package>
 
 </struts>
