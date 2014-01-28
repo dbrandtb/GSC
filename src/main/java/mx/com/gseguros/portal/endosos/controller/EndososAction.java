@@ -5887,6 +5887,19 @@ public class EndososAction extends PrincipalCoreAction
 				//PKG_CONSULTA.P_reImp_documentos
 				String nmsolici = this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite);
 				
+				/**
+				 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
+				 */
+				String cdtipsitGS = "213";
+				String sucursal = cdunieco;
+				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
+				
+				ejecutaWSrecibosEndoso(cdunieco, cdramo,
+				estado, nmpoliza,
+				nmsuplem, nsuplogi, null,
+						cdtipsitGS, sucursal, nmsolici, ntramite,
+						true, "INSERTA", cdtipsup );
+				
 				mensaje="Se ha guardado el endoso "+nsuplogi;
 			}
 			else
