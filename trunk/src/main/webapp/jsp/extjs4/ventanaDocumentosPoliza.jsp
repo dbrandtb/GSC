@@ -164,6 +164,7 @@ Ext.onReady(function()
         //,title         : 'Documentos'
         //,collapsible   : true
         //,titleCollapse : true
+        ,height        : 300
         ,onContrareciboClick : function(button,e)
         {
         	var window=button.up().up();
