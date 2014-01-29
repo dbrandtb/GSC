@@ -1,0 +1,30 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@ include file="/taglibs.jsp"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+        <title>Consulta Clausulas</title>
+        
+        <script type="text/javascript">
+            var _CONTEXT = '${ctx}';
+            var mesConUrlLoadCatalo    = '<s:url namespace="/catalogos"       action="obtieneCatalogo" />';
+            var _URL_TIPO_PAGO = _CONTEXT + '/js/proceso/siniestros/tiposPago.json';
+            
+            var _CATALOGO_OFICINA_RECEP = 	 '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_SUCURSALES_ADMIN"/>';
+            
+        </script>
+        <!-- <script type="text/javascript" src="${ctx}/resources/scripts/util/extjs4_utils.js"></script>-->
+        <script type="text/javascript" src="${ctx}/js/proceso/siniestros/altaTramite.js"></script>
+        
+    </head>
+    <body>
+    <!-- <div style="height:500px;">
+            <div id="div_clau"></div>
+   </div>-->
+    	<div style="height:10px;">
+            <div id="div_clau"></div>
+            <!-- <div id="divResultados" style="margin-top:10px;"></div>-->
+        </div> 
+   </body>
+</html>
