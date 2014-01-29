@@ -462,4 +462,25 @@ public class EndososManagerImpl implements EndososManager
 		log.debug("EndososManager actualizaExtraprimaValosit end");
 	}
 	
+	@Override
+	public void insertarPolizaCdperpag(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdperpag) throws Exception
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("pv_cdunieco_i",cdunieco);
+		params.put("pv_cdramo_i",cdramo);
+		params.put("pv_estado_i",estado);
+		params.put("pv_nmpoliza_i",nmpoliza);
+		params.put("pv_nmsuplem_i",nmsuplem);
+		params.put("pv_cdperpag_i",cdperpag);
+		log.debug("EndososManager insertaPolizaCdperpag params: "+params);
+		endososDAO.insertarPolizaCdperpag(params);
+		log.debug("EndososManager insertaPolizaCdperpag end");
+	}
+	
 }

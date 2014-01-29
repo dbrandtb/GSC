@@ -128,4 +128,14 @@ public interface EndososManager
 			,String nmsituac
 			,String nmsuplem
 			,String extraprima) throws Exception;
+	/**
+	 * PKG_ENDOSOS.P_INS_MPOLIZAS_CDPERPAG
+	 */
+	public void                      insertarPolizaCdperpag(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdperpag) throws Exception;
 }

@@ -337,11 +337,28 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return res;
     }
 
+    @Override
     public Map<String,Object> getInfoMpolizas(Map<String, Object> parameters) throws ApplicationException {
         log.debug("### kernel sustituto getInfoMpolizas map: "+parameters);
         Map<String,Object> map=(Map<String,Object>) this.getBackBoneInvoke(parameters, ProcesoDAO.GET_INFO_MPOLIZAS);
         log.debug("### kernel sustituto response map: "+map);
         return map;
+    }
+    
+    @Override
+    public Map<String,Object> getInfoMpolizas(
+    		String cdunieco
+    		,String cdramo
+    		,String estado
+    		,String nmpoliza
+    		,String cdusuari) throws ApplicationException {
+    	Map<String, Object> params = new HashMap<String, Object>(0);
+		params.put("pv_cdunieco" , cdunieco);
+		params.put("pv_cdramo"   , cdramo);
+		params.put("pv_estado"   , estado);
+		params.put("pv_nmpoliza" , nmpoliza);
+		params.put("pv_cdusuari" , cdusuari);
+		return this.getInfoMpolizas(params);
     }
     
     public List<GenericVO> getTmanteni(String tabla) throws ApplicationException

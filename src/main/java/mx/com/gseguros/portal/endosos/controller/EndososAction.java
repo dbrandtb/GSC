@@ -5889,19 +5889,6 @@ public class EndososAction extends PrincipalCoreAction
 				//PKG_CONSULTA.P_reImp_documentos
 				String nmsolici = this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite);
 				
-				/**
-				 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
-				 */
-				String cdtipsitGS = "213";
-				String sucursal = cdunieco;
-				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
-				
-				ejecutaWSrecibosEndoso(cdunieco, cdramo,
-				estado, nmpoliza,
-				nmsuplem, nsuplogi, null,
-						cdtipsitGS, sucursal, nmsolici, ntramite,
-						true, "INSERTA", cdtipsup );
-				
 				mensaje="Se ha guardado el endoso "+nsuplogi;
 			}
 			else
@@ -5931,6 +5918,221 @@ public class EndososAction extends PrincipalCoreAction
 	/*/////////////////////////////////*/
 	////// guardarEndosoExtraprima //////
 	/////////////////////////////////////
+	
+	/////////////////////////////
+	////// endosoFormaPago //////
+	/*
+	smap1:
+		CDRAMO: "2"
+		CDTIPSIT: "SL"
+		CDUNIECO: "1006"
+		DSCOMENT: ""
+		DSTIPSIT: "SALUD VITAL"
+		ESTADO: "M"
+		FEEMISIO: "22/01/2014"
+		FEINIVAL: "22/01/2014"
+		NMPOLIEX: "1006213000024000000"
+		NMPOLIZA: "24"
+		NMSUPLEM: "245668019180000000"
+		NSUPLOGI: "1"
+		NTRAMITE: "678"
+		PRIMA_TOTAL: "12207.37"
+	*/
+	/*////////////////////////////*/
+	public String endosoFormaPago()
+	{
+		this.session=ActionContext.getContext().getSession();
+		log.debug("\n"
+				+ "\n#############################"
+				+ "\n#############################"
+				+ "\n###### endosoFormaPago ######"
+				+ "\n######                 ######"
+				);
+		log.debug("smap1: "+smap1);
+		
+		String cdunieco = smap1.get("CDUNIECO");
+		String cdramo   = smap1.get("CDRAMO");
+		String estado   = smap1.get("ESTADO");
+		String nmpoliza = smap1.get("NMPOLIZA");
+		String cdtipsit = smap1.get("CDTIPSIT");
+		String cdtipsup = TipoEndoso.CAMBIO_FORMA_PAGO.getCdTipSup().toString();
+		
+		String cdPantalla            = "ENDOSO_FORMA_PAGO";
+		String cdPanelLectura        = "PANEL_LECTURA";
+		String keyItemsPanelLectura  = "itemsPanelLectura";
+		String keyFieldsPanelLectura = "fieldsFormLectura";
+		String cdItemsCambio         = "FORM_FORMA_PAGO";
+		String keyItemCambioOriginal = "itemCambioOld";
+		String keyItemCambioNuevo    = "itemCambioNew";
+				
+		UserVO usuario    = (UserVO)session.get("USUARIO");
+		String cdelemento = usuario.getEmpresa().getElementoId();
+		String cdusuari   = usuario.getUser();
+		String rol        = usuario.getRolActivo().getObjeto().getValue();
+		
+		String nombreItemOriginal = "FORMA DE PAGO ORIGINAL";
+		String nombreItemNuevo    = "NUEVA FORMA DE PAGO";
+		
+		String keyValorOriginal = "formapago";
+		
+		String respuesta=this.validaEndosoAnterior(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
+		
+		if(respuesta.equals(SUCCESS))
+		{
+			try
+			{	
+				GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+				imap1=new HashMap<String,Item>();
+				
+				gc.generaParcial(pantallasManager.obtenerCamposPantalla(
+						cdunieco    , cdramo
+						,cdtipsit   , estado
+						,nmpoliza   , null
+						,cdPantalla , rol
+						,null       , cdPanelLectura));
+				
+				imap1.put(keyItemsPanelLectura,gc.getItems());
+				imap1.put(keyFieldsPanelLectura,gc.getFields());
+				
+				List<Tatri> camposCambio=pantallasManager.obtenerCamposPantalla(
+						cdunieco    , cdramo
+						,cdtipsit   , estado
+						,nmpoliza   , null
+						,cdPantalla , rol
+						,null       , cdItemsCambio);
+				
+				camposCambio.get(0).setDsatribu(nombreItemOriginal);
+				camposCambio.get(0).setReadOnly(true);
+				gc.generaParcial(camposCambio);
+				imap1.put(keyItemCambioOriginal,gc.getItems());
+				
+				camposCambio.get(0).setDsatribu(nombreItemNuevo);
+				camposCambio.get(0).setReadOnly(false);
+				camposCambio.get(0).setSwobliga("S");
+				gc.generaParcial(camposCambio);
+				imap1.put(keyItemCambioNuevo,gc.getItems());
+				
+			}
+			catch(Exception ex)
+			{
+				log.error("error al mostrar pantalla endoso forma pago",ex);
+				error=ex.getMessage();
+				respuesta=ERROR;
+			}
+		}
+		
+		log.debug("\n"
+				+ "\n######                    ######"
+				+ "\n###### endosoFormaPago ######"
+				+ "\n################################"
+				+ "\n################################"
+				);
+		return respuesta;
+	}
+	/*////////////////////////////*/
+	////// endosoFormaPago //////
+	////////////////////////////////
+	
+	///////////////////////////////////////
+	////// guardarEndosoReexpedicion //////
+	/*
+	smap1:
+		CDRAMO: "2"
+		CDTIPSIT: "SL"
+		CDUNIECO: "1006"
+		DSCOMENT: ""
+		DSTIPSIT: "SALUD VITAL"
+		ESTADO: "M"
+		FEEMISIO: "22/01/2014"
+		FEINIVAL: "24/01/2014"
+		NMPOLIEX: "1006213000020000000"
+		NMPOLIZA: "20"
+		NMSUPLEM: "245668219200000004"
+		NSUPLOGI: "5"
+		NTRAMITE: "670"
+		PRIMA_TOTAL: "60712.07"
+		perpag: "1" (original)
+	smap2:
+		cdperpag: "63", (nueva)
+		fecha_endoso: "28/01/2014"
+	*/
+	/*//////////////////////////////////////*/
+	public String guardarEndosoFormaPago()
+	{
+		this.session=ActionContext.getContext().getSession();
+		log.debug("\n"
+				+ "\n#######################################"
+				+ "\n#######################################"
+				+ "\n###### guardarEndosoReexpedicion ######"
+				+ "\n######                           ######"
+				);
+		log.debug("smap1:"+smap1);
+		log.debug("smap2:"+smap2);
+		log.debug("smap3:"+smap3);
+		try
+		{
+			UserVO usuario        = (UserVO)session.get("USUARIO");
+			String cdtipsit       = smap1.get("CDTIPSIT");
+			String cdunieco       = smap1.get("CDUNIECO");
+			String cdramo         = smap1.get("CDRAMO");
+			String estado         = smap1.get("ESTADO");
+			String nmpoliza       = smap1.get("NMPOLIZA");
+			String ntramite       = smap1.get("NTRAMITE");
+			String cdperpag       = smap2.get("cdperpag");
+			String sFecha         = smap2.get("fecha_endoso");
+			Date   dFecha         = renderFechas.parse(sFecha);
+			String cdelemento     = usuario.getEmpresa().getElementoId();
+			String cdusuari       = usuario.getUser();
+			String proceso        = "END";
+			String cdtipsup       = TipoEndoso.CAMBIO_FORMA_PAGO.getCdTipSup().toString();
+			
+			//PKG_ENDOSOS.P_ENDOSO_INICIA
+			Map<String,String>resIniEnd=endososManager.iniciarEndoso(cdunieco, cdramo, estado, nmpoliza, sFecha, cdelemento, cdusuari, proceso, cdtipsup);
+			
+			String nmsuplem = resIniEnd.get("pv_nmsuplem_o");
+			String nsuplogi = resIniEnd.get("pv_nsuplogi_o");
+			
+			//PKG_ENDOSOS.P_INS_MPOLIZAS_CDPERPAG
+			endososManager.insertarPolizaCdperpag(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdperpag);
+			
+			//PKG_ENDOSOS.P_CALC_VALOR_ENDOSO
+			endososManager.calcularValorEndoso(cdunieco, cdramo, estado, nmpoliza, "1", nmsuplem, dFecha, cdtipsup);
+			
+			//+- 30 dias ? PKG_SATELITES.P_MOV_MESACONTROL : PKG_ENDOSOS.P_CONFIRMAR_ENDOSOB
+			String tramiteGenerado=this.confirmarEndoso(cdunieco, cdramo, estado, nmpoliza
+					,nmsuplem, nsuplogi, cdtipsup, "", dFecha, cdtipsit);
+			
+			if(StringUtils.isBlank(tramiteGenerado))
+			{
+				mensaje="Se ha guardado el endoso "+nsuplogi;
+			}
+			else
+			{
+				mensaje="El endoso "+nsuplogi
+						+" se guard&oacute; en mesa de control para autorizaci&oacute;n "
+						+ "con n&uacute;mero de tr&aacute;mite "+tramiteGenerado;
+			}
+			
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			error=ex.getMessage();
+			success=false;
+			log.error("error al guardar endoso de reexpedicion",ex);
+		}
+		
+		log.debug("\n"
+				+ "\n######                           ######"
+				+ "\n###### guardarEndosoReexpedicion ######"
+				+ "\n#######################################"
+				+ "\n#######################################"
+				);
+		return SUCCESS;
+	}
+	/*///////////////////////////////////*/
+	////// guardarEndosoReexpedicion //////
+	///////////////////////////////////////
 	
 	///////////////////////////////
 	////// getters y setters //////
