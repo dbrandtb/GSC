@@ -500,4 +500,22 @@ public class EndososManagerImpl implements EndososManager
 		return fecha;
 	}
 	
+	/**
+	 * P_CALC_RECIBOS_SUB_ENDOSO_FP
+	 */
+	@Override
+	public void calcularRecibosEndosoFormaPago(String cdunieco,String cdramo,
+			String estado,String nmpoliza,String nmsuplem) throws Exception
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("pv_cdunieco" , cdunieco);
+		params.put("pv_cdramo"   , cdramo);
+		params.put("pv_estado"   , estado);
+		params.put("pv_nmpoliza" , nmpoliza);
+		params.put("pv_nmsuplem" , nmsuplem);
+		log.debug("EndososManager calcularRecibosEndosoFormaPago params: "+params);
+		endososDAO.calcularRecibosEndosoFormaPago(params);
+		log.debug("EndososManager calcularRecibosEndosoFormaPago fin");
+	}
+	
 }

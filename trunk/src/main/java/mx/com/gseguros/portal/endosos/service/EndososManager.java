@@ -138,6 +138,14 @@ public interface EndososManager
 			,String nmpoliza
 			,String nmsuplem
 			,String cdperpag) throws Exception;
+	/**
+	 * PKG_ENDOSOS.P_GET_FEINIVAL_END_FP
+	 */
 	public Date                      obtenerFechaEndosoFormaPago(
 			String cdunieco,String cdramo,String estado,String nmpoliza) throws Exception;
+	/**
+	 * P_CALC_RECIBOS_SUB_ENDOSO_FP
+	 */
+	public void calcularRecibosEndosoFormaPago(String cdunieco,String cdramo,
+			String estado,String nmpoliza,String nmsuplem) throws Exception;
 }
