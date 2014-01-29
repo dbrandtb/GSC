@@ -5544,7 +5544,7 @@ public class EndososAction extends PrincipalCoreAction
 			String ntramite       = smap1.get("NTRAMITE");
 			String feIniVig       = smap3.get("feefecto");
 			String feFinvig       = smap3.get("feproren");
-			String cdrazonCancela = "9";
+			String cdrazonCancela = "5";
 			String comentaCancela = "Se cancela por reexpedicion";
 			
 			//PKG_ENDOSOS.P_ENDOSO_INICIA
@@ -5559,10 +5559,10 @@ public class EndososAction extends PrincipalCoreAction
 			String ntramiteNuevaPoliza = resReexped.get("pv_ntramite_o");
 			
 			//pkg_cancela.p_selecciona_poliza_unica
-			cancelacionManager.seleccionaPolizaUnica(cdunieco, cdramo, nmpoliza, cdunieco, dFecha);
+			cancelacionManager.seleccionaPolizaUnica(cdunieco, cdramo, nmpoliza, null, dFecha);
 			
 			//pkg_cancela.p_cancela_poliza
-			cancelacionManager.cancelaPoliza(cdunieco, cdramo, cdunieco, estado, nmpoliza, null
+			cancelacionManager.cancelaPoliza(cdunieco, cdramo, null, estado, nmpoliza, null
 					,cdrazonCancela, comentaCancela, feIniVig, feFinvig, sFecha, cdusuari);
 			
 			//+- 30 dias ? PKG_SATELITES.P_MOV_MESACONTROL : PKG_ENDOSOS.P_CONFIRMAR_ENDOSOB
