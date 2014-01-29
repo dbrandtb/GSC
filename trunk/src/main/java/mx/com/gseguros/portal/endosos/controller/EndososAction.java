@@ -5975,6 +5975,8 @@ public class EndososAction extends PrincipalCoreAction
 		
 		String keyValorOriginal = "formapago";
 		
+		String llaveFechaInicio = "fechaInicio";
+		
 		String respuesta=this.validaEndosoAnterior(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
 		
 		if(respuesta.equals(SUCCESS))
@@ -6012,6 +6014,8 @@ public class EndososAction extends PrincipalCoreAction
 				gc.generaParcial(camposCambio);
 				imap1.put(keyItemCambioNuevo,gc.getItems());
 				
+				Date fechaInicioEndoso=endososManager.obtenerFechaEndosoFormaPago(cdunieco, cdramo, estado, nmpoliza);
+				smap1.put(llaveFechaInicio,renderFechas.format(fechaInicioEndoso));
 			}
 			catch(Exception ex)
 			{
@@ -6052,6 +6056,7 @@ public class EndososAction extends PrincipalCoreAction
 		NTRAMITE: "670"
 		PRIMA_TOTAL: "60712.07"
 		perpag: "1" (original)
+		fechaInicio : 10/10/2012 (original desde el metodo que crea la pantalla)
 	smap2:
 		cdperpag: "63", (nueva)
 		fecha_endoso: "28/01/2014"
