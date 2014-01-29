@@ -21,6 +21,7 @@ smap1:
     NTRAMITE: "678"
     PRIMA_TOTAL: "12207.37"
     formapago : 12
+    fechaInicio : 10/10/2014
 */
 var _9_smap1 = <s:property value='%{getSmap1().toString().replace("=",":\'").replace(",","\',").replace("}","\'}")}' />;
 
@@ -138,8 +139,8 @@ Ext.onReady(function()
         format      : 'd/m/Y'
         ,fieldLabel : 'Fecha'
         ,allowBlank : false
-        ,value      : new Date()
         ,name       : 'fecha_endoso'
+        ,readOnly   : true
     });
     _9_panelEndoso   = new _9_PanelEndoso();
     _9_formFormaPago = new _9_FormFormaPago();
@@ -196,6 +197,7 @@ Ext.onReady(function()
                 _9_smap1['perpag'] = json.datosPoliza.cdperpag;
                 
                 comboOriginal.setValue(_9_smap1['perpag']);
+                _9_panelEndoso.items.items[0].setValue(_9_smap1.fechaInicio);
                 
                 comboNuevo.on('change',function(combo,newVal,oldVal)
                 {
@@ -209,6 +211,7 @@ Ext.onReady(function()
                         mensajeError('No hay cambio de forma de pago');
                     }
                 });
+                
             }
         }
         ,failure : function()

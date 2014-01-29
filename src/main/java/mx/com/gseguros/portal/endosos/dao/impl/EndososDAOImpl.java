@@ -1,5 +1,7 @@
 package mx.com.gseguros.portal.endosos.dao.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -829,6 +831,35 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("pv_nmsuplem_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdperpag_i" , OracleTypes.VARCHAR));
 			
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	/**
+	 * PKG_ENDOSOS.P_GET_FEINIVAL_END_FP
+	 */
+	@Override
+	public Date obtenerFechaEndosoFormaPago(Map<String, String> params) throws Exception
+	{
+		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerFechaEndosoFormaPago(this.getDataSource()), params);
+		SimpleDateFormat renderFechas=new SimpleDateFormat("dd/mm/yyyy");
+		Date fecha=renderFechas.parse(Utilerias.formateaFecha((String)resultadoMap.get("pv_feinival_o")));
+		return fecha;
+	}
+	
+	protected class ObtenerFechaEndosoFormaPago extends StoredProcedure
+	{
+		protected ObtenerFechaEndosoFormaPago(DataSource dataSource)
+		{
+			super(dataSource, "PKG_ENDOSOS.P_GET_FEINIVAL_END_FP");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_feinival_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();

@@ -138,4 +138,6 @@ public interface EndososManager
 			,String nmpoliza
 			,String nmsuplem
 			,String cdperpag) throws Exception;
+	public Date                      obtenerFechaEndosoFormaPago(
+			String cdunieco,String cdramo,String estado,String nmpoliza) throws Exception;
 }

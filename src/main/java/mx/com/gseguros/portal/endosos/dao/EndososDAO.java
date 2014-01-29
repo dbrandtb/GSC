@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.endosos.dao;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -32,4 +33,5 @@ public interface EndososDAO
 	public List<Map<String,String>> obtenerValositPorNmsuplem(Map<String, String> params)   throws Exception;
 	public void                     actualizaExtraprimaValosit(Map<String, String> params)  throws Exception;
 	public void                     insertarPolizaCdperpag(Map<String, String> params)      throws Exception;
+	public Date                     obtenerFechaEndosoFormaPago(Map<String, String> params) throws Exception;
 }

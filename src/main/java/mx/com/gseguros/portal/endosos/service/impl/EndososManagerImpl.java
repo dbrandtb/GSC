@@ -483,4 +483,21 @@ public class EndososManagerImpl implements EndososManager
 		log.debug("EndososManager insertaPolizaCdperpag end");
 	}
 	
+	/**
+	 * PKG_ENDOSOS.P_GET_FEINIVAL_END_FP
+	 */
+	@Override
+	public Date obtenerFechaEndosoFormaPago(String cdunieco,String cdramo,String estado,String nmpoliza) throws Exception
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		log.debug("EndososManager obtenerFechaEndosoFormaPago params: "+params);
+		Date fecha=endososDAO.obtenerFechaEndosoFormaPago(params);
+		log.debug("EndososManager obtenerFechaEndosoFormaPago fecha: "+fecha);
+		return fecha;
+	}
+	
 }
