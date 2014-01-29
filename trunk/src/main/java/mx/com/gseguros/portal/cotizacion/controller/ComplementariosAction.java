@@ -1618,6 +1618,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 
 			for(CalendarioEntidad cal : calendarios.getCalendariosEntidad()){
 				logger.debug(">>>Calendario: "+cal.getPeriodo());
+				logger.debug(">>>Inicio: "+cal.getFechaIncio());
+				logger.debug(">>>Termino: "+cal.getFechaTermino());
 				
 				params.put("pi_ADMINISTRADORA", cal.getAdministradora());
 				params.put("pi_ANIO", cal.getAnho());
