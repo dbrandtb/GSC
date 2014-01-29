@@ -866,4 +866,27 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		}
 	}
 	
+	/**
+	 * P_CALC_RECIBOS_SUB_ENDOSO_FP
+	 */
+	@Override
+	public void calcularRecibosEndosoFormaPago(Map<String, String> params) throws Exception
+	{
+		this.ejecutaSP(new CalcularRecibosEndosoFormaPago(this.getDataSource()), params);
+	}
+	
+	protected class CalcularRecibosEndosoFormaPago extends StoredProcedure
+	{
+		protected CalcularRecibosEndosoFormaPago(DataSource dataSource)
+		{
+			super(dataSource, "P_CALC_RECIBOS_SUB_ENDOSO_FP");
+			declareParameter(new SqlParameter("pv_cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem" , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 }

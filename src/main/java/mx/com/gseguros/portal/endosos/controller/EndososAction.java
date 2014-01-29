@@ -6014,6 +6014,7 @@ public class EndososAction extends PrincipalCoreAction
 				gc.generaParcial(camposCambio);
 				imap1.put(keyItemCambioNuevo,gc.getItems());
 				
+				//PKG_ENDOSOS.P_GET_FEINIVAL_END_FP
 				Date fechaInicioEndoso=endososManager.obtenerFechaEndosoFormaPago(cdunieco, cdramo, estado, nmpoliza);
 				smap1.put(llaveFechaInicio,renderFechas.format(fechaInicioEndoso));
 			}
@@ -6100,8 +6101,8 @@ public class EndososAction extends PrincipalCoreAction
 			//PKG_ENDOSOS.P_INS_MPOLIZAS_CDPERPAG
 			endososManager.insertarPolizaCdperpag(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdperpag);
 			
-			//PKG_ENDOSOS.P_CALC_VALOR_ENDOSO
-			endososManager.calcularValorEndoso(cdunieco, cdramo, estado, nmpoliza, "1", nmsuplem, dFecha, cdtipsup);
+			//P_CALC_RECIBOS_SUB_ENDOSO_FP
+			endososManager.calcularRecibosEndosoFormaPago(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
 			
 			//+- 30 dias ? PKG_SATELITES.P_MOV_MESACONTROL : PKG_ENDOSOS.P_CONFIRMAR_ENDOSOB
 			String tramiteGenerado=this.confirmarEndoso(cdunieco, cdramo, estado, nmpoliza
