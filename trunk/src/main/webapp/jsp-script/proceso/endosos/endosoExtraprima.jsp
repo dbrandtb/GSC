@@ -127,7 +127,7 @@ Ext.onReady(function()
     Ext.define('_8_PanelCla',
     {
         extend    : 'Ext.panel.Panel'
-        ,hidden   : _8_smap1.masextraprima!='si'
+        //,hidden   : _8_smap1.masextraprima!='si'
         ,border   : 0
         ,defaults :
         {

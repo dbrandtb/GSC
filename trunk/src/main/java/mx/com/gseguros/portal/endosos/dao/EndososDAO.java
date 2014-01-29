@@ -31,4 +31,5 @@ public interface EndososDAO
 	public Map<String, String>      pClonarPolizaReexped(Map<String, String> params)        throws Exception;
 	public List<Map<String,String>> obtenerValositPorNmsuplem(Map<String, String> params)   throws Exception;
 	public void                     actualizaExtraprimaValosit(Map<String, String> params)  throws Exception;
+	public void                     insertarPolizaCdperpag(Map<String, String> params)      throws Exception;
 }

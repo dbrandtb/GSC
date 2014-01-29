@@ -75,7 +75,23 @@ public interface KernelManagerSustituto {
     public DatosUsuario obtenerDatosUsuario(String cdusuario) throws ApplicationException;
     public WrapperResultados movDetalleSuplemento(Map<String,Object> parameters) throws ApplicationException;
     public WrapperResultados comprarCotizacion(Map<String,String> parameters) throws ApplicationException;
+    /**
+     * PKG_SATELITES.P_GET_INFO_MPOLIZAS
+     * @return cdusuari,cdunieco,dsunieco,cdperson,cdagente,
+     * nombre,cdramo,dsramo,nmcuadro,cdtipsit,fesolici,nmsolici,feefecto,feproren,ottempot,cdperpag
+     */
     public Map<String,Object> getInfoMpolizas(Map<String,Object>parameters) throws ApplicationException;
+    /**
+     * PKG_SATELITES.P_GET_INFO_MPOLIZAS
+     * @return cdusuari,cdunieco,dsunieco,cdperson,cdagente,
+     * nombre,cdramo,dsramo,nmcuadro,cdtipsit,fesolici,nmsolici,feefecto,feproren,ottempot,cdperpag
+     */
+    public Map<String,Object> getInfoMpolizas(
+    		String cdunieco
+    		,String cdramo
+    		,String estado
+    		,String nmpoliza
+    		,String cdusuari) throws ApplicationException;
     public List<GenericVO> getTmanteni(String tabla) throws ApplicationException;
 	public List<Map<String, Object>> obtenerAsegurados(Map<String, String> map1) throws ApplicationException;
 	public Map<String,Object> getInfoMpolizasCompleta(Map<String,String> parameters) throws ApplicationException;
