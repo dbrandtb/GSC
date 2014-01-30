@@ -17,6 +17,8 @@ public class CargaInfo {
 			setRegreso(admPanel.getDataCombo(getTabla(),getValor()));
 		}else if("llenaComboHijo".equals(getTarea())){
 			setRegreso(admPanel.getDataComboHijo(getTabla(),getValor()));
+		}else if("llenaGrid".equals(getTarea())){
+			setRegreso(admPanel.getDataGrid(getTabla(),getValor()));
 		}
 		
 		return "SUCCESS";

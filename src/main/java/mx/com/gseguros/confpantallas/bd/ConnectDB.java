@@ -1,7 +1,5 @@
 package mx.com.gseguros.confpantallas.bd;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 public class ConnectDB {
@@ -17,15 +15,15 @@ public class ConnectDB {
 		dataSource.setUsername("sa");
 		dataSource.setPassword("SalmaCamila2017");*/
 		
-		/*dataSource.setDriverClassName("oracle.jdbc.OracleDriver");
+		dataSource.setDriverClassName("oracle.jdbc.OracleDriver");
 		dataSource.setUrl("jdbc:oracle:thin:@localhost:1521:xe");
 		dataSource.setUsername("SYSTEM");
-		dataSource.setPassword("salmac");*/
+		dataSource.setPassword("salmac");
 		
-		dataSource.setDriverClassName("oracle.jdbc.driver.OracleDriver");
+		/*dataSource.setDriverClassName("oracle.jdbc.driver.OracleDriver");
 		dataSource.setUrl("jdbc:oracle:thin:@10.1.1.133:6521:GSEGUROS");
 		dataSource.setUsername("ice");
-		dataSource.setPassword("ice");
+		dataSource.setPassword("ice");*/
 	}
 
 	public DriverManagerDataSource getDataSource() {

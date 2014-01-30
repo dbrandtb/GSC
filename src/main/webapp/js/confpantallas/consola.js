@@ -13,7 +13,7 @@ var tablasId = 0;
 var borderId = 0;
 var ventanaId = 0;
 var textoId = 0;
-var numericId = 0; var labelId = 0; var imagenId = 0;
+var numericId = 0; var labelId = 0; var imagenId = 0; var hiddenId = 0; var gridId = 0; var gridIdH = 0;
 var pickerId = 0;
 var checkId = 0;
 var radioId = 0;
@@ -351,7 +351,11 @@ storeD.load();
             					}else if (ctl.getXType() == 'combobox'){
             						setSur('<p><b>Texto.- </b>Es el valor que contendrá el ComboBox por default [en tiempo de ejecución].  <b>[ExtJs.-value]</b></p>');
             					}else if (ctl.getXType() == 'label'){
-            						setSur('<p><b>Texto.- </b>Es el valor que contendrá el control Label para describirse.  <b>[ExtJs.-text]</b></p>');
+            						if(ctl.id.indexOf("hidden") > -1){
+            							setSur('<p><b>Texto.- </b>Es el valor que contendrá el control Hidden [en tiempo de ejecución] para pasar como parametro.  <b>[ExtJs.-value]</b></p>');
+            						}else{
+            							setSur('<p><b>Texto.- </b>Es el valor que contendrá el control Label para describirse.  <b>[ExtJs.-text]</b></p>');
+            						}
             					}else{
             						setSur('<p><b>Texto.- </b>Es el valor que contendrá el cuadro de texto por default. De estar en blanco [en tiempo de ejecución] el atributo no es considerado.</p>');
             					}
@@ -457,8 +461,17 @@ storeD.load();
             					setSur('<p><b>html.- </b>Es el atributo que define el texto con formato HTML se desea que aparezca en la etiqueta. Para que tenga efecto este atributo el de Texto deberá estar en blanco. Si esta vacío el atributo no se incluirá [en tiempo de ejecución]. <b>[ExtJs.-html]</b></p>');
             				}else if(record.data.name == 'src'){
             					setSur('<p><b>Src.- </b>Es el atributo que define la url relativa y/o absoluta de donde será cargada la imagen. Es indispensable para que se pinte la imagen de lo contrario se cargará la default. <b>[ExtJs.-src]</b></p>');
+            				}else if(record.data.name == 'query'){
+            					setSur('<p><b>Query.- </b>Es el atributo que define la consulta a la base de datos de la información que se desea pintar en el Grid. Es importante mencionar que la sentencia SQL debe contener el nombre del dataIndex definido en el control grid.</p>');
             				}else if(record.data.name == ''){
             					setSur('<p><b>(id).- </b>Es el id</p>');
+            				}else if(record.data.name == ''){
+            					setSur('<p><b>(id).- </b>Es el id</p>');
+            				}else if(record.data.name == ''){
+            					setSur('<p><b>(id).- </b>Es el id</p>');
+            				}else if(record.data.name == ''){
+            					setSur('<p><b>(id).- </b>Es el id</p>');
+
             				}
             				if(record.data.name == 'tipo' || record.data.name == '(id)'){
             					return false;
@@ -491,13 +504,6 @@ function setAttrCtrl(name, val){
 		ctl.setTitle(val);
 	/*}else if (name === 'nombre' || name === 'isRequerido' || name === 'isAnchor' || name === 'etiqueta_width' || name === 'isFondo'
 		|| name === 'textoMax' || name === 'textoSugerido' || name === 'textoMaxMsg' || name === 'textoMin'
-		|| name === 'textoMinMsg' || name === 'soloLectura' || name === 'toolTip' || name === 'valorMaxMsg' || name === 'isDesplegable'
-		|| name === 'valorMinMsg' || name === 'isFlechas' || name === 'fechaMaxMsg' || name === 'fechaMax'
-		|| name === 'fechaMin' || name === 'fechaMinMsg' || name === 'etiqueta_aling' || name === 'margen'
-		|| name === 'padding' || name === 'imagen_aling' || name === 'isRequeridoMsg' || name === 'isEditable'
-		|| name === 'multiSelect' || name === 'store' || name === 'modo' || name === 'selectconFoco'
-		|| name === 'selectAction' || name === 'valorDisplay' || name === 'valorId' 
-		|| name === 'isFlecha' || name === 'isAutoComp' || name === 'delimitador'
 		|| name === 'row' || name === 'columnas' || name === 'tabs'){
 		setDataSP(name,val);*/
 	}else if (name === 'height'){
@@ -517,7 +523,9 @@ function setAttrCtrl(name, val){
 		}else if (ctl.getXType() == 'combobox'){
 			ctl.setValue(val);
 		}else if (ctl.getXType() == 'label'){
-			ctl.setText(val);
+			if(ctl.id.indexOf("hidden") == -1){
+				ctl.setText(val);
+			}
 		}else{
 			ctl.setValue(val);
 		}
@@ -551,7 +559,21 @@ function creaDataSP(idP, idH){
 	}
 	storeSuperPanel.add(rgs);
 }
-
+function creaDataSPG(idP, idH, idG,idName){
+	nCtrl ++;
+	var rgs = { //spanel.json
+    	idPadre: idP,
+        idHijo: idH,
+        idGrid: idG,
+        order: nCtrl,
+        texto:'New Columna',
+        width: 80,
+        tipoG:'string',
+        dataIndex:'titulo',
+        name: idName
+	}
+	storeSuperPanel.add(rgs);
+}
 
 //Funcionciones para crear Paneles Layout//
 
@@ -585,7 +607,7 @@ function CreaAcordionColumnasPreliminar(idPnl,isBton) {
 	}
 	var columnasP = parseInt(getDataSP('columnas',idPnl));
 	if( columnasP > 0){Ext.apply(frm, {columns:columnasP});}
-	attrGralPreliminar(frm, idPnl, storeColumnas);
+	(frm, idPnl, storeColumnas);
 	return frm;
 }
 
@@ -837,6 +859,32 @@ function CreaCtrlLabelPreliminar(idCtls,col){
 	if(col > 0){Ext.apply(txt, {columnWidth:1/col});}
 	attrGralPreliminar(txt, idCtls,storeLabelAttr);
 	var texto = getDataSP('texto',idCtls);
+	if( texto != ''){Ext.apply(txt, {text:texto});}
+	return txt;
+}
+function CreaCtrlGridPreliminar(idCtls,col){
+	var grid = Ext.getCmp(idCtls);
+	var arryG =[];
+	Ext.each(grid.store.data.items, function(item){
+		var attr = {text:'label'};
+		Ext.apply(attr,{text:item.data.texto});
+		Ext.apply(attr,{width:item.data.width});
+		arryG.push(attr);
+	});
+	var txt = {
+		xtype:'gridpanel'
+	};
+	Ext.apply(txt,{columns:arryG});
+	if(col > 0){Ext.apply(txt, {columnWidth:1/col});}
+	attrGralPreliminar(txt, idCtls,storeGridAttr);
+	return txt;
+}
+function CreaCtrlHiddenPreliminar(idCtls,col){
+	var txt = {
+		xtype:'label',margin:'5 5 5 5'
+	};
+	attrGralPreliminar(txt, idCtls,storeHiddenAttr);
+	var texto = getDataSP('nombre',idCtls);
 	if( texto != ''){Ext.apply(txt, {text:texto});}
 	return txt;
 }
@@ -1165,6 +1213,117 @@ seteaAtributosGrid(arryAttr,obj.id,storeImagenAttr);
 }
 };
 return myCtrl;}
+function CreaCtrlHidden(id){var myCtrl = {xtype:'label',id: id,text : id,margin:'5 5 5 5',
+		listeners: {
+		    render: function(obj) {
+		        Ext.get(obj.id).on('click',function(e) {
+		var arryAttr = [];ctrl = obj.id;arryAttr.push('(id):'+obj.id);arryAttr.push('nombre:'+getValorSP('nombre',obj.id));
+		arryAttr.push('texto:'+getValorSP('texto',obj.id));
+		seteaAtributosGrid(arryAttr,obj.id,storeHiddenAttr);
+		        });
+		    }
+		}
+		};
+return myCtrl;}
+
+function CreaCtrlGrid(id,forma){var myCtrl = {xtype:'gridpanel',id: id,margin:'5 5 5 5',
+		store: Ext.create('Ext.data.Store', { 
+			model: 'modelGridDef', 
+			storeId : 'store_'+id,
+			autoLoad: true, 
+			proxy: { type: 'ajax', url : '../../js/confpantallas/data/attr.json', 
+				reader: {type: 'json',root: 'attrGridDef'} } }), 
+		columns: [ {text: "Titulo", 
+					width:180,
+					dataIndex: 'texto',
+					editor: {
+		                allowBlank: false
+		            }}, 
+		           {text: "Width", width: 60, 
+						xtype: 'numbercolumn',
+						format: '00000',
+						editor: {
+			                xtype: 'numberfield',
+			                allowBlank: false
+			            },
+						dataIndex: 'width'},
+		           {text: "Tipo", width: 80, dataIndex: 'tipoG',
+							editor: {
+								xtype: 'combobox',
+								store: storeListaTipoDatos,
+								queryMode: 'local',
+								displayField: 'key',
+								valueField: 'value'
+							}
+		           },
+		           {text: "DataIndex", width: 90, dataIndex: 'dataIndex',
+						editor: {
+			                allowBlank: false
+			            }},
+			        {text: "Id", width: 70, dataIndex: 'name'
+					}
+		           ], 
+		width: 470, height: 260,
+		tbar: [{
+		    text: 'Add Columna',
+		    handler : function() {
+		    	var plugin = Ext.getCmp(id).getPlugin('cellplugin_'+id);
+		    	plugin.cancelEdit();
+		    	gridIdH ++;
+				var gh = 'colG_' + gridIdH;
+				creaDataSPG(forma,gh,id,gh);
+                // Create a model instance
+                var r = Ext.create('modelGridDef', {
+                	texto: 'New Columna',
+                    width: 80,
+                    tipoG: 'string',
+                    dataIndex: 'titulo',
+                    name: gh
+                });
+                var rowG = plugin.grid.store.data.length;
+		    	Ext.getCmp(id).store.insert(rowG, r);
+                plugin.startEdit(rowG, 0);
+            }
+		    	
+		}, {
+			text: 'Eliminar',
+			handler: function() {
+                var sm = Ext.getCmp(id).getSelectionModel();
+                var plugin = Ext.getCmp(id).getPlugin('cellplugin_'+id);
+                plugin.cancelEdit();
+                var row = sm.selected.items[0].data;
+                eliminaGridRow(row.name);
+                var gstore = Ext.getCmp(id).store;
+                gstore.remove(sm.getSelection());
+                if (gstore.getCount() > 0) {
+                    sm.select(0);
+                }
+            }
+		}],
+		plugins: Ext.create('Ext.grid.plugin.RowEditing', {
+		    clicksToMoveEditor: 2,
+		    pluginId: 'cellplugin_'+id,
+		    autoCancel: false,
+		    listeners: {
+		    	edit: function(editor,e,opt){
+					e.record.commit();
+					updateGridRow(e.record.data.texto,e.record.data.width,e.record.data.tipoG,e.record.data.dataIndex,e.record.data.name);
+				}
+			}
+		}),
+		listeners: {
+		    render: function(obj) {
+		        Ext.get(obj.id).on('click',function(e) {
+		        	var arryAttr = [];ctrl = obj.id;arryAttr.push('(id):'+obj.id);arryAttr.push('nombre:'+getValorSP('nombre',obj.id));
+		        	arryAttr.push('height:'+ obj.getHeight());arryAttr.push('width:'+getValorSP('width','0'));arryAttr.push('margen:'+getValorSP('margen','5 5 5 5'));
+		        	arryAttr.push('query:'+getValorSP('query',''));
+		        	seteaAtributosGrid(arryAttr,obj.id,storeGridAttr);
+		        });
+		   }
+		}
+		};
+
+return myCtrl;}
 // Para agregar los Paneles de trabajo
 function agrega(tipo){
 	tipo = trim(tipo);
@@ -1340,20 +1499,35 @@ function agregaCtrl(tipo,forma,arryAttrCtrl){
 		pnl.add(CreaCtrlImagen(id));
 		arryAttr.push('src:http://www.sencha.com/img/20110215-feat-html5.png');
 		arryAttr.push('tipo:image');
+	}else if (tipo === 'Hidden'){
+		hiddenId ++;
+		id = 'hidden_' + hiddenId;
+		store=storeHiddenAttr;
+		pnl.add(CreaCtrlHidden(id));
+		arryAttr.push('tipo:hidden');
+	}else if (tipo === 'Grid'){
+		gridId ++;
+		id = 'grid_' + gridId;
+		store=storeGridAttr;
+		pnl.add(CreaCtrlGrid(id,forma));
+		arryAttr.push('tipo:gridpanel');
 	}
 	creaDataSP(forma,id);
 	arryAttr.push('(id):'+id);
-	if (tipo != 'Label' && tipo != 'Imagen'){
+	if (tipo != 'Label' && tipo != 'Imagen' && tipo != 'Hidden' && tipo != 'Grid'){
 		arryAttr.push('etiqueta:'+id);
 		arryAttr.push('etiqueta_aling:left');
 		arryAttr.push('etiqueta_width:100');/*valor inicial del objeto*/
 		arryAttr.push('isAnchor:95');/*valor inicial del objeto*/
 		arryAttr.push('padding:0 0 0 0');
 	}
-	arryAttr.push('height:'+getHeightCtrl(id)); 
+	if (tipo != 'Hidden'){
+		arryAttr.push('height:'+getHeightCtrl(id)); 
+		arryAttr.push('margen:5 5 5 5');
+		arryAttr.push('width:'+getWidthCtrl(id));
+	}
+	
 	arryAttr.push('nombre:'+id);
-	arryAttr.push('margen:5 5 5 5');
-	arryAttr.push('width:'+getWidthCtrl(id));
 	Ext.each(arryAttrCtrl, function(attr){
 		arryAttr.push(attr);
  	});
@@ -1528,6 +1702,29 @@ function fncPreliminar(){
 	}
 }
 
+function updateGridRow(titulo,width,tipoG,dataIndex,name){
+	Ext.each(storeSuperPanel.data.items, function(item){
+		if(item.data.idHijo==name){
+			item.data.texto = titulo;
+			item.data.width = width;
+			item.data.tipoG = tipoG;
+			item.data.dataIndex = dataIndex;
+			return;
+		}
+	});
+}
+
+function eliminaGridRow(name){
+	var arryAttrDeleted = [];
+	Ext.each(storeSuperPanel.data.items, function(item){
+		if(item.data.idHijo==name){
+			arryAttrDeleted.push(item);
+			return;
+		}	
+	 });
+	storeSuperPanel.remove(arryAttrDeleted);
+}
+
 function getHijosBotones(arryPControles,isBton,row){
 	Ext.each(arryPControles, function(pctrl){
 		var pplnctls = Ext.getCmp(pctrl.data.idHijo);
@@ -1542,7 +1739,7 @@ function getHijosBotones(arryPControles,isBton,row){
 function getHijosPanelCtrl(id){
 	var arryPControlesH = [];
 	Ext.each(storeSuperPanel.data.items, function(item){
-				if(item.data.idPadre==id){
+				if(item.data.idPadre==id && item.data.idGrid==''){
 					arryPControlesH.push(item);
 				}
 	 		});	
@@ -1583,12 +1780,26 @@ function setControlesPreliminar(arryPControles,arryPControlesIN,row,isBton,d, is
 			 		}else{
 			 			ctrW.add(CreaCtrlRadioPreliminar(pplnctls.getId(),row));
 			 		}
-			 	}else if(pplnctls.getXType() == 'label'){
+			 	}else if(pplnctls.getXType() == 'grid'){
 			 		if(isWin == false){
-			 			Ext.getCmp('preliminar_'+d).add(CreaCtrlLabelPreliminar(pplnctls.getId(),row));
+			 			Ext.getCmp('preliminar_'+d).add(CreaCtrlGridPreliminar(pplnctls.getId(),row));
 			 		}else{
-			 			ctrW.add(CreaCtrlLabelPreliminar(pplnctls.getId(),row));
+			 			ctrW.add(CreaCtrlGridPreliminar(pplnctls.getId(),row));
 			 		}
+			 	}else if(pplnctls.getXType() == 'label'){
+			 		if(pplnctls.id.indexOf("hidden") > -1){
+			 			if(isWin == false){
+				 			Ext.getCmp('preliminar_'+d).add(CreaCtrlHiddenPreliminar(pplnctls.getId(),row));
+				 		}else{
+				 			ctrW.add(CreaCtrlHiddenPreliminar(pplnctls.getId(),row));
+				 		}
+			 		}else{
+			 			if(isWin == false){
+				 			Ext.getCmp('preliminar_'+d).add(CreaCtrlLabelPreliminar(pplnctls.getId(),row));
+				 		}else{
+				 			ctrW.add(CreaCtrlLabelPreliminar(pplnctls.getId(),row));
+				 		}
+			 		}		
 			 	}else if(pplnctls.getXType() == 'image'){
 			 		if(isWin == false){
 			 			Ext.getCmp('preliminar_'+d).add(CreaCtrlImagenPreliminar(pplnctls.getId(),row));
@@ -1892,6 +2103,9 @@ function seteaAtributosGrid(arryAttr,id,store){
 			Ext.apply(daty, {html:value});
 		}else if(name === 'src'){
 			Ext.apply(daty, {src:value});
+		}else if(name === 'query'){
+			Ext.apply(daty, {query:value});
+
 		}
 		setDataSP(name,value);
     });
@@ -2042,6 +2256,8 @@ function getDataSP(attr,ctrlp){
 				rgs = item.data.html;
 			}else if(attr==='src'){
 				rgs = item.data.src;
+			}else if(attr==='query'){
+				rgs = item.data.query;
 			}
 			return;
 		}	
@@ -2189,6 +2405,8 @@ function setDataSP(attr,valor){
 				item.data.html=valor;
 			}else if(attr==='src'){
 				item.data.src=valor;
+			}else if(attr==='query'){
+				item.data.query=valor;
 			}
 			return false;
 		}	
@@ -2207,7 +2425,7 @@ function eliminarCtrl(name){
 	var panel;
 	var arryAttrDeleted = [];
 	Ext.each(storeSuperPanel.data.items, function(item){
-		if(item.data.idHijo==ctrl){
+		if(item.data.idHijo==ctrl || item.data.idGrid==ctrl){
 			arryAttrDeleted.push(item);
 			panel = item.data.idPadre;return;
 		}

@@ -3,6 +3,7 @@ Ext.define('modelSuperPanel', {
      fields: [
          {name: 'idPadre', 		type: 'string'},
          {name: 'idHijo',       	type: 'string'},
+         {name: 'idGrid', 		type: 'string'},
          {name: 'name', 		type: 'string'},
          {name: 'order', 		type: 'int'},
          {name: 'isRequerido', 		type: 'boolean'},
@@ -62,6 +63,7 @@ Ext.define('modelSuperPanel', {
 		 {name: 'fechaInvalidTxt',	type:'string'},
 		 {name: 'escala',type:'string'},
 		 {name: 'tipo',type:'string'},
+		 {name: 'tipoG',type:'string'},
 		 {name: 'isPadre',type:'string'},
 		 {name: 'url',type:'string'},
 		 {name: 'estilo',type:'string'},
@@ -72,8 +74,9 @@ Ext.define('modelSuperPanel', {
 		 {name: 'cordY',			type:'int'},
 		 {name: 'html',type:'string'},
 		 {name: 'src',type:'string'},
-		 {name: 'titulo_Posicion',type:'string'}
-         
+		 {name: 'titulo_Posicion',type:'string'},
+		 {name: 'dataIndex', type: 'string'},
+		 {name: 'query', type: 'string'}
          
      ]
 });
@@ -327,6 +330,72 @@ Ext.define('modelImagenAttr', {
          {name: 'zuprimir',			type:'boolean'}
      ]
 });
+Ext.define('modelHiddenAttr', {
+    extend: 'Ext.data.Model',
+    fields: [
+    	 {name: '(id)', 			type: 'string'},
+        {name: 'nombre', 			type: 'string'},
+        {name: 'tipo', 			type: 'string'},
+        {name: 'texto',			type:'string'},
+        {name: 'zuprimir',			type:'boolean'}
+    ]
+});
+Ext.define('modelGridAttr', {
+    extend: 'Ext.data.Model',
+    fields: [
+    	 {name: '(id)', 			type: 'string'},
+        {name: 'nombre', 			type: 'string'},
+        {name: 'tipo', 			type: 'string'},
+        {name: 'width',			type:'int'},
+        {name: 'height',			type:'int'},
+        {name: 'margen',			type:'string'},
+        {name: 'zuprimir',			type:'boolean'},
+        {name: 'query', 	type: 'string'}
+    ]
+});
+Ext.define('modelGridDef',{ extend: 'Ext.data.Model', 
+	fields: [ {name: 'texto', type: 'string'},
+	          {name: 'width', type: 'int'},
+	          {name: 'tipoG', type: 'string'},
+	          {name: 'name', type: 'string'},
+	          {name: 'dataIndex', type: 'string'}
+	 ] 
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

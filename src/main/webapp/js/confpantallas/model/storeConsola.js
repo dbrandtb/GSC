@@ -154,6 +154,7 @@ var storeComboAttr = Ext.create('Ext.data.Store',{
         reader: {type: 'json',root: 'attrCombo'}
    }
 });
+
 var storeListaEtiqueta_Aling = Ext.create('Ext.data.Store',{
 	model: 'modelComboBox',
 	autoLoad: true,
@@ -170,6 +171,15 @@ var storeListaEscala = Ext.create('Ext.data.Store',{
     	type: 'ajax',
         url : '../../js/confpantallas/data/attr.json',
         reader: {type: 'json',root: 'lista_Escala'}
+   }
+});
+var storeListaTipoDatos = Ext.create('Ext.data.Store',{
+	model: 'modelComboBox',
+	autoLoad: true,
+	proxy: {
+    	type: 'ajax',
+        url : '../../js/confpantallas/data/attr.json',
+        reader: {type: 'json',root: 'lista_TipoDatos'}
    }
 });
 var storeListaEstilo = Ext.create('Ext.data.Store',{
@@ -271,9 +281,29 @@ var storeImagenAttr = Ext.create('Ext.data.Store',{
         reader: {type: 'json',root: 'attrImagen'}
    }
 });
-
-
-
+var storeHiddenAttr = Ext.create('Ext.data.Store',{
+	model: 'modelHiddenAttr',
+	autoLoad: true,
+	proxy: {
+    	type: 'ajax',
+        url : '../../js/confpantallas/data/attr.json',
+        reader: {type: 'json',root: 'attrHidden'}
+   }
+});
+var storeGridAttr = Ext.create('Ext.data.Store',{
+	model: 'modelGridAttr',
+	autoLoad: true,
+	proxy: {
+    	type: 'ajax',
+        url : '../../js/confpantallas/data/attr.json',
+        reader: {type: 'json',root: 'attrGrid'}
+   }
+});
+var storeG = Ext.create('Ext.data.Store', { 
+	model: 'modelGridDef', 
+	autoLoad: true, 
+	proxy: { type: 'ajax', url : '../../js/confpantallas/data/attr.json', 
+		reader: {type: 'json',root: 'attrGridDef'} } });
 
 
 

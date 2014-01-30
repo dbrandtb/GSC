@@ -22,6 +22,13 @@ import mx.com.gseguros.confpantallas.model.DinamicTatriVo;
 public class DinamicDao {
 	private ConnectDB conn=null;
 	
+	public List<DinamicControlAttrVo> GetAttrGrid(HashMap<String, String> mapa){
+		conn = new ConnectDB();
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(conn.getDataSource());
+		String qry = this.getSqlSelect(mapa.get("query").toString(),mapa);
+		List<DinamicControlAttrVo> rgs  = jdbcTemplate.query(qry,new BeanPropertyRowMapper(DinamicControlAttrVo.class));
+		return rgs;
+	}
 	public List<Map> GetListados (HashMap<String, String> mapa){
 		conn = new ConnectDB();
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(conn.getDataSource());
@@ -33,6 +40,12 @@ public class DinamicDao {
 		conn = new ConnectDB();
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(conn.getDataSource());
 		String qry = this.getSqlSelect(mapa.get("query"),mapa);
+		List rgs = jdbcTemplate.queryForList(qry);
+		return rgs;
+	}
+	public List<HashMap> GetDataGrid (String qry){
+		conn = new ConnectDB();
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(conn.getDataSource());
 		List rgs = jdbcTemplate.queryForList(qry);
 		return rgs;
 	}
@@ -79,7 +92,6 @@ public class DinamicDao {
 		String rgs = jdbcTemplate.queryForObject(qry,String.class);
 		return rgs;
 	}
-	
 	public void ejecuta(HashMap<String, String> mapa){
 		conn = new ConnectDB();
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(conn.getDataSource());
@@ -110,7 +122,18 @@ public class DinamicDao {
 		String qry = this.getSqlSelect(query,objeto);
 		jdbcTemplate.update(qry);
 	}
-
+	public void ejecutaG(String query, DinamicControlAttrVo objeto){
+		conn = new ConnectDB();
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(conn.getDataSource());
+		String qry = this.getSqlSelectG(query,objeto);
+		jdbcTemplate.update(qry);
+	}
+	public void ejecutaSql(String query, DinamicControlAttrVo objeto){
+		conn = new ConnectDB();
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(conn.getDataSource());
+		String qry = this.getSqlSelectSql(query,objeto);
+		jdbcTemplate.update(qry);
+	}
 	public String setPanel (HashMap<String, Object> mapa){
 		String rgs = "";
 		try{
@@ -132,6 +155,8 @@ public class DinamicDao {
 				data.put("query", "deleteControles");
 				this.ejecuta(data);
 				data.put("query", "deleteControlesAttr");
+				this.ejecuta(data);
+				data.put("query", "deleteControlesAttrGrid");
 				this.ejecuta(data);
 			}
 			ArrayList<DinamicPanelVo> arryPaneles = (ArrayList<DinamicPanelVo>) mapa.get("newPanel");
@@ -165,6 +190,18 @@ public class DinamicDao {
 					this.ejecuta("insertActualControlAttr",itL.next());
 				}
 			}
+			
+			ArrayList<DinamicControlAttrVo> arryAttrGrid = (ArrayList<DinamicControlAttrVo>) mapa.get("lstdeLstCtrolGridAttr");
+			Iterator<DinamicControlAttrVo> itCG = arryAttrGrid.iterator();
+			while(itCG.hasNext()) {
+				this.ejecutaG("insertActualControlAttrGrid", itCG.next());
+			}
+
+			ArrayList<DinamicControlAttrVo> arryAttrGridSql = (ArrayList<DinamicControlAttrVo>) mapa.get("lstdeLstCtrolGridSql");
+			Iterator<DinamicControlAttrVo> itSql = arryAttrGridSql.iterator();
+			while(itSql.hasNext()) {
+				this.ejecutaSql("insertActualControlAttrGridSql", itSql.next());
+			}
 
 		}catch (Exception e){
 			rgs = e.toString();
@@ -186,6 +223,20 @@ public class DinamicDao {
 		}
 		return rgs;
 	}
+	private String getSqlSelectG (String qry, DinamicControlAttrVo mapa){
+		String rgs = "";
+		if(qry.equals("insertActualControlAttrGrid")){
+			rgs = "INSERT INTO DNC_DOCCONTROLGRID_ATTR VALUES ("+mapa.getIdattr()+","+mapa.getIdcontrol()+","+mapa.getIdpanel()+",'"+mapa.getAttr()+"','"+mapa.getValor()+"','"+mapa.getTipo()+"')";
+		}
+		return rgs;
+	}
+	private String getSqlSelectSql (String qry, DinamicControlAttrVo mapa){
+		String rgs = "";
+		if(qry.equals("insertActualControlAttrGridSql")){
+			rgs = "INSERT INTO DNC_DOCCONTROLGRID_SQL VALUES ("+mapa.getIdcontrol()+","+mapa.getIdpanel()+",'"+mapa.getAttr()+"','"+mapa.getValor()+"','"+mapa.getTipo()+"')";
+		}
+		return rgs;
+	}	
 	private String getSqlSelect (String qry, DinamicControlVo mapa){
 		String rgs = "";
 		if(qry.equals("insertActualControl")){
@@ -214,6 +265,10 @@ public class DinamicDao {
 			rgs = "SELECT NOMBRE, TABLA FROM DNC_TABLAS ORDER BY IDCONTROL";
 		}else if(qry.equals("ListadeRamosTatrisit")){
 			rgs = "SELECT DISTINCT(CDTIPSIT) AS NOMBRE, CDTIPSIT AS TABLA FROM TATRISIT ORDER BY CDTIPSIT";
+		}else if(qry.equals("ListadeControlesGrid")){	
+			rgs = "SELECT DISTINCT(IDCONTROL) FROM DNC_DOCCONTROLGRID_ATTR WHERE IDATTR = "+mapa.get("id")+" AND IDPANEL = "+mapa.get("panel");	
+		}else if(qry.equals("ListadeControlesGridAttr")){	
+			rgs = "SELECT IDATTR,IDCONTROL,IDPANEL,ATTR,VALOR,TIPO FROM DNC_DOCCONTROLGRID_ATTR WHERE IDATTR = "+mapa.get("id")+" AND IDCONTROL = "+mapa.get("control")+" AND IDPANEL = "+mapa.get("panel");	
 		}else if(qry.equals("ListadeCamposTatrisit")){
 			rgs = "SELECT DSATRIBU AS NOMBRE, DSATRIBU AS TABLA FROM TATRISIT WHERE CDTIPSIT = "+mapa.get("cdramo")+" ORDER BY CDATRIBU";
 		}else if(qry.equals("DatosControlTatrisit")){
@@ -224,7 +279,7 @@ public class DinamicDao {
 		}else if(qry.equals("maxPanel")){
 			rgs = "SELECT MAX(IDPANEL) + 1 FROM DNC_PANELES";
 		}else if(qry.equals("maxPadre")){
-			rgs = "SELECT MAX(IDPADRE) + 1 FROM DNC_PANELES";
+			rgs = "SELECT MAX(IDPADRE) FROM DNC_PANELES";
 		}else if(qry.equals("actualPanel")){
 			rgs = "SELECT IDPANEL FROM DNC_PANELES WHERE NAME_PANEL = '"+mapa.get("panel")+"'";
 		}else if(qry.equals("deletePanelAttr")){
@@ -235,6 +290,8 @@ public class DinamicDao {
 			rgs = "DELETE DNC_DOCCONTROL WHERE IDPANEL = "+mapa.get("idpanel");
 		}else if(qry.equals("deleteControlesAttr")){
 			rgs = "DELETE DNC_DOCCONTROL_ATTR WHERE IDPANEL = "+mapa.get("idpanel");
+		}else if(qry.equals("deleteControlesAttrGrid")){
+			rgs = "DELETE DNC_DOCCONTROLGRID_ATTR WHERE IDPANEL = "+mapa.get("idpanel");
 		}else if(qry.equals("listaValoresTablaApoyo")){
 			rgs = "SELECT A.OTCLAVE KEY, A.OTVALOR VALUE FROM TTAPVAT1 A, TTAPDSCL B "
 					+ "WHERE A.NMTABLA = (SELECT C.NMTABLA FROM TTAPTABL C WHERE C.CDTABLA = '"+mapa.get("tabla")+"') "
@@ -261,12 +318,12 @@ public class DinamicDao {
 			rgs = "SELECT A.OTCLAVE KEY, A.OTVALOR VALUE FROM TTAPVAT1 A, TTAPDSCL B "
 					+ "WHERE A.NMTABLA = (SELECT C.NMTABLA FROM TTAPTABL C "
 					+ "WHERE C.CDTABLA = '"+mapa.get("store")+"') AND A.NMTABLA = B.NMTABLA";
+		}else if(qry.equals("SqlQuery")){
+			rgs = "SELECT VALOR FROM DNC_DOCCONTROLGRID_SQL WHERE IDCONTROL = "+mapa.get("valor")+" AND IDPANEL = " +mapa.get("tabla");
 		}
 		return rgs;
 	}
 
-	
-	
 	
 	
 	

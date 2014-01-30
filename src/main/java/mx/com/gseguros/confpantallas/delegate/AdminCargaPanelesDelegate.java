@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import mx.com.gseguros.confpantallas.base.dao.DinamicDao;
 import mx.com.gseguros.confpantallas.model.DinamicComboVo;
+import mx.com.gseguros.confpantallas.model.DinamicControlAttrVo;
 import mx.com.gseguros.confpantallas.model.DinamicData;
 import mx.com.gseguros.confpantallas.model.DinamicItemBean;
 import mx.com.gseguros.confpantallas.model.DinamicPanelAttrGetVo;
@@ -54,6 +55,25 @@ public class AdminCargaPanelesDelegate {
 		}
 		return rgs;
 		
+	}
+	public String getDataGrid(String tabla, String valor){
+		String rgs = "";
+		HashMap<String, String> data = new HashMap<String, String>();
+		try {
+			DinamicDao dao = new DinamicDao();
+			data.put("query", "SqlQuery");
+			data.put("tabla", tabla);
+			data.put("valor", valor);
+			String qry = dao.getString(data);
+			List<HashMap> ltsP = dao.GetDataGrid(qry);
+			JSONArray jsonObject = JSONArray.fromObject(ltsP);
+			System.out.println(jsonObject);
+			rgs = jsonObject.toString();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return rgs;
 	}
 	public String getDataComboHijo(String tabla, String valor){
 		String rgs = "";
@@ -324,7 +344,24 @@ public class AdminCargaPanelesDelegate {
 					rgsAttr.append("Ext.getCmp('").append(strCmb).append("').enable();");
 					rgsAttr.append("\n");
 					rgsAttr.append("}").append("}");
-					rgsAttr.append(",");
+					rgsAttr.append(",");	
+				}else if (attrLts.getAttr().equals("columns")){
+					rgsAttr.append(attrLts.getAttr()).append(":");
+					rgsAttr.append("[");
+					rgsAttr.append(this.getAttrGrid(attrLts.getValor(), idP));
+					rgsAttr.append("]");
+					rgsAttr.append(",").append("\n");
+					rgsAttr.append("store: Ext.create('Ext.data.Store', {").append("\n");
+					rgsAttr.append("model: Ext.define('modelGridDef_").append(this.getValorAttr(listaAttrControl, "id")).append("',{ extend: 'Ext.data.Model', ").append("\n");
+					rgsAttr.append("fields: [").append("\n");
+					rgsAttr.append(this.getAttrModel(attrLts.getValor(), idP));
+					rgsAttr.append("] }),").append("\n");
+					rgsAttr.append("autoLoad: true,").append("\n");
+					rgsAttr.append("proxy: { type: 'ajax', url : '../../confpantallas/cargainfo.action', ").append("\n");
+					rgsAttr.append("reader: {type: 'json',root: 'success'}, extraParams: {tarea: 'llenaGrid', tabla:'");
+					rgsAttr.append(idP).append("', valor:'").append(this.getValorAttr(listaAttrControl, "query")).append("'} } }),").append("\n");
+				}else if (attrLts.getAttr().equals("query")){
+					System.out.println("Brinco Atributo");
 				}else{
 					rgsAttr.append(attrLts.getAttr()).append(":");
 					rgsAttr.append(this.setStrAttr(attrLts.getValor(), attrLts.getTipo()));
@@ -342,6 +379,86 @@ public class AdminCargaPanelesDelegate {
 		stB.append("},");
 		log.info("Total de atributos del Control: " + stB.toString());
 		return stB.toString();
+	}
+	private String getAttrModel(String id, Integer panel){
+		StringBuffer stB = new StringBuffer();
+		String rgs = "";
+		HashMap<String, String> data = new HashMap<String, String>();
+		try {
+			data.put("query", "ListadeControlesGrid");
+			data.put("id", String.valueOf(id));
+			data.put("panel", String.valueOf(panel));
+			DinamicDao dao = new DinamicDao();
+			List<Map> ltsP = dao.GetListados(data);
+			Iterator<Map> iltsP = ltsP.iterator();
+			while (iltsP.hasNext()) {
+				StringBuffer rgsAttr = new StringBuffer();
+				rgsAttr.append("{");
+				Map idCtrolM = iltsP.next();
+				String idCtrol = idCtrolM.get("IDCONTROL").toString();
+				data.put("query", "ListadeControlesGridAttr");
+				data.put("control", idCtrol);
+				List<DinamicControlAttrVo> ltsPAG = dao.GetAttrGrid(data);
+				Iterator<DinamicControlAttrVo> iltsPAG = ltsPAG.iterator();
+				while (iltsPAG.hasNext()) {
+					DinamicControlAttrVo ctrl = iltsPAG.next();
+					if("tipoG".equals(ctrl.getAttr())){
+						rgsAttr.append("type:").append(this.setStrAttr(ctrl.getValor(), ctrl.getTipo())).append(",");
+					}else if("dataIndex".equals(ctrl.getAttr())){
+						rgsAttr.append("name:").append(this.setStrAttr(ctrl.getValor(), ctrl.getTipo()));
+					}
+				}
+				rgs = rgsAttr.toString();
+				stB.append(rgs);
+				stB.append("},");
+			}
+			System.out.println(ltsP);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		rgs = stB.toString();
+		rgs = rgs.substring(0, stB.toString().length()-1);
+		return rgs;
+	}
+	private String getAttrGrid(String id, Integer panel){
+		StringBuffer stB = new StringBuffer();
+		String rgs = "";
+		HashMap<String, String> data = new HashMap<String, String>();
+		try {
+			data.put("query", "ListadeControlesGrid");
+			data.put("id", String.valueOf(id));
+			data.put("panel", String.valueOf(panel));
+			DinamicDao dao = new DinamicDao();
+			List<Map> ltsP = dao.GetListados(data);
+			Iterator<Map> iltsP = ltsP.iterator();
+			while (iltsP.hasNext()) {
+				StringBuffer rgsAttr = new StringBuffer();
+				rgsAttr.append("{");
+				Map idCtrolM = iltsP.next();
+				String idCtrol = idCtrolM.get("IDCONTROL").toString();
+				data.put("query", "ListadeControlesGridAttr");
+				data.put("control", idCtrol);
+				List<DinamicControlAttrVo> ltsPAG = dao.GetAttrGrid(data);
+				Iterator<DinamicControlAttrVo> iltsPAG = ltsPAG.iterator();
+				while (iltsPAG.hasNext()) {
+					DinamicControlAttrVo ctrl = iltsPAG.next();
+					if(!"tipoG".equals(ctrl.getAttr())){
+						rgsAttr.append(ctrl.getAttr()).append(":").append(this.setStrAttr(ctrl.getValor(), ctrl.getTipo())).append(",");
+					}
+				}
+				rgs = rgsAttr.toString();
+				rgs = rgs.substring(0, rgsAttr.toString().length()-1);
+				stB.append(rgs);
+				stB.append("},");
+			}
+			//JSONArray jsonObject = JSONArray.fromObject(ltsP);
+			System.out.println(ltsP);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		rgs = stB.toString();
+		rgs = rgs.substring(0, stB.toString().length()-1);
+		return rgs;
 	}
 	private String getAttrControl(String control,String attrBusca,List<HashMap> listaIdControles,Integer idP,String attr){
 		String rgs = "";
