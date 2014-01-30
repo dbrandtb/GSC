@@ -15,6 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TimeZone;
 
 import mx.com.aon.configurador.pantallas.model.components.GridVO;
 import mx.com.aon.core.web.PrincipalCoreAction;
@@ -1624,6 +1625,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 				logger.debug(">>>Termino: "+cal.getFechaTermino());
 				logger.debug(">>>Date Termino: "+cal.getFechaTermino().getTime());
 				logger.debug(">>>timezone: "+cal.getFechaTermino().getTimeZone());
+				
+				sdf.setTimeZone(TimeZone.getTimeZone("Mexico/General"));
 				
 				params.put("pi_ADMINISTRADORA", cal.getAdministradora());
 				params.put("pi_ANIO", cal.getAnho());
