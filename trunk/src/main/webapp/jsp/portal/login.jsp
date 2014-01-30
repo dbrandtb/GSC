@@ -32,7 +32,7 @@
         <tr> 
             
 		    <td colspan="5" class="textologin"><br>
-            INFORMACIÓN DE GENERAL DE SEGUROS.<br><br>
+            INFORMACI&Oacute;N DE GENERAL DE SEGUROS.<br><br>
             <br><br>  
 		    </td>
 		</tr>
