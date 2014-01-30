@@ -6116,6 +6116,9 @@ public class EndososAction extends PrincipalCoreAction
 			//P_CALC_RECIBOS_SUB_ENDOSO_FP
 			endososManager.calcularRecibosEndosoFormaPago(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
 			
+			//P_CALCULA_COMISION_BASE
+			endososManager.calcularComisionBase(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+			
 			//+- 30 dias ? PKG_SATELITES.P_MOV_MESACONTROL : PKG_ENDOSOS.P_CONFIRMAR_ENDOSOB
 			String tramiteGenerado=this.confirmarEndoso(cdunieco, cdramo, estado, nmpoliza
 					,nmsuplem, nsuplogi, cdtipsup, "", dFecha, cdtipsit);

@@ -889,4 +889,30 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		}
 	}
 	
+	/**
+	 * P_CALCULA_COMISION_BASE
+	 */
+	@Override
+	public void calcularComisionBase(Map<String, String> params) throws Exception
+	{
+		this.ejecutaSP(new CalcularComisionBase(this.getDataSource()), params);
+	}
+	
+	protected class CalcularComisionBase extends StoredProcedure
+	{
+		protected CalcularComisionBase(DataSource dataSource)
+		{
+			super(dataSource, "P_CALCULA_COMISION_BASE");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 }
