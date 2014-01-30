@@ -278,5 +278,40 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 	/*//////////////////////////////////////*/
 	////// cancelar polizas en tagrucan //////
 	//////////////////////////////////////////
+	
+	/**
+	 * PKG_CONSULTA.P_IMP_DOC_CANCELACION
+	 * @return nmsolici,nmsituac,descripc,descripl,ntramite,nmsuplem
+	 */
+	@Override
+	public List<Map<String,String>> reimprimeDocumentos(Map<String,String>params) throws Exception
+	{
+		Map<String,Object> resultadoMap=this.ejecutaSP(new ReimprimeDocumentos(this.getDataSource()), params);
+		return (List<Map<String, String>>) resultadoMap.get("PV_REGISTRO_O");
+	}
 
+	protected class ReimprimeDocumentos extends StoredProcedure
+	{
+		String columnas[]=new String[]{
+				"nmsolici"
+				,"nmsituac"
+				,"descripc"
+				,"descripl"
+				,"ntramite"
+				,"nmsuplem"
+		};
+		protected ReimprimeDocumentos(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONSULTA.P_IMP_DOC_CANCELACION");
+			declareParameter(new SqlParameter("PV_CDUNIECO_I"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDRAMO_I"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_ESTADO_I"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_NMPOLIZA_I"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_TIPMOV_I"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new GenericMapper(columnas)));
+			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
+		}
+	}
+	
 }

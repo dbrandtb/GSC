@@ -2,6 +2,7 @@ package mx.com.gseguros.portal.cancelacion.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -10,8 +11,10 @@ import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.cancelacion.service.CancelacionManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.utils.HttpUtil;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
@@ -200,6 +203,20 @@ public class CancelacionAction extends PrincipalCoreAction
 	
 	/////////////////////////////////////////
 	////// cancelacion unica de poliza //////
+	/*
+	pv_fevencim_i=03/02/2015,
+	pv_estado_i=M,
+	pv_nmsituac_i=1,
+	pv_fecancel_i=23/02/2014,
+	pv_comenta_i=asd,
+	pv_cdunieco_i=1006,
+	pv_nmpoliza_i=28,
+	pv_cduniage_i=,
+	pv_cdrazon_i=2,
+	pv_usuario_i=,
+	pv_feefecto_i=03/02/2014,
+	pv_cdramo_i=2
+	*/
 	/*/////////////////////////////////////*/
 	public String cancelacionUnica()
 	{
@@ -214,7 +231,61 @@ public class CancelacionAction extends PrincipalCoreAction
 		{
 			UserVO usuario=(UserVO)session.get("USUARIO");
 			smap1.put("pv_usuario_i",usuario.getUser());
-			cancelacionManager.cancelaPoliza(smap1);
+			cancelacionManager.cancelaPoliza(smap1);	
+			
+			String cdunieco = smap1.get("pv_cdunieco_i");
+			String cdramo   = smap1.get("pv_cdramo_i");
+			String estado   = smap1.get("pv_estado_i");
+			String nmpoliza = smap1.get("pv_nmpoliza_i");
+			
+			//PKG_CONSULTA.P_IMP_DOC_CANCELACION
+			//nmsolici,nmsituac,descripc,descripl,ntramite,nmsuplem
+			List<Map<String,String>>listaDocu=cancelacionManager.reimprimeDocumentos(cdunieco, cdramo, estado, nmpoliza, "52");
+			
+			for(Map<String,String> docu:listaDocu)
+			{
+				log.debug("docu iterado: "+docu);
+				String descripc = docu.get("descripc");
+				String descripl = docu.get("descripl");
+				String nmsuplem = docu.get("nmsuplem");
+				String ntramite = docu.get("ntramite");
+				
+				String rutaCarpeta = this.getText("ruta.documentos.poliza")+"/"+ntramite;
+				
+				String url=this.getText("ruta.servidor.reports")
+						+ "?destype=cache"
+						+ "&desformat=PDF"
+						+ "&userid="+this.getText("pass.servidor.reports")
+						+ "&report="+descripl
+						+ "&paramform=no"
+						+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+						+ "&p_unieco="+cdunieco
+						+ "&p_ramo="+cdramo
+						+ "&p_estado="+estado
+						+ "&p_poliza="+nmpoliza
+						+ "&p_suplem="+nmsuplem
+						+ "&desname="+rutaCarpeta+"/"+descripc;
+				if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
+				{
+					// C R E D E N C I A L _ X X X X X X . P D F
+					//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+					url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("_"));
+				}
+				log.debug(""
+						+ "\n#################################"
+						+ "\n###### Se solicita reporte ######"
+						+ "\na "+url+""
+						+ "\n#################################");
+				HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
+				log.debug(""
+						+ "\n######                    ######"
+						+ "\n###### reporte solicitado ######"
+						+ "\na "+url+""
+						+ "\n################################"
+						+ "\n################################"
+						+ "");
+			}
+			
 			success=true;			
 		}
 		catch(Exception ex)
@@ -369,7 +440,6 @@ public class CancelacionAction extends PrincipalCoreAction
 	/*/////////////////////////////////////////*/
 	////// obtener detalles de cancelacion //////
 	/////////////////////////////////////////////
-	
 	
 	/////////////////////////////////
 	////// getters and setters //////

@@ -142,5 +142,28 @@ public class CancelacionManagerImpl implements CancelacionManager
 		params.put("pv_usuario_i"  , cdusuari);
 		this.cancelaPoliza(params);
 	}
+	
+	/**
+	 * PKG_CONSULTA.P_IMP_DOC_CANCELACION
+	 * @return nmsolici,nmsituac,descripc,descripl,ntramite,nmsuplem
+	 */
+	@Override
+	public List<Map<String, String>> reimprimeDocumentos(String cdunieco,String cdramo,String estado,String nmpoliza,String tipmov) throws Exception
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("PV_CDUNIECO_I" , cdunieco);
+		params.put("PV_CDRAMO_I"   , cdramo);
+		params.put("PV_ESTADO_I"   , estado);
+		params.put("PV_NMPOLIZA_I" , nmpoliza);
+		params.put("PV_TIPMOV_I"   , tipmov);
+		log.debug("CancelacionManager reimprimeDocumentos params: "+params);
+		
+		List<Map<String,String>> lista = cancelacionDAO.reimprimeDocumentos(params);
+		lista                          = lista!=null?lista:new ArrayList<Map<String,String>>(0);
+		
+		log.debug("CancelacionManager reimprimeDocumentos lista size: "+lista.size());
+		
+		return lista;
+	}
 
 }
