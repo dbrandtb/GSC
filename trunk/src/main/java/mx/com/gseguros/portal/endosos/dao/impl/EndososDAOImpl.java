@@ -844,7 +844,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	public Date obtenerFechaEndosoFormaPago(Map<String, String> params) throws Exception
 	{
 		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerFechaEndosoFormaPago(this.getDataSource()), params);
-		SimpleDateFormat renderFechas=new SimpleDateFormat("dd/mm/yyyy");
+		SimpleDateFormat renderFechas=new SimpleDateFormat("dd/MM/yyyy");
 		Date fecha=renderFechas.parse(Utilerias.formateaFecha((String)resultadoMap.get("pv_feinival_o")));
 		return fecha;
 	}
