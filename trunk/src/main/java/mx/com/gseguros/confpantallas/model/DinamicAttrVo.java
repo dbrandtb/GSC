@@ -6,6 +6,7 @@ public class DinamicAttrVo implements java.io.Serializable  {
 	private String titulo;
 	private String idPadre;
 	private String idHijo;
+	private String idGrid;
 	private String name;
 	private int order;
 	private String isRequerido;
@@ -65,6 +66,7 @@ public class DinamicAttrVo implements java.io.Serializable  {
 	private String fechaInvalidTxt;
 	private String escala;
 	private String tipo;
+	private String tipoG;
 	private String isPadre;
 	private String url;
 	private String estilo;
@@ -75,6 +77,9 @@ public class DinamicAttrVo implements java.io.Serializable  {
 	private int cordY;
 	private String html;
 	private String src;
+	private String dataIndex;
+	private String query;
+	
 	
 	public String getTitulo() {
 		return titulo;
@@ -649,6 +654,38 @@ public class DinamicAttrVo implements java.io.Serializable  {
 
 	public void setSrc(String src) {
 		this.src = src;
+	}
+
+	public String getIdGrid() {
+		return idGrid;
+	}
+
+	public void setIdGrid(String idGrid) {
+		this.idGrid = idGrid;
+	}
+
+	public String getTipoG() {
+		return tipoG;
+	}
+
+	public void setTipoG(String tipoG) {
+		this.tipoG = tipoG;
+	}
+
+	public String getDataIndex() {
+		return dataIndex;
+	}
+
+	public void setDataIndex(String dataIndex) {
+		this.dataIndex = dataIndex;
+	}
+
+	public String getQuery() {
+		return query;
+	}
+
+	public void setQuery(String query) {
+		this.query = query;
 	}
 
 }

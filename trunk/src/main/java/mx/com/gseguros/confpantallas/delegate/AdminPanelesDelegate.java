@@ -20,6 +20,8 @@ public class AdminPanelesDelegate {
 	Collection<DinamicAttrVo> listPaneles = null;
 	ArrayList<DinamicControlVo> lstControles = new ArrayList<DinamicControlVo>();
 	ArrayList<ArrayList> lstdeLstCtrolAttr = new ArrayList<ArrayList>();
+	ArrayList<DinamicControlAttrVo> lstdeLstCtrolGridAttr = new ArrayList<DinamicControlAttrVo>();
+	ArrayList<DinamicControlAttrVo> lstdeLstCtrolGridSql = new ArrayList<DinamicControlAttrVo>();
 	
 	public String ExistePanel(String panel) {
 		String rgs = "";
@@ -103,6 +105,8 @@ public class AdminPanelesDelegate {
 			datas.put("listaAttr", lstAttrPaneles);
 			datas.put("listaControles", lstControles);
 			datas.put("ltsListaControlesArrt", lstdeLstCtrolAttr);
+			datas.put("lstdeLstCtrolGridAttr", lstdeLstCtrolGridAttr);
+			datas.put("lstdeLstCtrolGridSql", lstdeLstCtrolGridSql);
 			rgs = dao.setPanel(datas);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -165,8 +169,42 @@ public class AdminPanelesDelegate {
 				lstdeLstCtrolAttr.add(this.creaInsertLabelAttr(voC, ctrol, intMaxp));
 			}else if("image".equals(voC.getTipo())){
 				lstdeLstCtrolAttr.add(this.creaInsertImagenAttr(voC, ctrol, intMaxp));
+			}else if("hidden".equals(voC.getTipo())){
+				lstdeLstCtrolAttr.add(this.creaInsertHiddenAttr(voC, ctrol, intMaxp));
+			}else if("gridpanel".equals(voC.getTipo())){
+				lstdeLstCtrolAttr.add(this.creaInsertGridAttr(voC, ctrol, intMaxp));
+				String col = "", idG = "";
+				Iterator<ArrayList> itG = lstdeLstCtrolAttr.iterator();
+				while(itG.hasNext()) {
+					ArrayList<DinamicControlAttrVo> ltaGrid = itG.next();
+					Iterator<DinamicControlAttrVo> itGC = ltaGrid.iterator();
+					while(itGC.hasNext()) {
+						DinamicControlAttrVo ctrG = itGC.next();
+						if("columns".equals(ctrG.getAttr())){
+							col = ctrG.getValor();
+						}else if ("id".equals(ctrG.getAttr())){
+							idG = ctrG.getValor();
+						}
+					}
+				}
+				setListaColumnasGrid(idG,Integer.parseInt(col),intMaxp);
 			}
 			ctrol++;
+		}
+	}
+	
+	private void setListaColumnasGrid(String ctrol, Integer col, Integer nPanel){
+		int cons = 0;
+		Iterator<DinamicAttrVo> itH = listPaneles.iterator();
+		while(itH.hasNext()) {
+			DinamicAttrVo voH =  (DinamicAttrVo)itH.next();
+			if(voH.getIdGrid().equals(ctrol)){
+				cons ++;
+				lstdeLstCtrolGridAttr.add(new DinamicControlAttrVo(col,cons,  nPanel, "text", voH.getTexto(), "S"));
+				lstdeLstCtrolGridAttr.add(new DinamicControlAttrVo(col,cons,  nPanel, "width", String.valueOf(voH.getWidth()), "N"));
+				lstdeLstCtrolGridAttr.add(new DinamicControlAttrVo(col,cons,  nPanel, "tipoG", voH.getTipoG(), "S"));
+				lstdeLstCtrolGridAttr.add(new DinamicControlAttrVo(col,cons,  nPanel, "dataIndex", voH.getDataIndex(), "S"));
+			}
 		}
 	}
 	
@@ -175,7 +213,7 @@ public class AdminPanelesDelegate {
 		Iterator<DinamicAttrVo> itC = listPaneles.iterator();
 		while(itC.hasNext()) {
 			DinamicAttrVo voC = itC.next();
-			if(voC.getIdPadre().equals(panel)){
+			if(voC.getIdPadre().equals(panel) && voC.getIdGrid().equals("")){
 				rgs.add(voC);
 			}
 		}
@@ -363,7 +401,22 @@ public class AdminPanelesDelegate {
 		if(!vo.getSrc().equals("")){rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "src", vo.getSrc(), "S"));consec++;}
 		return rgs;
 	}
-	
+	private ArrayList<DinamicControlAttrVo> creaInsertHiddenAttr(DinamicAttrVo vo, int nControl, int nPanel){
+		ArrayList<DinamicControlAttrVo> rgs = new ArrayList<DinamicControlAttrVo>();
+		if(!vo.getTexto().equals("")){rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "value", vo.getTexto(), "S"));consec++;}
+		return rgs;
+	}
+	private ArrayList<DinamicControlAttrVo> creaInsertGridAttr(DinamicAttrVo vo, int nControl, int nPanel){
+		ArrayList<DinamicControlAttrVo> rgs = new ArrayList<DinamicControlAttrVo>();
+		rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "columns", String.valueOf(consec), "S"));consec++;
+		if(!vo.getQuery().equals("")){
+			rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "query", String.valueOf(consec), "S"));
+			String sql = vo.getQuery().replaceAll("'", "''");
+			lstdeLstCtrolGridSql.add(new DinamicControlAttrVo(0,consec,  nPanel, "query", sql, "S"));
+			consec++;
+		}
+		return rgs;
+	}
 }
 
 

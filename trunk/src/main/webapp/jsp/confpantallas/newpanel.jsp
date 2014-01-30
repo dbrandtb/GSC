@@ -14,6 +14,7 @@
 Ext.onReady(function() {
 	Ext.QuickTips.init();
 	Ext.define('ComboData', {extend: 'Ext.data.Model',fields: [{type: 'string', name: 'key'},{type: 'string', name: 'value'}]});
+
 	/******************************* Data ******************************************/
     <c:forEach var="dataVar" items="${listaCatalogosEA}">
 		var val<c:out value="${dataVar.nombreVar}" escapeXml="false" /> = '<c:out value="${dataVar.nombreVar}" escapeXml="false" />';

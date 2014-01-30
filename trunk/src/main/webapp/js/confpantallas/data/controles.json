@@ -44,6 +44,16 @@
         thumb: 'Imagen.png',
         url: 'imagen',
         type: 'Controles'
+    },{
+        name: 'Hidden',
+        thumb: 'Hidden.png',
+        url: 'hidden',
+        type: 'Controles'
+    },{
+        name: 'Grid',
+        thumb: 'Grid.png',
+        url: 'grid',
+        type: 'Controles'
     }
     
 ]

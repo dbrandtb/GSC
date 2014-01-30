@@ -10,6 +10,7 @@ public class DinamicControlAttrVo implements java.io.Serializable  {
 	private String valor;
 	private String tipo;
 	
+	public DinamicControlAttrVo(){}
 	public DinamicControlAttrVo(int idattr,int idcontrol,int idpanel,String attr,String valor,String tipo){
 		this.idattr = idattr;
 		this.idcontrol = idcontrol;

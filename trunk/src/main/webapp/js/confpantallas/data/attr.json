@@ -64,7 +64,12 @@
 "lista_Estilo":[{key: 'normal', value:'normal'},{key: 'submit', value:'submit'},{key: 'reset', value:'reset'}],
 "lista_Escala":[{key: 'small', value:'small'},{key: 'medium', value:'medium'},{key: 'large', value:'large'}],
 "attrLabel":[{tipo: 'Label'}],
-"attrImagen":[{tipo: 'Imagen'}]
+"attrImagen":[{tipo: 'Imagen'}],
+"attrHidden":[{tipo: 'Hidden'}],
+"attrGrid":[{tipo: 'gridpanel'}],
+"lista_TipoDatos":[{key: 'string', value:'string'},{key: 'date', value:'date'},{key: 'float', value:'float'},
+{key: 'int', value:'int'},{key: 'boolean', value:'boolean'}],
+"attrGridDeff":[{texto: 'Columna A',width:80,tipoG:'string',dataIndex:'titulo'},{texto: 'Columna B',width:80,tipoG:'string',dataIndex:'titulo'}]
 }
 
 
