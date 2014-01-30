@@ -148,4 +148,13 @@ public interface EndososManager
 	 */
 	public void calcularRecibosEndosoFormaPago(String cdunieco,String cdramo,
 			String estado,String nmpoliza,String nmsuplem) throws Exception;
+	/**
+	 * P_CALCULA_COMISION_BASE
+	 */
+	public void calcularComisionBase(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem) throws Exception;
 }

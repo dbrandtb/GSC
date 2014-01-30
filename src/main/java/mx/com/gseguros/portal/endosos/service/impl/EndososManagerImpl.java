@@ -518,4 +518,26 @@ public class EndososManagerImpl implements EndososManager
 		log.debug("EndososManager calcularRecibosEndosoFormaPago fin");
 	}
 	
+	/**
+	 * P_CALCULA_COMISION_BASE
+	 */
+	@Override
+	public void calcularComisionBase(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem) throws Exception
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_nmsuplem_i" , nmsuplem);
+		log.debug("EndososManager calcularComisionBase params: "+params);
+		endososDAO.calcularComisionBase(params);
+		log.debug("EndososManager calcularComisionBase fin");
+	}
+	
 }
