@@ -158,6 +158,8 @@ public class DinamicDao {
 				this.ejecuta(data);
 				data.put("query", "deleteControlesAttrGrid");
 				this.ejecuta(data);
+				data.put("query", "deleteControlesAttrSql");
+				this.ejecuta(data);
 			}
 			ArrayList<DinamicPanelVo> arryPaneles = (ArrayList<DinamicPanelVo>) mapa.get("newPanel");
 			Iterator<DinamicPanelVo> itP = arryPaneles.iterator();
@@ -292,6 +294,8 @@ public class DinamicDao {
 			rgs = "DELETE DNC_DOCCONTROL_ATTR WHERE IDPANEL = "+mapa.get("idpanel");
 		}else if(qry.equals("deleteControlesAttrGrid")){
 			rgs = "DELETE DNC_DOCCONTROLGRID_ATTR WHERE IDPANEL = "+mapa.get("idpanel");
+		}else if(qry.equals("deleteControlesAttrSql")){
+			rgs = "DELETE DNC_DOCCONTROLGRID_SQL WHERE IDPANEL = "+mapa.get("idpanel");
 		}else if(qry.equals("listaValoresTablaApoyo")){
 			rgs = "SELECT A.OTCLAVE KEY, A.OTVALOR VALUE FROM TTAPVAT1 A, TTAPDSCL B "
 					+ "WHERE A.NMTABLA = (SELECT C.NMTABLA FROM TTAPTABL C WHERE C.CDTABLA = '"+mapa.get("tabla")+"') "
