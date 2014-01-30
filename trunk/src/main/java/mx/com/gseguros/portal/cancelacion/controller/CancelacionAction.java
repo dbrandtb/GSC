@@ -13,6 +13,7 @@ import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 
 public class CancelacionAction extends PrincipalCoreAction
@@ -150,7 +151,15 @@ public class CancelacionAction extends PrincipalCoreAction
 			{
 				if(((String)en.getKey()).substring(0,5).equalsIgnoreCase("pv_fe"))
 				{
-					omap.put((String)en.getKey(),renderFechas.parse((String)en.getValue()));
+					String fecha=(String)en.getValue();
+					if(StringUtils.isNotBlank(fecha))
+					{
+						omap.put((String)en.getKey(),renderFechas.parse(fecha));
+					}
+					else
+					{
+						omap.put((String)en.getKey(),null);
+					}
 				}
 				else
 				{
