@@ -33,4 +33,13 @@ public interface CancelacionManager
 			,Date   fecha) throws Exception;
 	public void                     actualizarTagrucan        (Map<String,String> params) throws Exception;
 	public void                     cancelacionMasiva         (Map<String,String> params) throws Exception;
+	/**
+	 * PKG_CONSULTA.P_IMP_DOC_CANCELACION
+	 * @return nmsolici,nmsituac,descripc,descripl,ntramite,nmsuplem
+	 */
+	public List<Map<String, String>> reimprimeDocumentos      (String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String tipmov) throws Exception;
 }

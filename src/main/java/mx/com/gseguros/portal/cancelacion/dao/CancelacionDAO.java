@@ -13,4 +13,9 @@ public interface CancelacionDAO
     public void                     seleccionaPolizaUnica     (Map<String,Object> params) throws Exception;
     public void                     actualizarTagrucan        (Map<String,String> params) throws Exception;
     public void                     cancelacionMasiva         (Map<String,String> params) throws Exception;
+    /**
+	 * PKG_CONSULTA.P_IMP_DOC_CANCELACION
+	 * @return nmsolici,nmsituac,descripc,descripl,ntramite,nmsuplem
+	 */
+	public List<Map<String,String>> reimprimeDocumentos       (Map<String,String> params) throws Exception;
 }
