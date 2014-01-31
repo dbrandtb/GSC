@@ -710,7 +710,7 @@ Ext.onReady(function(){
         		    	    	fieldLabel : 'Sucursal Administradora'
         		    	    	,name      : 'smap1.pv_cdsucadm_i'
         		    	    	,allowBlank : false
-        		    	    	,editable   : false
+        		    	    	,editable   : true
         		    	    	,displayField : 'value'
         		    	    	,valueField   : 'key'
         		    	    	,forceSelection : true
@@ -736,7 +736,7 @@ Ext.onReady(function(){
                                 fieldLabel : 'Sucursal Documento'
                                 ,name       : 'smap1.pv_cdsucdoc_i'
                                 ,allowBlank : false
-                                ,editable   : false
+                                ,editable   : true
                                 ,displayField : 'value'
                                 ,valueField   : 'key'
                                 ,forceSelection : true
