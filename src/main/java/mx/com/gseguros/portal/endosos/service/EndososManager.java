@@ -10,6 +10,9 @@ public interface EndososManager
     public Map<String,String>        guardarEndosoNombres(Map<String,Object>params)           throws Exception;
     public Map<String, String>       confirmarEndosoB(Map<String, String> params)             throws Exception;
     public Map<String,String>        guardarEndosoDomicilio(Map<String,Object>params)         throws Exception;
+    /**
+     * PKG_CONSULTA.P_reImp_documentos
+     */
     public List<Map<String, String>> reimprimeDocumentos(Map<String, String> params)          throws Exception;
     public List<Map<String, String>> obtieneCoberturasDisponibles(Map<String, String> params) throws Exception;
     public Map<String,String>        guardarEndosoCoberturas(Map<String,Object>params)        throws Exception;
@@ -50,7 +53,13 @@ public interface EndososManager
 			,String nmsuplem
 			,Date   feinival
 			,String cdtipsup) throws Exception;
+	/**
+	 * PKG_ENDOSOS.P_ENDOSO_INICIA
+	 */
 	public Map<String,String>        iniciarEndoso(Map<String,String>params)                  throws Exception;
+	/**
+	 * PKG_ENDOSOS.P_ENDOSO_INICIA
+	 */
 	public Map<String,String>        iniciarEndoso(
 			String cdunieco
 			,String cdramo
@@ -168,7 +177,10 @@ public interface EndososManager
 			a.status,
 			a.cdtipoag,
 			porredau,
-			a.porparti
+			a.porparti,
+			nombre,
+			cdsucurs,
+			nmcuadro
 	 */
 	public List<Map<String,String>> obtenerAgentesEndosoAgente(
 			String cdunieco

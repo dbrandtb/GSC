@@ -3970,6 +3970,9 @@ public class EndososAction extends PrincipalCoreAction
 	//////////////////////////////
 	////// confirmar endoso //////
 	/*//////////////////////////*/
+	/**
+	 * +-30 dias ? PKG_SATELITES.P_MOV_MESACONTROL : PKG_ENDOSOS.P_CONFIRMAR_ENDOSOB
+	 */
 	private String confirmarEndoso(String cdunieco,String cdramo,String estado,String nmpoliza,
 			String nmsuplem, String nsuplogi, String cdtipsup, String dscoment, Date fechaEndoso,
 			String cdtipsit)throws Exception
@@ -5314,6 +5317,9 @@ public class EndososAction extends PrincipalCoreAction
 	/////////////////////////////////
 	////// regenera documentos //////
 	/*/////////////////////////////*/
+	/**
+	 * PKG_CONSULTA.P_reImp_documentos
+	 */
 	private String regeneraDocumentos(
 			String cdunieco
 			,String cdramo
@@ -5335,6 +5341,7 @@ public class EndososAction extends PrincipalCoreAction
 		paramsGetDoc.put("pv_nmsuplem_i" , nmsuplem);
 		paramsGetDoc.put("pv_tipmov_i"   , cdtipsup);
 		
+		//PKG_CONSULTA.P_reImp_documentos
 	    List<Map<String,String>>listaDocu=endososManager.reimprimeDocumentos(paramsGetDoc);
 	    log.debug("documentos que se regeneran: "+listaDocu);
 	    
@@ -6203,21 +6210,23 @@ public class EndososAction extends PrincipalCoreAction
 		log.debug("smap1: "+smap1);
 		///////////////////////
 		////// variables //////
-		String cdunieco         = smap1.get("CDUNIECO");
-		String cdramo           = smap1.get("CDRAMO");
-		String cdtipsit         = smap1.get("CDTIPSIT");
-		String estado           = smap1.get("ESTADO");
-		String nmpoliza         = smap1.get("NMPOLIZA");
-		String nmsuplem         = smap1.get("NMSUPLEM");
-		String rol              = ((UserVO)session.get("USUARIO")).getRolActivo().getObjeto().getValue();
-		String orden            = null;
-		String pantalla         = "ENDOSO_AGENTE";
-		String seccionLectura   = "PANEL_LECTURA";
-		String seccionModelo    = "MODELO";
-		String keyItemsPanelLec = "itemsPanelLectura";
-		String keyFieldsModelo  = "fieldsModelo";
-		String keyColumnsGrid   = "columnsGrid";
-		String cdtipsup         = TipoEndoso.CAMBIO_AGENTE.getCdTipSup().toString();
+		String cdunieco           = smap1.get("CDUNIECO");
+		String cdramo             = smap1.get("CDRAMO");
+		String cdtipsit           = smap1.get("CDTIPSIT");
+		String estado             = smap1.get("ESTADO");
+		String nmpoliza           = smap1.get("NMPOLIZA");
+		String nmsuplem           = smap1.get("NMSUPLEM");
+		String rol                = ((UserVO)session.get("USUARIO")).getRolActivo().getObjeto().getValue();
+		String orden              = null;
+		String pantalla           = "ENDOSO_AGENTE";
+		String seccionLectura     = "PANEL_LECTURA";
+		String seccionModelo      = "MODELO";
+		String seccionComboAgente = "COMBOAGENTE";
+		String keyItemsPanelLec   = "itemsPanelLectura";
+		String keyFieldsModelo    = "fieldsModelo";
+		String keyColumnsGrid     = "columnsGrid";
+		String keyComboAgentes    = "comboAgentes";
+		String cdtipsup           = TipoEndoso.CAMBIO_AGENTE.getCdTipSup().toString();
 		////// variables //////
 		///////////////////////
 		
@@ -6256,10 +6265,22 @@ public class EndososAction extends PrincipalCoreAction
 						,rol
 						,orden
 						,seccionModelo));
-				
-				imap1=new HashMap<String,Item>();
 				imap1.put(keyFieldsModelo,gc.getFields());
 				imap1.put(keyColumnsGrid,gc.getColumns());
+				
+				gc.generaParcial(pantallasManager.obtenerCamposPantalla(
+						cdunieco
+						,cdramo
+						,cdtipsit
+						,estado
+						,nmpoliza
+						,nmsuplem
+						,pantalla
+						,rol
+						,orden
+						,seccionComboAgente));
+				imap1.put(keyComboAgentes,gc.getItems());
+				
 				////// campos pantalla //////
 				/////////////////////////////
 				
@@ -6305,7 +6326,7 @@ public class EndososAction extends PrincipalCoreAction
 			
 			/*
 			PKG_CONSULTA.P_GET_AGENTE_POLIZA
-			a.cdunieco, a.cdramo, a.estado, a.nmpoliza, a.cdagente, a.nmsuplem, a.status, a.cdtipoag, porredau, a.porparti
+			a.cdunieco, a.cdramo, a.estado, a.nmpoliza, a.cdagente, a.nmsuplem, a.status, a.cdtipoag, porredau, a.porparti,nombre
 			*/
 			slist1=endososManager.obtenerAgentesEndosoAgente(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
 			
@@ -6336,6 +6357,126 @@ public class EndososAction extends PrincipalCoreAction
 	/*///////////////////////////////////*/
 	////// cargarAgentesEndosoAgente //////
 	///////////////////////////////////////
+	
+	/////////////////////////////////
+	////// guardarEndosoAgente //////
+	/*
+	smap1:
+		CDRAMO: "2"
+		CDTIPSIT: "SL"
+		CDUNIECO: "1002"
+		DSCOMENT: ""
+		DSTIPSIT: "SALUD VITAL"
+		ESTADO: "M"
+		FEEMISIO: "20/01/2014"
+		FEINIVAL: "20/01/2014"
+		NMPOLIEX: "1002213000019000000"
+		NMPOLIZA: "19"
+		NMSUPLEM: "245667814480000000"
+		NSUPLOGI: "0"
+		NTRAMITE: "573"
+		PRIMA_TOTAL: "52694.6"
+	smap2:
+		agente: "11000"
+		fecha_endoso: "31/01/2014"
+		nmcuadro
+		cdsucurs
+	*/
+	/*/////////////////////////////*/
+	public String guardarEndosoAgente()
+	{
+		this.session=ActionContext.getContext().getSession();
+		log.debug("\n"
+				+ "\n#################################"
+				+ "\n#################################"
+				+ "\n###### guardarEndosoAgente ######"
+				+ "\n######                     ######"
+				);
+		log.debug("smap1: "+smap1);
+		log.debug("smap2: "+smap2);
+		try
+		{
+			////// variables //////
+			String cdunieco            = smap1.get("CDUNIECO");
+			String cdramo              = smap1.get("CDRAMO");
+			String estado              = smap1.get("ESTADO");
+			String nmpoliza            = smap1.get("NMPOLIZA");
+			String sFecha              = smap2.get("fecha_endoso");
+			Date   dFecha            = renderFechas.parse(sFecha);
+			UserVO usuario             = (UserVO)session.get("USUARIO");
+			String cdelemento          = usuario.getEmpresa().getElementoId();
+			String cdusuari            = usuario.getUser();
+			String proceso             = "END";
+			String cdtipsup            = TipoEndoso.CAMBIO_AGENTE.getCdTipSup().toString();
+			String cdagente            = smap2.get("agente");
+			String tipoAgentePrincipal = "1";
+			String sesionComision      = "0";
+			String porcenParticip      = "100";
+			String nmcuadro            = smap2.get("nmcuadro");
+			String cdsucurs            = smap2.get("cdsucurs");
+			String comodinTodosAgente  = "TODOS";
+			String comentariosEndoso   = "";
+			String cdtipsit            = smap1.get("cdtipsit");
+			String ntramite            = smap1.get("NTRAMITE");
+			
+			//PKG_ENDOSOS.P_ENDOSO_INICIA
+			Map<String,String>resIniEnd=endososManager.iniciarEndoso(cdunieco, cdramo, estado, nmpoliza, sFecha, cdelemento, cdusuari, proceso, cdtipsup);
+			
+			String nmsuplem = resIniEnd.get("pv_nmsuplem_o");
+			String nsuplogi = resIniEnd.get("pv_nsuplogi_o");
+			
+			//PKG_SATELITES.P_MOV_MPOLIAGE_PORCENTAJES
+			Map<String,Object>mapArchivo=new LinkedHashMap<String,Object>(0);
+   	   		mapArchivo.put("pi_CDUNIECO"     , cdunieco);	
+   	   		mapArchivo.put("pi_CDRAMO"       , cdramo);
+   	   		mapArchivo.put("pi_ESTADO"       , estado);
+   	   		mapArchivo.put("pi_NMPOLIZA"     , nmpoliza);
+	   	   	mapArchivo.put("pi_CDAGENTE_NVO" , cdagente);
+	   	    mapArchivo.put("pi_CDAGENTE"     , comodinTodosAgente);
+	   		mapArchivo.put("pi_NMSUPLEM"     , nmsuplem);
+	   		mapArchivo.put("pi_CDTIPOAG"     , tipoAgentePrincipal);
+	   		mapArchivo.put("pi_PORREDAU"     , sesionComision);
+	   		mapArchivo.put("pi_NMCUADRO"     , nmcuadro);
+	   		mapArchivo.put("pi_CDSUCURS"     , cdsucurs);
+	   		mapArchivo.put("pi_PORPARTI"     , porcenParticip);
+	   		WrapperResultados result=kernelManager.guardarPorcentajeAgentes(mapArchivo);
+	   		
+	   		//+-30 dias ? PKG_SATELITES.P_MOV_MESACONTROL : PKG_ENDOSOS.P_CONFIRMAR_ENDOSOB
+	   		String tramiteGenerado=confirmarEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, cdtipsup, comentariosEndoso, dFecha, cdtipsit);
+	   		
+	   		if(StringUtils.isBlank(tramiteGenerado))
+	   		{
+	   			//PKG_CONSULTA.P_reImp_documentos
+	   			String nmsolici=this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite);
+	   			
+	   			mensaje="Se ha guardado el endoso "+nsuplogi;
+			}
+			else
+			{
+				mensaje="El endoso "+nsuplogi
+						+" se guard&oacute; en mesa de control para autorizaci&oacute;n "
+						+ "con n&uacute;mero de tr&aacute;mite "+tramiteGenerado;
+			}
+			
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			log.error("error al guardar endoso de agente",ex);
+			success=false;
+			error=ex.getMessage();
+		}
+		log.debug("\n"
+				+ "\n######                     ######"
+				+ "\n###### guardarEndosoAgente ######"
+				+ "\n#################################"
+				+ "\n#################################"
+				);
+		return SUCCESS;
+	}
+	/*/////////////////////////////*/
+	////// guardarEndosoAgente //////
+	/////////////////////////////////
 	
 	///////////////////////////////
 	////// getters y setters //////

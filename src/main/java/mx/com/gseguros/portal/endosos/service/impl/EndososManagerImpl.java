@@ -55,6 +55,9 @@ public class EndososManagerImpl implements EndososManager
         return mapa;
 	}
 	
+	/**
+	 * PKG_CONSULTA.P_reImp_documentos
+	 */
 	@Override
 	public List<Map<String, String>> reimprimeDocumentos(Map<String, String> params) throws Exception
 	{
@@ -184,7 +187,9 @@ public class EndososManagerImpl implements EndososManager
         return mapa;
 	}
 	
-	//PKG_ENDOSOS.P_ENDOSO_INICIA
+	/**
+	 * PKG_ENDOSOS.P_ENDOSO_INICIA
+	 */
 	@Override
 	public Map<String,String> iniciarEndoso(
 			String cdunieco
@@ -551,7 +556,10 @@ public class EndososManagerImpl implements EndososManager
 			a.status,
 			a.cdtipoag,
 			porredau,
-			a.porparti
+			a.porparti,
+			nombre,
+			cdsucurs,
+			nmcuadro
 	 */
 	@Override
 	public List<Map<String,String>> obtenerAgentesEndosoAgente(
