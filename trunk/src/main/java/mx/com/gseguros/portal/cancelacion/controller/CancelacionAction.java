@@ -31,6 +31,7 @@ public class CancelacionAction extends PrincipalCoreAction
 	private Map<String,String>       smap1;
 	private List<Map<String,String>> slist1;
 	private Map<String,Item>         imap;
+	private String                   error;
 	
 	//////////////////////////////////
 	////// marco de cancelacion //////
@@ -188,6 +189,7 @@ public class CancelacionAction extends PrincipalCoreAction
 			log.error("error al obtener polizas",ex);
 			slist1=null;
 			success=false;
+			error=ex.getMessage();
 		}
 		log.debug(""
 				+ "\n######               ######"
@@ -481,6 +483,14 @@ public class CancelacionAction extends PrincipalCoreAction
 	}
 	public void setPantallasManager(PantallasManager pantallasManager) {
 		this.pantallasManager = pantallasManager;
+	}
+
+	public String getError() {
+		return error;
+	}
+
+	public void setError(String error) {
+		this.error = error;
 	}
 		
 }
