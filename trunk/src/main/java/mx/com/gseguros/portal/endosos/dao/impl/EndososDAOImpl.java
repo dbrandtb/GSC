@@ -979,4 +979,39 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
         }
 	}
 	
+	/**
+	 * PKG_SATELITES.P_MOV_MPOLIAGE
+	 */
+	@Override
+	public void pMovMpoliage(Map<String, String> params) throws Exception
+	{
+		this.ejecutaSP(new PMovMpoliage(this.getDataSource()), params);
+	}
+	
+	protected class PMovMpoliage extends StoredProcedure
+	{
+		protected PMovMpoliage(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SATELITES.P_MOV_MPOLIAGE");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdagente_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_status_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipoag_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_porredau_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmcuadro_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdsucurs_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_accion_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ntramite_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_porparti_i" , OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 }

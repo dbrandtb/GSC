@@ -188,4 +188,23 @@ public interface EndososManager
 			,String estado
 			,String nmpoliza
 			,String nmsuplem) throws Exception;
+	/**
+	 * PKG_SATELITES.P_MOV_MPOLIAGE
+	 */
+	public void pMovMpoliage(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdagente
+			,String nmsuplem
+			,String status
+			,String cdtipoag
+			,String porredau
+			,String nmcuadro
+			,String cdsucurs
+			,String accion
+			,String ntramite
+			,String porparti
+			) throws Exception;
 }
