@@ -6125,6 +6125,7 @@ public class EndososAction extends PrincipalCoreAction
 			
 			if(StringUtils.isBlank(tramiteGenerado))
 			{
+				String nmsolici=this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite);
 				mensaje="Se ha guardado el endoso "+nsuplogi;
 			}
 			else
