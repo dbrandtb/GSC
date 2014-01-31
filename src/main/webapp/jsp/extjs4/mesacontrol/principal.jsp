@@ -831,16 +831,18 @@ Ext.onReady(function(){
                             }
         		    	    */
                             ,{
-        		    	    	xtype       : 'textfield'
+        		    	    	xtype       : 'numberfield'
         		    	    	,fieldLabel : 'P&oacute;liza'
         		    	    	,name       : 'smap1.pv_nmpoliza_i'
         		    	    	,allowBlank : false
+                                ,value      : 0
         		    	    }
         		    	    ,{
-                                xtype       : 'textfield'
+                                xtype       : 'numberfield'
                                 ,fieldLabel : 'Cotizaci&oacute;n'
                                 ,name       : 'smap1.pv_nmsolici_i'
                                 ,allowBlank : false
+                                ,value      : 0
                             }
         		    	    /*,{
         		    	    	xtype       : 'textfield'
