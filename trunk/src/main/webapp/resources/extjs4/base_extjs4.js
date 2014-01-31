@@ -128,51 +128,56 @@ function validarRFC(rfc,tper)
 
 function datosIncompletos()
 {
-	Ext.Msg.show({
+	var tmpMensajeEmergente=Ext.Msg.show({
         title    : 'Datos incompletos'
         ,icon    : Ext.Msg.WARNING
         ,msg     : 'Favor de capturar todos los campos requeridos'
         ,buttons : Ext.Msg.OK
     });
+	tmpMensajeEmergente.setPosition(tmpMensajeEmergente.getPosition()[0],100);
 }
 
 function errorComunicacion()
 {
-	Ext.Msg.show({
+	var tmpMensajeEmergente=Ext.Msg.show({
         title    : 'Error'
         ,icon    : Ext.Msg.ERROR
         ,msg     : 'Error de comunicaci&oacute;n'
         ,buttons : Ext.Msg.OK
     });
+	tmpMensajeEmergente.setPosition(tmpMensajeEmergente.getPosition()[0],100);
 }
 
 function mensajeWarning(mensaje)
 {
-	Ext.Msg.show({
+	var tmpMensajeEmergente=Ext.Msg.show({
 		title    : 'Error'
         ,icon    : Ext.Msg.WARNING
         ,msg     : mensaje
         ,buttons : Ext.Msg.OK
     });
+	tmpMensajeEmergente.setPosition(tmpMensajeEmergente.getPosition()[0],100);
 }
 
 function mensajeError(mensaje)
 {
-	Ext.Msg.show({
+	var tmpMensajeEmergente=Ext.Msg.show({
 		title    : 'Error'
         ,icon    : Ext.Msg.ERROR
         ,msg     : mensaje
         ,buttons : Ext.Msg.OK
     });
+	tmpMensajeEmergente.setPosition(tmpMensajeEmergente.getPosition()[0],100);
 }
 
 function mensajeCorrecto(titulo,mensaje)
 {
-	Ext.Msg.show({
+	var tmpMensajeEmergente=Ext.Msg.show({
 		title    : titulo
         ,msg     : mensaje
         ,buttons : Ext.Msg.OK
     });
+	tmpMensajeEmergente.setPosition(tmpMensajeEmergente.getPosition()[0],100);
 }
 
 /**
