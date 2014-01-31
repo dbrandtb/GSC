@@ -4169,6 +4169,7 @@ public class EndososAction extends PrincipalCoreAction
 			case COPAGO_MENOS:
 			case EXTRAPRIMA_MAS:
 			case EXTRAPRIMA_MENOS:
+			case CAMBIO_FORMA_PAGO:
 				ejecutaWSrecibosEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, 
 						rutaCarpeta, cdtipsitGS, sucursal, nmsolici, ntramiteEmi, true, "INSERTA", cdtipsup);
 				break;
@@ -6126,6 +6127,20 @@ public class EndososAction extends PrincipalCoreAction
 			if(StringUtils.isBlank(tramiteGenerado))
 			{
 				String nmsolici=this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite);
+				
+				/**
+				 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
+				 */
+				String cdtipsitGS = "213";
+				String sucursal = cdunieco;
+				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
+				
+				ejecutaWSrecibosEndoso(cdunieco, cdramo,
+				estado, nmpoliza,
+				nmsuplem, nsuplogi, null,
+						cdtipsitGS, sucursal, nmsolici, ntramite,
+						true, "INSERTA", cdtipsup );
+				
 				mensaje="Se ha guardado el endoso "+nsuplogi;
 			}
 			else
