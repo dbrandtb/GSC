@@ -915,4 +915,62 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		}
 	}
 	
+	/**
+	 * PKG_CONSULTA.P_GET_AGENTE_POLIZA
+	 * @return a.cdunieco,
+			a.cdramo,
+			a.estado,
+			a.nmpoliza,
+			a.cdagente,
+			a.nmsuplem,
+			a.status,
+			a.cdtipoag,
+			porredau,
+			a.porparti
+	 */
+	@Override
+	public List<Map<String,String>> obtenerAgentesEndosoAgente(Map<String, String> params) throws Exception
+	{
+		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerAgentesEndosoAgente(this.getDataSource()), params);
+		return (List<Map<String,String>>) resultadoMap.get("PV_REGISTRO_O");
+	}
+	
+	protected class ObtenerAgentesEndosoAgente extends StoredProcedure
+	{
+
+		protected ObtenerAgentesEndosoAgente(DataSource dataSource)
+		{
+			super(dataSource, "PKG_CONSULTA.P_GET_AGENTE_POLIZA");
+			declareParameter(new SqlParameter("PV_CDUNIECO_I" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDRAMO_I"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_ESTADO_I"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_NMPOLIZA_I" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_NMSUPLEM_I" , OracleTypes.VARCHAR));
+
+			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new DinamicMapper()));
+			/*
+			a.cdunieco,
+			a.cdramo,
+			a.estado,
+			a.nmpoliza,
+			a.cdagente,
+			a.nmsuplem,
+			a.status,
+			a.cdtipoag,
+			porredau,
+			a.porparti
+			*/
+			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
+			
+			compile();
+		}
+
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception
+		{
+            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+            return mapper.build(map);
+        }
+	}
+	
 }

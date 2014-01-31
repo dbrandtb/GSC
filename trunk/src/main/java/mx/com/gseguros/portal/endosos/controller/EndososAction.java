@@ -6155,6 +6155,172 @@ public class EndososAction extends PrincipalCoreAction
 	////// guardarEndosoReexpedicion //////
 	///////////////////////////////////////
 	
+	//////////////////////////
+	////// endosoAgente //////
+	/*
+	smap1:
+		CDRAMO      : "2"
+		CDTIPSIT    : "SL"
+		CDUNIECO    : "1002"
+		DSCOMENT    : ""
+		DSTIPSIT    : "SALUD VITAL"
+		ESTADO      : "M"
+		FEEMISIO    : "30/01/2014"
+		FEINIVAL    : "15/01/2014"
+		NMPOLIEX    : "1002213000064000000"
+		NMPOLIZA    : "64"
+		NMSUPLEM    : "245667313410000000"
+		NSUPLOGI    : "4"
+		NTRAMITE    : null
+		PRIMA_TOTAL : "17339.97"
+	*/
+	/*//////////////////////*/
+	public String endosoAgente()
+	{
+		this.session=ActionContext.getContext().getSession();
+		log.debug("\n"
+				+ "\n##########################"
+				+ "\n##########################"
+				+ "\n###### endosoAgente ######"
+				+ "\n######              ######"
+				);
+		log.debug("smap1: "+smap1);
+		///////////////////////
+		////// variables //////
+		String cdunieco         = smap1.get("CDUNIECO");
+		String cdramo           = smap1.get("CDRAMO");
+		String cdtipsit         = smap1.get("CDTIPSIT");
+		String estado           = smap1.get("ESTADO");
+		String nmpoliza         = smap1.get("NMPOLIZA");
+		String nmsuplem         = smap1.get("NMSUPLEM");
+		String rol              = ((UserVO)session.get("USUARIO")).getRolActivo().getObjeto().getValue();
+		String orden            = null;
+		String pantalla         = "ENDOSO_AGENTE";
+		String seccionLectura   = "PANEL_LECTURA";
+		String seccionModelo    = "MODELO";
+		String keyItemsPanelLec = "itemsPanelLectura";
+		String keyFieldsModelo  = "fieldsModelo";
+		String keyColumnsGrid   = "columnsGrid";
+		String cdtipsup         = TipoEndoso.CAMBIO_AGENTE.getCdTipSup().toString();
+		////// variables //////
+		///////////////////////
+		
+		String respuesta=validaEndosoAnterior(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
+		if(respuesta.equals(SUCCESS))
+		{
+			try
+			{
+				
+				/////////////////////////////
+				////// campos pantalla //////
+				GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+				gc.generaParcial(pantallasManager.obtenerCamposPantalla(
+						cdunieco
+						,cdramo
+						,cdtipsit
+						,estado
+						,nmpoliza
+						,nmsuplem
+						,pantalla
+						,rol
+						,orden
+						,seccionLectura));
+				
+				imap1=new HashMap<String,Item>();
+				imap1.put(keyItemsPanelLec,gc.getItems());
+				
+				gc.generaParcial(pantallasManager.obtenerCamposPantalla(
+						cdunieco
+						,cdramo
+						,cdtipsit
+						,estado
+						,nmpoliza
+						,nmsuplem
+						,pantalla
+						,rol
+						,orden
+						,seccionModelo));
+				
+				imap1=new HashMap<String,Item>();
+				imap1.put(keyFieldsModelo,gc.getFields());
+				imap1.put(keyColumnsGrid,gc.getColumns());
+				////// campos pantalla //////
+				/////////////////////////////
+				
+			}
+			catch(Exception ex)
+			{
+				log.error("error al cargar la pantalla de endoso de agente",ex);
+				error=ex.getMessage();
+			}
+		}
+		
+		log.debug("\n"
+				+ "\n######              ######"
+				+ "\n###### endosoAgente ######"
+				+ "\n##########################"
+				+ "\n##########################"
+				);
+		return respuesta;
+	}
+	/*//////////////////////*/
+	////// endosoAgente //////
+	//////////////////////////
+	
+	///////////////////////////////////////
+	////// cargarAgentesEndosoAgente //////
+	/*///////////////////////////////////*/
+	public String cargarAgentesEndosoAgente()
+	{
+		log.debug("\n"
+				+ "\n#######################################"
+				+ "\n#######################################"
+				+ "\n###### cargarAgentesEndosoAgente ######"
+				+ "\n######                           ######"
+				);
+		log.debug("smap1: "+smap1);
+		try
+		{
+			String cdunieco = smap1.get("cdunieco");
+			String cdramo   = smap1.get("cdramo");
+			String estado   = smap1.get("estado");
+			String nmpoliza = smap1.get("nmpoliza");
+			String nmsuplem = smap1.get("nmsuplem");
+			
+			/*
+			PKG_CONSULTA.P_GET_AGENTE_POLIZA
+			a.cdunieco, a.cdramo, a.estado, a.nmpoliza, a.cdagente, a.nmsuplem, a.status, a.cdtipoag, porredau, a.porparti
+			*/
+			slist1=endososManager.obtenerAgentesEndosoAgente(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
+			
+			for(Map<String,String>agente:slist1)
+			{
+				if(agente.get("porredau")!=null&&((Double)Double.parseDouble(agente.get("porredau")))>(double)0)
+				{
+					throw new Exception("Esta p&oacute;liza no permite el endoso de agente por tener sesi&oacute;n de comisi&oacute;n");
+				}
+			}
+			
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			log.error("error al cargar agentes para el endoso de agente",ex);
+			error=ex.getMessage();
+			success=false;
+		}
+		log.debug("\n"
+				+ "\n######                           ######"
+				+ "\n###### cargarAgentesEndosoAgente ######"
+				+ "\n#######################################"
+				+ "\n#######################################"
+				);
+		return SUCCESS;
+	}
+	/*///////////////////////////////////*/
+	////// cargarAgentesEndosoAgente //////
+	///////////////////////////////////////
+	
 	///////////////////////////////
 	////// getters y setters //////
 	/*///////////////////////////*/

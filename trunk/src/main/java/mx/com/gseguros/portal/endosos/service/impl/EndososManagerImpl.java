@@ -540,4 +540,38 @@ public class EndososManagerImpl implements EndososManager
 		log.debug("EndososManager calcularComisionBase fin");
 	}
 	
+	/**
+	 * PKG_CONSULTA.P_GET_AGENTE_POLIZA
+	 * @return a.cdunieco,
+			a.cdramo,
+			a.estado,
+			a.nmpoliza,
+			a.cdagente,
+			a.nmsuplem,
+			a.status,
+			a.cdtipoag,
+			porredau,
+			a.porparti
+	 */
+	@Override
+	public List<Map<String,String>> obtenerAgentesEndosoAgente(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem) throws Exception
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("PV_CDUNIECO_I" , cdunieco);
+		params.put("PV_CDRAMO_I"   , cdramo);
+		params.put("PV_ESTADO_I"   , estado);
+		params.put("PV_NMPOLIZA_I" , nmpoliza);
+		params.put("PV_NMSUPLEM_I" , nmsuplem);
+		log.debug("EndososManager obtenerAgentesEndosoAgente params: "+params);
+		List<Map<String,String>>lista=endososDAO.obtenerAgentesEndosoAgente(params);
+		lista=lista!=null?lista:new ArrayList<Map<String,String>>();
+		log.debug("EndososManager obtenerAgentesEndosoAgente lista size: "+lista.size());
+		return lista;
+	}
+	
 }
