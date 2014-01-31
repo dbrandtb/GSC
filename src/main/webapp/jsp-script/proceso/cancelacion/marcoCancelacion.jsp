@@ -539,16 +539,11 @@ Ext.onReady(function()
    	                                        });
 	    	    						}
 	    	    					}
-	    	    				    ,failure : function()
+	    	    				    ,failure : function(action,response)
 	    	    				    {
 	    	    				    	form1.setLoading(false);
-	    	    				    	Ext.Msg.show(
-	    				                {
-	    				                    title   : 'Error',
-	    				                    icon    : Ext.Msg.ERROR,
-	    				                    msg     : 'Error de comunicaci&oacute;n',
-	    				                    buttons : Ext.Msg.OK
-	    				                });
+	    	    				    	var json=Ext.decode(response.response.responseText);
+	    	    				    	mensajeError(json.error);
 	    	    				    }
 	    	    				});
     	    				}
