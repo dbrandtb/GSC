@@ -582,4 +582,44 @@ public class EndososManagerImpl implements EndososManager
 		return lista;
 	}
 	
+	/**
+	 * PKG_SATELITES.P_MOV_MPOLIAGE
+	 */
+	@Override
+	public void pMovMpoliage(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String cdagente
+			,String nmsuplem
+			,String status
+			,String cdtipoag
+			,String porredau
+			,String nmcuadro
+			,String cdsucurs
+			,String accion
+			,String ntramite
+			,String porparti
+			) throws Exception
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_cdagente_i" , cdagente);
+		params.put("pv_nmsuplem_i" , nmsuplem);
+		params.put("pv_status_i"   , status);
+		params.put("pv_cdtipoag_i" , cdtipoag);
+		params.put("pv_porredau_i" , porredau);
+		params.put("pv_nmcuadro_i" , nmcuadro);
+		params.put("pv_cdsucurs_i" , cdsucurs);
+		params.put("pv_accion_i"   , accion);
+		params.put("pv_ntramite_i" , ntramite);
+		params.put("pv_porparti_i" , porparti);
+		log.debug("EndososManager pMovMpoliage params: "+params);
+		endososDAO.pMovMpoliage(params);
+		log.debug("EndososManager pMovMpoliage fin");
+	}
 }

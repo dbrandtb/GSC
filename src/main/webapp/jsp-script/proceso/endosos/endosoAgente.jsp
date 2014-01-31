@@ -298,16 +298,22 @@ function _10_confirmar()
         /*
         a.cdunieco, a.cdramo, a.estado, a.nmpoliza, a.cdagente, a.nmsuplem, a.status, a.cdtipoag, porredau, a.porparti,nombre,cdsucurs,nmcuadro
         */
+        var slist1=[];
+        _10_storeAgentes.each(function(record)
+        {
+        	slist1.push(record.raw);
+        });
         var json=
         {
-            smap1  : _10_smap1
-            ,smap2 :
+            smap1   : _10_smap1
+            ,smap2  :
             {
                 fecha_endoso : Ext.Date.format(_10_fieldFechaEndoso.getValue(),'d/m/Y')
                 ,agente      : _10_formAgente.items.items[0].getValue()
                 ,nmcuadro    : _10_storeAgentes.getAt(0).get('NMCUADRO')
                 ,cdsucurs    : _10_storeAgentes.getAt(0).get('CDSUCURS')
             }
+            ,slist1 : slist1
         }
         debug('datos que se enviaran:',json);
         _10_panelPri.setLoading(true);

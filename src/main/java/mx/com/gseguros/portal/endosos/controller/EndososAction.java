@@ -6381,6 +6381,20 @@ public class EndososAction extends PrincipalCoreAction
 		fecha_endoso: "31/01/2014"
 		nmcuadro
 		cdsucurs
+	slist1:
+		{NMSUPLEM=245667814480000000,
+		NOMBRE="JIRO Y ASOCIADOS, AGENTE DE   "  "SEGUROS Y FIANZAS, S" .A. DE C.V.,
+		NMPOLIZA=19,
+		CDAGENTE=1170,
+		STATUS=V,
+		NMCUADRO=SV18,
+		ESTADO=M,
+		PORPARTI=100,
+		CDUNIECO=1002,
+		CDRAMO=2,
+		CDTIPOAG=1,
+		PORREDAU=0,
+		CDSUCURS=null}
 	*/
 	/*/////////////////////////////*/
 	public String guardarEndosoAgente()
@@ -6394,6 +6408,7 @@ public class EndososAction extends PrincipalCoreAction
 				);
 		log.debug("smap1: "+smap1);
 		log.debug("smap2: "+smap2);
+		log.debug("slist1: "+slist1);
 		try
 		{
 			////// variables //////
@@ -6414,7 +6429,6 @@ public class EndososAction extends PrincipalCoreAction
 			String porcenParticip      = "100";
 			String nmcuadro            = smap2.get("nmcuadro");
 			String cdsucurs            = smap2.get("cdsucurs");
-			String comodinTodosAgente  = "TODOS";
 			String comentariosEndoso   = "";
 			String cdtipsit            = smap1.get("cdtipsit");
 			String ntramite            = smap1.get("NTRAMITE");
@@ -6425,21 +6439,32 @@ public class EndososAction extends PrincipalCoreAction
 			String nmsuplem = resIniEnd.get("pv_nmsuplem_o");
 			String nsuplogi = resIniEnd.get("pv_nsuplogi_o");
 			
-			//PKG_SATELITES.P_MOV_MPOLIAGE_PORCENTAJES
-			Map<String,Object>mapArchivo=new LinkedHashMap<String,Object>(0);
-   	   		mapArchivo.put("pi_CDUNIECO"     , cdunieco);	
-   	   		mapArchivo.put("pi_CDRAMO"       , cdramo);
-   	   		mapArchivo.put("pi_ESTADO"       , estado);
-   	   		mapArchivo.put("pi_NMPOLIZA"     , nmpoliza);
-	   	   	mapArchivo.put("pi_CDAGENTE_NVO" , cdagente);
-	   	    mapArchivo.put("pi_CDAGENTE"     , comodinTodosAgente);
-	   		mapArchivo.put("pi_NMSUPLEM"     , nmsuplem);
-	   		mapArchivo.put("pi_CDTIPOAG"     , tipoAgentePrincipal);
-	   		mapArchivo.put("pi_PORREDAU"     , sesionComision);
-	   		mapArchivo.put("pi_NMCUADRO"     , nmcuadro);
-	   		mapArchivo.put("pi_CDSUCURS"     , cdsucurs);
-	   		mapArchivo.put("pi_PORPARTI"     , porcenParticip);
-	   		WrapperResultados result=kernelManager.guardarPorcentajeAgentes(mapArchivo);
+			//matar anteriores
+			for(Map<String,String>agenteIte:slist1)
+			{
+				String cdagenteIte = agenteIte.get("CDAGENTE");
+				String cdtipoagIte = agenteIte.get("CDTIPOAG");
+				String porredauIte = agenteIte.get("PORREDAU");
+				String nmcuadroIte = agenteIte.get("NMCUADRO");
+				String cdsucursIte = agenteIte.get("CDSUCURS");
+				String porpartiIte = agenteIte.get("PORPARTI");
+				
+				/**
+				 * insertar muerto
+				 * PKG_SATELITES.P_MOV_MPOLIAGE
+				 */
+				endososManager.pMovMpoliage(cdunieco, cdramo, estado, nmpoliza,
+						cdagenteIte, nmsuplem, Constantes.STATUS_VIVO, cdtipoagIte, porredauIte,
+						nmcuadroIte, cdsucursIte, Constantes.DELETE_MODE, ntramite, porpartiIte);
+			}
+			
+			/**
+			 * insertar vivo
+			 * PKG_SATELITES.P_MOV_MPOLIAGE
+			 */
+			endososManager.pMovMpoliage(cdunieco, cdramo, estado, nmpoliza,
+					cdagente, nmsuplem, Constantes.STATUS_VIVO, tipoAgentePrincipal, sesionComision,
+					nmcuadro, cdsucurs, Constantes.INSERT_MODE, ntramite, porcenParticip);
 	   		
 	   		//+-30 dias ? PKG_SATELITES.P_MOV_MESACONTROL : PKG_ENDOSOS.P_CONFIRMAR_ENDOSOB
 	   		String tramiteGenerado=confirmarEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, cdtipsup, comentariosEndoso, dFecha, cdtipsit);

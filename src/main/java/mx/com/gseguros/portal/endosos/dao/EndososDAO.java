@@ -62,4 +62,8 @@ public interface EndososDAO
 			nmcuadro
 	 */
 	public List<Map<String,String>> obtenerAgentesEndosoAgente(Map<String, String> params)     throws Exception;
+	/**
+	 * PKG_SATELITES.P_MOV_MPOLIAGE
+	 */
+	public void                     pMovMpoliage(Map<String, String> params)                   throws Exception;
 }
