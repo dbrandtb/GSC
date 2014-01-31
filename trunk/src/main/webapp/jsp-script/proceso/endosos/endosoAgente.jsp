@@ -40,6 +40,23 @@ debug('_10_smap1:',_10_smap1);
 
 Ext.onReady(function()
 {
+	///////////////////////
+	////// overrides //////
+	Ext.override(Ext.form.field.ComboBox,
+	{
+		initComponent : function()
+		{
+			debug('Ext.form.field.ComboBox initComponent');
+			Ext.apply(this,
+			{
+				forceSelection : 'true'
+			});
+			return this.callParent();
+		}
+	});
+	////// overrides //////
+	///////////////////////
+	
     /////////////////////
     ////// modelos //////
     Ext.define('_10_ModeloAgente',
@@ -76,7 +93,7 @@ Ext.onReady(function()
     		debug('_10_GridAgentes initComponent');
     		Ext.apply(this,
     		{
-    			title    : 'Agentes'
+    			title    : 'Agente(s)'
     			,store   : _10_storeAgentes
     			,columns : [ <s:property value="imap1.columnsGrid" /> ]
     		});
@@ -114,7 +131,7 @@ Ext.onReady(function()
             debug('_10_FormAgente initComponent');
             Ext.apply(this,
             {
-                title      : 'Agente'
+                title      : 'Agente nuevo'
                 ,defaults  :
                 {
                     style : 'margin : 5px;'
@@ -126,7 +143,7 @@ Ext.onReady(function()
                 }
                 ,items     :
                 [
-                    
+                     <s:property value="imap1.comboAgentes" />
                 ]
                 ,listeners :
                 {
@@ -198,7 +215,6 @@ Ext.onReady(function()
                 text      : 'Confirmar endoso'
                 ,icon     : '${ctx}/resources/fam3icons/icons/key.png'
                 ,handler  : _10_confirmar
-                ,disabled : true
             }
         ]
         ,items       :
@@ -233,6 +249,9 @@ Ext.onReady(function()
     		debug('agentes cargados:',json);
     		if(json.success==true)
     		{
+    			/*
+    			a.cdunieco, a.cdramo, a.estado, a.nmpoliza, a.cdagente, a.nmsuplem, a.status, a.cdtipoag, porredau, a.porparti,nombre
+    			*/
     			_10_storeAgentes.add(json.slist1);
     		}
     		else
@@ -276,13 +295,18 @@ function _10_confirmar()
     
     if(valido)
     {
+        /*
+        a.cdunieco, a.cdramo, a.estado, a.nmpoliza, a.cdagente, a.nmsuplem, a.status, a.cdtipoag, porredau, a.porparti,nombre,cdsucurs,nmcuadro
+        */
         var json=
         {
             smap1  : _10_smap1
             ,smap2 :
             {
                 fecha_endoso : Ext.Date.format(_10_fieldFechaEndoso.getValue(),'d/m/Y')
-                ,agente      : _10_formAgente.items.items[1].getValue()
+                ,agente      : _10_formAgente.items.items[0].getValue()
+                ,nmcuadro    : _10_storeAgentes.getAt(0).get('NMCUADRO')
+                ,cdsucurs    : _10_storeAgentes.getAt(0).get('CDSUCURS')
             }
         }
         debug('datos que se enviaran:',json);

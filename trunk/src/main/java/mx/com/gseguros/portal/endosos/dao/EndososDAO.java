@@ -56,7 +56,10 @@ public interface EndososDAO
 			a.status,
 			a.cdtipoag,
 			porredau,
-			a.porparti
+			a.porparti,
+			nombre,
+			cdsucurs,
+			nmcuadro
 	 */
 	public List<Map<String,String>> obtenerAgentesEndosoAgente(Map<String, String> params)     throws Exception;
 }

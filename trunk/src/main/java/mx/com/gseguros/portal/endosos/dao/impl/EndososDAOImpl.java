@@ -181,6 +181,9 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		}
 	}
 	
+	/**
+	 * PKG_CONSULTA.P_reImp_documentos
+	 */
 	@Override
 	public List<Map<String,String>> reimprimeDocumentos(Map<String,String>params) throws Exception
 	{
@@ -958,7 +961,10 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			a.status,
 			a.cdtipoag,
 			porredau,
-			a.porparti
+			a.porparti,
+			nombre,
+			cdsucurs,
+			nmcuadro
 			*/
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));

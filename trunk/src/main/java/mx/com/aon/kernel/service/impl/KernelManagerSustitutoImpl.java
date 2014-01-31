@@ -1064,6 +1064,9 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 		return result;
 	}
 
+	/**
+	 * PKG_SATELITES.P_MOV_MPOLIAGE_PORCENTAJES
+	 */
 	public WrapperResultados guardarPorcentajeAgentes(Map<String, Object> params)
 			throws ApplicationException {
 		WrapperResultados result = this.returnBackBoneInvoke(params,
