@@ -157,4 +157,23 @@ public interface EndososManager
 			,String estado
 			,String nmpoliza
 			,String nmsuplem) throws Exception;
+	/**
+	 * PKG_CONSULTA.P_GET_AGENTE_POLIZA
+	 * @return a.cdunieco,
+			a.cdramo,
+			a.estado,
+			a.nmpoliza,
+			a.cdagente,
+			a.nmsuplem,
+			a.status,
+			a.cdtipoag,
+			porredau,
+			a.porparti
+	 */
+	public List<Map<String,String>> obtenerAgentesEndosoAgente(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem) throws Exception;
 }

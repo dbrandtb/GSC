@@ -32,6 +32,7 @@
         <pattern>/endosos/endosoReexpedicion.action</pattern>
         <pattern>/endosos/endosoExtraprima.action</pattern>
         <pattern>/endosos/endosoFormaPago.action</pattern>
+        <pattern>/endosos/endosoAgente.action</pattern>
         
         <pattern>/catalogos/agregaUsuarios.action</pattern>
         <pattern>/jsp/catalogos/agregaUsuarios.jsp</pattern>

@@ -45,4 +45,18 @@ public interface EndososDAO
 	 * P_CALCULA_COMISION_BASE
 	 */
 	public void                     calcularComisionBase(Map<String, String> params)           throws Exception;
+	/**
+	 * PKG_CONSULTA.P_GET_AGENTE_POLIZA
+	 * @return a.cdunieco,
+			a.cdramo,
+			a.estado,
+			a.nmpoliza,
+			a.cdagente,
+			a.nmsuplem,
+			a.status,
+			a.cdtipoag,
+			porredau,
+			a.porparti
+	 */
+	public List<Map<String,String>> obtenerAgentesEndosoAgente(Map<String, String> params)     throws Exception;
 }
