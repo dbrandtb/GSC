@@ -1188,7 +1188,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						cdtipsitGS, sucursal, panel1.get("pv_nmpoliza"),panel1.get("pv_ntramite"),
 						false, "INSERTA"
 						);
-				obtenRecibosDxN(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem);
+				obtenRecibosDxN(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, cdtipsitGS, sucursal, panel1.get("pv_nmpoliza"), panel1.get("pv_ntramite"));
 			}else{
 				
 				ejecutaWSrecibos(_cdunieco, _cdramo,
@@ -1522,7 +1522,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		return exito;
 	} 
 	
-	public boolean obtenRecibosDxN(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem){
+	public boolean obtenRecibosDxN(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String cdtipsitGS, String sucursal, String nmsolici, String ntramite){
 		logger.debug("*** Entrando a metodo Genera Recibos DxN, para la poliza: " + nmpoliza + " cdunieco: " + cdunieco + "***");
 		
 		HashMap<String, Object> params = new HashMap<String, Object>();
@@ -1616,8 +1616,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 			
 			logger.debug("********* Total de calendarios *********** : "+calendarios.getCalendariosEntidad().length);
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-
+			int cont = 0;
+			
 			for(CalendarioEntidad cal : calendarios.getCalendariosEntidad()){
+				cont++;
 				logger.debug(">>>Calendario: "+cal.getPeriodo());
 				logger.debug(">>>Inicio: "+cal.getFechaIncio());
 				logger.debug(">>>Date Inicio: "+cal.getFechaIncio().getTime());
@@ -1642,6 +1644,31 @@ public class ComplementariosAction extends PrincipalCoreAction
 				
 				try {
 					kernelManager.guardaPeriodosDxN(params);
+				} catch (Exception e) {
+					logger.error("Error en llamado a PL", e);
+				}
+				
+				if(cont == 1)continue;
+				
+				String parametros = "?9999,0,"+sucursal+","+cdtipsitGS+","+nmpoliza+",0,0,,"+cont;
+				logger.debug("URL Generada para Recibo: "+ this.getText("url.imp.recibos")+parametros);
+				
+				HashMap<String, Object> paramsR =  new HashMap<String, Object>();
+				paramsR.put("pv_cdunieco_i", cdunieco);
+				paramsR.put("pv_cdramo_i", cdramo);
+				paramsR.put("pv_estado_i", estado);
+				paramsR.put("pv_nmpoliza_i", nmpoliza);
+				paramsR.put("pv_nmsuplem_i", nmsuplem);
+				paramsR.put("pv_feinici_i", new Date());
+				paramsR.put("pv_cddocume_i", this.getText("url.imp.recibos")+parametros);
+				paramsR.put("pv_dsdocume_i", "Recibo "+cont);
+				paramsR.put("pv_nmsolici_i", nmsolici);
+				paramsR.put("pv_ntramite_i", ntramite);
+				paramsR.put("pv_tipmov_i", "1");
+				paramsR.put("pv_swvisible_i", Constantes.NO);
+				
+				try{
+					kernelManager.guardarArchivo(paramsR);
 				} catch (Exception e) {
 					logger.error("Error en llamado a PL", e);
 				}
