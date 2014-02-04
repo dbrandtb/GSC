@@ -987,6 +987,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             {
             	map3.put("pv_ntramite_i" , null);
             }
+            map3.put("pv_porparti_i", "100");
             kernelManagerSustituto.movMPoliage(map3);
             
             
