@@ -14,6 +14,7 @@ import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.utils.HttpUtil;
 
 import org.apache.commons.lang3.StringUtils;
@@ -231,8 +232,11 @@ public class CancelacionAction extends PrincipalCoreAction
 		log.debug("smap1: "+smap1);
 		try
 		{
+			String cdtipsup = TipoEndoso.CANCELACION_UNICA.getCdTipSup().toString();
+			
 			UserVO usuario=(UserVO)session.get("USUARIO");
-			smap1.put("pv_usuario_i",usuario.getUser());
+			smap1.put("pv_usuario_i"  , usuario.getUser());
+			smap1.put("pv_cdtipsup_i" , cdtipsup);
 			cancelacionManager.cancelaPoliza(smap1);	
 			
 			String cdunieco = smap1.get("pv_cdunieco_i");
@@ -242,7 +246,7 @@ public class CancelacionAction extends PrincipalCoreAction
 			
 			//PKG_CONSULTA.P_IMP_DOC_CANCELACION
 			//nmsolici,nmsituac,descripc,descripl,ntramite,nmsuplem
-			List<Map<String,String>>listaDocu=cancelacionManager.reimprimeDocumentos(cdunieco, cdramo, estado, nmpoliza, "52");
+			List<Map<String,String>>listaDocu=cancelacionManager.reimprimeDocumentos(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
 			
 			for(Map<String,String> docu:listaDocu)
 			{
@@ -383,12 +387,15 @@ public class CancelacionAction extends PrincipalCoreAction
 				);
 		try
 		{
+			String cdtipsup = TipoEndoso.CANCELACION_MASIVA.getCdTipSup().toString();
+			
 			UserVO usuario=(UserVO) session.get("USUARIO");
 			
 			Map<String,String>params=new HashMap<String,String>(0);
 			params.put("pv_id_proceso_i"  , "1");
 			params.put("pv_fecha_carga_i" , null);
 			params.put("pv_usuario_i"     , usuario.getUser());
+			params.put("pv_cdtipsup_i"    , cdtipsup);
 			cancelacionManager.cancelacionMasiva(params);
 			success=true;
 		}
