@@ -1623,10 +1623,13 @@ public class ComplementariosAction extends PrincipalCoreAction
 				logger.debug(">>>Calendario: "+cal.getPeriodo());
 				logger.debug(">>>Inicio: "+cal.getFechaIncio());
 				logger.debug(">>>Date Inicio: "+cal.getFechaIncio().getTime());
-				logger.debug(">>>timezone: "+cal.getFechaIncio().getTimeZone());
-				logger.debug(">>>Termino: "+cal.getFechaTermino());
-				logger.debug(">>>Date Termino: "+cal.getFechaTermino().getTime());
-				logger.debug(">>>timezone: "+cal.getFechaTermino().getTimeZone());
+				
+				Calendar calendar =  Calendar.getInstance();
+				calendar.set(cal.getFechaIncio().get(Calendar.YEAR), cal.getFechaIncio().get(Calendar.MONTH), cal.getFechaIncio().get(Calendar.DAY_OF_MONTH));
+				logger.debug(">>>calendar: "+calendar);
+				logger.debug(">>>calendar Date: "+calendar.getTime());
+				logger.debug(">>>calendar sdf.format: "+sdf.format(calendar.getTime()));
+				
 				
 				sdf.setTimeZone(TimeZone.getTimeZone("Mexico/General"));
 				
