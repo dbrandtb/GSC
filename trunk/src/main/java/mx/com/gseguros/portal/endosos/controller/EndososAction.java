@@ -28,7 +28,6 @@ import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.ws.client.Ice2sigsWebServices;
 import mx.com.gseguros.ws.client.Ice2sigsWebServices.Estatus;
 import mx.com.gseguros.ws.client.Ice2sigsWebServices.Operacion;
-import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSalud;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.Recibo;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboRespuesta;
 
@@ -420,8 +419,17 @@ public class EndososAction extends PrincipalCoreAction
 			    /*///////////////////////////////////*/
 				////// re generar los documentos //////
 			    ///////////////////////////////////////
-				
-				ejecutaWSclienteSaludEndoso((String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"), (String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"), respuestaEndosoNombres.get("pv_nmsuplem_o"), "ACTUALIZA");
+				        
+				// Ejecutamos el Web Service de Cliente Salud:
+				ice2sigsWebServices.ejecutaWSclienteSalud(
+						(String) omap1.get("pv_cdunieco_i"),
+						(String) omap1.get("pv_cdramo_i"),
+						(String) omap1.get("pv_estado_i"),
+						(String) omap1.get("pv_nmpoliza_i"),
+						respuestaEndosoNombres.get("pv_nmsuplem_o"),
+						Ice2sigsWebServices.Operacion.ACTUALIZA,
+						(UserVO) session.get("USUARIO"));
+				//ejecutaWSclienteSaludEndoso((String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"), (String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"), respuestaEndosoNombres.get("pv_nmsuplem_o"), "ACTUALIZA");
 				
 				/**
 				 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
@@ -854,7 +862,16 @@ public class EndososAction extends PrincipalCoreAction
 				////// re generar los documentos //////
 			    ///////////////////////////////////////
 				
-				ejecutaWSclienteSaludEndoso(smap1.get("pv_cdunieco"), smap1.get("pv_cdramo"), smap1.get("pv_estado"), smap1.get("pv_nmpoliza"), resEndDomi.get("pv_nmsuplem_o"), "ACTUALIZA");
+				// Ejecutamos el Web Service de Cliente Salud:
+				ice2sigsWebServices.ejecutaWSclienteSalud(
+						smap1.get("pv_cdunieco"), 
+						smap1.get("pv_cdramo"), 
+						smap1.get("pv_estado"), 
+						smap1.get("pv_nmpoliza"), 
+						resEndDomi.get("pv_nmsuplem_o"), 
+						Ice2sigsWebServices.Operacion.ACTUALIZA, 
+						(UserVO) session.get("USUARIO"));
+				//ejecutaWSclienteSaludEndoso(smap1.get("pv_cdunieco"), smap1.get("pv_cdramo"), smap1.get("pv_estado"), smap1.get("pv_nmpoliza"), resEndDomi.get("pv_nmsuplem_o"), "ACTUALIZA");
 				
 
 				/**
@@ -3074,63 +3091,6 @@ public class EndososAction extends PrincipalCoreAction
 		return allInserted;
 	}
 	
-	private boolean ejecutaWSclienteSaludEndoso(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String Op){
-		boolean exito = true;
-		
-		logger.debug("********************* Entrando a Ejecuta WSclienteSalud ENDOSO ******************************");
-		
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("pv_cdunieco_i", cdunieco);
-		params.put("pv_cdramo_i", cdramo);
-		params.put("pv_estado_i", estado);
-		params.put("pv_nmpoliza_i", nmpoliza);
-		params.put("pv_nmsuplem_i", nmsuplem);
-		
-		if(StringUtils.isBlank(Op)) Op = "ACTUALIZA";
-		Operacion Operation = Operacion.valueOf(Op);
-		
-		WrapperResultados result = null;
-		ClienteSalud cliente =  null;
-		try {
-			result = kernelManager.obtenDatosClienteWS(params);
-			if(result.getItemList() != null && result.getItemList().size() > 0){
-				cliente = ((ArrayList<ClienteSalud>) result.getItemList()).get(0);
-			}
-			
-		} catch (Exception e1) {
-			logger.error("Error en llamar al PL de obtencion de ejecutaWSclienteSalud",e1);
-			return false;
-		}
-		
-		
-		if(cliente != null){
-			
-			String usuario = "SIN USUARIO";
-			if(session.containsKey("USUARIO") && session.get("USUARIO") != null){
-				UserVO usuarioSesion=(UserVO) session.get("USUARIO");
-				usuario = usuarioSesion.getUser();
-			}
-			
-			params.put("USUARIO", usuario);
-			
-			try{
-				logger.debug("Ejecutando WS TEST para WS Cliente");
-				ice2sigsWebServices.ejecutaClienteSaludGS(Operacion.INSERTA, null, params, false);
-			}catch(Exception e){
-				logger.error("Error al ejecutar WS TEST para cliente: " + cliente.getClaveCli(), e);
-			}
-			try{
-				logger.debug(">>>>>>> Enviando el Cliente: " + cliente.getClaveCli());
-				params.put("MANAGER", kernelManager);
-				ice2sigsWebServices.ejecutaClienteSaludGS(Operation, cliente, params, true);
-			}catch(Exception e){
-				logger.error("Error al insertar endoso del cliente: " + cliente.getClaveCli(), e);
-				exito = false;
-			}
-		}
-
-		return exito;
-	} 
 	
 	////////////////////////////
 	////// endoso de edad //////
@@ -3500,7 +3460,9 @@ public class EndososAction extends PrincipalCoreAction
 				////// re generar los documentos //////
 			    ///////////////////////////////////////
 				
-				ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
+				// Ejecutamos el Web Service de Cliente Salud:
+				ice2sigsWebServices.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, Ice2sigsWebServices.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
+				//ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
 				
 				/**
 				 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
@@ -3921,7 +3883,9 @@ public class EndososAction extends PrincipalCoreAction
 				////// re generar los documentos //////
 			    ///////////////////////////////////////
 				
-				ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
+				// Ejecutamos el Web Service de Cliente Salud:
+				ice2sigsWebServices.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, Ice2sigsWebServices.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
+				//ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
 				
 				/**
 				 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
@@ -4156,7 +4120,9 @@ public class EndososAction extends PrincipalCoreAction
 			case CORRECCION_NOMBRE_Y_RFC:
 			case CAMBIO_DOMICILIO:
 				
-				ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
+				// Ejecutamos el Web Service de Cliente Salud:
+				ice2sigsWebServices.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, Ice2sigsWebServices.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
+				//ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
 				
 				//insertaURLrecibosEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsitGS, sucursal, nmsolici, ntramiteEmi, cdtipsup);
 				
@@ -4183,7 +4149,9 @@ public class EndososAction extends PrincipalCoreAction
 			case MODIFICACION_SEXO_M_A_H:
 			case CAMBIO_DOMICILIO_ASEGURADO_TITULAR:
 				
-				ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
+				// Ejecutamos el Web Service de Cliente Salud:
+				ice2sigsWebServices.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, Ice2sigsWebServices.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
+				//ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
 				
 				ejecutaWSrecibosEndoso(cdunieco, cdramo,
 				estado, nmpoliza,
@@ -4630,7 +4598,9 @@ public class EndososAction extends PrincipalCoreAction
 				////// re generar los documentos //////
 			    ///////////////////////////////////////
 
-				ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
+				// Ejecutamos el Web Service de Cliente Salud:
+				ice2sigsWebServices.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, Ice2sigsWebServices.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
+				//ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
 				
 				String cdtipsitGS = "213";
 				String sucursal = cdunieco;

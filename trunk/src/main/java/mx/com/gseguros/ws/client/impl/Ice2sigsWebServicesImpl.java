@@ -1,10 +1,12 @@
 package mx.com.gseguros.ws.client.impl;
 
 import java.rmi.RemoteException;
-import java.text.DateFormat;
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.HashMap;
 
+import mx.com.aon.kernel.service.KernelManagerSustituto;
+import mx.com.aon.portal.model.UserVO;
+import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.ws.client.Ice2sigsWebServices;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.Agente;
@@ -80,6 +82,7 @@ import mx.com.gseguros.ws.client.recibossigs.callback.GeneradorReciboDxnWsServic
 import org.apache.axis2.AxisFault;
 
 public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
+	
 	private static org.apache.log4j.Logger logger = org.apache.log4j.Logger
 			.getLogger(Ice2sigsWebServicesImpl.class);
 
@@ -87,77 +90,10 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 	
 	private String endpoint;
 	
-	ServicioGSServiceCallbackHandlerImpl servicioGSServiceCallbackHandler;
+	private transient KernelManagerSustituto kernelManager;
 	
-	/*public enum Operacion {
-
-		INSERTA(1), ACTUALIZA(2), CONSULTA(3);
-
-		private int codigo;
-
-		private Operacion(int codigo) {
-			this.codigo = codigo;
-		}
-
-		public int getCodigo() {
-			return codigo;
-		}
-
-	}*/
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-//		for (Operacion op : Operacion.values()) {
-//			System.out.println(op.getCodigo() + " " + op.name());
-//		}
-
-		Ice2sigsWebServicesImpl serv = new Ice2sigsWebServicesImpl();
-
-		try {
-			DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT); 
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(df.parse("15/06/1986"));
-			
-			System.out.println("Calendar: "+ cal.getTime());
-			
-			AgenteSalud agente = new AgenteSalud();
-			agente.setClaAge("asd57AJFDG");
-			agente.setConPro("1");
-			agente.setCveFia("AS86A87");
-			agente.setFecIng(cal);
-			agente.setFecReg(cal);
-			agente.setIniFia(cal);
-			agente.setNomFia("nomfia");
-			agente.setNumAge(5656);
-			agente.setOfiAge(54);
-			agente.setProAge(72);
-			agente.setRegAge(8);
-			agente.setSucAge(17);
-			agente.setTerFia(cal);
-			agente.setTipAge(2);
-			agente.setUsrReg("usrreg");
-			
-			AgenteSaludRespuesta resp = serv.ejecutaAgenteSaludGS(Operacion.CONSULTA, agente, "http://wasgs.gseguros.com.mx:8080/ice2sigs/servicios");
-			
-			System.out.println("Codigo respuesta: "+ resp.getCodigo());
-			System.out.println("Mensaje respuesta: "+ resp.getMensaje());
-			System.out.println("Entidad respuesta: "+ resp.getAgenteSalud().getFecIng().getTime());
-			
-//			cliente = new ClienteSalud();
-//			cliente.setClaveCli(162);
-//			resp = serv.ejecutaClienteSaludGS(Operacion.CONSULTA, cliente);
-//			System.out.println("Mensaje respuesta: "+ resp.getMensaje());
-			
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
+	private transient ServicioGSServiceCallbackHandlerImpl servicioGSServiceCallbackHandler;
+	
 
 	public PolizaRespuesta ejecutaPolizaGS(Operacion operacion,
 			Poliza poliza, String endpoint) throws Exception {
@@ -340,7 +276,7 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 		return resultado;
 	}
 	
-	public ClienteSaludRespuesta ejecutaClienteSaludGS(Operacion operacion,
+	private ClienteSaludRespuesta ejecutaClienteSaludGS(Operacion operacion,
 			ClienteSalud cliente, HashMap<String, Object> params, boolean async) throws Exception {
 		
 		ClienteSaludRespuesta resultado = null;
@@ -634,6 +570,62 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 		
 		return resultado;
 	}
+	
+	
+	public boolean ejecutaWSclienteSalud(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem,
+			Ice2sigsWebServices.Operacion op, UserVO userVO) {
+		
+		boolean exito = true;
+		
+		logger.debug("********************* Entrando a Ejecuta WSclienteSalud ******************************");
+		
+		WrapperResultados result = null;
+		ClienteSalud cliente =  null;
+		
+		//Se invoca servicio para obtener los datos del cliente
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdunieco_i", cdunieco);
+		params.put("pv_cdramo_i", cdramo);
+		params.put("pv_estado_i", estado);
+		params.put("pv_nmpoliza_i", nmpoliza);
+		params.put("pv_nmsuplem_i", nmsuplem);
+		try {
+			result = kernelManager.obtenDatosClienteWS(params);
+			if(result.getItemList() != null && result.getItemList().size() > 0){
+				cliente = ((ArrayList<ClienteSalud>) result.getItemList()).get(0);
+			}
+		} catch (Exception e1) {
+			logger.error("Error en llamar al PL de obtencion de ejecutaWSclienteSalud",e1);
+			return false;
+		}
+		
+		
+		if(cliente != null){
+			
+			String usuario = "SIN USUARIO";
+			if(userVO != null){
+				usuario = userVO.getUser();
+			}
+			params.put("USUARIO", usuario);
+			
+			try{
+				logger.debug("Ejecutando WS TEST para WS Cliente");
+				ejecutaClienteSaludGS(Operacion.INSERTA, null, params, false);
+			}catch(Exception e){
+				logger.error("Error al ejecutar WS TEST para cliente: " + cliente.getClaveCli(), e);
+			}
+			try{
+				logger.debug(">>>>>>> Enviando el Cliente: " + cliente.getClaveCli());
+				ejecutaClienteSaludGS(op, cliente, params, true);
+			}catch(Exception e){
+				logger.error("Error al insertar el cliente: " + cliente.getClaveCli(), e);
+				exito = false;
+			}
+		}
+
+		return exito;
+	}
 
 
 	public String getEndpoint() {
@@ -653,5 +645,13 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 		this.servicioGSServiceCallbackHandler = servicioGSServiceCallbackHandler;
 	}
 	
+	
+	/**
+	 * Setter method
+	 * @param kernelManager
+	 */
+	public void setKernelManager(KernelManagerSustituto kernelManager) {
+		this.kernelManager = kernelManager;
+	}
 
 }
