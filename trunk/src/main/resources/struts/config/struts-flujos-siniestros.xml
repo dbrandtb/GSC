@@ -167,6 +167,22 @@
 		<action name="asignarReclamaciones">
     		<result>/jsp-script/proceso/siniestros/asignarReclamaciones.jsp</result>
 		</action>
+
+		<action name="calculosReclamaciones" class="siniestrosAction" method="entradaCalculos">
+    		<result>/jsp-script/proceso/siniestros/calculosReclamaciones.jsp</result>
+		</action>
+		
+		<action name="loadListaCalculos" class="siniestrosAction"
+			method="loadListaCalculos">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					loadList.*,
+					success
+				</param>
+			</result>
+		</action>
+		
     </package>
 
 </struts>

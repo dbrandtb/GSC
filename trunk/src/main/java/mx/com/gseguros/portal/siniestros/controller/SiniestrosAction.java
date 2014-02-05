@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.siniestros.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,6 +32,11 @@ public class SiniestrosAction extends ActionSupport{
     private List<DatosSiniestroVO> listaDatosSiniestro;
     private List<GenericVO> listaSubcobertura;
     private List<GenericVO> listaCPTICD;
+    
+    private boolean esHospitalario;
+    private HashMap<String, String> loadForm;
+    private List<HashMap<String, String>> loadList;
+    
     public String execute() throws Exception {
     	return SUCCESS;
     }
@@ -51,6 +57,84 @@ public class SiniestrosAction extends ActionSupport{
         }
         success = true;
         return SUCCESS;
+    }
+
+    public String entradaCalculos(){
+    	
+    	
+    	esHospitalario = false;
+    	loadForm =  new HashMap<String, String>();
+    	
+    	if(esHospitalario){
+        	loadForm.put("asegurado", "Manuel");
+        	loadForm.put("deducible", "5");
+        	loadForm.put("copago", "54");
+    	}else{
+    		loadForm.put("proveedor","Nombre Proveedor");
+    		loadForm.put("isrProveedor","Isr");
+    		loadForm.put("impuestoCedular","Imp ced");
+    		loadForm.put("iva","17.5");
+    	}
+    	
+    	success = true;
+    	return SUCCESS;
+    }
+    
+    public String loadListaCalculos(){
+    	loadList = new ArrayList<HashMap<String, String>>();
+    	HashMap<String, String> elements =  new HashMap<String, String>();
+		try {
+			elements.put("cpt", "1");
+			elements.put("cantidad", "1111");
+			elements.put("arancel", "11111111");
+			elements.put("subtotalArancel", "11");
+			elements.put("descuento", "111111111");
+			elements.put("subtotalDescuento", "11111111111");
+			elements.put("porcentajeCopago", "11111111");
+			elements.put("copago", "11111111111");
+			elements.put("copagoAplicado", "1111111111111");
+			elements.put("subtotal", "1111111");
+			elements.put("isr", "11111111");
+			elements.put("cedular", "111");
+			elements.put("subtotalImpuestos", "1111");
+			elements.put("iva", "1111");
+			elements.put("total", "11111");
+			elements.put("facturado", "11111");
+			elements.put("autorizado", "11111");
+			elements.put("valorUtilizar", "11111111111");
+			
+			loadList.add(elements);
+			
+			elements =  new HashMap<String, String>();
+			elements.put("cpt", "2");
+			elements.put("cantidad", "222222");
+			elements.put("arancel", "22222222");
+			elements.put("subtotalArancel", "22");
+			elements.put("descuento", "2222222");
+			elements.put("subtotalDescuento", "2222222222");
+			elements.put("porcentajeCopago", "222222222");
+			elements.put("copago", "2222222222");
+			elements.put("copagoAplicado", "222222222222");
+			elements.put("subtotal", "222222222222");
+			elements.put("isr", "22222222222");
+			elements.put("cedular", "222");
+			elements.put("subtotalImpuestos", "2222");
+			elements.put("iva", "2222");
+			elements.put("total", "22222");
+			elements.put("facturado", "2222");
+			elements.put("autorizado", "22222");
+			elements.put("valorUtilizar", "2222222");
+			
+			loadList.add(elements);
+			//List<AutorizacionServicioVO> lista = siniestrosManager.getConsultaAutorizacionesEsp(params.get("nmautser"));
+			//if(lista!=null && !lista.isEmpty())	datosAutorizacionEsp = lista.get(0);
+		}catch( Exception e){
+			logger.error("Error al obtener los datos de Autorización de Servicio en Especifico",e);
+			success =  false;
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
     }
     
     /**
@@ -377,6 +461,30 @@ public class SiniestrosAction extends ActionSupport{
 
 	public void setNumeroAutorizacion(AutorizacionServicioVO numeroAutorizacion) {
 		this.numeroAutorizacion = numeroAutorizacion;
+	}
+
+	public HashMap<String, String> getLoadForm() {
+		return loadForm;
+	}
+
+	public void setLoadForm(HashMap<String, String> loadForm) {
+		this.loadForm = loadForm;
+	}
+
+	public List<HashMap<String, String>> getLoadList() {
+		return loadList;
+	}
+
+	public void setLoadList(List<HashMap<String, String>> loadList) {
+		this.loadList = loadList;
+	}
+
+	public boolean isEsHospitalario() {
+		return esHospitalario;
+	}
+
+	public void setEsHospitalario(boolean esHospitalario) {
+		this.esHospitalario = esHospitalario;
 	}
 
 
