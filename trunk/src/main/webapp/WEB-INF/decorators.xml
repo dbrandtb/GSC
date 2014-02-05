@@ -33,9 +33,9 @@
         <pattern>/endosos/endosoExtraprima.action</pattern>
         <pattern>/endosos/endosoFormaPago.action</pattern>
         <pattern>/endosos/endosoAgente.action</pattern>
-        
         <pattern>/catalogos/agregaUsuarios.action</pattern>
-        <pattern>/jsp/catalogos/agregaUsuarios.jsp</pattern>
+        <pattern>/siniestros/calculosReclamaciones.action</pattern>
+        
 	</excludes>
 
 
@@ -148,9 +148,6 @@
          <pattern>/siniestros/ajustesMedicos.action</pattern>
          <pattern>/jsp-script/proceso/siniestros/ajustesMedicos.jsp</pattern>
 
-         <pattern>/siniestros/calculosReclamaciones.action</pattern>
-         <pattern>/jsp-script/proceso/siniestros/calculosReclamaciones.jsp</pattern>
-         
 	</decorator>
 	
 	

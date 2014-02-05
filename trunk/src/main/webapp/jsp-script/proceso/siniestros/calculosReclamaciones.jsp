@@ -9,7 +9,7 @@
             //var _URL_HeaderCalculos	= '<s:url namespace="/siniestros" action="obtenHeaderCalculos" />';
             var _URL_ListaCalculos		= '<s:url namespace="/siniestros" action="loadListaCalculos" />';
             
-            Ext.onReady(function() {
+	Ext.onReady(function() {
 
             	Ext.selection.CheckboxModel.override({
             		mode: 'SINGLE',
