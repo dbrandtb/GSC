@@ -27,7 +27,6 @@ import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.Tatri;
 import mx.com.gseguros.portal.emision.model.DatosRecibosDxNVO;
-import mx.com.gseguros.portal.emision.service.EmisionManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
@@ -59,7 +58,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 	private KernelManagerSustituto kernelManager;
 	private transient Ice2sigsWebServices ice2sigsWebServices;
-	private EmisionManager emisionManager;
 	
 	private Map<String, String> panel1;
 	private Map<String, String> panel2;
@@ -1182,7 +1180,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			//TODO:ELIMINAR ejecutaWSclienteSalud(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, );
 			//PolizaVO poliza = new PolizaVO();
 			// Ejecutamos el Web Service de Cliente Salud:
-			emisionManager.ejecutaWSclienteSalud(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, Ice2sigsWebServices.Operacion.INSERTA, (UserVO) session.get("USUARIO"));
+			ice2sigsWebServices.ejecutaWSclienteSalud(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, Ice2sigsWebServices.Operacion.INSERTA, (UserVO) session.get("USUARIO"));
 			
 			if(StringUtils.isNotBlank(esDxN) && "S".equalsIgnoreCase(esDxN)){
 				ejecutaWSrecibos(_cdunieco, _cdramo,
@@ -1305,7 +1303,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		//String operacion = map1.get("operacion");
 
 		// Ejecutamos el Web Service de Cliente Salud:
-		emisionManager.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, Ice2sigsWebServices.Operacion.INSERTA, (UserVO) session.get("USUARIO"));
+		ice2sigsWebServices.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, Ice2sigsWebServices.Operacion.INSERTA, (UserVO) session.get("USUARIO"));
 		
 		success = true;
 		return SUCCESS;
@@ -1949,10 +1947,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 		this.ice2sigsWebServices = ice2sigsWebServices;
 	}
 	
-	public void setEmisionManager(EmisionManager emisionManager) {
-		this.emisionManager = emisionManager;
-	}
-
 	public String getMensajeRespuesta() {
 		return mensajeRespuesta;
 	}
