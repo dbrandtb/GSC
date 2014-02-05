@@ -6,7 +6,7 @@
         <property name="locations">
             <list>
                  <value>file:/u01/wlserver/wldomain/gseguros/properties/mail.properties</value>
-                 <!-- <value>classpath:jdbc.properties</value> -->
+                 <value>classpath:global.properties</value>
             </list>
         </property> 
 	</bean>

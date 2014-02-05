@@ -2,6 +2,7 @@ package mx.com.gseguros.ws.client.ice2sigs.callback;
 
 import java.util.HashMap;
 
+import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.kernel.service.impl.KernelManagerSustitutoImpl;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.ws.client.Ice2sigsWebServices.Estatus;
@@ -11,11 +12,13 @@ import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSaludResp
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboGSResponseE;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboRespuesta;
 
-public class ServicioGSServiceCallbackHandlerImpl extends
-		ServicioGSServiceCallbackHandler {
+import org.apache.log4j.Logger;
 
-	private org.apache.log4j.Logger logger = org.apache.log4j.Logger
-			.getLogger(ServicioGSServiceCallbackHandlerImpl.class);
+public class ServicioGSServiceCallbackHandlerImpl extends ServicioGSServiceCallbackHandler {
+
+	private Logger logger = Logger.getLogger(ServicioGSServiceCallbackHandlerImpl.class);
+	
+	KernelManagerSustituto kernelManager;
 
 	public ServicioGSServiceCallbackHandlerImpl() {
 		super();
@@ -24,29 +27,53 @@ public class ServicioGSServiceCallbackHandlerImpl extends
 	public ServicioGSServiceCallbackHandlerImpl(Object obj) {
 		super(obj);
 	}
-
+	
+	public void setClientData(Object obj) {
+		super.clientData = obj;
+	}
+	
+	
 	@Override
 	public void receiveErrorclienteSaludGS(Exception e) {
-		logger.error("Error en WS clienteSalud: " + e.getMessage()
-				+ " Guardando en bitacora el error, getCause: " + e.getCause(),e);
+		logger.error("Error en WS clienteSalud: " + e.getMessage() + " Guardando en bitacora el error, getCause: " + e.getCause(),e);
 
+		///////////////////////////
 		HashMap<String, Object> params = (HashMap<String, Object>) this.clientData;
-
-		KernelManagerSustitutoImpl manager = (KernelManagerSustitutoImpl) params
-				.get("MANAGER");
 		String usuario = (String) params.get("USUARIO");
-		
 		try {
-			manager.movBitacobro((String) params.get("pv_cdunieco_i"),
+			kernelManager.movBitacobro(
+					(String) params.get("pv_cdunieco_i"),
 					(String) params.get("pv_cdramo_i"),
 					(String) params.get("pv_estado_i"),
-					(String) params.get("pv_nmpoliza_i"), "ErrWScliCx", "Msg: "
-							+ e.getMessage() + " ***Cause: " + e.getCause(),
+					(String) params.get("pv_nmpoliza_i"), 
+					"ErrWScliCx", 
+					"Msg: " + e.getMessage() + " ***Cause: " + e.getCause(),
 					 usuario);
 		} catch (Exception e1) {
 			logger.error("Error en llamado a PL", e1);
 		}
-	};
+		///////////////////////////
+		
+		//TODO: RBS cambiar el param por PolizaVO
+		/*
+		ServicioGSServiceCallbackHandlerVO gsServiceCallBackHandlerVO = (ServicioGSServiceCallbackHandlerVO) this.clientData;
+		PolizaVO poliza = gsServiceCallBackHandlerVO.getPolizaVO();
+		
+		try {
+			//Se ejecuta el servicio de datos para registrar el error ocurrido:
+			kernelManager.movBitacobro(
+					poliza.getCdUnieco(), 
+					poliza.getCdRamo(), 
+					poliza.getEstado(),
+					poliza.getNmPoliza(), 
+					"ErrWScliCx", 
+					"Msg: " + e.getMessage() + " ***Cause: " + e.getCause(), 
+					gsServiceCallBackHandlerVO.getUsuario());
+		} catch (Exception e1) {
+			logger.error("Error en llamado a PL", e1);
+		}
+		*/
+	}
 
 	@Override
 	public void receiveResultclienteSaludGS(ClienteSaludGSResponseE result) {
@@ -57,23 +84,44 @@ public class ServicioGSServiceCallbackHandlerImpl extends
 		if (Estatus.EXITO.getCodigo() != respuesta.getCodigo() && Estatus.LLAVE_DUPLICADA.getCodigo() != respuesta.getCodigo()) {
 			logger.error("Guardando en bitacora el estatus");
 
+			/////////////////////////////
 			HashMap<String, Object> params = (HashMap<String, Object>) this.clientData;
-			KernelManagerSustitutoImpl manager = (KernelManagerSustitutoImpl) params.get("MANAGER");
 			String usuario = (String) params.get("USUARIO");
-			
 			try {
-				manager.movBitacobro((String) params.get("pv_cdunieco_i"),
+				kernelManager.movBitacobro(
+						(String) params.get("pv_cdunieco_i"),
 						(String) params.get("pv_cdramo_i"),
 						(String) params.get("pv_estado_i"),
-						(String) params.get("pv_nmpoliza_i"), "ErrWScli",
+						(String) params.get("pv_nmpoliza_i"), 
+						"ErrWScli",
 						respuesta.getCodigo() + " - " + respuesta.getMensaje(),
-						 usuario);
+						usuario);
 			} catch (Exception e1) {
 				logger.error("Error en llamado a PL", e1);
 			}
+			/////////////////////////////
+			
+			//TODO: RBS cambiar el param por PolizaVO
+			/*
+			ServicioGSServiceCallbackHandlerVO gsServiceCallBackHandlerVO = (ServicioGSServiceCallbackHandlerVO) this.clientData;
+			PolizaVO poliza = gsServiceCallBackHandlerVO.getPolizaVO();
+			try {
+				//Se ejecuta el servicio de datos para registrar el error ocurrido:
+				kernelManager.movBitacobro(
+						poliza.getCdUnieco(), 
+						poliza.getCdRamo(), 
+						poliza.getEstado(),
+						poliza.getNmPoliza(), 
+						"ErrWScli", 
+						respuesta.getCodigo() + " - " + respuesta.getMensaje(), 
+						gsServiceCallBackHandlerVO.getUsuario());
+			} catch (Exception e1) {
+				logger.error("Error en llamado a PL", e1);
+			}
+			*/
 		}
-
 	}
+	
 
 	@Override
 	public void receiveErrorreciboGS(Exception e) {
@@ -128,6 +176,10 @@ public class ServicioGSServiceCallbackHandlerImpl extends
 				logger.error("Error en llamado a PL", e1);
 			}
 		}
+	}
+
+	public void setKernelManager(KernelManagerSustituto kernelManager) {
+		this.kernelManager = kernelManager;
 	}
 
 }

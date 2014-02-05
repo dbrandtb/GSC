@@ -28,13 +28,13 @@ import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.cotizacion.model.Tatri;
 import mx.com.gseguros.portal.emision.model.DatosRecibosDxNVO;
+import mx.com.gseguros.portal.emision.service.EmisionManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.ws.client.Ice2sigsWebServices;
 import mx.com.gseguros.ws.client.Ice2sigsWebServices.Estatus;
 import mx.com.gseguros.ws.client.Ice2sigsWebServices.Operacion;
-import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSalud;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.Recibo;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboRespuesta;
 import mx.com.gseguros.ws.client.recibossigs.GeneradorReciboDxnWsServiceStub.CalendarioEntidad;
@@ -60,6 +60,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 	private KernelManagerSustituto kernelManager;
 	private transient Ice2sigsWebServices ice2sigsWebServices;
+	private EmisionManager emisionManager;
 	
 	private Map<String, String> panel1;
 	private Map<String, String> panel2;
@@ -1179,7 +1180,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 			logger.debug(">>>>>>>>>> nmsolici: "+ panel1.get("pv_nmpoliza"));
 			logger.debug(">>>>>>>>>> nmtramite: "+ panel1.get("pv_ntramite"));
 			
-			ejecutaWSclienteSalud(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, "INSERTA");
+			//TODO:ELIMINAR ejecutaWSclienteSalud(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, );
+			//PolizaVO poliza = new PolizaVO();
+			// Ejecutamos el Web Service de Cliente Salud:
+			emisionManager.ejecutaWSclienteSalud(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, Ice2sigsWebServices.Operacion.INSERTA, (UserVO) session.get("USUARIO"));
 			
 			if(StringUtils.isNotBlank(esDxN) && "S".equalsIgnoreCase(esDxN)){
 				ejecutaWSrecibos(_cdunieco, _cdramo,
@@ -1294,14 +1298,15 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String estado = map1.get("estado");
 		String nmpoliza = map1.get("nmpoliza");
 		String nmsuplem = map1.get("nmsuplem");
-		String cdtipsitGS = map1.get("subramo");
-		String sucursal = map1.get("sucursal");
+		//String cdtipsitGS = map1.get("subramo");
+		//String sucursal = map1.get("sucursal");
 
-		String nmsolici = map1.get("nmsolici");
-		String nmtramite = map1.get("nmtramite");
-		String operacion = map1.get("operacion");
+		//String nmsolici = map1.get("nmsolici");
+		//String nmtramite = map1.get("nmtramite");
+		//String operacion = map1.get("operacion");
 
-		ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, operacion);
+		// Ejecutamos el Web Service de Cliente Salud:
+		emisionManager.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, Ice2sigsWebServices.Operacion.INSERTA, (UserVO) session.get("USUARIO"));
 		
 		success = true;
 		return SUCCESS;
@@ -1464,63 +1469,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 		return allInserted;
 	} 
 
-	private boolean ejecutaWSclienteSalud(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String Op){
-		boolean exito = true;
-		
-		logger.debug("********************* Entrando a Ejecuta WSclienteSalud ******************************");
-		
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("pv_cdunieco_i", cdunieco);
-		params.put("pv_cdramo_i", cdramo);
-		params.put("pv_estado_i", estado);
-		params.put("pv_nmpoliza_i", nmpoliza);
-		params.put("pv_nmsuplem_i", nmsuplem);
-		
-		if(StringUtils.isBlank(Op)) Op = "INSERTA";
-		Operacion Operation = Operacion.valueOf(Op);
-		
-		WrapperResultados result = null;
-		ClienteSalud cliente =  null;
-		try {
-			result = kernelManager.obtenDatosClienteWS(params);
-			if(result.getItemList() != null && result.getItemList().size() > 0){
-				cliente = ((ArrayList<ClienteSalud>) result.getItemList()).get(0);
-			}
-			
-		} catch (Exception e1) {
-			logger.error("Error en llamar al PL de obtencion de ejecutaWSclienteSalud",e1);
-			return false;
-		}
-		
-		
-		if(cliente != null){
-			
-			String usuario = "SIN USUARIO";
-			if(session.containsKey("USUARIO") && session.get("USUARIO") != null){
-				UserVO usuarioSesion=(UserVO) session.get("USUARIO");
-				usuario = usuarioSesion.getUser();
-			}
-			
-			params.put("USUARIO", usuario);
-			
-			try{
-				logger.debug("Ejecutando WS TEST para WS Cliente");
-				ice2sigsWebServices.ejecutaClienteSaludGS(Operacion.INSERTA, null, this.getText("url.ws.ice2sigs"), params, false);
-			}catch(Exception e){
-				logger.error("Error al ejecutar WS TEST para cliente: " + cliente.getClaveCli(), e);
-			}
-			try{
-				logger.debug(">>>>>>> Enviando el Cliente: " + cliente.getClaveCli());
-				params.put("MANAGER", kernelManager);
-				ice2sigsWebServices.ejecutaClienteSaludGS(Operation, cliente, this.getText("url.ws.ice2sigs"), params, true);
-			}catch(Exception e){
-				logger.error("Error al insertar el cliente: " + cliente.getClaveCli(), e);
-				exito = false;
-			}
-		}
-
-		return exito;
-	} 
 	
 	public boolean obtenRecibosDxN(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String cdtipsitGS, String sucursal, String nmsolici, String ntramite){
 		logger.debug("*** Entrando a metodo Genera Recibos DxN, para la poliza: " + nmpoliza + " cdunieco: " + cdunieco + "***");
@@ -2000,6 +1948,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 
 	public void setIce2sigsWebServices(Ice2sigsWebServices ice2sigsWebServices) {
 		this.ice2sigsWebServices = ice2sigsWebServices;
+	}
+	
+	public void setEmisionManager(EmisionManager emisionManager) {
+		this.emisionManager = emisionManager;
 	}
 
 	public String getMensajeRespuesta() {
