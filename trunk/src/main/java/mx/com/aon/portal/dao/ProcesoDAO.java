@@ -3267,10 +3267,10 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
         	recibo.setDerecho(rs.getDouble("derecho"));
         	
         	try {
-        		logger.debug("--> Parseando fecha rs.getString(fecEmi) -->> "+ rs.getString("fecEmi"));
+        		//logger.debug("--> Parseando fecha rs.getString(fecEmi) -->> "+ rs.getString("fecEmi"));
 	        	cal = Calendar.getInstance();
 				cal.setTime(spdf.parse(rs.getString("fecEmi")));
-				logger.debug("--> Calendario obtenido -->> "+ cal);
+				//logger.debug("--> Calendario obtenido -->> "+ cal);
 	        	recibo.setFecEmi(cal);
         	} catch (Exception e) {
 				logger.error("NO SE PUDO PARSEAR LA FECHA fecEmi !!! " + rs.getString("fecEmi"));
@@ -3278,10 +3278,10 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			}
         	
         	try {
-        		logger.debug("--> Parseando fecha rs.getString(fecIni) -->> "+ rs.getString("fecIni"));
+        		//logger.debug("--> Parseando fecha rs.getString(fecIni) -->> "+ rs.getString("fecIni"));
 	        	cal = Calendar.getInstance();
 	        	cal.setTime(spdf.parse(rs.getString("fecIni")));
-	        	logger.debug("--> Calendario obtenido -->> "+ cal);
+	        	//logger.debug("--> Calendario obtenido -->> "+ cal);
 	        	recibo.setFecIni(cal);
         	} catch (Exception e) {
 				logger.error("NO SE PUDO PARSEAR LA FECHA fecIni !!! " + rs.getString("fecIni"));
@@ -3289,7 +3289,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			}
         	
 	        try {
-	        	logger.debug("--> Parseando fecha rs.getString(fecPag) -->> "+ rs.getString("fecPag"));
+	        	//logger.debug("--> Parseando fecha rs.getString(fecPag) -->> "+ rs.getString("fecPag"));
 	        	cal = Calendar.getInstance();
 	        	cal.setTime(spdf.parse(rs.getString("fecPag")));
 	        	recibo.setFecPag(cal);
@@ -3301,15 +3301,15 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 				} catch (ParseException e1) {
 					logger.error("Error.");
 				}
-				logger.debug("--> Calendario obtenido -->> "+ cal);
+				//logger.debug("--> Calendario obtenido -->> "+ cal);
 	        	recibo.setFecPag(cal);
 			}
 	        	
 	        try {
-	        	logger.debug("--> Parseando fecha rs.getString(fecSta) -->> "+ rs.getString("fecSta"));
+	        	//logger.debug("--> Parseando fecha rs.getString(fecSta) -->> "+ rs.getString("fecSta"));
 	        	cal = Calendar.getInstance();
 	        	cal.setTime(spdf.parse(rs.getString("fecSta")));
-	        	logger.debug("--> Calendario obtenido -->> "+ cal);
+	        	//logger.debug("--> Calendario obtenido -->> "+ cal);
 	        	recibo.setFecSta(cal);
 	        } catch (Exception e) {
 				logger.error("NO SE PUDO PARSEAR LA FECHA fecSta !!! " + rs.getString("fecSta"));
@@ -3317,10 +3317,10 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			}
 	        
 	        try {
-	        	logger.debug("--> Parseando fecha rs.getString(fecTer) -->> "+ rs.getString("fecTer"));
+	        	//logger.debug("--> Parseando fecha rs.getString(fecTer) -->> "+ rs.getString("fecTer"));
 	        	cal = Calendar.getInstance();
 	        	cal.setTime(spdf.parse(rs.getString("fecTer")));
-	        	logger.debug("--> Calendario obtenido -->> "+ cal);
+	        	//logger.debug("--> Calendario obtenido -->> "+ cal);
 	        	recibo.setFecTer(cal);
         	} catch (Exception e) {
 				logger.error("NO SE PUDO PARSEAR LA FECHA fecTer !!! " + rs.getString("fecTer"));
@@ -3328,12 +3328,12 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			}
 	        	
         	recibo.setIva(rs.getDouble("iva"));
-        	logger.debug(">>>>>  Valor de iva: " +rs.getDouble("iva"));
+        	//logger.debug(">>>>>  Valor de iva: " +rs.getDouble("iva"));
         	
         	recibo.setNumAgt(rs.getInt("numAgt"));
         	recibo.setNumCli(rs.getInt("numCli"));
         	recibo.setNumEnd(rs.getInt("numEnd"));
-        	logger.debug(">>>>>  Valor de numEnd: " +rs.getInt("numEnd"));
+        	//logger.debug(">>>>>  Valor de numEnd: " +rs.getInt("numEnd"));
         	
         	recibo.setNumMon(rs.getInt("numMon"));
         	recibo.setNumPol(rs.getInt("numPol"));
@@ -3343,7 +3343,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
         	recibo.setPriCom(rs.getDouble("priCom"));
         	recibo.setPriDot(rs.getDouble("priDot"));
         	recibo.setPrima(rs.getDouble("prima"));
-        	logger.debug(">>>>>  Valor de prima: " +rs.getDouble("prima"));
+        	//logger.debug(">>>>>  Valor de prima: " +rs.getDouble("prima"));
         	
         	recibo.setRecargo(rs.getDouble("recargo"));
         	recibo.setRmdbRn(rs.getInt("rmdbRn"));
@@ -3351,7 +3351,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
         	recibo.setStatusr(rs.getString("statusr"));
         	
         	String tipoEndoso = rs.getString("tipEnd");
-        	logger.debug(">>>>>  Valor de tipEnd: " +rs.getString("tipEnd"));
+        	//logger.debug(">>>>>  Valor de tipEnd: " +rs.getString("tipEnd"));
         	
         	if(tipoEndoso == null)tipoEndoso = "";
         	recibo.setTipEnd(tipoEndoso);
