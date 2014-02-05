@@ -14,7 +14,7 @@
             //var _URL_CONSULTA_CLAUSU_DETALLE =      '<s:url namespace="/catalogos" action="consultaClausulaDetalle" />';
             //var _URL_INSERTA_CLAUSU =      '<s:url namespace="/catalogos" action="insertaClausula" />';
             
-            var _UrlPanelCalculos = '<s:url namespace="/siniestros" action="historialReclamaciones" />';      
+            var _UrlPanelCalculos = '<s:url namespace="/siniestros" action="calculosReclamaciones" />';      
             
         </script>
         <!-- <script type="text/javascript" src="${ctx}/resources/scripts/util/extjs4_utils.js"></script>-->

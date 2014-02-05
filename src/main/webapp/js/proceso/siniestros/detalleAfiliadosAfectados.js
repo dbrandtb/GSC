@@ -1033,9 +1033,19 @@ Ext.onReady(function() {
 	    	            border : false
     	        	},
     	        	items: [tramite]
-	    	    }/*, {
-	    	        title: 'Calculos'
-	    	    }*/]
+	    	    }, {
+	    	        title: 'Calculos',
+	    	        loader: {
+	    	        	url: _UrlPanelCalculos,
+	    	        	scripts: true,
+	    	        	autoLoad: false
+	    	        },
+	                listeners : {
+	                    activate : function(tab) {
+	                        tab.loader.load();
+	                    }
+	                }
+	    	    }]
     	});
 
 });
