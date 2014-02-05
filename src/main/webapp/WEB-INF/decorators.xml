@@ -147,6 +147,9 @@
          
          <pattern>/siniestros/ajustesMedicos.action</pattern>
          <pattern>/jsp-script/proceso/siniestros/ajustesMedicos.jsp</pattern>
+
+         <pattern>/siniestros/calculosReclamaciones.action</pattern>
+         <pattern>/jsp-script/proceso/siniestros/calculosReclamaciones.jsp</pattern>
          
 	</decorator>
 	
