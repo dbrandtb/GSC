@@ -1620,27 +1620,53 @@ public class ComplementariosAction extends PrincipalCoreAction
 			
 			for(CalendarioEntidad cal : calendarios.getCalendariosEntidad()){
 				cont++;
+				
 				logger.debug(">>>Calendario: "+cal.getPeriodo());
-				logger.debug(">>>Inicio: "+cal.getFechaIncio());
-				logger.debug(">>>Date Inicio: "+cal.getFechaIncio().getTime());
+				logger.debug(">>>Dia Inicio: "+cal.getFechaIncio().get(Calendar.DAY_OF_MONTH));
+				
+				String fechaCorte = null;
+				String fechaEmision = null;
+				String fechaStatus = null;
+				String fechaInicio = null;
+				String fechaTermino = null;
+				
+				
+				/**
+				 * COMMENT: Se ha obtenido el valor del calendario original pasandolo a otro calendario ya que el original venia incompleto y al hacer un getTime
+				 * 			Regresaba un Date Erroneo
+				 */
 				
 				Calendar calendar =  Calendar.getInstance();
-				calendar.set(cal.getFechaIncio().get(Calendar.YEAR), cal.getFechaIncio().get(Calendar.MONTH), cal.getFechaIncio().get(Calendar.DAY_OF_MONTH));
-				logger.debug(">>>calendar: "+calendar);
-				logger.debug(">>>calendar Date: "+calendar.getTime());
-				logger.debug(">>>calendar sdf.format: "+sdf.format(calendar.getTime()));
 				
-				
-				sdf.setTimeZone(TimeZone.getTimeZone("Mexico/General"));
+				if(cal.getFechaCorte() != null){
+					calendar.set(cal.getFechaCorte().get(Calendar.YEAR), cal.getFechaCorte().get(Calendar.MONTH), cal.getFechaCorte().get(Calendar.DAY_OF_MONTH));
+					fechaCorte = sdf.format(calendar.getTime());
+				}
+				if(cal.getFechaEmision() != null){
+					calendar.set(cal.getFechaEmision().get(Calendar.YEAR), cal.getFechaEmision().get(Calendar.MONTH), cal.getFechaEmision().get(Calendar.DAY_OF_MONTH));
+					fechaEmision = sdf.format(calendar.getTime());
+				}
+				if(cal.getFechaEstatus() != null){
+					calendar.set(cal.getFechaEstatus().get(Calendar.YEAR), cal.getFechaEstatus().get(Calendar.MONTH), cal.getFechaEstatus().get(Calendar.DAY_OF_MONTH));
+					fechaStatus = sdf.format(calendar.getTime());
+				}
+				if(cal.getFechaIncio() != null){
+					calendar.set(cal.getFechaIncio().get(Calendar.YEAR), cal.getFechaIncio().get(Calendar.MONTH), cal.getFechaIncio().get(Calendar.DAY_OF_MONTH));
+					fechaInicio = sdf.format(calendar.getTime());
+				}
+				if(cal.getFechaTermino() != null){
+					calendar.set(cal.getFechaTermino().get(Calendar.YEAR), cal.getFechaTermino().get(Calendar.MONTH), cal.getFechaTermino().get(Calendar.DAY_OF_MONTH));
+					fechaTermino = sdf.format(calendar.getTime());
+				}
 				
 				params.put("pi_ADMINISTRADORA", cal.getAdministradora());
 				params.put("pi_ANIO", cal.getAnho());
 				params.put("pi_ESTATUS", cal.getEstatus());
-				params.put("Pi_FECHACORTE", cal.getFechaCorte() == null ? null : sdf.format(cal.getFechaCorte().getTime()));
-				params.put("pi_FECHAEMISION", cal.getFechaEmision() == null ? null : sdf.format(cal.getFechaEmision().getTime()));
-				params.put("pi_FECHASTATUS", cal.getFechaEstatus() == null ? "01/01/1999" : sdf.format(cal.getFechaEstatus().getTime()));
-				params.put("pi_FECHAINICIO", cal.getFechaIncio() == null ? null : sdf.format(cal.getFechaIncio().getTime()));
-				params.put("pi_FECHATERMINO", cal.getFechaTermino() == null ? null : sdf.format(cal.getFechaTermino().getTime()));
+				params.put("Pi_FECHACORTE", fechaCorte);
+				params.put("pi_FECHAEMISION", fechaEmision);
+				params.put("pi_FECHASTATUS", fechaStatus);
+				params.put("pi_FECHAINICIO", fechaInicio);
+				params.put("pi_FECHATERMINO", fechaTermino);
 				params.put("pi_HORAEMISION", cal.getHoraEmision());
 				params.put("pi_PERIODO", cal.getPeriodo());
 				params.put("pi_RETENEDORA", cal.getRetenedora());
