@@ -65,7 +65,6 @@ public class EmisionManagerImpl implements EmisionManager {
 			}
 			try{
 				logger.debug(">>>>>>> Enviando el Cliente: " + cliente.getClaveCli());
-				params.put("MANAGER", kernelManager);
 				ice2sigsService.ejecutaClienteSaludGS(op, cliente, params, true);
 			}catch(Exception e){
 				logger.error("Error al insertar el cliente: " + cliente.getClaveCli(), e);
