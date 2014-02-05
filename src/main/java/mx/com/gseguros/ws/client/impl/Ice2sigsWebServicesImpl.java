@@ -85,6 +85,10 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 
 	private static final long WS_TIMEOUT =  20000;
 	
+	private String endpoint;
+	
+	ServicioGSServiceCallbackHandlerImpl servicioGSServiceCallbackHandler;
+	
 	/*public enum Operacion {
 
 		INSERTA(1), ACTUALIZA(2), CONSULTA(3);
@@ -337,7 +341,7 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 	}
 	
 	public ClienteSaludRespuesta ejecutaClienteSaludGS(Operacion operacion,
-			ClienteSalud cliente, String endpoint, HashMap<String, Object> params, boolean async) throws Exception {
+			ClienteSalud cliente, HashMap<String, Object> params, boolean async) throws Exception {
 		
 		ClienteSaludRespuesta resultado = null;
 		ServicioGSServiceStub stubGS = null;
@@ -362,8 +366,10 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 		
 		try {
 			if(async){
-				ServicioGSServiceCallbackHandlerImpl callback = new ServicioGSServiceCallbackHandlerImpl(params);
-				stubGS.startclienteSaludGS(clienteE, callback);
+				//ServicioGSServiceCallbackHandlerImpl callback = new ServicioGSServiceCallbackHandlerImpl(params);
+				//TODO: RBS Cambiar params por PolizaVO
+				servicioGSServiceCallbackHandler.setClientData(params);
+				stubGS.startclienteSaludGS(clienteE, servicioGSServiceCallbackHandler);
 			} else {
 				RespuestaGS = stubGS.clienteSaludGS(clienteE);
 				resultado = RespuestaGS.getClienteSaludGSResponse().get_return();
@@ -628,5 +634,24 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 		
 		return resultado;
 	}
+
+
+	public String getEndpoint() {
+		return endpoint;
+	}
+
+	public void setEndpoint(String endpoint) {
+		this.endpoint = endpoint;
+	}
+
+	/**
+	 * 
+	 * @param servicioGSServiceCallbackHandler
+	 */
+	public void setServicioGSServiceCallbackHandler(
+			ServicioGSServiceCallbackHandlerImpl servicioGSServiceCallbackHandler) {
+		this.servicioGSServiceCallbackHandler = servicioGSServiceCallbackHandler;
+	}
+	
 
 }

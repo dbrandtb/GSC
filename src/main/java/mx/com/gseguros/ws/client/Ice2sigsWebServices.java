@@ -81,8 +81,7 @@ public interface Ice2sigsWebServices {
 			Cliente cliente, String endpoint) throws Exception;
 
 	public ClienteSaludRespuesta ejecutaClienteSaludGS(Operacion operacion,
-			ClienteSalud cliente, String endpoint,
-			HashMap<String, Object> params, boolean async) throws Exception;
+			ClienteSalud cliente, HashMap<String, Object> params, boolean async) throws Exception;
 
 	public CcomisionRespuesta ejecutaComisionReciboAgenteGS(
 			Operacion operacion, Ccomision comisionReciboAgente, String endpoint)

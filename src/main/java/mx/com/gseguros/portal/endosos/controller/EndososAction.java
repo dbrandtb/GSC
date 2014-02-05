@@ -3115,14 +3115,14 @@ public class EndososAction extends PrincipalCoreAction
 			
 			try{
 				logger.debug("Ejecutando WS TEST para WS Cliente");
-				ice2sigsWebServices.ejecutaClienteSaludGS(Operacion.INSERTA, null, this.getText("url.ws.ice2sigs"), params, false);
+				ice2sigsWebServices.ejecutaClienteSaludGS(Operacion.INSERTA, null, params, false);
 			}catch(Exception e){
 				logger.error("Error al ejecutar WS TEST para cliente: " + cliente.getClaveCli(), e);
 			}
 			try{
 				logger.debug(">>>>>>> Enviando el Cliente: " + cliente.getClaveCli());
 				params.put("MANAGER", kernelManager);
-				ice2sigsWebServices.ejecutaClienteSaludGS(Operation, cliente, this.getText("url.ws.ice2sigs"), params, true);
+				ice2sigsWebServices.ejecutaClienteSaludGS(Operation, cliente, params, true);
 			}catch(Exception e){
 				logger.error("Error al insertar endoso del cliente: " + cliente.getClaveCli(), e);
 				exito = false;

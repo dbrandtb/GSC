@@ -5,8 +5,13 @@
 
 	<!-- WS ice2sigs -->
 	<bean id="ice2sigsWebServices" class="mx.com.gseguros.ws.client.impl.Ice2sigsWebServicesImpl">
+	   <property name="servicioGSServiceCallbackHandler" ref="servicioGSServiceCallbackHandlerImpl"></property>
+	   <property name="endpoint" value="${url.ws.ice2sigs}"></property>
 	</bean>	
 	
+	<bean id="servicioGSServiceCallbackHandlerImpl" class="mx.com.gseguros.ws.client.ice2sigs.callback.ServicioGSServiceCallbackHandlerImpl" scope="prototype">
+	   <property name="kernelManager" ref="kernelManagerSustituto"/>
+	</bean>
 	
 	
 </beans>
