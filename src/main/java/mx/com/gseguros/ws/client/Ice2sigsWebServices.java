@@ -12,8 +12,6 @@ import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.Ccomision;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.CcomisionRespuesta;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.Cliente;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteRespuesta;
-import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSalud;
-import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSaludRespuesta;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAgenteRespuesta;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoCoberturaRespuesta;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoEndosoRespuesta;
@@ -68,9 +66,11 @@ public interface Ice2sigsWebServices {
 	public PolizaRespuesta ejecutaPolizaGS(Operacion operacion, Poliza poliza,
 			String endpoint) throws Exception;
 
+	/*
 	public ReciboRespuesta ejecutaReciboGS(Operacion operacion, Recibo recibo,
 			String endpoint, HashMap<String, Object> params, boolean async)
 			throws Exception;
+	*/
 
 	public AgenteRespuesta ejecutaAgenteGS(Operacion operacion, Agente agente,
 			String endpoint) throws Exception;
@@ -115,7 +115,45 @@ public interface Ice2sigsWebServices {
 			PolizaEntidad polizaEntidad, String endpoint,
 			HashMap<String, Object> params, boolean async) throws Exception;
 	
+	
+	/**
+	 * Ejecuta el metodo expuesto de cliente del WS de iceToSigs
+	 * @param cdunieco
+	 * @param cdramo
+	 * @param estado
+	 * @param nmpoliza
+	 * @param nmsuplem
+	 * @param op
+	 * @param userVO
+	 * @return
+	 */
 	public boolean ejecutaWSclienteSalud(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String nmsuplem,
 			Ice2sigsWebServices.Operacion op, UserVO userVO);
+	
+	
+	/**
+	 * Ejecuta el metodo expuesto de recibos del WS iceToSigs
+	 * @param cdunieco
+	 * @param cdramo
+	 * @param estado
+	 * @param nmpoliza
+	 * @param nmsuplem
+	 * @param rutaPoliza
+	 * @param cdtipsitGS
+	 * @param sucursal
+	 * @param nmsolici
+	 * @param ntramite
+	 * @param async
+	 * @param operacion
+	 * @param tipoMov
+	 * @param userVO
+	 * @return
+	 */
+	public boolean ejecutaWSrecibos(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem,
+			String rutaPoliza, String cdtipsitGS, String sucursal,
+			String nmsolici, String ntramite, boolean async, Ice2sigsWebServices.Operacion operacion,
+			String tipoMov, UserVO userVO);
+	
 }

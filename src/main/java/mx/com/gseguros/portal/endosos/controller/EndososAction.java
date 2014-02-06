@@ -14,7 +14,6 @@ import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
-import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cancelacion.service.CancelacionManager;
 import mx.com.gseguros.portal.cotizacion.controller.ComplementariosCoberturasAction;
 import mx.com.gseguros.portal.cotizacion.model.Item;
@@ -26,10 +25,6 @@ import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.ws.client.Ice2sigsWebServices;
-import mx.com.gseguros.ws.client.Ice2sigsWebServices.Estatus;
-import mx.com.gseguros.ws.client.Ice2sigsWebServices.Operacion;
-import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.Recibo;
-import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboRespuesta;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -1386,13 +1381,20 @@ public class EndososAction extends PrincipalCoreAction
 					if(smap1.get("altabaja").equalsIgnoreCase("alta")) tipomov = "6";
 					else tipomov = "7";
 					
-					
+					// Ejecutamos el Web Service de Recibos:
+					ice2sigsWebServices.ejecutaWSrecibos((String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"), 
+							(String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"), 
+							respEndCob.get("pv_nmsuplem_o"), rutaCarpeta, 
+							cdtipsitGS, sucursal, nmsolici, nmtramite, 
+							true, Ice2sigsWebServices.Operacion.INSERTA, tipomov, 
+							(UserVO) session.get("USUARIO"));
+					/*
 					ejecutaWSrecibosEndoso((String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"),
 							(String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"),
 							respEndCob.get("pv_nmsuplem_o"), respEndCob.get("pv_nsuplogi_o"), rutaCarpeta,
 							cdtipsitGS, sucursal, nmsolici, nmtramite,
 							true, "INSERTA", tipomov );
-					
+					*/
 					
 					mensaje="Se ha confirmado el endoso "+respEndCob.get("pv_nsuplogi_o");
 				}
@@ -2818,11 +2820,20 @@ public class EndososAction extends PrincipalCoreAction
 				
 				String tipomov = alta?"9":"10";
 				
+				// Ejecutamos el Web Service de Recibos:
+				ice2sigsWebServices.ejecutaWSrecibos(cdunieco, cdramo, 
+						estado, nmpoliza, 
+						nmsuplem, rutaCarpeta, 
+						cdtipsitGS, sucursal, nmsolici, ntramite, 
+						true, Ice2sigsWebServices.Operacion.INSERTA, tipomov, 
+						(UserVO) session.get("USUARIO"));
+				/*
 				ejecutaWSrecibosEndoso(cdunieco, cdramo,
 						estado, nmpoliza,
 						nmsuplem, nsuplogi, rutaCarpeta,
 						cdtipsitGS, sucursal, nmsolici, ntramite,
 						true, "INSERTA", tipomov );
+				*/
 				
 				mensaje="Se ha guardado el endoso "+nsuplogi;
 				
@@ -2883,142 +2894,6 @@ public class EndososAction extends PrincipalCoreAction
 	/*/////////////////////////////////////*/
 	////// prueba de pantalla dinamica //////
 	/////////////////////////////////////////
-	
-	private boolean ejecutaWSrecibosEndoso(String cdunieco, String cdramo, String estado, String nmpoliza,
-			String nmsuplem, String numendoso, String rutaPoliza, String cdtipsitGS, String sucursal, String nmsolici,String ntramite, boolean async, String Op, String tipoMov){
-		boolean allInserted = true;
-		
-		logger.debug("*** Entrando a metodo Actualiza Recibos WS ice2sigs ENDOSO, para la poliza: " + nmpoliza + " sucursal: " + sucursal + "***");
-		
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("pv_cdunieco_i", cdunieco);
-		params.put("pv_cdramo_i", cdramo);
-		params.put("pv_estado_i", estado);
-		params.put("pv_nmpoliza_i", nmpoliza);
-		params.put("pv_nmsuplem_i", nmsuplem);
-		
-		if(StringUtils.isBlank(Op)) Op = "INSERTA";
-		Operacion Operation = Operacion.valueOf(Op);
-		
-		WrapperResultados result = null;
-		ArrayList<Recibo> recibos =  null;
-		try {
-			result = kernelManager.obtenDatosRecibos(params);
-			recibos = (ArrayList<Recibo>) result.getItemList();
-		} catch (Exception e1) {
-			logger.error("Error en llamar al PL de obtencion de RECIBOS",e1);
-			return false;
-		}
-
-		String usuario = "SIN USUARIO";
-		if(session.containsKey("USUARIO") && session.get("USUARIO") != null){
-			UserVO usuarioSesion=(UserVO) session.get("USUARIO");
-			usuario = usuarioSesion.getUser();
-		}
-		
-		if(async){
-			params.put("MANAGER", kernelManager);
-			params.put("USUARIO", usuario);
-		}
-		
-		for(Recibo recibo: recibos){
-			try{
-				if(async){
-					// Se crea un HashMap por cada invocacion asincrona del WS, para evitar issue (sobreescritura de valores):
-					HashMap<String, Object> paramsBitacora = new HashMap<String, Object>();
-					paramsBitacora.putAll(params);
-					paramsBitacora.put("NumRec", recibo.getNumRec());
-					
-					ice2sigsWebServices.ejecutaReciboGS(Operation, recibo, this.getText("url.ws.ice2sigs"), paramsBitacora, async);
-				}else{
-					ReciboRespuesta respuesta = ice2sigsWebServices.ejecutaReciboGS(Operation, recibo, this.getText("url.ws.ice2sigs"), null, async);
-					logger.debug("Resultado al ejecutar el WS Recibo: " + recibo.getNumRec() + " >>>"
-							+ respuesta.getCodigo() + " - " + respuesta.getMensaje());
-
-					if (Estatus.EXITO.getCodigo() != respuesta.getCodigo()) {
-						logger.error("Guardando en bitacora el estatus");
-
-						try {
-							kernelManager.movBitacobro((String) params.get("pv_cdunieco_i"),
-									(String) params.get("pv_cdramo_i"),
-									(String) params.get("pv_estado_i"),
-									(String) params.get("pv_nmpoliza_i"), "ErrWSrec",
-									"Error en Recibo " + params.get("NumRec")
-											+ " >>> " + respuesta.getCodigo() + " - "
-											+ respuesta.getMensaje(),
-									 usuario);
-						} catch (ApplicationException e1) {
-							logger.error("Error en llamado a PL", e1);
-						}
-					}
-				}
-			}catch(Exception e){
-				logger.error("Error al insertar endoso recibo: "+recibo.getNumRec()+" tramite: "+ntramite);
-				try {
-					kernelManager.movBitacobro(
-							(String) params.get("pv_cdunieco_i"),
-							(String) params.get("pv_cdramo_i"),
-							(String) params.get("pv_estado_i"),
-							(String) params.get("pv_nmpoliza_i"),
-							"ErrWSrecCx",
-							"Error en Recibo " + recibo.getNumRec()
-									+ " Msg: " + e.getMessage() + " ***Cause: "
-									+ e.getCause(),
-							 usuario);
-				} catch (Exception e1) {
-					logger.error("Error en llamado a PL", e1);
-				}
-			}
-		}
-		
-		/**
-		 * PARA EL GUARDADO CADA PDF DE RECIBO
-		 */
-		logger.debug("*** Empieza generacion de URLs para Recibos ***");
-		
-		String visible = null;
-		for(Recibo recibo: recibos){
-			
-			visible = (1 == recibo.getNumRec()) ? Constantes.SI : Constantes.NO;
-			
-			try{
-//				Parametro1:  9999: Recibo
-//				Parametro2:  Siempre va en 0
-//				Parametro3:  Sucursal
-//				Parametro4:  Ramo (213 o 214)
-//				Parametro5:  Poliza
-//				Parametro6:  Tramite(poner 0)
-//				Parametro7:  Numero de endoso (Cuando es poliza nueva poner 0)
-//				Parametro8:  Tipo de endoso (Si es vacio no enviar nada en otro caso poner A o D segun sea el caso)
-//				Parametro9:  Numero de recibo (1,2,3..segun la forma de pago) Para nuestro caso es siempre el 1
-				//if( 1 == recibo.getNumRec()){
-					String parametros = "?9999,0,"+sucursal+","+cdtipsitGS+","+nmpoliza+",0,"+recibo.getNumEnd()+","+recibo.getTipEnd()+","+recibo.getNumRec();
-					logger.debug("URL Generada para Recibo: "+ this.getText("url.imp.recibos")+parametros);
-					//HttpRequestUtil.generaReporte(this.getText("url.imp.recibos")+parametros, rutaPoliza+"/Recibo_"+recibo.getRmdbRn()+"_"+recibo.getNumRec()+".pdf");
-					
-					HashMap<String, Object> paramsR =  new HashMap<String, Object>();
-					paramsR.put("pv_cdunieco_i", cdunieco);
-					paramsR.put("pv_cdramo_i", cdramo);
-					paramsR.put("pv_estado_i", estado);
-					paramsR.put("pv_nmpoliza_i", nmpoliza);
-					paramsR.put("pv_nmsuplem_i", nmsuplem);
-					paramsR.put("pv_feinici_i", new Date());
-					paramsR.put("pv_cddocume_i", this.getText("url.imp.recibos")+parametros);
-					paramsR.put("pv_dsdocume_i", "Recibo "+recibo.getNumRec());
-					paramsR.put("pv_nmsolici_i", nmsolici);
-					paramsR.put("pv_ntramite_i", ntramite);
-					paramsR.put("pv_tipmov_i", tipoMov);
-					paramsR.put("pv_swvisible_i", visible);
-					
-					kernelManager.guardarArchivo(paramsR);
-				//}
-			}catch(Exception e){
-				logger.error("Error al guardar indexaxion de recibo: " + recibo.getRmdbRn(), e);
-			}
-		}
-
-		return allInserted;
-	}
 	
 	
 	////////////////////////////
@@ -3402,12 +3277,20 @@ public class EndososAction extends PrincipalCoreAction
 				String nmsolici = listaDocu.get(0).get("nmsolici");
 				String nmtramite = listaDocu.get(0).get("ntramite");
 				
+				// Ejecutamos el Web Service de Recibos:
+				ice2sigsWebServices.ejecutaWSrecibos(cdunieco, cdramo, 
+						estado, nmpoliza, 
+						nmsuplem, rutaCarpeta, 
+						cdtipsitGS, sucursal, nmsolici, nmtramite, 
+						true, Ice2sigsWebServices.Operacion.INSERTA, cdtipsup, 
+						(UserVO) session.get("USUARIO"));
+				/*
 				ejecutaWSrecibosEndoso(cdunieco, cdramo,
 				estado, nmpoliza,
 				nmsuplem, nsuplogi, rutaCarpeta,
 						cdtipsitGS, sucursal, nmsolici, nmtramite,
 						true, "INSERTA", cdtipsup );
-			
+				*/
 				mensaje="Endoso confirmado "+nsuplogi;
 			}
 			else
@@ -3824,11 +3707,20 @@ public class EndososAction extends PrincipalCoreAction
 				String nmsolici = listaDocu.get(0).get("nmsolici");
 				String nmtramite = listaDocu.get(0).get("ntramite");
 				
+				// Ejecutamos el Web Service de Recibos:
+				ice2sigsWebServices.ejecutaWSrecibos(cdunieco, cdramo, 
+						estado, nmpoliza, 
+						nmsuplem, rutaCarpeta, 
+						cdtipsitGS, sucursal, nmsolici, nmtramite, 
+						true, Ice2sigsWebServices.Operacion.INSERTA, cdtipsup, 
+						(UserVO) session.get("USUARIO"));
+				/*
 				ejecutaWSrecibosEndoso(cdunieco, cdramo,
 				estado, nmpoliza,
 				nmsuplem, nsuplogi, rutaCarpeta,
 						cdtipsitGS, sucursal, nmsolici, nmtramite,
 						true, "INSERTA", cdtipsup );
+				*/
 				
 				mensaje="Endoso confirmado "+nsuplogi;
 			}
@@ -4080,8 +3972,14 @@ public class EndososAction extends PrincipalCoreAction
 			case EXTRAPRIMA_MAS:
 			case EXTRAPRIMA_MENOS:
 			case CAMBIO_FORMA_PAGO:
+				// Ejecutamos el Web Service de Recibos:
+				ice2sigsWebServices.ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
+						rutaCarpeta, cdtipsitGS, sucursal, nmsolici, ntramiteEmi, true, Ice2sigsWebServices.Operacion.INSERTA, cdtipsup, 
+						(UserVO) session.get("USUARIO"));
+				/*
 				ejecutaWSrecibosEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, 
 						rutaCarpeta, cdtipsitGS, sucursal, nmsolici, ntramiteEmi, true, "INSERTA", cdtipsup);
+				*/
 				break;
 				
 			case INCREMENTO_EDAD_ASEGURADO:
@@ -4094,12 +3992,20 @@ public class EndososAction extends PrincipalCoreAction
 				ice2sigsWebServices.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, Ice2sigsWebServices.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
 				//ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
 				
+				// Ejecutamos el Web Service de Recibos:
+				ice2sigsWebServices.ejecutaWSrecibos(cdunieco, cdramo, 
+						estado, nmpoliza, 
+						nmsuplem, rutaCarpeta, 
+						cdtipsitGS, sucursal, nmsolici, ntramiteEmi, 
+						true, Ice2sigsWebServices.Operacion.INSERTA, cdtipsup, 
+						(UserVO) session.get("USUARIO"));
+				/*
 				ejecutaWSrecibosEndoso(cdunieco, cdramo,
 				estado, nmpoliza,
 				nmsuplem, nsuplogi, rutaCarpeta,
 						cdtipsitGS, sucursal, nmsolici, ntramiteEmi,
 						true, "INSERTA", cdtipsup );
-				
+				*/
 				break;
 
 			default:
@@ -4554,11 +4460,20 @@ public class EndososAction extends PrincipalCoreAction
 				
 				String tipomov = TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.getCdTipSup().toString();
 				
+				// Ejecutamos el Web Service de Recibos:
+				ice2sigsWebServices.ejecutaWSrecibos(cdunieco, cdramo, 
+						estado, nmpoliza, 
+						nmsuplem, rutaCarpeta, 
+						cdtipsitGS, sucursal, nmsolici, nmtramite, 
+						true, Ice2sigsWebServices.Operacion.INSERTA, tipomov, 
+						(UserVO) session.get("USUARIO"));
+				/*
 				ejecutaWSrecibosEndoso(cdunieco, cdramo,
 						estado, nmpoliza,
 						nmsuplem, nsuplogi, rutaCarpeta,
 						cdtipsitGS, sucursal, nmsolici, nmtramite,
 						true, "INSERTA", tipomov );
+				*/
 				
 			    mensaje="Se ha guardado el endoso "+nsuplogi;
 			    
@@ -4882,11 +4797,20 @@ public class EndososAction extends PrincipalCoreAction
 				String sucursal = cdunieco;
 				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 				
+				// Ejecutamos el Web Service de Recibos:
+				ice2sigsWebServices.ejecutaWSrecibos(cdunieco, cdramo, 
+						estado, nmpoliza, 
+						nmsuplem, null, 
+						cdtipsitGS, sucursal, nmsolici, ntramite, 
+						true, Ice2sigsWebServices.Operacion.INSERTA, cdtipsup, 
+						(UserVO) session.get("USUARIO"));
+				/*
 				ejecutaWSrecibosEndoso(cdunieco, cdramo,
 						estado, nmpoliza,
 						nmsuplem, nsuplogi, null,
 						cdtipsitGS, sucursal, nmsolici, ntramite,
 						true, "INSERTA", cdtipsup );
+				*/
 				
 				mensaje="Se ha guardado el endoso "+nsuplogi;
 			}
@@ -5186,12 +5110,21 @@ public class EndososAction extends PrincipalCoreAction
 				String cdtipsitGS = "213";
 				String sucursal = cdunieco;
 				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
-				
+
+				// Ejecutamos el Web Service de Recibos:
+				ice2sigsWebServices.ejecutaWSrecibos(cdunieco, cdramo, 
+						estado, nmpoliza, 
+						nmsuplem, null, 
+						cdtipsitGS, sucursal, nmsolici, ntramite, 
+						true, Ice2sigsWebServices.Operacion.INSERTA, cdtipsup, 
+						(UserVO) session.get("USUARIO"));
+				/*
 				ejecutaWSrecibosEndoso(cdunieco, cdramo,
 						estado, nmpoliza,
 						nmsuplem, nsuplogi, null,
 						cdtipsitGS, sucursal, nmsolici, ntramite,
 						true, "INSERTA", cdtipsup );
+				*/
 				
 				mensaje="Se ha guardado el endoso "+nsuplogi;
 			}
@@ -5808,11 +5741,20 @@ public class EndososAction extends PrincipalCoreAction
 				String sucursal = cdunieco;
 				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 				
+				// Ejecutamos el Web Service de Recibos:
+				ice2sigsWebServices.ejecutaWSrecibos(cdunieco, cdramo, 
+						estado, nmpoliza, 
+						nmsuplem, null, 
+						cdtipsitGS, sucursal, nmsolici, ntramite, 
+						true, Ice2sigsWebServices.Operacion.INSERTA, cdtipsup, 
+						(UserVO) session.get("USUARIO"));
+				/*
 				ejecutaWSrecibosEndoso(cdunieco, cdramo,
 				estado, nmpoliza,
 				nmsuplem, nsuplogi, null,
 						cdtipsitGS, sucursal, nmsolici, ntramite,
 						true, "INSERTA", cdtipsup );
+				*/
 				
 				mensaje="Se ha guardado el endoso "+nsuplogi;
 			}
@@ -6043,11 +5985,20 @@ public class EndososAction extends PrincipalCoreAction
 				String sucursal = cdunieco;
 				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 				
+				// Ejecutamos el Web Service de Recibos:
+				ice2sigsWebServices.ejecutaWSrecibos(cdunieco, cdramo, 
+						estado, nmpoliza, 
+						nmsuplem, null, 
+						cdtipsitGS, sucursal, nmsolici, ntramite, 
+						true, Ice2sigsWebServices.Operacion.INSERTA, cdtipsup, 
+						(UserVO) session.get("USUARIO"));
+				/*
 				ejecutaWSrecibosEndoso(cdunieco, cdramo,
 				estado, nmpoliza,
 				nmsuplem, nsuplogi, null,
 						cdtipsitGS, sucursal, nmsolici, ntramite,
 						true, "INSERTA", cdtipsup );
+				*/
 				
 				mensaje="Se ha guardado el endoso "+nsuplogi;
 			}

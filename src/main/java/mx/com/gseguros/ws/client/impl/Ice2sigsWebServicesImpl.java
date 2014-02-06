@@ -2,11 +2,14 @@ package mx.com.gseguros.ws.client.impl;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.ws.client.Ice2sigsWebServices;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.Agente;
@@ -90,6 +93,8 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 	
 	private String endpoint;
 	
+	private String urlImpresionRecibos;
+	
 	private transient KernelManagerSustituto kernelManager;
 	
 	private transient ServicioGSServiceCallbackHandlerImpl servicioGSServiceCallbackHandler;
@@ -130,8 +135,8 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 		return resultado;
 	}
 
-	public ReciboRespuesta ejecutaReciboGS(Operacion operacion,
-			Recibo recibo, String endpoint, HashMap<String, Object> params, boolean async) throws Exception {
+	private ReciboRespuesta ejecutaReciboGS(Operacion operacion,
+			Recibo recibo, HashMap<String, Object> params, boolean async) throws Exception {
 		
 		ReciboRespuesta resultado = null;
 		ServicioGSServiceStub stubGS = null;
@@ -576,9 +581,9 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 			String estado, String nmpoliza, String nmsuplem,
 			Ice2sigsWebServices.Operacion op, UserVO userVO) {
 		
-		boolean exito = true;
-		
 		logger.debug("********************* Entrando a Ejecuta WSclienteSalud ******************************");
+		
+		boolean exito = true;
 		
 		WrapperResultados result = null;
 		ClienteSalud cliente =  null;
@@ -599,7 +604,6 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 			logger.error("Error en llamar al PL de obtencion de ejecutaWSclienteSalud",e1);
 			return false;
 		}
-		
 		
 		if(cliente != null){
 			
@@ -627,6 +631,153 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 		return exito;
 	}
 
+	
+	public boolean ejecutaWSrecibos(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem,
+			String rutaPoliza, String cdtipsitGS, String sucursal,
+			String nmsolici, String ntramite, boolean async, Ice2sigsWebServices.Operacion operacion,
+			String tipoMov, UserVO userVO) {
+		
+		boolean allInserted = true;
+		
+		logger.debug("*** Entrando a metodo Recibos WS ice2sigs, para la poliza: " + nmpoliza + " sucursal: " + sucursal + " tipoMov: " + tipoMov + "***");
+		
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdunieco_i", cdunieco);
+		params.put("pv_cdramo_i", cdramo);
+		params.put("pv_estado_i", estado);
+		params.put("pv_nmpoliza_i", nmpoliza);
+		params.put("pv_nmsuplem_i", nmsuplem);
+		
+		WrapperResultados result = null;
+		ArrayList<Recibo> recibos =  null;
+		try {
+			result = kernelManager.obtenDatosRecibos(params);
+			recibos = (ArrayList<Recibo>) result.getItemList();
+		} catch (Exception e1) {
+			logger.error("Error en llamar al PL de obtencion de RECIBOS",e1);
+			return false;
+		}
+
+		String usuario = "SIN USUARIO";
+		if(userVO != null){
+			usuario = userVO.getUser();
+		}
+		
+		if(async){
+			params.put("USUARIO", usuario);
+		}
+		
+		for(Recibo recibo: recibos){
+			try{
+				if(async){
+					// Se crea un HashMap por cada invocacion asincrona del WS, para evitar issue (sobreescritura de valores):
+					HashMap<String, Object> paramsBitacora = new HashMap<String, Object>();
+					paramsBitacora.putAll(params);
+					paramsBitacora.put("NumRec", recibo.getNumRec());
+					
+					ejecutaReciboGS(operacion, recibo, paramsBitacora, async);
+				}else{
+					ReciboRespuesta respuesta = ejecutaReciboGS(operacion, recibo, null, async);
+					logger.debug("Resultado al ejecutar el WS Recibo: " + recibo.getNumRec() + " >>>"
+							+ respuesta.getCodigo() + " - " + respuesta.getMensaje());
+
+					if (Estatus.EXITO.getCodigo() != respuesta.getCodigo()) {
+						logger.error("Guardando en bitacora el estatus");
+
+						try {
+							kernelManager.movBitacobro((String) params.get("pv_cdunieco_i"),
+									(String) params.get("pv_cdramo_i"),
+									(String) params.get("pv_estado_i"),
+									(String) params.get("pv_nmpoliza_i"), "ErrWSrec",
+									"Error en Recibo " + params.get("NumRec")
+											+ " >>> " + respuesta.getCodigo() + " - "
+											+ respuesta.getMensaje(),
+									 usuario);
+						} catch (ApplicationException e1) {
+							logger.error("Error en llamado a PL", e1);
+						}
+					}
+				}
+			}catch(Exception e){
+				logger.error("Error al insertar recibo: "+recibo.getNumRec()+" tramite: "+ntramite);
+				try {
+					kernelManager.movBitacobro(
+							(String) params.get("pv_cdunieco_i"),
+							(String) params.get("pv_cdramo_i"),
+							(String) params.get("pv_estado_i"),
+							(String) params.get("pv_nmpoliza_i"),
+							"ErrWSrecCx",
+							"Error en Recibo " + recibo.getNumRec()
+									+ " Msg: " + e.getMessage() + " ***Cause: "
+									+ e.getCause(),
+							 usuario);
+				} catch (Exception e1) {
+					logger.error("Error en llamado a PL", e1);
+				}
+			}
+		}
+		
+		/**
+		 * PARA EL GUARDADO CADA PDF DE RECIBO
+		 */
+		logger.debug("*** Empieza generacion de URLs para Recibos ***");
+		
+		String visible = null;
+		for(Recibo recibo: recibos){
+			
+			visible = (1 == recibo.getNumRec()) ? Constantes.SI : Constantes.NO;
+			
+			try{
+				int numEndoso;
+				String tipoEndoso;
+				// Si es poliza nueva:
+				if(("1").equals(tipoMov)) {
+					numEndoso = 0;
+					tipoEndoso = "";
+				} else {
+					numEndoso = recibo.getNumEnd();
+					tipoEndoso = recibo.getTipEnd();
+				}
+				
+				//Parametro1:  9999: Recibo
+				//Parametro2:  Siempre va en 0
+				//Parametro3:  Sucursal
+				//Parametro4:  Ramo (213 o 214)
+				//Parametro5:  Poliza
+				//Parametro6:  Tramite(poner 0)
+				//Parametro7:  Numero de endoso (Cuando es poliza nueva poner 0)
+				//Parametro8:  Tipo de endoso (Si es vacio no enviar nada en otro caso poner A o D segun sea el caso)
+				//Parametro9:  Numero de recibo (1,2,3..segun la forma de pago) Para nuestro caso es siempre el 1
+				//if( 1 == recibo.getNumRec()){
+					String parametros = "?9999,0,"+sucursal+","+cdtipsitGS+","+nmpoliza+",0,"+numEndoso+","+tipoEndoso+","+recibo.getNumRec();
+					logger.debug("URL Generada para Recibo: "+ urlImpresionRecibos + parametros);
+					//HttpRequestUtil.generaReporte(this.getText("url.imp.recibos")+parametros, rutaPoliza+"/Recibo_"+recibo.getRmdbRn()+"_"+recibo.getNumRec()+".pdf");
+					
+					HashMap<String, Object> paramsR =  new HashMap<String, Object>();
+					paramsR.put("pv_cdunieco_i", cdunieco);
+					paramsR.put("pv_cdramo_i", cdramo);
+					paramsR.put("pv_estado_i", estado);
+					paramsR.put("pv_nmpoliza_i", nmpoliza);
+					paramsR.put("pv_nmsuplem_i", nmsuplem);
+					paramsR.put("pv_feinici_i", new Date());
+					paramsR.put("pv_cddocume_i", urlImpresionRecibos + parametros);
+					paramsR.put("pv_dsdocume_i", "Recibo "+recibo.getNumRec());
+					paramsR.put("pv_nmsolici_i", nmsolici);
+					paramsR.put("pv_ntramite_i", ntramite);
+					paramsR.put("pv_tipmov_i", tipoMov);
+					paramsR.put("pv_swvisible_i", visible);
+					
+					kernelManager.guardarArchivo(paramsR);
+				//}
+			}catch(Exception e){
+				logger.error("Error al guardar indexaxion de recibo: " + recibo.getRmdbRn(), e);
+			}
+		}
+
+		return allInserted;
+	}
+	
 
 	public String getEndpoint() {
 		return endpoint;
@@ -634,6 +785,14 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 
 	public void setEndpoint(String endpoint) {
 		this.endpoint = endpoint;
+	}
+	
+	public String getUrlImpresionRecibos() {
+		return urlImpresionRecibos;
+	}
+
+	public void setUrlImpresionRecibos(String urlImpresionRecibos) {
+		this.urlImpresionRecibos = urlImpresionRecibos;
 	}
 
 	/**
