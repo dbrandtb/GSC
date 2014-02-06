@@ -151,7 +151,7 @@ function errorComunicacion()
 function mensajeWarning(mensaje)
 {
 	var tmpMensajeEmergente=Ext.Msg.show({
-		title    : 'Error'
+		title    : 'Aviso'
         ,icon    : Ext.Msg.WARNING
         ,msg     : mensaje
         ,buttons : Ext.Msg.OK
@@ -174,6 +174,7 @@ function mensajeCorrecto(titulo,mensaje)
 {
 	var tmpMensajeEmergente=Ext.Msg.show({
 		title    : titulo
+		,icon: 'x-message-box-ok' 
         ,msg     : mensaje
         ,buttons : Ext.Msg.OK
     });

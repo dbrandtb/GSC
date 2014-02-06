@@ -17,6 +17,7 @@ import mx.com.gseguros.portal.siniestros.model.CoberturaPolizaVO;
 import mx.com.gseguros.portal.siniestros.model.DatosSiniestroVO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.DinamicMapper;
+import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utilerias;
 import oracle.jdbc.driver.OracleTypes;
 
@@ -450,16 +451,69 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
         }
     }
 
+    @Override
+	public List<HashMap<String, String>> loadListaDocumentos(
+			HashMap<String, String> params) throws DaoException {
+		
+		Map<String, Object> mapResult = ejecutaSP(new LoadListaDocumentos(getDataSource()), params);
+		
+		return (List<HashMap<String, String>>) mapResult.get("pv_registro_o");
+	}
+    
+    protected class LoadListaDocumentos extends StoredProcedure {
+
+		protected LoadListaDocumentos(DataSource dataSource) {
+			super(dataSource, "PKG_LISTAS.P_GET_DOCUMENTOS_SINIESTROS");
+			
+			declareParameter(new SqlParameter("pv_cdtippag_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipate_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmtramite_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new LoadListaDocumentosMapper()));
+			declareParameter(new SqlOutParameter("pv_messages_o", OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	
+    protected class LoadListaDocumentosMapper  implements RowMapper {
+        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+        	HashMap<String, String> map =  new HashMap<String, String>();
+        	String obl = Constantes.SI.equalsIgnoreCase(rs.getString("SWOBLIGA"))? "Si" : "No";
+        	map.put("id", rs.getString("CODIGO"));
+        	map.put("listo", rs.getString("VALOR"));
+        	map.put("nombre", rs.getString("DESCRIP"));
+        	map.put("obligatorio", obl);
+            return map;
+        }
+    }
 
 
+	@Override
+	public String guardaEstatusDocumento(HashMap<String, String> params)
+			throws DaoException {
+		
+		logger.debug("parms: "+params);
+		Map<String, Object> mapResult = ejecutaSP(new GuardaEstatusDocumento(getDataSource()), params);
+		
+		return (String) mapResult.get("pv_msg_id_o");
+	}
+	
+	protected class GuardaEstatusDocumento extends StoredProcedure {
 
-
-
-
-
-
-
-
-
+		protected GuardaEstatusDocumento(DataSource dataSource) {
+			super(dataSource, "PKG_SATELITES.P_INSERTA_MDOCUTRA");
+			
+			declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtippag_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipate_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cddocume_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_accion_i", OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 
 }
