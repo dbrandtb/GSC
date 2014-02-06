@@ -255,7 +255,7 @@ Ext.onReady(function() {
 	 	],
  		xtype: 'cell-editing',
 		id:'editorIncisos',
- 		title: 'Facturas en Tr&aacute;mite',
+ 		title: 'Alta de Tr&eacute;mite',
  		frame: false,
 
 	 	initComponent: function(){
@@ -342,12 +342,15 @@ Ext.onReady(function() {
 		 	});
 		 	return false;
 	 	},
-	 	onAddClick: function(){
+	 	
+	 	onAddClick: function(btn, e){
+	 		ventanaGrid.animateTarget=btn;
 	 		ventanaGrid.show();
-	 	},
+		   },
+		   
 	 	onRemoveClick: function(grid, rowIndex){
 	 		var record=this.getStore().getAt(rowIndex);
-	 		console.log(record);        	
+	 		console.log(record);
 	 		this.getStore().removeAt(rowIndex);
 	 	}
  	});
@@ -355,34 +358,30 @@ Ext.onReady(function() {
     mesConStoreUniAdmin=[];
     
     
-    
-    
-    
-    
-    
     Ext.create('Ext.form.Panel',
     	    {
     	        border    : 0
-    	        ,title: 'Facturas en Tr&aacute;mite'
+    	        ,title: 'Alta de Tr&eacute;mite'
     	        ,renderTo : 'div_clau'
 	        	,bodyPadding: 10
 	            ,width: 800
     	        ,items    :
     	        [
     	            {
-            			id:'txtContraRecibo'
+            			id:'idContraRecibo'
 		                ,xtype      : 'textfield'
 		            	,fieldLabel : 'Contra recibo'
 		            	,readOnly   : true
 		            	,labelWidth : 250
-		            	,name       : 'params.contraRecibo'
+		            	,name       : 'contraRecibo'
 		            },
 		            {
 		                id: 'txtEstado',
 		                name: 'params.estado',
 		                xtype: 'textfield',
 		                fieldLabel: 'Estado',
-		               labelWidth: 250
+		               labelWidth: 250,
+		               value:'Pendiente'
 		            },
 		            oficinaReceptora
 		            ,
@@ -390,12 +389,15 @@ Ext.onReady(function() {
 	            	,
 	            	{
 		            	id:'params.fechaRecepcion'
-		                ,xtype      : 'textfield'
+		                ,xtype      : 'datefield'
 		            	,fieldLabel : 'Fecha recepci&oacute;n'
-		            	,readOnly   : true
 		            	,labelWidth : 250
 		            	,name       : 'params.fechaRecepcion'
-		            },
+	            		,value		: new Date()
+		            	,format		: 'd/m/Y'
+		            	,readOnly   : true
+		            }
+	            	,
 	        		tipoPago
         			,
             		aseguradoAfectado
@@ -408,7 +410,6 @@ Ext.onReady(function() {
 		            	id:'txtNoFactura'
 		                ,xtype      : 'textfield'
 		            	,fieldLabel : 'No. Factura'
-		            	,readOnly   : true
 		            	,labelWidth : 250
 		            	,name       : 'params.noFactura'
 		            }
@@ -417,7 +418,6 @@ Ext.onReady(function() {
 		            	id:'txtImporte'
 		                ,xtype      : 'textfield'
 		            	,fieldLabel : 'Importe'
-		            	,readOnly   : true
 		            	,labelWidth : 250
 		            	,name       : 'params.importe'
 		            },
