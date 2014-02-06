@@ -8,6 +8,7 @@
 	   <property name="kernelManager" ref="kernelManagerSustituto"/>
 	   <property name="servicioGSServiceCallbackHandler" ref="servicioGSServiceCallbackHandlerImpl"></property>
 	   <property name="endpoint" value="${url.ws.ice2sigs}"></property>
+	   <property name="urlImpresionRecibos" value="${url.imp.recibos}"></property>
 	</bean>	
 	
 	<bean id="servicioGSServiceCallbackHandlerImpl" class="mx.com.gseguros.ws.client.ice2sigs.callback.ServicioGSServiceCallbackHandlerImpl" scope="prototype">

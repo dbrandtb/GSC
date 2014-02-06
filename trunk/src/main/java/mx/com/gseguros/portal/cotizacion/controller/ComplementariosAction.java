@@ -22,7 +22,6 @@ import mx.com.aon.flujos.cotizacion4.web.ResultadoCotizacion4Action;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
-import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.emision.model.DatosRecibosDxNVO;
@@ -33,8 +32,6 @@ import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.ws.client.Ice2sigsWebServices;
 import mx.com.gseguros.ws.client.Ice2sigsWebServices.Estatus;
 import mx.com.gseguros.ws.client.Ice2sigsWebServices.Operacion;
-import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.Recibo;
-import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboRespuesta;
 import mx.com.gseguros.ws.client.recibossigs.GeneradorReciboDxnWsServiceStub.CalendarioEntidad;
 import mx.com.gseguros.ws.client.recibossigs.GeneradorReciboDxnWsServiceStub.Empleado;
 import mx.com.gseguros.ws.client.recibossigs.GeneradorReciboDxnWsServiceStub.GeneradorRecibosDxnRespuesta;
@@ -1182,22 +1179,45 @@ public class ComplementariosAction extends PrincipalCoreAction
 			// Ejecutamos el Web Service de Cliente Salud:
 			ice2sigsWebServices.ejecutaWSclienteSalud(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, Ice2sigsWebServices.Operacion.INSERTA, (UserVO) session.get("USUARIO"));
 			
+			String tipoMov = "1";
+			
 			if(StringUtils.isNotBlank(esDxN) && "S".equalsIgnoreCase(esDxN)){
+				
+				// Ejecutamos el Web Service de Recibos:
+				ice2sigsWebServices.ejecutaWSrecibos(_cdunieco, _cdramo,
+						edoPoliza, _nmpoliza, 
+						_nmsuplem, rutaCarpeta,
+						cdtipsitGS, sucursal, panel1.get("pv_nmpoliza"), panel1.get("pv_ntramite"), 
+						false, Ice2sigsWebServices.Operacion.INSERTA, 
+						tipoMov,
+						(UserVO) session.get("USUARIO"));
+				/*
 				ejecutaWSrecibos(_cdunieco, _cdramo,
 						edoPoliza, _nmpoliza,
 						_nmsuplem, rutaCarpeta,
 						cdtipsitGS, sucursal, panel1.get("pv_nmpoliza"),panel1.get("pv_ntramite"),
 						false, "INSERTA"
 						);
+				*/
 				obtenRecibosDxN(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, cdtipsitGS, sucursal, panel1.get("pv_nmpoliza"), panel1.get("pv_ntramite"));
 			}else{
 				
+				// Ejecutamos el Web Service de Recibos:
+				ice2sigsWebServices.ejecutaWSrecibos(_cdunieco, _cdramo,
+						edoPoliza, _nmpoliza, 
+						_nmsuplem, rutaCarpeta,
+						cdtipsitGS, sucursal, panel1.get("pv_nmpoliza"),panel1.get("pv_ntramite"), 
+						true, Ice2sigsWebServices.Operacion.INSERTA, 
+						tipoMov,
+						(UserVO) session.get("USUARIO"));
+				/*
 				ejecutaWSrecibos(_cdunieco, _cdramo,
 						edoPoliza, _nmpoliza,
 						_nmsuplem, rutaCarpeta,
 						cdtipsitGS, sucursal, panel1.get("pv_nmpoliza"),panel1.get("pv_ntramite"),
 						true, "INSERTA"
 						);
+				*/
 			}
 			
 			Map<String,String>paramsGetDoc=new LinkedHashMap<String,String>(0);
@@ -1323,13 +1343,19 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String nmtramite = map1.get("nmtramite");
 
 		String operacion = map1.get("operacion");
+		if(StringUtils.isBlank(operacion)) operacion = "INSERTA";
+		Operacion op = Operacion.valueOf(operacion);
 
-		ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, null, cdtipsitGS, sucursal, nmsolici, nmtramite, true, operacion);
+		String tipoMov = "1";
+		
+		// Ejecutamos el Web Service de Recibos:
+		ice2sigsWebServices.ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, null, cdtipsitGS, sucursal, nmsolici, nmtramite, true, op, tipoMov, (UserVO) session.get("USUARIO"));
+		//ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, null, cdtipsitGS, sucursal, nmsolici, nmtramite, true, operacion);
 
 		success = true;
 		return SUCCESS;
 	}
-	
+	/*
 	private boolean ejecutaWSrecibos(String cdunieco, String cdramo, String estado, String nmpoliza,
 			String nmsuplem, String rutaPoliza, String cdtipsitGS, String sucursal, String nmsolici,String ntramite, boolean async, String Op){
 		boolean allInserted = true;
@@ -1417,9 +1443,9 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}
 		}
 		
-		/**
+		*//**
 		 * PARA EL GUARDADO CADA PDF DE RECIBO
-		 */
+		 *//*
 		logger.debug("*** Empieza generacion de URLs para Recibos ***");
 		
 		String visible = null;
@@ -1464,7 +1490,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		}
 
 		return allInserted;
-	} 
+	} */
 
 	
 	public boolean obtenRecibosDxN(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String cdtipsitGS, String sucursal, String nmsolici, String ntramite){
