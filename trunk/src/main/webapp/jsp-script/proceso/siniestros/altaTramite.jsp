@@ -9,9 +9,11 @@
         <script type="text/javascript">
             var _CONTEXT = '${ctx}';
             var mesConUrlLoadCatalo    = '<s:url namespace="/catalogos"       action="obtieneCatalogo" />';
-            var _URL_TIPO_PAGO = _CONTEXT + '/js/proceso/siniestros/tiposPago.json';
+            //var _URL_TIPO_PAGO = _CONTEXT + '/js/proceso/siniestros/tiposPago.json';
             
             var _CATALOGO_OFICINA_RECEP = 	 '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_SUCURSALES_ADMIN"/>';
+            var _CATALOGO_TipoAtencion = 	 '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_ATENCION_SINIESTROS"/>';
+            var _CATALOGO_TipoPago = 	 '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_PAGO_SINIESTROS"/>';
             
         </script>
         <!-- <script type="text/javascript" src="${ctx}/resources/scripts/util/extjs4_utils.js"></script>-->

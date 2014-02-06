@@ -17,14 +17,29 @@ storeIncisos=new Ext.data.Store(
 
 Ext.onReady(function() {
 
+	var storeTipoAtencion = Ext.create('Ext.data.JsonStore', {
+		model:'Generic',
+		proxy: {
+			type: 'ajax',
+			url: mesConUrlLoadCatalo,
+			extraParams : {catalogo:_CATALOGO_TipoAtencion},
+			reader: {
+				type: 'json',
+				root: 'lista'
+			}
+		}
+	});
+	storeTipoAtencion.load();
+    
 	var storeTipoPago = Ext.create('Ext.data.JsonStore', {
 		model:'Generic',
 		proxy: {
 			type: 'ajax',
-			url: _URL_TIPO_PAGO,
+			url: mesConUrlLoadCatalo,
+			extraParams : {catalogo:_CATALOGO_TipoPago},
 			reader: {
 				type: 'json',
-				root: 'tipoPago'
+				root: 'lista'
 			}
 		}
 	});
@@ -82,37 +97,45 @@ Ext.onReady(function() {
 	    
 	});
      
-    tipoPago= Ext.create('Ext.form.ComboBox',
+    var comboTipoAte= Ext.create('Ext.form.ComboBox',
     {
-        id:'tipoPago',			   name:'params.tipoPago',		        fieldLabel: 'Tipo pago',				queryMode:'local',
+        id:'tipoAtencion',			   name:'params.tipoAtencion',		        fieldLabel: 'Tipo Atenci&oacute;n',				queryMode:'local',
         displayField: 'value',	   valueField: 'key',					allowBlank:false,						editable:false,
-        labelWidth : 250,		   emptyText:'Seleccione...',			store: storeTipoPago
-       ,
-        listeners : {
-			'select' : function(combo, record) {
-					closedStatusSelectedID = this.getValue();
-					if(closedStatusSelectedID ==1){
-						//PAGO DIRECTO
-						Ext.getCmp('beneficiario').hide();
-						Ext.getCmp('editorIncisos').hide();
-						Ext.getCmp('proveedor').show();
-						Ext.getCmp('txtNoFactura').show();
-						Ext.getCmp('txtImporte').show();
-						Ext.getCmp('fechaFactura').show();
-						
-					}else{
-						//PAGO POR REEMBOLSO
-						Ext.getCmp('beneficiario').show();
-						Ext.getCmp('editorIncisos').show();
-						Ext.getCmp('proveedor').hide();
-						Ext.getCmp('txtNoFactura').hide();
-						Ext.getCmp('txtImporte').hide();
-						Ext.getCmp('fechaFactura').hide();
-						
-					}    					
-				}
-			}
+        labelWidth : 250,		   emptyText:'Seleccione...',			store: storeTipoAtencion
     });
+
+    tipoPago= Ext.create('Ext.form.ComboBox',
+    		{
+    	id:'tipoPago',			   name:'params.tipoPago',		        fieldLabel: 'Tipo pago',				queryMode:'local',
+    	displayField: 'value',	   valueField: 'key',					allowBlank:false,						editable:false,
+    	labelWidth : 250,		   emptyText:'Seleccione...',			store: storeTipoPago
+    	,
+    	listeners : {
+    		'select' : function(combo, record) {
+    			closedStatusSelectedID = this.getValue();
+    			if(closedStatusSelectedID ==1){
+    				//PAGO DIRECTO
+    				Ext.getCmp('beneficiario').hide();
+    				Ext.getCmp('editorIncisos').hide();
+    				Ext.getCmp('proveedor').show();
+    				Ext.getCmp('txtNoFactura').show();
+    				Ext.getCmp('txtImporte').show();
+    				Ext.getCmp('fechaFactura').show();
+    				
+    			}else{
+    				//PAGO POR REEMBOLSO
+    				Ext.getCmp('beneficiario').show();
+    				Ext.getCmp('editorIncisos').show();
+    				Ext.getCmp('proveedor').hide();
+    				Ext.getCmp('txtNoFactura').hide();
+    				Ext.getCmp('txtImporte').hide();
+    				Ext.getCmp('fechaFactura').hide();
+    				
+    			}    					
+    		}
+    	}
+    		});
+    
     
     aseguradoAfectado= Ext.create('Ext.form.ComboBox',
     {
@@ -398,6 +421,7 @@ Ext.onReady(function() {
 		            	,readOnly   : true
 		            }
 	            	,
+	            	comboTipoAte,
 	        		tipoPago
         			,
             		aseguradoAfectado
