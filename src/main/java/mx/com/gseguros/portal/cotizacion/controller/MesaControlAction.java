@@ -504,9 +504,9 @@ public class MesaControlAction extends PrincipalCoreAction
 			String cdramo        = smap1.get("cdramo");
 			String cdtipsit      = smap1.get("cdtipsit");
 			String rol           = usuario.getRolActivo().getObjeto().getValue();
-			String pantalla      = "MCDINAMICA";
+			String pantalla      = "TATRIMC";
 			String seccionForm   = "FORMULARIO";
-			String seccionGrid   = "GRIDPANEL";
+			String seccionGrid   = "TATRIMC";
 			String seccionFiltro = "FILTRO";
 			
 			////// obtener valores del formulario //////
