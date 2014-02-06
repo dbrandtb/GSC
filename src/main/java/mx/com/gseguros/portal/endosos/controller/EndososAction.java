@@ -5981,10 +5981,10 @@ public class EndososAction extends PrincipalCoreAction
 	{
 		this.session=ActionContext.getContext().getSession();
 		log.debug("\n"
-				+ "\n#######################################"
-				+ "\n#######################################"
-				+ "\n###### guardarEndosoReexpedicion ######"
-				+ "\n######                           ######"
+				+ "\n####################################"
+				+ "\n####################################"
+				+ "\n###### guardarEndosoFormaPago ######"
+				+ "\n######                        ######"
 				);
 		log.debug("smap1:"+smap1);
 		log.debug("smap2:"+smap2);
@@ -6061,10 +6061,10 @@ public class EndososAction extends PrincipalCoreAction
 		}
 		
 		log.debug("\n"
-				+ "\n######                           ######"
-				+ "\n###### guardarEndosoReexpedicion ######"
-				+ "\n#######################################"
-				+ "\n#######################################"
+				+ "\n######                        ######"
+				+ "\n###### guardarEndosoFormaPago ######"
+				+ "\n####################################"
+				+ "\n####################################"
 				);
 		return SUCCESS;
 	}
