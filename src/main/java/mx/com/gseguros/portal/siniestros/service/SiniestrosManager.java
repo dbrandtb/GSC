@@ -60,6 +60,10 @@ public interface SiniestrosManager {
 	 * ##################################### VERIFICAR ##############################*/
 	
 	public List<AutorizacionServicioVO> guardarAutorizacionServicio(HashMap<String, Object> paramsR) throws ApplicationException;
+	
+	public List<HashMap<String, String>> loadListaDocumentos(HashMap<String, String> params) throws ApplicationException;
+
+	public boolean guardaEstatusDocumentos(HashMap<String, String> params, List<HashMap<String, String>> saveList) throws ApplicationException;
 
 	
 

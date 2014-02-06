@@ -36,8 +36,10 @@ public class SiniestrosAction extends ActionSupport{
     private boolean esHospitalario;
     private HashMap<String, String> loadForm;
     private List<HashMap<String, String>> loadList;
+    private List<HashMap<String, String>> saveList;
     
     public String execute() throws Exception {
+    	success = true;
     	return SUCCESS;
     }
     
@@ -135,6 +137,32 @@ public class SiniestrosAction extends ActionSupport{
 		}
 		success = true;
 		return SUCCESS;
+    }
+
+    public String loadListaDocumentos(){
+    	try {
+    		loadList = siniestrosManager.loadListaDocumentos(params);
+    	}catch( Exception e){
+    		logger.error("Error en loadListaDocumentos",e);
+    		success =  false;
+    		return SUCCESS;
+    	}
+    	success = true;
+    	return SUCCESS;
+    }
+    
+    public String guardaListaDocumentos(){
+    	
+    	try {
+    		logger.debug("SaveList: "+ saveList);
+    		siniestrosManager.guardaEstatusDocumentos(params, saveList);
+    	}catch( Exception e){
+    		logger.error("Error en guardaListaDocumentos",e);
+    		success =  false;
+    		return SUCCESS;
+    	}
+    	success = true;
+    	return SUCCESS;
     }
     
     /**
@@ -485,6 +513,10 @@ public class SiniestrosAction extends ActionSupport{
 
 	public void setEsHospitalario(boolean esHospitalario) {
 		this.esHospitalario = esHospitalario;
+	}
+
+	public void setSaveList(List<HashMap<String, String>> saveList) {
+		this.saveList = saveList;
 	}
 
 

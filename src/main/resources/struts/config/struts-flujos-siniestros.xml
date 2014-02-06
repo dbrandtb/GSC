@@ -156,8 +156,27 @@
     		<result>/jsp-script/proceso/siniestros/verCoberturas.jsp</result>
 		</action>
 		
-		<action name="revisionDocumentos">
+		<action name="revisionDocumentos"  class="siniestrosAction" method="execute">
     		<result>/jsp-script/proceso/siniestros/revisionDocumentos.jsp</result>
+		</action>
+		
+		<action name="loadListaDocumentos" class="siniestrosAction"
+			method="loadListaDocumentos">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					loadList.*,
+					success
+				</param>
+			</result>
+		</action>
+		<action name="guardaListaDocumentos" class="siniestrosAction"
+			method="guardaListaDocumentos">
+			<interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
 		</action>
 		
 		<action name="seleccionCobertura">

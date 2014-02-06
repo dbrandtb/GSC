@@ -108,6 +108,35 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			throw new ApplicationException(daoExc.getMessage(), daoExc);
 		}
 	}
+
+	@Override
+	public List<HashMap<String, String>> loadListaDocumentos(HashMap<String, String> params)
+			throws ApplicationException {
+		try {
+			return siniestrosDAO.loadListaDocumentos(params);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}
+
+	@Override
+	public boolean guardaEstatusDocumentos(HashMap<String, String> params, List<HashMap<String, String>> saveList)
+			throws ApplicationException {
+		
+		boolean allUpdated = true;
+		
+		for(HashMap<String, String> doc : saveList){
+			try {
+				params.put("pv_accion_i", doc.get("listo"));
+				params.put("pv_cddocume_i", doc.get("id"));
+				siniestrosDAO.guardaEstatusDocumento(params);
+			} catch (DaoException daoExc) {
+				allUpdated = false;
+			}
+		}
+		
+		return allUpdated;
+	}
 	
 	public void setSiniestrosDAO(SiniestrosDAO siniestrosDAO) {
 		this.siniestrosDAO = siniestrosDAO;

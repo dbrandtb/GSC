@@ -30,6 +30,10 @@ public interface SiniestrosDAO {
 	public List<GenericVO> obtieneListadoSubcobertura(String cdgarant, String cdsubcob) throws DaoException;
 	
 	public List<GenericVO> obtieneListadoCPTICD(String cdtabla, String otclave) throws DaoException;
+
+	public List<HashMap<String, String>> loadListaDocumentos(HashMap<String, String> params) throws DaoException;
+	
+	public String guardaEstatusDocumento(HashMap<String, String> params) throws DaoException;
 	
 	/* ############################################################################## 
 	 * ##################################### VERIFICAR ##############################*/
