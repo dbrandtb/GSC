@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import mx.com.gseguros.portal.cotizacion.model.Item;
-import mx.com.gseguros.portal.cotizacion.model.Tatri;
 import mx.com.gseguros.portal.general.dao.PantallasDAO;
+import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 
 import org.apache.log4j.Logger;
@@ -19,6 +19,7 @@ public class PantallasManagerImpl implements PantallasManager
 	
 	private PantallasDAO  pantallasDAO;
 	
+	/*
 	@Override
 	public List<Tatri> obtenerCamposPantalla(
 			 Object cduno   , Object cddos
@@ -47,7 +48,46 @@ public class PantallasManagerImpl implements PantallasManager
 		
 		return lista;
 	}
+	*/
 	
+	/**
+	 * PKG_CONF_PANTALLAS.P_GET_TCONFCMP
+	 */
+	@Override
+	public List<ComponenteVO> obtenerComponentes(
+			 String cdtiptra
+			,String cdunieco
+			,String cdramo
+			,String cdtipsit
+			,String estado
+			,String cdsisrol
+			,String pantalla
+			,String seccion
+			,String orden
+			) throws Exception
+	{
+		Map<String,String>params = new LinkedHashMap<String,String>(0);
+		
+		params.put("PV_CDUNIECO_I" , cdunieco);
+		params.put("PV_CDRAMO_I"   , cdramo);
+		params.put("PV_CDTIPSIT_I" , cdtipsit);
+		params.put("PV_ESTADO_I"   , estado);
+		params.put("PV_PANTALLA_I" , pantalla);
+		params.put("PV_CDSISROL_I" , cdsisrol);
+		params.put("PV_CDTIPTRA_I" , cdtiptra);
+		params.put("PV_ORDEN_I"    , orden);
+		params.put("PV_SECCION_I"  , seccion);
+		
+		log.debug("PantallasManager obtenerComponentes params: "+params);
+		
+		List<ComponenteVO> lista=pantallasDAO.obtenerComponentes(params);
+		lista=lista!=null?lista:new ArrayList<ComponenteVO>(0);
+		log.debug("PantallasManager obtenerComponentes lista size: "+lista.size());
+		
+		return lista;
+	}
+	
+	/*
 	@Override
 	public List<Map<String, String>> obtenerParametrosPantalla(
 			 Object cduno   , Object cddos
@@ -74,7 +114,43 @@ public class PantallasManagerImpl implements PantallasManager
 		log.debug("EndososManager obtenerParametrosPantalla lista size: "+lista.size());
 		return lista;
     }
+    */
 	
+	/**
+	 * PKG_CONF_PANTALLAS.P_GET_TCONFCMP
+	 */
+	@Override
+	public List<Map<String, String>> obtenerParametros(
+			 String cdtiptra
+			,String cdunieco
+			,String cdramo
+			,String cdtipsit
+			,String estado
+			,String cdsisrol
+			,String pantalla
+			,String seccion
+			,String orden
+			) throws Exception
+	{
+		Map<String,String>params = new LinkedHashMap<String,String>(0);
+		
+		params.put("PV_CDUNIECO_I" , cdunieco);
+		params.put("PV_CDRAMO_I"   , cdramo);
+		params.put("PV_CDTIPSIT_I" , cdtipsit);
+		params.put("PV_ESTADO_I"   , estado);
+		params.put("PV_PANTALLA_I" , pantalla);
+		params.put("PV_CDSISROL_I" , cdsisrol);
+		params.put("PV_CDTIPTRA_I" , cdtiptra);
+		params.put("PV_ORDEN_I"    , orden);
+		params.put("PV_SECCION_I"  , seccion);
+		log.debug("EndososManager obtenerParametros params: "+params);
+		List<Map<String,String>> lista=pantallasDAO.obtenerParametros(params);
+		lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
+		log.debug("EndososManager obtenerParametros lista size: "+lista.size());
+		return lista;
+    }
+	
+	/*
 	@Override
 	public void borrarParametrosPantalla(
 			 Object cduno   , Object cddos
@@ -99,7 +175,41 @@ public class PantallasManagerImpl implements PantallasManager
 		pantallasDAO.borrarParametrosPantalla(params);
 		log.debug("EndososManager borrarParametrosPantalla end");
     }
+	*/
 	
+	/**
+	 * PKG_CONF_PANTALLAS.P_BORRAR_TCONFCMP
+	 */
+	@Override
+	public void borrarParametros(
+			 String cdtiptra
+			,String cdunieco
+			,String cdramo
+			,String cdtipsit
+			,String estado
+			,String cdsisrol
+			,String pantalla
+			,String seccion
+			,String orden
+			) throws Exception
+	{
+		Map<String,String>params = new LinkedHashMap<String,String>(0);
+		
+		params.put("PV_CDUNIECO_I" , cdunieco);
+		params.put("PV_CDRAMO_I"   , cdramo);
+		params.put("PV_CDTIPSIT_I" , cdtipsit);
+		params.put("PV_ESTADO_I"   , estado);
+		params.put("PV_PANTALLA_I" , pantalla);
+		params.put("PV_CDSISROL_I" , cdsisrol);
+		params.put("PV_CDTIPTRA_I" , cdtiptra);
+		params.put("PV_ORDEN_I"    , orden);
+		params.put("PV_SECCION_I"  , seccion);
+		log.debug("EndososManager borrarParametros params: "+params);
+		pantallasDAO.borrarParametros(params);
+		log.debug("EndososManager borrarParametros end");
+    }
+	
+	/*
 	@Override
 	public void insertarParametrosPantalla(Map<String,String> params) throws Exception
 	{
@@ -107,7 +217,22 @@ public class PantallasManagerImpl implements PantallasManager
 		pantallasDAO.insertarParametrosPantalla(params);
 		log.debug("EndososManager insertarParametrosPantalla end");
 	}
+	*/
 	
+	/**
+	 * PKG_CONF_PANTALLAS.P_INSERTA_TCONFCMP
+	 */
+	@Override
+	public void insertarParametros(Map<String,String> params) throws Exception
+	{
+		log.debug("EndososManager insertarParametros params: "+params);
+		pantallasDAO.insertarParametros(params);
+		log.debug("EndososManager insertarParametros end");
+	}
+	
+	/**
+	 * PKG_CONF_PANTALLAS.P_OBT_ARBOL_TCONFCMP
+	 */
 	@Override
 	public Item obtenerArbol() throws Exception
     {
@@ -118,8 +243,8 @@ public class PantallasManagerImpl implements PantallasManager
 		lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
 		log.debug("EndososManager obtenerArbol lista size: "+lista.size());
 		
-		String pantallaKey   = "CDSIETE";
-		String componenteKey = "CDDIEZ";
+		String pantallaKey   = "PANTALLA";
+		String componenteKey = "SECCION";
 		
 		//poner llaves (pantalla) y hojas (componentes)
 		Map<String,List<String>>arbol=new LinkedHashMap<String,List<String>>();

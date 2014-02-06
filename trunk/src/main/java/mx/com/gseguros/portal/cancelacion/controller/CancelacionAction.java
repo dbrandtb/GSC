@@ -51,19 +51,17 @@ public class CancelacionAction extends PrincipalCoreAction
 			
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			
-			gc.generaParcial(pantallasManager.obtenerCamposPantalla(
-					 null,null,null
-					,null,null,null
-					,"MARCOCANCELACION",null,null
-					,"FILTRO"));
+			gc.generaParcial(pantallasManager.obtenerComponentes(
+					null, null, null,
+					null, null, null,
+					"MARCOCANCELACION", "FILTRO", null));
 			
 			imap.put("itemsFiltro",gc.getItems());
 			
-			gc.generaParcial(pantallasManager.obtenerCamposPantalla(
-					 null,null,null
-					,null,null,null
-					,"MARCOCANCELACION",null,null
-					,"MODELOCANDIDATA"));
+			gc.generaParcial(pantallasManager.obtenerComponentes(
+					null, null, null,
+					null, null, null,
+					"MARCOCANCELACION", "MODELOCANDIDATA", null));
 			
 			imap.put("fieldsCandidata",gc.getFields());
 			imap.put("columnsCandidata",gc.getColumns());
@@ -103,11 +101,10 @@ public class CancelacionAction extends PrincipalCoreAction
 			
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			
-			gc.generaParcial(pantallasManager.obtenerCamposPantalla(
-					 null,null,null
-					,null,null,null
-					,"PANTALLACANCELARUNICA",null,null
-					,"FORM"));
+			gc.generaParcial(pantallasManager.obtenerComponentes(
+					null, null, null,
+					null, null, null,
+					"PANTALLACANCELARUNICA", "FORM", null));
 			
 			imap.put("itemsMarcocancelacionModelocandidata",gc.getItems());
 			
@@ -329,11 +326,10 @@ public class CancelacionAction extends PrincipalCoreAction
 			
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			
-			gc.generaParcial(pantallasManager.obtenerCamposPantalla(
-					 null,null,null
-					,null,null,null
-					,"MARCOCANCELACION",null,null
-					,"MODELOCANDIDATA"));
+			gc.generaParcial(pantallasManager.obtenerComponentes(
+					null, null, null,
+					null, null, null,
+					"MARCOCANCELACION", "MODELOCANDIDATA", null));
 			
 			imap.put("fieldsMarcocancelacionModelocandidata",gc.getFields());
 			imap.put("columnsMarcocancelacionModelocandidata",gc.getColumns());

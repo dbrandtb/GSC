@@ -45,27 +45,24 @@ public class UsuarioAction extends PrincipalCoreAction{
 			
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			
-			gc.generaParcial(pantallasManager.obtenerCamposPantalla(
-					 null,null,null
-					,null,null,null
-					,"PANTALLA_USUARIOS",usuario.getRolActivo().getObjeto().getValue(),null
-					,"BUSQUEDA"));
+			gc.generaParcial(pantallasManager.obtenerComponentes(
+					null, null, null,
+					null, null, usuario.getRolActivo().getObjeto().getValue(),
+					"PANTALLA_USUARIOS", "BUSQUEDA", null));
 			
 			items   = gc.getItems();
 			
-			gc.generaParcial(pantallasManager.obtenerCamposPantalla(
-					null,null,null
-					,null,null,null
-					,"PANTALLA_USUARIOS",usuario.getRolActivo().getObjeto().getValue(),null
-					,"MODEL"));
+			gc.generaParcial(pantallasManager.obtenerComponentes(
+					null, null, null,
+					null, null, usuario.getRolActivo().getObjeto().getValue(),
+					"PANTALLA_USUARIOS", "MODEL", null));
 			
 			fields  = gc.getFields();
 			
-			gc.generaParcial(pantallasManager.obtenerCamposPantalla(
-					 null,null,null
-					,null,null,null
-					,"PANTALLA_USUARIOS",usuario.getRolActivo().getObjeto().getValue(),null
-					,"COLUMNMODEL"));
+			gc.generaParcial(pantallasManager.obtenerComponentes(
+					null, null, null,
+					null, null, usuario.getRolActivo().getObjeto().getValue(),
+					"PANTALLA_USUARIOS", "COLUMNMODEL", null));
 			
 			columns = gc.getColumns();
 			
@@ -83,7 +80,7 @@ public class UsuarioAction extends PrincipalCoreAction{
         	success=true;
     	} catch(Exception e) {
     		logger.error(e.getMessage(), e);
-    		errorMessage = "Error al guardar el usuario. Intente más tarde";
+    		errorMessage = "Error al guardar el usuario. Intente mï¿½s tarde";
     	}
     	return SUCCESS;
     }
@@ -94,7 +91,7 @@ public class UsuarioAction extends PrincipalCoreAction{
     		success=true;
     	} catch(Exception e) {
     		logger.error(e.getMessage(), e);
-    		errorMessage = "Error al guardar obtieneUsuarios. Intente más tarde";
+    		errorMessage = "Error al guardar obtieneUsuarios. Intente mï¿½s tarde";
     	}
     	
     	logger.debug("Resultado de usuarios para la busqueda: "+ usuarios);
@@ -107,7 +104,7 @@ public class UsuarioAction extends PrincipalCoreAction{
     		success=true;
     	} catch(Exception e) {
     		logger.error(e.getMessage(), e);
-    		errorMessage = "Error al guardar el usuario. Intente más tarde";
+    		errorMessage = "Error al guardar el usuario. Intente mï¿½s tarde";
     	}
     	
     	logger.debug("Resultado de roles  de usuario: "+ roles);

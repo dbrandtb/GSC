@@ -18,8 +18,8 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cancelacion.service.CancelacionManager;
 import mx.com.gseguros.portal.cotizacion.controller.ComplementariosCoberturasAction;
 import mx.com.gseguros.portal.cotizacion.model.Item;
-import mx.com.gseguros.portal.cotizacion.model.Tatri;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
+import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
@@ -1459,11 +1459,11 @@ public class EndososAction extends PrincipalCoreAction
 		{
 			try
 			{
-				List<Tatri>tatrisit=kernelManager.obtenerTatrisit(smap1.get("cdtipsit"));
+				List<ComponenteVO>tatrisit=kernelManager.obtenerTatrisit(smap1.get("cdtipsit"));
 				GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 				gc.setCdtipsit(smap1.get("cdtipsit"));
-				List<Tatri>tatriTemp=new ArrayList<Tatri>(0);
-				for(Tatri t:tatrisit)
+				List<ComponenteVO>tatriTemp=new ArrayList<ComponenteVO>(0);
+				for(ComponenteVO t:tatrisit)
 				//si es agrupado solo dejar los atributos con N, si es individual solo los que tengan S
 				{
 					if(t.getSwsuscri().equalsIgnoreCase("S")&&t.getSwtarifi().equalsIgnoreCase("N"))//S=individual
@@ -1815,12 +1815,14 @@ public class EndososAction extends PrincipalCoreAction
 			
 			imap1=new LinkedHashMap<String,Item>(0);
 			
-			List<Tatri>tatriFiltro=pantallasManager.obtenerCamposPantalla(null,null,null,null,null,null,"EDITORPANTALLAS",null,null,"FILTRO");
+			List<ComponenteVO>tatriFiltro=pantallasManager.obtenerComponentes(
+					null, null, null, null, null, null, "EDITORPANTALLAS", "FILTRO", null);
 			gc.generaParcial(tatriFiltro);
 			imap1.put("itemsFiltro"  , gc.getItems());
 			imap1.put("fieldsFiltro" , gc.getFields());
 			
-			List<Tatri>tatriModelo=pantallasManager.obtenerCamposPantalla(null,null,null,null,null,null,"EDITORPANTALLAS",null,null,"MODELO");
+			List<ComponenteVO>tatriModelo=pantallasManager.obtenerComponentes(
+					null, null, null, null, null, null,"EDITORPANTALLAS", "MODELO",null);
 			gc.generaParcial(tatriModelo);
 			imap1.put("itemsModelo"   , gc.getItems());
 			imap1.put("fieldsModelo"  , gc.getFields());
@@ -1858,18 +1860,17 @@ public class EndososAction extends PrincipalCoreAction
 		log.debug("smap1: "+smap1);
 		try
 		{
-			List<Tatri>lt=pantallasManager.obtenerCamposPantalla(
-					smap1.get("cduno")
-					,smap1.get("cddos")
-					,smap1.get("cdtres")
-					,smap1.get("cdcuatro")
-					,smap1.get("cdcinco")
-					,smap1.get("cdseis")
-					,smap1.get("cdsiete")
-					,smap1.get("cdocho")
-					,smap1.get("cdnueve")
-					,smap1.get("cddiez")
-					);
+			List<ComponenteVO>lt=pantallasManager.obtenerComponentes(
+					smap1.get("cdtiptra")
+					,smap1.get("cdunieco")
+					,smap1.get("cdramo")
+					,smap1.get("cdtipsit")
+					,smap1.get("estado")
+					,smap1.get("rol")
+					,smap1.get("pantalla")
+					,smap1.get("seccion")
+					,smap1.get("orden"));
+			
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			gc.generaParcial(lt);
 			item1=gc.getFields();
@@ -1906,17 +1907,16 @@ public class EndososAction extends PrincipalCoreAction
 		log.debug("smap1: "+smap1);
 		try
 		{
-			slist1=pantallasManager.obtenerParametrosPantalla(
-					smap1.get("cduno")
-					,smap1.get("cddos")
-					,smap1.get("cdtres")
-					,smap1.get("cdcuatro")
-					,smap1.get("cdcinco")
-					,smap1.get("cdseis")
-					,smap1.get("cdsiete")
-					,smap1.get("cdocho")
-					,smap1.get("cdnueve")
-					,smap1.get("cddiez")
+			slist1=pantallasManager.obtenerParametros(
+					smap1.get("cdtiptra")
+					,smap1.get("cdunieco")
+					,smap1.get("cdramo")
+					,smap1.get("cdtipsit")
+					,smap1.get("estado")
+					,smap1.get("rol")
+					,smap1.get("pantalla")
+					,smap1.get("seccion")
+					,smap1.get("orden")
 					);
 			success=true;
 		}
@@ -1954,21 +1954,26 @@ public class EndososAction extends PrincipalCoreAction
 		{
 			if(slist1!=null)
 			{
-				pantallasManager.borrarParametrosPantalla(
-				smap1.get("cduno")
-				,smap1.get("cddos")
-				,smap1.get("cdtres")
-				,smap1.get("cdcuatro")
-				,smap1.get("cdcinco")
-				,smap1.get("cdseis")
-				,smap1.get("cdsiete")
-				,smap1.get("cdocho")
-				,smap1.get("cdnueve")
-				,smap1.get("cddiez")
+				pantallasManager.borrarParametros(
+						smap1.get("cdtiptra")
+						,smap1.get("cdunieco")
+						,smap1.get("cdramo")
+						,smap1.get("cdtipsit")
+						,smap1.get("estado")
+						,smap1.get("rol")
+						,smap1.get("pantalla")
+						,smap1.get("seccion")
+						,smap1.get("orden")
 						);
 				for(Map<String,String>nuevo:slist1)
 				{
-					pantallasManager.insertarParametrosPantalla(nuevo);
+					Map<String,String>mapaConPVI=new HashMap<String,String>();
+					for(Entry<String,String>en:nuevo.entrySet())
+					{
+						mapaConPVI.put("PV_"+en.getKey()+"_I",en.getValue());
+					}
+					mapaConPVI.put("PV_SWFINAL_I","N");
+					pantallasManager.insertarParametros(mapaConPVI);
 				}
 			}
 			success=true;
@@ -2080,26 +2085,24 @@ public class EndososAction extends PrincipalCoreAction
 				
 				GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 				
-				gc.generaParcial(pantallasManager.obtenerCamposPantalla(
-						 null,null,null
-						,null,null,null
-						,"ENDOSOABASEGU",null,null
-						,"MODELO"));
+				gc.generaParcial(pantallasManager.obtenerComponentes(
+						null, null, null,
+						null, null, null,
+						"ENDOSOABASEGU", "MODELO", null));
 				
 				imap1.put("modelo"   , gc.getFields());
 				imap1.put("columnas" , gc.getColumns());
 				
-				gc.generaParcial(pantallasManager.obtenerCamposPantalla(
-						 null,null,null
-						,null,null,null
-						,"ENDOSOABASEGU",null,null
-						,"PANELLECTURA"));
+				gc.generaParcial(pantallasManager.obtenerComponentes(
+						null, null, null,
+						null, null, null,
+						"ENDOSOABASEGU", "PANELLECTURA", null));
 				
 				imap1.put("panelLectura" , gc.getItems());
 				
 				////////////////////////////////////////////////
 				////// campos de tatrisit para individual //////
-				List<Tatri>tatrisit=kernelManager.obtenerTatrisit(cdtipsit);
+				List<ComponenteVO>tatrisit=kernelManager.obtenerTatrisit(cdtipsit);
 				gc.setCdtipsit(cdtipsit);
 				
 				List<String>exclusiones=new ArrayList<String>();
@@ -2116,13 +2119,13 @@ public class EndososAction extends PrincipalCoreAction
 				log.debug("exclusiones: "+exclusiones);
 				*/
 				
-				List<Tatri>tatriTemp=new ArrayList<Tatri>(0);
-				for(Tatri t:tatrisit)
+				List<ComponenteVO>tatriTemp=new ArrayList<ComponenteVO>(0);
+				for(ComponenteVO t:tatrisit)
 				//solo dejar los atributos si es individual, los que tengan S
 				{
 					if(t.getSwsuscri().equalsIgnoreCase("S"))//S=individual
 					{
-						String name=t.getCdatribu();
+						String name=t.getNameCdatribu();
 						log.debug("se busca "+name+" en excluciones");
 						if(!exclusiones.contains(name))
 						{
@@ -2133,11 +2136,11 @@ public class EndososAction extends PrincipalCoreAction
 				}
 				tatrisit=tatriTemp;
 				
-				tatriTemp=pantallasManager.obtenerCamposPantalla(
-						 null,null,null
-						,null,null,null
-						,"ENDOSOABASEGU",null,null
-						,"FORMULARIO");
+				tatriTemp=pantallasManager.obtenerComponentes(
+						null, null, null,
+						null, null, null,
+						"ENDOSOABASEGU", "FORMULARIO", null);
+				
 				tatriTemp.addAll(tatrisit);
 				tatrisit=tatriTemp;
 				
@@ -2862,11 +2865,10 @@ public class EndososAction extends PrincipalCoreAction
 			
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			
-			gc.generaParcial(pantallasManager.obtenerCamposPantalla(
-					 null,null,null
-					,null,null,null
-					,"TESTPANTALLA",usuario.getRolActivo().getObjeto().getValue(),null
-					,"TEST"));
+			gc.generaParcial(pantallasManager.obtenerComponentes(
+					null, null, null,
+					null, null, usuario.getRolActivo().getObjeto().getValue(),
+					"TESTPANTALLA", "TEST", null));
 			
 			item1=gc.getFields();
 			item2=gc.getColumns();
@@ -3126,12 +3128,11 @@ public class EndososAction extends PrincipalCoreAction
 			{
 				imap1=new HashMap<String,Item>();
 				GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-				gc.generaParcial(pantallasManager.obtenerCamposPantalla(
-						null,null,null
-						,null,null,null
-						,"ENDOSO_EDAD",null,null
-						,"MODELO"
-						));
+				gc.generaParcial(pantallasManager.obtenerComponentes(
+						null, null, null,
+						null, null, null,
+						"ENDOSO_EDAD", "MODELO", null));
+				
 				imap1.put("modelo"   , gc.getFields());
 				imap1.put("columnas" , gc.getColumns());
 			}
@@ -3548,12 +3549,11 @@ public class EndososAction extends PrincipalCoreAction
 			{
 				imap1=new HashMap<String,Item>();
 				GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-				gc.generaParcial(pantallasManager.obtenerCamposPantalla(
-						null,null,null
-						,null,null,null
-						,"ENDOSO_SEXO",null,null
-						,"MODELO"
-						));
+				gc.generaParcial(pantallasManager.obtenerComponentes(
+						null, null, null,
+						null, null, null,
+						"ENDOSO_SEXO", "MODELO", null));
+				
 				imap1.put("modelo"   , gc.getFields());
 				imap1.put("columnas" , gc.getColumns());
 			}
@@ -4253,15 +4253,17 @@ public class EndososAction extends PrincipalCoreAction
 				
 				imap1=new HashMap<String,Item>();
 				
-				gc.generaParcial(pantallasManager.obtenerCamposPantalla(
-						cdunieco  , cdramo                  , cdtipsit , estado , nmpoliza
-						,nmsuplem , "ENDOSO_DOMICILIO_FULL" , rol      , null   , "PANEL_LECTURA"));
+				gc.generaParcial(pantallasManager.obtenerComponentes(
+						null, cdunieco, cdramo,
+						cdtipsit, estado, rol,
+						"ENDOSO_DOMICILIO_FULL", "PANEL_LECTURA", null));
 							
 				imap1.put("itemsLectura",gc.getItems());
 				
-				gc.generaParcial(pantallasManager.obtenerCamposPantalla(
-						cdunieco  , cdramo                  , cdtipsit , estado , nmpoliza
-						,nmsuplem , "ENDOSO_DOMICILIO_FULL" , rol      , null   , "ITEMS_DOMICIL"));
+				gc.generaParcial(pantallasManager.obtenerComponentes(
+						null, cdunieco, cdramo,
+						cdtipsit, estado, rol,
+						"ENDOSO_DOMICILIO_FULL", "ITEMS_DOMICIL", null));
 				
 				imap1.put("itemsDomicil"  , gc.getItems());
 				imap1.put("fieldsDomicil" , gc.getFields());
@@ -4758,11 +4760,11 @@ public class EndososAction extends PrincipalCoreAction
 					throw new Exception("No hay deducible definido para este producto");
 				}
 				
-				List<Tatri>tatrisit = kernelManager.obtenerTatrisit(cdtipsit);
-				List<Tatri>temp     = new ArrayList<Tatri>();
-				for(Tatri tatrisitIte:tatrisit)
+				List<ComponenteVO>tatrisit = kernelManager.obtenerTatrisit(cdtipsit);
+				List<ComponenteVO>temp     = new ArrayList<ComponenteVO>();
+				for(ComponenteVO tatrisitIte:tatrisit)
 				{
-					if(tatrisitIte.getCdatribu().equalsIgnoreCase(cdatribuDeducible))
+					if(tatrisitIte.getNameCdatribu().equalsIgnoreCase(cdatribuDeducible))
 					{
 						temp.add(tatrisitIte);
 					}
@@ -4773,25 +4775,23 @@ public class EndososAction extends PrincipalCoreAction
 				gc.setCdtipsit(cdtipsit);
 				
 				imap1=new HashMap<String,Item>();
-				tatrisit.get(0).setDsatribu(nombreItemNuevoDeducible);
+				tatrisit.get(0).setLabel(nombreItemNuevoDeducible);
 				
 				gc.generaParcial(tatrisit);
 				
 				imap1.put(llaveItemNuevoDeducible,gc.getItems());
 				
-				tatrisit.get(0).setReadOnly(true);
-				tatrisit.get(0).setDsatribu(nombreItemDeducibleOriginal);
+				tatrisit.get(0).setSoloLectura(true);
+				tatrisit.get(0).setLabel(nombreItemDeducibleOriginal);
 				
 				gc.generaParcial(tatrisit);
 				
 				imap1.put(llaveItemDeducibleOriginal,gc.getItems());
 				
-				gc.generaParcial(pantallasManager.obtenerCamposPantalla(
-						cdunieco  , cdramo
-						,cdtipsit , estado
-						,nmpoliza , null
-						,pantalla , rol
-						,null     , "PANEL_LECTURA"));
+				gc.generaParcial(pantallasManager.obtenerComponentes(
+						null, cdunieco, cdramo,
+						cdtipsit, estado, rol, 
+						pantalla, "PANEL_LECTURA", null));
 				
 				imap1.put(llavePanelLectura,gc.getItems());
 				
@@ -5065,11 +5065,11 @@ public class EndososAction extends PrincipalCoreAction
 					throw new Exception("No hay copago definido para este producto");
 				}
 				
-				List<Tatri>tatrisit = kernelManager.obtenerTatrisit(cdtipsit);
-				List<Tatri>temp     = new ArrayList<Tatri>();
-				for(Tatri tatrisitIte:tatrisit)
+				List<ComponenteVO>tatrisit = kernelManager.obtenerTatrisit(cdtipsit);
+				List<ComponenteVO>temp     = new ArrayList<ComponenteVO>();
+				for(ComponenteVO tatrisitIte:tatrisit)
 				{
-					if(tatrisitIte.getCdatribu().equalsIgnoreCase(cdatribuCopago))
+					if(tatrisitIte.getNameCdatribu().equalsIgnoreCase(cdatribuCopago))
 					{
 						temp.add(tatrisitIte);
 					}
@@ -5080,25 +5080,23 @@ public class EndososAction extends PrincipalCoreAction
 				gc.setCdtipsit(cdtipsit);
 				
 				imap1=new HashMap<String,Item>();
-				tatrisit.get(0).setDsatribu(nombreItemNuevoCopago);
+				tatrisit.get(0).setLabel(nombreItemNuevoCopago);
 				
 				gc.generaParcial(tatrisit);
 				
 				imap1.put(llaveItemNuevoCopago,gc.getItems());
 				
-				tatrisit.get(0).setReadOnly(true);
-				tatrisit.get(0).setDsatribu(nombreItemCopagoOriginal);
+				tatrisit.get(0).setSoloLectura(true);
+				tatrisit.get(0).setLabel(nombreItemCopagoOriginal);
 				
 				gc.generaParcial(tatrisit);
 				
 				imap1.put(llaveItemCopagoOriginal,gc.getItems());
 				
-				gc.generaParcial(pantallasManager.obtenerCamposPantalla(
-						cdunieco  , cdramo
-						,cdtipsit , estado
-						,nmpoliza , null
-						,pantalla , rol
-						,null     , "PANEL_LECTURA"));
+				gc.generaParcial(pantallasManager.obtenerComponentes(
+						null, cdunieco, cdramo,
+						cdtipsit, estado, rol,
+						pantalla, "PANEL_LECTURA", null));
 				
 				imap1.put(llavePanelLectura,gc.getItems());
 				
@@ -5424,12 +5422,10 @@ public class EndososAction extends PrincipalCoreAction
 				GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 				imap1=new HashMap<String,Item>();
 				
-				gc.generaParcial(pantallasManager.obtenerCamposPantalla(
-						cdunieco    , cdramo
-						,cdtipsit   , estado
-						,nmpoliza   , null
-						,cdPantalla , rol
-						,null       , cdPanelLectura));
+				gc.generaParcial(pantallasManager.obtenerComponentes(
+						null, cdunieco, cdramo,
+						cdtipsit, estado, rol,
+						cdPantalla, cdPanelLectura, null));
 				
 				imap1.put(keyItemsPanelLectura,gc.getItems());
 				imap1.put(keyFieldsPanelLectura,gc.getFields());
@@ -5684,11 +5680,11 @@ public class EndososAction extends PrincipalCoreAction
 					throw new Exception("No hay extraprima definida para este producto");
 				}
 				
-				List<Tatri>tatrisit = kernelManager.obtenerTatrisit(cdtipsit);
-				List<Tatri>temp     = new ArrayList<Tatri>();
-				for(Tatri tatrisitIte:tatrisit)
+				List<ComponenteVO>tatrisit = kernelManager.obtenerTatrisit(cdtipsit);
+				List<ComponenteVO>temp     = new ArrayList<ComponenteVO>();
+				for(ComponenteVO tatrisitIte:tatrisit)
 				{
-					if(tatrisitIte.getCdatribu().equalsIgnoreCase(cdatribuExtraprima))
+					if(tatrisitIte.getNameCdatribu().equalsIgnoreCase(cdatribuExtraprima))
 					{
 						temp.add(tatrisitIte);
 					}
@@ -5699,25 +5695,23 @@ public class EndososAction extends PrincipalCoreAction
 				gc.setCdtipsit(cdtipsit);
 				
 				imap1=new HashMap<String,Item>();
-				tatrisit.get(0).setDsatribu(nombreItemNuevaExtraprima);
+				tatrisit.get(0).setLabel(nombreItemNuevaExtraprima);
 				
 				gc.generaParcial(tatrisit);
 				
 				imap1.put(llaveItemNuevaExtraprima,gc.getItems());
 				
-				tatrisit.get(0).setReadOnly(true);
-				tatrisit.get(0).setDsatribu(nombreItemExtraprimaOriginal);
+				tatrisit.get(0).setSoloLectura(true);
+				tatrisit.get(0).setLabel(nombreItemExtraprimaOriginal);
 				
 				gc.generaParcial(tatrisit);
 				
 				imap1.put(llaveItemExtraprimaOriginal,gc.getItems());
 				
-				gc.generaParcial(pantallasManager.obtenerCamposPantalla(
-						cdunieco  , cdramo
-						,cdtipsit , estado
-						,nmpoliza , null
-						,pantalla , rol
-						,null     , "PANEL_LECTURA"));
+				gc.generaParcial(pantallasManager.obtenerComponentes(
+						null, cdunieco, cdramo,
+						cdtipsit, estado, rol,
+						pantalla, "PANEL_LECTURA", null));
 				
 				imap1.put(llavePanelLectura,gc.getItems());
 				
@@ -5976,31 +5970,27 @@ public class EndososAction extends PrincipalCoreAction
 				GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 				imap1=new HashMap<String,Item>();
 				
-				gc.generaParcial(pantallasManager.obtenerCamposPantalla(
-						cdunieco    , cdramo
-						,cdtipsit   , estado
-						,nmpoliza   , null
-						,cdPantalla , rol
-						,null       , cdPanelLectura));
+				gc.generaParcial(pantallasManager.obtenerComponentes(
+						null, cdunieco, cdramo,
+						cdtipsit, estado, rol,
+						cdPantalla, cdPanelLectura, null));
 				
 				imap1.put(keyItemsPanelLectura,gc.getItems());
 				imap1.put(keyFieldsPanelLectura,gc.getFields());
 				
-				List<Tatri> camposCambio=pantallasManager.obtenerCamposPantalla(
-						cdunieco    , cdramo
-						,cdtipsit   , estado
-						,nmpoliza   , null
-						,cdPantalla , rol
-						,null       , cdItemsCambio);
+				List<ComponenteVO> camposCambio=pantallasManager.obtenerComponentes(
+						null, cdunieco, cdramo,
+						cdtipsit, estado, rol,
+						cdPantalla, cdItemsCambio, null);
 				
-				camposCambio.get(0).setDsatribu(nombreItemOriginal);
-				camposCambio.get(0).setReadOnly(true);
+				camposCambio.get(0).setLabel(nombreItemOriginal);
+				camposCambio.get(0).setSoloLectura(true);
 				gc.generaParcial(camposCambio);
 				imap1.put(keyItemCambioOriginal,gc.getItems());
 				
-				camposCambio.get(0).setDsatribu(nombreItemNuevo);
-				camposCambio.get(0).setReadOnly(false);
-				camposCambio.get(0).setSwobliga("S");
+				camposCambio.get(0).setLabel(nombreItemNuevo);
+				camposCambio.get(0).setSoloLectura(false);
+				camposCambio.get(0).setObligatorio(true);
 				gc.generaParcial(camposCambio);
 				imap1.put(keyItemCambioNuevo,gc.getItems());
 				
@@ -6209,46 +6199,27 @@ public class EndososAction extends PrincipalCoreAction
 				/////////////////////////////
 				////// campos pantalla //////
 				GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-				gc.generaParcial(pantallasManager.obtenerCamposPantalla(
-						cdunieco
-						,cdramo
-						,cdtipsit
-						,estado
-						,nmpoliza
-						,nmsuplem
-						,pantalla
-						,rol
-						,orden
-						,seccionLectura));
+				gc.generaParcial(pantallasManager.obtenerComponentes(
+						null, cdunieco, cdramo,
+						cdtipsit, estado, rol,
+						pantalla, seccionLectura, orden));
 				
 				imap1=new HashMap<String,Item>();
 				imap1.put(keyItemsPanelLec,gc.getItems());
 				
-				gc.generaParcial(pantallasManager.obtenerCamposPantalla(
-						cdunieco
-						,cdramo
-						,cdtipsit
-						,estado
-						,nmpoliza
-						,nmsuplem
-						,pantalla
-						,rol
-						,orden
-						,seccionModelo));
+				gc.generaParcial(pantallasManager.obtenerComponentes(
+						null, cdunieco, cdramo,
+						cdtipsit, estado, rol,
+						pantalla, seccionModelo, orden));
+				
 				imap1.put(keyFieldsModelo,gc.getFields());
 				imap1.put(keyColumnsGrid,gc.getColumns());
 				
-				gc.generaParcial(pantallasManager.obtenerCamposPantalla(
-						cdunieco
-						,cdramo
-						,cdtipsit
-						,estado
-						,nmpoliza
-						,nmsuplem
-						,pantalla
-						,rol
-						,orden
-						,seccionComboAgente));
+				gc.generaParcial(pantallasManager.obtenerComponentes(
+						null, cdunieco, cdramo,
+						cdtipsit, estado, rol,
+						pantalla, seccionComboAgente, orden));
+				
 				imap1.put(keyComboAgentes,gc.getItems());
 				
 				////// campos pantalla //////

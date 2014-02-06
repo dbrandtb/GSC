@@ -42,19 +42,17 @@ public class RehabilitacionAction extends PrincipalCoreAction
 			
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			
-			gc.generaParcial(pantallasManager.obtenerCamposPantalla(
-					 null,null,null
-					,null,null,null
-					,"MARCOREHABILITACION",null,null
-					,"FILTRO"));
+			gc.generaParcial(pantallasManager.obtenerComponentes(
+					null, null, null,
+					null, null, null,
+					"MARCOREHABILITACION", "FILTRO", null));
 			
 			imap.put("itemsFiltro" , gc.getItems());
 			
-			gc.generaParcial(pantallasManager.obtenerCamposPantalla(
-					 null,null,null
-					,null,null,null
-					,"MARCOREHABILITACION",null,null
-					,"MODELO"));
+			gc.generaParcial(pantallasManager.obtenerComponentes(
+					null, null, null,
+					null, null, null,
+					"MARCOREHABILITACION", "MODELO", null));
 			
 			imap.put("fieldsModelo" , gc.getFields());
 			imap.put("columnsGrid"  , gc.getColumns());
@@ -131,11 +129,10 @@ public class RehabilitacionAction extends PrincipalCoreAction
 			
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			
-			gc.generaParcial(pantallasManager.obtenerCamposPantalla(
-					 null,null,null
-					,null,null,null
-					,"PANTALLAREHABILITARUNICA",null,null
-					,"FORM"));
+			gc.generaParcial(pantallasManager.obtenerComponentes(
+					null, null, null,
+					null, null, null,
+					"PANTALLAREHABILITARUNICA", "FORM", null));
 			
 			imap.put("itemsForm" , gc.getItems());
 		}

@@ -5,30 +5,41 @@
 package mx.com.gseguros.portal.general.util;
 
 import java.util.List;
-import org.apache.commons.lang.StringUtils;
+
 import mx.com.gseguros.portal.cotizacion.model.Item;
-import mx.com.gseguros.portal.cotizacion.model.Tatri;
+import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.utils.Constantes;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 /**
  *
  * @author Jair
  */
-public class GeneradorCampos {
+public class GeneradorCampos
+{
+	
+	private static       Logger log                   = Logger.getLogger(GeneradorCampos.class);
+    public static final  String namePrefix            = "parametros.pv_otvalor";
+    private static final String formatoFecha          = "d/m/Y";
+    private static final String xtypeDatecolumn       = "datecolumn";
+    private static final int    staticFlex            = 1;
+    private static final String descExcTipoCampoVacio = "El campo no tiene tipo campo (A,N,T,F,P)";
+	private static final String descExcTipoCampoOtro  = "El campo tiene tipo campo incorrecto (A,N,T,F,P)";
     
-    public String idPrefix;
-    public static final String namePrefix="parametros.pv_otvalor";
-    private static org.apache.log4j.Logger log=org.apache.log4j.Logger.getLogger(GeneradorCampos.class);
-    private Item items;
-    private Item fields;
-    private Item columns;
+    public  String idPrefix;
+    private Item   items;
+    private Item   fields;
+    private Item   columns;
     private String context;
     private String cdgarant;
     private String cdramo;
     private String cdrol;
     private String cdtipsit;
     
-    private boolean parcial=false;
-    private boolean conEditor=false;
+    private boolean parcial   = false;
+    private boolean conEditor = false;
     
     public GeneradorCampos(String context)
     {
@@ -36,224 +47,283 @@ public class GeneradorCampos {
     	log.debug("contexto para el generador de campos: "+this.context);
     }
     
-    public void generaParcial(List<Tatri> lt) throws Exception
+    /**
+     * Genera componentes con la cadena (fields, columns o items) sin nombre.
+     * Los objetos JSON generados van en llaves sin pertenecer a un padre ni corchetes.
+     * Completo :
+     * "fields : [ {...}, ... {...} ]"
+     * Parcial  :
+     * "{...}, ... {...}"
+     */
+    public void generaParcial(List<ComponenteVO> listcomp) throws Exception
     {
         this.parcial=true;
-        this.genera(lt);
+        this.genera(listcomp);
         this.parcial=false;
     }
     
-    public void generaConEditor(List<Tatri> lt) throws Exception
+    /**
+     * Genera componentes cuyas columnas tienes editor.
+     * Sirve para grids editables.
+     * Genera el padre (columns, fields o items) y los corchetes que encierran los hijos.
+     * "columns :
+     * [
+     *    {
+     *        header     : 'columna'
+     *        ,dataIndex : 'index'
+     *        ,editor    :
+     *        {
+     *            xtype       : 'textfield'
+     *            ,allowBlank : false
+     *        }
+     *    },
+     *    ...
+     *    {...}
+     * ]"
+     */
+    public void generaConEditor(List<ComponenteVO> listcomp) throws Exception
     {
     	this.conEditor=true;
-    	this.genera(lt);
+    	this.genera(listcomp);
     	this.conEditor=false;
     }
     
-    public void generaParcialConEditor(List<Tatri> lt) throws Exception
+    /**
+     * Genera componentes parciales cuyas columnas tienen editor.
+     * Sirve para grids editables.
+     * Los objetos JSON generados no tienen padre (columns, items o fields) ni estan entre corchetes.
+     * "{
+     *     header     : 'columna'
+     *     ,dataIndex : 'index'
+     *     ,editor    :
+     *     {
+     *         xtype       : 'textfield'
+     *         ,allowBlank : false
+     *     }
+     * },
+     * ...
+     * { ... }"
+     */
+    public void generaParcialConEditor(List<ComponenteVO> listcomp) throws Exception
     {
     	this.parcial=true;
     	this.conEditor=true;
-    	this.genera(lt);
+    	this.genera(listcomp);
     	this.parcial=false;
     	this.conEditor=false;
     }
     
-    public void genera(List<Tatri> lt) throws Exception
+    public void genera(List<ComponenteVO> listcomp) throws Exception
     {
+    	String itemsKey   = null;
+    	String fieldsKey  = null;
+    	String columnskey = null;
+    	
+    	if(!this.parcial)
+    	{
+    		itemsKey   = "items";
+    		fieldsKey  = "fields";
+    		columnskey = "columns";
+    	}
+    	
     	idPrefix="idAutoGenerado_"+System.currentTimeMillis()+"_"+((long)Math.ceil((Math.random()*10000d)))+"_";
-        items=new Item(parcial?null:"items",null,Item.ARR);
-        fields=new Item(parcial?null:"fields",null,Item.ARR);
-        columns=new Item(parcial?null:"columns",null,Item.ARR);
-        if(lt!=null&&!lt.isEmpty())
+    	
+        items  = new Item(itemsKey   , null , Item.ARR);
+        fields = new Item(fieldsKey  , null , Item.ARR);
+        columns= new Item(columnskey , null , Item.ARR);
+        
+        if(listcomp!=null&&!listcomp.isEmpty())
         {
-            for(int i=0;i<lt.size();i++)
+            for(int i=0;i<listcomp.size();i++)
             {
-                this.generaCampoYFieldYColumn(lt, lt.get(i), i);
+                this.generaCampoYFieldYColumn(listcomp, listcomp.get(i), i);
             }
         }
+        
         log.debug(fields.toString());
         log.debug(items.toString());
         log.debug(columns.toString());
     }
     
-    private Item generaItem(List<Tatri> lt, Tatri ta, Integer idx, boolean esEditor) throws Exception
+    /**
+     * Genera un item para formulario o un editor para grid segun parametro de entrada esEditor
+     */
+    private Item generaItem(List<ComponenteVO> listcomp, ComponenteVO comp, Integer idx, boolean esEditor) throws Exception
     {
-    	boolean listeners=false;
+    	boolean esCombo   = StringUtils.isNotBlank(comp.getCatalogo());
+    	String  tipoCampo = comp.getTipoCampo();
     	
-    	//////////////////
-        ////// item //////
-        Item it=new Item();
-        if(StringUtils.isNotBlank(ta.getOttabval()))
-        //se alimenta de la base de datos
+        Item item=new Item();
+        item.setType(Item.OBJ);
+        
+        ////// Ext.create('Ext...',{}) //////
+        if(esCombo)
         {
-            it.setType(Item.OBJ);
-            it.setComposedName("Ext.create('Ext.form.ComboBox',{");
-            it.setComposedNameClose("})");
-            it.add(Item.crear("id", this.idPrefix+(esEditor?"editor_":"")+idx));
-            it.add(Item.crear("cdatribu", ta.getCdatribu()));
-            it.add(Item.crear("readOnly", ta.isReadOnly()));
-            it.add(Item.crear("allowBlank",ta.getSwobliga()==null||!ta.getSwobliga().equalsIgnoreCase("S")));
-            it.add(Item.crear("fieldLabel",!esEditor?ta.getDsatribu():""));
-            it.add(Item.crear("style","margin:5px"));
-            it.add(Item.crear("forceSelection",false));
-            it.add(Item.crear("typeAhead",true));
-            it.add(Item.crear("matchFieldWidth",true));
-            it.add(Item.crear("queryMode", "local"));
-            Item store=new Item(null,null,Item.OBJ,"store:Ext.create('Ext.data.Store',{","})");
-            it.add(store);
-            store.add("model","Generic");
-            if(idx>0&&StringUtils.isNotBlank(ta.getCdtablj1()))//para el hijo anidado
+        	item.setComposedName("Ext.create('Ext.form.ComboBox',{");
+        }
+        else if(tipoCampo.equals(ComponenteVO.TIPOCAMPO_ALFANUMERICO))
+        {
+        	item.setComposedName("Ext.create('Ext.form.TextField',{");
+        }
+        else if(tipoCampo.equals(ComponenteVO.TIPOCAMPO_TEXTAREA))
+        {
+        	item.setComposedName("Ext.create('Ext.form.TextArea',{");
+        }
+        else if(tipoCampo.equals(ComponenteVO.TIPOCAMPO_NUMERICO)||tipoCampo.equals(ComponenteVO.TIPOCAMPO_PORCENTAJE))
+        {
+        	item.setComposedName("Ext.create('Ext.form.NumberField',{");
+        }
+        else if(tipoCampo.equals(ComponenteVO.TIPOCAMPO_FECHA))
+        {
+        	item.setComposedName("Ext.create('Ext.form.DateField',{");
+        }
+        item.setComposedNameClose("})");
+        ////// Ext.create('Ext...',{}) //////
+        
+        ////// id, cdatribu, fieldLabel, allowBlank, name, readOnly, value, hidden, style //////
+        String auxIdEditor = "";
+        if(esEditor)
+        {
+        	auxIdEditor = "editor_";
+        }
+        String compId = this.idPrefix+auxIdEditor+idx; 
+        
+        String cdatribu = comp.getNameCdatribu();
+        if(cdatribu==null)
+        {
+        	cdatribu = "";
+        }
+        
+        String fieldLabel = comp.getLabel();
+        if(fieldLabel==null||esEditor)
+        {
+        	fieldLabel = "";
+        }
+        
+        String name = comp.getNameCdatribu();
+        if(name==null)
+        {
+        	name = "";
+        }
+        if(comp.isFlagEsAtribu())
+        {
+        	if(name.length()<2)
+        	{
+        		name = "0" + name;
+        	}
+        	name = GeneradorCampos.namePrefix + name;
+        }
+        
+        String value=comp.getValue();
+        
+        item.add("id"         , compId);
+        item.add("cdatribu"   , cdatribu);
+        item.add("fieldLabel" , fieldLabel);
+        item.add("allowBlank" , !comp.isObligatorio());
+        item.add("name"       , name);
+        item.add("readOnly"   , comp.isSoloLectura());
+        if(StringUtils.isNotBlank(value))
+        {
+        	item.add(Item.crear("value" , value).setQuotes(""));
+        }
+        item.add("hidden"     , comp.isOculto());
+        item.add("style"      , "margin:5px");
+        ////// id, cdatribu, fieldLabel, allowBlank, name, readOnly, value, hidden, style //////
+        
+        ////// format //////
+        if(tipoCampo.equals(ComponenteVO.TIPOCAMPO_FECHA))
+        {
+        	item.add("format",GeneradorCampos.formatoFecha);
+        }
+        ////// format //////
+        
+        ////// minLength, maxLength //////
+        if((tipoCampo.equals(ComponenteVO.TIPOCAMPO_ALFANUMERICO)
+        		||tipoCampo.equals(ComponenteVO.TIPOCAMPO_TEXTAREA)
+        		||tipoCampo.equals(ComponenteVO.TIPOCAMPO_NUMERICO)
+        		||tipoCampo.equals(ComponenteVO.TIPOCAMPO_PORCENTAJE)
+        		)&&!esCombo
+        		)
+        {
+	        if(comp.isFlagMinLength())
+	        {
+	        	item.add("minLength" , comp.getMinLength());
+	        }
+	        if(comp.isFlagMaxLength())
+	        {
+	        	item.add("maxLength" , comp.getMaxLength());
+	        }
+        }
+        ////// minLength, maxLength //////
+        
+        ////// es padre //////
+        boolean esPadre = idx<listcomp.size()-1&&listcomp.get(idx+1).isDependiente();
+        if(esPadre&&!esCombo)//si es combo no se pone porque se sobreescribe
+        {
+        	this.agregarHerenciaPadre(listcomp,item,idx,esEditor);
+        }
+        ////// es padre //////
+        
+        ////// combo //////
+        if(esCombo)
+        {
+        	boolean esHijo          = comp.isDependiente();
+        	boolean esAutocompleter = StringUtils.isNotBlank(comp.getQueryParam());
+        	
+        	////// typeAhead, displayField, valueField //////
+        	item.add("typeAhead"    , true);
+        	item.add("displayField" , "value");
+            item.add("valueField"   , "key");
+            ////// typeAhead, displayField, valueField //////
+        	
+        	////// forceSelection, editable //////
+            boolean editable = false;
+            if(esAutocompleter)
             {
-            	store.add("autoLoad",false);
+            	editable = true;
             }
-            else
+            item.add("forceSelection" , editable);
+            item.add("editable"       , editable);
+        	////// forceSelection, editable //////
+        	
+        	////// queryMode //////
+            String queryMode = "local";
+            if(esAutocompleter)
             {
-            	store.add("autoLoad",true);//debe ser true!
+            	queryMode = "remote";
             }
-            Item proxy=new Item("proxy",null,Item.OBJ);
-            store.add(proxy);
-            proxy.add("type","ajax");
-            proxy.add("url",this.context+"/catalogos/obtieneCatalogo.action");
-            if(ta.getType().equals(Tatri.TATRISIT))
+        	item.add("queryMode", queryMode);
+        	////// queryMode //////
+        	
+        	////// herencia //////
+        	boolean listeners = false;
+        	if(esPadre)
             {
-            	proxy.add(
-                        Item.crear("extraParams", null, Item.OBJ)
-                        .add("'params.cdatribu'",ta.getCdatribu())
-                        .add("'params.cdtipsit'",cdtipsit)
-                        .add("catalogo",Catalogos.TATRISIT.getCdTabla())
-                        );
-            }
-            else if(ta.getType().equals(Tatri.TATRIPOL))
-            {
-            	proxy.add(
-                        Item.crear("extraParams", null, Item.OBJ)
-                        .add("'params.cdatribu'",ta.getCdatribu())
-                        .add("catalogo",Catalogos.TATRIPOL.getCdTabla())
-                        );
-            }
-            else if(ta.getType().equals(Tatri.TATRIGAR))
-            {
-            	proxy.add(
-                        Item.crear("extraParams", null, Item.OBJ)
-                        .add("'params.cdatribu'",ta.getCdatribu())
-                        .add("'params.cdgarant'",cdgarant)
-                        .add("catalogo",Catalogos.TATRIGAR.getCdTabla())
-                        );
-            }
-            else if(ta.getType().equals(Tatri.TATRIPER))
-            {
-            	proxy.add(
-                        Item.crear("extraParams", null, Item.OBJ)
-                        .add("'params.cdramo'"  ,cdramo)
-                        .add("'params.cdrol'"   ,cdrol)
-                        .add("'params.cdatribu'",ta.getCdatribu())
-                        .add("'params.cdtipsit'",cdtipsit)
-                        .add("catalogo",Catalogos.TATRIPER.getCdTabla())
-                        );
-            }
-            else if(ta.getType().equals(Tatri.TATRIGEN))
-            {
-            	//////////////////////////////////////////////////////
-            	////// del 31 al 50 son parametros para lectura //////
-            	////// 31:llave 32:valor...                     //////
-            	Item extraParams=Item.crear("extraParams", null, Item.OBJ)
-                        .add("catalogo",ta.getMapa().get("OTVALOR03"));
-            	for(int i=31;i<=49;i+=2)
+            	if(esHijo)
             	{
-            		if(ta.getMapa().get("OTVALOR"+i)!=null&&ta.getMapa().get("OTVALOR"+i).length()>0)
-            		{
-            			extraParams.add(
-            					Item.crear(ta.getMapa().get("OTVALOR"+i),ta.getMapa().get("OTVALOR"+(i+1)))
-            					.setQuotes("")
-            					);
-            		}
-            	}
-            	proxy.add(extraParams);
-            	////// del 31 al 50 son parametros para lectura //////
-            	//////////////////////////////////////////////////////
-            	
-            	//////////////////////////////////////////////
-            	////// cuando el combo es autocompleter //////
-            	////// otvalor12 = queryParam           //////
-            	if(ta.getMapa().get("OTVALOR12")!=null&&ta.getMapa().get("OTVALOR12").length()>0)
-            	{
-            		it.add(Item.crear("hideTrigger" , true));
-            		it.add(Item.crear("minChars"    , 3));
-            		it.add(Item.crear("queryMode"   , "remote"));
-            		it.add(Item.crear("queryParam"  , ta.getMapa().get("OTVALOR12")));
-            		store.add("autoLoad",false);
-            	}
-            	////// cuando el combo es autocompleter //////
-            	//////////////////////////////////////////////
-            	
-            	////////////////////////////////
-            	////// para valor inicial //////
-            	////// otvalor13          //////
-            	if(ta.getMapa().get("OTVALOR13")!=null&&ta.getMapa().get("OTVALOR13").length()>0)
-            	{
-            		it.add(Item.crear("value" , ta.getMapa().get("OTVALOR13")).setQuotes(""));
-            	}
-            	////// para valor inicial //////
-            	////////////////////////////////
-            	
-            	/////////////////////////////////////
-            	////// para saber si es hidden //////
-            	if(ta.getMapa().get("OTVALOR14")!=null&&ta.getMapa().get("OTVALOR14").equalsIgnoreCase("S"))
-            	{
-            		it.add(Item.crear("hidden" , true));
-            	}
-            	////// para saber si es hidden //////
-            	/////////////////////////////////////
-            	
-            	/////////////////////////////////////
-            	////// para saber si es hidden //////
-            	if(ta.getMapa().get("OTVALOR14")!=null&&ta.getMapa().get("OTVALOR14").equalsIgnoreCase("S"))
-            	{
-            		it.add(Item.crear("hidden" , true));
-            	}
-            	////// para saber si es hidden //////
-            	/////////////////////////////////////
-            }
-            if(!ta.getType().equalsIgnoreCase(Tatri.TATRIGEN))
-            {
-            	it.add(Item.crear("name", this.namePrefix+(ta.getCdatribu().length()>1?ta.getCdatribu():"0"+ta.getCdatribu())));
-            }
-            else
-            {
-            	it.add(Item.crear("name", ta.getMapa().get("OTVALOR10")));
-            }
-            proxy.add(
-                    Item.crear("reader", null, Item.OBJ)
-                    .add("type","json")
-                    .add("root","lista")
-                    );
-            it.add(Item.crear("displayField", "value"));
-            it.add(Item.crear("valueField", "key"));
-            it.add(Item.crear("editable", "false"));
-            //it.add(Item.crear("emptyText", "Seleccione..."));
-            if(idx<lt.size()-1&&StringUtils.isNotBlank(lt.get(idx+1).getCdtablj1()))//para el padre anidado
-            {
-            	if(idx>0&&StringUtils.isNotBlank(ta.getCdtablj1()))//es padre e hijo a la vez
-            	{
-            		this.agregarHerenciaPadreHijo(lt,it,idx,esEditor);
+            		this.agregarHerenciaPadreHijo(listcomp, item, idx, esEditor);
             	}
             	else
             	{
-            		this.agregarHerenciaPadre(lt,it,idx,esEditor);
+            		this.agregarHerenciaPadre(listcomp, item, idx, esEditor);
             	}
             	listeners=true;
             }	
-            if(idx>0&&StringUtils.isNotBlank(ta.getCdtablj1()))//para el hijo anidado
+            if(esHijo)
             {
-                it.add(Item.crear("forceSelection",false));
-                it.add(Item.crear(""
+            	String auxCompAnteIdEditor = "";
+                if(esEditor)
+                {
+                	auxCompAnteIdEditor = "editor_";
+                }
+                String compAnteriorId = this.idPrefix+auxCompAnteIdEditor+(idx-1);
+                
+                //it.add(Item.crear("forceSelection",false));??
+                item.add(Item.crear(""
                 		+ "heredar",
                 		  "function(remoto)"
                 		+ "{"
-                		+ "    debug('Heredar "+(ta.getType()==Tatri.TATRIGEN?
-                				ta.getMapa().get("OTVALOR10"):
-                				this.namePrefix+(ta.getCdatribu().length()>1?ta.getCdatribu():"0"+ta.getCdatribu()))+"');"
+                		+ "    debug('Heredar "+name+"');"
                 		+ "    if(!this.noEsPrimera||remoto==true)"
                 		+ "    {"
                 		+ "        debug('Hereda por primera vez o porque la invoca el padre');"
@@ -262,11 +332,11 @@ public class GeneradorCampos {
                 		+ "        {"
                 		+ "            params    :"
                 		+ "            {"
-                		+ "                'params.idPadre':Ext.getCmp('"+this.idPrefix+(esEditor?"editor_":"")+(idx-1)+"').getValue()"
+                		+ "                'params.idPadre':Ext.getCmp('"+compAnteriorId+"').getValue()"
                 		+ "            }"
                 		+ "            ,callback : function()"
                 		+ "            {"
-                		+ "                var thisCmp=Ext.getCmp('"+this.idPrefix+(esEditor?"editor_":"")+idx+"');"
+                		+ "                var thisCmp=Ext.getCmp('"+compId+"');"
                 		+ "                var valorActual=thisCmp.getValue();"
                 		+ "                var dentro=false;"
                 		+ "                thisCmp.getStore().each(function(record)"
@@ -302,264 +372,301 @@ public class GeneradorCampos {
                 		+ "}")
                 		).setQuotes(""));
             }
+            ////// herencia //////
+            
+            ///////////////////
+            ////// store //////
+            //////       //////
+            Item store=new Item(null,null,Item.OBJ,"store:Ext.create('Ext.data.Store',{","})");
+            item.add(store);
+            store.add("model","Generic");
+            
+            ////// autoLoad //////
+            boolean autoLoad = true;
+            if(esHijo||esAutocompleter)
+            {
+            	autoLoad=false;
+            }
+            store.add("autoLoad",autoLoad);
+            ////// autoLoad //////
+            
+            ///////////////////
+            ////// proxy //////
+            Item proxy=new Item("proxy",null,Item.OBJ);
+            store.add(proxy);
+            proxy.add("type","ajax");
+            proxy.add("url",this.context+"/catalogos/obtieneCatalogo.action");
+            proxy.add(
+            		Item.crear("reader", null, Item.OBJ)
+            		.add("type","json")
+            		.add("root","lista")
+            		);
+            
+            ////// extraParams //////
+            if(comp.getType()==ComponenteVO.TIPO_TATRISIT)
+            {
+            	proxy.add(
+                        Item.crear("extraParams" , null, Item.OBJ)
+                        .add("'params.cdatribu'" , cdatribu)
+                        .add("'params.cdtipsit'" , cdtipsit)
+                        .add("catalogo"          , Catalogos.TATRISIT.getCdTabla())
+                        );
+            }
+            else if(comp.getType()==ComponenteVO.TIPO_TATRIPOL)
+            {
+            	proxy.add(
+                        Item.crear("extraParams" , null, Item.OBJ)
+                        .add("'params.cdatribu'" , cdatribu)
+                        .add("catalogo"          , Catalogos.TATRIPOL.getCdTabla())
+                        );
+            }
+            else if(comp.getType()==ComponenteVO.TIPO_TATRIGAR)
+            {
+            	proxy.add(
+                        Item.crear("extraParams" , null, Item.OBJ)
+                        .add("'params.cdatribu'" , cdatribu)
+                        .add("'params.cdgarant'" , cdgarant)
+                        .add("catalogo"          , Catalogos.TATRIGAR.getCdTabla())
+                        );
+            }
+            else if(comp.getType()==ComponenteVO.TIPO_TATRIPER)
+            {
+            	proxy.add(
+                        Item.crear("extraParams", null, Item.OBJ)
+                        .add("'params.cdramo'"  , cdramo)
+                        .add("'params.cdrol'"   , cdrol)
+                        .add("'params.cdatribu'", cdatribu)
+                        .add("'params.cdtipsit'", cdtipsit)
+                        .add("catalogo"         , Catalogos.TATRIPER.getCdTabla())
+                        );
+            }
+            else if(comp.getType()==ComponenteVO.TIPO_GENERICO)
+            {
+            	Item extraParams=Item.crear("extraParams", null, Item.OBJ)
+            			.add("catalogo",comp.getCatalogo());
+            	if(StringUtils.isNotBlank(comp.getParamName1()))
+            	{
+            		extraParams.add(Item.crear(comp.getParamName1(),comp.getParamValue1()).setQuotes(""));
+            	}
+            	if(StringUtils.isNotBlank(comp.getParamName2()))
+            	{
+            		extraParams.add(Item.crear(comp.getParamName2(),comp.getParamValue2()).setQuotes(""));
+            	}
+            	if(StringUtils.isNotBlank(comp.getParamName3()))
+            	{
+            		extraParams.add(Item.crear(comp.getParamName3(),comp.getParamValue3()).setQuotes(""));
+            	}
+            	if(StringUtils.isNotBlank(comp.getParamName4()))
+            	{
+            		extraParams.add(Item.crear(comp.getParamName4(),comp.getParamValue4()).setQuotes(""));
+            	}
+            	if(StringUtils.isNotBlank(comp.getParamName5()))
+            	{
+            		extraParams.add(Item.crear(comp.getParamName5(),comp.getParamValue5()).setQuotes(""));
+            	}
+            	proxy.add(extraParams);
+            }
+            ////// extraParams //////
+            
+            ////// proxy //////
+            ///////////////////
+            
+            //////       //////
+            ////// store //////
+            ///////////////////
+            
+            ////// autocompleter //////
+            if(esAutocompleter)
+            {
+            	item.add("hideTrigger" , true);
+            	item.add("minChars"    , 3);
+            	item.add("queryParam"  , comp.getQueryParam());
+            }
+            ////// autocompleter //////
         }
-        else if(ta.getSwformat().equals("A")||ta.getSwformat().equals("T"))//textfield y textarea
-        {
-            it.setType(Item.OBJ);
-            if(ta.getSwformat().equals("A"))
-            {
-            	it.setComposedName("Ext.create('Ext.form.TextField',{");
-            }
-            else
-            {
-            	it.setComposedName("Ext.create('Ext.form.TextArea',{");
-            }
-            it.setComposedNameClose("})");
-            it.add(Item.crear("id", this.idPrefix+(esEditor?"editor_":"")+idx));
-            it.add(Item.crear("cdatribu", ta.getCdatribu()));
-            it.add(Item.crear("readOnly", ta.isReadOnly()));
-            it.add(Item.crear("allowBlank",ta.getSwobliga()==null||!ta.getSwobliga().equalsIgnoreCase("S")));
-            it.add(Item.crear("fieldLabel",!esEditor?ta.getDsatribu():""));
-            it.add(Item.crear("style","margin:5px"));
-            //it.add(Item.crear("emptyText", "Introduzca..."));
-            if(ta.getNmlmin()!=null)
-            {
-            	it.add(Item.crear("minLength", Integer.parseInt(ta.getNmlmin())));
-            }
-            if(ta.getNmlmax()!=null)
-            {
-            	it.add(Item.crear("maxLength", Integer.parseInt(ta.getNmlmax())));
-            }
-            if(idx<lt.size()-1&&StringUtils.isNotBlank(lt.get(idx+1).getCdtablj1()))
-            {
-            	this.agregarHerenciaPadre(lt,it,idx,esEditor);
-            }
-            if(!ta.getType().equalsIgnoreCase(Tatri.TATRIGEN))
-            {
-            	it.add(Item.crear("name", this.namePrefix+(ta.getCdatribu().length()>1?ta.getCdatribu():"0"+ta.getCdatribu())));
-            }
-            else
-            {
-            	it.add(Item.crear("name", ta.getMapa().get("OTVALOR10")));
-            	
-            	////////////////////////////////
-            	////// para valor inicial //////
-            	////// otvalor13          //////
-            	if(ta.getMapa().get("OTVALOR13")!=null&&ta.getMapa().get("OTVALOR13").length()>0)
-            	{
-            		it.add(Item.crear("value" , ta.getMapa().get("OTVALOR13")).setQuotes(""));
-            	}
-            	////// para valor inicial //////
-            	////////////////////////////////
-            	
-            	/////////////////////////////////////
-            	////// para saber si es hidden //////
-            	if(ta.getMapa().get("OTVALOR14")!=null&&ta.getMapa().get("OTVALOR14").equalsIgnoreCase("S"))
-            	{
-            		it.add(Item.crear("hidden" , true));
-            	}
-            	////// para saber si es hidden //////
-            	/////////////////////////////////////
-            }
-        }
-        else if(ta.getSwformat().equals("N")||ta.getSwformat().equals("P"))
-        {
-            it.setType(Item.OBJ);
-            it.setComposedName("Ext.create('Ext.form.NumberField',{");
-            it.setComposedNameClose("})");
-            it.add(Item.crear("id", this.idPrefix+(esEditor?"editor_":"")+idx));
-            it.add(Item.crear("cdatribu", ta.getCdatribu()));
-            it.add(Item.crear("readOnly", ta.isReadOnly()));
-            it.add(Item.crear("allowBlank",ta.getSwobliga()==null||!ta.getSwobliga().equalsIgnoreCase("S")));
-            it.add(Item.crear("fieldLabel",!esEditor?ta.getDsatribu():""));
-            it.add(Item.crear("style","margin:5px"));
-            //it.add(Item.crear("emptyText", "Introduzca..."));
-            if(ta.getNmlmin()!=null)
-            {
-            	it.add(Item.crear("minLength", Integer.parseInt(ta.getNmlmin())));
-            }
-            if(ta.getNmlmax()!=null)
-            {
-            	it.add(Item.crear("maxLength", Integer.parseInt(ta.getNmlmax())));
-            }
-            if(idx<lt.size()-1&&StringUtils.isNotBlank(lt.get(idx+1).getCdtablj1()))
-            {
-            	this.agregarHerenciaPadre(lt,it,idx,esEditor);
-            }
-            if(!ta.getType().equalsIgnoreCase(Tatri.TATRIGEN))
-            {
-            	it.add(Item.crear("name", this.namePrefix+(ta.getCdatribu().length()>1?ta.getCdatribu():"0"+ta.getCdatribu())));
-            }
-            else
-            {
-            	it.add(Item.crear("name", ta.getMapa().get("OTVALOR10")));
-            	
-            	////////////////////////////////
-            	////// para valor inicial //////
-            	////// otvalor13          //////
-            	if(ta.getMapa().get("OTVALOR13")!=null&&ta.getMapa().get("OTVALOR13").length()>0)
-            	{
-            		it.add(Item.crear("value" , ta.getMapa().get("OTVALOR13")).setQuotes(""));
-            	}
-            	////// para valor inicial //////
-            	////////////////////////////////
-            	
-            	/////////////////////////////////////
-            	////// para saber si es hidden //////
-            	if(ta.getMapa().get("OTVALOR14")!=null&&ta.getMapa().get("OTVALOR14").equalsIgnoreCase("S"))
-            	{
-            		it.add(Item.crear("hidden" , true));
-            	}
-            	////// para saber si es hidden //////
-            	/////////////////////////////////////
-            }
-        }
-        else if(ta.getSwformat().equals("F"))
-        {
-            it.setType(Item.OBJ);
-            it.setComposedName("Ext.create('Ext.form.DateField',{");
-            it.setComposedNameClose("})");
-            it.add(Item.crear("id", this.idPrefix+(esEditor?"editor_":"")+idx));
-            it.add(Item.crear("cdatribu", ta.getCdatribu()));
-            it.add(Item.crear("readOnly", ta.isReadOnly()));
-            it.add(Item.crear("allowBlank",ta.getSwobliga()==null||!ta.getSwobliga().equalsIgnoreCase("S")));
-            it.add(Item.crear("fieldLabel",!esEditor?ta.getDsatribu():""));
-            it.add(Item.crear("style","margin:5px"));
-            it.add(Item.crear("format","d/m/Y"));
-            if(!ta.getType().equalsIgnoreCase(Tatri.TATRIGEN))
-            {
-            	it.add(Item.crear("name", this.namePrefix+(ta.getCdatribu().length()>1?ta.getCdatribu():"0"+ta.getCdatribu())));
-            }
-            else
-            {
-            	it.add(Item.crear("name", ta.getMapa().get("OTVALOR10")));
-            	
-            	////////////////////////////////
-            	////// para valor inicial //////
-            	////// otvalor13          //////
-            	if(ta.getMapa().get("OTVALOR13")!=null&&ta.getMapa().get("OTVALOR13").length()>0)
-            	{
-            		it.add(Item.crear("value" , ta.getMapa().get("OTVALOR13")).setQuotes(""));
-            	}
-            	////// para valor inicial //////
-            	////////////////////////////////
-            	
-            	/////////////////////////////////////
-            	////// para saber si es hidden //////
-            	if(ta.getMapa().get("OTVALOR14")!=null&&ta.getMapa().get("OTVALOR14").equalsIgnoreCase("S"))
-            	{
-            		it.add(Item.crear("hidden" , true));
-            	}
-            	////// para saber si es hidden //////
-            	/////////////////////////////////////
-            }
-        }
-        ////// item //////
-        //////////////////
+        ////// combo //////
         
-        return it;
+        return item;
     }
     
-    public void generaCampoYFieldYColumn(List<Tatri> lt, Tatri ta, Integer idx) throws Exception
+    /**
+     * Genera un field para Ext.data.Model
+     * Ext.define('MiModelo',
+     * {
+     *     extend  : 'Ext.data.Model'
+     *     ,fields :
+     *     [
+     *         <s:property value="itemFields" />
+     *     ]
+     * });
+     * La cadena imprime:
+     * {
+     *     name        : 'atributo'
+     *     ,type       : 'date'
+     *     ,dateFormat : 'd/m/Y'
+     * }
+     */
+    private Item generaField(List<ComponenteVO> listcomp, ComponenteVO comp, Integer idx) throws Exception
     {
-    	///////////////////
-    	////// field //////
-        Item fi=new Item();
-        fi.setType(Item.OBJ);
-        if(!ta.getType().equalsIgnoreCase(Tatri.TATRIGEN))
-        {            	
-        	fi.add(Item.crear("name", this.namePrefix+(ta.getCdatribu().length()>1?ta.getCdatribu():"0"+ta.getCdatribu())));
-        }
-        else
+    	String tipoAlfanum  = "string";
+    	String tipoFecha    = "date";
+    	String tipoEntero   = "int";
+    	String tipoFlotante = "float";
+    	
+    	String name = comp.getNameCdatribu();
+    	if(comp.isFlagEsAtribu())
+    	{
+    		String cdatribu = comp.getNameCdatribu();
+    		if(cdatribu.length()<2)
+    		{
+    			cdatribu = "0" + cdatribu;
+    		}
+    		name = GeneradorCampos.namePrefix + cdatribu;
+    	}
+    	
+        String type     = tipoAlfanum;
+        boolean esCombo = StringUtils.isNotBlank(comp.getCatalogo()); 
+        if(!esCombo)
         {
-        	fi.add(Item.crear("name", ta.getMapa().get("OTVALOR10")));
-        }
-        String type="string";
-        if(ta.getSwformat().equals("A")||StringUtils.isNotBlank(ta.getOttabval()))//si es combo solo pone strings
-            type="string";
-        else if(ta.getSwformat().equals("N"))
-            type="int";
-        else if(ta.getSwformat().equals("P"))
-        	type="float";
-        else if(ta.getSwformat().equals("F"))
-            type="date";
-        fi.add(Item.crear("type", type));
-        if(ta.getSwformat().equals("F"))
-        	fi.add(Item.crear("dateFormat", "d/m/Y"));
-    	////// field //////
-        ///////////////////
-        
-        ////////////////////
-        ////// column //////
-        Item col=new Item();
-        col.setType(Item.OBJ);
-        if(!ta.getType().equalsIgnoreCase(Tatri.TATRIGEN))
-        {            	
-        	col.add("dataIndex",this.namePrefix+(ta.getCdatribu().length()>1?ta.getCdatribu():"0"+ta.getCdatribu()));
-        }
-        else
-        {
-        	col.add("dataIndex",ta.getMapa().get("OTVALOR10"));
-        }
-        col.add("header",ta.getDsatribu());
-        col.add("flex",1);
-        if(type.equals("date"))
-        {
-        	col.add("xtype"  , "datecolumn");
-        	col.add("format" , "d/m/Y");
-        }
-        if(ta.getType()==Tatri.TATRIGEN)
-        {
-        	String visible=ta.getMapa().get("OTVALOR08");
-        	if(visible==null||visible.length()==0||visible.equalsIgnoreCase("N"))
-        	{
-        		col=null;
-        	}
-        	else if(visible.equalsIgnoreCase("H"))
-        	{
-        		col.add("hidden",true);
-        	}
+        	String tipo = comp.getTipoCampo();
+        	boolean tieneTipo = StringUtils.isNotBlank(tipo);  
         	
-        	if(col!=null)
+        	if(tieneTipo)
         	{
-	        	String renderer=ta.getMapa().get("OTVALOR09");
-	        	if(renderer==null||renderer.length()==0||renderer.equalsIgnoreCase("N"))
-	        	{
-	        		//sin renderer
-	        	}
-	        	else if(renderer.equalsIgnoreCase("MONEY"))
-	        	{
-	        		col.add(Item.crear("renderer","Ext.util.Format.usMoney").setQuotes(""));
-	        	}
-	        	else if(renderer.length()>0)
-	        	{
-	        		col.add(Item.crear("renderer",renderer).setQuotes(""));
-	        	}
+        		if(tipo.equalsIgnoreCase(ComponenteVO.TIPOCAMPO_ALFANUMERICO))
+        		{}
+        		else if(tipo.equalsIgnoreCase(ComponenteVO.TIPOCAMPO_FECHA))
+        		{
+        			type = tipoFecha;
+        		}
+        		else if(tipo.equalsIgnoreCase(ComponenteVO.TIPOCAMPO_NUMERICO))
+        		{
+        			type = tipoEntero;
+        		}
+        		else if(tipo.equalsIgnoreCase(ComponenteVO.TIPOCAMPO_PORCENTAJE))
+        		{
+        			type = tipoFlotante;
+        		}
+        		else if(tipo.equalsIgnoreCase(ComponenteVO.TIPOCAMPO_TEXTAREA))
+        		{}
+        		else
+        		{
+        			throw new Exception(descExcTipoCampoOtro);
+        		}
+        	}
+        	else
+        	{
+        		throw new Exception(descExcTipoCampoVacio);
         	}
         }
-        ////// column //////
-        ////////////////////
+
+        Item field=new Item();
+        field.setType(Item.OBJ);
+        field.add(Item.crear("name", name));
+        field.add(Item.crear("type", type));
         
-        ///////////////////////////
-        ////// item y editor //////
-        Item it=this.generaItem(lt, ta, idx, false);
+        if(type.equals(tipoFecha))
+        {
+        	field.add(Item.crear("dateFormat", GeneradorCampos.formatoFecha));
+        }
+        
+        return field;
+    }
+    
+    /**
+     * Genera una columna para usar en grid.
+     * Ext.define('MiGrid',
+     * {
+     *     extend   : 'Ext.grid.Panel'
+     *     ,columns :
+     *     [
+     *         <s:property value="itemColumn" />
+     *     ]
+     * });
+     */
+    private Item generaColumn(List<ComponenteVO> listcomp, ComponenteVO comp, Integer idx) throws Exception
+    {
+    	Item col = null;
+    	
+    	String columna = comp.getColumna();
+    	boolean hayColumna = StringUtils.isNotBlank(columna)
+    			&&(
+    				columna.equalsIgnoreCase(Constantes.SI)
+    				||columna.equalsIgnoreCase(ComponenteVO.COLUMNA_OCULTA)
+    			);
+    	
+    	if(hayColumna)
+    	{
+	    	String dataIndex = comp.getNameCdatribu();
+	    	if(comp.isFlagEsAtribu())
+	    	{
+	    		String cdatribu = comp.getNameCdatribu();
+	    		if(cdatribu.length()<2)
+	    		{
+	    			cdatribu = "0" + cdatribu;
+	    		}
+	    		dataIndex = GeneradorCampos.namePrefix + cdatribu;
+	    	}
+	    	
+	    	String header = comp.getLabel();
+	        
+	        boolean hidden  = columna.equalsIgnoreCase(ComponenteVO.COLUMNA_OCULTA);
+	        String renderer = comp.getRenderer();
+	        if(StringUtils.isBlank(renderer))
+	        {
+	        	renderer = "";
+	        }
+	        
+	        String tipoCampo = comp.getTipoCampo();
+	        boolean esFecha = StringUtils.isNotBlank(tipoCampo)&&tipoCampo.equalsIgnoreCase(ComponenteVO.TIPOCAMPO_FECHA);
+	    
+		    col=new Item();
+		    col.setType(Item.OBJ);
+		    col.add("header"    , header);
+		    col.add("dataIndex" , dataIndex);
+		    col.add("flex"      , GeneradorCampos.staticFlex);
+		    col.add("hidden"    , hidden);
+		    
+		    if(StringUtils.isNotBlank(renderer))
+		    {
+		    	col.add(Item.crear("renderer",renderer).setQuotes(""));
+		    }
+		    
+		    if(esFecha)
+		    {
+		    	col.add("xtype"  , GeneradorCampos.xtypeDatecolumn);
+		    	col.add("format" , GeneradorCampos.formatoFecha);
+		    }
+    	}
+    	
+    	return col;
+    }
+    
+    /**
+     * Genera el field para el modelo, el item para el formulario, la columna en caso de tener S o H, y su editor
+     * en caso de haber sido llamado desde generaConEditor() o desde generaParcialConEditor()
+     */
+    public void generaCampoYFieldYColumn(List<ComponenteVO> listcomp, ComponenteVO comp, Integer idx) throws Exception
+    {
+    	Item field  = this.generaField(listcomp, comp, idx);
+        Item column = this.generaColumn(listcomp, comp, idx);
+        Item item   = this.generaItem(listcomp, comp, idx, false);
+        
         Item editor=null;
         if(conEditor)
         {
-        	editor=this.generaItem(lt, ta, idx, true);
+        	editor=this.generaItem(listcomp, comp, idx, true);
         }
-        ////// item y editor //////
-        ///////////////////////////
         
-        items.add(it);
-        fields.add(fi);
-        if(col!=null)
+        items.add(item);
+        fields.add(field);
+        if(column!=null)
         {
         	if(conEditor)
         	{
-        		col.add("editor",editor);
+        		column.add("editor",editor);
         	}
-        	columns.add(col);
+        	columns.add(column);
         }
     }
 
@@ -572,7 +679,7 @@ public class GeneradorCampos {
      * @param editor
      * @throws Exception
      */
-    private void agregarHerenciaPadre(List<Tatri> lt, Item it, Integer idx, boolean editor) throws Exception
+    private void agregarHerenciaPadre(List<ComponenteVO> lt, Item it, Integer idx, boolean editor) throws Exception
     {
     	it.add(Item.crear(""
     			+ "listeners",
@@ -600,7 +707,7 @@ public class GeneradorCampos {
      * @param editor
      * @throws Exception
      */
-    private void agregarHerenciaPadreHijo(List<Tatri> lt, Item it, Integer idx, boolean editor) throws Exception
+    private void agregarHerenciaPadreHijo(List<ComponenteVO> lt, Item it, Integer idx, boolean editor) throws Exception
     {
     	it.add(Item.crear(""
     			+ "listeners",

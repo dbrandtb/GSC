@@ -16,7 +16,7 @@ import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
-import mx.com.gseguros.portal.cotizacion.model.Tatri;
+import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 
@@ -500,44 +500,32 @@ public class MesaControlAction extends PrincipalCoreAction
 			UserVO usuario=(UserVO) this.session.get("USUARIO");
 			username=usuario.getUser();
 			
+			String cdtiptra      = smap2.get("pv_cdtiptra_i");
+			String cdramo        = smap1.get("cdramo");
+			String cdtipsit      = smap1.get("cdtipsit");
+			String rol           = usuario.getRolActivo().getObjeto().getValue();
+			String pantalla      = "MCDINAMICA";
+			String seccionForm   = "FORMULARIO";
+			String seccionGrid   = "GRIDPANEL";
+			String seccionFiltro = "FILTRO";
+			
 			////// obtener valores del formulario //////
-			List<Tatri>ltFormulario=pantallasManager.obtenerCamposPantalla(
-					smap1.get("cduno")
-					,smap1.get("cddos")
-					,smap1.get("cdtres")
-					,smap1.get("cdcuatro")
-					,smap1.get("cdcinco")
-					,smap1.get("cdseis")
-					,smap1.get("cdsiete")
-					,usuario.getRolActivo().getObjeto().getValue()
-					,smap1.get("cdnueve")
-					,"FORMULARIO");
+			List<ComponenteVO>ltFormulario=pantallasManager.obtenerComponentes(
+					cdtiptra, null, cdramo,
+					cdtipsit, null, rol,
+					pantalla, seccionForm, null);
 			
 			////// obtener valores del grid //////
-			List<Tatri>ltgridpanel=pantallasManager.obtenerCamposPantalla(
-					smap1.get("cduno")
-					,smap1.get("cddos")
-					,smap1.get("cdtres")
-					,smap1.get("cdcuatro")
-					,smap1.get("cdcinco")
-					,smap1.get("cdseis")
-					,smap1.get("cdsiete")
-					,usuario.getRolActivo().getObjeto().getValue()
-					,smap1.get("cdnueve")
-					,"GRIDPANEL");
+			List<ComponenteVO>ltgridpanel=pantallasManager.obtenerComponentes(
+					cdtiptra, null, cdramo,
+					cdtipsit, null, rol,
+					pantalla, seccionGrid, null);
 			
 			////// obtener valores del filtro //////
-			List<Tatri>ltfiltro=pantallasManager.obtenerCamposPantalla(
-					smap1.get("cduno")
-					,smap1.get("cddos")
-					,smap1.get("cdtres")
-					,smap1.get("cdcuatro")
-					,smap1.get("cdcinco")
-					,smap1.get("cdseis")
-					,smap1.get("cdsiete")
-					,usuario.getRolActivo().getObjeto().getValue()
-					,smap1.get("cdnueve")
-					,"FILTRO");
+			List<ComponenteVO>ltfiltro=pantallasManager.obtenerComponentes(
+					cdtiptra, null, cdramo,
+					cdtipsit, null, rol,
+					pantalla, seccionFiltro, null);
 			
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			
