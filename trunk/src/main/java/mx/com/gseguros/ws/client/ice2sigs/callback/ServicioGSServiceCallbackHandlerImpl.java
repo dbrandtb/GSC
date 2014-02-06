@@ -129,11 +129,10 @@ public class ServicioGSServiceCallbackHandlerImpl extends ServicioGSServiceCallb
 
 		HashMap<String, Object> params = (HashMap<String, Object>) this.clientData;
 
-		KernelManagerSustitutoImpl manager = (KernelManagerSustitutoImpl) params.get("MANAGER");
 		String usuario = (String) params.get("USUARIO");
 		
 		try {
-			manager.movBitacobro(
+			kernelManager.movBitacobro(
 					(String) params.get("pv_cdunieco_i"),
 					(String) params.get("pv_cdramo_i"),
 					(String) params.get("pv_estado_i"),
@@ -160,11 +159,10 @@ public class ServicioGSServiceCallbackHandlerImpl extends ServicioGSServiceCallb
 		if (Estatus.EXITO.getCodigo() != respuesta.getCodigo()) {
 			logger.error("Guardando en bitacora el estatus");
 
-			KernelManagerSustitutoImpl manager = (KernelManagerSustitutoImpl) params.get("MANAGER");
 			String usuario = (String) params.get("USUARIO");
 			
 			try {
-				manager.movBitacobro((String) params.get("pv_cdunieco_i"),
+				kernelManager.movBitacobro((String) params.get("pv_cdunieco_i"),
 						(String) params.get("pv_cdramo_i"),
 						(String) params.get("pv_estado_i"),
 						(String) params.get("pv_nmpoliza_i"), "ErrWSrec",
