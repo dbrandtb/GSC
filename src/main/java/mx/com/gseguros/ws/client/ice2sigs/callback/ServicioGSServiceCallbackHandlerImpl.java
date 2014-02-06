@@ -3,7 +3,6 @@ package mx.com.gseguros.ws.client.ice2sigs.callback;
 import java.util.HashMap;
 
 import mx.com.aon.kernel.service.KernelManagerSustituto;
-import mx.com.aon.kernel.service.impl.KernelManagerSustitutoImpl;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.ws.client.Ice2sigsWebServices.Estatus;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceCallbackHandler;
@@ -18,7 +17,7 @@ public class ServicioGSServiceCallbackHandlerImpl extends ServicioGSServiceCallb
 
 	private Logger logger = Logger.getLogger(ServicioGSServiceCallbackHandlerImpl.class);
 	
-	KernelManagerSustituto kernelManager;
+	private transient KernelManagerSustituto kernelManager;
 
 	public ServicioGSServiceCallbackHandlerImpl() {
 		super();
@@ -157,7 +156,7 @@ public class ServicioGSServiceCallbackHandlerImpl extends ServicioGSServiceCallb
 				+ respuesta.getCodigo() + " - " + respuesta.getMensaje());
 
 		if (Estatus.EXITO.getCodigo() != respuesta.getCodigo()) {
-			logger.error("Guardando en bitacora el estatus");
+			logger.error("Guardando en bitacora el estatus..");
 
 			String usuario = (String) params.get("USUARIO");
 			
