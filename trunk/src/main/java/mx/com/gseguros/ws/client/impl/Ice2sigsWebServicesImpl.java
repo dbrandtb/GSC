@@ -161,8 +161,11 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 		
 		try {
 			if(async){
-				ServicioGSServiceCallbackHandlerImpl callback = new ServicioGSServiceCallbackHandlerImpl(params);
-				stubGS.startreciboGS(reciboE, callback);
+				//TODO: RBS Cambiar params por PolizaVO
+				// Se setean los parametros al callback handler:
+				servicioGSServiceCallbackHandler.setClientData(params);
+				
+				stubGS.startreciboGS(reciboE, servicioGSServiceCallbackHandler);
 			} else {
 				RespuestaGS = stubGS.reciboGS(reciboE);
 				resultado = RespuestaGS.getReciboGSResponse().get_return();
@@ -307,9 +310,10 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 		
 		try {
 			if(async){
-				//ServicioGSServiceCallbackHandlerImpl callback = new ServicioGSServiceCallbackHandlerImpl(params);
 				//TODO: RBS Cambiar params por PolizaVO
+				// Se setean los parametros al callback handler:
 				servicioGSServiceCallbackHandler.setClientData(params);
+				
 				stubGS.startclienteSaludGS(clienteE, servicioGSServiceCallbackHandler);
 			} else {
 				RespuestaGS = stubGS.clienteSaludGS(clienteE);
