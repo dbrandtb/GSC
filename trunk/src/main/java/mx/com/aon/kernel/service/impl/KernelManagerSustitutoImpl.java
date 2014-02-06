@@ -816,7 +816,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 				{
 					cdatribu = "0" + cdatribu;
 				}
-				String key = "PV_OTVALOR"+cdatribu+"_I";
+				String key = "PV_OTVALOR"+cdatribu;
 				if((!param.containsKey(key))&&(!param.containsKey(key.toLowerCase())))
 				{
 					param.put(key,null);
