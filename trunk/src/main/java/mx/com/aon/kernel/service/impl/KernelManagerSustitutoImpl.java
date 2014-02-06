@@ -807,6 +807,22 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 	
 	public WrapperResultados PMovMesacontrol(Map<String, Object> param) throws ApplicationException
 	{
+		if(param!=null)
+		{
+			for(int i=1;i<=50;i++)
+			{
+				String cdatribu=i+"";
+				if(cdatribu.length()<2)
+				{
+					cdatribu = "0" + cdatribu;
+				}
+				String key = "PV_OTVALOR"+cdatribu+"_I";
+				if((!param.containsKey(key))&&(!param.containsKey(key.toLowerCase())))
+				{
+					param.put(key,null);
+				}
+			}
+		}
 		log.debug("### kernel PMovMesacontrol map: "+param);
         WrapperResultados res=this.returnBackBoneInvoke(param, ProcesoDAO.P_MOV_MESACONTROL);
         log.debug("### kernel sustituto PMovMesacontrol id:"+res.getMsgId());

@@ -3878,41 +3878,46 @@ public class EndososAction extends PrincipalCoreAction
 		dif=Math.abs(dif);
 		long max=30l*24l*60l*60l*1000l;
 		
+		String dssuplem="";
+		List<Map<String,String>>endosos=endososManager.obtenerNombreEndosos();
+		for(Map<String,String>endoso:endosos)
+		{
+			if(endoso.get("CDTIPSUP").equalsIgnoreCase(cdtipsup))
+			{
+				dssuplem=endoso.get("DSTIPSUP");
+			}
+		}
+		String statusEndoso = "9";
 		if(dif>max)
 		{
-			String dssuplem="";
-			List<Map<String,String>>endosos=endososManager.obtenerNombreEndosos();
-			for(Map<String,String>endoso:endosos)
-			{
-				if(endoso.get("CDTIPSUP").equalsIgnoreCase(cdtipsup))
-				{
-					dssuplem=endoso.get("DSTIPSUP");
-				}
-			}
-			
-			Map<String,Object>paramsMesaControl=new HashMap<String,Object>();
-			paramsMesaControl.put("pv_cdunieco_i"   , cdunieco);
-			paramsMesaControl.put("pv_cdramo_i"     , cdramo);
-			paramsMesaControl.put("pv_estado_i"     , estado);
-			paramsMesaControl.put("pv_nmpoliza_i"   , nmpoliza);
-			paramsMesaControl.put("pv_nmsuplem_i"   , nmsuplem);
-			paramsMesaControl.put("pv_cdsucadm_i"   , cdunieco);
-			paramsMesaControl.put("pv_cdsucdoc_i"   , ntramite);
-			paramsMesaControl.put("pv_cdtiptra_i"   , "15");
-			paramsMesaControl.put("pv_ferecepc_i"   , fechaEndoso);
-			paramsMesaControl.put("pv_cdagente_i"   , "100");
-			paramsMesaControl.put("pv_referencia_i" , dssuplem);
-			paramsMesaControl.put("pv_nombre_i"     , cdtipsup);
-			paramsMesaControl.put("pv_festatus_i"   , fechaEndoso);
-			paramsMesaControl.put("pv_status_i"     , "8");
-			paramsMesaControl.put("pv_comments_i"   , dscoment);
-			paramsMesaControl.put("pv_nmsolici_i"   , nsuplogi);
-			paramsMesaControl.put("pv_cdtipsit_i"   , cdtipsit);
+			statusEndoso = "8";
+		}
+		Map<String,Object>paramsMesaControl=new HashMap<String,Object>();
+		paramsMesaControl.put("pv_cdunieco_i"   , cdunieco);
+		paramsMesaControl.put("pv_cdramo_i"     , cdramo);
+		paramsMesaControl.put("pv_estado_i"     , estado);
+		paramsMesaControl.put("pv_nmpoliza_i"   , nmpoliza);
+		paramsMesaControl.put("pv_nmsuplem_i"   , nmsuplem);
+		paramsMesaControl.put("pv_cdsucadm_i"   , cdunieco);
+		paramsMesaControl.put("pv_cdsucdoc_i"   , ntramite);
+		paramsMesaControl.put("pv_cdtiptra_i"   , "15");
+		paramsMesaControl.put("pv_ferecepc_i"   , fechaEndoso);
+		paramsMesaControl.put("pv_cdagente_i"   , "100");
+		paramsMesaControl.put("pv_referencia_i" , dssuplem);
+		paramsMesaControl.put("pv_nombre_i"     , cdtipsup);
+		paramsMesaControl.put("pv_festatus_i"   , fechaEndoso);
+		paramsMesaControl.put("pv_status_i"     , statusEndoso);
+		paramsMesaControl.put("pv_comments_i"   , dscoment);
+		paramsMesaControl.put("pv_nmsolici_i"   , nsuplogi);
+		paramsMesaControl.put("pv_cdtipsit_i"   , cdtipsit);
+		
+		if(dif>max)
+		{
 			WrapperResultados wr=kernelManager.PMovMesacontrol(paramsMesaControl);
 			ntramiteEndoso=(String) wr.getItemMap().get("ntramite");
 		}
 		else
-		{
+		{	
 			Map<String,String>paramConfirmarEndosoB=new LinkedHashMap<String,String>(0);
 			paramConfirmarEndosoB.put("pv_cdunieco_i" , cdunieco);
 			paramConfirmarEndosoB.put("pv_cdramo_i"   , cdramo);
@@ -3924,6 +3929,8 @@ public class EndososAction extends PrincipalCoreAction
 			paramConfirmarEndosoB.put("pv_dscoment_i" , dscoment);
 			endososManager.confirmarEndosoB(paramConfirmarEndosoB);
 			ntramiteEndoso="";
+			
+			kernelManager.PMovMesacontrol(paramsMesaControl);
 		}
 	    
 	    return ntramiteEndoso;
