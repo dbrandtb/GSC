@@ -21,6 +21,7 @@ public class GeneradorCampos
 {
 	
 	private static       Logger log                   = Logger.getLogger(GeneradorCampos.class);
+	public static final  String dataIndexPrefix       = "otvalor";
     public static final  String namePrefix            = "parametros.pv_otvalor";
     private static final String formatoFecha          = "d/m/Y";
     private static final String xtypeDatecolumn       = "datecolumn";
@@ -521,7 +522,7 @@ public class GeneradorCampos
     		{
     			cdatribu = "0" + cdatribu;
     		}
-    		name = GeneradorCampos.namePrefix + cdatribu;
+    		name = GeneradorCampos.dataIndexPrefix + cdatribu;
     	}
     	
         String type     = tipoAlfanum;
@@ -605,7 +606,7 @@ public class GeneradorCampos
 	    		{
 	    			cdatribu = "0" + cdatribu;
 	    		}
-	    		dataIndex = GeneradorCampos.namePrefix + cdatribu;
+	    		dataIndex = GeneradorCampos.dataIndexPrefix + cdatribu;
 	    	}
 	    	
 	    	String header = comp.getLabel();

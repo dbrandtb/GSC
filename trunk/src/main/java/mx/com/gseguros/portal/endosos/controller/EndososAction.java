@@ -3868,8 +3868,10 @@ public class EndososAction extends PrincipalCoreAction
 			String nmsuplem, String nsuplogi, String cdtipsup, String dscoment, Date fechaEndoso,
 			String cdtipsit)throws Exception
 	{
-		String ntramiteEndoso="0";
-		String ntramite=endososManager.obtenerNtramiteEmision(cdunieco, cdramo, estado, nmpoliza);
+		String ntramiteEndoso="";
+		String ntramiteEmision=endososManager.obtenerNtramiteEmision(cdunieco, cdramo, estado, nmpoliza);
+		UserVO usuario = (UserVO)session.get("USUARIO");
+		String cdusuari = usuario.getUser();
 		
 		Date fechaHoy=new Date();
 		long hoym=fechaHoy.getTime();
@@ -3899,17 +3901,22 @@ public class EndososAction extends PrincipalCoreAction
 		paramsMesaControl.put("pv_nmpoliza_i"   , nmpoliza);
 		paramsMesaControl.put("pv_nmsuplem_i"   , nmsuplem);
 		paramsMesaControl.put("pv_cdsucadm_i"   , cdunieco);
-		paramsMesaControl.put("pv_cdsucdoc_i"   , ntramite);
+		paramsMesaControl.put("pv_cdsucdoc_i"   , cdunieco);
 		paramsMesaControl.put("pv_cdtiptra_i"   , "15");
 		paramsMesaControl.put("pv_ferecepc_i"   , fechaEndoso);
-		paramsMesaControl.put("pv_cdagente_i"   , "100");
-		paramsMesaControl.put("pv_referencia_i" , dssuplem);
-		paramsMesaControl.put("pv_nombre_i"     , cdtipsup);
+		paramsMesaControl.put("pv_cdagente_i"   , null);
+		paramsMesaControl.put("pv_referencia_i" , null);
+		paramsMesaControl.put("pv_nombre_i"     , null);
 		paramsMesaControl.put("pv_festatus_i"   , fechaEndoso);
 		paramsMesaControl.put("pv_status_i"     , statusEndoso);
 		paramsMesaControl.put("pv_comments_i"   , dscoment);
-		paramsMesaControl.put("pv_nmsolici_i"   , nsuplogi);
+		paramsMesaControl.put("pv_nmsolici_i"   , null);
 		paramsMesaControl.put("pv_cdtipsit_i"   , cdtipsit);
+		paramsMesaControl.put("pv_otvalor01"    , ntramiteEmision);
+		paramsMesaControl.put("pv_otvalor02"    , cdtipsup);
+		paramsMesaControl.put("pv_otvalor03"    , dssuplem);
+		paramsMesaControl.put("pv_otvalor04"    , nsuplogi);
+		paramsMesaControl.put("pv_otvalor05"    , cdusuari);
 		
 		if(dif>max)
 		{
