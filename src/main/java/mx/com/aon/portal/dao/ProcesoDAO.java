@@ -22,15 +22,17 @@ import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.cotizacion.model.ConsultaDatosPolizaAgenteVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
-import mx.com.gseguros.portal.cotizacion.model.Tatri;
 import mx.com.gseguros.portal.dao.impl.DinamicMapper;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.emision.model.DatosRecibosDxNVO;
+import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utilerias;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSalud;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.Recibo;
 import oracle.jdbc.driver.OracleTypes;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;
@@ -1209,19 +1211,73 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     
     protected class ObtieneTatrisitMapper implements RowMapper {
         public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-            Tatri result=new Tatri();
-            result.setType(Tatri.TATRISIT);
-            result.setCdatribu(rs.getString("CDATRIBU"));
-            result.setSwformat(rs.getString("SWFORMAT"));
-            result.setNmlmin(rs.getString("NMLMIN"));
-            result.setNmlmax(rs.getString("NMLMAX"));
-            result.setSwobliga(rs.getString("SWOBLIGA"));
-            result.setDsatribu(rs.getString("DSATRIBU"));
-            result.setOttabval(rs.getString("OTTABVAL"));
-            result.setCdtablj1(rs.getString("CDTABLJ1"));
+        	ComponenteVO result=new ComponenteVO();
+        	result.setFlagEsAtribu(true);
+            result.setType(ComponenteVO.TIPO_TATRISIT);
+            result.setNameCdatribu(rs.getString("CDATRIBU"));
+            result.setTipoCampo(rs.getString("SWFORMAT"));
+            
+            String sMinlen = rs.getString("NMLMIN");
+            int minlen = -1;
+            boolean fMinlen = false;
+            if(StringUtils.isNotBlank(sMinlen))
+            {
+            	try
+            	{
+            		minlen=(Integer)Integer.parseInt(sMinlen);
+            		fMinlen = true;
+            	}
+            	catch(Exception ex)
+            	{
+            		minlen=-1;
+            		fMinlen=false;
+            	}
+            }
+            result.setMinLength(minlen);
+            result.setFlagMinLength(fMinlen);
+            
+            String sMaxlen = rs.getString("NMLMAX");
+            int maxlen = -1;
+            boolean fMaxlen = false;
+            if(StringUtils.isNotBlank(sMaxlen))
+            {
+            	try
+            	{
+            		maxlen=(Integer)Integer.parseInt(sMaxlen);
+            		fMaxlen = true;
+            	}
+            	catch(Exception ex)
+            	{
+            		maxlen=-1;
+            		fMaxlen=false;
+            	}
+            }
+            result.setMaxLength(maxlen);
+            result.setFlagMaxLength(fMaxlen);
+            
+            String sObliga = rs.getString("SWOBLIGA");
+            boolean isObliga = false;
+            if(StringUtils.isNotBlank(sObliga)&&sObliga.equalsIgnoreCase(Constantes.SI))
+            {
+            	isObliga = true;
+            }
+            result.setObligatorio(isObliga);
+            
+            result.setLabel(rs.getString("DSATRIBU"));
+            result.setCatalogo(rs.getString("OTTABVAL"));
+            
+            String sDepend = rs.getString("CDTABLJ1");
+            boolean isDepend = false;
+            if(StringUtils.isNotBlank(sDepend))
+            {
+            	isDepend = true;
+            }
+            result.setDependiente(isDepend);
+            
             result.setSwsuscri(rs.getString("SWSUSCRI"));
             result.setSwtarifi(rs.getString("SWTARIFI"));
             result.setSwpresen(rs.getString("SWPRESEN"));
+            
             return result;
         }
     }
@@ -1255,16 +1311,69 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	
 	protected class ObtieneTatripolMapper implements RowMapper {
 		public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-			Tatri result=new Tatri();
-			result.setType(Tatri.TATRIPOL);
-			result.setCdatribu(rs.getString("CDATRIBU"));
-			result.setSwformat(rs.getString("SWFORMAT"));
-			result.setNmlmin(rs.getString("NMLMIN"));
-			result.setNmlmax(rs.getString("NMLMAX"));
-			result.setSwobliga(rs.getString("SWOBLIGA"));
-			result.setDsatribu(rs.getString("DSATRIBU"));
-			result.setOttabval(rs.getString("OTTABVAL"));
-			result.setCdtablj1(rs.getString("CDTABLJ1"));
+			ComponenteVO result=new ComponenteVO();
+			result.setFlagEsAtribu(true);
+			result.setType(ComponenteVO.TIPO_TATRIPOL);
+			result.setNameCdatribu(rs.getString("CDATRIBU"));
+			result.setTipoCampo(rs.getString("SWFORMAT"));
+			
+			String sMinlen = rs.getString("NMLMIN");
+            int minlen = -1;
+            boolean fMinlen = false;
+            if(StringUtils.isNotBlank(sMinlen))
+            {
+            	try
+            	{
+            		minlen=(Integer)Integer.parseInt(sMinlen);
+            		fMinlen = true;
+            	}
+            	catch(Exception ex)
+            	{
+            		minlen=-1;
+            		fMinlen=false;
+            	}
+            }
+            result.setMinLength(minlen);
+            result.setFlagMinLength(fMinlen);
+            
+            String sMaxlen = rs.getString("NMLMAX");
+            int maxlen = -1;
+            boolean fMaxlen = false;
+            if(StringUtils.isNotBlank(sMaxlen))
+            {
+            	try
+            	{
+            		maxlen=(Integer)Integer.parseInt(sMaxlen);
+            		fMaxlen = true;
+            	}
+            	catch(Exception ex)
+            	{
+            		maxlen=-1;
+            		fMaxlen=false;
+            	}
+            }
+            result.setMaxLength(maxlen);
+            result.setFlagMaxLength(fMaxlen);
+			
+            String sObliga = rs.getString("SWOBLIGA");
+            boolean isObliga = false;
+            if(StringUtils.isNotBlank(sObliga)&&sObliga.equalsIgnoreCase(Constantes.SI))
+            {
+            	isObliga = true;
+            }
+            result.setObligatorio(isObliga);
+			
+			result.setLabel(rs.getString("DSATRIBU"));
+			result.setCatalogo(rs.getString("OTTABVAL"));
+			
+			String sDepend = rs.getString("CDTABLJ1");
+            boolean isDepend = false;
+            if(StringUtils.isNotBlank(sDepend))
+            {
+            	isDepend = true;
+            }
+            result.setDependiente(isDepend);
+			
 			return result;
 		}
 	}
@@ -1301,16 +1410,69 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	protected class ObtieneTatrigarMapper implements RowMapper
 	{
 		public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-			Tatri result=new Tatri();
-			result.setType(Tatri.TATRIGAR);
-			result.setCdatribu(rs.getString("CDATRIBU"));
-			result.setSwformat(rs.getString("SWFORMAT"));
-			result.setNmlmin(rs.getString("NMLMIN"));
-			result.setNmlmax(rs.getString("NMLMAX"));
-			result.setSwobliga(rs.getString("SWOBLIGA"));
-			result.setDsatribu(rs.getString("DSATRIBU"));
-			result.setOttabval(rs.getString("OTTABVAL"));
-			result.setCdtablj1(rs.getString("CDTABLJ1"));
+			ComponenteVO result=new ComponenteVO();
+			result.setFlagEsAtribu(true);
+			result.setType(ComponenteVO.TIPO_TATRIGAR);
+			result.setNameCdatribu(rs.getString("CDATRIBU"));
+			result.setTipoCampo(rs.getString("SWFORMAT"));
+			
+			String sMinlen = rs.getString("NMLMIN");
+            int minlen = -1;
+            boolean fMinlen = false;
+            if(StringUtils.isNotBlank(sMinlen))
+            {
+            	try
+            	{
+            		minlen=(Integer)Integer.parseInt(sMinlen);
+            		fMinlen = true;
+            	}
+            	catch(Exception ex)
+            	{
+            		minlen=-1;
+            		fMinlen=false;
+            	}
+            }
+            result.setMinLength(minlen);
+            result.setFlagMinLength(fMinlen);
+            
+            String sMaxlen = rs.getString("NMLMAX");
+            int maxlen = -1;
+            boolean fMaxlen = false;
+            if(StringUtils.isNotBlank(sMaxlen))
+            {
+            	try
+            	{
+            		maxlen=(Integer)Integer.parseInt(sMaxlen);
+            		fMaxlen = true;
+            	}
+            	catch(Exception ex)
+            	{
+            		maxlen=-1;
+            		fMaxlen=false;
+            	}
+            }
+            result.setMaxLength(maxlen);
+            result.setFlagMaxLength(fMaxlen);
+			
+            String sObliga = rs.getString("SWOBLIGA");
+            boolean isObliga = false;
+            if(StringUtils.isNotBlank(sObliga)&&sObliga.equalsIgnoreCase(Constantes.SI))
+            {
+            	isObliga = true;
+            }
+            result.setObligatorio(isObliga);
+			
+			result.setLabel(rs.getString("DSATRIBU"));
+			result.setCatalogo(rs.getString("OTTABVAL"));
+			
+			String sDepend = rs.getString("CDTABLJ1");
+            boolean isDepend = false;
+            if(StringUtils.isNotBlank(sDepend))
+            {
+            	isDepend = true;
+            }
+            result.setDependiente(isDepend);
+			
 			return result;
 		}
 	}
@@ -1347,16 +1509,69 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	protected class ObtieneTatriperMapper implements RowMapper
 	{
 		public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-			Tatri result=new Tatri();
-			result.setType(Tatri.TATRIPER);
-			result.setCdatribu(rs.getString("CDATRIBU"));
-			result.setSwformat(rs.getString("SWFORMAT"));
-			result.setNmlmin(rs.getString("NMLMIN"));
-			result.setNmlmax(rs.getString("NMLMAX"));
-			result.setSwobliga(rs.getString("SWOBLIGA"));
-			result.setDsatribu(rs.getString("DSATRIBU"));
-			result.setOttabval(rs.getString("OTTABVAL"));
-			result.setCdtablj1(rs.getString("CDTABLJ1"));
+			ComponenteVO result=new ComponenteVO();
+			result.setFlagEsAtribu(true);
+			result.setType(ComponenteVO.TIPO_TATRIPER);
+			result.setNameCdatribu(rs.getString("CDATRIBU"));
+			result.setTipoCampo(rs.getString("SWFORMAT"));
+			
+			String sMinlen = rs.getString("NMLMIN");
+            int minlen = -1;
+            boolean fMinlen = false;
+            if(StringUtils.isNotBlank(sMinlen))
+            {
+            	try
+            	{
+            		minlen=(Integer)Integer.parseInt(sMinlen);
+            		fMinlen = true;
+            	}
+            	catch(Exception ex)
+            	{
+            		minlen=-1;
+            		fMinlen=false;
+            	}
+            }
+            result.setMinLength(minlen);
+            result.setFlagMinLength(fMinlen);
+            
+            String sMaxlen = rs.getString("NMLMAX");
+            int maxlen = -1;
+            boolean fMaxlen = false;
+            if(StringUtils.isNotBlank(sMaxlen))
+            {
+            	try
+            	{
+            		maxlen=(Integer)Integer.parseInt(sMaxlen);
+            		fMaxlen = true;
+            	}
+            	catch(Exception ex)
+            	{
+            		maxlen=-1;
+            		fMaxlen=false;
+            	}
+            }
+            result.setMaxLength(maxlen);
+            result.setFlagMaxLength(fMaxlen);
+			
+            String sObliga = rs.getString("SWOBLIGA");
+            boolean isObliga = false;
+            if(StringUtils.isNotBlank(sObliga)&&sObliga.equalsIgnoreCase(Constantes.SI))
+            {
+            	isObliga = true;
+            }
+            result.setObligatorio(isObliga);
+			
+			result.setLabel(rs.getString("DSATRIBU"));
+			result.setCatalogo(rs.getString("OTTABVAL"));
+			
+			String sDepend = rs.getString("CDTABLJ1");
+            boolean isDepend = false;
+            if(StringUtils.isNotBlank(sDepend))
+            {
+            	isDepend = true;
+            }
+            result.setDependiente(isDepend);
+			
 			return result;
 		}
 	}

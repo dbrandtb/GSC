@@ -25,8 +25,8 @@ import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
-import mx.com.gseguros.portal.cotizacion.model.Tatri;
 import mx.com.gseguros.portal.emision.model.DatosRecibosDxNVO;
+import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
@@ -102,7 +102,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		log.debug("map1: "+map1);
 		try {
 			//List<Tatrisit>listaTatrisit=kernelManager.obtenerTatrisit("SL");
-			List<Tatri>listaTatrisit=kernelManager.obtenerTatripol(new String[]{cdramo});
+			List<ComponenteVO>listaTatrisit=kernelManager.obtenerTatripol(new String[]{cdramo});
 			log.debug("ServletActionContext.getServletContext().getServletContextName()$$$$$ "+ServletActionContext.getServletContext().getServletContextName());
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			gc.genera(listaTatrisit);
@@ -1946,7 +1946,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	public void setIce2sigsWebServices(Ice2sigsWebServices ice2sigsWebServices) {
 		this.ice2sigsWebServices = ice2sigsWebServices;
 	}
-	
+
 	public String getMensajeRespuesta() {
 		return mensajeRespuesta;
 	}

@@ -15,8 +15,9 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
-import mx.com.gseguros.portal.cotizacion.model.Tatri;
+import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.utils.Constantes;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
@@ -97,16 +98,16 @@ public class CotizacionAction extends PrincipalCoreAction
         GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
         gc.setCdtipsit(cdtipsit);
         
-        List<Tatri>camposAgrupados    = new ArrayList<Tatri>(0);
-        List<Tatri>camposIndividuales = new ArrayList<Tatri>(0);
+        List<ComponenteVO>camposAgrupados    = new ArrayList<ComponenteVO>(0);
+        List<ComponenteVO>camposIndividuales = new ArrayList<ComponenteVO>(0);
         
         imap = new HashMap<String,Item>();
         
         try
         {
-	        List<Tatri>tatrisit=kernelManager.obtenerTatrisit(cdtipsit);
-	        List<Tatri>temp=new ArrayList<Tatri>();
-	        for(Tatri tatriIte:tatrisit)
+	        List<ComponenteVO>tatrisit=kernelManager.obtenerTatrisit(cdtipsit);
+	        List<ComponenteVO>temp=new ArrayList<ComponenteVO>();
+	        for(ComponenteVO tatriIte:tatrisit)
 			{
 	        	if(tatriIte.getSwpresen().equalsIgnoreCase("S"))
 	        	{
@@ -115,17 +116,17 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 	        tatrisit=temp;
 	        
-			for(Tatri tatriIte:tatrisit)
+			for(ComponenteVO tatriIte:tatrisit)
 			{
 				////////////////////
 				////// custom //////
 				if(cdtipsit.equalsIgnoreCase("SL")||cdtipsit.equalsIgnoreCase("SN"))
 				{
-					if(tatriIte.getOttabval()!=null&&
-							(tatriIte.getOttabval().equalsIgnoreCase("2CODPOS")
-									||tatriIte.getOttabval().equalsIgnoreCase("2CODPOSN")))//codigo postal
+					if(tatriIte.getCatalogo()!=null&&
+							(tatriIte.getCatalogo().equalsIgnoreCase("2CODPOS")
+									||tatriIte.getCatalogo().equalsIgnoreCase("2CODPOSN")))//codigo postal
 					{
-						tatriIte.setOttabval("");
+						tatriIte.setCatalogo("");
 					}
 				}
 				////// custom //////
@@ -133,6 +134,7 @@ public class CotizacionAction extends PrincipalCoreAction
 					
 				if(tatriIte.getSwsuscri().equalsIgnoreCase("S"))//S=individual
 				{
+					tatriIte.setColumna(Constantes.SI);
 					camposIndividuales.add(tatriIte);
 				}
 				else
@@ -607,43 +609,44 @@ public class CotizacionAction extends PrincipalCoreAction
             
             ///////////////////////////////////
             ////// columnas para el grid //////
-            List<Tatri>tatriPlanes=new ArrayList<Tatri>();
+            List<ComponenteVO>tatriPlanes=new ArrayList<ComponenteVO>();
             
             ////// 1. forma de pago //////
-            Tatri tatriCdperpag=new Tatri();
-        	tatriCdperpag.setType(Tatri.TATRIGEN);
-        	tatriCdperpag.setDsatribu("CDPERPAG");
-        	tatriCdperpag.setSwformat("N");
-        	tatriCdperpag.setCdatribu("1");
+            ComponenteVO tatriCdperpag=new ComponenteVO();
+        	tatriCdperpag.setType(ComponenteVO.TIPO_GENERICO);
+        	tatriCdperpag.setLabel("CDPERPAG");
+        	tatriCdperpag.setTipoCampo(ComponenteVO.TIPOCAMPO_NUMERICO);
+        	tatriCdperpag.setNameCdatribu("CDPERPAG");
         	
-        	Map<String,String>mapaCdperpag=new HashMap<String,String>();
+        	/*Map<String,String>mapaCdperpag=new HashMap<String,String>();
         	mapaCdperpag.put("OTVALOR10","CDPERPAG");
-        	tatriCdperpag.setMapa(mapaCdperpag);
+        	tatriCdperpag.setMapa(mapaCdperpag);*/
         	tatriPlanes.add(tatriCdperpag);
         	
-        	Tatri tatriDsperpag=new Tatri();
-        	tatriDsperpag.setType(Tatri.TATRIGEN);
-        	tatriDsperpag.setDsatribu("Forma de pago");
-        	tatriDsperpag.setSwformat("A");
-        	tatriDsperpag.setCdatribu("1");
+        	ComponenteVO tatriDsperpag=new ComponenteVO();
+        	tatriDsperpag.setType(ComponenteVO.TIPO_GENERICO);
+        	tatriDsperpag.setLabel("Forma de pago");
+        	tatriDsperpag.setTipoCampo(ComponenteVO.TIPOCAMPO_ALFANUMERICO);
+        	tatriDsperpag.setNameCdatribu("DSPERPAG");
+        	tatriDsperpag.setColumna(Constantes.SI);
         	
-        	Map<String,String>mapaDsperpag=new HashMap<String,String>();
+        	/*Map<String,String>mapaDsperpag=new HashMap<String,String>();
         	mapaDsperpag.put("OTVALOR08","S");
         	mapaDsperpag.put("OTVALOR10","DSPERPAG");
-        	tatriDsperpag.setMapa(mapaDsperpag);
+        	tatriDsperpag.setMapa(mapaDsperpag);*/
         	tatriPlanes.add(tatriDsperpag);
         	////// 1. forma de pago //////
         	
         	////// 2. nmsituac //////
-        	Tatri tatriNmsituac=new Tatri();
-        	tatriNmsituac.setType(Tatri.TATRIGEN);
-        	tatriNmsituac.setDsatribu("NMSITUAC");
-        	tatriNmsituac.setSwformat("N");
-        	tatriNmsituac.setCdatribu("1");
+        	ComponenteVO tatriNmsituac=new ComponenteVO();
+        	tatriNmsituac.setType(ComponenteVO.TIPO_GENERICO);
+        	tatriNmsituac.setLabel("NMSITUAC");
+        	tatriNmsituac.setTipoCampo(ComponenteVO.TIPOCAMPO_NUMERICO);
+        	tatriNmsituac.setNameCdatribu("NMSITUAC");
         	
-        	Map<String,String>mapaNmsituac=new HashMap<String,String>();
+        	/*Map<String,String>mapaNmsituac=new HashMap<String,String>();
         	mapaNmsituac.put("OTVALOR10","NMSITUAC");
-        	tatriNmsituac.setMapa(mapaNmsituac);
+        	tatriNmsituac.setMapa(mapaNmsituac);*/
         	tatriPlanes.add(tatriNmsituac);
         	////// 2. nmsituac //////
         	
@@ -651,43 +654,46 @@ public class CotizacionAction extends PrincipalCoreAction
             for(Entry<String,String>plan:planes.entrySet())
             {
             	////// prima
-            	Tatri tatriPrima=new Tatri();
-            	tatriPrima.setType(Tatri.TATRIGEN);
-            	tatriPrima.setDsatribu(plan.getValue());
-            	tatriPrima.setSwformat("P");
-            	tatriPrima.setCdatribu("1");
+            	ComponenteVO tatriPrima=new ComponenteVO();
+            	tatriPrima.setType(ComponenteVO.TIPO_GENERICO);
+            	tatriPrima.setLabel(plan.getValue());
+            	tatriPrima.setTipoCampo(ComponenteVO.TIPOCAMPO_PORCENTAJE);
+            	tatriPrima.setColumna(Constantes.SI);
+            	tatriPrima.setRenderer(ComponenteVO.RENDERER_MONEY_EXT);
+            	tatriPrima.setNameCdatribu("MNPRIMA"+plan.getKey());
             	
-            	Map<String,String>mapaPlan=new HashMap<String,String>();
+            	/*Map<String,String>mapaPlan=new HashMap<String,String>();
             	mapaPlan.put("OTVALOR08","S");
             	mapaPlan.put("OTVALOR09","MONEY");
             	mapaPlan.put("OTVALOR10","MNPRIMA"+plan.getKey());
-            	tatriPrima.setMapa(mapaPlan);
+            	tatriPrima.setMapa(mapaPlan);*/
             	tatriPlanes.add(tatriPrima);
             	
             	////// cdplan
-            	Tatri tatriCdplan=new Tatri();
-             	tatriCdplan.setType(Tatri.TATRIGEN);
-             	tatriCdplan.setDsatribu("CDPLAN"+plan.getKey());
-             	tatriCdplan.setSwformat("A");
-             	tatriCdplan.setCdatribu("1");
+            	ComponenteVO tatriCdplan=new ComponenteVO();
+             	tatriCdplan.setType(ComponenteVO.TIPO_GENERICO);
+             	tatriCdplan.setLabel("CDPLAN"+plan.getKey());
+             	tatriCdplan.setTipoCampo(ComponenteVO.TIPOCAMPO_ALFANUMERICO);
+             	tatriCdplan.setNameCdatribu("CDPLAN"+plan.getKey());
+             	tatriCdplan.setColumna(ComponenteVO.COLUMNA_OCULTA);
              	
-             	Map<String,String>mapaCdplan=new HashMap<String,String>();
+             	/*Map<String,String>mapaCdplan=new HashMap<String,String>();
              	//mapaCdplan.put("OTVALOR08","H");
              	mapaCdplan.put("OTVALOR10","CDPLAN"+plan.getKey());
-             	tatriCdplan.setMapa(mapaCdplan);
+             	tatriCdplan.setMapa(mapaCdplan);*/
              	tatriPlanes.add(tatriCdplan);
              	
              	////// dsplan
-            	Tatri tatriDsplan=new Tatri();
-             	tatriDsplan.setType(Tatri.TATRIGEN);
-             	tatriDsplan.setDsatribu("DSPLAN"+plan.getKey());
-             	tatriDsplan.setSwformat("A");
-             	tatriDsplan.setCdatribu("1");
+             	ComponenteVO tatriDsplan=new ComponenteVO();
+             	tatriDsplan.setType(ComponenteVO.TIPO_GENERICO);
+             	tatriDsplan.setLabel("DSPLAN"+plan.getKey());
+             	tatriDsplan.setTipoCampo(ComponenteVO.TIPOCAMPO_ALFANUMERICO);
+             	tatriDsplan.setNameCdatribu("DSPLAN"+plan.getKey());
              	
-             	Map<String,String>mapaDsplan=new HashMap<String,String>();
+             	/*Map<String,String>mapaDsplan=new HashMap<String,String>();
              	//mapaDsplan.put("OTVALOR08","H");
              	mapaDsplan.put("OTVALOR10","DSPLAN"+plan.getKey());
-             	tatriDsplan.setMapa(mapaDsplan);
+             	tatriDsplan.setMapa(mapaDsplan);*/
              	tatriPlanes.add(tatriDsplan);
             }
             ////// 2. planes //////

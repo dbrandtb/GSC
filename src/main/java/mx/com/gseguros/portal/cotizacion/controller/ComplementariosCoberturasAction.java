@@ -14,7 +14,7 @@ import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
-import mx.com.gseguros.portal.cotizacion.model.Tatri;
+import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
 
@@ -275,7 +275,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
             pv_cdgarant_i     smap1 ready!
 			*/
 			smap1.put("pv_cdtipsit_i",datUsu.getCdtipsit());
-			List<Tatri>listTatri=kernelManager.obtenerTatrigar(smap1);
+			List<ComponenteVO>listTatri=kernelManager.obtenerTatrigar(smap1);
 			GeneradorCampos genCam=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			genCam.setCdgarant(smap1.get("pv_cdgarant_i"));
 			genCam.genera(listTatri);
@@ -620,7 +620,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 			paramTatriper.put("pv_cdramo_i"   , smap1.get("pv_cdramo"));
 			paramTatriper.put("pv_cdrol_i"    , smap1.get("pv_cdrol"));
 			paramTatriper.put("pv_cdtipsit_i" , smap1.get("cdtipsit"));
-			List<Tatri>tatriper=kernelManager.obtenerTatriper(paramTatriper);
+			List<ComponenteVO>tatriper=kernelManager.obtenerTatriper(paramTatriper);
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			gc.setCdrol(smap1.get("pv_cdrol"));
 			gc.setCdramo(smap1.get("pv_cdramo"));
@@ -722,7 +722,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
             pv_status_i    #V    QUITADO X(
             pv_cdtipsit_i  session
             */
-			smap1.put("pv_nmsuplem_i" , "0");
+			smap1.put("pv_nmsuplem_i" , "99999999999999999999");
 			//smap1.put("pv_status_i"   , "V");
 			//smap1.put("pv_cdtipsit_i" ,  datUsu.getCdtipsit());
 			Map<String,Object>parametrosCargados=null;
@@ -851,7 +851,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 				parametros.put("pv_nmsuplem" , "0");
 				parametros.put("pv_status"   , "0");
 				parametros.put("pv_cdatribu" , null);
-				parametros.put("pv_cdtipsit" , datUsu.getCdtipsit());
+				parametros.put("pv_cdtipsit" , smap1.get("cdtipsit"));
 				kernelManager.pMovTvaloper(parametros);
 			}
 			
@@ -963,12 +963,12 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 		{
 			log.debug("smap1: "+smap1);
 			smap1.put("timestamp",""+System.currentTimeMillis());
-			List<Tatri>tatrisit=kernelManager.obtenerTatrisit(smap1.get("cdtipsit"));
+			List<ComponenteVO>tatrisit=kernelManager.obtenerTatrisit(smap1.get("cdtipsit"));
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			gc.setCdtipsit(smap1.get("cdtipsit"));
-			List<Tatri>tatriTemp=new ArrayList<Tatri>(0);
+			List<ComponenteVO>tatriTemp=new ArrayList<ComponenteVO>(0);
 			boolean agrupado=smap1.containsKey("agrupado")&&smap1.get("agrupado").equalsIgnoreCase("SI");
-			for(Tatri t:tatrisit)
+			for(ComponenteVO t:tatrisit)
 			//si es agrupado solo dejar los atributos con N, si es individual solo los que tengan S
 			{
 				if(agrupado)
@@ -990,17 +990,17 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 			if(agrupado)
 			//reordenar cp, estado, municipio
 			{
-				List<Tatri>tatriTemp2=new ArrayList<Tatri>(0);
+				List<ComponenteVO>tatriTemp2=new ArrayList<ComponenteVO>(0);
 				//buscar cp
-				for(Tatri t:tatrisit) if(t.getCdatribu().equals("3")) tatriTemp2.add(t);
+				for(ComponenteVO t:tatrisit) if(t.getNameCdatribu().equals("3")) tatriTemp2.add(t);
 				//buscar estado
-				for(Tatri t:tatrisit) if(t.getCdatribu().equals("4")) tatriTemp2.add(t);
+				for(ComponenteVO t:tatrisit) if(t.getNameCdatribu().equals("4")) tatriTemp2.add(t);
 				//buscar municipio
-				for(Tatri t:tatrisit) if(t.getCdatribu().equals("17")) tatriTemp2.add(t);
+				for(ComponenteVO t:tatrisit) if(t.getNameCdatribu().equals("17")) tatriTemp2.add(t);
 				//agregar todos los demas
-				for(Tatri t:tatrisit)
+				for(ComponenteVO t:tatrisit)
 				{
-					if(!t.getCdatribu().equals("3")&&!t.getCdatribu().equals("4")&&!t.getCdatribu().equals("17"))
+					if(!t.getNameCdatribu().equals("3")&&!t.getNameCdatribu().equals("4")&&!t.getNameCdatribu().equals("17"))
 					{
 						tatriTemp2.add(t);
 					}

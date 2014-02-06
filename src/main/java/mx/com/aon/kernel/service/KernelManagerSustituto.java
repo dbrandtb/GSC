@@ -17,7 +17,7 @@ import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
-import mx.com.gseguros.portal.cotizacion.model.Tatri;
+import mx.com.gseguros.portal.general.model.ComponenteVO;
 
 /**
  *
@@ -70,8 +70,8 @@ public interface KernelManagerSustituto {
     public List<Map<String,String>>    obtenerResultadosCotizacion2(Map<String,String> params) throws ApplicationException;
     public List<CoberturaCotizacionVO> obtenerCoberturas(Map<String,String> parameters) throws ApplicationException;
     public AyudaCoberturaCotizacionVO obtenerAyudaCobertura(String idCobertura,String idRamo,String idCiaAsegurador) throws ApplicationException;
-    public List<Tatri> obtenerTatrisit(String cdtipsit) throws ApplicationException;
-    public List<Tatri> obtenerTatripol(String[] args) throws ApplicationException;
+    public List<ComponenteVO> obtenerTatrisit(String cdtipsit) throws ApplicationException;
+    public List<ComponenteVO> obtenerTatripol(String[] args) throws ApplicationException;
     public DatosUsuario obtenerDatosUsuario(String cdusuario) throws ApplicationException;
     public WrapperResultados movDetalleSuplemento(Map<String,Object> parameters) throws ApplicationException;
     public WrapperResultados comprarCotizacion(Map<String,String> parameters) throws ApplicationException;
@@ -108,10 +108,10 @@ public interface KernelManagerSustituto {
 	public WrapperResultados movPoligar(Map<String, String> param) throws ApplicationException;
 	public WrapperResultados movPolicap(Map<String, String> param) throws ApplicationException;
 	public List<Map<String, String>> obtenerDetallesCotizacion(Map<String, String> params) throws ApplicationException;
-	public List<Tatri> obtenerTatrigar(Map<String, String> smap1) throws ApplicationException;
+	public List<ComponenteVO> obtenerTatrigar(Map<String, String> smap1) throws ApplicationException;
 	//requiere de su propio catch si no hay datos:
 	public Map<String, Object> obtenerValoresTatrigar(Map<String, String> param) throws ApplicationException;
-	public List<Tatri> obtenerTatriper(Map<String, String> smap1) throws ApplicationException;
+	public List<ComponenteVO> obtenerTatriper(Map<String, String> smap1) throws ApplicationException;
 	//requiere de su propio catch si no hay datos:
 	public Map<String, Object> obtenerValoresTatriper(Map<String, String> smap1) throws ApplicationException;
 	public Map<String, String> obtenerDomicilio(Map<String, String> params) throws ApplicationException;

@@ -12,6 +12,7 @@
 /*///////////////////*/
 var inputCduniecop4        = '<s:property value="smap1.pv_cdunieco" />';
 var inputCdramop4          = '<s:property value="smap1.pv_cdramo" />';
+var inputCdtipsitp4        = '<s:property value="smap1.cdtipsit" />';
 var inputEstadop4          = '<s:property value="smap1.pv_estado" />';
 var inputNmpolizap4        = '<s:property value="smap1.pv_nmpoliza" />';
 var inputNmsituacp4        = '<s:property value="smap1.pv_nmsituac" />';
@@ -298,7 +299,8 @@ Ext.onReady(function(){
                                 'smap1.pv_nmpoliza' : inputNmpolizap4,
                                 'smap1.pv_nmsituac' : inputNmsituacp4,
                                 'smap1.pv_cdperson' : inputCdpersonp4,
-                                'smap1.pv_cdrol'    : inputCdrolp4
+                                'smap1.pv_cdrol'    : inputCdrolp4,
+                                'smap1.cdtipsit'    : inputCdtipsitp4
                             },
                             success:function(response,opts)
                             {

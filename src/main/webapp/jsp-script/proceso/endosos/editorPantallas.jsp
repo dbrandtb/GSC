@@ -112,8 +112,8 @@ Ext.onReady(function()
 		        			edipanFiltro.loadRecord(
 	                            Ext.create('EdipanModeloFiltro',
 	                            {
-	                            	'smap1.cdsiete' : record.parentNode.get('text') 
-	                                ,'smap1.cddiez' : text
+	                            	'smap1.pantalla' : record.parentNode.get('text') 
+	                                ,'smap1.seccion' : text
 	                            })
 	                        );
 		        		}
@@ -122,7 +122,7 @@ Ext.onReady(function()
 		        			edipanFiltro.loadRecord(
 			        			Ext.create('EdipanModeloFiltro',
 			        			{
-			        				'smap1.cdsiete' : text
+			        				'smap1.pantalla' : text
 			        			})
 		        			);
 		        		}
@@ -218,19 +218,20 @@ Ext.onReady(function()
 					    	
 					        edipanFiltro.setDisabled(false);//para poder usar los valores (*)
 					        var values=edipanFiltro.getValues();
+					        debug('valores del filtro:',values);
 					    	edipanFiltro.setDisabled(true);//regresarlo a como estaba (*)
 					    	
 					        var smap1={};
-					        smap1['cduno']    = values['smap1.cduno'];
-					        smap1['cddos']    = values['smap1.cddos'];
-					        smap1['cdtres']   = values['smap1.cdtres'];
-					        smap1['cdcuatro'] = values['smap1.cdcuatro'];
-					        smap1['cdcinco']  = values['smap1.cdcinco'];
-					        smap1['cdseis']   = values['smap1.cdseis'];
-					        smap1['cdsiete']  = values['smap1.cdsiete'];
-					        smap1['cdocho']   = values['smap1.cdocho'];
-					        smap1['cdnueve']  = values['smap1.cdnueve'];
-					        smap1['cddiez']   = values['smap1.cddiez'];
+					        smap1['cdunieco'] = values['smap1.cdunieco'];
+					        smap1['cdramo']   = values['smap1.cdramo'];
+					        smap1['cdtipsit'] = values['smap1.cdtipsit'];
+					        smap1['estado']   = values['smap1.estado'];
+					        smap1['pantalla'] = values['smap1.pantalla'];
+					        smap1['cdsisrol'] = values['smap1.cdsisrol'];
+					        smap1['cdtiptra'] = values['smap1.cdtiptra'];
+					        smap1['orden']    = values['smap1.orden'];
+					        smap1['seccion']  = values['smap1.seccion'];
+					        smap1['rol']      = values['smap1.rol'];
 					        json['smap1']     = smap1;
 					    	
 					    	var slist1=[];

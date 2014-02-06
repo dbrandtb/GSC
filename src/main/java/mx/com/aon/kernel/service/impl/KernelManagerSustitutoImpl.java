@@ -24,7 +24,7 @@ import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
-import mx.com.gseguros.portal.cotizacion.model.Tatri;
+import mx.com.gseguros.portal.general.model.ComponenteVO;
 
 import org.apache.log4j.Logger;
 
@@ -262,42 +262,42 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return res;
     }
     
-    public List<Tatri> obtenerTatrisit(String cdtipsit) throws ApplicationException
+    public List<ComponenteVO> obtenerTatrisit(String cdtipsit) throws ApplicationException
     {
         Map<String,Object> parameters=new HashMap<String,Object>(0);
         parameters.put("pv_cdtipsit_i",cdtipsit);
         log.debug("### kernel sustituto obtenerTatrisit map: "+parameters);
-        List<Tatri> lista= this.getAllBackBoneInvoke(parameters, ProcesoDAO.OBTENER_TATRISIT);
-        lista=lista!=null?lista:new ArrayList<Tatri>(0);
+        List<ComponenteVO> lista= this.getAllBackBoneInvoke(parameters, ProcesoDAO.OBTENER_TATRISIT);
+        lista=lista!=null?lista:new ArrayList<ComponenteVO>(0);
         log.debug("### kernel sustituto obtenerTatrisit lista size: "+lista.size());
         return lista;
     }
     
-    public List<Tatri> obtenerTatripol(String args[]) throws ApplicationException
+    public List<ComponenteVO> obtenerTatripol(String args[]) throws ApplicationException
     {
         Map<String,Object> parameters=new HashMap<String,Object>(0);
         parameters.put("pv_cdramo",args[0]);
         log.debug("### kernel sustituto obtenerTatripol map: "+parameters);
-        List<Tatri> lista= this.getAllBackBoneInvoke(parameters, ProcesoDAO.OBTENER_TATRIPOL);
-        lista=lista!=null?lista:new ArrayList<Tatri>(0);
+        List<ComponenteVO> lista= this.getAllBackBoneInvoke(parameters, ProcesoDAO.OBTENER_TATRIPOL);
+        lista=lista!=null?lista:new ArrayList<ComponenteVO>(0);
         log.debug("### kernel sustituto obtenerTatripol lista size: "+lista.size());
         return lista;
     }
     
-    public List<Tatri> obtenerTatrigar(Map<String,String>parameters) throws ApplicationException
+    public List<ComponenteVO> obtenerTatrigar(Map<String,String>parameters) throws ApplicationException
     {
         log.debug("### kernel sustituto obtenerTatrigar map: "+parameters);
-        List<Tatri> lista= this.getAllBackBoneInvoke(parameters, ProcesoDAO.OBTENER_TATRIGAR);
-        lista=lista!=null?lista:new ArrayList<Tatri>(0);
+        List<ComponenteVO> lista= this.getAllBackBoneInvoke(parameters, ProcesoDAO.OBTENER_TATRIGAR);
+        lista=lista!=null?lista:new ArrayList<ComponenteVO>(0);
         log.debug("### kernel sustituto obtenerTatrigar lista size: "+lista.size());
         return lista;
     }
     
-    public List<Tatri> obtenerTatriper(Map<String,String>parameters) throws ApplicationException
+    public List<ComponenteVO> obtenerTatriper(Map<String,String>parameters) throws ApplicationException
     {
         log.debug("### kernel sustituto obtenerTatriper map: "+parameters);
-        List<Tatri> lista= this.getAllBackBoneInvoke(parameters, ProcesoDAO.OBTENER_TATRIPER);
-        lista=lista!=null?lista:new ArrayList<Tatri>(0);
+        List<ComponenteVO> lista= this.getAllBackBoneInvoke(parameters, ProcesoDAO.OBTENER_TATRIPER);
+        lista=lista!=null?lista:new ArrayList<ComponenteVO>(0);
         log.debug("### kernel sustituto obtenerTatriper lista size: "+lista.size());
         return lista;
     }
