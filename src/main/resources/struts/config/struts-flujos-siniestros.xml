@@ -104,21 +104,107 @@
 			</result>
 		</action>
 		
-		<action name="guardaAutorizacionServicio" class="siniestrosAction"
-			method="guardaAutorizacionServicio">
+		<action name="consultaListaTDeTauts" class="siniestrosAction"
+			method="consultaListaTDeTauts">
 			<result type="json">
 				<param name="ignoreHierarchy">false</param>
 				<param name="includeProperties">
-					numeroAutorizacion.*,
+					listaConsultaTablas.*,
 					success
 				</param>
 			</result>
 		</action>
 		
+		<action name="guardaListaTDeTauts" class="siniestrosAction"
+			method="guardaListaTDeTauts">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					respuesta.*,
+					success
+				</param>
+			</result>
+		</action>
+		
+		
+		<action name="consultaListaTTAPVAATVO" class="siniestrosAction"
+			method="consultaListaTTAPVAATVO">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					listaConsultaTTAPVAATV.*,
+					success
+				</param>
+			</result>
+		</action>
+		
+		<action name="consultaListaManteni" class="siniestrosAction"
+			method="consultaListaManteni">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					listaConsultaManteni.*,
+					success
+				</param>
+			</result>
+		</action>
+		
+		<action name="consultaListaPorcentaje" class="siniestrosAction"
+			method="consultaListaPorcentaje">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					listaPorcentaje.*,
+					success
+				</param>
+			</result>
+		</action>
+		
+		<action name="consultaListaPoliza" class="siniestrosAction"
+			method="consultaListaPoliza">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					listaPoliza.*,
+					success
+				</param>
+			</result>
+		</action>
+		
+		<action name="guardaAutorizacionServicio" class="siniestrosAction" method="guardaAutorizacionServicio">
+	        <interceptor-ref name="json">
+	            <param name="enableSMD">true</param>
+	            <param name="ignoreSMDMethodInterfaces">false</param>
+	        </interceptor-ref>
+	        <result name="success" type="json"/>
+		</action>
+		
+		<!-- <action name="guardaAutorizacionServicio" class="siniestrosAction"
+			method="guardaAutorizacionServicio">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					listaPoliza.*,
+					success
+				</param>
+			</result>
+		</action>-->
+		
+		<!-- <action name="guardaPorcentajeAgentes" class="agentesAction" method="guardaPorcentajeAgentes">
+	        <interceptor-ref name="json">
+	            <param name="enableSMD">true</param>
+	            <param name="ignoreSMDMethodInterfaces">false</param>
+	        </interceptor-ref>
+	        <result name="success" type="json"/>
+		</action>-->
         <action name="principal" class="MesaControlAction" method="principal">
             <result name="success">/jsp-script/proceso/siniestros/principal.jsp</result>
         </action>
         
+        <action name="altaTramite">
+    		<result>/jsp-script/proceso/siniestros/altaTramite.jsp</result>
+		</action>
+		
 		<action name="principalCordinadorAR">
     		<result>/jsp-script/proceso/siniestros/principalCordinadorAR.jsp</result>
 		</action>
@@ -152,7 +238,7 @@
     		<result>/jsp-script/proceso/siniestros/historialReclamaciones.jsp</result>
 		</action>
 		
-		<action name="verCoberturas">
+		<action name="verCoberturas" class="siniestrosAction" method="verCoberturas">
     		<result>/jsp-script/proceso/siniestros/verCoberturas.jsp</result>
 		</action>
 		
@@ -185,6 +271,10 @@
 		
 		<action name="asignarReclamaciones">
     		<result>/jsp-script/proceso/siniestros/asignarReclamaciones.jsp</result>
+		</action>
+		
+		<action name="ajustesMedicos">
+    		<result>/jsp-script/proceso/siniestros/ajustesMedicos.jsp</result>
 		</action>
 
 		<action name="calculosReclamaciones" class="siniestrosAction" method="entradaCalculos">

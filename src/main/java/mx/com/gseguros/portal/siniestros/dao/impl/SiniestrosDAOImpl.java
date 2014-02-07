@@ -10,13 +10,18 @@ import javax.sql.DataSource;
 
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.DaoException;
+import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.siniestros.dao.SiniestrosDAO;
 import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
 import mx.com.gseguros.portal.siniestros.model.CoberturaPolizaVO;
+import mx.com.gseguros.portal.siniestros.model.ConsultaManteniVO;
+import mx.com.gseguros.portal.siniestros.model.ConsultaPolizaVO;
+import mx.com.gseguros.portal.siniestros.model.ConsultaPorcentajeVO;
+import mx.com.gseguros.portal.siniestros.model.ConsultaProveedorVO;
+import mx.com.gseguros.portal.siniestros.model.ConsultaTDETAUTSVO;
+import mx.com.gseguros.portal.siniestros.model.ConsultaTTAPVAATVO;
 import mx.com.gseguros.portal.siniestros.model.DatosSiniestroVO;
-import mx.com.gseguros.portal.dao.AbstractManagerDAO;
-import mx.com.gseguros.portal.dao.impl.DinamicMapper;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utilerias;
 import oracle.jdbc.driver.OracleTypes;
@@ -97,7 +102,9 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
         }
     }
 
-	@SuppressWarnings("unchecked")
+	
+    /******************************		ARCHIVO QUE SE TIENE QUE MODIFICAR 		***************************************/    
+    @SuppressWarnings("unchecked")
 	public List<GenericVO> obtieneListadoAsegurado(String cdperson) throws DaoException {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdperson_i", cdperson);
@@ -118,7 +125,7 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
 		}
 	}
 	
-    protected class DatosListaAsegurado  implements RowMapper {
+	protected class DatosListaAsegurado  implements RowMapper {
         public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
         	GenericVO consulta = new GenericVO();
         	consulta.setKey(rs.getString("CODIGO"));
@@ -169,13 +176,13 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
     
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<GenericVO> obtieneListadoProvMedico(String tipoprov,String cdpresta) throws DaoException {
+	public List<ConsultaProveedorVO> obtieneListadoProvMedico(String tipoprov,String cdpresta) throws DaoException {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_tipoprov_i", tipoprov);
 		params.put("pv_cdpresta_i", cdpresta);
 		
 		Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoProvMedicoSP(getDataSource()), params);
-		return (List<GenericVO>) mapResult.get("pv_registro_o");
+		return (List<ConsultaProveedorVO>) mapResult.get("pv_registro_o");
 	}
 	
 	protected class ObtieneListadoProvMedicoSP extends StoredProcedure
@@ -194,9 +201,11 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
 	
     protected class DatosListaProvMedico  implements RowMapper {
         public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-        	GenericVO consulta = new GenericVO();
-        	consulta.setKey(rs.getString("CDPRESTA"));
-        	consulta.setValue(rs.getString("NOMBRE"));
+        	ConsultaProveedorVO consulta = new ConsultaProveedorVO();
+        	consulta.setCdpresta(rs.getString("CDPRESTA"));
+        	consulta.setNombre(rs.getString("NOMBRE"));
+        	consulta.setCdespeci(rs.getString("CDESPECI"));
+        	consulta.setDescesp(rs.getString("DESCESP"));
             return consulta;
         }
     }
@@ -386,6 +395,84 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
 		SiniestrosDAOImpl.logger = logger;
 	}
 
+
+	/*@Override
+	public List<GenericVO> obtieneListadoMovRechazo(String cdmotRechazo)
+			throws DaoException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdtabla_i", cdmotRechazo);
+		
+		Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoMovRechazo(getDataSource()), params);
+		return (List<GenericVO>) mapResult.get("pv_registro_o");
+	}
+	
+	protected class ObtieneListadoMovRechazo extends StoredProcedure
+	{
+		protected ObtieneListadoMovRechazo(DataSource dataSource)
+		{
+			super(dataSource, "PKG_PRESINIESTRO.P_LISTA_TTAPVAT1");
+			declareParameter(new SqlParameter("pv_cdtabla_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DatosListaMotRechazo()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+    protected class DatosListaMotRechazo  implements RowMapper {
+        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+        	GenericVO consulta = new GenericVO();
+        	consulta.setKey(rs.getString("OTCLAVE"));
+        	consulta.setValue(rs.getString("OTVALOR"));
+            return consulta;
+        }
+    }*/
+    
+    
+	@Override
+	public List<ConsultaTDETAUTSVO> obtieneListadoTDeTauts(String nmautser)
+			throws DaoException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_nmautser_i", nmautser);
+		
+		Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTDeTauts(getDataSource()), params);
+		
+		@SuppressWarnings("unchecked")
+		List<ConsultaTDETAUTSVO> listadoTDeTauts = (List<ConsultaTDETAUTSVO>)mapResult.get("pv_registro_o");
+		return listadoTDeTauts;
+	}
+	
+	protected class ObtieneListadoTDeTauts extends StoredProcedure {
+
+		protected ObtieneListadoTDeTauts(DataSource dataSource) {
+			super(dataSource, "PKG_PRESINIESTRO.P_CONSULTA_TDETAUTS");
+			declareParameter(new SqlParameter("pv_nmautser_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DatosListadoTDeTauts()));
+	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+    protected class DatosListadoTDeTauts  implements RowMapper {
+        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+        	ConsultaTDETAUTSVO consulta = new ConsultaTDETAUTSVO();
+        	consulta.setNmautser(rs.getString("NMAUTSER"));
+        	consulta.setCdtipaut(rs.getString("CDTIPAUT"));
+        	consulta.setCdmedico(rs.getString("CDMEDICO"));
+        	consulta.setNombreMedico(rs.getString("NOMBREMEDICO"));
+        	consulta.setCdtipmed(rs.getString("CDTIPMED"));
+        	consulta.setCdcpt(rs.getString("CDCPT"));
+        	consulta.setDesccpt(rs.getString("DESCCPT"));
+        	consulta.setCantporc(rs.getString("CANTPORC"));
+        	consulta.setPrecio(rs.getString("PRECIO"));
+        	consulta.setPtimport(rs.getString("PTIMPORT"));
+        	consulta.setDescTipMed(rs.getString("DESCTIPMED"));
+            return consulta;
+        }
+    }
+    
+    
     
     
     /* ############################################################################## 
@@ -447,29 +534,37 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
         public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
         	AutorizacionServicioVO consulta = new AutorizacionServicioVO();
         	consulta.setNmautser(rs.getString("nmautser"));
+        	System.out.println("VALOR DE Nmautant");
+        	System.out.println(consulta.getNmautser());
+        	
             return consulta;
         }
     }
 
-    @Override
-	public List<HashMap<String, String>> loadListaDocumentos(
-			HashMap<String, String> params) throws DaoException {
+	@Override
+	public String guardarListaTDeTauts(HashMap<String, Object> paramsTDeTauts)
+			throws DaoException {
+		// TODO Auto-generated method stub
+		Map<String, Object> mapResult = ejecutaSP(new GuardaListaTDeTautsSP(getDataSource()), paramsTDeTauts);
 		
-		Map<String, Object> mapResult = ejecutaSP(new LoadListaDocumentos(getDataSource()), params);
-		
-		return (List<HashMap<String, String>>) mapResult.get("pv_registro_o");
+		@SuppressWarnings("unchecked")
+		String respuesta=(String) mapResult.get("pv_registro_o");
+		return respuesta;
 	}
-    
-    protected class LoadListaDocumentos extends StoredProcedure {
+	
+	protected class GuardaListaTDeTautsSP extends StoredProcedure {
 
-		protected LoadListaDocumentos(DataSource dataSource) {
-			super(dataSource, "PKG_LISTAS.P_GET_DOCUMENTOS_SINIESTROS");
-			
-			declareParameter(new SqlParameter("pv_cdtippag_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdtipate_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmtramite_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new LoadListaDocumentosMapper()));
-			declareParameter(new SqlOutParameter("pv_messages_o", OracleTypes.VARCHAR));
+		protected GuardaListaTDeTautsSP(DataSource dataSource) {
+			super(dataSource, "PKG_PRESINIESTRO.P_GUARDA_TDETAUTS");
+			declareParameter(new SqlParameter("pv_nmautser_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipaut_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdmedico_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipmed_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdctp_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_precio_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cantporc_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ptimport_i", OracleTypes.VARCHAR));	
+			//declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DatosGuardardoListaTDeTautsMapper()));
 	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
 			compile();
@@ -477,43 +572,262 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
 	}
 	
 	
-    protected class LoadListaDocumentosMapper  implements RowMapper {
+    /*protected class DatosGuardardoListaTDeTautsMapper  implements RowMapper {
         public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-        	HashMap<String, String> map =  new HashMap<String, String>();
-        	String obl = Constantes.SI.equalsIgnoreCase(rs.getString("SWOBLIGA"))? "Si" : "No";
-        	map.put("id", rs.getString("CODIGO"));
-        	map.put("listo", rs.getString("VALOR"));
-        	map.put("nombre", rs.getString("DESCRIP"));
-        	map.put("obligatorio", obl);
-            return map;
+        	logger.debug("ENTRA A DatosGuardardoListaTDeTautsMapper");
+        	logger.debug(rs);
+        	logger.debug(rowNum);
+        	logger.debug("SALE A DatosGuardardoListaTDeTautsMapper");
+            return rs;
+        }
+    }*/
+
+
+	@Override
+	public List<ConsultaTTAPVAATVO> obtieneListadoTTAPVAAT(
+			HashMap<String, Object> paramTTAPVAAT) throws DaoException {
+Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSource()), paramTTAPVAAT);
+		
+		@SuppressWarnings("unchecked")
+		List<ConsultaTTAPVAATVO> listaDatosPoliza = (List<ConsultaTTAPVAATVO>)mapResult.get("pv_registro_o");
+		return listaDatosPoliza;
+	}
+	protected class ObtieneListadoTTAPVAATSP extends StoredProcedure {
+
+		protected ObtieneListadoTTAPVAATSP(DataSource dataSource) {
+			super(dataSource, "PKG_PRESINIESTRO.P_LISTA_TTAPVAAT");
+			declareParameter(new SqlParameter("pv_cdtabla_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otclave1_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otclave2_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otclave3_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otclave4_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_otclave5_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DatosListaTTAPVAATMapper()));
+	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+    protected class DatosListaTTAPVAATMapper  implements RowMapper {
+        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+        	logger.debug("VALOR DE RESPUESTA");
+        	logger.debug(rs);
+        	
+        	logger.debug("VALOR DE colunma");
+        	logger.debug(rowNum);
+        	
+        	ConsultaTTAPVAATVO consulta = new ConsultaTTAPVAATVO();
+        	consulta.setNmtabla(rs.getString("NMTABLA"));
+        	consulta.setOtclave1(rs.getString("OTCLAVE1"));
+        	consulta.setOtclave2(rs.getString("OTCLAVE2"));
+        	consulta.setOtclave3(rs.getString("OTCLAVE3"));
+        	consulta.setOtclave4(rs.getString("OTCLAVE4"));
+        	consulta.setOtclave5(rs.getString("OTCLAVE5"));
+        	consulta.setFedesde(rs.getString("FEDESDE"));
+        	consulta.setFehasta(rs.getString("FEHASTA"));
+        	consulta.setOtvalor01(rs.getString("OTVALOR01"));
+            return consulta;
         }
     }
 
 
 	@Override
-	public String guardaEstatusDocumento(HashMap<String, String> params)
-			throws DaoException {
+	public List<ConsultaManteniVO> obtieneListadoManteni(
+			String cdtabla, String codigo) throws DaoException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdtabla_i", cdtabla);
+		params.put("pv_codigo_i", codigo);
 		
-		logger.debug("parms: "+params);
-		Map<String, Object> mapResult = ejecutaSP(new GuardaEstatusDocumento(getDataSource()), params);
+		Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoManteniSP(getDataSource()), params);
 		
-		return (String) mapResult.get("pv_msg_id_o");
+		@SuppressWarnings("unchecked")
+		List<ConsultaManteniVO> listaDatosPoliza = (List<ConsultaManteniVO>)mapResult.get("pv_registro_o");
+		return listaDatosPoliza;
 	}
 	
-	protected class GuardaEstatusDocumento extends StoredProcedure {
+	protected class ObtieneListadoManteniSP extends StoredProcedure {
 
-		protected GuardaEstatusDocumento(DataSource dataSource) {
-			super(dataSource, "PKG_SATELITES.P_INSERTA_MDOCUTRA");
-			
-			declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdtippag_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdtipate_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cddocume_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_accion_i", OracleTypes.VARCHAR));
+		protected ObtieneListadoManteniSP(DataSource dataSource) {
+			super(dataSource, "PKG_PRESINIESTRO.P_LISTA_TMANTENI");
+			declareParameter(new SqlParameter("pv_cdtabla_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_codigo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DatosListadoMantenimientoMapper()));
 	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
 			compile();
 		}
 	}
+	
+    protected class DatosListadoMantenimientoMapper  implements RowMapper {
+        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+        	ConsultaManteniVO consulta = new ConsultaManteniVO();
+        	consulta.setCdtabla(rs.getString("CDTABLA"));
+        	consulta.setCodigo(rs.getString("CODIGO"));
+        	consulta.setDescripc(rs.getString("DESCRIPC"));
+        	consulta.setDescripl(rs.getString("DESCRIPL"));
+            return consulta;
+        }
+    }
 
+
+	@Override
+	public List<ConsultaPorcentajeVO> obtieneListadoPorcentaje(String cdcpt,
+			String cdtipmed,String mtobase) throws DaoException {
+		// TODO Auto-generated method stub
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdcpt_i", cdcpt);
+		params.put("pv_cdtipmed_i", cdtipmed);
+		params.put("pv_mtobase_i", mtobase);
+		
+		
+		Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoPorcentajeSP(getDataSource()), params);
+		
+		@SuppressWarnings("unchecked")
+		List<ConsultaPorcentajeVO> listaDatosPoliza = (List<ConsultaPorcentajeVO>)mapResult.get("pv_registro_o");
+		return listaDatosPoliza;
+	}
+	
+	protected class ObtieneListadoPorcentajeSP extends StoredProcedure {
+
+		protected ObtieneListadoPorcentajeSP(DataSource dataSource) {
+			super(dataSource, "PKG_PRESINIESTRO.P_LISTA_TABULADOR");
+			declareParameter(new SqlParameter("pv_cdcpt_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipmed_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_mtobase_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DatosListadoPorcentajeMapper()));
+	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+    protected class DatosListadoPorcentajeMapper  implements RowMapper {
+        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+        	ConsultaPorcentajeVO consulta = new ConsultaPorcentajeVO();
+        	consulta.setPorcentaje(rs.getString("PORCENTAJE"));
+        	consulta.setMtomedico(rs.getString("MTOMEDICO"));
+            return consulta;
+        }
+    }
+
+
+	@Override
+	public List<ConsultaPolizaVO> obtieneListadoPoliza(String cdperson)
+			throws DaoException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdperson_i", cdperson);
+		
+		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerListadoPoliza(this.getDataSource()), params);
+		return (List<ConsultaPolizaVO>) resultadoMap.get("pv_registro_o");
+	}
+	protected class ObtenerListadoPoliza extends StoredProcedure
+	{
+		protected ObtenerListadoPoliza(DataSource dataSource)
+		{
+			super(dataSource, "PKG_PRESINIESTRO.P_LISTA_POLIZAS");
+			declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DatosListaPoliza()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	protected class DatosListaPoliza  implements RowMapper {
+        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+        	ConsultaPolizaVO consulta = new ConsultaPolizaVO();
+        	consulta.setCdunieco(rs.getString("CDUNIECO"));
+        	consulta.setCdramo(rs.getString("CDRAMO"));
+        	consulta.setEstado(rs.getString("ESTADO"));
+        	consulta.setNmpoliza(rs.getString("NMPOLIZA"));
+        	consulta.setNmsituac(rs.getString("NMSITUAC"));
+            return consulta;
+        }
+    }
+
+
+	@Override
+	public void eliminacionRegistrosTabla(String nmautser)
+			throws DaoException {
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("pv_nmautser_i", nmautser);
+			
+			Map<String,Object> resultadoMap=this.ejecutaSP(new EliminacionRegistros(this.getDataSource()), params);
+		}
+		protected class EliminacionRegistros extends StoredProcedure
+		{
+			protected EliminacionRegistros(DataSource dataSource)
+			{
+				super(dataSource, "PKG_PRESINIESTRO.P_BORRA_TDETAUTS");
+				declareParameter(new SqlParameter("pv_nmautser_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+				declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+				compile();
+			}
+		}
+		
+	    @Override
+		public List<HashMap<String, String>> loadListaDocumentos(
+				HashMap<String, String> params) throws DaoException {
+			
+			Map<String, Object> mapResult = ejecutaSP(new LoadListaDocumentos(getDataSource()), params);
+			
+			return (List<HashMap<String, String>>) mapResult.get("pv_registro_o");
+		}
+	    
+	    protected class LoadListaDocumentos extends StoredProcedure {
+
+			protected LoadListaDocumentos(DataSource dataSource) {
+				super(dataSource, "PKG_LISTAS.P_GET_DOCUMENTOS_SINIESTROS");
+				
+				declareParameter(new SqlParameter("pv_cdtippag_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_cdtipate_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_nmtramite_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new LoadListaDocumentosMapper()));
+				declareParameter(new SqlOutParameter("pv_messages_o", OracleTypes.VARCHAR));
+		        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+		        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+				compile();
+			}
+		}
+		
+		
+	    protected class LoadListaDocumentosMapper  implements RowMapper {
+	        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+	        	HashMap<String, String> map =  new HashMap<String, String>();
+	        	String obl = Constantes.SI.equalsIgnoreCase(rs.getString("SWOBLIGA"))? "Si" : "No";
+	        	map.put("id", rs.getString("CODIGO"));
+	        	map.put("listo", rs.getString("VALOR"));
+	        	map.put("nombre", rs.getString("DESCRIP"));
+	        	map.put("obligatorio", obl);
+	            return map;
+	        }
+	    }
+
+
+		@Override
+		public String guardaEstatusDocumento(HashMap<String, String> params)
+				throws DaoException {
+			
+			logger.debug("parms: "+params);
+			Map<String, Object> mapResult = ejecutaSP(new GuardaEstatusDocumento(getDataSource()), params);
+			
+			return (String) mapResult.get("pv_msg_id_o");
+		}
+		
+		protected class GuardaEstatusDocumento extends StoredProcedure {
+
+			protected GuardaEstatusDocumento(DataSource dataSource) {
+				super(dataSource, "PKG_SATELITES.P_INSERTA_MDOCUTRA");
+				
+				declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_cdtippag_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_cdtipate_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_cddocume_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_accion_i", OracleTypes.VARCHAR));
+		        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+		        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+				compile();
+			}
+		}
 }

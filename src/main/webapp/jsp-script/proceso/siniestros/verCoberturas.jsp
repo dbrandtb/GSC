@@ -9,14 +9,13 @@
         <title>Historial de Reclamaciones</title>
         --%>
         <script type="text/javascript">
-            var _CONTEXT = '${ctx}';            
-            var _URL_CARGA_CLAVES_CLAU =    	'<s:url namespace="/catalogos" action="cargaClausulas" />';
-            var _URL_CONSULTA_CLAUSU =      	'<s:url namespace="/catalogos" action="consultaClausulas" />';
-            var _URL_CONSULTA_CLAUSU_DETALLE =  '<s:url namespace="/catalogos" action="consultaClausulaDetalle" />';
-            var _URL_INSERTA_CLAUSU =      		'<s:url namespace="/catalogos" action="insertaClausula" />';
-            var _URL_ACTUALIZA_CLAUSU =      	'<s:url namespace="/catalogos" action="actualizaClausula" />';
-            
+            var _CONTEXT = '${ctx}';
+            var _URL_LISTA_COBERTURAPOL 				= '<s:url namespace="/siniestros" 		action="consultaListaCoberturaPoliza" />';
+            var _7_smap1 = <s:property value='%{getParams().toString().replace("=",":\'").replace(",","\',").replace("}","\'}")}' />;
+            //var _CATALOGO_AGENTES			= 	 '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@AGENTES"/>';
+           //debug('<s:property value="%{getParams().toString()}" />');
         </script>
+        
         <script type="text/javascript" src="${ctx}/js/proceso/siniestros/verCoberturas.js"></script>
     <%--    
     </head>

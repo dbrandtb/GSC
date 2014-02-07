@@ -23,6 +23,16 @@
             var _URL_LISTA_SUBCOBERTURA				= '<s:url namespace="/siniestros" action="consultaListaSubcobertura" />';
             var _URL_LISTA_CPTICD					= '<s:url namespace="/siniestros" action="consultaListaCPTICD" />';
             
+            var _URL_CONSULTA_DEDUCIBLE_COPAGO		= '<s:url namespace="/siniestros" 		action="consultaListaDatSubGeneral" />';
+            var _URL_CONSULTA_LISTADO_POLIZA		= '<s:url namespace="/siniestros" 		action="consultaListaPoliza" />';
+            
+            var _URL_LISTA_TABULADOR					= '<s:url namespace="/siniestros" action="consultaListaPorcentaje" />';
+            var _URL_LISTA_TMANTENI					= '<s:url namespace="/siniestros" action="consultaListaManteni" />';
+            var _URL_LISTADO_CONCEP_EQUIP    		= '<s:url namespace="/siniestros" action="consultaListaTDeTauts" />';
+            
+            var _URL_GUARDA_AUTORIZACION			= '<s:url namespace="/siniestros" action="guardaAutorizacionServicio" />';
+            
+            var _MONTO_BASE ='21000';
             
         </script>
         <!-- <script type="text/javascript" src="${ctx}/resources/scripts/util/extjs4_utils.js"></script>-->
@@ -33,7 +43,7 @@
     <!-- <div style="height:500px;">
             <div id="div_clau"></div>
    </div>-->
-    	<div style="height:10px;">
+    	<div style="height:1500px;">
             <div id="div_clau"></div>
             <!-- <div id="divResultados" style="margin-top:10px;"></div>-->
         </div> 

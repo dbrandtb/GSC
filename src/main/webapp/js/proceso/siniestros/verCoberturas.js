@@ -2,39 +2,25 @@ Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.chart.*', 'Ext.grid.Panel','Ext.l
 
 Ext.onReady(function() {
 
+	
     Ext.selection.CheckboxModel.override( {
         mode: 'SINGLE',
         allowDeselect: true
     });
 
-    //////////////////////////////////////
-    ////////		MODEL		/////////
-    /////////////////////////////////////
-    
-    Ext.define('modelVerCoberturas',{
+    Ext.define('modelListadoCoberturaPol',{
         extend: 'Ext.data.Model',
         fields: [
-					{type:'string',    name:'key'      						},//	QUITAR AL FINAL
-					{type:'string',    name:'value'      					},//	QUITAR AL FINAL
-					{type:'string',    name:'tipoAtencion'      			},
-					{type:'string',    name:'fechaReclamo'      			},
-					{type:'string',    name:'proveedor'      				},
-					{type:'string',    name:'diagnostico'      				},
-					{type:'string',    name:'numSiniestro'      			},
-					{type:'string',    name:'montoPagado'      				},
-					{type:'string',    name:'montoGastadoTotal'      		},
-					{type:'string',    name:'montoGastadoAnticipado'      	},
-					{type:'string',    name:'montoAutorizado'      			},
-					{type:'string',    name:'polizaAfectada'      			}
-        ]
+                 	{type:'string',    name:'cdgarant'},		{type:'string',    name:'dsgarant'},		{type:'string',    name:'ptcapita'}
+				]
     });
-    //////////////////////////////////////
-    ////////		STORE 		/////////
-    /////////////////////////////////////
-    var storeGridVerCoberturas = new Ext.data.Store(
+    
+
+    
+    storeCoberturaPol = new Ext.data.Store(
     {
     	pageSize : 10
-        ,model      : 'modelVerCoberturas'
+        ,model      : 'modelListadoCoberturaPol'
         ,autoLoad  : false
         ,proxy     :
         {
@@ -45,7 +31,78 @@ Ext.onReady(function() {
         }
     });
     
+    /*var storeCobertura = Ext.create('Ext.data.Store', {
+        model:'modelListadoCobertura',
+        autoLoad:false,
+        proxy: {
+            type: 'ajax',
+            url : _URL_LISTA_COBERTURA,
+            reader: {
+                type: 'json',
+                root: 'listaCoberturaPoliza'
+            }
+        }
+    });*/
     
+    /*storeListadoPoliza = new Ext.data.Store(
+    {
+    	pageSize : 10
+        ,model      : 'modelListadoPoliza'
+        ,autoLoad  : false
+        ,proxy     :
+        {
+            enablePaging : true,
+            reader       : 'json',
+            type         : 'memory',
+            data         : []
+        }
+    });*/
+
+    
+    registroCobertura=Ext.create('Ext.grid.Panel',
+			{
+			    id             : 'idCoberturaPol'
+			    ,store         :  storeCoberturaPol
+			    ,collapsible   : true
+			    ,titleCollapse : true
+			    //,style         : 'margin:5px'
+			    ,width   : 605
+			    ,height: 350
+			    ,columns       :
+			    [
+			        
+			         {
+			             header     : 'Clave'
+			             ,dataIndex : 'cdgarant'
+			             ,width     : 100
+			         },
+			         {
+			             header     : 'Descripci&oacute;n'
+			             ,dataIndex : 'dsgarant'
+			             ,width	    : 350
+			         }
+			         ,
+			         {
+			             header     : 'Monto'
+			             ,dataIndex : 'ptcapita'
+			             ,width	    : 150
+			             ,renderer	: Ext.util.Format.usMoney
+			         }
+			     ],
+			     bbar     :
+			     {
+			         displayInfo : true,
+			         store       : storeCoberturaPol,
+			         xtype       : 'pagingtoolbar'
+			     }
+			});
+    
+    		registroCobertura.store.sort([
+	            { 
+	            	property    : 'dsgarant',
+	            	direction   : 'ASC'
+	            }
+	        ]);
     
     Ext.create('Ext.panel.Panel',
     	    {
@@ -53,83 +110,43 @@ Ext.onReady(function() {
     	        ,renderTo : 'div_clau2'
     	        ,items    :
     	        [
-    	            /*TABLA CON LA INFORMACION DE DE HISTORIAL DE RECLAMACIONES*/
-    	            Ext.create('Ext.grid.Panel',
-    	            {
-    	                id             : 'clausulasGridId'
-    	                //,title         : 'Hist&oacute;rico de Reclamaciones'
-    	                ,store         :  storeGridVerCoberturas
-    	                //,collapsible   : true
-    	                //,titleCollapse : true
-    	                //,style         : 'margin:5px'
-    	                //,height        : 400
-    	                ,width   : 775
-    	                ,height: 360
-    	                ,columns       :
-    	                [
-    	                    {
-    	                        header     : 'Clave'
-    	                        ,dataIndex : 'key'
-	                        	,width	   : 200
-    	                        //,flex      : 1
-    	                    }
-    	                    ,
-    	                    {
-    	                        header     : 'Descripcion de la Cl&aacute;usula'
-        	                    ,dataIndex : 'value'
-        	                    ,width	   : 200	
-        	                    //,flex      : 1
-        	                }
-    	                    ,
-    	                    {	
-    	                    	text            :'Tipo de atenci&oacute;n',			width			: 200,
-    	                        dataIndex       :'tipoAtencion'                
-    	                    },
-    	                    {	
-    	                    	text            :'fecha reclamo',  					width           : 150,
-    	                        dataIndex       :'fechaReclamo'                
-    	                    }
-    	                    ,
-    	                    {	
-    	                    	text            :'Proveedor',  						width           : 200,
-    	                        dataIndex       :'proveedor'                
-    	                    },
-    	                    {	
-    	                    	text            :'Di&aacute;gnostico',				width           : 200,
-    	                        dataIndex       :'diagnostico'                
-    	                    },
-    	                    {
-    	                        text            :'No. Suministro',  				width           : 150,
-    	                        dataIndex       :'numSiniestro'                
-    	                    },            
-    	                    {
-    	                        text            :'Monto Pagado',  					width           : 150, 			renderer        :Ext.util.Format.usMoney,
-    	                        dataIndex       :'montoPagado'
-    	                    },
-    	                    {
-    	                        text            :'Monto gasto <br/> total',			width           : 150, 			renderer        :Ext.util.Format.usMoney, 
-    	                        dataIndex       :'montoGastadoTotal'
-    	                    },
-    	                    {
-    	                        text            :'Monto gasto <br/> anticipado',	width           : 150, 			renderer        :Ext.util.Format.usMoney, 
-    	                        dataIndex       :'montoGastadoAnticipado'
-    	                    },
-    	                    {
-    	                        text            :'Monto autorizado',				width           : 150, 			renderer        :Ext.util.Format.usMoney, 
-    	                        dataIndex       :'montoAutorizado'
-    	                    },
-    	                    {
-    	                        text            :'P&oacute;liza afectada',  	    width           : 150,
-    	                        dataIndex       :'polizaAfectada'                               
-    	                    }
-    	                ],
-    	                bbar     :
-    	                {
-    	                    displayInfo : true,
-    	                    store       : storeGridVerCoberturas,
-    	                    xtype       : 'pagingtoolbar'
-    	                }
-    	            })
+    	            registroCobertura
     	        ]
     	    });
+    
+    
+    
+    var params = {
+            	'params.cdunieco':_7_smap1.cdunieco,
+            	'params.estado':_7_smap1.estado,
+            	'params.cdramo':_7_smap1.cdramo,
+            	'params.nmpoliza':_7_smap1.nmpoliza,
+            	'params.nmsituac':_7_smap1.nmsituac
+    };
+    
+    console.log("RESPUESTA");
+    console.log(params);
+    cargaStorePaginadoLocal(storeCoberturaPol,_URL_LISTA_COBERTURAPOL, 'listaCoberturaPoliza', params, function(options, success, response){
+        if(success){
+        	
+            var jsonResponse = Ext.decode(response.responseText);
+            if(jsonResponse.listaCoberturaPoliza == null) {
+                Ext.Msg.show({
+                    title: 'Aviso',
+                    msg: 'No se encontraron datos.',
+                    buttons: Ext.Msg.OK,
+                    icon: Ext.Msg.WARNING
+                });
+                return;
+            }
+            
+        }else{
+            Ext.Msg.show({
+                title: 'Aviso',
+                msg: 'Error al obtener los datos.',
+                buttons: Ext.Msg.OK,
+                icon: Ext.Msg.ERROR
+            });
+        }
+    });
 });
