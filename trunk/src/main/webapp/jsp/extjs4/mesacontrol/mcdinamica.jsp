@@ -3,6 +3,12 @@
 <!DOCTYPE html>
 <html>
 <head>
+<style>
+.x-action-col-icon
+{
+    margin-right: 4px;
+}
+</style>
 <script>
 ///////////////////////
 ////// variables //////
@@ -10,7 +16,11 @@
 var mcdinInput     = [];
 var mcdinSesion    = [];
 var mcdinUrlNuevo  = '<s:url namespace="/mesacontrol" action="guardarTramiteDinamico" />';
-var mcdinUrlCargar = '<s:url namespace="/mesacontrol" action="loadTareasDinamico" />';
+var mcdinUrlCargar = '<s:url namespace="/mesacontrol" action="loadTareasDinamico"     />';
+var _4_urlReload   = '<s:url namespace="/mesacontrol" action="mcdinamica"             />';
+
+var _4_smap1 = <s:property value='%{getSmap1().toString().replace("=",":\'").replace(",","\',").replace("}","\'}")}' />;
+debug('_4_smap1:',_4_smap1);
 
 mcdinInput['cdunieco'] = '<s:property value="smap2.pv_cdunieco_i" />';
 mcdinInput['ntramite'] = '<s:property value="smap2.pv_ntramite_i" />';
@@ -46,14 +56,38 @@ var _4_botones=
 ///////////////////////
 </script>
 
-<s:if test='%{getSmap2().get("pv_cdtiptra_i").equalsIgnoreCase("15")}'>
-    <%@ include file="/jsp-script/proceso/endosos/scriptMesaAutorizacionEndosos.jsp"%>
+<s:if test='%{getSmap2().get("pv_cdtiptra_i").equalsIgnoreCase("1")}'>
+    <%@ include file="/jsp-script/proceso/endosos/scriptMesaEmision.jsp"%>
 </s:if>
+<s:elseif test='%{getSmap2().get("pv_cdtiptra_i").equalsIgnoreCase("15")}'>
+    <%@ include file="/jsp-script/proceso/endosos/scriptMesaAutorizacionEndosos.jsp"%>
+</s:elseif>
 
 <script>
 ///////////////////////
 ////// funciones //////
 /*///////////////////*/
+function _4_cambiarTiptra(cdtiptra)
+{
+	var editable='';
+	if(cdtiptra=='1')
+	{
+		editable='x';
+	}
+	Ext.create('Ext.form.Panel').submit(
+	{
+		url     : _4_urlReload
+		,params :
+		{
+			'smap1.cdramo'         : _4_smap1.cdramo
+			,'smap1.cdtipsit'      : _4_smap1.cdtipsit
+			,'smap1.gridTitle'     : _4_smap1.gridTitle
+			,'smap2.pv_cdtiptra_i' : cdtiptra
+			,'smap1.editable'      : editable
+		}
+	    ,standardSubmit : true
+	});
+}
 /*///////////////////*/
 ////// funciones //////
 ///////////////////////
@@ -134,19 +168,19 @@ Ext.onReady(function()
     			    ,<s:property value="imap1.gridColumns" />
     			    ,_4_botones
     			]
-    			<s:if test='%{getSmap1().get("editable")!=null}'>
     			,tbar      :
     			[
+    			    <s:if test='%{getSmap1().get("editable")!=null&&getSmap1().get("editable").length()>0}'>
     				{
-    					text     : 'Nuevo/Agregar'
-    					,icon    : '${ctx}/resources/fam3icons/icons/page.png'
+    					text     : 'Agregar tr&aacute;mite'
+    					,icon    : '${ctx}/resources/fam3icons/icons/add.png'
     					,handler : function()
     				    {
     						mcdinFormNuevo.show();
     				    }
     				}
+    			    </s:if>
     			]
-    			</s:if>
     			,bbar       :
     	        {
     	            displayInfo : true
@@ -170,6 +204,7 @@ Ext.onReady(function()
 		    	,icon          : '${ctx}/resources/fam3icons/icons/zoom.png'
 		    	,buttonAlign   : 'center'
 		    	,collapsible   : true
+		    	,url           : _4_urlReload
 		    	,minHeight     : 200
 		    	,titleCollapse : true
 		    	,layout        :
@@ -185,10 +220,44 @@ Ext.onReady(function()
 		    	[
 		    	    <s:property value="imap1.itemsFiltro" />
 		    	]
+		    	,tbar          :
+		    	[
+					{
+					    text      : 'Emisi&oacute;n'
+					    ,icon     : '${ctx}/resources/fam3icons/icons/star.png'
+					    ,disabled : mcdinInput['tiptra']=='1'
+					    ,handler  : function()
+					    {
+					    	_4_cambiarTiptra(1);
+					    }
+					}
+					,{
+                        text      : 'Endosos'
+                        ,icon     : '${ctx}/resources/fam3icons/icons/overlays.png'
+                        ,disabled : mcdinInput['tiptra']=='15'
+                        ,handler  : function()
+                        {
+                        	_4_cambiarTiptra(15);
+                        }
+                    }
+					,{
+                        text      : 'Siniestros'
+                        ,icon     : '${ctx}/resources/fam3icons/icons/flag_red.png'
+                        ,disabled : true
+                    }
+		    	]
 		    	,buttons       :
 		    	[
-		    	    {
-		    	    	text     : 'Buscar'
+					{
+                        text     : 'Limpiar'
+                        ,icon    : '${ctx}/resources/fam3icons/icons/control_repeat_blue.png'
+                        ,handler : function()
+                        {
+                            this.up().up().getForm().reset();
+                        }
+                    }
+		    	    ,{
+		    	    	text     : 'Filtrar'
 		    	    	,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
 		    	    	,handler : function()
 		    	    	{
@@ -197,6 +266,13 @@ Ext.onReady(function()
 			    	    		this.up().up().submit(
 			    	    		{
 			    	    			standardSubmit : true
+			    	    			,params        :
+			    	    			{
+			    	    				'smap1.cdramo'         : _4_smap1.cdramo
+			    	    	            ,'smap1.cdtipsit'      : _4_smap1.cdtipsit
+			    	    	            ,'smap1.gridTitle'     : _4_smap1.gridTitle
+			    	    	            ,'smap2.pv_cdtiptra_i' : mcdinInput['tiptra']
+			    	    			}
 			    	    		});
 		    	    		}
 		    	    		else
@@ -220,8 +296,8 @@ Ext.onReady(function()
     Ext.define('McdinFormNuevo',
     {
     	extend       : 'Ext.window.Window'
-        ,title       : 'Nuevo/Agregar'
-        ,icon        : '${ctx}/resources/fam3icons/icons/page.png'
+        ,title       : 'Agregar tr&aacute;mite'
+        ,icon        : '${ctx}/resources/fam3icons/icons/add.png'
         ,width       : 600
         ,modal       : true
         ,height      : 400
@@ -270,7 +346,7 @@ Ext.onReady(function()
                                             ,buttons : Ext.Msg.OK
                                             ,fn      : function()
                                             {
-                                                Ext.create('Ext.form.Panel').submit({standardSubmit:true});
+                                            	_4_cambiarTiptra(mcdinInput['tiptra']);
                                             }
                                         });    
                                     }
@@ -354,6 +430,7 @@ Ext.onReady(function()
         }
         ,success : function(response)
         {
+        	debug('responseText',response.responseText);
             var jsonResponse = Ext.decode(response.responseText);
             debug(jsonResponse);
             mcdinStore.setProxy(

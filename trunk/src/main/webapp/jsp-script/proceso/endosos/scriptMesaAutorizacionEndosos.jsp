@@ -112,15 +112,15 @@ function _4_autorizarEndoso()
 			url       : _4_urlAutorizarEndoso
 			,params   :
 			{
-				'smap1.ntramiteemi'  : record.get('cdsucdoc')
+				'smap1.ntramiteemi'  : record.get('parametros.pv_otvalor01')
 				,'smap1.ntramiteend' : record.get('ntramite')
 	            ,'smap1.cdunieco'    : record.get('cdunieco')
 	            ,'smap1.cdramo'      : record.get('cdramo')
 	            ,'smap1.estado'      : record.get('estado')
 	            ,'smap1.nmpoliza'    : record.get('nmpoliza')
 	            ,'smap1.nmsuplem'    : record.get('nmsuplem')
-	            ,'smap1.nsuplogi'    : record.get('nmsolici')
-	            ,'smap1.cdtipsup'    : record.get('nombre')
+	            ,'smap1.nsuplogi'    : record.get('parametros.pv_otvalor04')
+	            ,'smap1.cdtipsup'    : record.get('parametros.pv_otvalor02')
 	            ,'smap1.status'      : '9'
 	            ,'smap1.fechaEndoso' : Ext.Date.format(record.get('ferecepc'),'d/m/Y')
 	            ,'smap1.observacion' : _4_fieldComentAuthEndoso.getValue()

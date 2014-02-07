@@ -464,25 +464,24 @@ public class MesaControlAction extends PrincipalCoreAction
 	
 	/////////////////////////////////////////////////
 	//////      mesa de control dinamica       //////
-	////// smap1 :                             //////
-	//////     cddos     : ramo                //////
-	//////     cdtres    : situacion           //////
-	//////     cdsite    : proceso             //////
-	//////     gridTitle : titulo para el grid //////
-	//////     editable  : presente si es      //////
-	//////                 editable            //////
-	////// smap2 :                             //////
-	//////     pv_cdunieco_i                   //////
-	//////     pv_ntramite_i                   //////
-	//////     pv_cdramo_i                     //////
-	//////     pv_nmpoliza_i                   //////
-	//////     pv_estado_i                     //////
-	//////     pv_cdagente_i                   //////
-	//////     pv_status_i                     //////
-	//////     pv_cdtipsit_i                   //////
-	//////     pv_fedesde_i                    //////
-	//////     pv_fehasta_i                    //////
-	//////     pv_cdtiptra_i                   //////
+	/*
+	smap1:
+		(URL)gridTitle=Endosos en espera
+		(URL)cdramo=
+		(URL)cdtipsit=
+	smap2:
+		(URL)pv_cdtiptra_i=15
+		pv_fehasta_i=,
+		pv_cdagente_i=,
+		pv_estado_i=,
+		pv_cdtipsit_i=,
+		pv_status_i=-1,
+		pv_cdunieco_i=,
+		pv_fedesde_i=,
+		pv_nmpoliza_i=,
+		pv_ntramite_i=,
+		pv_cdramo_i=
+	*/
 	/*/////////////////////////////////////////////*/
 	public String mcdinamica()
 	{
