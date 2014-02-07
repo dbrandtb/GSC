@@ -21,6 +21,7 @@ public class GeneradorCampos
 {
 	
 	private static       Logger log                   = Logger.getLogger(GeneradorCampos.class);
+	public static final  String mappingPrefix         = "otvalor";
     public static final  String namePrefix            = "parametros.pv_otvalor";
     private static final String formatoFecha          = "d/m/Y";
     private static final String xtypeDatecolumn       = "datecolumn";
@@ -513,6 +514,7 @@ public class GeneradorCampos
     	String tipoEntero   = "int";
     	String tipoFlotante = "float";
     	
+    	String mapping = null;
     	String name = comp.getNameCdatribu();
     	if(comp.isFlagEsAtribu())
     	{
@@ -521,7 +523,8 @@ public class GeneradorCampos
     		{
     			cdatribu = "0" + cdatribu;
     		}
-    		name = GeneradorCampos.namePrefix + cdatribu;
+    		name    = GeneradorCampos.namePrefix + cdatribu;
+    		mapping = GeneradorCampos.mappingPrefix + cdatribu;
     	}
     	
         String type     = tipoAlfanum;
@@ -562,8 +565,12 @@ public class GeneradorCampos
 
         Item field=new Item();
         field.setType(Item.OBJ);
-        field.add(Item.crear("name", name));
-        field.add(Item.crear("type", type));
+        field.add("name", name);
+        field.add("type", type);
+        if(StringUtils.isNotBlank(mapping))
+        {
+        	field.add("mapping",mapping);
+        }
         
         if(type.equals(tipoFecha))
         {

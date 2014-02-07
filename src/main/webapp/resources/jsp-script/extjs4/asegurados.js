@@ -3260,7 +3260,7 @@ Ext
 				}).showAt(610, 45);
 			}
 
-			if (hayTramiteCargado) {qwe
+			if (hayTramiteCargado) {
 				Ext.create('Ext.window.Window', {
 					title : 'Documentos del tr&aacute;mite ' + ntramiteCargado,
 					closable : false,
