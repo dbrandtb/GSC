@@ -6,7 +6,6 @@
 	<!-- WS ice2sigs -->
 	<bean id="ice2sigsWebServices" class="mx.com.gseguros.ws.client.impl.Ice2sigsWebServicesImpl">
 	   <property name="kernelManager" ref="kernelManagerSustituto"/>
-	   <property name="servicioGSServiceCallbackHandler" ref="servicioGSServiceCallbackHandlerImpl"></property>
 	   <property name="endpoint" value="${url.ws.ice2sigs}"></property>
 	   <property name="urlImpresionRecibos" value="${url.imp.recibos}"></property>
 	</bean>	
