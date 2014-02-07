@@ -36,9 +36,9 @@ var panDocInputNmsuplem  = '<s:property value="params.nmsuplem" />';
 var panDocInputNtramite  = '<s:property value="params.ntramite" />';
 var panDocInputNmsolici  = '<s:property value="params.nmsolici" />';
 var panDocInputTipoMov   = '<s:property value="params.tipomov" />';
-var _nmTramite = '1010';
-var _tipoPago = '1';
-var _tipoAtencion = '1';
+var _nmTramite = '<s:property value="params.nmTramite" />';
+var _tipoPago = '<s:property value="params.cdTipoPago" />';
+var _tipoAtencion = '<s:property value="params.cdTipoAtencion" />';
 
 var panDocStoreDoc;
 var panDocUrlCargar      = '<s:url namespace="/documentos" action="cargaDocumentosSiniestro" />';
