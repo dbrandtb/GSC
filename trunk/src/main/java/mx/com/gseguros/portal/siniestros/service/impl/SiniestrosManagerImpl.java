@@ -10,6 +10,12 @@ import mx.com.gseguros.portal.siniestros.dao.SiniestrosDAO;
 import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
 import mx.com.gseguros.portal.siniestros.model.CoberturaPolizaVO;
+import mx.com.gseguros.portal.siniestros.model.ConsultaManteniVO;
+import mx.com.gseguros.portal.siniestros.model.ConsultaPolizaVO;
+import mx.com.gseguros.portal.siniestros.model.ConsultaPorcentajeVO;
+import mx.com.gseguros.portal.siniestros.model.ConsultaProveedorVO;
+import mx.com.gseguros.portal.siniestros.model.ConsultaTDETAUTSVO;
+import mx.com.gseguros.portal.siniestros.model.ConsultaTTAPVAATVO;
 import mx.com.gseguros.portal.siniestros.model.DatosSiniestroVO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 
@@ -40,7 +46,6 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	@Override
 	public List<AutorizaServiciosVO> getConsultaListaAutorizaciones(
 			String tipoAut, String cdperson) throws ApplicationException {
-		// TODO Auto-generated method stub
 		try {
 			return siniestrosDAO.obtieneListadoAutorizaciones(tipoAut,cdperson);
 		} catch (DaoException daoExc) {
@@ -49,7 +54,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	}
 	
 	@Override
-	public List<GenericVO> getConsultaListaProveedorMedico(String tipoprov,String cdpresta)
+	public List<ConsultaProveedorVO> getConsultaListaProveedorMedico(String tipoprov,String cdpresta)
 			throws ApplicationException {
 		try {
 			return siniestrosDAO.obtieneListadoProvMedico(tipoprov,cdpresta);
@@ -142,6 +147,37 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		this.siniestrosDAO = siniestrosDAO;
 	}
 	
+	
+	/*@Override
+	public List<GenericVO> getConsultaListaMotivoRechazo(String cdmotRechazo)
+			throws ApplicationException {
+		try {
+			return siniestrosDAO.obtieneListadoMovRechazo(cdmotRechazo);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}*/
+	
+	@Override
+	public List<ConsultaTDETAUTSVO> getConsultaListaTDeTauts(String nmautser)
+			throws ApplicationException {
+		try {
+			return siniestrosDAO.obtieneListadoTDeTauts(nmautser);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}
+
+	@Override
+	public void getEliminacionRegistros(String nmautser)
+			throws ApplicationException {
+			try {
+				siniestrosDAO.eliminacionRegistrosTabla(nmautser);
+			} catch (DaoException daoExc) {
+				throw new ApplicationException(daoExc.getMessage(), daoExc);
+			}
+	}
+	
 	/* ############################################################################## 
 	 * ##################################### VERIFICAR ##############################*/
 	@Override
@@ -153,19 +189,52 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		}
 	}
 
+	@Override
+	public String guardaListaTDeTauts(HashMap<String, Object> paramsTDeTauts)
+			throws ApplicationException {
+		try {
+			return siniestrosDAO.guardarListaTDeTauts(paramsTDeTauts);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}
 
+	@Override
+	public List<ConsultaTTAPVAATVO> getConsultaListaTTAPVAAT(
+			HashMap<String, Object> paramTTAPVAAT) throws ApplicationException {
+		 try {
+		        return siniestrosDAO.obtieneListadoTTAPVAAT(paramTTAPVAAT);
+		    } catch (DaoException daoExc) {
+		        throw new ApplicationException(daoExc.getMessage(), daoExc);
+		    }
+	}
 
+	@Override
+	public List<ConsultaManteniVO> getConsultaListaManteni(String cdtabla, String codigo) throws ApplicationException {
+		try {
+			return siniestrosDAO.obtieneListadoManteni(cdtabla,codigo);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}
 
+	@Override
+	public List<ConsultaPorcentajeVO> getConsultaListaPorcentaje(String cdcpt, String cdtipmed,String mtobase) throws ApplicationException {
+		try {
+			return siniestrosDAO.obtieneListadoPorcentaje(cdcpt,cdtipmed,mtobase);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}
+
+	@Override
+	public List<ConsultaPolizaVO> getConsultaListaPoliza(String cdperson) throws ApplicationException {
+		try {
+			return siniestrosDAO.obtieneListadoPoliza(cdperson);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}
 
 	
-
-	
-
-
-
-	
-
-
-
-
 }

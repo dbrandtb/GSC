@@ -8,6 +8,12 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
 import mx.com.gseguros.portal.siniestros.model.CoberturaPolizaVO;
+import mx.com.gseguros.portal.siniestros.model.ConsultaManteniVO;
+import mx.com.gseguros.portal.siniestros.model.ConsultaPolizaVO;
+import mx.com.gseguros.portal.siniestros.model.ConsultaPorcentajeVO;
+import mx.com.gseguros.portal.siniestros.model.ConsultaProveedorVO;
+import mx.com.gseguros.portal.siniestros.model.ConsultaTDETAUTSVO;
+import mx.com.gseguros.portal.siniestros.model.ConsultaTTAPVAATVO;
 import mx.com.gseguros.portal.siniestros.model.DatosSiniestroVO;
 
 public interface SiniestrosManager {
@@ -42,7 +48,7 @@ public interface SiniestrosManager {
 	 * @return List GenericVO
 	 * @throws ApplicationException
 	 */
-	public List<GenericVO> getConsultaListaProveedorMedico(String tipoprov,String cdpresta) throws ApplicationException;
+	public List<ConsultaProveedorVO> getConsultaListaProveedorMedico(String tipoprov,String cdpresta) throws ApplicationException;
 	
 	
 	public List<GenericVO> getConsultaListaCausaSiniestro(String cdcausa) throws ApplicationException;
@@ -56,6 +62,18 @@ public interface SiniestrosManager {
 	
 	public List<GenericVO> getConsultaListaCPTICD(String cdtabla, String otclave) throws ApplicationException;
 	
+	//public List<GenericVO> getConsultaListaMotivoRechazo(String cdmotRechazo) throws ApplicationException;
+	
+	public List<ConsultaTDETAUTSVO> getConsultaListaTDeTauts(String nmautser) throws ApplicationException;
+	
+	public List<ConsultaManteniVO> getConsultaListaManteni(String cdtabla, String codigo) throws ApplicationException;
+	
+	public String guardaListaTDeTauts(HashMap<String, Object> paramsTDeTauts) throws ApplicationException;
+	
+	public List<ConsultaPolizaVO> getConsultaListaPoliza(String cdperson) throws ApplicationException;
+	
+	public void getEliminacionRegistros(String nmautser) throws ApplicationException;
+	
 	/* ############################################################################## 
 	 * ##################################### VERIFICAR ##############################*/
 	
@@ -64,6 +82,19 @@ public interface SiniestrosManager {
 	public List<HashMap<String, String>> loadListaDocumentos(HashMap<String, String> params) throws ApplicationException;
 
 	public boolean guardaEstatusDocumentos(HashMap<String, String> params, List<HashMap<String, String>> saveList) throws ApplicationException;
+
+	public List<ConsultaTTAPVAATVO> getConsultaListaTTAPVAAT(HashMap<String, Object> paramTTAPVAAT) throws ApplicationException;
+
+	public List<ConsultaPorcentajeVO> getConsultaListaPorcentaje(String cdcpt, String cdtipmed,String mtobase) throws ApplicationException;
+
+	
+
+	
+
+	
+
+	
+	
 
 	
 

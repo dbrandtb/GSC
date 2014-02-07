@@ -61,6 +61,8 @@
         
         <pattern>/siniestros/historialReclamaciones.action</pattern>
         <pattern>/siniestros/verCoberturas.action</pattern>
+        <pattern>/siniestros/revisionDocumentos.action</pattern>
+        
 	</decorator>
     
     
@@ -130,8 +132,8 @@
          
          
          
-         <pattern>/siniestros/revisionDocumentos.action</pattern>
-         <pattern>/jsp-script/proceso/siniestros/revisionDocumentos.jsp</pattern>
+         <!-- <pattern>/siniestros/revisionDocumentos.action</pattern>
+         <pattern>/jsp-script/proceso/siniestros/revisionDocumentos.jsp</pattern>-->
          
          <pattern>/siniestros/seleccionCobertura.action</pattern>
          <pattern>/jsp-script/proceso/siniestros/seleccionCobertura.jsp</pattern>
