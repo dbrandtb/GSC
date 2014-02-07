@@ -83,6 +83,9 @@ import mx.com.gseguros.ws.client.recibossigs.GeneradorReciboDxnWsServiceStub.Pol
 import mx.com.gseguros.ws.client.recibossigs.callback.GeneradorReciboDxnWsServiceCallbackHandlerImpl;
 
 import org.apache.axis2.AxisFault;
+import org.apache.struts2.ServletActionContext;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 	
@@ -96,9 +99,6 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 	private String urlImpresionRecibos;
 	
 	private transient KernelManagerSustituto kernelManager;
-	
-	private transient ServicioGSServiceCallbackHandlerImpl servicioGSServiceCallbackHandler;
-	
 
 	public PolizaRespuesta ejecutaPolizaGS(Operacion operacion,
 			Poliza poliza, String endpoint) throws Exception {
@@ -163,9 +163,11 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 			if(async){
 				//TODO: RBS Cambiar params por PolizaVO
 				// Se setean los parametros al callback handler:
-				servicioGSServiceCallbackHandler.setClientData(params);
+				WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(ServletActionContext.getServletContext());
+				ServicioGSServiceCallbackHandlerImpl callback = (ServicioGSServiceCallbackHandlerImpl)context.getBean("servicioGSServiceCallbackHandlerImpl");
+				callback.setClientData(params);
 				
-				stubGS.startreciboGS(reciboE, servicioGSServiceCallbackHandler);
+				stubGS.startreciboGS(reciboE, callback);
 			} else {
 				RespuestaGS = stubGS.reciboGS(reciboE);
 				resultado = RespuestaGS.getReciboGSResponse().get_return();
@@ -312,9 +314,11 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 			if(async){
 				//TODO: RBS Cambiar params por PolizaVO
 				// Se setean los parametros al callback handler:
-				servicioGSServiceCallbackHandler.setClientData(params);
+				WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(ServletActionContext.getServletContext());
+				ServicioGSServiceCallbackHandlerImpl callback = (ServicioGSServiceCallbackHandlerImpl)context.getBean("servicioGSServiceCallbackHandlerImpl");
+				callback.setClientData(params);
 				
-				stubGS.startclienteSaludGS(clienteE, servicioGSServiceCallbackHandler);
+				stubGS.startclienteSaludGS(clienteE, callback);
 			} else {
 				RespuestaGS = stubGS.clienteSaludGS(clienteE);
 				resultado = RespuestaGS.getClienteSaludGSResponse().get_return();
@@ -799,15 +803,6 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 		this.urlImpresionRecibos = urlImpresionRecibos;
 	}
 
-	/**
-	 * 
-	 * @param servicioGSServiceCallbackHandler
-	 */
-	public void setServicioGSServiceCallbackHandler(
-			ServicioGSServiceCallbackHandlerImpl servicioGSServiceCallbackHandler) {
-		this.servicioGSServiceCallbackHandler = servicioGSServiceCallbackHandler;
-	}
-	
 	
 	/**
 	 * Setter method
