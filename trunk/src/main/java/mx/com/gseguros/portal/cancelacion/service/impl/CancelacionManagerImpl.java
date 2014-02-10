@@ -125,7 +125,8 @@ public class CancelacionManagerImpl implements CancelacionManager
 			,String feefecto
 			,String fevencim
 			,String fecancel
-			,String cdusuari) throws Exception
+			,String cdusuari
+			,String cdtipsup) throws Exception
 	{
 		Map<String,String>params=new HashMap<String,String>();
 		params.put("pv_cdunieco_i" , cdunieco);
@@ -140,6 +141,7 @@ public class CancelacionManagerImpl implements CancelacionManager
 		params.put("pv_fevencim_i" , fevencim);
 		params.put("pv_fecancel_i" , fecancel);
 		params.put("pv_usuario_i"  , cdusuari);
+		params.put("pv_cdtipsup_i" , cdtipsup);
 		this.cancelaPoliza(params);
 	}
 	

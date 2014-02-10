@@ -2258,7 +2258,7 @@ public class EndososAction extends PrincipalCoreAction
 			String cdnacion = smap1.get("cdnacion");
 			String cdelemen = usuario.getEmpresa().getElementoId();
 			String cdusuari = usuario.getUser();
-			Date fechaHoy   = new Date();
+			Date   fechaHoy = new Date();
 			String ntramite = smap2.get("NTRAMITE");
 			
 			String fechaEndoso  = smap3.get("fecha_endoso");
@@ -2314,8 +2314,8 @@ public class EndososAction extends PrincipalCoreAction
                 mapaPolisit.put("pv_swreduci_i",    null);
                 mapaPolisit.put("pv_cdagrupa_i",    "1");
                 mapaPolisit.put("pv_cdestado_i",    "0");
-                mapaPolisit.put("pv_fefecsit_i",    fechaHoy);
-                mapaPolisit.put("pv_fecharef_i",    fechaHoy);
+                mapaPolisit.put("pv_fefecsit_i",    fechaEndosoD);
+                mapaPolisit.put("pv_fecharef_i",    fechaEndosoD);
                 mapaPolisit.put("pv_cdgrupo_i",     null);
                 mapaPolisit.put("pv_nmsituaext_i",  null);
                 mapaPolisit.put("pv_nmsitaux_i",    null);
@@ -2609,8 +2609,8 @@ public class EndososAction extends PrincipalCoreAction
                 mapaPolisit.put("pv_swreduci_i",    null);
                 mapaPolisit.put("pv_cdagrupa_i",    "1");
                 mapaPolisit.put("pv_cdestado_i",    "0");
-                mapaPolisit.put("pv_fefecsit_i",    fechaHoy);
-                mapaPolisit.put("pv_fecharef_i",    fechaHoy);
+                mapaPolisit.put("pv_fefecsit_i",    fechaEndosoD);
+                mapaPolisit.put("pv_fecharef_i",    fechaEndosoD);
                 mapaPolisit.put("pv_cdgrupo_i",     null);
                 mapaPolisit.put("pv_nmsituaext_i",  null);
                 mapaPolisit.put("pv_nmsitaux_i",    null);
@@ -5411,7 +5411,7 @@ public class EndososAction extends PrincipalCoreAction
 			
 			//pkg_cancela.p_cancela_poliza
 			cancelacionManager.cancelaPoliza(cdunieco, cdramo, null, estado, nmpoliza, null
-					,cdrazonCancela, comentaCancela, feIniVig, feFinvig, sFecha, cdusuari);
+					,cdrazonCancela, comentaCancela, feIniVig, feFinvig, sFecha, cdusuari, cdtipsup);
 			
 			//+- 30 dias ? PKG_SATELITES.P_MOV_MESACONTROL : PKG_ENDOSOS.P_CONFIRMAR_ENDOSOB
 			String tramiteGenerado=this.confirmarEndoso(cdunieco, cdramo, estado, nmpoliza
