@@ -438,7 +438,7 @@ Ext.onReady(function()
                 type         : 'memory',
                 enablePaging : true,
                 reader       : 'json',
-                data         : jsonResponse.slist1
+                data         : jsonResponse.olist1
             });
             mcdinStore.load();
         }

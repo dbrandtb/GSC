@@ -1,6 +1,7 @@
 package mx.com.gseguros.portal.cotizacion.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -33,6 +34,7 @@ public class MesaControlAction extends PrincipalCoreAction
 	private Map<String,String>             smap2;
 	private List<Map<String,String>>       slist1;
 	private List<Map<String,String>>       slist2;
+	private List<Map<String,Object>>       olist1;
 	private List<GenericVO>                lista;
 	private String                         msgResult;
 	private boolean                        success;
@@ -176,7 +178,39 @@ public class MesaControlAction extends PrincipalCoreAction
 			UserVO usu=(UserVO) session.get("USUARIO");
 			smap1.put("pv_dsrol_i",usu.getRolActivo().getObjeto().getValue());
 			slist1=kernelManager.loadMesaControl(smap1);
-	
+			olist1=new ArrayList<Map<String,Object>>();
+			
+			if(slist1!=null&&slist1.size()>0)
+			{
+				for(Map<String,String> tramite:slist1)
+				{
+					Map<String,Object>aux=new HashMap<String,Object>();
+					for(Entry<String,String> en:tramite.entrySet())
+					{
+						String key   = en.getKey();
+						String value = en.getValue();
+						aux.put(key,value);
+					}
+					olist1.add(aux);
+				}
+				
+				for(Map<String,Object> tramite:olist1)
+				{
+					Map<String,String>parametros=new HashMap<String,String>();
+					for(Entry<String,Object> en:tramite.entrySet())
+					{
+						String key   = en.getKey();
+						String value = (String)en.getValue();
+						if(key!=null&&key.length()>6&&key.substring(0, 7).equalsIgnoreCase("otvalor"))
+						{
+							parametros.put("pv_"+key,value);
+						}
+					}
+					tramite.put("parametros",parametros);
+				}
+			}
+			
+			slist1=null;
 			success=true;
 		}
 		catch(Exception ex)
@@ -727,6 +761,14 @@ public class MesaControlAction extends PrincipalCoreAction
 
 	public void setPantallasManager(PantallasManager pantallasManager) {
 		this.pantallasManager = pantallasManager;
+	}
+
+	public List<Map<String, Object>> getOlist1() {
+		return olist1;
+	}
+
+	public void setOlist1(List<Map<String, Object>> olist1) {
+		this.olist1 = olist1;
 	}
 	
 }
