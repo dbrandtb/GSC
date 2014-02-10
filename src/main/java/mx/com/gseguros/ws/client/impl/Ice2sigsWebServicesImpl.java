@@ -162,9 +162,10 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 		try {
 			if(async){
 				//TODO: RBS Cambiar params por PolizaVO
-				// Se setean los parametros al callback handler:
+				//Se genera una nueva instancia en cada llamado, para evitar corrupcion de datos en el handler:
 				WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(ServletActionContext.getServletContext());
 				ServicioGSServiceCallbackHandlerImpl callback = (ServicioGSServiceCallbackHandlerImpl)context.getBean("servicioGSServiceCallbackHandlerImpl");
+				// Se setean los parametros al callback handler:
 				callback.setClientData(params);
 				
 				stubGS.startreciboGS(reciboE, callback);
@@ -313,9 +314,10 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 		try {
 			if(async){
 				//TODO: RBS Cambiar params por PolizaVO
-				// Se setean los parametros al callback handler:
+				//Se genera una nueva instancia en cada llamado, para evitar corrupcion de datos en el handler:
 				WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(ServletActionContext.getServletContext());
 				ServicioGSServiceCallbackHandlerImpl callback = (ServicioGSServiceCallbackHandlerImpl)context.getBean("servicioGSServiceCallbackHandlerImpl");
+				// Se setean los parametros al callback handler:
 				callback.setClientData(params);
 				
 				stubGS.startclienteSaludGS(clienteE, callback);
