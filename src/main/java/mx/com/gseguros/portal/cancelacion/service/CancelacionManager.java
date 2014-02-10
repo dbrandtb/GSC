@@ -23,7 +23,8 @@ public interface CancelacionManager
 			,String feefecto
 			,String fevencim
 			,String fecancel
-			,String cdusuari) throws Exception;
+			,String cdusuari
+			,String cdtipsup) throws Exception;
 	public void                     seleccionaPolizaUnica     (Map<String,Object> params) throws Exception;
 	public void                     seleccionaPolizaUnica (
 			String cdunieco
