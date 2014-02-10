@@ -71,6 +71,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case SEXO:
 				case STATUS_POLIZA:
 				case TIPOS_PAGO_POLIZA:
+				case TIPOS_PAGO_POLIZA_SIN_DXN:
 				case TIPOS_PERSONA:
 				case TIPOS_POLIZA:
 				case TIPO_PAGO_SINIESTROS:
