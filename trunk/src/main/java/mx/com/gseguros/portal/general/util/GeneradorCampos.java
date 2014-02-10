@@ -269,6 +269,7 @@ public class GeneradorCampos
         {
         	boolean esHijo          = comp.isDependiente();
         	boolean esAutocompleter = StringUtils.isNotBlank(comp.getQueryParam());
+        	boolean esComboVacio    = comp.isComboVacio();
         	
         	////// typeAhead, displayField, valueField //////
         	item.add("typeAhead"    , true);
@@ -278,7 +279,7 @@ public class GeneradorCampos
         	
         	////// forceSelection, editable //////
             boolean editable = false;
-            if(esAutocompleter)
+            if(esAutocompleter||esComboVacio)
             {
             	editable = true;
             }

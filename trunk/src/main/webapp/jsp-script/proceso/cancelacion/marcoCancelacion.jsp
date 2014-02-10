@@ -503,7 +503,16 @@ Ext.onReady(function()
 					        ]
 					    }
 					}
-    	    		,*/{
+    	    		,*/
+    	    		{
+                        text     : 'Limpiar'
+                        ,icon    : '${ctx}/resources/fam3icons/icons/control_repeat_blue.png'
+                        ,handler : function()
+                        {
+                            this.up().up().getForm().reset();
+                        }
+                    }
+    	    		,{
     	    			text     : 'Buscar'
     	    			,id      : 'marcanFilBotGen'
     	    			,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'

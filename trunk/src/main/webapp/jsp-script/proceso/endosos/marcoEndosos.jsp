@@ -1402,6 +1402,14 @@ Ext.onReady(function()
                             }
                         }
                     }
+                    ,{
+                        text     : 'Limpiar'
+                        ,icon    : '${ctx}/resources/fam3icons/icons/control_repeat_blue.png'
+                        ,handler : function()
+                        {
+                            this.up().up().getForm().reset();
+                        }
+                    }
                 ]
             })
             ,Ext.create('Ext.grid.Panel',
