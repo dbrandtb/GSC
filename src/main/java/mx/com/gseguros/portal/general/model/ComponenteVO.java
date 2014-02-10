@@ -50,6 +50,7 @@ public class ComponenteVO
 	private String  paramValue4   = null;
 	private String  paramName5    = null;
 	private String  paramValue5   = null;
+	private boolean comboVacio    = false;
 	
 	private String swsuscri = null;
 	private String swtarifi = null;
@@ -86,6 +87,7 @@ public class ComponenteVO
 			,String  paramValue4
 			,String  paramName5
 			,String  paramValue5
+			,boolean isComboVacio
 			)
 	{
 		this.type          = type;
@@ -116,6 +118,7 @@ public class ComponenteVO
 		this.paramValue4   = paramValue4;
 		this.paramName5    = paramName5;
 		this.paramValue5   = paramValue5;
+		this.comboVacio    = isComboVacio;
 	}
 	
 	public String getLabel() {
@@ -370,5 +373,13 @@ public class ComponenteVO
 	public String toString()
 	{
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
+	}
+
+	public boolean isComboVacio() {
+		return comboVacio;
+	}
+
+	public void setComboVacio(boolean comboVacio) {
+		this.comboVacio = comboVacio;
 	}
 }

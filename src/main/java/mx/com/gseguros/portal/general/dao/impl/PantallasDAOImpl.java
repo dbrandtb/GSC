@@ -86,6 +86,7 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 		String llaveValue4      = "VALUE4";
 		String llaveParam5      = "PARAM5";
 		String llaveValue5      = "VALUE5";
+		String llaveComboVacio  = "SWCVACIO";
 		
 		public Object mapRow(ResultSet rs, int rowNum) throws SQLException
 		{
@@ -184,6 +185,13 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 			String  paramName5   = rs.getString(llaveParam5);
 			String  paramValue5  = rs.getString(llaveValue5);
 			
+			String  sComboVacio  = rs.getString(llaveComboVacio);
+			boolean isComboVacio = false;
+			if(StringUtils.isNotBlank(sComboVacio)&&sComboVacio.equalsIgnoreCase(Constantes.SI))
+			{
+				isComboVacio = true;
+			}
+			
 			ComponenteVO comp = new ComponenteVO(
 					ComponenteVO.TIPO_GENERICO,
 					label         , tipoCampo     , catalogo,
@@ -194,7 +202,9 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 					value         , isOculto      , paramName1,
 					paramValue1   , paramName2    , paramValue2,
 					paramName3    , paramValue3   , paramName4,
-					paramValue4   , paramName5    , paramValue5);
+					paramValue4   , paramName5    , paramValue5,
+					isComboVacio
+					);
 			
 			return comp;
 		}
@@ -523,6 +533,7 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 			declareParameter(new SqlParameter("PV_PARAM5_I"        , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_VALUE5_I"        , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_SWFINAL_I"       , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_SWCVACIO_I"      , OracleTypes.VARCHAR));
 			
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("PV_TITLE_O"  , OracleTypes.VARCHAR));

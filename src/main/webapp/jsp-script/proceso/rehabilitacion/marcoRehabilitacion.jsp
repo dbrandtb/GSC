@@ -206,7 +206,15 @@ Ext.onReady(function()
                 ]
                 ,buttons       :
                 [
-                    {
+					{
+					    text     : 'Limpiar'
+					    ,icon    : '${ctx}/resources/fam3icons/icons/control_repeat_blue.png'
+					    ,handler : function()
+					    {
+					        this.up().up().getForm().reset();
+					    }
+					}
+                    ,{
                         text     : 'Buscar'
                         ,id      : 'marrehFilBotGen'
                         ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
