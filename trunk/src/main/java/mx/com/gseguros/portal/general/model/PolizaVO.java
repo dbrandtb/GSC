@@ -11,17 +11,19 @@ public class PolizaVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	private String cdUnieco;
+	private String cdunieco;
 	
-	private String cdRamo;
+	private String cdramo;
 	
 	private String estado;
 	
-	private String nmPoliza;
+	private String nmpoliza;
 	
-	private String nmSuplem;
+	private String nmsuplem;
 	
-	private String cdTipSit;
+	private String cdtipsit;
+	
+	private String nmsituac;
 	
 	
 	//Constructors:
@@ -30,42 +32,43 @@ public class PolizaVO implements Serializable {
 		super();
 	}
 
-	public PolizaVO(String cdUnieco, String cdRamo, String estado, String nmPoliza) {
+	public PolizaVO(String cdunieco, String cdramo, String estado, String nmpoliza) {
 		super();
-		this.cdUnieco = cdUnieco;
-		this.cdRamo = cdRamo;
+		this.cdunieco = cdunieco;
+		this.cdramo = cdramo;
 		this.estado = estado;
-		this.nmPoliza = nmPoliza;
+		this.nmpoliza = nmpoliza;
 	}
 
-	public PolizaVO(String cdUnieco, String cdRamo, String estado,
-			String nmPoliza, String nmSuplem, String cdTipSit) {
+	public PolizaVO(String cdunieco, String cdramo, String estado,
+			String nmpoliza, String nmsuplem, String cdtipsit, String nmsituac) {
 		super();
-		this.cdUnieco = cdUnieco;
-		this.cdRamo = cdRamo;
+		this.cdunieco = cdunieco;
+		this.cdramo = cdramo;
 		this.estado = estado;
-		this.nmPoliza = nmPoliza;
-		this.nmSuplem = nmSuplem;
-		this.cdTipSit = cdTipSit;
+		this.nmpoliza = nmpoliza;
+		this.nmsuplem = nmsuplem;
+		this.cdtipsit = cdtipsit;
+		this.nmsituac = nmsituac;
 	}
 	
 	
 	//Getters and setters:
 
-	public String getCdUnieco() {
-		return cdUnieco;
+	public String getCdunieco() {
+		return cdunieco;
 	}
 
-	public void setCdUnieco(String cdUnieco) {
-		this.cdUnieco = cdUnieco;
+	public void setCdunieco(String cdunieco) {
+		this.cdunieco = cdunieco;
 	}
 
-	public String getCdRamo() {
-		return cdRamo;
+	public String getCdramo() {
+		return cdramo;
 	}
 
-	public void setCdRamo(String cdRamo) {
-		this.cdRamo = cdRamo;
+	public void setCdramo(String cdramo) {
+		this.cdramo = cdramo;
 	}
 
 	public String getEstado() {
@@ -76,30 +79,37 @@ public class PolizaVO implements Serializable {
 		this.estado = estado;
 	}
 
-	public String getNmPoliza() {
-		return nmPoliza;
+	public String getNmpoliza() {
+		return nmpoliza;
 	}
 
-	public void setNmPoliza(String nmPoliza) {
-		this.nmPoliza = nmPoliza;
+	public void setNmpoliza(String nmpoliza) {
+		this.nmpoliza = nmpoliza;
 	}
 
-	public String getNmSuplem() {
-		return nmSuplem;
+	public String getNmsuplem() {
+		return nmsuplem;
 	}
 
-	public void setNmSuplem(String nmSuplem) {
-		this.nmSuplem = nmSuplem;
+	public void setNmsuplem(String nmsuplem) {
+		this.nmsuplem = nmsuplem;
 	}
 
-	public String getCdTipSit() {
-		return cdTipSit;
+	public String getCdtipsit() {
+		return cdtipsit;
 	}
 
-	public void setCdTipSit(String cdTipSit) {
-		this.cdTipSit = cdTipSit;
+	public void setCdtipsit(String cdtipsit) {
+		this.cdtipsit = cdtipsit;
 	}
 
+	public String getNmsituac() {
+		return nmsituac;
+	}
+
+	public void setNmsituac(String nmsituac) {
+		this.nmsituac = nmsituac;
+	}
 
 	@Override
 	public String toString() {
