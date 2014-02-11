@@ -5279,8 +5279,10 @@ public class EndososAction extends PrincipalCoreAction
 		
 		String cdPantalla            = "ENDOSO_REEXPEDICION";
 		String cdPanelLectura        = "PANEL_LECTURA";
+		String cdDatosEndoso         = "DATOS_ENDOSO";
 		String keyItemsPanelLectura  = "itemsPanelLectura";
 		String keyFieldsPanelLectura = "fieldsFormLectura";
+		String keyItemsDatosEndoso   = "itemsDatosEndoso";
 				
 		UserVO usuario    = (UserVO)session.get("USUARIO");
 		String cdelemento = usuario.getEmpresa().getElementoId();
@@ -5303,6 +5305,13 @@ public class EndososAction extends PrincipalCoreAction
 				
 				imap1.put(keyItemsPanelLectura,gc.getItems());
 				imap1.put(keyFieldsPanelLectura,gc.getFields());
+				
+				gc.generaParcial(pantallasManager.obtenerComponentes(
+						null, cdunieco, cdramo,
+						cdtipsit, estado, rol,
+						cdPantalla, cdDatosEndoso, null));
+				
+				imap1.put(keyItemsDatosEndoso,gc.getItems());
 			}
 			catch(Exception ex)
 			{
@@ -5345,7 +5354,9 @@ public class EndososAction extends PrincipalCoreAction
 		FEEMISIO=22/01/2014,
 		CDRAMO=2
 	smap2:
-		fecha_endoso
+		comment: ""
+		fecha_endoso: "10/02/2015"
+		trazreexped: "4"
 	smap3:
 		cdrfc=FLOR881209,
 		cdperson=512043,
@@ -5392,11 +5403,12 @@ public class EndososAction extends PrincipalCoreAction
 			String ntramite       = smap1.get("NTRAMITE");
 			String feIniVig       = smap3.get("feefecto");
 			String feFinvig       = smap3.get("feproren");
-			String cdrazonCancela = "5";
-			String comentaCancela = "Se cancela por reexpedicion";
+			String cdrazonReexp   = smap2.get("trazreexped");
+			String comentaReexp = smap2.get("comment");
 			
 			//PKG_ENDOSOS.P_ENDOSO_INICIA
-			Map<String,String>resIniEnd=endososManager.iniciarEndoso(cdunieco, cdramo, estado, nmpoliza, sFecha, cdelemento, cdusuari, proceso, cdtipsup);
+			Map<String,String>resIniEnd=endososManager.iniciarEndoso(cdunieco, cdramo, estado, nmpoliza,
+					sFecha, cdelemento, cdusuari, proceso, cdtipsup);
 			
 			String nmsuplem = resIniEnd.get("pv_nmsuplem_o");
 			String nsuplogi = resIniEnd.get("pv_nsuplogi_o");
@@ -5411,11 +5423,11 @@ public class EndososAction extends PrincipalCoreAction
 			
 			//pkg_cancela.p_cancela_poliza
 			cancelacionManager.cancelaPoliza(cdunieco, cdramo, null, estado, nmpoliza, null
-					,cdrazonCancela, comentaCancela, feIniVig, feFinvig, sFecha, cdusuari, cdtipsup);
+					,cdrazonReexp, comentaReexp, feIniVig, feFinvig, sFecha, cdusuari, cdtipsup);
 			
 			//+- 30 dias ? PKG_SATELITES.P_MOV_MESACONTROL : PKG_ENDOSOS.P_CONFIRMAR_ENDOSOB
 			String tramiteGenerado=this.confirmarEndoso(cdunieco, cdramo, estado, nmpoliza
-					,nmsuplem, nsuplogi, cdtipsup, "", dFecha, cdtipsit);
+					,nmsuplem, nsuplogi, cdtipsup, comentaReexp, dFecha, cdtipsit);
 			
 			if(tramiteGenerado==null||tramiteGenerado.length()==0)
 			{

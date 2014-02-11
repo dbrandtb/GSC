@@ -66,6 +66,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case MC_SUCURSALES_DOCUMENTO:
 				case MC_TIPOS_TRAMITE:
 				case MOTIVOS_CANCELACION:
+				case MOTIVOS_REEXPEDICION:
 				case NACIONALIDAD:
 				case ROLES_POLIZA:
 				case SEXO:
