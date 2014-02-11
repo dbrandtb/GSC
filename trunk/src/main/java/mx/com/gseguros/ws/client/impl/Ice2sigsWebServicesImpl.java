@@ -73,6 +73,7 @@ import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboGSE;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboGSResponseE;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboRespuesta;
 import mx.com.gseguros.ws.client.ice2sigs.callback.ServicioGSServiceCallbackHandlerImpl;
+import mx.com.gseguros.ws.client.model.ReciboVO;
 import mx.com.gseguros.ws.client.recibossigs.GeneradorReciboDxnWsServiceStub;
 import mx.com.gseguros.ws.client.recibossigs.GeneradorReciboDxnWsServiceStub.Empleado;
 import mx.com.gseguros.ws.client.recibossigs.GeneradorReciboDxnWsServiceStub.GeneraRecDxn;
@@ -645,7 +646,7 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 	public boolean ejecutaWSrecibos(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String nmsuplem,
 			String rutaPoliza, String cdtipsitGS, String sucursal,
-			String nmsolici, String ntramite, boolean async, Ice2sigsWebServices.Operacion operacion,
+			String nmsolici, String ntramite, boolean async,
 			String tipoMov, UserVO userVO) {
 		
 		boolean allInserted = true;
@@ -660,10 +661,10 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 		params.put("pv_nmsuplem_i", nmsuplem);
 		
 		WrapperResultados result = null;
-		ArrayList<Recibo> recibos =  null;
+		ArrayList<ReciboVO> recibos =  null;
 		try {
 			result = kernelManager.obtenDatosRecibos(params);
-			recibos = (ArrayList<Recibo>) result.getItemList();
+			recibos = (ArrayList<ReciboVO>) result.getItemList();
 		} catch (Exception e1) {
 			logger.error("Error en llamar al PL de obtencion de RECIBOS",e1);
 			return false;
@@ -678,7 +679,11 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 			params.put("USUARIO", usuario);
 		}
 		
-		for(Recibo recibo: recibos){
+		Recibo recibo = null;
+		for(ReciboVO recVO: recibos){
+			recibo = recVO.getRecibo();
+			Operacion operacion = Operacion.valueOf(recVO.getOperacion());
+			
 			try{
 				if(async){
 					// Se crea un HashMap por cada invocacion asincrona del WS, para evitar issue (sobreescritura de valores):
@@ -734,8 +739,17 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 		logger.debug("*** Empieza generacion de URLs para Recibos ***");
 		
 		String visible = null;
-		for(Recibo recibo: recibos){
+		for(ReciboVO recVO: recibos){
+			recibo = recVO.getRecibo();
 			
+			/**
+			 * Si el Recibo Tiene estatus 1 se guarda en tdocupol como documento de la poliza, excepto algunos endosos como el de forma de pago,
+			 * donde se generan recibos negativos para cancelar y esos no deben de guardarse, estos casos el estatus es distinto de 1
+			 */
+			if(!"1".equals(recibo.getStatusr())) continue;
+			/**
+			 * Por default se permite imprimir solo el primer recibo y los demas se guardan ocultos.
+			 */
 			visible = (1 == recibo.getNumRec()) ? Constantes.SI : Constantes.NO;
 			
 			try{

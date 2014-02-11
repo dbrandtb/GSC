@@ -1188,8 +1188,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						edoPoliza, _nmpoliza, 
 						_nmsuplem, rutaCarpeta,
 						cdtipsitGS, sucursal, panel1.get("pv_nmpoliza"), panel1.get("pv_ntramite"), 
-						false, Ice2sigsWebServices.Operacion.INSERTA, 
-						tipoMov,
+						false, tipoMov,
 						(UserVO) session.get("USUARIO"));
 				/*
 				ejecutaWSrecibos(_cdunieco, _cdramo,
@@ -1207,8 +1206,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 						edoPoliza, _nmpoliza, 
 						_nmsuplem, rutaCarpeta,
 						cdtipsitGS, sucursal, panel1.get("pv_nmpoliza"),panel1.get("pv_ntramite"), 
-						true, Ice2sigsWebServices.Operacion.INSERTA, 
-						tipoMov,
+						true, tipoMov,
 						(UserVO) session.get("USUARIO"));
 				/*
 				ejecutaWSrecibos(_cdunieco, _cdramo,
@@ -1342,14 +1340,14 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String nmsolici = map1.get("nmsolici");
 		String nmtramite = map1.get("nmtramite");
 
-		String operacion = map1.get("operacion");
-		if(StringUtils.isBlank(operacion)) operacion = "INSERTA";
-		Operacion op = Operacion.valueOf(operacion);
+//		String operacion = map1.get("operacion");
+//		if(StringUtils.isBlank(operacion)) operacion = "INSERTA";
+//		Operacion op = Operacion.valueOf(operacion);
 
 		String tipoMov = "1";
 		
 		// Ejecutamos el Web Service de Recibos:
-		ice2sigsWebServices.ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, null, cdtipsitGS, sucursal, nmsolici, nmtramite, true, op, tipoMov, (UserVO) session.get("USUARIO"));
+		ice2sigsWebServices.ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, null, cdtipsitGS, sucursal, nmsolici, nmtramite, true, tipoMov, (UserVO) session.get("USUARIO"));
 		//ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, null, cdtipsitGS, sucursal, nmsolici, nmtramite, true, operacion);
 
 		success = true;
