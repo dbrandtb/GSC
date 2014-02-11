@@ -63,14 +63,17 @@ Ext.onReady(function()
             Ext.apply(this,
             {
                 title     : 'Datos del endoso'
+                ,layout   :
+                {
+                	type     : 'table'
+                	,columns : 2
+                }
                 ,defaults :
                 {
                     style : 'margin : 5px;'
                 }
                 ,items    :
-                [
-                    _8_fieldFechaEndoso
-                ]
+                [ <s:property value="imap1.itemsDatosEndoso" /> ]
             });
             this.callParent();
         }
@@ -191,15 +194,39 @@ function _8_confirmar()
         }
     }
     
+    var motivo = _8_panelEndoso.items.items[1].getValue();
+    var coment = _8_panelEndoso.items.items[2].getValue();
+    
+    if(valido)
+    {
+    	valido=motivo&&motivo*1>0;
+    	if(!valido)
+    	{
+    		mensajeWarning('El motivo es requerido');
+    	}
+    }
+    
+    if(valido)
+    {
+    	if(motivo==30)//el 30 es el motivo Otros en TRAZREEXP y en TRAZCANC
+    	{
+    		if(!coment||coment.length==0)
+    		{
+    			valido = false;
+    		}
+    	}
+    	if(!valido)
+    	{
+    		mensajeWarning('Si el motivo es "Otros", se debe especificar en el campo comentarios');
+    	}
+    }
+    
     if(valido)
     {
         var json=
         {
             smap1  : _8_smap1
-            ,smap2 :
-            {
-                fecha_endoso : Ext.Date.format(_8_fieldFechaEndoso.getValue(),'d/m/Y')
-            }
+            ,smap2 : _8_panelEndoso.getValues()
             ,smap3 : _8_formLectura.getValues()
         }
         debug('datos que se enviaran:',json);
