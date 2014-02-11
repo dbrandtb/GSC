@@ -463,7 +463,17 @@ storeD.load();
             					setSur('<p><b>Src.- </b>Es el atributo que define la url relativa y/o absoluta de donde será cargada la imagen. Es indispensable para que se pinte la imagen de lo contrario se cargará la default. <b>[ExtJs.-src]</b></p>');
             				}else if(record.data.name == 'query'){
             					setSur('<p><b>Query.- </b>Es el atributo que define la consulta a la base de datos de la información que se desea pintar en el Grid. Es importante mencionar que la sentencia SQL debe contener el nombre del dataIndex definido en el control grid.</p>');
-            				}else if(record.data.name == ''){
+            				}else if(record.data.name == 'columna_orden'){
+            					setSur('<p><b>Columna_orden.- </b>Su valor es True y permite que dentro del Grid se ordenen los datos de la columna medinte una función que aparece en la cabecera de cada columna. <b>[ExtJs.-sortableColumns]</b></p>');
+            				}else if(record.data.name == 'columna_hidden'){
+            					setSur('<p><b>Columna_hidden.- </b>Es el atributo que define si en el cabecero de las columnas del Grid se mostrará la funcionalidad de ocultar la columna. <b>[ExtJs.-enableColumnHide]</b></p>');
+            				}else if(record.data.name == 'columna_resize'){
+            					setSur('<p><b>Columna_resize.- </b>Es el atributo que define si las columnas del Grid se prodrán modificar respecto al ancho, con la finalidad de ocultar o mostrar mayor información del renglon. <b>[ExtJs.-enableColumnResize]</b></p>');
+            				}else if(record.data.name == 'columna_move'){
+            					setSur('<p><b>Columna_move.- </b>Es el atributo que permite cambiar el orden de presentación de las columnas que se presentan en el Grid. <b>[ExtJs.-enableColumnMove]</b></p>');
+							}else if(record.data.name == 'isBorder'){
+            					setSur('<p><b>IsBorder.- </b>Es el atributo que define en tiempo se ejecución si el Grid contendrá un borde.</p>');
+            					}else if(record.data.name == ''){
             					setSur('<p><b>(id).- </b>Es el id</p>');
             				}else if(record.data.name == ''){
             					setSur('<p><b>(id).- </b>Es el id</p>');
@@ -471,7 +481,10 @@ storeD.load();
             					setSur('<p><b>(id).- </b>Es el id</p>');
             				}else if(record.data.name == ''){
             					setSur('<p><b>(id).- </b>Es el id</p>');
-
+            				}else if(record.data.name == ''){
+            					setSur('<p><b>(id).- </b>Es el id</p>');
+            				}else if(record.data.name == ''){
+            					setSur('<p><b>(id).- </b>Es el id</p>');
             				}
             				if(record.data.name == 'tipo' || record.data.name == '(id)'){
             					return false;
@@ -590,6 +603,31 @@ attrGralPreliminar(frm, idPnl, storeColumnas);
 return frm;
 }
 
+function CreaCtrlPanelPreliminar(idPnl,isBton) {
+var region = '';var stroreB;
+if(idPnl.indexOf("sur") > -1){
+	region='south';
+	stroreB = storeBorderSur;
+}else if (idPnl.indexOf("izq") > -1){
+	region='west';
+	stroreB = storeBorderIzq;
+}else if (idPnl.indexOf("centro") > -1){
+	region='center';
+	stroreB = storeBorderCenter;
+}else if (idPnl.indexOf("der") > -1){
+	region='east';
+	stroreB = storeBorderDer;
+}else if (idPnl.indexOf("norte") > -1){
+	region='north';
+	stroreB = storeBorderNorte;
+}
+if (isBton){var frm = {xtype:'panel',defaultType: 'container',region:region,layout: 'column',buttons: []};}else{var frm = {xtype:'panel',defaultType: 'container',region:region,layout: 'column'};}	
+var columnasP = parseInt(getDataSP('columnas',idPnl));
+if( columnasP > 0){Ext.apply(frm, {columns:columnasP});}
+attrGralPreliminar(frm, idPnl, stroreB);
+return frm;
+}
+
 function CreaWinPreliminar(idPnl,isBton) {
 if (isBton){
 var ppWina =  Ext.create('Ext.Window', {modal:true,buttons: []});
@@ -622,7 +660,11 @@ function CreaPanelAcordionPreliminar(idPnl,isBton){
 		attrGralPreliminar(frm, idPnl, storeAcordion);
 	return frm;
 }
-		
+function CreaPanelBorderPreliminar(idPnl,isBton){
+	var frm = {xtype:'panel',layout: 'border'};
+		attrGralPreliminar(frm, idPnl, storeBorder);
+	return frm;
+}		
 function attrGralPreliminar(pCtrl, idCtls, store){
 	Ext.apply(pCtrl, {id:'preliminar_' + idCtls});
 	if(getExisteStore(store,'etiqueta')){
@@ -1129,14 +1171,76 @@ function CreaAcordionColumnas(id) {
         bodyPadding: '5 5 5 5',
         isFondo: false,
         width: 350,height: 200,isAutoScroll:true,isCerrable: false, isBodyBorder:false,tipo:'form_columns'
-	}
+	};
 	storeSuperPanel.add(rgs);
 return frm;}
 
 
 function CreaPanelTablas(id) {var nameP = 'tablas' + id;var frm = new Ext.Panel({title: 'Titulo del Panel estilo Tablas ' + id,id: nameP,collapsible: true,margin: '5,0,0,5',frame: true,layout: {type: 'table',columns: 3},defaults: {frame:true, width:200, height: 200},closable: true,width: 350,height: 200,autoScroll:true,resizable:true,afterRender:function() { Ext.Panel.prototype.afterRender.apply(this, arguments); this.dropTarget = Ext.getCmp(nameP).body;var dd = new Ext.dd.DropTarget(this.dropTarget, {ddGroup:'controlesDD',notifyDrop:function(dd, e, node) { agregaCtrl(node.nodes[0].innerText,nameP);return true; }}); }});return frm;}
 //****Penidente agregar en cada border agregaCtrl(node.nodes[0].innerText,nameP);
-function CreaPanelBorder(id) {var nameP = 'border' + id;var frm = new Ext.Panel({title: 'Titulo del Panel estilo Border ' + id,id: nameP,collapsible: true,margin: '5,0,0,5',frame: true,layout: 'border',closable: true,width: 550,height: 350,autoScroll:true,resizable:true,afterRender:function() { Ext.Panel.prototype.afterRender.apply(this, arguments); this.dropTarget = Ext.getCmp(nameP).body;var dd = new Ext.dd.DropTarget(this.dropTarget, {ddGroup:'controlesDD',notifyDrop:function(dd, e, node) { return true; }}); }});return frm;}
+function CreaPanelBorder(id,titulo) {
+	var sur = 'sur_'+ borderId;
+	nCtrl ++;
+	var rgsSur = {idPadre: id,idHijo: sur,order: nCtrl,titulo:'Región Sur ' + borderId,bodyPadding: '5 5 5 5',height: 100,isFondo: false,isAutoScroll:true,isCerrable: false, isBodyBorder:false,isDesplegable:false,nombre:id,margen:'5 5 5 5',titulo_Aling:'left',columnas:2,tipo:'sur'};
+	storeSuperPanel.add(rgsSur);
+	var izq= 'izq_'+ borderId;
+	nCtrl ++;
+	var rgsIzq = {idPadre: id,idHijo: izq,order: nCtrl,titulo:'Región Izquierda ' + borderId,bodyPadding: '5 5 5 5',width: 200,isFondo: false,isAutoScroll:true,isCerrable: false, isBodyBorder:false,isDesplegable:false,nombre:id,margen:'5 5 5 5',titulo_Aling:'left',columnas:2,tipo:'izq'};
+	storeSuperPanel.add(rgsIzq);
+	var centro= 'centro_'+ borderId;
+	nCtrl ++;
+	var rgsCentro = {idPadre: id,idHijo: centro,order: nCtrl,titulo:'Región Centro ' + borderId,bodyPadding: '5 5 5 5',isFondo: false,isAutoScroll:true,isCerrable: false, isBodyBorder:false,isDesplegable:false,nombre:id,margen:'5 5 5 5',titulo_Aling:'left',columnas:2,tipo:'centro'};
+	storeSuperPanel.add(rgsCentro);
+	var der = 'der_'+ borderId;
+	nCtrl ++;
+	var rgsDer = {idPadre: id,idHijo: der,order: nCtrl,titulo:'Región Derecha ' + borderId,bodyPadding: '5 5 5 5',width: 200,isFondo: false,isAutoScroll:true,isCerrable: false, isBodyBorder:false,isDesplegable:false,nombre:id,margen:'5 5 5 5',titulo_Aling:'left',columnas:2,tipo:'der'};
+	storeSuperPanel.add(rgsDer);
+	var norte = 'norte_'+ borderId;
+	nCtrl ++;
+	var rgsNorte = {idPadre: id,idHijo: norte,order: nCtrl,titulo:'Región Norte ' + borderId,bodyPadding: '5 5 5 5',height: 100,isFondo: false,isAutoScroll:true,isCerrable: false, isBodyBorder:false,isDesplegable:false,nombre:id,margen:'5 5 5 5',titulo_Aling:'left',columnas:2, tipo:'norte'};
+	storeSuperPanel.add(rgsNorte);
+	var frm = new Ext.panel.Panel({title: titulo,id: id,collapsible: true,margin: '5,0,0,5',frame: true,
+	layout: 'border',closable: true,width: 700,height: 480,autoScroll:true,
+	resizable:true,
+	items: [{
+        title: 'Región Sur ' + borderId,region:'south',xtype:'panel',height: 100,id: sur,layout: 'column',columns: 2,closable:true,collapsible:true,autoScroll:true,split:true,margins:'5 5 5 5',
+        tools:[{type:'gear',tooltip: 'Mostrar atributos del panel',handler:function(event, toolEl, panelHeader){var name = panelHeader.id;var id = name.substring(0,name.indexOf("_header"));cargaAtributosPanel(id,storeBorderSur);}}],
+		afterRender:function(){Ext.Panel.prototype.afterRender.apply(this, arguments);this.dropTarget = Ext.getCmp(sur).body;var dd = new Ext.dd.DropTarget(this.dropTarget,{ddGroup:'controlesDD',notifyDrop:function(dd, e, node){agregaCtrl(node.nodes[0].innerText,sur);return true;}});},
+		listeners: {close:{fn: function(panel, eOpts ){limpiaObjetos(panel.id);}}}
+    },{
+        title: 'Región Izquierda ' + borderId,region:'west',xtype: 'panel',margins: '5 5 5 5',width: 200,closable: true,collapsible: true,id: izq,autoScroll:true,layout: 'column',split:true,columns: 2,
+        afterRender:function(){Ext.Panel.prototype.afterRender.apply(this, arguments);this.dropTarget = Ext.getCmp(izq).body;var dd = new Ext.dd.DropTarget(this.dropTarget,{ddGroup:'controlesDD',notifyDrop:function(dd, e, node){agregaCtrl(node.nodes[0].innerText,izq);return true;}});},
+		listeners:{close:{fn: function(panel, eOpts ){limpiaObjetos(panel.id);}}},
+		tools:[{type:'gear',tooltip: 'Mostrar atributos del panel',handler:function(event, toolEl, panelHeader) {var name = panelHeader.id;var id = name.substring(0,name.indexOf("_header"));cargaAtributosPanel(id,storeBorderIzq);}}]
+    },{
+        title: 'Región Centro '+ borderId, region: 'center', xtype: 'panel',margins: '5 5 5 5',closable: true,collapsible: true,id: centro,autoScroll:true,layout: 'column',split:true,columns: 2,
+        afterRender:function(){Ext.Panel.prototype.afterRender.apply(this, arguments);this.dropTarget = Ext.getCmp(centro).body;var dd = new Ext.dd.DropTarget(this.dropTarget,{ddGroup:'controlesDD',notifyDrop:function(dd, e, node){agregaCtrl(node.nodes[0].innerText,centro);return true;}});},
+        listeners:{close:{fn:function(panel, eOpts ){limpiaObjetos(panel.id);}}},
+        tools:[{type:'gear',tooltip: 'Mostrar atributos del panel',handler:function(event, toolEl, panelHeader) {var name = panelHeader.id;var id = name.substring(0,name.indexOf("_header"));cargaAtributosPanel(id,storeBorderCenter);}}]
+    },{
+        title: 'Región Norte ' + borderId,region: 'north',xtype: 'panel',height: 100,closable: true,collapsible: true,id: norte,autoScroll:true,layout: 'column',columns: 2,split:true,margins: '5 5 5 5',
+        tools:[{type:'gear',tooltip: 'Mostrar atributos del panel',handler:function(event, toolEl, panelHeader) {var name = panelHeader.id;var id = name.substring(0,name.indexOf("_header"));cargaAtributosPanel(id,storeBorderNorte);}}],
+        afterRender:function(){Ext.Panel.prototype.afterRender.apply(this, arguments);this.dropTarget = Ext.getCmp(norte).body;var dd = new Ext.dd.DropTarget(this.dropTarget,{ddGroup:'controlesDD',notifyDrop:function(dd, e, node){agregaCtrl(node.nodes[0].innerText,norte);return true;}});},
+		listeners:{close:{fn:function(panel, eOpts ){limpiaObjetos(panel.id);}}}
+    },{
+        title: 'Región Derecha ' + borderId,region:'east',xtype:'panel',margins:'5 5 5 5',width:200,closable:true,collapsible:true,id:der,layout: 'column',columns: 2,split:true,autoScroll:true,
+        afterRender:function(){Ext.Panel.prototype.afterRender.apply(this, arguments);this.dropTarget = Ext.getCmp(der).body;var dd = new Ext.dd.DropTarget(this.dropTarget,{ddGroup:'controlesDD',notifyDrop:function(dd, e, node){agregaCtrl(node.nodes[0].innerText,der);return true;}});},
+		listeners:{close:{fn: function(panel, eOpts ){limpiaObjetos(panel.id);}}},
+		tools:[{type:'gear',tooltip: 'Mostrar atributos del panel',handler:function(event, toolEl, panelHeader) {var name = panelHeader.id;var id = name.substring(0,name.indexOf("_header"));cargaAtributosPanel(id,storeBorderDer);}}]
+    }],
+    listeners: {
+    	close: {
+        	fn: function(panel, eOpts ){limpiaObjetos(panel.id);}
+    	},resize: {
+    		fn: function(){cargaAtributosPanel(this.id,storeBorder);}
+    	}
+    },
+    tools:[{type:'gear',tooltip: 'Mostrar atributos del panel',handler: 
+		function(event, toolEl, panelHeader) {
+    	var name = panelHeader.id;
+		var id = name.substring(0,name.indexOf("_header"));
+		cargaAtributosPanel(id,storeBorder);}}]
+	});return frm;}
 function CreateWin(id,titulo) {
 Ext.create('Ext.Window', {
 	title: titulo,
@@ -1263,7 +1367,7 @@ function CreaCtrlGrid(id,forma){var myCtrl = {xtype:'gridpanel',id: id,margin:'5
 			        {text: "Id", width: 70, dataIndex: 'name'
 					}
 		           ], 
-		width: 470, height: 260,
+		width: 470, height: 260,border:true,resizable:true,
 		tbar: [{
 		    text: 'Add Columna',
 		    handler : function() {
@@ -1317,9 +1421,24 @@ function CreaCtrlGrid(id,forma){var myCtrl = {xtype:'gridpanel',id: id,margin:'5
 		        	var arryAttr = [];ctrl = obj.id;arryAttr.push('(id):'+obj.id);arryAttr.push('nombre:'+getValorSP('nombre',obj.id));
 		        	arryAttr.push('height:'+ obj.getHeight());arryAttr.push('width:'+getValorSP('width','0'));arryAttr.push('margen:'+getValorSP('margen','5 5 5 5'));
 		        	arryAttr.push('query:'+getValorSP('query',''));
+		        	arryAttr.push('titulo:'+getValorSP('titulo',''));
+		        	arryAttr.push('titulo_Aling:'+getValorSP('titulo_Aling','left'));
+		        	arryAttr.push('columna_orden:'+getValorSP('columna_orden','true'));
+		        	arryAttr.push('isResizable:'+getValorSP('isResizable','false'));
+		        	arryAttr.push('isFondo:'+getValorSP('isFondo','false'));
+		        	arryAttr.push('columna_hidden:'+getValorSP('columna_hidden','true'));
+		        	arryAttr.push('columna_move:'+getValorSP('columna_move','true'));
+		        	arryAttr.push('columna_resize:'+getValorSP('columna_resize','true'));
+		        	arryAttr.push('isDesplegable:'+getValorSP('isDesplegable','false'));
+		        	arryAttr.push('isCerrable:'+getValorSP('isCerrable','false'));
+		        	arryAttr.push('isBodyBorder:'+getValorSP('isBodyBorder','false'));
 		        	seteaAtributosGrid(arryAttr,obj.id,storeGridAttr);
 		        });
-		   }
+		   },close: {
+           	fn: function(panel, eOpts ){limpiaObjetos(panel.id);}
+       		},resize: {
+       		fn: function(){cargaAtributosPanel(this.id,storeGridAttr);}
+       		}
 		}
 		};
 
@@ -1327,8 +1446,8 @@ return myCtrl;}
 // Para agregar los Paneles de trabajo
 function agrega(tipo){
 	tipo = trim(tipo);
-	var id;
-	var store;var titulo;
+	var id='';
+	var store;var titulo='';
 	var arryAttr = [];
 	if (tipo === 'Formulario'){
 		panelesId ++;
@@ -1370,7 +1489,15 @@ function agrega(tipo){
 		arryAttr.push('tabs:3');
 		arryAttr.push('tipo:form_acordion');
 	}else if(tipo === 'Tablas'){tablasId ++;target.add(CreaPanelTablas(tablasId));
-	}else if(tipo === 'Border'){borderId ++;target.add(CreaPanelBorder(borderId));
+	}else if(tipo === 'Border'){
+		borderId ++;
+		id = 'border_' + borderId;
+		store = storeBorder;
+		titulo = 'Titulo del Panel estilo Border ' + borderId;
+		target.add(CreaPanelBorder(id,titulo));
+		arryAttr.push('height:480');
+		arryAttr.push('width:700');
+		arryAttr.push('tipo:border');
 	}else if(tipo === 'Ventana'){
 		ventanaId ++;
 		id = 'ventana_' + ventanaId;
@@ -1403,8 +1530,8 @@ function agrega(tipo){
 	arryAttr.push('isBodyBorder:true');
 	arryAttr.push('titulo_Aling:left');
 	seteaAtributosGrid(arryAttr,id,store);	
-	var pnl = Ext.getCmp('west-panel');
-	var f = pnl.items.items[1].expand();
+	Ext.getCmp('west-panel').items.items[1].expand();
+	//var f = pnl.items.items[1].expand();
 	}
 
 
@@ -1511,6 +1638,17 @@ function agregaCtrl(tipo,forma,arryAttrCtrl){
 		store=storeGridAttr;
 		pnl.add(CreaCtrlGrid(id,forma));
 		arryAttr.push('tipo:gridpanel');
+		arryAttr.push('titulo:'+'');
+		arryAttr.push('titulo_Aling:left');
+		arryAttr.push('columna_orden:true');
+		arryAttr.push('isResizable:false');
+		arryAttr.push('isFondo:false');
+		arryAttr.push('columna_hidden:true');
+		arryAttr.push('columna_move:true');
+		arryAttr.push('columna_resize:true');
+		arryAttr.push('isDesplegable:false');
+		arryAttr.push('isCerrable:false');
+		arryAttr.push('isBodyBorder:false');
 	}
 	creaDataSP(forma,id);
 	arryAttr.push('(id):'+id);
@@ -1668,6 +1806,9 @@ function fncPreliminar(){
         	}else if(pplnctl.getXType() == 'panel' && d.indexOf("acordion") > -1){
         		row=0;
 	 			Ext.getCmp('pp_superpanelp').add(CreaPanelAcordionPreliminar(d,isBton));
+        	}else if(pplnctl.getXType() == 'panel' && d.indexOf("border") > -1){
+        		row=0;
+	 			Ext.getCmp('pp_superpanelp').add(CreaPanelBorderPreliminar(d,isBton));
         	}else if(pplnctl.getXType() == 'window'){
         		row=parseInt(ppln.data.columnas);
 	 			//Ext.getCmp('pp_superpanelp').add(CreaWinPreliminar(pplnctl.getId(),isBton));
@@ -1824,6 +1965,12 @@ function setControlesPreliminar(arryPControles,arryPControlesIN,row,isBton,d, is
 			 		}else{
 			 			ctrW.add(CreaCtrlComboPreliminar(pplnctls.getId(),row));
 			 		}
+			 	}else if(pplnctls.getXType() == 'panel'){
+			 		if(d.indexOf("border") > -1){
+			 			row=parseInt(pctrl.data.columnas);
+			 			arryPControlesIN.push(pctrl.data.idHijo);
+			 			Ext.getCmp('preliminar_'+pctrl.data.idPadre).add(CreaCtrlPanelPreliminar(pctrl.data.idHijo,isBton));
+			 		}
 			 	}else if(pplnctls.getXType() == 'form'){
 			 		if(d.indexOf("acordion") > -1){
 	 					row=parseInt(pctrl.data.columnas);
@@ -1897,8 +2044,13 @@ function cargaAtributosPanel(panel,store){
 	}else if (tipo === 'tabs'){
 		arryAttr.push('tabs:'+getValorSP('tabs',3));
 		arryAttr.push('margen:'+getValorSP('margen','5'));
+	}else if (tipo === 'sur' || tipo === 'izq' || tipo === 'norte' || tipo === 'der' || tipo === 'centro'){
+		arryAttr.push('columnas:'+getValorSP('columnas',2));
+		arryAttr.push('margen:'+getValorSP('margen','5 5 5 5'));
 	}else if (tipo === 'panel'){
 		arryAttr.push('url:'+getValorSP('url',''));
+		arryAttr.push('margen:'+getValorSP('margen','5'));
+	}else if (tipo === 'border'){
 		arryAttr.push('margen:'+getValorSP('margen','5'));
 	}else if (tipo === 'ventana'){
 		arryAttr.push('columnas:'+getValorSP('columnas',1));
@@ -1959,153 +2111,9 @@ function seteaAtributosGrid(arryAttr,id,store){
 		var s = item.indexOf(":");
 		var name = item.substr(0,s);
 		var value = item.substr(s+1);
-		if(name === 'titulo'){
-			Ext.apply(daty, {titulo:value}); 
-		}else if(name === 'nombre'){
-			Ext.apply(daty, {nombre:value});
-		}else if(name === '(id)'){
-			Ext.apply(daty, {"(id)":value}); 
-		}else if(name === 'width'){
-			Ext.apply(daty, {width:value});
-		}else if(name === 'height'){
-			Ext.apply(daty, {height:value}); 
-		}else if(name === 'etiqueta'){
-			Ext.apply(daty, {etiqueta:value});
-		}else if(name === 'isRequerido'){
-			Ext.apply(daty, {isRequerido:value});
-		}else if(name === 'isAnchor'){
-			Ext.apply(daty, {isAnchor:value});
-		}else if(name === 'etiqueta_width'){
-			Ext.apply(daty, {etiqueta_width:value});
-		}else if(name === 'isBloqueado'){
-			Ext.apply(daty, {isBloqueado:value});
-		}else if(name === 'textoSugerido'){
-			Ext.apply(daty, {textoSugerido:value});
-		}else if(name === 'textoMax'){
-			Ext.apply(daty, {textoMax:value});
-		}else if(name === 'textoMaxMsg'){
-			Ext.apply(daty, {textoMaxMsg:value});
-		}else if(name === 'textoMin'){
-			Ext.apply(daty, {textoMin:value});
-		}else if(name === 'textoMinMsg'){
-			Ext.apply(daty, {textoMinMsg:value});
-		}else if(name === 'soloLectura'){
-			Ext.apply(daty, {soloLectura:value});
-		}else if(name === 'toolTip'){
-			Ext.apply(daty, {toolTip:value});
-		}else if(name === 'texto'){
-			Ext.apply(daty, {texto:value});
-		}else if(name === 'valorMax'){
-			Ext.apply(daty, {valorMax:value});
-		}else if(name === 'valorMin'){
-			Ext.apply(daty, {valorMin:value});
-		}else if(name === 'valorMaxMsg'){
-			Ext.apply(daty, {valorMaxMsg:value});
-		}else if(name === 'valorMinMsg'){
-			Ext.apply(daty, {valorMinMsg:value});
-		}else if(name === 'isFlechas'){
-			Ext.apply(daty, {isFlechas:value});
-		}else if(name === 'fecha'){
-			Ext.apply(daty, {fecha:value});
-		}else if(name === 'fechaMax'){
-			Ext.apply(daty, {fechaMax:value});
-		}else if(name === 'fechaMin'){
-			Ext.apply(daty, {fechaMin:value});
-		}else if(name === 'fechaMinMsg'){
-			Ext.apply(daty, {fechaMinMsg:value});
-		}else if(name === 'etiqueta_aling'){
-			Ext.apply(daty, {etiqueta_aling:value});
-		}else if(name === 'isSeleccionado'){
-			Ext.apply(daty, {isSeleccionado:value});
-		}else if(name === 'texto'){
-			Ext.apply(daty, {texto:value});
-		}else if(name === 'imagenCls'){
-			Ext.apply(daty, {imagenCls:value});
-		}else if(name === 'margen'){
-			Ext.apply(daty, {margen:value});
-		}else if(name === 'padding'){
-			Ext.apply(daty, {padding:value});
-		}else if(name === 'imagen_aling'){
-			Ext.apply(daty, {imagen_aling:value});
-		}else if(name === 'isRequeridoMsg'){
-			Ext.apply(daty, {isRequeridoMsg:value});
-		}else if(name === 'isEditable'){
-			Ext.apply(daty, {isEditable:value});
-		}else if(name === 'multiSelect'){
-			Ext.apply(daty, {multiSelect:value});
-		}else if(name === 'store'){
-			Ext.apply(daty, {store:value});
-		}else if(name === 'modo'){
-			Ext.apply(daty, {modo:value});
-		}else if(name === 'selectconFoco'){
-			Ext.apply(daty, {selectconFoco:value});
-		}else if(name === 'selectAction'){
-			Ext.apply(daty, {selectAction:value});
-		}else if(name === 'valorDisplay'){
-			Ext.apply(daty, {valorDisplay:value});
-		}else if(name === 'valorId'){
-			Ext.apply(daty, {valorId:value});
-		}else if(name === 'isFlecha'){
-			Ext.apply(daty, {isFlecha:value});
-		}else if(name === 'isAutoComp'){
-			Ext.apply(daty, {isAutoComp:value});
-		}else if(name === 'delimitador'){
-			Ext.apply(daty, {delimitador:value});
-		}else if(name === 'row'){
-			Ext.apply(daty, {row:value});
-		}else if(name === 'columnas'){
-			Ext.apply(daty, {columnas:value});
-		}else if(name === 'tabs'){
-			Ext.apply(daty, {tabs:value});
-		}else if(name === 'isDesplegable'){
-			Ext.apply(daty, {isDesplegable:value});
-		}else if(name === 'isFondo'){
-			Ext.apply(daty, {isFondo:value});
-		}else if(name === 'isCerrable'){
-			Ext.apply(daty, {isCerrable:value});
-		}else if(name === 'bodyPadding'){
-			Ext.apply(daty, {bodyPadding:value});
-		}else if(name === 'isAutoScroll'){
-			Ext.apply(daty, {isAutoScroll:value});
-		}else if(name === 'isResizable'){
-			Ext.apply(daty, {isResizable:value});
-		}else if(name === 'isBodyBorder'){
-			Ext.apply(daty, {isBodyBorder:value});
-		}else if(name === 'titulo_Aling'){
-			Ext.apply(daty, {titulo_Aling:value});
-		}else if(name === 'titulo'){
-			Ext.apply(daty, {titulo:value});
-		}else if(name === 'etiqueta'){
-			Ext.apply(daty, {etiqueta:value});
-		}else if(name === 'fechaInvalidTxt'){
-			Ext.apply(daty, {fechaInvalidTxt:value});
-		}else if(name === 'escala'){
-			Ext.apply(daty, {escala:value});
-		}else if(name === 'tipo'){
-			Ext.apply(daty, {tipo:value});
-		}else if(name === 'isPadre'){
-			Ext.apply(daty, {isPadre:value});
-		}else if(name === 'estilo'){
-			Ext.apply(daty, {estilo:value});
-		}else if(name === 'url'){
-			Ext.apply(daty, {url:value});
-		}else if(name === 'titulo_Posicion'){
-			Ext.apply(daty, {titulo_Posicion:value});
-		}else if(name === 'isModal'){
-			Ext.apply(daty, {isModal:value});
-		}else if(name === 'isMinimizable'){
-			Ext.apply(daty, {isMinimizable:value});
-		}else if(name === 'cordX'){
-			Ext.apply(daty, {cordX:value});
-		}else if(name === 'cordY'){
-			Ext.apply(daty, {cordY:value});
-		}else if(name === 'html'){
-			Ext.apply(daty, {html:value});
-		}else if(name === 'src'){
-			Ext.apply(daty, {src:value});
-		}else if(name === 'query'){
-			Ext.apply(daty, {query:value});
-
+		if(name === 'titulo'){Ext.apply(daty, {titulo:value});}else if(name==='nombre'){Ext.apply(daty,{nombre:value});}else if(name ==='(id)'){Ext.apply(daty, {"(id)":value}); }else if(name === 'width'){Ext.apply(daty, {width:value});}else if(name === 'height'){Ext.apply(daty, {height:value});}else if(name === 'etiqueta'){Ext.apply(daty, {etiqueta:value});}else if(name === 'isRequerido'){Ext.apply(daty, {isRequerido:value});}else if(name === 'isAnchor'){Ext.apply(daty, {isAnchor:value});}else if(name === 'etiqueta_width'){Ext.apply(daty, {etiqueta_width:value});}else if(name === 'isBloqueado'){Ext.apply(daty, {isBloqueado:value});}else if(name === 'textoSugerido'){Ext.apply(daty, {textoSugerido:value});}else if(name === 'textoMax'){Ext.apply(daty, {textoMax:value});}else if(name === 'textoMaxMsg'){Ext.apply(daty, {textoMaxMsg:value});}else if(name === 'textoMin'){Ext.apply(daty, {textoMin:value});}else if(name === 'textoMinMsg'){Ext.apply(daty, {textoMinMsg:value});}else if(name === 'soloLectura'){Ext.apply(daty, {soloLectura:value});}else if(name === 'toolTip'){Ext.apply(daty, {toolTip:value});}else if(name === 'texto'){Ext.apply(daty, {texto:value});}else if(name === 'valorMax'){Ext.apply(daty, {valorMax:value});}else if(name === 'valorMin'){Ext.apply(daty, {valorMin:value});}else if(name === 'valorMaxMsg'){Ext.apply(daty, {valorMaxMsg:value});}else if(name === 'valorMinMsg'){Ext.apply(daty, {valorMinMsg:value});}else if(name === 'isFlechas'){Ext.apply(daty, {isFlechas:value});}else if(name === 'fecha'){Ext.apply(daty, {fecha:value});}else if(name === 'fechaMax'){Ext.apply(daty, {fechaMax:value});}else if(name === 'fechaMin'){Ext.apply(daty, {fechaMin:value});}else if(name === 'fechaMinMsg'){Ext.apply(daty, {fechaMinMsg:value});}else if(name === 'etiqueta_aling'){Ext.apply(daty, {etiqueta_aling:value});}else if(name === 'isSeleccionado'){Ext.apply(daty, {isSeleccionado:value});}else if(name === 'texto'){Ext.apply(daty, {texto:value});}else if(name === 'imagenCls'){Ext.apply(daty, {imagenCls:value});}else if(name === 'margen'){Ext.apply(daty, {margen:value});}else if(name === 'padding'){Ext.apply(daty, {padding:value});}else if(name === 'imagen_aling'){Ext.apply(daty, {imagen_aling:value});}else if(name === 'isRequeridoMsg'){Ext.apply(daty, {isRequeridoMsg:value});}else if(name === 'isEditable'){Ext.apply(daty, {isEditable:value});}else if(name === 'multiSelect'){Ext.apply(daty, {multiSelect:value});}else if(name === 'store'){Ext.apply(daty, {store:value});}else if(name === 'modo'){Ext.apply(daty, {modo:value});}else if(name === 'selectconFoco'){Ext.apply(daty, {selectconFoco:value});}else if(name === 'selectAction'){Ext.apply(daty, {selectAction:value});}else if(name === 'valorDisplay'){Ext.apply(daty, {valorDisplay:value});}else if(name === 'valorId'){Ext.apply(daty, {valorId:value});}else if(name === 'isFlecha'){Ext.apply(daty, {isFlecha:value});}else if(name === 'isAutoComp'){Ext.apply(daty, {isAutoComp:value});}else if(name === 'delimitador'){Ext.apply(daty, {delimitador:value});}else if(name === 'row'){Ext.apply(daty, {row:value});}else if(name === 'columnas'){Ext.apply(daty, {columnas:value});}else if(name === 'tabs'){Ext.apply(daty, {tabs:value});}else if(name === 'isDesplegable'){Ext.apply(daty, {isDesplegable:value});}else if(name === 'isFondo'){Ext.apply(daty, {isFondo:value});}else if(name === 'isCerrable'){Ext.apply(daty, {isCerrable:value});}else if(name === 'bodyPadding'){Ext.apply(daty, {bodyPadding:value});}else if(name === 'isAutoScroll'){Ext.apply(daty, {isAutoScroll:value});}else if(name === 'isResizable'){Ext.apply(daty, {isResizable:value});}else if(name === 'isBodyBorder'){Ext.apply(daty, {isBodyBorder:value});}else if(name === 'titulo_Aling'){Ext.apply(daty, {titulo_Aling:value});}else if(name === 'titulo'){Ext.apply(daty, {titulo:value});}else if(name === 'etiqueta'){Ext.apply(daty, {etiqueta:value});}else if(name === 'fechaInvalidTxt'){Ext.apply(daty, {fechaInvalidTxt:value});}else if(name === 'escala'){Ext.apply(daty, {escala:value});}else if(name === 'tipo'){Ext.apply(daty, {tipo:value});}else if(name === 'isPadre'){Ext.apply(daty, {isPadre:value});}else if(name === 'estilo'){Ext.apply(daty, {estilo:value});}else if(name === 'url'){Ext.apply(daty, {url:value});}else if(name === 'titulo_Posicion'){Ext.apply(daty, {titulo_Posicion:value});}else if(name === 'isModal'){Ext.apply(daty, {isModal:value});}else if(name === 'isMinimizable'){Ext.apply(daty, {isMinimizable:value});}else if(name === 'cordX'){Ext.apply(daty, {cordX:value});}else if(name === 'cordY'){Ext.apply(daty, {cordY:value});}else if(name === 'html'){Ext.apply(daty, {html:value});}else if(name === 'src'){Ext.apply(daty, {src:value});}else if(name === 'query'){Ext.apply(daty, {query:value});}else if(name === 'columna_orden'){Ext.apply(daty, {columna_orden:value});}else if(name === 'columna_hidden'){Ext.apply(daty, {columna_hidden:value});}else if(name === 'columna_move'){Ext.apply(daty, {columna_move:value});}else if(name === 'columna_resize'){Ext.apply(daty, {columna_resize:value});
+		}else if(name === 'isBorder'){
+			Ext.apply(daty, {isBorder:value});
 		}
 		setDataSP(name,value);
     });
@@ -2118,146 +2126,9 @@ function getDataSP(attr,ctrlp){
 	var rgs = 'undefined';
 	Ext.each(storeSuperPanel.data.items, function(item){
 		if(item.data.idHijo==ctrlp){
-			if(attr==='nombre'){
-				rgs = item.data.name;
-			}else if(attr==='isRequerido'){
-				rgs = item.data.isRequerido;
-			}else if(attr==='isAnchor'){
-				rgs = item.data.isAnchor;
-			}else if(attr==='width'){
-				rgs = item.data.width;
-			}else if(attr==='height'){
-				rgs = item.data.height;
-			}else if(attr==='etiqueta_width'){
-				rgs = item.data.etiqueta_width;
-			}else if(attr==='isBloqueado'){
-				rgs = item.data.isBloqueado;
-			}else if(attr==='textoSugerido'){
-				rgs = item.data.textoSugerido;
-			}else if(attr==='textoMax'){
-				rgs = item.data.textoMax;
-			}else if(attr==='textoMaxMsg'){
-				rgs = item.data.textoMaxMsg;
-			}else if(attr==='textoMin'){
-				rgs = item.data.textoMin;
-			}else if(attr==='textoMinMsg'){
-				rgs = item.data.textoMinMsg;
-			}else if(attr==='soloLectura'){
-				rgs = item.data.soloLectura;
-			}else if(attr==='toolTip'){
-				rgs = item.data.toolTip;
-			}else if(attr==='valorMin'){
-				rgs = item.data.valorMin;
-			}else if(attr==='valorMax'){
-				rgs = item.data.valorMax;	
-			}else if(attr==='valorMaxMsg'){
-				rgs = item.data.valorMaxMsg;
-			}else if(attr==='valorMinMsg'){
-				rgs = item.data.valorMinMsg;
-			}else if(attr==='isFlechas'){
-				rgs = item.data.isFlechas;	
-			}else if(attr==='fecha'){
-				rgs = item.data.fecha;	
-			}else if(attr==='fechaMax'){
-				rgs = item.data.fechaMax;	
-			}else if(attr==='fechaMaxMsg'){
-				rgs = item.data.fechaMaxMsg;	
-			}else if(attr==='fechaMin'){
-				rgs = item.data.fechaMin;	
-			}else if(attr==='fechaMinMsg'){
-				rgs = item.data.fechaMinMsg;			
-			}else if(attr==='etiqueta_aling'){
-				rgs = item.data.etiqueta_aling;			
-			}else if(attr==='isSeleccionado'){
-				rgs = item.data.isSeleccionado;			
-			}else if(attr==='texto'){
-				rgs = item.data.texto;		
-			}else if(attr==='imagenCls'){
-				rgs = item.data.imagenCls;
-			}else if(attr==='margen'){
-				rgs = item.data.margen;
-			}else if(attr==='padding'){
-				rgs = item.data.padding;		
-			}else if(attr==='imagen_aling'){
-				rgs = item.data.imagen_aling;
-			}else if(attr==='isRequeridoMsg'){
-				rgs = item.data.isRequeridoMsg;	
-			}else if(attr==='isEditable'){
-				rgs = item.data.isEditable;	
-			}else if(attr==='multiSelect'){
-				rgs = item.data.multiSelect;
-			}else if(attr==='store'){
-				rgs = item.data.store;		
-			}else if(attr==='modo'){
-				rgs = item.data.modo;	
-			}else if(attr==='selectconFoco'){
-				rgs = item.data.selectconFoco;	
-			}else if(attr==='selectAction'){
-				rgs = item.data.selectAction;
-			}else if(attr==='valorDisplay'){
-				rgs = item.data.valorDisplay;
-			}else if(attr==='valorId'){
-				rgs = item.data.valorId;	
-			}else if(attr==='isFlecha'){
-				rgs = item.data.isFlecha;
-			}else if(attr==='isAutoComp'){
-				rgs = item.data.isAutoComp;		
-			}else if(attr==='delimitador'){
-				rgs = item.data.delimitador;	
-			}else if(attr==='row'){
-				rgs = item.data.row;		
-			}else if(attr==='columnas'){
-				rgs = item.data.columnas;	
-			}else if(attr==='tabs'){
-				rgs = item.data.tabs;
-			}else if(attr==='isDesplegable'){
-				rgs = item.data.isDesplegable;		
-			}else if(attr==='isFondo'){
-				rgs = item.data.isFondo;
-			}else if(attr==='isCerrable'){
-				rgs = item.data.isCerrable;	
-			}else if(attr==='bodyPadding'){
-				rgs = item.data.bodyPadding;
-			}else if(attr==='isAutoScroll'){
-				rgs = item.data.isAutoScroll;
-			}else if(attr==='isResizable'){
-				rgs = item.data.isResizable;
-			}else if(attr==='isBodyBorder'){
-				rgs = item.data.isBodyBorder;
-			}else if(attr==='titulo_Aling'){
-				rgs = item.data.titulo_Aling;
-			}else if(attr==='titulo'){
-				rgs = item.data.titulo;
-			}else if(attr==='etiqueta'){
-				rgs = item.data.etiqueta;
-			}else if(attr==='fechaInvalidTxt'){
-				rgs = item.data.fechaInvalidTxt;
-			}else if(attr==='escala'){
-				rgs = item.data.escala;
-			}else if(attr==='tipo'){
-				rgs = item.data.tipo;
-			}else if(attr==='isPadre'){
-				rgs = item.data.isPadre;
-			}else if(attr==='estilo'){
-				rgs = item.data.estilo;
-			}else if(attr==='url'){
-				rgs = item.data.url;
-			}else if(attr==='titulo_Posicion'){
-				rgs = item.data.titulo_Posicion;
-			}else if(attr==='isModal'){
-				rgs = item.data.isModal;
-			}else if(attr==='isMinimizable'){
-				rgs = item.data.isMinimizable;
-			}else if(attr==='cordX'){
-				rgs = item.data.cordX;
-			}else if(attr==='cordY'){
-				rgs = item.data.cordY;
-			}else if(attr==='html'){
-				rgs = item.data.html;
-			}else if(attr==='src'){
-				rgs = item.data.src;
-			}else if(attr==='query'){
-				rgs = item.data.query;
+			if(attr==='nombre'){rgs = item.data.name;}else if(attr==='isRequerido'){rgs = item.data.isRequerido;}else if(attr==='isAnchor'){rgs = item.data.isAnchor;}else if(attr==='width'){rgs = item.data.width;}else if(attr==='height'){rgs = item.data.height;}else if(attr==='etiqueta_width'){rgs = item.data.etiqueta_width;}else if(attr==='isBloqueado'){rgs = item.data.isBloqueado;}else if(attr==='textoSugerido'){rgs = item.data.textoSugerido;}else if(attr==='textoMax'){rgs = item.data.textoMax;}else if(attr==='textoMaxMsg'){rgs = item.data.textoMaxMsg;}else if(attr==='textoMin'){rgs = item.data.textoMin;}else if(attr==='textoMinMsg'){rgs = item.data.textoMinMsg;}else if(attr==='soloLectura'){rgs = item.data.soloLectura;}else if(attr==='toolTip'){rgs = item.data.toolTip;}else if(attr==='valorMin'){rgs = item.data.valorMin;}else if(attr==='valorMax'){rgs = item.data.valorMax;}else if(attr==='valorMaxMsg'){rgs = item.data.valorMaxMsg;}else if(attr==='valorMinMsg'){rgs = item.data.valorMinMsg;}else if(attr==='isFlechas'){rgs = item.data.isFlechas;}else if(attr==='fecha'){rgs = item.data.fecha;}else if(attr==='fechaMax'){rgs = item.data.fechaMax;}else if(attr==='fechaMaxMsg'){rgs = item.data.fechaMaxMsg;}else if(attr==='fechaMin'){rgs = item.data.fechaMin;}else if(attr==='fechaMinMsg'){rgs = item.data.fechaMinMsg;}else if(attr==='etiqueta_aling'){rgs = item.data.etiqueta_aling;}else if(attr==='isSeleccionado'){rgs = item.data.isSeleccionado;}else if(attr==='texto'){rgs = item.data.texto;}else if(attr==='imagenCls'){rgs = item.data.imagenCls;}else if(attr==='margen'){rgs = item.data.margen;}else if(attr==='padding'){rgs = item.data.padding;}else if(attr==='imagen_aling'){rgs = item.data.imagen_aling;}else if(attr==='isRequeridoMsg'){rgs = item.data.isRequeridoMsg;}else if(attr==='isEditable'){rgs = item.data.isEditable;}else if(attr==='multiSelect'){rgs = item.data.multiSelect;}else if(attr==='store'){rgs = item.data.store;}else if(attr==='modo'){rgs = item.data.modo;}else if(attr==='selectconFoco'){rgs = item.data.selectconFoco;}else if(attr==='selectAction'){rgs = item.data.selectAction;}else if(attr==='valorDisplay'){rgs = item.data.valorDisplay;}else if(attr==='valorId'){rgs = item.data.valorId;}else if(attr==='isFlecha'){rgs = item.data.isFlecha;}else if(attr==='isAutoComp'){rgs = item.data.isAutoComp;}else if(attr==='delimitador'){rgs = item.data.delimitador;}else if(attr==='row'){rgs = item.data.row;}else if(attr==='columnas'){rgs = item.data.columnas;}else if(attr==='tabs'){rgs = item.data.tabs;}else if(attr==='isDesplegable'){rgs = item.data.isDesplegable;}else if(attr==='isFondo'){rgs = item.data.isFondo;}else if(attr==='isCerrable'){rgs = item.data.isCerrable;	}else if(attr==='bodyPadding'){rgs = item.data.bodyPadding;}else if(attr==='isAutoScroll'){rgs = item.data.isAutoScroll;}else if(attr==='isResizable'){rgs = item.data.isResizable;}else if(attr==='isBodyBorder'){rgs = item.data.isBodyBorder;}else if(attr==='titulo_Aling'){rgs = item.data.titulo_Aling;}else if(attr==='titulo'){rgs = item.data.titulo;}else if(attr==='etiqueta'){rgs = item.data.etiqueta;}else if(attr==='fechaInvalidTxt'){rgs = item.data.fechaInvalidTxt;}else if(attr==='escala'){rgs = item.data.escala;}else if(attr==='tipo'){rgs = item.data.tipo;}else if(attr==='isPadre'){rgs = item.data.isPadre;}else if(attr==='estilo'){rgs = item.data.estilo;}else if(attr==='url'){rgs = item.data.url;}else if(attr==='titulo_Posicion'){rgs = item.data.titulo_Posicion;}else if(attr==='isModal'){rgs = item.data.isModal;}else if(attr==='isMinimizable'){rgs = item.data.isMinimizable;}else if(attr==='cordX'){rgs = item.data.cordX;}else if(attr==='cordY'){rgs = item.data.cordY;}else if(attr==='html'){rgs = item.data.html;}else if(attr==='src'){rgs = item.data.src;}else if(attr==='query'){rgs = item.data.query;}else if(attr==='columna_orden'){rgs = item.data.columna_orden;}else if(attr==='columna_hidden'){rgs = item.data.columna_hidden;}else if(attr==='columna_move'){rgs = item.data.columna_move;}else if(attr==='columna_resize'){rgs = item.data.columna_resize;
+			}else if(attr==='isBorder'){
+				rgs = item.data.isBorder;
 			}
 			return;
 		}	
@@ -2267,146 +2138,9 @@ function getDataSP(attr,ctrlp){
 function setDataSP(attr,valor){
 	Ext.each(storeSuperPanel.data.items, function(item){
 		if(item.data.idHijo==ctrl){
-			if(attr==='nombre'){
-				item.data.name=valor;
-			}else if(attr==='isRequerido'){
-				item.data.isRequerido=valor;
-			}else if(attr==='isAnchor'){
-				item.data.isAnchor=valor;
-			}else if(attr==='width'){
-				item.data.width=valor;
-			}else if(attr==='height'){
-				item.data.height=valor;
-			}else if(attr==='etiqueta_width'){
-				item.data.etiqueta_width=valor;
-			}else if(attr==='isBloqueado'){
-				item.data.isBloqueado=valor;
-			}else if(attr==='textoSugerido'){
-				item.data.textoSugerido=valor;
-			}else if(attr==='textoMax'){
-				item.data.textoMax=valor;
-			}else if(attr==='textoMaxMsg'){
-				item.data.textoMaxMsg=valor;
-			}else if(attr==='textoMinMsg'){
-				item.data.textoMinMsg=valor;
-			}else if(attr==='textoMin'){
-				item.data.textoMin=valor;
-			}else if(attr==='soloLectura'){
-				item.data.soloLectura=valor;
-			}else if(attr==='toolTip'){
-				item.data.toolTip=valor;
-			}else if(attr==='valorMax'){
-				item.data.valorMax=valor;
-			}else if(attr==='valorMin'){
-				item.data.valorMin=valor;
-			}else if(attr==='valorMaxMsg'){
-				item.data.valorMaxMsg=valor;
-			}else if(attr==='valorMinMsg'){
-				item.data.valorMinMsg=valor;
-			}else if(attr==='isFlechas'){
-				item.data.isFlechas=valor;
-			}else if(attr==='fecha'){
-				item.data.fecha=valor;
-			}else if(attr==='fechaMax'){
-				item.data.fechaMax=valor;
-			}else if(attr==='fechaMaxMsg'){
-				item.data.fechaMaxMsg=valor;
-			}else if(attr==='fechaMin'){
-				item.data.fechaMin=valor;
-			}else if(attr==='fechaMinMsg'){
-				item.data.fechaMinMsg=valor;
-			}else if(attr==='etiqueta_aling'){
-				item.data.etiqueta_aling=valor;
-			}else if(attr==='isSeleccionado'){
-				item.data.isSeleccionado=valor;
-			}else if(attr==='texto'){
-				item.data.texto=valor;
-			}else if(attr==='imagenCls'){
-				item.data.imagenCls=valor;
-			}else if(attr==='margen'){
-				item.data.margen=valor;
-			}else if(attr==='padding'){
-				item.data.padding=valor;
-			}else if(attr==='imagen_aling'){
-				item.data.imagen_aling=valor;
-			}else if(attr==='isRequeridoMsg'){
-				item.data.isRequeridoMsg=valor;
-			}else if(attr==='isEditable'){
-				item.data.isEditable=valor;
-			}else if(attr==='multiSelect'){
-				item.data.multiSelect=valor;
-			}else if(attr==='store'){
-				item.data.store=valor;
-			}else if(attr==='modo'){
-				item.data.modo=valor;
-			}else if(attr==='selectconFoco'){
-				item.data.selectconFoco=valor;
-			}else if(attr==='selectAction'){
-				item.data.selectAction=valor;
-			}else if(attr==='valorDisplay'){
-				item.data.valorDisplay=valor;
-			}else if(attr==='valorId'){
-				item.data.valorId=valor;
-			}else if(attr==='isFlecha'){
-				item.data.isFlecha=valor;
-			}else if(attr==='isAutoComp'){
-				item.data.isAutoComp=valor;
-			}else if(attr==='delimitador'){
-				item.data.delimitador=valor;
-			}else if(attr==='row'){
-				item.data.row=valor;
-			}else if(attr==='columnas'){
-				item.data.columnas=valor;
-			}else if(attr==='tabs'){
-				item.data.tabs=valor;
-			}else if(attr==='isDesplegable'){
-				item.data.isDesplegable=valor;
-			}else if(attr==='isFondo'){
-				item.data.isFondo=valor;
-			}else if(attr==='isCerrable'){
-				item.data.isCerrable=valor;
-			}else if(attr==='bodyPadding'){
-				item.data.bodyPadding=valor;
-			}else if(attr==='isAutoScroll'){
-				item.data.isAutoScroll=valor;
-			}else if(attr==='isResizable'){
-				item.data.isResizable=valor;
-			}else if(attr==='isBodyBorder'){
-				item.data.isBodyBorder=valor;
-			}else if(attr==='titulo_Aling'){
-				item.data.titulo_Aling=valor;
-			}else if(attr==='titulo'){
-				item.data.titulo=valor;
-			}else if(attr==='etiqueta'){
-				item.data.etiqueta=valor;
-			}else if(attr==='fechaInvalidTxt'){
-				item.data.fechaInvalidTxt=valor;
-			}else if(attr==='escala'){
-				item.data.escala=valor;
-			}else if(attr==='tipo'){
-				item.data.tipo=valor;
-			}else if(attr==='isPadre'){
-				item.data.isPadre=valor;
-			}else if(attr==='estilo'){
-				item.data.estilo=valor;
-			}else if(attr==='url'){
-				item.data.url=valor;
-			}else if(attr==='titulo_Posicion'){
-				item.data.titulo_Posicion=valor;
-			}else if(attr==='isModal'){
-				item.data.isModal=valor;
-			}else if(attr==='isMinimizable'){
-				item.data.isMinimizable=valor;
-			}else if(attr==='cordX'){
-				item.data.cordX=valor;
-			}else if(attr==='cordY'){
-				item.data.cordY=valor;
-			}else if(attr==='html'){
-				item.data.html=valor;
-			}else if(attr==='src'){
-				item.data.src=valor;
-			}else if(attr==='query'){
-				item.data.query=valor;
+			if(attr==='nombre'){item.data.name=valor;}else if(attr==='isRequerido'){item.data.isRequerido=valor;}else if(attr==='isAnchor'){item.data.isAnchor=valor;}else if(attr==='width'){item.data.width=valor;}else if(attr==='height'){item.data.height=valor;}else if(attr==='etiqueta_width'){item.data.etiqueta_width=valor;}else if(attr==='isBloqueado'){item.data.isBloqueado=valor;}else if(attr==='textoSugerido'){item.data.textoSugerido=valor;}else if(attr==='textoMax'){item.data.textoMax=valor;}else if(attr==='textoMaxMsg'){item.data.textoMaxMsg=valor;}else if(attr==='textoMinMsg'){item.data.textoMinMsg=valor;}else if(attr==='textoMin'){item.data.textoMin=valor;}else if(attr==='soloLectura'){item.data.soloLectura=valor;}else if(attr==='toolTip'){item.data.toolTip=valor;}else if(attr==='valorMax'){item.data.valorMax=valor;}else if(attr==='valorMin'){item.data.valorMin=valor;}else if(attr==='valorMaxMsg'){item.data.valorMaxMsg=valor;}else if(attr==='valorMinMsg'){item.data.valorMinMsg=valor;}else if(attr==='isFlechas'){item.data.isFlechas=valor;}else if(attr==='fecha'){item.data.fecha=valor;}else if(attr==='fechaMax'){item.data.fechaMax=valor;}else if(attr==='fechaMaxMsg'){item.data.fechaMaxMsg=valor;}else if(attr==='fechaMin'){item.data.fechaMin=valor;}else if(attr==='fechaMinMsg'){item.data.fechaMinMsg=valor;}else if(attr==='etiqueta_aling'){item.data.etiqueta_aling=valor;}else if(attr==='isSeleccionado'){item.data.isSeleccionado=valor;}else if(attr==='texto'){item.data.texto=valor;}else if(attr==='imagenCls'){item.data.imagenCls=valor;}else if(attr==='margen'){item.data.margen=valor;}else if(attr==='padding'){item.data.padding=valor;}else if(attr==='imagen_aling'){item.data.imagen_aling=valor;}else if(attr==='isRequeridoMsg'){item.data.isRequeridoMsg=valor;}else if(attr==='isEditable'){item.data.isEditable=valor;}else if(attr==='multiSelect'){item.data.multiSelect=valor;}else if(attr==='store'){item.data.store=valor;}else if(attr==='modo'){item.data.modo=valor;}else if(attr==='selectconFoco'){item.data.selectconFoco=valor;}else if(attr==='selectAction'){item.data.selectAction=valor;}else if(attr==='valorDisplay'){item.data.valorDisplay=valor;}else if(attr==='valorId'){item.data.valorId=valor;}else if(attr==='isFlecha'){item.data.isFlecha=valor;}else if(attr==='isAutoComp'){item.data.isAutoComp=valor;}else if(attr==='delimitador'){item.data.delimitador=valor;}else if(attr==='row'){item.data.row=valor;}else if(attr==='columnas'){item.data.columnas=valor;}else if(attr==='tabs'){item.data.tabs=valor;}else if(attr==='isDesplegable'){item.data.isDesplegable=valor;}else if(attr==='isFondo'){item.data.isFondo=valor;}else if(attr==='isCerrable'){item.data.isCerrable=valor;}else if(attr==='bodyPadding'){item.data.bodyPadding=valor;}else if(attr==='isAutoScroll'){item.data.isAutoScroll=valor;}else if(attr==='isResizable'){item.data.isResizable=valor;}else if(attr==='isBodyBorder'){item.data.isBodyBorder=valor;}else if(attr==='titulo_Aling'){item.data.titulo_Aling=valor;}else if(attr==='titulo'){item.data.titulo=valor;}else if(attr==='etiqueta'){item.data.etiqueta=valor;}else if(attr==='fechaInvalidTxt'){item.data.fechaInvalidTxt=valor;}else if(attr==='escala'){item.data.escala=valor;}else if(attr==='tipo'){item.data.tipo=valor;}else if(attr==='isPadre'){item.data.isPadre=valor;}else if(attr==='estilo'){item.data.estilo=valor;}else if(attr==='url'){item.data.url=valor;}else if(attr==='titulo_Posicion'){item.data.titulo_Posicion=valor;}else if(attr==='isModal'){item.data.isModal=valor;}else if(attr==='isMinimizable'){item.data.isMinimizable=valor;}else if(attr==='cordX'){item.data.cordX=valor;}else if(attr==='cordY'){item.data.cordY=valor;}else if(attr==='html'){item.data.html=valor;}else if(attr==='src'){item.data.src=valor;}else if(attr==='query'){item.data.query=valor;}else if(attr==='columna_orden'){item.data.columna_orden=valor;}else if(attr==='columna_hidden'){item.data.columna_hidden=valor;}else if(attr==='columna_move'){item.data.columna_move=valor;}else if(attr==='columna_resize'){item.data.columna_resize=valor;
+			}else if(attr==='isBorder'){
+				item.data.isBorder=valor;
 			}
 			return false;
 		}	
