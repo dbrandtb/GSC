@@ -76,8 +76,12 @@ Ext.define('modelSuperPanel', {
 		 {name: 'src',type:'string'},
 		 {name: 'titulo_Posicion',type:'string'},
 		 {name: 'dataIndex', type: 'string'},
-		 {name: 'query', type: 'string'}
-         
+		 {name: 'query', type: 'string'},
+		 {name: 'columna_orden',type:'boolean'},
+		 {name: 'columna_hidden',type:'boolean'},
+         {name: 'columna_move',type:'boolean'},
+         {name: 'columna_resize',type:'boolean'},
+         {name: 'isBorder',type:'boolean'}
      ]
 });
 Ext.define('modelBasico', {
@@ -107,6 +111,82 @@ Ext.define('modelFormulario', {
 		 {name: 'titulo_Aling',type:'string'}
 
      ]
+});
+Ext.define('modelBorder', {
+    extend: 'Ext.data.Model',
+    fields: [
+        {name: '(id)', 			type: 'string'},
+        {name: 'titulo',       	type: 'string'},
+        {name: 'tipo', 			type: 'string'},
+        {name: 'height',		type:'int'},
+        {name: 'width',			type:'int'},
+        {name: 'isDesplegable',type:'boolean'},
+        {name: 'margen',			type:'string'},
+        {name: 'isFondo',type:'boolean'},
+        {name: 'isCerrable',type:'boolean'},
+        {name: 'bodyPadding',type:'string'},
+        {name: 'isAutoScroll',type:'boolean'},
+        {name: 'isResizable',type:'boolean'},
+        {name: 'isBodyBorder',type:'boolean'},
+        {name: 'nombre', 	    type: 'string'},
+        {name: 'titulo_Aling',type:'string'}
+    ]
+});
+Ext.define('modelBorderSur', {
+    extend: 'Ext.data.Model',
+    fields: [
+        {name: '(id)', 			type: 'string'},
+        {name: 'titulo',       	type: 'string'},
+        {name: 'bodyPadding',	type:'string'},	        
+        {name: 'isFondo',		type:'boolean'},
+        {name: 'height',		type:'int'},  
+        {name: 'isAutoScroll',	type:'boolean'},
+        {name: 'isCerrable',	type:'boolean'},
+        {name: 'isBodyBorder',	type:'boolean'},
+        {name: 'isDesplegable',	type:'boolean'},
+        {name: 'nombre', 	    type: 'string'},
+        {name: 'margen',		type:'string'},
+        {name: 'titulo_Aling',	type:'string'},  
+        {name: 'columnas',			type:'int'},
+        {name: 'tipo', 			type: 'string'}
+    ]
+});
+Ext.define('modelBorderCenter', {
+    extend: 'Ext.data.Model',
+    fields: [
+        {name: '(id)', 			type: 'string'},
+        {name: 'titulo',       	type: 'string'},
+        {name: 'bodyPadding',	type:'string'},	        
+        {name: 'isFondo',		type:'boolean'},
+        {name: 'isAutoScroll',	type:'boolean'},
+        {name: 'isCerrable',	type:'boolean'},
+        {name: 'isBodyBorder',	type:'boolean'},
+        {name: 'isDesplegable',	type:'boolean'},
+        {name: 'nombre', 	    type: 'string'},
+        {name: 'margen',		type:'string'},
+        {name: 'titulo_Aling',	type:'string'},  
+        {name: 'columnas',			type:'int'},
+        {name: 'tipo', 			type: 'string'}
+    ]
+});
+Ext.define('modelBorderIzq', {
+    extend: 'Ext.data.Model',
+    fields: [
+        {name: '(id)', 			type: 'string'},
+        {name: 'titulo',       	type: 'string'},
+        {name: 'bodyPadding',	type:'string'},	        
+        {name: 'isFondo',		type:'boolean'},
+        {name: 'width',		type:'int'},  
+        {name: 'isAutoScroll',	type:'boolean'},
+        {name: 'isCerrable',	type:'boolean'},
+        {name: 'isBodyBorder',	type:'boolean'},
+        {name: 'isDesplegable',	type:'boolean'},
+        {name: 'nombre', 	    type: 'string'},
+        {name: 'margen',		type:'string'},
+        {name: 'titulo_Aling',	type:'string'},  
+        {name: 'columnas',			type:'int'},
+        {name: 'tipo', 			type: 'string'}
+    ]
 });
 Ext.define('modelColumnas', {
      extend: 'Ext.data.Model',
@@ -350,7 +430,18 @@ Ext.define('modelGridAttr', {
         {name: 'height',			type:'int'},
         {name: 'margen',			type:'string'},
         {name: 'zuprimir',			type:'boolean'},
-        {name: 'query', 	type: 'string'}
+        {name: 'query', 	type: 'string'},
+        {name: 'titulo',type:'string'},
+        {name: 'titulo_Aling',type:'string'},
+        {name: 'columna_orden',type:'boolean'},
+        {name: 'isResizable',type:'boolean'},
+        {name: 'isFondo',type:'boolean'},
+        {name: 'columna_hidden',type:'boolean'},
+        {name: 'columna_move',type:'boolean'},
+        {name: 'columna_resize',type:'boolean'},
+        {name: 'isDesplegable',type:'boolean'},
+        {name: 'isCerrable',type:'boolean'},
+        {name: 'isBodyBorder',type:'boolean'}
     ]
 });
 Ext.define('modelGridDef',{ extend: 'Ext.data.Model', 
