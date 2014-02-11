@@ -1952,21 +1952,14 @@ public class EndososAction extends PrincipalCoreAction
 				);
 		log.debug("smap1: "+smap1);
 		log.debug("slist1: "+slist1);
+		
+		String idpro  = System.currentTimeMillis() + "";
+		String accion = Constantes.DELETE_MODE;
+		
 		try
 		{
 			if(slist1!=null)
-			{
-				pantallasManager.borrarParametros(
-						smap1.get("cdtiptra")
-						,smap1.get("cdunieco")
-						,smap1.get("cdramo")
-						,smap1.get("cdtipsit")
-						,smap1.get("estado")
-						,smap1.get("rol")
-						,smap1.get("pantalla")
-						,smap1.get("seccion")
-						,smap1.get("orden")
-						);
+			{	
 				for(Map<String,String>nuevo:slist1)
 				{
 					Map<String,String>mapaConPVI=new HashMap<String,String>();
@@ -1974,16 +1967,39 @@ public class EndososAction extends PrincipalCoreAction
 					{
 						mapaConPVI.put("PV_"+en.getKey()+"_I",en.getValue());
 					}
-					mapaConPVI.put("PV_SWFINAL_I","N");
+					mapaConPVI.put("PV_IDPRO_I",idpro);
 					pantallasManager.insertarParametros(mapaConPVI);
 				}
+				
+				accion = Constantes.INSERT_MODE;
 			}
 			success=true;
 		}
 		catch(Exception ex)
 		{
+			accion = Constantes.DELETE_MODE;
 			log.error("error al guardar parametros pantalla",ex);
 			success=false;
+		}
+		
+		try
+		{
+			pantallasManager.movParametros(
+					smap1.get("cdtiptra")
+					,smap1.get("cdunieco")
+					,smap1.get("cdramo")
+					,smap1.get("cdtipsit")
+					,smap1.get("estado")
+					,smap1.get("rol")
+					,smap1.get("pantalla")
+					,smap1.get("seccion")
+					,smap1.get("orden")
+					,accion
+					,idpro);
+		}
+		catch(Exception ex)
+		{
+			log.error("error al guardar parametros pantalla",ex);
 		}
 		log.debug(""
 				+ "\n######                           ######"

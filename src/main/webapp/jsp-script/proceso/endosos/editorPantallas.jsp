@@ -17,6 +17,7 @@ var edipanStore;
 var edipanIndexEditado;
 var edipanStoreArbol;
 var edipanPanelArbol;
+var edipanBotonAceptar;
 
 var edipanUrlLoad = '<s:url namespace="/endosos" action="obtenerParametrosPantalla" />';
 var edipanUrlSave = '<s:url namespace="/endosos" action="guardarParametrosPantalla" />';
@@ -237,7 +238,12 @@ Ext.onReady(function()
 					    	var slist1=[];
 					    	edipanStore.each(function(record)
 					    	{
-					    		slist1.push(record.getData());
+					    		var esFinal = record.get('SWFINAL');
+					    		esFinal = esFinal && ( esFinal=='s' || esFinal=='S' );
+					    		if(!esFinal)
+					    		{
+					    			slist1.push(record.getData());					    			
+					    		}
 					    	});
 					    	json['slist1']=slist1;
 					    	
@@ -330,7 +336,17 @@ Ext.onReady(function()
 			    		edipanIndexEditado=index;
 			    		debug('edipanIndexEditado',edipanIndexEditado);
 			    		
+			    		var esFinal = record.get('SWFINAL');
+			    		esFinal = esFinal && (esFinal=='S'||esFinal=='s');
+			    		
 			    		edipanEditor.loadRecord(record);
+			    		edipanBotonAceptar.setDisabled(esFinal);
+			    		
+			    		if(esFinal)
+			    		{
+			    			edipanEditor.items.items[0].setValue('');
+			    			edipanEditor.items.items[1].setValue('');
+			    		}
 			    		
 			    		edipanFiltro.setDisabled(true);
 			    		edipanPanelArbol.setDisabled(true);
@@ -370,29 +386,7 @@ Ext.onReady(function()
 		        ,buttonAlign : 'center'
                 ,buttons     :
                 [
-                    {
-                    	text     : 'Aceptar'
-                    	,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
-                    	,handler : function()
-                    	{
-                    		debug(this.up().up().getValues());
-                    		
-                    		if(this.up().up().isValid())
-                    		{
-	                    		edipanStore.removeAt(edipanIndexEditado);
-	                    		edipanStore.insert(edipanIndexEditado,this.up().up().getValues());
-	                    		
-	                    		edipanFiltro.setDisabled(true);
-	                    		edipanPanelArbol.setDisabled(true);
-	                            edipanGrid.setDisabled(false);
-	                            edipanEditor.setDisabled(true);
-	                            
-	                            edipanFiltro.collapse();
-	                            edipanGrid.expand();
-	                            edipanEditor.collapse();
-                    		}
-                    	}
-                    }
+                    edipanBotonAceptar
                     ,{
                         text     : 'Duplicar'
                         ,icon    : '${ctx}/resources/fam3icons/icons/add.png'
@@ -400,16 +394,19 @@ Ext.onReady(function()
                         {
                             debug(this.up().up().getValues());
                             
-                            edipanStore.add(this.up().up().getValues());
-                            
-                            edipanFiltro.setDisabled(true);
-                            edipanPanelArbol.setDisabled(true);
-                            edipanGrid.setDisabled(false);
-                            edipanEditor.setDisabled(true);
-                            
-                            edipanFiltro.collapse();
-                            edipanGrid.expand();
-                            edipanEditor.collapse();
+                            if(this.up().up().isValid())
+                            {
+	                            edipanStore.add(this.up().up().getValues());
+	                            
+	                            edipanFiltro.setDisabled(true);
+	                            edipanPanelArbol.setDisabled(true);
+	                            edipanGrid.setDisabled(false);
+	                            edipanEditor.setDisabled(true);
+	                            
+	                            edipanFiltro.collapse();
+	                            edipanGrid.expand();
+	                            edipanEditor.collapse();
+                            }
                         }
                     }
                     ,{
@@ -458,6 +455,31 @@ Ext.onReady(function()
 	///////////////////////
 	////// contenido //////
 	/*///////////////////*/
+	edipanBotonAceptar = Ext.create('Ext.button.Button',
+	{
+        text     : 'Aceptar'
+        ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+        ,handler : function()
+        {
+            debug(this.up().up().getValues());
+            
+            if(this.up().up().isValid())
+            {
+                edipanStore.removeAt(edipanIndexEditado);
+                edipanStore.insert(edipanIndexEditado,this.up().up().getValues());
+                
+                edipanFiltro.setDisabled(true);
+                edipanPanelArbol.setDisabled(true);
+                edipanGrid.setDisabled(false);
+                edipanEditor.setDisabled(true);
+                
+                edipanFiltro.collapse();
+                edipanGrid.expand();
+                edipanEditor.collapse();
+            }
+        }
+    });
+	
 	edipanPanelArbol = new EdipanPanelArbol();
 	edipanFiltro     = new EdipanFiltro();
 	edipanGrid       = new EdipanGrid();
