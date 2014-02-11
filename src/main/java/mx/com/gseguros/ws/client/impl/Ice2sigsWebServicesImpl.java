@@ -681,10 +681,11 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 		
 		Recibo recibo = null;
 		for(ReciboVO recVO: recibos){
-			recibo = recVO.getRecibo();
-			Operacion operacion = Operacion.valueOf(recVO.getOperacion());
 			
 			try{
+				recibo = recVO.getRecibo();
+				Operacion operacion = Operacion.valueOf(recVO.getOperacion());
+				
 				if(async){
 					// Se crea un HashMap por cada invocacion asincrona del WS, para evitar issue (sobreescritura de valores):
 					HashMap<String, Object> paramsBitacora = new HashMap<String, Object>();
