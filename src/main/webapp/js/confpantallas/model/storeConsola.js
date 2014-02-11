@@ -37,6 +37,60 @@ var storeFormulario = Ext.create('Ext.data.Store',{
         reader: {type: 'json',root: 'attrFormulario'}
    }
 });
+var storeBorder = Ext.create('Ext.data.Store',{
+	model: 'modelBorder',
+	autoLoad: true,
+	proxy: {
+    	type: 'ajax',
+        url : '../../js/confpantallas/data/attr.json',
+        reader: {type: 'json',root: 'attrBorder'}
+   }
+});
+var storeBorderSur = Ext.create('Ext.data.Store',{
+	model: 'modelBorderSur',
+	autoLoad: true,
+	proxy: {
+    	type: 'ajax',
+        url : '../../js/confpantallas/data/attr.json',
+        reader: {type: 'json',root: 'attrBorderSur'}
+   }
+});
+var storeBorderNorte = Ext.create('Ext.data.Store',{
+	model: 'modelBorderSur',
+	autoLoad: true,
+	proxy: {
+    	type: 'ajax',
+        url : '../../js/confpantallas/data/attr.json',
+        reader: {type: 'json',root: 'attrBorderSur'}
+   }
+});
+var storeBorderIzq = Ext.create('Ext.data.Store',{
+	model: 'modelBorderIzq',
+	autoLoad: true,
+	proxy: {
+    	type: 'ajax',
+        url : '../../js/confpantallas/data/attr.json',
+        reader: {type: 'json',root: 'attrBorderSur'}
+   }
+});
+var storeBorderCenter = Ext.create('Ext.data.Store',{
+	model: 'modelBorderCenter',
+	autoLoad: true,
+	proxy: {
+    	type: 'ajax',
+        url : '../../js/confpantallas/data/attr.json',
+        reader: {type: 'json',root: 'attrBorderSur'}
+   }
+});
+var storeBorderDer = Ext.create('Ext.data.Store',{
+	model: 'modelBorderIzq',
+	autoLoad: true,
+	proxy: {
+    	type: 'ajax',
+        url : '../../js/confpantallas/data/attr.json',
+        reader: {type: 'json',root: 'attrBorderSur'}
+   }
+});
 var storeColumnas = Ext.create('Ext.data.Store',{
 	model: 'modelColumnas',
 	autoLoad: true,
