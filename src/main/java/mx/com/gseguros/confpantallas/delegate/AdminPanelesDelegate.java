@@ -228,6 +228,34 @@ public class AdminPanelesDelegate {
 		if(!vo.getTitulo().equals("")){rgs.add(new DinamicPanelAttrVo(consec, intMaxp, "title", vo.getTitulo(), "S"));consec++;}
 		if(vo.getTipo().equals("form")){
 			if(!vo.getTipo().equals("")){rgs.add(new DinamicPanelAttrVo(consec, intMaxp, "xtype", vo.getTipo(), "S"));consec++;}
+		}else if(vo.getTipo().equals("border")){
+			rgs.add(new DinamicPanelAttrVo(consec, intMaxp, "xtype", "panel", "S"));consec++;
+			rgs.add(new DinamicPanelAttrVo(consec, intMaxp, "layout", "border", "S"));consec++;
+		}else if(vo.getTipo().equals("sur")){
+			rgs.add(new DinamicPanelAttrVo(consec, intMaxp, "xtype", "panel", "S"));consec++;
+			rgs.add(new DinamicPanelAttrVo(consec, intMaxp, "layout", "column", "S"));consec++;
+			rgs.add(new DinamicPanelAttrVo(consec, intMaxp, "region", "south", "S"));consec++;
+			if(vo.getColumnas() > 0){rgs.add(new DinamicPanelAttrVo(consec, intMaxp, "columns", String.valueOf(vo.getColumnas()), "N"));consec++;}
+		}else if(vo.getTipo().equals("norte")){
+			rgs.add(new DinamicPanelAttrVo(consec, intMaxp, "xtype", "panel", "S"));consec++;
+			rgs.add(new DinamicPanelAttrVo(consec, intMaxp, "layout", "column", "S"));consec++;
+			rgs.add(new DinamicPanelAttrVo(consec, intMaxp, "region", "north", "S"));consec++;
+			if(vo.getColumnas() > 0){rgs.add(new DinamicPanelAttrVo(consec, intMaxp, "columns", String.valueOf(vo.getColumnas()), "N"));consec++;}
+		}else if(vo.getTipo().equals("izq")){
+			rgs.add(new DinamicPanelAttrVo(consec, intMaxp, "xtype", "panel", "S"));consec++;
+			rgs.add(new DinamicPanelAttrVo(consec, intMaxp, "layout", "column", "S"));consec++;
+			rgs.add(new DinamicPanelAttrVo(consec, intMaxp, "region", "west", "S"));consec++;
+			if(vo.getColumnas() > 0){rgs.add(new DinamicPanelAttrVo(consec, intMaxp, "columns", String.valueOf(vo.getColumnas()), "N"));consec++;}
+		}else if(vo.getTipo().equals("der")){
+			rgs.add(new DinamicPanelAttrVo(consec, intMaxp, "xtype", "panel", "S"));consec++;
+			rgs.add(new DinamicPanelAttrVo(consec, intMaxp, "layout", "column", "S"));consec++;
+			rgs.add(new DinamicPanelAttrVo(consec, intMaxp, "region", "east", "S"));consec++;
+			if(vo.getColumnas() > 0){rgs.add(new DinamicPanelAttrVo(consec, intMaxp, "columns", String.valueOf(vo.getColumnas()), "N"));consec++;}
+		}else if(vo.getTipo().equals("centro")){
+			rgs.add(new DinamicPanelAttrVo(consec, intMaxp, "xtype", "panel", "S"));consec++;
+			rgs.add(new DinamicPanelAttrVo(consec, intMaxp, "layout", "column", "S"));consec++;
+			rgs.add(new DinamicPanelAttrVo(consec, intMaxp, "region", "center", "S"));consec++;
+			if(vo.getColumnas() > 0){rgs.add(new DinamicPanelAttrVo(consec, intMaxp, "columns", String.valueOf(vo.getColumnas()), "N"));consec++;}
 		}else if(vo.getTipo().equals("form_columns")){
 			rgs.add(new DinamicPanelAttrVo(consec, intMaxp, "xtype", "form", "S"));consec++;
 			rgs.add(new DinamicPanelAttrVo(consec, intMaxp, "layout", "column", "S"));consec++;
@@ -409,6 +437,17 @@ public class AdminPanelesDelegate {
 	private ArrayList<DinamicControlAttrVo> creaInsertGridAttr(DinamicAttrVo vo, int nControl, int nPanel){
 		ArrayList<DinamicControlAttrVo> rgs = new ArrayList<DinamicControlAttrVo>();
 		rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "columns", String.valueOf(consec), "S"));consec++;
+		rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "enableColumnHide", vo.getColumna_hidden(), "B"));consec++;
+		rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "enableColumnMove", vo.getColumna_move(), "B"));consec++;
+		rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "sortableColumns", vo.getColumna_orden(), "B"));consec++;
+		rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "enableColumnResize", vo.getColumna_resize(), "B"));consec++;
+		rgs.add(new DinamicControlAttrVo(consec, nControl,  nPanel, "bodyBorder", vo.getIsBodyBorder(), "B"));consec++;
+		rgs.add(new DinamicControlAttrVo(consec, nControl,  nPanel, "closable", vo.getIsCerrable(), "B"));consec++;
+		rgs.add(new DinamicControlAttrVo(consec, nControl,  nPanel, "collapsible", vo.getIsDesplegable(), "B"));consec++;
+		rgs.add(new DinamicControlAttrVo(consec, nControl,  nPanel, "frame", vo.getIsFondo(), "B"));consec++;
+		rgs.add(new DinamicControlAttrVo(consec, nControl,  nPanel, "resizable", vo.getIsResizable(), "B"));consec++;
+		if(!vo.getTitulo().equals("")){rgs.add(new DinamicControlAttrVo(consec,  nControl,  nPanel, "title", vo.getTitulo(), "S"));consec++;}
+		if(!vo.getTitulo_Aling().equals("")){rgs.add(new DinamicControlAttrVo(consec,  nControl,  nPanel, "titleAlign", vo.getTitulo_Aling(), "S"));consec++;}
 		if(!vo.getQuery().equals("")){
 			rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "query", String.valueOf(consec), "S"));
 			String sql = vo.getQuery().replaceAll("'", "''");
