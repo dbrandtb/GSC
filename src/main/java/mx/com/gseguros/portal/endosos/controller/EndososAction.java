@@ -1386,7 +1386,7 @@ public class EndososAction extends PrincipalCoreAction
 							(String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"), 
 							respEndCob.get("pv_nmsuplem_o"), rutaCarpeta, 
 							cdtipsitGS, sucursal, nmsolici, nmtramite, 
-							true, Ice2sigsWebServices.Operacion.INSERTA, tipomov, 
+							true, tipomov, 
 							(UserVO) session.get("USUARIO"));
 					/*
 					ejecutaWSrecibosEndoso((String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"),
@@ -2825,7 +2825,7 @@ public class EndososAction extends PrincipalCoreAction
 						estado, nmpoliza, 
 						nmsuplem, rutaCarpeta, 
 						cdtipsitGS, sucursal, nmsolici, ntramite, 
-						true, Ice2sigsWebServices.Operacion.INSERTA, tipomov, 
+						true, tipomov, 
 						(UserVO) session.get("USUARIO"));
 				/*
 				ejecutaWSrecibosEndoso(cdunieco, cdramo,
@@ -3282,7 +3282,7 @@ public class EndososAction extends PrincipalCoreAction
 						estado, nmpoliza, 
 						nmsuplem, rutaCarpeta, 
 						cdtipsitGS, sucursal, nmsolici, nmtramite, 
-						true, Ice2sigsWebServices.Operacion.INSERTA, cdtipsup, 
+						true, cdtipsup, 
 						(UserVO) session.get("USUARIO"));
 				/*
 				ejecutaWSrecibosEndoso(cdunieco, cdramo,
@@ -3712,7 +3712,7 @@ public class EndososAction extends PrincipalCoreAction
 						estado, nmpoliza, 
 						nmsuplem, rutaCarpeta, 
 						cdtipsitGS, sucursal, nmsolici, nmtramite, 
-						true, Ice2sigsWebServices.Operacion.INSERTA, cdtipsup, 
+						true, cdtipsup, 
 						(UserVO) session.get("USUARIO"));
 				/*
 				ejecutaWSrecibosEndoso(cdunieco, cdramo,
@@ -3974,7 +3974,7 @@ public class EndososAction extends PrincipalCoreAction
 			case CAMBIO_FORMA_PAGO:
 				// Ejecutamos el Web Service de Recibos:
 				ice2sigsWebServices.ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
-						rutaCarpeta, cdtipsitGS, sucursal, nmsolici, ntramiteEmi, true, Ice2sigsWebServices.Operacion.INSERTA, cdtipsup, 
+						rutaCarpeta, cdtipsitGS, sucursal, nmsolici, ntramiteEmi, true, cdtipsup, 
 						(UserVO) session.get("USUARIO"));
 				/*
 				ejecutaWSrecibosEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, 
@@ -3997,7 +3997,7 @@ public class EndososAction extends PrincipalCoreAction
 						estado, nmpoliza, 
 						nmsuplem, rutaCarpeta, 
 						cdtipsitGS, sucursal, nmsolici, ntramiteEmi, 
-						true, Ice2sigsWebServices.Operacion.INSERTA, cdtipsup, 
+						true, cdtipsup, 
 						(UserVO) session.get("USUARIO"));
 				/*
 				ejecutaWSrecibosEndoso(cdunieco, cdramo,
@@ -4465,7 +4465,7 @@ public class EndososAction extends PrincipalCoreAction
 						estado, nmpoliza, 
 						nmsuplem, rutaCarpeta, 
 						cdtipsitGS, sucursal, nmsolici, nmtramite, 
-						true, Ice2sigsWebServices.Operacion.INSERTA, tipomov, 
+						true, tipomov, 
 						(UserVO) session.get("USUARIO"));
 				/*
 				ejecutaWSrecibosEndoso(cdunieco, cdramo,
@@ -4802,7 +4802,7 @@ public class EndososAction extends PrincipalCoreAction
 						estado, nmpoliza, 
 						nmsuplem, null, 
 						cdtipsitGS, sucursal, nmsolici, ntramite, 
-						true, Ice2sigsWebServices.Operacion.INSERTA, cdtipsup, 
+						true, cdtipsup, 
 						(UserVO) session.get("USUARIO"));
 				/*
 				ejecutaWSrecibosEndoso(cdunieco, cdramo,
@@ -5116,7 +5116,7 @@ public class EndososAction extends PrincipalCoreAction
 						estado, nmpoliza, 
 						nmsuplem, null, 
 						cdtipsitGS, sucursal, nmsolici, ntramite, 
-						true, Ice2sigsWebServices.Operacion.INSERTA, cdtipsup, 
+						true, cdtipsup, 
 						(UserVO) session.get("USUARIO"));
 				/*
 				ejecutaWSrecibosEndoso(cdunieco, cdramo,
@@ -5758,7 +5758,7 @@ public class EndososAction extends PrincipalCoreAction
 						estado, nmpoliza, 
 						nmsuplem, null, 
 						cdtipsitGS, sucursal, nmsolici, ntramite, 
-						true, Ice2sigsWebServices.Operacion.INSERTA, cdtipsup, 
+						true, cdtipsup, 
 						(UserVO) session.get("USUARIO"));
 				/*
 				ejecutaWSrecibosEndoso(cdunieco, cdramo,
@@ -6002,7 +6002,7 @@ public class EndososAction extends PrincipalCoreAction
 						estado, nmpoliza, 
 						nmsuplem, null, 
 						cdtipsitGS, sucursal, nmsolici, ntramite, 
-						true, Ice2sigsWebServices.Operacion.INSERTA, cdtipsup, 
+						true, cdtipsup, 
 						(UserVO) session.get("USUARIO"));
 				/*
 				ejecutaWSrecibosEndoso(cdunieco, cdramo,

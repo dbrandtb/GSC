@@ -153,7 +153,7 @@ public interface Ice2sigsWebServices {
 	public boolean ejecutaWSrecibos(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String nmsuplem,
 			String rutaPoliza, String cdtipsitGS, String sucursal,
-			String nmsolici, String ntramite, boolean async, Ice2sigsWebServices.Operacion operacion,
+			String nmsolici, String ntramite, boolean async,
 			String tipoMov, UserVO userVO);
 	
 }
