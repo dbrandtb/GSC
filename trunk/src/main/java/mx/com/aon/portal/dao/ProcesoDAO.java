@@ -3633,7 +3633,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
         	recibo.setTotRec(rs.getInt("totRec"));
         	
         	recVO.setRecibo(recibo);
-        	recVO.setOperacion("TIPOPER");
+        	recVO.setOperacion(rs.getString("TIPOPER"));
         	
         	return recVO;
         }
