@@ -38,7 +38,7 @@ public class ProcesoResultadoDAOImpl extends AbstractManagerDAO implements Proce
 
 
 	@Override
-	public BaseVO obtieneMensaje(String msgId, String log, String cdUsuario, String dsPrograma) throws DaoException {
+	public String obtieneMensaje(String msgId, String log, String cdUsuario, String dsPrograma) throws DaoException {
 		try {
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("pv_msg_id_i", msgId);
@@ -48,7 +48,7 @@ public class ProcesoResultadoDAOImpl extends AbstractManagerDAO implements Proce
 			
 			Map<String, Object> mapResult = new ObtieneMensajeSP(getDataSource()).execute(params);
 			
-	        return new BaseVO(mapResult.get("pv_title_o").toString(), mapResult.get("pv_msg_text_o").toString());
+	        return mapResult.get("pv_msg_text_o").toString();
         
 		} catch(Exception e) {
         	throw new DaoException(e.getMessage(), e);

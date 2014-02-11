@@ -28,7 +28,8 @@ public abstract class AbstractManagerDAO extends JdbcDaoSupport {
      * @return Map con los objetos recuperados de la consulta al SP
      * @throws DaoException
      */
-    public Map<String, Object> ejecutaSP(StoredProcedure storedProcedure, Map parameters) throws DaoException {
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	public Map<String, Object> ejecutaSP(StoredProcedure storedProcedure, Map parameters) throws DaoException {
 		try {
 			Map<String, Object> mapResult = storedProcedure.execute(parameters);
 			
@@ -45,44 +46,43 @@ public abstract class AbstractManagerDAO extends JdbcDaoSupport {
     
     
     /**
-     * 
+     * Obtiene el mensaje asociado al msgId del servicio de datos
      * @param mapResult
-     * @return
+     * @return 
      * @throws Exception
      */
     private BaseVO traduceMensaje(Map<String, Object> mapResult) throws Exception {
     	
-    	String msgId = mapResult.get("pv_msg_id_o") != null ? mapResult.get("pv_msg_id_o").toString() : "";  
+    	String msgId    = mapResult.get("pv_msg_id_o") != null ? mapResult.get("pv_msg_id_o").toString() : "";  
         String msgTitle = mapResult.get("pv_title_o")  != null ? mapResult.get("pv_title_o").toString()  : "";
         logger.info(new StringBuilder("MsgId=").append(msgId).append(" ").append("MsgTitle=").append(msgTitle));
-    	
+        
+        // Obtenemos el msgText a partir del msgId:
+        String msgText = "";
         if(StringUtils.isNotBlank(msgId) ) {
-        	// Buscar el mensaje en properties, sino en BD:
+        	// Buscamos el msgText en properties, sino lo buscamos en BD:
         	ActionSupport actionSupport = new ActionSupport();
             if (!actionSupport.getText(msgId).equals(msgId)) {
-            	logger.info( new StringBuilder("MsgText=").append(actionSupport.getText(msgId)) );
-            	return new BaseVO(msgId, actionSupport.getText(msgId));
+            	msgText = actionSupport.getText(msgId);
             } else {
-            	
-            	BaseVO mensajeRespuesta = procesoResultadoDAO.obtieneMensaje(msgId, "0", null, null);
-            	
-            	if (mensajeRespuesta == null || StringUtils.isBlank(mensajeRespuesta.getKey()) || StringUtils.isBlank(mensajeRespuesta.getValue())) {
-    				String msgException = "No se encontró el mensaje de respuesta del servicio de datos, verifique los parámetros de salida";
-    				logger.error(msgException);
-    				throw new ApplicationException(msgException);
-    			}
-            	logger.info( new StringBuilder("MsgText=").append(mensajeRespuesta.getValue()) );
-    			if (mensajeRespuesta.getKey().equals(Constantes.MSG_TITLE_ERROR)) {
-    				String msgException = mensajeRespuesta.getValue(); 
-    				logger.error("Error de SP: " + msgException);
-    				throw new ApplicationException(msgException);
-    			}
-    			return new BaseVO(mensajeRespuesta.getKey(), mensajeRespuesta.getValue());
+            	msgText = procesoResultadoDAO.obtieneMensaje(msgId, "0", null, null);
             }
-        } else {
-        	logger.info("Parametros de estatus de salida vacios");
-        	return new BaseVO(msgId, msgTitle);
+            
+            if (StringUtils.isBlank(msgText)) {
+    			String msgException = "No se encontró el mensaje de respuesta del servicio de datos, verifique los parámetros de salida";
+    			logger.error(msgException);
+    			throw new ApplicationException(msgException);
+    		}
         }
+        logger.info( new StringBuilder("MsgText=").append(msgText) );
+        
+        // Si msgTitle es de tipo ERROR, lanzamos la excepción con el msgText obtenido:
+ 		if (msgTitle.equals(Constantes.MSG_TITLE_ERROR)) {
+ 			logger.error(new StringBuilder("Error de SP: ").append(msgText));
+ 			throw new ApplicationException(msgText);
+ 		}
+        
+		return new BaseVO(msgId, msgText);
     }
     
     
