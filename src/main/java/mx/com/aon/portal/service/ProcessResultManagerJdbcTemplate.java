@@ -42,30 +42,35 @@ public class ProcessResultManagerJdbcTemplate {
     public WrapperResultados processResultMessageId(WrapperResultados res) throws ApplicationException {
 
     	String msgId = res.getMsgId();
-    	logger.info(new StringBuilder("MsgId=").append(res.getMsgId()).append(" ").append("MsgTitle=").append(res.getMsgTitle()));
+    	String msgTitle = res.getMsgTitle();
+    	logger.info(new StringBuilder("MsgId=").append(msgId).append(" ").append("MsgTitle=").append(msgTitle));
+    	
+    	// Obtenemos el msgText a partir del msgId:
+        String msgText = "";
         if (StringUtils.isNotBlank(msgId)) {
-        	String msgText = null;
-        	// Buscar el mensaje en la BD si la clave no se encuentra en el properties:
+        	// Buscamos el msgText en properties, sino lo buscamos en BD:
 	    	ActionSupport actionSupport = new ActionSupport();
 	        if (!actionSupport.getText(msgId).equals(msgId)) {
 	        	msgText = actionSupport.getText(msgId);
 	        } else {
 	        	msgText = getResultMessage(msgId);
 	        }
-        	logger.info(new StringBuilder("MsgText=").append(msgText));
 
             if (StringUtils.isBlank(msgText)) {
             	String msgException = "No se encontró el mensaje de respuesta del servicio de datos, verifique los parámetros de salida";
                 logger.error(msgException);
                 throw new ApplicationException(msgException);
             }
-
-            if (res.getMsgTitle().equals(Constantes.MSG_TITLE_ERROR)) {
-				logger.error(new StringBuilder("Error de SP: ").append(msgText));
-				throw new ApplicationException(msgText);
-            }
-            
         }
+        logger.info(new StringBuilder("MsgText=").append(msgText));
+        
+        // Si msgTitle es de tipo ERROR, lanzamos la excepción con el msgText obtenido:
+        if (msgTitle.equals(Constantes.MSG_TITLE_ERROR)) {
+			logger.error(new StringBuilder("Error de SP: ").append(msgText));
+			throw new ApplicationException(msgText);
+        }
+        
+        res.setMsgText(msgText);
         return res;
     }
     

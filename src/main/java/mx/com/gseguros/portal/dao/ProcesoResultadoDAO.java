@@ -1,7 +1,6 @@
 package mx.com.gseguros.portal.dao;
 
 import mx.com.gseguros.exception.DaoException;
-import mx.com.gseguros.portal.general.model.BaseVO;
 
 /**
  * 
@@ -17,9 +16,9 @@ public interface ProcesoResultadoDAO {
 	 * @param log
 	 * @param cdUsuario
 	 * @param dsPrograma
-	 * @return Objeto con la clave y descripcion del mensaje
+	 * @return Mensaje de respuesta
 	 */
-	public BaseVO obtieneMensaje(String msgId, String log, String cdUsuario, String dsPrograma) 
+	public String obtieneMensaje(String msgId, String log, String cdUsuario, String dsPrograma) 
 			throws DaoException;
 
 }
