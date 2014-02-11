@@ -79,7 +79,10 @@ public class DinamicAttrVo implements java.io.Serializable  {
 	private String src;
 	private String dataIndex;
 	private String query;
-	
+	private String columna_hidden;
+	private String columna_move;
+	private String columna_orden;
+	private String columna_resize;
 	
 	public String getTitulo() {
 		return titulo;
@@ -686,6 +689,38 @@ public class DinamicAttrVo implements java.io.Serializable  {
 
 	public void setQuery(String query) {
 		this.query = query;
+	}
+
+	public String getColumna_hidden() {
+		return columna_hidden;
+	}
+
+	public void setColumna_hidden(String columna_hidden) {
+		this.columna_hidden = columna_hidden;
+	}
+
+	public String getColumna_move() {
+		return columna_move;
+	}
+
+	public void setColumna_move(String columna_move) {
+		this.columna_move = columna_move;
+	}
+
+	public String getColumna_orden() {
+		return columna_orden;
+	}
+
+	public void setColumna_orden(String columna_orden) {
+		this.columna_orden = columna_orden;
+	}
+
+	public String getColumna_resize() {
+		return columna_resize;
+	}
+
+	public void setColumna_resize(String columna_resize) {
+		this.columna_resize = columna_resize;
 	}
 
 }
