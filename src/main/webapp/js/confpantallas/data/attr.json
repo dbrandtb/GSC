@@ -5,6 +5,8 @@
     }],
 "attrFormulario":[{titulo: 'titulo',tipo: 'FormPanel',nombre: 'nombre panel',height: '200',width: '350'}],
 "attrWindow":[{titulo: 'titulo',tipo: 'Win'}],
+"attrBorder":[{tipo: 'Border'}],
+"attrBorderSur":[{tipo: 'Column'}],
 "attrColumnas":[{titulo: 'titulo',tipo: 'Column',nombre: 'nombre panel',height: '200',width: '350'}],
 "attrTabs":[{titulo: 'titulo',tipo: 'Tabs',nombre: 'nombre panel',height: '200',width: '350'}],
 "attrTabsIn":[{tipo: 'Column'}],
