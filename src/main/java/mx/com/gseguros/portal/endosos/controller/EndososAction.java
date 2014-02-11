@@ -5427,7 +5427,7 @@ public class EndososAction extends PrincipalCoreAction
 				mensaje="El endoso "+nsuplogi
 						+" se guard&oacute; en mesa de control para autorizaci&oacute;n "
 						+ "con n&uacute;mero de tr&aacute;mite "+tramiteGenerado+". "
-						+ "La p&oacute;liza reexpedida es "+nmpolizaNuevaPoliza+" con tr&aacutamite "
+						+ "La p&oacute;liza reexpedida es "+nmpolizaNuevaPoliza+" con tr&aacute;mite "
 						+ "de emisi&oacute;n "+ntramiteNuevaPoliza;
 			}
 			
