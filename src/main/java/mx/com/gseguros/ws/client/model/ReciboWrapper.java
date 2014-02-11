@@ -16,7 +16,7 @@ import org.apache.commons.lang.builder.ToStringStyle;
  * 
  */
 
-public class ReciboVO implements Serializable{
+public class ReciboWrapper implements Serializable{
 
    
     /**

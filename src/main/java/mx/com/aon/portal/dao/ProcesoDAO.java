@@ -30,7 +30,7 @@ import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utilerias;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSalud;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.Recibo;
-import mx.com.gseguros.ws.client.model.ReciboVO;
+import mx.com.gseguros.ws.client.model.ReciboWrapper;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.commons.lang.StringUtils;
@@ -3527,7 +3527,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     protected class DatosRecibosMapper  implements RowMapper {
     
     	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-    		ReciboVO recVO = new ReciboVO();
+    		ReciboWrapper recVO = new ReciboWrapper();
         	Recibo recibo = new Recibo();	    
         	//DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT); 
         	SimpleDateFormat spdf = new SimpleDateFormat("dd/MM/yyyy");

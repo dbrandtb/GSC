@@ -73,7 +73,7 @@ import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboGSE;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboGSResponseE;
 import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboRespuesta;
 import mx.com.gseguros.ws.client.ice2sigs.callback.ServicioGSServiceCallbackHandlerImpl;
-import mx.com.gseguros.ws.client.model.ReciboVO;
+import mx.com.gseguros.ws.client.model.ReciboWrapper;
 import mx.com.gseguros.ws.client.recibossigs.GeneradorReciboDxnWsServiceStub;
 import mx.com.gseguros.ws.client.recibossigs.GeneradorReciboDxnWsServiceStub.Empleado;
 import mx.com.gseguros.ws.client.recibossigs.GeneradorReciboDxnWsServiceStub.GeneraRecDxn;
@@ -661,10 +661,10 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 		params.put("pv_nmsuplem_i", nmsuplem);
 		
 		WrapperResultados result = null;
-		ArrayList<ReciboVO> recibos =  null;
+		ArrayList<ReciboWrapper> recibos =  null;
 		try {
 			result = kernelManager.obtenDatosRecibos(params);
-			recibos = (ArrayList<ReciboVO>) result.getItemList();
+			recibos = (ArrayList<ReciboWrapper>) result.getItemList();
 		} catch (Exception e1) {
 			logger.error("Error en llamar al PL de obtencion de RECIBOS",e1);
 			return false;
@@ -680,7 +680,7 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 		}
 		
 		Recibo recibo = null;
-		for(ReciboVO recVO: recibos){
+		for(ReciboWrapper recVO: recibos){
 			
 			try{
 				recibo = recVO.getRecibo();
@@ -740,7 +740,7 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 		logger.debug("*** Empieza generacion de URLs para Recibos ***");
 		
 		String visible = null;
-		for(ReciboVO recVO: recibos){
+		for(ReciboWrapper recVO: recibos){
 			recibo = recVO.getRecibo();
 			
 			/**
