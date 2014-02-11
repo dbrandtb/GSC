@@ -51,6 +51,20 @@ var _4_botones=
 	,menuDisabled : true
 	,sortable     : false
 };
+
+var _4_botonesGrid =
+[
+	<s:if test='%{getSmap1().get("editable")!=null&&getSmap1().get("editable").length()>0}'>
+	{
+	    text     : 'Agregar tr&aacute;mite'
+	    ,icon    : '${ctx}/resources/fam3icons/icons/add.png'
+	    ,handler : function()
+	    {
+	        mcdinFormNuevo.show();
+	    }
+	}
+	</s:if>
+];
 /*///////////////////*/
 ////// variables //////
 ///////////////////////
@@ -168,20 +182,8 @@ Ext.onReady(function()
     			    ,<s:property value="imap1.gridColumns" />
     			    ,_4_botones
     			]
-    			,tbar      :
-    			[
-    			    <s:if test='%{getSmap1().get("editable")!=null&&getSmap1().get("editable").length()>0}'>
-    				{
-    					text     : 'Agregar tr&aacute;mite'
-    					,icon    : '${ctx}/resources/fam3icons/icons/add.png'
-    					,handler : function()
-    				    {
-    						mcdinFormNuevo.show();
-    				    }
-    				}
-    			    </s:if>
-    			]
-    			,bbar       :
+    			,tbar      : _4_botonesGrid
+    			,bbar      :
     	        {
     	            displayInfo : true
     	            ,store      : mcdinStore
