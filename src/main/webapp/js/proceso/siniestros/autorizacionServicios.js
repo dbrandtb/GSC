@@ -431,7 +431,7 @@ Ext.onReady(function() {
 		colspan:2,						fieldLabel : 'Asegurado',			allowBlank: false,				displayField : 'value',		name:'cdperson',
         id:'idAsegurado',				labelWidth: 170,					width:500,						valueField   : 'key',
         forceSelection : false,			matchFieldWidth: false,				queryMode :'remote',			queryParam: 'params.cdperson',
-        store : storeAsegurados,		triggerAction: 'all',				editable:false,
+        store : storeAsegurados,		triggerAction: 'all',				//editable:false,
         listeners : {
 			'select' : function(combo, record) {
 					obtieneCDPerson = this.getValue();
@@ -470,7 +470,7 @@ Ext.onReady(function() {
 			            }
 			        });
 			        
-			        modificacionPolizas.show();
+			        modificacionPolizas.showAt(200,100);
 				}
 			}
     });
@@ -914,7 +914,7 @@ Ext.onReady(function() {
 	ventanaConceptosAutorizado= Ext.create('Ext.window.Window', {
 		renderTo: document.body,
 		title: 'Conceptos Autorizados',
-		height: 270,
+		//height: 200,
 		closeAction: 'hide',           
 		items:[panelConceptosAutorizados],
 		buttonAlign : 'center',
@@ -965,7 +965,7 @@ Ext.onReady(function() {
 	ventanaEqQuirurgicoBase= Ext.create('Ext.window.Window', {
 		renderTo: document.body,
 		title: 'Equipo quir&uacute;rgico base',
-		height: 270,
+		//height: 270,
 		closeAction: 'hide',
 		items:[panelEquipoQuirurgicoBase],		
 		buttonAlign : 'center',
@@ -1013,7 +1013,7 @@ Ext.onReady(function() {
 	ventanaEqQuirurgico= Ext.create('Ext.window.Window', {
 		renderTo: document.body,
 		title: 'Equipo quir&uacute;rgico',
-		height: 270,
+		//height: 270,
 		closeAction: 'hide',
 		items:[panelEquipoQuirurgico],		
 		buttonAlign : 'center',
@@ -1063,6 +1063,8 @@ Ext.onReady(function() {
 	//DATOS PARA EL PRIMER GRID --> CONCEPTOS AUTORIZADOS
 	Ext.define('EditorIncisos', {
 		extend: 'Ext.grid.Panel',
+		collapsible   : true,
+		titleCollapse : true,
 		requires: [
 		           'Ext.selection.CellModel',
 		           'Ext.grid.*',
@@ -1139,6 +1141,8 @@ Ext.onReady(function() {
 	//DATOS PARA EL SEGUDO GRID --> EQUIPO QUIRURGICO BASE
 	Ext.define('EditorIncisos2', {
 		extend: 'Ext.grid.Panel',
+		collapsible   : true,
+		titleCollapse : true,
 		requires: [
 		           'Ext.selection.CellModel',
 		           'Ext.grid.*',
@@ -1212,6 +1216,8 @@ Ext.onReady(function() {
 	//DATOS PARA EL TERCER GRID --> EQUIPO QUIRURGICO
 	Ext.define('EditorIncisos3', {
 		extend: 'Ext.grid.Panel',
+		collapsible   : true,
+		titleCollapse : true,
 		requires: [
 		           'Ext.selection.CellModel',
 		           'Ext.grid.*',
@@ -1468,10 +1474,10 @@ Ext.onReady(function() {
 	 			
 				if(idTipoAutorizacion !=3)
 				{
-					Ext.getCmp('idNumeroAnterior').hide();
-					Ext.getCmp('btnBuscar').hide();
+					//Ext.getCmp('idNumeroAnterior').hide();
+					//Ext.getCmp('btnBuscar').hide();
 				}else{
-					Ext.getCmp('btnBuscar').hide();
+					//Ext.getCmp('btnBuscar').hide();
 				}
 				
 				
@@ -1721,35 +1727,7 @@ modificacionClausula = Ext.create('Ext.window.Window',
 		[
 		 	panelClausula
 		 ]
-}).show();
-
-/*#####################################################################################################################################################
-#######################################################################################################################################################
-#######################################################################################################################################################*/
-	
-	
-	
-	
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}).showAt(50,100);
 
 
 
@@ -1835,15 +1813,41 @@ modificacionClausula = Ext.create('Ext.window.Window',
 			 			 	},
 			 			 	{
 			 			 		xtype       : 'textfield'		    ,fieldLabel : 'No. de autorizaci&oacute;n anterior',	id	: 'idNumeroAnterior',	
-			 			 		name       : 'nmautant'		,labelWidth	: 170
+			 			 		name       : 'nmautant'		,labelWidth	: 170,		readOnly   : true
 			 			 	}
 			 			 	,
-			 			 	Ext.create('Ext.Button',{
+			 			 	Ext.create('Ext.Button', {
+				 				 text: 'Buscar',
+				 				icon : _CONTEXT + '/resources/fam3icons/icons/folder.png',
+				 				 
+				 				 
+				 				handler: function() {
+				 					 Ext.create('Ext.window.Window',
+		 							 {
+			 						 	title        : 'Autorizaci&oacute;n de servicio'
+	 						 			//,modal       : true
+		 						 		,buttonAlign : 'center'
+	 						 			,width       : 750
+	 						 			,height      : 400
+	 						 			,autoScroll  : true
+	 						 			,loader      :
+	 						 			{
+	 						 				url       : _VER_AUTORIZACION_SERVICIO
+	 						 				,scripts  : true
+	 						 				,autoLoad : true
+	 						 				,params:{
+						                    	'params.nmautser':Ext.getCmp('idNumeroAnterior').getValue()
+						                    }
+	 						 			},
+		 							 }).showAt(150,150);
+				 				 }
+				 			 })	
+			 			 	/*Ext.create('Ext.Button',{
 			 			 			text: 'Buscar',
 			 			 			id:'btnBuscar',
 			 			 			icon : _CONTEXT + '/resources/fam3icons/icons/folder.png'
 			 			 			//falta la implementacion del boton, para cuando la busqueda se encuentre
-			 			 	})
+			 			 	})*/
 		 			 	]
 			 	}
 			 	,
@@ -1920,7 +1924,7 @@ modificacionClausula = Ext.create('Ext.window.Window',
 								            	'params.nmsituac':Ext.getCmp('idNmSituac').getValue()
 						                    }
 	 						 			},
-		 							 }).show();
+		 							 }).showAt(150,150);
 				 				 }
 				 			 })				
 			 			 ]

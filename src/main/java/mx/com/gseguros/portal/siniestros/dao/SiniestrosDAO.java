@@ -10,7 +10,7 @@ import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
 import mx.com.gseguros.portal.siniestros.model.CoberturaPolizaVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaManteniVO;
-import mx.com.gseguros.portal.siniestros.model.ConsultaPolizaVO;
+import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaPorcentajeVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaProveedorVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaTDETAUTSVO;
@@ -47,7 +47,7 @@ public interface SiniestrosDAO {
 	
 	public String guardarListaTDeTauts(HashMap<String, Object> paramsTDeTauts) throws DaoException;
 	
-	public List<ConsultaPolizaVO> obtieneListadoPoliza(String cdperson) throws DaoException;
+	public List<PolizaVO> obtieneListadoPoliza(String cdperson) throws DaoException;
 	
 	/* ############################################################################## 
 	 * ##################################### VERIFICAR ##############################*/

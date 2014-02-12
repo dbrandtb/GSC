@@ -9,7 +9,7 @@ import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
 import mx.com.gseguros.portal.siniestros.model.CoberturaPolizaVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaManteniVO;
-import mx.com.gseguros.portal.siniestros.model.ConsultaPolizaVO;
+import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaPorcentajeVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaProveedorVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaTDETAUTSVO;
@@ -43,7 +43,7 @@ public class SiniestrosAction extends ActionSupport{
     private List<ConsultaManteniVO> listaConsultaManteni;
     private List<ConsultaPorcentajeVO> listaPorcentaje;
     private List<HashMap<String,String>> datosTablas;
-    private List<ConsultaPolizaVO> listaPoliza;
+    private List<PolizaVO> listaPoliza;
     
     private boolean esHospitalario;
     private HashMap<String, String> loadForm;
@@ -56,6 +56,21 @@ public class SiniestrosAction extends ActionSupport{
      */
 	public String verCoberturas(){
 		logger.debug(" **** Entrando a verCoberturas ****");
+		try {
+			logger.debug("params=" + params);
+		}catch( Exception e){
+			logger.error(e.getMessage(), e);
+		}
+		success = true;
+		return SUCCESS;
+    }
+	
+	/**
+     * Función para la visualización de la autorizacion de servicio 
+     * @return params con los valores para hacer las consultas
+     */
+	public String verAutorizacionServicio(){
+		logger.debug(" **** Entrando a ver Autorizacion de servicio ****");
 		try {
 			logger.debug("params=" + params);
 		}catch( Exception e){
@@ -161,6 +176,85 @@ public class SiniestrosAction extends ActionSupport{
 					siniestrosManager.getEliminacionRegistros(params.get("nmautser"));
 					
 					List<AutorizacionServicioVO> lista = siniestrosManager.guardarAutorizacionServicio(paramsR);
+					if(lista!=null && !lista.isEmpty())
+					{
+						numeroAutorizacion = lista.get(0);
+						for(int i=0;i<datosTablas.size();i++)
+				   		{
+				   			HashMap<String, Object> paramsTDeTauts = new HashMap<String, Object>();
+				   			paramsTDeTauts.put("pv_nmautser_i",lista.get(0).getNmautser());
+							paramsTDeTauts.put("pv_cdtipaut_i",datosTablas.get(i).get("cdtipaut"));
+							paramsTDeTauts.put("pv_cdmedico_i",datosTablas.get(i).get("cdmedico"));
+							paramsTDeTauts.put("pv_cdtipmed_i",datosTablas.get(i).get("cdtipmed"));
+							paramsTDeTauts.put("pv_cdctp_i",datosTablas.get(i).get("cdcpt"));
+							paramsTDeTauts.put("pv_precio_i",datosTablas.get(i).get("precio"));
+							paramsTDeTauts.put("pv_cantporc_i",datosTablas.get(i).get("cantporc"));
+							paramsTDeTauts.put("pv_ptimport_i",datosTablas.get(i).get("ptimport"));
+							
+							//GUARDADO DE LOS DATOS PARA LAS TABLAS
+							siniestrosManager.guardaListaTDeTauts(paramsTDeTauts);
+							
+				   		}
+						
+					}
+			}catch( Exception e){
+				logger.error("Error al guardar la autorización de servicio ",e);
+	        return SUCCESS;
+	    }
+	    
+	    success = true;
+	    return SUCCESS;
+	}
+	
+	
+	/**
+	 * metodo para el guardado de la autorización de Servicio
+	 * @param Json con todos los valores del formulario y los grid
+	 * @return Lista AutorizaServiciosVO con la información de los asegurados
+	 */
+	public String guardaAltaTramite(){
+			logger.debug(" **** Entrando a guardado de Autorización de Servicio ****");
+			try {
+					//VALORES DE ENTRADA
+					HashMap<String, Object> paramsAtramite = new HashMap<String, Object>();
+					paramsAtramite.put("pv_contrarecibo_i",params.get("txtContraRecibo"));
+					paramsAtramite.put("pv_estado_i",params.get("txtEstado"));
+					paramsAtramite.put("pv_oficRecep_i",params.get("cmbOficReceptora"));
+					paramsAtramite.put("pv_oficEmis_i",params.get("cmbOficEmisora"));
+					paramsAtramite.put("pv_feRecepc_i",params.get("dtFechaRecepcion"));
+					paramsAtramite.put("pv_tipoAten_i",params.get("cmbTipoAtencion"));
+					paramsAtramite.put("pv_tipoPago_i",params.get("cmbTipoPago"));
+					paramsAtramite.put("pv_aseguaAf_i",params.get("cmbAseguradoAfectado"));
+					paramsAtramite.put("pv_benefici_i",params.get("cmbBeneficiario"));
+					paramsAtramite.put("pv_proveedo_i",params.get("cmbProveedor"));
+					paramsAtramite.put("pv_nmfactur_i",params.get("txtNoFactura"));
+					paramsAtramite.put("pv_importes_i",params.get("txtImporte"));
+					paramsAtramite.put("pv_fechaFac_i",params.get("dtFechaFactura"));
+					
+					if(params.get("cmbTipoPago") != "1")
+					{
+						for(int i=0;i<datosTablas.size();i++)
+				   		{
+				   			HashMap<String, Object> paramsTDeTauts = new HashMap<String, Object>();
+				   			//paramsTDeTauts.put("pv_nmautser_i",lista.get(0).getNmautser());
+							paramsTDeTauts.put("pv_cdtipaut_i",datosTablas.get(i).get("cdtipaut"));
+							paramsTDeTauts.put("pv_cdmedico_i",datosTablas.get(i).get("cdmedico"));
+							paramsTDeTauts.put("pv_cdtipmed_i",datosTablas.get(i).get("cdtipmed"));
+							paramsTDeTauts.put("pv_cdctp_i",datosTablas.get(i).get("cdcpt"));
+							paramsTDeTauts.put("pv_precio_i",datosTablas.get(i).get("precio"));
+							paramsTDeTauts.put("pv_cantporc_i",datosTablas.get(i).get("cantporc"));
+							paramsTDeTauts.put("pv_ptimport_i",datosTablas.get(i).get("ptimport"));
+							
+							//GUARDADO DE LOS DATOS PARA LAS TABLAS
+							siniestrosManager.guardaListaTDeTauts(paramsTDeTauts);
+							
+				   		}
+					}
+					
+					//ELIMINACION DE LOS REGISTROS EN LA TABLA
+					siniestrosManager.getEliminacionRegistros(params.get("nmautser"));
+					
+					List<AutorizacionServicioVO> lista = siniestrosManager.guardarAutorizacionServicio(paramsAtramite);
 					if(lista!=null && !lista.isEmpty())
 					{
 						numeroAutorizacion = lista.get(0);
@@ -308,7 +402,7 @@ public class SiniestrosAction extends ActionSupport{
    public String consultaListaPoliza(){
    	logger.debug(" **** Entrando al método de Lista de Poliza ****");
    	try {
-				List<ConsultaPolizaVO> lista = siniestrosManager.getConsultaListaPoliza(params.get("cdperson"));
+				List<PolizaVO> lista = siniestrosManager.getConsultaListaPoliza(params.get("cdperson"));
 				if(lista!=null && !lista.isEmpty())	listaPoliza = lista;
 			}catch( Exception e){
 				logger.error("Error al obtener los datos de la poliza ",e);
@@ -643,11 +737,11 @@ public class SiniestrosAction extends ActionSupport{
 	
 	
 
-	public List<ConsultaPolizaVO> getListaPoliza() {
+	public List<PolizaVO> getListaPoliza() {
 		return listaPoliza;
 	}
 
-	public void setListaPoliza(List<ConsultaPolizaVO> listaPoliza) {
+	public void setListaPoliza(List<PolizaVO> listaPoliza) {
 		this.listaPoliza = listaPoliza;
 	}
 

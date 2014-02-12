@@ -9,7 +9,7 @@
         <script type="text/javascript">
             var _CONTEXT = '${ctx}';
             var mesConUrlLoadCatalo    				= '<s:url namespace="/catalogos"       action="obtieneCatalogo" />';
-            var _URL_TIPOS_PENALIZACION				= _CONTEXT + '/js/proceso/siniestros/tiposPenalizacion.json';
+            //var _URL_TIPOS_PENALIZACION				= _CONTEXT + '/js/proceso/siniestros/tiposPenalizacion.json';
             var _CAT_AUTORIZACION				    = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_SUCURSALES_ADMIN"/>';
             var _URL_TIPO_AUTORIZACION				= _CONTEXT + '/js/proceso/siniestros/tiposAutorizacion.json';
             var _HISTORIAL_RECLAMACIONES    		= '<s:url namespace="/siniestros"      	action="historialReclamaciones" />';
@@ -26,17 +26,18 @@
             var _URL_CONSULTA_DEDUCIBLE_COPAGO		= '<s:url namespace="/siniestros" 		action="consultaListaDatSubGeneral" />';
             var _URL_CONSULTA_LISTADO_POLIZA		= '<s:url namespace="/siniestros" 		action="consultaListaPoliza" />';
             
-            var _URL_LISTA_TABULADOR					= '<s:url namespace="/siniestros" action="consultaListaPorcentaje" />';
+            var _URL_LISTA_TABULADOR				= '<s:url namespace="/siniestros" action="consultaListaPorcentaje" />';
             var _URL_LISTA_TMANTENI					= '<s:url namespace="/siniestros" action="consultaListaManteni" />';
             var _URL_LISTADO_CONCEP_EQUIP    		= '<s:url namespace="/siniestros" action="consultaListaTDeTauts" />';
             
             var _URL_GUARDA_AUTORIZACION			= '<s:url namespace="/siniestros" action="guardaAutorizacionServicio" />';
+            var _VER_AUTORIZACION_SERVICIO 			= '<s:url namespace="/siniestros"      	action="verAutorizacionServicio" />';
             
             var _MONTO_BASE ='21000';
             
         </script>
-        <!-- <script type="text/javascript" src="${ctx}/resources/scripts/util/extjs4_utils.js"></script>-->
         <script type="text/javascript" src="${ctx}/js/proceso/siniestros/autorizacionServicios.js"></script>
+        <!-- <script type="text/javascript" src="${ctx}/js/proceso/siniestros/verAutorizacionServicios.js"></script> -->
         
     </head>
     <body>
