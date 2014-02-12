@@ -10,20 +10,18 @@ import org.apache.log4j.Logger;
 @Deprecated
 public class WrapperResultadosGeneric implements WrapperResultadosBuilder {
 
+	@SuppressWarnings("unused")
 	private static Logger logger = Logger.getLogger(AbstractManagerDAO.class);
 	
-    public WrapperResultados build(Map map) throws SQLException {
+    @SuppressWarnings("rawtypes")
+	public WrapperResultados build(Map map) throws SQLException {
         WrapperResultados wrapperResultados = new WrapperResultados();
         String msgId = "";
         String title = "";
-
          if (map.get("pv_msg_id_o") != null && map.get("pv_title_o") != null) {
               msgId = (map.get("pv_msg_id_o")).toString();
               title = (map.get("pv_title_o")).toString();
-         } else {
-        	 logger.info("Parametros de estatus de salida vacios");
          }
-
          wrapperResultados.setMsgId(msgId);
          wrapperResultados.setMsgTitle(title);
          return wrapperResultados;
