@@ -61,8 +61,9 @@ public class ProcessResultManagerJdbcTemplate {
                 logger.error(msgException);
                 throw new ApplicationException(msgException);
             }
+            
+            logger.info(new StringBuilder("MsgText=").append(msgText));
         }
-        logger.info(new StringBuilder("MsgText=").append(msgText));
         
         // Si msgTitle es de tipo ERROR, lanzamos la excepción con el msgText obtenido:
         if (msgTitle.equals(Constantes.MSG_TITLE_ERROR)) {
