@@ -680,6 +680,27 @@ Ext.onReady(function() {
                     });
                 }
             }
+        }, {
+        	id: 'tbRecibos',
+        	title: 'RECIBOS',
+        	loader: {
+        		url: _URL_LOADER_RECIBOS,
+        		scripts: true,
+        		autoLoad: false
+        	},
+        	listeners: {
+        		activate: function(tab) {
+        			tab.loader.load({
+        				params : {
+                            'params.cdunieco': panelBusqueda.down('form').getForm().findField("params.cdunieco").getValue(),
+                            'params.cdramo'  : panelBusqueda.down('form').getForm().findField("params.cdramo").getValue(),
+                            'params.estado'  : panelBusqueda.down('form').getForm().findField("params.estado").getValue(),
+                            'params.nmpoliza': panelBusqueda.down('form').getForm().findField("params.nmpoliza").getValue(),
+                            'params.nmsuplem': panelBusqueda.down('form').getForm().findField("params.suplemento").getValue()
+                        }
+        			});
+        		}
+        	}
         }]    
     });
     

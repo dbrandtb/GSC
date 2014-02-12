@@ -33,6 +33,7 @@
         <pattern>/endosos/endosoExtraprima.action</pattern>
         <pattern>/endosos/endosoFormaPago.action</pattern>
         <pattern>/endosos/endosoAgente.action</pattern>
+        <pattern>/general/obtieneRecibos.action</pattern>
         <pattern>/catalogos/agregaUsuarios.action</pattern>
         <pattern>/siniestros/calculosReclamaciones.action</pattern>
         

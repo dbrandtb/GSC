@@ -18,6 +18,7 @@
     <include file="struts/config/struts-flujos-endosos.xml"/>
     <include file="struts/config/struts-flujos-rehabilitacion.xml"/>
     <include file="struts/config/struts-flujos-siniestros.xml"/>
+    <include file="struts/config/struts-general.xml"/>
     <include file="struts/config/struts-mesacontrol.xml"/>
     <include file="struts/config/struts-portal.xml"/>
     <include file="struts/config/struts-seguridad.xml"/>
