@@ -19,6 +19,7 @@
             var _URL_CONSULTA_RECIBOS_AGENTE =      '<s:url namespace="/consultasPoliza" action="consultaRecibosAgente" />';
             var _URL_CONSULTA_COPAGOS_POLIZA =      '<s:url namespace="/consultasPoliza" action="consultaCopagosPoliza" />';
             var _URL_CONSULTA_DOCUMENTOS =          '<s:url namespace="/documentos" action="ventanaDocumentosPoliza" />';
+            var _URL_LOADER_RECIBOS      =          '<s:url namespace="/general" action="loadRecibos" />';
             
             var _MSG_ERROR =                           'Error';
             var _MSG_INFO  =                           'Info';
