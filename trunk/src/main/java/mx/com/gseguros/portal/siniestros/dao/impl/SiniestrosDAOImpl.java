@@ -16,7 +16,7 @@ import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
 import mx.com.gseguros.portal.siniestros.model.CoberturaPolizaVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaManteniVO;
-import mx.com.gseguros.portal.siniestros.model.ConsultaPolizaVO;
+import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaPorcentajeVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaProveedorVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaTDETAUTSVO;
@@ -712,13 +712,13 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 
 
 	@Override
-	public List<ConsultaPolizaVO> obtieneListadoPoliza(String cdperson)
+	public List<PolizaVO> obtieneListadoPoliza(String cdperson)
 			throws DaoException {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdperson_i", cdperson);
 		
 		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerListadoPoliza(this.getDataSource()), params);
-		return (List<ConsultaPolizaVO>) resultadoMap.get("pv_registro_o");
+		return (List<PolizaVO>) resultadoMap.get("pv_registro_o");
 	}
 	protected class ObtenerListadoPoliza extends StoredProcedure
 	{
@@ -735,7 +735,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	
 	protected class DatosListaPoliza  implements RowMapper {
         public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-        	ConsultaPolizaVO consulta = new ConsultaPolizaVO();
+        	PolizaVO consulta = new PolizaVO();
         	consulta.setCdunieco(rs.getString("CDUNIECO"));
         	consulta.setCdramo(rs.getString("CDRAMO"));
         	consulta.setEstado(rs.getString("ESTADO"));

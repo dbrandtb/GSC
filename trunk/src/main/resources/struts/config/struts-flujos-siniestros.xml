@@ -242,6 +242,10 @@
     		<result>/jsp-script/proceso/siniestros/verCoberturas.jsp</result>
 		</action>
 		
+		<action name="verAutorizacionServicio" class="siniestrosAction" method="verAutorizacionServicio">
+    		<result>/jsp-script/proceso/siniestros/verAutorizacionServicios.jsp</result>
+		</action>
+		
 		<action name="revisionDocumentos"  class="siniestrosAction" method="execute">
     		<result>/jsp-script/proceso/siniestros/revisionDocumentos.jsp</result>
 		</action>

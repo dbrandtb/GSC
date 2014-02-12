@@ -62,6 +62,7 @@
         
         <pattern>/siniestros/historialReclamaciones.action</pattern>
         <pattern>/siniestros/verCoberturas.action</pattern>
+        <pattern>/siniestros/verAutorizacionServicio.action</pattern>
         <pattern>/siniestros/revisionDocumentos.action</pattern>
         
 	</decorator>
