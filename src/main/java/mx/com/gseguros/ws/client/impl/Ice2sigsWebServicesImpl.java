@@ -108,6 +108,7 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 		ServicioGSServiceStub stubGS = null;
 
 		try {
+			logger.info(new StringBuffer("endpoint a invocar=").append(endpoint));
 			stubGS = new ServicioGSServiceStub(endpoint);
 		} catch (AxisFault e) {
 			logger.error(e);
@@ -143,6 +144,7 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 		ServicioGSServiceStub stubGS = null;
 		
 		try {
+			logger.info(new StringBuffer("endpoint a invocar=").append(endpoint));
 			stubGS = new ServicioGSServiceStub(endpoint);
 		} catch (AxisFault e) {
 			logger.error(e);
@@ -190,6 +192,7 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 		ServicioGSServiceStub stubGS = null;
 		
 		try {
+			logger.info(new StringBuffer("endpoint a invocar=").append(endpoint));
 			stubGS = new ServicioGSServiceStub(endpoint);
 		} catch (AxisFault e) {
 			logger.error(e);
@@ -225,6 +228,7 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 		ServicioGSServiceStub stubGS = null;
 		
 		try {
+			logger.info(new StringBuffer("endpoint a invocar=").append(endpoint));
 			stubGS = new ServicioGSServiceStub(endpoint);
 		} catch (AxisFault e) {
 			logger.error(e);
@@ -260,6 +264,7 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 		ServicioGSServiceStub stubGS = null;
 		
 		try {
+			logger.info(new StringBuffer("endpoint a invocar=").append(endpoint));
 			stubGS = new ServicioGSServiceStub(endpoint);
 		} catch (AxisFault e) {
 			logger.error(e);
@@ -295,6 +300,7 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 		ServicioGSServiceStub stubGS = null;
 		
 		try {
+			logger.info(new StringBuffer("endpoint a invocar=").append(endpoint));
 			stubGS = new ServicioGSServiceStub(endpoint);
 		} catch (AxisFault e) {
 			logger.error(e);
@@ -342,6 +348,7 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 		ServicioGSServiceStub stubGS = null;
 		
 		try {
+			logger.info(new StringBuffer("endpoint a invocar=").append(endpoint));
 			stubGS = new ServicioGSServiceStub(endpoint);
 		} catch (AxisFault e) {
 			logger.error(e);
@@ -378,6 +385,7 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 		ServicioGSServiceStub stubGS = null;
 		
 		try {
+			logger.info(new StringBuffer("endpoint a invocar=").append(endpoint));
 			stubGS = new ServicioGSServiceStub(endpoint);
 		} catch (AxisFault e) {
 			logger.error(e);
@@ -413,6 +421,7 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 		ServicioGSServiceStub stubGS = null;
 		
 		try {
+			logger.info(new StringBuffer("endpoint a invocar=").append(endpoint));
 			stubGS = new ServicioGSServiceStub(endpoint);
 		} catch (AxisFault e) {
 			logger.error(e);
@@ -448,6 +457,7 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 		ServicioGSServiceStub stubGS = null;
 		
 		try {
+			logger.info(new StringBuffer("endpoint a invocar=").append(endpoint));
 			stubGS = new ServicioGSServiceStub(endpoint);
 		} catch (AxisFault e) {
 			logger.error(e);
@@ -483,6 +493,7 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 		ServicioGSServiceStub stubGS = null;
 		
 		try {
+			logger.info(new StringBuffer("endpoint a invocar=").append(endpoint));
 			stubGS = new ServicioGSServiceStub(endpoint);
 		} catch (AxisFault e) {
 			logger.error(e);
@@ -518,6 +529,7 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 		ServicioGSServiceStub stubGS = null;
 		
 		try {
+			logger.info(new StringBuffer("endpoint a invocar=").append(endpoint));
 			stubGS = new ServicioGSServiceStub(endpoint);
 		} catch (AxisFault e) {
 			logger.error(e);
@@ -552,6 +564,7 @@ public class Ice2sigsWebServicesImpl implements Ice2sigsWebServices {
 		GeneradorReciboDxnWsServiceStub stubGS = null;
 		
 		try {
+			logger.info(new StringBuffer("endpoint a invocar=").append(endpoint));
 			stubGS = new GeneradorReciboDxnWsServiceStub(endpoint);
 		} catch (AxisFault e) {
 			logger.error(e);
