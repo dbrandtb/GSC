@@ -28,9 +28,9 @@ import mx.com.gseguros.portal.emision.model.DatosRecibosDxNVO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utilerias;
-import mx.com.gseguros.ws.client.model.ReciboWrapper;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSalud;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Recibo;
+import mx.com.gseguros.ws.ice2sigs.client.model.ReciboWrapper;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.commons.lang.StringUtils;

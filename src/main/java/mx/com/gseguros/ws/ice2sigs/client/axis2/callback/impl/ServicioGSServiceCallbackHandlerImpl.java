@@ -1,4 +1,4 @@
-package mx.com.gseguros.ws.ice2sigs.client.axis2.callback;
+package mx.com.gseguros.ws.ice2sigs.client.axis2.callback.impl;
 
 import java.util.HashMap;
 

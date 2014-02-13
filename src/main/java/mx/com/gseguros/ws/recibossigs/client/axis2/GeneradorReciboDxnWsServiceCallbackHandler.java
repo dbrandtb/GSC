@@ -8,7 +8,6 @@
 
     package mx.com.gseguros.ws.recibossigs.client.axis2;
 
-import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub.GeneraRecDxnResponseE;
 
     /**
      *  GeneradorReciboDxnWsServiceCallbackHandler Callback class, Users can extend this class and implement

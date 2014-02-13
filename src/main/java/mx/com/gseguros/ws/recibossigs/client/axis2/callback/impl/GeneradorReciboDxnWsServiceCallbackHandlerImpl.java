@@ -1,16 +1,8 @@
-package mx.com.gseguros.ws.recibossigs.client.axis2.callback;
+package mx.com.gseguros.ws.recibossigs.client.axis2.callback.impl;
 
 import java.util.HashMap;
 
-import org.jfree.util.Log;
-
 import mx.com.aon.kernel.service.impl.KernelManagerSustitutoImpl;
-import mx.com.gseguros.exception.ApplicationException;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceCallbackHandler;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludGSResponseE;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludRespuesta;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboGSResponseE;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboRespuesta;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService.Estatus;
 import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceCallbackHandler;
 import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub.CalendarioEntidad;
