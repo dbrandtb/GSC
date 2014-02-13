@@ -4,13 +4,13 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
 	<!-- WS ice2sigs -->
-	<bean id="ice2sigsServiceImpl" class="mx.com.gseguros.ws.client.impl.Ice2sigsServiceImpl">
+	<bean id="ice2sigsServiceImpl" class="mx.com.gseguros.ws.ice2sigs.service.impl.Ice2sigsServiceImpl">
 	   <property name="kernelManager" ref="kernelManagerSustituto"/>
 	   <property name="endpoint" value="${url.ws.ice2sigs}"></property>
 	   <property name="urlImpresionRecibos" value="${url.imp.recibos}"></property>
 	</bean>	
 	
-	<bean id="servicioGSServiceCallbackHandlerImpl" class="mx.com.gseguros.ws.client.ice2sigs.callback.ServicioGSServiceCallbackHandlerImpl" scope="prototype">
+	<bean id="servicioGSServiceCallbackHandlerImpl" class="mx.com.gseguros.ws.ice2sigs.client.axis2.callback.impl.ServicioGSServiceCallbackHandlerImpl" scope="prototype">
 	   <property name="kernelManager" ref="kernelManagerSustituto"/>
 	</bean>
 	
