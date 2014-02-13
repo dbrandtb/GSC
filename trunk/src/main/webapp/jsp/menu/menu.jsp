@@ -18,10 +18,12 @@
 	<body>
 		<div id="header">
 			<div class="wrapper">
-				<font style="font-size: 17px;font-weight: bold;font-family: tahoma, arial, helvetica;padding: 20px 0px 0px 0px;">
-				    BIENVENIDO USUARIO:
+			    <br/>
+				<font style="font-size: 17px;font-family:calibri,tahoma,arial,helvetica;padding: 20px 0px 0px 0px;">
+				    Bienvenido
 				    <s:if test="%{#session.containsKey('USUARIO')}">
-					   <s:property value="%{#session['USUARIO'].name}" />
+					    usuario: <s:property value="%{#session['USUARIO'].name}" />
+					    rol:     <s:property value="%{#session['USUARIO'].rolActivo.objeto.value}" />
 				    </s:if>
 				</font>
             	<div>            		
