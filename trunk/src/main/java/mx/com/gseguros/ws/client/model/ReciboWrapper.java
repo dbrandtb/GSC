@@ -5,7 +5,7 @@ package mx.com.gseguros.ws.client.model;
 
 import java.io.Serializable;
 
-import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.Recibo;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Recibo;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;

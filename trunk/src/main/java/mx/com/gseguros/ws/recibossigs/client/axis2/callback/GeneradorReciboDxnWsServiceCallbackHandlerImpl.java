@@ -1,4 +1,4 @@
-package mx.com.gseguros.ws.client.recibossigs.callback;
+package mx.com.gseguros.ws.recibossigs.client.axis2.callback;
 
 import java.util.HashMap;
 
@@ -6,16 +6,16 @@ import org.jfree.util.Log;
 
 import mx.com.aon.kernel.service.impl.KernelManagerSustitutoImpl;
 import mx.com.gseguros.exception.ApplicationException;
-import mx.com.gseguros.ws.client.Ice2sigsWebServices.Estatus;
-import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceCallbackHandler;
-import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSaludGSResponseE;
-import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSaludRespuesta;
-import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboGSResponseE;
-import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboRespuesta;
-import mx.com.gseguros.ws.client.recibossigs.GeneradorReciboDxnWsServiceCallbackHandler;
-import mx.com.gseguros.ws.client.recibossigs.GeneradorReciboDxnWsServiceStub.CalendarioEntidad;
-import mx.com.gseguros.ws.client.recibossigs.GeneradorReciboDxnWsServiceStub.GeneraRecDxnResponseE;
-import mx.com.gseguros.ws.client.recibossigs.GeneradorReciboDxnWsServiceStub.GeneradorRecibosDxnRespuesta;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceCallbackHandler;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludGSResponseE;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludRespuesta;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboGSResponseE;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboRespuesta;
+import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService.Estatus;
+import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceCallbackHandler;
+import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub.CalendarioEntidad;
+import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub.GeneraRecDxnResponseE;
+import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub.GeneradorRecibosDxnRespuesta;
 
 public class GeneradorReciboDxnWsServiceCallbackHandlerImpl extends
 GeneradorReciboDxnWsServiceCallbackHandler {

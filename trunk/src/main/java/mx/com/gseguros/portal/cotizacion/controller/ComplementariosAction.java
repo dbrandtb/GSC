@@ -29,13 +29,12 @@ import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
-import mx.com.gseguros.ws.client.Ice2sigsWebServices;
-import mx.com.gseguros.ws.client.Ice2sigsWebServices.Estatus;
-import mx.com.gseguros.ws.client.Ice2sigsWebServices.Operacion;
-import mx.com.gseguros.ws.client.recibossigs.GeneradorReciboDxnWsServiceStub.CalendarioEntidad;
-import mx.com.gseguros.ws.client.recibossigs.GeneradorReciboDxnWsServiceStub.Empleado;
-import mx.com.gseguros.ws.client.recibossigs.GeneradorReciboDxnWsServiceStub.GeneradorRecibosDxnRespuesta;
-import mx.com.gseguros.ws.client.recibossigs.GeneradorReciboDxnWsServiceStub.PolizaEntidad;
+import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
+import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService.Estatus;
+import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub.CalendarioEntidad;
+import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub.Empleado;
+import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub.GeneradorRecibosDxnRespuesta;
+import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub.PolizaEntidad;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
@@ -54,7 +53,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	private Item fields;
 	
 	private KernelManagerSustituto kernelManager;
-	private transient Ice2sigsWebServices ice2sigsWebServices;
+	private transient Ice2sigsService ice2sigsService;
 	
 	private Map<String, String> panel1;
 	private Map<String, String> panel2;
@@ -1177,14 +1176,14 @@ public class ComplementariosAction extends PrincipalCoreAction
 			//TODO:ELIMINAR ejecutaWSclienteSalud(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, );
 			//PolizaVO poliza = new PolizaVO();
 			// Ejecutamos el Web Service de Cliente Salud:
-			ice2sigsWebServices.ejecutaWSclienteSalud(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, Ice2sigsWebServices.Operacion.INSERTA, (UserVO) session.get("USUARIO"));
+			ice2sigsService.ejecutaWSclienteSalud(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, Ice2sigsService.Operacion.INSERTA, (UserVO) session.get("USUARIO"));
 			
 			String tipoMov = "1";
 			
 			if(StringUtils.isNotBlank(esDxN) && "S".equalsIgnoreCase(esDxN)){
 				
 				// Ejecutamos el Web Service de Recibos:
-				ice2sigsWebServices.ejecutaWSrecibos(_cdunieco, _cdramo,
+				ice2sigsService.ejecutaWSrecibos(_cdunieco, _cdramo,
 						edoPoliza, _nmpoliza, 
 						_nmsuplem, rutaCarpeta,
 						cdtipsitGS, sucursal, panel1.get("pv_nmpoliza"), panel1.get("pv_ntramite"), 
@@ -1202,7 +1201,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			}else{
 				
 				// Ejecutamos el Web Service de Recibos:
-				ice2sigsWebServices.ejecutaWSrecibos(_cdunieco, _cdramo,
+				ice2sigsService.ejecutaWSrecibos(_cdunieco, _cdramo,
 						edoPoliza, _nmpoliza, 
 						_nmsuplem, rutaCarpeta,
 						cdtipsitGS, sucursal, panel1.get("pv_nmpoliza"),panel1.get("pv_ntramite"), 
@@ -1321,7 +1320,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		//String operacion = map1.get("operacion");
 
 		// Ejecutamos el Web Service de Cliente Salud:
-		ice2sigsWebServices.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, Ice2sigsWebServices.Operacion.INSERTA, (UserVO) session.get("USUARIO"));
+		ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, Ice2sigsService.Operacion.INSERTA, (UserVO) session.get("USUARIO"));
 		
 		success = true;
 		return SUCCESS;
@@ -1347,7 +1346,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String tipoMov = "1";
 		
 		// Ejecutamos el Web Service de Recibos:
-		ice2sigsWebServices.ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, null, cdtipsitGS, sucursal, nmsolici, nmtramite, true, tipoMov, (UserVO) session.get("USUARIO"));
+		ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, null, cdtipsitGS, sucursal, nmsolici, nmtramite, true, tipoMov, (UserVO) session.get("USUARIO"));
 		//ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, null, cdtipsitGS, sucursal, nmsolici, nmtramite, true, operacion);
 
 		success = true;
@@ -1406,7 +1405,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			polizaEnt.setRetenedoraEmp(Integer.parseInt(datosRecDxN.getRetenedoraEmp()));
 			polizaEnt.setSucursalEmi(Integer.parseInt(datosRecDxN.getSucursalEmi()));
 			
-			calendarios = ice2sigsWebServices.generarRecibosDxNGS(empleado, polizaEnt, this.getText("url.ws.ice2sigs.recdxn"), null, false);
+			calendarios = ice2sigsService.generarRecibosDxNGS(empleado, polizaEnt, this.getText("url.ws.ice2sigs.recdxn"), null, false);
 			
 		}catch(Exception e){
 			logger.error("Error al generar los datos de Recibos DxN: " + e.getMessage()
@@ -1831,8 +1830,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 		this.gridResultados = gridResultados;
 	}
 
-	public void setIce2sigsWebServices(Ice2sigsWebServices ice2sigsWebServices) {
-		this.ice2sigsWebServices = ice2sigsWebServices;
+	public void setIce2sigsService(Ice2sigsService ice2sigsService) {
+		this.ice2sigsService = ice2sigsService;
 	}
 
 	public String getMensajeRespuesta() {

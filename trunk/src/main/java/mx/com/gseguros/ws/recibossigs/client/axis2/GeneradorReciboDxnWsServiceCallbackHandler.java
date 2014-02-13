@@ -6,7 +6,9 @@
  * by the Apache Axis2 version: 1.5.1  Built on : Oct 19, 2009 (10:59:00 EDT)
  */
 
-    package mx.com.gseguros.ws.client.recibossigs;
+    package mx.com.gseguros.ws.recibossigs.client.axis2;
+
+import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub.GeneraRecDxnResponseE;
 
     /**
      *  GeneradorReciboDxnWsServiceCallbackHandler Callback class, Users can extend this class and implement
@@ -49,7 +51,7 @@
             * override this method for handling normal response from generaRecDxn operation
             */
            public void receiveResultgeneraRecDxn(
-                    mx.com.gseguros.ws.client.recibossigs.GeneradorReciboDxnWsServiceStub.GeneraRecDxnResponseE result
+                    mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub.GeneraRecDxnResponseE result
                         ) {
            }
 

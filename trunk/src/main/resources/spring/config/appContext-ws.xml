@@ -4,7 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
 	<!-- WS ice2sigs -->
-	<bean id="ice2sigsWebServices" class="mx.com.gseguros.ws.client.impl.Ice2sigsWebServicesImpl">
+	<bean id="ice2sigsServiceImpl" class="mx.com.gseguros.ws.client.impl.Ice2sigsServiceImpl">
 	   <property name="kernelManager" ref="kernelManagerSustituto"/>
 	   <property name="endpoint" value="${url.ws.ice2sigs}"></property>
 	   <property name="urlImpresionRecibos" value="${url.imp.recibos}"></property>

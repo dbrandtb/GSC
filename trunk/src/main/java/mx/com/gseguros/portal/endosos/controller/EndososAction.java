@@ -24,7 +24,7 @@ import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
-import mx.com.gseguros.ws.client.Ice2sigsWebServices;
+import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -48,7 +48,7 @@ public class EndososAction extends PrincipalCoreAction
 	private EndososManager           endososManager;
 	private KernelManagerSustituto   kernelManager;
 	private PantallasManager         pantallasManager;
-	private transient Ice2sigsWebServices ice2sigsWebServices;
+	private transient Ice2sigsService ice2sigsService;
 	private Item                     item1;
 	private Item                     item2;
 	private Item                     item3;
@@ -416,13 +416,13 @@ public class EndososAction extends PrincipalCoreAction
 			    ///////////////////////////////////////
 				        
 				// Ejecutamos el Web Service de Cliente Salud:
-				ice2sigsWebServices.ejecutaWSclienteSalud(
+				ice2sigsService.ejecutaWSclienteSalud(
 						(String) omap1.get("pv_cdunieco_i"),
 						(String) omap1.get("pv_cdramo_i"),
 						(String) omap1.get("pv_estado_i"),
 						(String) omap1.get("pv_nmpoliza_i"),
 						respuestaEndosoNombres.get("pv_nmsuplem_o"),
-						Ice2sigsWebServices.Operacion.ACTUALIZA,
+						Ice2sigsService.Operacion.ACTUALIZA,
 						(UserVO) session.get("USUARIO"));
 				//ejecutaWSclienteSaludEndoso((String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"), (String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"), respuestaEndosoNombres.get("pv_nmsuplem_o"), "ACTUALIZA");
 				
@@ -858,13 +858,13 @@ public class EndososAction extends PrincipalCoreAction
 			    ///////////////////////////////////////
 				
 				// Ejecutamos el Web Service de Cliente Salud:
-				ice2sigsWebServices.ejecutaWSclienteSalud(
+				ice2sigsService.ejecutaWSclienteSalud(
 						smap1.get("pv_cdunieco"), 
 						smap1.get("pv_cdramo"), 
 						smap1.get("pv_estado"), 
 						smap1.get("pv_nmpoliza"), 
 						resEndDomi.get("pv_nmsuplem_o"), 
-						Ice2sigsWebServices.Operacion.ACTUALIZA, 
+						Ice2sigsService.Operacion.ACTUALIZA, 
 						(UserVO) session.get("USUARIO"));
 				//ejecutaWSclienteSaludEndoso(smap1.get("pv_cdunieco"), smap1.get("pv_cdramo"), smap1.get("pv_estado"), smap1.get("pv_nmpoliza"), resEndDomi.get("pv_nmsuplem_o"), "ACTUALIZA");
 				
@@ -1382,7 +1382,7 @@ public class EndososAction extends PrincipalCoreAction
 					else tipomov = "7";
 					
 					// Ejecutamos el Web Service de Recibos:
-					ice2sigsWebServices.ejecutaWSrecibos((String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"), 
+					ice2sigsService.ejecutaWSrecibos((String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"), 
 							(String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"), 
 							respEndCob.get("pv_nmsuplem_o"), rutaCarpeta, 
 							cdtipsitGS, sucursal, nmsolici, nmtramite, 
@@ -2837,7 +2837,7 @@ public class EndososAction extends PrincipalCoreAction
 				String tipomov = alta?"9":"10";
 				
 				// Ejecutamos el Web Service de Recibos:
-				ice2sigsWebServices.ejecutaWSrecibos(cdunieco, cdramo, 
+				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
 						estado, nmpoliza, 
 						nmsuplem, rutaCarpeta, 
 						cdtipsitGS, sucursal, nmsolici, ntramite, 
@@ -3280,7 +3280,7 @@ public class EndososAction extends PrincipalCoreAction
 			    ///////////////////////////////////////
 				
 				// Ejecutamos el Web Service de Cliente Salud:
-				ice2sigsWebServices.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, Ice2sigsWebServices.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
+				ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, Ice2sigsService.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
 				//ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
 				
 				/**
@@ -3294,7 +3294,7 @@ public class EndososAction extends PrincipalCoreAction
 				String nmtramite = listaDocu.get(0).get("ntramite");
 				
 				// Ejecutamos el Web Service de Recibos:
-				ice2sigsWebServices.ejecutaWSrecibos(cdunieco, cdramo, 
+				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
 						estado, nmpoliza, 
 						nmsuplem, rutaCarpeta, 
 						cdtipsitGS, sucursal, nmsolici, nmtramite, 
@@ -3710,7 +3710,7 @@ public class EndososAction extends PrincipalCoreAction
 			    ///////////////////////////////////////
 				
 				// Ejecutamos el Web Service de Cliente Salud:
-				ice2sigsWebServices.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, Ice2sigsWebServices.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
+				ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, Ice2sigsService.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
 				//ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
 				
 				/**
@@ -3724,7 +3724,7 @@ public class EndososAction extends PrincipalCoreAction
 				String nmtramite = listaDocu.get(0).get("ntramite");
 				
 				// Ejecutamos el Web Service de Recibos:
-				ice2sigsWebServices.ejecutaWSrecibos(cdunieco, cdramo, 
+				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
 						estado, nmpoliza, 
 						nmsuplem, rutaCarpeta, 
 						cdtipsitGS, sucursal, nmsolici, nmtramite, 
@@ -3970,7 +3970,7 @@ public class EndososAction extends PrincipalCoreAction
 			case CAMBIO_DOMICILIO:
 				
 				// Ejecutamos el Web Service de Cliente Salud:
-				ice2sigsWebServices.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, Ice2sigsWebServices.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
+				ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, Ice2sigsService.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
 				//ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
 				
 				//insertaURLrecibosEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsitGS, sucursal, nmsolici, ntramiteEmi, cdtipsup);
@@ -3990,7 +3990,7 @@ public class EndososAction extends PrincipalCoreAction
 			case CAMBIO_FORMA_PAGO:
 			case CANCELACION_POR_REEXPEDICION:
 				// Ejecutamos el Web Service de Recibos:
-				ice2sigsWebServices.ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
+				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
 						rutaCarpeta, cdtipsitGS, sucursal, nmsolici, ntramiteEmi, true, cdtipsup, 
 						(UserVO) session.get("USUARIO"));
 				/*
@@ -4006,11 +4006,11 @@ public class EndososAction extends PrincipalCoreAction
 			case CAMBIO_DOMICILIO_ASEGURADO_TITULAR:
 				
 				// Ejecutamos el Web Service de Cliente Salud:
-				ice2sigsWebServices.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, Ice2sigsWebServices.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
+				ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, Ice2sigsService.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
 				//ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
 				
 				// Ejecutamos el Web Service de Recibos:
-				ice2sigsWebServices.ejecutaWSrecibos(cdunieco, cdramo, 
+				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
 						estado, nmpoliza, 
 						nmsuplem, rutaCarpeta, 
 						cdtipsitGS, sucursal, nmsolici, ntramiteEmi, 
@@ -4465,7 +4465,7 @@ public class EndososAction extends PrincipalCoreAction
 			    ///////////////////////////////////////
 
 				// Ejecutamos el Web Service de Cliente Salud:
-				ice2sigsWebServices.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, Ice2sigsWebServices.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
+				ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, Ice2sigsService.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
 				//ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
 				
 				String cdtipsitGS = "213";
@@ -4478,7 +4478,7 @@ public class EndososAction extends PrincipalCoreAction
 				String tipomov = TipoEndoso.CAMBIO_DOMICILIO_ASEGURADO_TITULAR.getCdTipSup().toString();
 				
 				// Ejecutamos el Web Service de Recibos:
-				ice2sigsWebServices.ejecutaWSrecibos(cdunieco, cdramo, 
+				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
 						estado, nmpoliza, 
 						nmsuplem, rutaCarpeta, 
 						cdtipsitGS, sucursal, nmsolici, nmtramite, 
@@ -4815,7 +4815,7 @@ public class EndososAction extends PrincipalCoreAction
 				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 				
 				// Ejecutamos el Web Service de Recibos:
-				ice2sigsWebServices.ejecutaWSrecibos(cdunieco, cdramo, 
+				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
 						estado, nmpoliza, 
 						nmsuplem, null, 
 						cdtipsitGS, sucursal, nmsolici, ntramite, 
@@ -5129,7 +5129,7 @@ public class EndososAction extends PrincipalCoreAction
 				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 
 				// Ejecutamos el Web Service de Recibos:
-				ice2sigsWebServices.ejecutaWSrecibos(cdunieco, cdramo, 
+				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
 						estado, nmpoliza, 
 						nmsuplem, null, 
 						cdtipsitGS, sucursal, nmsolici, ntramite, 
@@ -5459,7 +5459,7 @@ public class EndososAction extends PrincipalCoreAction
 				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 				
 				// Ejecutamos el Web Service de Recibos:
-				ice2sigsWebServices.ejecutaWSrecibos(cdunieco, cdramo, 
+				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
 						estado, nmpoliza, 
 						nmsuplem, null, 
 						cdtipsitGS, sucursal, "", ntramite, 
@@ -5786,7 +5786,7 @@ public class EndososAction extends PrincipalCoreAction
 				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 				
 				// Ejecutamos el Web Service de Recibos:
-				ice2sigsWebServices.ejecutaWSrecibos(cdunieco, cdramo, 
+				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
 						estado, nmpoliza, 
 						nmsuplem, null, 
 						cdtipsitGS, sucursal, nmsolici, ntramite, 
@@ -6030,7 +6030,7 @@ public class EndososAction extends PrincipalCoreAction
 				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 				
 				// Ejecutamos el Web Service de Recibos:
-				ice2sigsWebServices.ejecutaWSrecibos(cdunieco, cdramo, 
+				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
 						estado, nmpoliza, 
 						nmsuplem, null, 
 						cdtipsitGS, sucursal, nmsolici, ntramite, 
@@ -6491,8 +6491,8 @@ public class EndososAction extends PrincipalCoreAction
 		this.pantallasManager = pantallasManager;
 	}
 	
-	public void setIce2sigsWebServices(Ice2sigsWebServices ice2sigsWebServices) {
-		this.ice2sigsWebServices = ice2sigsWebServices;
+	public void setIce2sigsService(Ice2sigsService ice2sigsService) {
+		this.ice2sigsService = ice2sigsService;
 	}
 
 	public String getError() {
