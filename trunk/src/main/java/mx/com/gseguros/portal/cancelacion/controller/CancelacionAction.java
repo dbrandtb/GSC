@@ -16,6 +16,7 @@ import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.utils.HttpUtil;
+import mx.com.gseguros.ws.client.Ice2sigsWebServices;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
@@ -29,6 +30,7 @@ public class CancelacionAction extends PrincipalCoreAction
 	
 	private CancelacionManager       cancelacionManager;
 	private PantallasManager         pantallasManager;
+	private transient Ice2sigsWebServices ice2sigsWebServices;
 	private Map<String,String>       smap1;
 	private List<Map<String,String>> slist1;
 	private Map<String,Item>         imap;
@@ -244,14 +246,16 @@ public class CancelacionAction extends PrincipalCoreAction
 			//PKG_CONSULTA.P_IMP_DOC_CANCELACION
 			//nmsolici,nmsituac,descripc,descripl,ntramite,nmsuplem
 			List<Map<String,String>>listaDocu=cancelacionManager.reimprimeDocumentos(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
+			String nmsuplem = null;
+			String ntramite = null;
 			
 			for(Map<String,String> docu:listaDocu)
 			{
 				log.debug("docu iterado: "+docu);
 				String descripc = docu.get("descripc");
 				String descripl = docu.get("descripl");
-				String nmsuplem = docu.get("nmsuplem");
-				String ntramite = docu.get("ntramite");
+				nmsuplem = docu.get("nmsuplem");
+				ntramite = docu.get("ntramite");
 				
 				String rutaCarpeta = this.getText("ruta.documentos.poliza")+"/"+ntramite;
 				
@@ -288,6 +292,21 @@ public class CancelacionAction extends PrincipalCoreAction
 						+ "\n################################"
 						+ "");
 			}
+			
+			/**
+			 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
+			 */
+			String cdtipsitGS = "213";
+			String sucursal = cdunieco;
+			if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
+			
+			// Ejecutamos el Web Service de Recibos:
+			ice2sigsWebServices.ejecutaWSrecibos(cdunieco, cdramo, 
+					estado, nmpoliza, 
+					nmsuplem, null, 
+					cdtipsitGS, sucursal, "", ntramite, 
+					true, cdtipsup, 
+					(UserVO) session.get("USUARIO"));
 			
 			success=true;			
 		}
@@ -494,6 +513,10 @@ public class CancelacionAction extends PrincipalCoreAction
 
 	public void setError(String error) {
 		this.error = error;
+	}
+
+	public void setIce2sigsWebServices(Ice2sigsWebServices ice2sigsWebServices) {
+		this.ice2sigsWebServices = ice2sigsWebServices;
 	}
 		
 }
