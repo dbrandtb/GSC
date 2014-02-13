@@ -4,8 +4,9 @@ public class DinamicTatriVo implements java.io.Serializable  {
 
 	private static final long serialVersionUID = 1L;
 	
+	
 	Integer cdatribu;
-	Integer cdramo;
+	String cdramo;
 	String dsatribu;
 	String swformat;
 	String swobliga;
@@ -17,18 +18,8 @@ public class DinamicTatriVo implements java.io.Serializable  {
 	String swtarifi;
 	String swpresen;
 	
-	public Integer getCdatribu() {
-		return cdatribu;
-	}
-	public void setCdatribu(Integer cdatribu) {
-		this.cdatribu = cdatribu;
-	}
-	public Integer getCdramo() {
-		return cdramo;
-	}
-	public void setCdramo(Integer cdramo) {
-		this.cdramo = cdramo;
-	}
+
+
 	public String getDsatribu() {
 		return dsatribu;
 	}
@@ -88,6 +79,19 @@ public class DinamicTatriVo implements java.io.Serializable  {
 	}
 	public void setSwpresen(String swpresen) {
 		this.swpresen = swpresen;
+	}
+	
+	public Integer getCdatribu() {
+		return cdatribu;
+	}
+	public void setCdatribu(Integer cdatribu) {
+		this.cdatribu = cdatribu;
+	}
+	public String getCdramo() {
+		return cdramo;
+	}
+	public void setCdramo(String cdramo) {
+		this.cdramo = cdramo;
 	}
 	
 	
