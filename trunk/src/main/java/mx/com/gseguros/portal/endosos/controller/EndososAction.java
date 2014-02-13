@@ -3988,6 +3988,7 @@ public class EndososAction extends PrincipalCoreAction
 			case EXTRAPRIMA_MAS:
 			case EXTRAPRIMA_MENOS:
 			case CAMBIO_FORMA_PAGO:
+			case CANCELACION_POR_REEXPEDICION:
 				// Ejecutamos el Web Service de Recibos:
 				ice2sigsWebServices.ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
 						rutaCarpeta, cdtipsitGS, sucursal, nmsolici, ntramiteEmi, true, cdtipsup, 
@@ -5449,6 +5450,21 @@ public class EndososAction extends PrincipalCoreAction
 			{
 				mensaje="Se ha generado la p&oacute;liza "+nmpolizaNuevaPoliza
 						+" con n&uacute;mero de tr&aacute;mite "+ntramiteNuevaPoliza;
+				
+				/**
+				 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
+				 */
+				String cdtipsitGS = "213";
+				String sucursal = cdunieco;
+				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
+				
+				// Ejecutamos el Web Service de Recibos:
+				ice2sigsWebServices.ejecutaWSrecibos(cdunieco, cdramo, 
+						estado, nmpoliza, 
+						nmsuplem, null, 
+						cdtipsitGS, sucursal, "", ntramite, 
+						true, cdtipsup, 
+						(UserVO) session.get("USUARIO"));
 			}
 			else
 			{
