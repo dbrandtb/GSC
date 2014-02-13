@@ -272,7 +272,7 @@ public class DinamicDao {
 		}else if(qry.equals("ListadeControlesGridAttr")){	
 			rgs = "SELECT IDATTR,IDCONTROL,IDPANEL,ATTR,VALOR,TIPO FROM DNC_DOCCONTROLGRID_ATTR WHERE IDATTR = "+mapa.get("id")+" AND IDCONTROL = "+mapa.get("control")+" AND IDPANEL = "+mapa.get("panel");	
 		}else if(qry.equals("ListadeCamposTatrisit")){
-			rgs = "SELECT DSATRIBU AS NOMBRE, DSATRIBU AS TABLA FROM TATRISIT WHERE CDTIPSIT = "+mapa.get("cdramo")+" ORDER BY CDATRIBU";
+			rgs = "SELECT DSATRIBU AS NOMBRE, DSATRIBU AS TABLA FROM TATRISIT WHERE CDTIPSIT = '"+mapa.get("cdramo")+"' ORDER BY CDATRIBU";
 		}else if(qry.equals("DatosControlTatrisit")){
 			rgs = "SELECT CDTIPSIT CDRAMO, CDATRIBU, DSATRIBU, SWFORMAT, SWOBLIGA, NMLMAX, NMLMIN, OTTABVAL, SWPRODUC, SWSUPLEM, SWTARIFI, SWPRESEN FROM TATRISIT "
 					+ "WHERE CDTIPSIT = "+mapa.get("cdramo")+" AND DSATRIBU = '"+mapa.get("descripcion")+"'";
