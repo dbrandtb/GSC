@@ -1470,14 +1470,13 @@ Ext.onReady(function() {
 			,icon:_CONTEXT+'/resources/fam3icons/icons/application_edit.png'
 			,handler: function(){
 				idTipoAutorizacion= Ext.getCmp('tipoAutorizacion').getValue();
-				
-	 			
 				if(idTipoAutorizacion !=3)
 				{
-					//Ext.getCmp('idNumeroAnterior').hide();
-					//Ext.getCmp('btnBuscar').hide();
+					Ext.getCmp('idNumeroAnterior').hide();
+					Ext.getCmp('btnBuscar').hide();
 				}else{
-					//Ext.getCmp('btnBuscar').hide();
+					Ext.getCmp('idNumeroAnterior').show();
+					Ext.getCmp('btnBuscar').show();
 				}
 				
 				
@@ -1681,7 +1680,7 @@ Ext.onReady(function() {
 							                });
 							            }
 							        });
-									modificacionClausula.close();
+									modificacionClausula.hide();
 								},
 								failure : function ()
 								{
@@ -1706,7 +1705,7 @@ Ext.onReady(function() {
 					}
 				}else
 				{
-					modificacionClausula.close();
+					modificacionClausula.hide();
 				}
 				
 			}
@@ -1818,6 +1817,7 @@ modificacionClausula = Ext.create('Ext.window.Window',
 			 			 	,
 			 			 	Ext.create('Ext.Button', {
 				 				 text: 'Buscar',
+				 				 id:'btnBuscar',
 				 				icon : _CONTEXT + '/resources/fam3icons/icons/folder.png',
 				 				 
 				 				 
@@ -1875,7 +1875,7 @@ modificacionClausula = Ext.create('Ext.window.Window',
 			 	{
 			 		id: 'fechaVencimiento'					,xtype		: 'datefield'								,fieldLabel	: 'Fecha de vencimiento',
 			 		labelWidth : 170						,format		: 'd/m/Y',									name:'fevencim',
-			 		editable: true
+			 		editable: false							,readOnly   : true
 			 	},
 			 	{
 			 		id: 'fechaIngreso'						,xtype		: 'datefield'								,fieldLabel	: 'Fecha de Ingreso',
@@ -2003,7 +2003,11 @@ modificacionClausula = Ext.create('Ext.window.Window',
 			 		id:'botonGuardar',
 			 		handler: function() {
 			 		    if (panelInicialPrincipal.form.isValid()) {
-			 		    		guardadoAutorizacionServicio();
+		 		    		if(guardadoAutorizacionServicio())
+	 		    			{
+	 		    				modificacionClausula.show();
+	 		    			}
+			 		    		
 			 		    } else {
 			 		        Ext.Msg.show({
 			 		               title: 'Aviso',
@@ -2050,19 +2054,12 @@ modificacionClausula = Ext.create('Ext.window.Window',
 			 		    }
 			 		}
 			 	}
-			 	/*
-			 	{
-			 		text:'Rechazar',
-			 		icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
-			 		id:'Rechazar',
-			 		handler:function()
-			 		{}
-			 	}*/
 		 	]		
 	});
 	
-	function guardadoAutorizacionServicio()
+	function  guardadoAutorizacionServicio()
 	{
+			var respuesta=true;
 	        var submitValues={};
             var formulario=panelInicialPrincipal.form.getValues();
             submitValues['params']=formulario;
@@ -2150,8 +2147,7 @@ modificacionClausula = Ext.create('Ext.window.Window',
                                 storeConceptoAutorizados.removeAll();
                 				storeQuirugicoBase.removeAll();
                 				storeQuirurgico.removeAll();
-                				
-                				
+                				//
                             }
                             else{
                                 Ext.Msg.show({
@@ -2160,6 +2156,8 @@ modificacionClausula = Ext.create('Ext.window.Window',
                                     buttons: Ext.Msg.OK,
                                     icon: Ext.Msg.ERROR
                                 });
+                                
+                                respuesta= false;
                             }
                         },
                         failure:function(response,opts)
@@ -2171,9 +2169,10 @@ modificacionClausula = Ext.create('Ext.window.Window',
                                 buttons: Ext.Msg.OK,
                                 icon: Ext.Msg.ERROR
                             });
+                            respuesta=false;
                         }
                     });
-		return true;
+		return respuesta;
 	}
 	
 	
