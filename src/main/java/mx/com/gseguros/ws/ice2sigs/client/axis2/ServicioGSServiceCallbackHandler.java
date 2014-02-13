@@ -6,7 +6,20 @@
  * by the Apache Axis2 version: 1.5.1  Built on : Oct 19, 2009 (10:59:00 EDT)
  */
 
-    package mx.com.gseguros.ws.client.ice2sigs;
+    package mx.com.gseguros.ws.ice2sigs.client.axis2;
+
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteGSResponseE;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteSaludGSResponseE;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGSResponseE;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludGSResponseE;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ComisionReciboAgenteGSResponseE;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAgenteGSResponseE;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSResponseE;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoEndosoGSResponseE;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoGSResponseE;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoGSResponseE;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaGSResponseE;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboGSResponseE;
 
     /**
      *  ServicioGSServiceCallbackHandler Callback class, Users can extend this class and implement
@@ -49,7 +62,7 @@
             * override this method for handling normal response from agenteGS operation
             */
            public void receiveResultagenteGS(
-                    mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteGSResponseE result
+                    mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteGSResponseE result
                         ) {
            }
 
@@ -65,7 +78,7 @@
             * override this method for handling normal response from movimientoGS operation
             */
            public void receiveResultmovimientoGS(
-                    mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoGSResponseE result
+                    mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoGSResponseE result
                         ) {
            }
 
@@ -81,7 +94,7 @@
             * override this method for handling normal response from movimientoAseguradoCoberturaGS operation
             */
            public void receiveResultmovimientoAseguradoCoberturaGS(
-                    mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSResponseE result
+                    mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSResponseE result
                         ) {
            }
 
@@ -97,7 +110,7 @@
             * override this method for handling normal response from polizaGS operation
             */
            public void receiveResultpolizaGS(
-                    mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.PolizaGSResponseE result
+                    mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaGSResponseE result
                         ) {
            }
 
@@ -113,7 +126,7 @@
             * override this method for handling normal response from movimientoAseguradoGS operation
             */
            public void receiveResultmovimientoAseguradoGS(
-                    mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoGSResponseE result
+                    mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoGSResponseE result
                         ) {
            }
 
@@ -129,7 +142,7 @@
             * override this method for handling normal response from clienteSaludGS operation
             */
            public void receiveResultclienteSaludGS(
-                    mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSaludGSResponseE result
+                    mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludGSResponseE result
                         ) {
            }
 
@@ -145,7 +158,7 @@
             * override this method for handling normal response from clienteGS operation
             */
            public void receiveResultclienteGS(
-                    mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteGSResponseE result
+                    mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGSResponseE result
                         ) {
            }
 
@@ -161,7 +174,7 @@
             * override this method for handling normal response from movimientoAgenteGS operation
             */
            public void receiveResultmovimientoAgenteGS(
-                    mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAgenteGSResponseE result
+                    mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAgenteGSResponseE result
                         ) {
            }
 
@@ -177,7 +190,7 @@
             * override this method for handling normal response from reciboGS operation
             */
            public void receiveResultreciboGS(
-                    mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboGSResponseE result
+                    mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboGSResponseE result
                         ) {
            }
 
@@ -193,7 +206,7 @@
             * override this method for handling normal response from agenteSaludGS operation
             */
            public void receiveResultagenteSaludGS(
-                    mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteSaludGSResponseE result
+                    mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteSaludGSResponseE result
                         ) {
            }
 
@@ -209,7 +222,7 @@
             * override this method for handling normal response from movimientoAseguradoEndosoGS operation
             */
            public void receiveResultmovimientoAseguradoEndosoGS(
-                    mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoEndosoGSResponseE result
+                    mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoEndosoGSResponseE result
                         ) {
            }
 
@@ -225,7 +238,7 @@
             * override this method for handling normal response from comisionReciboAgenteGS operation
             */
            public void receiveResultcomisionReciboAgenteGS(
-                    mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ComisionReciboAgenteGSResponseE result
+                    mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ComisionReciboAgenteGSResponseE result
                         ) {
            }
 

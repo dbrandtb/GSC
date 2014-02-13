@@ -5,7 +5,7 @@
  * This file was auto-generated from WSDL
  * by the Apache Axis2 version: 1.5.1  Built on : Oct 19, 2009 (10:59:00 EDT)
  */
-        package mx.com.gseguros.ws.client.ice2sigs;
+        package mx.com.gseguros.ws.ice2sigs.client.axis2;
 
         
 
@@ -268,9 +268,9 @@
 
                     
 
-                            public  mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteGSResponseE agenteGS(
+                            public  mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteGSResponseE agenteGS(
 
-                            mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteGSE agenteGS0)
+                            mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteGSE agenteGS0)
                         
 
                     throws java.rmi.RemoteException
@@ -320,11 +320,11 @@
                 
                                 java.lang.Object object = fromOM(
                                              _returnEnv.getBody().getFirstElement() ,
-                                             mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteGSResponseE.class,
+                                             mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteGSResponseE.class,
                                               getEnvelopeNamespaces(_returnEnv));
 
                                
-                                        return (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteGSResponseE)object;
+                                        return (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteGSResponseE)object;
                                    
          }catch(org.apache.axis2.AxisFault f){
 
@@ -386,9 +386,9 @@
                 */
                 public  void startagenteGS(
 
-                 mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteGSE agenteGS0,
+                 mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteGSE agenteGS0,
 
-                  final mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceCallbackHandler callback)
+                  final mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceCallbackHandler callback)
 
                 throws java.rmi.RemoteException{
 
@@ -431,10 +431,10 @@
                                 org.apache.axiom.soap.SOAPEnvelope resultEnv = resultContext.getEnvelope();
                                 
                                         java.lang.Object object = fromOM(resultEnv.getBody().getFirstElement(),
-                                                                         mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteGSResponseE.class,
+                                                                         mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteGSResponseE.class,
                                                                          getEnvelopeNamespaces(resultEnv));
                                         callback.receiveResultagenteGS(
-                                        (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteGSResponseE)object);
+                                        (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteGSResponseE)object);
                                         
                             } catch (org.apache.axis2.AxisFault e) {
                                 callback.receiveErroragenteGS(e);
@@ -533,9 +533,9 @@
 
                     
 
-                            public  mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoGSResponseE movimientoGS(
+                            public  mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoGSResponseE movimientoGS(
 
-                            mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoGSE movimientoGS2)
+                            mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoGSE movimientoGS2)
                         
 
                     throws java.rmi.RemoteException
@@ -585,11 +585,11 @@
                 
                                 java.lang.Object object = fromOM(
                                              _returnEnv.getBody().getFirstElement() ,
-                                             mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoGSResponseE.class,
+                                             mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoGSResponseE.class,
                                               getEnvelopeNamespaces(_returnEnv));
 
                                
-                                        return (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoGSResponseE)object;
+                                        return (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoGSResponseE)object;
                                    
          }catch(org.apache.axis2.AxisFault f){
 
@@ -651,9 +651,9 @@
                 */
                 public  void startmovimientoGS(
 
-                 mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoGSE movimientoGS2,
+                 mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoGSE movimientoGS2,
 
-                  final mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceCallbackHandler callback)
+                  final mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceCallbackHandler callback)
 
                 throws java.rmi.RemoteException{
 
@@ -696,10 +696,10 @@
                                 org.apache.axiom.soap.SOAPEnvelope resultEnv = resultContext.getEnvelope();
                                 
                                         java.lang.Object object = fromOM(resultEnv.getBody().getFirstElement(),
-                                                                         mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoGSResponseE.class,
+                                                                         mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoGSResponseE.class,
                                                                          getEnvelopeNamespaces(resultEnv));
                                         callback.receiveResultmovimientoGS(
-                                        (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoGSResponseE)object);
+                                        (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoGSResponseE)object);
                                         
                             } catch (org.apache.axis2.AxisFault e) {
                                 callback.receiveErrormovimientoGS(e);
@@ -798,9 +798,9 @@
 
                     
 
-                            public  mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSResponseE movimientoAseguradoCoberturaGS(
+                            public  mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSResponseE movimientoAseguradoCoberturaGS(
 
-                            mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSE movimientoAseguradoCoberturaGS4)
+                            mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSE movimientoAseguradoCoberturaGS4)
                         
 
                     throws java.rmi.RemoteException
@@ -850,11 +850,11 @@
                 
                                 java.lang.Object object = fromOM(
                                              _returnEnv.getBody().getFirstElement() ,
-                                             mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSResponseE.class,
+                                             mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSResponseE.class,
                                               getEnvelopeNamespaces(_returnEnv));
 
                                
-                                        return (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSResponseE)object;
+                                        return (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSResponseE)object;
                                    
          }catch(org.apache.axis2.AxisFault f){
 
@@ -916,9 +916,9 @@
                 */
                 public  void startmovimientoAseguradoCoberturaGS(
 
-                 mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSE movimientoAseguradoCoberturaGS4,
+                 mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSE movimientoAseguradoCoberturaGS4,
 
-                  final mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceCallbackHandler callback)
+                  final mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceCallbackHandler callback)
 
                 throws java.rmi.RemoteException{
 
@@ -961,10 +961,10 @@
                                 org.apache.axiom.soap.SOAPEnvelope resultEnv = resultContext.getEnvelope();
                                 
                                         java.lang.Object object = fromOM(resultEnv.getBody().getFirstElement(),
-                                                                         mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSResponseE.class,
+                                                                         mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSResponseE.class,
                                                                          getEnvelopeNamespaces(resultEnv));
                                         callback.receiveResultmovimientoAseguradoCoberturaGS(
-                                        (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSResponseE)object);
+                                        (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSResponseE)object);
                                         
                             } catch (org.apache.axis2.AxisFault e) {
                                 callback.receiveErrormovimientoAseguradoCoberturaGS(e);
@@ -1063,9 +1063,9 @@
 
                     
 
-                            public  mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.PolizaGSResponseE polizaGS(
+                            public  mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaGSResponseE polizaGS(
 
-                            mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.PolizaGSE polizaGS6)
+                            mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaGSE polizaGS6)
                         
 
                     throws java.rmi.RemoteException
@@ -1115,11 +1115,11 @@
                 
                                 java.lang.Object object = fromOM(
                                              _returnEnv.getBody().getFirstElement() ,
-                                             mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.PolizaGSResponseE.class,
+                                             mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaGSResponseE.class,
                                               getEnvelopeNamespaces(_returnEnv));
 
                                
-                                        return (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.PolizaGSResponseE)object;
+                                        return (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaGSResponseE)object;
                                    
          }catch(org.apache.axis2.AxisFault f){
 
@@ -1181,9 +1181,9 @@
                 */
                 public  void startpolizaGS(
 
-                 mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.PolizaGSE polizaGS6,
+                 mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaGSE polizaGS6,
 
-                  final mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceCallbackHandler callback)
+                  final mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceCallbackHandler callback)
 
                 throws java.rmi.RemoteException{
 
@@ -1226,10 +1226,10 @@
                                 org.apache.axiom.soap.SOAPEnvelope resultEnv = resultContext.getEnvelope();
                                 
                                         java.lang.Object object = fromOM(resultEnv.getBody().getFirstElement(),
-                                                                         mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.PolizaGSResponseE.class,
+                                                                         mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaGSResponseE.class,
                                                                          getEnvelopeNamespaces(resultEnv));
                                         callback.receiveResultpolizaGS(
-                                        (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.PolizaGSResponseE)object);
+                                        (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaGSResponseE)object);
                                         
                             } catch (org.apache.axis2.AxisFault e) {
                                 callback.receiveErrorpolizaGS(e);
@@ -1328,9 +1328,9 @@
 
                     
 
-                            public  mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoGSResponseE movimientoAseguradoGS(
+                            public  mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoGSResponseE movimientoAseguradoGS(
 
-                            mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoGSE movimientoAseguradoGS8)
+                            mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoGSE movimientoAseguradoGS8)
                         
 
                     throws java.rmi.RemoteException
@@ -1380,11 +1380,11 @@
                 
                                 java.lang.Object object = fromOM(
                                              _returnEnv.getBody().getFirstElement() ,
-                                             mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoGSResponseE.class,
+                                             mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoGSResponseE.class,
                                               getEnvelopeNamespaces(_returnEnv));
 
                                
-                                        return (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoGSResponseE)object;
+                                        return (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoGSResponseE)object;
                                    
          }catch(org.apache.axis2.AxisFault f){
 
@@ -1446,9 +1446,9 @@
                 */
                 public  void startmovimientoAseguradoGS(
 
-                 mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoGSE movimientoAseguradoGS8,
+                 mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoGSE movimientoAseguradoGS8,
 
-                  final mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceCallbackHandler callback)
+                  final mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceCallbackHandler callback)
 
                 throws java.rmi.RemoteException{
 
@@ -1491,10 +1491,10 @@
                                 org.apache.axiom.soap.SOAPEnvelope resultEnv = resultContext.getEnvelope();
                                 
                                         java.lang.Object object = fromOM(resultEnv.getBody().getFirstElement(),
-                                                                         mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoGSResponseE.class,
+                                                                         mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoGSResponseE.class,
                                                                          getEnvelopeNamespaces(resultEnv));
                                         callback.receiveResultmovimientoAseguradoGS(
-                                        (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoGSResponseE)object);
+                                        (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoGSResponseE)object);
                                         
                             } catch (org.apache.axis2.AxisFault e) {
                                 callback.receiveErrormovimientoAseguradoGS(e);
@@ -1593,9 +1593,9 @@
 
                     
 
-                            public  mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSaludGSResponseE clienteSaludGS(
+                            public  mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludGSResponseE clienteSaludGS(
 
-                            mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSaludGSE clienteSaludGS10)
+                            mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludGSE clienteSaludGS10)
                         
 
                     throws java.rmi.RemoteException
@@ -1645,11 +1645,11 @@
                 
                                 java.lang.Object object = fromOM(
                                              _returnEnv.getBody().getFirstElement() ,
-                                             mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSaludGSResponseE.class,
+                                             mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludGSResponseE.class,
                                               getEnvelopeNamespaces(_returnEnv));
 
                                
-                                        return (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSaludGSResponseE)object;
+                                        return (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludGSResponseE)object;
                                    
          }catch(org.apache.axis2.AxisFault f){
 
@@ -1711,9 +1711,9 @@
                 */
                 public  void startclienteSaludGS(
 
-                 mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSaludGSE clienteSaludGS10,
+                 mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludGSE clienteSaludGS10,
 
-                  final mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceCallbackHandler callback)
+                  final mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceCallbackHandler callback)
 
                 throws java.rmi.RemoteException{
 
@@ -1756,10 +1756,10 @@
                                 org.apache.axiom.soap.SOAPEnvelope resultEnv = resultContext.getEnvelope();
                                 
                                         java.lang.Object object = fromOM(resultEnv.getBody().getFirstElement(),
-                                                                         mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSaludGSResponseE.class,
+                                                                         mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludGSResponseE.class,
                                                                          getEnvelopeNamespaces(resultEnv));
                                         callback.receiveResultclienteSaludGS(
-                                        (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSaludGSResponseE)object);
+                                        (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludGSResponseE)object);
                                         
                             } catch (org.apache.axis2.AxisFault e) {
                                 callback.receiveErrorclienteSaludGS(e);
@@ -1858,9 +1858,9 @@
 
                     
 
-                            public  mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteGSResponseE clienteGS(
+                            public  mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGSResponseE clienteGS(
 
-                            mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteGSE clienteGS12)
+                            mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGSE clienteGS12)
                         
 
                     throws java.rmi.RemoteException
@@ -1910,11 +1910,11 @@
                 
                                 java.lang.Object object = fromOM(
                                              _returnEnv.getBody().getFirstElement() ,
-                                             mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteGSResponseE.class,
+                                             mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGSResponseE.class,
                                               getEnvelopeNamespaces(_returnEnv));
 
                                
-                                        return (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteGSResponseE)object;
+                                        return (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGSResponseE)object;
                                    
          }catch(org.apache.axis2.AxisFault f){
 
@@ -1976,9 +1976,9 @@
                 */
                 public  void startclienteGS(
 
-                 mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteGSE clienteGS12,
+                 mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGSE clienteGS12,
 
-                  final mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceCallbackHandler callback)
+                  final mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceCallbackHandler callback)
 
                 throws java.rmi.RemoteException{
 
@@ -2021,10 +2021,10 @@
                                 org.apache.axiom.soap.SOAPEnvelope resultEnv = resultContext.getEnvelope();
                                 
                                         java.lang.Object object = fromOM(resultEnv.getBody().getFirstElement(),
-                                                                         mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteGSResponseE.class,
+                                                                         mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGSResponseE.class,
                                                                          getEnvelopeNamespaces(resultEnv));
                                         callback.receiveResultclienteGS(
-                                        (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteGSResponseE)object);
+                                        (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGSResponseE)object);
                                         
                             } catch (org.apache.axis2.AxisFault e) {
                                 callback.receiveErrorclienteGS(e);
@@ -2123,9 +2123,9 @@
 
                     
 
-                            public  mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAgenteGSResponseE movimientoAgenteGS(
+                            public  mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAgenteGSResponseE movimientoAgenteGS(
 
-                            mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAgenteGSE movimientoAgenteGS14)
+                            mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAgenteGSE movimientoAgenteGS14)
                         
 
                     throws java.rmi.RemoteException
@@ -2175,11 +2175,11 @@
                 
                                 java.lang.Object object = fromOM(
                                              _returnEnv.getBody().getFirstElement() ,
-                                             mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAgenteGSResponseE.class,
+                                             mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAgenteGSResponseE.class,
                                               getEnvelopeNamespaces(_returnEnv));
 
                                
-                                        return (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAgenteGSResponseE)object;
+                                        return (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAgenteGSResponseE)object;
                                    
          }catch(org.apache.axis2.AxisFault f){
 
@@ -2241,9 +2241,9 @@
                 */
                 public  void startmovimientoAgenteGS(
 
-                 mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAgenteGSE movimientoAgenteGS14,
+                 mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAgenteGSE movimientoAgenteGS14,
 
-                  final mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceCallbackHandler callback)
+                  final mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceCallbackHandler callback)
 
                 throws java.rmi.RemoteException{
 
@@ -2286,10 +2286,10 @@
                                 org.apache.axiom.soap.SOAPEnvelope resultEnv = resultContext.getEnvelope();
                                 
                                         java.lang.Object object = fromOM(resultEnv.getBody().getFirstElement(),
-                                                                         mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAgenteGSResponseE.class,
+                                                                         mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAgenteGSResponseE.class,
                                                                          getEnvelopeNamespaces(resultEnv));
                                         callback.receiveResultmovimientoAgenteGS(
-                                        (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAgenteGSResponseE)object);
+                                        (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAgenteGSResponseE)object);
                                         
                             } catch (org.apache.axis2.AxisFault e) {
                                 callback.receiveErrormovimientoAgenteGS(e);
@@ -2388,9 +2388,9 @@
 
                     
 
-                            public  mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboGSResponseE reciboGS(
+                            public  mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboGSResponseE reciboGS(
 
-                            mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboGSE reciboGS16)
+                            mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboGSE reciboGS16)
                         
 
                     throws java.rmi.RemoteException
@@ -2440,11 +2440,11 @@
                 
                                 java.lang.Object object = fromOM(
                                              _returnEnv.getBody().getFirstElement() ,
-                                             mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboGSResponseE.class,
+                                             mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboGSResponseE.class,
                                               getEnvelopeNamespaces(_returnEnv));
 
                                
-                                        return (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboGSResponseE)object;
+                                        return (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboGSResponseE)object;
                                    
          }catch(org.apache.axis2.AxisFault f){
 
@@ -2506,9 +2506,9 @@
                 */
                 public  void startreciboGS(
 
-                 mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboGSE reciboGS16,
+                 mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboGSE reciboGS16,
 
-                  final mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceCallbackHandler callback)
+                  final mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceCallbackHandler callback)
 
                 throws java.rmi.RemoteException{
 
@@ -2551,10 +2551,10 @@
                                 org.apache.axiom.soap.SOAPEnvelope resultEnv = resultContext.getEnvelope();
                                 
                                         java.lang.Object object = fromOM(resultEnv.getBody().getFirstElement(),
-                                                                         mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboGSResponseE.class,
+                                                                         mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboGSResponseE.class,
                                                                          getEnvelopeNamespaces(resultEnv));
                                         callback.receiveResultreciboGS(
-                                        (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboGSResponseE)object);
+                                        (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboGSResponseE)object);
                                         
                             } catch (org.apache.axis2.AxisFault e) {
                                 callback.receiveErrorreciboGS(e);
@@ -2653,9 +2653,9 @@
 
                     
 
-                            public  mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteSaludGSResponseE agenteSaludGS(
+                            public  mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteSaludGSResponseE agenteSaludGS(
 
-                            mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteSaludGSE agenteSaludGS18)
+                            mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteSaludGSE agenteSaludGS18)
                         
 
                     throws java.rmi.RemoteException
@@ -2705,11 +2705,11 @@
                 
                                 java.lang.Object object = fromOM(
                                              _returnEnv.getBody().getFirstElement() ,
-                                             mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteSaludGSResponseE.class,
+                                             mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteSaludGSResponseE.class,
                                               getEnvelopeNamespaces(_returnEnv));
 
                                
-                                        return (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteSaludGSResponseE)object;
+                                        return (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteSaludGSResponseE)object;
                                    
          }catch(org.apache.axis2.AxisFault f){
 
@@ -2771,9 +2771,9 @@
                 */
                 public  void startagenteSaludGS(
 
-                 mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteSaludGSE agenteSaludGS18,
+                 mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteSaludGSE agenteSaludGS18,
 
-                  final mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceCallbackHandler callback)
+                  final mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceCallbackHandler callback)
 
                 throws java.rmi.RemoteException{
 
@@ -2816,10 +2816,10 @@
                                 org.apache.axiom.soap.SOAPEnvelope resultEnv = resultContext.getEnvelope();
                                 
                                         java.lang.Object object = fromOM(resultEnv.getBody().getFirstElement(),
-                                                                         mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteSaludGSResponseE.class,
+                                                                         mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteSaludGSResponseE.class,
                                                                          getEnvelopeNamespaces(resultEnv));
                                         callback.receiveResultagenteSaludGS(
-                                        (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteSaludGSResponseE)object);
+                                        (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteSaludGSResponseE)object);
                                         
                             } catch (org.apache.axis2.AxisFault e) {
                                 callback.receiveErroragenteSaludGS(e);
@@ -2918,9 +2918,9 @@
 
                     
 
-                            public  mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoEndosoGSResponseE movimientoAseguradoEndosoGS(
+                            public  mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoEndosoGSResponseE movimientoAseguradoEndosoGS(
 
-                            mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoEndosoGSE movimientoAseguradoEndosoGS20)
+                            mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoEndosoGSE movimientoAseguradoEndosoGS20)
                         
 
                     throws java.rmi.RemoteException
@@ -2970,11 +2970,11 @@
                 
                                 java.lang.Object object = fromOM(
                                              _returnEnv.getBody().getFirstElement() ,
-                                             mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoEndosoGSResponseE.class,
+                                             mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoEndosoGSResponseE.class,
                                               getEnvelopeNamespaces(_returnEnv));
 
                                
-                                        return (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoEndosoGSResponseE)object;
+                                        return (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoEndosoGSResponseE)object;
                                    
          }catch(org.apache.axis2.AxisFault f){
 
@@ -3036,9 +3036,9 @@
                 */
                 public  void startmovimientoAseguradoEndosoGS(
 
-                 mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoEndosoGSE movimientoAseguradoEndosoGS20,
+                 mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoEndosoGSE movimientoAseguradoEndosoGS20,
 
-                  final mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceCallbackHandler callback)
+                  final mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceCallbackHandler callback)
 
                 throws java.rmi.RemoteException{
 
@@ -3081,10 +3081,10 @@
                                 org.apache.axiom.soap.SOAPEnvelope resultEnv = resultContext.getEnvelope();
                                 
                                         java.lang.Object object = fromOM(resultEnv.getBody().getFirstElement(),
-                                                                         mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoEndosoGSResponseE.class,
+                                                                         mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoEndosoGSResponseE.class,
                                                                          getEnvelopeNamespaces(resultEnv));
                                         callback.receiveResultmovimientoAseguradoEndosoGS(
-                                        (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoEndosoGSResponseE)object);
+                                        (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoEndosoGSResponseE)object);
                                         
                             } catch (org.apache.axis2.AxisFault e) {
                                 callback.receiveErrormovimientoAseguradoEndosoGS(e);
@@ -3183,9 +3183,9 @@
 
                     
 
-                            public  mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ComisionReciboAgenteGSResponseE comisionReciboAgenteGS(
+                            public  mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ComisionReciboAgenteGSResponseE comisionReciboAgenteGS(
 
-                            mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ComisionReciboAgenteGSE comisionReciboAgenteGS22)
+                            mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ComisionReciboAgenteGSE comisionReciboAgenteGS22)
                         
 
                     throws java.rmi.RemoteException
@@ -3235,11 +3235,11 @@
                 
                                 java.lang.Object object = fromOM(
                                              _returnEnv.getBody().getFirstElement() ,
-                                             mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ComisionReciboAgenteGSResponseE.class,
+                                             mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ComisionReciboAgenteGSResponseE.class,
                                               getEnvelopeNamespaces(_returnEnv));
 
                                
-                                        return (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ComisionReciboAgenteGSResponseE)object;
+                                        return (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ComisionReciboAgenteGSResponseE)object;
                                    
          }catch(org.apache.axis2.AxisFault f){
 
@@ -3301,9 +3301,9 @@
                 */
                 public  void startcomisionReciboAgenteGS(
 
-                 mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ComisionReciboAgenteGSE comisionReciboAgenteGS22,
+                 mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ComisionReciboAgenteGSE comisionReciboAgenteGS22,
 
-                  final mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceCallbackHandler callback)
+                  final mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceCallbackHandler callback)
 
                 throws java.rmi.RemoteException{
 
@@ -3346,10 +3346,10 @@
                                 org.apache.axiom.soap.SOAPEnvelope resultEnv = resultContext.getEnvelope();
                                 
                                         java.lang.Object object = fromOM(resultEnv.getBody().getFirstElement(),
-                                                                         mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ComisionReciboAgenteGSResponseE.class,
+                                                                         mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ComisionReciboAgenteGSResponseE.class,
                                                                          getEnvelopeNamespaces(resultEnv));
                                         callback.receiveResultcomisionReciboAgenteGS(
-                                        (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ComisionReciboAgenteGSResponseE)object);
+                                        (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ComisionReciboAgenteGSResponseE)object);
                                         
                             } catch (org.apache.axis2.AxisFault e) {
                                 callback.receiveErrorcomisionReciboAgenteGS(e);
@@ -60776,12 +60776,12 @@
         }
            
           
-            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteGSE param, boolean optimizeContent)
+            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteGSE param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
                         try{
-                             return param.getOMElement(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteGSE.MY_QNAME,
+                             return param.getOMElement(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteGSE.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -60790,12 +60790,12 @@
 
             }
         
-            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteGSResponseE param, boolean optimizeContent)
+            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteGSResponseE param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
                         try{
-                             return param.getOMElement(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteGSResponseE.MY_QNAME,
+                             return param.getOMElement(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteGSResponseE.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -60804,12 +60804,12 @@
 
             }
         
-            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoGSE param, boolean optimizeContent)
+            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoGSE param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
                         try{
-                             return param.getOMElement(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoGSE.MY_QNAME,
+                             return param.getOMElement(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoGSE.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -60818,12 +60818,12 @@
 
             }
         
-            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoGSResponseE param, boolean optimizeContent)
+            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoGSResponseE param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
                         try{
-                             return param.getOMElement(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoGSResponseE.MY_QNAME,
+                             return param.getOMElement(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoGSResponseE.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -60832,12 +60832,12 @@
 
             }
         
-            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSE param, boolean optimizeContent)
+            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSE param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
                         try{
-                             return param.getOMElement(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSE.MY_QNAME,
+                             return param.getOMElement(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSE.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -60846,12 +60846,12 @@
 
             }
         
-            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSResponseE param, boolean optimizeContent)
+            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSResponseE param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
                         try{
-                             return param.getOMElement(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSResponseE.MY_QNAME,
+                             return param.getOMElement(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSResponseE.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -60860,12 +60860,12 @@
 
             }
         
-            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.PolizaGSE param, boolean optimizeContent)
+            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaGSE param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
                         try{
-                             return param.getOMElement(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.PolizaGSE.MY_QNAME,
+                             return param.getOMElement(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaGSE.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -60874,12 +60874,12 @@
 
             }
         
-            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.PolizaGSResponseE param, boolean optimizeContent)
+            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaGSResponseE param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
                         try{
-                             return param.getOMElement(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.PolizaGSResponseE.MY_QNAME,
+                             return param.getOMElement(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaGSResponseE.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -60888,12 +60888,12 @@
 
             }
         
-            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoGSE param, boolean optimizeContent)
+            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoGSE param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
                         try{
-                             return param.getOMElement(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoGSE.MY_QNAME,
+                             return param.getOMElement(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoGSE.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -60902,12 +60902,12 @@
 
             }
         
-            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoGSResponseE param, boolean optimizeContent)
+            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoGSResponseE param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
                         try{
-                             return param.getOMElement(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoGSResponseE.MY_QNAME,
+                             return param.getOMElement(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoGSResponseE.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -60916,12 +60916,12 @@
 
             }
         
-            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSaludGSE param, boolean optimizeContent)
+            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludGSE param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
                         try{
-                             return param.getOMElement(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSaludGSE.MY_QNAME,
+                             return param.getOMElement(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludGSE.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -60930,12 +60930,12 @@
 
             }
         
-            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSaludGSResponseE param, boolean optimizeContent)
+            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludGSResponseE param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
                         try{
-                             return param.getOMElement(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSaludGSResponseE.MY_QNAME,
+                             return param.getOMElement(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludGSResponseE.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -60944,12 +60944,12 @@
 
             }
         
-            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteGSE param, boolean optimizeContent)
+            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGSE param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
                         try{
-                             return param.getOMElement(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteGSE.MY_QNAME,
+                             return param.getOMElement(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGSE.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -60958,12 +60958,12 @@
 
             }
         
-            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteGSResponseE param, boolean optimizeContent)
+            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGSResponseE param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
                         try{
-                             return param.getOMElement(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteGSResponseE.MY_QNAME,
+                             return param.getOMElement(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGSResponseE.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -60972,12 +60972,12 @@
 
             }
         
-            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAgenteGSE param, boolean optimizeContent)
+            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAgenteGSE param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
                         try{
-                             return param.getOMElement(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAgenteGSE.MY_QNAME,
+                             return param.getOMElement(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAgenteGSE.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -60986,12 +60986,12 @@
 
             }
         
-            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAgenteGSResponseE param, boolean optimizeContent)
+            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAgenteGSResponseE param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
                         try{
-                             return param.getOMElement(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAgenteGSResponseE.MY_QNAME,
+                             return param.getOMElement(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAgenteGSResponseE.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -61000,12 +61000,12 @@
 
             }
         
-            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboGSE param, boolean optimizeContent)
+            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboGSE param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
                         try{
-                             return param.getOMElement(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboGSE.MY_QNAME,
+                             return param.getOMElement(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboGSE.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -61014,12 +61014,12 @@
 
             }
         
-            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboGSResponseE param, boolean optimizeContent)
+            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboGSResponseE param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
                         try{
-                             return param.getOMElement(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboGSResponseE.MY_QNAME,
+                             return param.getOMElement(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboGSResponseE.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -61028,12 +61028,12 @@
 
             }
         
-            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteSaludGSE param, boolean optimizeContent)
+            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteSaludGSE param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
                         try{
-                             return param.getOMElement(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteSaludGSE.MY_QNAME,
+                             return param.getOMElement(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteSaludGSE.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -61042,12 +61042,12 @@
 
             }
         
-            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteSaludGSResponseE param, boolean optimizeContent)
+            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteSaludGSResponseE param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
                         try{
-                             return param.getOMElement(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteSaludGSResponseE.MY_QNAME,
+                             return param.getOMElement(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteSaludGSResponseE.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -61056,12 +61056,12 @@
 
             }
         
-            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoEndosoGSE param, boolean optimizeContent)
+            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoEndosoGSE param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
                         try{
-                             return param.getOMElement(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoEndosoGSE.MY_QNAME,
+                             return param.getOMElement(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoEndosoGSE.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -61070,12 +61070,12 @@
 
             }
         
-            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoEndosoGSResponseE param, boolean optimizeContent)
+            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoEndosoGSResponseE param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
                         try{
-                             return param.getOMElement(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoEndosoGSResponseE.MY_QNAME,
+                             return param.getOMElement(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoEndosoGSResponseE.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -61084,12 +61084,12 @@
 
             }
         
-            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ComisionReciboAgenteGSE param, boolean optimizeContent)
+            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ComisionReciboAgenteGSE param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
                         try{
-                             return param.getOMElement(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ComisionReciboAgenteGSE.MY_QNAME,
+                             return param.getOMElement(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ComisionReciboAgenteGSE.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -61098,12 +61098,12 @@
 
             }
         
-            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ComisionReciboAgenteGSResponseE param, boolean optimizeContent)
+            private  org.apache.axiom.om.OMElement  toOM(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ComisionReciboAgenteGSResponseE param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
                         try{
-                             return param.getOMElement(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ComisionReciboAgenteGSResponseE.MY_QNAME,
+                             return param.getOMElement(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ComisionReciboAgenteGSResponseE.MY_QNAME,
                                           org.apache.axiom.om.OMAbstractFactory.getOMFactory());
                         } catch(org.apache.axis2.databinding.ADBException e){
                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -61113,14 +61113,14 @@
             }
         
                                     
-                                        private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory, mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteGSE param, boolean optimizeContent)
+                                        private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory, mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteGSE param, boolean optimizeContent)
                                         throws org.apache.axis2.AxisFault{
 
                                              
                                                     try{
 
                                                             org.apache.axiom.soap.SOAPEnvelope emptyEnvelope = factory.getDefaultEnvelope();
-                                                            emptyEnvelope.getBody().addChild(param.getOMElement(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteGSE.MY_QNAME,factory));
+                                                            emptyEnvelope.getBody().addChild(param.getOMElement(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteGSE.MY_QNAME,factory));
                                                             return emptyEnvelope;
                                                         } catch(org.apache.axis2.databinding.ADBException e){
                                                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -61134,14 +61134,14 @@
 
                              
                                     
-                                        private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory, mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoGSE param, boolean optimizeContent)
+                                        private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory, mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoGSE param, boolean optimizeContent)
                                         throws org.apache.axis2.AxisFault{
 
                                              
                                                     try{
 
                                                             org.apache.axiom.soap.SOAPEnvelope emptyEnvelope = factory.getDefaultEnvelope();
-                                                            emptyEnvelope.getBody().addChild(param.getOMElement(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoGSE.MY_QNAME,factory));
+                                                            emptyEnvelope.getBody().addChild(param.getOMElement(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoGSE.MY_QNAME,factory));
                                                             return emptyEnvelope;
                                                         } catch(org.apache.axis2.databinding.ADBException e){
                                                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -61155,14 +61155,14 @@
 
                              
                                     
-                                        private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory, mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSE param, boolean optimizeContent)
+                                        private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory, mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSE param, boolean optimizeContent)
                                         throws org.apache.axis2.AxisFault{
 
                                              
                                                     try{
 
                                                             org.apache.axiom.soap.SOAPEnvelope emptyEnvelope = factory.getDefaultEnvelope();
-                                                            emptyEnvelope.getBody().addChild(param.getOMElement(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSE.MY_QNAME,factory));
+                                                            emptyEnvelope.getBody().addChild(param.getOMElement(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSE.MY_QNAME,factory));
                                                             return emptyEnvelope;
                                                         } catch(org.apache.axis2.databinding.ADBException e){
                                                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -61176,14 +61176,14 @@
 
                              
                                     
-                                        private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory, mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.PolizaGSE param, boolean optimizeContent)
+                                        private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory, mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaGSE param, boolean optimizeContent)
                                         throws org.apache.axis2.AxisFault{
 
                                              
                                                     try{
 
                                                             org.apache.axiom.soap.SOAPEnvelope emptyEnvelope = factory.getDefaultEnvelope();
-                                                            emptyEnvelope.getBody().addChild(param.getOMElement(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.PolizaGSE.MY_QNAME,factory));
+                                                            emptyEnvelope.getBody().addChild(param.getOMElement(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaGSE.MY_QNAME,factory));
                                                             return emptyEnvelope;
                                                         } catch(org.apache.axis2.databinding.ADBException e){
                                                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -61197,14 +61197,14 @@
 
                              
                                     
-                                        private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory, mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoGSE param, boolean optimizeContent)
+                                        private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory, mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoGSE param, boolean optimizeContent)
                                         throws org.apache.axis2.AxisFault{
 
                                              
                                                     try{
 
                                                             org.apache.axiom.soap.SOAPEnvelope emptyEnvelope = factory.getDefaultEnvelope();
-                                                            emptyEnvelope.getBody().addChild(param.getOMElement(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoGSE.MY_QNAME,factory));
+                                                            emptyEnvelope.getBody().addChild(param.getOMElement(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoGSE.MY_QNAME,factory));
                                                             return emptyEnvelope;
                                                         } catch(org.apache.axis2.databinding.ADBException e){
                                                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -61218,14 +61218,14 @@
 
                              
                                     
-                                        private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory, mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSaludGSE param, boolean optimizeContent)
+                                        private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory, mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludGSE param, boolean optimizeContent)
                                         throws org.apache.axis2.AxisFault{
 
                                              
                                                     try{
 
                                                             org.apache.axiom.soap.SOAPEnvelope emptyEnvelope = factory.getDefaultEnvelope();
-                                                            emptyEnvelope.getBody().addChild(param.getOMElement(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSaludGSE.MY_QNAME,factory));
+                                                            emptyEnvelope.getBody().addChild(param.getOMElement(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludGSE.MY_QNAME,factory));
                                                             return emptyEnvelope;
                                                         } catch(org.apache.axis2.databinding.ADBException e){
                                                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -61239,14 +61239,14 @@
 
                              
                                     
-                                        private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory, mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteGSE param, boolean optimizeContent)
+                                        private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory, mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGSE param, boolean optimizeContent)
                                         throws org.apache.axis2.AxisFault{
 
                                              
                                                     try{
 
                                                             org.apache.axiom.soap.SOAPEnvelope emptyEnvelope = factory.getDefaultEnvelope();
-                                                            emptyEnvelope.getBody().addChild(param.getOMElement(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteGSE.MY_QNAME,factory));
+                                                            emptyEnvelope.getBody().addChild(param.getOMElement(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGSE.MY_QNAME,factory));
                                                             return emptyEnvelope;
                                                         } catch(org.apache.axis2.databinding.ADBException e){
                                                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -61260,14 +61260,14 @@
 
                              
                                     
-                                        private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory, mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAgenteGSE param, boolean optimizeContent)
+                                        private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory, mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAgenteGSE param, boolean optimizeContent)
                                         throws org.apache.axis2.AxisFault{
 
                                              
                                                     try{
 
                                                             org.apache.axiom.soap.SOAPEnvelope emptyEnvelope = factory.getDefaultEnvelope();
-                                                            emptyEnvelope.getBody().addChild(param.getOMElement(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAgenteGSE.MY_QNAME,factory));
+                                                            emptyEnvelope.getBody().addChild(param.getOMElement(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAgenteGSE.MY_QNAME,factory));
                                                             return emptyEnvelope;
                                                         } catch(org.apache.axis2.databinding.ADBException e){
                                                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -61281,14 +61281,14 @@
 
                              
                                     
-                                        private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory, mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboGSE param, boolean optimizeContent)
+                                        private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory, mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboGSE param, boolean optimizeContent)
                                         throws org.apache.axis2.AxisFault{
 
                                              
                                                     try{
 
                                                             org.apache.axiom.soap.SOAPEnvelope emptyEnvelope = factory.getDefaultEnvelope();
-                                                            emptyEnvelope.getBody().addChild(param.getOMElement(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboGSE.MY_QNAME,factory));
+                                                            emptyEnvelope.getBody().addChild(param.getOMElement(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboGSE.MY_QNAME,factory));
                                                             return emptyEnvelope;
                                                         } catch(org.apache.axis2.databinding.ADBException e){
                                                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -61302,14 +61302,14 @@
 
                              
                                     
-                                        private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory, mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteSaludGSE param, boolean optimizeContent)
+                                        private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory, mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteSaludGSE param, boolean optimizeContent)
                                         throws org.apache.axis2.AxisFault{
 
                                              
                                                     try{
 
                                                             org.apache.axiom.soap.SOAPEnvelope emptyEnvelope = factory.getDefaultEnvelope();
-                                                            emptyEnvelope.getBody().addChild(param.getOMElement(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteSaludGSE.MY_QNAME,factory));
+                                                            emptyEnvelope.getBody().addChild(param.getOMElement(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteSaludGSE.MY_QNAME,factory));
                                                             return emptyEnvelope;
                                                         } catch(org.apache.axis2.databinding.ADBException e){
                                                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -61323,14 +61323,14 @@
 
                              
                                     
-                                        private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory, mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoEndosoGSE param, boolean optimizeContent)
+                                        private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory, mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoEndosoGSE param, boolean optimizeContent)
                                         throws org.apache.axis2.AxisFault{
 
                                              
                                                     try{
 
                                                             org.apache.axiom.soap.SOAPEnvelope emptyEnvelope = factory.getDefaultEnvelope();
-                                                            emptyEnvelope.getBody().addChild(param.getOMElement(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoEndosoGSE.MY_QNAME,factory));
+                                                            emptyEnvelope.getBody().addChild(param.getOMElement(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoEndosoGSE.MY_QNAME,factory));
                                                             return emptyEnvelope;
                                                         } catch(org.apache.axis2.databinding.ADBException e){
                                                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -61344,14 +61344,14 @@
 
                              
                                     
-                                        private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory, mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ComisionReciboAgenteGSE param, boolean optimizeContent)
+                                        private  org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory, mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ComisionReciboAgenteGSE param, boolean optimizeContent)
                                         throws org.apache.axis2.AxisFault{
 
                                              
                                                     try{
 
                                                             org.apache.axiom.soap.SOAPEnvelope emptyEnvelope = factory.getDefaultEnvelope();
-                                                            emptyEnvelope.getBody().addChild(param.getOMElement(mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ComisionReciboAgenteGSE.MY_QNAME,factory));
+                                                            emptyEnvelope.getBody().addChild(param.getOMElement(mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ComisionReciboAgenteGSE.MY_QNAME,factory));
                                                             return emptyEnvelope;
                                                         } catch(org.apache.axis2.databinding.ADBException e){
                                                             throw org.apache.axis2.AxisFault.makeFault(e);
@@ -61381,170 +61381,170 @@
 
         try {
         
-                if (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteGSE.class.equals(type)){
+                if (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteGSE.class.equals(type)){
                 
-                           return mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteGSE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                           return mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteGSE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }
            
-                if (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteGSResponseE.class.equals(type)){
+                if (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteGSResponseE.class.equals(type)){
                 
-                           return mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteGSResponseE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                           return mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteGSResponseE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }
            
-                if (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoGSE.class.equals(type)){
+                if (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoGSE.class.equals(type)){
                 
-                           return mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoGSE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                           return mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoGSE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }
            
-                if (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoGSResponseE.class.equals(type)){
+                if (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoGSResponseE.class.equals(type)){
                 
-                           return mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoGSResponseE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                           return mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoGSResponseE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }
            
-                if (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSE.class.equals(type)){
+                if (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSE.class.equals(type)){
                 
-                           return mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                           return mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }
            
-                if (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSResponseE.class.equals(type)){
+                if (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSResponseE.class.equals(type)){
                 
-                           return mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSResponseE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                           return mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSResponseE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }
            
-                if (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.PolizaGSE.class.equals(type)){
+                if (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaGSE.class.equals(type)){
                 
-                           return mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.PolizaGSE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                           return mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaGSE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }
            
-                if (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.PolizaGSResponseE.class.equals(type)){
+                if (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaGSResponseE.class.equals(type)){
                 
-                           return mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.PolizaGSResponseE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                           return mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaGSResponseE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }
            
-                if (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoGSE.class.equals(type)){
+                if (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoGSE.class.equals(type)){
                 
-                           return mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoGSE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                           return mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoGSE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }
            
-                if (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoGSResponseE.class.equals(type)){
+                if (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoGSResponseE.class.equals(type)){
                 
-                           return mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoGSResponseE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                           return mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoGSResponseE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }
            
-                if (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSaludGSE.class.equals(type)){
+                if (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludGSE.class.equals(type)){
                 
-                           return mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSaludGSE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                           return mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludGSE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }
            
-                if (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSaludGSResponseE.class.equals(type)){
+                if (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludGSResponseE.class.equals(type)){
                 
-                           return mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSaludGSResponseE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                           return mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludGSResponseE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }
            
-                if (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteGSE.class.equals(type)){
+                if (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGSE.class.equals(type)){
                 
-                           return mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteGSE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                           return mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGSE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }
            
-                if (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteGSResponseE.class.equals(type)){
+                if (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGSResponseE.class.equals(type)){
                 
-                           return mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteGSResponseE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                           return mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGSResponseE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }
            
-                if (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAgenteGSE.class.equals(type)){
+                if (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAgenteGSE.class.equals(type)){
                 
-                           return mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAgenteGSE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                           return mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAgenteGSE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }
            
-                if (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAgenteGSResponseE.class.equals(type)){
+                if (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAgenteGSResponseE.class.equals(type)){
                 
-                           return mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAgenteGSResponseE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                           return mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAgenteGSResponseE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }
            
-                if (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboGSE.class.equals(type)){
+                if (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboGSE.class.equals(type)){
                 
-                           return mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboGSE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                           return mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboGSE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }
            
-                if (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboGSResponseE.class.equals(type)){
+                if (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboGSResponseE.class.equals(type)){
                 
-                           return mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboGSResponseE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                           return mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboGSResponseE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }
            
-                if (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteSaludGSE.class.equals(type)){
+                if (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteSaludGSE.class.equals(type)){
                 
-                           return mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteSaludGSE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                           return mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteSaludGSE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }
            
-                if (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteSaludGSResponseE.class.equals(type)){
+                if (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteSaludGSResponseE.class.equals(type)){
                 
-                           return mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.AgenteSaludGSResponseE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                           return mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteSaludGSResponseE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }
            
-                if (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoEndosoGSE.class.equals(type)){
+                if (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoEndosoGSE.class.equals(type)){
                 
-                           return mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoEndosoGSE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                           return mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoEndosoGSE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }
            
-                if (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoEndosoGSResponseE.class.equals(type)){
+                if (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoEndosoGSResponseE.class.equals(type)){
                 
-                           return mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.MovimientoAseguradoEndosoGSResponseE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                           return mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoEndosoGSResponseE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }
            
-                if (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ComisionReciboAgenteGSE.class.equals(type)){
+                if (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ComisionReciboAgenteGSE.class.equals(type)){
                 
-                           return mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ComisionReciboAgenteGSE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                           return mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ComisionReciboAgenteGSE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }
            
-                if (mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ComisionReciboAgenteGSResponseE.class.equals(type)){
+                if (mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ComisionReciboAgenteGSResponseE.class.equals(type)){
                 
-                           return mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ComisionReciboAgenteGSResponseE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
+                           return mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ComisionReciboAgenteGSResponseE.Factory.parse(param.getXMLStreamReaderWithoutCaching());
                     
 
                 }

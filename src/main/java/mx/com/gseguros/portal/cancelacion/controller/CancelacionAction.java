@@ -2,7 +2,6 @@ package mx.com.gseguros.portal.cancelacion.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -11,12 +10,11 @@ import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.cancelacion.service.CancelacionManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
-import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.utils.HttpUtil;
-import mx.com.gseguros.ws.client.Ice2sigsWebServices;
+import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
@@ -30,7 +28,7 @@ public class CancelacionAction extends PrincipalCoreAction
 	
 	private CancelacionManager       cancelacionManager;
 	private PantallasManager         pantallasManager;
-	private transient Ice2sigsWebServices ice2sigsWebServices;
+	private transient Ice2sigsService ice2sigsService;
 	private Map<String,String>       smap1;
 	private List<Map<String,String>> slist1;
 	private Map<String,Item>         imap;
@@ -301,7 +299,7 @@ public class CancelacionAction extends PrincipalCoreAction
 			if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 			
 			// Ejecutamos el Web Service de Recibos:
-			ice2sigsWebServices.ejecutaWSrecibos(cdunieco, cdramo, 
+			ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
 					estado, nmpoliza, 
 					nmsuplem, null, 
 					cdtipsitGS, sucursal, "", ntramite, 
@@ -515,8 +513,8 @@ public class CancelacionAction extends PrincipalCoreAction
 		this.error = error;
 	}
 
-	public void setIce2sigsWebServices(Ice2sigsWebServices ice2sigsWebServices) {
-		this.ice2sigsWebServices = ice2sigsWebServices;
+	public void setIce2sigsService(Ice2sigsService ice2sigsService) {
+		this.ice2sigsService = ice2sigsService;
 	}
-		
+	
 }

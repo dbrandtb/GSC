@@ -33,8 +33,7 @@
     
     <bean id="beanDatosComplementarios" class="mx.com.gseguros.portal.cotizacion.controller.ComplementariosAction" scope="prototype">
         <property name="kernelManager" ref="kernelManagerSustituto"/>
-        <property name="ice2sigsWebServices" ref="ice2sigsWebServices"></property>
-        <!-- <property name="emisionManager" ref="emisionManagerImpl"/> -->
+        <property name="ice2sigsService" ref="ice2sigsServiceImpl"></property>
     </bean>
     
     <bean id="MesaControlAction" class="mx.com.gseguros.portal.cotizacion.controller.MesaControlAction" scope="prototype">

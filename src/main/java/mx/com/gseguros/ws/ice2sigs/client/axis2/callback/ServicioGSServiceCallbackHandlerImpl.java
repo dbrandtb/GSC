@@ -1,15 +1,15 @@
-package mx.com.gseguros.ws.client.ice2sigs.callback;
+package mx.com.gseguros.ws.ice2sigs.client.axis2.callback;
 
 import java.util.HashMap;
 
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.gseguros.exception.ApplicationException;
-import mx.com.gseguros.ws.client.Ice2sigsWebServices.Estatus;
-import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceCallbackHandler;
-import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSaludGSResponseE;
-import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ClienteSaludRespuesta;
-import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboGSResponseE;
-import mx.com.gseguros.ws.client.ice2sigs.ServicioGSServiceStub.ReciboRespuesta;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceCallbackHandler;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludGSResponseE;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludRespuesta;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboGSResponseE;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboRespuesta;
+import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService.Estatus;
 
 import org.apache.log4j.Logger;
 
