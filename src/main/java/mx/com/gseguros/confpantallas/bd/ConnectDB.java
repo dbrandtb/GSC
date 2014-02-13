@@ -14,16 +14,16 @@ public class ConnectDB {
 		dataSource.setUrl("jdbc:sqlserver://127.0.0.1:1433;databaseName=FopDinamic");
 		dataSource.setUsername("sa");
 		dataSource.setPassword("SalmaCamila2017");*/
-		
+		/*
 		dataSource.setDriverClassName("oracle.jdbc.OracleDriver");
 		dataSource.setUrl("jdbc:oracle:thin:@localhost:1521:xe");
 		dataSource.setUsername("SYSTEM");
 		dataSource.setPassword("salmac");
-		
-		/*dataSource.setDriverClassName("oracle.jdbc.driver.OracleDriver");
+		*/
+		dataSource.setDriverClassName("oracle.jdbc.driver.OracleDriver");
 		dataSource.setUrl("jdbc:oracle:thin:@10.1.1.133:6521:GSEGUROS");
 		dataSource.setUsername("ice");
-		dataSource.setPassword("ice");*/
+		dataSource.setPassword("ice");
 	}
 
 	public DriverManagerDataSource getDataSource() {
