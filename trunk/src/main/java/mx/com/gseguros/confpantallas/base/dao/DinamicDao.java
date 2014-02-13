@@ -275,7 +275,7 @@ public class DinamicDao {
 			rgs = "SELECT DSATRIBU AS NOMBRE, DSATRIBU AS TABLA FROM TATRISIT WHERE CDTIPSIT = '"+mapa.get("cdramo")+"' ORDER BY CDATRIBU";
 		}else if(qry.equals("DatosControlTatrisit")){
 			rgs = "SELECT CDTIPSIT CDRAMO, CDATRIBU, DSATRIBU, SWFORMAT, SWOBLIGA, NMLMAX, NMLMIN, OTTABVAL, SWPRODUC, SWSUPLEM, SWTARIFI, SWPRESEN FROM TATRISIT "
-					+ "WHERE CDTIPSIT = "+mapa.get("cdramo")+" AND DSATRIBU = '"+mapa.get("descripcion")+"'";
+					+ "WHERE CDTIPSIT = '"+mapa.get("cdramo")+"' AND DSATRIBU = '"+mapa.get("descripcion")+"'";
 		}else if(qry.equals("existePanel")){
 			rgs = "SELECT DISTINCT(NAME_PANEL) FROM DNC_PANELES WHERE NAME_PANEL = '"+mapa.get("panel")+"'";
 		}else if(qry.equals("maxPanel")){
