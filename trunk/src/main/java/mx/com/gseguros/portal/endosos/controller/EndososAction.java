@@ -1388,13 +1388,6 @@ public class EndososAction extends PrincipalCoreAction
 							cdtipsitGS, sucursal, nmsolici, nmtramite, 
 							true, tipomov, 
 							(UserVO) session.get("USUARIO"));
-					/*
-					ejecutaWSrecibosEndoso((String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"),
-							(String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"),
-							respEndCob.get("pv_nmsuplem_o"), respEndCob.get("pv_nsuplogi_o"), rutaCarpeta,
-							cdtipsitGS, sucursal, nmsolici, nmtramite,
-							true, "INSERTA", tipomov );
-					*/
 					
 					mensaje="Se ha confirmado el endoso "+respEndCob.get("pv_nsuplogi_o");
 				}
@@ -2843,13 +2836,6 @@ public class EndososAction extends PrincipalCoreAction
 						cdtipsitGS, sucursal, nmsolici, ntramite, 
 						true, tipomov, 
 						(UserVO) session.get("USUARIO"));
-				/*
-				ejecutaWSrecibosEndoso(cdunieco, cdramo,
-						estado, nmpoliza,
-						nmsuplem, nsuplogi, rutaCarpeta,
-						cdtipsitGS, sucursal, nmsolici, ntramite,
-						true, "INSERTA", tipomov );
-				*/
 				
 				mensaje="Se ha guardado el endoso "+nsuplogi;
 				
@@ -3300,13 +3286,6 @@ public class EndososAction extends PrincipalCoreAction
 						cdtipsitGS, sucursal, nmsolici, nmtramite, 
 						true, cdtipsup, 
 						(UserVO) session.get("USUARIO"));
-				/*
-				ejecutaWSrecibosEndoso(cdunieco, cdramo,
-				estado, nmpoliza,
-				nmsuplem, nsuplogi, rutaCarpeta,
-						cdtipsitGS, sucursal, nmsolici, nmtramite,
-						true, "INSERTA", cdtipsup );
-				*/
 				mensaje="Endoso confirmado "+nsuplogi;
 			}
 			else
@@ -3730,13 +3709,6 @@ public class EndososAction extends PrincipalCoreAction
 						cdtipsitGS, sucursal, nmsolici, nmtramite, 
 						true, cdtipsup, 
 						(UserVO) session.get("USUARIO"));
-				/*
-				ejecutaWSrecibosEndoso(cdunieco, cdramo,
-				estado, nmpoliza,
-				nmsuplem, nsuplogi, rutaCarpeta,
-						cdtipsitGS, sucursal, nmsolici, nmtramite,
-						true, "INSERTA", cdtipsup );
-				*/
 				
 				mensaje="Endoso confirmado "+nsuplogi;
 			}
@@ -3993,10 +3965,6 @@ public class EndososAction extends PrincipalCoreAction
 				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
 						rutaCarpeta, cdtipsitGS, sucursal, nmsolici, ntramiteEmi, true, cdtipsup, 
 						(UserVO) session.get("USUARIO"));
-				/*
-				ejecutaWSrecibosEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, 
-						rutaCarpeta, cdtipsitGS, sucursal, nmsolici, ntramiteEmi, true, "INSERTA", cdtipsup);
-				*/
 				break;
 				
 			case INCREMENTO_EDAD_ASEGURADO:
@@ -4016,13 +3984,6 @@ public class EndososAction extends PrincipalCoreAction
 						cdtipsitGS, sucursal, nmsolici, ntramiteEmi, 
 						true, cdtipsup, 
 						(UserVO) session.get("USUARIO"));
-				/*
-				ejecutaWSrecibosEndoso(cdunieco, cdramo,
-				estado, nmpoliza,
-				nmsuplem, nsuplogi, rutaCarpeta,
-						cdtipsitGS, sucursal, nmsolici, ntramiteEmi,
-						true, "INSERTA", cdtipsup );
-				*/
 				break;
 
 			default:
@@ -4484,13 +4445,6 @@ public class EndososAction extends PrincipalCoreAction
 						cdtipsitGS, sucursal, nmsolici, nmtramite, 
 						true, tipomov, 
 						(UserVO) session.get("USUARIO"));
-				/*
-				ejecutaWSrecibosEndoso(cdunieco, cdramo,
-						estado, nmpoliza,
-						nmsuplem, nsuplogi, rutaCarpeta,
-						cdtipsitGS, sucursal, nmsolici, nmtramite,
-						true, "INSERTA", tipomov );
-				*/
 				
 			    mensaje="Se ha guardado el endoso "+nsuplogi;
 			    
@@ -4821,13 +4775,6 @@ public class EndososAction extends PrincipalCoreAction
 						cdtipsitGS, sucursal, nmsolici, ntramite, 
 						true, cdtipsup, 
 						(UserVO) session.get("USUARIO"));
-				/*
-				ejecutaWSrecibosEndoso(cdunieco, cdramo,
-						estado, nmpoliza,
-						nmsuplem, nsuplogi, null,
-						cdtipsitGS, sucursal, nmsolici, ntramite,
-						true, "INSERTA", cdtipsup );
-				*/
 				
 				mensaje="Se ha guardado el endoso "+nsuplogi;
 			}
@@ -5135,13 +5082,6 @@ public class EndososAction extends PrincipalCoreAction
 						cdtipsitGS, sucursal, nmsolici, ntramite, 
 						true, cdtipsup, 
 						(UserVO) session.get("USUARIO"));
-				/*
-				ejecutaWSrecibosEndoso(cdunieco, cdramo,
-						estado, nmpoliza,
-						nmsuplem, nsuplogi, null,
-						cdtipsitGS, sucursal, nmsolici, ntramite,
-						true, "INSERTA", cdtipsup );
-				*/
 				
 				mensaje="Se ha guardado el endoso "+nsuplogi;
 			}
@@ -5792,13 +5732,6 @@ public class EndososAction extends PrincipalCoreAction
 						cdtipsitGS, sucursal, nmsolici, ntramite, 
 						true, cdtipsup, 
 						(UserVO) session.get("USUARIO"));
-				/*
-				ejecutaWSrecibosEndoso(cdunieco, cdramo,
-				estado, nmpoliza,
-				nmsuplem, nsuplogi, null,
-						cdtipsitGS, sucursal, nmsolici, ntramite,
-						true, "INSERTA", cdtipsup );
-				*/
 				
 				mensaje="Se ha guardado el endoso "+nsuplogi;
 			}
@@ -6036,13 +5969,6 @@ public class EndososAction extends PrincipalCoreAction
 						cdtipsitGS, sucursal, nmsolici, ntramite, 
 						true, cdtipsup, 
 						(UserVO) session.get("USUARIO"));
-				/*
-				ejecutaWSrecibosEndoso(cdunieco, cdramo,
-				estado, nmpoliza,
-				nmsuplem, nsuplogi, null,
-						cdtipsitGS, sucursal, nmsolici, ntramite,
-						true, "INSERTA", cdtipsup );
-				*/
 				
 				mensaje="Se ha guardado el endoso "+nsuplogi;
 			}
