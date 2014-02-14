@@ -108,6 +108,10 @@ function _4_cambiarTiptra(cdtiptra)
 
 Ext.onReady(function()
 {
+	
+<s:elseif test='%{getSmap2().get("pv_cdtiptra_i").equalsIgnoreCase("16")}'>
+	<%@ include file="/jsp-script/proceso/siniestros/scriptMesaSiniestros.jsp"%>
+</s:elseif>
     
     /////////////////////
     ////// modelos //////

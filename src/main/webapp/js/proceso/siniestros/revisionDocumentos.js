@@ -31,7 +31,7 @@ Ext.onReady(function() {
     });
     
     var gridDocumentos = Ext.create('Ext.grid.Panel',{
-		title: 'Checklist para los Documentos Etregados del Siniestro',
+		title: 'Checklist para los Documentos Entregados del Siniestro',
 		renderTo : 'maindiv',
 		autoScroll: true,
 		store:  storeDocumentos,
@@ -40,7 +40,7 @@ Ext.onReady(function() {
 		style: 'margin:0px',
 		height: 250,
 		columns       :[ { header     : 'Id' , dataIndex : 'id', hidden: true},
-		                 { header     : 'Listo' ,dataIndex : 'listo' ,flex: 1, xtype: 'checkcolumn', menuDisabled : true },
+		                 { header     : 'Entregado' ,dataIndex : 'listo' ,flex: 1, xtype: 'checkcolumn', menuDisabled : true },
 		                 { header     : 'Nombre del Documento' ,dataIndex : 'nombre' ,flex: 1 },
 		                 { header     : 'Obligatorio' ,dataIndex : 'obligatorio' ,flex: 1 }
 		 ],
