@@ -1088,7 +1088,7 @@ Ext.onReady(function()
                     ,liga    : '<s:url namespace="/endosos" action="endosoValositBasicoSimple" />'
                     ,funcion : 'endosovalositbasicosimple'
                 }*/
-                ,{
+                {
                 	texto    : '2'//nombres
                 	,liga    : '<s:url namespace="/endosos" action="pantallaEndosoNombres" />'
                 	,funcion : 'endosonombres'
