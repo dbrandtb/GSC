@@ -195,7 +195,7 @@ function _8_confirmar()
     }
     
     var motivo = _8_panelEndoso.items.items[1].getValue();
-    var coment = _8_panelEndoso.items.items[2].getValue();
+    var coment = _8_panelEndoso.items.items[3].getValue();
     
     if(valido)
     {

@@ -6088,6 +6088,7 @@ public class EndososAction extends PrincipalCoreAction
 		comment: ""
 		fecha_endoso: "10/02/2015"
 		trazreexped: "4"
+		cdplan : "A"
 	smap3:
 		cdrfc=FLOR881209,
 		cdperson=512043,
@@ -6135,7 +6136,8 @@ public class EndososAction extends PrincipalCoreAction
 			String feIniVig       = smap3.get("feefecto");
 			String feFinvig       = smap3.get("feproren");
 			String cdrazonReexp   = smap2.get("trazreexped");
-			String comentaReexp = smap2.get("comment");
+			String comentaReexp   = smap2.get("comment");
+			String cdplan         = smap2.get("cdplan");
 			
 			//PKG_ENDOSOS.P_ENDOSO_INICIA
 			Map<String,String>resIniEnd=endososManager.iniciarEndoso(cdunieco, cdramo, estado, nmpoliza,
@@ -6145,7 +6147,7 @@ public class EndososAction extends PrincipalCoreAction
 			String nsuplogi = resIniEnd.get("pv_nsuplogi_o");
 			
 			//P_CLONAR_POLIZA_REEXPED
-			Map<String,String>resReexped=endososManager.pClonarPolizaReexped(cdunieco, cdramo, estado, nmpoliza, sFecha);
+			Map<String,String>resReexped=endososManager.pClonarPolizaReexped(cdunieco, cdramo, estado, nmpoliza, sFecha, cdplan);
 			String nmpolizaNuevaPoliza = resReexped.get("pv_nmpolnew_o");
 			String ntramiteNuevaPoliza = resReexped.get("pv_ntramite_o");
 			

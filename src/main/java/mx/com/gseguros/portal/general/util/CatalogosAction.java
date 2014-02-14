@@ -80,6 +80,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case TCAUSASSV:
 				case TTRATAMIENTO:
 				case TPENALIZACIONES:
+				case PLANES:
 					lista = catalogosManager.getTmanteni(nombreCatalogo);
 	                break;
 				case MC_ESTATUS_TRAMITE:
