@@ -4,18 +4,22 @@
 ////// variables //////
 /*///////////////////*/
 var pantallaValositMainContent;
-var pantallaValositUrlLoad           = '<s:url namespace="/"        action="pantallaValositLoad" />';
-var pantallaValositUrlSave           = '<s:url namespace="/endosos" action="guardarEndosoValositBasico" />';
-var pantallaValositUrlDoc            = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza" />';
-var pantallaValositInput             = [];
-    pantallaValositInput['cdunieco'] = '<s:property value="smap1.cdunieco" />';
-    pantallaValositInput['cdramo']   = '<s:property value="smap1.cdramo" />';
-    pantallaValositInput['estado']   = '<s:property value="smap1.estado" />';
-    pantallaValositInput['nmpoliza'] = '<s:property value="smap1.nmpoliza" />';
-    pantallaValositInput['cdtipsit'] = '<s:property value="smap1.cdtipsit" />';
-    pantallaValositInput['nmsituac'] = '<s:property value="smap1.nmsituac" />';
-    pantallaValositInput['ntramite'] = '<s:property value="smap1.ntramite" />';
-    pantallaValositInput['nmsuplem'] = '<s:property value="smap1.nmsuplem" />';
+var pantallaValositUrlLoad       = '<s:url namespace="/"           action="pantallaValositLoad" />';
+var pantallaValositUrlSave       = '<s:url namespace="/endosos"    action="guardarEndosoValositBasico" />';
+var pantallaValositUrlSaveSimple = '<s:url namespace="/endosos"    action="guardarEndosoValositBasicoSimple" />';
+var pantallaValositUrlDoc        = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza" />';
+
+var pantallaValositInput                 = [];
+    pantallaValositInput['cdunieco']     = '<s:property value="smap1.cdunieco" />';
+    pantallaValositInput['cdramo']       = '<s:property value="smap1.cdramo" />';
+    pantallaValositInput['estado']       = '<s:property value="smap1.estado" />';
+    pantallaValositInput['nmpoliza']     = '<s:property value="smap1.nmpoliza" />';
+    pantallaValositInput['cdtipsit']     = '<s:property value="smap1.cdtipsit" />';
+    pantallaValositInput['nmsituac']     = '<s:property value="smap1.nmsituac" />';
+    pantallaValositInput['ntramite']     = '<s:property value="smap1.ntramite" />';
+    pantallaValositInput['nmsuplem']     = '<s:property value="smap1.nmsuplem" />';
+    pantallaValositInput['endososimple'] = <s:property value="endosoSimple" />;
+    
 var pantallaValositEsTitular         = false;
 debug('input',pantallaValositInput);
 /*///////////////////*/
@@ -177,7 +181,7 @@ Ext.onReady(function()
         ,border      : 0
         ,renderTo    : 'maindivpantallavalosit'
         ,buttonAlign : 'center'
-        ,url         : pantallaValositUrlSave
+        ,url         : pantallaValositInput['endososimple'] ? pantallaValositUrlSaveSimple : pantallaValositUrlSave
         ,items       :
         [
             pantallaValositMainContent

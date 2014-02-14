@@ -207,4 +207,12 @@ public interface EndososManager
 			,String ntramite
 			,String porparti
 			) throws Exception;
+	/**
+	 * PKG_SATELITES.P_GET_NMSUPLEM_EMISION
+	 */
+	public String pGetSuplemEmision(
+			 String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza) throws Exception;
 }

@@ -622,4 +622,22 @@ public class EndososManagerImpl implements EndososManager
 		endososDAO.pMovMpoliage(params);
 		log.debug("EndososManager pMovMpoliage fin");
 	}
+	
+	/**
+	 * PKG_SATELITES.P_GET_NMSUPLEM_EMISION
+	 */
+	@Override
+	public String pGetSuplemEmision(String cdunieco,String cdramo,String estado,String nmpoliza) throws Exception
+	{
+		String nmsuplem = "";
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		log.debug("EndososManager pGetSuplemEmision params: "+params);
+		nmsuplem = endososDAO.pGetSuplemEmision(params);
+		log.debug("EndososManager pGetSuplemEmision nmsuplem: "+nmsuplem);
+		return nmsuplem;
+	}
 }

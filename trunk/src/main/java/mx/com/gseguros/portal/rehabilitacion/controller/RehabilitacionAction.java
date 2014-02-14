@@ -7,10 +7,13 @@ import java.util.Map;
 import org.apache.struts2.ServletActionContext;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
+import mx.com.gseguros.portal.cancelacion.service.CancelacionManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.portal.rehabilitacion.service.RehabilitacionManager;
+import mx.com.gseguros.utils.HttpUtil;
 
 public class RehabilitacionAction extends PrincipalCoreAction
 {
@@ -23,6 +26,7 @@ public class RehabilitacionAction extends PrincipalCoreAction
 	private RehabilitacionManager          rehabilitacionManager;
 	private Map<String,Item>               imap;
 	private PantallasManager               pantallasManager;
+	private CancelacionManager             cancelacionManager;
 	
 	/////////////////////////////
 	////// marco principal //////
@@ -167,6 +171,59 @@ public class RehabilitacionAction extends PrincipalCoreAction
 		try
 		{
 			rehabilitacionManager.rehabilitarPoliza(smap1);
+			
+			String cdunieco = smap1.get("pv_cdunieco_i");
+			String cdramo   = smap1.get("pv_cdramo_i");
+			String estado   = smap1.get("pv_estado_i");
+			String nmpoliza = smap1.get("pv_nmpoliza_i");
+			String cdtipsup = TipoEndoso.REHABILITACION.getCdTipSup().toString();
+			
+			List<Map<String,String>>listaDocu=cancelacionManager.reimprimeDocumentos(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
+			
+			for(Map<String,String> docu:listaDocu)
+			{
+				log.debug("docu iterado: "+docu);
+				String descripc = docu.get("descripc");
+				String descripl = docu.get("descripl");
+				String nmsuplem = docu.get("nmsuplem");
+				String ntramite = docu.get("ntramite");
+				
+				String rutaCarpeta = this.getText("ruta.documentos.poliza")+"/"+ntramite;
+				
+				String url=this.getText("ruta.servidor.reports")
+						+ "?destype=cache"
+						+ "&desformat=PDF"
+						+ "&userid="+this.getText("pass.servidor.reports")
+						+ "&report="+descripl
+						+ "&paramform=no"
+						+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+						+ "&p_unieco="+cdunieco
+						+ "&p_ramo="+cdramo
+						+ "&p_estado="+estado
+						+ "&p_poliza="+nmpoliza
+						+ "&p_suplem="+nmsuplem
+						+ "&desname="+rutaCarpeta+"/"+descripc;
+				if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
+				{
+					// C R E D E N C I A L _ X X X X X X . P D F
+					//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+					url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("_"));
+				}
+				log.debug(""
+						+ "\n#################################"
+						+ "\n###### Se solicita reporte ######"
+						+ "\na "+url+""
+						+ "\n#################################");
+				HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
+				log.debug(""
+						+ "\n######                    ######"
+						+ "\n###### reporte solicitado ######"
+						+ "\na "+url+""
+						+ "\n################################"
+						+ "\n################################"
+						+ "");
+			}
+			
 			success=true;
 		}
 		catch(Exception ex)
@@ -228,6 +285,10 @@ public class RehabilitacionAction extends PrincipalCoreAction
 
 	public void setPantallasManager(PantallasManager pantallasManager) {
 		this.pantallasManager = pantallasManager;
+	}
+
+	public void setCancelacionManager(CancelacionManager cancelacionManager) {
+		this.cancelacionManager = cancelacionManager;
 	}
 
 }

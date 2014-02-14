@@ -19,8 +19,11 @@
         <pattern>/rehabilitacion/pantallaRehabilitacionUnica.action</pattern>
         <pattern>/endosos/pantallaEndosoCoberturas.action</pattern>
         <pattern>/endosos/pantallaEndosoDomicilio.action</pattern>
+        <pattern>/endosos/pantallaEndosoDomicilioSimple.action</pattern>
         <pattern>/endosos/pantallaEndosoNombres.action</pattern>
+        <pattern>/endosos/pantallaEndosoNombresSimple.action</pattern>
         <pattern>/endosos/endosoValositBasico.action</pattern>
+        <pattern>/endosos/endosoValositBasicoSimple.action</pattern>
         <pattern>/endosos/pantallaEndosoClausulas.action</pattern>
         <pattern>/endosos/pantallaEndosoAltaBajaAsegurado.action</pattern>
         <pattern>/endosos/endosoEdad.action</pattern>

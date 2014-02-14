@@ -5,8 +5,11 @@
 ////// variables //////
 /*///////////////////*/
 var endnomStoreAseg;
-var endnomUrlGuardar    = '<s:url namespace="/endosos" action="guardarEndosoNombres" />';
-var endnomUrlDoc        = '<s:url namespace="/documentos" action="ventanaDocumentosPolizaClon" />';
+
+var endnomUrlGuardar       = '<s:url namespace="/endosos" action="guardarEndosoNombres" />';
+var endnomUrlGuardarSimple = '<s:url namespace="/endosos" action="guardarEndosoNombresSimple" />';
+var endnomUrlDoc           = '<s:url namespace="/documentos" action="ventanaDocumentosPolizaClon" />';
+
 var endnomInput         = [];
 endnomInput['cdunieco'] = '<s:property value="smap1.cdunieco" />';
 endnomInput['cdramo']   = '<s:property value="smap1.cdramo" />';
@@ -14,6 +17,7 @@ endnomInput['cdtipsit'] = '<s:property value="smap1.cdtipsit" />';
 endnomInput['estado']   = '<s:property value="smap1.estado" />';
 endnomInput['nmpoliza'] = '<s:property value="smap1.nmpoliza" />';
 endnomInput['ntramite'] = '<s:property value="smap1.ntramite" />';
+endnomInput['simple']   = <s:property value="endosoSimple" />;
 debug('endnomInput',endnomInput);
 /*///////////////////*/
 ////// variables //////
@@ -304,7 +308,7 @@ Ext.onReady(function(){
                     			debug(json);
                     			Ext.Ajax.request(
                     			{
-                    				url       : endnomUrlGuardar
+                    				url       : endnomInput['simple'] ? endnomUrlGuardarSimple : endnomUrlGuardar
                     				,jsonData : json
                     				,success  : function(response)
                     			    {
