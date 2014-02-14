@@ -187,7 +187,7 @@
                 });
             }
         }
-    	else if(recordOperacion.get('funcion')=='endosodomicilio')
+    	else if(recordOperacion.get('funcion')=='endosodomicilio'||recordOperacion.get('funcion')=='endosodomiciliosimple')
     	{
     		debug('endoso domicilio');
     		var nAsegActivos=0;
@@ -237,7 +237,7 @@
                 });
             }
     	}
-    	else if(recordOperacion.get('funcion')=='endosovalositbasico')
+    	else if(recordOperacion.get('funcion')=='endosovalositbasico'||recordOperacion.get('funcion')=='endosovalositbasicosimple')
         {
             debug('endoso valosit basico');
             var nAsegActivos=0;
@@ -296,7 +296,7 @@
                 });
             }
         }
-    	else if(recordOperacion.get('funcion')=='endosonombres')
+    	else if(recordOperacion.get('funcion')=='endosonombres'||recordOperacion.get('funcion')=='endosonombressimple')
     	{
     		debug('endosonombres');
     		var nAsegActivos=0;
@@ -1073,7 +1073,22 @@ Ext.onReady(function()
             ,type         : 'memory'
             ,data         :
             [
-                {
+				/*{
+				    texto    : 'CORRECCI&Oacute;N DE NOMBRE Y RFC *'//nombres
+				    ,liga    : '<s:url namespace="/endosos" action="pantallaEndosoNombresSimple" />'
+				    ,funcion : 'endosonombressimple'
+				}
+				,{
+                    texto    : 'CAMBIO DE DOMICILIO *'//domicilio
+                    ,liga    : '<s:url namespace="/endosos" action="pantallaEndosoDomicilioSimple" />'
+                    ,funcion : 'endosodomiciliosimple'
+                }
+				,{
+                    texto    : 'CORRECI&Oacute;N ASEGURADOS ANTIGUEDAD Y PARENTESCO *'//valosit
+                    ,liga    : '<s:url namespace="/endosos" action="endosoValositBasicoSimple" />'
+                    ,funcion : 'endosovalositbasicosimple'
+                }*/
+                ,{
                 	texto    : '2'//nombres
                 	,liga    : '<s:url namespace="/endosos" action="pantallaEndosoNombres" />'
                 	,funcion : 'endosonombres'

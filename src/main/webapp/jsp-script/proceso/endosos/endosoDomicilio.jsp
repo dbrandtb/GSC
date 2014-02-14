@@ -21,9 +21,11 @@ var inputNombreaseguradop4 = '<s:property value="smap1.nombreAsegurado" escapeHt
 var inputCdrfcp4           = '<s:property value="smap1.cdrfc" escapeHtml="false" />';
 var inputCdtipsit          = '<s:property value="smap1.cdtipsit" />';
 var inputNtramite          = '<s:property value="smap1.ntramite" />';
+var inputEndosoSimple      = <s:property value="endosoSimple" />;
 var urlRegresarp4          = '<s:url namespace="/"        action="editarAsegurados" />';
 var urlCargarp4            = '<s:url namespace="/"        action="cargarPantallaDomicilio" />';
 var urlGuardarp4           = '<s:url namespace="/endosos" action="guardarEndosoDomicilio" />';
+var urlGuardarp4Simple     = '<s:url namespace="/endosos" action="guardarEndosoDomicilioSimple" />';
 var enddomUrlDoc           = '<s:url namespace="/documentos" action="ventanaDocumentosPolizaClon" />';
 var _ComboColoniasUrl      = '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
 var formPanelp4;
@@ -33,17 +35,18 @@ var esElContratanteP4      = false;
 <s:else>
 var esElContratanteP4      = true;
 </s:else>
-debug('inputCduniecop4'        ,inputCduniecop4);
-debug('inputCdramop4'          ,inputCdramop4);
-debug('inputEstadop4'          ,inputEstadop4);
-debug('inputNmpolizap4'        ,inputNmpolizap4);
-debug('inputNmsituacp4'        ,inputNmsituacp4);
-debug('inputCdpersonp4'        ,inputCdpersonp4);
-debug('inputCdrolp4'           ,inputCdrolp4);
-debug('inputNombreaseguradop4' ,inputNombreaseguradop4);
-debug('inputCdrfcp4'           ,inputCdrfcp4);
-debug('inputCdtipsit'          ,inputCdtipsit);
-debug('inputNtramite'          ,inputNtramite);
+debug('inputCduniecop4'        , inputCduniecop4);
+debug('inputCdramop4'          , inputCdramop4);
+debug('inputEstadop4'          , inputEstadop4);
+debug('inputNmpolizap4'        , inputNmpolizap4);
+debug('inputNmsituacp4'        , inputNmsituacp4);
+debug('inputCdpersonp4'        , inputCdpersonp4);
+debug('inputCdrolp4'           , inputCdrolp4);
+debug('inputNombreaseguradop4' , inputNombreaseguradop4);
+debug('inputCdrfcp4'           , inputCdrfcp4);
+debug('inputCdtipsit'          , inputCdtipsit);
+debug('inputNtramite'          , inputNtramite);
+debug('inputEndosoSimple'      , inputEndosoSimple);
 /*///////////////////*/
 ////// variables //////
 ///////////////////////
@@ -95,7 +98,7 @@ Ext.onReady(function(){
         renderTo    : 'maindivp4',
         border      : 0,
         buttonAlign : 'center',
-        url         : urlGuardarp4,
+        url         : inputEndosoSimple ? urlGuardarp4Simple : urlGuardarp4,
         items       :
         [
             Ext.create('Ext.panel.Panel',

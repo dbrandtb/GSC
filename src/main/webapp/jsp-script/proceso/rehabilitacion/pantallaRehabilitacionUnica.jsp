@@ -6,7 +6,7 @@
 /*///////////////////*/
 var panrehuniUrlDetCanc = '<s:url namespace="/cancelacion"    action="obtenerDetalleCancelacion"/>';
 var panrehuniUrlRehab   = '<s:url namespace="/rehabilitacion" action="rehabilitacionUnica"/>';
-var panrehuniInSmap1       = <s:property value='%{getSmap1().toString().replace("=",":\'").replace(",","\',").replace("}","\'}")}' />;
+var panrehuniInSmap1       = <s:property value='%{getSmap1().toString().replace("=",":\'").replace(",","\',").replace("}","\'}")}' escapeHtml="false" />;
 debug('panrehuniInSmap1',panrehuniInSmap1);
 /*///////////////////*/
 ////// variables //////
@@ -141,6 +141,10 @@ Ext.onReady(function(){
     	    	}
     	    }
     	]
+    	,listeners :
+        {
+            afterrender : heredarPanel
+        }
     });
     /*///////////////////*/
     ////// contenido //////

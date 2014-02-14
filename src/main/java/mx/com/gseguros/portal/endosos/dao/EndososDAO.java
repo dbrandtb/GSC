@@ -66,4 +66,8 @@ public interface EndososDAO
 	 * PKG_SATELITES.P_MOV_MPOLIAGE
 	 */
 	public void                     pMovMpoliage(Map<String, String> params)                   throws Exception;
+	/**
+	 * PKG_SATELITES.P_GET_NMSUPLEM_EMISION
+	 */
+	public String                   pGetSuplemEmision(Map<String,String>params)                throws Exception;
 }
