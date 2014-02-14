@@ -9,8 +9,12 @@
         <script type="text/javascript">
             var _CONTEXT = '${ctx}';
             var mesConUrlLoadCatalo    				= '<s:url namespace="/catalogos"       action="obtieneCatalogo" />';
-            //var _URL_TIPOS_PENALIZACION				= _CONTEXT + '/js/proceso/siniestros/tiposPenalizacion.json';
             var _CAT_AUTORIZACION				    = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_SUCURSALES_ADMIN"/>';
+            var _CAT_CAUSASINIESTRO				    = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TCAUSASSV"/>';
+            var _CAT_TRATAMIENTO				    = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TTRATAMIENTO"/>';
+            var _CAT_TPENALIZACIONES				    = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TPENALIZACIONES"/>';
+            
+            
             var _URL_TIPO_AUTORIZACION				= _CONTEXT + '/js/proceso/siniestros/tiposAutorizacion.json';
             var _HISTORIAL_RECLAMACIONES    		= '<s:url namespace="/siniestros"      	action="historialReclamaciones" />';
             var _VER_COBERTURAS		    			= '<s:url namespace="/siniestros"      	action="verCoberturas" />';
@@ -18,7 +22,6 @@
             var _URL_CONSULTA_LISTADO_AUTORIZACION 	= '<s:url namespace="/siniestros" 		action="consultaListaAutorizacion" />';
             var _URL_CONSULTA_AUTORIZACION_ESP 		= '<s:url namespace="/siniestros" 		action="consultaAutorizacionServicio" />';
             var _URL_CONSULTA_PROVEEDOR_MEDICO		= '<s:url namespace="/siniestros" 		action="consultaListaProvMedico" />';
-            var _URL_CAUSA_SINIESTRO 				= '<s:url namespace="/siniestros" 		action="consultaListaCausuaSiniestro" />';
             var _URL_LISTA_COBERTURA 				= '<s:url namespace="/siniestros" 		action="consultaListaCoberturaPoliza" />';
             var _URL_LISTA_SUBCOBERTURA				= '<s:url namespace="/siniestros" action="consultaListaSubcobertura" />';
             var _URL_LISTA_CPTICD					= '<s:url namespace="/siniestros" action="consultaListaCPTICD" />';

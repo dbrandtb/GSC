@@ -9,7 +9,7 @@ import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
 import mx.com.gseguros.portal.siniestros.model.CoberturaPolizaVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaManteniVO;
-import mx.com.gseguros.portal.general.model.PolizaVO;
+import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaPorcentajeVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaProveedorVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaTDETAUTSVO;
@@ -51,7 +51,7 @@ public interface SiniestrosManager {
 	public List<ConsultaProveedorVO> getConsultaListaProveedorMedico(String tipoprov,String cdpresta) throws ApplicationException;
 	
 	
-	public List<GenericVO> getConsultaListaCausaSiniestro(String cdcausa) throws ApplicationException;
+	//public List<GenericVO> getConsultaListaCausaSiniestro(String cdcausa) throws ApplicationException;
 	
 	
 	public List<CoberturaPolizaVO> getConsultaListaCoberturaPoliza(HashMap<String, Object> paramCobertura) throws ApplicationException;
@@ -70,7 +70,7 @@ public interface SiniestrosManager {
 	
 	public String guardaListaTDeTauts(HashMap<String, Object> paramsTDeTauts) throws ApplicationException;
 	
-	public List<PolizaVO> getConsultaListaPoliza(String cdperson) throws ApplicationException;
+	public List<PolizaVigenteVO> getConsultaListaPoliza(String cdperson) throws ApplicationException;
 	
 	public void getEliminacionRegistros(String nmautser) throws ApplicationException;
 	

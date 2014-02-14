@@ -48,6 +48,7 @@ Ext.onReady(function() {
                     {type:'string',    name:'cdcausa'},         {type:'string',    name:'descCausa'},
                     {type:'string',    name:'dstratam'},         {type:'string',    name:'dsobserv'},       {type:'string',    name:'dsnotas'}
 				]
+    
     });
     
     var storeConsultaFormulario = Ext.create('Ext.data.Store', {
@@ -66,26 +67,74 @@ Ext.onReady(function() {
     
     
     sucursalConsulta= Ext.create('Ext.form.field.ComboBox',
-    		{
-    			colspan		:2,					fieldLabel   : 'Sucursal',			id: 'sucConsulta',				allowBlank: false,			width:500	
-    			,editable   : false,			displayField : 'value',				valueField:'key',			    forceSelection : true
-    			,labelWidth : 170,				queryMode    :'local',				editable:false,					name:'cduniecs', readOnly   : true
-    			,store : Ext.create('Ext.data.Store', {
-    				model:'Generic',
-    				autoLoad:true,
-    				proxy:
-    				{
-    					type: 'ajax',
-    					url:mesConUrlLoadCatalo1,
-    					extraParams : {catalogo:_CAT_AUTORIZACION1},
-    					reader:
-    					{
-    						type: 'json',
-    						root: 'lista'
-    					}
-    				}
-    			})
-    		});
+	{
+		colspan		:2,					fieldLabel   : 'Sucursal',			id: 'sucConsulta',				allowBlank: false,			width:500	
+		,editable   : false,			displayField : 'value',				valueField:'key',			    forceSelection : true
+		,labelWidth : 170,				queryMode    :'local',				editable:false,					name:'cduniecs', readOnly   : true
+		,store : Ext.create('Ext.data.Store', {
+			model:'Generic',
+			autoLoad:true,
+			proxy:
+			{
+				type: 'ajax',
+				url:mesConUrlLoadCatalo1,
+				extraParams : {catalogo:_CAT_AUTORIZACION1},
+				reader:
+				{
+					type: 'json',
+					root: 'lista'
+				}
+			}
+		})
+	});
+    
+    
+    //     
+    
+    causaSiniestro2= Ext.create('Ext.form.field.ComboBox',
+	{
+	    colspan		:2,					fieldLabel   : 'Causa siniestro',			id: 'idCausaSiniestro2',				allowBlank: false,			width:500	
+	    ,editable   : false,			displayField : 'value',				valueField:'key',			    forceSelection : true
+	    ,labelWidth : 170,				queryMode    :'local',				editable:false,					name:'cdcausa', readOnly   : true
+	    ,store : Ext.create('Ext.data.Store', {
+	        model:'Generic',
+	        autoLoad:true,
+	        proxy:
+	        {
+	            type: 'ajax',
+	            url:mesConUrlLoadCatalo1,
+	            extraParams : {catalogo:_CAT_CAUSASINIESTRO1},
+	            reader:
+	            {
+	                type: 'json',
+	                root: 'lista'
+	            }
+	        }
+	    })
+	});
+    
+    tratamientoInformacion= Ext.create('Ext.form.field.ComboBox',
+	{
+	    colspan		:2,					fieldLabel   : 'Tr&aacute;tamiento',			id: 'tratamiento2',				allowBlank: false,			width:500	
+	    ,editable   : false,			displayField : 'value',				valueField:'key',			    forceSelection : true
+	    ,labelWidth : 170,				queryMode    :'local',				name:'dstratam',readOnly   : true
+	    ,store : Ext.create('Ext.data.Store', {
+	        model:'Generic',
+	        autoLoad:true,
+	        proxy:
+	        {
+	            type: 'ajax',
+	            url:mesConUrlLoadCatalo,
+	            extraParams : {catalogo:_CAT_TRATAMIENTO1},
+	            reader:
+	            {
+	                type: 'json',
+	                root: 'lista'
+	            }
+	        }
+	    })
+	});
+    
    //DATOS PARA EL PRIMER GRID --> CONCEPTOS AUTORIZADOS
 	storeConceptoAutorizados1=new Ext.data.Store(
 	{
@@ -289,11 +338,11 @@ Ext.onReady(function() {
 						    name       : 'cdunieco',			labelWidth	: 170,					readOnly   : true
 						},
 						{
-						    xtype       : 'textfield',			fieldLabel : 'ramo',				id  : 'cdramo1', 		hidden:true,
+						    xtype       : 'textfield',			fieldLabel : 'ramo',				id  : 'cdramo1',		hidden:true,
 						    name       : 'cdramo',			labelWidth	: 170,						readOnly   : true
 						},
 						{
-						    xtype       : 'textfield',			fieldLabel : 'estado',				id  : 'estado1', 		hidden:true,
+						    xtype       : 'textfield',			fieldLabel : 'estado',				id  : 'estado1',	hidden:true,
 						    name       : 'estado',			labelWidth	: 170,					readOnly   : true
 						},
 						{
@@ -301,7 +350,7 @@ Ext.onReady(function() {
 						    name       : 'nmsituac',			labelWidth	: 170,					readOnly   : true
 						},
 						{
-						    xtype       : 'textfield',			fieldLabel : 'medico',				id  : 'cdmedico1', 		hidden:true,
+						    xtype       : 'textfield',			fieldLabel : 'medico',				id  : 'cdmedico1', 	hidden:true,
 						    name       : 'cdmedico',			labelWidth	: 170,					readOnly   : true
 						},
 						
@@ -314,7 +363,7 @@ Ext.onReady(function() {
 						    name       : 'cdconval',			labelWidth	: 170,					readOnly   : true
 						},
 						{
-						    xtype       : 'textfield',			fieldLabel : 'cveSucursal',				id  : 'cveSucursal1', 		hidden:true,
+						    xtype       : 'textfield',			fieldLabel : 'cveSucursal',				id  : 'cveSucursal1', 	hidden:true,
 						    name       : 'cduniecs',			labelWidth	: 170,					readOnly   : true
 						},
 						{
@@ -360,10 +409,6 @@ Ext.onReady(function() {
     		                 ,allowBlank : false,				labelWidth: 170,				name:'nmpoliza'
     		             }
     				 	,
-    				 	/*{
-    				 		xtype       : 'textfield',			colspan:2,				fieldLabel : 'Sucursal',     	readOnly   : true,
-    	                    id:'sucursal1',					labelWidth: 170,		width:500
-    	                }*/
     	                sucursalConsulta
     				 	,
     				 	{
@@ -407,11 +452,11 @@ Ext.onReady(function() {
     	                    xtype       : 'textfield',			colspan:2,				fieldLabel : 'Suma disponible proveedor',			id  : 'sumdisponible1',
     	                    name       : 'mtsumadp',			labelWidth	: 170,										readOnly   : true,	renderer: Ext.util.Format.usMoney
     	                },
-    	                {
-    				 		colspan:2								,xtype       : 'textareafield'				,fieldLabel : 'Tr&aacute;tamiento'			,id       : 'tratamiento1'
-    			 			,labelWidth	 : 170						,name:'dstratam',		readOnly   : true,
-    			 			width      : 700						,height		: 70
-    				 	},
+    	                causaSiniestro2
+    	                ,
+    	                tratamientoInformacion
+    	                ,
+    	                
     				 	{
     				 		colspan:2								,xtype       : 'textareafield'				,fieldLabel : 'Observaciones'				,id       : 'observaciones1'
     			 			,labelWidth	 : 170						,name:'dsobserv',		readOnly   : true,
@@ -470,6 +515,8 @@ Ext.onReady(function() {
                     	panelInicialPrincipal1.getForm().loadRecord(records[0]);
                     	
                     	Ext.getCmp('sucConsulta').setValue(Ext.getCmp('cveSucursal1').getValue());
+                    	
+                    	//AQUI VA LA INFORMACION DE CAUSA DEL SINIESTRO 
                     	
                     	Ext.Ajax.request(
             		    {
