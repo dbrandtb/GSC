@@ -1,7 +1,5 @@
 package mx.com.gseguros.ws.ice2sigs.service;
 
-import java.util.HashMap;
-
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Agente;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteRespuesta;
@@ -23,9 +21,6 @@ import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaMovi
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaMovimientoAseguradoCobertura;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaMovimientoAseguradoEndoso;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaRespuesta;
-import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub.Empleado;
-import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub.GeneradorRecibosDxnRespuesta;
-import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub.PolizaEntidad;
 
 public interface Ice2sigsService {
 
@@ -64,12 +59,6 @@ public interface Ice2sigsService {
 	public PolizaRespuesta ejecutaPolizaGS(Operacion operacion, Poliza poliza,
 			String endpoint) throws Exception;
 
-	/*
-	public ReciboRespuesta ejecutaReciboGS(Operacion operacion, Recibo recibo,
-			String endpoint, HashMap<String, Object> params, boolean async)
-			throws Exception;
-	*/
-
 	public AgenteRespuesta ejecutaAgenteGS(Operacion operacion, Agente agente,
 			String endpoint) throws Exception;
 
@@ -78,11 +67,6 @@ public interface Ice2sigsService {
 
 	public ClienteRespuesta ejecutaClienteGS(Operacion operacion,
 			Cliente cliente, String endpoint) throws Exception;
-
-	/*
-	private ClienteSaludRespuesta ejecutaClienteSaludGS(Operacion operacion,
-			ClienteSalud cliente, HashMap<String, Object> params, boolean async) throws Exception;
-	*/
 
 	public CcomisionRespuesta ejecutaComisionReciboAgenteGS(
 			Operacion operacion, Ccomision comisionReciboAgente, String endpoint)
@@ -109,10 +93,6 @@ public interface Ice2sigsService {
 	public MovimientoRespuesta ejecutaMovimientoGS(Operacion operacion,
 			PolizaMovimiento movimiento, String endpoint) throws Exception;
 
-	public GeneradorRecibosDxnRespuesta generarRecibosDxNGS(Empleado empleado,
-			PolizaEntidad polizaEntidad, String endpoint,
-			HashMap<String, Object> params, boolean async) throws Exception;
-	
 	
 	/**
 	 * Ejecuta el metodo expuesto de cliente del WS de iceToSigs

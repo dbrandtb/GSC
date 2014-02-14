@@ -27,6 +27,10 @@ public class ServicioGSServiceCallbackHandlerImpl extends ServicioGSServiceCallb
 		super(obj);
 	}
 	
+	/**
+	 * Agregamos el setter de clientData 
+	 * @param obj
+	 */
 	public void setClientData(Object obj) {
 		super.clientData = obj;
 	}
@@ -36,7 +40,6 @@ public class ServicioGSServiceCallbackHandlerImpl extends ServicioGSServiceCallb
 	public void receiveErrorclienteSaludGS(Exception e) {
 		logger.error("Error en WS clienteSalud: " + e.getMessage() + " Guardando en bitacora el error, getCause: " + e.getCause(),e);
 
-		///////////////////////////
 		HashMap<String, Object> params = (HashMap<String, Object>) this.clientData;
 		String usuario = (String) params.get("USUARIO");
 		try {
@@ -51,27 +54,6 @@ public class ServicioGSServiceCallbackHandlerImpl extends ServicioGSServiceCallb
 		} catch (Exception e1) {
 			logger.error("Error en llamado a PL", e1);
 		}
-		///////////////////////////
-		
-		//TODO: RBS cambiar el param por PolizaVO
-		/*
-		ServicioGSServiceCallbackHandlerVO gsServiceCallBackHandlerVO = (ServicioGSServiceCallbackHandlerVO) this.clientData;
-		PolizaVO poliza = gsServiceCallBackHandlerVO.getPolizaVO();
-		
-		try {
-			//Se ejecuta el servicio de datos para registrar el error ocurrido:
-			kernelManager.movBitacobro(
-					poliza.getCdUnieco(), 
-					poliza.getCdRamo(), 
-					poliza.getEstado(),
-					poliza.getNmPoliza(), 
-					"ErrWScliCx", 
-					"Msg: " + e.getMessage() + " ***Cause: " + e.getCause(), 
-					gsServiceCallBackHandlerVO.getUsuario());
-		} catch (Exception e1) {
-			logger.error("Error en llamado a PL", e1);
-		}
-		*/
 	}
 
 	@Override
@@ -83,7 +65,7 @@ public class ServicioGSServiceCallbackHandlerImpl extends ServicioGSServiceCallb
 		if (Estatus.EXITO.getCodigo() != respuesta.getCodigo() && Estatus.LLAVE_DUPLICADA.getCodigo() != respuesta.getCodigo()) {
 			logger.error("Guardando en bitacora el estatus");
 
-			/////////////////////////////
+			//TODO: RBS cambiar el param por PolizaVO
 			HashMap<String, Object> params = (HashMap<String, Object>) this.clientData;
 			String usuario = (String) params.get("USUARIO");
 			try {
@@ -98,26 +80,6 @@ public class ServicioGSServiceCallbackHandlerImpl extends ServicioGSServiceCallb
 			} catch (Exception e1) {
 				logger.error("Error en llamado a PL", e1);
 			}
-			/////////////////////////////
-			
-			//TODO: RBS cambiar el param por PolizaVO
-			/*
-			ServicioGSServiceCallbackHandlerVO gsServiceCallBackHandlerVO = (ServicioGSServiceCallbackHandlerVO) this.clientData;
-			PolizaVO poliza = gsServiceCallBackHandlerVO.getPolizaVO();
-			try {
-				//Se ejecuta el servicio de datos para registrar el error ocurrido:
-				kernelManager.movBitacobro(
-						poliza.getCdUnieco(), 
-						poliza.getCdRamo(), 
-						poliza.getEstado(),
-						poliza.getNmPoliza(), 
-						"ErrWScli", 
-						respuesta.getCodigo() + " - " + respuesta.getMensaje(), 
-						gsServiceCallBackHandlerVO.getUsuario());
-			} catch (Exception e1) {
-				logger.error("Error en llamado a PL", e1);
-			}
-			*/
 		}
 	}
 	

@@ -21,20 +21,13 @@ import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.flujos.cotizacion4.web.ResultadoCotizacion4Action;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
-import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
-import mx.com.gseguros.portal.emision.model.DatosRecibosDxNVO;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
-import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
-import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService.Estatus;
-import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub.CalendarioEntidad;
-import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub.Empleado;
-import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub.GeneradorRecibosDxnRespuesta;
-import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub.PolizaEntidad;
+import mx.com.gseguros.ws.recibossigs.service.RecibosSigsService;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
@@ -54,6 +47,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 	private KernelManagerSustituto kernelManager;
 	private transient Ice2sigsService ice2sigsService;
+	private transient RecibosSigsService recibosSigsService;
 	
 	private Map<String, String> panel1;
 	private Map<String, String> panel2;
@@ -1189,15 +1183,8 @@ public class ComplementariosAction extends PrincipalCoreAction
 						cdtipsitGS, sucursal, panel1.get("pv_nmpoliza"), panel1.get("pv_ntramite"), 
 						false, tipoMov,
 						(UserVO) session.get("USUARIO"));
-				/*
-				ejecutaWSrecibos(_cdunieco, _cdramo,
-						edoPoliza, _nmpoliza,
-						_nmsuplem, rutaCarpeta,
-						cdtipsitGS, sucursal, panel1.get("pv_nmpoliza"),panel1.get("pv_ntramite"),
-						false, "INSERTA"
-						);
-				*/
-				obtenRecibosDxN(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, cdtipsitGS, sucursal, panel1.get("pv_nmpoliza"), panel1.get("pv_ntramite"));
+				// Ejecutamos el Web Service de Recibos DxN:
+				recibosSigsService.generaRecibosDxN(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, cdtipsitGS, sucursal, panel1.get("pv_nmpoliza"), panel1.get("pv_ntramite"), (UserVO) session.get("USUARIO"));
 			}else{
 				
 				// Ejecutamos el Web Service de Recibos:
@@ -1207,14 +1194,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 						cdtipsitGS, sucursal, panel1.get("pv_nmpoliza"),panel1.get("pv_ntramite"), 
 						true, tipoMov,
 						(UserVO) session.get("USUARIO"));
-				/*
-				ejecutaWSrecibos(_cdunieco, _cdramo,
-						edoPoliza, _nmpoliza,
-						_nmsuplem, rutaCarpeta,
-						cdtipsitGS, sucursal, panel1.get("pv_nmpoliza"),panel1.get("pv_ntramite"),
-						true, "INSERTA"
-						);
-				*/
 			}
 			
 			Map<String,String>paramsGetDoc=new LinkedHashMap<String,String>(0);
@@ -1347,202 +1326,9 @@ public class ComplementariosAction extends PrincipalCoreAction
 		
 		// Ejecutamos el Web Service de Recibos:
 		ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, null, cdtipsitGS, sucursal, nmsolici, nmtramite, true, tipoMov, (UserVO) session.get("USUARIO"));
-		//ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, null, cdtipsitGS, sucursal, nmsolici, nmtramite, true, operacion);
 
 		success = true;
 		return SUCCESS;
-	}
-
-	
-	public boolean obtenRecibosDxN(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String cdtipsitGS, String sucursal, String nmsolici, String ntramite){
-		logger.debug("*** Entrando a metodo Genera Recibos DxN, para la poliza: " + nmpoliza + " cdunieco: " + cdunieco + "***");
-		
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("pv_cdunieco_i", cdunieco);
-		params.put("pv_cdramo_i", cdramo);
-		params.put("pv_estado_i", estado);
-		params.put("pv_nmpoliza_i", nmpoliza);
-		params.put("pv_nmsuplem_i", nmsuplem);
-		
-		WrapperResultados result = null;
-		DatosRecibosDxNVO datosRecDxN = null;
-		
-		try {
-			result = kernelManager.obtenDatosRecibosDxN(params);
-			ArrayList<DatosRecibosDxNVO> listDatos = (ArrayList<DatosRecibosDxNVO>) result.getItemList();
-			datosRecDxN = listDatos.get(0);
-		} catch (Exception e1) {
-			logger.error("Error en llamar al PL de obtencion de Datos para recibos DxN",e1);
-			return false;
-		}
-		
-		GeneradorRecibosDxnRespuesta calendarios = null;
-		
-		try{
-			Empleado empleado =  new Empleado(); 
-			empleado.setAdministradoraEmp(Integer.parseInt(datosRecDxN.getAdministradoraEmp()));
-			empleado.setClaveEmp(datosRecDxN.getClaveEmp());
-			empleado.setCurpEmp(datosRecDxN.getCurpEmp());
-			empleado.setDepartamentoEmp(Integer.parseInt(datosRecDxN.getDepartamentoEmp()));
-			empleado.setMaternoEmp(datosRecDxN.getMaternoEmp());
-			empleado.setNombreEmp(datosRecDxN.getNombreEmp());
-			empleado.setPaternoEmp(datosRecDxN.getPaternoEmp());
-			empleado.setRetenedoraEmp(Integer.parseInt(datosRecDxN.getRetenedoraEmp()));
-			empleado.setRfcEmp(datosRecDxN.getRfcEmp());
-			
-			PolizaEntidad polizaEnt = new PolizaEntidad();
-			polizaEnt.setAdministradoraEmp(Integer.parseInt(datosRecDxN.getAdministradoraEmp()));
-			polizaEnt.setClaveDescuento(datosRecDxN.getClaveDescuento());
-			polizaEnt.setClaveEmp(datosRecDxN.getClaveEmp());
-			polizaEnt.setImpCob(Double.parseDouble(datosRecDxN.getImpCob()));
-			polizaEnt.setNumeroAgente(Integer.parseInt(datosRecDxN.getNumeroAgente()));
-			polizaEnt.setNumeroApoderado(Integer.parseInt(datosRecDxN.getNumeroApoderado()));
-			polizaEnt.setNumPag(datosRecDxN.getNumPag());
-			polizaEnt.setNumRel(Integer.parseInt(datosRecDxN.getNumRel()));
-			polizaEnt.setPolizaEmi(Integer.parseInt(datosRecDxN.getPolizaEmi()));
-			polizaEnt.setRamoEmi(Integer.parseInt(datosRecDxN.getRamoEmi()));
-			polizaEnt.setRenovacionAutomatica(datosRecDxN.getRenovacionAutomatica());
-			polizaEnt.setRetenedoraEmp(Integer.parseInt(datosRecDxN.getRetenedoraEmp()));
-			polizaEnt.setSucursalEmi(Integer.parseInt(datosRecDxN.getSucursalEmi()));
-			
-			calendarios = ice2sigsService.generarRecibosDxNGS(empleado, polizaEnt, this.getText("url.ws.ice2sigs.recdxn"), null, false);
-			
-		}catch(Exception e){
-			logger.error("Error al generar los datos de Recibos DxN: " + e.getMessage()
-					+ " Guardando en bitacora el error, getCause: " + e.getCause(),e);
-			
-			try {
-				UserVO usuario = (UserVO) session.get("USUARIO");
-				
-				kernelManager.movBitacobro((String) params.get("pv_cdunieco_i"),
-						(String) params.get("pv_cdramo_i"),
-						(String) params.get("pv_estado_i"),
-						(String) params.get("pv_nmpoliza_i"), "ErrWsDXNCx", "Msg: "
-								+ e.getMessage() + " ***Cause: " + e.getCause(),
-						 usuario.getUser());
-			} catch (Exception e1) {
-				logger.error("Error en llamado a PL", e1);
-			}
-			
-			return false;
-		}
-		
-		
-		if (Estatus.EXITO.getCodigo() != calendarios.getCodigo()) {
-			logger.error("Guardando en bitacora el estatus");
-
-			UserVO usuario = (UserVO) session.get("USUARIO");
-			
-			try {
-				kernelManager.movBitacobro((String) params.get("pv_cdunieco_i"),
-						(String) params.get("pv_cdramo_i"),
-						(String) params.get("pv_estado_i"),
-						(String) params.get("pv_nmpoliza_i"), "ErrWsDXN",
-						calendarios.getCodigo() + " - " + calendarios.getMensaje(),
-						 usuario.getUser());
-			} catch (Exception e1) {
-				logger.error("Error en llamado a PL", e1);
-			}
-			return false;
-		}else{
-			
-			logger.debug("********* Total de calendarios *********** : "+calendarios.getCalendariosEntidad().length);
-			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-			int cont = 0;
-			
-			for(CalendarioEntidad cal : calendarios.getCalendariosEntidad()){
-				cont++;
-				
-				logger.debug(">>>Calendario: "+cal.getPeriodo());
-				logger.debug(">>>Dia Inicio: "+cal.getFechaIncio().get(Calendar.DAY_OF_MONTH));
-				
-				String fechaCorte = null;
-				String fechaEmision = null;
-				String fechaStatus = null;
-				String fechaInicio = null;
-				String fechaTermino = null;
-				
-				
-				/**
-				 * COMMENT: Se ha obtenido el valor del calendario original pasandolo a otro calendario ya que el original venia incompleto y al hacer un getTime
-				 * 			Regresaba un Date Erroneo
-				 */
-				
-				Calendar calendar =  Calendar.getInstance();
-				
-				if(cal.getFechaCorte() != null){
-					calendar.set(cal.getFechaCorte().get(Calendar.YEAR), cal.getFechaCorte().get(Calendar.MONTH), cal.getFechaCorte().get(Calendar.DAY_OF_MONTH));
-					fechaCorte = sdf.format(calendar.getTime());
-				}
-				if(cal.getFechaEmision() != null){
-					calendar.set(cal.getFechaEmision().get(Calendar.YEAR), cal.getFechaEmision().get(Calendar.MONTH), cal.getFechaEmision().get(Calendar.DAY_OF_MONTH));
-					fechaEmision = sdf.format(calendar.getTime());
-				}
-				if(cal.getFechaEstatus() != null){
-					calendar.set(cal.getFechaEstatus().get(Calendar.YEAR), cal.getFechaEstatus().get(Calendar.MONTH), cal.getFechaEstatus().get(Calendar.DAY_OF_MONTH));
-					fechaStatus = sdf.format(calendar.getTime());
-				}
-				if(cal.getFechaIncio() != null){
-					calendar.set(cal.getFechaIncio().get(Calendar.YEAR), cal.getFechaIncio().get(Calendar.MONTH), cal.getFechaIncio().get(Calendar.DAY_OF_MONTH));
-					fechaInicio = sdf.format(calendar.getTime());
-				}
-				if(cal.getFechaTermino() != null){
-					calendar.set(cal.getFechaTermino().get(Calendar.YEAR), cal.getFechaTermino().get(Calendar.MONTH), cal.getFechaTermino().get(Calendar.DAY_OF_MONTH));
-					fechaTermino = sdf.format(calendar.getTime());
-				}
-				
-				params.put("pi_ADMINISTRADORA", cal.getAdministradora());
-				params.put("pi_ANIO", cal.getAnho());
-				params.put("pi_ESTATUS", cal.getEstatus());
-				params.put("Pi_FECHACORTE", fechaCorte);
-				params.put("pi_FECHAEMISION", fechaEmision);
-				params.put("pi_FECHASTATUS", fechaStatus);
-				params.put("pi_FECHAINICIO", fechaInicio);
-				params.put("pi_FECHATERMINO", fechaTermino);
-				params.put("pi_HORAEMISION", cal.getHoraEmision());
-				params.put("pi_PERIODO", cal.getPeriodo());
-				params.put("pi_RETENEDORA", cal.getRetenedora());
-				
-				try {
-					kernelManager.guardaPeriodosDxN(params);
-				} catch (Exception e) {
-					logger.error("Error en llamado a PL", e);
-				}
-				
-				if(cont == 1)continue;
-				
-				String parametros = "?9999,0,"+sucursal+","+cdtipsitGS+","+nmpoliza+",0,0,,"+cont;
-				logger.debug("URL Generada para Recibo: "+ this.getText("url.imp.recibos")+parametros);
-				
-				HashMap<String, Object> paramsR =  new HashMap<String, Object>();
-				paramsR.put("pv_cdunieco_i", cdunieco);
-				paramsR.put("pv_cdramo_i", cdramo);
-				paramsR.put("pv_estado_i", estado);
-				paramsR.put("pv_nmpoliza_i", nmpoliza);
-				paramsR.put("pv_nmsuplem_i", nmsuplem);
-				paramsR.put("pv_feinici_i", new Date());
-				paramsR.put("pv_cddocume_i", this.getText("url.imp.recibos")+parametros);
-				paramsR.put("pv_dsdocume_i", "Recibo "+cont);
-				paramsR.put("pv_nmsolici_i", nmsolici);
-				paramsR.put("pv_ntramite_i", ntramite);
-				paramsR.put("pv_tipmov_i", "1");
-				paramsR.put("pv_swvisible_i", Constantes.NO);
-				
-				try{
-					kernelManager.guardarArchivo(paramsR);
-				} catch (Exception e) {
-					logger.error("Error en llamado a PL", e);
-				}
-			}
-			
-			try {
-				kernelManager.lanzaProcesoDxN(params);
-			} catch (Exception e) {
-				logger.error("Error en llamado a PL", e);
-			}
-		}
-		
-		return true;
 	}
 	
 	public String buscarPersonasRepetidas()
@@ -1832,6 +1618,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 
 	public void setIce2sigsService(Ice2sigsService ice2sigsService) {
 		this.ice2sigsService = ice2sigsService;
+	}
+
+	public void setRecibosSigsService(RecibosSigsService recibosSigsService) {
+		this.recibosSigsService = recibosSigsService;
 	}
 
 	public String getMensajeRespuesta() {
