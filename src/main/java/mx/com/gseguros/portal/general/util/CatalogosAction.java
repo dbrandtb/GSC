@@ -77,6 +77,9 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case TIPOS_POLIZA:
 				case TIPO_PAGO_SINIESTROS:
 				case TIPO_ATENCION_SINIESTROS:
+				case TCAUSASSV:
+				case TTRATAMIENTO:
+				case TPENALIZACIONES:
 					lista = catalogosManager.getTmanteni(nombreCatalogo);
 	                break;
 				case MC_ESTATUS_TRAMITE:
