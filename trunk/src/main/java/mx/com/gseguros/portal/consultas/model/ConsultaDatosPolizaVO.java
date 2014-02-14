@@ -45,7 +45,10 @@ public class ConsultaDatosPolizaVO implements Serializable{
 	private String cdrfc;
 	private String cdagente;
 	private String statuspoliza;
-
+	private String cdplan;
+	private String cdramo;
+	private String cdtipsit;
+	private String cdunieco;
 	
 	public String getNmsolici() {
 		return nmsolici;
@@ -220,6 +223,30 @@ public class ConsultaDatosPolizaVO implements Serializable{
 	}
 	public String toString(){
 		return ToStringBuilder.reflectionToString(this,ToStringStyle.MULTI_LINE_STYLE);
+	}
+	public String getCdplan() {
+		return cdplan;
+	}
+	public void setCdplan(String cdplan) {
+		this.cdplan = cdplan;
+	}
+	public String getCdramo() {
+		return cdramo;
+	}
+	public void setCdramo(String cdramo) {
+		this.cdramo = cdramo;
+	}
+	public String getCdtipsit() {
+		return cdtipsit;
+	}
+	public void setCdtipsit(String cdtipsit) {
+		this.cdtipsit = cdtipsit;
+	}
+	public String getCdunieco() {
+		return cdunieco;
+	}
+	public void setCdunieco(String cdunieco) {
+		this.cdunieco = cdunieco;
 	}	
 	
 }

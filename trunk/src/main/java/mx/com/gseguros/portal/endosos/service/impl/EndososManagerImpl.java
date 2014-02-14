@@ -391,14 +391,16 @@ public class EndososManagerImpl implements EndososManager
 			,String cdramo
 			,String estado
 			,String nmpoliza
-			,String fecha) throws Exception
+			,String fecha
+			,String cdplan) throws Exception
 	{
 		Map<String,String>params=new HashMap<String,String>();
 		params.put("pv_cdunieco_i" , cdunieco);
 		params.put("pv_cdramo_i"   , cdramo);
 		params.put("pv_estado_i"   , estado);
 		params.put("pv_nmpoliza_i" , nmpoliza);
-		params.put("pv_feinival"   , fecha);
+		params.put("pv_feinival_i" , fecha);
+		params.put("pv_cdplan_i"   , cdplan);
 		log.debug("EndososManager pClonarPolizaReexped params: "+params);
 		Map<String,String> mapa=endososDAO.pClonarPolizaReexped(params);
 		log.debug("EndososManager pClonarPolizaReexped response map: "+mapa);
