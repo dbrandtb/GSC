@@ -9,7 +9,7 @@ import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
 import mx.com.gseguros.portal.siniestros.model.CoberturaPolizaVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaManteniVO;
-import mx.com.gseguros.portal.general.model.PolizaVO;
+import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaPorcentajeVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaProveedorVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaTDETAUTSVO;
@@ -43,7 +43,7 @@ public class SiniestrosAction extends ActionSupport{
     private List<ConsultaManteniVO> listaConsultaManteni;
     private List<ConsultaPorcentajeVO> listaPorcentaje;
     private List<HashMap<String,String>> datosTablas;
-    private List<PolizaVO> listaPoliza;
+    private List<PolizaVigenteVO> listaPoliza;
     
     private boolean esHospitalario;
     private HashMap<String, String> loadForm;
@@ -332,11 +332,7 @@ public class SiniestrosAction extends ActionSupport{
 	return SUCCESS;
    }
 	
-    /**
-     * Función que obtiene la lista de la causa del siniestro
-     * @param cdcausa
-     * @return Lista GenericVO con la información de los asegurados
-     */    
+    /*
     public String consultaListaCausuaSiniestro(){
     	logger.debug(" **** Entrando al método de Causa Siniestro ****");
 	   	try {
@@ -347,7 +343,7 @@ public class SiniestrosAction extends ActionSupport{
 	   	}
 	   	success = true;
 	   	return SUCCESS;
-   }
+   }*/
 	
 	/**
 	 * metodo que obtiene la información de deducible y copago
@@ -402,7 +398,7 @@ public class SiniestrosAction extends ActionSupport{
    public String consultaListaPoliza(){
    	logger.debug(" **** Entrando al método de Lista de Poliza ****");
    	try {
-				List<PolizaVO> lista = siniestrosManager.getConsultaListaPoliza(params.get("cdperson"));
+				List<PolizaVigenteVO> lista = siniestrosManager.getConsultaListaPoliza(params.get("cdperson"));
 				if(lista!=null && !lista.isEmpty())	listaPoliza = lista;
 			}catch( Exception e){
 				logger.error("Error al obtener los datos de la poliza ",e);
@@ -737,11 +733,11 @@ public class SiniestrosAction extends ActionSupport{
 	
 	
 
-	public List<PolizaVO> getListaPoliza() {
+	public List<PolizaVigenteVO> getListaPoliza() {
 		return listaPoliza;
 	}
 
-	public void setListaPoliza(List<PolizaVO> listaPoliza) {
+	public void setListaPoliza(List<PolizaVigenteVO> listaPoliza) {
 		this.listaPoliza = listaPoliza;
 	}
 

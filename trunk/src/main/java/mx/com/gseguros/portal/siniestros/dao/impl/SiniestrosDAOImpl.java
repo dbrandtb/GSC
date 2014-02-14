@@ -16,7 +16,7 @@ import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
 import mx.com.gseguros.portal.siniestros.model.CoberturaPolizaVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaManteniVO;
-import mx.com.gseguros.portal.general.model.PolizaVO;
+import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaPorcentajeVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaProveedorVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaTDETAUTSVO;
@@ -206,38 +206,6 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
         	consulta.setNombre(rs.getString("NOMBRE"));
         	consulta.setCdespeci(rs.getString("CDESPECI"));
         	consulta.setDescesp(rs.getString("DESCESP"));
-            return consulta;
-        }
-    }
-    
-	@Override
-	public List<GenericVO> obtieneListadoCausaSiniestro(String cdcausa)
-			throws DaoException {
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("pv_cdcausa_i", cdcausa);
-		
-		Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoCausaSiniestroSP(getDataSource()), params);
-		return (List<GenericVO>) mapResult.get("pv_registro_o");
-	}
-	
-	protected class ObtieneListadoCausaSiniestroSP extends StoredProcedure
-	{
-		protected ObtieneListadoCausaSiniestroSP(DataSource dataSource)
-		{
-			super(dataSource, "PKG_PRESINIESTRO.P_LISTA_CAUSAS");
-			declareParameter(new SqlParameter("pv_cdcausa_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DatosListaCausaSiniestro()));
-			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
-			compile();
-		}
-	}
-	
-    protected class DatosListaCausaSiniestro  implements RowMapper {
-        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-        	GenericVO consulta = new GenericVO();
-        	consulta.setKey(rs.getString("CDCAUSA"));
-        	consulta.setValue(rs.getString("DSCAUSA"));
             return consulta;
         }
     }
@@ -712,13 +680,13 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 
 
 	@Override
-	public List<PolizaVO> obtieneListadoPoliza(String cdperson)
+	public List<PolizaVigenteVO> obtieneListadoPoliza(String cdperson)
 			throws DaoException {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdperson_i", cdperson);
 		
 		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerListadoPoliza(this.getDataSource()), params);
-		return (List<PolizaVO>) resultadoMap.get("pv_registro_o");
+		return (List<PolizaVigenteVO>) resultadoMap.get("pv_registro_o");
 	}
 	protected class ObtenerListadoPoliza extends StoredProcedure
 	{
@@ -735,12 +703,15 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	
 	protected class DatosListaPoliza  implements RowMapper {
         public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-        	PolizaVO consulta = new PolizaVO();
+        	PolizaVigenteVO consulta = new PolizaVigenteVO();
         	consulta.setCdunieco(rs.getString("CDUNIECO"));
         	consulta.setCdramo(rs.getString("CDRAMO"));
         	consulta.setEstado(rs.getString("ESTADO"));
         	consulta.setNmpoliza(rs.getString("NMPOLIZA"));
         	consulta.setNmsituac(rs.getString("NMSITUAC"));
+        	consulta.setMtoBase(rs.getString("MTOBASE"));
+        	consulta.setFeinicio(Utilerias.formateaFecha(rs.getString("FEINICIO")));
+        	consulta.setFefinal(Utilerias.formateaFecha(rs.getString("FEFINAL")));
             return consulta;
         }
     }
@@ -803,7 +774,6 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	            return map;
 	        }
 	    }
-
 
 		@Override
 		public String guardaEstatusDocumento(HashMap<String, String> params)

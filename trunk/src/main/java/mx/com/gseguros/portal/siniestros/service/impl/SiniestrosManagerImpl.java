@@ -11,7 +11,7 @@ import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
 import mx.com.gseguros.portal.siniestros.model.CoberturaPolizaVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaManteniVO;
-import mx.com.gseguros.portal.general.model.PolizaVO;
+import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaPorcentajeVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaProveedorVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaTDETAUTSVO;
@@ -63,7 +63,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		}
 	}
 	
-	@Override
+	/*@Override
 	public List<GenericVO> getConsultaListaCausaSiniestro(String cdcausa)
 			throws ApplicationException {
 		try {
@@ -71,7 +71,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		} catch (DaoException daoExc) {
 			throw new ApplicationException(daoExc.getMessage(), daoExc);
 		}
-	}
+	}*/
 	
 	@Override
 	public List<CoberturaPolizaVO> getConsultaListaCoberturaPoliza(
@@ -228,7 +228,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	}
 
 	@Override
-	public List<PolizaVO> getConsultaListaPoliza(String cdperson) throws ApplicationException {
+	public List<PolizaVigenteVO> getConsultaListaPoliza(String cdperson) throws ApplicationException {
 		try {
 			return siniestrosDAO.obtieneListadoPoliza(cdperson);
 		} catch (DaoException daoExc) {
