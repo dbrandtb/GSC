@@ -5,14 +5,28 @@
 
 	<!-- WS ice2sigs -->
 	<bean id="ice2sigsServiceImpl" class="mx.com.gseguros.ws.ice2sigs.service.impl.Ice2sigsServiceImpl">
-	   <property name="kernelManager" ref="kernelManagerSustituto"/>
-	   <property name="endpoint" value="${url.ws.ice2sigs}"></property>
-	   <property name="urlImpresionRecibos" value="${url.imp.recibos}"></property>
+	    <property name="kernelManager" ref="kernelManagerSustituto"/>
+	    <property name="endpoint" value="${url.ws.ice2sigs}"></property>
+	    <property name="urlImpresionRecibos" value="${url.imp.recibos}"></property>
 	</bean>	
 	
+	<!-- Callback handler para el WS ice2sigs. Ya que se usa como modelo de datos usamos el scope "prototype" -->
 	<bean id="servicioGSServiceCallbackHandlerImpl" class="mx.com.gseguros.ws.ice2sigs.client.axis2.callback.impl.ServicioGSServiceCallbackHandlerImpl" scope="prototype">
-	   <property name="kernelManager" ref="kernelManagerSustituto"/>
+	    <property name="kernelManager" ref="kernelManagerSustituto"/>
 	</bean>
+	
+	
+	<!-- WS recibossigs -->
+	<bean id="recibosSigsServiceImpl" class="mx.com.gseguros.ws.recibossigs.service.impl.RecibosSigsServiceImpl">
+	    <property name="kernelManager" ref="kernelManagerSustituto"/>
+        <property name="endpoint" value="${url.ws.ice2sigs.recdxn}"></property>
+	    <property name="urlImpresionRecibos" value="${url.imp.recibos}"></property>
+	</bean>
+	
+	<!-- Callback handler para el WS recibossigs. Ya que se usa como modelo de datos usamos el scope "prototype" -->
+	<bean id="generadorReciboDxnWsServiceCallbackHandlerImpl" class="mx.com.gseguros.ws.recibossigs.client.axis2.callback.impl.GeneradorReciboDxnWsServiceCallbackHandlerImpl" scope="prototype">
+        <property name="kernelManager" ref="kernelManagerSustituto"/>
+    </bean>
 	
 	
 </beans>

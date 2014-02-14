@@ -74,14 +74,6 @@ import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboResp
 import mx.com.gseguros.ws.ice2sigs.client.axis2.callback.impl.ServicioGSServiceCallbackHandlerImpl;
 import mx.com.gseguros.ws.ice2sigs.client.model.ReciboWrapper;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
-import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub;
-import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub.Empleado;
-import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub.GeneraRecDxn;
-import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub.GeneraRecDxnE;
-import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub.GeneraRecDxnResponseE;
-import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub.GeneradorRecibosDxnRespuesta;
-import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub.PolizaEntidad;
-import mx.com.gseguros.ws.recibossigs.client.axis2.callback.impl.GeneradorReciboDxnWsServiceCallbackHandlerImpl;
 
 import org.apache.axis2.AxisFault;
 import org.apache.struts2.ServletActionContext;
@@ -101,6 +93,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 	
 	private transient KernelManagerSustituto kernelManager;
 
+	
 	public PolizaRespuesta ejecutaPolizaGS(Operacion operacion,
 			Poliza poliza, String endpoint) throws Exception {
 
@@ -550,48 +543,6 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 		try {
 			RespuestaGS = stubGS.movimientoGS(movimientoE);
 			resultado = RespuestaGS.getMovimientoGSResponse().get_return();
-		} catch (RemoteException re) {
-			logger.error(re);
-			throw new Exception("Error de conexion: " + re.getMessage());
-		}
-		
-		return resultado;
-	}
-	
-	public GeneradorRecibosDxnRespuesta generarRecibosDxNGS(Empleado empleado, PolizaEntidad polizaEntidad, String endpoint, HashMap<String, Object> params, boolean async) throws Exception {
-		
-		GeneradorRecibosDxnRespuesta resultado = null;
-		GeneradorReciboDxnWsServiceStub stubGS = null;
-		
-		try {
-			logger.info(new StringBuffer("endpoint a invocar=").append(endpoint));
-			stubGS = new GeneradorReciboDxnWsServiceStub(endpoint);
-		} catch (AxisFault e) {
-			logger.error(e);
-			throw new Exception("Error de preparacion de Axis2: "
-					+ e.getMessage());
-		}
-		stubGS._getServiceClient().getOptions().setTimeOutInMilliSeconds(WS_TIMEOUT);
-		
-		GeneraRecDxnResponseE RespuestaGS = null;
-		
-		GeneraRecDxn generaRecDxn =  new GeneraRecDxn();
-		generaRecDxn.setArg0(empleado);
-		generaRecDxn.setArg1(polizaEntidad);
-		
-		GeneraRecDxnE generaRecDxnE = new GeneraRecDxnE(); 
-		generaRecDxnE.setGeneraRecDxn(generaRecDxn);
-		
-		
-		try {
-			if(async){
-				GeneradorReciboDxnWsServiceCallbackHandlerImpl callback = new GeneradorReciboDxnWsServiceCallbackHandlerImpl(params);
-				stubGS.startgeneraRecDxn(generaRecDxnE, callback);
-			} else {
-				RespuestaGS = stubGS.generaRecDxn(generaRecDxnE);
-				resultado = RespuestaGS.getGeneraRecDxnResponse().get_return();
-				logger.debug("Resultado para ejecucion de WS generarRecibosDxNGS: "+resultado.getCodigo()+" - "+resultado.getMensaje());
-			}
 		} catch (RemoteException re) {
 			logger.error(re);
 			throw new Exception("Error de conexion: " + re.getMessage());
