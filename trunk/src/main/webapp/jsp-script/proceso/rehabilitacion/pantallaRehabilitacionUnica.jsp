@@ -6,7 +6,7 @@
 /*///////////////////*/
 var panrehuniUrlDetCanc = '<s:url namespace="/cancelacion"    action="obtenerDetalleCancelacion"/>';
 var panrehuniUrlRehab   = '<s:url namespace="/rehabilitacion" action="rehabilitacionUnica"/>';
-var panrehuniInSmap1       = <s:property value='%{getSmap1().toString().replace("=",":\'").replace(",","\',").replace("}","\'}")}' escapeHtml="false" />;
+var panrehuniInSmap1       = <s:property value='%{getSmap1().toString().replace("=",":\'").replace(",","\',").replace("}","\'}")}' />;
 debug('panrehuniInSmap1',panrehuniInSmap1);
 /*///////////////////*/
 ////// variables //////
