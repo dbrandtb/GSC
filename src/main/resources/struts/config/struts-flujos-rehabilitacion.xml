@@ -4,11 +4,11 @@
     
     <package name="rehabilitacion" extends="json-default" namespace="/rehabilitacion">
         
-        <action name="principal" class="RehabilitacionAction" method="marco">
+        <action name="principal" class="rehabilitacionAction" method="marco">
             <result name="success">/jsp-script/proceso/rehabilitacion/marcoRehabilitacion.jsp</result>
         </action>
         
-        <action name="buscarPolizas" class="RehabilitacionAction" method="buscarPolizas">
+        <action name="buscarPolizas" class="rehabilitacionAction" method="buscarPolizas">
             <interceptor-ref name="json">
                 <param name="enableSMD">true</param>
                 <param name="ignoreSMDMethodInterfaces">false</param>
@@ -16,7 +16,7 @@
             <result name="success" type="json" />
         </action>
         
-        <action name="pantallaRehabilitacionUnica" class="RehabilitacionAction" method="pantallaRehabilitacionUnica">
+        <action name="pantallaRehabilitacionUnica" class="rehabilitacionAction" method="pantallaRehabilitacionUnica">
             <interceptor-ref name="json">
                 <param name="enableSMD">true</param>
                 <param name="ignoreSMDMethodInterfaces">false</param>
@@ -24,7 +24,7 @@
             <result name="success">/jsp-script/proceso/rehabilitacion/pantallaRehabilitacionUnica.jsp</result>
         </action>
 
-        <action name="rehabilitacionUnica" class="RehabilitacionAction" method="rehabilitacionUnica">
+        <action name="rehabilitacionUnica" class="rehabilitacionAction" method="rehabilitacionUnica">
             <result name="success" type="json" />
         </action>
         

@@ -3,9 +3,10 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
     
-    <bean id="RehabilitacionAction" class="mx.com.gseguros.portal.rehabilitacion.controller.RehabilitacionAction" scope="prototype">
+    <bean id="rehabilitacionAction" class="mx.com.gseguros.portal.rehabilitacion.controller.RehabilitacionAction" scope="prototype">
         <property name="rehabilitacionManager" ref="rehabilitacionManagerImpl"></property>
         <property name="pantallasManager" ref="pantallasManagerImpl"></property>
+        <property name="cancelacionManager" ref="cancelacionManagerImpl"></property>
     </bean>
     
 </beans>
