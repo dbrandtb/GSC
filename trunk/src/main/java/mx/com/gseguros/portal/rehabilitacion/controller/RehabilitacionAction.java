@@ -130,6 +130,10 @@ public class RehabilitacionAction extends PrincipalCoreAction
 		try
 		{
 			imap=new HashMap<String,Item>(0);
+		
+			if(smap1 != null) {
+				smap1.put("COMENTARIOS", "");
+			}
 			
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			
