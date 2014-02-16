@@ -391,6 +391,7 @@ public class AdminPanelesDelegate {
 		if(!vo.getFechaMaxMsg().equals("")){rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "maxText", vo.getFechaMaxMsg(), "S"));consec++;}
 		if(!vo.getFechaMin().equals("")){rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "minValue", vo.getFechaMin(), "S"));consec++;}
 		if(!vo.getFechaMinMsg().equals("")){rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "minText", vo.getFechaMinMsg(), "S"));consec++;}
+		if(!vo.getIsPadre().equals("")){rgs.add(new DinamicControlAttrVo(consec,nControl,  nPanel, "isPadre", vo.getIsPadre(), "S"));consec++;}
 		return rgs;
 		
 	}
