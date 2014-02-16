@@ -268,7 +268,7 @@ public class DinamicDao {
 		}else if(qry.equals("ListadeRamosTatrisit")){
 			rgs = "SELECT DISTINCT(CDTIPSIT) AS NOMBRE, CDTIPSIT AS TABLA FROM TATRISIT ORDER BY CDTIPSIT";
 		}else if(qry.equals("ListadeControlesGrid")){	
-			rgs = "SELECT DISTINCT(IDCONTROL) FROM DNC_DOCCONTROLGRID_ATTR WHERE IDATTR = "+mapa.get("id")+" AND IDPANEL = "+mapa.get("panel");	
+			rgs = "SELECT DISTINCT(IDCONTROL) FROM DNC_DOCCONTROLGRID_ATTR WHERE IDATTR = '"+mapa.get("id")+"' AND IDPANEL = "+mapa.get("panel");	
 		}else if(qry.equals("ListadeControlesGridAttr")){	
 			rgs = "SELECT IDATTR,IDCONTROL,IDPANEL,ATTR,VALOR,TIPO FROM DNC_DOCCONTROLGRID_ATTR WHERE IDATTR = "+mapa.get("id")+" AND IDCONTROL = "+mapa.get("control")+" AND IDPANEL = "+mapa.get("panel");	
 		}else if(qry.equals("ListadeCamposTatrisit")){
