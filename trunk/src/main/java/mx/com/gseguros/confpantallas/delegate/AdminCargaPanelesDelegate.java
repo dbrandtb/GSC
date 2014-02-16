@@ -1,6 +1,8 @@
 package mx.com.gseguros.confpantallas.delegate;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -323,6 +325,41 @@ public class AdminCargaPanelesDelegate {
 						rgsAttr.append("handler: function() {var form = this.up('form').getForm();if (form.isValid()) {form.submit({success: function(form, action) {window.open('../../jsp/confpantallas/newpanel.jsp');},failure: function(form, action) {Ext.Msg.alert('Failed', 'fallo');}});}}");
 						rgsAttr.append(",");
 					}
+				}else if (attrLts.getAttr().equals("isPadre") && ctrl.indexOf("datafield") > -1){
+					String ctrlHijo = this.getValorAttr(listaAttrControl, "isPadre");
+					String strtime = this.getAttrControl(ctrlHijo, "name", listaIdControles, idP, "value");
+					rgsAttr.append("\n");
+					rgsAttr.append("listeners:{blur: function (e){");
+					rgsAttr.append("\n");
+					rgsAttr.append("var tipo = '").append(getTipo(strtime)).append("';");
+					rgsAttr.append("\n");
+					rgsAttr.append("var time = ").append(getTimeD(strtime)).append(";");
+					rgsAttr.append("\n");
+					rgsAttr.append("var dateTemp = new Date(Ext.getCmp('"+this.getValorAttr(listaAttrControl, "id")+"').getValue());");
+					rgsAttr.append("\n");
+					rgsAttr.append("if(tipo === 'Y'){");
+					rgsAttr.append("\n");
+					rgsAttr.append("dateTemp.setFullYear(dateTemp.getFullYear()+time);");
+					rgsAttr.append("\n");
+					rgsAttr.append("}else if(tipo === 'M'){");
+					rgsAttr.append("\n");
+					rgsAttr.append("dateTemp.setMonth(dateTemp.getMonth()+time);");
+					rgsAttr.append("}else if(tipo === 'D'){").append("\n");
+					rgsAttr.append("dateTemp.setDate(dateTemp.getDate()+time);");
+					rgsAttr.append("}var mes = dateTemp.getMonth() + 1;").append("\n");
+					rgsAttr.append("mes = '' + mes;").append("\n");
+					rgsAttr.append("var nC = mes.length;").append("\n");
+					rgsAttr.append("if(nC == 1){mes = '0' + mes;}").append("\n");
+					rgsAttr.append("var dia = dateTemp.getDate();").append("\n");
+					rgsAttr.append("dia = '' + dia;").append("\n");
+					rgsAttr.append("var nD = dia.length;").append("\n");
+					rgsAttr.append("if(nD == 1){dia = '0' + dia;}").append("\n");
+					rgsAttr.append("var año = dateTemp.getFullYear();").append("\n");
+					rgsAttr.append("año = '' + año;").append("\n");
+					rgsAttr.append("\n");
+					rgsAttr.append("Ext.getCmp('"+ctrlHijo+"').setValue(dia + '/'+ mes  +'/' + año);");
+					rgsAttr.append("\n");
+					rgsAttr.append("}},");
 				}else if (attrLts.getAttr().equals("isPadre")){
 					String idCmb = this.getValorAttr(listaAttrControl, "isPadre");
 					String strCmb = this.getAttrControl(idCmb, "name", listaIdControles, idP, "id");
@@ -362,6 +399,12 @@ public class AdminCargaPanelesDelegate {
 					rgsAttr.append(idP).append("', valor:'").append(this.getValorAttr(listaAttrControl, "query")).append("'} } }),").append("\n");
 				}else if (attrLts.getAttr().equals("query")){
 					System.out.println("Brinco Atributo");
+				}else if (attrLts.getAttr().equals("value") && ctrl.indexOf("datafield") > -1){
+					System.out.println(attrLts.getAttr());
+					rgsAttr.append("format: 'd/m/Y',");
+					rgsAttr.append(attrLts.getAttr()).append(":");
+					rgsAttr.append(this.getFechaFormat(attrLts.getValor(), attrLts.getTipo()));
+					rgsAttr.append(",");
 				}else{
 					rgsAttr.append(attrLts.getAttr()).append(":");
 					rgsAttr.append(this.setStrAttr(attrLts.getValor(), attrLts.getTipo()));
@@ -379,6 +422,126 @@ public class AdminCargaPanelesDelegate {
 		stB.append("},");
 		log.info("Total de atributos del Control: " + stB.toString());
 		return stB.toString();
+	}
+	private String getTipo(String dato){
+		String rgs = "";
+		if(dato.indexOf("sysdate") > -1 || dato.indexOf("SYSDATE") > -1){
+			String signo = getSigno(dato);
+			if(!signo.equals("")){
+				String resto = dato.substring(7).toUpperCase();
+				if(resto.indexOf("A") > -1){
+					rgs = "Y";
+				}else if(resto.indexOf("M") > -1){
+					rgs = "M";
+				}else if(resto.indexOf("D") > -1){
+					rgs = "D";
+				}else{
+					rgs = "D";
+				}
+			}
+		}
+		return rgs;
+	}
+	private String getTimeD(String dato){
+		String rgs = "";
+		if(dato.indexOf("sysdate") > -1 || dato.indexOf("SYSDATE") > -1){
+			String signo = getSigno(dato);
+			if(!signo.equals("")){
+				String resto = dato.substring(7).toUpperCase();
+				if(resto.indexOf("A") > -1){
+					rgs = resto.substring(resto.indexOf("A")+1).trim();
+				}else if(resto.indexOf("M") > -1){
+					rgs = resto.substring(resto.indexOf("M")+1).trim();
+				}else if(resto.indexOf("D") > -1){
+					rgs = resto.substring(resto.indexOf("D")+1).trim();
+				}else{
+					if(signo.equals("mas")){
+						rgs = resto = resto.substring(resto.indexOf("+")+1).trim();
+					}else if(signo.equals("menos")){
+						rgs = resto = resto.substring(resto.indexOf("-")+1).trim();
+					}
+				}
+			}
+		}
+		return rgs;
+	}
+	private String getFechaFormat(String valor, String tipo){
+		String rgs = valor;
+		if(valor.indexOf("sysdate") > -1 || valor.indexOf("SYSDATE") > -1){
+			String signo = getSigno(valor);
+			if(!signo.equals("")){
+				String resto = valor.substring(7).toUpperCase();
+				String factor = "";
+				Integer n = 0;
+				if(resto.indexOf("A") > -1){
+					factor = "Año";
+					resto = resto.substring(resto.indexOf("A")+1).trim();
+					n = Integer.parseInt(resto);
+				}else if(resto.indexOf("M") > -1){
+					factor = "Mes";
+					resto = resto.substring(resto.indexOf("M")+1).trim();
+					n = Integer.parseInt(resto);
+				}else if(resto.indexOf("D") > -1){
+					factor = "Dia";
+					resto = resto.substring(resto.indexOf("D")+1).trim();
+					n = Integer.parseInt(resto);
+				}else{
+					factor = "Dia";
+					if(signo.equals("mas")){
+						resto = resto.substring(resto.indexOf("+")+1).trim();
+					}else if(signo.equals("menos")){
+						resto = resto.substring(resto.indexOf("-")+1).trim();
+					}
+					n = Integer.parseInt(resto);
+				}
+				rgs = this.setStrAttr(this.getFecha(signo, factor, n), tipo);
+			}else{
+				rgs = "new Date()";
+			}
+		}else{
+			rgs = this.setStrAttr(valor, tipo);
+		}
+		return rgs;
+	}
+	
+	private String getFecha(String signo, String factor,Integer n){
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(new Date());
+		if(factor.equals("Dia") && signo.equals("mas")){
+			cal.add(Calendar.DATE, n);
+		}else if(factor.equals("Dia") && signo.equals("menos")){
+			cal.add(Calendar.DATE, -n);
+		}else if(factor.equals("Mes") && signo.equals("menos")){
+			cal.add(Calendar.MONTH, -n);
+		}else if(factor.equals("Mes") && signo.equals("mas")){
+			cal.add(Calendar.MONTH, n);
+		}else if(factor.equals("Año") && signo.equals("menos")){
+			cal.add(Calendar.YEAR, -n);
+		}else if(factor.equals("Año") && signo.equals("mas")){
+			cal.add(Calendar.YEAR, n);
+		}
+		String dia = getDia00(cal.get(Calendar.DAY_OF_MONTH));
+		String mes = getMes00(cal.get(Calendar.MONTH)+1);
+		String año = String.valueOf(cal.get(Calendar.YEAR));
+		return dia + "/" + mes + "/" + año; 
+	}
+	private String getDia00(int dia){
+		String rgs = "";
+		if(String.valueOf(dia).length() == 1){
+			rgs = "0"+String.valueOf(dia);
+		}else{
+			rgs = String.valueOf(dia);
+		}
+		return rgs;
+	}
+	private String getMes00(int mes){
+		String rgs = "";
+		if(String.valueOf(mes).length() == 1){
+			rgs = "0"+String.valueOf(mes);
+		}else{
+			rgs = String.valueOf(mes);
+		}
+		return rgs;
 	}
 	private String getAttrModel(String id, Integer panel){
 		StringBuffer stB = new StringBuffer();
@@ -595,7 +758,15 @@ public class AdminCargaPanelesDelegate {
 		return rgs;
 	}
 	
-
+	private String getSigno(String valor){
+		String rgs = "";
+		if(valor.indexOf("+") > -1){
+			rgs = "mas";
+		}else if(valor.indexOf("-") > -1){
+			rgs = "menos";
+		}
+		return rgs;
+	}
 }
 
 
