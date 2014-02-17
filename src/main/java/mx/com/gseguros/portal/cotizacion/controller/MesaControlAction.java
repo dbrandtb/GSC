@@ -568,7 +568,7 @@ public class MesaControlAction extends PrincipalCoreAction
 			imap1=new HashMap<String,Item>(0);
 			imap1.put("modelFields",gc.getFields());
 			imap1.put("gridColumns",gc.getColumns());
-			imap1.put("actionColumns",gc.getButtons());
+			//imap1.put("actionColumns",gc.getButtons());
 			
 			////// generar formulario //////
 			gc.generaParcial(ltFormulario);
