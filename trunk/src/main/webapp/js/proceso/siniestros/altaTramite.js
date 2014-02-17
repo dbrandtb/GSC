@@ -713,6 +713,15 @@ Ext.onReady(function() {
     	            id:'botonLimpiar',
     	            handler:function()
     	            {}
+    	        },
+    	        {
+    	            text:'Cancelar',
+    	            //icon:_CONTEXT+'/resources/fam3icons/icons/arrow_refresh.png',
+    	            ///id:'botonLimpiar',
+    	            handler:function()
+    	            {
+    	            	windowLoader.close();
+    	            }
     	        }
     	    ]
     	    });
