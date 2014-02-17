@@ -4,6 +4,10 @@
     
     <package name="general" extends="json-default" namespace="/general">
     
+        <action name="obtieneDatosAmbiente" class="environmentAction" method="obtieneDatosAmbiente">
+            <result name="success" type="json" />
+        </action>
+    
         <action name="loadRecibos" class="recibosAction" method="loadRecibos">
             <result name="success">/resources/scripts/consultaPolizas/includes/consultaRecibos.jsp</result>
         </action>
