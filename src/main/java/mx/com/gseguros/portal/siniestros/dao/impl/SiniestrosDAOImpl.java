@@ -712,6 +712,10 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
         	consulta.setMtoBase(rs.getString("MTOBASE"));
         	consulta.setFeinicio(Utilerias.formateaFecha(rs.getString("FEINICIO")));
         	consulta.setFefinal(Utilerias.formateaFecha(rs.getString("FEFINAL")));
+        	consulta.setDssucursal(rs.getString("DSUNIECO"));
+        	consulta.setDsramo(rs.getString("DSRAMO"));
+        	consulta.setEstatus(rs.getString("STATUS"));
+        	consulta.setDsestatus(rs.getString("DSTATUS"));
             return consulta;
         }
     }

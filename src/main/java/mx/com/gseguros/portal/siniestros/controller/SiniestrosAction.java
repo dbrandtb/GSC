@@ -314,6 +314,15 @@ public class SiniestrosAction extends ActionSupport{
 	public String consultaListaCoberturaPoliza(){
 		logger.debug(" **** Entrando a consulta de lista de Cobertura de poliza ****");
 		try {
+			
+			logger.error("VALORES DE ENTRADA");
+			logger.error(params.get("cdunieco"));
+			logger.error(params.get("estado"));
+			logger.error(params.get("cdramo"));
+			logger.error(params.get("nmpoliza"));
+			logger.error(params.get("nmsituac"));
+			logger.error(params.get("cdgarant"));
+			
 			HashMap<String, Object> paramCobertura = new HashMap<String, Object>();
 			paramCobertura.put("pv_cdunieco_i",params.get("cdunieco"));
 			paramCobertura.put("pv_estado_i",params.get("estado"));
@@ -381,6 +390,9 @@ public class SiniestrosAction extends ActionSupport{
    public String consultaListaSubcobertura(){
    	logger.debug(" **** Entrando al método de Lista de Subcobertura ****");
 	   	try {
+	   		logger.error("VALOR DE ENTRADA");
+	   		logger.error(params.get("cdgarant"));
+	   		logger.error(params.get("cdsubcob"));
 	   		listaSubcobertura= siniestrosManager.getConsultaListaSubcobertura(params.get("cdgarant"),params.get("cdsubcob"));
 	   	}catch( Exception e){
 	   		logger.error("Error al consultar la Lista de subcoberturas ",e);
