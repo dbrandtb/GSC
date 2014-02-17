@@ -54,11 +54,11 @@ Ext.onReady(function() {
             return Ext.Date.monthNumbers[name.substring(0, 1).toUpperCase() + name.substring(1, 3).toLowerCase()];
         };
 
-        Ext.Date.dayNames = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+        Ext.Date.dayNames = ["Domingo", "Lunes", "Martes", "Mi&eacute;rcoles", "Jueves", "Viernes", "S&aacute;bado"];
 
         Ext.Date.getShortDayName = function(day) {
-            if (day == 3) return "Mié";
-            if (day == 6) return "Sáb";
+            if (day == 3) return "Mi&eacute;";
+            if (day == 6) return "S&aacute;b";
             return Ext.Date.dayNames[day].substring(0, 3);
         };
 
@@ -95,8 +95,8 @@ Ext.define("Ext.locale.es.view.AbstractView", {
 Ext.define("Ext.locale.es.picker.Date", {
     override: "Ext.picker.Date",
     todayText: "Hoy",
-    minText: "Esta fecha es anterior a la fecha mínima",
-    maxText: "Esta fecha es posterior a la fecha máxima",
+    minText: "Esta fecha es anterior a la fecha m&iacute;nima",
+    maxText: "Esta fecha es posterior a la fecha m&aacute;xima",
     disabledDaysText: "",
     disabledDatesText: "",
     nextText: 'Mes Siguiente (Control+Right)',
@@ -115,12 +115,12 @@ Ext.define("Ext.locale.es.picker.Month", {
 
 Ext.define("Ext.locale.es.toolbar.Paging", {
     override: "Ext.PagingToolbar",
-    beforePageText: "Página",
+    beforePageText: "P&aacute;gina",
     afterPageText: "de {0}",
-    firstText: "Primera página",
-    prevText: "Página anterior",
-    nextText: "Página siguiente",
-    lastText: "Última página",
+    firstText: "Primera p&aacute;gina",
+    prevText: "P&aacute;gina anterior",
+    nextText: "P&aacute;gina siguiente",
+    lastText: "&Uacute;ltima p&aacute;gina",
     refreshText: "Actualizar",
     displayMsg: "Mostrando {0} - {1} de {2}",
     emptyMsg: 'Sin datos para mostrar'
@@ -128,13 +128,13 @@ Ext.define("Ext.locale.es.toolbar.Paging", {
 
 Ext.define("Ext.locale.es.form.field.Base", {
     override: "Ext.form.field.Base",
-    invalidText: "El valor en este campo es inválido"
+    invalidText: "El valor en este campo es inv&aacute;lido"
 });
 
 Ext.define("Ext.locale.es.form.field.Text", {
     override: "Ext.form.field.Text",
-    minLengthText: "El tamaño mínimo para este campo es de {0}",
-    maxLengthText: "El tamaño máximo para este campo es de {0}",
+    minLengthText: "El tamaño m&iacute;nimo para este campo es de {0}",
+    maxLengthText: "El tamaño m&aacute;ximo para este campo es de {0}",
     blankText: "Este campo es obligatorio",
     regexText: "",
     emptyText: null
@@ -144,9 +144,9 @@ Ext.define("Ext.locale.es.form.field.Number", {
     override: "Ext.form.field.Number",
     decimalSeparator: ",",
     decimalPrecision: 2,
-    minText: "El valor mínimo para este campo es de {0}",
-    maxText: "El valor máximo para este campo es de {0}",
-    nanText: "{0} no es un número válido"
+    minText: "El valor m&iacute;nimo para este campo es de {0}",
+    maxText: "El valor m&aacute;ximo para este campo es de {0}",
+    nanText: "{0} no es un n&uacute;mero v&aacute;lido"
 });
 
 Ext.define("Ext.locale.es.form.field.File", { 
@@ -160,7 +160,7 @@ Ext.define("Ext.locale.es.form.field.Date", {
     disabledDatesText: "Deshabilitado",
     minText: "La fecha para este campo debe ser posterior a {0}",
     maxText: "La fecha para este campo debe ser anterior a {0}",
-    invalidText: "{0} no es una fecha válida - debe tener el formato {1}",
+    invalidText: "{0} no es una fecha v&aacute;lida - debe tener el formato {1}",
     format: "d/m/Y",
     altFormats: "d/m/Y|d-m-y|d-m-Y|d/m|d-m|dm|dmy|dmY|d|Y-m-d"
 });
@@ -176,10 +176,10 @@ Ext.define("Ext.locale.es.form.field.ComboBox", {
 
 Ext.define("Ext.locale.es.form.field.VTypes", {
     override: "Ext.form.field.VTypes",
-    emailText: 'Este campo debe ser una dirección de correo electrónico con el formato "usuario@dominio.com"',
+    emailText: 'Este campo debe ser una direcci&oacute;n de correo electr&oacute;nico con el formato "usuario@dominio.com"',
     urlText: 'Este campo debe ser una URL con el formato "http:/' + '/www.dominio.com"',
-    alphaText: 'Este campo sólo debe contener letras y _',
-    alphanumText: 'Este campo sólo debe contener letras, números y _'
+    alphaText: 'Este campo s&oacute;lo debe contener letras y _',
+    alphanumText: 'Este campo s&oacute;lo debe contener letras, n&uacute;meros y _'
 });
 
 Ext.define("Ext.locale.es.form.field.HtmlEditor", {
@@ -194,8 +194,8 @@ Ext.define("Ext.locale.es.form.field.HtmlEditor", {
                 cls: Ext.baseCSSPrefix + 'html-editor-tip'
             },
             italic: {
-                title: 'Itálica (Ctrl+I)',
-                text: 'Transforma el texto seleccionado en Itálicas.',
+                title: 'It&aacute;lica (Ctrl+I)',
+                text: 'Transforma el texto seleccionado en It&aacute;licas.',
                 cls: Ext.baseCSSPrefix + 'html-editor-tip'
             },
             underline: {
@@ -254,8 +254,8 @@ Ext.define("Ext.locale.es.form.field.HtmlEditor", {
                 cls: Ext.baseCSSPrefix + 'html-editor-tip'
             },
             sourceedit: {
-                title: 'Código Fuente',
-                text: 'Pasar al modo de edición de código fuente.',
+                title: 'C&oacute;digo Fuente',
+                text: 'Pasar al modo de edici&oacute;n de c&oacute;digo fuente.',
                 cls: Ext.baseCSSPrefix + 'html-editor-tip'
             }
         }
@@ -287,19 +287,19 @@ Ext.define("Ext.locale.es.form.field.Time", {
     override: "Ext.form.field.Time",
     minText: "La hora en este campo debe ser igual o posterior a {0}",
     maxText: "La hora en este campo debe ser igual o anterior a {0}",
-    invalidText: "{0} no es una hora válida",
+    invalidText: "{0} no es una hora v&aacute;lida",
     format: "g:i A",
     altFormats: "g:ia|g:iA|g:i a|g:i A|h:i|g:i|H:i|ga|ha|gA|h a|g a|g A|gi|hi|gia|hia|g|H"
 });
 
 Ext.define("Ext.locale.es.form.CheckboxGroup", {
     override: "Ext.form.CheckboxGroup",
-    blankText: "Debe seleccionar al menos un étem de este grupo"
+    blankText: "Debe seleccionar al menos un &iacute;tem de este grupo"
 });
 
 Ext.define("Ext.locale.es.form.RadioGroup", {
     override: "Ext.form.RadioGroup",
-    blankText: "Debe seleccionar un étem de este grupo"
+    blankText: "Debe seleccionar un &iacute;tem de este grupo"
 });
 
 Ext.define("Ext.locale.es.window.MessageBox", {
@@ -307,7 +307,7 @@ Ext.define("Ext.locale.es.window.MessageBox", {
     buttonText: {
         ok: "Aceptar",
         cancel: "Cancelar",
-        yes: "Sí",
+        yes: "S&iacute;",
         no: "No"
     }    
 });
