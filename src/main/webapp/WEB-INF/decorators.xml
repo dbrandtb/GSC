@@ -67,6 +67,7 @@
         <pattern>/siniestros/verCoberturas.action</pattern>
         <pattern>/siniestros/verAutorizacionServicio.action</pattern>
         <pattern>/siniestros/revisionDocumentos.action</pattern>
+        <pattern>/siniestros/altaTramite.action</pattern>
         
 	</decorator>
     
@@ -149,8 +150,8 @@
          <pattern>/siniestros/asignarReclamaciones.action</pattern>
          <pattern>/jsp-script/proceso/siniestros/asignarReclamaciones.jsp</pattern>
          
-         <pattern>/siniestros/altaTramite.action</pattern>
-         <pattern>/jsp-script/proceso/siniestros/altaTramite.jsp</pattern>
+         <!--<pattern>/siniestros/altaTramite.action</pattern>
+         <pattern>/jsp-script/proceso/siniestros/altaTramite.jsp</pattern>-->
          
          <pattern>/siniestros/ajustesMedicos.action</pattern>
          <pattern>/jsp-script/proceso/siniestros/ajustesMedicos.jsp</pattern>

@@ -27,16 +27,19 @@ public class GeneradorCampos
     private static final int    staticFlex            = 1;
     private static final String descExcTipoCampoVacio = "El campo no tiene tipo campo (A,N,T,F,P)";
 	private static final String descExcTipoCampoOtro  = "El campo tiene tipo campo incorrecto (A,N,T,F,P)";
+	private static final String prefijoRutaIconos     = "/resources/fam3icons/icons/";
     
     public  String idPrefix;
     private Item   items;
     private Item   fields;
     private Item   columns;
+    private Item   buttons;
     private String context;
     private String cdgarant;
     private String cdramo;
     private String cdrol;
     private String cdtipsit;
+    private String rutaIconos;
     
     private boolean parcial   = false;
     private boolean conEditor = false;
@@ -44,6 +47,7 @@ public class GeneradorCampos
     public GeneradorCampos(String context)
     {
     	this.context="/"+context;
+    	this.rutaIconos = this.context+GeneradorCampos.prefijoRutaIconos;
     	log.debug("contexto para el generador de campos: "+this.context);
     }
     
@@ -118,12 +122,14 @@ public class GeneradorCampos
     	String itemsKey   = null;
     	String fieldsKey  = null;
     	String columnskey = null;
+    	String buttonskey = null;
     	
     	if(!this.parcial)
     	{
     		itemsKey   = "items";
     		fieldsKey  = "fields";
     		columnskey = "columns";
+    		buttonskey = "buttons";
     	}
     	
     	idPrefix="idAutoGenerado_"+System.currentTimeMillis()+"_"+((long)Math.ceil((Math.random()*10000d)))+"_";
@@ -131,6 +137,7 @@ public class GeneradorCampos
         items  = new Item(itemsKey   , null , Item.ARR);
         fields = new Item(fieldsKey  , null , Item.ARR);
         columns= new Item(columnskey , null , Item.ARR);
+        buttons= new Item(buttonskey , null , Item.ARR);
         
         if(listcomp!=null&&!listcomp.isEmpty())
         {
@@ -143,6 +150,7 @@ public class GeneradorCampos
         log.debug(fields.toString());
         log.debug(items.toString());
         log.debug(columns.toString());
+        log.debug(buttons.toString());
     }
     
     /**
@@ -642,6 +650,41 @@ public class GeneradorCampos
     	
     	return col;
     }
+
+    /**
+     * Genera una boton para usar en cualquier componente.
+     * Ext.define('MiGrid',
+     * {
+     *     extend   : 'Ext.grid.Panel'
+     *     ,buttons :
+     *     [
+     *         <s:property value="itemButton" />
+     *     ]
+     * });
+     */
+    private Item generaButton(List<ComponenteVO> listcomp, ComponenteVO comp, Integer idx) throws Exception
+    {
+    	Item button = null;
+    	
+    	if(StringUtils.isNotBlank(comp.getLabel())){
+    		
+    		boolean hayColumna = StringUtils.isNotBlank(comp.getColumna()) && (comp.getColumna().equalsIgnoreCase(Constantes.SI) || comp.getColumna().equalsIgnoreCase(ComponenteVO.COLUMNA_OCULTA));
+    		button=new Item();
+    		button.setType(Item.OBJ);
+    		
+    		if(!hayColumna)
+    		{
+    			button.add("xtype", "button");
+    		}
+    		
+    		button.add( hayColumna? "tooltip": "text", comp.getLabel());
+    		button.add("icon"                        , this.rutaIconos+comp.getIcon());
+    		button.add(Item.crear("handler"          , comp.getHandler()).setQuotes(""));
+    		
+    	}
+    	
+    	return button;
+    }
     
     /**
      * Genera el field para el modelo, el item para el formulario, la columna en caso de tener S o H, y su editor
@@ -652,6 +695,7 @@ public class GeneradorCampos
     	Item field  = this.generaField(listcomp, comp, idx);
         Item column = this.generaColumn(listcomp, comp, idx);
         Item item   = this.generaItem(listcomp, comp, idx, false);
+        Item button   = this.generaButton(listcomp, comp, idx);
         
         Item editor=null;
         if(conEditor)
@@ -669,6 +713,8 @@ public class GeneradorCampos
         	}
         	columns.add(column);
         }
+        
+        buttons.add(button);
     }
 
     /**
@@ -789,6 +835,14 @@ public class GeneradorCampos
 
 	public void setColumns(Item columns) {
 		this.columns = columns;
+	}
+
+	public Item getButtons() {
+		return buttons;
+	}
+
+	public void setButtons(Item buttons) {
+		this.buttons = buttons;
 	}
     
 }

@@ -40,6 +40,7 @@ public class MesaControlAction extends PrincipalCoreAction
 	private boolean                        success;
 	private Map<String,Item>               imap1;
 	private String                         username;
+	private String                         rol;
 	private PantallasManager               pantallasManager;
 	
 	public String principal()
@@ -536,7 +537,7 @@ public class MesaControlAction extends PrincipalCoreAction
 			String cdtiptra      = smap2.get("pv_cdtiptra_i");
 			String cdramo        = smap1.get("cdramo");
 			String cdtipsit      = smap1.get("cdtipsit");
-			String rol           = usuario.getRolActivo().getObjeto().getValue();
+			rol           = usuario.getRolActivo().getObjeto().getValue();
 			String pantalla      = "TATRIMC";
 			String seccionForm   = "FORMULARIO";
 			String seccionGrid   = "TATRIMC";
@@ -567,6 +568,7 @@ public class MesaControlAction extends PrincipalCoreAction
 			imap1=new HashMap<String,Item>(0);
 			imap1.put("modelFields",gc.getFields());
 			imap1.put("gridColumns",gc.getColumns());
+			imap1.put("actionColumns",gc.getButtons());
 			
 			////// generar formulario //////
 			gc.generaParcial(ltFormulario);
@@ -769,6 +771,14 @@ public class MesaControlAction extends PrincipalCoreAction
 
 	public void setOlist1(List<Map<String, Object>> olist1) {
 		this.olist1 = olist1;
+	}
+
+	public String getRol() {
+		return rol;
+	}
+
+	public void setRol(String rol) {
+		this.rol = rol;
 	}
 	
 }

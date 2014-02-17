@@ -87,6 +87,8 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 		String llaveParam5      = "PARAM5";
 		String llaveValue5      = "VALUE5";
 		String llaveComboVacio  = "SWCVACIO";
+		String llaveIcon        = "ICONO";
+		String llaveHandler     = "HANDLER";
 		
 		public Object mapRow(ResultSet rs, int rowNum) throws SQLException
 		{
@@ -192,6 +194,9 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 				isComboVacio = true;
 			}
 			
+			String  icon    = "disk.png";//rs.getString(llaveIcon);
+			String  handler = "function(){alert('click');}";//rs.getString(llaveHandler);
+			
 			ComponenteVO comp = new ComponenteVO(
 					ComponenteVO.TIPO_GENERICO,
 					label         , tipoCampo     , catalogo,
@@ -203,7 +208,7 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 					paramValue1   , paramName2    , paramValue2,
 					paramName3    , paramValue3   , paramName4,
 					paramValue4   , paramName5    , paramValue5,
-					isComboVacio
+					isComboVacio  , icon          , handler
 					);
 			
 			return comp;

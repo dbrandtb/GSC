@@ -55,6 +55,9 @@ public class ComponenteVO
 	private String swsuscri = null;
 	private String swtarifi = null;
 	private String swpresen = null;
+
+	private String icon = null;
+	private String handler = null;
 	
 	public ComponenteVO(){}
 	
@@ -88,6 +91,8 @@ public class ComponenteVO
 			,String  paramName5
 			,String  paramValue5
 			,boolean isComboVacio
+			,String icon
+			,String handler
 			)
 	{
 		this.type          = type;
@@ -119,6 +124,8 @@ public class ComponenteVO
 		this.paramName5    = paramName5;
 		this.paramValue5   = paramValue5;
 		this.comboVacio    = isComboVacio;
+		this.icon          = icon;
+		this.handler       = handler;
 	}
 	
 	public String getLabel() {
@@ -381,5 +388,21 @@ public class ComponenteVO
 
 	public void setComboVacio(boolean comboVacio) {
 		this.comboVacio = comboVacio;
+	}
+
+	public String getIcon() {
+		return icon;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
+
+	public String getHandler() {
+		return handler;
+	}
+
+	public void setHandler(String handler) {
+		this.handler = handler;
 	}
 }
