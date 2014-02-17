@@ -36,6 +36,7 @@ mcdinInput['tiptra']   = '<s:property value="smap2.pv_cdtiptra_i" />';
 debug('mcdinInput: ',mcdinInput);
 
 mcdinSesion['username'] = '<s:property value="username" />';
+mcdinSesion['rol'] = '<s:property value="rol" />';
 debug('mcdinSesion: ',mcdinSesion);
 
 var mcdinGrid;
@@ -47,9 +48,10 @@ var _4_botones=
 {
 	xtype         : 'actioncolumn'
 	,hidden       : false
-	,width        : 30
+	,width        : 200
 	,menuDisabled : true
 	,sortable     : false
+	,items:[<s:property value="imap1.actionColumns" />]
 };
 
 var _4_botonesGrid =
@@ -75,6 +77,9 @@ var _4_botonesGrid =
 </s:if>
 <s:elseif test='%{getSmap2().get("pv_cdtiptra_i").equalsIgnoreCase("15")}'>
     <%@ include file="/jsp-script/proceso/endosos/scriptMesaAutorizacionEndosos.jsp"%>
+</s:elseif>
+<s:elseif test='%{getSmap2().get("pv_cdtiptra_i").equalsIgnoreCase("16")}'>
+	<%@ include file="/jsp-script/proceso/siniestros/scriptMesaSiniestros.jsp"%>
 </s:elseif>
 
 <script>
@@ -109,10 +114,6 @@ function _4_cambiarTiptra(cdtiptra)
 Ext.onReady(function()
 {
 	
-<s:elseif test='%{getSmap2().get("pv_cdtiptra_i").equalsIgnoreCase("16")}'>
-	<%@ include file="/jsp-script/proceso/siniestros/scriptMesaSiniestros.jsp"%>
-</s:elseif>
-    
     /////////////////////
     ////// modelos //////
     /*/////////////////*/

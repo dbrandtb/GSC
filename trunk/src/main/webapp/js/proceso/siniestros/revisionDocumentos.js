@@ -76,6 +76,7 @@ Ext.onReady(function() {
 							gridDocumentos.setLoading(false);
 							mensajeCorrecto('Aviso','Se ha guardado con exito.');
 							storeDocumentos.reload();
+							windowLoader.close();
 						},
 						failure: function(){
 							gridDocumentos.setLoading(false);
