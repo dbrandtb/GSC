@@ -51,7 +51,9 @@ var _4_botones=
 	,width        : 200
 	,menuDisabled : true
 	,sortable     : false
-	,items:[<s:property value="imap1.actionColumns" />]
+	,items:[
+	        <%--s:property value="imap1.actionColumns" /--%>
+	]
 };
 
 var _4_botonesGrid =

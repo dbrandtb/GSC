@@ -33,7 +33,7 @@ public class GeneradorCampos
     private Item   items;
     private Item   fields;
     private Item   columns;
-    private Item   buttons;
+    //private Item   buttons;
     private String context;
     private String cdgarant;
     private String cdramo;
@@ -122,14 +122,14 @@ public class GeneradorCampos
     	String itemsKey   = null;
     	String fieldsKey  = null;
     	String columnskey = null;
-    	String buttonskey = null;
+    	//String buttonskey = null;
     	
     	if(!this.parcial)
     	{
     		itemsKey   = "items";
     		fieldsKey  = "fields";
     		columnskey = "columns";
-    		buttonskey = "buttons";
+    		//buttonskey = "buttons";
     	}
     	
     	idPrefix="idAutoGenerado_"+System.currentTimeMillis()+"_"+((long)Math.ceil((Math.random()*10000d)))+"_";
@@ -137,7 +137,7 @@ public class GeneradorCampos
         items  = new Item(itemsKey   , null , Item.ARR);
         fields = new Item(fieldsKey  , null , Item.ARR);
         columns= new Item(columnskey , null , Item.ARR);
-        buttons= new Item(buttonskey , null , Item.ARR);
+        //buttons= new Item(buttonskey , null , Item.ARR);
         
         if(listcomp!=null&&!listcomp.isEmpty())
         {
@@ -147,10 +147,18 @@ public class GeneradorCampos
             }
         }
         
-        log.debug(fields.toString());
-        log.debug(items.toString());
-        log.debug(columns.toString());
-        log.debug(buttons.toString());
+        if(fields != null) {
+        	log.debug(fields.toString());
+        }
+        if(items != null) {
+        	log.debug(items.toString());
+        }
+        if(columns != null) {
+        	log.debug(columns.toString());
+        }
+        //if(buttons != null) {
+        	//log.debug(buttons.toString());
+        //}
     }
     
     /**
@@ -695,7 +703,7 @@ public class GeneradorCampos
     	Item field  = this.generaField(listcomp, comp, idx);
         Item column = this.generaColumn(listcomp, comp, idx);
         Item item   = this.generaItem(listcomp, comp, idx, false);
-        Item button   = this.generaButton(listcomp, comp, idx);
+        //Item button   = this.generaButton(listcomp, comp, idx);
         
         Item editor=null;
         if(conEditor)
@@ -714,7 +722,7 @@ public class GeneradorCampos
         	columns.add(column);
         }
         
-        buttons.add(button);
+        //buttons.add(button);
     }
 
     /**
@@ -836,7 +844,7 @@ public class GeneradorCampos
 	public void setColumns(Item columns) {
 		this.columns = columns;
 	}
-
+	/*
 	public Item getButtons() {
 		return buttons;
 	}
@@ -844,5 +852,5 @@ public class GeneradorCampos
 	public void setButtons(Item buttons) {
 		this.buttons = buttons;
 	}
-    
+    */
 }
