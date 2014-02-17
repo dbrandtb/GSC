@@ -26,9 +26,63 @@ public class PolizaVigenteVO implements Serializable {
 	private String feinicio;
 	
 	private String fefinal;
+	
+	private String dssucursal;
+	
+	private String dsramo;
 
+	private String dsestatus;
+	
+	private String estatus;
 	
 	
+	
+	public String getEstatus() {
+		return estatus;
+	}
+
+
+
+	public void setEstatus(String estatus) {
+		this.estatus = estatus;
+	}
+
+	public String getDssucursal() {
+		return dssucursal;
+	}
+
+
+
+	public void setDssucursal(String dssucursal) {
+		this.dssucursal = dssucursal;
+	}
+
+
+
+	public String getDsramo() {
+		return dsramo;
+	}
+
+
+
+	public void setDsramo(String dsramo) {
+		this.dsramo = dsramo;
+	}
+
+
+
+	public String getDsestatus() {
+		return dsestatus;
+	}
+
+
+
+	public void setDsestatus(String dsestatus) {
+		this.dsestatus = dsestatus;
+	}
+
+
+
 	public String getFeinicio() {
 		return feinicio;
 	}

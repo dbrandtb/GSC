@@ -15,6 +15,22 @@ storeIncisos=new Ext.data.Store(
 });
 
 
+Ext.define('modelListadoProvMedico',{
+    extend: 'Ext.data.Model',
+    fields: [
+             	{type:'string',    name:'cdpresta'},		{type:'string',    name:'nombre'},		{type:'string',    name:'cdespeci'},		{type:'string',    name:'descesp'}
+			]
+});
+
+Ext.define('modelListadoPoliza',{
+    extend: 'Ext.data.Model',
+    fields: [
+             	{type:'string',    name:'cdramo'},		{type:'string',    name:'cdunieco'},		{type:'string',    name:'estado'},
+				{type:'string',    name:'nmpoliza'},	{type:'string',    name:'nmsituac'}
+			]
+});
+
+
 Ext.onReady(function() {
 
 	var storeTipoAtencion = Ext.create('Ext.data.JsonStore', {
@@ -31,6 +47,20 @@ Ext.onReady(function() {
 	});
 	storeTipoAtencion.load();
     
+	
+	storeAsegurados = Ext.create('Ext.data.Store', {
+        model:'Generic',
+        autoLoad:false,
+        proxy: {
+            type: 'ajax',
+            url : _URL_LISTADO_ASEGURADO,
+            reader: {
+                type: 'json',
+                root: 'listaAsegurado'
+            }
+        }
+    });
+	
 	var storeTipoPago = Ext.create('Ext.data.JsonStore', {
 		model:'Generic',
 		proxy: {
@@ -45,6 +75,36 @@ Ext.onReady(function() {
 	});
     storeTipoPago.load();
     
+    var storeProveedor = Ext.create('Ext.data.Store', {
+        model:'modelListadoProvMedico',
+        autoLoad:false,
+        proxy: {
+            type: 'ajax',
+            url : _URL_CONSULTA_PROVEEDOR_MEDICO,
+            extraParams:{
+            	'params.tipoprov' : 'C'
+            },
+            reader: {
+                type: 'json',
+                root: 'listaProvMedico'
+            }
+        }
+    });
+
+    storeListadoPoliza = new Ext.data.Store(
+    {
+    	pageSize : 5
+        ,model      : 'modelListadoPoliza'
+        ,autoLoad  : false
+        ,proxy     :
+        {
+            enablePaging : true,
+            reader       : 'json',
+            type         : 'memory',
+            data         : []
+        }
+    });
+    
     
     Ext.selection.CheckboxModel.override( {
         mode: 'SINGLE',
@@ -53,9 +113,9 @@ Ext.onReady(function() {
 
     oficinaReceptora= Ext.create('Ext.form.ComboBox',
   	{
-    	id:'oficinaReceptora',	   name:'params.oficinaReceptora',      fieldLabel: 'Oficina receptora',		queryMode:'local',		   
-    	displayField: 'value',	   valueField: 'key',					allowBlank:false,				        editable:false,
-    	labelWidth : 250,		   emptyText:'Seleccione...'
+    	id:'cmbOficReceptora',	   name:'cmbOficReceptora',     fieldLabel: 'Oficina receptora',		queryMode:'local',		   
+    	displayField: 'value',	   valueField: 'key',			allowBlank:false,				        editable:false,
+    	labelWidth : 250,		   width		 : 500,			emptyText:'Seleccione...'
    		,store : Ext.create('Ext.data.Store', {
    			model:'Generic',
    			autoLoad:true,
@@ -75,8 +135,8 @@ Ext.onReady(function() {
     
     oficinaEmisora= Ext.create('Ext.form.ComboBox',
 	{
-    	id:'oficinaEmisora',		name:'params.oficinaEmisora',		fieldLabel: 'Oficina emisora',			queryMode:'local',
-	    displayField: 'value',	    valueField: 'key',				    allowBlank:false,					    editable:false,
+    	id:'cmbOficEmisora',		name:'cmbOficEmisora',		fieldLabel: 'Oficina emisora',			queryMode:'local',
+	    displayField: 'value',	    valueField: 'key',			width		 : 500,					    allowBlank:false,					    editable:false,
 	    labelWidth : 250,		    emptyText:'Seleccione...'
 	    ,store : Ext.create('Ext.data.Store', {
 			model:'Generic',
@@ -99,66 +159,117 @@ Ext.onReady(function() {
      
     var comboTipoAte= Ext.create('Ext.form.ComboBox',
     {
-        id:'tipoAtencion',			   name:'params.tipoAtencion',		        fieldLabel: 'Tipo Atenci&oacute;n',				queryMode:'local',
+        id:'cmbTipoAtencion',			   name:'cmbTipoAtencion',		        fieldLabel: 'Tipo Atenci&oacute;n',				queryMode:'local',
         displayField: 'value',	   valueField: 'key',					allowBlank:false,						editable:false,
-        labelWidth : 250,		   emptyText:'Seleccione...',			store: storeTipoAtencion
+        labelWidth : 250,		   emptyText:'Seleccione...',			width		 : 500,						store: storeTipoAtencion
+    });
+
+    var tipoServicioInterno = Ext.create('Ext.form.ComboBox',
+    {
+        id:'tipoServicioInterno',			   name:'tipoServicioInterno',		        fieldLabel: 'Tipo de servicio',				queryMode:'local',
+        displayField: 'value',	   valueField: 'key',					allowBlank:false,						editable:false,
+        labelWidth : 170,		   emptyText:'Seleccione...',			width		 : 500,						store: storeTipoAtencion
     });
 
     tipoPago= Ext.create('Ext.form.ComboBox',
     		{
-    	id:'tipoPago',			   name:'params.tipoPago',		        fieldLabel: 'Tipo pago',				queryMode:'local',
+    	id:'cmbTipoPago',			   name:'cmbTipoPago',		        fieldLabel: 'Tipo pago',				queryMode:'local',
     	displayField: 'value',	   valueField: 'key',					allowBlank:false,						editable:false,
-    	labelWidth : 250,		   emptyText:'Seleccione...',			store: storeTipoPago
+    	labelWidth : 250,		   width		 : 500,					emptyText:'Seleccione...',			store: storeTipoPago
     	,
     	listeners : {
     		'select' : function(combo, record) {
     			closedStatusSelectedID = this.getValue();
     			if(closedStatusSelectedID ==1){
     				//PAGO DIRECTO
-    				Ext.getCmp('beneficiario').hide();
     				Ext.getCmp('editorIncisos').hide();
-    				Ext.getCmp('proveedor').show();
+    				Ext.getCmp('cmbBeneficiario').hide();
+    				Ext.getCmp('cmbProveedor').show();
     				Ext.getCmp('txtNoFactura').show();
     				Ext.getCmp('txtImporte').show();
-    				Ext.getCmp('fechaFactura').show();
+    				Ext.getCmp('dtFechaFactura').show();
     				
     			}else{
     				//PAGO POR REEMBOLSO
-    				Ext.getCmp('beneficiario').show();
-    				Ext.getCmp('editorIncisos').show();
-    				Ext.getCmp('proveedor').hide();
+    				Ext.getCmp('cmbProveedorInterno').hide();
     				Ext.getCmp('txtNoFactura').hide();
     				Ext.getCmp('txtImporte').hide();
-    				Ext.getCmp('fechaFactura').hide();
-    				
-    			}    					
+    				Ext.getCmp('dtFechaFactura').hide();
+    				Ext.getCmp('editorIncisos').show();
+    				Ext.getCmp('cmbBeneficiario').show();
+    			}
     		}
     	}
-    		});
+	});
+
     
-    
-    aseguradoAfectado= Ext.create('Ext.form.ComboBox',
+    aseguradoAfectado = Ext.create('Ext.form.field.ComboBox',
     {
-        id:'aseguradoAfectado',		name:'params.aseguradoAfectado',	fieldLabel: 'Asegurado afectado',		queryMode:'local',
-        displayField: 'value',      valueField: 'key',        			allowBlank:false,        				editable:false,        
-        labelWidth : 250,        	emptyText:'Seleccione...'        	//store: storeCirculoHospitalario
+		fieldLabel : 'Asegurado afectado',			allowBlank: false,				displayField : 'value',		name:'cmbAseguradoAfectado',
+        id:'cmbAseguradoAfectado',				labelWidth: 250,					width:500,						valueField   : 'key',
+        forceSelection : false,			matchFieldWidth: false,				queryMode :'remote',			queryParam: 'params.cdperson',
+        store : storeAsegurados,		triggerAction: 'all',				//editable:false
+        listeners : {
+            'select' : function(combo, record) {
+                    obtieneCDPerson = this.getValue();
+                    var params = {
+                            'params.cdperson' : obtieneCDPerson
+                    };
+                    
+                    cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA, 'listaPoliza', params, function(options, success, response){
+                        if(success){
+                            var jsonResponse = Ext.decode(response.responseText);
+                            if(jsonResponse.listaPoliza == null) {
+                                Ext.Msg.show({
+                                    title: 'Aviso',
+                                    msg: 'No se encontraron datos.',
+                                    buttons: Ext.Msg.OK,
+                                    icon: Ext.Msg.WARNING
+                                });
+                                return;
+                            }
+                            
+                        }else{
+                            Ext.Msg.show({
+                                title: 'Aviso',
+                                msg: 'Error al obtener los datos.',
+                                buttons: Ext.Msg.OK,
+                                icon: Ext.Msg.ERROR
+                            });
+                        }
+                    });
+                    
+                    modPolizasAltaTramite.showAt(200,100);
+                }
+            }
     });
     
-    beneficiario= Ext.create('Ext.form.ComboBox',
+    cmbBeneficiario= Ext.create('Ext.form.ComboBox',
 	{
-        id:'beneficiario',        name:'params.beneficiario',        	fieldLabel: 'Beneficiario',        queryMode:'local',        
+        id:'cmbBeneficiario',        name:'cmbBeneficiario',        	fieldLabel: 'Beneficiario',        queryMode:'local',        
         displayField: 'value',    valueField: 'key',        			allowBlank:false,        				editable:false,        
-        labelWidth : 250,         emptyText:'Seleccione...'//,       		store: storePenalizacion
+        labelWidth : 250,         width		 : 500,					emptyText:'Seleccione...'//,       		store: storePenalizacion
         
     });
     
-    proveedor= Ext.create('Ext.form.ComboBox',
+    
+    cmbProveedor = Ext.create('Ext.form.field.ComboBox',
     {
-        id:'proveedor',        	  name:'params.proveedor',        		fieldLabel: 'Proveedor',       	queryMode:'local',        
-        displayField: 'value',    valueField: 'key',        			allowBlank:false,        				editable:false,        
-        labelWidth : 250,        emptyText:'Seleccione...'        		//store: storeCirculoHospitalario
+    	fieldLabel : 'Proveedor',			allowBlank: false,				displayField : 'nombre',		name:'cmbProveedor',
+    		id:'cmbProveedor',				labelWidth: 250,					valueField   : 'cdpresta',			
+    		forceSelection : false,	width:500,		emptyText:'Seleccione...',
+    	matchFieldWidth: false,			queryMode :'remote',				queryParam: 'params.cdpresta',	store : storeProveedor,			editable:false,
+    	triggerAction: 'all'
     });
     
+    cmbProveedorInterno = Ext.create('Ext.form.field.ComboBox',
+    {
+    	fieldLabel : 'Proveedor',			allowBlank: false,				displayField : 'nombre',		name:'cmbProveedorInterno',
+    		id:'cmbProveedorInterno',				labelWidth: 250,					valueField   : 'cdpresta',			
+    		forceSelection : false,	width:500,		emptyText:'Seleccione...',
+    	matchFieldWidth: false,			queryMode :'remote',				queryParam: 'params.cdpresta',	store : storeProveedor,			editable:false,
+    	triggerAction: 'all'
+    });
     
     var panelModificacionInsercion= Ext.create('Ext.form.Panel',{
         border  : 0
@@ -185,27 +296,11 @@ Ext.onReady(function() {
     	        value:new Date()
     	    }
             ,
-            {
-		    	id:'tipoServicioInterno'
-		        ,xtype      : 'textfield'
-		    	,fieldLabel : 'Tipo de Servicio'
-	    		,labelWidth: 170
-                ,width:500
-                ,allowBlank:false
-		    	,name       : 'tipoServicioInterno'
-    		}
+            tipoServicioInterno
+            ,
+            cmbProveedorInterno
             ,
             	//proveedor2
-           	{
-		    	id:'proveedorInterno'
-		        ,xtype      : 'textfield'
-		    	,fieldLabel : 'Proveedor'
-	    		,labelWidth: 170
-                ,width:500
-                ,allowBlank:false
-		    	,name       : 'proveedorInterno'
-    		}
-            ,
             {
 		    	id:'importeInterno'
 		        ,xtype      : 'textfield'
@@ -237,7 +332,7 @@ Ext.onReady(function() {
         	 				  	noFactura: datos.noFactInterno,
         					 	fechaFactura: datos.fechaFactInterno,
         					 	tipoServicio: datos.tipoServicioInterno,
-        					 	proveedor: datos.proveedorInterno,
+        					 	proveedor: datos.cmbProveedorInterno,
         					 	importe: datos.importeInterno            	
 		        	 		});
                         	storeIncisos.add(rec);
@@ -379,7 +474,97 @@ Ext.onReady(function() {
  	});
     gridIncisos=new EditorIncisos();
     mesConStoreUniAdmin=[];
+
+
     
+    
+    
+    gridPolizasAltaTramite= Ext.create('Ext.grid.Panel',
+	{
+	    id             : 'polizasAltaTramite'
+	    ,store         :  storeListadoPoliza
+	    ,collapsible   : true
+	    ,titleCollapse : true
+	    //,style         : 'margin:5px'
+	    ,width   : 640
+	    ,height: 200
+	    ,columns       :
+	    [
+	        {
+	             header     : 'N&uacute;mero de P&oacute;liza'
+	             ,dataIndex : 'nmpoliza'
+	             ,width	 	: 150
+	         },
+	         {
+	             header     : 'Ramo'
+	             ,dataIndex : 'cdramo'
+	             ,width     : 100
+	         }
+	         ,
+	         {
+	             header     : 'Unieco'
+	             ,dataIndex : 'cdunieco'
+	             ,width     : 100
+	         },
+	         {
+	             header     : 'Estado'
+	             ,dataIndex : 'estado'
+	             ,width	    : 100
+	         }
+	         ,
+	         {
+	             header     : 'N&uacute;mero de Situaci&oacute;n'
+	             ,dataIndex : 'nmsituac'
+	             ,width	    : 200
+	         }
+	     ],
+	     bbar     :
+	     {
+	         displayInfo : true,
+	         store       : storeListadoPoliza,
+	         xtype       : 'pagingtoolbar'
+	     }
+	});
+    
+    modPolizasAltaTramite = Ext.create('Ext.window.Window',
+	{
+	    title        : 'Listado de P&oacute;liza'
+	    ,modal       : true
+	    ,buttonAlign : 'center'
+	    ,closable : false
+	    ,width		 : 650
+	    ,minHeight 	 : 100 
+	    ,maxheight      : 400
+	    ,items       :
+	        [
+	            gridPolizasAltaTramite
+	         ],
+	         buttons: [{
+	                text: "Seleccionar"
+	                ,icon:_CONTEXT+'/resources/fam3icons/icons/application_edit.png'
+	                ,handler: function(){
+	                        if(Ext.getCmp('polizasAltaTramite').getSelectionModel().hasSelection()){
+	                            var rowSelected = Ext.getCmp('polizasAltaTramite').getSelectionModel().getSelection()[0];
+	                            console.log(rowSelected);
+	                            /*Ext.getCmp('idUnieco').setValue(rowSelected.get('cdunieco'));
+	                            Ext.getCmp('idEstado').setValue(rowSelected.get('estado'));
+	                            Ext.getCmp('idcdRamo').setValue(rowSelected.get('cdramo'));
+	                            Ext.getCmp('idNmSituac').setValue(rowSelected.get('nmsituac'));
+	                            Ext.getCmp('polizaAfectada').setValue(rowSelected.get('nmpoliza'));*/
+	                            modPolizasAltaTramite.hide();
+	                        }else {
+	                            Ext.Msg.show({
+	                                title: 'Aviso',
+	                                msg: 'Debe de seleccionar la p&oacute;liza a afectar',
+	                                buttons: Ext.Msg.OK,
+	                                icon: Ext.Msg.ERROR
+	                            });
+	                            
+	                        }
+	                }
+	            }
+	         ]
+	});
     
     Ext.create('Ext.form.Panel',
     	    {
@@ -391,31 +576,36 @@ Ext.onReady(function() {
     	        ,items    :
     	        [
     	            {
-            			id:'idContraRecibo'
+            			id:'txtContraRecibo'
 		                ,xtype      : 'textfield'
 		            	,fieldLabel : 'Contra recibo'
 		            	,readOnly   : true
 		            	,labelWidth : 250
-		            	,name       : 'contraRecibo'
+		            	,width		 : 500
+		            	,name       : 'txtContraRecibo'
 		            },
 		            {
 		                id: 'txtEstado',
-		                name: 'params.estado',
+		                name: 'txtEstado',
 		                xtype: 'textfield',
 		                fieldLabel: 'Estado',
+		                readOnly   : true,
 		               labelWidth: 250,
+		               width		 : 500,
 		               value:'Pendiente'
 		            },
+		            
 		            oficinaReceptora
 		            ,
             		oficinaEmisora
 	            	,
 	            	{
-		            	id:'params.fechaRecepcion'
+		            	id:'dtFechaRecepcion'
 		                ,xtype      : 'datefield'
 		            	,fieldLabel : 'Fecha recepci&oacute;n'
 		            	,labelWidth : 250
-		            	,name       : 'params.fechaRecepcion'
+		            	,width		 : 500
+		            	,name       : 'dtFechaRecepcion'
 	            		,value		: new Date()
 		            	,format		: 'd/m/Y'
 		            	,readOnly   : true
@@ -426,16 +616,17 @@ Ext.onReady(function() {
         			,
             		aseguradoAfectado
 	            	,
-            		beneficiario
+	            	cmbBeneficiario
 	            	,
-	            	proveedor
+	            	cmbProveedor
 	        	    ,
 	        	    {
 		            	id:'txtNoFactura'
 		                ,xtype      : 'textfield'
 		            	,fieldLabel : 'No. Factura'
 		            	,labelWidth : 250
-		            	,name       : 'params.noFactura'
+		            	,width		: 500
+		            	,name       : 'txtNoFactura'
 		            }
 		            ,
                 	{
@@ -443,17 +634,19 @@ Ext.onReady(function() {
 		                ,xtype      : 'textfield'
 		            	,fieldLabel : 'Importe'
 		            	,labelWidth : 250
-		            	,name       : 'params.importe'
+		            	,width		: 500
+		            	,name       : 'txtImporte'
 		            },
 		            {
-                        id: 'fechaFactura',
-                        name: 'params.fechaFactura',
+                        id: 'dtFechaFactura',
+                        name: 'dtFechaFactura',
                         fieldLabel: 'Fecha Factura',
                         xtype: 'datefield',
                         format: 'd/m/Y',
                         editable: true,
                         allowBlank:false,
                         labelWidth : 250,
+                        width		 : 500,
                         value:new Date()
                     },
                     gridIncisos
