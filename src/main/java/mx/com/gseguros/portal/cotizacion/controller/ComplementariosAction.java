@@ -929,7 +929,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			
 			//////////////////////
 			////// sigsvdef //////
-			/*//////////////////*/
+			/*//////////////////*
 			Map<String,String> mapCoberturas=new HashMap<String,String>(0);
             //mapCoberturas.put("pv_cdunieco_i",   datosUsuario.getCdunieco());
             //mapCoberturas.put("pv_cdramo_i",     datosUsuario.getCdramo());
