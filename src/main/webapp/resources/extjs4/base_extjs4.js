@@ -134,7 +134,7 @@ function datosIncompletos()
         ,msg     : 'Favor de capturar todos los campos requeridos'
         ,buttons : Ext.Msg.OK
     });
-	tmpMensajeEmergente.setPosition(tmpMensajeEmergente.getPosition()[0],100);
+	centrarVentanaInterna(tmpMensajeEmergente);
 }
 
 function errorComunicacion()
@@ -145,7 +145,7 @@ function errorComunicacion()
         ,msg     : 'Error de comunicaci&oacute;n'
         ,buttons : Ext.Msg.OK
     });
-	tmpMensajeEmergente.setPosition(tmpMensajeEmergente.getPosition()[0],100);
+	centrarVentanaInterna(tmpMensajeEmergente);
 }
 
 function mensajeWarning(mensaje)
@@ -156,7 +156,7 @@ function mensajeWarning(mensaje)
         ,msg     : mensaje
         ,buttons : Ext.Msg.OK
     });
-	tmpMensajeEmergente.setPosition(tmpMensajeEmergente.getPosition()[0],100);
+	centrarVentanaInterna(tmpMensajeEmergente);
 }
 
 function mensajeError(mensaje)
@@ -167,7 +167,7 @@ function mensajeError(mensaje)
         ,msg     : mensaje
         ,buttons : Ext.Msg.OK
     });
-	tmpMensajeEmergente.setPosition(tmpMensajeEmergente.getPosition()[0],100);
+	centrarVentanaInterna(tmpMensajeEmergente);
 }
 
 function mensajeCorrecto(titulo,mensaje)
@@ -178,7 +178,7 @@ function mensajeCorrecto(titulo,mensaje)
         ,msg     : mensaje
         ,buttons : Ext.Msg.OK
     });
-	tmpMensajeEmergente.setPosition(tmpMensajeEmergente.getPosition()[0],100);
+	centrarVentanaInterna(tmpMensajeEmergente);
 }
 
 /**
@@ -205,6 +205,13 @@ function heredarPanel(formPanel)
 function centrarVentana(ventana)
 {
 	ventana.setPosition(ventana.getPosition()[0],parent.document.documentElement.scrollTop+100);
+}
+
+function centrarVentanaInterna(ventana)
+{
+	var y = $(window.parent).scrollTop() + 100;
+	debug('y:',y);
+	ventana.setPosition(ventana.getPosition()[0],y);
 }
 
 

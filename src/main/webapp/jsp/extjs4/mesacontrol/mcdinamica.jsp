@@ -96,7 +96,7 @@ function _4_cambiarTiptra(cdtiptra)
 	if(cdtiptra=='1')
 	{
 		editable = 'si';
-		titulo   = 'Emisión de pólizas';
+		titulo   = 'Tareas';
 	}
 	else if(cdtiptra=='15')
     {
@@ -106,7 +106,7 @@ function _4_cambiarTiptra(cdtiptra)
 	else if(cdtiptra=='16')
     {
         editable = '';
-        titulo   = 'Reclamaciones en trámite';
+        titulo   = 'Reclamaciones en proceso';
     }
 	
 	Ext.create('Ext.form.Panel').submit(
@@ -304,13 +304,7 @@ Ext.onReady(function()
 		    	    		}
 		    	    		else
 		    	    		{
-		    	    			Ext.Msg.show(
-                                {
-                                    title    : 'Error'
-                                    ,msg     : 'Favor de introducir los campos requeridos'
-                                    ,buttons : Ext.Msg.OK
-                                    ,icon    : Ext.Msg.WARNING
-                                });
+		    	    			mensajeWarning('Favor de introducir los campos requeridos');
 		    	    		}
 		    	    	}
 		    	    }
@@ -392,13 +386,7 @@ Ext.onReady(function()
                             }
                             else
                             {
-                                Ext.Msg.show(
-                                {
-                                    title    : 'Error'
-                                    ,msg     : 'Favor de introducir los campos requeridos'
-                                    ,buttons : Ext.Msg.OK
-                                    ,icon    : Ext.Msg.WARNING
-                                });
+                                mensajeWarning('Favor de introducir los campos requeridos');
                             }
                         }
                     }
