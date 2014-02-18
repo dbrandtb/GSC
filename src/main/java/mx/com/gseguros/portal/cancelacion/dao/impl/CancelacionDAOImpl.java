@@ -342,7 +342,6 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
             super(dataSource,"PKG_CONSULTA.P_CONS_POL_CANCELADAS");
             declareParameter(new SqlParameter("pv_feproces_i",       OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new PolizasCanceladasMapper()));
-            declareParameter(new SqlOutParameter("pv_messages_o", OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.NUMERIC));
             declareParameter(new SqlOutParameter("pv_title_o",    OracleTypes.VARCHAR));
             compile();
