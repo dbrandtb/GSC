@@ -78,11 +78,10 @@ Ext.onReady(function() {
     /*http://localhost:8080/gseguros/consultasPoliza/consultaCopagosPoliza.action?params.cdunieco=1009&params.cdramo=2&params.estado=M&params.nmpoliza=36&params.suplemento=1*/
     
     var params = {
-            	'params.cdunieco':'1009',
-            	'params.estado':'M',
-            	'params.cdramo':'2',
-            	'params.nmpoliza':'36',
-            	'params.suplemento':'1'
+        	'params.cdunieco':_7_smap1.cdunieco,
+        	'params.estado':_7_smap1.estado,
+        	'params.cdramo':_7_smap1.cdramo,
+        	'params.nmpoliza':_7_smap1.nmpoliza
     };
     
     storeCopagosPoliza.load({
