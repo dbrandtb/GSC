@@ -6164,6 +6164,53 @@ public class EndososAction extends PrincipalCoreAction
 			
 			if(tramiteGenerado==null||tramiteGenerado.length()==0)
 			{
+				
+				List<Map<String,String>>listaDocu=cancelacionManager.reimprimeDocumentos(cdunieco, cdramo, estado, nmpolizaNuevaPoliza, cdtipsup);
+			    log.debug("documentos que se regeneran: "+listaDocu);
+			    
+			    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
+			    
+				//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
+				for(Map<String,String> docu:listaDocu)
+				{
+					log.debug("docu iterado: "+docu);
+					String nmsolici = docu.get("nmsolici");
+					String descripc=docu.get("descripc");
+					String descripl=docu.get("descripl");
+					String url=this.getText("ruta.servidor.reports")
+							+ "?destype=cache"
+							+ "&desformat=PDF"
+							+ "&userid="+this.getText("pass.servidor.reports")
+							+ "&report="+descripl
+							+ "&paramform=no"
+							+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+							+ "&p_unieco="+cdunieco
+							+ "&p_ramo="+cdramo
+							+ "&p_estado="+estado
+							+ "&p_poliza="+nmpoliza
+							+ "&p_suplem="+nmsuplem
+							+ "&desname="+rutaCarpeta+"/"+descripc;
+					if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
+					{
+						// C R E D E N C I A L _ X X X X X X . P D F
+						//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+						url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("_"));
+					}
+					log.debug(""
+							+ "\n#################################"
+							+ "\n###### Se solicita reporte ######"
+							+ "\na "+url+""
+							+ "\n#################################");
+					HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
+					log.debug(""
+							+ "\n######                    ######"
+							+ "\n###### reporte solicitado ######"
+							+ "\na "+url+""
+							+ "\n################################"
+							+ "\n################################"
+							+ "");
+				}
+				
 				mensaje="Se ha generado la p&oacute;liza "+nmpolizaNuevaPoliza
 						+" con n&uacute;mero de tr&aacute;mite "+ntramiteNuevaPoliza;
 				
