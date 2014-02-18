@@ -194,8 +194,8 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 				isComboVacio = true;
 			}
 			
-			String  icon    = "disk.png";//rs.getString(llaveIcon);
-			String  handler = "function(){alert('click');}";//rs.getString(llaveHandler);
+			String  icon    = rs.getString(llaveIcon);
+			String  handler = rs.getString(llaveHandler);
 			
 			ComponenteVO comp = new ComponenteVO(
 					ComponenteVO.TIPO_GENERICO,
@@ -349,6 +349,8 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 			declareParameter(new SqlParameter("PV_VALUE5_I"        , OracleTypes.VARCHAR));
 			//declareParameter(new SqlParameter("PV_SWFINAL_I"       , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("PV_SWCVACIO_I"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_ICONO_I"         , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_HANDLER_I"       , OracleTypes.VARCHAR));
 			
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("PV_TITLE_O"  , OracleTypes.VARCHAR));

@@ -538,10 +538,11 @@ public class MesaControlAction extends PrincipalCoreAction
 			String cdramo        = smap1.get("cdramo");
 			String cdtipsit      = smap1.get("cdtipsit");
 			rol           = usuario.getRolActivo().getObjeto().getValue();
-			String pantalla      = "TATRIMC";
-			String seccionForm   = "FORMULARIO";
-			String seccionGrid   = "TATRIMC";
-			String seccionFiltro = "FILTRO";
+			String pantalla            = "TATRIMC";
+			String seccionForm         = "FORMULARIO";
+			String seccionGrid         = "TATRIMC";
+			String seccionFiltro       = "FILTRO";
+			String seccionActionColumn = "ACTIONCOLUMN";
 			
 			////// obtener valores del formulario //////
 			List<ComponenteVO>ltFormulario=pantallasManager.obtenerComponentes(
@@ -561,22 +562,30 @@ public class MesaControlAction extends PrincipalCoreAction
 					cdtipsit, null, rol,
 					pantalla, seccionFiltro, null);
 			
+			////// obtener botones del action column //////
+			List<ComponenteVO>ltactioncolumn=pantallasManager.obtenerComponentes(
+					cdtiptra, null, cdramo,
+					cdtipsit, null, rol,
+					pantalla, seccionActionColumn, null);
+			
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			
 			////// generar grid //////
-			gc.generaParcial(ltgridpanel);
+			gc.generaComponentes(ltgridpanel, true, true, false, true, false, false);
 			imap1=new HashMap<String,Item>(0);
 			imap1.put("modelFields",gc.getFields());
 			imap1.put("gridColumns",gc.getColumns());
-			//imap1.put("actionColumns",gc.getButtons());
 			
 			////// generar formulario //////
-			gc.generaParcial(ltFormulario);
+			gc.generaComponentes(ltFormulario, true, false, true, false, false, false);
 			imap1.put("formItems",gc.getItems());
 			
 			////// generar filtro //////
-			gc.generaParcial(ltfiltro);
+			gc.generaComponentes(ltfiltro, true, false, true, false, false, false);
 			imap1.put("itemsFiltro",gc.getItems());
+			
+			gc.generaComponentes(ltactioncolumn, true, false, false, false, false, true);
+			imap1.put("actionColumns",gc.getButtons());
 			
 			///////////////////////////////////////
 			////// para poner -1 por defecto //////
@@ -593,7 +602,7 @@ public class MesaControlAction extends PrincipalCoreAction
 		}
 		catch(Exception ex)
 		{
-			log.error("error al cargar mesa de control dinamica");
+			log.error("error al cargar mesa de control dinamica",ex);
 		}
 		
 		log.debug(""
