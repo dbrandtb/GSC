@@ -1,6 +1,7 @@
 package mx.com.gseguros.portal.cancelacion.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.cancelacion.service.CancelacionManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
@@ -398,6 +400,8 @@ public class CancelacionAction extends PrincipalCoreAction
 				+ "\n###### cancelacionAutoManual ######"
 				+ "\n######                       ######"
 				);
+		
+		logger.debug("params: "+ smap1);
 		try
 		{
 			String cdtipsup = TipoEndoso.CANCELACION_MASIVA.getCdTipSup().toString();
@@ -411,6 +415,30 @@ public class CancelacionAction extends PrincipalCoreAction
 			params.put("pv_cdtipsup_i"    , cdtipsup);
 			cancelacionManager.cancelacionMasiva(params);
 			success=true;
+			
+			params=new HashMap<String,String>(0);
+			params.put("pv_feproces_i", smap1.get("feproces"));
+			ArrayList<PolizaVO> polizasCanceladas = cancelacionManager.obtienePolizasCancelacionMasiva(params);
+			
+			logger.debug("Datos de polizas caceladas para WS: "+ polizasCanceladas);
+			for(PolizaVO polizaC : polizasCanceladas){
+				/**
+				 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
+				 */
+				String cdtipsitGS = "213";
+				String sucursal = polizaC.getCdunieco();
+				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
+				
+				// Ejecutamos el Web Service de Recibos:
+				ice2sigsService.ejecutaWSrecibos(polizaC.getCdunieco(), polizaC.getCdramo(), 
+						polizaC.getEstado(), polizaC.getNmpoliza(), 
+						polizaC.getNmsuplem(), null, 
+						cdtipsitGS, sucursal, "", "", 
+						true, cdtipsup, 
+						(UserVO) session.get("USUARIO"));
+				
+			}
+			
 		}
 		catch(Exception ex)
 		{

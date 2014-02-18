@@ -12,6 +12,8 @@
     var marcanurlramos     = '<s:url namespace="/"                action="obtenerRamos" />';
     var marcanStorePolizas;
     var marcanUrlFiltro    = '<s:url namespace="/cancelacion"     action="buscarPolizas" />'
+    
+    var _feproces = "";
     /*///////////////////*/
     ////// variables //////
     ///////////////////////
@@ -526,6 +528,8 @@ Ext.onReady(function()
 	    	    				{
 	    	    					success  : function(form,action)
 	    	    					{
+	    	    						_feproces = form1.getValues()['smap1.pv_fechapro_i'];
+	    	    						
 	    	    						form1.setLoading(false);
 	    	    						debug(action);
 	    	    						var json = Ext.decode(action.response.responseText);
@@ -539,6 +543,7 @@ Ext.onReady(function()
 	    	    						}
 	    	    						else
 	    	    						{
+	    	    							_feproces = "";
 	    	    							Ext.Msg.show(
    	                                        {
    	                                            title    : 'Sin resultados'
@@ -550,6 +555,7 @@ Ext.onReady(function()
 	    	    					}
 	    	    				    ,failure : function(action,response)
 	    	    				    {
+	    	    				    	_feproces = "";
 	    	    				    	form1.setLoading(false);
 	    	    				    	var json=Ext.decode(response.response.responseText);
 	    	    				    	mensajeError(json.error);

@@ -1,7 +1,11 @@
 package mx.com.gseguros.portal.cancelacion.dao;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import mx.com.gseguros.portal.general.model.PolizaVO;
 
 public interface CancelacionDAO
 {
@@ -18,4 +22,5 @@ public interface CancelacionDAO
 	 * @return nmsolici,nmsituac,descripc,descripl,ntramite,nmsuplem
 	 */
 	public List<Map<String,String>> reimprimeDocumentos       (Map<String,String> params) throws Exception;
+	public ArrayList<PolizaVO> obtienePolizasCancelacionMasiva(Map<String,String> params) throws Exception;
 }

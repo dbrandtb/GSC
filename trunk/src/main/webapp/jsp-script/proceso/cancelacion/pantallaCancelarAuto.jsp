@@ -156,6 +156,9 @@ Ext.onReady(function()
 		    		Ext.Ajax.request(
 		    		{
 		    			url       : panCanAutoUrlCancelar
+		    			,params: {
+		    				'smap1.feproces': _feproces
+		    			}
 		    			//,jsonData : jsonObject
 		    			,success  : function(response,opts)
                         {
