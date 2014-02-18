@@ -1,8 +1,12 @@
 package mx.com.gseguros.portal.cancelacion.service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import mx.com.gseguros.portal.general.model.PolizaVO;
 
 public interface CancelacionManager
 {	
@@ -34,6 +38,8 @@ public interface CancelacionManager
 			,Date   fecha) throws Exception;
 	public void                     actualizarTagrucan        (Map<String,String> params) throws Exception;
 	public void                     cancelacionMasiva         (Map<String,String> params) throws Exception;
+
+	public ArrayList<PolizaVO> obtienePolizasCancelacionMasiva(Map<String,String> params) throws Exception;
 	/**
 	 * PKG_CONSULTA.P_IMP_DOC_CANCELACION
 	 * @return nmsolici,nmsituac,descripc,descripl,ntramite,nmsuplem

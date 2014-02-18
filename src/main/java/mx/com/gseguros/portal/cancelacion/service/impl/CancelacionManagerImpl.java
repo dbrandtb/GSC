@@ -8,6 +8,7 @@ import java.util.Map;
 
 import mx.com.gseguros.portal.cancelacion.dao.CancelacionDAO;
 import mx.com.gseguros.portal.cancelacion.service.CancelacionManager;
+import mx.com.gseguros.portal.general.model.PolizaVO;
 
 public class CancelacionManagerImpl implements CancelacionManager
 {
@@ -109,6 +110,12 @@ public class CancelacionManagerImpl implements CancelacionManager
 		log.debug("CancelacionManager cancelacionMasiva params: "+params);
 		cancelacionDAO.cancelacionMasiva(params);
 		log.debug("CancelacionManager cancelacionMasiva end");
+	}
+
+	@Override
+	public ArrayList<PolizaVO> obtienePolizasCancelacionMasiva(Map<String,String> params) throws Exception
+	{
+		return cancelacionDAO.obtienePolizasCancelacionMasiva(params);
 	}
 	
 	//pkg_cancela.p_cancela_poliza

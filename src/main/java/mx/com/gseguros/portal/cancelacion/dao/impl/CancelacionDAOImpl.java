@@ -1,17 +1,24 @@
 package mx.com.gseguros.portal.cancelacion.dao.impl;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
 
+import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.cancelacion.dao.CancelacionDAO;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.DinamicMapper;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
+import mx.com.gseguros.portal.general.model.PolizaVO;
 import mx.com.gseguros.utils.Utilerias;
 import oracle.jdbc.driver.OracleTypes;
 
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.StoredProcedure;
@@ -315,5 +322,44 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 			declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
 		}
 	}
+	
+	
+	@Override
+	public ArrayList<PolizaVO> obtienePolizasCancelacionMasiva(Map<String,String> params) throws Exception{
+		
+		try {
+
+			Map<String, Object> resultado = ejecutaSP(new PolizasCanceladas(getDataSource()), params);
+			return (ArrayList<PolizaVO>) resultado.get("pv_registro_o");
+			
+		} catch (Exception e) {
+			throw new DaoException(e.getMessage(), e);
+		}
+	}
+	
+	protected class PolizasCanceladas extends StoredProcedure {
+    	protected PolizasCanceladas(DataSource dataSource) {
+            super(dataSource,"PKG_CONSULTA.P_CONS_POL_CANCELADAS");
+            declareParameter(new SqlParameter("pv_feproces_i",       OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new PolizasCanceladasMapper()));
+            declareParameter(new SqlOutParameter("pv_messages_o", OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o",    OracleTypes.VARCHAR));
+            compile();
+    	}
+    }
+    
+    protected class PolizasCanceladasMapper implements RowMapper {
+        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+            PolizaVO pol=new PolizaVO();
+            pol.setCdunieco(rs.getString("CDUNIECO"));
+            pol.setCdramo(rs.getString("CDRAMO"));
+            pol.setEstado(rs.getString("ESTADO"));
+            pol.setNmpoliza(rs.getString("NMPOLIZA"));
+            pol.setNmsuplem(rs.getString("NMSUPLEM"));
+            return pol;
+        }
+    }
+
 	
 }
