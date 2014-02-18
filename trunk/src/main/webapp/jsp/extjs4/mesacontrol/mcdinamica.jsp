@@ -52,7 +52,7 @@ var _4_botones=
 	,menuDisabled : true
 	,sortable     : false
 	,items:[
-	        <%--s:property value="imap1.actionColumns" /--%>
+			<%--s:property value="imap1.actionColumns" /--%>
 	]
 };
 
@@ -252,7 +252,11 @@ Ext.onReady(function()
 					,{
                         text      : 'Siniestros'
                         ,icon     : '${ctx}/resources/fam3icons/icons/flag_red.png'
-                        ,disabled : true
+                        ,disabled : mcdinInput['tiptra']=='16'
+                        ,handler  : function()
+                            {
+                            	_4_cambiarTiptra(16);
+                            }
                     }
 		    	]
 		    	,buttons       :
