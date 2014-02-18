@@ -142,6 +142,78 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		
 		return allUpdated;
 	}
+
+	@Override
+	public boolean rechazarTramite(HashMap<String, String> params)
+			throws ApplicationException {
+		try {
+			siniestrosDAO.rechazarTramite(params);
+		} catch (DaoException daoExc) {
+			log.error("Error al rechazar tramite: " + daoExc.getMessage(), daoExc);	
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public boolean turnarAreaReclamaciones(HashMap<String, String> params)
+			throws ApplicationException {
+		try {
+			siniestrosDAO.turnarAreaReclamaciones(params);
+		} catch (DaoException daoExc) {
+			log.error("Error al turnarAreaReclamaciones: " + daoExc.getMessage(), daoExc);	
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public boolean turnarAreaMedica(HashMap<String, String> params)
+			throws ApplicationException {
+		try {
+			siniestrosDAO.turnarAreaMedica(params);
+		} catch (DaoException daoExc) {
+			log.error("Error al turnarAreaMedica: " + daoExc.getMessage(), daoExc);	
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public boolean turnarOperadorAR(HashMap<String, String> params)
+			throws ApplicationException {
+		try {
+			siniestrosDAO.turnarOperadorAR(params);
+		} catch (DaoException daoExc) {
+			log.error("Error al turnarOperadorAR: " + daoExc.getMessage(), daoExc);	
+			return false;
+		}
+		return true;
+	}
+	
+	@Override
+	public boolean solicitarPago(HashMap<String, String> params)
+			throws ApplicationException {
+		try {
+			//siniestrosDAO.turnarOperadorAR(params);
+		} catch (Exception daoExc) {
+			log.error("Error al solicitarPago: " + daoExc.getMessage(), daoExc);	
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public boolean generarContrarecibo(HashMap<String, String> params)
+			throws ApplicationException {
+		try {
+			//siniestrosDAO.rechazarTramite(params);
+		} catch (Exception daoExc) {
+			log.error("Error al generarContrarecibo : " + daoExc.getMessage(), daoExc);	
+			return false;
+		}
+		return true;
+	}
 	
 	public void setSiniestrosDAO(SiniestrosDAO siniestrosDAO) {
 		this.siniestrosDAO = siniestrosDAO;

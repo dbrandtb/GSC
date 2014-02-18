@@ -295,6 +295,68 @@
 				</param>
 			</result>
 		</action>
+
+		<action name="rechazarTramite" class="siniestrosAction"
+			method="rechazarTramite">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success
+				</param>
+			</result>
+		</action>
+		
+		<action name="generarContrarecibo" class="siniestrosAction"
+			method="generarContrarecibo">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success
+				</param>
+			</result>
+		</action>
+		<action name="turnarAreaReclamaciones" class="siniestrosAction"
+			method="turnarAreaReclamaciones">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success
+				</param>
+			</result>
+		</action>
+		<action name="turnarAreaMedica" class="siniestrosAction"
+			method="turnarAreaMedica">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success
+				</param>
+			</result>
+		</action>
+
+		<action name="turnarOperadorAR" class="siniestrosAction"
+			method="turnarOperadorAR">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success
+				</param>
+			</result>
+		</action>
+
+		<action name="solicitarPago" class="siniestrosAction"
+			method="solicitarPago">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success
+				</param>
+			</result>
+		</action>
+		
+		<action name="ventanaDocumentosSiniestros" class="siniestrosAction" method="execute">
+            <result name="success">/jsp-script/proceso/siniestros/subirDocumentosSiniestros.jsp</result>
+        </action>
 		
     </package>
 

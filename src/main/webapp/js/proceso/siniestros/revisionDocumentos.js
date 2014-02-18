@@ -80,9 +80,9 @@ Ext.onReady(function() {
 						},
 						failure: function(){
 							gridDocumentos.setLoading(false);
-							mensajeError('Error','No se puedo guardar.');
+							mensajeError('Error','No se pudo guardar.');
 						}
-					})
+					});
 				}
 		}]
 	});

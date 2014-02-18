@@ -804,4 +804,108 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 				compile();
 			}
 		}
+
+		@Override
+		public String rechazarTramite(HashMap<String, String> params)
+				throws DaoException {
+			
+			logger.debug("parms: "+params);
+			Map<String, Object> mapResult = ejecutaSP(new RechazarTramite(getDataSource()), params);
+			
+			return (String) mapResult.get("pv_msg_id_o");
+		}
+		
+		protected class RechazarTramite extends StoredProcedure {
+			
+			protected RechazarTramite(DataSource dataSource) {
+				super(dataSource, "");
+				
+				declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_cdtippag_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_cdtipate_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_cddocume_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_accion_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+				declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+				compile();
+			}
+		}
+
+		@Override
+		public String turnarAreaReclamaciones(HashMap<String, String> params)
+				throws DaoException {
+			
+			logger.debug("parms: "+params);
+			Map<String, Object> mapResult = ejecutaSP(new TurnarAreaReclamaciones(getDataSource()), params);
+			
+			return (String) mapResult.get("pv_msg_id_o");
+		}
+		
+		protected class TurnarAreaReclamaciones extends StoredProcedure {
+			
+			protected TurnarAreaReclamaciones(DataSource dataSource) {
+				super(dataSource, "");
+				
+				declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_cdtippag_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_cdtipate_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_cddocume_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_accion_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+				declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+				compile();
+			}
+		}
+
+		@Override
+		public String turnarAreaMedica(HashMap<String, String> params)
+				throws DaoException {
+			
+			logger.debug("parms: "+params);
+			Map<String, Object> mapResult = ejecutaSP(new TurnarAreaMedica(getDataSource()), params);
+			
+			return (String) mapResult.get("pv_msg_id_o");
+		}
+		
+		protected class TurnarAreaMedica extends StoredProcedure {
+			
+			protected TurnarAreaMedica(DataSource dataSource) {
+				super(dataSource, "");
+				
+				declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_cdtippag_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_cdtipate_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_cddocume_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_accion_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+				declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+				compile();
+			}
+		}
+
+		@Override
+		public String turnarOperadorAR(HashMap<String, String> params)
+				throws DaoException {
+			
+			logger.debug("parms: "+params);
+			Map<String, Object> mapResult = ejecutaSP(new TurnarOperadorAR(getDataSource()), params);
+			
+			return (String) mapResult.get("pv_msg_id_o");
+		}
+		
+		protected class TurnarOperadorAR extends StoredProcedure {
+			
+			protected TurnarOperadorAR(DataSource dataSource) {
+				super(dataSource, "");
+				
+				declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_cdtippag_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_cdtipate_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_cddocume_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_accion_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+				declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+				compile();
+			}
+		}
 }

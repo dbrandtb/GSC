@@ -428,14 +428,14 @@ Ext.onReady(function()
                         ,dock  : 'top'
                         ,items :
                         [
-			                <s:if test='!smap1.containsKey("readOnly")'>
+			                <%--s:if test='!smap1.containsKey("readOnly")'--%>
                             {
                                 xtype    : 'button'
                                 ,text    : 'Agregar'
                                 ,icon    : panDocContexto+'/resources/fam3icons/icons/add.png'
                                 ,handler : this.onAddClick
                             }
-			                </s:if>
+			                <%--/s:if--%>
                             
                         ]
                     }
