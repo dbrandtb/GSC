@@ -1,6 +1,7 @@
 <%@ include file="/taglibs.jsp"%>
-
+<s:if test="false">
 <script>
+</s:if>
 
 var _UrlAltaDeTramite = '<s:url namespace="/siniestros"  action="altaTramite"   />';
 var _UrlRevisionDocsSiniestro = '<s:url namespace="/siniestros"  action="revisionDocumentos"   />';
@@ -339,4 +340,6 @@ Ext.onReady(function() {
 	
 
 });
+<s:if test="false">
 </script>
+</s:if>

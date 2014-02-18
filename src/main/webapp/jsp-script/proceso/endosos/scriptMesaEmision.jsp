@@ -1,6 +1,8 @@
 <%@ include file="/taglibs.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<s:if test="false">
 <script>
+</s:if>
 debug('###################################');
 debug('###### scriptMesaEmision.jsp ######');
 debug('###################################');
@@ -12,34 +14,6 @@ var mesConUrlDatCom       = '<s:url namespace="/"            action="datosComple
 var mesConUrlCotizar      = '<s:url namespace="/"            action="cotizacionVital"           />';
 var mesConUrlDetMC        = '<s:url namespace="/mesacontrol" action="obtenerDetallesTramite"    />';
 var mesConUrlFinDetalleMC = '<s:url namespace="/mesacontrol" action="finalizarDetalleTramiteMC" />';
-
-
-_4_botones=
-{
-    xtype         : 'actioncolumn'
-    ,hidden       : false
-    ,width        : 70
-    ,menuDisabled : true
-    ,sortable     : false
-    ,items        :
-    [
-        {
-            icon     : '${ctx}/resources/fam3icons/icons/page_attach.png'
-            ,tooltip : 'Ver documentos'
-            ,handler : _4_onFolderClick
-        }
-        ,{
-            icon     : '${ctx}/resources/fam3icons/icons/folder.png'
-            ,tooltip : 'Complementar'
-            ,handler : _4_onComplementariosClick
-        }
-        ,{
-            icon     : '${ctx}/resources/fam3icons/icons/clock.png'
-            ,tooltip : 'Ver detalles del tr&aacute;mite'
-            ,handler : _4_onClockClick
-        }
-    ]
-};
 ////// variables //////
 ///////////////////////
 
@@ -387,4 +361,6 @@ Ext.onReady(function()
 	/////////////////////
 	
 });
+<s:if test="false">
 </script>
+</s:if>

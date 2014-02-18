@@ -1,34 +1,14 @@
 <%@ include file="/taglibs.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<s:if test="false">
 <script>
+</s:if>
 debug('###############################################');
 debug('###### scriptMesaAutorizacionEndosos.jsp ######');
 debug('###############################################');
 
 ///////////////////////
 ////// variables //////
-_4_botones=
-{
-    xtype         : 'actioncolumn'
-    ,hidden       : false
-    ,width        : 50
-    ,menuDisabled : true
-    ,sortable     : false
-    ,items        :
-    [
-        {
-	        icon     : '${ctx}/resources/fam3icons/icons/key.png'
-	        ,tooltip : 'Autorizar'
-	        ,handler : _4_preAutorizarEndoso
-        }
-        ,{
-        	icon     : '${ctx}/resources/fam3icons/icons/printer.png'
-            ,tooltip : 'Documentos'
-            ,handler : _4_authEndosoDocumentos
-        }
-    ]
-};
-
 var _4_urlAutorizarEndoso = '<s:url namespace="/endosos" action="autorizarEndoso" />';
 var _4_authEndUrlDoc      = '<s:url namespace="/documentos" action="ventanaDocumentosPolizaClon" />';
 
@@ -207,4 +187,6 @@ Ext.onReady(function()
     ////// contenido //////
     ///////////////////////
 });
+<s:if test="false">
 </script>
+</s:if>

@@ -33,7 +33,7 @@ public class GeneradorCampos
     private Item   items;
     private Item   fields;
     private Item   columns;
-    //private Item   buttons;
+    private Item   buttons;
     private String context;
     private String cdgarant;
     private String cdramo;
@@ -43,6 +43,10 @@ public class GeneradorCampos
     
     private boolean parcial   = false;
     private boolean conEditor = false;
+    private boolean conField  = true;
+    private boolean conItem   = true;
+    private boolean conColumn = true;
+    private boolean conButton = false;
     
     public GeneradorCampos(String context)
     {
@@ -64,6 +68,45 @@ public class GeneradorCampos
         this.parcial=true;
         this.genera(listcomp);
         this.parcial=false;
+    }
+    
+    /**
+     * Genera componentes
+     * @param listcomp  >> la lista de componentes 
+     * @param esParcial >> Genera "items : [ {},...{}]" o solo "{},{},...{}"
+     * @param conField  >> Genera "{type:'date',name'fenacimi',dateFormat:'d/m/Y'}"
+     * @param conItem   >> Genera "Ext.create('Ext.form.field.Textfield..."
+     * @param conColumn >> Genera "{header : 'F. Nacimiento',dataIndex:'fenacimi'...}"
+     * @param conEditor >> Genera dentro de column "editor : Ext.create('Ext.form.field.DateField..."
+     * @param conButton >> Genera "{xtype:'button',text:'Guardar',icon:...}" o "{tooltip:'Enviar',icon....'}"
+     */
+    public void generaComponentes(
+    		List<ComponenteVO> listcomp, boolean esParcial, boolean conField,
+    		boolean conItem, boolean conColumn, boolean conEditor, boolean conButton) throws Exception
+    {
+    	boolean auxParcial   = this.parcial;
+    	boolean auxConField  = this.conField;
+    	boolean auxconItem   = this.conItem;
+    	boolean auxConColumn = this.conColumn;
+    	boolean auxConEditor = this.conEditor;
+    	boolean auxConButton = this.conButton;
+    	
+    	this.parcial   = esParcial;
+    	this.conField  = conField;
+    	this.conItem   = conItem;
+    	this.conColumn = conColumn;
+    	this.conEditor = conEditor;
+    	this.conButton = conButton;
+    	
+    	this.genera(listcomp);
+    	
+    	this.parcial   = auxParcial;
+    	this.conField  = auxConField;
+    	this.conItem   = auxconItem;
+    	this.conColumn = auxConColumn;
+    	this.conEditor = auxConEditor;
+    	this.conButton = auxConButton;
+    	
     }
     
     /**
@@ -122,14 +165,14 @@ public class GeneradorCampos
     	String itemsKey   = null;
     	String fieldsKey  = null;
     	String columnskey = null;
-    	//String buttonskey = null;
+    	String buttonskey = null;
     	
     	if(!this.parcial)
     	{
     		itemsKey   = "items";
     		fieldsKey  = "fields";
     		columnskey = "columns";
-    		//buttonskey = "buttons";
+    		buttonskey = "buttons";
     	}
     	
     	idPrefix="idAutoGenerado_"+System.currentTimeMillis()+"_"+((long)Math.ceil((Math.random()*10000d)))+"_";
@@ -137,7 +180,7 @@ public class GeneradorCampos
         items  = new Item(itemsKey   , null , Item.ARR);
         fields = new Item(fieldsKey  , null , Item.ARR);
         columns= new Item(columnskey , null , Item.ARR);
-        //buttons= new Item(buttonskey , null , Item.ARR);
+        buttons= new Item(buttonskey , null , Item.ARR);
         
         if(listcomp!=null&&!listcomp.isEmpty())
         {
@@ -147,18 +190,22 @@ public class GeneradorCampos
             }
         }
         
-        if(fields != null) {
+        if(this.conField)
+        {
         	log.debug(fields.toString());
         }
-        if(items != null) {
+        if(this.conItem)
+        {
         	log.debug(items.toString());
         }
-        if(columns != null) {
+        if(this.conColumn)
+        {
         	log.debug(columns.toString());
         }
-        //if(buttons != null) {
-        	//log.debug(buttons.toString());
-        //}
+        if(this.conButton)
+        {
+        	log.debug(buttons.toString());
+        }
     }
     
     /**
@@ -700,29 +747,37 @@ public class GeneradorCampos
      */
     public void generaCampoYFieldYColumn(List<ComponenteVO> listcomp, ComponenteVO comp, Integer idx) throws Exception
     {
-    	Item field  = this.generaField(listcomp, comp, idx);
-        Item column = this.generaColumn(listcomp, comp, idx);
-        Item item   = this.generaItem(listcomp, comp, idx, false);
-        //Item button   = this.generaButton(listcomp, comp, idx);
-        
-        Item editor=null;
-        if(conEditor)
-        {
-        	editor=this.generaItem(listcomp, comp, idx, true);
-        }
-        
-        items.add(item);
-        fields.add(field);
-        if(column!=null)
-        {
-        	if(conEditor)
-        	{
-        		column.add("editor",editor);
-        	}
-        	columns.add(column);
-        }
-        
-        //buttons.add(button);
+    	if(this.conField)
+    	{
+    		Item field  = this.generaField(listcomp, comp, idx);
+    		fields.add(field);
+    	}
+    	
+    	if(this.conItem)
+    	{
+    		Item item   = this.generaItem(listcomp, comp, idx, false);
+    		items.add(item);    		
+    	}
+    	
+    	if(this.conColumn)
+    	{
+    		Item column = this.generaColumn(listcomp, comp, idx);
+    		if(column != null)
+    		{
+	    		if(conEditor)
+	    		{
+	    			Item editor=this.generaItem(listcomp, comp, idx, true);
+	    			column.add("editor",editor);
+	    		}
+	    		columns.add(column);
+    		}
+    	}
+    	
+    	if(this.conButton)
+    	{
+	        Item button = this.generaButton(listcomp, comp, idx);
+	        buttons.add(button);
+    	}
     }
 
     /**
@@ -844,7 +899,7 @@ public class GeneradorCampos
 	public void setColumns(Item columns) {
 		this.columns = columns;
 	}
-	/*
+	
 	public Item getButtons() {
 		return buttons;
 	}
@@ -852,5 +907,5 @@ public class GeneradorCampos
 	public void setButtons(Item buttons) {
 		this.buttons = buttons;
 	}
-    */
+    
 }
