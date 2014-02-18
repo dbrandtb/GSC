@@ -4,7 +4,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-        <title>Consulta Clausulas</title>
+        <title>Autorizaci&oacute;n de servicio</title>
         
         <script type="text/javascript">
             var _CONTEXT = '${ctx}';
@@ -35,8 +35,7 @@
             
             var _URL_GUARDA_AUTORIZACION			= '<s:url namespace="/siniestros" action="guardaAutorizacionServicio" />';
             var _VER_AUTORIZACION_SERVICIO 			= '<s:url namespace="/siniestros"      	action="verAutorizacionServicio" />';
-            
-            var _MONTO_BASE ='21000';
+            var _UR_LISTA_PLAZAS 					= '<s:url namespace="/siniestros"      	action="consultaListaPlazas"/>';
             
         </script>
         <script type="text/javascript" src="${ctx}/js/proceso/siniestros/autorizacionServicios.js"></script>

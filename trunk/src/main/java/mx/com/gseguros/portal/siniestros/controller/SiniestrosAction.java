@@ -49,6 +49,7 @@ public class SiniestrosAction extends ActionSupport{
     private HashMap<String, String> loadForm;
     private List<HashMap<String, String>> loadList;
     private List<HashMap<String, String>> saveList;
+    private List<GenericVO> listaPlazas;
     
     /**
      * Función para la visualización de las coberturas 
@@ -190,10 +191,8 @@ public class SiniestrosAction extends ActionSupport{
 							paramsTDeTauts.put("pv_precio_i",datosTablas.get(i).get("precio"));
 							paramsTDeTauts.put("pv_cantporc_i",datosTablas.get(i).get("cantporc"));
 							paramsTDeTauts.put("pv_ptimport_i",datosTablas.get(i).get("ptimport"));
-							
 							//GUARDADO DE LOS DATOS PARA LAS TABLAS
 							siniestrosManager.guardaListaTDeTauts(paramsTDeTauts);
-							
 				   		}
 						
 					}
@@ -205,7 +204,7 @@ public class SiniestrosAction extends ActionSupport{
 	    success = true;
 	    return SUCCESS;
 	}
-	
+
 	
 	/**
 	 * metodo para el guardado de la autorización de Servicio
@@ -230,52 +229,6 @@ public class SiniestrosAction extends ActionSupport{
 					paramsAtramite.put("pv_nmfactur_i",params.get("txtNoFactura"));
 					paramsAtramite.put("pv_importes_i",params.get("txtImporte"));
 					paramsAtramite.put("pv_fechaFac_i",params.get("dtFechaFactura"));
-					
-					if(params.get("cmbTipoPago") != "1")
-					{
-						for(int i=0;i<datosTablas.size();i++)
-				   		{
-				   			HashMap<String, Object> paramsTDeTauts = new HashMap<String, Object>();
-				   			//paramsTDeTauts.put("pv_nmautser_i",lista.get(0).getNmautser());
-							paramsTDeTauts.put("pv_cdtipaut_i",datosTablas.get(i).get("cdtipaut"));
-							paramsTDeTauts.put("pv_cdmedico_i",datosTablas.get(i).get("cdmedico"));
-							paramsTDeTauts.put("pv_cdtipmed_i",datosTablas.get(i).get("cdtipmed"));
-							paramsTDeTauts.put("pv_cdctp_i",datosTablas.get(i).get("cdcpt"));
-							paramsTDeTauts.put("pv_precio_i",datosTablas.get(i).get("precio"));
-							paramsTDeTauts.put("pv_cantporc_i",datosTablas.get(i).get("cantporc"));
-							paramsTDeTauts.put("pv_ptimport_i",datosTablas.get(i).get("ptimport"));
-							
-							//GUARDADO DE LOS DATOS PARA LAS TABLAS
-							siniestrosManager.guardaListaTDeTauts(paramsTDeTauts);
-							
-				   		}
-					}
-					
-					//ELIMINACION DE LOS REGISTROS EN LA TABLA
-					siniestrosManager.getEliminacionRegistros(params.get("nmautser"));
-					
-					List<AutorizacionServicioVO> lista = siniestrosManager.guardarAutorizacionServicio(paramsAtramite);
-					if(lista!=null && !lista.isEmpty())
-					{
-						numeroAutorizacion = lista.get(0);
-						for(int i=0;i<datosTablas.size();i++)
-				   		{
-				   			HashMap<String, Object> paramsTDeTauts = new HashMap<String, Object>();
-				   			paramsTDeTauts.put("pv_nmautser_i",lista.get(0).getNmautser());
-							paramsTDeTauts.put("pv_cdtipaut_i",datosTablas.get(i).get("cdtipaut"));
-							paramsTDeTauts.put("pv_cdmedico_i",datosTablas.get(i).get("cdmedico"));
-							paramsTDeTauts.put("pv_cdtipmed_i",datosTablas.get(i).get("cdtipmed"));
-							paramsTDeTauts.put("pv_cdctp_i",datosTablas.get(i).get("cdcpt"));
-							paramsTDeTauts.put("pv_precio_i",datosTablas.get(i).get("precio"));
-							paramsTDeTauts.put("pv_cantporc_i",datosTablas.get(i).get("cantporc"));
-							paramsTDeTauts.put("pv_ptimport_i",datosTablas.get(i).get("ptimport"));
-							
-							//GUARDADO DE LOS DATOS PARA LAS TABLAS
-							siniestrosManager.guardaListaTDeTauts(paramsTDeTauts);
-							
-				   		}
-						
-					}
 			}catch( Exception e){
 				logger.error("Error al guardar la autorización de servicio ",e);
 	        return SUCCESS;
@@ -747,6 +700,23 @@ public class SiniestrosAction extends ActionSupport{
 	   return SUCCESS;
    }
 	
+   
+   /**
+    * Función que obtiene la lista del asegurado
+    * @param void sin parametros de entrada
+    * @return Lista GenericVO con la información de los asegurados
+    */    
+   public String consultaListaPlazas(){
+   	logger.debug(" **** Entrando al método de Lista de Plazas ****");
+	   	try {
+	   		listaPlazas= siniestrosManager.getConsultaListaPlaza();
+	   	}catch( Exception e){
+	   		logger.error("Error al consultar la Lista de los asegurados ",e);
+	   		return SUCCESS;
+	   	}
+	   	success = true;
+	   	return SUCCESS;
+   }
 	
     public List<HashMap<String, String>> getDatosTablas() {
 		return datosTablas;
@@ -948,4 +918,13 @@ public class SiniestrosAction extends ActionSupport{
 	public void setSaveList(List<HashMap<String, String>> saveList) {
 		this.saveList = saveList;
 	}
+
+	public List<GenericVO> getListaPlazas() {
+		return listaPlazas;
+	}
+
+	public void setListaPlazas(List<GenericVO> listaPlazas) {
+		this.listaPlazas = listaPlazas;
+	}
+	
 }

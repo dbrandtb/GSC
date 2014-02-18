@@ -10,7 +10,7 @@
         --%>
         <script type="text/javascript">
             var _CONTEXT = '${ctx}';
-            var _URL_LISTA_COBERTURAPOL 				= '<s:url namespace="/siniestros" 		action="consultaListaCoberturaPoliza" />';
+            var _URL_CONSULTA_COPAGOS_POLIZA =      '<s:url namespace="/consultasPoliza" action="consultaCopagosPoliza" />';
             var _7_smap1 = <s:property value='%{getParams().toString().replace("=",":\'").replace(",","\',").replace("}","\'}")}' />;
             //var _CATALOGO_AGENTES			= 	 '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@AGENTES"/>';
            //debug('<s:property value="%{getParams().toString()}" />');

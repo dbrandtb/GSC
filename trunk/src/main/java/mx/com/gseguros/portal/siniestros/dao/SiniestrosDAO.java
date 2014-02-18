@@ -70,6 +70,10 @@ public interface SiniestrosDAO {
 
 	public void eliminacionRegistrosTabla(String nmautser) throws DaoException;
 
+	public List<GenericVO> obtieneListadoPlaza() throws DaoException;
+
+	public Object guardaPrestadores(HashMap<String, Object> paramsPrestador) throws DaoException;
+
 	
 
 

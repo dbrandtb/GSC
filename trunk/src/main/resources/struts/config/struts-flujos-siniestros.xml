@@ -171,6 +171,17 @@
 			</result>
 		</action>
 		
+		<action name="consultaListaPlazas" class="siniestrosAction"
+			method="consultaListaPlazas">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					listaPlazas.*,
+					success
+				</param>
+			</result>
+		</action>
+		
 		<action name="guardaAutorizacionServicio" class="siniestrosAction" method="guardaAutorizacionServicio">
 	        <interceptor-ref name="json">
 	            <param name="enableSMD">true</param>
