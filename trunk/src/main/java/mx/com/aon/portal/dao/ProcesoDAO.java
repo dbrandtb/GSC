@@ -64,6 +64,7 @@ public class ProcesoDAO extends AbstractDAO {
 	public static final String MOV_MPOLIAGE = "MOV_MPOLIAGE";
 	public static final String CLONAR_SITUACION = "CLONAR_SITUACION";
 	public static final String EJECUTA_P_EXEC_SIGSVDEF = "EJECUTA_P_EXEC_SIGSVDEF";
+	public static final String EJECUTA_P_EXEC_SIGSVDEF_END = "EJECUTA_P_EXEC_SIGSVDEF_END";
 	public static final String PROC_INCISO_DEF = "PROC_INCISO_DEF";
 	public static final String PROCESO_EMISION = "PROCESO_EMISION";
 	public static final String OBTIENE_DESCRIPCION = "OBTIENE_DESCRIPCION";
@@ -159,6 +160,7 @@ public class ProcesoDAO extends AbstractDAO {
 		addStoredProcedure(OBTIENE_TVALOSIT_COTIZA, new ObtenerTvalositCotiza(getDataSource()));
 		addStoredProcedure(CLONAR_SITUACION, new ClonaSituacion(getDataSource()));
 		addStoredProcedure(EJECUTA_P_EXEC_SIGSVDEF, new EjecutaSIGSVDEF(getDataSource()));
+		addStoredProcedure(EJECUTA_P_EXEC_SIGSVDEF_END, new EjecutaSIGSVDEFEnd(getDataSource()));
 		addStoredProcedure(P_MOV_MPOLIZAS, new InsertaMaestroPolizas(getDataSource()));
 		addStoredProcedure(P_MOV_TVALOSIT, new InsertaValoresSituaciones(getDataSource()));
 		addStoredProcedure(P_UPD_TVALOSIT, new ActualizaValoresSituaciones(getDataSource()));
@@ -687,6 +689,32 @@ public class ProcesoDAO extends AbstractDAO {
     	
     	protected EjecutaSIGSVDEF(DataSource dataSource) {
     		super(dataSource,"P_EXEC_SIGSVDEF");
+    		
+    		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.NUMERIC));
+    		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.NUMERIC));
+    		declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.NUMERIC));
+    		declareParameter(new SqlParameter("pv_nmsituac_i", OracleTypes.NUMERIC));
+    		declareParameter(new SqlParameter("pv_nmsuplem_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdgarant_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdtipsup_i", OracleTypes.VARCHAR));
+    		
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+    		WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+    		return mapper.build(map);
+    		
+    	}
+    }
+    
+    protected class EjecutaSIGSVDEFEnd extends CustomStoredProcedure {
+    	
+    	protected EjecutaSIGSVDEFEnd(DataSource dataSource) {
+    		super(dataSource,"P_EXEC_SIGSVDEF_END");
     		
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.NUMERIC));
     		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.NUMERIC));
