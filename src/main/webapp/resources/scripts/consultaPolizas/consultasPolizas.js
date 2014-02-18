@@ -292,7 +292,8 @@ Ext.onReady(function() {
             {type:'string', name:'dstempot'},
             {type:'string', name:'nmpoliex'},
             {type:'string', name:'cdagente'},
-            {type:'string', name:'statuspoliza'}
+            {type:'string', name:'statuspoliza'},
+            {type:'string', name:'nmpolant'}
         ]
     });
 
@@ -320,21 +321,22 @@ Ext.onReady(function() {
             border : false
         },
         items : [ {
-            layout : 'hbox',
+        	layout : 'hbox',
             items : [
-                {xtype: 'textfield', name: 'nmpoliex', fieldLabel: 'N&uacute;mero de P&oacute;liza', readOnly: true, labelWidth: 120},
-                {xtype: 'textfield', id: 'nmsolici',  name: 'nmsolici', fieldLabel: 'N&uacute;mero de solicitud', width: 250, labelWidth: 150, readOnly: true}
+                {xtype: 'textfield',                  name: 'nmpoliex', fieldLabel: 'N&uacute;mero de P&oacute;liza', readOnly: true, labelWidth: 120, width: 300},
+                {xtype: 'textfield', id: 'nmsolici',  name: 'nmsolici', fieldLabel: 'N&uacute;mero de solicitud',     readOnly: true, labelWidth: 120, width: 220, labelAlign: 'right'},
+                {xtype: 'textfield', id: 'nmpolant',  name: 'nmpolant', fieldLabel: 'P&oacute;liza anterior',         readOnly: true, labelWidth: 120, width: 220, labelAlign: 'right'}
             ]
         }, {
             layout : 'hbox',
             items : [ 
-                {xtype:'textfield', name:'titular', fieldLabel: 'Nombre del contratante', readOnly: true, labelWidth: 120, width: 400}, 
-                {xtype:'textfield', name:'cdrfc', fieldLabel: 'RFC', readOnly: true, labelWidth: 120, labelAlign: 'right'}
+                {xtype:'textfield', name:'titular', fieldLabel: 'Nombre del contratante', readOnly: true, labelWidth: 120, width: 520}, 
+                {xtype:'textfield', name:'cdrfc',   fieldLabel: 'RFC',                    readOnly: true, labelWidth: 80,  width: 220, labelAlign: 'right'}
             ]
         }, {
             layout : 'hbox',
             items : [ 
-                {xtype: 'datefield', name: 'feemisio', fieldLabel: 'Fecha emisi&oacute;n',    format: 'd/m/Y', readOnly: true, labelWidth: 120, width: 220}, 
+                {xtype: 'datefield', name: 'feemisio', fieldLabel: 'Fecha emisi&oacute;n',    format: 'd/m/Y', readOnly: true, labelWidth: 120, width: 300}, 
                 {xtype: 'datefield', name: 'feefecto', fieldLabel: 'Fecha de efecto',         format: 'd/m/Y', readOnly: true, labelWidth: 120, width: 220, labelAlign: 'right'}, 
                 {xtype: 'datefield', name: 'feproren', fieldLabel: 'Fecha renovaci&oacute;n', format: 'd/m/Y', readOnly: true, labelWidth: 120, width: 220, labelAlign: 'right'}
             ]

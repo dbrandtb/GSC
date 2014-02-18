@@ -49,6 +49,7 @@ public class ConsultaDatosPolizaVO implements Serializable{
 	private String cdramo;
 	private String cdtipsit;
 	private String cdunieco;
+	private String nmpolant;
 	
 	public String getNmsolici() {
 		return nmsolici;
@@ -247,6 +248,12 @@ public class ConsultaDatosPolizaVO implements Serializable{
 	}
 	public void setCdunieco(String cdunieco) {
 		this.cdunieco = cdunieco;
-	}	
+	}
+	public String getNmpolant() {
+		return nmpolant;
+	}
+	public void setNmpolant(String nmpolant) {
+		this.nmpolant = nmpolant;
+	}
 	
 }
