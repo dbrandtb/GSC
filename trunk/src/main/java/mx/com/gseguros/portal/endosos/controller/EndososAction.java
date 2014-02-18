@@ -6165,7 +6165,7 @@ public class EndososAction extends PrincipalCoreAction
 			if(tramiteGenerado==null||tramiteGenerado.length()==0)
 			{
 				
-				List<Map<String,String>>listaDocu=cancelacionManager.reimprimeDocumentos(cdunieco, cdramo, estado, nmpolizaNuevaPoliza, cdtipsup);
+				List<Map<String,String>>listaDocu=cancelacionManager.reimprimeDocumentos(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
 			    log.debug("documentos que se regeneran: "+listaDocu);
 			    
 			    String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
