@@ -662,6 +662,90 @@ public class SiniestrosAction extends ActionSupport{
    	success = true;
    	return SUCCESS;
    }
+
+   public String rechazarTramite(){
+	   
+	   try {
+		   logger.debug("RechazarTramite Siniestros");
+		   siniestrosManager.rechazarTramite(params);
+	   }catch( Exception e){
+		   logger.error("Error en rechazarTramite",e);
+		   success =  false;
+		   return SUCCESS;
+	   }
+	   success = true;
+	   return SUCCESS;
+   }
+
+   public String generarContrarecibo(){
+	   
+	   try {
+		   logger.debug("generarContrarecibo Siniestros");
+		   siniestrosManager.generarContrarecibo(params);
+	   }catch( Exception e){
+		   logger.error("Error en generarContrarecibo",e);
+		   success =  false;
+		   return SUCCESS;
+	   }
+	   success = true;
+	   return SUCCESS;
+   }
+
+   public String turnarAreaReclamaciones(){
+	   
+	   try {
+		   logger.debug("turnarAreaReclamaciones Siniestros");
+		   siniestrosManager.turnarAreaReclamaciones(params);
+	   }catch( Exception e){
+		   logger.error("Error en turnarAreaReclamaciones",e);
+		   success =  false;
+		   return SUCCESS;
+	   }
+	   success = true;
+	   return SUCCESS;
+   }
+
+   public String turnarAreaMedica(){
+	   
+	   try {
+		   logger.debug("turnarAreaMedica Siniestros");
+		   siniestrosManager.turnarAreaMedica(params);
+	   }catch( Exception e){
+		   logger.error("Error en turnarAreaMedica",e);
+		   success =  false;
+		   return SUCCESS;
+	   }
+	   success = true;
+	   return SUCCESS;
+   }
+
+   public String turnarOperadorAR(){
+	   
+	   try {
+		   logger.debug("turnarOperadorAR Siniestros");
+		   siniestrosManager.turnarOperadorAR(params);
+	   }catch( Exception e){
+		   logger.error("Error en turnarOperadorAR",e);
+		   success =  false;
+		   return SUCCESS;
+	   }
+	   success = true;
+	   return SUCCESS;
+   }
+
+   public String solicitarPago(){
+	   
+	   try {
+		   logger.debug("solicitarPago Siniestros");
+		   siniestrosManager.solicitarPago(params);
+	   }catch( Exception e){
+		   logger.error("Error en solicitarPago",e);
+		   success =  false;
+		   return SUCCESS;
+	   }
+	   success = true;
+	   return SUCCESS;
+   }
 	
 	
     public List<HashMap<String, String>> getDatosTablas() {

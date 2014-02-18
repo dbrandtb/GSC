@@ -83,6 +83,18 @@ public interface SiniestrosManager {
 
 	public boolean guardaEstatusDocumentos(HashMap<String, String> params, List<HashMap<String, String>> saveList) throws ApplicationException;
 
+	public boolean rechazarTramite(HashMap<String, String> params) throws ApplicationException;
+
+	public boolean generarContrarecibo(HashMap<String, String> params) throws ApplicationException;
+
+	public boolean turnarAreaReclamaciones(HashMap<String, String> params) throws ApplicationException;
+
+	public boolean turnarAreaMedica(HashMap<String, String> params) throws ApplicationException;
+
+	public boolean turnarOperadorAR(HashMap<String, String> params) throws ApplicationException;
+
+	public boolean solicitarPago(HashMap<String, String> params) throws ApplicationException;
+
 	public List<ConsultaTTAPVAATVO> getConsultaListaTTAPVAAT(HashMap<String, Object> paramTTAPVAAT) throws ApplicationException;
 
 	public List<ConsultaPorcentajeVO> getConsultaListaPorcentaje(String cdcpt, String cdtipmed,String mtobase) throws ApplicationException;

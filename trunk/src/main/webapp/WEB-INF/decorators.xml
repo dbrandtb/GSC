@@ -60,6 +60,7 @@
 		<pattern>/documentos/ventanaDocumentosPoliza</pattern>
 		<pattern>/documentos/ventanaDocumentosPolizaClon</pattern>
 		<pattern>/jsp/extjs4/ventanaDocumentosPoliza.jsp</pattern>
+		<pattern>/jsp-script/proceso/siniestros/subirDocumentosSiniestros.jsp</pattern>
 		<pattern>/flujocotizacion/principal.action</pattern>
         <pattern>/jsp/consultas/agentes/consultaAgentes.jsp</pattern>
         
