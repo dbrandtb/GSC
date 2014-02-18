@@ -90,11 +90,25 @@ _4_botones.width = (_4_botones.items.length*20)+10;
 /*///////////////////*/
 function _4_cambiarTiptra(cdtiptra)
 {
-	var editable='';
+	var editable = '';
+	var titulo   = '';
+	
 	if(cdtiptra=='1')
 	{
-		editable='x';
+		editable = 'si';
+		titulo   = 'Emisión de pólizas';
 	}
+	else if(cdtiptra=='15')
+    {
+        editable = '';
+        titulo   = 'Endosos en espera';
+    }
+	else if(cdtiptra=='16')
+    {
+        editable = '';
+        titulo   = 'Reclamaciones en trámite';
+    }
+	
 	Ext.create('Ext.form.Panel').submit(
 	{
 		url     : _4_urlReload
@@ -102,7 +116,7 @@ function _4_cambiarTiptra(cdtiptra)
 		{
 			'smap1.cdramo'         : _4_smap1.cdramo
 			,'smap1.cdtipsit'      : _4_smap1.cdtipsit
-			,'smap1.gridTitle'     : _4_smap1.gridTitle
+			,'smap1.gridTitle'     : titulo
 			,'smap2.pv_cdtiptra_i' : cdtiptra
 			,'smap1.editable'      : editable
 		}
