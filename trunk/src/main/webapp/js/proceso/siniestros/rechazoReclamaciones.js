@@ -22,11 +22,12 @@ Ext.onReady(function() {
  
     
     panelRechazarReclamaciones= Ext.create('Ext.form.Panel', {
-        id: 'panelRechazarReclamaciones',
+        title: 'Rechazar Reclamaci&oacute;n',
+    	id: 'panelRechazarReclamaciones',
         width: 650,
         //url: _URL_INSERTA_CLAUSU,
         bodyPadding: 5,
-        renderTo: Ext.getBody(),
+        renderTo: 'maindiv',
         items: [
             	motivoRechazo,
     	        {
@@ -86,18 +87,5 @@ Ext.onReady(function() {
     	}
     	]
     });
-
 	
-	rechazarReclamaciones = Ext.create('Ext.window.Window',
-	        {
-	            title        : 'Rechazar Reclamaci&oacute;n'
-	            ,modal       : true
-	            ,buttonAlign : 'center'
-	            ,width		 : 650
-	            ,height      : 375
-	            ,items       :
-	            [
-	             	panelRechazarReclamaciones
-	        ]
-	        }).show();
 });

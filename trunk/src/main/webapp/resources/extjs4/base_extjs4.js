@@ -198,6 +198,16 @@ function heredarPanel(formPanel)
 	}
 }
 
+/**
+ * Centra un componente tipoWindow o Mensaje de Texto  en la pantalla principal 
+ * @param ventana
+ */
+function centrarVentana(ventana)
+{
+	ventana.setPosition(ventana.getPosition()[0],parent.document.documentElement.scrollTop+100);
+}
+
+
 ////////////////////////////
 ////// INICIO MODELOS //////
 ////////////////////////////

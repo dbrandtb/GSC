@@ -5,7 +5,7 @@
 
 var _UrlAltaDeTramite = '<s:url namespace="/siniestros"  action="altaTramite"   />';
 var _UrlRevisionDocsSiniestro = '<s:url namespace="/siniestros"  action="revisionDocumentos"   />';
-var _UrlRechazarTramite = '<s:url namespace="/siniestros"  action="rechazarTramite"   />';
+var _UrlRechazarTramiteWindwow = '<s:url namespace="/siniestros"  action="rechazoReclamaciones"   />';
 var _UrlDocumentosSiniestro = '<s:url namespace="/siniestros"  action="ventanaDocumentosSiniestros"   />';
 var _UrlGenerarContrarecibo = '<s:url namespace="/siniestros"  action="generarContrarecibo"   />';
 var _UrlTurnarAreaReclamaciones = '<s:url namespace="/siniestros"  action="turnarAreaReclamaciones"   />';
@@ -14,9 +14,9 @@ var _UrlTurnarAreaMedica = '<s:url namespace="/siniestros"  action="turnarAreaMe
 var _UrlSolicitarPago = '<s:url namespace="/siniestros"  action="solicitarPago"   />';
 var _UrlTurnarOperadorAR = '<s:url namespace="/siniestros"  action="turnarOperadorAR"   />';
 
-var windowLoader; 
+var windowLoader;
+var msgWindow;
 
-Ext.onReady(function() {
 	_4_botonesGrid =
 	[
 		<s:if test='%{"MESADECONTROL".equalsIgnoreCase(getRol())}'>
@@ -28,7 +28,7 @@ Ext.onReady(function() {
 		</s:if>
 	];
 	
-	_4_botones = {
+	/*_4_botones = {
 			xtype: 'actioncolumn',
 			hidden: false,
 			width: 200,
@@ -74,7 +74,7 @@ Ext.onReady(function() {
 	            handler : turnarAoperadorReclamaciones
 	        }
 	    ]
-	};
+	};*/
 
 	function altaTramiteWindow(){
 	    windowLoader = Ext.create('Ext.window.Window',{
@@ -90,6 +90,7 @@ Ext.onReady(function() {
 	            autoLoad : true
 	        }
 	    }).show();
+	    windowLoader.setPosition(windowLoader.getPosition()[0],parent.document.documentElement.scrollTop+100);
 	}
 	
 	
@@ -114,36 +115,30 @@ Ext.onReady(function() {
 	            autoLoad : true
 	        }
 	    }).show();
+	    windowLoader.setPosition(windowLoader.getPosition()[0],parent.document.documentElement.scrollTop+100);
 	}
 	function rechazarTramiteWindow(grid,rowIndex,colIndex){
-		Ext.Msg.show({
-	        title: 'Aviso',
-	        msg: '&iquest;Esta seguro que desea rechazar el tr&aacute;mite?',
-	        buttons: Ext.Msg.YESNO,
-	        icon: Ext.Msg.QUESTION,
-	        fn: function(buttonId, text, opt){
-	        	if(buttonId == 'yes'){
-	        		
-	        		Ext.Ajax.request({
-						url: _UrlRechazarTramite,
-						jsonData: {
-							/*params: {
-					    		'pv_ntramite_i' : _nmTramite,
-					    		'pv_cdtippag_i' : _tipoPago,
-					    		'pv_cdtipate_i' : _tipoAtencion
-					    	}*/
-						},
-						success: function() {
-							mensajeCorrecto('Aviso','Se ha rechazado con exito.');
-						},
-						failure: function(){
-							mensajeError('Error','No se pudo rechazar.');
-						}
-					});
-	        	}
-	        	
+		
+		windowLoader = Ext.create('Ext.window.Window',{
+	        modal       : true,
+	        buttonAlign : 'center',
+	        width       : 700,
+	        height      : 500,
+	        autoScroll  : true,
+	        loader      : {
+	            url     : _UrlRechazarTramiteWindwow,
+	            params  : {
+	                'params.nmTramite'  : '1010',
+	                'params.cdTipoPago' : '1',
+	                'params.cdTipoAtencion'  : '1'
+	            },
+	            scripts  : true,
+	            loadMask : true,
+	            autoLoad : true
 	        }
-	    });
+	    }).show();
+		
+		windowLoader.setPosition(windowLoader.getPosition()[0],parent.document.documentElement.scrollTop+100);
 	}
 	function documentosWindow(grid,rowIndex,colIndex){
 		var record = grid.getStore().getAt(rowIndex);
@@ -166,10 +161,11 @@ Ext.onReady(function() {
 	            autoLoad : true
 	        }
 	    }).show();
+	    windowLoader.setPosition(windowLoader.getPosition()[0],parent.document.documentElement.scrollTop+100);
 	}
 	function generaContrareciboWindow(grid,rowIndex,colIndex){
 		
-		Ext.Msg.show({
+		msgWindow = Ext.Msg.show({
 	        title: 'Aviso',
 	        msg: '&iquest;Esta seguro que desea generar el contrarecibo?',
 	        buttons: Ext.Msg.YESNO,
@@ -197,10 +193,11 @@ Ext.onReady(function() {
 	        	
 	        }
 	    });
+		msgWindow.setPosition(msgWindow.getPosition()[0],parent.document.documentElement.scrollTop+100);
 		
 	}
 	function turnarAreclamaciones(grid,rowIndex,colIndex){
-		Ext.Msg.show({
+		msgWindow = Ext.Msg.show({
 	        title: 'Aviso',
 	        msg: '&iquest;Esta seguro que desea turnar al Area de Reclamaciones?',
 	        buttons: Ext.Msg.YESNO,
@@ -228,6 +225,7 @@ Ext.onReady(function() {
 	        	
 	        }
 	    });
+		msgWindow.setPosition(msgWindow.getPosition()[0],parent.document.documentElement.scrollTop+100);
 	}
 	function detalleReclamacionWindow(grid,rowIndex,colIndex){
 		
@@ -246,7 +244,7 @@ Ext.onReady(function() {
 				});
 	}
 	function turnarAareaMedica(grid,rowIndex,colIndex){
-		Ext.Msg.show({
+		msgWindow = Ext.Msg.show({
 	        title: 'Aviso',
 	        msg: '&iquest;Esta seguro que desea turnar al Area M&eacute;dica?',
 	        buttons: Ext.Msg.YESNO,
@@ -274,11 +272,12 @@ Ext.onReady(function() {
 	        	
 	        }
 	    });
+		msgWindow.setPosition(msgWindow.getPosition()[0],parent.document.documentElement.scrollTop+100);
 		
 	}
 	
 	function turnarAoperadorReclamaciones(grid,rowIndex,colIndex){
-		Ext.Msg.show({
+		msgWindow = Ext.Msg.show({
 	        title: 'Aviso',
 	        msg: '&iquest;Esta seguro que desea turnar al Operador de Reclamaciones?',
 	        buttons: Ext.Msg.YESNO,
@@ -306,9 +305,10 @@ Ext.onReady(function() {
 	        	
 	        }
 	    });
+		msgWindow.setPosition(msgWindow.getPosition()[0],parent.document.documentElement.scrollTop+100);
 	}
 	function solicitarPago(grid,rowIndex,colIndex){
-		Ext.Msg.show({
+		msgWindow = Ext.Msg.show({
 	        title: 'Aviso',
 	        msg: '&iquest;Esta seguro que desea solicitar el pago?',
 	        buttons: Ext.Msg.YESNO,
@@ -336,10 +336,9 @@ Ext.onReady(function() {
 	        	
 	        }
 	    });
+		msgWindow.setPosition(msgWindow.getPosition()[0],parent.document.documentElement.scrollTop+100);
 	}
 	
-
-});
 <s:if test="false">
 </script>
 </s:if>
