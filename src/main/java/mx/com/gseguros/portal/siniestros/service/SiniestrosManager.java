@@ -99,6 +99,10 @@ public interface SiniestrosManager {
 
 	public List<ConsultaPorcentajeVO> getConsultaListaPorcentaje(String cdcpt, String cdtipmed,String mtobase) throws ApplicationException;
 
+	public List<GenericVO> getConsultaListaPlaza() throws ApplicationException;
+
+	public void guardarPrestadores(HashMap<String, Object> paramsPrestador) throws ApplicationException;
+
 	
 
 	

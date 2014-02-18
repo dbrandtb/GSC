@@ -308,5 +308,24 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		}
 	}
 
+	@Override
+	public List<GenericVO> getConsultaListaPlaza() throws ApplicationException {
+		try {
+			return siniestrosDAO.obtieneListadoPlaza();
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}
+
+	
+	@Override
+	public void guardarPrestadores(HashMap<String, Object> paramsPrestador) throws ApplicationException {
+		try {
+			siniestrosDAO.guardaPrestadores(paramsPrestador);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}
+
 	
 }

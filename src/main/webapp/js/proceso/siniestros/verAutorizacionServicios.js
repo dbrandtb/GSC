@@ -696,7 +696,6 @@ Ext.onReady(function() {
         						        });
         						    }
         						});
-                    	
                     }
                 }else{
                     Ext.Msg.show({

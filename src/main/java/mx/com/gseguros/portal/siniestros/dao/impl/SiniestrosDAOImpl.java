@@ -11,6 +11,7 @@ import javax.sql.DataSource;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
+import mx.com.gseguros.portal.dao.impl.DinamicMapper;
 import mx.com.gseguros.portal.siniestros.dao.SiniestrosDAO;
 import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
@@ -532,8 +533,7 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
 			declareParameter(new SqlParameter("pv_precio_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cantporc_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_ptimport_i", OracleTypes.VARCHAR));	
-			//declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DatosGuardardoListaTDeTautsMapper()));
-	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
 			compile();
 		}
@@ -800,6 +800,62 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 				declareParameter(new SqlParameter("pv_cddocume_i", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pv_accion_i", OracleTypes.VARCHAR));
 		        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+		        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+				compile();
+			}
+		}
+
+		@Override
+		public List<GenericVO> obtieneListadoPlaza() throws DaoException {
+			Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerListaPlazas(this.getDataSource()), new HashMap<String,String>());
+			return (List<GenericVO>) resultadoMap.get("pv_registro_o");
+		}
+		
+		protected class ObtenerListaPlazas extends StoredProcedure
+		{
+			protected ObtenerListaPlazas(DataSource dataSource)
+			{
+				super(dataSource, "PKG_LISTAS.P_GET_PLAZAS");
+				
+				declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DatosListaPlazas()));
+				declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+				declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+				compile();
+			}
+		}
+		
+		protected class DatosListaPlazas  implements RowMapper {
+	        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+	        	GenericVO consulta = new GenericVO();
+	        	consulta.setKey(rs.getString("CDUNIECO"));
+	        	consulta.setValue(rs.getString("DSUNIECO"));
+	            return consulta;
+	        }
+	    }
+
+
+		@Override
+		public Object guardaPrestadores(HashMap<String, Object> paramsPrestador)
+				throws DaoException {
+			Map<String, Object> mapResult = ejecutaSP(new GuardaPrestadoresSP(getDataSource()), paramsPrestador);
+			
+			@SuppressWarnings("unchecked")
+			String respuesta=(String) mapResult.get("pv_registro_o");
+			return respuesta;
+		}
+		
+		protected class GuardaPrestadoresSP extends StoredProcedure {
+			protected GuardaPrestadoresSP(DataSource dataSource) {
+				super(dataSource, "PKG_SATELITES.P_INS_PRESTADORES");
+				declareParameter(new SqlParameter("pv_nmautser_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_cdtipaut_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_cdmedico_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_cdtipmed_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_cdctp_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_precio_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_cantporc_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_ptimport_i", OracleTypes.VARCHAR));	
+				declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 		        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
 				compile();
 			}
