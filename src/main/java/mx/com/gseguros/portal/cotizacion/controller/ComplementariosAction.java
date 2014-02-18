@@ -927,9 +927,9 @@ public class ComplementariosAction extends PrincipalCoreAction
 			UserVO usuario=(UserVO)session.get("USUARIO");
 			DatosUsuario datosUsuario=kernelManager.obtenerDatosUsuario(usuario.getUser());
 			
-			//////////////////////
-			////// sigsvdef //////
-			/*//////////////////*
+			//////////////////////////
+			////// sigsvdef end //////
+			/*//////////////////////*/
 			Map<String,String> mapCoberturas=new HashMap<String,String>(0);
             //mapCoberturas.put("pv_cdunieco_i",   datosUsuario.getCdunieco());
             //mapCoberturas.put("pv_cdramo_i",     datosUsuario.getCdramo());
@@ -941,10 +941,10 @@ public class ComplementariosAction extends PrincipalCoreAction
             mapCoberturas.put("pv_nmsuplem_i",   "0");//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             mapCoberturas.put("pv_cdgarant_i",   "TODO");//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             mapCoberturas.put("pv_cdtipsup_i",   "1");
-            kernelManager.coberturas(mapCoberturas);
-			/*//////////////////*/
-			////// sigsvdef //////
-			//////////////////////
+            kernelManager.coberturasEnd(mapCoberturas);
+			/*//////////////////////*/
+			////// sigsvdef end //////
+			//////////////////////////
 			
 			////////////////////////////////
 			////// retarifica         //////
