@@ -334,11 +334,12 @@ public class GeneradorCampos
         	boolean esAutocompleter = StringUtils.isNotBlank(comp.getQueryParam());
         	boolean esComboVacio    = comp.isComboVacio();
         	
-        	////// typeAhead, displayField, valueField //////
-        	item.add("typeAhead"    , true);
-        	item.add("displayField" , "value");
-            item.add("valueField"   , "key");
-            ////// typeAhead, displayField, valueField //////
+        	////// typeAhead, displayField, valueField, matchFieldWidth //////
+        	item.add("typeAhead"       , true);
+        	item.add("displayField"    , "value");
+            item.add("valueField"      , "key");
+            item.add("matchFieldWidth" , false);
+            ////// typeAhead, displayField, valueField, matchFieldWidth //////
         	
         	////// forceSelection, editable //////
             boolean editable = false;
