@@ -85,6 +85,7 @@ Ext.onReady(function() {
 	        loader      : {
 	            url     : _UrlAltaDeTramite,
 	            scripts  : true,
+	            loadMask : true,
 	            autoLoad : true
 	        }
 	    }).show();
@@ -108,6 +109,7 @@ Ext.onReady(function() {
 	                'params.cdTipoAtencion'  : '1'
 	            },
 	            scripts  : true,
+	            loadMask : true,
 	            autoLoad : true
 	        }
 	    }).show();
@@ -115,8 +117,8 @@ Ext.onReady(function() {
 	function rechazarTramiteWindow(grid,rowIndex,colIndex){
 		Ext.Msg.show({
 	        title: 'Aviso',
-	        msg: '¿Esta seguro que desea rechazar el tr&aacute;mite?',
-	        buttons: Ext.Msg.YESNOCANCEL,
+	        msg: '&iquest;Esta seguro que desea rechazar el tr&aacute;mite?',
+	        buttons: Ext.Msg.YESNO,
 	        icon: Ext.Msg.QUESTION,
 	        fn: function(buttonId, text, opt){
 	        	if(buttonId == 'yes'){
@@ -159,6 +161,7 @@ Ext.onReady(function() {
 	                'params.cdTipoAtencion'  : '1'
 	            },
 	            scripts  : true,
+	            loadMask : true,
 	            autoLoad : true
 	        }
 	    }).show();
@@ -167,8 +170,8 @@ Ext.onReady(function() {
 		
 		Ext.Msg.show({
 	        title: 'Aviso',
-	        msg: '¿Esta seguro que desea generar el contrarecibo?',
-	        buttons: Ext.Msg.YESNOCANCEL,
+	        msg: '&iquest;Esta seguro que desea generar el contrarecibo?',
+	        buttons: Ext.Msg.YESNO,
 	        icon: Ext.Msg.QUESTION,
 	        fn: function(buttonId, text, opt){
 	        	if(buttonId == 'yes'){
@@ -198,8 +201,8 @@ Ext.onReady(function() {
 	function turnarAreclamaciones(grid,rowIndex,colIndex){
 		Ext.Msg.show({
 	        title: 'Aviso',
-	        msg: '¿Esta seguro que desea turnar al Area de Reclamaciones?',
-	        buttons: Ext.Msg.YESNOCANCEL,
+	        msg: '&iquest;Esta seguro que desea turnar al Area de Reclamaciones?',
+	        buttons: Ext.Msg.YESNO,
 	        icon: Ext.Msg.QUESTION,
 	        fn: function(buttonId, text, opt){
 	        	if(buttonId == 'yes'){
@@ -244,8 +247,8 @@ Ext.onReady(function() {
 	function turnarAareaMedica(grid,rowIndex,colIndex){
 		Ext.Msg.show({
 	        title: 'Aviso',
-	        msg: '¿Esta seguro que desea turnar al Area M&eacute;dica?',
-	        buttons: Ext.Msg.YESNOCANCEL,
+	        msg: '&iquest;Esta seguro que desea turnar al Area M&eacute;dica?',
+	        buttons: Ext.Msg.YESNO,
 	        icon: Ext.Msg.QUESTION,
 	        fn: function(buttonId, text, opt){
 	        	if(buttonId == 'yes'){
@@ -276,8 +279,8 @@ Ext.onReady(function() {
 	function turnarAoperadorReclamaciones(grid,rowIndex,colIndex){
 		Ext.Msg.show({
 	        title: 'Aviso',
-	        msg: '¿Esta seguro que desea turnar al Operador de Reclamaciones?',
-	        buttons: Ext.Msg.YESNOCANCEL,
+	        msg: '&iquest;Esta seguro que desea turnar al Operador de Reclamaciones?',
+	        buttons: Ext.Msg.YESNO,
 	        icon: Ext.Msg.QUESTION,
 	        fn: function(buttonId, text, opt){
 	        	if(buttonId == 'yes'){
@@ -306,8 +309,8 @@ Ext.onReady(function() {
 	function solicitarPago(grid,rowIndex,colIndex){
 		Ext.Msg.show({
 	        title: 'Aviso',
-	        msg: '¿Esta seguro que desea solicitar el pago?',
-	        buttons: Ext.Msg.YESNOCANCEL,
+	        msg: '&iquest;Esta seguro que desea solicitar el pago?',
+	        buttons: Ext.Msg.YESNO,
 	        icon: Ext.Msg.QUESTION,
 	        fn: function(buttonId, text, opt){
 	        	if(buttonId == 'yes'){
