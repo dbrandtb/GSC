@@ -48,11 +48,11 @@ var _4_botones=
 {
 	xtype         : 'actioncolumn'
 	,hidden       : false
-	,width        : 200
 	,menuDisabled : true
 	,sortable     : false
-	,items:[
-			<%--s:property value="imap1.actionColumns" /--%>
+	,items:
+	[
+	    <s:property value="imap1.actionColumns" />
 	]
 };
 
@@ -72,7 +72,6 @@ var _4_botonesGrid =
 /*///////////////////*/
 ////// variables //////
 ///////////////////////
-</script>
 
 <s:if test='%{getSmap2().get("pv_cdtiptra_i").equalsIgnoreCase("1")}'>
     <%@ include file="/jsp-script/proceso/endosos/scriptMesaEmision.jsp"%>
@@ -84,7 +83,8 @@ var _4_botonesGrid =
 	<%@ include file="/jsp-script/proceso/siniestros/scriptMesaSiniestros.jsp"%>
 </s:elseif>
 
-<script>
+_4_botones.width = (_4_botones.items.length*20)+10;
+
 ///////////////////////
 ////// funciones //////
 /*///////////////////*/
