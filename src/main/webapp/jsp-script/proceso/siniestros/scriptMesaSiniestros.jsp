@@ -6,7 +6,7 @@
 var _UrlAltaDeTramite = '<s:url namespace="/siniestros"  action="altaTramite"   />';
 var _UrlRevisionDocsSiniestro = '<s:url namespace="/siniestros"  action="revisionDocumentos"   />';
 var _UrlRechazarTramiteWindwow = '<s:url namespace="/siniestros"  action="rechazoReclamaciones"   />';
-var _UrlDocumentosSiniestro = '<s:url namespace="/siniestros"  action="ventanaDocumentosSiniestros"   />';
+var _UrlDocumentosPoliza = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza" />';
 var _UrlGenerarContrarecibo = '<s:url namespace="/siniestros"  action="generarContrarecibo"   />';
 var _UrlTurnarAreaReclamaciones = '<s:url namespace="/siniestros"  action="turnarAreaReclamaciones"   />';
 var _UrlDetalleSiniestro = '<s:url namespace="/siniestros"  action="detalleAfiliadosAfectados"   />';
@@ -98,19 +98,29 @@ var msgWindow;
 	}
 	function documentosWindow(grid,rowIndex,colIndex){
 		var record = grid.getStore().getAt(rowIndex);
+	    debug('record',record);
 	    
 	    windowLoader = Ext.create('Ext.window.Window',{
 	        modal       : true,
 	        buttonAlign : 'center',
+	        title       : 'Documentos del siniestro',
 	        width       : 600,
 	        height      : 400,
 	        autoScroll  : true,
 	        loader      : {
-	            url     : _UrlDocumentosSiniestro,
+	            url     : _UrlDocumentosPoliza,
 	            params  : {
-	                'params.nmTramite'  : '1010',
-	                'params.cdTipoPago' : '1',
-	                'params.cdTipoAtencion'  : '1'
+	                'smap1.ntramite'  : record.get('ntramite')
+	                ,'smap1.cdtippag' : record.get('parametros.pv_otvalor02')
+	                ,'smap1.cdtipate' : record.get('parametros.pv_otvalor07')
+	                ,'smap1.cdtiptra' : '16'
+                    ,'smap1.cdunieco' : record.get('cdsucdoc')
+                    ,'smap1.cdramo'   : record.get('cdramo')
+                    ,'smap1.estado'   : record.get('estado')
+	                ,'smap1.nmpoliza' : record.get('nmpoliza')
+                    ,'smap1.nmsuplem' : '0'
+                    ,'smap1.nmsolici' : ''
+                    ,'smap1.tipomov'  : record.get('parametros.pv_otvalor02')
 	            },
 	            scripts  : true,
 	            loadMask : true,

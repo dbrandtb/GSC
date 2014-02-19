@@ -60,6 +60,13 @@ var panDocUrlViewDoc     = '<s:url namespace ="/documentos" action="descargaDocI
 var venDocUrlImpConrec   = '<s:url namespace ="/documentos" action="generarContrarecibo" />';
 
 var _URLhabilitaSigRec   = '<s:url namespace ="/documentos" action="habilitaSigRec" />';
+
+var panDocSmap1 = <s:property value='%{getSmap1().toString().replace("=",":\'").replace(",","\',").replace("}","\'}")}' />;
+
+debug('panDocSmap1:',panDocSmap1);
+
+var panDocStoreConfigDocs;
+var urlComboDocumentos = '<s:url namespace="/siniestros" action="loadListaDocumentos" />';
 /*//////////////////////*/
 ////// variables    //////
 //////////////////////////
@@ -97,6 +104,16 @@ Ext.onReady(function()
             ,'orden'
             ,'nsuplogi'
         ]
+    });
+    
+    Ext.define('modeloConfigDocumentos',
+    {
+        extend: 'Ext.data.Model',
+        fields: [{type:'string',    name:'id'},
+                 {type:'boolean',   name:'listo'},
+                 {type:'string',    name:'nombre'},
+                 {type:'string',    name:'obligatorio'}
+                ]
     });
     /*//////////////////////*/
     ////// modelos      //////
@@ -147,6 +164,31 @@ Ext.onReady(function()
                 type  : 'json'
                 ,root : 'slist1'
             }
+        }
+    });
+    
+    panDocStoreConfigDocs = Ext.create('Ext.data.JsonStore',
+    {
+        model  :'modeloConfigDocumentos',
+        proxy :
+        {
+            type   : 'ajax',
+            url    : urlComboDocumentos,
+            reader : 
+            {
+                type : 'json',
+                root : 'loadList'
+            }
+        }
+    });
+    
+    panDocStoreConfigDocs.load(
+    {
+        params:
+        {
+            'params.pv_cdtippag_i'  : panDocSmap1.cdtippag,
+            'params.pv_cdtipate_i'  : panDocSmap1.cdtipate,
+            'params.pv_nmtramite_i' : panDocSmap1.ntramite
         }
     });
     /*//////////////////////*/
@@ -250,7 +292,7 @@ Ext.onReady(function()
             var windowAgregarDocu=Ext.create('Ext.window.Window',
             {
                 id           : 'panDocWinPopupAddDoc'
-                ,title       : 'Agregar documento a poliza'//+panDocInputNmpoliza
+                ,title       : 'Agregar documento'//+panDocInputNmpoliza
                 ,closable    : false
                 ,modal       : true
                 ,width       : 500
@@ -320,6 +362,21 @@ Ext.onReady(function()
                                     }
                                 }
                             }
+                            ,{
+                                xtype          :'combobox',
+                                fieldLabel     : 'Asociar a Documento',
+                                hiddenName     : 'docuAsociado',
+                                emptyText      :'Seleccione...',
+                                queryMode      :'local',
+                                allowBlank     :true,
+                                typeAhead      :true,
+                                store          : panDocStoreConfigDocs,
+                                forceSelection : true,
+                                editable       : true,
+                                valueField     : 'id',
+                                displayField   : 'nombre',
+                                triggerAction  : 'all'
+                            }
                             ,Ext.create('Ext.panel.Panel',
                             {
                                 html    :'<iframe id="panDocIframeUploadDoc" name="panDocIframeUploadDoc"></iframe>'
@@ -384,7 +441,7 @@ Ext.onReady(function()
                     })
                 ]
             }).show();
-            windowAgregarDocu.center();
+            centrarVentanaInterna(windowAgregarDocu);
         }
         ,initComponent   : function()
         {
@@ -536,6 +593,7 @@ Ext.onReady(function()
 	                            ,text    : 'Generar contrarecibo'
 	                            ,icon    : '${ctx}/resources/fam3icons/icons/page_attach.png'
 	                            ,handler : this.onContrareciboClick
+	                            ,hidden  : panDocSmap1.cdtiptra!='1' && panDocSmap1.cdtiptra!='15'
                             },
                             '-',
                             { xtype: 'tbspacer', width: 50 }, 
@@ -544,6 +602,7 @@ Ext.onReady(function()
                             	,id      : 'habilitaRec'
 	                            ,text    : 'Habilitar siguiente Recibo'
 	                            ,icon    : '${ctx}/resources/fam3icons/icons/table_go.png'
+	                            ,hidden  : panDocSmap1.cdtiptra!='1' && panDocSmap1.cdtiptra!='15'
 	                            ,handler : function (button, evt){
 	                            	var window=button.up().up();
 	                            	

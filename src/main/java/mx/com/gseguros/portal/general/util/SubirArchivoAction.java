@@ -132,18 +132,19 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
             pv_dsdocume_i
             */
             Map<String,Object>paramMovDocu=new LinkedHashMap<String,Object>(0);
-            paramMovDocu.put("pv_cdunieco_i" , smap1.get("cdunieco"));
-            paramMovDocu.put("pv_cdramo_i"   , smap1.get("cdramo"));
-            paramMovDocu.put("pv_estado_i"   , smap1.get("estado"));
-            paramMovDocu.put("pv_nmpoliza_i" , smap1.get("nmpoliza"));
-            paramMovDocu.put("pv_nmsolici_i" , smap1.get("nmsolici"));
-            paramMovDocu.put("pv_nmsuplem_i" , smap1.get("nmsuplem"));
-            paramMovDocu.put("pv_ntramite_i" , smap1.get("ntramite"));
-            paramMovDocu.put("pv_feinici_i"  , renderFechas.parse(smap1.get("fecha")));
-            paramMovDocu.put("pv_cddocume_i" , nombreArchivo);
-            paramMovDocu.put("pv_dsdocume_i" , smap1.get("descripcion"));
-            paramMovDocu.put("pv_tipmov_i"   , smap1.get("tipomov"));
-            paramMovDocu.put("pv_swvisible_i"   , null);
+            paramMovDocu.put("pv_cdunieco_i"  , smap1.get("cdunieco"));
+            paramMovDocu.put("pv_cdramo_i"    , smap1.get("cdramo"));
+            paramMovDocu.put("pv_estado_i"    , smap1.get("estado"));
+            paramMovDocu.put("pv_nmpoliza_i"  , smap1.get("nmpoliza"));
+            paramMovDocu.put("pv_nmsolici_i"  , smap1.get("nmsolici"));
+            paramMovDocu.put("pv_nmsuplem_i"  , smap1.get("nmsuplem"));
+            paramMovDocu.put("pv_ntramite_i"  , smap1.get("ntramite"));
+            paramMovDocu.put("pv_feinici_i"   , renderFechas.parse(smap1.get("fecha")));
+            paramMovDocu.put("pv_cddocume_i"  , nombreArchivo);
+            paramMovDocu.put("pv_dsdocume_i"  , smap1.get("descripcion"));
+            paramMovDocu.put("pv_tipmov_i"    , smap1.get("tipomov"));
+            paramMovDocu.put("pv_swvisible_i" , null);
+            paramMovDocu.put("pv_codidocu_i"  , smap1.get("codidocu"));
             kernelManager.guardarArchivo(paramMovDocu);
         }
         

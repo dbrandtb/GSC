@@ -112,6 +112,10 @@ public class DocumentosPolizaAction extends ActionSupport {
 				+ "\n######                         ######"
 				);
 		logger.debug("smap1: "+smap1);
+		if(smap1!=null && !smap1.containsKey("cdtiptra"))
+		{
+			smap1.put("cdtiptra","1");
+		}
 		logger.debug(""
 				+ "\n######                         ######"
 				+ "\n######                         ######"
