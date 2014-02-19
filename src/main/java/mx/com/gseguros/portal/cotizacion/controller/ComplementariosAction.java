@@ -1274,6 +1274,7 @@ public class ComplementariosAction extends PrincipalCoreAction
         	parDmesCon.put("pv_cdclausu_i"   , null);
         	parDmesCon.put("pv_comments_i"   , "El tr&aacute;mite se emiti&oacute;");
         	parDmesCon.put("pv_cdusuari_i"   , datUsu.getCdusuari());
+        	parDmesCon.put("pv_cdmotivo_i"   , null);
         	kernelManager.movDmesacontrol(parDmesCon);
 			
 			success=true;
