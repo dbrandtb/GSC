@@ -19,6 +19,7 @@ import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
+import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 
 import org.apache.struts2.ServletActionContext;
@@ -299,67 +300,55 @@ public class MesaControlAction extends PrincipalCoreAction
 		log.debug("smap1: "+smap1);
 		try
 		{
+			//Se obtienen los datos del usuario:
 			UserVO usu=(UserVO)session.get("USUARIO");
 			DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usu.getUser());
 			
 			String statusNuevo=smap1.get("status");
 			String ntramite=smap1.get("ntramite");
 			String comments=smap1.get("comments");
+			String cdmotivo=smap1.get("cdmotivo");
+			
+			// Se actualiza el estatus en la mesa de control:
 			kernelManager.mesaControlUpdateStatus(ntramite,statusNuevo);
 			
-			if(statusNuevo.equals("1"))
-			{
-				log.debug("se inserta detalle nuevo");
-            	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
-            	parDmesCon.put("pv_ntramite_i"   , ntramite);
-            	parDmesCon.put("pv_feinicio_i"   , new Date());
-            	parDmesCon.put("pv_cdclausu_i"   , null);
-            	parDmesCon.put("pv_comments_i"   , "<p>El tr&aacute;mite fue turnado a revisi&oacute;n m&eacute;dica con las siguientes observaciones:</p>"+comments);
-            	parDmesCon.put("pv_cdusuari_i"   , datUsu.getCdusuari());
-            	parDmesCon.put("pv_cdmotivo_i"   , null);
-            	kernelManager.movDmesacontrol(parDmesCon);
+			// Creamos un enum en base al tipo de tramite
+			EstatusTramite enumEstatusTramite = null;
+			for(EstatusTramite statTra : EstatusTramite.values()) {
+				if(statTra.getCodigo().equals(statusNuevo)) {
+					enumEstatusTramite = statTra;
+					break;
+				}
 			}
-			else if(statusNuevo.equals("4"))
-			{
-				log.debug("se inserta detalle nuevo");
-            	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
-            	parDmesCon.put("pv_ntramite_i"   , ntramite);
-            	parDmesCon.put("pv_feinicio_i"   , new Date());
-            	parDmesCon.put("pv_cdclausu_i"   , null);
-            	parDmesCon.put("pv_comments_i"   , "<p>La p&oacute;liza fue rechazada con los siguientes detalles:</p>"+comments);
-            	parDmesCon.put("pv_cdusuari_i"   , datUsu.getCdusuari());
-            	parDmesCon.put("pv_cdmotivo_i"   , null);
-            	kernelManager.movDmesacontrol(parDmesCon);
+			String comentarioPrevio = "";
+	    	switch(enumEstatusTramite) {
+	    		case EN_REVISION_MEDICA:
+	    			comentarioPrevio = "<p>El tr&aacute;mite fue turnado a revisi&oacute;n m&eacute;dica con las siguientes observaciones:</p>";
+	    			break;
+	    		case RECHAZADO:
+	    			comentarioPrevio = "<p>La p&oacute;liza fue rechazada con los siguientes detalles:</p>";
+	    			break;
+	    		case VO_BO_MEDICO:
+	    		case SOLICITUD_MEDICA:
+	    			comentarioPrevio = "<p>El m&eacute;dico revis&oacute; el tr&aacute;mite con las siguientes observaciones:</p>";
+	    			break;
+				default:
+					break;
 			}
-			else if(statusNuevo.equals("5"))
-			{
-				log.debug("se inserta detalle nuevo");
-            	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
-            	parDmesCon.put("pv_ntramite_i"   , ntramite);
-            	parDmesCon.put("pv_feinicio_i"   , new Date());
-            	parDmesCon.put("pv_cdclausu_i"   , null);
-            	parDmesCon.put("pv_comments_i"   , "<p>El m&eacute;dico revis&oacute; el tr&aacute;mite con las siguientes observaciones:</p>"+comments);
-            	parDmesCon.put("pv_cdusuari_i"   , datUsu.getCdusuari());
-            	parDmesCon.put("pv_cdmotivo_i"   , null);
-            	kernelManager.movDmesacontrol(parDmesCon);
-			}
-			else if(statusNuevo.equals("6"))
-			{
-				log.debug("se inserta detalle nuevo");
-            	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
-            	parDmesCon.put("pv_ntramite_i"   , ntramite);
-            	parDmesCon.put("pv_feinicio_i"   , new Date());
-            	parDmesCon.put("pv_cdclausu_i"   , null);
-            	parDmesCon.put("pv_comments_i"   , "<p>El m&eacute;dico revis&oacute; el tr&aacute;mite con las siguientes observaciones:</p>"+comments);
-            	parDmesCon.put("pv_cdusuari_i"   , datUsu.getCdusuari());
-            	parDmesCon.put("pv_cdmotivo_i"   , null);
-            	kernelManager.movDmesacontrol(parDmesCon);
-			}
+	    	log.debug("se inserta detalle nuevo");
+        	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
+        	parDmesCon.put("pv_ntramite_i"   , ntramite);
+        	parDmesCon.put("pv_feinicio_i"   , new Date());
+        	parDmesCon.put("pv_cdclausu_i"   , null);
+        	parDmesCon.put("pv_comments_i"   , new StringBuilder(comentarioPrevio).append(comments));
+        	parDmesCon.put("pv_cdusuari_i"   , datUsu.getCdusuari());
+        	parDmesCon.put("pv_cdmotivo_i"   , cdmotivo);
+        	// Se inserta el detalle de la mesa de control:
+        	kernelManager.movDmesacontrol(parDmesCon);
 			
 			success=true;
-		}
-		catch(Exception ex)
-		{
+			
+		} catch(Exception ex) {
 			success=false;
 			log.error("error al actualizar status de tramite de mesa de control",ex);
 		}
@@ -674,7 +663,6 @@ public class MesaControlAction extends PrincipalCoreAction
         	parDmesCon.put("pv_cdclausu_i"   , null);
         	parDmesCon.put("pv_comments_i"   , "Se guard&oacute; un nuevo tr&aacute;mite manual desde mesa de control");
         	parDmesCon.put("pv_cdusuari_i"   , usu.getUser());
-        	parDmesCon.put("pv_cdmotivo_i"   , null);
         	parDmesCon.put("pv_cdmotivo_i"   , null);
         	kernelManager.movDmesacontrol(parDmesCon);
 			////// se guarda el detalle //////
