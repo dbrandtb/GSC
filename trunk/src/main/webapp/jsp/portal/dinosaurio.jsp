@@ -9,7 +9,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <script type="text/javascript" src="${ctx}/resources/extjs4/ext-all-debug.js"></script>
+        <script type="text/javascript" src="${ctx}/resources/extjs4/ext-all.js"></script>
         <script type="text/javascript" src="${ctx}/resources/extjs4/base_extjs4.js"></script>
         <script>
             
