@@ -190,7 +190,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
     public WrapperResultados coberturasEnd(Map<String,String> parameters) throws ApplicationException
     {
         log.debug("### kernel sustituto coberturasEnd map: "+parameters);
-        WrapperResultados res=this.returnBackBoneInvoke(parameters, ProcesoDAO.EJECUTA_P_EXEC_SIGSVDEF_END);
+        WrapperResultados res=this.returnBackBoneInvoke(parameters, ProcesoDAO.EJECUTA_P_EXEC_SIGSVDEFEND);
         log.debug("### kernel sustituto coberturasEnd id:"+res.getMsgId());
         log.debug("### kernel sustituto coberturasEnd mesage:"+res.getMsgText());
         return res;

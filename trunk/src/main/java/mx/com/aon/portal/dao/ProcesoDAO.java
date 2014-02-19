@@ -64,7 +64,7 @@ public class ProcesoDAO extends AbstractDAO {
 	public static final String MOV_MPOLIAGE = "MOV_MPOLIAGE";
 	public static final String CLONAR_SITUACION = "CLONAR_SITUACION";
 	public static final String EJECUTA_P_EXEC_SIGSVDEF = "EJECUTA_P_EXEC_SIGSVDEF";
-	public static final String EJECUTA_P_EXEC_SIGSVDEF_END = "EJECUTA_P_EXEC_SIGSVDEF_END";
+	public static final String EJECUTA_P_EXEC_SIGSVDEFEND = "EJECUTA_P_EXEC_SIGSVDEFEND";
 	public static final String PROC_INCISO_DEF = "PROC_INCISO_DEF";
 	public static final String PROCESO_EMISION = "PROCESO_EMISION";
 	public static final String OBTIENE_DESCRIPCION = "OBTIENE_DESCRIPCION";
@@ -160,7 +160,7 @@ public class ProcesoDAO extends AbstractDAO {
 		addStoredProcedure(OBTIENE_TVALOSIT_COTIZA, new ObtenerTvalositCotiza(getDataSource()));
 		addStoredProcedure(CLONAR_SITUACION, new ClonaSituacion(getDataSource()));
 		addStoredProcedure(EJECUTA_P_EXEC_SIGSVDEF, new EjecutaSIGSVDEF(getDataSource()));
-		addStoredProcedure(EJECUTA_P_EXEC_SIGSVDEF_END, new EjecutaSIGSVDEFEnd(getDataSource()));
+		addStoredProcedure(EJECUTA_P_EXEC_SIGSVDEFEND, new EjecutaSIGSVDEFEnd(getDataSource()));
 		addStoredProcedure(P_MOV_MPOLIZAS, new InsertaMaestroPolizas(getDataSource()));
 		addStoredProcedure(P_MOV_TVALOSIT, new InsertaValoresSituaciones(getDataSource()));
 		addStoredProcedure(P_UPD_TVALOSIT, new ActualizaValoresSituaciones(getDataSource()));
@@ -714,7 +714,7 @@ public class ProcesoDAO extends AbstractDAO {
     protected class EjecutaSIGSVDEFEnd extends CustomStoredProcedure {
     	
     	protected EjecutaSIGSVDEFEnd(DataSource dataSource) {
-    		super(dataSource,"P_EXEC_SIGSVDEF_END");
+    		super(dataSource,"P_EXEC_SIGSVDEFEND");
     		
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.NUMERIC));
     		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.NUMERIC));
