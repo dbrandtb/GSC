@@ -1971,11 +1971,11 @@ modificacionClausula = Ext.create('Ext.window.Window',
 			 	},
 			 	{
 			 		xtype       : 'textfield'				,fieldLabel : 'Deducible'					,id       : 'idDeducible'
-		 			,allowBlank : false						,labelWidth: 170							,readOnly   : true
+		 			,labelWidth: 170						,readOnly   : true
 			 	},
 			 	{
 			 		xtype       : 'textfield'				,fieldLabel : 'Copago'						,id       : 'idCopago'
-		 			,allowBlank : false						,labelWidth: 170							,readOnly   : true
+		 			,labelWidth: 170						,readOnly   : true
 			 	},
 			 	penalizacion
 			 	,
