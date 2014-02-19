@@ -3485,7 +3485,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	{
 		protected ObtenerDetalleMesaControl(DataSource dataSource)
 		{
-			super(dataSource,"PKG_CONSULTA. P_cons_det_mesactrl");
+			super(dataSource,"PKG_CONSULTA.P_cons_det_mesactrl");
 			declareParameter(new SqlParameter("pv_ntramite_i",      OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerDetalleMesaControlMapper()));
 			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
@@ -3507,7 +3507,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 		public Object mapRow(ResultSet rs, int rowNum) throws SQLException
 		{
 			String cols[]=new String[]{"NTRAMITE","NMORDINA","CDTIPTRA","CDCLAUSU","FECHAINI","FECHAFIN",
-					"COMMENTS","CDUSUARI_INI","CDUSUARI_FIN","usuario_ini","usuario_fin"};
+					"COMMENTS","CDUSUARI_INI","CDUSUARI_FIN","usuario_ini","usuario_fin","cdmotivo"};
 			Map<String,String> map=new HashMap<String,String>(0);
 			for(String col:cols)
 			{
