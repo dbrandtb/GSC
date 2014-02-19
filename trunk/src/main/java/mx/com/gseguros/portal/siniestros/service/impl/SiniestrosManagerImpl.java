@@ -125,6 +125,16 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	}
 
 	@Override
+	public List<HashMap<String, String>> loadListaIncisosRechazos(HashMap<String, String> params)
+			throws ApplicationException {
+		try {
+			return siniestrosDAO.loadListaIncisosRechazos(params);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}
+
+	@Override
 	public boolean guardaEstatusDocumentos(HashMap<String, String> params, List<HashMap<String, String>> saveList)
 			throws ApplicationException {
 		
@@ -141,6 +151,16 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		}
 		
 		return allUpdated;
+	}
+	
+	@Override
+	public List<HashMap<String, String>> loadListaRechazos()
+			throws ApplicationException {
+		try {
+			return siniestrosDAO.loadListaRechazos();
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
 	}
 
 	@Override

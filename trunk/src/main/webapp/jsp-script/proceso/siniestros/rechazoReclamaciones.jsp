@@ -7,6 +7,11 @@
         <title>Documento</title>
         <script type="text/javascript">
             var _CONTEXT = '${ctx}';
+            
+            var _URL_ListaRechazos =      '<s:url namespace="/siniestros" action="loadListaRechazos" />';
+            var _URL_ListaIncisosRechazos =      '<s:url namespace="/siniestros" action="loadListaIncisosRechazos" />';
+            var _URL_ActualizaStatusTramite =      '<s:url namespace="/mesacontrol" action="actualizarStatusTramite" />';
+            
         </script>
         <!-- <script type="text/javascript" src="${ctx}/resources/scripts/util/extjs4_utils.js"></script>-->
         <script type="text/javascript" src="${ctx}/js/proceso/siniestros/rechazoReclamaciones.js"></script>

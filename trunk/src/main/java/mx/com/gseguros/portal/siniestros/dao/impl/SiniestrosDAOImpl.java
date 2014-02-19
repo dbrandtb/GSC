@@ -765,8 +765,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 				compile();
 			}
 		}
-		
-		
+	    
 	    protected class LoadListaDocumentosMapper  implements RowMapper {
 	        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
 	        	HashMap<String, String> map =  new HashMap<String, String>();
@@ -778,6 +777,74 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	            return map;
 	        }
 	    }
+
+
+	    @Override
+	    public List<HashMap<String, String>> loadListaIncisosRechazos(
+	    		HashMap<String, String> params) throws DaoException {
+	    	
+	    	Map<String, Object> mapResult = ejecutaSP(new LoadListaIncisosRechazos(getDataSource()), params);
+	    	
+	    	return (List<HashMap<String, String>>) mapResult.get("pv_registro_o");
+	    }
+	    
+	    protected class LoadListaIncisosRechazos extends StoredProcedure {
+	    	
+	    	protected LoadListaIncisosRechazos(DataSource dataSource) {
+	    		super(dataSource, "PKG_LISTAS.P_GET_CAUSAS_MOT_RECHAZO");
+	    		
+	    		declareParameter(new SqlParameter("pv_cdmotivo_i", OracleTypes.VARCHAR));
+	    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new LoadListaIncisosRechazosMapper()));
+	    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+	    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+	    		compile();
+	    	}
+	    }
+	    
+	    protected class LoadListaIncisosRechazosMapper  implements RowMapper {
+	        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+	        	HashMap<String, String> map =  new HashMap<String, String>();
+	        	
+	        	map.put("key", rs.getString("CDCAUMOT"));
+	        	map.put("value", rs.getString("DSCAUMOT"));
+	        	
+	            return map;
+	        }
+	    }
+
+	    @Override
+	    public List<HashMap<String, String>> loadListaRechazos() throws DaoException {
+	    	Map<String, Object> params = new HashMap<String, Object>();
+	    	Map<String, Object> mapResult = ejecutaSP(new LoadListaRechazos(getDataSource()), params);
+	    	
+	    	return (List<HashMap<String, String>>) mapResult.get("pv_registro_o");
+	    }
+	    
+	    protected class LoadListaRechazos extends StoredProcedure {
+	    	
+	    	protected LoadListaRechazos(DataSource dataSource) {
+	    		super(dataSource, "PKG_LISTAS.P_GET_MOTIVOS_RECHAZO");
+	    		
+	    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new LoadListaRechazosMapper()));
+	    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+	    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+	    		compile();
+	    	}
+	    }
+		
+		
+	    protected class LoadListaRechazosMapper  implements RowMapper {
+	        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+	        	HashMap<String, String> map =  new HashMap<String, String>();
+	        	
+	        	map.put("key", rs.getString("CDMOTIVO"));
+	        	map.put("value", rs.getString("DSMOTIVO"));
+	        	
+	            return map;
+	        }
+	    }
+		
+	   
 
 		@Override
 		public String guardaEstatusDocumento(HashMap<String, String> params)

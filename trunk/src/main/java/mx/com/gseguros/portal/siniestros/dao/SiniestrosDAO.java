@@ -39,6 +39,10 @@ public interface SiniestrosDAO {
 	public List<GenericVO> obtieneListadoCPTICD(String cdtabla, String otclave) throws DaoException;
 
 	public List<HashMap<String, String>> loadListaDocumentos(HashMap<String, String> params) throws DaoException;
+
+	public List<HashMap<String, String>> loadListaIncisosRechazos(HashMap<String, String> params) throws DaoException;
+
+	public List<HashMap<String, String>> loadListaRechazos() throws DaoException;
 	
 	public String guardaEstatusDocumento(HashMap<String, String> params) throws DaoException;
 

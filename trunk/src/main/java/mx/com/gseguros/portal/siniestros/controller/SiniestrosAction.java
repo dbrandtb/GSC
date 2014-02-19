@@ -616,6 +616,30 @@ public class SiniestrosAction extends ActionSupport{
    	return SUCCESS;
    }
 
+   public String loadListaRechazos(){
+	   	try {
+	   		loadList = siniestrosManager.loadListaRechazos();
+	   	}catch( Exception e){
+	   		logger.error("Error en loadListaRechazos",e);
+	   		success =  false;
+	   		return SUCCESS;
+	   	}
+	   	success = true;
+	   	return SUCCESS;
+   }
+
+   public String loadListaIncisosRechazos(){
+	   try {
+		   loadList = siniestrosManager.loadListaIncisosRechazos(params);
+	   }catch( Exception e){
+		   logger.error("Error en loadListaRechazos",e);
+		   success =  false;
+		   return SUCCESS;
+	   }
+	   success = true;
+	   return SUCCESS;
+   }
+   
    public String rechazarTramite(){
 	   
 	   try {

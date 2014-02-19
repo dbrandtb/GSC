@@ -3,12 +3,53 @@ Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.chart.*', 'Ext.grid.*', 'Ext.grid
 Ext.onReady(function() {
 
 
+	Ext.define('modeloRechazos',{
+        extend: 'Ext.data.Model',
+        fields: [{type:'string',    name:'key'},
+                 {type:'string',    name:'value'},
+				]
+    });
+	
+	 var storeRechazos = Ext.create('Ext.data.JsonStore', {
+	    	model:'modeloRechazos',
+	        proxy: {
+	            type: 'ajax',
+	            url: _URL_ListaRechazos,
+	            reader: {
+	                type: 'json',
+	                root: 'loadList'
+	            }
+	        }
+	    });
+	 storeRechazos.load();
+
+	 Ext.define('modeloIncisosRechazos',{
+		 extend: 'Ext.data.Model',
+		 fields: [{type:'string',    name:'key'},
+		          {type:'string',    name:'value'},
+		          ]
+	 });
+	 
+	 var storeIncisosRechazos = Ext.create('Ext.data.JsonStore', {
+		 model:'modeloIncisosRechazos',
+		 proxy: {
+			 type: 'ajax',
+			 url: _URL_ListaIncisosRechazos,
+			 reader: {
+				 type: 'json',
+				 root: 'loadList'
+			 }
+		 }
+	 });
+	
+	
+	
     motivoRechazo= Ext.create('Ext.form.ComboBox',
     	    {
     	        id:'motivoRechazo',
     	        name:'params.motivoRechazo',
     	        fieldLabel: 'Motivo',
-    	        //store: storeCirculoHospitalario,
+    	        store: storeRechazos,
     	        queryMode:'local',
     	        displayField: 'value',
     	        valueField: 'key',
@@ -17,29 +58,64 @@ Ext.onReady(function() {
     	        editable:false,
     	        labelWidth : 150,
     	        width: 600,
-    	        emptyText:'Seleccione un Motivo ...'
+    	        emptyText:'Seleccione ...',
+    	        listeners: {
+    	        	select: function(combo, records, eOpts){
+    	        		
+    	        		storeIncisosRechazos.load({
+    	        			 params: {
+    	        				'params.pv_cdmotivo_i' : records[0].get('key')
+    	        			 }
+    	        		 });
+    	        	}
+    	        }
     	    });
+
+    
+    textoRechazo = Ext.create('Ext.form.field.TextArea', {
+        	fieldLabel: 'Descripci&oacute;n modificado'
+    		,labelWidth: 150
+    		,width: 600
+    		,name:'params.descripcion'
+			,height: 250
+			,allowBlank: false
+			,blankText:'La descripci&oacute;n es un dato requerido'
+        });
+    
+    incisosRechazo= Ext.create('Ext.form.ComboBox',
+    		{
+    	id:'incisosRechazo',
+    	name:'params.incisosRechazo',
+    	fieldLabel: 'Incisos Rechazo',
+    	store: storeIncisosRechazos,
+    	queryMode:'local',
+    	displayField: 'value',
+    	valueField: 'key',
+//    	allowBlank:false,
+    	blankText:'El motivo es un dato requerido',
+    	editable:false,
+    	labelWidth : 150,
+    	width: 600,
+    	emptyText:'Seleccione ...',
+    		listeners: {
+	        	select: function(combo, records, eOpts){
+	        		
+	        		textoRechazo.setValue(records[0].get('value'));
+	        	}
+	        }
+    });
  
     
     panelRechazarReclamaciones= Ext.create('Ext.form.Panel', {
         title: 'Rechazar Reclamaci&oacute;n',
     	id: 'panelRechazarReclamaciones',
         width: 650,
-        //url: _URL_INSERTA_CLAUSU,
+        url: _URL_ActualizaStatusTramite,
         bodyPadding: 5,
         renderTo: 'maindiv',
         items: [
-            	motivoRechazo,
-    	        {
-    	            xtype: 'textarea'
-	            	,fieldLabel: 'Descripci&oacute;n modificado'
-            		,labelWidth: 150
-            		,width: 600
-            		,name:'params.descripcion'
-        			,height: 250
-        			,allowBlank: false
-        			,blankText:'La descripci&oacute;n es un dato requerido'
-    	        }],
+            	motivoRechazo,incisosRechazo,textoRechazo
+    	        ],
 	        buttonAlign:'center',
 	        buttons: [{
     		text: 'Guardar'
@@ -63,7 +139,8 @@ Ext.onReady(function() {
     	   	                    msg: "La cl&aacute;usula se guardo correctamente",
     	   	                    buttons: Ext.Msg.OK
     	   	                });
-    						panelRechazarReclamaciones.form.reset();
+//    						panelRechazarReclamaciones.form.reset();
+    						windowLoader.close();
     						
     					}
     				});
@@ -81,8 +158,8 @@ Ext.onReady(function() {
     	    icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
     	    buttonAlign : 'center',
     	    handler: function() {
-    	        rechazarReclamaciones.close();
-    	        asginarUsuario.show();
+    	        windowLoader.close();
+    	        //asginarUsuario.show();
     	    }
     	}
     	]
