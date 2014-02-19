@@ -48,7 +48,7 @@
             var urlPantallaValosit     = '<s:url namespace="/"                action="pantallaValosit" />';
             var urlPantallaAgentes     = '<s:url namespace="/flujocotizacion" action="principal" />';
             var urlServidorReports      = '<s:text name="ruta.servidor.reports" />';
-            var _NOMBRE_REPORTE_CARATULA = '<s:text name="reporte.caratulaprevia.nombre" />';
+            var _NOMBRE_REPORTE_CARATULA = '<s:text name="reports.rdf.caratula.previa.nombre" />';
             var complerepSrvUsr            = '<s:text name="pass.servidor.reports" />';
             var compleUrlViewDoc     = '<s:url namespace ="/documentos"     action="descargaDocInline" />';
             debug(sesionDsrol);

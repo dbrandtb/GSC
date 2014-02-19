@@ -166,14 +166,14 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 
 	public boolean validaUsuarioLdap(String user, String password) throws Exception {
 		DirContext ctx;
-		logger.debug("URLLDAP=" +        this.getText("validacion.ldap.URLLDAP"));
-		logger.debug("ContextoLDAP=" +   this.getText("validacion.ldap.ContextoLDAP"));
-		logger.debug("TipoAuthLDAP=" +   this.getText("validacion.ldap.TipoAuthLDAP"));
-		logger.debug("UsuarioLDAP=" +    this.getText("validacion.ldap.UsuarioLDAP"));
-		logger.debug("PasswordLDAP=" +   this.getText("validacion.ldap.PasswordLDAP"));
-		logger.debug("SearchBaseLDAP=" + this.getText("validacion.ldap.SearchBaseLDAP"));
+		logger.debug("URLLDAP=" +        this.getText("ldap.provider.url"));
+		logger.debug("ContextoLDAP=" +   this.getText("ldap.factory.initial"));
+		logger.debug("TipoAuthLDAP=" +   this.getText("ldap.security.authentication"));
+		logger.debug("UsuarioLDAP=" +    this.getText("ldap.security.principal"));
+		logger.debug("PasswordLDAP=" +   this.getText("ldap.security.credentials"));
+		logger.debug("SearchBaseLDAP=" + this.getText("ldap.base.search"));
 		
-		Hashtable env = datosConexionLDAP(this.getText("validacion.ldap.UsuarioLDAP"), this.getText("validacion.ldap.PasswordLDAP"));
+		Hashtable env = datosConexionLDAP(this.getText("ldap.security.principal"), this.getText("ldap.security.credentials"));
 		boolean existeUsuario = false;
 		try {
 			 ctx = new InitialLdapContext(env, null);
@@ -190,14 +190,14 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 				String searchFilter = "(cn="+user+")";
 				// String searchBase = "cn=Users,dc=biosnettcs,dc=com";
 				NamingEnumeration<SearchResult> results = ctx.search(
-						this.getText("validacion.ldap.SearchBaseLDAP"), searchFilter, searchCtls);
+						this.getText("ldap.base.search"), searchFilter, searchCtls);
 				while (results.hasMoreElements()) {
 					SearchResult searchResult = (SearchResult) results.next();
 					Attributes attrs = searchResult.getAttributes();
 					// OBTENEMOS LA UNIDAD ORGANIZATIVA DEL UID BUSCADO CON SU UID Y
 					// LO COMPLETAMOS CON LA BASE
 					String dn = searchResult.getName() + ","
-							+ this.getText("validacion.ldap.SearchBaseLDAP");
+							+ this.getText("ldap.base.search");
 	
 					if (attrs != null) {
 						// EL UID EXISTE AHORA VALIDAR PASSWORD
@@ -234,11 +234,11 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 			// String url = Constantes.URLLDAP;
 			// String contexto = Constantes.ContextoLDAP;
 			// String tipoAuth = "simple";
-			env.put(Context.INITIAL_CONTEXT_FACTORY, this.getText("validacion.ldap.ContextoLDAP"));
-			env.put(Context.SECURITY_AUTHENTICATION, this.getText("validacion.ldap.TipoAuthLDAP"));
+			env.put(Context.INITIAL_CONTEXT_FACTORY, this.getText("ldap.factory.initial"));
+			env.put(Context.SECURITY_AUTHENTICATION, this.getText("ldap.security.authentication"));
 			env.put(Context.SECURITY_PRINCIPAL, user);
 			env.put(Context.SECURITY_CREDENTIALS, pass);
-			env.put(Context.PROVIDER_URL, this.getText("validacion.ldap.URLLDAP"));
+			env.put(Context.PROVIDER_URL, this.getText("ldap.provider.url"));
 
 		} catch (Exception e) {
 			logger.error("Error en la creacion de conexion LDAP", e);
