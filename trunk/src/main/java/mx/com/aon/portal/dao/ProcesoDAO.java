@@ -3098,21 +3098,22 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 		protected GuardarArchivoPoliza(DataSource dataSource)
 		{
 			super(dataSource,"PKG_SATELITES.P_MOV_DOCUMENTOS");
-			declareParameter(new SqlParameter("pv_cdunieco_i", 		OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdramo_i", 		OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_estado_i", 		OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmpoliza_i", 		OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmsuplem_i", 		OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_feinici_i", 		OracleTypes.DATE));
-			declareParameter(new SqlParameter("pv_cddocume_i", 		OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_dsdocume_i", 		OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_ntramite_i", 		OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmsolici_i", 		OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_tipmov_i", 		OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_swvisible_i", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdunieco_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_feinici_i"   , OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_cddocume_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsdocume_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ntramite_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsolici_i"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_tipmov_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_swvisible_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_codidocu_i"  , OracleTypes.VARCHAR));
 	
-			declareParameter(new SqlOutParameter("pv_msg_id_o", 	OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o", 		OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 	
 			compile();
 		}
