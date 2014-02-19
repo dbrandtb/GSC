@@ -1021,6 +1021,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             	parDmesCon.put("pv_cdclausu_i"   , null);
             	parDmesCon.put("pv_comments_i"   , "Se guard&oacute; una cotizaci&oacute;n nueva para el tr&aacute;mite");
             	parDmesCon.put("pv_cdusuari_i"   , userData.getCdusuari());
+            	parDmesCon.put("pv_cdmotivo_i"   , null);
             	kernelManagerSustituto.movDmesacontrol(parDmesCon);
             }
             else

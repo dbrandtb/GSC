@@ -934,6 +934,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 			
             omap1.put("pv_feinicio_i"   , new Date());
             omap1.put("pv_cdusuari_i"   , userData.getCdusuari());
+            omap1.put("pv_cdmotivo_i"   , null);
             kernelManager.movDmesacontrol(omap1);
             
 			success=true;

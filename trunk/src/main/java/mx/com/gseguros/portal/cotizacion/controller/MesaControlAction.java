@@ -266,6 +266,7 @@ public class MesaControlAction extends PrincipalCoreAction
         	parDmesCon.put("pv_cdclausu_i"   , null);
         	parDmesCon.put("pv_comments_i"   , "Se guard&oacute; un nuevo tr&aacute;mite manual desde mesa de control");
         	parDmesCon.put("pv_cdusuari_i"   , usu.getUser());
+        	parDmesCon.put("pv_cdmotivo_i"   , null);
         	kernelManager.movDmesacontrol(parDmesCon);
 					
 			success=true;
@@ -315,6 +316,7 @@ public class MesaControlAction extends PrincipalCoreAction
             	parDmesCon.put("pv_cdclausu_i"   , null);
             	parDmesCon.put("pv_comments_i"   , "<p>El tr&aacute;mite fue turnado a revisi&oacute;n m&eacute;dica con las siguientes observaciones:</p>"+comments);
             	parDmesCon.put("pv_cdusuari_i"   , datUsu.getCdusuari());
+            	parDmesCon.put("pv_cdmotivo_i"   , null);
             	kernelManager.movDmesacontrol(parDmesCon);
 			}
 			else if(statusNuevo.equals("4"))
@@ -326,6 +328,7 @@ public class MesaControlAction extends PrincipalCoreAction
             	parDmesCon.put("pv_cdclausu_i"   , null);
             	parDmesCon.put("pv_comments_i"   , "<p>La p&oacute;liza fue rechazada con los siguientes detalles:</p>"+comments);
             	parDmesCon.put("pv_cdusuari_i"   , datUsu.getCdusuari());
+            	parDmesCon.put("pv_cdmotivo_i"   , null);
             	kernelManager.movDmesacontrol(parDmesCon);
 			}
 			else if(statusNuevo.equals("5"))
@@ -337,6 +340,7 @@ public class MesaControlAction extends PrincipalCoreAction
             	parDmesCon.put("pv_cdclausu_i"   , null);
             	parDmesCon.put("pv_comments_i"   , "<p>El m&eacute;dico revis&oacute; el tr&aacute;mite con las siguientes observaciones:</p>"+comments);
             	parDmesCon.put("pv_cdusuari_i"   , datUsu.getCdusuari());
+            	parDmesCon.put("pv_cdmotivo_i"   , null);
             	kernelManager.movDmesacontrol(parDmesCon);
 			}
 			else if(statusNuevo.equals("6"))
@@ -348,6 +352,7 @@ public class MesaControlAction extends PrincipalCoreAction
             	parDmesCon.put("pv_cdclausu_i"   , null);
             	parDmesCon.put("pv_comments_i"   , "<p>El m&eacute;dico revis&oacute; el tr&aacute;mite con las siguientes observaciones:</p>"+comments);
             	parDmesCon.put("pv_cdusuari_i"   , datUsu.getCdusuari());
+            	parDmesCon.put("pv_cdmotivo_i"   , null);
             	kernelManager.movDmesacontrol(parDmesCon);
 			}
 			
@@ -420,6 +425,7 @@ public class MesaControlAction extends PrincipalCoreAction
 			UserVO usu=(UserVO)session.get("USUARIO");
 			DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usu.getUser());
 			smap1.put("pv_cdusuari_fin_i",datUsu.getCdusuari());
+			smap1.put("pv_cdmotivo_i", null);
 			kernelManager.mesaControlFinalizarDetalle(smap1);
 			success=true;
 		}
@@ -668,6 +674,8 @@ public class MesaControlAction extends PrincipalCoreAction
         	parDmesCon.put("pv_cdclausu_i"   , null);
         	parDmesCon.put("pv_comments_i"   , "Se guard&oacute; un nuevo tr&aacute;mite manual desde mesa de control");
         	parDmesCon.put("pv_cdusuari_i"   , usu.getUser());
+        	parDmesCon.put("pv_cdmotivo_i"   , null);
+        	parDmesCon.put("pv_cdmotivo_i"   , null);
         	kernelManager.movDmesacontrol(parDmesCon);
 			////// se guarda el detalle //////
         	//////////////////////////////////
