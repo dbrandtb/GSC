@@ -58,9 +58,9 @@ var msgWindow;
 	        loader      : {
 	            url     : _UrlRevisionDocsSiniestro,
 	            params  : {
-	                'params.nmTramite'  : '1010',
-	                'params.cdTipoPago' : '1',
-	                'params.cdTipoAtencion'  : '1'
+	                'params.nmTramite'  : record.get('ntramite'),
+	                'params.cdTipoPago' : record.get('parametros.pv_otvalor02'),
+	                'params.cdTipoAtencion'  : record.get('parametros.pv_otvalor07')
 	            },
 	            scripts  : true,
 	            loadMask : true,
@@ -72,6 +72,10 @@ var msgWindow;
 	function rechazarTramiteWindow(grid,rowIndex,colIndex){
 		
 		var record = grid.getStore().getAt(rowIndex);
+		if(record.get('status') == '4'){
+			mensajeWarning('Este tr&aacute;mite ya se encuentra rechazado!');
+			return;
+		}
 		
 		windowLoader = Ext.create('Ext.window.Window',{
 	        modal       : true,
