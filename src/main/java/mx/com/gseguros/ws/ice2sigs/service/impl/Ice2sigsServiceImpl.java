@@ -741,7 +741,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 				//if( 1 == recibo.getNumRec()){
 					String parametros = "?9999,0,"+sucursal+","+cdtipsitGS+","+nmpoliza+",0,"+numEndoso+","+tipoEndoso+","+recibo.getNumRec();
 					logger.debug("URL Generada para Recibo: "+ urlImpresionRecibos + parametros);
-					//HttpRequestUtil.generaReporte(this.getText("url.recibos.impresion")+parametros, rutaPoliza+"/Recibo_"+recibo.getRmdbRn()+"_"+recibo.getNumRec()+".pdf");
+					//HttpRequestUtil.generaReporte(this.getText("recibos.impresion.url")+parametros, rutaPoliza+"/Recibo_"+recibo.getRmdbRn()+"_"+recibo.getNumRec()+".pdf");
 					
 					HashMap<String, Object> paramsR =  new HashMap<String, Object>();
 					paramsR.put("pv_cdunieco_i", cdunieco);
