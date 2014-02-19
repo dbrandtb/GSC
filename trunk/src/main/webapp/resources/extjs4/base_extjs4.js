@@ -204,7 +204,7 @@ function heredarPanel(formPanel)
  */
 function centrarVentana(ventana)
 {
-	ventana.setPosition(ventana.getPosition()[0],parent.document.documentElement.scrollTop+100);
+	ventana.setPosition(ventana.getPosition()[0], $(window.parent).scrollTop() + 100);
 }
 
 function centrarVentanaInterna(ventana)
