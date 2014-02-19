@@ -47,7 +47,7 @@ Ext.onReady(function() {
     motivoRechazo= Ext.create('Ext.form.ComboBox',
     	    {
     	        id:'motivoRechazo',
-    	        name:'params.motivoRechazo',
+    	        name:'smap1.cdmotivo',
     	        fieldLabel: 'Motivo',
     	        store: storeRechazos,
     	        queryMode:'local',
@@ -76,7 +76,7 @@ Ext.onReady(function() {
         	fieldLabel: 'Descripci&oacute;n modificado'
     		,labelWidth: 150
     		,width: 600
-    		,name:'params.descripcion'
+    		,name:'smap1.comments'
 			,height: 250
 			,allowBlank: false
 			,blankText:'La descripci&oacute;n es un dato requerido'
@@ -85,7 +85,7 @@ Ext.onReady(function() {
     incisosRechazo= Ext.create('Ext.form.ComboBox',
     		{
     	id:'incisosRechazo',
-    	name:'params.incisosRechazo',
+    	name:'smap1.incisosRechazo',
     	fieldLabel: 'Incisos Rechazo',
     	store: storeIncisosRechazos,
     	queryMode:'local',
@@ -124,7 +124,11 @@ Ext.onReady(function() {
     		handler: function() {
     	    	if (panelRechazarReclamaciones.form.isValid()) {
     	    		panelRechazarReclamaciones.form.submit({
-    		        	waitMsg:'Procesando...',			        	
+    		        	waitMsg:'Procesando...',			
+    		        	params: {
+    		        		'smap1.ntramite' : _nmTramite, 
+    		        		'smap1.status'   : 4,
+    		        	},
     		        	failure: function(form, action) {
     		        		Ext.Msg.show({
     	   	                    title: 'ERROR',
@@ -136,9 +140,10 @@ Ext.onReady(function() {
     					success: function(form, action) {
     						Ext.Msg.show({
     	   	                    title: '&Eacute;XITO',
-    	   	                    msg: "La cl&aacute;usula se guardo correctamente",
+    	   	                    msg: "Se ha rechazado correctamente",
     	   	                    buttons: Ext.Msg.OK
     	   	                });
+    						loadMcdinStore();
 //    						panelRechazarReclamaciones.form.reset();
     						windowLoader.close();
     						

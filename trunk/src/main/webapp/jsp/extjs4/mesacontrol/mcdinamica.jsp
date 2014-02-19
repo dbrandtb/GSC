@@ -43,6 +43,7 @@ var mcdinGrid;
 var mcdinStore;
 var mcdinFiltro;
 var mcdinFormNuevo;
+var loadMcdinStore;
 
 var _4_botones=
 {
@@ -191,16 +192,10 @@ Ext.onReady(function()
     			title      : '<s:property value="smap1.gridTitle" />'
     			,store     : mcdinStore
     			,minHeight : 200
+    			,selType: 'checkboxmodel'
     			,columns   :
     			[
-    			    {
-    			    	xtype         : 'checkcolumn'
-    			    	,dataIndex    : 'activo'
-    			    	,width        : 30
-    			    	,menuDisabled : true
-    			    	,sortable     : false
-    			    }
-    			    ,<s:property value="imap1.gridColumns" />
+    			    <s:property value="imap1.gridColumns" />
     			    ,_4_botones
     			]
     			,tbar      : _4_botonesGrid
@@ -426,48 +421,52 @@ Ext.onReady(function()
     //////////////////////
     ////// cargador //////
     /*//////////////////*/
-    Ext.Ajax.request(
-    {
-        url      : mcdinUrlCargar
-        ,params  :
-        {
-            'smap1.pv_cdunieco_i'   : mcdinInput['cdunieco']
-             ,'smap1.pv_ntramite_i' : mcdinInput['ntramite']
-             ,'smap1.pv_cdramo_i'   : mcdinInput['cdramo']
-             ,'smap1.pv_nmpoliza_i' : mcdinInput['nmpoliza']
-             ,'smap1.pv_estado_i'   : mcdinInput['estado']
-             ,'smap1.pv_cdagente_i' : mcdinInput['cdagente']
-             ,'smap1.pv_status_i'   : mcdinInput['status']
-             ,'smap1.pv_cdtipsit_i' : mcdinInput['cdtipsit']
-             ,'smap1.pv_fedesde_i'  : mcdinInput['fedesde']
-             ,'smap1.pv_fehasta_i'  : mcdinInput['fehasta']
-             ,'smap1.pv_cdtiptra_i' : mcdinInput['tiptra']
-        }
-        ,success : function(response)
-        {
-        	debug('responseText',response.responseText);
-            var jsonResponse = Ext.decode(response.responseText);
-            debug(jsonResponse);
-            mcdinStore.setProxy(
-            {
-                type         : 'memory',
-                enablePaging : true,
-                reader       : 'json',
-                data         : jsonResponse.olist1
-            });
-            mcdinStore.load();
-        }
-        ,failure : function()
-        {
-            var msg=Ext.Msg.show(
-            {
-                title   : 'Error',
-                icon    : Ext.Msg.ERROR,
-                msg     : 'Error de comunicaci&oacute;n',
-                buttons : Ext.Msg.OK
-            });
-        }
-    });
+    loadMcdinStore = function (){
+	    Ext.Ajax.request(
+	    {
+	        url      : mcdinUrlCargar
+	        ,params  :
+	        {
+	            'smap1.pv_cdunieco_i'   : mcdinInput['cdunieco']
+	             ,'smap1.pv_ntramite_i' : mcdinInput['ntramite']
+	             ,'smap1.pv_cdramo_i'   : mcdinInput['cdramo']
+	             ,'smap1.pv_nmpoliza_i' : mcdinInput['nmpoliza']
+	             ,'smap1.pv_estado_i'   : mcdinInput['estado']
+	             ,'smap1.pv_cdagente_i' : mcdinInput['cdagente']
+	             ,'smap1.pv_status_i'   : mcdinInput['status']
+	             ,'smap1.pv_cdtipsit_i' : mcdinInput['cdtipsit']
+	             ,'smap1.pv_fedesde_i'  : mcdinInput['fedesde']
+	             ,'smap1.pv_fehasta_i'  : mcdinInput['fehasta']
+	             ,'smap1.pv_cdtiptra_i' : mcdinInput['tiptra']
+	        }
+	        ,success : function(response)
+	        {
+	        	debug('responseText',response.responseText);
+	            var jsonResponse = Ext.decode(response.responseText);
+	            debug(jsonResponse);
+	            mcdinStore.setProxy(
+	            {
+	                type         : 'memory',
+	                enablePaging : true,
+	                reader       : 'json',
+	                data         : jsonResponse.olist1
+	            });
+	            mcdinStore.load();
+	        }
+	        ,failure : function()
+	        {
+	            var msg=Ext.Msg.show(
+	            {
+	                title   : 'Error',
+	                icon    : Ext.Msg.ERROR,
+	                msg     : 'Error de comunicaci&oacute;n',
+	                buttons : Ext.Msg.OK
+	            });
+	        }
+	    });
+    }
+    
+    loadMcdinStore();
     /*//////////////////*/
     ////// cargador //////
     //////////////////////
