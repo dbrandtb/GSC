@@ -241,7 +241,7 @@
 		</action>
 		
 		
-		<action name="rechazoReclamaciones">
+		<action name="rechazoReclamaciones" class="siniestrosAction"  method="execute">
     		<result>/jsp-script/proceso/siniestros/rechazoReclamaciones.jsp</result>
 		</action>
 		

@@ -8,6 +8,8 @@
         <script type="text/javascript">
             var _CONTEXT = '${ctx}';
             
+            var _nmTramite = '<s:property value="params.nmTramite" />';
+            
             var _URL_ListaRechazos =      '<s:url namespace="/siniestros" action="loadListaRechazos" />';
             var _URL_ListaIncisosRechazos =      '<s:url namespace="/siniestros" action="loadListaIncisosRechazos" />';
             var _URL_ActualizaStatusTramite =      '<s:url namespace="/mesacontrol" action="actualizarStatusTramite" />';

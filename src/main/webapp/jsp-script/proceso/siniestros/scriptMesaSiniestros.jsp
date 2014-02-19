@@ -28,54 +28,6 @@ var msgWindow;
 		</s:if>
 	];
 	
-	/*_4_botones = {
-			xtype: 'actioncolumn',
-			hidden: false,
-			width: 200,
-			menuDisabled : true,
-			sortable: false,
-			items: [{
-	            icon     : '${ctx}/resources/fam3icons/icons/folder_table.png',
-	            tooltip : 'Revisi&oacute;n de Documentos',
-	            handler : revDocumentosWindow
-	        }
-	        ,{
-	            icon     : '${ctx}/resources/fam3icons/icons/cancel.png',
-	            tooltip : 'Rechazar',
-	            handler : rechazarTramiteWindow
-	        }
-	        ,{
-	            icon     : '${ctx}/resources/fam3icons/icons/page_attach.png',
-	            tooltip : 'Documentos',
-	            handler : documentosWindow
-	        },{
-	            icon     : '${ctx}/resources/fam3icons/icons/accept.png',
-	            tooltip : 'Generar Contrarecibo',
-	            handler : generaContrareciboWindow
-	        },{
-	            icon     : '${ctx}/resources/fam3icons/icons/user_go.png',
-	            tooltip : 'Turnar a &aacute;rea de Reclamaciones',
-	            handler : turnarAreclamaciones
-	        },{
-	            icon     : '${ctx}/resources/fam3icons/icons/page_white_magnify.png',
-	            tooltip : 'Detalle de Reclamaci&oacute;',
-	            handler : detalleReclamacionWindow
-	        },{
-	            icon     : '${ctx}/resources/fam3icons/icons/user_go.png',
-	            tooltip : 'Turnar a &aacute;rea M&eacute;dica',
-	            handler : turnarAareaMedica
-	        },{
-	            icon     : '${ctx}/resources/fam3icons/icons/money_dollar.png',
-	            tooltip : 'Solicitar Pago',
-	            handler : solicitarPago
-	        },{
-	            icon     : '${ctx}/resources/fam3icons/icons/user_go.png',
-	            tooltip : 'Turnar a Operador de Reclamaciones',
-	            handler : turnarAoperadorReclamaciones
-	        }
-	    ]
-	};*/
-
 	function altaTramiteWindow(){
 	    windowLoader = Ext.create('Ext.window.Window',{
 	        modal       : true,
@@ -90,7 +42,7 @@ var msgWindow;
 	            autoLoad : true
 	        }
 	    }).show();
-	    windowLoader.setPosition(windowLoader.getPosition()[0],parent.document.documentElement.scrollTop+100);
+	    centrarVentana(windowLoader);
 	}
 	
 	
@@ -115,9 +67,11 @@ var msgWindow;
 	            autoLoad : true
 	        }
 	    }).show();
-	    windowLoader.setPosition(windowLoader.getPosition()[0],parent.document.documentElement.scrollTop+100);
+	    centrarVentana(windowLoader);
 	}
 	function rechazarTramiteWindow(grid,rowIndex,colIndex){
+		
+		var record = grid.getStore().getAt(rowIndex);
 		
 		windowLoader = Ext.create('Ext.window.Window',{
 	        modal       : true,
@@ -128,9 +82,7 @@ var msgWindow;
 	        loader      : {
 	            url     : _UrlRechazarTramiteWindwow,
 	            params  : {
-	                'params.nmTramite'  : '1010',
-	                'params.cdTipoPago' : '1',
-	                'params.cdTipoAtencion'  : '1'
+	                'params.nmTramite'  : record.get('ntramite')
 	            },
 	            scripts  : true,
 	            loadMask : true,
@@ -138,7 +90,7 @@ var msgWindow;
 	        }
 	    }).show();
 		
-		windowLoader.setPosition(windowLoader.getPosition()[0],parent.document.documentElement.scrollTop+100);
+		centrarVentana(windowLoader);
 	}
 	function documentosWindow(grid,rowIndex,colIndex){
 		var record = grid.getStore().getAt(rowIndex);
@@ -161,7 +113,7 @@ var msgWindow;
 	            autoLoad : true
 	        }
 	    }).show();
-	    windowLoader.setPosition(windowLoader.getPosition()[0],parent.document.documentElement.scrollTop+100);
+	    centrarVentana(windowLoader);
 	}
 	function generaContrareciboWindow(grid,rowIndex,colIndex){
 		
@@ -193,7 +145,7 @@ var msgWindow;
 	        	
 	        }
 	    });
-		msgWindow.setPosition(msgWindow.getPosition()[0],parent.document.documentElement.scrollTop+100);
+		centrarVentana(msgWindow);
 		
 	}
 	function turnarAreclamaciones(grid,rowIndex,colIndex){
@@ -225,7 +177,7 @@ var msgWindow;
 	        	
 	        }
 	    });
-		msgWindow.setPosition(msgWindow.getPosition()[0],parent.document.documentElement.scrollTop+100);
+		centrarVentana(msgWindow);
 	}
 	function detalleReclamacionWindow(grid,rowIndex,colIndex){
 		
@@ -272,7 +224,7 @@ var msgWindow;
 	        	
 	        }
 	    });
-		msgWindow.setPosition(msgWindow.getPosition()[0],parent.document.documentElement.scrollTop+100);
+		centrarVentana(msgWindow);
 		
 	}
 	
@@ -305,7 +257,7 @@ var msgWindow;
 	        	
 	        }
 	    });
-		msgWindow.setPosition(msgWindow.getPosition()[0],parent.document.documentElement.scrollTop+100);
+		centrarVentana(msgWindow);
 	}
 	function solicitarPago(grid,rowIndex,colIndex){
 		msgWindow = Ext.Msg.show({
@@ -336,7 +288,7 @@ var msgWindow;
 	        	
 	        }
 	    });
-		msgWindow.setPosition(msgWindow.getPosition()[0],parent.document.documentElement.scrollTop+100);
+		centrarVentana(msgWindow);
 	}
 	
 <s:if test="false">
