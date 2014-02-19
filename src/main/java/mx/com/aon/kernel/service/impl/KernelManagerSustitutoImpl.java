@@ -697,9 +697,16 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 
 	public WrapperResultados guardarArchivo(Map<String, Object> param) throws ApplicationException
 	{
-		if(param!=null&&!param.containsKey("pv_codidocu_i"))
+		if(param!=null)
 		{
-			param.put("pv_codidocu_i",null);
+			if(!param.containsKey("pv_codidocu_i"))
+			{
+				param.put("pv_codidocu_i",null);
+			}
+			if(!param.containsKey("pv_cdtiptra_i"))
+			{
+				param.put("pv_cdtiptra_i","1");
+			}
 		}
 		log.debug("### kernel sustituto guardarArchivo map: "+param);
         WrapperResultados res=this.returnBackBoneInvoke(param, ProcesoDAO.GUARDAR_ARCHIVO_POLIZA);
