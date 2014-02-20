@@ -364,39 +364,6 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
 		SiniestrosDAOImpl.logger = logger;
 	}
 
-
-	/*@Override
-	public List<GenericVO> obtieneListadoMovRechazo(String cdmotRechazo)
-			throws DaoException {
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("pv_cdtabla_i", cdmotRechazo);
-		
-		Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoMovRechazo(getDataSource()), params);
-		return (List<GenericVO>) mapResult.get("pv_registro_o");
-	}
-	
-	protected class ObtieneListadoMovRechazo extends StoredProcedure
-	{
-		protected ObtieneListadoMovRechazo(DataSource dataSource)
-		{
-			super(dataSource, "PKG_PRESINIESTRO.P_LISTA_TTAPVAT1");
-			declareParameter(new SqlParameter("pv_cdtabla_i", OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DatosListaMotRechazo()));
-			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
-			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
-			compile();
-		}
-	}
-	
-    protected class DatosListaMotRechazo  implements RowMapper {
-        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-        	GenericVO consulta = new GenericVO();
-        	consulta.setKey(rs.getString("OTCLAVE"));
-        	consulta.setValue(rs.getString("OTVALOR"));
-            return consulta;
-        }
-    }*/
-    
     
 	@Override
 	public List<ConsultaTDETAUTSVO> obtieneListadoTDeTauts(String nmautser)
@@ -515,10 +482,7 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
 			throws DaoException {
 		// TODO Auto-generated method stub
 		Map<String, Object> mapResult = ejecutaSP(new GuardaListaTDeTautsSP(getDataSource()), paramsTDeTauts);
-		
-		@SuppressWarnings("unchecked")
-		String respuesta=(String) mapResult.get("pv_registro_o");
-		return respuesta;
+		return (String) mapResult.get("pv_registro_o");
 	}
 	
 	protected class GuardaListaTDeTautsSP extends StoredProcedure {
@@ -726,7 +690,6 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			throws DaoException {
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("pv_nmautser_i", nmautser);
-			
 			Map<String,Object> resultadoMap=this.ejecutaSP(new EliminacionRegistros(this.getDataSource()), params);
 		}
 		protected class EliminacionRegistros extends StoredProcedure
@@ -900,34 +863,6 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	        }
 	    }
 
-
-		@Override
-		public Object guardaPrestadores(HashMap<String, Object> paramsPrestador)
-				throws DaoException {
-			Map<String, Object> mapResult = ejecutaSP(new GuardaPrestadoresSP(getDataSource()), paramsPrestador);
-			
-			@SuppressWarnings("unchecked")
-			String respuesta=(String) mapResult.get("pv_registro_o");
-			return respuesta;
-		}
-		
-		protected class GuardaPrestadoresSP extends StoredProcedure {
-			protected GuardaPrestadoresSP(DataSource dataSource) {
-				super(dataSource, "PKG_SATELITES.P_INS_PRESTADORES");
-				declareParameter(new SqlParameter("pv_nmautser_i", OracleTypes.VARCHAR));
-				declareParameter(new SqlParameter("pv_cdtipaut_i", OracleTypes.VARCHAR));
-				declareParameter(new SqlParameter("pv_cdmedico_i", OracleTypes.VARCHAR));
-				declareParameter(new SqlParameter("pv_cdtipmed_i", OracleTypes.VARCHAR));
-				declareParameter(new SqlParameter("pv_cdctp_i", OracleTypes.VARCHAR));
-				declareParameter(new SqlParameter("pv_precio_i", OracleTypes.VARCHAR));
-				declareParameter(new SqlParameter("pv_cantporc_i", OracleTypes.VARCHAR));
-				declareParameter(new SqlParameter("pv_ptimport_i", OracleTypes.VARCHAR));	
-				declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
-		        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-				compile();
-			}
-		}
-
 		@Override
 		public String rechazarTramite(HashMap<String, String> params)
 				throws DaoException {
@@ -1026,6 +961,28 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 				declareParameter(new SqlParameter("pv_cdtipate_i", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pv_cddocume_i", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pv_accion_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+				declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+				compile();
+			}
+		}
+
+
+		@Override
+		public String guardaFacMesaControl(
+				HashMap<String, Object> paramsFacMesaCtrl) throws DaoException {
+				Map<String, Object> mapResult = ejecutaSP(new guardaFacMesaControlSP(getDataSource()), paramsFacMesaCtrl);
+				return (String) mapResult.get("pv_msg_id_o");
+		}
+		
+		protected class guardaFacMesaControlSP extends StoredProcedure {
+			protected guardaFacMesaControlSP(DataSource dataSource) {
+				declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_nfactura_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_ffactura_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_cdtipser_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_cdpresta_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_ptimport_i", OracleTypes.VARCHAR));
 				declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 				declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
 				compile();

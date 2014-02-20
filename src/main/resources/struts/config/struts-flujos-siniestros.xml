@@ -190,6 +190,14 @@
 	        <result name="success" type="json"/>
 		</action>
 		
+		<action name="guardaAltaTramite" class="siniestrosAction" method="guardaAltaTramite">
+	        <interceptor-ref name="json">
+	            <param name="enableSMD">true</param>
+	            <param name="ignoreSMDMethodInterfaces">false</param>
+	        </interceptor-ref>
+	        <result name="success" type="json"/>
+		</action>
+		
 		<!-- <action name="guardaAutorizacionServicio" class="siniestrosAction"
 			method="guardaAutorizacionServicio">
 			<result type="json">

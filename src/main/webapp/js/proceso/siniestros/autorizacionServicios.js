@@ -4,6 +4,7 @@ var storeConceptoAutorizados;
 var storeQuirugicoBase;
 var storeQuirugico;
 var extraParams='';
+var panDocInputNtramite='55';
 Ext.onReady(function() {
 
 	Ext.selection.CheckboxModel.override( {
@@ -128,7 +129,7 @@ Ext.onReady(function() {
             type: 'ajax',
             url : _URL_CONSULTA_PROVEEDOR_MEDICO,
             extraParams:{
-            	'params.tipoprov' : 'M'
+            	'params.tipoprov' : '15'
             },
             reader: {
                 type: 'json',
@@ -144,7 +145,7 @@ Ext.onReady(function() {
             type: 'ajax',
             url : _URL_CONSULTA_PROVEEDOR_MEDICO,
             extraParams:{
-            	'params.tipoprov' : 'C'
+            	'params.tipoprov' : '16'
             },
             reader: {
                 type: 'json',
@@ -231,8 +232,6 @@ Ext.onReady(function() {
 	{
 		autoDestroy: true,						model: 'modelListadoTablas'
 	});
-
-	/*VERIFICAR*/
 	
 	var storeCobertura = Ext.create('Ext.data.Store', {
         model:'modelListadoCobertura',
@@ -414,7 +413,17 @@ Ext.onReady(function() {
 	                root: 'lista'
 	            }
 	        }
-	    })
+	    }),
+	    listeners : {
+			change:function(e){
+				if(e.getValue()=='3')
+				{
+					//aqui va el valor del campo que contiene el monto total para el valor de la suma asegurada
+					
+				}
+				
+    		}
+        }
 	});
 	
 	
@@ -449,8 +458,6 @@ Ext.onReady(function() {
     	matchFieldWidth : false,					triggerAction: 'all',			queryParam   : 'params.cdpresta',		store          : storeMedico,
     	minChars  		: 2,						queryMode    :'remote',
 		listeners : {
-			//'select' : function(combo, record) {
-			//<<<<
 			change:function(e){
 				Ext.getCmp('idEspecialidad').setValue('');
 	    		Ext.Ajax.request(
@@ -458,7 +465,7 @@ Ext.onReady(function() {
 					    url     : _URL_CONSULTA_PROVEEDOR_MEDICO
 					    ,params:{
 							'params.cdpresta' : e.getValue(),
-							'params.tipoprov' : 'M'
+							'params.tipoprov' : '15'
 		                }
 					    ,success : function (response)
 					    {
@@ -561,6 +568,7 @@ Ext.onReady(function() {
 								var json=Ext.decode(response.responseText).listaDatosSiniestro[0];
 	    		            	Ext.getCmp('idDeducible').setValue(json.deducible);
 	    		            	Ext.getCmp('idCopago').setValue(json.copago);
+	    		            	//Ext.getCmp('idMontoMaximo').setValue(json.benefmax);
 							}
 			            },
 			            failure : function ()
@@ -1106,7 +1114,7 @@ Ext.onReady(function() {
 	   },
 	   onAddClick: function(btn, e){
 		   ventanaConceptosAutorizado.animateTarget=btn;
-		   ventanaConceptosAutorizado.showAt(150,900);
+		   ventanaConceptosAutorizado.showAt(150,750);
 	   },
 	   onRemoveClick: function(grid, rowIndex){
 		   var record=this.getStore().getAt(rowIndex);
@@ -1181,7 +1189,7 @@ Ext.onReady(function() {
 	
        onAddClick: function(btn, e){
     	   ventanaEqQuirurgicoBase.animateTarget=btn;
-    	   ventanaEqQuirurgicoBase.showAt(150,1100);
+    	   ventanaEqQuirurgicoBase.showAt(150,970);
        },
        onRemoveClick: function(grid, rowIndex){
     	   var record=this.getStore().getAt(rowIndex);
@@ -1258,7 +1266,7 @@ Ext.onReady(function() {
 	
        onAddClick: function(btn, e){
     	   ventanaEqQuirurgico.animateTarget=btn;
-    	   ventanaEqQuirurgico.showAt(150,1300);
+    	   ventanaEqQuirurgico.showAt(150,1220);
        },
        onRemoveClick: function(grid, rowIndex){
     	   var record=this.getStore().getAt(rowIndex);
@@ -1970,13 +1978,18 @@ modificacionClausula = Ext.create('Ext.window.Window',
 		 			,allowBlank : false						,labelWidth: 170							,readOnly   : true
 			 	},
 			 	{
-			 		xtype       : 'textfield'				,fieldLabel : 'Deducible'					,id       : 'idDeducible'
+			 		colspan:2,  xtype       : 'textfield'				,fieldLabel : 'Deducible'					,id       : 'idDeducible'
 		 			,labelWidth: 170						,readOnly   : true
 			 	},
 			 	{
-			 		xtype       : 'textfield'				,fieldLabel : 'Copago'						,id       : 'idCopago'
-		 			,labelWidth: 170						,readOnly   : true
+			 		colspan:2, xtype       : 'textfield'				,fieldLabel : 'Copago'						,id       : 'idCopago'
+		 			,labelWidth: 170						,readOnly   : true,  width: 670
 			 	},
+			 	/*{
+			 		
+			 		colspan:2, xtype       : 'textfield'				,fieldLabel : 'montoMaximo'						,id       : 'idMontoMaximo'
+		 			,labelWidth: 170						,readOnly   : true
+			 	},*/
 			 	penalizacion
 			 	,
 			 	comboICD
@@ -2088,6 +2101,74 @@ modificacionClausula = Ext.create('Ext.window.Window',
 			 		               icon: Ext.Msg.WARNING
 			 		           });
 			 		    }
+			 		}
+			 	},
+			 	{
+			 		text:'Generar Autorizaci&oacute;n',
+			 		icon:_CONTEXT+'/resources/fam3icons/icons/folder_database.png',
+			 		id:'generarAutorizacion',
+			 		handler:function()
+			 		{
+			 			// Verificamos el status de la autorización
+			 			Ext.Ajax.request
+			 		    ({
+			 		        url       : venDocUrlImpConrec
+			 		        ,params   :
+			 		        {
+			 		            'smap1.ntramite' : panDocInputNtramite
+			 		            //'smap1.ntramite' : '12'
+			 		        }
+			 		        ,success  : function(response)
+			 		        {
+			 		            var json=Ext.decode(response.responseText);
+			 		            console.log("VALOR DE LA RESPUESTA");
+			 		           	console.log(json);
+			 		            if(json.success==true)
+			 		            {
+			 		                //window.setLoading(false);
+			 		                var numRand=Math.floor((Math.random()*100000)+1);
+			 		                var windowVerDocu=Ext.create('Ext.window.Window',
+			 		                {
+			 		                    title          : 'Contrarecibo'
+			 		                    ,width         : 700
+			 		                    ,height        : 500
+			 		                    ,collapsible   : true
+			 		                    ,titleCollapse : true
+			 		                    ,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
+			 		                                     +'src="'+panDocUrlViewDoc+'?idPoliza='+panDocInputNtramite+'&filename='+json.uploadKey+'">'
+			 		                                     +'</iframe>'
+			 		                    ,listeners     :
+			 		                    {
+			 		                        resize : function(win,width,height,opt){
+			 		                            debug(width,height);
+			 		                            $('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
+			 		                        }
+			 		                    }
+			 		                }).show();
+			 		                windowVerDocu.center();
+			 		            }
+			 		            else
+			 		            {
+			 		                window.setLoading(false);
+			 		                Ext.Msg.show({
+			 		                    title:'Error',
+			 		                    msg: 'Error al generar contrarecibo',
+			 		                    buttons: Ext.Msg.OK,
+			 		                    icon: Ext.Msg.ERROR
+			 		                });
+			 		            }
+			 		        }
+			 		        ,failure  : function()
+			 		        {
+			 		            window.setLoading(false);
+			 		            Ext.Msg.show({
+			 		                title:'Error',
+			 		                msg: 'Error de comunicaci&oacute;n',
+			 		                buttons: Ext.Msg.OK,
+			 		                icon: Ext.Msg.ERROR
+			 		            });
+			 		        }
+			 		    });
 			 		}
 			 	}
 		 	]		

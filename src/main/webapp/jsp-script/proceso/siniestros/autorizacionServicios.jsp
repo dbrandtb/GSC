@@ -14,6 +14,8 @@
             var _CAT_TRATAMIENTO				    = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TTRATAMIENTO"/>';
             var _CAT_TPENALIZACIONES				    = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TPENALIZACIONES"/>';
             
+            var panDocUrlViewDoc     = '<s:url namespace ="/documentos" action="descargaDocInline" />';
+            var venDocUrlImpConrec   = '<s:url namespace ="/documentos" action="generarContrarecibo" />';
             
             var _URL_TIPO_AUTORIZACION				= _CONTEXT + '/js/proceso/siniestros/tiposAutorizacion.json';
             var _HISTORIAL_RECLAMACIONES    		= '<s:url namespace="/siniestros"      	action="historialReclamaciones" />';
