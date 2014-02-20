@@ -1,0 +1,19 @@
+var storeProducto = new Ext.data.Store({
+           proxy: new Ext.data.HttpProxy({
+               url: 'flujocotizacion/obtenerListaComboId.action'
+           
+          }),
+            reader: new Ext.data.JsonReader({
+            root: 'itemList',
+            id: 'value'
+            },[
+           {name: 'value', type: 'string',mapping:'value'},
+           {name: 'label', type: 'string',mapping:'label'}    
+            ]),
+            remoteSort: true,
+            baseParams: {endPointName: 'OBTIENE_PRODUCTOS_CLIENTE',
+            			comboId: ' ' 
+            			},
+            sortInfo:{ field:'value', direction:'DESC' }           
+        });
+      
