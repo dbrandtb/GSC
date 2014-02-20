@@ -1,0 +1,33 @@
+items:[{
+		xtype: 'grid',
+		id:'gridResultado',
+            store: getResultado(),
+            title: '<span style="color:#98012e;font-size:11px;font-family:Arial,Helvetica,sans-serif;">Datos Adicionales</span>',
+            stripeRows: true,
+            cm: cm,
+            cls: 'alinear',
+            height:200,
+            width:800,
+            viewConfig: {autoFill: true,forceFit:true},
+        
+            sm: new Ext.grid.RowSelectionModel({
+                singleSelect: true,
+                listeners: {                            
+                    rowselect: function(sm, row, rec) { 
+                    var selectedId = storeGrid.data.items[row].id;
+                    window.location.href = 'endoso.action'+'?id='+selectedId;
+                    }
+                }
+            }),
+            bbar: new Ext.PagingToolbar({
+            pageSize: 25,
+            store: storeGrid,
+            displayInfo: true,
+            displayMsg: 'Displaying rows {0} - {1} of {2}',
+            emptyMsg: "No rows to display"
+                  })
+           
+           
+     
+   }]
+    
