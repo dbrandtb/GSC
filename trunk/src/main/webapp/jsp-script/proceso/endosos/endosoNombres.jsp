@@ -270,6 +270,7 @@ Ext.onReady(function(){
                         ,value      : new Date()
                         ,allowBlank : false
                         ,name       : 'pv_fecha_i'
+                        ,readOnly   : endnomInput['simple']
                     }
                 ]
                 ,buttons     :
