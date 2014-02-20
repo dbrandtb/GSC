@@ -71,7 +71,7 @@ public class CancelacionAction extends PrincipalCoreAction
 		}
 		catch(Exception ex)
 		{
-			log.error("error al generar el marco de cancelacion");
+			log.error("error al generar el marco de cancelacion",ex);
 		}
 		log.debug(""
 				+ "\n######                  ######"
