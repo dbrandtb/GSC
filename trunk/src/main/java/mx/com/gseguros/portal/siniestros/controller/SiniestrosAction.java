@@ -1,11 +1,17 @@
 package mx.com.gseguros.portal.siniestros.controller;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
+import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
+import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal2.web.GenericVO;
+import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
 import mx.com.gseguros.portal.siniestros.model.CoberturaPolizaVO;
@@ -17,16 +23,19 @@ import mx.com.gseguros.portal.siniestros.model.ConsultaTTAPVAATVO;
 import mx.com.gseguros.portal.siniestros.model.DatosSiniestroVO;
 import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
-import org.apache.log4j.Logger;
-import com.opensymphony.xwork2.ActionSupport;
+import mx.com.gseguros.utils.HttpUtil;
 
-public class SiniestrosAction extends ActionSupport{
+import org.apache.log4j.Logger;
+
+public class SiniestrosAction extends PrincipalCoreAction{
     
     private static final long serialVersionUID = -6321288906841302337L;
 	private Logger logger = Logger.getLogger(SiniestrosAction.class);	
 	private boolean success;
     private SiniestrosManager siniestrosManager;
+    private KernelManagerSustituto kernelManagerSustituto;
     private HashMap<String,String> params;
+    private HashMap<String,Object> paramsO;
     private AutorizacionServicioVO datosAutorizacionEsp;
     private AutorizacionServicioVO numeroAutorizacion;
     private List<GenericVO> listaAsegurado;
@@ -43,7 +52,6 @@ public class SiniestrosAction extends ActionSupport{
     private List<ConsultaPorcentajeVO> listaPorcentaje;
     private List<HashMap<String,String>> datosTablas;
     private List<PolizaVigenteVO> listaPoliza;
-    private KernelManagerSustituto kernelManager;
     private String msgResult;
     
     private boolean esHospitalario;
@@ -289,7 +297,7 @@ public class SiniestrosAction extends ActionSupport{
 					
 					logger.error("RESPUESTA 1");
 					logger.error(parMesCon);
-					WrapperResultados res = kernelManager.PMovMesacontrol(parMesCon);
+					WrapperResultados res = kernelManagerSustituto.PMovMesacontrol(parMesCon);
 					logger.error("VALOR DE RESPUESTA");
 					logger.error(res);
 					if(res.getItemMap() == null)
@@ -432,16 +440,7 @@ public class SiniestrosAction extends ActionSupport{
 	   	success = true;
 	   	return SUCCESS;
    }
-   
-   
-	
-   public KernelManagerSustituto getKernelManager() {
-	return kernelManager;
-}
 
-public void setKernelManager(KernelManagerSustituto kernelManager) {
-	this.kernelManager = kernelManager;
-}
 
 public String getMsgResult() {
 	return msgResult;
@@ -735,8 +734,51 @@ public void setMsgResult(String msgResult) {
    public String generarContrarecibo(){
 	   
 	   try {
-		   logger.debug("generarContrarecibo Siniestros");
-		   siniestrosManager.generarContrarecibo(params);
+		   logger.debug("generarContrarecibo Siniestros: "+ paramsO);
+		   
+		   
+		   File carpeta=new File(getText("ruta.documentos.poliza") + "/" + paramsO.get("pv_ntramite_i"));
+           if(!carpeta.exists()){
+           		logger.debug("no existe la carpeta::: "+paramsO.get("pv_ntramite_i"));
+           		carpeta.mkdir();
+           		if(carpeta.exists()){
+           			logger.debug("carpeta creada");
+           		} else {
+           			logger.debug("carpeta NO creada");
+           		}
+           } else {
+           	 logger.debug("existe la carpeta   ::: "+paramsO.get("pv_ntramite_i"));
+           }
+           
+           UserVO usuario=(UserVO)session.get("USUARIO");
+           
+           String urlContrareciboSiniestro = ""
+           					   + getText("ruta.servidor.reports")
+                               + "?p_usuario=" + usuario.getUser() 
+                               + "&p_TRAMITE=" + paramsO.get("pv_ntramite_i")
+                               + "&destype=cache"
+                               + "&desformat=PDF"
+                               + "&userid="+getText("pass.servidor.reports")
+                               + "&ACCESSIBLE=YES"
+                               + "&report="+getText("reporte.contrarecibo.siniestro")
+                               + "&paramform=no"
+                               ;
+           String nombreArchivo = getText("nombre.archivo.contrarecibo.siniestro");
+           String pathArchivo=""
+           					+ getText("ruta.documentos.poliza")
+           					+ "/" + paramsO.get("pv_ntramite_i")
+           					+ "/" + nombreArchivo
+           					;
+           HttpUtil.generaArchivo(urlContrareciboSiniestro, pathArchivo);
+           
+           paramsO.put("pv_feinici_i"  , new Date());
+           paramsO.put("pv_cddocume_i" , nombreArchivo);
+           paramsO.put("pv_dsdocume_i" , "Contra Recibo");
+           paramsO.put("pv_swvisible_i"   , null);
+           paramsO.put("pv_codidocu_i"   , null);
+           paramsO.put("pv_cdtiptra_i"   , TipoTramite.SINIESTRO.getCodigo());
+           kernelManagerSustituto.guardarArchivo(paramsO);
+		   
 	   }catch( Exception e){
 		   logger.error("Error en generarContrarecibo",e);
 		   success =  false;
@@ -1027,6 +1069,19 @@ public void setMsgResult(String msgResult) {
 
 	public void setListaPlazas(List<GenericVO> listaPlazas) {
 		this.listaPlazas = listaPlazas;
+	}
+
+	public HashMap<String, Object> getParamsO() {
+		return paramsO;
+	}
+
+	public void setParamsO(HashMap<String, Object> paramsO) {
+		this.paramsO = paramsO;
+	}
+
+	public void setKernelManagerSustituto(
+			KernelManagerSustituto kernelManagerSustituto) {
+		this.kernelManagerSustituto = kernelManagerSustituto;
 	}
 	
 }

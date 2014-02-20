@@ -6,6 +6,7 @@
  	  
     <bean id="siniestrosAction" class="mx.com.gseguros.portal.siniestros.controller.SiniestrosAction" scope="prototype">
         <property name="siniestrosManager" ref="siniestrosManagerImpl"/>
+        <property name="kernelManagerSustituto" ref="kernelManagerSustituto"/>
     </bean>
         
 </beans>
