@@ -206,6 +206,7 @@ Ext.onReady(function()
                         ,value      : new Date()
                         ,allowBlank : false
                         ,name       : 'smap1.fecha_endoso'
+                        ,readOnly   : pantallaValositInput['endososimple']
                     }
             	]
             })

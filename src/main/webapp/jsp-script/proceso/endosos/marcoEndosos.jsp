@@ -1073,7 +1073,7 @@ Ext.onReady(function()
             ,type         : 'memory'
             ,data         :
             [
-				/*{
+				{
 				    texto    : 'CORRECCI&Oacute;N DE NOMBRE Y RFC *'//nombres
 				    ,liga    : '<s:url namespace="/endosos" action="pantallaEndosoNombresSimple" />'
 				    ,funcion : 'endosonombressimple'
@@ -1087,8 +1087,8 @@ Ext.onReady(function()
                     texto    : 'CORRECI&Oacute;N ASEGURADOS ANTIGUEDAD Y PARENTESCO *'//valosit
                     ,liga    : '<s:url namespace="/endosos" action="endosoValositBasicoSimple" />'
                     ,funcion : 'endosovalositbasicosimple'
-                }*/
-                {
+                }
+                ,{
                 	texto    : '2'//nombres
                 	,liga    : '<s:url namespace="/endosos" action="pantallaEndosoNombres" />'
                 	,funcion : 'endosonombres'

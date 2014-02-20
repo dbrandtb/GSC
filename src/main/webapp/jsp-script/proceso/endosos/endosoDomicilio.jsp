@@ -293,6 +293,7 @@ Ext.onReady(function(){
 					    ,value      : new Date()
 					    ,allowBlank : false
 					    ,name       : 'smap2.pv_fecha_i'
+					    ,readOnly   : inputEndosoSimple
 					}
             	]
             })
