@@ -365,8 +365,7 @@ Ext.onReady(function()
                             ,{
                                 xtype          :'combobox',
                                 fieldLabel     : 'Asociar a Documento',
-                                hiddenName     : 'docuAsociado',
-                                emptyText      :'Seleccione...',
+                                name           : 'smap1.codidocu',
                                 queryMode      :'local',
                                 allowBlank     :true,
                                 typeAhead      :true,
@@ -375,7 +374,8 @@ Ext.onReady(function()
                                 editable       : true,
                                 valueField     : 'id',
                                 displayField   : 'nombre',
-                                triggerAction  : 'all'
+                                triggerAction  : 'all',
+                                hidden         : panDocSmap1.cdtiptra!='16'
                             }
                             ,Ext.create('Ext.panel.Panel',
                             {
