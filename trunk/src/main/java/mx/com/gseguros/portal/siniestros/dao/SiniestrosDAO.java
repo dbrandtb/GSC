@@ -76,27 +76,6 @@ public interface SiniestrosDAO {
 
 	public List<GenericVO> obtieneListadoPlaza() throws DaoException;
 
-	public Object guardaPrestadores(HashMap<String, Object> paramsPrestador) throws DaoException;
+	public String guardaFacMesaControl(HashMap<String, Object> paramsFacMesaCtrl) throws DaoException;
 
-	
-
-
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-	
-
-	
-
-	
-	
 }

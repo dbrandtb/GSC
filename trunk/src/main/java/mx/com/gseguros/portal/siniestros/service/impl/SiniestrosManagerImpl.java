@@ -63,16 +63,6 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		}
 	}
 	
-	/*@Override
-	public List<GenericVO> getConsultaListaCausaSiniestro(String cdcausa)
-			throws ApplicationException {
-		try {
-			return siniestrosDAO.obtieneListadoCausaSiniestro(cdcausa);
-		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
-		}
-	}*/
-	
 	@Override
 	public List<CoberturaPolizaVO> getConsultaListaCoberturaPoliza(
 			HashMap<String, Object> paramCobertura) throws ApplicationException {
@@ -239,17 +229,6 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		this.siniestrosDAO = siniestrosDAO;
 	}
 	
-	
-	/*@Override
-	public List<GenericVO> getConsultaListaMotivoRechazo(String cdmotRechazo)
-			throws ApplicationException {
-		try {
-			return siniestrosDAO.obtieneListadoMovRechazo(cdmotRechazo);
-		} catch (DaoException daoExc) {
-			throw new ApplicationException(daoExc.getMessage(), daoExc);
-		}
-	}*/
-	
 	@Override
 	public List<ConsultaTDETAUTSVO> getConsultaListaTDeTauts(String nmautser)
 			throws ApplicationException {
@@ -270,8 +249,6 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			}
 	}
 	
-	/* ############################################################################## 
-	 * ##################################### VERIFICAR ##############################*/
 	@Override
 	public List<AutorizacionServicioVO> guardarAutorizacionServicio(HashMap<String, Object> paramsR)throws ApplicationException {
 		try {
@@ -339,13 +316,12 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 
 	
 	@Override
-	public void guardarPrestadores(HashMap<String, Object> paramsPrestador) throws ApplicationException {
+	public String guardaListaFacMesaControl(HashMap<String, Object> paramsFacMesaCtrl) throws ApplicationException {
+		// TODO Auto-generated method stub
 		try {
-			siniestrosDAO.guardaPrestadores(paramsPrestador);
+			return siniestrosDAO.guardaFacMesaControl(paramsFacMesaCtrl);
 		} catch (DaoException daoExc) {
 			throw new ApplicationException(daoExc.getMessage(), daoExc);
 		}
 	}
-
-	
 }

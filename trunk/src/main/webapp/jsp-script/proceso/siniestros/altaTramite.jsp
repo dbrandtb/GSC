@@ -20,6 +20,8 @@
             var _URL_CONSULTA_PROVEEDOR_MEDICO		= '<s:url namespace="/siniestros" 		action="consultaListaProvMedico" />';
             var _URL_LISTADO_ASEGURADO          	= '<s:url namespace="/siniestros"       action="consultaListaAsegurado" />';
             
+            var _URL_GUARDA_ALTA_TRAMITE     		= '<s:url namespace="/siniestros"       action="guardaAltaTramite" />';
+            
             
         </script>
         <!-- <script type="text/javascript" src="${ctx}/resources/scripts/util/extjs4_utils.js"></script>-->

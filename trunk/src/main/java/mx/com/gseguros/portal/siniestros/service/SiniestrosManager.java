@@ -105,7 +105,7 @@ public interface SiniestrosManager {
 
 	public List<GenericVO> getConsultaListaPlaza() throws ApplicationException;
 
-	public void guardarPrestadores(HashMap<String, Object> paramsPrestador) throws ApplicationException;
+	public String guardaListaFacMesaControl(HashMap<String, Object> paramsFacMesaCtrl) throws ApplicationException;
 
 	
 
