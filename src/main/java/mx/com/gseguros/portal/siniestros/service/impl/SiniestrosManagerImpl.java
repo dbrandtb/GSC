@@ -213,17 +213,6 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		return true;
 	}
 
-	@Override
-	public boolean generarContrarecibo(HashMap<String, String> params)
-			throws ApplicationException {
-		try {
-			//siniestrosDAO.rechazarTramite(params);
-		} catch (Exception daoExc) {
-			log.error("Error al generarContrarecibo : " + daoExc.getMessage(), daoExc);	
-			return false;
-		}
-		return true;
-	}
 	
 	public void setSiniestrosDAO(SiniestrosDAO siniestrosDAO) {
 		this.siniestrosDAO = siniestrosDAO;

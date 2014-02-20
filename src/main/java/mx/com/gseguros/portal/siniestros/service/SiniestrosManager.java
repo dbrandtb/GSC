@@ -89,8 +89,6 @@ public interface SiniestrosManager {
 
 	public boolean rechazarTramite(HashMap<String, String> params) throws ApplicationException;
 
-	public boolean generarContrarecibo(HashMap<String, String> params) throws ApplicationException;
-
 	public boolean turnarAreaReclamaciones(HashMap<String, String> params) throws ApplicationException;
 
 	public boolean turnarAreaMedica(HashMap<String, String> params) throws ApplicationException;
