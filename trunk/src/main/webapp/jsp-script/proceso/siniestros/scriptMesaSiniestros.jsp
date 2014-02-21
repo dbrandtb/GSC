@@ -71,6 +71,7 @@ var msgWindow;
 	    }).show();
 	    centrarVentana(windowLoader);
 	}
+	
 	function rechazarTramiteWindow(grid,rowIndex,colIndex){
 		
 		var record = grid.getStore().getAt(rowIndex);
@@ -98,6 +99,7 @@ var msgWindow;
 		
 		centrarVentana(windowLoader);
 	}
+	
 	function documentosWindow(grid,rowIndex,colIndex){
 		var record = grid.getStore().getAt(rowIndex);
 	    debug('record',record);
@@ -131,6 +133,7 @@ var msgWindow;
 	    }).show();
 	    centrarVentana(windowLoader);
 	}
+	
 	function generaContrareciboWindow(grid,rowIndex,colIndex){
 		
 		var record = grid.getStore().getAt(rowIndex);
@@ -197,6 +200,7 @@ var msgWindow;
 		centrarVentana(msgWindow);
 		
 	}
+	
 	function turnarAreclamaciones(grid,rowIndex,colIndex){
 		msgWindow = Ext.Msg.show({
 	        title: 'Aviso',
@@ -228,6 +232,7 @@ var msgWindow;
 	    });
 		centrarVentana(msgWindow);
 	}
+	
 	function detalleReclamacionWindow(grid,rowIndex,colIndex){
 		
 		Ext.create('Ext.form.Panel').submit(
@@ -244,6 +249,7 @@ var msgWindow;
 				    ,standardSubmit : true
 				});
 	}
+	
 	function turnarAareaMedica(grid,rowIndex,colIndex){
 		msgWindow = Ext.Msg.show({
 	        title: 'Aviso',
@@ -308,6 +314,7 @@ var msgWindow;
 	    });
 		centrarVentana(msgWindow);
 	}
+	
 	function solicitarPago(grid,rowIndex,colIndex){
 		msgWindow = Ext.Msg.show({
 	        title: 'Aviso',
