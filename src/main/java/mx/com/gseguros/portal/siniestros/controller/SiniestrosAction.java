@@ -25,6 +25,7 @@ import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.HttpUtil;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 public class SiniestrosAction extends PrincipalCoreAction{
@@ -734,8 +735,41 @@ public void setMsgResult(String msgResult) {
    public String generarContrarecibo(){
 	   
 	   try {
+		    params =  new HashMap<String, String>();
+		    params.put("pv_nmtramite_i", (String) paramsO.get("pv_ntramite_i"));
+		    params.put("pv_cdtippag_i", (String) paramsO.get("pv_cdtippag_i"));
+		    params.put("pv_cdtipate_i", (String) paramsO.get("pv_cdtipate_i"));
+	   		loadList = siniestrosManager.loadListaDocumentos(params);
+	   		
+	   		HashMap<String, String> otro = new HashMap<String, String>();
+	   		otro.put("listo", "false");
+	   		otro.put("nombre", "prueba");
+	   		otro.put("id", "idprueba");
+	   		otro.put("obligatorio", "No");
+	   		
+	   		loadList.add(otro);
+	   		for(HashMap<String, String> doc: loadList){
+	   			logger.debug("*******************  Doc: ***********************");
+	   			logger.debug("listo:" +doc.get("listo"));
+	   			logger.debug("nombre:" +doc.get("nombre"));
+	   			logger.debug("id:" +doc.get("id"));
+	   			logger.debug("obligatorio:" +doc.get("obligatorio"));
+	   			
+	   			if( "Si".equalsIgnoreCase((String)doc.get("obligatorio")) && !(doc.get("listo")!= null && "true".equalsIgnoreCase((String)doc.get("listo")))){
+	   				msgResult = "No se puede Generar el Contra Recibo ya que en Revision de Documentos no se han marcado como entregados todos los documentos obligatorios.";
+	   				success = false;
+	   				return SUCCESS;
+	   			}
+	   		}
+	   	}catch( Exception e){
+	   		logger.error("Error en loadListaDocumentos",e);
+	   		msgResult = "Error al cargar documentos obligatorios";
+	   		success =  false;
+	   		return SUCCESS;
+	   	}
+	   
+	   try {
 		   logger.debug("generarContrarecibo Siniestros: "+ paramsO);
-		   
 		   
 		   File carpeta=new File(getText("ruta.documentos.poliza") + "/" + paramsO.get("pv_ntramite_i"));
            if(!carpeta.exists()){
@@ -760,10 +794,10 @@ public void setMsgResult(String msgResult) {
                                + "&desformat=PDF"
                                + "&userid="+getText("pass.servidor.reports")
                                + "&ACCESSIBLE=YES"
-                               + "&report="+getText("reporte.contrarecibo.siniestro")
+                               + "&report="+getText("reports.rdf.contrarecibo.reclamacion.nombre")
                                + "&paramform=no"
                                ;
-           String nombreArchivo = getText("nombre.archivo.contrarecibo.siniestro");
+           String nombreArchivo = getText("siniestro.contrarecibo.nombre");
            String pathArchivo=""
            					+ getText("ruta.documentos.poliza")
            					+ "/" + paramsO.get("pv_ntramite_i")

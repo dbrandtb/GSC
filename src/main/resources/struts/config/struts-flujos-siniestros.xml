@@ -330,7 +330,8 @@
 			<result type="json">
 				<param name="ignoreHierarchy">false</param>
 				<param name="includeProperties">
-					success
+					success,
+					msgResult
 				</param>
 			</result>
 		</action>
