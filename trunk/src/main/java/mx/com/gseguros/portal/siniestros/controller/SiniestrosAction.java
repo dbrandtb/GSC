@@ -749,11 +749,6 @@ public void setMsgResult(String msgResult) {
 	   		
 	   		loadList.add(otro);
 	   		for(HashMap<String, String> doc: loadList){
-	   			logger.debug("*******************  Doc: ***********************");
-	   			logger.debug("listo:" +doc.get("listo"));
-	   			logger.debug("nombre:" +doc.get("nombre"));
-	   			logger.debug("id:" +doc.get("id"));
-	   			logger.debug("obligatorio:" +doc.get("obligatorio"));
 	   			
 	   			if( "Si".equalsIgnoreCase((String)doc.get("obligatorio")) && !(doc.get("listo")!= null && "true".equalsIgnoreCase((String)doc.get("listo")))){
 	   				msgResult = "No se puede Generar el Contra Recibo ya que en Revision de Documentos no se han marcado como entregados todos los documentos obligatorios.";
