@@ -11,8 +11,7 @@ public enum EstatusTramite {
 	EN_CAPTURA("7"),
 	ENDOSO_EN_ESPERA("8"),
 	ENDOSO_CONFIRMADO("9"),
-	EN_ESPERA_DE_ASIGNACION("10"),
-	DICTAMINADO("11");
+	EN_ESPERA_DE_ASIGNACION("10");
 
 	private String codigo;
 
@@ -24,8 +23,4 @@ public enum EstatusTramite {
 		return codigo;
 	}
 	
-	
-	public static void main(String[] args) {
-		System.out.println("main");
-	}
 }
