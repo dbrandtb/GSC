@@ -279,7 +279,7 @@ Ext.onReady(function()
                         }
                     }
 		    	    ,{
-		    	    	text     : 'Filtrar'
+		    	    	text     : 'Buscar'
 		    	    	,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
 		    	    	,handler : function()
 		    	    	{
