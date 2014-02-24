@@ -78,4 +78,10 @@ public interface SiniestrosDAO {
 
 	public String guardaFacMesaControl(HashMap<String, Object> paramsFacMesaCtrl) throws DaoException;
 
+	public String guardaListaTworkSin(HashMap<String, Object> paramsTworkSin) throws DaoException;
+
+	public String guardaAltaSiniestroAutServicio(String nmautser) throws DaoException;
+
+	public String guardaAltaSiniestroAltaTramite(String ntramite) throws DaoException;
+
 }

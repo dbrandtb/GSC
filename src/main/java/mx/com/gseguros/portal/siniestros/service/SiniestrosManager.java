@@ -105,32 +105,9 @@ public interface SiniestrosManager {
 
 	public String guardaListaFacMesaControl(HashMap<String, Object> paramsFacMesaCtrl) throws ApplicationException;
 
-	
+	public String guardaListaTworkSin(HashMap<String, Object> paramsTworkSin) throws ApplicationException;
 
-	
+	public String getAltaSiniestroAutServicio(String nmautser) throws ApplicationException;
 
-	
-
-	
-	
-
-	
-
-	
-
-	
-
-	
-
-
-	
-
-
-
-	
-
-	
-
-	
-	
+	public String getAltaSiniestroAltaTramite(String ntramite) throws ApplicationException;
 }

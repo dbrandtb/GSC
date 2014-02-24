@@ -1,17 +1,19 @@
 Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.chart.*', 'Ext.grid.Panel','Ext.layout.container.Column', 'Ext.selection.CheckboxModel' ]);
 var datosgrid;
-var storeIncisos;
+var storeFactCtrl;
+var storeListAsegPagDirecto;
 
-Ext.define('modelClau',
+
+Ext.define('modelFactCtrl',
 {
     extend:'Ext.data.Model',
-    fields:['noFactura','fechaFactura','tipoServicio','proveedor','importe']
+    fields:['noFactura','fechaFactura','tipoServicio','tipoServicioName','proveedor','proveedorName','importe']
 });
 
-storeIncisos=new Ext.data.Store(
+storeFactCtrl=new Ext.data.Store(
 {
     autoDestroy: true,
-    model: 'modelClau'
+    model: 'modelFactCtrl'
 });
 
 
@@ -27,9 +29,26 @@ Ext.define('modelListadoPoliza',{
     fields: [	{type:'string',    name:'cdramo'},				{type:'string',    name:'cdunieco'},				{type:'string',    name:'estado'},
 				{type:'string',    name:'nmpoliza'},			{type:'string',    name:'nmsituac'},				{type:'string',    name:'mtoBase'},
 				{type:'string',    name:'feinicio'},			{type:'string',    name:'fefinal'},					{type:'string',    name:'dssucursal'},
-				{type:'string',    name:'dsramo'},				{type:'string',    name:'estatus'},					{type:'string',    name:'dsestatus'}	]
+				{type:'string',    name:'dsramo'},				{type:'string',    name:'estatus'},					{type:'string',    name:'dsestatus'},
+				{type:'string',    name:'nmsolici'},			{type:'string',    name:'nmsuplem'},				{type:'string',    name:'cdtipsit'}			]
 });
 
+
+Ext.define('modelListAsegPagDirecto',{
+    extend: 'Ext.data.Model',
+    fields: [
+                {type:'string',    name:'modUnieco'},		{type:'string',    name:'modEstado'},		    {type:'string',    name:'modRamo'},
+                {type:'string',    name:'modNmsituac'},		{type:'string',    name:'modPolizaAfectada'},	{type:'string',    name:'modCdpersondesc'},
+                {type:'string',    name:'modNmsolici'},		{type:'string',    name:'modNmsuplem'},		    {type:'string',    name:'modCdtipsit'},
+                {type:'string',    name:'modNmautserv'},	{type:'string',    name:'modFechaOcurrencia'},	{type:'string',    name:'modCdperson'}
+                
+            ]
+});
+
+storeListAsegPagDirecto=new Ext.data.Store(
+{
+    autoDestroy: true,						model: 'modelListAsegPagDirecto'
+});
 
 Ext.onReady(function() {
 
@@ -159,7 +178,7 @@ Ext.onReady(function() {
      
     var comboTipoAte= Ext.create('Ext.form.ComboBox',
     {
-        id:'cmbTipoAtencion',			   name:'cmbTipoAtencion',		        fieldLabel: 'Tipo Atenci&oacute;n',				queryMode:'local',
+        id:'cmbTipoAtencion',			   name:'cmbTipoAtencion',		        fieldLabel: 'Tipo atenci&oacute;n',				queryMode:'local',
         displayField: 'value',	   valueField: 'key',					allowBlank:false,						editable:false,
         labelWidth : 250,		   emptyText:'Seleccione...',			width		 : 500,						store: storeTipoAtencion
     });
@@ -175,12 +194,13 @@ Ext.onReady(function() {
     		{
     	id:'cmbTipoPago',			   name:'cmbTipoPago',		        fieldLabel: 'Tipo pago',				queryMode:'local',
     	displayField: 'value',	   valueField: 'key',					allowBlank:false,						editable:false,
-    	labelWidth : 250,		   width		 : 500,					emptyText:'Seleccione...',			store: storeTipoPago
-    	,
+    	labelWidth : 250,		   width		 : 500,					emptyText:'Seleccione...',			store: storeTipoPago,
     	listeners : {
-    		'select' : function(combo, record) {
-    			closedStatusSelectedID = this.getValue();
-    			if(closedStatusSelectedID ==1){
+    		
+    		change:function(e){
+    		//'select' : function(combo, record) {
+    			//closedStatusSelectedID = this.getValue();
+    			if(e.getValue() =='1'){
     				//PAGO DIRECTO
     				Ext.getCmp('editorIncisos').hide();
     				Ext.getCmp('cmbBeneficiario').hide();
@@ -188,15 +208,21 @@ Ext.onReady(function() {
     				Ext.getCmp('txtNoFactura').show();
     				Ext.getCmp('txtImporte').show();
     				Ext.getCmp('dtFechaFactura').show();
+    				Ext.getCmp('EditorAsegPagDirecto').show();
+    				Ext.getCmp('cmbAseguradoAfectado').hide();
+    				Ext.getCmp('dtFechaOcurrencia').hide();
     				
     			}else{
     				//PAGO POR REEMBOLSO
-    				Ext.getCmp('cmbProveedorInterno').hide();
+    				Ext.getCmp('cmbProveedor').hide();
     				Ext.getCmp('txtNoFactura').hide();
     				Ext.getCmp('txtImporte').hide();
     				Ext.getCmp('dtFechaFactura').hide();
     				Ext.getCmp('editorIncisos').show();
     				Ext.getCmp('cmbBeneficiario').show();
+    				Ext.getCmp('EditorAsegPagDirecto').hide();
+    				Ext.getCmp('cmbAseguradoAfectado').show();
+    				Ext.getCmp('dtFechaOcurrencia').show();
     			}
     		}
     	}
@@ -205,11 +231,11 @@ Ext.onReady(function() {
     
     aseguradoAfectado = Ext.create('Ext.form.field.ComboBox',
     {
-		fieldLabel : 'Asegurado afectado',			allowBlank: false,				displayField : 'value',		name:'cmbAseguradoAfectado',
-        id:'cmbAseguradoAfectado',				labelWidth: 250,					width:500,						valueField   : 'key',
-        forceSelection : false,			matchFieldWidth: false,				queryMode :'remote',			queryParam: 'params.cdperson',
-        store : storeAsegurados,		triggerAction: 'all',				//editable:false
-        listeners : {
+    	fieldLabel : 'Asegurado afectado',      displayField : 'value',         name:'cmbAseguradoAfectado',
+    	id:'cmbAseguradoAfectado',              labelWidth: 250,            width:500,                      valueField   : 'key',
+    	forceSelection : false,                 matchFieldWidth: false,     queryMode :'remote',            queryParam: 'params.cdperson',
+    	minChars  : 2,                          store : storeAsegurados,    triggerAction: 'all',			hideTrigger:true,
+    	listeners : {
             'select' : function(combo, record) {
                     obtieneCDPerson = this.getValue();
                     var params = {
@@ -226,6 +252,8 @@ Ext.onReady(function() {
                                     buttons: Ext.Msg.OK,
                                     icon: Ext.Msg.WARNING
                                 });
+                                //limpiarRegistros();
+            					Ext.getCmp('cmbAseguradoAfectado').setValue('');
                                 modPolizasAltaTramite.hide();
                                 return;
                             }
@@ -244,6 +272,48 @@ Ext.onReady(function() {
                 }
             }
     });
+    
+    aseguradoAfectadoPagDir = Ext.create('Ext.form.field.ComboBox',
+	{
+	    fieldLabel : 'Asegurado',      allowBlank: false,          displayField : 'value',         name:'cmboAseguradoAfect',
+	    id:'cmboAseguradoAfect',              labelWidth: 170,     width:500,                      valueField   : 'key',
+	    forceSelection : false,                 matchFieldWidth: false,     queryMode :'remote',            queryParam: 'params.cdperson',
+	    store : storeAsegurados,    triggerAction: 'all',			hideTrigger:true,
+	    listeners : {
+	        'select' : function(combo, record) {
+	                var params = {
+	                        'params.cdperson' : this.getValue()
+	                };
+	                
+	                cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA, 'listaPoliza', params, function(options, success, response){
+	                    if(success){
+	                        var jsonResponse = Ext.decode(response.responseText);
+	                        if(jsonResponse.listaPoliza == null) {
+	                            Ext.Msg.show({
+	                                title: 'Aviso',
+	                                msg: 'No se encontraron datos.',
+	                                buttons: Ext.Msg.OK,
+	                                icon: Ext.Msg.WARNING
+	                            });
+	                            Ext.getCmp('cmboAseguradoAfect').setValue('');
+	                            modPolizasAltaTramite.hide();
+	                            return;
+	                        }
+	                        
+	                    }else{
+	                        Ext.Msg.show({
+	                            title: 'Aviso',
+	                            msg: 'Error al obtener los datos.',
+	                            buttons: Ext.Msg.OK,
+	                            icon: Ext.Msg.ERROR
+	                        });
+	                    }
+	                });
+	                
+	                modPolizasAltaTramite.show();
+	            }
+	        }
+	});
     
     cmbBeneficiario= Ext.create('Ext.form.ComboBox',
 	{
@@ -266,7 +336,7 @@ Ext.onReady(function() {
     cmbProveedorInterno = Ext.create('Ext.form.field.ComboBox',
     {
     	fieldLabel : 'Proveedor',			allowBlank: false,				displayField : 'nombre',		name:'cmbProveedorInterno',
-    		id:'cmbProveedorInterno',				labelWidth: 250,					valueField   : 'cdpresta',			
+    		id:'cmbProveedorInterno',				labelWidth: 170,					valueField   : 'cdpresta',			
     		forceSelection : false,	width:500,		emptyText:'Seleccione...',
     	matchFieldWidth: false,			queryMode :'remote',				queryParam: 'params.cdpresta',	store : storeProveedor,			editable:false,
     	triggerAction: 'all'
@@ -304,12 +374,15 @@ Ext.onReady(function() {
             	//proveedor2
             {
 		    	id:'importeInterno'
-		        ,xtype      : 'textfield'
+		        ,xtype      : 'numberfield'
 		    	,fieldLabel : 'Importe'
 	    		,labelWidth: 170
                 ,width:500
                 ,allowBlank:false
 		    	,name       : 'importeInterno'
+		    	,allowDecimals :true
+		    	,decimalSeparator :'.'
+		    	,minValue: 0
     		}
         ]
     });
@@ -328,15 +401,20 @@ Ext.onReady(function() {
                         if (panelModificacionInsercion.form.isValid()) {
                         	
                         	var datos=panelModificacionInsercion.form.getValues();
-                        	console.log(datos);
-                        	var rec = new modelClau({
+                        	
+                        	var rec = new modelFactCtrl({
         	 				  	noFactura: datos.noFactInterno,
         					 	fechaFactura: datos.fechaFactInterno,
         					 	tipoServicio: datos.tipoServicioInterno,
         					 	proveedor: datos.cmbProveedorInterno,
-        					 	importe: datos.importeInterno
+        					 	importe: datos.importeInterno,
+        					 	proveedorName: cmbProveedorInterno.rawValue,
+        					 	tipoServicioName:tipoServicioInterno.rawValue
 		        	 		});
-                        	storeIncisos.add(rec);
+                        	
+                        	console.log(rec);
+                        	storeFactCtrl.add(rec);
+                        	ventanaGrid.close();
                         	panelModificacionInsercion.getForm().reset();
                         } else {
                             Ext.Msg.show({
@@ -386,7 +464,7 @@ Ext.onReady(function() {
 	 			width: 750,
 	 			height: 200,
 	 			plugins: [this.cellEditing],
-	 			store: storeIncisos,
+	 			store: storeFactCtrl,
 	 			columns: 
 	 			[
 				 	{	
@@ -397,10 +475,10 @@ Ext.onReady(function() {
 				 		
 				 	},
 				 	{
-					 	header: 'Tipo de Servicio',			dataIndex: 'tipoServicio',	 	flex:2	
+					 	header: 'Tipo de Servicio',			dataIndex: 'tipoServicioName',	 	flex:2	
 				 	},
 				 	{
-					 	header: 'Proveedor (Reembolso)',	dataIndex: 'proveedor',			flex:2
+					 	header: 'Proveedor',				dataIndex: 'proveedorName',			flex:2
 				 	},
 				 	{
 					 	header: 'Importe', 					dataIndex: 'importe',		 	flex:2,				renderer: Ext.util.Format.usMoney
@@ -430,38 +508,6 @@ Ext.onReady(function() {
 		 	});
  			this.callParent();
 	 	},
-	 	getColumnIndexes: function () {
-		 	var me, columnIndexes;
-		 	me = this;
-		 	columnIndexes = [];
-		 	Ext.Array.each(me.columns, function (column)
-		 	{
-		 		if (column.getEditor&&Ext.isDefined(column.getEditor())&&column.getEditor().allowBlank==false) {
-		 			columnIndexes.push(column.dataIndex);
-			 	} else {
-			 		columnIndexes.push(undefined);
-			 	}
-		 	});
-		 	return columnIndexes;
-	 	},
-	 	validateRow: function (columnIndexes,record, y)
-	 	//hace que una celda de columna con allowblank=false tenga el estilo rojito
-	 	{
-		 	var view = this.getView();
-		 	Ext.each(columnIndexes, function (columnIndex, x)
-		 	{
-		 		if(columnIndex)
-			 	{
-			 		var cell=view.getCellByPosition({row: y, column: x});
-			 		cellValue=record.get(columnIndex);
-				 	if(cell.addCls&&((!cellValue)||(cellValue.lenght==0))){
-				 		cell.addCls("custom-x-form-invalid-field");
-				 	}
-			 	}
-		 	});
-		 	return false;
-	 	},
-	 	
 	 	onAddClick: function(btn, e){
 	 		ventanaGrid.animateTarget=btn;
 	 		ventanaGrid.show();
@@ -475,9 +521,151 @@ Ext.onReady(function() {
  	});
     gridIncisos=new EditorIncisos();
     mesConStoreUniAdmin=[];
-
-
     
+    
+    
+    var panelListadoAsegurado= Ext.create('Ext.form.Panel',{
+        border  : 0
+        ,startCollapsed : true
+        ,bodyStyle:'padding:5px;'
+        ,items :
+        [   			
+            {
+                id:'dtfechaOcurrencias'
+                ,xtype      : 'datefield'
+                ,fieldLabel : 'Fecha ocurrencia'
+                ,labelWidth : 170
+                ,name       : 'dtfechaOcurrencias'
+                ,format		: 'd/m/Y'
+            },
+            aseguradoAfectadoPagDir
+        ]
+    });
+
+    ventanaAgregarAsegurado= Ext.create('Ext.window.Window', {
+        renderTo: document.body,
+        title: 'Asegurados',
+        //height: 200,
+        closeAction: 'hide',           
+        items:[panelListadoAsegurado],
+        buttonAlign : 'center',
+        buttons:[
+            {
+                text: 'Aceptar',
+                icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
+                handler: function() {
+                    if (panelListadoAsegurado.form.isValid()) {			
+                        var datos=panelListadoAsegurado.form.getValues();
+                        
+                        var rec = new modelListAsegPagDirecto({
+                        	modUnieco: Ext.getCmp('idUnieco').getValue(),
+                        	modEstado: Ext.getCmp('idEstado').getValue(),
+                        	modRamo: Ext.getCmp('idcdRamo').getValue(),
+                        	modNmsituac: Ext.getCmp('idNmSituac').getValue(),
+                        	modPolizaAfectada: Ext.getCmp('polizaAfectada').getValue(),
+                        	modNmsolici: Ext.getCmp('idNmsolici').getValue(),
+                        	modNmsuplem: Ext.getCmp('idNmsuplem').getValue(),
+                        	modCdtipsit: Ext.getCmp('idCdtipsit').getValue(),
+                        	modNmautserv: "",
+                        	modFechaOcurrencia: datos.dtfechaOcurrencias,
+                        	modCdperson: datos.cmboAseguradoAfect,
+                        	modCdpersondesc: aseguradoAfectadoPagDir.rawValue
+                        });
+                        console.log("VALOR DE REC");
+                        console.log(rec);
+                        storeListAsegPagDirecto.add(rec);
+                        limpiarRegistros();
+                        panelListadoAsegurado.getForm().reset();
+                        ventanaAgregarAsegurado.close();
+                    } else {
+                        Ext.Msg.show({
+                            title: 'Aviso',
+                            msg: 'Complete la informaci&oacute;n requerida',
+                            buttons: Ext.Msg.OK,
+                            icon: Ext.Msg.WARNING
+                        });
+                    }
+                }
+            },
+            {
+                text: 'Cancelar',
+                icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+                handler: function(){
+                    panelListadoAsegurado.getForm().reset();
+                    ventanaAgregarAsegurado.close();
+                }
+            }
+        ]
+    });
+    
+    
+    Ext.define('EditorAsegPagDirecto', {
+        extend: 'Ext.grid.Panel',
+        requires: [
+            'Ext.selection.CellModel',
+            'Ext.grid.*',
+            'Ext.data.*',
+            'Ext.util.*',
+            'Ext.form.*'
+        ],
+        xtype: 'cell-editing',
+        id:'EditorAsegPagDirecto',
+        title: 'Asegurados',
+        frame: false,
+
+        initComponent: function(){
+            this.cellEditing = new Ext.grid.plugin.CellEditing({
+            clicksToEdit: 1
+            });
+
+                Ext.apply(this, {
+                width: 750,
+                height: 200,
+                plugins: [this.cellEditing],
+                store: storeListAsegPagDirecto,
+                columns: 
+                [
+                    {	
+                        header: 'Fecha ocurrencia',			dataIndex: 'modFechaOcurrencia',			width:150
+                    },
+                    {
+                        header: 'Asegurado afectado',		dataIndex: 'modCdpersondesc',				width:350
+                    },
+                    {
+                        xtype: 'actioncolumn',				width: 30,					 	sortable: false,	 	menuDisabled: true,
+                        items: [{
+                            icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
+                            tooltip: 'Quitar asegurado',
+                            scope: this,
+                            handler: this.onRemoveClick
+                        }]
+                    }
+                ],
+                selModel: {
+                    selType: 'cellmodel'
+                },
+                tbar: [{
+                    icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png',
+                    text: 'Agregar Asegurado',
+                    scope: this,
+                    handler: this.onAddClick
+                }]
+            });
+            this.callParent();
+        },
+        onAddClick: function(btn, e){
+        	ventanaAgregarAsegurado.animateTarget=btn;
+            ventanaAgregarAsegurado.show();
+           },
+           
+        onRemoveClick: function(grid, rowIndex){
+            var record=this.getStore().getAt(rowIndex);
+            console.log(record);
+            this.getStore().removeAt(rowIndex);
+        }
+    });
+
+    gridAsegPagDirecto=new EditorAsegPagDirecto();
     
     
     gridPolizasAltaTramite= Ext.create('Ext.grid.Panel',
@@ -530,11 +718,20 @@ Ext.onReady(function() {
 					Ext.getCmp('idcdRamo').setValue(record.get('cdramo'));
 					Ext.getCmp('idNmSituac').setValue(record.get('nmsituac'));
 					Ext.getCmp('polizaAfectada').setValue(record.get('nmpoliza'));
+					Ext.getCmp('idNmsolici').setValue(record.get('nmsolici'));
+					Ext.getCmp('idNmsuplem').setValue(record.get('nmsuplem'));
+					Ext.getCmp('idCdtipsit').setValue(record.get('cdtipsit'));
 					modPolizasAltaTramite.hide();
                 }
             }
 
 	});
+    gridPolizasAltaTramite.store.sort([
+        {
+        	property    : 'nmpoliza',			direction   : 'DESC'
+        }
+    ]);
+    
     
     modPolizasAltaTramite = Ext.create('Ext.window.Window',
 	{
@@ -563,23 +760,37 @@ Ext.onReady(function() {
     	        [
 					{
 					    xtype       : 'textfield',			fieldLabel : 'Unieco'				,id       : 'idUnieco',				name       : 'cdunieco'
-					    ,allowBlank : false,				labelWidth: 170,	hidden:true
+					    ,labelWidth: 170,	hidden:true
 					},
 					{
 					    xtype       : 'textfield',			fieldLabel : 'estado'				,id       : 'idEstado',				name       : 'estado'			
-					    ,allowBlank : false,				labelWidth: 170,	hidden:true
+					    ,labelWidth: 170,	hidden:true
 					},
 					{
 					    xtype       : 'textfield',			fieldLabel : 'Ramo'				,id       : 'idcdRamo',					name       : 'cdramo'
-					    ,allowBlank : false,				labelWidth: 170,	hidden:true
+					    ,labelWidth: 170,	hidden:true
 					},	 			
 					{
 					    xtype       : 'textfield',			fieldLabel : 'nmsituac'				,id       : 'idNmSituac',			name       : 'nmsituac'
-					    ,allowBlank : false,				labelWidth: 170,	hidden:true
+					    ,labelWidth: 170,	hidden:true
 					},
 					{
 					   xtype       : 'textfield',			fieldLabel : 'P&oacute;liza afectada'				,id       : 'polizaAfectada'
-					   ,allowBlank : false,				labelWidth: 170,				name:'nmpoliza',	readOnly   : true,	hidden:true
+					   ,labelWidth: 170,				name:'nmpoliza',	readOnly   : true//,	hidden:true
+					},
+					
+//												
+					{
+					    xtype       : 'textfield',			fieldLabel : 'nmsolici'				,id       : 'idNmsolici',			name       : 'nmsolici'
+					    ,labelWidth: 170,	hidden:true
+					},
+					{
+					    xtype       : 'textfield',			fieldLabel : 'nmsuplem'				,id       : 'idNmsuplem',			name       : 'nmsuplem'
+					    ,labelWidth: 170,	hidden:true
+					},
+					{
+					    xtype       : 'textfield',			fieldLabel : 'cdtipsit'				,id       : 'idCdtipsit',			name       : 'cdtipsit'
+					    ,labelWidth: 170,	hidden:true
 					},
     	            {
             			id:'txtContraRecibo'
@@ -618,8 +829,17 @@ Ext.onReady(function() {
 		            }
 	            	,
 	            	comboTipoAte,
-	        		tipoPago
-        			,
+	        		tipoPago,
+        			{
+                        id: 'dtFechaOcurrencia',
+                        name: 'dtFechaOcurrencia',
+                        fieldLabel: 'Fecha ocurrencia',
+                        xtype: 'datefield',
+                        format: 'd/m/Y',
+                        editable: true,
+                        labelWidth : 250,
+                        width		 : 500
+                    },
             		aseguradoAfectado
 	            	,
 	            	cmbBeneficiario
@@ -637,16 +857,19 @@ Ext.onReady(function() {
 		            ,
                 	{
 		            	id:'txtImporte'
-		                ,xtype      : 'textfield'
+		                ,xtype      : 'numberfield'
 		            	,fieldLabel : 'Importe'
 		            	,labelWidth : 250
 		            	,width		: 500
 		            	,name       : 'txtImporte'
+	            		,allowDecimals :true
+	    		    	,decimalSeparator :'.'
+	    		    	,minValue: 0
 		            },
 		            {
                         id: 'dtFechaFactura',
                         name: 'dtFechaFactura',
-                        fieldLabel: 'Fecha Factura',
+                        fieldLabel: 'Fecha factura',
                         xtype: 'datefield',
                         format: 'd/m/Y',
                         editable: true,
@@ -656,13 +879,15 @@ Ext.onReady(function() {
                         value:new Date()
                     },
                     gridIncisos
+                    ,
+                    gridAsegPagDirecto
     	        ],
     	        buttonAlign:'center',
     	        buttons: [{
     	            id:'botonCotizar',
     	            icon:_CONTEXT+'/resources/fam3icons/icons/calculator.png',
     	            //text: hayTramiteCargado?'Precaptura':'Cotizar',
-    	            text: 'Generar Tramite',
+    	            text: 'Generar Tr&aacute;mite',
             		handler: function() {
             			
             			var form = this.up('form').getForm();
@@ -673,27 +898,43 @@ Ext.onReady(function() {
             				var submitValues={};
             				var formulario=panelInicialPral.form.getValues();
             				submitValues['params']=formulario;
-
-            				(console.log("VALORES A ENVIAR"));
-            				console.log(formulario);
             				
             				var datosTablas = [];
-            				storeIncisos.each(function(record,index){
-	            				datosTablas.push({
-	            					nfactura:record.get('noFactura'),
-	            					ffactura:record.get('fechaFactura'),
-	            					cdtipser:record.get('tipoServicio'),
-	            					cdpresta:record.get('proveedor'),
-	            					ptimport:record.get('importe')
-	            				});
-            				});
+            				
+            				// si es pago directo
+            				if( Ext.getCmp('cmbTipoPago').getValue() == "1")
+        					{
+            					storeListAsegPagDirecto.each(function(record,index){
+            						datosTablas.push({
+    	            					cdperson:record.get('modCdperson'),
+    	            					cdtipsit:record.get('modCdtipsit'),
+    	            					estado:record.get('modEstado'),
+    	            					fechaOcurrencia:record.get('modFechaOcurrencia'),
+    	            					nmsituac:record.get('modNmsituac'),
+    	            					nmsolici:record.get('modNmsolici'),
+    	            					nmsuplem:record.get('modNmsuplem'),
+    	            					polizaAfectada:record.get('modPolizaAfectada'),
+    	            					ramo:record.get('modRamo'),
+    	            					unieco:record.get('modUnieco')
+    	            				});
+                				});
+        					}else{
+        						storeFactCtrl.each(function(record,index){
+    	            				datosTablas.push({
+    	            					nfactura:record.get('noFactura'),
+    	            					ffactura:record.get('fechaFactura'),
+    	            					cdtipser:record.get('tipoServicio'),
+    	            					cdpresta:record.get('proveedor'),
+    	            					ptimport:record.get('importe')
+    	            				});
+                				});
+    						}
             				
             				submitValues['datosTablas']=datosTablas;
             				panelInicialPral.setLoading(true);
             				
-            				console.log("valores a enviar al proceso de guardado");
+            				console.log("VALOR A ENVIAR A LA PARTE DE GUARDADO");
             				console.log(submitValues);
-            				
             				Ext.Ajax.request(
     						{
     						    url: _URL_GUARDA_ALTA_TRAMITE,
@@ -705,12 +946,17 @@ Ext.onReady(function() {
     						        
     						        if(jsonResp.success==true){
     						            console.log(Ext.decode(response.responseText));
+    						            console.log(Ext.decode(response.responseText).msgResult);
     						            Ext.Msg.show({
     						                title:'Guardado',
-    						                msg: mensaje+" : "+numeroAutorizacion ,
+    						                msg: 'Se gener&oacute; el n&uacute;mero de tr&aacute;mite '+ Ext.decode(response.responseText).msgResult ,
     						                buttons: Ext.Msg.OK,
     						                icon: Ext.Msg.INFO
     						            });
+    						            
+    						            panelInicialPral.getForm().reset();
+    						            storeFactCtrl.removeAll();
+    						            windowLoader.close();
     						        }
     						        else{
     						            Ext.Msg.show({
@@ -737,33 +983,6 @@ Ext.onReady(function() {
     	                }
             			else
         				{
-            				var incisosRecords = storeIncisos.getRange();
-            				console.log(incisosRecords.length);
-            				
-            				var incisosJson = [];
-            				storeIncisos.each(function(record,index){
-	                        	if(record.get('nombre')
-	                        			&&record.get('nombre').length>0)
-                        		{
-	                        		nombres++;
-                        		}
-	                            incisosJson.push({
-	                            	noFactura: record.get('noFactura'),
-	                            	fechaFactura: record.get('fechaFactura'),
-	                            	tipoServicio: record.get('tipoServicio'),
-	                            	proveedor: record.get('proveedor'),
-	                            	importe: record.get('importe')
-	                            });
-                            });
-            				
-            				console.log('---- VALOR DE IncisosJson ---- ');
-            				console.log(incisosJson);
-            				
-            				var submitValues=form.getValues();
-                        	submitValues['incisos']=incisosJson;
-                        	console.log('---- VALOR DE submitValues ---- ');
-            				console.log(submitValues);
-            				
             				Ext.Msg.show({
     	                    	title:'Datos incompletos',
     	                    	msg: 'Favor de introducir todos los campos requeridos',
@@ -775,8 +994,6 @@ Ext.onReady(function() {
     	        },
     	        {
     	            text:'Cancelar',
-    	            //icon:_CONTEXT+'/resources/fam3icons/icons/arrow_refresh.png',
-    	            ///id:'botonLimpiar',
     	            handler:function()
     	            {
     	            	windowLoader.close();
@@ -784,4 +1001,20 @@ Ext.onReady(function() {
     	        }
     	    ]
     	    });
+    
+    Ext.getCmp('cmbTipoPago').setValue('1');
+    
+	function limpiarRegistros()
+	{
+		Ext.getCmp('idUnieco').setValue('');
+		Ext.getCmp('idEstado').setValue('');
+		Ext.getCmp('idcdRamo').setValue('');
+		Ext.getCmp('idNmSituac').setValue('');
+		Ext.getCmp('polizaAfectada').setValue('');
+		Ext.getCmp('idNmsolici').setValue('');
+		Ext.getCmp('idNmsuplem').setValue('');
+		Ext.getCmp('idCdtipsit').setValue('');
+		
+    	return true;
+	}
 });
