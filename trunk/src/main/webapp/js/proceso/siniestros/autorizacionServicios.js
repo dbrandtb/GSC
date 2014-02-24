@@ -352,6 +352,7 @@ Ext.onReady(function() {
         id     :'idAsegurado',			labelWidth 	   : 170,				valueField     : 'key',			queryParam   : 'params.cdperson',
         width  :500,					forceSelection : false,				matchFieldWidth: false,			queryMode    :'remote',
         minChars  : 2,					store 		   : storeAsegurados,	triggerAction  : 'all',			name:'cdperson',
+        hideTrigger:true,
         listeners : {
 			'select' : function(combo, record) {
 					obtieneCDPerson = this.getValue();
@@ -373,10 +374,12 @@ Ext.onReady(function() {
 			                if(jsonResponse.listaPoliza == null) {								
 			                    Ext.Msg.show({
 			                        title: 'Aviso',
-			                        msg: 'No se encontraron datos.',
+			                        msg: 'No se encontraron P&oacute;liza de dicho asegurado',
 			                        buttons: Ext.Msg.OK,
 			                        icon: Ext.Msg.WARNING
 			                    });
+			                    
+			                    Ext.getCmp('idAsegurado').setValue('');
 			                    modificacionPolizas.hide();
 			                    return;
 			                }
@@ -456,7 +459,7 @@ Ext.onReady(function() {
     	fieldLabel 		: 'M&eacute;dico',			allowBlank   : false,			displayField : 'nombre',				name		   :'cdmedico',
     	id				:'idMedico',				labelWidth   : 170,			    valueField   : 'cdpresta',				forceSelection : false,
     	matchFieldWidth : false,					triggerAction: 'all',			queryParam   : 'params.cdpresta',		store          : storeMedico,
-    	minChars  		: 2,						queryMode    :'remote',
+    	minChars  		: 2,						queryMode    :'remote',			hideTrigger:true,
 		listeners : {
 			change:function(e){
 				Ext.getCmp('idEspecialidad').setValue('');
@@ -495,7 +498,7 @@ Ext.onReady(function() {
 		fieldLabel : 'M&eacute;dico',	allowBlank: false,				displayField : 'nombre',			id:'idmedicoConAutorizado',
 		labelWidth: 100,				width:450,						valueField   : 'cdpresta',			forceSelection : false,
 		matchFieldWidth: false,			queryMode :'remote',			queryParam: 'params.cdpresta',		store : storeMedico,//,		editable:false,
-		minChars  : 2,					triggerAction: 'all',			name:'idmedicoConAutorizado'
+		minChars  : 2,					triggerAction: 'all',			name:'idmedicoConAutorizado',		hideTrigger:true
 	});
     
     medicoEqQuirurg = Ext.create('Ext.form.field.ComboBox',
@@ -503,7 +506,7 @@ Ext.onReady(function() {
 		fieldLabel : 'M&eacute;dico',	allowBlank: false,				displayField : 'nombre',			id:'idmedicoEqQuirurg',
 		labelWidth: 100,				width:450,						valueField   : 'cdpresta',			forceSelection : false,
 		matchFieldWidth: false,			queryMode :'remote',			queryParam: 'params.cdpresta',		store : storeMedico,//,		editable:false,
-		triggerAction: 'all',			name:'idmedicoEqQuirurg',		minChars  : 2
+		triggerAction: 'all',			name:'idmedicoEqQuirurg',		minChars  : 2,						hideTrigger:true
 		
 	});
     
@@ -512,7 +515,7 @@ Ext.onReady(function() {
     	colspan:2,						fieldLabel : 'Proveedor',		allowBlank: false,					displayField : 'nombre',		name:'cdprovee',
     	id:'idProveedor',				labelWidth: 170,				valueField   : 'cdpresta',			forceSelection : false,	width:500,
     	matchFieldWidth: false,			queryMode :'remote',			queryParam: 'params.cdpresta',		store : storeProveedor,
-    	minChars  : 2,					triggerAction: 'all'
+    	minChars  : 2,					triggerAction: 'all',			hideTrigger:true
     });
     
     coberturaAfectada = Ext.create('Ext.form.field.ComboBox',
@@ -591,7 +594,7 @@ Ext.onReady(function() {
     	colspan:2,						fieldLabel : 'ICD',					allowBlank: false,				displayField : 'value',		width:500,
     	id:'idComboICD',				labelWidth: 170,					valueField   : 'key',			forceSelection : false,
     	matchFieldWidth: false,			queryMode :'remote',				queryParam: 'params.otclave',	store : storeTiposICD,
-    	minChars  : 2,					name:'cdicd',	editable:true,		triggerAction: 'all'
+    	minChars  : 2,					name:'cdicd',	editable:true,		triggerAction: 'all',			hideTrigger:true
     });
     
     cptConAutorizado = Ext.create('Ext.form.field.ComboBox',
@@ -599,7 +602,7 @@ Ext.onReady(function() {
     	fieldLabel : 'CPT',				allowBlank: false,					displayField : 'value',			id:'cptConAutorizado',
     	width:450,						valueField   : 'key',				forceSelection : false,			matchFieldWidth: false,
     	queryMode :'remote',			queryParam: 'params.otclave',   	store : storeTiposCPT,			triggerAction: 'all',
-    	minChars  : 2,					name:'cptConAutorizado',
+    	minChars  : 2,					name:'cptConAutorizado',			hideTrigger:true,
     	listeners : {
     		'select' : function(combo, record) {
     	    	Ext.getCmp('precioConAutorizado').setValue('');
@@ -640,7 +643,7 @@ Ext.onReady(function() {
     	fieldLabel : 'CPT',				allowBlank: false,					displayField : 'value',			id:'cptQuirBase',
     	width:450,						valueField: 'key',					forceSelection : false,			matchFieldWidth: false,
     	queryMode :'remote',			queryParam: 'params.otclave',		store : storeTiposCPT,			triggerAction: 'all',
-    	minChars  : 2,					name:'cptQuirBase',
+    	minChars  : 2,					name:'cptQuirBase',			hideTrigger:true,
     	listeners : {
     		'select' : function(combo, record) {
     	    	Ext.getCmp('precioQuirurgico').setValue('');
@@ -1326,8 +1329,7 @@ Ext.onReady(function() {
 				 ,id			: 'idCodigoAsegurado',						labelWidth		: 170,			width		 	: 500
 				 ,valueField   	: 'key',									forceSelection 	: false,		matchFieldWidth	: false
 				 ,minChars  	: 2,										queryMode 		:'remote'		,queryParam: 'params.cdperson'
-				 ,store : storeAsegurados
-				 ,triggerAction: 'all'
+				 ,store : storeAsegurados,									hideTrigger:true				,triggerAction: 'all'
 			 })
 			 ]
 		,buttonAlign: 'center'
@@ -1999,7 +2001,7 @@ modificacionClausula = Ext.create('Ext.window.Window',
 			 	{
 			 		colspan:2,			xtype : 'numberfield',              id:'sumDisponible',           fieldLabel: 'Suma disponible proveedor',
 			 		labelWidth: 170,    allowBlank: false,	                allowDecimals :true,          decimalSeparator :'.',                 allowBlank:false,
-			 		name:'mtsumadp'
+			 		name:'mtsumadp',	minValue: 0
 			 		
 			 	}
 			 	,
@@ -2321,7 +2323,6 @@ modificacionClausula = Ext.create('Ext.window.Window',
                     storeConceptoAutorizados.removeAll();
     				storeQuirugicoBase.removeAll();
     				storeQuirurgico.removeAll();
-    				//
                 }
                 else{
                     Ext.Msg.show({

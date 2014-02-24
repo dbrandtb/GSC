@@ -313,4 +313,35 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			throw new ApplicationException(daoExc.getMessage(), daoExc);
 		}
 	}
+
+	@Override
+	public String guardaListaTworkSin(HashMap<String, Object> paramsTworkSin) throws ApplicationException {
+		// TODO Auto-generated method stub
+		try {
+			return siniestrosDAO.guardaListaTworkSin(paramsTworkSin);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}
+
+	@Override
+	public String getAltaSiniestroAutServicio(String nmautser) throws ApplicationException {
+		// TODO Auto-generated method stub
+		try {
+			return siniestrosDAO.guardaAltaSiniestroAutServicio(nmautser);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}
+
+	@Override
+	public String getAltaSiniestroAltaTramite(String ntramite) throws ApplicationException {
+		// TODO Auto-generated method stub
+		try {
+			return siniestrosDAO.guardaAltaSiniestroAltaTramite(ntramite);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}
 }
+

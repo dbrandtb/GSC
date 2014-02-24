@@ -35,10 +35,50 @@ public class PolizaVigenteVO implements Serializable {
 	
 	private String estatus;
 	
+	private String nmsuplem;
+	
+	private String nmsolici;
+	
+	private String cdtipsit;
 	
 	
 	public String getEstatus() {
 		return estatus;
+	}
+
+
+	public String getNmsuplem() {
+		return nmsuplem;
+	}
+
+
+
+	public void setNmsuplem(String nmsuplem) {
+		this.nmsuplem = nmsuplem;
+	}
+
+
+
+	public String getNmsolici() {
+		return nmsolici;
+	}
+
+
+
+	public void setNmsolici(String nmsolici) {
+		this.nmsolici = nmsolici;
+	}
+
+
+
+	public String getCdtipsit() {
+		return cdtipsit;
+	}
+
+
+
+	public void setCdtipsit(String cdtipsit) {
+		this.cdtipsit = cdtipsit;
 	}
 
 

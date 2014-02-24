@@ -1,6 +1,9 @@
 package mx.com.gseguros.portal.siniestros.controller;
 
 import java.io.File;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -224,101 +227,74 @@ public class SiniestrosAction extends PrincipalCoreAction{
 	public String guardaAltaTramite(){
 			logger.debug(" **** Entrando al guardado de alta de tramite ****");
 			try {
-					//VALORES DE ENTRADA
 					HashMap<String, Object> parMesCon = new HashMap<String, Object>();
 					parMesCon.put("pv_cdunieco_i",params.get("cdunieco"));
 					parMesCon.put("pv_cdramo_i",params.get("cdramo"));
 					parMesCon.put("pv_estado_i",params.get("estado"));
 					parMesCon.put("pv_nmpoliza_i",params.get("nmpoliza"));
-					parMesCon.put("pv_nmsuplem_i",params.get("nmsituac"));
+					parMesCon.put("pv_nmsuplem_i",params.get("nmsuplem"));
 					parMesCon.put("pv_cdsucadm_i",params.get("cmbOficEmisora"));
 					parMesCon.put("pv_cdsucdoc_i",params.get("cmbOficReceptora"));
 					parMesCon.put("pv_cdtiptra_i","16");
-					parMesCon.put("pv_ferecepc_i",null);
-					parMesCon.put("pv_cdagente_i","11000");
-					parMesCon.put("pv_referencia_i","REF");
-					parMesCon.put("pv_nombre_i","Prueba");
-					parMesCon.put("pv_festatus_i",null);
+					parMesCon.put("pv_ferecepc_i",getDate(params.get("dtFechaRecepcion")));
+					parMesCon.put("pv_cdagente_i",null);
+					parMesCon.put("pv_referencia_i",null);
+					parMesCon.put("pv_nombre_i",null);
+					parMesCon.put("pv_festatus_i",getDate(params.get("dtFechaFactura")));
 					parMesCon.put("pv_status_i","2");
-					parMesCon.put("pv_comments_i","Prueba");
-					parMesCon.put("pv_nmsolici_i","4289");
-					parMesCon.put("pv_cdtipsit_i","SL");
-					/*parMesCon.put("pv_otvalor01",null);
-					parMesCon.put("pv_otvalor02",null);
-					parMesCon.put("pv_otvalor03",null);
-					parMesCon.put("pv_otvalor04",null);
-					parMesCon.put("pv_otvalor05",null);
-					parMesCon.put("pv_otvalor06",null);
-					parMesCon.put("pv_otvalor07",null);
-					parMesCon.put("pv_otvalor08",null);
-					parMesCon.put("pv_otvalor09",null);
-					parMesCon.put("pv_otvalor10",null);
-					parMesCon.put("pv_otvalor11",null);
-					parMesCon.put("pv_otvalor12",null);
-					parMesCon.put("pv_otvalor13",null);
-					parMesCon.put("pv_otvalor14",null);
-					parMesCon.put("pv_otvalor15",null);
-					parMesCon.put("pv_otvalor16",null);
-					parMesCon.put("pv_otvalor17",null);
-					parMesCon.put("pv_otvalor18",null);
-					parMesCon.put("pv_otvalor19",null);
-					parMesCon.put("pv_otvalor20",null);
-					parMesCon.put("pv_otvalor21",null);
-					parMesCon.put("pv_otvalor22",null);
-					parMesCon.put("pv_otvalor23",null);
-					parMesCon.put("pv_otvalor24",null);
-					parMesCon.put("pv_otvalor25",null);
-					parMesCon.put("pv_otvalor26",null);
-					parMesCon.put("pv_otvalor27",null);
-					parMesCon.put("pv_otvalor28",null);
-					parMesCon.put("pv_otvalor29",null);
-					parMesCon.put("pv_otvalor30",null);
-					parMesCon.put("pv_otvalor31",null);
-					parMesCon.put("pv_otvalor32",null);
-					parMesCon.put("pv_otvalor33",null);
-					parMesCon.put("pv_otvalor34",null);
-					parMesCon.put("pv_otvalor35",null);
-					parMesCon.put("pv_otvalor36",null);
-					parMesCon.put("pv_otvalor37",null);
-					parMesCon.put("pv_otvalor38",null);
-					parMesCon.put("pv_otvalor39",null);
-					parMesCon.put("pv_otvalor40",null);
-					parMesCon.put("pv_otvalor41",null);
-					parMesCon.put("pv_otvalor42",null);
-					parMesCon.put("pv_otvalor43",null);
-					parMesCon.put("pv_otvalor44",null);
-					parMesCon.put("pv_otvalor45",null);
-					parMesCon.put("pv_otvalor46",null);
-					parMesCon.put("pv_otvalor47",null);
-					parMesCon.put("pv_otvalor48",null);
-					parMesCon.put("pv_otvalor49",null);
-					parMesCon.put("pv_otvalor50",null);*/
+					parMesCon.put("pv_comments_i",null);
+					parMesCon.put("pv_nmsolici_i",params.get("nmsolici"));
+					parMesCon.put("pv_cdtipsit_i",params.get("cdtipsit"));
+					parMesCon.put("pv_otvalor02",params.get("cmbTipoPago"));							// TIPO DE PAGO
+					parMesCon.put("pv_otvalor03",params.get("txtImporte"));								// IMPORTE
+					parMesCon.put("pv_otvalor04",params.get("cmbProveedor"));							// PROVEEDOR
+					parMesCon.put("pv_otvalor06",params.get("dtFechaFactura"));							// FECHA FACTURA
+					parMesCon.put("pv_otvalor07",params.get("cmbTipoAtencion"));						// TIPO DE ANTENCION
+					parMesCon.put("pv_otvalor08",params.get("txtNoFactura"));							// NO. DE FACTURA
+					parMesCon.put("pv_otvalor09",params.get("cmbAseguradoAfectado"));					// CDPERSON
+					parMesCon.put("pv_otvalor10",params.get("dtFechaOcurrencia"));						// FECHA OCURRENCIA
 					
-					
-					
-					logger.error("RESPUESTA 1");
-					logger.error(parMesCon);
 					WrapperResultados res = kernelManagerSustituto.PMovMesacontrol(parMesCon);
-					logger.error("VALOR DE RESPUESTA");
-					logger.error(res);
 					if(res.getItemMap() == null)
 					{
 						logger.error("Sin mensaje respuesta de nmtramite!!");
 					}
 					else{
 						msgResult = (String) res.getItemMap().get("ntramite");
-						logger.debug("TRAMITE RESULTADO: "+msgResult);
-						/*for(int i=0;i<datosTablas.size();i++)
-					    {
-					        HashMap<String, Object> paramsFacMesaCtrl = new HashMap<String, Object>();
-					        paramsFacMesaCtrl.put("pv_ntramite_i","");									//completar con el valor anterior
-					        paramsFacMesaCtrl.put("pv_nfactura_i",datosTablas.get(i).get("cdtipaut"));
-					        paramsFacMesaCtrl.put("pv_ffactura_i",datosTablas.get(i).get("cdmedico"));
-					        paramsFacMesaCtrl.put("pv_cdtipser_i",datosTablas.get(i).get("cdtipmed"));
-					        paramsFacMesaCtrl.put("pv_cdpresta_i",datosTablas.get(i).get("cdcpt"));
-					        paramsFacMesaCtrl.put("pv_ptimport_i",datosTablas.get(i).get("precio"));
-					        siniestrosManager.guardaListaFacMesaControl(paramsFacMesaCtrl);
-					    }*/
+						if(params.get("cmbTipoPago").trim().equalsIgnoreCase("1"))
+						{
+							for(int i=0;i<datosTablas.size();i++)
+						    {
+								HashMap<String, Object> paramsTworkSin = new HashMap<String, Object>();
+								paramsTworkSin.put("pv_nmtramite_i",msgResult);
+								paramsTworkSin.put("pv_cdunieco_i",datosTablas.get(i).get("unieco"));
+								paramsTworkSin.put("pv_cdramo_i",datosTablas.get(i).get("ramo"));
+								paramsTworkSin.put("pv_estado_i",datosTablas.get(i).get("estado"));
+								paramsTworkSin.put("pv_nmpoliza_i",datosTablas.get(i).get("polizaAfectada"));
+								paramsTworkSin.put("pv_nmsolici_i",datosTablas.get(i).get("nmsolici"));
+								paramsTworkSin.put("pv_nmsuplem_i",datosTablas.get(i).get("nmsuplem"));
+								paramsTworkSin.put("pv_nmsituac_i",datosTablas.get(i).get("nmsituac"));
+								paramsTworkSin.put("pv_cdtipsit_i",datosTablas.get(i).get("cdtipsit"));
+								paramsTworkSin.put("pv_cdperson_i",datosTablas.get(i).get("cdperson"));
+								paramsTworkSin.put("pv_feocurre_i",datosTablas.get(i).get("fechaOcurrencia"));
+								paramsTworkSin.put("pv_nmautser_i",null);
+						        siniestrosManager.guardaListaTworkSin(paramsTworkSin);
+						    }
+							
+						}else{
+							
+							for(int i=0;i<datosTablas.size();i++)
+						    {
+						        HashMap<String, Object> paramsFacMesaCtrl = new HashMap<String, Object>();
+						        paramsFacMesaCtrl.put("pv_ntramite_i",msgResult);									//completar con el valor anterior
+						        paramsFacMesaCtrl.put("pv_nfactura_i",datosTablas.get(i).get("nfactura"));
+						        paramsFacMesaCtrl.put("pv_ffactura_i",datosTablas.get(i).get("ffactura"));
+						        paramsFacMesaCtrl.put("pv_cdtipser_i",datosTablas.get(i).get("cdtipser"));
+						        paramsFacMesaCtrl.put("pv_cdpresta_i",datosTablas.get(i).get("cdpresta"));
+						        paramsFacMesaCtrl.put("pv_ptimport_i",datosTablas.get(i).get("ptimport"));
+						        siniestrosManager.guardaListaFacMesaControl(paramsFacMesaCtrl);
+						    }
+						}
 					}
 			}catch( Exception e){
 				logger.error("Error en el guardado de alta de trámite ",e);
@@ -412,9 +388,6 @@ public class SiniestrosAction extends PrincipalCoreAction{
    public String consultaListaSubcobertura(){
    	logger.debug(" **** Entrando al método de Lista de Subcobertura ****");
 	   	try {
-	   		logger.error("VALOR DE ENTRADA");
-	   		logger.error(params.get("cdgarant"));
-	   		logger.error(params.get("cdsubcob"));
 	   		listaSubcobertura= siniestrosManager.getConsultaListaSubcobertura(params.get("cdgarant"),params.get("cdsubcob"));
 	   	}catch( Exception e){
 	   		logger.error("Error al consultar la Lista de subcoberturas ",e);
@@ -575,10 +548,6 @@ public void setMsgResult(String msgResult) {
    public String consultaListaPorcentaje(){
 		logger.debug(" **** Entrando a consulta de lista de Mantenimiento****");
 		try {
-				logger.debug("VALORES DE ENTRADA");
-				logger.debug(params.get("cdcpt"));
-				logger.debug(params.get("cdtipmed"));
-				
 				List<ConsultaPorcentajeVO> lista = siniestrosManager.getConsultaListaPorcentaje(params.get("cdcpt"),params.get("cdtipmed"),params.get("mtobase"));
 				if(lista!=null && !lista.isEmpty())	listaPorcentaje = lista;
 		}catch( Exception e){
@@ -588,6 +557,33 @@ public void setMsgResult(String msgResult) {
 	success = true;
 	return SUCCESS;
    }
+   
+   
+   public String generarSiniestroAutServicio(){
+		logger.debug(" **** Entrando a generar el siniestro  por medio de la autorizacion del servicio ***");
+		try {
+				siniestrosManager.getAltaSiniestroAutServicio(params.get("nmautser"));
+		}catch( Exception e){
+			logger.error("Error al obtener los datos de Autorización de Servicio en Especifico",e);
+			return SUCCESS;
+		}
+	   success = true;
+	   return SUCCESS;
+   }
+   
+   public String generarSiniestroAltaTramite(){
+		logger.debug(" **** Entrando a generar el siniestro  por medio del alta de tramite***");
+		try {
+				siniestrosManager.getAltaSiniestroAltaTramite(params.get("ntramite"));
+		}catch( Exception e){
+			logger.error("Error al obtener los datos de Autorización de Servicio en Especifico",e);
+			return SUCCESS;
+		}
+	   success = true;
+	   return SUCCESS;
+  }
+   
+   
    
    
    public String entradaCalculos(){
@@ -1004,6 +1000,16 @@ public void setMsgResult(String msgResult) {
 		return listaAutorizacion;
 	}
 
+    public Date getDate(String date)
+    {
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            return df.parse(date);
+        } catch (ParseException ex) {
+        	
+        }
+        return null;
+    }
     
     /*	SETTER 	*/    
     public void setSuccess(boolean success) {
