@@ -17,6 +17,7 @@ import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
 import mx.com.gseguros.portal.siniestros.model.CoberturaPolizaVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaManteniVO;
+import mx.com.gseguros.portal.siniestros.model.ListaFacturasVO;
 import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaPorcentajeVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaProveedorVO;
@@ -915,10 +916,10 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		}
 
 
-		@Override
-		public String guardaListaTworkSin(HashMap<String, Object> paramsTworkSin) throws DaoException {
-			Map<String, Object> mapResult = ejecutaSP(new guardaListaTworkSinSP(getDataSource()), paramsTworkSin);
-			return (String) mapResult.get("pv_msg_id_o");
+	@Override
+	public String guardaListaTworkSin(HashMap<String, Object> paramsTworkSin) throws DaoException {
+		Map<String, Object> mapResult = ejecutaSP(new guardaListaTworkSinSP(getDataSource()), paramsTworkSin);
+		return (String) mapResult.get("pv_msg_id_o");
 	}
 	
 	protected class guardaListaTworkSinSP extends StoredProcedure {
@@ -966,7 +967,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	@Override
 	public String guardaAltaSiniestroAltaTramite(String ntramite) throws DaoException {
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("pv_nmautser_i", ntramite);
+		params.put("pv_ntramite_i", ntramite);
 		Map<String, Object> mapResult = ejecutaSP(new GuardaSiniestroAltaTramite(this.getDataSource()), params);
 		return (String) mapResult.get("pv_msg_id_o");
 	}
@@ -983,23 +984,98 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		}
 	}
 
-/*Map<String, Object> params = new HashMap<String, Object>();
-	params.put("pv_nmautser_i", nmautser);
-	Map<String,Object> resultadoMap=this.ejecutaSP(new EliminacionRegistros(this.getDataSource()), params);
-}
-protected class EliminacionRegistros extends StoredProcedure
-{
-	protected EliminacionRegistros(DataSource dataSource)
-	{
-		super(dataSource, "PKG_PRESINIESTRO.P_BORRA_TDETAUTS");
-		declareParameter(new SqlParameter("pv_nmautser_i", OracleTypes.VARCHAR));
-		declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
-		declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
-		compile();
+
+	@Override
+	public String guardaAltaMsinival(HashMap<String, Object> paramMsinival) throws DaoException {
+		Map<String, Object> mapResult = ejecutaSP(new guardaAltaMsinivalSP(getDataSource()), paramMsinival);
+		return (String) mapResult.get("pv_msg_id_o");
 	}
-}*/
+	
+	protected class guardaAltaMsinivalSP extends StoredProcedure {
+		protected guardaAltaMsinivalSP(DataSource dataSource) {
+			super(dataSource, "PKG_SINIESTRO.P_GEN_MSINIVAL");
+			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_aaapertu_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_status_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsinies_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdgarant_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdconval_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdcapita_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmordina_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_femovimi_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdmoneda_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ptpagos_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ptrecobr_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ptimprec_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ptimpimp_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_factura_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_swlibera_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipmov_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdidemov_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 
 
-		
-		
+	@Override
+	public List<ListaFacturasVO> obtieneListadoFacturas(HashMap<String, Object> paramFact) throws DaoException {
+		Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoFacturasSP(getDataSource()), paramFact);
+		List<ListaFacturasVO> listaDatosPoliza = (List<ListaFacturasVO>)mapResult.get("pv_registro_o");
+		return listaDatosPoliza;
+	}
+	
+	protected class ObtieneListadoFacturasSP extends StoredProcedure {
+
+		protected ObtieneListadoFacturasSP(DataSource dataSource) {
+			super(dataSource, "PKG_SINIESTRO.P_LISTA_FACTURA");
+			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_aaapertu_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsinies_i", OracleTypes.VARCHAR));			
+			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ListadoFacturasMapper()));
+	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	protected class ListadoFacturasMapper  implements RowMapper {
+        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+        	ListaFacturasVO consulta = new ListaFacturasVO();
+        	consulta.setCdfactur(rs.getString("CDFACTUR"));
+        	consulta.setFefactur(rs.getString("FEFACTUR"));
+        	consulta.setCdprovee(rs.getString("CDPROVEE"));
+        	consulta.setCdrol(rs.getString("CDROL"));
+        	consulta.setCdperson(rs.getString("CDPERSON"));
+        	consulta.setMtolocal(rs.getString("MTOLOCAL"));
+        	consulta.setDesProvee(rs.getString("PROVEEDOR"));
+            return consulta;
+        }
+    }
+
+
+	@Override
+	public String bajaMsinival(HashMap<String, Object> paramBajasinival) throws DaoException {
+		Map<String, Object> mapResult = ejecutaSP(new BajaMsinivalSP(this.getDataSource()), paramBajasinival);
+		return (String) mapResult.get("pv_msg_id_o");
+	}
+	
+	protected class BajaMsinivalSP extends StoredProcedure
+	{
+		protected BajaMsinivalSP(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SINIESTRO.P_BORRA_MSINIVAL");
+			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_aaapertu_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_status_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsinies_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
