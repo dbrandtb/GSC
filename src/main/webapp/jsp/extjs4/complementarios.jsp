@@ -548,6 +548,9 @@
 		                            ,handler : function()
 		                            {
 		                                var form=Ext.getCmp('formPanel');
+		                                if(form.isValid())
+		                                {
+		                                //--
 		                                form.setLoading(true);
 		                                Ext.Ajax.request(
 		                                {
@@ -894,6 +897,12 @@
 		                                        });
 		                                    }
 		                                });
+		                                //--
+		                                }
+		                                else
+		                        	    {
+		                                	datosIncompletos();
+		                        	    }
 		                            }
 		                        }
 		                        ,{

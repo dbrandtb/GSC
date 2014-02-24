@@ -21,9 +21,13 @@ import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.flujos.cotizacion4.web.ResultadoCotizacion4Action;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
+import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.portal.general.service.CatalogosManager;
+import mx.com.gseguros.portal.general.util.Catalogos;
+import mx.com.gseguros.portal.general.util.CatalogosAction;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
@@ -48,6 +52,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	private KernelManagerSustituto kernelManager;
 	private transient Ice2sigsService ice2sigsService;
 	private transient RecibosSigsService recibosSigsService;
+	private CatalogosManager catalogosManager;
 	
 	private Map<String, String> panel1;
 	private Map<String, String> panel2;
@@ -92,7 +97,43 @@ public class ComplementariosAction extends PrincipalCoreAction
 		log.debug("map1: "+map1);
 		try {
 			//List<Tatrisit>listaTatrisit=kernelManager.obtenerTatrisit("SL");
+			
+			UserVO usuario = (UserVO)session.get("USUARIO");
+			
 			List<ComponenteVO>listaTatrisit=kernelManager.obtenerTatripol(new String[]{cdramo});
+			
+			/*//// si es forma de pago dxn entonces los campos tatripol son obligatorios //////
+			CatalogosAction catalogosAction = new CatalogosAction();
+			catalogosAction.setCatalogosManager(catalogosManager);
+			catalogosAction.setCatalogo("TIPOS_PAGO_POLIZA_SIN_DXN");
+			catalogosAction.obtieneCatalogo();
+			List<GenericVO> formasPagoSinDxn = catalogosAction.getLista();
+			
+			Map<String, Object> parameters = new HashMap<String, Object>(0);
+			parameters.put("pv_cdunieco", cdunieco);
+			parameters.put("pv_cdramo", cdramo);
+			parameters.put("pv_estado", estado);
+			parameters.put("pv_nmpoliza", nmpoliza);
+			parameters.put("pv_cdusuari", usuario.getUser());
+			
+			Map<String, Object> select = kernelManager.getInfoMpolizas(parameters);
+			String cdperpag            = (String) select.get("cdperpag");
+			
+			boolean esDxn = true;
+			for(GenericVO formaNoDxnIte: formasPagoSinDxn)
+			{
+				if(formaNoDxnIte.getKey().equalsIgnoreCase(cdperpag))
+				{
+					esDxn = false;
+				}
+			}
+			
+			for(ComponenteVO comIte : listaTatrisit)
+			{
+				comIte.setObligatorio(esDxn);
+			}
+			*///// si es forma de pago dxn entonces los campos tatripol son obligatorios //////
+			
 			log.debug("ServletActionContext.getServletContext().getServletContextName()$$$$$ "+ServletActionContext.getServletContext().getServletContextName());
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			gc.genera(listaTatrisit);
@@ -1658,6 +1699,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 
 	public void setCdtipsit(String cdtipsit) {
 		this.cdtipsit = cdtipsit;
+	}
+
+	public void setCatalogosManager(CatalogosManager catalogosManager) {
+		this.catalogosManager = catalogosManager;
 	}
 
 }

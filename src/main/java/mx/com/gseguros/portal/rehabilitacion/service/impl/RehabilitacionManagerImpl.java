@@ -1,6 +1,7 @@
 package mx.com.gseguros.portal.rehabilitacion.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +30,41 @@ public class RehabilitacionManagerImpl implements RehabilitacionManager
 		log.debug("RehabilitacionManager rehabilitarPoliza params: "+params);
 		rehabilitacionDAO.rehabilitarPoliza(params);
 		log.debug("RehabilitacionManager rehabilitarPoliza end");
+	}
+	
+	/**
+	 * pkg_satelites.p_valida_antiguedad
+	 */
+	@Override
+	public boolean validaAntiguedad(String cdunieco,String cdramo,String estado,String nmpoliza) throws Exception
+	{
+		Map<String,String>params = new HashMap<String,String>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		log.debug("RehabilitacionManager validaAntiguedad params: "+params);
+		boolean validacion = rehabilitacionDAO.validaAntiguedad(params);
+		log.debug("RehabilitacionManager validaAntiguedad alguno tieneantiguedad: "+(validacion?"si":"no"));
+		return validacion;
+	}
+	
+	/**
+	 * pkg_satelites.p_borra_antiguedad
+	 */
+	@Override
+	public void borraAntiguedad(String cdunieco,String cdramo,String estado,String nmpoliza,String nmsuplem,String fereinst) throws Exception
+	{
+		Map<String,String>params = new HashMap<String,String>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_nmsuplem_i" , nmsuplem);
+		params.put("pv_fereinst_i" , fereinst);
+		log.debug("RehabilitacionManager borraAntiguedad params: "+params);
+		rehabilitacionDAO.borraAntiguedad(params);
+		log.debug("RehabilitacionManager borraAntiguedad end");
 	}
 	
 	/////////////////////////////////

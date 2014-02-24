@@ -8,6 +8,7 @@ import javax.sql.DataSource;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.DinamicMapper;
 import mx.com.gseguros.portal.rehabilitacion.dao.RehabilitacionDAO;
+import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utilerias;
 import oracle.jdbc.driver.OracleTypes;
 
@@ -69,6 +70,63 @@ public class RehabilitacionDAOImpl extends AbstractManagerDAO implements Rehabil
             
             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 	        declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	/**
+	 * pkg_satelites.p_valida_antiguedad
+	 */
+	@Override
+	public boolean validaAntiguedad(Map<String,String>params) throws Exception
+	{
+		boolean validacion = false; 
+		Map<String,Object>mapa=this.ejecutaSP(new ValidaAntiguedad(this.getDataSource()), Utilerias.ponFechas(params));
+		validacion = mapa!=null && mapa.containsKey("pv_valor_o") 
+				&& mapa.get("pv_valor_o")!=null && ((String)mapa.get("pv_valor_o")).equalsIgnoreCase(Constantes.SI);
+		return validacion;
+	}
+	
+	protected class ValidaAntiguedad extends StoredProcedure
+	{
+		protected ValidaAntiguedad(DataSource dataSource)
+		{
+			super(dataSource, "pkg_satelites.p_valida_antiguedad");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+            
+			declareParameter(new SqlOutParameter("pv_valor_o"  , OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+	        declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	/**
+	 * pkg_satelites.p_borra_antiguedad
+	 */
+	@Override
+	public void borraAntiguedad(Map<String,String>params) throws Exception
+	{
+		this.ejecutaSP(new BorraAntiguedad(this.getDataSource()), Utilerias.ponFechas(params));
+	}
+	
+	protected class BorraAntiguedad extends StoredProcedure
+	{
+		protected BorraAntiguedad(DataSource dataSource)
+		{
+			super(dataSource, "pkg_satelites.p_borra_antiguedad");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_fereinst_i" , OracleTypes.DATE));
+            
+            declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+	        declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
 		}
 	}
