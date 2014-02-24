@@ -412,7 +412,6 @@ Ext.onReady(function() {
         					 	tipoServicioName:tipoServicioInterno.rawValue
 		        	 		});
                         	
-                        	console.log(rec);
                         	storeFactCtrl.add(rec);
                         	ventanaGrid.close();
                         	panelModificacionInsercion.getForm().reset();
@@ -515,7 +514,6 @@ Ext.onReady(function() {
 		   
 	 	onRemoveClick: function(grid, rowIndex){
 	 		var record=this.getStore().getAt(rowIndex);
-	 		console.log(record);
 	 		this.getStore().removeAt(rowIndex);
 	 	}
  	});
@@ -571,8 +569,6 @@ Ext.onReady(function() {
                         	modCdperson: datos.cmboAseguradoAfect,
                         	modCdpersondesc: aseguradoAfectadoPagDir.rawValue
                         });
-                        console.log("VALOR DE REC");
-                        console.log(rec);
                         storeListAsegPagDirecto.add(rec);
                         limpiarRegistros();
                         panelListadoAsegurado.getForm().reset();
@@ -660,7 +656,6 @@ Ext.onReady(function() {
            
         onRemoveClick: function(grid, rowIndex){
             var record=this.getStore().getAt(rowIndex);
-            console.log(record);
             this.getStore().removeAt(rowIndex);
         }
     });
@@ -712,7 +707,6 @@ Ext.onReady(function() {
 	    },
 	    listeners: {
                 itemclick: function(dv, record, item, index, e){
-                	console.log(record);
                 	Ext.getCmp('idUnieco').setValue(record.get('cdunieco'));
 					Ext.getCmp('idEstado').setValue(record.get('estado'));
 					Ext.getCmp('idcdRamo').setValue(record.get('cdramo'));
@@ -776,7 +770,7 @@ Ext.onReady(function() {
 					},
 					{
 					   xtype       : 'textfield',			fieldLabel : 'P&oacute;liza afectada'				,id       : 'polizaAfectada'
-					   ,labelWidth: 170,				name:'nmpoliza',	readOnly   : true//,	hidden:true
+					   ,labelWidth: 170,				name:'nmpoliza',	readOnly   : true,	hidden:true
 					},
 					
 //												
@@ -809,7 +803,7 @@ Ext.onReady(function() {
 		                readOnly   : true,
 		               labelWidth: 250,
 		               width		 : 500,
-		               value:'Pendiente'
+		               value:'PENDIENTE'
 		            },
 		            
 		            oficinaReceptora
@@ -933,8 +927,6 @@ Ext.onReady(function() {
             				submitValues['datosTablas']=datosTablas;
             				panelInicialPral.setLoading(true);
             				
-            				console.log("VALOR A ENVIAR A LA PARTE DE GUARDADO");
-            				console.log(submitValues);
             				Ext.Ajax.request(
     						{
     						    url: _URL_GUARDA_ALTA_TRAMITE,
@@ -945,8 +937,6 @@ Ext.onReady(function() {
     						        var jsonResp = Ext.decode(response.responseText);
     						        
     						        if(jsonResp.success==true){
-    						            console.log(Ext.decode(response.responseText));
-    						            console.log(Ext.decode(response.responseText).msgResult);
     						            Ext.Msg.show({
     						                title:'Guardado',
     						                msg: 'Se gener&oacute; el n&uacute;mero de tr&aacute;mite '+ Ext.decode(response.responseText).msgResult ,
