@@ -4,9 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
+import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.cancelacion.service.CancelacionManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.service.PantallasManager;
@@ -14,6 +16,7 @@ import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.portal.rehabilitacion.service.RehabilitacionManager;
 import mx.com.gseguros.utils.HttpUtil;
+import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 
 public class RehabilitacionAction extends PrincipalCoreAction
 {
@@ -27,6 +30,7 @@ public class RehabilitacionAction extends PrincipalCoreAction
 	private Map<String,Item>               imap;
 	private PantallasManager               pantallasManager;
 	private CancelacionManager             cancelacionManager;
+	private transient Ice2sigsService ice2sigsService;
 	
 	/////////////////////////////
 	////// marco principal //////
@@ -182,6 +186,9 @@ public class RehabilitacionAction extends PrincipalCoreAction
 			String nmpoliza = smap1.get("pv_nmpoliza_i");
 			String cdtipsup = TipoEndoso.REHABILITACION.getCdTipSup().toString();
 			
+			String nmsuplem = null;
+			String ntramite = null;
+			
 			List<Map<String,String>>listaDocu=cancelacionManager.reimprimeDocumentos(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
 			
 			for(Map<String,String> docu:listaDocu)
@@ -189,8 +196,8 @@ public class RehabilitacionAction extends PrincipalCoreAction
 				log.debug("docu iterado: "+docu);
 				String descripc = docu.get("descripc");
 				String descripl = docu.get("descripl");
-				String nmsuplem = docu.get("nmsuplem");
-				String ntramite = docu.get("ntramite");
+				nmsuplem = docu.get("nmsuplem");
+				ntramite = docu.get("ntramite");
 				
 				String rutaCarpeta = this.getText("ruta.documentos.poliza")+"/"+ntramite;
 				
@@ -227,6 +234,21 @@ public class RehabilitacionAction extends PrincipalCoreAction
 						+ "\n################################"
 						+ "");
 			}
+			
+			/**
+			 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
+			 */
+			String cdtipsitGS = "213";
+			String sucursal = cdunieco;
+			if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
+			
+			// Ejecutamos el Web Service de Recibos:
+			ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
+					estado, nmpoliza, 
+					nmsuplem, null, 
+					cdtipsitGS, sucursal, "", ntramite, 
+					true, cdtipsup, 
+					(UserVO) session.get("USUARIO"));
 			
 			success=true;
 		}
@@ -293,6 +315,10 @@ public class RehabilitacionAction extends PrincipalCoreAction
 
 	public void setCancelacionManager(CancelacionManager cancelacionManager) {
 		this.cancelacionManager = cancelacionManager;
+	}
+
+	public void setIce2sigsService(Ice2sigsService ice2sigsService) {
+		this.ice2sigsService = ice2sigsService;
 	}
 
 }
