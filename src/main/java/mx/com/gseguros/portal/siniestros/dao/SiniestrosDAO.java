@@ -48,12 +48,6 @@ public interface SiniestrosDAO {
 
 	public String rechazarTramite(HashMap<String, String> params) throws DaoException;
 
-	public String turnarAreaReclamaciones(HashMap<String, String> params) throws DaoException;
-
-	public String turnarAreaMedica(HashMap<String, String> params) throws DaoException;
-
-	public String turnarOperadorAR(HashMap<String, String> params) throws DaoException;
-	
 	//public List<GenericVO> obtieneListadoMovRechazo(String cdmotRechazo) throws DaoException;
 	
 	public List<ConsultaTDETAUTSVO> obtieneListadoTDeTauts(String nmautser) throws DaoException;

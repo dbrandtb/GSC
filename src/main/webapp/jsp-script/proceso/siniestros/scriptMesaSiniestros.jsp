@@ -9,14 +9,13 @@ var _UrlRevisionDocsSiniestro = '<s:url namespace="/siniestros"  action="revisio
 var _UrlRechazarTramiteWindwow = '<s:url namespace="/siniestros"  action="rechazoReclamaciones"   />';
 var _UrlDocumentosPoliza = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza" />';
 var _UrlGenerarContrarecibo = '<s:url namespace="/siniestros"  action="generarContrarecibo"   />';
-var _UrlTurnarAreaReclamaciones = '<s:url namespace="/siniestros"  action="turnarAreaReclamaciones"   />';
 var _UrlDetalleSiniestro = '<s:url namespace="/siniestros"  action="detalleAfiliadosAfectados"   />';
-var _UrlTurnarAreaMedica = '<s:url namespace="/siniestros"  action="turnarAreaMedica"   />';
 var _UrlSolicitarPago = '<s:url namespace="/siniestros"  action="solicitarPago"   />';
-var _UrlTurnarOperadorAR = '<s:url namespace="/siniestros"  action="turnarOperadorAR"   />';
+
+var _URL_ActualizaStatusTramite =      '<s:url namespace="/mesacontrol" action="actualizarStatusTramite" />';
 
 var panDocUrlViewDoc     = '<s:url namespace ="/documentos" action="descargaDocInline" />';
-var _URL_ActualizaStatusTramite =      '<s:url namespace="/mesacontrol" action="actualizarStatusTramite" />';
+
 
 var windowLoader;
 var msgWindow;
