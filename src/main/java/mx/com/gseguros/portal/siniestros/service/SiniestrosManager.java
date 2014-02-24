@@ -9,6 +9,7 @@ import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
 import mx.com.gseguros.portal.siniestros.model.CoberturaPolizaVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaManteniVO;
+import mx.com.gseguros.portal.siniestros.model.ListaFacturasVO;
 import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaPorcentajeVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaProveedorVO;
@@ -104,4 +105,10 @@ public interface SiniestrosManager {
 	public String getAltaSiniestroAutServicio(String nmautser) throws ApplicationException;
 
 	public String getAltaSiniestroAltaTramite(String ntramite) throws ApplicationException;
+
+	public String getAltaMsinival(HashMap<String, Object> paramMsinival) throws ApplicationException;
+
+	public List<ListaFacturasVO> getConsultaListaFacturas(HashMap<String, Object> paramFact) throws ApplicationException;
+
+	public String getBajaMsinival(HashMap<String, Object> paramBajasinival) throws ApplicationException;
 }

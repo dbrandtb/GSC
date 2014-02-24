@@ -182,6 +182,17 @@
 			</result>
 		</action>
 		
+		<action name="consultaListaFacturas" class="siniestrosAction"
+			method="consultaListaFacturas">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					listaFacturas.*,
+					success
+				</param>
+			</result>
+		</action>
+		
 		<action name="guardaAutorizacionServicio" class="siniestrosAction" method="guardaAutorizacionServicio">
 	        <interceptor-ref name="json">
 	            <param name="enableSMD">true</param>

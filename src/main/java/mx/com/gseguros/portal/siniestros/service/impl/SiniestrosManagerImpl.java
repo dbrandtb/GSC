@@ -11,6 +11,7 @@ import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
 import mx.com.gseguros.portal.siniestros.model.CoberturaPolizaVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaManteniVO;
+import mx.com.gseguros.portal.siniestros.model.ListaFacturasVO;
 import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaPorcentajeVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaProveedorVO;
@@ -303,6 +304,34 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		// TODO Auto-generated method stub
 		try {
 			return siniestrosDAO.guardaAltaSiniestroAltaTramite(ntramite);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}
+
+	@Override
+	public String getAltaMsinival(HashMap<String, Object> paramMsinival) throws ApplicationException {
+		// TODO Auto-generated method stub
+		try {
+			return siniestrosDAO.guardaAltaMsinival(paramMsinival);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}
+
+	@Override
+	public List<ListaFacturasVO> getConsultaListaFacturas(HashMap<String, Object> paramFact) throws ApplicationException {
+		try {
+			return siniestrosDAO.obtieneListadoFacturas(paramFact);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}
+
+	@Override
+	public String getBajaMsinival(HashMap<String, Object> paramBajasinival) throws ApplicationException {
+		try {
+			return siniestrosDAO.bajaMsinival(paramBajasinival);
 		} catch (DaoException daoExc) {
 			throw new ApplicationException(daoExc.getMessage(), daoExc);
 		}

@@ -24,6 +24,7 @@ import mx.com.gseguros.portal.siniestros.model.ConsultaProveedorVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaTDETAUTSVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaTTAPVAATVO;
 import mx.com.gseguros.portal.siniestros.model.DatosSiniestroVO;
+import mx.com.gseguros.portal.siniestros.model.ListaFacturasVO;
 import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.HttpUtil;
@@ -63,6 +64,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
     private List<HashMap<String, String>> loadList;
     private List<HashMap<String, String>> saveList;
     private List<GenericVO> listaPlazas;
+    private List<ListaFacturasVO> listaFacturas;
     
     /**
      * Función para la visualización de las coberturas 
@@ -571,8 +573,8 @@ public void setMsgResult(String msgResult) {
 	   return SUCCESS;
    }
    
-   public String generarSiniestroAltaTramite(){
-		logger.debug(" **** Entrando a generar el siniestro  por medio del alta de tramite***");
+	   public String generarSiniestroAltaTramite(){
+			logger.debug(" **** Entrando a generar el siniestro  por medio del alta de tramite***");
 		try {
 				siniestrosManager.getAltaSiniestroAltaTramite(params.get("ntramite"));
 		}catch( Exception e){
@@ -581,14 +583,80 @@ public void setMsgResult(String msgResult) {
 		}
 	   success = true;
 	   return SUCCESS;
+	}
+   
+   public String generarAltaMsinival(){
+		logger.debug(" **** Entrando a generar la alta de MSINIVAL***");
+	try {
+		HashMap<String, Object> paramMsinival = new HashMap<String, Object>();
+		paramMsinival.put("pv_cdunieco_i",params.get("cdunieco"));
+		paramMsinival.put("pv_cdramo_i",params.get("cdramo"));
+		paramMsinival.put("pv_aaapertu_i",params.get("aaapertu"));
+		paramMsinival.put("pv_status_i",params.get("status"));
+		paramMsinival.put("pv_nmsinies_i",params.get("nmsinies"));
+		paramMsinival.put("pv_cdgarant_i",params.get("cdgarant"));
+		paramMsinival.put("pv_cdconval_i",params.get("cdconval"));
+		paramMsinival.put("pv_cdcapita_i",params.get("cdcapita"));
+		paramMsinival.put("pv_nmordina_i",params.get("nmordina"));
+		paramMsinival.put("pv_femovimi_i",params.get("femovimi"));
+		paramMsinival.put("pv_cdmoneda_i",params.get("cdmoneda"));
+		paramMsinival.put("pv_ptpagos_i",params.get("ptpagos"));
+		paramMsinival.put("pv_ptrecobr_i",params.get("ptrecobr"));
+		paramMsinival.put("pv_ptimprec_i",params.get("ptimprec"));
+		paramMsinival.put("pv_ptimpimp_i",params.get("ptimpimp"));
+		paramMsinival.put("pv_factura_i",params.get("factura"));
+		paramMsinival.put("pv_swlibera_i",params.get("swlibera"));
+		paramMsinival.put("pv_cdtipmov_i",params.get("cdtipmov"));
+		paramMsinival.put("pv_cdidemov_i",params.get("cdidemov"));
+		siniestrosManager.getAltaMsinival(paramMsinival);
+	}catch( Exception e){
+		logger.error("Error al al generar el alta de MSINIVAL ",e);
+			return SUCCESS;
+		}
+	   success = true;
+	   return SUCCESS;
+   }
+   
+   public String generarBajaMsinival(){
+		logger.debug(" **** Entrando a generar baja de MSINIVAL***");
+	try {
+		HashMap<String, Object> paramBajasinival = new HashMap<String, Object>();
+		paramBajasinival.put("pv_cdunieco_i",params.get("cdunieco"));
+		paramBajasinival.put("pv_cdramo_i",params.get("cdramo"));
+		paramBajasinival.put("pv_aaapertu_i",params.get("aaapertu"));
+		paramBajasinival.put("pv_status_i",params.get("status"));
+		paramBajasinival.put("pv_nmsinies_i",params.get("nmsinies"));
+		siniestrosManager.getBajaMsinival(paramBajasinival);
+	}catch( Exception e){
+		logger.error("Error al al generar la baja de MSINIVAL ",e);
+			return SUCCESS;
+		}
+	   success = true;
+	   return SUCCESS;
+   }
+   
+   public String consultaListaFacturas(){
+		logger.debug(" **** Entrando a consulta de lista de facturas****");
+		try {
+	            HashMap<String, Object> paramFact = new HashMap<String, Object>();
+	            paramFact.put("pv_cdunieco_i",params.get("cdunieco"));
+	            paramFact.put("pv_cdramo_i",params.get("cdramo"));
+	            paramFact.put("pv_aaapertu_i",params.get("aapertu"));
+	            paramFact.put("pv_nmsinies_i",params.get("nmsinies"));
+				List<ListaFacturasVO> lista = siniestrosManager.getConsultaListaFacturas(paramFact);
+				logger.debug("RESPUESTA DE LA CONSULTA");
+				logger.debug(lista);
+				
+				if(lista!=null && !lista.isEmpty())	listaFacturas = lista;
+		}catch( Exception e){
+			logger.error("Error al obtener los datos de lista de facturas ",e);
+			return SUCCESS;
+		}
+	success = true;
+	return SUCCESS;
   }
    
-   
-   
-   
    public String entradaCalculos(){
-   	
-   	
    	esHospitalario = false;
    	loadForm =  new HashMap<String, String>();
    	
@@ -845,7 +913,11 @@ public void setMsgResult(String msgResult) {
 	   	return SUCCESS;
    }
 	
-    public List<HashMap<String, String>> getDatosTablas() {
+    public void setListaFacturas(List<ListaFacturasVO> listaFacturas) {
+	this.listaFacturas = listaFacturas;
+}
+
+	public List<HashMap<String, String>> getDatosTablas() {
 		return datosTablas;
 	}
 
@@ -863,6 +935,11 @@ public void setMsgResult(String msgResult) {
     	return listaCPTICD;
 	}
 	
+    
+	public List<ListaFacturasVO> getListaFacturas() {
+		return listaFacturas;
+	}
+
 	public List<ConsultaTDETAUTSVO> getListaConsultaTablas() {
 		return listaConsultaTablas;
 	}

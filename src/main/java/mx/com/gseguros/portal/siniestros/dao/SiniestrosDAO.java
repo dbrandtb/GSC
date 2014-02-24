@@ -10,6 +10,7 @@ import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
 import mx.com.gseguros.portal.siniestros.model.CoberturaPolizaVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaManteniVO;
+import mx.com.gseguros.portal.siniestros.model.ListaFacturasVO;
 import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaPorcentajeVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaProveedorVO;
@@ -77,5 +78,11 @@ public interface SiniestrosDAO {
 	public String guardaAltaSiniestroAutServicio(String nmautser) throws DaoException;
 
 	public String guardaAltaSiniestroAltaTramite(String ntramite) throws DaoException;
+
+	public String guardaAltaMsinival(HashMap<String, Object> paramMsinival) throws DaoException;
+
+	public List<ListaFacturasVO> obtieneListadoFacturas(HashMap<String, Object> paramFact) throws DaoException;
+
+	public String bajaMsinival(HashMap<String, Object> paramBajasinival) throws DaoException;
 
 }
