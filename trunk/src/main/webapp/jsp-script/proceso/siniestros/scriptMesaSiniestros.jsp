@@ -218,7 +218,7 @@ var msgWindow;
 	function turnarAreclamaciones(grid,rowIndex,colIndex){
 		var record = grid.getStore().getAt(rowIndex);
 		
-	        		comentariosText = Ext.create('Ext.form.field.TextArea', {
+	        		var comentariosText = Ext.create('Ext.form.field.TextArea', {
 	                	fieldLabel: 'Observaciones'
 	            		,labelWidth: 150
 	            		,width: 600
@@ -306,68 +306,144 @@ var msgWindow;
 	}
 	
 	function turnarAareaMedica(grid,rowIndex,colIndex){
-		msgWindow = Ext.Msg.show({
-	        title: 'Aviso',
-	        msg: '&iquest;Esta seguro que desea turnar al Area M&eacute;dica?',
-	        buttons: Ext.Msg.YESNO,
-	        icon: Ext.Msg.QUESTION,
-	        fn: function(buttonId, text, opt){
-	        	if(buttonId == 'yes'){
-	        		
-	        		Ext.Ajax.request({
-						url: _UrlTurnarAreaMedica,
-						jsonData: {
-							/*params: {
-					    		'pv_ntramite_i' : _nmTramite,
-					    		'pv_cdtippag_i' : _tipoPago,
-					    		'pv_cdtipate_i' : _tipoAtencion
-					    	}*/
-						},
-						success: function() {
-							mensajeCorrecto('Aviso','Se ha turnado con exito.');
-						},
-						failure: function(){
-							mensajeError('Error','No se pudo turnar.');
-						}
-					});
-	        	}
-	        	
-	        }
-	    });
-		centrarVentana(msgWindow);
+		 var comentariosText = Ext.create('Ext.form.field.TextArea', {
+        	fieldLabel: 'Observaciones'
+    		,labelWidth: 150
+    		,width: 600
+    		,name:'smap1.comments'
+			,height: 250
+        });
+		
+		windowLoader = Ext.create('Ext.window.Window',{
+	        modal       : true,
+	        buttonAlign : 'center',
+	        width       : 663,
+	        height      : 400,
+	        autoScroll  : true,
+	        items       : [
+        	        		Ext.create('Ext.form.Panel', {
+        	                title: 'Turnar al Area Médica',
+        	                width: 650,
+        	                url: _URL_ActualizaStatusTramite,
+        	                bodyPadding: 5,
+        	                items: [comentariosText],
+        	        	    buttonAlign:'center',
+        	        	    buttons: [{
+        	            		text: 'Turnar'
+        	            		,icon:_CONTEXT+'/resources/fam3icons/icons/accept.png'
+        	            		,buttonAlign : 'center',
+        	            		handler: function() {
+        	            	    	if (this.up().up().form.isValid()) {
+        	            	    		this.up().up().form.submit({
+        	            		        	waitMsg:'Procesando...',
+        	            		        	params: {
+        	            		        		'smap1.ntramite' : record.get('ntramite'), 
+        	            		        		'smap1.status'   : 1,
+        	            		        	},
+        	            		        	failure: function(form, action) {
+        	            		        		mensajeError('Error','No se pudo turnar.');
+        	            					},
+        	            					success: function(form, action) {
+        	            						mensajeCorrecto('Aviso','Se ha turnado con exito.');
+        	            						loadMcdinStore();
+        	            						windowLoader.close();
+        	            						
+        	            					}
+        	            				});
+        	            			} else {
+        	            				Ext.Msg.show({
+        	            	                   title: 'Aviso',
+        	            	                   msg: 'Complete la informaci&oacute;n requerida',
+        	            	                   buttons: Ext.Msg.OK,
+        	            	                   icon: Ext.Msg.WARNING
+        	            	               });
+        	            			}
+        	            		}
+        	            	},{
+        	            	    text: 'Cancelar',
+        	            	    icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+        	            	    buttonAlign : 'center',
+        	            	    handler: function() {
+        	            	        windowLoader.close();
+        	            	    }
+        	            	}
+        	            	]
+        	            })  
+	            	]
+	    }).show();
+		
+		centrarVentana(windowLoader);
 		
 	}
 	
 	function turnarAoperadorReclamaciones(grid,rowIndex,colIndex){
-		msgWindow = Ext.Msg.show({
-	        title: 'Aviso',
-	        msg: '&iquest;Esta seguro que desea turnar al Operador de Reclamaciones?',
-	        buttons: Ext.Msg.YESNO,
-	        icon: Ext.Msg.QUESTION,
-	        fn: function(buttonId, text, opt){
-	        	if(buttonId == 'yes'){
-	        		
-	        		Ext.Ajax.request({
-						url: _UrlTurnarOperadorAR,
-						jsonData: {
-							/*params: {
-					    		'pv_ntramite_i' : _nmTramite,
-					    		'pv_cdtippag_i' : _tipoPago,
-					    		'pv_cdtipate_i' : _tipoAtencion
-					    	}*/
-						},
-						success: function() {
-							mensajeCorrecto('Aviso','Se ha turnado con exito.');
-						},
-						failure: function(){
-							mensajeError('Error','No se pudo turnar.');
-						}
-					});
-	        	}
-	        	
-	        }
-	    });
-		centrarVentana(msgWindow);
+		var comentariosText = Ext.create('Ext.form.field.TextArea', {
+        	fieldLabel: 'Observaciones'
+    		,labelWidth: 150
+    		,width: 600
+    		,name:'smap1.comments'
+			,height: 250
+        });
+		
+		windowLoader = Ext.create('Ext.window.Window',{
+	        modal       : true,
+	        buttonAlign : 'center',
+	        width       : 663,
+	        height      : 400,
+	        autoScroll  : true,
+	        items       : [
+        	        		Ext.create('Ext.form.Panel', {
+        	                title: 'Turnar a Operador de Reclamaciones',
+        	                width: 650,
+        	                url: _URL_ActualizaStatusTramite,
+        	                bodyPadding: 5,
+        	                items: [comentariosText],
+        	        	    buttonAlign:'center',
+        	        	    buttons: [{
+        	            		text: 'Turnar'
+        	            		,icon:_CONTEXT+'/resources/fam3icons/icons/accept.png'
+        	            		,buttonAlign : 'center',
+        	            		handler: function() {
+        	            	    	if (this.up().up().form.isValid()) {
+        	            	    		this.up().up().form.submit({
+        	            		        	waitMsg:'Procesando...',
+        	            		        	params: {
+        	            		        		'smap1.ntramite' : record.get('ntramite'), 
+        	            		        		'smap1.status'   : 7,
+        	            		        	},
+        	            		        	failure: function(form, action) {
+        	            		        		mensajeError('Error','No se pudo turnar.');
+        	            					},
+        	            					success: function(form, action) {
+        	            						mensajeCorrecto('Aviso','Se ha turnado con exito.');
+        	            						loadMcdinStore();
+        	            						windowLoader.close();
+        	            						
+        	            					}
+        	            				});
+        	            			} else {
+        	            				Ext.Msg.show({
+        	            	                   title: 'Aviso',
+        	            	                   msg: 'Complete la informaci&oacute;n requerida',
+        	            	                   buttons: Ext.Msg.OK,
+        	            	                   icon: Ext.Msg.WARNING
+        	            	               });
+        	            			}
+        	            		}
+        	            	},{
+        	            	    text: 'Cancelar',
+        	            	    icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+        	            	    buttonAlign : 'center',
+        	            	    handler: function() {
+        	            	        windowLoader.close();
+        	            	    }
+        	            	}
+        	            	]
+        	            })  
+	            	]
+	    }).show();
+		
+		centrarVentana(windowLoader);
 	}
 	
 	function solicitarPago(grid,rowIndex,colIndex){
