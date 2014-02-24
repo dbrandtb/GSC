@@ -218,13 +218,6 @@ var msgWindow;
 	function turnarAreclamaciones(grid,rowIndex,colIndex){
 		var record = grid.getStore().getAt(rowIndex);
 		
-		msgWindow = Ext.Msg.show({
-	        title: 'Aviso',
-	        msg: '&iquest;Esta seguro que desea turnar al Area de Reclamaciones?',
-	        buttons: Ext.Msg.YESNO,
-	        icon: Ext.Msg.QUESTION,
-	        fn: function(buttonId, text, opt){
-	        	if(buttonId == 'yes'){
 	        		comentariosText = Ext.create('Ext.form.field.TextArea', {
 	                	fieldLabel: 'Observaciones'
 	            		,labelWidth: 150
@@ -292,12 +285,7 @@ var msgWindow;
 	        	    }).show();
 	        		
 	        		centrarVentana(windowLoader);
-	        		
-	        	}
 	        	
-	        }
-	    });
-		centrarVentana(msgWindow);
 	}
 	
 	function detalleReclamacionWindow(grid,rowIndex,colIndex){
