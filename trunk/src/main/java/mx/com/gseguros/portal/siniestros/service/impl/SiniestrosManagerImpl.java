@@ -166,42 +166,6 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	}
 
 	@Override
-	public boolean turnarAreaReclamaciones(HashMap<String, String> params)
-			throws ApplicationException {
-		try {
-			siniestrosDAO.turnarAreaReclamaciones(params);
-		} catch (DaoException daoExc) {
-			log.error("Error al turnarAreaReclamaciones: " + daoExc.getMessage(), daoExc);	
-			return false;
-		}
-		return true;
-	}
-
-	@Override
-	public boolean turnarAreaMedica(HashMap<String, String> params)
-			throws ApplicationException {
-		try {
-			siniestrosDAO.turnarAreaMedica(params);
-		} catch (DaoException daoExc) {
-			log.error("Error al turnarAreaMedica: " + daoExc.getMessage(), daoExc);	
-			return false;
-		}
-		return true;
-	}
-
-	@Override
-	public boolean turnarOperadorAR(HashMap<String, String> params)
-			throws ApplicationException {
-		try {
-			siniestrosDAO.turnarOperadorAR(params);
-		} catch (DaoException daoExc) {
-			log.error("Error al turnarOperadorAR: " + daoExc.getMessage(), daoExc);	
-			return false;
-		}
-		return true;
-	}
-	
-	@Override
 	public boolean solicitarPago(HashMap<String, String> params)
 			throws ApplicationException {
 		try {

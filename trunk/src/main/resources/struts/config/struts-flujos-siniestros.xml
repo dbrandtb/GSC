@@ -335,34 +335,6 @@
 				</param>
 			</result>
 		</action>
-		<action name="turnarAreaReclamaciones" class="siniestrosAction"
-			method="turnarAreaReclamaciones">
-			<result type="json">
-				<param name="ignoreHierarchy">false</param>
-				<param name="includeProperties">
-					success
-				</param>
-			</result>
-		</action>
-		<action name="turnarAreaMedica" class="siniestrosAction"
-			method="turnarAreaMedica">
-			<result type="json">
-				<param name="ignoreHierarchy">false</param>
-				<param name="includeProperties">
-					success
-				</param>
-			</result>
-		</action>
-
-		<action name="turnarOperadorAR" class="siniestrosAction"
-			method="turnarOperadorAR">
-			<result type="json">
-				<param name="ignoreHierarchy">false</param>
-				<param name="includeProperties">
-					success
-				</param>
-			</result>
-		</action>
 
 		<action name="solicitarPago" class="siniestrosAction"
 			method="solicitarPago">
