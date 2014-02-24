@@ -1,16 +1,15 @@
 package mx.com.gseguros.portal.rehabilitacion.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.ServletActionContext;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.cancelacion.service.CancelacionManager;
 import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
@@ -18,18 +17,23 @@ import mx.com.gseguros.portal.rehabilitacion.service.RehabilitacionManager;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.ServletActionContext;
+
 public class RehabilitacionAction extends PrincipalCoreAction
 {
 
-	private static final long              serialVersionUID      = 5306848466443116067L;
-	private static org.apache.log4j.Logger log                   = org.apache.log4j.Logger.getLogger(RehabilitacionAction.class);
-	private Map<String,String>             smap1;
-	private List<Map<String,String>>       slist1;
-	private boolean                        success               = false;
-	private RehabilitacionManager          rehabilitacionManager;
-	private Map<String,Item>               imap;
-	private PantallasManager               pantallasManager;
-	private CancelacionManager             cancelacionManager;
+	private static final long              serialVersionUID = 5306848466443116067L;
+	private static org.apache.log4j.Logger log              = org.apache.log4j.Logger.getLogger(RehabilitacionAction.class);
+	private boolean                        success          = false;
+	SimpleDateFormat                       renderFechas     = new SimpleDateFormat("dd/MM/yyyy");
+	
+	private Map<String,String>       smap1;
+	private List<Map<String,String>> slist1;
+	private RehabilitacionManager    rehabilitacionManager;
+	private Map<String,Item>         imap;
+	private PantallasManager         pantallasManager;
+	private CancelacionManager       cancelacionManager;
 	private transient Ice2sigsService ice2sigsService;
 	
 	/////////////////////////////
@@ -121,6 +125,29 @@ public class RehabilitacionAction extends PrincipalCoreAction
 	
 	//////////////////////////////////////////////
 	////// pantalla de rehabilitacion unica //////
+	/*
+	smap1:
+		ASEGURADO: "OCTAVIO  CORTINA  CEREZO"
+		ASEGURADORA: "SALUD MATRIZ"
+		CDELEMENTO: "6442"
+		CDMONEDA: "001"
+		CDPERSON: "512150"
+		CDRAMO: "2"
+		CDRAZON: "22"
+		CDUNIECO: "1000"
+		COMENTARIOS: "POR REQUERIR OTRO PRODUCTO"
+		DSELEMEN: "GENERAL DE SEGUROS"
+		DSRAZON: "A solicitud del Asegurado"
+		ESTADO: "M"
+		FECANCEL: "15/04/2014"
+		FEEFECTO: "15/10/2013"
+		FEVENCIM: "15/10/2014"
+		NMCANCEL: "1"
+		NMPOLIZA: "63"
+		NMSITUAC: "1"
+		NMSUPLEM: "245676312000000000"
+		PRODUCTO: "SALUD VITAL" 
+	*/
 	/*//////////////////////////////////////////*/
 	public String pantallaRehabilitacionUnica()
 	{
@@ -141,10 +168,45 @@ public class RehabilitacionAction extends PrincipalCoreAction
 			
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			
-			gc.generaParcial(pantallasManager.obtenerComponentes(
+			List<ComponenteVO>componentes = pantallasManager.obtenerComponentes(
 					null, null, null,
 					null, null, null,
-					"PANTALLAREHABILITARUNICA", "FORM", null));
+					"PANTALLAREHABILITARUNICA", "FORM", null); 
+			
+			ComponenteVO preguntaAntiguedad = null;
+			ComponenteVO algunoAntiguo      = null;
+			
+			for(ComponenteVO comIte : componentes)
+			{
+				if(comIte.getCatalogo()!=null&&comIte.getCatalogo().equalsIgnoreCase("SINO"))
+				{
+					preguntaAntiguedad = comIte;
+				}
+				if(comIte.getLabel()!=null&&comIte.getLabel().equalsIgnoreCase("ALGUNOANTIGUO"))
+				{
+					algunoAntiguo = comIte;
+				}
+			}
+			
+			String cdunieco = smap1.get("CDUNIECO");
+			String cdramo   = smap1.get("CDRAMO");
+			String estado   = smap1.get("ESTADO");
+			String nmpoliza = smap1.get("NMPOLIZA");
+			
+			boolean algunoAntiguedad = rehabilitacionManager.validaAntiguedad(cdunieco, cdramo, estado, nmpoliza);
+			
+			if(algunoAntiguedad)
+			{
+				preguntaAntiguedad.setOculto(false);
+				algunoAntiguo.setValue("'S'");
+			}
+			else
+			{
+				preguntaAntiguedad.setOculto(true);
+				algunoAntiguo.setValue("'N'");
+			}
+			
+			gc.generaParcial(componentes);
 			
 			imap.put("itemsForm" , gc.getItems());
 		}
@@ -166,6 +228,25 @@ public class RehabilitacionAction extends PrincipalCoreAction
 	
 	/////////////////////////////////
 	////// rehabilitacionUnica //////
+	/*
+	smap1.pv_cdunieco_i:1000
+	smap1.pv_cdramo_i:2
+	smap1.pv_estado_i:M
+	smap1.pv_nmpoliza_i:58
+	smap1.pv_feefecto_i:18/12/2013
+	smap1.pv_fevencim_i:18/12/2014
+	smap1.pv_fecancel_i:07/01/2014
+	smap1.pv_nmcancel_i:2
+	smap1.pv_cdrazon_i:9
+	smap1.inutil:Cacelacion por Falta de Pago
+	smap1.pv_cdperson_i:511754
+	smap1.pv_cdmoneda_i:001
+	smap1.pv_fereinst_i:24/02/2014
+	smap1.pv_sino_i:N
+	smap1.pv_comments_i:SD
+	smap1.pv_nmsuplem_i:245666520230000000
+	smap1.pv_algunoantiguo_i:S
+	*/
 	/*/////////////////////////////*/
 	public String rehabilitacionUnica()
 	{
@@ -178,12 +259,22 @@ public class RehabilitacionAction extends PrincipalCoreAction
 		log.debug("smap1: "+smap1);
 		try
 		{
+			boolean algunAntiguo   = smap1.get("pv_algunoantiguo_i")!=null && smap1.get("pv_algunoantiguo_i").equalsIgnoreCase("S");
+			boolean seConservaAnti = smap1.get("pv_sino_i")         !=null && smap1.get("pv_sino_i")         .equalsIgnoreCase("S");
+			String  cdunieco       = smap1.get("pv_cdunieco_i");
+			String  cdramo         = smap1.get("pv_cdramo_i");
+			String  estado         = smap1.get("pv_estado_i");
+			String  nmpoliza       = smap1.get("pv_nmpoliza_i");
+			String  nmsuplemPol    = smap1.get("pv_nmsuplem_i");
+			String  fereinst       = smap1.get("pv_fereinst_i");
+			
+			if(algunAntiguo && !seConservaAnti)
+			{
+				rehabilitacionManager.borraAntiguedad(cdunieco, cdramo, estado, nmpoliza, nmsuplemPol, fereinst);
+			}
+			
 			rehabilitacionManager.rehabilitarPoliza(smap1);
 			
-			String cdunieco = smap1.get("pv_cdunieco_i");
-			String cdramo   = smap1.get("pv_cdramo_i");
-			String estado   = smap1.get("pv_estado_i");
-			String nmpoliza = smap1.get("pv_nmpoliza_i");
 			String cdtipsup = TipoEndoso.REHABILITACION.getCdTipSup().toString();
 			
 			String nmsuplem = null;

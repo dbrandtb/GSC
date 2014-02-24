@@ -122,6 +122,11 @@ public class CatalogosAction extends PrincipalCoreAction {
 						lista.add(new GenericVO(nombre.get("CDTIPSUP"), nombre.get("DSTIPSUP")));
 					}
 					break;
+				case SINO:
+					lista=new ArrayList<GenericVO>(0);
+					lista.add(new GenericVO("N", "NO"));
+					lista.add(new GenericVO("S", "SI"));
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + nombreCatalogo);
 					//break;
