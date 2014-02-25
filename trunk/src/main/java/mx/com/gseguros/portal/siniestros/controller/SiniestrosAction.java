@@ -237,7 +237,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 				
 					this.session=ActionContext.getContext().getSession();
 			        UserVO usuario=(UserVO) session.get("USUARIO");
-		        
+		            
 					HashMap<String, Object> parMesCon = new HashMap<String, Object>();
 					parMesCon.put("pv_cdunieco_i",params.get("cdunieco"));
 					parMesCon.put("pv_cdramo_i",params.get("cdramo"));
@@ -318,6 +318,20 @@ public class SiniestrosAction extends PrincipalCoreAction{
 						        paramsFacMesaCtrl.put("pv_ptimport_i",datosTablas.get(i).get("ptimport"));
 						        siniestrosManager.guardaListaFacMesaControl(paramsFacMesaCtrl);
 						    }
+							HashMap<String, Object> paramsTworkSinPagRem = new HashMap<String, Object>();
+					        paramsTworkSinPagRem.put("pv_nmtramite_i",msgResult);
+					        paramsTworkSinPagRem.put("pv_cdunieco_i",params.get("cdunieco"));
+					        paramsTworkSinPagRem.put("pv_cdramo_i",params.get("cdramo"));
+					        paramsTworkSinPagRem.put("pv_estado_i",params.get("estado"));
+					        paramsTworkSinPagRem.put("pv_nmpoliza_i",params.get("nmpoliza"));
+					        paramsTworkSinPagRem.put("pv_nmsolici_i",params.get("nmsolici"));
+					        paramsTworkSinPagRem.put("pv_nmsuplem_i",params.get("nmsuplem"));
+					        paramsTworkSinPagRem.put("pv_nmsituac_i",params.get("nmsituac"));
+					        paramsTworkSinPagRem.put("pv_cdtipsit_i",params.get("cdtipsit"));
+					        paramsTworkSinPagRem.put("pv_cdperson_i",params.get("cmbAseguradoAfectado"));
+					        paramsTworkSinPagRem.put("pv_feocurre_i",params.get("fechaOcurrencia"));
+					        paramsTworkSinPagRem.put("pv_nmautser_i",null);
+					        siniestrosManager.guardaListaTworkSin(paramsTworkSinPagRem);
 						}
 					}
 			}catch( Exception e){
