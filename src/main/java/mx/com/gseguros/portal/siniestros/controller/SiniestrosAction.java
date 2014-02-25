@@ -805,13 +805,13 @@ public void setMsgResult(String msgResult) {
 		    params.put("pv_cdtipate_i", (String) paramsO.get("pv_cdtipate_i"));
 	   		loadList = siniestrosManager.loadListaDocumentos(params);
 	   		
-	   		HashMap<String, String> otro = new HashMap<String, String>();
-	   		otro.put("listo", "false");
-	   		otro.put("nombre", "prueba");
-	   		otro.put("id", "idprueba");
-	   		otro.put("obligatorio", "No");
 	   		
-	   		loadList.add(otro);
+	   		if(loadList == null || loadList.isEmpty()){
+	   			msgResult = "No se puede Generar el Contra Recibo. No hay documentos";
+   				success = false;
+   				return SUCCESS;
+	   		}
+	   		
 	   		for(HashMap<String, String> doc: loadList){
 	   			
 	   			if( "Si".equalsIgnoreCase((String)doc.get("obligatorio")) && !(doc.get("listo")!= null && "true".equalsIgnoreCase((String)doc.get("listo")))){
