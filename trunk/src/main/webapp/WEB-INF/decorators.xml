@@ -37,7 +37,6 @@
         <pattern>/endosos/endosoFormaPago.action</pattern>
         <pattern>/endosos/endosoAgente.action</pattern>
         <pattern>/general/obtieneRecibos.action</pattern>
-        <pattern>/catalogos/agregaUsuarios.action</pattern>
         <pattern>/siniestros/calculosReclamaciones.action</pattern>
         
 	</excludes>
@@ -119,9 +118,6 @@
         <pattern>/emision/*.action</pattern>
         <pattern>/jsp-script/proceso/emision/*.jsp</pattern>
         
-        
-        <pattern>/siniestros/principal.action</pattern>
-        <pattern>/jsp-script/proceso/siniestros/principal.jsp</pattern>
         
         <pattern>/siniestros/principalCordinadorAR.action</pattern>
         <pattern>/jsp-script/proceso/siniestros/principalCordinadorAR.jsp</pattern>
