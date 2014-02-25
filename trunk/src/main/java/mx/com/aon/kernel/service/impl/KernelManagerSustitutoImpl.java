@@ -1193,5 +1193,10 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 		WrapperResultados res = this.returnBackBoneInvoke(params,ProcesoDAO.HABILITA_SIG_RECIBO);
 		return res.getMsgTitle();
 	}
+	public boolean validaDatosDxN(HashMap<String, Object> params) throws ApplicationException{
+		WrapperResultados res = this.returnBackBoneInvoke(params,ProcesoDAO.VALIDA_DATOS_DXN);
+		boolean exito = "1".equals(res.getItemMap().get("EXITO"));
+		return exito;
+	}
 	
 }

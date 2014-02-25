@@ -145,6 +145,7 @@ public class ProcesoDAO extends AbstractDAO {
 	public static final String VALIDAR_EXTRAPRIMA_SITUAC   =	"VALIDAR_EXTRAPRIMA_SITUAC";
 	public static final String P_OBTIENE_MESACONTROL_SUPER = "P_OBTIENE_MESACONTROL_SUPER";
 	public static final String HABILITA_SIG_RECIBO = "HABILITA_SIG_RECIBO";
+	public static final String VALIDA_DATOS_DXN = "VALIDA_DATOS_DXN";
 
 	protected void initDao() throws Exception {
 		addStoredProcedure(EJECUTA_SIGSVALIPOL, new EjecutarSIGSVALIPOL(getDataSource()));
@@ -238,6 +239,7 @@ public class ProcesoDAO extends AbstractDAO {
 		addStoredProcedure(VALIDAR_EXTRAPRIMA_SITUAC, new ValidarExtraprimaSituac(getDataSource()));
 		addStoredProcedure(VALIDAR_EXTRAPRIMA_SITUAC_READ, new ValidarExtraprimaSituacRead(getDataSource()));
 		addStoredProcedure(HABILITA_SIG_RECIBO, new HabilitaSigRecibo(getDataSource()));
+		addStoredProcedure(VALIDA_DATOS_DXN, new ValidaDatosDxn(getDataSource()));
 	}
 	
 	
@@ -4451,6 +4453,40 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
     		WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
     		WrapperResultados wrapperResultados=mapper.build(map);
+    		return wrapperResultados;
+    	}   	
+    	
+    }
+
+    protected class ValidaDatosDxn extends CustomStoredProcedure {
+    	
+    	protected ValidaDatosDxn(DataSource dataSource) {
+    		super(dataSource, "PKG_SATELITES.P_VALIDA_ATRIB_FP_DXN");
+    		declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_swexito_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+    		WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+    		WrapperResultados wrapperResultados=mapper.build(map);
+    		
+    		logger.debug("pv_swexito_o: "+map.get("pv_swexito_o"));
+    		String exito = null;
+			if(map.get("pv_swexito_o") != null){
+				exito = map.get("pv_swexito_o").toString();
+			}else{
+				exito = "2";
+			}
+			wrapperResultados.setItemMap(new HashMap<String, Object>());
+			wrapperResultados.getItemMap().put("EXITO", exito);
+			
     		return wrapperResultados;
     	}   	
     	

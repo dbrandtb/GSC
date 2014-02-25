@@ -897,6 +897,23 @@ public class ComplementariosAction extends PrincipalCoreAction
 				);
 		try
 		{
+			
+			try{
+				HashMap<String, Object> paramsValida = new HashMap<String, Object>();
+				paramsValida.put("pv_cdunieco_i", cdunieco);
+				paramsValida.put("pv_cdramo_i", cdramo);
+				paramsValida.put("pv_estado_i", "W");
+				paramsValida.put("pv_nmpoliza_i", panel1.get("nmpoliza"));
+				paramsValida.put("pv_nmsuplem_i", "0");
+				
+				if(!kernelManager.validaDatosDxN(paramsValida)){
+					mensajeRespuesta = "Favor de verificar los Datos Adicionales correspondientes a Descuento por N&oacute;mina";
+					return SUCCESS;
+				}
+			}catch(Exception ex){
+				log.error("Error al validar Datos de DxN",ex);
+			} 
+			
 			///////////////////////////////////
 			////// validar la extraprima //////
 			/*///////////////////////////////*/
