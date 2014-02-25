@@ -183,12 +183,7 @@ Ext.onReady(function() {
         labelWidth : 250,		   emptyText:'Seleccione...',			width		 : 500,						store: storeTipoAtencion
     });
 
-    var tipoServicioInterno = Ext.create('Ext.form.ComboBox',
-    {
-        id:'tipoServicioInterno',			   name:'tipoServicioInterno',		        fieldLabel: 'Tipo de servicio',				queryMode:'local',
-        displayField: 'value',	   valueField: 'key',					allowBlank:false,						editable:false,
-        labelWidth : 170,		   emptyText:'Seleccione...',			width		 : 500,						store: storeTipoAtencion
-    });
+    
 
     var tipoPago= Ext.create('Ext.form.ComboBox',
     		{
@@ -295,30 +290,19 @@ Ext.onReady(function() {
     	triggerAction: 'all'
     });
     
-    var cmbProveedorInterno = Ext.create('Ext.form.field.ComboBox',
-    {
-    	fieldLabel : 'Proveedor',			allowBlank: false,				displayField : 'nombre',		name:'cmbProveedorInterno',
-    		id:'cmbProveedorInterno',				labelWidth: 170,					valueField   : 'cdpresta',			
-    		forceSelection : true,	width:500,		emptyText:'Seleccione...',
-    	matchFieldWidth: false,			queryMode :'remote',				queryParam: 'params.cdpresta',	store : storeProveedor,			editable:false,
-    	triggerAction: 'all'
-    });
     
     var panelModificacionInsercion= Ext.create('Ext.form.Panel',{
         border  : 0
         ,bodyStyle:'padding:5px;'
         ,items :
         [   
-             {
-		    	id:'noFactInterno'
-		        ,xtype      : 'textfield'
-		    	,fieldLabel : 'No. Factura'
-	    		,labelWidth: 170
-	    		,allowBlank:false
-		    	,name       : 'noFactInterno'
-    		},            
-    		{
-    	        id: 'fechaFactInterno',
+            {
+		        xtype      : 'textfield',
+		        name       : 'noFactInterno',
+		    	fieldLabel : 'No. Factura',
+	    		labelWidth: 170,
+	    		allowBlank:false
+    		},{
     	        name: 'fechaFactInterno',
     	        fieldLabel: 'Fecha Factura',
     	        xtype: 'datefield',
@@ -327,35 +311,57 @@ Ext.onReady(function() {
     	        allowBlank:false,
     	        labelWidth : 170,
     	        value:new Date()
-    	    }
-            ,
-            tipoServicioInterno
-            ,
-            cmbProveedorInterno
-            ,
-            	//proveedor2
-            {
-		    	id:'importeInterno'
-		        ,xtype      : 'numberfield'
-		    	,fieldLabel : 'Importe'
-	    		,labelWidth: 170
-                ,width:500
-                ,allowBlank:false
-		    	,name       : 'importeInterno'
-		    	,allowDecimals :true
-		    	,decimalSeparator :'.'
-		    	,minValue: 0
+    	    },{
+            	xtype: 'combo',
+                name:'tipoServicioInterno',
+                valueField: 'key',
+                displayField: 'value',
+                fieldLabel: 'Tipo de servicio',
+                store: storeTipoAtencion,
+                queryMode:'local',
+                allowBlank:false,
+                editable:false,
+                width: 500,
+                labelWidth : 170,
+                emptyText:'Seleccione...'
+            },{
+            	xtype       : 'combo',
+            	name        :'proveedorInterno',
+            	fieldLabel  : 'Proveedor',
+            	displayField: 'nombre',
+            	valueField  : 'cdpresta',
+            	allowBlank  : false,
+            	width       : 500,			
+                forceSelection : true,
+                matchFieldWidth: false,
+                queryMode   :'remote',
+                queryParam  : 'params.cdpresta',
+                store       : storeProveedor,
+                triggerAction  : 'all',
+                labelWidth  : 170,
+                emptyText   : 'Seleccione...',
+                editable    : false
+            },{   
+            	xtype      : 'numberfield',
+		        name       : 'importeInterno',
+		    	fieldLabel : 'Importe',
+		    	allowBlank:false,
+		    	allowDecimals :true,
+		    	decimalSeparator :'.',
+		    	minValue: 0,
+                width:500,
+                labelWidth: 170
     		}
         ]
     });
     /*PANTALLA EMERGENTE PARA LA INSERCION Y MODIFICACION DE LOS DATOS DEL GRID*/
     var ventanaGrid= Ext.create('Ext.window.Window', {
-         renderTo: document.body,
            title: 'NUEVAS FACTURAS',
-           height: 230,
            closeAction: 'hide',
+           modal: true,
+           resizable: false,
+           height: 230,
            items:[panelModificacionInsercion],
-           
            buttons:[{
                   text: 'Aceptar',
                   icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
@@ -368,10 +374,10 @@ Ext.onReady(function() {
         	 				  	noFactura: datos.noFactInterno,
         					 	fechaFactura: datos.fechaFactInterno,
         					 	tipoServicio: datos.tipoServicioInterno,
-        					 	proveedor: datos.cmbProveedorInterno,
+        					 	proveedor: datos.proveedorInterno,
         					 	importe: datos.importeInterno,
-        					 	proveedorName: cmbProveedorInterno.rawValue,
-        					 	tipoServicioName:tipoServicioInterno.rawValue
+        					 	proveedorName: panelModificacionInsercion.query('combo[name=proveedorInterno]')[0].rawValue,
+        					 	tipoServicioName: panelModificacionInsercion.query('combo[name=tipoServicioInterno]')[0].rawValue
 		        	 		});
                         	
                         	storeFactCtrl.add(rec);
@@ -496,7 +502,6 @@ Ext.onReady(function() {
                 fieldLabel : 'Fecha ocurrencia',
                 allowBlank: false,
                 maxValue   :  new Date(),
-                labelWidth : 170,
                 format		: 'd/m/Y'
             },{
             	xtype: 'combo',
@@ -507,7 +512,6 @@ Ext.onReady(function() {
         	    allowBlank: false,
         	    width:500,
         	    minChars  : 2,
-        	    labelWidth: 170,
         	    forceSelection : true,
         	    matchFieldWidth: false,
         	    queryMode :'remote',
@@ -555,11 +559,11 @@ Ext.onReady(function() {
     });
 
    var ventanaAgregarAsegurado= Ext.create('Ext.window.Window', {
-        //renderTo: document.body,
         title: 'Asegurados',
         //height: 200,
-        closeAction: 'hide', 
+        closeAction: 'hide',
         modal: true, 
+        resizable: false,
         items:[panelListadoAsegurado],
         buttonAlign : 'center',
         buttons:[
@@ -747,11 +751,12 @@ Ext.onReady(function() {
 	{
 	    title        : 'Listado de P&oacute;liza'
 	    ,modal       : true
+	    ,resizable   : false
 	    ,buttonAlign : 'center'
-	    ,closable : false
+	    ,closable    : false
 	    ,width		 : 650
 	    ,minHeight 	 : 100 
-	    ,maxheight      : 400
+	    ,maxheight   : 400
 	    ,items       :
 	        [
 	            gridPolizasAltaTramite
