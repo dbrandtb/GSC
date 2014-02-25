@@ -2,6 +2,7 @@ package mx.com.gseguros.portal.siniestros.service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
@@ -21,7 +22,7 @@ import mx.com.gseguros.portal.siniestros.model.DatosSiniestroVO;
 public interface SiniestrosManager {
 	
 	/**
-	 * Obtiene la información de la Autorización de servicio en especifico
+	 * Obtiene la informaciï¿½n de la Autorizaciï¿½n de servicio en especifico
 	 * @param nmautser
 	 * @return List AutorizacionServicioVO
 	 * @throws ApplicationException
@@ -36,7 +37,7 @@ public interface SiniestrosManager {
 	public List<GenericVO> getConsultaListaAsegurado(String cdperson) throws ApplicationException;
 	
 	/**
-	 * Obtiene la información de la lista de autorizaciones
+	 * Obtiene la informaciï¿½n de la lista de autorizaciones
 	 * @param cdperson
 	 * @return List AutorizaServiciosVO  
 	 * @throws ApplicationException
@@ -117,5 +118,5 @@ public interface SiniestrosManager {
 	
 	public List<GenericVO> obtieneListadoCobertura(String cdramo,String cdtipsit) throws ApplicationException;
 	
-	public String actualizaOTValorMesaControl(HashMap<String, Object> params) throws ApplicationException;
+	public String actualizaOTValorMesaControl(Map<String, Object> params) throws ApplicationException;
 }
