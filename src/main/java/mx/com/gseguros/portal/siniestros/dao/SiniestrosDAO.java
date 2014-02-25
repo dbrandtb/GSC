@@ -41,6 +41,8 @@ public interface SiniestrosDAO {
 
 	public List<HashMap<String, String>> loadListaDocumentos(HashMap<String, String> params) throws DaoException;
 
+	public String generaContraRecibo(HashMap<String, Object> params) throws DaoException;
+
 	public List<HashMap<String, String>> loadListaIncisosRechazos(HashMap<String, String> params) throws DaoException;
 
 	public List<HashMap<String, String>> loadListaRechazos() throws DaoException;

@@ -1078,4 +1078,22 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
+
+	@Override
+	public String generaContraRecibo(HashMap<String, Object> params) throws DaoException {
+		Map<String, Object> mapResult = ejecutaSP(new GeneraContraRecibo(this.getDataSource()), params);
+		return (String) mapResult.get("pv_title_o");
+	}
+	
+	protected class GeneraContraRecibo extends StoredProcedure
+	{
+		protected GeneraContraRecibo(DataSource dataSource)
+		{
+			super(dataSource, "Pkg_Presiniestro.p_update_contrarecibo");
+			declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

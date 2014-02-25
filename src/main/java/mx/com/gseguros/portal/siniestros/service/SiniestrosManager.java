@@ -82,6 +82,8 @@ public interface SiniestrosManager {
 	
 	public List<HashMap<String, String>> loadListaDocumentos(HashMap<String, String> params) throws ApplicationException;
 
+	public String generaContraRecibo(HashMap<String, Object> params) throws ApplicationException;
+
 	public List<HashMap<String, String>> loadListaIncisosRechazos(HashMap<String, String> params) throws ApplicationException;
 
 	public boolean guardaEstatusDocumentos(HashMap<String, String> params, List<HashMap<String, String>> saveList) throws ApplicationException;
