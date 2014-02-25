@@ -181,7 +181,7 @@ Ext.onReady(function() {
     var comboTipoAte= Ext.create('Ext.form.ComboBox',
     {
         id:'cmbTipoAtencion',			   name:'cmbTipoAtencion',		        fieldLabel: 'Tipo atenci&oacute;n',				queryMode:'local',
-        displayField: 'value',	   valueField: 'key',					allowBlank:false,						editable:false,
+        displayField: 'value',	   valueField: 'key',					editable:false,
         labelWidth : 250,		   emptyText:'Seleccione...',			width		 : 500,						store: storeTipoAtencion
     });
 
@@ -911,6 +911,42 @@ Ext.onReady(function() {
     	                {
             				//aqui realizamos el llamado al guardado
             				var respuesta=true;
+            				//Llenamos los campos dependiendo si es pago por reembolso
+            				if( Ext.getCmp('cmbTipoPago').getValue() == "1") // Pago Directo
+        					{
+            					var obtener = [];
+                				storeListAsegPagDirecto.each(function(record) {
+                                    obtener.push(record.data);
+                                });
+                				if(obtener.length == 1){
+                					Ext.getCmp('idUnieco').setValue(obtener[0].modUnieco);
+                					Ext.getCmp('idEstado').setValue(obtener[0].modEstado);
+                					Ext.getCmp('idcdRamo').setValue(obtener[0].modRamo);
+                					Ext.getCmp('idNmSituac').setValue(obtener[0].modNmsituac);
+                					Ext.getCmp('polizaAfectada').setValue(obtener[0].modPolizaAfectada);
+                					Ext.getCmp('idNmsolici').setValue(obtener[0].modNmsolici);
+                					Ext.getCmp('idNmsuplem').setValue(obtener[0].modNmsuplem);
+                					Ext.getCmp('idCdtipsit').setValue(obtener[0].modCdtipsit);
+                					Ext.getCmp('cmbAseguradoAfectado').setValue(obtener[0].modCdperson);
+                					Ext.getCmp('dtFechaOcurrencia').setValue(obtener[0].modFechaOcurrencia);
+                				}
+        					}else{
+        						
+        						var obtener = [];
+        						storeFactCtrl.each(function(record) {
+                                    obtener.push(record.data);
+                                });
+                				if(obtener.length == 1){
+                					Ext.getCmp('cmbProveedor').setValue(obtener[0].proveedor);
+            	    				Ext.getCmp('txtNoFactura').setValue(obtener[0].noFactura);
+            	    				Ext.getCmp('txtImporte').setValue(obtener[0].importe);
+            	    				Ext.getCmp('dtFechaFactura').setValue(obtener[0].fechaFactura);
+            	    				Ext.getCmp('cmbTipoAtencion').setValue(obtener[0].tipoServicio);
+        	    				}else{
+        	    					Ext.getCmp('dtFechaFactura').setValue('');
+        	    				}
+        					}
+            				
             				var submitValues={};
             				var formulario=panelInicialPral.form.getValues();
             				submitValues['params']=formulario;

@@ -32,6 +32,8 @@ import mx.com.gseguros.utils.HttpUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.opensymphony.xwork2.ActionContext;
+
 public class SiniestrosAction extends PrincipalCoreAction{
     
     private static final long serialVersionUID = -6321288906841302337L;
@@ -158,6 +160,8 @@ public class SiniestrosAction extends PrincipalCoreAction{
 	public String guardaAutorizacionServicio(){
 			logger.debug(" **** Entrando a guardado de Autorización de Servicio ****");
 			try {
+					this.session=ActionContext.getContext().getSession();
+			        UserVO usuario=(UserVO) session.get("USUARIO");
 					HashMap<String, Object> paramsR = new HashMap<String, Object>();
 					paramsR.put("pv_nmautser_i",params.get("nmautser"));
 					paramsR.put("pv_nmautant_i",params.get("nmautant"));
@@ -186,7 +190,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 					paramsR.put("pv_dsobserv_i",params.get("dsobserv"));
 					paramsR.put("pv_dsnotas_i",params.get("dsnotas"));
 					paramsR.put("pv_fesistem_i",params.get("fesistem")); 
-					paramsR.put("pv_cduser_i",params.get("cduser"));
+					paramsR.put("pv_cduser_i",usuario.getUser());
 					
 					//ELIMINACION DE LOS REGISTROS EN LA TABLA
 					siniestrosManager.getEliminacionRegistros(params.get("nmautser"));
@@ -229,6 +233,10 @@ public class SiniestrosAction extends PrincipalCoreAction{
 	public String guardaAltaTramite(){
 			logger.debug(" **** Entrando al guardado de alta de tramite ****");
 			try {
+				
+					this.session=ActionContext.getContext().getSession();
+			        UserVO usuario=(UserVO) session.get("USUARIO");
+		        
 					HashMap<String, Object> parMesCon = new HashMap<String, Object>();
 					parMesCon.put("pv_cdunieco_i",params.get("cdunieco"));
 					parMesCon.put("pv_cdramo_i",params.get("cdramo"));
@@ -249,14 +257,17 @@ public class SiniestrosAction extends PrincipalCoreAction{
 					parMesCon.put("pv_cdtipsit_i",params.get("cdtipsit"));
 					parMesCon.put("pv_otvalor02",params.get("cmbTipoPago"));							// TIPO DE PAGO
 					parMesCon.put("pv_otvalor03",params.get("txtImporte"));								// IMPORTE
-					parMesCon.put("pv_otvalor04",params.get("cmbProveedor"));							// PROVEEDOR
+					parMesCon.put("pv_otvalor04",params.get("cmbBeneficiario"));
+					parMesCon.put("pv_otvalor05",usuario.getUser());
 					parMesCon.put("pv_otvalor06",params.get("dtFechaFactura"));							// FECHA FACTURA
 					parMesCon.put("pv_otvalor07",params.get("cmbTipoAtencion"));						// TIPO DE ANTENCION
 					parMesCon.put("pv_otvalor08",params.get("txtNoFactura"));							// NO. DE FACTURA
 					parMesCon.put("pv_otvalor09",params.get("cmbAseguradoAfectado"));					// CDPERSON
 					parMesCon.put("pv_otvalor10",params.get("dtFechaOcurrencia"));						// FECHA OCURRENCIA
+					parMesCon.put("pv_otvalor11",params.get("cmbProveedor"));
 					
 					WrapperResultados res = kernelManagerSustituto.PMovMesacontrol(parMesCon);
+					
 					if(res.getItemMap() == null)
 					{
 						logger.error("Sin mensaje respuesta de nmtramite!!");
@@ -282,6 +293,16 @@ public class SiniestrosAction extends PrincipalCoreAction{
 								paramsTworkSin.put("pv_nmautser_i",null);
 						        siniestrosManager.guardaListaTworkSin(paramsTworkSin);
 						    }
+							
+							HashMap<String, Object> paramsFacMesaCtrl = new HashMap<String, Object>();
+					        paramsFacMesaCtrl.put("pv_ntramite_i",msgResult);									//completar con el valor anterior
+					        paramsFacMesaCtrl.put("pv_nfactura_i",params.get("txtNoFactura"));
+					        paramsFacMesaCtrl.put("pv_ffactura_i",params.get("dtFechaFactura"));
+					        paramsFacMesaCtrl.put("pv_cdtipser_i",params.get("cmbTipoAtencion"));
+					        paramsFacMesaCtrl.put("pv_cdpresta_i",params.get("cmbProveedor"));
+					        paramsFacMesaCtrl.put("pv_ptimport_i",params.get("txtImporte"));
+					        siniestrosManager.guardaListaFacMesaControl(paramsFacMesaCtrl);
+							
 							
 						}else{
 							
