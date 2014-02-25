@@ -346,5 +346,15 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			throw new ApplicationException(daoExc.getMessage(), daoExc);
 		}
 	}
+	
+	//public List<GenericVO> obtieneListadoCobertura(String cdramo,String cdtipsit) throws DaoException;
+	
+	public List<GenericVO> obtieneListadoCobertura(String cdramo,String cdtipsit) throws ApplicationException {
+		try {
+			return siniestrosDAO.obtieneListadoCobertura(cdramo,cdtipsit);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}
 }
 
