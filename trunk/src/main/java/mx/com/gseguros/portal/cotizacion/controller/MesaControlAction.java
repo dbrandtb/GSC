@@ -44,6 +44,32 @@ public class MesaControlAction extends PrincipalCoreAction
 	private String                         rol;
 	private PantallasManager               pantallasManager;
 	
+	public String principal()
+	{
+		log.debug(""
+				+ "\n#######################################"
+				+ "\n#######################################"
+				+ "\n###### mesa de control principal ######"
+				+ "\n######                           ######"
+				);
+		if(smap1==null)
+		{
+			smap1=new HashMap<String,String>(0);
+		}
+		if((!smap1.containsKey("pv_status_i")))
+		{
+			log.debug("pv_status_i: "+smap1.get("pv_status_i"));
+			smap1.put("pv_status_i","-1");//valor default
+		}
+		log.debug(""
+				+ "\n######                           ######"
+				+ "\n###### mesa de control principal ######"
+				+ "\n#######################################"
+				+ "\n#######################################"
+				);
+		return SUCCESS;
+	}
+	
 	public String loadTareas()
 	{
 		log.debug(""
