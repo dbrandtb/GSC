@@ -1,57 +1,63 @@
-Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.chart.*', 'Ext.grid.Panel','Ext.layout.container.Column', 'Ext.selection.CheckboxModel' ]);
-var datosgrid;
-var storeFactCtrl;
-var storeListAsegPagDirecto;
-
-
-Ext.define('modelFactCtrl',
-{
-    extend:'Ext.data.Model',
-    fields:['noFactura','fechaFactura','tipoServicio','tipoServicioName','proveedor','proveedorName','importe']
-});
-
-storeFactCtrl=new Ext.data.Store(
-{
-    autoDestroy: true,
-    model: 'modelFactCtrl'
-});
-
-
-Ext.define('modelListadoProvMedico',{
-    extend: 'Ext.data.Model',
-    fields: [
-             	{type:'string',    name:'cdpresta'},		{type:'string',    name:'nombre'},		{type:'string',    name:'cdespeci'},		{type:'string',    name:'descesp'}
-			]
-});
-
-Ext.define('modelListadoPoliza',{
-    extend: 'Ext.data.Model',
-    fields: [	{type:'string',    name:'cdramo'},				{type:'string',    name:'cdunieco'},				{type:'string',    name:'estado'},
-				{type:'string',    name:'nmpoliza'},			{type:'string',    name:'nmsituac'},				{type:'string',    name:'mtoBase'},
-				{type:'string',    name:'feinicio'},			{type:'string',    name:'fefinal'},					{type:'string',    name:'dssucursal'},
-				{type:'string',    name:'dsramo'},				{type:'string',    name:'estatus'},					{type:'string',    name:'dsestatus'},
-				{type:'string',    name:'nmsolici'},			{type:'string',    name:'nmsuplem'},				{type:'string',    name:'cdtipsit'}			]
-});
-
-
-Ext.define('modelListAsegPagDirecto',{
-    extend: 'Ext.data.Model',
-    fields: [
-                {type:'string',    name:'modUnieco'},		{type:'string',    name:'modEstado'},		    {type:'string',    name:'modRamo'},
-                {type:'string',    name:'modNmsituac'},		{type:'string',    name:'modPolizaAfectada'},	{type:'string',    name:'modCdpersondesc'},
-                {type:'string',    name:'modNmsolici'},		{type:'string',    name:'modNmsuplem'},		    {type:'string',    name:'modCdtipsit'},
-                {type:'string',    name:'modNmautserv'},	{type:'string',    name:'modFechaOcurrencia'},	{type:'string',    name:'modCdperson'}
-                
-            ]
-});
-
-storeListAsegPagDirecto=new Ext.data.Store(
-{
-    autoDestroy: true,						model: 'modelListAsegPagDirecto'
-});
+Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.grid.Panel','Ext.layout.container.Column', 'Ext.selection.CheckboxModel' ]);
 
 Ext.onReady(function() {
+	
+	Ext.selection.CheckboxModel.override( {
+	    mode: 'SINGLE',
+	    allowDeselect: true
+	});
 
+	//Models:
+	
+	Ext.define('modelFactCtrl', {
+	    extend:'Ext.data.Model',
+	    fields:['noFactura','fechaFactura','tipoServicio','tipoServicioName','proveedor','proveedorName','importe']
+	});
+	
+	Ext.define('modelListadoProvMedico',{
+	    extend: 'Ext.data.Model',
+	    fields: [
+            {type:'string', name:'cdpresta'},
+            {type:'string', name:'nombre'},
+            {type:'string', name:'cdespeci'},
+            {type:'string',name:'descesp'}
+	    ]
+	});
+	
+	Ext.define('modelListadoPoliza',{
+	    extend: 'Ext.data.Model',
+	    fields: [	{type:'string',    name:'cdramo'},				{type:'string',    name:'cdunieco'},				{type:'string',    name:'estado'},
+					{type:'string',    name:'nmpoliza'},			{type:'string',    name:'nmsituac'},				{type:'string',    name:'mtoBase'},
+					{type:'string',    name:'feinicio'},			{type:'string',    name:'fefinal'},					{type:'string',    name:'dssucursal'},
+					{type:'string',    name:'dsramo'},				{type:'string',    name:'estatus'},					{type:'string',    name:'dsestatus'},
+					{type:'string',    name:'nmsolici'},			{type:'string',    name:'nmsuplem'},				{type:'string',    name:'cdtipsit'}			]
+	});
+	
+	Ext.define('modelListAsegPagDirecto',{
+	    extend: 'Ext.data.Model',
+	    fields: [
+	                {type:'string',    name:'modUnieco'},		{type:'string',    name:'modEstado'},		    {type:'string',    name:'modRamo'},
+	                {type:'string',    name:'modNmsituac'},		{type:'string',    name:'modPolizaAfectada'},	{type:'string',    name:'modCdpersondesc'},
+	                {type:'string',    name:'modNmsolici'},		{type:'string',    name:'modNmsuplem'},		    {type:'string',    name:'modCdtipsit'},
+	                {type:'string',    name:'modNmautserv'},	{type:'string',    name:'modFechaOcurrencia'},	{type:'string',    name:'modCdperson'}
+	                
+	            ]
+	});
+	
+
+	//Stores:
+	
+	var storeFactCtrl=new Ext.data.Store(
+	{
+	    autoDestroy: true,
+	    model: 'modelFactCtrl'
+	});
+
+	var storeListAsegPagDirecto=new Ext.data.Store(
+	{
+	    autoDestroy: true,						model: 'modelListAsegPagDirecto'
+	});
+	
 	var storeTipoAtencion = Ext.create('Ext.data.JsonStore', {
 		model:'Generic',
 		proxy: {
@@ -65,7 +71,6 @@ Ext.onReady(function() {
 		}
 	});
 	storeTipoAtencion.load();
-    
 	
 	var storeAsegurados = Ext.create('Ext.data.Store', {
         model:'Generic',
@@ -125,12 +130,8 @@ Ext.onReady(function() {
     });
     
     
-    Ext.selection.CheckboxModel.override( {
-        mode: 'SINGLE',
-        allowDeselect: true
-    });
-
-    var oficinaReceptora= Ext.create('Ext.form.ComboBox',
+    
+    var cmbOficinaReceptora = Ext.create('Ext.form.ComboBox',
   	{
     	id:'cmbOficReceptora',	   name:'cmbOficReceptora',     fieldLabel: 'Oficina receptora',		queryMode:'local',		   
     	displayField: 'value',	   valueField: 'key',			allowBlank:false,				        editable:false,
@@ -152,9 +153,10 @@ Ext.onReady(function() {
    		})
    	});
     
-    var oficinaEmisora= Ext.create('Ext.form.ComboBox',
+    var cmbOficinaEmisora = Ext.create('Ext.form.ComboBox',
 	{
-    	id:'cmbOficEmisora',		name:'cmbOficEmisora',		fieldLabel: 'Oficina emisora',			queryMode:'local',
+    	id:'cmbOficEmisora',
+    	name:'cmbOficEmisora',		fieldLabel: 'Oficina emisora',			queryMode:'local',
 	    displayField: 'value',	    valueField: 'key',			width		 : 500,					    allowBlank:false,					    editable:false,
 	    labelWidth : 250,		    emptyText:'Seleccione...'
 	    ,store : Ext.create('Ext.data.Store', {
@@ -826,10 +828,9 @@ Ext.onReady(function() {
 		               width		 : 500,
 		               value:'PENDIENTE'
 		            },
-		            
-		            oficinaReceptora
+		            cmbOficinaReceptora
 		            ,
-            		oficinaEmisora
+		            cmbOficinaEmisora
 	            	,
 	            	{
 		            	id:'dtFechaRecepcion'
