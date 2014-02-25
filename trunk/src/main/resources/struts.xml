@@ -8,6 +8,7 @@
     <!-- jtezva agregado para monitorear el progreso de subir archivo -->
     
     <constant name="struts.devMode" value="true"/>
+    <constant name="struts.enable.SlashesInActionNames" value="true"/>
 
     <include file="struts/config/struts-catalogos.xml"/>
     <include file="struts/config/struts-consultas-poliza.xml"/>
