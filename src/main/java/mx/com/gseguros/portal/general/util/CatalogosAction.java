@@ -133,7 +133,21 @@ public class CatalogosAction extends PrincipalCoreAction {
 					lista = siniestrosManager.obtieneListadoCobertura(params.get("cdramo"), params.get("cdtipsit"));
 					break;
 				case SUBCOBERTURAS:
-					lista = siniestrosManager.getConsultaListaSubcobertura(params.get("cdgarant"), params.get("cdsubcob"));
+					String cdgarant = null;
+					String cdsubcob = null;
+					if(params!=null)
+					{
+						cdsubcob = params.get("cdsubcob");
+						if(params.get("cdgarant")!=null)
+						{
+							cdgarant = params.get("cdgarant");
+						}
+						else if(params.get("idPadre")!=null)
+						{
+							cdgarant = params.get("idPadre");
+						}
+					}
+					lista = siniestrosManager.getConsultaListaSubcobertura(cdgarant, cdsubcob);
 					break;
 				default:
 					throw new Exception("Catalogo no existente: " + nombreCatalogo);

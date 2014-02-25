@@ -8,12 +8,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal2.web.GenericVO;
+import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.portal.general.service.PantallasManager;
+import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
@@ -30,8 +35,8 @@ import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -42,6 +47,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 	private boolean success;
     private SiniestrosManager siniestrosManager;
     private KernelManagerSustituto kernelManagerSustituto;
+    private PantallasManager       pantallasManager;
     private HashMap<String,String> params;
     private HashMap<String,Object> paramsO;
     private AutorizacionServicioVO datosAutorizacionEsp;
@@ -69,8 +75,12 @@ public class SiniestrosAction extends PrincipalCoreAction{
     private List<GenericVO> listaPlazas;
     private List<ListaFacturasVO> listaFacturas;
     
+    private Item             item;
+    private Map<String,Item> imap;
+    private String           mensaje;
+    
     /**
-     * Función para la visualización de las coberturas 
+     * Funciï¿½n para la visualizaciï¿½n de las coberturas 
      * @return params con los valores para hacer las consultas
      */
 	public String verCoberturas(){
@@ -85,7 +95,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
     }
 	
 	/**
-     * Función para la visualización de la autorizacion de servicio 
+     * Funciï¿½n para la visualizaciï¿½n de la autorizacion de servicio 
      * @return params con los valores para hacer las consultas
      */
 	public String verAutorizacionServicio(){
@@ -100,17 +110,17 @@ public class SiniestrosAction extends PrincipalCoreAction{
     }
 	
     /**
-     * Función que realiza la busqueda de la consulta de Autorización de servicio en especifico
+     * Funciï¿½n que realiza la busqueda de la consulta de Autorizaciï¿½n de servicio en especifico
      * @param String nmautser
-     * @return String autorización de Servicio
+     * @return String autorizaciï¿½n de Servicio
      */
     public String consultaAutorizacionServicio(){
-    		logger.debug(" **** Entrando a Consulta de Autorización de Servicio en Especifico****");
+    		logger.debug(" **** Entrando a Consulta de Autorizaciï¿½n de Servicio en Especifico****");
     		try {
     				List<AutorizacionServicioVO> lista = siniestrosManager.getConsultaAutorizacionesEsp(params.get("nmautser"));
     				if(lista!=null && !lista.isEmpty())	datosAutorizacionEsp = lista.get(0);
     		}catch( Exception e){
-    			logger.error("Error al obtener los datos de Autorización de Servicio en Especifico",e);
+    			logger.error("Error al obtener los datos de Autorizaciï¿½n de Servicio en Especifico",e);
             return SUCCESS;
         }
         success = true;
@@ -118,12 +128,12 @@ public class SiniestrosAction extends PrincipalCoreAction{
     }
     
     /**
-     * Función que obtiene la lista del asegurado
+     * Funciï¿½n que obtiene la lista del asegurado
      * @param void sin parametros de entrada
-     * @return Lista GenericVO con la información de los asegurados
+     * @return Lista GenericVO con la informaciï¿½n de los asegurados
      */    
     public String consultaListaAsegurado(){
-    	logger.debug(" **** Entrando al método de Lista de Asegurado ****");
+    	logger.debug(" **** Entrando al mï¿½todo de Lista de Asegurado ****");
 	   	try {
 	   		listaAsegurado= siniestrosManager.getConsultaListaAsegurado(params.get("cdperson"));
 	   	}catch( Exception e){
@@ -135,12 +145,12 @@ public class SiniestrosAction extends PrincipalCoreAction{
     }
     
 	/**
-	 * Función que obtiene el listado de  de Autorización de Servicio
+	 * Funciï¿½n que obtiene el listado de  de Autorizaciï¿½n de Servicio
 	 * @param String cdperson
-	 * @return Lista AutorizaServiciosVO con la información de los asegurados
+	 * @return Lista AutorizaServiciosVO con la informaciï¿½n de los asegurados
 	 */
 	public String consultaListaAutorizacion(){
-		logger.debug(" **** Entrando a consulta de lista de Autorización por CDPERSON ****");
+		logger.debug(" **** Entrando a consulta de lista de Autorizaciï¿½n por CDPERSON ****");
 		try {
 				
 				List<AutorizaServiciosVO> lista = siniestrosManager.getConsultaListaAutorizaciones(params.get("tipoAut"),params.get("cdperson"));
@@ -154,12 +164,12 @@ public class SiniestrosAction extends PrincipalCoreAction{
     }
     
 	/**
-	 * metodo para el guardado de la autorización de Servicio
+	 * metodo para el guardado de la autorizaciï¿½n de Servicio
 	 * @param Json con todos los valores del formulario y los grid
-	 * @return Lista AutorizaServiciosVO con la información de los asegurados
+	 * @return Lista AutorizaServiciosVO con la informaciï¿½n de los asegurados
 	 */
 	public String guardaAutorizacionServicio(){
-			logger.debug(" **** Entrando a guardado de Autorización de Servicio ****");
+			logger.debug(" **** Entrando a guardado de Autorizaciï¿½n de Servicio ****");
 			try {
 					this.session=ActionContext.getContext().getSession();
 			        UserVO usuario=(UserVO) session.get("USUARIO");
@@ -217,7 +227,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 						
 					}
 			}catch( Exception e){
-				logger.error("Error al guardar la autorización de servicio ",e);
+				logger.error("Error al guardar la autorizaciï¿½n de servicio ",e);
 	        return SUCCESS;
 	    }
 	    
@@ -227,9 +237,9 @@ public class SiniestrosAction extends PrincipalCoreAction{
 
 	
 	/**
-	 * metodo para el guardado de la autorización de Servicio
+	 * metodo para el guardado de la autorizaciï¿½n de Servicio
 	 * @param Json con todos los valores del formulario y los grid
-	 * @return Lista AutorizaServiciosVO con la información de los asegurados
+	 * @return Lista AutorizaServiciosVO con la informaciï¿½n de los asegurados
 	 */
 	public String guardaAltaTramite(){
 			logger.debug(" **** Entrando al guardado de alta de tramite ****");
@@ -335,7 +345,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 						}
 					}
 			}catch( Exception e){
-				logger.error("Error en el guardado de alta de trámite ",e);
+				logger.error("Error en el guardado de alta de trï¿½mite ",e);
 	        return SUCCESS;
 	    }
 	    
@@ -344,13 +354,13 @@ public class SiniestrosAction extends PrincipalCoreAction{
 	}
     
     /**
-    * Función que obtiene la lista del Medico y proveedor por medio del identificador
+    * Funciï¿½n que obtiene la lista del Medico y proveedor por medio del identificador
     * @param tipoprov
     * @param cdpresta
-    * @return Lista ConsultaProveedorVO con la información de los asegurados
+    * @return Lista ConsultaProveedorVO con la informaciï¿½n de los asegurados
     */    
    public String consultaListaProvMedico(){
-   	logger.debug(" **** Entrando al método de listado para el medico y proveedor****");
+   	logger.debug(" **** Entrando al mï¿½todo de listado para el medico y proveedor****");
 	   	try {
 			
 			List<ConsultaProveedorVO> lista = siniestrosManager.getConsultaListaProveedorMedico(params.get("tipoprov"),params.get("cdpresta"));
@@ -367,7 +377,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
    /**
 	 * metodo que obtiene el listado de las coberturas de poliza
 	 * @param maps [cdunieco,estado,cdramo,nmpoliza,nmsituac,cdgarant]
-	 * @return Lista CoberturaPolizaVO con la información de los asegurados
+	 * @return Lista CoberturaPolizaVO con la informaciï¿½n de los asegurados
 	 */
 	public String consultaListaCoberturaPoliza(){
 		logger.debug(" **** Entrando a consulta de lista de Cobertura de poliza ****");
@@ -391,9 +401,9 @@ public class SiniestrosAction extends PrincipalCoreAction{
    }
 	
 	/**
-	 * metodo que obtiene la información de deducible y copago
+	 * metodo que obtiene la informaciï¿½n de deducible y copago
 	 * @param String params [cdunieco,estado,cdramo,nmpoliza,nmsituac,cdgarant,subcober]
-	 * @return Lista DatosSiniestroVO con la información de los asegurados
+	 * @return Lista DatosSiniestroVO con la informaciï¿½n de los asegurados
 	 */
 	public String consultaListaDatSubGeneral(){
 		logger.debug(" **** Entrando a consulta de lista de subcobertura **");
@@ -418,13 +428,13 @@ public class SiniestrosAction extends PrincipalCoreAction{
     }
 	
     /**
-    * Función que obtiene la lista de Sbcobertura
+    * Funciï¿½n que obtiene la lista de Sbcobertura
     * @param cdgarant
     * @param cdsubcob
-    * @return Lista GenericVO con la información de los asegurados
+    * @return Lista GenericVO con la informaciï¿½n de los asegurados
     */    
    public String consultaListaSubcobertura(){
-   	logger.debug(" **** Entrando al método de Lista de Subcobertura ****");
+   	logger.debug(" **** Entrando al mï¿½todo de Lista de Subcobertura ****");
 	   	try {
 	   		listaSubcobertura= siniestrosManager.getConsultaListaSubcobertura(params.get("cdgarant"),params.get("cdsubcob"));
 	   	}catch( Exception e){
@@ -436,12 +446,12 @@ public class SiniestrosAction extends PrincipalCoreAction{
   }
 	
    /**
-    * Función que obtiene la lista de las poliza
+    * Funciï¿½n que obtiene la lista de las poliza
     * @param cdperson
-    * @return Lista GenericVO con la información de los asegurados
+    * @return Lista GenericVO con la informaciï¿½n de los asegurados
     */ 
    public String consultaListaPoliza(){
-   	logger.debug(" **** Entrando al método de Lista de Poliza ****");
+   	logger.debug(" **** Entrando al mï¿½todo de Lista de Poliza ****");
    	try {
 				List<PolizaVigenteVO> lista = siniestrosManager.getConsultaListaPoliza(params.get("cdperson"));
 				if(lista!=null && !lista.isEmpty())	listaPoliza = lista;
@@ -463,13 +473,13 @@ public void setMsgResult(String msgResult) {
 }
 
 /**
-   * Función que obtiene el listado de las subcobertura
+   * Funciï¿½n que obtiene el listado de las subcobertura
    * @param cdtabla
    * @param otclave
-   * @return Lista GenericVO con la información de los asegurados
+   * @return Lista GenericVO con la informaciï¿½n de los asegurados
    */    
    public String consultaListaCPTICD(){
-	  	logger.debug(" **** Entrando al método de Lista de Subcobertura ****");
+	  	logger.debug(" **** Entrando al mï¿½todo de Lista de Subcobertura ****");
 		   	try {	   		
 		   		listaCPTICD= siniestrosManager.getConsultaListaCPTICD(params.get("cdtabla"),params.get("otclave"));
 		   	}catch( Exception e){
@@ -481,9 +491,9 @@ public void setMsgResult(String msgResult) {
    }
 	
    	/**
-	 * Función que obtiene el listado de las listas de los grids
+	 * Funciï¿½n que obtiene el listado de las listas de los grids
 	 * @param String nmautser
-	 * @return Lista ConsultaTDETAUTSVO con la información
+	 * @return Lista ConsultaTDETAUTSVO con la informaciï¿½n
 	 */
 	public String consultaListaTDeTauts(){
 		logger.debug(" **** Entrando a consulta de lista TDETAUTS ****");
@@ -492,7 +502,7 @@ public void setMsgResult(String msgResult) {
 				List<ConsultaTDETAUTSVO> lista = siniestrosManager.getConsultaListaTDeTauts(params.get("nmautser"));
 				if(lista!=null && !lista.isEmpty())	listaConsultaTablas = lista;
 		}catch( Exception e){
-			logger.error("Error al obtener los datos para la información de las tablas iternas",e);
+			logger.error("Error al obtener los datos para la informaciï¿½n de las tablas iternas",e);
 			return SUCCESS;
 		}
 		success = true;
@@ -500,12 +510,12 @@ public void setMsgResult(String msgResult) {
 	}
 	
 	/**
-	 * Función para eliminar la listas de los grids
+	 * Funciï¿½n para eliminar la listas de los grids
 	 * @param String nmautser
 	 * @return void
 	 */
 	public void borraRegistrosTabla(){
-		logger.debug(" **** Entrando a eliminación de registros de tablas ****");
+		logger.debug(" **** Entrando a eliminaciï¿½n de registros de tablas ****");
 		try {
 				siniestrosManager.getEliminacionRegistros(params.get("nmautser"));
 				
@@ -515,14 +525,14 @@ public void setMsgResult(String msgResult) {
    }
 	
 	/**
-	 * Función para eliminar la listas de los grids
+	 * Funciï¿½n para eliminar la listas de los grids
 	 * @param params [nmautser,cdtipaut,cdmedico,cdtipmed,cdcpt,precio,cantporc,ptimport]
 	 * @return void
 	 */
 	public String guardaListaTDeTauts(){
-		logger.debug(" **** Entrando a guardado de Autorización de Servicio ****");
+		logger.debug(" **** Entrando a guardado de Autorizaciï¿½n de Servicio ****");
 		try {
-				// Recibirá una lista con los valores y de ahi guardarlos en forma de mapas
+				// Recibirï¿½ una lista con los valores y de ahi guardarlos en forma de mapas
 				HashMap<String, Object> paramsTDeTauts = new HashMap<String, Object>();
 				paramsTDeTauts.put("pv_nmautser_i",params.get("nmautser"));
 				paramsTDeTauts.put("pv_cdtipaut_i",params.get("cdtipaut"));
@@ -543,9 +553,9 @@ public void setMsgResult(String msgResult) {
 }
 	
 	/**
-	 * Función que obtiene el listado de  de Autorización de Servicio
+	 * Funciï¿½n que obtiene el listado de  de Autorizaciï¿½n de Servicio
 	 * @param String cdperson
-	 * @return Lista AutorizaServiciosVO con la información de los asegurados
+	 * @return Lista AutorizaServiciosVO con la informaciï¿½n de los asegurados
 	 */
 	public String consultaListaTTAPVAATVO(){
 		logger.debug(" **** Entrando a consulta de lista de Cobertura de poliza ****");
@@ -602,7 +612,7 @@ public void setMsgResult(String msgResult) {
 		try {
 				siniestrosManager.getAltaSiniestroAutServicio(params.get("nmautser"));
 		}catch( Exception e){
-			logger.error("Error al obtener los datos de Autorización de Servicio en Especifico",e);
+			logger.error("Error al obtener los datos de Autorizaciï¿½n de Servicio en Especifico",e);
 			return SUCCESS;
 		}
 	   success = true;
@@ -614,7 +624,7 @@ public void setMsgResult(String msgResult) {
 		try {
 				siniestrosManager.getAltaSiniestroAltaTramite(params.get("ntramite"));
 		}catch( Exception e){
-			logger.error("Error al obtener los datos de Autorización de Servicio en Especifico",e);
+			logger.error("Error al obtener los datos de Autorizaciï¿½n de Servicio en Especifico",e);
 			return SUCCESS;
 		}
 	   success = true;
@@ -760,7 +770,7 @@ public void setMsgResult(String msgResult) {
 			//List<AutorizacionServicioVO> lista = siniestrosManager.getConsultaAutorizacionesEsp(params.get("nmautser"));
 			//if(lista!=null && !lista.isEmpty())	datosAutorizacionEsp = lista.get(0);
 		}catch( Exception e){
-			logger.error("Error al obtener los datos de Autorización de Servicio en Especifico",e);
+			logger.error("Error al obtener los datos de Autorizaciï¿½n de Servicio en Especifico",e);
 			success =  false;
 			return SUCCESS;
 		}
@@ -954,12 +964,12 @@ public void setMsgResult(String msgResult) {
 	
    
    /**
-    * Función que obtiene la lista del asegurado
+    * Funciï¿½n que obtiene la lista del asegurado
     * @param void sin parametros de entrada
-    * @return Lista GenericVO con la información de los asegurados
+    * @return Lista GenericVO con la informaciï¿½n de los asegurados
     */    
    public String consultaListaPlazas(){
-   	logger.debug(" **** Entrando al método de Lista de Plazas ****");
+   	logger.debug(" **** Entrando al mï¿½todo de Lista de Plazas ****");
 	   	try {
 	   		listaPlazas= siniestrosManager.getConsultaListaPlaza();
 	   	}catch( Exception e){
@@ -969,6 +979,101 @@ public void setMsgResult(String msgResult) {
 	   	success = true;
 	   	return SUCCESS;
    }
+   
+    public String pantallaSeleccionCobertura()
+    {
+    	logger.debug(""
+    			+ "\n########################################"
+    			+ "\n########################################"
+    			+ "\n###### pantallaSeleccionCobertura ######"
+    			+ "\n######                            ######"
+    			);
+    	logger.debug("params: "+params);
+    	
+    	try
+    	{
+	    	UserVO usuario  = (UserVO)session.get("USUARIO");
+	    	String cdrol    = usuario.getRolActivo().getObjeto().getValue();
+	    	String pantalla = "SELECCION_COBERTURA";
+	    	String seccion  = "FORMULARIO";
+	    	
+	    	List<ComponenteVO> componentes = pantallasManager.obtenerComponentes(
+	    			null, null, null, null, null, cdrol, pantalla, seccion, null);
+	    	
+	    	GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+	    	
+	    	gc.generaComponentes(componentes, true, false, true, false, false, false);
+	    	
+	    	item = gc.getItems();
+	    	
+    	}
+    	catch(Exception ex)
+    	{
+    		logger.error("error al cargar pantalla de seleccion de cobertura",ex);
+    	}
+    	
+    	logger.debug(""
+    			+ "\n######                            ######"
+    			+ "\n###### pantallaSeleccionCobertura ######"
+    			+ "\n########################################"
+    			+ "\n########################################"
+    			);
+    	return SUCCESS;
+    }
+    
+    /*
+    params:
+    	cdramo   = 2,
+    	cdgarant = 18HO,
+    	cdtipsit = SL,
+    	cdsubgar = 18HO001,
+    	cdunieco = 1006,
+    	ntramite = 1010
+    */
+    public String guardarSeleccionCobertura()
+    {
+    	logger.debug(""
+    			+ "\n#######################################"
+    			+ "\n#######################################"
+    			+ "\n###### guardarSeleccionCobertura ######"
+    			+ "\n######                           ######"
+    			);
+    	logger.debug("params: "+params);
+    	
+    	try
+    	{
+    		String cdramo   = params.get("cdramo");
+    		String cdtipsit = params.get("cdtipsit");
+    		String cdgarant = params.get("cdgarant");
+    		String cdsubgar = params.get("cdsubgar");
+    		String ntramite = params.get("ntramite");
+    		
+    		Map<String,Object> otvalor = new HashMap<String,Object>();
+    		otvalor.put("pv_ntramite_i" , ntramite);
+    		otvalor.put("pv_cdramo_i"   , cdramo);
+    		otvalor.put("pv_cdtipsit_i" , cdtipsit);
+    		otvalor.put("pv_otvalor12_i"  , cdgarant);
+    		otvalor.put("pv_otvalor13_i"  , cdsubgar);
+    		siniestrosManager.actualizaOTValorMesaControl(otvalor);
+    		
+    		success = true;
+    		mensaje = "Tr&aacute;mite actualizado";
+    	}
+    	catch(Exception ex)
+    	{
+    		success=false;
+    		logger.error("error al seleccionar la cobertura",ex);
+    		mensaje = ex.getMessage();
+    	}
+    	
+    	logger.debug(""
+    			+ "\n######                           ######"
+    			+ "\n###### guardarSeleccionCobertura ######"
+    			+ "\n#######################################"
+    			+ "\n#######################################"
+    			);
+    	return SUCCESS;
+    }
 	
     public void setListaFacturas(List<ListaFacturasVO> listaFacturas) {
 	this.listaFacturas = listaFacturas;
@@ -1049,7 +1154,6 @@ public void setMsgResult(String msgResult) {
 		this.listaCausaSiniestro = listaCausaSiniestro;
 	}
 	
-	
 	public List<ConsultaProveedorVO> getListaProvMedico() {
 		return listaProvMedico;
 	}
@@ -1057,8 +1161,6 @@ public void setMsgResult(String msgResult) {
 	public void setListaProvMedico(List<ConsultaProveedorVO> listaProvMedico) {
 		this.listaProvMedico = listaProvMedico;
 	}
-	
-	
 
 	public List<PolizaVigenteVO> getListaPoliza() {
 		return listaPoliza;
@@ -1067,14 +1169,9 @@ public void setMsgResult(String msgResult) {
 	public void setListaPoliza(List<PolizaVigenteVO> listaPoliza) {
 		this.listaPoliza = listaPoliza;
 	}
-
 	
 	public boolean isSuccess() {
 		return success;
-	}
-	
-	public SiniestrosManager getSiniestrosManager() {
-		return siniestrosManager;
 	}
 
 	public HashMap<String, String> getParams() {
@@ -1209,6 +1306,34 @@ public void setMsgResult(String msgResult) {
 	public void setKernelManagerSustituto(
 			KernelManagerSustituto kernelManagerSustituto) {
 		this.kernelManagerSustituto = kernelManagerSustituto;
+	}
+
+	public void setPantallasManager(PantallasManager pantallasManager) {
+		this.pantallasManager = pantallasManager;
+	}
+
+	public Item getItem() {
+		return item;
+	}
+
+	public void setItem(Item item) {
+		this.item = item;
+	}
+
+	public Map<String, Item> getImap() {
+		return imap;
+	}
+
+	public void setImap(Map<String, Item> imap) {
+		this.imap = imap;
+	}
+
+	public String getMensaje() {
+		return mensaje;
+	}
+
+	public void setMensaje(String mensaje) {
+		this.mensaje = mensaje;
 	}
 	
 }

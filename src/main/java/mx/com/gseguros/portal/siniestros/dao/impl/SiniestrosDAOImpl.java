@@ -1101,7 +1101,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdramo_i", cdramo);
 		params.put("pv_cdtipsit_i", cdtipsit);
-		Map<String, Object> mapResult = ejecutaSP(new GuardaSiniestroAltaTramite(this.getDataSource()), params);
+		Map<String, Object> mapResult = ejecutaSP(new ObtenerListaCoberturas(this.getDataSource()), params);
 		List<GenericVO> listaCoberturas = (List<GenericVO>)mapResult.get("pv_registro_o");
 		return listaCoberturas;
 	}
@@ -1123,14 +1123,14 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	protected class DatosListaCobertura  implements RowMapper {
         public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
         	GenericVO consulta = new GenericVO();
-        	consulta.setKey(rs.getString("CDUNIECO"));
-        	consulta.setValue(rs.getString("DSUNIECO"));
+        	consulta.setKey(rs.getString("CDGARANT"));
+        	consulta.setValue(rs.getString("DSGARANT"));
             return consulta;
         }
     }
 	
 	@Override
-	public String actualizaOTValorMesaControl(HashMap<String, Object> params) throws DaoException {
+	public String actualizaOTValorMesaControl(Map<String, Object> params) throws DaoException {
 		Map<String, Object> mapResult = ejecutaSP(new ActualizaOTValorMesaControl(this.getDataSource()), params);
 		return (String) mapResult.get("pv_title_o");
 	}

@@ -7,19 +7,20 @@ var _CONTEXT = '${ctx}';
 var _PAGO_DIRECTO = "1";
 var _REEMBOLSO    = "2";
 
-var _UrlAltaDeTramite = '<s:url namespace="/siniestros"  action="altaTramite"   />';
-var _UrlRevisionDocsSiniestro = '<s:url namespace="/siniestros"  action="revisionDocumentos"   />';
-var _UrlRechazarTramiteWindwow = '<s:url namespace="/siniestros"  action="rechazoReclamaciones"   />';
-var _UrlDocumentosPoliza = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza" />';
-var _UrlGenerarContrarecibo = '<s:url namespace="/siniestros"  action="generarContrarecibo"   />';
-var _UrlDetalleSiniestro = '<s:url namespace="/siniestros"  action="detalleAfiliadosAfectados"   />';
-var _UrlSolicitarPago = '<s:url namespace="/siniestros"  action="solicitarPago"   />';
+var _UrlAltaDeTramite           = '<s:url namespace="/siniestros" action="altaTramite"               />';
+var _UrlRevisionDocsSiniestro   = '<s:url namespace="/siniestros" action="revisionDocumentos"        />';
+var _UrlRechazarTramiteWindwow  = '<s:url namespace="/siniestros" action="rechazoReclamaciones"      />';
+var _UrlDocumentosPoliza        = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza"   />';
+var _UrlGenerarContrarecibo     = '<s:url namespace="/siniestros" action="generarContrarecibo"       />';
+var _UrlDetalleSiniestro        = '<s:url namespace="/siniestros" action="detalleAfiliadosAfectados" />';
+var _UrlDetalleSiniestroDirecto = '<s:url namespace="/siniestros" action="afiliadosAfectados"        />';
+var _UrlSolicitarPago           = '<s:url namespace="/siniestros" action="solicitarPago"             />';
+var _urlSeleccionCobertura      = '<s:url namespace="/siniestros" action="seleccionCobertura"        />';
 
 var _UrlGeneraSiniestroTramite =      '<s:url namespace="/siniestros" action="generaSiniestroTramite" />';
 var _URL_ActualizaStatusTramite =      '<s:url namespace="/mesacontrol" action="actualizarStatusTramite" />';
 
 var panDocUrlViewDoc     = '<s:url namespace ="/documentos" action="descargaDocInline" />';
-
 
 var windowLoader;
 var msgWindow;
@@ -332,21 +333,55 @@ var msgWindow;
 	        	
 	}
 	
-	function detalleReclamacionWindow(grid,rowIndex,colIndex){
+	function detalleReclamacionWindow(grid,rowIndex,colIndex)
+	{
+		var record = grid.getStore().getAt(rowIndex);
+		debug('record:',record.data);
+		
+		var formapago = record.get('parametros.pv_otvalor02');
+		debug('formapago:',formapago);
+		
+		var esPagoDirecto = formapago == _PAGO_DIRECTO;
+		debug('esPagoDirecto:',esPagoDirecto ? 'si' : 'no');
+		
+		var params = {};
+		
+		var conCoberYSubcober = false;
+		if(esPagoDirecto)
+		{
+			if(record.get('parametros.pv_otvalor12')&&record.get('parametros.pv_otvalor12').length>0)
+			{
+				conCoberYSubcober = true;
+			}
+		}
+		debug('conCoberYSubcober:',conCoberYSubcober ? 'si' : 'no');
+		
+		var urlDestino = _UrlDetalleSiniestro;
+		if(esPagoDirecto)
+		{
+			if(conCoberYSubcober)
+			{
+				urlDestino = _UrlDetalleSiniestroDirecto;
+			}
+			else
+			{
+				urlDestino = _urlSeleccionCobertura;
+				params['params.ntramite'] = record.get('ntramite');
+				params['params.cdunieco'] = record.get('cdsucdoc');
+				params['params.cdramo']   = record.get('cdramo');
+				params['params.cdtipsit'] = record.get('cdtipsit');
+			}
+		}
+		debug('urlDestino:',urlDestino);
+		
+		debug('params:',params);
 		
 		Ext.create('Ext.form.Panel').submit(
-				{
-					url     : _UrlDetalleSiniestro
-					/*,params :
-					{
-						'smap1.cdramo'         : _4_smap1.cdramo
-						,'smap1.cdtipsit'      : _4_smap1.cdtipsit
-						,'smap1.gridTitle'     : _4_smap1.gridTitle
-						,'smap2.pv_cdtiptra_i' : cdtiptra
-						,'smap1.editable'      : editable
-					}*/
-				    ,standardSubmit : true
-				});
+		{
+			url             : urlDestino
+			,params         : params
+		    ,standardSubmit : true
+		});
 	}
 	
 	function turnarAareaMedica(grid,rowIndex,colIndex){

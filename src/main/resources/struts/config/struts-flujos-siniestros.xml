@@ -296,8 +296,8 @@
             <result name="success" type="json" />
 		</action>
 		
-		<action name="seleccionCobertura">
-    		<result>/jsp-script/proceso/siniestros/seleccionCobertura.jsp</result>
+		<action name="seleccionCobertura" class="siniestrosAction" method="pantallaSeleccionCobertura">
+    		<result name="success">/jsp-script/proceso/siniestros/seleccionCobertura.jsp</result>
 		</action>
 		
 		<action name="asignarReclamaciones">
@@ -388,6 +388,14 @@
 					success
 				</param>
 			</result>
+		</action>
+		
+		<action name="guardarSeleccionCobertura" class="siniestrosAction" method="guardarSeleccionCobertura">
+		    <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+		    <result type="json"></result>
 		</action>
 		
     </package>

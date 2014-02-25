@@ -2,6 +2,16 @@ Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.chart.*', 'Ext.grid.*', 'Ext.grid
 
 Ext.onReady(function() {
 
+	unieco = Ext.create('Ext.form.Textfield',
+	{
+		label  : 'cdunieco'
+		,value : _selCobParams.cdunieco
+	});
+	
+	ramo = Ext.create('Ext.form.ComboBox',
+	{
+		
+	});
 
     cobertura= Ext.create('Ext.form.ComboBox',
     	    {
