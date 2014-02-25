@@ -1020,7 +1020,7 @@ Ext.onReady(function() {
     	    renderTo: document.body,
     	    border : false,
     	    items: [{
-    	        title: 'Informaci&oacute; General',
+    	        title: 'Informaci&oacute;n General',
     	        	defaults : {
 	    	            bodyPadding : 5,
 	    	            border : false
@@ -1034,7 +1034,7 @@ Ext.onReady(function() {
     	        	},
     	        	items: [tramite]
 	    	    }, {
-	    	        title: 'Calculos',
+	    	        title: 'C&aacute;lculos',
 	    	        loader: {
 	    	        	url: _UrlPanelCalculos,
 	    	        	scripts: true,

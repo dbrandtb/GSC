@@ -241,7 +241,7 @@
 		</action>
 		
 		<action name="detalleAfiliadosAfectados">
-    		<result>/jsp-script/proceso/siniestros/detalleAfiliadosAfectados.jsp</result>
+    		<result>/jsp-script/proceso/siniestros/detalleReclamacion/detalleReclamacion.jsp</result>
 		</action>
         
         <action name="altaTramite">
@@ -309,7 +309,7 @@
 		</action>
 
 		<action name="calculosReclamaciones" class="siniestrosAction" method="entradaCalculos">
-    		<result>/jsp-script/proceso/siniestros/calculosReclamaciones.jsp</result>
+    		<result>/jsp-script/proceso/siniestros/detalleReclamacion/includes/calculos.jsp</result>
 		</action>
 		
 		<action name="loadListaCalculos" class="siniestrosAction"

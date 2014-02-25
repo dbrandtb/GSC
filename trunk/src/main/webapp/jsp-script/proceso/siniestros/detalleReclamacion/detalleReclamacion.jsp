@@ -18,8 +18,7 @@
             
         </script>
         <!-- <script type="text/javascript" src="${ctx}/resources/scripts/util/extjs4_utils.js"></script>-->
-        <script type="text/javascript" src="${ctx}/js/proceso/siniestros/detalleAfiliadosAfectados.js"></script>
-        
+        <script type="text/javascript" src="${ctx}/js/proceso/siniestros/detalleReclamacion/detalleReclamacion.js"></script>
     </head>
     <body>
     <!-- <div style="height:500px;">
