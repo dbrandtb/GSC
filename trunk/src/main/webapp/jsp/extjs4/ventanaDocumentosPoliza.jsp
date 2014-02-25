@@ -724,8 +724,6 @@ Ext.onReady(function()
         }
         , onDownloadClick : function(record)
         {
-        	debug(rowIndex,colIndex);
-        	var record=grid.getStore().getAt(rowIndex);
         	Ext.create('Ext.form.Panel').submit(
             {
                 url              : panDocUrlDownload
