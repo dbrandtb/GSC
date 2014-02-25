@@ -6,6 +6,7 @@
         <property name="catalogosManager" ref="catalogosManagerImpl"/>
         <property name="kernelManager"    ref="kernelManagerSustituto"/>
         <property name="endososManager" ref="endososManagerImpl"/>
+        <property name="siniestrosManager" ref="siniestrosManagerImpl"/>
     </bean>
 
     <bean id="clausuladoAction" class="mx.com.gseguros.portal.catalogos.controller.ClausuladoAction" scope="prototype">

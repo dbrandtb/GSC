@@ -86,5 +86,7 @@ public interface SiniestrosDAO {
 	public List<ListaFacturasVO> obtieneListadoFacturas(HashMap<String, Object> paramFact) throws DaoException;
 
 	public String bajaMsinival(HashMap<String, Object> paramBajasinival) throws DaoException;
+	
+	public List<GenericVO> obtieneListadoCobertura(String cdramo,String cdtipsit) throws DaoException;
 
 }

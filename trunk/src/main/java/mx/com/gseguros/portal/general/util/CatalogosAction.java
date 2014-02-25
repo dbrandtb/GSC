@@ -9,6 +9,7 @@ import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
+import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 
 import org.apache.log4j.Logger;
 
@@ -26,6 +27,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 	private CatalogosManager       catalogosManager;
 	private KernelManagerSustituto kernelManager;
 	private EndososManager         endososManager;
+	private SiniestrosManager 	   siniestrosManager;
     
     private boolean success;
     
@@ -127,6 +129,12 @@ public class CatalogosAction extends PrincipalCoreAction {
 					lista.add(new GenericVO("N", "NO"));
 					lista.add(new GenericVO("S", "SI"));
 					break;
+				case COBERTURAS:
+					lista = siniestrosManager.obtieneListadoCobertura(params.get("cdramo"), params.get("cdtipsit"));
+					break;
+				case SUBCOBERTURAS:
+					lista = siniestrosManager.getConsultaListaSubcobertura(params.get("cdgarant"), params.get("cdsubcob"));
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + nombreCatalogo);
 					//break;
@@ -183,6 +191,11 @@ public class CatalogosAction extends PrincipalCoreAction {
 
 	public void setEndososManager(EndososManager endososManager) {
 		this.endososManager = endososManager;
+	}
+
+
+	public void setSiniestrosManager(SiniestrosManager siniestrosManager) {
+		this.siniestrosManager = siniestrosManager;
 	}
 	
 }
