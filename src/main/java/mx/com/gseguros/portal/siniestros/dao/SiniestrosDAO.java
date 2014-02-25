@@ -89,4 +89,6 @@ public interface SiniestrosDAO {
 	
 	public List<GenericVO> obtieneListadoCobertura(String cdramo,String cdtipsit) throws DaoException;
 
+	public String actualizaOTValorMesaControl(HashMap<String, Object> params) throws DaoException;
+
 }

@@ -116,4 +116,6 @@ public interface SiniestrosManager {
 	public String getBajaMsinival(HashMap<String, Object> paramBajasinival) throws ApplicationException;
 	
 	public List<GenericVO> obtieneListadoCobertura(String cdramo,String cdtipsit) throws ApplicationException;
+	
+	public String actualizaOTValorMesaControl(HashMap<String, Object> params) throws ApplicationException;
 }

@@ -356,5 +356,14 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			throw new ApplicationException(daoExc.getMessage(), daoExc);
 		}
 	}
+	
+	@Override
+	public String actualizaOTValorMesaControl(HashMap<String, Object> params) throws ApplicationException {
+		try {
+			return siniestrosDAO.actualizaOTValorMesaControl(params);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}
 }
 
