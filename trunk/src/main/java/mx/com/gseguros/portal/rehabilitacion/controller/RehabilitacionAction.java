@@ -278,7 +278,6 @@ public class RehabilitacionAction extends PrincipalCoreAction
 			
 			String cdtipsup = TipoEndoso.REHABILITACION.getCdTipSup().toString();
 			
-			String nmsuplem = null;
 			String ntramite = null;
 			
 			List<Map<String,String>>listaDocu=cancelacionManager.reimprimeDocumentos(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
@@ -288,7 +287,7 @@ public class RehabilitacionAction extends PrincipalCoreAction
 				log.debug("docu iterado: "+docu);
 				String descripc = docu.get("descripc");
 				String descripl = docu.get("descripl");
-				nmsuplem = docu.get("nmsuplem");
+				String nmsuplem = docu.get("nmsuplem");
 				ntramite = docu.get("ntramite");
 				
 				String rutaCarpeta = this.getText("ruta.documentos.poliza")+"/"+ntramite;
@@ -337,7 +336,7 @@ public class RehabilitacionAction extends PrincipalCoreAction
 			// Ejecutamos el Web Service de Recibos:
 			ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
 					estado, nmpoliza, 
-					nmsuplem, null, 
+					nmsuplemRehab, null, 
 					cdtipsitGS, sucursal, "", ntramite, 
 					true, cdtipsup, 
 					(UserVO) session.get("USUARIO"));
