@@ -116,6 +116,16 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	}
 
 	@Override
+	public String generaContraRecibo(HashMap<String, Object> params)
+			throws ApplicationException {
+		try {
+			return siniestrosDAO.generaContraRecibo(params);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}
+
+	@Override
 	public List<HashMap<String, String>> loadListaIncisosRechazos(HashMap<String, String> params)
 			throws ApplicationException {
 		try {

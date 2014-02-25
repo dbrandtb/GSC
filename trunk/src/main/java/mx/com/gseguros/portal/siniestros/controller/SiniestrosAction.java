@@ -27,6 +27,7 @@ import mx.com.gseguros.portal.siniestros.model.DatosSiniestroVO;
 import mx.com.gseguros.portal.siniestros.model.ListaFacturasVO;
 import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
+import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
 
 import org.apache.commons.lang.StringUtils;
@@ -850,6 +851,12 @@ public void setMsgResult(String msgResult) {
 	   
 	   try {
 		   logger.debug("generarContrarecibo Siniestros: "+ paramsO);
+		   
+		   if(Constantes.MSG_TITLE_ERROR.equals(siniestrosManager.generaContraRecibo(paramsO))){
+			    msgResult = "Error al generar el n&uacute; de Contra Recibo";
+		   		success =  false;
+		   		return SUCCESS;
+		   }
 		   
 		   File carpeta=new File(getText("ruta.documentos.poliza") + "/" + paramsO.get("pv_ntramite_i"));
            if(!carpeta.exists()){
