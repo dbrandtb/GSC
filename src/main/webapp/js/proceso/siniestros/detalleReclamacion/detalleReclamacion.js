@@ -1038,7 +1038,10 @@ Ext.onReady(function() {
 	    	        loader: {
 	    	        	url: _UrlPanelCalculos,
 	    	        	scripts: true,
-	    	        	autoLoad: false
+	    	        	autoLoad: false,
+	    	        	ajaxOptions: {
+	    	        		method: 'POST'
+	    	        	}
 	    	        },
 	                listeners : {
 	                    activate : function(tab) {

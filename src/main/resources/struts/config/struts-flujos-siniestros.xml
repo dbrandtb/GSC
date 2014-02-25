@@ -308,7 +308,7 @@
     		<result>/jsp-script/proceso/siniestros/ajustesMedicos.jsp</result>
 		</action>
 
-		<action name="calculosReclamaciones" class="siniestrosAction" method="entradaCalculos">
+		<action name="includes/calculosReclamaciones" class="siniestrosAction" method="entradaCalculos">
     		<result>/jsp-script/proceso/siniestros/detalleReclamacion/includes/calculos.jsp</result>
 		</action>
 		
