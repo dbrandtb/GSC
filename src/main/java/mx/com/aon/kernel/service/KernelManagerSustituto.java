@@ -229,4 +229,6 @@ public interface KernelManagerSustituto {
     		,String estado
     		,String nmpoliza
     		,String nmsuplem) throws ApplicationException;
+    
+    public boolean validaDatosDxN(HashMap<String, Object> params) throws ApplicationException;
 }
