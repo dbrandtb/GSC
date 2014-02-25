@@ -353,6 +353,16 @@
 				</param>
 			</result>
 		</action>
+
+		<action name="generaSiniestroTramite" class="siniestrosAction"
+			method="generaSiniestroTramite">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success
+				</param>
+			</result>
+		</action>
 		
 		<action name="ventanaDocumentosSiniestros" class="siniestrosAction" method="execute">
             <result name="success">/jsp-script/proceso/siniestros/subirDocumentosSiniestros.jsp</result>
