@@ -273,47 +273,6 @@ Ext.onReady(function() {
             }
     });
     
-    aseguradoAfectadoPagDir = Ext.create('Ext.form.field.ComboBox',
-	{
-	    fieldLabel : 'Asegurado',      allowBlank: false,          displayField : 'value',         name:'cmboAseguradoAfect',
-	    id:'cmboAseguradoAfect',              labelWidth: 170,     width:500,                      valueField   : 'key',
-	    forceSelection : false,                 matchFieldWidth: false,     queryMode :'remote',            queryParam: 'params.cdperson',
-	    store : storeAsegurados,    triggerAction: 'all',			hideTrigger:true,
-	    listeners : {
-	        'select' : function(combo, record) {
-	                var params = {
-	                        'params.cdperson' : this.getValue()
-	                };
-	                
-	                cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA, 'listaPoliza', params, function(options, success, response){
-	                    if(success){
-	                        var jsonResponse = Ext.decode(response.responseText);
-	                        if(jsonResponse.listaPoliza == null) {
-	                            Ext.Msg.show({
-	                                title: 'Aviso',
-	                                msg: 'No se encontraron datos.',
-	                                buttons: Ext.Msg.OK,
-	                                icon: Ext.Msg.WARNING
-	                            });
-	                            Ext.getCmp('cmboAseguradoAfect').setValue('');
-	                            modPolizasAltaTramite.hide();
-	                            return;
-	                        }
-	                        
-	                    }else{
-	                        Ext.Msg.show({
-	                            title: 'Aviso',
-	                            msg: 'Error al obtener los datos.',
-	                            buttons: Ext.Msg.OK,
-	                            icon: Ext.Msg.ERROR
-	                        });
-	                    }
-	                });
-	                
-	                modPolizasAltaTramite.show();
-	            }
-	        }
-	});
     
     cmbBeneficiario= Ext.create('Ext.form.ComboBox',
 	{
@@ -529,22 +488,74 @@ Ext.onReady(function() {
         ,items :
         [   			
             {
-                id:'dtfechaOcurrencias'
-                ,xtype      : 'datefield'
-                ,fieldLabel : 'Fecha ocurrencia'
-                ,labelWidth : 170
-                ,name       : 'dtfechaOcurrencias'
-                ,format		: 'd/m/Y'
-            },
-            aseguradoAfectadoPagDir
+                xtype      : 'datefield',
+                name       : 'dtfechaOcurrencias',
+                fieldLabel : 'Fecha ocurrencia',
+                allowBlank: false,
+                maxValue   :  new Date(),
+                labelWidth : 170,
+                format		: 'd/m/Y'
+            },{
+            	xtype: 'combo',
+            	name:'cmbAseguradoAfect',
+            	fieldLabel : 'Asegurado',
+        	    displayField : 'value',
+        	    valueField   : 'key',
+        	    allowBlank: false,
+        	    width:500,
+        	    labelWidth: 170,
+        	    forceSelection : false,
+        	    matchFieldWidth: false,
+        	    queryMode :'remote',
+        	    queryParam: 'params.cdperson',
+        	    store : storeAsegurados,
+        	    triggerAction: 'all',
+        	    hideTrigger:true,
+        	    listeners : {
+        	    	
+        	        'select' : function(combo, record) {
+        	        	
+        	        	var params = {'params.cdperson' : this.getValue()};
+                        
+                        cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA, 'listaPoliza', params, function(options, success, response){
+                            if(success){
+                                var jsonResponse = Ext.decode(response.responseText);
+                                if(jsonResponse.listaPoliza == null) {
+                                    Ext.Msg.show({
+                                        title: 'Aviso',
+                                        msg: 'No existen p&oacute;lizas para el asegurado elegido.',
+                                        buttons: Ext.Msg.OK,
+                                        icon: Ext.Msg.WARNING
+                                    });
+                                    
+                                    combo.clearValue();
+                                    modPolizasAltaTramite.hide();
+                                    return;
+                                }
+                                
+                            }else{
+                                Ext.Msg.show({
+                                    title: 'Aviso',
+                                    msg: 'Error al obtener los datos.',
+                                    buttons: Ext.Msg.OK,
+                                    icon: Ext.Msg.ERROR
+                                });
+                            }
+                        });
+                        
+                        modPolizasAltaTramite.show();
+                    }
+        	    }
+            }
         ]
     });
 
     ventanaAgregarAsegurado= Ext.create('Ext.window.Window', {
-        renderTo: document.body,
+        //renderTo: document.body,
         title: 'Asegurados',
         //height: 200,
-        closeAction: 'hide',           
+        closeAction: 'hide', 
+        modal: true, 
         items:[panelListadoAsegurado],
         buttonAlign : 'center',
         buttons:[
@@ -552,7 +563,8 @@ Ext.onReady(function() {
                 text: 'Aceptar',
                 icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
                 handler: function() {
-                    if (panelListadoAsegurado.form.isValid()) {			
+                    if (panelListadoAsegurado.form.isValid()) {
+                    	
                         var datos=panelListadoAsegurado.form.getValues();
                         
                         var rec = new modelListAsegPagDirecto({
@@ -566,8 +578,8 @@ Ext.onReady(function() {
                         	modCdtipsit: Ext.getCmp('idCdtipsit').getValue(),
                         	modNmautserv: "",
                         	modFechaOcurrencia: datos.dtfechaOcurrencias,
-                        	modCdperson: datos.cmboAseguradoAfect,
-                        	modCdpersondesc: aseguradoAfectadoPagDir.rawValue
+                        	modCdperson: datos.cmbAseguradoAfect,
+                        	modCdpersondesc: panelListadoAsegurado.query('combo[name=cmbAseguradoAfect]')[0].rawValue
                         });
                         storeListAsegPagDirecto.add(rec);
                         limpiarRegistros();
