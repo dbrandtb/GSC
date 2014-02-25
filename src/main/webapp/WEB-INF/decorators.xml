@@ -39,6 +39,13 @@
         <pattern>/general/obtieneRecibos.action</pattern>
         <pattern>/siniestros/calculosReclamaciones.action</pattern>
         
+         <pattern>/siniestros/historialReclamaciones.action</pattern>
+        <pattern>/siniestros/verCoberturas.action</pattern>
+        <pattern>/siniestros/verAutorizacionServicio.action</pattern>
+        <pattern>/siniestros/revisionDocumentos.action</pattern>
+        <pattern>/siniestros/altaTramite.action</pattern>
+        <pattern>/siniestros/rechazoReclamaciones.action</pattern>
+        
 	</excludes>
 
 
@@ -63,12 +70,7 @@
 		<pattern>/flujocotizacion/principal.action</pattern>
         <pattern>/jsp/consultas/agentes/consultaAgentes.jsp</pattern>
         
-        <pattern>/siniestros/historialReclamaciones.action</pattern>
-        <pattern>/siniestros/verCoberturas.action</pattern>
-        <pattern>/siniestros/verAutorizacionServicio.action</pattern>
-        <pattern>/siniestros/revisionDocumentos.action</pattern>
-        <pattern>/siniestros/altaTramite.action</pattern>
-        <pattern>/siniestros/rechazoReclamaciones.action</pattern>
+       
         
 	</decorator>
     
@@ -118,32 +120,9 @@
         <pattern>/emision/*.action</pattern>
         <pattern>/jsp-script/proceso/emision/*.jsp</pattern>
         
-        
-        <pattern>/siniestros/principalCordinadorAR.action</pattern>
-        <pattern>/jsp-script/proceso/siniestros/principalCordinadorAR.jsp</pattern>
-        
-        <pattern>/siniestros/afiliadosAfectados.action</pattern>
-        <pattern>/jsp-script/proceso/siniestros/afiliadosAfectados.jsp</pattern>
-        
-         <pattern>/siniestros/detalleAfiliadosAfectados.action</pattern>
-         <pattern>/jsp-script/proceso/siniestros/detalleAfiliadosAfectados.jsp</pattern>
-         
-         <pattern>/siniestros/autorizacionServicios.action</pattern>
-         <pattern>/jsp-script/proceso/siniestros/autorizacionServicios.jsp</pattern>
-         
-         <pattern>/siniestros/seleccionCobertura.action</pattern>
-         <pattern>/jsp-script/proceso/siniestros/seleccionCobertura.jsp</pattern>
-         
-         <pattern>/siniestros/tipoAutorizacion.action</pattern>
-         <pattern>/jsp-script/proceso/siniestros/tipoAutorizacion.jsp</pattern>
-         
-         <pattern>/siniestros/asignarReclamaciones.action</pattern>
-         <pattern>/jsp-script/proceso/siniestros/asignarReclamaciones.jsp</pattern>
-         
-         <pattern>/siniestros/ajustesMedicos.action</pattern>
-         <pattern>/jsp-script/proceso/siniestros/ajustesMedicos.jsp</pattern>
-
-	</decorator>
+        <pattern>/siniestros/*.action</pattern>
+        <pattern>/jsp-script/proceso/siniestros/*.jsp</pattern>
+   	</decorator>
 	
 	
 	<decorator name="roles" page="decorator_roles.jsp">

@@ -650,6 +650,9 @@ Ext.onReady(function() {
                         header: 'Asegurado afectado',		dataIndex: 'modCdpersondesc',				width:350
                     },
                     {
+                        header: 'N&uacute;mero P&oacute;liza',		dataIndex: 'modPolizaAfectada',				width:100
+                    },
+                    {
                         xtype: 'actioncolumn',				width: 30,					 	sortable: false,	 	menuDisabled: true,
                         items: [{
                             icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
@@ -984,6 +987,8 @@ Ext.onReady(function() {
             				
             				submitValues['datosTablas']=datosTablas;
             				panelInicialPral.setLoading(true);
+            				console.log("VALOR A ENVIAR");
+            				console.log(submitValues);
             				
             				Ext.Ajax.request(
     						{
