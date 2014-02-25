@@ -227,9 +227,6 @@
 	        </interceptor-ref>
 	        <result name="success" type="json"/>
 		</action>-->
-        <action name="principal" class="MesaControlAction" method="principal">
-            <result name="success">/jsp-script/proceso/siniestros/principal.jsp</result>
-        </action>
         
         <action name="altaTramite">
     		<result>/jsp-script/proceso/siniestros/altaTramite.jsp</result>
