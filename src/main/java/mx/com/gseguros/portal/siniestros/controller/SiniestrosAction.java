@@ -922,6 +922,21 @@ public void setMsgResult(String msgResult) {
 	   success = true;
 	   return SUCCESS;
    }
+
+   public String generaSiniestroTramite(){
+	   
+	   try {
+		   
+		   logger.debug("generaSiniestroTramite Siniestros, params:" + params);
+		   siniestrosManager.getAltaSiniestroAltaTramite(params.get("pv_ntramite_i"));
+	   }catch( Exception e){
+		   logger.error("Error en generaSiniestroTramite",e);
+		   success =  false;
+		   return SUCCESS;
+	   }
+	   success = true;
+	   return SUCCESS;
+   }
 	
    
    /**

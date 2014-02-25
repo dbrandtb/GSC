@@ -4,6 +4,9 @@
 </s:if>
 var _CONTEXT = '${ctx}';
 
+var _PAGO_DIRECTO = "1";
+var _REEMBOLSO    = "2";
+
 var _UrlAltaDeTramite = '<s:url namespace="/siniestros"  action="altaTramite"   />';
 var _UrlRevisionDocsSiniestro = '<s:url namespace="/siniestros"  action="revisionDocumentos"   />';
 var _UrlRechazarTramiteWindwow = '<s:url namespace="/siniestros"  action="rechazoReclamaciones"   />';
@@ -12,6 +15,7 @@ var _UrlGenerarContrarecibo = '<s:url namespace="/siniestros"  action="generarCo
 var _UrlDetalleSiniestro = '<s:url namespace="/siniestros"  action="detalleAfiliadosAfectados"   />';
 var _UrlSolicitarPago = '<s:url namespace="/siniestros"  action="solicitarPago"   />';
 
+var _UrlGeneraSiniestroTramite =      '<s:url namespace="/siniestros" action="generaSiniestroTramite" />';
 var _URL_ActualizaStatusTramite =      '<s:url namespace="/mesacontrol" action="actualizarStatusTramite" />';
 
 var panDocUrlViewDoc     = '<s:url namespace ="/documentos" action="descargaDocInline" />';
@@ -203,7 +207,7 @@ var msgWindow;
        						}
 						},
 						failure: function(){
-							mensajeError('Error','No se pudo generar contrarecibo.');
+							mensajeError('No se pudo generar contrarecibo.');
 						}
 					});
 	        	}
@@ -244,23 +248,64 @@ var msgWindow;
 			        	            		,icon:_CONTEXT+'/resources/fam3icons/icons/accept.png'
 			        	            		,buttonAlign : 'center',
 			        	            		handler: function() {
-			        	            	    	if (this.up().up().form.isValid()) {
-			        	            	    		this.up().up().form.submit({
-			        	            		        	waitMsg:'Procesando...',
-			        	            		        	params: {
-			        	            		        		'smap1.ntramite' : record.get('ntramite'), 
-			        	            		        		'smap1.status'   : 10,
-			        	            		        	},
-			        	            		        	failure: function(form, action) {
-			        	            		        		mensajeError('Error','No se pudo turnar.');
-			        	            					},
-			        	            					success: function(form, action) {
-			        	            						mensajeCorrecto('Aviso','Se ha turnado con exito.');
-			        	            						loadMcdinStore();
-			        	            						windowLoader.close();
-			        	            						
-			        	            					}
-			        	            				});
+			        	            			var formPanel = this.up().up();
+			        	            	    	if (formPanel.form.isValid()) {
+			        	            	    		
+			        	            	    		if(record.get('parametros.pv_otvalor02') == _REEMBOLSO){
+			        	            	    			Ext.Ajax.request({
+			        	            						url: _UrlGeneraSiniestroTramite,
+			        	            						params: {
+			        	            							'params.pv_ntramite_i' : record.get('ntramite')
+			        	            						},
+			        	            						success: function(response, opt) {
+			        	            							
+			        	            							var jsonRes=Ext.decode(response.responseText);
+
+			        	            							if(jsonRes.success == true){
+				        	            							formPanel.form.submit({
+							        	            		        	waitMsg:'Procesando...',
+							        	            		        	params: {
+							        	            		        		'smap1.ntramite' : record.get('ntramite'), 
+							        	            		        		'smap1.status'   : 10,
+							        	            		        	},
+							        	            		        	failure: function(form, action) {
+							        	            		        		mensajeError('No se pudo turnar.');
+							        	            					},
+							        	            					success: function(form, action) {
+							        	            						mensajeCorrecto('Aviso','Se ha turnado con exito.');
+							        	            						loadMcdinStore();
+							        	            						windowLoader.close();
+							        	            						
+							        	            					}
+						        	            					});
+			        	            							}else{
+			        	            								mensajeError('Error al generar Siniestro para Area de Reclamaciones');
+			        	            							}
+			        	            						},
+			        	            						failure: function(){
+			        	            							mensajeError('Error al generar Siniestro para Area de Reclamaciones');
+			        	            						}
+			        	            					});
+			        	            	    			
+			        	            	    		}else{
+			        	            	    			formPanel.form.submit({
+				        	            		        	waitMsg:'Procesando...',
+				        	            		        	params: {
+				        	            		        		'smap1.ntramite' : record.get('ntramite'), 
+				        	            		        		'smap1.status'   : 10,
+				        	            		        	},
+				        	            		        	failure: function(form, action) {
+				        	            		        		mensajeError('No se pudo turnar.');
+				        	            					},
+				        	            					success: function(form, action) {
+				        	            						mensajeCorrecto('Aviso','Se ha turnado con exito.');
+				        	            						loadMcdinStore();
+				        	            						windowLoader.close();
+				        	            						
+				        	            					}
+			        	            					});
+			        	            	    		}
+			        	            	    		
 			        	            			} else {
 			        	            				Ext.Msg.show({
 			        	            	                   title: 'Aviso',
@@ -340,7 +385,7 @@ var msgWindow;
         	            		        		'smap1.status'   : 1,
         	            		        	},
         	            		        	failure: function(form, action) {
-        	            		        		mensajeError('Error','No se pudo turnar.');
+        	            		        		mensajeError('No se pudo turnar.');
         	            					},
         	            					success: function(form, action) {
         	            						mensajeCorrecto('Aviso','Se ha turnado con exito.');
@@ -411,7 +456,7 @@ var msgWindow;
         	            		        		'smap1.status'   : 7,
         	            		        	},
         	            		        	failure: function(form, action) {
-        	            		        		mensajeError('Error','No se pudo turnar.');
+        	            		        		mensajeError('No se pudo turnar.');
         	            					},
         	            					success: function(form, action) {
         	            						mensajeCorrecto('Aviso','Se ha turnado con exito.');
@@ -467,7 +512,7 @@ var msgWindow;
 							mensajeCorrecto('Aviso','El pago se ha solicitado con exito.');
 						},
 						failure: function(){
-							mensajeError('Error','No se pudo solicitar el pago.');
+							mensajeError('No se pudo solicitar el pago.');
 						}
 					});
 	        	}
