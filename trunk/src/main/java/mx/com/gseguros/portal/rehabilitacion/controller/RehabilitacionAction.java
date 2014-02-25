@@ -265,15 +265,16 @@ public class RehabilitacionAction extends PrincipalCoreAction
 			String  cdramo         = smap1.get("pv_cdramo_i");
 			String  estado         = smap1.get("pv_estado_i");
 			String  nmpoliza       = smap1.get("pv_nmpoliza_i");
-			String  nmsuplemPol    = smap1.get("pv_nmsuplem_i");
 			String  fereinst       = smap1.get("pv_fereinst_i");
+			
+			
+			Map<String,Object> resRehab = rehabilitacionManager.rehabilitarPoliza(smap1);
+			String nmsuplemRehab = (String)resRehab.get("pv_nmsuplem_o");
 			
 			if(algunAntiguo && !seConservaAnti)
 			{
-				rehabilitacionManager.borraAntiguedad(cdunieco, cdramo, estado, nmpoliza, nmsuplemPol, fereinst);
+				rehabilitacionManager.borraAntiguedad(cdunieco, cdramo, estado, nmpoliza, nmsuplemRehab, fereinst);
 			}
-			
-			rehabilitacionManager.rehabilitarPoliza(smap1);
 			
 			String cdtipsup = TipoEndoso.REHABILITACION.getCdTipSup().toString();
 			

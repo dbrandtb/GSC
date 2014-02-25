@@ -43,9 +43,9 @@ public class RehabilitacionDAOImpl extends AbstractManagerDAO implements Rehabil
 	}
 	
 	@Override
-	public void rehabilitarPoliza(Map<String,String>params) throws Exception
+	public Map<String,Object> rehabilitarPoliza(Map<String,String>params) throws Exception
 	{
-		this.ejecutaSP(new RehabilitarPoliza(this.getDataSource()), Utilerias.ponFechas(params));
+		return this.ejecutaSP(new RehabilitarPoliza(this.getDataSource()), Utilerias.ponFechas(params));
 	}
 	
 	protected class RehabilitarPoliza extends StoredProcedure
@@ -68,6 +68,7 @@ public class RehabilitacionDAOImpl extends AbstractManagerDAO implements Rehabil
 			declareParameter(new SqlParameter("pv_comments_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
             
+			declareParameter(new SqlOutParameter("pv_nmsuplem_o" , OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 	        declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
