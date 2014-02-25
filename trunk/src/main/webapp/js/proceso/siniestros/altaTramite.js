@@ -67,7 +67,7 @@ Ext.onReady(function() {
 	storeTipoAtencion.load();
     
 	
-	storeAsegurados = Ext.create('Ext.data.Store', {
+	var storeAsegurados = Ext.create('Ext.data.Store', {
         model:'Generic',
         autoLoad:false,
         proxy: {
@@ -110,7 +110,7 @@ Ext.onReady(function() {
         }
     });
 
-    storeListadoPoliza = new Ext.data.Store(
+    var storeListadoPoliza = new Ext.data.Store(
     {
     	pageSize : 5
         ,model      : 'modelListadoPoliza'
@@ -130,7 +130,7 @@ Ext.onReady(function() {
         allowDeselect: true
     });
 
-    oficinaReceptora= Ext.create('Ext.form.ComboBox',
+    var oficinaReceptora= Ext.create('Ext.form.ComboBox',
   	{
     	id:'cmbOficReceptora',	   name:'cmbOficReceptora',     fieldLabel: 'Oficina receptora',		queryMode:'local',		   
     	displayField: 'value',	   valueField: 'key',			allowBlank:false,				        editable:false,
@@ -152,7 +152,7 @@ Ext.onReady(function() {
    		})
    	});
     
-    oficinaEmisora= Ext.create('Ext.form.ComboBox',
+    var oficinaEmisora= Ext.create('Ext.form.ComboBox',
 	{
     	id:'cmbOficEmisora',		name:'cmbOficEmisora',		fieldLabel: 'Oficina emisora',			queryMode:'local',
 	    displayField: 'value',	    valueField: 'key',			width		 : 500,					    allowBlank:false,					    editable:false,
@@ -190,7 +190,7 @@ Ext.onReady(function() {
         labelWidth : 170,		   emptyText:'Seleccione...',			width		 : 500,						store: storeTipoAtencion
     });
 
-    tipoPago= Ext.create('Ext.form.ComboBox',
+    var tipoPago= Ext.create('Ext.form.ComboBox',
     		{
     	id:'cmbTipoPago',			   name:'cmbTipoPago',		        fieldLabel: 'Tipo pago',				queryMode:'local',
     	displayField: 'value',	   valueField: 'key',					allowBlank:false,						editable:false,
@@ -208,6 +208,7 @@ Ext.onReady(function() {
     				Ext.getCmp('txtNoFactura').show();
     				Ext.getCmp('txtImporte').show();
     				Ext.getCmp('dtFechaFactura').show();
+    				Ext.getCmp('cmbTipoAtencion').show();
     				Ext.getCmp('EditorAsegPagDirecto').show();
     				Ext.getCmp('cmbAseguradoAfectado').hide();
     				Ext.getCmp('dtFechaOcurrencia').hide();
@@ -218,6 +219,7 @@ Ext.onReady(function() {
     				Ext.getCmp('txtNoFactura').hide();
     				Ext.getCmp('txtImporte').hide();
     				Ext.getCmp('dtFechaFactura').hide();
+    				Ext.getCmp('cmbTipoAtencion').hide();
     				Ext.getCmp('editorIncisos').show();
     				Ext.getCmp('cmbBeneficiario').show();
     				Ext.getCmp('EditorAsegPagDirecto').hide();
@@ -229,11 +231,11 @@ Ext.onReady(function() {
 	});
 
     
-    aseguradoAfectado = Ext.create('Ext.form.field.ComboBox',
+    var aseguradoAfectado = Ext.create('Ext.form.field.ComboBox',
     {
     	fieldLabel : 'Asegurado afectado',      displayField : 'value',         name:'cmbAseguradoAfectado',
     	id:'cmbAseguradoAfectado',              labelWidth: 250,            width:500,                      valueField   : 'key',
-    	forceSelection : false,                 matchFieldWidth: false,     queryMode :'remote',            queryParam: 'params.cdperson',
+    	forceSelection : true,                 matchFieldWidth: false,     queryMode :'remote',            queryParam: 'params.cdperson',
     	minChars  : 2,                          store : storeAsegurados,    triggerAction: 'all',			hideTrigger:true,
     	listeners : {
             'select' : function(combo, record) {
@@ -273,30 +275,31 @@ Ext.onReady(function() {
             }
     });
     
-    
-    cmbBeneficiario= Ext.create('Ext.form.ComboBox',
+    var cmbBeneficiario= Ext.create('Ext.form.ComboBox',
 	{
-        id:'cmbBeneficiario',        name:'cmbBeneficiario',        	fieldLabel: 'Beneficiario',        queryMode:'local',        
-        displayField: 'value',    valueField: 'key',        			/*allowBlank:false,*/        				editable:false,        
-        labelWidth : 250,         width		 : 500,					emptyText:'Seleccione...'//,       		store: storePenalizacion
-        
+        id:'cmbBeneficiario',        name:'cmbBeneficiario',        	fieldLabel: 'Beneficiario',        queryMode:'remote',
+        displayField: 'value',    valueField: 'key',        			editable:true,
+        labelWidth : 250,         width		 : 500,
+        forceSelection : true,                 matchFieldWidth: false,     queryParam: 'params.cdperson',
+    	minChars  : 2,                          store : storeAsegurados,    triggerAction: 'all',			hideTrigger:true
     });
     
     
-    cmbProveedor = Ext.create('Ext.form.field.ComboBox',
+    
+    var cmbProveedor = Ext.create('Ext.form.field.ComboBox',
     {
     	fieldLabel : 'Proveedor',			/*allowBlank:false,*/				displayField : 'nombre',		name:'cmbProveedor',
     		id:'cmbProveedor',				labelWidth: 250,					valueField   : 'cdpresta',			
-    		forceSelection : false,	width:500,		emptyText:'Seleccione...',
+    		forceSelection : true,	width:500,		emptyText:'Seleccione...',
     	matchFieldWidth: false,			queryMode :'remote',				queryParam: 'params.cdpresta',	store : storeProveedor,			editable:false,
     	triggerAction: 'all'
     });
     
-    cmbProveedorInterno = Ext.create('Ext.form.field.ComboBox',
+    var cmbProveedorInterno = Ext.create('Ext.form.field.ComboBox',
     {
     	fieldLabel : 'Proveedor',			allowBlank: false,				displayField : 'nombre',		name:'cmbProveedorInterno',
     		id:'cmbProveedorInterno',				labelWidth: 170,					valueField   : 'cdpresta',			
-    		forceSelection : false,	width:500,		emptyText:'Seleccione...',
+    		forceSelection : true,	width:500,		emptyText:'Seleccione...',
     	matchFieldWidth: false,			queryMode :'remote',				queryParam: 'params.cdpresta',	store : storeProveedor,			editable:false,
     	triggerAction: 'all'
     });
@@ -346,7 +349,7 @@ Ext.onReady(function() {
         ]
     });
     /*PANTALLA EMERGENTE PARA LA INSERCION Y MODIFICACION DE LOS DATOS DEL GRID*/
-    ventanaGrid= Ext.create('Ext.window.Window', {
+    var ventanaGrid= Ext.create('Ext.window.Window', {
          renderTo: document.body,
            title: 'NUEVAS FACTURAS',
            height: 230,
@@ -503,8 +506,9 @@ Ext.onReady(function() {
         	    valueField   : 'key',
         	    allowBlank: false,
         	    width:500,
+        	    minChars  : 2,
         	    labelWidth: 170,
-        	    forceSelection : false,
+        	    forceSelection : true,
         	    matchFieldWidth: false,
         	    queryMode :'remote',
         	    queryParam: 'params.cdperson',
@@ -550,7 +554,7 @@ Ext.onReady(function() {
         ]
     });
 
-    ventanaAgregarAsegurado= Ext.create('Ext.window.Window', {
+   var ventanaAgregarAsegurado= Ext.create('Ext.window.Window', {
         //renderTo: document.body,
         title: 'Asegurados',
         //height: 200,
@@ -739,7 +743,7 @@ Ext.onReady(function() {
     ]);
     
     
-    modPolizasAltaTramite = Ext.create('Ext.window.Window',
+    var modPolizasAltaTramite = Ext.create('Ext.window.Window',
 	{
 	    title        : 'Listado de P&oacute;liza'
 	    ,modal       : true
