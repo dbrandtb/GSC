@@ -1028,11 +1028,19 @@ Ext.onReady(function() {
     	        	items: [informacionGral]    	        
 	    	    }, {
 	    	        title: 'Revisi&oacute;n Administrativa',
-	    	        defaults : {
-	    	            bodyPadding : 5,
-	    	            border : false
-    	        	},
-    	        	items: [tramite]
+	    	        loader: {
+	    	        	url: _UrlPanelRevAdmin,
+	    	        	scripts: true,
+	    	        	autoLoad: false,
+	    	        	ajaxOptions: {
+	    	        		method: 'POST'
+	    	        	}
+	    	        },
+	                listeners : {
+	                    activate : function(tab) {
+	                        tab.loader.load();
+	                    }
+	                }
 	    	    }, {
 	    	        title: 'C&aacute;lculos',
 	    	        loader: {

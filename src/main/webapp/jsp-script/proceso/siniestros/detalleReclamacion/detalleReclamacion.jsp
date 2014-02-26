@@ -15,6 +15,7 @@
             //var _URL_INSERTA_CLAUSU =      '<s:url namespace="/catalogos" action="insertaClausula" />';
             
             var _UrlPanelCalculos = '<s:url namespace="/siniestros" action="includes/calculosReclamaciones" />';
+            var _UrlPanelRevAdmin = '<s:url namespace="/siniestros" action="includes/revAdmin" />';
             
         </script>
         <!-- <script type="text/javascript" src="${ctx}/resources/scripts/util/extjs4_utils.js"></script>-->

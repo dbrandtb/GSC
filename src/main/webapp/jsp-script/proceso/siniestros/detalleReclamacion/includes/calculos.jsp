@@ -133,7 +133,7 @@
             	Ext.create('Ext.form.Panel',{
             		border: false
             		,title: 'Calculos de Siniestro'
-            		,renderTo : 'maindiv'
+            		,renderTo : 'maindivCalculos'
             		,bodyStyle:'padding:5px;'
             		,layout: {type:'hbox', pack: 'center'}
             		,items: [gridCalculos2]		
@@ -152,7 +152,7 @@
             	var panelCalculos = Ext.create('Ext.form.Panel',{
             		border: false
             		,title: 'Calculos de Siniestro'
-            		,renderTo : 'maindiv'
+            		,renderTo : 'maindivCalculos'
             		,bodyStyle:'padding:5px;'
             		,items: [
             		         {
@@ -193,4 +193,4 @@
 
 </script>
 
-<div id="maindiv" style="height:400px;"></div>
+<div id="maindivCalculos" style="height:400px;"></div>
