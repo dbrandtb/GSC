@@ -12,36 +12,110 @@ public class PolizaVigenteVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private String cdunieco;
-	
-	private String cdramo;
-	
-	private String estado;
-	
-	private String nmpoliza;
-	
-	private String nmsituac;
-	
-	private String mtoBase;
-	
-	private String feinicio;
-	
-	private String fefinal;
-	
 	private String dssucursal;
-	
+	private String estado;
+	private String cdramo;
 	private String dsramo;
-
-	private String dsestatus;
-	
+	private String nmpoliza;
+	private String nmsituac;
+	private String mtoBase;
+	private String feinicio;
+	private String fefinal;
 	private String estatus;
-	
-	private String nmsuplem;
-	
+	private String dsestatus;
 	private String nmsolici;
-	
+	private String nmsuplem;
 	private String cdtipsit;
+	private String estatusCliente;
+	private String desEstatusCliente;
+	private String faltaAsegurado;
+	private String fcancelacionAfiliado;
+	private String mtoBeneficioMax;
+	private String zonaContratada;
+	private String vigenciaPoliza;
+	 
 	
 	
+	public String getDesEstatusCliente() {
+		return desEstatusCliente;
+	}
+
+
+	public void setDesEstatusCliente(String desEstatusCliente) {
+		this.desEstatusCliente = desEstatusCliente;
+	}
+
+
+	public String getVigenciaPoliza() {
+		return vigenciaPoliza;
+	}
+
+
+	public void setVigenciaPoliza(String vigenciaPoliza) {
+		this.vigenciaPoliza = vigenciaPoliza;
+	}
+
+
+	public String getEstatusCliente() {
+		return estatusCliente;
+	}
+
+
+	public void setEstatusCliente(String estatusCliente) {
+		this.estatusCliente = estatusCliente;
+	}
+
+
+	/*public String getDesEstatusCliente() {
+		return desEstatusCliente;
+	}
+
+
+	public void setDesEstatusCliente(String desEstatusCliente) {
+		this.desEstatusCliente = desEstatusCliente;
+	}*/
+
+
+	public String getFaltaAsegurado() {
+		return faltaAsegurado;
+	}
+
+
+	public void setFaltaAsegurado(String faltaAsegurado) {
+		this.faltaAsegurado = faltaAsegurado;
+	}
+
+
+	public String getFcancelacionAfiliado() {
+		return fcancelacionAfiliado;
+	}
+
+
+	public void setFcancelacionAfiliado(String fcancelacionAfiliado) {
+		this.fcancelacionAfiliado = fcancelacionAfiliado;
+	}
+
+
+	public String getMtoBeneficioMax() {
+		return mtoBeneficioMax;
+	}
+
+
+	public void setMtoBeneficioMax(String mtoBeneficioMax) {
+		this.mtoBeneficioMax = mtoBeneficioMax;
+	}
+
+
+	public String getZonaContratada() {
+		return zonaContratada;
+	}
+
+
+	public void setZonaContratada(String zonaContratada) {
+		this.zonaContratada = zonaContratada;
+	}
+
+
 	public String getEstatus() {
 		return estatus;
 	}

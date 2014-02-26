@@ -81,7 +81,8 @@ Ext.onReady(function() {
         	'params.cdunieco':_7_smap1.cdunieco,
         	'params.estado':_7_smap1.estado,
         	'params.cdramo':_7_smap1.cdramo,
-        	'params.nmpoliza':_7_smap1.nmpoliza
+        	'params.nmpoliza':_7_smap1.nmpoliza,
+        	'params.suplemento':_7_smap1.suplemento
     };
     
     storeCopagosPoliza.load({

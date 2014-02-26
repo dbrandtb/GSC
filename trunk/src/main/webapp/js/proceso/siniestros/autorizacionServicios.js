@@ -42,7 +42,11 @@ Ext.onReady(function() {
         fields: [	{type:'string',    name:'cdramo'},				{type:'string',    name:'cdunieco'},				{type:'string',    name:'estado'},
 					{type:'string',    name:'nmpoliza'},			{type:'string',    name:'nmsituac'},				{type:'string',    name:'mtoBase'},
 					{type:'string',    name:'feinicio'},			{type:'string',    name:'fefinal'},					{type:'string',    name:'dssucursal'},
-					{type:'string',    name:'dsramo'},				{type:'string',    name:'estatus'},					{type:'string',    name:'dsestatus'}	]
+					{type:'string',    name:'dsramo'},				{type:'string',    name:'estatus'},					{type:'string',    name:'dsestatus'},
+					
+					{type:'string',    name:'nmsuplem'},			{type:'string',    name:'cdtipsit'},				{type:'string',    name:'estatusCliente'},
+					{type:'string',    name:'faltaAsegurado'},		{type:'string',    name:'fcancelacionAfiliado'},	{type:'string',    name:'mtoBeneficioMax'},
+					{type:'string',    name:'zonaContratada'},		{type:'string',    name:'vigenciaPoliza'},			{type:'string',    name:'desEstatusCliente'}]
     });
 	
 	Ext.define('modelListadoTmanteni',{
@@ -264,10 +268,10 @@ Ext.onReady(function() {
 	{
 	    id            : 'polizaGridId',
 	    store         : storeListadoPoliza,
-	    collapsible   : true,
-	    titleCollapse : true,
+	    //collapsible   : true,
+	    //titleCollapse : true,
 	    selType	      : 'checkboxmodel',
-	    width         : 640,
+	    width         : 700,
 	    height		  : 200,
 	    columns       :
 	    [
@@ -275,13 +279,19 @@ Ext.onReady(function() {
 	             header     : 'N&uacute;mero de P&oacute;liza',		dataIndex : 'nmpoliza',		width	 	: 150
 	        },
 	        {
-	             header     : 'Estatus',							dataIndex : 'dsestatus',	width	 	: 100
+	             header     : 'Estatus p&oacute;liza ',							dataIndex : 'dsestatus',	width	 	: 100
 	        },
 	        {
-	             header     : 'Fecha inicio',						dataIndex : 'feinicio',		width	    : 100
+	             header     : 'Vigencia p&oacute;liza <br/> Fecha inicio \t\t  |  \t\t Fecha fin  ',						dataIndex : 'vigenciaPoliza',		width	    : 200
 	        },
 	        {
-	             header     : 'Fecha final',						dataIndex : 'fefinal',		width	    : 100
+	             header     : 'Fecha alta <br/> asegurado',		dataIndex : 'faltaAsegurado',		width	    : 100
+	        },
+	        {
+	             header     : 'Fecha cancelaci&oacute;n <br/> asegurado',						dataIndex : 'fcancelacionAfiliado',		width	    : 150
+	        },
+	        {
+	             header     : 'Estatus<br/> asegurado',						dataIndex : 'desEstatusCliente',		width	    : 100
 	        },
 	        {
 	             header     : 'Producto',							dataIndex : 'dsramo',		width       : 150
@@ -304,12 +314,13 @@ Ext.onReady(function() {
 	    },
 	    listeners: {
                 itemclick: function(dv, record, item, index, e){
-            		Ext.getCmp('idUnieco').setValue(record.get('cdunieco'));
+                	Ext.getCmp('idUnieco').setValue(record.get('cdunieco'));
 					Ext.getCmp('idEstado').setValue(record.get('estado'));
 					Ext.getCmp('idcdRamo').setValue(record.get('cdramo'));
 					Ext.getCmp('idNmSituac').setValue(record.get('nmsituac'));
 					Ext.getCmp('polizaAfectada').setValue(record.get('nmpoliza'));
 					Ext.getCmp('idMontoBase').setValue(record.get('mtoBase'));
+					Ext.getCmp('idNmsuplem').setValue(record.get('nmsuplem'));
 					storeCobertura.load({
 	                    params:{
 	                    	'params.cdunieco':Ext.getCmp('idUnieco').getValue(),
@@ -337,7 +348,7 @@ Ext.onReady(function() {
 		,modal       : true
 		,buttonAlign : 'center'
 		,closable 	 : false
-		,width		 : 650
+		,width		 : 710
 		,minHeight 	 : 100 
 		,maxheight      : 400
 		,items       :
@@ -1564,7 +1575,6 @@ Ext.onReady(function() {
 									
 									//INFORMACION DEL ASEGURADO
 									Ext.getCmp('idAsegurado').setValue(json.cdperson);
-										//console.log(json.nombreCliente);
 									
 									//Fecha Solicitud
 									Ext.getCmp('fechaSolicitud').setValue(json.fesolici);
@@ -1583,15 +1593,12 @@ Ext.onReady(function() {
 									
 									//Proveedor
 									Ext.getCmp('idProveedor').setValue(json.cdprovee);
-										//console.log(json.nombreProveedor);
 									
 									//Médico
 									Ext.getCmp('idMedico').setValue(json.cdmedico);
-										//console.log(json.nombreMedico);
 									
 									//Causa Siniestro
 									Ext.getCmp('idCausaSiniestro').setValue(json.cdcausa);
-										//console.log(json.descCausa);
 									
 									//Tratamiento
 									Ext.getCmp('tratamiento').setValue(json.dstratam);
@@ -1835,13 +1842,10 @@ modificacionClausula = Ext.create('Ext.window.Window',
 				}
 	 			,
 	 			{
-	 				 colspan:2,	xtype       : 'textfield',			fieldLabel : 'cduser'				,id       : 'idCduser',			name       : 'cduser'
-					 ,allowBlank : false,				labelWidth: 170,					value:'ICE',	hidden:true
-	 			},
-	 			/*{
-	 				 colspan:2,	xtype       : 'textfield',			fieldLabel : 'Estatus del tr&aacute;mite'				,id       : 'idEstatusTramite'
-					 ,labelWidth: 170,			value:'En captura'
-	 			},*/
+	 				 xtype       : 'textfield',			fieldLabel : 'nmsuplem'				,id       : 'idNmsuplem',			name       : 'nmsuplem'
+					 ,allowBlank : false,				labelWidth: 170	,					hidden:true
+	 			}
+	 			,
 			 	{
 			 		colspan:2
 			 		,border: false
@@ -1961,7 +1965,7 @@ modificacionClausula = Ext.create('Ext.window.Window',
 								            	'params.estado':Ext.getCmp('idEstado').getValue(),
 								            	'params.cdramo':Ext.getCmp('idcdRamo').getValue(),
 								            	'params.nmpoliza':Ext.getCmp('polizaAfectada').getValue(),
-								            	'params.nmsituac':Ext.getCmp('idNmSituac').getValue()
+								            	'params.suplemento':Ext.getCmp('idNmsuplem').getValue()
 						                    }
 	 						 			},
 		 							 }).showAt(150,150);
@@ -2078,7 +2082,6 @@ modificacionClausula = Ext.create('Ext.window.Window',
 		 		    		
 			 				if(Ext.getCmp('fechaAutorizacion').getValue()!=null && Ext.getCmp('fechaVencimiento').getValue())
 		 					{
-			 					//console.log("TIENE DATOS");
 			 					Ext.getCmp('idstatus').setValue("2");
 			 					if(guardadoAutorizacionServicio())
 		 		    			{
@@ -2123,8 +2126,6 @@ modificacionClausula = Ext.create('Ext.window.Window',
 			 		        ,success  : function(response)
 			 		        {
 			 		            var json=Ext.decode(response.responseText);
-			 		            console.log("VALOR DE LA RESPUESTA");
-			 		           	console.log(json);
 			 		            if(json.success==true)
 			 		            {
 			 		                //window.setLoading(false);
