@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.siniestros.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,7 +91,14 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	public List<GenericVO> getConsultaListaSubcobertura(String cdgarant,
 			String cdsubcob) throws ApplicationException {
 		try {
-			return siniestrosDAO.obtieneListadoSubcobertura(cdgarant,cdsubcob);
+			log.debug("getConsultaListaSubcobertura cdgarant: "+cdgarant+", cdsubcob: "+cdsubcob);
+			List<GenericVO> lista = siniestrosDAO.obtieneListadoSubcobertura(cdgarant,cdsubcob);
+			if(lista==null)
+			{
+				lista= new ArrayList<GenericVO>();
+			}
+			log.debug("getConsultaListaSubcobertura lista size: "+lista.size());
+			return lista;
 		} catch (DaoException daoExc) {
 			throw new ApplicationException(daoExc.getMessage(), daoExc);
 		}
@@ -386,6 +394,62 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		{
 			throw new ApplicationException(daoExc.getMessage(), daoExc);
 		}
+	}
+	
+	/**
+	 * PKG_SINIESTRO.P_LISTA_SINIESTROSXTRAMITE
+	 * 6969 NMSINIES,
+	 * 500 NMAUTSER,
+	 * 510918 CDPERSON,
+	 * 'JUAN PEREZ' NOMBRE,
+	 * SYSDATE FEOCURRE,
+	 * 1009 CDUNIECO,
+	 * 'SALUD CAMPECHE' DSUNIECO,
+	 * 2 CDRAMO,
+	 * 'SALUD VITAL' DSRAMO,
+	 * 'SL' CDTIPSIT,
+	 * 'SALUD VITAL' DSTIPSIT,
+	 * 'M' ESTADO,
+	 * 500 NMPOLIZA,
+	 * 'S' VOBOAUTO,
+	 * '65' CDICD,
+	 * 'GRIPE' DSICD,
+	 * '66' ICD2,
+	 * 'FIEBRE' DSICD2,
+	 * 12.5 DESCPORC,
+	 * 300 DESCNUME,
+	 * 15 COPAGO,
+	 * 3500 PTIMPORT,
+	 * 'S' AUTRECLA,
+	 * 54647 NMRECLAM
+	 */
+	@Override
+	public List<Map<String,String>> listaSiniestrosTramite(String ntramite) throws Exception
+	{
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("pv_ntramite_i" , ntramite);
+		log.debug("listaSiniestrosTramite params: "+params);
+		List<Map<String,String>> lista = siniestrosDAO.listaSiniestrosTramite(params);
+		if(lista == null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		log.debug("listaSiniestrosTramite lista size: "+lista.size());
+		return lista;
+	}
+	
+	/**
+	 * PKG_PRESINIESTRO.P_GET_TRAMITE_COMPLETO
+	 */
+	@Override
+	public Map<String,String> obtenerTramiteCompleto(String ntramite) throws Exception
+	{
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("pv_ntramite_i" , ntramite);
+		log.debug("obtenerTramiteCompleto params: "+params);
+		Map<String,String> tramite = siniestrosDAO.obtenerTramiteCompleto(params);
+		log.debug("obtenerTramiteCompleto tramite: "+tramite);
+		return tramite;
 	}
 }
 

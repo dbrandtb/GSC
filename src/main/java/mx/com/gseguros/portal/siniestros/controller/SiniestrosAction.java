@@ -75,9 +75,10 @@ public class SiniestrosAction extends PrincipalCoreAction{
     private List<GenericVO> listaPlazas;
     private List<ListaFacturasVO> listaFacturas;
     
-    private Item             item;
-    private Map<String,Item> imap;
-    private String           mensaje;
+    private Item                     item;
+    private Map<String,Item>         imap;
+    private String                   mensaje;
+    private List<Map<String,String>> slist1;
     
     /**
      * Funci�n para la visualizaci�n de las coberturas 
@@ -1082,7 +1083,151 @@ public void setMsgResult(String msgResult) {
     			);
     	return SUCCESS;
     }
+    
+    public String afiliadosAfectados()
+    {
+    	logger.debug(""
+    			+ "\n################################"
+    			+ "\n################################"
+    			+ "\n###### afiliadosAfectados ######"
+    			+ "\n######                    ######"
+    			);
+    	logger.debug("params: "+params);
+    	
+    	try
+    	{
+    		String ntramite = params.get("ntramite");
+    		
+    		if(ntramite==null)
+    		{
+    			throw new Exception("No hay tramite");
+    		}
+    		
+    		params = (HashMap<String, String>) siniestrosManager.obtenerTramiteCompleto(ntramite);
+    		
+    		UserVO usuario  = (UserVO)session.get("USUARIO");
+	    	String cdrol    = usuario.getRolActivo().getObjeto().getValue();
+	    	String pantalla = "AFILIADOS_AGRUPADOS";
+	    	String seccion  = "FORMULARIO";
+	    	
+	    	List<ComponenteVO> componentes = pantallasManager.obtenerComponentes(
+	    			null, null, null, null, null, cdrol, pantalla, seccion, null);
+	    	
+	    	GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+	    	
+	    	gc.generaComponentes(componentes, true, false, true, false, false, false);
+	    	
+	    	imap = new HashMap<String,Item>();
+	    	imap.put("itemsForm",gc.getItems());
+	    	
+	    	slist1 = siniestrosManager.listaSiniestrosTramite(ntramite);
+	    	
+	    	seccion = "COLUMNAS";
+	    	
+	    	componentes = pantallasManager.obtenerComponentes(
+	    			null, null, null, null, null, cdrol, pantalla, seccion, null);
+	    	
+	    	for(ComponenteVO com:componentes)
+	    	{
+	    		com.setWidth(100);
+	    	}
+	    	
+	    	gc.generaComponentes(componentes, true, false, false, true, false, false);
+	    	
+	    	imap.put("columnas",gc.getColumns());
+    	}
+    	catch(Exception ex)
+    	{
+    		logger.error("error al cargar pantalla de asegurados afectados",ex);
+    	}
+    	
+    	logger.debug(""
+    			+ "\n######                    ######"
+    			+ "\n###### afiliadosAfectados ######"
+    			+ "\n################################"
+    			+ "\n################################"
+    			);
+    	return SUCCESS;
+    }
 	
+    /*
+    params:
+    	OTVALOR11=101, 
+    	CDTIPSIT=SL,
+    	OTVALOR12=18HO, 
+    	OTVALOR07=3, 
+    	OTVALOR13=18HO001, 
+    	OTVALOR08=696913, 
+    	CDSUCDOC=1006, 
+    	OTVALOR06=25/02/2014, 
+    	CDRAMO=2, 
+    	OTVALOR03=3000, 
+    	ntramite=1397
+    */
+    public String guardarAfiliadosAfectados()
+    {
+    	logger.debug(""
+    			+ "\n#######################################"
+    			+ "\n#######################################"
+    			+ "\n###### guardarAfiliadosAfectados ######"
+    			+ "\n######                           ######"
+    			);
+    	logger.debug("params: "+params);
+    	
+    	try
+    	{
+    		String ntramite = params.get("ntramite");
+    		String cdramo   = params.get("CDRAMO");
+    		String cdtipsit = params.get("CDTIPSIT");
+    		String importe  = params.get("OTVALOR03");
+    		String feFactu  = params.get("OTVALOR06");
+    		String tipoate  = params.get("OTVALOR07");
+    		String factura  = params.get("OTVALOR08");
+    		String cdprove  = params.get("OTVALOR11");
+    		String cdgarant = params.get("OTVALOR12");
+    		String cdsubgar = params.get("OTVALOR13");
+    		
+    		HashMap<String,Object> paramsFactura = new HashMap<String,Object>();
+    		paramsFactura.put("pv_ntramite_i" , ntramite);
+    		paramsFactura.put("pv_nfactura_i" , factura);
+    		paramsFactura.put("pv_ffactura_i" , feFactu);
+    		paramsFactura.put("pv_cdtipser_i" , tipoate);
+    		paramsFactura.put("pv_cdpresta_i" , cdprove);
+    		paramsFactura.put("pv_ptimport_i" , importe);
+    		siniestrosManager.guardaListaFacMesaControl(paramsFactura);
+    		
+    		Map<String,Object> otvalor = new HashMap<String,Object>();
+    		otvalor.put("pv_ntramite_i"  , ntramite);
+    		otvalor.put("pv_cdramo_i"    , cdramo);
+    		otvalor.put("pv_cdtipsit_i"  , cdtipsit);
+    		otvalor.put("pv_otvalor03_i" , importe);
+    		otvalor.put("pv_otvalor06_i" , feFactu);
+    		otvalor.put("pv_otvalor07_i" , tipoate);
+    		otvalor.put("pv_otvalor08_i" , factura);
+    		otvalor.put("pv_otvalor11_i" , cdprove);
+    		otvalor.put("pv_otvalor12_i" , cdgarant);
+    		otvalor.put("pv_otvalor13_i" , cdsubgar);
+    		siniestrosManager.actualizaOTValorMesaControl(otvalor);
+    		
+    		mensaje = "Datos guardados correctamente";
+    		success=true;
+    	}
+    	catch(Exception ex)
+    	{
+    		logger.error("error al guardar afiliados afectados",ex);
+    		success=false;
+    		mensaje=ex.getMessage();
+    	}
+    	
+    	logger.debug(""
+    			+ "\n######                           ######"
+    			+ "\n###### guardarAfiliadosAfectados ######"
+    			+ "\n#######################################"
+    			+ "\n#######################################"
+    			);
+    	return SUCCESS;
+    }
+    
     public void setListaFacturas(List<ListaFacturasVO> listaFacturas) {
 	this.listaFacturas = listaFacturas;
 }
@@ -1342,6 +1487,14 @@ public void setMsgResult(String msgResult) {
 
 	public void setMensaje(String mensaje) {
 		this.mensaje = mensaje;
+	}
+
+	public List<Map<String, String>> getSlist1() {
+		return slist1;
+	}
+
+	public void setSlist1(List<Map<String, String>> slist1) {
+		this.slist1 = slist1;
 	}
 	
 }

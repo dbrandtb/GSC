@@ -59,6 +59,8 @@ public class ComponenteVO
 	private String icon = null;
 	private String handler = null;
 	
+	private int width = 0;
+	
 	public ComponenteVO(){}
 	
 	public ComponenteVO(
@@ -404,5 +406,13 @@ public class ComponenteVO
 
 	public void setHandler(String handler) {
 		this.handler = handler;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
 	}
 }

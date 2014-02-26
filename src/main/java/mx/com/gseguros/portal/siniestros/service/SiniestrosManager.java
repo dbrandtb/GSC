@@ -6,18 +6,17 @@ import java.util.Map;
 
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
-import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
 import mx.com.gseguros.portal.siniestros.model.CoberturaPolizaVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaManteniVO;
-import mx.com.gseguros.portal.siniestros.model.ListaFacturasVO;
-import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaPorcentajeVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaProveedorVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaTDETAUTSVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaTTAPVAATVO;
 import mx.com.gseguros.portal.siniestros.model.DatosSiniestroVO;
+import mx.com.gseguros.portal.siniestros.model.ListaFacturasVO;
+import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
 
 public interface SiniestrosManager {
 	
@@ -119,4 +118,38 @@ public interface SiniestrosManager {
 	public List<GenericVO> obtieneListadoCobertura(String cdramo,String cdtipsit) throws ApplicationException;
 	
 	public String actualizaOTValorMesaControl(Map<String, Object> params) throws ApplicationException;
+	
+	/**
+	 * PKG_SINIESTRO.P_LISTA_SINIESTROSXTRAMITE
+	 * 6969 NMSINIES,
+	 * 500 NMAUTSER,
+	 * 510918 CDPERSON,
+	 * 'JUAN PEREZ' NOMBRE,
+	 * SYSDATE FEOCURRE,
+	 * 1009 CDUNIECO,
+	 * 'SALUD CAMPECHE' DSUNIECO,
+	 * 2 CDRAMO,
+	 * 'SALUD VITAL' DSRAMO,
+	 * 'SL' CDTIPSIT,
+	 * 'SALUD VITAL' DSTIPSIT,
+	 * 'M' ESTADO,
+	 * 500 NMPOLIZA,
+	 * 'S' VOBOAUTO,
+	 * '65' CDICD,
+	 * 'GRIPE' DSICD,
+	 * '66' ICD2,
+	 * 'FIEBRE' DSICD2,
+	 * 12.5 DESCPORC,
+	 * 300 DESCNUME,
+	 * 15 COPAGO,
+	 * 3500 PTIMPORT,
+	 * 'S' AUTRECLA,
+	 * 54647 NMRECLAM
+	 */
+	public List<Map<String,String>> listaSiniestrosTramite(String ntramite) throws Exception;
+	
+	/**
+	 * PKG_PRESINIESTRO.P_GET_TRAMITE_COMPLETO
+	 */
+	public Map<String,String> obtenerTramiteCompleto(String ntramite) throws Exception;
 }

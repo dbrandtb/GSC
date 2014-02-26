@@ -11,6 +11,7 @@ import javax.sql.DataSource;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
+import mx.com.gseguros.portal.dao.impl.DinamicMapper;
 import mx.com.gseguros.portal.siniestros.dao.SiniestrosDAO;
 import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
@@ -1207,6 +1208,83 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("pv_otvalor49_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_otvalor50_i", OracleTypes.VARCHAR));
 			
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	/**
+	 * PKG_SINIESTRO.P_LISTA_SINIESTROSXTRAMITE
+	 * 6969 NMSINIES,
+	 * 500 NMAUTSER,
+	 * 510918 CDPERSON,
+	 * 'JUAN PEREZ' NOMBRE,
+	 * SYSDATE FEOCURRE,
+	 * 1009 CDUNIECO,
+	 * 'SALUD CAMPECHE' DSUNIECO,
+	 * 2 CDRAMO,
+	 * 'SALUD VITAL' DSRAMO,
+	 * 'SL' CDTIPSIT,
+	 * 'SALUD VITAL' DSTIPSIT,
+	 * 'M' ESTADO,
+	 * 500 NMPOLIZA,
+	 * 'S' VOBOAUTO,
+	 * '65' CDICD,
+	 * 'GRIPE' DSICD,
+	 * '66' ICD2,
+	 * 'FIEBRE' DSICD2,
+	 * 12.5 DESCPORC,
+	 * 300 DESCNUME,
+	 * 15 COPAGO,
+	 * 3500 PTIMPORT,
+	 * 'S' AUTRECLA,
+	 * 54647 NMRECLAM
+	 */
+	@Override
+	public List<Map<String,String>> listaSiniestrosTramite(Map<String, String> params) throws Exception
+	{
+		Map<String, Object> mapResult = ejecutaSP(new ListaSiniestrosTramite(this.getDataSource()), params);
+		return (List<Map<String,String>>) mapResult.get("pv_registro_o");
+	}
+	
+	protected class ListaSiniestrosTramite extends StoredProcedure
+	{
+		protected ListaSiniestrosTramite(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SINIESTRO.P_LISTA_SINIESTROSXTRAMITE");
+			declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	/**
+	 * PKG_PRESINIESTRO.P_GET_TRAMITE_COMPLETO
+	 */
+	@Override
+	public Map<String,String> obtenerTramiteCompleto(Map<String, String> params) throws Exception
+	{
+		Map<String, Object> mapResult = ejecutaSP(new ObtenerTramiteCompleto(this.getDataSource()), params);
+		List<Map<String,String>> listaTramites = (List<Map<String,String>>) mapResult.get("pv_registro_o");
+		if(listaTramites==null||listaTramites.size()==0)
+		{
+			throw new Exception("No se encuentra el tramite "+params.get("pv_ntramite_i"));
+		}
+		return listaTramites.get(0);
+	}
+	
+	protected class ObtenerTramiteCompleto extends StoredProcedure
+	{
+		protected ObtenerTramiteCompleto(DataSource dataSource)
+		{
+			super(dataSource, "PKG_PRESINIESTRO.P_GET_TRAMITE_COMPLETO");
+			declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();

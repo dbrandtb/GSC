@@ -236,8 +236,8 @@
     		<result>/jsp-script/proceso/siniestros/principalCordinadorAR.jsp</result>
 		</action>
 		
-		<action name="afiliadosAfectados">
-    		<result>/jsp-script/proceso/siniestros/afiliadosAfectados.jsp</result>
+		<action name="afiliadosAfectados" class="siniestrosAction" method="afiliadosAfectados">
+    		<result name="success">/jsp-script/proceso/siniestros/afiliadosAfectados.jsp</result>
 		</action>
 		
 		<action name="detalleAfiliadosAfectados">
@@ -405,6 +405,14 @@
             </interceptor-ref>
 		    <result type="json"></result>
 		</action>
+		
+		<action name="guardarAfiliadosAfectados" class="siniestrosAction" method="guardarAfiliadosAfectados">
+            <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result type="json"></result>
+        </action>
 		
     </package>
 
