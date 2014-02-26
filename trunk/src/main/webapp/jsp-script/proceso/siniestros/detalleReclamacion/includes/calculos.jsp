@@ -5,7 +5,7 @@
             var _CONTEXT = '${ctx}';
             
             var esHospitalario = <s:property value="esHospitalario" />;
-            var loadForm = <s:property value='%{loadForm.toString().replace("=",":\'").replace(",","\',").replace("}","\'}")}' />;
+            var loadForm = <s:property value='loadForm' escapeHtml='false'/>;
             //var _URL_HeaderCalculos	= '<s:url namespace="/siniestros" action="obtenHeaderCalculos" />';
             var _URL_ListaCalculos		= '<s:url namespace="/siniestros" action="loadListaCalculos" />';
             
