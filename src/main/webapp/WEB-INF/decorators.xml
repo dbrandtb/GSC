@@ -46,6 +46,7 @@
         <pattern>/siniestros/revisionDocumentos.action</pattern>
         <pattern>/siniestros/altaTramite.action</pattern>
         <pattern>/siniestros/rechazoReclamaciones.action</pattern>
+        <pattern>/siniestros/autorizacionServicios.action</pattern>
         
 	</excludes>
 
