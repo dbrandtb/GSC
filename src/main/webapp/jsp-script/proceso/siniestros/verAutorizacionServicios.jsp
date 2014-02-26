@@ -18,7 +18,7 @@
             var _URL_CONSULTA_DEDUCIBLE_COPAGO1		= '<s:url namespace="/siniestros" 		action="consultaListaDatSubGeneral" />';
             var mesConUrlLoadCatalo1    				= '<s:url namespace="/catalogos"       action="obtieneCatalogo" />';
             var _CAT_AUTORIZACION1				    = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_SUCURSALES_ADMIN"/>';
-            var _CAT_CAUSASINIESTRO1				    = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TCAUSASSV"/>';
+            var _CAT_CAUSASINIESTRO1				    = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CAUSA_SINIESTRO"/>';
             var _CAT_TRATAMIENTO1				    = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TTRATAMIENTO"/>';
             
             var valorAction = <s:property value='%{getParams().toString().replace("=",":\'").replace(",","\',").replace("}","\'}")}' />;
