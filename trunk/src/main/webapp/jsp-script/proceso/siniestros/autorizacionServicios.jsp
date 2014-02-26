@@ -10,7 +10,7 @@
             var _CONTEXT = '${ctx}';
             var mesConUrlLoadCatalo    				= '<s:url namespace="/catalogos"       action="obtieneCatalogo" />';
             var _CAT_AUTORIZACION				    = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_SUCURSALES_ADMIN"/>';
-            var _CAT_CAUSASINIESTRO				    = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TCAUSASSV"/>';
+            var _CAT_CAUSASINIESTRO				    = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CAUSA_SINIESTRO"/>';
             var _CAT_TRATAMIENTO				    = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TTRATAMIENTO"/>';
             var _CAT_TPENALIZACIONES				    = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TPENALIZACIONES"/>';
             

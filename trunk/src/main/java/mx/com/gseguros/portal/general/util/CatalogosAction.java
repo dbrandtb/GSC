@@ -79,7 +79,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case TIPOS_POLIZA:
 				case TIPO_PAGO_SINIESTROS:
 				case TIPO_ATENCION_SINIESTROS:
-				case TCAUSASSV:
+				case CAUSA_SINIESTRO:
 				case TTRATAMIENTO:
 				case TPENALIZACIONES:
 				case PLANES:
