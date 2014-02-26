@@ -37,6 +37,7 @@ import mx.com.gseguros.utils.HttpUtil;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.json.JSONUtil;
 
 import com.opensymphony.xwork2.ActionContext;
 
@@ -708,13 +709,13 @@ public void setMsgResult(String msgResult) {
    	loadForm =  new HashMap<String, String>();
    	
    	if(esHospitalario){
-       	loadForm.put("asegurado", "Manuel");
+       	loadForm.put("asegurado", "Manuel,lopez");
        	loadForm.put("deducible", "5");
        	loadForm.put("copago", "54");
    	}else{
-   		loadForm.put("proveedor","Nombre Proveedor");
+   		loadForm.put("proveedor","Nombre, Proveedor");
    		loadForm.put("isrProveedor","Isr");
-   		loadForm.put("impuestoCedular","Imp ced");
+   		loadForm.put("impuestoCedular","Imp, ced");
    		loadForm.put("iva","17.5");
    	}
    	
@@ -1412,8 +1413,13 @@ public void setMsgResult(String msgResult) {
 		this.numeroAutorizacion = numeroAutorizacion;
 	}
 	
-	public HashMap<String, String> getLoadForm() {
-		return loadForm;
+	public String getLoadForm() {
+		try {
+			return JSONUtil.serialize(loadForm);
+		} catch (Exception e) {
+			logger.error("Error al generar JSON de LoadForm",e);
+			return null;
+		}
 	}
 
 	public void setLoadForm(HashMap<String, String> loadForm) {
