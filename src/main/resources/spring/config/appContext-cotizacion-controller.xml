@@ -17,10 +17,12 @@
     
     <bean id="cotizacionVital" class="mx.com.aon.flujos.cotizacion4.web.ResultadoCotizacion4Action" scope="prototype" parent="principalCotizacion">
         <property name="kernelManagerSustituto" ref="kernelManagerSustituto"/>
+        <property name="catalogosManager"       ref="catalogosManagerImpl"/>
     </bean>
     
     <bean id="CotizacionAction" class="mx.com.gseguros.portal.emision.controller.CotizacionAction" scope="prototype">
         <property name="kernelManager" ref="kernelManagerSustituto"/>
+        <property name="catalogosManager"       ref="catalogosManagerImpl"/>
     </bean>
     
     <!-- <bean id="beanCatalogosAction" class="mx.com.gseguros.portal.general.util.CatalogosAction" scope="prototype" parent="principalCotizacion">

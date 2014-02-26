@@ -5,6 +5,8 @@ import java.util.Map;
 
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.DaoException;
+import mx.com.gseguros.portal.general.util.Rango;
+import mx.com.gseguros.portal.general.util.TipoTramite;
 
 public interface CatalogosDAO {
 	
@@ -25,5 +27,7 @@ public interface CatalogosDAO {
 	public List<GenericVO> obtieneRolesSistema() throws DaoException;
 	
 	public List<GenericVO> obtieneStatusTramite(Map<String,String> params) throws Exception;
+	
+	public String obtieneCantidadMaxima(String cdramo, String cdtipsit, TipoTramite tipoTramite, Rango rango) throws Exception;
 
 }

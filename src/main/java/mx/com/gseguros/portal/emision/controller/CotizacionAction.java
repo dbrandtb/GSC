@@ -16,7 +16,10 @@ import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.portal.general.util.Rango;
+import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.utils.Constantes;
 
 import org.apache.log4j.Logger;
@@ -31,7 +34,8 @@ public class CotizacionAction extends PrincipalCoreAction
 	private static Logger           log              = Logger.getLogger(CotizacionAction.class);
 	private static SimpleDateFormat renderFechas     = new SimpleDateFormat("dd/MM/yyyy"); 
 	
-	private KernelManagerSustituto   kernelManager;
+	private transient KernelManagerSustituto   kernelManager;
+	private transient CatalogosManager catalogosManager;
 	private boolean                  success;
 	private Map<String,String>       smap1;
 	private Map<String,Item>         imap;
@@ -57,8 +61,8 @@ public class CotizacionAction extends PrincipalCoreAction
 		String cdtipsit = smap1.get("cdtipsit");
 		
 		String ntramite;
-		String cdunieco;
-		String cdramo;
+		String cdunieco=null;
+		String cdramo=null;
 		
 		smap1.put("user",usuario.getUser());
 		
@@ -159,6 +163,14 @@ public class CotizacionAction extends PrincipalCoreAction
 		log.debug("camposIndividuales: "+camposIndividuales);
         ////// obtener campos de tatrisit //////
         ////////////////////////////////////////
+		
+		//Obtenemos la edad máxima para la cotizacion:
+        try {
+        	smap1.put("edadMaximaCotizacion", 
+        			catalogosManager.obtieneCantidadMaxima(cdramo, cdtipsit, TipoTramite.POLIZA_NUEVA, Rango.ANIOS));
+        } catch(Exception e) {
+        	log.error("Error al obtener la edad máxima de cotización", e);
+        }
         
 		log.debug("\n"
 				+ "\n######                    ######"
@@ -740,6 +752,10 @@ public class CotizacionAction extends PrincipalCoreAction
 	/*///////////////////////////*/
 	public void setKernelManager(KernelManagerSustituto kernelManager) {
 		this.kernelManager = kernelManager;
+	}
+
+	public void setCatalogosManager(CatalogosManager catalogosManager) {
+		this.catalogosManager = catalogosManager;
 	}
 
 	public boolean isSuccess() {

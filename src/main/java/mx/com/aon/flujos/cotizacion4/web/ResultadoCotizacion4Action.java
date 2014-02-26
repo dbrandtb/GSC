@@ -23,6 +23,9 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal.web.model.IncisoSaludVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
+import mx.com.gseguros.portal.general.service.CatalogosManager;
+import mx.com.gseguros.portal.general.util.Rango;
+import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.utils.HttpUtil;
 import net.sf.json.JSONArray;
 
@@ -45,6 +48,8 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     
     //beans
     private KernelManagerSustituto kernelManagerSustituto;
+    
+    private CatalogosManager catalogosManager;
     
     //Constantes de catalogos
     public static final String cdatribuSexo                         ="1";
@@ -139,6 +144,8 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
     private String cdtipsit;
     private List<Map<String,String>>slist1;
     
+    private String edadMaximaCotizacion;
+    
     public String entrar()
     {
         UserVO usuario=(UserVO) session.get("USUARIO");
@@ -166,8 +173,16 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
         log.debug("### cdunieco: "+cdunieco);
         log.debug("### cdramo: "+cdramo);
         log.debug("### cdtipsit: "+cdtipsit);
-        if(cdtipsit.equalsIgnoreCase("GB"))
+        if(cdtipsit.equalsIgnoreCase("GB")) {
         	return "gb";
+        }
+        
+        //Obtenemos la edad máxima para la cotizacion:
+        try {
+        	edadMaximaCotizacion = catalogosManager.obtieneCantidadMaxima(cdramo, cdtipsit, TipoTramite.POLIZA_NUEVA, Rango.ANIOS);
+        } catch(Exception e) {
+        	log.error("Error al obtener la edad máxima de cotización", e);
+        }
         return SUCCESS;
     }
     
@@ -1153,11 +1168,18 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
         return SUCCESS;
     }
 
+    
+    //Getters and setters:
+    
     public void setKernelManagerSustituto(KernelManagerSustituto kernelManagerSustituto) {
         this.kernelManagerSustituto = kernelManagerSustituto;
     }
+    
+    public void setCatalogosManager(CatalogosManager catalogosManager) {
+		this.catalogosManager = catalogosManager;
+	}
 
-    public String getCodigoPostal() {
+	public String getCodigoPostal() {
         return codigoPostal;
     }
 
@@ -1554,6 +1576,14 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
 
 	public void setSlist1(List<Map<String, String>> slist1) {
 		this.slist1 = slist1;
+	}
+
+	public String getEdadMaximaCotizacion() {
+		return edadMaximaCotizacion;
+	}
+
+	public void setEdadMaximaCotizacion(String edadMaximaCotizacion) {
+		this.edadMaximaCotizacion = edadMaximaCotizacion;
 	}
     
 }

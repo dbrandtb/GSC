@@ -61,6 +61,8 @@ var _0_botDetalleCobertura;
 var _0_windowAyudaCobertura;
 var _0_selectedIdcobertura;
 
+var EDAD_MAXIMA_COTIZACION=<s:property value="smap1.edadMaximaCotizacion"/>;
+debug('EDAD_MAXIMA_COTIZACION=', EDAD_MAXIMA_COTIZACION);
 debug('_0_smap1: ',_0_smap1);
 /*///////////////////*/
 ////// variables //////
@@ -783,7 +785,7 @@ function _0_validarCustom()
 		//////////////////////////////////////
 		
 		////////////////////////////////
-		////// mayores a 64 anios //////
+		////// validacion de edad maxima de cotizacion //////
 		if(valido)
 		{
 			var algunMayor = false;
@@ -802,7 +804,7 @@ function _0_validarCustom()
                         / 60
                         / 60
                         / 1000));
-                if (edad > 64)
+                if (edad > EDAD_MAXIMA_COTIZACION)
                 {
                     algunMayor = true;
                 }
@@ -810,10 +812,10 @@ function _0_validarCustom()
             valido = !algunMayor;
             if(!valido)
             {
-                mensajeWarning('La edad del asegurado no debe exceder de 64 a&ntilde;os');
+                mensajeWarning('La edad del asegurado no debe exceder de '+EDAD_MAXIMA_COTIZACION+' a&ntilde;os');
             }
 		}
-        ////// mayores a 64 anios //////
+	    ////// validacion de edad maxima de cotizacion //////
 		////////////////////////////////
 	}
     ////// para SL y SN //////

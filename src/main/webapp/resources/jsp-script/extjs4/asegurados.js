@@ -2841,7 +2841,7 @@ Ext
 
 												var hayTitular = 0;
 												var menorDeEdad = false;
-												var mayores69 = false;
+												var isMayorAEdadMaxima = false;
 												var fueraDeGuanajuato = inputCdtipsit == 'SN'
 														&& (campoCodigoPostal
 																.getValue() < 36000 || campoCodigoPostal
@@ -2866,7 +2866,7 @@ Ext
 																					// true
 																					// por
 																					// los
-																					// mayores69
+																					// isMayorAEdadMaxima
 															{
 																var fechaNacimiento = new Date(
 																		record
@@ -2883,8 +2883,8 @@ Ext
 																		/ 60
 																		/ 60
 																		/ 1000));
-																if (edad > 64) {
-																	mayores69 = true;
+																if (edad > EDAD_MAXIMA_COTIZACION) {
+																	isMayorAEdadMaxima = true;
 																}
 																// console.log("hoy",parseInt(hoy));
 																// console.log("fenacimi",parseInt(fechaNacimiento));
@@ -2898,7 +2898,7 @@ Ext
 												if (form.isValid()) {
 													if (hayTitular == 1) {
 														if (!menorDeEdad || true) {
-															if (!mayores69) {
+															if (!isMayorAEdadMaxima) {
 																var incisosRecords = storeIncisos
 																		.getRange();
 																if (incisosRecords
@@ -3064,7 +3064,7 @@ Ext
 																Ext.Msg
 																		.show({
 																			title : 'Datos incompletos',
-																			msg : 'La edad del asegurado no debe exceder de 64 a&ntilde;os',
+																			msg : 'La edad del asegurado no debe exceder de '+EDAD_MAXIMA_COTIZACION+' a&ntilde;os',
 																			buttons : Ext.Msg.OK,
 																			icon : Ext.Msg.WARNING
 																		});
