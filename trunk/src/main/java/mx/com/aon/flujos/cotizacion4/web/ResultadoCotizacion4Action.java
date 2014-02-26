@@ -182,6 +182,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
         	edadMaximaCotizacion = catalogosManager.obtieneCantidadMaxima(cdramo, cdtipsit, TipoTramite.POLIZA_NUEVA, Rango.ANIOS);
         } catch(Exception e) {
         	log.error("Error al obtener la edad máxima de cotización", e);
+        	edadMaximaCotizacion = "0";
         }
         return SUCCESS;
     }
