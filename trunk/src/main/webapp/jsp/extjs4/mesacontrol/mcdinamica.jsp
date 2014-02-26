@@ -77,6 +77,9 @@ var _4_botonesGrid =
 <s:if test='%{getSmap2().get("pv_cdtiptra_i").equalsIgnoreCase("1")}'>
     <%@ include file="/jsp-script/proceso/endosos/scriptMesaEmision.jsp"%>
 </s:if>
+<s:elseif test='%{getSmap2().get("pv_cdtiptra_i").equalsIgnoreCase("14")}'>
+<%@ include file="/jsp-script/proceso/endosos/scriptMesaAutorizacionServicios.jsp"%>
+</s:elseif>
 <s:elseif test='%{getSmap2().get("pv_cdtiptra_i").equalsIgnoreCase("15")}'>
     <%@ include file="/jsp-script/proceso/endosos/scriptMesaAutorizacionEndosos.jsp"%>
 </s:elseif>
@@ -99,6 +102,11 @@ function _4_cambiarTiptra(cdtiptra)
 		editable = 'si';
 		titulo   = 'Tareas';
 	}
+	else if(cdtiptra=='14')
+    {
+        editable = '';
+        titulo   = 'Autorizaciones de servicios';
+    }
 	else if(cdtiptra=='15')
     {
         editable = '';
@@ -257,6 +265,15 @@ Ext.onReady(function()
                         {
                         	_4_cambiarTiptra(15);
                         }
+                    }
+					,{
+                        text      : 'Auto. Servicios'
+                        ,icon     : '${ctx}/resources/fam3icons/icons/page_go.png'
+                        ,disabled : mcdinInput['tiptra']=='14'
+                        ,handler  : function()
+                            {
+                                _4_cambiarTiptra(14);
+                            }
                     }
 					,{
                         text      : 'Siniestros'

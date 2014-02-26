@@ -593,7 +593,7 @@ Ext.onReady(function()
 	                            ,text    : 'Generar contrarecibo'
 	                            ,icon    : '${ctx}/resources/fam3icons/icons/page_attach.png'
 	                            ,handler : this.onContrareciboClick
-	                            ,hidden  : panDocSmap1.cdtiptra!='1' && panDocSmap1.cdtiptra!='15'
+	                            ,hidden  : panDocSmap1.cdtiptra=='14' || panDocSmap1.cdtiptra=='16'
                             },
                             '-',
                             { xtype: 'tbspacer', width: 50 }, 
@@ -602,7 +602,7 @@ Ext.onReady(function()
                             	,id      : 'habilitaRec'
 	                            ,text    : 'Habilitar siguiente Recibo'
 	                            ,icon    : '${ctx}/resources/fam3icons/icons/table_go.png'
-	                            ,hidden  : panDocSmap1.cdtiptra!='1' && panDocSmap1.cdtiptra!='15'
+	                            ,hidden  : panDocSmap1.cdtiptra=='14' || panDocSmap1.cdtiptra=='16'
 	                            ,handler : function (button, evt){
 	                            	var window=button.up().up();
 	                            	
