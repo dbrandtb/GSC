@@ -680,10 +680,22 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
         	consulta.setDsramo(rs.getString("DSRAMO"));
         	consulta.setEstatus(rs.getString("STATUS"));
         	consulta.setDsestatus(rs.getString("DSTATUS"));
-        	
         	consulta.setNmsolici(rs.getString("NMSOLICI"));
         	consulta.setNmsuplem(rs.getString("NMSUPLEM"));
         	consulta.setCdtipsit(rs.getString("CDTIPSIT"));
+        	consulta.setEstatusCliente(rs.getString("STATUS_CLIENTE"));
+        	if(rs.getString("STATUS_CLIENTE").equalsIgnoreCase("v"))
+        	{
+        		consulta.setDesEstatusCliente("Vigente");
+        	}else{
+        		consulta.setDesEstatusCliente("Cancelado");
+        	}
+        	
+        	consulta.setFcancelacionAfiliado(rs.getString("FCANCEL_AFILIADO"));
+        	consulta.setFaltaAsegurado(Utilerias.formateaFecha(rs.getString("FALTA_ASEGURADO")));
+        	consulta.setMtoBeneficioMax(rs.getString("BENEFICIO_MAXIMO"));
+        	consulta.setZonaContratada(rs.getString("ZONA_CONTRATADA"));
+        	consulta.setVigenciaPoliza(Utilerias.formateaFecha(rs.getString("FEINICIO"))+"\t\t|\t\t"+Utilerias.formateaFecha(rs.getString("FEFINAL")));
             return consulta;
         }
     }
