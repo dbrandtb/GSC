@@ -90,5 +90,39 @@ public interface SiniestrosDAO {
 	public List<GenericVO> obtieneListadoCobertura(String cdramo,String cdtipsit) throws DaoException;
 
 	public String actualizaOTValorMesaControl(Map<String, Object> params) throws DaoException;
+	
+	/**
+	 * PKG_SINIESTRO.P_LISTA_SINIESTROSXTRAMITE
+	 * 6969 NMSINIES,
+	 * 500 NMAUTSER,
+	 * 510918 CDPERSON,
+	 * 'JUAN PEREZ' NOMBRE,
+	 * SYSDATE FEOCURRE,
+	 * 1009 CDUNIECO,
+	 * 'SALUD CAMPECHE' DSUNIECO,
+	 * 2 CDRAMO,
+	 * 'SALUD VITAL' DSRAMO,
+	 * 'SL' CDTIPSIT,
+	 * 'SALUD VITAL' DSTIPSIT,
+	 * 'M' ESTADO,
+	 * 500 NMPOLIZA,
+	 * 'S' VOBOAUTO,
+	 * '65' CDICD,
+	 * 'GRIPE' DSICD,
+	 * '66' ICD2,
+	 * 'FIEBRE' DSICD2,
+	 * 12.5 DESCPORC,
+	 * 300 DESCNUME,
+	 * 15 COPAGO,
+	 * 3500 PTIMPORT,
+	 * 'S' AUTRECLA,
+	 * 54647 NMRECLAM
+	 */
+	public List<Map<String,String>> listaSiniestrosTramite(Map<String, String> params) throws Exception;
+	
+	/**
+	 * PKG_PRESINIESTRO.P_GET_TRAMITE_COMPLETO
+	 */
+	public Map<String,String> obtenerTramiteCompleto(Map<String, String> params) throws Exception;
 
 }

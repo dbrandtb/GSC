@@ -362,6 +362,7 @@ var msgWindow;
 			if(conCoberYSubcober)
 			{
 				urlDestino = _UrlDetalleSiniestroDirecto;
+				params['params.ntramite'] = record.get('ntramite');
 			}
 			else
 			{
@@ -381,6 +382,7 @@ var msgWindow;
 			url             : urlDestino
 			,params         : params
 		    ,standardSubmit : true
+		    //,target         : '_parent'
 		});
 	}
 	

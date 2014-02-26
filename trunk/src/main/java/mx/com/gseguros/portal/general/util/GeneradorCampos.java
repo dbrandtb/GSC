@@ -300,6 +300,14 @@ public class GeneradorCampos
         }
         ////// format //////
         
+        ////// decimales //////
+        if(tipoCampo.equals(ComponenteVO.TIPOCAMPO_PORCENTAJE))
+		{
+        	item.add("allowDecimals",true);
+        	item.add("decimalSeparator",".");
+		}
+        ////// decimales //////
+        
         ////// minLength, maxLength //////
         if((tipoCampo.equals(ComponenteVO.TIPOCAMPO_ALFANUMERICO)
         		||tipoCampo.equals(ComponenteVO.TIPOCAMPO_TEXTAREA)
@@ -689,7 +697,14 @@ public class GeneradorCampos
 		    col.setType(Item.OBJ);
 		    col.add("header"    , header);
 		    col.add("dataIndex" , dataIndex);
-		    col.add("flex"      , GeneradorCampos.staticFlex);
+		    if(comp.getWidth()==0)
+		    {
+		    	col.add("flex" , GeneradorCampos.staticFlex);
+		    }
+		    else
+		    {
+		    	col.add("width" , comp.getWidth());
+		    }
 		    col.add("hidden"    , hidden);
 		    
 		    if(StringUtils.isNotBlank(renderer))

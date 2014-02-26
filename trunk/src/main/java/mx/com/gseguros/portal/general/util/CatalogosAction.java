@@ -9,6 +9,7 @@ import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
+import mx.com.gseguros.portal.siniestros.model.ConsultaProveedorVO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 
 import org.apache.log4j.Logger;
@@ -148,6 +149,22 @@ public class CatalogosAction extends PrincipalCoreAction {
 						}
 					}
 					lista = siniestrosManager.getConsultaListaSubcobertura(cdgarant, cdsubcob);
+					break;
+				case PROVEEDORES:
+					List<ConsultaProveedorVO> provs = siniestrosManager.getConsultaListaProveedorMedico("16", null);
+					lista = new ArrayList<GenericVO>();
+					for(ConsultaProveedorVO prov : provs)
+					{
+						lista.add(new GenericVO(prov.getCdpresta(),prov.getNombre()));
+					}
+					break;
+				case MEDICOS:
+					List<ConsultaProveedorVO> medicos = siniestrosManager.getConsultaListaProveedorMedico("15", null);
+					lista = new ArrayList<GenericVO>();
+					for(ConsultaProveedorVO medico : medicos)
+					{
+						lista.add(new GenericVO(medico.getCdpresta(),medico.getNombre()));
+					}
 					break;
 				default:
 					throw new Exception("Catalogo no existente: " + nombreCatalogo);
