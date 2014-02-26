@@ -19,9 +19,15 @@
             
             var _11_itemsForm = [ <s:property value="imap.itemsForm" /> ];
             
-            var _11_urlGuardar = '<s:url namespace="/siniestros" action="guardarAfiliadosAfectados" />';
+            var _11_urlGuardar                  = '<s:url namespace="/siniestros" action="guardarAfiliadosAfectados" />';
+            var _11_urlIniciarSiniestroTworksin = '<s:url namespace="/siniestros" action="iniciarSiniestroTworksin" />';
             
             var _11_form;
+            var _11_recordActivo;
+            var _11_windowPedirAut;
+            var _11_formPedirAuto;
+            var _11_textfieldAsegurado;
+            var _11_textfieldNmautserv;
             
             var recordsStore = [];
             
@@ -37,7 +43,7 @@
                 	,noPoliza        : '<s:property value='%{getSlist1().get(#contador).get("NMPOLIZA")}' />'
                 	,VoBoAuto        : '<s:property value='%{getSlist1().get(#contador).get("VOBOAUTO")}' />'
                 	,icd             : '<s:property value='%{getSlist1().get(#contador).get("CDICD")}'    />'
-                	,icdSecundario   : '<s:property value='%{getSlist1().get(#contador).get("ICD2")}'     />'
+                	,icdSecundario   : '<s:property value='%{getSlist1().get(#contador).get("CDICD2")}'     />'
                 	,porcDescuento   : '<s:property value='%{getSlist1().get(#contador).get("DESCPORC")}' />'
                 	,impoDescuento   : '<s:property value='%{getSlist1().get(#contador).get("DESCNUME")}' />'
                 	,copago          : '<s:property value='%{getSlist1().get(#contador).get("COPAGO")}'   />'
@@ -56,12 +62,16 @@
 								{
 									xtype         : 'actioncolumn'
 									,menuDisabled : true
-									,header       : 'Capturar<br/>Detalle'
-									,width        : 60
+									,width        : 50
 									,align        : 'center'
 									,items        :
 									[
 									    {
+									    	icon     : '${ctx}/resources/fam3icons/icons/pencil.png'
+									    	,tooltip : 'Editar'
+									    	,handler : _11_editar
+									    }
+									    ,{
 									    	icon     : '${ctx}/resources/fam3icons/icons/folder.png'
 									    	,tooltip : 'Capturar Detalle'
 									    	,handler : revisarDocumento
@@ -173,33 +183,206 @@
             debug('_11_params:',_11_params);
             ////// variables //////
             
-            ////// funciones //////
-            function revisarDocumento(grid,rowIndex)
+////// funciones //////
+function revisarDocumento(grid,rowIndex)
+{
+	var record = grid.getStore().getAt(rowIndex);
+	debug('record.raw:',record.raw);
+	
+	var valido = true;
+	
+	if(valido)
+	{
+	    valido = _11_validaAutorizacion(record);
+	}
+	
+	if(valido)
+	{
+		valido = record.get('VoBoAuto')!='n'&&record.get('VoBoAuto')!='N';
+		if(!valido)
+		{
+			mensajeError('El siniestro no se puede continuar porque no tiene el visto bueno autom&aacute;tico');
+		}
+	}
+	
+	if(valido)
+	{
+		valido = record.get('AUTRECLA')!='n'&&record.get('AUTRECLA')!='N';
+		if(!valido)
+	    {
+	        mensajeError('El siniestro no se puede continuar porque no tiene el visto bueno del &aacute;rea de reclamaciones');
+	    }
+	}
+	
+	if(valido)
+	{
+		valido = record.get('AUTMEDIC')!='n'&&record.get('AUTMEDIC')!='N';
+	    if(!valido)
+	    {
+	        mensajeError('El siniestro no se puede continuar porque no tiene el visto bueno del &aacute;rea m&eacute;dica');
+	    }
+	}
+}
+
+function _11_editar(grid,rowindex)
+{
+	var record = grid.getStore().getAt(rowindex);
+	debug('_11_editar:',record.raw);
+	
+	var valido = _11_validaAutorizacion(record);
+	
+	debug('!_11_editar');
+}
+
+function _11_validaAutorizacion(record)
+{
+	debug('_11_validaAutorizacion: ',record.raw);
+	
+	var valido = true;
+	var nAut = record.get('NoAutorizacion');
+	valido = nAut && nAut>0;
+	if(!valido)
+	{
+		_11_pedirAutorizacion(record);
+	}
+	debug('!_11_validaAutorizacion: ',valido?'si':'no');
+	return valido;
+}
+
+function _11_pedirAutorizacion(record)
+{
+	_11_recordActivo = record;
+	debug('_11_recordActivo:',_11_recordActivo.data);
+	
+	_11_textfieldAsegurado.setValue(_11_recordActivo.get('nombre'));
+	_11_textfieldNmautserv.setValue('');
+	
+	_11_windowPedirAut.show();
+	centrarVentanaInterna(_11_windowPedirAut);
+}
+
+function _11_asociarAutorizacion()
+{
+	var valido = _11_formPedirAuto.isValid();
+	if(!valido)
+	{
+		datosIncompletos();
+	}
+	
+	if(valido)
+	{
+		var json =
+		{
+			'params.nmautser'  : _11_textfieldNmautserv.getValue()
+			,'params.nmpoliza' : _11_recordActivo.get('noPoliza')
+			,'params.cdperson' : _11_recordActivo.get('codAfiliado')
+			,'params.ntramite' : _11_params.NTRAMITE
+		};
+		debug('datos a enviar:',json);
+		
+		_11_formPedirAuto.setLoading(true);
+		Ext.Ajax.request(
+		{
+			url      : _11_urlIniciarSiniestroTworksin
+			,params  : json
+			,success : function(response)
+			{
+				_11_formPedirAuto.setLoading(false);
+				json = Ext.decode(response.responseText);
+				debug('respuesta:',json);
+				if(json.success==true)
+				{
+					mensajeCorrecto('Datos guardados',json.mensaje);
+				}
+				else
+				{
+					mensajeError(json.mensaje);
+				}
+			}
+		    ,failure : function()
+		    {
+		    	_11_formPedirAuto.setLoading(false);
+		    	errorComunicacion();
+		    }
+		});
+	}
+}
+////// funciones //////
+
+Ext.onReady(function()
+{
+	////// componentes //////
+	Ext.define('_11_FormPedirAuto',
+	{
+		extend         : 'Ext.form.Panel'
+		,initComponent : function()
+        {
+            debug('_11_FormPedirAuto initComponent');
+            Ext.apply(this,
             {
-            	var record = grid.getStore().getAt(rowIndex);
-            	debug('record.raw:',record.raw);
-            	
-            	var valido = true;
-            	valido = record.get('VoBoAuto')!='n'&&record.get('VoBoAuto')!='N';
-            	if(!valido)
-            	{
-            		mensajeError('El siniestro no se puede continuar porque no tiene el visto bueno autom&aacute;tico');
-            	}
-            	
-            	valido = record.get('AUTRECLA')!='n'&&record.get('AUTRECLA')!='N';
-            	if(!valido)
-                {
-                    mensajeError('El siniestro no se puede continuar porque no tiene el visto bueno del &aacute;rea de reclamaciones');
-                }
-            	
-            	valido = record.get('AUTMEDIC')!='n'&&record.get('AUTMEDIC')!='N';
-                if(!valido)
-                {
-                    mensajeError('El siniestro no se puede continuar porque no tiene el visto bueno del &aacute;rea m&eacute;dica');
-                }
-            }
-            ////// funciones //////
-            
+            	border : 0
+                ,items :
+                [
+                     {
+                    	 xtype : 'label'
+                    	 ,text : 'Se requiere el número de autorización para continuar'
+                     }
+                     ,_11_textfieldAsegurado
+                     ,_11_textfieldNmautserv
+                ]
+            });
+            this.callParent();
+        }
+	});
+	
+	Ext.define('_11_WindowPedirAut',
+	{
+		extend         : 'Ext.window.Window'
+		,initComponent : function()
+		{
+			debug('_11_windowPedirAut initComponent');
+			Ext.apply(this,
+			{
+				title        : 'Autorizaci&oacute;n de servicios'
+				,icon        : '${ctx}/resources/fam3icons/icons/tick.png'
+				,width       : 350
+				,height      : 200
+				,closeAction : 'hide'
+				,modal       : true
+				,defaults    : { style : 'margin : 5px; ' }
+				,items       : _11_formPedirAuto
+				,buttonAlign : 'center'
+				,buttons     :
+				[
+				    {
+				    	text     : 'Asociar autorizaci&oacute;n'
+				    	,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
+				    	,handler : _11_asociarAutorizacion
+				    }
+				]
+			});
+			this.callParent();
+		}
+	});
+	////// componentes //////
+	
+	////// contenido //////
+	_11_textfieldAsegurado = Ext.create('Ext.form.TextField',
+	{
+		fieldLabel : 'Asegurado'
+		,readOnly  : true
+	});
+	_11_textfieldNmautserv = Ext.create('Ext.form.NumberField',
+    {
+        fieldLabel  : 'No. de autorizaci&oacute;n'
+        ,readOnly   : false
+        ,allowBlank : false
+        ,minLength  : 1
+    });
+	_11_formPedirAuto  = new _11_FormPedirAuto();
+	_11_windowPedirAut = new _11_WindowPedirAut();
+	////// contenido //////
+});
         </script>
         <!-- <script type="text/javascript" src="${ctx}/resources/scripts/util/extjs4_utils.js"></script>-->
         <script type="text/javascript" src="${ctx}/js/proceso/siniestros/afiliadosAfectados.js"></script>

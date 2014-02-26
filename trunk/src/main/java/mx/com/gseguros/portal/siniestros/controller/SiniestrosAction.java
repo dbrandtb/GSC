@@ -314,6 +314,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 					        paramsFacMesaCtrl.put("pv_cdtipser_i",params.get("cmbTipoAtencion"));
 					        paramsFacMesaCtrl.put("pv_cdpresta_i",params.get("cmbProveedor"));
 					        paramsFacMesaCtrl.put("pv_ptimport_i",params.get("txtImporte"));
+					        paramsFacMesaCtrl.put("pv_cdgarant_i",null);
 					        siniestrosManager.guardaListaFacMesaControl(paramsFacMesaCtrl);
 							
 							
@@ -328,6 +329,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 						        paramsFacMesaCtrl.put("pv_cdtipser_i",datosTablas.get(i).get("cdtipser"));
 						        paramsFacMesaCtrl.put("pv_cdpresta_i",datosTablas.get(i).get("cdpresta"));
 						        paramsFacMesaCtrl.put("pv_ptimport_i",datosTablas.get(i).get("ptimport"));
+						        paramsFacMesaCtrl.put("pv_cdgarant_i",null);
 						        siniestrosManager.guardaListaFacMesaControl(paramsFacMesaCtrl);
 						    }
 							HashMap<String, Object> paramsTworkSinPagRem = new HashMap<String, Object>();
@@ -1195,6 +1197,7 @@ public void setMsgResult(String msgResult) {
     		paramsFactura.put("pv_cdtipser_i" , tipoate);
     		paramsFactura.put("pv_cdpresta_i" , cdprove);
     		paramsFactura.put("pv_ptimport_i" , importe);
+    		paramsFactura.put("pv_cdgarant_i" , cdgarant);
     		siniestrosManager.guardaListaFacMesaControl(paramsFactura);
     		
     		Map<String,Object> otvalor = new HashMap<String,Object>();
@@ -1225,6 +1228,42 @@ public void setMsgResult(String msgResult) {
     			+ "\n###### guardarAfiliadosAfectados ######"
     			+ "\n#######################################"
     			+ "\n#######################################"
+    			);
+    	return SUCCESS;
+    }
+    
+    /*
+    params:
+    	nmautser=123, 
+    	cdperson=514262, 
+    	nmpoliza=42, 
+    	ntramite=1428
+    */
+    public String iniciarSiniestroTworksin()
+    {
+    	logger.debug(""
+    			+ "\n######################################"
+    			+ "\n######################################"
+    			+ "\n###### iniciarSiniestroTworksin ######"
+    			+ "\n######                          ######"
+    			);
+    	logger.debug("params: "+params);
+    	try
+    	{
+    		mensaje = "Se ha asociado el siniestro con la autorizaci&oacute;n";
+    		success=true;
+    	}
+    	catch(Exception ex)
+    	{
+    		logger.error("error al inicar siniestro desde tworksin",ex);
+    		mensaje = ex.getMessage();
+    		success=false;
+    	}
+    	logger.debug(""
+    			+ "\n######                          ######"
+    			+ "\n###### iniciarSiniestroTworksin ######"
+    			+ "\n######################################"
+    			+ "\n######################################"
     			);
     	return SUCCESS;
     }

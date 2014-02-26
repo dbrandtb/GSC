@@ -13,7 +13,7 @@ var _selCobParams = <s:property value='%{getParams().toString().replace("=",":\'
 var _selCobForm;
 
 var _selCobUrlSave   = '<s:url namespace="/siniestros" action="guardarSeleccionCobertura" />';
-var _selCobUrlAvanza = '<s:url namespace="/siniestros" action="detalleAfiliadosAfectados" />';
+var _selCobUrlAvanza = '<s:url namespace="/siniestros" action="afiliadosAfectados"        />';
 
 debug('_selCobParams:',_selCobParams);
 ////// variables //////
