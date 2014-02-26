@@ -9,12 +9,6 @@ Ext.onReady(function() {
     	    border : false,
     	    items: [{
     	            title: 'Informaci&oacute;n General',
-    	        	/*defaults : {
-	    	            bodyPadding : 5,
-	    	            border : false
-    	        	},
-    	        	items: [pnlInformacionGral]
-    	        	*/
     	            loader: {
 	    	        	url: _URL_LOADER_INFO_GRAL_RECLAMACION,
 	    	        	scripts: true,
