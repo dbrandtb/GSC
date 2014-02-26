@@ -413,6 +413,10 @@
             </interceptor-ref>
             <result type="json"></result>
         </action>
+        
+        <action name="iniciarSiniestroTworksin" class="siniestrosAction" method="iniciarSiniestroTworksin">
+            <result type="json"></result>
+        </action>
 		
     </package>
 

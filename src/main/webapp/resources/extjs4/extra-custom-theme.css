@@ -6,3 +6,8 @@
     background-position:bottom;
     border:1px solid #c30;
 }
+.x-action-col-icon {
+    height: 16px;
+    width: 16px;
+    margin-right: 8px;
+}
