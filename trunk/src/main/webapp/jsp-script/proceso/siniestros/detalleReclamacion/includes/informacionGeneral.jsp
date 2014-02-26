@@ -4,9 +4,6 @@
 <script type="text/javascript">
 
 Ext.onReady(function() {
-/*
- * Se cambió informacionGral por pnlInformacionGral
- */
  
 	var pnlInformacionGral= Ext.create('Ext.form.Panel',{
 	    border    : 0,
@@ -24,21 +21,18 @@ Ext.onReady(function() {
 	    [
 	        {
 	            xtype      : 'textfield',
-	            id         :'txtContraRecibo',
 	            name       : 'params.contraRecibo',
 	            fieldLabel : 'Contra recibo',
 	            colspan    : 2,
 	            labelWidth : 250
 	        },{
 	        	xtype      : 'textfield',
-	            id:        'txtEstado',
-	            name       : 'params.estado',
+	        	name       : 'params.estado',
 	            fieldLabel : 'Estado',
 	            colspan    : 2,
 	            labelWidth : 250
 	        },{            
 	        	xtype: 'combo',
-				id:'oficinaEmisora',
 				name:'params.oficinaEmisora',
 				fieldLabel: 'Oficina emisora',
 				//store: storeCirculoHospitalario,
@@ -52,7 +46,6 @@ Ext.onReady(function() {
 				emptyText:'Seleccione...'
 	        },{
 	        	xtype: 'combo',
-				id:'oficinaDocumento',
 				name:'params.oficinaDocumento',
 				fieldLabel: 'Oficina documento',
 				colspan:2,
@@ -65,14 +58,12 @@ Ext.onReady(function() {
 				labelWidth : 250,
 				emptyText:'Seleccione...'
 	        },{
-	            id         : 'params.fechaRecepcion',
 	            xtype      : 'textfield',
 	            fieldLabel : 'Fecha recepci&oacute;n',
 	            colspan    : 2,
 	            labelWidth : 250,
 	            name       : 'params.fechaRecepcion'
 	        },{
-	            id         : 'fechaOcurrencia',
 	            xtype      : 'datefield',
 	            fieldLabel : 'Fecha ocurrencia',
 	            labelWidth : 250,
@@ -80,170 +71,148 @@ Ext.onReady(function() {
 	            format     : 'd/m/Y',
 	            colspan    : 2,
 	            editable   : true,
-	            value      :new Date()
+	            value      : new Date()
 	        },{
-	        	xtype: 'combo',
-				id:'origenSiniestro',
-				name:'params.origenSiniestro',
-				fieldLabel: 'Origen siniestro',
-				//store: storeCirculoHospitalario,
-				colspan:2,
-				queryMode:'local',
+	        	xtype       : 'combo',
+				name        : 'params.origenSiniestro',
+				fieldLabel  : 'Origen siniestro',
+				//store     : storeCirculoHospitalario,
+				colspan     : 2,
+				queryMode   :'local',
 				displayField: 'value',
-				valueField: 'key',
-				allowBlank:false,
-				editable:false,
-				labelWidth : 250,
-				emptyText:'Seleccione...'
+				valueField  : 'key',
+				allowBlank  : false,
+				editable    : false,
+				labelWidth  : 250,
+				emptyText   :'Seleccione...'
 	        },{
-	            id: 'txtPlan',
 	            xtype      : 'textfield',
+	            name       : 'params.plan',
 	            fieldLabel : 'Plan',
-	            colspan    :2,
-	            labelWidth : 250,
-	            name       : 'params.plan'
+	            colspan    : 2,
+	            labelWidth : 250 
 	        },{
-	            id         : 'txtCirculoHospitalario',
 	            xtype      : 'textfield',
 	            fieldLabel : 'Circulo hospitalario',
-	            colspan    :2,
+	            colspan    : 2,
 	            labelWidth : 250,
 	            name       : 'params.circuloHospitalario'
 	        },{
-	            id         : 'txtZonaTarificacion',
 	            xtype      : 'textfield',
+	            name       : 'params.zonaTarificacion',
 	            fieldLabel : 'Zona tarificaci&oacute;n',
 	            colspan    : 2,
-	            labelWidth : 250,
-	            name       : 'params.zonaTarificacion'
+	            labelWidth : 250
 	        },{
-	            id: 'txtSumAseguradaContratada' ,
 	            xtype      : 'textfield',
+	            name       : 'params.sumAseguradaContr',
 	            fieldLabel : 'Suma asegurada contratada',
 	            colspan    : 2,
-	            labelWidth : 250,
-	            name       : 'params.sumAseguradaContr'
+	            labelWidth : 250
 	        },{
-	        	xtype: 'combo',
-	        	colspan:2,
-	            id:'tipoPago',
-	            name:'params.tipoPago',
-	            fieldLabel: 'Tipo pago',
-	            //store: storeCirculoHospitalario,
-	            queryMode:'local',
+	        	xtype       : 'combo',
+	        	name        : 'params.tipoPago',
+	        	colspan     : 2,
+	            fieldLabel  : 'Tipo pago',
+	            //store     : storeCirculoHospitalario,
+	            queryMode   : 'local',
 	            displayField: 'value',
-	            valueField: 'key',
-	            allowBlank:false,
-	            editable:false,
-	            labelWidth : 250,
-	            emptyText:'Seleccione...'
+	            valueField  : 'key',
+	            allowBlank  : false,
+	            editable    : false,
+	            labelWidth  : 250,
+	            emptyText   : 'Seleccione...'
 	        },{
-	            id: 'txtPoliza',
 	            xtype      : 'textfield',
+	            name       : 'params.poliza',
 	            fieldLabel : 'P&oacute;liza',
-	            labelWidth: 250,
-	            name       : 'params.poliza'
-	        },
-	        Ext.create('Ext.Button', {
-	            text: 'Ver detalle p&oacute;liza',
-	            width : 180,
-	            icon : _CONTEXT + '/resources/fam3icons/icons/application_view_list.png'
-	        })
-	        ,
-	        {
-	            id: 'txtSumaDisponible'         ,xtype      : 'textfield'                   ,fieldLabel : 'Suma asegurada disponible',
-	            labelWidth: 250                 ,name       : 'params.sumaDisponible'
-	            
-	        },
-	        Ext.create('Ext.Button', {
-	            text: 'Ver coberturas',
-	            width : 180,
-	            icon : _CONTEXT + '/resources/fam3icons/icons/application_view_list.png'
-	        })
-	        ,
-	        {
-	            id: 'fechaInicioVigencia'       ,xtype      : 'textfield'                   ,fieldLabel : 'Inicio vigencia',
-	            labelWidth : 250                ,name       : 'params.fechaInicioVigencia'
-	        }
-	        ,
-	        Ext.create('Ext.Button', {
-	            text: 'Ver historial de reclamaci&oacute;n',
-	            width : 180,
-	            icon : _CONTEXT + '/resources/fam3icons/icons/application_view_list.png'
-	        })
-	        ,
-	        {
-	            id:'fechaFinVigencia',xtype      : 'textfield',fieldLabel : 'Fin vigencia',labelWidth : 250 ,name       : 'params.fechaFinVigencia'
-	        }
-	        ,
-	        Ext.create('Ext.Button', {
-	            text: 'Ver exclusiones p&oacute;liza',
-	            width : 180,
-	            icon : _CONTEXT + '/resources/fam3icons/icons/application_view_list.png'
-	        })
-	        ,
-	        {
-	            id:'estatusPoliza',xtype      : 'textfield',fieldLabel : 'Estatus p&oacute;liza',labelWidth : 250,name       : 'params.estatusPoliza'
-	        }
-	        ,
-	        Ext.create('Ext.Button', {
-	            text: 'Ver historial rehabilitaciones',
-	            width : 180,
-	            icon : _CONTEXT + '/resources/fam3icons/icons/application_view_list.png'
-	        })
-	        ,
-	        {
-	            id:'fechaAntiguedad',xtype      : 'textfield'
-	            ,fieldLabel : 'Reconocimiento de Antig&uuml;edad'
-	            ,readOnly   : true
-	            ,labelWidth : 250
-	            ,name       : 'params.fechaAntiguedad'
-	            ,colspan    : 2
-	        }
-	        ,
-	        {
-	            id:'fechaAntiguedadGSS'
-	            ,xtype      : 'textfield'
-	            ,fieldLabel : 'Antig&uuml;edad con General de Salud'
-	            ,readOnly   : true
-	            ,labelWidth : 250
-	            ,name       : 'params.fechaAntiguedadGSS'
-	        }
-	        ,
-	        {
-	            id:'tiempoAntiguedadGSS'
-	            ,xtype      : 'textfield'
+	            labelWidth : 250
+	        },{
+	        	xtype  : 'button',
+	        	text   : 'Ver detalle p&oacute;liza',
+                width  : 180,
+                icon   : _CONTEXT + '/resources/fam3icons/icons/application_view_list.png'
+	        },{
+	            xtype      : 'textfield',
+	            name       : 'params.sumaDisponible',
+	            fieldLabel : 'Suma asegurada disponible',
+	            labelWidth : 250
+	        },{
+	        	xtype: 'button',
+	        	text: 'Ver coberturas',
+                width : 180,
+                icon : _CONTEXT + '/resources/fam3icons/icons/application_view_list.png'
+	        },{
+	            xtype      : 'textfield',
+	            name       : 'params.fechaInicioVigencia',
+	            fieldLabel : 'Inicio vigencia',
+	            labelWidth : 250
+	        },{
+	        	xtype  : 'button',
+	        	text   : 'Ver historial de reclamaci&oacute;n',
+                width  : 180,
+                icon   : _CONTEXT + '/resources/fam3icons/icons/application_view_list.png'
+	        },{
+	            xtype      : 'textfield',
+	            name       : 'params.fechaFinVigencia',
+	            fieldLabel : 'Fin vigencia',
+	            labelWidth : 250
+	        },{
+	        	xtype  : 'button',
+	        	text   : 'Ver exclusiones p&oacute;liza',
+                width  : 180,
+                icon   : _CONTEXT + '/resources/fam3icons/icons/application_view_list.png'
+	        },{
+	            xtype      : 'textfield',
+	            name       : 'params.estatusPoliza',
+	            fieldLabel : 'Estatus p&oacute;liza',
+	            labelWidth : 250
+	        },{
+	        	xtype  : 'button',
+	        	text   : 'Ver historial rehabilitaciones',
+                width  : 180,
+                icon   : _CONTEXT + '/resources/fam3icons/icons/application_view_list.png'
+	        },{
+	        	xtype      : 'textfield',
+	        	name       : 'params.fechaAntiguedad',
+	            fieldLabel : 'Reconocimiento de Antig&uuml;edad',
+	            readOnly   : true,
+	            labelWidth : 250,
+	            colspan    : 2
+	        },{
+	            xtype      : 'textfield',
+	            name       : 'params.fechaAntiguedadGSS',
+	            fieldLabel : 'Antig&uuml;edad con General de Salud',
+	            readOnly   : true,
+	            labelWidth : 250
+	        },{
+	            xtype      : 'textfield',
+	            name       : 'params.tiempoAntiguedadGSS',
 	            //,fieldLabel : 'Antig&uuml;edad con General de Salud'
-	            ,readOnly   : true
-	            ,labelWidth : 250
-	            ,name       : 'params.tiempoAntiguedadGSS'
-	        }
-	        ,
-	        {
-	            id:'formaPagoPoliza'
-	            ,xtype      : 'textfield'
-	            ,fieldLabel : 'Forma de pago de la p&oacute;liza'
-	            ,readOnly   : true
-	            ,labelWidth : 250
-	            ,name       : 'params.formaPagoPoliza'
-	            ,colspan    : 2
+	            readOnly   : true,
+	            labelWidth : 250
 	        },{
-				xtype: 'combo',
-				colspan:2,
-				id:'aseguradoAfectado',
-				name:'params.aseguradoAfectado',
-				fieldLabel: 'Asegurado afectado',
-				//store: storeCirculoHospitalario,
-				queryMode:'local',
+	            xtype      : 'textfield',
+	            name       : 'params.formaPagoPoliza',
+	            fieldLabel : 'Forma de pago de la p&oacute;liza',
+	            readOnly   : true,
+	            labelWidth : 250,
+	            colspan    : 2
+	        },{
+				xtype       : 'combo',
+				colspan     : 2,
+				name        : 'params.aseguradoAfectado',
+				fieldLabel  : 'Asegurado afectado',
+				//store     : storeCirculoHospitalario,
+				queryMode   : 'local',
 				displayField: 'value',
-				valueField: 'key',
-				allowBlank:false,
-				editable:false,
-				labelWidth : 250,
-				emptyText:'Seleccione...'
+				valueField  : 'key',
+				allowBlank  : false,
+				editable    : false,
+				labelWidth  : 250,
+				emptyText   : 'Seleccione...'
 	        },{
-				xtype: 'combo',
-				id:'proveedor',
+				xtype       : 'combo',
 				name:'params.proveedor',
 				fieldLabel: 'Proveedor',
 				//store: storeCirculoHospitalario,
@@ -255,45 +224,41 @@ Ext.onReady(function() {
 				labelWidth : 250,
 				emptyText:'Seleccione...'
 	        },{
-	            id:'circuloHospitalario'
-	            ,xtype      : 'textfield'
-	            ,fieldLabel : 'Circulo hospitalario'
-	            ,readOnly   : true
-	            ,labelWidth : 150
-	            ,name       : 'params.circuloHospitalario'
+	            xtype      : 'textfield',
+	            name       : 'params.circuloHospitalario2',
+	            fieldLabel : 'Circulo hospitalario',
+	            readOnly   : true,
+	            labelWidth : 150
 	        },{
-	        	xtype: 'combo',
-	        	colspan:2,
-	            id:'icd',
-	            name:'params.icd',
-	            fieldLabel: 'ICD',
-	            //store: storeCirculoHospitalario,
-	            queryMode:'local',
+	        	xtype       : 'combo',
+	        	name        : 'params.icd',
+	        	colspan     : 2,
+	            fieldLabel  : 'ICD',
+	            //store     : storeCirculoHospitalario,
+	            queryMode   : 'local',
 	            displayField: 'value',
-	            valueField: 'key',
-	            allowBlank:false,
-	            editable:false,
-	            labelWidth : 250,
-	            emptyText:'Seleccione...'
+	            valueField  : 'key',
+	            allowBlank  : false,
+	            editable    : false,
+	            labelWidth  : 250,
+	            emptyText   : 'Seleccione...'
 	        },{
-	        	xtype: 'combo',
-				colspan:2,
-				id:'icdSecundario',
-				name:'params.icdSecundario',
-				fieldLabel: 'ICD secundario',
-				//store: storeCirculoHospitalario,
-				queryMode:'local',
+	        	xtype       : 'combo',
+	        	name        : 'params.icdSecundario',
+				colspan     : 2,
+				fieldLabel  : 'ICD secundario',
+				//store     : storeCirculoHospitalario,
+				queryMode   : 'local',
 				displayField: 'value',
-				valueField: 'key',
-				allowBlank:false,
-				editable:false,
-				labelWidth : 250,
-				emptyText:'Seleccione...'
+				valueField  : 'key',
+				allowBlank  : false,
+				editable    : false,
+				labelWidth  : 250,
+				emptyText   : 'Seleccione...'
 	        }
 	    ],
 	    buttonAlign:'center',
 	    buttons: [{
-	        id:'botonCotizar',
 	        icon:_CONTEXT+'/resources/fam3icons/icons/calculator.png',
 	        //text: hayTramiteCargado?'Precaptura':'Cotizar',
 	        text: 'Generar Tramite',
@@ -349,11 +314,9 @@ Ext.onReady(function() {
 	    },{
 	        text:'Limpiar',
 	        icon:_CONTEXT+'/resources/fam3icons/icons/arrow_refresh.png',
-	        id:'botonLimpiar',
 	        handler:function()
 	        {}
-	    }
-	]
+	    }]
 	}); 
 
 });
