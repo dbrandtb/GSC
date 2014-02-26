@@ -151,7 +151,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 					lista = siniestrosManager.getConsultaListaSubcobertura(cdgarant, cdsubcob);
 					break;
 				case PROVEEDORES:
-					List<ConsultaProveedorVO> provs = siniestrosManager.getConsultaListaProveedorMedico("16", null);
+					List<ConsultaProveedorVO> provs = siniestrosManager.getConsultaListaProveedorMedico(Rol.CLINICA.getCdrol(), null);
 					lista = new ArrayList<GenericVO>();
 					for(ConsultaProveedorVO prov : provs)
 					{
@@ -159,7 +159,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 					}
 					break;
 				case MEDICOS:
-					List<ConsultaProveedorVO> medicos = siniestrosManager.getConsultaListaProveedorMedico("15", null);
+					List<ConsultaProveedorVO> medicos = siniestrosManager.getConsultaListaProveedorMedico(Rol.MEDICO.getCdrol(), null);
 					lista = new ArrayList<GenericVO>();
 					for(ConsultaProveedorVO medico : medicos)
 					{
