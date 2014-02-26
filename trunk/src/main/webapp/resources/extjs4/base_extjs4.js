@@ -170,14 +170,28 @@ function mensajeError(mensaje)
 	centrarVentanaInterna(tmpMensajeEmergente);
 }
 
-function mensajeCorrecto(titulo,mensaje)
+function mensajeCorrecto(titulo,mensaje,funcion)
 {
-	var tmpMensajeEmergente=Ext.Msg.show({
-		title    : titulo
-		,icon: 'x-message-box-ok' 
-        ,msg     : mensaje
-        ,buttons : Ext.Msg.OK
-    });
+	
+	if(funcion)
+	{
+		var tmpMensajeEmergente=Ext.Msg.show({
+			title    : titulo
+			,icon: 'x-message-box-ok' 
+	        ,msg     : mensaje
+	        ,buttons : Ext.Msg.OK
+	        ,fn      : funcion 
+	    });
+	}
+	else
+	{
+		var tmpMensajeEmergente=Ext.Msg.show({
+			title    : titulo
+			,icon: 'x-message-box-ok' 
+	        ,msg     : mensaje
+	        ,buttons : Ext.Msg.OK 
+	    });
+    }
 	centrarVentanaInterna(tmpMensajeEmergente);
 }
 
