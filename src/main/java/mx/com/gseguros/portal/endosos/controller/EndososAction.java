@@ -6939,7 +6939,7 @@ public class EndososAction extends PrincipalCoreAction
 			String nmcuadro            = smap2.get("nmcuadro");
 			String cdsucurs            = smap2.get("cdsucurs");
 			String comentariosEndoso   = "";
-			String cdtipsit            = smap1.get("cdtipsit");
+			String cdtipsit            = smap1.get("CDTIPSIT");
 			String ntramite            = smap1.get("NTRAMITE");
 			
 			//PKG_ENDOSOS.P_ENDOSO_INICIA
