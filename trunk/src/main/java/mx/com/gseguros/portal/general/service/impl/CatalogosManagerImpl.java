@@ -3,12 +3,14 @@ package mx.com.gseguros.portal.general.service.impl;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
-
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.general.dao.CatalogosDAO;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.util.Catalogos;
+import mx.com.gseguros.portal.general.util.Rango;
+import mx.com.gseguros.portal.general.util.TipoTramite;
+
+import org.apache.commons.lang.StringUtils;
 
 public class CatalogosManagerImpl implements CatalogosManager {
 	
@@ -84,5 +86,11 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	{
 		return catalogosDAO.obtieneStatusTramite(params);
 	}
+	
+	@Override
+	public String obtieneCantidadMaxima(String cdramo, String cdtipsit, TipoTramite tipoTramite, Rango rango) throws Exception {
+		return catalogosDAO.obtieneCantidadMaxima(cdramo, cdtipsit, tipoTramite, rango);
+	}
+	
 
 }

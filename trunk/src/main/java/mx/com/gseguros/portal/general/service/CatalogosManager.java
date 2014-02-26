@@ -5,6 +5,8 @@ import java.util.Map;
 
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.general.util.Catalogos;
+import mx.com.gseguros.portal.general.util.Rango;
+import mx.com.gseguros.portal.general.util.TipoTramite;
 
 public interface CatalogosManager {
 	
@@ -25,4 +27,15 @@ public interface CatalogosManager {
 	public List<GenericVO> obtieneRolesSistema() throws Exception;
 	
 	public List<GenericVO> obtieneStatusTramite(Map<String,String> params) throws Exception;
+	
+	/**
+     * Obtiene la cantidad m&aacute;xima de acuerdo a un tipo de rango (unidad de medida) solicitado
+     * @param cdramo      cdramo
+     * @param cdtipsit    cdtipsit
+     * @param tipoTramite tipo de tramite
+     * @param rango       tipo de rango solicitado
+     * @return Cantidad m&aacute;xima solicitada
+     * @throws Exception
+     */
+    public String obtieneCantidadMaxima(String cdramo, String cdtipsit, TipoTramite tipoTramite, Rango rango) throws Exception;
 }

@@ -80,6 +80,7 @@
             var inputCdunieco='<s:property value="cdunieco" />';
             var inputCdramo  ='<s:property value="cdramo" />';
             var inputCdtipsit='<s:property value="cdtipsit" />';
+            var EDAD_MAXIMA_COTIZACION='<s:property value="edadMaximaCotizacion" />';
             debug('cdunieco,cdramo,cdtipsit',inputCdunieco,inputCdramo,inputCdtipsit);
             debug('hayTramiteCargado '+(hayTramiteCargado?'true':'false'));
             debug('ntramiteCargado: '+ntramiteCargado);
