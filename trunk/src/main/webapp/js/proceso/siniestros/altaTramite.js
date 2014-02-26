@@ -30,7 +30,9 @@ Ext.onReady(function() {
 					{type:'string',    name:'nmpoliza'},			{type:'string',    name:'nmsituac'},				{type:'string',    name:'mtoBase'},
 					{type:'string',    name:'feinicio'},			{type:'string',    name:'fefinal'},					{type:'string',    name:'dssucursal'},
 					{type:'string',    name:'dsramo'},				{type:'string',    name:'estatus'},					{type:'string',    name:'dsestatus'},
-					{type:'string',    name:'nmsolici'},			{type:'string',    name:'nmsuplem'},				{type:'string',    name:'cdtipsit'}			]
+					{type:'string',    name:'nmsolici'},			{type:'string',    name:'nmsuplem'},				{type:'string',    name:'cdtipsit'},
+					{type:'string',    name:'dsestatus'},			{type:'string',    name:'vigenciaPoliza'},			{type:'string',    name:'faltaAsegurado'},
+					{type:'string',    name:'fcancelacionAfiliado'},{type:'string',    name:'desEstatusCliente'}]
 	});
 	
 	Ext.define('modelListAsegPagDirecto',{
@@ -130,54 +132,52 @@ Ext.onReady(function() {
     });
     
     
-    
-    var cmbOficinaReceptora = Ext.create('Ext.form.ComboBox',
-  	{
-    	id:'cmbOficReceptora',	   name:'cmbOficReceptora',     fieldLabel: 'Oficina receptora',		queryMode:'local',		   
-    	displayField: 'value',	   valueField: 'key',			allowBlank:false,				        editable:false,
-    	labelWidth : 250,		   width		 : 500,			emptyText:'Seleccione...'
-   		,store : Ext.create('Ext.data.Store', {
-   			model:'Generic',
-   			autoLoad:true,
-   			proxy:
-   			{
-   				type: 'ajax',
-   				url:mesConUrlLoadCatalo,
-   				extraParams : {catalogo:_CATALOGO_OFICINA_RECEP},
-   				reader:
-   				{
-   					type: 'json',
-   					root: 'lista'
-   				}
-   			}
-   		})
-   	});
-    
-    var cmbOficinaEmisora = Ext.create('Ext.form.ComboBox',
+    var cmbOficinaReceptora = Ext.create('Ext.form.field.ComboBox',
 	{
-    	id:'cmbOficEmisora',
-    	name:'cmbOficEmisora',		fieldLabel: 'Oficina emisora',			queryMode:'local',
-	    displayField: 'value',	    valueField: 'key',			width		 : 500,					    allowBlank:false,					    editable:false,
-	    labelWidth : 250,		    emptyText:'Seleccione...'
-	    ,store : Ext.create('Ext.data.Store', {
-			model:'Generic',
-			autoLoad:true,
-			proxy:
-			{
-				type: 'ajax',
-				url:mesConUrlLoadCatalo,
-				extraParams : {catalogo:_CATALOGO_OFICINA_RECEP},
-				//extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_TIPOS_TRAMITE"/>'},
-				reader:
-				{
-					type: 'json',
-					root: 'lista'
-				}
-			}
-		})
-	    
+	    fieldLabel : 'Oficina emisora',				id:'cmbOficReceptora',			name      : 'smap1.pv_cdsucadm_i',
+	    allowBlank : false,							editable   : true,				displayField : 'value',
+	    labelWidth : 250,		   					 emptyText:'Seleccione...',		width		 : 500,
+	    valueField   : 'key',						forceSelection : true,			queryMode      :'local',
+	    store : Ext.create('Ext.data.Store', {
+	        model:'Generic',
+	        autoLoad:true,
+	        proxy:
+	        {
+	            type: 'ajax',
+	            url:mesConUrlLoadCatalo,
+	            extraParams : {catalogo:_CATALOGO_OFICINA_RECEP},
+	            reader:
+	            {
+	                type: 'json',
+	                root: 'lista'
+	            }
+	        }
+	    })
 	});
-     
+   
+    var cmbOficinaEmisora = Ext.create('Ext.form.field.ComboBox',
+	{
+	    fieldLabel : 'Oficina emisora',				id:'cmbOficEmisora',			name      : 'smap1.pv_cdsucadm_i',
+	    allowBlank : false,							editable   : true,				displayField : 'value',
+	    labelWidth : 250,		   					 emptyText:'Seleccione...',		width		 : 500,
+	    valueField   : 'key',						forceSelection : true,			queryMode      :'local',
+	    store : Ext.create('Ext.data.Store', {
+	        model:'Generic',
+	        autoLoad:true,
+	        proxy:
+	        {
+	            type: 'ajax',
+	            url:mesConUrlLoadCatalo,
+	            extraParams : {catalogo:_CATALOGO_OFICINA_RECEP},
+	            reader:
+	            {
+	                type: 'json',
+	                root: 'lista'
+	            }
+	        }
+	    })
+	});
+    
     var comboTipoAte= Ext.create('Ext.form.ComboBox',
     {
         id:'cmbTipoAtencion',			   name:'cmbTipoAtencion',		        fieldLabel: 'Tipo atenci&oacute;n',				queryMode:'local',
@@ -251,8 +251,7 @@ Ext.onReady(function() {
                                     buttons: Ext.Msg.OK,
                                     icon: Ext.Msg.WARNING
                                 });
-                                //limpiarRegistros();
-            					Ext.getCmp('cmbAseguradoAfectado').setValue('');
+                                Ext.getCmp('cmbAseguradoAfectado').setValue('');
                                 modPolizasAltaTramite.hide();
                                 return;
                             }
@@ -267,31 +266,26 @@ Ext.onReady(function() {
                         }
                     });
                     
-                    modPolizasAltaTramite.showAt(200,100);
+                    modPolizasAltaTramite.show();
                 }
             }
     });
     
     var cmbBeneficiario= Ext.create('Ext.form.ComboBox',
 	{
-        id:'cmbBeneficiario',        name:'cmbBeneficiario',        	fieldLabel: 'Beneficiario',        queryMode:'remote',
-        displayField: 'value',    valueField: 'key',        			editable:true,
-        labelWidth : 250,         width		 : 500,
-        forceSelection : true,                 matchFieldWidth: false,     queryParam: 'params.cdperson',
-    	minChars  : 2,                          store : storeAsegurados,    triggerAction: 'all',			hideTrigger:true
+        id:'cmbBeneficiario',       name:'cmbBeneficiario',        	fieldLabel: 'Beneficiario',         queryMode:'remote',
+        displayField: 'value',    	valueField: 'key',        		editable:true,					 	labelWidth : 250,
+        width		 : 500,			forceSelection : true,          matchFieldWidth: false,     		queryParam: 'params.cdperson',
+    	minChars  : 2, 				store : storeAsegurados,    	triggerAction: 'all',				hideTrigger:true
     });
     
-    
-    
-    var cmbProveedor = Ext.create('Ext.form.field.ComboBox',
+    cmbProveedor = Ext.create('Ext.form.field.ComboBox',
     {
-    	fieldLabel : 'Proveedor',			/*allowBlank:false,*/				displayField : 'nombre',		name:'cmbProveedor',
-    		id:'cmbProveedor',				labelWidth: 250,					valueField   : 'cdpresta',			
-    		forceSelection : true,	width:500,		emptyText:'Seleccione...',
-    	matchFieldWidth: false,			queryMode :'remote',				queryParam: 'params.cdpresta',	store : storeProveedor,			editable:false,
-    	triggerAction: 'all'
+    	fieldLabel : 'Proveedor',		displayField : 'nombre',		name:'cmbProveedor',
+    	id:'cmbProveedor',				labelWidth: 250,				width:500,					valueField   : 'cdpresta',
+    	forceSelection : true,			matchFieldWidth: false,			queryMode :'remote',		queryParam: 'params.cdpresta',
+    	minChars  : 2,					store : storeProveedor,			triggerAction: 'all',		hideTrigger:true
     });
-    
     
     var panelModificacionInsercion= Ext.create('Ext.form.Panel',{
         border  : 0
@@ -421,7 +415,7 @@ Ext.onReady(function() {
 	 	],
  		xtype: 'cell-editing',
 		id:'editorIncisos',
- 		title: 'Alta de Tr&aacute;mite',
+ 		title: 'Alta de facturas',
  		frame: false,
 
 	 	initComponent: function(){
@@ -552,7 +546,6 @@ Ext.onReady(function() {
                                 });
                             }
                         });
-                        
                         modPolizasAltaTramite.show();
                     }
         	    }
@@ -687,15 +680,14 @@ Ext.onReady(function() {
 
     gridAsegPagDirecto=new EditorAsegPagDirecto();
     
-    
     gridPolizasAltaTramite= Ext.create('Ext.grid.Panel',
 	{
 	    id            : 'polizaGridAltaTramite',
 	    store         : storeListadoPoliza,
-	    collapsible   : true,
-	    titleCollapse : true,
+	    //collapsible   : true,
+	    //titleCollapse : true,
 	    selType	      : 'checkboxmodel',
-	    width         : 640,
+	    width         : 700,
 	    height		  : 200,
 	    columns       :
 	    [
@@ -703,13 +695,19 @@ Ext.onReady(function() {
 	             header     : 'N&uacute;mero de P&oacute;liza',		dataIndex : 'nmpoliza',		width	 	: 150
 	        },
 	        {
-	             header     : 'Estatus',							dataIndex : 'dsestatus',	width	 	: 100
+	        	 header     : 'Estatus p&oacute;liza ',							dataIndex : 'dsestatus',	width	 	: 100
 	        },
 	        {
-	             header     : 'Fecha inicio',						dataIndex : 'feinicio',		width	    : 100
+	             header     : 'Vigencia p&oacute;liza <br/> Fecha inicio \t\t  |  \t\t Fecha fin  ',						dataIndex : 'vigenciaPoliza',		width	    : 200
 	        },
 	        {
-	             header     : 'Fecha final',						dataIndex : 'fefinal',		width	    : 100
+	             header     : 'Fecha alta <br/> asegurado',		dataIndex : 'faltaAsegurado',		width	    : 100
+	        },
+	        {
+	             header     : 'Fecha cancelaci&oacute;n <br/> asegurado',						dataIndex : 'fcancelacionAfiliado',		width	    : 150
+	        },
+	        {
+	             header     : 'Estatus<br/> asegurado',						dataIndex : 'desEstatusCliente',		width	    : 100
 	        },
 	        {
 	             header     : 'Producto',							dataIndex : 'dsramo',		width       : 150
@@ -732,15 +730,87 @@ Ext.onReady(function() {
 	    },
 	    listeners: {
                 itemclick: function(dv, record, item, index, e){
-                	Ext.getCmp('idUnieco').setValue(record.get('cdunieco'));
-					Ext.getCmp('idEstado').setValue(record.get('estado'));
-					Ext.getCmp('idcdRamo').setValue(record.get('cdramo'));
-					Ext.getCmp('idNmSituac').setValue(record.get('nmsituac'));
-					Ext.getCmp('polizaAfectada').setValue(record.get('nmpoliza'));
-					Ext.getCmp('idNmsolici').setValue(record.get('nmsolici'));
-					Ext.getCmp('idNmsuplem').setValue(record.get('nmsuplem'));
-					Ext.getCmp('idCdtipsit').setValue(record.get('cdtipsit'));
-					modPolizasAltaTramite.hide();
+                	//1.- Validamos que el asegurado este vigente
+                	if(record.get('desEstatusCliente')=="Vigente")
+            		{
+                		var valorFechaOcurrencia;
+                		if(Ext.getCmp('cmbTipoPago').getValue() == "1")
+            			{
+                			var valorFechaOcu = panelListadoAsegurado.query('datefield[name=dtfechaOcurrencias]')[0].rawValue;
+                			valorFechaOcurrencia = new Date(valorFechaOcu.substring(6,10)+"/"+valorFechaOcu.substring(3,5)+"/"+valorFechaOcu.substring(0,2));
+            			}else{
+            				valorFechaOcurrencia = Ext.getCmp('dtFechaOcurrencia').getValue();
+            			}
+                		
+                		var valorFechaInicial = new Date(record.get('feinicio').substring(6,10)+"/"+record.get('feinicio').substring(3,5)+"/"+record.get('feinicio').substring(0,2));
+                		var valorFechaFinal =   new Date(record.get('fefinal').substring(6,10)+"/"+record.get('fefinal').substring(3,5)+"/"+record.get('fefinal').substring(0,2));
+                		var valorFechaAltaAsegurado = new Date(record.get('faltaAsegurado').substring(6,10)+"/"+record.get('faltaAsegurado').substring(3,5)+"/"+record.get('faltaAsegurado').substring(0,2));
+                		
+                		if( (valorFechaOcurrencia <= valorFechaFinal) && (valorFechaOcurrencia >= valorFechaInicial)){
+                    		if( valorFechaOcurrencia >= valorFechaAltaAsegurado )
+                			{
+                    			//cumple la condición la fecha de ocurrencia es menor igual a la fecha de alta de tramite
+                    			Ext.getCmp('idUnieco').setValue(record.get('cdunieco'));
+            					Ext.getCmp('idEstado').setValue(record.get('estado'));
+            					Ext.getCmp('idcdRamo').setValue(record.get('cdramo'));
+            					Ext.getCmp('idNmSituac').setValue(record.get('nmsituac'));
+            					Ext.getCmp('polizaAfectada').setValue(record.get('nmpoliza'));
+            					Ext.getCmp('idNmsolici').setValue(record.get('nmsolici'));
+            					Ext.getCmp('idNmsuplem').setValue(record.get('nmsuplem'));
+            					Ext.getCmp('idCdtipsit').setValue(record.get('cdtipsit'));
+            					modPolizasAltaTramite.hide();
+                			}else{
+                				// No se cumple la condición la fecha de ocurrencia es mayor a la fecha de alta de tramite
+                				Ext.Msg.show({
+        	                    	title:'Error',
+        	                    	msg: 'La fecha de ocurrencia es mayor a la fecha de alta del asegurado',
+        	                    	buttons: Ext.Msg.OK,
+        	                    	icon: Ext.Msg.ERROR
+        	                	});
+                				modPolizasAltaTramite.hide();
+                    			limpiarRegistros();
+                    			if(Ext.getCmp('cmbTipoPago').getValue() == "1")
+                    			{
+                    				panelListadoAsegurado.query('combo[name=cmbAseguradoAfect]')[0].setValue('');
+                    			}else{
+                    				Ext.getCmp('cmbAseguradoAfectado').setValue('');
+                    			}
+            					
+                			}
+                		}else{
+                			// La fecha de ocurrencia no se encuentra en el rango de la poliza vigente
+                			Ext.Msg.show({
+    	                    	title:'Error',
+    	                    	msg: 'La fecha de ocurrencia no se encuentra en el rango de la p&oacute;liza vigente',
+    	                    	buttons: Ext.Msg.OK,
+    	                    	icon: Ext.Msg.ERROR
+    	                	});
+                			modPolizasAltaTramite.hide();
+                			limpiarRegistros();
+                			if(Ext.getCmp('cmbTipoPago').getValue() == "1")
+                			{
+                				panelListadoAsegurado.query('combo[name=cmbAseguradoAfect]')[0].setValue('');
+                			}else{
+                				Ext.getCmp('cmbAseguradoAfectado').setValue('');
+                			}
+                		}
+            		}else{
+            			// El asegurado no se encuentra vigente
+            			Ext.Msg.show({
+	                    	title:'Error',
+	                    	msg: 'El asegurado de la p&oacute;liza seleccionado no se encuentra vigente',
+	                    	buttons: Ext.Msg.OK,
+	                    	icon: Ext.Msg.ERROR
+	                	});
+            			modPolizasAltaTramite.hide();
+            			limpiarRegistros();
+            			if(Ext.getCmp('cmbTipoPago').getValue() == "1")
+            			{
+            				panelListadoAsegurado.query('combo[name=cmbAseguradoAfect]')[0].setValue('');
+            			}else{
+            				Ext.getCmp('cmbAseguradoAfectado').setValue('');
+            			}
+            		}
                 }
             }
 
@@ -759,7 +829,7 @@ Ext.onReady(function() {
 	    ,resizable   : false
 	    ,buttonAlign : 'center'
 	    ,closable    : false
-	    ,width		 : 650
+	    ,width		 : 710
 	    ,minHeight 	 : 100 
 	    ,maxheight   : 400
 	    ,items       :
@@ -798,8 +868,6 @@ Ext.onReady(function() {
 					   xtype       : 'textfield',			fieldLabel : 'P&oacute;liza afectada'				,id       : 'polizaAfectada'
 					   ,labelWidth: 170,				name:'nmpoliza',	readOnly   : true,	hidden:true
 					},
-					
-//												
 					{
 					    xtype       : 'textfield',			fieldLabel : 'nmsolici'				,id       : 'idNmsolici',			name       : 'nmsolici'
 					    ,labelWidth: 170,	hidden:true
@@ -905,7 +973,6 @@ Ext.onReady(function() {
     	        buttons: [{
     	            id:'botonCotizar',
     	            icon:_CONTEXT+'/resources/fam3icons/icons/calculator.png',
-    	            //text: hayTramiteCargado?'Precaptura':'Cotizar',
     	            text: 'Generar Tr&aacute;mite',
             		handler: function() {
             			
@@ -987,8 +1054,6 @@ Ext.onReady(function() {
             				
             				submitValues['datosTablas']=datosTablas;
             				panelInicialPral.setLoading(true);
-            				console.log("VALOR A ENVIAR");
-            				console.log(submitValues);
             				
             				Ext.Ajax.request(
     						{
@@ -1070,4 +1135,10 @@ Ext.onReady(function() {
 		
     	return true;
 	}
+	
+	function validarInformacion(fechaOcurrencia)
+	{
+		return true;
+	}
+	
 });
