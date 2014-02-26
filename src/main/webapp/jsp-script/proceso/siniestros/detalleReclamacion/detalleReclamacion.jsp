@@ -14,7 +14,8 @@
             //var _URL_CONSULTA_CLAUSU_DETALLE =      '<s:url namespace="/catalogos" action="consultaClausulaDetalle" />';
             //var _URL_INSERTA_CLAUSU =      '<s:url namespace="/catalogos" action="insertaClausula" />';
             
-            var _UrlPanelCalculos = '<s:url namespace="/siniestros" action="includes/calculosReclamaciones" />';
+            var _UrlPanelCalculos                 = '<s:url namespace="/siniestros" action="includes/calculosReclamaciones" />';
+            var _URL_LOADER_INFO_GRAL_RECLAMACION = '<s:url namespace="/siniestros" action="includes/loadInfoGeneralReclamacion" />';
             var _UrlPanelRevAdmin = '<s:url namespace="/siniestros" action="includes/revAdmin" />';
             
         </script>

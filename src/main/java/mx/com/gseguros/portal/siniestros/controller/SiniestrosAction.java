@@ -721,6 +721,14 @@ public void setMsgResult(String msgResult) {
    	return SUCCESS;
    }
    
+   
+   public String loadInfoGeneralReclamacion(){
+
+	   
+	   success = true;
+	   return SUCCESS;
+   }
+   
    public String loadListaCalculos(){
    	loadList = new ArrayList<HashMap<String, String>>();
    	HashMap<String, String> elements =  new HashMap<String, String>();

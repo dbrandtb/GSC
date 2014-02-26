@@ -316,6 +316,10 @@
     		<result>/jsp-script/proceso/siniestros/detalleReclamacion/includes/revisionAdministrativa.jsp</result>
 		</action>
 		
+		<action name="includes/loadInfoGeneralReclamacion" class="siniestrosAction" method="loadInfoGeneralReclamacion">
+            <result>/jsp-script/proceso/siniestros/detalleReclamacion/includes/informacionGeneral.jsp</result>
+        </action>
+		
 		<action name="loadListaCalculos" class="siniestrosAction"
 			method="loadListaCalculos">
 			<result type="json">
