@@ -15,6 +15,246 @@ var _UrlRechazarTramiteWindwow  = '<s:url namespace="/siniestros" action="rechaz
 
 Ext.onReady(function() {
 	
+	var storeIncisos;
+	var storeDetalle;
+
+	Ext.define('modelClau',
+	{
+	    extend:'Ext.data.Model',
+	    fields:['noFactura','fechaFactura','tipoServicio','proveedor','importe']
+	});
+
+	Ext.define('modelDetalle',
+	{
+	    extend:'Ext.data.Model',
+	    fields:['concepto','ub','subcobertura','importe','descuento','subtotalfactura','importeAutorizado']
+	});
+
+	storeIncisos=new Ext.data.Store(
+	{
+	    autoDestroy: true,
+	    model: 'modelClau'
+	});
+
+	storeDetalle=new Ext.data.Store(
+			{
+			    autoDestroy: true,
+			    model: 'modelDetalle'
+			});
+
+	
+	var panelModificacionInsercion= Ext.create('Ext.form.Panel',{
+        border  : 0
+        ,bodyStyle:'padding:5px;'
+        ,items :
+        [   
+             {
+		        xtype      : 'textfield'
+		    	,fieldLabel : 'No. Factura'
+	    		,labelWidth: 170
+	    		,allowBlank:false
+		    	,name       : 'noFactInterno'
+    		},            
+    		{
+    	        name: 'fechaFactInterno',
+    	        fieldLabel: 'Fecha Factura',
+    	        xtype: 'datefield',
+    	        format: 'd/m/Y',
+    	        editable: true,
+    	        allowBlank:false,
+    	        labelWidth : 170,
+    	        value:new Date()
+    	    }
+            ,
+            {
+		        xtype      : 'textfield'
+		    	,fieldLabel : 'Tipo de Servicio'
+	    		,labelWidth: 170
+                ,width:500
+                ,allowBlank:false
+		    	,name       : 'tipoServicioInterno'
+    		}
+            ,
+            	//proveedor2
+           	{
+		        xtype      : 'textfield'
+		    	,fieldLabel : 'Proveedor'
+	    		,labelWidth: 170
+                ,width:500
+                ,allowBlank:false
+		    	,name       : 'proveedorInterno'
+    		}
+            ,
+            {
+		        xtype      : 'textfield'
+		    	,fieldLabel : 'Importe'
+	    		,labelWidth: 170
+                ,width:500
+                ,allowBlank:false
+		    	,name       : 'importeInterno'
+    		}
+        ]
+    });
+    
+    
+    var panelInsercionDetalle= Ext.create('Ext.form.Panel',{
+        border  : 0
+        ,bodyStyle:'padding:5px;'
+        ,items :
+        [   
+             {
+		        xtype      : 'textfield'
+		    	,fieldLabel : 'Concepto'
+	    		,labelWidth: 170
+	    		,allowBlank:false
+		    	,name       : 'nombreConcepto'
+    		}
+            ,
+            {
+		        xtype      : 'textfield'
+		    	,fieldLabel : 'UB'
+	    		,labelWidth: 170
+	    		,allowBlank:false
+		    	,name       : 'ub'
+    		}
+            ,
+            {
+		        xtype      : 'textfield'
+		    	,fieldLabel : 'Subcobertura'
+	    		,labelWidth: 170
+	    		,allowBlank:false
+		    	,name       : 'subcobertura'
+    		}
+            ,
+            {
+		        xtype      : 'textfield'
+		    	,fieldLabel : 'importe'
+	    		,labelWidth: 170
+	    		,allowBlank:false
+		    	,name       : 'importe'
+    		}
+            ,
+            {
+		        xtype      : 'textfield'
+		    	,fieldLabel : 'Descuento (%)'
+	    		,labelWidth: 170
+	    		,allowBlank:false
+		    	,name       : 'porcentajeDescuento'
+    		}
+            ,
+            {
+		        xtype      : 'textfield'
+		    	,fieldLabel : 'Subtotal factura'
+	    		,labelWidth: 170
+	    		,allowBlank:false
+		    	,name       : 'subtotalFactura'
+    		}
+            ,
+            {
+		        xtype      : 'textfield'
+		    	,fieldLabel : 'Importe autorizado arancel'
+	    		,labelWidth: 170
+	    		,allowBlank:false
+		    	,name       : 'importeAutorizado'
+    		}
+        ]
+    });
+
+	/*PANTALLA EMERGENTE PARA LA INSERCION Y MODIFICACION DE LOS DATOS DEL GRID*/
+    ventanaGrid2= Ext.create('Ext.window.Window', {
+        renderTo: document.body,
+          title: 'NUEVAS FACTURAS',
+          height: 285,
+          closeAction: 'hide',
+          items:[panelInsercionDetalle],
+          
+          buttons:[{
+                 text: 'Aceptar',
+                 icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
+                 handler: function() {
+                       if (panelInsercionDetalle.form.isValid()) {
+                       	
+                       	var datos=panelInsercionDetalle.form.getValues();
+                       	console.log(datos);
+                       	var rec = new modelDetalle({
+                       		concepto: datos.nombreConcepto,
+                       		ub: datos.ub,
+                       		subcobertura: datos.subcobertura,
+                       		importe: datos.importe,
+                       		descuento: datos.porcentajeDescuento,        	
+                       		subtotalfactura: datos.subtotalFactura,
+                       		importeAutorizado: datos.importeAutorizado,
+		        	 		});
+                       	storeDetalle.add(rec);
+                       	panelInsercionDetalle.getForm().reset();
+                       } else {
+                           Ext.Msg.show({
+                                  title: 'Aviso',
+                                  msg: 'Complete la informaci&oacute;n requerida',
+                                  buttons: Ext.Msg.OK,
+                                  icon: Ext.Msg.WARNING
+                              });
+                       }
+                   }
+             },
+           {
+                 text: 'Cancelar',
+                 icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+                 handler: function() {
+                	 panelInsercionDetalle.getForm().reset();
+                     ventanaGrid2.close();
+                 }
+           }
+          ]
+          });
+    
+    ventanaGrid= Ext.create('Ext.window.Window', {
+         renderTo: document.body,
+           title: 'NUEVAS FACTURAS',
+           height: 230,
+           closeAction: 'hide',
+           items:[panelModificacionInsercion],
+           
+           buttons:[{
+                  text: 'Aceptar',
+                  icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
+                  handler: function() {
+                        if (panelModificacionInsercion.form.isValid()) {
+                        	
+                        	var datos=panelModificacionInsercion.form.getValues();
+                        	console.log(datos);
+                        	var rec = new modelClau({
+        	 				  	noFactura: datos.noFactInterno,
+        					 	fechaFactura: datos.fechaFactInterno,
+        					 	tipoServicio: datos.tipoServicioInterno,
+        					 	proveedor: datos.proveedorInterno,
+        					 	importe: datos.importeInterno            	
+		        	 		});
+                        	storeIncisos.add(rec);
+                        	panelModificacionInsercion.getForm().reset();
+                        } else {
+                            Ext.Msg.show({
+                                   title: 'Aviso',
+                                   msg: 'Complete la informaci&oacute;n requerida',
+                                   buttons: Ext.Msg.OK,
+                                   icon: Ext.Msg.WARNING
+                               });
+                        }
+                    }
+              },
+            {
+                  text: 'Cancelar',
+                  icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+                  handler: function() {
+                      panelModificacionInsercion.getForm().reset();
+                      ventanaGrid.close();
+                  }
+            }
+           ]
+           });    
+
+	
+	
 /*////////////////////////////////////////////////////////////////
 ////////////////   DECLARACION DE EDITOR DE INCISOS  ////////////
 ///////////////////////////////////////////////////////////////*/
@@ -296,8 +536,7 @@ Ext.create('Ext.form.Panel',{
 	,items      : [
         		gridIncisos,
 		        {
-			    	id:'totalFacturado'
-			        ,xtype      : 'textfield'
+			        xtype      : 'textfield'
 			    	,fieldLabel : 'Total Facturado'
 		    		,labelWidth: 170
 		            ,width:500
@@ -371,13 +610,6 @@ Ext.create('Ext.form.Panel',{
                     	icon: Ext.Msg.WARNING
                 	});
 				}*/
-            }
-        },
-        {
-        	text: 'Cancelar',
-            icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
-            handler: function() {
-            	menu2.close();
             }
         }
 	]
