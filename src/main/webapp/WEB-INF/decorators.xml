@@ -36,16 +36,9 @@
         <pattern>/endosos/endosoExtraprima.action</pattern>
         <pattern>/endosos/endosoFormaPago.action</pattern>
         <pattern>/endosos/endosoAgente.action</pattern>
-        <pattern>/general/obtieneRecibos.action</pattern>
         
         <pattern>/*/includes/*.action</pattern>
         
-        <pattern>/siniestros/historialReclamaciones.action</pattern>
-        <pattern>/siniestros/verCoberturas.action</pattern>
-        <pattern>/siniestros/verAutorizacionServicio.action</pattern>
-        <pattern>/siniestros/revisionDocumentos.action</pattern>
-        <pattern>/siniestros/altaTramite.action</pattern>
-        <pattern>/siniestros/rechazoReclamaciones.action</pattern>
 	</excludes>
 
 

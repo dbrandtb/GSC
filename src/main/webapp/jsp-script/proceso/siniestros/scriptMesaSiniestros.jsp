@@ -7,9 +7,9 @@ var _CONTEXT = '${ctx}';
 var _PAGO_DIRECTO = "1";
 var _REEMBOLSO    = "2";
 
-var _UrlAltaDeTramite           = '<s:url namespace="/siniestros" action="altaTramite"               />';
-var _UrlRevisionDocsSiniestro   = '<s:url namespace="/siniestros" action="revisionDocumentos"        />';
-var _UrlRechazarTramiteWindwow  = '<s:url namespace="/siniestros" action="rechazoReclamaciones"      />';
+var _UrlAltaDeTramite           = '<s:url namespace="/siniestros" action="includes/altaTramite"      />';
+var _UrlRevisionDocsSiniestro   = '<s:url namespace="/siniestros" action="includes/revisionDocumentos"        />';
+var _UrlRechazarTramiteWindwow  = '<s:url namespace="/siniestros" action="includes/rechazoReclamaciones" />';
 var _UrlDocumentosPoliza        = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza"   />';
 var _UrlGenerarContrarecibo     = '<s:url namespace="/siniestros" action="generarContrarecibo"       />';
 var _UrlDetalleSiniestro        = '<s:url namespace="/siniestros" action="detalleAfiliadosAfectados" />';
