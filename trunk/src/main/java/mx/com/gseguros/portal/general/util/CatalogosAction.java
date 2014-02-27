@@ -167,7 +167,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 					}
 					break;
 				case ICD:
-					List<GenericVO> listaCPTICD= siniestrosManager.getConsultaListaCPTICD(params.get("cdtabla"),params.get("otclave"));
+					lista = siniestrosManager.getConsultaListaCPTICD(nombreCatalogo.getCdTabla(),params.get("otclave"));
 					break;
 				default:
 					throw new Exception("Catalogo no existente: " + nombreCatalogo);

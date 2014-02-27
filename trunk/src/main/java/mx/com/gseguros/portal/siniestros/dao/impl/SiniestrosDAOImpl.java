@@ -961,7 +961,8 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_nmautser_i", nmautser);
 		Map<String, Object> mapResult = ejecutaSP(new GuardAltaSiniestroAutServicio(this.getDataSource()), params);
-		return (String) mapResult.get("pv_msg_id_o");
+		java.math.BigDecimal msgId = (java.math.BigDecimal)mapResult.get("pv_msg_id_o"); 
+		return msgId.toPlainString();
 	}
 	
 	protected class GuardAltaSiniestroAutServicio extends StoredProcedure

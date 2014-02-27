@@ -17,10 +17,17 @@
             //var _URL_ACTUALIZA_CLAUSU =      '<s:url namespace="/catalogos" action="actualizaClausula" />';
             var _11_params = <s:property value='%{getParams().toString().replace("=",":\'").replace(",","\',").replace("}","\'}")}' />;
             
-            var _11_itemsForm = [ <s:property value="imap.itemsForm" /> ];
+            var _11_itemsForm =
+            [
+                <s:property value="imap.itemsForm" />
+                ,{
+                	xtype : 'label'
+                }
+            ];
             
             var _11_urlGuardar                  = '<s:url namespace="/siniestros" action="guardarAfiliadosAfectados" />';
-            var _11_urlIniciarSiniestroTworksin = '<s:url namespace="/siniestros" action="iniciarSiniestroTworksin" />';
+            var _11_urlIniciarSiniestroTworksin = '<s:url namespace="/siniestros" action="iniciarSiniestroTworksin"  />';
+            var _11_urlActualizarSiniestro      = '<s:url namespace="/siniestros" action="actualizarMultiSiniestro"  />';
             
             var _11_form;
             var _11_recordActivo;
@@ -28,6 +35,8 @@
             var _11_formPedirAuto;
             var _11_textfieldAsegurado;
             var _11_textfieldNmautserv;
+            var _11_windowEdicion;
+            var _11_formEdicion;
             
             var recordsStore = [];
             
@@ -44,8 +53,8 @@
                 	,VoBoAuto        : '<s:property value='%{getSlist1().get(#contador).get("VOBOAUTO")}' />'
                 	,icd             : '<s:property value='%{getSlist1().get(#contador).get("CDICD")}'    />'
                 	,icdSecundario   : '<s:property value='%{getSlist1().get(#contador).get("CDICD2")}'     />'
-                	,porcDescuento   : '<s:property value='%{getSlist1().get(#contador).get("DESCPORC")}' />'
-                	,impoDescuento   : '<s:property value='%{getSlist1().get(#contador).get("DESCNUME")}' />'
+                	<%--,porcDescuento   : '<s:property value='%{getSlist1().get(#contador).get("DESCPORC")}' />'
+                	,impoDescuento   : '<s:property value='%{getSlist1().get(#contador).get("DESCNUME")}' />'--%>
                 	,copago          : '<s:property value='%{getSlist1().get(#contador).get("COPAGO")}'   />'
                 	,impFacturado    : '<s:property value='%{getSlist1().get(#contador).get("PTIMPORT")}' />'
                 	,autoFacturado   : '<s:property value='%{getSlist1().get(#contador).get("AUTRECLA")}' />'
@@ -145,7 +154,7 @@
                                 {
                                     text            :'Subtotal <br/>Arancel',           width           : 110,          renderer        :Ext.util.Format.usMoney, 
                                     align           :'center',                          dataIndex       :'subtoArancel'
-                                },*/
+                                },
                                 {
                                     text            :'%<br/>Desc.',  
                                     dataIndex       :'porcDescuento',
@@ -158,7 +167,7 @@
                                     align           :'center',
                                     width           :80
                                     ,renderer       :Ext.util.Format.usMoney
-                                },
+                                },*/
                                 {
                                     text            :'Copago',                          width           : 50,          
                                     align           :'center',
@@ -231,6 +240,11 @@ function _11_editar(grid,rowindex)
 	
 	var valido = _11_validaAutorizacion(record);
 	
+	if(valido)
+	{
+		_11_abrirEditor(record);
+	}
+	
 	debug('!_11_editar');
 }
 
@@ -292,7 +306,17 @@ function _11_asociarAutorizacion()
 				debug('respuesta:',json);
 				if(json.success==true)
 				{
-					mensajeCorrecto('Datos guardados',json.mensaje);
+					mensajeCorrecto('Datos guardados',json.mensaje,function()
+					{
+						Ext.create('Ext.form.Panel').submit(
+				        {
+				            standardSubmit :true
+				            ,params        :
+				            {
+				                'params.ntramite' : _11_params.NTRAMITE
+				            }
+				        });
+					});
 				}
 				else
 				{
@@ -306,6 +330,103 @@ function _11_asociarAutorizacion()
 		    }
 		});
 	}
+}
+
+function _11_abrirEditor(record)
+{
+	_11_recordActivo = record;
+	debug('_11_abrirEditor _11_recordActivo:',_11_recordActivo.raw);
+	_11_llenaFormulario();
+	_11_windowEdicion.show();
+	centrarVentanaInterna(_11_windowEdicion);
+	debug('!_11_abrirEditor');
+}
+
+function _11_llenaFormulario()
+{
+	debug('_11_llenaFormulario');
+	
+	var itemNtramite = _11_formEdicion.items.items[0];
+	var itemCdunieco = _11_formEdicion.items.items[1];
+	var itemNmsinies = _11_formEdicion.items.items[2];
+	var itemNautoriz = _11_formEdicion.items.items[3];
+	var itemCdperson = _11_formEdicion.items.items[4];
+	var itemNombre   = _11_formEdicion.items.items[5];
+	var itemNmpoliza = _11_formEdicion.items.items[6];
+	var itemFeocurre = _11_formEdicion.items.items[7];
+	var itemIcd      = _11_formEdicion.items.items[8];
+	var itemIcd2     = _11_formEdicion.items.items[10];
+	var itemNreclamo = _11_formEdicion.items.items[12];
+	
+	itemNtramite.setValue(_11_params.NTRAMITE);
+	itemNmsinies.setValue(_11_recordActivo.get('IdReclamacion'));
+	itemNautoriz.setValue(_11_recordActivo.get('NoAutorizacion'));
+	itemCdperson.setValue(_11_recordActivo.get('codAfiliado'));
+	itemNombre.setValue(_11_recordActivo.get('nombre'));
+	itemCdunieco.setValue(_11_params.CDSUCDOC);
+	itemNmpoliza.setValue(_11_recordActivo.get('noPoliza'));
+	itemFeocurre.setValue(_11_recordActivo.get('fechaOcurrencia'));
+	itemIcd.setValue(_11_recordActivo.get('icd'));
+	itemIcd2.setValue(_11_recordActivo.get('icdSecundario'));
+	itemNreclamo.setValue(_11_recordActivo.get('noReclamo'));
+	
+	debug('!_11_llenaFormulario');
+}
+
+function _11_guardarEdicion()
+{
+	debug('_11_guardarEdicion');
+	
+	var valido = _11_formEdicion.isValid();
+	if(!valido)
+	{
+		datosIncompletos();
+	}
+	
+	if(valido)
+	{
+		_11_formEdicion.setLoading(true);
+		var json =
+		{
+			params : _11_formEdicion.getValues()
+		};
+		debug('datos enviados:',json);
+		Ext.Ajax.request(
+		{
+			url       : _11_urlActualizarSiniestro
+			,jsonData : json
+			,success  : function(response)
+			{
+				_11_formEdicion.setLoading(false);
+				json = Ext.decode(response.responseText);
+				if(json.success == true)
+				{
+					mensajeCorrecto('Datos guardados',json.mensaje,function()
+                    {
+                        Ext.create('Ext.form.Panel').submit(
+                        {
+                            standardSubmit :true
+                            ,params        :
+                            {
+                                'params.ntramite' : _11_params.NTRAMITE
+                            }
+                        });
+                    });
+				}
+				else
+				{
+					mensajeError(json.mensaje);
+				}
+			}
+		    ,failure  : function()
+		    {
+		    	_11_formEdicion.setLoading(false);
+		    	errorComunicacion();
+		    }
+		});
+	}
+	
+	debug('!_11_guardarEdicion');
 }
 ////// funciones //////
 
@@ -330,6 +451,26 @@ Ext.onReady(function()
                      ,_11_textfieldAsegurado
                      ,_11_textfieldNmautserv
                 ]
+            });
+            this.callParent();
+        }
+	});
+	
+	Ext.define('_11_FormEdicion',
+	{
+		extend         : 'Ext.form.Panel'
+        ,initComponent : function()
+        {
+            debug('_11_FormEdicion initComponent');
+            Ext.apply(this,
+            {
+                border  : 0
+                ,layout :
+                {
+                	type     : 'table'
+                	,columns : 2
+                }
+                ,items  : [ <s:property value="imap.itemsEdicion" /> ]
             });
             this.callParent();
         }
@@ -364,6 +505,37 @@ Ext.onReady(function()
 			this.callParent();
 		}
 	});
+	
+	Ext.define('_11_WindowEdicion',
+    {
+        extend         : 'Ext.window.Window'
+        ,initComponent : function()
+        {
+            debug('_11_WindowEdicion initComponent');
+            Ext.apply(this,
+            {
+                title        : 'Asegurado afectado'
+                ,icon        : '${ctx}/resources/fam3icons/icons/user.png'
+                ,width       : 700
+                ,height      : 400
+                ,autoScroll  : true
+                ,closeAction : 'hide'
+                ,modal       : true
+                ,defaults    : { style : 'margin : 5px; ' }
+                ,items       : _11_formEdicion
+                ,buttonAlign : 'center'
+                ,buttons     :
+                [
+                    {
+                        text     : 'Guardar'
+                        ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
+                        ,handler : _11_guardarEdicion
+                    }
+                ]
+            });
+            this.callParent();
+        }
+    });
 	////// componentes //////
 	
 	////// contenido //////
@@ -381,6 +553,8 @@ Ext.onReady(function()
     });
 	_11_formPedirAuto  = new _11_FormPedirAuto();
 	_11_windowPedirAut = new _11_WindowPedirAut();
+	_11_formEdicion    = new _11_FormEdicion();
+	_11_windowEdicion  = new _11_WindowEdicion();
 	////// contenido //////
 });
         </script>
