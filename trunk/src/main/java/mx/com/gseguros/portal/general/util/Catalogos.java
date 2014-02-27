@@ -36,7 +36,8 @@ public enum Catalogos {
 	COBERTURAS("COBERTURAS"),
 	SUBCOBERTURAS("SUBCOBERTURAS"),
 	PROVEEDORES("PROVEEDORES"),
-	MEDICOS("MEDICOS")
+	MEDICOS("MEDICOS"),
+	ICD("")
 	;
 
 	private String cdTabla;
