@@ -12,7 +12,7 @@ var _UrlRevisionDocsSiniestro   = '<s:url namespace="/siniestros" action="includ
 var _UrlRechazarTramiteWindwow  = '<s:url namespace="/siniestros" action="includes/rechazoReclamaciones" />';
 var _UrlDocumentosPoliza        = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza"   />';
 var _UrlGenerarContrarecibo     = '<s:url namespace="/siniestros" action="generarContrarecibo"       />';
-var _UrlDetalleSiniestro        = '<s:url namespace="/siniestros" action="detalleAfiliadosAfectados" />';
+var _UrlDetalleSiniestro        = '<s:url namespace="/siniestros" action="detalleSiniestro" />';
 var _UrlDetalleSiniestroDirecto = '<s:url namespace="/siniestros" action="afiliadosAfectados"        />';
 var _UrlSolicitarPago           = '<s:url namespace="/siniestros" action="solicitarPago"             />';
 var _urlSeleccionCobertura      = '<s:url namespace="/siniestros" action="seleccionCobertura"        />';

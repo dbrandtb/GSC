@@ -239,11 +239,7 @@
 		<action name="afiliadosAfectados" class="siniestrosAction" method="afiliadosAfectados">
     		<result name="success">/jsp-script/proceso/siniestros/afiliadosAfectados.jsp</result>
 		</action>
-		
-		<action name="detalleAfiliadosAfectados">
-    		<result>/jsp-script/proceso/siniestros/detalleReclamacion/detalleReclamacion.jsp</result>
-		</action>
-        
+		        
 		<action name="autorizacionServicios">
     		<result>/jsp-script/proceso/siniestros/autorizacionServicios.jsp</result>
 		</action>
@@ -302,29 +298,6 @@
 		
 		<action name="ajustesMedicos">
     		<result>/jsp-script/proceso/siniestros/ajustesMedicos.jsp</result>
-		</action>
-
-		<action name="includes/calculosReclamaciones" class="siniestrosAction" method="entradaCalculos">
-    		<result>/jsp-script/proceso/siniestros/detalleReclamacion/includes/calculos.jsp</result>
-		</action>
-
-		<action name="includes/revAdmin" class="siniestrosAction">
-    		<result>/jsp-script/proceso/siniestros/detalleReclamacion/includes/revisionAdministrativa.jsp</result>
-		</action>
-		
-		<action name="includes/loadInfoGeneralReclamacion" class="siniestrosAction" method="loadInfoGeneralReclamacion">
-            <result>/jsp-script/proceso/siniestros/detalleReclamacion/includes/informacionGeneral.jsp</result>
-        </action>
-		
-		<action name="loadListaCalculos" class="siniestrosAction"
-			method="loadListaCalculos">
-			<result type="json">
-				<param name="ignoreHierarchy">false</param>
-				<param name="includeProperties">
-					loadList.*,
-					success
-				</param>
-			</result>
 		</action>
 
 		<action name="rechazarTramite" class="siniestrosAction"
@@ -421,6 +394,34 @@
             </interceptor-ref>
             <result type="json"></result>
         </action>
+        
+        
+        
+		<action name="detalleSiniestro">
+    		<result>/jsp-script/proceso/siniestros/detalleReclamacion/detalleReclamacion.jsp</result>
+		</action>
+		
+		<action name="includes/calculosReclamaciones" class="detalleSiniestroAction" method="entradaCalculos">
+    		<result>/jsp-script/proceso/siniestros/detalleReclamacion/includes/calculos.jsp</result>
+		</action>
+
+		<action name="includes/revAdmin" class="detalleSiniestroAction">
+    		<result>/jsp-script/proceso/siniestros/detalleReclamacion/includes/revisionAdministrativa.jsp</result>
+		</action>
+		
+		<action name="includes/loadInfoGeneralReclamacion" class="detalleSiniestroAction" method="loadInfoGeneralReclamacion">
+            <result>/jsp-script/proceso/siniestros/detalleReclamacion/includes/informacionGeneral.jsp</result>
+        </action>
+		
+		<action name="obtieneCalculos" class="detalleSiniestroAction" method="obtieneCalculos">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					loadList.*,
+					success
+				</param>
+			</result>
+		</action>
 		
     </package>
 
