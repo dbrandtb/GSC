@@ -23,7 +23,8 @@ _4_botonesGrid.push(
     text     : 'Alta de tr&aacute;mite'
     ,icon    : '${ctx}/resources/fam3icons/icons/add.png'
     ,handler : function altaTramiteWindow(){
-        windowLoader = Ext.create('Ext.window.Window',{
+    	Ext.create("Ext.form.Panel").submit({url     : _4_urlPantallaAutServ,standardSubmit:true});
+        /*windowLoader = Ext.create('Ext.window.Window',{
             modal       : true,
             buttonAlign : 'center',
             width       : 800,
@@ -39,7 +40,7 @@ _4_botonesGrid.push(
                 }
             }
         }).show();
-        centrarVentana(windowLoader);
+        centrarVentana(windowLoader);*/
     }
 });
 ////// variables //////
