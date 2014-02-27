@@ -1332,19 +1332,23 @@ public void setMsgResult(String msgResult) {
     
     /*
     params:
-    	cdperson=517982, 
-    	nreclamo=, 
-    	feocurre=26/02/2014, 
-    	ntramite=1445, 
-    	cdicd=, 
-    	nmautser=12, 
-    	nombre=ALVAROJAIR,MARTINEZ VARELA, 
-    	nmpoliza=44, 
-    	_icd2=, 
-    	_icd=, 
-    	cdicd2=, 
-    	cdunieco=1000, 
-    	nmsinies=20
+    	_icd: ""
+		_icd2: ""
+		autmedic: "N"
+		autrecla: "N"
+		cdicd: "A150"
+		cdicd2: "A150"
+		cdperson: "517982"
+		cdunieco: "1000"
+		commenar: "ar"
+		commenme: "me"
+		feocurre: "26/02/2014"
+		nmautser: "12"
+		nmpoliza: "44"
+		nmsinies: "20"
+		nombre: "ALVAROJAIR,MARTINEZ VARELA"
+		nreclamo: ""
+		ntramite: "1445"
      */
     public String actualizarMultiSiniestro()
     {
