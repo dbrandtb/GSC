@@ -25,7 +25,7 @@ Ext.onReady(function() {
 	    	    }, {
 	    	        title: 'Revisi&oacute;n Administrativa',
 	    	        loader: {
-	    	        	url: _UrlPanelRevAdmin,
+	    	        	url: _URL_LOADER_REV_ADMIN,
 	    	        	scripts: true,
 	    	        	autoLoad: false,
 	    	        	ajaxOptions: {
@@ -40,7 +40,7 @@ Ext.onReady(function() {
 	    	    }, {
 	    	        title: 'C&aacute;lculos',
 	    	        loader: {
-	    	        	url: _UrlPanelCalculos,
+	    	        	url: _URL_LOADER_CALCULOS,
 	    	        	scripts: true,
 	    	        	autoLoad: false,
 	    	        	ajaxOptions: {
