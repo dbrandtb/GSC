@@ -8,10 +8,8 @@ var _CONTEXT = '${ctx}';
 var _PAGO_DIRECTO = "1";
 var _REEMBOLSO    = "2";
 
-var _UrlAltaDeTramite           = '<s:url namespace="/siniestros" action="includes/altaTramite"               />';
-var _UrlRevisionDocsSiniestro   = '<s:url namespace="/siniestros" action="includes/revisionDocumentos"        />';
-var _UrlRechazarTramiteWindwow  = '<s:url namespace="/siniestros" action="includes/rechazoReclamaciones"      />';
-
+var _nmTramite = '<s:property value="params.nmTramite" />';
+var _nmSiniestro = '<s:property value="params.nmSiniestro" />';
 
 Ext.onReady(function() {
 	
@@ -71,7 +69,7 @@ Ext.onReady(function() {
 		    	,fieldLabel : 'Tipo de Servicio'
 	    		,labelWidth: 170
                 ,width:500
-                ,allowBlank:false
+                ,readOnly: true
 		    	,name       : 'tipoServicioInterno'
     		}
             ,
@@ -81,16 +79,18 @@ Ext.onReady(function() {
 		    	,fieldLabel : 'Proveedor'
 	    		,labelWidth: 170
                 ,width:500
-                ,allowBlank:false
+                ,readOnly: true
 		    	,name       : 'proveedorInterno'
     		}
             ,
             {
-		        xtype      : 'textfield'
+		        xtype      : 'numberfield'
 		    	,fieldLabel : 'Importe'
 	    		,labelWidth: 170
                 ,width:500
                 ,allowBlank:false
+                ,allowDecimals: true
+                ,decimalSeparator: '.'
 		    	,name       : 'importeInterno'
     		}
         ]
@@ -210,7 +210,7 @@ Ext.onReady(function() {
     
     ventanaGrid= Ext.create('Ext.window.Window', {
          renderTo: document.body,
-           title: 'NUEVAS FACTURAS',
+           title: 'Agregar Factura',
            height: 230,
            closeAction: 'hide',
            items:[panelModificacionInsercion],
@@ -232,6 +232,7 @@ Ext.onReady(function() {
 		        	 		});
                         	storeIncisos.add(rec);
                         	panelModificacionInsercion.getForm().reset();
+                        	ventanaGrid.close();
                         } else {
                             Ext.Msg.show({
                                    title: 'Aviso',
@@ -278,7 +279,7 @@ Ext.define('EditorIncisos', {
  		});
 
  			Ext.apply(this, {
- 			height: 200,
+ 			height: 250,
  			plugins: [this.cellEditing],
  			store: storeIncisos,
  			columns: 
@@ -364,8 +365,59 @@ Ext.define('EditorIncisos', {
 	 	});
 	 	return false;
  	},
+ 	buttonAlign: 'center',
+ 	buttons: [{
+ 		text: 'Guardar Facturas',
+ 		handler: function (){
+ 			
+ 			//debug("upd: "+ storeIncisos.getUpdatedRecords().length);
+ 			//debug("mdf: "+ storeIncisos.getModifiedRecords().length);
+ 			debug("new: "+ storeIncisos.getNewRecords().length);
+ 			debug("del: "+ storeIncisos.getRemovedRecords().length);
+ 			
+ 			var saveList = [];
+ 			var deleteList = [];
+ 			
+ 			storeIncisos.getNewRecords().forEach(function(record,index,arr){
+				saveList.push(record.data);
+			});
+ 			storeIncisos.getRemovedRecords().forEach(function(record,index,arr){
+ 				deleteList.push(record.data);
+			});
+ 			
+ 			if(saveList.length == 0 && deleteList.length == 0){
+				mensajeWarning('No se modificaron datos.');
+				return;
+			}
+ 			
+ 			gridIncisos.setLoading(true);
+			Ext.Ajax.request({
+				url: ,
+				jsonData: {
+					params: {
+			    		'pv_ntramite_i' : _nmTramite,
+			    		'pv_cdtippag_i' : _tipoPago,
+			    		'pv_cdtipate_i' : _tipoAtencion
+			    	},
+					saveList   : saveList,
+					deleteList : deleteList
+				},
+				success: function() {
+					gridIncisos.setLoading(false);
+					mensajeCorrecto('Aviso','Se ha guardado con exito.');
+					storeIncisos.reload();
+				},
+				failure: function(){
+					gridIncisos.setLoading(false);
+					mensajeError('Error','No se pudo guardar.');
+				}
+			});
+ 			
+ 		}
+ 	}],
  	onAddClick: function(){	 		
  		ventanaGrid.show();
+ 		centrarVentana(ventanaGrid);
  		
  		/*window.parent.scrollTo(0,600);
  		// Create a model instance
@@ -407,7 +459,7 @@ Ext.define('EditorIncisos2', {
  	],
 		xtype: 'cell-editing',
 
-		title: 'Facturas en Tr&aacute;mite',
+		title: 'Conceptos en Factura',
 		frame: false,
 
  	initComponent: function(){
@@ -416,7 +468,7 @@ Ext.define('EditorIncisos2', {
  		});
 
  			Ext.apply(this, {
- 			height: 200,
+ 			height: 250,
  			plugins: [this.cellEditing],
  			store: storeDetalle,
  			columns: 
