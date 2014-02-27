@@ -101,7 +101,17 @@ public interface SiniestrosManager {
 
 	public List<GenericVO> getConsultaListaPlaza() throws ApplicationException;
 
-	public String guardaListaFacMesaControl(HashMap<String, Object> paramsFacMesaCtrl) throws ApplicationException;
+	public String guardaListaFacMesaControl(
+			String ntramite,
+			String nfactura,
+			String fefactura,
+			String cdtipser,
+			String cdpresta,
+			String ptimport,
+			String cdgarant,
+			String descporc,
+			String descnume
+			) throws ApplicationException;
 
 	public String guardaListaTworkSin(HashMap<String, Object> paramsTworkSin) throws ApplicationException;
 
@@ -152,4 +162,26 @@ public interface SiniestrosManager {
 	 * PKG_PRESINIESTRO.P_GET_TRAMITE_COMPLETO
 	 */
 	public Map<String,String> obtenerTramiteCompleto(String ntramite) throws Exception;
+	
+	/**
+	 * PKG_SATELITES.P_OBT_TFACMESCTRL
+	 * ntramite,
+		nfactura,
+		ffactura,
+		cdtipser,
+		DescServicio,
+		cdpresta,
+		NombreProveedor,
+		ptimport,
+		cdgarant,
+		DSGARANT,
+		DESCPORC,
+		DESCNUME
+	 */
+	public List<Map<String,String>> obtenerFacturasTramite(String ntramite) throws Exception;
+
+	/**
+	 * PKG_PRESINIESTRO.P_UPD_NMAUTSER_TWORKSIN
+	 */
+	public void actualizarAutorizacionTworksin(String ntramite, String nmpoliza, String cdperson,String nmautser) throws Exception;
 }

@@ -922,6 +922,8 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 				declareParameter(new SqlParameter("pv_cdpresta_i", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pv_ptimport_i", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pv_cdgarant_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_descporc_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_descnume_i", OracleTypes.VARCHAR));
 				declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 				declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
 				compile();
@@ -969,7 +971,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	{
 		protected GuardAltaSiniestroAutServicio(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SINIESTRO.P_GEN_SINIEST_TRA");
+			super(dataSource, "PKG_SINIESTRO.P_GEN_SINIEST_AUT");
 			declareParameter(new SqlParameter("pv_nmautser_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
@@ -1286,6 +1288,64 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
 			
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	/**
+	 * PKG_SATELITES.P_OBT_TFACMESCTRL
+	 * ntramite,
+		nfactura,
+		ffactura,
+		cdtipser,
+		DescServicio,
+		cdpresta,
+		NombreProveedor,
+		ptimport,
+		cdgarant,
+		DSGARANT,
+		DESCPORC,
+		DESCNUME
+	 */
+	@Override
+	public List<Map<String,String>> obtenerFacturasTramite(Map<String, String> params) throws Exception
+	{
+		Map<String, Object> mapResult = ejecutaSP(new ObtenerFacturasTramite(this.getDataSource()), params);
+		return (List<Map<String,String>>) mapResult.get("pv_registro_o");
+	}
+	
+	protected class ObtenerFacturasTramite extends StoredProcedure
+	{
+		protected ObtenerFacturasTramite(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SATELITES.P_OBT_TFACMESCTRL");
+			declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void actualizarAutorizacionTworksin(Map<String, String> params) throws Exception
+	{
+		ejecutaSP(new ActualizarAutorizacionTworksin(this.getDataSource()), params);
+	}
+	
+	protected class ActualizarAutorizacionTworksin extends StoredProcedure
+	{
+		protected ActualizarAutorizacionTworksin(DataSource dataSource)
+		{
+			super(dataSource, "PKG_PRESINIESTRO.P_UPD_NMAUTSER_TWORKSIN");
+			declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmautser_i", OracleTypes.VARCHAR));
+			
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
