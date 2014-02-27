@@ -620,7 +620,7 @@ Ext.onReady(function() {
         	    				    url     : _URL_CONSULTA_PROVEEDOR_MEDICO1
         	    				    ,params:{
         	    						'params.cdpresta' : Ext.getCmp('cdmedico1').getValue(),
-        	    						'params.tipoprov' : 'M'
+        	    						'params.tipoprov' : '15'
         	    	                }
         	    				    ,success : function (response)
         	    				    {

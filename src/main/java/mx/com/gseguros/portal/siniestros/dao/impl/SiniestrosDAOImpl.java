@@ -471,9 +471,6 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
         public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
         	AutorizacionServicioVO consulta = new AutorizacionServicioVO();
         	consulta.setNmautser(rs.getString("nmautser"));
-        	System.out.println("VALOR DE Nmautant");
-        	System.out.println(consulta.getNmautser());
-        	
             return consulta;
         }
     }

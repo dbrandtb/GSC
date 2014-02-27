@@ -226,7 +226,34 @@ public class SiniestrosAction extends PrincipalCoreAction{
 							//GUARDADO DE LOS DATOS PARA LAS TABLAS
 							siniestrosManager.guardaListaTDeTauts(paramsTDeTauts);
 				   		}
-						
+						if(params.get("claveTipoAutoriza").trim().equalsIgnoreCase("1") || params.get("claveTipoAutoriza").trim().equalsIgnoreCase("3"))
+						{
+							/* VALORES A ENVIAR A MESA DE CONTROL */
+							HashMap<String, Object> paramsMCAut = new HashMap<String, Object>();
+							paramsMCAut.put("pv_cdunieco_i",params.get("cdunieco"));
+							paramsMCAut.put("pv_cdramo_i",params.get("cdramo"));
+							paramsMCAut.put("pv_estado_i",params.get("estado"));
+							paramsMCAut.put("pv_nmpoliza_i",params.get("nmpoliza"));
+							paramsMCAut.put("pv_nmsuplem_i",null);
+							paramsMCAut.put("pv_cdsucadm_i",null);
+							paramsMCAut.put("pv_cdsucdoc_i",null);
+							paramsMCAut.put("pv_cdtiptra_i","14");
+							paramsMCAut.put("pv_ferecepc_i",null);
+							paramsMCAut.put("pv_cdagente_i",null);
+							paramsMCAut.put("pv_referencia_i",null);
+							paramsMCAut.put("pv_nombre_i",null);
+							paramsMCAut.put("pv_festatus_i",null);
+							paramsMCAut.put("pv_status_i","2");
+							paramsMCAut.put("pv_comments_i",params.get("dsnotas"));
+							paramsMCAut.put("pv_nmsolici_i",null);
+							paramsMCAut.put("pv_cdtipsit_i",null);
+							paramsMCAut.put("pv_otvalor01",lista.get(0).getNmautser());         		// No. de autorización
+							paramsMCAut.put("pv_otvalor02",params.get("fesolici"));             		// Fecha de Solicitud
+							paramsMCAut.put("pv_otvalor03",params.get("feautori"));             		// Fecha de autorizacion
+							paramsMCAut.put("pv_otvalor04",params.get("fevencim"));             		// Fecha de Vencimiento
+							paramsMCAut.put("pv_otvalor05",params.get("cdperson"));             		// CdPerson
+							WrapperResultados res = kernelManagerSustituto.PMovMesacontrol(paramsMCAut);
+						}
 					}
 			}catch( Exception e){
 				logger.error("Error al guardar la autorizaciï¿½n de servicio ",e);

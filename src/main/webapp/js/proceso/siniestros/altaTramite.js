@@ -247,7 +247,7 @@ Ext.onReady(function() {
                             if(jsonResponse.listaPoliza == null) {
                                 Ext.Msg.show({
                                     title: 'Aviso',
-                                    msg: 'No se encontraron datos.',
+                                    msg: 'No existen p&oacute;lizas para el asegurado elegido.',
                                     buttons: Ext.Msg.OK,
                                     icon: Ext.Msg.WARNING
                                 });
@@ -1079,7 +1079,7 @@ Ext.onReady(function() {
     						        else{
     						            Ext.Msg.show({
     						                title:'Error',
-    						                msg: 'Error al realizar los registros',
+    						                msg: 'Error en el guardado del alta de tr&aacute;mite',
     						                buttons: Ext.Msg.OK,
     						                icon: Ext.Msg.ERROR
     						            });

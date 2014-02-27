@@ -1483,7 +1483,8 @@ Ext.onReady(function() {
 							        for(var i=0;i<json.listaConsultaTablas.length;i++)
 				                    {
 				                        /*OBTENEMOS LOS VALORES*/
-				                        
+							        	console.log("OBTENEMOS LOS VALORES DE LA RESPUESTA DE LOS MEDICO");
+					        			console.log(json.listaConsultaTablas[i]);
 				                        if(json.listaConsultaTablas[i].cdtipaut==1)
 			                        	{
 				                        	var rec = new modelListadoTablas({
@@ -1842,8 +1843,8 @@ modificacionClausula = Ext.create('Ext.window.Window',
 				}
 	 			,
 	 			{
-	 				 xtype       : 'textfield',			fieldLabel : 'nmsuplem'				,id       : 'idNmsuplem',			name       : 'nmsuplem'
-					 ,allowBlank : false,				labelWidth: 170	,					hidden:true
+	 				 xtype       : 'textfield',			fieldLabel : 'nmsuplem'				,id       : 'idNmsuplem',			name       : 'nmsuplem',
+					 labelWidth: 170	,					hidden:true
 	 			}
 	 			,
 			 	{
@@ -2107,72 +2108,6 @@ modificacionClausula = Ext.create('Ext.window.Window',
 			 		           });
 			 		    }
 			 		}
-			 	},
-			 	{
-			 		text:'Generar Autorizaci&oacute;n',
-			 		icon:_CONTEXT+'/resources/fam3icons/icons/folder_database.png',
-			 		id:'generarAutorizacion',
-			 		handler:function()
-			 		{
-			 			// Verificamos el status de la autorización
-			 			Ext.Ajax.request
-			 		    ({
-			 		        url       : venDocUrlImpConrec
-			 		        ,params   :
-			 		        {
-			 		            'smap1.ntramite' : panDocInputNtramite
-			 		            //'smap1.ntramite' : '12'
-			 		        }
-			 		        ,success  : function(response)
-			 		        {
-			 		            var json=Ext.decode(response.responseText);
-			 		            if(json.success==true)
-			 		            {
-			 		                //window.setLoading(false);
-			 		                var numRand=Math.floor((Math.random()*100000)+1);
-			 		                var windowVerDocu=Ext.create('Ext.window.Window',
-			 		                {
-			 		                    title          : 'Contrarecibo'
-			 		                    ,width         : 700
-			 		                    ,height        : 500
-			 		                    ,collapsible   : true
-			 		                    ,titleCollapse : true
-			 		                    ,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
-			 		                                     +'src="'+panDocUrlViewDoc+'?idPoliza='+panDocInputNtramite+'&filename='+json.uploadKey+'">'
-			 		                                     +'</iframe>'
-			 		                    ,listeners     :
-			 		                    {
-			 		                        resize : function(win,width,height,opt){
-			 		                            debug(width,height);
-			 		                            $('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
-			 		                        }
-			 		                    }
-			 		                }).show();
-			 		                windowVerDocu.center();
-			 		            }
-			 		            else
-			 		            {
-			 		                window.setLoading(false);
-			 		                Ext.Msg.show({
-			 		                    title:'Error',
-			 		                    msg: 'Error al generar contrarecibo',
-			 		                    buttons: Ext.Msg.OK,
-			 		                    icon: Ext.Msg.ERROR
-			 		                });
-			 		            }
-			 		        }
-			 		        ,failure  : function()
-			 		        {
-			 		            window.setLoading(false);
-			 		            Ext.Msg.show({
-			 		                title:'Error',
-			 		                msg: 'Error de comunicaci&oacute;n',
-			 		                buttons: Ext.Msg.OK,
-			 		                icon: Ext.Msg.ERROR
-			 		            });
-			 		        }
-			 		    });
-			 		}
 			 	}
 		 	]		
 	});
@@ -2282,6 +2217,10 @@ modificacionClausula = Ext.create('Ext.window.Window',
 		
 		submitValues['datosTablas']=datosTablas;
 		panelInicialPrincipal.setLoading(true);
+		
+		console.log("VALOR A ENVIAR AL GUARDADO");
+		console.log(submitValues);
+		
         Ext.Ajax.request(
         {
             url: _URL_GUARDA_AUTORIZACION,
