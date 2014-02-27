@@ -247,7 +247,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 							paramsMCAut.put("pv_comments_i",params.get("dsnotas"));
 							paramsMCAut.put("pv_nmsolici_i",null);
 							paramsMCAut.put("pv_cdtipsit_i",null);
-							paramsMCAut.put("pv_otvalor01",lista.get(0).getNmautser());         		// No. de autorización
+							paramsMCAut.put("pv_otvalor01",lista.get(0).getNmautser());         		// No. de autorizaciï¿½n
 							paramsMCAut.put("pv_otvalor02",params.get("fesolici"));             		// Fecha de Solicitud
 							paramsMCAut.put("pv_otvalor03",params.get("feautori"));             		// Fecha de autorizacion
 							paramsMCAut.put("pv_otvalor04",params.get("fevencim"));             		// Fecha de Vencimiento
@@ -1178,6 +1178,15 @@ public void setMsgResult(String msgResult) {
 	    	gc.generaComponentes(componentes, true, false, false, true, false, false);
 	    	
 	    	imap.put("columnas",gc.getColumns());
+	    	
+	    	seccion = "FORM_EDICION";
+	    	
+	    	componentes = pantallasManager.obtenerComponentes(
+	    			null, null, null, null, null, cdrol, pantalla, seccion, null);
+	    	
+	    	gc.generaComponentes(componentes, true, false, true, false, false, false);
+	    	
+	    	imap.put("itemsEdicion",gc.getItems());
     	}
     	catch(Exception ex)
     	{
@@ -1315,6 +1324,51 @@ public void setMsgResult(String msgResult) {
     	logger.debug(""
     			+ "\n######                          ######"
     			+ "\n###### iniciarSiniestroTworksin ######"
+    			+ "\n######################################"
+    			+ "\n######################################"
+    			);
+    	return SUCCESS;
+    }
+    
+    /*
+    params:
+    	cdperson=517982, 
+    	nreclamo=, 
+    	feocurre=26/02/2014, 
+    	ntramite=1445, 
+    	cdicd=, 
+    	nmautser=12, 
+    	nombre=ALVAROJAIR,MARTINEZ VARELA, 
+    	nmpoliza=44, 
+    	_icd2=, 
+    	_icd=, 
+    	cdicd2=, 
+    	cdunieco=1000, 
+    	nmsinies=20
+     */
+    public String actualizarMultiSiniestro()
+    {
+    	logger.debug(""
+    			+ "\n######################################"
+    			+ "\n######################################"
+    			+ "\n###### actualizarMultiSiniestro ######"
+    			+ "\n######                          ######"
+    			);
+    	logger.debug("params: "+params);
+    	try
+    	{
+    		success = true;
+    		mensaje = "Siniestro actualizado";
+    	}
+    	catch(Exception ex)
+    	{
+    		logger.error("error al actualizar siniestro desde pantalla multisiniestro",ex);
+    		success = false;
+    		mensaje = ex.getMessage();
+    	}
+    	logger.debug(""
+    			+ "\n######                          ######"
+    			+ "\n###### actualizarMultiSiniestro ######"
     			+ "\n######################################"
     			+ "\n######################################"
     			);
