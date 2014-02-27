@@ -28,6 +28,7 @@
             var _11_urlGuardar                  = '<s:url namespace="/siniestros" action="guardarAfiliadosAfectados" />';
             var _11_urlIniciarSiniestroTworksin = '<s:url namespace="/siniestros" action="iniciarSiniestroTworksin"  />';
             var _11_urlActualizarSiniestro      = '<s:url namespace="/siniestros" action="actualizarMultiSiniestro"  />';
+            var _11_urlTabbedPanel              = '<s:url namespace="/siniestros" action="detalleSiniestro"          />';
             
             var _11_form;
             var _11_recordActivo;
@@ -230,6 +231,20 @@ function revisarDocumento(grid,rowIndex)
 	    {
 	        mensajeError('El siniestro no se puede continuar porque no tiene el visto bueno del &aacute;rea m&eacute;dica');
 	    }
+	}
+	
+	if(valido)
+	{
+		Ext.create('Ext.form.Panel').submit(
+        {
+        	url             : _11_urlTabbedPanel
+            ,standardSubmit : true
+            ,params         :
+            {
+                'params.ntramite'  : _11_params.NTRAMITE
+                ,'params.nmsinies' : record.get("IdReclamacion") 
+            }
+        });
 	}
 }
 
