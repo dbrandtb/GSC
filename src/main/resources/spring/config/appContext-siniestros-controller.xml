@@ -9,5 +9,10 @@
         <property name="kernelManagerSustituto" ref="kernelManagerSustituto"/>
         <property name="pantallasManager"   ref="pantallasManagerImpl"></property>
     </bean>
+    
+    <bean id="detalleSiniestroAction" class="mx.com.gseguros.portal.siniestros.controller.DetalleSiniestroAction" scope="prototype">
+        <property name="siniestrosManager" ref="siniestrosManagerImpl"/>
+    </bean>
+    
         
 </beans>

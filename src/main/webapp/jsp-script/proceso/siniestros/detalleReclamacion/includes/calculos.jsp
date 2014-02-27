@@ -7,7 +7,7 @@
             var esHospitalario = <s:property value="esHospitalario" />;
             var loadForm = <s:property value='loadForm' escapeHtml='false'/>;
             //var _URL_HeaderCalculos	= '<s:url namespace="/siniestros" action="obtenHeaderCalculos" />';
-            var _URL_ListaCalculos		= '<s:url namespace="/siniestros" action="loadListaCalculos" />';
+            var _URL_ListaCalculos		= '<s:url namespace="/siniestros" action="obtieneCalculos" />';
             
 	Ext.onReady(function() {
 
@@ -55,7 +55,7 @@
                         url: _URL_ListaCalculos,
                         reader: {
                             type: 'json',
-                            root: 'loadList'
+                            root: 'listado'
                         }
                     }
                 });

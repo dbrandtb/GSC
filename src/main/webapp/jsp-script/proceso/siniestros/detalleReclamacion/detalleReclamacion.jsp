@@ -8,10 +8,10 @@
         
         <script type="text/javascript">
             var _CONTEXT = '${ctx}';
-            var _URL_LOADER_CALCULOS                 = '<s:url namespace="/siniestros" action="includes/calculosReclamaciones" />';
-            var _URL_LOADER_INFO_GRAL_RECLAMACION = '<s:url namespace="/siniestros" action="includes/loadInfoGeneralReclamacion" />';
-            var _URL_LOADER_REV_ADMIN = '<s:url namespace="/siniestros" action="includes/revAdmin" />';
             
+            var _URL_LOADER_INFO_GRAL_RECLAMACION = '<s:url namespace="/siniestros" action="includes/loadInfoGeneralReclamacion" />';
+            var _URL_LOADER_REV_ADMIN             = '<s:url namespace="/siniestros" action="includes/revAdmin" />';
+            var _URL_LOADER_CALCULOS              = '<s:url namespace="/siniestros" action="includes/calculosReclamaciones" />';
         </script>
         <!-- <script type="text/javascript" src="${ctx}/resources/scripts/util/extjs4_utils.js"></script>-->
         <script type="text/javascript" src="${ctx}/js/proceso/siniestros/detalleReclamacion/detalleReclamacion.js"></script>
