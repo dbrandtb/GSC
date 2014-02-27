@@ -228,7 +228,7 @@
 	        <result name="success" type="json"/>
 		</action>-->
         
-        <action name="altaTramite">
+        <action name="includes/altaTramite">
     		<result>/jsp-script/proceso/siniestros/altaTramite.jsp</result>
 		</action>
 		
@@ -244,10 +244,6 @@
     		<result>/jsp-script/proceso/siniestros/detalleReclamacion/detalleReclamacion.jsp</result>
 		</action>
         
-        <action name="altaTramite">
-    		<result>/jsp-script/proceso/siniestros/altaTramite.jsp</result>
-		</action>
-		
 		<action name="autorizacionServicios">
     		<result>/jsp-script/proceso/siniestros/autorizacionServicios.jsp</result>
 		</action>
@@ -257,23 +253,23 @@
 		</action>
 		
 		
-		<action name="rechazoReclamaciones" class="siniestrosAction"  method="execute">
+		<action name="includes/rechazoReclamaciones" class="siniestrosAction"  method="execute">
     		<result>/jsp-script/proceso/siniestros/rechazoReclamaciones.jsp</result>
 		</action>
 		
-		<action name="historialReclamaciones">
+		<action name="includes/historialReclamaciones">
     		<result>/jsp-script/proceso/siniestros/historialReclamaciones.jsp</result>
 		</action>
 		
-		<action name="verCoberturas" class="siniestrosAction" method="verCoberturas">
+		<action name="includes/verCoberturas" class="siniestrosAction" method="verCoberturas">
     		<result>/jsp-script/proceso/siniestros/verCoberturas.jsp</result>
 		</action>
 		
-		<action name="verAutorizacionServicio" class="siniestrosAction" method="verAutorizacionServicio">
+		<action name="includes/verAutorizacionServicio" class="siniestrosAction" method="verAutorizacionServicio">
     		<result>/jsp-script/proceso/siniestros/verAutorizacionServicios.jsp</result>
 		</action>
 		
-		<action name="revisionDocumentos"  class="siniestrosAction" method="execute">
+		<action name="includes/revisionDocumentos"  class="siniestrosAction" method="execute">
     		<result>/jsp-script/proceso/siniestros/revisionDocumentos.jsp</result>
 		</action>
 		

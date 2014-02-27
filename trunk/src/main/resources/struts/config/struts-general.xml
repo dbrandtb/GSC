@@ -12,7 +12,7 @@
             <result name="success">/resources/scripts/consultaPolizas/includes/consultaRecibos.jsp</result>
         </action>
     
-        <action name="obtieneRecibos" class="recibosAction" method="obtieneRecibos">
+        <action name="includes/obtieneRecibos" class="recibosAction" method="obtieneRecibos">
             <result type="json"/>
         </action>
         

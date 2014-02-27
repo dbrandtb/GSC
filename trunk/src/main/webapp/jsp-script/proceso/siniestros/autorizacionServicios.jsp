@@ -18,8 +18,8 @@
             var venDocUrlImpConrec   = '<s:url namespace ="/documentos" action="generarContrarecibo" />';
             
             var _URL_TIPO_AUTORIZACION				= _CONTEXT + '/js/proceso/siniestros/tiposAutorizacion.json';
-            var _HISTORIAL_RECLAMACIONES    		= '<s:url namespace="/siniestros"      	action="historialReclamaciones" />';
-            var _VER_COBERTURAS		    			= '<s:url namespace="/siniestros"      	action="verCoberturas" />';
+            var _HISTORIAL_RECLAMACIONES    		= '<s:url namespace="/siniestros"      	action="includes/historialReclamaciones" />';
+            var _VER_COBERTURAS		    			= '<s:url namespace="/siniestros"      	action="includes/verCoberturas" />';
             var _URL_LISTADO_ASEGURADO          	= '<s:url namespace="/siniestros"       action="consultaListaAsegurado" />';
             var _URL_CONSULTA_LISTADO_AUTORIZACION 	= '<s:url namespace="/siniestros" 		action="consultaListaAutorizacion" />';
             var _URL_CONSULTA_AUTORIZACION_ESP 		= '<s:url namespace="/siniestros" 		action="consultaAutorizacionServicio" />';
@@ -36,7 +36,7 @@
             var _URL_LISTADO_CONCEP_EQUIP    		= '<s:url namespace="/siniestros" action="consultaListaTDeTauts" />';
             
             var _URL_GUARDA_AUTORIZACION			= '<s:url namespace="/siniestros" action="guardaAutorizacionServicio" />';
-            var _VER_AUTORIZACION_SERVICIO 			= '<s:url namespace="/siniestros"      	action="verAutorizacionServicio" />';
+            var _VER_AUTORIZACION_SERVICIO 			= '<s:url namespace="/siniestros"      	action="includes/verAutorizacionServicio" />';
             var _UR_LISTA_PLAZAS 					= '<s:url namespace="/siniestros"      	action="consultaListaPlazas"/>';
             
         </script>

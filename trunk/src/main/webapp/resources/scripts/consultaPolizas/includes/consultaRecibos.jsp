@@ -17,7 +17,7 @@ Ext.onReady(function(){
     Ext.util.Format.thousandSeparator = ',';
     Ext.util.Format.decimalSeparator = '.';
 	
-	var _URL_CONSULTA_RECIBOS        = '<s:url namespace="/general" action="obtieneRecibos" />';
+	var _URL_CONSULTA_RECIBOS        = '<s:url namespace="/general" action="includes/obtieneRecibos" />';
     var _URL_CONSULTA_DETALLE_RECIBO = '<s:url namespace="/general" action="obtieneDetalleRecibo" />';
 	var pRcb_cdunieco                = '<s:property value="params.cdunieco" />';
 	var pRcb_cdramo                  = '<s:property value="params.cdramo" />';
