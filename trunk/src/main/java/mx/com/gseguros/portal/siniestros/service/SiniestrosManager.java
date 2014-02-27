@@ -219,5 +219,36 @@ public interface SiniestrosManager {
 			String tipautor,
 			String comments,
 			String accion) throws Exception;
-			
+	
+	public void P_MOV_MSINIVAL(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsuplem,
+			String nmsituac,
+			String aaapertu,
+			String status,
+			String nmsinies,
+			String nfactura,
+			String cdgarant,
+			String cdconval,
+			String cdconcep,
+			String idconcep,
+			String cdcapita,
+			String nmordina,
+			Date   femovimi,
+			String cdmoneda,
+			String ptprecio,
+			String cantidad,
+			String destopor,
+			String destoimp,
+			String ptimport,
+			String ptrecobr,
+			String nmanno,
+			String nmapunte,
+			String userregi,
+			Date   feregist,
+			String accion) throws Exception;
+	
 }

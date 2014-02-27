@@ -1477,4 +1477,111 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
+	
+	public void P_MOV_MSINIVAL(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsuplem,
+			String nmsituac,
+			String aaapertu,
+			String status,
+			String nmsinies,
+			String nfactura,
+			String cdgarant,
+			String cdconval,
+			String cdconcep,
+			String idconcep,
+			String cdcapita,
+			String nmordina,
+			Date   femovimi,
+			String cdmoneda,
+			String ptprecio,
+			String cantidad,
+			String destopor,
+			String destoimp,
+			String ptimport,
+			String ptrecobr,
+			String nmanno,
+			String nmapunte,
+			String userregi,
+			Date   feregist,
+			String accion) throws Exception
+	{
+		Map<String,Object>p=new HashMap<String,Object>();
+		p.put("pv_cdunieco_i" , cdunieco);
+		p.put("pv_cdramo_i"   , cdramo);
+		p.put("pv_estado_i"   , estado);
+		p.put("pv_nmpoliza_i" , nmpoliza);
+		p.put("pv_nmsuplem_i" , nmsuplem);
+		p.put("pv_nmsituac_i" , nmsituac);
+		p.put("pv_aaapertu_i" , aaapertu);
+		p.put("pv_status_i"   , status);
+		p.put("pv_nmsinies_i" , nmsinies);
+		p.put("pv_nfactura_i" , nfactura);
+		p.put("pv_cdgarant_i" , cdgarant);
+		p.put("pv_cdconval_i" , cdconval);
+		p.put("pv_cdconcep_i" , cdconcep);
+		p.put("pv_idconcep_i" , idconcep);
+		p.put("pv_cdcapita_i" , cdcapita);
+		p.put("pv_nmordina_i" , nmordina);
+		p.put("pv_femovimi_i" , femovimi);
+		p.put("pv_cdmoneda_i" , cdmoneda);
+		p.put("pv_ptprecio_i" , ptprecio);
+		p.put("pv_cantidad_i" , cantidad);
+		p.put("pv_destopor_i" , destopor);
+		p.put("pv_destoimp_i" , destoimp);
+		p.put("pv_ptimport_i" , ptimport);
+		p.put("pv_ptrecobr_i" , ptrecobr);
+		p.put("pv_nmanno_i"   , nmanno);
+		p.put("pv_nmapunte_i" , nmapunte);
+		p.put("pv_userregi_i" , userregi);
+		p.put("pv_feregist_i" , feregist);
+		p.put("pv_accion_i"   , accion);
+		logger.debug("P_MOV_MSINIVAL params: "+p);
+		ejecutaSP(new PMOVMSINIVAL(this.getDataSource()), p);
+		logger.debug("P_MOV_MSINIVAL end");
+	}
+	
+	protected class PMOVMSINIVAL extends StoredProcedure
+	{
+		protected PMOVMSINIVAL(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SINIESTRO.P_MOV_MSINIVAl");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsituac_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_aaapertu_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_status_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsinies_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nfactura_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdgarant_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdconval_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdconcep_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_idconcep_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdcapita_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmordina_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_femovimi_i" , OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_cdmoneda_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ptprecio_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cantidad_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_destopor_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_destoimp_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ptimport_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ptrecobr_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmanno_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmapunte_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_userregi_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_feregist_i" , OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_accion_i"   , OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
