@@ -124,5 +124,26 @@ public interface SiniestrosDAO {
 	 * PKG_PRESINIESTRO.P_GET_TRAMITE_COMPLETO
 	 */
 	public Map<String,String> obtenerTramiteCompleto(Map<String, String> params) throws Exception;
+	
+	/**
+	 * PKG_SATELITES.P_OBT_TFACMESCTRL
+	 * ntramite,
+		nfactura,
+		ffactura,
+		cdtipser,
+		DescServicio,
+		cdpresta,
+		NombreProveedor,
+		ptimport,
+		cdgarant,
+		DSGARANT,
+		DESCPORC,
+		DESCNUME
+	 */
+	public List<Map<String,String>> obtenerFacturasTramite(Map<String, String> params) throws Exception;
 
+	/**
+	 * PKG_PRESINIESTRO.P_UPB_NMAUTSER_TWORKSIN
+	 */
+	public void actualizarAutorizacionTworksin(Map<String,String>params) throws Exception;
 }

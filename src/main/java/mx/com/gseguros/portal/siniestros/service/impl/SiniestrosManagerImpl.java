@@ -289,9 +289,29 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 
 	
 	@Override
-	public String guardaListaFacMesaControl(HashMap<String, Object> paramsFacMesaCtrl) throws ApplicationException {
+	public String guardaListaFacMesaControl(
+			String ntramite,
+			String nfactura,
+			String fefactura,
+			String cdtipser,
+			String cdpresta,
+			String ptimport,
+			String cdgarant,
+			String descporc,
+			String descnume) throws ApplicationException {
 		// TODO Auto-generated method stub
 		try {
+			HashMap<String,Object> paramsFacMesaCtrl=new HashMap<String,Object>();
+			paramsFacMesaCtrl.put("pv_ntramite_i",ntramite);
+			paramsFacMesaCtrl.put("pv_nfactura_i",nfactura);
+			paramsFacMesaCtrl.put("pv_ffactura_i",fefactura);
+			paramsFacMesaCtrl.put("pv_cdtipser_i",cdtipser);
+			paramsFacMesaCtrl.put("pv_cdpresta_i",cdpresta);
+			paramsFacMesaCtrl.put("pv_ptimport_i",ptimport);
+			paramsFacMesaCtrl.put("pv_cdgarant_i",cdgarant);
+			paramsFacMesaCtrl.put("pv_descporc_i",descporc);
+			paramsFacMesaCtrl.put("pv_descnume_i",descnume);
+			log.debug("guardaListaFacMesaControl params: "+paramsFacMesaCtrl);
 			return siniestrosDAO.guardaFacMesaControl(paramsFacMesaCtrl);
 		} catch (DaoException daoExc) {
 			throw new ApplicationException(daoExc.getMessage(), daoExc);
@@ -451,5 +471,47 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		log.debug("obtenerTramiteCompleto tramite: "+tramite);
 		return tramite;
 	}
+	
+	/**
+	 * PKG_SATELITES.P_OBT_TFACMESCTRL
+	 * ntramite,
+		nfactura,
+		ffactura,
+		cdtipser,
+		DescServicio,
+		cdpresta,
+		NombreProveedor,
+		ptimport,
+		cdgarant,
+		DSGARANT,
+		DESCPORC,
+		DESCNUME
+	 */
+	@Override
+	public List<Map<String,String>> obtenerFacturasTramite(String ntramite) throws Exception
+	{
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("pv_ntramite_i" , ntramite);
+		log.debug("obtenerFacturasTramite params: "+params);
+		List<Map<String,String>> lista = siniestrosDAO.obtenerFacturasTramite(params);
+		if(lista==null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		log.debug("obtenerFacturasTramite lista size: "+lista.size());
+		return lista;
+	}
+	
+	@Override
+	public void actualizarAutorizacionTworksin(String ntramite, String nmpoliza, String cdperson,String nmautser) throws Exception
+	{
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("pv_ntramite_i",ntramite);
+		params.put("pv_nmpoliza_i",nmpoliza);
+		params.put("pv_cdperson_i",cdperson);
+		params.put("pv_nmautser_i",nmautser);
+		log.debug("actualizarAutorizacionTworksin params: "+params);
+		siniestrosDAO.actualizarAutorizacionTworksin(params);
+		log.debug("actualizarAutorizacionTworksin end");
+	}
 }
-

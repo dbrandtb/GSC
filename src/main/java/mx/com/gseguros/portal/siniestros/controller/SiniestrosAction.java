@@ -306,31 +306,34 @@ public class SiniestrosAction extends PrincipalCoreAction{
 								paramsTworkSin.put("pv_nmautser_i",null);
 						        siniestrosManager.guardaListaTworkSin(paramsTworkSin);
 						    }
-							
-							HashMap<String, Object> paramsFacMesaCtrl = new HashMap<String, Object>();
-					        paramsFacMesaCtrl.put("pv_ntramite_i",msgResult);									//completar con el valor anterior
-					        paramsFacMesaCtrl.put("pv_nfactura_i",params.get("txtNoFactura"));
-					        paramsFacMesaCtrl.put("pv_ffactura_i",params.get("dtFechaFactura"));
-					        paramsFacMesaCtrl.put("pv_cdtipser_i",params.get("cmbTipoAtencion"));
-					        paramsFacMesaCtrl.put("pv_cdpresta_i",params.get("cmbProveedor"));
-					        paramsFacMesaCtrl.put("pv_ptimport_i",params.get("txtImporte"));
-					        paramsFacMesaCtrl.put("pv_cdgarant_i",null);
-					        siniestrosManager.guardaListaFacMesaControl(paramsFacMesaCtrl);
-							
+					        
+					        siniestrosManager.guardaListaFacMesaControl(
+					        		msgResult, 
+					        		params.get("txtNoFactura"), 
+					        		params.get("dtFechaFactura"), 
+					        		params.get("cmbTipoAtencion"), 
+					        		params.get("cmbProveedor"), 
+					        		params.get("txtImporte"), 
+					        		null, 
+					        		null, 
+					        		null
+					        		);
 							
 						}else{
 							
 							for(int i=0;i<datosTablas.size();i++)
 						    {
-						        HashMap<String, Object> paramsFacMesaCtrl = new HashMap<String, Object>();
-						        paramsFacMesaCtrl.put("pv_ntramite_i",msgResult);									//completar con el valor anterior
-						        paramsFacMesaCtrl.put("pv_nfactura_i",datosTablas.get(i).get("nfactura"));
-						        paramsFacMesaCtrl.put("pv_ffactura_i",datosTablas.get(i).get("ffactura"));
-						        paramsFacMesaCtrl.put("pv_cdtipser_i",datosTablas.get(i).get("cdtipser"));
-						        paramsFacMesaCtrl.put("pv_cdpresta_i",datosTablas.get(i).get("cdpresta"));
-						        paramsFacMesaCtrl.put("pv_ptimport_i",datosTablas.get(i).get("ptimport"));
-						        paramsFacMesaCtrl.put("pv_cdgarant_i",null);
-						        siniestrosManager.guardaListaFacMesaControl(paramsFacMesaCtrl);
+						        siniestrosManager.guardaListaFacMesaControl(
+						        		msgResult, 
+						        		datosTablas.get(i).get("nfactura"), 
+						        		datosTablas.get(i).get("ffactura"), 
+						        		datosTablas.get(i).get("cdtipser"), 
+						        		datosTablas.get(i).get("cdpresta"), 
+						        		datosTablas.get(i).get("ptimport"), 
+						        		null, 
+						        		null, 
+						        		null
+						        		);
 						    }
 							HashMap<String, Object> paramsTworkSinPagRem = new HashMap<String, Object>();
 					        paramsTworkSinPagRem.put("pv_nmtramite_i",msgResult);
@@ -1057,7 +1060,6 @@ public void setMsgResult(String msgResult) {
     		String cdramo   = params.get("cdramo");
     		String cdtipsit = params.get("cdtipsit");
     		String cdgarant = params.get("cdgarant");
-    		String cdsubgar = params.get("cdsubgar");
     		String ntramite = params.get("ntramite");
     		
     		Map<String,Object> otvalor = new HashMap<String,Object>();
@@ -1065,7 +1067,6 @@ public void setMsgResult(String msgResult) {
     		otvalor.put("pv_cdramo_i"   , cdramo);
     		otvalor.put("pv_cdtipsit_i" , cdtipsit);
     		otvalor.put("pv_otvalor12_i"  , cdgarant);
-    		otvalor.put("pv_otvalor13_i"  , cdsubgar);
     		siniestrosManager.actualizaOTValorMesaControl(otvalor);
     		
     		success = true;
@@ -1107,6 +1108,18 @@ public void setMsgResult(String msgResult) {
     		}
     		
     		params = (HashMap<String, String>) siniestrosManager.obtenerTramiteCompleto(ntramite);
+    		
+    		List<Map<String,String>> facturas = siniestrosManager.obtenerFacturasTramite(ntramite);
+    		
+    		if(facturas==null || facturas.size()==0)
+    		{
+    			throw new Exception("No se encuentra la factura");
+    		}
+    		
+    		Map<String,String> factura = facturas.get(0);
+    		
+    		params.put("DESCPORC",factura.get("DESCPORC"));
+    		params.put("DESCNUME",factura.get("DESCNUME"));
     		
     		UserVO usuario  = (UserVO)session.get("USUARIO");
 	    	String cdrol    = usuario.getRolActivo().getObjeto().getValue();
@@ -1189,16 +1202,20 @@ public void setMsgResult(String msgResult) {
     		String cdprove  = params.get("OTVALOR11");
     		String cdgarant = params.get("OTVALOR12");
     		String cdsubgar = params.get("OTVALOR13");
+    		String descporc = params.get("DESCPORC");
+    		String descnume = params.get("DESCNUME");
     		
-    		HashMap<String,Object> paramsFactura = new HashMap<String,Object>();
-    		paramsFactura.put("pv_ntramite_i" , ntramite);
-    		paramsFactura.put("pv_nfactura_i" , factura);
-    		paramsFactura.put("pv_ffactura_i" , feFactu);
-    		paramsFactura.put("pv_cdtipser_i" , tipoate);
-    		paramsFactura.put("pv_cdpresta_i" , cdprove);
-    		paramsFactura.put("pv_ptimport_i" , importe);
-    		paramsFactura.put("pv_cdgarant_i" , cdgarant);
-    		siniestrosManager.guardaListaFacMesaControl(paramsFactura);
+    		siniestrosManager.guardaListaFacMesaControl(
+    				ntramite, 
+    				factura, 
+    				feFactu, 
+    				tipoate, 
+    				cdprove, 
+    				importe, 
+    				cdgarant, 
+    				descporc, 
+    				descnume
+    				);
     		
     		Map<String,Object> otvalor = new HashMap<String,Object>();
     		otvalor.put("pv_ntramite_i"  , ntramite);
@@ -1250,6 +1267,15 @@ public void setMsgResult(String msgResult) {
     	logger.debug("params: "+params);
     	try
     	{
+    		String nmautser = params.get("nmautser");
+    		String cdperson = params.get("cdperson");
+    		String nmpoliza = params.get("nmpoliza");
+    		String ntramite = params.get("ntramite");
+    		
+    		siniestrosManager.actualizarAutorizacionTworksin(ntramite,nmpoliza,cdperson,nmautser);
+    		
+    		siniestrosManager.getAltaSiniestroAutServicio(nmautser);
+    		
     		mensaje = "Se ha asociado el siniestro con la autorizaci&oacute;n";
     		success=true;
     	}
