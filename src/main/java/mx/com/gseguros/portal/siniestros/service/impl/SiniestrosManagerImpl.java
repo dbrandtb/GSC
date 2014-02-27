@@ -1,6 +1,7 @@
 package mx.com.gseguros.portal.siniestros.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,13 +14,13 @@ import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
 import mx.com.gseguros.portal.siniestros.model.CoberturaPolizaVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaManteniVO;
-import mx.com.gseguros.portal.siniestros.model.ListaFacturasVO;
-import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaPorcentajeVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaProveedorVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaTDETAUTSVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaTTAPVAATVO;
 import mx.com.gseguros.portal.siniestros.model.DatosSiniestroVO;
+import mx.com.gseguros.portal.siniestros.model.ListaFacturasVO;
+import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 
 public class SiniestrosManagerImpl implements SiniestrosManager {
@@ -429,6 +430,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	 * 'SALUD VITAL' DSRAMO,
 	 * 'SL' CDTIPSIT,
 	 * 'SALUD VITAL' DSTIPSIT,
+	 * status,
 	 * 'M' ESTADO,
 	 * 500 NMPOLIZA,
 	 * 'S' VOBOAUTO,
@@ -441,7 +443,8 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	 * 15 COPAGO,
 	 * 3500 PTIMPORT,
 	 * 'S' AUTRECLA,
-	 * 54647 NMRECLAM
+	 * 54647 NMRECLAM,
+	 * aaapertu
 	 */
 	@Override
 	public List<Map<String,String>> listaSiniestrosTramite(String ntramite) throws Exception
@@ -513,5 +516,45 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		log.debug("actualizarAutorizacionTworksin params: "+params);
 		siniestrosDAO.actualizarAutorizacionTworksin(params);
 		log.debug("actualizarAutorizacionTworksin end");
+	}
+	
+	@Override
+	public void actualizaMsinies(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsituac,
+			String nmsuplem,
+			String status,
+			String aaapertu,
+			String nmsinies,
+			Date feocurre,
+			String cdicd,
+			String cdicd2,
+			String nreclamo) throws Exception
+	{
+		siniestrosDAO.actualizaMsinies(cdunieco,cdramo,estado,nmpoliza,nmsituac,nmsuplem,status,aaapertu,nmsinies,feocurre,cdicd,cdicd2,nreclamo);
+	}
+	
+	@Override
+	public void P_MOV_MAUTSINI(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsuplem,
+			String nmsituac,
+			String aaapertu,
+			String status,
+			String nmsinies,
+			String nfactura,
+			String areaauto,
+			String swautori,
+			String tipautor,
+			String comments,
+			String accion) throws Exception
+	{
+		siniestrosDAO.P_MOV_MAUTSINI(cdunieco,cdramo,estado,nmpoliza,nmsuplem,nmsituac,aaapertu,status,nmsinies,nfactura,areaauto,swautori,tipautor,comments,accion);
 	}
 }

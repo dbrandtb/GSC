@@ -39,6 +39,11 @@ public interface Constantes {
     
     public static final String STATUS_VIVO   = "V";
     public static final String STATUS_MUERTO = "M";
+    
+    public static final String MAUTSINI_AREA_RECLAMACIONES = "RE";
+    public static final String MAUTSINI_AREA_MEDICA        = "ME";
+    public static final String MAUTSINI_SINIESTRO          = "S";
+    public static final String MAUTSINI_FACTURA            = "F";
 	
     /**
      * Mensaje Atributo Variable cuando tiene hijos asociados
