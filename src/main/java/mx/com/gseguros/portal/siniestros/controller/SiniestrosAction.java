@@ -4,6 +4,7 @@ import java.io.File;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +18,10 @@ import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
+import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.portal.general.util.Rango;
+import mx.com.gseguros.portal.general.util.Rol;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
@@ -46,6 +50,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 	private boolean success;
     private SiniestrosManager siniestrosManager;
     private KernelManagerSustituto kernelManagerSustituto;
+    private transient CatalogosManager catalogosManager;
     private PantallasManager       pantallasManager;
     private HashMap<String,String> params;
     private HashMap<String,Object> paramsO;
@@ -66,7 +71,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
     private List<HashMap<String,String>> datosTablas;
     private List<PolizaVigenteVO> listaPoliza;
     private String msgResult;
-    
+    private String diasMaximos;
     private List<HashMap<String, String>> loadList;
     private List<HashMap<String, String>> saveList;
     private List<GenericVO> listaPlazas;
@@ -301,6 +306,11 @@ public class SiniestrosAction extends PrincipalCoreAction{
 					parMesCon.put("pv_otvalor09",params.get("cmbAseguradoAfectado"));					// CDPERSON
 					parMesCon.put("pv_otvalor10",params.get("dtFechaOcurrencia"));						// FECHA OCURRENCIA
 					parMesCon.put("pv_otvalor11",params.get("cmbProveedor"));
+					if(params.get("cmbProveedor").toString().length() > 0){
+						parMesCon.put("pv_otvalor13",Rol.CLINICA.getCdrol());
+					}
+					
+					
 					
 					WrapperResultados res = kernelManagerSustituto.PMovMesacontrol(parMesCon);
 					
@@ -935,6 +945,25 @@ public void setMsgResult(String msgResult) {
 	   	return SUCCESS;
    }
    
+   public String consultaNumeroDias(){
+	   	logger.debug(" **** Entrando al metodo para obtener los numeros  de dias ****");
+	   	try {
+	   		logger.debug("VALORES A OCUPAR");
+	   		
+	   		logger.debug(params.get("cdramo"));
+	   		logger.debug(params.get("cdtipsit"));
+	   		logger.debug(TipoTramite.SINIESTRO.getCodigo());
+	   		logger.debug(Rango.DIAS.getClave());
+	   		logger.debug("FIN DE VALORES A OCUPAR");
+	   		diasMaximos= catalogosManager.obtieneCantidadMaxima(params.get("cdramo"), params.get("cdtipsit"), TipoTramite.SINIESTRO, Rango.DIAS);
+	   	}catch( Exception e){
+	   		logger.error("Error al consultar la Lista de los asegurados ",e);
+	   		return SUCCESS;
+	   	}
+	   	success = true;
+	   	return SUCCESS;
+   }
+   
     public String pantallaSeleccionCobertura()
     {
     	logger.debug(""
@@ -1243,6 +1272,8 @@ public void setMsgResult(String msgResult) {
     	return SUCCESS;
     }
     
+    
+    
     /*
     params:
     	_icd: ""
@@ -1295,6 +1326,10 @@ public void setMsgResult(String msgResult) {
     public void setListaFacturas(List<ListaFacturasVO> listaFacturas) {
 	this.listaFacturas = listaFacturas;
 }
+
+	public void setCatalogosManager(CatalogosManager catalogosManager) {
+		this.catalogosManager = catalogosManager;
+	}
 
 	public List<HashMap<String, String>> getDatosTablas() {
 		return datosTablas;
@@ -1544,5 +1579,11 @@ public void setMsgResult(String msgResult) {
 	public void setSlist1(List<Map<String, String>> slist1) {
 		this.slist1 = slist1;
 	}
-	
+	public String getDiasMaximos() {
+		return diasMaximos;
+	}
+
+	public void setDiasMaximos(String diasMaximos) {
+		this.diasMaximos = diasMaximos;
+	}
 }

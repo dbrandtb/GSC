@@ -395,7 +395,16 @@
             <result type="json"></result>
         </action>
         
-        
+        <action name="consultaNumeroDias" class="siniestrosAction"
+			method="consultaNumeroDias">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success,
+					diasMaximos
+				</param>
+			</result>
+		</action>
         
 		<action name="detalleSiniestro">
     		<result>/jsp-script/proceso/siniestros/detalleReclamacion/detalleReclamacion.jsp</result>

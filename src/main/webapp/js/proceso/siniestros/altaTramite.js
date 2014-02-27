@@ -134,7 +134,7 @@ Ext.onReady(function() {
     
     var cmbOficinaReceptora = Ext.create('Ext.form.field.ComboBox',
 	{
-	    fieldLabel : 'Oficina emisora',				id:'cmbOficReceptora',			name      : 'smap1.pv_cdsucadm_i',
+	    fieldLabel : 'Oficina receptora',				id:'cmbOficReceptora',			name      : 'smap1.pv_cdsucadm_i',
 	    allowBlank : false,							editable   : true,				displayField : 'value',
 	    labelWidth : 250,		   					 emptyText:'Seleccione...',		width		 : 500,
 	    valueField   : 'key',						forceSelection : true,			queryMode      :'local',
@@ -1132,7 +1132,6 @@ Ext.onReady(function() {
 		Ext.getCmp('idNmsolici').setValue('');
 		Ext.getCmp('idNmsuplem').setValue('');
 		Ext.getCmp('idCdtipsit').setValue('');
-		
     	return true;
 	}
 	

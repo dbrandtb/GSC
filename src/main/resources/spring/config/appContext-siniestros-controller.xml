@@ -8,6 +8,7 @@
         <property name="siniestrosManager" ref="siniestrosManagerImpl"/>
         <property name="kernelManagerSustituto" ref="kernelManagerSustituto"/>
         <property name="pantallasManager"   ref="pantallasManagerImpl"></property>
+        <property name="catalogosManager"   ref="catalogosManagerImpl"></property>
     </bean>
     
     <bean id="detalleSiniestroAction" class="mx.com.gseguros.portal.siniestros.controller.DetalleSiniestroAction" scope="prototype">
