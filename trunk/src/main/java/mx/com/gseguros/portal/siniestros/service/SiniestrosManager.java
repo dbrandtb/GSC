@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.siniestros.service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -142,6 +143,7 @@ public interface SiniestrosManager {
 	 * 'SALUD VITAL' DSRAMO,
 	 * 'SL' CDTIPSIT,
 	 * 'SALUD VITAL' DSTIPSIT,
+	 * status,
 	 * 'M' ESTADO,
 	 * 500 NMPOLIZA,
 	 * 'S' VOBOAUTO,
@@ -154,7 +156,8 @@ public interface SiniestrosManager {
 	 * 15 COPAGO,
 	 * 3500 PTIMPORT,
 	 * 'S' AUTRECLA,
-	 * 54647 NMRECLAM
+	 * 54647 NMRECLAM,
+	 * aaapertu
 	 */
 	public List<Map<String,String>> listaSiniestrosTramite(String ntramite) throws Exception;
 	
@@ -184,4 +187,37 @@ public interface SiniestrosManager {
 	 * PKG_PRESINIESTRO.P_UPD_NMAUTSER_TWORKSIN
 	 */
 	public void actualizarAutorizacionTworksin(String ntramite, String nmpoliza, String cdperson,String nmautser) throws Exception;
+	
+	public void actualizaMsinies(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsitauc,
+			String nmsuplem,
+			String status,
+			String aaapertu,
+			String nmsinies,
+			Date feocurre,
+			String cdicd,
+			String cdicd2,
+			String nreclamo) throws Exception;
+	
+	public void P_MOV_MAUTSINI(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsuplem,
+			String nmsituac,
+			String aaapertu,
+			String status,
+			String nmsinies,
+			String nfactura,
+			String areaauto,
+			String swautori,
+			String tipautor,
+			String comments,
+			String accion) throws Exception;
+			
 }

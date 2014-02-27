@@ -192,19 +192,19 @@ public class GeneradorCampos
         
         if(this.conField)
         {
-        	log.debug(fields.toString());
+        	//log.debug(fields.toString());
         }
         if(this.conItem)
         {
-        	log.debug(items.toString());
+        	//log.debug(items.toString());
         }
         if(this.conColumn)
         {
-        	log.debug(columns.toString());
+        	//log.debug(columns.toString());
         }
         if(this.conButton)
         {
-        	log.debug(buttons.toString());
+        	//log.debug(buttons.toString());
         }
     }
     

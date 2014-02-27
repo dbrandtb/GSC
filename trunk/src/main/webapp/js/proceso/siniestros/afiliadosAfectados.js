@@ -97,6 +97,13 @@ Ext.onReady(function() {
 					,'COMMENAR'
 					,'AUTMEDIC'
 					,'COMMENME'
+					,{name:'AAAPERTU',type:'int'}
+					,'STATUS'
+					,'CDUNIECO'
+					,'CDRAMO'
+					,'NMSUPLEM'
+					,'NMSITUAC'
+					,'ESTADO'
         ]
     });
     

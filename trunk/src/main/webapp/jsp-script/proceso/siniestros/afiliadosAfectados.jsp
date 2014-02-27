@@ -45,25 +45,32 @@
             <s:iterator value="slist1">
                 recordsStore.push(
                 {
-                	IdReclamacion    : '<s:property value='%{getSlist1().get(#contador).get("NMSINIES")}' />'
-                	,NoAutorizacion  : '<s:property value='%{getSlist1().get(#contador).get("NMAUTSER")}' />'
-                	,codAfiliado     : '<s:property value='%{getSlist1().get(#contador).get("CDPERSON")}' />'
-                	,nombre          : '<s:property value='%{getSlist1().get(#contador).get("NOMBRE")}'   />'
-                	,fechaOcurrencia : '<s:property value='%{getSlist1().get(#contador).get("FEOCURRE")}' />'
-                	,noPoliza        : '<s:property value='%{getSlist1().get(#contador).get("NMPOLIZA")}' />'
-                	,VoBoAuto        : '<s:property value='%{getSlist1().get(#contador).get("VOBOAUTO")}' />'
-                	,icd             : '<s:property value='%{getSlist1().get(#contador).get("CDICD")}'    />'
-                	,icdSecundario   : '<s:property value='%{getSlist1().get(#contador).get("CDICD2")}'     />'
+                	IdReclamacion    : '<s:property value='%{getSlist1().get(#contador).get("NMSINIES")}'  />'
+                	,NoAutorizacion  : '<s:property value='%{getSlist1().get(#contador).get("NMAUTSER")}'  />'
+                	,codAfiliado     : '<s:property value='%{getSlist1().get(#contador).get("CDPERSON")}'  />'
+                	,nombre          : '<s:property value='%{getSlist1().get(#contador).get("NOMBRE")}'    />'
+                	,fechaOcurrencia : '<s:property value='%{getSlist1().get(#contador).get("FEOCURRE")}'  />'
+                	,noPoliza        : '<s:property value='%{getSlist1().get(#contador).get("NMPOLIZA")}'  />'
+                	,VoBoAuto        : '<s:property value='%{getSlist1().get(#contador).get("VOBOAUTO")}'  />'
+                	,icd             : '<s:property value='%{getSlist1().get(#contador).get("CDICD")}'     />'
+                	,icdSecundario   : '<s:property value='%{getSlist1().get(#contador).get("CDICD2")}'    />'
                 	<%--,porcDescuento   : '<s:property value='%{getSlist1().get(#contador).get("DESCPORC")}' />'
                 	,impoDescuento   : '<s:property value='%{getSlist1().get(#contador).get("DESCNUME")}' />'--%>
-                	,copago          : '<s:property value='%{getSlist1().get(#contador).get("COPAGO")}'   />'
-                	,impFacturado    : '<s:property value='%{getSlist1().get(#contador).get("PTIMPORT")}' />'
-                	,autoFacturado   : '<s:property value='%{getSlist1().get(#contador).get("AUTRECLA")}' />'
-                	,noReclamo       : '<s:property value='%{getSlist1().get(#contador).get("NMRECLAM")}' />'
-                	,AUTRECLA        : '<s:property value='%{getSlist1().get(#contador).get("AUTRECLA")}' />'
-                	,COMMENAR        : '<s:property value='%{getSlist1().get(#contador).get("COMMENAR")}' />'
-                	,AUTMEDIC        : '<s:property value='%{getSlist1().get(#contador).get("AUTMEDIC")}' />'
-                    ,COMMENME        : '<s:property value='%{getSlist1().get(#contador).get("COMMENME")}' />'
+                	,copago          : '<s:property value='%{getSlist1().get(#contador).get("COPAGO")}'    />'
+                	,impFacturado    : '<s:property value='%{getSlist1().get(#contador).get("PTIMPORT")}'  />'
+                	,autoFacturado   : '<s:property value='%{getSlist1().get(#contador).get("AUTRECLA")}'  />'
+                	,noReclamo       : '<s:property value='%{getSlist1().get(#contador).get("NMRECLAMO")}' />'
+                	,AUTRECLA        : '<s:property value='%{getSlist1().get(#contador).get("AUTRECLA")}'  />'
+                	,COMMENAR        : '<s:property value='%{getSlist1().get(#contador).get("COMMENAR")}'  />'
+                	,AUTMEDIC        : '<s:property value='%{getSlist1().get(#contador).get("AUTMEDIC")}'  />'
+                    ,COMMENME        : '<s:property value='%{getSlist1().get(#contador).get("COMMENME")}'  />'
+                    ,AAAPERTU        : '<s:property value='%{getSlist1().get(#contador).get("AAAPERTU")}'  />'
+                    ,STATUS          : '<s:property value='%{getSlist1().get(#contador).get("STATUS")}'    />'
+                    ,CDUNIECO        : '<s:property value='%{getSlist1().get(#contador).get("CDUNIECO")}'  />'
+                    ,CDRAMO          : '<s:property value='%{getSlist1().get(#contador).get("CDRAMO")}'    />'
+                    ,NMSUPLEM        : '<s:property value='%{getSlist1().get(#contador).get("NMSUPLEM")}'  />'
+                    ,NMSITUAC        : '<s:property value='%{getSlist1().get(#contador).get("NMSITUAC")}'  />'
+                    ,ESTADO          : '<s:property value='%{getSlist1().get(#contador).get("ESTADO")}'    />'
                 });
                 <s:set name="contador" value="#contador+1" />
             </s:iterator>
@@ -242,7 +249,15 @@ function revisarDocumento(grid,rowIndex)
             ,params         :
             {
                 'params.ntramite'  : _11_params.NTRAMITE
-                ,'params.nmsinies' : record.get("IdReclamacion") 
+                ,'params.cdunieco' : record.get('CDUNIECO')
+                ,'params.cdramo'   : record.get('CDRAMO')
+                ,'params.estado'   : record.get('ESTADO')
+                ,'params.nmpoliza' : record.get('noPoliza')
+                ,'params.nmsuplem' : record.get('NMSUPLEM')
+                ,'params.nmsituac' : record.get('NMSITUAC')
+                ,'params.aaapertu' : record.get('AAAPERTU')
+                ,'params.status'   : record.get('STATUS')
+                ,'params.nmsinies' : record.get('IdReclamacion')
             }
         });
 	}
@@ -372,6 +387,10 @@ function _11_llenaFormulario()
 	var itemIcd      = _11_formEdicion.items.items[8];
 	var itemIcd2     = _11_formEdicion.items.items[10];
 	var itemNreclamo = _11_formEdicion.items.items[12];
+	var itemAutrecla = _11_formEdicion.items.items[13];
+	var itemCommenar = _11_formEdicion.items.items[14];
+	var itemAutmedic = _11_formEdicion.items.items[15];
+    var itemCommenme = _11_formEdicion.items.items[16];
 	
 	itemNtramite.setValue(_11_params.NTRAMITE);
 	itemNmsinies.setValue(_11_recordActivo.get('IdReclamacion'));
@@ -384,6 +403,10 @@ function _11_llenaFormulario()
 	itemIcd.setValue(_11_recordActivo.get('icd'));
 	itemIcd2.setValue(_11_recordActivo.get('icdSecundario'));
 	itemNreclamo.setValue(_11_recordActivo.get('noReclamo'));
+	itemAutrecla.setValue(_11_recordActivo.get('AUTRECLA'));
+	itemCommenar.setValue(_11_recordActivo.get('COMMENAR'));
+	itemAutmedic.setValue(_11_recordActivo.get('AUTMEDIC'));
+    itemCommenme.setValue(_11_recordActivo.get('COMMENME'));
 	
 	debug('!_11_llenaFormulario');
 }
@@ -405,6 +428,15 @@ function _11_guardarEdicion()
 		{
 			params : _11_formEdicion.getValues()
 		};
+		json.params['cdunieco'] = _11_recordActivo.get('CDUNIECO');
+		json.params['cdramo']   = _11_recordActivo.get('CDRAMO');
+		json.params['estado']   = _11_recordActivo.get('ESTADO');
+		json.params['nmpoliza'] = _11_recordActivo.get('noPoliza');
+		json.params['nmsituac'] = _11_recordActivo.get('NMSITUAC');
+		json.params['nmsuplem'] = _11_recordActivo.get('NMSUPLEM');
+		json.params['status']   = _11_recordActivo.get('STATUS');
+		json.params['aaapertu'] = _11_recordActivo.get('AAAPERTU');
+		json.params['nmsinies'] = _11_recordActivo.get('IdReclamacion');
 		debug('datos enviados:',json);
 		Ext.Ajax.request(
 		{

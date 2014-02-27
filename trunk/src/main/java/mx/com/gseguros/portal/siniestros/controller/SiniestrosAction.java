@@ -4,7 +4,6 @@ import java.io.File;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -17,8 +16,8 @@ import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
-import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
+import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.Rango;
 import mx.com.gseguros.portal.general.util.Rol;
@@ -47,6 +46,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
     
     private static final long serialVersionUID = -6321288906841302337L;
 	private Logger logger = Logger.getLogger(SiniestrosAction.class);	
+	private DateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
 	private boolean success;
     private SiniestrosManager siniestrosManager;
     private KernelManagerSustituto kernelManagerSustituto;
@@ -1305,6 +1305,49 @@ public void setMsgResult(String msgResult) {
     	logger.debug("params: "+params);
     	try
     	{
+    		String cdunieco  = params.get("cdunieco");
+    		String cdramo    = params.get("cdramo");
+    		String estado    = params.get("estado");
+    		String nmpoliza  = params.get("nmpoliza");
+    		String nmsituac  = params.get("nmsituac");
+    		String nmsuplem  = params.get("nmsuplem");
+    		String status    = params.get("status");
+    		String aaapertu  = params.get("aaapertu");
+    		String nmsinies  = params.get("nmsinies");
+    		
+    		String feocurre  = params.get("feocurre");
+    		Date   dFeocurre = renderFechas.parse(feocurre);
+    		String cdicd     = params.get("cdicd");
+    		String cdicd2    = params.get("cdicd2");
+    		String nreclamo  = params.get("nreclamo");
+    		
+    		String autrecla = params.get("autrecla");
+    		String commenar = params.get("commenar");
+    		String autmedic = params.get("autmedic");
+    		String commenme = params.get("commenme");
+    		
+    		siniestrosManager.actualizaMsinies(
+    				cdunieco,
+    				cdramo,
+    				estado,
+    				nmpoliza,
+    				nmsituac,
+    				nmsuplem,
+    				status,
+    				aaapertu,
+    				nmsinies,
+    				
+    				dFeocurre,
+    				cdicd,
+    				cdicd2,
+    				nreclamo);
+    		
+    		siniestrosManager.P_MOV_MAUTSINI(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, null,
+    				Constantes.MAUTSINI_AREA_RECLAMACIONES, autrecla, Constantes.MAUTSINI_SINIESTRO, commenar, Constantes.UPDATE_MODE);
+    		
+    		siniestrosManager.P_MOV_MAUTSINI(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, null,
+    				Constantes.MAUTSINI_AREA_MEDICA, autmedic, Constantes.MAUTSINI_SINIESTRO, commenme, Constantes.UPDATE_MODE);
+    		
     		success = true;
     		mensaje = "Siniestro actualizado";
     	}

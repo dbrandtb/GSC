@@ -2,6 +2,7 @@ package mx.com.gseguros.portal.siniestros.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1228,6 +1229,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	 * 'SALUD VITAL' DSRAMO,
 	 * 'SL' CDTIPSIT,
 	 * 'SALUD VITAL' DSTIPSIT,
+	 * status,
 	 * 'M' ESTADO,
 	 * 500 NMPOLIZA,
 	 * 'S' VOBOAUTO,
@@ -1240,7 +1242,8 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	 * 15 COPAGO,
 	 * 3500 PTIMPORT,
 	 * 'S' AUTRECLA,
-	 * 54647 NMRECLAM
+	 * 54647 NMRECLAM,
+	 * aaapertu
 	 */
 	@Override
 	public List<Map<String,String>> listaSiniestrosTramite(Map<String, String> params) throws Exception
@@ -1346,6 +1349,131 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void actualizaMsinies(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsituac,
+			String nmsuplem,
+			String status,
+			String aaapertu,
+			String nmsinies,
+			Date feocurre,
+			String cdicd,
+			String cdicd2,
+			String nreclamo) throws Exception
+	{
+		Map<String,Object>params=new HashMap<String,Object>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		params.put("pv_nmsituac_i" , nmsituac);
+		params.put("pv_nmsuplem_i" , nmsuplem);
+		params.put("pv_status_i"   , status);
+		params.put("pv_aaapertu_i" , aaapertu);
+		params.put("pv_nmsinies_i" , nmsinies);
+		params.put("pv_feocurre_i" , feocurre);
+		params.put("pv_cdicd_i"    , cdicd);
+		params.put("pv_cdicd2_i"   , cdicd2);
+		params.put("pv_nreclamo_i" , nreclamo);
+		logger.debug("actualizaMsinies params: "+params);
+		ejecutaSP(new ActualizaMultisiniestro(this.getDataSource()), params);
+		logger.debug("actualizaMsinies end");
+	}
+	
+	protected class ActualizaMultisiniestro extends StoredProcedure
+	{
+		protected ActualizaMultisiniestro(DataSource dataSource)
+		{
+			super(dataSource, "PKG_PRESINIESTRO.P_ACTUALIZA_MULTISINIESTRO");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsituac_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_status_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_aaapertu_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsinies_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_feocurre_i" , OracleTypes.DATE));
+			declareParameter(new SqlParameter("pv_cdicd_i"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdicd2_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nreclamo_i" , OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	public void P_MOV_MAUTSINI(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsuplem,
+			String nmsituac,
+			String aaapertu,
+			String status,
+			String nmsinies,
+			String nfactura,
+			String areaauto,
+			String swautori,
+			String tipautor,
+			String comments,
+			String accion) throws Exception
+	{
+		Map<String,String> p = new HashMap<String,String>();
+		p.put("pv_cdunieco_i" , cdunieco);
+		p.put("pv_cdramo_i"   , cdramo);
+		p.put("pv_estado_i"   , estado);
+		p.put("pv_nmpoliza_i" , nmpoliza);
+		p.put("pv_nmsuplem_i" , nmsuplem);
+		p.put("pv_nmsituac_i" , nmsituac);
+		p.put("pv_aaapertu_i" , aaapertu);
+		p.put("pv_status_i"   , status);
+		p.put("pv_nmsinies_i" , nmsinies);
+		p.put("pv_nfactura_i" , nfactura);
+		p.put("pv_areaauto_i" , areaauto);
+		p.put("pv_swautori_i" , swautori);
+		p.put("pv_tipautor_i" , tipautor);
+		p.put("pv_comments_i" , comments);
+		p.put("pv_accion_i"   , accion);
+		logger.debug("actualizaMsinies params: "+p);
+		ejecutaSP(new PMOVMAUTSINI(this.getDataSource()), p);
+		logger.debug("actualizaMsinies end");
+	}
+	
+	protected class PMOVMAUTSINI extends StoredProcedure
+	{
+		protected PMOVMAUTSINI(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SINIESTRO.P_MOV_MAUTSINI");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsituac_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_aaapertu_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_status_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsinies_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nfactura_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_areaauto_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_swautori_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_tipautor_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_comments_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_accion_i"   , OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
 		}
 	}
