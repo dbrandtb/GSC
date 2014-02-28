@@ -298,6 +298,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			String cdpresta,
 			String ptimport,
 			String cdgarant,
+			String cdconval,
 			String descporc,
 			String descnume) throws ApplicationException {
 		// TODO Auto-generated method stub
@@ -310,6 +311,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			paramsFacMesaCtrl.put("pv_cdpresta_i",cdpresta);
 			paramsFacMesaCtrl.put("pv_ptimport_i",ptimport);
 			paramsFacMesaCtrl.put("pv_cdgarant_i",cdgarant);
+			paramsFacMesaCtrl.put("pv_cdconval_i",cdconval);
 			paramsFacMesaCtrl.put("pv_descporc_i",descporc);
 			paramsFacMesaCtrl.put("pv_descnume_i",descnume);
 			log.debug("guardaListaFacMesaControl params: "+paramsFacMesaCtrl);

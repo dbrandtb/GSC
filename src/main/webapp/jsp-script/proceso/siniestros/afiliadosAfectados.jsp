@@ -21,7 +21,8 @@
             [
                 <s:property value="imap.itemsForm" />
                 ,{
-                	xtype : 'label'
+                	xtype   : 'label'
+                	,hidden : true
                 }
             ];
             

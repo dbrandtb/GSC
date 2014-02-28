@@ -350,7 +350,8 @@ public class SiniestrosAction extends PrincipalCoreAction{
 					        		params.get("cmbProveedor"), 
 					        		params.get("txtImporte"), 
 					        		null, 
-					        		null, 
+					        		null,
+					        		null,
 					        		null
 					        		);
 							
@@ -365,7 +366,8 @@ public class SiniestrosAction extends PrincipalCoreAction{
 						        		datosTablas.get(i).get("cdtipser"), 
 						        		datosTablas.get(i).get("cdpresta"), 
 						        		datosTablas.get(i).get("ptimport"), 
-						        		null, 
+						        		null,
+						        		null,
 						        		null, 
 						        		null
 						        		);
@@ -1044,7 +1046,7 @@ public void setMsgResult(String msgResult) {
     	cdramo   = 2,
     	cdgarant = 18HO,
     	cdtipsit = SL,
-    	cdsubgar = 18HO001,
+    	cdconval = 18HO001,
     	cdunieco = 1006,
     	ntramite = 1010
     */
@@ -1063,6 +1065,7 @@ public void setMsgResult(String msgResult) {
     		String cdramo   = params.get("cdramo");
     		String cdtipsit = params.get("cdtipsit");
     		String cdgarant = params.get("cdgarant");
+    		String cdconval = params.get("cdconval");
     		String ntramite = params.get("ntramite");
     		
     		Map<String,Object> otvalor = new HashMap<String,Object>();
@@ -1213,7 +1216,7 @@ public void setMsgResult(String msgResult) {
     		String factura  = params.get("OTVALOR08");
     		String cdprove  = params.get("OTVALOR11");
     		String cdgarant = params.get("OTVALOR12");
-    		String cdsubgar = params.get("OTVALOR13");
+    		String cdconval = params.get("OTVALOR14");
     		String descporc = params.get("DESCPORC");
     		String descnume = params.get("DESCNUME");
     		
@@ -1224,7 +1227,8 @@ public void setMsgResult(String msgResult) {
     				tipoate, 
     				cdprove, 
     				importe, 
-    				cdgarant, 
+    				cdgarant,
+    				cdconval,
     				descporc, 
     				descnume
     				);
@@ -1239,7 +1243,7 @@ public void setMsgResult(String msgResult) {
     		otvalor.put("pv_otvalor08_i" , factura);
     		otvalor.put("pv_otvalor11_i" , cdprove);
     		otvalor.put("pv_otvalor12_i" , cdgarant);
-    		otvalor.put("pv_otvalor13_i" , cdsubgar);
+    		otvalor.put("pv_otvalor14_i" , cdconval);
     		siniestrosManager.actualizaOTValorMesaControl(otvalor);
     		
     		mensaje = "Datos guardados correctamente";
