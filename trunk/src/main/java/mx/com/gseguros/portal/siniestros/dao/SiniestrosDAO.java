@@ -247,4 +247,6 @@ public interface SiniestrosDAO {
 			String nmsituac,String aaapertu,String status,String nmsinies) throws Exception;
 	
 	public List<GenericVO>obtenerCodigosMedicos(String idconcep, String subcaden) throws Exception;
+	
+	public Map<String,String>obtenerLlaveSiniestroReembolso(String ntramite) throws Exception;
 }
