@@ -670,4 +670,35 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		log.debug("P_GET_MSINIVAL lista size:"+lista.size());
 		return lista;
 	}
+	
+	@Override
+	public void P_MOV_TDSINIVAL(
+			String cdunieco,String cdramo,String estado,String nmpoliza,String nmsuplem,
+			String nmsituac,String aaapertu,String status,String nmsinies,String nfactura,
+			String cdgarant,String cdconval,String cdconcep,String idconcep,String nmordina,
+			String nmordmov,String ptimport,String comments,String userregi,Date feregist,String accion) throws Exception
+	{
+		siniestrosDAO.P_MOV_TDSINIVAL(cdunieco,cdramo,estado,nmpoliza,nmsuplem,nmsituac,
+				aaapertu,status,nmsinies,nfactura,cdgarant,
+				cdconval,cdconcep,idconcep,nmordina,nmordmov,
+				ptimport,comments,userregi,feregist,accion);
+	}
+	
+	@Override
+	public List<Map<String,String>>P_GET_TDSINIVAL(
+			String cdunieco,String cdramo,String estado,String nmpoliza,String nmsuplem,
+			String nmsituac,String aaapertu,String status,String nmsinies,String nfactura,
+			String cdgarant,String cdconval,String cdconcep,String idconcep,String nmordina) throws Exception
+	{
+		List<Map<String,String>>lista=siniestrosDAO.P_GET_TDSINIVAL(
+				cdunieco,cdramo,estado,nmpoliza,nmsuplem,nmsituac,
+				aaapertu,status,nmsinies,nfactura,cdgarant,
+				cdconval,cdconcep,idconcep,nmordina);
+		if(lista==null)
+		{
+			lista=new ArrayList<Map<String,String>>();
+		}
+		log.debug("P_GET_TDSINIVAL lista size:"+lista.size());
+		return lista;
+	}
 }

@@ -224,8 +224,19 @@ public interface SiniestrosDAO {
 			String status,
 			String nmsinies,
 			String nfactura) throws Exception;
-			
+	
 	public List<PolizaVigenteVO> consultaPolizaUnica(HashMap<String, Object> paramPolUnica) throws Exception;
 
 	public String validaExclusionPenalizacion(HashMap<String, Object> paramExclusion) throws Exception;
+	
+	public void P_MOV_TDSINIVAL(
+			String cdunieco,String cdramo,String estado,String nmpoliza,String nmsuplem,
+			String nmsituac,String aaapertu,String status,String nmsinies,String nfactura,
+			String cdgarant,String cdconval,String cdconcep,String idconcep,String nmordina,
+			String nmordmov,String ptimport,String comments,String userregi,Date feregist,String accion) throws Exception;
+	
+	public List<Map<String,String>>P_GET_TDSINIVAL(
+			String cdunieco,String cdramo,String estado,String nmpoliza,String nmsuplem,
+			String nmsituac,String aaapertu,String status,String nmsinies,String nfactura,
+			String cdgarant,String cdconval,String cdconcep,String idconcep,String nmordina) throws Exception;
 }
