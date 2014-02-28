@@ -926,8 +926,8 @@ function _mostrarVentanaAjustes(grid,rowIndex,colIndex){
     windowLoader = Ext.create('Ext.window.Window',{
         modal       : true,
         buttonAlign : 'center',
-        width       : 600,
-        height      : 400,
+        width       : 650,
+        height      : 450,
         autoScroll  : true,
         loader      : {
             url     : _UrlAjustesMedicos,
