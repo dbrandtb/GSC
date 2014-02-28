@@ -14,7 +14,6 @@
             var _URL_CATALOGOS                  = '<s:url namespace="/catalogos"  action="obtieneCatalogo" />';
             var _URL_CONSULTA_AUTORIZACION_ESP1 = '<s:url namespace="/siniestros" action="consultaAutorizacionServicio" />';
             var _URL_CONSULTA_DEDUCIBLE_COPAGO1 = '<s:url namespace="/siniestros" action="consultaListaDatSubGeneral" />';
-            var _URL_CONSULTA_PROVEEDOR_MEDICO1 = '<s:url namespace="/siniestros" action="consultaListaProvMedico" />';
             var _URL_LISTA_SUBCOBERTURA1		= '<s:url namespace="/siniestros" action="consultaListaSubcobertura" />';
             var _URL_LISTA_TMANTENI1			= '<s:url namespace="/siniestros" action="consultaListaManteni" />';
             var _URL_LISTADO_CONCEP_EQUIP1      = '<s:url namespace="/siniestros" action="consultaListaTDeTauts" />';
