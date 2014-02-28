@@ -3,6 +3,7 @@ package mx.com.gseguros.portal.siniestros.controller;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +37,27 @@ public class AjustesMedicosSiniestrosAction extends PrincipalCoreAction {
     	return SUCCESS;
     }
 
+    public String pantallaAjustesMedicos()
+    {
+    	params = new HashMap<String,String>();
+    	params.put("cdunieco" , "1");
+    	params.put("cdramo"   , "2");
+    	params.put("estado"   , "3");
+    	params.put("nmpoliza" , "4");
+    	params.put("nmsuplem" , "5");
+    	params.put("nmsituac" , "6");
+    	params.put("aaapertu" , "7");
+    	params.put("status"   , "8");
+    	params.put("nmsinies" , "9");
+    	params.put("nfactura" , "10");
+    	params.put("cdgarant" , "11");
+    	params.put("cdconval" , "12");
+    	params.put("cdconcep" , "13");
+    	params.put("idconcep" , "14");
+    	params.put("nmordina" , "15");
+    	return SUCCESS;
+    }
+	
 	public String obtenerTdsinival()
     {
     	logger.debug(""
@@ -113,11 +135,10 @@ public class AjustesMedicosSiniestrosAction extends PrincipalCoreAction {
     		String cdconval  = params.get("cdconval");
     		String cdconcep  = params.get("cdconcep");
     		String idconcep  = params.get("idconcep");
-    		String nmordina  = params.get("femovimi");
+    		String nmordina  = params.get("nmordina");
     		String ptimport  = params.get("ptimport");
     		String userregi  = usuario.getUser();
-    		String feregist  = params.get("feregist");
-    		Date   dFeregist = renderFechas.parse(feregist);
+    		Date   dFeregist = new Date();
     		String comments  = params.get("comments");
     		String nmordmov  = params.get("nmordmov");
     		
