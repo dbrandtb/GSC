@@ -4,6 +4,7 @@ import java.io.File;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +28,6 @@ import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
 import mx.com.gseguros.portal.siniestros.model.CoberturaPolizaVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaManteniVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaPorcentajeVO;
-import mx.com.gseguros.portal.siniestros.model.ConsultaProveedorVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaTDETAUTSVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaTTAPVAATVO;
 import mx.com.gseguros.portal.siniestros.model.DatosSiniestroVO;
@@ -1383,7 +1383,56 @@ public void setMsgResult(String msgResult) {
     	return SUCCESS;
     }
     
-    
+    public String obtenerMsinival()
+    {
+    	logger.debug(""
+    			+ "\n#############################"
+    			+ "\n#############################"
+    			+ "\n###### obtenerMsinival ######"
+    			+ "\n######                 ######"
+    			);
+    	logger.debug("params: "+params);
+    	try
+    	{
+    		String cdunieco = params.get("cdunieco");
+    		String cdramo   = params.get("cdramo");
+    		String estado   = params.get("estado");
+    		String nmpoliza = params.get("nmpoliza");
+    		String nmsuplem = params.get("nmsuplem");
+    		String nmsituac = params.get("nmsituac");
+    		String aaapertu = params.get("aaapertu");
+    		String status   = params.get("status");
+    		String nmsinies = params.get("nmsinies");
+    		String nfactura = params.get("nfactura");
+    		
+    		List<Map<String,String>>lista = siniestrosManager.P_GET_MSINIVAL(
+    				cdunieco, cdramo, estado, nmpoliza, nmsuplem,
+    				nmsituac, aaapertu, status, nmsinies, nfactura);
+    		
+    		loadList = new ArrayList<HashMap<String,String>>();
+    		
+    		for(Map<String,String>map:lista)
+    		{
+    			loadList.add((HashMap<String,String>)map);
+    		}
+    		
+    		mensaje="Datos obtenidos";
+    		success=true;
+    	}
+    	catch(Exception ex)
+    	{
+    		logger.error("error al obtener msinival",ex);
+    		success=false;
+    		mensaje=ex.getMessage();
+    	}
+    	logger.debug(""
+    			+ "\n######                 ######"
+    			+ "\n###### obtenerMsinival ######"
+    			+ "\n#############################"
+    			+ "\n#############################"
+    			);
+    	return SUCCESS;
+    }
     
     public String getExistePenalizacion() {
 		return existePenalizacion;
