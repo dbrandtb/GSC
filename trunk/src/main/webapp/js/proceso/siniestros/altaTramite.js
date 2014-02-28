@@ -64,7 +64,7 @@ Ext.onReady(function() {
 		model:'Generic',
 		proxy: {
 			type: 'ajax',
-			url: mesConUrlLoadCatalo,
+			url: _URL_CATALOGOS,
 			extraParams : {catalogo:_CATALOGO_TipoAtencion},
 			reader: {
 				type: 'json',
@@ -91,7 +91,7 @@ Ext.onReady(function() {
 		model:'Generic',
 		proxy: {
 			type: 'ajax',
-			url: mesConUrlLoadCatalo,
+			url: _URL_CATALOGOS,
 			extraParams : {catalogo:_CATALOGO_TipoPago},
 			reader: {
 				type: 'json',
@@ -106,13 +106,14 @@ Ext.onReady(function() {
         autoLoad:false,
         proxy: {
             type: 'ajax',
-            url : _URL_CONSULTA_PROVEEDOR_MEDICO,
+            url : _URL_CATALOGOS,
             extraParams:{
-            	'params.tipoprov' : '16'
+                catalogo         : _CATALOGO_PROVEEDORES,
+                catalogoGenerico : true
             },
             reader: {
                 type: 'json',
-                root: 'listaProvMedico'
+                root: 'listaGenerica'
             }
         }
     });
@@ -144,7 +145,7 @@ Ext.onReady(function() {
 	        proxy:
 	        {
 	            type: 'ajax',
-	            url:mesConUrlLoadCatalo,
+	            url:_URL_CATALOGOS,
 	            extraParams : {catalogo:_CATALOGO_OFICINA_RECEP},
 	            reader:
 	            {
@@ -167,7 +168,7 @@ Ext.onReady(function() {
 	        proxy:
 	        {
 	            type: 'ajax',
-	            url:mesConUrlLoadCatalo,
+	            url:_URL_CATALOGOS,
 	            extraParams : {catalogo:_CATALOGO_OFICINA_RECEP},
 	            reader:
 	            {
