@@ -5,6 +5,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -1449,8 +1450,8 @@ public void setMsgResult(String msgResult) {
     		String idconcep  = params.get("idconcep");
     		String cdcapita  = params.get("cdcapita");
     		String nmordina  = params.get("femovimi");
-    		String femovimi  = params.get("femovimi");
-    		Date   dFemovimi = renderFechas.parse(femovimi);
+//    		String femovimi  = params.get("femovimi");
+    		Date   dFemovimi = new Date();
     		String cdmoneda  = params.get("cdmoneda");
     		String ptprecio  = params.get("ptprecio");
     		String cantidad  = params.get("cantidad");
@@ -1458,11 +1459,11 @@ public void setMsgResult(String msgResult) {
     		String destoimp  = params.get("destoimp");
     		String ptimport  = params.get("ptimport");
     		String ptrecobr  = params.get("ptrecobr");
-    		String nmanno    = params.get("nmanno");
+    		String nmanno    = Calendar.getInstance().get(Calendar.YEAR)+"";
     		String nmapunte  = params.get("nmapunte");
     		String userregi  = usuario.getUser();
     		String feregist  = params.get("feregist");
-    		Date   dFeregist = renderFechas.parse(feregist);
+    		Date   dFeregist = new Date();//renderFechas.parse(feregist);
     		
     		siniestrosManager.P_MOV_MSINIVAL(
     				cdunieco, cdramo, estado, nmpoliza, nmsuplem,
