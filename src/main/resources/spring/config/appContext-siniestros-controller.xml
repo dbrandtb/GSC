@@ -18,7 +18,9 @@
     
     <bean id="ajustesMedicosSiniestrosAction" class="mx.com.gseguros.portal.siniestros.controller.AjustesMedicosSiniestrosAction" scope="prototype">
         <property name="siniestrosManager" ref="siniestrosManagerImpl"/>
+        <property name="kernelManager"     ref="kernelManagerSustituto"/>
         <property name="pantallasManager"  ref="pantallasManagerImpl"></property>
+        <property name="catalogosManager"  ref="catalogosManagerImpl"></property>
     </bean>
     
         
