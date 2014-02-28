@@ -16,5 +16,10 @@
         <property name="pantallasManager"   ref="pantallasManagerImpl"></property>
     </bean>
     
+    <bean id="ajustesMedicosSiniestrosAction" class="mx.com.gseguros.portal.siniestros.controller.AjustesMedicosSiniestrosAction" scope="prototype">
+        <property name="siniestrosManager" ref="siniestrosManagerImpl"/>
+        <property name="pantallasManager"  ref="pantallasManagerImpl"></property>
+    </bean>
+    
         
 </beans>
