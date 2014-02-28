@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
@@ -43,7 +44,40 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	
 	
 	
-	public String execute() throws Exception {
+	public String execute() throws Exception
+	{
+		logger.debug(""
+				+ "\n####################################"
+				+ "\n####################################"
+				+ "\n###### DetalleSiniestroAction ######"
+				+ "\n######                        ######"
+				);
+		logger.debug("params:"+params);
+		if(!params.containsKey("nmsinies"))
+		{
+			try
+			{
+				String ntramite = params.get("ntramite");
+				params = (HashMap<String, String>) siniestrosManager.obtenerLlaveSiniestroReembolso(ntramite);
+				Map<String,String>aux=new HashMap<String,String>();
+				for(Entry<String,String>en:params.entrySet())
+				{
+					aux.put(en.getKey().toLowerCase(),en.getValue());
+				}
+				params=(HashMap<String, String>) aux;
+				logger.debug("params obtenidos:"+params);
+			}
+			catch(Exception ex)
+			{
+				logger.error("error al obtener clave de siniestro para la pantalla del tabed panel",ex);
+			}
+		}
+		logger.debug(""
+				+ "\n######                        ######"
+				+ "\n###### DetalleSiniestroAction ######"
+				+ "\n####################################"
+				+ "\n####################################"
+				);
     	success = true;
     	return SUCCESS;
     }

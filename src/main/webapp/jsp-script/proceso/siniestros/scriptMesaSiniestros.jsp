@@ -373,6 +373,10 @@ var msgWindow;
 				params['params.cdtipsit'] = record.get('cdtipsit');
 			}
 		}
+		else
+		{
+			params['params.ntramite'] = record.get('ntramite');
+		}
 		debug('urlDestino:',urlDestino);
 		
 		debug('params:',params);

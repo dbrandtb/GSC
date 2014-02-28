@@ -747,4 +747,10 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		log.debug("obtenerCodigosMedicos lista size: "+lista.size());
 		return lista;
 	}
+	
+	@Override
+	public Map<String,String>obtenerLlaveSiniestroReembolso(String ntramite) throws Exception
+	{
+		return siniestrosDAO.obtenerLlaveSiniestroReembolso(ntramite);
+	}
 }

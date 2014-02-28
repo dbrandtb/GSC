@@ -1920,4 +1920,35 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
+	
+	@Override
+	public Map<String,String>obtenerLlaveSiniestroReembolso(String ntramite) throws Exception
+	{
+		Map<String,String>p=new HashMap<String,String>();
+		p.put("pv_ntramite_i" , ntramite);
+		logger.debug("obtenerLlaveSiniestroReembolso params: "+p);
+		Map<String, Object> mapResult = ejecutaSP(new ObtenerLlaveSiniestroReembolso(this.getDataSource()), p);
+		List<Map<String,String>>lista=(List<Map<String,String>>) mapResult.get("pv_registro_o");
+		Map<String,String>llave=null;
+		if(lista!=null)
+		{
+			llave=lista.get(0);
+		}
+		logger.debug("obtenerLlaveSiniestroReembolso llave: "+llave);
+		return llave;
+	}
+	
+	protected class ObtenerLlaveSiniestroReembolso extends StoredProcedure
+	{
+		protected ObtenerLlaveSiniestroReembolso(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SINIESTRO.P_GET_LLAVE_SINIES_REEMBOLSO");
+			declareParameter(new SqlParameter("pv_ntramite_i" , OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }
