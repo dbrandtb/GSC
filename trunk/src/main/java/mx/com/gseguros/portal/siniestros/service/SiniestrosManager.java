@@ -89,7 +89,7 @@ public interface SiniestrosManager {
 	public List<HashMap<String, String>> loadListaIncisosRechazos(HashMap<String, String> params) throws ApplicationException;
 
 	public boolean guardaEstatusDocumentos(HashMap<String, String> params, List<HashMap<String, String>> saveList) throws ApplicationException;
-	
+
 	public List<HashMap<String, String>> loadListaRechazos() throws ApplicationException;
 
 	public boolean rechazarTramite(HashMap<String, String> params) throws ApplicationException;
@@ -183,6 +183,8 @@ public interface SiniestrosManager {
 		DESCNUME
 	 */
 	public List<Map<String,String>> obtenerFacturasTramite(String ntramite) throws Exception;
+
+	public List<HashMap<String,String>> obtenerFacturasTramiteSiniestro(String ntramite, String siniestro) throws Exception;
 
 	/**
 	 * PKG_PRESINIESTRO.P_UPD_NMAUTSER_TWORKSIN

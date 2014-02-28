@@ -6,9 +6,15 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
+import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.portal.general.service.PantallasManager;
+import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 
 import org.apache.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.json.JSONUtil;
 
 public class DetalleSiniestroAction extends PrincipalCoreAction {
@@ -18,6 +24,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	private Logger logger = Logger.getLogger(DetalleSiniestroAction.class);
 
 	private transient SiniestrosManager siniestrosManager;
+	private PantallasManager       pantallasManager;
 
 	private boolean success;
 
@@ -25,9 +32,14 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 
 	private HashMap<String, String> loadForm;
 	
-	private List<HashMap<String, String>> listado;
+	private List<HashMap<String, String>> loadList;
+    private List<HashMap<String, String>> saveList;
+    private List<HashMap<String, String>> deleteList;
 	
-	private Map<String, String> params;
+	private HashMap<String, String> params;
+	private HashMap<String,Object> paramsO;
+	
+	private Map<String,Item> imap;
 	
 	
 	
@@ -41,8 +53,8 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 		
 		//
 		
-		String nmsinies = params.get("nmsinies");
-		String nmtramite = params.get("nmtramite");
+		//String nmsinies = params.get("nmsinies");
+		//String nmtramite = params.get("nmtramite");
 		success = true;
 		return SUCCESS;
 	}
@@ -70,7 +82,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	
 	
 	public String obtieneCalculos() {
-		listado = new ArrayList<HashMap<String, String>>();
+		loadList = new ArrayList<HashMap<String, String>>();
 		HashMap<String, String> elements = new HashMap<String, String>();
 		try {
 			elements.put("cpt", "1");
@@ -92,7 +104,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 			elements.put("autorizado", "11111");
 			elements.put("valorUtilizar", "11111111111");
 
-			listado.add(elements);
+			loadList.add(elements);
 
 			elements = new HashMap<String, String>();
 			elements.put("cpt", "2");
@@ -114,7 +126,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 			elements.put("autorizado", "22222");
 			elements.put("valorUtilizar", "2222222");
 
-			listado.add(elements);
+			loadList.add(elements);
 			// List<AutorizacionServicioVO> lista =
 			// siniestrosManager.getConsultaAutorizacionesEsp(params.get("nmautser"));
 			// if(lista!=null && !lista.isEmpty()) datosAutorizacionEsp =
@@ -128,6 +140,71 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 	
+	
+	public String entradaRevisionAdmin(){
+	   	
+	   	try {
+	   		logger.debug("Obteniendo Columnas dinamicas de Revision Administrativa");
+	   		
+	   		UserVO usuario  = (UserVO)session.get("USUARIO");
+	    	String cdrol    = usuario.getRolActivo().getObjeto().getValue();
+	    	String pantalla = "AFILIADOS_AGRUPADOS";
+	    	String seccion  = "COLUMNAS";
+	    	
+	    	List<ComponenteVO> componentes = pantallasManager.obtenerComponentes(
+	    			null, null, null, null, null, cdrol, pantalla, seccion, null);
+	    	
+	    	GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+	    	
+	    	gc.generaComponentes(componentes, true, false, false, true,false, false);
+	    	
+	    	imap = new HashMap<String,Item>();
+	    	imap.put("gridColumns",gc.getColumns());
+	   		
+	   		logger.debug("Resultado: "+imap);
+	   		//siniestrosManager.guardaListaTramites(params, deleteList, saveList);
+	   	}catch( Exception e){
+	   		logger.error("Error en guardaListaTramites",e);
+	   		success =  false;
+	   		return SUCCESS;
+	   	}
+	   	success = true;
+	   	return SUCCESS;
+	   }
+	
+	public String loadListaFacturasTramite(){
+	   	try {
+		   		List<Map<String, String>> result = siniestrosManager.P_GET_FACTURAS_SINIESTRO(params.get("cdunieco"), params.get("cdramo"), params.get("estado"), params.get("nmpoliza"), params.get("nmsuplem"), params.get("nmsituac"), params.get("aaapertu"), params.get("status"), params.get("nmsinies")); 
+		   		loadList = new ArrayList<HashMap<String, String>>();
+		   		
+		   		HashMap<String, String> mapa =null;
+		   		for(Map item: result){
+		   			mapa =  new HashMap<String, String>();
+		   			mapa.putAll(item);
+		   			loadList.add(mapa);
+		   		}
+	   		
+	   	}catch( Exception e){
+	   		logger.error("Error en loadListaFacturasTramite",e);
+	   		success =  false;
+	   		return SUCCESS;
+	   	}
+	   	success = true;
+	   	return SUCCESS;
+	}
+	
+	public String guardaFacturaTramite(){
+	   	
+	   	try {
+	   		//siniestrosManager.guardaListaFacMesaControl(params.get(""), nfactura, fefactura, cdtipser, cdpresta, ptimport, cdgarant, cdconval, descporc, descnume);
+	   	}catch( Exception e){
+	   		logger.error("Error en guardaListaTramites",e);
+	   		success =  false;
+	   		return SUCCESS;
+	   	}
+	   	success = true;
+	   	return SUCCESS;
+	}
 	
 	
 	// Getters and setters:
@@ -165,20 +242,57 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 		this.loadForm = loadForm;
 	}
 
-	public List<HashMap<String, String>> getLoadList() {
-		return listado;
-	}
-
-	public void setLoadList(List<HashMap<String, String>> loadList) {
-		this.listado = loadList;
-	}
-
-	public Map<String, String> getParams() {
+	public HashMap<String, String> getParams() {
 		return params;
 	}
 
-	public void setParams(Map<String, String> params) {
+	public void setParams(HashMap<String, String> params) {
 		this.params = params;
+	}
+
+
+	public List<HashMap<String, String>> getLoadList() {
+		return loadList;
+	}
+
+
+	public void setLoadList(List<HashMap<String, String>> loadList) {
+		this.loadList = loadList;
+	}
+
+
+	public List<HashMap<String, String>> getSaveList() {
+		return saveList;
+	}
+
+
+	public void setSaveList(List<HashMap<String, String>> saveList) {
+		this.saveList = saveList;
+	}
+
+
+	public HashMap<String, Object> getParamsO() {
+		return paramsO;
+	}
+
+
+	public void setParamsO(HashMap<String, Object> paramsO) {
+		this.paramsO = paramsO;
+	}
+
+
+	public void setPantallasManager(PantallasManager pantallasManager) {
+		this.pantallasManager = pantallasManager;
+	}
+
+
+	public Map<String, Item> getImap() {
+		return imap;
+	}
+
+
+	public void setImap(Map<String, Item> imap) {
+		this.imap = imap;
 	}
 	
 }

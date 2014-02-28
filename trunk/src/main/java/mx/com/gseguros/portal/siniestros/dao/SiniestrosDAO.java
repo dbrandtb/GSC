@@ -145,6 +145,8 @@ public interface SiniestrosDAO {
 	 */
 	public List<Map<String,String>> obtenerFacturasTramite(Map<String, String> params) throws Exception;
 
+	public List<HashMap<String,String>> obtenerFacturasTramiteSiniestro(HashMap<String, String> params) throws Exception;
+
 	/**
 	 * PKG_PRESINIESTRO.P_UPB_NMAUTSER_TWORKSIN
 	 */
@@ -243,4 +245,5 @@ public interface SiniestrosDAO {
 	public List<Map<String,String>>P_GET_FACTURAS_SINIESTRO(
 			String cdunieco,String cdramo,String estado,String nmpoliza,String nmsuplem,
 			String nmsituac,String aaapertu,String status,String nmsinies) throws Exception;
+	
 }

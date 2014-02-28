@@ -28,6 +28,10 @@ Ext.onReady(function() {
 	    	        	url: _URL_LOADER_REV_ADMIN,
 	    	        	scripts: true,
 	    	        	autoLoad: false,
+	    	        	params: {
+	    	        		'params.ntramite': 1396,
+	    	        		'params.nsinies': 1396
+	    	        	},
 	    	        	ajaxOptions: {
 	    	        		method: 'POST'
 	    	        	}
