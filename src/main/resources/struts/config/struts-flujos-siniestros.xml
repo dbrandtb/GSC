@@ -464,6 +464,18 @@
 		<action name="obtenerMsinival" class="siniestrosAction" method="obtenerMsinival">
             <result type="json"></result>
         </action>
+        
+        <action name="guardarMsinival" class="siniestrosAction" method="guardarMsinival">
+            <result type="json"></result>
+        </action>
+        
+        <action name="obtenerTdsinival" class="ajustesMedicosSiniestrosAction" method="obtenerTdsinival">
+            <result type="json"></result>
+        </action>
+        
+        <action name="guardarTdsinival" class="ajustesMedicosSiniestrosAction" method="guardarTdsinival">
+            <result type="json"></result>
+        </action>
 		
     </package>
 
