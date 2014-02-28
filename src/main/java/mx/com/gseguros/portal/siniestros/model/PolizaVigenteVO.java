@@ -33,9 +33,21 @@ public class PolizaVigenteVO implements Serializable {
 	private String mtoBeneficioMax;
 	private String zonaContratada;
 	private String vigenciaPoliza;
+	private String numPoliza;
 	 
 	
 	
+	
+	public String getNumPoliza() {
+		return numPoliza;
+	}
+
+
+	public void setNumPoliza(String numPoliza) {
+		this.numPoliza = numPoliza;
+	}
+
+
 	public String getDesEstatusCliente() {
 		return desEstatusCliente;
 	}

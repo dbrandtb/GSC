@@ -517,6 +517,24 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		siniestrosDAO.actualizarAutorizacionTworksin(params);
 		log.debug("actualizarAutorizacionTworksin end");
 	}
+
+	@Override
+	public List<PolizaVigenteVO> getConsultaPolizaUnica(HashMap<String, Object> paramPolUnica) throws Exception {
+		try {
+			return siniestrosDAO.consultaPolizaUnica(paramPolUnica);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}
+
+	@Override
+	public String validaExclusionPenalizacion(HashMap<String, Object> paramExclusion) throws Exception {
+		try {
+			return siniestrosDAO.validaExclusionPenalizacion(paramExclusion);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}
 	
 	@Override
 	public void actualizaMsinies(

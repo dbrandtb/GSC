@@ -171,7 +171,7 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
         	consulta.setFesolici(Utilerias.formateaFecha(rs.getString("FESOLICI")));
         	consulta.setPolizaafectada(rs.getString("POLIZAAFECTADA"));
         	consulta.setCdprovee(rs.getString("CDPROVEE"));
-        	consulta.setNombreProveedor(rs.getString("NOMBREPROVEEDOR"));        	
+        	consulta.setNombreProveedor(rs.getString("NOMBREPROVEEDOR"));
             return consulta;
         }
     }
@@ -209,6 +209,9 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
         	consulta.setNombre(rs.getString("NOMBRE"));
         	consulta.setCdespeci(rs.getString("CDESPECI"));
         	consulta.setDescesp(rs.getString("DESCESP"));
+        	consulta.setCirculo(rs.getString("CIRCULO"));
+        	consulta.setCodpos(rs.getString("CODPOS"));
+        	consulta.setZonaHospitalaria(rs.getString("ZONA"));
             return consulta;
         }
     }
@@ -695,6 +698,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
         	consulta.setMtoBeneficioMax(rs.getString("BENEFICIO_MAXIMO"));
         	consulta.setZonaContratada(rs.getString("ZONA_CONTRATADA"));
         	consulta.setVigenciaPoliza(Utilerias.formateaFecha(rs.getString("FEINICIO"))+"\t\t|\t\t"+Utilerias.formateaFecha(rs.getString("FEFINAL")));
+        	consulta.setNumPoliza(rs.getString("NUMPOLIZA"));
             return consulta;
         }
     }
@@ -1352,6 +1356,55 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
+
+
+	@Override
+	public List<PolizaVigenteVO> consultaPolizaUnica(HashMap<String, Object> paramPolUnica) throws Exception {
+		Map<String, Object> mapResult = ejecutaSP(new ObtienePolizaUnicaSP(getDataSource()), paramPolUnica);
+		List<PolizaVigenteVO> listaDatosPoliza = (List<PolizaVigenteVO>)mapResult.get("pv_registro_o");
+		return listaDatosPoliza;
+	}
+	
+	protected class ObtienePolizaUnicaSP extends StoredProcedure {
+
+		protected ObtienePolizaUnicaSP(DataSource dataSource) {
+			super(dataSource, "PKG_PRESINIESTRO.P_OBTIENE_POLIZAUNICA");
+			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DatosListaPoliza()));
+	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+
+	@Override
+	public String validaExclusionPenalizacion(HashMap<String, Object> paramExclusion) throws Exception {
+		Map<String, Object> resultado = ejecutaSP(new ExisteEsclusionPenalizacion(getDataSource()), paramExclusion);
+		logger.debug( resultado.get("pv_existe_o"));
+		return (String) resultado.get("pv_existe_o");
+	}
+	
+    protected class ExisteEsclusionPenalizacion extends StoredProcedure {
+    	
+    	protected ExisteEsclusionPenalizacion(DataSource dataSource) {
+    		
+    		super(dataSource, "PKG_PRESINIESTRO.P_ELIMACION_PENALIZACION");
+    		declareParameter(new SqlParameter("pv_cdunieco_i",   OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsituac_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_existe_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
 	
 	@Override
 	public void actualizaMsinies(
@@ -1636,4 +1689,8 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
+	
+
+
+	
 }

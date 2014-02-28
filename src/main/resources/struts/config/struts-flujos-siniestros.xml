@@ -171,6 +171,16 @@
 			</result>
 		</action>
 		
+		<action name="consultaPolizaUnica" class="siniestrosAction"
+			method="consultaPolizaUnica">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+                    polizaUnica.*,
+                    success
+                </param>
+			</result>
+		</action>
 		<action name="consultaListaPlazas" class="siniestrosAction"
 			method="consultaListaPlazas">
 			<result type="json">
@@ -402,6 +412,17 @@
 				<param name="includeProperties">
 					success,
 					diasMaximos
+				</param>
+			</result>
+		</action>
+		
+		<action name="validaExclusionPenalizacion" class="siniestrosAction"
+			method="validaExclusionPenalizacion">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success,
+					existePenalizacion
 				</param>
 			</result>
 		</action>

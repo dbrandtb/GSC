@@ -149,8 +149,8 @@ public interface SiniestrosDAO {
 	 * PKG_PRESINIESTRO.P_UPB_NMAUTSER_TWORKSIN
 	 */
 	public void actualizarAutorizacionTworksin(Map<String,String>params) throws Exception;
-	
-	public void actualizaMsinies(
+
+		public void actualizaMsinies(
 			String cdunieco,
 			String cdramo,
 			String estado,
@@ -224,4 +224,8 @@ public interface SiniestrosDAO {
 			String status,
 			String nmsinies,
 			String nfactura) throws Exception;
+			
+	public List<PolizaVigenteVO> consultaPolizaUnica(HashMap<String, Object> paramPolUnica) throws Exception;
+
+	public String validaExclusionPenalizacion(HashMap<String, Object> paramExclusion) throws Exception;
 }
