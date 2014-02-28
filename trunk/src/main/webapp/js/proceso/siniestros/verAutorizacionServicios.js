@@ -77,7 +77,7 @@ Ext.onReady(function() {
 			proxy:
 			{
 				type: 'ajax',
-				url:mesConUrlLoadCatalo1,
+				url:_URL_CATALOGOS,
 				extraParams : {catalogo:_CAT_AUTORIZACION1},
 				reader:
 				{
@@ -102,7 +102,7 @@ Ext.onReady(function() {
 	        proxy:
 	        {
 	            type: 'ajax',
-	            url:mesConUrlLoadCatalo1,
+	            url:_URL_CATALOGOS,
 	            extraParams : {catalogo:_CAT_CAUSASINIESTRO1},
 	            reader:
 	            {
@@ -617,17 +617,19 @@ Ext.onReady(function() {
                     	
                     	Ext.Ajax.request(
         	    				{
-        	    				    url     : _URL_CONSULTA_PROVEEDOR_MEDICO1
+        	    				    url     : _URL_CATALOGOS
         	    				    ,params:{
         	    						'params.cdpresta' : Ext.getCmp('cdmedico1').getValue(),
-        	    						'params.tipoprov' : '15'
+        	    						 catalogo         : _CAT_MEDICOS,
+        	    						 catalogoGenerico : true
         	    	                }
         	    				    ,success : function (response)
         	    				    {
-        	    				    	if(Ext.decode(response.responseText).listaProvMedico != null)
+        	    				    	if(Ext.decode(response.responseText).listaGenerica != null)
             				    		{
-        	    				    		var json=Ext.decode(response.responseText).listaProvMedico[0];
+        	    				    		var json=Ext.decode(response.responseText).listaGenerica[0];
         		    				        Ext.getCmp('especialidad1').setValue(json.descesp);
+        		    				        panelInicialPrincipal1.down('textfield[name=nombreMedico]').setValue(json.nombre);
             				    		}
         	    				    },
         	    				    failure : function ()
