@@ -8,10 +8,7 @@ var _CONTEXT = '${ctx}';
 var _PAGO_DIRECTO = "1";
 var _REEMBOLSO    = "2";
 
-var _nmTramite = '<s:property value="params.ntramite" />';
-var _nmSiniestro = '<s:property value="params.nmSiniestro" />';
 
-debug("Ntramite: "+ _nmTramite);
 var _URL_LoadFacturas =  '<s:url namespace="/siniestros" action="loadListaFacturasTramite" />';
 var _URL_GuardaFactura =  '<s:url namespace="/siniestros" action="guardaFacturaTramite" />';
 
@@ -34,14 +31,22 @@ Ext.onReady(function() {
         fields: [{type:'string',    name:'NFACTURA'},
                  {type:'string',    name:'FFACTURA'},
                  {type:'string',    name:'CDTIPSER'},
-                 {type:'string',    name:'DESCSERVICIO'},
+                 {type:'string',    name:'DESCRIPC'},
                  {type:'string',    name:'CDPRESTA'},
-                 {type:'string',    name:'NOMBREPROVEEDOR'},
                  {type:'string',    name:'PTIMPORT'},
                  {type:'string',    name:'CDGARANT'},
                  {type:'string',    name:'DSGARANT'},
                  {type:'string',    name:'DESCPORC'},
-                 {type:'string',    name:'DESCNUME'}
+                 {type:'string',    name:'DESCNUME'},
+                 {type:'string',    name:'CDCONVAL'},
+                 {type:'string',    name:'COPAGO'},
+                 {type:'string',    name:'NOM_PRESTA'},
+                 {type:'string',    name:'DSSUBGAR'},
+                 {type:'string',    name:'AUTRECLA'},
+                 {type:'string',    name:'AUTMEDIC'},
+                 {type:'string',    name:'COMMENME'},
+                 {type:'string',    name:'DEDUCIBLE'},
+                 {type:'string',    name:'COMMENAR'}
 				]
     });
 	
@@ -82,7 +87,16 @@ Ext.onReady(function() {
 	});
 	storeFacturas.load({
     	params: {
-    		'params.nmtramite' : _nmTramite
+    		'params.ntramite' : _NTRAMITE,
+    		'params.cdunieco'  : _CDUNIECO,
+    		'params.cdramo'    : _CDRAMO,
+    		'params.estado'    : _ESTADO,
+    		'params.nmpoliza'  : _NMPOLIZA,
+    		'params.nmsituac'  : _NMSITUAC,
+    		'params.nmsuplem'  : _NMSUPLEM,
+    		'params.status'    : _STATUS,
+    		'params.aaapertu'  : _AAAPERTU,
+    		'params.nmsinies'  : _NMSINIES
     	}
     });
 
@@ -136,7 +150,7 @@ Ext.onReady(function() {
             },
             extraParams: {
                 'catalogo' : _CATALOGO_COBERTURAS,
-                'params.cdramo' : '2',
+                'params.cdramo' : _CDRAMO,
                 'params.cdtipsit' : 'SL'
             }
         }
@@ -399,7 +413,7 @@ Ext.onReady(function() {
                         	panelEdicionFacturas.form.submit({
             		        	waitMsg:'Procesando...',			
             		        	params: {
-            		        		'params.ntramite'   : _nmTramite 
+            		        		'params.ntramite'   : _NTRAMITE 
             		        	},
             		        	failure: function(form, action) {
             		        		mensajeError("Error al guardar la Factura");
@@ -484,11 +498,11 @@ Ext.define('EditorFacturas', {
  					renderer : Ext.util.Format.usMoney
  				},{
  					header : 'Deducible',
- 					dataIndex : '',
+ 					dataIndex : 'DEDUCIBLE',
  					width : 120
  				},{
  					header : 'Copago',
- 					dataIndex : '',
+ 					dataIndex : 'COPAGO',
  					width : 120
  				}, <s:property value="imap.gridColumns" />
  				,{

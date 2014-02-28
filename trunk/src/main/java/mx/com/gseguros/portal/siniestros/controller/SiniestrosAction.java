@@ -1523,7 +1523,6 @@ public void setMsgResult(String msgResult) {
 		this.datosTablas = datosTablas;
 	}
 
-	private List<GenericVO> listaMotivoRechazo;
     public String execute() throws Exception {
     	success = true;
     	return SUCCESS;
@@ -1544,14 +1543,6 @@ public void setMsgResult(String msgResult) {
 
 	public void setListaConsultaTablas(List<ConsultaTDETAUTSVO> listaConsultaTablas) {
 		this.listaConsultaTablas = listaConsultaTablas;
-	}
-
-	public List<GenericVO> getListaMotivoRechazo() {
-		return listaMotivoRechazo;
-	}
-
-	public void setListaMotivoRechazo(List<GenericVO> listaMotivoRechazo) {
-		this.listaMotivoRechazo = listaMotivoRechazo;
 	}
 
 	public void setListaCPTICD(List<GenericVO> listaCPTICD) {

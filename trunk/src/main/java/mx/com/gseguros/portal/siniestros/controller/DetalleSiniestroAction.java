@@ -154,6 +154,11 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	    	List<ComponenteVO> componentes = pantallasManager.obtenerComponentes(
 	    			null, null, null, null, null, cdrol, pantalla, seccion, null);
 	    	
+	    	for(ComponenteVO com:componentes)
+	    	{
+	    		com.setWidth(100);
+	    	}
+	    	
 	    	GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 	    	
 	    	gc.generaComponentes(componentes, true, false, false, true,false, false);
@@ -244,6 +249,15 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 
 	public HashMap<String, String> getParams() {
 		return params;
+	}
+
+	public String getParamsJson() {
+		try {
+			return JSONUtil.serialize(params);
+		} catch (Exception e) {
+			logger.error("Error al generar JSON de params",e);
+			return null;
+		}
 	}
 
 	public void setParams(HashMap<String, String> params) {
