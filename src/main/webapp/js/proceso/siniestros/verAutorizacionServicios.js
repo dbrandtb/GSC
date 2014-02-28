@@ -124,7 +124,7 @@ Ext.onReady(function() {
 	        proxy:
 	        {
 	            type: 'ajax',
-	            url:mesConUrlLoadCatalo,
+	            url: _URL_CATALOGOS,
 	            extraParams : {catalogo:_CAT_TRATAMIENTO1},
 	            reader:
 	            {
