@@ -3,6 +3,25 @@ Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.chart.*', 'Ext.grid.*', 'Ext.grid
 Ext.onReady(function() {
 
 	
+	Ext.create('Ext.form.Panel', {
+	    width: 400,
+	    height: 200,
+	    dockedItems: [{
+	        xtype: 'toolbar'
+	    }],
+	    listeners: {
+	        click: {
+	            element: 'el', //bind to the underlying el property on the panel
+	            fn: function(){ console.log('click el'); }
+	        },
+	        dblclick: {
+	            element: 'body', //bind to the underlying body property on the panel
+	            fn: function(){ console.log('dblclick body'); }
+	        }
+	    }
+	});
+	
+	/*
     //////////////////////////////////////
     ////////		MODEL 		/////////
     /////////////////////////////////////
@@ -162,12 +181,7 @@ Ext.onReady(function() {
         //url: _URL_INSERTA_CLAUSU,
         bodyPadding: 5,
         renderTo: Ext.getBody(),
-        /*layout     :
-		{
-				type     : 'table'
-				,columns : 2
-		}
-		,*/defaults 	:
+        defaults 	:
 		{
 				style : 'margin:5px;'
 		}
@@ -231,4 +245,6 @@ Ext.onReady(function() {
 	             	panelClausula
 	        ]
 	        }).show();
+	
+	*/
 });
