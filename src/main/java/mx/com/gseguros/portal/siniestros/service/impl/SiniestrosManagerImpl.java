@@ -620,4 +620,36 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 				 feregist,
 				 accion);
 	}
+	
+	@Override
+	public List<Map<String,String>>P_GET_MSINIVAL(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsuplem,
+			String nmsituac,
+			String aaapertu,
+			String status,
+			String nmsinies,
+			String nfactura) throws Exception
+	{
+		List<Map<String,String>>lista=siniestrosDAO.P_GET_MSINIVAL(
+				 cdunieco,
+				 cdramo,
+				 estado,
+				 nmpoliza,
+				 nmsuplem,
+				 nmsituac,
+				 aaapertu,
+				 status,
+				 nmsinies,
+				 nfactura);
+		if(lista==null)
+		{
+			lista=new ArrayList<Map<String,String>>();
+		}
+		log.debug("P_GET_MSINIVAL lista size:"+lista.size());
+		return lista;
+	}
 }

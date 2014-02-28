@@ -212,4 +212,16 @@ public interface SiniestrosDAO {
 			String userregi,
 			Date   feregist,
 			String accion) throws Exception;
+	
+	public List<Map<String,String>>P_GET_MSINIVAL(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsuplem,
+			String nmsituac,
+			String aaapertu,
+			String status,
+			String nmsinies,
+			String nfactura) throws Exception;
 }

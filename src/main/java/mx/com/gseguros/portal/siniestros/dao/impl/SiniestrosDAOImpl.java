@@ -1548,7 +1548,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	{
 		protected PMOVMSINIVAL(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SINIESTRO.P_MOV_MSINIVAl");
+			super(dataSource, "PKG_PRESINIESTRO.P_MOV_MSINIVAl");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -1581,6 +1581,58 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<Map<String,String>>P_GET_MSINIVAL(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsuplem,
+			String nmsituac,
+			String aaapertu,
+			String status,
+			String nmsinies,
+			String nfactura) throws Exception
+	{
+		Map<String,String>p=new HashMap<String,String>();
+		p.put("pv_cdunieco_i" , cdunieco);
+		p.put("pv_cdramo_i"   , cdramo);
+		p.put("pv_estado_i"   , estado);
+		p.put("pv_nmpoliza_i" , nmpoliza);
+		p.put("pv_nmsuplem_i" , nmsuplem);
+		p.put("pv_nmsituac_i" , nmsituac);
+		p.put("pv_aaapertu_i" , aaapertu);
+		p.put("pv_status_i"   , status);
+		p.put("pv_nmsinies_i" , nmsinies);
+		p.put("pv_nfactura_i" , nfactura);
+		logger.debug("P_GET_MSINIVAL params: "+p);
+		Map<String, Object> mapResult = ejecutaSP(new PGETMSINIVAL(this.getDataSource()), p);
+		return (List<Map<String,String>>) mapResult.get("pv_registro_o");
+	}
+	
+	protected class PGETMSINIVAL extends StoredProcedure
+	{
+		protected PGETMSINIVAL(DataSource dataSource)
+		{
+			super(dataSource, "PKG_CONSULTA.P_GET_MSINIVAL");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsituac_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_aaapertu_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_status_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsinies_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nfactura_i" , OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
 		}
 	}

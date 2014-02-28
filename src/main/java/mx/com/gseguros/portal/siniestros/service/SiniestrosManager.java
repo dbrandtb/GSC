@@ -251,4 +251,24 @@ public interface SiniestrosManager {
 			Date   feregist,
 			String accion) throws Exception;
 	
+	/**
+	 * CDUNIECO,CDRAMO,ESTADO,NMPOLIZA,NMSUPLEM,
+		NMSITUAC,AAAPERTU,STATUS,NMSINIES,NFACTURA,
+		CDGARANT,CDCONVAL,CDCONCEP,IDCONCEP,CDCAPITA,
+		NMORDINA,FEMOVIMI,CDMONEDA,PTPRECIO,CANTIDAD,
+		DESTOPOR,DESTOIMP,PTIMPORT,PTRECOBR,NMANNO,
+		NMAPUNTE,USERREGI,FEREGIST
+	 */
+	public List<Map<String,String>>P_GET_MSINIVAL(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsuplem,
+			String nmsituac,
+			String aaapertu,
+			String status,
+			String nmsinies,
+			String nfactura) throws Exception;
+	
 }
