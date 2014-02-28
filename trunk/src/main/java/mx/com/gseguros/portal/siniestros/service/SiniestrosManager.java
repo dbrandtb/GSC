@@ -187,7 +187,7 @@ public interface SiniestrosManager {
 	 * PKG_PRESINIESTRO.P_UPD_NMAUTSER_TWORKSIN
 	 */
 	public void actualizarAutorizacionTworksin(String ntramite, String nmpoliza, String cdperson,String nmautser) throws Exception;
-	
+
 	public void actualizaMsinies(
 			String cdunieco,
 			String cdramo,
@@ -270,5 +270,9 @@ public interface SiniestrosManager {
 			String status,
 			String nmsinies,
 			String nfactura) throws Exception;
+	
+	public List<PolizaVigenteVO> getConsultaPolizaUnica(HashMap<String, Object> paramPolUnica) throws Exception;
+
+	public String validaExclusionPenalizacion(HashMap<String, Object> paramExclusion) throws Exception;
 	
 }

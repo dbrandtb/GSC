@@ -32,7 +32,7 @@ Ext.onReady(function() {
 					{type:'string',    name:'dsramo'},				{type:'string',    name:'estatus'},					{type:'string',    name:'dsestatus'},
 					{type:'string',    name:'nmsolici'},			{type:'string',    name:'nmsuplem'},				{type:'string',    name:'cdtipsit'},
 					{type:'string',    name:'dsestatus'},			{type:'string',    name:'vigenciaPoliza'},			{type:'string',    name:'faltaAsegurado'},
-					{type:'string',    name:'fcancelacionAfiliado'},{type:'string',    name:'desEstatusCliente'}]
+					{type:'string',    name:'fcancelacionAfiliado'},{type:'string',    name:'desEstatusCliente'},		{type:'string',    name:'numPoliza'}]
 	});
 	
 	Ext.define('modelListAsegPagDirecto',{
@@ -41,8 +41,8 @@ Ext.onReady(function() {
 	                {type:'string',    name:'modUnieco'},		{type:'string',    name:'modEstado'},		    {type:'string',    name:'modRamo'},
 	                {type:'string',    name:'modNmsituac'},		{type:'string',    name:'modPolizaAfectada'},	{type:'string',    name:'modCdpersondesc'},
 	                {type:'string',    name:'modNmsolici'},		{type:'string',    name:'modNmsuplem'},		    {type:'string',    name:'modCdtipsit'},
-	                {type:'string',    name:'modNmautserv'},	{type:'string',    name:'modFechaOcurrencia'},	{type:'string',    name:'modCdperson'}
-	                
+	                {type:'string',    name:'modNmautserv'},	{type:'string',    name:'modFechaOcurrencia'},	{type:'string',    name:'modCdperson'},
+	                {type:'string',    name:'modnumPoliza'}
 	            ]
 	});
 	
@@ -570,7 +570,6 @@ Ext.onReady(function() {
                     if (panelListadoAsegurado.form.isValid()) {
                     	
                         var datos=panelListadoAsegurado.form.getValues();
-                        
                         var rec = new modelListAsegPagDirecto({
                         	modUnieco: Ext.getCmp('idUnieco').getValue(),
                         	modEstado: Ext.getCmp('idEstado').getValue(),
@@ -583,7 +582,8 @@ Ext.onReady(function() {
                         	modNmautserv: "",
                         	modFechaOcurrencia: datos.dtfechaOcurrencias,
                         	modCdperson: datos.cmbAseguradoAfect,
-                        	modCdpersondesc: panelListadoAsegurado.query('combo[name=cmbAseguradoAfect]')[0].rawValue
+                        	modCdpersondesc: panelListadoAsegurado.query('combo[name=cmbAseguradoAfect]')[0].rawValue,
+                        	modnumPoliza:Ext.getCmp('idNumPolizaInt').getValue()
                         });
                         storeListAsegPagDirecto.add(rec);
                         limpiarRegistros();
@@ -644,7 +644,7 @@ Ext.onReady(function() {
                         header: 'Asegurado afectado',		dataIndex: 'modCdpersondesc',				width:350
                     },
                     {
-                        header: 'N&uacute;mero P&oacute;liza',		dataIndex: 'modPolizaAfectada',				width:100
+                        header: 'N&uacute;mero P&oacute;liza',		dataIndex: 'modnumPoliza',				width:200
                     },
                     {
                         xtype: 'actioncolumn',				width: 30,					 	sortable: false,	 	menuDisabled: true,
@@ -692,9 +692,14 @@ Ext.onReady(function() {
 	    height		  : 200,
 	    columns       :
 	    [
+	        
+	        
 	        {
-	             header     : 'N&uacute;mero de P&oacute;liza',		dataIndex : 'nmpoliza',		width	 	: 150
+	             header     : 'N&uacute;mero de P&oacute;liza',		dataIndex : 'numPoliza',		width	 	: 200
 	        },
+	        /*{
+	             header     : 'N&uacute;mero de P&oacute;liza',		dataIndex : 'nmpoliza',		width	 	: 150
+	        },*/
 	        {
 	        	 header     : 'Estatus p&oacute;liza ',							dataIndex : 'dsestatus',	width	 	: 100
 	        },
@@ -759,6 +764,7 @@ Ext.onReady(function() {
             					Ext.getCmp('idNmsolici').setValue(record.get('nmsolici'));
             					Ext.getCmp('idNmsuplem').setValue(record.get('nmsuplem'));
             					Ext.getCmp('idCdtipsit').setValue(record.get('cdtipsit'));
+            					Ext.getCmp('idNumPolizaInt').setValue(record.get('numPoliza'));
             					modPolizasAltaTramite.hide();
                 			}else{
                 				// No se cumple la condición la fecha de ocurrencia es mayor a la fecha de alta de tramite
@@ -881,6 +887,10 @@ Ext.onReady(function() {
 					    xtype       : 'textfield',			fieldLabel : 'cdtipsit'				,id       : 'idCdtipsit',			name       : 'cdtipsit'
 					    ,labelWidth: 170,	hidden:true
 					},
+					{
+					    xtype       : 'textfield',			fieldLabel : 'numPolizaInt'			,id       : 'idNumPolizaInt',	name       : 'numPolizaInt'
+					    ,labelWidth: 170,	hidden:true
+					},
     	            {
             			id:'txtContraRecibo'
 		                ,xtype      : 'textfield'
@@ -926,7 +936,8 @@ Ext.onReady(function() {
                         format: 'd/m/Y',
                         editable: true,
                         labelWidth : 250,
-                        width		 : 500
+                        width		 : 500,
+                        maxValue   :  new Date()
                     },
             		aseguradoAfectado
 	            	,
@@ -1133,6 +1144,7 @@ Ext.onReady(function() {
 		Ext.getCmp('idNmsolici').setValue('');
 		Ext.getCmp('idNmsuplem').setValue('');
 		Ext.getCmp('idCdtipsit').setValue('');
+		Ext.getCmp('idNumPolizaInt').setValue('');
     	return true;
 	}
 	

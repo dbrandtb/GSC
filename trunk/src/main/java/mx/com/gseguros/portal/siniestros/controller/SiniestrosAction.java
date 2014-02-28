@@ -70,8 +70,10 @@ public class SiniestrosAction extends PrincipalCoreAction{
     private List<ConsultaPorcentajeVO> listaPorcentaje;
     private List<HashMap<String,String>> datosTablas;
     private List<PolizaVigenteVO> listaPoliza;
+    private List<PolizaVigenteVO> polizaUnica;
     private String msgResult;
     private String diasMaximos;
+    private String existePenalizacion;
     private List<HashMap<String, String>> loadList;
     private List<HashMap<String, String>> saveList;
     private List<GenericVO> listaPlazas;
@@ -502,6 +504,26 @@ public class SiniestrosAction extends PrincipalCoreAction{
 	   	success = true;
 	   	return SUCCESS;
    }
+   
+   
+   public String consultaPolizaUnica(){
+	   	logger.debug(" **** Entrando al metodo de consulta poliza Unica ****");
+	   	try {
+		   		HashMap<String, Object> paramPolUnica = new HashMap<String, Object>();
+		   		paramPolUnica.put("pv_cdunieco_i",params.get("cdunieco"));
+		   		paramPolUnica.put("pv_cdramo_i",params.get("cdramo"));
+		   		paramPolUnica.put("pv_estado_i",params.get("estado"));
+		   		paramPolUnica.put("pv_nmpoliza_i",params.get("nmpoliza"));
+		   		paramPolUnica.put("pv_cdperson_i",params.get("cdperson"));
+		   		List<PolizaVigenteVO> polUnica = siniestrosManager.getConsultaPolizaUnica(paramPolUnica);
+				if(polUnica!=null && !polUnica.isEmpty())	polizaUnica = polUnica;
+			}catch( Exception e){
+				logger.error("Error al obtener los datos de la poliza ",e);
+				return SUCCESS;
+			}
+		   	success = true;
+		   	return SUCCESS;
+	   }
 
 
 public String getMsgResult() {
@@ -949,12 +971,6 @@ public void setMsgResult(String msgResult) {
 	   	logger.debug(" **** Entrando al metodo para obtener los numeros  de dias ****");
 	   	try {
 	   		logger.debug("VALORES A OCUPAR");
-	   		
-	   		logger.debug(params.get("cdramo"));
-	   		logger.debug(params.get("cdtipsit"));
-	   		logger.debug(TipoTramite.SINIESTRO.getCodigo());
-	   		logger.debug(Rango.DIAS.getClave());
-	   		logger.debug("FIN DE VALORES A OCUPAR");
 	   		diasMaximos= catalogosManager.obtieneCantidadMaxima(params.get("cdramo"), params.get("cdtipsit"), TipoTramite.SINIESTRO, Rango.DIAS);
 	   	}catch( Exception e){
 	   		logger.error("Error al consultar la Lista de los asegurados ",e);
@@ -963,6 +979,24 @@ public void setMsgResult(String msgResult) {
 	   	success = true;
 	   	return SUCCESS;
    }
+   
+   public String validaExclusionPenalizacion(){
+	   	logger.debug(" **** Entrando al metodo de validacion de Penalizacion ****");
+	   	try {
+		   		HashMap<String, Object> paramExclusion = new HashMap<String, Object>();
+		   		paramExclusion.put("pv_cdunieco_i",params.get("cdunieco"));
+		   		paramExclusion.put("pv_estado_i",params.get("estado"));
+		   		paramExclusion.put("pv_cdramo_i",params.get("cdramo"));
+		   		paramExclusion.put("pv_nmpoliza_i",params.get("nmpoliza"));
+		   		paramExclusion.put("pv_nmsituac_i",params.get("nmsituac"));
+		   		existePenalizacion = siniestrosManager.validaExclusionPenalizacion(paramExclusion);
+	   	}catch( Exception e){
+	   		logger.error("Error al consultar la Lista de los asegurados ",e);
+	   		return SUCCESS;
+	   	}
+	   	success = true;
+	   	return SUCCESS;
+  }
    
     public String pantallaSeleccionCobertura()
     {
@@ -1366,7 +1400,25 @@ public void setMsgResult(String msgResult) {
     	return SUCCESS;
     }
     
-    public void setListaFacturas(List<ListaFacturasVO> listaFacturas) {
+    
+    
+    public String getExistePenalizacion() {
+		return existePenalizacion;
+	}
+
+	public void setExistePenalizacion(String existePenalizacion) {
+		this.existePenalizacion = existePenalizacion;
+	}
+
+	public List<PolizaVigenteVO> getPolizaUnica() {
+		return polizaUnica;
+	}
+
+	public void setPolizaUnica(List<PolizaVigenteVO> polizaUnica) {
+		this.polizaUnica = polizaUnica;
+	}
+
+	public void setListaFacturas(List<ListaFacturasVO> listaFacturas) {
 	this.listaFacturas = listaFacturas;
 }
 
