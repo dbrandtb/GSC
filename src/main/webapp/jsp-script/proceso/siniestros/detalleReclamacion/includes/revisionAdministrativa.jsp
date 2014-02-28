@@ -12,11 +12,19 @@ var _REEMBOLSO    = "2";
 var _URL_LoadFacturas =  '<s:url namespace="/siniestros" action="loadListaFacturasTramite" />';
 var _URL_GuardaFactura =  '<s:url namespace="/siniestros" action="guardaFacturaTramite" />';
 
+var _URL_LoadConceptos =  '<s:url namespace="/siniestros" action="obtenerMsinival" />';
+var _URL_GuardaConcepto =  '<s:url namespace="/siniestros" action="guardarMsinival" />';
+
+var _UrlAjustesMedicos =  '<s:url namespace="/siniestros" action="includes/ajustesMedicos" />';
+
 var _URL_CATALOGOS = '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
 var _CATALOGO_TipoAtencion = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_ATENCION_SINIESTROS"/>';
 var _CATALOGO_PROVEEDORES  = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@PROVEEDORES"/>';
 var _CATALOGO_COBERTURAS  = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@COBERTURAS"/>';
 var _CATALOGO_SUBCOBERTURAS  = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURAS"/>';
+
+var _CATALOGO_TipoConcepto  = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_CONCEPTO_SINIESTROS"/>';
+var _CATALOGO_ConceptosMedicos  = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CODIGOS_MEDICOS"/>';
 
 Ext.onReady(function() {
 	
@@ -52,14 +60,12 @@ Ext.onReady(function() {
 	
 	Ext.define('modelConceptos',{
         extend: 'Ext.data.Model',
-        fields: [{type:'string',    name:'concepto'},
-                 {type:'string',    name:'ub'},
-                 {type:'string',    name:'subcobertura'},
-                 {type:'string',    name:'importe'},
-                 {type:'string',    name:'descuento'},
-                 {type:'string',    name:'subtotalfactura'},
-                 {type:'string',    name:'importeAutorizado'}
-				]
+        fields: ["CDUNIECO","CDRAMO","ESTADO","NMPOLIZA","NMSUPLEM",
+         		"NMSITUAC","AAAPERTU","STATUS","NMSINIES","NFACTURA",
+        		"CDGARANT","CDCONVAL","CDCONCEP","IDCONCEP","CDCAPITA",
+        		"NMORDINA",{name:"FEMOVIMI", type: "date", dateFormat: "d/m/Y"},"CDMONEDA","PTPRECIO","CANTIDAD",
+        		"DESTOPOR","DESTOIMP","PTIMPORT","PTRECOBR","NMANNO",
+        		"NMAPUNTE","USERREGI",{name:"FEREGIST", type: "date", dateFormat: "d/m/Y"}]
     });
 
 	Ext.define('modelListadoProvMedico',{
@@ -103,7 +109,15 @@ Ext.onReady(function() {
 	storeConceptos=new Ext.data.Store(
 			{
 			    autoDestroy: true,
-			    model: 'modelConceptos'
+			    model: 'modelConceptos',
+			    proxy: {
+		            type: 'ajax',
+		            url: _URL_LoadConceptos,
+		            reader: {
+		                type: 'json',
+		                root: 'loadList'
+		            }
+		        }
 			});
 	
 	var storeTipoAtencion = Ext.create('Ext.data.JsonStore', {
@@ -171,6 +185,49 @@ Ext.onReady(function() {
                 catalogo: _CATALOGO_SUBCOBERTURAS
             }
         }
+	});
+
+	var storeSubcoberturasC = Ext.create('Ext.data.Store',{
+        model: 'Generic',
+        autoLoad: false,
+        proxy: {
+            type: 'ajax',
+            url: _URL_CATALOGOS,
+            reader: {
+                type: 'json',
+                root: 'lista'
+            },
+            extraParams: {
+                catalogo: _CATALOGO_SUBCOBERTURAS
+            }
+        }
+	});
+	
+	var storeTipoConcepto = Ext.create('Ext.data.JsonStore', {
+		model:'Generic',
+		proxy: {
+			type: 'ajax',
+			url: _URL_CATALOGOS,
+			extraParams : {catalogo:_CATALOGO_TipoConcepto},
+			reader: {
+				type: 'json',
+				root: 'lista'
+			}
+		}
+	});
+	storeTipoConcepto.load();
+	
+	var storeConceptosCatalogo = Ext.create('Ext.data.JsonStore', {
+		model:'Generic',
+		proxy: {
+			type: 'ajax',
+			url: _URL_CATALOGOS,
+			extraParams : {catalogo:_CATALOGO_ConceptosMedicos},
+			reader: {
+				type: 'json',
+				root: 'lista'
+			}
+		}
 	});
 	
 	
@@ -290,92 +347,185 @@ Ext.onReady(function() {
     var panelEdicionConceptos = Ext.create('Ext.form.Panel',{
         border  : 0
         ,bodyStyle:'padding:5px;'
+        ,url: _URL_GuardaConcepto
         ,items :
-        [   
-             {
-		        xtype      : 'textfield'
-		    	,fieldLabel : 'Concepto'
+        [   {
+        	xtype       : 'combo',
+        	name        : 'params.cdconval',
+        	fieldLabel  : 'Sub Cobertura',
+        	labelWidth: 150,
+        	displayField: 'value',
+        	valueField  : 'key',
+        	allowBlank  : false,
+            forceSelection : true,
+            matchFieldWidth: false,
+            queryMode   :'local',
+            store       : storeSubcoberturasC,
+            triggerAction  : 'all',
+            emptyText   : 'Seleccione...',
+            editable    : false
+        },{
+        	xtype: 'combo',
+            name:'params.idconcep',
+            labelWidth: 150,
+            valueField: 'key',
+            displayField: 'value',
+            fieldLabel: 'Tipo de Concepto',
+            store: storeTipoConcepto,
+            queryMode:'local',
+            allowBlank:false,
+            editable:false,
+            emptyText:'Seleccione...',
+            listeners:{
+            	select: function (combo, records, opts){
+            		var cdTipo =  records[0].get('key');
+            		storeConceptosCatalogo.load({
+            			params: {
+            				'params.idPadre' : cdTipo
+            			}
+            		});
+            	}
+            }
+        },{
+        	xtype: 'combo',
+            name:'params.cdconcep',
+            labelWidth: 150,
+            valueField: 'key',
+            displayField: 'value',
+            fieldLabel: 'Concepto',
+            store: storeConceptosCatalogo,
+            queryMode:'local',
+            allowBlank:false,
+            editable:true,
+            forceSelection: true,
+            emptyText:'Seleccione...'
+        },
+            {
+		        xtype      : 'numberfield'
+		    	,fieldLabel : 'Precio'
 	    		,labelWidth: 150
 	    		,allowBlank:false
-		    	,name       : 'nombreConcepto'
+	    		,allowDecimals: true
+                ,decimalSeparator: '.'
+                ,minValue: 0
+		    	,name       : 'params.ptprecio'
+		    	,listeners: {
+		    		change: calculaImporteConcepto
+		    	}
     		}
-            ,
+            ,{
+		       		 xtype      : 'numberfield'
+			    	,fieldLabel : 'Cantidad'
+		    		,labelWidth: 150
+		    		,allowBlank:false
+	                ,minValue: 0
+			    	,name       : 'params.cantidad'
+			    	,listeners: {
+				    		change: calculaImporteConcepto
+				    }
+	    	}
+	         ,
             {
-		        xtype      : 'textfield'
-		    	,fieldLabel : 'UB'
-	    		,labelWidth: 150
-	    		,allowBlank:false
-		    	,name       : 'ub'
-    		}
-            ,
-            {
-		        xtype      : 'textfield'
-		    	,fieldLabel : 'Subcobertura'
-	    		,labelWidth: 150
-	    		,allowBlank:false
-		    	,name       : 'subcobertura'
-    		}
-            ,
-            {
-		        xtype      : 'textfield'
-		    	,fieldLabel : 'importe'
-	    		,labelWidth: 150
-	    		,allowBlank:false
-		    	,name       : 'importe'
-    		}
-            ,
-            {
-		        xtype      : 'textfield'
+		        xtype      : 'numberfield'
 		    	,fieldLabel : 'Descuento (%)'
 	    		,labelWidth: 150
+                ,minValue: 0
 	    		,allowBlank:false
-		    	,name       : 'porcentajeDescuento'
+		    	,name       : 'params.destopor'
+		    	,listeners: {
+			    		change: calculaImporteConcepto
+			    }
+    		},
+            {
+		        xtype      : 'numberfield'
+		    	,fieldLabel : 'Descuento Importe'
+	    		,labelWidth: 150
+	    		,allowBlank:false
+	    		,allowDecimals: true
+                ,decimalSeparator: '.'
+                ,minValue: 0
+		    	,name       : 'params.destoimp'
+		    	,listeners: {
+			    		change: calculaImporteConcepto
+			    }
     		}
             ,
             {
-		        xtype      : 'textfield'
+		        xtype      : 'numberfield'
 		    	,fieldLabel : 'Subtotal factura'
 	    		,labelWidth: 150
 	    		,allowBlank:false
-		    	,name       : 'subtotalFactura'
+	    		,allowDecimals: true
+                ,decimalSeparator: '.'
+                ,readOnly: true
+                ,minValue: 0
+		    	,name       : 'params.ptimport'
     		}
-            ,
+            /*,
             {
 		        xtype      : 'textfield'
 		    	,fieldLabel : 'Importe autorizado arancel'
 	    		,labelWidth: 150
 	    		,allowBlank:false
 		    	,name       : 'importeAutorizado'
-    		}
+    		}*/
         ]
     });
+    
+    function calculaImporteConcepto(){
+    	var importe = panelEdicionConceptos.down('[name="params.ptprecio"]').getValue()*1;
+    	var cantidad = panelEdicionConceptos.down('[name="params.cantidad"]').getValue()*1;
+    	var destopor = panelEdicionConceptos.down('[name="params.destopor"]').getValue()*1;
+    	var destoimp = panelEdicionConceptos.down('[name="params.destoimp"]').getValue()*1;
+    	
+    	panelEdicionConceptos.down('[name="params.ptimport"]').setValue(((cantidad*importe) *(1-(destopor/100)))-destoimp);
+    	
+    }
 
 	/*PANTALLA EMERGENTE PARA LA INSERCION Y MODIFICACION DE LOS DATOS DEL GRID*/
     var windowConceptos= Ext.create('Ext.window.Window', {
           title: 'Agregar Concepto',
           closeAction: 'hide',
           items:[panelEdicionConceptos],
-          
+          bodyStyle:'padding:15px;',
           buttons:[{
                  text: 'Aceptar',
                  icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
                  handler: function() {
                        if (panelEdicionConceptos.form.isValid()) {
+                    	   var record = gridFacturas.getSelectionModel().getSelection()[0];
+                    	   debug("CdGarant: "+record.get('CDGARANT'));
+                    	   debug("Factura: "+record.get('NFACTURA'));
+                    	   
+                    	   panelEdicionConceptos.form.submit({
+           		        	waitMsg:'Procesando...',			
+           		        	params: {
+           		        		'params.cdunieco'   : _CDUNIECO,
+           		        		'params.cdramo'   : _CDRAMO,
+           		        		'params.estado'   : _ESTADO,
+           		        		'params.nmpoliza'   : _NMPOLIZA,
+           		        		'params.nmsituac'   : _NMSITUAC,
+           		        		'params.nmsuplem'   : _NMSUPLEM,
+           		        		'params.status'   : _STATUS,
+           		        		'params.aaapertu'   : _AAAPERTU,
+           		        		'params.nmsinies'   : _NMSINIES,
+           		        		'params.nfactura'   : record.get('NFACTURA'),
+           		        		'params.cdgarant'   : record.get('CDGARANT')
+           		        	},
+           		        	failure: function(form, action) {
+           		        		mensajeError("Error al guardar el concepto");
+           					},
+           					success: function(form, action) {
+           						
+           						storeConceptos.reload();
+           						panelEdicionConceptos.getForm().reset();
+                               	windowConceptos.close();
+                               	mensajeCorrecto("Aviso","Se ha guardado el concepto.");
+           						
+           						
+           					}
+           				});
                        	
-                       	var datos=panelEdicionConceptos.form.getValues();
-                       	console.log(datos);
-                       	var rec = new modelConceptos({
-                       		concepto: datos.nombreConcepto,
-                       		ub: datos.ub,
-                       		subcobertura: datos.subcobertura,
-                       		importe: datos.importe,
-                       		descuento: datos.porcentajeDescuento,        	
-                       		subtotalfactura: datos.subtotalFactura,
-                       		importeAutorizado: datos.importeAutorizado,
-		        	 		});
-                       	storeConceptos.add(rec);
-                       	panelEdicionConceptos.getForm().reset();
-                       	windowConceptos.close();
                        } else {
                            Ext.Msg.show({
                                   title: 'Aviso',
@@ -409,7 +559,7 @@ Ext.onReady(function() {
                   handler: function() {
                         if (panelEdicionFacturas.form.isValid()) {
                         	
-                        	var datos=panelEdicionFacturas.form.getValues();
+                        	//var datos=panelEdicionFacturas.form.getValues();
                         	panelEdicionFacturas.form.submit({
             		        	waitMsg:'Procesando...',			
             		        	params: {
@@ -577,6 +727,25 @@ Ext.define('EditorFacturas', {
  		var record=this.getStore().getAt(rowIndex);
  		debug("Editando...");        	
  		
+ 	},
+ 	listeners: {
+ 		select: function (grid, record, index, opts){
+ 			debug(record.get('NFACTURA'));
+ 			storeConceptos.load({
+ 				params: {
+ 		    		'params.nfactura'  : record.get('NFACTURA'),
+ 		    		'params.cdunieco'  : _CDUNIECO,
+ 		    		'params.cdramo'    : _CDRAMO,
+ 		    		'params.estado'    : _ESTADO,
+ 		    		'params.nmpoliza'  : _NMPOLIZA,
+ 		    		'params.nmsituac'  : _NMSITUAC,
+ 		    		'params.nmsuplem'  : _NMSUPLEM,
+ 		    		'params.status'    : _STATUS,
+ 		    		'params.aaapertu'  : _AAAPERTU,
+ 		    		'params.nmsinies'  : _NMSINIES
+ 		    	}
+ 			});
+ 		}
  	}
 	});
 
@@ -609,48 +778,59 @@ Ext.define('EditorConceptos', {
  			store: storeConceptos,
  			columns: 
  				[{
- 					header : 'Concepto',
- 					dataIndex : 'concepto',
+ 					dataIndex : 'NMORDINA',
+ 					width : 20
+ 				},{
+ 					header : 'Tipo Concepto',
+ 					dataIndex : 'IDCONCEP',
  					width : 150
  				},{
- 					header : 'UB',
- 					dataIndex : 'ub',
+ 					header : 'Codigo Concepto',
+ 					dataIndex : 'CDCONCEP',
  					width : 150
  				// , renderer: Ext.util.Format.dateRenderer('d M Y')
 
  				},{
  					header : 'Subcobertura',
- 					dataIndex : 'subcobertura',
+ 					dataIndex : 'CDCONVAL',
  					width : 150
  				},{
- 					header : 'Importe',
- 					dataIndex : 'importe',
+ 					header : 'Precio',
+ 					dataIndex : 'PTPRECIO',
  					width : 150,
  					renderer : Ext.util.Format.usMoney
  				},{
+ 					header : 'Cantidad',
+ 					dataIndex : 'CANTIDAD',
+ 					width : 150
+ 				},{
  					header : 'Descuento (%)',
- 					dataIndex : 'descuento',
+ 					dataIndex : 'DESTOPOR',
+ 					width : 150
+ 				},{
+ 					header : 'Descuento ($)',
+ 					dataIndex : 'DESTOIMP',
  					width : 150
  				},{
  					header : 'Subtotal Factura',
- 					dataIndex : 'subtotalfactura',
+ 					dataIndex : 'PTIMPORT',
  					width : 150
- 				},{
+ 				},/*{
  					header : 'Importe autorizado <br/> arancel',
  					dataIndex : 'importeAutorizado',
  					width : 150
- 				},{
+ 				},*/{
  					xtype : 'actioncolumn',
  					width : 30,
  					sortable : false,
  					menuDisabled : true,
- 					items : [ {
+ 					items : [<s:property value="imap.conceptosButton" />/*, {
  						icon : _CONTEXT
  								+ '/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
  						tooltip : 'Quitar inciso',
  						scope : this,
  						handler : this.onRemoveClick
- 					} ]
+ 					} */]
  				} ],
 	 		tbar: [{
 			 	icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png',
@@ -694,6 +874,14 @@ Ext.define('EditorConceptos', {
  	},
  	onAddClick: function(){
  		if(gridFacturas.getSelectionModel().hasSelection()){
+ 			
+ 			var record = gridFacturas.getSelectionModel().getSelection()[0];
+ 			
+ 			storeSubcoberturasC.load({
+    			params: {
+    				'params.cdgarant' : record.get('CDGARANT')
+    			}
+    		});
  			windowConceptos.show();
  		}else {
  			mensajeWarning("Debe seleccionar una factura para poder agregar un concepto a la misma.");
@@ -728,7 +916,53 @@ Ext.create('Ext.form.Panel',{
 				gridConceptos
 	]
 	});
+	
+function _mostrarVentanaAjustes(grid,rowIndex,colIndex){
+    var record = grid.getStore().getAt(rowIndex);
+    var recordFactura = gridFacturas.getSelectionModel().getSelection()[0];
+    
+    debug("Codigo Garantia: "+recordFactura.get('NFACTURA'));
+    
+    windowLoader = Ext.create('Ext.window.Window',{
+        modal       : true,
+        buttonAlign : 'center',
+        width       : 600,
+        height      : 400,
+        autoScroll  : true,
+        loader      : {
+            url     : _UrlAjustesMedicos,
+            params         :
+            {
+                'params.ntramite'  : _NTRAMITE
+                ,'params.cdunieco' : _CDUNIECO
+                ,'params.cdramo'   : _CDRAMO
+                ,'params.estado'   : _ESTADO
+                ,'params.nmpoliza' : _NMPOLIZA
+                ,'params.nmsuplem' : _NMSUPLEM
+                ,'params.nmsituac' : _NMSITUAC
+                ,'params.aaapertu' : _AAAPERTU
+                ,'params.status'   : _STATUS
+                ,'params.nmsinies' : _NMSINIES
+                ,'params.nfactura' : recordFactura.get('NFACTURA')
+                ,'params.cdgarant' : record.get('CDGARANT')
+                ,'params.cdconval' : record.get('CDCONVAL')
+                ,'params.cdconcep' : record.get('CDCONCEP')
+                ,'params.idconcep' : record.get('IDCONCEP')
+                ,'params.nmordina' : record.get('NMORDINA')
+            },
+            scripts  : true,
+            loadMask : true,
+            autoLoad : true,
+            ajaxOptions: {
+            	method: 'POST'
+            }
+        }
+    }).show();
+    centrarVentana(windowLoader);
+}
+
 });
+
 </script>
 
 <div id="maindivAdminData" style="height:600px;"></div>

@@ -165,6 +165,16 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	    	
 	    	imap = new HashMap<String,Item>();
 	    	imap.put("gridColumns",gc.getColumns());
+	    	
+	    	pantalla = "DETALLE_FACTURA";
+	    	seccion  = "BOTONES_CONCEPTOS";
+	    	
+	    	componentes = pantallasManager.obtenerComponentes(
+	    			null, null, null, null, null, cdrol, pantalla, seccion, null);
+	    	
+	    	gc.generaComponentes(componentes, true, false, false, false,false, true);
+	    	
+	    	imap.put("conceptosButton",gc.getButtons());
 	   		
 	   		logger.debug("Resultado: "+imap);
 	   		//siniestrosManager.guardaListaTramites(params, deleteList, saveList);
