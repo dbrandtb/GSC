@@ -10,19 +10,21 @@
         --%>
         <script type="text/javascript">
             var _CONTEXT = '${ctx}';
-            var _URL_CONSULTA_AUTORIZACION_ESP1 		= '<s:url namespace="/siniestros" 		action="consultaAutorizacionServicio" />';
-            var _URL_LISTADO_CONCEP_EQUIP1    		= '<s:url namespace="/siniestros" action="consultaListaTDeTauts" />';
-            var _URL_LISTA_SUBCOBERTURA1				= '<s:url namespace="/siniestros" action="consultaListaSubcobertura" />';
-            var _URL_LISTA_TMANTENI1					= '<s:url namespace="/siniestros" action="consultaListaManteni" />';
-            var _URL_CONSULTA_PROVEEDOR_MEDICO1		= '<s:url namespace="/siniestros" 		action="consultaListaProvMedico" />';
-            var _URL_CONSULTA_DEDUCIBLE_COPAGO1		= '<s:url namespace="/siniestros" 		action="consultaListaDatSubGeneral" />';
-            var mesConUrlLoadCatalo1    				= '<s:url namespace="/catalogos"       action="obtieneCatalogo" />';
-            var _CAT_AUTORIZACION1				    = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_SUCURSALES_ADMIN"/>';
-            var _CAT_CAUSASINIESTRO1				    = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CAUSA_SINIESTRO"/>';
-            var _CAT_TRATAMIENTO1				    = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TTRATAMIENTO"/>';
+            
+            var _URL_CATALOGOS                  = '<s:url namespace="/catalogos"  action="obtieneCatalogo" />';
+            var _URL_CONSULTA_AUTORIZACION_ESP1 = '<s:url namespace="/siniestros" action="consultaAutorizacionServicio" />';
+            var _URL_CONSULTA_DEDUCIBLE_COPAGO1 = '<s:url namespace="/siniestros" action="consultaListaDatSubGeneral" />';
+            var _URL_CONSULTA_PROVEEDOR_MEDICO1 = '<s:url namespace="/siniestros" action="consultaListaProvMedico" />';
+            var _URL_LISTA_SUBCOBERTURA1		= '<s:url namespace="/siniestros" action="consultaListaSubcobertura" />';
+            var _URL_LISTA_TMANTENI1			= '<s:url namespace="/siniestros" action="consultaListaManteni" />';
+            var _URL_LISTADO_CONCEP_EQUIP1      = '<s:url namespace="/siniestros" action="consultaListaTDeTauts" />';
+            
+            var _CAT_AUTORIZACION1	 = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_SUCURSALES_ADMIN"/>';
+            var _CAT_CAUSASINIESTRO1 = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CAUSA_SINIESTRO"/>';
+            var _CAT_TRATAMIENTO1	 = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TTRATAMIENTO"/>';
+            var _CAT_MEDICOS         = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MEDICOS"/>';
             
             var valorAction = <s:property value='%{getParams().toString().replace("=",":\'").replace(",","\',").replace("}","\'}")}' />;
-            
             
         </script>
         
