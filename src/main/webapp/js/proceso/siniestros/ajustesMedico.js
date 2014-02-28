@@ -2,16 +2,20 @@ Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.chart.*', 'Ext.grid.Panel','Ext.l
 var datosgrid;
 var storeIncisos;
 
-Ext.define('modelClau',
-{
-    extend:'Ext.data.Model',
-    fields:['consecutivo','ajusteImporte','observaciones']
+
+Ext.define('modelAjusteMedico',{
+    extend: 'Ext.data.Model',
+    fields: [
+        {type:'string', name:'COMMENTS'},
+        {type:'string', name:'PTIMPORT'},
+        {type:'string', name:'NMORDMOV'}
+    ]
 });
 
 storeIncisos=new Ext.data.Store(
 {
     autoDestroy: true,
-    model: 'modelClau'
+    model: 'modelAjusteMedico'
 });
 
 function _amRecardar()
@@ -34,7 +38,7 @@ function _amRecardar()
 		'params.idconcep' : _amParams.idconcep,
 		'params.nmordina' : _amParams.nmordina
 	};
-	debug('datos que se envian al servidor: ',json);
+	//debug('datos que se envian al servidor: ',json);
 	gridIncisos.setLoading(true);
 	Ext.Ajax.request(
 	{
@@ -44,7 +48,7 @@ function _amRecardar()
 		{
 			gridIncisos.setLoading(false);
 			json = Ext.decode(response.responseText);
-			debug('respuesta del servidor: ',json);
+			//debug('respuesta del servidor: ',json);
 			if(json.success == true)
 			{
 				var total = 0*1;
@@ -104,7 +108,9 @@ function _amAgregar(ptimport,comments)
 	    	if(json.success == true)
 	    	{
 	    		//recargar el grid
+	    		ventanaGridAjusteMedico.close();
 	    		_amRecardar();
+	    		
 	    	}
 	    	else
 	    	{
@@ -131,16 +137,18 @@ Ext.onReady(function() {
         ,bodyStyle:'padding:5px;'
         ,items :
         [   
-	         {
-		    	id:'idConsecutivo'				,xtype      : 'textfield'	    	,fieldLabel : 'Consecutivo'
-	    		,labelWidth: 170	    		,allowBlank:false		    		,width: 300
-		    	,name : 'idConsecutivo'
-	         },
-	         {
-		    	id:'idAjusteImporte'	        ,xtype      : 'textfield'	    	,fieldLabel : 'Ajuste de importe'
-	    		,labelWidth: 170	    		,allowBlank:false		    		,width: 500
-		    	,name : 'idAjusteImporte'
-	         },
+	         {   
+	            	xtype      : 'numberfield',
+			        name       : 'idAjusteImporte',
+			        id:	'idAjusteImporte',
+			    	fieldLabel : 'Importe',
+			    	allowBlank:false,
+			    	allowDecimals :true,
+			    	decimalSeparator :'.',
+			    	minValue: 0,
+	                labelWidth: 170
+	    		}
+	         ,
 	         {
 		    	id:'idObservaciones'	        ,xtype      : 'textfield'	    	,fieldLabel : 'Observaciones'
 	    		,labelWidth: 170	    		,allowBlank:false		    		,width: 500
@@ -161,17 +169,10 @@ Ext.onReady(function() {
                   icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
                   handler: function() {
                         if (panelAjusteMedico.form.isValid()) {
-                        	
+                        	// realizamos el guardado del registro
                         	var datos=panelAjusteMedico.form.getValues();
                         	console.log(datos);
-                        	
-                        	var rec = new modelClau({
-                        		consecutivo: datos.idConsecutivo,
-                        		ajusteImporte: datos.idAjusteImporte,
-                        		observaciones: datos.idObservaciones
-		        	 		});
-                        	storeIncisos.add(rec);
-                        	panelAjusteMedico.getForm().reset();
+                        	_amAgregar( datos.idAjusteImporte,datos.idObservaciones);
                         } else {
                             Ext.Msg.show({
                                    title: 'Aviso',
@@ -223,17 +224,18 @@ Ext.onReady(function() {
 	 			store: storeIncisos,
 	 			columns: 
 	 			[
-	 			 	//'consecutivo','ajusteImporte','Observaciones'
-				 	{	
-				 		header: 'Consecutivo',			dataIndex: 'consecutivo'
-				 	},
-				 	{
-				 		header: 'Ajuste de importe',	dataIndex: 'ajusteImporte',			width: 200		,renderer: Ext.util.Format.usMoney
+
+					{
+						header: 'Consecutivo',			dataIndex: 'NMORDMOV',			width: 100
+						
+					},
+					{
+				 		header: 'Ajuste de importe',	dataIndex: 'PTIMPORT',			width: 200		,renderer: Ext.util.Format.usMoney
 				 		
 				 	},
 				 	{
-					 	header: 'Observaciones',			dataIndex: 'observaciones',	 	flex:2	
-				 	},
+					 	header: 'Observaciones',		dataIndex: 'COMMENTS',	 	flex:2	
+				 	}/*,
 				 	{
 					 	xtype: 'actioncolumn',
 					 	width: 30,
@@ -241,11 +243,11 @@ Ext.onReady(function() {
 					 	menuDisabled: true,
 					 	items: [{
 					 		icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
-					 		tooltip: 'Quitar inciso',
+					 		tooltip: 'Quitar ajuste m&eacute;dico',
 					 		scope: this,
 					 		handler: this.onRemoveClick
 				 		}]
-				 	}
+				 	}*/
 		 		],
 		 		selModel: {
 			 		selType: 'cellmodel'
@@ -313,12 +315,17 @@ Ext.onReady(function() {
     	        border    : 0
     	        ,title: 'Ajustes M&eacute;dico'
     	        ,renderTo : 'div_clau'
-	        	//,bodyPadding: 10
-	        	,bodyStyle:'padding:5px;'
-	            ,width: 800
+	        	,bodyPadding: 10
+	        	,width: 800
+	            ,defaults 	:
+	    		{
+	    			style : 'margin:5px;'
+	    		}
+	    		
     	        ,items    :
     	        [
-    	            {
+    	            
+            		{
             			id:'idConcepto'
 		                ,xtype      : 'textfield'
 		            	,fieldLabel : 'Concepto'
@@ -346,81 +353,18 @@ Ext.onReady(function() {
                     gridIncisos
                     ,
                     {
-        		    	id:'idTotalAjustado'
-        		        ,xtype      : 'textfield'
+            			id:'idTotalAjustado'
+        		        ,xtype      : 'numberfield'
         		    	,fieldLabel : 'Total ajustado'
         	    		,labelWidth: 170
-        	    		,allowBlank:false
-        	    		,width: 500
-        		    	,name       : 'idTotalAjustado'
+        	    		,name       : 'idTotalAjustado',
+        		    	allowDecimals :true,
+        		    	decimalSeparator :'.',
+        		    	renderer: Ext.util.Format.usMoney
         	         }
-    	        ],
-    	        buttonAlign:'center',
-    	        buttons: [{
-    	            id:'botonGuadar',
-    	            icon:_CONTEXT+'/resources/fam3icons/icons/calculator.png',
-    	            //text: hayTramiteCargado?'Precaptura':'Cotizar',
-    	            text: 'Guardar',
-            		handler: function() {
-            			
-            			var form = this.up('form').getForm();
-            			if (form.isValid())
-    	                {
-            				Ext.Msg.show({
-    	                    	title:'Exito',
-    	                    	msg: 'Se contemplaron todo',
-    	                    	buttons: Ext.Msg.OK,
-    	                    	icon: Ext.Msg.WARNING
-    	                	});
-    	                }
-            			else
-        				{
-            				var incisosRecords = storeIncisos.getRange();
-            				console.log(incisosRecords.length);
-            				
-            				var incisosJson = [];
-            				storeIncisos.each(function(record,index){
-	                        	if(record.get('nombre')
-	                        			&&record.get('nombre').length>0)
-                        		{
-	                        		nombres++;
-                        		}
-	                            incisosJson.push({
-	                            	noFactura: record.get('noFactura'),
-	                            	fechaFactura: record.get('fechaFactura'),
-	                            	tipoServicio: record.get('tipoServicio'),
-	                            	proveedor: record.get('proveedor'),
-	                            	importe: record.get('importe')
-	                            });
-                            });
-            				
-            				console.log('---- VALOR DE IncisosJson ---- ');
-            				console.log(incisosJson);
-            				
-            				var submitValues=form.getValues();
-                        	submitValues['incisos']=incisosJson;
-                        	console.log('---- VALOR DE submitValues ---- ');
-            				console.log(submitValues);
-            				
-            				Ext.Msg.show({
-    	                    	title:'Datos incompletos',
-    	                    	msg: 'Favor de introducir todos los campos requeridos',
-    	                    	buttons: Ext.Msg.OK,
-    	                    	icon: Ext.Msg.WARNING
-    	                	});
-        				}
-    	            }
-    	        },
-    	        {
-    	            text:'Cancelar',
-    	            icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
-    	            id:'botonCancelar',
-    	            handler:function()
-    	            {}
-    	        }
-    	    ]
+    	        ]
     	    });
     
-    _amAgregar('150.5','sin observaciones');
+    _amRecardar();
     
 });

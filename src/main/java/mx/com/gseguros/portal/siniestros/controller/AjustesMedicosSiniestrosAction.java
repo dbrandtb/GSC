@@ -39,7 +39,7 @@ public class AjustesMedicosSiniestrosAction extends PrincipalCoreAction {
 
     public String pantallaAjustesMedicos()
     {
-    	params = new HashMap<String,String>();
+    	/*params = new HashMap<String,String>();
     	params.put("cdunieco" , "1");
     	params.put("cdramo"   , "2");
     	params.put("estado"   , "3");
@@ -54,7 +54,7 @@ public class AjustesMedicosSiniestrosAction extends PrincipalCoreAction {
     	params.put("cdconval" , "12");
     	params.put("cdconcep" , "13");
     	params.put("idconcep" , "14");
-    	params.put("nmordina" , "15");
+    	params.put("nmordina" , "15");*/
     	return SUCCESS;
     }
 	

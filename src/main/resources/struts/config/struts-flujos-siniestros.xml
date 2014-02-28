@@ -291,7 +291,7 @@
     		<result>/jsp-script/proceso/siniestros/asignarReclamaciones.jsp</result>
 		</action>
 		
-		<action name="ajustesMedicos" class="ajustesMedicosSiniestrosAction"  method="pantallaAjustesMedicos">
+		<action name="includes/ajustesMedicos" class="ajustesMedicosSiniestrosAction"  method="pantallaAjustesMedicos">
     		<result name="success">/jsp-script/proceso/siniestros/ajustesMedicos.jsp</result>
 		</action>
 
@@ -307,6 +307,17 @@
 		
 		<action name="generarContrarecibo" class="siniestrosAction"
 			method="generarContrarecibo">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success,
+					msgResult
+				</param>
+			</result>
+		</action>
+		
+		<action name="generarAutoriServicio" class="siniestrosAction"
+			method="generarAutoriServicio">
 			<result type="json">
 				<param name="ignoreHierarchy">false</param>
 				<param name="includeProperties">
