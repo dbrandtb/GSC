@@ -1420,6 +1420,77 @@ public void setMsgResult(String msgResult) {
     	return SUCCESS;
     }
     
+    public String guardarMsinival()
+    {
+    	logger.debug(""
+    			+ "\n#############################"
+    			+ "\n#############################"
+    			+ "\n###### guardarMsinival ######"
+    			+ "\n######                 ######"
+    			);
+    	logger.debug("params: "+params);
+    	try
+    	{
+    		UserVO usuario = (UserVO)session.get("USUARIO");
+    		
+    		String cdunieco  = params.get("cdunieco");
+    		String cdramo    = params.get("cdramo");
+    		String estado    = params.get("estado");
+    		String nmpoliza  = params.get("nmpoliza");
+    		String nmsuplem  = params.get("nmsuplem");
+    		String nmsituac  = params.get("nmsituac");
+    		String aaapertu  = params.get("aaapertu");
+    		String status    = params.get("status");
+    		String nmsinies  = params.get("nmsinies");
+    		String nfactura  = params.get("nfactura");
+    		String cdgarant  = params.get("cdgarant");
+    		String cdconval  = params.get("cdconval");
+    		String cdconcep  = params.get("cdconcep");
+    		String idconcep  = params.get("idconcep");
+    		String cdcapita  = params.get("cdcapita");
+    		String nmordina  = params.get("femovimi");
+    		String femovimi  = params.get("femovimi");
+    		Date   dFemovimi = renderFechas.parse(femovimi);
+    		String cdmoneda  = params.get("cdmoneda");
+    		String ptprecio  = params.get("ptprecio");
+    		String cantidad  = params.get("cantidad");
+    		String destopor  = params.get("destopor");
+    		String destoimp  = params.get("destoimp");
+    		String ptimport  = params.get("ptimport");
+    		String ptrecobr  = params.get("ptrecobr");
+    		String nmanno    = params.get("nmanno");
+    		String nmapunte  = params.get("nmapunte");
+    		String userregi  = usuario.getUser();
+    		String feregist  = params.get("feregist");
+    		Date   dFeregist = renderFechas.parse(feregist);
+    		
+    		siniestrosManager.P_MOV_MSINIVAL(
+    				cdunieco, cdramo, estado, nmpoliza, nmsuplem,
+    				nmsituac, aaapertu, status, nmsinies, nfactura,
+    				cdgarant, cdconval, cdconcep, idconcep, cdcapita,
+    				nmordina, dFemovimi, cdmoneda, ptprecio, cantidad,
+    				destopor, destoimp, ptimport, ptrecobr, nmanno,
+    				nmapunte, userregi, dFeregist, Constantes.INSERT_MODE);
+    		
+    		mensaje = "Datos guardados";
+    		success = true;
+    		
+    	}
+    	catch(Exception ex)
+    	{
+    		logger.debug("error al guardar msinival",ex);
+    		success=false;
+    		mensaje=ex.getMessage();
+    	}
+    	logger.debug(""
+    			+ "\n######                 ######"
+    			+ "\n###### guardarMsinival ######"
+    			+ "\n#############################"
+    			+ "\n#############################"
+    			);
+    	return SUCCESS;
+    }
+    
     public String getExistePenalizacion() {
 		return existePenalizacion;
 	}
