@@ -296,13 +296,13 @@ Ext.onReady(function(){
                                                             {
                                                                 debug(me);
                                                                 me.up().up().setLoading(true);
-                                                                console.log(Ext.getCmp("idComboTipCla").getValue());
+                                                                //console.log(Ext.getCmp("idComboTipCla").getValue());
                                                                 var swgrapol;
                                                                 Ext.getCmp("idComboTipCla").getStore().each(function(record){
                                                                     if (record.get("cdtipcla") == Ext.getCmp("idComboTipCla").getValue())
                                                                         {swgrapol=record.get("swgrapol");}
                                                                     });
-                                                                console.log(swgrapol);
+                                                                //console.log(swgrapol);
                                                                 
                                                                 if(swgrapol == "S")
                                                                 {
