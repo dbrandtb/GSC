@@ -1602,7 +1602,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	{
 		protected PMOVMSINIVAL(DataSource dataSource)
 		{
-			super(dataSource, "PKG_PRESINIESTRO.P_MOV_MSINIVAl");
+			super(dataSource, "PKG_SINIESTRO.P_MOV_MSINIVAL");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
