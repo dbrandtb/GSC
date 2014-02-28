@@ -38,6 +38,10 @@
             var _URL_GUARDA_AUTORIZACION			= '<s:url namespace="/siniestros" action="guardaAutorizacionServicio" />';
             var _VER_AUTORIZACION_SERVICIO 			= '<s:url namespace="/siniestros"      	action="includes/verAutorizacionServicio" />';
             var _UR_LISTA_PLAZAS 					= '<s:url namespace="/siniestros"      	action="consultaListaPlazas"/>';
+            var _URL_NUMERO_DIAS					= '<s:url namespace="/siniestros"      	action="consultaNumeroDias"/>';
+            
+            var _URL_POLIZA_UNICA					= '<s:url namespace="/siniestros"      	action="consultaPolizaUnica"/>';;
+            var _URL_EXCLUSION_PENALIZACION			= '<s:url namespace="/siniestros"      	action="validaExclusionPenalizacion"/>';;
             
         </script>
         <script type="text/javascript" src="${ctx}/js/proceso/siniestros/autorizacionServicios.js"></script>
