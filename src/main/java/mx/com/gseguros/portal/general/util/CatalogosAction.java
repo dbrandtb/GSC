@@ -33,14 +33,25 @@ public class CatalogosAction extends PrincipalCoreAction {
     private boolean success;
     
     /**
+     * true si queremos la propiedad "listaGenerica", 
+     * false si queremos la propiedad "lista"
+     */
+    private boolean catalogoGenerico;
+    
+    /**
      * Nombre del catalogo a obtener
      */
     private String catalogo;
     
     /**
-     * Lista con los objetos a devolver
+     * Lista con elementos de tipo "key","value" del cat&aacute;logo solicitado
      */
     private List<GenericVO> lista = new ArrayList<GenericVO>(0);
+    
+    /**
+     * Lista personalizada, puede contener cualquier tipo de objeto 
+     */
+    private List<?> listaGenerica;
     
     /**
      * Parametros enviados a los catalogos
@@ -56,8 +67,8 @@ public class CatalogosAction extends PrincipalCoreAction {
     public String obtieneCatalogo() throws Exception {
     	logger.debug("catalogo=" + catalogo);
         try {
-        	Catalogos nombreCatalogo = Catalogos.valueOf(catalogo);
-        	switch(nombreCatalogo) {
+        	Catalogos cat = Catalogos.valueOf(catalogo);
+        	switch(cat) {
         	
         		case AGENTES:
         			lista = catalogosManager.obtieneAgentes(params!=null?params.get("agente"):null);
@@ -84,7 +95,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case TTRATAMIENTO:
 				case TPENALIZACIONES:
 				case PLANES:
-					lista = catalogosManager.getTmanteni(nombreCatalogo);
+					lista = catalogosManager.getTmanteni(cat);
 	                break;
 				case MC_ESTATUS_TRAMITE:
 					lista = catalogosManager.obtieneStatusTramite(params);
@@ -150,27 +161,35 @@ public class CatalogosAction extends PrincipalCoreAction {
 					}
 					lista = siniestrosManager.getConsultaListaSubcobertura(cdgarant, cdsubcob);
 					break;
-				case PROVEEDORES:
-					List<ConsultaProveedorVO> provs = siniestrosManager.getConsultaListaProveedorMedico(Rol.CLINICA.getCdrol(), null);
-					lista = new ArrayList<GenericVO>();
-					for(ConsultaProveedorVO prov : provs)
-					{
-						lista.add(new GenericVO(prov.getCdpresta(),prov.getNombre()));
+				case MEDICOS:
+					List<ConsultaProveedorVO> medicos = siniestrosManager.getConsultaListaProveedorMedico(
+							Rol.MEDICO.getCdrol(), params != null ? params.get("cdpresta") : null);
+					if(catalogoGenerico) {
+						listaGenerica = medicos;
+					} else {
+						lista = new ArrayList<GenericVO>();
+						for(ConsultaProveedorVO medico : medicos) {
+							lista.add(new GenericVO(medico.getCdpresta(),medico.getNombre()));
+						}
 					}
 					break;
-				case MEDICOS:
-					List<ConsultaProveedorVO> medicos = siniestrosManager.getConsultaListaProveedorMedico(Rol.MEDICO.getCdrol(), null);
-					lista = new ArrayList<GenericVO>();
-					for(ConsultaProveedorVO medico : medicos)
-					{
-						lista.add(new GenericVO(medico.getCdpresta(),medico.getNombre()));
+				case PROVEEDORES:
+					List<ConsultaProveedorVO> provs = siniestrosManager.getConsultaListaProveedorMedico(
+							Rol.CLINICA.getCdrol(), params != null ? params.get("cdpresta") : null);
+					if(catalogoGenerico) {
+						listaGenerica = provs;
+					} else {
+						lista = new ArrayList<GenericVO>();
+						for(ConsultaProveedorVO prov : provs) {
+							lista.add(new GenericVO(prov.getCdpresta(),prov.getNombre()));
+						}
 					}
 					break;
 				case ICD:
-					lista = siniestrosManager.getConsultaListaCPTICD(nombreCatalogo.getCdTabla(),params.get("otclave"));
+					lista = siniestrosManager.getConsultaListaCPTICD(cat.getCdTabla(),params.get("otclave"));
 					break;
 				default:
-					throw new Exception("Catalogo no existente: " + nombreCatalogo);
+					throw new Exception("Catalogo no existente: " + cat);
 					//break;
 			}
         	success = true;
@@ -191,6 +210,14 @@ public class CatalogosAction extends PrincipalCoreAction {
 		this.success = success;
 	}
 
+	public boolean isCatalogoGenerico() {
+		return catalogoGenerico;
+	}
+
+	public void setCatalogoGenerico(boolean catalogoGenerico) {
+		this.catalogoGenerico = catalogoGenerico;
+	}
+
 	public String getCatalogo() {
 		return catalogo;
 	}
@@ -205,6 +232,14 @@ public class CatalogosAction extends PrincipalCoreAction {
 
 	public void setLista(List<GenericVO> lista) {
 		this.lista = lista;
+	}
+
+	public List<?> getListaGenerica() {
+		return listaGenerica;
+	}
+
+	public void setListaGenerica(List<?> listaGenerica) {
+		this.listaGenerica = listaGenerica;
 	}
 
 	public Map<String, String> getParams() {
