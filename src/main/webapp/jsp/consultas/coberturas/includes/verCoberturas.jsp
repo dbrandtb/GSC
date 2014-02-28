@@ -16,7 +16,7 @@
            //debug('<s:property value="%{getParams().toString()}" />');
         </script>
         
-        <script type="text/javascript" src="${ctx}/js/proceso/siniestros/verCoberturas.js"></script>
+        <script type="text/javascript" src="${ctx}/js/consultas/coberturas/includes/verCoberturas.js"></script>
     <%--    
     </head>
     <body>--%>

@@ -354,6 +354,22 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     }
     
     
+    /**
+     * Funcion para la visualizacion de las coberturas 
+     * @return params con los valores para hacer las consultas
+     */
+	public String verCoberturas(){
+		logger.debug(" **** Entrando a verCoberturas ****");
+		try {
+			logger.debug("params=" + params);
+		}catch( Exception e){
+			logger.error(e.getMessage(), e);
+		}
+		success = true;
+		return SUCCESS;
+    }
+    
+    
     //Getters and setters:
     
 	public List<ConsultaDatosAseguradoVO> getDatosAsegurados() {

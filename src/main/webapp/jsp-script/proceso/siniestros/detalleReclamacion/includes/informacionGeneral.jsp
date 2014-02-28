@@ -15,8 +15,8 @@
 	var _NMSINIES = '<s:property value="params.nmsinies" />';
 	*/
 
-	var _URL_CATALOGOS             = '<s:url namespace="/catalogos"  action="obtieneCatalogo" />';
-	var _URL_LOADER_VER_COBERTURAS = '<s:url namespace="/siniestros" action="includes/verCoberturas" />';
+	var _URL_CATALOGOS             = '<s:url namespace="/catalogos"       action="obtieneCatalogo" />';
+	var _URL_LOADER_VER_COBERTURAS = '<s:url namespace="/consultasPoliza" action="includes/verCoberturas" />';
 
 	Ext.onReady(function() {
 	 

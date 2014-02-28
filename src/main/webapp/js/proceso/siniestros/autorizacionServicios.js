@@ -376,8 +376,6 @@ Ext.onReady(function() {
 						    }
 					});
 					
-					idExclusionPenalizacion
-					
 					storeListadoAsegurado.removeAll();
 					modificacionPolizas.hide();
                 }
