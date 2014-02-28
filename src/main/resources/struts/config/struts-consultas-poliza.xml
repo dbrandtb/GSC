@@ -129,6 +129,10 @@
         <action name="includes/verCoberturas" class="ConsultasPolizaAction" method="verCoberturas">
             <result>/jsp/consultas/coberturas/includes/verCoberturas.jsp</result>
         </action>
+        
+        <action name="verExclusiones" class="ConsultasPolizaAction" method="verExclusiones">
+            <result>/jsp/consultas/exclusiones/includes/verExclusionesPoliza.jsp</result>
+        </action>
 
 	</package>
 
