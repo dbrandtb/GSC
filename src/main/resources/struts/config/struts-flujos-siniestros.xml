@@ -435,7 +435,7 @@
     		<result>/jsp-script/proceso/siniestros/detalleReclamacion/includes/calculos.jsp</result>
 		</action>
 
-		<action name="includes/revAdmin" class="detalleSiniestroAction">
+		<action name="includes/revAdmin" class="detalleSiniestroAction" method= "entradaRevisionAdmin">
     		<result>/jsp-script/proceso/siniestros/detalleReclamacion/includes/revisionAdministrativa.jsp</result>
 		</action>
 		
@@ -449,6 +449,29 @@
 				<param name="includeProperties">
 					loadList.*,
 					success
+				</param>
+			</result>
+		</action>
+		
+		<action name="loadListaFacturasTramite" class="detalleSiniestroAction"
+			method="loadListaFacturasTramite">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					loadList.*,
+					success,
+					msgResult
+				</param>
+			</result>
+		</action>
+
+		<action name="guardaFacturaTramite" class="detalleSiniestroAction"
+			method="guardaFacturaTramite">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success,
+					msgResult
 				</param>
 			</result>
 		</action>

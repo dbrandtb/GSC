@@ -163,7 +163,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		
 		return allUpdated;
 	}
-	
+
 	@Override
 	public List<HashMap<String, String>> loadListaRechazos()
 			throws ApplicationException {
@@ -502,6 +502,22 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		if(lista==null)
 		{
 			lista = new ArrayList<Map<String,String>>();
+		}
+		log.debug("obtenerFacturasTramite lista size: "+lista.size());
+		return lista;
+	}
+
+	@Override
+	public List<HashMap<String,String>> obtenerFacturasTramiteSiniestro(String ntramite, String siniestro) throws Exception
+	{
+		HashMap<String,String> params = new HashMap<String,String>();
+		params.put("pv_ntramite_i" , ntramite);
+		params.put("" , siniestro);
+		
+		List<HashMap<String,String>> lista = siniestrosDAO.obtenerFacturasTramiteSiniestro(params);
+		if(lista==null)
+		{
+			lista = new ArrayList<HashMap<String,String>>();
 		}
 		log.debug("obtenerFacturasTramite lista size: "+lista.size());
 		return lista;

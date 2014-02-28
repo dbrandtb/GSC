@@ -1336,6 +1336,37 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		}
 	}
 	
+
+	@Override
+	public List<HashMap<String,String>> obtenerFacturasTramiteSiniestro(HashMap<String, String> params) throws Exception
+	{
+		Map<String, Object> mapResult = ejecutaSP(new ObtenerFacturasTramiteSiniestro(this.getDataSource()), params);
+		return (List<HashMap<String,String>>) mapResult.get("pv_registro_o");
+	}
+	
+	protected class ObtenerFacturasTramiteSiniestro extends StoredProcedure
+	{
+		protected ObtenerFacturasTramiteSiniestro(DataSource dataSource)
+		{
+			super(dataSource, "");
+			declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new FacturasTramiteMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	protected class FacturasTramiteMapper  implements RowMapper {
+        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+        	AutorizacionServicioVO consulta = new AutorizacionServicioVO();
+        	consulta.setNmautser(rs.getString("NMAUTSER"));
+        	consulta.setNmautant(rs.getString("NMAUTANT"));
+            return consulta;
+        }
+    }
+	
 	@Override
 	public void actualizarAutorizacionTworksin(Map<String, String> params) throws Exception
 	{
@@ -1602,7 +1633,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	{
 		protected PMOVMSINIVAL(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SINIESTRO.P_MOV_MSINIVAL");
+			super(dataSource, "PKG_PRESINIESTRO.P_MOV_MSINIVAl");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
