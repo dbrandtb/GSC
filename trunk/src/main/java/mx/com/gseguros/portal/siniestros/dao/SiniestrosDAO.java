@@ -239,4 +239,8 @@ public interface SiniestrosDAO {
 			String cdunieco,String cdramo,String estado,String nmpoliza,String nmsuplem,
 			String nmsituac,String aaapertu,String status,String nmsinies,String nfactura,
 			String cdgarant,String cdconval,String cdconcep,String idconcep,String nmordina) throws Exception;
+	
+	public List<Map<String,String>>P_GET_FACTURAS_SINIESTRO(
+			String cdunieco,String cdramo,String estado,String nmpoliza,String nmsuplem,
+			String nmsituac,String aaapertu,String status,String nmsinies) throws Exception;
 }

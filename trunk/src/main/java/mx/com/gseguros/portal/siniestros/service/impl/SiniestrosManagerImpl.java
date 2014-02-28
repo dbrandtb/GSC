@@ -703,4 +703,20 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		log.debug("P_GET_TDSINIVAL lista size:"+lista.size());
 		return lista;
 	}
+	
+	@Override
+	public List<Map<String,String>>P_GET_FACTURAS_SINIESTRO(
+			String cdunieco,String cdramo,String estado,String nmpoliza,String nmsuplem,
+			String nmsituac,String aaapertu,String status,String nmsinies) throws Exception
+	{
+		List<Map<String,String>>lista=siniestrosDAO.P_GET_FACTURAS_SINIESTRO(
+				cdunieco,cdramo,estado,nmpoliza,nmsuplem,nmsituac,
+				aaapertu,status,nmsinies);
+		if(lista==null)
+		{
+			lista=new ArrayList<Map<String,String>>();
+		}
+		log.debug("P_GET_FACTURAS_SINIES lista size:"+lista.size());
+		return lista;
+	}
 }
