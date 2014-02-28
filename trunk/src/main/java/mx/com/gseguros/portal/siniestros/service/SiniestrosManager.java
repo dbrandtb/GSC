@@ -298,5 +298,6 @@ public interface SiniestrosManager {
 	public List<Map<String,String>>P_GET_FACTURAS_SINIESTRO(
 			String cdunieco,String cdramo,String estado,String nmpoliza,String nmsuplem,
 			String nmsituac,String aaapertu,String status,String nmsinies) throws Exception;
-	
+
+	public List<GenericVO>obtenerCodigosMedicos(String idconcep, String subcaden) throws Exception;
 }

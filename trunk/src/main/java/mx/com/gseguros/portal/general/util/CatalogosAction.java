@@ -189,6 +189,16 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case ICD:
 					lista = siniestrosManager.getConsultaListaCPTICD(cat.getCdTabla(),params.get("otclave"));
 					break;
+				case CODIGOS_MEDICOS:
+					String idconcep = null;
+					String descripc = null;
+					if(params!=null)
+					{
+						idconcep = params.get("idPadre");
+						descripc = params.get("descripc");
+					}
+					lista = siniestrosManager.obtenerCodigosMedicos(idconcep, descripc);
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;

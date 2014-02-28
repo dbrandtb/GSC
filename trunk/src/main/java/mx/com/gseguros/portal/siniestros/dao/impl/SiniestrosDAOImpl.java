@@ -2,6 +2,7 @@ package mx.com.gseguros.portal.siniestros.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -1877,6 +1878,41 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("pv_aaapertu_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_status_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmsinies_i" , OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public List<GenericVO>obtenerCodigosMedicos(String idconcep, String subcaden) throws Exception
+	{
+		Map<String,String>p=new HashMap<String,String>();
+		p.put("pv_idconcep_i" , idconcep);
+		p.put("pv_descripc_i" , subcaden);
+		logger.debug("obtenerCodigosMedicos params: "+p);
+		Map<String, Object> mapResult = ejecutaSP(new ObtenerCodigosMedicos(this.getDataSource()), p);
+		List<Map<String,String>>lista=(List<Map<String,String>>) mapResult.get("pv_registro_o");
+		List<GenericVO>listaG=new ArrayList<GenericVO>();
+		if(lista!=null)
+		{
+			for(Map<String,String>cpt:lista)
+			{
+				listaG.add(new GenericVO(cpt.get("CLAVE"),cpt.get("VALOR")));
+			}
+		}
+		return listaG;
+	}
+	
+	protected class ObtenerCodigosMedicos extends StoredProcedure
+	{
+		protected ObtenerCodigosMedicos(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SINIESTRO.P_LISTA_CODIGOS_MEDICOS");
+			declareParameter(new SqlParameter("pv_idconcep_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_descripc_i" , OracleTypes.VARCHAR));
 			
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
