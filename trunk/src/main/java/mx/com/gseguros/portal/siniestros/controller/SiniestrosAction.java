@@ -57,7 +57,6 @@ public class SiniestrosAction extends PrincipalCoreAction{
     private AutorizacionServicioVO datosAutorizacionEsp;
     private AutorizacionServicioVO numeroAutorizacion;
     private List<GenericVO> listaAsegurado;
-    private List<ConsultaProveedorVO> listaProvMedico;
     private List<GenericVO> listaCausaSiniestro;
     private List<AutorizaServiciosVO> listaAutorizacion;
     private List<CoberturaPolizaVO> listaCoberturaPoliza;
@@ -397,26 +396,6 @@ public class SiniestrosAction extends PrincipalCoreAction{
 	    return SUCCESS;
 	}
     
-    /**
-    * Funci�n que obtiene la lista del Medico y proveedor por medio del identificador
-    * @param tipoprov
-    * @param cdpresta
-    * @return Lista ConsultaProveedorVO con la informaci�n de los asegurados
-    */    
-   public String consultaListaProvMedico(){
-   	logger.debug(" **** Entrando al m�todo de listado para el medico y proveedor****");
-	   	try {
-			
-			List<ConsultaProveedorVO> lista = siniestrosManager.getConsultaListaProveedorMedico(params.get("tipoprov"),params.get("cdpresta"));
-			if(lista!=null && !lista.isEmpty())	listaProvMedico = lista;
-		}catch( Exception e){
-			logger.error("Error al obtener la lista de Proveedor o medico ",e);
-			return SUCCESS;
-		}
-	   	
-	   	success = true;
-	   	return SUCCESS;
-   }
     
    /**
 	 * metodo que obtiene el listado de las coberturas de poliza
@@ -1503,14 +1482,6 @@ public void setMsgResult(String msgResult) {
 
 	public void setListaCausaSiniestro(List<GenericVO> listaCausaSiniestro) {
 		this.listaCausaSiniestro = listaCausaSiniestro;
-	}
-	
-	public List<ConsultaProveedorVO> getListaProvMedico() {
-		return listaProvMedico;
-	}
-
-	public void setListaProvMedico(List<ConsultaProveedorVO> listaProvMedico) {
-		this.listaProvMedico = listaProvMedico;
 	}
 
 	public List<PolizaVigenteVO> getListaPoliza() {

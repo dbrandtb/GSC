@@ -38,17 +38,6 @@
 			</result>
 		</action>
 		
-		<action name="consultaListaProvMedico" class="siniestrosAction"
-			method="consultaListaProvMedico">
-			<result type="json">
-				<param name="ignoreHierarchy">false</param>
-				<param name="includeProperties">
-					listaProvMedico.*,
-					success
-				</param>
-			</result>
-		</action>
-		
 		<action name="consultaListaCausuaSiniestro" class="siniestrosAction"
 			method="consultaListaCausuaSiniestro">
 			<result type="json">
@@ -427,7 +416,7 @@
 			</result>
 		</action>
         
-		<action name="detalleSiniestro">
+		<action name="detalleSiniestro" class="detalleSiniestroAction">
     		<result>/jsp-script/proceso/siniestros/detalleReclamacion/detalleReclamacion.jsp</result>
 		</action>
 		
