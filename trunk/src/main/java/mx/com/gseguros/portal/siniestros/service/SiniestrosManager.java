@@ -110,6 +110,7 @@ public interface SiniestrosManager {
 			String cdpresta,
 			String ptimport,
 			String cdgarant,
+			String cdconval,
 			String descporc,
 			String descnume
 			) throws ApplicationException;
