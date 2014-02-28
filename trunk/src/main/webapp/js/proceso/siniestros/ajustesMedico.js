@@ -14,6 +14,110 @@ storeIncisos=new Ext.data.Store(
     model: 'modelClau'
 });
 
+function _amRecardar()
+{
+	var json =
+	{
+		'params.cdunieco' : _amParams.cdunieco,
+		'params.cdramo'   : _amParams.cdramo,
+		'params.estado'   : _amParams.estado,
+		'params.nmpoliza' : _amParams.nmpoliza,
+		'params.nmsuplem' : _amParams.nmsuplem,
+		'params.nmsituac' : _amParams.nmsituac,
+		'params.aaapertu' : _amParams.aaapertu,
+		'params.status'   : _amParams.status,
+		'params.nmsinies' : _amParams.nmsinies,
+		'params.nfactura' : _amParams.nfactura,
+		'params.cdgarant' : _amParams.cdgarant,
+		'params.cdconval' : _amParams.cdconval,
+		'params.cdconcep' : _amParams.cdconcep,
+		'params.idconcep' : _amParams.idconcep,
+		'params.nmordina' : _amParams.nmordina
+	};
+	debug('datos que se envian al servidor: ',json);
+	gridIncisos.setLoading(true);
+	Ext.Ajax.request(
+	{
+		url : _amUrlCargar
+		,params : json
+		,success : function(response)
+		{
+			gridIncisos.setLoading(false);
+			json = Ext.decode(response.responseText);
+			debug('respuesta del servidor: ',json);
+			if(json.success == true)
+			{
+				var total = 0*1;
+				for(var i = 0;i<json.loadList.length;i++)
+				{
+					total = total*1 + json.loadList[i]["PTIMPORT"]*1;
+				}
+				Ext.getCmp('idTotalAjustado').setValue(total);
+				storeIncisos.removeAll();
+				storeIncisos.add(json.loadList);
+			}
+			else
+			{
+				mensajeError('No se pudieron obtener los ajustes m&eacute;dicos');
+			}
+		}
+	    ,failure : function()
+	    {
+	    	gridIncisos.setLoading(false);
+	    	errorComunicacion();
+	    }
+	});
+}
+
+function _amAgregar(ptimport,comments)
+{
+	var json =
+	{
+		'params.cdunieco' : _amParams.cdunieco,
+		'params.cdramo'   : _amParams.cdramo,
+		'params.estado'   : _amParams.estado,
+		'params.nmpoliza' : _amParams.nmpoliza,
+		'params.nmsuplem' : _amParams.nmsuplem,
+		'params.nmsituac' : _amParams.nmsituac,
+		'params.aaapertu' : _amParams.aaapertu,
+		'params.status'   : _amParams.status,
+		'params.nmsinies' : _amParams.nmsinies,
+		'params.nfactura' : _amParams.nfactura,
+		'params.cdgarant' : _amParams.cdgarant,
+		'params.cdconval' : _amParams.cdconval,
+		'params.cdconcep' : _amParams.cdconcep,
+		'params.idconcep' : _amParams.idconcep,
+		'params.nmordina' : _amParams.nmordina,
+		'params.ptimport' : ptimport,
+		'params.comments' : comments
+	};
+	debug('datos que se envian al servidor: ',json);
+	ventanaGridAjusteMedico.setLoading(true);
+	Ext.Ajax.request(
+	{
+		url     : _amUrlAgregar
+		,params : json
+	    ,success : function(response)
+	    {
+	    	ventanaGridAjusteMedico.setLoading(false);
+	    	json = Ext.decode(response.responseText);
+	    	if(json.success == true)
+	    	{
+	    		//recargar el grid
+	    		_amRecardar();
+	    	}
+	    	else
+	    	{
+	    		mensajeError(json.mensaje);
+	    	}
+	    }
+	    ,failure : function()
+	    {
+	    	ventanaGridAjusteMedico.setLoading(false);
+	    	errorComunicacion();
+	    }
+	});
+}
 
 Ext.onReady(function() {
 
@@ -316,4 +420,7 @@ Ext.onReady(function() {
     	        }
     	    ]
     	    });
+    
+    _amAgregar('150.5','sin observaciones');
+    
 });

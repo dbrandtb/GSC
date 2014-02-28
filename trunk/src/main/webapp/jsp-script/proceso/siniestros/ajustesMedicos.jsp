@@ -8,10 +8,16 @@
         
         <script type="text/javascript">
             var _CONTEXT = '${ctx}';
-            var mesConUrlLoadCatalo    = '<s:url namespace="/catalogos"       action="obtieneCatalogo" />';
+            var mesConUrlLoadCatalo    = '<s:url namespace="/catalogos"  action="obtieneCatalogo"  />';
+            var _amUrlAgregar          = '<s:url namespace="/siniestros" action="guardarTdsinival" />';
+            var _amUrlCargar           = '<s:url namespace="/siniestros" action="obtenerTdsinival" />';
             var _URL_TIPO_PAGO = _CONTEXT + '/js/proceso/siniestros/tiposPago.json';
             
             var _CATALOGO_OFICINA_RECEP = 	 '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_SUCURSALES_ADMIN"/>';
+            
+            var _amParams = <s:property value='%{getParams().toString().replace("=",":\'").replace(",","\',").replace("}","\'}")}' />;
+            
+            debug("_amParams: ",_amParams);
             
         </script>
         <!-- <script type="text/javascript" src="${ctx}/resources/scripts/util/extjs4_utils.js"></script>-->

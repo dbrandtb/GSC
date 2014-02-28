@@ -291,8 +291,8 @@
     		<result>/jsp-script/proceso/siniestros/asignarReclamaciones.jsp</result>
 		</action>
 		
-		<action name="ajustesMedicos">
-    		<result>/jsp-script/proceso/siniestros/ajustesMedicos.jsp</result>
+		<action name="ajustesMedicos" class="ajustesMedicosSiniestrosAction"  method="pantallaAjustesMedicos">
+    		<result name="success">/jsp-script/proceso/siniestros/ajustesMedicos.jsp</result>
 		</action>
 
 		<action name="rechazarTramite" class="siniestrosAction"
