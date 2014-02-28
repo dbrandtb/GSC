@@ -8,40 +8,44 @@
         
         <script type="text/javascript">
             var _CONTEXT = '${ctx}';
-            var mesConUrlLoadCatalo    				= '<s:url namespace="/catalogos"       action="obtieneCatalogo" />';
+            
             var _CAT_AUTORIZACION				    = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_SUCURSALES_ADMIN"/>';
             var _CAT_CAUSASINIESTRO				    = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CAUSA_SINIESTRO"/>';
             var _CAT_TRATAMIENTO				    = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TTRATAMIENTO"/>';
-            var _CAT_TPENALIZACIONES				    = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TPENALIZACIONES"/>';
-            
-            var panDocUrlViewDoc     = '<s:url namespace ="/documentos" action="descargaDocInline" />';
-            var venDocUrlImpConrec   = '<s:url namespace ="/documentos" action="generarContrarecibo" />';
+            var _CAT_TPENALIZACIONES				= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TPENALIZACIONES"/>';
+            var _CAT_MEDICOS                        = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MEDICOS"/>';
+            var _CAT_PROVEEDORES                    = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@PROVEEDORES"/>';
             
             var _URL_TIPO_AUTORIZACION				= _CONTEXT + '/js/proceso/siniestros/tiposAutorizacion.json';
-            var _HISTORIAL_RECLAMACIONES    		= '<s:url namespace="/siniestros"      	action="includes/historialReclamaciones" />';
-            var _VER_COBERTURAS		    			= '<s:url namespace="/siniestros"      	action="includes/verCoberturas" />';
-            var _URL_LISTADO_ASEGURADO          	= '<s:url namespace="/siniestros"       action="consultaListaAsegurado" />';
-            var _URL_CONSULTA_LISTADO_AUTORIZACION 	= '<s:url namespace="/siniestros" 		action="consultaListaAutorizacion" />';
-            var _URL_CONSULTA_AUTORIZACION_ESP 		= '<s:url namespace="/siniestros" 		action="consultaAutorizacionServicio" />';
-            var _URL_CONSULTA_PROVEEDOR_MEDICO		= '<s:url namespace="/siniestros" 		action="consultaListaProvMedico" />';
-            var _URL_LISTA_COBERTURA 				= '<s:url namespace="/siniestros" 		action="consultaListaCoberturaPoliza" />';
-            var _URL_LISTA_SUBCOBERTURA				= '<s:url namespace="/siniestros" action="consultaListaSubcobertura" />';
-            var _URL_LISTA_CPTICD					= '<s:url namespace="/siniestros" action="consultaListaCPTICD" />';
             
-            var _URL_CONSULTA_DEDUCIBLE_COPAGO		= '<s:url namespace="/siniestros" 		action="consultaListaDatSubGeneral" />';
-            var _URL_CONSULTA_LISTADO_POLIZA		= '<s:url namespace="/siniestros" 		action="consultaListaPoliza" />';
+            var _URL_CATALOGOS                      = '<s:url namespace="/catalogos"   action="obtieneCatalogo" />';
             
-            var _URL_LISTA_TABULADOR				= '<s:url namespace="/siniestros" action="consultaListaPorcentaje" />';
-            var _URL_LISTA_TMANTENI					= '<s:url namespace="/siniestros" action="consultaListaManteni" />';
-            var _URL_LISTADO_CONCEP_EQUIP    		= '<s:url namespace="/siniestros" action="consultaListaTDeTauts" />';
+            var _HISTORIAL_RECLAMACIONES    		= '<s:url namespace="/siniestros"  action="includes/historialReclamaciones" />';
+            var _VER_COBERTURAS		    			= '<s:url namespace="/siniestros"  action="includes/verCoberturas" />';
+            var _URL_LISTADO_ASEGURADO          	= '<s:url namespace="/siniestros"  action="consultaListaAsegurado" />';
+            var _URL_CONSULTA_LISTADO_AUTORIZACION 	= '<s:url namespace="/siniestros"  action="consultaListaAutorizacion" />';
+            var _URL_CONSULTA_AUTORIZACION_ESP 		= '<s:url namespace="/siniestros"  action="consultaAutorizacionServicio" />';
+            var _URL_LISTA_COBERTURA 				= '<s:url namespace="/siniestros"  action="consultaListaCoberturaPoliza" />';
+            var _URL_LISTA_SUBCOBERTURA				= '<s:url namespace="/siniestros"  action="consultaListaSubcobertura" />';
+            var _URL_LISTA_CPTICD					= '<s:url namespace="/siniestros"  action="consultaListaCPTICD" />';
             
-            var _URL_GUARDA_AUTORIZACION			= '<s:url namespace="/siniestros" action="guardaAutorizacionServicio" />';
-            var _VER_AUTORIZACION_SERVICIO 			= '<s:url namespace="/siniestros"      	action="includes/verAutorizacionServicio" />';
-            var _UR_LISTA_PLAZAS 					= '<s:url namespace="/siniestros"      	action="consultaListaPlazas"/>';
-            var _URL_NUMERO_DIAS					= '<s:url namespace="/siniestros"      	action="consultaNumeroDias"/>';
+            var _URL_CONSULTA_DEDUCIBLE_COPAGO		= '<s:url namespace="/siniestros"  action="consultaListaDatSubGeneral" />';
+            var _URL_CONSULTA_LISTADO_POLIZA		= '<s:url namespace="/siniestros"  action="consultaListaPoliza" />';
             
-            var _URL_POLIZA_UNICA					= '<s:url namespace="/siniestros"      	action="consultaPolizaUnica"/>';;
-            var _URL_EXCLUSION_PENALIZACION			= '<s:url namespace="/siniestros"      	action="validaExclusionPenalizacion"/>';;
+            var _URL_LISTA_TABULADOR				= '<s:url namespace="/siniestros"  action="consultaListaPorcentaje" />';
+            var _URL_LISTA_TMANTENI					= '<s:url namespace="/siniestros"  action="consultaListaManteni" />';
+            var _URL_LISTADO_CONCEP_EQUIP    		= '<s:url namespace="/siniestros"  action="consultaListaTDeTauts" />';
+            
+            var _URL_GUARDA_AUTORIZACION			= '<s:url namespace="/siniestros"  action="guardaAutorizacionServicio" />';
+            var _VER_AUTORIZACION_SERVICIO 			= '<s:url namespace="/siniestros"  action="includes/verAutorizacionServicio" />';
+            var _UR_LISTA_PLAZAS 					= '<s:url namespace="/siniestros"  action="consultaListaPlazas"/>';
+            var _URL_NUMERO_DIAS					= '<s:url namespace="/siniestros"  action="consultaNumeroDias"/>';
+            
+            var _URL_POLIZA_UNICA					= '<s:url namespace="/siniestros"  action="consultaPolizaUnica"/>';
+            var _URL_EXCLUSION_PENALIZACION			= '<s:url namespace="/siniestros"  action="validaExclusionPenalizacion"/>';
+            
+            var panDocUrlViewDoc                    = '<s:url namespace ="/documentos" action="descargaDocInline" />';
+            var venDocUrlImpConrec                  = '<s:url namespace ="/documentos" action="generarContrarecibo" />';
             
         </script>
         <script type="text/javascript" src="${ctx}/js/proceso/siniestros/autorizacionServicios.js"></script>

@@ -134,13 +134,14 @@ Ext.onReady(function() {
         autoLoad:false,
         proxy: {
             type: 'ajax',
-            url : _URL_CONSULTA_PROVEEDOR_MEDICO,
+            url : _URL_CATALOGOS,
             extraParams:{
-            	'params.tipoprov' : '15'
+                catalogo         : _CAT_MEDICOS,
+                catalogoGenerico : true
             },
             reader: {
                 type: 'json',
-                root: 'listaProvMedico'
+                root: 'listaGenerica'
             }
         }
     });
@@ -150,13 +151,14 @@ Ext.onReady(function() {
         autoLoad:false,
         proxy: {
             type: 'ajax',
-            url : _URL_CONSULTA_PROVEEDOR_MEDICO,
+            url : _URL_CATALOGOS,
             extraParams:{
-            	'params.tipoprov' : '16'
+                catalogo         : _CAT_PROVEEDORES,
+                catalogoGenerico : true
             },
             reader: {
                 type: 'json',
-                root: 'listaProvMedico'
+                root: 'listaGenerica'
             }
         }
     });
@@ -468,7 +470,7 @@ Ext.onReady(function() {
 	        proxy:
 	        {
 	            type: 'ajax',
-	            url:mesConUrlLoadCatalo,
+	            url: _URL_CATALOGOS,
 	            extraParams : {catalogo:_CAT_CAUSASINIESTRO},
 	            reader:
 	            {
@@ -503,7 +505,7 @@ Ext.onReady(function() {
 	        proxy:
 	        {
 	            type: 'ajax',
-	            url:mesConUrlLoadCatalo,
+	            url : _URL_CATALOGOS,
 	            extraParams : {catalogo:_CAT_TRATAMIENTO},
 	            reader:
 	            {
@@ -517,7 +519,7 @@ Ext.onReady(function() {
 	medico = Ext.create('Ext.form.field.ComboBox',
     {
     	fieldLabel 		: 'M&eacute;dico',			allowBlank   : false,			displayField : 'nombre',				name		   :'cdmedico',
-    	id				:'idMedico',				labelWidth   : 170,			    valueField   : 'cdpresta',				forceSelection : true,
+    	id				: 'idMedico',				labelWidth   : 170,			    valueField   : 'cdpresta',				forceSelection : true,
     	matchFieldWidth : false,					triggerAction: 'all',			queryParam   : 'params.cdpresta',		store          : storeMedico,
     	minChars  		: 2,						queryMode    :'remote',			hideTrigger:true,
 		listeners : {
@@ -525,16 +527,17 @@ Ext.onReady(function() {
 				Ext.getCmp('idEspecialidad').setValue('');
 	    		Ext.Ajax.request(
 					{
-					    url     : _URL_CONSULTA_PROVEEDOR_MEDICO
+					    url     : _URL_CATALOGOS
 					    ,params:{
-							'params.cdpresta' : e.getValue(),
-							'params.tipoprov' : '15'
+							'params.cdpresta': e.getValue(),
+							catalogo         : _CAT_MEDICOS,
+   						 	catalogoGenerico : true
 		                }
 					    ,success : function (response)
 					    {
-					    	if(Ext.decode(response.responseText).listaProvMedico != null)
+					    	if(Ext.decode(response.responseText).listaGenerica != null)
 				    		{
-					    		var json=Ext.decode(response.responseText).listaProvMedico[0];
+					    		var json=Ext.decode(response.responseText).listaGenerica[0];
 	    				        Ext.getCmp('idEspecialidad').setValue(json.descesp);
 				    		}
 					    },
@@ -580,16 +583,17 @@ Ext.onReady(function() {
 			change:function(e){
 				Ext.Ajax.request(
 					{
-					    url     : _URL_CONSULTA_PROVEEDOR_MEDICO
+					    url     : _URL_CATALOGOS
 					    ,params:{
-							'params.cdpresta' : e.getValue(),
-							'params.tipoprov' : '16'
+							'params.cdpresta': e.getValue(),
+							catalogo         : _CAT_PROVEEDORES,
+   						    catalogoGenerico : true
 		                }
 					    ,success : function (response)
 					    {
-					    	if(Ext.decode(response.responseText).listaProvMedico != null)
+					    	if(Ext.decode(response.responseText).listaGenerica != null)
 				    		{
-					    		var json=Ext.decode(response.responseText).listaProvMedico[0];
+					    		var json=Ext.decode(response.responseText).listaGenerica[0];
 	    				        Ext.getCmp('idCirculoHospProv').setValue(json.circulo);
 	    				        Ext.getCmp('codPostalProv').setValue(json.codpos);
 	    				        Ext.getCmp('idzonaHospProv').setValue(json.zonaHospitalaria);
@@ -846,7 +850,7 @@ Ext.onReady(function() {
 	        proxy:
 	        {
 	            type: 'ajax',
-	            url:mesConUrlLoadCatalo,
+	            url : _URL_CATALOGOS,
 	            extraParams : {catalogo:_CAT_TPENALIZACIONES},
 	            reader:
 	            {
