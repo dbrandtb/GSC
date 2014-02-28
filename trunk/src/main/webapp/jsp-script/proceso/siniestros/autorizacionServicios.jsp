@@ -21,7 +21,7 @@
             var _URL_CATALOGOS                      = '<s:url namespace="/catalogos"   action="obtieneCatalogo" />';
             
             var _HISTORIAL_RECLAMACIONES    		= '<s:url namespace="/siniestros"  action="includes/historialReclamaciones" />';
-            var _VER_COBERTURAS		    			= '<s:url namespace="/siniestros"  action="includes/verCoberturas" />';
+            var _VER_COBERTURAS		    			= '<s:url namespace="/consultasPoliza"  action="includes/verCoberturas" />';
             var _URL_LISTADO_ASEGURADO          	= '<s:url namespace="/siniestros"  action="consultaListaAsegurado" />';
             var _URL_CONSULTA_LISTADO_AUTORIZACION 	= '<s:url namespace="/siniestros"  action="consultaListaAutorizacion" />';
             var _URL_CONSULTA_AUTORIZACION_ESP 		= '<s:url namespace="/siniestros"  action="consultaAutorizacionServicio" />';

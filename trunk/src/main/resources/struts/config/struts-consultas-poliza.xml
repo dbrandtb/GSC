@@ -3,8 +3,7 @@
 <struts>
 	<include file="struts-default.xml" />
 
-	<package name="consultasPoliza" extends="json-default"
-		namespace="/consultasPoliza">
+	<package name="consultasPoliza" extends="json-default" namespace="/consultasPoliza">
 
 		<action name="consultaDatosPoliza" class="ConsultasPolizaAction"
 			method="consultaDatosPoliza">
@@ -127,6 +126,9 @@
             </result>
         </action>
         
+        <action name="includes/verCoberturas" class="ConsultasPolizaAction" method="verCoberturas">
+            <result>/jsp/consultas/coberturas/includes/verCoberturas.jsp</result>
+        </action>
 
 	</package>
 

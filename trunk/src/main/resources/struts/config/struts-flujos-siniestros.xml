@@ -256,10 +256,6 @@
     		<result>/jsp-script/proceso/siniestros/historialReclamaciones.jsp</result>
 		</action>
 		
-		<action name="includes/verCoberturas" class="siniestrosAction" method="verCoberturas">
-    		<result>/jsp-script/proceso/siniestros/verCoberturas.jsp</result>
-		</action>
-		
 		<action name="includes/verAutorizacionServicio" class="siniestrosAction" method="verAutorizacionServicio">
     		<result>/jsp-script/proceso/siniestros/verAutorizacionServicios.jsp</result>
 		</action>

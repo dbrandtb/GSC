@@ -83,20 +83,6 @@ public class SiniestrosAction extends PrincipalCoreAction{
     private String                   mensaje;
     private List<Map<String,String>> slist1;
     
-    /**
-     * Funci�n para la visualizaci�n de las coberturas 
-     * @return params con los valores para hacer las consultas
-     */
-	public String verCoberturas(){
-		logger.debug(" **** Entrando a verCoberturas ****");
-		try {
-			logger.debug("params=" + params);
-		}catch( Exception e){
-			logger.error(e.getMessage(), e);
-		}
-		success = true;
-		return SUCCESS;
-    }
 	
 	/**
      * Funci�n para la visualizaci�n de la autorizacion de servicio 
