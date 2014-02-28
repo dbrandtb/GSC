@@ -735,4 +735,16 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		log.debug("P_GET_FACTURAS_SINIES lista size:"+lista.size());
 		return lista;
 	}
+	
+	@Override
+	public List<GenericVO>obtenerCodigosMedicos(String idconcep, String subcaden) throws Exception
+	{
+		List<GenericVO>lista=siniestrosDAO.obtenerCodigosMedicos(idconcep,subcaden);
+		if(lista==null)
+		{
+			lista = new ArrayList<GenericVO>();
+		}
+		log.debug("obtenerCodigosMedicos lista size: "+lista.size());
+		return lista;
+	}
 }
