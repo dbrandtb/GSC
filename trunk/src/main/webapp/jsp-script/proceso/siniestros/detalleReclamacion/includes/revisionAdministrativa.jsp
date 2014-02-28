@@ -18,6 +18,8 @@ var _URL_GuardaFactura =  '<s:url namespace="/siniestros" action="guardaFacturaT
 var _URL_CATALOGOS = '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
 var _CATALOGO_TipoAtencion = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_ATENCION_SINIESTROS"/>';
 var _CATALOGO_PROVEEDORES  = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@PROVEEDORES"/>';
+var _CATALOGO_COBERTURAS  = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@COBERTURAS"/>';
+var _CATALOGO_SUBCOBERTURAS  = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SUBCOBERTURAS"/>';
 
 Ext.onReady(function() {
 	
@@ -120,7 +122,43 @@ Ext.onReady(function() {
             }
         }
     });
+	storeProveedor.load();
 
+	var storeCoberturas = Ext.create('Ext.data.Store',{
+        model: 'Generic',
+        autoLoad: true,
+        proxy: {
+            type: 'ajax',
+            url: _URL_CATALOGOS,
+            reader: {
+                type: 'json',
+                root: 'lista'
+            },
+            extraParams: {
+                'catalogo' : _CATALOGO_COBERTURAS,
+                'params.cdramo' : '2',
+                'params.cdtipsit' : 'SL'
+            }
+        }
+	});
+	storeCoberturas.load();
+
+	var storeSubcoberturas = Ext.create('Ext.data.Store',{
+        model: 'Generic',
+        autoLoad: false,
+        proxy: {
+            type: 'ajax',
+            url: _URL_CATALOGOS,
+            reader: {
+                type: 'json',
+                root: 'lista'
+            },
+            extraParams: {
+                catalogo: _CATALOGO_SUBCOBERTURAS
+            }
+        }
+	});
+	
 	
 	var panelEdicionFacturas= Ext.create('Ext.form.Panel',{
         border  : 0,
@@ -132,10 +170,10 @@ Ext.onReady(function() {
 		        xtype      : 'textfield'
 		    	,fieldLabel : 'No. Factura'
 	    		,allowBlank:false
-		    	,name       : 'noFactInterno'
+		    	,name       : 'params.nfactura'
     		},            
     		{
-    	        name: 'fechaFactInterno',
+    	        name: 'params.fefactura',
     	        fieldLabel: 'Fecha Factura',
     	        xtype: 'datefield',
     	        format: 'd/m/Y',
@@ -144,7 +182,7 @@ Ext.onReady(function() {
     	        value:new Date()
     	    },{
             	xtype: 'combo',
-                name:'tipoServicioInterno',
+                name:'params.cdtipser',
                 valueField: 'key',
                 displayField: 'value',
                 fieldLabel: 'Tipo de servicio',
@@ -155,7 +193,7 @@ Ext.onReady(function() {
                 emptyText:'Seleccione...'
             },{
             	xtype       : 'combo',
-            	name        : 'proveedorInterno',
+            	name        : 'params.cdpresta',
             	fieldLabel  : 'Proveedor',
             	displayField: 'nombre',
             	valueField  : 'cdpresta',
@@ -169,13 +207,51 @@ Ext.onReady(function() {
                 emptyText   : 'Seleccione...',
                 editable    : false
             },{
+            	xtype       : 'combo',
+            	name        : 'params.cdgarant',
+            	fieldLabel  : 'Cobertura',
+            	displayField: 'value',
+            	valueField  : 'key',
+            	allowBlank  : true,
+                forceSelection : true,
+                matchFieldWidth: false,
+                queryMode   :'remote',
+                store       : storeCoberturas,
+                triggerAction  : 'all',
+                emptyText   : 'Seleccione...',
+                listeners: {
+                	select: function (combo, records, opts){
+                		var cdGarant =  records[0].get('key');
+                		storeSubcoberturas.load({
+                			params: {
+                				'params.cdgarant' : cdGarant
+                			}
+                		});
+                	}
+                },
+                editable    : false
+            },{
+            	xtype       : 'combo',
+            	name        : 'params.cdconval',
+            	fieldLabel  : 'Sub Cobertura',
+            	displayField: 'value',
+            	valueField  : 'key',
+            	allowBlank  : false,
+                forceSelection : true,
+                matchFieldWidth: false,
+                queryMode   :'local',
+                store       : storeSubcoberturas,
+                triggerAction  : 'all',
+                emptyText   : 'Seleccione...',
+                editable    : false
+            },{
 		        xtype      : 'numberfield'
 		    	,fieldLabel : 'Importe'
                 ,allowBlank:false
                 ,allowDecimals: true
                 ,decimalSeparator: '.'
                 ,minValue: 0
-		    	,name       : 'importeInterno'
+		    	,name       : 'params.ptimport'
     		},{
 		        	xtype      : 'numberfield'
 			    	,fieldLabel : 'Descuento %'
@@ -183,7 +259,7 @@ Ext.onReady(function() {
 	                ,allowDecimals: true
 	                ,decimalSeparator: '.'
 	                ,minValue: 0
-			    	,name       : 'descPorc'
+			    	,name       : 'params.descporc'
 	    	},{
 		        xtype      : 'numberfield'
 			    	,fieldLabel : 'Descuento Importe'
@@ -191,12 +267,12 @@ Ext.onReady(function() {
 	                ,allowDecimals: true
 	                ,decimalSeparator: '.'
 	                ,minValue: 0
-			    	,name       : 'descImport'
+			    	,name       : 'params.descnume'
 	    	}
         ]
     });
     
-    
+	
     var panelEdicionConceptos = Ext.create('Ext.form.Panel',{
         border  : 0
         ,bodyStyle:'padding:5px;'
@@ -323,15 +399,7 @@ Ext.onReady(function() {
                         	panelEdicionFacturas.form.submit({
             		        	waitMsg:'Procesando...',			
             		        	params: {
-            		        		'params.pv_ntramite_i'   : _nmTramite, 
-            		        		'params.pv_nfactura_i'   : datos.noFactInterno,
-            		        		'params.pv_ffactura_i'   : datos.fechaFactInterno,
-            		        		'params.pv_cdtipser_i'   : datos.tipoServicioInterno,
-            		        		'params.pv_cdpresta_i'   : datos.proveedorInterno,
-            		        		'params.pv_ptimport_i'   : datos.importeInterno,
-            		        		'params.pv_cdgarant_i'   : '',
-            		        		'params.pv_descporc_i'   : datos.descPorc,
-            		        		'params.pv_descnume_i'   : datos.descImport,
+            		        		'params.ntramite'   : _nmTramite 
             		        	},
             		        	failure: function(form, action) {
             		        		mensajeError("Error al guardar la Factura");

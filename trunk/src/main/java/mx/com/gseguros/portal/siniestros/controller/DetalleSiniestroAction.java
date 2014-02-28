@@ -196,7 +196,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	public String guardaFacturaTramite(){
 	   	
 	   	try {
-	   		//siniestrosManager.guardaListaFacMesaControl(params.get(""), nfactura, fefactura, cdtipser, cdpresta, ptimport, cdgarant, cdconval, descporc, descnume);
+	   		siniestrosManager.guardaListaFacMesaControl(params.get("ntramite"), params.get("nfactura"), params.get("fefactura"), params.get("cdtipser"), params.get("cdpresta"), params.get("ptimport"), params.get("cdgarant"), params.get("cdconval"), params.get("descporc"), params.get("descnume"));
 	   	}catch( Exception e){
 	   		logger.error("Error en guardaListaTramites",e);
 	   		success =  false;
