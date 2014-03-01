@@ -753,4 +753,13 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	{
 		return siniestrosDAO.obtenerLlaveSiniestroReembolso(ntramite);
 	}
+
+	@Override
+	public String validaPorcentajePenalizacion(String zonaContratada,String zonaAtencion) throws Exception {
+		try {
+			return siniestrosDAO.validaPorcentajePenalizacion(zonaContratada,zonaAtencion);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}
 }

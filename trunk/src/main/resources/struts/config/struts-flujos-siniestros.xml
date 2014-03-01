@@ -412,6 +412,17 @@
 			</result>
 		</action>
 		
+		<action name="validaPorcentajePenalizacion" class="siniestrosAction"
+			method="validaPorcentajePenalizacion">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success,
+					porcentajePenalizacion
+				</param>
+			</result>
+		</action>
+		
 		<action name="validaExclusionPenalizacion" class="siniestrosAction"
 			method="validaExclusionPenalizacion">
 			<result type="json">

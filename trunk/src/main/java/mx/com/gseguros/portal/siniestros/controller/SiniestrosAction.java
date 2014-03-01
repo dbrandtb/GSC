@@ -74,6 +74,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
     private String msgResult;
     private String diasMaximos;
     private String existePenalizacion;
+    private String porcentajePenalizacion;
     private List<HashMap<String, String>> loadList;
     private List<HashMap<String, String>> saveList;
     private List<GenericVO> listaPlazas;
@@ -183,7 +184,10 @@ public class SiniestrosAction extends PrincipalCoreAction{
 					paramsR.put("pv_cdprovee_i",params.get("cdprovee"));
 					paramsR.put("pv_cdmedico_i",params.get("cdmedico"));
 					paramsR.put("pv_mtsumadp_i",params.get("mtsumadp"));
-					paramsR.put("pv_porpenal_i",params.get("porpenal"));
+					//paramsR.put("pv_porpenal_i",params.get("porpenal")); // penalizacion Final
+					paramsR.put("pv_copagofi_i",params.get("copagoTotal")); // Copago Final
+					
+					paramsR.put("pv_porpenal_i","0"); // penalizacion Final
 					paramsR.put("pv_cdicd_i",params.get("cdicd"));
 					paramsR.put("pv_cdcausa_i",params.get("cdcausa"));
 					paramsR.put("pv_aaapertu_i",params.get("aaapertu"));
@@ -263,6 +267,9 @@ public class SiniestrosAction extends PrincipalCoreAction{
 			logger.debug(" **** Entrando al guardado de alta de tramite ****");
 			try {
 				
+					logger.debug("VALOR DE ENTRADA");
+					logger.debug(params);
+					
 					this.session=ActionContext.getContext().getSession();
 			        UserVO usuario=(UserVO) session.get("USUARIO");
 		            
@@ -323,7 +330,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 								paramsTworkSin.put("pv_nmsituac_i",datosTablas.get(i).get("nmsituac"));
 								paramsTworkSin.put("pv_cdtipsit_i",datosTablas.get(i).get("cdtipsit"));
 								paramsTworkSin.put("pv_cdperson_i",datosTablas.get(i).get("cdperson"));
-								paramsTworkSin.put("pv_feocurre_i",datosTablas.get(i).get("fechaOcurrencia"));
+								paramsTworkSin.put("pv_feocurre_i",datosTablas.get(i).get("dtFechaOcurrencia"));
 								paramsTworkSin.put("pv_nmautser_i",null);
 						        siniestrosManager.guardaListaTworkSin(paramsTworkSin);
 						    }
@@ -369,7 +376,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 					        paramsTworkSinPagRem.put("pv_nmsituac_i",params.get("nmsituac"));
 					        paramsTworkSinPagRem.put("pv_cdtipsit_i",params.get("cdtipsit"));
 					        paramsTworkSinPagRem.put("pv_cdperson_i",params.get("cmbAseguradoAfectado"));
-					        paramsTworkSinPagRem.put("pv_feocurre_i",params.get("fechaOcurrencia"));
+					        paramsTworkSinPagRem.put("pv_feocurre_i",params.get("dtFechaOcurrencia"));
 					        paramsTworkSinPagRem.put("pv_nmautser_i",null);
 					        siniestrosManager.guardaListaTworkSin(paramsTworkSinPagRem);
 						}
@@ -650,11 +657,11 @@ public void setMsgResult(String msgResult) {
    }
    
 	   public String generarSiniestroAltaTramite(){
-			logger.debug(" **** Entrando a generar el siniestro  por medio del alta de tramite***");
+			logger.debug(" **** Entrando a generar el siniestro por medio de la autorizacion de servicio ***");
 		try {
 				siniestrosManager.getAltaSiniestroAltaTramite(params.get("ntramite"));
 		}catch( Exception e){
-			logger.error("Error al obtener los datos de Autorizaciï¿½n de Servicio en Especifico",e);
+			logger.error("Error al obtener los datos de autorizacion de ",e);
 			return SUCCESS;
 		}
 	   success = true;
@@ -888,6 +895,69 @@ public void setMsgResult(String msgResult) {
 	   return SUCCESS;
    }
 
+   
+   public String generarAutoriServicio(){
+	   
+	   logger.debug("VALOR DE MENSAJE");
+	   logger.debug(paramsO);
+	 
+	   
+	   try {
+		   File carpeta=new File(getText("ruta.documentos.poliza") + "/" + paramsO.get("pv_ntramite_i"));
+           if(!carpeta.exists()){
+           		logger.debug("no existe la carpeta::: "+paramsO.get("pv_ntramite_i"));
+           		carpeta.mkdir();
+           		if(carpeta.exists()){
+           			logger.debug("carpeta creada");
+           		} else {
+           			logger.debug("carpeta NO creada");
+           		}
+           } else {
+           	 logger.debug("existe la carpeta   ::: "+paramsO.get("pv_ntramite_i"));
+           }
+           
+           UserVO usuario=(UserVO)session.get("USUARIO");
+           //urlContrareciboSiniestro
+           String urlAutorizacionServicio = ""
+           					   + getText("ruta.servidor.reports")
+                               + "?p_unieco=" +  paramsO.get("pv_ntramite_i")
+                               + "&p_ramo=" + paramsO.get("pv_cdramo_i")
+                               + "&p_estado=" + paramsO.get("pv_estado_i")
+                               + "&p_poliza=" + paramsO.get("pv_nmpoliza_i")
+                               + "&P_AUTSER=" + paramsO.get("pv_nmAutSer_i")
+                               + "&P_CDPERSON=" + paramsO.get("pv_cdperson_i")
+                               + "&destype=cache"
+                               + "&desformat=PDF"
+                               + "&userid="+getText("pass.servidor.reports")
+                               + "&ACCESSIBLE=YES"
+                               + "&report="+getText("reports.rdf.siniestros.autoriServicio.nombre")
+                               + "&paramform=no"
+                               ;
+           logger.debug(urlAutorizacionServicio);
+           String nombreArchivo = getText("siniestro.autorizacionServicio.nombre");
+           String pathArchivo=""
+           					+ getText("ruta.documentos.poliza")
+           					+ "/" + paramsO.get("pv_ntramite_i")
+           					+ "/" + nombreArchivo
+           					;
+           HttpUtil.generaArchivo(urlAutorizacionServicio, pathArchivo);
+           
+           paramsO.put("pv_feinici_i"  , new Date());
+           paramsO.put("pv_cddocume_i" , nombreArchivo);
+           paramsO.put("pv_dsdocume_i" , "Autorizacion Servicio");
+           paramsO.put("pv_swvisible_i"   , null);
+           paramsO.put("pv_codidocu_i"   , null);
+           paramsO.put("pv_cdtiptra_i"   , TipoTramite.AUTORIZACION_SERVICIOS.getCodigo());
+           kernelManagerSustituto.guardarArchivo(paramsO);
+		   
+	   }catch( Exception e){
+		   logger.error("Error al generar la autorización de Servicio ",e);
+		   success =  false;
+		   return SUCCESS;
+	   }
+	   success = true;
+	   return SUCCESS;
+   }
    public String solicitarPago(){
 	   
 	   try {
@@ -965,6 +1035,18 @@ public void setMsgResult(String msgResult) {
 	   	success = true;
 	   	return SUCCESS;
   }
+   
+   public String validaPorcentajePenalizacion(){
+	   	logger.debug(" **** Entrando al metodo de porcentaje de validación ****");
+	   	try {
+	   		porcentajePenalizacion = siniestrosManager.validaPorcentajePenalizacion(params.get("zonaContratada"), params.get("zonaAtencion"));
+	   	}catch( Exception e){
+	   		logger.error("Error al consultar al metodo de porcentaje de penalización ",e);
+	   		return SUCCESS;
+	   	}
+	   	success = true;
+	   	return SUCCESS;
+ }
    
     public String pantallaSeleccionCobertura()
     {
@@ -1754,4 +1836,13 @@ public void setMsgResult(String msgResult) {
 	public void setDiasMaximos(String diasMaximos) {
 		this.diasMaximos = diasMaximos;
 	}
+
+	public String getPorcentajePenalizacion() {
+		return porcentajePenalizacion;
+	}
+
+	public void setPorcentajePenalizacion(String porcentajePenalizacion) {
+		this.porcentajePenalizacion = porcentajePenalizacion;
+	}
+	
 }

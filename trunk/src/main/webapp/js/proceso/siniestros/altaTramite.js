@@ -206,7 +206,6 @@ Ext.onReady(function() {
     				Ext.getCmp('txtNoFactura').show();
     				Ext.getCmp('txtImporte').show();
     				Ext.getCmp('dtFechaFactura').show();
-    				Ext.getCmp('cmbTipoAtencion').show();
     				Ext.getCmp('EditorAsegPagDirecto').show();
     				Ext.getCmp('cmbAseguradoAfectado').hide();
     				Ext.getCmp('dtFechaOcurrencia').hide();
@@ -217,7 +216,6 @@ Ext.onReady(function() {
     				Ext.getCmp('txtNoFactura').hide();
     				Ext.getCmp('txtImporte').hide();
     				Ext.getCmp('dtFechaFactura').hide();
-    				Ext.getCmp('cmbTipoAtencion').hide();
     				Ext.getCmp('editorIncisos').show();
     				Ext.getCmp('cmbBeneficiario').show();
     				Ext.getCmp('EditorAsegPagDirecto').hide();
@@ -328,7 +326,8 @@ Ext.onReady(function() {
             	displayField: 'nombre',
             	valueField  : 'cdpresta',
             	allowBlank  : false,
-            	width       : 500,			
+            	minChars  : 2,
+            	width       : 500,
                 forceSelection : true,
                 matchFieldWidth: false,
                 queryMode   :'remote',
@@ -337,7 +336,8 @@ Ext.onReady(function() {
                 triggerAction  : 'all',
                 labelWidth  : 170,
                 emptyText   : 'Seleccione...',
-                editable    : false
+                editable    : true,
+                hideTrigger:true
             },{   
             	xtype      : 'numberfield',
 		        name       : 'importeInterno',
@@ -1026,6 +1026,7 @@ Ext.onReady(function() {
             	    				Ext.getCmp('cmbTipoAtencion').setValue(obtener[0].tipoServicio);
         	    				}else{
         	    					Ext.getCmp('dtFechaFactura').setValue('');
+        	    					Ext.getCmp('cmbTipoAtencion').setValue(obtener[0].tipoServicio);
         	    				}
         					}
             				
@@ -1066,7 +1067,6 @@ Ext.onReady(function() {
             				
             				submitValues['datosTablas']=datosTablas;
             				panelInicialPral.setLoading(true);
-            				
             				Ext.Ajax.request(
     						{
     						    url: _URL_GUARDA_ALTA_TRAMITE,

@@ -43,7 +43,7 @@
             
             var _URL_POLIZA_UNICA					= '<s:url namespace="/siniestros"  action="consultaPolizaUnica"/>';
             var _URL_EXCLUSION_PENALIZACION			= '<s:url namespace="/siniestros"  action="validaExclusionPenalizacion"/>';
-            
+            var _URL_PORCENTAJE_PENALIZACION		= '<s:url namespace="/siniestros"  action="validaPorcentajePenalizacion"/>';
             var panDocUrlViewDoc                    = '<s:url namespace ="/documentos" action="descargaDocInline" />';
             var venDocUrlImpConrec                  = '<s:url namespace ="/documentos" action="generarContrarecibo" />';
             

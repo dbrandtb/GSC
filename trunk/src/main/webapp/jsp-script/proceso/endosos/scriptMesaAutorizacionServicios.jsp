@@ -14,6 +14,8 @@ var _4_authEndUrlDoc      = '<s:url namespace="/documentos" action="ventanaDocum
 
 var _4_urlPantallaAutServ = '<s:url namespace="/siniestros" action="autorizacionServicios" />';
 
+var _UrlGenerarAutoServicio     = '<s:url namespace="/siniestros" action="generarAutoriServicio"       />';
+
 var _4_selectedRecordEndoso;
 var _4_windowAutorizarEndoso;
 var _4_fieldComentAuthEndoso;
@@ -169,6 +171,80 @@ function _4_autorizarEndoso()
 	
 }
 
+function generaAutoriServicioWindow(grid,rowIndex,colIndex){
+	
+	var record = grid.getStore().getAt(rowIndex);
+	
+	msgWindow = Ext.Msg.show({
+        title: 'Aviso',
+        msg: '&iquest;Esta seguro que desea generar el contrarecibo?',
+        buttons: Ext.Msg.YESNO,
+        icon: Ext.Msg.QUESTION,
+        fn: function(buttonId, text, opt){
+        	if(buttonId == 'yes'){
+        		console.log(record.get('ntramite'));
+        		console.log(record.get('cdunieco'));
+        		console.log(record.raw.cdramo);
+   				console.log(record.raw.estado);
+   				console.log(record.get('nmpoliza')),
+   				console.log(record.get('parametros.pv_otvalor01'));
+   				console.log(record.get('parametros.pv_otvalor05'));
+        		
+			
+        	
+        		Ext.Ajax.request({
+					url: _UrlGenerarAutoServicio,
+					params: {
+							'paramsO.pv_ntramite_i' : record.get('ntramite'),
+							
+				    		'paramsO.pv_cdunieco_i' : record.get('cdunieco'),
+				    		'paramsO.pv_cdramo_i'   : record.raw.cdramo,
+				    		'paramsO.pv_estado_i'   : record.raw.estado,
+				    		'paramsO.pv_nmpoliza_i' : record.get('nmpoliza'),
+				    		'paramsO.pv_nmAutSer_i' : record.get('parametros.pv_otvalor01'),
+				    		'paramsO.pv_cdperson_i' : record.get('parametros.pv_otvalor05')
+				    	
+					},
+					success: function(response, opt) {
+						var jsonRes=Ext.decode(response.responseText);
+
+						if(jsonRes.success == true){
+							var numRand=Math.floor((Math.random()*100000)+1);
+				        	debug('numRand a: ',numRand);
+				        	var windowVerDocu=Ext.create('Ext.window.Window',
+				        	{
+				        		title          : 'Contrarecibo de Documentos del Siniestro'
+				        		,width         : 700
+				        		,height        : 500
+				        		,collapsible   : true
+				        		,titleCollapse : true
+				        		,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
+				        		                 +'src="'+panDocUrlViewDoc+'?idPoliza=' + record.get('ntramite') + '&filename=' + '<s:text name="siniestro.contrarecibo.nombre"/>' +'">'
+				        		                 +'</iframe>'
+				        		,listeners     :
+				        		{
+				        			resize : function(win,width,height,opt){
+				                        debug(width,height);
+				                        $('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
+				                    }
+				        		}
+				        	}).show();
+				        	windowVerDocu.center();
+   						}else {
+   							mensajeError(jsonRes.msgResult);
+   						}
+					},
+					failure: function(){
+						mensajeError('No se pudo generar contrarecibo.');
+					}
+				});
+        	}
+        	
+        }
+    });
+	centrarVentana(msgWindow);
+	
+}
 function _4_generarAutorizacion(grid,rowIndex)
 {
 	var record = grid.getStore().getAt(rowIndex);
