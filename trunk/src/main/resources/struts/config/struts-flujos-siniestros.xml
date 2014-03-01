@@ -438,9 +438,9 @@
     		<result>/jsp-script/proceso/siniestros/detalleReclamacion/detalleReclamacion.jsp</result>
 		</action>
 		
-		<action name="includes/calculosReclamaciones" class="detalleSiniestroAction" method="entradaCalculos">
-    		<result>/jsp-script/proceso/siniestros/detalleReclamacion/includes/calculos.jsp</result>
-		</action>
+		<action name="includes/calculoSiniestros" class="siniestrosAction" method="calculoSiniestros">
+            <result name="success">/jsp-script/proceso/siniestros/calculos.jsp</result>
+        </action>
 
 		<action name="includes/revAdmin" class="detalleSiniestroAction" method= "entradaRevisionAdmin">
     		<result>/jsp-script/proceso/siniestros/detalleReclamacion/includes/revisionAdministrativa.jsp</result>
@@ -509,10 +509,6 @@
         
         <action name="guardarTdsinival" class="ajustesMedicosSiniestrosAction" method="guardarTdsinival">
             <result type="json"></result>
-        </action>
-        
-        <action name="calculoSiniestros" class="siniestrosAction" method="calculoSiniestros">
-            <result name="success">/jsp-script/proceso/siniestros/calculos.jsp</result>
         </action>
         
         <action name="obtenerFacturasTramite" class="siniestrosAction" method="obtenerFacturasTramite">

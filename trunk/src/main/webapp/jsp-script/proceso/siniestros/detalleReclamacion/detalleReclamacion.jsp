@@ -11,7 +11,7 @@
             
             var _URL_LOADER_INFO_GRAL_RECLAMACION = '<s:url namespace="/siniestros" action="includes/loadInfoGeneralReclamacion" />';
             var _URL_LOADER_REV_ADMIN             = '<s:url namespace="/siniestros" action="includes/revAdmin" />';
-            var _URL_LOADER_CALCULOS              = '<s:url namespace="/siniestros" action="includes/calculosReclamaciones" />';
+            var _URL_LOADER_CALCULOS              = '<s:url namespace="/siniestros" action="includes/calculoSiniestros" />';
             
             var _CDUNIECO = '<s:property value="params.cdunieco" />';
             var _CDRAMO   = '<s:property value="params.cdramo" />';
@@ -28,5 +28,6 @@
         <script type="text/javascript" src="${ctx}/js/proceso/siniestros/detalleReclamacion/detalleReclamacion.js"></script>
     </head>
     <body>
+        <div id="dvDetalleReclamacion" style="height:1000px;"></div>
     </body>
 </html>

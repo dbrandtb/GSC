@@ -239,17 +239,17 @@
 	                    }
 	                })
 		        }*/,{
-		        	colspan    : 1,
+		        	//colspan    : 1,
 		            xtype      : 'displayfield',
 		            name       : 'NMPOLIEX',
 		            fieldLabel : 'P&oacute;liza'
-		        },{
+		        }/*,{
 		        	colspan: 1,
 		        	xtype  : 'button',
 		        	text   : 'Ver detalle p&oacute;liza',
 	                width  : 180,
 	                icon   : _CONTEXT + '/resources/fam3icons/icons/application_view_list.png'
-		        },{
+		        }*/,{
 		        	colspan    : 1,
 		        	xtype      : 'currencyfield',
 		            name       : 'IMPORTE',
@@ -283,18 +283,18 @@
 	                    }).showAt(150,150);
 	                }
 		        },{
-		        	colspan    : 1,
+		        	//colspan    : 1,
 		            xtype      : 'displayfield',
 		            name       : 'FEINIVAL',
 		            fieldLabel : 'Inicio vigencia'
-		        },{
+		        }/*,{
 		        	colspan: 1,
 		        	xtype  : 'button',
 		        	text   : 'Ver historial de reclamaci&oacute;n',
 	                width  : 180,
 	                icon   : _CONTEXT + '/resources/fam3icons/icons/application_view_list.png',
 	                disabled: true
-		        },{
+		        }*/,{
 		        	colspan    : 1,
 		            xtype      : 'displayfield',
 		            name       : 'FEFINVAL',
@@ -329,18 +329,18 @@
                         }).show();
                     }
 		        },{
-		        	colspan    : 1,
+		        	//colspan    : 1,
 		            xtype      : 'displayfield',
 		            name       : 'STAPOLIZA',
 		            fieldLabel : 'Estatus p&oacute;liza'
-		        },{
+		        }/*,{
 		        	colspan    : 1,
 		        	xtype      : 'button',
 		        	text       : 'Ver historial rehabilitaciones',
 	                width      : 180,
 	                icon       : _CONTEXT + '/resources/fam3icons/icons/application_view_list.png',
 	                disabled   : true
-		        },{
+		        }*/,{
 		        	xtype      : 'displayfield',
 		        	name       : 'FEANTIG',
 		            fieldLabel : 'Reconocimiento de Antig&uuml;edad'
@@ -439,7 +439,7 @@
 	                }),
 	                listeners : {
 	                	select : function(combo, records, eOpts ) {
-                            pnlInformacionGral.down('[name=CDICD2]').setValue(combo.getValue());
+                            pnlInformacionGral.down('[name=CDICD]').setValue(combo.getValue());
                         }
 	                }
 		        },{
@@ -573,4 +573,4 @@
 	
 	});
 </script>
-<div id="dvInformacionGeneral" style="height:870px;"></div>
+<div id="dvInformacionGeneral" style="height:1000px;"></div>
