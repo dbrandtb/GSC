@@ -1101,4 +1101,4 @@ function _p12_calcular()
 ////// funciones //////
 
 </script>
-<div id="_p12_divpri"></div>
+<div id="_p12_divpri" style="height:1500px;"></div>

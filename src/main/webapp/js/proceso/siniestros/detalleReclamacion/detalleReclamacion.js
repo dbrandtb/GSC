@@ -5,7 +5,7 @@ Ext.onReady(function() {
 	Ext.create('Ext.tab.Panel', {
     	    //width: 800,
     	    //height: 400,
-    	    renderTo: document.body,
+    	    renderTo: 'dvDetalleReclamacion',
     	    border : false,
     	    items: [{
     	            title: 'Informaci&oacute;n General',
@@ -28,10 +28,6 @@ Ext.onReady(function() {
 	    	        	url: _URL_LOADER_REV_ADMIN,
 	    	        	scripts: true,
 	    	        	autoLoad: false,
-	    	        	params: {
-	    	        		'params.ntramite': 1396,
-	    	        		'params.nsinies': 1396
-	    	        	},
 	    	        	ajaxOptions: {
 	    	        		method: 'POST'
 	    	        	}
@@ -49,6 +45,9 @@ Ext.onReady(function() {
 	    	        	autoLoad: false,
 	    	        	ajaxOptions: {
 	    	        		method: 'POST'
+	    	        	},
+	    	        	params : {
+	    	        		'params.ntramite' : _NTRAMITE
 	    	        	}
 	    	        },
 	                listeners : {

@@ -35,8 +35,6 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 
 	private boolean success;
 
-	private boolean esHospitalario;
-
 	private HashMap<String, String> loadForm;
 	
 	private List<HashMap<String, String>> loadList;
@@ -93,87 +91,6 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	
 	
 	public String loadInfoGeneralReclamacion() {
-		success = true;
-		return SUCCESS;
-	}
-	
-	
-	public String entradaCalculos() {
-
-		esHospitalario = false;
-		loadForm = new HashMap<String, String>();
-
-		if (esHospitalario) {
-			loadForm.put("asegurado", "Manuel,lopez");
-			loadForm.put("deducible", "5");
-			loadForm.put("copago", "54");
-		} else {
-			loadForm.put("proveedor", "Nombre, Proveedor");
-			loadForm.put("isrProveedor", "Isr");
-			loadForm.put("impuestoCedular", "Imp, ced");
-			loadForm.put("iva", "17.5");
-		}
-
-		success = true;
-		return SUCCESS;
-	}
-	
-	
-	public String obtieneCalculos() {
-		loadList = new ArrayList<HashMap<String, String>>();
-		HashMap<String, String> elements = new HashMap<String, String>();
-		try {
-			elements.put("cpt", "1");
-			elements.put("cantidad", "1111");
-			elements.put("arancel", "11111111");
-			elements.put("subtotalArancel", "11");
-			elements.put("descuento", "111111111");
-			elements.put("subtotalDescuento", "11111111111");
-			elements.put("porcentajeCopago", "11111111");
-			elements.put("copago", "11111111111");
-			elements.put("copagoAplicado", "1111111111111");
-			elements.put("subtotal", "1111111");
-			elements.put("isr", "11111111");
-			elements.put("cedular", "111");
-			elements.put("subtotalImpuestos", "1111");
-			elements.put("iva", "1111");
-			elements.put("total", "11111");
-			elements.put("facturado", "11111");
-			elements.put("autorizado", "11111");
-			elements.put("valorUtilizar", "11111111111");
-
-			loadList.add(elements);
-
-			elements = new HashMap<String, String>();
-			elements.put("cpt", "2");
-			elements.put("cantidad", "222222");
-			elements.put("arancel", "22222222");
-			elements.put("subtotalArancel", "22");
-			elements.put("descuento", "2222222");
-			elements.put("subtotalDescuento", "2222222222");
-			elements.put("porcentajeCopago", "222222222");
-			elements.put("copago", "2222222222");
-			elements.put("copagoAplicado", "222222222222");
-			elements.put("subtotal", "222222222222");
-			elements.put("isr", "22222222222");
-			elements.put("cedular", "222");
-			elements.put("subtotalImpuestos", "2222");
-			elements.put("iva", "2222");
-			elements.put("total", "22222");
-			elements.put("facturado", "2222");
-			elements.put("autorizado", "22222");
-			elements.put("valorUtilizar", "2222222");
-
-			loadList.add(elements);
-			// List<AutorizacionServicioVO> lista =
-			// siniestrosManager.getConsultaAutorizacionesEsp(params.get("nmautser"));
-			// if(lista!=null && !lista.isEmpty()) datosAutorizacionEsp =
-			// lista.get(0);
-		} catch (Exception e) {
-			logger.error("Error al obtener los datos de Autorizaci�n de Servicio en Especifico", e);
-			success = false;
-			return SUCCESS;
-		}
 		success = true;
 		return SUCCESS;
 	}
@@ -327,14 +244,6 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 
 	public void setSuccess(boolean success) {
 		this.success = success;
-	}
-
-	public boolean isEsHospitalario() {
-		return esHospitalario;
-	}
-
-	public void setEsHospitalario(boolean esHospitalario) {
-		this.esHospitalario = esHospitalario;
 	}
 
 	public String getLoadForm() {
