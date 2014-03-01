@@ -342,7 +342,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 								paramsTworkSin.put("pv_nmsituac_i",datosTablas.get(i).get("nmsituac"));
 								paramsTworkSin.put("pv_cdtipsit_i",datosTablas.get(i).get("cdtipsit"));
 								paramsTworkSin.put("pv_cdperson_i",datosTablas.get(i).get("cdperson"));
-								paramsTworkSin.put("pv_feocurre_i",datosTablas.get(i).get("dtFechaOcurrencia"));
+								paramsTworkSin.put("pv_feocurre_i",datosTablas.get(i).get("fechaOcurrencia"));
 								paramsTworkSin.put("pv_nmautser_i",null);
 						        siniestrosManager.guardaListaTworkSin(paramsTworkSin);
 						    }
@@ -1744,6 +1744,10 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     							logger.debug("usando iva proveedor "+ivaprov);
     							boolean copagoPorc = false;
     							String scopago =concepto.get("COPAGO");
+    							if(scopago.equalsIgnoreCase("no"));
+    							{
+    								scopago="0";
+    							}
     							logger.debug("procesar copago "+scopago);
     							if(StringUtils.isNotBlank(scopago))
     							{
