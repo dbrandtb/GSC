@@ -177,26 +177,15 @@ function generaAutoriServicioWindow(grid,rowIndex,colIndex){
 	
 	msgWindow = Ext.Msg.show({
         title: 'Aviso',
-        msg: '&iquest;Esta seguro que desea generar el contrarecibo?',
+        msg: '&iquest;Esta seguro que desea generar la Autorizaci&oacute;n de Servicio ?',
         buttons: Ext.Msg.YESNO,
         icon: Ext.Msg.QUESTION,
         fn: function(buttonId, text, opt){
         	if(buttonId == 'yes'){
-        		console.log(record.get('ntramite'));
-        		console.log(record.get('cdunieco'));
-        		console.log(record.raw.cdramo);
-   				console.log(record.raw.estado);
-   				console.log(record.get('nmpoliza')),
-   				console.log(record.get('parametros.pv_otvalor01'));
-   				console.log(record.get('parametros.pv_otvalor05'));
-        		
-			
-        	
         		Ext.Ajax.request({
 					url: _UrlGenerarAutoServicio,
 					params: {
 							'paramsO.pv_ntramite_i' : record.get('ntramite'),
-							
 				    		'paramsO.pv_cdunieco_i' : record.get('cdunieco'),
 				    		'paramsO.pv_cdramo_i'   : record.raw.cdramo,
 				    		'paramsO.pv_estado_i'   : record.raw.estado,
@@ -213,13 +202,13 @@ function generaAutoriServicioWindow(grid,rowIndex,colIndex){
 				        	debug('numRand a: ',numRand);
 				        	var windowVerDocu=Ext.create('Ext.window.Window',
 				        	{
-				        		title          : 'Contrarecibo de Documentos del Siniestro'
+				        		title          : 'Autorizaci&oacute;n de Sevicio Siniestro'
 				        		,width         : 700
 				        		,height        : 500
 				        		,collapsible   : true
 				        		,titleCollapse : true
 				        		,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
-				        		                 +'src="'+panDocUrlViewDoc+'?idPoliza=' + record.get('ntramite') + '&filename=' + '<s:text name="siniestro.contrarecibo.nombre"/>' +'">'
+				        		                 +'src="'+panDocUrlViewDoc+'?idPoliza=' + record.get('ntramite') + '&filename=' + '<s:text name="siniestro.autorizacionServicio.nombre"/>' +'">'
 				        		                 +'</iframe>'
 				        		,listeners     :
 				        		{

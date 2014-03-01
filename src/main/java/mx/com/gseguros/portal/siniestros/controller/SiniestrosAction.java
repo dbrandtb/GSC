@@ -898,10 +898,6 @@ public void setMsgResult(String msgResult) {
    
    public String generarAutoriServicio(){
 	   
-	   logger.debug("VALOR DE MENSAJE");
-	   logger.debug(paramsO);
-	 
-	   
 	   try {
 		   File carpeta=new File(getText("ruta.documentos.poliza") + "/" + paramsO.get("pv_ntramite_i"));
            if(!carpeta.exists()){
@@ -920,7 +916,7 @@ public void setMsgResult(String msgResult) {
            //urlContrareciboSiniestro
            String urlAutorizacionServicio = ""
            					   + getText("ruta.servidor.reports")
-                               + "?p_unieco=" +  paramsO.get("pv_ntramite_i")
+                               + "?p_unieco=" +  paramsO.get("pv_cdunico_i")
                                + "&p_ramo=" + paramsO.get("pv_cdramo_i")
                                + "&p_estado=" + paramsO.get("pv_estado_i")
                                + "&p_poliza=" + paramsO.get("pv_nmpoliza_i")
