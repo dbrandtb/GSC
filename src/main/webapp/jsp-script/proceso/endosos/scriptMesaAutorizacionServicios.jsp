@@ -15,6 +15,7 @@ var _4_authEndUrlDoc      = '<s:url namespace="/documentos" action="ventanaDocum
 var _4_urlPantallaAutServ = '<s:url namespace="/siniestros" action="autorizacionServicios" />';
 
 var _UrlGenerarAutoServicio     = '<s:url namespace="/siniestros" action="generarAutoriServicio"       />';
+var panDocUrlViewDoc     = '<s:url namespace ="/documentos" action="descargaDocInline" />';
 
 var _4_selectedRecordEndoso;
 var _4_windowAutorizarEndoso;
@@ -174,6 +175,7 @@ function _4_autorizarEndoso()
 function generaAutoriServicioWindow(grid,rowIndex,colIndex){
 	
 	var record = grid.getStore().getAt(rowIndex);
+	console.log(record);
 	
 	msgWindow = Ext.Msg.show({
         title: 'Aviso',
@@ -191,7 +193,8 @@ function generaAutoriServicioWindow(grid,rowIndex,colIndex){
 				    		'paramsO.pv_estado_i'   : record.raw.estado,
 				    		'paramsO.pv_nmpoliza_i' : record.get('nmpoliza'),
 				    		'paramsO.pv_nmAutSer_i' : record.get('parametros.pv_otvalor01'),
-				    		'paramsO.pv_cdperson_i' : record.get('parametros.pv_otvalor05')
+				    		'paramsO.pv_cdperson_i' : record.get('parametros.pv_otvalor05'),
+				    		'paramsO.pv_nmsuplem_i' : record.raw.nmsuplem,
 				    	
 					},
 					success: function(response, opt) {
