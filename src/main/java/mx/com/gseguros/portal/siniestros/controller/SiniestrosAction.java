@@ -2074,9 +2074,9 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     							logger.debug("ptimport "+ptimport);
     							
     							double ajusteaplica = 0d;
-    							if(StringUtils.isNotBlank(row.get("PTIMPORTAJUSTADO")))
+    							if(StringUtils.isNotBlank(row.get("PTIMPORT_AJUSTADO")))
     							{
-    								ajusteaplica = Double.parseDouble(row.get("PTIMPORTAJUSTADO"));
+    								ajusteaplica = Double.parseDouble(row.get("PTIMPORT_AJUSTADO"));
     							}
     							logger.debug("ajusteaplica "+ajusteaplica);
     							

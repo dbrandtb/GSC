@@ -635,7 +635,7 @@ Ext.onReady(function()
                     }
                     ,{
                         header     : 'Ajuste'
-                        ,dataIndex : 'PTIMPORTAJUSTADO'
+                        ,dataIndex : 'PTIMPORT_AJUSTADO'
                         ,renderer  : Ext.util.Format.usMoney
                         ,flex      : 1
                     }
