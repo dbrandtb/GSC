@@ -16,7 +16,6 @@ import mx.com.gseguros.portal.siniestros.model.ConsultaProveedorVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaTDETAUTSVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaTTAPVAATVO;
 import mx.com.gseguros.portal.siniestros.model.DatosSiniestroVO;
-import mx.com.gseguros.portal.siniestros.model.HistorialSiniestroVO;
 import mx.com.gseguros.portal.siniestros.model.ListaFacturasVO;
 import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
 
