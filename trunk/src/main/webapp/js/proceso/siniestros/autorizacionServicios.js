@@ -1529,9 +1529,7 @@ Ext.onReady(function() {
 							        for(var i=0;i<json.listaConsultaTablas.length;i++)
 				                    {
 				                        /*OBTENEMOS LOS VALORES*/
-							        	console.log("OBTENEMOS LOS VALORES DE LA RESPUESTA DE LOS MEDICO");
-					        			console.log(json.listaConsultaTablas[i]);
-				                        if(json.listaConsultaTablas[i].cdtipaut==1)
+							        	if(json.listaConsultaTablas[i].cdtipaut==1)
 			                        	{
 				                        	var rec = new modelListadoTablas({
 				                        		nmautser: json.listaConsultaTablas[i].nmautser,
@@ -1600,9 +1598,6 @@ Ext.onReady(function() {
 								,success : function (response)
 								{
 									var json=Ext.decode(response.responseText).datosAutorizacionEsp;
-									
-									console.log("VALOR DE RESPUESTA");
-									console.log(json);
 									if(Ext.getCmp('claveTipoAutoriza').getValue() == 3 )
 									{
 										//Número de autorización
@@ -1642,9 +1637,6 @@ Ext.onReady(function() {
 									
 									
 									//Médico
-									console.log("Valor del médico");
-									console.log(json.cdmedico);
-									
 									Ext.getCmp('idMedico').setValue(json.cdmedico);
 									
 									//Causa Siniestro
@@ -1740,9 +1732,6 @@ Ext.onReady(function() {
 							            }
 							            ,success : function (response)
 							            {
-							            	console.log("VALOR DE LA RESPUESTA POR BUSQUEDA INDIVIDUAL");
-							            	console.log(Ext.decode(response.responseText).polizaUnica);
-
 							            	if(Ext.decode(response.responseText).polizaUnica != null)
 						            		{
 							            		var json=Ext.decode(response.responseText).polizaUnica[0];
@@ -2362,10 +2351,7 @@ modificacionClausula = Ext.create('Ext.window.Window',
 		submitValues['datosTablas']=datosTablas;
 		panelInicialPrincipal.setLoading(true);
 		
-		console.log("VALOR A ENVIAR AL GUARDADO");
-		console.log(submitValues);
-		
-        Ext.Ajax.request(
+		Ext.Ajax.request(
         {
             url: _URL_GUARDA_AUTORIZACION,
             jsonData:Ext.encode(submitValues), // convierte a estructura JSON
@@ -2454,7 +2440,6 @@ modificacionClausula = Ext.create('Ext.window.Window',
 	        {
 	            //asignamos el valor de la exclusion al campo para su posterior uso
 	            Ext.getCmp('idExclusionPenalizacion').setValue(Ext.decode(response.responseText).existePenalizacion);
-	            console.log(Ext.getCmp('idExclusionPenalizacion').getValue());
 	        },
 	        failure : function ()
 	        {
@@ -2483,9 +2468,7 @@ modificacionClausula = Ext.create('Ext.window.Window',
 	            }
 	            ,success : function (response)
 	            {
-	            	console.log(Ext.decode(response.responseText));
 	            	Ext.getCmp('idPenalCambioZona').setValue(Ext.decode(response.responseText).porcentajePenalizacion);
-	            	console.log(Ext.getCmp('idPenalCambioZona').getValue());
 	                
 	            },
 	            failure : function ()
@@ -2504,8 +2487,6 @@ modificacionClausula = Ext.create('Ext.window.Window',
 	    //validación para camvio de zona
 	    var valor1="";
 	    var valor2="";
-	    console.log("VALOR DE console.log(circuloHosPoliza);");
-	    console.log(Ext.getCmp('iddsplanAsegurado').getValue());
 	    if(Ext.getCmp('iddsplanAsegurado').getValue() == "PLUS 100") {       valor1="A";    }
 	    if(Ext.getCmp('iddsplanAsegurado').getValue() == "PLUS 500") {       valor1="B";    }
 	    if(Ext.getCmp('iddsplanAsegurado').getValue() == "PLUS 1000"){      valor1="C";     }
@@ -2521,11 +2502,7 @@ modificacionClausula = Ext.create('Ext.window.Window',
 
 	function validacionCirculoHospitalario(circuloHosPoliza,circuloHosProv)
 	{
-		console.log("VALOR DE ENTRADA A LA FUNCION validacionCirculoHospitalario");
-		console.log(circuloHosPoliza);
-		console.log(circuloHosProv);
-		
-	    var valor = circuloHosPoliza+""+circuloHosProv;
+		var valor = circuloHosPoliza+""+circuloHosProv;
 	    switch(valor)
 	    {
 	        case "AA" :
@@ -2553,10 +2530,7 @@ modificacionClausula = Ext.create('Ext.window.Window',
 	
 	function validacionCopagoTotal()
 	{
-		console.log("VALOR DE ENTRADA A LA FUNCION validacionCopagoTotal");
-		
-	    var copagoOrig= Ext.getCmp('idCopago').getValue() ;
-	    console.log(copagoOrig);
+		var copagoOrig= Ext.getCmp('idCopago').getValue() ;
 	    var sumatoria = 0;
 	    if( copagoOrig =="NO" || copagoOrig =="NA")
 	    {
@@ -2566,8 +2540,7 @@ modificacionClausula = Ext.create('Ext.window.Window',
 	    }
 	    if(copagoOrig.indexOf("$") >= 0)
 	    {
-	    	console.log("entra a $");
-	        sumatoria = + Ext.getCmp('idPenalCircHospitalario').getValue() + + Ext.getCmp('idPenalCambioZona').getValue();
+	    	sumatoria = + Ext.getCmp('idPenalCircHospitalario').getValue() + + Ext.getCmp('idPenalCambioZona').getValue();
 	        if(sumatoria > 0){
 	        	Ext.getCmp('idCopagoFin').setValue(copagoOrig +" "+ sumatoria +"%");
 	        }else{
@@ -2578,7 +2551,6 @@ modificacionClausula = Ext.create('Ext.window.Window',
 	    }
 	    if(copagoOrig.indexOf("%") > 0)
 	    {
-	    	console.log("entra a %");
 	    	sumatoria = + Ext.getCmp('idPenalCircHospitalario').getValue() + +Ext.getCmp('idPenalCambioZona').getValue() +  +copagoOrig.replace("%","");
 	        Ext.getCmp('idCopagoFin').setValue(sumatoria);
 	        return true;
