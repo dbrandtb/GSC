@@ -91,6 +91,7 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
         	consulta.setNombreMedico(rs.getString("NOMBREMEDICO"));
         	consulta.setMtsumadp(rs.getString("MTSUMADP"));
         	consulta.setPorpenal(rs.getString("PORPENAL"));
+        	consulta.setCopagofi(rs.getString("COPAGOFI"));
         	consulta.setCdicd(rs.getString("CDICD"));
         	consulta.setDescICD(rs.getString("DESCICD"));
         	consulta.setCdcausa(rs.getString("CDCAUSA"));
@@ -455,6 +456,7 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
 			declareParameter(new SqlParameter("pv_cdmedico_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_mtsumadp_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_porpenal_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_copagofi_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdicd_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdcausa_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_aaapertu_i", OracleTypes.VARCHAR));
@@ -700,6 +702,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
         	consulta.setZonaContratada(rs.getString("ZONA_CONTRATADA"));
         	consulta.setVigenciaPoliza(Utilerias.formateaFecha(rs.getString("FEINICIO"))+"\t\t|\t\t"+Utilerias.formateaFecha(rs.getString("FEFINAL")));
         	consulta.setNumPoliza(rs.getString("NUMPOLIZA"));
+        	consulta.setDsplan(rs.getString("DSPLAN"));
             return consulta;
         }
     }
@@ -1948,6 +1951,29 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+
+	@Override
+	public String validaPorcentajePenalizacion(String zonaContratada,String zonaAtencion) throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_zcontratada_i", zonaContratada);
+		params.put("pv_zatencion_i", zonaAtencion);
+		Map<String, Object> mapResult = ejecutaSP(new ValidaPorcentajePenalizacionSP(getDataSource()), params);
+		return (String) mapResult.get("pv_penalizacion_o");
+	}
+	
+	protected class ValidaPorcentajePenalizacionSP extends StoredProcedure {
+
+		protected ValidaPorcentajePenalizacionSP(DataSource dataSource) {
+			super(dataSource, "PKG_PRESINIESTRO.P_GET_PENALIZACION");
+			declareParameter(new SqlParameter("pv_zcontratada_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_zatencion_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_penalizacion_o", OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
 			compile();
 		}
 	}

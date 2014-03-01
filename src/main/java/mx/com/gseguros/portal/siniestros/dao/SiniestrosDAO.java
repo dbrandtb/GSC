@@ -249,4 +249,6 @@ public interface SiniestrosDAO {
 	public List<GenericVO>obtenerCodigosMedicos(String idconcep, String subcaden) throws Exception;
 	
 	public Map<String,String>obtenerLlaveSiniestroReembolso(String ntramite) throws Exception;
+
+	public String validaPorcentajePenalizacion(String zonaContratada,String zonaAtencion) throws Exception;
 }

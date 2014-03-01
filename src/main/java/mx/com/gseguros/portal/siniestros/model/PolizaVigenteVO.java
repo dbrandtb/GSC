@@ -34,10 +34,22 @@ public class PolizaVigenteVO implements Serializable {
 	private String zonaContratada;
 	private String vigenciaPoliza;
 	private String numPoliza;
+	private String dsplan;
+	
 	 
 	
 	
 	
+	public String getDsplan() {
+		return dsplan;
+	}
+
+
+	public void setDsplan(String dsplan) {
+		this.dsplan = dsplan;
+	}
+
+
 	public String getNumPoliza() {
 		return numPoliza;
 	}

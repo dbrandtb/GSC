@@ -36,6 +36,7 @@ public class AutorizacionServicioVO implements Serializable{
 	private String NombreMedico;
 	private String mtsumadp;
 	private String porpenal;
+	private String copagofi;
 	private String cdicd;
 	private String DescICD;
 	private String cdcausa;
@@ -48,6 +49,15 @@ public class AutorizacionServicioVO implements Serializable{
 	private String fesistem;
 	private String cduser;
 	
+	
+	public String getCopagofi() {
+		return copagofi;
+	}
+
+	public void setCopagofi(String copagofi) {
+		this.copagofi = copagofi;
+	}
+
 	public String getNmautser() {
 		return nmautser;
 	}
