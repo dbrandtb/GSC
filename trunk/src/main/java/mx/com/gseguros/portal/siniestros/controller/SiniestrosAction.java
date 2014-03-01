@@ -916,7 +916,7 @@ public void setMsgResult(String msgResult) {
            //urlContrareciboSiniestro
            String urlAutorizacionServicio = ""
            					   + getText("ruta.servidor.reports")
-                               + "?p_unieco=" +  paramsO.get("pv_cdunico_i")
+                               + "?p_unieco=" +  paramsO.get("pv_cdunieco_i")
                                + "&p_ramo=" + paramsO.get("pv_cdramo_i")
                                + "&p_estado=" + paramsO.get("pv_estado_i")
                                + "&p_poliza=" + paramsO.get("pv_nmpoliza_i")
@@ -944,6 +944,9 @@ public void setMsgResult(String msgResult) {
            paramsO.put("pv_swvisible_i"   , null);
            paramsO.put("pv_codidocu_i"   , null);
            paramsO.put("pv_cdtiptra_i"   , TipoTramite.AUTORIZACION_SERVICIOS.getCodigo());
+           paramsO.put("pv_nmsolici_i",paramsO.get("pv_nmsuplem_i"));
+           paramsO.put("pv_tipmov_i",TipoTramite.AUTORIZACION_SERVICIOS.getCodigo());
+           logger.debug(paramsO);
            kernelManagerSustituto.guardarArchivo(paramsO);
 		   
 	   }catch( Exception e){
