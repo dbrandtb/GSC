@@ -462,6 +462,7 @@ var msgWindow;
 	}
 	
 	function turnarAoperadorReclamaciones(grid,rowIndex,colIndex){
+		var record = grid.getStore().getAt(rowIndex);
 		var comentariosText = Ext.create('Ext.form.field.TextArea', {
         	fieldLabel: 'Observaciones'
     		,labelWidth: 150

@@ -11,13 +11,14 @@ import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
 import mx.com.gseguros.portal.siniestros.model.CoberturaPolizaVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaManteniVO;
-import mx.com.gseguros.portal.siniestros.model.ListaFacturasVO;
-import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaPorcentajeVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaProveedorVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaTDETAUTSVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaTTAPVAATVO;
 import mx.com.gseguros.portal.siniestros.model.DatosSiniestroVO;
+import mx.com.gseguros.portal.siniestros.model.HistorialSiniestroVO;
+import mx.com.gseguros.portal.siniestros.model.ListaFacturasVO;
+import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
 
 public interface SiniestrosDAO {
 
@@ -249,6 +250,13 @@ public interface SiniestrosDAO {
 	public List<GenericVO>obtenerCodigosMedicos(String idconcep, String subcaden) throws Exception;
 	
 	public Map<String,String>obtenerLlaveSiniestroReembolso(String ntramite) throws Exception;
+	
+	public List<Map<String,String>> obtieneDatosGeneralesSiniestro(Map<String, Object> params) throws Exception;
+	
+	public Map<String, Object> actualizaDatosGeneralesSiniestro(Map<String, Object> params) throws Exception;
+	
+	public List<HistorialSiniestroVO> obtieneHistorialReclamaciones(Map<String, Object> params) throws Exception;
+	
 	
 	public List<Map<String,String>>P_GET_CONCEPTOS_FACTURA(
 			String cdunieco,

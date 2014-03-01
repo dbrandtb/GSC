@@ -19,6 +19,7 @@ import mx.com.gseguros.portal.siniestros.model.ConsultaProveedorVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaTDETAUTSVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaTTAPVAATVO;
 import mx.com.gseguros.portal.siniestros.model.DatosSiniestroVO;
+import mx.com.gseguros.portal.siniestros.model.HistorialSiniestroVO;
 import mx.com.gseguros.portal.siniestros.model.ListaFacturasVO;
 import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
@@ -753,6 +754,72 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	{
 		return siniestrosDAO.obtenerLlaveSiniestroReembolso(ntramite);
 	}
+	
+	
+	@Override
+	public List<Map<String,String>> obtieneDatosGeneralesSiniestro(String cdunieco, String cdramo, String estado, String nmpoliza, 
+			String nmsituac, String nmsuplem, String status, String aaapertu, String nmsinies, String ntramite) throws Exception {
+		
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("pv_cdunieco_i", cdunieco);
+		params.put("pv_cdramo_i",   cdramo);
+		params.put("pv_estado_i",   estado);
+		params.put("pv_nmpoliza_i", nmpoliza);
+		params.put("pv_nmsituac_i", nmsituac);
+		params.put("pv_nmsuplem_i", nmsuplem);
+		params.put("pv_status_i",   status);
+		params.put("pv_aaapertu_i", aaapertu);
+		params.put("pv_nmsinies_i", nmsinies);
+		params.put("pv_ntramite_i", ntramite);
+		
+		log.debug("obtieneDatosGeneralesSiniestro params: "+params);
+		return siniestrosDAO.obtieneDatosGeneralesSiniestro(params);
+	}
+	
+	
+	@Override
+	public Map<String, Object> actualizaDatosGeneralesSiniestro(String cdunieco, String cdramo, String estado, String nmpoliza, 
+			String nmsuplem, String aaapertu, String nmsinies, Date feocurre,
+			String nmreclamo, String cdicd, String cdicd2, String cdcausa) throws Exception {
+
+		HashMap<String,Object> params=new HashMap<String,Object>();
+		params.put("pv_cdunieco_i", cdunieco);
+		params.put("pv_cdramo_i",   cdramo);
+		params.put("pv_estado_i",   estado);
+		params.put("pv_nmpoliza_i", nmpoliza);
+		params.put("pv_nmsuplem_i", nmsuplem);
+		params.put("pv_aaapertu_i", aaapertu);
+		params.put("pv_nmsinies_i", nmsinies);
+		params.put("pv_feocurre_i", feocurre);
+		params.put("pv_nmreclamo_i",nmreclamo);
+		params.put("pv_cdicd_i",    cdicd);
+		params.put("pv_cdicd2_i",   cdicd2);
+		params.put("pv_cdcausa_i",  cdcausa);
+		log.debug("actualizaDatosGeneralesSiniestro params: "+params);
+		return siniestrosDAO.actualizaDatosGeneralesSiniestro(params);
+	}
+	
+	
+	@Override
+	public List<HistorialSiniestroVO> obtieneHistorialReclamaciones(String cdunieco, String cdramo, String estado, String nmpoliza, 
+			String nmsituac, String nmsuplem, String status, String aaapertu, String nmsinies, String ntramite) throws Exception {
+		
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		params.put("pv_cdunieco_i", cdunieco);
+		params.put("pv_cdramo_i",   cdramo);
+		params.put("pv_estado_i",   estado);
+		params.put("pv_nmpoliza_i", nmpoliza);
+		params.put("pv_nmsituac_i", nmsituac);
+		params.put("pv_nmsuplem_i", nmsuplem);
+		params.put("pv_status_i",   status);
+		params.put("pv_aaapertu_i", aaapertu);
+		params.put("pv_nmsinies_i", nmsinies);
+		params.put("pv_ntramite_i", ntramite);
+		
+		log.debug("obtieneHistorialReclamaciones params: "+params);
+		return siniestrosDAO.obtieneHistorialReclamaciones(params);
+	}
+	
 	
 	@Override
 	public List<Map<String,String>>P_GET_CONCEPTOS_FACTURA(

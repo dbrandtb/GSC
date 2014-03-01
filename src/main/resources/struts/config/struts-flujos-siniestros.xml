@@ -483,6 +483,18 @@
 			</result>
 		</action>
 		
+		<action name="obtieneDatosGeneralesSiniestro" class="detalleSiniestroAction" method="obtieneDatosGeneralesSiniestro">
+            <result type="json"></result>
+        </action>
+        
+        <action name="actualizaDatosGeneralesSiniestro" class="detalleSiniestroAction" method="actualizaDatosGeneralesSiniestro">
+            <result type="json"></result>
+        </action>
+        
+        <action name="obtieneHistorialReclamaciones" class="detalleSiniestroAction" method="obtieneHistorialReclamaciones">
+            <result type="json"></result>
+        </action>
+		
 		<action name="obtenerMsinival" class="siniestrosAction" method="obtenerMsinival">
             <result type="json"></result>
         </action>
