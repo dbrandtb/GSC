@@ -302,6 +302,33 @@ public interface SiniestrosManager {
 	public List<GenericVO>obtenerCodigosMedicos(String idconcep, String subcaden) throws Exception;
 	
 	public Map<String,String>obtenerLlaveSiniestroReembolso(String ntramite) throws Exception;
+	
+	public List<Map<String,String>>P_GET_CONCEPTOS_FACTURA(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsuplem,
+			String nmsituac,
+			String aaapertu,
+			String status,
+			String nmsinies,
+			String nfactura) throws Exception;
+	
+	public Map<String,String> obtenerDatosProveedor(String cdpresta) throws Exception;
+	
+	public Map<String,String>obtenerCopagoDeducible(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsuplem,
+			String nmsituac,
+			String aaapertu,
+			String status,
+			String nmsinies,
+			String nfactura) throws Exception;
 
 	public String validaPorcentajePenalizacion(String zonaContratada, String zonaAtencion) throws Exception;
+	
 }

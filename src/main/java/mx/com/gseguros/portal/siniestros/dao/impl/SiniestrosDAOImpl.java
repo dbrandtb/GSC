@@ -992,7 +992,8 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_ntramite_i", ntramite);
 		Map<String, Object> mapResult = ejecutaSP(new GuardaSiniestroAltaTramite(this.getDataSource()), params);
-		return (String) mapResult.get("pv_msg_id_o");
+		java.math.BigDecimal msgId = (java.math.BigDecimal)mapResult.get("pv_msg_id_o"); 
+		return msgId.toPlainString();
 	}
 	
 	protected class GuardaSiniestroAltaTramite extends StoredProcedure
@@ -1954,8 +1955,121 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
-
-
+	
+	@Override
+	public List<Map<String,String>>P_GET_CONCEPTOS_FACTURA(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsuplem,
+			String nmsituac,
+			String aaapertu,
+			String status,
+			String nmsinies,
+			String nfactura) throws Exception
+	{
+		Map<String,Object>p=new HashMap<String,Object>();
+		p.put("pv_cdunieco_i" , cdunieco);
+		p.put("pv_cdramo_i"   , cdramo);
+		p.put("pv_estado_i"   , estado);
+		p.put("pv_nmpoliza_i" , nmpoliza);
+		p.put("pv_nmsuplem_i" , nmsuplem);
+		p.put("pv_nmsituac_i" , nmsituac);
+		p.put("pv_aaapertu_i" , aaapertu);
+		p.put("pv_status_i"   , status);
+		p.put("pv_nmsinies_i" , nmsinies);
+		p.put("pv_nfactura_i" , nfactura);
+		logger.debug("P_GET_CONCEPTOS_FACTURA params: "+p);
+		Map<String, Object> mapResult = ejecutaSP(new PGETCONCEPTOSFACTURA(this.getDataSource()), p);
+		return (List<Map<String,String>>) mapResult.get("pv_registro_o");
+	}
+	
+	protected class PGETCONCEPTOSFACTURA extends StoredProcedure
+	{
+		protected PGETCONCEPTOSFACTURA(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SINIESTRO.P_GET_CONCEPTOS_FACTURA");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsituac_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_aaapertu_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_status_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsinies_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nfactura_i" , OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public Map<String,String>obtenerCopagoDeducible(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsuplem,
+			String nmsituac,
+			String aaapertu,
+			String status,
+			String nmsinies,
+			String nfactura) throws Exception
+	{
+		Map<String,Object>p=new HashMap<String,Object>();
+		p.put("pv_cdunieco_i" , cdunieco);
+		p.put("pv_cdramo_i"   , cdramo);
+		p.put("pv_estado_i"   , estado);
+		p.put("pv_nmpoliza_i" , nmpoliza);
+		p.put("pv_nmsuplem_i" , nmsuplem);
+		p.put("pv_nmsituac_i" , nmsituac);
+		p.put("pv_aaapertu_i" , aaapertu);
+		p.put("pv_status_i"   , status);
+		p.put("pv_nmsinies_i" , nmsinies);
+		p.put("pv_nfactura_i" , nfactura);
+		logger.debug("obtenerCopagoDeducible params: "+p);
+		/*Map<String, Object> mapResult = ejecutaSP(new ObtenerCopagoDeducible(this.getDataSource()), p);
+		List<Map<String,String>> lista = (List<Map<String,String>>) mapResult.get("pv_registro_o");
+		if(lista==null||lista.size()==0)
+		{
+			throw new Exception("No se encuentra el copago deducible");
+		}
+		return lista.get(0);*/
+		Map<String,String>m= new HashMap<String,String>();
+		m.put("COPAGO"    , "10");//(Math.random()*10d)+"");
+		m.put("TIPCOPAG"  , "P");//Math.random()>0.5d?"P":"I");
+		m.put("DEDUCIBLE" , "2000");//(Math.random()*2000d*((Math.random()>0.7d)?1d:0d))+"");
+		return m;
+	}
+	
+	protected class ObtenerCopagoDeducible extends StoredProcedure
+	{
+		protected ObtenerCopagoDeducible(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SINIESTRO.P_GET_COPAGO_DEDUCIBLE");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsituac_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_aaapertu_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_status_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsinies_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nfactura_i" , OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 	@Override
 	public String validaPorcentajePenalizacion(String zonaContratada,String zonaAtencion) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
