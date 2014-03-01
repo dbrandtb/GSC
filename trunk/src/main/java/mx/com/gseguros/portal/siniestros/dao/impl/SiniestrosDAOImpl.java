@@ -24,6 +24,7 @@ import mx.com.gseguros.portal.siniestros.model.ConsultaProveedorVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaTDETAUTSVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaTTAPVAATVO;
 import mx.com.gseguros.portal.siniestros.model.DatosSiniestroVO;
+import mx.com.gseguros.portal.siniestros.model.HistorialSiniestroVO;
 import mx.com.gseguros.portal.siniestros.model.ListaFacturasVO;
 import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
 import mx.com.gseguros.utils.Constantes;
@@ -1955,6 +1956,109 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
+	
+	
+	@Override
+	public List<Map<String,String>> obtieneDatosGeneralesSiniestro(Map<String, Object> params) throws Exception {
+		Map<String, Object> result = ejecutaSP(new ObtieneDatosGeneralesSiniestro(this.getDataSource()), params);
+		return (List<Map<String,String>>)result.get("pv_registro_o");
+	}
+	
+	protected class ObtieneDatosGeneralesSiniestro extends StoredProcedure {
+		protected ObtieneDatosGeneralesSiniestro(DataSource dataSource) {
+			// TODO: Terminar cuando este listo el SP
+			super(dataSource, "PKG_SINIESTRO.P_LISTA_DG_STROS");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i" , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_estado_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsituac_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_status_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_aaapertu_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsinies_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ntramite_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	/*
+	protected class ObtieneDatosGeneralesSiniestroMapper  implements RowMapper<DatosGeneralesSiniestroVO> {
+        public DatosGeneralesSiniestroVO mapRow(ResultSet rs, int rowNum) throws SQLException {
+        	DatosGeneralesSiniestroVO datosSiniestro = new DatosGeneralesSiniestroVO();
+        	// TODO: Terminar cuando este listo el SP
+            return datosSiniestro;
+        }
+    }
+    */
+	
+	
+	@Override
+	public Map<String, Object> actualizaDatosGeneralesSiniestro(Map<String, Object> params) throws Exception {
+		return ejecutaSP(new ActualizaDatosGeneralesSiniestro(this.getDataSource()), params);
+	}
+	
+	protected class ActualizaDatosGeneralesSiniestro extends StoredProcedure {
+		protected ActualizaDatosGeneralesSiniestro(DataSource dataSource) {
+			super(dataSource, "PKG_SINIESTRO.P_MOD_MSINIEST");
+            declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdramo_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_aaapertu_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmsinies_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_estado_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_feocurre_i" , OracleTypes.DATE));
+            declareParameter(new SqlParameter("pv_nmreclamo_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdicd_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdicd2_i" , OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdcausa_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<HistorialSiniestroVO> obtieneHistorialReclamaciones(Map<String, Object> params) throws Exception {
+		Map<String, Object> result = ejecutaSP(new ObtieneHistorialReclamaciones(this.getDataSource()), params);
+		return (List<HistorialSiniestroVO>)result.get("pv_registro_o");
+	}
+	
+	protected class ObtieneHistorialReclamaciones extends StoredProcedure {
+		protected ObtieneHistorialReclamaciones(DataSource dataSource) {
+			// TODO: Terminar cuando este listo el SP
+			super(dataSource, "");
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i" , OracleTypes.NUMERIC));
+			declareParameter(new SqlParameter("pv_estado_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_status_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_aaapertu_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmsinies_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ntramite_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new ObtieneHistorialReclamacionesMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	protected class ObtieneHistorialReclamacionesMapper  implements RowMapper<HistorialSiniestroVO> {
+        public HistorialSiniestroVO mapRow(ResultSet rs, int rowNum) throws SQLException {
+        	HistorialSiniestroVO historialReclamacion = new HistorialSiniestroVO();
+        	// TODO: Terminar cuando este listo el SP
+            return historialReclamacion;
+        }
+    }
+	
+	
 	
 	@Override
 	public List<Map<String,String>>P_GET_CONCEPTOS_FACTURA(

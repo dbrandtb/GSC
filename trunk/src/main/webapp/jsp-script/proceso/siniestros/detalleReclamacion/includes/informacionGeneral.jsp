@@ -13,16 +13,79 @@
 	var _STATUS   = '<s:property value="params.status" />';// status del siniestro
 	var _AAAPERTU = '<s:property value="params.aaapertu" />';
 	var _NMSINIES = '<s:property value="params.nmsinies" />';
+	var _NTRAMITE = '<s:property value="params.ntramite" />';
 	*/
 
-	var _URL_CATALOGOS             = '<s:url namespace="/catalogos"       action="obtieneCatalogo" />';
-	var _URL_LOADER_VER_COBERTURAS = '<s:url namespace="/consultasPoliza" action="includes/verCoberturas" />';
+	var _URL_CATALOGOS              = '<s:url namespace="/catalogos"       action="obtieneCatalogo" />';
+	var _URL_INFO_GRAL_SINIESTRO    = '<s:url namespace="/siniestros"      action="obtieneDatosGeneralesSiniestro" />';
+	var _URL_ACTUALIZA_INFO_GRAL_SIN= '<s:url namespace="/siniestros"      action="actualizaDatosGeneralesSiniestro" />';
+	var _URL_LOADER_VER_COBERTURAS  = '<s:url namespace="/consultasPoliza" action="includes/verCoberturas" />';
+	var _URL_LOADER_VER_EXCLUSIONES = '<s:url namespace="/consultasPoliza" action="includes/verExclusiones" />';
 
 	Ext.onReady(function() {
-	 
+		
+		Ext.define('CurrencyField', {
+		    extend: 'Ext.form.field.Display',
+		    alias: ['widget.currencyfield'],
+		    
+		    valueToRaw: function(value) {
+		        return Ext.util.Format.currency(value, '$ ', 2);
+		    }
+		});
+		
+		// Models:
+		
+		Ext.define('ModelInfoGralSiniestro',{
+		    extend: 'Ext.data.Model',
+		    fields: [
+		        {type:'string', name:'CONTREC'},
+				{type:'string', name:'DESSTATUS'},
+				{type:'string', name:'CDSUCADM'},
+				{type:'string', name:'CDSUCDOC'},
+				{type:'string', name:'FERECEPC'},
+				{type:'string', name:'FEOCURRE'},
+				{type:'string', name:'CDCAUSA'},
+				{type:'string', name:'PLANTARI'},
+				{type:'string', name:'CIRHOSPI'},
+				{type:'string', name:'DSZONAT'},
+				{type:'string', name:'SUMAASEG'},
+				{type:'string', name:'TIPPAG'},
+				{type:'string', name:'NMPOLIEX'},
+				{type:'string', name:'IMPORTE'},
+				{type:'string', name:'FEINIVAL'},
+				{type:'string', name:'FEFINVAL'},
+				{type:'string', name:'STAPOLIZA'},
+				{type:'string', name:'FEANTIG'},
+				{type:'string', name:'FEALTA'},
+				{type:'string', name:'CONTEO'},
+				{type:'string', name:'DSPERPAG'},
+				{type:'string', name:'ASEGURADO'},
+				{type:'string', name:'DSPROVEED'},
+				{type:'string', name:'CIRHOPROV'},
+				{type:'string', name:'CDICD'},
+				{type:'string', name:'CDICD2'},
+				{type:'string', name:'NMRECLAMO'}
+		    ]
+		});
+	
+	
+		var storeInfoGralSiniestro=new Ext.data.Store({
+	        autoDestroy: true,
+	        model: 'ModelInfoGralSiniestro',
+	        proxy: {
+	            type: 'ajax',
+	            url: _URL_INFO_GRAL_SINIESTRO,
+	            reader: {
+	                type: 'json',
+	                root: 'siniestro'
+	            }
+	        }
+	    });
+		 
 		var pnlInformacionGral= Ext.create('Ext.form.Panel',{
+			url       : _URL_ACTUALIZA_INFO_GRAL_SIN,
 		    border    : 0,
-		    renderTo : 'dvInformacionGeneral',
+		    renderTo  : 'dvInformacionGeneral',
 		    bodyPadding: 10,
 		    width: 900,
 		    layout :{
@@ -36,17 +99,20 @@
 		    },
 		    items:
 		    [
-		        {
-		            xtype      : 'textfield',
-		            name       : 'params.contraRecibo',
+				{
+				    xtype      : 'hidden',
+				    name       : 'NMRECLAMO'
+				},{
+		            xtype      : 'displayfield',
+		            name       : 'CONTREC',
 		            fieldLabel : 'Contra recibo'
 		        },{
-		        	xtype      : 'textfield',
-		        	name       : 'params.estado',
+		        	xtype      : 'displayfield',
+		        	name       : 'DESSTATUS',
 		            fieldLabel : 'Estado'
 		        },{            
 		        	xtype: 'combo',
-					name:'params.oficinaEmisora',
+					name:'CDSUCADM',
 					fieldLabel: 'Oficina emisora',
 					queryMode:'local',
 					displayField: 'value',
@@ -71,7 +137,7 @@
 	                })
 		        },{
 		        	xtype: 'combo',
-					name:'params.oficinaDocumento',
+					name:'CDSUCDOC',
 					fieldLabel: 'Oficina documento',
 					queryMode:'local',
 					displayField: 'value',
@@ -95,18 +161,16 @@
 	                    }
 	                })
 		        },{
-		            xtype      : 'textfield',
+		            xtype      : 'displayfield',
 		            fieldLabel : 'Fecha recepci&oacute;n',
-		            name       : 'params.fechaRecepcion'
+		            name       : 'FERECEPC'
 		        },{
-		            xtype      : 'datefield',
+		            xtype      : 'displayfield',
 		            fieldLabel : 'Fecha ocurrencia',
-		            name       : 'params.fechaOcurrencia',
-		            format     : 'd/m/Y',
-		            value      : new Date()
+		            name       : 'FEOCURRE'
 		        },{
 		        	xtype       : 'combo',
-					name        : 'params.origenSiniestro',
+					name        : 'CDCAUSA',
 					fieldLabel  : 'Origen siniestro',
 					queryMode   : 'local',
 					displayField: 'value',
@@ -130,24 +194,28 @@
 	                    }
 	                })
 		        },{
-		            xtype      : 'textfield',
-		            name       : 'params.plan',
+		            xtype      : 'displayfield',
+		            name       : 'PLANTARI',
 		            fieldLabel : 'Plan'
 		        },{
-		            xtype      : 'textfield',
+		            xtype      : 'displayfield',
 		            fieldLabel : 'Circulo hospitalario',
-		            name       : 'params.circuloHospitalario'
+		            name       : 'CIRHOSPI'
 		        },{
-		            xtype      : 'textfield',
-		            name       : 'params.zonaTarificacion',
+		            xtype      : 'displayfield',
+		            name       : 'DSZONAT',
 		            fieldLabel : 'Zona tarificaci&oacute;n'
 		        },{
-		            xtype      : 'textfield',
-		            name       : 'params.sumAseguradaContr',
+		            xtype      : 'currencyfield',
+		            name       : 'SUMAASEG',
 		            fieldLabel : 'Suma asegurada contratada'
 		        },{
+                    xtype      : 'displayfield',
+                    name       : 'TIPPAG',
+                    fieldLabel : 'Tipo pago'
+                }/*,{
 		        	xtype       : 'combo',
-		        	name        : 'params.tipoPago',
+		        	name        : 'TIPPAG',
 		            fieldLabel  : 'Tipo pago',
 		            queryMode   : 'local',
 		            displayField: 'value',
@@ -170,21 +238,21 @@
 	                        }
 	                    }
 	                })
-		        },{
+		        }*/,{
 		        	colspan    : 1,
-		            xtype      : 'textfield',
-		            name       : 'params.poliza',
+		            xtype      : 'displayfield',
+		            name       : 'NMPOLIEX',
 		            fieldLabel : 'P&oacute;liza'
 		        },{
-		        	colspan    : 1,
+		        	colspan: 1,
 		        	xtype  : 'button',
 		        	text   : 'Ver detalle p&oacute;liza',
 	                width  : 180,
 	                icon   : _CONTEXT + '/resources/fam3icons/icons/application_view_list.png'
 		        },{
 		        	colspan    : 1,
-		            xtype      : 'textfield',
-		            name       : 'params.sumaDisponible',
+		        	xtype      : 'currencyfield',
+		            name       : 'IMPORTE',
 		            fieldLabel : 'Suma asegurada disponible'
 		        },{
 		        	colspan    : 1,
@@ -216,74 +284,89 @@
 	                }
 		        },{
 		        	colspan    : 1,
-		            xtype      : 'textfield',
-		            name       : 'params.fechaInicioVigencia',
+		            xtype      : 'displayfield',
+		            name       : 'FEINIVAL',
 		            fieldLabel : 'Inicio vigencia'
 		        },{
-		        	colspan    : 1,
+		        	colspan: 1,
 		        	xtype  : 'button',
 		        	text   : 'Ver historial de reclamaci&oacute;n',
 	                width  : 180,
-	                icon   : _CONTEXT + '/resources/fam3icons/icons/application_view_list.png'
+	                icon   : _CONTEXT + '/resources/fam3icons/icons/application_view_list.png',
+	                disabled: true
 		        },{
 		        	colspan    : 1,
-		            xtype      : 'textfield',
-		            name       : 'params.fechaFinVigencia',
+		            xtype      : 'displayfield',
+		            name       : 'FEFINVAL',
 		            fieldLabel : 'Fin vigencia'
 		        },{
-		        	colspan    : 1,
-		        	xtype  : 'button',
-		        	text   : 'Ver exclusiones p&oacute;liza',
-	                width  : 180,
-	                icon   : _CONTEXT + '/resources/fam3icons/icons/application_view_list.png'
+		        	colspan : 1,
+		        	xtype   : 'button',
+		        	text    : 'Ver exclusiones p&oacute;liza',
+	                width   : 180,
+	                icon    : _CONTEXT + '/resources/fam3icons/icons/application_view_list.png',
+	                handler : function() {
+                        Ext.create('Ext.window.Window', {
+                           title       : 'Exclusiones de la p&oacute;liza',
+                           modal       : true,
+                           buttonAlign : 'center',
+                           autoScroll  : true,
+                           width       : 425,
+                           height      : 255,
+                           loader      : {
+                               url     : _URL_LOADER_VER_EXCLUSIONES,
+                               scripts : true,
+                               autoLoad: true,
+                               params:{
+                                   'params.cdunieco': _CDUNIECO,
+                                   'params.cdramo'  : _CDRAMO,
+                                   'params.estado'  : _ESTADO,
+                                   'params.nmpoliza': _NMPOLIZA,
+                                   'params.nmsituac': _NMSITUAC//,
+                                   //'params.nmsuplem': _NMSUPLEM
+                               }
+                           }
+                        }).show();
+                    }
 		        },{
 		        	colspan    : 1,
-		            xtype      : 'textfield',
-		            name       : 'params.estatusPoliza',
+		            xtype      : 'displayfield',
+		            name       : 'STAPOLIZA',
 		            fieldLabel : 'Estatus p&oacute;liza'
 		        },{
 		        	colspan    : 1,
-		        	xtype  : 'button',
-		        	text   : 'Ver historial rehabilitaciones',
-	                width  : 180,
-	                icon   : _CONTEXT + '/resources/fam3icons/icons/application_view_list.png'
+		        	xtype      : 'button',
+		        	text       : 'Ver historial rehabilitaciones',
+	                width      : 180,
+	                icon       : _CONTEXT + '/resources/fam3icons/icons/application_view_list.png',
+	                disabled   : true
 		        },{
-		        	xtype      : 'textfield',
-		        	name       : 'params.fechaAntiguedad',
-		            fieldLabel : 'Reconocimiento de Antig&uuml;edad',
-		            readOnly   : true
+		        	xtype      : 'displayfield',
+		        	name       : 'FEANTIG',
+		            fieldLabel : 'Reconocimiento de Antig&uuml;edad'
 		        },{
 		        	colspan    : 1,
-		            xtype      : 'textfield',
-		            name       : 'params.fechaAntiguedadGSS',
+		            xtype      : 'displayfield',
+		            name       : 'FEALTA',
 		            fieldLabel : 'Antig&uuml;edad con General de Salud',
 		            readOnly   : true
 		        },{
 		        	colspan    : 1,
-		            xtype      : 'textfield',
-		            name       : 'params.tiempoAntiguedadGSS',
-		            //,fieldLabel : 'Antig&uuml;edad con General de Salud'
-		            readOnly   : true
+		            xtype      : 'displayfield',
+		            name       : 'CONTEO'
+		            
 		        },{
-		            xtype      : 'textfield',
-		            name       : 'params.formaPagoPoliza',
-		            fieldLabel : 'Forma de pago de la p&oacute;liza',
-		            readOnly   : true
+		            xtype      : 'displayfield',
+		            name       : 'DSPERPAG',
+		            fieldLabel : 'Forma de pago de la p&oacute;liza'
 		        },{
-					xtype       : 'combo',
-					name        : 'params.aseguradoAfectado',
-					fieldLabel  : 'Asegurado afectado',
-					//store     : storeCirculoHospitalario,
-					queryMode   : 'local',
-					displayField: 'value',
-					valueField  : 'key',
-					allowBlank  : false,
-					forceSelection : true,
-					emptyText   : 'Seleccione...'
-		        },{
+					xtype      : 'displayfield',
+					name       : 'ASEGURADO',
+					fieldLabel : 'Asegurado afectado'
+		        }/*,{
 		        	colspan     : 1,
 					xtype       : 'combo',
-					name        : 'params.proveedor',
+					name        : 'DSPROVEED',
 					fieldLabel  : 'Proveedor',
 					emptyText   : 'Seleccione...',
 					valueField  : 'key',
@@ -312,21 +395,25 @@
 	                        }
 	                    }
 	                })
-		        },{
+		        }*/,{
+                    colspan    : 1,
+                    xtype      : 'displayfield',
+                    name       : 'DSPROVEED',
+                    fieldLabel : 'Proveedor'
+                },{
 		        	colspan    : 1,
-		            xtype      : 'textfield',
-		            name       : 'params.circuloHospitalario2',
+		            xtype      : 'displayfield',
+		            name       : 'CIRHOPROV',
 		            fieldLabel : 'Circulo hospitalario',
-		            readOnly   : true,
 		            labelWidth : 120
 		        },{
+		        	colspan     : 1,
 		        	xtype       : 'combo',
-		        	name        : 'params.icd',
+		        	name        : 'CDICD_TEMP',
 		        	fieldLabel  : 'ICD',
 		        	emptyText   : 'Seleccione...',
 		        	valueField  : 'key',
 		        	displayField: 'value',
-		            allowBlank  : false,
 		            forceSelection : true,
 		            matchFieldWidth: false,
 		            hideTrigger : true,
@@ -349,10 +436,21 @@
 	                            root: 'lista'
 	                        }
 	                    }
-	                })
+	                }),
+	                listeners : {
+	                	select : function(combo, records, eOpts ) {
+                            pnlInformacionGral.down('[name=CDICD2]').setValue(combo.getValue());
+                        }
+	                }
 		        },{
+                    colspan    : 1,
+                    xtype      : 'displayfield',
+                    name       : 'CDICD',
+                    labelWidth : 120
+                },{
+		        	colspan     : 1,
 		        	xtype       : 'combo',
-		        	name        : 'params.icdSecundario',
+		        	name        : 'CDICD2_TEMP',
 					fieldLabel  : 'ICD secundario',
 					emptyText   : 'Seleccione...',
 					valueField  : 'key',
@@ -379,8 +477,18 @@
 				                root: 'lista'
 				            }
 				        }
-				    })
-		        }
+				    }),
+                    listeners : {
+                        select : function(combo, records, eOpts ) {
+                            pnlInformacionGral.down('[name=CDICD2]').setValue(combo.getValue());
+                        }
+                    }
+		        },{
+                    colspan    : 1,
+                    xtype      : 'displayfield',
+                    name       : 'CDICD2',
+                    labelWidth : 120
+                }
 		    ],
 		    buttonAlign:'center',
 		    buttons: [{
@@ -388,45 +496,34 @@
 		        text: 'Guardar',
 		        handler: function() {
 		            
-		            var form = this.up('form').getForm();
-		            if (form.isValid())
-		            {
+		        	var form = this.up('form').getForm();
+		            
+		            if (form.isValid()){
+		            	
+		            	form.submit({
+		            	    params: {
+		            	        'params.cdunieco' : _CDUNIECO,
+		            	        'params.cdramo'   : _CDRAMO,
+		            	        'params.estado'   : _ESTADO,
+		            	        'params.nmpoliza' : _NMPOLIZA,
+		            	        'params.nmsuplem' : _NMSUPLEM,
+		            	        'params.aaapertu' : _AAAPERTU,
+		            	        'params.nmsinies' : _NMSINIES,
+		            	        'params.feocurre' : pnlInformacionGral.down('[name=FEOCURRE]').getValue(),
+		            	        'params.nmreclamo': pnlInformacionGral.down('[name=NMRECLAMO]').getValue(),
+		            	        'params.cdicd'    : pnlInformacionGral.down('[name=CDICD]').getValue(),
+		            	        'params.cdicd2'   : pnlInformacionGral.down('[name=CDICD2]').getValue(),
+		            	        'params.cdcausa'  : pnlInformacionGral.down('[name=CDCAUSA]').getValue()
+		            	    },
+		            	});
+		            	
 		                Ext.Msg.show({
 		                    title:'Exito',
-		                    msg: 'Se contemplaron todo',
+		                    msg: 'Se actualizaron los datos generales del siniestro',
 		                    buttons: Ext.Msg.OK,
 		                    icon: Ext.Msg.WARNING
 		                });
-		            }
-		            else
-		            {
-		                var incisosRecords = storeIncisos.getRange();
-		                console.log(incisosRecords.length);
-		                
-		                var incisosJson = [];
-		                storeIncisos.each(function(record,index){
-		                    if(record.get('nombre')
-		                            &&record.get('nombre').length>0)
-		                    {
-		                        nombres++;
-		                    }
-		                    incisosJson.push({
-		                        noFactura: record.get('noFactura'),
-		                        fechaFactura: record.get('fechaFactura'),
-		                        tipoServicio: record.get('tipoServicio'),
-		                        proveedor: record.get('proveedor'),
-		                        importe: record.get('importe')
-		                    });
-		                });
-		                
-		                console.log('---- VALOR DE IncisosJson ---- ');
-		                console.log(incisosJson);
-		                
-		                var submitValues=form.getValues();
-		                submitValues['incisos']=incisosJson;
-		                console.log('---- VALOR DE submitValues ---- ');
-		                console.log(submitValues);
-		                
+		            } else {
 		                Ext.Msg.show({
 		                    title:'Datos incompletos',
 		                    msg: 'Favor de introducir todos los campos requeridos',
@@ -435,13 +532,44 @@
 		                });
 		            }
 		        }
-		    }/*,{
-		        text:'Limpiar',
+		    },{
+		        text:'Restaurar',
 		        icon:_CONTEXT+'/resources/fam3icons/icons/arrow_refresh.png',
-		        handler:function()
-		        {}
-		    }*/]
-		}); 
+		        handler:function(){
+		        	this.up('form').getForm().reset();
+		        }
+		    }]
+		});
+		
+		storeInfoGralSiniestro.load({
+            params: {
+                'params.cdunieco' : _CDUNIECO,
+                'params.cdramo'   : _CDRAMO,
+                'params.estado'   : _ESTADO,
+                'params.nmpoliza' : _NMPOLIZA,
+                'params.nmsituac' : _NMSITUAC,
+                'params.nmsuplem' : _NMSUPLEM,
+                'params.status'   : _STATUS,
+                'params.aaapertu' : _AAAPERTU,
+                'params.nmsinies' : _NMSINIES,
+                'params.ntramite' : _NTRAMITE
+            },
+            callback: function(records, operation, success) {
+                if(success){
+                    if(records.length > 0){
+                    	console.log("record=");
+                    	console.log(records[0]);
+                    	pnlInformacionGral.getForm().loadRecord(records[0]);  
+                    }else {
+                        showMessage('Error', 'No hay datos de la p&oacute;liza', Ext.Msg.OK, Ext.Msg.ERROR);
+                    }
+                }else {
+                    showMessage('Error', 'Error al obtener los datos de la p&oacute;liza, intente m\u00E1s tarde',
+                    Ext.Msg.OK, Ext.Msg.ERROR);
+                }
+            }
+        });
+		
 	
 	});
 </script>

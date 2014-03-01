@@ -1,6 +1,9 @@
 package mx.com.gseguros.portal.siniestros.controller;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +15,7 @@ import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.portal.siniestros.model.HistorialSiniestroVO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 
 import org.apache.log4j.Logger;
@@ -26,6 +30,8 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 
 	private transient SiniestrosManager siniestrosManager;
 	private PantallasManager       pantallasManager;
+	
+	private DateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
 
 	private boolean success;
 
@@ -42,6 +48,9 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	
 	private Map<String,Item> imap;
 	
+	private List<Map<String, String>> siniestro;
+	
+	private List<HistorialSiniestroVO> historialSiniestro;
 	
 	
 	public String execute() throws Exception
@@ -84,11 +93,6 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	
 	
 	public String loadInfoGeneralReclamacion() {
-		
-		//
-		
-		//String nmsinies = params.get("nmsinies");
-		//String nmtramite = params.get("nmtramite");
 		success = true;
 		return SUCCESS;
 	}
@@ -256,6 +260,61 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	}
 	
 	
+	public String obtieneDatosGeneralesSiniestro() throws Exception {
+		try {
+			siniestro = siniestrosManager.obtieneDatosGeneralesSiniestro(
+					params.get("cdunieco"), params.get("cdramo"),
+					params.get("estado"), params.get("nmpoliza"),
+					params.get("nmsituac"), params.get("nmsuplem"),
+					params.get("status"), params.get("aaapertu"),
+					params.get("nmsinies"), params.get("ntramite"));
+			success = true;
+		}catch(Exception e){
+	   		logger.error("Error en actualizaDatosGeneralesSiniestro", e);
+	   	}
+		return SUCCESS;
+	}
+	
+	
+	public String actualizaDatosGeneralesSiniestro() throws Exception {
+		try {
+			Date dFeocurre = renderFechas.parse(params.get("feocurre"));
+            siniestrosManager.actualizaDatosGeneralesSiniestro(
+					params.get("cdunieco"), params.get("cdramo"),
+					params.get("estado"), params.get("nmpoliza"),
+					params.get("nmsuplem"),params.get("aaapertu"),
+					params.get("nmsinies"), dFeocurre,
+					params.get("nmreclamo"), params.get("cdicd"),
+					params.get("cdicd2"), params.get("cdcausa"));
+			success = true;
+		} catch(Exception e) {
+	   		logger.error("Error en actualizaDatosGeneralesSiniestro", e);
+	   	}
+		return SUCCESS;
+	}
+	
+	
+	public String obtieneHistorialReclamaciones() throws Exception {
+		try {
+			// Dummy data:
+			
+			// TODO: Terminar cuando este listo el SP
+			historialSiniestro = siniestrosManager.obtieneHistorialReclamaciones(
+					params.get("cdunieco"), params.get("cdramo"),
+					params.get("estado"), params.get("nmpoliza"),
+					params.get("nmsituac"), params.get("nmsuplem"),
+					params.get("status"), params.get("aaapertu"),
+					params.get("nmsinies"), params.get("ntramite"));
+			
+			success = true;
+		} catch(Exception e) {
+	   		logger.error("Error en actualizaDatosGeneralesSiniestro", e);
+	   	}
+		return SUCCESS;
+	}
+	
+	
+	
 	// Getters and setters:
 
 	public void setSiniestrosManager(SiniestrosManager siniestrosManager) {
@@ -351,6 +410,24 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 
 	public void setImap(Map<String, Item> imap) {
 		this.imap = imap;
+	}
+
+	public List<Map<String, String>> getSiniestro() {
+		return siniestro;
+	}
+
+	public void setSiniestro(List<Map<String, String>> siniestro) {
+		this.siniestro = siniestro;
+	}
+
+
+	public List<HistorialSiniestroVO> getHistorialSiniestro() {
+		return historialSiniestro;
+	}
+
+
+	public void setHistorialSiniestro(List<HistorialSiniestroVO> historialSiniestro) {
+		this.historialSiniestro = historialSiniestro;
 	}
 	
 }
