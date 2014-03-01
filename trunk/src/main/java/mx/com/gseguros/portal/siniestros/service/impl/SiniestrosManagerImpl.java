@@ -753,7 +753,58 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	{
 		return siniestrosDAO.obtenerLlaveSiniestroReembolso(ntramite);
 	}
-
+	
+	@Override
+	public List<Map<String,String>>P_GET_CONCEPTOS_FACTURA(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsuplem,
+			String nmsituac,
+			String aaapertu,
+			String status,
+			String nmsinies,
+			String nfactura) throws Exception
+	{
+		List<Map<String,String>>lista=siniestrosDAO.P_GET_CONCEPTOS_FACTURA(
+				cdunieco,cdramo,estado,nmpoliza,nmsuplem,nmsituac,aaapertu,status,nmsinies,nfactura);
+		if(lista==null)
+		{
+			lista = new ArrayList<Map<String,String>>();
+		}
+		log.debug("P_GET_CONCEPTOS_FACTURA lista size: "+lista.size());
+		return lista;
+	}
+	
+	@Override
+	public Map<String,String> obtenerDatosProveedor(String cdpresta) throws Exception
+	{
+		Map<String,String> proveedor = new HashMap<String,String>();
+		proveedor.put("CDPRESTA" , "69");
+		proveedor.put("NOMBRE"   , "PROVEEDOR");
+		proveedor.put("ISR"      , "0");
+		proveedor.put("CEDULAR"  , "0");
+		proveedor.put("IVA"      , "16");
+		return proveedor;
+	}
+	
+	@Override
+	public Map<String,String>obtenerCopagoDeducible(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza,
+			String nmsuplem,
+			String nmsituac,
+			String aaapertu,
+			String status,
+			String nmsinies,
+			String nfactura) throws Exception
+	{
+		return siniestrosDAO.obtenerCopagoDeducible(cdunieco,cdramo,estado,nmpoliza,nmsuplem,nmsituac,aaapertu,status,nmsinies,nfactura);
+	}
+	
 	@Override
 	public String validaPorcentajePenalizacion(String zonaContratada,String zonaAtencion) throws Exception {
 		try {

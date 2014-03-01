@@ -26,7 +26,7 @@ public class DinamicMapper implements RowMapper
 		{
 			String col=metaData.getColumnName(i);
 			//log.debug("columna: "+col);
-			if(col!=null&&col.substring(0,2).equalsIgnoreCase("fe"))
+			if(col!=null&&(col.substring(0,2).equalsIgnoreCase("fe")||col.substring(0,2).equalsIgnoreCase("ff")))
 			{
 				map.put(col,Utilerias.formateaFecha(rs.getString(col)));
 			}

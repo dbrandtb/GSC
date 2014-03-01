@@ -498,6 +498,26 @@
         <action name="guardarTdsinival" class="ajustesMedicosSiniestrosAction" method="guardarTdsinival">
             <result type="json"></result>
         </action>
+        
+        <action name="calculoSiniestros" class="siniestrosAction" method="calculoSiniestros">
+            <result name="success">/jsp-script/proceso/siniestros/calculos.jsp</result>
+        </action>
+        
+        <action name="obtenerFacturasTramite" class="siniestrosAction" method="obtenerFacturasTramite">
+            <result type="json"></result>
+        </action>
+        
+        <action name="obtenerSiniestrosTramite" class="siniestrosAction" method="obtenerSiniestrosTramite">
+            <result type="json"></result>
+        </action>
+        
+        <action name="obtenerDatosProveedor" class="siniestrosAction" method="obtenerDatosProveedor">
+            <result type="json"></result>
+        </action>
+        
+        <action name="obtenerConceptosCalculo" class="siniestrosAction" method="obtenerConceptosCalculo">
+            <result type="json"></result>
+        </action>
 		
     </package>
 
