@@ -445,6 +445,8 @@ public class SiniestrosAction extends PrincipalCoreAction{
 			paramDatSubGral.put("pv_nmsituac_i",params.get("nmsituac"));
 			paramDatSubGral.put("pv_cdgarant_i",params.get("cdgarant"));
 			paramDatSubGral.put("pv_subcober_i",params.get("subcober"));
+			paramDatSubGral.put("pv_cdpresta_i",params.get("cdpresta"));
+			paramDatSubGral.put("pv_cdtipo_i",Rol.CLINICA.getCdrol());
 			
 			List<DatosSiniestroVO> lista = siniestrosManager.getConsultaListaDatSubGeneral(paramDatSubGral);
 			if(lista!=null && !lista.isEmpty())	listaDatosSiniestro = lista;
