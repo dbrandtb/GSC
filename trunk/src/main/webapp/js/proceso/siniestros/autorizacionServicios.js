@@ -4,7 +4,6 @@ var storeConceptoAutorizados;
 var storeQuirugicoBase;
 var storeQuirugico;
 var extraParams='';
-var panDocInputNtramite='55';
 Ext.onReady(function() {
 
 	Ext.selection.CheckboxModel.override( {
@@ -344,7 +343,6 @@ Ext.onReady(function() {
 	                    }
 					});
 					
-					//validarZonaCirculoHospitalario();
 					storeListadoAsegurado.removeAll();
 					modificacionPolizas.hide();
                 }
@@ -538,6 +536,8 @@ Ext.onReady(function() {
     	matchFieldWidth: false,			queryMode :'remote',			queryParam: 'params.cdpresta',		store : storeProveedor,
     	minChars  : 2,					triggerAction: 'all',			hideTrigger:true,
 		listeners : {
+			
+			//'select' : function(combo, record) {
 			change:function(e){
 				Ext.getCmp('idDeducible').setValue('');
             	Ext.getCmp('idCopago').setValue('');
@@ -569,7 +569,8 @@ Ext.onReady(function() {
 		    					{
 		    					    url     : _URL_CATALOGOS
 		    					    ,params:{
-		    							'params.cdpresta': e.getValue(),
+		    							//'params.cdpresta': e.getValue(),					Ext.getCmp('idProveedor').getValue()
+		    					    	'params.cdpresta': Ext.getCmp('idProveedor').getValue(),
 		    							catalogo         : _CAT_PROVEEDORES,
 		       						    catalogoGenerico : true
 		    		                }
@@ -582,7 +583,6 @@ Ext.onReady(function() {
 		    	    				        Ext.getCmp('codPostalProv').setValue(json.codpos);
 		    	    				        Ext.getCmp('idzonaHospProv').setValue(json.zonaHospitalaria);
 		    	    				        
-		    	    				        //AQUI VA LA FUNCION QUE REALIZARÁ LA VALIDACION DE LOS CAMPOS DEL CIRCULO HOSPITALARIO Y CAMBIO DE ZONA
 		    	    				        validarZonaCirculoHospitalario();
 		    				    		}
 		    					    },
@@ -620,9 +620,7 @@ Ext.onReady(function() {
     	labelWidth: 170,					valueField   : 'cdgarant',	forceSelection : true,			matchFieldWidth: false,
     	queryMode :'remote',				store : storeCobertura,		triggerAction: 'all',			editable:false,
         listeners : {
-        	//<<
-        	//'select' : function(combo, record) {
-        	change:function(e){
+        	'select' : function(combo, record) {
 	    		Ext.getCmp('idSubcobertura').reset();
 	    		Ext.getCmp('idSubcobertura').setValue('');
 	    		Ext.getCmp('idDeducible').setValue('');
@@ -630,7 +628,7 @@ Ext.onReady(function() {
 	    		storeSubcobertura.removeAll();
 		        	storeSubcobertura.load({
 		                params:{
-		                'params.cdgarant' : e.getValue()
+		                	'params.cdgarant' :this.getValue()
 		                }
 		            });
 	        }
@@ -1667,6 +1665,8 @@ Ext.onReady(function() {
 									
 									Ext.getCmp('idSucursal').setValue(json.cduniecs);
 									
+									
+									
 									//CARGO LOS VALORES DE COBERTURA SEGUN LOS DATOS DE ENTRADA
 									storeCobertura.load({
 					                    params:{
@@ -1753,7 +1753,6 @@ Ext.onReady(function() {
 							            }
 							        });
 							        Ext.getCmp('idProveedor').setValue(valorProveedor);
-							        //validarZonaCirculoHospitalario();
 									modificacionClausula.hide();
 								},
 								failure : function ()
@@ -1931,11 +1930,6 @@ modificacionClausula = Ext.create('Ext.window.Window',
 	 			{
 	 				 xtype       : 'textfield',			fieldLabel : 'dsplanPoliza'		,id       : 'iddsplanAsegurado',
 					 labelWidth: 170,					hidden:true
-		 			/*listeners : {
-		 				change:function(e){
-		 					console.log("Cambió dsplanPoliza=" + e.getValue());
-		 				}
-		 			}*/
 	 			}
 	 			,
 			 	{
@@ -2105,12 +2099,7 @@ modificacionClausula = Ext.create('Ext.window.Window',
 			 	},
 			 	{
 			 		colspan:2, xtype       : 'textfield'				,fieldLabel : 'Copago original'						,id       : 'idCopago'
-		 			,labelWidth: 170						,readOnly   : true,  width: 670/*,
-		 			listeners : {
-		 				change:function(e){
-		 					console.log("Cambió Copago original=" + e.getValue());
-		 				}
-		 			}*/
+		 			,labelWidth: 170						,readOnly   : true,  width: 670
 			 	},
 			 	{
 			 		colspan:2, xtype       : 'textfield'				,fieldLabel : 'Copago final'						,id       : 'idCopagoFin'
@@ -2124,12 +2113,7 @@ modificacionClausula = Ext.create('Ext.window.Window',
 			 		xtype       : 'textfield'				,fieldLabel : 'Penalizaci&oacuten por cambio de zona'						,id       : 'idPenalCambioZona'
 		 			,labelWidth: 170						,readOnly   : true,			name       : 'idPenalCambioZona'
 			 	},
-			 	/*{
-			 		colspan:2, xtype       : 'textfield'				,fieldLabel : 'Penalizaci&oacute total',			id       : 'idPenalTotal'
-		 			,labelWidth: 170									,name       : 'penalTotal',							readOnly   : true
-			 	}
-			 	//penalizacion
-			 	,*/
+			 	
 			 	comboICD
 			 	,
 			 	causaSiniestro
@@ -2467,6 +2451,19 @@ modificacionClausula = Ext.create('Ext.window.Window',
 	            ,success : function (response)
 	            {
 	            	Ext.getCmp('idPenalCambioZona').setValue(Ext.decode(response.responseText).porcentajePenalizacion);
+	            	
+	            	//validación para camvio de zona
+	        	    var valor1="";
+	        	    var valor2="";
+	        	    if(Ext.getCmp('iddsplanAsegurado').getValue() == "PLUS 100") {       valor1="A";    }
+	        	    if(Ext.getCmp('iddsplanAsegurado').getValue() == "PLUS 500") {       valor1="B";    }
+	        	    if(Ext.getCmp('iddsplanAsegurado').getValue() == "PLUS 1000"){      valor1="C";     }
+	        	    if(Ext.getCmp('idCirculoHospProv').getValue() == "PLUS 100") {       valor2="A";    }
+	        	    if(Ext.getCmp('idCirculoHospProv').getValue() == "PLUS 500") {       valor2="B";    }
+	        	    if(Ext.getCmp('idCirculoHospProv').getValue() == "PLUS 1000"){      valor2="C";     }
+	        	    
+	        	    validacionCirculoHospitalario(valor1,valor2);
+	        	    validacionCopagoTotal();
 	                
 	            },
 	            failure : function ()
@@ -2482,18 +2479,7 @@ modificacionClausula = Ext.create('Ext.window.Window',
 	        });
 	    }
 	    
-	    //validación para camvio de zona
-	    var valor1="";
-	    var valor2="";
-	    if(Ext.getCmp('iddsplanAsegurado').getValue() == "PLUS 100") {       valor1="A";    }
-	    if(Ext.getCmp('iddsplanAsegurado').getValue() == "PLUS 500") {       valor1="B";    }
-	    if(Ext.getCmp('iddsplanAsegurado').getValue() == "PLUS 1000"){      valor1="C";     }
-	    if(Ext.getCmp('idCirculoHospProv').getValue() == "PLUS 100") {       valor2="A";    }
-	    if(Ext.getCmp('idCirculoHospProv').getValue() == "PLUS 500") {       valor2="B";    }
-	    if(Ext.getCmp('idCirculoHospProv').getValue() == "PLUS 1000"){      valor2="C";     }
 	    
-	    validacionCirculoHospitalario(valor1,valor2);
-	    validacionCopagoTotal();
 	    
 	return true;
 	}
@@ -2549,6 +2535,11 @@ modificacionClausula = Ext.create('Ext.window.Window',
 	    }
 	    if(copagoOrig.indexOf("%") > 0)
 	    {
+	    	sumatoria = + Ext.getCmp('idPenalCircHospitalario').getValue() + +Ext.getCmp('idPenalCambioZona').getValue() +  +copagoOrig.replace("%","");
+	        Ext.getCmp('idCopagoFin').setValue(sumatoria);
+	        return true;
+	    }
+	    else{
 	    	sumatoria = + Ext.getCmp('idPenalCircHospitalario').getValue() + +Ext.getCmp('idPenalCambioZona').getValue() +  +copagoOrig.replace("%","");
 	        Ext.getCmp('idCopagoFin').setValue(sumatoria);
 	        return true;
