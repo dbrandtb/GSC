@@ -49,7 +49,7 @@
 				{type:'string', name:'CIRHOSPI'},
 				{type:'string', name:'DSZONAT'},
 				{type:'string', name:'SUMAASEG'},
-				{type:'string', name:'TIPPAG'},
+				{type:'string', name:'DSTIPPAG'},
 				{type:'string', name:'NMPOLIEX'},
 				{type:'string', name:'IMPORTE'},
 				{type:'string', name:'FEINIVAL'},
@@ -211,11 +211,11 @@
 		            fieldLabel : 'Suma asegurada contratada'
 		        },{
                     xtype      : 'displayfield',
-                    name       : 'TIPPAG',
+                    name       : 'DSTIPPAG',
                     fieldLabel : 'Tipo pago'
                 }/*,{
 		        	xtype       : 'combo',
-		        	name        : 'TIPPAG',
+		        	name        : 'DSTIPPAG',
 		            fieldLabel  : 'Tipo pago',
 		            queryMode   : 'local',
 		            displayField: 'value',
@@ -513,16 +513,32 @@
 		            	        'params.nmreclamo': pnlInformacionGral.down('[name=NMRECLAMO]').getValue(),
 		            	        'params.cdicd'    : pnlInformacionGral.down('[name=CDICD]').getValue(),
 		            	        'params.cdicd2'   : pnlInformacionGral.down('[name=CDICD2]').getValue(),
-		            	        'params.cdcausa'  : pnlInformacionGral.down('[name=CDCAUSA]').getValue()
+		            	        'params.cdcausa'  : pnlInformacionGral.down('[name=CDCAUSA]').getValue(),
+		            	        'params.ntramite' : _NTRAMITE,
+		            	        'params.cdsucadm' : pnlInformacionGral.down('[name=CDSUCADM]').getValue(),
+		            	        'params.cdsucdoc' : pnlInformacionGral.down('[name=CDSUCDOC]').getValue()
 		            	    },
+			                success: function(form, action) {
+								Ext.Msg.show({
+								      title:'Exito',
+								      msg: 'Se actualizaron los datos generales del siniestro',
+								      buttons: Ext.Msg.OK,
+								      icon: Ext.Msg.WARNING
+								});
+			                },
+			                failure: function(form, action) {
+			                    switch (action.failureType) {
+			                        case Ext.form.action.Action.CONNECT_FAILURE:
+			                            Ext.Msg.alert('Error', 'Error de comunicaci&oacute;n');
+			                            break;
+			                        case Ext.form.action.Action.SERVER_INVALID:
+			                        case Ext.form.action.Action.LOAD_FAILURE:
+			                            Ext.Msg.alert('Error', 'Error del servidor, consulte a soporte');
+			                            break;
+			                   }
+			                }
 		            	});
 		            	
-		                Ext.Msg.show({
-		                    title:'Exito',
-		                    msg: 'Se actualizaron los datos generales del siniestro',
-		                    buttons: Ext.Msg.OK,
-		                    icon: Ext.Msg.WARNING
-		                });
 		            } else {
 		                Ext.Msg.show({
 		                    title:'Datos incompletos',
@@ -557,8 +573,6 @@
             callback: function(records, operation, success) {
                 if(success){
                     if(records.length > 0){
-                    	console.log("record=");
-                    	console.log(records[0]);
                     	pnlInformacionGral.getForm().loadRecord(records[0]);  
                     }else {
                         showMessage('Error', 'No hay datos de la p&oacute;liza', Ext.Msg.OK, Ext.Msg.ERROR);

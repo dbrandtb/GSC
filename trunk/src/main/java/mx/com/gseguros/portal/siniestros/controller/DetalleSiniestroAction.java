@@ -195,6 +195,13 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	
 	public String actualizaDatosGeneralesSiniestro() throws Exception {
 		try {
+			Map<String,Object> pMesaCtrl = new HashMap<String,Object>();
+			pMesaCtrl.put("pv_ntramite_i", params.get("ntramite"));
+			pMesaCtrl.put("pv_cdsucadm_i", params.get("cdsucadm"));
+			pMesaCtrl.put("pv_cdsucdoc_i", params.get("cdsucdoc"));
+			logger.debug("pMesaCtrl=" + pMesaCtrl);
+    		siniestrosManager.actualizaOTValorMesaControl(pMesaCtrl);
+			
 			Date dFeocurre = renderFechas.parse(params.get("feocurre"));
             siniestrosManager.actualizaDatosGeneralesSiniestro(
 					params.get("cdunieco"), params.get("cdramo"),
