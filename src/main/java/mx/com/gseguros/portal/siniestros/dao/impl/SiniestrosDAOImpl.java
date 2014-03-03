@@ -269,7 +269,7 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
 
 		protected ObtieneListadoDatSubGeneralSP(DataSource dataSource) {
 			super(dataSource, "PKG_PRESINIESTRO.P_LISTA_DAT_SUBG");
-			
+
 			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
@@ -277,6 +277,8 @@ public class SiniestrosDAOImpl extends AbstractManagerDAO implements SiniestrosD
 			declareParameter(new SqlParameter("pv_nmsituac_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdgarant_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_subcober_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdpresta_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipo_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DatosListaDatSubGeneralMapper()));
 	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
