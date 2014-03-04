@@ -18,7 +18,7 @@ storeIncisos=new Ext.data.Store(
     model: 'modelAjusteMedico'
 });
 
-function _amRecardar()
+function _amRecargar()
 {
 	var json =
 	{
@@ -39,14 +39,14 @@ function _amRecardar()
 		'params.nmordina' : _amParams.nmordina
 	};
 	//debug('datos que se envian al servidor: ',json);
-	gridIncisos.setLoading(true);
+	//gridIncisos.setLoading(true);
 	Ext.Ajax.request(
 	{
 		url : _amUrlCargar
 		,params : json
 		,success : function(response)
 		{
-			gridIncisos.setLoading(false);
+			//gridIncisos.setLoading(false);
 			json = Ext.decode(response.responseText);
 			//debug('respuesta del servidor: ',json);
 			if(json.success == true)
@@ -68,6 +68,63 @@ function _amRecardar()
 	    ,failure : function()
 	    {
 	    	gridIncisos.setLoading(false);
+	    	errorComunicacion();
+	    }
+	});
+}
+
+
+function _amEliminar(nmordmov,ptimport,comments)
+{
+	var json =
+	{
+		'params.cdunieco' : _amParams.cdunieco,
+		'params.cdramo'   : _amParams.cdramo,
+		'params.estado'   : _amParams.estado,
+		'params.nmpoliza' : _amParams.nmpoliza,
+		'params.nmsuplem' : _amParams.nmsuplem,
+		'params.nmsituac' : _amParams.nmsituac,
+		'params.aaapertu' : _amParams.aaapertu,
+		'params.status'   : _amParams.status,
+		'params.nmsinies' : _amParams.nmsinies,
+		'params.nfactura' : _amParams.nfactura,
+		'params.cdgarant' : _amParams.cdgarant,
+		'params.cdconval' : _amParams.cdconval,
+		'params.cdconcep' : _amParams.cdconcep,
+		'params.idconcep' : _amParams.idconcep,
+		'params.nmordina' : _amParams.nmordina,
+		'params.nmordmov' : nmordmov,
+		'params.ptimport' : ptimport,
+		'params.comments' : comments
+	};
+	
+	Ext.Ajax.request(
+	{
+		url : _amUrlEliminar
+		,params : json
+		,success : function(response)
+		{
+			json = Ext.decode(response.responseText);
+	    	if(json.success == true){
+	    		var arr = [];
+	    		storeIncisos.each(function(record) {
+		    	    arr.push(record.data);
+		    	});
+	    		var montoAjustado= 0;
+	    		for(var i = 0; i < arr.length; i++)
+		    	{
+	    			montoAjustado = montoAjustado + (+ arr[i].PTIMPORT);
+		    	}
+	    		Ext.getCmp('idTotalAjustado').setValue(montoAjustado);
+	    	}
+	    	else
+	    	{
+	    		mensajeError(json.mensaje);
+	    	}
+		}
+	    ,failure : function()
+	    {
+	    	//gridIncisos.setLoading(false);
 	    	errorComunicacion();
 	    }
 	});
@@ -109,7 +166,7 @@ function _amAgregar(ptimport,comments)
 	    	{
 	    		//recargar el grid
 	    		ventanaGridAjusteMedico.close();
-	    		_amRecardar();
+	    		_amRecargar();
 	    		
 	    	}
 	    	else
@@ -138,9 +195,9 @@ Ext.onReady(function() {
         ,items :
         [   
 	         {   
-	            	xtype      : 'numberfield',
-			        name       : 'idAjusteImporte',
-			        id:	'idAjusteImporte',
+	            	xtype:'numberfield',
+			        name:'idAjusteImporte',
+			        //id:	'idAjusteImporte',
 			    	fieldLabel : 'Importe',
 			    	allowBlank:false,
 			    	allowDecimals :true,
@@ -150,7 +207,7 @@ Ext.onReady(function() {
 	    		}
 	         ,
 	         {
-		    	id:'idObservaciones'	        ,xtype      : 'textfield'	    	,fieldLabel : 'Observaciones'
+		    	 xtype      : 'textfield'	    	,fieldLabel : 'Observaciones'
 	    		,labelWidth: 170	    		,allowBlank:false		    		,width: 500
 		    	,name : 'idObservaciones'
 	         }
@@ -160,7 +217,8 @@ Ext.onReady(function() {
     ventanaGridAjusteMedico= Ext.create('Ext.window.Window', {
          renderTo: document.body,
            title: 'Ajuste M&eacute;dico',
-           height: 180,
+           height: 150,
+           width: 600,
            closeAction: 'hide',
            items:[panelAjusteMedico],
            
@@ -235,7 +293,7 @@ Ext.onReady(function() {
 				 	},
 				 	{
 					 	header: 'Observaciones',		dataIndex: 'COMMENTS',	 	flex:2	
-				 	}/*,
+				 	},
 				 	{
 					 	xtype: 'actioncolumn',
 					 	width: 30,
@@ -247,7 +305,7 @@ Ext.onReady(function() {
 					 		scope: this,
 					 		handler: this.onRemoveClick
 				 		}]
-				 	}*/
+				 	}
 		 		],
 		 		selModel: {
 			 		selType: 'cellmodel'
@@ -297,8 +355,8 @@ Ext.onReady(function() {
 	 	},
 	 	onRemoveClick: function(grid, rowIndex){
 	 		var record=this.getStore().getAt(rowIndex);
-	 		console.log(record);        	
 	 		this.getStore().removeAt(rowIndex);
+	 		_amEliminar(record.data.NMORDMOV,record.data.PTIMPORT,record.data.COMMENTS);
 	 	}
  	});
     gridIncisos=new EditorIncisos();
@@ -365,6 +423,6 @@ Ext.onReady(function() {
     	        ]
     	    });
     
-    _amRecardar();
+    _amRecargar();
     
 });

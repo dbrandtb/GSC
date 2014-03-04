@@ -533,6 +533,10 @@
             <result type="json"></result>
         </action>
         
+         <action name="eliminarTdsinival" class="ajustesMedicosSiniestrosAction" method="eliminarTdsinival">
+            <result type="json"></result>
+        </action>
+        
         <action name="obtenerFacturasTramite" class="siniestrosAction" method="obtenerFacturasTramite">
             <result type="json"></result>
         </action>
