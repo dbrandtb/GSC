@@ -75,9 +75,9 @@ function _4_authEndosoDocumentos(grid,rowIndex,colIndex)
                 ,'smap1.cdramo'   : record.get('cdramo')
                 ,'smap1.estado'   : record.get('estado')
                 ,'smap1.nmsuplem' : record.get('nmsuplem')
-                ,'smap1.ntramite' : record.get('cdsucdoc')
+                ,'smap1.ntramite' : record.get('ntramite')
                 ,'smap1.nmsolici' : ''
-                ,'smap1.tipomov'  : record.get('nombre')
+                ,'smap1.tipomov'  : 14
                 ,'smap1.cdtiptra' : 14
                 ,'smap1.readOnly' : 'si'
             }

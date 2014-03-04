@@ -9,7 +9,7 @@
 
 		<script type="text/javascript">
             
-		    var CTX = '${ctx}';
+		    var _CONTEXT = '${ctx}';
             
             var _cdUnieco =  '<s:property value="params.cdunieco" />';
             var _cdRamo   =  '<s:property value="params.cdramo" />';
@@ -60,20 +60,42 @@
                     }
                 });
 				
-				
-				Ext.create('Ext.grid.Panel', {
-	                //title       : 'Exclusiones de P&oacute;liza',
-	                store         : storeExclusionesPoliza,
-	                style         : 'margin:5px',
-	                width         : 400,
-	                height        : 200,
-	                renderTo      : 'maindivExcs',
-	                buttonAlign   : 'center',
-	                columns       : [{
-	                    header     : 'Nombre',
-	                    dataIndex  : 'dsclausu',
-	                    flex       : 1
-	                }]
+				Ext.create('Ext.panel.Panel', {
+					name      : 'pnlExclusiones',
+					renderTo  : 'maindivExcs',
+					layout:'fit',
+					defaults  : {
+						style : 'margin:5px'
+					},
+	                items: [{
+	                	xtype       : 'grid',
+					    store       : storeExclusionesPoliza,
+					    buttonAlign : 'center',
+					    columns     : [{
+					        header    : 'Nombre',
+					        dataIndex : 'dsclausu',
+					        flex      : 1
+					    },{
+	                        //menuDisabled: true,
+	                        xtype : 'actioncolumn',
+	                        width : 30,
+	                        items : [{
+                                icon    : _CONTEXT+'/resources/fam3icons/icons/application_view_detail.png',
+                                tooltip : 'Ver detalle',
+                                handler : function(gridview, rowIndex, colIndex) {
+	                                var rec = gridview.getStore().getAt(rowIndex);
+	                                this.up('panel[name=pnlExclusiones]').down('[name=detalleExclusion]').setValue(rec.get('linea_usuario'));
+                                }
+	                        }]
+					    }]
+					},{
+                        xtype: 'label',
+                        text: 'Detalles:'
+                    },{
+						xtype : 'textarea',
+						name  : 'detalleExclusion',
+                        height: 380
+					}]
 			    });
 		            	
 		    });
