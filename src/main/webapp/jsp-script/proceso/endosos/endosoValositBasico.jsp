@@ -19,6 +19,7 @@ var pantallaValositInput                 = [];
     pantallaValositInput['ntramite']     = '<s:property value="smap1.ntramite" />';
     pantallaValositInput['nmsuplem']     = '<s:property value="smap1.nmsuplem" />';
     pantallaValositInput['endososimple'] = <s:property value="endosoSimple" />;
+    pantallaValositInput['fechainicio']  = pantallaValositInput['endososimple'] ? '<s:property value="mensaje" />' : new Date();
     
 var pantallaValositEsTitular         = false;
 debug('input',pantallaValositInput);
@@ -203,7 +204,7 @@ Ext.onReady(function()
                         xtype       : 'datefield'
                         ,fieldLabel : 'Fecha de inicio'
                         ,format     : 'd/m/Y'
-                        ,value      : new Date()
+                        ,value      : pantallaValositInput['fechainicio']
                         ,allowBlank : false
                         ,name       : 'smap1.fecha_endoso'
                         ,readOnly   : pantallaValositInput['endososimple']

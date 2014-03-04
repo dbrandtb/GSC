@@ -216,4 +216,20 @@ public interface EndososManager
 			,String cdramo
 			,String estado
 			,String nmpoliza) throws Exception;
+	
+	public String obtieneFechaInicioVigenciaPoliza
+	(
+		String cdunieco,
+		String cdramo,
+		String estado,
+		String nmpoliza
+		) throws Exception;
+	
+	public boolean validaEndosoSimple
+	(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza
+			) throws Exception;
 }

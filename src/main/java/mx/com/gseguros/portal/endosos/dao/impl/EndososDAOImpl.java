@@ -16,9 +16,11 @@ import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.DinamicMapper;
 import mx.com.gseguros.portal.dao.impl.GenericMapper;
 import mx.com.gseguros.portal.endosos.dao.EndososDAO;
+import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utilerias;
 import oracle.jdbc.driver.OracleTypes;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.StoredProcedure;
@@ -26,6 +28,8 @@ import org.springframework.jdbc.object.StoredProcedure;
 public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 {
 
+	private static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(EndososDAOImpl.class);
+	
 	protected class ObtenerEndosos extends StoredProcedure
 	{
 		String[] columnas=new String[]{
@@ -1048,4 +1052,92 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
         }
 	}
 	
+	public String obtieneFechaInicioVigenciaPoliza(String cdunieco,String cdramo,String estado,String nmpoliza) throws Exception
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		log.debug("obtieneFechaInicioVigenciaPoliza params: "+params);
+		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtieneFechaInicioVigenciaPoliza(this.getDataSource()), params);
+		String sfecha = (String)resultadoMap.get("pv_fecha_o");
+		sfecha = Utilerias.formateaFecha(sfecha);
+		log.debug("obtieneFechaInicioVigenciaPoliza resultado: "+sfecha);
+		return sfecha;
+	}
+	
+	protected class ObtieneFechaInicioVigenciaPoliza extends StoredProcedure
+	{
+
+		protected ObtieneFechaInicioVigenciaPoliza(DataSource dataSource)
+		{
+			super(dataSource, "PKG_CONSULTA.P_OBTIENE_FEINIVAL_POLIZA");
+
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+
+			declareParameter(new SqlOutParameter("pv_fecha_o"  , OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+	        declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			
+			compile();
+		}
+
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception
+		{
+            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+            return mapper.build(map);
+        }
+	}
+
+	@Override
+	public boolean validaEndosoSimple
+	(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza
+			) throws Exception
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("pv_cdunieco_i" , cdunieco);
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_estado_i"   , estado);
+		params.put("pv_nmpoliza_i" , nmpoliza);
+		log.debug("validaEndosoSimple params: "+params);
+		Map<String,Object> resultadoMap=this.ejecutaSP(new ValidaEndosoSimple(this.getDataSource()), params);
+		String svalido = (String)resultadoMap.get("pv_valido_o");
+		boolean bvalido = StringUtils.isNotBlank(svalido)&&svalido.equalsIgnoreCase(Constantes.SI);
+		log.debug("validaEndosoSimple resultado: "+bvalido);
+		return bvalido;
+	}
+	
+	protected class ValidaEndosoSimple extends StoredProcedure
+	{
+
+		protected ValidaEndosoSimple(DataSource dataSource)
+		{
+			super(dataSource, "PKG_CONSULTA.P_VALIDA_ENDOSO_SIMPLE");
+
+			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+
+			declareParameter(new SqlOutParameter("pv_valido_o" , OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+	        declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			
+			compile();
+		}
+
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception
+		{
+            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+            return mapper.build(map);
+        }
+	}
 }

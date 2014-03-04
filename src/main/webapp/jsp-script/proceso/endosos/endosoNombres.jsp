@@ -18,6 +18,7 @@ endnomInput['estado']   = '<s:property value="smap1.estado" />';
 endnomInput['nmpoliza'] = '<s:property value="smap1.nmpoliza" />';
 endnomInput['ntramite'] = '<s:property value="smap1.ntramite" />';
 endnomInput['simple']   = <s:property value="endosoSimple" />;
+endnomInput['fechainicio'] = endnomInput['simple'] ? '<s:property value="mensaje" />' : new Date(); 
 debug('endnomInput',endnomInput);
 /*///////////////////*/
 ////// variables //////
@@ -267,7 +268,7 @@ Ext.onReady(function(){
                         xtype       : 'datefield'
                         ,fieldLabel : 'Fecha de inicio'
                         ,format     : 'd/m/Y'
-                        ,value      : new Date()
+                        ,value      : endnomInput['fechainicio']
                         ,allowBlank : false
                         ,name       : 'pv_fecha_i'
                         ,readOnly   : endnomInput['simple']

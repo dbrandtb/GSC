@@ -22,6 +22,7 @@ var inputCdrfcp4           = '<s:property value="smap1.cdrfc" escapeHtml="false"
 var inputCdtipsit          = '<s:property value="smap1.cdtipsit" />';
 var inputNtramite          = '<s:property value="smap1.ntramite" />';
 var inputEndosoSimple      = <s:property value="endosoSimple" />;
+var inputFechaInicio       = inputEndosoSimple ? '<s:property value="mensaje" />' : new Date();
 var urlRegresarp4          = '<s:url namespace="/"        action="editarAsegurados" />';
 var urlCargarp4            = '<s:url namespace="/"        action="cargarPantallaDomicilio" />';
 var urlGuardarp4           = '<s:url namespace="/endosos" action="guardarEndosoDomicilio" />';
@@ -290,7 +291,7 @@ Ext.onReady(function(){
 					    xtype       : 'datefield'
 					    ,fieldLabel : 'Fecha de inicio'
 					    ,format     : 'd/m/Y'
-					    ,value      : new Date()
+					    ,value      : inputFechaInicio
 					    ,allowBlank : false
 					    ,name       : 'smap2.pv_fecha_i'
 					    ,readOnly   : inputEndosoSimple
