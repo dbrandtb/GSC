@@ -1560,13 +1560,16 @@ public void setMsgResult(String msgResult) {
     		String feregist  = params.get("feregist");
     		Date   dFeregist = new Date();//renderFechas.parse(feregist);
     		
+    		String operacion =  params.get("operacion");
+    		if(StringUtils.isBlank(operacion)) operacion = Constantes.INSERT_MODE;
+    		
     		siniestrosManager.P_MOV_MSINIVAL(
     				cdunieco, cdramo, estado, nmpoliza, nmsuplem,
     				nmsituac, aaapertu, status, nmsinies, nfactura,
     				cdgarant, cdconval, cdconcep, idconcep, cdcapita,
     				nmordina, dFemovimi, cdmoneda, ptprecio, cantidad,
     				destopor, destoimp, ptimport, ptrecobr, nmanno,
-    				nmapunte, userregi, dFeregist, Constantes.INSERT_MODE);
+    				nmapunte, userregi, dFeregist, operacion);
     		
     		mensaje = "Datos guardados";
     		success = true;

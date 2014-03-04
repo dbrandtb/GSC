@@ -924,6 +924,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		protected class guardaFacMesaControlSP extends StoredProcedure {
 			protected guardaFacMesaControlSP(DataSource dataSource) {
 				super(dataSource, "PKG_SATELITES.P_MOV_TFACMESCTRL");
+				declareParameter(new SqlParameter("pv_accion_i", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pv_nfactura_i", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pv_ffactura_i", OracleTypes.VARCHAR));
