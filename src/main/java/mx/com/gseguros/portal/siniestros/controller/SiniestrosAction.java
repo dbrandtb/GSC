@@ -881,7 +881,7 @@ public void setMsgResult(String msgResult) {
                                + "&desformat=PDF"
                                + "&userid="+getText("pass.servidor.reports")
                                + "&ACCESSIBLE=YES"
-                               + "&report="+getText("reports.rdf.contrarecibo.reclamacion.nombre")
+                               + "&report="+getText("rdf.siniestro.contrarecibo.nombre")
                                + "&paramform=no"
                                ;
            String nombreArchivo = getText("siniestro.contrarecibo.nombre");
@@ -940,7 +940,7 @@ public void setMsgResult(String msgResult) {
                                + "&desformat=PDF"
                                + "&userid="+getText("pass.servidor.reports")
                                + "&ACCESSIBLE=YES"
-                               + "&report="+getText("reports.rdf.siniestros.autoriServicio.nombre")
+                               + "&report="+getText("rdf.siniestro.autorizacion.servicio.nombre")
                                + "&paramform=no"
                                ;
            logger.debug(urlAutorizacionServicio);
