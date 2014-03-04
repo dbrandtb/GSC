@@ -10,6 +10,9 @@
             var _CONTEXT = '${ctx}';
             var mesConUrlLoadCatalo    = '<s:url namespace="/catalogos"  action="obtieneCatalogo"  />';
             var _amUrlAgregar          = '<s:url namespace="/siniestros" action="guardarTdsinival" />';
+            
+            var _amUrlEliminar          = '<s:url namespace="/siniestros" action="eliminarTdsinival" />';
+            
             var _amUrlCargar           = '<s:url namespace="/siniestros" action="obtenerTdsinival" />';
             var _URL_TIPO_PAGO = _CONTEXT + '/js/proceso/siniestros/tiposPago.json';
             
