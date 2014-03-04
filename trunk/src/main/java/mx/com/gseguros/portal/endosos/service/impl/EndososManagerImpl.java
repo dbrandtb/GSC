@@ -642,4 +642,28 @@ public class EndososManagerImpl implements EndososManager
 		log.debug("EndososManager pGetSuplemEmision nmsuplem: "+nmsuplem);
 		return nmsuplem;
 	}
+	
+	@Override
+	public String obtieneFechaInicioVigenciaPoliza
+	(
+		String cdunieco,
+		String cdramo,
+		String estado,
+		String nmpoliza
+		) throws Exception
+	{
+		return endososDAO.obtieneFechaInicioVigenciaPoliza(cdunieco,cdramo,estado,nmpoliza);
+	}
+	
+	@Override
+	public boolean validaEndosoSimple
+	(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza
+			) throws Exception
+	{
+		return endososDAO.validaEndosoSimple(cdunieco,cdramo,estado,nmpoliza);
+	}
 }

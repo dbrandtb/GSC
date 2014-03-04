@@ -70,4 +70,14 @@ public interface EndososDAO
 	 * PKG_SATELITES.P_GET_NMSUPLEM_EMISION
 	 */
 	public String                   pGetSuplemEmision(Map<String,String>params)                throws Exception;
+	
+	public String obtieneFechaInicioVigenciaPoliza(String cdunieco,String cdramo,String estado,String nmpoliza) throws Exception;
+	
+	public boolean validaEndosoSimple
+	(
+			String cdunieco,
+			String cdramo,
+			String estado,
+			String nmpoliza
+			) throws Exception;
 }

@@ -38,6 +38,8 @@ public class EndososAction extends PrincipalCoreAction
 	private static Logger            log              = Logger.getLogger(EndososAction.class);
 	private boolean                  success          = false;
 	private SimpleDateFormat         renderFechas     = new SimpleDateFormat("dd/MM/yyyy");
+
+	public static final String       ENDOSO_SIMPLE_NO_PERMITIDO = "Este endoso solo lo puede capturar si no hay endosos anteriores";
 	
 	private List<Map<String,String>> slist1;
 	private List<Map<String,String>> slist2;
@@ -247,15 +249,40 @@ public class EndososAction extends PrincipalCoreAction
 		log.debug("smap1: "+smap1);
 		log.debug("session: "+session);
 		
+		String respuesta = ERROR;
 		endosoSimple = true;
 		
-		ComplementariosCoberturasAction actionDomicilio=new ComplementariosCoberturasAction();
-		actionDomicilio.setSession(session);
-		actionDomicilio.setSmap1(smap1);
-		actionDomicilio.setKernelManager(kernelManager);
-		actionDomicilio.mostrarPantallaDomicilio();
-		item1=actionDomicilio.getItem1();
-		item2=actionDomicilio.getItem2();
+		try
+		{
+			String cdunieco = smap1.get("pv_cdunieco");
+			String cdramo   = smap1.get("pv_cdramo");
+			String estado   = smap1.get("pv_estado");
+			String nmpoliza = smap1.get("pv_nmpoliza");
+			
+			boolean permitido = endososManager.validaEndosoSimple(cdunieco, cdramo, estado, nmpoliza);
+			if(!permitido)
+			{
+				throw new Exception(EndososAction.ENDOSO_SIMPLE_NO_PERMITIDO);
+			}
+			
+			mensaje = endososManager.obtieneFechaInicioVigenciaPoliza(cdunieco, cdramo, estado, nmpoliza);
+		
+			ComplementariosCoberturasAction actionDomicilio=new ComplementariosCoberturasAction();
+			actionDomicilio.setSession(session);
+			actionDomicilio.setSmap1(smap1);
+			actionDomicilio.setKernelManager(kernelManager);
+			actionDomicilio.mostrarPantallaDomicilio();
+			item1=actionDomicilio.getItem1();
+			item2=actionDomicilio.getItem2();
+			
+			respuesta = SUCCESS;
+		}
+		catch(Exception ex)
+		{
+			log.error("error al cargar pantalla de endoso de valosit simple",ex);
+			error=ex.getMessage();
+			respuesta = ERROR;
+		}
 			
 		log.debug(""
 				+ "\n######                               ######"
@@ -263,7 +290,7 @@ public class EndososAction extends PrincipalCoreAction
 				+ "\n###########################################"
 				+ "\n###########################################"
 				);
-		return SUCCESS;
+		return respuesta;
 	}
 	/*//////////////////////////////////////////*/
 	////// pantalla de endoso de domicilio  //////
@@ -361,14 +388,43 @@ public class EndososAction extends PrincipalCoreAction
 				);
 		log.debug("smap1: "+smap1);
 		log.debug("slist1: "+slist1);
+		
+		String respuesta = ERROR;
+		
 		endosoSimple = true;
+		
+		try
+		{
+			String cdunieco = smap1.get("cdunieco");
+			String cdramo   = smap1.get("cdramo");
+			String estado   = smap1.get("estado");
+			String nmpoliza = smap1.get("nmpoliza");
+			
+			boolean permitido = endososManager.validaEndosoSimple(cdunieco, cdramo, estado, nmpoliza);
+			
+			if(!permitido)
+			{
+				throw new Exception(EndososAction.ENDOSO_SIMPLE_NO_PERMITIDO);
+			}
+			
+			mensaje = endososManager.obtieneFechaInicioVigenciaPoliza(cdunieco, cdramo, estado, nmpoliza);
+			
+			respuesta = SUCCESS;
+		}
+		catch(Exception ex)
+		{
+			log.error("error al abrir la pantalla de endoso de nombres simple",ex);
+			respuesta = ERROR;
+			error = ex.getMessage();
+		}
+		
 		log.debug(""
 				+ "\n######                             ######"
 				+ "\n###### pantallaEndosoNombresSimple ######"
 				+ "\n#########################################"
 				+ "\n#########################################"
 				);
-		return SUCCESS;
+		return respuesta;
 	}
 	/*///////////////////////////////////////*/
 	////// pantalla de endoso de nombres //////
@@ -1872,8 +1928,23 @@ public class EndososAction extends PrincipalCoreAction
 				);
 		log.debug("smap1: "+smap1);
 		endosoSimple = true;
+		String respuesta = ERROR;
 		try
 		{
+			
+			String cdunieco = smap1.get("cdunieco");
+			String cdramo   = smap1.get("cdramo");
+			String estado   = smap1.get("estado");
+			String nmpoliza = smap1.get("nmpoliza");
+			
+			boolean permitido = endososManager.validaEndosoSimple(cdunieco, cdramo, estado, nmpoliza);
+			if(!permitido)
+			{
+				throw new Exception(EndososAction.ENDOSO_SIMPLE_NO_PERMITIDO);
+			}
+			
+			mensaje = endososManager.obtieneFechaInicioVigenciaPoliza(cdunieco, cdramo, estado, nmpoliza);
+			
 			List<ComponenteVO>tatrisit=kernelManager.obtenerTatrisit(smap1.get("cdtipsit"));
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			gc.setCdtipsit(smap1.get("cdtipsit"));
@@ -1890,9 +1961,13 @@ public class EndososAction extends PrincipalCoreAction
 			gc.genera(tatrisit);
 			item1=gc.getFields();
 			item2=gc.getItems();
+			
+			respuesta = SUCCESS;
 		}
 		catch(Exception ex)
 		{
+			respuesta = ERROR;
+			error = ex.getMessage();
 			log.error("error al mostrar la pantalla de valosit",ex);
 		}
 		log.debug(""
@@ -1901,7 +1976,7 @@ public class EndososAction extends PrincipalCoreAction
 				+ "\n#######################################"
 				+ "\n#######################################"
 				);
-		return SUCCESS;
+		return respuesta;
 	}
 	/*/////////////////////////////*/
 	////// endoso B de valosit //////
