@@ -23,6 +23,7 @@ import mx.com.gseguros.portal.siniestros.model.HistorialSiniestroVO;
 import mx.com.gseguros.portal.siniestros.model.ListaFacturasVO;
 import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
+import mx.com.gseguros.utils.Constantes;
 
 public class SiniestrosManagerImpl implements SiniestrosManager {
 	private SiniestrosDAO siniestrosDAO;
@@ -305,6 +306,41 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		// TODO Auto-generated method stub
 		try {
 			HashMap<String,Object> paramsFacMesaCtrl=new HashMap<String,Object>();
+			paramsFacMesaCtrl.put("pv_accion_i", Constantes.INSERT_MODE);
+			paramsFacMesaCtrl.put("pv_ntramite_i",ntramite);
+			paramsFacMesaCtrl.put("pv_nfactura_i",nfactura);
+			paramsFacMesaCtrl.put("pv_ffactura_i",fefactura);
+			paramsFacMesaCtrl.put("pv_cdtipser_i",cdtipser);
+			paramsFacMesaCtrl.put("pv_cdpresta_i",cdpresta);
+			paramsFacMesaCtrl.put("pv_ptimport_i",ptimport);
+			paramsFacMesaCtrl.put("pv_cdgarant_i",cdgarant);
+			paramsFacMesaCtrl.put("pv_cdconval_i",cdconval);
+			paramsFacMesaCtrl.put("pv_descporc_i",descporc);
+			paramsFacMesaCtrl.put("pv_descnume_i",descnume);
+			log.debug("guardaListaFacMesaControl params: "+paramsFacMesaCtrl);
+			return siniestrosDAO.guardaFacMesaControl(paramsFacMesaCtrl);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}
+
+	@Override
+	public String movFacMesaControl(
+			String ntramite,
+			String nfactura,
+			String fefactura,
+			String cdtipser,
+			String cdpresta,
+			String ptimport,
+			String cdgarant,
+			String cdconval,
+			String descporc,
+			String descnume, 
+			String operacion) throws ApplicationException {
+		// TODO Auto-generated method stub
+		try {
+			HashMap<String,Object> paramsFacMesaCtrl=new HashMap<String,Object>();
+			paramsFacMesaCtrl.put("pv_accion_i", operacion);
 			paramsFacMesaCtrl.put("pv_ntramite_i",ntramite);
 			paramsFacMesaCtrl.put("pv_nfactura_i",nfactura);
 			paramsFacMesaCtrl.put("pv_ffactura_i",fefactura);

@@ -17,6 +17,7 @@ import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.siniestros.model.HistorialSiniestroVO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
+import mx.com.gseguros.utils.Constantes;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
@@ -174,6 +175,32 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	   	}
 	   	success = true;
 	   	return SUCCESS;
+	}
+	
+	public String actualizaFacturaTramite(){
+		
+		try {
+			siniestrosManager.movFacMesaControl(params.get("ntramite"), params.get("nfactura"), params.get("fefactura"), params.get("cdtipser"), params.get("cdpresta"), params.get("ptimport"), params.get("cdgarant"), params.get("cdconval"), params.get("descporc"), params.get("descnume"), Constantes.UPDATE_MODE);
+		}catch( Exception e){
+			logger.error("Error en actualizaFacturaTramite",e);
+			success =  false;
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
+
+	public String borraFacturaTramite(){
+		
+		try {
+			siniestrosManager.movFacMesaControl(params.get("ntramite"), params.get("nfactura"), null, null, null, null, null, null, null, null, Constantes.DELETE_MODE);
+		}catch( Exception e){
+			logger.error("Error en borraFacturaTramite",e);
+			success =  false;
+			return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
 	}
 	
 	

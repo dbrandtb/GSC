@@ -483,6 +483,28 @@
 			</result>
 		</action>
 		
+		<action name="actualizaFacturaTramite" class="detalleSiniestroAction"
+			method="actualizaFacturaTramite">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success,
+					msgResult
+				</param>
+			</result>
+		</action>
+
+		<action name="eliminaFacturaTramite" class="detalleSiniestroAction"
+			method="borraFacturaTramite">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success,
+					msgResult
+				</param>
+			</result>
+		</action>
+		
 		<action name="obtieneDatosGeneralesSiniestro" class="detalleSiniestroAction" method="obtieneDatosGeneralesSiniestro">
             <result type="json"></result>
         </action>

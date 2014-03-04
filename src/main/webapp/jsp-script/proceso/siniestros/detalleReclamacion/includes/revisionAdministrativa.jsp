@@ -11,6 +11,8 @@ var _REEMBOLSO    = "2";
 
 var _URL_LoadFacturas =  '<s:url namespace="/siniestros" action="loadListaFacturasTramite" />';
 var _URL_GuardaFactura =  '<s:url namespace="/siniestros" action="guardaFacturaTramite" />';
+var _URL_ActualizaFactura =  '<s:url namespace="/siniestros" action="actualizaFacturaTramite" />';
+var _URL_EliminaFactura =  '<s:url namespace="/siniestros" action="eliminaFacturaTramite" />';
 
 var _URL_LoadConceptos =  '<s:url namespace="/siniestros" action="obtenerMsinival" />';
 var _URL_GuardaConcepto =  '<s:url namespace="/siniestros" action="guardarMsinival" />';
@@ -25,6 +27,8 @@ var _CATALOGO_SUBCOBERTURAS  = '<s:property value="@mx.com.gseguros.portal.gener
 
 var _CATALOGO_TipoConcepto  = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_CONCEPTO_SINIESTROS"/>';
 var _CATALOGO_ConceptosMedicos  = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CODIGOS_MEDICOS"/>';
+
+var _Operacion; 
 
 Ext.onReady(function() {
 	
@@ -307,7 +311,7 @@ Ext.onReady(function() {
             	fieldLabel  : 'Sub Cobertura',
             	displayField: 'value',
             	valueField  : 'key',
-            	allowBlank  : false,
+            	allowBlank  : true,
                 forceSelection : true,
                 matchFieldWidth: false,
                 queryMode   :'local',
@@ -486,10 +490,11 @@ Ext.onReady(function() {
     var windowConceptos= Ext.create('Ext.window.Window', {
           title: 'Agregar Concepto',
           closeAction: 'hide',
+          modal:true,
           items:[panelEdicionConceptos],
           bodyStyle:'padding:15px;',
           buttons:[{
-                 text: 'Aceptar',
+                 text: 'Guardar',
                  icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
                  handler: function() {
                        if (panelEdicionConceptos.form.isValid()) {
@@ -510,7 +515,8 @@ Ext.onReady(function() {
            		        		'params.aaapertu'   : _AAAPERTU,
            		        		'params.nmsinies'   : _NMSINIES,
            		        		'params.nfactura'   : record.get('NFACTURA'),
-           		        		'params.cdgarant'   : record.get('CDGARANT')
+           		        		'params.cdgarant'   : record.get('CDGARANT'),
+           		        		'params.operacion'   : _Operacion
            		        	},
            		        	failure: function(form, action) {
            		        		mensajeError("Error al guardar el concepto");
@@ -551,17 +557,25 @@ Ext.onReady(function() {
            title: 'Agregar Factura',
            bodyStyle:'padding:5px;',
            closeAction: 'hide',
+           modal: true,
            items:[panelEdicionFacturas],
            
            buttons:[{
-                  text: 'Aceptar',
+                  text: 'Guardar',
                   icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
                   handler: function() {
                         if (panelEdicionFacturas.form.isValid()) {
                         	
+                        	var UrlFact;
+                        	if(_Operacion == 'I'){
+                        		UrlFact = _URL_GuardaFactura;
+                        	}else {
+                        		UrlFact = _URL_ActualizaFactura;
+                        	}
                         	//var datos=panelEdicionFacturas.form.getValues();
                         	panelEdicionFacturas.form.submit({
-            		        	waitMsg:'Procesando...',			
+            		        	waitMsg:'Procesando...',	
+            		        	url: UrlFact,
             		        	params: {
             		        		'params.ntramite'   : _NTRAMITE 
             		        	},
@@ -572,6 +586,7 @@ Ext.onReady(function() {
             						
             						storeFacturas.reload();
             						panelEdicionFacturas.getForm().reset();
+            						storeConceptos.removeAll();
                                 	windowFacturas.close();
                                 	mensajeCorrecto("Aviso","Se ha guardado la Factura");
             						
@@ -662,13 +677,13 @@ Ext.define('EditorFacturas', {
  					menuDisabled : true,
  					items : [ {
  						icon : _CONTEXT+'/resources/fam3icons/icons/delete.png',
- 						tooltip : 'Quitar inciso',
+ 						tooltip : 'Eliminar Factura',
  						scope : this,
  						handler : this.onRemoveClick
  					},
  					{
  						icon : _CONTEXT+'/resources/fam3icons/icons/pencil.png',
- 						tooltip : 'Editar',
+ 						tooltip : 'Editar Factura',
  						scope : this,
  						handler : this.onEditClick
  					}]
@@ -713,19 +728,75 @@ Ext.define('EditorFacturas', {
 	 	});
 	 	return false;
  	},
- 	onAddClick: function(){	 		
+ 	onAddClick: function(){	 
+ 		panelEdicionFacturas.getForm().reset();
+ 		panelEdicionFacturas.down('[name="params.nfactura"]').setReadOnly(false);
+ 		_Operacion = 'I';
  		windowFacturas.show();
  		centrarVentana(windowFacturas);
  		
  	},
  	onRemoveClick: function(grid, rowIndex){
  		var record=this.getStore().getAt(rowIndex);
- 		debug(record);        	
- 		this.getStore().removeAt(rowIndex);
+ 		
+ 		panelEdicionFacturas.getForm().reset();
+ 		
+ 		centrarVentana(Ext.Msg.show({
+	        title: 'Aviso',
+	        msg: '&iquest;Esta seguro que desea eliminar esta factura?',
+	        buttons: Ext.Msg.YESNO,
+	        icon: Ext.Msg.QUESTION,
+	        fn: function(buttonId, text, opt){
+	        	if(buttonId == 'yes'){
+	        		
+	        		gridFacturas.setLoading(true);
+	         		
+	         		Ext.Ajax.request({
+	        			url: _URL_EliminaFactura,
+	        			params: {
+	        		    		'params.ntramite' : _NTRAMITE,
+	        		    		'params.nfactura' : record.get('NFACTURA')
+	        			},
+	        			success: function() {
+	        				gridFacturas.setLoading(false);
+	        				mensajeCorrecto('Aviso','Se ha eliminado con exito.');
+	        				storeFacturas.reload();
+	        			},
+	        			failure: function(){
+	        				gridFacturas.setLoading(false);
+	        				mensajeError('Error','No se pudo eliminar.');
+	        			}
+	        		});
+	        	}
+	        	
+	        }
+	    }));
+ 		
+ 		
  	},
  	onEditClick: function(grid, rowIndex){
  		var record=this.getStore().getAt(rowIndex);
- 		debug("Editando...");        	
+ 		_Operacion = 'U';
+ 		debug("Editando...");
+ 		panelEdicionFacturas.down('[name="params.nfactura"]').setReadOnly(true);
+ 		panelEdicionFacturas.down('[name="params.nfactura"]').setValue(record.get('NFACTURA'));
+ 		panelEdicionFacturas.down('[name="params.fefactura"]').setValue(record.get('FFACTURA'));
+ 		panelEdicionFacturas.down('[name="params.cdtipser"]').setValue(record.get('CDTIPSER'));
+ 		panelEdicionFacturas.down('[name="params.cdpresta"]').setValue(record.get('CDPRESTA'));
+ 		panelEdicionFacturas.down('[name="params.cdgarant"]').setValue(record.get('CDGARANT'));
+ 		storeSubcoberturas.load({
+			params: {
+				'params.cdgarant' : record.get('CDGARANT')
+			},
+			callback: function (){ 
+				panelEdicionFacturas.down('[name="params.cdconval"]').setValue(record.get('CDCONVAL'));
+			}
+		});
+ 		panelEdicionFacturas.down('[name="params.ptimport"]').setValue(record.get('PTIMPORT'));
+ 		panelEdicionFacturas.down('[name="params.descporc"]').setValue(record.get('DESCPORC'));
+ 		panelEdicionFacturas.down('[name="params.descnume"]').setValue(record.get('DESCNUME'));
+ 		windowFacturas.show();
+ 		centrarVentana(windowFacturas);
  		
  	},
  	listeners: {
@@ -821,16 +892,22 @@ Ext.define('EditorConceptos', {
  					width : 150
  				},*/{
  					xtype : 'actioncolumn',
- 					width : 30,
+ 					width : 70,
  					sortable : false,
  					menuDisabled : true,
- 					items : [<s:property value="imap.conceptosButton" />/*, {
- 						icon : _CONTEXT
- 								+ '/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
- 						tooltip : 'Quitar inciso',
+ 					items : [
+ 					 {
+ 						icon : _CONTEXT+'/resources/fam3icons/icons/delete.png',
+ 						tooltip : 'Eliminar Concepto',
  						scope : this,
  						handler : this.onRemoveClick
- 					} */]
+ 					},
+ 					{
+ 						icon : _CONTEXT+'/resources/fam3icons/icons/pencil.png',
+ 						tooltip : 'Editar Concepto',
+ 						scope : this,
+ 						handler : this.onEditClick
+ 					},<s:property value="imap.conceptosButton" />]
  				} ],
 	 		tbar: [{
 			 	icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png',
@@ -875,6 +952,12 @@ Ext.define('EditorConceptos', {
  	onAddClick: function(){
  		if(gridFacturas.getSelectionModel().hasSelection()){
  			
+ 			panelEdicionConceptos.getForm().reset();
+ 			panelEdicionConceptos.down('[name="params.cdconval"]').setReadOnly(false);
+ 			panelEdicionConceptos.down('[name="params.idconcep"]').setReadOnly(false);
+ 			panelEdicionConceptos.down('[name="params.cdconcep"]').setReadOnly(false);
+ 			_Operacion = 'I';
+ 			
  			var record = gridFacturas.getSelectionModel().getSelection()[0];
  			
  			storeSubcoberturasC.load({
@@ -883,9 +966,51 @@ Ext.define('EditorConceptos', {
     			}
     		});
  			windowConceptos.show();
+ 			centrarVentana(windowConceptos);
  		}else {
  			mensajeWarning("Debe seleccionar una factura para poder agregar un concepto a la misma.");
  		} 
+ 	},
+ 	onEditClick: function(grid, rowIndex){
+ 		var record=this.getStore().getAt(rowIndex);
+ 		_Operacion = 'U';
+ 		debug("Editando...");
+ 		
+ 		panelEdicionConceptos.getForm().reset();
+			
+ 		storeSubcoberturasC.load({
+			params: {
+				'params.cdgarant' : record.get('CDGARANT')
+			},
+			callback: function (){ 
+				panelEdicionConceptos.down('[name="params.cdconval"]').setValue(record.get('CDCONVAL'));
+			}
+		});
+ 		
+ 		panelEdicionConceptos.down('[name="params.idconcep"]').setValue(record.get('IDCONCEP'));
+ 		
+ 		storeConceptosCatalogo.load({
+			params: {
+				'params.idPadre' : record.get('IDCONCEP')
+			},
+			callback: function (){ 
+				panelEdicionConceptos.down('[name="params.cdconcep"]').setValue(record.get('CDCONCEP'));
+			}
+		});
+ 		
+ 		panelEdicionConceptos.down('[name="params.ptprecio"]').setValue(record.get('PTPRECIO'));
+ 		panelEdicionConceptos.down('[name="params.cantidad"]').setValue(record.get('CANTIDAD'));
+ 		panelEdicionConceptos.down('[name="params.destopor"]').setValue(record.get('DESTOPOR'));
+ 		panelEdicionConceptos.down('[name="params.destoimp"]').setValue(record.get('DESTOIMP'));
+ 		panelEdicionConceptos.down('[name="params.ptimport"]').setValue(record.get('PTIMPORT'));
+ 		
+ 		panelEdicionConceptos.down('[name="params.cdconval"]').setReadOnly(true);
+ 		panelEdicionConceptos.down('[name="params.idconcep"]').setReadOnly(true);
+ 		panelEdicionConceptos.down('[name="params.cdconcep"]').setReadOnly(true);
+ 		
+ 		windowConceptos.show();
+ 		centrarVentana(windowConceptos);
+ 		
  	},
  	onRemoveClick: function(grid, rowIndex){
  		var record=this.getStore().getAt(rowIndex);

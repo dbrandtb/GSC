@@ -116,6 +116,20 @@ public interface SiniestrosManager {
 			String descnume
 			) throws ApplicationException;
 
+	public String movFacMesaControl(
+			String ntramite,
+			String nfactura,
+			String fefactura,
+			String cdtipser,
+			String cdpresta,
+			String ptimport,
+			String cdgarant,
+			String cdconval,
+			String descporc,
+			String descnume,
+			String operacion
+			) throws ApplicationException;
+
 	public String guardaListaTworkSin(HashMap<String, Object> paramsTworkSin) throws ApplicationException;
 
 	public String getAltaSiniestroAutServicio(String nmautser) throws ApplicationException;
