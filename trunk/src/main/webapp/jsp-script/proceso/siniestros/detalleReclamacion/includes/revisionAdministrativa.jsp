@@ -28,7 +28,8 @@ var _CATALOGO_SUBCOBERTURAS  = '<s:property value="@mx.com.gseguros.portal.gener
 var _CATALOGO_TipoConcepto  = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_CONCEPTO_SINIESTROS"/>';
 var _CATALOGO_ConceptosMedicos  = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CODIGOS_MEDICOS"/>';
 
-var _Operacion; 
+var _Operacion;
+var _Nmordina;
 
 Ext.onReady(function() {
 	
@@ -37,6 +38,8 @@ Ext.onReady(function() {
 	
 	var gridFacturas;
 	var gridConceptos;
+	
+	var panelPrincipal;
 	
 	Ext.define('modelFacturas',{
         extend: 'Ext.data.Model',
@@ -506,16 +509,17 @@ Ext.onReady(function() {
            		        	waitMsg:'Procesando...',			
            		        	params: {
            		        		'params.cdunieco'   : _CDUNIECO,
-           		        		'params.cdramo'   : _CDRAMO,
-           		        		'params.estado'   : _ESTADO,
+           		        		'params.cdramo'     : _CDRAMO,
+           		        		'params.estado'     : _ESTADO,
            		        		'params.nmpoliza'   : _NMPOLIZA,
            		        		'params.nmsituac'   : _NMSITUAC,
            		        		'params.nmsuplem'   : _NMSUPLEM,
-           		        		'params.status'   : _STATUS,
+           		        		'params.status'     : _STATUS,
            		        		'params.aaapertu'   : _AAAPERTU,
            		        		'params.nmsinies'   : _NMSINIES,
            		        		'params.nfactura'   : record.get('NFACTURA'),
            		        		'params.cdgarant'   : record.get('CDGARANT'),
+           		        		'params.nmordina'   : _Operacion == 'U'? _Nmordina:'',
            		        		'params.operacion'   : _Operacion
            		        	},
            		        	failure: function(form, action) {
@@ -675,17 +679,16 @@ Ext.define('EditorFacturas', {
  					width : 50,
  					sortable : false,
  					menuDisabled : true,
- 					items : [ {
- 						icon : _CONTEXT+'/resources/fam3icons/icons/delete.png',
- 						tooltip : 'Eliminar Factura',
- 						scope : this,
- 						handler : this.onRemoveClick
- 					},
- 					{
+ 					items : [{
  						icon : _CONTEXT+'/resources/fam3icons/icons/pencil.png',
  						tooltip : 'Editar Factura',
  						scope : this,
  						handler : this.onEditClick
+ 					},{
+ 						icon : _CONTEXT+'/resources/fam3icons/icons/delete.png',
+ 						tooltip : 'Eliminar Factura',
+ 						scope : this,
+ 						handler : this.onRemoveClick
  					}]
  				} ],
 	 		tbar: [{
@@ -732,12 +735,14 @@ Ext.define('EditorFacturas', {
  		panelEdicionFacturas.getForm().reset();
  		panelEdicionFacturas.down('[name="params.nfactura"]').setReadOnly(false);
  		_Operacion = 'I';
+ 		
+ 		windowFacturas.setTitle('Agregar Factura');
  		windowFacturas.show();
  		centrarVentana(windowFacturas);
  		
  	},
  	onRemoveClick: function(grid, rowIndex){
- 		var record=this.getStore().getAt(rowIndex);
+ 		var record=grid.getStore().getAt(rowIndex);
  		
  		panelEdicionFacturas.getForm().reset();
  		
@@ -757,14 +762,20 @@ Ext.define('EditorFacturas', {
 	        		    		'params.ntramite' : _NTRAMITE,
 	        		    		'params.nfactura' : record.get('NFACTURA')
 	        			},
-	        			success: function() {
+	        			success: function(response) {
+	        				var res = Ext.decode(response.responseText);
 	        				gridFacturas.setLoading(false);
-	        				mensajeCorrecto('Aviso','Se ha eliminado con exito.');
-	        				storeFacturas.reload();
+	        				
+	        				if(res.success){
+		        				mensajeCorrecto('Aviso','Se ha eliminado con exito.');
+	    	    				storeFacturas.reload();
+	        				}else {
+	        					mensajeError('No se pudo eliminar.');	
+	        				}
 	        			},
 	        			failure: function(){
 	        				gridFacturas.setLoading(false);
-	        				mensajeError('Error','No se pudo eliminar.');
+	        				mensajeError('No se pudo eliminar.');
 	        			}
 	        		});
 	        	}
@@ -775,28 +786,38 @@ Ext.define('EditorFacturas', {
  		
  	},
  	onEditClick: function(grid, rowIndex){
- 		var record=this.getStore().getAt(rowIndex);
+ 		var record=grid.getStore().getAt(rowIndex);
  		_Operacion = 'U';
  		debug("Editando...");
+ 		
+ 		panelEdicionFacturas.getForm().reset();
+ 		
  		panelEdicionFacturas.down('[name="params.nfactura"]').setReadOnly(true);
  		panelEdicionFacturas.down('[name="params.nfactura"]').setValue(record.get('NFACTURA'));
  		panelEdicionFacturas.down('[name="params.fefactura"]').setValue(record.get('FFACTURA'));
  		panelEdicionFacturas.down('[name="params.cdtipser"]').setValue(record.get('CDTIPSER'));
  		panelEdicionFacturas.down('[name="params.cdpresta"]').setValue(record.get('CDPRESTA'));
  		panelEdicionFacturas.down('[name="params.cdgarant"]').setValue(record.get('CDGARANT'));
+ 		
+ 		
+ 		panelPrincipal.setLoading(true);
  		storeSubcoberturas.load({
 			params: {
 				'params.cdgarant' : record.get('CDGARANT')
 			},
 			callback: function (){ 
 				panelEdicionFacturas.down('[name="params.cdconval"]').setValue(record.get('CDCONVAL'));
+				panelPrincipal.setLoading(false);
+				
+				windowFacturas.setTitle('Editar Factura');
+				windowFacturas.show();
+		 		centrarVentana(windowFacturas);
 			}
 		});
  		panelEdicionFacturas.down('[name="params.ptimport"]').setValue(record.get('PTIMPORT'));
  		panelEdicionFacturas.down('[name="params.descporc"]').setValue(record.get('DESCPORC'));
  		panelEdicionFacturas.down('[name="params.descnume"]').setValue(record.get('DESCNUME'));
- 		windowFacturas.show();
- 		centrarVentana(windowFacturas);
+ 		
  		
  	},
  	listeners: {
@@ -852,6 +873,10 @@ Ext.define('EditorConceptos', {
  					dataIndex : 'NMORDINA',
  					width : 20
  				},{
+ 					header : 'Factura',
+ 					dataIndex:  'NFACTURA',
+ 					hidden: true
+ 				},{
  					header : 'Tipo Concepto',
  					dataIndex : 'IDCONCEP',
  					width : 150
@@ -892,22 +917,10 @@ Ext.define('EditorConceptos', {
  					width : 150
  				},*/{
  					xtype : 'actioncolumn',
- 					width : 70,
+ 					width : 80,
  					sortable : false,
  					menuDisabled : true,
- 					items : [
- 					 {
- 						icon : _CONTEXT+'/resources/fam3icons/icons/delete.png',
- 						tooltip : 'Eliminar Concepto',
- 						scope : this,
- 						handler : this.onRemoveClick
- 					},
- 					{
- 						icon : _CONTEXT+'/resources/fam3icons/icons/pencil.png',
- 						tooltip : 'Editar Concepto',
- 						scope : this,
- 						handler : this.onEditClick
- 					},<s:property value="imap.conceptosButton" />]
+ 					items : [<s:property value="imap.conceptosButton" />]
  				} ],
 	 		tbar: [{
 			 	icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png',
@@ -965,6 +978,8 @@ Ext.define('EditorConceptos', {
     				'params.cdgarant' : record.get('CDGARANT')
     			}
     		});
+ 			
+ 			windowConceptos.setTitle('Agregar Concepto');
  			windowConceptos.show();
  			centrarVentana(windowConceptos);
  		}else {
@@ -972,12 +987,14 @@ Ext.define('EditorConceptos', {
  		} 
  	},
  	onEditClick: function(grid, rowIndex){
- 		var record=this.getStore().getAt(rowIndex);
+ 		var record=grid.getStore().getAt(rowIndex);
  		_Operacion = 'U';
+ 		_Nmordina = record.get('NMORDINA');
  		debug("Editando...");
  		
  		panelEdicionConceptos.getForm().reset();
-			
+ 		panelPrincipal.setLoading(true);
+ 		
  		storeSubcoberturasC.load({
 			params: {
 				'params.cdgarant' : record.get('CDGARANT')
@@ -995,6 +1012,11 @@ Ext.define('EditorConceptos', {
 			},
 			callback: function (){ 
 				panelEdicionConceptos.down('[name="params.cdconcep"]').setValue(record.get('CDCONCEP'));
+				panelPrincipal.setLoading(false);
+				
+				windowConceptos.setTitle('Editar Concepto');
+				windowConceptos.show();
+		 		centrarVentana(windowConceptos);
 			}
 		});
  		
@@ -1008,21 +1030,72 @@ Ext.define('EditorConceptos', {
  		panelEdicionConceptos.down('[name="params.idconcep"]').setReadOnly(true);
  		panelEdicionConceptos.down('[name="params.cdconcep"]').setReadOnly(true);
  		
- 		windowConceptos.show();
- 		centrarVentana(windowConceptos);
- 		
  	},
  	onRemoveClick: function(grid, rowIndex){
- 		var record=this.getStore().getAt(rowIndex);
- 		console.log(record);        	
- 		this.getStore().removeAt(rowIndex);
+ 		var record=grid.getStore().getAt(rowIndex);
+ 		_Operacion = 'D';
+ 		
+ 		centrarVentana(Ext.Msg.show({
+	        title: 'Aviso',
+	        msg: '&iquest;Esta seguro que desea eliminar este concepto?',
+	        buttons: Ext.Msg.YESNO,
+	        icon: Ext.Msg.QUESTION,
+	        fn: function(buttonId, text, opt){
+	        	if(buttonId == 'yes'){
+	        		
+	        		gridConceptos.setLoading(true);
+	         		
+	         		Ext.Ajax.request({
+	        			url: _URL_GuardaConcepto,
+	        			params         :
+	                    {
+	                        'params.ntramite'  : _NTRAMITE
+	                        ,'params.cdunieco' : _CDUNIECO
+	                        ,'params.cdramo'   : _CDRAMO
+	                        ,'params.estado'   : _ESTADO
+	                        ,'params.nmpoliza' : _NMPOLIZA
+	                        ,'params.nmsuplem' : _NMSUPLEM
+	                        ,'params.nmsituac' : _NMSITUAC
+	                        ,'params.aaapertu' : _AAAPERTU
+	                        ,'params.status'   : _STATUS
+	                        ,'params.nmsinies' : _NMSINIES
+	                        ,'params.nfactura' : record.get('NFACTURA')
+	                        ,'params.cdgarant' : record.get('CDGARANT')
+	                        ,'params.cdconval' : record.get('CDCONVAL')
+	                        ,'params.cdconcep' : record.get('CDCONCEP')
+	                        ,'params.idconcep' : record.get('IDCONCEP')
+	                        ,'params.nmordina' : record.get('NMORDINA')
+	                        ,'params.operacion': _Operacion
+	                    },
+	        			success: function(response) {
+	        				var res = Ext.decode(response.responseText);
+	        				gridConceptos.setLoading(false);
+	        				
+	        				if(res.success){
+	        					mensajeCorrecto('Aviso','Se ha eliminado con exito.');
+		        				storeConceptos.reload();	
+	        				}else {
+		        				mensajeError('No se pudo eliminar.');
+	        				}
+	        			},
+	        			failure: function(){
+	        				gridConceptos.setLoading(false);
+	        				mensajeError('No se pudo eliminar.');
+	        			}
+	        		});
+	        	}
+	        	
+	        }
+	    }));
+ 		
+ 		
  	}
 	});
 
 gridConceptos=new EditorConceptos();
 
 
-Ext.create('Ext.form.Panel',{
+panelPrincipal = Ext.create('Ext.form.Panel',{
 	renderTo: 'maindivAdminData',
 	border     : false
 	,bodyStyle:'padding:5px;'

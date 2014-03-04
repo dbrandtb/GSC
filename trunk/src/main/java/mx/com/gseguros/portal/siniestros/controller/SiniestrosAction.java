@@ -1544,7 +1544,7 @@ public void setMsgResult(String msgResult) {
     		String cdconcep  = params.get("cdconcep");
     		String idconcep  = params.get("idconcep");
     		String cdcapita  = params.get("cdcapita");
-    		String nmordina  = params.get("femovimi");
+    		String nmordina  = params.get("nmordina");
 //    		String femovimi  = params.get("femovimi");
     		Date   dFemovimi = new Date();
     		String cdmoneda  = params.get("cdmoneda");

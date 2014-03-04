@@ -73,14 +73,21 @@ Ext.onReady(function() {
 							saveList : 	saveList
 						},
 						success: function() {
+							var res = Ext.decode(response.responseText);
 							gridDocumentos.setLoading(false);
-							mensajeCorrecto('Aviso','Se ha guardado con exito.');
-							storeDocumentos.reload();
-							windowLoader.close();
+							
+							if(res.success){
+								mensajeCorrecto('Aviso','Se ha guardado con exito.');
+								storeDocumentos.reload();
+								windowLoader.close();
+							}else{
+								mensajeError('No se pudo guardar.');
+							}
+							
 						},
 						failure: function(){
 							gridDocumentos.setLoading(false);
-							mensajeError('Error','No se pudo guardar.');
+							mensajeError('No se pudo guardar.');
 						}
 					});
 				}
