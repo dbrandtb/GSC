@@ -213,32 +213,7 @@
                     xtype      : 'displayfield',
                     name       : 'DSTIPPAG',
                     fieldLabel : 'Tipo pago'
-                }/*,{
-		        	xtype       : 'combo',
-		        	name        : 'DSTIPPAG',
-		            fieldLabel  : 'Tipo pago',
-		            queryMode   : 'local',
-		            displayField: 'value',
-		            valueField  : 'key',
-		            allowBlank  : false,
-		            forceSelection : true,
-		            emptyText   : 'Seleccione...',
-		            store : Ext.create('Ext.data.Store', {
-	                    model:'Generic',
-	                    autoLoad:true,
-	                    proxy: {
-	                        type: 'ajax',
-	                        url:  _URL_CATALOGOS,
-	                        extraParams : {
-	                            catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_PAGO_SINIESTROS"/>'
-	                        },
-	                        reader: {
-	                            type: 'json',
-	                            root: 'lista'
-	                        }
-	                    }
-	                })
-		        }*/,{
+                },{
 		        	//colspan    : 1,
 		            xtype      : 'displayfield',
 		            name       : 'NMPOLIEX',
@@ -311,8 +286,8 @@
                            modal       : true,
                            buttonAlign : 'center',
                            autoScroll  : true,
-                           width       : 425,
-                           height      : 255,
+                           width       : 450,
+                           height      : 455,
                            loader      : {
                                url     : _URL_LOADER_VER_EXCLUSIONES,
                                scripts : true,
@@ -363,39 +338,7 @@
 					xtype      : 'displayfield',
 					name       : 'ASEGURADO',
 					fieldLabel : 'Asegurado afectado'
-		        }/*,{
-		        	colspan     : 1,
-					xtype       : 'combo',
-					name        : 'DSPROVEED',
-					fieldLabel  : 'Proveedor',
-					emptyText   : 'Seleccione...',
-					valueField  : 'key',
-					displayField: 'value',
-					allowBlank  : false,
-					forceSelection : true,
-					matchFieldWidth: false,
-					hideTrigger : true,
-	                triggerAction: 'all',
-	                queryMode   : 'remote',
-	                queryParam  : 'params.cdpresta',
-	                minChars    : 2,
-	                store       : Ext.create('Ext.data.Store', {
-	                    model:'Generic',
-	                    autoLoad:false,
-	                    proxy: {
-	                        type: 'ajax',
-	                        url : _URL_CATALOGOS,
-	                        extraParams:{
-	                            catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@PROVEEDORES"/>'
-	                            
-	                        },
-	                        reader: {
-	                            type: 'json',
-	                            root: 'lista'
-	                        }
-	                    }
-	                })
-		        }*/,{
+		        },{
                     colspan    : 1,
                     xtype      : 'displayfield',
                     name       : 'DSPROVEED',
