@@ -1109,7 +1109,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
                                 + "&desformat=PDF"
                                 + "&userid="+getText("pass.servidor.reports")
                                 + "&ACCESSIBLE=YES"
-                                + "&report="+getText("reporte.cotizacion.nombre")
+                                + "&report="+getText("rdf.cotizacion.nombre")
                                 + "&paramform=no"
                                 ;
             String nombreArchivoCotizacion="cotizacion.pdf";

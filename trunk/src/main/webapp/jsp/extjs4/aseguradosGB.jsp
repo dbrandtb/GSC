@@ -12,7 +12,7 @@
     </style>
         <script type="text/javascript">
         
-            var _NOMBRE_REPORTE_COTIZACION =            '<s:text name="reporte.cotizacion.nombre"/>';
+            var _NOMBRE_REPORTE_COTIZACION =            '<s:text name="rdf.cotizacion.nombre"/>';
         
             //URL padre de los catalogos
             var _URL_OBTEN_CATALOGO_GENERICO=           '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
