@@ -229,6 +229,65 @@ public class AjustesMedicosSiniestrosAction extends PrincipalCoreAction {
     	return SUCCESS;
     }
 	
+    public String modificarTdsinival()
+    {
+    	logger.debug(""
+    			+ "\n##############################"
+    			+ "\n##############################"
+    			+ "\n###### modificarTdsinival ######"
+    			+ "\n######                  ######"
+    			);
+    	logger.debug("params: "+params);
+    	try
+    	{
+    		UserVO usuario = (UserVO)session.get("USUARIO");
+    		
+    		String cdunieco  = params.get("cdunieco");
+    		String cdramo    = params.get("cdramo");
+    		String estado    = params.get("estado");
+    		String nmpoliza  = params.get("nmpoliza");
+    		String nmsuplem  = params.get("nmsuplem");
+    		String nmsituac  = params.get("nmsituac");
+    		String aaapertu  = params.get("aaapertu");
+    		String status    = params.get("status");
+    		String nmsinies  = params.get("nmsinies");
+    		String nfactura  = params.get("nfactura");
+    		String cdgarant  = params.get("cdgarant");
+    		String cdconval  = params.get("cdconval");
+    		String cdconcep  = params.get("cdconcep");
+    		String idconcep  = params.get("idconcep");
+    		String nmordina  = params.get("nmordina");
+    		String ptimport  = params.get("ptimport");
+    		String userregi  = usuario.getUser();
+    		Date   dFeregist = new Date();
+    		String comments  = params.get("comments");
+    		String nmordmov  = params.get("nmordmov");
+    		
+    		siniestrosManager.P_MOV_TDSINIVAL(
+    				cdunieco, cdramo, estado, nmpoliza, nmsuplem,
+    				nmsituac, aaapertu, status, nmsinies, nfactura,
+    				cdgarant, cdconval, cdconcep, idconcep, nmordina,
+    				nmordmov, ptimport, comments, userregi, dFeregist,
+    				Constantes.UPDATE_MODE);
+    		
+    		mensaje = "error al modificar el registro";
+    		success = true;
+    		
+    	}
+    	catch(Exception ex)
+    	{
+    		logger.debug("error al eliminar el registro",ex);
+    		success=false;
+    		mensaje=ex.getMessage();
+    	}
+    	logger.debug(""
+    			+ "\n######                  ######"
+    			+ "\n###### modificar Tdsinival ######"
+    			+ "\n##############################"
+    			+ "\n##############################"
+    			);
+    	return SUCCESS;
+    }
 	//Getters and setters:
 
 	public void setSiniestrosManager(SiniestrosManager siniestrosManager) {

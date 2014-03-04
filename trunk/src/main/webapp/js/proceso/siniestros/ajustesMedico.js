@@ -1,7 +1,7 @@
 Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.chart.*', 'Ext.grid.Panel','Ext.layout.container.Column', 'Ext.selection.CheckboxModel' ]);
 var datosgrid;
 var storeIncisos;
-
+var tipoAccion = 0; // Nuevo
 
 Ext.define('modelAjusteMedico',{
     extend: 'Ext.data.Model',
@@ -51,14 +51,19 @@ function _amRecargar()
 			//debug('respuesta del servidor: ',json);
 			if(json.success == true)
 			{
-				var total = 0*1;
-				for(var i = 0;i<json.loadList.length;i++)
-				{
-					total = total*1 + json.loadList[i]["PTIMPORT"]*1;
-				}
-				Ext.getCmp('idTotalAjustado').setValue(total);
 				storeIncisos.removeAll();
 				storeIncisos.add(json.loadList);
+				
+				var arr = [];
+	    		storeIncisos.each(function(record) {
+		    	    arr.push(record.data);
+		    	});
+	    		var montoAjustado= 0;
+	    		for(var i = 0; i < arr.length; i++)
+		    	{
+	    			montoAjustado = montoAjustado + (+ arr[i].PTIMPORT);
+		    	}
+	    		Ext.getCmp('idTotalAjustado').setValue(montoAjustado);
 			}
 			else
 			{
@@ -104,18 +109,60 @@ function _amEliminar(nmordmov,ptimport,comments)
 		,params : json
 		,success : function(response)
 		{
+			tipoAccion = 0;
 			json = Ext.decode(response.responseText);
 	    	if(json.success == true){
-	    		var arr = [];
-	    		storeIncisos.each(function(record) {
-		    	    arr.push(record.data);
-		    	});
-	    		var montoAjustado= 0;
-	    		for(var i = 0; i < arr.length; i++)
-		    	{
-	    			montoAjustado = montoAjustado + (+ arr[i].PTIMPORT);
-		    	}
-	    		Ext.getCmp('idTotalAjustado').setValue(montoAjustado);
+	    		_amRecargar();
+	    	}
+	    	else
+	    	{
+	    		mensajeError(json.mensaje);
+	    	}
+		}
+	    ,failure : function()
+	    {
+	    	//gridIncisos.setLoading(false);
+	    	errorComunicacion();
+	    }
+	});
+}
+
+
+function _amModificar(consecutivo,ptimport,comments)
+{
+	var json =
+	{
+		'params.cdunieco' : _amParams.cdunieco,
+		'params.cdramo'   : _amParams.cdramo,
+		'params.estado'   : _amParams.estado,
+		'params.nmpoliza' : _amParams.nmpoliza,
+		'params.nmsuplem' : _amParams.nmsuplem,
+		'params.nmsituac' : _amParams.nmsituac,
+		'params.aaapertu' : _amParams.aaapertu,
+		'params.status'   : _amParams.status,
+		'params.nmsinies' : _amParams.nmsinies,
+		'params.nfactura' : _amParams.nfactura,
+		'params.cdgarant' : _amParams.cdgarant,
+		'params.cdconval' : _amParams.cdconval,
+		'params.cdconcep' : _amParams.cdconcep,
+		'params.idconcep' : _amParams.idconcep,
+		'params.nmordina' : _amParams.nmordina,
+		'params.nmordmov' : consecutivo,
+		'params.ptimport' : ptimport,
+		'params.comments' : comments
+	};
+	
+	Ext.Ajax.request(
+	{
+		url : _amUrlModificar
+		,params : json
+		,success : function(response)
+		{
+			json = Ext.decode(response.responseText);
+			tipoAccion = 0;
+	    	if(json.success == true){
+	    		ventanaGridAjusteMedico.close();
+	    		_amRecargar();
 	    	}
 	    	else
 	    	{
@@ -162,9 +209,9 @@ function _amAgregar(ptimport,comments)
 	    {
 	    	ventanaGridAjusteMedico.setLoading(false);
 	    	json = Ext.decode(response.responseText);
+	    	tipoAccion = 0;
 	    	if(json.success == true)
 	    	{
-	    		//recargar el grid
 	    		ventanaGridAjusteMedico.close();
 	    		_amRecargar();
 	    		
@@ -194,6 +241,14 @@ Ext.onReady(function() {
         ,bodyStyle:'padding:5px;'
         ,items :
         [   
+			{   
+				xtype:'numberfield',
+				name:'idConsecutivo',
+				fieldLabel : 'Consecutivo',
+				minValue: 0,
+			    labelWidth: 170,
+			    hidden:true
+			},
 	         {   
 	            	xtype:'numberfield',
 			        name:'idAjusteImporte',
@@ -229,8 +284,13 @@ Ext.onReady(function() {
                         if (panelAjusteMedico.form.isValid()) {
                         	// realizamos el guardado del registro
                         	var datos=panelAjusteMedico.form.getValues();
-                        	console.log(datos);
-                        	_amAgregar( datos.idAjusteImporte,datos.idObservaciones);
+                        	if(tipoAccion == 0) // insertar
+                        	{
+                        		_amAgregar(datos.idAjusteImporte,datos.idObservaciones);
+                        	}else{
+                        		_amModificar(datos.idConsecutivo,datos.idAjusteImporte,datos.idObservaciones);
+                        	}
+                        	
                         } else {
                             Ext.Msg.show({
                                    title: 'Aviso',
@@ -300,6 +360,18 @@ Ext.onReady(function() {
 					 	sortable: false,
 					 	menuDisabled: true,
 					 	items: [{
+	 						icon : _CONTEXT+'/resources/fam3icons/icons/pencil.png',
+	 						tooltip : 'Editar movimiento',
+	 						scope : this,
+	 						handler : this.onEditClick
+	 					}]
+				 	},
+				 	{
+					 	xtype: 'actioncolumn',
+					 	width: 30,
+					 	sortable: false,
+					 	menuDisabled: true,
+					 	items: [{
 					 		icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/delete.png',
 					 		tooltip: 'Quitar ajuste m&eacute;dico',
 					 		scope: this,
@@ -350,7 +422,18 @@ Ext.onReady(function() {
 		 	});
 		 	return false;
 	 	},
+	 	onEditClick: function(grid, rowIndex){
+	 		panelAjusteMedico.getForm().reset();
+	 		var record=this.getStore().getAt(rowIndex);
+	 		tipoAccion = 1;
+	 		panelAjusteMedico.getForm().reset();
+	 		panelAjusteMedico.down('[name="idConsecutivo"]').setValue(record.get('NMORDMOV'));
+	 		panelAjusteMedico.down('[name="idAjusteImporte"]').setValue(record.get('PTIMPORT'));
+	 		panelAjusteMedico.down('[name="idObservaciones"]').setValue(record.get('COMMENTS'));
+	 		ventanaGridAjusteMedico.show();
+	 	},
 	 	onAddClick: function(){
+	 		tipoAccion= 0;
 	 		ventanaGridAjusteMedico.show();
 	 	},
 	 	onRemoveClick: function(grid, rowIndex){
