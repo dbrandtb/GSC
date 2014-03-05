@@ -346,6 +346,8 @@ var msgWindow;
 		
 		var params = {};
 		
+		params['params.tipopago'] = formapago;
+		
 		var conCoberYSubcober = false;
 		if(esPagoDirecto)
 		{

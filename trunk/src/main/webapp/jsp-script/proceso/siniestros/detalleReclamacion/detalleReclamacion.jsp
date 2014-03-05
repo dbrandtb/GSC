@@ -23,6 +23,7 @@
             var _AAAPERTU = '<s:property value="params.aaapertu" />';
             var _NMSINIES = '<s:property value="params.nmsinies" />';
             var _NTRAMITE= '<s:property value="params.ntramite" />';
+            var _TIPOPAGO= '<s:property value="params.tipopago" />';
         </script>
         <!-- <script type="text/javascript" src="${ctx}/resources/scripts/util/extjs4_utils.js"></script>-->
         <script type="text/javascript" src="${ctx}/js/proceso/siniestros/detalleReclamacion/detalleReclamacion.js"></script>
