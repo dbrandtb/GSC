@@ -15,6 +15,7 @@ import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.siniestros.model.HistorialSiniestroVO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
@@ -61,25 +62,23 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 				+ "\n######                        ######"
 				);
 		logger.debug("params:"+params);
+		
 		if(!params.containsKey("nmsinies"))
 		{
-			try
-			{
+			try{
 				String ntramite = params.get("ntramite");
-				params = (HashMap<String, String>) siniestrosManager.obtenerLlaveSiniestroReembolso(ntramite);
-				Map<String,String>aux=new HashMap<String,String>();
-				for(Entry<String,String>en:params.entrySet())
-				{
-					aux.put(en.getKey().toLowerCase(),en.getValue());
+				Map<String,String> paramsRes = (HashMap<String, String>) siniestrosManager.obtenerLlaveSiniestroReembolso(ntramite);
+				
+				for(Entry<String,String>en:paramsRes.entrySet()){
+					params.put(en.getKey().toLowerCase(),en.getValue());
 				}
-				params=(HashMap<String, String>) aux;
-				logger.debug("params obtenidos:"+params);
-			}
-			catch(Exception ex)
-			{
+				
+			}catch(Exception ex){
 				logger.error("error al obtener clave de siniestro para la pantalla del tabed panel",ex);
 			}
 		}
+		
+		logger.debug("params obtenidos:"+params);
 		logger.debug(""
 				+ "\n######                        ######"
 				+ "\n###### DetalleSiniestroAction ######"
@@ -131,6 +130,12 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	    	gc.generaComponentes(componentes, true, false, false, false,false, true);
 	    	
 	    	imap.put("conceptosButton",gc.getButtons());
+	    	
+	    	seccion = "FORM_EDICION";
+	    	componentes = pantallasManager.obtenerComponentes(
+	    			null, null, null, null, null, cdrol, pantalla, seccion, null);
+	    	gc.generaComponentes(componentes, true, false, true, false, false, false);
+	    	imap.put("itemsEdicion",gc.getItems());
 	   		
 	   		logger.debug("Resultado: "+imap);
 	   		//siniestrosManager.guardaListaTramites(params, deleteList, saveList);
@@ -165,9 +170,39 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	}
 	
 	public String guardaFacturaTramite(){
+		
+		String cdunieco  = params.get("cdunieco");
+		String cdramo    = params.get("cdramo");
+		String estado    = params.get("estado");
+		String nmpoliza  = params.get("nmpoliza");
+		String nmsituac  = params.get("nmsituac");
+		String nmsuplem  = params.get("nmsuplem");
+		String status    = params.get("status");
+		String aaapertu  = params.get("aaapertu");
+		String nmsinies  = params.get("nmsinies");
+		String nfactura  = params.get("nfactura");
+		
+		String autrecla = params.get("autrecla");
+		String commenar = params.get("commenar");
+		String autmedic = params.get("autmedic");
+		String commenme = params.get("commenme");
+		
+		UserVO usuario  = (UserVO)session.get("USUARIO");
+		String cdrol    = usuario.getRolActivo().getObjeto().getValue();
+		
+		logger.debug("Guarda Factura, Rol Sistema: "+cdrol);
 	   	
 	   	try {
 	   		siniestrosManager.guardaListaFacMesaControl(params.get("ntramite"), params.get("nfactura"), params.get("fefactura"), params.get("cdtipser"), params.get("cdpresta"), params.get("ptimport"), params.get("cdgarant"), params.get("cdconval"), params.get("descporc"), params.get("descnume"));
+	   		
+	   		if(RolSistema.COORDINADOR_SINIESTROS.getCdsisrol().equals(cdrol) || RolSistema.OPERADOR_SINIESTROS.getCdsisrol().equals(cdrol)){
+	   			siniestrosManager.P_MOV_MAUTSINI(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura,
+	    				Constantes.MAUTSINI_AREA_RECLAMACIONES, autrecla, Constantes.MAUTSINI_FACTURA, commenar, Constantes.INSERT_MODE);
+	   		} else if(RolSistema.COORDINADOR_MEDICO.getCdsisrol().equals(cdrol) || RolSistema.MEDICO.getCdsisrol().equals(cdrol)){
+	   			siniestrosManager.P_MOV_MAUTSINI(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura,
+	    				Constantes.MAUTSINI_AREA_MEDICA, autmedic, Constantes.MAUTSINI_FACTURA, commenme, Constantes.INSERT_MODE);
+	   		}
+	   		
 	   	}catch( Exception e){
 	   		logger.error("Error en guardaListaTramites",e);
 	   		success =  false;
@@ -178,9 +213,37 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	}
 	
 	public String actualizaFacturaTramite(){
+		String cdunieco  = params.get("cdunieco");
+		String cdramo    = params.get("cdramo");
+		String estado    = params.get("estado");
+		String nmpoliza  = params.get("nmpoliza");
+		String nmsituac  = params.get("nmsituac");
+		String nmsuplem  = params.get("nmsuplem");
+		String status    = params.get("status");
+		String aaapertu  = params.get("aaapertu");
+		String nmsinies  = params.get("nmsinies");
+		String nfactura  = params.get("nfactura");
 		
+		String autrecla = params.get("autrecla");
+		String commenar = params.get("commenar");
+		String autmedic = params.get("autmedic");
+		String commenme = params.get("commenme");
+		
+		UserVO usuario  = (UserVO)session.get("USUARIO");
+		String cdrol    = usuario.getRolActivo().getObjeto().getValue();
+		
+		logger.debug("Actuliza Factura, Rol Sistema: "+cdrol);
 		try {
 			siniestrosManager.movFacMesaControl(params.get("ntramite"), params.get("nfactura"), params.get("fefactura"), params.get("cdtipser"), params.get("cdpresta"), params.get("ptimport"), params.get("cdgarant"), params.get("cdconval"), params.get("descporc"), params.get("descnume"), Constantes.UPDATE_MODE);
+			
+			if(RolSistema.COORDINADOR_SINIESTROS.getCdsisrol().equals(cdrol) || RolSistema.OPERADOR_SINIESTROS.getCdsisrol().equals(cdrol)){
+				siniestrosManager.P_MOV_MAUTSINI(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura,
+	    				Constantes.MAUTSINI_AREA_RECLAMACIONES, autrecla, Constantes.MAUTSINI_FACTURA, commenar, Constantes.UPDATE_MODE);
+			} else if(RolSistema.COORDINADOR_MEDICO.getCdsisrol().equals(cdrol) || RolSistema.MEDICO.getCdsisrol().equals(cdrol)){
+				siniestrosManager.P_MOV_MAUTSINI(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura,
+	    				Constantes.MAUTSINI_AREA_MEDICA, autmedic, Constantes.MAUTSINI_FACTURA, commenme, Constantes.UPDATE_MODE);
+			}
+    		
 		}catch( Exception e){
 			logger.error("Error en actualizaFacturaTramite",e);
 			success =  false;

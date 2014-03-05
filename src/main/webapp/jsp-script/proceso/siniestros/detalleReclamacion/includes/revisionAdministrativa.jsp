@@ -267,8 +267,7 @@ Ext.onReady(function() {
                 store: storeTipoAtencion,
                 queryMode:'local',
                 allowBlank:false,
-                editable:false,
-                emptyText:'Seleccione...'
+                editable:false
             },{
             	xtype       : 'combo',
             	name        : 'params.cdpresta',
@@ -282,7 +281,6 @@ Ext.onReady(function() {
                 queryParam  : 'params.cdpresta',
                 store       : storeProveedor,
                 triggerAction  : 'all',
-                emptyText   : 'Seleccione...',
                 editable    : false
             },{
             	xtype       : 'combo',
@@ -296,7 +294,6 @@ Ext.onReady(function() {
                 queryMode   :'remote',
                 store       : storeCoberturas,
                 triggerAction  : 'all',
-                emptyText   : 'Seleccione...',
                 listeners: {
                 	select: function (combo, records, opts){
                 		var cdGarant =  records[0].get('key');
@@ -320,7 +317,6 @@ Ext.onReady(function() {
                 queryMode   :'local',
                 store       : storeSubcoberturas,
                 triggerAction  : 'all',
-                emptyText   : 'Seleccione...',
                 editable    : false
             },{
 		        xtype      : 'numberfield'
@@ -347,6 +343,7 @@ Ext.onReady(function() {
 	                ,minValue: 0
 			    	,name       : 'params.descnume'
 	    	}
+	    	<s:property value='%{"," + imap.itemsEdicion}' />
         ]
     });
     
@@ -369,7 +366,6 @@ Ext.onReady(function() {
             queryMode   :'local',
             store       : storeSubcoberturasC,
             triggerAction  : 'all',
-            emptyText   : 'Seleccione...',
             editable    : false
         },{
         	xtype: 'combo',
@@ -382,7 +378,6 @@ Ext.onReady(function() {
             queryMode:'local',
             allowBlank:false,
             editable:false,
-            emptyText:'Seleccione...',
             listeners:{
             	select: function (combo, records, opts){
             		var cdTipo =  records[0].get('key');
@@ -404,8 +399,7 @@ Ext.onReady(function() {
             queryMode:'local',
             allowBlank:false,
             editable:true,
-            forceSelection: true,
-            emptyText:'Seleccione...'
+            forceSelection: true
         },
             {
 		        xtype      : 'numberfield'
@@ -581,7 +575,16 @@ Ext.onReady(function() {
             		        	waitMsg:'Procesando...',	
             		        	url: UrlFact,
             		        	params: {
-            		        		'params.ntramite'   : _NTRAMITE 
+            		        		'params.ntramite'   : _NTRAMITE,
+            		        		'params.cdunieco'  : _CDUNIECO,
+            		        		'params.cdramo'    : _CDRAMO,
+            		        		'params.estado'    : _ESTADO,
+            		        		'params.nmpoliza'  : _NMPOLIZA,
+            		        		'params.nmsituac'  : _NMSITUAC,
+            		        		'params.nmsuplem'  : _NMSUPLEM,
+            		        		'params.status'    : _STATUS,
+            		        		'params.aaapertu'  : _AAAPERTU,
+            		        		'params.nmsinies'  : _NMSINIES
             		        	},
             		        	failure: function(form, action) {
             		        		mensajeError("Error al guardar la Factura");
@@ -619,7 +622,6 @@ Ext.onReady(function() {
            ]
            });    
 
-	
 	
 /*////////////////////////////////////////////////////////////////
 ////////////////   DECLARACION DE GRID FACTURAS ////////////
@@ -673,7 +675,7 @@ Ext.define('EditorFacturas', {
  					header : 'Copago',
  					dataIndex : 'COPAGO',
  					width : 120
- 				}, <s:property value="imap.gridColumns" />
+ 				} <s:property value='%{"," + imap.gridColumns}' />
  				,{
  					xtype : 'actioncolumn',
  					width : 50,
@@ -695,6 +697,7 @@ Ext.define('EditorFacturas', {
 			 	icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png',
 			 	text: 'Agregar Factura',
 			 	scope: this,
+			 	hidden: (Ext.isEmpty(_TIPOPAGO) || _TIPOPAGO == '1'),
 			 	handler: this.onAddClick
 	 		}]
 	 	});
@@ -817,7 +820,19 @@ Ext.define('EditorFacturas', {
  		panelEdicionFacturas.down('[name="params.ptimport"]').setValue(record.get('PTIMPORT'));
  		panelEdicionFacturas.down('[name="params.descporc"]').setValue(record.get('DESCPORC'));
  		panelEdicionFacturas.down('[name="params.descnume"]').setValue(record.get('DESCNUME'));
- 		
+
+ 		if(!Ext.isEmpty(panelEdicionFacturas.down('[name="params.autrecla"]'))){
+ 			panelEdicionFacturas.down('[name="params.autrecla"]').setValue(record.get('AUTRECLA'));
+ 		}
+ 		if(!Ext.isEmpty(panelEdicionFacturas.down('[name="params.commenar"]'))){
+ 			panelEdicionFacturas.down('[name="params.commenar"]').setValue(record.get('COMMENAR'));
+ 		}
+ 		if(!Ext.isEmpty(panelEdicionFacturas.down('[name="params.autmedic"]'))){
+ 			panelEdicionFacturas.down('[name="params.autmedic"]').setValue(record.get('AUTMEDIC'));
+ 		}
+ 		if(!Ext.isEmpty(panelEdicionFacturas.down('[name="params.commenme"]'))){
+ 			panelEdicionFacturas.down('[name="params.commenme"]').setValue(record.get('COMMENME'));
+ 		}
  		
  	},
  	listeners: {
