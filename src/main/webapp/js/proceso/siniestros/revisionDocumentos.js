@@ -72,7 +72,7 @@ Ext.onReady(function() {
 					    	},
 							saveList : 	saveList
 						},
-						success: function() {
+						success: function(response) {
 							var res = Ext.decode(response.responseText);
 							gridDocumentos.setLoading(false);
 							
