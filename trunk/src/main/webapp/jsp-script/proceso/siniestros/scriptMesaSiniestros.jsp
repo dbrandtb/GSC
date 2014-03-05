@@ -27,7 +27,7 @@ var msgWindow;
 
 	_4_botonesGrid =
 	[
-		<s:if test='%{"MESADECONTROL".equalsIgnoreCase(getRol())}'>
+		<s:if test='%{"MCSINIESTROS".equalsIgnoreCase(getRol())}'>
 		{
 		    text     : 'Alta de tr&aacute;mite'
 		    ,icon    : '${ctx}/resources/fam3icons/icons/add.png'
