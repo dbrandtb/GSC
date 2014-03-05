@@ -23,7 +23,7 @@
 				    Bienvenido
 				    <s:if test="%{#session.containsKey('USUARIO')}">
 					    usuario: <s:property value="%{#session['USUARIO'].name}" />
-					    rol:     <s:property value="%{#session['USUARIO'].rolActivo.objeto.value}" />
+					    rol:     <s:property value="%{#session['USUARIO'].rolActivo.objeto.label}" />
 				    </s:if>
 				</font>
             	<div>            		
