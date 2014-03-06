@@ -358,6 +358,19 @@ Ext.onReady(function()
                         edipanEditor.expand();
 			    	}
 			    }
+			    ,viewConfig :
+                {
+                    listeners :
+                    {
+                        refresh : function(dataview)
+                        {
+                            Ext.each(dataview.panel.columns, function(column)
+                            {
+                                column.autoSize();
+                            });
+                        }
+                    }
+                }
 			});
 			this.callParent();
 		}
