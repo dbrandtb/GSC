@@ -434,6 +434,7 @@ Ext.onReady(function() {
 	 	},
 	 	onAddClick: function(){
 	 		tipoAccion= 0;
+	 		panelAjusteMedico.getForm().reset();
 	 		ventanaGridAjusteMedico.show();
 	 	},
 	 	onRemoveClick: function(grid, rowIndex){
