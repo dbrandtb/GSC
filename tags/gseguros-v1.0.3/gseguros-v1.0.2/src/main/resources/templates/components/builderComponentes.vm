@@ -1,0 +1,70 @@
+items:[{
+    xtype:"fieldset",
+    title:'<span style="color:#98012e;font-size:11px;font-family:Arial,Helvetica,sans-serif;">Legend</span>',
+    autoHeight:true,
+    items:[{
+        fieldLabel:'Lugar de entrada',
+        emptyText:'Seleccione...',
+        xtype:'combo',        
+        name:'proceso',
+        hiddenName:'hproceso',
+        id:'proceso',
+        store: storeProceso,
+        displayField:'label',
+        valueField:'value', 
+        //lazyInit : false,
+        triggerAction: 'all', 
+        selectOnFocus:true,
+        typeAhead: true,
+        editable:true
+      },{
+      xtype:'datefield',
+        fieldLabel: 'Fecha inicio',
+        name: 'startdt',
+        allowBlank:true,
+        id: 'startdt'
+        
+      },{
+      xtype:'datefield',
+        fieldLabel: 'Fecha fin',
+        name: 'enddt',
+        allowBlank:true,
+        id: 'enddt'
+        
+      },{
+    	xtype:'timefield',
+        fieldLabel:"Hora",
+        id:'timevalue',
+        name:'timevalue'
+      },{
+      layout:'column',
+      border:false,
+      items:[{ 
+      		   columnWidth:.2,
+               layout: 'form',
+               border:false,   
+               items: [{
+               			xtype: 'radio',
+               			name: 'sexo',
+               			id:'fem',
+               			inputValue: 'F',
+               			boxLabel:'Femenino',
+               			fieldLabel: 'Sexo'
+                }]
+              }, {
+              columnWidth:.2,
+              layout: 'form',
+              border:false,
+              items: [{
+                		xtype: 'radio',
+              			name: 'sexo',
+              			id:'mas',
+              			inputValue: 'M',
+               			boxLabel:'Masculino',
+               			labelSeparator: ' '               			    
+               }]
+              
+          }]  //items
+       }]
+  
+  }]

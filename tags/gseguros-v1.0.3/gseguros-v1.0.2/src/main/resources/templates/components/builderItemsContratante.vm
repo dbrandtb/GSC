@@ -1,0 +1,66 @@
+
+items: [{
+		border:false,
+        colspan: 3,
+        bodyStyle:'margin-bottom: 20px;',
+        width:800,
+        html: '<div align="center"><span style="color:#98012e;font-size:12px;font-family:Arial,Helvetica,sans-serif;">Contratante</span></div>'
+        },{
+        border:false,
+        layout:'form',
+        labelWidth : 30,
+        width : 275,
+        items:[{  
+         		xtype:'textfield',
+		        fieldLabel: 'Rol',
+		        width : 210,
+		 		name:'rol'
+        }]
+       
+ 		},{
+        border:false,
+        layout:'form',
+        labelWidth : 130,
+        width : 250,
+        items:[{  
+         		xtype:'textfield',
+		        fieldLabel: 'Numero de Empleado',
+		        width : 110,
+		 		name:'numeroEmpleado'
+        }]
+        },{
+        border:false,
+        layout:'form',
+        width : 275,
+        labelWidth : 145,
+        items:[{  
+         		xtype:'textfield',
+		        fieldLabel: 'Identificador de Persona ',
+		        width : 100,
+		 		name:'idPersona'
+        }]
+       },{
+        border:false,
+        layout:'form',
+        labelWidth : 120,
+        width : 250,
+        items:[{  
+         		xtype:'datefield',
+		 		fieldLabel: 'Fecha de Nacimiento',
+		        name: 'fechaNacimiento',
+		        width : 100,
+		        allowBlank:true
+		        
+        }]
+      },{
+        border:false,
+        layout:'form',
+        labelWidth : 130,
+        width : 275,
+        items:[{  
+         		xtype:'textfield',
+		        fieldLabel: 'Edad',
+		        width : 110,
+		 		name:'edad'
+        }]
+ }]//end items FormPanel
