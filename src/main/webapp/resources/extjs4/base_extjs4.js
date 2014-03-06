@@ -24,6 +24,7 @@ function validarRFC(rfc,tper)
 {
 	debug('validarRFC',rfc,tper);
 	var valido=rfc&&rfc.length>0&&tper&&tper.length>0;
+	debug('validacion inicial:',valido);
 	if(valido)
 	{
 		var regexLetras=/^[a-zA-Z]*$/;
@@ -32,6 +33,7 @@ function validarRFC(rfc,tper)
 		if(tper=='F'||tper=='S')
 		{
 			valido=rfc.length==10||rfc.length==13;
+			debug('validacion longitud:',valido);
 			if(valido)
 			{
 				// M A V A 9 0 0 8 1 7 J 3 6
@@ -66,15 +68,17 @@ function validarRFC(rfc,tper)
 		}
 		else if(tper=='M')
 		{
-			valido=rfc.length==9;
+			valido=rfc.length==9||rfc.length==12;
+			debug('validacion longitud:',valido);
 			if(valido)
 			{
-				// A B C 9 0 0 8 1 7
-				//0 1 2 3 4 5 6 7 8 9
+				// A B C 9 0 0 8 1 7 X Y Z
+				//0 1 2 3 4 5 6 7 8 9 0 1 2
 				var letras    = rfc.substring(0,3);
 				var anio      = rfc.substring(3,5);
 				var mes       = rfc.substring(5,7);
 				var dia       = rfc.substring(7,9);
+				var homoclave = rfc.length==12?rfc.substring(9,12):false;
 				debug(letras,anio,mes,dia);
 				valido=valido&&regexLetras.test(letras);
 				debug('letras',valido);
@@ -84,6 +88,11 @@ function validarRFC(rfc,tper)
 				debug('mes',valido);
 				valido=valido&&regexNumeros.test(dia);
 				debug('dia',valido);
+				if(homoclave)
+				{
+					valido=valido&&regexLetrasNumeros.test(homoclave);
+					debug('homoclave',valido);
+				}
 				if(valido)
 				{
 					valido=valido&&mes*1<13;
