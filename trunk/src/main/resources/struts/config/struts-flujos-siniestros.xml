@@ -283,6 +283,17 @@
             <result name="success" type="json" />
 		</action>
 		
+		<action name="validaDocumentosCargados" class="siniestrosAction"
+			method="validaDocumentosCargados">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success,
+					msgResult
+				</param>
+			</result>
+		</action>
+		
 		<action name="seleccionCobertura" class="siniestrosAction" method="pantallaSeleccionCobertura">
     		<result name="success">/jsp-script/proceso/siniestros/seleccionCobertura.jsp</result>
 		</action>

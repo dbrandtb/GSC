@@ -780,6 +780,33 @@ public void setMsgResult(String msgResult) {
    	return SUCCESS;
    }
 
+   public String validaDocumentosCargados(){
+	   
+	   try {
+		   logger.debug("ValidaDocumentosCargados params: "+ params);
+		   msgResult = siniestrosManager.validaDocumentosCargados(params);
+		   logger.debug("Respuesta ValidaDocumentosCargados: "+ msgResult);
+		   if(StringUtils.isBlank(msgResult)){
+			   msgResult = "Error al realizar validaci&oacute; de documentos";
+			   success = false;
+		   }else if(Constantes.NO.equalsIgnoreCase(msgResult)){
+			   msgResult = "No se han anexado todos los documentos, favor de subir todos los documentos marcados como entregados en el checklist.";
+			   success =  false;
+		   }else if(Constantes.SI.equalsIgnoreCase(msgResult)){
+			   success =  true;
+		   }else{
+			   success =  false;
+		   }
+		   
+	   }catch( Exception e){
+		   logger.error("Error en validaDocumentosCargados",e);
+		   success =  false;
+		   return SUCCESS;
+	   }
+	   
+	   return SUCCESS;
+   }
+
    public String loadListaRechazos(){
 	   	try {
 	   		loadList = siniestrosManager.loadListaRechazos();
