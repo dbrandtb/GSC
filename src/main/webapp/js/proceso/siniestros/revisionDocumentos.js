@@ -48,6 +48,7 @@ Ext.onReady(function() {
 		buttons:[{
 				text: 'Guardar Estatus de Entrega',
 				icon    : _CONTEXT+'/resources/fam3icons/icons/disk.png',
+				disabled: _tieneCR,
 				handler: function() {
 					var saveList = [];
 					storeDocumentos.getUpdatedRecords().forEach(function(record,index,arr){

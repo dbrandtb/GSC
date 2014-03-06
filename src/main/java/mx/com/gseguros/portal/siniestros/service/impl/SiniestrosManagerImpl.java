@@ -918,4 +918,13 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			throw new ApplicationException(daoExc.getMessage(), daoExc);
 		}
 	}
+
+	@Override
+	public String validaDocumentosCargados(HashMap<String, String> params) throws Exception {
+		try {
+			return siniestrosDAO.validaDocumentosCargados(params);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}
 }

@@ -31,6 +31,7 @@ import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utilerias;
 import oracle.jdbc.driver.OracleTypes;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;
@@ -2196,6 +2197,27 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlOutParameter("pv_penalizacion_o", OracleTypes.VARCHAR));
 	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public String validaDocumentosCargados(HashMap<String, String> params) throws Exception {
+		Map<String, Object> mapResult = ejecutaSP(new ValidaDocumentosCargados(getDataSource()), params);
+		return (String) mapResult.get("PV_VALOR_O");
+	}
+	
+	protected class ValidaDocumentosCargados extends StoredProcedure {
+
+		protected ValidaDocumentosCargados(DataSource dataSource) {
+			super(dataSource, "PKG_PRESINIESTRO.P_VALIDA_DOCUMENTOS");
+			declareParameter(new SqlParameter("PV_NTRAMITE_I", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDRAMO_I", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_cdtippag_I", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDTIPATE_I", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("PV_VALOR_O", OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("PV_TITLE_O", OracleTypes.VARCHAR));
 			compile();
 		}
 	}

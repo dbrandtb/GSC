@@ -8,6 +8,7 @@ var _REEMBOLSO    = '<s:property value="@mx.com.gseguros.portal.general.util.Tip
 
 var _UrlAltaDeTramite           = '<s:url namespace="/siniestros" action="includes/altaTramite"      />';
 var _UrlRevisionDocsSiniestro   = '<s:url namespace="/siniestros" action="includes/revisionDocumentos"        />';
+var _UrlValidaDocumentosCargados= '<s:url namespace="/siniestros" action="validaDocumentosCargados"        />';
 var _UrlRechazarTramiteWindwow  = '<s:url namespace="/siniestros" action="includes/rechazoReclamaciones" />';
 var _UrlDocumentosPoliza        = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza"   />';
 var _UrlGenerarContrarecibo     = '<s:url namespace="/siniestros" action="generarContrarecibo"       />';
@@ -64,7 +65,8 @@ var msgWindow;
 	            params  : {
 	                'params.nmTramite'  : record.get('ntramite'),
 	                'params.cdTipoPago' : record.get('parametros.pv_otvalor02'),
-	                'params.cdTipoAtencion'  : record.get('parametros.pv_otvalor07')
+	                'params.cdTipoAtencion'  : record.get('parametros.pv_otvalor07'),
+	                'params.tieneCR'  : !Ext.isEmpty(record.get('parametros.pv_otvalor01'))
 	            },
 	            scripts  : true,
 	            loadMask : true,
@@ -175,6 +177,8 @@ var msgWindow;
 							var jsonRes=Ext.decode(response.responseText);
 
 							if(jsonRes.success == true){
+								loadMcdinStore();
+								
 								var numRand=Math.floor((Math.random()*100000)+1);
 					        	debug('numRand a: ',numRand);
 					        	var windowVerDocu=Ext.create('Ext.window.Window',
@@ -215,7 +219,19 @@ var msgWindow;
 	function turnarAreclamaciones(grid,rowIndex,colIndex){
 		var record = grid.getStore().getAt(rowIndex);
 		
-	        		var comentariosText = Ext.create('Ext.form.field.TextArea', {
+		Ext.Ajax.request({
+			url: _UrlValidaDocumentosCargados,
+			params: {
+				'params.PV_NTRAMITE_I' : record.get('ntramite'),
+				'params.PV_CDRAMO_I'   : record.get('cdramo'),
+				'params.PV_cdtippag_I' : record.get('parametros.pv_otvalor02'),
+				'params.PV_CDTIPATE_I' : record.get('parametros.pv_otvalor07')
+			},
+			success: function(response, opt) {
+				var jsonRes=Ext.decode(response.responseText);
+
+				if(jsonRes.success == true){
+					var comentariosText = Ext.create('Ext.form.field.TextArea', {
 	                	fieldLabel: 'Observaciones'
 	            		,labelWidth: 150
 	            		,width: 600
@@ -320,9 +336,17 @@ var msgWindow;
 			        	            	]
 			        	            })  
 	        	            	]
-	        	    }).show();
+	        	    	}).show();
 	        		
-	        		centrarVentana(windowLoader);
+	        			centrarVentana(windowLoader);
+					}else {
+						mensajeError(jsonRes.msgResult);
+					}
+			},
+			failure: function(){
+				mensajeError('Error al turnar.');
+			}
+		});
 	        	
 	}
 	

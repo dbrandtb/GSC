@@ -20,6 +20,7 @@
             var _nmTramite = '<s:property value="params.nmTramite" />';
             var _tipoPago = '<s:property value="params.cdTipoPago" />';
             var _tipoAtencion = '<s:property value="params.cdTipoAtencion" />';
+            var _tieneCR = <s:property value="params.tieneCR" />;
             
         </script>
         <script type="text/javascript" src="${ctx}/js/proceso/siniestros/revisionDocumentos.js"></script>
