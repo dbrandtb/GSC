@@ -470,25 +470,30 @@ Ext.onReady(function()
 	/*///////////////////*/
 	edipanBotonAceptar = Ext.create('Ext.button.Button',
 	{
-        text     : 'Aceptar'
+        text     : 'Actualizar'
         ,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
         ,handler : function()
         {
-            debug(this.up().up().getValues());
+        	var form = this.up('form');
+            debug(form.getValues());
             
-            if(this.up().up().isValid())
-            {
-                edipanStore.removeAt(edipanIndexEditado);
-                edipanStore.insert(edipanIndexEditado,this.up().up().getValues());
-                
-                edipanFiltro.setDisabled(true);
-                edipanPanelArbol.setDisabled(true);
-                edipanGrid.setDisabled(false);
-                edipanEditor.setDisabled(true);
-                
-                edipanFiltro.collapse();
-                edipanGrid.expand();
-                edipanEditor.collapse();
+            if(form.isValid()) {
+            	
+                Ext.MessageBox.confirm('Confirmar', '¿Est&aacute; seguro que desea actualizar este campo?', function(btn){
+                	if(btn === 'yes'){
+                		edipanStore.removeAt(edipanIndexEditado);
+                        edipanStore.insert(edipanIndexEditado, form.getValues());
+                        
+                        edipanFiltro.setDisabled(true);
+                        edipanPanelArbol.setDisabled(true);
+                        edipanGrid.setDisabled(false);
+                        edipanEditor.setDisabled(true);
+                        
+                        edipanFiltro.collapse();
+                        edipanGrid.expand();
+                        edipanEditor.collapse();
+                	}
+                });
             }
         }
     });
