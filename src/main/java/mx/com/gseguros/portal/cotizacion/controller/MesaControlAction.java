@@ -538,6 +538,7 @@ public class MesaControlAction extends PrincipalCoreAction
 			String seccionGrid         = "TATRIMC";
 			String seccionFiltro       = "FILTRO";
 			String seccionActionColumn = "ACTIONCOLUMN";
+			String seccionGridButtons   = "GRIDBUTTONS";
 			
 			////// obtener valores del formulario //////
 			List<ComponenteVO>ltFormulario=pantallasManager.obtenerComponentes(
@@ -563,6 +564,12 @@ public class MesaControlAction extends PrincipalCoreAction
 					cdtipsit, null, rol,
 					pantalla, seccionActionColumn, null);
 			
+			////// obtener botones del grid //////
+			List<ComponenteVO>ltgridbuttons=pantallasManager.obtenerComponentes(
+					cdtiptra, null, cdramo,
+					cdtipsit, null, rol,
+					pantalla, seccionGridButtons, null);
+			
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			
 			////// generar grid //////
@@ -581,6 +588,9 @@ public class MesaControlAction extends PrincipalCoreAction
 			
 			gc.generaComponentes(ltactioncolumn, true, false, false, false, false, true);
 			imap1.put("actionColumns",gc.getButtons());
+			
+			gc.generaComponentes(ltgridbuttons, true, false, false, false, false, true);
+			imap1.put("gridbuttons",gc.getButtons());
 			
 			///////////////////////////////////////
 			////// para poner -1 por defecto //////

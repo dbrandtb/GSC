@@ -3,9 +3,8 @@
 <script>
 </s:if>
 var _CONTEXT = '${ctx}';
-
-var _PAGO_DIRECTO = "1";
-var _REEMBOLSO    = "2";
+var _PAGO_DIRECTO = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@PAGO_DIRECTO.codigo" />';
+var _REEMBOLSO    = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@REEMBOLSO.codigo" />';
 
 var _UrlAltaDeTramite           = '<s:url namespace="/siniestros" action="includes/altaTramite"      />';
 var _UrlRevisionDocsSiniestro   = '<s:url namespace="/siniestros" action="includes/revisionDocumentos"        />';
@@ -27,13 +26,7 @@ var msgWindow;
 
 	_4_botonesGrid =
 	[
-		<s:if test='%{"MCSINIESTROS".equalsIgnoreCase(getRol())}'>
-		{
-		    text     : 'Alta de tr&aacute;mite'
-		    ,icon    : '${ctx}/resources/fam3icons/icons/add.png'
-		    ,handler : altaTramiteWindow
-		}
-		</s:if>
+        <s:property value="imap1.gridbuttons" />
 	];
 	
 	function altaTramiteWindow(){
