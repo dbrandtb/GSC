@@ -490,6 +490,7 @@ public class GeneradorCampos
             	proxy.add(
                         Item.crear("extraParams" , null, Item.OBJ)
                         .add("'params.cdatribu'" , cdatribu)
+                        .add("'params.cdramo'"   , Ramo.SALUD_VITAL.getCdramo())
                         .add("catalogo"          , Catalogos.TATRIPOL.getCdTabla())
                         );
             }
@@ -499,6 +500,8 @@ public class GeneradorCampos
                         Item.crear("extraParams" , null, Item.OBJ)
                         .add("'params.cdatribu'" , cdatribu)
                         .add("'params.cdgarant'" , cdgarant)
+                        .add("'params.cdramo'" ,   Ramo.SALUD_VITAL.getCdramo())
+                        .add("'params.cdtipsit'" , TipoSituacion.SALUD_VITAL.getCdtipsit())
                         .add("catalogo"          , Catalogos.TATRIGAR.getCdTabla())
                         );
             }

@@ -105,10 +105,10 @@ public class CatalogosAction extends PrincipalCoreAction {
 		            lista = catalogosManager.obtieneAtributosSituacion(params.get("cdatribu"), params.get("cdtipsit"), params.get("idPadre"));
 					break;
 				case TATRIPOL:
-			        lista = catalogosManager.obtieneAtributosPoliza(params.get("cdatribu"), "2", params.get("idPadre"));
+			        lista = catalogosManager.obtieneAtributosPoliza(params.get("cdatribu"), params.get("cdramo"), params.get("idPadre"));
 					break;
 				case TATRIGAR:
-					lista = catalogosManager.obtieneAtributosGarantia(params.get("cdatribu"), "SL", "2", params.get("idPadre"), params.get("cdgarant"));
+					lista = catalogosManager.obtieneAtributosGarantia(params.get("cdatribu"), params.get("cdtipsit"), params.get("cdramo"), params.get("idPadre"), params.get("cdgarant"));
 					break;
 				case TATRIPER:
 			        lista = catalogosManager.obtieneAtributosRol(params.get("cdatribu"), params.get("cdtipsit"), params.get("cdramo"), params.get("idPadre"), params.get("cdrol"));
