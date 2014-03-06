@@ -1134,7 +1134,20 @@ public void setMsgResult(String msgResult) {
     		otvalor.put("pv_cdramo_i"   , cdramo);
     		otvalor.put("pv_cdtipsit_i" , cdtipsit);
     		otvalor.put("pv_otvalor12_i"  , cdgarant);
+    		otvalor.put("pv_otvalor14_i"  , cdconval);
     		siniestrosManager.actualizaOTValorMesaControl(otvalor);
+    		
+    		List<Map<String,String>> facturas  = siniestrosManager.obtenerFacturasTramite(ntramite);
+    		Map<String,String>       factura   = facturas.get(0);
+    		String                   nfactura  = factura.get("NFACTURA");
+    		String                   fefactura = factura.get("FFACTURA");
+    		String                   cdtipser  = factura.get("CDTIPSER");
+    		String                   cdpresta  = factura.get("CDPRESTA");
+    		String                   ptimport  = factura.get("PTIMPORT");
+    		String                   descporc  = factura.get("DESCPORC");
+    		String                   descnume  = factura.get("DESCNUME");
+    		
+    		siniestrosManager.guardaListaFacMesaControl(ntramite, nfactura, fefactura, cdtipser, cdpresta, ptimport, cdgarant, cdconval, descporc, descnume);
     		
     		success = true;
     		mensaje = "Tr&aacute;mite actualizado";
@@ -1157,13 +1170,13 @@ public void setMsgResult(String msgResult) {
     
     public String afiliadosAfectados()
     {
-    	logger.debug(""
+    	logger.info(""
     			+ "\n################################"
     			+ "\n################################"
     			+ "\n###### afiliadosAfectados ######"
     			+ "\n######                    ######"
     			);
-    	logger.debug("params: "+params);
+    	logger.info("params: "+params);
     	
     	try
     	{
@@ -1184,6 +1197,9 @@ public void setMsgResult(String msgResult) {
     		}
     		
     		Map<String,String> factura = facturas.get(0);
+    		logger.debug("factura encontrada: "+factura);
+    		params.put("OTVALOR12",factura.get("CDGARANT"));
+    		params.put("OTVALOR14",factura.get("CDCONVAL"));
     		
     		params.put("DESCPORC",factura.get("DESCPORC"));
     		params.put("DESCNUME",factura.get("DESCNUME"));
@@ -1233,7 +1249,7 @@ public void setMsgResult(String msgResult) {
     		logger.error("error al cargar pantalla de asegurados afectados",ex);
     	}
     	
-    	logger.debug(""
+    	logger.info(""
     			+ "\n######                    ######"
     			+ "\n###### afiliadosAfectados ######"
     			+ "\n################################"

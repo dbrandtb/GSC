@@ -516,18 +516,20 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	
 	/**
 	 * PKG_SATELITES.P_OBT_TFACMESCTRL
-	 * ntramite,
-		nfactura,
-		ffactura,
-		cdtipser,
-		DescServicio,
-		cdpresta,
-		NombreProveedor,
-		ptimport,
-		cdgarant,
-		DSGARANT,
-		DESCPORC,
-		DESCNUME
+	 * CDCONVAL=null,
+	 * CDGARANT=null, 
+	 * CDPRESTA=3107,
+	 * CDTIPSER=1,
+	 * DESCNUME=null,
+	 * DESCPORC=null,
+	 * DESCSERVICIO=HOSPITALIZACIÓN,
+	 * DSGARANT=null,
+	 * DSSUBGAR=null
+	 * FFACTURA=05/03/2014,
+	 * NFACTURA=3829, 
+	 * NOMBREPROVEEDOR=null,
+	 * NTRAMITE=1592,
+	 * PTIMPORT=500,
 	 */
 	@Override
 	public List<Map<String,String>> obtenerFacturasTramite(String ntramite) throws Exception
