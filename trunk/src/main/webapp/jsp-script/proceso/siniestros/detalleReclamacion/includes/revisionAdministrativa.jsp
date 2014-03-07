@@ -697,7 +697,7 @@ Ext.define('EditorFacturas', {
 			 	icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png',
 			 	text: 'Agregar Factura',
 			 	scope: this,
-			 	hidden: (Ext.isEmpty(_TIPOPAGO) || _TIPOPAGO == '1'),
+			 	hidden: (Ext.isEmpty(_TIPOPAGO) || _TIPOPAGO == _PAGO_DIRECTO),
 			 	handler: this.onAddClick
 	 		}]
 	 	});
@@ -737,6 +737,7 @@ Ext.define('EditorFacturas', {
  	onAddClick: function(){	 
  		panelEdicionFacturas.getForm().reset();
  		panelEdicionFacturas.down('[name="params.nfactura"]').setReadOnly(false);
+ 		panelEdicionFacturas.down('[name="params.cdgarant"]').setReadOnly(false);
  		_Operacion = 'I';
  		
  		windowFacturas.setTitle('Agregar Factura');
@@ -745,6 +746,11 @@ Ext.define('EditorFacturas', {
  		
  	},
  	onRemoveClick: function(grid, rowIndex){
+ 		if(Ext.isEmpty(_TIPOPAGO) || _TIPOPAGO == _PAGO_DIRECTO){
+ 			mensajeWarning('No se pueden eliminar Facturas en Pago Directo.');
+ 			return;
+ 		}
+ 		
  		var record=grid.getStore().getAt(rowIndex);
  		
  		panelEdicionFacturas.getForm().reset();
@@ -796,6 +802,7 @@ Ext.define('EditorFacturas', {
  		panelEdicionFacturas.getForm().reset();
  		
  		panelEdicionFacturas.down('[name="params.nfactura"]').setReadOnly(true);
+ 		panelEdicionFacturas.down('[name="params.cdgarant"]').setReadOnly(true);
  		panelEdicionFacturas.down('[name="params.nfactura"]').setValue(record.get('NFACTURA'));
  		panelEdicionFacturas.down('[name="params.fefactura"]').setValue(record.get('FFACTURA'));
  		panelEdicionFacturas.down('[name="params.cdtipser"]').setValue(record.get('CDTIPSER'));
