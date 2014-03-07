@@ -3,9 +3,25 @@
 <script>
 </s:if>
 var _CONTEXT = '${ctx}';
+
+
+/* ******************** CATALOGOS ******************** */
+
+// Catalogo Tipos de pago a utilizar:
 var _PAGO_DIRECTO = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@PAGO_DIRECTO.codigo" />';
 var _REEMBOLSO    = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@REEMBOLSO.codigo" />';
 
+// Catalogo Estatus de tramite a utilizar:
+var _STATUS_TRAMITE_EN_REVISION_MEDICA      = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_REVISION_MEDICA.codigo" />';
+var _STATUS_TRAMITE_RECHAZADO               = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@RECHAZADO.codigo" />';
+var _STATUS_TRAMITE_EN_CAPTURA              = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_CAPTURA.codigo" />';
+var _STATUS_TRAMITE_EN_ESPERA_DE_ASIGNACION = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_ESPERA_DE_ASIGNACION.codigo" />';
+
+// Catalogo Tipos de tramite a utilizar:
+var _TIPO_TRAMITE_SINIESTRO = '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@SINIESTRO.codigo" />';
+/* *************************************************** */
+
+// URLs:
 var _UrlAltaDeTramite           = '<s:url namespace="/siniestros" action="includes/altaTramite"      />';
 var _UrlRevisionDocsSiniestro   = '<s:url namespace="/siniestros" action="includes/revisionDocumentos"        />';
 var _UrlValidaDocumentosCargados= '<s:url namespace="/siniestros" action="validaDocumentosCargados"        />';
@@ -82,7 +98,7 @@ var msgWindow;
 	function rechazarTramiteWindow(grid,rowIndex,colIndex){
 		
 		var record = grid.getStore().getAt(rowIndex);
-		if(record.get('status') == '4'){
+		if(record.get('status') == _STATUS_TRAMITE_RECHAZADO){
 			mensajeWarning('Este tr&aacute;mite ya se encuentra rechazado!');
 			return;
 		}
@@ -127,7 +143,7 @@ var msgWindow;
 	                'smap1.ntramite'  : record.get('ntramite')
 	                ,'smap1.cdtippag' : record.get('parametros.pv_otvalor02')
 	                ,'smap1.cdtipate' : record.get('parametros.pv_otvalor07')
-	                ,'smap1.cdtiptra' : '16'
+	                ,'smap1.cdtiptra' : _TIPO_TRAMITE_SINIESTRO
                     ,'smap1.cdunieco' : record.get('cdsucdoc')
                     ,'smap1.cdramo'   : record.get('cdramo')
                     ,'smap1.estado'   : record.get('estado')
@@ -276,7 +292,7 @@ var msgWindow;
 							        	            		        	waitMsg:'Procesando...',
 							        	            		        	params: {
 							        	            		        		'smap1.ntramite' : record.get('ntramite'), 
-							        	            		        		'smap1.status'   : 10,
+							        	            		        		'smap1.status'   : _STATUS_TRAMITE_EN_ESPERA_DE_ASIGNACION
 							        	            		        	},
 							        	            		        	failure: function(form, action) {
 							        	            		        		mensajeError('No se pudo turnar.');
@@ -302,7 +318,7 @@ var msgWindow;
 				        	            		        	waitMsg:'Procesando...',
 				        	            		        	params: {
 				        	            		        		'smap1.ntramite' : record.get('ntramite'), 
-				        	            		        		'smap1.status'   : 10,
+				        	            		        		'smap1.status'   : _STATUS_TRAMITE_EN_ESPERA_DE_ASIGNACION
 				        	            		        	},
 				        	            		        	failure: function(form, action) {
 				        	            		        		mensajeError('No se pudo turnar.');
@@ -442,7 +458,7 @@ var msgWindow;
         	            		        	waitMsg:'Procesando...',
         	            		        	params: {
         	            		        		'smap1.ntramite' : record.get('ntramite'), 
-        	            		        		'smap1.status'   : 1,
+        	            		        		'smap1.status'   : _STATUS_TRAMITE_EN_REVISION_MEDICA
         	            		        	},
         	            		        	failure: function(form, action) {
         	            		        		mensajeError('No se pudo turnar.');
@@ -514,7 +530,7 @@ var msgWindow;
         	            		        	waitMsg:'Procesando...',
         	            		        	params: {
         	            		        		'smap1.ntramite' : record.get('ntramite'), 
-        	            		        		'smap1.status'   : 7,
+        	            		        		'smap1.status'   : _STATUS_TRAMITE_EN_CAPTURA
         	            		        	},
         	            		        	failure: function(form, action) {
         	            		        		mensajeError('No se pudo turnar.');
