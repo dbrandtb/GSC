@@ -28,8 +28,8 @@ var panDocUrlViewDoc     = '<s:url namespace ="/documentos" action="descargaDocI
 var _URL_ActualizaStatusTramite =      '<s:url namespace="/mesacontrol" action="actualizarStatusTramite" />';
 
 var _4_selectedRecordEndoso;
-var _4_windowAutorizarEndoso;
-var _4_fieldComentAuthEndoso;
+//var _4_windowAutorizarEndoso;
+//var _4_fieldComentAuthEndoso;
 
 _4_botonesGrid.push(
 {
@@ -500,6 +500,7 @@ Ext.onReady(function()
 {
 	/////////////////////////
 	////// componentes //////
+	/*
 	_4_fieldComentAuthEndoso=Ext.create('Ext.form.field.TextArea',
 	{
 		width   : 280
@@ -533,12 +534,13 @@ Ext.onReady(function()
 			this.callParent();
 		}
 	});
+	*/
     ////// componentes //////
 	/////////////////////////
 	
 	///////////////////////
 	////// contenido //////
-	_4_windowAutorizarEndoso=new _4_WindowAutorizarEndoso();
+	//_4_windowAutorizarEndoso=new _4_WindowAutorizarEndoso();
     ////// contenido //////
     ///////////////////////
 });
