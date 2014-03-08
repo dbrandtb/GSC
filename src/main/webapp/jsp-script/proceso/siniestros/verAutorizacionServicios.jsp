@@ -17,11 +17,15 @@
             var _URL_LISTA_SUBCOBERTURA1		= '<s:url namespace="/siniestros" action="consultaListaSubcobertura" />';
             var _URL_LISTA_TMANTENI1			= '<s:url namespace="/siniestros" action="consultaListaManteni" />';
             var _URL_LISTADO_CONCEP_EQUIP1      = '<s:url namespace="/siniestros" action="consultaListaTDeTauts" />';
+            var _UR_LISTA_PLAZAS 					= '<s:url namespace="/siniestros"  action="consultaListaPlazas"/>';
             
             var _CAT_AUTORIZACION1	 = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_SUCURSALES_ADMIN"/>';
             var _CAT_CAUSASINIESTRO1 = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CAUSA_SINIESTRO"/>';
             var _CAT_TRATAMIENTO1	 = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TTRATAMIENTO"/>';
             var _CAT_MEDICOS         = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MEDICOS"/>';
+            var _URL_EXCLUSION_PENALIZACION			= '<s:url namespace="/siniestros"  action="validaExclusionPenalizacion"/>';
+            var _URL_POLIZA_UNICA					= '<s:url namespace="/siniestros"  action="consultaPolizaUnica"/>';
+            var _URL_PORCENTAJE_PENALIZACION		= '<s:url namespace="/siniestros"  action="validaPorcentajePenalizacion"/>';
             
             var valorAction = <s:property value='%{getParams().toString().replace("=",":\'").replace(",","\',").replace("}","\'}")}' />;
             

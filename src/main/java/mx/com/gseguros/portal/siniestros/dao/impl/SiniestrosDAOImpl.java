@@ -2195,6 +2195,27 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
+
+
+	@Override
+	public String obtieneAutorizacionProceso(String nmAutSer) throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("PV_NMAUTSER_I", nmAutSer);
+		
+		Map<String, Object> resultado = ejecutaSP(new ExisteAutorizacionProceso(getDataSource()), params);
+		return (String) resultado.get("PV_VALOR_I");
+	}
+	
+    protected class ExisteAutorizacionProceso extends StoredProcedure {
+    	protected ExisteAutorizacionProceso(DataSource dataSource) {
+    		super(dataSource, "PKG_PRESINIESTRO.P_VALIDA_TDETAUTS");
+    		declareParameter(new SqlParameter("PV_NMAUTSER_I",   OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("PV_VALOR_I", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
 	
 	@Override
 	public String validaDocumentosCargados(HashMap<String, String> params) throws Exception {

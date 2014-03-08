@@ -81,6 +81,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
     private String msgResult;
     private String diasMaximos;
     private String existePenalizacion;
+    private String autorizarProceso;
     private String porcentajePenalizacion;
     private List<HashMap<String, String>> loadList;
     private List<HashMap<String, String>> saveList;
@@ -115,6 +116,17 @@ public class SiniestrosAction extends PrincipalCoreAction{
 		}
 		success = true;
 		return SUCCESS;
+    }
+
+    public String autorizacionServicios() {
+	logger.debug(" **** Entrando a autorizacion Servicio ****");
+	try {
+		logger.debug("params=" + params);
+	} catch (Exception e) {
+		logger.error(e.getMessage(), e);
+	}
+	success = true;
+	return SUCCESS;
     }
 	
     /**
@@ -252,7 +264,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 							paramsMCAut.put("pv_referencia_i",null);
 							paramsMCAut.put("pv_nombre_i",null);
 							paramsMCAut.put("pv_festatus_i",null);
-							paramsMCAut.put("pv_status_i","2");
+							paramsMCAut.put("pv_status_i","7");
 							paramsMCAut.put("pv_comments_i",params.get("dsnotas"));
 							paramsMCAut.put("pv_nmsolici_i",null);
 							paramsMCAut.put("pv_cdtipsit_i",null);
@@ -3230,5 +3242,14 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 
 	public void setPorcentajePenalizacion(String porcentajePenalizacion) {
 		this.porcentajePenalizacion = porcentajePenalizacion;
+	}
+
+	public String getParamsJson() {
+		try {
+			return JSONUtil.serialize(params);
+		} catch (Exception e) {
+			logger.error("Error al generar JSON de params",e);
+			return null;
+		}
 	}
 }

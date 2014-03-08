@@ -361,6 +361,8 @@ public interface SiniestrosManager {
 
 	public String validaPorcentajePenalizacion(String zonaContratada, String zonaAtencion) throws Exception;
 
+	public String validaAutorizacionProceso(String nmAutSer) throws Exception;
+
 	public String validaDocumentosCargados(HashMap<String, String> params) throws Exception;
 	
 }

@@ -929,6 +929,15 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	}
 
 	@Override
+	public String validaAutorizacionProceso(String nmAutSer) throws Exception {
+		try {
+			return siniestrosDAO.obtieneAutorizacionProceso(nmAutSer);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}
+
+	@Override
 	public String validaDocumentosCargados(HashMap<String, String> params) throws Exception {
 		try {
 			return siniestrosDAO.validaDocumentosCargados(params);
