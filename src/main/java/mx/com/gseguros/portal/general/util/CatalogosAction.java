@@ -1,6 +1,7 @@
 package mx.com.gseguros.portal.general.util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -198,6 +199,27 @@ public class CatalogosAction extends PrincipalCoreAction {
 						descripc = params.get("descripc");
 					}
 					lista = siniestrosManager.obtenerCodigosMedicos(idconcep, descripc);
+					break;
+				case MOTIVOS_RECHAZO_SINIESTRO:
+					lista=new ArrayList<GenericVO>();
+					List<Map<String,String>>listaMotivos=siniestrosManager.loadListaRechazos();
+					for(Map<String,String>ele : listaMotivos)
+					{
+						lista.add(new GenericVO(ele.get("CDMOTIVO"),ele.get("DSMOTIVO")));
+					}
+					break;
+				case SUBMOTIVOS_RECHAZO_SINIESTRO:
+					if(params==null)
+					{
+						params=new HashMap<String,String>();
+					}
+					params.put("pv_cdmotivo_i",params.get("idPadre"));
+					lista=new ArrayList<GenericVO>();
+					List<Map<String,String>>listaSubMotivos=siniestrosManager.loadListaIncisosRechazos(params);
+					for(Map<String,String>ele : listaSubMotivos)
+					{
+						lista.add(new GenericVO(ele.get("CDCAUMOT"),ele.get("DSCAUMOT")));
+					}
 					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);

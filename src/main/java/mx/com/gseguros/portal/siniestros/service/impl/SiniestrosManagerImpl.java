@@ -138,7 +138,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	}
 
 	@Override
-	public List<HashMap<String, String>> loadListaIncisosRechazos(HashMap<String, String> params)
+	public List<Map<String, String>> loadListaIncisosRechazos(Map<String, String> params)
 			throws ApplicationException {
 		try {
 			return siniestrosDAO.loadListaIncisosRechazos(params);
@@ -167,7 +167,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	}
 
 	@Override
-	public List<HashMap<String, String>> loadListaRechazos()
+	public List<Map<String, String>> loadListaRechazos()
 			throws ApplicationException {
 		try {
 			return siniestrosDAO.loadListaRechazos();
@@ -624,13 +624,22 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			String status,
 			String nmsinies,
 			String nfactura,
+			String cdgarant,
+			String cdconval,
+			String cdconcep,
+			String idconcep,
+			String nmordina,
 			String areaauto,
 			String swautori,
 			String tipautor,
 			String comments,
 			String accion) throws Exception
 	{
-		siniestrosDAO.P_MOV_MAUTSINI(cdunieco,cdramo,estado,nmpoliza,nmsuplem,nmsituac,aaapertu,status,nmsinies,nfactura,areaauto,swautori,tipautor,comments,accion);
+		siniestrosDAO.P_MOV_MAUTSINI(
+				cdunieco,cdramo,estado,nmpoliza,nmsuplem,
+				nmsituac,aaapertu,status,nmsinies,nfactura,
+				cdgarant,cdconval,cdconcep,idconcep,nmordina,
+				areaauto,swautori,tipautor,comments,accion);
 	}
 	
 	@Override

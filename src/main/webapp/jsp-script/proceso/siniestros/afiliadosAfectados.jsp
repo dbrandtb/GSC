@@ -26,10 +26,16 @@
                 }
             ];
             
-            var _11_urlGuardar                  = '<s:url namespace="/siniestros" action="guardarAfiliadosAfectados" />';
-            var _11_urlIniciarSiniestroTworksin = '<s:url namespace="/siniestros" action="iniciarSiniestroTworksin"  />';
-            var _11_urlActualizarSiniestro      = '<s:url namespace="/siniestros" action="actualizarMultiSiniestro"  />';
-            var _11_urlTabbedPanel              = '<s:url namespace="/siniestros" action="detalleSiniestro"          />';
+            var _11_itemsRechazo = [ <s:property value="imap.itemsCancelar" /> ];
+            _11_itemsRechazo[2]['width']  = 500;
+            _11_itemsRechazo[2]['height'] = 150;
+            
+            var _11_urlGuardar                  = '<s:url namespace="/siniestros"  action="guardarAfiliadosAfectados"     />';
+            var _11_urlIniciarSiniestroTworksin = '<s:url namespace="/siniestros"  action="iniciarSiniestroTworksin"      />';
+            var _11_urlActualizarSiniestro      = '<s:url namespace="/siniestros"  action="actualizarMultiSiniestro"      />';
+            var _11_urlTabbedPanel              = '<s:url namespace="/siniestros"  action="detalleSiniestro"              />';
+            var _11_urlCancelar                 = '<s:url namespace="/siniestros"  action="includes/rechazoReclamaciones" />';
+            var _11_urlMesaControl              = '<s:url namespace="/mesacontrol" action="mcdinamica"                    />';
             
             var _11_form;
             var _11_recordActivo;
@@ -39,6 +45,8 @@
             var _11_textfieldNmautserv;
             var _11_windowEdicion;
             var _11_formEdicion;
+            var _11_windowRechazoSiniestro;
+            var _11_formRechazo;
             
             var recordsStore = [];
             
@@ -422,6 +430,19 @@ function _11_guardarEdicion()
 		datosIncompletos();
 	}
 	
+	var autorizaRecla = _11_formEdicion.items.items[13].getValue();
+	var autorizaMedic = _11_formEdicion.items.items[15].getValue();
+	debug('autorizaRecla',autorizaRecla);
+	debug('autorizaMedic',autorizaMedic);
+	var valido = autorizaRecla && autorizaRecla =='S' && autorizaMedic && autorizaMedic=='S';
+	if(!valido)
+	{
+		mensajeWarning(
+				'El tr&aacute;mite de pago directo ser&aacute; cancelado debido a que no ha sido autorizado alguno de los siniestros'
+				,function(){_11_windowRechazoSiniestro.show();centrarVentanaInterna(_11_windowRechazoSiniestro);}
+		);
+	}
+	
 	if(valido)
 	{
 		_11_formEdicion.setLoading(true);
@@ -476,6 +497,78 @@ function _11_guardarEdicion()
 	
 	debug('!_11_guardarEdicion');
 }
+
+function _11_rechazoSiniestro()
+{
+	debug('_11_rechazoSiniestro');
+	
+	var valido = _11_formRechazo.isValid();
+	if(!valido)
+	{
+		datosIncompletos();
+	}
+	
+	if(valido)
+	{
+		//_11_formEdicion.setLoading(true);
+        var json =
+        {
+            params : _11_formEdicion.getValues()
+        };
+        json.params['cdunieco'] = _11_recordActivo.get('CDUNIECO');
+        json.params['cdramo']   = _11_recordActivo.get('CDRAMO');
+        json.params['estado']   = _11_recordActivo.get('ESTADO');
+        json.params['nmpoliza'] = _11_recordActivo.get('noPoliza');
+        json.params['nmsituac'] = _11_recordActivo.get('NMSITUAC');
+        json.params['nmsuplem'] = _11_recordActivo.get('NMSUPLEM');
+        json.params['status']   = _11_recordActivo.get('STATUS');
+        json.params['aaapertu'] = _11_recordActivo.get('AAAPERTU');
+        json.params['nmsinies'] = _11_recordActivo.get('IdReclamacion');
+        
+        json.params['cancelar']       = 'si';
+        json.params['cdmotivo']       = _11_itemsRechazo[0].getValue();
+        json.params['cdsubmotivo']    = _11_itemsRechazo[1].getValue();
+        json.params['rechazocomment'] = _11_itemsRechazo[2].getValue();
+        
+        debug('datos enviados:',json);
+        _11_windowRechazoSiniestro.setLoading(true);
+        Ext.Ajax.request(
+        {
+            url       : _11_urlActualizarSiniestro
+            ,jsonData : json
+            ,success  : function(response)
+            {
+            	_11_windowRechazoSiniestro.setLoading(false);
+                json = Ext.decode(response.responseText);
+                if(json.success == true)
+                {
+                    mensajeCorrecto('Datos guardados',json.mensaje,function()
+                    {
+                        Ext.create('Ext.form.Panel').submit(
+                        {
+                        	url             : _11_urlMesaControl
+                            ,standardSubmit :true
+                            ,params         :
+                            {
+                                'smap1.gridTitle'      : 'Siniestros'
+                                ,'smap2.pv_cdtiptra_i' : 16
+                            }
+                        });
+                    });
+                }
+                else
+                {
+                    mensajeError(json.mensaje);
+                }
+            }
+            ,failure  : function()
+            {
+            	_11_windowRechazoSiniestro.setLoading(false);
+                errorComunicacion();
+            }
+        });
+	}
+}
 ////// funciones //////
 
 Ext.onReady(function()
@@ -523,6 +616,22 @@ Ext.onReady(function()
             this.callParent();
         }
 	});
+	
+	Ext.define('_11_FormRechazo',
+    {
+        extend         : 'Ext.form.Panel'
+        ,initComponent : function()
+        {
+            debug('_11_FormRechazo initComponent');
+            Ext.apply(this,
+            {
+                border  : 0
+                ,items  : _11_itemsRechazo
+            });
+            this.callParent();
+        }
+    });
+	
 	
 	Ext.define('_11_WindowPedirAut',
 	{
@@ -584,6 +693,36 @@ Ext.onReady(function()
             this.callParent();
         }
     });
+	
+	Ext.define('_11_WindowRechazoSiniestro',
+    {
+        extend         : 'Ext.window.Window'
+        ,initComponent : function()
+        {
+            debug('_11_WindowRechazoSiniestro initComponent');
+            Ext.apply(this,
+            {
+                title        : 'Rechazo de tr&aacute;mite'
+                ,width       : 600
+                ,height      : 350
+                ,autoScroll  : true
+                ,closeAction : 'hide'
+                ,modal       : true
+                ,defaults    : { style : 'margin : 5px; ' }
+                ,items       : _11_formRechazo
+                ,buttonAlign : 'center'
+                ,buttons     :
+                [
+                    {
+                        text     : 'Rechazar'
+                        ,icon    : '${ctx}/resources/fam3icons/icons/delete.png'
+                        ,handler : _11_rechazoSiniestro
+                    }
+                ]
+            });
+            this.callParent();
+        }
+    });
 	////// componentes //////
 	
 	////// contenido //////
@@ -603,7 +742,17 @@ Ext.onReady(function()
 	_11_windowPedirAut = new _11_WindowPedirAut();
 	_11_formEdicion    = new _11_FormEdicion();
 	_11_windowEdicion  = new _11_WindowEdicion();
+	
+	_11_formRechazo            = new _11_FormRechazo();
+	_11_windowRechazoSiniestro = new _11_WindowRechazoSiniestro();
 	////// contenido //////
+	
+	////// loader //////
+	_11_formRechazo.items.items[1].on('select',function(combo, records, eOpts)
+	{    
+		_11_formRechazo.items.items[2].setValue(records[0].get('value'));
+	});
+	////// loader //////
 });
         </script>
         <!-- <script type="text/javascript" src="${ctx}/resources/scripts/util/extjs4_utils.js"></script>-->

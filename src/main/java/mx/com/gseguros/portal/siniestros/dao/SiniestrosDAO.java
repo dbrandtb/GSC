@@ -45,9 +45,9 @@ public interface SiniestrosDAO {
 
 	public String generaContraRecibo(HashMap<String, Object> params) throws DaoException;
 
-	public List<HashMap<String, String>> loadListaIncisosRechazos(HashMap<String, String> params) throws DaoException;
+	public List<Map<String, String>> loadListaIncisosRechazos(Map<String, String> params) throws DaoException;
 
-	public List<HashMap<String, String>> loadListaRechazos() throws DaoException;
+	public List<Map<String, String>> loadListaRechazos() throws DaoException;
 	
 	public String guardaEstatusDocumento(HashMap<String, String> params) throws DaoException;
 
@@ -179,6 +179,11 @@ public interface SiniestrosDAO {
 			String status,
 			String nmsinies,
 			String nfactura,
+			String cdgarant,
+			String cdconval,
+			String cdconcep,
+			String idconcep,
+			String nmordina,
 			String areaauto,
 			String swautori,
 			String tipautor,

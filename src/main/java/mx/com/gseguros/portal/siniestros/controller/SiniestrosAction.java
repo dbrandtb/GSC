@@ -16,13 +16,17 @@ import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal2.web.GenericVO;
+import mx.com.gseguros.portal.cotizacion.controller.MesaControlAction;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.service.PantallasManager;
+import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.Rango;
 import mx.com.gseguros.portal.general.util.Rol;
+import mx.com.gseguros.portal.general.util.RolSistema;
+import mx.com.gseguros.portal.general.util.TipoPago;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
@@ -809,7 +813,15 @@ public void setMsgResult(String msgResult) {
 
    public String loadListaRechazos(){
 	   	try {
-	   		loadList = siniestrosManager.loadListaRechazos();
+	   		loadList = new ArrayList<HashMap<String,String>>();
+	   		List<Map<String,String>>lista=siniestrosManager.loadListaRechazos();
+	   		for(Map<String,String>ele:lista)
+	   		{
+	   			HashMap<String,String>map=new HashMap<String,String>();
+	   			map.put("key"   , ele.get("CDMOTIVO"));
+	   			map.put("value" , ele.get("DSMOTIVO"));
+	   			loadList.add(map);
+	   		}
 	   	}catch( Exception e){
 	   		logger.error("Error en loadListaRechazos",e);
 	   		success =  false;
@@ -821,7 +833,7 @@ public void setMsgResult(String msgResult) {
 
    public String loadListaIncisosRechazos(){
 	   try {
-		   loadList = siniestrosManager.loadListaIncisosRechazos(params);
+		   loadList = new ArrayList<HashMap<String,String>>();;//siniestrosManager.loadListaIncisosRechazos(params);
 	   }catch( Exception e){
 		   logger.error("Error en loadListaRechazos",e);
 		   success =  false;
@@ -1270,6 +1282,17 @@ public void setMsgResult(String msgResult) {
 	    	gc.generaComponentes(componentes, true, false, true, false, false, false);
 	    	
 	    	imap.put("itemsEdicion",gc.getItems());
+	    	
+	    	pantalla = "RECHAZO_SINIESTRO";
+	    	seccion  = "FORMULARIO";
+	    	
+	    	componentes = pantallasManager.obtenerComponentes(
+	    			null, null, null, null, null, cdrol, pantalla, seccion, null);
+	    	
+	    	gc.generaComponentes(componentes, true, false, true, false, false, false);
+	    	
+	    	imap.put("itemsCancelar",gc.getItems());
+	    	
     	}
     	catch(Exception ex)
     	{
@@ -1418,26 +1441,37 @@ public void setMsgResult(String msgResult) {
     
     /*
     params:
-    	_icd: ""
-		_icd2: ""
+    	_icd: "A600"
+		_icd2: "C761"
+		aaapertu: 2014
 		autmedic: "N"
-		autrecla: "N"
-		cdicd: "A150"
-		cdicd2: "A150"
+		autrecla: "S"
+		cdicd: ""
+		cdicd2: ""
 		cdperson: "517982"
-		cdunieco: "1000"
-		commenar: "ar"
-		commenme: "me"
-		feocurre: "26/02/2014"
+		cdramo: "2"
+		cdunieco: "1006"
+		commenar: "OK"
+		commenme: "OK"
+		estado: "M"
+		feocurre: "01/01/2014"
 		nmautser: "12"
 		nmpoliza: "44"
 		nmsinies: "20"
+		nmsituac: "1"
+		nmsuplem: "245671518430000000"
 		nombre: "ALVAROJAIR,MARTINEZ VARELA"
-		nreclamo: ""
+		nreclamo: "6960"
 		ntramite: "1445"
+		--cancelar: "si"      solo con cancelacion
+		--cdmotivo: "9"       solo con cancelacion
+		--cdsubmotivo: "1"    solo con cancelacion
+		--rechazocomment:     solo con cancelacion
+		status: "W"
      */
     public String actualizarMultiSiniestro()
     {
+    	this.session = ActionContext.getContext().getSession();
     	logger.debug(""
     			+ "\n######################################"
     			+ "\n######################################"
@@ -1468,6 +1502,17 @@ public void setMsgResult(String msgResult) {
     		String autmedic = params.get("autmedic");
     		String commenme = params.get("commenme");
     		
+    		boolean cancela     = StringUtils.isNotBlank(params.get("cancelar"));
+    		String  cdmotivo    = params.get("cdmotivo");
+    		String  rechazoCome = params.get("rechazocomment");
+    		String  ntramite    = params.get("ntramite");
+    		
+    		UserVO usuario = (UserVO)session.get("USUARIO");
+    		String cdrol   = usuario.getRolActivo().getObjeto().getValue();
+    		
+    		Map<String,String>tramiteCompleto = siniestrosManager.obtenerTramiteCompleto(ntramite);
+			String tipoPago = tramiteCompleto.get("OTVALOR02");
+    		
     		siniestrosManager.actualizaMsinies(
     				cdunieco,
     				cdramo,
@@ -1485,10 +1530,126 @@ public void setMsgResult(String msgResult) {
     				nreclamo);
     		
     		siniestrosManager.P_MOV_MAUTSINI(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, null,
+    				null,null,null,null,null,
     				Constantes.MAUTSINI_AREA_RECLAMACIONES, autrecla, Constantes.MAUTSINI_SINIESTRO, commenar, Constantes.INSERT_MODE);
     		
     		siniestrosManager.P_MOV_MAUTSINI(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, null,
+    				null,null,null,null,null,
     				Constantes.MAUTSINI_AREA_MEDICA, autmedic, Constantes.MAUTSINI_SINIESTRO, commenme, Constantes.INSERT_MODE);
+    		
+    		if(cancela)
+    		{
+    			Boolean rolMedico = null;
+    			if(cdrol.equalsIgnoreCase(RolSistema.COORDINADOR_MEDICO.getCdsisrol())
+    					||cdrol.equalsIgnoreCase(RolSistema.COORDINADOR_MEDICO_MULTIREGIONAL.getCdsisrol())
+    					||cdrol.equalsIgnoreCase(RolSistema.GERENTE_MEDICO_MULTIREGIONAL.getCdsisrol())
+    					||cdrol.equalsIgnoreCase(RolSistema.MEDICO.getCdsisrol())
+    					)
+    			{
+    				rolMedico = Boolean.TRUE;
+    			}
+    			else if(cdrol.equalsIgnoreCase(RolSistema.COORDINADOR_SINIESTROS.getCdsisrol())
+    					||cdrol.equalsIgnoreCase(RolSistema.OPERADOR_SINIESTROS.getCdsisrol())
+    					)
+    			{
+    				rolMedico = Boolean.FALSE;
+    			}
+    			
+    			if(rolMedico==null)
+    			{
+    				throw new Exception("El usuario actual no puede cancelar");
+    			}
+    			
+    			MesaControlAction mca = new MesaControlAction();
+    			mca.setKernelManager(kernelManagerSustituto);
+    			mca.setSession(session);
+    			Map<String,String>smap1=new HashMap<String,String>();
+    			smap1.put("ntramite" , ntramite);
+    			smap1.put("status"   , EstatusTramite.RECHAZADO.getCodigo());
+    			smap1.put("cdmotivo" , cdmotivo);
+    			smap1.put("comments" , rechazoCome);
+    			mca.setSmap1(smap1);
+    			mca.actualizarStatusTramite();
+    			if(!mca.isSuccess())
+    			{
+    				throw new Exception("Error al cancelar el trámite");
+    			}
+    			
+    			String nombreReporte = null;
+    			String nombreArchivo = null;
+    			if(rolMedico)
+    			{
+    				nombreReporte = getText("rdf.siniestro.rechazo.medico.nombre");
+    				nombreArchivo = getText("pdf.siniestro.rechazo.medico.nombre");
+    			}
+    			else//cancelacion por area de reclamaciones
+    			{
+    				boolean esReembolso = tipoPago.equalsIgnoreCase(TipoPago.REEMBOLSO.getCodigo());
+    				if(esReembolso)
+    				{
+    					nombreReporte = getText("rdf.siniestro.rechazo.reemb.nombre");
+        				nombreArchivo = getText("pdf.siniestro.rechazo.reemb.nombre");
+    				}
+    				else
+    				{
+    					nombreReporte = getText("rdf.siniestro.rechazo.pdir.nombre");
+        				nombreArchivo = getText("pdf.siniestro.rechazo.pdir.nombre");
+    				}
+    			}
+    			
+    			File carpeta=new File(getText("ruta.documentos.poliza") + "/" + ntramite);
+    			if(!carpeta.exists())
+    			{
+    				logger.debug("no existe la carpeta::: "+ntramite);
+    				carpeta.mkdir();
+    				if(carpeta.exists())
+    				{
+    					logger.debug("carpeta creada");
+    				}
+    				else
+    				{
+    					logger.debug("carpeta NO creada");
+    				}
+    			}
+    			else
+    			{
+    				logger.debug("existe la carpeta   ::: "+ntramite);
+    			}
+    			
+    			String urlContrareciboSiniestro = ""
+    					+ getText("ruta.servidor.reports")
+    					+ "?p_usuario="  + usuario.getUser()
+    					+ "&P_NTRAMITE=" + ntramite
+    					+ "&userid="     + getText("pass.servidor.reports")
+    					+ "&report="     + nombreReporte
+    					+ "&destype=cache"
+    					+ "&desformat=PDF"
+    					+ "&ACCESSIBLE=YES"
+    					+ "&paramform=no";
+    			String pathArchivo=""
+    					+ getText("ruta.documentos.poliza")
+    					+ "/" + ntramite
+    					+ "/" + nombreArchivo;
+    			
+    			HttpUtil.generaArchivo(urlContrareciboSiniestro, pathArchivo);
+    	        
+    			Map<String,Object>paramsDocupol = new HashMap<String,Object>();
+    			paramsDocupol.put("pv_cdunieco_i"  , cdunieco);
+    			paramsDocupol.put("pv_cdramo_i"    , cdramo);
+    			paramsDocupol.put("pv_estado_i"    , estado);
+    			paramsDocupol.put("pv_nmpoliza_i"  , nmpoliza);
+    			paramsDocupol.put("pv_nmsuplem_i"  , nmsuplem);
+    			paramsDocupol.put("pv_feinici_i"   , new Date());
+    			paramsDocupol.put("pv_cddocume_i"  , nombreArchivo);
+    			paramsDocupol.put("pv_dsdocume_i"  , "Carta rechazo");
+    			paramsDocupol.put("pv_ntramite_i"  , ntramite);
+    			paramsDocupol.put("pv_nmsolici_i"  , null);
+    			paramsDocupol.put("pv_tipmov_i"    , tipoPago);
+    			paramsDocupol.put("pv_swvisible_i" , Constantes.SI);
+    			paramsDocupol.put("pv_codidocu_i"  , null);
+    			paramsDocupol.put("pv_cdtiptra_i"  , TipoTramite.SINIESTRO.getCodigo());
+    	        kernelManagerSustituto.guardarArchivo(paramsDocupol);
+    		}
     		
     		success = true;
     		mensaje = "Siniestro actualizado";
@@ -2190,6 +2351,16 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     		imap.put("conceptoFields"  , gc.getFields());
     		imap.put("conceptoColumns" , gc.getColumns());
     	
+    		seccion     = "FORM_AUTORIZA";
+    		componentes = pantallasManager.obtenerComponentes(null, null, null, null, null, cdrol, pantalla, seccion, null);
+    		gc.generaComponentes(componentes, true, false, true, false, false, false);
+    		imap.put("autorizaItems",gc.getItems());
+    		
+    		pantalla    = "RECHAZO_SINIESTRO";
+    		seccion     = "FORMULARIO";
+    		componentes = pantallasManager.obtenerComponentes(null, null, null, null, null, cdrol, pantalla, seccion, null);
+    		gc.generaComponentes(componentes, true, false, true, false, false, false);
+    		imap.put("rechazoitems",gc.getItems());
     	}
     	catch(Exception ex)
     	{
@@ -2382,6 +2553,205 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     			+ "\n###### obtenerConceptosCalculo ######"
     			+ "\n#####################################"
     			+ "\n#####################################"
+    			);
+    	return SUCCESS;
+    }
+    
+    public String autorizaConcepto()
+    {
+    	this.session=ActionContext.getContext().getSession();
+    	logger.debug(""
+    			+ "\n##############################"
+    			+ "\n##############################"
+    			+ "\n###### autorizaConcepto ######"
+    			+ "\n######                  ######"
+    			);
+    	logger.debug("params: "+params);
+    	try
+    	{
+    		String cdunieco = params.get("CDUNIECO");
+    		String cdramo   = params.get("CDRAMO");
+    		String estado   = params.get("ESTADO");
+    		String nmpoliza = params.get("NMPOLIZA");
+    		String nmsuplem = params.get("NMSUPLEM");
+    		String nmsituac = params.get("NMSITUAC");
+    		String aaapertu = params.get("AAAPERTU");
+    		String status   = params.get("STATUS");
+    		String nmsinies = params.get("NMSINIES");
+    		String nfactura = params.get("NFACTURA");
+    		String cdgarant = params.get("CDGARANT");
+    		String cdconval = params.get("CDCONVAL");
+    		String cdconcep = params.get("CDCONCEP");
+    		String idconcep = params.get("IDCONCEP");
+    		String nmordina = params.get("NMORDINA");
+    		String autmedic = params.get("AUTMEDIC");
+    		String commenme = params.get("COMMENME");
+    		String autrecla = params.get("AUTRECLA");
+    		String commenre = params.get("COMMENRE");
+    		
+    		boolean cancela     = StringUtils.isNotBlank(params.get("cancela"));
+    		String  cdmotivo    = params.get("cdmotivo");
+    		String  rechazoCome = params.get("commenrechazo");
+    		UserVO  usuario     = (UserVO)session.get("USUARIO");
+    		String  cdrol       = usuario.getRolActivo().getObjeto().getValue();
+    		
+    		if(StringUtils.isNotBlank(autmedic))
+    		{
+	    		siniestrosManager.P_MOV_MAUTSINI(
+	    				cdunieco, cdramo,   estado,   nmpoliza, nmsuplem,
+	    				nmsituac, aaapertu, status,   nmsinies, nfactura,
+	    				cdgarant, cdconval, cdconcep, idconcep, nmordina,
+	    				Constantes.MAUTSINI_AREA_MEDICA,
+	    				autmedic,
+	    				Constantes.MAUTSINI_DETALLE,
+	    				commenme,
+	    				Constantes.INSERT_MODE);
+    		}
+    		
+    		if(StringUtils.isNotBlank(autrecla))
+    		{
+    			siniestrosManager.P_MOV_MAUTSINI(
+	    				cdunieco, cdramo,   estado,   nmpoliza, nmsuplem,
+	    				nmsituac, aaapertu, status,   nmsinies, nfactura,
+	    				cdgarant, cdconval, cdconcep, idconcep, nmordina,
+	    				Constantes.MAUTSINI_AREA_RECLAMACIONES,
+	    				autrecla,
+	    				Constantes.MAUTSINI_DETALLE,
+	    				commenre,
+	    				Constantes.INSERT_MODE);
+    		}
+    		
+    		if(cancela)
+    		{
+    			String ntramite = params.get("ntramite");
+    			Map<String,String> tramiteCompleto = siniestrosManager.obtenerTramiteCompleto(ntramite);
+    			String tipoPago = tramiteCompleto.get("OTVALOR02");
+    			Boolean rolMedico = null;
+    			if(cdrol.equalsIgnoreCase(RolSistema.COORDINADOR_MEDICO.getCdsisrol())
+    					||cdrol.equalsIgnoreCase(RolSistema.COORDINADOR_MEDICO_MULTIREGIONAL.getCdsisrol())
+    					||cdrol.equalsIgnoreCase(RolSistema.GERENTE_MEDICO_MULTIREGIONAL.getCdsisrol())
+    					||cdrol.equalsIgnoreCase(RolSistema.MEDICO.getCdsisrol())
+    					)
+    			{
+    				rolMedico = Boolean.TRUE;
+    			}
+    			else if(cdrol.equalsIgnoreCase(RolSistema.COORDINADOR_SINIESTROS.getCdsisrol())
+    					||cdrol.equalsIgnoreCase(RolSistema.OPERADOR_SINIESTROS.getCdsisrol())
+    					)
+    			{
+    				rolMedico = Boolean.FALSE;
+    			}
+    			
+    			if(rolMedico==null)
+    			{
+    				throw new Exception("El usuario actual no puede cancelar");
+    			}
+    			
+    			MesaControlAction mca = new MesaControlAction();
+    			mca.setKernelManager(kernelManagerSustituto);
+    			mca.setSession(session);
+    			Map<String,String>smap1=new HashMap<String,String>();
+    			smap1.put("ntramite" , ntramite);
+    			smap1.put("status"   , EstatusTramite.RECHAZADO.getCodigo());
+    			smap1.put("cdmotivo" , cdmotivo);
+    			smap1.put("comments" , rechazoCome);
+    			mca.setSmap1(smap1);
+    			mca.actualizarStatusTramite();
+    			if(!mca.isSuccess())
+    			{
+    				throw new Exception("Error al cancelar el trámite");
+    			}
+    			
+    			String nombreReporte = null;
+    			String nombreArchivo = null;
+    			if(rolMedico)
+    			{
+    				nombreReporte = getText("rdf.siniestro.rechazo.medico.nombre");
+    				nombreArchivo = getText("pdf.siniestro.rechazo.medico.nombre");
+    			}
+    			else//cancelacion por area de reclamaciones
+    			{
+    				boolean esReembolso = tipoPago.equalsIgnoreCase(TipoPago.REEMBOLSO.getCodigo());
+    				if(esReembolso)
+    				{
+    					nombreReporte = getText("rdf.siniestro.rechazo.reemb.nombre");
+        				nombreArchivo = getText("pdf.siniestro.rechazo.reemb.nombre");
+    				}
+    				else
+    				{
+    					nombreReporte = getText("rdf.siniestro.rechazo.pdir.nombre");
+        				nombreArchivo = getText("pdf.siniestro.rechazo.pdir.nombre");
+    				}
+    			}
+    			
+    			File carpeta=new File(getText("ruta.documentos.poliza") + "/" + ntramite);
+    			if(!carpeta.exists())
+    			{
+    				logger.debug("no existe la carpeta::: "+ntramite);
+    				carpeta.mkdir();
+    				if(carpeta.exists())
+    				{
+    					logger.debug("carpeta creada");
+    				}
+    				else
+    				{
+    					logger.debug("carpeta NO creada");
+    				}
+    			}
+    			else
+    			{
+    				logger.debug("existe la carpeta   ::: "+ntramite);
+    			}
+    			
+    			String urlContrareciboSiniestro = ""
+    					+ getText("ruta.servidor.reports")
+    					+ "?p_usuario="  + usuario.getUser()
+    					+ "&P_NTRAMITE=" + ntramite
+    					+ "&userid="     + getText("pass.servidor.reports")
+    					+ "&report="     + nombreReporte
+    					+ "&destype=cache"
+    					+ "&desformat=PDF"
+    					+ "&ACCESSIBLE=YES"
+    					+ "&paramform=no";
+    			String pathArchivo=""
+    					+ getText("ruta.documentos.poliza")
+    					+ "/" + ntramite
+    					+ "/" + nombreArchivo;
+    			
+    			HttpUtil.generaArchivo(urlContrareciboSiniestro, pathArchivo);
+    	        
+    			Map<String,Object>paramsDocupol = new HashMap<String,Object>();
+    			paramsDocupol.put("pv_cdunieco_i"  , cdunieco);
+    			paramsDocupol.put("pv_cdramo_i"    , cdramo);
+    			paramsDocupol.put("pv_estado_i"    , estado);
+    			paramsDocupol.put("pv_nmpoliza_i"  , nmpoliza);
+    			paramsDocupol.put("pv_nmsuplem_i"  , nmsuplem);
+    			paramsDocupol.put("pv_feinici_i"   , new Date());
+    			paramsDocupol.put("pv_cddocume_i"  , nombreArchivo);
+    			paramsDocupol.put("pv_dsdocume_i"  , "Carta rechazo");
+    			paramsDocupol.put("pv_ntramite_i"  , ntramite);
+    			paramsDocupol.put("pv_nmsolici_i"  , null);
+    			paramsDocupol.put("pv_tipmov_i"    , tipoPago);
+    			paramsDocupol.put("pv_swvisible_i" , Constantes.SI);
+    			paramsDocupol.put("pv_codidocu_i"  , null);
+    			paramsDocupol.put("pv_cdtiptra_i"  , TipoTramite.SINIESTRO.getCodigo());
+    	        kernelManagerSustituto.guardarArchivo(paramsDocupol);
+    		}
+    		
+    		success = true;
+    		mensaje = "Datos guardados";
+    	}
+    	catch(Exception ex)
+    	{
+    		logger.error("error al autorizar concepto",ex);
+    		success = false;
+    		mensaje = ex.getMessage();
+    	}
+    	logger.debug(""
+    			+ "\n######                  ######"
+    			+ "\n###### autorizaConcepto ######"
+    			+ "\n##############################"
+    			+ "\n##############################"
     			);
     	return SUCCESS;
     }

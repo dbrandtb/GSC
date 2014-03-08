@@ -770,12 +770,12 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 
 
 	    @Override
-	    public List<HashMap<String, String>> loadListaIncisosRechazos(
-	    		HashMap<String, String> params) throws DaoException {
+	    public List<Map<String, String>> loadListaIncisosRechazos(
+	    		Map<String, String> params) throws DaoException {
 	    	
 	    	Map<String, Object> mapResult = ejecutaSP(new LoadListaIncisosRechazos(getDataSource()), params);
 	    	
-	    	return (List<HashMap<String, String>>) mapResult.get("pv_registro_o");
+	    	return (List<Map<String, String>>) mapResult.get("pv_registro_o");
 	    }
 	    
 	    protected class LoadListaIncisosRechazos extends StoredProcedure {
@@ -784,30 +784,21 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	    		super(dataSource, "PKG_LISTAS.P_GET_CAUSAS_MOT_RECHAZO");
 	    		
 	    		declareParameter(new SqlParameter("pv_cdmotivo_i", OracleTypes.VARCHAR));
-	    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new LoadListaIncisosRechazosMapper()));
+	    		//CDCAUMOT
+	    		//DSCAUMOT
+	    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DinamicMapper()));
 	    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 	    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
 	    		compile();
 	    	}
 	    }
-	    
-	    protected class LoadListaIncisosRechazosMapper  implements RowMapper {
-	        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-	        	HashMap<String, String> map =  new HashMap<String, String>();
-	        	
-	        	map.put("key", rs.getString("CDCAUMOT"));
-	        	map.put("value", rs.getString("DSCAUMOT"));
-	        	
-	            return map;
-	        }
-	    }
 
 	    @Override
-	    public List<HashMap<String, String>> loadListaRechazos() throws DaoException {
+	    public List<Map<String, String>> loadListaRechazos() throws DaoException {
 	    	Map<String, Object> params = new HashMap<String, Object>();
 	    	Map<String, Object> mapResult = ejecutaSP(new LoadListaRechazos(getDataSource()), params);
 	    	
-	    	return (List<HashMap<String, String>>) mapResult.get("pv_registro_o");
+	    	return (List<Map<String, String>>) mapResult.get("pv_registro_o");
 	    }
 	    
 	    protected class LoadListaRechazos extends StoredProcedure {
@@ -815,26 +806,14 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	    	protected LoadListaRechazos(DataSource dataSource) {
 	    		super(dataSource, "PKG_LISTAS.P_GET_MOTIVOS_RECHAZO");
 	    		
-	    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new LoadListaRechazosMapper()));
+	    		//CDMOTIVO
+	    		//DSMOTIVO
+	    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DinamicMapper()));
 	    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 	    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
 	    		compile();
 	    	}
 	    }
-		
-		
-	    protected class LoadListaRechazosMapper  implements RowMapper {
-	        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-	        	HashMap<String, String> map =  new HashMap<String, String>();
-	        	
-	        	map.put("key", rs.getString("CDMOTIVO"));
-	        	map.put("value", rs.getString("DSMOTIVO"));
-	        	
-	            return map;
-	        }
-	    }
-		
-	   
 
 		@Override
 		public String guardaEstatusDocumento(HashMap<String, String> params)
@@ -1509,6 +1488,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		}
 	}
 	
+	@Override
 	public void P_MOV_MAUTSINI(
 			String cdunieco,
 			String cdramo,
@@ -1520,6 +1500,11 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			String status,
 			String nmsinies,
 			String nfactura,
+			String cdgarant,
+			String cdconval,
+			String cdconcep,
+			String idconcep,
+			String nmordina,
 			String areaauto,
 			String swautori,
 			String tipautor,
@@ -1537,6 +1522,11 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		p.put("pv_status_i"   , status);
 		p.put("pv_nmsinies_i" , nmsinies);
 		p.put("pv_nfactura_i" , nfactura);
+		p.put("pv_cdgarant_i" , cdgarant);
+		p.put("pv_cdconval_i" , cdconval);
+		p.put("pv_cdconcep_i" , cdconcep);
+		p.put("pv_idconcep_i" , idconcep);
+		p.put("pv_nmordina_i" , nmordina);
 		p.put("pv_areaauto_i" , areaauto);
 		p.put("pv_swautori_i" , swautori);
 		p.put("pv_tipautor_i" , tipautor);
@@ -1562,6 +1552,11 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("pv_status_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nmsinies_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_nfactura_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdgarant_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdconval_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdconcep_i" , OracleTypes.VARCHAR));
+			//declareParameter(new SqlParameter("pv_idconcep_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmordina_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_areaauto_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_swautori_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_tipautor_i" , OracleTypes.VARCHAR));

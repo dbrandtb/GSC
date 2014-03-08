@@ -31,6 +31,15 @@ var _CATALOGO_ConceptosMedicos  = '<s:property value="@mx.com.gseguros.portal.ge
 var _Operacion;
 var _Nmordina;
 
+//jtezva
+var _revAdm_urlMesaControl = '<s:url namespace="/mesacontrol" action="mcdinamica" />';
+var _revAdm_itemsRechazo   = [ <s:property value="imap.itemsCancelar" /> ];
+    _revAdm_itemsRechazo[2]['width']  = 500;
+    _revAdm_itemsRechazo[2]['height'] = 150;
+var _revAdm_formRechazo;
+var _revAdm_windowRechazo;
+var panelEdicionFacturas;
+
 Ext.onReady(function() {
 	
 	var storeFacturas;
@@ -84,6 +93,53 @@ Ext.onReady(function() {
             {type:'string',name:'descesp'}
 	    ]
 	});
+	
+	//jtezva
+	Ext.define('_revAdm_FormRechazo',
+    {
+        extend         : 'Ext.form.Panel'
+        ,initComponent : function()
+        {
+            debug('_revAdm_FormRechazo initComponent');
+            Ext.apply(this,
+            {
+                border  : 0
+                ,items  : _revAdm_itemsRechazo
+            });
+            this.callParent();
+        }
+    });
+	
+	//jtezva
+	Ext.define('_revAdm_WindowRechazo',
+    {
+        extend         : 'Ext.window.Window'
+        ,initComponent : function()
+        {
+            debug('_revAdm_WindowRechazo initComponent');
+            Ext.apply(this,
+            {
+                title        : 'Rechazo de tr&aacute;mite'
+                ,width       : 600
+                ,height      : 350
+                ,autoScroll  : true
+                ,closeAction : 'hide'
+                ,modal       : true
+                ,defaults    : { style : 'margin : 5px; ' }
+                ,items       : _revAdm_formRechazo
+                ,buttonAlign : 'center'
+                ,buttons     :
+                [
+                    {
+                        text     : 'Rechazar'
+                        ,icon    : '${ctx}/resources/fam3icons/icons/delete.png'
+                        ,handler : _revAdm_rechazoSiniestro
+                    }
+                ]
+            });
+            this.callParent();
+        }
+    });
 	
 	storeFacturas=new Ext.data.Store(
 	{
@@ -238,7 +294,7 @@ Ext.onReady(function() {
 	});
 	
 	
-	var panelEdicionFacturas= Ext.create('Ext.form.Panel',{
+	panelEdicionFacturas= Ext.create('Ext.form.Panel',{
         border  : 0,
         url: _URL_GuardaFactura
         ,bodyStyle:'padding:5px;'
@@ -482,6 +538,10 @@ Ext.onReady(function() {
     	panelEdicionConceptos.down('[name="params.ptimport"]').setValue(((cantidad*importe) *(1-(destopor/100)))-destoimp);
     	
     }
+    
+    //jtezva
+    _revAdm_formRechazo   = new _revAdm_FormRechazo();
+    _revAdm_windowRechazo = new _revAdm_WindowRechazo();
 
 	/*PANTALLA EMERGENTE PARA LA INSERCION Y MODIFICACION DE LOS DATOS DEL GRID*/
     var windowConceptos= Ext.create('Ext.window.Window', {
@@ -571,36 +631,59 @@ Ext.onReady(function() {
                         		UrlFact = _URL_ActualizaFactura;
                         	}
                         	//var datos=panelEdicionFacturas.form.getValues();
-                        	panelEdicionFacturas.form.submit({
-            		        	waitMsg:'Procesando...',	
-            		        	url: UrlFact,
-            		        	params: {
-            		        		'params.ntramite'   : _NTRAMITE,
-            		        		'params.cdunieco'  : _CDUNIECO,
-            		        		'params.cdramo'    : _CDRAMO,
-            		        		'params.estado'    : _ESTADO,
-            		        		'params.nmpoliza'  : _NMPOLIZA,
-            		        		'params.nmsituac'  : _NMSITUAC,
-            		        		'params.nmsuplem'  : _NMSUPLEM,
-            		        		'params.status'    : _STATUS,
-            		        		'params.aaapertu'  : _AAAPERTU,
-            		        		'params.nmsinies'  : _NMSINIES
-            		        	},
-            		        	failure: function(form, action) {
-            		        		mensajeError("Error al guardar la Factura");
-            					},
-            					success: function(form, action) {
-            						
-            						storeFacturas.reload();
-            						panelEdicionFacturas.getForm().reset();
-            						storeConceptos.removeAll();
-                                	windowFacturas.close();
-                                	mensajeCorrecto("Aviso","Se ha guardado la Factura");
-            						
-            						
-            					}
-            				});
-                        	
+                        	var autoMed = panelEdicionFacturas.down('[name="params.autrecla"]');
+                        	if(autoMed)
+                        	{
+                        		autoMed = autoMed.getValue();
+                        	}
+                        	var autoRec = panelEdicionFacturas.down('[name="params.autmedic"]');
+                        	if(autoRec)
+                        	{
+                        		autoRec = autoRec.getValue();
+                        	}
+                        	debug('autoMed',autoMed,'autoRec',autoRec);
+                        	var cancelar = (autoMed && autoMed =='N') || (autoRec && autoRec == 'N');
+                        	debug('cancelar sin tipopago',cancelar ? 'si' : 'no');
+                        	cancelar = cancelar &&(Ext.isEmpty(_TIPOPAGO) || _TIPOPAGO == _PAGO_DIRECTO);
+                        	debug('cancelar con tipopago',cancelar ? 'si' : 'no');
+                        	if(cancelar)
+                        	{
+                        		//jtezva
+                        		mensajeWarning(
+						                'El tr&aacute;mite de pago directo ser&aacute; cancelado debido a que no ha sido autorizada alguna de las facturas'
+						                ,function(){_revAdm_windowRechazo.show();centrarVentanaInterna(_revAdm_windowRechazo);}
+						        );
+                        	}
+                        	else
+                        	{
+	                        	panelEdicionFacturas.form.submit({
+	            		        	waitMsg:'Procesando...',	
+	            		        	url: UrlFact,
+	            		        	params: {
+	            		        		'params.ntramite'   : _NTRAMITE,
+	            		        		'params.cdunieco'  : _CDUNIECO,
+	            		        		'params.cdramo'    : _CDRAMO,
+	            		        		'params.estado'    : _ESTADO,
+	            		        		'params.nmpoliza'  : _NMPOLIZA,
+	            		        		'params.nmsituac'  : _NMSITUAC,
+	            		        		'params.nmsuplem'  : _NMSUPLEM,
+	            		        		'params.status'    : _STATUS,
+	            		        		'params.aaapertu'  : _AAAPERTU,
+	            		        		'params.nmsinies'  : _NMSINIES
+	            		        	},
+	            		        	failure: function(form, action) {
+	            		        		mensajeError("Error al guardar la Factura");
+	            					},
+	            					success: function(form, action) {
+	            						
+	            						storeFacturas.reload();
+	            						panelEdicionFacturas.getForm().reset();
+	            						storeConceptos.removeAll();
+	                                	windowFacturas.close();
+	                                	mensajeCorrecto("Aviso","Se ha guardado la Factura");	
+	            					}
+	            				});	
+                        	}
                         } else {
                             Ext.Msg.show({
                                    title: 'Aviso',
@@ -1180,9 +1263,74 @@ function _mostrarVentanaAjustes(grid,rowIndex,colIndex){
     }).show();
     centrarVentana(windowLoader);
 }
-
+        //jtezva
+        _revAdm_formRechazo.items.items[1].on('select',function(combo, records, eOpts)
+	    {    
+        	_revAdm_formRechazo.items.items[2].setValue(records[0].get('value'));
+	    });
 });
 
+//jtezva
+////// funciones //////
+function _revAdm_rechazoSiniestro()
+{
+    debug('_revAdm_rechazoSiniestro');
+    
+    var valido = _revAdm_formRechazo.isValid();
+    if(!valido)
+    {
+        datosIncompletos();
+    }
+    
+    if(valido)
+    {
+    	var UrlFact;
+        if(_Operacion == 'I'){
+            UrlFact = _URL_GuardaFactura;
+        }else {
+            UrlFact = _URL_ActualizaFactura;
+        }
+        _revAdm_windowRechazo.setLoading(true);
+        panelEdicionFacturas.form.submit({    
+            url: UrlFact,
+            params: {
+                'params.ntramite'       : _NTRAMITE,
+                'params.cdunieco'       : _CDUNIECO,
+                'params.cdramo'         : _CDRAMO,
+                'params.estado'         : _ESTADO,
+                'params.nmpoliza'       : _NMPOLIZA,
+                'params.nmsituac'       : _NMSITUAC,
+                'params.nmsuplem'       : _NMSUPLEM,
+                'params.status'         : _STATUS,
+                'params.aaapertu'       : _AAAPERTU,
+                'params.nmsinies'       : _NMSINIES,
+                'params.cancelar'       : 'si',
+                'params.cdmotivo'       : _revAdm_itemsRechazo[0].getValue(),
+                'params.cdsubmotivo'    : _revAdm_itemsRechazo[1].getValue(),
+                'params.rechazocomment' : _revAdm_itemsRechazo[2].getValue()
+            },
+            failure: function(form, action) {
+            	_revAdm_windowRechazo.setLoading(false);
+                mensajeError("Error al guardar la Factura");
+            },
+            success: function(form, action)
+            {
+            	_revAdm_windowRechazo.setLoading(false);
+            	Ext.create('Ext.form.Panel').submit(
+                {
+                    url             : _revAdm_urlMesaControl
+                    ,standardSubmit :true
+                    ,params         :
+                    {
+                        'smap1.gridTitle'      : 'Siniestros'
+                        ,'smap2.pv_cdtiptra_i' : 16
+                    }
+                });
+            }
+        });
+    }
+}
+////// funciones //////
 </script>
 
 <div id="maindivAdminData" style="height:600px;"></div>
