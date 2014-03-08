@@ -44,6 +44,7 @@ public interface Constantes {
     public static final String MAUTSINI_AREA_MEDICA        = "ME";
     public static final String MAUTSINI_SINIESTRO          = "S";
     public static final String MAUTSINI_FACTURA            = "F";
+    public static final String MAUTSINI_DETALLE            = "D";
 	
     /**
      * Mensaje Atributo Variable cuando tiene hijos asociados

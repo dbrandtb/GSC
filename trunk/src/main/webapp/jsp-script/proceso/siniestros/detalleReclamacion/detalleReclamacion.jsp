@@ -24,11 +24,13 @@
             var _NMSINIES = '<s:property value="params.nmsinies" />';
             var _NTRAMITE= '<s:property value="params.ntramite" />';
             var _TIPOPAGO= '<s:property value="params.tipopago" />';
+            
+            debug('_TIPOPAGO',_TIPOPAGO);
         </script>
         <!-- <script type="text/javascript" src="${ctx}/resources/scripts/util/extjs4_utils.js"></script>-->
         <script type="text/javascript" src="${ctx}/js/proceso/siniestros/detalleReclamacion/detalleReclamacion.js"></script>
     </head>
     <body>
-        <div id="dvDetalleReclamacion" style="height:1000px;"></div>
+        <div id="dvDetalleReclamacion" style="height:2500px;"></div>
     </body>
 </html>

@@ -25,23 +25,26 @@ debug('_p12_lhosp:'  , _p12_lhosp);
 debug('_p12_lpdir:'  , _p12_lpdir);
 debug('_p12_lprem:'  , _p12_lprem);
 
-var _p12_urlObtenerFacturasTramite   = '<s:url namespace="/siniestros" action="obtenerFacturasTramite"   />';
-var _p12_urlObtenerSiniestrosTramite = '<s:url namespace="/siniestros" action="obtenerSiniestrosTramite" />';
-var _p12_urlObtenerDatosProveedor    = '<s:url namespace="/siniestros" action="obtenerDatosProveedor"    />';
-var _p12_urlObtenerConceptosCalculo  = '<s:url namespace="/siniestros" action="obtenerConceptosCalculo"  />';
+var _p12_urlObtenerFacturasTramite   = '<s:url namespace="/siniestros"  action="obtenerFacturasTramite"   />';
+var _p12_urlObtenerSiniestrosTramite = '<s:url namespace="/siniestros"  action="obtenerSiniestrosTramite" />';
+var _p12_urlObtenerDatosProveedor    = '<s:url namespace="/siniestros"  action="obtenerDatosProveedor"    />';
+var _p12_urlObtenerConceptosCalculo  = '<s:url namespace="/siniestros"  action="obtenerConceptosCalculo"  />';
+var _p12_urlAutorizaConceptos        = '<s:url namespace="/siniestros"  action="autorizaConcepto"         />';
+var _p12_urlMesaControl              = '<s:url namespace="/mesacontrol" action="mcdinamica"               />';
 
 var _p12_formTramite;
 var _p12_formFactura;
 var _p12_formProveedor;
 var _p12_formSiniestro;
-//var _p12_gridFacturas;
-//var _p12_storeFacturas;
-//var _p12_gridSiniestros;
-//var _p12_storeSiniestros;
 var _p12_panelCalculo;
-//var _p12_gridConceptos;
 var _p12_paneles = [];
-//var _p12_storeConceptos;
+var _p12_formAutoriza;
+var _p12_windowAutoriza;
+var _p12_itemsRechazo = [ <s:property value="imap.rechazoitems" /> ];
+    _p12_itemsRechazo[2]['width']  = 500;
+    _p12_itemsRechazo[2]['height'] = 150;
+var _p12_formRechazo;
+var _p12_windowRechazo;
 
 ////// variables //////
 
@@ -464,6 +467,11 @@ Ext.onReady(function()
                             ,renderer  : Ext.util.Format.usMoney
                             ,flex      : 1
                         }
+            		    ,{
+            		    	header     : 'Observaciones<br/>M&eacute;dicas'
+            		    	,dataIndex : 'COMMENME'
+            		    	,flex      : 1
+            		    }
             		]
 	            	,viewConfig :
 	                {
@@ -478,6 +486,10 @@ Ext.onReady(function()
 	                        }
 	                    }
 	                }
+            	    ,listeners :
+            	    {
+            	    	itemclick : _p12_mostrarWindowAutoriza
+            	    }
             	});
 	            var panelTotales = Ext.create('Ext.form.Panel',
 	            {
@@ -840,9 +852,81 @@ Ext.onReady(function()
     	    }
     	]
     }));
+    
+    Ext.define('_p12_FormRechazo',
+    {
+        extend         : 'Ext.form.Panel'
+        ,initComponent : function()
+        {
+            debug('_p12_FormRechazo initComponent');
+            Ext.apply(this,
+            {
+                border  : 0
+                ,items  : _p12_itemsRechazo
+            });
+            this.callParent();
+        }
+    });
+    
+    Ext.define('_p12_WindowRechazo',
+    {
+        extend         : 'Ext.window.Window'
+        ,initComponent : function()
+        {
+            debug('_p12_WindowRechazo initComponent');
+            Ext.apply(this,
+            {
+                title        : 'Rechazo de tr&aacute;mite'
+                ,width       : 600
+                ,height      : 350
+                ,autoScroll  : true
+                ,closeAction : 'hide'
+                ,modal       : true
+                ,defaults    : { style : 'margin : 5px; ' }
+                ,items       : _p12_formRechazo
+                ,buttonAlign : 'center'
+                ,buttons     :
+                [
+                    {
+                        text     : 'Rechazar'
+                        ,icon    : '${ctx}/resources/fam3icons/icons/delete.png'
+                        ,handler : _p12_rechazoSiniestro
+                    }
+                ]
+            });
+            this.callParent();
+        }
+    });
 	////// componentes //////
 	
 	////// contenido //////
+	_p12_formRechazo   = new _p12_FormRechazo();
+	_p12_windowRechazo = new _p12_WindowRechazo();
+	
+	_p12_formAutoriza = Ext.create('Ext.form.Panel',
+	{
+		items : [ <s:property value="imap.autorizaItems" /> ] 
+	});
+	
+	_p12_windowAutoriza = Ext.create('Ext.window.Window',
+	{
+		title        : 'Autorizar concepto'
+		,width       : 600
+		,height      : 400
+		,closeAction : 'hide'
+		,items       : _p12_formAutoriza
+		,modal       : true
+		,buttonAlign : 'center'
+		,buttons     :
+		[
+		    {
+		    	text     : 'Guardar'
+		    	,icon    : '${ctx}/resources/fam3icons/icons/key.png'
+		    	,handler : _p12_autorizarConcepto
+		    }
+		]
+	});
+	
 	_p12_formTramite = Ext.create('Ext.form.Panel',
 	{
 		title   : 'TR&Aacute;MITE'
@@ -1003,6 +1087,11 @@ Ext.onReady(function()
 	////// contenido //////
 	
 	////// loader //////
+	_p12_formRechazo.items.items[1].on('select',function(combo, records, eOpts)
+    {
+		_p12_formRechazo.items.items[2].setValue(records[0].get('value'));
+    });
+	
 	_p12_formTramite.loadRecord(new _p12_Tramite(_p12_smap));
 	_p12_formFactura.loadRecord(new _p12_Factura(_p12_smap2));
 	_p12_formProveedor.loadRecord(new _p12_Proveedor(_p12_smap3));
@@ -1019,7 +1108,151 @@ Ext.onReady(function()
 });
 
 ////// funciones //////
+function _p12_mostrarWindowAutoriza(grid,record)
+{
+	debug('_p12_mostrarWindowAutoriza record:',record.raw);
+	_p12_formAutoriza.getForm().reset();
+	_p12_formAutoriza.loadRecord(new _p12_Concepto(record.raw));
+	_p12_windowAutoriza.show();
+	centrarVentanaInterna(_p12_windowAutoriza);
+}
 
+function _p12_rechazoSiniestro()
+{
+	debug('_p12_rechazoSiniestro');
+	var valido = _p12_formRechazo.isValid();
+	if(!valido)
+	{
+		datosIncompletos();
+	}
+	
+	if(valido)
+	{
+		_p12_windowRechazo.setLoading(true);
+		var json =
+		{
+			params : _p12_formAutoriza.getValues()
+		};
+		json.params['cancela']       = 'si';
+		json.params['cdmotivo']      = _p12_formRechazo.items.items[0].getValue();
+		json.params['commenrechazo'] = _p12_formRechazo.items.items[2].getValue();
+		json.params['ntramite']      = _p12_smap['NTRAMITE'];
+		debug('datos a enviar:',json);
+	    Ext.Ajax.request(
+	    {
+	        url       : _p12_urlAutorizaConceptos
+	        ,jsonData : json
+	        ,success  : function(response)
+	        {
+	        	_p12_windowRechazo.setLoading(false);
+	            json = Ext.decode(response.responseText);
+	            debug('respuesta:',json);
+	            if(json.success==true)
+	            {
+	                mensajeCorrecto('Datos guardados',json.mensaje);
+	                Ext.create('Ext.form.Panel').submit(
+	                {
+	                    url             : _p12_urlMesaControl
+	                	,standardSubmit : true
+	                    ,params         :
+	                    {
+	                        'smap1.gridTitle'      : 'Siniestros'
+	                        ,'smap2.pv_cdtiptra_i' : 16
+	                    }
+	                });
+	            }
+	            else
+	            {
+	                mensajeError(json.mensaje);
+	            }
+	        }
+	        ,failure  : function()
+	        {
+	        	_p12_windowRechazo.setLoading(false);
+	            errorComunicacion();
+	        }
+	    });
+	}
+}
+
+function _p12_autorizarConcepto()
+{
+	debug('_p12_autorizarConcepto');
+	
+	var valido = _p12_formAutoriza.isValid();
+	if(!valido)
+	{
+		datosIncompletos();
+	}
+	
+	if(valido)
+	{
+		
+		var autoMed = _p12_formAutoriza.down('[name="AUTRECLA"]');
+        if(autoMed)
+        {
+            autoMed = autoMed.getValue();
+        }
+        var autoRec = _p12_formAutoriza.down('[name="AUTMEDIC"]');
+        if(autoRec)
+        {
+            autoRec = autoRec.getValue();
+        }
+        debug('autoMed',autoMed,'autoRec',autoRec);
+        var cancelar = (autoMed && autoMed =='N') || (autoRec && autoRec == 'N');
+        debug('cancelar sin tipopago',cancelar ? 'si' : 'no');
+        cancelar = cancelar && _p12_smap['OTVALOR02']=='1';
+        debug('cancelar con tipopago',cancelar ? 'si' : 'no');
+        if(cancelar)
+        {
+            //jtezva
+            mensajeWarning(
+                    'El tr&aacute;mite de pago directo ser&aacute; cancelado debido a que no ha sido autorizada alguno de los conceptos'
+                    ,function(){_p12_windowRechazo.show();centrarVentanaInterna(_p12_windowRechazo);}
+            );
+        }
+        else
+        {
+			_p12_formAutoriza.setLoading(true);
+			Ext.Ajax.request(
+			{
+				url       : _p12_urlAutorizaConceptos
+				,jsonData :
+				{
+					params : _p12_formAutoriza.getValues() 
+				}
+				,success  : function(response)
+				{
+					_p12_formAutoriza.setLoading(false);
+					var json = Ext.decode(response.responseText);
+					debug('respuesta:',json);
+					if(json.success==true)
+					{
+						mensajeCorrecto('Datos guardados',json.mensaje);
+						Ext.create('Ext.form.Panel').submit(
+						{
+							standardSubmit : true
+							,params        :
+							{
+								'params.ntramite'  : _NTRAMITE
+								,'params.tipopago' : _TIPOPAGO
+							}
+						});
+					}
+					else
+					{
+						mensajeError(json.mensaje);
+					}
+				}
+				,failure  : function()
+				{
+					_p12_formAutoriza.setLoading(false);
+					errorComunicacion();
+				}
+			});
+        }
+	}
+}
 <%--
 function _p12_calcular()
 {
@@ -1101,4 +1334,4 @@ function _p12_calcular()
 ////// funciones //////
 
 </script>
-<div id="_p12_divpri" style="height:1500px;"></div>
+<div id="_p12_divpri" style="height:2400px;"></div>

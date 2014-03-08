@@ -39,7 +39,10 @@ public enum Catalogos {
 	SUBCOBERTURAS(""),
 	PROVEEDORES(""),
 	MEDICOS(""),
-	ICD("2TABLICD");
+	ICD("2TABLICD"),
+	MOTIVOS_RECHAZO_SINIESTRO(""),
+	SUBMOTIVOS_RECHAZO_SINIESTRO("")
+	;
 
 	private String cdTabla;
 
