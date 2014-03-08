@@ -13,7 +13,8 @@
     
     <bean id="detalleSiniestroAction" class="mx.com.gseguros.portal.siniestros.controller.DetalleSiniestroAction" scope="prototype">
         <property name="siniestrosManager" ref="siniestrosManagerImpl"/>
-        <property name="pantallasManager"   ref="pantallasManagerImpl"></property>
+        <property name="pantallasManager"  ref="pantallasManagerImpl"></property>
+        <property name="kernelManager"     ref="kernelManagerSustituto"/>
     </bean>
     
     <bean id="ajustesMedicosSiniestrosAction" class="mx.com.gseguros.portal.siniestros.controller.AjustesMedicosSiniestrosAction" scope="prototype">
