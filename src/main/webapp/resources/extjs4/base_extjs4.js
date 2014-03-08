@@ -157,14 +157,27 @@ function errorComunicacion()
 	centrarVentanaInterna(tmpMensajeEmergente);
 }
 
-function mensajeWarning(mensaje)
+function mensajeWarning(mensaje,funcion)
 {
-	var tmpMensajeEmergente=Ext.Msg.show({
-		title    : 'Aviso'
-        ,icon    : Ext.Msg.WARNING
-        ,msg     : mensaje
-        ,buttons : Ext.Msg.OK
-    });
+	if(funcion)
+	{
+		var tmpMensajeEmergente=Ext.Msg.show({
+			title    : 'Aviso'
+	        ,icon    : Ext.Msg.WARNING
+	        ,msg     : mensaje
+	        ,buttons : Ext.Msg.OK
+	        ,fn      : funcion 
+	    });
+	}
+	else
+	{
+		var tmpMensajeEmergente=Ext.Msg.show({
+			title    : 'Aviso'
+	        ,icon    : Ext.Msg.WARNING
+	        ,msg     : mensaje
+	        ,buttons : Ext.Msg.OK
+	    });
+	}
 	centrarVentanaInterna(tmpMensajeEmergente);
 }
 
