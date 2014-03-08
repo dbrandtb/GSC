@@ -44,7 +44,7 @@ Ext.onReady(function() {
                     {type:'string',    name:'cdmedico'},         {type:'string',    name:'nombreMedico'},
                     {type:'string',    name:'porpenal'},
                     {type:'string',    name:'cdicd'},         {type:'string',    name:'descICD'},
-                    {type:'string',    name:'mtsumadp'},
+                    {type:'string',    name:'mtsumadp'},	 {type:'string', name:'copagofi'},
                     {type:'string',    name:'cdcausa'},         {type:'string',    name:'descCausa'},
                     {type:'string',    name:'dstratam'},         {type:'string',    name:'dsobserv'},       {type:'string',    name:'dsnotas'}
 				]
@@ -68,7 +68,7 @@ Ext.onReady(function() {
     
     sucursalConsulta= Ext.create('Ext.form.field.ComboBox',
 	{
-		colspan		:2,					fieldLabel   : 'Sucursal',			id: 'sucConsulta',				allowBlank: false,			width:500	
+		colspan		:2,					fieldLabel   : 'Plaza',			id: 'sucConsulta',				allowBlank: false,			width:500	
 		,editable   : false,			displayField : 'value',				valueField:'key',			    forceSelection : true
 		,labelWidth : 170,				queryMode    :'local',				editable:false,					name:'cduniecs', readOnly   : true
 		,store : Ext.create('Ext.data.Store', {
@@ -77,12 +77,11 @@ Ext.onReady(function() {
 			proxy:
 			{
 				type: 'ajax',
-				url:_URL_CATALOGOS,
-				extraParams : {catalogo:_CAT_AUTORIZACION1},
+				url:_UR_LISTA_PLAZAS,
 				reader:
 				{
 					type: 'json',
-					root: 'lista'
+					root: 'listaPlazas'
 				}
 			}
 		})
@@ -405,8 +404,13 @@ Ext.onReady(function() {
     				 	    readOnly   : true
     				 	},
     				 	{
+    				 		colspan:2,   xtype       : 'textfield',			fieldLabel : 'P&oacute;liza afectada'				,id       : 'polizaAfectadaCom1'
+		 					 ,allowBlank : false,				labelWidth: 170,				name:'nmpolizaCom',	readOnly   : true, Width: 1100
+			 			 }
+    				 	,
+    				 	{
     		                 colspan:2,   xtype       : 'textfield',			fieldLabel : 'P&oacute;liza afectada'				,id       : 'polizaAfectada1'
-    		                 ,allowBlank : false,				labelWidth: 170,				name:'nmpoliza'
+    		                 ,allowBlank : false,				labelWidth: 170,				name:'nmpoliza', hidden:true
     		             }
     				 	,
     	                sucursalConsulta
@@ -424,6 +428,26 @@ Ext.onReady(function() {
     	                    xtype       : 'textfield',			colspan:2,					fieldLabel : 'Proveedor',			id  : 'proveedor1',
     	                    name       : 'nombreProveedor',		labelWidth	: 170,			width:500,							readOnly   : true
     	                },
+    	                {
+    	                	colspan:2,	xtype       : 'textfield',			fieldLabel : 'Exclusion'		,id       : 'idExclusionPenalizacion1',
+    						labelWidth: 170//,					hidden:true
+    		 			}
+    	                ,{
+    	                    xtype       : 'textfield',			colspan:2,					fieldLabel : 'Proveedor clave',			id  : 'cdproveedor1',
+    	                    name       : 'cdprovee',		labelWidth	: 170,			width:500,							readOnly   : true
+    	                },
+    	                {
+    	                	 colspan:2,	xtype       : 'textfield',			fieldLabel : 'zonaHospProv'		,id       : 'idzonaHospProv1',
+    						 labelWidth: 170//,					hidden:true
+    		 			},
+    		 			{
+    		 				colspan:2,xtype       : 'textfield',			fieldLabel : 'zonaContratadaPoliza'		,id       : 'idZonaContratadaPoliza1',
+    						 labelWidth: 170//,					hidden:true
+    		 			},
+    		 			{
+    		 				colspan:2,xtype       : 'textfield',			fieldLabel : 'dsplanPoliza'		,id       : 'iddsplanAsegurado1',
+    						 labelWidth: 170//,					hidden:true
+    		 			},
     				 	{
     	                    xtype       : 'textfield',			fieldLabel : 'Medico',				id  : 'medico1',
     	                    name       : 'nombreMedico',			labelWidth	: 170,										readOnly   : true
@@ -433,30 +457,37 @@ Ext.onReady(function() {
     	                   labelWidth	: 170,										readOnly   : true
     	                },
     				 	{
-    	                    xtype       : 'textfield',			fieldLabel : 'Deducible',				id  : 'deducible1',
+    	                	colspan:2,   xtype       : 'textfield',			fieldLabel : 'Deducible',				id  : 'deducible1',
     	                    labelWidth	: 170,										readOnly   : true
     	                },
     	                {
-    	                    xtype       : 'textfield',			fieldLabel : 'Copago',			id  : 'copago1',
-    	                    labelWidth	: 170,										readOnly   : true
+    	                	colspan:2,   xtype       : 'textfield',			fieldLabel : 'Copago original',			id  : 'copago1',
+    	                    labelWidth	: 170,										readOnly   : true,		width:500
     	                },
     	                {
-    	                    xtype       : 'textfield',			colspan:2,			fieldLabel : 'Penalizaci&oacute;n',			id  : 'penalizacion1',
-    	                    labelWidth	: 170,							width:500,			readOnly   : true
+    	                	colspan:2,   xtype       : 'textfield',			fieldLabel : 'Copago final',			id  : 'copagoFin1',  name:'copagofi',
+    	                    labelWidth	: 170,										readOnly   : true,		width:500
     	                },
+    	                {
+    				 		xtype       : 'textfield'				,fieldLabel : 'Penalizaci&oacuten circulo hospitalario'						,id       : 'idPenalCircHospitalario1'
+    			 			,labelWidth: 170						,readOnly   : true, name: 'idPenalCircHospitalario1'
+    				 	},
+    				 	{
+    				 		xtype       : 'textfield'				,fieldLabel : 'Penalizaci&oacuten por cambio de zona'						,id       : 'idPenalCambioZona1'
+    			 			,labelWidth: 170						,readOnly   : true,			name       : 'idPenalCambioZona1'
+    				 	},
     	                {
     	                    xtype       : 'textfield',			colspan:2,					fieldLabel : 'ICD',			id  : 'icd1',
     	                    name       : 'descICD',		labelWidth	: 170,			width:500,							readOnly   : true
     	                },
+    	                causaSiniestro2
+    	                ,
     	                {
     	                    xtype       : 'textfield',			colspan:2,				fieldLabel : 'Suma disponible proveedor',			id  : 'sumdisponible1',
     	                    name       : 'mtsumadp',			labelWidth	: 170,										readOnly   : true,	renderer: Ext.util.Format.usMoney
     	                },
-    	                causaSiniestro2
-    	                ,
     	                tratamientoInformacion
     	                ,
-    	                
     				 	{
     				 		colspan:2								,xtype       : 'textareafield'				,fieldLabel : 'Observaciones'				,id       : 'observaciones1'
     			 			,labelWidth	 : 170						,name:'dsobserv',		readOnly   : true,
@@ -494,219 +525,292 @@ Ext.onReady(function() {
     		});
     
     
-    var params = {
-            'params.nmautser'  : valorAction.nmautser
-        };
-        
-    	storeConsultaFormulario.load({
-            params: params,
-            callback: function(records, operation, success){
-                if(success){
-                    if(records.length <= 0){
-                        Ext.Msg.show({
-                             title: 'Aviso',
-                             msg: 'No se encontraron datos',
-                             buttons: Ext.Msg.OK,
-                             icon: Ext.Msg.ERROR
-                         });
-                    }else{
-                    	
-                    	
-                    	panelInicialPrincipal1.getForm().loadRecord(records[0]);
-                    	
-                    	Ext.getCmp('sucConsulta').setValue(Ext.getCmp('cveSucursal1').getValue());
-                    	
-                    	//AQUI VA LA INFORMACION DE CAUSA DEL SINIESTRO 
-                    	
-                    	Ext.Ajax.request(
-            		    {
-            		        url     : _URL_LISTA_SUBCOBERTURA1
-            		        ,params : 
-            		        {
-            		            'params.cdsubcob':Ext.getCmp('cveSubgarantia1').getValue()
-            		        }
-            		        ,success : function (response)
-            		        {
-            		        	if(Ext.decode(response.responseText).listaSubcobertura != null)
-            		            {
-            		                var json=Ext.decode(response.responseText).listaSubcobertura[0];							            	
-            		                Ext.getCmp('subcobertura1').setValue(json.value);
-            		            }
-            		        },
-            		        failure : function ()
-            		        {
-            		            me.up().up().setLoading(false);
-            		            Ext.Msg.show({
-            		                title:'Error',
-            		                msg: 'Error de comunicaci&oacute;n',
-            		                buttons: Ext.Msg.OK,
-            		                icon: Ext.Msg.ERROR
-            		            });
-            		        }
-            		    });
-                    	
-                    	Ext.Ajax.request(
-	    		        {
-	    		            url     : _URL_CONSULTA_DEDUCIBLE_COPAGO1
-	    		            ,params : 
-	    		            {
-	    		            	'params.cdunieco':Ext.getCmp('unieco1').getValue(),
-	    		            	'params.estado':Ext.getCmp('estado1').getValue(),
-	    		            	'params.cdramo':Ext.getCmp('cdramo1').getValue(),
-	    		            	'params.nmpoliza':Ext.getCmp('polizaAfectada1').getValue(),
-	    		            	'params.nmsituac':Ext.getCmp('nmsituac1').getValue(),
-	    		            	'params.cdgarant':Ext.getCmp('cveGarantia1').getValue(),
-	    		            	'params.subcober':Ext.getCmp('cveSubgarantia1').getValue(),
-	    		            	
-	    		            }
-	    		            ,success : function (response)
-	    		            {
-	    		            	var respuesta= Ext.decode(response.responseText);
-	    		            	
-	    						if(respuesta.listaDatosSiniestro != null)
-    							{
-	    							var json=Ext.decode(response.responseText).listaDatosSiniestro[0];
-    	    		            	Ext.getCmp('deducible1').setValue(json.deducible);
-    	    		            	Ext.getCmp('copago1').setValue(json.copago);
+		var params = {
+			'params.nmautser'  : valorAction.nmautser
+		};
+		storeConsultaFormulario.load({
+			params: params,
+			callback: function(records, operation, success){
+				if(success){
+					if(records.length <= 0){
+						Ext.Msg.show({
+							title: 'Aviso',
+							msg: 'No se encontraron datos',
+							buttons: Ext.Msg.OK,
+							icon: Ext.Msg.ERROR
+						});
+					}else{
+						panelInicialPrincipal1.getForm().loadRecord(records[0]);
+						Ext.getCmp('sucConsulta').setValue(Ext.getCmp('cveSucursal1').getValue());
+						
+						Ext.Ajax.request(
+						{
+							url     : _URL_LISTA_SUBCOBERTURA1
+							,params : 
+							{
+								'params.cdsubcob':Ext.getCmp('cveSubgarantia1').getValue()
+							}
+							,success : function (response)
+							{
+								if(Ext.decode(response.responseText).listaSubcobertura != null)
+								{
+									var json=Ext.decode(response.responseText).listaSubcobertura[0];							            	
+									Ext.getCmp('subcobertura1').setValue(json.value);
 								}
-	    		
-	    		            	
-	    		            },
-	    		            failure : function ()
-	    		            {
-	    		                me.up().up().setLoading(false);
-	    		                Ext.Msg.show({
-	    		                    title:'Error',
-	    		                    msg: 'Error de comunicaci&oacute;n',
-	    		                    buttons: Ext.Msg.OK,
-	    		                    icon: Ext.Msg.ERROR
-	    		                });
-	    		            }
-	    		        });
-                    	
-                    	Ext.Ajax.request(
-            		    {
-            		        url     : _URL_LISTA_TMANTENI1
-            		        ,params : 
-            		        {
-            		        	
-            		        	'params.cdtabla' : 'TPENALIZACIONES',
-            		        	'params.codigo' : Ext.getCmp('porpenal1').getValue()
-            		        }
-            		        ,success : function (response)
-            		        {
-            		        	if(Ext.decode(response.responseText).listaConsultaManteni != null)
-            		            {
-            		                var json=Ext.decode(response.responseText).listaConsultaManteni[0];							            	
-            		                Ext.getCmp('penalizacion1').setValue(json.descripc);
-            		            }
-            		        },
-            		        failure : function ()
-            		        {
-            		            me.up().up().setLoading(false);
-            		            Ext.Msg.show({
-            		                title:'Error',
-            		                msg: 'Error de comunicaci&oacute;n',
-            		                buttons: Ext.Msg.OK,
-            		                icon: Ext.Msg.ERROR
-            		            });
-            		        }
-            		    });
-                    	// MEDICO
-                    	//console.log(Ext.getCmp('cdmedico1').getValue());
-                    	
-                    	Ext.Ajax.request(
-        	    				{
-        	    				    url     : _URL_CATALOGOS
-        	    				    ,params:{
-        	    						'params.cdpresta' : Ext.getCmp('cdmedico1').getValue(),
-        	    						 catalogo         : _CAT_MEDICOS,
-        	    						 catalogoGenerico : true
-        	    	                }
-        	    				    ,success : function (response)
-        	    				    {
-        	    				    	if(Ext.decode(response.responseText).listaGenerica != null)
-            				    		{
-        	    				    		var json=Ext.decode(response.responseText).listaGenerica[0];
-        		    				        Ext.getCmp('especialidad1').setValue(json.descesp);
-        		    				        panelInicialPrincipal1.down('textfield[name=nombreMedico]').setValue(json.nombre);
-            				    		}
-        	    				    },
-        	    				    failure : function ()
-        	    				    {
-        	    				        me.up().up().setLoading(false);
-        	    				        Ext.Msg.show({
-        	    				            title:'Error',
-        	    				            msg: 'Error de comunicaci&oacute;n',
-        	    				            buttons: Ext.Msg.OK,
-        	    				            icon: Ext.Msg.ERROR
-        	    				        });
-        	    				    }
-        	    				});
-                    	// AQUI SE TIENE QUE HACER EL LLAMADO A LOS SERVICIOS PARA OBTENER LA INFORMACION DE LAS TABLAS
-                    	Ext.Ajax.request(
-        						{
-        						    url     : _URL_LISTADO_CONCEP_EQUIP1
-        						    ,params : params
-        							
-        						    ,success : function (response)
-        						    {
-        						    	if(Ext.decode(response.responseText).listaConsultaTablas != null)
-        			            		{
-        						    		var json=Ext.decode(response.responseText);
-        							        
-        							        for(var i=0;i<json.listaConsultaTablas.length;i++)
-        				                    {
-        				                        /*OBTENEMOS LOS VALORES*/
-        				                        var rec = new modelListadoTablas1({
-        			                        		nmautser: json.listaConsultaTablas[i].nmautser,
-        			                        		cdtipaut:json.listaConsultaTablas[i].cdtipaut,
-        			                        		cdmedico:json.listaConsultaTablas[i].cdmedico,
-        			                        		nombreMedico:json.listaConsultaTablas[i].nombreMedico,
-        			                        		desccpt:json.listaConsultaTablas[i].desccpt,
-        			                        		precio:json.listaConsultaTablas[i].precio,
-        			                        		cdtipmed:json.listaConsultaTablas[i].cdtipmed,
-        			                        		cdcpt:json.listaConsultaTablas[i].cdcpt,
-        			                        		cantporc:json.listaConsultaTablas[i].cantporc,
-        			                        		ptimport:json.listaConsultaTablas[i].ptimport,
-        			                        		descTipMed:json.listaConsultaTablas[i].descTipMed
-        					    				});
-        				                        if(json.listaConsultaTablas[i].cdtipaut==1)
-        			                        	{
-        				                        	storeConceptoAutorizados1.add(rec);
-        			                        	}
-        				                        if(json.listaConsultaTablas[i].cdtipaut==2)
-        			                        	{
-        				                        	storeQuirugicoBase1.add(rec);
-        			                        	}
-        				                        
-        				                        if(json.listaConsultaTablas[i].cdtipaut==3)
-        			                        	{
-        				                        	storeQuirurgico1.add(rec);
-        			                        	}
-        				                    }
-        			            		}
-        						    },
-        						    failure : function ()
-        						    {
-        						        me.up().up().setLoading(false);
-        						        Ext.Msg.show({
-        						            title:'Error',
-        						            msg: 'Error de comunicaci&oacute;n',
-        						            buttons: Ext.Msg.OK,
-        						            icon: Ext.Msg.ERROR
-        						        });
-        						    }
-        						});
-                    }
-                }else{
-                    Ext.Msg.show({
-                         title: 'Error',
-                         msg: 'Error al obtener los datos',
-                         buttons: Ext.Msg.OK,
-                         icon: Ext.Msg.ERROR
-                     });
-                }
-            }
-        });
+							},
+							failure : function ()
+							{
+								me.up().up().setLoading(false);
+								Ext.Msg.show({
+									title:'Error',
+									msg: 'Error de comunicaci&oacute;n',
+									buttons: Ext.Msg.OK,
+									icon: Ext.Msg.ERROR
+								});
+							}
+						});
+		
+					Ext.Ajax.request(
+					{
+						url     : _URL_CONSULTA_DEDUCIBLE_COPAGO1
+						,params : 
+						{
+							'params.cdunieco':Ext.getCmp('unieco1').getValue(),
+							'params.estado':Ext.getCmp('estado1').getValue(),
+							'params.cdramo':Ext.getCmp('cdramo1').getValue(),
+							'params.nmpoliza':Ext.getCmp('polizaAfectada1').getValue(),
+							'params.nmsituac':Ext.getCmp('nmsituac1').getValue(),
+							'params.cdgarant':Ext.getCmp('cveGarantia1').getValue(),
+							'params.subcober':Ext.getCmp('cveSubgarantia1').getValue()
+						}
+						,success : function (response)
+						{
+							var respuesta= Ext.decode(response.responseText);
+							if(respuesta.listaDatosSiniestro != null)
+							{
+								var json=Ext.decode(response.responseText).listaDatosSiniestro[0];
+								Ext.getCmp('deducible1').setValue(json.deducible);
+								Ext.getCmp('copago1').setValue(json.copago);
+					
+								Ext.Ajax.request(
+								{
+									url     : _URL_CATALOGOS
+									,params:{
+										'params.cdpresta': Ext.getCmp('cdproveedor1').getValue(),
+										catalogo         : _CAT_PROVEEDORES,
+										catalogoGenerico : true
+									}
+									,success : function (response)
+									{
+										if(Ext.decode(response.responseText).listaGenerica != null)
+										{
+											var json=Ext.decode(response.responseText).listaGenerica[0];
+											Ext.getCmp('idzonaHospProv1').setValue(json.zonaHospitalaria);
+										}
+									},
+									failure : function ()
+									{
+										me.up().up().setLoading(false);
+										Ext.Msg.show({
+											title:'Error',
+											msg: 'Error de comunicaci&oacute;n',
+											buttons: Ext.Msg.OK,
+											icon: Ext.Msg.ERROR
+										});
+									}
+								});
+							}
+						},
+						failure : function ()
+						{
+							me.up().up().setLoading(false);
+							Ext.Msg.show({
+								title:'Error',
+								msg: 'Error de comunicaci&oacute;n',
+								buttons: Ext.Msg.OK,
+								icon: Ext.Msg.ERROR
+							});
+						}
+					});
+		
+					Ext.Ajax.request(
+					{
+						url     : _URL_LISTA_TMANTENI1
+						,params : 
+						{
+							'params.cdtabla' : 'TPENALIZACIONES',
+							'params.codigo' : Ext.getCmp('porpenal1').getValue()
+						}
+						,success : function (response)
+						{
+							if(Ext.decode(response.responseText).listaConsultaManteni != null)
+							{
+								var json=Ext.decode(response.responseText).listaConsultaManteni[0];							            	
+								Ext.getCmp('penalizacion1').setValue(json.descripc);
+							}
+						},
+						failure : function ()
+						{
+							me.up().up().setLoading(false);
+							Ext.Msg.show({
+								title:'Error',
+								msg: 'Error de comunicaci&oacute;n',
+								buttons: Ext.Msg.OK,
+								icon: Ext.Msg.ERROR
+							});
+						}
+					});
+					
+					Ext.Ajax.request(
+					{
+						url     : _URL_CATALOGOS
+						,params:{
+							'params.cdpresta' : Ext.getCmp('cdmedico1').getValue(),
+							catalogo         : _CAT_MEDICOS,
+							catalogoGenerico : true
+						}
+						,success : function (response)
+						{
+							if(Ext.decode(response.responseText).listaGenerica != null)
+							{
+								var json=Ext.decode(response.responseText).listaGenerica[0];
+								Ext.getCmp('especialidad1').setValue(json.descesp);
+								panelInicialPrincipal1.down('textfield[name=nombreMedico]').setValue(json.nombre);
+							}
+						},
+						failure : function ()
+						{
+							me.up().up().setLoading(false);
+							Ext.Msg.show({
+								title:'Error',
+								msg: 'Error de comunicaci&oacute;n',
+								buttons: Ext.Msg.OK,
+								icon: Ext.Msg.ERROR
+							});
+						}
+					});
+					
+					Ext.Ajax.request(
+					{
+						url     : _URL_LISTADO_CONCEP_EQUIP1
+						,params : params
+						,success : function (response)
+						{
+							if(Ext.decode(response.responseText).listaConsultaTablas != null)
+							{
+								var json=Ext.decode(response.responseText);
+								for(var i=0;i<json.listaConsultaTablas.length;i++)
+								{
+									/*OBTENEMOS LOS VALORES*/
+									var rec = new modelListadoTablas1({
+										nmautser: json.listaConsultaTablas[i].nmautser,
+										cdtipaut:json.listaConsultaTablas[i].cdtipaut,
+										cdmedico:json.listaConsultaTablas[i].cdmedico,
+										nombreMedico:json.listaConsultaTablas[i].nombreMedico,
+										desccpt:json.listaConsultaTablas[i].desccpt,
+										precio:json.listaConsultaTablas[i].precio,
+										cdtipmed:json.listaConsultaTablas[i].cdtipmed,
+										cdcpt:json.listaConsultaTablas[i].cdcpt,
+										cantporc:json.listaConsultaTablas[i].cantporc,
+										ptimport:json.listaConsultaTablas[i].ptimport,
+										descTipMed:json.listaConsultaTablas[i].descTipMed
+									});
+									if(json.listaConsultaTablas[i].cdtipaut==1)
+									{
+										storeConceptoAutorizados1.add(rec);
+									}
+									if(json.listaConsultaTablas[i].cdtipaut==2)
+									{
+										storeQuirugicoBase1.add(rec);
+									}
+									if(json.listaConsultaTablas[i].cdtipaut==3)
+									{
+										storeQuirurgico1.add(rec);
+									}
+								}
+							}
+						},
+						failure : function ()
+						{
+							me.up().up().setLoading(false);
+							Ext.Msg.show({
+								title:'Error',
+								msg: 'Error de comunicaci&oacute;n',
+								buttons: Ext.Msg.OK,
+								icon: Ext.Msg.ERROR
+							});
+						}
+					});
+					
+					Ext.Ajax.request(
+					{
+						url     : _URL_POLIZA_UNICA
+						,params : 
+						{
+							'params.cdunieco':Ext.getCmp('idUnieco').getValue(),
+							'params.cdramo':Ext.getCmp('idcdRamo').getValue(),
+							'params.estado':Ext.getCmp('idEstado').getValue(),
+							'params.nmpoliza':Ext.getCmp('polizaAfectada').getValue(),
+							'params.cdperson':Ext.getCmp('idAsegurado').getValue()
+						}
+						,success : function (response)
+						{
+							if(Ext.decode(response.responseText).polizaUnica != null)
+							{
+								var json=Ext.decode(response.responseText).polizaUnica[0];
+								console.log("valores de retorno");
+								console.log(json);
+								Ext.getCmp('idZonaContratadaPoliza1').setValue(json.zonaContratada);
+								Ext.getCmp('polizaAfectadaCom1').setValue(json.numPoliza);
+								Ext.getCmp('iddsplanAsegurado1').setValue(json.dsplan);
+							}
+						},
+						failure : function ()
+						{
+							me.up().up().setLoading(false);
+							Ext.Msg.show({
+								title:'Error',
+								msg: 'Error de comunicaci&oacute;n',
+								buttons: Ext.Msg.OK,
+								icon: Ext.Msg.ERROR
+							});
+						}
+					});
+					
+					Ext.Ajax.request(
+					{
+						url     : _URL_EXCLUSION_PENALIZACION
+						,params:{
+							'params.cdunieco':Ext.getCmp('unieco1').getValue(),
+							'params.estado':Ext.getCmp('estado1').getValue(),
+							'params.cdramo':Ext.getCmp('cdramo1').getValue(),
+							'params.nmpoliza':Ext.getCmp('polizaAfectada1').getValue(),
+							'params.nmsituac':Ext.getCmp('nmsituac1').getValue()
+						}
+						,success : function (response)
+						{
+							//asignamos el valor de la exclusion al campo para su posterior uso
+							Ext.getCmp('idExclusionPenalizacion1').setValue(Ext.decode(response.responseText).existePenalizacion);
+						},
+						failure : function ()
+						{
+							Ext.Msg.show({
+								title:'Error',
+								msg: 'Error de comunicaci&oacute;n',
+								buttons: Ext.Msg.OK,
+								icon: Ext.Msg.ERROR
+							});
+						}
+					});
+				}
+			}else{
+				Ext.Msg.show({
+					title: 'Error',
+					msg: 'Error al obtener los datos',
+					buttons: Ext.Msg.OK,
+					icon: Ext.Msg.ERROR
+				});
+			}
+		}
+	});
 });

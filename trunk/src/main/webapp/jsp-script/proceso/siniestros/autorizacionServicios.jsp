@@ -47,6 +47,11 @@
             var panDocUrlViewDoc                    = '<s:url namespace ="/documentos" action="descargaDocInline" />';
             var venDocUrlImpConrec                  = '<s:url namespace ="/documentos" action="generarContrarecibo" />';
             
+            
+            var valorAction = <s:property value='paramsJson' escapeHtml='false'/>;
+            
+            debug(valorAction);
+            
         </script>
         <script type="text/javascript" src="${ctx}/js/proceso/siniestros/autorizacionServicios.js"></script>
         <!-- <script type="text/javascript" src="${ctx}/js/proceso/siniestros/verAutorizacionServicios.js"></script> -->

@@ -239,9 +239,9 @@
     		<result name="success">/jsp-script/proceso/siniestros/afiliadosAfectados.jsp</result>
 		</action>
 		        
-		<action name="autorizacionServicios">
+		<!-- <action name="autorizacionServicios">
     		<result>/jsp-script/proceso/siniestros/autorizacionServicios.jsp</result>
-		</action>
+		</action>-->
 		
 		<action name="tipoAutorizacion">
     		<result>/jsp-script/proceso/siniestros/tipoAutorizacion.jsp</result>
@@ -251,6 +251,11 @@
 		<action name="includes/rechazoReclamaciones" class="siniestrosAction"  method="execute">
     		<result>/jsp-script/proceso/siniestros/rechazoReclamaciones.jsp</result>
 		</action>
+		
+		<action name="autorizacionServicios" class="siniestrosAction"  method="autorizacionServicios">
+    		<result>/jsp-script/proceso/siniestros/autorizacionServicios.jsp</result>
+		</action>
+		
 		
 		<action name="includes/historialReclamaciones">
     		<result>/jsp-script/proceso/siniestros/historialReclamaciones.jsp</result>
@@ -441,6 +446,17 @@
 				<param name="includeProperties">
 					success,
 					existePenalizacion
+				</param>
+			</result>
+		</action>
+		
+		<action name="validaAutorizacionProceso" class="siniestrosAction"
+			method="validaAutorizacionProceso">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success,
+					autorizarProceso
 				</param>
 			</result>
 		</action>

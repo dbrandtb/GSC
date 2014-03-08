@@ -70,7 +70,10 @@ Ext.onReady(function() {
                  	{type:'string',    name:'ptimport'},			{type:'string',    name:'descTipMed'}	]
     });
 	
-	//STORE PARA SELECCIONAR EL TIPO DE AUTORIZACION
+	////////////////////////////////////////////////
+	/////////// 		STORE				////////
+	////////////////////////////////////////////////
+	
     storeTipoAutorizacion= Ext.create('Ext.data.JsonStore', {
     	model:'Generic',
         proxy: {
@@ -83,7 +86,7 @@ Ext.onReady(function() {
         }
     });
     storeTipoAutorizacion.load();
-	storeAsegurados = Ext.create('Ext.data.Store', {
+	var storeAsegurados = Ext.create('Ext.data.Store', {
         model:'Generic',
         autoLoad:false,
         proxy: {
@@ -92,6 +95,49 @@ Ext.onReady(function() {
             reader: {
                 type: 'json',
                 root: 'listaAsegurado'
+            }
+        }
+    });
+	var storeAsegurados2 = Ext.create('Ext.data.Store', {
+        model:'Generic',
+        autoLoad:false,
+        proxy: {
+            type: 'ajax',
+            url : _URL_LISTADO_ASEGURADO,
+            reader: {
+                type: 'json',
+                root: 'listaAsegurado'
+            }
+        }
+    });
+	
+	storePlazas= Ext.create('Ext.data.Store', {
+		model:'Generic',
+		autoLoad:true,
+		proxy:
+		{
+			type: 'ajax',
+			url:_UR_LISTA_PLAZAS,
+			reader:
+			{
+				type: 'json',
+				root: 'listaPlazas'
+			}
+		}
+	});
+	
+	storeCausaSinestro= Ext.create('Ext.data.Store', {
+        model:'Generic',
+        autoLoad:true,
+        proxy:
+        {
+            type: 'ajax',
+            url: _URL_CATALOGOS,
+            extraParams : {catalogo:_CAT_CAUSASINIESTRO},
+            reader:
+            {
+                type: 'json',
+                root: 'lista'
             }
         }
     });
@@ -209,6 +255,21 @@ Ext.onReady(function() {
         }
     });
     
+    storeTratamiento= Ext.create('Ext.data.Store', {
+        model:'Generic',
+        autoLoad:true,
+        proxy:
+        {
+            type: 'ajax',
+            url : _URL_CATALOGOS,
+            extraParams : {catalogo:_CAT_TRATAMIENTO},
+            reader:
+            {
+                type: 'json',
+                root: 'lista'
+            }
+        }
+    });
     storeTabulador = Ext.create('Ext.data.Store', {
         model:'modelListadoTabulador',
         autoLoad:false,
@@ -266,107 +327,9 @@ Ext.onReady(function() {
         }
     });
 	
-	/*GRID PARA LA PANTALLA DE VISUALIZACIÓN DE LA INFORMACIÓN INICIAL DE MODO DE AUTORIZACIÓN*/
-	gridDatosPoliza= Ext.create('Ext.grid.Panel',
-	{
-	    id            : 'polizaGridId',
-	    store         : storeListadoPoliza,
-	    //collapsible   : true,
-	    //titleCollapse : true,
-	    selType	      : 'checkboxmodel',
-	    width         : 700,
-	    height		  : 200,
-	    columns       :
-	    [
-	        {
-	             header     : 'N&uacute;mero de P&oacute;liza',		dataIndex : 'numPoliza',		width	 	: 200
-	        },
-	        {
-	             header     : 'Estatus p&oacute;liza ',							dataIndex : 'dsestatus',	width	 	: 100
-	        },
-	        {
-	             header     : 'Vigencia p&oacute;liza <br/> Fecha inicio \t\t  |  \t\t Fecha fin  ',						dataIndex : 'vigenciaPoliza',		width	    : 200
-	        },
-	        {
-	             header     : 'Fecha alta <br/> asegurado',		dataIndex : 'faltaAsegurado',		width	    : 100
-	        },
-	        {
-	             header     : 'Fecha cancelaci&oacute;n <br/> asegurado',						dataIndex : 'fcancelacionAfiliado',		width	    : 150
-	        },
-	        {
-	             header     : 'Estatus<br/> asegurado',						dataIndex : 'desEstatusCliente',		width	    : 100
-	        },
-	        {
-	             header     : 'Producto',							dataIndex : 'dsramo',		width       : 150
-	        },
-	        {
-	             header     : 'Sucursal',							dataIndex : 'dssucursal',	width       : 150
-	        },
-	        {
-	             header     : 'Estado',								dataIndex : 'estado',		width	    : 100
-	        },
-	        {
-	             header     : 'N&uacute;mero de Situaci&oacute;n',	dataIndex : 'nmsituac',		width	    : 150
-	         }
-		],
-	    bbar :
-	    {
-	        displayInfo : true,
-	        store       : storeListadoPoliza,
-	        xtype       : 'pagingtoolbar'
-	    },
-	    listeners: {
-                itemclick: function(dv, record, item, index, e){
-                	Ext.getCmp('idUnieco').setValue(record.get('cdunieco'));
-					Ext.getCmp('idEstado').setValue(record.get('estado'));
-					Ext.getCmp('idcdRamo').setValue(record.get('cdramo'));
-					Ext.getCmp('idNmSituac').setValue(record.get('nmsituac'));
-					Ext.getCmp('polizaAfectada').setValue(record.get('nmpoliza'));
-					Ext.getCmp('polizaAfectadaCom').setValue(record.get('numPoliza'));
-					
-					Ext.getCmp('iddsplanAsegurado').setValue(record.get('dsplan'));
-					Ext.getCmp('idMontoBase').setValue(record.get('mtoBase'));
-					Ext.getCmp('idNmsuplem').setValue(record.get('nmsuplem'));
-					Ext.getCmp('idZonaContratadaPoliza').setValue(record.get('zonaContratada'));
-					Ext.getCmp('idcdtipsit').setValue(record.get('cdtipsit'));
-					storeCobertura.load({
-	                    params:{
-	                    	'params.cdunieco':Ext.getCmp('idUnieco').getValue(),
-			            	'params.estado':Ext.getCmp('idEstado').getValue(),
-			            	'params.cdramo':Ext.getCmp('idcdRamo').getValue(),
-			            	'params.nmpoliza':Ext.getCmp('polizaAfectada').getValue(),
-			            	'params.nmsituac':Ext.getCmp('idNmSituac').getValue()
-	                    }
-					});
-					
-					storeListadoAsegurado.removeAll();
-					modificacionPolizas.hide();
-                }
-            }
-
-	});
-	gridDatosPoliza.store.sort([
-        {
-        	property    : 'nmpoliza',			direction   : 'DESC'
-        }
-    ]);
-	
-	//PANTALLA QUE CARGA LOS VALORES DEL PANEL 
-	modificacionPolizas = Ext.create('Ext.window.Window',
-	{
-		title        : 'Listado de P&oacute;liza'
-		,modal       : true
-		,buttonAlign : 'center'
-		,closable 	 : false
-		,width		 : 710
-		,minHeight 	 : 100 
-		,maxheight      : 400
-		,items       :
-			[
-			 	gridDatosPoliza
-			]
-	});
-	
+	////////////////////////////////////////////////////////////////////
+	/////////// 		DECLARACIÓN DE LOS COMBOS				////////
+    ////////////////////////////////////////////////////////////////////
 	asegurado = Ext.create('Ext.form.field.ComboBox',
     {
 		colspan:2,						fieldLabel     : 'Asegurado',		allowBlank     : false,			displayField : 'value',
@@ -392,7 +355,7 @@ Ext.onReady(function() {
 			        cargaStorePaginadoLocal(storeListadoPoliza, _URL_CONSULTA_LISTADO_POLIZA, 'listaPoliza', params, function(options, success, response){
 			            if(success){
 			                var jsonResponse = Ext.decode(response.responseText);
-			                if(jsonResponse.listaPoliza == null) {								
+			                if(jsonResponse.listaPoliza == null) {
 			                    Ext.Msg.show({
 			                        title: 'Aviso',
 			                        msg: 'No se encontraron P&oacute;liza de dicho asegurado',
@@ -414,7 +377,6 @@ Ext.onReady(function() {
 			                });
 			            }
 			        });
-			        // AQUI VA LA INFORMACION PARA LA VALIDACION DEL CAMPO
 			        storeListadoAsegurado.removeAll();
 			        modificacionPolizas.showAt(200,100);
 				}
@@ -426,46 +388,15 @@ Ext.onReady(function() {
 	    colspan	   :2,				fieldLabel   : 'Causa siniestro',	id		  : 'idCausaSiniestro',			allowBlank		: false,			width:500,
 	    editable   : false,			displayField : 'value',				valueField:'key',			    		forceSelection  : true,
 	    labelWidth : 170,			queryMode    :'local',				editable  :false,						name			:'cdcausa',
-	    store : Ext.create('Ext.data.Store', {
-	        model:'Generic',
-	        autoLoad:true,
-	        proxy:
-	        {
-	            type: 'ajax',
-	            url: _URL_CATALOGOS,
-	            extraParams : {catalogo:_CAT_CAUSASINIESTRO},
-	            reader:
-	            {
-	                type: 'json',
-	                root: 'lista'
-	            }
-	        }
-	    })
+	    store : storeCausaSinestro
 	});
-	
-	
-	
 	
 	tratamiento= Ext.create('Ext.form.field.ComboBox',
 	{
 		colspan	   :2,			fieldLabel   : 'Tr&aacute;tamiento',	id        : 'tratamiento',		allowBlank     : false,	
 	    editable   : false,		displayField : 'value',					valueField: 'key',			    forceSelection : true,
 	    width	   :500,		labelWidth   : 170,						queryMode : 'local',			name           :'dstratam'
-	    ,store : Ext.create('Ext.data.Store', {
-	        model:'Generic',
-	        autoLoad:true,
-	        proxy:
-	        {
-	            type: 'ajax',
-	            url : _URL_CATALOGOS,
-	            extraParams : {catalogo:_CAT_TRATAMIENTO},
-	            reader:
-	            {
-	                type: 'json',
-	                root: 'lista'
-	            }
-	        }
-	    })
+	    ,store : storeTratamiento
 	});
 	
 	medico = Ext.create('Ext.form.field.ComboBox',
@@ -512,7 +443,7 @@ Ext.onReady(function() {
     {
 		fieldLabel : 'M&eacute;dico',	allowBlank: false,				displayField : 'nombre',			id:'idmedicoConAutorizado',
 		labelWidth: 100,				width:450,						valueField   : 'cdpresta',			forceSelection : true,
-		matchFieldWidth: false,			queryMode :'remote',			queryParam: 'params.cdpresta',		store : storeMedico,//,		editable:false,
+		matchFieldWidth: false,			queryMode :'remote',			queryParam: 'params.cdpresta',		store : storeMedico,
 		minChars  : 2,					triggerAction: 'all',			name:'idmedicoConAutorizado',		hideTrigger:true
 	});
     
@@ -520,7 +451,7 @@ Ext.onReady(function() {
     {
 		fieldLabel : 'M&eacute;dico',	allowBlank: false,				displayField : 'nombre',			id:'idmedicoEqQuirurg',
 		labelWidth: 100,				width:450,						valueField   : 'cdpresta',			forceSelection : true,
-		matchFieldWidth: false,			queryMode :'remote',			queryParam: 'params.cdpresta',		store : storeMedico,//,		editable:false,
+		matchFieldWidth: false,			queryMode :'remote',			queryParam: 'params.cdpresta',		store : storeMedico,
 		triggerAction: 'all',			name:'idmedicoEqQuirurg',		minChars  : 2,						hideTrigger:true
 		
 	});
@@ -532,8 +463,6 @@ Ext.onReady(function() {
     	matchFieldWidth: false,			queryMode :'remote',			queryParam: 'params.cdpresta',		store : storeProveedor,
     	minChars  : 2,					triggerAction: 'all',			hideTrigger:true,
 		listeners : {
-			
-			//'select' : function(combo, record) {
 			change:function(e){
 				obtieneInformacion();
     		}
@@ -649,7 +578,6 @@ Ext.onReady(function() {
 	            		{
     	            		var json=Ext.decode(response.responseText).listaPorcentaje[0];
         	                Ext.getCmp('precioQuirurgico').setValue(json.mtomedico);
-        	                //<<<
     				        var importeTotal= Ext.getCmp('precioQuirurgico').getValue() * (Ext.getCmp('porcentajeQuirurgico').getValue()*100);
     						Ext.getCmp('importeQuirurgico').setValue(importeTotal);
 	            		}
@@ -670,28 +598,14 @@ Ext.onReady(function() {
     });
     
 	//SUCURSAL
+    
 	sucursal= Ext.create('Ext.form.field.ComboBox',
 	{
 		colspan		:2,					fieldLabel   : 'Plaza',			id: 'idSucursal',				allowBlank: false,			width:500	
 		,editable   : false,			displayField : 'value',				valueField:'key',			    forceSelection : true
 		,labelWidth : 170,				queryMode    :'local',				editable:false,					name:'cduniecs'
-		,store : Ext.create('Ext.data.Store', {
-			model:'Generic',
-			autoLoad:true,
-			proxy:
-			{
-				type: 'ajax',
-				url:_UR_LISTA_PLAZAS,
-				reader:
-				{
-					type: 'json',
-					root: 'listaPlazas'
-				}
-			}
-		})
+		,store : storePlazas
 	});	
-	
-	
 	
 	
 	tipoMedico = Ext.create('Ext.form.field.ComboBox',
@@ -726,6 +640,282 @@ Ext.onReady(function() {
 		    	}
 		    }
 		}
+	});
+
+	
+	codigoAsegurado= Ext.create('Ext.form.ComboBox',
+	{
+		id:'tipoAutorizacion',				fieldLabel: 'Tipo autorizaci&oacute;n',		store: storeTipoAutorizacion,
+		queryMode:'local',					displayField: 'value',						valueField: 'key',					allowBlank:false,
+		blankText:'Es un dato requerido',	editable:false,								labelWidth : 170,
+		width: 400,							emptyText:'Seleccione Autorizaci&oacute;n ...',
+		listeners : {
+			'select' : function(combo, record) {
+					closedStatusSelectedID = this.getValue();
+					Ext.getCmp('claveTipoAutoriza').setValue(closedStatusSelectedID);
+					if(closedStatusSelectedID !=1){
+						Ext.getCmp('panelbusqueda').show();
+						Ext.getCmp('clausulasGridId').show();
+					}else{
+						Ext.getCmp('panelbusqueda').hide();
+						Ext.getCmp('clausulasGridId').hide();
+						Ext.getCmp('idNumeroAnterior').hide();
+						Ext.getCmp('btnBuscar').hide();
+						modificacionClausula.hide();
+						
+					}
+				}
+			}
+	});
+    
+	/*panel que contiene la información del asegurado a buscar este se ocupa en el combo */
+	panelbusquedas = Ext.create('Ext.panel.Panel',
+	{
+	    border  : 0,		id     : 'panelbusqueda',				width	: 600,		style  : 'margin:5px'
+	    ,items :
+	        [
+	            Ext.create('Ext.form.field.ComboBox',
+	            {
+	                fieldLabel 	: 'Nombre/C&oacute;digo asegurado',			allowBlank		: false,		displayField 	: 'value'
+	                ,id			: 'idCodigoAsegurado',						labelWidth		: 170,			width		 	: 500
+	                ,valueField : 'key',									forceSelection 	: true,		    matchFieldWidth	: false
+	                ,minChars  	: 2,										queryMode 		:'remote'		,queryParam: 'params.cdperson'
+	                ,store : storeAsegurados2,								hideTrigger:true			    ,triggerAction: 'all'
+	            })
+	        ]
+	    ,buttonAlign: 'center'
+	    ,buttons : [{
+	        text: "Buscar"
+	        ,icon:_CONTEXT+'/resources/fam3icons/icons/magnifier.png'
+	        ,handler: function(){
+	            if (panelClausula.form.isValid()) {
+	                storeListadoAsegurado.removeAll();
+	                var params = {
+	                    'params.cdperson' : Ext.getCmp('idCodigoAsegurado').getValue(),
+	                    'params.tipoAut' : Ext.getCmp('tipoAutorizacion').getValue()
+	                };
+	                storeTipoMedico.load();
+	                storeMedico.load();
+	                storeProveedor.load();
+	                storeTiposICD.load();
+
+	                cargaStorePaginadoLocal(storeListadoAsegurado, _URL_CONSULTA_LISTADO_AUTORIZACION, 'listaAutorizacion', params, function(options, success, response){
+	                    if(success){
+	                        var jsonResponse = Ext.decode(response.responseText);
+	                        if(jsonResponse.listaAutorizacion == null) {								
+	                            Ext.Msg.show({
+	                                title: 'Aviso',
+	                                msg: 'No se encontraron datos.',
+	                                buttons: Ext.Msg.OK,
+	                                icon: Ext.Msg.WARNING
+	                            });
+	                            return;
+	                        }
+	                    }else{
+	                        Ext.Msg.show({
+	                            title: 'Aviso',
+	                            msg: 'Error al obtener los datos.',
+	                            buttons: Ext.Msg.OK,
+	                            icon: Ext.Msg.ERROR
+	                        });
+	                    }
+	                });
+	            } else {
+	                Ext.Msg.show({
+	                    title: 'Aviso',
+	                    msg: 'Complete la informaci&oacute;n requerida',
+	                    buttons: Ext.Msg.OK,
+	                    icon: Ext.Msg.WARNING
+	                });
+	            }
+	        }
+	    }] 
+	});
+    
+	gridDatos= Ext.create('Ext.grid.Panel',
+	{
+	    id             : 'clausulasGridId'
+	    ,store         :  storeListadoAsegurado
+	    ,collapsible   : true
+	    ,titleCollapse : true
+	    ,style         : 'margin:5px'
+	    ,selType: 'checkboxmodel'
+	    ,width   : 600
+	    ,height: 200
+	    ,columns       :
+	    [
+	        {       header     : 'N&uacute;mero <br/> Autorizaci&oacute;n'            ,dataIndex : 'nmautser'            ,width     : 100        },
+	        {       header     : 'N&uacute;mero <br/> Autorizaci&oacute;n Anterior'   ,dataIndex : 'nmautant'            ,width     : 200        },
+	        {       header     : 'Fecha Solicitud'                                    ,dataIndex : 'fesolici'            ,width     : 100        },
+	        {       header     : 'P&oacute;liza <br/> Afectada'                       ,dataIndex : 'polizaafectada'      ,width     : 100        },
+	        {       header     : 'Clave Proveedor'                                    ,dataIndex : 'cdprovee'            ,width     : 100        },
+	        {       header     : 'Nombre del Proveedor'                               ,dataIndex : 'nombreProveedor'     ,width     : 200        }
+	    ],
+	    bbar :
+	    {
+	        displayInfo : true,
+	        store       : storeListadoAsegurado,
+	        xtype       : 'pagingtoolbar'
+	    },
+	    listeners: {
+	        itemclick: function(dv, record, item, index, e) {
+	            idTipoAutorizacion= Ext.getCmp('tipoAutorizacion').getValue();
+	            if(idTipoAutorizacion !=3)
+	            {
+	                Ext.getCmp('idNumeroAnterior').hide();
+	                Ext.getCmp('btnBuscar').hide();
+	            }else{
+	                Ext.getCmp('idNumeroAnterior').show();
+	                Ext.getCmp('btnBuscar').show();
+	            }
+
+	            if(idTipoAutorizacion !=1)
+	            {
+	                if(Ext.getCmp('clausulasGridId').getSelectionModel().hasSelection()){
+	                    var rowSelected = Ext.getCmp('clausulasGridId').getSelectionModel().getSelection()[0];
+	                    var nmautser= rowSelected.get('nmautser');
+	                    cargarInformacionAutorizacionServicio(nmautser);
+	                }else {
+	                    //Ext.Msg.alert('Aviso', 'Debe de seleccionar una cl&aacute;usula para realizar la edici&oacute;n');
+	                    Ext.Msg.show({
+	                        title: 'Aviso',
+	                        msg: 'Debe de seleccionar un registro para realizar la edici&oacute;n',
+	                        buttons: Ext.Msg.OK,
+	                        icon: Ext.Msg.ERROR
+	                    });
+	                }
+	            }
+	            modificacionClausula.hide();
+	        }
+	    }
+	});
+	gridDatos.store.sort([
+	{
+	    property    : 'nmautser',			direction   : 'DESC'
+	}
+	]);
+    
+	
+	Ext.getCmp('panelbusqueda').hide();
+	Ext.getCmp('clausulasGridId').hide();
+	
+	
+	
+	panelClausula= Ext.create('Ext.form.Panel', {
+		id: 'panelClausula',
+		border:0,
+		bodyPadding: 5,
+		renderTo: Ext.getBody(),
+		defaults 	:
+		{	
+			style : 'margin:5px;'
+		}
+		,
+		items: [
+		        codigoAsegurado 	// <-- contiene los valores de los combo
+		        ,panelbusquedas 	// <-- contiene el formulario para la busqueda de acuerdo al codigo del asegurado
+		        ,gridDatos 			// <-- Contiene la información de los asegurados
+			]
+	});
+	
+    /*VERIFICAMOS SI ES UN PROCESO NUEVO O UN COMPLEMENTAR */
+    if(valorAction == null)
+	{
+		modificacionClausula = Ext.create('Ext.window.Window',
+		{
+			title        : 'Modo de Autorizaci&oacute;n'
+			,modal       : true
+			,buttonAlign : 'center'
+			,closable : false
+			,width		 : 650
+			,minHeight 	 : 100 
+			,maxheight      : 400
+			,items       :
+				[
+				 	panelClausula
+				]
+		}).showAt(50,100);
+	}else{
+			storeTipoMedico.load();
+			storeMedico.load();
+			storeProveedor.load();
+			storeTiposICD.load();
+			storeMedico.load();
+			storePlazas.load();
+			storeCausaSinestro.load();
+			storeTratamiento.load();
+			storeTabulador.load();
+			cargarInformacionAutorizacionServicio(valorAction.nmAutSer);
+	}
+    
+    
+    gridDatosPoliza= Ext.create('Ext.grid.Panel',
+	{
+	    id            : 'polizaGridId',				    store         : storeListadoPoliza,			    selType	      : 'checkboxmodel',
+	    width         : 700,						    height		  : 200,						    columns       :
+	    [
+	        {				header     : 'N&uacute;mero de P&oacute;liza',										dataIndex : 'numPoliza',			width	 	: 200	        },
+	        {	            header     : 'Estatus p&oacute;liza ',												dataIndex : 'dsestatus',			width	 	: 100	        },
+	        {               header     : 'Vigencia p&oacute;liza <br/> Fecha inicio \t\t  |  \t\t Fecha fin  ',	dataIndex : 'vigenciaPoliza',		width	    : 200           },
+	        {               header     : 'Fecha alta <br/> asegurado',											dataIndex : 'faltaAsegurado',		width	    : 100	        },
+	        {               header     : 'Fecha cancelaci&oacute;n <br/> asegurado',							dataIndex : 'fcancelacionAfiliado',	width	    : 150	        },
+	        {               header     : 'Estatus<br/> asegurado',												dataIndex : 'desEstatusCliente',	width	    : 100	        },
+	        {               header     : 'Producto',															dataIndex : 'dsramo',				width       : 150	        },
+	        {				header     : 'Sucursal',															dataIndex : 'dssucursal',			width       : 150	        },
+	        {               header     : 'Estado',																dataIndex : 'estado',				width	    : 100	        },
+	        {				header     : 'N&uacute;mero de Situaci&oacute;n',									dataIndex : 'nmsituac',				width	    : 150           }
+		],
+	    bbar :
+	    {	
+	    	displayInfo : true,		        store       : storeListadoPoliza,		        xtype       : 'pagingtoolbar'
+    	},
+	    listeners: {
+                itemclick: function(dv, record, item, index, e){
+                	Ext.getCmp('idUnieco').setValue(record.get('cdunieco'));
+					Ext.getCmp('idEstado').setValue(record.get('estado'));
+					Ext.getCmp('idcdRamo').setValue(record.get('cdramo'));
+					Ext.getCmp('idNmSituac').setValue(record.get('nmsituac'));
+					Ext.getCmp('polizaAfectada').setValue(record.get('nmpoliza'));
+					Ext.getCmp('polizaAfectadaCom').setValue(record.get('numPoliza'));
+					Ext.getCmp('iddsplanAsegurado').setValue(record.get('dsplan'));
+					Ext.getCmp('idMontoBase').setValue(record.get('mtoBase'));
+					Ext.getCmp('idNmsuplem').setValue(record.get('nmsuplem'));
+					Ext.getCmp('idZonaContratadaPoliza').setValue(record.get('zonaContratada'));
+					Ext.getCmp('idcdtipsit').setValue(record.get('cdtipsit'));
+					storeCobertura.load({
+	                    params:{
+	                    	'params.cdunieco':Ext.getCmp('idUnieco').getValue(),
+			            	'params.estado':Ext.getCmp('idEstado').getValue(),
+			            	'params.cdramo':Ext.getCmp('idcdRamo').getValue(),
+			            	'params.nmpoliza':Ext.getCmp('polizaAfectada').getValue(),
+			            	'params.nmsituac':Ext.getCmp('idNmSituac').getValue()
+	                    }
+					});
+					storeListadoAsegurado.removeAll();
+					modificacionPolizas.hide();
+                }
+            }
+	});
+	gridDatosPoliza.store.sort([
+        {
+        	property    : 'nmpoliza',			direction   : 'DESC'
+        }
+    ]);
+	
+	//PANTALLA QUE CARGA LOS VALORES DEL PANEL 
+	modificacionPolizas = Ext.create('Ext.window.Window',
+	{
+		title        : 'Listado de P&oacute;liza'
+		,modal       : true
+		,buttonAlign : 'center'
+		,closable 	 : false
+		,width		 : 710
+		,minHeight 	 : 100 
+		,maxheight      : 400
+		,items       :
+			[
+			 	gridDatosPoliza
+			]
 	});
 	
 	
@@ -1253,498 +1443,43 @@ Ext.onReady(function() {
 /*#####################################################################################################################################################
 ###################################################### 		 DATOS PARA LA BUSQUEDA INICIAL 	#######################################################
 #######################################################################################################################################################*/
-	
-	codigoAsegurado= Ext.create('Ext.form.ComboBox',
-	{
-		//colspan:2,
-		id:'tipoAutorizacion',				fieldLabel: 'Tipo autorizaci&oacute;n',		store: storeTipoAutorizacion,
-		queryMode:'local',					displayField: 'value',						valueField: 'key',					allowBlank:false,
-		blankText:'Es un dato requerido',	editable:false,								labelWidth : 170,
-		width: 400,							emptyText:'Seleccione Autorizaci&oacute;n ...',
-		listeners : {
-			'select' : function(combo, record) {
-					closedStatusSelectedID = this.getValue();
-					Ext.getCmp('claveTipoAutoriza').setValue(closedStatusSelectedID);
-					if(closedStatusSelectedID !=1){
-						Ext.getCmp('panelbusqueda').show();
-						Ext.getCmp('clausulasGridId').show();
-					}else{
-						Ext.getCmp('panelbusqueda').hide();
-						Ext.getCmp('clausulasGridId').hide();
-						Ext.getCmp('idNumeroAnterior').hide();
-						Ext.getCmp('btnBuscar').hide();
-						modificacionClausula.hide();
-						
-					}
-				}
-			}
-	});
-	
-	
-	panelbusquedas= Ext.create('Ext.panel.Panel',
-	{
-		border  : 0,		id     : 'panelbusqueda',				width	: 600,		style  : 'margin:5px'
-		,items :
-			[
-			 Ext.create('Ext.form.field.ComboBox',
-			 {
-				 fieldLabel 	: 'Nombre/C&oacute;digo asegurado',			allowBlank		: false,		displayField 	: 'value'
-				 ,id			: 'idCodigoAsegurado',						labelWidth		: 170,			width		 	: 500
-				 ,valueField   	: 'key',									forceSelection 	: true,		matchFieldWidth	: false
-				 ,minChars  	: 2,										queryMode 		:'remote'		,queryParam: 'params.cdperson'
-				 ,store : storeAsegurados,									hideTrigger:true				,triggerAction: 'all'
-			 })
-			 ]
-		,buttonAlign: 'center'
-		,buttons : [{
-			text: "Buscar"
-			,icon:_CONTEXT+'/resources/fam3icons/icons/magnifier.png'
-			,handler: function(){
-				if (panelClausula.form.isValid()) {
-					storeListadoAsegurado.removeAll();
-					var params = {
-							'params.cdperson' : Ext.getCmp('idCodigoAsegurado').getValue(),
-							'params.tipoAut' : Ext.getCmp('tipoAutorizacion').getValue()
-					};
-					
-					storeTipoMedico.load();
-					storeMedico.load();
-					storeProveedor.load();
-					//storeSubcobertura.load();
-					storeTiposICD.load();
-					
-					cargaStorePaginadoLocal(storeListadoAsegurado, _URL_CONSULTA_LISTADO_AUTORIZACION, 'listaAutorizacion', params, function(options, success, response){
-						if(success){
-							var jsonResponse = Ext.decode(response.responseText);
-							if(jsonResponse.listaAutorizacion == null) {								
-								Ext.Msg.show({
-									title: 'Aviso',
-									msg: 'No se encontraron datos.',
-									buttons: Ext.Msg.OK,
-									icon: Ext.Msg.WARNING
-								});
-								return;
-							}
-							
-						}else{
-							Ext.Msg.show({
-								title: 'Aviso',
-								msg: 'Error al obtener los datos.',
-								buttons: Ext.Msg.OK,
-								icon: Ext.Msg.ERROR
-							});
-						}
-					});
-				} else {
-					Ext.Msg.show({
-						title: 'Aviso',
-						msg: 'Complete la informaci&oacute;n requerida',
-						buttons: Ext.Msg.OK,
-						icon: Ext.Msg.WARNING
-					});
-				}
-			}	
-		}] 
-	});
-	
-	gridDatos= Ext.create('Ext.grid.Panel',
-	{
-		id             : 'clausulasGridId'
-		,store         :  storeListadoAsegurado
-		,collapsible   : true
-		,titleCollapse : true
-		,style         : 'margin:5px'
-		,selType: 'checkboxmodel'
-		,width   : 600
-		,height: 200
-		,columns       :
-		[
-			 {
-				 header     : 'N&uacute;mero <br/> Autorizaci&oacute;n'
-				 ,dataIndex : 'nmautser'
-				 ,width	 	: 100
-			 },
-			 {
-				 header     : 'N&uacute;mero <br/> Autorizaci&oacute;n Anterior'
-				 ,dataIndex : 'nmautant'
-				 ,width     : 200
-			 }
-			 ,
-			 {
-				 header     : 'Fecha Solicitud'
-				 ,dataIndex : 'fesolici'
-				 ,width     : 100
-			 },
-			 {
-				 header     : 'P&oacute;liza <br/> Afectada'
-				 ,dataIndex : 'polizaafectada'
-				 ,width	    : 100
-			 }
-			 ,
-			 {
-				 header     : 'Clave Proveedor'
-				 ,dataIndex : 'cdprovee'
-				 ,width	    : 100
-			 }
-			 ,
-			 {
-				 header     : 'Nombre del Proveedor'
-				 ,dataIndex : 'nombreProveedor'
-				 ,width	   : 200
-			 }
-		 ],
-		 bbar     :
-		 {
-			 displayInfo : true,
-			 store       : storeListadoAsegurado,
-			 xtype       : 'pagingtoolbar'
-		 },
-		//aqui va el listener
-		listeners: {
-	        itemclick: function(dv, record, item, index, e) {
-	        	idTipoAutorizacion= Ext.getCmp('tipoAutorizacion').getValue();
-	           	if(idTipoAutorizacion !=3)
-				{
-					Ext.getCmp('idNumeroAnterior').hide();
-					Ext.getCmp('btnBuscar').hide();
-				}else{
-					Ext.getCmp('idNumeroAnterior').show();
-					Ext.getCmp('btnBuscar').show();
-				}
-				
-				
-				if(idTipoAutorizacion !=1)
-				{
-					if(Ext.getCmp('clausulasGridId').getSelectionModel().hasSelection()){
-						var rowSelected = Ext.getCmp('clausulasGridId').getSelectionModel().getSelection()[0];
-						var nmautser= rowSelected.get('nmautser');
-						Ext.Ajax.request(
-						{
-						    url     : _URL_LISTADO_CONCEP_EQUIP
-						    ,params : 
-							{
-								'params.nmautser'  : nmautser
-							}
-						    ,success : function (response)
-						    {
-						    	if(Ext.decode(response.responseText).listaConsultaTablas != null)
-			            		{
-						    		var json=Ext.decode(response.responseText);
-							        
-							        for(var i=0;i<json.listaConsultaTablas.length;i++)
-				                    {
-				                        /*OBTENEMOS LOS VALORES*/
-							        	if(json.listaConsultaTablas[i].cdtipaut==1)
-			                        	{
-				                        	var rec = new modelListadoTablas({
-				                        		nmautser: json.listaConsultaTablas[i].nmautser,
-				                        		cdtipaut:json.listaConsultaTablas[i].cdtipaut,
-				                        		cdmedico:json.listaConsultaTablas[i].cdmedico,
-				                        		nombreMedico:json.listaConsultaTablas[i].nombreMedico,
-				                        		desccpt:json.listaConsultaTablas[i].desccpt,
-				                        		precio:json.listaConsultaTablas[i].precio,
-				                        		cdtipmed:json.listaConsultaTablas[i].cdtipmed,
-				                        		cdcpt:json.listaConsultaTablas[i].cdcpt,
-				                        		cantporc:(json.listaConsultaTablas[i].cantporc),
-				                        		ptimport:json.listaConsultaTablas[i].ptimport,
-				                        		descTipMed:json.listaConsultaTablas[i].descTipMed
-						    				});
-				                        	storeConceptoAutorizados.add(rec);
-			                        	}
-				                        else
-			                        	{
-				                        	var rec = new modelListadoTablas({
-				                        		nmautser: json.listaConsultaTablas[i].nmautser,
-				                        		cdtipaut:json.listaConsultaTablas[i].cdtipaut,
-				                        		cdmedico:json.listaConsultaTablas[i].cdmedico,
-				                        		nombreMedico:json.listaConsultaTablas[i].nombreMedico,
-				                        		desccpt:json.listaConsultaTablas[i].desccpt,
-				                        		precio:json.listaConsultaTablas[i].precio,
-				                        		cdtipmed:json.listaConsultaTablas[i].cdtipmed,
-				                        		cdcpt:json.listaConsultaTablas[i].cdcpt,
-				                        		cantporc:(json.listaConsultaTablas[i].cantporc) * 100,
-				                        		ptimport:json.listaConsultaTablas[i].ptimport,
-				                        		descTipMed:json.listaConsultaTablas[i].descTipMed
-						    				});
-				                        	
-				                        	if(json.listaConsultaTablas[i].cdtipaut==2)
-				                        	{
-					                        	storeQuirugicoBase.add(rec);
-					                        	obtenerValorBase(storeQuirugicoBase);
-				                        	}
-					                        
-					                        if(json.listaConsultaTablas[i].cdtipaut==3)
-				                        	{
-					                        	storeQuirurgico.add(rec);
-				                        	}
-			                        	}
-				                    }
-			            		}
-						    },
-						    failure : function ()
-						    {
-						        me.up().up().setLoading(false);
-						        Ext.Msg.show({
-						            title:'Error',
-						            msg: 'Error de comunicaci&oacute;n',
-						            buttons: Ext.Msg.OK,
-						            icon: Ext.Msg.ERROR
-						        });
-						    }
-						});
-						
-						Ext.Ajax.request(
-								{
-									url     : _URL_CONSULTA_AUTORIZACION_ESP
-									,params : 
-									{
-										'params.nmautser'  : nmautser
-									}
-								,success : function (response)
-								{
-									var json=Ext.decode(response.responseText).datosAutorizacionEsp;
-									
-									if(Ext.getCmp('claveTipoAutoriza').getValue() == 3 )
-									{
-										//Número de autorización
-										Ext.getCmp('idNoAutorizacion').setValue();
-										
-										//Número de autorizacion Anterior
-										Ext.getCmp('idNumeroAnterior').setValue(json.nmautser);
-									
-									}else{
-										//Número de autorización
-										Ext.getCmp('idNoAutorizacion').setValue(json.nmautser);
-										
-										//Número de autorizacion Anterior
-										Ext.getCmp('idNumeroAnterior').setValue(json.nmautant);
-									}
-									
-									//INFORMACION DEL ASEGURADO
-									Ext.getCmp('idAsegurado').setValue(json.cdperson);
-									
-									//Fecha Solicitud
-									Ext.getCmp('fechaSolicitud').setValue(json.fesolici);
-									
-									//Fecha Autorización
-									Ext.getCmp('fechaAutorizacion').setValue(json.feautori);
-									
-									//Fecha Afectado
-									Ext.getCmp('fechaVencimiento').setValue(json.fevencim);
-									
-									//Fecha de Ingreso
-									Ext.getCmp('fechaIngreso').setValue(json.feingres);
-									
-									// Póliza Afectada
-									Ext.getCmp('polizaAfectada').setValue(json.nmpoliza);
-									
-									//Proveedor
-									var valorProveedor= json.cdprovee;
-									
-									
-									//Médico
-									Ext.getCmp('idMedico').setValue(json.cdmedico);
-									
-									//Causa Siniestro
-									Ext.getCmp('idCausaSiniestro').setValue(json.cdcausa);
-									
-									//Tratamiento
-									Ext.getCmp('tratamiento').setValue(json.dstratam);
-									
-									//Observaciones
-									Ext.getCmp('observaciones').setValue(json.dsobserv);
-									
-									//Nota Interes
-									Ext.getCmp('notaInterna').setValue(json.dsnotas);
-									
-									
-									Ext.getCmp('idUnieco').setValue(json.cdunieco);
-									Ext.getCmp('idEstado').setValue(json.estado);
-									Ext.getCmp('idcdRamo').setValue(json.cdramo);
-									Ext.getCmp('idNmSituac').setValue(json.nmsituac);
-									
-									Ext.getCmp('idComboICD').setValue(json.cdicd);
-									
-									Ext.getCmp('sumDisponible').setValue(json.mtsumadp);
-									
-									Ext.getCmp('idCopagoFin').setValue(json.copagofi);
-									
-									Ext.getCmp('idSucursal').setValue(json.cduniecs);
-									
-									
-									
-									//CARGO LOS VALORES DE COBERTURA SEGUN LOS DATOS DE ENTRADA
-									storeCobertura.load({
-					                    params:{
-					                    	'params.cdunieco':Ext.getCmp('idUnieco').getValue(),
-							            	'params.estado':Ext.getCmp('idEstado').getValue(),
-							            	'params.cdramo':Ext.getCmp('idcdRamo').getValue(),
-							            	'params.nmpoliza':Ext.getCmp('polizaAfectada').getValue(),
-							            	'params.nmsituac':Ext.getCmp('idNmSituac').getValue()
-					                    }
-									});
-									
-									Ext.getCmp('idCobAfectada').setValue(json.cdgarant);
-									storeSubcobertura.load({
-						                params:{
-						                	'params.cdgarant' :Ext.getCmp('idCobAfectada').getValue()
-						                }
-						            });
-									
-									Ext.getCmp('idSubcobertura').setValue(json.cdconval);
-									Ext.getCmp('idProveedor').setValue(valorProveedor);
-									//OBTENEMOS LOS VALORES DE DEDUCIBLE Y COPAGO
-							        Ext.Ajax.request(
-							        {
-							            url     : _URL_CONSULTA_DEDUCIBLE_COPAGO
-							            ,params : 
-							            {
-							            	'params.cdunieco':Ext.getCmp('idUnieco').getValue(),
-							            	'params.estado':Ext.getCmp('idEstado').getValue(),
-							            	'params.cdramo':Ext.getCmp('idcdRamo').getValue(),
-							            	'params.nmpoliza':Ext.getCmp('polizaAfectada').getValue(),
-							            	'params.nmsituac':Ext.getCmp('idNmSituac').getValue(),
-							            	'params.cdgarant':Ext.getCmp('idCobAfectada').getValue(),
-							            	'params.subcober':Ext.getCmp('idSubcobertura').getValue(),
-							            	'params.cdpresta':Ext.getCmp('idProveedor').getValue()
-							            }
-							            ,success : function (response)
-							            {
-							            	if(Ext.decode(response.responseText).listaDatosSiniestro != null)
-						            		{
-							            		var json=Ext.decode(response.responseText).listaDatosSiniestro[0];							            	
-								            	Ext.getCmp('idDeducible').setValue(json.deducible);
-								            	Ext.getCmp('idCopago').setValue(json.copago);
-						            		}
-							            },
-							            failure : function ()
-							            {
-							                me.up().up().setLoading(false);
-							                Ext.Msg.show({
-							                    title:'Error',
-							                    msg: 'Error de comunicaci&oacute;n',
-							                    buttons: Ext.Msg.OK,
-							                    icon: Ext.Msg.ERROR
-							                });
-							            }
-							        });
-							        
-							        //OBTENEMOS LA INFORMACION DE LA POLIZA EN ESPECIFICO PARA OBTENER LOS VALORES QUE SE NECESITARAN PARA LAS VALIDACIONES DE PENALIZACION
-							        Ext.Ajax.request(
-							        {
-							            url     : _URL_POLIZA_UNICA
-							            ,params : 
-							            {
-							            	'params.cdunieco':Ext.getCmp('idUnieco').getValue(),
-							            	'params.cdramo':Ext.getCmp('idcdRamo').getValue(),
-							            	'params.estado':Ext.getCmp('idEstado').getValue(),
-							            	'params.nmpoliza':Ext.getCmp('polizaAfectada').getValue(),
-							            	'params.cdperson':Ext.getCmp('idAsegurado').getValue()
-							            }
-							            ,success : function (response)
-							            {
-							            	if(Ext.decode(response.responseText).polizaUnica != null)
-						            		{
-							            		var json=Ext.decode(response.responseText).polizaUnica[0];
-							            		Ext.getCmp('idMontoBase').setValue(json.mtoBase);
-												Ext.getCmp('idNmsuplem').setValue(json.nmsuplem);
-												Ext.getCmp('idZonaContratadaPoliza').setValue(json.zonaContratada);
-												Ext.getCmp('polizaAfectadaCom').setValue(json.numPoliza);
-												Ext.getCmp('idcdtipsit').setValue(json.cdtipsit);
-												Ext.getCmp('iddsplanAsegurado').setValue(json.dsplan);
-						            		}
-							            },
-							            failure : function ()
-							            {
-							                me.up().up().setLoading(false);
-							                Ext.Msg.show({
-							                    title:'Error',
-							                    msg: 'Error de comunicaci&oacute;n',
-							                    buttons: Ext.Msg.OK,
-							                    icon: Ext.Msg.ERROR
-							                });
-							            }
-							        });
-							        
-									modificacionClausula.hide();
-								},
-								failure : function ()
-								{
-									me.up().up().setLoading(false);
-									Ext.Msg.show({
-										title:'Error',
-										msg: 'Error de comunicaci&oacute;n',
-										buttons: Ext.Msg.OK,
-										icon: Ext.Msg.ERROR
-									});
-								}
-								});
-						
-						
-					}else {
-						//Ext.Msg.alert('Aviso', 'Debe de seleccionar una cl&aacute;usula para realizar la edici&oacute;n');
-						Ext.Msg.show({
-							title: 'Aviso',
-							msg: 'Debe de seleccionar un registro para realizar la edici&oacute;n',
-							buttons: Ext.Msg.OK,
-							icon: Ext.Msg.ERROR
-						});
-						
-					}
-				}
-	           	modificacionClausula.hide();
-	           	
-	        }			     	
-	    }
-		
-			
-	});
-	gridDatos.store.sort([
-        {
-        	property    : 'nmautser',			direction   : 'DESC'
-        }
-    ]);
-	
-	
-	/*OCULTAMOS LA INFORMACION DEL GRID Y DE LA BUSQUEDA*/
-	
-	Ext.getCmp('panelbusqueda').hide();
-	Ext.getCmp('clausulasGridId').hide();
-	
-	panelClausula= Ext.create('Ext.form.Panel', {
-		id: 'panelClausula',
-		border:0,
-		bodyPadding: 5,
-		renderTo: Ext.getBody(),
-		defaults 	:
-		{	
-			style : 'margin:5px;'
-		}
-		,
-		items: [
-		        codigoAsegurado 	// <-- contiene los valores de los combo
-		        ,panelbusquedas 	// <-- contiene el formulario para la busqueda de acuerdo al codigo del asegurado
-		        ,gridDatos 			// <-- Contiene la información de los asegurados
-			]
-});
-	
-modificacionClausula = Ext.create('Ext.window.Window',
-{
-	title        : 'Modo de Autorizaci&oacute;n'
-	,modal       : true
-	,buttonAlign : 'center'
-	,closable : false
-	,width		 : 650
-	,minHeight 	 : 100 
-	,maxheight      : 400
-	,items       :
-		[
-		 	panelClausula
-		 ]
-}).showAt(50,100);
 
+	
+	
 
-
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 /*################################################################################################################################################
 ###################################################### 			 PANTALLA 	PRINCIPAL 		 #####################################################
 ##################################################################################################################################################*/
@@ -2104,7 +1839,7 @@ modificacionClausula = Ext.create('Ext.window.Window',
 			 		           });
 			 		    }
 			 		}
-			 	},
+			 	}/*,
 			 	{
 			 		text:'Autorizar',
 			 		icon:_CONTEXT+'/resources/fam3icons/icons/key.png',
@@ -2142,9 +1877,269 @@ modificacionClausula = Ext.create('Ext.window.Window',
 			 		           });
 			 		    }
 			 		}
-			 	}
+			 	}*/
 		 	]		
 	});
+	
+	function cargarInformacionAutorizacionServicio(nmautser)
+	{
+	    Ext.Ajax.request(
+	    {
+	        url     : _URL_LISTADO_CONCEP_EQUIP
+	        ,params : 
+	        {
+	            'params.nmautser'  : nmautser
+	        }
+	        ,success : function (response)
+	        {
+	            if(Ext.decode(response.responseText).listaConsultaTablas != null)
+	            {
+	                var json=Ext.decode(response.responseText);
+	                
+	                for(var i=0;i<json.listaConsultaTablas.length;i++)
+	                {
+	                    /*OBTENEMOS LOS VALORES*/
+	                    if(json.listaConsultaTablas[i].cdtipaut==1)
+	                    {
+	                        var rec = new modelListadoTablas({
+	                            nmautser: json.listaConsultaTablas[i].nmautser,
+	                            cdtipaut:json.listaConsultaTablas[i].cdtipaut,
+	                            cdmedico:json.listaConsultaTablas[i].cdmedico,
+	                            nombreMedico:json.listaConsultaTablas[i].nombreMedico,
+	                            desccpt:json.listaConsultaTablas[i].desccpt,
+	                            precio:json.listaConsultaTablas[i].precio,
+	                            cdtipmed:json.listaConsultaTablas[i].cdtipmed,
+	                            cdcpt:json.listaConsultaTablas[i].cdcpt,
+	                            cantporc:(json.listaConsultaTablas[i].cantporc),
+	                            ptimport:json.listaConsultaTablas[i].ptimport,
+	                            descTipMed:json.listaConsultaTablas[i].descTipMed
+	                        });
+	                        storeConceptoAutorizados.add(rec);
+	                    }
+	                    else{
+	                        var rec = new modelListadoTablas({
+	                            nmautser: json.listaConsultaTablas[i].nmautser,
+	                            cdtipaut:json.listaConsultaTablas[i].cdtipaut,
+	                            cdmedico:json.listaConsultaTablas[i].cdmedico,
+	                            nombreMedico:json.listaConsultaTablas[i].nombreMedico,
+	                            desccpt:json.listaConsultaTablas[i].desccpt,
+	                            precio:json.listaConsultaTablas[i].precio,
+	                            cdtipmed:json.listaConsultaTablas[i].cdtipmed,
+	                            cdcpt:json.listaConsultaTablas[i].cdcpt,
+	                            cantporc:(json.listaConsultaTablas[i].cantporc) * 100,
+	                            ptimport:json.listaConsultaTablas[i].ptimport,
+	                            descTipMed:json.listaConsultaTablas[i].descTipMed
+	                         });
+	                         
+	                         if(json.listaConsultaTablas[i].cdtipaut==2)
+	                         {
+	                            storeQuirugicoBase.add(rec);
+	                            obtenerValorBase(storeQuirugicoBase);
+	                         }
+	                         if(json.listaConsultaTablas[i].cdtipaut==3)
+	                         {
+	                            storeQuirurgico.add(rec);
+	                         }
+	                    }
+	                }
+	            }
+	        },
+	        failure : function ()
+	        {
+	            me.up().up().setLoading(false);
+	            Ext.Msg.show({
+	                title:'Error',
+	                msg: 'Error de comunicaci&oacute;n',
+	                buttons: Ext.Msg.OK,
+	                icon: Ext.Msg.ERROR
+	            });
+	        }
+	    });
+	    
+	    Ext.Ajax.request(
+	    {
+	        url     : _URL_CONSULTA_AUTORIZACION_ESP
+	        ,params : 
+	        {
+	            'params.nmautser'  : nmautser
+	        }
+	        ,success : function (response)
+	        {
+	            var json=Ext.decode(response.responseText).datosAutorizacionEsp;
+	            console.log("OBTENEMOS LOS VALORES DEL JSON _URL_CONSULTA_AUTORIZACION_ESP");
+	            console.log(json);
+	            
+	            if(Ext.getCmp('claveTipoAutoriza').getValue() == 3 )
+	            {
+	                //Número de autorización
+	                Ext.getCmp('idNoAutorizacion').setValue();
+	                
+	                //Número de autorizacion Anterior
+	                Ext.getCmp('idNumeroAnterior').setValue(json.nmautser);
+	            }else{
+	                //Número de autorización
+	                Ext.getCmp('idNoAutorizacion').setValue(json.nmautser);
+
+	                //Número de autorizacion Anterior
+	                Ext.getCmp('idNumeroAnterior').setValue(json.nmautant);
+	            }
+
+	            //INFORMACION DEL ASEGURADO
+	            
+	            storeAsegurados.load();
+	            panelInicialPrincipal.down('[name=cdperson]').setValue(json.cdperson);
+	            
+	            //Fecha Solicitud
+	            Ext.getCmp('fechaSolicitud').setValue(json.fesolici);
+
+	            //Fecha Autorización
+	            Ext.getCmp('fechaAutorizacion').setValue(json.feautori);
+
+	            //Fecha Afectado
+	            Ext.getCmp('fechaVencimiento').setValue(json.fevencim);
+
+	            //Fecha de Ingreso
+	            Ext.getCmp('fechaIngreso').setValue(json.feingres);
+
+	            // Póliza Afectada
+	            Ext.getCmp('polizaAfectada').setValue(json.nmpoliza);
+
+	            //Proveedor
+	            var valorProveedor= json.cdprovee;
+
+
+	            //Médico
+	            Ext.getCmp('idMedico').setValue(json.cdmedico);
+
+	            //Causa Siniestro
+	            Ext.getCmp('idCausaSiniestro').setValue(json.cdcausa);
+
+	            //Tratamiento
+	            Ext.getCmp('tratamiento').setValue(json.dstratam);
+
+	            //Observaciones
+	            Ext.getCmp('observaciones').setValue(json.dsobserv);
+
+	            //Nota Interes
+	            Ext.getCmp('notaInterna').setValue(json.dsnotas);
+	            Ext.getCmp('idUnieco').setValue(json.cdunieco);
+	            Ext.getCmp('idEstado').setValue(json.estado);
+	            Ext.getCmp('idcdRamo').setValue(json.cdramo);
+	            Ext.getCmp('idNmSituac').setValue(json.nmsituac);
+	            Ext.getCmp('idComboICD').setValue(json.cdicd);
+	            Ext.getCmp('sumDisponible').setValue(json.mtsumadp);
+	            Ext.getCmp('idCopagoFin').setValue(json.copagofi);
+	            Ext.getCmp('idSucursal').setValue(json.cduniecs);
+	            
+	            //CARGO LOS VALORES DE COBERTURA SEGUN LOS DATOS DE ENTRADA
+	            storeCobertura.load({
+	                params:{
+	                    'params.cdunieco':Ext.getCmp('idUnieco').getValue(),
+	                    'params.estado':Ext.getCmp('idEstado').getValue(),
+	                    'params.cdramo':Ext.getCmp('idcdRamo').getValue(),
+	                    'params.nmpoliza':Ext.getCmp('polizaAfectada').getValue(),
+	                    'params.nmsituac':Ext.getCmp('idNmSituac').getValue()
+	                    }
+	            });
+
+	            Ext.getCmp('idCobAfectada').setValue(json.cdgarant);
+	            storeSubcobertura.load({
+	                params:{
+	                    'params.cdgarant' :Ext.getCmp('idCobAfectada').getValue()
+	                }
+	            });
+
+	            Ext.getCmp('idSubcobertura').setValue(json.cdconval);
+	            Ext.getCmp('idProveedor').setValue(valorProveedor);
+	            //OBTENEMOS LOS VALORES DE DEDUCIBLE Y COPAGO
+	            Ext.Ajax.request(
+	            {
+	                url     : _URL_CONSULTA_DEDUCIBLE_COPAGO
+	                ,params : 
+	                {
+	                    'params.cdunieco':Ext.getCmp('idUnieco').getValue(),
+	                    'params.estado':Ext.getCmp('idEstado').getValue(),
+	                    'params.cdramo':Ext.getCmp('idcdRamo').getValue(),
+	                    'params.nmpoliza':Ext.getCmp('polizaAfectada').getValue(),
+	                    'params.nmsituac':Ext.getCmp('idNmSituac').getValue(),
+	                    'params.cdgarant':Ext.getCmp('idCobAfectada').getValue(),
+	                    'params.subcober':Ext.getCmp('idSubcobertura').getValue(),
+	                    'params.cdpresta':Ext.getCmp('idProveedor').getValue()
+	                }
+	                ,success : function (response)
+	                {
+	                    if(Ext.decode(response.responseText).listaDatosSiniestro != null)
+	                    {
+	                        var json=Ext.decode(response.responseText).listaDatosSiniestro[0];							            	
+	                        Ext.getCmp('idDeducible').setValue(json.deducible);
+	                        Ext.getCmp('idCopago').setValue(json.copago);
+	                    }
+	                },
+	                failure : function ()
+	                {
+	                    me.up().up().setLoading(false);
+	                    Ext.Msg.show({
+	                        title:'Error',
+	                        msg: 'Error de comunicaci&oacute;n',
+	                        buttons: Ext.Msg.OK,
+	                        icon: Ext.Msg.ERROR
+	                    });
+	                }
+	            });
+
+	            //OBTENEMOS LA INFORMACION DE LA POLIZA EN ESPECIFICO PARA OBTENER LOS VALORES QUE SE NECESITARAN PARA LAS VALIDACIONES DE PENALIZACION
+	            Ext.Ajax.request(
+	            {
+	                url     : _URL_POLIZA_UNICA
+	                ,params : 
+	                {
+	                    'params.cdunieco':Ext.getCmp('idUnieco').getValue(),
+	                    'params.cdramo':Ext.getCmp('idcdRamo').getValue(),
+	                    'params.estado':Ext.getCmp('idEstado').getValue(),
+	                    'params.nmpoliza':Ext.getCmp('polizaAfectada').getValue(),
+	                    'params.cdperson':Ext.getCmp('idAsegurado').getValue()
+	                }
+	                ,success : function (response)
+	                {
+	                    if(Ext.decode(response.responseText).polizaUnica != null)
+	                    {
+	                        var json=Ext.decode(response.responseText).polizaUnica[0];
+	                        Ext.getCmp('idMontoBase').setValue(json.mtoBase);
+	                        Ext.getCmp('idNmsuplem').setValue(json.nmsuplem);
+	                        Ext.getCmp('idZonaContratadaPoliza').setValue(json.zonaContratada);
+	                        Ext.getCmp('polizaAfectadaCom').setValue(json.numPoliza);
+	                        Ext.getCmp('idcdtipsit').setValue(json.cdtipsit);
+	                        Ext.getCmp('iddsplanAsegurado').setValue(json.dsplan);
+	                    }
+	                },
+	                failure : function ()
+	                {
+	                    me.up().up().setLoading(false);
+	                    Ext.Msg.show({
+	                        title:'Error',
+	                        msg: 'Error de comunicaci&oacute;n',
+	                        buttons: Ext.Msg.OK,
+	                        icon: Ext.Msg.ERROR
+	                    });
+	                }
+	            });
+	            //modificacionClausula.hide();
+	        },
+	        failure : function ()
+	        {
+	            me.up().up().setLoading(false);
+	            Ext.Msg.show({
+	                title:'Error',
+	                msg: 'Error de comunicaci&oacute;n',
+	                buttons: Ext.Msg.OK,
+	                icon: Ext.Msg.ERROR
+	            });
+	        }
+	    });
+	    return true;
+	}
+	
+	
 	
 	function ModificarEquipoQuirurguico(storeQuirurgico)
 	{

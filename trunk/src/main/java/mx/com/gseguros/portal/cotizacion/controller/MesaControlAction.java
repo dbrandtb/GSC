@@ -332,6 +332,9 @@ public class MesaControlAction extends PrincipalCoreAction
 	    		case SOLICITUD_MEDICA:
 	    			comentarioPrevio = "<p>El m&eacute;dico revis&oacute; el tr&aacute;mite con las siguientes observaciones:</p>";
 	    			break;
+	    		case EN_ESPERA_DE_AUTORIZACION:
+	    			comentarioPrevio = "<p>El coordinador m&eacute;dico multiregional remiti&oacute; las siguientes observaciones:</p>";
+	    			break;
 				default:
 					break;
 			}
