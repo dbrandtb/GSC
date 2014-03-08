@@ -10,6 +10,7 @@
         <script type="text/javascript" src="${ctx}/resources/extjs4/jquery-1.10.2.min.js"></script>
         <script type="text/javascript" src="${ctx}/resources/extjs4/ext-all.js"></script>
         <script type="text/javascript" src="${ctx}/resources/extjs4/locale/ext-lang-es.js"></script>
+        <%@ include file="/resources/jsp-script/util/catalogos.jsp"%>
         <script type="text/javascript" src="${ctx}/resources/extjs4/base_extjs4.js"></script>
         <script type="text/javascript" src="${ctx}/resources/scripts/util/extjs4_utils.js"></script>
         <decorator:head />
