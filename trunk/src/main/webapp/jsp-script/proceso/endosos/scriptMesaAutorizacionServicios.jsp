@@ -7,6 +7,12 @@ debug('#################################################');
 debug('###### scriptMesaAutorizacionServicios.jsp ######');
 debug('#################################################');
 
+/* ******************** CATALOGOS ******************** */
+
+
+//Catalogo Tipos de tramite a utilizar:
+var _TIPO_TRAMITE_AUTORIZACION_SERVICIOS = '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@AUTORIZACION_SERVICIOS.codigo" />';
+/* *************************************************** */
 ///////////////////////
 ////// variables //////
 var _4_urlAutorizarEndoso = '<s:url namespace="/endosos" action="autorizarEndoso" />';
@@ -82,7 +88,7 @@ function _4_authEndosoDocumentos(grid,rowIndex,colIndex)
                 ,'smap1.ntramite' : record.get('ntramite')
                 ,'smap1.nmsolici' : ''
                 ,'smap1.tipomov'  : 14
-                ,'smap1.cdtiptra' : 14
+                ,'smap1.cdtiptra' : _TIPO_TRAMITE_AUTORIZACION_SERVICIOS
                 //,'smap1.readOnly' : 'si'
             }
             ,scripts  : true
@@ -91,90 +97,6 @@ function _4_authEndosoDocumentos(grid,rowIndex,colIndex)
     }).show();
 }
 
-function _4_preAutorizarEndoso(grid,rowIndex,colIndex)
-{
-	var store=grid.getStore();
-    var record=store.getAt(rowIndex);
-    debug('record',record);
-    
-    _4_selectedRecordEndoso=record;
-    _4_fieldComentAuthEndoso.setValue('');
-    _4_windowAutorizarEndoso.show();
-}
-
-function _4_autorizarEndoso()
-{
-	var record=_4_selectedRecordEndoso;
-	debug('record',record);
-	
-	var status=record.get('status');
-	
-	var valido=true;
-	
-	if(valido)
-	{
-		valido=status=='8';
-		if(!valido)
-		{
-			mensajeWarning('El endoso ya est&aacute; confirmado');
-		}
-	}
-	
-	if(valido)
-	{
-		mcdinGrid.setLoading(true);
-		_4_windowAutorizarEndoso.hide();
-		Ext.Ajax.request(
-		{
-			url       : _4_urlAutorizarEndoso
-			,params   :
-			{
-				'smap1.ntramiteemi'  : record.get('parametros.pv_otvalor01')
-				,'smap1.ntramiteend' : record.get('ntramite')
-	            ,'smap1.cdunieco'    : record.get('cdunieco')
-	            ,'smap1.cdramo'      : record.get('cdramo')
-	            ,'smap1.estado'      : record.get('estado')
-	            ,'smap1.nmpoliza'    : record.get('nmpoliza')
-	            ,'smap1.nmsuplem'    : record.get('nmsuplem')
-	            ,'smap1.nsuplogi'    : record.get('parametros.pv_otvalor04')
-	            ,'smap1.cdtipsup'    : record.get('parametros.pv_otvalor02')
-	            ,'smap1.status'      : '9'
-	            ,'smap1.fechaEndoso' : Ext.Date.format(record.get('ferecepc'),'d/m/Y')
-	            ,'smap1.observacion' : _4_fieldComentAuthEndoso.getValue()
-			}
-			,success  : function(response)
-			{
-				mcdinGrid.setLoading(false);
-				var json=Ext.decode(response.responseText);
-				if(json.success==true)
-				{
-					Ext.Msg.show(
-					{
-                        title    : 'Endoso autorizado'
-                        ,msg     : 'El endoso ha sido autorizado'
-                        ,buttons : Ext.Msg.OK
-                        ,fn      : function()
-                        {
-                        	Ext.create('Ext.form.Panel').submit({standardSubmit:true});
-                        }
-                    });
-				}
-				else
-				{
-					_4_windowAutorizarEndoso.show();
-					mensajeError(json.error);
-				}
-			}
-		    ,failure  : function()
-		    {
-		    	mcdinGrid.setLoading(false);
-		    	_4_windowAutorizarEndoso.show();
-		    	errorComunicacion();
-		    }
-		});
-	}
-	
-}
 
 function generaAutoriServicioWindow(grid,rowIndex,colIndex){
 	
