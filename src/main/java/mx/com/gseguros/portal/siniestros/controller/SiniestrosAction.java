@@ -275,7 +275,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 							logger.debug(params.get("status"));
 							if(params.get("status").trim().equalsIgnoreCase("2")){
 								paramsMCAut.put("pv_status_i",EstatusTramite.CONFIRMADO.getCodigo());//  con
-								generarAutoriServicio();
+								//generarAutoriServicio();
 								
 							}else{
 								if(usuario.getRolActivo().getObjeto().getValue().trim().equalsIgnoreCase("COORDMEDMULTI"))
