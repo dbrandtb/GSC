@@ -12,7 +12,8 @@ public enum EstatusTramite {
 	ENDOSO_EN_ESPERA("8"),
 	ENDOSO_CONFIRMADO("9"),
 	EN_ESPERA_DE_ASIGNACION("10"),
-	EN_ESPERA_DE_AUTORIZACION("11");
+	EN_ESPERA_DE_AUTORIZACION("11"),
+	EN_CAPTURA_CMM("12");
 
 	private String codigo;
 

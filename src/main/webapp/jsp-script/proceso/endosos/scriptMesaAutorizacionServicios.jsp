@@ -118,7 +118,7 @@ function generaAutoriServicioWindow(grid,rowIndex,colIndex){
 				    		'paramsO.pv_estado_i'   : record.raw.estado,
 				    		'paramsO.pv_nmpoliza_i' : record.get('nmpoliza'),
 				    		'paramsO.pv_nmAutSer_i' : record.get('parametros.pv_otvalor01'),
-				    		'paramsO.pv_cdperson_i' : record.get('parametros.pv_otvalor05'),
+				    		'paramsO.pv_cdperson_i' : record.get('parametros.pv_otvalor06'),
 				    		'paramsO.pv_nmsuplem_i' : record.raw.nmsuplem,
 				    	
 					},
