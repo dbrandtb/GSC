@@ -1643,11 +1643,11 @@ Ext.onReady(function() {
 	 			,
 	 			{
 	 				 xtype       : 'textfield',			fieldLabel : 'dsNombreAsegurado'		,id       : 'dsNombreAsegurado', 	name:'dsNombreAsegurado',
-					 labelWidth: 170//,					hidden:true
+					 labelWidth: 170,					hidden:true
 	 			},
 	 			{
 	 				 xtype       : 'textfield',			fieldLabel : 'NumTramite'		,id       : 'idNumtramiteInicial', 	name:'idNumtramiteInicial',
-					 labelWidth: 170//,					hidden:true
+					 labelWidth: 170,					hidden:true
 	 			}
 	 			//<<<
 	 			,
