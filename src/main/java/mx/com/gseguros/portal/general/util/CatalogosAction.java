@@ -94,8 +94,8 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case TIPO_ATENCION_SINIESTROS:
 				case TIPO_CONCEPTO_SINIESTROS:
 				case CAUSA_SINIESTRO:
-				case TTRATAMIENTO:
-				case TPENALIZACIONES:
+				case TRATAMIENTOS:
+				case PENALIZACIONES:
 				case PLANES:
 					lista = catalogosManager.getTmanteni(cat);
 	                break;
