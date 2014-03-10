@@ -6,6 +6,7 @@
 	<!-- WS ice2sigs -->
 	<bean id="ice2sigsServiceImpl" class="mx.com.gseguros.ws.ice2sigs.service.impl.Ice2sigsServiceImpl">
 	    <property name="kernelManager" ref="kernelManagerSustituto"/>
+	    <property name="siniestrosManager" ref="siniestrosManagerImpl"/>
 	    <property name="endpoint" value="${ws.ice2sigs.url}"></property>
 	    <property name="urlImpresionRecibos" value="${recibos.impresion.url}"></property>
 	</bean>	

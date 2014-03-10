@@ -2,7 +2,9 @@ package mx.com.gseguros.portal.siniestros.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +31,7 @@ import mx.com.gseguros.portal.siniestros.model.ListaFacturasVO;
 import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utilerias;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Reclamo;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.commons.lang.StringUtils;
@@ -1890,6 +1893,26 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
+	@Override
+	public List<Map<String,String>>cargaHistorialSiniestros(Map<String,String> params) throws Exception
+	{
+		Map<String, Object> mapResult = ejecutaSP(new CargaHistorialHiniestros(this.getDataSource()), params);
+		return (List<Map<String,String>>) mapResult.get("pv_registro_o");
+	}
+	
+	protected class CargaHistorialHiniestros extends StoredProcedure
+	{
+		protected CargaHistorialHiniestros(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SINIESTRO.P_GET_HIST_STROS");
+			declareParameter(new SqlParameter("pv_cdperson_i" , OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 	
 	@Override
 	public List<GenericVO>obtenerCodigosMedicos(String idconcep, String subcaden) throws Exception
@@ -2237,4 +2260,169 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
+	
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Reclamo> obtieneDatosReclamoWS(Map<String, Object> params) throws Exception{
+		Map<String, Object> result = ejecutaSP(new ObtieneDatosReclamoWS(this.getDataSource()), params);
+		return (List<Reclamo>)result.get("pv_registro_o");
+	}
+	
+	protected class ObtieneDatosReclamoWS extends StoredProcedure {
+		protected ObtieneDatosReclamoWS(DataSource dataSource) {
+			super(dataSource, "PKG_CONSULTA.P_WS_RECLAMACIONES");
+			declareParameter(new SqlParameter("pv_ntramite_i" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new ReclamoWSMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	protected class ReclamoWSMapper  implements RowMapper {
+        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+        	Reclamo reclamo =  new Reclamo();
+        	SimpleDateFormat spdf = new SimpleDateFormat("dd/MM/yyyy");
+        	Calendar cal;
+        	
+        	reclamo.setCanIce(rs.getDouble("CAN_ICE"));
+        	reclamo.setConPag(rs.getInt("CON_PAG"));
+        	reclamo.setConReg(0);
+        	reclamo.setCveAfe(rs.getInt("CVE_AFE"));
+        	reclamo.setCveAge(rs.getInt("CVE_AGE"));
+        	reclamo.setCveCap(rs.getString("CVE_CAP"));
+        	reclamo.setCveCob(rs.getInt("CVE_COB"));
+        	reclamo.setCveDes(rs.getInt("CVE_DES"));
+        	reclamo.setCveEdo(rs.getInt("CVE_EDO"));
+        	reclamo.setCveMun(rs.getInt("CVE_MUN"));
+        	reclamo.setEdoImp(rs.getInt("EDO_IMP"));
+        	reclamo.setEdoOcu(rs.getInt("EDO_OCU"));
+        	reclamo.setEstReg(rs.getString("EST_REG"));
+        	
+        	try {
+    			logger.debug("--> Parseando fecha rs.getString(FEC_FAC) -->> "+ rs.getString("FEC_FAC"));
+	        	cal = Calendar.getInstance();
+				cal.setTime(spdf.parse(rs.getString("FEC_FAC")));
+				logger.debug("--> Calendario obtenido -->> "+ cal);
+				reclamo.setFecFac(cal);
+        	} catch (Exception e) {
+				logger.error("NO SE PUDO PARSEAR LA FECHA FEC_FAC !!! ");
+				reclamo.setFecFac(null);
+			}
+
+        	try {
+        		logger.debug("--> Parseando fecha rs.getString(FEC_OCU) -->> "+ rs.getString("FEC_OCU"));
+        		cal = Calendar.getInstance();
+        		cal.setTime(spdf.parse(rs.getString("FEC_OCU")));
+        		logger.debug("--> Calendario obtenido -->> "+ cal);
+        		reclamo.setFecOcu(cal);
+        	} catch (Exception e) {
+        		logger.error("NO SE PUDO PARSEAR LA FECHA FEC_OCU !!! ");
+        		reclamo.setFecOcu(null);
+        	}
+
+        	try {
+        		logger.debug("--> Parseando fecha rs.getString(FEC_PRO) -->> "+ rs.getString("FEC_PRO"));
+        		cal = Calendar.getInstance();
+        		cal.setTime(spdf.parse(rs.getString("FEC_PRO")));
+        		logger.debug("--> Calendario obtenido -->> "+ cal);
+        		reclamo.setFecPro(cal);
+        	} catch (Exception e) {
+        		logger.error("NO SE PUDO PARSEAR LA FECHA FEC_PRO !!! ");
+        		reclamo.setFecPro(null);
+        	}
+
+        	try {
+        		logger.debug("--> Parseando fecha rs.getString(FEC_REG) -->> "+ rs.getString("FEC_REG"));
+        		cal = Calendar.getInstance();
+        		cal.setTime(spdf.parse(rs.getString("FEC_REG")));
+        		logger.debug("--> Calendario obtenido -->> "+ cal);
+        		reclamo.setFecReg(cal);
+        	} catch (Exception e) {
+        		logger.error("NO SE PUDO PARSEAR LA FECHA FEC_REG !!! ");
+        		reclamo.setFecReg(null);
+        	}
+
+        	try {
+        		logger.debug("--> Parseando fecha rs.getString(FIN_VIG) -->> "+ rs.getString("FIN_VIG"));
+        		cal = Calendar.getInstance();
+        		cal.setTime(spdf.parse(rs.getString("FIN_VIG")));
+        		logger.debug("--> Calendario obtenido -->> "+ cal);
+        		reclamo.setFinVig(cal);
+        	} catch (Exception e) {
+        		logger.error("NO SE PUDO PARSEAR LA FECHA FIN_VIG !!! ");
+        		reclamo.setFinVig(null);
+        	}
+
+        	try {
+        		logger.debug("--> Parseando hora rs.getString(HOR_OCU) -->> "+ rs.getString("HOR_OCU"));
+        		cal = Calendar.getInstance();
+        		cal.set(cal.get(cal.YEAR), cal.get(cal.MONTH), cal.get(cal.DAY_OF_MONTH), rs.getInt("HOR_OCU"), 0);
+        		logger.debug("--> Calendario obtenido -->> "+ cal);
+        		reclamo.setHorOcu(cal);
+        	} catch (Exception e) {
+        		logger.error("NO SE PUDO PARSEAR LA hora HOR_OCU !!! ");
+        		reclamo.setHorOcu(null);
+        	}
+        	try {
+        		logger.debug("--> Parseando hora rs.getString(HOR_PRO) -->> "+ rs.getString("HOR_PRO"));
+        		cal = Calendar.getInstance();
+        		cal.set(cal.get(cal.YEAR), cal.get(cal.MONTH), cal.get(cal.DAY_OF_MONTH), rs.getInt("HOR_PRO"), 0);
+        		logger.debug("--> Calendario obtenido -->> "+ cal);
+        		reclamo.setHorPro(cal);
+        	} catch (Exception e) {
+        		logger.error("NO SE PUDO PARSEAR LA hora HOR_PRO !!! ");
+        		reclamo.setHorPro(null);
+        	}
+        	
+        	reclamo.setIcodreclamo(rs.getInt("ICODRECLAMO"));
+        	reclamo.setIdBen(rs.getInt("ID_BEN"));
+        	reclamo.setIdBen1(rs.getInt("ID_BEN1"));
+        	reclamo.setImpMov(rs.getDouble("IMP_MOV"));
+        	reclamo.setIncPol(rs.getInt("INC_POL"));
+        	
+        
+        	try {
+    			logger.debug("--> Parseando fecha rs.getString(INI_VIG) -->> "+ rs.getString("INI_VIG"));
+	        	cal = Calendar.getInstance();
+				cal.setTime(spdf.parse(rs.getString("INI_VIG")));
+				logger.debug("--> Calendario obtenido -->> "+ cal);
+				reclamo.setIniVig(cal);
+        	} catch (Exception e) {
+				logger.error("NO SE PUDO PARSEAR LA FECHA INI_VIG !!! ");
+				reclamo.setIniVig(null);
+			}
+        	
+        	
+        	reclamo.setIsrMov(rs.getDouble("ISR_MOV"));
+        	reclamo.setIvaMov(rs.getDouble("IVA_MOV"));
+        	reclamo.setIvrMov(rs.getDouble("IVR_MOV"));
+        	reclamo.setMatAfe(rs.getString("MAT_AFE"));
+        	reclamo.setMatCli(rs.getString("MAT_CLI"));
+        	reclamo.setMunImp(rs.getInt("MUN_IMP"));
+        	reclamo.setMunOcu(rs.getInt("MUN_OCU"));
+        	reclamo.setNomAfe(rs.getString("NOM_AFE"));
+        	reclamo.setNomCli(rs.getString("NOM_CLI"));
+        	reclamo.setNumDoc(rs.getString("NUM_DOC"));
+        	reclamo.setNumMov(rs.getInt("NUM_MOV"));
+        	reclamo.setNumPol(rs.getInt("NUM_POL"));
+        	reclamo.setNumSin(rs.getInt("NUM_SIN"));
+        	reclamo.setNumSol(rs.getInt("NUM_SOL"));
+        	reclamo.setObsSin(rs.getString("OBS_SIN"));
+        	reclamo.setPatAfe(rs.getString("PAT_AFE"));
+        	reclamo.setPatCli(rs.getString("PAT_CLI"));
+        	reclamo.setRamPol(rs.getInt("RAM_POL"));
+        	reclamo.setRegRec(rs.getString("REG_REC"));
+        	reclamo.setSucAdm(rs.getInt("SUC_ADM"));
+        	reclamo.setSucPol(rs.getInt("SUC_POL"));
+        	reclamo.setTipBen(rs.getString("TIP_BEN"));
+        	reclamo.setTipBen1(rs.getString("TIP_BEN1"));
+        	reclamo.setTipImp(rs.getString("TIP_IMP"));
+        	reclamo.setTipMov(rs.getString("TIP_MOV"));
+        	reclamo.setTisecuencialafi(rs.getInt("TISECUENCIALAFI"));
+        	
+            return reclamo;
+        }
+    }
 }

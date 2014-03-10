@@ -133,5 +133,14 @@ public interface Ice2sigsService {
 			String rutaPoliza, String cdtipsitGS, String sucursal,
 			String nmsolici, String ntramite, boolean async,
 			String tipoMov, UserVO userVO);
+
+	/**
+	 * Metodo que ejecuta el WS para mandar los datos de un siniestro a GS
+	 * @param ntramite
+	 * @param async
+	 * @param userVO
+	 * @return
+	 */
+	public boolean ejecutaWSreclamo(String ntramite, Ice2sigsService.Operacion op, boolean async, UserVO userVO);
 	
 }

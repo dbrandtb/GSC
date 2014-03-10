@@ -19,6 +19,7 @@ import mx.com.gseguros.portal.siniestros.model.DatosSiniestroVO;
 import mx.com.gseguros.portal.siniestros.model.HistorialSiniestroVO;
 import mx.com.gseguros.portal.siniestros.model.ListaFacturasVO;
 import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Reclamo;
 
 public interface SiniestrosDAO {
 
@@ -251,6 +252,8 @@ public interface SiniestrosDAO {
 	public List<Map<String,String>>P_GET_FACTURAS_SINIESTRO(
 			String cdunieco,String cdramo,String estado,String nmpoliza,String nmsuplem,
 			String nmsituac,String aaapertu,String status,String nmsinies) throws Exception;
+
+	public List<Map<String,String>>cargaHistorialSiniestros(Map<String,String> params) throws Exception;
 	
 	public List<GenericVO>obtenerCodigosMedicos(String idconcep, String subcaden) throws Exception;
 	
@@ -292,4 +295,6 @@ public interface SiniestrosDAO {
 	public String obtieneAutorizacionProceso(String nmAutSer) throws Exception;
 	
 	public String validaDocumentosCargados(HashMap<String, String> params) throws Exception;
+	
+	public List<Reclamo> obtieneDatosReclamoWS(Map<String, Object> params) throws Exception;
 }

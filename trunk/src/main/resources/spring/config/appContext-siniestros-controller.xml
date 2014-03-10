@@ -9,6 +9,7 @@
         <property name="kernelManagerSustituto" ref="kernelManagerSustituto"/>
         <property name="pantallasManager"   ref="pantallasManagerImpl"></property>
         <property name="catalogosManager"   ref="catalogosManagerImpl"></property>
+        <property name="ice2sigsService"    ref="ice2sigsServiceImpl"></property>
     </bean>
     
     <bean id="detalleSiniestroAction" class="mx.com.gseguros.portal.siniestros.controller.DetalleSiniestroAction" scope="prototype">

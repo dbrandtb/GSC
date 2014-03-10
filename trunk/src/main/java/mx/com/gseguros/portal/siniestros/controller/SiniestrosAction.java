@@ -41,6 +41,7 @@ import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
+import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -60,6 +61,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
     private KernelManagerSustituto kernelManagerSustituto;
     private transient CatalogosManager catalogosManager;
     private PantallasManager       pantallasManager;
+    private transient Ice2sigsService ice2sigsService;
     private HashMap<String,String> params;
     private HashMap<String,Object> paramsO;
     private AutorizacionServicioVO datosAutorizacionEsp;
@@ -3305,7 +3307,6 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 	public void setPorcentajePenalizacion(String porcentajePenalizacion) {
 		this.porcentajePenalizacion = porcentajePenalizacion;
 	}
-
 	
 	public String getAutorizarProceso() {
 		return autorizarProceso;
@@ -3322,5 +3323,9 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 			logger.error("Error al generar JSON de params",e);
 			return null;
 		}
+	}
+
+	public void setIce2sigsService(Ice2sigsService ice2sigsService) {
+		this.ice2sigsService = ice2sigsService;
 	}
 }

@@ -9,6 +9,8 @@ import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSal
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludRespuesta;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboGSResponseE;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboRespuesta;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReclamoGSResponseE;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReclamoRespuesta;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService.Estatus;
 
 import org.apache.log4j.Logger;
@@ -129,6 +131,55 @@ public class ServicioGSServiceCallbackHandlerImpl extends ServicioGSServiceCallb
 						(String) params.get("pv_nmpoliza_i"), "ErrWSrec",
 						"Error en Recibo " + params.get("NumRec")
 								+ " >>> " + respuesta.getCodigo() + " - "
+								+ respuesta.getMensaje(),
+						 usuario);
+			} catch (ApplicationException e1) {
+				logger.error("Error en llamado a PL", e1);
+			}
+		}
+	}
+	
+	@Override
+	public void receiveErrorreclamoGS(Exception e) {
+		logger.error("Error en WS Reclamo: " + e.getMessage() + " Guardando en bitacora el error, getCause: " + e.getCause(),e);
+
+		HashMap<String, Object> params = (HashMap<String, Object>) this.clientData;
+
+		String usuario = (String) params.get("USUARIO");
+		
+		try {
+			kernelManager.movBitacobro(
+					(String) params.get("pv_cdunieco_i"),
+					(String) params.get("pv_cdramo_i"),
+					(String) params.get("pv_estado_i"),
+					(String) params.get("pv_nmpoliza_i"),
+					"ErrWSsinCx",
+					"Msg: " + e.getMessage() + " ***Cause: " + e.getCause(),
+					 usuario);
+		} catch (Exception e1) {
+			logger.error("Error en llamado a PL", e1);
+		}
+	}
+
+	@Override
+	public void receiveResultreclamoGS(ReclamoGSResponseE result) {
+		logger.debug("Comunicacion exitosa WS Reclamo");
+		ReclamoRespuesta respuesta = result.getReclamoGSResponse().get_return();
+		HashMap<String, Object> params = (HashMap<String, Object>) this.clientData;
+		
+		logger.debug("Resultado al ejecutar el WS Reclamo: " + respuesta.getCodigo() + " - " + respuesta.getMensaje());
+
+		if (Estatus.EXITO.getCodigo() != respuesta.getCodigo()) {
+			logger.error("Guardando en bitacora el estatus..");
+
+			String usuario = (String) params.get("USUARIO");
+			
+			try {
+				kernelManager.movBitacobro((String) params.get("pv_cdunieco_i"),
+						(String) params.get("pv_cdramo_i"),
+						(String) params.get("pv_estado_i"),
+						(String) params.get("pv_nmpoliza_i"), "ErrWSsin",
+						"Error en Reclamo " + respuesta.getCodigo() + " - "
 								+ respuesta.getMensaje(),
 						 usuario);
 			} catch (ApplicationException e1) {
