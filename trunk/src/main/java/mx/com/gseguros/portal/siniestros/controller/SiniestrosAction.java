@@ -696,7 +696,7 @@ public void setMsgResult(String msgResult) {
 	return SUCCESS;
    }	
 	
-	
+   @Deprecated	
    public String consultaListaManteni(){
 		logger.debug(" **** Entrando a consulta de lista de Mantenimiento****");
 		try {
