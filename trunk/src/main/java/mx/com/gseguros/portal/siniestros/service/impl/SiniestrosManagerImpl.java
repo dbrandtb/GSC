@@ -25,7 +25,6 @@ import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Reclamo;
-
 public class SiniestrosManagerImpl implements SiniestrosManager {
 	private SiniestrosDAO siniestrosDAO;
 	
@@ -784,18 +783,6 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		log.debug("P_GET_FACTURAS_SINIES lista size:"+lista.size());
 		return lista;
 	}
-
-	@Override
-	public List<Map<String,String>> cargaHistorialSiniestros(Map<String,String> params) throws Exception
-			{
-		List<Map<String,String>>lista=siniestrosDAO.cargaHistorialSiniestros(params);
-		if(lista==null)
-		{
-			lista=new ArrayList<Map<String,String>>();
-		}
-		log.debug("cargaHistorial lista size:"+lista.size());
-		return lista;
-			}
 	
 	@Override
 	public List<GenericVO>obtenerCodigosMedicos(String idconcep, String subcaden) throws Exception
@@ -966,5 +953,17 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		} catch (DaoException daoExc) {
 			throw new ApplicationException(daoExc.getMessage(), daoExc);
 		}
+	}
+
+	@Override
+	public List<Map<String,String>> cargaHistorialSiniestros(Map<String,String> params) throws Exception
+	{
+		List<Map<String,String>>lista=siniestrosDAO.cargaHistorialSiniestros(params);
+		if(lista==null)
+		{
+			lista=new ArrayList<Map<String,String>>();
+		}
+		log.debug("cargaHistorial lista size:"+lista.size());
+		return lista;
 	}
 }

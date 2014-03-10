@@ -428,6 +428,17 @@
 			</result>
 		</action>
 		
+		<action name="consultaMontoMaximo" class="siniestrosAction"
+			method="consultaMontoMaximo">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success,
+					montoMaximo
+				</param>
+			</result>
+		</action>
+		
 		<action name="validaPorcentajePenalizacion" class="siniestrosAction"
 			method="validaPorcentajePenalizacion">
 			<result type="json">

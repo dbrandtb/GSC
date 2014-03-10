@@ -885,7 +885,7 @@ Ext.onReady(function() {
 	///////////////////////////////////////////////////////////////////////////
 	//DATOS PARA EL PRIMER GRID --> CONCEPTOS AUTORIZADOS
 	ventanaConceptosAutorizado= Ext.create('Ext.window.Window', {
-		renderTo: document.body,
+		//renderTo: document.body,
 		title: 'tr&aacute;tamiento m&eacute;dico',
 		//height: 200,
 		closeAction: 'hide',           
@@ -937,7 +937,7 @@ Ext.onReady(function() {
 	//DATOS PARA EL SEGUDO GRID --> EQUIPO QUIRURGICO BASE
 	
 	ventanaEqQuirurgicoBase= Ext.create('Ext.window.Window', {
-		renderTo: document.body,
+		//renderTo: document.body,
 		title: 'Equipo quir&uacute;rgico base',
 		//height: 270,
 		closeAction: 'hide',
@@ -989,7 +989,7 @@ Ext.onReady(function() {
 	//DATOS PARA EL TERCER GRID --> EQUIPO QUIRURGICO
 	
 	ventanaEqQuirurgico= Ext.create('Ext.window.Window', {
-		renderTo: document.body,
+		//renderTo: document.body,
 		title: 'Equipo quir&uacute;rgico',
 		//height: 270,
 		closeAction: 'hide',
@@ -1275,31 +1275,7 @@ Ext.onReady(function() {
 ###################################################### 		 DATOS PARA LA BUSQUEDA INICIAL 	#######################################################
 #######################################################################################################################################################*/
 	
-	codigoAsegurado= Ext.create('Ext.form.ComboBox',
-	{
-		//colspan:2,
-		id:'tipoAutorizacion',				fieldLabel: 'Tipo autorizaci&oacute;n',		store: storeTipoAutorizacion,
-		queryMode:'local',					displayField: 'value',						valueField: 'key',					allowBlank:false,
-		blankText:'Es un dato requerido',	editable:false,								labelWidth : 170,
-		width: 400,							emptyText:'Seleccione Autorizaci&oacute;n ...',
-		listeners : {
-			'select' : function(combo, record) {
-					closedStatusSelectedID = this.getValue();
-					Ext.getCmp('claveTipoAutoriza').setValue(closedStatusSelectedID);
-					if(closedStatusSelectedID !=1){
-						Ext.getCmp('panelbusqueda').show();
-						Ext.getCmp('clausulasGridId').show();
-					}else{
-						Ext.getCmp('panelbusqueda').hide();
-						Ext.getCmp('clausulasGridId').hide();
-						Ext.getCmp('idNumeroAnterior').hide();
-						Ext.getCmp('btnBuscar').hide();
-						modificacionClausula.hide();
-						
-					}
-				}
-			}
-	});
+	
 	
 	
 	panelbusquedas= Ext.create('Ext.panel.Panel',
@@ -1451,7 +1427,7 @@ Ext.onReady(function() {
 						
 					}
 				}
-	           	modificacionClausula.hide();
+	           	modificacionClausula.close();
 	           	
 	        }			     	
 	    }
@@ -1474,14 +1450,41 @@ Ext.onReady(function() {
 		id: 'panelClausula',
 		border:0,
 		bodyPadding: 5,
-		renderTo: Ext.getBody(),
+		//renderTo: Ext.getBody(),
 		defaults 	:
 		{	
 			style : 'margin:5px;'
 		}
 		,
 		items: [
-		        codigoAsegurado 	// <-- contiene los valores de los combo
+		        //codigoAsegurado 	// <-- contiene los valores de los combo
+		        
+		       
+	{
+		//colspan:2,
+		xtype: 'combo',id:'tipoAutorizacion',				fieldLabel: 'Tipo autorizaci&oacute;n',		store: storeTipoAutorizacion,
+		queryMode:'local',					displayField: 'value',						valueField: 'key',					allowBlank:false,
+		blankText:'Es un dato requerido',	editable:false,								labelWidth : 170,
+		width: 400,							emptyText:'Seleccione Autorizaci&oacute;n ...',
+		listeners : {
+			'select' : function(combo, record) {
+					closedStatusSelectedID = this.getValue();
+					Ext.getCmp('claveTipoAutoriza').setValue(closedStatusSelectedID);
+					if(closedStatusSelectedID !=1){
+						Ext.getCmp('panelbusqueda').show();
+						Ext.getCmp('clausulasGridId').show();
+					}else{
+						Ext.getCmp('panelbusqueda').hide();
+						Ext.getCmp('clausulasGridId').hide();
+						Ext.getCmp('idNumeroAnterior').hide();
+						Ext.getCmp('btnBuscar').hide();
+						modificacionClausula.close();
+						
+					}
+				}
+			}
+	}
+		        
 		        ,panelbusquedas 	// <-- contiene el formulario para la busqueda de acuerdo al codigo del asegurado
 		        ,gridDatos 			// <-- Contiene la información de los asegurados
 			]
@@ -2354,7 +2357,7 @@ Ext.onReady(function() {
                 	}
                     if(Ext.getCmp('claveTipoAutoriza').getValue() == 2)
                 	{
-                    	mensaje= 'Se modific&oacute; la Autorizaci&oacute;n de Servicio con el n&uacute;mero ';
+                    	mensaje= 'Se gener&oacute; la carta para la autorizaci&oacute; con el n&uacute;mero ';
                 	}
                     
                     if(Ext.getCmp('claveTipoAutoriza').getValue() == 3)

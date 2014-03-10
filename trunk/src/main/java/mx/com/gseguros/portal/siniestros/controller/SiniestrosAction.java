@@ -82,6 +82,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
     private List<PolizaVigenteVO> polizaUnica;
     private String msgResult;
     private String diasMaximos;
+    private String montoMaximo;
     private String existePenalizacion;
     private String autorizarProceso;
     private String porcentajePenalizacion;
@@ -1134,6 +1135,18 @@ public void setMsgResult(String msgResult) {
 	   	success = true;
 	   	return SUCCESS;
    }
+   
+   public String consultaMontoMaximo(){
+	   	logger.debug(" **** Entrando al metodo para obtener los numeros  de dias ****");
+	   	try {
+	   		montoMaximo = catalogosManager.obtieneCantidadMaxima(params.get("cdramo"), params.get("cdtipsit"), TipoTramite.SINIESTRO, Rango.PESOS);
+	   	}catch( Exception e){
+	   		logger.error("Error al consultar la Lista de los asegurados ",e);
+	   		return SUCCESS;
+	   	}
+	   	success = true;
+	   	return SUCCESS;
+ }
    
    public String validaExclusionPenalizacion(){
 	   	logger.debug(" **** Entrando al metodo de validacion de Penalizacion ****");
@@ -3328,4 +3341,14 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 	public void setIce2sigsService(Ice2sigsService ice2sigsService) {
 		this.ice2sigsService = ice2sigsService;
 	}
+
+	public String getMontoMaximo() {
+		return montoMaximo;
+	}
+
+	public void setMontoMaximo(String montoMaximo) {
+		this.montoMaximo = montoMaximo;
+	}
+	
+	
 }

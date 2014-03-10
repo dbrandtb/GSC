@@ -3,7 +3,8 @@ package mx.com.gseguros.portal.general.util;
 public enum Rango {
 	
 	ANIOS("1"),
-	DIAS("2");
+	DIAS("2"),
+	PESOS("3");
 
 	private String clave;
 
