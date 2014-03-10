@@ -190,9 +190,15 @@ public class SiniestrosAction extends PrincipalCoreAction{
 	 */
 	public String guardaAutorizacionServicio(){
 			logger.debug(" **** Entrando a guardado de Autorizaci�n de Servicio ****");
+			logger.debug("VALOR DE LOS PARAMETROS DE ENTRADA AL MOMENTO DE GUARDARLO");
+			logger.debug(params);
+			
 			try {
 					this.session=ActionContext.getContext().getSession();
 			        UserVO usuario=(UserVO) session.get("USUARIO");
+			        logger.debug("VALOR DEL ROL");
+					logger.debug(usuario.getRolActivo().getObjeto().getValue());
+					
 					HashMap<String, Object> paramsR = new HashMap<String, Object>();
 					paramsR.put("pv_nmautser_i",params.get("nmautser"));
 					paramsR.put("pv_nmautant_i",params.get("nmautant"));
@@ -255,7 +261,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 							paramsMCAut.put("pv_cdramo_i",params.get("cdramo"));
 							paramsMCAut.put("pv_estado_i",params.get("estado"));
 							paramsMCAut.put("pv_nmpoliza_i",params.get("nmpoliza"));
-							paramsMCAut.put("pv_nmsuplem_i",null);
+							paramsMCAut.put("pv_nmsuplem_i",params.get("nmsuplem"));
 							paramsMCAut.put("pv_cdsucadm_i",null);
 							paramsMCAut.put("pv_cdsucdoc_i",null);
 							paramsMCAut.put("pv_cdtiptra_i","14");
@@ -264,16 +270,61 @@ public class SiniestrosAction extends PrincipalCoreAction{
 							paramsMCAut.put("pv_referencia_i",null);
 							paramsMCAut.put("pv_nombre_i",null);
 							paramsMCAut.put("pv_festatus_i",null);
-							paramsMCAut.put("pv_status_i","7");
+							
+							logger.debug("VALOR DEL STATUS");
+							logger.debug(params.get("status"));
+							if(params.get("status").trim().equalsIgnoreCase("2")){
+								paramsMCAut.put("pv_status_i",EstatusTramite.CONFIRMADO.getCodigo());//  con
+								generarAutoriServicio();
+								
+							}else{
+								if(usuario.getRolActivo().getObjeto().getValue().trim().equalsIgnoreCase("COORDMEDMULTI"))
+								{
+									paramsMCAut.put("pv_status_i",EstatusTramite.EN_CAPTURA_CMM.getCodigo());// valor 12
+								}else{
+									paramsMCAut.put("pv_status_i",EstatusTramite.EN_CAPTURA.getCodigo());// valor 7
+								}
+							}
+							//paramsMCAut.put("pv_status_i","7");
 							paramsMCAut.put("pv_comments_i",params.get("dsnotas"));
 							paramsMCAut.put("pv_nmsolici_i",null);
-							paramsMCAut.put("pv_cdtipsit_i",null);
+							paramsMCAut.put("pv_cdtipsit_i",params.get("cdtipsit"));
 							paramsMCAut.put("pv_otvalor01",lista.get(0).getNmautser());         		// No. de autorizaci�n
 							paramsMCAut.put("pv_otvalor02",params.get("fesolici"));             		// Fecha de Solicitud
 							paramsMCAut.put("pv_otvalor03",params.get("feautori"));             		// Fecha de autorizacion
 							paramsMCAut.put("pv_otvalor04",params.get("fevencim"));             		// Fecha de Vencimiento
-							paramsMCAut.put("pv_otvalor05",params.get("cdperson"));             		// CdPerson
+							paramsMCAut.put("pv_otvalor05",params.get("dsNombreAsegurado"));            // Nombre del asegurado
 							WrapperResultados res = kernelManagerSustituto.PMovMesacontrol(paramsMCAut);
+						}else{
+							// aqui va la actualizacion de los campos de mesa control
+							//verificamos el valor del dsnom
+							Map<String,Object> otvalor = new HashMap<String,Object>();
+							if(params.get("dsNombreAsegurado").toString().length() > 0){
+								otvalor.put("pv_otvalor05_i"  , params.get("dsNombreAsegurado"));
+							}
+				    		otvalor.put("pv_ntramite_i" , params.get("idNumtramiteInicial"));
+				    		otvalor.put("pv_cdramo_i"   , params.get("cdramo"));
+				    		otvalor.put("pv_cdtipsit_i" , params.get("cdtipsit"));
+				    		otvalor.put("pv_otvalor02_i"  , params.get("fesolici"));
+				    		otvalor.put("pv_otvalor03_i"  , params.get("feautori"));
+				    		otvalor.put("pv_otvalor04_i"  , params.get("fevencim"));
+				    		siniestrosManager.actualizaOTValorMesaControl(otvalor);
+				    		
+				    		// Tenemos que actualizar el status para el guardado
+				    		if(params.get("status").trim().equalsIgnoreCase("2")){
+								//paramsMCAut.put("pv_status_i",EstatusTramite.CONFIRMADO.getCodigo());
+				    			MesaControlAction mca = new MesaControlAction();
+				    			mca.setKernelManager(kernelManagerSustituto);
+				    			mca.setSession(session);
+				    			Map<String,String>smap1=new HashMap<String,String>();
+				    			smap1.put("ntramite" , params.get("idNumtramiteInicial"));
+				    			smap1.put("status"   , EstatusTramite.CONFIRMADO.getCodigo());
+				    			smap1.put("cdmotivo" , null);
+				    			smap1.put("comments" , null);
+				    			mca.setSmap1(smap1);
+				    			mca.actualizarStatusTramite();
+							}
+							
 						}
 					}
 			}catch( Exception e){
@@ -1100,6 +1151,17 @@ public void setMsgResult(String msgResult) {
 	   	return SUCCESS;
   }
    
+   public String validaAutorizacionProceso(){
+	   	logger.debug(" **** Entrando al metodo de validacion de Penalizacion ****");
+	   	try {
+		   		autorizarProceso = siniestrosManager.validaAutorizacionProceso(params.get("nmAutSer"));
+	   	}catch( Exception e){
+	   		logger.error("Error al consultar la Lista de los asegurados ",e);
+	   		return SUCCESS;
+	   	}
+	   	success = true;
+	   	return SUCCESS;
+ }
    public String validaPorcentajePenalizacion(){
 	   	logger.debug(" **** Entrando al metodo de porcentaje de validaci�n ****");
 	   	try {
@@ -3242,6 +3304,15 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 
 	public void setPorcentajePenalizacion(String porcentajePenalizacion) {
 		this.porcentajePenalizacion = porcentajePenalizacion;
+	}
+
+	
+	public String getAutorizarProceso() {
+		return autorizarProceso;
+	}
+
+	public void setAutorizarProceso(String autorizarProceso) {
+		this.autorizarProceso = autorizarProceso;
 	}
 
 	public String getParamsJson() {
