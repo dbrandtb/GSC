@@ -9,6 +9,9 @@ debug('#################################################');
 
 /* ******************** CATALOGOS ******************** */
 
+// Catalogo Estatus de tramite a utilizar:
+var _STATUS_PENDIENTE                 = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@PENDIENTE.codigo" />';
+var _STATUS_EN_ESPERA_DE_AUTORIZACION = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_ESPERA_DE_AUTORIZACION.codigo" />';
 
 //Catalogo Tipos de tramite a utilizar:
 var _TIPO_TRAMITE_AUTORIZACION_SERVICIOS = '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@AUTORIZACION_SERVICIOS.codigo" />';
@@ -240,7 +243,7 @@ function turnarCoordinaMedMultiregional(grid,rowIndex,colIndex){
                 	            		        	waitMsg:'Procesando...',
                 	            		        	params: {
                 	            		        		'smap1.ntramite' : record.get('ntramite'), 
-                	            		        		'smap1.status'   : 2,
+                	            		        		'smap1.status'   : _STATUS_PENDIENTE,
                 	            		        	},
                 	            		        	failure: function(form, action) {
                 	            		        		mensajeError('No se pudo turnar.');
@@ -344,7 +347,7 @@ function turnarGerenteMedMultiregional(grid,rowIndex,colIndex){
                 	            		        	waitMsg:'Procesando...',
                 	            		        	params: {
                 	            		        		'smap1.ntramite' : record.get('ntramite'), 
-                	            		        		'smap1.status'   : 11,
+                	            		        		'smap1.status'   : _STATUS_EN_ESPERA_DE_AUTORIZACION,
                 	            		        	},
                 	            		        	failure: function(form, action) {
                 	            		        		mensajeError('No se pudo turnar.');
@@ -447,7 +450,7 @@ function turnarGenerenteMedMultiregional(grid,rowIndex,colIndex){
                 	            		        	waitMsg:'Procesando...',
                 	            		        	params: {
                 	            		        		'smap1.ntramite' : record.get('ntramite'), 
-                	            		        		'smap1.status'   : 11,
+                	            		        		'smap1.status'   : _STATUS_EN_ESPERA_DE_AUTORIZACION,
                 	            		        	},
                 	            		        	failure: function(form, action) {
                 	            		        		mensajeError('No se pudo turnar.');
