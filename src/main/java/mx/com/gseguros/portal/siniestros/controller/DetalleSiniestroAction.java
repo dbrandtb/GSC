@@ -46,11 +46,11 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 
 	private boolean success;
 
-	private HashMap<String, String> loadForm;
+	private Map<String, String> loadForm;
 	
-	private List<HashMap<String, String>> loadList;
-    private List<HashMap<String, String>> saveList;
-    private List<HashMap<String, String>> deleteList;
+	private List<Map<String, String>> loadList;
+    private List<Map<String, String>> saveList;
+    private List<Map<String, String>> deleteList;
 	
 	private HashMap<String, String> params;
 	private HashMap<String,Object> paramsO;
@@ -63,6 +63,13 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	
 	
 	public String execute() throws Exception
+	{
+		
+    	success = true;
+    	return SUCCESS;
+    }
+	
+	public String detalleSiniestro() throws Exception
 	{
 		logger.debug(""
 				+ "\n####################################"
@@ -94,9 +101,9 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 				+ "\n####################################"
 				+ "\n####################################"
 				);
-    	success = true;
-    	return SUCCESS;
-    }
+		success = true;
+		return SUCCESS;
+	}
 	
 	
 	public String loadInfoGeneralReclamacion() {
@@ -165,15 +172,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	
 	public String loadListaFacturasTramite(){
 	   	try {
-		   		List<Map<String, String>> result = siniestrosManager.P_GET_FACTURAS_SINIESTRO(params.get("cdunieco"), params.get("cdramo"), params.get("estado"), params.get("nmpoliza"), params.get("nmsuplem"), params.get("nmsituac"), params.get("aaapertu"), params.get("status"), params.get("nmsinies")); 
-		   		loadList = new ArrayList<HashMap<String, String>>();
-		   		
-		   		HashMap<String, String> mapa =null;
-		   		for(Map item: result){
-		   			mapa =  new HashMap<String, String>();
-		   			mapa.putAll(item);
-		   			loadList.add(mapa);
-		   		}
+	   			loadList = siniestrosManager.P_GET_FACTURAS_SINIESTRO(params.get("cdunieco"), params.get("cdramo"), params.get("estado"), params.get("nmpoliza"), params.get("nmsuplem"), params.get("nmsituac"), params.get("aaapertu"), params.get("status"), params.get("nmsinies")); 
 	   		
 	   	}catch( Exception e){
 	   		logger.error("Error en loadListaFacturasTramite",e);
@@ -466,7 +465,17 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 		return SUCCESS;
 	}
 	
-	
+	public String cargaHistorialSiniestros(){
+	   	try {
+	   			loadList = siniestrosManager.cargaHistorialSiniestros(params); 
+	   	}catch( Exception e){
+	   		logger.error("Error en loadListaFacturasTramite",e);
+	   		success =  false;
+	   		return SUCCESS;
+	   	}
+	   	success = true;
+	   	return SUCCESS;
+	}
 	
 	// Getters and setters:
 
@@ -513,22 +522,22 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	}
 
 
-	public List<HashMap<String, String>> getLoadList() {
+	public List<Map<String, String>> getLoadList() {
 		return loadList;
 	}
 
 
-	public void setLoadList(List<HashMap<String, String>> loadList) {
+	public void setLoadList(List<Map<String, String>> loadList) {
 		this.loadList = loadList;
 	}
 
 
-	public List<HashMap<String, String>> getSaveList() {
+	public List<Map<String, String>> getSaveList() {
 		return saveList;
 	}
 
 
-	public void setSaveList(List<HashMap<String, String>> saveList) {
+	public void setSaveList(List<Map<String, String>> saveList) {
 		this.saveList = saveList;
 	}
 

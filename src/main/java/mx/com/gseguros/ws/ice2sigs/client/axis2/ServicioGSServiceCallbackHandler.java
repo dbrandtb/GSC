@@ -8,7 +8,6 @@
 
     package mx.com.gseguros.ws.ice2sigs.client.axis2;
 
-
     /**
      *  ServicioGSServiceCallbackHandler Callback class, Users can extend this class and implement
      *  their own receiveResult and receiveError methods.
@@ -107,6 +106,22 @@
            * override this method for handling error response from polizaGS operation
            */
             public void receiveErrorpolizaGS(java.lang.Exception e) {
+            }
+                
+           /**
+            * auto generated Axis2 call back method for reclamoGS method
+            * override this method for handling normal response from reclamoGS operation
+            */
+           public void receiveResultreclamoGS(
+                    mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReclamoGSResponseE result
+                        ) {
+           }
+
+          /**
+           * auto generated Axis2 Error handler
+           * override this method for handling error response from reclamoGS operation
+           */
+            public void receiveErrorreclamoGS(java.lang.Exception e) {
             }
                 
            /**

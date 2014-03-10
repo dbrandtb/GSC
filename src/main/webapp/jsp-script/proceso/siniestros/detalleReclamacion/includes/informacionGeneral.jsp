@@ -21,6 +21,7 @@
 	var _URL_ACTUALIZA_INFO_GRAL_SIN= '<s:url namespace="/siniestros"      action="actualizaDatosGeneralesSiniestro" />';
 	var _URL_LOADER_VER_COBERTURAS  = '<s:url namespace="/consultasPoliza" action="includes/verCoberturas" />';
 	var _URL_LOADER_VER_EXCLUSIONES = '<s:url namespace="/consultasPoliza" action="includes/verExclusiones" />';
+	var _URL_LOADER_HISTORIAL_RECLAMACIONES = '<s:url namespace="/siniestros" action="includes/historialReclamaciones" />';
 
 	Ext.onReady(function() {
 		
@@ -64,7 +65,8 @@
 				{type:'string', name:'CIRHOPROV'},
 				{type:'string', name:'CDICD'},
 				{type:'string', name:'CDICD2'},
-				{type:'string', name:'NMRECLAMO'}
+				{type:'string', name:'NMRECLAMO'},
+				{type:'string', name:'CDPERSON'}
 		    ]
 		});
 	
@@ -102,6 +104,9 @@
 				{
 				    xtype      : 'hidden',
 				    name       : 'NMRECLAMO'
+				},{
+				    xtype      : 'hidden',
+				    name       : 'CDPERSON'
 				},{
 		            xtype      : 'displayfield',
 		            name       : 'CONTREC',
@@ -258,18 +263,45 @@
 	                    }).showAt(150,150);
 	                }
 		        },{
-		        	//colspan    : 1,
+		        	colspan    : 1,
 		            xtype      : 'displayfield',
 		            name       : 'FEINIVAL',
 		            fieldLabel : 'Inicio vigencia'
-		        }/*,{
+		        },{
 		        	colspan: 1,
 		        	xtype  : 'button',
 		        	text   : 'Ver historial de reclamaci&oacute;n',
 	                width  : 180,
 	                icon   : _CONTEXT + '/resources/fam3icons/icons/application_view_list.png',
-	                disabled: true
-		        }*/,{
+	                handler: function(){
+	                	
+	                	var windowHistSinies = Ext.create('Ext.window.Window',{
+	            	        modal       : true,
+	            	        buttonAlign : 'center',
+	            	        width       : 800,
+	            	        height      : 300,
+	            	        autoScroll  : true,
+	            	        loader      : {
+	            	            url     : _URL_LOADER_HISTORIAL_RECLAMACIONES,
+	            	            params  : {
+	            	                'params.cdperson'  : pnlInformacionGral.down('[name=CDPERSON]').getValue()
+	            	            },
+	            	            scripts  : true,
+	            	            loadMask : true,
+	            	            autoLoad : true,
+	            	            ajaxOptions: {
+	            	            	method: 'POST'
+	            	            }
+	            	        },
+	            	        buttons: [{
+	            	        	 icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+	            			     text: 'Cerrar',
+	            			     handler: function() {windowHistSinies.close();}
+	            	        }]
+	            	    }).show();
+	            	    centrarVentana(windowHistSinies);
+	                } 
+		        },{
 		        	colspan    : 1,
 		            xtype      : 'displayfield',
 		            name       : 'FEFINVAL',

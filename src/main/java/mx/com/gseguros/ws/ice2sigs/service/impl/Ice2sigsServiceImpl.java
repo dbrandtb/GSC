@@ -4,11 +4,13 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Agente;
@@ -71,6 +73,11 @@ import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboGS;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboGSE;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboGSResponseE;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboRespuesta;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Reclamo;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReclamoGS;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReclamoGSE;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReclamoGSResponseE;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReclamoRespuesta;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.callback.impl.ServicioGSServiceCallbackHandlerImpl;
 import mx.com.gseguros.ws.ice2sigs.client.model.ReciboWrapper;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
@@ -92,6 +99,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 	private String urlImpresionRecibos;
 	
 	private transient KernelManagerSustituto kernelManager;
+	private SiniestrosManager siniestrosManager;
 
 	
 	public PolizaRespuesta ejecutaPolizaGS(Operacion operacion,
@@ -551,6 +559,54 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 		return resultado;
 	}
 	
+	private ReclamoRespuesta ejecutaReclamoGS(Operacion operacion,
+			Reclamo reclamo, HashMap<String, Object> params, boolean async) throws Exception {
+		
+		ReclamoRespuesta resultado = null;
+		ServicioGSServiceStub stubGS = null;
+		
+		try {
+			logger.info(new StringBuffer("endpoint a invocar=").append(endpoint));
+			stubGS = new ServicioGSServiceStub(endpoint);
+		} catch (AxisFault e) {
+			logger.error(e);
+			throw new Exception("Error de preparacion de Axis2: "
+					+ e.getMessage());
+		}
+		stubGS._getServiceClient().getOptions().setTimeOutInMilliSeconds(WS_TIMEOUT);
+		
+		ReclamoGSResponseE RespuestaGS = null;
+		
+		ReclamoGS reclamoS = new ReclamoGS();
+		reclamoS.setArg0(operacion.getCodigo());
+		reclamoS.setArg1(reclamo);
+		
+		ReclamoGSE reclamoE = new ReclamoGSE();
+		reclamoE.setReclamoGS(reclamoS);
+		
+		try {
+			if(async){
+				//TODO: RBS Cambiar params por PolizaVO
+				//Se genera una nueva instancia en cada llamado, para evitar corrupcion de datos en el handler:
+				WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(ServletActionContext.getServletContext());
+				ServicioGSServiceCallbackHandlerImpl callback = (ServicioGSServiceCallbackHandlerImpl)context.getBean("servicioGSServiceCallbackHandlerImpl");
+				// Se setean los parametros al callback handler:
+				callback.setClientData(params);
+				
+				stubGS.startreclamoGS(reclamoE, callback);
+			} else {
+				RespuestaGS = stubGS.reclamoGS(reclamoE);
+				resultado = RespuestaGS.getReclamoGSResponse().get_return();
+				logger.debug("Resultado de WS ejecutaReclamoGS: "+resultado.getCodigo()+" - "+resultado.getMensaje());
+			}
+		} catch (RemoteException re) {
+			logger.error(re);
+			throw new Exception("Error de conexion: " + re.getMessage());
+		}
+		
+		return resultado;
+	}
+	
 	
 	public boolean ejecutaWSclienteSalud(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String nmsuplem,
@@ -766,7 +822,49 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 
 		return allInserted;
 	}
-	
+
+	public boolean ejecutaWSreclamo(String ntramite, Ice2sigsService.Operacion op, boolean async, UserVO userVO) {
+		
+		logger.debug("********************* Entrando a Ejecuta WSreclamo ******************************");
+		
+		boolean exito = true;
+		
+		List<Reclamo> result = null;
+		Reclamo reclamo =  null;
+		
+		//Se invoca servicio para obtener los datos del cliente
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_ntramite_i", ntramite);
+		
+		try {
+			result = siniestrosManager.obtieneDatosReclamoWS(params);
+			if(result != null && result.size() > 0){
+				reclamo = result.get(0);
+			}
+		} catch (Exception e1) {
+			logger.error("Error en llamar al PL de obtencion de obtieneDatosReclamoWS",e1);
+			return false;
+		}
+		
+		if(reclamo != null){
+			
+			String usuario = "SIN USUARIO";
+			if(userVO != null){
+				usuario = userVO.getUser();
+			}
+			params.put("USUARIO", usuario);
+			
+			try{
+				logger.debug(">>>>>>> Enviando el Reclamo: " + reclamo.getIcodreclamo());
+				ejecutaReclamoGS(op, reclamo, params, true);
+			}catch(Exception e){
+				logger.error("Error al enviar el Reclamo: " + reclamo.getIcodreclamo(), e);
+				exito = false;
+			}
+		}
+
+		return exito;
+	}
 
 	public String getEndpoint() {
 		return endpoint;
@@ -791,6 +889,10 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 	 */
 	public void setKernelManager(KernelManagerSustituto kernelManager) {
 		this.kernelManager = kernelManager;
+	}
+
+	public void setSiniestrosManager(SiniestrosManager siniestrosManager) {
+		this.siniestrosManager = siniestrosManager;
 	}
 
 }

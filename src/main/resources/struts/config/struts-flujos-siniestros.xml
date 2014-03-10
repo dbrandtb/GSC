@@ -461,7 +461,7 @@
 			</result>
 		</action>
         
-		<action name="detalleSiniestro" class="detalleSiniestroAction">
+		<action name="detalleSiniestro" class="detalleSiniestroAction" method="detalleSiniestro">
     		<result>/jsp-script/proceso/siniestros/detalleReclamacion/detalleReclamacion.jsp</result>
 		</action>
 		
@@ -475,6 +475,10 @@
 		
 		<action name="includes/loadInfoGeneralReclamacion" class="detalleSiniestroAction" method="loadInfoGeneralReclamacion">
             <result>/jsp-script/proceso/siniestros/detalleReclamacion/includes/informacionGeneral.jsp</result>
+        </action>
+
+		<action name="includes/historialReclamaciones" class="detalleSiniestroAction">
+            <result>/jsp-script/proceso/siniestros/detalleReclamacion/includes/verHistorialSiniestros.jsp</result>
         </action>
 		
 		<action name="obtieneCalculos" class="detalleSiniestroAction" method="obtieneCalculos">
@@ -591,6 +595,18 @@
             </interceptor-ref>
             <result type="json"></result>
         </action>
+        
+        <action name="cargaHistorialSiniestros" class="detalleSiniestroAction"
+			method="cargaHistorialSiniestros">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					loadList.*,
+					success,
+					msgResult
+				</param>
+			</result>
+		</action>
 		
     </package>
 
