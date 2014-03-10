@@ -221,9 +221,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 					paramsR.put("pv_cdprovee_i",params.get("cdprovee"));
 					paramsR.put("pv_cdmedico_i",params.get("cdmedico"));
 					paramsR.put("pv_mtsumadp_i",params.get("mtsumadp"));
-					//paramsR.put("pv_porpenal_i",params.get("porpenal")); // penalizacion Final
 					paramsR.put("pv_copagofi_i",params.get("copagoTotal")); // Copago Final
-					
 					paramsR.put("pv_porpenal_i","0"); // penalizacion Final
 					paramsR.put("pv_cdicd_i",params.get("cdicd"));
 					paramsR.put("pv_cdcausa_i",params.get("cdcausa"));
@@ -256,6 +254,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 							//GUARDADO DE LOS DATOS PARA LAS TABLAS
 							siniestrosManager.guardaListaTDeTauts(paramsTDeTauts);
 				   		}
+						
 						if(params.get("claveTipoAutoriza").trim().equalsIgnoreCase("1") || params.get("claveTipoAutoriza").trim().equalsIgnoreCase("3"))
 						{
 							/* VALORES A ENVIAR A MESA DE CONTROL */
@@ -298,6 +297,27 @@ public class SiniestrosAction extends PrincipalCoreAction{
 							paramsMCAut.put("pv_otvalor04",params.get("fevencim"));             		// Fecha de Vencimiento
 							paramsMCAut.put("pv_otvalor05",params.get("dsNombreAsegurado"));            // Nombre del asegurado
 							WrapperResultados res = kernelManagerSustituto.PMovMesacontrol(paramsMCAut);
+							
+							logger.debug("VALOR DE LA MESA DE CONTROL");
+							logger.debug(res.getItemMap());
+							logger.debug(res.getItemMap().get("ntramite"));
+							
+							if(params.get("status").trim().equalsIgnoreCase("2")){
+								Map<String,Object>paramsO =new HashMap<String,Object>();
+								paramsO.put("pv_ntramite_i" , (String)res.getItemMap().get("ntramite"));
+								paramsO.put("pv_cdunieco_i" , params.get("cdunieco"));
+								paramsO.put("pv_cdramo_i" , params.get("cdramo"));
+								paramsO.put("pv_estado_i" , params.get("estado"));
+								paramsO.put("pv_nmpoliza_i" , params.get("nmpoliza"));
+								paramsO.put("pv_nmAutSer_i" , lista.get(0).getNmautser());//params.get("nmautant"));
+								paramsO.put("pv_cdperson_i" , params.get("cdperson"));
+								paramsO.put("pv_nmsuplem_i" , params.get("nmsuplem"));
+								//mca.setParamsO((HashMap<String, Object>) paramsO);
+								logger.debug("VALORES A ENVIAR PARA LA GENERACION DEL PDF");
+								logger.debug(paramsO);
+								generarAutoriServicio(paramsO);
+							}
+							
 						}else{
 							// aqui va la actualizacion de los campos de mesa control
 							//verificamos el valor del dsnom
@@ -326,6 +346,20 @@ public class SiniestrosAction extends PrincipalCoreAction{
 				    			smap1.put("comments" , null);
 				    			mca.setSmap1(smap1);
 				    			mca.actualizarStatusTramite();
+				    			
+				    			Map<String,Object>paramsO =new HashMap<String,Object>();
+								paramsO.put("pv_ntramite_i" , params.get("idNumtramiteInicial"));
+								paramsO.put("pv_cdunieco_i" , params.get("cdunieco"));
+								paramsO.put("pv_cdramo_i" , params.get("cdramo"));
+								paramsO.put("pv_estado_i" , params.get("estado"));
+								paramsO.put("pv_nmpoliza_i" , params.get("nmpoliza"));
+								paramsO.put("pv_nmAutSer_i" , lista.get(0).getNmautser());
+								paramsO.put("pv_cdperson_i" , params.get("cdperson"));
+								paramsO.put("pv_nmsuplem_i" , params.get("nmsuplem"));
+								logger.debug("VALORES A ENVIAR PARA LA GENERACION DEL PDF");
+								logger.debug(paramsO);
+								generarAutoriServicio(paramsO);
+				    			
 							}
 							
 						}
@@ -1014,8 +1048,14 @@ public void setMsgResult(String msgResult) {
 	   return SUCCESS;
    }
 
-   
-   public String generarAutoriServicio(){
+   /*private void generarAutoriServicio(Map<String, Object> paramsO) {
+		// TODO Auto-generated method stub
+	   paramsO2.get(key)
+	}
+   */
+   public String generarAutoriServicio(Map<String, Object> paramsO){
+	   
+	   
 	   
 	   try {
 		   File carpeta=new File(getText("ruta.documentos.poliza") + "/" + paramsO.get("pv_ntramite_i"));
@@ -1063,7 +1103,7 @@ public void setMsgResult(String msgResult) {
            paramsO.put("pv_swvisible_i"   , null);
            paramsO.put("pv_codidocu_i"   , null);
            paramsO.put("pv_cdtiptra_i"   , TipoTramite.AUTORIZACION_SERVICIOS.getCodigo());
-           paramsO.put("pv_nmsolici_i",paramsO.get("pv_nmsuplem_i"));
+           paramsO.put("pv_nmsolici_i",null);
            paramsO.put("pv_tipmov_i",TipoTramite.AUTORIZACION_SERVICIOS.getCodigo());
            logger.debug(paramsO);
            kernelManagerSustituto.guardarArchivo(paramsO);
@@ -1146,7 +1186,7 @@ public void setMsgResult(String msgResult) {
 	   	}
 	   	success = true;
 	   	return SUCCESS;
- }
+  }
    
    public String validaExclusionPenalizacion(){
 	   	logger.debug(" **** Entrando al metodo de validacion de Penalizacion ****");
@@ -3320,6 +3360,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 	public void setPorcentajePenalizacion(String porcentajePenalizacion) {
 		this.porcentajePenalizacion = porcentajePenalizacion;
 	}
+
 	
 	public String getAutorizarProceso() {
 		return autorizarProceso;
