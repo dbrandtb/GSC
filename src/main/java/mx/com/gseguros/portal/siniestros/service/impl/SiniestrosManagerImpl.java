@@ -966,4 +966,10 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		log.debug("cargaHistorial lista size:"+lista.size());
 		return lista;
 	}
+
+	@Override
+	public void getCambiarEstatusMAUTSERV(String nmautser,String status) throws Exception {
+		// TODO Auto-generated method stub
+		siniestrosDAO.cambiarEstatusMAUTSERV(nmautser,status);
+	}
 }

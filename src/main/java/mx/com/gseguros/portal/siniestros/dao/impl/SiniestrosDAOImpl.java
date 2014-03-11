@@ -2421,8 +2421,30 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
         	reclamo.setTipImp(rs.getString("TIP_IMP"));
         	reclamo.setTipMov(rs.getString("TIP_MOV"));
         	reclamo.setTisecuencialafi(rs.getInt("TISECUENCIALAFI"));
-        	
             return reclamo;
         }
     }
+
+
+	@Override
+	public void cambiarEstatusMAUTSERV(String nmautser, String status) throws Exception {
+		// TODO Auto-generated method stub
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_nmautser_i", nmautser);
+		params.put("pv_status_i", status);
+		Map<String, Object> mapResult = ejecutaSP(new CambioEstatusMAUTSERV(getDataSource()), params);
+	}
+	
+	protected class CambioEstatusMAUTSERV extends StoredProcedure
+	{
+		protected CambioEstatusMAUTSERV(DataSource dataSource)
+		{
+			super(dataSource, "PKG_PRESINIESTRO.p_upd_status_mautserv");
+			declareParameter(new SqlParameter("pv_nmautser_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_status_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 }

@@ -32,6 +32,7 @@ var _URL_MONTO_MAXIMO			= '<s:url namespace="/siniestros"  action="consultaMonto
 var _UrlValidaAutoProceso    = '<s:url namespace="/siniestros" action="validaAutorizacionProceso" />';
 var panDocUrlViewDoc     = '<s:url namespace ="/documentos" action="descargaDocInline" />';
 var _URL_ActualizaStatusTramite =      '<s:url namespace="/mesacontrol" action="actualizarStatusTramite" />';
+var _URL_ActualizaStatusMAUTSERV =      '<s:url namespace="/siniestros" action="cambiarEstatusMAUTSERV" />';
 //UserVO usuario  = (UserVO)session.get("USUARIO");
 //String cdrol    = usuario.getRolActivo().getObjeto().getValue();
 
@@ -156,13 +157,34 @@ function rechazoAutorizacionServicio(grid,rowIndex,colIndex){
 	    	            		        		'smap1.status'   : _STATUS_TRAMITE_RECHAZADO,
 	    	            		        	},
 	    	            		        	failure: function(form, action) {
-	    	            		        		mensajeError('No se pudo turnar.');
+	    	            		        		mensajeError('No se pudo rechazar.');
 	    	            					},
 	    	            					success: function(form, action) {
-	    	            						mensajeCorrecto('Aviso','Se ha rechazado con exito.');
-	    	            						loadMcdinStore();
-	    	            						windowLoader.close();
 	    	            						
+	    	            						Ext.Ajax.request(
+   	            								{
+   	            									url     : _URL_ActualizaStatusMAUTSERV
+   	            								    ,params:{
+   	            								    	'params.nmautser' :  record.get('parametros.pv_otvalor01'),
+   	 	    	            		        			'params.status'   : _STATUS_TRAMITE_RECHAZADO,
+   	            								    }
+   	            								    ,success : function (response)
+   	            								    {
+   	            								    	mensajeCorrecto('Aviso','Se ha rechazado con exito.');
+	   	 	    	            						loadMcdinStore();
+	   	 	    	            						windowLoader.close();
+   	            								    },
+   	            								    failure : function ()
+   	            								    {
+   	            								        me.up().up().setLoading(false);
+   	            								        Ext.Msg.show({
+   	            								            title:'Error',
+   	            								            msg: 'Error de comunicaci&oacute;n',
+   	            								            buttons: Ext.Msg.OK,
+   	            								            icon: Ext.Msg.ERROR
+   	            								        });
+   	            								    }
+   	            								});
 	    	            					}
 	    	            				});
 	    	            			} else {

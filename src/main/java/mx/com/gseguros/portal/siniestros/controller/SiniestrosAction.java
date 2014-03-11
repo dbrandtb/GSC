@@ -703,6 +703,19 @@ public void setMsgResult(String msgResult) {
 		}
    }
 	
+	public String cambiarEstatusMAUTSERV(){
+		logger.debug(" **** Entrando a cambiar el estatus al momento de cancelarlos ****");
+		try {
+				siniestrosManager.getCambiarEstatusMAUTSERV(params.get("nmautser"), params.get("status"));
+				
+		}catch( Exception e){
+			logger.error("Error al cambiar el estatus",e);
+		}
+		
+		success = true;
+		return SUCCESS;
+   }
+	
 	/**
 	 * Funci�n para eliminar la listas de los grids
 	 * @param params [nmautser,cdtipaut,cdmedico,cdtipmed,cdcpt,precio,cantporc,ptimport]

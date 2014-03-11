@@ -369,5 +369,7 @@ public interface SiniestrosManager {
 	public String validaDocumentosCargados(HashMap<String, String> params) throws Exception;
 
 	public List<Reclamo> obtieneDatosReclamoWS(Map<String, Object> params) throws Exception;
+
+	public void getCambiarEstatusMAUTSERV(String nmautser,String status) throws Exception;
 	
 }
