@@ -1487,9 +1487,7 @@ Ext.onReady(function() {
 						Ext.getCmp('clausulasGridId').hide();
 						Ext.getCmp('idNumeroAnterior').hide();
 						Ext.getCmp('btnBuscar').hide();
-						console.log("VALOR DE CDROL");
-			        	console.log(cdrol);
-			        	if(cdrol=="COORDINAMED")
+						if(cdrol=="COORDINAMED")
 						{
 							Ext.getCmp('Autorizar').hide();
 						}else{
@@ -2129,6 +2127,11 @@ Ext.onReady(function() {
 			panelInicialPrincipal.down('[name=cdperson]').setValue(json.cdperson);
 			//Ext.getCmp('idAsegurado').setValue(json.cdperson);
 			
+			
+			var dsnom = json.cdperson+" "+json.nombreCliente;
+			
+			Ext.getCmp('dsNombreAsegurado').setValue(dsnom);
+			
 			//Fecha Solicitud
 			Ext.getCmp('fechaSolicitud').setValue(json.fesolici);
 			
@@ -2402,7 +2405,7 @@ Ext.onReady(function() {
 		   });
 		
 		var valorIdEstatus= Ext.getCmp('idstatus').getValue();
-		console.log(valorIdEstatus);
+		
 		submitValues['datosTablas']=datosTablas;
 		panelInicialPrincipal.setLoading(true);
 		
@@ -2421,7 +2424,6 @@ Ext.onReady(function() {
                     var mensaje='';
                     
                     // si el estatus es igual a 2 se va a autorizar
-                    console.log(Ext.getCmp('idstatus').getValue());
                     if(Ext.getCmp('idstatus').getValue() == "2"){
                     	mensaje= 'Se gener&oacute; la carta para la autorizaci&oacute;n con el n&uacute;mero ';
                     }else{
@@ -2440,14 +2442,6 @@ Ext.onReady(function() {
                     	}
                     }
                     
-                    /*Ext.Msg.show({
-                        title:'Guardado',
-                        msg: mensaje+" : "+numeroAutorizacion ,
-                        buttons: Ext.Msg.OK,
-                        icon: Ext.Msg.INFO
-                    });*/
-                    
-                    
                     mensajeCorrecto('Datos guardados',mensaje+" : "+numeroAutorizacion,function()
             		{
             		    Ext.create('Ext.form.Panel').submit(
@@ -2462,8 +2456,6 @@ Ext.onReady(function() {
             		    });
             		});
                     
-                    
-                    
                     panelInicialPrincipal.getForm().reset();
                     storeMedico.removeAll();
                     Ext.getCmp('idEspecialidad').setValue('');
@@ -2471,17 +2463,6 @@ Ext.onReady(function() {
                     storeConceptoAutorizados.removeAll();
     				storeQuirugicoBase.removeAll();
     				storeQuirurgico.removeAll();
-    				
-    				/*Ext.create('Ext.form.Panel').submit(
-					{
-					    url             : _p12_urlMesaControl
-					    ,standardSubmit : true
-					    ,params         :
-					    {
-					        'smap1.gridTitle'      : 'Autorizaci&oacute;n de servicio'
-					        ,'smap2.pv_cdtiptra_i' : 14
-					    }
-					});*/
                 }
                 else{
                     Ext.Msg.show({

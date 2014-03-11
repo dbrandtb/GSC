@@ -66,6 +66,26 @@ var msgWindow;
 	    centrarVentana(windowLoader);
 	}
 	
+	function complementarAltaWindow(){
+	    windowLoader = Ext.create('Ext.window.Window',{
+	        modal       : true,
+	        buttonAlign : 'center',
+	        width       : 800,
+	        height      : 730,
+	        autoScroll  : true,
+	        loader      : {
+	            url     : _UrlAltaDeTramite,
+	            scripts  : true,
+	            loadMask : true,
+	            autoLoad : true,
+	            ajaxOptions: {
+	            	method: 'POST'
+	            }
+	        }
+	    }).show();
+	    centrarVentana(windowLoader);
+	}
+	
 	
 	function revDocumentosWindow(grid,rowIndex,colIndex){
 	    var record = grid.getStore().getAt(rowIndex);
