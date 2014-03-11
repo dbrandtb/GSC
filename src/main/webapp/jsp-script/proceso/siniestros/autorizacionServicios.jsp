@@ -48,9 +48,10 @@
             var venDocUrlImpConrec                  = '<s:url namespace ="/documentos" action="generarContrarecibo" />';
             
             var _p12_urlMesaControl              = '<s:url namespace="/mesacontrol" action="mcdinamica"               />';
+            var _URL_MONTO_MAXIMO			= '<s:url namespace="/siniestros"  action="consultaMontoMaximo"/>';
             
             var valorAction = <s:property value='paramsJson' escapeHtml='false'/>;
-            
+            console.log(valorAction);
             debug(valorAction);
             
         </script>

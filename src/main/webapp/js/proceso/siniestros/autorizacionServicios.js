@@ -4,6 +4,7 @@ var storeConceptoAutorizados;
 var storeQuirugicoBase;
 var storeQuirugico;
 var extraParams='';
+var cdrol;
 Ext.onReady(function() {
 
 	Ext.selection.CheckboxModel.override( {
@@ -1415,7 +1416,7 @@ Ext.onReady(function() {
 						var rowSelected = Ext.getCmp('clausulasGridId').getSelectionModel().getSelection()[0];
 						var nmautser= rowSelected.get('nmautser');
 						
-						cargarInformacionAutorizacionServicio(nmautser,null);
+						cargarInformacionAutorizacionServicio(nmautser,null,null);
 					}else {
 						//Ext.Msg.alert('Aviso', 'Debe de seleccionar una cl&aacute;usula para realizar la edici&oacute;n');
 						Ext.Msg.show({
@@ -1474,12 +1475,30 @@ Ext.onReady(function() {
 					if(closedStatusSelectedID !=1){
 						Ext.getCmp('panelbusqueda').show();
 						Ext.getCmp('clausulasGridId').show();
+						
+						console.log("VALOR DE CDROL");
+			        	console.log(cdrol);
+			        	if(cdrol=="COORDINAMED")
+						{
+							Ext.getCmp('Autorizar').hide();
+						}else{
+							Ext.getCmp('Autorizar').show();
+						}
 					}else{
 						Ext.getCmp('panelbusqueda').hide();
 						Ext.getCmp('clausulasGridId').hide();
 						Ext.getCmp('idNumeroAnterior').hide();
 						Ext.getCmp('btnBuscar').hide();
-						//modificacionClausula.close();
+						console.log("VALOR DE CDROL");
+			        	console.log(cdrol);
+			        	if(cdrol=="COORDINAMED")
+						{
+							Ext.getCmp('Autorizar').hide();
+						}else{
+							Ext.getCmp('Autorizar').show();
+						}
+			        	
+			        	//modificacionClausula.close();
 						modificacionClausula.hide();
 						
 					}
@@ -1522,8 +1541,10 @@ Ext.onReady(function() {
 					]
 			});
 	
-	if(valorAction == null)
+	
+	if(valorAction.nmAutSer == null && valorAction.ntramite ==null)
 	{
+		cdrol = valorAction.cdrol;
 		modificacionClausula.showAt(50,100);
 	}else{
 		
@@ -1537,7 +1558,8 @@ Ext.onReady(function() {
 			storeTratamiento.load();
 			storeTabulador.load();
 			storeTipoAutorizacion.load();
-			cargarInformacionAutorizacionServicio(valorAction.nmAutSer, valorAction.ntramite);
+			cargarInformacionAutorizacionServicio(valorAction.nmAutSer, valorAction.ntramite,valorAction.cdrol);
+			
 	}
 
 /*################################################################################################################################################
@@ -1648,7 +1670,7 @@ Ext.onReady(function() {
 	 			,
 	 			{
 	 				 xtype       : 'textfield',			fieldLabel : 'dsNombreAsegurado'		,id       : 'dsNombreAsegurado', 	name:'dsNombreAsegurado',
-					 labelWidth: 170,					hidden:true
+					 labelWidth: 170//,					hidden:true
 	 			},
 	 			{
 	 				 xtype       : 'textfield',			fieldLabel : 'NumTramite'		,id       : 'idNumtramiteInicial', 	name:'idNumtramiteInicial',
@@ -1895,24 +1917,7 @@ Ext.onReady(function() {
 			 		id:'botonGuardar',
 			 		handler: function() {
 			 		    if (panelInicialPrincipal.form.isValid()) {
-			 		    	
-		 		    		if(guardadoAutorizacionServicio())
-	 		    			{
-		 		    			//aqui tiene que ir el redirect
-	 		    				//modificacionClausula.show();
-		 		    			/*Ext.create('Ext.form.Panel').submit(
- 		    					{
- 		    					    url             : _p12_urlMesaControl
- 		    					    ,standardSubmit : true
- 		    					    ,params         :
- 		    					    {
- 		    					        'smap1.gridTitle'      : 'Autorizaci&oacute;n de servicio'
- 		    					        ,'smap2.pv_cdtiptra_i' : 14
- 		    					    }
- 		    					});*/
-		 		    			
-	 		    			}
-			 		    		
+			 		    		guardadoAutorizacionServicio();
 			 		    } else {
 			 		        Ext.Msg.show({
 			 		               title: 'Aviso',
@@ -1922,7 +1927,8 @@ Ext.onReady(function() {
 			 		           });
 			 		    }
 			 		}
-			 	},
+			 	}
+			 	,
 			 	{
 			 		text:'Autorizar',
 			 		icon:_CONTEXT+'/resources/fam3icons/icons/key.png',
@@ -1931,26 +1937,66 @@ Ext.onReady(function() {
 			 		{
 			 			
 			 			if (panelInicialPrincipal.form.isValid()) {
-			 				
-		 		    		
-			 				if(Ext.getCmp('fechaAutorizacion').getValue()!=null && Ext.getCmp('fechaVencimiento').getValue())
-		 					{
-			 					Ext.getCmp('idstatus').setValue("2");
-			 					if(guardadoAutorizacionServicio())
-		 		    			{
-		 		    				//modificacionClausula.show();
-		 		    			}
-		 					}
-			 				else
-		 					{
-			 					Ext.Msg.show({
-				 		               title: 'Error',
-				 		               msg: 'La fecha de autorizaci&oacute;n y fecha vencimiento son requeridas',
-				 		               buttons: Ext.Msg.OK,
-				 		               icon: Ext.Msg.ERROR
-				 		           });
-		 					}
-			 				
+			 				Ext.Ajax.request(
+									{
+									    url     : _URL_MONTO_MAXIMO
+									    ,params:{
+											'params.cdramo' : Ext.getCmp('idcdRamo').getValue(),
+											'params.cdtipsit' : Ext.getCmp('idcdtipsit').getValue()
+									}
+									,success : function (response)
+								    {
+								    	console.log(Ext.decode(response.responseText).montoMaximo);
+								    	
+								    	if(+ (Ext.getCmp('sumDisponible').getValue() <= +(Ext.decode(response.responseText).montoMaximo)))
+							    		{
+								    		
+								    		if(Ext.getCmp('fechaAutorizacion').getValue()!=null && Ext.getCmp('fechaVencimiento').getValue())
+						 					{
+							 					Ext.getCmp('idstatus').setValue("2");
+							 					
+							 					console.log(Ext.getCmp('idstatus').getValue());
+							 					guardadoAutorizacionServicio();
+						 					}
+							 				else
+						 					{
+							 					Ext.Msg.show({
+								 		               title: 'Error',
+								 		               msg: 'La fecha de autorizaci&oacute;n y fecha vencimiento son requeridas',
+								 		               buttons: Ext.Msg.OK,
+								 		               icon: Ext.Msg.ERROR
+								 		           });
+						 					}
+							    		}else
+						    			{
+							    			mensajeCorrecto('Datos',"Este tr&aacute;mite debe de ser turnada al gerente ",function()
+					                		{
+					                		    Ext.create('Ext.form.Panel').submit(
+					                		    {
+					                		        url             : _p12_urlMesaControl
+					                		        ,standardSubmit : true
+					                		        ,params         :
+					                		        {
+					                		            'smap1.gridTitle'      : 'Autorizaci&oacute;n de servicio'
+					                		            ,'smap2.pv_cdtiptra_i' : 14
+					                		        }
+					                		    });
+					                		});
+						    			}
+								    	
+								    	
+								    },
+								    failure : function ()
+								    {
+								        me.up().up().setLoading(false);
+								        Ext.Msg.show({
+								            title:'Error',
+								            msg: 'Error de comunicaci&oacute;n',
+								            buttons: Ext.Msg.OK,
+								            icon: Ext.Msg.ERROR
+								        });
+								    }
+								});
 			 		    } else {
 			 		        Ext.Msg.show({
 			 		               title: 'Aviso',
@@ -1965,7 +2011,7 @@ Ext.onReady(function() {
 	});
 	
 	
-	function cargarInformacionAutorizacionServicio(nmautser,ntramite)
+	function cargarInformacionAutorizacionServicio(nmautser,ntramite,cdrol)
 	{
 		console.log(ntramite);
 		
@@ -2082,6 +2128,9 @@ Ext.onReady(function() {
 					}
             });
 			
+			
+			//Ext.getCmp('dsNombreAsegurado').setValue(asegurado.displayField);
+			
 			panelInicialPrincipal.down('[name=cdperson]').setValue(json.cdperson);
 			//Ext.getCmp('idAsegurado').setValue(json.cdperson);
 			
@@ -2133,6 +2182,14 @@ Ext.onReady(function() {
 			
 			Ext.getCmp('idSucursal').setValue(json.cduniecs);
 			
+			console.log(cdrol);
+			
+			if(cdrol=="COORDINAMED")
+			{
+				Ext.getCmp('Autorizar').hide();
+			}else{
+				Ext.getCmp('Autorizar').show();
+			}
 			
 			
 			//CARGO LOS VALORES DE COBERTURA SEGUN LOS DATOS DE ENTRADA
@@ -2350,6 +2407,8 @@ Ext.onReady(function() {
 		        });
 		   });
 		
+		var valorIdEstatus= Ext.getCmp('idstatus').getValue();
+		console.log(valorIdEstatus);
 		submitValues['datosTablas']=datosTablas;
 		panelInicialPrincipal.setLoading(true);
 		
@@ -2367,20 +2426,21 @@ Ext.onReady(function() {
                     Ext.getCmp('idNoAutorizacion').setValue(numeroAutorizacion);
                     var mensaje='';
                     
-                    // si el estatus es igual a 2 se va a autorizar 
-                    if(Ext.getCmp('idstatus').getValue() == 2){
+                    // si el estatus es igual a 2 se va a autorizar
+                    console.log(Ext.getCmp('idstatus').getValue());
+                    if(Ext.getCmp('idstatus').getValue() == "2"){
                     	mensaje= 'Se gener&oacute; la carta para la autorizaci&oacute;n con el n&uacute;mero ';
                     }else{
-                    	if(Ext.getCmp('claveTipoAutoriza').getValue() == 1)
+                    	if(Ext.getCmp('claveTipoAutoriza').getValue() == "1")
                     	{
                         	mensaje= 'Se guardo la Autorizaci&oacute;n de Servicio con el n&uacute;mero ';
                     	}
-                        if(Ext.getCmp('claveTipoAutoriza').getValue() == 2)
+                        if(Ext.getCmp('claveTipoAutoriza').getValue() == "2")
                     	{
                         	mensaje= 'Se modific&oacute; la autorizaci&oacute;n con el n&uacute;mero ';
                     	}
                         
-                        if(Ext.getCmp('claveTipoAutoriza').getValue() == 3)
+                        if(Ext.getCmp('claveTipoAutoriza').getValue() == "3")
                     	{
                         	mensaje= 'Se reemplaz&oacute; la Autorizaci&oacute;n de Servicio con el n&uacute;mero ';
                     	}
