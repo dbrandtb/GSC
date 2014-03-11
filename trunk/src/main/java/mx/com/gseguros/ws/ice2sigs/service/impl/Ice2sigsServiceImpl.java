@@ -823,7 +823,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 		return allInserted;
 	}
 
-	public boolean ejecutaWSreclamo(String ntramite, Ice2sigsService.Operacion op, boolean async, UserVO userVO) {
+	public boolean ejecutaWSreclamo(String ntramite, String cdunieco, String cdramo, String estado, String nmpoliza, Ice2sigsService.Operacion op, boolean async, UserVO userVO) {
 		
 		logger.debug("********************* Entrando a Ejecuta WSreclamo ******************************");
 		
@@ -835,6 +835,10 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 		//Se invoca servicio para obtener los datos del cliente
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_ntramite_i", ntramite);
+		params.put("pv_cdunieco_i", cdunieco);
+		params.put("pv_cdramo_i", cdramo);
+		params.put("pv_estado_i", estado);
+		params.put("pv_nmpoliza_i", nmpoliza);
 		
 		try {
 			result = siniestrosManager.obtieneDatosReclamoWS(params);

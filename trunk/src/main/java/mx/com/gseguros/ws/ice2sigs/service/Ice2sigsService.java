@@ -141,6 +141,6 @@ public interface Ice2sigsService {
 	 * @param userVO
 	 * @return
 	 */
-	public boolean ejecutaWSreclamo(String ntramite, Ice2sigsService.Operacion op, boolean async, UserVO userVO);
+	public boolean ejecutaWSreclamo(String ntramite, String cdunieco, String cdramo, String estado, String nmpoliza, Ice2sigsService.Operacion op, boolean async, UserVO userVO);
 	
 }
