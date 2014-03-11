@@ -1476,9 +1476,7 @@ Ext.onReady(function() {
 						Ext.getCmp('panelbusqueda').show();
 						Ext.getCmp('clausulasGridId').show();
 						
-						console.log("VALOR DE CDROL");
-			        	console.log(cdrol);
-			        	if(cdrol=="COORDINAMED")
+						if(cdrol=="COORDINAMED")
 						{
 							Ext.getCmp('Autorizar').hide();
 						}else{
@@ -1558,6 +1556,7 @@ Ext.onReady(function() {
 			storeTratamiento.load();
 			storeTabulador.load();
 			storeTipoAutorizacion.load();
+			cdrol = valorAction.cdrol;
 			cargarInformacionAutorizacionServicio(valorAction.nmAutSer, valorAction.ntramite,valorAction.cdrol);
 			
 	}
@@ -1670,7 +1669,7 @@ Ext.onReady(function() {
 	 			,
 	 			{
 	 				 xtype       : 'textfield',			fieldLabel : 'dsNombreAsegurado'		,id       : 'dsNombreAsegurado', 	name:'dsNombreAsegurado',
-					 labelWidth: 170//,					hidden:true
+					 labelWidth: 170,					hidden:true
 	 			},
 	 			{
 	 				 xtype       : 'textfield',			fieldLabel : 'NumTramite'		,id       : 'idNumtramiteInicial', 	name:'idNumtramiteInicial',
@@ -1946,45 +1945,46 @@ Ext.onReady(function() {
 									}
 									,success : function (response)
 								    {
-								    	console.log(Ext.decode(response.responseText).montoMaximo);
 								    	
-								    	if(+ (Ext.getCmp('sumDisponible').getValue() <= +(Ext.decode(response.responseText).montoMaximo)))
-							    		{
-								    		
-								    		if(Ext.getCmp('fechaAutorizacion').getValue()!=null && Ext.getCmp('fechaVencimiento').getValue())
-						 					{
-							 					Ext.getCmp('idstatus').setValue("2");
-							 					
-							 					console.log(Ext.getCmp('idstatus').getValue());
+								    	if(cdrol=="COORDMEDMULTI")
+										{
+								    		if(+ (Ext.getCmp('sumDisponible').getValue() <= +(Ext.decode(response.responseText).montoMaximo)))
+								    		{
+									    		
+									    		if(Ext.getCmp('fechaAutorizacion').getValue()!=null && Ext.getCmp('fechaVencimiento').getValue())
+							 					{
+								 					Ext.getCmp('idstatus').setValue("2");
+								 					guardadoAutorizacionServicio();
+							 					}
+								 				else
+							 					{
+								 					Ext.Msg.show({
+									 		               title: 'Error',
+									 		               msg: 'La fecha de autorizaci&oacute;n y fecha vencimiento son requeridas',
+									 		               buttons: Ext.Msg.OK,
+									 		               icon: Ext.Msg.ERROR
+									 		           });
+							 					}
+								    		}else
+							    			{
+								    			mensajeCorrecto('Datos',"Este tr&aacute;mite debe de ser turnada al gerente ",function()
+						                		{
+						                		    Ext.create('Ext.form.Panel').submit(
+						                		    {
+						                		        url             : _p12_urlMesaControl
+						                		        ,standardSubmit : true
+						                		        ,params         :
+						                		        {
+						                		            'smap1.gridTitle'      : 'Autorizaci&oacute;n de servicio'
+						                		            ,'smap2.pv_cdtiptra_i' : 14
+						                		        }
+						                		    });
+						                		});
+							    			}
+										}else{
+												Ext.getCmp('idstatus').setValue("2");
 							 					guardadoAutorizacionServicio();
-						 					}
-							 				else
-						 					{
-							 					Ext.Msg.show({
-								 		               title: 'Error',
-								 		               msg: 'La fecha de autorizaci&oacute;n y fecha vencimiento son requeridas',
-								 		               buttons: Ext.Msg.OK,
-								 		               icon: Ext.Msg.ERROR
-								 		           });
-						 					}
-							    		}else
-						    			{
-							    			mensajeCorrecto('Datos',"Este tr&aacute;mite debe de ser turnada al gerente ",function()
-					                		{
-					                		    Ext.create('Ext.form.Panel').submit(
-					                		    {
-					                		        url             : _p12_urlMesaControl
-					                		        ,standardSubmit : true
-					                		        ,params         :
-					                		        {
-					                		            'smap1.gridTitle'      : 'Autorizaci&oacute;n de servicio'
-					                		            ,'smap2.pv_cdtiptra_i' : 14
-					                		        }
-					                		    });
-					                		});
-						    			}
-								    	
-								    	
+										}
 								    },
 								    failure : function ()
 								    {
@@ -2013,10 +2013,6 @@ Ext.onReady(function() {
 	
 	function cargarInformacionAutorizacionServicio(nmautser,ntramite,cdrol)
 	{
-		console.log(ntramite);
-		
-		
-		
 		Ext.Ajax.request(
 		{
 		    url     : _URL_LISTADO_CONCEP_EQUIP
@@ -2128,7 +2124,6 @@ Ext.onReady(function() {
 					}
             });
 			
-			
 			//Ext.getCmp('dsNombreAsegurado').setValue(asegurado.displayField);
 			
 			panelInicialPrincipal.down('[name=cdperson]').setValue(json.cdperson);
@@ -2182,7 +2177,6 @@ Ext.onReady(function() {
 			
 			Ext.getCmp('idSucursal').setValue(json.cduniecs);
 			
-			console.log(cdrol);
 			
 			if(cdrol=="COORDINAMED")
 			{

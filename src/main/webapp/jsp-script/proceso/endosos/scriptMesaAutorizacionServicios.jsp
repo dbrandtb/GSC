@@ -427,7 +427,7 @@ function turnarGerenteMedMultiregional(grid,rowIndex,colIndex){
 		
 		msgWindow = Ext.Msg.show({
 	        title: 'Aviso',
-	        msg: '&iquest;El tr&aacute;mite ser&aacute; turnado para el gerente para su Vo.Bo., esta seguro ?',
+	        msg: 'El tr&aacute;mite ser&aacute; turnado al Gerente M&eacute;dico para su Vo.Bo. &iquest; esta seguro ?',
 	        buttons: Ext.Msg.YESNO,
 	        icon: Ext.Msg.QUESTION,
 	        fn: function(buttonId, text, opt){
