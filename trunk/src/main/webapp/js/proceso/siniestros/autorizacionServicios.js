@@ -1427,7 +1427,8 @@ Ext.onReady(function() {
 						
 					}
 				}
-	           	modificacionClausula.close();
+	           	//modificacionClausula.close();
+				modificacionClausula.hide();
 	           	
 	        }			     	
 	    }
@@ -1478,7 +1479,8 @@ Ext.onReady(function() {
 						Ext.getCmp('clausulasGridId').hide();
 						Ext.getCmp('idNumeroAnterior').hide();
 						Ext.getCmp('btnBuscar').hide();
-						modificacionClausula.close();
+						//modificacionClausula.close();
+						modificacionClausula.hide();
 						
 					}
 				}
@@ -1893,9 +1895,22 @@ Ext.onReady(function() {
 			 		id:'botonGuardar',
 			 		handler: function() {
 			 		    if (panelInicialPrincipal.form.isValid()) {
+			 		    	
 		 		    		if(guardadoAutorizacionServicio())
 	 		    			{
-	 		    				modificacionClausula.show();
+		 		    			//aqui tiene que ir el redirect
+	 		    				//modificacionClausula.show();
+		 		    			/*Ext.create('Ext.form.Panel').submit(
+ 		    					{
+ 		    					    url             : _p12_urlMesaControl
+ 		    					    ,standardSubmit : true
+ 		    					    ,params         :
+ 		    					    {
+ 		    					        'smap1.gridTitle'      : 'Autorizaci&oacute;n de servicio'
+ 		    					        ,'smap2.pv_cdtiptra_i' : 14
+ 		    					    }
+ 		    					});*/
+		 		    			
 	 		    			}
 			 		    		
 			 		    } else {
@@ -1923,7 +1938,7 @@ Ext.onReady(function() {
 			 					Ext.getCmp('idstatus').setValue("2");
 			 					if(guardadoAutorizacionServicio())
 		 		    			{
-		 		    				modificacionClausula.show();
+		 		    				//modificacionClausula.show();
 		 		    			}
 		 					}
 			 				else
@@ -2351,26 +2366,48 @@ Ext.onReady(function() {
                 	var numeroAutorizacion = Ext.decode(response.responseText).numeroAutorizacion.nmautser;
                     Ext.getCmp('idNoAutorizacion').setValue(numeroAutorizacion);
                     var mensaje='';
-                    if(Ext.getCmp('claveTipoAutoriza').getValue() == 1)
-                	{
-                    	mensaje= 'Se guardo la Autorizaci&oacute;n de Servicio con el n&uacute;mero ';
-                	}
-                    if(Ext.getCmp('claveTipoAutoriza').getValue() == 2)
-                	{
-                    	mensaje= 'Se gener&oacute; la carta para la autorizaci&oacute; con el n&uacute;mero ';
-                	}
                     
-                    if(Ext.getCmp('claveTipoAutoriza').getValue() == 3)
-                	{
-                    	mensaje= 'Se reemplaz&oacute; la Autorizaci&oacute;n de Servicio con el n&uacute;mero ';
-                	}
+                    // si el estatus es igual a 2 se va a autorizar 
+                    if(Ext.getCmp('idstatus').getValue() == 2){
+                    	mensaje= 'Se gener&oacute; la carta para la autorizaci&oacute;n con el n&uacute;mero ';
+                    }else{
+                    	if(Ext.getCmp('claveTipoAutoriza').getValue() == 1)
+                    	{
+                        	mensaje= 'Se guardo la Autorizaci&oacute;n de Servicio con el n&uacute;mero ';
+                    	}
+                        if(Ext.getCmp('claveTipoAutoriza').getValue() == 2)
+                    	{
+                        	mensaje= 'Se modific&oacute; la autorizaci&oacute;n con el n&uacute;mero ';
+                    	}
+                        
+                        if(Ext.getCmp('claveTipoAutoriza').getValue() == 3)
+                    	{
+                        	mensaje= 'Se reemplaz&oacute; la Autorizaci&oacute;n de Servicio con el n&uacute;mero ';
+                    	}
+                    }
                     
-                    Ext.Msg.show({
+                    /*Ext.Msg.show({
                         title:'Guardado',
                         msg: mensaje+" : "+numeroAutorizacion ,
                         buttons: Ext.Msg.OK,
                         icon: Ext.Msg.INFO
-                    });
+                    });*/
+                    
+                    
+                    mensajeCorrecto('Datos guardados',mensaje+" : "+numeroAutorizacion,function()
+            		{
+            		    Ext.create('Ext.form.Panel').submit(
+            		    {
+            		        url             : _p12_urlMesaControl
+            		        ,standardSubmit : true
+            		        ,params         :
+            		        {
+            		            'smap1.gridTitle'      : 'Autorizaci&oacute;n de servicio'
+            		            ,'smap2.pv_cdtiptra_i' : 14
+            		        }
+            		    });
+            		});
+                    
                     
                     
                     panelInicialPrincipal.getForm().reset();
@@ -2380,6 +2417,17 @@ Ext.onReady(function() {
                     storeConceptoAutorizados.removeAll();
     				storeQuirugicoBase.removeAll();
     				storeQuirurgico.removeAll();
+    				
+    				/*Ext.create('Ext.form.Panel').submit(
+					{
+					    url             : _p12_urlMesaControl
+					    ,standardSubmit : true
+					    ,params         :
+					    {
+					        'smap1.gridTitle'      : 'Autorizaci&oacute;n de servicio'
+					        ,'smap2.pv_cdtiptra_i' : 14
+					    }
+					});*/
                 }
                 else{
                     Ext.Msg.show({

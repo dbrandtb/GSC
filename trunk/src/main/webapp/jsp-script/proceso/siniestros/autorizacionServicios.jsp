@@ -47,6 +47,7 @@
             var panDocUrlViewDoc                    = '<s:url namespace ="/documentos" action="descargaDocInline" />';
             var venDocUrlImpConrec                  = '<s:url namespace ="/documentos" action="generarContrarecibo" />';
             
+            var _p12_urlMesaControl              = '<s:url namespace="/mesacontrol" action="mcdinamica"               />';
             
             var valorAction = <s:property value='paramsJson' escapeHtml='false'/>;
             
