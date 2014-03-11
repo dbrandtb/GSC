@@ -113,6 +113,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 	public String verAutorizacionServicio(){
 		logger.debug(" **** Entrando a ver Autorizacion de servicio ****");
 		try {
+			//modificamos el valor del params para colocarle el rol que se esta ocupando
 			logger.debug("params=" + params);
 		}catch( Exception e){
 			logger.error(e.getMessage(), e);
@@ -124,7 +125,30 @@ public class SiniestrosAction extends PrincipalCoreAction{
     public String autorizacionServicios() {
 	logger.debug(" **** Entrando a autorizacion Servicio ****");
 	try {
-		logger.debug("params=" + params);
+		logger.debug("PARAMETROS INICIALES " + params);
+		
+		//Obtenemos el Rol a ocupar
+		UserVO usuario  = (UserVO)session.get("USUARIO");
+    	String cdrol    = usuario.getRolActivo().getObjeto().getValue();
+    	String numero_aut = null;
+    	String ntramite = null;
+    	
+    	if(params != null)
+    	{
+    		numero_aut  = params.get("nmAutSer");
+        	ntramite  =  params.get("ntramite");
+    	}
+    	
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("nmAutSer",numero_aut);
+		params.put("ntramite",ntramite);
+		params.put("cdrol",cdrol);
+		setParamsJson(params);
+		//setParamsJson(String(params));
+		logger.debug("PARAMETROS FINALES " + params);
+		
+		
+		/*params={nmAutSer=98, cdrol=, ntramite=1673}*/
 	} catch (Exception e) {
 		logger.error(e.getMessage(), e);
 	}
@@ -132,7 +156,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 	return SUCCESS;
     }
 	
-    /**
+	/**
      * Funci�n que realiza la busqueda de la consulta de Autorizaci�n de servicio en especifico
      * @param String nmautser
      * @return String autorizaci�n de Servicio
@@ -3370,6 +3394,10 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 		this.autorizarProceso = autorizarProceso;
 	}
 
+	public void setParamsJson(HashMap<String, String> params2) {
+		this.params = params2;
+	}
+	
 	public String getParamsJson() {
 		try {
 			return JSONUtil.serialize(params);
