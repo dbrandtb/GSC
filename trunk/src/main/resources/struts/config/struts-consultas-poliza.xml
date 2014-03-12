@@ -126,13 +126,21 @@
             </result>
         </action>
         
-        <action name="includes/verCoberturas" class="ConsultasPolizaAction" method="verCoberturas">
-            <result>/jsp/consultas/coberturas/includes/verCoberturas.jsp</result>
+        <action name="includes/verCoberturasPoliza" class="ConsultasPolizaAction" method="verCoberturas">
+            <result>/jsp/consultas/polizas/includes/verCoberturasPoliza.jsp</result>
         </action>
         
         <action name="includes/verExclusiones" class="ConsultasPolizaAction" method="verExclusiones">
             <result>/jsp/consultas/exclusiones/includes/verExclusionesPoliza.jsp</result>
         </action>
+        
+        <action name="includes/ventanaDatosPoliza" class="ConsultasPolizaAction">
+		    <result>/jsp/consultas/polizas/includes/datosGeneralesPoliza.jsp</result>
+		</action>
+		
+        <action name="includes/ventanaAseguradosPoliza" class="ConsultasPolizaAction">
+		    <result>/jsp/consultas/polizas/includes/aseguradosPoliza.jsp</result>
+		</action>
 
 	</package>
 

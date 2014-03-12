@@ -20,7 +20,7 @@
     <%--    
     </head>
     <body>--%>
-    <div style="height:100px;">
+    <div style="height:800px;">
             <div id="div_clau2"></div>
    </div>
    <%-- </body>
