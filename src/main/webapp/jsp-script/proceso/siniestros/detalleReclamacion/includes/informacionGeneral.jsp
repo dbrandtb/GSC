@@ -19,9 +19,13 @@
 	var _URL_CATALOGOS              = '<s:url namespace="/catalogos"       action="obtieneCatalogo" />';
 	var _URL_INFO_GRAL_SINIESTRO    = '<s:url namespace="/siniestros"      action="obtieneDatosGeneralesSiniestro" />';
 	var _URL_ACTUALIZA_INFO_GRAL_SIN= '<s:url namespace="/siniestros"      action="actualizaDatosGeneralesSiniestro" />';
-	var _URL_LOADER_VER_COBERTURAS  = '<s:url namespace="/consultasPoliza" action="includes/verCoberturas" />';
+	var _URL_LOADER_VER_COBERTURAS  = '<s:url namespace="/consultasPoliza" action="includes/verCoberturasPoliza" />';
 	var _URL_LOADER_VER_EXCLUSIONES = '<s:url namespace="/consultasPoliza" action="includes/verExclusiones" />';
 	var _URL_LOADER_HISTORIAL_RECLAMACIONES = '<s:url namespace="/siniestros" action="includes/historialReclamaciones" />';
+	var _URL_LOADER_DATOS_POLIZA            = '<s:url namespace="/consultasPoliza" action="includes/ventanaDatosPoliza" />';
+	var _URL_LOADER_ASEGURADOS_POLIZA       = '<s:url namespace="/consultasPoliza" action="includes/ventanaAseguradosPoliza" />';
+	var _URL_LOADER_CONSULTA_DOCUMENTOS     = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza" />';
+    var _URL_LOADER_RECIBOS                 = '<s:url namespace="/general" action="loadRecibos" />';
 
 	Ext.onReady(function() {
 		
@@ -219,17 +223,156 @@
                     name       : 'DSTIPPAG',
                     fieldLabel : 'Tipo pago'
                 },{
-		        	//colspan    : 1,
+		        	colspan    : 1,
 		            xtype      : 'displayfield',
 		            name       : 'NMPOLIEX',
 		            fieldLabel : 'P&oacute;liza'
-		        }/*,{
+		        },{
 		        	colspan: 1,
 		        	xtype  : 'button',
 		        	text   : 'Ver detalle p&oacute;liza',
 	                width  : 180,
-	                icon   : _CONTEXT + '/resources/fam3icons/icons/application_view_list.png'
-		        }*/,{
+	                icon   : _CONTEXT + '/resources/fam3icons/icons/application_view_list.png',
+	                handler: function() {
+	                    var windowDetPol = Ext.create('Ext.window.Window', {
+	                       title        : 'Detalle de la p&oacute;liza',
+	                       modal       : true,
+	                       buttonAlign : 'center',
+	                       width       : 830,
+	                       height      : 500,
+	                       autoScroll  : true,
+	                       items: [Ext.create('Ext.tab.Panel', {
+		                           width: 830,
+		                           items: [{
+		                               title : 'DATOS DE LA POLIZA',
+		                               loader: {
+			                           		url: _URL_LOADER_DATOS_POLIZA,
+			                           		scripts: true,
+			                           		loadMask : true,
+			                           		autoLoad: false,
+			                           		ajaxOptions: {
+			                	            	method: 'POST'
+			                	            }
+			                           	},
+			                           	listeners: {
+			                           		activate: function(tab) {
+			                           			tab.loader.load({
+			                           				params : {
+			                                               'params.cdunieco': _CDUNIECO,
+			                                               'params.cdramo'  : _CDRAMO,
+			                                               'params.estado'  : _ESTADO,
+			                                               'params.nmpoliza': _NMPOLIZA
+			                                           }
+			                           			});
+			                           		}
+			                           	}
+		                           }, {
+		                               //title: 'DATOS TARIFICACION',
+		                           	title: 'COPAGOS',
+		                           	loader: {
+		                           		url: _URL_LOADER_VER_COBERTURAS,
+		                           		scripts: true,
+		                           		loadMask : true,
+		                           		autoLoad: false,
+		                           		ajaxOptions: {
+		                	            	method: 'POST'
+		                	            }
+		                           	},
+		                           	listeners: {
+		                           		activate: function(tab) {
+		                           			tab.loader.load({
+		                           				params : {
+		                                               'params.cdunieco'  : _CDUNIECO,
+		                                               'params.cdramo'    : _CDRAMO,
+		                                               'params.estado'    : _ESTADO,
+		                                               'params.nmpoliza'  : _NMPOLIZA,
+		                                               'params.suplemento': _NMSUPLEM
+		                                           }
+		                           			});
+		                           		}
+		                           	}
+		                           }, {
+		                               title: 'ASEGURADOS',
+		                               loader: {
+			                           		url: _URL_LOADER_ASEGURADOS_POLIZA,
+			                           		scripts: true,
+			                           		loadMask : true,
+			                           		autoLoad: false,
+			                           		ajaxOptions: {
+			                	            	method: 'POST'
+			                	            }
+			                           	},
+			                           	listeners: {
+			                           		activate: function(tab) {
+			                           			tab.loader.load({
+			                           				params : {
+			                                               'params.cdunieco'  : _CDUNIECO,
+			                                               'params.cdramo'    : _CDRAMO,
+			                                               'params.estado'    : _ESTADO,
+			                                               'params.nmpoliza'  : _NMPOLIZA,
+			                                               'params.suplemento': _NMSUPLEM
+			                                           }
+			                           			});
+			                           		}
+			                           	}
+		                           }, {
+		                               title : 'DOCUMENTACION',
+		                               width: '350',
+		                               loader : {
+		                                   url : _URL_LOADER_CONSULTA_DOCUMENTOS,
+		                                   scripts : true,
+		                                   loadMask : true,
+		                                   autoLoad : false,
+		                                   ajaxOptions: {
+			                	            	method: 'POST'
+			                	           }
+		                               },
+		                               listeners : {
+		                                   activate : function(tab) {
+		                                       tab.loader.load({
+		                                           params : {
+		                                               'smap1.readOnly': true,
+		                                               'smap1.nmpoliza': _NMPOLIZA,
+		                                               'smap1.cdunieco': _CDUNIECO,
+		                                               'smap1.cdramo'  : _CDRAMO,
+		                                               'smap1.estado'  : _ESTADO,
+		                                               'smap1.nmsuplem': _NMSUPLEM,
+		                                               'smap1.ntramite': _NTRAMITE,
+		                                               'smap1.tipomov' : '0'
+		                                           }
+		                                       });
+		                                   }
+		                               }
+		                           }, {
+		                           	title: 'RECIBOS',
+		                           	loader: {
+		                           		url: _URL_LOADER_RECIBOS,
+		                           		scripts: true,
+		                           		loadMask : true,
+		                           		autoLoad: false,
+		                           		ajaxOptions: {
+		                	            	method: 'POST'
+		                	            }
+		                           	},
+		                           	listeners: {
+		                           		activate: function(tab) {
+		                           			tab.loader.load({
+		                           				params : {
+		                                               'params.cdunieco': _CDUNIECO,
+		                                               'params.cdramo'  : _CDRAMO,
+		                                               'params.estado'  : _ESTADO,
+		                                               'params.nmpoliza': _NMPOLIZA,
+		                                               'params.nmsuplem': _NMSUPLEM
+		                                           }
+		                           			});
+		                           		}
+		                           	}
+		                           }]    
+		                       })]
+	                    }).show();
+	                    centrarVentana(windowDetPol);
+	                }
+		        },{
 		        	colspan    : 1,
 		        	xtype      : 'currencyfield',
 		            name       : 'IMPORTE',
