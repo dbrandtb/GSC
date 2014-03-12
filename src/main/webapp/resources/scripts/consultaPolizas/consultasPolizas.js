@@ -226,7 +226,7 @@ Ext.onReady(function() {
                 if(this.getSelectionModel().hasSelection()) {
                     
                     // Mostrar listado de tipos de consulta:
-                    listViewOpcionesConsulta.up('panel').setTitle('Elije una consulta:');
+                    listViewOpcionesConsulta.up('panel').setTitle('Elija una consulta:');
                     listViewOpcionesConsulta.expand();
                     
                 
@@ -1156,7 +1156,7 @@ Ext.onReady(function() {
     
     function limpiaSeleccionTiposConsulta() {
         listViewOpcionesConsulta.getSelectionModel().deselectAll();
-        listViewOpcionesConsulta.collapse();
+        listViewOpcionesConsulta.collapse('top', false);
     }
     
     function cargaPolizasAsegurado(formBusqueda, btn) {
