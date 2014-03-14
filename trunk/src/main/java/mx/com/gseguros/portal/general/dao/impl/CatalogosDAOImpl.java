@@ -346,7 +346,7 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdramo_i", cdramo);
 		params.put("pv_cdtipsit_i", cdtipsit);
-		params.put("pv_cdtiptra_i", tipoTramite.getCodigo());
+		params.put("pv_cdtiptra_i", tipoTramite.getCdtiptra());
 		params.put("pv_tipocant_i", rango.getClave());
 		
 		Map<String, Object> resultado = ejecutaSP(new ObtieneCantidadMaxima(getDataSource()), params);

@@ -19,13 +19,13 @@ public enum TipoTramite {
 	ENDOSO_PARADO_POR_AUTORIZACION("15"),
 	SINIESTRO("16");
 
-	private String codigo;
+	private String cdtiptra;
 
-	private TipoTramite(String codigo) {
-		this.codigo = codigo;
+	private TipoTramite(String cdtiptra) {
+		this.cdtiptra = cdtiptra;
 	}
 
-	public String getCodigo() {
-		return codigo;
+	public String getCdtiptra() {
+		return cdtiptra;
 	}
 }

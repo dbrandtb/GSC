@@ -1215,7 +1215,7 @@ public void setMsgResult(String msgResult) {
            paramsO.put("pv_dsdocume_i" , "Contra Recibo");
            paramsO.put("pv_swvisible_i"   , null);
            paramsO.put("pv_codidocu_i"   , null);
-           paramsO.put("pv_cdtiptra_i"   , TipoTramite.SINIESTRO.getCodigo());
+           paramsO.put("pv_cdtiptra_i"   , TipoTramite.SINIESTRO.getCdtiptra());
            kernelManagerSustituto.guardarArchivo(paramsO);
 		   
 	   }catch( Exception e){
@@ -1281,9 +1281,9 @@ public void setMsgResult(String msgResult) {
            paramsO.put("pv_dsdocume_i" , "Autorizacion Servicio");
            paramsO.put("pv_swvisible_i"   , null);
            paramsO.put("pv_codidocu_i"   , null);
-           paramsO.put("pv_cdtiptra_i"   , TipoTramite.AUTORIZACION_SERVICIOS.getCodigo());
+           paramsO.put("pv_cdtiptra_i"   , TipoTramite.AUTORIZACION_SERVICIOS.getCdtiptra());
            paramsO.put("pv_nmsolici_i",null);
-           paramsO.put("pv_tipmov_i",TipoTramite.AUTORIZACION_SERVICIOS.getCodigo());
+           paramsO.put("pv_tipmov_i",TipoTramite.AUTORIZACION_SERVICIOS.getCdtiptra());
            logger.debug(paramsO);
            kernelManagerSustituto.guardarArchivo(paramsO);
 		   
@@ -1963,7 +1963,7 @@ public void setMsgResult(String msgResult) {
     			paramsDocupol.put("pv_tipmov_i"    , tipoPago);
     			paramsDocupol.put("pv_swvisible_i" , Constantes.SI);
     			paramsDocupol.put("pv_codidocu_i"  , null);
-    			paramsDocupol.put("pv_cdtiptra_i"  , TipoTramite.SINIESTRO.getCodigo());
+    			paramsDocupol.put("pv_cdtiptra_i"  , TipoTramite.SINIESTRO.getCdtiptra());
     	        kernelManagerSustituto.guardarArchivo(paramsDocupol);
     		}
     		
@@ -3051,7 +3051,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     			paramsDocupol.put("pv_tipmov_i"    , tipoPago);
     			paramsDocupol.put("pv_swvisible_i" , Constantes.SI);
     			paramsDocupol.put("pv_codidocu_i"  , null);
-    			paramsDocupol.put("pv_cdtiptra_i"  , TipoTramite.SINIESTRO.getCodigo());
+    			paramsDocupol.put("pv_cdtiptra_i"  , TipoTramite.SINIESTRO.getCdtiptra());
     	        kernelManagerSustituto.guardarArchivo(paramsDocupol);
     		}
     		

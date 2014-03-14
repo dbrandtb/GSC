@@ -8,7 +8,7 @@ var _CONTEXT = '${ctx}';
 /* ******************** CATALOGOS ******************** */
 
 // Catalogo Tipos de pago a utilizar:
-var _PAGO_DIRECTO = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@PAGO_DIRECTO.codigo" />';
+var _PAGO_DIRECTO = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@DIRECTO.codigo" />';
 var _REEMBOLSO    = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@REEMBOLSO.codigo" />';
 
 // Catalogo Estatus de tramite a utilizar:
@@ -18,7 +18,7 @@ var _STATUS_TRAMITE_EN_CAPTURA              = '<s:property value="@mx.com.gsegur
 var _STATUS_TRAMITE_EN_ESPERA_DE_ASIGNACION = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_ESPERA_DE_ASIGNACION.codigo" />';
 
 // Catalogo Tipos de tramite a utilizar:
-var _TIPO_TRAMITE_SINIESTRO = '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@SINIESTRO.codigo" />';
+var _TIPO_TRAMITE_SINIESTRO = '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@SINIESTRO.cdtiptra" />';
 /* *************************************************** */
 
 // URLs:
