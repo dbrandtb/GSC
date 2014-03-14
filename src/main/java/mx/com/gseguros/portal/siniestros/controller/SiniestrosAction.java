@@ -1416,16 +1416,19 @@ public void setMsgResult(String msgResult) {
     		siniestrosManager.actualizaOTValorMesaControl(otvalor);
     		
     		List<Map<String,String>> facturas  = siniestrosManager.obtenerFacturasTramite(ntramite);
-    		Map<String,String>       factura   = facturas.get(0);
-    		String                   nfactura  = factura.get("NFACTURA");
-    		String                   fefactura = factura.get("FFACTURA");
-    		String                   cdtipser  = factura.get("CDTIPSER");
-    		String                   cdpresta  = factura.get("CDPRESTA");
-    		String                   ptimport  = factura.get("PTIMPORT");
-    		String                   descporc  = factura.get("DESCPORC");
-    		String                   descnume  = factura.get("DESCNUME");
     		
-    		siniestrosManager.guardaListaFacMesaControl(ntramite, nfactura, fefactura, cdtipser, cdpresta, ptimport, cdgarant, cdconval, descporc, descnume);
+    		for(Map<String,String>factura:facturas)
+    		{
+	    		String                   nfactura  = factura.get("NFACTURA");
+	    		String                   fefactura = factura.get("FFACTURA");
+	    		String                   cdtipser  = factura.get("CDTIPSER");
+	    		String                   cdpresta  = factura.get("CDPRESTA");
+	    		String                   ptimport  = factura.get("PTIMPORT");
+	    		String                   descporc  = factura.get("DESCPORC");
+	    		String                   descnume  = factura.get("DESCNUME");
+	    		
+	    		siniestrosManager.guardaListaFacMesaControl(ntramite, nfactura, fefactura, cdtipser, cdpresta, ptimport, cdgarant, cdconval, descporc, descnume);
+    		}
     		
     		success = true;
     		mensaje = "Tr&aacute;mite actualizado";
@@ -2400,15 +2403,16 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 				lpdir.add(mpdir);
 				//directo
 				
-				//reembolso
-				Map<String,String>mprem=new HashMap<String,String>(0);
-				mprem.put("TOTALNETO" , "0");
-				mprem.put("SUBTOTAL"  , "0");
-				lprem.add(mprem);
-				//reembolso
     			
     			for(Map<String,String>facturaIte:facturas)
     			{
+    				//reembolso
+    				Map<String,String>mprem=new HashMap<String,String>(0);
+    				mprem.put("TOTALNETO" , "0");
+    				mprem.put("SUBTOTAL"  , "0");
+    				lprem.add(mprem);
+    				//reembolso
+    				
     				String cdunieco = siniestro.get("CDUNIECO");
     				String cdramo   = siniestro.get("CDRAMO");
     				String estado   = siniestro.get("ESTADO");

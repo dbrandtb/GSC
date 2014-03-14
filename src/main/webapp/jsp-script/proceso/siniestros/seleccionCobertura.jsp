@@ -12,8 +12,9 @@ var _selCobParams = <s:property value='%{getParams().toString().replace("=",":\'
 
 var _selCobForm;
 
-var _selCobUrlSave   = '<s:url namespace="/siniestros" action="guardarSeleccionCobertura" />';
-var _selCobUrlAvanza = '<s:url namespace="/siniestros" action="afiliadosAfectados"        />';
+var _selCobUrlSave            = '<s:url namespace="/siniestros" action="guardarSeleccionCobertura" />';
+var _selCobUrlAvanza          = '<s:url namespace="/siniestros" action="afiliadosAfectados"        />';
+var _selCobUrlAvanzaReembolso = '<s:url namespace="/siniestros" action="detalleSiniestro"          />'; 
 
 debug('_selCobParams:',_selCobParams);
 ////// variables //////
@@ -131,7 +132,7 @@ function _selCobAvanza()
 	}
 	Ext.create('Ext.form.Panel').submit(
 	{
-		url             : _selCobUrlAvanza
+		url             : _selCobParams.otvalor02=='1'?_selCobUrlAvanza:_selCobUrlAvanzaReembolso
 		,standardSubmit : true
 		,params         : params
 	});
