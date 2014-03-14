@@ -409,7 +409,7 @@ var msgWindow;
 		params['params.tipopago'] = formapago;
 		
 		var conCoberYSubcober = false;
-		if(esPagoDirecto)
+		if(esPagoDirecto||true)
 		{
 			if(record.get('parametros.pv_otvalor12')&&record.get('parametros.pv_otvalor12').length>0)
 			{
@@ -418,21 +418,29 @@ var msgWindow;
 		}
 		debug('conCoberYSubcober:',conCoberYSubcober ? 'si' : 'no');
 		
-		var urlDestino = _UrlDetalleSiniestro;
-		if(esPagoDirecto)
+		var urlDestino;
+		if(esPagoDirecto||true)
 		{
 			if(conCoberYSubcober)
 			{
-				urlDestino = _UrlDetalleSiniestroDirecto;
+				if(esPagoDirecto)
+				{
+					urlDestino = _UrlDetalleSiniestroDirecto;
+				}
+				else
+				{
+					urlDestino = _UrlDetalleSiniestro;
+				}
 				params['params.ntramite'] = record.get('ntramite');
 			}
 			else
 			{
 				urlDestino = _urlSeleccionCobertura;
-				params['params.ntramite'] = record.get('ntramite');
-				params['params.cdunieco'] = record.get('cdsucdoc');
-				params['params.cdramo']   = record.get('cdramo');
-				params['params.cdtipsit'] = record.get('cdtipsit');
+				params['params.ntramite']  = record.get('ntramite');
+				params['params.cdunieco']  = record.get('cdsucdoc');
+				params['params.cdramo']    = record.get('cdramo');
+				params['params.cdtipsit']  = record.get('cdtipsit');
+				params['params.otvalor02'] = record.get('parametros.pv_otvalor02');
 			}
 		}
 		else

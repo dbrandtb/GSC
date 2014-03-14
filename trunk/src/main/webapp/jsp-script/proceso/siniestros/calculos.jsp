@@ -672,6 +672,7 @@ Ext.onReady(function()
                     }
                 }
             });
+            debug('indice,_p12_lprem[indice]',indice,_p12_lprem[indice]);
             var ptimpoajus  = _p12_lprem[indice].SUBTOTAL*1.0;
             var destopor    = _p12_slist1[indice].DESCPORC*1.0;
             var destoimp    = _p12_slist1[indice].DESCNUME*1.0;
