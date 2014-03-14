@@ -17,6 +17,7 @@ import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.dao.impl.DinamicMapper;
 import mx.com.gseguros.portal.siniestros.dao.SiniestrosDAO;
+import mx.com.gseguros.portal.siniestros.model.AltaTramiteVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
 import mx.com.gseguros.portal.siniestros.model.CoberturaPolizaVO;
@@ -28,6 +29,7 @@ import mx.com.gseguros.portal.siniestros.model.ConsultaTTAPVAATVO;
 import mx.com.gseguros.portal.siniestros.model.DatosSiniestroVO;
 import mx.com.gseguros.portal.siniestros.model.HistorialSiniestroVO;
 import mx.com.gseguros.portal.siniestros.model.ListaFacturasVO;
+import mx.com.gseguros.portal.siniestros.model.MesaControlVO;
 import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utilerias;
@@ -2447,4 +2449,158 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
+
+
+	@Override
+	public List<AltaTramiteVO> consultaListaAltaTramite(String ntramite) throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_ntramite_i", ntramite);
+		Map<String, Object> mapResult = ejecutaSP(new ConsultaListaAltaTramite(getDataSource()), params);
+		return (List<AltaTramiteVO>) mapResult.get("pv_registro_o");
+	}
+	
+	protected class ConsultaListaAltaTramite extends StoredProcedure
+	{
+		protected ConsultaListaAltaTramite(DataSource dataSource)
+		{
+			super(dataSource, "PKG_PRESINIESTRO.p_get_tfacmesctrl_tworksin");
+			declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DatosListaAltaTramite()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	protected class DatosListaAltaTramite  implements RowMapper {
+        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+        	AltaTramiteVO consulta = new AltaTramiteVO();
+        	//rs.getString("")
+        	consulta.setNtramite(rs.getString("NTRAMITE"));
+        	consulta.setNfactura(rs.getString("NFACTURA"));
+        	consulta.setFfactura(Utilerias.formateaFecha(rs.getString("FFACTURA")));
+        	consulta.setCdtipser(rs.getString("CDTIPSER"));
+        	consulta.setDstipser(rs.getString("DSTIPSER"));
+        	consulta.setDspresta(rs.getString("DSPRESTA"));
+        	consulta.setCdpresta(rs.getString("CDPRESTA"));
+        	consulta.setPtimport(rs.getString("PTIMPORT"));
+        	consulta.setCdgarant(rs.getString("CDGARANT"));
+        	consulta.setCdconval(rs.getString("CDCONVAL"));
+        	consulta.setDescporc(rs.getString("DESCPORC"));
+        	consulta.setDescnume(rs.getString("DESCNUME"));
+        	consulta.setCdunieco(rs.getString("CDUNIECO"));
+        	consulta.setCdramo(rs.getString("CDRAMO"));
+        	consulta.setEstado(rs.getString("ESTADO"));
+        	consulta.setNmpoliza(rs.getString("NMPOLIZA"));
+        	consulta.setNmsolici(rs.getString("NMSOLICI"));
+        	consulta.setNmsuplem(rs.getString("NMSUPLEM"));
+        	consulta.setNmsituac(rs.getString("NMSITUAC"));
+        	consulta.setCdtipsit(rs.getString("CDTIPSIT"));
+        	consulta.setNombre(rs.getString("NOMBRE"));
+        	consulta.setCdperson(rs.getString("CDPERSON"));
+        	consulta.setFeocurre(Utilerias.formateaFecha(rs.getString("FEOCURRE")));
+        	consulta.setNmautser(rs.getString("NMAUTSER"));
+        	consulta.setNmpoliex(rs.getString("NMPOLIEX"));
+        	consulta.setNombreAsegurado(rs.getString("CDPERSON")+" "+ rs.getString("NOMBRE"));
+            return consulta;
+        }
+    }
+
+
+	@Override
+	public List<MesaControlVO> consultaListaMesaControl(String ntramite) throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_ntramite_i", ntramite);
+		Map<String, Object> mapResult = ejecutaSP(new ConsultaListaMesaControl(getDataSource()), params);
+		return (List<MesaControlVO>) mapResult.get("pv_registro_o");
+	}
+	
+	protected class ConsultaListaMesaControl extends StoredProcedure
+	{
+		protected ConsultaListaMesaControl(DataSource dataSource)
+		{
+			super(dataSource, "PKG_PRESINIESTRO.P_GET_TRAMITE_COMPLETO");
+			declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DatosListaMesaControl()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	protected class DatosListaMesaControl  implements RowMapper {
+        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+        	MesaControlVO consulta = new MesaControlVO();
+        	//rs.getString("")
+        	consulta.setNtramitemc(rs.getString("NTRAMITE"));
+        	consulta.setCduniecomc(rs.getString("CDUNIECO"));
+        	consulta.setCdramomc(rs.getString("CDRAMO"));
+        	consulta.setEstadomc(rs.getString("ESTADO"));
+        	consulta.setNmpolizamc(rs.getString("NMPOLIZA"));
+        	consulta.setNmsuplemmc(rs.getString("NMSUPLEM"));
+        	consulta.setNmsolicimc(rs.getString("NMSOLICI"));
+        	consulta.setCdsucadmmc(rs.getString("CDSUCADM"));
+        	consulta.setCdsucdocmc(rs.getString("CDSUCDOC"));
+        	consulta.setCdsubrammc(rs.getString("CDSUBRAM"));
+        	consulta.setCdtiptramc(rs.getString("CDTIPTRA"));
+        	consulta.setFerecepcmc(Utilerias.formateaFecha(rs.getString("FERECEPC")));
+        	consulta.setCdagentemc(rs.getString("CDAGENTE"));
+        	consulta.setReferenciamc(rs.getString("REFERENCIA"));
+        	consulta.setNombremc(rs.getString("NOMBRE"));
+        	consulta.setFecstatumc(Utilerias.formateaFecha(rs.getString("FECSTATU")));
+        	consulta.setStatusmc(rs.getString("STATUS"));
+        	consulta.setCommentsmc(rs.getString("COMMENTS"));
+        	consulta.setCdtipsitmc(rs.getString("CDTIPSIT"));
+        	consulta.setOtvalor01mc(rs.getString("OTVALOR01"));
+        	consulta.setOtvalor02mc(rs.getString("OTVALOR02"));
+        	consulta.setOtvalor03mc(rs.getString("OTVALOR03"));
+        	consulta.setOtvalor04mc(rs.getString("OTVALOR04"));
+        	consulta.setOtvalor05mc(rs.getString("OTVALOR05"));
+        	consulta.setOtvalor06mc(Utilerias.formateaFecha(rs.getString("OTVALOR06")));
+        	consulta.setOtvalor07mc(rs.getString("OTVALOR07"));
+        	consulta.setOtvalor08mc(rs.getString("OTVALOR08"));
+        	consulta.setOtvalor09mc(rs.getString("OTVALOR09"));
+        	consulta.setOtvalor10mc(Utilerias.formateaFecha(rs.getString("OTVALOR10")));
+        	consulta.setOtvalor11mc(rs.getString("OTVALOR11"));
+        	consulta.setOtvalor12mc(rs.getString("OTVALOR12"));
+        	consulta.setOtvalor13mc(rs.getString("OTVALOR13"));
+        	consulta.setOtvalor14mc(rs.getString("OTVALOR14"));
+        	consulta.setOtvalor15mc(rs.getString("OTVALOR15"));
+        	consulta.setOtvalor16mc(rs.getString("OTVALOR16"));
+        	consulta.setOtvalor17mc(rs.getString("OTVALOR17"));
+        	consulta.setOtvalor18mc(rs.getString("OTVALOR18"));
+        	consulta.setOtvalor19mc(rs.getString("OTVALOR19"));
+        	consulta.setOtvalor20mc(rs.getString("OTVALOR20"));
+        	consulta.setOtvalor21mc(rs.getString("OTVALOR21"));
+        	consulta.setOtvalor22mc(rs.getString("OTVALOR22"));
+        	consulta.setOtvalor23mc(rs.getString("OTVALOR23"));
+        	consulta.setOtvalor24mc(rs.getString("OTVALOR24"));
+        	consulta.setOtvalor25mc(rs.getString("OTVALOR25"));
+        	consulta.setOtvalor26mc(rs.getString("OTVALOR26"));
+        	consulta.setOtvalor27mc(rs.getString("OTVALOR27"));
+        	consulta.setOtvalor28mc(rs.getString("OTVALOR28"));
+        	consulta.setOtvalor29mc(rs.getString("OTVALOR29"));
+        	consulta.setOtvalor30mc(rs.getString("OTVALOR30"));
+        	consulta.setOtvalor31mc(rs.getString("OTVALOR31"));
+        	consulta.setOtvalor32mc(rs.getString("OTVALOR32"));
+        	consulta.setOtvalor33mc(rs.getString("OTVALOR33"));
+        	consulta.setOtvalor34mc(rs.getString("OTVALOR34"));
+        	consulta.setOtvalor35mc(rs.getString("OTVALOR35"));
+        	consulta.setOtvalor36mc(rs.getString("OTVALOR36"));
+        	consulta.setOtvalor37mc(rs.getString("OTVALOR37"));
+        	consulta.setOtvalor38mc(rs.getString("OTVALOR38"));
+        	consulta.setOtvalor39mc(rs.getString("OTVALOR39"));
+        	consulta.setOtvalor40mc(rs.getString("OTVALOR40"));
+        	consulta.setOtvalor41mc(rs.getString("OTVALOR41"));
+        	consulta.setOtvalor42mc(rs.getString("OTVALOR42"));
+        	consulta.setOtvalor43mc(rs.getString("OTVALOR43"));
+        	consulta.setOtvalor44mc(rs.getString("OTVALOR44"));
+        	consulta.setOtvalor45mc(rs.getString("OTVALOR45"));
+        	consulta.setOtvalor46mc(rs.getString("OTVALOR46"));
+        	consulta.setOtvalor47mc(rs.getString("OTVALOR47"));
+        	consulta.setOtvalor48mc(rs.getString("OTVALOR48"));
+        	consulta.setOtvalor49mc(rs.getString("OTVALOR49"));
+        	consulta.setOtvalor50mc(rs.getString("OTVALOR50"));
+        	return consulta;
+        }
+    }
+
 }

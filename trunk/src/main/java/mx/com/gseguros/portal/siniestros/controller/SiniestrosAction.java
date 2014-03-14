@@ -28,6 +28,7 @@ import mx.com.gseguros.portal.general.util.Rol;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoPago;
 import mx.com.gseguros.portal.general.util.TipoTramite;
+import mx.com.gseguros.portal.siniestros.model.AltaTramiteVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
 import mx.com.gseguros.portal.siniestros.model.CoberturaPolizaVO;
@@ -37,6 +38,7 @@ import mx.com.gseguros.portal.siniestros.model.ConsultaTDETAUTSVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaTTAPVAATVO;
 import mx.com.gseguros.portal.siniestros.model.DatosSiniestroVO;
 import mx.com.gseguros.portal.siniestros.model.ListaFacturasVO;
+import mx.com.gseguros.portal.siniestros.model.MesaControlVO;
 import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
@@ -70,6 +72,8 @@ public class SiniestrosAction extends PrincipalCoreAction{
     private List<GenericVO> listaCausaSiniestro;
     private List<AutorizaServiciosVO> listaAutorizacion;
     private List<CoberturaPolizaVO> listaCoberturaPoliza;
+    private List<AltaTramiteVO> listaAltaTramite;
+    private List<MesaControlVO> listaMesaControl;
     private List<DatosSiniestroVO> listaDatosSiniestro;
     private List<GenericVO> listaSubcobertura;
     private List<GenericVO> listaCPTICD;
@@ -121,6 +125,21 @@ public class SiniestrosAction extends PrincipalCoreAction{
 		success = true;
 		return SUCCESS;
     }
+	
+	
+	public String altaTramite(){
+		logger.debug(" **** Entrando al metodo de alta de tramite ****");
+		try {
+			//modificamos el valor del params para colocarle el rol que se esta ocupando
+			logger.debug("params=" + params);
+		}catch( Exception e){
+			logger.error(e.getMessage(), e);
+		}
+		success = true;
+		return SUCCESS;
+    }
+	
+	
 
     public String autorizacionServicios() {
 	logger.debug(" **** Entrando a autorizacion Servicio ****");
@@ -130,6 +149,23 @@ public class SiniestrosAction extends PrincipalCoreAction{
 		//Obtenemos el Rol a ocupar
 		UserVO usuario  = (UserVO)session.get("USUARIO");
     	String cdrol    = usuario.getRolActivo().getObjeto().getValue();
+    	
+    	String pantalla            = "AUTORIZACION_SERVICIOS";
+		String seccion             = "PANELBUTTONS";
+		
+		////// obtener valores del formulario //////
+		List<ComponenteVO>ltFormulario=pantallasManager.obtenerComponentes(
+				null, null, null,
+				null, null, cdrol,
+				pantalla, seccion, null);
+		
+		GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+		
+		////// generar grid //////
+		gc.generaComponentes(ltFormulario, true, false, false, false, false, true);
+		imap=new HashMap<String,Item>(0);
+		imap.put("panelbuttons",gc.getButtons());
+    	
     	String numero_aut = null;
     	String ntramite = null;
     	
@@ -144,7 +180,6 @@ public class SiniestrosAction extends PrincipalCoreAction{
 		params.put("ntramite",ntramite);
 		params.put("cdrol",cdrol);
 		setParamsJson(params);
-		//setParamsJson(String(params));
 		logger.debug("PARAMETROS FINALES " + params);
 		
 		
@@ -407,6 +442,9 @@ public class SiniestrosAction extends PrincipalCoreAction{
 			logger.debug(" **** Entrando al guardado de alta de tramite ****");
 			try {
 				
+					
+					
+				
 					logger.debug("VALOR DE ENTRADA");
 					logger.debug(params);
 					
@@ -425,7 +463,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 					parMesCon.put("pv_ferecepc_i",getDate(params.get("dtFechaRecepcion")));
 					parMesCon.put("pv_cdagente_i",null);
 					parMesCon.put("pv_referencia_i",null);
-					parMesCon.put("pv_nombre_i",null);
+					parMesCon.put("pv_nombre_i",params.get("idnombreAsegurado")); // Se guardara la información del Asegurado
 					parMesCon.put("pv_festatus_i",getDate(params.get("dtFechaFactura")));
 					parMesCon.put("pv_status_i","2");
 					parMesCon.put("pv_comments_i",null);
@@ -441,14 +479,13 @@ public class SiniestrosAction extends PrincipalCoreAction{
 					parMesCon.put("pv_otvalor09",params.get("cmbAseguradoAfectado"));					// CDPERSON
 					parMesCon.put("pv_otvalor10",params.get("dtFechaOcurrencia"));						// FECHA OCURRENCIA
 					parMesCon.put("pv_otvalor11",params.get("cmbProveedor"));
+					parMesCon.put("pv_otvalor15",params.get("idnombreBeneficiarioProv"));
 					if(params.get("cmbProveedor").toString().length() > 0){
 						parMesCon.put("pv_otvalor13",Rol.CLINICA.getCdrol());
 					}
 					
-					
-					
-					WrapperResultados res = kernelManagerSustituto.PMovMesacontrol(parMesCon);
-					
+					if(params.get("idNumTramite").toString().length() <= 0){
+						WrapperResultados res = kernelManagerSustituto.PMovMesacontrol(parMesCon);
 					if(res.getItemMap() == null)
 					{
 						logger.error("Sin mensaje respuesta de nmtramite!!");
@@ -521,6 +558,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 					        siniestrosManager.guardaListaTworkSin(paramsTworkSinPagRem);
 						}
 					}
+				}
 			}catch( Exception e){
 				logger.error("Error en el guardado de alta de trï¿½mite ",e);
 	        return SUCCESS;
@@ -551,6 +589,37 @@ public class SiniestrosAction extends PrincipalCoreAction{
 			if(lista!=null && !lista.isEmpty())	listaCoberturaPoliza = lista;
 		}catch( Exception e){
 			logger.error("Error al obtener la lista de la cobertura de la poliza ",e);
+			return SUCCESS;
+		}
+	success = true;
+	return SUCCESS;
+   }
+	
+	
+	public String consultaListadoAltaTramite(){
+		logger.debug(" **** Entrando a consulta de lista de alta de tramite ****");
+		try {
+			
+			List<AltaTramiteVO> lista = siniestrosManager.getConsultaListaAltaTramite(params.get("ntramite"));
+			logger.debug(lista);
+			if(lista!=null && !lista.isEmpty())	listaAltaTramite = lista;
+		}catch( Exception e){
+			logger.error("Error al obtener la lista del alta de tramite ",e);
+			return SUCCESS;
+		}
+	success = true;
+	return SUCCESS;
+   }
+	
+	public String consultaListadoMesaControl(){
+		logger.debug(" **** Entrando a consulta del registro de la mesa de control  ****");
+		try {
+			
+			List<MesaControlVO> lista = siniestrosManager.getConsultaListaMesaControl(params.get("ntramite"));
+			logger.debug(lista);
+			if(lista!=null && !lista.isEmpty())	listaMesaControl = lista;
+		}catch( Exception e){
+			logger.error("Error al obtener los registros de la mesa de control  ",e);
 			return SUCCESS;
 		}
 	success = true;
@@ -1656,9 +1725,14 @@ public void setMsgResult(String msgResult) {
     		String cdperson = params.get("cdperson");
     		String nmpoliza = params.get("nmpoliza");
     		String ntramite = params.get("ntramite");
+
+    		//CUANDO SE PIDE EL NUMERO DE AUTORIZACION DE SERVICIO EN PANTALLA
+    		//SE EJECUTAN LOS SIGUIENTES PL:
     		
+    		//INSERTA EL NUMERO DE AUTORIZACION EN TWORKSIN
     		siniestrosManager.actualizarAutorizacionTworksin(ntramite,nmpoliza,cdperson,nmautser);
     		
+    		//CREA UN MSINIEST A PARTIR DE TWORKSIN
     		siniestrosManager.getAltaSiniestroAutServicio(nmautser);
     		
     		mensaje = "Se ha asociado el siniestro con la autorizaci&oacute;n";
@@ -3507,6 +3581,26 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 
 	public void setMontoMaximo(String montoMaximo) {
 		this.montoMaximo = montoMaximo;
+	}
+
+
+	public List<AltaTramiteVO> getListaAltaTramite() {
+		return listaAltaTramite;
+	}
+
+
+	public void setListaAltaTramite(List<AltaTramiteVO> listaAltaTramite) {
+		this.listaAltaTramite = listaAltaTramite;
+	}
+
+
+	public List<MesaControlVO> getListaMesaControl() {
+		return listaMesaControl;
+	}
+
+
+	public void setListaMesaControl(List<MesaControlVO> listaMesaControl) {
+		this.listaMesaControl = listaMesaControl;
 	}
 	
 	
