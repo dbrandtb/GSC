@@ -320,6 +320,16 @@
 				</param>
 			</result>
 		</action>
+
+		<action name="generaCartaRechazo" class="siniestrosAction"
+			method="generaCartaRechazo">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success
+				</param>
+			</result>
+		</action>
 		
 		<action name="generarContrarecibo" class="siniestrosAction"
 			method="generarContrarecibo">

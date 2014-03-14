@@ -15,6 +15,10 @@
 	var _NMSINIES = '<s:property value="params.nmsinies" />';
 	var _NTRAMITE = '<s:property value="params.ntramite" />';
 	*/
+	
+	//Catalogo Tipos de pago a utilizar:
+	var _PAGO_DIRECTO = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@PAGO_DIRECTO.codigo" />';
+	var _REEMBOLSO    = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@REEMBOLSO.codigo" />';
 
 	var _URL_CATALOGOS              = '<s:url namespace="/catalogos"       action="obtieneCatalogo" />';
 	var _URL_INFO_GRAL_SINIESTRO    = '<s:url namespace="/siniestros"      action="obtieneDatosGeneralesSiniestro" />';
@@ -517,13 +521,15 @@
                     colspan    : 1,
                     xtype      : 'displayfield',
                     name       : 'DSPROVEED',
-                    fieldLabel : 'Proveedor'
+                    fieldLabel : 'Proveedor',
+                    hidden: (_TIPOPAGO == _REEMBOLSO)
                 },{
 		        	colspan    : 1,
 		            xtype      : 'displayfield',
 		            name       : 'CIRHOPROV',
 		            fieldLabel : 'Circulo hospitalario',
-		            labelWidth : 120
+		            labelWidth : 120,
+		            hidden: (_TIPOPAGO == _REEMBOLSO)
 		        },{
 		        	colspan     : 1,
 		        	xtype       : 'combo',
@@ -571,6 +577,7 @@
 		        	name        : 'CDICD2_TEMP',
 					fieldLabel  : 'ICD secundario',
 					emptyText   : 'Seleccione...',
+					hidden: (_TIPOPAGO == _REEMBOLSO),
 					valueField  : 'key',
 					displayField: 'value',
 					forceSelection : true,

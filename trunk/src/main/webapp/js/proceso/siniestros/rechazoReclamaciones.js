@@ -118,7 +118,7 @@ Ext.onReady(function() {
     	        ],
 	        buttonAlign:'center',
 	        buttons: [{
-    		text: 'Guardar'
+    		text: 'Rechazar'
     		,icon:_CONTEXT+'/resources/fam3icons/icons/accept.png'
     		,buttonAlign : 'center',
     		handler: function() {
@@ -132,21 +132,78 @@ Ext.onReady(function() {
     		        	failure: function(form, action) {
     		        		Ext.Msg.show({
     	   	                    title: 'ERROR',
-    	   	                    msg: action.result.errorMessage,
+    	   	                    msg: 'Error al Rechazar.',
     	   	                    buttons: Ext.Msg.OK,
     	   	                    icon: Ext.Msg.ERROR
     	   	                });
     					},
     					success: function(form, action) {
-    						Ext.Msg.show({
-    	   	                    title: '&Eacute;XITO',
-    	   	                    msg: "Se ha rechazado correctamente",
-    	   	                    buttons: Ext.Msg.OK
-    	   	                });
-    						loadMcdinStore();
-//    						panelRechazarReclamaciones.form.reset();
-    						windowLoader.close();
     						
+    						var respuesta = Ext.decode(action.response.responseText);
+    						if(respuesta.success==true){
+    							Ext.Msg.show({
+        	   	                    title: '&Eacute;XITO',
+        	   	                    msg: "Se ha rechazado correctamente.",
+        	   	                    buttons: Ext.Msg.OK
+        	   	                });
+        						loadMcdinStore();
+        						windowLoader.close();
+        						
+        						Ext.Ajax.request({
+        							url: _UrlGeneraCartaRechazo,
+        							params: {
+        								'paramsO.pv_cdunieco_i' : _cdunieco,
+        					    		'paramsO.pv_cdramo_i'   : _cdramo,
+        					    		'paramsO.pv_estado_i'   : _estado,
+        					    		'paramsO.pv_nmpoliza_i' : _nmpoliza,
+        					    		'paramsO.pv_nmsuplem_i' : _nmsuplem,
+        					    		'paramsO.pv_nmsolici_i' : _nmsolici,
+        					    		'paramsO.pv_tipmov_i'   : _TIPOPAGO,
+        								'paramsO.pv_ntramite_i' : _nmTramite,
+        								'paramsO.tipopago' : _TIPOPAGO
+        							},
+        							success: function(response, opt) {
+        								var jsonRes=Ext.decode(response.responseText);
+
+        								if(jsonRes.success == true){
+        									var numRand=Math.floor((Math.random()*100000)+1);
+        						        	debug('numRand a: ',numRand);
+        						        	var windowVerDocu=Ext.create('Ext.window.Window',
+        						        	{
+        						        		title          : 'Carta de Rechazo del Siniestro'
+        						        		,width         : 700
+        						        		,height        : 500
+        						        		,collapsible   : true
+        						        		,titleCollapse : true
+        						        		,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
+        						        		                 +'src="'+panDocUrlViewDoc+'?idPoliza=' + _nmTramite + '&filename=' + nombreReporteRechazo +'">'
+        						        		                 +'</iframe>'
+        						        		,listeners     :
+        						        		{
+        						        			resize : function(win,width,height,opt){
+        						                        debug(width,height);
+        						                        $('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
+        						                    }
+        						        		}
+        						        	}).show();
+        						        	windowVerDocu.center();
+        								}else {
+        									mensajeError('Error al generar la carta de rechazo.');
+        								}
+        							},
+        							failure: function(){
+        								mensajeError('Error al generar la carta de rechazo.');
+        							}
+        						});
+        						
+    						}else {
+    							Ext.Msg.show({
+        	   	                    title: 'ERROR',
+        	   	                    msg: 'Error al Rechazar.',
+        	   	                    buttons: Ext.Msg.OK,
+        	   	                    icon: Ext.Msg.ERROR
+        	   	                });
+    						}
     					}
     				});
     			} else {
