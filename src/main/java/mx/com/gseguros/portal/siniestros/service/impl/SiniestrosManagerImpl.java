@@ -10,6 +10,7 @@ import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.siniestros.dao.SiniestrosDAO;
+import mx.com.gseguros.portal.siniestros.model.AltaTramiteVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
 import mx.com.gseguros.portal.siniestros.model.CoberturaPolizaVO;
@@ -21,6 +22,7 @@ import mx.com.gseguros.portal.siniestros.model.ConsultaTTAPVAATVO;
 import mx.com.gseguros.portal.siniestros.model.DatosSiniestroVO;
 import mx.com.gseguros.portal.siniestros.model.HistorialSiniestroVO;
 import mx.com.gseguros.portal.siniestros.model.ListaFacturasVO;
+import mx.com.gseguros.portal.siniestros.model.MesaControlVO;
 import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
@@ -971,5 +973,23 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	public void getCambiarEstatusMAUTSERV(String nmautser,String status) throws Exception {
 		// TODO Auto-generated method stub
 		siniestrosDAO.cambiarEstatusMAUTSERV(nmautser,status);
+	}
+
+	@Override
+	public List<AltaTramiteVO> getConsultaListaAltaTramite(String ntramite) throws Exception {
+		try {
+			return siniestrosDAO.consultaListaAltaTramite(ntramite);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}
+
+	@Override
+	public List<MesaControlVO> getConsultaListaMesaControl(String ntramite) throws Exception {
+		try {
+			return siniestrosDAO.consultaListaMesaControl(ntramite);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
 	}
 }

@@ -7,6 +7,7 @@ import java.util.Map;
 
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.DaoException;
+import mx.com.gseguros.portal.siniestros.model.AltaTramiteVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
 import mx.com.gseguros.portal.siniestros.model.CoberturaPolizaVO;
@@ -18,6 +19,7 @@ import mx.com.gseguros.portal.siniestros.model.ConsultaTTAPVAATVO;
 import mx.com.gseguros.portal.siniestros.model.DatosSiniestroVO;
 import mx.com.gseguros.portal.siniestros.model.HistorialSiniestroVO;
 import mx.com.gseguros.portal.siniestros.model.ListaFacturasVO;
+import mx.com.gseguros.portal.siniestros.model.MesaControlVO;
 import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Reclamo;
 
@@ -299,4 +301,8 @@ public interface SiniestrosDAO {
 	public List<Reclamo> obtieneDatosReclamoWS(Map<String, Object> params) throws Exception;
 
 	public void cambiarEstatusMAUTSERV(String nmautser,String status) throws Exception;
+
+	public List<AltaTramiteVO> consultaListaAltaTramite(String ntramite) throws Exception;
+
+	public List<MesaControlVO> consultaListaMesaControl(String ntramite) throws Exception;
 }

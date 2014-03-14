@@ -338,7 +338,10 @@ Ext.onReady(function() {
                 queryParam  : 'params.cdpresta',
                 store       : storeProveedor,
                 triggerAction  : 'all',
-                editable    : false
+                //editable    : false,
+                minChars  : 2,
+                hideTrigger:true,
+                triggerAction: 'all',
             },{
             	xtype       : 'combo',
             	name        : 'params.cdgarant',

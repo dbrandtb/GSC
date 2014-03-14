@@ -27,6 +27,28 @@
 			</result>
 		</action>
 		
+		<action name="consultaListadoMesaControl" class="siniestrosAction"
+			method="consultaListadoMesaControl">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					listaMesaControl.*,
+					success
+				</param>
+			</result>
+		</action>
+		
+		<action name="consultaListadoAltaTramite" class="siniestrosAction"
+			method="consultaListadoAltaTramite">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					listaAltaTramite.*,
+					success
+				</param>
+			</result>
+		</action>
+		
 		<action name="consultaListaAutorizacion" class="siniestrosAction"
 			method="consultaListaAutorizacion">
 			<result type="json">
@@ -227,7 +249,11 @@
 	        <result name="success" type="json"/>
 		</action>-->
         
-        <action name="includes/altaTramite">
+        <!-- <action name="includes/altaTramite">
+    		<result>/jsp-script/proceso/siniestros/altaTramite.jsp</result>
+		</action>-->
+		
+		<action name="includes/altaTramite" class="siniestrosAction"  method="altaTramite">
     		<result>/jsp-script/proceso/siniestros/altaTramite.jsp</result>
 		</action>
 		
@@ -264,6 +290,11 @@
 		<action name="includes/verAutorizacionServicio" class="siniestrosAction" method="verAutorizacionServicio">
     		<result>/jsp-script/proceso/siniestros/verAutorizacionServicios.jsp</result>
 		</action>
+		
+		
+		
+		
+		
 		
 		<action name="includes/revisionDocumentos"  class="siniestrosAction" method="execute">
     		<result>/jsp-script/proceso/siniestros/revisionDocumentos.jsp</result>

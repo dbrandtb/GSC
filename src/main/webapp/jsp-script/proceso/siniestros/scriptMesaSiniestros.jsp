@@ -66,7 +66,10 @@ var msgWindow;
 	    centrarVentana(windowLoader);
 	}
 	
-	function complementarAltaWindow(){
+	function complementarAltaWindow(grid,rowIndex){
+		
+		var record = grid.getStore().getAt(rowIndex);
+		
 	    windowLoader = Ext.create('Ext.window.Window',{
 	        modal       : true,
 	        buttonAlign : 'center',
@@ -75,7 +78,11 @@ var msgWindow;
 	        autoScroll  : true,
 	        loader      : {
 	            url     : _UrlAltaDeTramite,
-	            scripts  : true,
+	            params   :
+		        {
+		        	'params.ntramite' : record.get('ntramite')
+		        },
+		        scripts  : true,
 	            loadMask : true,
 	            autoLoad : true,
 	            ajaxOptions: {

@@ -518,6 +518,11 @@
 					name       : 'ASEGURADO',
 					fieldLabel : 'Asegurado afectado'
 		        },{
+                    //colspan    : 1,
+                    xtype      : 'displayfield',
+                    name       : 'ASEGURADO',
+                    fieldLabel : 'Beneficiario'
+                },{
                     colspan    : 1,
                     xtype      : 'displayfield',
                     name       : 'DSPROVEED',
