@@ -2,7 +2,7 @@ package mx.com.gseguros.portal.general.util;
 
 public enum TipoPago {
 	
-	PAGO_DIRECTO("1"),
+	DIRECTO("1"),
 	REEMBOLSO("2");
 
 	private String codigo;

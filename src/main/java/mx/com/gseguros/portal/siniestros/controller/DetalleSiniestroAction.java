@@ -378,7 +378,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
     			paramsDocupol.put("pv_tipmov_i"    , tipoPago);
     			paramsDocupol.put("pv_swvisible_i" , Constantes.SI);
     			paramsDocupol.put("pv_codidocu_i"  , null);
-    			paramsDocupol.put("pv_cdtiptra_i"  , TipoTramite.SINIESTRO.getCodigo());
+    			paramsDocupol.put("pv_cdtiptra_i"  , TipoTramite.SINIESTRO.getCdtiptra());
     	        kernelManager.guardarArchivo(paramsDocupol);
     		}
     		
