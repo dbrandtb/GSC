@@ -994,6 +994,79 @@ public void setMsgResult(String msgResult) {
 	   return SUCCESS;
    }
 
+   public String generaCartaRechazo(){
+	   
+	   try {
+		   
+		   logger.debug("generaCartaRechazo Siniestros");
+		   
+		   UserVO usuario=(UserVO)session.get("USUARIO");
+		   String cdrol    = usuario.getRolActivo().getObjeto().getValue();
+		   String tipoPago = (String) paramsO.get("tipopago");
+		   
+		   String nombreRdf = "";
+		   
+		   if(RolSistema.MEDICO.getCdsisrol().equals(cdrol) || RolSistema.COORDINADOR_MEDICO.getCdsisrol().equals(cdrol) 
+				   || RolSistema.COORDINADOR_MEDICO_MULTIREGIONAL.getCdsisrol().equals(cdrol) || RolSistema.GERENTE_MEDICO_MULTIREGIONAL.getCdsisrol().equals(cdrol)){
+			   nombreRdf = getText("rdf.siniestro.cartarechazo.medico.nombre");
+		   }else {
+				if(TipoPago.PAGO_DIRECTO.getCodigo().equals(tipoPago)){
+					nombreRdf = getText("rdf.siniestro.cartarechazo.pagodirecto.nombre");
+				} else if(TipoPago.REEMBOLSO.getCodigo().equals(tipoPago)){
+					nombreRdf = getText("rdf.siniestro.cartarechazo.reembolso.nombre");
+				}
+		   }
+		   
+		   File carpeta=new File(getText("ruta.documentos.poliza") + "/" + paramsO.get("pv_ntramite_i"));
+           if(!carpeta.exists()){
+           		logger.debug("no existe la carpeta::: "+paramsO.get("pv_ntramite_i"));
+           		carpeta.mkdir();
+           		if(carpeta.exists()){
+           			logger.debug("carpeta creada");
+           		} else {
+           			logger.debug("carpeta NO creada");
+           		}
+           } else {
+           	 logger.debug("existe la carpeta   ::: "+paramsO.get("pv_ntramite_i"));
+           }
+           
+           
+           String urlContrareciboSiniestro = ""
+           					   + getText("ruta.servidor.reports")
+                               + "?p_usuario=" + usuario.getUser() 
+                               + "&p_ntramite=" + paramsO.get("pv_ntramite_i")
+                               + "&destype=cache"
+                               + "&desformat=PDF"
+                               + "&userid="+getText("pass.servidor.reports")
+                               + "&ACCESSIBLE=YES"
+                               + "&report="+ nombreRdf
+                               + "&paramform=no"
+                               ;
+           String nombreArchivo = getText("pdf.siniestro.cartarechazo.nombre");
+           String pathArchivo=""
+           					+ getText("ruta.documentos.poliza")
+           					+ "/" + paramsO.get("pv_ntramite_i")
+           					+ "/" + nombreArchivo
+           					;
+           HttpUtil.generaArchivo(urlContrareciboSiniestro, pathArchivo);
+           
+           paramsO.put("pv_feinici_i"  , new Date());
+           paramsO.put("pv_cddocume_i" , nombreArchivo);
+           paramsO.put("pv_dsdocume_i" , "Carta Rechazo");
+           paramsO.put("pv_swvisible_i"   , null);
+           paramsO.put("pv_codidocu_i"   , null);
+           paramsO.put("pv_cdtiptra_i"   , TipoTramite.SINIESTRO.getCodigo());
+           kernelManagerSustituto.guardarArchivo(paramsO);
+		   
+	   }catch( Exception e){
+		   logger.error("Error en generaCartaRechazo",e);
+		   success =  false;
+		   return SUCCESS;
+	   }
+	   success = true;
+	   return SUCCESS;
+   }
+
    public String generarContrarecibo(){
 	   
 	   try {

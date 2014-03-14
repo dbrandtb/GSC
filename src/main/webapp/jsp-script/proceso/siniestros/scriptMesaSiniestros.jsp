@@ -132,7 +132,14 @@ var msgWindow;
 	        loader      : {
 	            url     : _UrlRechazarTramiteWindwow,
 	            params  : {
-	                'params.nmTramite'  : record.get('ntramite')
+	            	'params.cdunieco' : record.get('cdunieco'),
+		    		'params.cdramo'   : record.get('cdramo'),
+		    		'params.estado'   : record.get('estado'),
+		    		'params.nmpoliza' : record.get('nmpoliza'),
+		    		'params.nmsuplem' : record.get('nmsuplem'),
+		    		'params.nmsolici' : record.get('nmsolici'),
+	                'params.nmTramite'  : record.get('ntramite'),
+	                'params.tipopago'   : record.get('parametros.pv_otvalor02')
 	            },
 	            scripts  : true,
 	            loadMask : true,
@@ -446,6 +453,7 @@ var msgWindow;
 	}
 	
 	function turnarAareaMedica(grid,rowIndex,colIndex){
+		var record = grid.getStore().getAt(rowIndex);
 		 var comentariosText = Ext.create('Ext.form.field.TextArea', {
         	fieldLabel: 'Observaciones'
     		,labelWidth: 150
