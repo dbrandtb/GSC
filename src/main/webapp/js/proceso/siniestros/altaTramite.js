@@ -1118,17 +1118,24 @@ Ext.onReady(function() {
     						    success:function(response,opts){
     						    	panelInicialPral.setLoading(false);
     						        var jsonResp = Ext.decode(response.responseText);
-    						        
+    						        panelInicialPral.getForm().reset();
+						            storeFactCtrl.removeAll();
+						            
     						        if(jsonResp.success==true){
-    						            Ext.Msg.show({
-    						                title:'Guardado',
-    						                msg: 'Se gener&oacute; el n&uacute;mero de tr&aacute;mite '+ Ext.decode(response.responseText).msgResult ,
-    						                buttons: Ext.Msg.OK,
-    						                icon: Ext.Msg.INFO
-    						            });
-    						            
-    						            panelInicialPral.getForm().reset();
-    						            storeFactCtrl.removeAll();
+    						           
+    						            mensajeCorrecto('Guardado',"Se gener&oacute; el n&uacute;mero de tr&aacute;mite "+ Ext.decode(response.responseText).msgResult ,function()
+				                		{
+				                		    Ext.create('Ext.form.Panel').submit(
+				                		    {
+				                		        url             : _p12_urlMesaControl
+				                		        ,standardSubmit : true
+				                		        ,params         :
+				                		        {
+				                		            'smap1.gridTitle'      : 'Siniestros en espera'
+				                		            ,'smap2.pv_cdtiptra_i' : 16
+				                		        }
+				                		    });
+				                		});
     						            windowLoader.close();
     						        }
     						        else{
