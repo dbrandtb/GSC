@@ -1124,7 +1124,7 @@ public void setMsgResult(String msgResult) {
            paramsO.put("pv_dsdocume_i" , "Carta Rechazo");
            paramsO.put("pv_swvisible_i"   , null);
            paramsO.put("pv_codidocu_i"   , null);
-           paramsO.put("pv_cdtiptra_i"   , TipoTramite.SINIESTRO.getCodigo());
+           paramsO.put("pv_cdtiptra_i"   , TipoTramite.SINIESTRO.getCdtiptra());
            kernelManagerSustituto.guardarArchivo(paramsO);
 		   
 	   }catch( Exception e){
