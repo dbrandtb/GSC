@@ -17,7 +17,7 @@
 	*/
 	
 	//Catalogo Tipos de pago a utilizar:
-	var _PAGO_DIRECTO = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@PAGO_DIRECTO.codigo" />';
+	var _PAGO_DIRECTO = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@DIRECTO.codigo" />';
 	var _REEMBOLSO    = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@REEMBOLSO.codigo" />';
 
 	var _URL_CATALOGOS              = '<s:url namespace="/catalogos"       action="obtieneCatalogo" />';
