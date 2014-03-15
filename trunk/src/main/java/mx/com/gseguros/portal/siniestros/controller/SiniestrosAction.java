@@ -1079,7 +1079,7 @@ public void setMsgResult(String msgResult) {
 				   || RolSistema.COORDINADOR_MEDICO_MULTIREGIONAL.getCdsisrol().equals(cdrol) || RolSistema.GERENTE_MEDICO_MULTIREGIONAL.getCdsisrol().equals(cdrol)){
 			   nombreRdf = getText("rdf.siniestro.cartarechazo.medico.nombre");
 		   }else {
-				if(TipoPago.PAGO_DIRECTO.getCodigo().equals(tipoPago)){
+				if(TipoPago.DIRECTO.getCodigo().equals(tipoPago)){
 					nombreRdf = getText("rdf.siniestro.cartarechazo.pagodirecto.nombre");
 				} else if(TipoPago.REEMBOLSO.getCodigo().equals(tipoPago)){
 					nombreRdf = getText("rdf.siniestro.cartarechazo.reembolso.nombre");
