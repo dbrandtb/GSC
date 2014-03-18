@@ -305,8 +305,10 @@ public interface SiniestrosDAO {
 	public List<AltaTramiteVO> consultaListaAltaTramite(String ntramite) throws Exception;
 
 	public List<MesaControlVO> consultaListaMesaControl(String ntramite) throws Exception;
-
+	
 	public void eliminacionTworksin(String ntramite) throws Exception;
 
 	public void eliminacionTFacMesaControl(String ntramite) throws Exception;
+	
+	public Map<String,String> obtenerDatosProveedor(String cdpresta) throws Exception;
 }

@@ -569,6 +569,21 @@ function _11_rechazoSiniestro()
         });
 	}
 }
+
+function _11_regresarMC()
+{
+	debug('_11_regresarMC');
+	Ext.create('Ext.form.Panel').submit(
+    {
+        url             : _11_urlMesaControl
+        ,standardSubmit :true
+        ,params         :
+        {
+            'smap1.gridTitle'      : 'Siniestros'
+            ,'smap2.pv_cdtiptra_i' : 16
+        }
+    });
+}
 ////// funciones //////
 
 Ext.onReady(function()
@@ -652,7 +667,7 @@ Ext.onReady(function()
 				,buttonAlign : 'center'
 				,buttons     :
 				[
-				    {
+					{
 				    	text     : 'Asociar autorizaci&oacute;n'
 				    	,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
 				    	,handler : _11_asociarAutorizacion
@@ -683,7 +698,7 @@ Ext.onReady(function()
                 ,buttonAlign : 'center'
                 ,buttons     :
                 [
-                    {
+					{
                         text     : 'Guardar'
                         ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
                         ,handler : _11_guardarEdicion

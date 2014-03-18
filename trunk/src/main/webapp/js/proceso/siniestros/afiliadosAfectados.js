@@ -234,8 +234,14 @@ Ext.onReady(function() {
 	    	    ]*/
     	        ,
     	        buttonAlign:'center',
-    	        buttons: [
-    	        {
+    	        buttons: 
+    	        [      
+    	            {
+					    text     : 'Regresar'
+					    ,icon    : _CONTEXT+'/resources/fam3icons/icons/cancel.png'
+					    ,handler : _11_regresarMC
+					}
+					,{
     	            id:'botonCotizar',
     	            icon:_CONTEXT+'/resources/fam3icons/icons/disk.png',
     	            //text: hayTramiteCargado?'Precaptura':'Cotizar',

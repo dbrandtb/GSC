@@ -36,7 +36,6 @@ import mx.com.gseguros.utils.Utilerias;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Reclamo;
 import oracle.jdbc.driver.OracleTypes;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;
@@ -2602,8 +2601,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
         	return consulta;
         }
     }
-
-
+	
 	@Override
 	public void eliminacionTworksin(String ntramite) throws DaoException {
 		// TODO Auto-generated method stub
@@ -2667,4 +2665,36 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			}
 		}
 		*/
+	
+	@Override
+	public Map<String,String> obtenerDatosProveedor(String cdpresta) throws Exception
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("cdpresta",cdpresta);
+		Map<String,Object>respuesta = this.ejecutaSP(new ObtenerDatosProveedor(this.getDataSource()), params);
+		List<Map<String,String>>registro = (List<Map<String, String>>) respuesta.get("pv_registro_o");
+		if(registro==null||registro.isEmpty())
+		{
+			throw new Exception("No se encuentra el proveedor con clave '"+cdpresta+"'");
+		}
+		if(registro.size()>1)
+		{
+			throw new Exception("Se encontro mas de un proveedor con clave '"+cdpresta+"'");
+		}
+		return registro.get(0);
+	}
+
+	protected class ObtenerDatosProveedor extends StoredProcedure
+	{
+		protected ObtenerDatosProveedor(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SINIESTRO.P_GET_MPRESTAD");
+			declareParameter(new SqlParameter("cdpresta", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 }
