@@ -3036,7 +3036,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     public String ProcesoAltaTramite(String msgResult) throws ApplicationException
     {
         // si tipo de pago es Directo
-        if(params.get("cmbTipoPago").trim().equalsIgnoreCase("1"))
+        if(params.get("cmbTipoPago").trim().equalsIgnoreCase(TipoPago.DIRECTO.getCodigo()))
         {
 
         	if(params.get("idNumTramite").toString().length() > 0){
