@@ -16,6 +16,7 @@ import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal2.web.GenericVO;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.controller.MesaControlAction;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
@@ -441,16 +442,11 @@ public class SiniestrosAction extends PrincipalCoreAction{
 	public String guardaAltaTramite(){
 			logger.debug(" **** Entrando al guardado de alta de tramite ****");
 			try {
-				
-					
-					
-				
-					logger.debug("VALOR DE ENTRADA");
+					logger.debug("VALORES DE ENTRADA");
 					logger.debug(params);
 					
 					this.session=ActionContext.getContext().getSession();
 			        UserVO usuario=(UserVO) session.get("USUARIO");
-		            
 					HashMap<String, Object> parMesCon = new HashMap<String, Object>();
 					parMesCon.put("pv_cdunieco_i",params.get("cdunieco"));
 					parMesCon.put("pv_cdramo_i",params.get("cdramo"));
@@ -484,83 +480,46 @@ public class SiniestrosAction extends PrincipalCoreAction{
 						parMesCon.put("pv_otvalor13",Rol.CLINICA.getCdrol());
 					}
 					
+					//Si es un registro nuevo
 					if(params.get("idNumTramite").toString().length() <= 0){
-						WrapperResultados res = kernelManagerSustituto.PMovMesacontrol(parMesCon);
-					if(res.getItemMap() == null)
-					{
-						logger.error("Sin mensaje respuesta de nmtramite!!");
-					}
-					else{
-						msgResult = (String) res.getItemMap().get("ntramite");
-						if(params.get("cmbTipoPago").trim().equalsIgnoreCase("1"))
-						{
-							for(int i=0;i<datosTablas.size();i++)
-						    {
-								HashMap<String, Object> paramsTworkSin = new HashMap<String, Object>();
-								paramsTworkSin.put("pv_nmtramite_i",msgResult);
-								paramsTworkSin.put("pv_cdunieco_i",datosTablas.get(i).get("unieco"));
-								paramsTworkSin.put("pv_cdramo_i",datosTablas.get(i).get("ramo"));
-								paramsTworkSin.put("pv_estado_i",datosTablas.get(i).get("estado"));
-								paramsTworkSin.put("pv_nmpoliza_i",datosTablas.get(i).get("polizaAfectada"));
-								paramsTworkSin.put("pv_nmsolici_i",datosTablas.get(i).get("nmsolici"));
-								paramsTworkSin.put("pv_nmsuplem_i",datosTablas.get(i).get("nmsuplem"));
-								paramsTworkSin.put("pv_nmsituac_i",datosTablas.get(i).get("nmsituac"));
-								paramsTworkSin.put("pv_cdtipsit_i",datosTablas.get(i).get("cdtipsit"));
-								paramsTworkSin.put("pv_cdperson_i",datosTablas.get(i).get("cdperson"));
-								paramsTworkSin.put("pv_feocurre_i",datosTablas.get(i).get("fechaOcurrencia"));
-								paramsTworkSin.put("pv_nmautser_i",null);
-						        siniestrosManager.guardaListaTworkSin(paramsTworkSin);
-						    }
-					        
-					        siniestrosManager.guardaListaFacMesaControl(
-					        		msgResult, 
-					        		params.get("txtNoFactura"), 
-					        		params.get("dtFechaFactura"), 
-					        		params.get("cmbTipoAtencion"), 
-					        		params.get("cmbProveedor"), 
-					        		params.get("txtImporte"), 
-					        		null, 
-					        		null,
-					        		null,
-					        		null
-					        		);
-							
-						}else{
-							
-							for(int i=0;i<datosTablas.size();i++)
-						    {
-						        siniestrosManager.guardaListaFacMesaControl(
-						        		msgResult, 
-						        		datosTablas.get(i).get("nfactura"), 
-						        		datosTablas.get(i).get("ffactura"), 
-						        		datosTablas.get(i).get("cdtipser"), 
-						        		datosTablas.get(i).get("cdpresta"), 
-						        		datosTablas.get(i).get("ptimport"), 
-						        		null,
-						        		null,
-						        		null, 
-						        		null
-						        		);
-						    }
-							HashMap<String, Object> paramsTworkSinPagRem = new HashMap<String, Object>();
-					        paramsTworkSinPagRem.put("pv_nmtramite_i",msgResult);
-					        paramsTworkSinPagRem.put("pv_cdunieco_i",params.get("cdunieco"));
-					        paramsTworkSinPagRem.put("pv_cdramo_i",params.get("cdramo"));
-					        paramsTworkSinPagRem.put("pv_estado_i",params.get("estado"));
-					        paramsTworkSinPagRem.put("pv_nmpoliza_i",params.get("nmpoliza"));
-					        paramsTworkSinPagRem.put("pv_nmsolici_i",params.get("nmsolici"));
-					        paramsTworkSinPagRem.put("pv_nmsuplem_i",params.get("nmsuplem"));
-					        paramsTworkSinPagRem.put("pv_nmsituac_i",params.get("nmsituac"));
-					        paramsTworkSinPagRem.put("pv_cdtipsit_i",params.get("cdtipsit"));
-					        paramsTworkSinPagRem.put("pv_cdperson_i",params.get("cmbAseguradoAfectado"));
-					        paramsTworkSinPagRem.put("pv_feocurre_i",params.get("dtFechaOcurrencia"));
-					        paramsTworkSinPagRem.put("pv_nmautser_i",null);
-					        siniestrosManager.guardaListaTworkSin(paramsTworkSinPagRem);
+					    WrapperResultados res = kernelManagerSustituto.PMovMesacontrol(parMesCon);
+					    if(res.getItemMap() == null)
+					    {
+					        logger.error("Sin mensaje respuesta de nmtramite!!");
+					    }
+					    else{
+					        msgResult = (String) res.getItemMap().get("ntramite");
+					        // llamado a la funcion
+					        ProcesoAltaTramite(msgResult);
+				        }
+					}else{
+						
+						ProcesoAltaTramite(params.get("idNumTramite").toString());
+						//despues de esto tengo que actualizar la mesa de control
+						Map<String,Object> otvalor = new HashMap<String,Object>();
+						otvalor.put("pv_ntramite_i" , params.get("idNumTramite"));
+			    		otvalor.put("pv_cdramo_i"   , params.get("cdramo"));
+			    		otvalor.put("pv_cdtipsit_i" , params.get("cdtipsit"));
+			    		otvalor.put("pv_cdsucadm_i", params.get("cmbOficEmisora"));
+			    		otvalor.put("pv_cdsucdoc_i", params.get("cmbOficReceptora"));
+			    		otvalor.put("pv_otvalor02_i",params.get("cmbTipoPago"));							// TIPO DE PAGO
+			    		otvalor.put("pv_otvalor03_i",params.get("txtImporte"));								// IMPORTE
+			    		otvalor.put("pv_otvalor04_i",params.get("cmbBeneficiario"));
+			    		otvalor.put("pv_otvalor05_i",usuario.getUser());
+			    		otvalor.put("pv_otvalor06_i",params.get("dtFechaFactura"));							// FECHA FACTURA
+			    		otvalor.put("pv_otvalor07_i",params.get("cmbTipoAtencion"));						// TIPO DE ANTENCION
+			    		otvalor.put("pv_otvalor08_i",params.get("txtNoFactura"));							// NO. DE FACTURA
+			    		otvalor.put("pv_otvalor09_i",params.get("cmbAseguradoAfectado"));					// CDPERSON
+			    		otvalor.put("pv_otvalor10_i",params.get("dtFechaOcurrencia"));						// FECHA OCURRENCIA
+			    		otvalor.put("pv_otvalor11_i",params.get("cmbProveedor"));
+			    		otvalor.put("pv_otvalor15_i",params.get("idnombreBeneficiarioProv"));
+						if(params.get("cmbProveedor").toString().length() > 0){
+							otvalor.put("pv_otvalor13_i",Rol.CLINICA.getCdrol());
 						}
+			    		siniestrosManager.actualizaOTValorMesaControl(otvalor);
 					}
-				}
 			}catch( Exception e){
-				logger.error("Error en el guardado de alta de tr�mite ",e);
+				logger.error("Error en el guardado de alta de tramite ",e);
 	        return SUCCESS;
 	    }
 	    
@@ -3070,6 +3029,120 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     			+ "\n##############################"
     			+ "\n##############################"
     			);
+    	return SUCCESS;
+    }
+    
+    
+    public String ProcesoAltaTramite(String msgResult) throws ApplicationException
+    {
+        // si tipo de pago es Directo
+        if(params.get("cmbTipoPago").trim().equalsIgnoreCase("1"))
+        {
+
+        	if(params.get("idNumTramite").toString().length() > 0){
+        		// SE REALIZA LA ELIMINACION EN TWORKSIN
+        		try {
+        			siniestrosManager.getEliminacionTworksin(msgResult);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					logger.error("error al eliminar en Tworksin ",e);
+				}
+        		
+        	}
+        	
+            for(int i=0;i<datosTablas.size();i++)
+            {
+                HashMap<String, Object> paramsTworkSin = new HashMap<String, Object>();
+                paramsTworkSin.put("pv_nmtramite_i",msgResult);
+                paramsTworkSin.put("pv_cdunieco_i",datosTablas.get(i).get("unieco"));
+                paramsTworkSin.put("pv_cdramo_i",datosTablas.get(i).get("ramo"));
+                paramsTworkSin.put("pv_estado_i",datosTablas.get(i).get("estado"));
+                paramsTworkSin.put("pv_nmpoliza_i",datosTablas.get(i).get("polizaAfectada"));
+                paramsTworkSin.put("pv_nmsolici_i",datosTablas.get(i).get("nmsolici"));
+                paramsTworkSin.put("pv_nmsuplem_i",datosTablas.get(i).get("nmsuplem"));
+                paramsTworkSin.put("pv_nmsituac_i",datosTablas.get(i).get("nmsituac"));
+                paramsTworkSin.put("pv_cdtipsit_i",datosTablas.get(i).get("cdtipsit"));
+                paramsTworkSin.put("pv_cdperson_i",datosTablas.get(i).get("cdperson"));
+                paramsTworkSin.put("pv_feocurre_i",datosTablas.get(i).get("fechaOcurrencia"));
+                paramsTworkSin.put("pv_nmautser_i",null);
+                siniestrosManager.guardaListaTworkSin(paramsTworkSin);
+            }
+            
+            if(params.get("idNumTramite").toString().length() > 0){
+            	// SE REALIZA LA ELIMINACION EN TFACMESCTRL
+            	try {
+        			// numero de tramite, 
+					siniestrosManager.getEliminacionTFacMesaControl(msgResult);
+				} catch (Exception e) {
+					logger.error("error al eliminar en TFACMESCRL",e);
+				}
+        	}
+            siniestrosManager.guardaListaFacMesaControl(
+                msgResult, 
+                params.get("txtNoFactura"),
+                params.get("dtFechaFactura"),
+                params.get("cmbTipoAtencion"),
+                params.get("cmbProveedor"),
+                params.get("txtImporte"),
+                null,
+                null,
+                null,
+                null
+            );
+        }else{
+            // si el tipo de pago es por reembolso
+        	if(params.get("idNumTramite").toString().length() > 0){
+        		// SE REALIZA LA ELIMINACION EN TFACMESCTRL
+        		try {
+        			// numero de tramite, 
+					siniestrosManager.getEliminacionTFacMesaControl(msgResult);
+				} catch (Exception e) {
+					logger.error("error al eliminar en TfacMesCtrl ",e);
+				}
+        	}
+        	
+            for(int i=0;i<datosTablas.size();i++)
+            {
+                siniestrosManager.guardaListaFacMesaControl(
+                    msgResult, 
+                    datosTablas.get(i).get("nfactura"),
+                    datosTablas.get(i).get("ffactura"),
+                    datosTablas.get(i).get("cdtipser"),
+                    datosTablas.get(i).get("cdpresta"),
+                    datosTablas.get(i).get("ptimport"),
+                    null,
+                    null,
+                    null,
+                    null
+                );
+            }
+            
+            if(params.get("idNumTramite").toString().length() > 0){
+        	    // SE REALIZA LA ELIMINACION EN TWORKSIN
+            	try {
+        			// numero de tramite, 
+					siniestrosManager.getEliminacionTworksin(msgResult);
+				} catch (Exception e) {
+					logger.error("error al eliminar en TworkSin ",e);
+				}
+        	}
+            
+            HashMap<String, Object> paramsTworkSinPagRem = new HashMap<String, Object>();
+            paramsTworkSinPagRem.put("pv_nmtramite_i",msgResult);
+            paramsTworkSinPagRem.put("pv_cdunieco_i",params.get("cdunieco"));
+            paramsTworkSinPagRem.put("pv_cdramo_i",params.get("cdramo"));
+            paramsTworkSinPagRem.put("pv_estado_i",params.get("estado"));
+            paramsTworkSinPagRem.put("pv_nmpoliza_i",params.get("nmpoliza"));
+            paramsTworkSinPagRem.put("pv_nmsolici_i",params.get("nmsolici"));
+            paramsTworkSinPagRem.put("pv_nmsuplem_i",params.get("nmsuplem"));
+            paramsTworkSinPagRem.put("pv_nmsituac_i",params.get("nmsituac"));
+            paramsTworkSinPagRem.put("pv_cdtipsit_i",params.get("cdtipsit"));
+            paramsTworkSinPagRem.put("pv_cdperson_i",params.get("cmbAseguradoAfectado"));
+            paramsTworkSinPagRem.put("pv_feocurre_i",params.get("dtFechaOcurrencia"));
+            paramsTworkSinPagRem.put("pv_nmautser_i",null);
+            siniestrosManager.guardaListaTworkSin(paramsTworkSinPagRem);
+        }
+        success = true;
     	return SUCCESS;
     }
     

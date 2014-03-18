@@ -1023,14 +1023,8 @@ Ext.onReady(function() {
         					{
             					var obtener = [];
                 				storeListAsegPagDirecto.each(function(record) {
-                					console.log("VALORES DEl STORE LISTA ASEGURADO");
-                					console.log(record);
-                					
-                                    obtener.push(record.data);
+                					obtener.push(record.data);
                                 });
-                				
-                				console.log("VALOR LENGTH");
-                				console.log(obtener.length);
                 				
                 				if(obtener.length == 1){
                 					Ext.getCmp('idUnieco').setValue(obtener[0].modUnieco);
@@ -1057,15 +1051,17 @@ Ext.onReady(function() {
         						storeFactCtrl.each(function(record) {
                                     obtener.push(record.data);
                                 });
+        						
+        						
                 				if(obtener.length == 1){
                 					Ext.getCmp('cmbProveedor').setValue(obtener[0].proveedor);
             	    				Ext.getCmp('txtNoFactura').setValue(obtener[0].noFactura);
             	    				Ext.getCmp('txtImporte').setValue(obtener[0].importe);
             	    				Ext.getCmp('dtFechaFactura').setValue(obtener[0].fechaFactura);
-            	    				Ext.getCmp('cmbTipoAtencion').setValue(obtener[0].tipoServicio);
+            	    				//Ext.getCmp('cmbTipoAtencion').setValue(obtener[0].tipoServicio);
         	    				}else{
         	    					Ext.getCmp('dtFechaFactura').setValue('');
-        	    					Ext.getCmp('cmbTipoAtencion').setValue(obtener[0].tipoServicio);
+        	    					//Ext.getCmp('cmbTipoAtencion').setValue(obtener[0].tipoServicio);
         	    				}
         					}
             				
@@ -1106,9 +1102,6 @@ Ext.onReady(function() {
             				
             				submitValues['datosTablas']=datosTablas;
             				
-            				console.log("VALORES AL ENVAR AL GUARDADO");
-            				console.log(submitValues);
-            				
             				panelInicialPral.setLoading(true);
             				Ext.Ajax.request(
     						{
@@ -1118,12 +1111,18 @@ Ext.onReady(function() {
     						    success:function(response,opts){
     						    	panelInicialPral.setLoading(false);
     						        var jsonResp = Ext.decode(response.responseText);
-    						        panelInicialPral.getForm().reset();
-						            storeFactCtrl.removeAll();
-						            
     						        if(jsonResp.success==true){
-    						           
-    						            mensajeCorrecto('Guardado',"Se gener&oacute; el n&uacute;mero de tr&aacute;mite "+ Ext.decode(response.responseText).msgResult ,function()
+    						        	var etiqueta;
+    						        	var mensaje;
+    						        	if(valorAction == null)
+    						        	{
+    						        		etiqueta = "Guardado";
+    						        		mensaje = "Se gener&oacute; el n&uacute;mero de tr&aacute;mite "+ Ext.decode(response.responseText).msgResult; 
+    						        	}else{
+    						        		etiqueta = "Modificaci&oacute;n";
+    						        		mensaje = "Se modific&oacute; el n&uacute;mero de tr&aacute;mite "+ valorAction.ntramite;
+    						        	}
+    						            mensajeCorrecto(etiqueta,mensaje,function()
 				                		{
 				                		    Ext.create('Ext.form.Panel').submit(
 				                		    {
@@ -1136,6 +1135,9 @@ Ext.onReady(function() {
 				                		        }
 				                		    });
 				                		});
+    						            panelInicialPral.getForm().reset();
+    						            storeFactCtrl.removeAll();
+    						            
     						            windowLoader.close();
     						        }
     						        else{
@@ -1182,9 +1184,6 @@ Ext.onReady(function() {
     	    ]
     	    });
     
-    
-    //console.log(valorAction);
-    
     if(valorAction == null)
 	{
     	Ext.getCmp('cmbTipoPago').setValue('1');
@@ -1203,10 +1202,7 @@ Ext.onReady(function() {
 			    	if(Ext.decode(response.responseText).listaMesaControl != null)
 		    		{
 			    		var json=Ext.decode(response.responseText).listaMesaControl[0];
-			    		console.log("VALOR DEL JSON DE LA MESA DE CONTROL");
-			    		console.log(json);
 			    		
-			    		//<<<
 			    		//ASIGNACION DE VALORES GENERALES PARA PAGO DIRECTO Y REEMBOLSO
 			    		Ext.getCmp('idNumTramite').setValue(valorAction.ntramite);
 			    		Ext.getCmp('txtEstado').setValue('PENDIENTE');
@@ -1227,7 +1223,6 @@ Ext.onReady(function() {
 			    			Ext.getCmp('idnombreBeneficiarioProv').setValue(json.otvalor15mc);
 			    			Ext.getCmp('idnombreAsegurado').setValue(json.nombremc);
 			    			
-			    			console.log(Ext.getCmp('cmbAseguradoAfectado').getValue());
 			    			storeAsegurados.load({
 								params:{
 				                    'params.cdperson':json.otvalor09mc
@@ -1243,26 +1238,6 @@ Ext.onReady(function() {
 			    			});
 			    			
 			    			Ext.getCmp('cmbBeneficiario').setValue(json.otvalor04mc);
-			    			
-			    			//Ext.getCmp('cmbBeneficiario').setValue(json.otvalor04mc);
-			    			
-			    			
-			    			/*storeAsegurados.load({
-								params:{
-				                    'params.cdperson':json.otvalor09mc
-								}
-			    			});
-			    			
-			    			
-			    			
-			    			storeAsegurados.load({
-								params:{
-				                    'params.cdperson':json.otvalor04mc
-								}
-			    			});
-			    			
-			    			console.log(json.otvalor04mc);*/
-			    			
 			    		}
 			    		
 			    		
@@ -1275,14 +1250,9 @@ Ext.onReady(function() {
 	    	                }
 	    				    ,success : function (response)
 	    				    {
-	    	                    console.log("VALOR DE RESPUESTA _URL_CONSULTA_GRID_ALTA_TRAMITE");
-	    	                    //console.log(Ext.decode(response.responseText));
 	    	                    if(Ext.decode(response.responseText).listaAltaTramite != null)
 	    			    		{
-	    				    		//console.log(Ext.decode(response.responseText).listaAltaTramite.length);
 	    				    		var json=Ext.decode(response.responseText).listaAltaTramite;
-	    				    		console.log("VALOR DE JSON");
-	    				    		console.log(json);
 	    				    		
 	    				    		if(Ext.getCmp('cmbTipoPago').getValue() =="1"){
 	    				    			// PAGO DIRECTO
@@ -1305,9 +1275,7 @@ Ext.onReady(function() {
 		    		                        	modnumPoliza:json[i].nmpoliex // --> Se tiene que cambiar
 		    		                        });
 
-		    				    			//console.log("VALORES OBTENIDOS");
-		    				    			console.log(rec);
-		    		                        storeListAsegPagDirecto.add(rec);
+		    				    			storeListAsegPagDirecto.add(rec);
 		    		                        //limpiarRegistros();
 		    				    		}
 	    				    		}else{
@@ -1319,12 +1287,10 @@ Ext.onReady(function() {
 											 	tipoServicio: json[i].cdtipser,
 											 	proveedor: json[i].cdpresta,
 											 	importe: json[i].ptimport,
-											 	proveedorName: json[i].dspresta,
+											 	proveedorName: json[i].cdpresta+ " "+json[i].dspresta,
 											 	tipoServicioName: json[i].dstipser
 		    		                        });
 
-		    				    			//console.log("VALORES OBTENIDOS");
-		    				    			//console.log(rec);
 		    				    			storeFactCtrl.add(rec);
 		    		                        //limpiarRegistros();
 		    				    		}
