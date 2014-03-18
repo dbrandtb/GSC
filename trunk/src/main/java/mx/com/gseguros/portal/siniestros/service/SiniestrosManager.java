@@ -377,5 +377,9 @@ public interface SiniestrosManager {
 	public List<AltaTramiteVO> getConsultaListaAltaTramite(String ntramite) throws Exception;
 
 	public List<MesaControlVO> getConsultaListaMesaControl(String ntramite) throws Exception;
+
+	public void getEliminacionTworksin(String ntramite) throws Exception;
+
+	public void getEliminacionTFacMesaControl(String ntramite) throws Exception;
 	
 }

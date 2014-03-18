@@ -992,4 +992,22 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			throw new ApplicationException(daoExc.getMessage(), daoExc);
 		}
 	}
+
+	@Override
+	public void getEliminacionTworksin(String ntramite) throws Exception {
+		try {
+			siniestrosDAO.eliminacionTworksin(ntramite);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}
+
+	@Override
+	public void getEliminacionTFacMesaControl(String ntramite) throws Exception {
+		try {
+			siniestrosDAO.eliminacionTFacMesaControl(ntramite);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}
 }

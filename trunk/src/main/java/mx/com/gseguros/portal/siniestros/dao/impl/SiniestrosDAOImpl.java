@@ -2603,4 +2603,68 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
         }
     }
 
+
+	@Override
+	public void eliminacionTworksin(String ntramite) throws DaoException {
+		// TODO Auto-generated method stub
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_nmtramite_i", ntramite);
+		params.put("pv_nmautser_i", null);
+		
+		logger.debug("VALOR DEL PARAMS");
+		logger.debug(params);
+		Map<String,Object> resultadoMap=this.ejecutaSP(new EliminacionRegistrosTworksin(this.getDataSource()), params);
+	}
+	protected class EliminacionRegistrosTworksin extends StoredProcedure
+	{
+		protected EliminacionRegistrosTworksin(DataSource dataSource)
+		{
+			super(dataSource, "PKG_PRESINIESTRO.P_BORRA_TWORKSIN");
+			declareParameter(new SqlParameter("pv_nmtramite_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmautser_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+
+	@Override
+	public void eliminacionTFacMesaControl(String ntramite) throws DaoException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_nmtramite_i", ntramite);
+		 
+		Map<String,Object> resultadoMap=this.ejecutaSP(new EliminacionTFacMesaControl(this.getDataSource()), params);
+	}
+	protected class EliminacionTFacMesaControl extends StoredProcedure
+	{
+		protected EliminacionTFacMesaControl(DataSource dataSource)
+		{
+			super(dataSource, "PKG_PRESINIESTRO.p_borra_tfacmesctrl_tramite");
+			declareParameter(new SqlParameter("pv_nmtramite_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	
+	/*	public void eliminacionRegistrosTabla(String nmautser)
+			throws DaoException {
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("pv_nmautser_i", nmautser);
+			Map<String,Object> resultadoMap=this.ejecutaSP(new EliminacionRegistros(this.getDataSource()), params);
+		}
+		protected class EliminacionRegistros extends StoredProcedure
+		{
+			protected EliminacionRegistros(DataSource dataSource)
+			{
+				super(dataSource, "PKG_PRESINIESTRO.P_BORRA_TDETAUTS");
+				declareParameter(new SqlParameter("pv_nmautser_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+				declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+				compile();
+			}
+		}
+		*/
 }
