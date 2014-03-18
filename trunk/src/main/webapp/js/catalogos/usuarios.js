@@ -1,13 +1,6 @@
 Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.grid.Panel','Ext.layout.container.Column', 'Ext.selection.CheckboxModel' ]);
 
 Ext.onReady(function() {
-	
-	/*
-    Ext.selection.CheckboxModel.override( {
-        mode: 'SINGLE',
-        allowDeselect: true
-    });
-    */
 
     Ext.create('Ext.panel.Panel', {
 	    border   : 0,
@@ -15,7 +8,7 @@ Ext.onReady(function() {
 	    items    : [
             {
 				xtype: 'form',
-				title: 'Agregar usuario del sistema',
+				//title: 'Agregar usuario del sistema',
 				url: _URL_INSERTA_PERSONA,
 				border: false,
 				margin: '5',

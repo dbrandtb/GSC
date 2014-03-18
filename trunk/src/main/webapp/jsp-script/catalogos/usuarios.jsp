@@ -11,8 +11,10 @@
 var busquedaUsuariosStore;
 
 var _UrlBusquedaUsuarios    = '<s:url namespace="/catalogos"    action="busquedaUsuarios" />';
-var _windowAgregarUsuario			= '<s:url namespace="/catalogos"    action="agregaUsuarios" />';
+var _URL_LOADER_NUEVO_USUARIO   = '<s:url namespace="/catalogos"    action="agregaUsuarios" />';
 var _UrlAgregarUsuario      = '<s:url namespace="/catalogos"    action="guardaUsuario" />';
+var _MSG_SIN_DATOS          = 'No hay datos';
+var _MSG_BUSQUEDA_SIN_DATOS = 'No se encontraron datos. Intente cambiar los filtros de b\u00FAsqueda.';
 /*///////////////////*/
 ////// variables //////
 ///////////////////////
@@ -183,9 +185,13 @@ Ext.onReady(function()
                             ,autoScroll  : true
                             ,loader      :
                             {
-                                url       : _windowAgregarUsuario
+                                url       : _URL_LOADER_NUEVO_USUARIO
                                 ,scripts  : true
                                 ,autoLoad : true
+                                ,loadMask : true
+                                ,ajaxOptions: {
+                                    method   : 'POST'
+                                }
                             }
                         }).show();
                     }
