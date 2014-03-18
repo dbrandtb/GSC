@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
+
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.exception.DaoException;
@@ -544,6 +546,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		{
 			lista = new ArrayList<Map<String,String>>();
 		}
+		log.debug("lista: "+lista);
 		log.debug("obtenerFacturasTramite lista size: "+lista.size());
 		return lista;
 	}
@@ -896,12 +899,31 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	@Override
 	public Map<String,String> obtenerDatosProveedor(String cdpresta) throws Exception
 	{
-		Map<String,String> proveedor = new HashMap<String,String>();
-		proveedor.put("CDPRESTA" , "69");
-		proveedor.put("NOMBRE"   , "PROVEEDOR");
-		proveedor.put("ISR"      , "0");
-		proveedor.put("CEDULAR"  , "0");
-		proveedor.put("IVA"      , "16");
+		log.info(""
+				+ "\n###################################"
+				+ "\n###### obtenerDatosProveedor ######"
+				);
+		Map<String,String> proveedor = siniestrosDAO.obtenerDatosProveedor(cdpresta);
+		String iva     = proveedor.get("IVA");
+		String cedular = proveedor.get("CEDULAR");
+		String isr     = proveedor.get("ISR");
+		if(StringUtils.isBlank(iva))
+		{
+			proveedor.put("IVA","0");
+		}
+		if(StringUtils.isBlank(cedular))
+		{
+			proveedor.put("CEDULAR","0");
+		}
+		if(StringUtils.isBlank(isr))
+		{
+			proveedor.put("ISR","0");
+		}
+		log.info("proveedor: "+proveedor);
+		log.info(""
+				+ "\n###### obtenerDatosProveedor ######"
+				+ "\n###################################"
+				);
 		return proveedor;
 	}
 	
