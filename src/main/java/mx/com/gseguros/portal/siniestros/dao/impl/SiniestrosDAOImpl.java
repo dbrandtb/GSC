@@ -2150,46 +2150,47 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			String nfactura) throws Exception
 	{
 		Map<String,Object>p=new HashMap<String,Object>();
-		p.put("pv_cdunieco_i" , cdunieco);
-		p.put("pv_cdramo_i"   , cdramo);
-		p.put("pv_estado_i"   , estado);
-		p.put("pv_nmpoliza_i" , nmpoliza);
-		p.put("pv_nmsuplem_i" , nmsuplem);
-		p.put("pv_nmsituac_i" , nmsituac);
-		p.put("pv_aaapertu_i" , aaapertu);
-		p.put("pv_status_i"   , status);
-		p.put("pv_nmsinies_i" , nmsinies);
-		p.put("pv_nfactura_i" , nfactura);
+		p.put("cdunieco" , cdunieco);
+		p.put("cdramo"   , cdramo);
+		p.put("estado"   , estado);
+		p.put("nmpoliza" , nmpoliza);
+		p.put("nmsuplem" , nmsuplem);
+		p.put("nmsituac" , nmsituac);
+		p.put("aaapertu" , aaapertu);
+		p.put("status"   , status);
+		p.put("nmsinies" , nmsinies);
+		p.put("nfactura" , nfactura);
 		logger.debug("obtenerCopagoDeducible params: "+p);
-		/*Map<String, Object> mapResult = ejecutaSP(new ObtenerCopagoDeducible(this.getDataSource()), p);
+		Map<String, Object> mapResult = ejecutaSP(new ObtenerCopagoDeducible(this.getDataSource()), p);
 		List<Map<String,String>> lista = (List<Map<String,String>>) mapResult.get("pv_registro_o");
 		if(lista==null||lista.size()==0)
 		{
 			throw new Exception("No se encuentra el copago deducible");
 		}
-		return lista.get(0);*/
-		Map<String,String>m= new HashMap<String,String>();
-		m.put("COPAGO"    , "10");//(Math.random()*10d)+"");
-		m.put("TIPCOPAG"  , "P");//Math.random()>0.5d?"P":"I");
-		m.put("DEDUCIBLE" , "2000");//(Math.random()*2000d*((Math.random()>0.7d)?1d:0d))+"");
-		return m;
+		if(lista.size()>1)
+		{
+			throw new Exception("Copago y deducible duplicado");
+		}
+		Map<String,String>copagoDeducible = lista.get(0);
+		logger.debug("Copago deducible: "+copagoDeducible);
+		return copagoDeducible;
 	}
 	
 	protected class ObtenerCopagoDeducible extends StoredProcedure
 	{
 		protected ObtenerCopagoDeducible(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SINIESTRO.P_GET_COPAGO_DEDUCIBLE");
-			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmsuplem_i" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmsituac_i" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_aaapertu_i" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_status_i"   , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nmsinies_i" , OracleTypes.VARCHAR));
-			declareParameter(new SqlParameter("pv_nfactura_i" , OracleTypes.VARCHAR));
+			super(dataSource, "PKG_PRESINIESTRO.P_GET_DATOS_SUBG");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("aaapertu" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsinies" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nfactura" , OracleTypes.VARCHAR));
 			
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
