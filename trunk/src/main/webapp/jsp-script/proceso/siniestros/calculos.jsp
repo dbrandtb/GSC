@@ -204,12 +204,12 @@ Ext.onReady(function()
             	var deducible = _p12_slist2[indice].DEDUCIBLE*1.0;
             	var subttDedu = subttDesc - deducible;
             	var copago    = _p12_slist2[indice].COPAGO*1.0;
-            	var tipcopag  = _p12_slist2[indice].TIPCOPAG;
-            	if(tipcopag=='I')
+            	var tipcopag  = _p12_slist2[indice].TIPOCOPAGO;
+            	if(tipcopag=='$')
             	{
             		var copagoaplica = copago;
             	}
-            	else if(tipcopag=='P')
+            	else if(tipcopag=='%')
             	{
             		var copagoaplica = subttDedu*(copago/100.0);
             	}
@@ -681,12 +681,12 @@ Ext.onReady(function()
             var deducible   = _p12_slist2[indice].DEDUCIBLE;
             var subttdeduc  = subttdesc-deducible;
             var copago      = _p12_slist2[indice].COPAGO*1.0;
-            var tipcopag    = _p12_slist2[indice].TIPCOPAG;
-            if(tipcopag=='I')
+            var tipcopag    = _p12_slist2[indice].TIPOCOPAGO;
+            if(tipcopag=='$')
             {
                 var copagoaplica = copago;
             }
-            else if(tipcopag=='P')
+            else if(tipcopag=='%')
             {
                 var copagoaplica = subttdeduc*(copago/100.0);
             }

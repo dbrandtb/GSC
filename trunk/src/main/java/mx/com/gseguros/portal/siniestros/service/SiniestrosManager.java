@@ -352,6 +352,11 @@ public interface SiniestrosManager {
 	
 	public Map<String,String> obtenerDatosProveedor(String cdpresta) throws Exception;
 	
+	/**
+	 * PKG_PRESINIESTRO.P_GET_DATOS_SUBG
+	 * {CDGARANT=18SD, OTCLAVE2=18SD003, CDCAPITA=4,
+ LUC=SI, DEDUCIBLE=NA, COPAGO=25, BENEFMAX=NA, ICD=SI, CPT=SI, LIMITES=NA, TIPOCOPAGO=%, UNIDAD=null, :B11=0}
+	 */
 	public Map<String,String>obtenerCopagoDeducible(
 			String cdunieco,
 			String cdramo,
