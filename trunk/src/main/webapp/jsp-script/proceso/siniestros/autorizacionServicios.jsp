@@ -52,7 +52,7 @@
             
             var valorAction = <s:property value='paramsJson' escapeHtml='false'/>;
             console.log(valorAction);
-            debug(valorAction);
+            //debug(valorAction);
             
         </script>
         <script type="text/javascript" src="${ctx}/js/proceso/siniestros/autorizacionServicios.js"></script>
