@@ -35,6 +35,7 @@ public class PolizaVigenteVO implements Serializable {
 	private String vigenciaPoliza;
 	private String numPoliza;
 	private String dsplan;
+	private String mesesAsegurado;
 	
 	 
 	
@@ -315,6 +316,16 @@ public class PolizaVigenteVO implements Serializable {
 		this.mtoBase = mtoBase;
 	}
 
+
+
+	public String getMesesAsegurado() {
+		return mesesAsegurado;
+	}
+
+
+	public void setMesesAsegurado(String mesesAsegurado) {
+		this.mesesAsegurado = mesesAsegurado;
+	}
 
 
 	@Override

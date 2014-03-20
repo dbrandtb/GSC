@@ -711,6 +711,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
         	consulta.setVigenciaPoliza(Utilerias.formateaFecha(rs.getString("FEINICIO"))+"\t\t|\t\t"+Utilerias.formateaFecha(rs.getString("FEFINAL")));
         	consulta.setNumPoliza(rs.getString("NUMPOLIZA"));
         	consulta.setDsplan(rs.getString("DSPLAN"));
+        	consulta.setMesesAsegurado(rs.getString("MESESASEGURADO"));
             return consulta;
         }
     }
