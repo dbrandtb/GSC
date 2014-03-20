@@ -163,7 +163,8 @@ Ext.onReady(function(){
                 map.put("NMNUMINT" , rs.getString(""));
                 */
                 [
-                    {
+                    <s:property value="item3" />
+                    /*{
                     	fieldLabel     : 'Consecutivo',
                     	xtype          : 'numberfield',
                     	name           : 'smap1.NMORDDOM',
@@ -178,7 +179,7 @@ Ext.onReady(function(){
                     {
                         xtype          : 'textfield',
                         name           : 'smap1.CDEDO',
-                        hidden         : true
+                        hidden         : false
                     },
                     {
                         fieldLabel     : 'Estado / Ciudad',
@@ -189,7 +190,7 @@ Ext.onReady(function(){
                     {
                         xtype          : 'textfield',
                         name           : 'smap1.CDMUNICI',
-                        hidden         : true
+                        hidden         : false
                     },
                     {
                         fieldLabel     : 'Delegaci&oacute;n / Municipio',
@@ -252,7 +253,7 @@ Ext.onReady(function(){
                         maxLength      : 10,
                         allowBlank     : true,
                         readOnly       : !esElContratanteP4
-                    }
+                    }*/
                 ]
             }),
         ],
@@ -356,81 +357,42 @@ Ext.onReady(function(){
             		expande(2);
             	}
             }
-            <%-- Esta parte tiene un FALSE agregado porque ya no se usa --%>
-            <s:if test="false&&(smap1!=null&&smap1.botonCopiar!=null&&smap1.botonCopiar==1)">
-            ,{
-            	text     : 'Copiar domicilio del titular'
-            	,icon    : contextop2+'/resources/fam3icons/icons/house_go.png'
-            	,handler : function()
-            	{
-            		////// usa valores del padre (editarAsegurados.jsp) //////
-            		storePersonasp2.each(function(record,index)
-       				{
-            			if(record.get('estomador')==true)
-           				{
-            				Ext.define('LoaderFormp4',
-       					    {
-       					        extend:'Modelo1p4',
-       					        proxy:
-       					        {
-       					            extraParams:
-       					            {
-       					                'smap1.pv_cdunieco_i'   : inputCduniecop4,
-       					                'smap1.pv_cdramo_i'     : inputCdramop4,
-       					                'smap1.pv_estado_i'     : inputEstadop4,
-       					                'smap1.pv_nmpoliza_i'   : inputNmpolizap4,
-       					                'smap1.pv_nmsituac_i'   : record.get('nmsituac'),
-       					                'smap1.pv_cdperson_i'   : record.get('cdperson'),
-       					                'smap1.pv_cdrol_i'      : '2',
-       					                'smap1.nombreAsegurado' : record.get('nombre')+' '+(record.get('segundo_nombre')?record.get('segundo_nombre')+' ':' ')+record.get('Apellido_Paterno')+' '+record.get('Apellido_Materno'),
-       					                'smap1.cdrfc'           : record.get('cdrfc')
-       					            },
-       					            type:'ajax',
-       					            url : urlCargarp4,
-       					            reader:
-       					            {
-       					                type:'json'
-       					            }
-       					        }
-       					    });
-
-       					    var loaderFormp4=Ext.ModelManager.getModel('LoaderFormp4');
-       					    loaderFormp4.load(123, {
-       					        success: function(resp) {
-       					            formPanelp4.getForm().setValues(
-       					            {
-       					            	'smap1.NMORDDOM':resp.data['smap1.NMORDDOM'],
-       					                'smap1.CODPOSTAL':resp.data['smap1.CODPOSTAL'],
-       					                'smap1.estado':resp.data['smap1.estado'],
-	       					            'smap1.Municipio':resp.data['smap1.Municipio'],
-	                                    'smap1.NMTELEFO':resp.data['smap1.NMTELEFO'],
-	                                    'smap1.CDCOLONI':resp.data['smap1.CDCOLONI'],
-	       					            'smap1.DSDOMICI':resp.data['smap1.DSDOMICI'],
-	                                    'smap1.NMNUMERO':resp.data['smap1.NMNUMERO'],
-	                                    'smap1.NMNUMINT':resp.data['smap1.NMNUMINT']
-       					            });
-       					            
-	       					        Ext.getCmp('coloniaId').getStore().load({
-	       				                params: {catalogo:'COLONIAS','params.cp': resp.data['smap1.CODPOSTAL']}
-	       				            });
-       					        },
-       					        failure:function()
-       					        {
-       					            Ext.Msg.show({
-       					                title:'Error',
-       					                icon: Ext.Msg.ERROR,
-       					                msg: 'Error al cargar',
-       					                buttons: Ext.Msg.OK
-       					            });
-       					        }
-       					    });
-           				}
-       				});
-            		////// usa valores del padre //////
-            	}
-            }
-            </s:if>
         ]
+    });
+    
+    if(inputNmsituacp4>0)//si es asegurado solo puede leer cp, estado y municipio
+    {
+    	formPanelp4.items.items[2].items.items[1].setReadOnly(true);//cp
+    	formPanelp4.items.items[2].items.items[2].setReadOnly(true);//estado
+    	formPanelp4.items.items[2].items.items[3].setReadOnly(true);//municipio
+    }
+    
+    //establecer cargar colonia al cambiar cod pos
+    formPanelp4.items.items[2].items.items[1].on('blur',function()
+    {
+        debug('cod pos change');
+        formPanelp4.items.items[2].items.items[4].getStore().load(
+        {
+            params :
+            {
+                'params.cp' : formPanelp4.items.items[2].items.items[1].getValue()
+            }
+            ,callback : function()
+            {
+                var hay=false;
+                formPanelp4.items.items[2].items.items[4].getStore().each(function(record)
+                {
+                    if(formPanelp4.items.items[2].items.items[4].getValue()==record.get('key'))
+                    {
+                        hay=true;
+                    }
+                });
+                if(!hay)
+                {
+                	formPanelp4.items.items[2].items.items[4].setValue('');
+                }
+            }
+        });
     });
     /*///////////////////*/
     ////// contenido //////
@@ -475,11 +437,12 @@ Ext.onReady(function(){
         	//console.log(resp);
             formPanelp4.loadRecord(resp);
             
-            Ext.getCmp('coloniaId').getStore().load({
-            	params:
-            	{
-            		'params.cp' : resp.data['smap1.CODPOSTAL']
-                    ,'catalogo' : '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@COLONIAS"/>'
+            debug('[name="smap1.CDCOLONI"]:',Ext.ComponentQuery.query('[name="smap1.CDCOLONI"]').length);
+            Ext.ComponentQuery.query('[name="smap1.CDCOLONI"]')[Ext.ComponentQuery.query('[name="smap1.CDCOLONI"]').length-1].getStore().load(
+            {
+                params :
+                {
+                    'params.cp' : resp.data['smap1.CODPOSTAL']
                 }
             });
         },
@@ -500,7 +463,7 @@ Ext.onReady(function(){
 	    //storePersonasp2.each(function(record,index)
 	    //{
 	    var record = storePersonasp2.getAt(0);
-	        if(true||record.get('estomador')==true)
+	        if(inputNmsituacp4>1)//si es asegurano no titular le pone la direccion del titular
 	        {
 	            Ext.define('LoaderFormp4',
 	            {
@@ -546,9 +509,14 @@ Ext.onReady(function(){
 	                        'smap1.NMNUMERO':resp.data['smap1.NMNUMERO'],
 	                        'smap1.NMNUMINT':resp.data['smap1.NMNUMINT']
 	                    });
-	                    Ext.getCmp('coloniaId').getStore().load({
-	                        params: {catalogo:'COLONIAS','params.cp': resp.data['smap1.CODPOSTAL']}
-	                    });
+	                    debug('[name="smap1.CDCOLONI"]:',Ext.ComponentQuery.query('[name="smap1.CDCOLONI"]').length);
+	                    Ext.ComponentQuery.query('[name="smap1.CDCOLONI"]')[Ext.ComponentQuery.query('[name="smap1.CDCOLONI"]').length-1].getStore().load(
+                        {
+                            params :
+                            {
+                                'params.cp' : resp.data['smap1.CODPOSTAL']
+                            }
+                        });
 	                },
 	                failure:function()
 	                {
