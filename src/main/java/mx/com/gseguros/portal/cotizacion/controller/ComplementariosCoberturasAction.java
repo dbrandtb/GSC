@@ -15,6 +15,7 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
 
@@ -24,6 +25,7 @@ import org.apache.struts2.ServletActionContext;
 public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 
 	private KernelManagerSustituto kernelManager;
+	private PantallasManager pantallasManager;
 	private Map<String,String>smap1;
 	private Map<String,String>smap2;
 	private Map<String,String>smap3;
@@ -628,6 +630,15 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 			gc.genera(tatriper);
 			item1=gc.getFields();
 			item2=gc.getItems();
+			
+			gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			List<ComponenteVO>listaCamposDomicilio = pantallasManager.obtenerComponentes(
+					null, null, null, null, null, null, "ASEGURADO_DOMICILIO", "FORMULARIO", null);
+			
+			gc.generaComponentes(listaCamposDomicilio, true, false, true, false, false, false);
+			
+			item3=gc.getItems();
+			
 			/*item1=Item.crear("fields",null,Item.ARR)//quitame
 					.add(Item.crear(null,null,Item.OBJ).add("name","parametros.pv_otvalor01"))//quitame
 					.add(Item.crear(null,null,Item.OBJ).add("name","parametros.pv_otvalor02"))//quitame
@@ -1460,6 +1471,10 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 
 	public void setStr2(String str2) {
 		this.str2 = str2;
+	}
+
+	public void setPantallasManager(PantallasManager pantallasManager) {
+		this.pantallasManager = pantallasManager;
 	}
 	
 }
