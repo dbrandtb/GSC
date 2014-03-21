@@ -2765,4 +2765,64 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		}
 	}
 	
+	@Override
+	public Map<String,String>obtenerAutorizacionesFactura(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			,String aaapertu
+			,String status
+			,String nmsinies
+			,String nfactura) throws Exception
+	{
+		Map<String,String>params = new HashMap<String,String>();
+		params.put("cdunieco",cdunieco);
+		params.put("cdramo",cdramo);
+		params.put("estado",estado);
+		params.put("nmpoliza",nmpoliza);
+		params.put("nmsuplem",nmsuplem);
+		params.put("nmsituac",nmsituac);
+		params.put("aaapertu",aaapertu);
+		params.put("status",status);
+		params.put("nmsinies",nmsinies);
+		params.put("nfactura",nfactura);
+		logger.info("params: "+params);
+		Map<String,Object> result=ejecutaSP(new ObtenerAutorizacionesFactura(getDataSource()), params);
+		List<Map<String,String>>autorizacionesFacturaLista = (List<Map<String,String>>)result.get("pv_registro_o");
+		if(autorizacionesFacturaLista==null || autorizacionesFacturaLista.size()==0)
+		{
+			throw new Exception("No se encuentran las autorizaciones de factura");
+		}
+		if(autorizacionesFacturaLista.size()>1)
+		{
+			throw new Exception("Se encontraron autorizaciones de factura duplicada");
+		}
+		return autorizacionesFacturaLista.get(0);
+	}
+	
+	protected class ObtenerAutorizacionesFactura extends StoredProcedure
+	{
+		protected ObtenerAutorizacionesFactura(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SINIESTRO.P_GET_MAUTSINI_FACTURA");
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("aaapertu" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsinies" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nfactura" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR , new DinamicMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 }

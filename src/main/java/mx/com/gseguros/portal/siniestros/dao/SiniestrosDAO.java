@@ -328,4 +328,16 @@ public interface SiniestrosDAO {
 			,String ivr
 			,String isr
 			,boolean enviado) throws Exception;
+	
+	public Map<String,String>obtenerAutorizacionesFactura(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			,String aaapertu
+			,String status
+			,String nmsinies
+			,String nfactura) throws Exception;
 }

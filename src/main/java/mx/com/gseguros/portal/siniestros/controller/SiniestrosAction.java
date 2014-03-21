@@ -2193,6 +2193,14 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     				String nmsinies = siniestroIte.get("NMSINIES");
     				String nfactura = factura.get("NFACTURA");
     				
+    				Map<String,String>autorizacionesFactura = siniestrosManager.obtenerAutorizacionesFactura(
+    						cdunieco, cdramo, estado, nmpoliza, nmsuplem,
+    						nmsituac, aaapertu, status, nmsinies, nfactura);
+    				factura.put("AUTMEDIC"+nmsinies,autorizacionesFactura.get("AUTMEDIC"));
+    				factura.put("COMMENME"+nmsinies,autorizacionesFactura.get("COMMENME"));
+    				factura.put("AUTRECLA"+nmsinies,autorizacionesFactura.get("AUTRECLA"));
+    				factura.put("COMMENAR"+nmsinies,autorizacionesFactura.get("COMMENAR"));
+    				
     				Map<String,String>copagoDeducibleSiniestroIte =siniestrosManager.obtenerCopagoDeducible(
     						cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura);
     				String sDeducibleSiniestroIte     = copagoDeducibleSiniestroIte.get("DEDUCIBLE").replace(",","");
@@ -2594,6 +2602,22 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     			
     			for(Map<String,String>facturaIte:facturas)
     			{
+    				Map<String,String>autorizacionesFacturaIte = siniestrosManager.obtenerAutorizacionesFactura(
+    						siniestro.get("CDUNIECO"),
+        					siniestro.get("CDRAMO"),
+        					siniestro.get("ESTADO"),
+        					siniestro.get("NMPOLIZA"),
+        					siniestro.get("NMSUPLEM"),
+        					siniestro.get("NMSITUAC"),
+        					siniestro.get("AAAPERTU"),
+        					siniestro.get("STATUS"),
+        					siniestro.get("NMSINIES"),
+        					facturaIte.get("NFACTURA"));
+					facturaIte.put("AUTMEDIC",autorizacionesFacturaIte.get("AUTMEDIC"));
+					facturaIte.put("COMMENME",autorizacionesFacturaIte.get("COMMENME"));
+					facturaIte.put("AUTRECLA",autorizacionesFacturaIte.get("AUTRECLA"));
+					facturaIte.put("COMMENAR",autorizacionesFacturaIte.get("COMMENAR"));
+    				
     				//reembolso
     				Map<String,String>mprem=new HashMap<String,String>(0);
     				mprem.put("TOTALNETO" , "0");
@@ -3396,6 +3420,81 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
             siniestrosManager.guardaListaTworkSin(paramsTworkSinPagRem);
         }
         success = true;
+    	return SUCCESS;
+    }
+    
+    public String guardarCalculos()
+    {
+    	this.session=ActionContext.getContext().getSession();
+    	logger.info(""
+    			+ "\n#############################"
+    			+ "\n###### guardarCalculos ######"
+    			);
+    	logger.info("slist1: "+slist1);
+    	try
+    	{
+    		for(Map<String,String> importe : slist1)
+    		{
+    			/*  aaapertu: "2014"
+					cdramo: "2"
+					cdunieco: "1006"
+					estado: "M"
+					importe: "1546.66"
+					isr: "0.0"
+					iva: "0.0"
+					ivr: "0.0"
+					nmpoliza: "44"
+					nmsinies: "20"
+					nmsituac: "1"
+					nmsuplem: "245671518430000000"
+					ntramite: "1445"
+					status: "W"
+    			 */
+    			String cduniecoIte = importe.get("cdunieco");
+    			String cdramoIte   = importe.get("cdramo");
+    			String estadoIte   = importe.get("estado");
+    			String nmpolizaIte = importe.get("nmpoliza");
+    			String nmsuplemIte = importe.get("nmsuplem");
+    			String nmsituacIte = importe.get("nmsituac");
+    			String aaapertuIte = importe.get("aaapertu");
+    			String statusIte   = importe.get("status");
+    			String nmsiniesIte = importe.get("nmsinies");
+    			String ntramiteIte = importe.get("ntramite");
+    			String importeIte  = importe.get("importe");
+    			String ivaIte      = importe.get("iva");
+    			String ivrIte      = importe.get("ivr");
+    			String isrIte      = importe.get("isr");
+    			siniestrosManager.movTimpsini(
+    					Constantes.INSERT_MODE
+    					,cduniecoIte
+    					,cdramoIte
+    					,estadoIte
+    					,nmpolizaIte
+    					,nmsuplemIte
+    					,nmsituacIte
+    					,aaapertuIte
+    					,statusIte
+    					,nmsiniesIte
+    					,ntramiteIte
+    					,importeIte
+    					,ivaIte
+    					,ivrIte
+    					,isrIte
+    					,false);
+    		}
+    		success = true;
+    		mensaje = "Datos guardados";
+    	}
+    	catch(Exception ex)
+    	{
+    		logger.error("Error al guardaar calculos",ex);
+    		success = false;
+    		mensaje = ex.getMessage();
+    	}
+    	logger.info(""
+    			+ "\n###### guardarCalculos ######"
+    			+ "\n#############################"
+    			);
     	return SUCCESS;
     }
     
