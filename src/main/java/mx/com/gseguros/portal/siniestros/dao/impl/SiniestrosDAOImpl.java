@@ -2699,4 +2699,70 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		}
 	}
 	
+	@Override
+	public void movTimpsini(String accion
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			,String aaapertu
+			,String status
+			,String nmsinies
+			,String ntramite
+			,String ptimport
+			,String iva
+			,String ivr
+			,String isr
+			,boolean enviado) throws Exception
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("accion"   , accion);
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		params.put("nmsituac" , nmsituac);
+		params.put("aaapertu" , aaapertu);
+		params.put("status"   , status);
+		params.put("nmsinies" , nmsinies);
+		params.put("ntramite" , ntramite);
+		params.put("ptimport" , ptimport);
+		params.put("iva"      , iva);
+		params.put("ivr"      , ivr);
+		params.put("isr"      , isr);
+		params.put("enviado",enviado?Constantes.SI:Constantes.NO);
+		logger.debug("params: "+params);
+		ejecutaSP(new MovTimpsini(this.getDataSource()), params);
+	}
+	
+	protected class MovTimpsini extends StoredProcedure
+	{
+		protected MovTimpsini(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SINIESTRO.P_MOV_TIMPSINI");
+			declareParameter(new SqlParameter("accion"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsituac" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("aaapertu" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("status"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsinies" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("ptimport" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("iva"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("ivr"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("isr"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("enviado"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 }
