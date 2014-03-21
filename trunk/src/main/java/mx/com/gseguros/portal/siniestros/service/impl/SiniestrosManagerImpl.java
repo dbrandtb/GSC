@@ -1032,4 +1032,33 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			throw new ApplicationException(daoExc.getMessage(), daoExc);
 		}
 	}
+	
+	@Override
+	public void movTimpsini(String accion
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			,String aaapertu
+			,String status
+			,String nmsinies
+			,String ntramite
+			,String ptimport
+			,String iva
+			,String ivr
+			,String isr
+			,boolean enviado) throws Exception
+	{
+		log.info(""
+				+ "\n#########################"
+				+ "\n###### movTimpsini ######");
+		siniestrosDAO.movTimpsini(accion,cdunieco,cdramo,estado,nmpoliza,nmsuplem,nmsituac,aaapertu,status,nmsinies,ntramite,
+				ptimport,iva,ivr,isr,enviado);
+		log.info(""
+				+ "\n###### movTimpsini ######"
+				+ "\n#########################"
+				);
+	}
 }

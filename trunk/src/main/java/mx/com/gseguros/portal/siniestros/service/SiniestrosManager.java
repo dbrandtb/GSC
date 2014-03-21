@@ -387,4 +387,21 @@ public interface SiniestrosManager {
 
 	public void getEliminacionTFacMesaControl(String ntramite) throws Exception;
 	
+	public void movTimpsini(String accion
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			,String aaapertu
+			,String status
+			,String nmsinies
+			,String ntramite
+			,String ptimport
+			,String iva
+			,String ivr
+			,String isr
+			,boolean enviado) throws Exception;
+	
 }

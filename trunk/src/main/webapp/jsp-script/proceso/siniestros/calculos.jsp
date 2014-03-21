@@ -4,26 +4,29 @@
 
 ////// variables //////
 
-var _p12_smap   = <s:property value='smapJson'   escapeHtml='false' />;
-var _p12_smap2  = <s:property value='smap2Json'  escapeHtml='false' />;
-var _p12_smap3  = <s:property value='smap3Json'  escapeHtml='false' />;
-var _p12_slist1 = <s:property value='slist1Json' escapeHtml='false' />;//facturas(REEMBOLSO)/siniestros(P DIRECTO)
-var _p12_slist2 = <s:property value='slist2Json' escapeHtml='false' />;//copago/deducible (TODOS)
-var _p12_slist3 = <s:property value='slist3Json' escapeHtml='false' />;//proveedores (REEMBOLSO)
-var _p12_llist1 = <s:property value='llist1Json' escapeHtml='false' />;//lista de lista de conceptos (TODOS)
-var _p12_lhosp  = <s:property value='lhospJson'  escapeHtml='false' />;//lista de totales hopitalizacion
-var _p12_lpdir  = <s:property value='lpdirJson'  escapeHtml='false' />;//lista de datos pdirecto
-var _p12_lprem  = <s:property value='lpremJson'  escapeHtml='false' />;//lista de datos preembolso
-debug('_p12_smap:'   , _p12_smap);
-debug('_p12_smap2:'  , _p12_smap2);
-debug('_p12_smap3:'  , _p12_smap3);
-debug('_p12_slist1:' , _p12_slist1);
-debug('_p12_slist2:' , _p12_slist2);
-debug('_p12_slist3:' , _p12_slist3);
-debug('_p12_llist1:' , _p12_llist1);
-debug('_p12_lhosp:'  , _p12_lhosp);
-debug('_p12_lpdir:'  , _p12_lpdir);
-debug('_p12_lprem:'  , _p12_lprem);
+var _p12_smap    = <s:property value='smapJson'                    escapeHtml='false' />;
+var _p12_smap2   = <s:property value='smap2Json'                   escapeHtml='false' />;
+var _p12_smap3   = <s:property value='smap3Json'                   escapeHtml='false' />;
+var _p12_slist1  = <s:property value='slist1Json'                  escapeHtml='false' />;//facturas(REEMBOLSO)/siniestros(P DIRECTO)
+var _p12_slist2  = <s:property value='slist2Json'                  escapeHtml='false' />;//copago/deducible (TODOS)
+var _p12_slist3  = <s:property value='slist3Json'                  escapeHtml='false' />;//proveedores (REEMBOLSO)
+var _p12_llist1  = <s:property value='llist1Json'                  escapeHtml='false' />;//lista de lista de conceptos (TODOS)
+var _p12_lhosp   = <s:property value='lhospJson'                   escapeHtml='false' />;//lista de totales hopitalizacion
+var _p12_lpdir   = <s:property value='lpdirJson'                   escapeHtml='false' />;//lista de datos pdirecto
+var _p12_lprem   = <s:property value='lpremJson'                   escapeHtml='false' />;//lista de datos preembolso
+var _p12_listaWS = <s:property value='listaImportesWebServiceJson' escapeHtml='false' />;
+
+debug('_p12_smap:'    , _p12_smap);
+debug('_p12_smap2:'   , _p12_smap2);
+debug('_p12_smap3:'   , _p12_smap3);
+debug('_p12_slist1:'  , _p12_slist1);
+debug('_p12_slist2:'  , _p12_slist2);
+debug('_p12_slist3:'  , _p12_slist3);
+debug('_p12_llist1:'  , _p12_llist1);
+debug('_p12_lhosp:'   , _p12_lhosp);
+debug('_p12_lpdir:'   , _p12_lpdir);
+debug('_p12_lprem:'   , _p12_lprem);
+debug('_p12_listaWS:' , _p12_listaWS);
 
 var _p12_urlObtenerFacturasTramite   = '<s:url namespace="/siniestros"  action="obtenerFacturasTramite"   />';
 var _p12_urlObtenerSiniestrosTramite = '<s:url namespace="/siniestros"  action="obtenerSiniestrosTramite" />';
@@ -201,8 +204,27 @@ Ext.onReady(function()
             	debug('descuento' , descuento);
             	debug('iva'       , iva);
             	var subttDesc = importe - descuento;
-            	var deducible = _p12_slist2[indice].DEDUCIBLE*1.0;
+            	var deducible = 0;
+            	var sDeducible = _p12_slist2[indice].DEDUCIBLE;
+            	if(
+            			!(!sDeducible
+            			||sDeducible.toLowerCase()=='na'
+            			||sDeducible.toLowerCase()=='no')
+            			)
+            	{
+            		deducible = sDeducible.replace(',','')*1.0;
+            	}
             	var subttDedu = subttDesc - deducible;
+            	_p12_slist2[indice].COPAGOAUX = _p12_slist2[indice].COPAGO;
+            	_p12_slist2[indice].COPAGO = 0;
+            	if(
+            		!(!_p12_slist2[indice].COPAGOAUX
+            		||_p12_slist2[indice].COPAGOAUX.toLowerCase()=='na'
+            		||_p12_slist2[indice].COPAGOAUX.toLowerCase()=='no')	
+            	)
+            	{
+            		_p12_slist2[indice].COPAGO = _p12_slist2[indice].COPAGOAUX;
+            	}
             	var copago    = _p12_slist2[indice].COPAGO*1.0;
             	var tipcopag  = _p12_slist2[indice].TIPOCOPAGO;
             	if(tipcopag=='$')
@@ -678,8 +700,27 @@ Ext.onReady(function()
             var destoimp    = _p12_slist1[indice].DESCNUME*1.0;
             var destoaplica = (ptimpoajus*(_p12_slist1[indice].DESCPORC/100.0)) + destoimp;
             var subttdesc   = ptimpoajus-destoaplica;
-            var deducible   = _p12_slist2[indice].DEDUCIBLE;
+            var sDeducible  = _p12_slist2[indice].DEDUCIBLE;
+            var deducible   = 0;
+            if(
+                    !(!sDeducible
+                    ||sDeducible.toLowerCase()=='na'
+                    ||sDeducible.toLowerCase()=='no')
+                    )
+            {
+                deducible = sDeducible.replace(',','')*1.0;
+            }
             var subttdeduc  = subttdesc-deducible;
+            _p12_slist2[indice].COPAGOAUX = _p12_slist2[indice].COPAGO;
+            _p12_slist2[indice].COPAGO = 0;
+            if(
+                !(!_p12_slist2[indice].COPAGOAUX
+                ||_p12_slist2[indice].COPAGOAUX.toLowerCase()=='na'
+                ||_p12_slist2[indice].COPAGOAUX.toLowerCase()=='no')    
+            )
+            {
+                _p12_slist2[indice].COPAGO = _p12_slist2[indice].COPAGOAUX;
+            }
             var copago      = _p12_slist2[indice].COPAGO*1.0;
             var tipcopag    = _p12_slist2[indice].TIPOCOPAGO;
             if(tipcopag=='$')
