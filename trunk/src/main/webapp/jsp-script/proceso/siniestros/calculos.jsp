@@ -34,6 +34,7 @@ var _p12_urlObtenerDatosProveedor    = '<s:url namespace="/siniestros"  action="
 var _p12_urlObtenerConceptosCalculo  = '<s:url namespace="/siniestros"  action="obtenerConceptosCalculo"  />';
 var _p12_urlAutorizaConceptos        = '<s:url namespace="/siniestros"  action="autorizaConcepto"         />';
 var _p12_urlMesaControl              = '<s:url namespace="/mesacontrol" action="mcdinamica"               />';
+var _p12_urlGuardar                  = '<s:url namespace="/siniestros"  action="guardarCalculos"          />';
 
 var _p12_formTramite;
 var _p12_formFactura;
@@ -880,6 +881,7 @@ Ext.onReady(function()
     	{
     		style : 'margin : 5px;'
     	}
+        ,layout : 'hbox'
     	,items    :
     	[
     	    {
@@ -891,6 +893,12 @@ Ext.onReady(function()
                 {
                     return Ext.util.Format.usMoney(value);
                 }
+    	    }
+    	    ,{
+    	    	xtype    : 'button'
+    	    	,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
+    	    	,text    : 'Aceptar y guardar'
+    	    	,handler : _p12_guardar_click
     	    }
     	]
     }));
@@ -1103,7 +1111,21 @@ Ext.onReady(function()
 	    ,renderTo : '_p12_divpri'
 	    ,items    :
 	    [
-	        _p12_formTramite
+	        {
+	        	xtype     : 'panel'
+	        	,title    : 'C&Aacute;LCULOS DEL TR&Aacute;MITE'
+	        	,items :
+	        	[
+			        {
+			        	xtype   : 'panel'
+			        	,style  : 'margin : 5px;'
+			        	,border : 0
+			        	,icon   : '${ctx}/resources/fam3icons/icons/error.png'
+			        	,title  : 'Al acceder a esta pesta&ntilde;a los c&aacute;lculos anteriores se eliminan y debe guardarlos de nuevo'
+			        }
+	        	]
+	        }
+	        ,_p12_formTramite
 	        ,_p12_formFactura
 	        ,_p12_formProveedor
 	        ,_p12_formSiniestro
@@ -1373,6 +1395,150 @@ function _p12_calcular()
 }
 --%>
 
+function _p12_guardar_click()
+{
+	debug('_p12_guardar_click');
+	var ventana = Ext.MessageBox.confirm('Guardar pagos','¿Desea guardar el importe total?',_p12_guardar_confirmar);
+	centrarVentanaInterna(ventana);
+}
+
+function _p12_guardar_confirmar(boton)
+{
+	debug('_p12_guardar_confirmar:',boton);
+	if(boton=='yes')
+	{
+		_p12_guardar();
+	}
+}
+
+function _p12_guardar()
+{
+	debug('_p12_guardar');
+	var valido = _p12_validaAutorizaciones();
+	if(valido.length==0)
+	{
+		_p12_panelCalculo.setLoading(true);
+		Ext.Ajax.request(
+		{
+			url       : _p12_urlGuardar
+			,jsonData :
+			{
+				slist1 : _p12_listaWS
+			}
+			,success  : function(response)
+			{
+				_p12_panelCalculo.setLoading(false);
+				var json = Ext.decode(response.responseText);
+				debug('respuesta:',json);
+				if(json.success)
+				{
+					mensajeCorrecto('Datos guardados',json.mensaje);
+				}
+				else
+				{
+					mensajeError(json.mensaje);
+				}
+			}
+		    ,failure  : function()
+		    {
+		    	_p12_panelCalculo.setLoading(false);
+		    	errorComunicacion();
+		    }
+		});
+	}
+	else
+	{
+		mensajeError(valido);
+	}
+}
+
+function _p12_validaAutorizaciones()
+{
+	var result = '';
+	debug('_p12_validaAutorizaciones');
+	var esPagoDirecto = _p12_smap.PAGODIRECTO=='S';
+	debug('esPagoDirecto:',esPagoDirecto);
+	if(esPagoDirecto)
+	{
+		var esHospital = _p12_smap2.CDGARANT=='18HO'||_p12_smap2.CDGARANT=='18MA';
+		debug('esHospital:',esHospital);
+		if(esHospital&&false)
+		{
+			debug('validando hospitalizacion pago directo');
+		}
+		else
+		{
+			debug('validando pago directo');
+			var i;
+			var factura    = _p12_smap2;
+			var siniestros = _p12_slist1;
+			var conceptos  = _p12_llist1; 
+			for(i=0;i<siniestros.length;i++)
+			{
+				var siniestroIte = siniestros[i];
+				if(siniestroIte.AUTRECLA!='S')
+                {
+                    result = result + 'Reclamaciones no autoriza el siniestro ' + siniestroIte.NMSINIES + '<br/>';
+                }
+				if(siniestroIte.AUTMEDIC!='S')
+				{
+					result = result + 'El m&eacute;dico no autoriza el siniestro ' + siniestroIte.NMSINIES + '<br/>';
+				}
+			}
+			for(i=0;i<siniestros.length;i++)
+            {
+				var siniestroIte = siniestros[i];
+				if(factura['AUTRECLA'+siniestroIte.NMSINIES]!='S')
+				{
+					result = result + 'Reclamaciones no autoriza la factura para el siniestro ' + siniestroIte.NMSINIES + '<br/>';
+				}
+				if(factura['AUTMEDIC'+siniestroIte.NMSINIES]!='S')
+				{
+					result = result + 'El m&eacute;dico no autoriza la factura para el siniestro ' + siniestroIte.NMSINIES + '<br/>';
+				}
+            }
+			for(i=0;i<siniestros.length;i++)
+            {
+                var siniestroIte = siniestros[i];
+                var conceptosSiniestro = _p12_llist1[i];
+                var j;
+                for(j=0;j<conceptosSiniestro.length;j++)
+                {
+                	var conceptoSiniestroIte = conceptosSiniestro[j];
+                	/*if(conceptoSiniestroIte.AUTRECLA!='S')
+                    {
+                        result = result + 'Reclamaciones no autoriza el concepto \'' + conceptoSiniestroIte.OTVALOR + '\' del siniestro ' + siniestroIte.NMSINIES + '<br/>';
+                    }*/
+                    if(conceptoSiniestroIte.AUTMEDIC!='S')
+                    {
+                        result = result + 'El m&eacute;dico no autoriza el concepto \'' + conceptoSiniestroIte.OTVALOR + '\' del siniestro ' + siniestroIte.NMSINIES + '<br/>';
+                    }
+                }
+            }
+		}
+	}
+	else
+	{
+		debug('validando reembolso');
+		var facturas = _p12_slist1;
+		debug('facturas a validar:',facturas);
+		var i;
+		for(i=0;i<facturas.length;i++)
+		{
+			var facturaIte = facturas[i];
+			debug('validando factura '+facturaIte.NFACTURA);
+			if(facturaIte.AUTRECLA!='S')
+            {
+                result = result + 'Reclamaciones no autoriza la factura ' + facturaIte.NFACTURA + '<br/>';
+            }
+            if(facturaIte.AUTMEDIC!='S')
+            {
+                result = result + 'El m&eacute;dico no autoriza la factura ' + facturaIte.NFACTURA + '<br/>';
+            }
+		}
+	}
+	return result;
+}
 ////// funciones //////
 
 </script>

@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
-
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.exception.DaoException;
@@ -29,6 +27,8 @@ import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Reclamo;
+
+import org.apache.commons.lang.StringUtils;
 public class SiniestrosManagerImpl implements SiniestrosManager {
 	private SiniestrosDAO siniestrosDAO;
 	
@@ -1060,5 +1060,32 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 				+ "\n###### movTimpsini ######"
 				+ "\n#########################"
 				);
+	}
+	
+	@Override
+	public Map<String,String>obtenerAutorizacionesFactura(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String nmsituac
+			,String aaapertu
+			,String status
+			,String nmsinies
+			,String nfactura) throws Exception
+	{
+		log.info(""
+				+ "\n##########################################"
+				+ "\n###### obtenerAutorizacionesFactura ######"
+				);
+		Map<String,String>autorizacionesFactura = siniestrosDAO.obtenerAutorizacionesFactura(cdunieco,cdramo
+				,estado,nmpoliza,nmsuplem,nmsituac,aaapertu,status,nmsinies,nfactura);
+		log.info("autorizaciones: "+autorizacionesFactura);
+		log.info(""
+				+ "\n###### obtenerAutorizacionesFactura ######"
+				+ "\n##########################################"
+				);
+		return autorizacionesFactura;
 	}
 }
