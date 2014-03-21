@@ -63,7 +63,7 @@
 				Ext.create('Ext.panel.Panel', {
 					name      : 'pnlExclusiones',
 					renderTo  : 'maindivExcs',
-					layout:'fit',
+					//layout:'fit',
 					defaults  : {
 						style : 'margin:5px'
 					},
@@ -94,7 +94,8 @@
                     },{
 						xtype : 'textarea',
 						name  : 'detalleExclusion',
-                        height: 380
+                        height: 300,
+                        width : 425
 					}]
 			    });
 		            	

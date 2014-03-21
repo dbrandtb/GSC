@@ -537,11 +537,41 @@ Ext.onReady(function() {
         columns: [
             //{text:'Rol',dataIndex:'dsrol',width:130 , align:'left'},
             {text:'Tipo de asegurado',dataIndex:'parentesco',width:130 , align:'left'},
-            {text:'Nombre',dataIndex:'titular',width:280,align:'left'},
+            {text:'Nombre',dataIndex:'titular',width:250,align:'left'},
             {text:'Estatus',dataIndex:'status',width:100,align:'left'},
             {text:'RFC',dataIndex:'cdrfc',width:130,align:'left'},
             {text:'Sexo',dataIndex:'sexo',width:90 , align:'left'},
             {text:'Fecha Nac.',dataIndex:'fenacimi',width:100, align:'left',renderer: Ext.util.Format.dateRenderer('d/m/Y')}
+            ,{
+            	xtype         : 'actioncolumn'
+            	,icon         : _CONTEXT+'/resources/fam3icons/icons/lock.png'
+            	,width        : 30
+            	,menuDisabled : true
+            	,sortable     : false
+            	,handler      : function(grid,rowIndex)
+            	{
+            		var record = grid.getStore().getAt(rowIndex);
+            		var values = panelBusqueda.down('form').getForm().getValues();
+            		debug('record nmsituac:',record.get('nmsituac'));
+            		values['params.nmsituac']=record.get('nmsituac');
+            		debug('form values:',values);
+            		Ext.create('Ext.window.Window', {
+                        title       : 'Exclusiones de la p&oacute;liza',
+                        modal       : true,
+                        buttonAlign : 'center',
+                        autoScroll  : true,
+                        width       : 450,
+                        height      : 455,
+                        loader      :
+                        {
+                            url      : _URL_LOADER_VER_EXCLUSIONES,
+                            scripts  : true,
+                            autoLoad : true,
+                            params   : values
+                        }
+                     }).show();
+            	}
+            }
         ]
     });
     
