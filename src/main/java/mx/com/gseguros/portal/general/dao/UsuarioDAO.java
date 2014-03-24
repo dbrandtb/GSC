@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.general.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +16,10 @@ public interface UsuarioDAO {
 	public GenericVO guardaUsuario(Map params) throws DaoException;
 
 	public List<UsuarioVO> obtieneUsuarios(Map params) throws DaoException;
-	public List<RolVO> obtieneRolesUsuario(Map params) throws DaoException;
+	
+	public List<Map<String, String>> obtieneRolesUsuario(Map params) throws DaoException;
+	
+	public String guardaRolUsuario(Map params) throws DaoException;
 	
 	public List<UsuarioRolEmpresaVO> obtieneRolesCliente(String user) throws DaoException;
 

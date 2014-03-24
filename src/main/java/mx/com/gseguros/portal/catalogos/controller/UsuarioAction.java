@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.catalogos.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import mx.com.gseguros.portal.general.util.GeneradorCampos;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.json.JSONUtil;
 
 public class UsuarioAction extends PrincipalCoreAction{
 
@@ -35,6 +37,9 @@ public class UsuarioAction extends PrincipalCoreAction{
 	private Item items;
 	
 	private List<UsuarioVO> usuarios;
+	
+	private List<Map<String, String>> loadList;
+    private List<Map<String, String>> saveList;
 
 	public String cargaPantallaUsuarios() throws Exception{
 		try
@@ -80,7 +85,7 @@ public class UsuarioAction extends PrincipalCoreAction{
         	success=true;
     	} catch(Exception e) {
     		logger.error(e.getMessage(), e);
-    		errorMessage = "Error al guardar el usuario. Intente m�s tarde";
+    		errorMessage = "Error al guardar el usuario. Intente m&aacute;s tarde";
     	}
     	return SUCCESS;
     }
@@ -91,25 +96,37 @@ public class UsuarioAction extends PrincipalCoreAction{
     		success=true;
     	} catch(Exception e) {
     		logger.error(e.getMessage(), e);
-    		errorMessage = "Error al guardar obtieneUsuarios. Intente m�s tarde";
+    		errorMessage = "Error al obtener usuarios. Intente m&aacute;s tarde";
     	}
     	
     	logger.debug("Resultado de usuarios para la busqueda: "+ usuarios);
     	return SUCCESS;
     }
     public String obtieneRolesUsuario() throws Exception {
-    	List<RolVO> roles = null;
-    	try{
-    		roles = usuarioManager.obtieneRolesUsuario(params);
-    		success=true;
-    	} catch(Exception e) {
-    		logger.error(e.getMessage(), e);
-    		errorMessage = "Error al guardar el usuario. Intente m�s tarde";
-    	}
-    	
-    	logger.debug("Resultado de roles  de usuario: "+ roles);
-    	return SUCCESS;
-    }
+       	try {
+       		loadList = usuarioManager.obtieneRolesUsuario(params);
+       	}catch( Exception e){
+       		logger.error("Error en obtieneRolesUsuario",e);
+       		success =  false;
+       		return SUCCESS;
+       	}
+       	success = true;
+       	return SUCCESS;
+       }
+    
+       public String guardaRolesUsuario(){
+       	
+       	try {
+       		logger.debug("guardaRolesUsuario SaveList: "+ saveList);
+       		usuarioManager.guardaRolesUsuario(params, saveList);
+       	}catch( Exception e){
+       		logger.error("Error en guardaRolesUsuario",e);
+       		success =  false;
+       		return SUCCESS;
+       	}
+       	success = true;
+       	return SUCCESS;
+       }
 
 
     // getters and setters
@@ -177,4 +194,28 @@ public class UsuarioAction extends PrincipalCoreAction{
 		this.usuarios = usuarios;
 	}
 	
+	public String getParamsJson() {
+		try {
+			return JSONUtil.serialize(params);
+		} catch (Exception e) {
+			logger.error("Error al generar JSON de params",e);
+			return null;
+		}
+	}
+
+	public List<Map<String, String>> getLoadList() {
+		return loadList;
+	}
+
+	public void setLoadList(List<Map<String, String>> loadList) {
+		this.loadList = loadList;
+	}
+
+	public List<Map<String, String>> getSaveList() {
+		return saveList;
+	}
+
+	public void setSaveList(List<Map<String, String>> saveList) {
+		this.saveList = saveList;
+	}
 }

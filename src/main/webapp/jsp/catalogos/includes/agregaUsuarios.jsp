@@ -15,12 +15,18 @@
             var _CAT_ROLES_SISTEMA = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@ROLES_SISTEMA"/>';
             var _CAT_COLONIAS= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@COLONIAS"/>';
             var _SEXO        = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SEXO"/>';
-            var ROL_AGENTE  = 'EJECUTIVOCUENTA';
+            var ROL_AGENTE    = '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@AGENTE.cdsisrol" />';
+            
+            var _parametros = <s:property value='paramsJson' escapeHtml='false'/>;
+            var editMode = (_parametros.edit == 'S');
+            
+            debug(_parametros);
+            
         </script>
-        <script type="text/javascript" src="${ctx}/js/catalogos/usuarios.js"></script>
+        <script type="text/javascript" src="${ctx}/js/catalogos/agregaUsuarios.js"></script>
         
     </head>
     <body>
-	    <div id="div_usuarios" style="height:500px;"></div>
+	    <div id="div_usuarios" style="height:400px;"></div>
     </body>
 </html>

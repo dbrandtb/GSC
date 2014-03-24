@@ -1,6 +1,7 @@
 package mx.com.gseguros.portal.general.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +12,7 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.model.UsuarioRolEmpresaVO;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.general.dao.UsuarioDAO;
 import mx.com.gseguros.portal.general.dao.impl.UsuarioDAOImpl;
 import mx.com.gseguros.portal.general.model.RolVO;
@@ -38,8 +40,31 @@ public class UsuarioManagerImpl implements UsuarioManager {
 	}
 
 	@Override
-	public List<RolVO> obtieneRolesUsuario(Map<String, String> params) throws Exception {
-		return usuarioDAO.obtieneRolesUsuario(params);
+	public List<Map<String, String>> obtieneRolesUsuario(Map<String, String> params) throws ApplicationException{
+		try {
+			return usuarioDAO.obtieneRolesUsuario(params);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	
+	}
+	
+	@Override
+	public boolean guardaRolesUsuario(Map<String, String> params, List<Map<String, String>> saveList) throws ApplicationException{
+		boolean allUpdated = true;
+		
+		for(Map<String, String> rol : saveList){
+			try {
+				params.put("PV_ACCION_I", rol.get("EXISTE_ROL"));
+				params.put("PV_CDSISROL_I", rol.get("CDSISROL"));
+				usuarioDAO.guardaRolUsuario(params);
+			} catch (DaoException daoExc) {
+				logger.error("Error al guardar Rol ",daoExc);
+				allUpdated = false;
+			}
+		}
+		
+		return allUpdated;
 	}
 	
 	
