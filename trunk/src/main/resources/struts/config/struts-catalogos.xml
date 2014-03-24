@@ -65,8 +65,12 @@
             </result>
         </action>
         
-        <action name="agregaUsuarios">
-            <result>/jsp/catalogos/agregaUsuarios.jsp</result>
+        <action name="includes/agregaUsuarios" class="usuarioAction">
+            <result>/jsp/catalogos/includes/agregaUsuarios.jsp</result>
+        </action>
+
+        <action name="includes/editarRolesUsuario" class="usuarioAction">
+            <result>/jsp/catalogos/includes/editarRolesUsuario.jsp</result>
         </action>
 
         <action name="gestionUsuarios" class="usuarioAction" method="cargaPantallaUsuarios">
@@ -79,16 +83,24 @@
         
         <action name="obtieneRolesUsuario" class="usuarioAction" method="obtieneRolesUsuario">
             <result type="json">
-            </result>
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					loadList.*,
+					success
+				</param>
+			</result>
         </action>
+        
+        <action name="guardaRolesUsuario" class="usuarioAction" method="guardaRolesUsuario">
+			<interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+            <result name="success" type="json" />
+		</action>
         
         <action name="guardaUsuario" class="usuarioAction" method="guardaUsuario">
             <result type="json">
-                <!-- <param name="ignoreHierarchy">false</param>
-                <param name="includeProperties">
-                    msgResult.*,
-                    success
-                </param> -->
             </result>
         </action>
 

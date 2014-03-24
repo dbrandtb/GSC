@@ -30,7 +30,10 @@ public class UsuarioVO implements Serializable {
     private String dSexo;
     private String feNacimi;
     private String cdrfc;
+    private String curp;
     private String dsEmail;
+    private String cdrol;
+    private String esAgente;
 
     /**
      * @return the cdUsuario
@@ -137,5 +140,29 @@ public class UsuarioVO implements Serializable {
 
 	public void setDsEmail(String dsEmail) {
 		this.dsEmail = dsEmail;
+	}
+
+	public String getCdrol() {
+		return cdrol;
+	}
+
+	public void setCdrol(String cdrol) {
+		this.cdrol = cdrol;
+	}
+
+	public String getCurp() {
+		return curp;
+	}
+
+	public void setCurp(String curp) {
+		this.curp = curp;
+	}
+
+	public String getEsAgente() {
+		return esAgente;
+	}
+
+	public void setEsAgente(String esAgente) {
+		this.esAgente = esAgente;
 	}
 }

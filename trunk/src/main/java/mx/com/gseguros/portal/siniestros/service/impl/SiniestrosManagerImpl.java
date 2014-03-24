@@ -163,6 +163,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 				params.put("pv_cddocume_i", doc.get("id"));
 				siniestrosDAO.guardaEstatusDocumento(params);
 			} catch (DaoException daoExc) {
+				log.error("Error al guardar documento ",daoExc);
 				allUpdated = false;
 			}
 		}
