@@ -6881,6 +6881,9 @@ public class EndososAction extends PrincipalCoreAction
 				
 				imap1.put(keyComboAgentes,gc.getItems());
 				
+				Date fechaInicioEndoso=endososManager.obtenerFechaEndosoFormaPago(cdunieco, cdramo, estado, nmpoliza);
+				smap1.put("fechaInicioEndoso",renderFechas.format(fechaInicioEndoso));
+				
 				////// campos pantalla //////
 				/////////////////////////////
 				

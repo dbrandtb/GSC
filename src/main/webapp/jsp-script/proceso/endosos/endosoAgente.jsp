@@ -193,7 +193,8 @@ Ext.onReady(function()
         format      : 'd/m/Y'
         ,fieldLabel : 'Fecha'
         ,allowBlank : false
-        ,value      : new Date()
+        ,value      : '<s:property value="smap1.fechaInicioEndoso" />'
+        ,readOnly   : true
         ,name       : 'fecha_endoso'
     });
     _10_panelEndoso = new _10_PanelEndoso();
