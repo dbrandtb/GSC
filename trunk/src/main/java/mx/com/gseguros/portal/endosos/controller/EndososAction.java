@@ -4688,6 +4688,7 @@ public class EndososAction extends PrincipalCoreAction
 			case EXTRAPRIMA_MAS:
 			case EXTRAPRIMA_MENOS:
 			case CAMBIO_FORMA_PAGO:
+			case CAMBIO_AGENTE:
 			case CANCELACION_POR_REEXPEDICION:
 				// Ejecutamos el Web Service de Recibos:
 				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
@@ -7057,6 +7058,18 @@ public class EndososAction extends PrincipalCoreAction
 	   		{
 	   			//PKG_CONSULTA.P_reImp_documentos
 	   			String nmsolici=this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite);
+	   			
+	   			String cdtipsitGS = "213";
+				String sucursal = cdunieco;
+				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
+				
+				// Ejecutamos el Web Service de Recibos:
+	   			ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
+						estado, nmpoliza, 
+						nmsuplem, null, 
+						cdtipsitGS, sucursal, nmsolici, ntramite, 
+						true, cdtipsup, 
+						(UserVO) session.get("USUARIO"));
 	   			
 	   			mensaje="Se ha guardado el endoso "+nsuplogi;
 			}
