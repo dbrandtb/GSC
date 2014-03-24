@@ -232,4 +232,14 @@ public interface EndososManager
 			String estado,
 			String nmpoliza
 			) throws Exception;
+	
+	public void validaNuevaCobertura(String cdgarant, Date fenacimi) throws Exception;
+	
+	public void calcularRecibosCambioAgente(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdagente) throws Exception;
 }

@@ -98,6 +98,7 @@
 	                    	,'smap1.botonCopiar'     : '0'
 	                    	,'smap1.altabaja'        : 'alta'
 	                    	,'smap1.cdtipsit'        : recordActivo.get('CDTIPSIT')
+	                    	,'smap1.fenacimi'        : Ext.Date.format(recordActivo.get('fenacimi'), 'd/m/Y')
 	                    }
 	                });
     			}

@@ -23,6 +23,7 @@
     var inputNtramitep3  = '<s:property value="smap1.ntramite" />';
     var inputAltabajap3  = '<s:property value="smap1.altabaja" />';
     var inputCdtipsitp3  = '<s:property value="smap1.cdtipsit" />';
+    var inputFenacimip3  = '<s:property value="smap1.fenacimi" />';
     var urlGuardarCoberturasp3 = '<s:url namespace="/" action="guardarCoberturasUsuario" />';
     var urlTatrip3 = '<s:url namespace="/" action="obtenerCamposTatrigar" />';
     var urlLoadTatrip3 = '<s:url namespace="/" action="obtenerValoresTatrigar" />';
@@ -104,6 +105,7 @@
             json['smap1']['altabaja']  = inputAltabajap3;
             json['smap1']['cdtipsit']  = inputCdtipsitp3;
             json['smap1']['confirmar'] = confirmar;
+            json['smap1']['fenacimi']  = inputFenacimip3;
             debug(json);
             Ext.Ajax.request(
             {
