@@ -1370,6 +1370,7 @@ public class EndososAction extends PrincipalCoreAction
     //////     altabaja            //////
 	//////     cdtipsit            //////
 	//////     confirmar           //////
+	//////     fenacimi            //////
 	////// omap1:                  //////
 	//////     pv_cdunieco_i       //////
 	//////     pv_cdramo_i         //////
@@ -1399,6 +1400,22 @@ public class EndososAction extends PrincipalCoreAction
         UserVO usuario=(UserVO) session.get("USUARIO");
 		try
 		{
+			String sFenacimi = smap1.get("fenacimi");
+			Date fenacimi = null;
+			if(StringUtils.isNotBlank(sFenacimi))
+			{
+				fenacimi = renderFechas.parse(sFenacimi);
+			}
+			
+			if(fenacimi!=null)
+			{
+				for(Map<String,String> nuevo:slist2)
+				{
+					String cdgarant = nuevo.get("garantia");
+					endososManager.validaNuevaCobertura(cdgarant, fenacimi);
+				}
+			}
+			
 			/*
 			 * pv_cdunieco_i
 			 * pv_cdramo_i
@@ -4695,7 +4712,6 @@ public class EndososAction extends PrincipalCoreAction
 						rutaCarpeta, cdtipsitGS, sucursal, nmsolici, ntramiteEmi, true, cdtipsup, 
 						(UserVO) session.get("USUARIO"));
 				break;
-				
 			case INCREMENTO_EDAD_ASEGURADO:
 			case DECREMENTO_EDAD_ASEGURADO:
 			case MODIFICACION_SEXO_H_A_M:
@@ -4714,7 +4730,6 @@ public class EndososAction extends PrincipalCoreAction
 						true, cdtipsup, 
 						(UserVO) session.get("USUARIO"));
 				break;
-
 			default:
 				log.debug("**** NO HAY WEB SERVICE PARA CDTIPSUP " + cdtipsup + " ******");
 				break;
@@ -7051,11 +7066,14 @@ public class EndososAction extends PrincipalCoreAction
 					cdagente, nmsuplem, Constantes.STATUS_VIVO, tipoAgentePrincipal, sesionComision,
 					nmcuadro, cdsucurs, Constantes.INSERT_MODE, ntramite, porcenParticip);
 	   		
+			endososManager.calcularRecibosCambioAgente(cdunieco,cdramo,estado,nmpoliza,nmsuplem,cdagente);
+			
 	   		//+-30 dias ? PKG_SATELITES.P_MOV_MESACONTROL : PKG_ENDOSOS.P_CONFIRMAR_ENDOSOB
 	   		String tramiteGenerado=confirmarEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, cdtipsup, comentariosEndoso, dFecha, cdtipsit);
 	   		
 	   		if(StringUtils.isBlank(tramiteGenerado))
 	   		{
+	   			
 	   			//PKG_CONSULTA.P_reImp_documentos
 	   			String nmsolici=this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite);
 	   			

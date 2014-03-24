@@ -1140,4 +1140,81 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
             return mapper.build(map);
         }
 	}
+	
+	@Override
+	public void validaNuevaCobertura(String cdgarant, Date fenacimi) throws Exception
+	{
+		Map<String,Object>params = new HashMap<String,Object>();
+		params.put("fenacimi",fenacimi);
+		params.put("cdgarant",cdgarant);
+		log.info("params :"+params);
+		ejecutaSP(new ValidaNuevaCobertura(getDataSource()),params);
+	}
+	
+	protected class ValidaNuevaCobertura extends StoredProcedure
+	{
+
+		protected ValidaNuevaCobertura(DataSource dataSource)
+		{
+			super(dataSource, "PKG_ENDOSOS.P_VALIDA_FEC_ENDOSO");
+
+			declareParameter(new SqlParameter("fenacimi" , OracleTypes.DATE));
+			declareParameter(new SqlParameter("cdgarant" , OracleTypes.VARCHAR));
+
+	        declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+	        declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			
+			compile();
+		}
+
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception
+		{
+            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+            return mapper.build(map);
+        }
+	}
+	
+	@Override
+	public void calcularRecibosCambioAgente(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdagente) throws Exception
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("cdunieco" , cdunieco);
+		params.put("cdramo"   , cdramo);
+		params.put("estado"   , estado);
+		params.put("nmpoliza" , nmpoliza);
+		params.put("nmsuplem" , nmsuplem);
+		params.put("cdagente" , cdagente);
+		log.info("params :"+params);
+		ejecutaSP(new CalcularRecibosCambioAgente(getDataSource()),params);
+	}
+	
+	protected class CalcularRecibosCambioAgente extends StoredProcedure
+	{
+
+		protected CalcularRecibosCambioAgente(DataSource dataSource)
+		{
+			super(dataSource, "P_CALC_RECIBOS_CAM_AGTE");
+
+			declareParameter(new SqlParameter("cdunieco" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmsuplem" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdagente" , OracleTypes.VARCHAR));
+			
+			compile();
+		}
+
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception
+		{
+            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+            return mapper.build(map);
+        }
+	}
 }

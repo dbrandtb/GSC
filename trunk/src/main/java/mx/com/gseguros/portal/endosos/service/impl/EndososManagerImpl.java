@@ -666,4 +666,38 @@ public class EndososManagerImpl implements EndososManager
 	{
 		return endososDAO.validaEndosoSimple(cdunieco,cdramo,estado,nmpoliza);
 	}
+	
+	@Override
+	public void validaNuevaCobertura(String cdgarant, Date fenacimi) throws Exception
+	{
+		log.info(""
+				+ "\n##################################"
+				+ "\n###### validaNuevaCobertura ######"
+				);
+		endososDAO.validaNuevaCobertura(cdgarant,fenacimi);
+		log.info(""
+				+ "\n###### validaNuevaCobertura ######"
+				+ "\n##################################"
+				);
+	}
+	
+	@Override
+	public void calcularRecibosCambioAgente(
+			String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza
+			,String nmsuplem
+			,String cdagente) throws Exception
+	{
+		log.info(""
+				+ "\n#########################################"
+				+ "\n###### calcularRecibosCambioAgente ######"
+				);
+		endososDAO.calcularRecibosCambioAgente(cdunieco,cdramo,estado,nmpoliza,nmsuplem,cdagente);
+		log.info(""
+				+ "\n###### calcularRecibosCambioAgente ######"
+				+ "\n#########################################"
+				);
+	}
 }
