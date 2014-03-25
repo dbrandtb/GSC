@@ -8,6 +8,8 @@
         <property name="dataSource" ref="dataSource" />
     </bean>
     
+    <bean id="consultasSiniestroDAOImpl" class="mx.com.gseguros.portal.consultas.dao.impl.ConsultasSiniestroDAOImpl" parent="abstractManagerDAO"/>
+    
     <bean id="consultasDAOImpl" class="mx.com.gseguros.portal.consultas.dao.impl.ConsultasDAOImpl" parent="abstractManagerDAO"/>
     
 </beans>

@@ -1,0 +1,41 @@
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<include file="struts-default.xml" />
+
+	<package name="consultasSiniestro" extends="json-default" namespace="/consultasSiniestro">
+
+		<action name="consultaSiniestros">
+    		<result>/jsp/consultas/siniestros/consultasSiniestros.jsp</result>
+		</action>
+
+		<action name="detalleSiniestrosInicial" class="consultasSiniestroAction" method="detalleSiniestrosInicial">
+            <result type="json"></result>
+        </action>
+        
+		<action name="includes/revAdmin" class="detalleSiniestroAction" method= "entradaRevisionAdmin">
+    		<result>/jsp/consultas/siniestros/includes/revisionAdministrativa.jsp</result>
+		</action>
+		
+		<action name="includes/loadInfoGeneralReclamacion" class="detalleSiniestroAction" method="loadInfoGeneralReclamacion">
+            <result>/jsp/consultas/siniestros/includes/informacionGeneral.jsp</result>
+        </action>
+
+		<action name="obtieneDatosGeneralesSiniestro" class="detalleSiniestroAction" method="obtieneDatosGeneralesSiniestro">
+            <result type="json"></result>
+        </action>
+        
+        <action name="consultaAseguradosPagoReembolso" class="consultasSiniestroAction"
+			method="consultaAseguradosPagoReembolso">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					datosSiniestroAsegurado.*,
+					success
+				</param>
+			</result>
+		</action>
+		
+	</package>
+
+</struts>

@@ -6,9 +6,14 @@
         <property name="consultasPolizaManager" ref="consultasPolizaManager"/>
     </bean>
     
+    <bean id="consultasSiniestroAction" class="mx.com.gseguros.portal.consultas.controller.ConsultasSiniestroAction" scope="prototype">
+        <property name="consultaSiniestrosManager" ref="consultasSiniestroManagerImpl"/>
+        <property name="siniestrosManager" ref="siniestrosManagerImpl"/>
+    </bean>
     <bean id="consultasAction" class="mx.com.gseguros.portal.consultas.controller.ConsultasAction" scope="prototype">
         <property name="consultasManager" ref="consultasManagerImpl"/>
         <property name="pantallasManager" ref="pantallasManagerImpl"/>
     </bean>
+    
     
 </beans>
