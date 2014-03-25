@@ -72,15 +72,28 @@ Ext.onReady(function()
 	});
 	_p13_gridProveedores = Ext.create('Ext.grid.Panel',
 	{
-		title    : 'Proveedores'
-		,store   : _p13_storeProveedores
-		,columns : [ <s:property value="mapaItem.columnasGrid" /> ]
-		,bbar    :
+		title       : 'Proveedores'
+		,store      : _p13_storeProveedores
+		,columns    : [ <s:property value="mapaItem.columnasGrid" /> ]
+		,bbar       :
 	    {
 	        displayInfo : true
 	        ,store      : _p13_storeProveedores
 	        ,xtype      : 'pagingtoolbar'
 	    }
+	    ,viewConfig :
+        {
+            listeners :
+            {
+                refresh : function(dataview)
+                {
+                    Ext.each(dataview.panel.columns, function(column)
+                    {
+                        column.autoSize();
+                    });
+                }
+            }
+        }
 	});
 	Ext.create('Ext.panel.Panel',
 	{

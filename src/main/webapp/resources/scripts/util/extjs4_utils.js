@@ -50,6 +50,7 @@ function cargaStorePaginadoLocal(_store, _url, _root, _params, _callback, compon
 	_store.removeAll();
 	if(componente)
 	{
+		componente.setLoading(true);
 		grid.down('pagingtoolbar').moveFirst();
 	}
     Ext.Ajax.request(
@@ -59,6 +60,10 @@ function cargaStorePaginadoLocal(_store, _url, _root, _params, _callback, compon
         callback  : _callback,
         success   : function(response)
         {
+        	if(componente)
+        	{
+        		componente.setLoading(false);
+        	}
             var jsonResponse = Ext.decode(response.responseText);
             _store.setProxy(
             {
@@ -71,6 +76,10 @@ function cargaStorePaginadoLocal(_store, _url, _root, _params, _callback, compon
         },
         failure   : function()
         {
+        	if(componente)
+        	{
+        		componente.setLoading(false);
+        	}
             Ext.Msg.show({
                 title   : 'Error',
                 icon    : Ext.Msg.ERROR,
