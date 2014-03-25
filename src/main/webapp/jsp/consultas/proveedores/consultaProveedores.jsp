@@ -75,6 +75,7 @@ Ext.onReady(function()
 		title       : 'Proveedores'
 		,store      : _p13_storeProveedores
 		,columns    : [ <s:property value="mapaItem.columnasGrid" /> ]
+	    ,minHeight  : 200
 		,bbar       :
 	    {
 	        displayInfo : true
@@ -137,6 +138,6 @@ function _p13_filtrarProveedores()
 </script>
 </head>
 <body>
-<div id="_p13_divpri"></div>
+<div id="_p13_divpri" style="height : 600px;"></div>
 </body>
 </html>
