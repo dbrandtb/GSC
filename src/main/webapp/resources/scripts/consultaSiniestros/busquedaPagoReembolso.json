@@ -1,0 +1,10 @@
+{
+    pagoReembolso: [{
+		"key": "1",
+		"value": "N&uacute;mero de tr&aacute;mite"
+	},{
+        "key": "2",
+        "value": "Asegurado"
+    }
+    ]
+}
