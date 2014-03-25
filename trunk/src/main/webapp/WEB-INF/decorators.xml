@@ -117,6 +117,8 @@
 
         <pattern>/consultasPoliza/*.action</pattern>
         <pattern>/jsp/consultas/*.jsp</pattern>
+        
+        <pattern>/consultas/*.action</pattern>
    	</decorator>
 	
 	
