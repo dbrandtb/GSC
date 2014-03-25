@@ -1406,6 +1406,25 @@ public class ComplementariosAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	
+	public String ejecutaWSManualRecibosDxN() {
+		
+		String cdunieco = map1.get("cdunieco");
+		String cdramo = map1.get("cdramo");
+		String estado = map1.get("estado");
+		String nmpoliza = map1.get("nmpoliza");
+		String nmsuplem = map1.get("nmsuplem");
+		String cdtipsitGS = map1.get("subramo");
+		String sucursal = map1.get("sucursal");
+		String nmsolici = map1.get("nmsolici");
+		String nmtramite = map1.get("nmtramite");
+
+		// Ejecutamos el Web Service de Recibos DxN:
+		recibosSigsService.generaRecibosDxN(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsitGS, sucursal, nmsolici, nmtramite, (UserVO) session.get("USUARIO"));
+		success = true;
+		return SUCCESS;
+	}
+	
 	public String buscarPersonasRepetidas()
 	{
 		log.debug(""
