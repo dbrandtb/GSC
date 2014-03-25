@@ -9,6 +9,8 @@
         </property>
 	</bean>	
 	
-	
+	<bean id="consultasManagerImpl" class="mx.com.gseguros.portal.consultas.service.impl.ConsultasManagerImpl">
+        <property name="consultasDAO" ref="consultasDAOImpl" />
+    </bean> 
 	
 </beans>

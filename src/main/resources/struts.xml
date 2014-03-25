@@ -11,6 +11,7 @@
     <constant name="struts.enable.SlashesInActionNames" value="true"/>
 
     <include file="struts/config/struts-catalogos.xml"/>
+    <include file="struts/config/struts-consultas.xml"/>
     <include file="struts/config/struts-consultas-poliza.xml"/>
     <include file="struts/config/struts-documentosPoliza.xml"/>
     <include file="struts/config/struts-flujos-cancelacion.xml"/>

@@ -46,7 +46,12 @@ var store=Ext.create('Ext.data.Store',
  * @param _params
  * @param _callback
  */
-function cargaStorePaginadoLocal(_store, _url, _root, _params, _callback) {
+function cargaStorePaginadoLocal(_store, _url, _root, _params, _callback, componente) {
+	_store.removeAll();
+	if(componente)
+	{
+		grid.down('pagingtoolbar').moveFirst();
+	}
     Ext.Ajax.request(
     {
         url       : _url,
