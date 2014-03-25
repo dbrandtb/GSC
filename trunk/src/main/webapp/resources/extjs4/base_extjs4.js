@@ -9,11 +9,11 @@ function debug(a,b,c,d)
 {
 	if(false)
 	{
-	    if(d)
+	    if(d!=undefined)
 	        console.log(a,b,c,d);
-	    else if(c)
+	    else if(c!=undefined)
 	        console.log(a,b,c);
-	    else if(b)
+	    else if(b!=undefined)
 	        console.log(a,b);
 	    else
 	        console.log(a);
