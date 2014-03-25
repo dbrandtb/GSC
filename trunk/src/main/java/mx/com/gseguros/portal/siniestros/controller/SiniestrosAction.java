@@ -2450,12 +2450,18 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     							double israplicado       = subtotalCopago*(isrprov/100d);//++
     							logger.debug("israplicado "+israplicado);
     							row.put("ISRAPLICA",israplicado+"");
-    							double cedularaplicado   = subtotalCopago*(cedprov/100d);//++
+    							double subtotalImpuestos = subtotalCopago-(israplicado+0d);//cedularaplicado);//++
+    							logger.debug("subtotalImpuestos "+subtotalImpuestos);
+    							
+    							////// modificado
+    							double cedularaplicado   = subtotalImpuestos*(cedprov/100d);//++
     							logger.debug("cedularaplicado "+cedularaplicado);
     							row.put("CEDUAPLICA",cedularaplicado+"");
-    							double subtotalImpuestos = subtotalCopago-(israplicado+cedularaplicado);//++
-    							logger.debug("subtotalImpuestos "+subtotalImpuestos);
+    							////// modificado
+    							
+    							subtotalImpuestos = subtotalImpuestos - cedularaplicado;
     							row.put("SUBTTIMPUESTOS",subtotalImpuestos+"");
+    							
     							double ivaaplicado       = subtotalImpuestos*(ivaprov/100d);//++
     							logger.debug("ivaaplicado "+ivaaplicado);
     							row.put("IVAAPLICA",ivaaplicado+"");
@@ -3001,8 +3007,8 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     		smap.put("CDPRESTA" , "69");
     		smap.put("NOMBRE"   , "PROVEEDOR");
     		smap.put("ISR"      , "12.5");
-    		smap.put("CEDULAR"  , "5.0");
-    		smap.put("IVA"      , "11");
+    		smap.put("CEDULAR"  , "1.0");
+    		smap.put("IVA"      , "16");
     		success=true;
     		mensaje="Datos obtenidos";
     	}
