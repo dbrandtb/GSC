@@ -8,5 +8,9 @@
     	<property name="recibosManager" ref="recibosManagerImpl"/>
     </bean>
     
+    <bean id="reportesAction" class="mx.com.gseguros.portal.general.controller.ReportesAction" scope="prototype" >
+        <property name="reportesManager" ref="reportesManagerImpl" />
+    </bean>
+    
 	
 </beans>

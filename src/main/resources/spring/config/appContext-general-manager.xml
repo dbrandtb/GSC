@@ -6,4 +6,8 @@
         <property name="recibosDAO" ref="recibosDAOImpl"/>
     </bean>
     
+    <bean id="reportesManagerImpl" class="mx.com.gseguros.portal.general.service.impl.ReportesManagerImpl">
+        <property name="reportesDAO" ref="reportesDAOImpl"/>
+    </bean>
+    
 </beans>

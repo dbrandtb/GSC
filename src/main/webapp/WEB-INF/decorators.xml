@@ -117,13 +117,14 @@
 
         <pattern>/consultasPoliza/*.action</pattern>
         <pattern>/jsp/consultas/*.jsp</pattern>
+        <pattern>/consultas/*.action</pattern>
         
         <pattern>/consultasSiniestro/*.action</pattern>
         <pattern>/jsp/consultas/siniestros/*.jsp</pattern>
         
-        
-        
-        <pattern>/consultas/*.action</pattern>
+        <pattern>/reportes/*.action</pattern>
+        <pattern>/jsp-script/reportes/*.jsp</pattern>
+
    	</decorator>
 	
 	

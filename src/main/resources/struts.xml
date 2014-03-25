@@ -24,6 +24,7 @@
     <include file="struts/config/struts-general.xml"/>
     <include file="struts/config/struts-mesacontrol.xml"/>
     <include file="struts/config/struts-portal.xml"/>
+    <include file="struts/config/struts-reportes.xml"/>
     <include file="struts/config/struts-seguridad.xml"/>
     <include file="struts/config/struts-confpantallas.xml"/>
     
@@ -272,6 +273,12 @@
         <action name="manualWSrecibos" class="beanDatosComplementarios" method="ejecutaWSManualRecibos">
             <result name="success" type="json" />
         </action>
+        
+        <action name="manualWSRecibosDxN" class="beanDatosComplementarios" method="ejecutaWSManualRecibosDxN">
+            <result name="success" type="json" />
+        </action>
+        
+        
         <!-- <action name="cargaColonias" class="beanCatalogosAction" method="cargaColonias">
             <result name="success" type="json" />
         </action> -->
