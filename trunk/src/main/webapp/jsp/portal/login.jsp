@@ -6,7 +6,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-<title>Inicio</title>
+<title>ICE ${ctx}</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <script language="javascript">
