@@ -2647,6 +2647,23 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
+
+	@Override
+	public String solicitudPagoEnviada(Map params)throws DaoException {
+		Map<String,Object> resultadoMap=this.ejecutaSP(new SolicitudPagoEnviada(this.getDataSource()), params);
+		return (String) resultadoMap.get("pv_title_o");	
+	}
+	protected class SolicitudPagoEnviada extends StoredProcedure
+	{
+		protected SolicitudPagoEnviada(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SINIESTRO.P_ACT_TRAMITE_SINI_A_ENVIADO");
+			declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 	
 	
 	/*	public void eliminacionRegistrosTabla(String nmautser)

@@ -829,8 +829,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 		
 		boolean exito = true;
 		
-		List<Reclamo> result = null;
-		Reclamo reclamo =  null;
+		List<Reclamo> resultReclamos = null;
 		
 		//Se invoca servicio para obtener los datos del cliente
 		HashMap<String, Object> params = new HashMap<String, Object>();
@@ -840,31 +839,40 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 		params.put("pv_estado_i", estado);
 		params.put("pv_nmpoliza_i", nmpoliza);
 		
+		String usuario = "SIN USUARIO";
+		if(userVO != null){
+			usuario = userVO.getUser();
+		}
+		params.put("USUARIO", usuario);
+		
 		try {
-			result = siniestrosManager.obtieneDatosReclamoWS(params);
-			if(result != null && result.size() > 0){
-				reclamo = result.get(0);
-			}
+			resultReclamos = siniestrosManager.obtieneDatosReclamoWS(params);
 		} catch (Exception e1) {
 			logger.error("Error en llamar al PL de obtencion de obtieneDatosReclamoWS",e1);
 			return false;
 		}
 		
-		if(reclamo != null){
+		if(resultReclamos != null && resultReclamos.size() > 0){
 			
-			String usuario = "SIN USUARIO";
-			if(userVO != null){
-				usuario = userVO.getUser();
+			for(Reclamo reclamo : resultReclamos){
+				if(reclamo.getNumPol() == 0){
+					logger.debug("Sin datos para ejecutaWSreclamo ");
+					return false;
+				}
+				
+				try{
+					logger.debug(">>>>>>> Enviando el Reclamo: " + reclamo.getIcodreclamo());
+					ejecutaReclamoGS(op, reclamo, params, true);
+					//si el sresultado es falso mov bitacobros
+				}catch(Exception e){
+					logger.error("Error al enviar el Reclamo: " + reclamo.getIcodreclamo(), e);
+					exito = false;
+					//si el sresultado es falso mov bitacobros CX
+				}
 			}
-			params.put("USUARIO", usuario);
-			
-			try{
-				logger.debug(">>>>>>> Enviando el Reclamo: " + reclamo.getIcodreclamo());
-				ejecutaReclamoGS(op, reclamo, params, true);
-			}catch(Exception e){
-				logger.error("Error al enviar el Reclamo: " + reclamo.getIcodreclamo(), e);
-				exito = false;
-			}
+		}else {
+			logger.debug("Sin datos para ejecutaWSreclamo ");
+			return false;
 		}
 
 		return exito;

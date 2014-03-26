@@ -98,7 +98,7 @@ public interface SiniestrosManager {
 
 	public boolean rechazarTramite(HashMap<String, String> params) throws ApplicationException;
 
-	public boolean solicitarPago(HashMap<String, String> params) throws ApplicationException;
+	public boolean solicitudPagoEnviada(Map<String, String> params) throws ApplicationException;
 
 	public List<ConsultaTTAPVAATVO> getConsultaListaTTAPVAAT(HashMap<String, Object> paramTTAPVAAT) throws ApplicationException;
 

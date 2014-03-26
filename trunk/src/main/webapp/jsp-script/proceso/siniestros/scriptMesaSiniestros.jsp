@@ -611,6 +611,8 @@ var msgWindow;
 	}
 	
 	function solicitarPago(grid,rowIndex,colIndex){
+		var record = grid.getStore().getAt(rowIndex);
+		
 		msgWindow = Ext.Msg.show({
 	        title: 'Aviso',
 	        msg: '&iquest;Esta seguro que desea solicitar el pago?',
@@ -621,15 +623,21 @@ var msgWindow;
 	        		
 	        		Ext.Ajax.request({
 						url: _UrlSolicitarPago,
-						jsonData: {
-							/*params: {
-					    		'pv_ntramite_i' : _nmTramite,
-					    		'pv_cdtippag_i' : _tipoPago,
-					    		'pv_cdtipate_i' : _tipoAtencion
-					    	}*/
-						},
-						success: function() {
-							mensajeCorrecto('Aviso','El pago se ha solicitado con exito.');
+						params: {
+				    		'params.pv_ntramite_i' : record.get('ntramite'),
+				    		'params.pv_cdunieco_i' : record.get('cdunieco'),
+				    		'params.cdramo'        : record.get('cdramo'),
+				    		'params.estado'        : record.get('estado'),
+				    		'params.npoliza'       : record.get('nmpoliza')
+				    	},
+						success: function(response, opts) {
+							var respuesta = Ext.decode(response.responseText);
+							if(respuesta.success){
+								mensajeCorrecto('Aviso','El pago se ha solicitado con exito.');	
+							}else {
+								mensajeError('Error al solicitar el pago, No se han guardado correctamente los calculos, &oacute; no se envi&&oacute; exitosamente alguno de los Reclamos');
+							}
+							
 						},
 						failure: function(){
 							mensajeError('No se pudo solicitar el pago.');
