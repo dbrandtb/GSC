@@ -12,6 +12,14 @@
         <action name="consultarProveedores" class="consultasAction" method="consultarProveedores">
             <result type="json" />
         </action>
+        
+        <action name="pantallaConsultaFacturas" class="consultasAction" method="pantallaConsultaFacturas">
+            <result name="success">/jsp/consultas/facturas/consultaFacturas.jsp</result>
+        </action>
+        
+        <action name="consultarFacturas" class="consultasAction" method="consultarFacturas">
+            <result type="json" />
+        </action>
 
     </package>
 
