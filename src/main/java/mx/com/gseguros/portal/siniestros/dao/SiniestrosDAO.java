@@ -340,4 +340,6 @@ public interface SiniestrosDAO {
 			,String status
 			,String nmsinies
 			,String nfactura) throws Exception;
+	
+	public String solicitudPagoEnviada(Map params)throws Exception;
 }

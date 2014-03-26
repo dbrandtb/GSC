@@ -45,6 +45,7 @@ import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
+import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService.Operacion;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -1262,14 +1263,19 @@ public void setMsgResult(String msgResult) {
    public String solicitarPago(){
 	   
 	   try {
-		   logger.debug("solicitarPago Siniestros");
-		   siniestrosManager.solicitarPago(params);
+		   logger.debug("solicitarPago Siniestros params: "+ params);
+		   UserVO usuario  = (UserVO)session.get("USUARIO");
+		   
+		   success = ice2sigsService.ejecutaWSreclamo(params.get("pv_ntramite_i"), params.get("pv_cdunieco_i"), params.get("cdramo"), params.get("estado"), params.get("npoliza"), Operacion.INSERTA, false, usuario);
+		   if(success){
+			   siniestrosManager.solicitudPagoEnviada(params);
+		   }
 	   }catch( Exception e){
 		   logger.error("Error en solicitarPago",e);
 		   success =  false;
 		   return SUCCESS;
 	   }
-	   success = true;
+	   
 	   return SUCCESS;
    }
 

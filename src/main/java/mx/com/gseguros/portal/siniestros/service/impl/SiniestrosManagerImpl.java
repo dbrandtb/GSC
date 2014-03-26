@@ -194,12 +194,12 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	}
 
 	@Override
-	public boolean solicitarPago(HashMap<String, String> params)
+	public boolean solicitudPagoEnviada(Map<String, String> params)
 			throws ApplicationException {
 		try {
-			//siniestrosDAO.turnarOperadorAR(params);
+			siniestrosDAO.solicitudPagoEnviada(params);
 		} catch (Exception daoExc) {
-			log.error("Error al solicitarPago: " + daoExc.getMessage(), daoExc);	
+			log.error("Error en solicitudPagoEnviada PL: " + daoExc.getMessage(), daoExc);	
 			return false;
 		}
 		return true;
