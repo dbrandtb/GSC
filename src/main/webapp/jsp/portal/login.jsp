@@ -16,7 +16,7 @@
     <link href="${ctx}/resources/extjs4/extra-custom-theme.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="${ctx}/resources/extjs4/ext-all.js"></script>
     <script type="text/javascript" src="${ctx}/resources/extjs4/locale/ext-lang-es.js"></script>
-<script type="text/javascript" src="${ctx}/resources/scripts/portal/login/login.js"></script>
+    <script type="text/javascript" src="${ctx}/resources/scripts/portal/login/login.js"></script>
 
 </head>
 <body>
