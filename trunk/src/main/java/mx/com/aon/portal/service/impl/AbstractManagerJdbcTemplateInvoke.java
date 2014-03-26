@@ -43,7 +43,6 @@ public abstract class AbstractManagerJdbcTemplateInvoke {
      * @return instancia de WrapperResultados cargado con los id de msgs de respuesta y resultados
      * @throws mx.com.gseguros.exception.ApplicationException
      */
-    @SuppressWarnings("unchecked")
     public Object getBackBoneInvoke(Object arg,String endpointName ) throws ApplicationException {
         WrapperResultados res;
 
@@ -85,7 +84,6 @@ public abstract class AbstractManagerJdbcTemplateInvoke {
      * @return instancia de WrapperResultados cargado con los id de msgs de respuesta y resultados
      * @throws mx.com.gseguros.exception.ApplicationException
      */
-    @SuppressWarnings("unchecked")
     public WrapperResultados returnBackBoneInvoke(Object arg,String endpointName ) throws ApplicationException {
         WrapperResultados res;
 
@@ -113,7 +111,6 @@ public abstract class AbstractManagerJdbcTemplateInvoke {
      * @return instancia de WrapperResultados cargado con los id de msgs de respuesta y resultados
      * @throws mx.com.gseguros.exception.ApplicationException
      */
-    @SuppressWarnings("unchecked")
     public WrapperResultados returnResult(Object arg,String endpointName ) throws ApplicationException {
         WrapperResultados res;
 
@@ -133,8 +130,8 @@ public abstract class AbstractManagerJdbcTemplateInvoke {
     }
     
     
-    @SuppressWarnings("unchecked")
-    public List getAllBackBoneInvoke(Object arg,String endpointName) throws ApplicationException {
+    @SuppressWarnings("rawtypes")
+	public List getAllBackBoneInvoke(Object arg,String endpointName) throws ApplicationException {
         WrapperResultados res;
 
         try {
@@ -173,7 +170,6 @@ public abstract class AbstractManagerJdbcTemplateInvoke {
 	 * @return instancia de WrapperResultados cargado con los id de msgs de respuesta y resultados
 	 * @throws mx.com.aon.core.ApplicationException
      */
-	@SuppressWarnings("unchecked")
 	public PagedList pagedBackBoneInvoke(Object arg,String endpointName ,int start,int limit) throws ApplicationException {
 		WrapperResultados res;
 
