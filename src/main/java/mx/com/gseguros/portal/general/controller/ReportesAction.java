@@ -32,20 +32,16 @@ public class ReportesAction extends PrincipalCoreAction {
 	
 	private Map<String, String> params;
 	
-	private Map<String,String> strMapIn;
-	private Map<String,String> strMapOut;
-	
 	private InputStream fileInputStream;
+	
 	private String filename;
+	
 	protected String contentType;
 
 	protected boolean success;
 	
 	private String cdreporte;
 	
-	private Integer orden;
-	
-	private String valor;
 	
 	public String execute() throws Exception {
 		return SUCCESS;
@@ -69,7 +65,6 @@ public class ReportesAction extends PrincipalCoreAction {
 		List<ComponenteVO> lstCmp = new ArrayList<ComponenteVO>();
 		
 		for(ParamReporteVO paramRep : paramsReporte) {
-			logger.debug("paramReporte=" + paramRep);
 			ComponenteVO cmp = new ComponenteVO();
 			cmp.setType(ComponenteVO.TIPO_GENERICO);
 			cmp.setLabel(paramRep.getDescripcion());
@@ -104,9 +99,6 @@ public class ReportesAction extends PrincipalCoreAction {
 		    paramsReporte.add(paramReporte);
 		}
 		
-		logger.debug("params=" + params);
-		logger.debug("paramsReporte=" + paramsReporte);
-		
 		try {
 			contentType = "application/vnd.ms-excel";
 			filename = cdreporte+"."+Constantes.FORMAT_XLS;
@@ -120,37 +112,10 @@ public class ReportesAction extends PrincipalCoreAction {
 	}
 	
 	
-	/**
-	 * Metodo para la descarga de los archivos de los Movimientos en los casos
-	 * de BO
-	 * 
-	 * @return
-	 */
-	@Deprecated
-	public String obtenerReporteExcel() {
-		
-		logger.debug(">>>>>>>>>>>>>>  Obtiene reporte Excel <<<<<<<<<<<<<");
+	//Getters and setters:
 
-		contentType = "application/vnd.ms-excel";
-		filename = "Prueba.xls";
-		logger.debug("filename: " + filename);
-		logger.debug("contentType: " + contentType);
-		
-		try {
-		
-			HashMap<String,Object> params = new HashMap<String, Object>();
-			params.put("pv_idreporte_i", "Prueba");
-			params.put("pv_codusr_i", "ICE");
-			
-			fileInputStream = reportesManager.obtenerReporteExcel(params);
-			//logger.debug("Este es el InputStream: "+ fileInputStream);
-			
-		} catch (Exception e) {
-			logger.error("Error al ejecutar obtieneReporte",e);
-		}
-
-		success = true;
-		return SUCCESS;
+	public void setReportesManager(ReportesManager reportesManager) {
+		this.reportesManager = reportesManager;
 	}
 	
 	public InputStream getFileInputStream() {
@@ -185,10 +150,6 @@ public class ReportesAction extends PrincipalCoreAction {
 		this.contentType = contentType;
 	}
 
-	public void setReportesManager(ReportesManager reportesManager) {
-		this.reportesManager = reportesManager;
-	}
-
 	public List<ReporteVO> getReportes() {
 		return reportes;
 	}
@@ -213,47 +174,12 @@ public class ReportesAction extends PrincipalCoreAction {
 		this.params = params;
 	}
 
-	public Map<String, String> getStrMapIn() {
-		return strMapIn;
-	}
-
-	public void setStrMapIn(Map<String, String> strMapIn) {
-		this.strMapIn = strMapIn;
-	}
-
-	public Map<String, String> getStrMapOut() {
-		return strMapOut;
-	}
-
-
-	public void setStrMapOut(Map<String, String> strMapOut) {
-		this.strMapOut = strMapOut;
-	}
-
-
 	public String getCdreporte() {
 		return cdreporte;
 	}
 
 	public void setCdreporte(String cdreporte) {
 		this.cdreporte = cdreporte;
-	}
-
-
-	public Integer getOrden() {
-		return orden;
-	}
-
-	public void setOrden(Integer orden) {
-		this.orden = orden;
-	}
-
-	public String getValor() {
-		return valor;
-	}
-
-	public void setValor(String valor) {
-		this.valor = valor;
 	}
 
 }

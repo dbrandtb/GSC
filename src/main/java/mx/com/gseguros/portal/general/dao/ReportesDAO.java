@@ -1,7 +1,6 @@
 package mx.com.gseguros.portal.general.dao;
 
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -57,10 +56,5 @@ public interface ReportesDAO {
 	 * @throws DaoException
 	 */
 	public InputStream obtenerReporte(String cdreporte, String username) throws DaoException;
-	
-	
-	@Deprecated
-	public InputStream obtieneReporteExcel(HashMap<String,Object> params) throws DaoException;
-
 	
 }
