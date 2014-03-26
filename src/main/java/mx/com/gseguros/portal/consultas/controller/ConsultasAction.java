@@ -69,6 +69,10 @@ public class ConsultasAction extends PrincipalCoreAction
 	
 	public String pantallaConsultaProveedores()
 	{
+		logger.info(""
+				+ "\n#########################################"
+				+ "\n###### pantallaConsultaProveedores ######"
+				);
 		try
 		{
 			UserVO usuario     = (UserVO)session.get("USUARIO");
@@ -97,6 +101,76 @@ public class ConsultasAction extends PrincipalCoreAction
 		{
 			logger.error("error al desplegar pantalla de consulta de proveedores",ex);
 		}
+		logger.info(""
+				+ "\n###### pantallaConsultaProveedores ######"
+				+ "\n#########################################"
+				);
+		return SUCCESS;
+	}
+	
+	public String consultarFacturas()
+	{
+		logger.info(""
+				+ "\n###############################"
+				+ "\n###### consultarFacturas ######"
+				);
+		logger.info("mapaLigadoObjetoEntrada: "+mapaLigadoObjetoEntrada);
+		try
+		{
+			listaMapasStringSalida = consultasManager.consultaDinamica("PKG_CONSULTA.P_GET_DATOS_FACTURAS", mapaLigadoObjetoEntrada);
+		}
+		catch(Exception ex)
+		{
+			listaMapasStringSalida = new ArrayList<Map<String,String>>();
+			success = false;
+			error = ex.getMessage();
+			logger.error("error al consultar proveedores",ex);
+		}
+		logger.info(""
+				+ "\n###### consultarFacturas ######"
+				+ "\n###############################"
+				);
+		return SUCCESS;
+	}
+	
+	public String pantallaConsultaFacturas()
+	{
+		logger.info(""
+				+ "\n######################################"
+				+ "\n###### pantallaConsultaFacturas ######"
+				);
+		try
+		{
+			UserVO usuario     = (UserVO)session.get("USUARIO");
+			String cdsisrol    = usuario.getRolActivo().getObjeto().getValue();
+			String pantalla    = "CONSULTA_FACTURAS";
+			String seccion     = null;
+			GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			mapaItem           = new HashMap<String,Item>();
+			
+			//items del formulario
+			seccion = "FILTRO";
+			List<ComponenteVO> componentesFormulario = pantallasManager.obtenerComponentes(
+					null, null, null, null, null, cdsisrol, pantalla, seccion, null);
+			gc.generaComponentes(componentesFormulario, true, false, true, false, false, false);
+			mapaItem.put("itemsFormulario",gc.getItems());
+			
+			//fields del modelo y columnas del grid
+			seccion = "GRID";
+			List<ComponenteVO> componentesGrid = pantallasManager.obtenerComponentes(
+					null, null, null, null, null, cdsisrol, pantalla, seccion, null);
+			gc.generaComponentes(componentesGrid, true, true, false, true, false, false);
+			mapaItem.put("fieldsModelo",gc.getFields());
+			mapaItem.put("columnasGrid",gc.getColumns());
+		}
+		catch(Exception ex)
+		{
+			logger.error("error al desplegar pantalla de consulta de facturas",ex);
+		}
+		logger.info(""
+				+ "\n###### pantallaConsultaFacturas ######"
+				+ "\n######################################"
+				);
 		return SUCCESS;
 	}
 
