@@ -12,7 +12,7 @@ Ext.onReady(function(){
             scope:this,
             specialkey: function(f,e){
                 if(e.getKey()==e.ENTER){                	
-                	validarUsuario()
+                	validarUsuario();
                 }
             }
         }
@@ -45,39 +45,40 @@ Ext.onReady(function(){
 	    height: 150,
         width: 270,
         bodyPadding: 5,
-	   items:[
-		        	dsUser,
-		        	dsPassword
-		        ]
-		,
+	    items:[
+		    dsUser,
+		    dsPassword
+        ],
 		buttons: [{
 			text: 'Entrar',
-	        handler: function() {
+	        handler: function(btn, e) {
 	        	validarUsuario();
 			}
 		},{
 			text: 'Cancelar',
-	        handler: function() {
-	        	loginForm.form.reset();
+	        handler: function(btn, e) {
+	        	btn.up('form').getForm().reset();
 			}
-		}
-		]
+		}]
 	});
 			
 	loginForm.render();
 	
-    function validarUsuario()
-    {
+    function validarUsuario() {
     	if (loginForm.form.isValid()) {
     		loginForm.form.submit({
 	        	waitMsg:'Procesando...',
 	        	failure: function(form, action) {
-	        		Ext.Msg.show({
-   	                    title: 'ERROR',
-   	                    msg: action.result.errorMessage,
-   	                    buttons: Ext.Msg.OK,
-   	                    icon: Ext.Msg.ERROR
-   	                });
+	        		switch (action.failureType) {
+                        case Ext.form.action.Action.CONNECT_FAILURE:
+                    	    Ext.Msg.show({title: 'Error', msg: 'Error de comunicaci&oacute;n', buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
+                            break;
+                        case Ext.form.action.Action.SERVER_INVALID:
+                        case Ext.form.action.Action.LOAD_FAILURE:
+                    	    var msgServer = Ext.isEmpty(action.result.errorMessage) ? 'Error interno del servidor, consulte a soporte' : action.result.errorMessage;
+                            Ext.Msg.show({title: 'Error', msg: msgServer, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
+                            break;
+                    }
 				},
 				success: function(form, action) {
 					self.location.href = _CONTEXT+'/seleccionaRolCliente.action';
