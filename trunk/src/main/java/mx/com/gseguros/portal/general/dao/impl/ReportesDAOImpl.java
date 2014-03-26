@@ -29,22 +29,7 @@ import org.springframework.jdbc.support.lob.OracleLobHandler;
 public class ReportesDAOImpl extends AbstractManagerDAO implements ReportesDAO {
 	
 	private static Logger logger = Logger.getLogger(ReportesDAOImpl.class);
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public InputStream obtieneReporteExcel(HashMap<String,Object> params) throws DaoException{
-		
-		InputStream archivo =  null;
-		try {
-			Map<String, Object> resultado = ejecutaSP(new ObtieneReporteExcelSP(getDataSource()), params);
-			ArrayList<InputStream> inputList = (ArrayList<InputStream>) resultado.get("pv_registro_o");
-			archivo = inputList.get(0);
-		} catch (Exception e) {
-			throw new DaoException(e.getMessage(), e);
-		}
-		
-		return archivo;
-	}
+	
 	
 	protected class ObtieneReporteExcelSP extends StoredProcedure {
     	protected ObtieneReporteExcelSP(DataSource dataSource) {

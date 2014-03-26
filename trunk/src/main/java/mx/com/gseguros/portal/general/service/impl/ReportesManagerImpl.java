@@ -15,15 +15,10 @@ import org.apache.log4j.Logger;
 
 public class ReportesManagerImpl implements ReportesManager {
 	
+	@SuppressWarnings("unused")
 	private static Logger logger = Logger.getLogger(ReportesManagerImpl.class);
 	
 	private ReportesDAO reportesDAO;
-	
-	@Deprecated
-	@Override
-	public InputStream obtenerReporteExcel(HashMap<String,Object> params) throws Exception {
-		return reportesDAO.obtieneReporteExcel(params);
-	}
 
 
 	@Override
