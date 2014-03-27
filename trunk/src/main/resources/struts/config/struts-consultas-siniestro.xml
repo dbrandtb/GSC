@@ -25,6 +25,12 @@
             <result type="json"></result>
         </action>
         
+        
+        <action name="afiliadosAfectados" class="siniestrosAction" method="afiliadosAfectados">
+		    <result type="json"></result>
+		</action>
+
+
         <action name="consultaAseguradosPagoReembolso" class="consultasSiniestroAction"
 			method="consultaAseguradosPagoReembolso">
 			<result type="json">
@@ -35,6 +41,29 @@
 				</param>
 			</result>
 		</action>
+		
+		<action name="consultaProveedorPDirecto" class="consultasSiniestroAction"
+			method="consultaProveedorPDirecto">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					datosProveedorPDirecto.*,
+					success
+				</param>
+			</result>
+		</action>
+		
+		<action name="consultaFacturasPagoDirecto" class="consultasSiniestroAction"
+			method="consultaFacturasPagoDirecto">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					datosFacturaPagoDirecto.*,
+					success
+				</param>
+			</result>
+		</action>
+		
 		
 	</package>
 

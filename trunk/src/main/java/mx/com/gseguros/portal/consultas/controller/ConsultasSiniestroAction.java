@@ -29,6 +29,7 @@ public class ConsultasSiniestroAction extends PrincipalCoreAction{
     private SiniestrosManager siniestrosManager;
     private ConsultasSiniestroManager consultaSiniestrosManager;
     private List<ConsultaDatosSiniestrosVO> datosSiniestroAsegurado;
+    private List<ConsultaDatosSiniestrosVO> datosFacturaPagoDirecto;
     
     //private ConsultasSiniestroAction consultasSiniestroManager;
     private HashMap<String, String> params;
@@ -75,10 +76,24 @@ public class ConsultasSiniestroAction extends PrincipalCoreAction{
 		}catch( Exception e){
 			logger.error("Error al obtener los datos de Consulta de Asegurados Pago por reembolso",e);
         return SUCCESS;
-    }
-    success = true;
-    return SUCCESS;
-}
+		}
+		success = true;
+		return SUCCESS;
+	}
+	
+	public String consultaFacturasPagoDirecto(){
+		logger.debug(" **** Entrando a Consulta de Asegurados Pago por reembolso ****");
+		try {
+				List<ConsultaDatosSiniestrosVO> lista = consultaSiniestrosManager.getConsultaFacturasPagoDirecto(params.get("cdperson"),params.get("cdproveedor"),params.get("cdfactura"));
+				logger.debug(lista);
+				if(lista!=null && !lista.isEmpty())	datosFacturaPagoDirecto = lista;
+		}catch( Exception e){
+			logger.error("Error al obtener los datos de Consulta de Asegurados Pago por reembolso",e);
+        return SUCCESS;
+		}
+		success = true;
+		return SUCCESS;
+	}
 	
 	
     public String execute() throws Exception {
@@ -143,6 +158,17 @@ public class ConsultasSiniestroAction extends PrincipalCoreAction{
 	public void setConsultaSiniestrosManager(
 			ConsultasSiniestroManager consultaSiniestrosManager) {
 		this.consultaSiniestrosManager = consultaSiniestrosManager;
+	}
+
+
+	public List<ConsultaDatosSiniestrosVO> getDatosFacturaPagoDirecto() {
+		return datosFacturaPagoDirecto;
+	}
+
+
+	public void setDatosFacturaPagoDirecto(
+			List<ConsultaDatosSiniestrosVO> datosFacturaPagoDirecto) {
+		this.datosFacturaPagoDirecto = datosFacturaPagoDirecto;
 	}
 
 	
