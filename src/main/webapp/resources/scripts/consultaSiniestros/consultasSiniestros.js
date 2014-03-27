@@ -786,7 +786,7 @@ Ext.onReady(function() {
             ]
         },
         {
-            title:'AFILIADOS AFECTADOS',
+            title:'ASEGURADOS AFECTADOS',
             width:990,
             //height:150,
             colspan:2,
@@ -918,7 +918,7 @@ Ext.onReady(function() {
 	    		}else{
 	    			Ext.Msg.show({
 			            title:'Error',
-			            msg: 'No existe asegurado para dicho registro',
+			            msg: 'No existe informaci&oacute;n suficiente para dicho tr&aacute;mite',
 			            buttons: Ext.Msg.OK,
 			            icon: Ext.Msg.ERROR
 			        });
