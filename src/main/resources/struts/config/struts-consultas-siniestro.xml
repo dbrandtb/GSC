@@ -20,7 +20,11 @@
 		<action name="includes/loadInfoGeneralReclamacion" class="detalleSiniestroAction" method="loadInfoGeneralReclamacion">
             <result>/jsp/consultas/siniestros/includes/informacionGeneral.jsp</result>
         </action>
-
+        
+        <action name="includes/calculoSiniestros" class="siniestrosAction" method="calculoSiniestros">
+            <result name="success">/jsp/consultas/siniestros/includes/calculos.jsp</result>
+        </action>
+        
 		<action name="obtieneDatosGeneralesSiniestro" class="detalleSiniestroAction" method="obtieneDatosGeneralesSiniestro">
             <result type="json"></result>
         </action>
