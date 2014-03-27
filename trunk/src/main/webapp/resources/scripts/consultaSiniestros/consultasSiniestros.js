@@ -821,7 +821,7 @@ Ext.onReady(function() {
 		    	if(Ext.decode(response.responseText).listaMesaControl != null)
 	    		{
 		    		var json=Ext.decode(response.responseText).listaMesaControl[0];
-		    		console.log(json.otvalor02mc);
+		    		//console.log(json.otvalor02mc);
 		    		if(tipoPago != json.otvalor02mc){
 		    			Ext.Msg.show({
 				            title:'Error',
@@ -877,9 +877,9 @@ Ext.onReady(function() {
 		    	var json = Ext.decode(response.responseText).slist1;
 		    	if(json != null)
 	    		{
-		    		console.log(json.length);
+		    		//console.log(json.length);
 			    	for(var i = 0; i < json.length; i++){
-			    		console.log(json[i].NMSINIES);
+			    		//console.log(json[i].NMSINIES);
 		    			var rec = new modelListAsegAfiliados({
 		    				NMSINIES: 	json[i].NMSINIES,			//	9
 		    				NMAUTSER: 	json[i].NMAUTSER,
@@ -949,7 +949,7 @@ Ext.onReady(function() {
                 }
 			    ,success : function (response)
 			    {
-			    	console.log(Ext.decode(response.responseText));
+			    	//console.log(Ext.decode(response.responseText));
 			    	var json = Ext.decode(response.responseText);
 		    		_CDUNIECO = json.params.cdunieco;
 		    		_CDRAMO = json.params.cdramo;
