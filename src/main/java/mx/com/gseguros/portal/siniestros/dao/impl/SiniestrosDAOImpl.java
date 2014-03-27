@@ -2732,6 +2732,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			,String iva
 			,String ivr
 			,String isr
+			,String cedular
 			,boolean enviado) throws Exception
 	{
 		Map<String,String>params=new HashMap<String,String>();
@@ -2750,6 +2751,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		params.put("iva"      , iva);
 		params.put("ivr"      , ivr);
 		params.put("isr"      , isr);
+		params.put("cedular"  , cedular);
 		params.put("enviado",enviado?Constantes.SI:Constantes.NO);
 		logger.debug("params: "+params);
 		ejecutaSP(new MovTimpsini(this.getDataSource()), params);
@@ -2775,6 +2777,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("iva"      , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("ivr"      , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("isr"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cedular"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("enviado"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));

@@ -61,6 +61,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 	private static final String IMPORTE_WS_IVA     = "iva";
 	private static final String IMPORTE_WS_IVR     = "ivr";
 	private static final String IMPORTE_WS_ISR     = "isr";
+	private static final String IMPORTE_WS_CEDULAR = "cedular";
 	
     private static final long serialVersionUID = -6321288906841302337L;
 	private Logger logger = Logger.getLogger(SiniestrosAction.class);	
@@ -2118,7 +2119,7 @@ public void setMsgResult(String msgResult) {
     		siniestrosManager.movTimpsini(
     				Constantes.DELETE_MODE, null, null, null, null,
     				null, null, null, null, null,
-    				ntramite, null, null, null, null, false
+    				ntramite, null, null, null, null, null, false
     				);
     		
     		/*NTRAMITE=1445, CDUNIECO=null, CDRAMO=2, ESTADO=null, 
@@ -2274,6 +2275,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     				double ivaSiniestroIte;
     				double ivrSiniestroIte;
     				double isrSiniestroIte;
+    				double cedSiniestroIte;
     				
     				//hospitalizacion
     				Map<String,String> hosp = new HashMap<String,String>();
@@ -2292,6 +2294,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     				//pago directo
     				Map<String,String> mpdir = new HashMap<String,String>();
     				mpdir.put("total","0");
+    				mpdir.put("totalcedular","0");
     				lpdir.add(mpdir);
     				//pago directo
     				
@@ -2494,6 +2497,12 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     							logger.debug("new totalGrupo"+totalGrupo);
     							mpdir.put("total",totalGrupo+"");
     							
+    							double totalGrupoCedular = Double.parseDouble(mpdir.get("totalcedular"));
+    							logger.debug("base totalGrupoCedular"+totalGrupoCedular);
+    							totalGrupoCedular += cedularaplicado;
+    							logger.debug("new totalGrupoCedular"+totalGrupoCedular);
+    							mpdir.put("totalcedular",totalGrupoCedular+"");
+    							
     							concepto.putAll(row);
     							logger.debug("<<PAGO DIRECTO");
     						}
@@ -2529,10 +2538,12 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 						ivaSiniestroIte = hIVA;
 						ivrSiniestroIte = 0d;
 						isrSiniestroIte = 0d;
+						cedSiniestroIte = 0d;
 						importesWSSiniestroIte.put(IMPORTE_WS_IMPORTE , (new Double(importeSiniestroIte)).toString());
 						importesWSSiniestroIte.put(IMPORTE_WS_IVA     , (new Double(ivaSiniestroIte)    ).toString());
 						importesWSSiniestroIte.put(IMPORTE_WS_IVR     , (new Double(ivrSiniestroIte)    ).toString());
 						importesWSSiniestroIte.put(IMPORTE_WS_ISR     , (new Double(isrSiniestroIte)    ).toString());
+						importesWSSiniestroIte.put(IMPORTE_WS_CEDULAR , (new Double(cedSiniestroIte)    ).toString());
 						logger.debug("mapa WS siniestro iterado: "+importesWSSiniestroIte);
 						logger.debug("<<WS del siniestro iterado");
 					}
@@ -2549,10 +2560,12 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 						ivaSiniestroIte = importeSiniestroIte * ( ivaprov / 100d );
 						ivrSiniestroIte = 0d;
 						isrSiniestroIte = 0d;
+						cedSiniestroIte = Double.valueOf(mpdir.get("totalcedular"));
 						importesWSSiniestroIte.put(IMPORTE_WS_IMPORTE , (new Double(importeSiniestroIte)).toString());
 						importesWSSiniestroIte.put(IMPORTE_WS_IVA     , (new Double(ivaSiniestroIte)    ).toString());
 						importesWSSiniestroIte.put(IMPORTE_WS_IVR     , (new Double(ivrSiniestroIte)    ).toString());
 						importesWSSiniestroIte.put(IMPORTE_WS_ISR     , (new Double(isrSiniestroIte)    ).toString());
+						importesWSSiniestroIte.put(IMPORTE_WS_CEDULAR , (new Double(cedSiniestroIte)    ).toString());
 						logger.debug("mapa WS siniestro iterado: "+importesWSSiniestroIte);
 						logger.debug("<<WS del siniestro iterado");
 					}
@@ -2610,6 +2623,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 				double ivaSiniestroUnico     = 0d;
 				double ivrSiniestroUnico     = 0d;
 				double isrSiniestroUnico     = 0d;
+				double cedularSiniestroUnico = 0d;
     			
     			for(Map<String,String>facturaIte:facturas)
     			{
@@ -2873,6 +2887,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 				importesWSSiniestroUnico.put(IMPORTE_WS_IVA     , (new Double(ivaSiniestroUnico)    ).toString());
 				importesWSSiniestroUnico.put(IMPORTE_WS_IVR     , (new Double(ivrSiniestroUnico)    ).toString());
 				importesWSSiniestroUnico.put(IMPORTE_WS_ISR     , (new Double(isrSiniestroUnico)    ).toString());
+				importesWSSiniestroUnico.put(IMPORTE_WS_CEDULAR , (new Double(cedularSiniestroUnico)).toString());
 				logger.debug("mapa WS siniestro unico: "+importesWSSiniestroUnico);
 				logger.debug("<<WS del siniestro unico");
     			
@@ -3446,20 +3461,21 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     	{
     		for(Map<String,String> importe : slist1)
     		{
-    			/*  aaapertu: "2014"
-					cdramo: "2"
-					cdunieco: "1006"
-					estado: "M"
-					importe: "1546.66"
-					isr: "0.0"
-					iva: "0.0"
-					ivr: "0.0"
-					nmpoliza: "44"
-					nmsinies: "20"
-					nmsituac: "1"
-					nmsuplem: "245671518430000000"
-					ntramite: "1445"
-					status: "W"
+    			/*  aaapertu : "2014"
+					cdramo   : "2"
+					cdunieco : "1006"
+					estado   : "M"
+					importe  : "1546.66"
+					isr      : "0.0"
+					iva      : "0.0"
+					ivr      : "0.0"
+					cedular  : "0.0"
+					nmpoliza : "44"
+					nmsinies : "20"
+					nmsituac : "1"
+					nmsuplem : "245671518430000000"
+					ntramite : "1445"
+					status   : "W"
     			 */
     			String cduniecoIte = importe.get("cdunieco");
     			String cdramoIte   = importe.get("cdramo");
@@ -3475,6 +3491,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     			String ivaIte      = importe.get("iva");
     			String ivrIte      = importe.get("ivr");
     			String isrIte      = importe.get("isr");
+    			String cedularIte  = importe.get("cedular");
     			siniestrosManager.movTimpsini(
     					Constantes.INSERT_MODE
     					,cduniecoIte
@@ -3491,6 +3508,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     					,ivaIte
     					,ivrIte
     					,isrIte
+    					,cedularIte
     					,false);
     		}
     		success = true;

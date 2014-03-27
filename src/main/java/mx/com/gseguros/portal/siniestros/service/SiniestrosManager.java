@@ -402,6 +402,7 @@ public interface SiniestrosManager {
 			,String iva
 			,String ivr
 			,String isr
+			,String cedular
 			,boolean enviado) throws Exception;
 	
 	public Map<String,String>obtenerAutorizacionesFactura(
