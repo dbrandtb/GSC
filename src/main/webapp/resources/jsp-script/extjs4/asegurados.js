@@ -2904,6 +2904,17 @@ Ext
 																if (incisosRecords
 																		&& incisosRecords.length > 0) {
 																	if (!fueraDeGuanajuato) {
+																		///////////////////////////////////////////////////////////////////////////
+																		////// para los dispositivos moviles se necesita 1 segundo de espera //////
+																		////// para que hagan el unfocus de los combos del grid anidado      //////
+																		///////////////////////////////////////////////////////////////////////////
+																		debug('mobile timeout in');
+																		formPanel.setLoading(true);
+																		//alert('1');
+																		setTimeout(function(){
+																		debug('mobile timeout out');
+																		formPanel.setLoading(false);
+																		//alert('2');
 																		var incisosJson = [];
 																		var nombres = 0;
 																		storeIncisos
@@ -3041,7 +3052,11 @@ Ext
 																						buttons : Ext.Msg.OK,
 																						icon : Ext.Msg.WARNING
 																					});
-																		}
+																		}/////////////////////////////////////////////////////////////////////////
+																		////// para los dispositivos moviles se necesita 1 segundo de espera //////
+																		////// para que hagan el unfocus de los combos del grid anidado      //////
+																		///////////////////////////////////////////////////////////////////////////
+																		},1500);
 																	} else {
 																		Ext.Msg
 																				.show({
