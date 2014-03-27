@@ -266,14 +266,7 @@ Ext.onReady(function() {
 					 ,valueField   	: 'key',									forceSelection 	: true,		matchFieldWidth	: false
 					 ,minChars  	: 2,										queryMode 		:'remote'		,queryParam: 'params.cdperson'
 					 ,store : storeAsegurados,									hideTrigger:true				,triggerAction: 'all'
-				 }),
-				 {
-		            	xtype       : 'combo',            	name        :'proveedorInterno',           	fieldLabel  : 'Proveedor',            	displayField: 'nombre',
-		            	valueField  : 'cdpresta',          	allowBlank  : false,		            	minChars  : 2,			            	width       : 500,
-		                forceSelection : true,              matchFieldWidth: false,		                queryMode   :'remote',	                queryParam  : 'params.cdpresta',
-		                store       : storeProveedor,	    triggerAction  : 'all',		                labelWidth  : 170,		                emptyText   : 'Seleccione...',
-		                editable    : true,                hideTrigger:true
-	            }
+				 })
 			]
 		,buttonAlign: 'center'
 		,buttons : [{
