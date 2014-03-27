@@ -1050,13 +1050,14 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			,String iva
 			,String ivr
 			,String isr
+			,String cedular
 			,boolean enviado) throws Exception
 	{
 		log.info(""
 				+ "\n#########################"
 				+ "\n###### movTimpsini ######");
 		siniestrosDAO.movTimpsini(accion,cdunieco,cdramo,estado,nmpoliza,nmsuplem,nmsituac,aaapertu,status,nmsinies,ntramite,
-				ptimport,iva,ivr,isr,enviado);
+				ptimport,iva,ivr,isr,cedular,enviado);
 		log.info(""
 				+ "\n###### movTimpsini ######"
 				+ "\n#########################"
