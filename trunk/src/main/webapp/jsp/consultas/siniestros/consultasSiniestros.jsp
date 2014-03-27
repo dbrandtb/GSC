@@ -37,7 +37,7 @@
             
             var _URL_LOADER_INFO_GRAL_RECLAMACION 	= '<s:url namespace="/consultasSiniestro" action="includes/loadInfoGeneralReclamacion" />';
             var _URL_LOADER_REV_ADMIN             	= '<s:url namespace="/consultasSiniestro" action="includes/revAdmin" />';
-            var _URL_LOADER_CALCULOS             	= '<s:url namespace="/siniestros" action="includes/calculoSiniestros" />';
+            var _URL_LOADER_CALCULOS             	= '<s:url namespace="/consultasSiniestro" action="includes/calculoSiniestros" />';
             
             var _URL_FACTURA_PDIRECTO   			= '<s:url namespace="/consultasSiniestro" action="consultaFacturasPagoDirecto" />';
             var _URL_MESA_DE_CONTROL     			= '<s:url namespace="/siniestros"       action="consultaListadoMesaControl" />';
