@@ -2954,6 +2954,881 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     	return SUCCESS;
     }
     
+    
+    
+    public String consultaCalculoSiniestros()
+    {
+    	logger.debug(""
+    			+ "\n########################################"
+    			+ "\n########################################"
+    			+ "\n###### Consulta calculoSiniestros ######"
+    			+ "\n######                             ######"
+    			);
+    	logger.debug("params: "+params);
+    	try
+    	{
+    		imap = new HashMap<String,Item>();
+    		
+    		GeneradorCampos    gc          = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+    		String             pantalla    = "CALCULO_SINIESTRO";
+    		String             seccion     = null;
+    	    String             ntramite    = params.get("ntramite");
+    		List<ComponenteVO> componentes = null;
+    		UserVO             usuario     = (UserVO)session.get("USUARIO");
+    		String             cdrol       = usuario.getRolActivo().getObjeto().getValue();
+    		
+    		Map<String,String>       tramite    = siniestrosManager.obtenerTramiteCompleto(ntramite);
+    		List<Map<String,String>> facturas   = siniestrosManager.obtenerFacturasTramite(ntramite);
+    		List<Map<String,String>> siniestros = siniestrosManager.listaSiniestrosTramite(ntramite);
+    		
+    		smap = tramite;
+    		
+    		if(tramite==null||siniestros==null||facturas==null)
+    		{
+    			throw new Exception("No se encontro tramite/facturas/siniestros para el tramite");
+    		}
+    		
+    		/*
+    		 * Borramos los cálculos anteriores
+    		 */
+    		/*siniestrosManager.movTimpsini(
+    				Constantes.DELETE_MODE, null, null, null, null,
+    				null, null, null, null, null,
+    				ntramite, null, null, null, null, null, false
+    				);*/
+    		
+    		/*NTRAMITE=1445, CDUNIECO=null, CDRAMO=2, ESTADO=null, 
+NMPOLIZA=null, NMSUPLEM=null, NMSOLICI=null, CDSUCADM=1000, CDSUCDOC=1000, CDSUBRAM=213, CDTIPTRA=16, FERECEPC=26/0
+2/2014, CDAGENTE=11060, REFERENCIA=null, NOMBRE=PROSPECTO, FECSTATU=26/02/2014, STATUS=10, COMMENTS=null, CDTIPSIT=
+SL, OTVALOR01=15, OTVALOR02=1, OTVALOR03=2000, OTVALOR04=null, OTVALOR05=A100, OTVALOR06=26/02/2014, OTVALOR07=3, O
+TVALOR08=1002, OTVALOR09=null, OTVALOR10=null, OTVALOR11=101, OTVALOR12=18SO, OTVALOR13=null, OTVALOR14=18SO003, OT
+VALOR15=null, OTVALOR16=null, OTVALOR17=null, OTVALOR18=null, OTVALOR19=null, OTVALOR20=null, OTVALOR21=null, OTVAL
+OR22=null, OTVALOR23=null, OTVALOR24=null, OTVALOR25=null, OTVALOR26=null, OTVALOR27=null, OTVALOR28=null, OTVALOR2
+9=null, OTVALOR30=null, OTVALOR31=null, OTVALOR32=null, OTVALOR33=null, OTVALOR34=null, OTVALOR35=null, OTVALOR36=n
+ull, OTVALOR37=null, OTVALOR38=null, OTVALOR39=null, OTVALOR40=null, OTVALOR41=null, OTVALOR42=null, OTVALOR43=null
+, OTVALOR44=null, OTVALOR45=null, OTVALOR46=null, OTVALOR47=null, OTVALOR48=null, OTVALOR49=null, OTVALOR50=null*/
+    		logger.debug("tramite: "+tramite);
+    		/*[{NTRAMITE=1445, NFACTURA=1002, FFACTURA=26/02/2014, 
+CDTIPSER=3, DESCSERVICIO=CONSULTA MCP(Médico General, Familiar, Internista, Pediatra, Ginecólogo y Odontólogo), CDP
+RESTA=101, NOMBREPROVEEDOR=HOMERO,RUEDA DE LEON CASTILLO, PTIMPORT=2000, CDGARANT=18SO, DSGARANT=Servicios Odontoló
+gicos, DESCPORC=0, DESCNUME=0, CDCONVAL=18SO003, DSSUBGAR=Profilaxis}]*/
+    		logger.debug("facturas: "+facturas);
+    		/*[{NMSINIES=20, NMAUTSER=12, CDPERSON=517982, NOMBRE
+=ALVAROJAIR,MARTINEZ VARELA, FEOCURRE=27/02/2014, CDUNIECO=1006, DSUNIECO=SALUD TIJUANA, CDRAMO=2, DSRAMO=SALUD VIT
+AL, CDTIPSIT=SL, DSTIPSIT=SALUD VITAL, STATUS=W, ESTADO=M, NMPOLIZA=44, VOBOAUTO=S, CDICD=A500, DSICD=SIFILIS CONGE
+NITA PRECOZ, SINTOMATICA, CDICD2=A600, DSICD2=INFECCION DE GENITALES Y TRAYECTO UROGENITAL DEBIDA A VIRUS DEL HERPE
+S (HERPES S, DESCPORC=12.5, DESCNUME=300, :B2=null, PTIMPORT=3000, AUTRECLA=S, NMRECLAMO=6969, COMMENAR=OK, COMMENM
+E=OK, AUTMEDIC=S, AAAPERTU=2014, NMSITUAC=1, NMSUPLEM=245671518430000000}]*/
+    		logger.debug("siniestros: "+siniestros);
+
+    		boolean esPagoDirecto = false;
+    		if(tramite.get("OTVALOR02").equals("1"))
+    		{
+    			esPagoDirecto = true;
+    		}
+    		logger.debug("esPagoDirecto: "+esPagoDirecto);
+    		
+    		Map<String,String> factura        = null;
+    		/*"CDPRESTA" , "NOMBRE" , "ISR" , "CEDULAR" , "IVA"*/
+    		Map<String,String> proveedor      = null;
+    		Map<String,String> siniestro      = null;
+    		/*{CDUNIECO=1006, CDRAMO=2, ESTADO=M, NMPOLIZA=44,
+ NMSUPLEM=245671518430000000, NMSITUAC=1, AAAPERTU=2014, STATUS=W, NMSINIES=20, CDCONCEP=1, OTVALOR=Costo Administr
+acion de Salud, IDCONCEP=2, DESCRIPC=HCPC, CANTIDAD=2, DESTOPOR=1, DESTOIMP=16, DEDUCIBLE=NA, COPAGO=$100.00, AUTME
+DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
+    		List<Map<String,String>>conceptos = null;
+    		
+    		slist2          = new ArrayList<Map<String,String>>();
+    		slist3          = new ArrayList<Map<String,String>>();
+    		llist1          = new ArrayList<List<Map<String,String>>>();
+    		lhosp           = new ArrayList<Map<String,String>>();
+    		lpdir           = new ArrayList<Map<String,String>>();
+    		lprem           = new ArrayList<Map<String,String>>();
+    		listaImportesWS = new ArrayList<Map<String,String>>(); 
+    		if(esPagoDirecto)
+    		{
+    			factura   = facturas.get(0);
+    			facturas  = null;
+    			proveedor = siniestrosManager.obtenerDatosProveedor(factura.get("CDPRESTA"));
+    			smap2     = factura;
+    			smap3     = proveedor;
+    			smap.put("PAGODIRECTO","S");
+    			conceptos = siniestrosManager.P_GET_CONCEPTOS_FACTURA(
+    					null, null, null, null, null, null, null, null, null, factura.get("NFACTURA"));
+    			slist1    = siniestros;
+    			
+    			double ivaprov = Double.parseDouble(proveedor.get("IVA")); 
+    			double cedprov = Double.parseDouble(proveedor.get("CEDULAR"));
+    			double isrprov = Double.parseDouble(proveedor.get("ISR"));
+    			
+    			for(Map<String,String>siniestroIte:siniestros)
+    			{
+    				String cdunieco = siniestroIte.get("CDUNIECO");
+    				String cdramo   = siniestroIte.get("CDRAMO");
+    				String estado   = siniestroIte.get("ESTADO");
+    				String nmpoliza = siniestroIte.get("NMPOLIZA");
+    				String nmsuplem = siniestroIte.get("NMSUPLEM");
+    				String nmsituac = siniestroIte.get("NMSITUAC");
+    				String aaapertu = siniestroIte.get("AAAPERTU");
+    				String status   = siniestroIte.get("STATUS");
+    				String nmsinies = siniestroIte.get("NMSINIES");
+    				String nfactura = factura.get("NFACTURA");
+    				
+    				Map<String,String>autorizacionesFactura = siniestrosManager.obtenerAutorizacionesFactura(
+    						cdunieco, cdramo, estado, nmpoliza, nmsuplem,
+    						nmsituac, aaapertu, status, nmsinies, nfactura);
+    				factura.put("AUTMEDIC"+nmsinies,autorizacionesFactura.get("AUTMEDIC"));
+    				factura.put("COMMENME"+nmsinies,autorizacionesFactura.get("COMMENME"));
+    				factura.put("AUTRECLA"+nmsinies,autorizacionesFactura.get("AUTRECLA"));
+    				factura.put("COMMENAR"+nmsinies,autorizacionesFactura.get("COMMENAR"));
+    				
+    				Map<String,String>copagoDeducibleSiniestroIte =siniestrosManager.obtenerCopagoDeducible(
+    						cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura);
+    				String sDeducibleSiniestroIte     = copagoDeducibleSiniestroIte.get("DEDUCIBLE").replace(",","");
+    				double deducibleSiniestroIte      = 0d;
+    				String sCopagoSiniestroIte        = copagoDeducibleSiniestroIte.get("COPAGO");
+    				String tipoCopagoSiniestroIte     = copagoDeducibleSiniestroIte.get("TIPOCOPAGO");
+    				double copagoAplicadoSiniestroIte = 0d;
+    				double cantidadCopagoSiniestroIte = 0d;
+    				
+    				if(StringUtils.isNotBlank(sDeducibleSiniestroIte)
+    						&&(!sDeducibleSiniestroIte.equalsIgnoreCase("na"))
+    						&&(!sDeducibleSiniestroIte.equalsIgnoreCase("no"))
+    						)
+    				{
+    					try
+    					{
+    						deducibleSiniestroIte = Double.valueOf(sDeducibleSiniestroIte);
+    					}
+    					catch(Exception ex)
+    					{
+    						logger.debug(""
+    								+ "\n### ERROR ##################################################"
+    								+ "\n### no es numero deducible: '"+sDeducibleSiniestroIte+"' ###"
+    								+ "\n############################################################"
+    								);
+    						deducibleSiniestroIte = 0d;
+    					}
+    				}
+    				if(StringUtils.isNotBlank(sCopagoSiniestroIte)
+    						&&(!sCopagoSiniestroIte.equalsIgnoreCase("na"))
+    						&&(!sCopagoSiniestroIte.equalsIgnoreCase("no"))
+    						)
+    				{
+    					try
+    					{
+    						cantidadCopagoSiniestroIte = Double.valueOf(sCopagoSiniestroIte);
+    					}
+    					catch(Exception ex)
+    					{
+    						logger.debug(""
+    								+ "\n### ERROR ############################################"
+    								+ "\n### no es numero copago: '"+sCopagoSiniestroIte+"' ###"
+    								+ "\n######################################################"
+    								);
+    						cantidadCopagoSiniestroIte = 0d;
+    					}
+    				}
+    				slist2.add(copagoDeducibleSiniestroIte);
+    				
+    				List<Map<String,String>>listaConceptosSiniestro = new ArrayList<Map<String,String>>();
+    				llist1.add(listaConceptosSiniestro);
+    				
+    				Map<String,String>importesWSSiniestroIte=new HashMap<String,String>();
+    				importesWSSiniestroIte.put("cdunieco" , siniestroIte.get("CDUNIECO"));
+    				importesWSSiniestroIte.put("cdramo"   , siniestroIte.get("CDRAMO"));
+    				importesWSSiniestroIte.put("estado"   , siniestroIte.get("ESTADO"));
+    				importesWSSiniestroIte.put("nmpoliza" , siniestroIte.get("NMPOLIZA"));
+    				importesWSSiniestroIte.put("nmsuplem" , siniestroIte.get("NMSUPLEM"));
+    				importesWSSiniestroIte.put("nmsituac" , siniestroIte.get("NMSITUAC"));
+    				importesWSSiniestroIte.put("aaapertu" , siniestroIte.get("AAAPERTU"));
+    				importesWSSiniestroIte.put("status"   , siniestroIte.get("STATUS"));
+    				importesWSSiniestroIte.put("nmsinies" , siniestroIte.get("NMSINIES"));
+    				importesWSSiniestroIte.put("ntramite" , ntramite);
+    				listaImportesWS.add(importesWSSiniestroIte);
+    				double importeSiniestroIte;
+    				double ivaSiniestroIte;
+    				double ivrSiniestroIte;
+    				double isrSiniestroIte;
+    				double cedSiniestroIte;
+    				
+    				//hospitalizacion
+    				Map<String,String> hosp = new HashMap<String,String>();
+    				lhosp.add(hosp);
+    				hosp.put("PTIMPORT" , "0");
+    				hosp.put("DESTO"    , "0");
+    				hosp.put("IVA"      , "0");
+    				//hospitalizacion
+    				
+    				//reembolso
+    				Map<String,String>mprem=new HashMap<String,String>();
+    				mprem.put("dummy","dummy");
+    				lprem.add(mprem);
+    				//remmbolso
+    				
+    				//pago directo
+    				Map<String,String> mpdir = new HashMap<String,String>();
+    				mpdir.put("total","0");
+    				mpdir.put("totalcedular","0");
+    				lpdir.add(mpdir);
+    				//pago directo
+    				
+    				for(Map<String,String>concepto : conceptos)
+    				{
+    					if(concepto.get("CDUNIECO").equals(siniestroIte.get("CDUNIECO"))
+    							&&concepto.get("CDRAMO").equals(siniestroIte.get("CDRAMO"))
+    							&&concepto.get("ESTADO").equals(siniestroIte.get("ESTADO"))
+    							&&concepto.get("NMPOLIZA").equals(siniestroIte.get("NMPOLIZA"))
+    							&&concepto.get("NMSUPLEM").equals(siniestroIte.get("NMSUPLEM"))
+    							&&concepto.get("NMSITUAC").equals(siniestroIte.get("NMSITUAC"))
+    							&&concepto.get("AAAPERTU").equals(siniestroIte.get("AAAPERTU"))
+    							&&concepto.get("STATUS").equals(siniestroIte.get("STATUS"))
+    							&&concepto.get("NMSINIES").equals(siniestroIte.get("NMSINIES"))
+    							)
+    					{
+    						listaConceptosSiniestro.add(concepto);
+    						
+    						//hospitalizacion
+    						if(factura.get("CDGARANT").equalsIgnoreCase("18HO")||factura.get("CDGARANT").equalsIgnoreCase("18MA"))
+    						{
+    							logger.debug(">>HOSPITALIZACION");
+    							double PTIMPORT=Double.parseDouble(concepto.get("PTIMPORT"));
+    							double DESTOPOR=Double.parseDouble(concepto.get("DESTOPOR"));
+    							double DESTOIMP=Double.parseDouble(concepto.get("DESTOIMP"));
+    							logger.debug("concepto importe "+PTIMPORT);
+    							logger.debug("concepto desto "+DESTOPOR);
+    							logger.debug("concepto destoimp "+DESTOIMP);
+    							logger.debug("usando iva proveedor "+ivaprov);
+    							boolean copagoPorc = false;
+    							String scopago =concepto.get("COPAGO");
+    							if(scopago.equalsIgnoreCase("no"));
+    							{
+    								scopago="0";
+    							}
+    							logger.debug("procesar copago "+scopago);
+    							if(StringUtils.isNotBlank(scopago))
+    							{
+    								if(scopago.contains("%"))
+    								{
+    									copagoPorc = true;
+    								}
+    								scopago=scopago.replace("%", "").replace("$", "");
+    								if(copagoPorc)
+    								{
+    									DESTOPOR=DESTOPOR+Double.valueOf(scopago);
+    								}
+    								else
+    								{
+    									DESTOIMP=DESTOIMP+Double.valueOf(scopago);
+    								}
+    							}
+    							logger.debug("concepto desto + copago % "+DESTOPOR);
+    							logger.debug("concepto destoimp + copago $ "+DESTOIMP);
+    							
+    							double hPTIMPORT = Double.parseDouble(hosp.get("PTIMPORT"));
+    							double hDESTO    = Double.parseDouble(hosp.get("DESTO"));
+    							double hIVA      = Double.parseDouble(hosp.get("IVA"));
+    							logger.debug("base import "+hPTIMPORT);
+    							logger.debug("base desto "+hDESTO);
+    							logger.debug("base iva "+hIVA);
+    							hPTIMPORT += PTIMPORT;
+    							hDESTO    += (PTIMPORT*(DESTOPOR/100d)) + (DESTOIMP);
+    							hIVA      += PTIMPORT*(ivaprov/100d);
+    							logger.debug("new import "+hPTIMPORT);
+    							logger.debug("new desto "+hDESTO);
+    							logger.debug("new iva "+hIVA);
+    							hosp.put("PTIMPORT" , hPTIMPORT+"");
+    							hosp.put("DESTO"    , hDESTO+"");
+    							hosp.put("IVA"      , hIVA+"");
+    							logger.debug("<<HOSPITALIZACION");
+    						}
+    						//hospitalizacion
+    						else
+    						//pago directo
+    						{
+    							/*
+    							CDUNIECO=1006,
+    							CDRAMO=2,
+    							ESTADO=M,
+    							NMPOLIZA=44,
+    							NMSUPLEM=245671518430000000, 
+    							MSITUAC=1, 
+    							AAAPERTU=2014, 
+    							STATUS=W, 
+    							NMSINIES=20, 
+    							CDCONCEP=1, 
+    							OTVALOR=Costo Administracion de Salud, 
+    							IDCONCEP=2, 
+    							DESCRIPC=HCPC, 
+    							CANTIDAD=2, 
+    							DESTOPOR=1, 
+    							DESTOIMP=16, 
+    							DEDUCIBLE=NA, 
+    							COPAGO=$100.00, 
+    							AUTMEDIC=null, 
+    							COMMENME=null, 
+    							PTIMPORT=346, 
+    							IMP_ARANCEL=null
+    							NFACTURA
+    							*/
+    							logger.debug(">>PAGO DIRECTO");
+    							Map<String,String>row=new HashMap<String,String>();
+    							row.putAll(concepto);
+    							
+    							double cantidad = Double.valueOf(row.get("CANTIDAD"));
+    							logger.debug("cantidad "+cantidad);
+    							double precioArancel = 0d;
+    							if(StringUtils.isNotBlank(row.get("IMP_ARANCEL")))
+    							{
+    								precioArancel = Double.valueOf(row.get("IMP_ARANCEL"));
+    							}
+    							row.put("IMP_ARANCEL",precioArancel+"");
+    							logger.debug("precioArancel "+precioArancel);
+    							double subtotalArancel = cantidad*precioArancel;//++
+    							logger.debug("subtotalArancel "+subtotalArancel);
+    							row.put("SUBTTARANCEL",subtotalArancel+"");
+    							double descuentoPorc   = 0d;
+    							double descuentoImpo   = 0d;
+    							if(StringUtils.isNotBlank(row.get("DESTOPOR")))
+    							{
+    								descuentoPorc = Double.parseDouble(row.get("DESTOPOR"));
+    							}
+    							if(StringUtils.isNotBlank(row.get("DESTOIMP")))
+    							{
+    								descuentoImpo = Double.parseDouble(row.get("DESTOIMP"));
+    							}
+    							double descuentoAplicado=(subtotalArancel*(descuentoPorc/100d))+descuentoImpo;//++
+    							logger.debug("descuentoAplicado "+descuentoAplicado);
+    							row.put("DESTOAPLICA",descuentoAplicado+"");
+    							double subtotalDescuento=subtotalArancel-descuentoAplicado;//++
+    							logger.debug("subtotalDescuento "+subtotalDescuento);
+    							row.put("SUBTTDESCUENTO",subtotalDescuento+"");
+    							
+    							boolean copagoPorc = false;
+    							double  copago = 0d;
+    							double  copagoAplicado = 0d;//++
+    							String scopago =concepto.get("COPAGO");
+    							logger.debug("procesar copago "+scopago);
+    							if(StringUtils.isNotBlank(scopago))
+    							{
+    								if(scopago.contains("%"))
+    								{
+    									copagoPorc = true;
+    								}
+    								scopago=scopago.replace("%", "").replace("$", "");
+    								copago=Double.valueOf(scopago);
+    								if(copagoPorc)
+    								{
+    									copagoAplicado=subtotalDescuento*(copagoAplicado/100d);
+    								}
+    								else
+    								{
+    									copagoAplicado=copago;
+    								}
+    							}
+    							row.put("COPAGOAPLICA",copagoAplicado+"");
+    							logger.debug("copagoAplicado "+copagoAplicado);
+    							double subtotalCopago    = subtotalDescuento - copagoAplicado;//++
+    							logger.debug("subtotalCopago "+subtotalCopago);
+    							row.put("SUBTTCOPAGO",subtotalCopago+"");
+    							double israplicado       = subtotalCopago*(isrprov/100d);//++
+    							logger.debug("israplicado "+israplicado);
+    							row.put("ISRAPLICA",israplicado+"");
+    							double subtotalImpuestos = subtotalCopago-(israplicado+0d);//cedularaplicado);//++
+    							logger.debug("subtotalImpuestos "+subtotalImpuestos);
+    							
+    							////// modificado
+    							double cedularaplicado   = subtotalImpuestos*(cedprov/100d);//++
+    							logger.debug("cedularaplicado "+cedularaplicado);
+    							row.put("CEDUAPLICA",cedularaplicado+"");
+    							////// modificado
+    							
+    							subtotalImpuestos = subtotalImpuestos - cedularaplicado;
+    							row.put("SUBTTIMPUESTOS",subtotalImpuestos+"");
+    							
+    							double ivaaplicado       = subtotalImpuestos*(ivaprov/100d);//++
+    							logger.debug("ivaaplicado "+ivaaplicado);
+    							row.put("IVAAPLICA",ivaaplicado+"");
+    							double ptimportauto      = subtotalImpuestos-ivaaplicado;//++
+    							logger.debug("ptimportauto "+ptimportauto);
+    							row.put("PTIMPORTAUTO",ptimportauto+"");
+    							
+    							double ptimport = Double.parseDouble(row.get("PTIMPORT"));
+    							logger.debug("ptimport "+ptimport);
+    							
+    							double valorusado        = ptimportauto;//++
+    							
+    							String autmedic = row.get("AUTMEDIC");
+    							if(StringUtils.isNotBlank(autmedic)&&autmedic.equalsIgnoreCase("S"))
+    							{
+    								valorusado = ptimport;
+    							}
+    							logger.debug("valorusado "+valorusado);
+    							row.put("VALORUSADO",valorusado+"");
+    							
+    							double totalGrupo = Double.parseDouble(mpdir.get("total"));
+    							logger.debug("base totalGrupo"+totalGrupo);
+    							totalGrupo += valorusado;
+    							logger.debug("new totalGrupo"+totalGrupo);
+    							mpdir.put("total",totalGrupo+"");
+    							
+    							double totalGrupoCedular = Double.parseDouble(mpdir.get("totalcedular"));
+    							logger.debug("base totalGrupoCedular"+totalGrupoCedular);
+    							totalGrupoCedular += cedularaplicado;
+    							logger.debug("new totalGrupoCedular"+totalGrupoCedular);
+    							mpdir.put("totalcedular",totalGrupoCedular+"");
+    							
+    							concepto.putAll(row);
+    							logger.debug("<<PAGO DIRECTO");
+    						}
+    						//pago directo
+    					}
+    				}
+    				
+    				//hospitalizacion
+					if(factura.get("CDGARANT").equalsIgnoreCase("18HO")||factura.get("CDGARANT").equalsIgnoreCase("18MA"))
+					{
+						logger.debug(">>WS del siniestro iterado");
+						logger.debug("deducible siniestro iterado: "+sDeducibleSiniestroIte);
+						logger.debug("copago siniestro iterado: "+sCopagoSiniestroIte);
+						logger.debug("tipo copago siniestro iterado: "+tipoCopagoSiniestroIte);
+						
+						double hPTIMPORT = Double.valueOf(hosp.get("PTIMPORT"));
+						double DESTOIMP  = Double.valueOf(hosp.get("DESTO"));
+						double hIVA      = Double.valueOf(hosp.get("IVA"));
+						
+						double subttDesto = hPTIMPORT - ( DESTOIMP + deducibleSiniestroIte );
+						if(StringUtils.isNotBlank(tipoCopagoSiniestroIte))
+						{
+							if(tipoCopagoSiniestroIte.equalsIgnoreCase("$"))
+							{
+								copagoAplicadoSiniestroIte = cantidadCopagoSiniestroIte;
+							}
+							if(tipoCopagoSiniestroIte.equalsIgnoreCase("%"))
+							{
+								copagoAplicadoSiniestroIte = subttDesto * ( cantidadCopagoSiniestroIte / 100d );
+							}
+						}
+						importeSiniestroIte = subttDesto - copagoAplicadoSiniestroIte;
+						ivaSiniestroIte = hIVA;
+						ivrSiniestroIte = 0d;
+						isrSiniestroIte = 0d;
+						cedSiniestroIte = 0d;
+						importesWSSiniestroIte.put(IMPORTE_WS_IMPORTE , (new Double(importeSiniestroIte)).toString());
+						importesWSSiniestroIte.put(IMPORTE_WS_IVA     , (new Double(ivaSiniestroIte)    ).toString());
+						importesWSSiniestroIte.put(IMPORTE_WS_IVR     , (new Double(ivrSiniestroIte)    ).toString());
+						importesWSSiniestroIte.put(IMPORTE_WS_ISR     , (new Double(isrSiniestroIte)    ).toString());
+						importesWSSiniestroIte.put(IMPORTE_WS_CEDULAR , (new Double(cedSiniestroIte)    ).toString());
+						logger.debug("mapa WS siniestro iterado: "+importesWSSiniestroIte);
+						logger.debug("<<WS del siniestro iterado");
+					}
+					else//pago directo
+					{
+						logger.debug(">>WS del siniestro iterado");
+						logger.debug("deducible siniestro iterado: "+sDeducibleSiniestroIte);
+						logger.debug("copago siniestro iterado: "+sCopagoSiniestroIte);
+						logger.debug("tipo copago siniestro iterado: "+tipoCopagoSiniestroIte);
+						
+						double totalGrupo = Double.valueOf(mpdir.get("total"));
+						
+						importeSiniestroIte = totalGrupo / ( 1d + ( ivaprov  / 100d ) );
+						ivaSiniestroIte = importeSiniestroIte * ( ivaprov / 100d );
+						ivrSiniestroIte = 0d;
+						isrSiniestroIte = 0d;
+						cedSiniestroIte = Double.valueOf(mpdir.get("totalcedular"));
+						importesWSSiniestroIte.put(IMPORTE_WS_IMPORTE , (new Double(importeSiniestroIte)).toString());
+						importesWSSiniestroIte.put(IMPORTE_WS_IVA     , (new Double(ivaSiniestroIte)    ).toString());
+						importesWSSiniestroIte.put(IMPORTE_WS_IVR     , (new Double(ivrSiniestroIte)    ).toString());
+						importesWSSiniestroIte.put(IMPORTE_WS_ISR     , (new Double(isrSiniestroIte)    ).toString());
+						importesWSSiniestroIte.put(IMPORTE_WS_CEDULAR , (new Double(cedSiniestroIte)    ).toString());
+						logger.debug("mapa WS siniestro iterado: "+importesWSSiniestroIte);
+						logger.debug("<<WS del siniestro iterado");
+					}
+    				
+    			}
+    		}
+    		else//REEMBOLSO
+    		{
+    			siniestro  = siniestros.get(0);
+    			siniestros = null;
+    			smap2      = siniestro;
+    			smap3      = new HashMap<String,String>();
+    			smap3.put("a","a");
+    			smap.put("PAGODIRECTO","N");
+    			conceptos  = siniestrosManager.P_GET_CONCEPTOS_FACTURA(
+    					siniestro.get("CDUNIECO"),
+    					siniestro.get("CDRAMO"),
+    					siniestro.get("ESTADO"),
+    					siniestro.get("NMPOLIZA"),
+    					siniestro.get("NMSUPLEM"),
+    					siniestro.get("NMSITUAC"),
+    					siniestro.get("AAAPERTU"),
+    					siniestro.get("STATUS"),
+    					siniestro.get("NMSINIES"),
+    					null);
+    			slist1     = facturas;
+    			
+    			//hospitalizacion
+    			Map<String,String> hosp = new HashMap<String,String>();
+				lhosp.add(hosp);
+				hosp.put("PTIMPORT" , "0");
+				hosp.put("DESTO"    , "0");
+				hosp.put("IVA"      , "0");
+				//hospitalizacion
+				
+				//directo
+				Map<String,String>mpdir=new HashMap<String,String>();
+				mpdir.put("dummy","dummy");
+				lpdir.add(mpdir);
+				//directo
+				
+				Map<String,String>importesWSSiniestroUnico=new HashMap<String,String>();
+				importesWSSiniestroUnico.put("cdunieco" , siniestro.get("CDUNIECO"));
+				importesWSSiniestroUnico.put("cdramo"   , siniestro.get("CDRAMO"));
+				importesWSSiniestroUnico.put("estado"   , siniestro.get("ESTADO"));
+				importesWSSiniestroUnico.put("nmpoliza" , siniestro.get("NMPOLIZA"));
+				importesWSSiniestroUnico.put("nmsuplem" , siniestro.get("NMSUPLEM"));
+				importesWSSiniestroUnico.put("nmsituac" , siniestro.get("NMSITUAC"));
+				importesWSSiniestroUnico.put("aaapertu" , siniestro.get("AAAPERTU"));
+				importesWSSiniestroUnico.put("status"   , siniestro.get("STATUS"));
+				importesWSSiniestroUnico.put("nmsinies" , siniestro.get("NMSINIES"));
+				importesWSSiniestroUnico.put("ntramite" , ntramite);
+				listaImportesWS.add(importesWSSiniestroUnico);
+				double importeSiniestroUnico = 0d;
+				double ivaSiniestroUnico     = 0d;
+				double ivrSiniestroUnico     = 0d;
+				double isrSiniestroUnico     = 0d;
+				double cedularSiniestroUnico = 0d;
+    			
+    			for(Map<String,String>facturaIte:facturas)
+    			{
+    				Map<String,String>autorizacionesFacturaIte = siniestrosManager.obtenerAutorizacionesFactura(
+    						siniestro.get("CDUNIECO"),
+        					siniestro.get("CDRAMO"),
+        					siniestro.get("ESTADO"),
+        					siniestro.get("NMPOLIZA"),
+        					siniestro.get("NMSUPLEM"),
+        					siniestro.get("NMSITUAC"),
+        					siniestro.get("AAAPERTU"),
+        					siniestro.get("STATUS"),
+        					siniestro.get("NMSINIES"),
+        					facturaIte.get("NFACTURA"));
+					facturaIte.put("AUTMEDIC",autorizacionesFacturaIte.get("AUTMEDIC"));
+					facturaIte.put("COMMENME",autorizacionesFacturaIte.get("COMMENME"));
+					facturaIte.put("AUTRECLA",autorizacionesFacturaIte.get("AUTRECLA"));
+					facturaIte.put("COMMENAR",autorizacionesFacturaIte.get("COMMENAR"));
+    				
+    				//reembolso
+    				Map<String,String>mprem=new HashMap<String,String>(0);
+    				mprem.put("TOTALNETO" , "0");
+    				mprem.put("SUBTOTAL"  , "0");
+    				lprem.add(mprem);
+    				//reembolso
+    				
+    				String destopor = facturaIte.get("DESCPORC");
+    				if(StringUtils.isBlank(destopor))
+    				{
+    					facturaIte.put("DESCPORC","0");
+    				}
+    				String destoimp = facturaIte.get("DESCNUME");
+    				if(StringUtils.isBlank(destoimp))
+    				{
+    					facturaIte.put("DESCNUME","0");
+    				}
+    				
+    				String cdunieco = siniestro.get("CDUNIECO");
+    				String cdramo   = siniestro.get("CDRAMO");
+    				String estado   = siniestro.get("ESTADO");
+    				String nmpoliza = siniestro.get("NMPOLIZA");
+    				String nmsuplem = siniestro.get("NMSUPLEM");
+    				String nmsituac = siniestro.get("NMSITUAC");
+    				String aaapertu = siniestro.get("AAAPERTU");
+    				String status   = siniestro.get("STATUS");
+    				String nmsinies = siniestro.get("NMSINIES");
+    				String nfactura = facturaIte.get("NFACTURA");
+    				Map<String,String>copagoDeducibleFacturaIte =siniestrosManager.obtenerCopagoDeducible(
+    						cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura);
+    				String sDeducibleFacturaIte     = copagoDeducibleFacturaIte.get("DEDUCIBLE").replace(",","");
+    				double deducibleFacturaIte      = 0d;
+    				String sCopagoFacturaIte        = copagoDeducibleFacturaIte.get("COPAGO");
+    				String tipoCopagoFacturaIte     = copagoDeducibleFacturaIte.get("TIPOCOPAGO");
+    				double cantidadCopagoFacturaIte = 0d;
+    				double copagoAplicadoFacturaIte = 0d;
+    				
+    				if(StringUtils.isNotBlank(sDeducibleFacturaIte)
+    						&&(!sDeducibleFacturaIte.equalsIgnoreCase("na"))
+    						&&(!sDeducibleFacturaIte.equalsIgnoreCase("no"))
+    						)
+    				{
+    					try
+    					{
+    						deducibleFacturaIte = Double.valueOf(sDeducibleFacturaIte);
+    					}
+    					catch(Exception ex)
+    					{
+    						logger.debug(""
+    								+ "\n### ERROR ##################################################"
+    								+ "\n### no es numero deducible: '"+sDeducibleFacturaIte+"' ###"
+    								+ "\n############################################################"
+    								);
+    						deducibleFacturaIte = 0d;
+    					}
+    				}
+    				if(StringUtils.isNotBlank(sCopagoFacturaIte)
+    						&&(!sCopagoFacturaIte.equalsIgnoreCase("na"))
+    						&&(!sCopagoFacturaIte.equalsIgnoreCase("no"))
+    						)
+    				{
+    					try
+    					{
+    						cantidadCopagoFacturaIte = Double.valueOf(sCopagoFacturaIte);
+    					}
+    					catch(Exception ex)
+    					{
+    						logger.debug(""
+    								+ "\n### ERROR ############################################"
+    								+ "\n### no es numero copago: '"+sCopagoFacturaIte+"' ###"
+    								+ "\n######################################################"
+    								);
+    						cantidadCopagoFacturaIte = 0d;
+    					}
+    				}
+    				slist2.add(copagoDeducibleFacturaIte);
+    				
+    				Map<String,String>datosProveedor =siniestrosManager.obtenerDatosProveedor(facturaIte.get("CDPRESTA")); 
+    				slist3.add(datosProveedor);
+    				double ivaprov=Double.parseDouble(datosProveedor.get("IVA"));
+    				
+    				List<Map<String,String>>listaConceptosFactura = new ArrayList<Map<String,String>>();
+    				llist1.add(listaConceptosFactura);
+    				for(Map<String,String>concepto : conceptos)
+    				{
+    					if(concepto.get("NFACTURA").equals(facturaIte.get("NFACTURA")))
+    					{
+    						listaConceptosFactura.add(concepto);
+    						
+    						//hospitalizacion
+    						/*
+    						if(facturaIte.get("CDGARANT").equalsIgnoreCase("18HO")||facturaIte.get("CDGARANT").equalsIgnoreCase("18MA"))
+    						{
+    							logger.debug(">>HOSPITALIZACION");
+    							double PTIMPORT=Double.parseDouble(concepto.get("PTIMPORT"));
+    							double DESTOPOR=Double.parseDouble(concepto.get("DESTOPOR"));
+    							double DESTOIMP=Double.parseDouble(concepto.get("DESTOIMP"));
+    							logger.debug("concepto importe "+PTIMPORT);
+    							logger.debug("concepto desto "+DESTOPOR);
+    							logger.debug("concepto destoimp "+DESTOIMP);
+    							logger.debug("usando iva proveedor "+ivaprov);
+    							boolean copagoPorc = false;
+    							String scopago =concepto.get("COPAGO");
+    							logger.debug("procesar copago "+scopago);
+    							if(StringUtils.isNotBlank(scopago))
+    							{
+    								if(scopago.contains("%"))
+    								{
+    									copagoPorc = true;
+    								}
+    								scopago=scopago.replace("%", "").replace("$", "");
+    								if(copagoPorc)
+    								{
+    									DESTOPOR=DESTOPOR+Double.valueOf(scopago);
+    								}
+    								else
+    								{
+    									DESTOIMP=DESTOIMP+Double.valueOf(scopago);
+    								}
+    							}
+    							logger.debug("concepto desto + copago % "+DESTOPOR);
+    							logger.debug("concepto destoimp + copago $ "+DESTOIMP);
+    							
+    							double hPTIMPORT = Double.parseDouble(hosp.get("PTIMPORT"));
+    							double hDESTO    = Double.parseDouble(hosp.get("DESTO"));
+    							double hIVA      = Double.parseDouble(hosp.get("IVA"));
+    							logger.debug("base import "+hPTIMPORT);
+    							logger.debug("base desto "+hDESTO);
+    							logger.debug("base iva "+hIVA);
+    							hPTIMPORT += PTIMPORT;
+    							hDESTO    += (PTIMPORT*(DESTOPOR/100d)) + (DESTOIMP);
+    							hIVA      += PTIMPORT*(ivaprov/100d);
+    							logger.debug("new import "+hPTIMPORT);
+    							logger.debug("new desto "+hDESTO);
+    							logger.debug("new iva "+hIVA);
+    							hosp.put("PTIMPORT" , hPTIMPORT+"");
+    							hosp.put("DESTO"    , hDESTO+"");
+    							hosp.put("IVA"      , hIVA+"");
+    							logger.debug("<<HOSPITALIZACION");
+    						}
+    						//hospitalizacion
+    						else
+    						//pago reembolso
+    						{
+    						*/
+    							/*
+    							CDUNIECO=1006,
+    							CDRAMO=2,
+    							ESTADO=M,
+    							NMPOLIZA=44,
+    							NMSUPLEM=245671518430000000, 
+    							MSITUAC=1, 
+    							AAAPERTU=2014, 
+    							STATUS=W, 
+    							NMSINIES=20, 
+    							CDCONCEP=1, 
+    							OTVALOR=Costo Administracion de Salud, 
+    							IDCONCEP=2, 
+    							DESCRIPC=HCPC, 
+    							CANTIDAD=2, 
+    							DESTOPOR=1, 
+    							DESTOIMP=16, 
+    							DEDUCIBLE=NA, 
+    							COPAGO=$100.00, 
+    							AUTMEDIC=null, 
+    							COMMENME=null, 
+    							PTIMPORT=346, 
+    							IMP_ARANCEL=null
+    							NFACTURA
+    							*/
+    							logger.debug(">>REEMBOLSO");
+    							Map<String,String>row=new HashMap<String,String>();
+    							row.putAll(concepto);
+    							
+    							double ptimport = Double.parseDouble(row.get("PTIMPORT"));
+    							logger.debug("ptimport "+ptimport);
+    							
+    							double ajusteaplica = 0d;
+    							if(StringUtils.isNotBlank(row.get("PTIMPORT_AJUSTADO")))
+    							{
+    								ajusteaplica = Double.parseDouble(row.get("PTIMPORT_AJUSTADO"));
+    							}
+    							logger.debug("ajusteaplica "+ajusteaplica);
+    							
+    							double subtotal = ptimport-ajusteaplica;
+    							logger.debug("subtotal "+subtotal);
+    							row.put("SUBTOTAL",subtotal+"");
+    							
+    							double gtotalneto = Double.parseDouble(mprem.get("TOTALNETO"));
+    							double gsubtotal  = Double.parseDouble(mprem.get("SUBTOTAL"));
+    							logger.debug("base totalneto " + gtotalneto);
+    							logger.debug("base subtotal "  + gsubtotal);
+    							gtotalneto += ptimport;
+    							gsubtotal  += subtotal;
+    							logger.debug("new totalneto " + gtotalneto);
+    							logger.debug("new subtotal "  + gsubtotal);
+    							
+    							mprem.put("TOTALNETO" , gtotalneto + "");
+    							mprem.put("SUBTOTAL"  , gsubtotal  + "");
+    							
+    							concepto.putAll(row);
+    							logger.debug("<<REEMBOLSO");
+    						/*}*/
+    						//pago reembolso
+    					}
+    					    					
+    				}
+    				
+    				logger.debug(">>Calculando total factura iterada para WS");
+    				logger.debug("deducible :"+deducibleFacturaIte);
+    				logger.debug("scopago: "+sCopagoFacturaIte);
+    				logger.debug("tipocopago: "+tipoCopagoFacturaIte);
+    				double totalFactura  = Double.valueOf(mprem.get("SUBTOTAL"));
+    				double destoPorFac   = Double.valueOf(facturaIte.get("DESCPORC"));
+    				double destoImpFac   = Double.valueOf(facturaIte.get("DESCNUME"));
+    				double destoAplicado = (totalFactura*(destoPorFac/100d)) + destoImpFac;
+    				logger.debug("subtotal: "+totalFactura);
+    				totalFactura -= destoAplicado;
+    				logger.debug("subtotal desto: "+totalFactura);
+    				totalFactura -= deducibleFacturaIte;
+    				logger.debug("subtotal deducible: "+totalFactura);
+    				if(StringUtils.isNotBlank(tipoCopagoFacturaIte))
+					{
+						if(tipoCopagoFacturaIte.equalsIgnoreCase("$"))
+						{
+							copagoAplicadoFacturaIte = cantidadCopagoFacturaIte;
+						}
+						if(tipoCopagoFacturaIte.equalsIgnoreCase("%"))
+						{
+							copagoAplicadoFacturaIte = totalFactura * ( cantidadCopagoFacturaIte / 100d );
+						}
+					}
+    				totalFactura -= copagoAplicadoFacturaIte;
+    				logger.debug("total copago (final): "+totalFactura);
+    				logger.debug("<<Calculando total factura iterada para WS");
+    				
+    				importeSiniestroUnico += totalFactura;
+    			}
+    			
+    			logger.debug(">>WS del siniestro unico");
+				importesWSSiniestroUnico.put(IMPORTE_WS_IMPORTE , (new Double(importeSiniestroUnico)).toString());
+				importesWSSiniestroUnico.put(IMPORTE_WS_IVA     , (new Double(ivaSiniestroUnico)    ).toString());
+				importesWSSiniestroUnico.put(IMPORTE_WS_IVR     , (new Double(ivrSiniestroUnico)    ).toString());
+				importesWSSiniestroUnico.put(IMPORTE_WS_ISR     , (new Double(isrSiniestroUnico)    ).toString());
+				importesWSSiniestroUnico.put(IMPORTE_WS_CEDULAR , (new Double(cedularSiniestroUnico)).toString());
+				logger.debug("mapa WS siniestro unico: "+importesWSSiniestroUnico);
+				logger.debug("<<WS del siniestro unico");
+    			
+    		}
+    		
+    		if(conceptos!=null&&conceptos.size()>0)
+    		{
+    			logger.debug("conceptos[0]: "+conceptos);
+    		}
+    		
+    		seccion     = "FORM_TRAMITE";
+    		componentes = pantallasManager.obtenerComponentes(null, null, null, null, null, cdrol, pantalla, seccion, null);
+    		gc.generaComponentes(componentes, true, true, true, false, false, false);
+    		imap.put("tramiteFields" , gc.getFields());
+    		imap.put("tramiteItems"  , gc.getItems());
+    		
+    		seccion     = "FACTURA";
+    		componentes = pantallasManager.obtenerComponentes(null, null, null, null, null, cdrol, pantalla, seccion, null);
+    		gc.generaComponentes(componentes, true, true, true, true, false, false);
+    		imap.put("facturaFields"  , gc.getFields());
+    		imap.put("facturaItems"   , gc.getItems());
+    		imap.put("facturaColumns" , gc.getColumns());
+    		
+    		seccion     = "SINIESTRO";
+    		componentes = pantallasManager.obtenerComponentes(null, null, null, null, null, cdrol, pantalla, seccion, null);
+    		gc.generaComponentes(componentes, true, true, true, true, false, false);
+    		imap.put("siniestroFields"  , gc.getFields());
+    		imap.put("siniestroItems"   , gc.getItems());
+    		imap.put("siniestroColumns" , gc.getColumns());
+    		
+    		seccion     = "PROVEEDOR";
+    		componentes = pantallasManager.obtenerComponentes(null, null, null, null, null, cdrol, pantalla, seccion, null);
+    		gc.generaComponentes(componentes, true, true, true, false, false, false);
+    		imap.put("proveedorFields" , gc.getFields());
+    		imap.put("proveedorItems"  , gc.getItems());
+    		
+    		seccion     = "CONCEPTO";
+    		componentes = pantallasManager.obtenerComponentes(null, null, null, null, null, cdrol, pantalla, seccion, null);
+    		gc.generaComponentes(componentes, true, true, false, true, false, false);
+    		imap.put("conceptoFields"  , gc.getFields());
+    		imap.put("conceptoColumns" , gc.getColumns());
+    	
+    		seccion     = "FORM_AUTORIZA";
+    		componentes = pantallasManager.obtenerComponentes(null, null, null, null, null, cdrol, pantalla, seccion, null);
+    		gc.generaComponentes(componentes, true, false, true, false, false, false);
+    		imap.put("autorizaItems",gc.getItems());
+    		
+    		pantalla    = "RECHAZO_SINIESTRO";
+    		seccion     = "FORMULARIO";
+    		componentes = pantallasManager.obtenerComponentes(null, null, null, null, null, cdrol, pantalla, seccion, null);
+    		gc.generaComponentes(componentes, true, false, true, false, false, false);
+    		imap.put("rechazoitems",gc.getItems());
+    	}
+    	catch(Exception ex)
+    	{
+    		logger.debug("error al cargar pantalla de calculo de siniestros",ex);
+    	}
+    	logger.debug(""
+    			+ "\n######                            ######"
+    			+ "\n###### Consulta calculoSiniestros ######"
+    			+ "\n########################################"
+    			+ "\n########################################"
+    			);
+    	return SUCCESS;
+    }
+    
     public String obtenerFacturasTramite()
     {
     	logger.debug(""
