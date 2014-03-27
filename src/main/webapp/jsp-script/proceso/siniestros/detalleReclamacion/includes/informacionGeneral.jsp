@@ -74,7 +74,8 @@
 				{type:'string', name:'CDICD'},
 				{type:'string', name:'CDICD2'},
 				{type:'string', name:'NMRECLAMO'},
-				{type:'string', name:'CDPERSON'}
+				{type:'string', name:'CDPERSON'},
+				{type:'string', name:'BENEFICIARIO'}
 		    ]
 		});
 	
@@ -520,7 +521,7 @@
 		        },{
                     //colspan    : 1,
                     xtype      : 'displayfield',
-                    name       : 'ASEGURADO',
+                    name       : 'BENEFICIARIO',
                     fieldLabel : 'Beneficiario'
                 },{
                     colspan    : 1,

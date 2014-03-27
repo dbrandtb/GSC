@@ -24,5 +24,14 @@ public class ConsultasSiniestroManagerImpl implements ConsultasSiniestroManager 
 	public void setConsultasSiniestroDAO(ConsultasSiniestroDAO consultasSiniestroDAO) {
 		this.consultasSiniestroDAO = consultasSiniestroDAO;
 	}
+
+	@Override
+	public List<ConsultaDatosSiniestrosVO> getConsultaFacturasPagoDirecto(String cdperson, String cdproveedor, String cdfactura) throws ApplicationException {
+		try {
+			return consultasSiniestroDAO.obtieneConsultaFacturasPagoDirecto(cdperson,cdproveedor,cdfactura);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}
 	
 }

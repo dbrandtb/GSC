@@ -15,5 +15,7 @@ import mx.com.gseguros.portal.consultas.model.ConsultaDatosSiniestrosVO;
 public interface ConsultasSiniestroManager {
 	
 	public List<ConsultaDatosSiniestrosVO> getConsultaAseguradosPagoReembolso(String cdperson)throws ApplicationException;
+
+	public List<ConsultaDatosSiniestrosVO> getConsultaFacturasPagoDirecto(String cdperson, String cdproveedor, String cdfactura)throws ApplicationException;
 	
 }

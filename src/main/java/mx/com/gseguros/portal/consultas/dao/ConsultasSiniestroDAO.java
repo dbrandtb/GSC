@@ -13,4 +13,10 @@ public interface ConsultasSiniestroDAO {
 
 
 	public List<ConsultaDatosSiniestrosVO> obtieneConsultaAseguradosPagoReembolso(String cdperson) throws DaoException;
+
+
+	public List<ConsultaDatosSiniestrosVO> obtieneConsultaFacturasPagoDirecto(String cdperson, String cdproveedor, String cdfactura) throws DaoException;
+
+
+
 }

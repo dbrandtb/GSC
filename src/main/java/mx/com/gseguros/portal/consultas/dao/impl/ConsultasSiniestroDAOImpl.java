@@ -42,6 +42,7 @@ public class ConsultasSiniestroDAOImpl extends AbstractManagerDAO implements Con
 			compile();
 		}
 	}
+	
 	protected class DatosListaAasegurado  implements RowMapper {
         public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
         	ConsultaDatosSiniestrosVO consulta = new ConsultaDatosSiniestrosVO();
@@ -51,9 +52,39 @@ public class ConsultasSiniestroDAOImpl extends AbstractManagerDAO implements Con
         	consulta.setNmsinies(rs.getString("NMSINIES"));
         	consulta.setFeocurre(Utilerias.formateaFecha(rs.getString("FEOCURRE")));
         	consulta.setFeapertu(Utilerias.formateaFecha(rs.getString("FEAPERTU")));
+        	consulta.setAsegurado(rs.getString("CDPERSON")+" "+rs.getString("NOMBRE"));
+        	consulta.setProveedor(rs.getString("CDPRESTA")+" "+rs.getString("DSPRESTA"));
+        	consulta.setFactura(rs.getString("NFACTURA"));
+        	
         	return consulta;
         }
     }
+	
+	@SuppressWarnings("unchecked")
+	public List<ConsultaDatosSiniestrosVO> obtieneConsultaFacturasPagoDirecto(String cdperson, String cdproveerdor, String cdfactura) throws DaoException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdperson_i", cdperson);
+		params.put("pv_proveedor_i", cdproveerdor);
+		params.put("pv_factura_i", cdfactura);
+		Map<String, Object> mapResult = ejecutaSP(new ConsultaListaFacturasPagoDirecto(getDataSource()), params);
+		return (List<ConsultaDatosSiniestrosVO>) mapResult.get("pv_registro_o");
+	}
+	
+	protected class ConsultaListaFacturasPagoDirecto extends StoredProcedure
+	{
+		protected ConsultaListaFacturasPagoDirecto(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SINIESTRO.P_GET_SIN_ASEG_PD");
+			declareParameter(new SqlParameter("pv_cdperson_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_proveedor_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_factura_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DatosListaAasegurado()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
 
 
 

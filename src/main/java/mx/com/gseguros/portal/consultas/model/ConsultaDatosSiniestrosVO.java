@@ -23,6 +23,9 @@ public class ConsultaDatosSiniestrosVO implements Serializable{
 	private String nmsinies;
 	private String feocurre;
 	private String feapertu;
+	private String asegurado;
+	private String factura;
+	private String proveedor;
 	
 
 	public String getNtramite() {
@@ -72,6 +75,36 @@ public class ConsultaDatosSiniestrosVO implements Serializable{
 
 	public void setFeapertu(String feapertu) {
 		this.feapertu = feapertu;
+	}
+
+
+	public String getAsegurado() {
+		return asegurado;
+	}
+
+
+	public void setAsegurado(String asegurado) {
+		this.asegurado = asegurado;
+	}
+
+
+	public String getFactura() {
+		return factura;
+	}
+
+
+	public void setFactura(String factura) {
+		this.factura = factura;
+	}
+
+
+	public String getProveedor() {
+		return proveedor;
+	}
+
+
+	public void setProveedor(String proveedor) {
+		this.proveedor = proveedor;
 	}
 
 

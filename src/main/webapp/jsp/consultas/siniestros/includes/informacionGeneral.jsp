@@ -74,7 +74,10 @@
 				{type:'string', name:'CDICD'},
 				{type:'string', name:'CDICD2'},
 				{type:'string', name:'NMRECLAMO'},
-				{type:'string', name:'CDPERSON'}
+				{type:'string', name:'CDPERSON'},
+				{type:'string', name:'DSICD'},
+				{type:'string', name:'DSICD2'},
+				{type:'string', name:'BENEFICIARIO'}
 		    ]
 		});
 	
@@ -523,7 +526,7 @@
 		        },{
                     //colspan    : 1,
                     xtype      : 'displayfield',
-                    name       : 'ASEGURADO',
+                    name       : 'BENEFICIARIO',
                     fieldLabel : 'Beneficiario'
                 },{
                     colspan    : 1,
@@ -539,91 +542,14 @@
 		            labelWidth : 120,
 		            hidden: (_TIPOPAGO == _REEMBOLSO)
 		        },{
-		        	colspan     : 1,
-		        	xtype       : 'combo',
-		        	name        : 'CDICD_TEMP',
-		        	fieldLabel  : 'ICD',
-		        	//emptyText   : 'Seleccione...',
-		        	valueField  : 'key',
-		        	displayField: 'value',
-		            forceSelection : true,
-		            matchFieldWidth: false,
-		            hideTrigger : true,
-		            readOnly   : true,
-		            triggerAction: 'all',
-		            queryMode   : 'remote',
-	                queryParam  : 'params.otclave',
-	                minChars    : 2,
-	                store       : Ext.create('Ext.data.Store', {
-	                    model:'Generic',
-	                    autoLoad:false,
-	                    proxy: {
-	                        type: 'ajax',
-	                        url : _URL_CATALOGOS,
-	                        extraParams:{
-	                            catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@ICD"/>',
-	                            'params.cdtabla' : '2TABLICD'
-	                        },
-	                        reader: {
-	                            type: 'json',
-	                            root: 'lista'
-	                        }
-	                    }
-	                }),
-	                listeners : {
-	                	select : function(combo, records, eOpts ) {
-                            pnlInformacionGral.down('[name=CDICD]').setValue(combo.getValue());
-                        }
-	                }
+					xtype      : 'displayfield',
+					name       : 'DSICD',
+					fieldLabel : 'ICD'
 		        },{
-                    colspan    : 1,
-                    xtype      : 'displayfield',
-                    name       : 'CDICD',
-                    labelWidth : 120
-                },{
-		        	colspan     : 1,
-		        	xtype       : 'combo',
-		        	name        : 'CDICD2_TEMP',
-					fieldLabel  : 'ICD secundario',
-					//emptyText   : 'Seleccione...',
-					hidden: (_TIPOPAGO == _REEMBOLSO),
-					valueField  : 'key',
-					displayField: 'value',
-					forceSelection : true,
-					matchFieldWidth: false,
-					readOnly   : true,
-					hideTrigger : true,
-					triggerAction: 'all',
-					queryMode   : 'remote',
-	                queryParam  : 'params.otclave',
-	                minChars    : 2,
-					store       : Ext.create('Ext.data.Store', {
-				        model:'Generic',
-				        autoLoad:false,
-				        proxy: {
-				            type: 'ajax',
-				            url : _URL_CATALOGOS,
-				            extraParams:{
-				            	catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@ICD"/>',
-				                'params.cdtabla' : '2TABLICD'
-				            },
-				            reader: {
-				                type: 'json',
-				                root: 'lista'
-				            }
-				        }
-				    }),
-                    listeners : {
-                        select : function(combo, records, eOpts ) {
-                            pnlInformacionGral.down('[name=CDICD2]').setValue(combo.getValue());
-                        }
-                    }
-		        },{
-                    colspan    : 1,
-                    xtype      : 'displayfield',
-                    name       : 'CDICD2',
-                    labelWidth : 120
-                }
+					xtype      : 'displayfield',
+					name       : 'DSICD2',
+					fieldLabel : 'ICD secundario'
+		        }
 		    ]
 		});
 		
