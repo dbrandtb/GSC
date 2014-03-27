@@ -21,7 +21,7 @@
             <result>/jsp/consultas/siniestros/includes/informacionGeneral.jsp</result>
         </action>
         
-        <action name="includes/calculoSiniestros" class="siniestrosAction" method="calculoSiniestros">
+        <action name="includes/calculoSiniestros" class="siniestrosAction" method="consultaCalculoSiniestros">
             <result name="success">/jsp/consultas/siniestros/includes/calculos.jsp</result>
         </action>
         
