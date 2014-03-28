@@ -1043,7 +1043,12 @@ public void setMsgResult(String msgResult) {
 		   
 		   String nombreRdf = "";
 		   
-		   if(RolSistema.COORDINADOR_MEDICO.getCdsisrol().equals(cdrol)|| RolSistema.COORDINADOR_MEDICO_MULTIREGIONAL.getCdsisrol().equals(cdrol) || RolSistema.GERENTE_MEDICO_MULTIREGIONAL.getCdsisrol().equals(cdrol) || RolSistema.MEDICO.getCdsisrol().equals(cdrol)){
+		   if(RolSistema.COORDINADOR_MEDICO.getCdsisrol().equals(cdrol)
+				   || RolSistema.COORDINADOR_MEDICO_MULTIREGIONAL.getCdsisrol().equals(cdrol)
+				   || RolSistema.GERENTE_MEDICO_MULTIREGIONAL.getCdsisrol().equals(cdrol)
+				   || RolSistema.MEDICO.getCdsisrol().equals(cdrol)
+				   || RolSistema.MEDICO_AJUSTADOR.getCdsisrol().equals(cdrol)
+				   ){
 			   nombreRdf = getText("rdf.siniestro.cartarechazo.medico.nombre");
 		   }else {
 				if(TipoPago.DIRECTO.getCodigo().equals(tipoPago)){
@@ -1893,6 +1898,7 @@ public void setMsgResult(String msgResult) {
     					||cdrol.equalsIgnoreCase(RolSistema.COORDINADOR_MEDICO_MULTIREGIONAL.getCdsisrol())
     					||cdrol.equalsIgnoreCase(RolSistema.GERENTE_MEDICO_MULTIREGIONAL.getCdsisrol())
     					||cdrol.equalsIgnoreCase(RolSistema.MEDICO.getCdsisrol())
+    					||cdrol.equalsIgnoreCase(RolSistema.MEDICO_AJUSTADOR.getCdsisrol())
     					)
     			{
     				rolMedico = Boolean.TRUE;
@@ -4147,6 +4153,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     					||cdrol.equalsIgnoreCase(RolSistema.COORDINADOR_MEDICO_MULTIREGIONAL.getCdsisrol())
     					||cdrol.equalsIgnoreCase(RolSistema.GERENTE_MEDICO_MULTIREGIONAL.getCdsisrol())
     					||cdrol.equalsIgnoreCase(RolSistema.MEDICO.getCdsisrol())
+    					||cdrol.equalsIgnoreCase(RolSistema.MEDICO_AJUSTADOR.getCdsisrol())
     					)
     			{
     				rolMedico = Boolean.TRUE;
