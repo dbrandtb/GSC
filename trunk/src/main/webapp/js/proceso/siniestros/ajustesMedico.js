@@ -457,7 +457,7 @@ Ext.onReady(function() {
     	        border    : 0
     	        ,title: 'Ajustes M&eacute;dico'
     	        ,renderTo : 'div_clau'
-	        	,bodyPadding: 10
+	        	//,bodyPadding: 10
 	        	,width: 800
 	            ,defaults 	:
 	    		{
@@ -475,6 +475,7 @@ Ext.onReady(function() {
 		            	,labelWidth : 160
 		            	,width: 500
 		            	,name       : 'idConcepto'
+		            	,hidden:true
 		            },
 		            {
 		                id: 'idCPT'
@@ -483,6 +484,7 @@ Ext.onReady(function() {
 		                ,fieldLabel: 'CPT'
 		                ,labelWidth: 160
 		                ,width: 500
+		                ,hidden:true
 		            },
 		            {
 		                id: 'idImporteFact'
@@ -491,6 +493,7 @@ Ext.onReady(function() {
 		                ,fieldLabel: 'Importe facturado'
 		                ,labelWidth: 160
 		                ,width: 500
+		                ,hidden:true
 		            },
                     gridIncisos
                     ,
