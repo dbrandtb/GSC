@@ -1497,24 +1497,27 @@ function _p12_validaAutorizaciones()
 					result = result + 'El m&eacute;dico no autoriza la factura para el siniestro ' + siniestroIte.NMSINIES + '<br/>';
 				}
             }
-			for(i=0;i<siniestros.length;i++)
-            {
-                var siniestroIte = siniestros[i];
-                var conceptosSiniestro = _p12_llist1[i];
-                var j;
-                for(j=0;j<conceptosSiniestro.length;j++)
-                {
-                	var conceptoSiniestroIte = conceptosSiniestro[j];
-                	/*if(conceptoSiniestroIte.AUTRECLA!='S')
-                    {
-                        result = result + 'Reclamaciones no autoriza el concepto \'' + conceptoSiniestroIte.OTVALOR + '\' del siniestro ' + siniestroIte.NMSINIES + '<br/>';
-                    }*/
-                    if(conceptoSiniestroIte.AUTMEDIC!='S')
-                    {
-                        result = result + 'El m&eacute;dico no autoriza el concepto \'' + conceptoSiniestroIte.OTVALOR + '\' del siniestro ' + siniestroIte.NMSINIES + '<br/>';
-                    }
-                }
-            }
+			if(!esHospital)
+			{
+				for(i=0;i<siniestros.length;i++)
+	            {
+	                var siniestroIte = siniestros[i];
+	                var conceptosSiniestro = _p12_llist1[i];
+	                var j;
+	                for(j=0;j<conceptosSiniestro.length;j++)
+	                {
+	                	var conceptoSiniestroIte = conceptosSiniestro[j];
+	                	/*if(conceptoSiniestroIte.AUTRECLA!='S')
+	                    {
+	                        result = result + 'Reclamaciones no autoriza el concepto \'' + conceptoSiniestroIte.OTVALOR + '\' del siniestro ' + siniestroIte.NMSINIES + '<br/>';
+	                    }*/
+	                    if(conceptoSiniestroIte.AUTMEDIC!='S')
+	                    {
+	                        result = result + 'El m&eacute;dico no autoriza el concepto \'' + conceptoSiniestroIte.OTVALOR + '\' del siniestro ' + siniestroIte.NMSINIES + '<br/>';
+	                    }
+	                }
+	            }
+			}
 		}
 	}
 	else
