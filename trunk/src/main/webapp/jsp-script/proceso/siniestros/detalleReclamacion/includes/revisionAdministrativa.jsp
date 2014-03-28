@@ -441,11 +441,16 @@ Ext.onReady(function() {
             listeners:{
             	select: function (combo, records, opts){
             		var cdTipo =  records[0].get('key');
-            		storeConceptosCatalogo.load({
+            		storeConceptosCatalogo.proxy.extraParams=
+            		{
+            			'params.idPadre' : cdTipo
+            			,catalogo        : _CATALOGO_ConceptosMedicos
+            		};
+            		/*storeConceptosCatalogo.load({
             			params: {
             				'params.idPadre' : cdTipo
             			}
-            		});
+            		});*/
             	}
             }
         },{
@@ -456,10 +461,13 @@ Ext.onReady(function() {
             displayField: 'value',
             fieldLabel: 'Concepto',
             store: storeConceptosCatalogo,
-            queryMode:'local',
+            queryMode:'remote',
             allowBlank:false,
             editable:true,
             forceSelection: true
+            ,queryParam  : 'params.descripc'
+            ,hideTrigger : true
+            ,minChars    : 3
         },
             {
 		        xtype      : 'numberfield'
