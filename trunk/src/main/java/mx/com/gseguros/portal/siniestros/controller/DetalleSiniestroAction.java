@@ -213,7 +213,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	   			siniestrosManager.P_MOV_MAUTSINI(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura,
 	   					null,null,null,null,null,
 	    				Constantes.MAUTSINI_AREA_RECLAMACIONES, autrecla, Constantes.MAUTSINI_FACTURA, commenar, Constantes.INSERT_MODE);
-	   		} else if(RolSistema.COORDINADOR_MEDICO.getCdsisrol().equals(cdrol) || RolSistema.MEDICO.getCdsisrol().equals(cdrol)){
+	   		} else if(RolSistema.COORDINADOR_MEDICO.getCdsisrol().equals(cdrol) || RolSistema.COORDINADOR_MEDICO_MULTIREGIONAL.getCdsisrol().equals(cdrol) || RolSistema.GERENTE_MEDICO_MULTIREGIONAL.getCdsisrol().equals(cdrol) || RolSistema.MEDICO.getCdsisrol().equals(cdrol)){
 	   			siniestrosManager.P_MOV_MAUTSINI(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura,
 	   					null,null,null,null,null,
 	    				Constantes.MAUTSINI_AREA_MEDICA, autmedic, Constantes.MAUTSINI_FACTURA, commenme, Constantes.INSERT_MODE);
@@ -255,7 +255,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 				siniestrosManager.P_MOV_MAUTSINI(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura,
 	   					null,null,null,null,null,
 	    				Constantes.MAUTSINI_AREA_RECLAMACIONES, autrecla, Constantes.MAUTSINI_FACTURA, commenar, Constantes.UPDATE_MODE);
-			} else if(RolSistema.COORDINADOR_MEDICO.getCdsisrol().equals(cdrol) || RolSistema.MEDICO.getCdsisrol().equals(cdrol)){
+			} else if(RolSistema.COORDINADOR_MEDICO.getCdsisrol().equals(cdrol)|| RolSistema.COORDINADOR_MEDICO_MULTIREGIONAL.getCdsisrol().equals(cdrol) || RolSistema.GERENTE_MEDICO_MULTIREGIONAL.getCdsisrol().equals(cdrol) || RolSistema.MEDICO.getCdsisrol().equals(cdrol)){
 				siniestrosManager.P_MOV_MAUTSINI(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura,
 	   					null,null,null,null,null,
 	    				Constantes.MAUTSINI_AREA_MEDICA, autmedic, Constantes.MAUTSINI_FACTURA, commenme, Constantes.UPDATE_MODE);

@@ -1043,7 +1043,7 @@ public void setMsgResult(String msgResult) {
 		   
 		   String nombreRdf = "";
 		   
-		   if(RolSistema.COORDINADOR_MEDICO_MULTIREGIONAL.getCdsisrol().equals(cdrol)){
+		   if(RolSistema.COORDINADOR_MEDICO.getCdsisrol().equals(cdrol)|| RolSistema.COORDINADOR_MEDICO_MULTIREGIONAL.getCdsisrol().equals(cdrol) || RolSistema.GERENTE_MEDICO_MULTIREGIONAL.getCdsisrol().equals(cdrol) || RolSistema.MEDICO.getCdsisrol().equals(cdrol)){
 			   nombreRdf = getText("rdf.siniestro.cartarechazo.medico.nombre");
 		   }else {
 				if(TipoPago.DIRECTO.getCodigo().equals(tipoPago)){
