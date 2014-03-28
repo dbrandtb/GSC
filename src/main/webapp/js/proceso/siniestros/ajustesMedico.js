@@ -18,6 +18,33 @@ storeIncisos=new Ext.data.Store(
     model: 'modelAjusteMedico'
 });
 
+var storeTipoConcepto = Ext.create('Ext.data.JsonStore', {
+	model:'Generic',
+	proxy: {
+		type: 'ajax',
+		url: _URL_CATALOGOS,
+		extraParams : {catalogo:_CATALOGO_TipoConcepto},
+		reader: {
+			type: 'json',
+			root: 'lista'
+		}
+	}
+});
+storeTipoConcepto.load();
+
+var storeConceptosCatalogo = Ext.create('Ext.data.JsonStore', {
+	model:'Generic',
+	proxy: {
+		type: 'ajax',
+		url: _URL_CATALOGOS,
+		extraParams : {catalogo:_CATALOGO_ConceptosMedicos},
+		reader: {
+			type: 'json',
+			root: 'lista'
+		}
+	}
+});
+
 function _amRecargar()
 {
 	var json =
@@ -38,6 +65,18 @@ function _amRecargar()
 		'params.idconcep' : _amParams.idconcep,
 		'params.nmordina' : _amParams.nmordina
 	};
+	
+	// mandamos a cargar la informacion de los combios
+	//
+	storeTipoConcepto.load();
+	Ext.getCmp('idConceptos').setValue(_amParams.idconcep);
+	storeConceptosCatalogo.load({
+		params: {
+			'params.idPadre' : _amParams.idconcep
+		}
+	});
+	
+	Ext.getCmp('conceptosID').setValue(_amParams.cdconcep);
 	//debug('datos que se envian al servidor: ',json);
 	//gridIncisos.setLoading(true);
 	Ext.Ajax.request(
@@ -102,7 +141,8 @@ function _amEliminar(nmordmov,ptimport,comments)
 		'params.ptimport' : ptimport,
 		'params.comments' : comments
 	};
-	
+	console.log(_amParams.idconcep);
+	console.log(ptimport);
 	Ext.Ajax.request(
 	{
 		url : _amUrlEliminar
@@ -259,7 +299,7 @@ Ext.onReady(function() {
 			    	decimalSeparator :'.',
 			    	minValue: 0,
 	                labelWidth: 170
-	    		}
+	    	}
 	         ,
 	         {
 		    	 xtype      : 'textfield'	    	,fieldLabel : 'Observaciones'
@@ -430,12 +470,12 @@ Ext.onReady(function() {
 	 		panelAjusteMedico.down('[name="idConsecutivo"]').setValue(record.get('NMORDMOV'));
 	 		panelAjusteMedico.down('[name="idAjusteImporte"]').setValue(record.get('PTIMPORT'));
 	 		panelAjusteMedico.down('[name="idObservaciones"]').setValue(record.get('COMMENTS'));
-	 		ventanaGridAjusteMedico.show();
+	 		ventanaGridAjusteMedico.showAt(150,600);
 	 	},
 	 	onAddClick: function(){
 	 		tipoAccion= 0;
 	 		panelAjusteMedico.getForm().reset();
-	 		ventanaGridAjusteMedico.show();
+	 		ventanaGridAjusteMedico.showAt(150,600);
 	 	},
 	 	onRemoveClick: function(grid, rowIndex){
 	 		var record=this.getStore().getAt(rowIndex);
@@ -468,6 +508,45 @@ Ext.onReady(function() {
     	        [
     	            
             		{
+			        	xtype: 'combo',
+			            name:'params.idconcep',
+			            id: 'idConceptos',
+			            labelWidth: 150,
+			            valueField: 'key',
+			            displayField: 'value',
+			            fieldLabel: 'Tipo de Concepto',
+			            store: storeTipoConcepto,
+			            queryMode:'local',
+			            allowBlank:false,
+			            editable:false,
+			            readOnly   : true/*,
+			            listeners:{
+			            	select: function (combo, records, opts){
+			            		var cdTipo =  records[0].get('key');
+			            		storeConceptosCatalogo.load({
+			            			params: {
+			            				'params.idPadre' : cdTipo
+			            			}
+			            		});
+			            	}
+			            }*/
+			        },{
+			        	xtype: 'combo',
+			            name:'params.cdconcep',
+			            id:'conceptosID',
+			            labelWidth: 150,
+			            valueField: 'key',
+			            displayField: 'value',
+			            fieldLabel: 'Concepto',
+			            store: storeConceptosCatalogo,
+			            queryMode:'local',
+			            allowBlank:false,
+			            editable:true,
+			            forceSelection: true,
+			            readOnly   : true,
+			            width:550
+			        }
+        /*{
             			id:'idConcepto'
 		                ,xtype      : 'textfield'
 		            	,fieldLabel : 'Concepto'
@@ -475,7 +554,8 @@ Ext.onReady(function() {
 		            	,labelWidth : 160
 		            	,width: 500
 		            	,name       : 'idConcepto'
-		            	,hidden:true
+		            	, value: _amParams.idconcep
+		            	//,hidden:true
 		            },
 		            {
 		                id: 'idCPT'
@@ -484,17 +564,10 @@ Ext.onReady(function() {
 		                ,fieldLabel: 'CPT'
 		                ,labelWidth: 160
 		                ,width: 500
-		                ,hidden:true
-		            },
-		            {
-		                id: 'idImporteFact'
-		                ,name: 'idCPT'
-		                ,xtype: 'textfield'
-		                ,fieldLabel: 'Importe facturado'
-		                ,labelWidth: 160
-		                ,width: 500
-		                ,hidden:true
-		            },
+		                , value: _amParams.cdconcep
+		                //, value:,
+		                //,hidden:true
+		            }*/,
                     gridIncisos
                     ,
                     {

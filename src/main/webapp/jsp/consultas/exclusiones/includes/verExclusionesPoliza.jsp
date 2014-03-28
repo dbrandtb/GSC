@@ -54,7 +54,7 @@
                             return;
                         }
                         if(records.length == 0){
-                            showMessage('No hay exclusiones', 'Esta póliza no tiene exclusiones', Ext.Msg.OK, Ext.Msg.INFO);
+                            showMessage('No hay exclusiones', 'Este asegurado no tiene exclusiones', Ext.Msg.OK, Ext.Msg.INFO);
                             return;
                         }
                     }
