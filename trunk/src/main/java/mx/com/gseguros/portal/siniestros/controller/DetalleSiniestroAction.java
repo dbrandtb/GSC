@@ -310,7 +310,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
     			String nombreArchivo = null;
     			if(rolMedico)
     			{
-    				nombreReporte = getText("rdf.siniestro.rechazo.medico.nombre");
+    				nombreReporte = getText("rdf.siniestro.cartarechazo.medico.nombre");
     				nombreArchivo = getText("pdf.siniestro.rechazo.medico.nombre");
     			}
     			else//cancelacion por area de reclamaciones
@@ -318,12 +318,12 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
     				boolean esReembolso = tipoPago.equalsIgnoreCase(TipoPago.REEMBOLSO.getCodigo());
     				if(esReembolso)
     				{
-    					nombreReporte = getText("rdf.siniestro.rechazo.reemb.nombre");
+    					nombreReporte = getText("rdf.siniestro.cartarechazo.reembolso.nombre");
         				nombreArchivo = getText("pdf.siniestro.rechazo.reemb.nombre");
     				}
     				else
     				{
-    					nombreReporte = getText("rdf.siniestro.rechazo.pdir.nombre");
+    					nombreReporte = getText("rdf.siniestro.cartarechazo.pagodirecto.nombre");
         				nombreArchivo = getText("pdf.siniestro.rechazo.pdir.nombre");
     				}
     			}

@@ -31,6 +31,7 @@ import mx.com.gseguros.portal.siniestros.model.HistorialSiniestroVO;
 import mx.com.gseguros.portal.siniestros.model.ListaFacturasVO;
 import mx.com.gseguros.portal.siniestros.model.MesaControlVO;
 import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
+import mx.com.gseguros.portal.siniestros.model.SiniestroVO;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.Utilerias;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Reclamo;
@@ -2649,9 +2650,9 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	}
 
 	@Override
-	public String solicitudPagoEnviada(Map params)throws DaoException {
+	public List<SiniestroVO>  solicitudPagoEnviada(Map params)throws DaoException {
 		Map<String,Object> resultadoMap=this.ejecutaSP(new SolicitudPagoEnviada(this.getDataSource()), params);
-		return (String) resultadoMap.get("pv_title_o");	
+		return (List<SiniestroVO>) resultadoMap.get("pv_registro_o");	
 	}
 	protected class SolicitudPagoEnviada extends StoredProcedure
 	{
@@ -2659,11 +2660,29 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		{
 			super(dataSource, "PKG_SINIESTRO.P_ACT_TRAMITE_SINI_A_ENVIADO");
 			declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new SiniestrosMapper()));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
 		}
 	}
+	
+	protected class SiniestrosMapper  implements RowMapper {
+        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+        	SiniestroVO siniestro = new SiniestroVO();
+        	siniestro.setCdunieco(rs.getString("CDUNIECO"));
+        	siniestro.setCdramo(rs.getString("CDRAMO"));
+        	siniestro.setEstado(rs.getString("ESTADO"));
+        	siniestro.setNmpoliza(rs.getString("NMPOLIZA"));
+        	siniestro.setNmsuplem(rs.getString("NMSUPLEM"));
+        	siniestro.setNmsituac(rs.getString("NMSITUAC"));
+        	siniestro.setAapertu(rs.getString("AAAPERTU"));
+        	siniestro.setStatusSinies(rs.getString("STATUS"));
+        	siniestro.setNmsinies(rs.getString("NMSINIES"));
+        	
+        	return siniestro;
+        }
+    }
 	
 	
 	/*	public void eliminacionRegistrosTabla(String nmautser)

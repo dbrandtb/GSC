@@ -49,7 +49,7 @@ public class GeneradorReciboDxnWsServiceCallbackHandlerImpl extends GeneradorRec
 					(String) params.get("pv_estado_i"),
 					(String) params.get("pv_nmpoliza_i"), "ErrWsDXNCx", "Msg: "
 							+ e.getMessage() + " ***Cause: " + e.getCause(),
-					 usuario);
+					 usuario, null);
 		} catch (Exception e1) {
 			logger.error("Error en llamado a PL", e1);
 		}
@@ -77,7 +77,7 @@ public class GeneradorReciboDxnWsServiceCallbackHandlerImpl extends GeneradorRec
 						(String) params.get("pv_estado_i"),
 						(String) params.get("pv_nmpoliza_i"), "ErrWsDXN",
 						respuesta.getCodigo() + " - " + respuesta.getMensaje(),
-						 usuario);
+						 usuario, null);
 			} catch (Exception e1) {
 				logger.error("Error en llamado a PL", e1);
 			}

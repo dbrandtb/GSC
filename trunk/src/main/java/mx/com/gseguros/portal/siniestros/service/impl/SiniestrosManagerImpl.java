@@ -24,6 +24,7 @@ import mx.com.gseguros.portal.siniestros.model.HistorialSiniestroVO;
 import mx.com.gseguros.portal.siniestros.model.ListaFacturasVO;
 import mx.com.gseguros.portal.siniestros.model.MesaControlVO;
 import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
+import mx.com.gseguros.portal.siniestros.model.SiniestroVO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Reclamo;
@@ -194,15 +195,16 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	}
 
 	@Override
-	public boolean solicitudPagoEnviada(Map<String, String> params)
+	public List<SiniestroVO>  solicitudPagoEnviada(Map<String, String> params)
 			throws ApplicationException {
+		
+		List<SiniestroVO> siniestros  = null;
 		try {
-			siniestrosDAO.solicitudPagoEnviada(params);
+			siniestros = siniestrosDAO.solicitudPagoEnviada(params);
 		} catch (Exception daoExc) {
 			log.error("Error en solicitudPagoEnviada PL: " + daoExc.getMessage(), daoExc);	
-			return false;
 		}
-		return true;
+		return siniestros;
 	}
 
 	

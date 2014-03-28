@@ -111,7 +111,7 @@ public class RecibosSigsServiceImpl implements RecibosSigsService {
 						(String) params.get("pv_estado_i"),
 						(String) params.get("pv_nmpoliza_i"), "ErrWsDXNCx", "Msg: "
 								+ e.getMessage() + " ***Cause: " + e.getCause(),
-						userVO.getUser());
+						userVO.getUser(), null);
 			} catch (Exception e1) {
 				logger.error("Error en llamado a PL", e1);
 			}
@@ -129,7 +129,7 @@ public class RecibosSigsServiceImpl implements RecibosSigsService {
 						(String) params.get("pv_estado_i"),
 						(String) params.get("pv_nmpoliza_i"), "ErrWsDXN",
 						calendarios.getCodigo() + " - " + calendarios.getMensaje(),
-						userVO.getUser());
+						userVO.getUser(), null);
 			} catch (Exception e1) {
 				logger.error("Error en llamado a PL", e1);
 			}
