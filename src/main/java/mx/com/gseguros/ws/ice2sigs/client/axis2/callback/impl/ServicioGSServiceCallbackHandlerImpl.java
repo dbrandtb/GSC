@@ -52,7 +52,7 @@ public class ServicioGSServiceCallbackHandlerImpl extends ServicioGSServiceCallb
 					(String) params.get("pv_nmpoliza_i"), 
 					"ErrWScliCx", 
 					"Msg: " + e.getMessage() + " ***Cause: " + e.getCause(),
-					 usuario);
+					 usuario, null);
 		} catch (Exception e1) {
 			logger.error("Error en llamado a PL", e1);
 		}
@@ -78,7 +78,7 @@ public class ServicioGSServiceCallbackHandlerImpl extends ServicioGSServiceCallb
 						(String) params.get("pv_nmpoliza_i"), 
 						"ErrWScli",
 						respuesta.getCodigo() + " - " + respuesta.getMensaje(),
-						usuario);
+						usuario,null);
 			} catch (Exception e1) {
 				logger.error("Error en llamado a PL", e1);
 			}
@@ -104,7 +104,7 @@ public class ServicioGSServiceCallbackHandlerImpl extends ServicioGSServiceCallb
 					"Error en Recibo " + params.get("NumRec")
 							+ " Msg: " + e.getMessage() + " ***Cause: "
 							+ e.getCause(),
-					 usuario);
+					 usuario, null);
 		} catch (Exception e1) {
 			logger.error("Error en llamado a PL", e1);
 		}
@@ -132,7 +132,7 @@ public class ServicioGSServiceCallbackHandlerImpl extends ServicioGSServiceCallb
 						"Error en Recibo " + params.get("NumRec")
 								+ " >>> " + respuesta.getCodigo() + " - "
 								+ respuesta.getMensaje(),
-						 usuario);
+						 usuario,null);
 			} catch (ApplicationException e1) {
 				logger.error("Error en llamado a PL", e1);
 			}
@@ -154,8 +154,10 @@ public class ServicioGSServiceCallbackHandlerImpl extends ServicioGSServiceCallb
 					(String) params.get("pv_estado_i"),
 					(String) params.get("pv_nmpoliza_i"),
 					"ErrWSsinCx",
-					"Msg: " + e.getMessage() + " ***Cause: " + e.getCause(),
-					 usuario);
+					"Error en Siniestro: " + params.get("NumSin") + " Inciso: " + params.get("NumInc") 
+							+ " Msg: " + e.getMessage() + " ***Cause: "
+							+ e.getCause(),
+					 usuario, (String) params.get("pv_ntramite_i"));
 		} catch (Exception e1) {
 			logger.error("Error en llamado a PL", e1);
 		}
@@ -179,9 +181,10 @@ public class ServicioGSServiceCallbackHandlerImpl extends ServicioGSServiceCallb
 						(String) params.get("pv_cdramo_i"),
 						(String) params.get("pv_estado_i"),
 						(String) params.get("pv_nmpoliza_i"), "ErrWSsin",
-						"Error en Reclamo " + respuesta.getCodigo() + " - "
+						"Error en Siniestro: " + params.get("NumSin") + " Inciso: " + params.get("NumInc") 
+								+ " >>> " + respuesta.getCodigo() + " - "
 								+ respuesta.getMensaje(),
-						 usuario);
+						 usuario, (String) params.get("pv_ntramite_i"));
 			} catch (ApplicationException e1) {
 				logger.error("Error en llamado a PL", e1);
 			}

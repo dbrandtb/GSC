@@ -729,7 +729,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 									"Error en Recibo " + params.get("NumRec")
 											+ " >>> " + respuesta.getCodigo() + " - "
 											+ respuesta.getMensaje(),
-									 usuario);
+									 usuario, null);
 						} catch (ApplicationException e1) {
 							logger.error("Error en llamado a PL", e1);
 						}
@@ -747,7 +747,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 							"Error en Recibo " + recibo.getNumRec()
 									+ " Msg: " + e.getMessage() + " ***Cause: "
 									+ e.getCause(),
-							 usuario);
+							 usuario, null);
 				} catch (Exception e1) {
 					logger.error("Error en llamado a PL", e1);
 				}
@@ -823,7 +823,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 		return allInserted;
 	}
 
-	public boolean ejecutaWSreclamo(String ntramite, String cdunieco, String cdramo, String estado, String nmpoliza, Ice2sigsService.Operacion op, boolean async, UserVO userVO) {
+	public boolean ejecutaWSreclamosTramite(String ntramite, Ice2sigsService.Operacion op, boolean async, UserVO userVO) {
 		
 		logger.debug("********************* Entrando a Ejecuta WSreclamo ******************************");
 		
@@ -834,10 +834,6 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 		//Se invoca servicio para obtener los datos del cliente
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_ntramite_i", ntramite);
-		params.put("pv_cdunieco_i", cdunieco);
-		params.put("pv_cdramo_i", cdramo);
-		params.put("pv_estado_i", estado);
-		params.put("pv_nmpoliza_i", nmpoliza);
 		
 		String usuario = "SIN USUARIO";
 		if(userVO != null){
@@ -860,14 +856,61 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 					return false;
 				}
 				
+				params.put("pv_cdunieco_i", Integer.toString(reclamo.getSucPol()));
+				params.put("pv_cdramo_i",   Integer.toString(reclamo.getRamPol()));
+				params.put("pv_estado_i",   "M");
+				params.put("pv_nmpoliza_i", Integer.toString(reclamo.getNumPol()));
+				
 				try{
 					logger.debug(">>>>>>> Enviando el Reclamo: " + reclamo.getIcodreclamo());
-					ejecutaReclamoGS(op, reclamo, params, true);
-					//si el sresultado es falso mov bitacobros
+					
+					if(async){
+						// Se crea un HashMap por cada invocacion asincrona del WS, para evitar issue (sobreescritura de valores):
+						HashMap<String, Object> paramsBitacora = new HashMap<String, Object>();
+						paramsBitacora.putAll(params);
+						paramsBitacora.put("NumSin", reclamo.getNumSin());
+						paramsBitacora.put("NumInc", reclamo.getIncPol());
+						
+						ejecutaReclamoGS(op, reclamo, paramsBitacora, async);
+					}else{
+						
+						ReclamoRespuesta respuesta = ejecutaReclamoGS(op, reclamo, params, async);
+						
+						if (Estatus.EXITO.getCodigo() != respuesta.getCodigo()) {
+							logger.error("Guardando en bitacora el estatus");
+
+							try {
+								kernelManager.movBitacobro((String) params.get("pv_cdunieco_i"),
+										(String) params.get("pv_cdramo_i"),
+										(String) params.get("pv_estado_i"),
+										(String) params.get("pv_nmpoliza_i"), "ErrWSsin",
+										"Error en Siniestro: " + reclamo.getNumSin() + " Inciso: " + reclamo.getIncPol() 
+												+ " >>> " + respuesta.getCodigo() + " - "
+												+ respuesta.getMensaje(),
+										 usuario, (String) params.get("pv_ntramite_i"));
+							} catch (ApplicationException e1) {
+								logger.error("Error en llamado a PL", e1);
+							}
+						}
+					}
+					
 				}catch(Exception e){
 					logger.error("Error al enviar el Reclamo: " + reclamo.getIcodreclamo(), e);
 					exito = false;
-					//si el sresultado es falso mov bitacobros CX
+					try {
+						kernelManager.movBitacobro(
+								(String) params.get("pv_cdunieco_i"),
+								(String) params.get("pv_cdramo_i"),
+								(String) params.get("pv_estado_i"),
+								(String) params.get("pv_nmpoliza_i"),
+								"ErrWSsinCx",
+								"Error en Siniestro: " + reclamo.getNumSin() + " Inciso: " + reclamo.getIncPol()
+										+ " Msg: " + e.getMessage() + " ***Cause: "
+										+ e.getCause(),
+								 usuario, (String) params.get("pv_ntramite_i"));
+					} catch (Exception e1) {
+						logger.error("Error en llamado a PL", e1);
+					}
 				}
 			}
 		}else {

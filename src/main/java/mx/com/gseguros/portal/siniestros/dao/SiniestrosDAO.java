@@ -21,6 +21,7 @@ import mx.com.gseguros.portal.siniestros.model.HistorialSiniestroVO;
 import mx.com.gseguros.portal.siniestros.model.ListaFacturasVO;
 import mx.com.gseguros.portal.siniestros.model.MesaControlVO;
 import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
+import mx.com.gseguros.portal.siniestros.model.SiniestroVO;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Reclamo;
 
 public interface SiniestrosDAO {
@@ -342,5 +343,5 @@ public interface SiniestrosDAO {
 			,String nmsinies
 			,String nfactura) throws Exception;
 	
-	public String solicitudPagoEnviada(Map params)throws Exception;
+	public List<SiniestroVO> solicitudPagoEnviada(Map params)throws Exception;
 }

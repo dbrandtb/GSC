@@ -625,17 +625,14 @@ var msgWindow;
 						url: _UrlSolicitarPago,
 						params: {
 				    		'params.pv_ntramite_i' : record.get('ntramite'),
-				    		'params.pv_cdunieco_i' : record.get('cdunieco'),
-				    		'params.cdramo'        : record.get('cdramo'),
-				    		'params.estado'        : record.get('estado'),
-				    		'params.npoliza'       : record.get('nmpoliza')
+				    		'params.pv_tipmov_i'   : record.get('parametros.pv_otvalor02')
 				    	},
 						success: function(response, opts) {
 							var respuesta = Ext.decode(response.responseText);
 							if(respuesta.success){
 								mensajeCorrecto('Aviso','El pago se ha solicitado con exito.');	
 							}else {
-								mensajeError('Error al solicitar el pago, No se han guardado correctamente los calculos, &oacute; no se envi&&oacute; exitosamente alguno de los Reclamos');
+								mensajeError('Error al solicitar el pago, No se han guardado correctamente los calculos, &oacute; no se envi&oacute; exitosamente alguno de los Reclamos');
 							}
 							
 						},

@@ -41,6 +41,7 @@ import mx.com.gseguros.portal.siniestros.model.DatosSiniestroVO;
 import mx.com.gseguros.portal.siniestros.model.ListaFacturasVO;
 import mx.com.gseguros.portal.siniestros.model.MesaControlVO;
 import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
+import mx.com.gseguros.portal.siniestros.model.SiniestroVO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
@@ -1267,9 +1268,70 @@ public void setMsgResult(String msgResult) {
 		   logger.debug("solicitarPago Siniestros params: "+ params);
 		   UserVO usuario  = (UserVO)session.get("USUARIO");
 		   
-		   success = ice2sigsService.ejecutaWSreclamo(params.get("pv_ntramite_i"), params.get("pv_cdunieco_i"), params.get("cdramo"), params.get("estado"), params.get("npoliza"), Operacion.INSERTA, false, usuario);
+		   success = ice2sigsService.ejecutaWSreclamosTramite(params.get("pv_ntramite_i"), Operacion.INSERTA, false, usuario);
+		  
 		   if(success){
-			   siniestrosManager.solicitudPagoEnviada(params);
+			   List<SiniestroVO> siniestrosTramite = siniestrosManager.solicitudPagoEnviada(params);
+			   
+			   paramsO = new HashMap<String, Object>();
+			   paramsO.putAll(params);
+			   
+			   String nombreRdf = getText("rdf.siniestro.cartafiniquito.nombre");
+			   
+			   File carpeta=new File(getText("ruta.documentos.poliza") + "/" + paramsO.get("pv_ntramite_i"));
+	           if(!carpeta.exists()){
+	           		logger.debug("no existe la carpeta::: "+paramsO.get("pv_ntramite_i"));
+	           		carpeta.mkdir();
+	           		if(carpeta.exists()){
+	           			logger.debug("carpeta creada");
+	           		} else {
+	           			logger.debug("carpeta NO creada");
+	           		}
+	           } else {
+	           	 logger.debug("existe la carpeta   ::: "+paramsO.get("pv_ntramite_i"));
+	           }
+	           
+	           for(SiniestroVO siniestro : siniestrosTramite){
+	        	   String urlFiniquitoSiniestro = ""
+       					   + getText("ruta.servidor.reports")
+                           + "?p_unieco=" + siniestro.getCdunieco() 
+                           + "&p_ramo="   + siniestro.getCdramo()
+                           + "&p_estado=" + siniestro.getEstado()
+                           + "&p_poliza=" + siniestro.getNmpoliza()
+                           + "&p_suplem=" + siniestro.getNmsuplem()
+                           + "&p_nmsituac="+ siniestro.getNmsituac()
+                           + "&p_aaapertu="+ siniestro.getAapertu()
+                           + "&p_status="  + siniestro.getStatusSinies()
+                           + "&p_sinies="+ siniestro.getNmsinies()
+                           + "&destype=cache"
+                           + "&desformat=PDF"
+                           + "&userid="+getText("pass.servidor.reports")
+                           + "&ACCESSIBLE=YES"
+                           + "&report="+ nombreRdf
+                           + "&paramform=no"
+                           ;
+			       String nombreArchivo = siniestro.getNmsinies() +"_"+ siniestro.getAapertu() +"_" + getText("pdf.siniestro.finiquito.nombre");
+			       String pathArchivo=""
+			       					+ getText("ruta.documentos.poliza")
+			       					+ "/" + paramsO.get("pv_ntramite_i")
+			       					+ "/" + nombreArchivo
+			       					;
+			       HttpUtil.generaArchivo(urlFiniquitoSiniestro, pathArchivo);
+			       
+			       paramsO.put("pv_cdunieco_i"  , siniestro.getCdunieco());
+			       paramsO.put("pv_cdramo_i"  , siniestro.getCdramo());
+			       paramsO.put("pv_estado_i"  , siniestro.getEstado());
+			       paramsO.put("pv_nmpoliza_i"  , siniestro.getNmpoliza());
+			       paramsO.put("pv_nmsuplem_i"  , siniestro.getNmsuplem());
+			       paramsO.put("pv_feinici_i"  , new Date());
+			       paramsO.put("pv_cddocume_i" , nombreArchivo);
+			       paramsO.put("pv_dsdocume_i" , "Carta Finiquito");
+			       paramsO.put("pv_nmsolici_i" , siniestro.getNmpoliza());
+			       paramsO.put("pv_swvisible_i"   , null);
+			       paramsO.put("pv_codidocu_i"   , null);
+			       paramsO.put("pv_cdtiptra_i"   , TipoTramite.SINIESTRO.getCdtiptra());
+			       kernelManagerSustituto.guardarArchivo(paramsO);
+	           }
 		   }
 	   }catch( Exception e){
 		   logger.error("Error en solicitarPago",e);
@@ -1866,7 +1928,7 @@ public void setMsgResult(String msgResult) {
     			String nombreArchivo = null;
     			if(rolMedico)
     			{
-    				nombreReporte = getText("rdf.siniestro.rechazo.medico.nombre");
+    				nombreReporte = getText("rdf.siniestro.cartarechazo.medico.nombre");
     				nombreArchivo = getText("pdf.siniestro.rechazo.medico.nombre");
     			}
     			else//cancelacion por area de reclamaciones
@@ -1874,12 +1936,12 @@ public void setMsgResult(String msgResult) {
     				boolean esReembolso = tipoPago.equalsIgnoreCase(TipoPago.REEMBOLSO.getCodigo());
     				if(esReembolso)
     				{
-    					nombreReporte = getText("rdf.siniestro.rechazo.reemb.nombre");
+    					nombreReporte = getText("rdf.siniestro.cartarechazo.reembolso.nombre");
         				nombreArchivo = getText("pdf.siniestro.rechazo.reemb.nombre");
     				}
     				else
     				{
-    					nombreReporte = getText("rdf.siniestro.rechazo.pdir.nombre");
+    					nombreReporte = getText("rdf.siniestro.cartarechazo.pagodirecto.nombre");
         				nombreArchivo = getText("pdf.siniestro.rechazo.pdir.nombre");
     				}
     			}
@@ -4120,7 +4182,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     			String nombreArchivo = null;
     			if(rolMedico)
     			{
-    				nombreReporte = getText("rdf.siniestro.rechazo.medico.nombre");
+    				nombreReporte = getText("rdf.siniestro.cartarechazo.medico.nombre");
     				nombreArchivo = getText("pdf.siniestro.rechazo.medico.nombre");
     			}
     			else//cancelacion por area de reclamaciones
@@ -4128,12 +4190,12 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     				boolean esReembolso = tipoPago.equalsIgnoreCase(TipoPago.REEMBOLSO.getCodigo());
     				if(esReembolso)
     				{
-    					nombreReporte = getText("rdf.siniestro.rechazo.reemb.nombre");
+    					nombreReporte = getText("rdf.siniestro.cartarechazo.reembolso.nombre");
         				nombreArchivo = getText("pdf.siniestro.rechazo.reemb.nombre");
     				}
     				else
     				{
-    					nombreReporte = getText("rdf.siniestro.rechazo.pdir.nombre");
+    					nombreReporte = getText("rdf.siniestro.cartarechazo.pagodirecto.nombre");
         				nombreArchivo = getText("pdf.siniestro.rechazo.pdir.nombre");
     				}
     			}

@@ -21,6 +21,7 @@ import mx.com.gseguros.portal.siniestros.model.HistorialSiniestroVO;
 import mx.com.gseguros.portal.siniestros.model.ListaFacturasVO;
 import mx.com.gseguros.portal.siniestros.model.MesaControlVO;
 import mx.com.gseguros.portal.siniestros.model.PolizaVigenteVO;
+import mx.com.gseguros.portal.siniestros.model.SiniestroVO;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Reclamo;
 
 public interface SiniestrosManager {
@@ -98,7 +99,7 @@ public interface SiniestrosManager {
 
 	public boolean rechazarTramite(HashMap<String, String> params) throws ApplicationException;
 
-	public boolean solicitudPagoEnviada(Map<String, String> params) throws ApplicationException;
+	public List<SiniestroVO> solicitudPagoEnviada(Map<String, String> params) throws ApplicationException;
 
 	public List<ConsultaTTAPVAATVO> getConsultaListaTTAPVAAT(HashMap<String, Object> paramTTAPVAAT) throws ApplicationException;
 
