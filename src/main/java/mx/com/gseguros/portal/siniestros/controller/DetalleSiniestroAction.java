@@ -209,15 +209,15 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	   	try {
 	   		siniestrosManager.guardaListaFacMesaControl(params.get("ntramite"), params.get("nfactura"), params.get("fefactura"), params.get("cdtipser"), params.get("cdpresta"), params.get("ptimport"), params.get("cdgarant"), params.get("cdconval"), params.get("descporc"), params.get("descnume"));
 	   		
-	   		if(RolSistema.COORDINADOR_SINIESTROS.getCdsisrol().equals(cdrol) || RolSistema.OPERADOR_SINIESTROS.getCdsisrol().equals(cdrol)){
+	   		
 	   			siniestrosManager.P_MOV_MAUTSINI(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura,
 	   					null,null,null,null,null,
 	    				Constantes.MAUTSINI_AREA_RECLAMACIONES, autrecla, Constantes.MAUTSINI_FACTURA, commenar, Constantes.INSERT_MODE);
-	   		} else if(RolSistema.COORDINADOR_MEDICO.getCdsisrol().equals(cdrol) || RolSistema.COORDINADOR_MEDICO_MULTIREGIONAL.getCdsisrol().equals(cdrol) || RolSistema.GERENTE_MEDICO_MULTIREGIONAL.getCdsisrol().equals(cdrol) || RolSistema.MEDICO.getCdsisrol().equals(cdrol)){
+	   		
 	   			siniestrosManager.P_MOV_MAUTSINI(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura,
 	   					null,null,null,null,null,
 	    				Constantes.MAUTSINI_AREA_MEDICA, autmedic, Constantes.MAUTSINI_FACTURA, commenme, Constantes.INSERT_MODE);
-	   		}
+	   		
 	   	}catch( Exception e){
 	   		logger.error("Error en guardaListaTramites",e);
 	   		success =  false;
@@ -251,15 +251,15 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 		try {
 			siniestrosManager.movFacMesaControl(params.get("ntramite"), params.get("nfactura"), params.get("fefactura"), params.get("cdtipser"), params.get("cdpresta"), params.get("ptimport"), params.get("cdgarant"), params.get("cdconval"), params.get("descporc"), params.get("descnume"), Constantes.UPDATE_MODE);
 			
-			if(RolSistema.COORDINADOR_SINIESTROS.getCdsisrol().equals(cdrol) || RolSistema.OPERADOR_SINIESTROS.getCdsisrol().equals(cdrol)){
+			
 				siniestrosManager.P_MOV_MAUTSINI(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura,
 	   					null,null,null,null,null,
 	    				Constantes.MAUTSINI_AREA_RECLAMACIONES, autrecla, Constantes.MAUTSINI_FACTURA, commenar, Constantes.UPDATE_MODE);
-			} else if(RolSistema.COORDINADOR_MEDICO.getCdsisrol().equals(cdrol)|| RolSistema.COORDINADOR_MEDICO_MULTIREGIONAL.getCdsisrol().equals(cdrol) || RolSistema.GERENTE_MEDICO_MULTIREGIONAL.getCdsisrol().equals(cdrol) || RolSistema.MEDICO.getCdsisrol().equals(cdrol)){
+			
 				siniestrosManager.P_MOV_MAUTSINI(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura,
 	   					null,null,null,null,null,
 	    				Constantes.MAUTSINI_AREA_MEDICA, autmedic, Constantes.MAUTSINI_FACTURA, commenme, Constantes.UPDATE_MODE);
-			}
+			
 			
 			boolean cancela     = StringUtils.isNotBlank(params.get("cancelar"));
     		String  cdmotivo    = params.get("cdmotivo");
@@ -275,6 +275,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
     					||cdrol.equalsIgnoreCase(RolSistema.COORDINADOR_MEDICO_MULTIREGIONAL.getCdsisrol())
     					||cdrol.equalsIgnoreCase(RolSistema.GERENTE_MEDICO_MULTIREGIONAL.getCdsisrol())
     					||cdrol.equalsIgnoreCase(RolSistema.MEDICO.getCdsisrol())
+    					||cdrol.equalsIgnoreCase(RolSistema.MEDICO_AJUSTADOR.getCdsisrol())
     					)
     			{
     				rolMedico = Boolean.TRUE;
