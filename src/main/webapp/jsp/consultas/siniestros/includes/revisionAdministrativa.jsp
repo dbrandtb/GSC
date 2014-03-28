@@ -1181,7 +1181,7 @@ panelPrincipal = Ext.create('Ext.form.Panel',{
 	,bodyStyle:'padding:5px;'
 	,items      : [
         		gridFacturas,
-		        {
+		        /*{
 			        xtype      : 'textfield'
 			    	,fieldLabel : 'Total Facturado'
 		    		,labelWidth: 170
@@ -1190,7 +1190,7 @@ panelPrincipal = Ext.create('Ext.form.Panel',{
 			    	,name       : 'totalFacturado'
 		    		,aling:	'center'
 					,padding : 10
-				},
+				}*/,
 				gridConceptos
 	]
 	});
