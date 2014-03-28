@@ -20,7 +20,9 @@
             var _CATALOGO_OFICINA_RECEP = 	 '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_SUCURSALES_ADMIN"/>';
             
             var _amParams = <s:property value='%{getParams().toString().replace("=",":\'").replace(",","\',").replace("}","\'}")}' />;
-            
+            var _URL_CATALOGOS = '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
+            var _CATALOGO_TipoConcepto  = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_CONCEPTO_SINIESTROS"/>';
+            var _CATALOGO_ConceptosMedicos  = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CODIGOS_MEDICOS"/>';
             debug("_amParams: ",_amParams);
             
         </script>
