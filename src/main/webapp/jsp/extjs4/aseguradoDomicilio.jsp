@@ -361,7 +361,7 @@ Ext.onReady(function(){
     });
     var combocoloni=formPanelp4.items.items[2].items.items[4];
     combocoloni.setEditable(true);
-    combocoloni.setForceSelection(false);
+    //combocoloni.forceSelection=false;
     
     if(inputNmsituacp4>0)//si es asegurado solo puede leer cp, estado y municipio
     {
