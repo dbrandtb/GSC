@@ -485,7 +485,7 @@ var msgWindow;
 	        autoScroll  : true,
 	        items       : [
         	        		Ext.create('Ext.form.Panel', {
-        	                title: 'Turnar al Area Médica',
+        	                title: 'Turnar al Area M&eacute;dica',
         	                width: 650,
         	                url: _URL_ActualizaStatusTramite,
         	                bodyPadding: 5,

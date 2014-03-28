@@ -151,9 +151,7 @@ Ext.onReady(function() {
                     {   text :'# Auto.',          	   width : 100,         align  :'center',       dataIndex       :'NMAUTSER' },
                     {   text :'Clave<br/>asegu.',      width : 100,         align  :'center',       dataIndex       :'CDPERSON' },
                     {   text :'Nombre<br/>Asegurado',  width : 150,         align  :'center',       dataIndex       :'NOMBRE'   },
-                    {	text :'Fecha<br/>Ocurrencia',  width : 100,         align  :'center',       dataIndex       :'FEOCURRE',
-                    	format :'d/m/y',      		   xtype :'datecolumn'
-                    },
+                    {	text :'Fecha<br/>Ocurrencia',  width : 100,         align  :'center',       dataIndex       :'FEOCURRE' },
                     {	text :'P&oacute;liza',         width : 100,			align  :'center',		dataIndex       :'NMPOLIZA'	},
                     {
                         text :'Vo.Bo.<br/>Auto.',      width : 100,			align  :'center',       dataIndex       :'VOBOAUTO',
