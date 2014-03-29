@@ -737,6 +737,7 @@ Ext.onReady(function()
                 var copagoaplica = 0.0;
             }
             var total = subttdeduc - copagoaplica;
+            _p12_slist1[indice]['TOTALFACTURA']=total;
             totalglobal = totalglobal + total;
             
             var panelTotales = Ext.create('Ext.panel.Panel',
@@ -1418,12 +1419,14 @@ function _p12_guardar()
 	if(valido.length==0)
 	{
 		_p12_panelCalculo.setLoading(true);
+		var esPagoDirecto = _p12_smap.PAGODIRECTO=='S';
 		Ext.Ajax.request(
 		{
 			url       : _p12_urlGuardar
 			,jsonData :
 			{
-				slist1 : _p12_listaWS
+				slist1  : _p12_listaWS
+				,slist2 : esPagoDirecto ? [] : _p12_slist1
 			}
 			,success  : function(response)
 			{

@@ -2864,7 +2864,31 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		}
 	}
 
-
+	@Override
+	public void guardarTotalProcedenteFactura(String ntramite,String nfactura,String importe)throws Exception
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("ntramite" , ntramite);
+		params.put("nfactura" , nfactura);
+		params.put("importe"  , importe);
+		logger.debug("params: "+params);
+		ejecutaSP(new GuardarTotalProcedenteFactura(this.getDataSource()), params);
+	}
+	
+	protected class GuardarTotalProcedenteFactura extends StoredProcedure
+	{
+		protected GuardarTotalProcedenteFactura(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SINIESTRO.P_UPD_TFACTURA");
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nfactura" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("importe"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 	@Override
 	public String validaDocumentosAutServicio(String ntramite) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();

@@ -4406,6 +4406,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     			+ "\n###### guardarCalculos ######"
     			);
     	logger.info("slist1: "+slist1);
+    	logger.info("slist2: "+slist2);
     	try
     	{
     		for(Map<String,String> importe : slist1)
@@ -4459,6 +4460,13 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     					,isrIte
     					,cedularIte
     					,false);
+    		}
+    		for(Map<String,String> totalFacturaIte : slist2)
+    		{
+    			String ntramite     = totalFacturaIte.get("NTRAMITE");
+    			String nfactura     = totalFacturaIte.get("NFACTURA");
+    			String totalFactura = totalFacturaIte.get("TOTALFACTURA"); 
+    			siniestrosManager.guardarTotalProcedenteFactura(ntramite,nfactura,totalFactura);
     		}
     		success = true;
     		mensaje = "Datos guardados";

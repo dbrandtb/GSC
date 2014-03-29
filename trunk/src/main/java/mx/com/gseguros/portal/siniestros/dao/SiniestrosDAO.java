@@ -344,6 +344,9 @@ public interface SiniestrosDAO {
 			,String nfactura) throws Exception;
 	
 	public List<SiniestroVO> solicitudPagoEnviada(Map params)throws Exception;
-
+	
+	public void guardarTotalProcedenteFactura(String ntramite,String nfactura,String importe)throws Exception;
+	
 	public String validaDocumentosAutServicio(String ntramite)throws Exception;
+	
 }
