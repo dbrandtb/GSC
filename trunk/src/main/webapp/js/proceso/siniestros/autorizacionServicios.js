@@ -5,6 +5,8 @@ var storeQuirugicoBase;
 var storeQuirugico;
 var extraParams='';
 var cdrol;
+var _Existe = "S";
+var _NExiste = "N";
 Ext.onReady(function() {
 
 	Ext.selection.CheckboxModel.override( {
@@ -511,7 +513,7 @@ Ext.onReady(function() {
 					        me.up().up().setLoading(false);
 					        Ext.Msg.show({
 					            title:'Error',
-					            msg: 'Error de comunicaci&oacute;n',
+					            msg: 'Error de comunicaci&oacute;n 66666',
 					            buttons: Ext.Msg.OK,
 					            icon: Ext.Msg.ERROR
 					        });
@@ -637,7 +639,7 @@ Ext.onReady(function() {
     	                me.up().up().setLoading(false);
     	                Ext.Msg.show({
     	                    title:'Error',
-    	                    msg: 'Error de comunicaci&oacute;n',
+    	                    msg: 'Error de comunicaci&oacute;n 777777',
     	                    buttons: Ext.Msg.OK,
     	                    icon: Ext.Msg.ERROR
     	                });
@@ -683,7 +685,7 @@ Ext.onReady(function() {
     	                me.up().up().setLoading(false);
     	                Ext.Msg.show({
     	                    title:'Error',
-    	                    msg: 'Error de comunicaci&oacute;n',
+    	                    msg: 'Error de comunicaci&oacute;n 888888',
     	                    buttons: Ext.Msg.OK,
     	                    icon: Ext.Msg.ERROR
     	                });
@@ -1775,7 +1777,7 @@ Ext.onReady(function() {
 								        me.up().up().setLoading(false);
 								        Ext.Msg.show({
 								            title:'Error',
-								            msg: 'Error de comunicaci&oacute;n',
+								            msg: 'Error de comunicaci&oacute;n 999999',
 								            buttons: Ext.Msg.OK,
 								            icon: Ext.Msg.ERROR
 								        });
@@ -1934,7 +1936,7 @@ Ext.onReady(function() {
 			 		id:'botonGuardar',
 			 		handler: function() {
 			 		    if (panelInicialPrincipal.form.isValid()) {
-			 		    		guardadoAutorizacionServicio();
+			 		    		guardadoAutorizacionServicio(_Existe);
 			 		    } else {
 			 		        Ext.Msg.show({
 			 		               title: 'Aviso',
@@ -1952,69 +1954,99 @@ Ext.onReady(function() {
 			 		id:'Autorizar',
 			 		handler:function()
 			 		{
-			 			
 			 			if (panelInicialPrincipal.form.isValid()) {
-			 				Ext.Ajax.request(
-									{
-									    url     : _URL_MONTO_MAXIMO
-									    ,params:{
-											'params.cdramo' : Ext.getCmp('idcdRamo').getValue(),
-											'params.cdtipsit' : Ext.getCmp('idcdtipsit').getValue()
-									}
-									,success : function (response)
-								    {
-								    	
-								    	if(cdrol=="COORDMEDMULTI")
-										{
-								    		if(+ (Ext.getCmp('sumDisponible').getValue() <= +(Ext.decode(response.responseText).montoMaximo)))
-								    		{
-									    		
-									    		if(Ext.getCmp('fechaAutorizacion').getValue()!=null && Ext.getCmp('fechaVencimiento').getValue())
-							 					{
-								 					Ext.getCmp('idstatus').setValue("2");
-								 					guardadoAutorizacionServicio();
-							 					}
-								 				else
-							 					{
-								 					Ext.Msg.show({
-									 		               title: 'Error',
-									 		               msg: 'La fecha de autorizaci&oacute;n y fecha vencimiento son requeridas',
-									 		               buttons: Ext.Msg.OK,
-									 		               icon: Ext.Msg.ERROR
-									 		           });
-							 					}
-								    		}else
-							    			{
-								    			mensajeCorrecto('Datos',"Este tr&aacute;mite debe de ser turnada al gerente ",function()
-						                		{
-						                		    Ext.create('Ext.form.Panel').submit(
-						                		    {
-						                		        url             : _p12_urlMesaControl
-						                		        ,standardSubmit : true
-						                		        ,params         :
-						                		        {
-						                		            'smap1.gridTitle'      : 'Autorizaci&oacute;n de servicio'
-						                		            ,'smap2.pv_cdtiptra_i' : 14
-						                		        }
-						                		    });
-						                		});
-							    			}
-										}else{
-												Ext.getCmp('idstatus').setValue("2");
-							 					guardadoAutorizacionServicio();
-										}
-								    },
-								    failure : function ()
-								    {
-								        me.up().up().setLoading(false);
-								        Ext.Msg.show({
-								            title:'Error',
-								            msg: 'Error de comunicaci&oacute;n',
-								            buttons: Ext.Msg.OK,
-								            icon: Ext.Msg.ERROR
-								        });
-								    }
-								});
+			 				//validamos que exista valor del registro
+			 				if(valorAction == null )
+			 				{
+			 					//Solo se guarda y no realiza la validacion del monto
+			 					guardadoAutorizacionServicio(_NExiste);
+			 				}else{
+			 					Ext.Ajax.request(
+		        				{
+		        				    url     : _URL_Existe_Documentos
+		        				    ,params:{
+		        				         'params.ntramite': valorAction.ntramite
+		        				    }
+		        				    ,success : function (response)
+		        				    {
+		                                if(Ext.decode(response.responseText).existeDocAutServicio =="N")
+		        			        	{
+		        				        	guardadoAutorizacionServicio(_NExiste);
+		        			        	}else{
+	                                        	Ext.Ajax.request(
+													{
+													    url     : _URL_MONTO_MAXIMO
+													    ,params:{
+															'params.cdramo' : Ext.getCmp('idcdRamo').getValue(),
+															'params.cdtipsit' : Ext.getCmp('idcdtipsit').getValue()
+													}
+													,success : function (response)
+												    {
+												    	
+												    	if(cdrol=="COORDMEDMULTI")
+														{
+												    		if(+ (Ext.getCmp('sumDisponible').getValue() <= +(Ext.decode(response.responseText).montoMaximo)))
+												    		{
+													    		
+													    		if(Ext.getCmp('fechaAutorizacion').getValue()!=null && Ext.getCmp('fechaVencimiento').getValue())
+											 					{
+												 					Ext.getCmp('idstatus').setValue("2");
+												 					guardadoAutorizacionServicio(_Existe);
+											 					}
+												 				else
+											 					{
+												 					Ext.Msg.show({
+													 		               title: 'Error',
+													 		               msg: 'La fecha de autorizaci&oacute;n y fecha vencimiento son requeridas',
+													 		               buttons: Ext.Msg.OK,
+													 		               icon: Ext.Msg.ERROR
+													 		           });
+											 					}
+												    		}else
+											    			{
+												    			Ext.Msg.show({
+												    		        title: 'Aviso',
+												    		        msg: 'Este tr&aacute;mite debe de ser turnada al gerente  &iquest;Deseas guardar los cambios?',
+												    		        buttons: Ext.Msg.YESNO,
+												    		        icon: Ext.Msg.QUESTION,
+												    		        fn: function(buttonId, text, opt){
+												    		        	if(buttonId == 'yes'){
+												    		        		guardadoAutorizacionServicio(_Existe);
+												    		        	}
+												    		        	
+												    		        }
+												    		    });
+											    			}
+														}else{
+																Ext.getCmp('idstatus').setValue("2");
+											 					guardadoAutorizacionServicio(_Existe);
+														}
+												    },
+													    failure : function ()
+													    {
+													        me.up().up().setLoading(false);
+													        Ext.Msg.show({
+													            title:'Error',
+													            msg: 'Error de comunicaci&oacute;n 1000',
+													            buttons: Ext.Msg.OK,
+													            icon: Ext.Msg.ERROR
+													        });
+													    }
+												});
+		                                }
+		        				    },
+		        				    failure : function ()
+		        				    {
+		        				        me.up().up().setLoading(false);
+		        				        Ext.Msg.show({
+		        				            title:'Error',
+		        				            msg: 'Error de comunicaci&oacute;n YYYYY ',
+		        				            buttons: Ext.Msg.OK,
+		        				            icon: Ext.Msg.ERROR
+		        				        });
+		        				    }
+		        				});
+			 				}
 			 		    } else {
 			 		        Ext.Msg.show({
 			 		               title: 'Aviso',
@@ -2099,7 +2131,7 @@ Ext.onReady(function() {
 		        me.up().up().setLoading(false);
 		        Ext.Msg.show({
 		            title:'Error',
-		            msg: 'Error de comunicaci&oacute;n',
+		            msg: 'Error de comunicaci&oacute;n TTTTTT',
 		            buttons: Ext.Msg.OK,
 		            icon: Ext.Msg.ERROR
 		        });
@@ -2229,7 +2261,7 @@ Ext.onReady(function() {
 	                me.up().up().setLoading(false);
 	                Ext.Msg.show({
 	                    title:'Error',
-	                    msg: 'Error de comunicaci&oacute;n',
+	                    msg: 'Error de comunicaci&oacute;n EEEEE',
 	                    buttons: Ext.Msg.OK,
 	                    icon: Ext.Msg.ERROR
 	                });
@@ -2279,83 +2311,6 @@ Ext.onReady(function() {
 		});
 		return true;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	
@@ -2419,7 +2374,7 @@ Ext.onReady(function() {
 	
 	
 	
-	function  guardadoAutorizacionServicio()
+	function  guardadoAutorizacionServicio(valor)
 	{
 		var respuesta=true;
         var submitValues={};
@@ -2486,18 +2441,35 @@ Ext.onReady(function() {
                     if(Ext.getCmp('idstatus').getValue() == "2"){
                     	mensaje= 'Se gener&oacute; la carta para la autorizaci&oacute;n con el n&uacute;mero ';
                     }else{
+                    	
                     	if(Ext.getCmp('claveTipoAutoriza').getValue() == "1")
                     	{
-                        	mensaje= 'Se guardo la Autorizaci&oacute;n de Servicio con el n&uacute;mero ';
+                    		if(valor=="N")
+                			{
+                    			mensaje= 'No se autoriz&oacute; - requieres subir al menos un archivo, pero se guard&oacute; la autorizaci&oacute;n de servicio con el n&uacute;mero  ';
+                			}else{
+                				mensaje= 'Se guard&oacute; la autorizaci&oacute;n de servicio con el n&uacute;mero ';
+                			}
+                        	
                     	}
                         if(Ext.getCmp('claveTipoAutoriza').getValue() == "2")
                     	{
-                        	mensaje= 'Se modific&oacute; la autorizaci&oacute;n con el n&uacute;mero ';
+                        	if(valor=="N")
+                			{
+                    			mensaje= 'No se autoriz&oacute; - requieres subir al menos un archivo, pero se modific&oacute; la autorizaci&oacute;n de servicio con el n&uacute;mero ';
+                			}else{
+                				mensaje= 'Se modific&oacute; la autorizaci&oacute;n con el n&uacute;mero ';
+                			}
                     	}
                         
                         if(Ext.getCmp('claveTipoAutoriza').getValue() == "3")
                     	{
-                        	mensaje= 'Se reemplaz&oacute; la Autorizaci&oacute;n de Servicio con el n&uacute;mero ';
+                        	if(valor=="N")
+                			{
+                    			mensaje= 'No se autoriz&oacute; , se reemplaz&oacute; la autorizaci&oacute;n de servicio con el n&uacute;mero ';
+                			}else{
+                				mensaje= 'Se reemplaz&oacute; la autorizaci&oacute;n de servicio con el n&uacute;mero ';
+                			}
                     	}
                     }
                     
@@ -2509,7 +2481,7 @@ Ext.onReady(function() {
             		        ,standardSubmit : true
             		        ,params         :
             		        {
-            		            'smap1.gridTitle'      : 'Autorizaci&oacute;n de servicio'
+            		            'smap1.gridTitle'      : 'Autorizaci\u00F3n de servicio'
             		            ,'smap2.pv_cdtiptra_i' : 14
             		        }
             		    });
@@ -2539,7 +2511,7 @@ Ext.onReady(function() {
             	panelInicialPrincipal.setLoading(false);
                 Ext.Msg.show({
                     title:'Error',
-                    msg: 'Error de comunicaci&oacute;n',
+                    msg: 'Error de comunicaci&oacute;n 11111',
                     buttons: Ext.Msg.OK,
                     icon: Ext.Msg.ERROR
                 });
@@ -2608,7 +2580,7 @@ Ext.onReady(function() {
 			    					        me.up().up().setLoading(false);
 			    					        Ext.Msg.show({
 			    					            title:'Error',
-			    					            msg: 'Error de comunicaci&oacute;n',
+			    					            msg: 'Error de comunicaci&oacute;n 222222',
 			    					            buttons: Ext.Msg.OK,
 			    					            icon: Ext.Msg.ERROR
 			    					        });
@@ -2628,7 +2600,7 @@ Ext.onReady(function() {
 	                me.up().up().setLoading(false);
 	                Ext.Msg.show({
 	                    title:'Error',
-	                    msg: 'Error de comunicaci&oacute;n',
+	                    msg: 'Error de comunicaci&oacute;n 33333',
 	                    buttons: Ext.Msg.OK,
 	                    icon: Ext.Msg.ERROR
 	                });
@@ -2674,7 +2646,7 @@ Ext.onReady(function() {
 		            me.up().up().setLoading(false);
 		            Ext.Msg.show({
 		                title:'Error',
-		                msg: 'Error de comunicaci&oacute;n',
+		                msg: 'Error de comunicaci&oacute;n 44444444',
 		                buttons: Ext.Msg.OK,
 		                icon: Ext.Msg.ERROR
 		            });
@@ -2726,7 +2698,7 @@ Ext.onReady(function() {
 		                me.up().up().setLoading(false);
 		                Ext.Msg.show({
 		                    title:'Error',
-		                    msg: 'Error de comunicaci&oacute;n',
+		                    msg: 'Error de comunicaci&oacute;n 55555',
 		                    buttons: Ext.Msg.OK,
 		                    icon: Ext.Msg.ERROR
 		                });

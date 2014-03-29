@@ -97,6 +97,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
     private String diasMaximos;
     private String montoMaximo;
     private String existePenalizacion;
+    private String existeDocAutServicio;
     private String autorizarProceso;
     private String porcentajePenalizacion;
     private List<HashMap<String, String>> loadList;
@@ -825,6 +826,10 @@ public void setMsgResult(String msgResult) {
    public String consultaListaPorcentaje(){
 		logger.debug(" **** Entrando a consulta de lista de Mantenimiento****");
 		try {
+				logger.debug(params.get("cdcpt"));
+				logger.debug(params.get("cdtipmed"));
+				logger.debug(params.get("mtobase"));
+				
 				List<ConsultaPorcentajeVO> lista = siniestrosManager.getConsultaListaPorcentaje(params.get("cdcpt"),params.get("cdtipmed"),params.get("mtobase"));
 				if(lista!=null && !lista.isEmpty())	listaPorcentaje = lista;
 		}catch( Exception e){
@@ -4471,6 +4476,18 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     	return SUCCESS;
     }
     
+    public String validaDocumentosAutoServ(){
+	   	logger.debug(" **** Entrando al metodo de validacion de documentos de Autorizacion de servicio ****");
+	   	try {
+		   		existeDocAutServicio = siniestrosManager.validaDocumentosAutServicio(params.get("ntramite"));
+	   	}catch( Exception e){
+	   		logger.error("Error al consultar la validacion de documentos de Autorizacion de servicio ",e);
+	   		return SUCCESS;
+	   	}
+	   	success = true;
+	   	return SUCCESS;
+  }
+    
     public String getExistePenalizacion() {
 		return existePenalizacion;
 	}
@@ -5032,6 +5049,16 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 
 	public String getIMPORTE_WS_ISR() {
 		return IMPORTE_WS_ISR;
+	}
+
+
+	public String getExisteDocAutServicio() {
+		return existeDocAutServicio;
+	}
+
+
+	public void setExisteDocAutServicio(String existeDocAutServicio) {
+		this.existeDocAutServicio = existeDocAutServicio;
 	}
 	
 }

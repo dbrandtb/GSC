@@ -1092,4 +1092,13 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 				);
 		return autorizacionesFactura;
 	}
+
+	@Override
+	public String validaDocumentosAutServicio(String ntramite) throws Exception {
+		try {
+			return siniestrosDAO.validaDocumentosAutServicio(ntramite);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}
 }
