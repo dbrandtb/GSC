@@ -420,4 +420,6 @@ public interface SiniestrosManager {
 
 	public String validaDocumentosAutServicio(String ntramite) throws Exception;
 	
+	public void guardarTotalProcedenteFactura(String ntramite,String nfactura,String importe)throws Exception;
+	
 }

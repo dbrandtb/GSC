@@ -1092,7 +1092,20 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 				);
 		return autorizacionesFactura;
 	}
-
+	
+	@Override
+	public void guardarTotalProcedenteFactura(String ntramite,String nfactura,String importe)throws Exception
+	{
+		log.info(""
+				+ "\n###########################################"
+				+ "\n###### guardarTotalProcedenteFactura ######");
+		siniestrosDAO.guardarTotalProcedenteFactura(ntramite,nfactura,importe);
+		log.info(""
+				+ "\n###### guardarTotalProcedenteFactura ######"
+				+ "\n###########################################"
+				);
+	}
+	
 	@Override
 	public String validaDocumentosAutServicio(String ntramite) throws Exception {
 		try {
@@ -1101,4 +1114,5 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			throw new ApplicationException(daoExc.getMessage(), daoExc);
 		}
 	}
+		
 }
