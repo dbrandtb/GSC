@@ -33,6 +33,8 @@ var _UrlValidaAutoProceso    = '<s:url namespace="/siniestros" action="validaAut
 var panDocUrlViewDoc     = '<s:url namespace ="/documentos" action="descargaDocInline" />';
 var _URL_ActualizaStatusTramite =      '<s:url namespace="/mesacontrol" action="actualizarStatusTramite" />';
 var _URL_ActualizaStatusMAUTSERV =      '<s:url namespace="/siniestros" action="cambiarEstatusMAUTSERV" />';
+var _URL_Existe_Documentos =     '<s:url namespace="/siniestros" action="validaDocumentosAutoServ" />';
+
 //UserVO usuario  = (UserVO)session.get("USUARIO");
 //String cdrol    = usuario.getRolActivo().getObjeto().getValue();
 
@@ -212,72 +214,6 @@ function rechazoAutorizacionServicio(grid,rowIndex,colIndex){
 	}
 }
 
-function generaAutoriServicioWindow(grid,rowIndex,colIndex){
-	
-	var record = grid.getStore().getAt(rowIndex);
-	
-	msgWindow = Ext.Msg.show({
-        title: 'Aviso',
-        msg: '&iquest;Esta seguro que desea generar la Autorizaci&oacute;n de Servicio ?',
-        buttons: Ext.Msg.YESNO,
-        icon: Ext.Msg.QUESTION,
-        fn: function(buttonId, text, opt){
-        	if(buttonId == 'yes'){
-        		Ext.Ajax.request({
-					url: _UrlGenerarAutoServicio,
-					params: {
-							'paramsO.pv_ntramite_i' : record.get('ntramite'),
-				    		'paramsO.pv_cdunieco_i' : record.get('cdunieco'),
-				    		'paramsO.pv_cdramo_i'   : record.raw.cdramo,
-				    		'paramsO.pv_estado_i'   : record.raw.estado,
-				    		'paramsO.pv_nmpoliza_i' : record.get('nmpoliza'),
-				    		'paramsO.pv_nmAutSer_i' : record.get('parametros.pv_otvalor01'),
-				    		'paramsO.pv_cdperson_i' : record.get('parametros.pv_otvalor06'),
-				    		'paramsO.pv_nmsuplem_i' : record.raw.nmsuplem,
-				    	
-					},
-					success: function(response, opt) {
-						var jsonRes=Ext.decode(response.responseText);
-
-						if(jsonRes.success == true){
-							var numRand=Math.floor((Math.random()*100000)+1);
-				        	debug('numRand a: ',numRand);
-				        	var windowVerDocu=Ext.create('Ext.window.Window',
-				        	{
-				        		title          : 'Autorizaci&oacute;n de Sevicio Siniestro'
-				        		,width         : 700
-				        		,height        : 500
-				        		,collapsible   : true
-				        		,titleCollapse : true
-				        		,html          : '<iframe innerframe="'+numRand+'" frameborder="0" width="100" height="100"'
-				        		                 +'src="'+panDocUrlViewDoc+'?idPoliza=' + record.get('ntramite') + '&filename=' + '<s:text name="siniestro.autorizacionServicio.nombre"/>' +'">'
-				        		                 +'</iframe>'
-				        		,listeners     :
-				        		{
-				        			resize : function(win,width,height,opt){
-				                        debug(width,height);
-				                        $('[innerframe="'+numRand+'"]').attr({'width':width-20,'height':height-60});
-				                    }
-				        		}
-				        	}).show();
-				        	windowVerDocu.center();
-   						}else {
-   							mensajeError(jsonRes.msgResult);
-   						}
-					},
-					failure: function(){
-						mensajeError('No se pudo generar contrarecibo.');
-					}
-				});
-        	}
-        	
-        }
-    });
-	centrarVentana(msgWindow);
-	
-}
-
-
 function _4_onComplementariosClick(grid,rowIndex)
 {
 	var record = grid.getStore().getAt(rowIndex);
@@ -348,73 +284,105 @@ function turnarCoordinaMedMultiregional(grid,rowIndex,colIndex){
 				 	            icon: Ext.Msg.ERROR
 				 	        });
 			        	}else{
-			        		var comentariosText = Ext.create('Ext.form.field.TextArea', {
-			                    fieldLabel: 'Observaciones'
-			                    ,labelWidth: 150
-			                    ,width: 600
-			                    ,name:'smap1.comments'
-			                    ,height: 250
-			                });
-			                
-			                windowLoader = Ext.create('Ext.window.Window',{
-			                    modal       : true,
-			                    buttonAlign : 'center',
-			                    width       : 663,
-			                    height      : 400,
-			                    autoScroll  : true,
-			                    items       : [
-			                                    Ext.create('Ext.form.Panel', {
-			                                    title: 'Turnar al coordinador m&eacute;dico multiregional',
-			                                    width: 650,
-			                                    url: _URL_ActualizaStatusTramite,
-			                                    bodyPadding: 5,
-			                                    items: [comentariosText],
-			                                    buttonAlign:'center',
-			                                    buttons: [{
-			                                        text: 'Turnar',
-			                                        icon    : '${ctx}/resources/fam3icons/icons/accept.png',
-			                                        buttonAlign : 'center',
-			                                        handler: function() {
-			                	            	    	if (this.up().up().form.isValid()) {
-			                	            	    		this.up().up().form.submit({
-			                	            		        	waitMsg:'Procesando...',
-			                	            		        	params: {
-			                	            		        		'smap1.ntramite' : record.get('ntramite'), 
-			                	            		        		'smap1.status'   : _STATUS_PENDIENTE,
-			                	            		        	},
-			                	            		        	failure: function(form, action) {
-			                	            		        		mensajeError('No se pudo turnar.');
-			                	            					},
-			                	            					success: function(form, action) {
-			                	            						mensajeCorrecto('Aviso','Se ha turnado con exito.');
-			                	            						loadMcdinStore();
-			                	            						windowLoader.close();
-			                	            						
-			                	            					}
-			                	            				});
-			                	            			} else {
-			                	            				Ext.Msg.show({
-			                	            	                   title: 'Aviso',
-			                	            	                   msg: 'Complete la informaci&oacute;n requerida',
-			                	            	                   buttons: Ext.Msg.OK,
-			                	            	                   icon: Ext.Msg.WARNING
-			                	            	               });
-			                	            			}
-			                	            		}
-			                                    },{
-			                                        text: 'Cancelar',
-			                                        icon    : '${ctx}/resources/fam3icons/icons/cancel.png',
-			                                        buttonAlign : 'center',
-			                                        handler: function() {
-			                                            windowLoader.close();
-			                                        }
-			                                    }
-			                                    ]
-			                                })  
-			                            ]
-			                }).show();
-			                centrarVentana(windowLoader);
-			        		
+			        				Ext.Ajax.request(
+			        				{
+			        				    url     : _URL_Existe_Documentos
+			        				    ,params:{
+			        				         'params.ntramite': record.get('ntramite')
+			        				    }
+			        				    ,success : function (response)
+			        				    {
+			                                console.log(Ext.decode(response.responseText));
+			                                
+			        				        if(Ext.decode(response.responseText).existeDocAutServicio =="N")
+			        			        	{
+			        				        	 Ext.Msg.show({
+			        				 	            title:'Error',
+			        				 	            msg: 'No se puede turnar debes de registrar al menos un documento',
+			        				 	            buttons: Ext.Msg.OK,
+			        				 	            icon: Ext.Msg.ERROR
+			        				 	        });
+			        			        	}else{
+			                                    // se coloca la validacion de que existe archivos
+			        			        		var comentariosText = Ext.create('Ext.form.field.TextArea', {
+			        			                    fieldLabel: 'Observaciones'
+			        			                    ,labelWidth: 150
+			        			                    ,width: 600
+			        			                    ,name:'smap1.comments'
+			        			                    ,height: 250
+			        			                });
+			        			                
+			        			                windowLoader = Ext.create('Ext.window.Window',{
+			        			                    modal       : true,
+			        			                    buttonAlign : 'center',
+			        			                    width       : 663,
+			        			                    height      : 400,
+			        			                    autoScroll  : true,
+			        			                    items       : [
+			        			                                    Ext.create('Ext.form.Panel', {
+			        			                                    title: 'Turnar al coordinador m&eacute;dico multiregional',
+			        			                                    width: 650,
+			        			                                    url: _URL_ActualizaStatusTramite,
+			        			                                    bodyPadding: 5,
+			        			                                    items: [comentariosText],
+			        			                                    buttonAlign:'center',
+			        			                                    buttons: [{
+			        			                                        text: 'Turnar',
+			        			                                        icon    : '${ctx}/resources/fam3icons/icons/accept.png',
+			        			                                        buttonAlign : 'center',
+			        			                                        handler: function() {
+			        			                	            	    	if (this.up().up().form.isValid()) {
+			        			                	            	    		this.up().up().form.submit({
+			        			                	            		        	waitMsg:'Procesando...',
+			        			                	            		        	params: {
+			        			                	            		        		'smap1.ntramite' : record.get('ntramite'), 
+			        			                	            		        		'smap1.status'   : _STATUS_PENDIENTE,
+			        			                	            		        	},
+			        			                	            		        	failure: function(form, action) {
+			        			                	            		        		mensajeError('No se pudo turnar.');
+			        			                	            					},
+			        			                	            					success: function(form, action) {
+			        			                	            						mensajeCorrecto('Aviso','Se ha turnado con exito.');
+			        			                	            						loadMcdinStore();
+			        			                	            						windowLoader.close();
+			        			                	            						
+			        			                	            					}
+			        			                	            				});
+			        			                	            			} else {
+			        			                	            				Ext.Msg.show({
+			        			                	            	                   title: 'Aviso',
+			        			                	            	                   msg: 'Complete la informaci&oacute;n requerida',
+			        			                	            	                   buttons: Ext.Msg.OK,
+			        			                	            	                   icon: Ext.Msg.WARNING
+			        			                	            	               });
+			        			                	            			}
+			        			                	            		}
+			        			                                    },{
+			        			                                        text: 'Cancelar',
+			        			                                        icon    : '${ctx}/resources/fam3icons/icons/cancel.png',
+			        			                                        buttonAlign : 'center',
+			        			                                        handler: function() {
+			        			                                            windowLoader.close();
+			        			                                        }
+			        			                                    }
+			        			                                    ]
+			        			                                })  
+			        			                            ]
+			        			                }).show();
+			        			                centrarVentana(windowLoader);
+			                                }
+			        				    },
+			        				    failure : function ()
+			        				    {
+			        				        me.up().up().setLoading(false);
+			        				        Ext.Msg.show({
+			        				            title:'Error',
+			        				            msg: 'Error de comunicaci&oacute;n',
+			        				            buttons: Ext.Msg.OK,
+			        				            icon: Ext.Msg.ERROR
+			        				        });
+			        				    }
+			        				});
 			        	}
 				    },
 				    failure : function ()
@@ -447,114 +415,128 @@ function turnarGerenteMedMultiregional(grid,rowIndex,colIndex){
 		return;
 	}else{
 		
-		msgWindow = Ext.Msg.show({
-	        title: 'Aviso',
-	        msg: 'El tr&aacute;mite ser&aacute; turnado al Gerente M&eacute;dico para su Vo.Bo. &iquest; esta seguro ?',
-	        buttons: Ext.Msg.YESNO,
-	        icon: Ext.Msg.QUESTION,
-	        fn: function(buttonId, text, opt){
-	        	if(buttonId == 'yes'){
-	        		/*Ext.Ajax.request(
-			{
-				url     : _URL_MONTO_MAXIMO
-			    ,params:{
-			         'params.cdramo': record.raw.cdramo,
-			         'params.cdtipsit': record.raw.cdtipsit
-			    }
-			    ,success : function (response)
-			    {
-			    	Ext.decode(response.responseText);
-			    	console.log(Ext.decode(response.responseText))
-			    },
-			    failure : function ()
-			    {
-			        me.up().up().setLoading(false);
-			        Ext.Msg.show({
-			            title:'Error',
-			            msg: 'Error de comunicaci&oacute;n',
-			            buttons: Ext.Msg.OK,
-			            icon: Ext.Msg.ERROR
-			        });
-			    }
-			});*/
-			
 			Ext.Ajax.request(
 			{
-			    url     : _UrlValidaAutoProceso
+			    url     : _URL_Existe_Documentos
 			    ,params:{
-			         'params.nmAutSer': record.get('parametros.pv_otvalor01')
+			         'params.ntramite': record.get('ntramite')
 			    }
 			    ,success : function (response)
 			    {
-			       
-		        		var comentariosText = Ext.create('Ext.form.field.TextArea', {
-		                    fieldLabel: 'Observaciones'
-		                    ,labelWidth: 150
-		                    ,width: 600
-		                    ,name:'smap1.comments'
-		                    ,height: 250
-		                });
-		                
-		                windowLoader = Ext.create('Ext.window.Window',{
-		                    modal       : true,
-		                    buttonAlign : 'center',
-		                    width       : 663,
-		                    height      : 400,
-		                    autoScroll  : true,
-		                    items       : [
-		                                    Ext.create('Ext.form.Panel', {
-		                                    title: 'Turnar al gerente m&eacute;dico multiregional',
-		                                    width: 650,
-		                                    url: _URL_ActualizaStatusTramite,
-		                                    bodyPadding: 5,
-		                                    items: [comentariosText],
-		                                    buttonAlign:'center',
-		                                    buttons: [{
-		                                        text: 'Turnar',
-		                                        icon    : '${ctx}/resources/fam3icons/icons/accept.png',
-		                                        buttonAlign : 'center',
-		                                        handler: function() {
-		                	            	    	if (this.up().up().form.isValid()) {
-		                	            	    		this.up().up().form.submit({
-		                	            		        	waitMsg:'Procesando...',
-		                	            		        	params: {
-		                	            		        		'smap1.ntramite' : record.get('ntramite'), 
-		                	            		        		'smap1.status'   : _STATUS_EN_ESPERA_DE_AUTORIZACION,
-		                	            		        	},
-		                	            		        	failure: function(form, action) {
-		                	            		        		mensajeError('No se pudo turnar.');
-		                	            					},
-		                	            					success: function(form, action) {
-		                	            						mensajeCorrecto('Aviso','Se ha turnado con exito.');
-		                	            						loadMcdinStore();
-		                	            						windowLoader.close();
-		                	            						
-		                	            					}
-		                	            				});
-		                	            			} else {
-		                	            				Ext.Msg.show({
-		                	            	                   title: 'Aviso',
-		                	            	                   msg: 'Complete la informaci&oacute;n requerida',
-		                	            	                   buttons: Ext.Msg.OK,
-		                	            	                   icon: Ext.Msg.WARNING
-		                	            	               });
-		                	            			}
-		                	            		}
-		                                    },{
-		                                        text: 'Cancelar',
-		                                        icon    : '${ctx}/resources/fam3icons/icons/cancel.png',
-		                                        buttonAlign : 'center',
-		                                        handler: function() {
-		                                            windowLoader.close();
-		                                        }
-		                                    }
-		                                    ]
-		                                })  
-		                            ]
-		                }).show();
-		                centrarVentana(windowLoader);
-		        		
-		        	//}
+			    	console.log(Ext.decode(response.responseText).existeDocAutServicio);
+	                if(Ext.decode(response.responseText).existeDocAutServicio =="N")
+		        	{
+			        	 Ext.Msg.show({
+			 	            title:'Error',
+			 	            msg: 'No se puede turnar debes de registrar al menos un documento',
+			 	            buttons: Ext.Msg.OK,
+			 	            icon: Ext.Msg.ERROR
+			 	        });
+		        	}else{
+	                          // DATOS
+			        		msgWindow = Ext.Msg.show({
+			        	        title: 'Aviso',
+			        	        msg: 'El tr&aacute;mite ser&aacute; turnado al Gerente M&eacute;dico para su Vo.Bo. &iquest; esta seguro ?',
+			        	        buttons: Ext.Msg.YESNO,
+			        	        icon: Ext.Msg.QUESTION,
+			        	        fn: function(buttonId, text, opt){
+			        	        	if(buttonId == 'yes'){
+			        					Ext.Ajax.request(
+			        					{
+			        					    url     : _UrlValidaAutoProceso
+			        					    ,params:{
+			        					         'params.nmAutSer': record.get('parametros.pv_otvalor01')
+			        					    }
+			        					    ,success : function (response)
+			        					    {
+			        					       
+			        				        		var comentariosText = Ext.create('Ext.form.field.TextArea', {
+			        				                    fieldLabel: 'Observaciones'
+			        				                    ,labelWidth: 150
+			        				                    ,width: 600
+			        				                    ,name:'smap1.comments'
+			        				                    ,height: 250
+			        				                });
+			        				                
+			        				                windowLoader = Ext.create('Ext.window.Window',{
+			        				                    modal       : true,
+			        				                    buttonAlign : 'center',
+			        				                    width       : 663,
+			        				                    height      : 400,
+			        				                    autoScroll  : true,
+			        				                    items       : [
+			        				                                    Ext.create('Ext.form.Panel', {
+			        				                                    title: 'Turnar al gerente m&eacute;dico multiregional',
+			        				                                    width: 650,
+			        				                                    url: _URL_ActualizaStatusTramite,
+			        				                                    bodyPadding: 5,
+			        				                                    items: [comentariosText],
+			        				                                    buttonAlign:'center',
+			        				                                    buttons: [{
+			        				                                        text: 'Turnar',
+			        				                                        icon    : '${ctx}/resources/fam3icons/icons/accept.png',
+			        				                                        buttonAlign : 'center',
+			        				                                        handler: function() {
+			        				                	            	    	if (this.up().up().form.isValid()) {
+			        				                	            	    		this.up().up().form.submit({
+			        				                	            		        	waitMsg:'Procesando...',
+			        				                	            		        	params: {
+			        				                	            		        		'smap1.ntramite' : record.get('ntramite'), 
+			        				                	            		        		'smap1.status'   : _STATUS_EN_ESPERA_DE_AUTORIZACION,
+			        				                	            		        	},
+			        				                	            		        	failure: function(form, action) {
+			        				                	            		        		mensajeError('No se pudo turnar.');
+			        				                	            					},
+			        				                	            					success: function(form, action) {
+			        				                	            						mensajeCorrecto('Aviso','Se ha turnado con exito.');
+			        				                	            						loadMcdinStore();
+			        				                	            						windowLoader.close();
+			        				                	            						
+			        				                	            					}
+			        				                	            				});
+			        				                	            			} else {
+			        				                	            				Ext.Msg.show({
+			        				                	            	                   title: 'Aviso',
+			        				                	            	                   msg: 'Complete la informaci&oacute;n requerida',
+			        				                	            	                   buttons: Ext.Msg.OK,
+			        				                	            	                   icon: Ext.Msg.WARNING
+			        				                	            	               });
+			        				                	            			}
+			        				                	            		}
+			        				                                    },{
+			        				                                        text: 'Cancelar',
+			        				                                        icon    : '${ctx}/resources/fam3icons/icons/cancel.png',
+			        				                                        buttonAlign : 'center',
+			        				                                        handler: function() {
+			        				                                            windowLoader.close();
+			        				                                        }
+			        				                                    }
+			        				                                    ]
+			        				                                })  
+			        				                            ]
+			        				                }).show();
+			        				                centrarVentana(windowLoader);
+			        				        		
+			        				        	//}
+			        					    },
+			        					    failure : function ()
+			        					    {
+			        					        me.up().up().setLoading(false);
+			        					        Ext.Msg.show({
+			        					            title:'Error',
+			        					            msg: 'Error de comunicaci&oacute;n',
+			        					            buttons: Ext.Msg.OK,
+			        					            icon: Ext.Msg.ERROR
+			        					        });
+			        					    }
+			        					});
+	
+			        	        	}
+			        	        	
+			        	        }
+			        	    });
+			        		centrarVentana(msgWindow);
+                      }
 			    },
 			    failure : function ()
 			    {
@@ -567,13 +549,6 @@ function turnarGerenteMedMultiregional(grid,rowIndex,colIndex){
 			        });
 			    }
 			});
-
-	        	}
-	        	
-	        }
-	    });
-		centrarVentana(msgWindow);
-		
 	}
 }
 

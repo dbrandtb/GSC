@@ -417,5 +417,7 @@ public interface SiniestrosManager {
 			,String status
 			,String nmsinies
 			,String nfactura) throws Exception;
+
+	public String validaDocumentosAutServicio(String ntramite) throws Exception;
 	
 }

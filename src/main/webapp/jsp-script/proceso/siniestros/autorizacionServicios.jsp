@@ -47,8 +47,9 @@
             var panDocUrlViewDoc                    = '<s:url namespace ="/documentos" action="descargaDocInline" />';
             var venDocUrlImpConrec                  = '<s:url namespace ="/documentos" action="generarContrarecibo" />';
             
-            var _p12_urlMesaControl              = '<s:url namespace="/mesacontrol" action="mcdinamica"               />';
-            var _URL_MONTO_MAXIMO			= '<s:url namespace="/siniestros"  action="consultaMontoMaximo"/>';
+            var _p12_urlMesaControl              	= '<s:url namespace="/mesacontrol" action="mcdinamica"               />';
+            var _URL_MONTO_MAXIMO					= '<s:url namespace="/siniestros"  action="consultaMontoMaximo"/>';
+            var _URL_Existe_Documentos				= '<s:url namespace="/siniestros" action="validaDocumentosAutoServ" />';
             
             var valorAction = <s:property value='paramsJson' escapeHtml='false'/>;
             console.log(valorAction);
