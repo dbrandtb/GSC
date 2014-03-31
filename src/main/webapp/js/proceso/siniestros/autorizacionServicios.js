@@ -513,7 +513,7 @@ Ext.onReady(function() {
 					        me.up().up().setLoading(false);
 					        Ext.Msg.show({
 					            title:'Error',
-					            msg: 'Error de comunicaci&oacute;n 66666',
+					            msg: 'Error de comunicaci&oacute;n',
 					            buttons: Ext.Msg.OK,
 					            icon: Ext.Msg.ERROR
 					        });
@@ -639,7 +639,7 @@ Ext.onReady(function() {
     	                me.up().up().setLoading(false);
     	                Ext.Msg.show({
     	                    title:'Error',
-    	                    msg: 'Error de comunicaci&oacute;n 777777',
+    	                    msg: 'Error de comunicaci&oacute;n',
     	                    buttons: Ext.Msg.OK,
     	                    icon: Ext.Msg.ERROR
     	                });
@@ -685,7 +685,7 @@ Ext.onReady(function() {
     	                me.up().up().setLoading(false);
     	                Ext.Msg.show({
     	                    title:'Error',
-    	                    msg: 'Error de comunicaci&oacute;n 888888',
+    	                    msg: 'Error de comunicaci&oacute;n',
     	                    buttons: Ext.Msg.OK,
     	                    icon: Ext.Msg.ERROR
     	                });
@@ -1777,7 +1777,7 @@ Ext.onReady(function() {
 								        me.up().up().setLoading(false);
 								        Ext.Msg.show({
 								            title:'Error',
-								            msg: 'Error de comunicaci&oacute;n 999999',
+								            msg: 'Error de comunicaci&oacute;n',
 								            buttons: Ext.Msg.OK,
 								            icon: Ext.Msg.ERROR
 								        });
@@ -2027,7 +2027,7 @@ Ext.onReady(function() {
 													        me.up().up().setLoading(false);
 													        Ext.Msg.show({
 													            title:'Error',
-													            msg: 'Error de comunicaci&oacute;n 1000',
+													            msg: 'Error de comunicaci&oacute;n',
 													            buttons: Ext.Msg.OK,
 													            icon: Ext.Msg.ERROR
 													        });
@@ -2040,7 +2040,7 @@ Ext.onReady(function() {
 		        				        me.up().up().setLoading(false);
 		        				        Ext.Msg.show({
 		        				            title:'Error',
-		        				            msg: 'Error de comunicaci&oacute;n YYYYY ',
+		        				            msg: 'Error de comunicaci&oacute;n',
 		        				            buttons: Ext.Msg.OK,
 		        				            icon: Ext.Msg.ERROR
 		        				        });
@@ -2131,7 +2131,7 @@ Ext.onReady(function() {
 		        me.up().up().setLoading(false);
 		        Ext.Msg.show({
 		            title:'Error',
-		            msg: 'Error de comunicaci&oacute;n TTTTTT',
+		            msg: 'Error de comunicaci&oacute;n',
 		            buttons: Ext.Msg.OK,
 		            icon: Ext.Msg.ERROR
 		        });
@@ -2261,7 +2261,7 @@ Ext.onReady(function() {
 	                me.up().up().setLoading(false);
 	                Ext.Msg.show({
 	                    title:'Error',
-	                    msg: 'Error de comunicaci&oacute;n EEEEE',
+	                    msg: 'Error de comunicaci&oacute;n',
 	                    buttons: Ext.Msg.OK,
 	                    icon: Ext.Msg.ERROR
 	                });
@@ -2502,7 +2502,7 @@ Ext.onReady(function() {
             	panelInicialPrincipal.setLoading(false);
                 Ext.Msg.show({
                     title:'Error',
-                    msg: 'Error de comunicaci&oacute;n 11111',
+                    msg: 'Error de comunicaci&oacute;n',
                     buttons: Ext.Msg.OK,
                     icon: Ext.Msg.ERROR
                 });
@@ -2571,7 +2571,7 @@ Ext.onReady(function() {
 			    					        me.up().up().setLoading(false);
 			    					        Ext.Msg.show({
 			    					            title:'Error',
-			    					            msg: 'Error de comunicaci&oacute;n 222222',
+			    					            msg: 'Error de comunicaci&oacute;n',
 			    					            buttons: Ext.Msg.OK,
 			    					            icon: Ext.Msg.ERROR
 			    					        });
@@ -2591,7 +2591,7 @@ Ext.onReady(function() {
 	                me.up().up().setLoading(false);
 	                Ext.Msg.show({
 	                    title:'Error',
-	                    msg: 'Error de comunicaci&oacute;n 33333',
+	                    msg: 'Error de comunicaci&oacute;n',
 	                    buttons: Ext.Msg.OK,
 	                    icon: Ext.Msg.ERROR
 	                });
@@ -2637,7 +2637,7 @@ Ext.onReady(function() {
 		            me.up().up().setLoading(false);
 		            Ext.Msg.show({
 		                title:'Error',
-		                msg: 'Error de comunicaci&oacute;n 44444444',
+		                msg: 'Error de comunicaci&oacute;n',
 		                buttons: Ext.Msg.OK,
 		                icon: Ext.Msg.ERROR
 		            });
@@ -2689,7 +2689,7 @@ Ext.onReady(function() {
 		                me.up().up().setLoading(false);
 		                Ext.Msg.show({
 		                    title:'Error',
-		                    msg: 'Error de comunicaci&oacute;n 55555',
+		                    msg: 'Error de comunicaci&oacute;n',
 		                    buttons: Ext.Msg.OK,
 		                    icon: Ext.Msg.ERROR
 		                });
