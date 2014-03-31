@@ -714,9 +714,7 @@ Ext.onReady(function() {
 																					{
 																						//asignamos el valor de la exclusion al campo para su posterior uso
 																						Ext.getCmp('idExclusionPenalizacion1').setValue(Ext.decode(response.responseText).existePenalizacion);
-																						console.log("Entra a validacion");
-																						console.log(Ext.getCmp('idCausaSiniestro2').getValue());
-																					    if(Ext.getCmp('idExclusionPenalizacion1').getValue()=="S" || Ext.getCmp('idCausaSiniestro2').getValue() =="2" || Ext.getCmp('idCausaSiniestro2').getValue() == "3")
+																						if(Ext.getCmp('idExclusionPenalizacion1').getValue()=="S" || Ext.getCmp('idCausaSiniestro2').getValue() =="2" || Ext.getCmp('idCausaSiniestro2').getValue() == "3")
 																					    {
 																					    	Ext.getCmp('idPenalCambioZona1').setValue("0");
 																					    }else{
