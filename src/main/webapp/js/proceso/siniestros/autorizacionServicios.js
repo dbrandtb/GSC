@@ -2444,36 +2444,27 @@ Ext.onReady(function() {
                     	
                     	if(Ext.getCmp('claveTipoAutoriza').getValue() == "1")
                     	{
-                    		if(valor=="N")
-                			{
-                    			mensaje= 'No se autoriz&oacute; - requieres subir al menos un archivo, pero se guard&oacute; la autorizaci&oacute;n de servicio con el n&uacute;mero  ';
-                			}else{
-                				mensaje= 'Se guard&oacute; la autorizaci&oacute;n de servicio con el n&uacute;mero ';
-                			}
-                        	
+                    		mensaje = 'Se guard&oacute; la autorizaci&oacute;n de servicio con el n&uacute;mero ';
                     	}
                         if(Ext.getCmp('claveTipoAutoriza').getValue() == "2")
                     	{
-                        	if(valor=="N")
-                			{
-                    			mensaje= 'No se autoriz&oacute; - requieres subir al menos un archivo, pero se modific&oacute; la autorizaci&oacute;n de servicio con el n&uacute;mero ';
-                			}else{
-                				mensaje= 'Se modific&oacute; la autorizaci&oacute;n con el n&uacute;mero ';
-                			}
+                        	mensaje = 'Se modific&oacute; la autorizaci&oacute;n con el n&uacute;mero ';
                     	}
                         
                         if(Ext.getCmp('claveTipoAutoriza').getValue() == "3")
                     	{
-                        	if(valor=="N")
-                			{
-                    			mensaje= 'No se autoriz&oacute; , se reemplaz&oacute; la autorizaci&oacute;n de servicio con el n&uacute;mero ';
-                			}else{
-                				mensaje= 'Se reemplaz&oacute; la autorizaci&oacute;n de servicio con el n&uacute;mero ';
-                			}
+                        	mensaje= 'Se reemplaz&oacute; la autorizaci&oacute;n de servicio con el n&uacute;mero ';
                     	}
                     }
                     
-                    mensajeCorrecto('Datos guardados',mensaje+" : "+numeroAutorizacion,function()
+                    if(valor=="N")
+        			{
+            			mensaje= mensaje+" : "+numeroAutorizacion +". Para autorizar se requiere al menos subir un documento.";
+        			}else{
+        				mensaje= mensaje+" : "+numeroAutorizacion +".";
+        			}
+                    
+                    mensajeCorrecto('Datos guardados',mensaje,function()
             		{
             		    Ext.create('Ext.form.Panel').submit(
             		    {
