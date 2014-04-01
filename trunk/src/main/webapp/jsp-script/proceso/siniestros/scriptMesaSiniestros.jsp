@@ -502,6 +502,7 @@ var msgWindow;
         	            		        	params: {
         	            		        		'smap1.ntramite' : record.get('ntramite'), 
         	            		        		'smap1.status'   : _STATUS_TRAMITE_EN_REVISION_MEDICA
+        	            		        		,'smap1.rol_destino' : 'medajustador'
         	            		        	},
         	            		        	failure: function(form, action) {
         	            		        		mensajeError('No se pudo turnar.');
@@ -574,6 +575,7 @@ var msgWindow;
         	            		        	params: {
         	            		        		'smap1.ntramite' : record.get('ntramite'), 
         	            		        		'smap1.status'   : _STATUS_TRAMITE_EN_CAPTURA
+        	            		        		,'smap1.rol_destino' : 'operadorsini'
         	            		        	},
         	            		        	failure: function(form, action) {
         	            		        		mensajeError('No se pudo turnar.');
