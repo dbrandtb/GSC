@@ -21,7 +21,9 @@ import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 
 public class MesaControlAction extends PrincipalCoreAction
@@ -31,6 +33,7 @@ public class MesaControlAction extends PrincipalCoreAction
 	private static org.apache.log4j.Logger log              = org.apache.log4j.Logger.getLogger(MesaControlAction.class);
 	private static SimpleDateFormat        renderFechas     = new SimpleDateFormat("dd/MM/yyyy");
 	private KernelManagerSustituto         kernelManager;
+	private SiniestrosManager              siniestrosManager;
 	private Map<String,String>             smap1;
 	private Map<String,String>             smap2;
 	private List<Map<String,String>>       slist1;
@@ -302,10 +305,10 @@ public class MesaControlAction extends PrincipalCoreAction
 	public String actualizarStatusTramite()
 	{
 		log.debug(""
-				+ "\n##################################################"
-				+ "\n##################################################"
-				+ "\n###### actualizarStatusTramite              ######"
-				+ "\n######                                      ######"
+				+ "\n#####################################"
+				+ "\n#####################################"
+				+ "\n###### actualizarStatusTramite ######"
+				+ "\n######                         ######"
 				);
 		log.debug("smap1: "+smap1);
 		try
@@ -318,6 +321,10 @@ public class MesaControlAction extends PrincipalCoreAction
 			String ntramite=smap1.get("ntramite");
 			String comments=smap1.get("comments");
 			String cdmotivo=smap1.get("cdmotivo");
+			
+			String rolDestino     = smap1.get("rol_destino");
+			String usuarioDestino = smap1.get("usuario_destino");
+			boolean paraUsuario = StringUtils.isNotBlank(rolDestino);
 			
 			// Se actualiza el estatus en la mesa de control:
 			kernelManager.mesaControlUpdateStatus(ntramite,statusNuevo);
@@ -358,6 +365,11 @@ public class MesaControlAction extends PrincipalCoreAction
         	parDmesCon.put("pv_cdmotivo_i"   , cdmotivo);
         	// Se inserta el detalle de la mesa de control:
         	kernelManager.movDmesacontrol(parDmesCon);
+        	
+        	if(paraUsuario)
+        	{
+        		siniestrosManager.turnarTramite(ntramite, rolDestino, usuarioDestino);
+        	}
 			
 			success=true;
 			
@@ -366,10 +378,10 @@ public class MesaControlAction extends PrincipalCoreAction
 			log.error("error al actualizar status de tramite de mesa de control",ex);
 		}
 		log.debug(""
-				+ "\n######                                      ######"
-				+ "\n###### actualizarStatusTramite              ######"
-				+ "\n##################################################"
-				+ "\n##################################################"
+				+ "\n######                         ######"
+				+ "\n###### actualizarStatusTramite ######"
+				+ "\n#####################################"
+				+ "\n#####################################"
 				);
 		return SUCCESS;
 	}
@@ -807,6 +819,10 @@ public class MesaControlAction extends PrincipalCoreAction
 
 	public void setRol(String rol) {
 		this.rol = rol;
+	}
+
+	public void setSiniestrosManager(SiniestrosManager siniestrosManager) {
+		this.siniestrosManager = siniestrosManager;
 	}
 	
 }

@@ -826,6 +826,60 @@ public class ComplementariosAction extends PrincipalCoreAction
 				}
 				kernelManager.movMpoliper(parametros);
 				
+				//////////////////////////
+				//para que cambie tvalosit
+				try
+				{
+					Map<String,String>paramsGetValosit = new LinkedHashMap<String,String>(0);
+					paramsGetValosit.put("pv_cdunieco_i" , map1.get("pv_cdunieco"));
+					paramsGetValosit.put("pv_cdramo_i"   , map1.get("pv_cdramo"));
+					paramsGetValosit.put("pv_estado_i"   , map1.get("pv_estado"));
+					paramsGetValosit.put("pv_nmpoliza_i" , map1.get("pv_nmpoliza"));
+					paramsGetValosit.put("pv_nmsituac_i" , (String)aseg.get("nmsituac"));
+					log.debug("paramsValositAseguradoIterado: "+paramsGetValosit);
+					Map<String,Object>valositAsegurado=kernelManager.obtieneValositSituac(paramsGetValosit);
+					log.debug("valositAseguradoIterado: "+valositAsegurado);
+					
+					Map<String,Object>valositAseguradoIteradoTemp=new LinkedHashMap<String,Object>(0);
+					//poner pv_ a los leidos
+					Iterator it=valositAsegurado.entrySet().iterator();
+					while(it.hasNext())
+					{
+						Entry en=(Entry)it.next();
+						valositAseguradoIteradoTemp.put("pv_"+(String)en.getKey(),en.getValue());//agregar pv_ a los anteriores
+					}
+					valositAsegurado=valositAseguradoIteradoTemp;
+					log.debug("se puso pv_");
+					
+					valositAsegurado.put("pv_otvalor02", (String)aseg.get("fenacimi"));
+					log.debug("se agregaron los nuevos");
+					
+					//convertir a string el total
+					Map<String,String>paramsNuevos=new LinkedHashMap<String,String>(0);
+					it=valositAsegurado.entrySet().iterator();
+					while(it.hasNext())
+					{
+						Entry en=(Entry)it.next();
+						paramsNuevos.put((String)en.getKey(),(String)en.getValue());
+					}
+					log.debug("se pasaron a string");
+					
+					paramsNuevos.put("pv_cdunieco" , map1.get("pv_cdunieco"));
+					paramsNuevos.put("pv_cdramo"   , map1.get("pv_cdramo"));
+					paramsNuevos.put("pv_estado"   , map1.get("pv_estado"));
+					paramsNuevos.put("pv_nmpoliza" , map1.get("pv_nmpoliza"));
+					paramsNuevos.put("pv_nmsituac" , (String)aseg.get("nmsituac"));
+					log.debug("los actualizados seran: "+paramsNuevos);
+					
+					kernelManager.actualizaValoresSituaciones(paramsNuevos);
+				}
+				catch(Exception ex)
+				{
+					log.error("exception no lanzada a pantalla",ex);
+				}
+				//para que cambie tvalosit
+				//////////////////////////
+				
 				i++;
 			}
 			success=true;
