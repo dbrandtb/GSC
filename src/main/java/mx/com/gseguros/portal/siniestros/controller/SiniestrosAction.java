@@ -4496,6 +4496,32 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 	   	return SUCCESS;
   }
     
+    public String obtenerUsuariosPorRol()
+    {
+    	logger.info(""
+    			+ "\n###################################"
+    			+ "\n###### obtenerUsuariosPorRol ######"
+    			);
+    	logger.info("smap: "+smap);
+    	try
+    	{
+    		String cdsisrol = smap.get("cdsisrol");
+    		slist1  = siniestrosManager.obtenerUsuariosPorRol(cdsisrol);
+    		success = true;
+    	}
+    	catch(Exception ex)
+		{
+    		logger.error("error al obtener usuarios por rol",ex);
+    		slist1  = new ArrayList<Map<String,String>>();
+    		success = false;
+		}
+    	logger.info(""
+    			+ "\n###### obtenerUsuariosPorRol ######"
+    			+ "\n###################################"
+    			);
+    	return SUCCESS;
+    }
+    
     public String getExistePenalizacion() {
 		return existePenalizacion;
 	}

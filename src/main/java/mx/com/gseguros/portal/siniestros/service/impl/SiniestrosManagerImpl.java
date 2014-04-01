@@ -1127,5 +1127,17 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 				+ "\n###########################"
 				);
 	}
+	
+	@Override
+	public List<Map<String,String>> obtenerUsuariosPorRol(String cdsisrol)throws Exception
+	{
+		List<Map<String,String>> lista = siniestrosDAO.obtenerUsuariosPorRol(cdsisrol);
+		if(lista==null)
+		{
+			lista=new ArrayList<Map<String,String>>();
+		}
+		log.info("lista size: "+lista.size());
+		return lista;
+	}
 		
 }

@@ -2936,4 +2936,26 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		}
 	}
 	
+	@Override
+	public List<Map<String,String>> obtenerUsuariosPorRol(String cdsisrol)throws Exception
+	{
+		Map<String,String>params = new HashMap<String,String>();
+		params.put("cdsisrol",cdsisrol);
+		Map<String,Object>result = this.ejecutaSP(new ObtenerUsuariosPorRol(this.getDataSource()), params);
+		return (List<Map<String,String>>)result.get("pv_registro_o");
+	}
+	
+	protected class ObtenerUsuariosPorRol extends StoredProcedure
+	{
+		protected ObtenerUsuariosPorRol(DataSource dataSource)
+		{
+			super(dataSource, "PKG_PRESINIESTRO.P_GET_USUARIOS_ROL");
+			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR  , new DinamicMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 }
