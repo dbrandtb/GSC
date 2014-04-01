@@ -33,6 +33,8 @@ var _UrlDetalleSiniestroDirecto = '<s:url namespace="/siniestros" action="afilia
 var _UrlSolicitarPago           = '<s:url namespace="/siniestros" action="solicitarPago"             />';
 var _urlSeleccionCobertura      = '<s:url namespace="/siniestros" action="seleccionCobertura"        />';
 
+var _mesasin_url_lista_reasignacion = '<s:url namespace="/siniestros" action="obtenerUsuariosPorRol" />';
+
 var _UrlGeneraSiniestroTramite =      '<s:url namespace="/siniestros" action="generaSiniestroTramite" />';
 var _URL_ActualizaStatusTramite =      '<s:url namespace="/mesacontrol" action="actualizarStatusTramite" />';
 
@@ -502,7 +504,8 @@ var msgWindow;
         	            		        	params: {
         	            		        		'smap1.ntramite' : record.get('ntramite'), 
         	            		        		'smap1.status'   : _STATUS_TRAMITE_EN_REVISION_MEDICA
-        	            		        		,'smap1.rol_destino' : 'medajustador'
+        	            		        		,'smap1.rol_destino'     : 'medajustador'
+        	            		        		,'smap1.usuario_destino' : colIndex.length>6 ? colIndex : ''
         	            		        	},
         	            		        	failure: function(form, action) {
         	            		        		mensajeError('No se pudo turnar.');
@@ -575,7 +578,8 @@ var msgWindow;
         	            		        	params: {
         	            		        		'smap1.ntramite' : record.get('ntramite'), 
         	            		        		'smap1.status'   : _STATUS_TRAMITE_EN_CAPTURA
-        	            		        		,'smap1.rol_destino' : 'operadorsini'
+        	            		        		,'smap1.rol_destino'     : 'operadorsini'
+                                                ,'smap1.usuario_destino' : colIndex.length>6 ? colIndex : ''
         	            		        	},
         	            		        	failure: function(form, action) {
         	            		        		mensajeError('No se pudo turnar.');
@@ -649,6 +653,107 @@ var msgWindow;
 		centrarVentana(msgWindow);
 	}
 	
+function reasignarClick(grid,dataIndex)
+{
+	var record=grid.getStore().getAt(dataIndex);
+	debug('reasignarClick record:',record);
+	var rol='';
+	if(record.get('status')=='1')
+	{
+		rol='medajustador';
+	}
+	else if(record.get('status')=='7')
+	{
+		rol='operadorsini';
+	}
+	debug('rol:',rol);
+	
+	var usuario = record.get('parametros.pv_otvalor16');
+	debug('usuario encargado:',usuario);
+	
+	var valido = rol && usuario;
+	if(!valido)
+	{
+		mensajeWarning('El tr&aacute;mite solo se puede reasignar si est&aacute; asignado a alg&uacute;n usuario'
+		+' y en status "En captura" o "En revisi&oacute;n m&eacute;dica"');
+	}
+	
+	if(valido)
+	{
+		Ext.Ajax.request(
+		{
+			url      : _mesasin_url_lista_reasignacion
+			,params  :
+			{
+				'smap.cdsisrol' : rol
+			}
+			,success : function(response)
+			{
+				var json = Ext.decode(response.responseText);
+				debug('respuesta:',json);
+				var ventana = Ext.create('Ext.window.Window',
+				{
+					title   : 'Seleccionar usuario'
+					,modal  : true
+					,width  : 400
+					,height : 300
+					,items  :
+					[
+					    Ext.create('Ext.grid.Panel',
+					    {
+					    	columns :
+					    	[
+					    	    {
+					    	    	header     : 'Nombre'
+					    	    	,dataIndex : 'DSUSUARIO'
+					    	    	,flex      : 1
+					    	    }
+					    	    ,{
+					    	    	xtype         : 'actioncolumn'
+					    	    	,width        : 20
+					    	    	,menuDisabled : true
+					    	    	,sortable     : false
+					    	    	,icon         : '${ctx}/resources/fam3icons/icons/accept.png'
+					    	    	,handler      : function(gridVen,rowIndexVen)
+					    	    	{
+					    	    		var record  = gridVen.getStore().getAt(rowIndexVen);
+					    	    		var usuarioNuevo = record.get('CDUSUARIO');
+					    	    		debug('usuarioNuevo:',usuarioNuevo);
+					    	    		if(rol=='medajustador')
+					    	    		{
+					    	    			turnarAareaMedica(grid,dataIndex,usuarioNuevo);
+					    	    			ventana.destroy();
+					    	    		}
+					    	    		else if(rol=='operadorsini')
+					    	    		{
+					    	    			turnarAoperadorReclamaciones(grid,dataIndex,usuarioNuevo);
+					    	    			ventana.destroy();
+					    	    		}
+					    	    	}
+					    	    }
+					    	]
+					        ,store  : Ext.create('Ext.data.Store',
+					        {
+					        	fields    : ['CDUSUARIO','DSUSUARIO']
+					        	,autoLoad : true
+					        	,proxy    :
+					        	{
+					        		type    : 'memory'
+					        		,reader : 'json'
+					        	    ,data   : json.slist1					        		
+					        	}
+					        })
+					    })
+					]
+				});
+				ventana.show();
+				centrarVentanaInterna(ventana);
+			}
+		    ,failure : errorComunicacion
+		});
+	}
+}
+
 <s:if test="false">
 </script>
 </s:if>
