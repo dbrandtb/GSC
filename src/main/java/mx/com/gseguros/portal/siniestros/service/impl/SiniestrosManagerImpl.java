@@ -1114,5 +1114,18 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			throw new ApplicationException(daoExc.getMessage(), daoExc);
 		}
 	}
+	
+	@Override
+	public void turnarTramite(String ntramite,String cdsisrol,String cdusuari) throws Exception
+	{
+		log.info(""
+				+ "\n###########################"
+				+ "\n###### turnarTramite ######");
+		siniestrosDAO.turnarTramite(ntramite,cdsisrol,cdusuari);
+		log.info(""
+				+ "\n###### turnarTramite ######"
+				+ "\n###########################"
+				);
+	}
 		
 }

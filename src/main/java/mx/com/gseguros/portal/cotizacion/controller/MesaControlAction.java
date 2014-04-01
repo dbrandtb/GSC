@@ -178,8 +178,18 @@ public class MesaControlAction extends PrincipalCoreAction
 		try
 		{
 			UserVO usu=(UserVO) session.get("USUARIO");
-			smap1.put("pv_dsrol_i",usu.getRolActivo().getObjeto().getValue());
-			slist1=kernelManager.loadMesaControl(smap1);
+			String cdsisrol = usu.getRolActivo().getObjeto().getValue();
+			String cdusuari = usu.getUser();
+			smap1.put("pv_dsrol_i",cdsisrol);
+			smap1.put("pv_cdusuari_i",cdusuari);
+			if(cdsisrol.equalsIgnoreCase("operadorsini")||cdsisrol.equalsIgnoreCase("medajustador"))
+			{
+				slist1=kernelManager.loadMesaControlUsuario(smap1);
+			}
+			else
+			{
+				slist1=kernelManager.loadMesaControl(smap1);
+			}
 			olist1=new ArrayList<Map<String,Object>>();
 			
 			if(slist1!=null&&slist1.size()>0)
