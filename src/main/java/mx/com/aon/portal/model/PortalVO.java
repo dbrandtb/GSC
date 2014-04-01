@@ -1,6 +1,9 @@
 package mx.com.aon.portal.model;
 
 import java.io.Serializable;
+
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
 /**
  * 
  * @author sergio.ramirez
@@ -171,6 +174,13 @@ public class PortalVO implements Serializable{
 	public void setOtroContenido(String otroContenido) {
 		this.otroContenido = otroContenido;
 	}
+	
+	/**
+     * @return String
+     */
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
+    }
 	
 	
 }
