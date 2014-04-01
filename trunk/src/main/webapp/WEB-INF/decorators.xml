@@ -102,6 +102,7 @@
         
         <pattern>/catalogos/*.action</pattern>
         <pattern>/jsp/catalogos/*.jsp</pattern>
+        <pattern>/jsp-script/catalogos/*.jsp</pattern>
         
         <pattern>/cancelacion/*.action</pattern>
         <pattern>/jsp-script/proceso/cancelacion/*.jsp</pattern>
