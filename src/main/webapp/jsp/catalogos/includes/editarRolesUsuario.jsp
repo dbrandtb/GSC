@@ -58,7 +58,7 @@ Ext.onReady(function() {
 				icon    : _CONTEXT+'/resources/fam3icons/icons/disk.png',
 				handler: function() {
 					if(_esAgente == 'N'){
-						alert('No es Agente, Validando almenos 1 rol');
+						
 						var almenos1rol = false;
 						storeRoles.each(function(record){
 							if(record.get('EXISTE_ROL')){

@@ -180,7 +180,6 @@ Ext.onReady(function() {
         		
         		if(editMode){
      			   if(_parametros.esAgente == 'N'){
-     				  alert('render NOEsAgente');
      				  
      				  form.findField('params.otsexo').allowBlank = true;
      				  form.findField('params.dsapellido').allowBlank = true;
@@ -194,7 +193,7 @@ Ext.onReady(function() {
 
         			if(editMode){
         				if(_parametros.esAgente == 'S'){
-        					alert('edit EsAgente');
+        					
         					form.findField('params.esAgente').setValue('1');
                 			form.findField('params.cdagente').setValue(usuario);
         				}else {
