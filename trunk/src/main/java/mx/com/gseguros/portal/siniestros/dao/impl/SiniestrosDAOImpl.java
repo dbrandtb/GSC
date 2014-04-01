@@ -2910,5 +2910,30 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     		compile();
     	}
     }
+    
+    @Override
+    public void turnarTramite(String ntramite,String cdsisrol,String cdusuari) throws Exception
+    {
+    	Map<String,String>params=new HashMap<String,String>();
+    	params.put("ntramite",ntramite);
+    	params.put("cdsisrol",cdsisrol);
+    	params.put("cdusuari",cdusuari);
+    	logger.debug("params: "+params);
+		ejecutaSP(new TurnarTramite(this.getDataSource()), params);
+	}
+	
+	protected class TurnarTramite extends StoredProcedure
+	{
+		protected TurnarTramite(DataSource dataSource)
+		{
+			super(dataSource, "PKG_PRESINIESTRO.P_TURNAR_TRAMITE");
+			declareParameter(new SqlParameter("cdsisrol" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuari" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("ntramite" , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
 	
 }

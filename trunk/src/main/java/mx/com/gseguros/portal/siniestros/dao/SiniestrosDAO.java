@@ -349,4 +349,6 @@ public interface SiniestrosDAO {
 	
 	public String validaDocumentosAutServicio(String ntramite)throws Exception;
 	
+	public void turnarTramite(String ntramite,String cdsisrol,String cdusuari) throws Exception;
+	
 }

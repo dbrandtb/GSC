@@ -422,4 +422,6 @@ public interface SiniestrosManager {
 	
 	public void guardarTotalProcedenteFactura(String ntramite,String nfactura,String importe)throws Exception;
 	
+	public void turnarTramite(String ntramite,String cdsisrol,String cdusuari) throws Exception;
+	
 }

@@ -113,6 +113,7 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String GUARDAR_ARCHIVO_POLIZA = "GUARDAR_ARCHIVO_POLIZA";
     public static final String OBTENER_TIPOS_CLAUSULAS_EXCLUSION = "OBTENER_TIPOS_CLAUSULAS_EXCLUSION";
     public static final String LOAD_MESA_CONTROL = "LOAD_MESA_CONTROL";
+    public static final String LOAD_MESA_CONTROL_USUARIO = "LOAD_MESA_CONTROL_USUARIO";
     public static final String LOAD_DETALLE_MESA_CONTROL = "LOAD_DETALLE_MESA_CONTROL";
     public static final String OBTENER_EXCLUSIONES_X_TIPO = "OBTENER_EXCLUSIONES_X_TIPO";
     public static final String OBTENER_HTML_CLAUSULA="OBTENER_HTML_CLAUSULA";
@@ -204,6 +205,7 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(GUARDAR_ARCHIVO_POLIZA, new GuardarArchivoPoliza(getDataSource()));
         addStoredProcedure(OBTENER_TIPOS_CLAUSULAS_EXCLUSION, new ObtenerTiposClausulasExclusion(getDataSource()));
         addStoredProcedure(LOAD_MESA_CONTROL, new ObtenerMesaControl(getDataSource()));
+        addStoredProcedure(LOAD_MESA_CONTROL_USUARIO, new ObtenerMesaControlUsuario(getDataSource()));
         addStoredProcedure(P_OBTIENE_MESACONTROL_SUPER, new ObtenerMesaControlSuper(getDataSource()));
         addStoredProcedure(LOAD_DETALLE_MESA_CONTROL, new ObtenerDetalleMesaControl(getDataSource()));
         addStoredProcedure(OBTENER_EXCLUSIONES_X_TIPO, new ObtenerExclusionesXTipo(getDataSource()));
@@ -3482,6 +3484,42 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 	/*/////////////////////////////////*/
 	////// obtener mesa de control //////
 	/////////////////////////////////////
+	
+	/////////////////////////////////////
+	////// obtener mesa de control //////
+	/*/////////////////////////////////*/
+	protected class ObtenerMesaControlUsuario extends CustomStoredProcedure
+	{
+		protected ObtenerMesaControlUsuario(DataSource dataSource)
+		{
+			super(dataSource,"PKG_PRESINIESTRO.P_GET_MESACONTROL_USUARIO");
+			declareParameter(new SqlParameter("pv_cdunieco_i",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ntramite_i",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i",        OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i",        OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdagente_i",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_status_i",        OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsit_i",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_fedesde_i",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_fehasta_i",      OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsrol_i",         OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtiptra_i",         OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdusuari_i",         OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtenerMesaControlMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
+		}
+	
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception
+		{
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			WrapperResultados wrapperResultados = mapper.build(map);
+			List result = (List) map.get("pv_registro_o");
+			wrapperResultados.setItemList(result);
+			return wrapperResultados;
+		}
+	}
 	
 	/////////////////////////////////////////////////////////////////
 	////// obtener detalles de tramite(s) para mesa de control //////
