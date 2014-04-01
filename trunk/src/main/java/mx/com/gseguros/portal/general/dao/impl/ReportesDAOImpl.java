@@ -19,6 +19,7 @@ import mx.com.gseguros.portal.general.model.ReporteVO;
 import mx.com.gseguros.utils.Constantes;
 import oracle.jdbc.driver.OracleTypes;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;
@@ -103,7 +104,8 @@ public class ReportesDAOImpl extends AbstractManagerDAO implements ReportesDAO {
         	reporteParam.setDescripcion(rs.getString("DESCPARAM"));
         	reporteParam.setTipo(rs.getString("TIPOPARAM"));
         	reporteParam.setValor(rs.getString("VALINICIO"));
-        	reporteParam.setObligatorio(rs.getString("SWOBLIGA").equals(Constantes.SI) ? true : false);
+        	boolean obligatorio = (StringUtils.isNotBlank(rs.getString("SWOBLIGA")) && rs.getString("SWOBLIGA").equals(Constantes.SI)) ? true : false;
+        	reporteParam.setObligatorio(obligatorio);
         	return reporteParam;
         }
     }
