@@ -688,6 +688,10 @@
             </interceptor-ref>
             <result type="json"></result>
         </action>
+        
+        <action name="obtenerUsuariosPorRol" class="siniestrosAction" method="obtenerUsuariosPorRol">
+            <result type="json"></result>
+        </action>
 		
     </package>
 

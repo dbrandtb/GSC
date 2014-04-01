@@ -351,4 +351,6 @@ public interface SiniestrosDAO {
 	
 	public void turnarTramite(String ntramite,String cdsisrol,String cdusuari) throws Exception;
 	
+	public List<Map<String,String>> obtenerUsuariosPorRol(String cdsisrol)throws Exception;
+	
 }
