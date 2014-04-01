@@ -87,8 +87,8 @@ public class ReportesAction extends PrincipalCoreAction {
  
 	
 	public String procesoObtencionReporte() throws Exception {
-
-		String username = ((UserVO)session.get("USUARIO")).getName();
+		
+		String username = ((UserVO)session.get("USUARIO")).getUser();
 		
 		// Se arman los parametros de entrada del reporte:
 		List<ParamReporteVO> paramsReporte = new ArrayList<ParamReporteVO>();
