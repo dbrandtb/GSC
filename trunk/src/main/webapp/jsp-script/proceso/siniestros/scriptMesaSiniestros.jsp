@@ -330,8 +330,18 @@ var msgWindow;
 							        	            		        		'smap1.ntramite' : record.get('ntramite'), 
 							        	            		        		'smap1.status'   : _STATUS_TRAMITE_EN_ESPERA_DE_ASIGNACION
 							        	            		        	},
-							        	            		        	failure: function(form, action) {
-							        	            		        		mensajeError('No se pudo turnar.');
+							        	            		        	failure: function(form, action)
+							        	            		        	{
+							        	            		        		debug(action);
+							        	            		        		switch (action.failureType)
+							        	            		        		{
+							        	            		        		    case Ext.form.action.Action.CONNECT_FAILURE:
+							        	            		        		    	errorComunicacion();
+								        	            		                    break;
+								        	            		                case Ext.form.action.Action.SERVER_INVALID:
+								        	            		                	mensajeError(action.result.mensaje);
+								        	            		            }
+							        	            		        		//mensajeError('No se pudo turnar.');
 							        	            					},
 							        	            					success: function(form, action) {
 							        	            						mensajeCorrecto('Aviso','Se ha turnado con exito.');
@@ -357,7 +367,16 @@ var msgWindow;
 				        	            		        		'smap1.status'   : _STATUS_TRAMITE_EN_ESPERA_DE_ASIGNACION
 				        	            		        	},
 				        	            		        	failure: function(form, action) {
-				        	            		        		mensajeError('No se pudo turnar.');
+				        	            		        		debug(action);
+				        	            		        		switch (action.failureType)
+                                                                {
+                                                                    case Ext.form.action.Action.CONNECT_FAILURE:
+                                                                        errorComunicacion();
+                                                                        break;
+                                                                    case Ext.form.action.Action.SERVER_INVALID:
+                                                                    	mensajeError(action.result.mensaje);
+                                                                }
+				        	            		        		//mensajeError('No se pudo turnar.');
 				        	            					},
 				        	            					success: function(form, action) {
 				        	            						mensajeCorrecto('Aviso','Se ha turnado con exito.');
@@ -508,7 +527,16 @@ var msgWindow;
         	            		        		,'smap1.usuario_destino' : colIndex.length>6 ? colIndex : ''
         	            		        	},
         	            		        	failure: function(form, action) {
-        	            		        		mensajeError('No se pudo turnar.');
+        	            		        		debug(action);
+        	            		        		switch (action.failureType)
+                                                {
+                                                    case Ext.form.action.Action.CONNECT_FAILURE:
+                                                        errorComunicacion();
+                                                        break;
+                                                    case Ext.form.action.Action.SERVER_INVALID:
+                                                    	mensajeError(action.result.mensaje);
+                                                }
+        	            		        		//mensajeError('No se pudo turnar.');
         	            					},
         	            					success: function(form, action) {
         	            						mensajeCorrecto('Aviso','Se ha turnado con exito.');
@@ -582,7 +610,16 @@ var msgWindow;
                                                 ,'smap1.usuario_destino' : colIndex.length>6 ? colIndex : ''
         	            		        	},
         	            		        	failure: function(form, action) {
-        	            		        		mensajeError('No se pudo turnar.');
+        	            		        		debug(action);
+        	            		        		switch (action.failureType)
+                                                {
+                                                    case Ext.form.action.Action.CONNECT_FAILURE:
+                                                        errorComunicacion();
+                                                        break;
+                                                    case Ext.form.action.Action.SERVER_INVALID:
+                                                    	mensajeError(action.result.mensaje);
+                                                }
+        	            		        		//mensajeError('No se pudo turnar.');
         	            					},
         	            					success: function(form, action) {
         	            						mensajeCorrecto('Aviso','Se ha turnado con exito.');

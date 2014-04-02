@@ -353,4 +353,16 @@ public interface SiniestrosDAO {
 	
 	public List<Map<String,String>> obtenerUsuariosPorRol(String cdsisrol)throws Exception;
 	
+	public void moverTramite(
+			String ntramite
+			,String nuevoStatus
+			,String comments
+			,String cdusuariSesion
+			,String cdsisrolSesion
+			,String cdusuariDestino
+			,String cdsisrolDestino
+			,String cdmotivo
+			,String cdclausu
+			) throws Exception;
+	
 }

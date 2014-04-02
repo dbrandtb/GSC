@@ -46,6 +46,7 @@ public class MesaControlAction extends PrincipalCoreAction
 	private String                         username;
 	private String                         rol;
 	private PantallasManager               pantallasManager;
+	private String                         mensaje;
 	
 	public String principal()
 	{
@@ -315,7 +316,7 @@ public class MesaControlAction extends PrincipalCoreAction
 		{
 			//Se obtienen los datos del usuario:
 			UserVO usu=(UserVO)session.get("USUARIO");
-			DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usu.getUser());
+			//DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usu.getUser());
 			
 			String statusNuevo=smap1.get("status");
 			String ntramite=smap1.get("ntramite");
@@ -324,10 +325,17 @@ public class MesaControlAction extends PrincipalCoreAction
 			
 			String rolDestino     = smap1.get("rol_destino");
 			String usuarioDestino = smap1.get("usuario_destino");
-			boolean paraUsuario = StringUtils.isNotBlank(rolDestino);
+			//boolean paraUsuario = StringUtils.isNotBlank(rolDestino);
 			
+			String cdusuariSesion = usu.getUser();
+			String cdsisrolSesion = usu.getRolActivo().getObjeto().getValue();
+			String cdclausu       = null;
+			
+			siniestrosManager.moverTramite(ntramite, statusNuevo, comments, cdusuariSesion, cdsisrolSesion, usuarioDestino, rolDestino, cdmotivo, cdclausu);
+			
+			/*
 			// Se actualiza el estatus en la mesa de control:
-			kernelManager.mesaControlUpdateStatus(ntramite,statusNuevo);
+			//kernelManager.mesaControlUpdateStatus(ntramite,statusNuevo);
 			
 			// Creamos un enum en base al tipo de tramite
 			EstatusTramite enumEstatusTramite = null;
@@ -364,18 +372,20 @@ public class MesaControlAction extends PrincipalCoreAction
         	parDmesCon.put("pv_cdusuari_i"   , datUsu.getCdusuari());
         	parDmesCon.put("pv_cdmotivo_i"   , cdmotivo);
         	// Se inserta el detalle de la mesa de control:
-        	kernelManager.movDmesacontrol(parDmesCon);
+        	//kernelManager.movDmesacontrol(parDmesCon);
         	
         	if(paraUsuario)
         	{
         		siniestrosManager.turnarTramite(ntramite, rolDestino, usuarioDestino);
         	}
+			*/
 			
 			success=true;
 			
 		} catch(Exception ex) {
 			success=false;
 			log.error("error al actualizar status de tramite de mesa de control",ex);
+			mensaje=ex.getMessage();
 		}
 		log.debug(""
 				+ "\n######                         ######"
@@ -823,6 +833,14 @@ public class MesaControlAction extends PrincipalCoreAction
 
 	public void setSiniestrosManager(SiniestrosManager siniestrosManager) {
 		this.siniestrosManager = siniestrosManager;
+	}
+
+	public String getMensaje() {
+		return mensaje;
+	}
+
+	public void setMensaje(String mensaje) {
+		this.mensaje = mensaje;
 	}
 	
 }

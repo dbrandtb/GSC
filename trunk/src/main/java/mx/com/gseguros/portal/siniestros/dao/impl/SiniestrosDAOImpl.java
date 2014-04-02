@@ -2958,4 +2958,51 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		}
 	}
 	
+	@Override
+	public void moverTramite(
+			String ntramite
+			,String nuevoStatus
+			,String comments
+			,String cdusuariSesion
+			,String cdsisrolSesion
+			,String cdusuariDestino
+			,String cdsisrolDestino
+			,String cdmotivo
+			,String cdclausu
+			) throws Exception
+	{
+		Map<String,String>params=new HashMap<String,String>();
+		params.put("ntramite"        , ntramite);
+		params.put("nuevoStatus"     , nuevoStatus);
+		params.put("comments"        , comments);
+		params.put("cdusuariSesion"  , cdusuariSesion);
+		params.put("cdsisrolSesion"  , cdsisrolSesion);
+		params.put("cdusuariDestino" , cdusuariDestino);
+		params.put("cdsisrolDestino" , cdsisrolDestino);
+		params.put("cdmotivo"        , cdmotivo);
+		params.put("cdclausu"        , cdclausu);
+		logger.info("params: "+params);
+		ejecutaSP(new MoverTramite(getDataSource()), params);
+	}
+	
+	protected class MoverTramite extends StoredProcedure
+	{
+		protected MoverTramite(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SATELITES.P_MOV_TRAMITE");
+			declareParameter(new SqlParameter("ntramite"        , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nuevoStatus"     , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("comments"        , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuariSesion"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrolSesion"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuariDestino" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrolDestino" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdmotivo"        , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdclausu"        , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 }
