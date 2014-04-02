@@ -1139,5 +1139,29 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		log.info("lista size: "+lista.size());
 		return lista;
 	}
+	
+	@Override
+	public void moverTramite(
+			String ntramite
+			,String nuevoStatus
+			,String comments
+			,String cdusuariSesion
+			,String cdsisrolSesion
+			,String cdusuariDestino
+			,String cdsisrolDestino
+			,String cdmotivo
+			,String cdclausu
+			) throws Exception
+	{
+		log.info(""
+				+ "\n##########################"
+				+ "\n###### moverTramite ######"
+				);
+		siniestrosDAO.moverTramite(ntramite,nuevoStatus,comments,cdusuariSesion,cdsisrolSesion,cdusuariDestino,cdsisrolDestino,cdmotivo,cdclausu);
+		log.info(""
+				+ "\n###### moverTramite ######"
+				+ "\n##########################"
+				);
+	}
 		
 }
