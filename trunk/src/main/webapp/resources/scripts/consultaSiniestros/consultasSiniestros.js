@@ -1,6 +1,4 @@
 Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.chart.*', 'Ext.grid.Panel','Ext.layout.container.Column', 'Ext.selection.CheckboxModel' ]);
-var _PAGO_DIRECTO = TipoPago.Directo;
-var _PAGO_REEMBOLSO = TipoPago.Reembolso;
 Ext.onReady(function() {
 
     Ext.selection.CheckboxModel.override( {
@@ -193,7 +191,7 @@ Ext.onReady(function() {
     		                _STATUS = record.get('STATUS');
     		                _AAAPERTU = record.get('AAAPERTU');
     		                _NMSINIES = record.get('NMSINIES');
-    		                _TIPOPAGO = _PAGO_DIRECTO;
+    		                _TIPOPAGO = TipoPago.Directo;
     		                _NTRAMITE = record.get('NTRAMITE');
     		                cargaInformacionTab();
                 		}
@@ -244,7 +242,7 @@ Ext.onReady(function() {
 							var rowSelected = Ext.getCmp('gridAseguradoReembolso').getSelectionModel().getSelection()[0];
 							
 							var ntramite= rowSelected.get('ntramite');
-							_TIPOPAGO = _PAGO_REEMBOLSO;
+							_TIPOPAGO = TipoPago.Reembolso;
 							validaTipoTramite(ntramite,_TIPOPAGO);
 							validaTipoPagoReembolso(_TIPOPAGO,ntramite);
 						}else {
@@ -392,7 +390,7 @@ Ext.onReady(function() {
 	        	if(Ext.getCmp('gridProveedoresPDirecto').getSelectionModel().hasSelection()){
 						var rowSelected = Ext.getCmp('gridProveedoresPDirecto').getSelectionModel().getSelection()[0];
 						var ntramite= rowSelected.get('ntramite');
-						_TIPOPAGO = _PAGO_DIRECTO;
+						_TIPOPAGO = TipoPago.Directo;
 						validaTipoPagoDirecto(ntramite);
 					}else {
 						Ext.Msg.show({
@@ -689,7 +687,7 @@ Ext.onReady(function() {
                                 //Obtenemos el valor elegido en 'groupTipoBusqueda' para elegir el tipo de busqueda a realizar.
                                 switch (formBusqueda.findField('groupTipoBusqueda').getValue().tipoBusqueda) {
                                     case 1: // --> Pago Directo
-                                    	_TIPOPAGO = _PAGO_DIRECTO;
+                                    	_TIPOPAGO = TipoPago.Directo;
                                     	// Busqueda por Datos Generales de la poliza:
                                     	if(!formBusqueda.findField('tipoPagoDirecto').isValid()){
                                             showMessage('', _MSG_FILTRO_BUSQUEDA, Ext.Msg.OK, Ext.Msg.INFO);
@@ -760,7 +758,7 @@ Ext.onReady(function() {
                                     break;
                                         
                                     case 2:  // --> Pago Reembolso
-                                    	_TIPOPAGO = _PAGO_REEMBOLSO;
+                                    	_TIPOPAGO = TipoPago.Reembolso;
                                     	if(!formBusqueda.findField('tipoPagoReembolso').isValid()){
                                             showMessage('', _MSG_FILTRO_BUSQUEDA, Ext.Msg.OK, Ext.Msg.INFO);
                                             return;
