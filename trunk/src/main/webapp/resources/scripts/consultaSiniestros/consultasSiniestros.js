@@ -119,7 +119,8 @@ Ext.onReady(function() {
                     {type:'string',    name:'NMPOLIZA'},        {type:'string',    name:'VOBOAUTO'},        {type:'string',    name:'CDICD'},        {type:'string',    name:'DSICD'},
                     {type:'string',    name:'CDICD2'},        {type:'string',    name:'DSICD2'},        {type:'string',    name:'DESCPORC'},        {type:'string',    name:'DESCNUME'},
                     {type:'string',    name:'COPAGO'},        {type:'string',    name:'PTIMPORT'},        {type:'string',    name:'AUTRECLA'},        {type:'string',    name:'NMRECLAMO'},
-                    {type:'string',    name:'COMMENAR'},        {type:'string',    name:'COMMENME'},        {type:'string',    name:'AUTMEDIC'},		{type:'string',    name:'NTRAMITE'}
+                    {type:'string',    name:'COMMENAR'},        {type:'string',    name:'COMMENME'},        {type:'string',    name:'AUTMEDIC'},		{type:'string',    name:'NTRAMITE'},
+                    {type:'string',    name:'USERASIGNADO'}
 	            ]
 	});
     
@@ -147,6 +148,7 @@ Ext.onReady(function() {
                 store: storeListAsegPagDirecto,
                 columns: 
                 [
+                    {	text :'Usuario<br/>asignado',  width : 100,		   	align  :'center',		dataIndex       :'USERASIGNADO'},
                     {	text :'Id<br/>Sini.',          width : 100,			align  :'center', 	 	dataIndex       :'NMSINIES'	},
                     {   text :'# Auto.',          	   width : 100,         align  :'center',       dataIndex       :'NMAUTSER' },
                     {   text :'Clave<br/>asegu.',      width : 100,         align  :'center',       dataIndex       :'CDPERSON' },
@@ -174,22 +176,28 @@ Ext.onReady(function() {
                     {	text :'Copago',              width : 100,           align  :'center',		dataIndex       :'COPAGO'	},
                     {	text :'$<br/>Facturado', 	 width : 100,           align  :'center',		dataIndex       :'PTIMPORT',	renderer       :Ext.util.Format.usMoney  },
                     {	text :'#<br/>Reclamo',       width : 60,		   	align  :'center',		dataIndex       :'NMRECLAMO'}
+                    
+                    
                 ]
                 ,listeners: {
-                    itemclick: function(dv, record, item, index, e) {
+                	itemclick: function(dv, record, item, index, e) {
                         /*Obtenemos los valores para los tabpaneles*/
-                    	_CDUNIECO = record.get('CDUNIECO');
-			    		_CDRAMO = record.get('CDRAMO');
-		                _ESTADO = record.get('ESTADO');
-		                _NMPOLIZA = record.get('NMPOLIZA');
-		                _NMSITUAC = record.get('NMSITUAC');
-		                _NMSUPLEM = record.get('NMSUPLEM');
-		                _STATUS = record.get('STATUS');
-		                _AAAPERTU = record.get('AAAPERTU');
-		                _NMSINIES = record.get('NMSINIES');
-		                _TIPOPAGO = _PAGO_DIRECTO;
-		                _NTRAMITE = record.get('NTRAMITE');
-		                cargaInformacionTab();
+                    	if(_TIPOPAGO !="2")
+                		{
+                    		_CDUNIECO = record.get('CDUNIECO');
+    			    		_CDRAMO = record.get('CDRAMO');
+    		                _ESTADO = record.get('ESTADO');
+    		                _NMPOLIZA = record.get('NMPOLIZA');
+    		                _NMSITUAC = record.get('NMSITUAC');
+    		                _NMSUPLEM = record.get('NMSUPLEM');
+    		                _STATUS = record.get('STATUS');
+    		                _AAAPERTU = record.get('AAAPERTU');
+    		                _NMSINIES = record.get('NMSINIES');
+    		                _TIPOPAGO = _PAGO_DIRECTO;
+    		                _NTRAMITE = record.get('NTRAMITE');
+    		                cargaInformacionTab();
+                		}
+                    	
                     }
                 }
             });
@@ -234,8 +242,10 @@ Ext.onReady(function() {
 		        	limpiarRegistros();
 		        	if(Ext.getCmp('gridAseguradoReembolso').getSelectionModel().hasSelection()){
 							var rowSelected = Ext.getCmp('gridAseguradoReembolso').getSelectionModel().getSelection()[0];
+							
 							var ntramite= rowSelected.get('ntramite');
 							_TIPOPAGO = _PAGO_REEMBOLSO;
+							validaTipoTramite(ntramite,_TIPOPAGO);
 							validaTipoPagoReembolso(_TIPOPAGO,ntramite);
 						}else {
 							Ext.Msg.show({
@@ -812,7 +822,6 @@ Ext.onReady(function() {
 		    	if(Ext.decode(response.responseText).listaMesaControl != null)
 	    		{
 		    		var json=Ext.decode(response.responseText).listaMesaControl[0];
-		    		//console.log(json.otvalor02mc);
 		    		if(tipoPago != json.otvalor02mc){
 		    			Ext.Msg.show({
 				            title:'Error',
@@ -826,6 +835,11 @@ Ext.onReady(function() {
                         	validaTipoPagoDirecto(numeroTramite);
 		    			}else{
 		    				// --> Pago por reembolso
+		    				// Si es pago por reembolso insertar en la tabla el valor de otvalor05
+		    				var rec = new modelListAsegAfiliados({
+			    				USERASIGNADO: json.otvalor05mc
+		                    });
+			    			storeListAsegPagDirecto.add(rec);
 		    				validaTipoPagoReembolso(tipoPago,numeroTramite);
 		    			}
 		    		}
@@ -868,10 +882,10 @@ Ext.onReady(function() {
 		    	var json = Ext.decode(response.responseText).slist1;
 		    	if(json != null)
 	    		{
-		    		//console.log(json.length);
-			    	for(var i = 0; i < json.length; i++){
-			    		//console.log(json[i].NMSINIES);
-		    			var rec = new modelListAsegAfiliados({
+		    		var dato = Ext.decode(response.responseText).params;
+		    		
+		    		for(var i = 0; i < json.length; i++){
+			    		var rec = new modelListAsegAfiliados({
 		    				NMSINIES: 	json[i].NMSINIES,			//	9
 		    				NMAUTSER: 	json[i].NMAUTSER,
 		    				CDPERSON: 	json[i].CDPERSON,
@@ -902,7 +916,8 @@ Ext.onReady(function() {
 		    				COMMENAR:   json[i].COMMENAR,
 		    				COMMENME:   json[i].COMMENME,
 		    				AUTMEDIC:   json[i].AUTMEDIC,
-		    				NTRAMITE:	numeroTramite
+		    				NTRAMITE:	numeroTramite,
+		    				USERASIGNADO: dato.OTVALOR05
 	                    });
 		    			storeListAsegPagDirecto.add(rec);
 		    		}
@@ -940,7 +955,6 @@ Ext.onReady(function() {
                 }
 			    ,success : function (response)
 			    {
-			    	//console.log(Ext.decode(response.responseText));
 			    	var json = Ext.decode(response.responseText);
 		    		_CDUNIECO = json.params.cdunieco;
 		    		_CDRAMO = json.params.cdramo;
