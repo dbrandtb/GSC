@@ -1,6 +1,6 @@
 Ext.require([ 'Ext.form.*', 'Ext.data.*', 'Ext.chart.*', 'Ext.grid.Panel','Ext.layout.container.Column', 'Ext.selection.CheckboxModel' ]);
-var _PAGO_DIRECTO = '1';
-var _PAGO_REEMBOLSO = '2';
+var _PAGO_DIRECTO = TipoPago.Directo;
+var _PAGO_REEMBOLSO = TipoPago.Reembolso;
 Ext.onReady(function() {
 
     Ext.selection.CheckboxModel.override( {
@@ -182,7 +182,7 @@ Ext.onReady(function() {
                 ,listeners: {
                 	itemclick: function(dv, record, item, index, e) {
                         /*Obtenemos los valores para los tabpaneles*/
-                    	if(_TIPOPAGO !="2")
+                    	if(_TIPOPAGO != TipoPago.Reembolso)
                 		{
                     		_CDUNIECO = record.get('CDUNIECO');
     			    		_CDRAMO = record.get('CDRAMO');
