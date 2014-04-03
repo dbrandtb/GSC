@@ -77,7 +77,8 @@
 				{type:'string', name:'CDPERSON'},
 				{type:'string', name:'DSICD'},
 				{type:'string', name:'DSICD2'},
-				{type:'string', name:'BENEFICIARIO'}
+				{type:'string', name:'BENEFICIARIO'},
+				{type:'string', name:'FERECEP'}
 		    ]
 		});
 	
@@ -181,7 +182,7 @@
 		        },{
 		            xtype      : 'displayfield',
 		            fieldLabel : 'Fecha recepci&oacute;n',
-		            name       : 'FERECEPC'
+		            name       : 'FERECEP'
 		        },{
 		            xtype      : 'displayfield',
 		            fieldLabel : 'Fecha ocurrencia',
@@ -325,7 +326,8 @@
 			                           			});
 			                           		}
 			                           	}
-		                           }, {
+		                           },
+		                           {
 		                               title : 'DOCUMENTACION',
 		                               width: '350',
 		                               loader : {
@@ -347,7 +349,7 @@
 		                                               'smap1.cdramo'  : _CDRAMO,
 		                                               'smap1.estado'  : _ESTADO,
 		                                               'smap1.nmsuplem': _NMSUPLEM,
-		                                               'smap1.ntramite': _NTRAMITE,
+		                                               //'smap1.ntramite': _NTRAMITE,
 		                                               'smap1.tipomov' : '0'
 		                                           }
 		                                       });
