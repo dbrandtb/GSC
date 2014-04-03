@@ -581,6 +581,112 @@ var msgWindow;
 		
 	}
 	
+	function turnarAreclamacionesMedAjustador(grid,rowIndex,colIndex){
+		var record = grid.getStore().getAt(rowIndex);
+		
+		Ext.Ajax.request({
+			url: _UrlValidaDocumentosCargados,
+			params: {
+				'params.PV_NTRAMITE_I' : record.get('ntramite'),
+				'params.PV_CDRAMO_I'   : record.get('cdramo'),
+				'params.PV_cdtippag_I' : record.get('parametros.pv_otvalor02'),
+				'params.PV_CDTIPATE_I' : record.get('parametros.pv_otvalor07')
+			},
+			success: function(response, opt) {
+				var jsonRes=Ext.decode(response.responseText);
+
+				if(jsonRes.success == true){
+					var comentariosText = Ext.create('Ext.form.field.TextArea', {
+	                	fieldLabel: 'Observaciones'
+	            		,labelWidth: 150
+	            		,width: 600
+	            		,name:'smap1.comments'
+	        			,height: 250
+	                });
+	        		
+	        		windowLoader = Ext.create('Ext.window.Window',{
+	        	        modal       : true,
+	        	        buttonAlign : 'center',
+	        	        width       : 663,
+	        	        height      : 400,
+	        	        autoScroll  : true,
+	        	        items       : [
+			        	        		Ext.create('Ext.form.Panel', {
+			        	                title: 'Turnar a Coordinador de Reclamaciones',
+			        	                width: 650,
+			        	                url: _URL_ActualizaStatusTramite,
+			        	                bodyPadding: 5,
+			        	                items: [comentariosText],
+			        	        	    buttonAlign:'center',
+			        	        	    buttons: [{
+			        	            		text: 'Turnar'
+			        	            		,icon:_CONTEXT+'/resources/fam3icons/icons/accept.png'
+			        	            		,buttonAlign : 'center',
+			        	            		handler: function() {
+			        	            			var formPanel = this.up().up();
+			        	            	    	if (formPanel.form.isValid()) {
+			        	            	    		formPanel.form.submit({
+							        	            		        	waitMsg:'Procesando...',
+							        	            		        	params: {
+							        	            		        		'smap1.ntramite' : record.get('ntramite'), 
+							        	            		        		'smap1.status'   : _STATUS_TRAMITE_EN_ESPERA_DE_ASIGNACION
+							        	            		        	},
+							        	            		        	failure: function(form, action)
+							        	            		        	{
+							        	            		        		debug(action);
+							        	            		        		switch (action.failureType)
+							        	            		        		{
+							        	            		        		    case Ext.form.action.Action.CONNECT_FAILURE:
+							        	            		        		    	errorComunicacion();
+								        	            		                    break;
+								        	            		                case Ext.form.action.Action.SERVER_INVALID:
+								        	            		                	mensajeError(action.result.mensaje);
+								        	            		                	break;
+								        	            		            }
+							        	            		        		//mensajeError('No se pudo turnar.');
+							        	            					},
+							        	            					success: function(form, action) {
+							        	            						mensajeCorrecto('Aviso','Se ha turnado con exito.');
+							        	            						loadMcdinStore();
+							        	            						windowLoader.close();
+							        	            						
+							        	            					}
+						        	            					});
+			        	            			} else {
+			        	            				Ext.Msg.show({
+			        	            	                   title: 'Aviso',
+			        	            	                   msg: 'Complete la informaci&oacute;n requerida',
+			        	            	                   buttons: Ext.Msg.OK,
+			        	            	                   icon: Ext.Msg.WARNING
+			        	            	               });
+			        	            			}
+			        	            		}
+			        	            	},{
+			        	            	    text: 'Cancelar',
+			        	            	    icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+			        	            	    buttonAlign : 'center',
+			        	            	    handler: function() {
+			        	            	        windowLoader.close();
+			        	            	    }
+			        	            	}
+			        	            	]
+			        	            })  
+	        	            	]
+	        	    	}).show();
+	        		
+	        			centrarVentana(windowLoader);
+					}else {
+						mensajeError(jsonRes.msgResult);
+					}
+			},
+			failure: function(){
+				mensajeError('Error al turnar.');
+			}
+		});
+	}
+	
+	
+	
 	function turnarAoperadorReclamaciones(grid,rowIndex,colIndex){
 		var record = grid.getStore().getAt(rowIndex);
 		var comentariosText = Ext.create('Ext.form.field.TextArea', {
@@ -683,6 +789,7 @@ var msgWindow;
 				    	},
 						success: function(response, opts) {
 							var respuesta = Ext.decode(response.responseText);
+							console.log(respuesta);
 							if(respuesta.success){
 								mensajeCorrecto('Aviso','El pago se ha solicitado con exito.');	
 							}else {
