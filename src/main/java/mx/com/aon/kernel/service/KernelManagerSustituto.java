@@ -232,4 +232,16 @@ public interface KernelManagerSustituto {
     		,String nmsuplem) throws ApplicationException;
     
     public boolean validaDatosDxN(HashMap<String, Object> params) throws ApplicationException;
+    
+    /**
+     * Valida si usuario tiene asociada una sucursal dada
+     * @param cdunieco Sucursal a validar
+     * @param cdramo   Ramo
+     * @param cdtipsit Tipo de situacion
+     * @param username Usuario a validar
+     * @return
+     * @throws ApplicationException
+     */
+    public WrapperResultados validaUsuarioSucursal(String cdunieco, String cdramo, String cdtipsit, String username) throws ApplicationException;
+    
 }

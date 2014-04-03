@@ -147,6 +147,7 @@ public class ProcesoDAO extends AbstractDAO {
 	public static final String P_OBTIENE_MESACONTROL_SUPER = "P_OBTIENE_MESACONTROL_SUPER";
 	public static final String HABILITA_SIG_RECIBO = "HABILITA_SIG_RECIBO";
 	public static final String VALIDA_DATOS_DXN = "VALIDA_DATOS_DXN";
+	public static final String VALIDA_USUARIO_SUCURSAL = "VALIDA_USUARIO_SUCURSAL";
 
 	protected void initDao() throws Exception {
 		addStoredProcedure(EJECUTA_SIGSVALIPOL, new EjecutarSIGSVALIPOL(getDataSource()));
@@ -242,6 +243,7 @@ public class ProcesoDAO extends AbstractDAO {
 		addStoredProcedure(VALIDAR_EXTRAPRIMA_SITUAC_READ, new ValidarExtraprimaSituacRead(getDataSource()));
 		addStoredProcedure(HABILITA_SIG_RECIBO, new HabilitaSigRecibo(getDataSource()));
 		addStoredProcedure(VALIDA_DATOS_DXN, new ValidaDatosDxn(getDataSource()));
+		addStoredProcedure(VALIDA_USUARIO_SUCURSAL, new ValidaUsuarioSucursal(getDataSource()));
 	}
 	
 	
@@ -4581,5 +4583,25 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			return wrapperResultados;
 		}
 	}
+    
+    
+    protected class ValidaUsuarioSucursal extends CustomStoredProcedure {
+    	
+    	protected ValidaUsuarioSucursal(DataSource dataSource) {
+    		super(dataSource, "PKG_SATELITES.P_VALIDA_USUARIO_SUCURSAL");
+    		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdramo_i"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdtipsit"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdusuari_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o",OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+            return mapper.build(map);
+        }   	
+    }
     
 }

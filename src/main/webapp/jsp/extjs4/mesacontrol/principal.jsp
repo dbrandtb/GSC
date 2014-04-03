@@ -965,14 +965,18 @@ Ext.onReady(function(){
 	                                            });
 	                                            
 	                                        },
-	                                        failure:function(){
-	                                            form.setLoading(false);
-	                                            Ext.Msg.show({
-	                                                title:'Error',
-	                                                msg: 'Error de comunicaci&oacute;n',
-	                                                buttons: Ext.Msg.OK,
-	                                                icon: Ext.Msg.ERROR
-	                                            });
+	                                        failure: function(form2, action) {
+	                                        	form.setLoading(false);
+	                                            switch (action.failureType) {
+	                                                case Ext.form.action.Action.CONNECT_FAILURE:
+	                                                    Ext.Msg.show({title: 'Error', msg: 'Error de comunicaci&oacute;n', buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
+	                                                    break;
+	                                                case Ext.form.action.Action.SERVER_INVALID:
+	                                                case Ext.form.action.Action.LOAD_FAILURE:
+	                                                    var msjeError = Ext.isEmpty(action.result.errorMessage) ? 'Error interno del servidor, consulte a soporte' : action.result.errorMessage;
+	                                                    Ext.Msg.show({title: 'Error', msg: msjeError, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
+	                                                    break;
+	                                            }
 	                                        }
 	                                    });
         		    	    		}

@@ -15,15 +15,14 @@ import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.aon.portal2.web.GenericVO;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
-import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 
 public class MesaControlAction extends PrincipalCoreAction
@@ -47,6 +46,7 @@ public class MesaControlAction extends PrincipalCoreAction
 	private String                         rol;
 	private PantallasManager               pantallasManager;
 	private String                         mensaje;
+	private String                         errorMessage;
 	
 	public String principal()
 	{
@@ -246,8 +246,7 @@ public class MesaControlAction extends PrincipalCoreAction
 	////// loadTareasDinamico //////
 	////////////////////////////////
 	
-	public String guardarTramiteManual()
-	{
+	public String guardarTramiteManual() {
 		log.debug(""
 				+ "\n##################################################"
 				+ "\n##################################################"
@@ -256,7 +255,7 @@ public class MesaControlAction extends PrincipalCoreAction
 				);
 		try
 		{
-			UserVO usu=(UserVO)session.get("USUARIO");
+			UserVO user = (UserVO)session.get("USUARIO");
 			//DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usu.getUser());
 			
 			Map<String,Object>omap=new LinkedHashMap<String,Object>(0);
@@ -269,6 +268,10 @@ public class MesaControlAction extends PrincipalCoreAction
 			omap.put("pv_ferecepc_i",new Date());
 			omap.put("pv_festatus_i",new Date());
 			omap.put("pv_cdunieco_i",omap.get("pv_cdsucdoc_i"));
+			
+			//Validamos el usuario contra la sucursal:
+			kernelManager.validaUsuarioSucursal(omap.get("pv_cdsucdoc_i").toString(), null, null, user.getUser());
+			
 			WrapperResultados res = kernelManager.PMovMesacontrol(omap);
 			if(res.getItemMap() == null)log.error("Sin mensaje respuesta de nmtramite!!");
 			else msgResult = (String) res.getItemMap().get("ntramite");
@@ -280,16 +283,17 @@ public class MesaControlAction extends PrincipalCoreAction
         	parDmesCon.put("pv_feinicio_i"   , new Date());
         	parDmesCon.put("pv_cdclausu_i"   , null);
         	parDmesCon.put("pv_comments_i"   , "Se guard&oacute; un nuevo tr&aacute;mite manual desde mesa de control");
-        	parDmesCon.put("pv_cdusuari_i"   , usu.getUser());
+        	parDmesCon.put("pv_cdusuari_i"   , user.getUser());
         	parDmesCon.put("pv_cdmotivo_i"   , null);
         	kernelManager.movDmesacontrol(parDmesCon);
 					
 			success=true;
-		}
-		catch(Exception ex)
-		{
+			
+		} catch(ApplicationException ae) {
+			log.error("Error al guardar tramite manual", ae);
+			errorMessage = ae.getMessage();
+		} catch(Exception ex) {
 			log.error("error al guardar tramite manual",ex);
-			success=false;
 		}
 		log.debug(""
 				+ "\n######                                      ######"
@@ -680,6 +684,11 @@ public class MesaControlAction extends PrincipalCoreAction
 			omap.put("pv_cdunieco_i",smap1.get("pv_cdsucdoc_i"));//se parcha porque requiere el mismo valor
 			omap.put("pv_ferecepc_i",renderFechas.parse((String)omap.get("pv_ferecepc_i")));//se convierte String a Date
 			omap.put("pv_festatus_i",renderFechas.parse((String)omap.get("pv_festatus_i")));//se convierte String a Date
+			
+			//Validamos el usuario contra la sucursal:
+			UserVO user=(UserVO)session.get("USUARIO");
+			WrapperResultados result = kernelManager.validaUsuarioSucursal(smap1.get("pv_cdsucdoc_i").toString(), null, null, user.getUser());
+			
 			WrapperResultados res = kernelManager.PMovMesacontrol(omap);
 			////// Se guarda el tramite //////
 			//////////////////////////////////
@@ -714,10 +723,14 @@ public class MesaControlAction extends PrincipalCoreAction
         	//////////////////////////////////
 					
 			success=true;
-		}
-		catch(Exception ex)
-		{
-			log.error("error al guardar tramite manual",ex);
+			
+		} catch(ApplicationException ae) {
+			
+			log.error("Error al guardar tramite dinamico", ae);
+			errorMessage = ae.getMessage();
+			
+	    } catch(Exception ex) {
+			log.error("error al guardar tramite dinamico",ex);
 			success=false;
 		}
 		log.debug(""
@@ -841,6 +854,14 @@ public class MesaControlAction extends PrincipalCoreAction
 
 	public void setMensaje(String mensaje) {
 		this.mensaje = mensaje;
+	}
+
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
 	}
 	
 }
