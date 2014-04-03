@@ -77,7 +77,7 @@ var msgWindow;
 		}
 		else{
 			var record = grid.getStore().getAt(rowIndex);
-			console.log(record.get('status'));
+			//console.log(record.get('status'));
 		    windowLoader = Ext.create('Ext.window.Window',{
 		        modal       : true,
 		        buttonAlign : 'center',
@@ -789,7 +789,7 @@ var msgWindow;
 				    	},
 						success: function(response, opts) {
 							var respuesta = Ext.decode(response.responseText);
-							console.log(respuesta);
+							//console.log(respuesta);
 							if(respuesta.success){
 								mensajeCorrecto('Aviso','El pago se ha solicitado con exito.');	
 							}else {
