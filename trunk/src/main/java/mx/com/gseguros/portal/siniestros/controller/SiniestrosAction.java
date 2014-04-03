@@ -1012,9 +1012,17 @@ public void setMsgResult(String msgResult) {
 
    public String loadListaIncisosRechazos(){
 	   try {
-		   loadList = new ArrayList<HashMap<String,String>>();;//siniestrosManager.loadListaIncisosRechazos(params);
+		   loadList = new ArrayList<HashMap<String,String>>();
+		   List<Map<String,String>>lista= siniestrosManager.loadListaIncisosRechazos(params);
+		   for(Map<String,String>ele:lista)
+	   		{
+	   			HashMap<String,String>map=new HashMap<String,String>();
+	   			map.put("key"   , ele.get("CDCAUMOT"));
+	   			map.put("value" , ele.get("DSCAUMOT"));
+	   			loadList.add(map);
+	   		}
 	   }catch( Exception e){
-		   logger.error("Error en loadListaRechazos",e);
+		   logger.error("Error en loadListaIncisosRechazos",e);
 		   success =  false;
 		   return SUCCESS;
 	   }
