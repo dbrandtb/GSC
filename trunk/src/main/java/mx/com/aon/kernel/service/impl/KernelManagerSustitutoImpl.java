@@ -1245,4 +1245,23 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 		return exito;
 	}
 	
+	public WrapperResultados validaUsuarioSucursal(String cdunieco, String cdramo, String cdtipsit, String username) throws ApplicationException {
+		
+		try {
+			Map<String,String>params = new HashMap<String,String>();
+			params.put("pv_cdunieco_i" , cdunieco);
+			params.put("pv_cdramo_i"   , cdramo);
+			params.put("pv_cdtipsit"   , cdtipsit);
+			params.put("pv_cdusuari_i" , username);
+			
+			log.debug("### kernel validaUsuarioSucursal map: "+params);
+			WrapperResultados res = this.returnBackBoneInvoke(params,ProcesoDAO.VALIDA_USUARIO_SUCURSAL);
+	        log.debug("### validaUsuarioSucursal id:"+res.getMsgId());
+	        log.debug("### validaUsuarioSucursal message:"+res.getMsgText());
+	        return res;
+		} catch(Exception e) {
+			throw new ApplicationException(new StringBuilder("El usuario ").append(username).append(" no está asociado a la sucursal de documento elegida, debe elegir otra.").toString(), e);
+		}
+	}
+	
 }
