@@ -347,6 +347,7 @@ var msgWindow;
 								        	            		                    break;
 								        	            		                case Ext.form.action.Action.SERVER_INVALID:
 								        	            		                	mensajeError(action.result.mensaje);
+								        	            		                	break;
 								        	            		            }
 							        	            		        		//mensajeError('No se pudo turnar.');
 							        	            					},
@@ -382,6 +383,7 @@ var msgWindow;
                                                                         break;
                                                                     case Ext.form.action.Action.SERVER_INVALID:
                                                                     	mensajeError(action.result.mensaje);
+                                                                    	break;
                                                                 }
 				        	            		        		//mensajeError('No se pudo turnar.');
 				        	            					},
@@ -542,6 +544,7 @@ var msgWindow;
                                                         break;
                                                     case Ext.form.action.Action.SERVER_INVALID:
                                                     	mensajeError(action.result.mensaje);
+                                                    	break;
                                                 }
         	            		        		//mensajeError('No se pudo turnar.');
         	            					},
@@ -625,6 +628,7 @@ var msgWindow;
                                                         break;
                                                     case Ext.form.action.Action.SERVER_INVALID:
                                                     	mensajeError(action.result.mensaje);
+                                                    	break;
                                                 }
         	            		        		//mensajeError('No se pudo turnar.');
         	            					},
