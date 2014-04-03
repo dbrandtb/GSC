@@ -61,7 +61,10 @@ Ext.onReady(function() {
     	        emptyText:'Seleccione ...',
     	        listeners: {
     	        	select: function(combo, records, eOpts){
-    	        		
+    	        		//Ext.getCmp('incisosRechazo').setValue('');
+    	        		panelRechazarReclamaciones.down('[name=smap1.incisosRechazo]').setValue('');
+    	        		panelRechazarReclamaciones.down('[name=smap1.comments]').setValue('');
+    	        		storeIncisosRechazos.removeAll();
     	        		storeIncisosRechazos.load({
     	        			 params: {
     	        				'params.pv_cdmotivo_i' : records[0].get('key')

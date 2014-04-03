@@ -71,28 +71,35 @@ var msgWindow;
 	function complementarAltaWindow(grid,rowIndex){
 		
 		var record = grid.getStore().getAt(rowIndex);
-		
-	    windowLoader = Ext.create('Ext.window.Window',{
-	        modal       : true,
-	        buttonAlign : 'center',
-	        width       : 800,
-	        height      : 730,
-	        autoScroll  : true,
-	        loader      : {
-	            url     : _UrlAltaDeTramite,
-	            params   :
-		        {
-		        	'params.ntramite' : record.get('ntramite')
-		        },
-		        scripts  : true,
-	            loadMask : true,
-	            autoLoad : true,
-	            ajaxOptions: {
-	            	method: 'POST'
-	            }
-	        }
-	    }).show();
-	    centrarVentana(windowLoader);
+		if(record.get('status') == _STATUS_TRAMITE_RECHAZADO){
+			mensajeWarning('No se puede complementar el tr&aacute;mite ya se encuentra rechazado');
+			return;
+		}
+		else{
+			var record = grid.getStore().getAt(rowIndex);
+			console.log(record.get('status'));
+		    windowLoader = Ext.create('Ext.window.Window',{
+		        modal       : true,
+		        buttonAlign : 'center',
+		        width       : 800,
+		        height      : 730,
+		        autoScroll  : true,
+		        loader      : {
+		            url     : _UrlAltaDeTramite,
+		            params   :
+			        {
+			        	'params.ntramite' : record.get('ntramite')
+			        },
+			        scripts  : true,
+		            loadMask : true,
+		            autoLoad : true,
+		            ajaxOptions: {
+		            	method: 'POST'
+		            }
+		        }
+		    }).show();
+		    centrarVentana(windowLoader);
+		}
 	}
 	
 	

@@ -1021,6 +1021,9 @@ Ext.onReady(function() {
             				//Llenamos los campos dependiendo si es pago por reembolso
             				if( Ext.getCmp('cmbTipoPago').getValue() == "1") // Pago Directo
         					{
+            					Ext.getCmp('cmbAseguradoAfectado').setValue("");
+            					Ext.getCmp('dtFechaOcurrencia').setValue("");
+            					Ext.getCmp('cmbBeneficiario').setValue("");
             					var obtener = [];
                 				storeListAsegPagDirecto.each(function(record) {
                 					obtener.push(record.data);
@@ -1046,6 +1049,11 @@ Ext.onReady(function() {
                 					Ext.getCmp('dtFechaOcurrencia').setValue(obtener[0].modFechaOcurrencia);
                 				}
         					}else{
+        						
+        						Ext.getCmp('cmbProveedor').setValue("");
+        						Ext.getCmp('txtNoFactura').setValue("");
+        						Ext.getCmp('txtImporte').setValue("");
+        						Ext.getCmp('dtFechaFactura').setValue("");
         						
         						var obtener = [];
         						storeFactCtrl.each(function(record) {
