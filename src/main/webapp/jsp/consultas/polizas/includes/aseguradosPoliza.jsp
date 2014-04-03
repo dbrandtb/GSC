@@ -59,10 +59,11 @@ Ext.onReady(function(){
         }],
         columns: [
             //{text:'Rol',dataIndex:'dsrol',width:130 , align:'left'},
-            {text:'Tipo de asegurado',dataIndex:'parentesco',width:130 , align:'left'},
-            {text:'Nombre',dataIndex:'titular',width:280,align:'left'},
-            {text:'Estatus',dataIndex:'status',width:100,align:'left'},
-            {text:'RFC',dataIndex:'cdrfc',width:130,align:'left'},
+            {text:'Tipo de <br/> asegurado',dataIndex:'parentesco',width:100 , align:'left'},
+            {text:'Clave <br/>Asegurado',dataIndex:'cdperson',width:100,align:'left'},
+            {text:'Nombre',dataIndex:'titular',width:250,align:'left'},
+            {text:'Estatus',dataIndex:'status',width:90,align:'left'},
+            {text:'RFC',dataIndex:'cdrfc',width:110,align:'left'},
             {text:'Sexo',dataIndex:'sexo',width:90 , align:'left'},
             {text:'Fecha Nac.',dataIndex:'fenacimi',width:100, align:'left',renderer: Ext.util.Format.dateRenderer('d/m/Y')}
         ]

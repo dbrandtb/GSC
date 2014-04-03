@@ -75,7 +75,8 @@
 				{type:'string', name:'CDICD2'},
 				{type:'string', name:'NMRECLAMO'},
 				{type:'string', name:'CDPERSON'},
-				{type:'string', name:'BENEFICIARIO'}
+				{type:'string', name:'BENEFICIARIO'},
+				{type:'string', name:'FERECEP'}
 		    ]
 		});
 	
@@ -177,7 +178,7 @@
 		        },{
 		            xtype      : 'displayfield',
 		            fieldLabel : 'Fecha recepci&oacute;n',
-		            name       : 'FERECEPC'
+		            name       : 'FERECEP'
 		        },{
 		            xtype      : 'displayfield',
 		            fieldLabel : 'Fecha ocurrencia',
@@ -342,7 +343,7 @@
 		                                               'smap1.cdramo'  : _CDRAMO,
 		                                               'smap1.estado'  : _ESTADO,
 		                                               'smap1.nmsuplem': _NMSUPLEM,
-		                                               'smap1.ntramite': _NTRAMITE,
+		                                               //'smap1.ntramite': _NTRAMITE,
 		                                               'smap1.tipomov' : '0'
 		                                           }
 		                                       });
