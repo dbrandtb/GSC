@@ -1462,7 +1462,7 @@ function _p12_validaAutorizaciones()
 	var esPagoDirecto = _p12_smap.PAGODIRECTO=='S';
 	debug('esPagoDirecto:',esPagoDirecto);
 	if(esPagoDirecto)
-	{
+	{false && 
 		var esHospital = _p12_smap2.CDGARANT=='18HO'||_p12_smap2.CDGARANT=='18MA';
 		debug('esHospital:',esHospital);
 		if(esHospital&&false)
@@ -1483,7 +1483,7 @@ function _p12_validaAutorizaciones()
                 {
                     result = result + 'Reclamaciones no autoriza el siniestro ' + siniestroIte.NMSINIES + '<br/>';
                 }
-				if(siniestroIte.AUTMEDIC!='S')
+				if(false && siniestroIte.AUTMEDIC!='S')
 				{
 					result = result + 'El m&eacute;dico no autoriza el siniestro ' + siniestroIte.NMSINIES + '<br/>';
 				}
@@ -1495,7 +1495,7 @@ function _p12_validaAutorizaciones()
 				{
 					result = result + 'Reclamaciones no autoriza la factura para el siniestro ' + siniestroIte.NMSINIES + '<br/>';
 				}
-				if(factura['AUTMEDIC'+siniestroIte.NMSINIES]!='S')
+				if(false && factura['AUTMEDIC'+siniestroIte.NMSINIES]!='S')
 				{
 					result = result + 'El m&eacute;dico no autoriza la factura para el siniestro ' + siniestroIte.NMSINIES + '<br/>';
 				}
@@ -1514,7 +1514,7 @@ function _p12_validaAutorizaciones()
 	                    {
 	                        result = result + 'Reclamaciones no autoriza el concepto \'' + conceptoSiniestroIte.OTVALOR + '\' del siniestro ' + siniestroIte.NMSINIES + '<br/>';
 	                    }*/
-	                    if(conceptoSiniestroIte.AUTMEDIC!='S')
+	                    if(false && conceptoSiniestroIte.AUTMEDIC!='S')
 	                    {
 	                        result = result + 'El m&eacute;dico no autoriza el concepto \'' + conceptoSiniestroIte.OTVALOR + '\' del siniestro ' + siniestroIte.NMSINIES + '<br/>';
 	                    }
