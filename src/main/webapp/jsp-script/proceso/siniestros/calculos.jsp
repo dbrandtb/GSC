@@ -1462,7 +1462,7 @@ function _p12_validaAutorizaciones()
 	var esPagoDirecto = _p12_smap.PAGODIRECTO=='S';
 	debug('esPagoDirecto:',esPagoDirecto);
 	if(esPagoDirecto)
-	{false && 
+	{
 		var esHospital = _p12_smap2.CDGARANT=='18HO'||_p12_smap2.CDGARANT=='18MA';
 		debug('esHospital:',esHospital);
 		if(esHospital&&false)
@@ -1537,7 +1537,7 @@ function _p12_validaAutorizaciones()
             {
                 result = result + 'Reclamaciones no autoriza la factura ' + facturaIte.NFACTURA + '<br/>';
             }
-            if(facturaIte.AUTMEDIC!='S')
+            if(false && facturaIte.AUTMEDIC!='S')
             {
                 result = result + 'El m&eacute;dico no autoriza la factura ' + facturaIte.NFACTURA + '<br/>';
             }
