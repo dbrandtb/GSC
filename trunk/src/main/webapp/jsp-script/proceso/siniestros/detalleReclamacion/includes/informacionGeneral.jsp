@@ -651,33 +651,33 @@
 		            	        'params.cdsucdoc' : pnlInformacionGral.down('[name=CDSUCDOC]').getValue()
 		            	    },
 			                success: function(form, action) {
-								Ext.Msg.show({
+			                	centrarVentanaInterna(Ext.Msg.show({
 								      title:'Exito',
 								      msg: 'Se actualizaron los datos generales del siniestro',
 								      buttons: Ext.Msg.OK,
 								      icon: Ext.Msg.WARNING
-								});
+								}));
 			                },
 			                failure: function(form, action) {
 			                    switch (action.failureType) {
 			                        case Ext.form.action.Action.CONNECT_FAILURE:
-			                            Ext.Msg.alert('Error', 'Error de comunicaci&oacute;n');
+			                        	centrarVentanaInterna(Ext.Msg.alert('Error', 'Error de comunicaci&oacute;n'));
 			                            break;
 			                        case Ext.form.action.Action.SERVER_INVALID:
 			                        case Ext.form.action.Action.LOAD_FAILURE:
-			                            Ext.Msg.alert('Error', 'Error del servidor, consulte a soporte');
+			                        	centrarVentanaInterna(Ext.Msg.alert('Error', 'Error del servidor, consulte a soporte'));
 			                            break;
 			                   }
 			                }
 		            	});
 		            	
 		            } else {
-		                Ext.Msg.show({
+		            	centrarVentanaInterna(Ext.Msg.show({
 		                    title:'Datos incompletos',
 		                    msg: 'Favor de introducir todos los campos requeridos',
 		                    buttons: Ext.Msg.OK,
 		                    icon: Ext.Msg.WARNING
-		                });
+		                }));
 		            }
 		        }
 		    },{
@@ -707,11 +707,11 @@
                     if(records.length > 0){
                     	pnlInformacionGral.getForm().loadRecord(records[0]);  
                     }else {
-                        showMessage('Error', 'No hay datos de la p&oacute;liza', Ext.Msg.OK, Ext.Msg.ERROR);
+                    	centrarVentanaInterna(showMessage('Error', 'No hay datos de la p&oacute;liza', Ext.Msg.OK, Ext.Msg.ERROR));
                     }
                 }else {
-                    showMessage('Error', 'Error al obtener los datos de la p&oacute;liza, intente m\u00E1s tarde',
-                    Ext.Msg.OK, Ext.Msg.ERROR);
+                	centrarVentanaInterna(showMessage('Error', 'Error al obtener los datos de la p&oacute;liza, intente m\u00E1s tarde',
+                    Ext.Msg.OK, Ext.Msg.ERROR));
                 }
             }
         });

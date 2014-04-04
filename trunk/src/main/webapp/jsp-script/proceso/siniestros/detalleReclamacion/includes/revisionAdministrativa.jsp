@@ -589,26 +589,26 @@ Ext.onReady(function() {
            		        		'params.operacion'   : _Operacion
            		        	},
            		        	failure: function(form, action) {
-           		        		mensajeError("Error al guardar el concepto");
+           		        		centrarVentanaInterna(mensajeError("Error al guardar el concepto"));
            					},
            					success: function(form, action) {
            						
            						storeConceptos.reload();
            						panelEdicionConceptos.getForm().reset();
                                	windowConceptos.close();
-                               	mensajeCorrecto("Aviso","Se ha guardado el concepto.");
+                               	centrarVentanaInterna(mensajeCorrecto("Aviso","Se ha guardado el concepto."));
            						
            						
            					}
            				});
                        	
                        } else {
-                           Ext.Msg.show({
+                    	   centrarVentanaInterna(Ext.Msg.show({
                                   title: 'Aviso',
                                   msg: 'Complete la informaci&oacute;n requerida',
                                   buttons: Ext.Msg.OK,
                                   icon: Ext.Msg.WARNING
-                              });
+                              }));
                        }
                    }
              },
@@ -661,10 +661,10 @@ Ext.onReady(function() {
                         	if(cancelar)
                         	{
                         		//jtezva
-                        		mensajeWarning(
+                        		centrarVentanaInterna(mensajeWarning(
 						                'El tr&aacute;mite de pago directo ser&aacute; cancelado debido a que no ha sido autorizada alguna de las facturas'
 						                ,function(){_revAdm_windowRechazo.show();centrarVentanaInterna(_revAdm_windowRechazo);}
-						        );
+						        ));
                         	}
                         	else
                         	{
@@ -684,7 +684,7 @@ Ext.onReady(function() {
 	            		        		'params.nmsinies'  : _NMSINIES
 	            		        	},
 	            		        	failure: function(form, action) {
-	            		        		mensajeError("Error al guardar la Factura");
+	            		        		centrarVentanaInterna(mensajeError("Error al guardar la Factura"));
 	            					},
 	            					success: function(form, action) {
 	            						
@@ -692,17 +692,17 @@ Ext.onReady(function() {
 	            						panelEdicionFacturas.getForm().reset();
 	            						storeConceptos.removeAll();
 	                                	windowFacturas.close();
-	                                	mensajeCorrecto("Aviso","Se ha guardado la Factura");	
+	                                	centrarVentanaInterna(mensajeCorrecto("Aviso","Se ha guardado la Factura"));	
 	            					}
 	            				});	
                         	}
                         } else {
-                            Ext.Msg.show({
+                        	centrarVentanaInterna(Ext.Msg.show({
                                    title: 'Aviso',
                                    msg: 'Complete la informaci&oacute;n requerida',
                                    buttons: Ext.Msg.OK,
                                    icon: Ext.Msg.WARNING
-                               });
+                               }));
                         }
                     }
               },
@@ -842,7 +842,7 @@ Ext.define('EditorFacturas', {
  	},
  	onRemoveClick: function(grid, rowIndex){
  		if(Ext.isEmpty(_TIPOPAGO) || _TIPOPAGO == _PAGO_DIRECTO){
- 			mensajeWarning('No se pueden eliminar Facturas en Pago Directo.');
+ 			centrarVentanaInterna(mensajeWarning('No se pueden eliminar Facturas en Pago Directo.'));
  			return;
  		}
  		
@@ -871,15 +871,15 @@ Ext.define('EditorFacturas', {
 	        				gridFacturas.setLoading(false);
 	        				
 	        				if(res.success){
-		        				mensajeCorrecto('Aviso','Se ha eliminado con exito.');
+	        					centrarVentanaInterna(mensajeCorrecto('Aviso','Se ha eliminado con exito.'));
 	    	    				storeFacturas.reload();
 	        				}else {
-	        					mensajeError('No se pudo eliminar.');	
+	        					centrarVentanaInterna(mensajeError('No se pudo eliminar.'));	
 	        				}
 	        			},
 	        			failure: function(){
 	        				gridFacturas.setLoading(false);
-	        				mensajeError('No se pudo eliminar.');
+	        				centrarVentanaInterna(mensajeError('No se pudo eliminar.'));
 	        			}
 	        		});
 	        	}
@@ -1100,7 +1100,7 @@ Ext.define('EditorConceptos', {
  			windowConceptos.show();
  			centrarVentana(windowConceptos);
  		}else {
- 			mensajeWarning("Debe seleccionar una factura para poder agregar un concepto a la misma.");
+ 			centrarVentanaInterna(mensajeWarning("Debe seleccionar una factura para poder agregar un concepto a la misma."));
  		} 
  	},
  	onEditClick: function(grid, rowIndex){
@@ -1189,15 +1189,15 @@ Ext.define('EditorConceptos', {
 	        				gridConceptos.setLoading(false);
 	        				
 	        				if(res.success){
-	        					mensajeCorrecto('Aviso','Se ha eliminado con exito.');
+	        					centrarVentanaInterna(mensajeCorrecto('Aviso','Se ha eliminado con exito.'));
 		        				storeConceptos.reload();	
 	        				}else {
-		        				mensajeError('No se pudo eliminar.');
+	        					centrarVentanaInterna(mensajeError('No se pudo eliminar.'));
 	        				}
 	        			},
 	        			failure: function(){
 	        				gridConceptos.setLoading(false);
-	        				mensajeError('No se pudo eliminar.');
+	        				centrarVentanaInterna(mensajeError('No se pudo eliminar.'));
 	        			}
 	        		});
 	        	}
@@ -1313,7 +1313,7 @@ function _revAdm_rechazoSiniestro()
             },
             failure: function(form, action) {
             	_revAdm_windowRechazo.setLoading(false);
-                mensajeError("Error al guardar la Factura");
+            	centrarVentanaInterna(mensajeError("Error al guardar la Factura"));
             },
             success: function(form, action)
             {
