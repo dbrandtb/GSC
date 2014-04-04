@@ -758,7 +758,8 @@ Ext.onReady(function()
                     }
         		}
         	}).show();
-        	windowVerDocu.center();
+        	centrarVentanaInterna(windowVerDocu);
+        	//windowVerDocu.center();
         	//window.open(,'_blank','width=800,height=600');
         }
     });
