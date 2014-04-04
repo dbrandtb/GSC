@@ -261,12 +261,12 @@ Ext.onReady(function()
             ,type         : 'memory'
             ,data         :
             [
-                {
+                /*{
                 	texto    : 'Cancelaci&oacute;n &uacute;nica'
                 	,liga    : '<s:url namespace="/cancelacion"     action="pantallaCancelar" />'
                 	,funcion : 'cancelacionunica'
                 }
-                ,{
+                ,*/{
                     texto    : 'Cancelaci&oacute;n autom&aacute;tica'
                     ,liga    : '<s:url namespace="/cancelacion"     action="pantallaCancelarAuto" />'
                     ,funcion : 'cancelacionauto'
