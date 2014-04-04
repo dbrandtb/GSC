@@ -434,7 +434,7 @@ function _11_guardarEdicion()
 	var autorizaMedic = _11_formEdicion.items.items[15].getValue();
 	debug('autorizaRecla',autorizaRecla);
 	debug('autorizaMedic',autorizaMedic);
-	var valido = autorizaRecla && autorizaRecla =='S' && (!autorizaMedic OR autorizaMedic!='N');
+	var valido = autorizaRecla && autorizaRecla =='S' && (!autorizaMedic || autorizaMedic!='N');
 	if(!valido)
 	{
 		mensajeWarning(
