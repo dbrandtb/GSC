@@ -40,6 +40,7 @@
 	<link rel="stylesheet" type="text/css" href="${ctx}/resources/extjs/resources/css/ext-all.css" />
 	<link rel="stylesheet" type="text/css" href="${ctx}/resources/extjs/resources/css/xtheme-gray.css" />
 	<link href="${ctx}/resources/css/template_css.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="${ctx}/resources/extjs4/jquery-1.10.2.min.js"></script>
 	<script type="text/javascript" src="${ctx}/resources/extjs/adapter/ext/ext-base.js"></script>
 	<script type="text/javascript" src="${ctx}/resources/extjs/ext-all.js"></script>
 	<script type="text/javascript" src="${ctx}/resources/scripts/util/ext.js"></script>

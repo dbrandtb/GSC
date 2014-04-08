@@ -18,4 +18,8 @@
         <property name="pantallasManager" ref="pantallasManagerImpl"></property>
     </bean>
 
+    <bean id="menusAction" class="mx.com.gseguros.portal.catalogos.controller.MenuAction" scope="prototype">
+        <property name="menuManager" ref="menuManagerImpl"></property>
+    </bean>
+
 </beans>

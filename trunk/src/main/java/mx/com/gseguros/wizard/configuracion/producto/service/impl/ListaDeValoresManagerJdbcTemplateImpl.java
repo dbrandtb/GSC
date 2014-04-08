@@ -99,9 +99,10 @@ public class ListaDeValoresManagerJdbcTemplateImpl extends AbstractManagerJdbcTe
 	        	HashMap<String,Object> params = new HashMap<String, Object>();
 	        	params.put("PI_NMTABLA", nmTabla);
 	        	WrapperResultados res = returnBackBoneInvoke(params, "OBTIENE_TABLA_1Y5_CLAVES");
-	        	tabla = (ListaDeValoresVO) res.getItemList();
+	        	tabla = (ListaDeValoresVO) res.getItemList().get(0);
 	        
 	        } catch (Exception e) {
+	        	logger.error(e);
 	            throw new ApplicationException("Error regresando la tabla de 1 y 5 claves");
 	        }
 	        return tabla;
@@ -424,9 +425,11 @@ public class ListaDeValoresManagerJdbcTemplateImpl extends AbstractManagerJdbcTe
 	        	HashMap<String,Object> params = new HashMap<String, Object>();
 	        	params.put("PI_NMTABLA", nmTabla);
 	        	WrapperResultados res = returnBackBoneInvoke(params, "OBTIENE_TABLA_1Y5_CLAVES");
-	        	cabecera = (ListaDeValoresVO) res.getItemList();
+	        	
+	        	cabecera = (ListaDeValoresVO) res.getItemList().get(0);
 	        
 	        } catch (Exception e) {
+	        	logger.error(e);
 	            throw new ApplicationException("Error regresando la cabecera de lista de valores");
 	        }
 	        return cabecera;
@@ -440,9 +443,10 @@ public class ListaDeValoresManagerJdbcTemplateImpl extends AbstractManagerJdbcTe
 	        	HashMap<String,Object> params = new HashMap<String, Object>();
 	        	params.put("PI_NMTABLA", nmTabla);
 	        	WrapperResultados res = returnBackBoneInvoke(params, "OBTIENE_CLAVE_LISTA_DE_VALORES");
-	        	clave = (ListaDeValoresVO) res.getItemList();
+	        	clave = (ListaDeValoresVO) res.getItemList().get(0);
 	        	
 	        } catch (Exception e) {
+	        	logger.error(e);
 	            throw new ApplicationException("Error regresando la clave de lista de valores");
 	        }
 	        return clave;
@@ -456,9 +460,10 @@ public class ListaDeValoresManagerJdbcTemplateImpl extends AbstractManagerJdbcTe
 	        	HashMap<String,Object> params = new HashMap<String, Object>();
 	        	params.put("PI_NMTABLA", nmTabla);
 	        	WrapperResultados res = returnBackBoneInvoke(params, "OBTIENE_DESCRIPCION_LISTA_DE_VALORES");
-	        	descripcion = (ListaDeValoresVO) res.getItemList();
+	        	descripcion = (ListaDeValoresVO) res.getItemList().get(0);
 	        
 	        } catch (Exception e) {
+	        	logger.error(e);
 	            throw new ApplicationException("Error regresando la descripcion de lista de valores");
 	        }
 	        return descripcion;

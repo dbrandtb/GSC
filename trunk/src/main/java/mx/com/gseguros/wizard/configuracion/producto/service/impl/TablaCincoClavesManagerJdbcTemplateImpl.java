@@ -403,11 +403,12 @@ public class TablaCincoClavesManagerJdbcTemplateImpl extends AbstractManagerJdbc
 			List<LlaveValorVO> listaAtributos = null;
 			try {
 				WrapperResultados res = returnBackBoneInvoke(params, "OBTIENE_VALORES_ATRIBUTOS_CLAVES");
-				atributos = (DescripcionVeinticincoAtributosVO) res.getItemList();
+				atributos = (DescripcionVeinticincoAtributosVO) res.getItemList().get(0);
 				listaAtributos = new ArrayList<LlaveValorVO>();
 				listaAtributos = convierteAListaLVVO(claves.getIdentificador(), descripcionAtributos, atributos);
 				
 			} catch (Exception e) {
+				logger.error(e);
 				throw new ApplicationException("Error regresando atributos para la tabla de cinco claves");
 			}
 			

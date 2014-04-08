@@ -781,7 +781,7 @@ public class ListaDeValoresAction extends Padre {
 		ListaDeValoresVO ldvVO = null;
 		if (nmTabla != null) {
 			ldvVO = new ListaDeValoresVO();
-			cabeceraListaDeValores = listaDeValoresManager
+			cabeceraListaDeValores = listaDeValoresManagerJdbcTemplate
 					.obtieneCabeceraListaDeValores(nmTabla);
 			ldvVO.setNumeroTabla(nmTabla);
 			ldvVO.setNombre(cabeceraListaDeValores.getNombre());
@@ -795,14 +795,14 @@ public class ListaDeValoresAction extends Padre {
 			ldvVO.setDsCatalogo1(cabeceraListaDeValores.getDsCatalogo1());
 			ldvVO.setDsCatalogo2(cabeceraListaDeValores.getDsCatalogo2());
 			ldvVO.setClaveDependencia(cabeceraListaDeValores.getClaveDependencia());
-			claveListaDeValores = listaDeValoresManager
+			claveListaDeValores = listaDeValoresManagerJdbcTemplate
 					.obtieneClaveListaDeValores(nmTabla);
 			ldvVO.setClave(claveListaDeValores.getClave());
 			ldvVO.setFormatoClave(claveListaDeValores.getFormatoClave());
 			ldvVO.setMinimoClave(claveListaDeValores.getMinimoClave());
 			ldvVO.setMaximoClave(claveListaDeValores.getMaximoClave());
 
-			descripcionListaDeValores = listaDeValoresManager
+			descripcionListaDeValores = listaDeValoresManagerJdbcTemplate
 					.obtieneDescripcionListaDeValores(nmTabla);
 			ldvVO.setCdAtribu(descripcionListaDeValores.getCdAtribu());
 			ldvVO.setDescripcionFormato(descripcionListaDeValores
@@ -872,7 +872,7 @@ public class ListaDeValoresAction extends Padre {
 		   log.debug("NUMEROTABLA-->" + nmTabla);
 		   Map<String, String> params =  new HashMap<String, String>();
 		   params.put("pi_nmtabla_i",nmTabla);
-		   listaDeValoresManager.eliminarTablaClave(params);
+		   listaDeValoresManagerJdbcTemplate.eliminarTablaClave(params);
            success = true;
 		   return SUCCESS;
 		}catch(ApplicationException e){

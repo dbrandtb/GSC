@@ -87,6 +87,10 @@
     	    <property name="listaDeValoresManager" ref="ListaDeValoresManagerJdbcTemplate" />
     	    <property name="tablaCincoClavesManager" ref="TablaCincoClavesManagerJdbcTemplateImpl" />
     </bean>
+
+    <bean id="ValoresTablaCincoClavesAction" class="mx.com.gseguros.wizard.configuracion.producto.tablaCincoClaves.web.ValoresTablaCincoClavesAction" scope="prototype" parent="PadreAction">
+    	    <property name="tablaCincoClavesManagerJdbcTemplate" ref="TablaCincoClavesManagerJdbcTemplateImpl" />
+    </bean>
     
     
 </beans>
