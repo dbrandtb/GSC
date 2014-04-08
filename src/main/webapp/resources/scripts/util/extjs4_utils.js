@@ -46,12 +46,13 @@ var store=Ext.create('Ext.data.Store',
  * @param _params
  * @param _callback
  */
-function cargaStorePaginadoLocal(_store, _url, _root, _params, _callback, componente) {
-	_store.removeAll();
-	if(componente)
-	{
-		componente.setLoading(true);
-		grid.down('pagingtoolbar').moveFirst();
+function cargaStorePaginadoLocal(_store, _url, _root, _params, _callback, _grid) {
+	
+	if(_grid){
+		_grid.setLoading(true);
+		if(_grid.down('pagingtoolbar')){
+			_grid.down('pagingtoolbar').moveFirst();
+		}
 	}
     Ext.Ajax.request(
     {
@@ -60,13 +61,12 @@ function cargaStorePaginadoLocal(_store, _url, _root, _params, _callback, compon
         callback  : _callback,
         success   : function(response)
         {
-        	if(componente)
-        	{
-        		componente.setLoading(false);
+        	if(_grid){
+        		_grid.setLoading(false);
         	}
+        	_store.removeAll();
             var jsonResponse = Ext.decode(response.responseText);
-            _store.setProxy(
-            {
+            _store.setProxy({
                 type         : 'memory',
                 enablePaging : true,
                 reader       : 'json',
@@ -76,10 +76,10 @@ function cargaStorePaginadoLocal(_store, _url, _root, _params, _callback, compon
         },
         failure   : function()
         {
-        	if(componente)
-        	{
-        		componente.setLoading(false);
+        	if(_grid){
+        		_grid.setLoading(false);
         	}
+        	_store.removeAll();
             Ext.Msg.show({
                 title   : 'Error',
                 icon    : Ext.Msg.ERROR,
