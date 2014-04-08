@@ -151,7 +151,7 @@ if(encabezado){
                     		if (Ext.util.JSON.decode(response.responseText).success == false) {
 	                				//Ext.Msg.alert('Error', 'No se pudieron guardar los cambios');                        							
                        		} else {
-		               				//Ext.Msg.alert('Status', 'Se han guardado con éxito los cambios');
+		               				//Ext.Msg.alert('Status', 'Se han guardado con ï¿½xito los cambios');
 		                    		storeCampo.load();
     	                    }
 	    	       		},
@@ -1029,7 +1029,7 @@ variables locales de expresion
                allowBlank: false
            })
         },{
-           header: "Expresión",
+           header: "Expresi&oacute;n",
            dataIndex: 'expresion',
            width: 240,
            editor: new Ext.form.TextField({
@@ -1045,11 +1045,11 @@ variables locales de expresion
         cm: cmClaves,
         autoScroll:true,
         width: 530,//430
-        height:100,//autoHeight:true,
+        height:140,//autoHeight:true,
         autoExpandColumn:'clave',
-        title:'Claves',
-        collapsible:true,
-        frame:true,
+        //title:'Claves',
+        //collapsible:true,
+        frame:false,
         plugins:checkColumn,
         clicksToEdit:1,
 		viewConfig: {
@@ -1088,7 +1088,7 @@ variables locales de expresion
         					border:false,
 		        			items:[{
 	               		        xtype:'button',
-   			   				    text:'Eliminar Variable',
+   			   				    text:'Eliminar Variable&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
    							    handler:function(){
    							    		var valorCombo=comboVariables.getValue();
    							    		if(comboVariables.isDirty()){
@@ -1180,7 +1180,7 @@ variables locales de expresion
         					border:false,
 		        			items:[{
 		        				xtype:'button',
-		        				text:'Guardar Variable',
+		        				text:'Guardar Variable&nbsp;&nbsp;&nbsp;&nbsp;',
 		        				handler:function(){
 		        					if(formPanelVariablesLocales.form.isValid()){
 			        					if(validarClavesObligatoriasExpresion()){
@@ -1264,7 +1264,9 @@ Expresiones
     		var descripcion= new Ext.form.TextArea({
 	                        name: "descripcion",
 	                        fieldLabel: 'Descripci\u00F3n*',
-	                        width: '250',
+	                        hideLabel : true,
+	                        width: 500,
+	                        height : 130,
 	                        labelSeparator:'',
 	                        //allowBlank: true,
 	                        maxLength:'2000',
@@ -1298,55 +1300,73 @@ Expresiones
 		   				//margins:'0 5 5 5',
 		   				//height:300,
 			        	//bodyStyle:'padding:5px 5px 0',
-		   				border:false,
-		   				frame:false,
-		   				title: 'Expresi\u00F3n',
-		   				items: [{
-					            layout:'column',
-					            border:false,
-					            items:[{
-						                columnWidth:.7,
-					    	            layout: 'form',
-					        	        border:false,
-					            	    labelAlign: 'top',
-					                	items: [{layout:'form',border:false,heigth:'10'},descripcion]
-						            },{
-						                columnWidth:.3,
-						                layout: 'form',
-						                border:false,
-						                items: [
-						                		{
-							                    layout: 'form',
-							             		heigth:'10',
-						    	         		border:false
-						        	        },{
-						            	        layout: 'form',
-						                		border:false,
-						                		items: [{
-						                				id:'switch-recalcular-expresion-simple',
-								    	                xtype:'checkbox',
-							    		                fieldLabel: 'Last Name',
-							            		        hideLabel:true,
-							                    		boxLabel:'Recalcular Siempre',
-							                    		name:'switchRecalcular'
-		        	        						},{
-							            		        xtype:'button',
-		                							    text:'Comprobar Sintaxis',
-		                							    handler: function () {
-		                							    	tab2.form.submit({
-		                							    		url: 'expresiones/ValidarExpresion.action',			      
-								            					failure: function(form, action) {
-												    				Ext.MessageBox.alert('Mensaje de Error', Ext.util.JSON.decode(action.response.responseText).mensajeValidacion);
-																},
-																success: function(form, action) {
-												    				//Ext.MessageBox.alert('Confirm', action.result.info);	
-												    				//alert("Exito!!");
-												    				//Ext.getCmp('hidden-valor-defecto-atributos-variables').setValue("-1");					   
-												    				Ext.MessageBox.alert('Mensaje', Ext.util.JSON.decode(action.response.responseText).mensajeValidacion);
-																}
-							        						});
-		                							    }
-					        			        }]
+		   				border : false,
+		   				frame  : false,
+		   				//title  : 'Expresi&oacute;nyyy',
+		   				items  :
+		   				[
+		   				     {
+					             //layout:'column',
+					             border:false,
+					             items:
+					             [
+					                 {
+						                 //columnWidth : .7,
+					    	             layout      : 'form',
+					        	         border      : false,
+					              	     //labelAlign  : 'top',
+					                 	 items       :
+					                	 [
+					                	     {
+					                	    	 layout:'form',
+					                	    	 border:false,
+					                	    	 heigth:'10'
+					                	     }
+					                	     ,descripcion
+					                	 ]
+						             }
+					                 ,{
+						                 columnWidth : .3,
+						                 layout      : 'form',
+						                 border      : false,
+						                 items:
+						                 [
+						                     /*{
+						                    	 layout : 'form',
+							             		 heigth : '10',
+						    	         		 border : false
+						        	         },*/{
+						            	         layout : 'form',
+						                		 border : false,
+						                		 items  :
+						                		 [
+						                		     {
+						                				 id         : 'switch-recalcular-expresion-simple',
+								    	                 xtype      : 'checkbox',
+							    		                 fieldLabel : 'Last Name',
+							            		         hideLabel  : true,
+							                    		 boxLabel   : 'Recalcular Siempre',
+							                    		 name       : 'switchRecalcular'
+		        	        						 }/*,{
+							            		         xtype   : 'button',
+		                							     text    : 'Comprobar Sintaxis',
+		                							     handler : function ()
+		                							     {
+		                							    	 tab2.form.submit({
+		                							    		 url: 'expresiones/ValidarExpresion.action',			      
+								            					 failure: function(form, action) {
+												    				 Ext.MessageBox.alert('Mensaje de Error', Ext.util.JSON.decode(action.response.responseText).mensajeValidacion);
+																 },
+																 success: function(form, action) {
+												    				 //Ext.MessageBox.alert('Confirm', action.result.info);	
+												    				 //alert("Exito!!");
+												    				 //Ext.getCmp('hidden-valor-defecto-atributos-variables').setValue("-1");					   
+												    				 Ext.MessageBox.alert('Mensaje', Ext.util.JSON.decode(action.response.responseText).mensajeValidacion);
+																 }
+							        						 });
+		                							     }
+		        	        						 }*/
+		        	        					]
 					            	    }]
 					            }]
 					        }]
@@ -1367,7 +1387,7 @@ nueva ventana
             closable:true,
             buttonAlign:'center',
             width:800,//700
-            height:580,
+            height:680,
             //border:false,
             plain:true,
             layout: 'border',
@@ -1389,7 +1409,7 @@ nueva ventana
 								        autoHeigth:true,
 							    	    bodyStyle: 'padding-bottom:15px;background:#eee;',
 										autoScroll: true,
-										html: '<p class="details-info">Al seleccionar uno de los elementos del árbol aquí aparecerá su detalle.<br><br> Al darle doble click al elemento se agregará al campo de descripción </p>'
+										html: '<p class="details-info">Al seleccionar uno de los elementos del &aacute;rbol aqu&iacute; aparecer&aacute; su detalle.<br><br> Al darle doble click al elemento se agregar&aacute; al campo de descripci&aacute;n </p>'
 					    	})]
 	                    
 	                },{
@@ -1433,7 +1453,7 @@ nueva ventana
 	 										descripcion.setValue(valor+n.attributes.funcion);
 	 									}
 						        }
-						    },{    
+						    },{
 						        title: 'Variables Temporales',
 						        xtype: 'treepanel',
 						        width: 200,
@@ -1466,7 +1486,7 @@ nueva ventana
 						    }]
 		
 										
-				},{layout:'form',region:'center',boder:false,frame:true,items:[tab2,formPanelVariablesLocales]}],
+				},{layout:'form',region:'center',border:false,frame:false,items:[tab2,formPanelVariablesLocales]}],
 				buttons:[{
   						text:'Guardar',
   						handler: function(){//alert(Ext.getCmp('hidden-expresion-session-expresion').getValue());
@@ -1528,7 +1548,7 @@ nueva ventana
         });
  }else{
 	 wind = new Ext.Window({
-            title: 'Expresi\u00F3n',
+            title: 'Expresi&oacute;n',
             closable:true,
             buttonAlign:'center',
             width:800,//700
@@ -1553,7 +1573,7 @@ nueva ventana
 								        autoHeigth:true,
 							    	    bodyStyle: 'padding-bottom:15px;background:#eee;',
 										autoScroll: true,
-										html: '<p class="details-info">Al seleccionar uno de los elementos del árbol aquí aparecerá su detalle.<br><br> Al darle doble click al elemento se agregará al campo de descripción </p>'
+										html: '<p class="details-info">Al seleccionar uno de los elementos del &aacute;rbol aqu&iacute; aparecer&aacute; su detalle.<br><br> Al darle doble click al elemento se agregar&aacute; al campo de descripci&oacute;n </p>'
 					    	})]
 	                    
 	                },{
@@ -1574,6 +1594,24 @@ nueva ventana
 						        xtype: 'treepanel',
 			    			    width: 200,
 						        autoScroll: true,
+						        id : 'tezvatreefunciones',
+						        tbar:
+						        [
+						            {
+						            	xtype      : 'textfield'
+						            	,width     : 150
+						            	,id        : 'tezvafiltrofunciones'
+						            }
+						            ,{
+						            	xtype    : 'button'
+						            	,text    : 'x'
+						            	,handler : function(elem,event)
+						            	{
+						            		Ext.getCmp('tezvafiltrofunciones').setValue('');
+						            		$('#tezvafiltrofunciones').keyup();
+						            	}
+						            }
+						        ],
 						        split: true,
 			    			    loader: new Ext.tree.TreeLoader({
 						               dataUrl:'expresiones/FuncionesArbol.action'
@@ -1602,6 +1640,24 @@ nueva ventana
 						        xtype: 'treepanel',
 						        width: 200,
 			    			    autoScroll: true,
+			    			    id : 'tezvatreevariables',
+						        tbar:
+						        [
+						            {
+						            	xtype      : 'textfield'
+						            	,width     : 150
+						            	,id        : 'tezvafiltrovariables'
+						            }
+						            ,{
+						            	xtype    : 'button'
+						            	,text    : 'x'
+						            	,handler : function(elem,event)
+						            	{
+						            		Ext.getCmp('tezvafiltrovariables').setValue('');
+						            		$('#tezvafiltrovariables').keyup();
+						            	}
+						            }
+						        ],
 						        split: true,
 						        loader: new Ext.tree.TreeLoader({
 						               dataUrl:'expresiones/VariablesTemporalesArbol.action'
@@ -1664,7 +1720,7 @@ nueva ventana
 	  						//alert(Ext.getCmp('hidden-expresion-session-expresion').getValue()); 						
 
   							//Si existe la expresion en BD entonces no limpiamos el campo, 
-  							//si no existe la expresión en BD, entonces limpiamos el campo:
+  							//si no existe la expresiï¿½n en BD, entonces limpiamos el campo:
   							var conn = new Ext.data.Connection();
   							params="codigoExpresion=" + codigoExpresion;
 							conn.request ({
@@ -1695,6 +1751,36 @@ nueva ventana
  }
 
         wind.show();
+        
+        $('#tezvafiltrofunciones').on('keyup',function()
+        {
+        	tezvaFiltrarArbol('tezvatreefunciones',this.value);
+        });
+        
+        $('#tezvafiltrovariables').on('keyup',function()
+        {
+        	tezvaFiltrarArbol('tezvatreevariables',this.value);
+        });
+        
+        function tezvaFiltrarArbol(id,valor)
+        {
+        	var arbol = Ext.getCmp(id);
+        	arbol.root.eachChild(function(node)
+        	{
+        		var nodo = node.text.toUpperCase().replace(/ /g,'');
+        		valor    = valor.toUpperCase().replace(/ /g,'');
+        		var lio  = nodo.lastIndexOf(valor);
+        		if(lio>-1)
+        		{
+        			node.getUI().show();
+        		}
+        		else
+        		{
+        			node.getUI().hide();
+        		}
+        		return true;
+        	});
+        }
         
    		function validarClavesObligatoriasExpresion(){
 	    	var boleanoGE=false;
@@ -1760,7 +1846,7 @@ nueva ventana
 		
 		/**
 		 * Convierte los caracteres '+' y '&' en '@PLUS@' y '@AMP@' respectivamente, por conflictos en envio de params.
-		 *  La responsabilidad de invertirlos de nuevo será del action que recibe los params.
+		 *  La responsabilidad de invertirlos de nuevo serï¿½ del action que recibe los params.
 		 */
 		function codificaCaracteresConConflicto(cadena){
 			return cadena.replace(/&/g,'@AMP@').replace(/\+/g,'@PLUS@');
