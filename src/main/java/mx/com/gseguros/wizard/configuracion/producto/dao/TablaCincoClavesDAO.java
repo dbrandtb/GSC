@@ -51,7 +51,7 @@ public class TablaCincoClavesDAO extends AbstractDAO {
 			super(dataSource, "PKG_TABAPOYO.P_OBTIENE_VALORES_CLAVES");
 
 			declareParameter(new SqlParameter("PV_NMTABLA_I",
-					OracleTypes.NUMERIC));
+					OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ValoresClaveMapper()));
 	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
 	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
@@ -193,7 +193,7 @@ protected class DescripAtrCincoClaves extends CustomStoredProcedure {
     	
     	protected DescripAtrCincoClaves(DataSource dataSource) {
     		super(dataSource, "PKG_TABAPOYO.P_OBTIENE_DESC_ATR");
-    		declareParameter(new SqlParameter("PI_NMTABLA",OracleTypes.NUMERIC));
+    		declareParameter(new SqlParameter("PI_NMTABLA",OracleTypes.VARCHAR));
  
     		declareParameter(new SqlOutParameter("PV_REGISTRO_O", OracleTypes.CURSOR, new Desc5ClvMapper()));
     		declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.NUMERIC));
@@ -223,14 +223,14 @@ protected class DescripAtrCincoClaves extends CustomStoredProcedure {
     	
     	protected ValoresAtrCincoClaves(DataSource dataSource) {
     		super(dataSource, "PKG_TABAPOYO.P_OBTIENE_VALORES_ATRIBUTOS");
-    		declareParameter(new SqlParameter("PV_NMTABLA_I",OracleTypes.NUMERIC));
-    		declareParameter(new SqlParameter("PV_OTCLAVE1_I",OracleTypes.NUMERIC));
-    		declareParameter(new SqlParameter("PV_OTCLAVE2_I",OracleTypes.NUMERIC));
-    		declareParameter(new SqlParameter("PV_OTCLAVE3_I",OracleTypes.NUMERIC));
-    		declareParameter(new SqlParameter("PV_OTCLAVE4_I",OracleTypes.NUMERIC));
-    		declareParameter(new SqlParameter("PV_OTCLAVE5_I",OracleTypes.NUMERIC));
-    		declareParameter(new SqlParameter("PV_FEDESDE_I",OracleTypes.NUMERIC));
-    		declareParameter(new SqlParameter("PV_FEHASTA_I",OracleTypes.NUMERIC));
+    		declareParameter(new SqlParameter("PV_NMTABLA_I",OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("PV_OTCLAVE1_I",OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("PV_OTCLAVE2_I",OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("PV_OTCLAVE3_I",OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("PV_OTCLAVE4_I",OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("PV_OTCLAVE5_I",OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("PV_FEDESDE_I",OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("PV_FEHASTA_I",OracleTypes.VARCHAR));
     		
     		declareParameter(new SqlOutParameter("PV_REGISTRO_O", OracleTypes.CURSOR, new Valores5ClvMapper()));
     		declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.NUMERIC));
@@ -284,47 +284,47 @@ protected class DescripAtrCincoClaves extends CustomStoredProcedure {
 		protected InsertaValoresCincoClaves(DataSource dataSource) {
 			super(dataSource, "PKG_TABAPOYO.P_GUARDA_VALORES");
 
-			  declareParameter(new SqlParameter("PI_TIP_TRAN", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_NMTABLA", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_OTCLAVE1", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_OTCLAVE2", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_OTCLAVE3", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_OTCLAVE4", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_OTCLAVE5", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_FEDESDE", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_FEHASTA", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_OTCLAVE1_ANT", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_OTCLAVE2_ANT", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_OTCLAVE3_ANT", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_OTCLAVE4_ANT", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_OTCLAVE5_ANT", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_FEDESDE_ANT", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_FEHASTA_ANT", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_OTVALOR01", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_OTVALOR02", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_OTVALOR03", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_OTVALOR04", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_OTVALOR05", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_OTVALOR06", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_OTVALOR07", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_OTVALOR08", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_OTVALOR09", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_OTVALOR10", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_OTVALOR11", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_OTVALOR12", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_OTVALOR13", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_OTVALOR14", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_OTVALOR15", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_OTVALOR16", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_OTVALOR17", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_OTVALOR18", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_OTVALOR19", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_OTVALOR20", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_OTVALOR21", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_OTVALOR22", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_OTVALOR23", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_OTVALOR24", OracleTypes.NUMERIC));
-			  declareParameter(new SqlParameter("PI_OTVALOR25", OracleTypes.NUMERIC));
+			  declareParameter(new SqlParameter("PI_TIP_TRAN", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_NMTABLA", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_OTCLAVE1", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_OTCLAVE2", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_OTCLAVE3", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_OTCLAVE4", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_OTCLAVE5", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_FEDESDE", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_FEHASTA", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_OTCLAVE1_ANT", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_OTCLAVE2_ANT", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_OTCLAVE3_ANT", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_OTCLAVE4_ANT", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_OTCLAVE5_ANT", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_FEDESDE_ANT", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_FEHASTA_ANT", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_OTVALOR01", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_OTVALOR02", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_OTVALOR03", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_OTVALOR04", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_OTVALOR05", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_OTVALOR06", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_OTVALOR07", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_OTVALOR08", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_OTVALOR09", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_OTVALOR10", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_OTVALOR11", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_OTVALOR12", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_OTVALOR13", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_OTVALOR14", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_OTVALOR15", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_OTVALOR16", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_OTVALOR17", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_OTVALOR18", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_OTVALOR19", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_OTVALOR20", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_OTVALOR21", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_OTVALOR22", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_OTVALOR23", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_OTVALOR24", OracleTypes.VARCHAR));
+			  declareParameter(new SqlParameter("PI_OTVALOR25", OracleTypes.VARCHAR));
 			  
 	        declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
 	        declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));

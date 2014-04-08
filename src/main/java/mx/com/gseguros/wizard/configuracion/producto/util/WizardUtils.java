@@ -75,7 +75,7 @@ public class WizardUtils{
     	
     	String formato = "EEE MMM dd yyyy HH:mm:ss Z";
     	
-    	
+    	if(date.contains("/"))return date;
     	
     	
     	int longFecha1Digito= date.length();

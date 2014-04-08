@@ -34,6 +34,7 @@
         		   {name: 'descripcionTabla', type: 'string',mapping:'dsTabla'},
 		           {name: 'numeroTabla', type: 'string',mapping:'numeroTabla'}    
         		]),
+        		baseParams:{limit:'-1'},
         		remoteSort: true
     		});
     		
@@ -126,17 +127,24 @@
 		//renderTo:document.body,
 		
 	
-		viewConfig: {autoFill: true,forceFit:true},                
+		viewConfig: {autoFill: true,forceFit:true}/*,                
 		bbar: new Ext.PagingToolbar({
 			pageSize:20,
 			store: storeListaDeValores,									            
 			displayInfo: true,
 			displayMsg: 'Mostrando registros {0} - {1} de {2}',
 			emptyMsg: "No hay resultados"
-			})        							        				        							 
+			})*/        							        				        							 
 		}); 	
 
- var tabListaDeValores = new Ext.FormPanel({
+	var FiltroLista = new Ext.form.TextField({
+			fieldLabel: 'Filtrar',
+			id: 'filtroListaValoresId',
+			name: 'hectasd',
+			width:150
+	});
+	
+	var tabListaDeValores = new Ext.FormPanel({
         labelAlign: 'top',
         id: 'tabs-ListaDeValores',
         title:'Lista De Valores',
@@ -148,9 +156,29 @@
                 
                 layout:'form',
                 width:610,
-                items: [gridListaDeValores]
+                items: [FiltroLista,gridListaDeValores]
            
         }]
     });
     tabListaDeValores.render('tablaApoyoListaDeValores');
+    
+    $('#filtroListaValoresId').on('keyup',function(){
+		storeListaDeValores.filterBy(function(record, id){
+			console.log(record);
+			var key = record.get('codigoTabla').replace(/ /g,'');
+			var value = record.get('descripcionTabla').replace(/ /g,'');
+			
+			var filtro = FiltroLista.getValue().replace(/ /g,'');
+    		var posK = key.lastIndexOf(filtro);
+    		var posV = value.lastIndexOf(filtro);
+    		
+    		if(posK > -1 || posV > -1){
+    			return true;
+    		}else{
+    			return false;
+    		}
+		});
+		
+	});
+
 });  

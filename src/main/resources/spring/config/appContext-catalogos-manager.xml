@@ -13,5 +13,9 @@
     <bean id="usuarioManagerImpl" class="mx.com.gseguros.portal.general.service.impl.UsuarioManagerImpl">
         <property name="usuarioDAO" ref="usuarioDAOImpl"/>
     </bean>
+
+    <bean id="menuManagerImpl" class="mx.com.gseguros.portal.general.service.impl.MenuManagerImpl">
+        <property name="menuDAO" ref="menuDAOImpl"/>
+    </bean>
     
 </beans>

@@ -2,9 +2,11 @@
 package mx.com.gseguros.wizard.configuracion.producto.dao;
 
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -357,29 +359,38 @@ public class ListaValoresDAO extends AbstractDAO {
 
     protected class T1y5Mapper  implements RowMapper {
         public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+        	
+        	Map<String,String> map=new LinkedHashMap<String,String>(0);
+    		ResultSetMetaData metaData = rs.getMetaData();
+    		int numCols=metaData.getColumnCount();
+    		for (int i=1;i<=numCols;i++){
+    			String col=metaData.getColumnName(i);
+    			map.put(col,col);			
+    		}
         	ListaDeValoresVO valorVO = new ListaDeValoresVO();
-        	valorVO.setNumeroTabla(rs.getString("NMTABLA"));
-        	valorVO.setNombre(rs.getString("CDTABLA"));
-        	valorVO.setDescripcion(rs.getString("DSTABLA"));
-        	valorVO.setClnatura(rs.getString("CLNATURA"));
-        	valorVO.setDsNatura(rs.getString("DSNATURA"));
-        	valorVO.setOttipoac(rs.getString("OTTIPOAC"));
-        	valorVO.setModificaValores(rs.getString("SWMODIFI"));
-        	valorVO.setEnviarTablaErrores(rs.getString("SWERROR"));
-        	valorVO.setCdCatalogo1(rs.getString("CDTABLJ1"));
-        	valorVO.setCdCatalogo2(rs.getString("CDTABLJ2"));
-        	valorVO.setClaveDependencia(rs.getString("CDTABLJ3"));
-        	valorVO.setDsCatalogo1(rs.getString("DSTABLJ1"));
-        	valorVO.setDsCatalogo2(rs.getString("DSTABLJ2"));
-        	valorVO.setClave(rs.getString("DSCLAVE1"));
-        	valorVO.setFormatoClave(rs.getString("SWFORMA1"));
-        	valorVO.setMinimoClave(rs.getString("NMLMIN1"));
-        	valorVO.setMaximoClave(rs.getString("NMLMAX1"));
-        	valorVO.setCdAtribu(rs.getString("CDATRIBU"));
-        	valorVO.setDescripcionFormato(rs.getString("DSATRIBU"));
-        	valorVO.setFormatoDescripcion(rs.getString("SWFORMAT"));
-        	valorVO.setMinimoDescripcion(rs.getString("NMLMIN"));
-        	valorVO.setMaximoDescripcion(rs.getString("NMLMAX"));
+        	
+        	if(map.containsKey("NMTABLA")) valorVO.setNumeroTabla(rs.getString("NMTABLA"));
+        	if(map.containsKey("CDTABLA")) valorVO.setNombre(rs.getString("CDTABLA"));
+        	if(map.containsKey("DSTABLA")) valorVO.setDescripcion(rs.getString("DSTABLA"));
+        	if(map.containsKey("CLNATURA")) valorVO.setClnatura(rs.getString("CLNATURA"));
+        	if(map.containsKey("DSNATURA")) valorVO.setDsNatura(rs.getString("DSNATURA"));
+        	if(map.containsKey("OTTIPOAC")) valorVO.setOttipoac(rs.getString("OTTIPOAC"));
+        	if(map.containsKey("SWMODIFI")) valorVO.setModificaValores(rs.getString("SWMODIFI"));
+        	if(map.containsKey("SWERROR")) valorVO.setEnviarTablaErrores(rs.getString("SWERROR"));
+        	if(map.containsKey("CDTABLJ1")) valorVO.setCdCatalogo1(rs.getString("CDTABLJ1"));
+        	if(map.containsKey("CDTABLJ2")) valorVO.setCdCatalogo2(rs.getString("CDTABLJ2"));
+        	if(map.containsKey("CDTABLJ3")) valorVO.setClaveDependencia(rs.getString("CDTABLJ3"));
+        	if(map.containsKey("DSTABLJ1")) valorVO.setDsCatalogo1(rs.getString("DSTABLJ1"));
+        	if(map.containsKey("DSTABLJ2")) valorVO.setDsCatalogo2(rs.getString("DSTABLJ2"));
+        	if(map.containsKey("DSCLAVE1")) valorVO.setClave(rs.getString("DSCLAVE1"));
+        	if(map.containsKey("SWFORMA1")) valorVO.setFormatoClave(rs.getString("SWFORMA1"));
+        	if(map.containsKey("NMLMIN1")) valorVO.setMinimoClave(rs.getString("NMLMIN1"));
+        	if(map.containsKey("NMLMAX1")) valorVO.setMaximoClave(rs.getString("NMLMAX1"));
+        	if(map.containsKey("CDATRIBU")) valorVO.setCdAtribu(rs.getString("CDATRIBU"));
+        	if(map.containsKey("DSATRIBU")) valorVO.setDescripcionFormato(rs.getString("DSATRIBU"));
+        	if(map.containsKey("SWFORMAT")) valorVO.setFormatoDescripcion(rs.getString("SWFORMAT"));
+        	if(map.containsKey("NMLMIN")) valorVO.setMinimoDescripcion(rs.getString("NMLMIN"));
+        	if(map.containsKey("NMLMAX")) valorVO.setMaximoDescripcion(rs.getString("NMLMAX"));
         	
             return valorVO;
         }

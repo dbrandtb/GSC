@@ -7,5 +7,7 @@
     <bean id="clausuladoDAOImpl" class="mx.com.gseguros.portal.catalogos.dao.impl.ClausuladoDAOImpl" parent="abstractManagerDAO"/>
     
     <bean id="usuarioDAOImpl" class="mx.com.gseguros.portal.general.dao.impl.UsuarioDAOImpl" parent="abstractManagerDAO"/>
+
+    <bean id="menuDAOImpl" class="mx.com.gseguros.portal.general.dao.impl.MenuDAOImpl" parent="abstractManagerDAO"/>
     
 </beans>

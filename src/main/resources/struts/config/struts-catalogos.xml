@@ -76,6 +76,7 @@
         <action name="gestionUsuarios" class="usuarioAction" method="cargaPantallaUsuarios">
             <result>/jsp-script/catalogos/usuarios.jsp</result>
         </action>
+        
         <action name="busquedaUsuarios" class="usuarioAction" method="obtieneUsuarios">
    			<result type="json">
             </result>
@@ -100,6 +101,50 @@
 		</action>
         
         <action name="guardaUsuario" class="usuarioAction" method="guardaUsuario">
+            <result type="json">
+            </result>
+        </action>
+        
+        <action name="adminMenus" class="menuAction">
+            <result name="input">/jsp-script/catalogos/configuracionMenus.jsp</result>
+        </action>
+        
+        <action name="obtieneOpcionesLiga" class="menusAction" method="obtieneOpcionesLiga">
+            <result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					loadList.*,
+					success
+				</param>
+			</result>
+        </action>
+
+        <action name="obtieneMenusPorRol" class="menusAction" method="obtieneMenusPorRol">
+            <result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					loadList.*,
+					success
+				</param>
+			</result>
+        </action>
+        
+        <action name="guardaOpcionLiga" class="menusAction" method="guardaOpcionLiga">
+            <result type="json">
+            </result>
+        </action>
+
+        <action name="guardaMenu" class="menusAction" method="guardaMenu">
+            <result type="json">
+            </result>
+        </action>
+
+        <action name="eliminaOpcionLiga" class="menusAction" method="eliminaOpcionLiga">
+            <result type="json">
+            </result>
+        </action>
+        
+        <action name="eliminaMenu" class="menusAction" method="eliminaMenu">
             <result type="json">
             </result>
         </action>

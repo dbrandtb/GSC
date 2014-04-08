@@ -88,7 +88,15 @@ Grid editable de claves
     // the data store (created below)
     
     function formatDate(value){
-        return value ? value.dateFormat('d-M-Y') : '';
+    	if(value){
+    		try{
+    			return value.format('d/m/Y');
+    		}catch(e){
+    			return value;
+    		}
+    	}else{
+    		return '';
+    	}
     };
     
     cmClaves = new Ext.grid.ColumnModel([{
@@ -324,9 +332,9 @@ Grid editable de claves
 	                descripcionClave3: '',
     	            descripcionClave4: '',
         	        descripcionClave5: '',
-        	        fechaDesde: (new Date()).clearTime(),
-        	        fechaHasta: (new Date()).clearTime()
-            	   	});      
+        	        fechaDesde: (new Date()).format('d/m/Y'),
+        	        fechaHasta: (new Date()).format('d/m/Y')
+            	   	});   
             	   	
 		gridEditableClaves.stopEditing();            		    		
 		storeClaves.add(p);
@@ -362,8 +370,8 @@ Grid editable de claves
 	                descripcionClave3: '',
     	            descripcionClave4: '',
         	        descripcionClave5: '',
-        	        fechaDesde: (new Date()).clearTime(),
-        	        fechaHasta: (new Date()).clearTime()
+        	        fechaDesde: (new Date()).format('d/m/Y'),
+        	        fechaHasta: (new Date()).format('d/m/Y')
             	   	});      
             	   	
 		gridEditableClaves.stopEditing();            		    		
@@ -872,8 +880,8 @@ Forma del panel Editable
 								"&&listaValores5ClavesParams[" + i + "].descripcionCincoClaves.descripcionClave3=" + recs[i].get('descripcionClave3')+ 
 								"&&listaValores5ClavesParams[" + i + "].descripcionCincoClaves.descripcionClave4=" + recs[i].get('descripcionClave4')+
 								"&&listaValores5ClavesParams[" + i + "].descripcionCincoClaves.descripcionClave5=" + recs[i].get('descripcionClave5')+ 
-								"&&listaValores5ClavesParams[" + i + "].fechaDesde=" + recs[i].get('fechaDesde')+											 
-								"&&listaValores5ClavesParams[" + i + "].fechaHasta=" + recs[i].get('fechaHasta')+"&&";
+								"&&listaValores5ClavesParams[" + i + "].fechaDesde=" + formatDate(recs[i].get('fechaDesde'))+											 
+								"&&listaValores5ClavesParams[" + i + "].fechaHasta=" + formatDate(recs[i].get('fechaHasta'))+"&&";
 							
 					if( identificadorClaves == _nuevoRegistro || identificadorClaves == _soloAtributosModificados ){
 						if(identificadorClaves == _nuevoRegistro) tipoTransito = _insertarRegistro; ;
@@ -882,8 +890,8 @@ Forma del panel Editable
 										"&&listaValores5ClavesParams[" + i + "].descripcionCincoClavesAnterior.descripcionClave3=" + recs[i].get('descripcionClave3')+ 
 										"&&listaValores5ClavesParams[" + i + "].descripcionCincoClavesAnterior.descripcionClave4=" + recs[i].get('descripcionClave4')+
 										"&&listaValores5ClavesParams[" + i + "].descripcionCincoClavesAnterior.descripcionClave5=" + recs[i].get('descripcionClave5')+ 
-										"&&listaValores5ClavesParams[" + i + "].fechaDesdeAnterior=" + recs[i].get('fechaDesde')+											 
-										"&&listaValores5ClavesParams[" + i + "].fechaHastaAnterior=" + recs[i].get('fechaHasta')+"&&";
+										"&&listaValores5ClavesParams[" + i + "].fechaDesdeAnterior=" + formatDate(recs[i].get('fechaDesde'))+											 
+										"&&listaValores5ClavesParams[" + i + "].fechaHastaAnterior=" + formatDate(recs[i].get('fechaHasta'))+"&&";
 					}else {
 
 						recs[i].reject(true);
@@ -893,8 +901,8 @@ Forma del panel Editable
 										"&&listaValores5ClavesParams[" + i + "].descripcionCincoClavesAnterior.descripcionClave3=" + recs[i].get('descripcionClave3')+ 
 										"&&listaValores5ClavesParams[" + i + "].descripcionCincoClavesAnterior.descripcionClave4=" + recs[i].get('descripcionClave4')+
 										"&&listaValores5ClavesParams[" + i + "].descripcionCincoClavesAnterior.descripcionClave5=" + recs[i].get('descripcionClave5')+ 
-										"&&listaValores5ClavesParams[" + i + "].fechaDesdeAnterior=" + recs[i].get('fechaDesde')+											 
-										"&&listaValores5ClavesParams[" + i + "].fechaHastaAnterior=" + recs[i].get('fechaHasta')+"&&";
+										"&&listaValores5ClavesParams[" + i + "].fechaDesdeAnterior=" + formatDate(recs[i].get('fechaDesde'))+											 
+										"&&listaValores5ClavesParams[" + i + "].fechaHastaAnterior=" + formatDate(recs[i].get('fechaHasta'))+"&&";
 					}
 								
 								
