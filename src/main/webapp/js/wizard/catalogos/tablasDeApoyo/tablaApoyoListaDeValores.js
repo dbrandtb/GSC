@@ -140,7 +140,6 @@
 	var FiltroLista = new Ext.form.TextField({
 			fieldLabel: 'Filtrar',
 			id: 'filtroListaValoresId',
-			name: 'hectasd',
 			width:150
 	});
 	
@@ -152,23 +151,17 @@
         width: 650,
         autoScroll:true,
         heigth:400,
-        items: [{
-                
-                layout:'form',
-                width:610,
-                items: [FiltroLista,gridListaDeValores]
-           
-        }]
+        items: [FiltroLista,gridListaDeValores]
     });
     tabListaDeValores.render('tablaApoyoListaDeValores');
     
     $('#filtroListaValoresId').on('keyup',function(){
 		storeListaDeValores.filterBy(function(record, id){
-			console.log(record);
-			var key = record.get('codigoTabla').replace(/ /g,'');
-			var value = record.get('descripcionTabla').replace(/ /g,'');
 			
-			var filtro = FiltroLista.getValue().replace(/ /g,'');
+			var key = record.get('codigoTabla').toUpperCase().replace(/ /g,'');
+			var value = record.get('descripcionTabla').toUpperCase().replace(/ /g,'');
+			
+			var filtro = FiltroLista.getValue().toUpperCase().replace(/ /g,'');
     		var posK = key.lastIndexOf(filtro);
     		var posV = value.lastIndexOf(filtro);
     		

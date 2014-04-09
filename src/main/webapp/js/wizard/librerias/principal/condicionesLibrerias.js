@@ -37,6 +37,7 @@ Ext.onReady(function(){
 	        		            
 				]),
 			//autoLoad:true,
+			baseParams:{limit:'-1'},
 			remoteSort: true
     	});
     	storeCondiciones.setDefaultSort('descripcionCabecera', 'desc');
@@ -146,19 +147,26 @@ Ext.onReady(function(){
 		//renderTo:document.body,
 		
 	
-		viewConfig: {autoFill: true,forceFit:true},                
+		viewConfig: {autoFill: true,forceFit:true}/*,                
 		bbar: new Ext.PagingToolbar({
 			pageSize:20,
 			store: storeCondiciones,									            
 			displayInfo: true,
 			displayMsg: 'Mostrando registros {0} - {1} de {2}',
 			emptyMsg: "No hay resultados"
-			})        							        				        							 
+			})*/        							        				        							 
 		}); 	
 	}
 	
 	createGridCondiciones();
 	//storeCondiciones.load();
+	
+	var FiltroLista = new Ext.form.TextField({
+		fieldLabel: 'Filtrar',
+		id: 'filtroListaCondicionesId',
+		width:150
+	});
+	
  //********************************************************     
     var tab2 = new Ext.FormPanel({
         labelAlign: 'top',
@@ -168,29 +176,26 @@ Ext.onReady(function(){
         width: 670,
         autoScroll:true,
         heigth:400,
-        items: [{
-            layout:'column',
-            border:false,
-            items:[{
-                columnWidth:.5,
-                layout: 'form',
-                border:false,
-                items: [{
-                    xtype:'textfield',
-                    fieldLabel: '<s:text name="librerias.cabecera.texto"/>',
-                    labelSeparator:'',
-                    hidden:true,
-                    name: 'first',
-                    anchor:'95%'
-                }]
-            }]
-        },{
-                //title:'Condiciones',
-                layout:'form',
-                width:610,
-                items: [grid3]
-		}]
+        items: [FiltroLista,grid3]
     });
 
     tab2.render('libreriasCondiciones');
+    
+    $('#filtroListaCondicionesId').on('keyup',function(){
+		storeCondiciones.filterBy(function(record, id){
+			
+			var key = record.get('nombreCabecera').toUpperCase().replace(/ /g,'');
+			var value = record.get('descripcionCabecera').toUpperCase().replace(/ /g,'');
+			
+			var filtro = FiltroLista.getValue().toUpperCase().replace(/ /g,'');
+    		var posK = key.lastIndexOf(filtro);
+    		var posV = value.lastIndexOf(filtro);
+    		
+    		if(posK > -1 || posV > -1){
+    			return true;
+    		}else{
+    			return false;
+    		}
+		});
+	});
 });

@@ -37,6 +37,7 @@ Ext.onReady(function(){
 	        		            
 				]),
 			//autoLoad:true,
+			baseParams:{limit:'-1'},
 			remoteSort: true
     	});
     	storeTarificacion.setDefaultSort('descripcionCabecera', 'desc');
@@ -53,8 +54,8 @@ Ext.onReady(function(){
 		var cmTarificacion = new Ext.grid.ColumnModel([
 		    new Ext.grid.RowNumberer(),
 			{header: "Nombre", 	   dataIndex:'nombreCabecera',	width: 120, sortable:true,id:'nombreCabecera'},		    
-		    {header: "Descripción",   dataIndex:'descripcionCabecera',	width: 120, sortable:true},
-		    {header: "Tipo",   dataIndex:'descripcionTipo',	width: 120, sortable:true}
+		    {header: "Descripción",   dataIndex:'descripcionCabecera',	width: 250, sortable:true},
+		    {header: "Tipo",   dataIndex:'descripcionTipo',	width: 250, sortable:true}
 		   
 		   	                	
         ]);
@@ -147,19 +148,26 @@ Ext.onReady(function(){
 		//renderTo:document.body,
 		
 	
-		viewConfig: {autoFill: true,forceFit:true},                
+		viewConfig: {autoFill: false,forceFit:false}/*,                
 		bbar: new Ext.PagingToolbar({
 			pageSize:20,
 			store: storeTarificacion,									            
 			displayInfo: true,
 			displayMsg: 'Mostrando registros {0} - {1} de {2}',
 			emptyMsg: "No hay resultados"
-			})        							        				        							 
+			})*/        							        				        							 
 		}); 	
 	}
 	
 	createGridTarificacion();
 	//storeTarificacion.load(); 
+	
+	var FiltroLista = new Ext.form.TextField({
+		fieldLabel: 'Filtrar',
+		id: 'filtroListaConcepTarifId',
+		width:150
+	});
+	
  //********************************************************     
     var tab2 = new Ext.FormPanel({
         labelAlign: 'top',
@@ -169,29 +177,26 @@ Ext.onReady(function(){
         width: 670,
         autoScroll:true,
         heigth:400,
-        items: [{
-            layout:'column',
-            border:false,
-            items:[{
-                columnWidth:.5,
-                layout: 'form',
-                border:false,
-                items: [{
-                    xtype:'textfield',
-                    fieldLabel: '<s:text name="librerias.cabecera.texto"/>',
-                    labelSeparator:'',
-                    hidden:true,
-                    name: 'first',
-                    anchor:'95%'
-                }]
-            }]
-        },{
-                //title:'Conceptos de Tarificación',
-                layout:'form',
-                width:610,
-                items: [grid5]
-		}]
+        items: [FiltroLista,grid5]
     });
 
     tab2.render('libreriasTarificacion');
+    
+    $('#filtroListaConcepTarifId').on('keyup',function(){
+		storeTarificacion.filterBy(function(record, id){
+			
+			var key = record.get('nombreCabecera').toUpperCase().replace(/ /g,'');
+			var value = record.get('descripcionCabecera').toUpperCase().replace(/ /g,'');
+			
+			var filtro = FiltroLista.getValue().toUpperCase().replace(/ /g,'');
+    		var posK = key.lastIndexOf(filtro);
+    		var posV = value.lastIndexOf(filtro);
+    		
+    		if(posK > -1 || posV > -1){
+    			return true;
+    		}else{
+    			return false;
+    		}
+		});
+	});
 });
