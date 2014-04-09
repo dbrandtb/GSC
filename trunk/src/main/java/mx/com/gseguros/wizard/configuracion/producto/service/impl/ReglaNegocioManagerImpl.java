@@ -101,17 +101,18 @@ public class ReglaNegocioManagerImpl implements ReglaNegocioManager {
 			Log.error("Error al ejecutar PL para obtener regla de negocio",e);
 		}
 		
-		if(limit != -1){
-	        if (result.size() < (start + limit)){
-	          limit =  result.size();
-	        } else {
-	          limit = start + limit;
-	        }
-		}
-		
 		if(result!=null){
+			
+			if(limit != -1){
+		        if (result.size() < (start + limit)){
+		          limit =  result.size();
+		        } else {
+		          limit = start + limit;
+		        }
+		        result = result.subList(start, limit);
+			}
 			pagedList = new PagedList();
-			pagedList.setItemsRangeList(result.subList(start, limit));
+			pagedList.setItemsRangeList(result);
 	        pagedList.setTotalItems(result.size());
 		}
 		

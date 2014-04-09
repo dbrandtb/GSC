@@ -39,6 +39,7 @@
 	        	   {name: 'value', type: 'string',mapping:'value'},
 	        	   {name: 'nick', type: 'string',mapping:'nick'}      
     		 	]),
+    		 	baseParams:{limit:'-1'},
 				remoteSort: true
     		});     	
 			return storeTabla5Claves;
@@ -115,16 +116,22 @@
 		//renderTo:document.body,
 		
 	
-		viewConfig: {autoFill: true,forceFit:true},                
+		viewConfig: {autoFill: true,forceFit:true}/*,                
 		bbar: new Ext.PagingToolbar({
 			pageSize:20,
 			store: storeTabla5Claves,									            
 			displayInfo: true,
 			displayMsg: 'Mostrando registros {0} - {1} de {2}',
 			emptyMsg: "No hay resultados"
-			})        							        				        							 
+			})*/        							        				        							 
 		}); 	
-                        // Ext.form.FormPanel
+                        
+	var FiltroLista = new Ext.form.TextField({
+		fieldLabel: 'Filtrar',
+		id: 'filtroListaCincoClavesId',
+		width:150
+	});
+	
      var tabTabla5Claves = new Ext.form.FormPanel({
         labelAlign: 'top',
         id: 'tabs-Tabla5Claves',
@@ -133,14 +140,26 @@
         width: 670,
         autoScroll:true,
         heigth:400,
-        items: [{
-                
-                layout:'form',
-                width:610,
-                items: [gridTabla5Claves]
-           
-        }]
+        items: [FiltroLista,gridTabla5Claves]
     });
     tabTabla5Claves.render('tablaApoyoTabla5Claves');
+    
+    $('#filtroListaCincoClavesId').on('keyup',function(){
+		storeTabla5Claves.filterBy(function(record, id){
+			
+			var key = record.get('key').toUpperCase().replace(/ /g,'');
+			var value = record.get('value').toUpperCase().replace(/ /g,'');
+			
+			var filtro = FiltroLista.getValue().toUpperCase().replace(/ /g,'');
+    		var posK = key.lastIndexOf(filtro);
+    		var posV = value.lastIndexOf(filtro);
+    		
+    		if(posK > -1 || posV > -1){
+    			return true;
+    		}else{
+    			return false;
+    		}
+		});
+    });
  
 });
