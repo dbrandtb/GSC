@@ -337,7 +337,7 @@ var comboCondicion =new Ext.form.ComboBox({
                             			border:false,
                             			items:[
                             				{xtype:'button', 
-                            				text: 'Agregar Concepto',                        				 
+                            				text: 'Agregar Concepto&nbsp;',                        				 
                        						buttonAlign: "right", 
                        						handler: function() {                    	
 				     							var connect = new Ext.data.Connection();
@@ -345,14 +345,51 @@ var comboCondicion =new Ext.form.ComboBox({
 												url:'atributosVariables/ObtenerCodigoExpresion.action',
 												callback: function (options, success, response) {				   
 													var codigoDeExpresion = Ext.util.JSON.decode(response.responseText).codigoExpresion;
-													ExpresionesVentana2(codigoDeExpresion, "EXPRESION", dsConcepto, '2');
+													ExpresionesVentana2(codigoDeExpresion, "EXPRESION_CONCEPTO_TARIFICACION", dsConcepto, '2');
 													}
 					   							});
 				     }
                        						}
                                 		]
                         		}]
-                			},comboComportamiento,{                				
+                			},
+                			{				    	 		
+				    	 		layout:'column',				    	 		
+                    			border:false,
+                    			baseCls: 'x-plain',
+                    			width: '630',
+                    			items: [{
+                            			columnWidth:.75,
+                            			labelAlign: 'rigth',
+                            			layout:'form',
+                            			baseCls: 'x-plain',
+                            			border:false,
+                            			items:[comboComportamiento]
+                        				},{
+                            			columnWidth:.25,
+                            			labelAlign: 'rigth',
+                            			layout:'form',
+                            			baseCls: 'x-plain',
+                            			border:false,
+                            			items:[
+                            				{xtype:'button', 
+                            				text: 'Agregar Variable T.',                        				 
+                       						buttonAlign: "right", 
+                       						handler: function() {                    	
+				     							var connect = new Ext.data.Connection();
+						    					connect.request ({
+												url:'atributosVariables/ObtenerCodigoExpresion.action',
+												callback: function (options, success, response) {				   
+													var codigoDeExpresion = Ext.util.JSON.decode(response.responseText).codigoExpresion;
+													ExpresionesVentana2(codigoDeExpresion, "EXPRESION_VARIABLES_TEMPORALES", null, '5');
+													}
+					   							});
+				     }
+                       						}
+                                		]
+                        		}]
+                			},
+                			{                				
                     			layout:'column',
                     			id:'id-configurar-concepto-cobertura-validacion-combo-comportamiento',
                     			border:false,
@@ -373,7 +410,7 @@ var comboCondicion =new Ext.form.ComboBox({
                             			border:false,
                             			items:[
                                 			{xtype:'button', 
-                       						text: 'Agregar Condicion',
+                       						text: 'Agregar Condici&oacute;n&nbsp;',
                        						buttonAlign: "right", 
                        						handler: function() {
                 									var connect = new Ext.data.Connection();
@@ -381,7 +418,7 @@ var comboCondicion =new Ext.form.ComboBox({
 														url:'atributosVariables/ObtenerCodigoExpresion.action',
 														callback: function (options, success, response) {				   
 															codigoExpresion = Ext.util.JSON.decode(response.responseText).codigoExpresion;
-															ExpresionesVentana2(codigoExpresion, "EXPRESION", dsCondicion, '3');
+															ExpresionesVentana2(codigoExpresion, "EXPRESION_CONDICIONES", dsCondicion, '3');
 														}
 											   		});
                 								}
@@ -458,7 +495,7 @@ var comboCondicion =new Ext.form.ComboBox({
 		storeConceptosCobertura.load();
 	}
 	
-	//Si vamos a Agregar(si el row esta vacio) ó el combo no tiene el valor 'CONDICIONAL', escondemos dicho combo:
+	//Si vamos a Agregar(si el row esta vacio) ï¿½ el combo no tiene el valor 'CONDICIONAL', escondemos dicho combo:
 	if( Ext.isEmpty(row) || Ext.getCmp('hidden-codigo-combo-comportamiento').getValue() != 'C' ){
 		Ext.getCmp('id-configurar-concepto-cobertura-validacion-combo-comportamiento').hide();
 	}

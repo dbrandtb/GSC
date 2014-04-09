@@ -134,7 +134,7 @@ public class ExpresionesManagerImpl extends AbstractManagerJdbcTemplateInvoke im
 				success = false;
 				logger.error("Exception in invoke 'INSERTAR_LISTA_CLAVES'", bae);
 			}
-			logger.debug("MESAJE para: "+clave.getCodigoSecuencia()+" es: "+mensaje.getMsgTitle());
+			//logger.debug("MESAJE para: "+clave.getCodigoSecuencia()+" es: "+mensaje.getMsgTitle());
 			if( mensaje!= null && mensaje.getMsgTitle() != null){
 				if("1".equals(mensaje.getMsgTitle())){
 					success = false;

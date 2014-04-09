@@ -74,8 +74,10 @@ public class ConceptosCoberturaManagerImpl implements ConceptosCoberturaManager 
 		
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("PV_CDRAMO", codigoRamo);
-		params.put("PV_CDTIPSIT", null);
-		params.put("PV_CDGARANT", null);
+		//params.put("PV_CDTIPSIT", null);
+		//params.put("PV_CDGARANT", null);
+		params.put("PV_CDTIPSIT",codigoSituacion);
+		params.put("PV_CDGARANT",codigoCobertura);
 		try {
 			
 			listaConceptosCobertura = wizardDAO.obtieneConceptosPorCobertura(params);

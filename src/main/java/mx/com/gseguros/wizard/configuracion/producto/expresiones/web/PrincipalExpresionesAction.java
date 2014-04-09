@@ -579,83 +579,111 @@ public class PrincipalExpresionesAction extends ExpresionesPadre {
 		exp.setSwitchRecalcular(switchRecalcular);
 		exp.setOttiporg(ottiporg);
 		exp.setOttipexp("P");//PADRE
-		try {
-				log.debug("Valida expresion: " + codigoExpresion);
-				
-				WrapperResultados mensajeExp = mensajeExp =  expresionesManager.validarExpresion(Integer.parseInt(codigoExpresion), descripcion, "P", "0");
-				if(mensajeExp != null)
+		try
+		{
+			log.debug("Valida expresion: " + codigoExpresion);
+			
+			WrapperResultados mensajeExp = mensajeExp =  expresionesManager.validarExpresion(Integer.parseInt(codigoExpresion), descripcion, "P", "0");
+			if(mensajeExp != null)
+			{
+				mensajeDelAction = mensajeExp.getMsgText();
+				if(StringUtils.isNotBlank(mensajeExp.getMsgId()))
 				{
-					mensajeDelAction = mensajeExp.getMsgText();
-					if(StringUtils.isNotBlank(mensajeExp.getMsgId()))
+					if(!mensajeExp.getMsgId().equals("0"))
 					{
-						if(!mensajeExp.getMsgId().equals("0"))
-						{
-							success = false;
-						}
-						else
-						{
-							success = true;
-						}
+						success = false;
 					}
 					else
 					{
-						success = false;
+						success = true;
 					}
 				}
 				else
 				{
 					success = false;
-					mensajeDelAction = "Error al validar. Consulte a su soporte";
 				}
-				
-				session.put(codigoExpresionSession, exp.getCodigoExpresion());
-			
-				if(success){
-					if(session.containsKey("LISTA_CLAVES_COMPLETA"))listaClave = (List<ClaveVO>) session.get("LISTA_CLAVES_COMPLETA");
-					log.debug("Lista completa de LISTA CLAVE: "+ listaClave); 
-					if(listaClave != null && !listaClave.isEmpty()){
-						try {
-								for(ClaveVO cvo: listaClave){
-									if(/*StringUtils.isNotBlank(cvo.getCodigoExpresionKey())&& */StringUtils.isNotBlank(cvo.getCodigoVariable())){
-										WrapperResultados mensaje =  expresionesManager.validarExpresion(Integer.parseInt(/*cvo.getCodigoExpresionKey()*/codigoExpresion), descripcion, "P", cvo.getCodigoVariable());
-										if(mensaje != null){
-											mensajeDelAction = mensaje.getMsgText();
-											if(StringUtils.isNotBlank(mensaje.getMsgId())){
-												 if(!mensaje.getMsgId().equals("0"))success = false;
-												 	else success = true; 
-											}else {
-												success = false;
-												mensajeDelAction = "Error al validar clave. Consulte a su soporte";
-											}
-										}else {
-											success = false;
-											mensajeDelAction = "Error al validar clave. Consulte a su soporte";
-										}
-										
-										if(!success)break;
-									}
-								}
-							
-						} catch (Exception exception) {
-							success = false;
-							mensajeDelAction = exception.getMessage();
-						}
-							
-					}
+			}
+			else
+			{
+				success = false;
+				mensajeDelAction = "Error al validar. Consulte a su soporte";
 			}
 			
-			//success = true;
-		} catch (Exception exception) {
+			session.put(codigoExpresionSession, exp.getCodigoExpresion());
+		
+			if(success)
+			{
+				if(session.containsKey("LISTA_CLAVES_COMPLETA"))
+				{
+					listaClave = (List<ClaveVO>) session.get("LISTA_CLAVES_COMPLETA");
+				}
+				listaClave = null;
+				log.debug("Lista completa de LISTA CLAVE: "+ listaClave); 
+				if(listaClave != null && !listaClave.isEmpty())
+				{
+					try
+					{
+						for(ClaveVO cvo: listaClave)
+						{
+							if(/*StringUtils.isNotBlank(cvo.getCodigoExpresionKey())&& */
+									StringUtils.isNotBlank(cvo.getCodigoVariable()))
+							{
+								WrapperResultados mensaje = expresionesManager.validarExpresion(
+										Integer.parseInt(/*cvo.getCodigoExpresionKey()*/codigoExpresion),
+										descripcion,
+										"P",
+										cvo.getCodigoVariable());
+								if(mensaje != null)
+								{
+									mensajeDelAction = mensaje.getMsgText();
+									if(StringUtils.isNotBlank(mensaje.getMsgId()))
+									{
+										if(!mensaje.getMsgId().equals("0"))
+										{
+											success = false;
+										}
+										else
+										{
+											success = true;
+										}
+									}
+									else
+									{
+										success = false;
+										mensajeDelAction = "Error al validar clave. Consulte a su soporte";
+									}
+								}
+								else
+								{
+									success = false;
+									mensajeDelAction = "Error al validar clave. Consulte a su soporte";
+								}
+								if(!success)break;
+							}
+						}
+					}
+					catch (Exception exception)
+					{
+						success = false;
+						mensajeDelAction = exception.getMessage();
+					}	
+				}
+			}
+		}
+		catch (Exception exception)
+		{
 			success = false;
 			mensajeDelAction = exception.getMessage();
 			log.debug("before validate");
 			List<String> banderaVariablesTemporales = validaVariablesTemporales();		
 			log.debug("after validate +banderaVariablesTemporales="+banderaVariablesTemporales);
-			if(banderaVariablesTemporales!=null  && !banderaVariablesTemporales.isEmpty()){		
+			if(banderaVariablesTemporales!=null  && !banderaVariablesTemporales.isEmpty())
+			{
 				mensajeDelAction+=" \nLas variables locales que no \n utilicen en la expresion \ndebe borrarlas: ";
-				for(String variableEnDesuso: banderaVariablesTemporales){
+				for(String variableEnDesuso: banderaVariablesTemporales)
+				{
 					mensajeDelAction+="\n"+variableEnDesuso;
-				}			
+				}
 			}
 		}
 		
@@ -663,11 +691,15 @@ public class PrincipalExpresionesAction extends ExpresionesPadre {
 //			success = false;			
 //		if (StringUtils.isBlank(mensajeDelAction) || mensajeDelAction.equals("Registro Creado"))
 //			success = true;
-		if(success){
+		if(success)
+		{
 			int codigoExpresion = 0;
-			try{
+			try
+			{
 				codigoExpresion = insertarExpresion(success, exp);
-			}catch(Exception exception){
+			}
+			catch(Exception exception)
+			{
 				log.error("Error:" + exception.getMessage(), exception);
 			}
 			log.debug("En agregar expresion despues de guardar expresion, codigoExpresion = " + codigoExpresion);
@@ -679,7 +711,9 @@ public class PrincipalExpresionesAction extends ExpresionesPadre {
 				);
 		return SUCCESS;
 	}
-	public List<String> validaVariablesTemporales(){
+	
+	public List<String> validaVariablesTemporales()
+	{
 		log.debug("entry validate temporal variables");
 		List<String> variablesEnDesuso = new ArrayList<String>();
 		if(session.containsKey("CATALOGO_VARIABLES") && !((List<VariableVO>)session.get("CATALOGO_VARIABLES")).isEmpty()){
@@ -702,7 +736,12 @@ public class PrincipalExpresionesAction extends ExpresionesPadre {
 		}
 		return variablesEnDesuso;
 	}
-	public String editarExpresion() throws Exception{
+	public String editarExpresion() throws Exception
+	{
+		log.debug(""
+				+ "\n#############################"
+				+ "\n###### editarExpresion ######"
+				);
 		log.debug("codigoExpresionSession"+codigoExpresionSession);
 		session.remove("");
 		if( codigoExpresion!=null && StringUtils.isNotBlank(codigoExpresion) ){
@@ -724,6 +763,10 @@ public class PrincipalExpresionesAction extends ExpresionesPadre {
 			editarExpresion.add(evo);
 		}
 		success = true;
+		log.debug(""
+				+ "\n###### editarExpresion ######"
+				+ "\n#############################"
+				);
 		return SUCCESS;
 	}
 	public String eliminarVariable() throws Exception{
