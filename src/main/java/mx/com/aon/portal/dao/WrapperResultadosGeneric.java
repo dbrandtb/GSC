@@ -15,16 +15,27 @@ public class WrapperResultadosGeneric implements WrapperResultadosBuilder {
 	
     @SuppressWarnings("rawtypes")
 	public WrapperResultados build(Map map) throws SQLException {
+    	//logger.debug("### map en wrapperresultadosgeneric: "+map+"\n###");
         WrapperResultados wrapperResultados = new WrapperResultados();
-        String msgId = "";
-        String title = "";
-         if (map.get("pv_msg_id_o") != null && map.get("pv_title_o") != null) {
-              msgId = (map.get("pv_msg_id_o")).toString();
-              title = (map.get("pv_title_o")).toString();
-         }
-         wrapperResultados.setMsgId(msgId);
-         wrapperResultados.setMsgTitle(title);
-         return wrapperResultados;
+        String msgId    = "";
+        String msgTitle = "";
+        String msgText  = "";
+        if(map.get("pv_msg_id_o")!=null)
+        {
+        	msgId = map.get("pv_msg_id_o").toString();
+        }
+        if(map.get("pv_title_o")!=null)
+        {
+        	msgTitle = map.get("pv_title_o").toString();
+        }
+        if(map.get("pv_msg_text_o")!=null)
+        {
+        	msgText = map.get("pv_msg_text_o").toString();
+        }
+        wrapperResultados.setMsgId(msgId);
+        wrapperResultados.setMsgTitle(msgTitle);
+        wrapperResultados.setMsgText(msgText);
+        return wrapperResultados;
      }
 
 }

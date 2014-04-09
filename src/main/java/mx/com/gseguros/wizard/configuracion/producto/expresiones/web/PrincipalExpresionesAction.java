@@ -77,19 +77,19 @@ public class PrincipalExpresionesAction extends ExpresionesPadre {
 	private boolean success;
 	
     /**
-     * Atributo agregado como parametro de la petición por struts que indica
-     * el inicio de el número de linea en cual iniciar
+     * Atributo agregado como parametro de la peticiï¿½n por struts que indica
+     * el inicio de el nï¿½mero de linea en cual iniciar
      */
     protected int start;
     
     /**
-     * Atributo agregado como parametro de la petición por struts que indica la cantidad
+     * Atributo agregado como parametro de la peticiï¿½n por struts que indica la cantidad
      * de registros a ser consultados
      */
     protected int limit=20;
     
     /**
-     * Atributo de respuesta interpretado por strust con el número de registros totales
+     * Atributo de respuesta interpretado por strust con el nï¿½mero de registros totales
      * que devuelve la consulta.
      */
     protected int totalCount;
@@ -245,32 +245,58 @@ public class PrincipalExpresionesAction extends ExpresionesPadre {
 	 * 
 	 * @return
 	 */
-	public String validarExpresion() {
+	public String validarExpresion()
+	{
+		log.info(""
+				+ "\n##############################"
+				+ "\n###### validarExpresion ######"
+				);
 		try {
-			log.debug("Valida expresion PADRE HHH" + codigoExpresion);
+			log.info("codigoExpresion: "+codigoExpresion);
+			log.info("descripcion: "+descripcion);
 			WrapperResultados mensaje =  expresionesManager.validarExpresion(Integer.parseInt(codigoExpresion), descripcion, "P", "0");
-			if(mensaje != null){
+			log.debug("respuesta: "+mensaje);
+			if(mensaje != null)
+			{
 				mensajeValidacion = mensaje.getMsgText();
-				if(StringUtils.isNotBlank(mensaje.getMsgId())){
-					 if(!mensaje.getMsgId().equals("0"))success = false;
-					 	else success = true; 
-				}else success = false;
-			}else {
+				if(StringUtils.isNotBlank(mensaje.getMsgId()))
+				{
+					 if(!mensaje.getMsgId().equals("0"))
+					 {
+						 success = false;
+					 }
+					 else
+					 {
+						 success = true;
+					 }
+				}
+				else
+				{
+					success = false;
+				}
+			}
+			else
+			{
 				success = false;
 				mensajeValidacion = "Error al validar. Consulte a su soporte";
 			}
 			 
 			log.debug("Valida expresion en metodo validar 1 " + mensajeValidacion);
 			
-			
 			/*if (StringUtils.isBlank(mensajeValidacion)) {
 				mensajeValidacion = "";//"Sintaxis correcta";
 				success = true;
 			}*/
-		} catch (Exception exception) {
-			success = false;
-			mensajeValidacion = exception.getMessage();
 		}
+		catch (Exception ex)
+		{
+			success = false;
+			mensajeValidacion = ex.getMessage();
+		}
+		log.info(""
+				+ "\n###### validarExpresion ######"
+				+ "\n##############################"
+				);
 		return SUCCESS;
 	}
 
@@ -514,7 +540,10 @@ public class PrincipalExpresionesAction extends ExpresionesPadre {
 	
 	public String agregarExpresion() throws Exception{
 		
-		log.debug("!!!!!!!!!!!!!!!!!!!!!!dentro de agregar expresion");
+		log.info(""
+				+ "\n########################"
+				+ "\n### agregarExpresion ###"
+				);
 		log.debug(descripcion);
 		otExpresion=descripcion;
 		otExpresiones=descripcion;
@@ -534,8 +563,14 @@ public class PrincipalExpresionesAction extends ExpresionesPadre {
 			codigoExpresion="0";
 		}
 		log.debug("session.containsKey('CATALOGO_VARIABLES')="+session.containsKey("CATALOGO_VARIABLES"));
-		log.debug("session.get('CATALOGO_VARIABLES')="+session.get("CATALOGO_VARIABLES"));
-		log.debug("((List)session.get('CATALOGO_VARIABLES')).isEmpty()="+((List)session.get("CATALOGO_VARIABLES")).isEmpty());
+		if(session.containsKey("CATALOGO_VARIABLES"))
+		{
+			log.debug("session.get('CATALOGO_VARIABLES')="+session.get("CATALOGO_VARIABLES"));
+			if(session.get("CATALOGO_VARIABLES")!=null)
+			{
+				log.debug("((List)session.get('CATALOGO_VARIABLES')).isEmpty()="+((List)session.get("CATALOGO_VARIABLES")).isEmpty());				
+			}
+		}
 		log.debug("switchRecalcular="+switchRecalcular);
 		ExpresionVO exp = new ExpresionVO();
 		exp.setCodigoExpresion(Integer.parseInt(codigoExpresion));
@@ -548,13 +583,27 @@ public class PrincipalExpresionesAction extends ExpresionesPadre {
 				log.debug("Valida expresion: " + codigoExpresion);
 				
 				WrapperResultados mensajeExp = mensajeExp =  expresionesManager.validarExpresion(Integer.parseInt(codigoExpresion), descripcion, "P", "0");
-				if(mensajeExp != null){
+				if(mensajeExp != null)
+				{
 					mensajeDelAction = mensajeExp.getMsgText();
-					if(StringUtils.isNotBlank(mensajeExp.getMsgId())){
-						 if(!mensajeExp.getMsgId().equals("0"))success = false;
-						 	else success = true; 
-					}else success = false;
-				}else {
+					if(StringUtils.isNotBlank(mensajeExp.getMsgId()))
+					{
+						if(!mensajeExp.getMsgId().equals("0"))
+						{
+							success = false;
+						}
+						else
+						{
+							success = true;
+						}
+					}
+					else
+					{
+						success = false;
+					}
+				}
+				else
+				{
 					success = false;
 					mensajeDelAction = "Error al validar. Consulte a su soporte";
 				}
@@ -624,6 +673,10 @@ public class PrincipalExpresionesAction extends ExpresionesPadre {
 			log.debug("En agregar expresion despues de guardar expresion, codigoExpresion = " + codigoExpresion);
 		}
 		log.debug("mensajeDelAction = " + mensajeDelAction);
+		log.info(""
+				+ "\n### agregarExpresion ###"
+				+ "\n########################"
+				);
 		return SUCCESS;
 	}
 	public List<String> validaVariablesTemporales(){
