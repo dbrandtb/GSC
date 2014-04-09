@@ -248,19 +248,19 @@ public class AtributosVariablesAction extends ExpresionesPadre {
 	private String mensajeRespuesta;
 	
     /**
-     * Atributo agregado como parametro de la petición por struts que indica
-     * el inicio de el número de linea en cual iniciar
+     * Atributo agregado como parametro de la peticiï¿½n por struts que indica
+     * el inicio de el nï¿½mero de linea en cual iniciar
      */
     protected int start;
     
     /**
-     * Atributo agregado como parametro de la petición por struts que indica la cantidad
+     * Atributo agregado como parametro de la peticiï¿½n por struts que indica la cantidad
      * de registros a ser consultados
      */
     protected int limit=20;
     
     /**
-     * Atributo de respuesta interpretado por strust con el número de registros totales
+     * Atributo de respuesta interpretado por strust con el nï¿½mero de registros totales
      * que devuelve la consulta.
      */
     protected int totalCount;
@@ -268,7 +268,7 @@ public class AtributosVariablesAction extends ExpresionesPadre {
 
 	/**
 	 * Metodo <code>execute</code> con el que es llamado desde Struts para
-	 * atender la petición web.
+	 * atender la peticiï¿½n web.
 	 * 
 	 * @return INPUT
 	 * @throws Exception
@@ -716,15 +716,21 @@ public class AtributosVariablesAction extends ExpresionesPadre {
 		return SUCCESS;
 	}
 
-	public String obtenerCodigoExpresion() throws Exception {
-
-		log
-				.debug("Entro a obtener codigo expresion!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+	public String obtenerCodigoExpresion() throws Exception
+	{
+		log.debug(""
+				+ "\n####################################"
+				+ "\n###### obtenerCodigoExpresion ######"
+				);
 		codigoExpresion = Integer.toString(expresionesManager
 				.obtieneSecuenciaExpresion());
 		log.debug("OBTIENE CODIGO EXPRESION: " + codigoExpresion);
 
 		success = true;
+		log.debug(""
+				+ "\n###### obtenerCodigoExpresion ######"
+				+ "\n####################################"
+				);
 		return SUCCESS;
 	}
 

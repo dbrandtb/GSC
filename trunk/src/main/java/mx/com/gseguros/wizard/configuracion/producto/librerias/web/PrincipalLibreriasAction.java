@@ -186,7 +186,7 @@ public class PrincipalLibreriasAction extends ExpresionesPadre {
 	
 	/**
 	 * Metodo <code>execute</code> con el que es llamado desde Struts para
-	 * atender la petición web.
+	 * atender la peticiï¿½n web.
 	 * 
 	 * @return INPUT
 	 * @throws Exception
@@ -541,21 +541,20 @@ public class PrincipalLibreriasAction extends ExpresionesPadre {
 	
 	@SuppressWarnings("static-access")
 	public String insertaReglaNegocio() throws Exception{
+		log.debug(""
+				+ "\n#################################"
+				+ "\n###### insertaReglaNegocio ######"
+				);
 		//libreria no se utiliza...se puede eliminar
-		boolean isDebugEnabled = log.isDebugEnabled();
-		if(isDebugEnabled){
-			log.debug("Entro a insertar grid de librerias");
-			log.debug("GRID--"+numeroGrid);
-			log.debug("session.get('EXPRESION') = "+session.get("EXPRESION"));
-		}
+		log.debug("Entro a insertar grid de librerias");
+		log.debug("GRID--"+numeroGrid);
+		log.debug("session.get('EXPRESION') = "+session.get("EXPRESION"));
         
         //////////////////////////////////////////////////////////////////////Validacion
         if(session.containsKey("CATALOGO_VARIABLES_TEMPORALES_PRODUCTO"))
             listaReglaNegocioVariables = (List<ReglaNegocioVO>) session.get("CATALOGO_VARIABLES_TEMPORALES_PRODUCTO");
         
-        if(isDebugEnabled){
-            log.debug(":::: listaReglaNegocioVariables :::: " + listaReglaNegocioVariables);
-        }
+        log.debug(":::: listaReglaNegocioVariables :::: " + listaReglaNegocioVariables);
         
         if (listaReglaNegocioVariables == null) {
             listaReglaNegocioVariables = reglaNegocioManager.obtenerReglasNegocio(reglaNegocio.VariableTemporal);
@@ -563,27 +562,20 @@ public class PrincipalLibreriasAction extends ExpresionesPadre {
         
         agregarVariableTemp = "true";
         if (listaReglaNegocioVariables != null) {
-            for (ReglaNegocioVO regla : listaReglaNegocioVariables) {
-                if(isDebugEnabled){
-                    log.debug(":::: regla :::: " + regla.getNombre());
-                    log.debug(":::: nombreCabecera ::: " + nombreCabecera);
-                }    
+            for (ReglaNegocioVO regla : listaReglaNegocioVariables)
+            {    
                 if (nombreCabecera != null && nombreCabecera.equalsIgnoreCase(regla.getNombre())) {
                     mensajeDelAction = "El nombre de la regla ya existe";
                     mensajeValidacion = "El nombre de la regla ya existe";
-                    if(isDebugEnabled){
-                        log.debug(":::: Ya existe regla!!!!!!!!!!!!!!!!!!!!!!!!!! :::: ");                        
-                    }
+                    log.debug(":::: Ya existe regla!!!!!!!!!!!!!!!!!!!!!!!!!! :::: ");
                     agregarVariableTemp = "false";
                     break;
                 }
             }    
         }
-        if(isDebugEnabled){
-            log.debug(":::: agregarVariableTemp :::: " + agregarVariableTemp);
-            log.debug(":::: mensajeDelAction :: " + mensajeDelAction);
-            log.debug(":::: mensajeValidacion :: " + mensajeValidacion);
-        }
+        log.debug(":::: agregarVariableTemp :::: " + agregarVariableTemp);
+        log.debug(":::: mensajeDelAction :: " + mensajeDelAction);
+        log.debug(":::: mensajeValidacion :: " + mensajeValidacion);
         ////////////////////////////////////////////////////////////////////////////////
                 
 		success=true;
@@ -600,12 +592,10 @@ public class PrincipalLibreriasAction extends ExpresionesPadre {
 						negocio.setCodigoExpresion(Integer.toString(codigoExpresion));
 						negocio.setNombre(nombreCabecera);
 						negocio.setDescripcion(descripcionCabecera);
-						if(isDebugEnabled){
-                            log.debug("CODIGO---"+negocio.getCodigo());
-							log.debug("NOMBRE---"+negocio.getNombre());
-							log.debug("DESCRIPCION---"+negocio.getDescripcion());
-							log.debug("CD EXPRESION---"+negocio.getCodigoExpresion());
-						}
+                        log.debug("CODIGO---"+negocio.getCodigo());
+						log.debug("NOMBRE---"+negocio.getNombre());
+						log.debug("DESCRIPCION---"+negocio.getDescripcion());
+						log.debug("CD EXPRESION---"+negocio.getCodigoExpresion());
 						reglaNegocioManager.insertarReglaNegocio(negocio);
 						
 					}
@@ -622,15 +612,13 @@ public class PrincipalLibreriasAction extends ExpresionesPadre {
 						negocio.setDescripcion(descripcionCabecera);
 						negocio.setTipo(tipo);
 						negocio.setMensaje(mensaje);
-						if(isDebugEnabled){
-                            log.debug("CODIGO---"+negocio.getCodigo());
-							log.debug("NOMBRE VALIDACION---"+negocio.getNombre());
-							log.debug("DESCRIPCION VALIDACION---"+negocio.getDescripcion());
-							log.debug("CD EXPRESION VALIDACION---"+negocio.getCodigoExpresion());
-							log.debug("TIPO VALICION---"+negocio.getTipo());
-							log.debug("TIPO DESCRIPCION---"+tipoDescripcion);
-							log.debug("MENSAJE VALICION---"+negocio.getMensaje());
-						}
+                        log.debug("CODIGO---"+negocio.getCodigo());
+						log.debug("NOMBRE VALIDACION---"+negocio.getNombre());
+						log.debug("DESCRIPCION VALIDACION---"+negocio.getDescripcion());
+						log.debug("CD EXPRESION VALIDACION---"+negocio.getCodigoExpresion());
+						log.debug("TIPO VALICION---"+negocio.getTipo());
+						log.debug("TIPO DESCRIPCION---"+tipoDescripcion);
+						log.debug("MENSAJE VALICION---"+negocio.getMensaje());
 						reglaNegocioManager.insertarReglaNegocio(negocio);
 						
 					}
@@ -646,12 +634,10 @@ public class PrincipalLibreriasAction extends ExpresionesPadre {
 						negocio.setCodigoExpresion(Integer.toString(codigoExpresion));
 						negocio.setNombre(nombreCabecera);
 						negocio.setDescripcion(descripcionCabecera);
-						if(isDebugEnabled){
-                            log.debug("CODIGO---"+negocio.getCodigo());
-							log.debug("NOMBRE---"+negocio.getNombre());
-							log.debug("DESCRIPCION---"+negocio.getDescripcion());
-							log.debug("CD EXPRESION---"+negocio.getCodigoExpresion());
-						}
+                        log.debug("CODIGO---"+negocio.getCodigo());
+						log.debug("NOMBRE---"+negocio.getNombre());
+						log.debug("DESCRIPCION---"+negocio.getDescripcion());
+						log.debug("CD EXPRESION---"+negocio.getCodigoExpresion());
 						reglaNegocioManager.insertarReglaNegocio(negocio);						
 					}
 				}
@@ -666,13 +652,11 @@ public class PrincipalLibreriasAction extends ExpresionesPadre {
 						negocio.setNombre(nombreCabecera);
 						negocio.setDescripcion(descripcionCabecera);
 						negocio.setNivel(nivel);
-						if(isDebugEnabled){
-                            log.debug("CODIGO---"+negocio.getCodigo());
-							log.debug("NOMBRE---"+negocio.getNombre());
-							log.debug("DESCRIPCION---"+negocio.getDescripcion());
-							log.debug("NIVEL---"+negocio.getNivel());
-							log.debug("CD EXPRESION---"+negocio.getCodigoExpresion());
-						}
+                        log.debug("CODIGO---"+negocio.getCodigo());
+						log.debug("NOMBRE---"+negocio.getNombre());
+						log.debug("DESCRIPCION---"+negocio.getDescripcion());
+						log.debug("NIVEL---"+negocio.getNivel());
+						log.debug("CD EXPRESION---"+negocio.getCodigoExpresion());
 						reglaNegocioManager.insertarReglaNegocio(negocio);						
 					}
 				}
@@ -688,14 +672,12 @@ public class PrincipalLibreriasAction extends ExpresionesPadre {
 						negocio.setNombre(nombreCabecera);
 						negocio.setDescripcion(descripcionCabecera);
 						negocio.setTipo(tipo);
-						if(isDebugEnabled){
-                            log.debug("CODIGO---"+negocio.getCodigo());
-							log.debug("NOMBRE---"+negocio.getNombre());
-							log.debug("DESCRIPCION---"+negocio.getDescripcion());
-							log.debug("TIPO TARIFICACION---"+negocio.getTipo());
-							log.debug("TIPO DESCRIPCION---"+tipoDescripcion);
-							log.debug("CD EXPRESION---"+negocio.getCodigoExpresion());
-						}
+                        log.debug("CODIGO---"+negocio.getCodigo());
+						log.debug("NOMBRE---"+negocio.getNombre());
+						log.debug("DESCRIPCION---"+negocio.getDescripcion());
+						log.debug("TIPO TARIFICACION---"+negocio.getTipo());
+						log.debug("TIPO DESCRIPCION---"+tipoDescripcion);
+						log.debug("CD EXPRESION---"+negocio.getCodigoExpresion());
 						reglaNegocioManager.insertarReglaNegocio(negocio);						
 					}
 				}
@@ -708,24 +690,27 @@ public class PrincipalLibreriasAction extends ExpresionesPadre {
 		}
 		
 		success = true;
+		log.debug(""
+				+ "\n###### insertaReglaNegocio ######"
+				+ "\n#################################"
+				);
 		return SUCCESS;
 	}
 	
 	
 	@SuppressWarnings("static-access")
 	public String insertaReglaNegocioExp() throws Exception{
+		log.debug(""
+				+ "\n####################################"
+				+ "\n###### insertaReglaNegocioExp ######"
+				);
 		//libreria no se utiliza...se puede eliminar
-		boolean isDebugEnabled = log.isDebugEnabled();
-		if(isDebugEnabled){
-			log.debug("Entro a insertar grid de librerias");
-			log.debug("GRID--"+numeroGrid);
-			log.debug("session.get('EXPRESION') = "+session.get("EXPRESION"));
-		}
-        
-        if(isDebugEnabled){
-            log.debug(":::: mensajeDelAction :: " + mensajeDelAction);
-            log.debug(":::: mensajeValidacion :: " + mensajeValidacion);
-        }
+		log.debug("Entro a insertar grid de librerias");
+		log.debug("GRID--"+numeroGrid);
+		log.debug("session.get('EXPRESION') = "+session.get("EXPRESION"));
+
+        log.debug(":::: mensajeDelAction :: " + mensajeDelAction);
+        log.debug(":::: mensajeValidacion :: " + mensajeValidacion);
         ////////////////////////////////////////////////////////////////////////////////
                 
 		success=true;
@@ -742,12 +727,10 @@ public class PrincipalLibreriasAction extends ExpresionesPadre {
 						negocio.setCodigoExpresion(Integer.toString(codigoExpresion));
 						negocio.setNombre(nombreCabecera);
 						negocio.setDescripcion(descripcionCabecera);
-						if(isDebugEnabled){
-                            log.debug("CODIGO---"+negocio.getCodigo());
-							log.debug("NOMBRE---"+negocio.getNombre());
-							log.debug("DESCRIPCION---"+negocio.getDescripcion());
-							log.debug("CD EXPRESION---"+negocio.getCodigoExpresion());
-						}
+                        log.debug("CODIGO---"+negocio.getCodigo());
+						log.debug("NOMBRE---"+negocio.getNombre());
+						log.debug("DESCRIPCION---"+negocio.getDescripcion());
+						log.debug("CD EXPRESION---"+negocio.getCodigoExpresion());
 						reglaNegocioManager.insertarReglaNegocio(negocio);
 						
 					}
@@ -764,15 +747,13 @@ public class PrincipalLibreriasAction extends ExpresionesPadre {
 						negocio.setDescripcion(descripcionCabecera);
 						negocio.setTipo(tipo);
 						negocio.setMensaje(mensaje);
-						if(isDebugEnabled){
-                            log.debug("CODIGO---"+negocio.getCodigo());
-							log.debug("NOMBRE VALIDACION---"+negocio.getNombre());
-							log.debug("DESCRIPCION VALIDACION---"+negocio.getDescripcion());
-							log.debug("CD EXPRESION VALIDACION---"+negocio.getCodigoExpresion());
-							log.debug("TIPO VALICION---"+negocio.getTipo());
-							log.debug("TIPO DESCRIPCION---"+tipoDescripcion);
-							log.debug("MENSAJE VALICION---"+negocio.getMensaje());
-						}
+                        log.debug("CODIGO---"+negocio.getCodigo());
+						log.debug("NOMBRE VALIDACION---"+negocio.getNombre());
+						log.debug("DESCRIPCION VALIDACION---"+negocio.getDescripcion());
+						log.debug("CD EXPRESION VALIDACION---"+negocio.getCodigoExpresion());
+						log.debug("TIPO VALICION---"+negocio.getTipo());
+						log.debug("TIPO DESCRIPCION---"+tipoDescripcion);
+						log.debug("MENSAJE VALICION---"+negocio.getMensaje());
 						reglaNegocioManager.insertarReglaNegocio(negocio);
 						
 					}
@@ -788,12 +769,10 @@ public class PrincipalLibreriasAction extends ExpresionesPadre {
 						negocio.setCodigoExpresion(Integer.toString(codigoExpresion));
 						negocio.setNombre(nombreCabecera);
 						negocio.setDescripcion(descripcionCabecera);
-						if(isDebugEnabled){
-                            log.debug("CODIGO---"+negocio.getCodigo());
-							log.debug("NOMBRE---"+negocio.getNombre());
-							log.debug("DESCRIPCION---"+negocio.getDescripcion());
-							log.debug("CD EXPRESION---"+negocio.getCodigoExpresion());
-						}
+                        log.debug("CODIGO---"+negocio.getCodigo());
+						log.debug("NOMBRE---"+negocio.getNombre());
+						log.debug("DESCRIPCION---"+negocio.getDescripcion());
+						log.debug("CD EXPRESION---"+negocio.getCodigoExpresion());
 						reglaNegocioManager.insertarReglaNegocio(negocio);						
 					}
 				}
@@ -808,13 +787,11 @@ public class PrincipalLibreriasAction extends ExpresionesPadre {
 						negocio.setNombre(nombreCabecera);
 						negocio.setDescripcion(descripcionCabecera);
 						negocio.setNivel(nivel);
-						if(isDebugEnabled){
-                            log.debug("CODIGO---"+negocio.getCodigo());
-							log.debug("NOMBRE---"+negocio.getNombre());
-							log.debug("DESCRIPCION---"+negocio.getDescripcion());
-							log.debug("NIVEL---"+negocio.getNivel());
-							log.debug("CD EXPRESION---"+negocio.getCodigoExpresion());
-						}
+                        log.debug("CODIGO---"+negocio.getCodigo());
+						log.debug("NOMBRE---"+negocio.getNombre());
+						log.debug("DESCRIPCION---"+negocio.getDescripcion());
+						log.debug("NIVEL---"+negocio.getNivel());
+						log.debug("CD EXPRESION---"+negocio.getCodigoExpresion());
 						reglaNegocioManager.insertarReglaNegocio(negocio);						
 					}
 				}
@@ -830,14 +807,12 @@ public class PrincipalLibreriasAction extends ExpresionesPadre {
 						negocio.setNombre(nombreCabecera);
 						negocio.setDescripcion(descripcionCabecera);
 						negocio.setTipo(tipo);
-						if(isDebugEnabled){
-                            log.debug("CODIGO---"+negocio.getCodigo());
-							log.debug("NOMBRE---"+negocio.getNombre());
-							log.debug("DESCRIPCION---"+negocio.getDescripcion());
-							log.debug("TIPO TARIFICACION---"+negocio.getTipo());
-							log.debug("TIPO DESCRIPCION---"+tipoDescripcion);
-							log.debug("CD EXPRESION---"+negocio.getCodigoExpresion());
-						}
+                        log.debug("CODIGO---"+negocio.getCodigo());
+						log.debug("NOMBRE---"+negocio.getNombre());
+						log.debug("DESCRIPCION---"+negocio.getDescripcion());
+						log.debug("TIPO TARIFICACION---"+negocio.getTipo());
+						log.debug("TIPO DESCRIPCION---"+tipoDescripcion);
+						log.debug("CD EXPRESION---"+negocio.getCodigoExpresion());
 						reglaNegocioManager.insertarReglaNegocio(negocio);						
 					}
 				}
@@ -850,6 +825,10 @@ public class PrincipalLibreriasAction extends ExpresionesPadre {
 		}
 		
 		success = true;
+		log.debug(""
+				+ "\n###### insertaReglaNegocioExp ######"
+				+ "\n####################################"
+				);
 		return SUCCESS;
 	}
 	

@@ -1,4 +1,10 @@
-ExpresionesVentana2 = function(codigoExpresion, codigoExpresionSession, store, encabezado, row ){
+ExpresionesVentana2 = function(codigoExpresion, codigoExpresionSession, store, encabezado, row )
+{
+	//console.log('codigoExpresion:'       , codigoExpresion);
+	//console.log('codigoExpresionSession' , codigoExpresionSession);
+	//console.log('store:'                 , store);
+	//console.log('encabezado:'            , encabezado);
+	//console.log('row:'                   , row);
 var cabecera;
 var dsComboV;
 var record4editing;
@@ -45,10 +51,11 @@ function editaExpresion(){
     	storeExpresion.setDefaultSort('descripcion', 'desc');
     	    	
     	storeExpresion.on('load', function(){   
-    						//alert(codigoExpresion);
-    						//alert(Ext.getCmp('hidden-codigo-expresio-expresion').getValue());
-    						if(storeExpresion.getTotalCount()>0){                        
+    						//console.log('codigoExpresion:',codigoExpresion);
+    						//console.log('codigoExpresion hidden value:',Ext.getCmp('hidden-codigo-expresio-expresion').getValue());
+    						if(storeExpresion.getTotalCount()>0){
 		                           var rec = storeExpresion.getAt(0);                  
+		                           //console.log('loadrecord',rec);
         		                   var swRecalcular= rec.get('switchRecalcular');
                 		           Ext.getCmp('forma-expresiones').getForm().loadRecord(rec);
                         		   if(swRecalcular == 'S'){
@@ -364,7 +371,7 @@ if(encabezado){
                     blankText : 'Descripci\u00F3n requerida.',
                     width:150
 		   	});
-   	
+		   	
 		   	var tipoTarificacionds = new Ext.data.Store({
         			proxy: new Ext.data.HttpProxy({
 						url: 'librerias/CargaComboTipo.action'+'?comboTipo='+'tarificacion'
@@ -381,8 +388,9 @@ if(encabezado){
 	       tipoTarificacionds.setDefaultSort('tipoDeTarificacion', 'desc'); 
        
 	       var tipoTarificacion = new Ext.form.ComboBox({
-    			tpl: '<tpl for="."><div ext:qtip="{claveTipo}" class="x-combo-list-item">{valorTipo}</div></tpl>',
+    			//tpl: '<tpl for="."><div ext:qtip="{claveTipo}" class="x-combo-list-item">{valorTipo}</div></tpl>',
     			store: tipoTarificacionds,
+    			valueField:'claveTipo',
     			displayField:'valorTipo',
 	    		allowBlank:false,
     			blankText : 'Tipo de tarificaci\u00F3n requerido.',
@@ -394,7 +402,7 @@ if(encabezado){
     			triggerAction: 'all',
 	    		emptyText:'Seleccione tipo de tarifa.',
     			selectOnFocus:true,
-    			fieldLabel: 'Tipo*',
+    			fieldLabel: 'Tipox*',
     			name:"descripcionTipo",
 	          	focusAndSelect : function(record) {
 	    	     	var index = typeof record === 'number' ? record : this.store.indexOf(record);
@@ -572,8 +580,9 @@ if(encabezado){
 		    tipods.setDefaultSort('tipoDeValidaciones', 'desc'); 
        
 	        var tipoValidaciones = new Ext.form.ComboBox({
-	    		tpl: '<tpl for="."><div ext:qtip="{claveTipo}" class="x-combo-list-item">{valorTipo}</div></tpl>',
+	    		//tpl: '<tpl for="."><div ext:qtip="{claveTipo}" class="x-combo-list-item">{valorTipo}</div></tpl>',
     			store: tipods,
+    			valueField:'claveTipo',
     			displayField:'valorTipo',
     			allowBlank:false,
 	    		blankText : 'Tipo de tarificaci\u00F3n requerido.',
@@ -585,7 +594,7 @@ if(encabezado){
     			triggerAction: 'all',
     			emptyText:'Seleccione validaci\u00F3n.',
 	    		selectOnFocus:true,
-    			fieldLabel: 'Tipo*',
+    			fieldLabel: 'Tipoy*',
     			name:"descripcionTipo",
 		       	focusAndSelect : function(record) {
 		         	var index = typeof record === 'number' ? record : this.store.indexOf(record);
@@ -1447,6 +1456,24 @@ nueva ventana
 						        xtype: 'treepanel',
 			    			    width: 200,
 						        autoScroll: true,
+						        id : 'tezvatreefuncionesHeader',
+						        tbar:
+						        [
+						            {
+						            	xtype      : 'textfield'
+						            	,width     : 150
+						            	,id        : 'tezvafiltrofuncionesHeader'
+						            }
+						            ,{
+						            	xtype    : 'button'
+						            	,text    : 'x'
+						            	,handler : function(elem,event)
+						            	{
+						            		Ext.getCmp('tezvafiltrofuncionesHeader').setValue('');
+						            		$('#tezvafiltrofuncionesHeader').keyup();
+						            	}
+						            }
+						        ],
 						        split: true,
 			    			    loader: new Ext.tree.TreeLoader({
 						               dataUrl:'expresiones/FuncionesArbol.action'
@@ -1475,6 +1502,24 @@ nueva ventana
 						        xtype: 'treepanel',
 						        width: 200,
 			    			    autoScroll: true,
+			    			    id : 'tezvatreevariablesHeader',
+						        tbar:
+						        [
+						            {
+						            	xtype      : 'textfield'
+						            	,width     : 150
+						            	,id        : 'tezvafiltrovariablesHeader'
+						            }
+						            ,{
+						            	xtype    : 'button'
+						            	,text    : 'x'
+						            	,handler : function(elem,event)
+						            	{
+						            		Ext.getCmp('tezvafiltrovariablesHeader').setValue('');
+						            		$('#tezvafiltrovariablesHeader').keyup();
+						            	}
+						            }
+						        ],
 						        split: true,
 						        loader: new Ext.tree.TreeLoader({
 						               dataUrl:'expresiones/VariablesTemporalesArbol.action'
@@ -1504,66 +1549,115 @@ nueva ventana
 		
 										
 				},{layout:'form',region:'center',border:false,frame:false,items:[tab2,formPanelVariablesLocales]}],
-				buttons:[{
+				buttons:
+				[
+				    {
   						text:'Guardar',
-  						handler: function(){//alert(Ext.getCmp('hidden-expresion-session-expresion').getValue());
-  							if(descripcion.getValue().length>0) {
-  								var ottiporg = obtenerOTTIPORG(codigoExpresionSession);
-					 		        tab2.form.submit({			      
-								            waitTitle:'Espere',
-					            			waitMsg:'Procesando...',
-					            			params :{
-					            				ottiporg : ottiporg
-					            			},
-								            failure: function(form, action) {
-												    Ext.MessageBox.alert('Mensaje de Error', Ext.util.JSON.decode(action.response.responseText).mensajeDelAction);
-												    //Ext.MessageBox.alert('Error Message', 'failure');
-											},
-											success: function(form, action) {
-												    //Ext.MessageBox.alert('Confirm', action.result.info);	
-												    //alert("Exito!!");
-												    //Ext.getCmp('hidden-valor-defecto-atributos-variables').setValue("-1");	
-												    cabecera.form.submit({
-												    	waitTitle:'Espere',
-								            			waitMsg:'Procesando...',
-								            			failure: function(form, action) {
-														    Ext.MessageBox.alert('Mensaje de Error', Ext.util.JSON.decode(action.response.responseText).mensajeDelAction);
-														},
-														success: function(form, action) {
-															
-															var mensaje = 'Condici&oacute;n guardada';
-															
-															if(encabezado == '2') mensaje = 'Concepto guardado';
-															else if(encabezado == '5') mensaje = 'Variable guardada';
-															
-															Ext.MessageBox.alert('Aviso', mensaje);
-															store.load();
-														    wind.close();
-														}
-												    });				   
-											}
-							        });                   
-	        		        } else{
-	        		        		descripcion.markInvalid('Descripcion requerida');
+  						handler: function()
+  						{
+  							var valido = true;	
+  							if(valido)
+  							{
+  								var combovalue = formPanelVariablesLocales.getForm().getValues().claveSeleccionada;
+  								if(combovalue=='Seleccione una variable')
+  								{
+  									combovalue='';
+  								}
+  								//console.log('combo value:',combovalue);
+  								var store = comboVariables.store;
+  								//console.log('store:',store);
+  								var existe = combovalue.length==0;
+  								if(!existe)
+  								{
+	  								store.each(function(record)
+	  								{
+	  									//console.log('record iterado:',record);
+	  									if(record.get('nombre').toUpperCase()==combovalue.toUpperCase())
+	  									{
+	  										existe = true;
+	  									}
+	  								});
+  								}
+  								valido = existe;
+  								if(!valido)
+  								{
+  									Ext.MessageBox.alert('Error', 'Falta guardar la variable');
+  								}
+  							}
+  							
+  							if(valido)
+  							{
+  								valido = descripcion.getValue().length>0;
+  								if(!valido)
+  								{
+  									descripcion.markInvalid('Descripcion requerida');
 									Ext.MessageBox.alert('Error', 'Favor de llenar los datos requeridos');
-							}     
+  								}
+  							}
+  							
+  							if(valido)
+  							{
+  								var ottiporg = obtenerOTTIPORG(codigoExpresionSession);
+				 		        tab2.form.submit(
+				 		        {			      
+						            waitTitle:'Espere',
+			            			waitMsg:'Procesando...',
+			            			params :
+			            			{
+			            				ottiporg : ottiporg
+			            			},
+						            failure: function(form, action)
+						            {
+										Ext.MessageBox.alert('Mensaje de Error', Ext.util.JSON.decode(action.response.responseText).mensajeDelAction);
+									},
+									success: function(form, action)
+									{	
+										//console.log(cabecera.form.getValues());
+									    cabecera.form.submit(
+									    {
+									    	waitTitle:'Espere',
+					            			waitMsg:'Procesando...',
+					            			failure: function(form, action)
+					            			{
+											    Ext.MessageBox.alert('Mensaje de Error', Ext.util.JSON.decode(action.response.responseText).mensajeDelAction);
+											},
+											success: function(form, action)
+											{	
+												var mensaje = 'Condici&oacute;n guardada';
+												
+												if(encabezado == '2') mensaje = 'Concepto guardado';
+												else if(encabezado == '5') mensaje = 'Variable guardada';
+												else if(encabezado == '4') mensaje = 'Validaci&oacute;n guardada';
+												
+												Ext.MessageBox.alert('Aviso', mensaje);
+												store.load();
+											    wind.close();
+											}
+									    });				   
+									}
+						        });                  
+	        		        }
   						}
-  					},{
+  					},
+  					{
   						text:'Cancelar',
-  						handler:function(){ 
+  						handler:function()
+  						{ 
   							wind.close();
   							var params2="codigoExpresion=" + codigoExpresion;
   							var conn2 = new Ext.data.Connection();
-  							conn2.request ({
+  							conn2.request(
+  							{
 								url: 'expresiones/LimpiarSesion.action',
 								method: 'POST',
 								successProperty : '@success',
 								params : params2
 		      				});
   						}
-  				}]
-        });
- }else{
+  					}
+  				]
+ 	        });
+ 	}else{
 	 wind = new Ext.Window({
             title: 'Expresi&oacute;n',
             closable:true,
@@ -1704,68 +1798,122 @@ nueva ventana
 		
 										
 				},{layout:'form',region:'center',boder:false,frame:true,items:[tab2,formPanelVariablesLocales]}],
-				buttons:[{
+				buttons:
+				[
+				    {
   						text:'Guardar',
-  						handler: function(){//alert(Ext.getCmp('hidden-expresion-session-expresion').getValue());
-  							if(descripcion.getValue().length>0) {
-  									var ottiporg = obtenerOTTIPORG(codigoExpresionSession);
-					 		        tab2.form.submit({
-								            waitTitle:'Espere',
-					            			waitMsg:'Procesando...',
-					            			params :{
-					            				ottiporg : ottiporg
-					            			},
-								            failure: function(form, action) {
-												    Ext.MessageBox.alert('Mensaje de Error', Ext.util.JSON.decode(action.response.responseText).mensajeDelAction);
-												    //Ext.MessageBox.alert('Error Message', 'failure');
-											},
-											success: function(form, action) {
-												    //Ext.MessageBox.alert('Confirm', action.result.info);	
-												    //alert("Exito!!");
-												    //Ext.getCmp('hidden-valor-defecto-atributos-variables').setValue("-1");					   
-												    wind.close();
-											}
-							        });                   
-	        		        } else{
-	        		        		descripcion.markInvalid('Descripcion requerida');
+  						handler: function()
+  						{
+  							var valido = true;	
+  							if(valido)
+  							{
+  								var combovalue = formPanelVariablesLocales.getForm().getValues().claveSeleccionada;
+  								if(combovalue=='Seleccione una variable')
+  								{
+  									combovalue='';
+  								}
+  								//console.log('combo value:',combovalue);
+  								var store = comboVariables.store;
+  								//console.log('store:',store);
+  								var existe = combovalue.length==0;
+  								if(!existe)
+  								{
+	  								store.each(function(record)
+	  								{
+	  									//console.log('record iterado:',record);
+	  									if(record.get('nombre').toUpperCase()==combovalue.toUpperCase())
+	  									{
+	  										existe = true;
+	  									}
+	  								});
+  								}
+  								valido = existe;
+  								if(!valido)
+  								{
+  									Ext.MessageBox.alert('Error', 'Falta guardar la variable');
+  								}
+  							}
+  							
+  							if(valido)
+  							{
+  								valido = descripcion.getValue().length>0;
+  								if(!valido)
+  								{
+  									descripcion.markInvalid('Descripcion requerida');
 									Ext.MessageBox.alert('Error', 'Favor de llenar los datos requeridos');
-							}     
+  								}
+  							}
+  							
+  							if(valido)
+  							{
+								var ottiporg = obtenerOTTIPORG(codigoExpresionSession);
+				 		        tab2.form.submit(
+				 		        {
+						            waitTitle:'Espere',
+			            			waitMsg:'Procesando...',
+			            			params :
+			            			{
+			            				ottiporg : ottiporg
+			            			},
+						            failure: function(form, action)
+						            {
+										    Ext.MessageBox.alert('Mensaje de Error', Ext.util.JSON.decode(action.response.responseText).mensajeDelAction);
+									},
+									success: function(form, action)
+									{					   
+										    wind.close();
+									}
+						        });                   
+	        		        }
   						}
-  					},{
+  					},
+  					{
   						text:'Cancelar',
-  						handler:function(){
+  						handler:function()
+  						{
 	  						//alert(Ext.getCmp('hidden-expresion-session-expresion').getValue()); 						
 
   							//Si existe la expresion en BD entonces no limpiamos el campo, 
   							//si no existe la expresi�n en BD, entonces limpiamos el campo:
   							var conn = new Ext.data.Connection();
   							params="codigoExpresion=" + codigoExpresion;
-							conn.request ({
+							conn.request (
+							{
 								url: 'expresiones/ExisteExpresion.action',
 								method: 'POST',
 								successProperty : '@success',
 								params :	 params,
 								waitMsg: 'Espere por favor....',
-					    		callback: function (options, success, response) {
+					    		callback: function (options, success, response)
+					    		{
 					    			//alert('success=' + success + '    success:'+ Ext.util.JSON.decode(response.responseText).success);
-					    			if(Ext.util.JSON.decode(response.responseText).success == false){
+					    			if(Ext.util.JSON.decode(response.responseText).success == false)
+					    			{
 					    				//Limpiar campos que utilizan la ventana de Expresiones:
   										//Id del campo en Numeracion de Incisos (Agregar) y del campo en Numeracion de Polizas(Agregar/Editar)
-  										if(Ext.getCmp('dsCalculo')){ Ext.getCmp('dsCalculo').reset(); }
+  										if(Ext.getCmp('dsCalculo'))
+  										{
+  											Ext.getCmp('dsCalculo').reset();
+  										}
   										//Id del campo en Numeracion de Incisos (Editar)
-  										if(Ext.getCmp('dsCalculoId')){ Ext.getCmp('dsCalculoId').reset(); }
+  										if(Ext.getCmp('dsCalculoId'))
+  										{
+  											Ext.getCmp('dsCalculoId').reset();
+  										}
   										//Id del campo en Numeracion de Endosos (Agregar/Editar)
-  										if(Ext.getCmp('algoritmoId')){ Ext.getCmp('algoritmoId').reset(); }
+  										if(Ext.getCmp('algoritmoId'))
+  										{
+  											Ext.getCmp('algoritmoId').reset();
+  										}
 					    			}
 	    	       				}
 		      				});
-  							
   							wind.close();
-  							
   						}
-  				}]
-        });
- }
+  					}
+  				]
+	        });
+        }
 
         wind.show();
         
@@ -1777,6 +1925,16 @@ nueva ventana
         $('#tezvafiltrovariables').on('keyup',function()
         {
         	tezvaFiltrarArbol('tezvatreevariables',this.value);
+        });
+        
+        $('#tezvafiltrofuncionesHeader').on('keyup',function()
+        {
+        	tezvaFiltrarArbol('tezvatreefuncionesHeader',this.value);
+        });
+        
+        $('#tezvafiltrovariablesHeader').on('keyup',function()
+        {
+        	tezvaFiltrarArbol('tezvatreevariablesHeader',this.value);
         });
         
         function tezvaFiltrarArbol(id,valor)
@@ -1873,6 +2031,49 @@ nueva ventana
 		//alert('entro al if de row');
 		var record = store.getAt(row);
 	    //codigoExpresion= record.get('codigoExpresion');
-        Ext.getCmp('cabecera-form').getForm().loadRecord(record);
+		//console.log('loadrecord cabecera:',record);
+		var form = Ext.getCmp('cabecera-form');
+        form.getForm().loadRecord(record);
+        //console.log('form items.items:',form.items.items);
+        if(encabezado && encabezado=='2')//concepto de tarificacion
+        {
+	        var campoHiddenTipo = form.items.items[0];
+	        var comboTipo = form.items.items[1].items.items[1].items.items[0].items.items[0];
+	        //console.log('campohidden:',campoHiddenTipo);
+	        //console.log('combotipo:',comboTipo);
+	        comboTipo.store.addListener('load',function()
+	        {
+	        	//console.log('store load');
+	        	comboTipo.store.each(function(recordIte)
+				{
+	        		//console.log('iterando:',recordIte);
+	        		if(recordIte.get('valorTipo').toUpperCase()==record.get('descripcionTipo').toUpperCase())
+	        		{
+	        			//console.log('es',record);
+	        			campoHiddenTipo.setValue(recordIte.get('claveTipo'));
+	        		}
+				});
+	        });
+        }
+        else if(encabezado && encabezado=='4')//validacion
+        {
+	        var campoHiddenTipo = form.items.items[0];
+	        var comboTipo = form.items.items[1].items.items[1].items.items[0].items.items[0];
+	        //console.log('campohidden:',campoHiddenTipo);
+	        //console.log('combotipo:',comboTipo);
+	        comboTipo.store.addListener('load',function()
+	        {
+	        	//console.log('store load');
+	        	comboTipo.store.each(function(recordIte)
+				{
+	        		//console.log('iterando:',recordIte);
+	        		if(recordIte.get('valorTipo').toUpperCase()==record.get('descripcionTipo').toUpperCase())
+	        		{
+	        			//console.log('es');
+	        			campoHiddenTipo.setValue(recordIte.get('claveTipo'));
+	        		}
+				});
+	        });
+        }
 	}
 };
