@@ -1336,36 +1336,53 @@ Expresiones
 							             		 heigth : '10',
 						    	         		 border : false
 						        	         },*/{
-						            	         layout : 'form',
+						            	         layout :'column',
 						                		 border : false,
 						                		 items  :
 						                		 [
 						                		     {
-						                				 id         : 'switch-recalcular-expresion-simple',
-								    	                 xtype      : 'checkbox',
-							    		                 fieldLabel : 'Last Name',
-							            		         hideLabel  : true,
-							                    		 boxLabel   : 'Recalcular Siempre',
-							                    		 name       : 'switchRecalcular'
-		        	        						 }/*,{
-							            		         xtype   : 'button',
-		                							     text    : 'Comprobar Sintaxis',
-		                							     handler : function ()
-		                							     {
-		                							    	 tab2.form.submit({
-		                							    		 url: 'expresiones/ValidarExpresion.action',			      
-								            					 failure: function(form, action) {
-												    				 Ext.MessageBox.alert('Mensaje de Error', Ext.util.JSON.decode(action.response.responseText).mensajeValidacion);
-																 },
-																 success: function(form, action) {
-												    				 //Ext.MessageBox.alert('Confirm', action.result.info);	
-												    				 //alert("Exito!!");
-												    				 //Ext.getCmp('hidden-valor-defecto-atributos-variables').setValue("-1");					   
-												    				 Ext.MessageBox.alert('Mensaje', Ext.util.JSON.decode(action.response.responseText).mensajeValidacion);
-																 }
-							        						 });
-		                							     }
-		        	        						 }*/
+						                		    	 layout      : 'form',
+						                		    	 columnWidth : 0.3,
+						                		    	 border : false,
+							                		     items:
+							                		     [
+								                		     {
+								                				 id         : 'switch-recalcular-expresion-simple',
+										    	                 xtype      : 'checkbox',
+									    		                 fieldLabel : 'Last Name',
+									            		         hideLabel  : true,
+									                    		 boxLabel   : 'Recalcular Siempre',
+									                    		 name       : 'switchRecalcular',
+				        	        						 }
+								                		 ]
+						        	                 },
+		        	        						 {
+		        	        							 layout:'form',
+	        	        								 columnWidth : 0.7,
+	        	        								 border      : false,
+	        	        								 items       :
+	        	        								 [
+	        	        								     {
+									            		         xtype   : 'button',
+				                							     text    : 'Comprobar Sintaxis',
+				                							     handler : function ()
+				                							     {
+				                							    	 tab2.form.submit({
+				                							    		 url: 'expresiones/ValidarExpresion.action',			      
+										            					 failure: function(form, action) {
+														    				 Ext.MessageBox.alert('Mensaje de Error', Ext.util.JSON.decode(action.response.responseText).mensajeValidacion);
+																		 },
+																		 success: function(form, action) {
+														    				 //Ext.MessageBox.alert('Confirm', action.result.info);	
+														    				 //alert("Exito!!");
+														    				 //Ext.getCmp('hidden-valor-defecto-atributos-variables').setValue("-1");					   
+														    				 Ext.MessageBox.alert('Mensaje', Ext.util.JSON.decode(action.response.responseText).mensajeValidacion);
+																		 }
+									        						 });
+				                							     }
+	        	        								     }
+	        	        								 ]
+		        	        					     }
 		        	        					]
 					            	    }]
 					            }]

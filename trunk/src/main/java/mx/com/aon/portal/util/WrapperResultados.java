@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
 
 public class WrapperResultados implements Serializable {
     
@@ -131,4 +133,10 @@ public class WrapperResultados implements Serializable {
     public void setMsgText(String msgText) {
         this.msgText = msgText;
     }
+    
+    @Override
+	public String toString()
+	{
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
+	}
 }

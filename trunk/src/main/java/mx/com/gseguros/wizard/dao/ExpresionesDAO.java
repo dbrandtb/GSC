@@ -67,7 +67,7 @@ public class ExpresionesDAO extends AbstractDAO{
 		protected BuscarValoresTablas(DataSource dataSource) {
 			super(dataSource, "PKG_LISTAS.P_TABLAS");
 			
-			logger.debug("%%% Entro a método BuscarValoresTablas sin parámetros para ejecutar PKG_LISTAS.P_TABLAS %%%");
+			logger.debug("%%% Entro a mï¿½todo BuscarValoresTablas sin parï¿½metros para ejecutar PKG_LISTAS.P_TABLAS %%%");
 		
 			declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ValoresTablaMapper()));
 			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
@@ -329,7 +329,7 @@ public class ExpresionesDAO extends AbstractDAO{
 	    	try {
 	    			
 	    		List<ComposerVariableVOClaveVO> lstComposerVariableClave = (List<ComposerVariableVOClaveVO>) map.get("pv_registro_o");
-	    		// Lista que contendrá el agrupamiento final de todos los elementos:
+	    		// Lista que contendrï¿½ el agrupamiento final de todos los elementos:
 	    		List<VariableVO> listaFinalVariableVO = new ArrayList<VariableVO>();
 	    		List<ClaveVO> listaTmpClaveVO = new ArrayList<ClaveVO>();
 	    		for(ComposerVariableVOClaveVO composer : lstComposerVariableClave) {
@@ -406,7 +406,7 @@ public class ExpresionesDAO extends AbstractDAO{
     	protected ObtieneSecuenciaExpresion(DataSource dataSource) {
     		super(dataSource, "PKG_WIZARD.P_OBTIENE_CDEXPRES");
     		
-    		logger.debug("%%% Entro a método BuscarValoresTablas sin parámetros para ejecutar PKG_LISTAS.P_TABLAS %%%");
+    		logger.debug("%%% Entro a mï¿½todo BuscarValoresTablas sin parï¿½metros para ejecutar PKG_LISTAS.P_TABLAS %%%");
     		
     		declareParameter(new SqlOutParameter("PV_SEC_CDEXPRES", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
@@ -528,28 +528,31 @@ public class ExpresionesDAO extends AbstractDAO{
     	
     }
 
-    protected class ValidaExpresion extends CustomStoredProcedure {
+    protected class ValidaExpresion extends CustomStoredProcedure
+    {
     	
-    	protected ValidaExpresion(DataSource dataSource) {
+    	protected ValidaExpresion(DataSource dataSource)
+    	{
     		super(dataSource, "PKG_WIZARD.P_PARSEADOR");
     		
-    		declareParameter(new SqlParameter("pv_expresion_i", OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("pv_cdexpres_i", OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("pv_ottipexp_i", OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("pv_ottiporg_i", OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("pv_otlength_i", OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("pv_otdepth_i", OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("pv_lang_code_o", OracleTypes.VARCHAR));
-    		declareParameter(new SqlParameter("pv_cdvariable_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_expresion_i"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdexpres_i"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_ottipexp_i"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_ottiporg_i"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_otlength_i"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_otdepth_i"    , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_lang_code_o"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdvariable_i" , OracleTypes.VARCHAR));
     		
-    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
-    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
-    		declareParameter(new SqlOutParameter("pv_msg_text_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_text_o"   , OracleTypes.VARCHAR));
     		compile();
     	}
     	
     	@SuppressWarnings("unchecked")
-    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception
+    	{
     		WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
     		return mapper.build(map);
     	}

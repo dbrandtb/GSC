@@ -226,8 +226,8 @@ public class ExpresionesManagerImpl extends AbstractManagerJdbcTemplateInvoke im
 	}
 
 	/**
-	 * Método para obtener los valores de las tablas en la pantalla Wizard de Parametrización, 
-	 * pestaña Catálogos, opción Tablas de Apoyo, opción Tabla Cinco Valores. 
+	 * Mï¿½todo para obtener los valores de las tablas en la pantalla Wizard de Parametrizaciï¿½n, 
+	 * pestaï¿½a Catï¿½logos, opciï¿½n Tablas de Apoyo, opciï¿½n Tabla Cinco Valores. 
 	 * @param start
 	 * @param limit
 	 * @return pagedBackBoneInvoke(map, endpointName, start, limit)
@@ -384,24 +384,26 @@ public class ExpresionesManagerImpl extends AbstractManagerJdbcTemplateInvoke im
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public WrapperResultados validarExpresion(int codigoExpresion, String expresion, String tipoExpresion , String cdVariable) throws Exception {
-		
+	public WrapperResultados validarExpresion(int codigoExpresion, String expresion, String tipoExpresion , String cdVariable) throws Exception
+	{	
 		Map<String, String> params = new HashMap<String, String>();
 		
-		params.put("pv_expresion_i", expresion);
-		params.put("pv_cdexpres_i", codigoExpresion + "");
-		params.put("pv_ottipexp_i", tipoExpresion);
-		params.put("pv_ottiporg_i", "0");
-		params.put("pv_otlength_i", "0");
-		params.put("pv_otdepth_i", "0");
-		params.put("pv_lang_code_o", null);
-		params.put("pv_cdvariable_i", cdVariable);
+		params.put("pv_expresion_i"  , expresion);
+		params.put("pv_cdexpres_i"   , codigoExpresion + "");
+		params.put("pv_ottipexp_i"   , tipoExpresion);
+		params.put("pv_ottiporg_i"   , "0");
+		params.put("pv_otlength_i"   , "0");
+		params.put("pv_otdepth_i"    , "0");
+		params.put("pv_lang_code_o"  , null);
+		params.put("pv_cdvariable_i" , cdVariable);
 		
 		WrapperResultados mensaje = null;
-		try {
+		try
+		{
 			mensaje =  returnBackBoneInvoke(params, "VALIDA_EXPRESION");
-			
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			logger.error("Error al validar la expresion");
 			throw new Exception("Validacion de expresiones", e);
 		}
