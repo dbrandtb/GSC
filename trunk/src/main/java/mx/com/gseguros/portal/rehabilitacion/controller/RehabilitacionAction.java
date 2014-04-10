@@ -17,7 +17,7 @@ import mx.com.gseguros.portal.rehabilitacion.service.RehabilitacionManager;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 
 public class RehabilitacionAction extends PrincipalCoreAction
