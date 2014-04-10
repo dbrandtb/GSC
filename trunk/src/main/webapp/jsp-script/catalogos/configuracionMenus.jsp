@@ -67,17 +67,19 @@ Ext.onReady(function()
 		,fields :
 		['CDMENU','DSMENU','CDELEMENTO','CDPERSON','CDROL', 'CDUSUARIO', 'CDESTADO', 'CDTIPOMENU']
 	});
+	
 	Ext.define('gridOpMenuModel',
-	{
-		extend : 'Ext.data.Model'
-		,fields :
-		['','','','','']
+			{
+				extend : 'Ext.data.Model'
+				,fields :
+				['CDNIVEL','CDNIVEL_PADRE','DSMENU_EST','CDTITULO','DSTITULO']
 	});
+	
 	Ext.define('gridOpSubMenuModel',
 	{
 		extend : 'Ext.data.Model'
 		,fields :
-		['','','','','']
+		['CDNIVEL','CDNIVEL_PADRE','DSMENU_EST','CDTITULO','DSTITULO']
 	});
 	/*/////////////////*/
 	////// modelos //////
@@ -112,19 +114,7 @@ Ext.onReady(function()
             ,data        : []
         }
     });
-	var opcionesMenuStore = Ext.create('Ext.data.Store',
-    {
-		pageSize : 20,
-        autoLoad : true
-        ,model   : 'gridOpMenuModel'
-        ,proxy   :
-        {
-            type         : 'memory'
-            ,enablePaging : true
-            ,reader      : 'json'
-            ,data        : []
-        }
-    });
+	
 	var opcionesSubMenuStore = Ext.create('Ext.data.Store',
     {
 		pageSize : 20,
@@ -141,13 +131,6 @@ Ext.onReady(function()
 	/*////////////////*/
 	////// stores //////
 	////////////////////
-	
-	/////////////////////////
-	////// componentes //////
-	/*/////////////////////*/
-	/*/////////////////////*/
-	////// componentes //////
-	/////////////////////////
 	
 	///////////////////////
 	////// contenido //////
@@ -288,9 +271,7 @@ Ext.onReady(function()
             	var model =  gridMenus.getSelectionModel();
             	if(model.hasSelection()){
             		var record = model.getLastSelected();
-            		
-            		
-            		
+					windowOpcionesMenu(record.get('CDMENU'));            		
             	}else{
             		showMessage("Aviso","Debe seleccionar un registro", Ext.Msg.OK, Ext.Msg.INFO);
             	}
@@ -607,6 +588,141 @@ Ext.onReady(function()
 	          ]
 	          });
 		 windowMenu.show();
+	}
+	
+	
+	function windowOpcionesMenu(_cdMenu){
+		debug('CdMenu: ',_cdMenu);
+		
+		var opcionesMenuStore = Ext.create('Ext.data.Store',
+			    {
+					pageSize : 20,
+			        autoLoad : true
+			        ,model   : 'gridOpMenuModel'
+			        ,proxy   :
+			        {
+			            type         : 'memory'
+			            ,enablePaging : true
+			            ,reader      : 'json'
+			            ,data        : []
+			        }
+		});
+		
+		var gridOpMenu = Ext.create('Ext.grid.Panel',
+			    {
+		    	height : 250
+		    	,selType: 'checkboxmodel'
+		    	,store : opcionesMenuStore
+		    	,columns :
+		    	[ { header     : 'CDNIVEL' , dataIndex : 'CDNIVEL', hidden: true},
+		          { header     : 'Nombre Opci&oacute;n Men&uacute;', dataIndex : 'DSMENU_EST', flex: 1}
+				]
+		    	,bbar     :
+		        {
+		            displayInfo : true,
+		            store       : opcionesMenuStore,
+		            xtype       : 'pagingtoolbar'
+		            
+		        },
+		        tbar: [{
+		            icon    : '${ctx}/resources/fam3icons/icons/add.png',
+		            text    : 'Agregar opci&oacute;n menu',
+		            handler : function()
+		            {
+		            	agregarEditarOpMenu();
+		            }
+		        },{
+		            icon    : '${ctx}/resources/fam3icons/icons/pencil.png',
+		            text    : 'Editar opci&oacute;n menu',
+		            handler : function()
+		            {
+		            	var model =  gridOpMenu.getSelectionModel();
+		            	if(model.hasSelection()){
+		            		var record = model.getLastSelected();
+		            		agregarEditarOpMenu(record);
+		            		
+		            	}else{
+		            		showMessage("Aviso","Debe seleccionar un registro", Ext.Msg.OK, Ext.Msg.INFO);
+		            	}
+		            }
+		        },{
+		            icon    : '${ctx}/resources/fam3icons/icons/user_edit.png',
+		            text    : 'Ver/Editar Opciones SubMenu',
+		            handler : function()
+		            {
+		            	var model =  gridOpMenu.getSelectionModel();
+		            	if(model.hasSelection()){
+		            		var record = model.getLastSelected();
+		            		
+		            		
+		            	}else{
+		            		showMessage("Aviso","Debe seleccionar un registro", Ext.Msg.OK, Ext.Msg.INFO);
+		            	}
+		            }
+		        },{
+		            icon    : '${ctx}/resources/fam3icons/icons/delete.png',
+		            text    : 'Eliminar opci&oacute;n menu',
+		            scope   : this,
+		            handler : function (btn, e){
+		            	var model =  gridOpMenu.getSelectionModel();
+		            	if(model.hasSelection()){
+		            		
+		            		Ext.Msg.show({
+		    		            title: 'Aviso',
+		    		            msg: '&iquest;Esta seguro que desea eliminar esta opci&oacute;n de menu?',
+		    		            buttons: Ext.Msg.YESNO,
+		    		            fn: function(buttonId, text, opt) {
+		    		            	if(buttonId == 'yes') {
+		    		            		Ext.Ajax.request({
+		            						url: _UrlEliminaOpMenu,
+		            						params: {
+		            					    		'params.pv_cdmenu_i' : model.getLastSelected().get('CDMENU')
+		            						},
+		            						success: function(response, opt) {
+		            							var jsonRes=Ext.decode(response.responseText);
+
+		            							if(jsonRes.success == true){
+		            								mensajeCorrecto('Aviso','Se ha eliminado la opci&oacute;n de menu correctamente.');
+		    										recargaGridMenus();        							
+		                   						}else {
+		                   							mensajeError('No se pudo eliminar la opci&oacute;n de menu.');
+		                   						}
+		            						},
+		            						failure: function(){
+		            							mensajeError('No se pudo eliminar la opci&oacute;n de menu.');
+		            						}
+		            					});
+		    		            	}
+		            			},
+		    		            animateTarget: btn,
+		    		            icon: Ext.Msg.QUESTION
+		        			});
+		            		
+		            	}else{
+		            		showMessage("Aviso","Debe seleccionar un registro", Ext.Msg.OK, Ext.Msg.INFO);
+		            	}
+		            }
+		        }]
+		    });
+		var windowOpMenu = Ext.create('Ext.window.Window', {
+			  title : 'Opciones de Men&uacute;',
+	          //closeAction: 'hide',
+	          modal:true,
+	          width : 600,
+	          height : 400,
+	          items:[gridOpMenu],
+	          bodyStyle:'padding:15px;',
+	          buttons:[{
+		                 text: 'Cerrar',
+		                 icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+		                 handler: function() {
+		                	 windowOpMenu.close();
+		                 }
+	           		} ]
+	          });
+		 	windowOpMenu.show();
+				
+		
 	}
 
 });

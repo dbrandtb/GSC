@@ -1018,6 +1018,7 @@ protected class VarTemProMapper implements RowMapper {
 		ReglaNegocioVO regla = new ReglaNegocioVO();
 		regla.setNombre(rs.getString("CDVARIAT"));
 		regla.setDescripcion(rs.getString("DSVARIAT"));
+		regla.setCodigoExpresion(rs.getString("CDEXPRES"));
 		
 		return regla;
 	}
