@@ -200,7 +200,7 @@ Ext.onReady(function() {
 								}, '-', {
 									text : 'Editar',
 									tooltip : 'Editar variable temporal',
-									iconCls : 'edit',
+									iconCls : 'option',
 									handler : function() {
 										if (Ext.getCmp('grid-variables-temporales-producto').getSelectionModel().hasSelection()) {
 											var codigoExpresion = Ext.getCmp('grid-variables-temporales-producto').getSelectionModel().getSelected().get('codigoExpresion');
