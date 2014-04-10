@@ -25,7 +25,7 @@
             var _NMSINIES;
             var _NTRAMITE;
             
-            var _URL_AFILIADOS_AFECTADOS   		    = 		'<s:url namespace="/consultasSiniestro" action="afiliadosAfectados" />';
+            var _URL_AFILIADOS_AFECTADOS   		    = '<s:url namespace="/consultasSiniestro" action="afiliadosAfectados" />';
             var _URL_LISTADO_ASEGURADO          	= '<s:url namespace="/siniestros"  action="consultaListaAsegurado" />';
             var _URL_CONSULTA_LIST_ASEG_REEMBOLSO   = '<s:url namespace="/consultasSiniestro" action="consultaAseguradosPagoReembolso" />';
             var _URL_CONSULTA_PROVEEDOR_PDIRECTO    = '<s:url namespace="/consultasSiniestro" action="consultaProveedorPDirecto" />';

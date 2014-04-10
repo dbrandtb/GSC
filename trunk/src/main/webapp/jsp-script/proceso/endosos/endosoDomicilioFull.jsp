@@ -31,7 +31,8 @@ _5_smap1:
     tpersona=F,
     Apellido_Paterno=PAT
 */
-var _5_smap1 = <s:property value='%{getSmap1().toString().replace("=",":\'").replace(",","\',").replace("}","\'}")}' />;
+//Obtenemos el contenido en formato JSON de la propiedad solicitada:
+var _5_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 
 var _5_urlLoadMdomicil = '<s:url namespace="/"        action="cargarPantallaDomicilio" />';
 var _5_urlGuardar      = '<s:url namespace="/endosos" action="guardarEndosoDomicilioFull" />';

@@ -3,10 +3,12 @@
 <script>
 ///////////////////////
 ////// variables //////
-var _1_smap1       = <s:property value='%{getSmap1().toString().replace("=",":\'").replace(",","\',").replace("}","\'}")}' />;
-var _1_slist1      = <s:property value='%{getSlist1().toString().replace("=",":\'").replace(",","\',").replace("}","\'}").replace("}\',","},")}' />;
-var _1_storeFeeder = <s:property value='%{getSlist1().toString().replace("=",":\'").replace(",","\',").replace("}","\'}").replace("}\',","},")}' />;
-var _1_urlGuardar  = '<s:url namespace="/endosos" action="guardarEndosoSexo" />'; 
+var _1_urlGuardar  = '<s:url namespace="/endosos" action="guardarEndosoSexo" />';
+
+//Obtenemos el contenido en formato JSON de la propiedad solicitada:
+var _1_smap1       = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
+var _1_slist1      = <s:property value="%{convertToJSON('slist1')}" escapeHtml="false" />;
+var _1_storeFeeder = <s:property value="%{convertToJSON('slist1')}" escapeHtml="false" />;
 
 var _1_store;
 var _1_grid;
@@ -16,6 +18,7 @@ var _1_form;
 debug('_1_smap1',_1_smap1);
 debug('_1_slist1',_1_slist1);
 debug('_1_storeFeeder',_1_storeFeeder);
+
 ////// variables //////
 ///////////////////////
 

@@ -21,8 +21,10 @@
     debug('panCanInput:',panCanInput);
     */
     
-    var pancanInSmap1=<s:property value='%{getSmap1().toString().replace("=",":\'").replace(",","\',").replace("}","\'}")}' />;
+    // Obtenemos el contenido en formato JSON de la propiedad solicitada:
+    var pancanInSmap1=<s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
     debug('pancanInSmap1',pancanInSmap1);
+    
     /*///////////////////*/
     ////// variables //////
     ///////////////////////

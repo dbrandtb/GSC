@@ -6,7 +6,9 @@
 /*///////////////////*/
 var panrehuniUrlDetCanc = '<s:url namespace="/cancelacion"    action="obtenerDetalleCancelacion"/>';
 var panrehuniUrlRehab   = '<s:url namespace="/rehabilitacion" action="rehabilitacionUnica"/>';
-var panrehuniInSmap1    = <s:property value='%{getSmap1().toString().replace("=",":\'").replace(",","\',").replace("}","\'}")}' escapeHtml="false" />;
+
+// Obtenemos el contenido en formato JSON de la propiedad solicitada:
+var panrehuniInSmap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 debug('panrehuniInSmap1',panrehuniInSmap1);
 /*///////////////////*/
 ////// variables //////

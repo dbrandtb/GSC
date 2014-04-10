@@ -4,19 +4,16 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-        <title>Consulta Clausulas</title>
+        <title>Afiliados Afectados</title>
         
         <script type="text/javascript">
             ////// variables //////
             var _CONTEXT = '${ctx}';
             var _URL_CONSULTA_DATOS_TARIFA_POLIZA = '<s:url namespace="/consultasPoliza" action="consultaDatosTarifaPoliza" />';
-            //var _URL_CARGA_CLAVES_CLAU =    '<s:url namespace="/catalogos" action="cargaClausulas" />';
-            //var _URL_CONSULTA_CLAUSU =      '<s:url namespace="/catalogos" action="consultaClausulas" />';
-            //var _URL_CONSULTA_CLAUSU_DETALLE =      '<s:url namespace="/catalogos" action="consultaClausulaDetalle" />';
-            //var _URL_INSERTA_CLAUSU =      '<s:url namespace="/catalogos" action="insertaClausula" />';
-            //var _URL_ACTUALIZA_CLAUSU =      '<s:url namespace="/catalogos" action="actualizaClausula" />';
-            //var _11_params = <s:property value='%{getParams().toString().replace("=",":\'").replace(",","\',").replace("}","\'}")}' />;
-            var _11_params = <s:property value='paramsJson' escapeHtml='false'/>;
+            
+            // Obtenemos el contenido en formato JSON de la propiedad solicitada:
+            var _11_params = <s:property value="%{convertToJSON('params')}" escapeHtml="false" />;
+            
             var _11_itemsForm =
             [
                 <s:property value="imap.itemsForm" />

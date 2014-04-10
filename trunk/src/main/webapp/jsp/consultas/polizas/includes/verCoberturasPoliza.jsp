@@ -1,27 +1,16 @@
-<%--<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
---%>
 <%@ include file="/taglibs.jsp"%>
-<%-- 
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-        <title>Historial de Reclamaciones</title>
-        --%>
-        <script type="text/javascript">
-            var _CONTEXT = '${ctx}';
-            var _URL_CONSULTA_COPAGOS_POLIZA =      '<s:url namespace="/consultasPoliza" action="consultaCopagosPoliza" />';
-            var _7_smap1 = <s:property value='%{getParams().toString().replace("=",":\'").replace(",","\',").replace("}","\'}")}' />;
-            //var _CATALOGO_AGENTES			= 	 '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@AGENTES"/>';
-           //debug('<s:property value="%{getParams().toString()}" />');
-        </script>
+
+
+<script type="text/javascript">
+    var _CONTEXT = '${ctx}';
+    var _URL_CONSULTA_COPAGOS_POLIZA =      '<s:url namespace="/consultasPoliza" action="consultaCopagosPoliza" />';
+    
+    // Obtenemos el contenido en formato JSON de la propiedad solicitada:
+    var _7_smap1 = <s:property value="%{convertToJSON('params')}" escapeHtml="false" />;
+</script>
         
-        <script type="text/javascript" src="${ctx}/js/consultas/coberturas/includes/verCoberturas.js"></script>
-    <%--    
-    </head>
-    <body>--%>
-    <div style="height:800px;">
-            <div id="div_clau2"></div>
-   </div>
-   <%-- </body>
-</html>--%>
+<script type="text/javascript" src="${ctx}/js/consultas/coberturas/includes/verCoberturas.js"></script>
+
+<div style="height:800px;">
+    <div id="div_clau2"></div>
+</div>
