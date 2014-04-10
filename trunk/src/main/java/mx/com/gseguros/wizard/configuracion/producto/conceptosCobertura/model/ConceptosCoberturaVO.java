@@ -61,6 +61,9 @@ public class ConceptosCoberturaVO implements Serializable {
 	 * orden para concepto por cobertura.
 	 */
 	private String orden;
+	private String cdtipcon;
+	private String dstipcon;
+	private String cdexpres;
 
 	
 	//GETTERS Y SETTERS
@@ -150,5 +153,29 @@ public class ConceptosCoberturaVO implements Serializable {
 
 	public void setOrden(String orden) {
 		this.orden = orden;
+	}
+
+	public String getCdtipcon() {
+		return cdtipcon;
+	}
+
+	public void setCdtipcon(String cdtipcon) {
+		this.cdtipcon = cdtipcon;
+	}
+
+	public String getDstipcon() {
+		return dstipcon;
+	}
+
+	public void setDstipcon(String dstipcon) {
+		this.dstipcon = dstipcon;
+	}
+
+	public String getCdexpres() {
+		return cdexpres;
+	}
+
+	public void setCdexpres(String cdexpres) {
+		this.cdexpres = cdexpres;
 	}
 }

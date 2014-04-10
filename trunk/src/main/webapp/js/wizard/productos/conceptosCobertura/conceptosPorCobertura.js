@@ -34,7 +34,10 @@ Ext.onReady(function(){
 	        		{name: 'descripcionComportamiento',  type: 'string',  mapping:'descripcionComportamiento'},
 	        		{name: 'codigoCondicion',  type: 'string',  mapping:'codigoCondicion'},
 	        		{name: 'descripcionCondicion',  type: 'string',  mapping:'descripcionCondicion'},
-	        		{name: 'orden',  type: 'string',  mapping:'orden'}
+	        		{name: 'orden'   , type:'string' , mapping:'orden'},
+	        		{name: 'cdtipcon', type:'string' , mapping:'cdtipcon'},
+	        		{name: 'dstipcon', type:'string' , mapping:'dstipcon'},
+	        		{name: 'cdexpres', type:'string' , mapping:'cdexpres'}
 	        		            
 				]),
 			//autoLoad:true,
@@ -129,6 +132,29 @@ Ext.onReady(function(){
                             		}                                                                     
                                  });
                                  temporal=-1;
+                                 Ext.getCmp('editar-ConceptosCoberturaExpresion').on('click',function(){
+                             		
+                             		if(afuera!=temporal){
+                             			//alert("AFUERA: " + afuera);
+                             			//alert("hidden: " + Ext.getCmp('hidden-codigo-combo-conceptos-cobertura').getValue());
+                             			//alert("TEMPORAL: " + temporal);
+                             			//alert("STORE: " + storeConceptosCobertura);
+                             			temporal=afuera;
+                             			var rec = storeConceptosCobertura.getAt(temporal);
+                             			//console.log('record:',rec);
+                             			//alert("TEMPORAL2: " + temporal);
+                             			//alert("temporal"+temporal);
+                             			//configuraConceptoCobertura (storeConceptosCobertura,Ext.getCmp('hidden-codigo-combo-conceptos-cobertura').getValue(),afuera);
+                             			//ExpresionesVentana2(codigoDeExpresion, "EXPRESION_VARIABLES_TEMPORALES", null, '5');
+                             			var storeAux = new Ext.data.SimpleStore({
+										    fields: [{name: 'codigoExpresion'},{name: 'descripcionCabecera'},{name:'descripcionTipo'},{name:'nombreCabecera'}],
+										    data: [[rec.get('cdexpres'),rec.get('descripcionConcepto'),rec.get('dstipcon'),rec.get('codigoConcepto')]]
+										});
+										
+										ExpresionesVentana2(rec.get('cdexpres'), 'EXPRESION_CONCEPTO_TARIFICACION', storeAux, '2', 0);
+                             		}                                                                     
+                                  });
+                                  temporal=-1;
 	                   	 }
 	               	}
 		}),
@@ -150,6 +176,12 @@ Ext.onReady(function(){
             text:'Editar',
             id:'editar-ConceptosCobertura',
             tooltip:'Editar concepto por cobertura',
+            iconCls:'option'
+           
+        },'-',{
+            text:'Editar expresi&oacute;n',
+            id:'editar-ConceptosCoberturaExpresion',
+            tooltip:'Editar expresi&oacute;n del concepto',
             iconCls:'option'
            
         }],      							        	    	    

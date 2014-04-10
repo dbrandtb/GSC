@@ -637,6 +637,9 @@ public class WizardDAOImpl extends AbstractManagerDAO implements WizardDAO {
     		concepto.setDescripcionComportamiento(rs.getString("DSCOMPOR"));
     		concepto.setCodigoCondicion(rs.getString("CDCONDIC"));
     		concepto.setDescripcionCondicion(rs.getString("DSCONDIC"));
+    		concepto.setCdtipcon(rs.getString("CDTIPCON"));
+    		concepto.setDstipcon(rs.getString("DSTIPCON"));
+    		concepto.setCdexpres(rs.getString("CDEXPRES"));
     		
     		return concepto;
     	}
