@@ -61,9 +61,9 @@ var venDocUrlImpConrec   = '<s:url namespace ="/documentos" action="generarContr
 
 var _URLhabilitaSigRec   = '<s:url namespace ="/documentos" action="habilitaSigRec" />';
 
-var panDocSmap1 = <s:property value='%{getSmap1().toString().replace("=",":\'").replace(",","\',").replace("}","\'}")}' />;
-
-debug('panDocSmap1:',panDocSmap1);
+//Obtenemos el contenido en formato JSON de la propiedad solicitada:
+var panDocSmap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
+debug('panDocSmap1:', panDocSmap1);
 
 var panDocStoreConfigDocs;
 var urlComboDocumentos = '<s:url namespace="/siniestros" action="loadListaDocumentos" />';

@@ -19,7 +19,8 @@ var mcdinUrlNuevo  = '<s:url namespace="/mesacontrol" action="guardarTramiteDina
 var mcdinUrlCargar = '<s:url namespace="/mesacontrol" action="loadTareasDinamico"     />';
 var _4_urlReload   = '<s:url namespace="/mesacontrol" action="mcdinamica"             />';
 
-var _4_smap1 = <s:property value='%{getSmap1().toString().replace("=",":\'").replace(",","\',").replace("}","\'}")}' />;
+//Obtenemos el contenido en formato JSON de la propiedad solicitada:
+var _4_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 debug('_4_smap1:',_4_smap1);
 
 mcdinInput['cdunieco'] = '<s:property value="smap2.pv_cdunieco_i" />';

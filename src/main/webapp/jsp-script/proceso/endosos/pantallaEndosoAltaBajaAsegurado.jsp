@@ -22,8 +22,9 @@ var loadExcluTimeoutVar;
 var _3_panelCla;
 var _3_storeClaUsa;
 
-var panendabaseguInputSmap1   = <s:property value='%{getSmap1().toString().replace("=",":\'").replace(",","\',").replace("}","\'}")}' />;
-var panendabaseguInputSmap2   = <s:property value='%{getSmap2().toString().replace("=",":\'").replace(",","\',").replace("}","\'}")}' />;
+//Obtenemos el contenido en formato JSON de la propiedad solicitada:
+var panendabaseguInputSmap1   = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
+var panendabaseguInputSmap2   = <s:property value="%{convertToJSON('smap2')}" escapeHtml="false" />;
 
 var panendabaseguUrlLoadAsegu = '<s:url namespace="/"           action="cargarComplementariosAsegurados" />';
 var panendabaseguUrlSave      = '<s:url namespace="/endosos"    action="guardarEndosoAltaBajaAsegurado" />';

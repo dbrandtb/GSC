@@ -6,6 +6,11 @@
 /*///////////////////*/
 var panCanAutoUrlCancelar = '<s:url namespace="/cancelacion" action="cancelacionAutoManual" />';
 var panCanAutoStorePolizas;
+
+//Obtenemos el contenido en formato JSON de la propiedad solicitada:
+var slist1JSON = <s:property value="%{convertToJSON('slist1')}" escapeHtml="false" />;
+debug('slist1JSON='+ slist1JSON);
+
 /*///////////////////*/
 ////// variables //////
 ///////////////////////
@@ -21,47 +26,6 @@ Ext.onReady(function()
         ,fields :
         [
             <s:property value="imap.fieldsMarcocancelacionModelocandidata" />
-            /*
-            {
-                name        : "FEMISION"
-                ,type       : "date"
-                ,dateFormat : "d/m/Y"
-            }
-            ,{
-                name        : "FEINICOV"
-                ,type       : "date"
-                ,dateFormat : "d/m/Y"
-            }
-            ,{
-                name        : "FEFINIV"
-                ,type       : "date"
-                ,dateFormat : "d/m/Y"
-            }
-            ,{
-                name        : "PRITOTAL"
-                ,type       : "float"
-            }
-            ,"NOMBRE"
-            ,"DSRAMO"
-            ,"CDRAMO"
-            ,"DSTIPSIT"
-            ,"CDTIPSIT"
-            ,"DSUNIECO"
-            ,"CDUNIECO"
-            ,"NMPOLIZA"
-            ,"NMPOLIEX"
-            ,"NMSOLICI"
-            ,"ESTADO"
-            ,{
-                name  : 'activo'
-                ,type : 'boolean'
-            }
-            ,{
-                name        : "FERECIBO"
-                ,type       : "date"
-                ,dateFormat : "d/m/Y"
-            }
-            */
         ]
     });
     /*/////////////////*/
@@ -81,38 +45,7 @@ Ext.onReady(function()
             enablePaging  : true
             ,reader       : 'json'
             ,type         : 'memory'
-            ,data         :
-            [
-                <s:set name="contador" value="0" />
-                <s:iterator value="slist1">
-                <s:if test="#contador>0">
-                ,
-                </s:if>
-                <s:property value='%{getSlist1().get(#contador).toString().replace("=",":\'").replace(",","\',").replace("}","\'}")}' />
-                /*
-                {
-                	FEMISION  : '<s:property value='%{getSlist1().get(#contador).get("FEMISION")}' />'
-                	,FEINICOV : '<s:property value='%{getSlist1().get(#contador).get("FEINICOV")}' />'
-                	,FEFINIV  : '<s:property value='%{getSlist1().get(#contador).get("FEFINIV")}' />'
-                	,PRITOTAL : '<s:property value='%{getSlist1().get(#contador).get("PRITOTAL")}' />'
-                    ,NOMBRE   : '<s:property value='%{getSlist1().get(#contador).get("NOMBRE")}' />'
-                    ,DSRAMO   : '<s:property value='%{getSlist1().get(#contador).get("DSRAMO")}' />'
-                    ,CDRAMO   : '<s:property value='%{getSlist1().get(#contador).get("CDRAMO")}' />'
-                    ,DSTIPSIT : '<s:property value='%{getSlist1().get(#contador).get("DSTIPSIT")}' />'
-                    ,CDTIPSIT : '<s:property value='%{getSlist1().get(#contador).get("CDTIPSIT")}' />'
-                    ,DSUNIECO : '<s:property value='%{getSlist1().get(#contador).get("DSUNIECO")}' />'
-                    ,CDUNIECO : '<s:property value='%{getSlist1().get(#contador).get("CDUNIECO")}' />'
-                    ,NMPOLIZA : '<s:property value='%{getSlist1().get(#contador).get("NMPOLIZA")}' />'
-                    ,NMPOLIEX : '<s:property value='%{getSlist1().get(#contador).get("NMPOLIEX")}' />'
-                    ,NMSOLICI : '<s:property value='%{getSlist1().get(#contador).get("NMSOLICI")}' />'
-                    ,ESTADO   : '<s:property value='%{getSlist1().get(#contador).get("ESTADO")}' />'
-                    ,activo   : false
-                    ,FERECIBO : '<s:property value='%{getSlist1().get(#contador).get("FERECIBO")}' />'
-                }
-                */
-                <s:set name="contador" value="#contador+1" />
-                </s:iterator>
-            ]
+            ,data         : slist1JSON
         }
     });
     /*////////////////*/
@@ -142,14 +75,6 @@ Ext.onReady(function()
 		    	,icon    : '${ctx}/resources/fam3icons/icons/key.png'
 		    	,handler : function()
 		    	{
-		    		/*
-		    		var jsonObject       = {};
-		    		jsonObject['slist1'] = [];
-		    		panCanAutoStorePolizas.each(function(record)
-		    		{
-		    			jsonObject['slist1'].push(record.raw);
-		    		});
-		    		*/
 		    		var boton=this;
 		    		var grid = this.up().up();
 		    		grid.setLoading(true);
@@ -159,7 +84,6 @@ Ext.onReady(function()
 		    			,params: {
 		    				'smap1.feproces': _feproces
 		    			}
-		    			//,jsonData : jsonObject
 		    			,success  : function(response,opts)
                         {
 		    				grid.setLoading(false);
@@ -201,40 +125,6 @@ Ext.onReady(function()
 		,columns     :
 		[
 		    <s:property value="imap.columnsMarcocancelacionModelocandidata" />
-		    /*
-		    {
-		    	header     : 'Sucursal'
-		    	,dataIndex : 'DSUNIECO'
-		    	,flex      : 1
-		    }
-		    ,{
-                header     : 'Producto'
-                ,dataIndex : 'DSRAMO'
-                ,flex      : 1
-            }
-		    ,{
-                header     : 'Modalidad'
-                ,dataIndex : 'DSTIPSIT'
-                ,flex      : 1
-            }
-		    ,{
-                header     : 'P&oacute;liza'
-                ,dataIndex : 'NMPOLIEX'
-                ,flex      : 1
-            }
-		    ,{
-                header     : 'Cliente'
-                ,dataIndex : 'NOMBRE'
-                ,flex      : 1
-            }
-		    ,{
-                header     : 'Fecha de recibo'
-                ,dataIndex : 'FERECIBO'
-                ,flex      : 1
-                ,xtype     : 'datecolumn'
-                ,format    : 'd M Y'
-            }
-		    */
 		]
 	});
 	

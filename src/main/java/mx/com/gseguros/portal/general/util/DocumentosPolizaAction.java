@@ -6,15 +6,14 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import com.opensymphony.xwork2.ActionSupport;
-
-public class DocumentosPolizaAction extends ActionSupport {
+public class DocumentosPolizaAction extends PrincipalCoreAction {
 
 	private static final long serialVersionUID = 5866297387639852014L;
 

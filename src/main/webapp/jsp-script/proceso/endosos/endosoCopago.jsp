@@ -23,7 +23,8 @@ smap1:
     copago : 10000
     mascopago : si
 */
-var _7_smap1 = <s:property value='%{getSmap1().toString().replace("=",":\'").replace(",","\',").replace("}","\'}")}' />;
+//Obtenemos el contenido en formato JSON de la propiedad solicitada:
+var _7_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 
 var _7_formLectura;
 var _7_formCopago;
