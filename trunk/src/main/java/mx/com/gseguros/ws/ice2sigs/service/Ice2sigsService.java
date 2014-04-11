@@ -1,6 +1,7 @@
 package mx.com.gseguros.ws.ice2sigs.service;
 
 import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.portal.general.model.RespuestaVO;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Agente;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteRespuesta;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteSalud;
@@ -141,6 +142,6 @@ public interface Ice2sigsService {
 	 * @param userVO
 	 * @return
 	 */
-	public boolean ejecutaWSreclamosTramite(String ntramite, Ice2sigsService.Operacion op, boolean async, UserVO userVO);
+	public RespuestaVO ejecutaWSreclamosTramite(String ntramite, Ice2sigsService.Operacion op, boolean async, UserVO userVO);
 	
 }

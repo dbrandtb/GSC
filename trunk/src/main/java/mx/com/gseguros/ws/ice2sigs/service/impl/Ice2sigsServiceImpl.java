@@ -10,6 +10,7 @@ import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.portal.general.model.RespuestaVO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub;
@@ -170,6 +171,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 				WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(ServletActionContext.getServletContext());
 				ServicioGSServiceCallbackHandlerImpl callback = (ServicioGSServiceCallbackHandlerImpl)context.getBean("servicioGSServiceCallbackHandlerImpl");
 				// Se setean los parametros al callback handler:
+				//params.put("STUB", stubGS);
 				callback.setClientData(params);
 				
 				stubGS.startreciboGS(reciboE, callback);
@@ -823,11 +825,12 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 		return allInserted;
 	}
 
-	public boolean ejecutaWSreclamosTramite(String ntramite, Ice2sigsService.Operacion op, boolean async, UserVO userVO) {
+	public RespuestaVO ejecutaWSreclamosTramite(String ntramite, Ice2sigsService.Operacion op, boolean async, UserVO userVO) {
 		
 		logger.debug("********************* Entrando a Ejecuta WSreclamo ******************************");
 		
-		boolean exito = true;
+		RespuestaVO res =  new RespuestaVO();
+		res.setSuccess(true);
 		
 		List<Reclamo> resultReclamos = null;
 		
@@ -845,7 +848,9 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 			resultReclamos = siniestrosManager.obtieneDatosReclamoWS(params);
 		} catch (Exception e1) {
 			logger.error("Error en llamar al PL de obtencion de obtieneDatosReclamoWS",e1);
-			return false;
+			res.setSuccess(false);
+			res.setMensaje("Sin datos. No se han guardado correctamente los calculos.");
+			return res;
 		}
 		
 		if(resultReclamos != null && resultReclamos.size() > 0){
@@ -853,7 +858,9 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 			for(Reclamo reclamo : resultReclamos){
 				if(reclamo.getNumPol() == 0){
 					logger.debug("Sin datos para ejecutaWSreclamo ");
-					return false;
+					res.setSuccess(false);
+					res.setMensaje("Alguno de los reclamos no tiene la informaci&oacute;n necesaria para solicitar el pago.");
+					return res;
 				}
 				
 				params.put("pv_cdunieco_i", Integer.toString(reclamo.getSucPol()));
@@ -896,7 +903,8 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 					
 				}catch(Exception e){
 					logger.error("Error al enviar el Reclamo: " + reclamo.getIcodreclamo(), e);
-					exito = false;
+					res.setSuccess(false);
+					res.setMensaje("Error al enviar alg&aacute;n Reclamo para la solicitud de Pago. Intente nuevamente.");
 					try {
 						kernelManager.movBitacobro(
 								(String) params.get("pv_cdunieco_i"),
@@ -915,10 +923,12 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 			}
 		}else {
 			logger.debug("Sin datos para ejecutaWSreclamo ");
-			return false;
+			res.setSuccess(false);
+			res.setMensaje("Sin datos. No se han guardado correctamente los calculos.");
+			return res;
 		}
 
-		return exito;
+		return res;
 	}
 
 	public String getEndpoint() {

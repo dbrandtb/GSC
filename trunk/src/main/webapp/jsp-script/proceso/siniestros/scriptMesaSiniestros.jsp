@@ -793,7 +793,7 @@ var msgWindow;
 							if(respuesta.success){
 								mensajeCorrecto('Aviso','El pago se ha solicitado con exito.');	
 							}else {
-								mensajeError('Error. No se han guardado correctamente los calculos, &oacute; no se envi&oacute; exitosamente alguno de los Reclamos, intente nuevamente.');
+								mensajeError(respuesta.mensaje);
 							}
 							
 						},
