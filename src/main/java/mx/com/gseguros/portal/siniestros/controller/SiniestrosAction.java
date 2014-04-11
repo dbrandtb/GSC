@@ -20,6 +20,7 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.controller.MesaControlAction;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.portal.general.model.RespuestaVO;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
@@ -1286,8 +1287,10 @@ public void setMsgResult(String msgResult) {
 		   logger.debug("solicitarPago Siniestros params: "+ params);
 		   UserVO usuario  = (UserVO)session.get("USUARIO");
 		   
-		   success = ice2sigsService.ejecutaWSreclamosTramite(params.get("pv_ntramite_i"), Operacion.INSERTA, false, usuario);
-		  
+		   RespuestaVO res = ice2sigsService.ejecutaWSreclamosTramite(params.get("pv_ntramite_i"), Operacion.INSERTA, false, usuario);
+		   success = res.isSuccess();
+		   mensaje = res.getMensaje();
+		   
 		   if(success){
 			   List<SiniestroVO> siniestrosTramite = siniestrosManager.solicitudPagoEnviada(params);
 			   
@@ -1352,8 +1355,9 @@ public void setMsgResult(String msgResult) {
 	           }
 		   }
 	   }catch( Exception e){
-		   logger.error("Error en solicitarPago",e);
+		   logger.error("Error en solicitarPago generacion de cartas finiquito",e);
 		   success =  false;
+		   mensaje = "Error al solicitar Pago, generaci&oacute;n de cartas finiquito. Consulte a Soporte T&eacute;cnico.";
 		   return SUCCESS;
 	   }
 	   
