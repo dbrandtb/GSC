@@ -186,7 +186,7 @@ var contentPanel = new Ext.Panel({
 								                       							//n.attributes.children=null;
 							                        							//return false;
 							                       						} else {
-							                       								//Ext.Msg.alert('Confirmación', 'Se han guardado con éxito los cambios');
+							                       								//Ext.Msg.alert('Confirmaciï¿½n', 'Se han guardado con ï¿½xito los cambios');
 							                       								//alert("n.attributes.tipoObjeto=" + n.attributes.tipoObjeto + "\n n.attributes.nivel="+ n.attributes.nivel);
 							                       								if('Producto'==n.attributes.tipoObjeto){
 							                       									//Ext.getCmp('id-combo-clausulas-definicion').store.load();
@@ -1110,6 +1110,9 @@ new Ext.Viewport({
 		
 			Ext.getCmp('obligatorio-endoso-check-atributos-variables').setValue(false);
 			Ext.getCmp('obligatorio-endoso-check-atributos-variables').setRawValue("N");
+			
+			Ext.getCmp('atributo-para-todos-check-atributos-variables').setValue(false);
+			Ext.getCmp('atributo-para-todos-check-atributos-variables').setRawValue("N");
 			//*****************
 			//alert('disable 1 : ' + Ext.getCmp('id-descripcion-atributos-variables').disabled);
 			Ext.getCmp('id-descripcion-atributos-variables').enable();
@@ -1285,6 +1288,9 @@ new Ext.Viewport({
                 	Ext.getCmp('obligatorio-endoso-check-atributos-variables').setRawValue("N");
                 }
                 
+                Ext.getCmp('atributo-para-todos-check-atributos-variables').setValue(false);
+    			Ext.getCmp('atributo-para-todos-check-atributos-variables').setRawValue("N");
+                
                 //*******************************
                 Ext.getCmp('hidden-clave-campo-atributos-variables').setValue(recAtributosVariables.get('claveCampo'));
                 Ext.getCmp('hidden-descripcion-atributos-variables').setValue(recAtributosVariables.get('descripcion'));
@@ -1450,7 +1456,7 @@ new Ext.Viewport({
 	    	Ext.getCmp('codigo-form-plan-recarga-store-arbol').store.removeAll(); 
 	    	Ext.getCmp('grid-planes-configuracion-coberturas').getStore().removeAll();
 	    }
-	    //Evitar que se reduzca el tamaño de la ventana cuando entremos al wizard:
+	    //Evitar que se reduzca el tamaï¿½o de la ventana cuando entremos al wizard:
 	    window.parent.parent.setAbsoluteSizeHeight(550);
 });
 

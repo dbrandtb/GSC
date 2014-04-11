@@ -197,6 +197,7 @@ public class AtributosVariablesManagerImpl extends
 		params.put("PV_NMORDEN_I", atributos.getOrden());
 		params.put("PV_NMAGRUPA_I", atributos.getAgrupador());
 		params.put("PV_CDCONDICVIS_I", atributos.getCodigoCondicion());
+		params.put("PV_SWSUSCRI_I",atributos.getAtributoParaTodos());
 		
 		try {
 			if (atributos.getClaveCampo() == null) {
