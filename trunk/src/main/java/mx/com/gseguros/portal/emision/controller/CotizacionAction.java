@@ -164,12 +164,12 @@ public class CotizacionAction extends PrincipalCoreAction
         ////// obtener campos de tatrisit //////
         ////////////////////////////////////////
 		
-		//Obtenemos la edad máxima para la cotizacion:
+		//Obtenemos la edad mï¿½xima para la cotizacion:
         try {
         	smap1.put("edadMaximaCotizacion", 
         			catalogosManager.obtieneCantidadMaxima(cdramo, cdtipsit, TipoTramite.POLIZA_NUEVA, Rango.ANIOS));
         } catch(Exception e) {
-        	log.error("Error al obtener la edad máxima de cotización", e);
+        	log.error("Error al obtener la edad mï¿½xima de cotizaciï¿½n", e);
         	smap1.put("edadMaximaCotizacion", "0");
         }
         
@@ -342,8 +342,8 @@ public class CotizacionAction extends PrincipalCoreAction
                 mapaPolisitIterado.put("pv_swreduci_i"   , null);
                 mapaPolisitIterado.put("pv_cdagrupa_i"   , "1");
                 mapaPolisitIterado.put("pv_cdestado_i"   , "0");
-                mapaPolisitIterado.put("pv_fefecsit_i"   , fechaHoy);
-                mapaPolisitIterado.put("pv_fecharef_i"   , fechaHoy);
+                mapaPolisitIterado.put("pv_fefecsit_i"   , renderFechas.parse(feini));
+                mapaPolisitIterado.put("pv_fecharef_i"   , renderFechas.parse(feini));
                 mapaPolisitIterado.put("pv_cdgrupo_i"    , null);
                 mapaPolisitIterado.put("pv_nmsituaext_i" , null);
                 mapaPolisitIterado.put("pv_nmsitaux_i"   , null);
