@@ -422,7 +422,21 @@ Ext.form.Field.prototype.msgTarget = "side";
 				            	}
 				            }
                  
-            });                    
+            });    
+       
+       var esAtributoParaTodosCheck= new Ext.form.Checkbox({
+			id:'atributo-para-todos-check-atributos-variables',
+           name:'atributoParaTodos',
+           boxLabel: 'Repetido en situaciones',
+       	hideLabel:true,	
+           checked:false,
+           onClick:function(){
+			            	if(this.getValue()){
+			            	this.setRawValue("S");				            	
+			            	}
+			            }
+            
+       });  
 			
             var datosVariablesForm = new Ext.form.FormPanel({
             	id:'id-atributos-variables-form',
@@ -578,6 +592,13 @@ Ext.form.Field.prototype.msgTarget = "side";
 						obligatorioEndosoCheck
 		        	]
 				},{
+					layout:'form',
+		        	//id:'hidden-form-check-obligatorio',
+		        	border: false,
+		        	items:[
+		        	       esAtributoParaTodosCheck
+		        	]     	
+				},{
  				   layout:'column',
  				   border: false,
             				items:[{
@@ -692,7 +713,9 @@ Ext.form.Field.prototype.msgTarget = "side";
                    		  }
                    		
                    		 
-                   		  banderaSelectCombo=false;          		
+                   		  banderaSelectCombo=false;          	
+                   		  //console.log(datosVariablesForm);
+                   		  //console.log(datosVariablesForm.form.getValues());
 		 		        	datosVariablesForm.form.submit({			      
 					            	waitTitle:'Espere',
 					            	waitMsg:'Guardando atributo variable...',
@@ -730,7 +753,7 @@ Ext.form.Field.prototype.msgTarget = "side";
 									},
 									success: function(form, action) {
 										var mensajeRespuesta = Ext.util.JSON.decode(action.response.responseText).mensajeRespuesta;
-										//Si mensajeRespuesta no esta vacio, sí hay hijos, entonces preguntamos:
+										//Si mensajeRespuesta no esta vacio, sï¿½ hay hijos, entonces preguntamos:
 										if(!Ext.isEmpty(mensajeRespuesta)){
 											Ext.MessageBox.confirm('Mensaje', mensajeRespuesta, function(btn) {
            										if(btn == 'yes'){

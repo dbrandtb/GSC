@@ -88,32 +88,10 @@ Ext.onReady(function(){
         ,model    : 'EndNomAsegurado'
         ,proxy    :
         {
-            enablePaging  : true
-            ,reader       : 'json'
-            ,type         : 'memory'
-            ,data         :
-            [
-				<s:set name="contador" value="0" />
-				<s:iterator value="slist1">
-				<s:if test="#contador>0">
-				,
-				</s:if>
-				{
-				    cdperson          : '<s:property value='%{getSlist1().get(#contador).get("cdperson")}' />'
-				    ,nombre           : '<s:property value='%{getSlist1().get(#contador).get("nombre")}' />'
-				    ,segundo_nombre   : '<s:property value='%{getSlist1().get(#contador).get("segundo_nombre")}' />'
-				    ,Apellido_Paterno : '<s:property value='%{getSlist1().get(#contador).get("Apellido_Paterno")}' />'
-				    ,Apellido_Materno : '<s:property value='%{getSlist1().get(#contador).get("Apellido_Materno")}' />'
-				    ,cdrfc            : '<s:property value='%{getSlist1().get(#contador).get("cdrfc")}' />'
-				    ,CDUNIECO         : '<s:property value='%{getSlist1().get(#contador).get("CDUNIECO")}' />'
-				    ,CDRAMO           : '<s:property value='%{getSlist1().get(#contador).get("CDRAMO")}' />'
-				    ,CDTIPSIT         : '<s:property value='%{getSlist1().get(#contador).get("CDTIPSIT")}' />'
-				    ,ESTADO           : '<s:property value='%{getSlist1().get(#contador).get("ESTADO")}' />'
-				    ,NMPOLIZA         : '<s:property value='%{getSlist1().get(#contador).get("NMPOLIZA")}' />'
-				}
-				<s:set name="contador" value="#contador+1" />
-				</s:iterator>
-            ]
+            enablePaging : true
+            ,reader      : 'json'
+            ,type        : 'memory'
+            ,data        : <s:property value="%{convertToJSON('slist1')}" escapeHtml="false" />
         }
 	    ,listeners        :
 	    {

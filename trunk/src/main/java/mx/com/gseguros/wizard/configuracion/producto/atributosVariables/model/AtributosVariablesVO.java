@@ -51,6 +51,9 @@ public class AtributosVariablesVO implements Serializable {
     private String modificableComplementario;
     private String apareceEndoso;
     private String obligatorioEndoso;
+    
+    private String atributoParaTodos;
+    
     /**
 	 * @return the inserta
 	 */
@@ -473,6 +476,14 @@ public class AtributosVariablesVO implements Serializable {
 
 	public void setNumeroTabla(String numeroTabla) {
 		this.numeroTabla = numeroTabla;
+	}
+
+	public String getAtributoParaTodos() {
+		return atributoParaTodos;
+	}
+
+	public void setAtributoParaTodos(String atributoParaTodos) {
+		this.atributoParaTodos = atributoParaTodos;
 	}
 	
 	

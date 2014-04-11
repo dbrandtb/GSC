@@ -177,6 +177,7 @@ public class AtributoDAO extends AbstractDAO {
     		declareParameter(new SqlParameter("PV_NMORDEN_I", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("PV_NMAGRUPA_I", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("PV_CDCONDICVIS_I", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("PV_SWSUSCRI_I", OracleTypes.VARCHAR));
     		
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));

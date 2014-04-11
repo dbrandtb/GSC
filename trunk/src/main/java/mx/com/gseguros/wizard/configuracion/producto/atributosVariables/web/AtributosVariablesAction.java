@@ -91,6 +91,8 @@ public class AtributosVariablesAction extends ExpresionesPadre {
 	 * modificado en emision.
 	 */
 	private String modificaEmision;
+	
+	private String atributoParaTodos;
 
 	/**
 	 * Atributo agregado por struts que indica si el atributo variable es
@@ -403,6 +405,10 @@ public class AtributosVariablesAction extends ExpresionesPadre {
 	// momento no se esta manipulando
 	@SuppressWarnings("unchecked")
 	public String guardarAtributosVariables() throws Exception {
+		log.debug(""
+				+ "\n#######################################"
+				+ "\n###### guardarAtributosVariables ######"
+				);
 		log.debug("codigoExpresionSession" + codigoExpresionSession);
 		if (!(codigoExpresionSession != null
 				&& StringUtils.isNotBlank(codigoExpresionSession) && codigoExpresionSession
@@ -451,6 +457,10 @@ public class AtributosVariablesAction extends ExpresionesPadre {
 		if (modificableComplementario == null) {
 			modificableComplementario = "N";
 		}
+		if(atributoParaTodos==null)
+		{
+			atributoParaTodos = "N";
+		}
 
 		if (StringUtils.isBlank(codigoRadioAtributosVariables))
 			codigoRadioAtributosVariables = "A";
@@ -474,6 +484,7 @@ public class AtributosVariablesAction extends ExpresionesPadre {
 		atributos.setObligatorioComplementario(obligatorioComplementario);
 		atributos.setObligatorioEndoso(obligatorioEndoso);
 		atributos.setModificableComplementario(modificableComplementario);
+		atributos.setAtributoParaTodos(atributoParaTodos);
 
 		/* sErGiO */
 		if (StringUtils.isNotBlank(agrupador)) {
@@ -586,6 +597,10 @@ public class AtributosVariablesAction extends ExpresionesPadre {
 			}catch(ApplicationException ae){
 				mensajeRespuesta = ae.getMessage();
 				success = false;
+				log.debug(""
+						+ "\n###### guardarAtributosVariables ######"
+						+ "\n#######################################"
+						);
 				return SUCCESS;
 			}
 		}
@@ -601,6 +616,10 @@ public class AtributosVariablesAction extends ExpresionesPadre {
 			session.put("ARBOL_PRODUCTOS_RECARGAR", temporalTree);
 			session.remove("ARBOL_PRODUCTOS");
 		}
+		log.debug(""
+				+ "\n###### guardarAtributosVariables ######"
+				+ "\n#######################################"
+				);
 		return SUCCESS;
 	}
 
@@ -1262,6 +1281,14 @@ public class AtributosVariablesAction extends ExpresionesPadre {
 
 	public void setCdInsCte(String cdInsCte) {
 		this.cdInsCte = cdInsCte;
+	}
+
+	public String getAtributoParaTodos() {
+		return atributoParaTodos;
+	}
+
+	public void setAtributoParaTodos(String atributoParaTodos) {
+		this.atributoParaTodos = atributoParaTodos;
 	}
 
 }
