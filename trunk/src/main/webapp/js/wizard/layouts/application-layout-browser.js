@@ -135,7 +135,7 @@ var contentPanel = new Ext.Panel({
 						        region:'west',	
 						        collapsible:true,
 	       	                    minSize: 200,
-    		   			        maxSize: 200,
+    		   			        //maxSize: 200,
 						        margins: '0 0 0 0',
 			    			    width: 200,
 						        autoScroll: true,
