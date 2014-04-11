@@ -617,7 +617,7 @@ public class PrincipalExpresionesAction extends ExpresionesPadre {
 				{
 					listaClave = (List<ClaveVO>) session.get("LISTA_CLAVES_COMPLETA");
 				}
-				listaClave = null;
+				//listaClave = null;
 				log.debug("Lista completa de LISTA CLAVE: "+ listaClave); 
 				if(listaClave != null && !listaClave.isEmpty())
 				{
