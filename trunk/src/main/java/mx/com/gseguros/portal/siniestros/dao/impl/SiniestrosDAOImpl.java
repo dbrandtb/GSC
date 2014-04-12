@@ -909,7 +909,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		
 		protected class guardaFacMesaControlSP extends StoredProcedure {
 			protected guardaFacMesaControlSP(DataSource dataSource) {
-				super(dataSource, "PKG_SATELITES.P_MOV_TFACMESCTRL");
+				super(dataSource, "PKG_SATELITES.P_MOV_TFACMESCTRL2");
 				declareParameter(new SqlParameter("pv_accion_i", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pv_nfactura_i", OracleTypes.VARCHAR));
@@ -921,6 +921,10 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 				declareParameter(new SqlParameter("pv_cdconval_i", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pv_descporc_i", OracleTypes.VARCHAR));
 				declareParameter(new SqlParameter("pv_descnume_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_cdmoneda_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_tasacamb_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_ptimporta_i", OracleTypes.VARCHAR));
+				declareParameter(new SqlParameter("pv_dctonuex_i", OracleTypes.VARCHAR));
 				declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 				declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
 				compile();
@@ -1604,7 +1608,10 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			String nmapunte,
 			String userregi,
 			Date   feregist,
-			String accion) throws Exception
+			String accion,
+			String ptpcioex,
+			String dctoimex,
+			String ptimpoex) throws Exception
 	{
 		Map<String,Object>p=new HashMap<String,Object>();
 		p.put("pv_cdunieco_i" , cdunieco);
@@ -1636,6 +1643,9 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		p.put("pv_userregi_i" , userregi);
 		p.put("pv_feregist_i" , feregist);
 		p.put("pv_accion_i"   , accion);
+		p.put("pv_ptpcioex_i"   , ptpcioex);
+		p.put("pv_dctoimex_i"   , dctoimex);
+		p.put("pv_ptimpoex_i"   , ptimpoex);
 		logger.debug("P_MOV_MSINIVAL params: "+p);
 		ejecutaSP(new PMOVMSINIVAL(this.getDataSource()), p);
 		logger.debug("P_MOV_MSINIVAL end");
@@ -1645,7 +1655,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	{
 		protected PMOVMSINIVAL(DataSource dataSource)
 		{
-			super(dataSource, "PKG_SINIESTRO.P_MOV_MSINIVAl");
+			super(dataSource, "PKG_SINIESTRO.P_MOV_MSINIVAL1");
 			declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
@@ -1675,6 +1685,9 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("pv_userregi_i" , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_feregist_i" , OracleTypes.DATE));
 			declareParameter(new SqlParameter("pv_accion_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ptpcioex_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dctoimex_i"   , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_ptimpoex_i"   , OracleTypes.VARCHAR));
 			
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
@@ -2503,6 +2516,10 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
         	consulta.setNmautser(rs.getString("NMAUTSER"));
         	consulta.setNmpoliex(rs.getString("NMPOLIEX"));
         	consulta.setNombreAsegurado(rs.getString("CDPERSON")+" "+ rs.getString("NOMBRE"));
+        	consulta.setCdmoneda(rs.getString("CDMONEDA"));
+        	consulta.setDesTipomoneda(rs.getString("DESTIPOMONEDA"));
+        	consulta.setTasacamb(rs.getString("TASACAMB"));
+        	consulta.setPtimporta(rs.getString("PTIMPORTA"));
             return consulta;
         }
     }
@@ -3004,5 +3021,4 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
-	
 }

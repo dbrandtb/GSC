@@ -10,7 +10,7 @@ Ext.onReady(function() {
 	//Models:
 	Ext.define('modelFactCtrl', {
 	    extend:'Ext.data.Model',
-	    fields:['noFactura','fechaFactura','tipoServicio','tipoServicioName','proveedor','proveedorName','importe']
+	    fields:['noFactura','fechaFactura','tipoServicio','tipoServicioName','proveedor','proveedorName','importe','tipoMoneda','tipoMonedaName','tasaCambio','importeFactura']
 	});
 	
 	Ext.define('modelListadoProvMedico',{
@@ -158,6 +158,34 @@ Ext.onReady(function() {
 	});
     storeTipoPago.load();
     
+    var storeTipoMoneda = Ext.create('Ext.data.JsonStore', {
+		model:'Generic',
+		proxy: {
+			type: 'ajax',
+			url: _URL_CATALOGOS,
+			extraParams : {catalogo:_CATALOGO_TipoMoneda},
+			reader: {
+				type: 'json',
+				root: 'lista'
+			}
+		}
+	});
+    storeTipoMoneda.load();
+    
+    var storeTipoMonedaInterna = Ext.create('Ext.data.JsonStore', {
+		model:'Generic',
+		proxy: {
+			type: 'ajax',
+			url: _URL_CATALOGOS,
+			extraParams : {catalogo:_CATALOGO_TipoMoneda},
+			reader: {
+				type: 'json',
+				root: 'lista'
+			}
+		}
+	});
+    storeTipoMonedaInterna.load();
+    
     var storeProveedor = Ext.create('Ext.data.Store', {
         model:'modelListadoProvMedico',
         autoLoad:false,
@@ -232,6 +260,7 @@ Ext.onReady(function() {
     				Ext.getCmp('cmbProveedor').show();
     				Ext.getCmp('txtNoFactura').show();
     				Ext.getCmp('txtImporte').show();
+    				Ext.getCmp('cmbTipoMoneda').hide();
     				Ext.getCmp('dtFechaFactura').show();
     				Ext.getCmp('EditorAsegPagDirecto').show();
     				Ext.getCmp('cmbAseguradoAfectado').hide();
@@ -244,6 +273,7 @@ Ext.onReady(function() {
     				Ext.getCmp('cmbProveedor').hide();
     				Ext.getCmp('txtNoFactura').hide();
     				Ext.getCmp('txtImporte').hide();
+    				Ext.getCmp('cmbTipoMoneda').hide();
     				Ext.getCmp('dtFechaFactura').hide();
     				Ext.getCmp('editorIncisos').show();
     				Ext.getCmp('cmbBeneficiario').show();
@@ -328,10 +358,15 @@ Ext.onReady(function() {
 				Ext.getCmp('idnombreBeneficiarioProv').setValue(cmbProveedor.rawValue);
 			}
     	}
-    	
-    	
     });
 
+    cmbTipoMoneda = Ext.create('Ext.form.ComboBox',
+    {
+        id:'cmbTipoMoneda',			   name:'cmbTipoMoneda',		        fieldLabel: 'Tipo moneda',				queryMode:'local',
+        displayField: 'value',	   valueField: 'key',					editable:false,
+        labelWidth : 250,		   emptyText:'Seleccione...',			width		 : 500,						store: storeTipoMoneda, value:'001'
+    });
+    
     // PANEL PARA EL PAGO POR REEMBOLSO
     var panelModificacionInsercion= Ext.create('Ext.form.Panel',{
         border  : 0
@@ -348,28 +383,81 @@ Ext.onReady(function() {
             {
             	xtype: 'combo',		                name:'tipoServicioInterno',	                valueField: 'key',		                displayField: 'value',
                 fieldLabel: 'Tipo de servicio',     store: storeTipoAtencion2,	                queryMode:'local',		                allowBlank:false,
-                editable:false,		                width: 500,					                labelWidth : 170,		                emptyText:'Seleccione...'
+                editable:false,		                width: 500,					                labelWidth : 170,		                emptyText:'Seleccione...',
+                value:'8'
             },
             {
             	xtype       : 'combo',            	name        :'proveedorInterno',           	fieldLabel  : 'Proveedor',            	displayField: 'nombre',
             	valueField  : 'cdpresta',          	allowBlank  : false,		            	minChars  : 2,			            	width       : 500,
                 forceSelection : true,              matchFieldWidth: false,		                queryMode   :'remote',	                queryParam  : 'params.cdpresta',
                 store       : storeProveedor,	    triggerAction  : 'all',		                labelWidth  : 170,		                emptyText   : 'Seleccione...',
-                editable    : true,                hideTrigger:true
+                editable    : true,                hideTrigger:true, value:'8'
             },
-            {   
+    		{
+    			xtype       : 'combo',            	name:'cmbTipoMonedaInterna',		        valueField: 'key',				displayField: 'value',
+    			fieldLabel: 'Tipo moneda',			store: storeTipoMonedaInterna,				queryMode:'local',				allowBlank:false,
+    			editable:false,		                width: 500,					                labelWidth : 170,		        emptyText:'Seleccione...',
+    			listeners : {
+    				change:function(e){
+    					console.log(e.getValue());
+    					if(e.getValue()!='001')
+						{
+    						panelModificacionInsercion.query('numberfield[name=importeInternoMext]')[0].show();
+    				 		panelModificacionInsercion.query('numberfield[name=tasaCambioMext]')[0].show();
+    				 		panelModificacionInsercion.query('numberfield[name=importeInterno]')[0].hide();
+						
+						}else{
+							panelModificacionInsercion.query('numberfield[name=importeInternoMext]')[0].hide();
+					 		panelModificacionInsercion.query('numberfield[name=tasaCambioMext]')[0].hide();
+					 		panelModificacionInsercion.query('numberfield[name=importeInterno]')[0].show();
+						}
+    	    		}
+    	        }
+		    },
+		    {
             	xtype      : 'numberfield',	        name       : 'importeInterno',		    	fieldLabel : 'Importe',			    	allowBlank:false,
 		    	allowDecimals :true,		    	decimalSeparator :'.',				    	minValue: 0,			                width:500,                labelWidth: 170
+    		},
+    		{   
+            	xtype      : 'numberfield',	        name       : 'importeInternoMext',		    	fieldLabel : 'Importe',			    	allowBlank:false,
+		    	allowDecimals :true,		    	decimalSeparator :'.',				    	minValue: 0,			                width:500,
+		    	labelWidth: 170,					value:'0',
+		    	listeners:{
+					change:function(field,value)
+					{
+						try
+						{
+							var importeTotal= panelModificacionInsercion.query('numberfield[name=importeInternoMext]')[0].getValue() * panelModificacionInsercion.query('numberfield[name=tasaCambioMext]')[0].getValue();
+							panelModificacionInsercion.query('numberfield[name=importeInterno]')[0].setValue(importeTotal);
+						}catch(e){}
+					}
+				}
+    		},
+    		{   
+            	xtype      : 'numberfield',	        name       : 'tasaCambioMext',		    	fieldLabel : 'Tasa de cambio',		allowBlank:false,
+		    	allowDecimals :true,		    	decimalSeparator :'.',				    	minValue: 0, 		                width:500,
+		    	labelWidth: 170, 					value:'0',
+		    	listeners:{
+					change:function(field,value)
+					{
+						try
+						{
+							var importeTotal= panelModificacionInsercion.query('numberfield[name=importeInternoMext]')[0].getValue() * panelModificacionInsercion.query('numberfield[name=tasaCambioMext]')[0].getValue();
+							panelModificacionInsercion.query('numberfield[name=importeInterno]')[0].setValue(importeTotal);
+						}catch(e){}
+					}
+				}
     		}
         ]
     });
+    
     /*PANTALLA EMERGENTE PARA LA INSERCION Y MODIFICACION DE LOS DATOS DEL GRID PARA EL PAGO POR REEMBOLSO*/
     var ventanaGrid= Ext.create('Ext.window.Window', {
            title: 'NUEVAS FACTURAS',
            closeAction: 'hide',
            modal: true,
            resizable: false,
-           height: 230,
+           height: 260,
            items:[panelModificacionInsercion],
            buttons:[{
                   text: 'Aceptar',
@@ -378,15 +466,37 @@ Ext.onReady(function() {
                         if (panelModificacionInsercion.form.isValid()) {
                         	
                         	var datos=panelModificacionInsercion.form.getValues();
+                        	console.log("VALOR DE LOS DATOS A GUARDAR PAGO POR REEMBOLSO");
+                        	console.log(datos);
+                        	var pptimport;
+                        	var pptimporta;
+                        	var tasaCambio;
+                        	
+                        	console.log("TIPO DE MONEDA INTERNA");
+                        	console.log(datos.cmbTipoMonedaInterna);
+                        	if(datos.cmbTipoMonedaInterna!='001')
+                    		{
+                        		pptimport= datos.importeInterno;
+                    			pptimporta = datos.importeInternoMext;
+                    			tasaCambio = datos.tasaCambioMext;
+                    		}else{
+                    			pptimport= datos.importeInterno;
+                    			pptimporta = 0;
+                    			tasaCambio = 0;
+                    		}
                         	
                         	var rec = new modelFactCtrl({
         	 				  	noFactura: datos.noFactInterno,
         					 	fechaFactura: datos.fechaFactInterno,
         					 	tipoServicio: datos.tipoServicioInterno,
         					 	proveedor: datos.proveedorInterno,
-        					 	importe: datos.importeInterno,
+        					 	importe: pptimport,
+        					 	tipoMoneda: datos.cmbTipoMonedaInterna,
         					 	proveedorName: panelModificacionInsercion.query('combo[name=proveedorInterno]')[0].rawValue,
-        					 	tipoServicioName: panelModificacionInsercion.query('combo[name=tipoServicioInterno]')[0].rawValue
+        					 	tipoServicioName: panelModificacionInsercion.query('combo[name=tipoServicioInterno]')[0].rawValue,
+        					 	tipoMonedaName: panelModificacionInsercion.query('combo[name=cmbTipoMonedaInterna]')[0].rawValue,
+        					 	tasaCambio: tasaCambio,
+        					 	importeFactura:pptimporta 
 		        	 		});
                         	
                         	storeFactCtrl.add(rec);
@@ -456,7 +566,17 @@ Ext.onReady(function() {
 					 	header: 'Proveedor',				dataIndex: 'proveedorName',			flex:2
 				 	},
 				 	{
-					 	header: 'Importe', 					dataIndex: 'importe',		 	flex:2,				renderer: Ext.util.Format.usMoney
+					 	header: 'Importe Factura', 				dataIndex: 'importeFactura',		 	flex:2,				renderer: Ext.util.Format.usMoney
+				 	},
+				 	{
+					 	header: 'Importe MXN', 					dataIndex: 'importe',		 	flex:2,				renderer: Ext.util.Format.usMoney
+				 	}
+				 	,
+				 	{
+					 	header: 'Moneda', 				dataIndex: 'tipoMonedaName',	flex:2
+				 	},
+				 	{
+					 	header: 'Tasa cambio', 				dataIndex: 'tasaCambio',	flex:2
 				 	},
 				 	{
 					 	xtype: 'actioncolumn',
@@ -484,6 +604,10 @@ Ext.onReady(function() {
  			this.callParent();
 	 	},
 	 	onAddClick: function(btn, e){
+	 		panelModificacionInsercion.query('combo[name=cmbTipoMonedaInterna]')[0].setValue('001');
+	 		panelModificacionInsercion.query('combo[name=tipoServicioInterno]')[0].hide();
+	 		//panelModificacionInsercion.query('numberfield[name=importeInternoMext]')[0].hide();
+	 		//panelModificacionInsercion.query('numberfield[name=tasaCambioMext]')[0].hide();
 	 		ventanaGrid.animateTarget=btn;
 	 		ventanaGrid.show();
 		   },
@@ -626,26 +750,26 @@ Ext.onReady(function() {
     Ext.define('EditorAsegPagDirecto', {
         extend: 'Ext.grid.Panel',
         requires: [
-            'Ext.selection.CellModel',
+            //'Ext.selection.CellModel',
             'Ext.grid.*',
             'Ext.data.*',
             'Ext.util.*',
             'Ext.form.*'
         ],
-        xtype: 'cell-editing',
+       //xtype: 'cell-editing',
         id:'EditorAsegPagDirecto',
         title: 'Asegurados',
         frame: false,
 
         initComponent: function(){
-            this.cellEditing = new Ext.grid.plugin.CellEditing({
+            /*this.cellEditing = new Ext.grid.plugin.CellEditing({
             clicksToEdit: 1
-            });
+            });*/
 
                 Ext.apply(this, {
                 width: 750,
                 height: 200,
-                plugins: [this.cellEditing],
+                //plugins: [this.cellEditing],
                 store: storeListAsegPagDirecto,
                 columns: 
                 [
@@ -668,9 +792,9 @@ Ext.onReady(function() {
                         }]
                     }
                 ],
-                selModel: {
+                /*selModel: {
                     selType: 'cellmodel'
-                },
+                },*/
                 tbar: [{
                     icon:_CONTEXT+'/resources/extjs4/resources/ext-theme-classic/images/icons/fam/add.png',
                     text: 'Agregar Asegurado',
@@ -684,7 +808,6 @@ Ext.onReady(function() {
         	ventanaAgregarAsegurado.animateTarget=btn;
             ventanaAgregarAsegurado.show();
            },
-           
         onRemoveClick: function(grid, rowIndex){
             var record=this.getStore().getAt(rowIndex);
             this.getStore().removeAt(rowIndex);
@@ -990,6 +1113,8 @@ Ext.onReady(function() {
 	    		    	,decimalSeparator :'.'
 	    		    	,minValue: 0
 		            },
+		            cmbTipoMoneda
+		            ,
 		            {
                         id: 'dtFechaFactura',
                         name: 'dtFechaFactura',
@@ -1029,6 +1154,7 @@ Ext.onReady(function() {
                 					obtener.push(record.data);
                                 });
                 				
+                				
                 				if(obtener.length == 1){
                 					Ext.getCmp('idUnieco').setValue(obtener[0].modUnieco);
                 					Ext.getCmp('idEstado').setValue(obtener[0].modEstado);
@@ -1053,10 +1179,13 @@ Ext.onReady(function() {
         						Ext.getCmp('cmbProveedor').setValue("");
         						Ext.getCmp('txtNoFactura').setValue("");
         						Ext.getCmp('txtImporte').setValue("");
+        						Ext.getCmp('cmbTipoMoneda').setValue("");
         						Ext.getCmp('dtFechaFactura').setValue("");
         						
         						var obtener = [];
         						storeFactCtrl.each(function(record) {
+        							console.log("VALOR DE PAGO POR REEMBOLSO");
+        							console.log(record);
                                     obtener.push(record.data);
                                 });
         						
@@ -1066,10 +1195,6 @@ Ext.onReady(function() {
             	    				Ext.getCmp('txtNoFactura').setValue(obtener[0].noFactura);
             	    				Ext.getCmp('txtImporte').setValue(obtener[0].importe);
             	    				Ext.getCmp('dtFechaFactura').setValue(obtener[0].fechaFactura);
-            	    				//Ext.getCmp('cmbTipoAtencion').setValue(obtener[0].tipoServicio);
-        	    				}else{
-        	    					Ext.getCmp('dtFechaFactura').setValue('');
-        	    					//Ext.getCmp('cmbTipoAtencion').setValue(obtener[0].tipoServicio);
         	    				}
         					}
             				
@@ -1098,18 +1223,24 @@ Ext.onReady(function() {
                 				});
         					}else{
         						storeFactCtrl.each(function(record,index){
+        							console.log("VALOR DE RECORD");
+        							console.log(record);
     	            				datosTablas.push({
     	            					nfactura:record.get('noFactura'),
     	            					ffactura:record.get('fechaFactura'),
     	            					cdtipser:record.get('tipoServicio'),
     	            					cdpresta:record.get('proveedor'),
-    	            					ptimport:record.get('importe')
+    	            					ptimport:record.get('importe'),
+    	            					cdmoneda:record.get('tipoMoneda'),
+    	            					tasacamb:record.get('tasaCambio'),
+    	            					ptimporta:record.get('importeFactura')
     	            				});
                 				});
     						}
             				
             				submitValues['datosTablas']=datosTablas;
-            				
+            				console.log("############ DATOS PARA ENVIAR ############");
+            				console.log(submitValues);
             				panelInicialPral.setLoading(true);
             				Ext.Ajax.request(
     						{
@@ -1220,6 +1351,7 @@ Ext.onReady(function() {
 			    		Ext.getCmp('cmbTipoAtencion').setValue(json.otvalor07mc);
 			    		Ext.getCmp('cmbTipoPago').setValue(json.otvalor02mc);
 			    		
+			    		//VALORES DE PAGO DIRECTO
 			    		if(Ext.getCmp('cmbTipoPago').getValue() =="1"){
 			    			Ext.getCmp('cmbProveedor').setValue(json.otvalor11mc);
 			    			Ext.getCmp('txtNoFactura').setValue(json.otvalor08mc);
@@ -1227,6 +1359,19 @@ Ext.onReady(function() {
 			    			Ext.getCmp('dtFechaFactura').setValue(json.otvalor06mc);
 			    			
 			    		}else{
+			    			//VALORES DE PAGO POR REEMBOLSO
+			    			console.log("PAGO POR REEMBOLSO");
+			    			console.log(json);
+			    			Ext.getCmp('idUnieco').setValue(json.cduniecomc);
+			    			Ext.getCmp('idEstado').setValue(json.estadomc);
+			    			Ext.getCmp('idcdRamo').setValue(json.cdramomc);
+			    			//Ext.getCmp('idNmSituac').setValue(json.);
+			    			Ext.getCmp('polizaAfectada').setValue(json.nmpolizamc);
+			    			Ext.getCmp('idNmsolici').setValue(json.nmsolicimc);
+			    			Ext.getCmp('idNmsuplem').setValue(json.nmsuplemmc);
+			    			Ext.getCmp('idCdtipsit').setValue(json.cdtipsitmc);
+			    			//Ext.getCmp('idNumPolizaInt').setValue(json.);
+			    			
 			    			Ext.getCmp('dtFechaOcurrencia').setValue(json.otvalor10mc);
 			    			Ext.getCmp('idnombreBeneficiarioProv').setValue(json.otvalor15mc);
 			    			Ext.getCmp('idnombreAsegurado').setValue(json.nombremc);
@@ -1261,11 +1406,13 @@ Ext.onReady(function() {
 	    	                    if(Ext.decode(response.responseText).listaAltaTramite != null)
 	    			    		{
 	    				    		var json=Ext.decode(response.responseText).listaAltaTramite;
+	    				    		console.log("");
 	    				    		
 	    				    		if(Ext.getCmp('cmbTipoPago').getValue() =="1"){
 	    				    			// PAGO DIRECTO
 	    				    			var nombreProveedor= json[0].cdpresta +" "+ json[0].dspresta;
 	    				    			Ext.getCmp('idnombreBeneficiarioProv').setValue(nombreProveedor);
+	    				    			Ext.getCmp('cmbTipoMoneda').setValue(json[0].cdmoneda);
 	    				    			for(var i = 0; i < json.length; i++){
 		    				    			var rec = new modelListAsegPagDirecto({
 		    		                        	modUnieco: json[i].cdunieco,
@@ -1280,15 +1427,17 @@ Ext.onReady(function() {
 		    		                        	modFechaOcurrencia: json[i].feocurre,
 		    		                        	modCdperson: json[i].cdperson,
 		    		                        	modCdpersondesc: json[i].nombreAsegurado,
-		    		                        	modnumPoliza:json[i].nmpoliex // --> Se tiene que cambiar
+		    		                        	modnumPoliza:json[i].nmpoliex
 		    		                        });
 
 		    				    			storeListAsegPagDirecto.add(rec);
-		    		                        //limpiarRegistros();
 		    				    		}
 	    				    		}else{
-	    				    			
+	    				    			//PAGO POR REEMBOLSO
+	    				    			Ext.getCmp('idNmSituac').setValue(json[0].nmsituac);
 	    				    			for(var i = 0; i < json.length; i++){
+	    				    				console.log("valor de json");
+	    				    				console.log(json[i]);
 	    				    				var rec = new modelFactCtrl({
 							 				  	noFactura: json[i].nfactura,
 											 	fechaFactura: json[i].ffactura,
@@ -1296,25 +1445,16 @@ Ext.onReady(function() {
 											 	proveedor: json[i].cdpresta,
 											 	importe: json[i].ptimport,
 											 	proveedorName: json[i].cdpresta+ " "+json[i].dspresta,
-											 	tipoServicioName: json[i].dstipser
+											 	tipoServicioName: json[i].dstipser,
+											 	tipoMoneda: json[i].cdmoneda,
+											 	tipoMonedaName: json[i].desTipomoneda,
+											 	tasaCambio: json[i].tasacamb,
+											 	importeFactura:json[i].ptimporta
 		    		                        });
 
 		    				    			storeFactCtrl.add(rec);
-		    		                        //limpiarRegistros();
 		    				    		}
-	    				    			/*	
-					        	 		});
-					                	
-					                	storeFactCtrl.add(rec);
-					                	ventanaGrid.close();
-					                	panelModificacionInsercion.getForm().reset();*/
 	    				    		}
-	    				    		
-	    				    		
-	    				    		
-	    				    		
-	    				    		
-	    				    		/**/
 	    			    		}
 	    				    },
 	    				    failure : function ()
@@ -1341,7 +1481,6 @@ Ext.onReady(function() {
 			        });
 			    }
 			});
-			//Ext.getCmp('cmbTipoPago').setValue('2');
 	}
     
     

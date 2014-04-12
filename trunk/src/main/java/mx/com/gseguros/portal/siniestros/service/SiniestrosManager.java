@@ -117,7 +117,11 @@ public interface SiniestrosManager {
 			String cdgarant,
 			String cdconval,
 			String descporc,
-			String descnume
+			String descnume,
+			String cdmoneda,
+			String tasacamb,
+			String ptimporta,
+			String dctonuex
 			) throws ApplicationException;
 
 	public String movFacMesaControl(
@@ -131,7 +135,11 @@ public interface SiniestrosManager {
 			String cdconval,
 			String descporc,
 			String descnume,
-			String operacion
+			String operacion,
+			String cdmoneda,
+			String tasacamb,
+			String ptimporta,
+			String dctonuex
 			) throws ApplicationException;
 
 	public String guardaListaTworkSin(HashMap<String, Object> paramsTworkSin) throws ApplicationException;
@@ -276,7 +284,10 @@ public interface SiniestrosManager {
 			String nmapunte,
 			String userregi,
 			Date   feregist,
-			String accion) throws Exception;
+			String accion,
+			String ptpcioex,
+			String dctoimex,
+			String ptimpoex) throws Exception;
 	
 	/**
 	 * CDUNIECO,CDRAMO,ESTADO,NMPOLIZA,NMSUPLEM,

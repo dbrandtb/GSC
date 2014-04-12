@@ -97,6 +97,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case TRATAMIENTOS:
 				case PENALIZACIONES:
 				case PLANES:
+				case TIPO_MONEDA:
 					lista = catalogosManager.getTmanteni(cat);
 	                break;
 				case MC_ESTATUS_TRAMITE:

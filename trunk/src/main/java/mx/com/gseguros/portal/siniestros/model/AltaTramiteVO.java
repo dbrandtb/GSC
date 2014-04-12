@@ -38,8 +38,10 @@ public class AltaTramiteVO implements Serializable{
 	private String cdperson;
 	private String feocurre;
 	private String nmautser;
-	//private String nombreBeneficiario;
-	//private String nombreProveedor;
+	private String cdmoneda;
+	private String desTipomoneda;
+	private String tasacamb;
+	private String ptimporta;
 	private String nombreAsegurado;
 	
 	
@@ -283,15 +285,25 @@ public class AltaTramiteVO implements Serializable{
 		this.nombreAsegurado = nombreAsegurado;
 	}
 
-
-	/*public String getNombreBeneficiario() {
-		return nombreBeneficiario;
+	
+	public String getCdmoneda() {
+		return cdmoneda;
 	}
 
 
-	public void setNombreBeneficiario(String nombreBeneficiario) {
-		this.nombreBeneficiario = nombreBeneficiario;
-	}*/
+	public void setCdmoneda(String cdmoneda) {
+		this.cdmoneda = cdmoneda;
+	}
+
+
+	public String getDesTipomoneda() {
+		return desTipomoneda;
+	}
+
+
+	public void setDesTipomoneda(String desTipomoneda) {
+		this.desTipomoneda = desTipomoneda;
+	}
 
 
 	public String toString(){
@@ -326,6 +338,26 @@ public class AltaTramiteVO implements Serializable{
 
 	public void setNmpoliex(String nmpoliex) {
 		this.nmpoliex = nmpoliex;
+	}
+
+
+	public String getTasacamb() {
+		return tasacamb;
+	}
+
+
+	public void setTasacamb(String tasacamb) {
+		this.tasacamb = tasacamb;
+	}
+
+
+	public String getPtimporta() {
+		return ptimporta;
+	}
+
+
+	public void setPtimporta(String ptimporta) {
+		this.ptimporta = ptimporta;
 	}	
 	
 }

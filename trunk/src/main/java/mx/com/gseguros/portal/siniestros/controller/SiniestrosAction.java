@@ -369,10 +369,6 @@ public class SiniestrosAction extends PrincipalCoreAction{
 							paramsMCAut.put("pv_otvalor05",params.get("dsNombreAsegurado"));            // Nombre del asegurado
 							WrapperResultados res = kernelManagerSustituto.PMovMesacontrol(paramsMCAut);
 							
-							logger.debug("VALOR DE LA MESA DE CONTROL");
-							logger.debug(res.getItemMap());
-							logger.debug(res.getItemMap().get("ntramite"));
-							
 							if(params.get("status").trim().equalsIgnoreCase("2")){
 								Map<String,Object>paramsO =new HashMap<String,Object>();
 								paramsO.put("pv_ntramite_i" , (String)res.getItemMap().get("ntramite"));
@@ -383,9 +379,6 @@ public class SiniestrosAction extends PrincipalCoreAction{
 								paramsO.put("pv_nmAutSer_i" , lista.get(0).getNmautser());//params.get("nmautant"));
 								paramsO.put("pv_cdperson_i" , params.get("cdperson"));
 								paramsO.put("pv_nmsuplem_i" , params.get("nmsuplem"));
-								//mca.setParamsO((HashMap<String, Object>) paramsO);
-								logger.debug("VALORES A ENVIAR PARA LA GENERACION DEL PDF");
-								logger.debug(paramsO);
 								generarAutoriServicio(paramsO);
 							}
 							
@@ -407,6 +400,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 				    		// Tenemos que actualizar el status para el guardado
 				    		if(params.get("status").trim().equalsIgnoreCase("2")){
 								//paramsMCAut.put("pv_status_i",EstatusTramite.CONFIRMADO.getCodigo());
+				    			
 				    			MesaControlAction mca = new MesaControlAction();
 				    			mca.setKernelManager(kernelManagerSustituto);
 				    			mca.setSession(session);
@@ -415,8 +409,11 @@ public class SiniestrosAction extends PrincipalCoreAction{
 				    			smap1.put("status"   , EstatusTramite.CONFIRMADO.getCodigo());
 				    			smap1.put("cdmotivo" , null);
 				    			smap1.put("comments" , null);
+				    			smap1.put("rol_destino" , null);
+				    			smap1.put("usuario_destino" , null);
 				    			mca.setSmap1(smap1);
 				    			mca.actualizarStatusTramite();
+				    			
 				    			
 				    			Map<String,Object>paramsO =new HashMap<String,Object>();
 								paramsO.put("pv_ntramite_i" , params.get("idNumtramiteInicial"));
@@ -453,9 +450,6 @@ public class SiniestrosAction extends PrincipalCoreAction{
 	public String guardaAltaTramite(){
 			logger.debug(" **** Entrando al guardado de alta de tramite ****");
 			try {
-					logger.debug("VALORES DE ENTRADA");
-					logger.debug(params);
-					
 					this.session=ActionContext.getContext().getSession();
 			        UserVO usuario=(UserVO) session.get("USUARIO");
 					HashMap<String, Object> parMesCon = new HashMap<String, Object>();
@@ -466,13 +460,13 @@ public class SiniestrosAction extends PrincipalCoreAction{
 					parMesCon.put("pv_nmsuplem_i",params.get("nmsuplem"));
 					parMesCon.put("pv_cdsucadm_i",params.get("cmbOficEmisora"));
 					parMesCon.put("pv_cdsucdoc_i",params.get("cmbOficReceptora"));
-					parMesCon.put("pv_cdtiptra_i","16");
+					parMesCon.put("pv_cdtiptra_i",TipoTramite.SINIESTRO.getCdtiptra());
 					parMesCon.put("pv_ferecepc_i",getDate(params.get("dtFechaRecepcion")));
 					parMesCon.put("pv_cdagente_i",null);
 					parMesCon.put("pv_referencia_i",null);
 					parMesCon.put("pv_nombre_i",params.get("idnombreAsegurado")); // Se guardara la informaci�n del Asegurado
 					parMesCon.put("pv_festatus_i",getDate(params.get("dtFechaFactura")));
-					parMesCon.put("pv_status_i","2");
+					parMesCon.put("pv_status_i",EstatusTramite.PENDIENTE.getCodigo());
 					parMesCon.put("pv_comments_i",null);
 					parMesCon.put("pv_nmsolici_i",params.get("nmsolici"));
 					parMesCon.put("pv_cdtipsit_i",params.get("cdtipsit"));
@@ -1540,6 +1534,8 @@ public void setMsgResult(String msgResult) {
     		siniestrosManager.actualizaOTValorMesaControl(otvalor);
     		
     		List<Map<String,String>> facturas  = siniestrosManager.obtenerFacturasTramite(ntramite);
+    		logger.debug("#### VALOR DE LAS FACTURAS ####### ");
+    		logger.debug(facturas);
     		
     		for(Map<String,String>factura:facturas)
     		{
@@ -1550,8 +1546,12 @@ public void setMsgResult(String msgResult) {
 	    		String                   ptimport  = factura.get("PTIMPORT");
 	    		String                   descporc  = factura.get("DESCPORC");
 	    		String                   descnume  = factura.get("DESCNUME");
+	    		String                   cdmoneda  = factura.get("CDMONEDA");
+	    		String                   tasacamb  = factura.get("TASACAMB");
+	    		String                   ptimporta = factura.get("PTIMPORTA");
+	    		String                   dctonuex = factura.get("DCTONUEX");
 	    		
-	    		siniestrosManager.guardaListaFacMesaControl(ntramite, nfactura, fefactura, cdtipser, cdpresta, ptimport, cdgarant, cdconval, descporc, descnume);
+	    		siniestrosManager.guardaListaFacMesaControl(ntramite, nfactura, fefactura, cdtipser, cdpresta, ptimport, cdgarant, cdconval, descporc, descnume,cdmoneda,tasacamb,ptimporta,dctonuex);
     		}
     		
     		success = true;
@@ -1723,8 +1723,11 @@ public void setMsgResult(String msgResult) {
     				cdgarant,
     				cdconval,
     				descporc, 
-    				descnume
-    				);
+    				descnume,
+    				"001",
+    				"0",
+    				"0",
+    				"0");
     		
     		Map<String,Object> otvalor = new HashMap<String,Object>();
     		otvalor.put("pv_ntramite_i"  , ntramite);
@@ -2137,6 +2140,11 @@ public void setMsgResult(String msgResult) {
     		Date   dFeregist = new Date();//renderFechas.parse(feregist);
     		
     		String operacion =  params.get("operacion");
+    		
+    		String ptpcioex  = params.get("ptpcioex");
+    		String dctoimex  = params.get("dctoimex");
+    		String ptimpoex  = params.get("ptimpoex");
+    		
     		if(StringUtils.isBlank(operacion)) operacion = Constantes.INSERT_MODE;
     		
     		siniestrosManager.P_MOV_MSINIVAL(
@@ -2145,7 +2153,7 @@ public void setMsgResult(String msgResult) {
     				cdgarant, cdconval, cdconcep, idconcep, cdcapita,
     				nmordina, dFemovimi, cdmoneda, ptprecio, cantidad,
     				destopor, destoimp, ptimport, ptrecobr, nmanno,
-    				nmapunte, userregi, dFeregist, operacion);
+    				nmapunte, userregi, dFeregist, operacion,ptpcioex,dctoimex,ptimpoex);
     		
     		mensaje = "Datos guardados";
     		success = true;
@@ -4351,6 +4359,10 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
                 null,
                 null,
                 null,
+                null,
+                params.get("cmbTipoMoneda"),
+                null,
+                null,
                 null
             );
         }else{
@@ -4377,6 +4389,10 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
                     null,
                     null,
                     null,
+                    null,
+                    datosTablas.get(i).get("cdmoneda"),
+                    datosTablas.get(i).get("tasacamb"),
+                    datosTablas.get(i).get("ptimporta"),
                     null
                 );
             }
