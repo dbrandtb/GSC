@@ -309,7 +309,11 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			String cdgarant,
 			String cdconval,
 			String descporc,
-			String descnume) throws ApplicationException {
+			String descnume,
+			String cdmoneda,
+			String tasacamb,
+			String ptimporta,
+			String dctonuex) throws ApplicationException {
 		// TODO Auto-generated method stub
 		try {
 			HashMap<String,Object> paramsFacMesaCtrl=new HashMap<String,Object>();
@@ -324,6 +328,10 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			paramsFacMesaCtrl.put("pv_cdconval_i",cdconval);
 			paramsFacMesaCtrl.put("pv_descporc_i",descporc);
 			paramsFacMesaCtrl.put("pv_descnume_i",descnume);
+			paramsFacMesaCtrl.put("pv_cdmoneda_i",cdmoneda);
+			paramsFacMesaCtrl.put("pv_tasacamb_i",tasacamb);
+			paramsFacMesaCtrl.put("pv_ptimporta_i",ptimporta);
+			paramsFacMesaCtrl.put("pv_dctonuex_i",dctonuex);
 			log.debug("guardaListaFacMesaControl params: "+paramsFacMesaCtrl);
 			return siniestrosDAO.guardaFacMesaControl(paramsFacMesaCtrl);
 		} catch (DaoException daoExc) {
@@ -343,7 +351,11 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			String cdconval,
 			String descporc,
 			String descnume, 
-			String operacion) throws ApplicationException {
+			String operacion,
+			String cdmoneda,
+			String tasacamb,
+			String ptimporta,
+			String dctonuex) throws ApplicationException {
 		// TODO Auto-generated method stub
 		try {
 			HashMap<String,Object> paramsFacMesaCtrl=new HashMap<String,Object>();
@@ -358,6 +370,10 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			paramsFacMesaCtrl.put("pv_cdconval_i",cdconval);
 			paramsFacMesaCtrl.put("pv_descporc_i",descporc);
 			paramsFacMesaCtrl.put("pv_descnume_i",descnume);
+			paramsFacMesaCtrl.put("pv_cdmoneda_i",cdmoneda);
+			paramsFacMesaCtrl.put("pv_tasacamb_i",tasacamb);
+			paramsFacMesaCtrl.put("pv_ptimporta_i",ptimporta);
+			paramsFacMesaCtrl.put("pv_dctonuex_i",dctonuex);
 			log.debug("guardaListaFacMesaControl params: "+paramsFacMesaCtrl);
 			return siniestrosDAO.guardaFacMesaControl(paramsFacMesaCtrl);
 		} catch (DaoException daoExc) {
@@ -680,7 +696,10 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			String nmapunte,
 			String userregi,
 			Date   feregist,
-			String accion) throws Exception
+			String accion,
+			String ptpcioex,
+			String dctoimex,
+			String ptimpoex) throws Exception
 	{
 		siniestrosDAO.P_MOV_MSINIVAL(cdunieco,
 				 cdramo,
@@ -710,7 +729,10 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 				 nmapunte,
 				 userregi,
 				 feregist,
-				 accion);
+				 accion,
+				 ptpcioex,
+				 dctoimex,
+				 ptimpoex);
 	}
 	
 	@Override

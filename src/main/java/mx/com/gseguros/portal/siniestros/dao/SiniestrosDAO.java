@@ -223,7 +223,10 @@ public interface SiniestrosDAO {
 			String nmapunte,
 			String userregi,
 			Date   feregist,
-			String accion) throws Exception;
+			String accion,
+			String ptpcioex,
+			String dctoimex,
+			String ptimpoex) throws Exception;
 	
 	public List<Map<String,String>>P_GET_MSINIVAL(
 			String cdunieco,

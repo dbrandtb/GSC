@@ -1416,6 +1416,7 @@ function _p12_guardar()
 {
 	debug('_p12_guardar');
 	var valido = _p12_validaAutorizaciones();
+	console.log(valido);
 	if(valido.length==0)
 	{
 		_p12_panelCalculo.setLoading(true);
@@ -1451,7 +1452,13 @@ function _p12_guardar()
 	}
 	else
 	{
-		mensajeError(valido);
+		centrarVentanaInterna(Ext.Msg.show({
+	           title      : 'Error',
+	           msg        : valido,
+	           width      : 600,
+	           icon    	  : Ext.Msg.ERROR,
+	           buttons    : Ext.Msg.OK
+	    }));
 	}
 }
 
@@ -1532,7 +1539,15 @@ function _p12_validaAutorizaciones()
 		for(i=0;i<facturas.length;i++)
 		{
 			var facturaIte = facturas[i];
-			debug('validando factura '+facturaIte.NFACTURA);
+			
+			if(+ facturaIte.PTIMPORT <= 0){
+				result = result + 'Verifica el Importe ' + facturaIte.NFACTURA + '<br/>';
+			}
+			
+			if(+facturaIte.DCTONUEX > +facturaIte.DESCNUME){
+				result = result + 'Verifica el Descuento ' + facturaIte.NFACTURA + '<br/>';
+			}
+			
 			if(facturaIte.AUTRECLA!='S')
             {
                 result = result + 'Reclamaciones no autoriza la factura ' + facturaIte.NFACTURA + '<br/>';
@@ -1540,6 +1555,37 @@ function _p12_validaAutorizaciones()
             if(false && facturaIte.AUTMEDIC!='S')
             {
                 result = result + 'El m&eacute;dico no autoriza la factura ' + facturaIte.NFACTURA + '<br/>';
+            }
+            
+            
+            
+            var conceptos = _p12_llist1[i];
+            console.log(conceptos);
+            var j;
+            for(j=0;j<conceptos.length;j++)
+            {
+            	//var facturaIte = conceptos[j];
+            	var conceptosInt = conceptos[j];
+            	
+            	console.log("FOR J");
+            	console.log(conceptosInt.PTIMPORT);
+            	console.log(conceptosInt.DCTOIMEX);
+            	console.log(conceptosInt.DESTOIMP);
+            	console.log(conceptosInt.PTPCIOEX);
+            	console.log(conceptosInt.PTPRECIO);
+            	
+            	
+            	if(+ conceptosInt.PTIMPORT <= 0){
+    				result = result + 'Verifica el Importe del concepto ' + conceptosInt.NFACTURA + '<br/>';
+    			}
+    			
+    			if(+conceptosInt.DCTOIMEX > +conceptosInt.DESTOIMP){
+    				result = result + 'Verifica el Descuento ' + conceptosInt.NFACTURA + '<br/>';
+    			}
+    			if(+conceptosInt.PTPCIOEX > +conceptosInt.PTPRECIO){
+    				result = result + 'Verifica el Precio ' + conceptosInt.NFACTURA + '<br/>';
+    			}
+            	
             }
 		}
 	}

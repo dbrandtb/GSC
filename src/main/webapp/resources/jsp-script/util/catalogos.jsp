@@ -44,7 +44,8 @@ var Cat = {
     TiposPersona              : '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPOS_PERSONA" />',
     TiposPoliza               : '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPOS_POLIZA" />',
     TipSit                    : '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPSIT" />',
-    Tratamientos              : '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TRATAMIENTOS" />'
+    Tratamientos              : '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TRATAMIENTOS" />',
+    TipoMoneda                : '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_MONEDA" />'
 };
 
 
