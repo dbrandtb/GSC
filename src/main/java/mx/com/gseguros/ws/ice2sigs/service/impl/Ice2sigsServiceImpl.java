@@ -857,7 +857,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 			
 			for(Reclamo reclamo : resultReclamos){
 				if(reclamo.getNumPol() == 0){
-					logger.debug("Sin datos para ejecutaWSreclamo ");
+					logger.debug("Sin datos para ejecutaWSreclamo.");
 					res.setSuccess(false);
 					res.setMensaje("Alguno de los reclamos no tiene la informaci&oacute;n necesaria para solicitar el pago.");
 					return res;
@@ -904,7 +904,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 				}catch(Exception e){
 					logger.error("Error al enviar el Reclamo: " + reclamo.getIcodreclamo(), e);
 					res.setSuccess(false);
-					res.setMensaje("Error al enviar alg&aacute;n Reclamo para la solicitud de Pago. Intente nuevamente.");
+					res.setMensaje("Error al enviar alg&uacute;n Reclamo para la solicitud de Pago. Intente nuevamente.");
 					try {
 						kernelManager.movBitacobro(
 								(String) params.get("pv_cdunieco_i"),
@@ -922,7 +922,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 				}
 			}
 		}else {
-			logger.debug("Sin datos para ejecutaWSreclamo ");
+			logger.debug("Sin datos para ejecutaWSreclamo.");
 			res.setSuccess(false);
 			res.setMensaje("Sin datos. No se han guardado correctamente los calculos.");
 			return res;
