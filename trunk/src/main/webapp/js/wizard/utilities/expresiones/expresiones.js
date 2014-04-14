@@ -1,4 +1,4 @@
-ExpresionesVentana2 = function(codigoExpresion, codigoExpresionSession, store, encabezado, row )
+ExpresionesVentana2 = function(codigoExpresion, codigoExpresionSession, store, encabezado, row, callbackFunction )
 {
 	//console.log('codigoExpresion:'       , codigoExpresion);
 	//console.log('codigoExpresionSession' , codigoExpresionSession);
@@ -1596,6 +1596,31 @@ nueva ventana
   							}
   							
   							if(valido)
+  							{ 
+  								debug('comboVariables:',comboVariables);
+  								var storeVariables = comboVariables.store;
+  								debug('storeVariables:',storeVariables);
+  								var descripcionTmp = descripcion.getValue();
+  								debug('descripcion:',descripcionTmp);
+  								var variablesFaltantes = '';
+  								storeVariables.each(function(record)
+  								{
+  									var nombreVariableTmp = record.get('nombre').toUpperCase();
+  									debug('iterando:',nombreVariableTmp);
+  									var lio = descripcionTmp.toUpperCase().lastIndexOf(nombreVariableTmp);
+  									if(lio==-1)
+  									{
+  										variablesFaltantes = variablesFaltantes + 'La variable '+nombreVariableTmp+' no se utiliza en la expresi&oacute;n<br/>';
+  									}
+  								});
+  								valido = variablesFaltantes.length==0;
+  								if(!valido)
+  								{
+  									Ext.MessageBox.alert('Error', variablesFaltantes);
+  								}
+  							}
+  							
+  							if(valido)
   							{
   								var ottiporg = obtenerOTTIPORG(codigoExpresionSession);
 				 		        tab2.form.submit(
@@ -1632,6 +1657,11 @@ nueva ventana
 												Ext.MessageBox.alert('Aviso', mensaje);
 												store.load();
 											    wind.close();
+											    
+											    if(callbackFunction)
+											    {
+											    	callbackFunction();
+											    }
 											}
 									    });				   
 									}
@@ -1840,7 +1870,32 @@ nueva ventana
   								if(!valido)
   								{
   									descripcion.markInvalid('Descripcion requerida');
-									Ext.MessageBox.alert('Error', 'Favor de llenar los datos requeridos');
+  									Ext.MessageBox.alert('Error', 'Favor de llenar los datos requeridos');
+  								}
+  							}
+  							
+  							if(valido)
+  							{ 
+  								debug('comboVariables:',comboVariables);
+  								var storeVariables = comboVariables.store;
+  								debug('storeVariables:',storeVariables);
+  								var descripcionTmp = descripcion.getValue();
+  								debug('descripcion:',descripcionTmp);
+  								var variablesFaltantes = '';
+  								storeVariables.each(function(record)
+  								{
+  									var nombreVariableTmp = record.get('nombre').toUpperCase();
+  									debug('iterando:',nombreVariableTmp);
+  									var lio = descripcionTmp.toUpperCase().lastIndexOf(nombreVariableTmp);
+  									if(lio==-1)
+  									{
+  										variablesFaltantes = variablesFaltantes + 'La variable '+nombreVariableTmp+' no se utiliza en la expresi&oacute;n<br/>';
+  									}
+  								});
+  								valido = variablesFaltantes.length==0;
+  								if(!valido)
+  								{
+  									Ext.MessageBox.alert('Error', variablesFaltantes);
   								}
   							}
   							
@@ -1861,7 +1916,11 @@ nueva ventana
 									},
 									success: function(form, action)
 									{					   
-										    wind.close();
+										wind.close();
+										if(callbackFunction)
+										{
+											callbackFunction();
+										}
 									}
 						        });                   
 	        		        }
@@ -2077,3 +2136,26 @@ nueva ventana
         }
 	}
 };
+
+function debug(a,b,c,d)
+{
+	if(false)
+	{
+		if(d!=undefined)
+		{
+			console.log(a,b,c,d);
+		}
+		else if(c!=undefined)
+		{
+			console.log(a,b,c);
+		}
+		else if(b!=undefined)
+		{
+			console.log(a,b);
+		}
+		else
+		{
+			console.log(a);
+		}
+	}
+}
