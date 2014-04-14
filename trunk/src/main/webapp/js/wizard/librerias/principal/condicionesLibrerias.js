@@ -77,7 +77,6 @@ Ext.onReady(function(){
 	        	 			//selIndexValidaciones = storeCondiciones.indexOf(sel);
 	        	 			Ext.getCmp('eliminar-condiciones').on('click',function(){                            		
                             		//DeleteDemouser(storeCondiciones,selectedId,sel,listaValoresForm);
-                                                                                                       
                                  });
                             
                             afuera=row;     
@@ -90,14 +89,18 @@ Ext.onReady(function(){
                             			if(codigoExpresion!=null && codigoExpresion!="" && codigoExpresion!="0" && codigoExpresion!="undefined"){ 
                             				
                             				
-                            				ExpresionesVentana2(codigoExpresion, 'EXPRESION_CONDICIONES', storeCondiciones, '3', afuera);
+                            				ExpresionesVentana2(codigoExpresion, 'EXPRESION_CONDICIONES', storeCondiciones, '3', afuera, function(){
+            									storeCondiciones.load();
+            								});
 					            		}else{
 	            								var connect = new Ext.data.Connection();
 											    connect.request ({
 													url:'atributosVariables/ObtenerCodigoExpresion.action',
 													callback: function (options, success, response) {				   
 														codigoExpresion = Ext.util.JSON.decode(response.responseText).codigoExpresion;
-														ExpresionesVentana2(codigoExpresion, 'EXPRESION_CONDICIONES', storeCondiciones, '3', afuera);
+														ExpresionesVentana2(codigoExpresion, 'EXPRESION_CONDICIONES', storeCondiciones, '3', afuera, function(){
+															storeCondiciones.load();
+														});
 													}
 										   		});
 					            		}
@@ -123,7 +126,10 @@ Ext.onReady(function(){
 							url:'atributosVariables/ObtenerCodigoExpresion.action',
 							callback: function (options, success, response) {				   
 								codigoExpresion = Ext.util.JSON.decode(response.responseText).codigoExpresion;
-								ExpresionesVentana2(codigoExpresion, 'EXPRESION_CONDICIONES', storeCondiciones, '3');
+								
+								ExpresionesVentana2(codigoExpresion, 'EXPRESION_CONDICIONES', storeCondiciones, '3' ,null, function(){
+									storeCondiciones.load();
+								});
 							}
 				   		});
 				     }
