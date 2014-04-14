@@ -1523,6 +1523,7 @@ if(edita){
 													});
 													
 													if(!edita)window.close();
+													dstore.load();
 										    	});						    		
 								    		
 								    		//action.form.reset();    		
@@ -1546,7 +1547,6 @@ if(edita){
 	            	text: 'Cerrar',
 	            	handler: function(){
 	            		window.close();
-	            		dstore.load();
 	            	}
     		    }]    
 
