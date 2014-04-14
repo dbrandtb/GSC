@@ -1191,56 +1191,93 @@ variables locales de expresion
 		        				xtype:'button',
 		        				text:'Guardar Variable&nbsp;&nbsp;&nbsp;&nbsp;',
 		        				handler:function(){
-		        					if(formPanelVariablesLocales.form.isValid()){
-			        					if(validarClavesObligatoriasExpresion()){
-			        						Ext.getCmp('hidden-codigo-nombre-variable-local').setValue(comboVariables.getValue());
-			        						//alert(Ext.getCmp('hidden-codigo-nombre-variable-local').getValue());
-				        					var params="codigoExpresion=" + Ext.getCmp('hidden-codigo-expresio-expresion').getValue();
-				        					var maxlengthRecords=dsComboClave.getTotalCount();
-				        					var modifiedRecords = dsComboClave.getModifiedRecords();
-							 				for (var i=0; i<maxlengthRecords; i++) {				
-							 					var validaModificados = true;					
-							 					if(modifiedRecords.length>0){
-							 						for(var j=0; j<modifiedRecords.length;j++){
-							 							if(dsComboClave.getAt(i).get('codigoSecuencia') == modifiedRecords[j].get('codigoSecuencia')){
-							 								validaModificados = false;
-							 								params+="&&listaClave["+i+"].codigoSecuencia="+modifiedRecords[j].get('codigoSecuencia')+
-															"&&listaClave["+i+"].clave="+modifiedRecords[j].get('clave')+ 
-															"&&listaClave["+i+"].recalcular="+((modifiedRecords[j].get('switchRecalcular')== true)?'S':'N')+
-															//reemplazamos los caracteres '&' '+' para no tener conflictos, se recuperaran en el action:
-															"&&listaClave["+i+"].expresion="+ codificaCaracteresConConflicto( modifiedRecords[j].get('expresion') );
-							 							}
-							 						}
-							 					}
-							 					if(validaModificados){
-													params+="&&listaClave["+i+"].codigoSecuencia="+dsComboClave.getAt(i).get('codigoSecuencia')+
-													"&&listaClave["+i+"].clave="+dsComboClave.getAt(i).get('clave')+ 
-													"&&listaClave["+i+"].recalcular="+((dsComboClave.getAt(i).get('switchRecalcular')== true)?'S':'N')+
-													//reemplazamos los caracteres '&' '+' para no tener conflictos, se recuperaran en el action:
-													"&&listaClave["+i+"].expresion="+ codificaCaracteresConConflicto( dsComboClave.getAt(i).get('expresion') );
-												}
+		        					var valido = true;
+		        					
+		        					if(valido)
+		        					{
+		        						valido = formPanelVariablesLocales.form.isValid(); 
+		        						if(!valido)
+		        						{
+		        							Ext.MessageBox.alert('Error', 'Favor de llenar datos requeridos');
+		        						}
+		        					}
+		        					
+		        					if(valido)
+		        					{
+		        						valido = validarClavesObligatoriasExpresion();
+							        }
+		        					
+		        					if(valido)
+		        					{
+		        						var combovalue = formPanelVariablesLocales.getForm().getValues().claveSeleccionada.toUpperCase();
+		  								if(combovalue=='Seleccione una variable')
+		  								{
+		  									combovalue='';
+		  								}
+		  								var descripcionTmp = descripcion.getValue();
+		  								var lio = descripcionTmp.toUpperCase().lastIndexOf(combovalue);
+		  								valido = lio!=-1;
+	  									if(!valido)
+	  									{
+	  										Ext.MessageBox.alert('Error', 'La variable '+combovalue+' no se utiliza en la expresi&oacute;n');
+	  									}
+		        					}
+		        					
+		        					if(valido)
+		        					{
+		        						Ext.getCmp('hidden-codigo-nombre-variable-local').setValue(comboVariables.getValue());
+		        						//alert(Ext.getCmp('hidden-codigo-nombre-variable-local').getValue());
+			        					var params="codigoExpresion=" + Ext.getCmp('hidden-codigo-expresio-expresion').getValue();
+			        					var maxlengthRecords=dsComboClave.getTotalCount();
+			        					var modifiedRecords = dsComboClave.getModifiedRecords();
+						 				for (var i=0; i<maxlengthRecords; i++)
+						 				{
+						 					var validaModificados = true;
+						 					if(modifiedRecords.length>0)
+						 					{
+						 						for(var j=0; j<modifiedRecords.length;j++)
+						 						{
+						 							if(dsComboClave.getAt(i).get('codigoSecuencia') == modifiedRecords[j].get('codigoSecuencia'))
+						 							{
+						 								validaModificados = false;
+						 								params+="&&listaClave["+i+"].codigoSecuencia="+modifiedRecords[j].get('codigoSecuencia')+
+														"&&listaClave["+i+"].clave="+modifiedRecords[j].get('clave')+ 
+														"&&listaClave["+i+"].recalcular="+((modifiedRecords[j].get('switchRecalcular')== true)?'S':'N')+
+														//reemplazamos los caracteres '&' '+' para no tener conflictos, se recuperaran en el action:
+														"&&listaClave["+i+"].expresion="+ codificaCaracteresConConflicto( modifiedRecords[j].get('expresion') );
+						 							}
+						 						}
+						 					}
+						 					if(validaModificados)
+						 					{
+												params+="&&listaClave["+i+"].codigoSecuencia="+dsComboClave.getAt(i).get('codigoSecuencia')+
+												"&&listaClave["+i+"].clave="+dsComboClave.getAt(i).get('clave')+ 
+												"&&listaClave["+i+"].recalcular="+((dsComboClave.getAt(i).get('switchRecalcular')== true)?'S':'N')+
+												//reemplazamos los caracteres '&' '+' para no tener conflictos, se recuperaran en el action:
+												"&&listaClave["+i+"].expresion="+ codificaCaracteresConConflicto( dsComboClave.getAt(i).get('expresion') );
 											}
-											//alert(params);
-											var ottiporg = obtenerOTTIPORG(codigoExpresionSession);
-											params += "&&ottiporg="+ottiporg;
-				        					formPanelVariablesLocales.form.submit({			      
-									            waitTitle:'Espere',
-						            			waitMsg:'Procesando...',
-						            			params:params,
-									            failure: function(form, action) {
-													    Ext.MessageBox.alert('Mensaje de Error', Ext.util.JSON.decode(action.response.responseText).mensajeDelAction);
-													    //Ext.MessageBox.alert('Error Message', 'failure');
-												},
-												success: function(form, action) {
-													Ext.MessageBox.alert('Aviso', Ext.util.JSON.decode(action.response.responseText).mensajeDelAction);
-					        						dsComboClave.commitChanges();
-													dsComboV.load();
-												}
-									        });
-								        }
-							        }else{
-										Ext.MessageBox.alert('Error', 'Favor de llenar datos requeridos');
-									} 
+										}
+										//alert(params);
+										var ottiporg = obtenerOTTIPORG(codigoExpresionSession);
+										params += "&&ottiporg="+ottiporg;
+			        					formPanelVariablesLocales.form.submit(
+			        					{			      
+								            waitTitle:'Espere',
+					            			waitMsg:'Procesando...',
+					            			params:params,
+								            failure: function(form, action)
+								            {
+												    Ext.MessageBox.alert('Mensaje de Error', Ext.util.JSON.decode(action.response.responseText).mensajeDelAction);
+												    //Ext.MessageBox.alert('Error Message', 'failure');
+											},
+											success: function(form, action)
+											{
+												Ext.MessageBox.alert('Aviso', Ext.util.JSON.decode(action.response.responseText).mensajeDelAction);
+				        						dsComboClave.commitChanges();
+												dsComboV.load();
+											}
+								        });
+		        					}
 		        				}
 		        			}]       
 			    	}]
