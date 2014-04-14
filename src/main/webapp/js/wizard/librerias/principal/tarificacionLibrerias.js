@@ -91,14 +91,18 @@ Ext.onReady(function(){
                             			var codigoExpresion = storeTarificacion.getAt(afuera).get('codigoExpresion');
                             			//alert(codigoExpresion);
                             			if(codigoExpresion!=null && codigoExpresion!="" && codigoExpresion!="0" && codigoExpresion!="undefined"){ 
-                            				ExpresionesVentana2(codigoExpresion, 'EXPRESION_CONCEPTO_TARIFICACION', storeTarificacion, '2', afuera);
+                            				ExpresionesVentana2(codigoExpresion, 'EXPRESION_CONCEPTO_TARIFICACION', storeTarificacion, '2', afuera, function(){
+                            					storeTarificacion.load();
+            								});
 					            		}else{
 	            								var connect = new Ext.data.Connection();
 											    connect.request ({
 													url:'atributosVariables/ObtenerCodigoExpresion.action',
 													callback: function (options, success, response) {				   
 														codigoExpresion = Ext.util.JSON.decode(response.responseText).codigoExpresion;
-														ExpresionesVentana2(codigoExpresion, 'EXPRESION_CONCEPTO_TARIFICACION', storeTarificacion, '2', afuera);
+														ExpresionesVentana2(codigoExpresion, 'EXPRESION_CONCEPTO_TARIFICACION', storeTarificacion, '2', afuera, function(){
+			                            					storeTarificacion.load();
+			            								});
 													}
 										   		});
 					            		}
@@ -124,7 +128,9 @@ Ext.onReady(function(){
 								url:'atributosVariables/ObtenerCodigoExpresion.action',
 								callback: function (options, success, response) {				   
 									var codigoDeExpresion = Ext.util.JSON.decode(response.responseText).codigoExpresion;
-									ExpresionesVentana2(codigoDeExpresion, 'EXPRESION_CONCEPTO_TARIFICACION', storeTarificacion, '2');
+									ExpresionesVentana2(codigoDeExpresion, 'EXPRESION_CONCEPTO_TARIFICACION', storeTarificacion, '2', null, function(){
+                    					storeTarificacion.load();
+    								});
 								}
 					   		});
 				     }

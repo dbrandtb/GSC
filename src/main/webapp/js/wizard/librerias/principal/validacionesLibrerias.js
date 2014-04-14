@@ -92,14 +92,18 @@ Ext.onReady(function(){
                             			var codigoExpresion = storeValidaciones.getAt(afuera).get('codigoExpresion');
                             			//alert(codigoExpresion);
                             			if(codigoExpresion!=null && codigoExpresion!="" && codigoExpresion!="0" && codigoExpresion!="undefined"){ 
-                            				ExpresionesVentana2(codigoExpresion, 'EXPRESION_VALIDACIONES', storeValidaciones, '4', afuera);
+                            				ExpresionesVentana2(codigoExpresion, 'EXPRESION_VALIDACIONES', storeValidaciones, '4', afuera, function(){
+                            					storeValidaciones.load();
+            								});
 					            		}else{
 	            								var connect = new Ext.data.Connection();
 											    connect.request ({
 													url:'atributosVariables/ObtenerCodigoExpresion.action',
 													callback: function (options, success, response) {				   
 														codigoExpresion = Ext.util.JSON.decode(response.responseText).codigoExpresion;
-														ExpresionesVentana2(codigoExpresion, 'EXPRESION_VALIDACIONES', storeValidaciones, '4', afuera);
+														ExpresionesVentana2(codigoExpresion, 'EXPRESION_VALIDACIONES', storeValidaciones, '4', afuera, function(){
+															storeValidaciones.load();
+			            								});
 													}
 										   		});
 					            		}
@@ -124,7 +128,9 @@ Ext.onReady(function(){
 								url:'atributosVariables/ObtenerCodigoExpresion.action',
 								callback: function (options, success, response) {				   
 									var codigoDeExpresion = Ext.util.JSON.decode(response.responseText).codigoExpresion;
-									ExpresionesVentana2(codigoDeExpresion, 'EXPRESION_VALIDACIONES', storeValidaciones, '4');
+									ExpresionesVentana2(codigoDeExpresion, 'EXPRESION_VALIDACIONES', storeValidaciones, '4', null, function(){
+										storeValidaciones.load();
+    								});
 								}
 					   		});
 				     }

@@ -84,14 +84,18 @@ Ext.onReady(function(){
                             			var codigoExpresion = storeVariables.getAt(afuera).get('codigoExpresion');
                             			//alert(codigoExpresion);
                             			if(codigoExpresion!=null && codigoExpresion!="" && codigoExpresion!="0" && codigoExpresion!="undefined"){ 
-                            				ExpresionesVentana2(codigoExpresion, 'EXPRESION_VARIABLES_TEMPORALES', storeVariables, '5', afuera);
+                            				ExpresionesVentana2(codigoExpresion, 'EXPRESION_VARIABLES_TEMPORALES', storeVariables, '5', afuera, function(){
+                            					storeVariables.load();
+            								});
 					            		}else{
 	            								var connect = new Ext.data.Connection();
 											    connect.request ({
 													url:'atributosVariables/ObtenerCodigoExpresion.action',
 													callback: function (options, success, response) {				   
 														codigoExpresion = Ext.util.JSON.decode(response.responseText).codigoExpresion;
-														ExpresionesVentana2(codigoExpresion, 'EXPRESION_VARIABLES_TEMPORALES', storeVariables, '5', afuera);
+														ExpresionesVentana2(codigoExpresion, 'EXPRESION_VARIABLES_TEMPORALES', storeVariables, '5', afuera, function(){
+			                            					storeVariables.load();
+			            								});
 													}
 										   		});
 					            		}
@@ -112,7 +116,9 @@ Ext.onReady(function(){
 								url:'atributosVariables/ObtenerCodigoExpresion.action',
 								callback: function (options, success, response) {				   
 									var codigoDeExpresion = Ext.util.JSON.decode(response.responseText).codigoExpresion;
-									ExpresionesVentana2(codigoDeExpresion, 'EXPRESION_VARIABLES_TEMPORALES', storeVariables, '5');
+									ExpresionesVentana2(codigoDeExpresion, 'EXPRESION_VARIABLES_TEMPORALES', storeVariables, '5', null, function(){
+                    					storeVariables.load();
+    								});
 								}
 					   		});
 				     }
