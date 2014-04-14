@@ -26,6 +26,7 @@ import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.util.Rango;
 import mx.com.gseguros.portal.general.util.TipoTramite;
+import mx.com.gseguros.portal.general.util.Validacion;
 import mx.com.gseguros.utils.HttpUtil;
 import net.sf.json.JSONArray;
 
@@ -179,7 +180,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
         
         //Obtenemos la edad m�xima para la cotizacion:
         try {
-        	edadMaximaCotizacion = catalogosManager.obtieneCantidadMaxima(cdramo, cdtipsit, TipoTramite.POLIZA_NUEVA, Rango.ANIOS);
+        	edadMaximaCotizacion = catalogosManager.obtieneCantidadMaxima(cdramo, cdtipsit, TipoTramite.POLIZA_NUEVA, Rango.ANIOS, Validacion.EDAD_MAX_COTIZACION);
         } catch(Exception e) {
         	log.error("Error al obtener la edad m�xima de cotizaci�n", e);
         	edadMaximaCotizacion = "0";

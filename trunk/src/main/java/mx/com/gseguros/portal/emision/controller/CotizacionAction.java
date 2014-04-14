@@ -20,6 +20,7 @@ import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.Rango;
 import mx.com.gseguros.portal.general.util.TipoTramite;
+import mx.com.gseguros.portal.general.util.Validacion;
 import mx.com.gseguros.utils.Constantes;
 
 import org.apache.log4j.Logger;
@@ -167,7 +168,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		//Obtenemos la edad m�xima para la cotizacion:
         try {
         	smap1.put("edadMaximaCotizacion", 
-        			catalogosManager.obtieneCantidadMaxima(cdramo, cdtipsit, TipoTramite.POLIZA_NUEVA, Rango.ANIOS));
+        			catalogosManager.obtieneCantidadMaxima(cdramo, cdtipsit, TipoTramite.POLIZA_NUEVA, Rango.ANIOS, Validacion.EDAD_MAX_COTIZACION));
         } catch(Exception e) {
         	log.error("Error al obtener la edad m�xima de cotizaci�n", e);
         	smap1.put("edadMaximaCotizacion", "0");

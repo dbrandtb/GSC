@@ -4,7 +4,8 @@ public enum Rango {
 	
 	ANIOS("1"),
 	DIAS("2"),
-	PESOS("3");
+	PESOS("3"),
+	LONGITUD("4");
 
 	private String clave;
 

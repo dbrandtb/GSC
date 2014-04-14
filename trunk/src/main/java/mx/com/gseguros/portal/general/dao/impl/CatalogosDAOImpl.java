@@ -14,6 +14,7 @@ import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.general.dao.CatalogosDAO;
 import mx.com.gseguros.portal.general.util.Rango;
 import mx.com.gseguros.portal.general.util.TipoTramite;
+import mx.com.gseguros.portal.general.util.Validacion;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.log4j.Logger;
@@ -342,13 +343,14 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 
 	
 	@Override
-	public String obtieneCantidadMaxima(String cdramo, String cdtipsit, TipoTramite tipoTramite, Rango rango) throws Exception {
+	public String obtieneCantidadMaxima(String cdramo, String cdtipsit, TipoTramite tipoTramite, Rango rango, Validacion validacion) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("pv_cdramo_i", cdramo);
-		params.put("pv_cdtipsit_i", cdtipsit);
-		params.put("pv_cdtiptra_i", tipoTramite.getCdtiptra());
-		params.put("pv_tipocant_i", rango.getClave());
-		
+		params.put("pv_cdramo_i"   , cdramo);
+		params.put("pv_cdtipsit_i" , cdtipsit);
+		params.put("pv_cdtiptra_i" , tipoTramite.getCdtiptra());
+		params.put("pv_tipocant_i" , rango.getClave());
+		params.put("pv_numval_i"   , validacion.getClave());
+		logger.debug("obtieneCantidadMaxima params: "+params);
 		Map<String, Object> resultado = ejecutaSP(new ObtieneCantidadMaxima(getDataSource()), params);
 		return (String) resultado.get("pv_cantidad_o");
 	}
@@ -357,11 +359,12 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
     	
     	protected ObtieneCantidadMaxima(DataSource dataSource) {
     		
-    		super(dataSource, "PKG_CONSULTA.P_GET_EDAD_MAXIMA");
+    		super(dataSource, "PKG_CONSULTA.P_GET_CANTIDAD_MAXIMA");
     		declareParameter(new SqlParameter("pv_cdramo_i",   OracleTypes.NUMERIC));
 			declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtiptra_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_tipocant_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_numval_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_cantidad_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
