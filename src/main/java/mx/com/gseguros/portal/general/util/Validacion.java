@@ -7,9 +7,17 @@ public enum Validacion {
 	 */
 	EDAD_MAX_COTIZACION("1"),
 	/**
+	 * Dias maximos permitidos entre la fecha de ocurrencia y fecha de autorizacion
+	 */
+	DIAS_MAX_AUTORIZACION_SERVICIOS("2"),
+	/**
+	 * Monto maximo de una autorizacion sin que requiera autorizacion especial
+	 */
+	MONTO_MAXIMO_AUTORIZACION_SERVICIOS("3"),
+	/**
 	 * Longitud m&aacute;xima del nombre del contratante
 	 */
-	LONGITUD_MAX_CONTRATANTE("2");
+	LONGITUD_MAX_CONTRATANTE("4");
 	
 	private String clave;
 	

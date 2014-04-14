@@ -30,6 +30,7 @@ import mx.com.gseguros.portal.general.util.Rol;
 import mx.com.gseguros.portal.general.util.RolSistema;
 import mx.com.gseguros.portal.general.util.TipoPago;
 import mx.com.gseguros.portal.general.util.TipoTramite;
+import mx.com.gseguros.portal.general.util.Validacion;
 import mx.com.gseguros.portal.siniestros.model.AltaTramiteVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizaServiciosVO;
 import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
@@ -1395,7 +1396,7 @@ public void setMsgResult(String msgResult) {
 	   	logger.debug(" **** Entrando al metodo para obtener los numeros  de dias ****");
 	   	try {
 	   		logger.debug("VALORES A OCUPAR");
-	   		diasMaximos= catalogosManager.obtieneCantidadMaxima(params.get("cdramo"), params.get("cdtipsit"), TipoTramite.SINIESTRO, Rango.DIAS);
+	   		diasMaximos= catalogosManager.obtieneCantidadMaxima(params.get("cdramo"), params.get("cdtipsit"), TipoTramite.SINIESTRO, Rango.DIAS, Validacion.DIAS_MAX_AUTORIZACION_SERVICIOS);
 	   	}catch( Exception e){
 	   		logger.error("Error al consultar la Lista de los asegurados ",e);
 	   		return SUCCESS;
@@ -1407,7 +1408,7 @@ public void setMsgResult(String msgResult) {
    public String consultaMontoMaximo(){
 	   	logger.debug(" **** Entrando al metodo para obtener los numeros  de dias ****");
 	   	try {
-	   		montoMaximo = catalogosManager.obtieneCantidadMaxima(params.get("cdramo"), params.get("cdtipsit"), TipoTramite.SINIESTRO, Rango.PESOS);
+	   		montoMaximo = catalogosManager.obtieneCantidadMaxima(params.get("cdramo"), params.get("cdtipsit"), TipoTramite.SINIESTRO, Rango.PESOS, Validacion.MONTO_MAXIMO_AUTORIZACION_SERVICIOS);
 	   	}catch( Exception e){
 	   		logger.error("Error al consultar la Lista de los asegurados ",e);
 	   		return SUCCESS;

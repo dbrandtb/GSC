@@ -7,6 +7,7 @@ import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.general.util.Rango;
 import mx.com.gseguros.portal.general.util.TipoTramite;
+import mx.com.gseguros.portal.general.util.Validacion;
 
 public interface CatalogosDAO {
 	
@@ -28,6 +29,6 @@ public interface CatalogosDAO {
 	
 	public List<GenericVO> obtieneStatusTramite(Map<String,String> params) throws Exception;
 	
-	public String obtieneCantidadMaxima(String cdramo, String cdtipsit, TipoTramite tipoTramite, Rango rango) throws Exception;
+	public String obtieneCantidadMaxima(String cdramo, String cdtipsit, TipoTramite tipoTramite, Rango rango, Validacion validacion) throws Exception;
 
 }

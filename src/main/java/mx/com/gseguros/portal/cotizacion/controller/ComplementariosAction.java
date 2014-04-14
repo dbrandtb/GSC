@@ -26,6 +26,9 @@ import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.portal.general.util.Rango;
+import mx.com.gseguros.portal.general.util.TipoTramite;
+import mx.com.gseguros.portal.general.util.Validacion;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 import mx.com.gseguros.ws.recibossigs.service.RecibosSigsService;
@@ -703,6 +706,17 @@ public class ComplementariosAction extends PrincipalCoreAction
 					.add(new Item("flex", 1))
 					.add(Item.crear("hidden",true))
 					);
+			
+			String maxLenContratante = catalogosManager.obtieneCantidadMaxima(
+					map1.get("cdramo")
+					,map1.get("cdtipsit")
+					,TipoTramite.POLIZA_NUEVA
+					,Rango.LONGITUD
+					,Validacion.LONGITUD_MAX_CONTRATANTE);
+			
+			map1.put("maxLenContratante",maxLenContratante);
+			log.debug("map1: "+map1);
+			
 		} catch (Exception ex) {
 			log.error("error al generar los campos dinamicos", ex);
 			item1 = null;

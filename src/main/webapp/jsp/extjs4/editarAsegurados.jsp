@@ -19,6 +19,7 @@
 	var inputEstadop2=   '<s:property value="map1.estado" />';
 	var inputNmpolizap2= '<s:property value="map1.nmpoliza" />';
 	var inputCdtipsitp2= '<s:property value="map1.cdtipsit" />';
+	var inputMaxLenContratante = <s:property value="map1.maxLenContratante" />;
 	var CDATRIBU_ROLp2='<s:property value="cdatribuRol" />';
 	var gridPersonasp2;
 	var CDATRIBU_SEXOp2='<s:property value="cdatribuSexo" />';
@@ -291,6 +292,7 @@
                                 var completos=true;
                                 var storeSinCdperson=Ext.create('Ext.data.Store',{model:'Modelo1p2'});
                                 var sinCdpersonlen=0;
+                                var contratanteCumpleMaxLen = true;
                                 
                                 //ver si el contratante es aparte
                                 var hayContApart=true;
@@ -328,6 +330,18 @@
                                         //console.log("#incompleto:");
                                         //console.log(record);
                                         completos=false;                                    
+                                    }
+                                   	debug('validando maxlen contratante aparte:',inputMaxLenContratante);
+                                   	var recordTmp = recordContApart;
+                                   	var lenTmp = 0;
+                                   	lenTmp = lenTmp + (recordTmp.get("nombre")==null?0:recordTmp.get("nombre").length);
+                                   	lenTmp = lenTmp + (recordTmp.get("segundo_nombre")==null?0:recordTmp.get("segundo_nombre").length);
+                                   	lenTmp = lenTmp + (recordTmp.get("Apellido_Paterno")==null?0:recordTmp.get("Apellido_Paterno").length);
+                                   	lenTmp = lenTmp + (recordTmp.get("Apellido_Materno")==null?0:recordTmp.get("Apellido_Materno").length);
+                                   	debug('lenTmp:',lenTmp);
+                                    if(lenTmp>inputMaxLenContratante)
+                                    {
+                                        contratanteCumpleMaxLen = false;
                                     }
                                     incisosJson.push({
                                         nmsituac:'0',
@@ -404,6 +418,18 @@
                                             tpersona : typeof recordAsegu.get('tpersona')=='string'?recordAsegu.get('tpersona'):recordAsegu.get('tpersona').get('key'),
                                             nacional : typeof recordAsegu.get('nacional')=='string'?recordAsegu.get('nacional'):recordAsegu.get('nacional').get('key')
                                         });
+                                        debug('validando maxlen contratante en los asegurados:',inputMaxLenContratante);
+                                        var recordTmp = recordAsegu;
+                                        var lenTmp = 0;
+                                        lenTmp = lenTmp + (recordTmp.get("nombre")==null?0:recordTmp.get("nombre").length);
+                                        lenTmp = lenTmp + (recordTmp.get("segundo_nombre")==null?0:recordTmp.get("segundo_nombre").length);
+                                        lenTmp = lenTmp + (recordTmp.get("Apellido_Paterno")==null?0:recordTmp.get("Apellido_Paterno").length);
+                                        lenTmp = lenTmp + (recordTmp.get("Apellido_Materno")==null?0:recordTmp.get("Apellido_Materno").length);
+                                        debug('lenTmp:',lenTmp);
+                                        if(lenTmp>inputMaxLenContratante)
+                                        {
+                                            contratanteCumpleMaxLen = false;
+                                        }
                                     }
                                     debug('f5');
                                     incisosJson.push({
@@ -425,6 +451,8 @@
                                 });
                                 
                                 //tratar de hacer submit
+                                if(contratanteCumpleMaxLen)
+                                {
                                 if(completos)
                                 {
                                     if(sinCdpersonlen==0)
@@ -589,6 +617,11 @@ debug("validarYGuardar flag:2");
                                     });
 debug("validarYGuardar flag:2");
                 timeoutflagp2=2;
+                                }
+                                }
+                                else
+                                {
+                                	mensajeError('El contratante excede de '+inputMaxLenContratante+' caracteres');
                                 }
                             }
                             else
@@ -1757,6 +1790,7 @@ debug("validarYGuardar flag:2");
 	                            var completos=true;
 	                            var storeSinCdperson=Ext.create('Ext.data.Store',{model:'Modelo1p2'});
 	                            var sinCdpersonlen=0;
+	                            var contratanteCumpleMaxLen = true;
 	                            
 	                            //ver si el contratante es aparte
 	                            var hayContApart=true;
@@ -1795,6 +1829,18 @@ debug("validarYGuardar flag:2");
                                         //console.log(record);
                                         completos=false;                                    
                                     }
+	                            	debug('validando maxlen contratante aparte:',inputMaxLenContratante);
+	                            	var recordTmp = recordContApart;
+                                    var lenTmp = 0;
+                                    lenTmp = lenTmp + (recordTmp.get("nombre")==null?0:recordTmp.get("nombre").length);
+                                    lenTmp = lenTmp + (recordTmp.get("segundo_nombre")==null?0:recordTmp.get("segundo_nombre").length);
+                                    lenTmp = lenTmp + (recordTmp.get("Apellido_Paterno")==null?0:recordTmp.get("Apellido_Paterno").length);
+                                    lenTmp = lenTmp + (recordTmp.get("Apellido_Materno")==null?0:recordTmp.get("Apellido_Materno").length);
+                                    debug('lenTmp:',lenTmp);
+	                            	if(lenTmp>inputMaxLenContratante)
+	                            	{
+	                            		contratanteCumpleMaxLen = false;
+	                            	}
 	                            	incisosJson.push({
                                         nmsituac:'0',
                                         cdrol:'1',
@@ -1870,6 +1916,18 @@ debug("validarYGuardar flag:2");
 	                                        tpersona : typeof recordAsegu.get('tpersona')=='string'?recordAsegu.get('tpersona'):recordAsegu.get('tpersona').get('key'),
 	                                        nacional : typeof recordAsegu.get('nacional')=='string'?recordAsegu.get('nacional'):recordAsegu.get('nacional').get('key')
 	                                	});
+	                                	debug('validando maxlen contratante en los asegurados:',inputMaxLenContratante);
+	                                	var recordTmp = recordAsegu;
+	                                    var lenTmp = 0;
+	                                    lenTmp = lenTmp + (recordTmp.get("nombre")==null?0:recordTmp.get("nombre").length);
+	                                    lenTmp = lenTmp + (recordTmp.get("segundo_nombre")==null?0:recordTmp.get("segundo_nombre").length);
+	                                    lenTmp = lenTmp + (recordTmp.get("Apellido_Paterno")==null?0:recordTmp.get("Apellido_Paterno").length);
+	                                    lenTmp = lenTmp + (recordTmp.get("Apellido_Materno")==null?0:recordTmp.get("Apellido_Materno").length);
+	                                    debug('lenTmp:',lenTmp);
+	                                    if(lenTmp>inputMaxLenContratante)
+	                                    {
+	                                        contratanteCumpleMaxLen = false;
+	                                    }
                                 	}
 	                                debug('f5');
 	                                incisosJson.push({
@@ -1891,6 +1949,8 @@ debug("validarYGuardar flag:2");
 	                            });
                                 
 	                            //tratar de hacer submit
+	                            if(contratanteCumpleMaxLen)
+	                            {
 	                            if(completos)
                             	{
 	                            	if(sinCdpersonlen==0)
@@ -2048,6 +2108,11 @@ debug("validarYGuardar flag:2");
 	                                    icon: Ext.Msg.WARNING
 	                                });
                             	}
+	                        }
+		            		else
+		            		{
+		            			mensajeError('El contratante excede de '+inputMaxLenContratante+' caracteres');
+		            		}
 	                        }
 		            		else
 	            			{
