@@ -54,7 +54,7 @@ Ext.onReady(function(){
 		var cmCondiciones = new Ext.grid.ColumnModel([
 		    new Ext.grid.RowNumberer(),
 			{header: "Nombre", 	   dataIndex:'nombreCabecera',	width: 120, sortable:true,id:'nombreCabecera'},		    
-		    {header: "Descripción",   dataIndex:'descripcionCabecera',	width: 120, sortable:true}
+		    {header: "Descripciï¿½n",   dataIndex:'descripcionCabecera',	width: 120, sortable:true}
 		   
 		   	                	
         ]);
@@ -70,7 +70,7 @@ Ext.onReady(function(){
 		cm: cmCondiciones,
 		sm: new Ext.grid.RowSelectionModel({
 		singleSelect: true,
-		listeners: {							
+		/*listeners: {							
         	rowselect: function(sm, row, rec) {	                    		                    	                        	                     	                        
 	        	 			selectedId = storeCondiciones.data.items[row].id;
 	        	 			//var sel = Ext.getCmp('grid-lista3').getSelectionModel().getSelected();
@@ -112,13 +112,13 @@ Ext.onReady(function(){
                             Ext.getCmp('editar-grid').on('click',function(){                            		
                             		 ExpresionesVentanaCondiciones(storeCondiciones,rec,row);
                                                                                                              
-                                 });*/     
+                                 });**     
 	                   	 }
-	               	}
+	               	}*/
 		}),
 		tbar:[{
             text:'Agregar',
-            tooltip:'Agregar condición',
+            tooltip:'Agregar condici&oacute;n',
             iconCls:'add',
             handler: function() {                    	
 				     	var connect = new Ext.data.Connection();
@@ -133,17 +133,57 @@ Ext.onReady(function(){
 							}
 				   		});
 				     }
-        },'-',{
+        },/*'-',{
             text:'Eliminar',
             id:'eliminar-condiciones',
-            tooltip:'Eliminar condición',
+            tooltip:'Eliminar condiciï¿½n',
             iconCls:'remove'
-            
-        },'-',{
+        },*/'-',{
             text:'Editar',
             id:"editar-condiciones",
-            tooltip:'Editar condición',
-            iconCls:'option'
+            tooltip:'Editar condici&oacute;n',
+            iconCls:'option',
+            handler:function()
+            {
+            	var gridTmp  = grid3;
+            	var storeTmp = storeCondiciones;
+            	debug(gridTmp.getSelectionModel().getSelected());
+            	if(gridTmp.getSelectionModel().hasSelection())
+            	{
+            		var recordTmp = gridTmp.getSelectionModel().getSelected();
+            		debug('recordTmp:',recordTmp);
+            		var indexTmp = storeTmp.indexOf(recordTmp);
+            		debug('indexTmp:',indexTmp);
+            		var codigoExpresion = storeCondiciones.getAt(indexTmp).get('codigoExpresion');
+            		if(codigoExpresion!=null && codigoExpresion!="" && codigoExpresion!="0" && codigoExpresion!=undefined)
+            		{
+            			ExpresionesVentana2(codigoExpresion, 'EXPRESION_CONDICIONES', storeCondiciones, '3', indexTmp, function()
+            			{
+            				storeCondiciones.load();
+            			});
+            		}
+            		else
+            		{
+            			var connect = new Ext.data.Connection();
+            			connect.request (
+            			{
+            				url:'atributosVariables/ObtenerCodigoExpresion.action',
+            				callback: function (options, success, response)
+            				{
+            					codigoExpresion = Ext.util.JSON.decode(response.responseText).codigoExpresion;
+            					ExpresionesVentana2(codigoExpresion, 'EXPRESION_CONDICIONES', storeCondiciones, '3', indexTmp, function()
+            					{
+            						storeCondiciones.load();
+            					});
+            				}
+            			});
+            		}
+            	}
+            	else
+            	{
+            		Ext.Msg.alert('Aviso', 'Seleccione un registro');
+            	}
+            }
         }],      							        	    	    
     	width:600,
         height:370,

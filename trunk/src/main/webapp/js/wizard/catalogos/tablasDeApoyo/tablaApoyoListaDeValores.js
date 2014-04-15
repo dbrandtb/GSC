@@ -72,7 +72,7 @@
 		
 		sm: new Ext.grid.RowSelectionModel({
 		singleSelect: true,		
-		listeners: {							
+		/*listeners: {							
         	rowselect: function(sm, row, rec) {	                    		                    	                        	                     	                        
 	        	 			    
                             afuera=row;     
@@ -96,7 +96,7 @@
                                  });
                                  temporal=-1;
 	                   	 }
-	               	}
+	               	}*/
 		}),
 		tbar:[{
             text:'Agregar',
@@ -109,15 +109,48 @@
             text:'Eliminar',
             id:'eliminar-ListaDeValores',
             tooltip:'Eliminar',
-            iconCls:'remove'
-            
-            
+            iconCls:'remove',
+            handler:function()
+            {
+            	var gridTmp  = gridListaDeValores;
+            	var storeTmp = storeListaDeValores;
+            	debug(gridTmp.getSelectionModel().getSelected());
+            	if(gridTmp.getSelectionModel().hasSelection())
+            	{
+            		var recordTmp = gridTmp.getSelectionModel().getSelected();
+            		debug('recordTmp:',recordTmp);
+            		var indexTmp = storeTmp.indexOf(recordTmp);
+            		debug('indexTmp:',indexTmp);
+            		borradoListaValores(storeTmp,indexTmp,tabListaDeValores);
+            	}
+            	else
+            	{
+            		Ext.Msg.alert('Aviso', 'Seleccione un registro');
+            	}
+            }
         },'-',{
             text:'Editar',
             id:"editar-ListaDeValores",
             tooltip:'Editar',
-            iconCls:'option'
-           
+            iconCls:'option',
+            handler : function()
+            {
+            	var gridTmp  = gridListaDeValores;
+            	var storeTmp = storeListaDeValores;
+            	debug(gridTmp.getSelectionModel().getSelected());
+            	if(gridTmp.getSelectionModel().hasSelection())
+            	{
+            		var recordTmp = gridTmp.getSelectionModel().getSelected();
+            		debug('recordTmp:',recordTmp);
+            		var indexTmp = storeTmp.indexOf(recordTmp);
+            		debug('indexTmp:',indexTmp);
+            		creaListasDeValores(storeTmp,'edita',indexTmp);
+            	}
+            	else
+            	{
+            		Ext.Msg.alert('Aviso', 'Seleccione un registro');
+            	}
+            }
         }],      							        	    	    
     	width:600,
         height:290,
