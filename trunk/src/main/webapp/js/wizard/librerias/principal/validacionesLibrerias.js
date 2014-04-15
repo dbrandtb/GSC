@@ -121,13 +121,13 @@ Ext.onReady(function(){
 								}
 					   		});
 				     }
-        },/*'-',{
+        },'-',{
             text:'Eliminar',
             id:'eliminar-validaciones',
             tooltip:'Eliminar validaci�n',
             iconCls:'remove'
             
-        },*/'-',{
+        },'-',{
             text:'Editar',
             id:"editar-validaciones",
             tooltip:'Editar validaci&oacute;n',

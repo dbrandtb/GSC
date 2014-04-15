@@ -82,7 +82,7 @@ Ext.onReady(function(){
 		cm: cm,
 		sm: new Ext.grid.RowSelectionModel({
 		singleSelect: true,
-		listeners: {							
+		/*listeners: {							
         	rowselect: function(sm, row, rec) {	                    		                    	                        	                     	                        
 	        	 			selectedId = storeConceptosCobertura.data.items[row].id;
 	        	 			//var sel = Ext.getCmp('grid-lista1').getSelectionModel().getSelected();
@@ -156,7 +156,7 @@ Ext.onReady(function(){
                                   });
                                   temporal=-1;
 	                   	 }
-	               	}
+	               	}*/
 		}),
 		tbar:[{
             text:'Agregar',
@@ -169,21 +169,104 @@ Ext.onReady(function(){
             text:'Eliminar',
             id:'eliminar-ConceptosCobertura',
             tooltip:'Eliminar concepto por cobertura',
-            iconCls:'remove'
-            
-            
+            iconCls:'remove',
+            handler : function()
+            {
+            	var gridTmp  = gridConceptoCobertura;
+            	var storeTmp = storeConceptosCobertura;
+            	debug(gridTmp.getSelectionModel().getSelected());
+            	if(gridTmp.getSelectionModel().hasSelection())
+            	{
+            		var recordTmp = gridTmp.getSelectionModel().getSelected();
+            		debug('recordTmp:',recordTmp);
+            		var indexTmp = storeTmp.indexOf(recordTmp);
+            		debug('indexTmp:',indexTmp);
+            		//
+            		var rec = storeConceptosCobertura.getAt(indexTmp);
+					var eliminaCodigoPeriodo= rec.get('codigoPeriodo');                          
+					var eliminaOrden=rec.get('orden');
+        			Ext.MessageBox.confirm('Mensaje','Esta seguro que desea eliminar este elemento?', function(btn) {
+							if(btn == 'yes'){ 
+	     
+									var conn = new Ext.data.Connection();
+									conn.request ({	
+				 					url:'conceptosCobertura/EliminarConceptosPorCobertura.action?codigoPeriodo='+eliminaCodigoPeriodo+'&orden='+eliminaOrden,
+ 									waitTitle:'Espere',
+            						waitMsg:'Procesando...',
+	 									callback: function (options, success, response) {			     	 		
+        	 							if (Ext.util.JSON.decode(response.responseText).success == false) {
+          	 								Ext.Msg.alert('Status', 'Error al eliminar el elemento');                               
+         								} else {
+             								Ext.Msg.alert('Status', 'Elemento eliminado');
+             								storeConceptosCobertura.load();
+           								}
+       								}
+									});         	 
+						}
+						});
+            		//
+            	}
+            	else
+            	{
+            		Ext.Msg.alert('Aviso', 'Seleccione un registro');
+            	}
+            }
         },'-',{
             text:'Editar',
             id:'editar-ConceptosCobertura',
             tooltip:'Editar concepto por cobertura',
-            iconCls:'option'
-           
+            iconCls:'option',
+            handler : function()
+            {
+            	var gridTmp  = gridConceptoCobertura;
+            	var storeTmp = storeConceptosCobertura;
+            	debug(gridTmp.getSelectionModel().getSelected());
+            	if(gridTmp.getSelectionModel().hasSelection())
+            	{
+            		var recordTmp = gridTmp.getSelectionModel().getSelected();
+            		debug('recordTmp:',recordTmp);
+            		var indexTmp = storeTmp.indexOf(recordTmp);
+            		debug('indexTmp:',indexTmp);
+            		//
+            		configuraConceptoCobertura (storeConceptosCobertura,Ext.getCmp('hidden-codigo-combo-conceptos-cobertura').getValue(),indexTmp);
+            		//
+            	}
+            	else
+            	{
+            		Ext.Msg.alert('Aviso', 'Seleccione un registro');
+            	}
+            }
         },'-',{
             text:'Editar expresi&oacute;n',
             id:'editar-ConceptosCoberturaExpresion',
             tooltip:'Editar expresi&oacute;n del concepto',
-            iconCls:'option'
-           
+            iconCls:'option',
+            handler : function()
+            {
+            	var gridTmp  = gridConceptoCobertura;
+            	var storeTmp = storeConceptosCobertura;
+            	debug(gridTmp.getSelectionModel().getSelected());
+            	if(gridTmp.getSelectionModel().hasSelection())
+            	{
+            		var recordTmp = gridTmp.getSelectionModel().getSelected();
+            		debug('recordTmp:',recordTmp);
+            		var indexTmp = storeTmp.indexOf(recordTmp);
+            		debug('indexTmp:',indexTmp);
+            		//
+            		var rec = storeConceptosCobertura.getAt(indexTmp);
+         			var storeAux = new Ext.data.SimpleStore({
+					    fields: [{name: 'codigoExpresion'},{name: 'descripcionCabecera'},{name:'descripcionTipo'},{name:'nombreCabecera'}],
+					    data: [[rec.get('cdexpres'),rec.get('descripcionConcepto'),rec.get('dstipcon'),rec.get('codigoConcepto')]]
+					});
+					
+					ExpresionesVentana2(rec.get('cdexpres'), 'EXPRESION_CONCEPTO_TARIFICACION', storeAux, '2', 0);
+            		//
+            	}
+            	else
+            	{
+            		Ext.Msg.alert('Aviso', 'Seleccione un registro');
+            	}
+            }
         }],      							        	    	    
     	width:650,
         height:290,

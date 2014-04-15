@@ -242,7 +242,7 @@ Ext.onReady(function() {
 			cm: cm,
 			sm: new Ext.grid.RowSelectionModel({
 			singleSelect: true,
-			listeners: {
+			/*listeners: {
         		rowselect: function(sm, row, rec) {
 					//selectedId = store.data.items[row].id;
 					//var sel = Ext.getCmp('grid-lista').getSelectionModel().getSelected();
@@ -265,7 +265,7 @@ Ext.onReady(function() {
 										},
 										success: function(form, action) {
 											var mensajeRespuesta = Ext.util.JSON.decode(action.response.responseText).mensajeRespuesta;
-											//Si mensajeRespuesta no esta vacio, sí hay hijos, entonces preguntamos:
+											//Si mensajeRespuesta no esta vacio, sï¿½ hay hijos, entonces preguntamos:
 											if(!Ext.isEmpty(mensajeRespuesta)){
 												Ext.MessageBox.confirm('Mensaje', mensajeRespuesta, function(btn) {
        												if(btn == 'yes'){
@@ -295,7 +295,7 @@ Ext.onReady(function() {
 					});
 					temporal=-1;   
 	            }
-			}
+			}*/
 		}),
 		tbar:[{
             text:'Agregar',
@@ -317,13 +317,82 @@ Ext.onReady(function() {
             text:'Eliminar',
             id:'eliminar-grid-rol',
             tooltip:'Elimina atributo variable',
-            iconCls:'remove'
-            
+            iconCls:'remove',
+            handler : function()
+            {
+            	var gridTmp  = grid2;
+            	var storeTmp = storeVariablesRol;
+            	debug(gridTmp.getSelectionModel().getSelected());
+            	if(gridTmp.getSelectionModel().hasSelection())
+            	{
+            		var recordTmp = gridTmp.getSelectionModel().getSelected();
+            		debug('recordTmp:',recordTmp);
+            		var indexTmp = storeTmp.indexOf(recordTmp);
+            		debug('indexTmp:',indexTmp);
+            		//
+            		Ext.MessageBox.confirm('Mensaje','Esta seguro que desea eliminar este elemento?', function(btn) {
+						if(btn == 'yes'){
+							
+							//Validar si el atributo variable tiene hijos asociados, para mostrar advertencia.
+                			rolesForm.form.submit({
+    							url:'rol/ValidaHijosAtributoVariableRol.action',
+    							params: {codigoAtributoVariable: grid2.getSelectionModel().getSelected().get('codigoAtributoVariable')},
+		            			waitTitle: 'Espere',
+		            			waitMsg: 'Validando...',
+		            			failure: function(form, action) {
+					    			Ext.MessageBox.alert('Error ', 'Error al verificar asociaciones de atributo variable');
+								},
+								success: function(form, action) {
+									var mensajeRespuesta = Ext.util.JSON.decode(action.response.responseText).mensajeRespuesta;
+									//Si mensajeRespuesta no esta vacio, sï¿½ hay hijos, entonces preguntamos:
+									if(!Ext.isEmpty(mensajeRespuesta)){
+										Ext.MessageBox.confirm('Mensaje', mensajeRespuesta, function(btn) {
+												if(btn == 'yes'){
+													//Eliminar Atributo Variable de Rol
+													eliminaAtributoVariableRol(storeVariablesRol,indexTmp,rolesForm);
+												}
+										});
+									}else{
+										//Eliminar Atributo Variable de Rol
+										eliminaAtributoVariableRol(storeVariablesRol,indexTmp,rolesForm);
+									}
+								}
+        					});
+        					
+        				}
+					});
+            		//
+            	}
+            	else
+            	{
+            		Ext.Msg.alert('Aviso', 'Seleccione un registro');
+            	}
+            }
         },'-',{
             text:'Editar',
             id:"editar-grid-rol",
             tooltip:'Edita atributo variable',
-            iconCls:'option'
+            iconCls:'option',
+            handler : function()
+            {
+            	var gridTmp  = grid2;
+            	var storeTmp = storeVariablesRol;
+            	debug(gridTmp.getSelectionModel().getSelected());
+            	if(gridTmp.getSelectionModel().hasSelection())
+            	{
+            		var recordTmp = gridTmp.getSelectionModel().getSelected();
+            		debug('recordTmp:',recordTmp);
+            		var indexTmp = storeTmp.indexOf(recordTmp);
+            		debug('indexTmp:',indexTmp);
+            		//
+            		seleccionaAtributosVariables(storeVariablesRol,indexTmp);
+            		//
+            	}
+            	else
+            	{
+            		Ext.Msg.alert('Aviso', 'Seleccione un registro');
+            	}
+            }
         }/*,'-',{
             
             text:'<s:text name="productos.configRoles.btn.valDefectoPoliza"/>',
@@ -357,7 +426,7 @@ Ext.onReady(function() {
             	
             	frame:false,
             	//labelAlign: 'right',
-        		title:'Asociaci\u00F3n De Roles',
+        		title:'Asociaci&oacute;n De Roles',
         		url:'rol/InsertaRolInciso.action',
         		id: 'roles-form',
         		width:670,
@@ -412,7 +481,7 @@ Ext.onReady(function() {
                 				    tooltip: 'Eliminar rol',
 				                    buttonAlign: 'right',
                 				    handler: function() {
-                				    	//TODO: IF validar que una opción esté elegida en el combo y este en el árbol(si existe, eliminarla)
+                				    	//TODO: IF validar que una opciï¿½n estï¿½ elegida en el combo y este en el ï¿½rbol(si existe, eliminarla)
                 				    	if (rolesForm.form.isValid()) {
                 				    		Ext.MessageBox.confirm('Mensaje','Esta seguro de querer eliminar este elemento?', function(btn) {
            										if(btn == 'yes'){
