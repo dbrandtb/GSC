@@ -131,37 +131,7 @@ Ext.onReady(function() {
 						cm : cmVariables,
 						sm : new Ext.grid.RowSelectionModel(
 								{
-									singleSelect : true,
-									listeners : {
-										rowselect : function(sm, row, rec) {
-											var valor = rec
-													.get('nombreCabecera');
-											Ext
-													.getCmp(
-															'eliminar-variables-producto')
-													.on(
-															'click',
-															function() {
-																Ext
-																		.getCmp(
-																				'variables-producto-form')
-																		.getForm()
-																		.load(
-																				{
-																					url : 'librerias/DesasociarVariableDelProducto.action?codigoVariableProducto='
-																							+ valor,
-																					failure : function(
-																							a,
-																							t) {
-																						storeVariablesProducto
-																								.load();
-																						storeComboVariables
-																								.load();
-																					}
-																				});
-															});
-										}
-									}
+									singleSelect : true
 								}),
 						tbar : [
 								{
@@ -221,7 +191,18 @@ Ext.onReady(function() {
 									text : 'Eliminar',
 									id : 'eliminar-variables-producto',
 									tooltip : 'Eliminar variable temporal',
-									iconCls : 'remove'
+									iconCls : 'remove',
+									handler : function() {
+										if (Ext.getCmp('grid-variables-temporales-producto').getSelectionModel().hasSelection()) {
+											var codigoExpresion = Ext.getCmp('grid-variables-temporales-producto').getSelectionModel().getSelected().get('codigoExpresion');
+											var nombreExp = Ext.getCmp('grid-variables-temporales-producto').getSelectionModel().getSelected().get('nombreCabecera');
+											var descExp = Ext.getCmp('grid-variables-temporales-producto').getSelectionModel().getSelected().get('descripcionCabecera');
+											
+											
+										} else {
+											Ext.MessageBox.alert('Status','Seleccione un registro.');
+										}
+									}
 								} ],
 						width : 600,
 						height : 290,
