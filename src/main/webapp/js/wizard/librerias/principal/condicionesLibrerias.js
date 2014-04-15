@@ -133,12 +133,12 @@ Ext.onReady(function(){
 							}
 				   		});
 				     }
-        },/*'-',{
+        },'-',{
             text:'Eliminar',
             id:'eliminar-condiciones',
             tooltip:'Eliminar condici�n',
             iconCls:'remove'
-        },*/'-',{
+        },'-',{
             text:'Editar',
             id:"editar-condiciones",
             tooltip:'Editar condici&oacute;n',

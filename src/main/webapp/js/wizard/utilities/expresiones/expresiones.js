@@ -1570,7 +1570,7 @@ nueva ventana
 						        listeners: {
 			    				        click: function(n) {
 								                //Ext.Msg.alert('Navigation Tree Click', 'You clicked: "' + n.attributes.text + '"');								                
-	 											//detailsUpdate(n.attributes.descripcion);
+			    				        	    detailsUpdate(n.attributes.funcion);
 							            },
 							            dblclick: function(n){
 							            	 var valor= descripcion.getValue();
@@ -1849,7 +1849,7 @@ nueva ventana
 						        listeners: {
 			    				        click: function(n) {
 								                //Ext.Msg.alert('Navigation Tree Click', 'You clicked: "' + n.attributes.text + '"');								                
-	 											//detailsUpdate(n.attributes.descripcion);
+			    				        	detailsUpdate(n.attributes.funcion);
 							            },
 							            dblclick: function(n){
 							            	 var valor= descripcion.getValue();
@@ -2038,11 +2038,13 @@ nueva ventana
         	var arbol = Ext.getCmp(id);
         	arbol.root.eachChild(function(node)
         	{
-        		var nodo = node.text.toUpperCase().replace(/ /g,'');
+        		debug('nodo:',node.attributes);
+        		var nodo = node.text.toUpperCase().replace(/ /g,'')+'_'+node.attributes.funcion.toUpperCase().replace(/ /g,'');
         		valor    = valor.toUpperCase().replace(/ /g,'');
         		var lio  = nodo.lastIndexOf(valor);
         		if(lio>-1)
         		{
+        			debug(nodo);
         			node.getUI().show();
         		}
         		else

@@ -181,7 +181,7 @@ var storeSumaAseguradaInciso;
 			{header: "Tipo suma asegurada", 	   dataIndex:'descripcionTipoCapital',	width: 160, sortable:true,id:'descripcionTipoCapital'},		    
 		    {header: "Lista de valores",   dataIndex:'descripcionListaValor',	width: 170, sortable:true},
 		    {header: "Leyenda",   dataIndex:'descripcionLeyenda',	width: 120, sortable:true},
-		    {header: "Reinstalación autom&aacute;tica",   dataIndex:'switchReinstalacion',	width: 100, sortable:true}
+		    {header: "Reinstalaciï¿½n autom&aacute;tica",   dataIndex:'switchReinstalacion',	width: 100, sortable:true}
 		    
 		   
 		   	                	
@@ -199,7 +199,7 @@ var storeSumaAseguradaInciso;
 		cm: cm,
 		sm: new Ext.grid.RowSelectionModel({
 		singleSelect: true,
-		listeners: {							
+		/*listeners: {							
         	rowselect: function(sm, row, rec) {	                    		                    	                        	                     	                        
 	        	 			selectedId = storeSumaAseguradaInciso.data.items[row].id;	        	 			
                             		 
@@ -224,7 +224,7 @@ var storeSumaAseguradaInciso;
                                  });
                                  temporal=-1;
 	                   	 }
-	               	}
+	               	}*/
 		}),
 		tbar:[{
             text:'Agregar',
@@ -240,15 +240,54 @@ var storeSumaAseguradaInciso;
             text:'Eliminar',
             id:'eliminar-sumaAsegurada-inciso',
             tooltip:'Elimina suma asegurada',
-            iconCls:'remove'
-            
-            
+            iconCls:'remove',
+            handler : function()
+            {
+            	var gridTmp  = gridSumaAseguradaInciso;
+            	var storeTmp = storeSumaAseguradaInciso;
+            	debug(gridTmp.getSelectionModel().getSelected());
+            	if(gridTmp.getSelectionModel().hasSelection())
+            	{
+            		var recordTmp = gridTmp.getSelectionModel().getSelected();
+            		debug('recordTmp:',recordTmp);
+            		var indexTmp = storeTmp.indexOf(recordTmp);
+            		debug('indexTmp:',indexTmp);
+            		//
+            		EliminaSumaAsegurada(storeSumaAseguradaInciso,null,indexTmp,sumaAseguradaForm);
+            		//
+            	}
+            	else
+            	{
+            		Ext.Msg.alert('Aviso', 'Seleccione un registro');
+            	}
+            }
         },'-',{
             text:'Editar',
             id:"editar-sumaAsegurada-inciso",
             tooltip:'Edita suma asegurada',
-            iconCls:'option'
-           
+            iconCls:'option',
+            handler : function()
+            {
+            	var gridTmp  = gridSumaAseguradaInciso;
+            	var storeTmp = storeSumaAseguradaInciso;
+            	debug(gridTmp.getSelectionModel().getSelected());
+            	if(gridTmp.getSelectionModel().hasSelection())
+            	{
+            		var recordTmp = gridTmp.getSelectionModel().getSelected();
+            		debug('recordTmp:',recordTmp);
+            		var indexTmp = storeTmp.indexOf(recordTmp);
+            		debug('indexTmp:',indexTmp);
+            		//
+            		claveCoberturaSuma= Ext.getCmp('hidden-clave-cobertura-suma-asegurada').getValue();
+					descripcionCoberturaSuma= Ext.getCmp('hidden-descripcion-cobertura-suma-asegurada').getValue();                            			
+        			AgregaSumaAseguradaInciso (claveCoberturaSuma,descripcionCoberturaSuma,storeSumaAseguradaInciso,indexTmp);
+            		//
+            	}
+            	else
+            	{
+            		Ext.Msg.alert('Aviso', 'Seleccione un registro');
+            	}
+            }
         }],      							        	    	    
     	width:600,
         height:290,
