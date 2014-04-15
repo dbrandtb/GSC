@@ -70,53 +70,7 @@ Ext.onReady(function(){
 		//baseCls:' background:white ',
 		cm: cmTarificacion,
 		sm: new Ext.grid.RowSelectionModel({
-		singleSelect: true,
-		listeners: {							
-        	rowselect: function(sm, row, rec) {	                    		                    	                        	                     	                        
-	        	 			selectedId = storeTarificacion.data.items[row].id;
-	        	 			//var sel = Ext.getCmp('grid-lista5').getSelectionModel().getSelected();
-	        	 			//selIndexValidaciones = storeTarificacion.indexOf(sel);
-	        	 			Ext.getCmp('eliminar-tarificacion').on('click',function(){                            		
-                            		//DeleteDemouser(storeTarificacion,selectedId,sel,listaValoresForm);
-                                                                                                       
-                                 });
-                                 
-                            afuera=row;     
-                            Ext.getCmp('editar-tarificacion').on('click',function(){
-                            		//alert("afuera"+afuera);
-                            		//alert("temporal"+temporal);
-                            		if(afuera!=temporal){
-                            			temporal=afuera;
-                            			//alert("temporal"+temporal);
-                            			var codigoExpresion = storeTarificacion.getAt(afuera).get('codigoExpresion');
-                            			//alert(codigoExpresion);
-                            			if(codigoExpresion!=null && codigoExpresion!="" && codigoExpresion!="0" && codigoExpresion!="undefined"){ 
-                            				ExpresionesVentana2(codigoExpresion, 'EXPRESION_CONCEPTO_TARIFICACION', storeTarificacion, '2', afuera, function(){
-                            					storeTarificacion.load();
-            								});
-					            		}else{
-	            								var connect = new Ext.data.Connection();
-											    connect.request ({
-													url:'atributosVariables/ObtenerCodigoExpresion.action',
-													callback: function (options, success, response) {				   
-														codigoExpresion = Ext.util.JSON.decode(response.responseText).codigoExpresion;
-														ExpresionesVentana2(codigoExpresion, 'EXPRESION_CONCEPTO_TARIFICACION', storeTarificacion, '2', afuera, function(){
-			                            					storeTarificacion.load();
-			            								});
-													}
-										   		});
-					            		}
-                            			//ExpresionesVentanaTarificaciones(storeTarificacion,rec,temporal);
-                            		}                                                                     
-                                 });
-                                 temporal=-1;         
-                                 
-                            /*Ext.getCmp('editar-grid').on('click',function(){                            		
-                            		 ExpresionesVentanaTarificaciones(storeTarificacion,rec,row);
-                                                                                                                
-                                 });*/     
-	                   	 }
-	               	}
+		singleSelect: true
 		}),
 		tbar:[{
             text:'Agregar',
@@ -138,13 +92,51 @@ Ext.onReady(function(){
             text:'Eliminar',
             id:'eliminar-tarificacion',
             tooltip:'Eliminar tarificación',
-            iconCls:'remove'
+            iconCls:'remove',
+            handler: function() {          
+            	if(grid5.getSelectionModel().hasSelection()){
+            		var selrecord = grid5.getSelectionModel().getSelected();
+            		
+            		//DeleteDemouser(storeTarificacion,selectedId,sel,listaValoresForm);
+            	}else {
+        			Ext.Msg.alert("Aviso","Seleccione un registro.");
+        		}  
+             }
             
         },'-',{
             text:'Editar',
             id:'editar-tarificacion',
             tooltip:'Editar tarificación',
-            iconCls:'option'
+            iconCls:'option',
+            handler: function() {                            		
+        		if(grid5.getSelectionModel().hasSelection()){
+        			var selrecord = grid5.getSelectionModel().getSelected();
+        			var recordIndex = storeTarificacion.indexOf(selrecord);
+
+            			var codigoExpresion = selrecord.get('codigoExpresion');
+            			if(codigoExpresion!=null && codigoExpresion!="" && codigoExpresion!="0" && codigoExpresion!="undefined"){ 
+            				ExpresionesVentana2(codigoExpresion, 'EXPRESION_CONCEPTO_TARIFICACION', storeTarificacion, '2', recordIndex, function(){
+            					storeTarificacion.load();
+							});
+	            		}else{
+								var connect = new Ext.data.Connection();
+							    connect.request ({
+									url:'atributosVariables/ObtenerCodigoExpresion.action',
+									callback: function (options, success, response) {				   
+										codigoExpresion = Ext.util.JSON.decode(response.responseText).codigoExpresion;
+										ExpresionesVentana2(codigoExpresion, 'EXPRESION_CONCEPTO_TARIFICACION', storeTarificacion, '2', recordIndex, function(){
+                        					storeTarificacion.load();
+        								});
+									}
+						   		});
+	            		}
+            			//ExpresionesVentanaTarificaciones(storeTarificacion,rec,temporal);
+            		                                                             
+                 
+        		}else {
+        			Ext.Msg.alert("Aviso","Seleccione un registro.");
+        		}                                                                     
+             }
         }],      							        	    	    
     	width:600,
         height:370,

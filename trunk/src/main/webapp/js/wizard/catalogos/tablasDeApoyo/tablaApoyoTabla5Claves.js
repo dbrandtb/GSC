@@ -62,30 +62,7 @@
 		//baseCls:' background:white ',
 		cm: cm,
 		sm: new Ext.grid.RowSelectionModel({
-		singleSelect: true,
-		listeners: {							
-        	rowselect: function(sm, row, rec) {	                    		                    	                        	                     	                        
-                            afuera=row;     
-                            
-                             Ext.getCmp('eliminar-Tabla5Claves').on('click',function(){                            		
-                            		if(afuera!=temporal){
-                            			temporal=afuera;
-                            			TablasDeApoyoBorrado(storeTabla5Claves,temporal,tabTabla5Claves);
-                            		}                                                                     
-                                 });
-                            
-                            Ext.getCmp('editar-Tabla5Claves').on('click',function(){                            		
-                            		if(afuera!=temporal){
-                            			temporal=afuera;
-                            			//alert("num tabla"+rec.get('nick'));
-                            			//alert(selectedId+"!="+row);
-                            			//var variable = rec.get('nick');
-                            			TablasDeApoyo(storeTabla5Claves,temporal);
-                            		}                                                                     
-                                 });
-                                 temporal=-1;
-	                   	 }
-	               	}
+		singleSelect: true
 		}),
 		tbar:[{
             text:'Agregar',
@@ -98,14 +75,30 @@
             text:'Eliminar',
             id:'eliminar-Tabla5Claves',
             tooltip:'Eliminar',
-            iconCls:'remove'
+            iconCls:'remove',
+            handler: function() {          
+            	if(gridTabla5Claves.getSelectionModel().hasSelection()){
+            		var selrecord = gridTabla5Claves.getSelectionModel().getSelected();
+            		TablasDeApoyoBorrado(storeTabla5Claves,storeTabla5Claves.indexOf(selrecord),tabTabla5Claves);     
+            	}else {
+        			Ext.Msg.alert("Aviso","Seleccione un registro.");
+        		}  
+             }
             
             
         },'-',{
             text:'Editar',
             id:"editar-Tabla5Claves",
             tooltip:'Editar',
-            iconCls:'option'
+            iconCls:'option',
+            handler: function() {                            		
+        		if(gridTabla5Claves.getSelectionModel().hasSelection()){
+        			var selrecord = gridTabla5Claves.getSelectionModel().getSelected();
+        			TablasDeApoyo(storeTabla5Claves,storeTabla5Claves.indexOf(selrecord));
+        		}else {
+        			Ext.Msg.alert("Aviso","Seleccione un registro.");
+        		}                                                                     
+             }
            
         }],      							        	    	    
     	width:600,
