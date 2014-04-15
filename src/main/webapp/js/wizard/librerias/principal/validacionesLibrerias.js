@@ -56,7 +56,7 @@ Ext.onReady(function(){
 		var cmValidaciones = new Ext.grid.ColumnModel([
 		     new Ext.grid.RowNumberer(),
 			{header: "Nombre", 	   dataIndex:'nombreCabecera', sortable:true,id:'nombreCabecera', width: 100},		    
-		    {header: "Descripción",   dataIndex:'descripcionCabecera', sortable:true, width: 300},
+		    {header: "Descripciï¿½n",   dataIndex:'descripcionCabecera', sortable:true, width: 300},
 		    //{header: "Tipo", 	   dataIndex:'descripcionTipo', sortable:true}		    
 		    {header: "Mensaje",   dataIndex:'mensaje', sortable:true, width: 500}
 		   
@@ -74,23 +74,15 @@ Ext.onReady(function(){
 		cm: cmValidaciones,
 		sm: new Ext.grid.RowSelectionModel({
 		singleSelect: true,
-		listeners: {							
+		/*listeners: {							
         	rowselect: function(sm, row, rec) {	                    		                    	                        	                     	                        
 	        	 			selectedId = storeValidaciones.data.items[row].id;
-	        	 			//var sel = Ext.getCmp('grid-lista2').getSelectionModel().getSelected();
-	        	 			//selIndexValidaciones = storeValidaciones.indexOf(sel);
-	        	 			Ext.getCmp('eliminar-validaciones').on('click',function(){                            		
-                            		//DeleteDemouser(storeValidaciones,selectedId,sel,listaValoresForm);
-                                                                                                       
-                                 });
                             afuera=row;     
                             Ext.getCmp('editar-validaciones').on('click',function(){
                             		
                             		if(afuera!=temporal){
                             			temporal=afuera;
-                            			//alert("temporal"+temporal);
                             			var codigoExpresion = storeValidaciones.getAt(afuera).get('codigoExpresion');
-                            			//alert(codigoExpresion);
                             			if(codigoExpresion!=null && codigoExpresion!="" && codigoExpresion!="0" && codigoExpresion!="undefined"){ 
                             				ExpresionesVentana2(codigoExpresion, 'EXPRESION_VALIDACIONES', storeValidaciones, '4', afuera, function(){
                             					storeValidaciones.load();
@@ -107,20 +99,15 @@ Ext.onReady(function(){
 													}
 										   		});
 					            		}
-                            			//ExpresionesVentanaValidaciones(storeValidaciones,rec,temporal);
                             		}                                                                     
                                  });
-                                 temporal=-1;     
-                            /*Ext.getCmp('editar-grid').on('click',function(){                            		
-                            		 ExpresionesVentanaValidaciones(storeValidaciones,rec,row);
-                                                                                                              
-                                 });*/     
+                                 temporal=-1;   
 	                   	 }
-	               	}
+	               	}*/
 		}),
 		tbar:[{
             text:'Agregar',
-            tooltip:'Agregar validación',
+            tooltip:'Agregar validaciï¿½n',
             iconCls:'add',
             handler: function() {                    	
 				     	var connect = new Ext.data.Connection();
@@ -134,17 +121,58 @@ Ext.onReady(function(){
 								}
 					   		});
 				     }
-        },'-',{
+        },/*'-',{
             text:'Eliminar',
             id:'eliminar-validaciones',
-            tooltip:'Eliminar validación',
+            tooltip:'Eliminar validaciï¿½n',
             iconCls:'remove'
             
-        },'-',{
+        },*/'-',{
             text:'Editar',
             id:"editar-validaciones",
-            tooltip:'Editar validación',
-            iconCls:'option'
+            tooltip:'Editar validaci&oacute;n',
+            iconCls:'option',
+            handler : function()
+            {
+            	var gridTmp  = grid2;
+            	var storeTmp = storeValidaciones;
+            	debug(gridTmp.getSelectionModel().getSelected());
+            	if(gridTmp.getSelectionModel().hasSelection())
+            	{
+            		var recordTmp = gridTmp.getSelectionModel().getSelected();
+            		debug('recordTmp:',recordTmp);
+            		var indexTmp = storeTmp.indexOf(recordTmp);
+            		debug('indexTmp:',indexTmp);
+            		var codigoExpresion = storeValidaciones.getAt(indexTmp).get('codigoExpresion');
+            		if(codigoExpresion!=null && codigoExpresion!="" && codigoExpresion!="0" && codigoExpresion!=undefined)
+            		{ 
+            			ExpresionesVentana2(codigoExpresion, 'EXPRESION_VALIDACIONES', storeValidaciones, '4', indexTmp, function()
+    					{
+            				storeValidaciones.load();
+    					});
+            		}
+            		else
+            		{
+            			var connect = new Ext.data.Connection();
+            			connect.request (
+    					{
+    						url:'atributosVariables/ObtenerCodigoExpresion.action',
+    						callback: function (options, success, response)
+    						{				   
+    							codigoExpresion = Ext.util.JSON.decode(response.responseText).codigoExpresion;
+    							ExpresionesVentana2(codigoExpresion, 'EXPRESION_VALIDACIONES', storeValidaciones, '4', indexTmp, function()
+								{
+    								storeValidaciones.load();
+								});
+    						}
+    					});
+            		}
+            	}
+            	else
+            	{
+            		Ext.Msg.alert('Aviso', 'Seleccione un registro');
+            	}
+            }
         }],      							        	    	    
     	width:600,
         height:370,
