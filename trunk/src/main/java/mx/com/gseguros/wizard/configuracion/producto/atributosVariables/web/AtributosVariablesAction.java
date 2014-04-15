@@ -716,7 +716,7 @@ public class AtributosVariablesAction extends ExpresionesPadre {
 		MensajesVO mensajeVO = null;
 		mensajeVO = atributosVariablesManager.eliminarAtributosVariables(atributos, nivel);
 		mensajeRespuesta = mensajeVO.getMsgText();
-		if(mensajeVO.getMsgId().equals("200012")){
+		if(mensajeVO.getMsgId()!=null&&mensajeVO.getMsgId().equals("200012")){
 			if(StringUtils.isBlank(mensajeRespuesta))mensajeRespuesta = "El atributo variable se ha eliminado con &eacute;xito";
 			success = true;
 			//Si se elimino elemento, actualizar valores
