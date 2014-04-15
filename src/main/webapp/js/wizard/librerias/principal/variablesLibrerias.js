@@ -67,44 +67,7 @@ Ext.onReady(function(){
 		//baseCls:' background:white ',
 		cm: cmVariables,
 		sm: new Ext.grid.RowSelectionModel({
-		singleSelect: true,
-		listeners: {							
-        	rowselect: function(sm, row, rec) {	                    		                    	                        	                     	                        
-	        	 			selectedId = storeVariables.data.items[row].id;
-	        	 			//var sel = Ext.getCmp('grid-lista1').getSelectionModel().getSelected();
-	        	 			//selIndexVariables = storeVariables.indexOf(rec);
-                            		 //alert("row"+row);
-                            		 
-                            afuera=row;     
-                            Ext.getCmp('editar-variables').on('click',function(){
-                            		
-                            		if(afuera!=temporal){
-                            			temporal=afuera;
-                            			//alert("temporal"+temporal);
-                            			var codigoExpresion = storeVariables.getAt(afuera).get('codigoExpresion');
-                            			//alert(codigoExpresion);
-                            			if(codigoExpresion!=null && codigoExpresion!="" && codigoExpresion!="0" && codigoExpresion!="undefined"){ 
-                            				ExpresionesVentana2(codigoExpresion, 'EXPRESION_VARIABLES_TEMPORALES', storeVariables, '5', afuera, function(){
-                            					storeVariables.load();
-            								});
-					            		}else{
-	            								var connect = new Ext.data.Connection();
-											    connect.request ({
-													url:'atributosVariables/ObtenerCodigoExpresion.action',
-													callback: function (options, success, response) {				   
-														codigoExpresion = Ext.util.JSON.decode(response.responseText).codigoExpresion;
-														ExpresionesVentana2(codigoExpresion, 'EXPRESION_VARIABLES_TEMPORALES', storeVariables, '5', afuera, function(){
-			                            					storeVariables.load();
-			            								});
-													}
-										   		});
-					            		}
-                            			//ExpresionesVentanaVariablesTemporales(storeVariables,rec,temporal);
-                            		}                                                                     
-                                 });
-                                 temporal=-1;
-	                   	 }
-	               	}
+		singleSelect: true
 		}),
 		tbar:[{
             text:'Agregar',
@@ -158,7 +121,35 @@ Ext.onReady(function(){
             text:'Editar',
             id:"editar-variables",
             tooltip:'Editar variable temporal',
-            iconCls:'option'
+            iconCls:'option',
+            handler: function() {                            		
+        		if(grid1.getSelectionModel().hasSelection()){
+        			var selrecord = grid1.getSelectionModel().getSelected();
+        			var recordIndex = storeVariables.indexOf(selrecord);
+
+        			var codigoExpresion = selrecord.get('codigoExpresion');
+        			if(codigoExpresion!=null && codigoExpresion!="" && codigoExpresion!="0" && codigoExpresion!="undefined"){ 
+        				ExpresionesVentana2(codigoExpresion, 'EXPRESION_VARIABLES_TEMPORALES', storeVariables, '5', recordIndex, function(){
+        					storeVariables.load();
+						});
+            		}else{
+							var connect = new Ext.data.Connection();
+						    connect.request ({
+								url:'atributosVariables/ObtenerCodigoExpresion.action',
+								callback: function (options, success, response) {				   
+									codigoExpresion = Ext.util.JSON.decode(response.responseText).codigoExpresion;
+									ExpresionesVentana2(codigoExpresion, 'EXPRESION_VARIABLES_TEMPORALES', storeVariables, '5', recordIndex, function(){
+                    					storeVariables.load();
+    								});
+								}
+					   		});
+            		}
+        			//ExpresionesVentanaVariablesTemporales(storeVariables,rec,temporal);
+        		
+        		}else {
+        			Ext.Msg.alert("Aviso","Seleccione un registro.");
+        		}                                                                     
+             }
            
         }],      							        	    	    
     	width:600,
