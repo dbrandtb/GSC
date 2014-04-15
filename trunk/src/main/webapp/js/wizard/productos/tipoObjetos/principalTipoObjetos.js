@@ -163,7 +163,7 @@ Ext.onReady(function() {
 			cm: cm,
 			sm: new Ext.grid.RowSelectionModel({
 				singleSelect: true,
-				listeners: {
+				/*listeners: {
 					rowselect: function(sm, row, rec) {
 						selectedId = storeVariableObjeto.data.items[row].id;
 	    	 			Ext.getCmp('eliminar-grid-objeto').on('click',function(){
@@ -185,7 +185,7 @@ Ext.onReady(function() {
 										},
 										success: function(form, action) {
 											var mensajeRespuesta = Ext.util.JSON.decode(action.response.responseText).mensajeRespuesta;
-											//Si mensajeRespuesta no esta vacio, sí hay hijos, entonces preguntamos:
+											//Si mensajeRespuesta no esta vacio, sï¿½ hay hijos, entonces preguntamos:
 											if(!Ext.isEmpty(mensajeRespuesta)){
 												Ext.MessageBox.confirm('Mensaje', mensajeRespuesta, function(btn) {
        												if(btn == 'yes'){
@@ -214,7 +214,7 @@ Ext.onReady(function() {
 						});
 						temporal=-1;
 					}
-				}
+				}*/
 			}),
 			tbar:[{
 	            text:'Agregar',
@@ -232,12 +232,87 @@ Ext.onReady(function() {
 	            text:'Eliminar',
 	            id:'eliminar-grid-objeto',
 	            tooltip:'Elimina dato variable',
-	            iconCls:'remove'
+	            iconCls:'remove',
+	            handler : function()
+	            {
+	            	var gridTmp  = grid2objetos;
+	            	var storeTmp = storeVariableObjeto;
+	            	debug(gridTmp.getSelectionModel().getSelected());
+	            	if(gridTmp.getSelectionModel().hasSelection())
+	            	{
+	            		var rec = gridTmp.getSelectionModel().getSelected();
+	            		debug('rec:',recordTmp);
+	            		var row = storeTmp.indexOf(rec);
+	            		debug('row:',indexTmp);
+	            		//
+	            		selectedId = storeVariableObjeto.data.items[row].id;
+	            		Ext.MessageBox.confirm('Mensaje','Esta seguro que desea eliminar este elemento?', function(btn) {
+       						if(btn == 'yes'){
+       							
+       							//Validar si el atributo variable tiene hijos asociados, para mostrar advertencia.
+                    			objetosForm.form.submit({
+        							url:'tipoObjeto/ValidaHijosAtributoVariableObjeto.action',
+        							params: {
+        								//codigoObjeto: rec.get('claveObjeto'),
+										descripcion: selectedId,
+										claveCampo: rec.get('claveCampo')
+									},
+			            			waitTitle: 'Espere',
+			            			waitMsg: 'Validando...',
+			            			failure: function(form, action) {
+						    			Ext.MessageBox.alert('Error ', 'Error al verificar asociaciones de atributo variable');
+									},
+									success: function(form, action) {
+										var mensajeRespuesta = Ext.util.JSON.decode(action.response.responseText).mensajeRespuesta;
+										//Si mensajeRespuesta no esta vacio, sï¿½ hay hijos, entonces preguntamos:
+										if(!Ext.isEmpty(mensajeRespuesta)){
+											Ext.MessageBox.confirm('Mensaje', mensajeRespuesta, function(btn) {
+   												if(btn == 'yes'){
+   													//Eliminar Atributo Variable de Objeto
+   													eliminaAtributoVariableObjeto(storeVariableObjeto,selectedId,objetosForm, rec);
+   												}
+											});
+										}else{
+											//Eliminar Atributo Variable de Objeto
+											eliminaAtributoVariableObjeto(storeVariableObjeto,selectedId,objetosForm, rec);
+										}
+									}
+	        					});
+    	 						
+							}
+						});
+	            		//
+	            	}
+	            	else
+	            	{
+	            		Ext.Msg.alert('Aviso', 'Seleccione un registro');
+	            	}
+	            }
 	        },'-',{
 	            text:'Editar',
 	            id:"editar-grid-objeto",
 	            tooltip:'Edita atributo variable',
-	            iconCls:'option'
+	            iconCls:'option',
+	            handler : function()
+	            {
+	            	var gridTmp  = grid2objetos;
+	            	var storeTmp = storeVariableObjeto;
+	            	debug(gridTmp.getSelectionModel().getSelected());
+	            	if(gridTmp.getSelectionModel().hasSelection())
+	            	{
+	            		var rec = gridTmp.getSelectionModel().getSelected();
+	            		debug('rec:',recordTmp);
+	            		var row = storeTmp.indexOf(rec);
+	            		debug('row:',indexTmp);
+	            		//
+	            		CreaDatosVariablesObjeto(storeVariableObjeto,indexTmp);
+	            		//
+	            	}
+	            	else
+	            	{
+	            		Ext.Msg.alert('Aviso', 'Seleccione un registro');
+	            	}
+	            }
 	        }/*,'-',{
 	            text:'<s:text name="productos.configObjetos.btn.valDefectoPoliza"/>',
 	            tooltip:'Valor por defecto del rol'
