@@ -68,7 +68,7 @@ Ext.onReady(function(){
 		cm: cm,
 		sm: new Ext.grid.RowSelectionModel({
 		singleSelect: true,
-		listeners: {							
+		/*listeners: {							
         	rowselect: function(sm, row, rec) {
         		filaSeleccionada = row;
 	        	 			selectedId = storeDatosFijos.data.items[filaSeleccionada].id;
@@ -105,7 +105,7 @@ Ext.onReady(function(){
                                  });
                                  temporal=-1;
 	                   	 }
-	               	}
+	               	}*/
 		}),
 		tbar:[{
             text:'Agregar',
@@ -125,15 +125,66 @@ Ext.onReady(function(){
             text:'Eliminar',
             id:'eliminar-DatosFijos',
             tooltip:'Eliminar',
-            iconCls:'remove'
-            
-            
+            iconCls:'remove',
+            handler : function()
+            {
+            	var gridTmp  = gridDatosFijos;
+            	var storeTmp = storeDatosFijos;
+            	debug(gridTmp.getSelectionModel().getSelected());
+            	if(gridTmp.getSelectionModel().hasSelection())
+            	{
+            		var recordTmp = gridTmp.getSelectionModel().getSelected();
+            		debug('recordTmp:',recordTmp);
+            		var indexTmp = storeTmp.indexOf(recordTmp);
+            		debug('indexTmp:',indexTmp);
+            		//
+            		
+            		//
+            	}
+            	else
+            	{
+            		Ext.Msg.alert('Aviso', 'Seleccione un registro');
+            	}
+            }
         },'-',{
             text:'Editar',
             id:"editar-DatosFijos",
             tooltip:'Editar',
-            iconCls:'option'
-           
+            iconCls:'option',
+            handler : function()
+            {
+            	var gridTmp  = gridDatosFijos;
+            	var storeTmp = storeDatosFijos;
+            	debug(gridTmp.getSelectionModel().getSelected());
+            	if(gridTmp.getSelectionModel().hasSelection())
+            	{
+            		var recordTmp = gridTmp.getSelectionModel().getSelected();
+            		debug('recordTmp:',recordTmp);
+            		var indexTmp = storeTmp.indexOf(recordTmp);
+            		debug('indexTmp:',indexTmp);
+            		//
+            		var codigoExpresion = storeDatosFijos.getAt(indexTmp).get('codigoExpresion');
+        			//alert(codigoExpresion);
+        			if(codigoExpresion!=null && codigoExpresion!="" && codigoExpresion!="0" && codigoExpresion!=undefined)
+        			{ 
+        				ExpresionesVentana2(codigoExpresion, 'EXPRESION_DATOS_FIJOS', storeDatosFijos, '0', indexTmp);
+            		}else{
+							var connect = new Ext.data.Connection();
+						    connect.request ({
+								url:'atributosVariables/ObtenerCodigoExpresion.action',
+								callback: function (options, success, response) {				   
+									codigoExpresion = Ext.util.JSON.decode(response.responseText).codigoExpresion;
+									ExpresionesVentana2(codigoExpresion, 'EXPRESION_DATOS_FIJOS', storeDatosFijos, '0', indexTmp);
+								}
+					   		});
+            		}
+            		//
+            	}
+            	else
+            	{
+            		Ext.Msg.alert('Aviso', 'Seleccione un registro');
+            	}
+            }
         }],      							        	    	    
     	width:600,
         height:290,
