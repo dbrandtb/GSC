@@ -12,6 +12,7 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.portal.emision.model.DatosRecibosDxNVO;
 import mx.com.gseguros.utils.Constantes;
+import mx.com.gseguros.ws.model.WrapperResultadosWS;
 import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub;
 import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub.CalendarioEntidad;
 import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub.Empleado;
@@ -59,6 +60,7 @@ public class RecibosSigsServiceImpl implements RecibosSigsService {
 		
 		WrapperResultados result = null;
 		DatosRecibosDxNVO datosRecDxN = null;
+		WrapperResultadosWS resultWS = null;
 		
 		try {
 			result = kernelManager.obtenDatosRecibosDxN(params);
@@ -98,7 +100,9 @@ public class RecibosSigsServiceImpl implements RecibosSigsService {
 			polizaEnt.setRetenedoraEmp(Integer.parseInt(datosRecDxN.getRetenedoraEmp()));
 			polizaEnt.setSucursalEmi(Integer.parseInt(datosRecDxN.getSucursalEmi()));
 			
-			calendarios = generarRecibosDxNGS(empleado, polizaEnt, endpoint, null, false);
+			resultWS = generarRecibosDxNGS(empleado, polizaEnt, endpoint, null, false);
+			calendarios = (GeneradorRecibosDxnRespuesta) resultWS.getResultadoWS();
+			logger.debug("XML de entrada: " + resultWS.getXmlIn());
 			
 		}catch(Exception e){
 			logger.error("Error al generar los datos de Recibos DxN: " + e.getMessage()
@@ -246,11 +250,12 @@ public class RecibosSigsServiceImpl implements RecibosSigsService {
 	 * @return
 	 * @throws Exception
 	 */
-	private GeneradorRecibosDxnRespuesta generarRecibosDxNGS(Empleado empleado,
+	private WrapperResultadosWS generarRecibosDxNGS(Empleado empleado,
 			PolizaEntidad polizaEntidad, String endpoint,
 			HashMap<String, Object> params, boolean async) throws Exception {
 		
 		GeneradorRecibosDxnRespuesta resultado = null;
+		WrapperResultadosWS resWS = new WrapperResultadosWS();
 		GeneradorReciboDxnWsServiceStub stubGS = null;
 		
 		try {
@@ -279,12 +284,15 @@ public class RecibosSigsServiceImpl implements RecibosSigsService {
 				WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(ServletActionContext.getServletContext());
 				GeneradorReciboDxnWsServiceCallbackHandlerImpl callback = (GeneradorReciboDxnWsServiceCallbackHandlerImpl)context.getBean("generadorReciboDxnWsServiceCallbackHandlerImpl");
 				// Se setean los parametros al callback handler:
+				params.put("STUB", stubGS);
 				callback.setClientData(params);
 				
 				stubGS.startgeneraRecDxn(generaRecDxnE, callback);
 			} else {
 				RespuestaGS = stubGS.generaRecDxn(generaRecDxnE);
 				resultado = RespuestaGS.getGeneraRecDxnResponse().get_return();
+				resWS.setResultadoWS(resultado);
+				resWS.setXmlIn(stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
 				logger.debug("Resultado para ejecucion de WS generarRecibosDxNGS: "+resultado.getCodigo()+" - "+resultado.getMensaje());
 			}
 		} catch (RemoteException re) {
@@ -292,7 +300,7 @@ public class RecibosSigsServiceImpl implements RecibosSigsService {
 			throw new Exception("Error de conexion: " + re.getMessage());
 		}
 		
-		return resultado;
+		return resWS;
 	}
 	
 

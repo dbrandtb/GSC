@@ -57,44 +57,6 @@ public interface Ice2sigsService {
 
 	}
 
-	public PolizaRespuesta ejecutaPolizaGS(Operacion operacion, Poliza poliza,
-			String endpoint) throws Exception;
-
-	public AgenteRespuesta ejecutaAgenteGS(Operacion operacion, Agente agente,
-			String endpoint) throws Exception;
-
-	public AgenteSaludRespuesta ejecutaAgenteSaludGS(Operacion operacion,
-			AgenteSalud agente, String endpoint) throws Exception;
-
-	public ClienteRespuesta ejecutaClienteGS(Operacion operacion,
-			Cliente cliente, String endpoint) throws Exception;
-
-	public CcomisionRespuesta ejecutaComisionReciboAgenteGS(
-			Operacion operacion, Ccomision comisionReciboAgente, String endpoint)
-			throws Exception;
-
-	public MovimientoAgenteRespuesta ejecutaMovimientoAgenteGS(
-			Operacion operacion, PolizaMovimientoAgente movimientoAgente,
-			String endpoint) throws Exception;
-
-	public AseguradoRespuesta ejecutaMovimientoAseguradoGS(Operacion operacion,
-			PolizaMovimientoAsegurado movimientoAsegurado, String endpoint)
-			throws Exception;
-
-	public MovimientoAseguradoCoberturaRespuesta ejecutaMovimientoAseguradoCoberturaGS(
-			Operacion operacion,
-			PolizaMovimientoAseguradoCobertura movimientoAseguradoCobertura,
-			String endpoint) throws Exception;
-
-	public MovimientoAseguradoEndosoRespuesta ejecutaMovimientoAseguradoEndosoGS(
-			Operacion operacion,
-			PolizaMovimientoAseguradoEndoso movimientoAseguradoEndoso,
-			String endpoint) throws Exception;
-
-	public MovimientoRespuesta ejecutaMovimientoGS(Operacion operacion,
-			PolizaMovimiento movimiento, String endpoint) throws Exception;
-
-	
 	/**
 	 * Ejecuta el metodo expuesto de cliente del WS de iceToSigs
 	 * @param cdunieco

@@ -5,9 +5,12 @@ import java.util.HashMap;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService.Estatus;
 import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceCallbackHandler;
+import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub;
 import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub.CalendarioEntidad;
 import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub.GeneraRecDxnResponseE;
 import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub.GeneradorRecibosDxnRespuesta;
+
+import org.apache.axis2.AxisFault;
 
 public class GeneradorReciboDxnWsServiceCallbackHandlerImpl extends GeneradorReciboDxnWsServiceCallbackHandler {
 
@@ -40,15 +43,22 @@ public class GeneradorReciboDxnWsServiceCallbackHandlerImpl extends GeneradorRec
 
 		HashMap<String, Object> params = (HashMap<String, Object>) this.clientData;
 
+		GeneradorReciboDxnWsServiceStub stubGS = (GeneradorReciboDxnWsServiceStub) params.get("STUB");
+		logger.debug("Imprimpriendo el xml enviado al WS: ");
+		try {
+			logger.debug(stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
+		} catch (AxisFault ex) {
+			logger.error(ex);
+		}
+		
 		String usuario = null;
 		if(params.containsKey("USUARIO")) usuario = (String) params.get("USUARIO");
 		
 		try {
 			kernelManager.movBitacobro((String) params.get("pv_cdunieco_i"),
-					(String) params.get("pv_cdramo_i"),
-					(String) params.get("pv_estado_i"),
-					(String) params.get("pv_nmpoliza_i"), "ErrWsDXNCx", "Msg: "
-							+ e.getMessage() + " ***Cause: " + e.getCause(),
+					(String) params.get("pv_cdramo_i"), (String) params.get("pv_estado_i"),
+					(String) params.get("pv_nmpoliza_i"),
+					"ErrWsDXNCx", "Msg: " + e.getMessage() + " ***Cause: " + e.getCause(),
 					 usuario, null);
 		} catch (Exception e1) {
 			logger.error("Error en llamado a PL", e1);
@@ -62,12 +72,21 @@ public class GeneradorReciboDxnWsServiceCallbackHandlerImpl extends GeneradorRec
 		logger.debug("Comunicacion exitosa WS generaRecDxn");
 		GeneradorRecibosDxnRespuesta respuesta = result.getGeneraRecDxnResponse().get_return();
 		logger.debug("Resultado al ejecutar el WS generaRecDxn: " + respuesta.getCodigo() + " - " + respuesta.getMensaje());
+		
+		HashMap<String, Object> params = (HashMap<String, Object>) this.clientData;
+		
+		GeneradorReciboDxnWsServiceStub stubGS = (GeneradorReciboDxnWsServiceStub) params.get("STUB");
+		logger.debug("Imprimpriendo el xml enviado al WS: ");
+		try {
+			logger.debug(stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
+		} catch (AxisFault e) {
+			logger.error(e);
+		}
 
 		if (Estatus.EXITO.getCodigo() != respuesta.getCodigo()) {
 			
 			logger.error("Guardando en bitacora el estatus");
 
-			HashMap<String, Object> params = (HashMap<String, Object>) this.clientData;
 			String usuario = null;
 			if(params.containsKey("USUARIO")) usuario = (String) params.get("USUARIO");
 			
