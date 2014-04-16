@@ -1,6 +1,5 @@
 package mx.com.gseguros.ws.ice2sigs.service.impl;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,61 +13,11 @@ import mx.com.gseguros.portal.general.model.RespuestaVO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Agente;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteGS;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteGSE;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteGSResponseE;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteRespuesta;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteSalud;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteSaludGS;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteSaludGSE;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteSaludGSResponseE;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AgenteSaludRespuesta;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AseguradoRespuesta;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Ccomision;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.CcomisionRespuesta;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Cliente;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGS;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGSE;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGSResponseE;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteRespuesta;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSalud;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludGS;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludGSE;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludGSResponseE;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludRespuesta;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ComisionReciboAgenteGS;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ComisionReciboAgenteGSE;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ComisionReciboAgenteGSResponseE;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAgenteGS;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAgenteGSE;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAgenteGSResponseE;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAgenteRespuesta;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoCoberturaGS;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSE;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoCoberturaGSResponseE;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoCoberturaRespuesta;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoEndosoGS;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoEndosoGSE;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoEndosoGSResponseE;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoEndosoRespuesta;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoGS;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoGSE;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoGSResponseE;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoGS;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoGSE;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoGSResponseE;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoRespuesta;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Poliza;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaGS;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaGSE;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaGSResponseE;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaMovimiento;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaMovimientoAgente;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaMovimientoAsegurado;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaMovimientoAseguradoCobertura;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaMovimientoAseguradoEndoso;
-import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.PolizaRespuesta;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Recibo;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboGS;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboGSE;
@@ -82,6 +31,7 @@ import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReclamoRes
 import mx.com.gseguros.ws.ice2sigs.client.axis2.callback.impl.ServicioGSServiceCallbackHandlerImpl;
 import mx.com.gseguros.ws.ice2sigs.client.model.ReciboWrapper;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
+import mx.com.gseguros.ws.model.WrapperResultadosWS;
 
 import org.apache.axis2.AxisFault;
 import org.apache.struts2.ServletActionContext;
@@ -101,205 +51,13 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 	
 	private transient KernelManagerSustituto kernelManager;
 	private SiniestrosManager siniestrosManager;
-
 	
-	public PolizaRespuesta ejecutaPolizaGS(Operacion operacion,
-			Poliza poliza, String endpoint) throws Exception {
 
-		PolizaRespuesta resultado = null;
-		ServicioGSServiceStub stubGS = null;
-
-		try {
-			logger.info(new StringBuffer("endpoint a invocar=").append(endpoint));
-			stubGS = new ServicioGSServiceStub(endpoint);
-		} catch (AxisFault e) {
-			logger.error(e);
-			throw new Exception("Error de preparacion de Axis2: "
-					+ e.getMessage());
-		}
-		stubGS._getServiceClient().getOptions().setTimeOutInMilliSeconds(WS_TIMEOUT);
-
-		PolizaGSResponseE RespuestaGS = null;
-
-		PolizaGS polizaS = new PolizaGS();
-		polizaS.setArg0(operacion.getCodigo());
-		polizaS.setArg1(poliza);
-
-		PolizaGSE polizaE = new PolizaGSE();
-		polizaE.setPolizaGS(polizaS);
-
-		try {
-			RespuestaGS = stubGS.polizaGS(polizaE);
-			resultado = RespuestaGS.getPolizaGSResponse().get_return();
-		} catch (RemoteException re) {
-			logger.error(re);
-			throw new Exception("Error de conexion: " + re.getMessage());
-		}
-		
-		return resultado;
-	}
-
-	private ReciboRespuesta ejecutaReciboGS(Operacion operacion,
-			Recibo recibo, HashMap<String, Object> params, boolean async) throws Exception {
-		
-		ReciboRespuesta resultado = null;
-		ServicioGSServiceStub stubGS = null;
-		
-		try {
-			logger.info(new StringBuffer("endpoint a invocar=").append(endpoint));
-			stubGS = new ServicioGSServiceStub(endpoint);
-		} catch (AxisFault e) {
-			logger.error(e);
-			throw new Exception("Error de preparacion de Axis2: "
-					+ e.getMessage());
-		}
-		stubGS._getServiceClient().getOptions().setTimeOutInMilliSeconds(WS_TIMEOUT);
-		
-		ReciboGSResponseE RespuestaGS = null;
-		
-		ReciboGS reciboS = new ReciboGS();
-		reciboS.setArg0(operacion.getCodigo());
-		reciboS.setArg1(recibo);
-		
-		ReciboGSE reciboE = new ReciboGSE();
-		reciboE.setReciboGS(reciboS);
-		
-		try {
-			if(async){
-				//TODO: RBS Cambiar params por PolizaVO
-				//Se genera una nueva instancia en cada llamado, para evitar corrupcion de datos en el handler:
-				WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(ServletActionContext.getServletContext());
-				ServicioGSServiceCallbackHandlerImpl callback = (ServicioGSServiceCallbackHandlerImpl)context.getBean("servicioGSServiceCallbackHandlerImpl");
-				// Se setean los parametros al callback handler:
-				//params.put("STUB", stubGS);
-				callback.setClientData(params);
-				
-				stubGS.startreciboGS(reciboE, callback);
-			} else {
-				RespuestaGS = stubGS.reciboGS(reciboE);
-				resultado = RespuestaGS.getReciboGSResponse().get_return();
-				logger.debug("Resultado sincrono para primer ejecucion de WS: "+resultado.getCodigo()+" - "+resultado.getMensaje());
-			}
-		} catch (RemoteException re) {
-			logger.error(re);
-			throw new Exception("Error de conexion: " + re.getMessage());
-		}
-		
-		return resultado;
-	}
-
-	public AgenteRespuesta ejecutaAgenteGS(Operacion operacion,
-			Agente agente, String endpoint) throws Exception {
-		
-		AgenteRespuesta resultado = null;
-		ServicioGSServiceStub stubGS = null;
-		
-		try {
-			logger.info(new StringBuffer("endpoint a invocar=").append(endpoint));
-			stubGS = new ServicioGSServiceStub(endpoint);
-		} catch (AxisFault e) {
-			logger.error(e);
-			throw new Exception("Error de preparacion de Axis2: "
-					+ e.getMessage());
-		}
-		stubGS._getServiceClient().getOptions().setTimeOutInMilliSeconds(WS_TIMEOUT);
-		
-		AgenteGSResponseE RespuestaGS = null;
-		
-		AgenteGS agenteS = new AgenteGS();
-		agenteS.setArg0(operacion.getCodigo());
-		agenteS.setArg1(agente);
-		
-		AgenteGSE agenteE = new AgenteGSE();
-		agenteE.setAgenteGS(agenteS);
-		
-		try {
-			RespuestaGS = stubGS.agenteGS(agenteE);
-			resultado = RespuestaGS.getAgenteGSResponse().get_return();
-		} catch (RemoteException re) {
-			logger.error(re);
-			throw new Exception("Error de conexion: " + re.getMessage());
-		}
-		
-		return resultado;
-	}
-	
-	public AgenteSaludRespuesta ejecutaAgenteSaludGS(Operacion operacion,
-			AgenteSalud agente, String endpoint) throws Exception {
-		
-		AgenteSaludRespuesta resultado = null;
-		ServicioGSServiceStub stubGS = null;
-		
-		try {
-			logger.info(new StringBuffer("endpoint a invocar=").append(endpoint));
-			stubGS = new ServicioGSServiceStub(endpoint);
-		} catch (AxisFault e) {
-			logger.error(e);
-			throw new Exception("Error de preparacion de Axis2: "
-					+ e.getMessage());
-		}
-		stubGS._getServiceClient().getOptions().setTimeOutInMilliSeconds(WS_TIMEOUT);
-		
-		AgenteSaludGSResponseE RespuestaGS = null;
-		
-		AgenteSaludGS agenteS = new AgenteSaludGS();
-		agenteS.setArg0(operacion.getCodigo());
-		agenteS.setArg1(agente);
-		
-		AgenteSaludGSE agenteE = new AgenteSaludGSE();
-		agenteE.setAgenteSaludGS(agenteS);
-		
-		try {
-			RespuestaGS = stubGS.agenteSaludGS(agenteE);
-			resultado = RespuestaGS.getAgenteSaludGSResponse().get_return();
-		} catch (RemoteException re) {
-			logger.error(re);
-			throw new Exception("Error de conexion: " + re.getMessage());
-		}
-		
-		return resultado;
-	}
-
-	public ClienteRespuesta ejecutaClienteGS(Operacion operacion,
-			Cliente cliente, String endpoint) throws Exception {
-		
-		ClienteRespuesta resultado = null;
-		ServicioGSServiceStub stubGS = null;
-		
-		try {
-			logger.info(new StringBuffer("endpoint a invocar=").append(endpoint));
-			stubGS = new ServicioGSServiceStub(endpoint);
-		} catch (AxisFault e) {
-			logger.error(e);
-			throw new Exception("Error de preparacion de Axis2: "
-					+ e.getMessage());
-		}
-		stubGS._getServiceClient().getOptions().setTimeOutInMilliSeconds(WS_TIMEOUT);
-		
-		ClienteGSResponseE RespuestaGS = null;
-		
-		ClienteGS clienteS = new ClienteGS();
-		clienteS.setArg0(operacion.getCodigo());
-		clienteS.setArg1(cliente);
-		
-		ClienteGSE clienteE = new ClienteGSE();
-		clienteE.setClienteGS(clienteS);
-		
-		try {
-			RespuestaGS = stubGS.clienteGS(clienteE);
-			resultado = RespuestaGS.getClienteGSResponse().get_return();
-		} catch (RemoteException re) {
-			logger.error(re);
-			throw new Exception("Error de conexion: " + re.getMessage());
-		}
-		
-		return resultado;
-	}
-	
-	private ClienteSaludRespuesta ejecutaClienteSaludGS(Operacion operacion,
+	private WrapperResultadosWS ejecutaClienteSaludGS(Operacion operacion,
 			ClienteSalud cliente, HashMap<String, Object> params, boolean async) throws Exception {
 		
 		ClienteSaludRespuesta resultado = null;
+		WrapperResultadosWS resWS = new WrapperResultadosWS();
 		ServicioGSServiceStub stubGS = null;
 		
 		try {
@@ -328,26 +86,30 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 				WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(ServletActionContext.getServletContext());
 				ServicioGSServiceCallbackHandlerImpl callback = (ServicioGSServiceCallbackHandlerImpl)context.getBean("servicioGSServiceCallbackHandlerImpl");
 				// Se setean los parametros al callback handler:
+				params.put("STUB", stubGS);
 				callback.setClientData(params);
 				
 				stubGS.startclienteSaludGS(clienteE, callback);
 			} else {
 				RespuestaGS = stubGS.clienteSaludGS(clienteE);
 				resultado = RespuestaGS.getClienteSaludGSResponse().get_return();
+				resWS.setResultadoWS(resultado);
+				resWS.setXmlIn(stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
 				logger.debug("Resultado sincrono para primer ejecucion de WS: "+resultado.getCodigo()+" - "+resultado.getMensaje());
 			}
-		} catch (RemoteException re) {
+		} catch (Exception re) {
 			logger.error(re);
 			throw new Exception("Error de conexion: " + re.getMessage());
 		}
 		
-		return resultado;
+		return resWS;
 	}
 	
-	public CcomisionRespuesta ejecutaComisionReciboAgenteGS(Operacion operacion,
-			Ccomision comisionReciboAgente, String endpoint) throws Exception {
+	private WrapperResultadosWS ejecutaReciboGS(Operacion operacion,
+			Recibo recibo, HashMap<String, Object> params, boolean async) throws Exception {
 		
-		CcomisionRespuesta resultado = null;
+		ReciboRespuesta resultado = null;
+		WrapperResultadosWS resWS = new WrapperResultadosWS();
 		ServicioGSServiceStub stubGS = null;
 		
 		try {
@@ -360,211 +122,47 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 		}
 		stubGS._getServiceClient().getOptions().setTimeOutInMilliSeconds(WS_TIMEOUT);
 		
-		ComisionReciboAgenteGSResponseE RespuestaGS = null;
+		ReciboGSResponseE RespuestaGS = null;
 		
-		ComisionReciboAgenteGS comisionReciboAgenteS = new ComisionReciboAgenteGS();
-		comisionReciboAgenteS.setArg0(operacion.getCodigo());
-		comisionReciboAgenteS.setArg1(comisionReciboAgente);
+		ReciboGS reciboS = new ReciboGS();
+		reciboS.setArg0(operacion.getCodigo());
+		reciboS.setArg1(recibo);
 		
-		ComisionReciboAgenteGSE comisionReciboAgenteE = new ComisionReciboAgenteGSE();
-		comisionReciboAgenteE.setComisionReciboAgenteGS(comisionReciboAgenteS);
+		ReciboGSE reciboE = new ReciboGSE();
+		reciboE.setReciboGS(reciboS);
 		
 		try {
-			RespuestaGS = stubGS.comisionReciboAgenteGS(comisionReciboAgenteE);
-			resultado = RespuestaGS.getComisionReciboAgenteGSResponse().get_return();
-		} catch (RemoteException re) {
+			if(async){
+				//TODO: RBS Cambiar params por PolizaVO
+				//Se genera una nueva instancia en cada llamado, para evitar corrupcion de datos en el handler:
+				WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(ServletActionContext.getServletContext());
+				ServicioGSServiceCallbackHandlerImpl callback = (ServicioGSServiceCallbackHandlerImpl)context.getBean("servicioGSServiceCallbackHandlerImpl");
+				// Se setean los parametros al callback handler:
+				params.put("STUB", stubGS);
+				callback.setClientData(params);
+				
+				stubGS.startreciboGS(reciboE, callback);
+			} else {
+				RespuestaGS = stubGS.reciboGS(reciboE);
+				resultado = RespuestaGS.getReciboGSResponse().get_return();
+				resWS.setResultadoWS(resultado);
+				resWS.setXmlIn(stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
+				logger.debug("Resultado sincrono para primer ejecucion de WS: "+resultado.getCodigo()+" - "+resultado.getMensaje());
+			}
+		} catch (Exception re) {
 			logger.error(re);
 			throw new Exception("Error de conexion: " + re.getMessage());
 		}
 		
-		return resultado;
+		return resWS;
 	}
+
 	
-	
-	public MovimientoAgenteRespuesta ejecutaMovimientoAgenteGS(Operacion operacion,
-			PolizaMovimientoAgente movimientoAgente, String endpoint) throws Exception {
-		
-		MovimientoAgenteRespuesta resultado = null;
-		ServicioGSServiceStub stubGS = null;
-		
-		try {
-			logger.info(new StringBuffer("endpoint a invocar=").append(endpoint));
-			stubGS = new ServicioGSServiceStub(endpoint);
-		} catch (AxisFault e) {
-			logger.error(e);
-			throw new Exception("Error de preparacion de Axis2: "
-					+ e.getMessage());
-		}
-		stubGS._getServiceClient().getOptions().setTimeOutInMilliSeconds(WS_TIMEOUT);
-		
-		MovimientoAgenteGSResponseE RespuestaGS = null;
-		
-		MovimientoAgenteGS movimientoAgenteS = new MovimientoAgenteGS();
-		movimientoAgenteS.setArg0(operacion.getCodigo());
-		movimientoAgenteS.setArg1(movimientoAgente);
-		
-		MovimientoAgenteGSE movimientoAgenteE = new MovimientoAgenteGSE();
-		movimientoAgenteE.setMovimientoAgenteGS(movimientoAgenteS);
-		
-		try {
-			RespuestaGS = stubGS.movimientoAgenteGS(movimientoAgenteE);
-			resultado = RespuestaGS.getMovimientoAgenteGSResponse().get_return();
-		} catch (RemoteException re) {
-			logger.error(re);
-			throw new Exception("Error de conexion: " + re.getMessage());
-		}
-		
-		return resultado;
-	}
-
-	public AseguradoRespuesta ejecutaMovimientoAseguradoGS(Operacion operacion,
-			PolizaMovimientoAsegurado movimientoAsegurado, String endpoint) throws Exception {
-		
-		AseguradoRespuesta resultado = null;
-		ServicioGSServiceStub stubGS = null;
-		
-		try {
-			logger.info(new StringBuffer("endpoint a invocar=").append(endpoint));
-			stubGS = new ServicioGSServiceStub(endpoint);
-		} catch (AxisFault e) {
-			logger.error(e);
-			throw new Exception("Error de preparacion de Axis2: "
-					+ e.getMessage());
-		}
-		stubGS._getServiceClient().getOptions().setTimeOutInMilliSeconds(WS_TIMEOUT);
-		
-		MovimientoAseguradoGSResponseE RespuestaGS = null;
-		
-		MovimientoAseguradoGS movimientoAseguradoS = new MovimientoAseguradoGS();
-		movimientoAseguradoS.setArg0(operacion.getCodigo());
-		movimientoAseguradoS.setArg1(movimientoAsegurado);
-		
-		MovimientoAseguradoGSE movimientoAseguradoE = new MovimientoAseguradoGSE();
-		movimientoAseguradoE.setMovimientoAseguradoGS(movimientoAseguradoS);
-		
-		try {
-			RespuestaGS = stubGS.movimientoAseguradoGS(movimientoAseguradoE);
-			resultado = RespuestaGS.getMovimientoAseguradoGSResponse().get_return();
-		} catch (RemoteException re) {
-			logger.error(re);
-			throw new Exception("Error de conexion: " + re.getMessage());
-		}
-		
-		return resultado;
-	}
-
-	public MovimientoAseguradoCoberturaRespuesta ejecutaMovimientoAseguradoCoberturaGS(Operacion operacion,
-			PolizaMovimientoAseguradoCobertura movimientoAseguradoCobertura, String endpoint) throws Exception {
-		
-		MovimientoAseguradoCoberturaRespuesta resultado = null;
-		ServicioGSServiceStub stubGS = null;
-		
-		try {
-			logger.info(new StringBuffer("endpoint a invocar=").append(endpoint));
-			stubGS = new ServicioGSServiceStub(endpoint);
-		} catch (AxisFault e) {
-			logger.error(e);
-			throw new Exception("Error de preparacion de Axis2: "
-					+ e.getMessage());
-		}
-		stubGS._getServiceClient().getOptions().setTimeOutInMilliSeconds(WS_TIMEOUT);
-		
-		MovimientoAseguradoCoberturaGSResponseE RespuestaGS = null;
-		
-		MovimientoAseguradoCoberturaGS movimientoAseguradoCoberturaS = new MovimientoAseguradoCoberturaGS();
-		movimientoAseguradoCoberturaS.setArg0(operacion.getCodigo());
-		movimientoAseguradoCoberturaS.setArg1(movimientoAseguradoCobertura);
-		
-		MovimientoAseguradoCoberturaGSE movimientoAseguradoCoberturaE = new MovimientoAseguradoCoberturaGSE();
-		movimientoAseguradoCoberturaE.setMovimientoAseguradoCoberturaGS(movimientoAseguradoCoberturaS);
-		
-		try {
-			RespuestaGS = stubGS.movimientoAseguradoCoberturaGS(movimientoAseguradoCoberturaE);
-			resultado = RespuestaGS.getMovimientoAseguradoCoberturaGSResponse().get_return();
-		} catch (RemoteException re) {
-			logger.error(re);
-			throw new Exception("Error de conexion: " + re.getMessage());
-		}
-		
-		return resultado;
-	}
-
-	public MovimientoAseguradoEndosoRespuesta ejecutaMovimientoAseguradoEndosoGS(Operacion operacion,
-			PolizaMovimientoAseguradoEndoso movimientoAseguradoEndoso, String endpoint) throws Exception {
-		
-		MovimientoAseguradoEndosoRespuesta resultado = null;
-		ServicioGSServiceStub stubGS = null;
-		
-		try {
-			logger.info(new StringBuffer("endpoint a invocar=").append(endpoint));
-			stubGS = new ServicioGSServiceStub(endpoint);
-		} catch (AxisFault e) {
-			logger.error(e);
-			throw new Exception("Error de preparacion de Axis2: "
-					+ e.getMessage());
-		}
-		stubGS._getServiceClient().getOptions().setTimeOutInMilliSeconds(WS_TIMEOUT);
-		
-		MovimientoAseguradoEndosoGSResponseE RespuestaGS = null;
-		
-		MovimientoAseguradoEndosoGS movimientoAseguradoEndosoS = new MovimientoAseguradoEndosoGS();
-		movimientoAseguradoEndosoS.setArg0(operacion.getCodigo());
-		movimientoAseguradoEndosoS.setArg1(movimientoAseguradoEndoso);
-		
-		MovimientoAseguradoEndosoGSE movimientoAseguradoEndosoE = new MovimientoAseguradoEndosoGSE();
-		movimientoAseguradoEndosoE.setMovimientoAseguradoEndosoGS(movimientoAseguradoEndosoS);
-		
-		try {
-			RespuestaGS = stubGS.movimientoAseguradoEndosoGS(movimientoAseguradoEndosoE);
-			resultado = RespuestaGS.getMovimientoAseguradoEndosoGSResponse().get_return();
-		} catch (RemoteException re) {
-			logger.error(re);
-			throw new Exception("Error de conexion: " + re.getMessage());
-		}
-		
-		return resultado;
-	}
-
-	public MovimientoRespuesta ejecutaMovimientoGS(Operacion operacion,
-			PolizaMovimiento movimiento, String endpoint) throws Exception {
-		
-		MovimientoRespuesta resultado = null;
-		ServicioGSServiceStub stubGS = null;
-		
-		try {
-			logger.info(new StringBuffer("endpoint a invocar=").append(endpoint));
-			stubGS = new ServicioGSServiceStub(endpoint);
-		} catch (AxisFault e) {
-			logger.error(e);
-			throw new Exception("Error de preparacion de Axis2: "
-					+ e.getMessage());
-		}
-		stubGS._getServiceClient().getOptions().setTimeOutInMilliSeconds(WS_TIMEOUT);
-		
-		MovimientoGSResponseE RespuestaGS = null;
-		
-		MovimientoGS movimientoS = new MovimientoGS();
-		movimientoS.setArg0(operacion.getCodigo());
-		movimientoS.setArg1(movimiento);
-		
-		MovimientoGSE movimientoE = new MovimientoGSE();
-		movimientoE.setMovimientoGS(movimientoS);
-		
-		try {
-			RespuestaGS = stubGS.movimientoGS(movimientoE);
-			resultado = RespuestaGS.getMovimientoGSResponse().get_return();
-		} catch (RemoteException re) {
-			logger.error(re);
-			throw new Exception("Error de conexion: " + re.getMessage());
-		}
-		
-		return resultado;
-	}
-	
-	private ReclamoRespuesta ejecutaReclamoGS(Operacion operacion,
+	private WrapperResultadosWS ejecutaReclamoGS(Operacion operacion,
 			Reclamo reclamo, HashMap<String, Object> params, boolean async) throws Exception {
 		
 		ReclamoRespuesta resultado = null;
+		WrapperResultadosWS resWS = new WrapperResultadosWS();
 		ServicioGSServiceStub stubGS = null;
 		
 		try {
@@ -593,20 +191,23 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 				WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(ServletActionContext.getServletContext());
 				ServicioGSServiceCallbackHandlerImpl callback = (ServicioGSServiceCallbackHandlerImpl)context.getBean("servicioGSServiceCallbackHandlerImpl");
 				// Se setean los parametros al callback handler:
+				params.put("STUB", stubGS);
 				callback.setClientData(params);
 				
 				stubGS.startreclamoGS(reclamoE, callback);
 			} else {
 				RespuestaGS = stubGS.reclamoGS(reclamoE);
 				resultado = RespuestaGS.getReclamoGSResponse().get_return();
+				resWS.setResultadoWS(resultado);
+				resWS.setXmlIn(stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
 				logger.debug("Resultado de WS ejecutaReclamoGS: "+resultado.getCodigo()+" - "+resultado.getMensaje());
 			}
-		} catch (RemoteException re) {
+		} catch (Exception re) {
 			logger.error(re);
 			throw new Exception("Error de conexion: " + re.getMessage());
 		}
 		
-		return resultado;
+		return resWS;
 	}
 	
 	
@@ -683,6 +284,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 		params.put("pv_nmsuplem_i", nmsuplem);
 		
 		WrapperResultados result = null;
+		WrapperResultadosWS resultWS = null;
 		ArrayList<ReciboWrapper> recibos =  null;
 		try {
 			result = kernelManager.obtenDatosRecibos(params);
@@ -716,9 +318,11 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 					
 					ejecutaReciboGS(operacion, recibo, paramsBitacora, async);
 				}else{
-					ReciboRespuesta respuesta = ejecutaReciboGS(operacion, recibo, null, async);
+					resultWS = ejecutaReciboGS(operacion, recibo, null, async);
+					ReciboRespuesta respuesta = (ReciboRespuesta) resultWS.getResultadoWS();
 					logger.debug("Resultado al ejecutar el WS Recibo: " + recibo.getNumRec() + " >>>"
 							+ respuesta.getCodigo() + " - " + respuesta.getMensaje());
+					logger.debug("XML de entrada: " + resultWS.getXmlIn());
 
 					if (Estatus.EXITO.getCodigo() != respuesta.getCodigo()) {
 						logger.error("Guardando en bitacora el estatus");
@@ -831,8 +435,8 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 		
 		RespuestaVO res =  new RespuestaVO();
 		res.setSuccess(true);
-		
 		List<Reclamo> resultReclamos = null;
+		WrapperResultadosWS resultWS = null;
 		
 		//Se invoca servicio para obtener los datos del cliente
 		HashMap<String, Object> params = new HashMap<String, Object>();
@@ -881,7 +485,9 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 						ejecutaReclamoGS(op, reclamo, paramsBitacora, async);
 					}else{
 						
-						ReclamoRespuesta respuesta = ejecutaReclamoGS(op, reclamo, params, async);
+						resultWS = ejecutaReclamoGS(op, reclamo, params, async);
+						ReclamoRespuesta respuesta = (ReclamoRespuesta) resultWS.getResultadoWS();
+						logger.debug("XML de entrada: " + resultWS.getXmlIn());
 						
 						if (Estatus.EXITO.getCodigo() != respuesta.getCodigo()) {
 							logger.error("Guardando en bitacora el estatus");

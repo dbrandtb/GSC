@@ -5,6 +5,7 @@ import java.util.HashMap;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceCallbackHandler;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludGSResponseE;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludRespuesta;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboGSResponseE;
@@ -13,6 +14,7 @@ import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReclamoGSR
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReclamoRespuesta;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService.Estatus;
 
+import org.apache.axis2.AxisFault;
 import org.apache.log4j.Logger;
 
 public class ServicioGSServiceCallbackHandlerImpl extends ServicioGSServiceCallbackHandler {
@@ -43,6 +45,15 @@ public class ServicioGSServiceCallbackHandlerImpl extends ServicioGSServiceCallb
 		logger.error("Error en WS clienteSalud: " + e.getMessage() + " Guardando en bitacora el error, getCause: " + e.getCause(),e);
 
 		HashMap<String, Object> params = (HashMap<String, Object>) this.clientData;
+		
+		ServicioGSServiceStub stubGS = (ServicioGSServiceStub) params.get("STUB");
+		logger.debug("Imprimpriendo el xml enviado al WS: ");
+		try {
+			logger.debug(stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
+		} catch (AxisFault ex) {
+			logger.error(ex);
+		}
+		
 		String usuario = (String) params.get("USUARIO");
 		try {
 			kernelManager.movBitacobro(
@@ -63,12 +74,21 @@ public class ServicioGSServiceCallbackHandlerImpl extends ServicioGSServiceCallb
 		logger.debug("Comunicacion exitosa WS clienteSalud");
 		ClienteSaludRespuesta respuesta = result.getClienteSaludGSResponse().get_return();
 		logger.debug("Resultado al ejecutar el WS cliente: " + respuesta.getCodigo() + " - " + respuesta.getMensaje());
+		
+		//TODO: RBS cambiar el param por PolizaVO
+		HashMap<String, Object> params = (HashMap<String, Object>) this.clientData;
+		
+		ServicioGSServiceStub stubGS = (ServicioGSServiceStub) params.get("STUB");
+		logger.debug("Imprimpriendo el xml enviado al WS: ");
+		try {
+			logger.debug(stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
+		} catch (AxisFault e) {
+			logger.error(e);
+		}
 
 		if (Estatus.EXITO.getCodigo() != respuesta.getCodigo() && Estatus.LLAVE_DUPLICADA.getCodigo() != respuesta.getCodigo()) {
 			logger.error("Guardando en bitacora el estatus");
 
-			//TODO: RBS cambiar el param por PolizaVO
-			HashMap<String, Object> params = (HashMap<String, Object>) this.clientData;
 			String usuario = (String) params.get("USUARIO");
 			try {
 				kernelManager.movBitacobro(
@@ -92,6 +112,14 @@ public class ServicioGSServiceCallbackHandlerImpl extends ServicioGSServiceCallb
 
 		HashMap<String, Object> params = (HashMap<String, Object>) this.clientData;
 
+		ServicioGSServiceStub stubGS = (ServicioGSServiceStub) params.get("STUB");
+		logger.debug("Imprimpriendo el xml enviado al WS: ");
+		try {
+			logger.debug(stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
+		} catch (AxisFault ex) {
+			logger.error(ex);
+		}
+		
 		String usuario = (String) params.get("USUARIO");
 		
 		try {
@@ -118,7 +146,15 @@ public class ServicioGSServiceCallbackHandlerImpl extends ServicioGSServiceCallb
 		
 		logger.debug("Resultado al ejecutar el WS Recibo: " + params.get("NumRec") + " >>>"
 				+ respuesta.getCodigo() + " - " + respuesta.getMensaje());
-
+		
+		ServicioGSServiceStub stubGS = (ServicioGSServiceStub) params.get("STUB");
+		logger.debug("Imprimpriendo el xml enviado al WS: ");
+		try {
+			logger.debug(stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
+		} catch (AxisFault e) {
+			logger.error(e);
+		}
+		
 		if (Estatus.EXITO.getCodigo() != respuesta.getCodigo()) {
 			logger.error("Guardando en bitacora el estatus..");
 
@@ -144,7 +180,14 @@ public class ServicioGSServiceCallbackHandlerImpl extends ServicioGSServiceCallb
 		logger.error("Error en WS Reclamo: " + e.getMessage() + " Guardando en bitacora el error, getCause: " + e.getCause(),e);
 
 		HashMap<String, Object> params = (HashMap<String, Object>) this.clientData;
-
+		ServicioGSServiceStub stubGS = (ServicioGSServiceStub) params.get("STUB");
+		logger.debug("Imprimpriendo el xml enviado al WS: ");
+		try {
+			logger.debug(stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
+		} catch (AxisFault ex) {
+			logger.error(ex);
+		}
+		
 		String usuario = (String) params.get("USUARIO");
 		
 		try {
@@ -170,6 +213,13 @@ public class ServicioGSServiceCallbackHandlerImpl extends ServicioGSServiceCallb
 		HashMap<String, Object> params = (HashMap<String, Object>) this.clientData;
 		
 		logger.debug("Resultado al ejecutar el WS Reclamo: " + respuesta.getCodigo() + " - " + respuesta.getMensaje());
+		ServicioGSServiceStub stubGS = (ServicioGSServiceStub) params.get("STUB");
+		logger.debug("Imprimpriendo el xml enviado al WS: ");
+		try {
+			logger.debug(stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
+		} catch (AxisFault e) {
+			logger.error(e);
+		}
 
 		if (Estatus.EXITO.getCodigo() != respuesta.getCodigo()) {
 			logger.error("Guardando en bitacora el estatus..");
