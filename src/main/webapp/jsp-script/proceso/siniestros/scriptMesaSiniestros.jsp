@@ -533,7 +533,7 @@ var msgWindow;
         	            		        		'smap1.ntramite' : record.get('ntramite'), 
         	            		        		'smap1.status'   : _STATUS_TRAMITE_EN_REVISION_MEDICA
         	            		        		,'smap1.rol_destino'     : 'medajustador'
-        	            		        		,'smap1.usuario_destino' : colIndex.length>4 ? colIndex : ''
+        	            		        		,'smap1.usuario_destino' : colIndex.length>3 ? colIndex : ''
         	            		        	},
         	            		        	failure: function(form, action) {
         	            		        		debug(action);
@@ -723,7 +723,7 @@ var msgWindow;
         	            		        		'smap1.ntramite' : record.get('ntramite'), 
         	            		        		'smap1.status'   : _STATUS_TRAMITE_EN_CAPTURA
         	            		        		,'smap1.rol_destino'     : 'operadorsini'
-                                                ,'smap1.usuario_destino' : colIndex.length>4 ? colIndex : ''
+                                                ,'smap1.usuario_destino' : colIndex.length>3 ? colIndex : ''
         	            		        	},
         	            		        	failure: function(form, action) {
         	            		        		debug(action);
