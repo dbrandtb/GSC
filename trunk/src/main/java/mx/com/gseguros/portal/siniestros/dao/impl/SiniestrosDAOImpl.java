@@ -2300,7 +2300,6 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	protected class ReclamoWSMapper  implements RowMapper {
         public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
         	Reclamo reclamo =  new Reclamo();
-        	SimpleDateFormat spdf = new SimpleDateFormat("dd/MM/yyyy");
         	Calendar cal;
         	
         	reclamo.setCanIce(rs.getDouble("CAN_ICE"));
@@ -2317,60 +2316,41 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
         	reclamo.setEdoOcu(rs.getInt("EDO_OCU"));
         	reclamo.setEstReg(rs.getString("EST_REG"));
         	
-        	try {
-    			logger.debug("--> Parseando fecha rs.getString(FEC_FAC) -->> "+ rs.getString("FEC_FAC"));
-	        	cal = Calendar.getInstance();
-				cal.setTime(spdf.parse(rs.getString("FEC_FAC")));
-				logger.debug("--> Calendario obtenido -->> "+ cal);
-				reclamo.setFecFac(cal);
-        	} catch (Exception e) {
-				logger.error("NO SE PUDO PARSEAR LA FECHA FEC_FAC !!! ");
-				reclamo.setFecFac(null);
-			}
-
-        	try {
-        		logger.debug("--> Parseando fecha rs.getString(FEC_OCU) -->> "+ rs.getString("FEC_OCU"));
-        		cal = Calendar.getInstance();
-        		cal.setTime(spdf.parse(rs.getString("FEC_OCU")));
-        		logger.debug("--> Calendario obtenido -->> "+ cal);
+        	cal = Utilerias.getCalendar(rs.getString("FEC_FAC"), Constantes.FORMATO_FECHA);
+        	if(cal != null){
+        		reclamo.setFecFac(cal);
+        	}else{
+        		logger.error("NO SE PUDO PARSEAR LA FECHA FEC_FAC !!! " + rs.getString("FEC_FAC"));
+        	}
+        	
+        	cal = Utilerias.getCalendar(rs.getString("FEC_OCU"), Constantes.FORMATO_FECHA);
+        	if(cal != null){
         		reclamo.setFecOcu(cal);
-        	} catch (Exception e) {
-        		logger.error("NO SE PUDO PARSEAR LA FECHA FEC_OCU !!! ");
-        		reclamo.setFecOcu(null);
+        	}else{
+        		logger.error("NO SE PUDO PARSEAR LA FECHA FEC_OCU !!! " + rs.getString("FEC_OCU"));
         	}
 
-        	try {
-        		logger.debug("--> Parseando fecha rs.getString(FEC_PRO) -->> "+ rs.getString("FEC_PRO"));
-        		cal = Calendar.getInstance();
-        		cal.setTime(spdf.parse(rs.getString("FEC_PRO")));
-        		logger.debug("--> Calendario obtenido -->> "+ cal);
+        	cal = Utilerias.getCalendar(rs.getString("FEC_PRO"), Constantes.FORMATO_FECHA);
+        	if(cal != null){
         		reclamo.setFecPro(cal);
-        	} catch (Exception e) {
-        		logger.error("NO SE PUDO PARSEAR LA FECHA FEC_PRO !!! ");
-        		reclamo.setFecPro(null);
+        	}else{
+        		logger.error("NO SE PUDO PARSEAR LA FECHA FEC_PRO !!! " + rs.getString("FEC_PRO"));
         	}
 
-        	try {
-        		logger.debug("--> Parseando fecha rs.getString(FEC_REG) -->> "+ rs.getString("FEC_REG"));
-        		cal = Calendar.getInstance();
-        		cal.setTime(spdf.parse(rs.getString("FEC_REG")));
-        		logger.debug("--> Calendario obtenido -->> "+ cal);
+        	cal = Utilerias.getCalendar(rs.getString("FEC_REG"), Constantes.FORMATO_FECHA);
+        	if(cal != null){
         		reclamo.setFecReg(cal);
-        	} catch (Exception e) {
-        		logger.error("NO SE PUDO PARSEAR LA FECHA FEC_REG !!! ");
-        		reclamo.setFecReg(null);
+        	}else{
+        		logger.error("NO SE PUDO PARSEAR LA FECHA FEC_REG !!! " + rs.getString("FEC_REG"));
         	}
 
-        	try {
-        		logger.debug("--> Parseando fecha rs.getString(FIN_VIG) -->> "+ rs.getString("FIN_VIG"));
-        		cal = Calendar.getInstance();
-        		cal.setTime(spdf.parse(rs.getString("FIN_VIG")));
-        		logger.debug("--> Calendario obtenido -->> "+ cal);
+        	cal = Utilerias.getCalendar(rs.getString("FIN_VIG"), Constantes.FORMATO_FECHA);
+        	if(cal != null){
         		reclamo.setFinVig(cal);
-        	} catch (Exception e) {
-        		logger.error("NO SE PUDO PARSEAR LA FECHA FIN_VIG !!! ");
-        		reclamo.setFinVig(null);
+        	}else{
+        		logger.error("NO SE PUDO PARSEAR LA FECHA FIN_VIG !!! " + rs.getString("FIN_VIG"));
         	}
+
 
         	try {
         		logger.debug("--> Parseando hora rs.getString(HOR_OCU) -->> "+ rs.getString("HOR_OCU"));
@@ -2399,17 +2379,13 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
         	reclamo.setImpMov(rs.getDouble("IMP_MOV"));
         	reclamo.setIncPol(rs.getInt("INC_POL"));
         	
-        
-        	try {
-    			logger.debug("--> Parseando fecha rs.getString(INI_VIG) -->> "+ rs.getString("INI_VIG"));
-	        	cal = Calendar.getInstance();
-				cal.setTime(spdf.parse(rs.getString("INI_VIG")));
-				logger.debug("--> Calendario obtenido -->> "+ cal);
-				reclamo.setIniVig(cal);
-        	} catch (Exception e) {
-				logger.error("NO SE PUDO PARSEAR LA FECHA INI_VIG !!! ");
-				reclamo.setIniVig(null);
-			}
+        	
+        	cal = Utilerias.getCalendar(rs.getString("INI_VIG"), Constantes.FORMATO_FECHA);
+        	if(cal != null){
+        		reclamo.setIniVig(cal);
+        	}else{
+        		logger.error("NO SE PUDO PARSEAR LA FECHA INI_VIG !!! " + rs.getString("INI_VIG"));
+        	}
         	
         	
         	reclamo.setIsrMov(rs.getDouble("ISR_MOV"));

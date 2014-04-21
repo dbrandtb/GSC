@@ -1,6 +1,8 @@
 package mx.com.gseguros.utils;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -36,6 +38,57 @@ public class Utilerias {
 		return strBuilder.toString();
 	}
 	
+	/**
+	 * Convierte una fecha String a Calendar
+	 * @param fecha String
+	 * @return devuelve objeto Calendar
+	 */
+	public static Calendar getCalendar(String fecha, String dateFormat) {
+		
+		Calendar  cal = null;
+		
+		try {
+			//Asumimos que tiene formato dd/MM/YYYY
+			//TODO:preparar este metodo  para otros formatos
+			if(Utilerias.esFechaValida(fecha, dateFormat)){
+				String [] fechaArr = fecha.split("/");   
+				int dia  =  Integer.parseInt(fechaArr[0]);
+				int mes  =  Integer.parseInt(fechaArr[1])-1;
+				int anio =  Integer.parseInt(fechaArr[2]);
+				cal = Calendar.getInstance();
+				cal.set(anio, mes, dia);
+			}
+		} catch (Exception e) {
+			logger.error("Error al formatear la fecha", e);
+		}
+		
+		return cal;
+	}
+	
+	public static boolean esFechaValida(String dateToValidate, String dateFromat){
+		 
+		if(dateToValidate == null){
+			return false;
+		}
+		SimpleDateFormat sdf = new SimpleDateFormat(dateFromat);
+		sdf.setLenient(false);
+ 
+		try {
+			//if not valid, it will throw ParseException
+			Date date = sdf.parse(dateToValidate);
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
+	}
+
+	public static void main(String[] args) {
+		
+		
+		System.out.println(Utilerias.getCalendar("11/25/2014", "dd/MM/yyyy"));
+		System.out.println(Utilerias.esFechaValida("11/25/2014", "dd/MM/yyyy"));
+		
+	}
 	
 	/*
 	public static String formateaNumero(String numero)
