@@ -3603,8 +3603,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     	public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
     		ReciboWrapper recVO = new ReciboWrapper();
         	Recibo recibo = new Recibo();	    
-        	//DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT); 
-        	SimpleDateFormat spdf = new SimpleDateFormat("dd/MM/yyyy");
+        	
         	Calendar cal;
         	
         	recibo.setActRec(rs.getInt("actRec"));
@@ -3613,66 +3612,42 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
         	recibo.setComRec(rs.getDouble("comRec"));
         	recibo.setDerecho(rs.getDouble("derecho"));
         	
-        	try {
-        		//logger.debug("--> Parseando fecha rs.getString(fecEmi) -->> "+ rs.getString("fecEmi"));
-	        	cal = Calendar.getInstance();
-				cal.setTime(spdf.parse(rs.getString("fecEmi")));
-				//logger.debug("--> Calendario obtenido -->> "+ cal);
-	        	recibo.setFecEmi(cal);
-        	} catch (Exception e) {
-				logger.error("NO SE PUDO PARSEAR LA FECHA fecEmi !!! " + rs.getString("fecEmi"));
-				recibo.setFecEmi(null);
-			}
+        	cal = Utilerias.getCalendar(rs.getString("fecEmi"), Constantes.FORMATO_FECHA);
+        	if(cal != null){
+        		recibo.setFecEmi(cal);
+        	}else{
+        		logger.error("NO SE PUDO PARSEAR LA FECHA fecEmi !!! " + rs.getString("fecEmi"));
+        	}
         	
-        	try {
-        		//logger.debug("--> Parseando fecha rs.getString(fecIni) -->> "+ rs.getString("fecIni"));
-	        	cal = Calendar.getInstance();
-	        	cal.setTime(spdf.parse(rs.getString("fecIni")));
-	        	//logger.debug("--> Calendario obtenido -->> "+ cal);
-	        	recibo.setFecIni(cal);
-        	} catch (Exception e) {
-				logger.error("NO SE PUDO PARSEAR LA FECHA fecIni !!! " + rs.getString("fecIni"));
-				recibo.setFecIni(null);
-			}
+        	cal = Utilerias.getCalendar(rs.getString("fecIni"), Constantes.FORMATO_FECHA);
+        	if(cal != null){
+        		recibo.setFecIni(cal);
+        	}else{
+        		logger.error("NO SE PUDO PARSEAR LA FECHA fecIni !!! " + rs.getString("fecIni"));
+        	}
+        
+        	cal = Utilerias.getCalendar(rs.getString("fecPag"), Constantes.FORMATO_FECHA);
+        	if(cal != null){
+        		recibo.setFecPag(cal);
+        	}else{
+        		logger.error("NO SE PUDO PARSEAR LA FECHA fecPag se envia 01/01/1900 !!! " + rs.getString("fecPag"));
+        		recibo.setFecPag(Utilerias.getCalendar("01/01/1900", Constantes.FORMATO_FECHA));
+        	}
         	
-	        try {
-	        	//logger.debug("--> Parseando fecha rs.getString(fecPag) -->> "+ rs.getString("fecPag"));
-	        	cal = Calendar.getInstance();
-	        	cal.setTime(spdf.parse(rs.getString("fecPag")));
-	        	recibo.setFecPag(cal);
-	        } catch (Exception e) {
-				//logger.error("NO SE PUDO PARSEAR LA FECHA fecPag !!! " + rs.getString("fecPag")+" se manda valor default 01/01/1900");
-				cal = Calendar.getInstance();
-				try {
-					cal.setTime(spdf.parse("01/01/1900"));
-				} catch (ParseException e1) {
-					logger.error("Error.");
-				}
-				//logger.debug("--> Calendario obtenido -->> "+ cal);
-	        	recibo.setFecPag(cal);
-			}
-	        	
-	        try {
-	        	//logger.debug("--> Parseando fecha rs.getString(fecSta) -->> "+ rs.getString("fecSta"));
-	        	cal = Calendar.getInstance();
-	        	cal.setTime(spdf.parse(rs.getString("fecSta")));
-	        	//logger.debug("--> Calendario obtenido -->> "+ cal);
-	        	recibo.setFecSta(cal);
-	        } catch (Exception e) {
-				logger.error("NO SE PUDO PARSEAR LA FECHA fecSta !!! " + rs.getString("fecSta"));
-				recibo.setFecSta(null);
-			}
+        	cal = Utilerias.getCalendar(rs.getString("fecSta"), Constantes.FORMATO_FECHA);
+        	if(cal != null){
+        		recibo.setFecSta(cal);
+        	}else{
+        		logger.error("NO SE PUDO PARSEAR LA FECHA fecSta !!! " + rs.getString("fecSta"));
+        	}
 	        
-	        try {
-	        	//logger.debug("--> Parseando fecha rs.getString(fecTer) -->> "+ rs.getString("fecTer"));
-	        	cal = Calendar.getInstance();
-	        	cal.setTime(spdf.parse(rs.getString("fecTer")));
-	        	//logger.debug("--> Calendario obtenido -->> "+ cal);
-	        	recibo.setFecTer(cal);
-        	} catch (Exception e) {
-				logger.error("NO SE PUDO PARSEAR LA FECHA fecTer !!! " + rs.getString("fecTer"));
-				recibo.setFecTer(null);
-			}
+        	cal = Utilerias.getCalendar(rs.getString("fecTer"), Constantes.FORMATO_FECHA);
+        	if(cal != null){
+        		recibo.setFecTer(cal);
+        	}else{
+        		logger.error("NO SE PUDO PARSEAR LA FECHA fecTer !!! " + rs.getString("fecTer"));
+        	}
+	        	
 	        	
         	recibo.setIva(rs.getDouble("iva"));
         	//logger.debug(">>>>>  Valor de iva: " +rs.getDouble("iva"));
@@ -3909,28 +3884,21 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		cliente.setEstadoCli(rs.getInt("estadoCli"));
     		cliente.setFaxCli(rs.getString("faxCli"));
 
-    		try {
-    			logger.debug("--> Parseando fecha rs.getString(fecaltaCli) -->> "+ rs.getString("fecaltaCli"));
-	        	cal = Calendar.getInstance();
-				cal.setTime(spdf.parse(rs.getString("fecaltaCli")));
-				logger.debug("--> Calendario obtenido -->> "+ cal);
-				cliente.setFecaltaCli(cal);
-        	} catch (Exception e) {
-				logger.error("NO SE PUDO PARSEAR LA FECHA fecaltaCli !!! " + rs.getString("fecaltaCli"));
-				cliente.setFecaltaCli(null);
-			}
-        	
-        	try {
-        		logger.debug("--> Parseando fecha rs.getString(fecnacCli) -->> "+ rs.getString("fecnacCli"));
-	        	cal = Calendar.getInstance();
-	        	cal.setTime(spdf.parse(rs.getString("fecnacCli")));
-	        	logger.debug("--> Calendario obtenido -->> "+ cal);
-	        	cliente.setFecnacCli(cal);
-        	} catch (Exception e) {
-				logger.error("NO SE PUDO PARSEAR LA FECHA fecnacCli !!! " + rs.getString("fecnacCli"));
-				cliente.setFecnacCli(null);
-			}
     		
+    		cal = Utilerias.getCalendar(rs.getString("fecaltaCli"), Constantes.FORMATO_FECHA);
+        	if(cal != null){
+        		cliente.setFecaltaCli(cal);
+        	}else{
+        		logger.error("NO SE PUDO PARSEAR LA FECHA fecaltaCli !!! " + rs.getString("fecaltaCli"));
+        	}
+        	
+        	cal = Utilerias.getCalendar(rs.getString("fecnacCli"), Constantes.FORMATO_FECHA);
+        	if(cal != null){
+        		cliente.setFecnacCli(cal);
+        	}else{
+        		logger.error("NO SE PUDO PARSEAR LA FECHA fecnacCli !!! " + rs.getString("fecnacCli"));
+        	}
+        	
     		cliente.setFismorCli(rs.getInt("fismorCli"));
     		cliente.setGiroCli(rs.getInt("giroCli"));
     		
