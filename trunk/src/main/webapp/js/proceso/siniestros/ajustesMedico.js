@@ -6,9 +6,9 @@ var tipoAccion = 0; // Nuevo
 Ext.define('modelAjusteMedico',{
     extend: 'Ext.data.Model',
     fields: [
-        {type:'string', name:'COMMENTS'},
-        {type:'string', name:'PTIMPORT'},
-        {type:'string', name:'NMORDMOV'}
+             {type:'string', name:'COMMENTS'},
+             {type:'string', name:'PTIMPORT'},
+             {type:'string', name:'NMORDMOV'}
     ]
 });
 
@@ -66,8 +66,7 @@ function _amRecargar()
 		'params.nmordina' : _amParams.nmordina
 	};
 	
-	// mandamos a cargar la informacion de los combios
-	//
+	//LLenamos la información de los combos
 	storeTipoConcepto.load();
 	Ext.getCmp('idConceptos').setValue(_amParams.idconcep);
 	storeConceptosCatalogo.load({
@@ -77,22 +76,17 @@ function _amRecargar()
 	});
 	
 	Ext.getCmp('conceptosID').setValue(_amParams.cdconcep);
-	//debug('datos que se envian al servidor: ',json);
-	//gridIncisos.setLoading(true);
 	Ext.Ajax.request(
 	{
 		url : _amUrlCargar
 		,params : json
 		,success : function(response)
 		{
-			//gridIncisos.setLoading(false);
 			json = Ext.decode(response.responseText);
-			//debug('respuesta del servidor: ',json);
 			if(json.success == true)
 			{
 				storeIncisos.removeAll();
 				storeIncisos.add(json.loadList);
-				
 				var arr = [];
 	    		storeIncisos.each(function(record) {
 		    	    arr.push(record.data);
@@ -141,8 +135,7 @@ function _amEliminar(nmordmov,ptimport,comments)
 		'params.ptimport' : ptimport,
 		'params.comments' : comments
 	};
-	console.log(_amParams.idconcep);
-	console.log(ptimport);
+	
 	Ext.Ajax.request(
 	{
 		url : _amUrlEliminar
@@ -161,7 +154,6 @@ function _amEliminar(nmordmov,ptimport,comments)
 		}
 	    ,failure : function()
 	    {
-	    	//gridIncisos.setLoading(false);
 	    	errorComunicacion();
 	    }
 	});
@@ -211,7 +203,6 @@ function _amModificar(consecutivo,ptimport,comments)
 		}
 	    ,failure : function()
 	    {
-	    	//gridIncisos.setLoading(false);
 	    	errorComunicacion();
 	    }
 	});
@@ -292,8 +283,7 @@ Ext.onReady(function() {
 	         {   
 	            	xtype:'numberfield',
 			        name:'idAjusteImporte',
-			        //id:	'idAjusteImporte',
-			    	fieldLabel : 'Importe',
+			        fieldLabel : 'Importe',
 			    	allowBlank:false,
 			    	allowDecimals :true,
 			    	decimalSeparator :'.',
@@ -302,9 +292,12 @@ Ext.onReady(function() {
 	    	}
 	         ,
 	         {
-		    	 xtype      : 'textfield'	    	,fieldLabel : 'Observaciones'
-	    		,labelWidth: 170	    		,allowBlank:false		    		,width: 500
-		    	,name : 'idObservaciones'
+		    	 xtype      : 'textfield',
+		    	 fieldLabel : 'Observaciones',
+		    	 labelWidth: 170,
+		    	 allowBlank:false,
+		    	 width: 500,
+		    	 name : 'idObservaciones'
 	         }
         ]
     });
@@ -385,11 +378,9 @@ Ext.onReady(function() {
 
 					{
 						header: 'Consecutivo',			dataIndex: 'NMORDMOV',			width: 100
-						
 					},
 					{
 				 		header: 'Ajuste de importe',	dataIndex: 'PTIMPORT',			width: 200		,renderer: Ext.util.Format.usMoney
-				 		
 				 	},
 				 	{
 					 	header: 'Observaciones',		dataIndex: 'COMMENTS',	 	flex:2	
@@ -470,12 +461,14 @@ Ext.onReady(function() {
 	 		panelAjusteMedico.down('[name="idConsecutivo"]').setValue(record.get('NMORDMOV'));
 	 		panelAjusteMedico.down('[name="idAjusteImporte"]').setValue(record.get('PTIMPORT'));
 	 		panelAjusteMedico.down('[name="idObservaciones"]').setValue(record.get('COMMENTS'));
-	 		ventanaGridAjusteMedico.showAt(150,600);
+	 		//ventanaGridAjusteMedico.showAt(150,600);
+	 		centrarVentanaInterna(ventanaGridAjusteMedico.show());
 	 	},
 	 	onAddClick: function(){
 	 		tipoAccion= 0;
 	 		panelAjusteMedico.getForm().reset();
-	 		ventanaGridAjusteMedico.showAt(150,600);
+	 		//ventanaGridAjusteMedico.showAt(150,600);
+	 		centrarVentanaInterna(ventanaGridAjusteMedico.show());
 	 	},
 	 	onRemoveClick: function(grid, rowIndex){
 	 		var record=this.getStore().getAt(rowIndex);
@@ -485,12 +478,6 @@ Ext.onReady(function() {
  	});
     gridIncisos=new EditorIncisos();
     mesConStoreUniAdmin=[];
-    
-    
-    
-    
-    
-    
     
     Ext.create('Ext.form.Panel',
     	    {
@@ -506,7 +493,6 @@ Ext.onReady(function() {
 	    		
     	        ,items    :
     	        [
-    	            
             		{
 			        	xtype: 'combo',
 			            name:'params.idconcep',
@@ -519,18 +505,9 @@ Ext.onReady(function() {
 			            queryMode:'local',
 			            allowBlank:false,
 			            editable:false,
-			            readOnly   : true/*,
-			            listeners:{
-			            	select: function (combo, records, opts){
-			            		var cdTipo =  records[0].get('key');
-			            		storeConceptosCatalogo.load({
-			            			params: {
-			            				'params.idPadre' : cdTipo
-			            			}
-			            		});
-			            	}
-			            }*/
-			        },{
+			            readOnly   : true
+			        },
+			        {
 			        	xtype: 'combo',
 			            name:'params.cdconcep',
 			            id:'conceptosID',
@@ -545,29 +522,7 @@ Ext.onReady(function() {
 			            forceSelection: true,
 			            readOnly   : true,
 			            width:550
-			        }
-        /*{
-            			id:'idConcepto'
-		                ,xtype      : 'textfield'
-		            	,fieldLabel : 'Concepto'
-		            	,readOnly   : true
-		            	,labelWidth : 160
-		            	,width: 500
-		            	,name       : 'idConcepto'
-		            	, value: _amParams.idconcep
-		            	//,hidden:true
-		            },
-		            {
-		                id: 'idCPT'
-		                ,name: 'idCPT'
-		                ,xtype: 'textfield'
-		                ,fieldLabel: 'CPT'
-		                ,labelWidth: 160
-		                ,width: 500
-		                , value: _amParams.cdconcep
-		                //, value:,
-		                //,hidden:true
-		            }*/,
+			        },
                     gridIncisos
                     ,
                     {
@@ -579,10 +534,9 @@ Ext.onReady(function() {
         		    	allowDecimals :true,
         		    	decimalSeparator :'.',
         		    	renderer: Ext.util.Format.usMoney
-        	         }
+        	        }
     	        ]
     	    });
-    
     _amRecargar();
     
 });
