@@ -313,11 +313,19 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			String cdmoneda,
 			String tasacamb,
 			String ptimporta,
-			String dctonuex) throws ApplicationException {
+			String dctonuex,
+			String tipoAccion) throws ApplicationException {
 		// TODO Auto-generated method stub
 		try {
+			String accion = null;
+			
+			if(tipoAccion == null || tipoAccion == ""){
+				accion = Constantes.INSERT_MODE;
+			}else{
+				accion = Constantes.UPDATE_MODE;
+			}
 			HashMap<String,Object> paramsFacMesaCtrl=new HashMap<String,Object>();
-			paramsFacMesaCtrl.put("pv_accion_i", Constantes.INSERT_MODE);
+			paramsFacMesaCtrl.put("pv_accion_i", accion);
 			paramsFacMesaCtrl.put("pv_ntramite_i",ntramite);
 			paramsFacMesaCtrl.put("pv_nfactura_i",nfactura);
 			paramsFacMesaCtrl.put("pv_ffactura_i",fefactura);

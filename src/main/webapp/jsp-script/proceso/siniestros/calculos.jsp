@@ -1416,7 +1416,7 @@ function _p12_guardar()
 {
 	debug('_p12_guardar');
 	var valido = _p12_validaAutorizaciones();
-	console.log(valido);
+	//console.log(valido);
 	if(valido.length==0)
 	{
 		_p12_panelCalculo.setLoading(true);
@@ -1560,20 +1560,12 @@ function _p12_validaAutorizaciones()
             
             
             var conceptos = _p12_llist1[i];
-            console.log(conceptos);
+            //console.log(conceptos);
             var j;
             for(j=0;j<conceptos.length;j++)
             {
             	//var facturaIte = conceptos[j];
             	var conceptosInt = conceptos[j];
-            	
-            	console.log("FOR J");
-            	console.log(conceptosInt.PTIMPORT);
-            	console.log(conceptosInt.DCTOIMEX);
-            	console.log(conceptosInt.DESTOIMP);
-            	console.log(conceptosInt.PTPCIOEX);
-            	console.log(conceptosInt.PTPRECIO);
-            	
             	
             	if(+ conceptosInt.PTIMPORT <= 0){
     				result = result + 'Verifica el Importe del concepto ' + conceptosInt.NFACTURA + '<br/>';

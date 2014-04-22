@@ -120,6 +120,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
     private List<Map<String,String>> lpdir;
     private List<Map<String,String>> lprem;
     private List<Map<String,String>> listaImportesWS;
+    private List<Map<String,String>> facturasxTramite;
 	
     private List<List<Map<String,String>>> llist1;
     
@@ -1474,6 +1475,7 @@ public void setMsgResult(String msgResult) {
 	    	String cdrol    = usuario.getRolActivo().getObjeto().getValue();
 	    	String pantalla = "SELECCION_COBERTURA";
 	    	String seccion  = "FORMULARIO";
+	    	imap = new HashMap<String,Item>();
 	    	
 	    	List<ComponenteVO> componentes = pantallasManager.obtenerComponentes(
 	    			null, null, null, null, null, cdrol, pantalla, seccion, null);
@@ -1482,7 +1484,17 @@ public void setMsgResult(String msgResult) {
 	    	
 	    	gc.generaComponentes(componentes, true, false, true, false, false, false);
 	    	
-	    	item = gc.getItems();
+	    	//item=gc.getItems();
+	    	imap.put("item",gc.getItems());
+	    	
+	    	seccion = "COLUMNAS";
+	    	componentes = pantallasManager.obtenerComponentes(null, null, null, null, null, cdrol, pantalla, seccion, null);
+	    	
+	    	gc.generaComponentes(componentes, true, true, false, true, false, false);
+	    	
+	    	imap.put("columnas",gc.getColumns());
+	    	imap.put("modelFacturas", gc.getFields());
+	    	
 	    	
     	}
     	catch(Exception ex)
@@ -1552,11 +1564,107 @@ public void setMsgResult(String msgResult) {
 	    		String                   ptimporta = factura.get("PTIMPORTA");
 	    		String                   dctonuex = factura.get("DCTONUEX");
 	    		
-	    		siniestrosManager.guardaListaFacMesaControl(ntramite, nfactura, fefactura, cdtipser, cdpresta, ptimport, cdgarant, cdconval, descporc, descnume,cdmoneda,tasacamb,ptimporta,dctonuex);
+	    		siniestrosManager.guardaListaFacMesaControl(ntramite, nfactura, fefactura, cdtipser, cdpresta, ptimport, cdgarant, cdconval, descporc, descnume,cdmoneda,tasacamb,ptimporta,dctonuex,null);
     		}
     		
     		success = true;
     		mensaje = "Tr&aacute;mite actualizado";
+    	}
+    	catch(Exception ex)
+    	{
+    		success=false;
+    		logger.error("error al seleccionar la cobertura",ex);
+    		mensaje = ex.getMessage();
+    	}
+    	
+    	logger.debug(""
+    			+ "\n######                           ######"
+    			+ "\n###### guardarSeleccionCobertura ######"
+    			+ "\n#######################################"
+    			+ "\n#######################################"
+    			);
+    	return SUCCESS;
+    }
+    
+    
+    public String guardarSeleccionCoberturaxTramite()
+    {
+    	logger.debug(""
+    			+ "\n###############################################"
+    			+ "\n###############################################"
+    			+ "\n###### guardarSeleccionCoberturaxTramite ######"
+    			+ "\n######                           		  ######"
+    			);
+    	logger.debug("params: "+params);
+    	
+    	try
+    	{
+    		String cdramo   = params.get("cdramo");
+    		String cdtipsit = params.get("cdtipsit");
+    		String cdgarant = params.get("cdgarant");
+    		String cdconval = params.get("cdconval");
+    		String ntramite = params.get("ntramite");
+    		
+    		Map<String,Object> otvalor = new HashMap<String,Object>();
+    		otvalor.put("pv_ntramite_i" , ntramite);
+    		otvalor.put("pv_cdramo_i"   , cdramo);
+    		otvalor.put("pv_cdtipsit_i" , cdtipsit);
+    		otvalor.put("pv_otvalor12_i"  , cdgarant);
+    		otvalor.put("pv_otvalor14_i"  , cdconval);
+    		siniestrosManager.actualizaOTValorMesaControl(otvalor);
+    		
+    		success = true;
+    		mensaje = "Tr&aacute;mite actualizado";
+    	}
+    	catch(Exception ex)
+    	{
+    		success=false;
+    		logger.error("error al seleccionar la cobertura",ex);
+    		mensaje = ex.getMessage();
+    	}
+    	
+    	logger.debug(""
+    			+ "\n######                           		  ######"
+    			+ "\n###### guardarSeleccionCoberturaxTramite ######"
+    			+ "\n###############################################"
+    			+ "\n###############################################"
+    			);
+    	return SUCCESS;
+    }
+    
+    public String guardarCoberturaxFactura()
+    {
+    	logger.debug(""
+    			+ "\n#######################################"
+    			+ "\n#######################################"
+    			+ "\n###### guardarCoberturaxFactura  ######"
+    			+ "\n######                           ######"
+    			);
+    	logger.debug("params: "+params);
+    	
+    	try
+    	{
+    		
+    		String                   ntramite  = params.get("ntramite");
+			String                   nfactura  = params.get("nfactura");
+    		String                   fefactura = params.get("ffactura");
+    		String                   cdtipser  = params.get("cdtipser");
+    		String                   cdpresta  = params.get("cdpresta");
+    		String                   ptimport  = params.get("ptimport");
+    		String                   descporc  = params.get("descporc");
+    		String                   descnume  = params.get("descnume");
+    		String                   cdmoneda  = params.get("cdmoneda");
+    		String                   tasacamb  = params.get("tasacamb");
+    		String                   ptimporta = params.get("ptimporta");
+    		String                   dctonuex =  params.get("dctonuex");
+    		String                   cdgarant =  params.get("cdgarant");
+    		String                   cdconval =  params.get("cdconval");
+    		String                   tipoAccion =  params.get("tipoAccion");
+    		
+    		siniestrosManager.guardaListaFacMesaControl(ntramite, nfactura, fefactura, cdtipser, cdpresta, ptimport, cdgarant, cdconval, descporc, descnume,cdmoneda,tasacamb,ptimporta,dctonuex,tipoAccion);
+    		
+    		success = true;
+    		mensaje = "Cobertura y subcobertura modificada";
     	}
     	catch(Exception ex)
     	{
@@ -1728,7 +1836,8 @@ public void setMsgResult(String msgResult) {
     				"001",
     				"0",
     				"0",
-    				"0");
+    				"0",
+    				null);
     		
     		Map<String,Object> otvalor = new HashMap<String,Object>();
     		otvalor.put("pv_ntramite_i"  , ntramite);
@@ -4364,6 +4473,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
                 params.get("cmbTipoMoneda"),
                 null,
                 null,
+                null,
                 null
             );
         }else{
@@ -4394,6 +4504,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
                     datosTablas.get(i).get("cdmoneda"),
                     datosTablas.get(i).get("tasacamb"),
                     datosTablas.get(i).get("ptimporta"),
+                    null,
                     null
                 );
             }
@@ -5123,5 +5234,16 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 	public void setExisteDocAutServicio(String existeDocAutServicio) {
 		this.existeDocAutServicio = existeDocAutServicio;
 	}
+
+
+	public List<Map<String, String>> getFacturasxTramite() {
+		return facturasxTramite;
+	}
+
+
+	public void setFacturasxTramite(List<Map<String, String>> facturasxTramite) {
+		this.facturasxTramite = facturasxTramite;
+	}
+	
 	
 }

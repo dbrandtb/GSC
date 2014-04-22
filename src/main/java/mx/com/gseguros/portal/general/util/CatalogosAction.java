@@ -4,13 +4,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
+import mx.com.gseguros.portal.siniestros.model.CoberturaPolizaVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaProveedorVO;
+import mx.com.gseguros.portal.siniestros.model.DatosSiniestroVO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 
 import org.apache.log4j.Logger;
@@ -147,6 +150,42 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case COBERTURAS:
 					lista = siniestrosManager.obtieneListadoCobertura(params.get("cdramo"), params.get("cdtipsit"));
 					break;
+				case COBERTURASXTRAMITE:
+					
+					try{
+						String tipoPago = params.get("tipopago").toString();
+						
+						if(TipoPago.DIRECTO.getCodigo().equals(tipoPago)){
+							lista = siniestrosManager.obtieneListadoCobertura(params.get("cdramo"), params.get("cdtipsit"));
+							break;
+						}else{
+							String ntramite = params.get("ntramite");
+							Map<String,String> paramsRes = (HashMap<String, String>) siniestrosManager.obtenerLlaveSiniestroReembolso(ntramite);
+							
+							for(Entry<String,String>en:paramsRes.entrySet()){
+								params.put(en.getKey().toLowerCase(),en.getValue());
+							}
+							
+							HashMap<String, Object> paramCobertura = new HashMap<String, Object>();
+							paramCobertura.put("pv_cdunieco_i",params.get("cdunieco"));
+							paramCobertura.put("pv_estado_i",params.get("estado"));
+							paramCobertura.put("pv_cdramo_i",params.get("cdramo"));
+							paramCobertura.put("pv_nmpoliza_i",params.get("nmpoliza"));
+							paramCobertura.put("pv_nmsituac_i",params.get("nmsituac"));
+							paramCobertura.put("pv_cdgarant_i",params.get("cdgarant"));
+							
+							List<CoberturaPolizaVO> listaCobertura = siniestrosManager.getConsultaListaCoberturaPoliza(paramCobertura);
+							lista=new ArrayList<GenericVO>(0);
+							for(CoberturaPolizaVO nombre:listaCobertura) {
+								lista.add(new GenericVO(nombre.getCdgarant(), nombre.getDsgarant()));
+							}
+							break;
+						}
+					}catch(Exception ex){
+						logger.error("error al obtener clave de siniestro para la pantalla del tabed panel",ex);
+					}
+					
+					
 				case SUBCOBERTURAS:
 					String cdgarant = null;
 					String cdsubcob = null;
