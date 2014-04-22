@@ -77,8 +77,7 @@ var msgWindow;
 		}
 		else{
 			var record = grid.getStore().getAt(rowIndex);
-			//console.log(record.get('status'));
-		    windowLoader = Ext.create('Ext.window.Window',{
+			windowLoader = Ext.create('Ext.window.Window',{
 		        modal       : true,
 		        buttonAlign : 'center',
 		        width       : 800,
@@ -352,7 +351,7 @@ var msgWindow;
 							        	            		        		//mensajeError('No se pudo turnar.');
 							        	            					},
 							        	            					success: function(form, action) {
-							        	            						mensajeCorrecto('Aviso','Se ha turnado con exito.');
+							        	            						mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito.');
 							        	            						loadMcdinStore();
 							        	            						windowLoader.close();
 							        	            						
@@ -388,7 +387,7 @@ var msgWindow;
 				        	            		        		//mensajeError('No se pudo turnar.');
 				        	            					},
 				        	            					success: function(form, action) {
-				        	            						mensajeCorrecto('Aviso','Se ha turnado con exito.');
+				        	            						mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito.');
 				        	            						loadMcdinStore();
 				        	            						windowLoader.close();
 				        	            						
@@ -549,7 +548,7 @@ var msgWindow;
         	            		        		//mensajeError('No se pudo turnar.');
         	            					},
         	            					success: function(form, action) {
-        	            						mensajeCorrecto('Aviso','Se ha turnado con exito.');
+        	            						mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito.');
         	            						loadMcdinStore();
         	            						windowLoader.close();
         	            						
@@ -646,7 +645,7 @@ var msgWindow;
 							        	            		        		//mensajeError('No se pudo turnar.');
 							        	            					},
 							        	            					success: function(form, action) {
-							        	            						mensajeCorrecto('Aviso','Se ha turnado con exito.');
+							        	            						mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito.');
 							        	            						loadMcdinStore();
 							        	            						windowLoader.close();
 							        	            						
@@ -739,7 +738,7 @@ var msgWindow;
         	            		        		//mensajeError('No se pudo turnar.');
         	            					},
         	            					success: function(form, action) {
-        	            						mensajeCorrecto('Aviso','Se ha turnado con exito.');
+        	            						mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito.');
         	            						loadMcdinStore();
         	            						windowLoader.close();
         	            						
@@ -789,9 +788,8 @@ var msgWindow;
 				    	},
 						success: function(response, opts) {
 							var respuesta = Ext.decode(response.responseText);
-							//console.log(respuesta);
 							if(respuesta.success){
-								mensajeCorrecto('Aviso','El pago se ha solicitado con exito.');	
+								mensajeCorrecto('Aviso','El pago se ha solicitado con &eacute;xito.');	
 							}else {
 								mensajeError(respuesta.mensaje);
 							}

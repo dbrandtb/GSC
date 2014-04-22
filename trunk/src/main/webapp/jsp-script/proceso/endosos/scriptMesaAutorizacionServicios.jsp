@@ -112,7 +112,6 @@ function _4_authEndosoDocumentos(grid,rowIndex,colIndex)
 function rechazoAutorizacionServicio(grid,rowIndex,colIndex){
 	
 	var record = grid.getStore().getAt(rowIndex);
-	console.log(record);
 	
 	if(record.get('status') == _STATUS_TRAMITE_RECHAZADO){
 		mensajeWarning('Este tr&aacute;mite ya se encuentra rechazado!');
@@ -172,7 +171,7 @@ function rechazoAutorizacionServicio(grid,rowIndex,colIndex){
    	            								    }
    	            								    ,success : function (response)
    	            								    {
-   	            								    	mensajeCorrecto('Aviso','Se ha rechazado con exito.');
+   	            								    	mensajeCorrecto('Aviso','Se ha rechazado con &eacute;xito.');
 	   	 	    	            						loadMcdinStore();
 	   	 	    	            						windowLoader.close();
    	            								    },
@@ -292,9 +291,7 @@ function turnarCoordinaMedMultiregional(grid,rowIndex,colIndex){
 			        				    }
 			        				    ,success : function (response)
 			        				    {
-			                                console.log(Ext.decode(response.responseText));
-			                                
-			        				        if(Ext.decode(response.responseText).existeDocAutServicio =="N")
+			                                if(Ext.decode(response.responseText).existeDocAutServicio =="N")
 			        			        	{
 			        				        	 Ext.Msg.show({
 			        				 	            title:'Error',
@@ -342,7 +339,7 @@ function turnarCoordinaMedMultiregional(grid,rowIndex,colIndex){
 			        			                	            		        		mensajeError('No se pudo turnar.');
 			        			                	            					},
 			        			                	            					success: function(form, action) {
-			        			                	            						mensajeCorrecto('Aviso','Se ha turnado con exito.');
+			        			                	            						mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito.');
 			        			                	            						loadMcdinStore();
 			        			                	            						windowLoader.close();
 			        			                	            						
@@ -403,7 +400,6 @@ function turnarCoordinaMedMultiregional(grid,rowIndex,colIndex){
 //TURNAR AL GERENTE MULTIREGIONAL
 function turnarGerenteMedMultiregional(grid,rowIndex,colIndex){
     var record = grid.getStore().getAt(rowIndex);
-	console.log(record);
 	
     if(record.get('status') == _STATUS_TRAMITE_RECHAZADO){
 		mensajeWarning('No se puede turnar el tr&aacute;mite ya se encuentra rechazado');
@@ -423,8 +419,7 @@ function turnarGerenteMedMultiregional(grid,rowIndex,colIndex){
 			    }
 			    ,success : function (response)
 			    {
-			    	console.log(Ext.decode(response.responseText).existeDocAutServicio);
-	                if(Ext.decode(response.responseText).existeDocAutServicio =="N")
+			    	if(Ext.decode(response.responseText).existeDocAutServicio =="N")
 		        	{
 			        	 Ext.Msg.show({
 			 	            title:'Error',
@@ -488,7 +483,7 @@ function turnarGerenteMedMultiregional(grid,rowIndex,colIndex){
 			        				                	            		        		mensajeError('No se pudo turnar.');
 			        				                	            					},
 			        				                	            					success: function(form, action) {
-			        				                	            						mensajeCorrecto('Aviso','Se ha turnado con exito.');
+			        				                	            						mensajeCorrecto('Aviso','Se ha turnado con &eacute;xito.');
 			        				                	            						loadMcdinStore();
 			        				                	            						windowLoader.close();
 			        				                	            						

@@ -28,6 +28,7 @@ var _CATALOGO_SUBCOBERTURAS  = '<s:property value="@mx.com.gseguros.portal.gener
 
 var _CATALOGO_TipoConcepto  = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_CONCEPTO_SINIESTROS"/>';
 var _CATALOGO_ConceptosMedicos  = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CODIGOS_MEDICOS"/>';
+var _CATALOGO_TipoMoneda   = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_MONEDA"/>';
 
 var _Operacion;
 var _Nmordina;
@@ -71,7 +72,12 @@ Ext.onReady(function() {
                  {type:'string',    name:'AUTMEDIC'},
                  {type:'string',    name:'COMMENME'},
                  {type:'string',    name:'DEDUCIBLE'},
-                 {type:'string',    name:'COMMENAR'}
+                 {type:'string',    name:'COMMENAR'},
+                 {type:'string',    name:'CDMONEDA'},
+                 {type:'string',    name:'DESTIPOMONEDA'},
+                 {type:'string',    name:'TASACAMB'},
+                 {type:'string',    name:'PTIMPORTA'},
+                 {type:'string',    name:'DCTONUEX'}
 				]
     });
 	
@@ -80,9 +86,10 @@ Ext.onReady(function() {
         fields: ["CDUNIECO","CDRAMO","ESTADO","NMPOLIZA","NMSUPLEM",
          		"NMSITUAC","AAAPERTU","STATUS","NMSINIES","NFACTURA",
         		"CDGARANT","CDCONVAL","CDCONCEP","IDCONCEP","CDCAPITA",
+        		"DSGARANT","DSSUBGAR","DESIDCONCEP","DESCONCEP","TOTAJUSMED","SUBTAJUSTADO",
         		"NMORDINA",{name:"FEMOVIMI", type: "date", dateFormat: "d/m/Y"},"CDMONEDA","PTPRECIO","CANTIDAD",
         		"DESTOPOR","DESTOIMP","PTIMPORT","PTRECOBR","NMANNO",
-        		"NMAPUNTE","USERREGI",{name:"FEREGIST", type: "date", dateFormat: "d/m/Y"}]
+        		"NMAPUNTE","USERREGI",{name:"FEREGIST", type: "date", dateFormat: "d/m/Y"},"PTPCIOEX","DCTOIMEX","PTIMPOEX"]
     });
 
 	Ext.define('modelListadoProvMedico',{
@@ -189,7 +196,7 @@ Ext.onReady(function() {
 		proxy: {
 			type: 'ajax',
 			url: _URL_CATALOGOS,
-			extraParams : {catalogo:_CATALOGO_TipoAtencion},
+			extraParams : {catalogo:_CATALOGO_TipoAtencion},//Cat.TipoAtencionSiniestros
 			reader: {
 				type: 'json',
 				root: 'lista'
@@ -234,7 +241,21 @@ Ext.onReady(function() {
         }
 	});
 	storeCoberturas.load();
-
+	
+	var storeTipoMoneda = Ext.create('Ext.data.JsonStore', {
+		model:'Generic',
+		proxy: {
+			type: 'ajax',
+			url: _URL_CATALOGOS,
+			extraParams : {catalogo:_CATALOGO_TipoMoneda},
+			reader: {
+				type: 'json',
+				root: 'lista'
+			}
+		}
+	});
+    storeTipoMoneda.load();
+    
 	var storeSubcoberturas = Ext.create('Ext.data.Store',{
         model: 'Generic',
         autoLoad: false,
@@ -297,6 +318,7 @@ Ext.onReady(function() {
 	
 	panelEdicionFacturas= Ext.create('Ext.form.Panel',{
         border  : 0,
+        width: 400,
         url: _URL_GuardaFactura
         ,bodyStyle:'padding:5px;'
         ,items :
@@ -306,6 +328,7 @@ Ext.onReady(function() {
 		    	,fieldLabel : 'No. Factura'
 	    		,allowBlank:false
 		    	,name       : 'params.nfactura'
+		    	,labelWidth: 170
     		},            
     		{
     	        name: 'params.fefactura',
@@ -314,7 +337,8 @@ Ext.onReady(function() {
     	        format: 'd/m/Y',
     	        editable: true,
     	        allowBlank:false,
-    	        value:new Date()
+    	        value:new Date(),
+    	        labelWidth: 170
     	    },{
             	xtype: 'combo',
                 name:'params.cdtipser',
@@ -324,6 +348,7 @@ Ext.onReady(function() {
                 store: storeTipoAtencion,
                 queryMode:'local',
                 allowBlank:false,
+                labelWidth: 170,
                 editable:false
             },{
             	xtype       : 'combo',
@@ -342,6 +367,7 @@ Ext.onReady(function() {
                 minChars  : 2,
                 hideTrigger:true,
                 triggerAction: 'all',
+                labelWidth: 170
             },{
             	xtype       : 'combo',
             	name        : 'params.cdgarant',
@@ -352,6 +378,7 @@ Ext.onReady(function() {
                 forceSelection : true,
                 matchFieldWidth: false,
                 queryMode   :'remote',
+                labelWidth: 170,
                 store       : storeCoberturas,
                 triggerAction  : 'all',
                 listeners: {
@@ -377,7 +404,40 @@ Ext.onReady(function() {
                 queryMode   :'local',
                 store       : storeSubcoberturas,
                 triggerAction  : 'all',
+                labelWidth: 170,
                 editable    : false
+            },{
+            	xtype       : 'combo',
+            	name        : 'params.tipoMoneda',
+            	fieldLabel  : 'Tipo moneda',
+            	displayField: 'value',
+            	valueField  : 'key',
+            	allowBlank  : true,
+                forceSelection : true,
+                matchFieldWidth: false,
+                queryMode   :'local',
+                labelWidth: 170,
+                store       : storeTipoMoneda,
+                triggerAction  : 'all',
+                editable    : false,
+                listeners : {
+    				change:function(e){
+    					if(e.getValue()!='001')
+						{
+    						panelEdicionFacturas.query('numberfield[name=params.ptimport]')[0].show();
+    						panelEdicionFacturas.query('numberfield[name=params.ptimporta]')[0].show();
+    						panelEdicionFacturas.query('numberfield[name=params.tasacamb]')[0].show();
+    						panelEdicionFacturas.query('numberfield[name=params.dctonuex]')[0].show();
+						
+						}else{
+							panelEdicionFacturas.query('numberfield[name=params.ptimport]')[0].show();
+							panelEdicionFacturas.query('numberfield[name=params.ptimporta]')[0].hide();
+    						panelEdicionFacturas.query('numberfield[name=params.tasacamb]')[0].hide();
+    						panelEdicionFacturas.query('numberfield[name=params.dctonuex]')[0].hide();
+						}
+    	    		}
+    	        }
+                
             },{
 		        xtype      : 'numberfield'
 		    	,fieldLabel : 'Importe'
@@ -385,7 +445,44 @@ Ext.onReady(function() {
                 ,allowDecimals: true
                 ,decimalSeparator: '.'
                 ,minValue: 0
+                ,labelWidth: 170
 		    	,name       : 'params.ptimport'
+    		},{
+		        xtype      : 'numberfield'
+		    	,fieldLabel : 'Importe moneda extranjera'
+	    		,labelWidth: 170
+                ,allowBlank:false
+                ,allowDecimals: true
+                ,decimalSeparator: '.'
+                ,minValue: 0
+		    	,name       : 'params.ptimporta'
+		    	,listeners : {
+    				change:function(e){
+    					panelEdicionFacturas.down('[name="params.ptimport"]').setValue(+panelEdicionFacturas.down('[name="params.tasacamb"]').getValue() * +panelEdicionFacturas.down('[name="params.ptimporta"]').getValue() );
+    	    		}
+    	        }
+    		},{
+		        xtype      : 'numberfield'
+		    	,fieldLabel : 'Tasa Cambio'
+                ,allowBlank:false
+                ,allowDecimals: true
+                ,decimalSeparator: '.'
+               	,labelWidth: 170
+                ,minValue: 0
+		    	,name       : 'params.tasacamb'
+		    	,listeners : {
+    				change:function(e){
+    					var cantidad = e.getValue();
+    					if(+ cantidad > 0)
+   						{
+    						panelEdicionFacturas.down('[name="params.ptimport"]').setValue(+panelEdicionFacturas.down('[name="params.tasacamb"]').getValue() * +panelEdicionFacturas.down('[name="params.ptimporta"]').getValue() );
+    				 		panelEdicionFacturas.down('[name="params.descnume"]').setValue(+panelEdicionFacturas.down('[name="params.tasacamb"]').getValue() * +panelEdicionFacturas.down('[name="params.dctonuex"]').getValue() );
+   						}else{
+   							panelEdicionFacturas.down('[name="params.ptimport"]').setValue('0');
+   					 		panelEdicionFacturas.down('[name="params.descnume"]').setValue('0');
+   						}
+    	    		}
+    	        }
     		},{
 		        	xtype      : 'numberfield'
 			    	,fieldLabel : 'Descuento %'
@@ -393,6 +490,7 @@ Ext.onReady(function() {
 	                ,allowDecimals: true
 	                ,decimalSeparator: '.'
 	                ,minValue: 0
+	                ,labelWidth: 170
 			    	,name       : 'params.descporc'
 	    	},{
 		        xtype      : 'numberfield'
@@ -401,19 +499,40 @@ Ext.onReady(function() {
 	                ,allowDecimals: true
 	                ,decimalSeparator: '.'
 	                ,minValue: 0
+	                ,labelWidth: 170
 			    	,name       : 'params.descnume'
+	    	},{
+		        xtype      : 'numberfield'
+			    	,fieldLabel : 'Descuento Importe Ext'
+	                ,allowBlank:false
+	                ,allowDecimals: true
+	                ,decimalSeparator: '.'
+	                ,minValue: 0
+	                ,labelWidth: 170
+			    	,name       : 'params.dctonuex'
+		    		,listeners : {
+	    				change:function(e){
+	    					panelEdicionFacturas.down('[name="params.descnume"]').setValue(+panelEdicionFacturas.down('[name="params.tasacamb"]').getValue() * +panelEdicionFacturas.down('[name="params.dctonuex"]').getValue() );
+	    	    		}
+	    	        }
 	    	}
+	    	
 	    	<s:property value='%{"," + imap.itemsEdicion}' />
+	    	
         ]
     });
-    
+	for(var i=13;i<panelEdicionFacturas.items.items.length;i++)
+	{
+		panelEdicionFacturas.items.items[i].labelWidth=166;
+	}
 	
     var panelEdicionConceptos = Ext.create('Ext.form.Panel',{
         border  : 0
         ,bodyStyle:'padding:5px;'
         ,url: _URL_GuardaConcepto
         ,items :
-        [   {
+        [   
+            {
         	xtype       : 'combo',
         	name        : 'params.cdconval',
         	fieldLabel  : 'Sub Cobertura',
@@ -441,11 +560,16 @@ Ext.onReady(function() {
             listeners:{
             	select: function (combo, records, opts){
             		var cdTipo =  records[0].get('key');
-            		storeConceptosCatalogo.load({
+            		storeConceptosCatalogo.proxy.extraParams=
+            		{
+            			'params.idPadre' : cdTipo
+            			,catalogo        : _CATALOGO_ConceptosMedicos
+            		};
+            		/*storeConceptosCatalogo.load({
             			params: {
             				'params.idPadre' : cdTipo
             			}
-            		});
+            		});*/
             	}
             }
         },{
@@ -456,24 +580,69 @@ Ext.onReady(function() {
             displayField: 'value',
             fieldLabel: 'Concepto',
             store: storeConceptosCatalogo,
-            queryMode:'local',
+            queryMode:'remote',
             allowBlank:false,
             editable:true,
             forceSelection: true
-        },
-            {
+            ,queryParam  : 'params.descripc'
+            ,hideTrigger : true
+            ,minChars    : 3
+        },{
+	        xtype      : 'numberfield'
+	    	,fieldLabel : 'Tasa Cambio'
+            ,allowDecimals: true
+            ,decimalSeparator: '.'
+            ,minValue: 0
+            ,labelWidth: 150
+	    	,name       : 'params.tasacamb1'
+    		,listeners : {
+   				change:function(e){
+   					var cantidad = e.getValue();
+   					if(+ cantidad > 0)
+  						{
+   						panelEdicionConceptos.down('[name="params.ptprecio"]').setValue(+panelEdicionConceptos.down('[name="params.tasacamb1"]').getValue() * +panelEdicionConceptos.down('[name="params.ptpcioex"]').getValue() );
+   						panelEdicionConceptos.down('[name="params.destoimp"]').setValue(+panelEdicionConceptos.down('[name="params.tasacamb1"]').getValue() * +panelEdicionConceptos.down('[name="params.dctoimex"]').getValue() );
+   						panelEdicionConceptos.down('[name="params.ptimport"]').setValue(+panelEdicionConceptos.down('[name="params.tasacamb1"]').getValue() * +panelEdicionConceptos.down('[name="params.ptimpoex"]').getValue() );
+  						}else{
+  							panelEdicionConceptos.down('[name="params.ptprecio"]').setValue('0');
+  							panelEdicionConceptos.down('[name="params.destoimp"]').setValue('0');
+  							panelEdicionConceptos.down('[name="params.ptimport"]').setValue('0');
+  						}
+   	    		}
+   	        }
+   		},
+           {
 		        xtype      : 'numberfield'
 		    	,fieldLabel : 'Precio'
 	    		,labelWidth: 150
 	    		,allowBlank:false
 	    		,allowDecimals: true
-                ,decimalSeparator: '.'
-                ,minValue: 0
+	               ,decimalSeparator: '.'
+	               ,minValue: 0
 		    	,name       : 'params.ptprecio'
 		    	,listeners: {
 		    		change: calculaImporteConcepto
 		    	}
-    		}
+   		},
+   		{
+	        xtype      : 'numberfield'
+	    	,fieldLabel : 'Precio Ext'
+    		,labelWidth: 150
+    		,allowBlank:false
+    		,allowDecimals: true
+               ,decimalSeparator: '.'
+               ,minValue: 0
+	    	,name       : 'params.ptpcioex'
+	    	/*,listeners: {
+	    		change: calculaImporteConcepto
+	    	}*/
+    		,listeners : {
+  				change:function(e){
+  						panelEdicionConceptos.down('[name="params.ptprecio"]').setValue(+panelEdicionConceptos.down('[name="params.tasacamb1"]').getValue() * +panelEdicionConceptos.down('[name="params.ptpcioex"]').getValue() );
+  						calculaImporteConcepto();
+  	    		}
+   	        }
+		}
             ,{
 		       		 xtype      : 'numberfield'
 			    	,fieldLabel : 'Cantidad'
@@ -509,8 +678,38 @@ Ext.onReady(function() {
 		    	,listeners: {
 			    		change: calculaImporteConcepto
 			    }
+    		},
+    		{
+		        xtype      : 'numberfield'
+		    	,fieldLabel : 'Descuento Importe Ext'
+	    		,labelWidth: 150
+	    		,allowBlank:false
+	    		,allowDecimals: true
+                ,decimalSeparator: '.'
+                ,minValue: 0
+		    	,name       : 'params.dctoimex'
+	    		,listeners : {
+	  				change:function(e){
+	  						panelEdicionConceptos.down('[name="params.destoimp"]').setValue(+panelEdicionConceptos.down('[name="params.tasacamb1"]').getValue() * +panelEdicionConceptos.down('[name="params.dctoimex"]').getValue() );
+	  						calculaImporteConcepto();
+	  	    		}
+	   	        }
+    			/*,listeners: {
+			    		change: calculaImporteConcepto
+			    }*/
     		}
             ,
+            {
+		        xtype      : 'numberfield'
+		    	,fieldLabel : 'Subtotal factura Ext'
+	    		,labelWidth: 150
+	    		,allowBlank:false
+	    		,allowDecimals: true
+                ,decimalSeparator: '.'
+                ,readOnly: true
+                ,minValue: 0
+		    	,name       : 'params.ptimpoex'
+    		},
             {
 		        xtype      : 'numberfield'
 		    	,fieldLabel : 'Subtotal factura'
@@ -522,194 +721,30 @@ Ext.onReady(function() {
                 ,minValue: 0
 		    	,name       : 'params.ptimport'
     		}
-            /*,
-            {
-		        xtype      : 'textfield'
-		    	,fieldLabel : 'Importe autorizado arancel'
-	    		,labelWidth: 150
-	    		,allowBlank:false
-		    	,name       : 'importeAutorizado'
-    		}*/
         ]
     });
     
     function calculaImporteConcepto(){
-    	var importe = panelEdicionConceptos.down('[name="params.ptprecio"]').getValue()*1;
+    	
     	var cantidad = panelEdicionConceptos.down('[name="params.cantidad"]').getValue()*1;
+    	
+    	var importe = panelEdicionConceptos.down('[name="params.ptprecio"]').getValue()*1;
     	var destopor = panelEdicionConceptos.down('[name="params.destopor"]').getValue()*1;
     	var destoimp = panelEdicionConceptos.down('[name="params.destoimp"]').getValue()*1;
-    	
     	panelEdicionConceptos.down('[name="params.ptimport"]').setValue(((cantidad*importe) *(1-(destopor/100)))-destoimp);
     	
+    	var importeEx = panelEdicionConceptos.down('[name="params.ptpcioex"]').getValue()*1;
+    	var destoporEx = panelEdicionConceptos.down('[name="params.destopor"]').getValue()*1;
+    	var destoimpEx = panelEdicionConceptos.down('[name="params.dctoimex"]').getValue()*1;
+    	
+    	panelEdicionConceptos.down('[name="params.ptimpoex"]').setValue(((cantidad*importeEx) *(1-(destoporEx/100)))-destoimpEx);
     }
+
     
     //jtezva
     _revAdm_formRechazo   = new _revAdm_FormRechazo();
     _revAdm_windowRechazo = new _revAdm_WindowRechazo();
 
-	/*PANTALLA EMERGENTE PARA LA INSERCION Y MODIFICACION DE LOS DATOS DEL GRID*/
-    var windowConceptos= Ext.create('Ext.window.Window', {
-          title: 'Agregar Concepto',
-          closeAction: 'hide',
-          modal:true,
-          items:[panelEdicionConceptos],
-          bodyStyle:'padding:15px;',
-          buttons:[{
-                 text: 'Guardar',
-                 icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
-                 handler: function() {
-                       if (panelEdicionConceptos.form.isValid()) {
-                    	   var record = gridFacturas.getSelectionModel().getSelection()[0];
-                    	   debug("CdGarant: "+record.get('CDGARANT'));
-                    	   debug("Factura: "+record.get('NFACTURA'));
-                    	   
-                    	   panelEdicionConceptos.form.submit({
-           		        	waitMsg:'Procesando...',			
-           		        	params: {
-           		        		'params.cdunieco'   : _CDUNIECO,
-           		        		'params.cdramo'     : _CDRAMO,
-           		        		'params.estado'     : _ESTADO,
-           		        		'params.nmpoliza'   : _NMPOLIZA,
-           		        		'params.nmsituac'   : _NMSITUAC,
-           		        		'params.nmsuplem'   : _NMSUPLEM,
-           		        		'params.status'     : _STATUS,
-           		        		'params.aaapertu'   : _AAAPERTU,
-           		        		'params.nmsinies'   : _NMSINIES,
-           		        		'params.nfactura'   : record.get('NFACTURA'),
-           		        		'params.cdgarant'   : record.get('CDGARANT'),
-           		        		'params.nmordina'   : _Operacion == 'U'? _Nmordina:'',
-           		        		'params.operacion'   : _Operacion
-           		        	},
-           		        	failure: function(form, action) {
-           		        		mensajeError("Error al guardar el concepto");
-           					},
-           					success: function(form, action) {
-           						
-           						storeConceptos.reload();
-           						panelEdicionConceptos.getForm().reset();
-                               	windowConceptos.close();
-                               	mensajeCorrecto("Aviso","Se ha guardado el concepto.");
-           						
-           						
-           					}
-           				});
-                       	
-                       } else {
-                           Ext.Msg.show({
-                                  title: 'Aviso',
-                                  msg: 'Complete la informaci&oacute;n requerida',
-                                  buttons: Ext.Msg.OK,
-                                  icon: Ext.Msg.WARNING
-                              });
-                       }
-                   }
-             },
-           {
-                 text: 'Cancelar',
-                 icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
-                 handler: function() {
-                	 panelEdicionConceptos.getForm().reset();
-                     windowConceptos.close();
-                 }
-           }
-          ]
-          });
-    
-    var windowFacturas= Ext.create('Ext.window.Window', {
-           title: 'Agregar Factura',
-           bodyStyle:'padding:5px;',
-           closeAction: 'hide',
-           modal: true,
-           items:[panelEdicionFacturas],
-           
-           buttons:[{
-                  text: 'Guardar',
-                  icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
-                  handler: function() {
-                        if (panelEdicionFacturas.form.isValid()) {
-                        	
-                        	var UrlFact;
-                        	if(_Operacion == 'I'){
-                        		UrlFact = _URL_GuardaFactura;
-                        	}else {
-                        		UrlFact = _URL_ActualizaFactura;
-                        	}
-                        	//var datos=panelEdicionFacturas.form.getValues();
-                        	var autoMed = panelEdicionFacturas.down('[name="params.autrecla"]');
-                        	if(autoMed)
-                        	{
-                        		autoMed = autoMed.getValue();
-                        	}
-                        	var autoRec = panelEdicionFacturas.down('[name="params.autmedic"]');
-                        	if(autoRec)
-                        	{
-                        		autoRec = autoRec.getValue();
-                        	}
-                        	debug('autoMed',autoMed,'autoRec',autoRec);
-                        	var cancelar = (autoMed && autoMed =='N') || (autoRec && autoRec == 'N');
-                        	debug('cancelar sin tipopago',cancelar ? 'si' : 'no');
-                        	cancelar = cancelar &&(Ext.isEmpty(_TIPOPAGO) || _TIPOPAGO == _PAGO_DIRECTO);
-                        	debug('cancelar con tipopago',cancelar ? 'si' : 'no');
-                        	if(cancelar)
-                        	{
-                        		//jtezva
-                        		mensajeWarning(
-						                'El tr&aacute;mite de pago directo ser&aacute; cancelado debido a que no ha sido autorizada alguna de las facturas'
-						                ,function(){_revAdm_windowRechazo.show();centrarVentanaInterna(_revAdm_windowRechazo);}
-						        );
-                        	}
-                        	else
-                        	{
-	                        	panelEdicionFacturas.form.submit({
-	            		        	waitMsg:'Procesando...',	
-	            		        	url: UrlFact,
-	            		        	params: {
-	            		        		'params.ntramite'   : _NTRAMITE,
-	            		        		'params.cdunieco'  : _CDUNIECO,
-	            		        		'params.cdramo'    : _CDRAMO,
-	            		        		'params.estado'    : _ESTADO,
-	            		        		'params.nmpoliza'  : _NMPOLIZA,
-	            		        		'params.nmsituac'  : _NMSITUAC,
-	            		        		'params.nmsuplem'  : _NMSUPLEM,
-	            		        		'params.status'    : _STATUS,
-	            		        		'params.aaapertu'  : _AAAPERTU,
-	            		        		'params.nmsinies'  : _NMSINIES
-	            		        	},
-	            		        	failure: function(form, action) {
-	            		        		mensajeError("Error al guardar la Factura");
-	            					},
-	            					success: function(form, action) {
-	            						
-	            						storeFacturas.reload();
-	            						panelEdicionFacturas.getForm().reset();
-	            						storeConceptos.removeAll();
-	                                	windowFacturas.close();
-	                                	mensajeCorrecto("Aviso","Se ha guardado la Factura");	
-	            					}
-	            				});	
-                        	}
-                        } else {
-                            Ext.Msg.show({
-                                   title: 'Aviso',
-                                   msg: 'Complete la informaci&oacute;n requerida',
-                                   buttons: Ext.Msg.OK,
-                                   icon: Ext.Msg.WARNING
-                               });
-                        }
-                    }
-              },
-            {
-                  text: 'Cancelar',
-                  icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
-                  handler: function() {
-                      panelEdicionFacturas.getForm().reset();
-                      windowFacturas.close();
-                  }
-            }
-           ]
-           });    
-
-	
 /*////////////////////////////////////////////////////////////////
 ////////////////   DECLARACION DE GRID FACTURAS ////////////
 ///////////////////////////////////////////////////////////////*/
@@ -755,6 +790,17 @@ Ext.define('EditorFacturas', {
  					width : 150,
  					renderer : Ext.util.Format.usMoney
  				},{
+ 					header : 'Moneda',
+ 					dataIndex : 'DESTIPOMONEDA',
+ 					width : 150,
+ 					hidden: false
+ 				},{
+ 					header : 'Tasa cambio',
+ 					dataIndex : 'TASACAMB',
+ 					width : 150,
+ 					hidden: false,
+ 					renderer : Ext.util.Format.usMoney
+ 				},{
  					header : 'Deducible',
  					dataIndex : 'DEDUCIBLE',
  					width : 120
@@ -763,7 +809,38 @@ Ext.define('EditorFacturas', {
  					dataIndex : 'COPAGO',
  					width : 120
  				} <s:property value='%{"," + imap.gridColumns}' />
- 			 ]
+ 				,{
+ 					header : 'Moneda',
+ 					dataIndex : 'CDMONEDA',
+ 					width : 150,
+ 					hidden: true
+ 				},{
+ 					header : 'Importe Ext',
+ 					dataIndex : 'PTIMPORTA',
+ 					width : 150,
+ 					hidden: true
+ 				},{
+ 					header : 'DESC EXT',
+ 					dataIndex : 'DCTONUEX',
+ 					width : 150,
+ 					hidden: true
+ 				}/*,{
+ 					xtype : 'actioncolumn',
+ 					width : 50,
+ 					sortable : false,
+ 					menuDisabled : true,
+ 					items : [{
+ 						icon : _CONTEXT+'/resources/fam3icons/icons/pencil.png',
+ 						tooltip : 'Editar Factura',
+ 						scope : this,
+ 						handler : this.onEditClick
+ 					},{
+ 						icon : _CONTEXT+'/resources/fam3icons/icons/delete.png',
+ 						tooltip : 'Eliminar Factura',
+ 						scope : this,
+ 						handler : this.onRemoveClick
+ 					}]
+ 				} */]
 	 	});
 			this.callParent();
  	},
@@ -802,6 +879,17 @@ Ext.define('EditorFacturas', {
  		panelEdicionFacturas.getForm().reset();
  		panelEdicionFacturas.down('[name="params.nfactura"]').setReadOnly(false);
  		panelEdicionFacturas.down('[name="params.cdgarant"]').setReadOnly(false);
+ 		panelEdicionFacturas.down('[name="params.tipoMoneda"]').setValue('001');
+ 		//xca<<<<
+ 		//panelEdicionFacturas.down('[name="params.tipoMoneda"]').setValue('001');
+ 		panelEdicionFacturas.down('[name="params.tasacamb"]').setValue('0');
+ 		panelEdicionFacturas.down('[name="params.ptimporta"]').setValue('0');
+ 		panelEdicionFacturas.down('[name="params.ptimport"]').setValue('0');
+ 		panelEdicionFacturas.down('[name="params.descnume"]').setValue('0');
+ 		panelEdicionFacturas.down('[name="params.dctonuex"]').setValue('0');
+ 		panelEdicionFacturas.down('[name="params.descporc"]').setValue('0');
+ 		
+ 		
  		_Operacion = 'I';
  		
  		windowFacturas.setTitle('Agregar Factura');
@@ -811,7 +899,7 @@ Ext.define('EditorFacturas', {
  	},
  	onRemoveClick: function(grid, rowIndex){
  		if(Ext.isEmpty(_TIPOPAGO) || _TIPOPAGO == _PAGO_DIRECTO){
- 			mensajeWarning('No se pueden eliminar Facturas en Pago Directo.');
+ 			centrarVentanaInterna(mensajeWarning('No se pueden eliminar Facturas en Pago Directo.'));
  			return;
  		}
  		
@@ -838,17 +926,17 @@ Ext.define('EditorFacturas', {
 	        			success: function(response) {
 	        				var res = Ext.decode(response.responseText);
 	        				gridFacturas.setLoading(false);
-	        				
+	        				storeFacturas.reload();
 	        				if(res.success){
-		        				mensajeCorrecto('Aviso','Se ha eliminado con exito.');
+	        					centrarVentanaInterna(mensajeCorrecto('Aviso','Se ha eliminado con &eacute;xito.'));
 	    	    				storeFacturas.reload();
 	        				}else {
-	        					mensajeError('No se pudo eliminar.');	
+	        					centrarVentanaInterna(mensajeError('No se pudo eliminar.'));	
 	        				}
 	        			},
 	        			failure: function(){
 	        				gridFacturas.setLoading(false);
-	        				mensajeError('No se pudo eliminar.');
+	        				centrarVentanaInterna(mensajeError('No se pudo eliminar.'));
 	        			}
 	        		});
 	        	}
@@ -860,6 +948,13 @@ Ext.define('EditorFacturas', {
  	},
  	onEditClick: function(grid, rowIndex){
  		var record=grid.getStore().getAt(rowIndex);
+ 		
+ 		if(Ext.isEmpty(_TIPOPAGO) || _TIPOPAGO == _PAGO_DIRECTO){
+ 			panelEdicionFacturas.query('numberfield[name=params.ptimporta]')[0].hide();
+			panelEdicionFacturas.query('numberfield[name=params.tasacamb]')[0].hide();
+			panelEdicionFacturas.query('combo[name=params.tipoMoneda]')[0].hide();
+			panelEdicionFacturas.query('numberfield[name=params.dctonuex]')[0].hide();
+ 		}
  		_Operacion = 'U';
  		debug("Editando...");
  		
@@ -872,7 +967,10 @@ Ext.define('EditorFacturas', {
  		panelEdicionFacturas.down('[name="params.cdtipser"]').setValue(record.get('CDTIPSER'));
  		panelEdicionFacturas.down('[name="params.cdpresta"]').setValue(record.get('CDPRESTA'));
  		panelEdicionFacturas.down('[name="params.cdgarant"]').setValue(record.get('CDGARANT'));
- 		
+ 		panelEdicionFacturas.down('[name="params.tipoMoneda"]').setValue(record.get('CDMONEDA'));
+ 		panelEdicionFacturas.down('[name="params.tasacamb"]').setValue(record.get('TASACAMB') == null || record.get('TASACAMB') == ''? "0":record.get('TASACAMB'));
+ 		panelEdicionFacturas.down('[name="params.ptimporta"]').setValue(record.get('PTIMPORTA') == null || record.get('PTIMPORTA') == ''? "0":record.get('PTIMPORTA'));
+ 		panelEdicionFacturas.down('[name="params.dctonuex"]').setValue(record.get('DCTONUEX') == null || record.get('DCTONUEX') == ''? "0":record.get('DCTONUEX'));
  		
  		panelPrincipal.setLoading(true);
  		storeSubcoberturas.load({
@@ -888,9 +986,9 @@ Ext.define('EditorFacturas', {
 		 		centrarVentana(windowFacturas);
 			}
 		});
- 		panelEdicionFacturas.down('[name="params.ptimport"]').setValue(record.get('PTIMPORT'));
- 		panelEdicionFacturas.down('[name="params.descporc"]').setValue(record.get('DESCPORC'));
- 		panelEdicionFacturas.down('[name="params.descnume"]').setValue(record.get('DESCNUME'));
+ 		panelEdicionFacturas.down('[name="params.ptimport"]').setValue(record.get('PTIMPORT') == null || record.get('PTIMPORT') == ''? "0":record.get('PTIMPORT'));
+ 		panelEdicionFacturas.down('[name="params.descporc"]').setValue(record.get('DESCPORC') == null || record.get('DESCPORC') == ''? "0":record.get('DESCPORC'));
+ 		panelEdicionFacturas.down('[name="params.descnume"]').setValue(record.get('DESCNUME') == null || record.get('DESCNUME') == ''? "0":record.get('DESCNUME'));
 
  		if(!Ext.isEmpty(panelEdicionFacturas.down('[name="params.autrecla"]'))){
  			panelEdicionFacturas.down('[name="params.autrecla"]').setValue(record.get('AUTRECLA'));
@@ -957,24 +1055,23 @@ Ext.define('EditorConceptos', {
  			columns: 
  				[{
  					dataIndex : 'NMORDINA',
- 					width : 20
+ 					width : 20,
+ 					hidden: true
  				},{
  					header : 'Factura',
  					dataIndex:  'NFACTURA',
  					hidden: true
  				},{
  					header : 'Tipo Concepto',
- 					dataIndex : 'IDCONCEP',
+ 					dataIndex : 'DESIDCONCEP',
  					width : 150
  				},{
  					header : 'Codigo Concepto',
- 					dataIndex : 'CDCONCEP',
+ 					dataIndex : 'DESCONCEP',
  					width : 150
- 				// , renderer: Ext.util.Format.dateRenderer('d M Y')
-
  				},{
  					header : 'Subcobertura',
- 					dataIndex : 'CDCONVAL',
+ 					dataIndex : 'DSSUBGAR',
  					width : 150
  				},{
  					header : 'Precio',
@@ -994,21 +1091,22 @@ Ext.define('EditorConceptos', {
  					dataIndex : 'DESTOIMP',
  					width : 150
  				},{
+ 					header : 'Ajuste M&eacute;dico',
+ 					dataIndex : 'TOTAJUSMED',
+ 					width : 150,
+ 					renderer : Ext.util.Format.usMoney
+ 				},{
  					header : 'Subtotal Factura',
  					dataIndex : 'PTIMPORT',
- 					width : 150
- 				}/*,{
- 					header : 'Importe autorizado <br/> arancel',
- 					dataIndex : 'importeAutorizado',
- 					width : 150
+ 					width : 150,
+ 					renderer : Ext.util.Format.usMoney
  				},{
- 					xtype : 'actioncolumn',
- 					width : 80,
- 					sortable : false,
- 					menuDisabled : true,
- 					items : [<s:property value="imap.conceptosButton" />]
- 				} */]
-	 	});
+ 					header : 'Subtotal Ajustado',
+ 					dataIndex : 'SUBTAJUSTADO',
+ 					width : 150,
+ 					renderer : Ext.util.Format.usMoney
+ 				}]
+			});
 			this.callParent();
  	},
  	getColumnIndexes: function () {
@@ -1041,134 +1139,6 @@ Ext.define('EditorConceptos', {
 		 	}
 	 	});
 	 	return false;
- 	},
- 	onAddClick: function(){
- 		if(gridFacturas.getSelectionModel().hasSelection()){
- 			
- 			panelEdicionConceptos.getForm().reset();
- 			panelEdicionConceptos.down('[name="params.cdconval"]').setReadOnly(false);
- 			panelEdicionConceptos.down('[name="params.idconcep"]').setReadOnly(false);
- 			panelEdicionConceptos.down('[name="params.cdconcep"]').setReadOnly(false);
- 			_Operacion = 'I';
- 			
- 			var record = gridFacturas.getSelectionModel().getSelection()[0];
- 			
- 			storeSubcoberturasC.load({
-    			params: {
-    				'params.cdgarant' : record.get('CDGARANT')
-    			}
-    		});
- 			
- 			windowConceptos.setTitle('Agregar Concepto');
- 			windowConceptos.show();
- 			centrarVentana(windowConceptos);
- 		}else {
- 			mensajeWarning("Debe seleccionar una factura para poder agregar un concepto a la misma.");
- 		} 
- 	},
- 	onEditClick: function(grid, rowIndex){
- 		var record=grid.getStore().getAt(rowIndex);
- 		_Operacion = 'U';
- 		_Nmordina = record.get('NMORDINA');
- 		debug("Editando...");
- 		
- 		panelEdicionConceptos.getForm().reset();
- 		panelPrincipal.setLoading(true);
- 		
- 		storeSubcoberturasC.load({
-			params: {
-				'params.cdgarant' : record.get('CDGARANT')
-			},
-			callback: function (){ 
-				panelEdicionConceptos.down('[name="params.cdconval"]').setValue(record.get('CDCONVAL'));
-			}
-		});
- 		
- 		panelEdicionConceptos.down('[name="params.idconcep"]').setValue(record.get('IDCONCEP'));
- 		
- 		storeConceptosCatalogo.load({
-			params: {
-				'params.idPadre' : record.get('IDCONCEP')
-			},
-			callback: function (){ 
-				panelEdicionConceptos.down('[name="params.cdconcep"]').setValue(record.get('CDCONCEP'));
-				panelPrincipal.setLoading(false);
-				
-				windowConceptos.setTitle('Editar Concepto');
-				windowConceptos.show();
-		 		centrarVentana(windowConceptos);
-			}
-		});
- 		
- 		panelEdicionConceptos.down('[name="params.ptprecio"]').setValue(record.get('PTPRECIO'));
- 		panelEdicionConceptos.down('[name="params.cantidad"]').setValue(record.get('CANTIDAD'));
- 		panelEdicionConceptos.down('[name="params.destopor"]').setValue(record.get('DESTOPOR'));
- 		panelEdicionConceptos.down('[name="params.destoimp"]').setValue(record.get('DESTOIMP'));
- 		panelEdicionConceptos.down('[name="params.ptimport"]').setValue(record.get('PTIMPORT'));
- 		
- 		panelEdicionConceptos.down('[name="params.cdconval"]').setReadOnly(true);
- 		panelEdicionConceptos.down('[name="params.idconcep"]').setReadOnly(true);
- 		panelEdicionConceptos.down('[name="params.cdconcep"]').setReadOnly(true);
- 		
- 	},
- 	onRemoveClick: function(grid, rowIndex){
- 		var record=grid.getStore().getAt(rowIndex);
- 		_Operacion = 'D';
- 		
- 		centrarVentana(Ext.Msg.show({
-	        title: 'Aviso',
-	        msg: '&iquest;Esta seguro que desea eliminar este concepto?',
-	        buttons: Ext.Msg.YESNO,
-	        icon: Ext.Msg.QUESTION,
-	        fn: function(buttonId, text, opt){
-	        	if(buttonId == 'yes'){
-	        		
-	        		gridConceptos.setLoading(true);
-	         		
-	         		Ext.Ajax.request({
-	        			url: _URL_GuardaConcepto,
-	        			params         :
-	                    {
-	                        'params.ntramite'  : _NTRAMITE
-	                        ,'params.cdunieco' : _CDUNIECO
-	                        ,'params.cdramo'   : _CDRAMO
-	                        ,'params.estado'   : _ESTADO
-	                        ,'params.nmpoliza' : _NMPOLIZA
-	                        ,'params.nmsuplem' : _NMSUPLEM
-	                        ,'params.nmsituac' : _NMSITUAC
-	                        ,'params.aaapertu' : _AAAPERTU
-	                        ,'params.status'   : _STATUS
-	                        ,'params.nmsinies' : _NMSINIES
-	                        ,'params.nfactura' : record.get('NFACTURA')
-	                        ,'params.cdgarant' : record.get('CDGARANT')
-	                        ,'params.cdconval' : record.get('CDCONVAL')
-	                        ,'params.cdconcep' : record.get('CDCONCEP')
-	                        ,'params.idconcep' : record.get('IDCONCEP')
-	                        ,'params.nmordina' : record.get('NMORDINA')
-	                        ,'params.operacion': _Operacion
-	                    },
-	        			success: function(response) {
-	        				var res = Ext.decode(response.responseText);
-	        				gridConceptos.setLoading(false);
-	        				
-	        				if(res.success){
-	        					mensajeCorrecto('Aviso','Se ha eliminado con exito.');
-		        				storeConceptos.reload();	
-	        				}else {
-		        				mensajeError('No se pudo eliminar.');
-	        				}
-	        			},
-	        			failure: function(){
-	        				gridConceptos.setLoading(false);
-	        				mensajeError('No se pudo eliminar.');
-	        			}
-	        		});
-	        	}
-	        	
-	        }
-	    }));
- 		
- 		
  	}
 	});
 
@@ -1181,16 +1151,6 @@ panelPrincipal = Ext.create('Ext.form.Panel',{
 	,bodyStyle:'padding:5px;'
 	,items      : [
         		gridFacturas,
-		        /*{
-			        xtype      : 'textfield'
-			    	,fieldLabel : 'Total Facturado'
-		    		,labelWidth: 170
-		            ,width:500
-		            ,allowBlank:false
-			    	,name       : 'totalFacturado'
-		    		,aling:	'center'
-					,padding : 10
-				}*/,
 				gridConceptos
 	]
 	});
@@ -1198,7 +1158,6 @@ panelPrincipal = Ext.create('Ext.form.Panel',{
 function _mostrarVentanaAjustes(grid,rowIndex,colIndex){
     var record = grid.getStore().getAt(rowIndex);
     var recordFactura = gridFacturas.getSelectionModel().getSelection()[0];
-    
     debug("Codigo Garantia: "+recordFactura.get('NFACTURA'));
     
     windowLoader = Ext.create('Ext.window.Window',{
@@ -1211,22 +1170,28 @@ function _mostrarVentanaAjustes(grid,rowIndex,colIndex){
             url     : _UrlAjustesMedicos,
             params         :
             {
-                'params.ntramite'  : _NTRAMITE
-                ,'params.cdunieco' : _CDUNIECO
-                ,'params.cdramo'   : _CDRAMO
-                ,'params.estado'   : _ESTADO
-                ,'params.nmpoliza' : _NMPOLIZA
-                ,'params.nmsuplem' : _NMSUPLEM
-                ,'params.nmsituac' : _NMSITUAC
-                ,'params.aaapertu' : _AAAPERTU
-                ,'params.status'   : _STATUS
-                ,'params.nmsinies' : _NMSINIES
-                ,'params.nfactura' : recordFactura.get('NFACTURA')
-                ,'params.cdgarant' : record.get('CDGARANT')
-                ,'params.cdconval' : record.get('CDCONVAL')
-                ,'params.cdconcep' : record.get('CDCONCEP')
-                ,'params.idconcep' : record.get('IDCONCEP')
-                ,'params.nmordina' : record.get('NMORDINA')
+                'params.ntramite'  		: _NTRAMITE
+                ,'params.cdunieco' 		: _CDUNIECO
+                ,'params.cdramo'   		: _CDRAMO
+                ,'params.estado'   		: _ESTADO
+                ,'params.nmpoliza' 		: _NMPOLIZA
+                ,'params.nmsuplem' 		: _NMSUPLEM
+                ,'params.nmsituac' 		: _NMSITUAC
+                ,'params.aaapertu' 		: _AAAPERTU
+                ,'params.status'   		: _STATUS
+                ,'params.nmsinies' 		: _NMSINIES
+                ,'params.nfactura'		: recordFactura.get('NFACTURA')
+                ,'params.cdgarant' 		: record.get('CDGARANT')
+                ,'params.cdconval' 		: record.get('CDCONVAL')
+                ,'params.cdconcep' 		: record.get('CDCONCEP')
+                ,'params.idconcep' 		: record.get('IDCONCEP')
+                ,'params.nmordina' 		: record.get('NMORDINA')
+                ,'params.precio'   		: record.get('PTPRECIO')
+                ,'params.cantidad'      : record.get('CANTIDAD')
+                ,'params.descuentoporc' : record.get('DESTOPOR')
+                ,'params.descuentonum'  : record.get('DESTOIMP')
+                ,'params.importe'       : record.get('PTIMPORT')
+                ,'params.ajusteMedi'    : record.get('TOTAJUSMED')
             },
             scripts  : true,
             loadMask : true,
@@ -1235,6 +1200,15 @@ function _mostrarVentanaAjustes(grid,rowIndex,colIndex){
             	method: 'POST'
             }
         }
+	    ,
+	    listeners:{
+	         close:function(){
+	             if(true){
+	                 //Actualizamos la información de la consulta del grid inferior
+	            	 storeConceptos.reload();
+	             }
+	         }
+	    }
     }).show();
     centrarVentana(windowLoader);
 }
@@ -1286,7 +1260,7 @@ function _revAdm_rechazoSiniestro()
             },
             failure: function(form, action) {
             	_revAdm_windowRechazo.setLoading(false);
-                mensajeError("Error al guardar la Factura");
+            	centrarVentanaInterna(mensajeError("Error al guardar la Factura"));
             },
             success: function(form, action)
             {

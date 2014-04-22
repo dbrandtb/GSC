@@ -25,6 +25,10 @@
             var _NTRAMITE= '<s:property value="params.ntramite" />';
             var _TIPOPAGO= '<s:property value="params.tipopago" />';
             
+            
+            var _UrlDocumentosPoliza        = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza"   />';
+            var _TIPO_TRAMITE_SINIESTRO = '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@SINIESTRO.cdtiptra" />';
+            
             debug('_TIPOPAGO',_TIPOPAGO);
         </script>
         <!-- <script type="text/javascript" src="${ctx}/resources/scripts/util/extjs4_utils.js"></script>-->

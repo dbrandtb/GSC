@@ -12,6 +12,26 @@ Ext.define('modelAjusteMedico',{
     ]
 });
 
+Ext.define('modelInforGral', {
+    extend:'Ext.data.Model',
+    fields:['txtPrecio','txtCantidad','','txtDescPor','txtDescNum','txtAjusteMed','txtSubTotalFac','txtSbubTotalAjuste']
+});
+
+Ext.define('modelAjusteMedico',{
+    extend: 'Ext.data.Model',
+    fields: [
+             {type:'string', name:'COMMENTS'},
+             {type:'string', name:'PTIMPORT'},
+             {type:'string', name:'NMORDMOV'}
+    ]
+});
+
+var storeModelInforGral =new Ext.data.Store(
+{
+    autoDestroy: true,
+    model: 'modelInforGral'
+});
+
 storeIncisos=new Ext.data.Store(
 {
     autoDestroy: true,
@@ -63,9 +83,14 @@ function _amRecargar()
 		'params.cdconval' : _amParams.cdconval,
 		'params.cdconcep' : _amParams.cdconcep,
 		'params.idconcep' : _amParams.idconcep,
-		'params.nmordina' : _amParams.nmordina
+		'params.nmordina' : _amParams.nmordina,
+		'params.precio'   : _amParams.precio,
+		'params.cantidad' : _amParams.cantidad,
+		'params.descuentonum' : _amParams.descuentonum,
+		'params.importe'  : _amParams.importe,
+		'params.ajusteMedi':_amParams.ajusteMedi//,
+		//importetxtDescNum
 	};
-	
 	//LLenamos la información de los combos
 	storeTipoConcepto.load();
 	Ext.getCmp('idConceptos').setValue(_amParams.idconcep);
@@ -97,6 +122,19 @@ function _amRecargar()
 	    			montoAjustado = montoAjustado + (+ arr[i].PTIMPORT);
 		    	}
 	    		Ext.getCmp('idTotalAjustado').setValue(montoAjustado);
+	    		
+	    		storeModelInforGral.removeAll();
+	    		var rec = new modelInforGral({
+	    			txtPrecio:   _amParams.precio,
+	    			txtCantidad: _amParams.cantidad,
+	    			txtDescPor:  _amParams.descuentoporc,
+	    			txtDescNum:  _amParams.descuentonum,
+	    			txtSubTotalFac: _amParams.importe,
+	    			txtAjusteMed: montoAjustado,
+	    			txtSbubTotalAjuste: (+ _amParams.importe - +montoAjustado)
+	    			});
+	    		
+	    		storeModelInforGral.add(rec);
 			}
 			else
 			{
@@ -289,8 +327,7 @@ Ext.onReady(function() {
 			    	decimalSeparator :'.',
 			    	minValue: 0,
 	                labelWidth: 170
-	    	}
-	         ,
+	    	},
 	         {
 		    	 xtype      : 'textfield',
 		    	 fieldLabel : 'Observaciones',
@@ -479,6 +516,46 @@ Ext.onReady(function() {
     gridIncisos=new EditorIncisos();
     mesConStoreUniAdmin=[];
     
+    Ext.define('EditorInforGral', {
+ 		extend: 'Ext.grid.Panel',
+	 	requires: [
+		 	'Ext.selection.CellModel',
+		 	'Ext.grid.*',
+		 	'Ext.data.*',
+		 	'Ext.util.*',
+		 	'Ext.form.*'
+	 	],
+ 		xtype: 'cell-editing',
+		id:'editorInforGral',
+ 		title: 'Informaci&oacute;n General',
+ 		frame: false,
+
+	 	initComponent: function(){
+	 		this.cellEditing = new Ext.grid.plugin.CellEditing({
+	 		clicksToEdit: 1
+	 		});
+
+	 			Ext.apply(this, {
+	 			width: 750,
+	 			height: 100,
+	 			plugins: [this.cellEditing],
+	 			store: storeModelInforGral,
+	 			columns: 
+	 			[
+				 	{   header: 'Precio',			    dataIndex: 'txtPrecio',			    flex:2		 ,renderer: Ext.util.Format.usMoney	},
+				 	{   header: 'Cantidad',			    dataIndex: 'txtCantidad',		    flex:2       },
+				 	{   header: 'Descuento %',		    dataIndex: 'txtDescPor',	 		flex:2	     },
+				 	{ 	header: 'Descuento $',		    dataIndex: 'txtDescNum',			flex:2  	 ,renderer: Ext.util.Format.usMoney	},
+				 	{   header: 'Ajuste M&eacute;dico', dataIndex: 'txtAjusteMed',			flex:2       ,renderer: Ext.util.Format.usMoney	},
+				 	{ 	header: 'Subtotal Factura', 	dataIndex: 'txtSubTotalFac',		flex:2       ,renderer: Ext.util.Format.usMoney	},
+				 	{   header: 'Subtotal Ajustado',	dataIndex: 'txtSbubTotalAjuste',	flex:2   	 ,renderer: Ext.util.Format.usMoney	},
+		 		]
+		 	});
+ 			this.callParent();
+	 	}
+ 	});
+    gridInforGral = new EditorInforGral();
+    
     Ext.create('Ext.form.Panel',
     	    {
     	        border    : 0
@@ -490,7 +567,6 @@ Ext.onReady(function() {
 	    		{
 	    			style : 'margin:5px;'
 	    		}
-	    		
     	        ,items    :
     	        [
             		{
@@ -523,17 +599,18 @@ Ext.onReady(function() {
 			            readOnly   : true,
 			            width:550
 			        },
-                    gridIncisos
+.                    gridIncisos
                     ,
                     {
             			id:'idTotalAjustado'
-        		        ,xtype      : 'numberfield'
+        		        ,xtype      : 'displayfield'
         		    	,fieldLabel : 'Total ajustado'
         	    		,labelWidth: 170
         	    		,name       : 'idTotalAjustado',
         		    	allowDecimals :true,
         		    	decimalSeparator :'.',
-        		    	renderer: Ext.util.Format.usMoney
+        		    	renderer: Ext.util.Format.usMoney//,
+        		    	//readOnly   : true
         	        }
     	        ]
     	    });

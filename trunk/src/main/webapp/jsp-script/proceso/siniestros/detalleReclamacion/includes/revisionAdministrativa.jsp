@@ -86,7 +86,7 @@ Ext.onReady(function() {
         fields: ["CDUNIECO","CDRAMO","ESTADO","NMPOLIZA","NMSUPLEM",
          		"NMSITUAC","AAAPERTU","STATUS","NMSINIES","NFACTURA",
         		"CDGARANT","CDCONVAL","CDCONCEP","IDCONCEP","CDCAPITA",
-        		"DSGARANT","DSSUBGAR","DESIDCONCEP","DESCONCEP",
+        		"DSGARANT","DSSUBGAR","DESIDCONCEP","DESCONCEP","TOTAJUSMED","SUBTAJUSTADO",
         		"NMORDINA",{name:"FEMOVIMI", type: "date", dateFormat: "d/m/Y"},"CDMONEDA","PTPRECIO","CANTIDAD",
         		"DESTOPOR","DESTOIMP","PTIMPORT","PTRECOBR","NMANNO",
         		"NMAPUNTE","USERREGI",{name:"FEREGIST", type: "date", dateFormat: "d/m/Y"},"PTPCIOEX","DCTOIMEX","PTIMPOEX"]
@@ -972,7 +972,8 @@ Ext.define('EditorFacturas', {
  					header : 'Tasa cambio',
  					dataIndex : 'TASACAMB',
  					width : 150,
- 					hidden: false
+ 					hidden: false,
+ 					renderer : Ext.util.Format.usMoney
  				},{
  					header : 'Deducible',
  					dataIndex : 'DEDUCIBLE',
@@ -1106,9 +1107,9 @@ Ext.define('EditorFacturas', {
 	        			success: function(response) {
 	        				var res = Ext.decode(response.responseText);
 	        				gridFacturas.setLoading(false);
-	        				
+	        				storeFacturas.reload();
 	        				if(res.success){
-	        					centrarVentanaInterna(mensajeCorrecto('Aviso','Se ha eliminado con exito.'));
+	        					centrarVentanaInterna(mensajeCorrecto('Aviso','Se ha eliminado con &eacute;xito.'));
 	    	    				storeFacturas.reload();
 	        				}else {
 	        					centrarVentanaInterna(mensajeError('No se pudo eliminar.'));	
@@ -1128,8 +1129,6 @@ Ext.define('EditorFacturas', {
  	},
  	onEditClick: function(grid, rowIndex){
  		var record=grid.getStore().getAt(rowIndex);
- 		
- 		console.log(record);
  		
  		if(Ext.isEmpty(_TIPOPAGO) || _TIPOPAGO == _PAGO_DIRECTO){
  			panelEdicionFacturas.query('numberfield[name=params.ptimporta]')[0].hide();
@@ -1153,7 +1152,6 @@ Ext.define('EditorFacturas', {
  		panelEdicionFacturas.down('[name="params.tasacamb"]').setValue(record.get('TASACAMB') == null || record.get('TASACAMB') == ''? "0":record.get('TASACAMB'));
  		panelEdicionFacturas.down('[name="params.ptimporta"]').setValue(record.get('PTIMPORTA') == null || record.get('PTIMPORTA') == ''? "0":record.get('PTIMPORTA'));
  		panelEdicionFacturas.down('[name="params.dctonuex"]').setValue(record.get('DCTONUEX') == null || record.get('DCTONUEX') == ''? "0":record.get('DCTONUEX'));
- 		//console.log(record.get('DCTONUEX'));
  		
  		panelPrincipal.setLoading(true);
  		storeSubcoberturas.load({
@@ -1275,12 +1273,19 @@ Ext.define('EditorConceptos', {
  					width : 150
  				},{
  					header : 'Ajuste M&eacute;dico',
- 					//dataIndex : 'DESTOIMP',
- 					width : 150
+ 					dataIndex : 'TOTAJUSMED',
+ 					width : 150,
+ 					renderer : Ext.util.Format.usMoney
  				},{
  					header : 'Subtotal Factura',
  					dataIndex : 'PTIMPORT',
- 					width : 150
+ 					width : 150,
+ 					renderer : Ext.util.Format.usMoney
+ 				},{
+ 					header : 'Subtotal Ajustado',
+ 					dataIndex : 'SUBTAJUSTADO',
+ 					width : 150,
+ 					renderer : Ext.util.Format.usMoney
  				},{
  					xtype : 'actioncolumn',
  					width : 80,
@@ -1512,10 +1517,10 @@ Ext.define('EditorConceptos', {
 	        			success: function(response) {
 	        				var res = Ext.decode(response.responseText);
 	        				gridConceptos.setLoading(false);
-	        				
+	        				storeConceptos.reload();
 	        				if(res.success){
-	        					centrarVentanaInterna(mensajeCorrecto('Aviso','Se ha eliminado con exito.'));
-		        				storeConceptos.reload();	
+	        					centrarVentanaInterna(mensajeCorrecto('Aviso','Se ha eliminado con &eacute;xito.'));
+		        				storeConceptos.reload();
 	        				}else {
 	        					centrarVentanaInterna(mensajeError('No se pudo eliminar.'));
 	        				}
@@ -1550,7 +1555,6 @@ panelPrincipal = Ext.create('Ext.form.Panel',{
 function _mostrarVentanaAjustes(grid,rowIndex,colIndex){
     var record = grid.getStore().getAt(rowIndex);
     var recordFactura = gridFacturas.getSelectionModel().getSelection()[0];
-    
     debug("Codigo Garantia: "+recordFactura.get('NFACTURA'));
     
     windowLoader = Ext.create('Ext.window.Window',{
@@ -1563,22 +1567,28 @@ function _mostrarVentanaAjustes(grid,rowIndex,colIndex){
             url     : _UrlAjustesMedicos,
             params         :
             {
-                'params.ntramite'  : _NTRAMITE
-                ,'params.cdunieco' : _CDUNIECO
-                ,'params.cdramo'   : _CDRAMO
-                ,'params.estado'   : _ESTADO
-                ,'params.nmpoliza' : _NMPOLIZA
-                ,'params.nmsuplem' : _NMSUPLEM
-                ,'params.nmsituac' : _NMSITUAC
-                ,'params.aaapertu' : _AAAPERTU
-                ,'params.status'   : _STATUS
-                ,'params.nmsinies' : _NMSINIES
-                ,'params.nfactura' : recordFactura.get('NFACTURA')
-                ,'params.cdgarant' : record.get('CDGARANT')
-                ,'params.cdconval' : record.get('CDCONVAL')
-                ,'params.cdconcep' : record.get('CDCONCEP')
-                ,'params.idconcep' : record.get('IDCONCEP')
-                ,'params.nmordina' : record.get('NMORDINA')
+                'params.ntramite'  		: _NTRAMITE
+                ,'params.cdunieco' 		: _CDUNIECO
+                ,'params.cdramo'   		: _CDRAMO
+                ,'params.estado'   		: _ESTADO
+                ,'params.nmpoliza' 		: _NMPOLIZA
+                ,'params.nmsuplem' 		: _NMSUPLEM
+                ,'params.nmsituac' 		: _NMSITUAC
+                ,'params.aaapertu' 		: _AAAPERTU
+                ,'params.status'   		: _STATUS
+                ,'params.nmsinies' 		: _NMSINIES
+                ,'params.nfactura'		: recordFactura.get('NFACTURA')
+                ,'params.cdgarant' 		: record.get('CDGARANT')
+                ,'params.cdconval' 		: record.get('CDCONVAL')
+                ,'params.cdconcep' 		: record.get('CDCONCEP')
+                ,'params.idconcep' 		: record.get('IDCONCEP')
+                ,'params.nmordina' 		: record.get('NMORDINA')
+                ,'params.precio'   		: record.get('PTPRECIO')
+                ,'params.cantidad'      : record.get('CANTIDAD')
+                ,'params.descuentoporc' : record.get('DESTOPOR')
+                ,'params.descuentonum'  : record.get('DESTOIMP')
+                ,'params.importe'       : record.get('PTIMPORT')
+                ,'params.ajusteMedi'    : record.get('TOTAJUSMED')
             },
             scripts  : true,
             loadMask : true,
@@ -1587,6 +1597,15 @@ function _mostrarVentanaAjustes(grid,rowIndex,colIndex){
             	method: 'POST'
             }
         }
+	    ,
+	    listeners:{
+	         close:function(){
+	             if(true){
+	                 //Actualizamos la información de la consulta del grid inferior
+	            	 storeConceptos.reload();
+	             }
+	         }
+	    }
     }).show();
     centrarVentana(windowLoader);
 }
