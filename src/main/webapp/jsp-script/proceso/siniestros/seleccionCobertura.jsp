@@ -215,7 +215,7 @@
                     buttonAlign : 'center',
                     buttons:[
                     {
-                        text: 'Aceptar',
+                        text: 'Continuar',
                         icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
                         handler: function() {
                         // Verificamos que todas las facturas tengan coberturas y subcoberturas
