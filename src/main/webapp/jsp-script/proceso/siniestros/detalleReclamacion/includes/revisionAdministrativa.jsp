@@ -1274,6 +1274,10 @@ Ext.define('EditorConceptos', {
  					dataIndex : 'DESTOIMP',
  					width : 150
  				},{
+ 					header : 'Ajuste M&eacute;dico',
+ 					//dataIndex : 'DESTOIMP',
+ 					width : 150
+ 				},{
  					header : 'Subtotal Factura',
  					dataIndex : 'PTIMPORT',
  					width : 150
