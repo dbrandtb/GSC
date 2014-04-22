@@ -230,29 +230,6 @@
 	        <result name="success" type="json"/>
 		</action>
 		
-		<!-- <action name="guardaAutorizacionServicio" class="siniestrosAction"
-			method="guardaAutorizacionServicio">
-			<result type="json">
-				<param name="ignoreHierarchy">false</param>
-				<param name="includeProperties">
-					listaPoliza.*,
-					success
-				</param>
-			</result>
-		</action>-->
-		
-		<!-- <action name="guardaPorcentajeAgentes" class="agentesAction" method="guardaPorcentajeAgentes">
-	        <interceptor-ref name="json">
-	            <param name="enableSMD">true</param>
-	            <param name="ignoreSMDMethodInterfaces">false</param>
-	        </interceptor-ref>
-	        <result name="success" type="json"/>
-		</action>-->
-        
-        <!-- <action name="includes/altaTramite">
-    		<result>/jsp-script/proceso/siniestros/altaTramite.jsp</result>
-		</action>-->
-		
 		<action name="includes/altaTramite" class="siniestrosAction"  method="altaTramite">
     		<result>/jsp-script/proceso/siniestros/altaTramite.jsp</result>
 		</action>
@@ -264,10 +241,6 @@
 		<action name="afiliadosAfectados" class="siniestrosAction" method="afiliadosAfectados">
     		<result name="success">/jsp-script/proceso/siniestros/afiliadosAfectados.jsp</result>
 		</action>
-		        
-		<!-- <action name="autorizacionServicios">
-    		<result>/jsp-script/proceso/siniestros/autorizacionServicios.jsp</result>
-		</action>-->
 		
 		<action name="tipoAutorizacion">
     		<result>/jsp-script/proceso/siniestros/tipoAutorizacion.jsp</result>
@@ -290,11 +263,6 @@
 		<action name="includes/verAutorizacionServicio" class="siniestrosAction" method="verAutorizacionServicio">
     		<result>/jsp-script/proceso/siniestros/verAutorizacionServicios.jsp</result>
 		</action>
-		
-		
-		
-		
-		
 		
 		<action name="includes/revisionDocumentos"  class="siniestrosAction" method="execute">
     		<result>/jsp-script/proceso/siniestros/revisionDocumentos.jsp</result>
@@ -439,6 +407,25 @@
 		    <result type="json"></result>
 		</action>
 		
+		<action name="guardarSeleccionCoberturaxTramite" class="siniestrosAction" method="guardarSeleccionCoberturaxTramite">
+		    <interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+		    <result type="json"></result>
+		</action>
+		
+		<action name="guardarCoberturaxFactura" class="siniestrosAction"
+			method="guardarCoberturaxFactura">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success,
+					mensaje
+				</param>
+			</result>
+		</action>
+		
 		<action name="guardarAfiliadosAfectados" class="siniestrosAction" method="guardarAfiliadosAfectados">
             <interceptor-ref name="json">
                 <param name="enableSMD">true</param>
@@ -534,7 +521,18 @@
 				</param>
 			</result>
 		</action>
-        
+		
+		<action name="detalleSiniestroDatos" class="detalleSiniestroAction"
+			method="detalleSiniestro">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success,
+					params
+				</param>
+			</result>
+		</action>
+		
 		<action name="detalleSiniestro" class="detalleSiniestroAction" method="detalleSiniestro">
     		<result>/jsp-script/proceso/siniestros/detalleReclamacion/detalleReclamacion.jsp</result>
 		</action>

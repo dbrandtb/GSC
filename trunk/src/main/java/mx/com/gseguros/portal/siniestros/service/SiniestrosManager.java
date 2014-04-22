@@ -121,7 +121,8 @@ public interface SiniestrosManager {
 			String cdmoneda,
 			String tasacamb,
 			String ptimporta,
-			String dctonuex
+			String dctonuex,
+			String tipoAccion
 			) throws ApplicationException;
 
 	public String movFacMesaControl(

@@ -8,6 +8,7 @@ var Cat = {
     Agentes                   : '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@AGENTES" />',
     CausaSiniestro            : '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CAUSA_SINIESTRO" />',
     Coberturas                : '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@COBERTURAS" />',
+    CoberturasxTramite        : '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@COBERTURASXTRAMITE" />',
     CodigosMedicos            : '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CODIGOS_MEDICOS" />',
     Colonias                  : '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@COLONIAS" />',
     Endosos                   : '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@ENDOSOS" />',

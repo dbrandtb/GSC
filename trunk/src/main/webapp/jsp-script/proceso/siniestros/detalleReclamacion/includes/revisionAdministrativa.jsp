@@ -86,6 +86,7 @@ Ext.onReady(function() {
         fields: ["CDUNIECO","CDRAMO","ESTADO","NMPOLIZA","NMSUPLEM",
          		"NMSITUAC","AAAPERTU","STATUS","NMSINIES","NFACTURA",
         		"CDGARANT","CDCONVAL","CDCONCEP","IDCONCEP","CDCAPITA",
+        		"DSGARANT","DSSUBGAR","DESIDCONCEP","DESCONCEP",
         		"NMORDINA",{name:"FEMOVIMI", type: "date", dateFormat: "d/m/Y"},"CDMONEDA","PTPRECIO","CANTIDAD",
         		"DESTOPOR","DESTOIMP","PTIMPORT","PTRECOBR","NMANNO",
         		"NMAPUNTE","USERREGI",{name:"FEREGIST", type: "date", dateFormat: "d/m/Y"},"PTPCIOEX","DCTOIMEX","PTIMPOEX"]
@@ -195,7 +196,7 @@ Ext.onReady(function() {
 		proxy: {
 			type: 'ajax',
 			url: _URL_CATALOGOS,
-			extraParams : {catalogo:_CATALOGO_TipoAtencion},
+			extraParams : {catalogo:_CATALOGO_TipoAtencion},//Cat.TipoAtencionSiniestros
 			reader: {
 				type: 'json',
 				root: 'lista'
@@ -1237,24 +1238,23 @@ Ext.define('EditorConceptos', {
  			columns: 
  				[{
  					dataIndex : 'NMORDINA',
- 					width : 20
+ 					width : 20,
+ 					hidden: true
  				},{
  					header : 'Factura',
  					dataIndex:  'NFACTURA',
  					hidden: true
  				},{
  					header : 'Tipo Concepto',
- 					dataIndex : 'IDCONCEP',
+ 					dataIndex : 'DESIDCONCEP',
  					width : 150
  				},{
  					header : 'Codigo Concepto',
- 					dataIndex : 'CDCONCEP',
+ 					dataIndex : 'DESCONCEP',
  					width : 150
- 				// , renderer: Ext.util.Format.dateRenderer('d M Y')
-
  				},{
  					header : 'Subcobertura',
- 					dataIndex : 'CDCONVAL',
+ 					dataIndex : 'DSSUBGAR',
  					width : 150
  				},{
  					header : 'Precio',
@@ -1277,11 +1277,7 @@ Ext.define('EditorConceptos', {
  					header : 'Subtotal Factura',
  					dataIndex : 'PTIMPORT',
  					width : 150
- 				},/*{
- 					header : 'Importe autorizado <br/> arancel',
- 					dataIndex : 'importeAutorizado',
- 					width : 150
- 				},*/{
+ 				},{
  					xtype : 'actioncolumn',
  					width : 80,
  					sortable : false,

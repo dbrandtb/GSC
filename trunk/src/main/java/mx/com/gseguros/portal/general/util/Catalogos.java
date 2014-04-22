@@ -5,6 +5,7 @@ public enum Catalogos {
 	AGENTES(""),
 	CAUSA_SINIESTRO("TCAUSASSV"),
 	COBERTURAS(""),
+	COBERTURASXTRAMITE(""),
 	CODIGOS_MEDICOS(""),
 	COLONIAS(""),
 	ENDOSOS(""),
