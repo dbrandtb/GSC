@@ -508,11 +508,7 @@ Ext.onReady(function()
 	                            });
 	                        }
 	                    }
-	                }/*
-            	    ,listeners :
-            	    {
-            	    	itemclick : _p12_mostrarWindowAutoriza
-            	    }*/
+	                }
             	});
 	            var panelTotales = Ext.create('Ext.form.Panel',
 	            {
@@ -737,6 +733,7 @@ Ext.onReady(function()
                 var copagoaplica = 0.0;
             }
             var total = subttdeduc - copagoaplica;
+            _p12_slist1[indice]['TOTALFACTURA']=total;
             totalglobal = totalglobal + total;
             
             var panelTotales = Ext.create('Ext.panel.Panel',
@@ -1110,22 +1107,6 @@ Ext.onReady(function()
 	        ,_p12_formProveedor
 	        ,_p12_formSiniestro
 	        ,_p12_panelCalculo
-	        /*
-	        ,Ext.create('Ext.panel.Panel',
-	        {
-	        	border  : 0
-	        	,layout :
-	        	{
-	        		type     : 'table'
-	        		,columns : 2
-	        	}
-	            ,items  :
-	        	[
-	        	    _p12_gridFacturas
-	        	    ,_p12_gridSiniestros
-	        	]
-	        })
-	        ,_p12_panelCalculo*/
 	    ]
 	});
 	////// contenido //////
@@ -1140,27 +1121,10 @@ Ext.onReady(function()
 	_p12_formFactura.loadRecord(new _p12_Factura(_p12_smap2));
 	_p12_formProveedor.loadRecord(new _p12_Proveedor(_p12_smap3));
 	_p12_formSiniestro.loadRecord(new _p12_Siniestro(_p12_smap2));
-	/*_p12_storeFacturas.load(
-	{
-		params : { 'smap.ntramite' : _p12_smap.NTRAMITE }
-	});
-	_p12_storeSiniestros.load(
-    {
-        params : { 'smap.ntramite' : _p12_smap.NTRAMITE }
-    });*/
 	////// loader //////
 });
 
 ////// funciones //////
-function _p12_mostrarWindowAutoriza(grid,record)
-{
-	debug('_p12_mostrarWindowAutoriza record:',record.raw);
-	_p12_formAutoriza.getForm().reset();
-	_p12_formAutoriza.loadRecord(new _p12_Concepto(record.raw));
-	_p12_windowAutoriza.show();
-	centrarVentanaInterna(_p12_windowAutoriza);
-}
-
 function _p12_rechazoSiniestro()
 {
 	debug('_p12_rechazoSiniestro');
@@ -1375,13 +1339,6 @@ function _p12_calcular()
 }
 --%>
 
-function _p12_guardar_click()
-{
-	debug('_p12_guardar_click');
-	var ventana = Ext.MessageBox.confirm('Guardar pagos','¿Desea guardar el importe total?',_p12_guardar_confirmar);
-	centrarVentanaInterna(ventana);
-}
-
 function _p12_guardar_confirmar(boton)
 {
 	debug('_p12_guardar_confirmar:',boton);
@@ -1395,15 +1352,18 @@ function _p12_guardar()
 {
 	debug('_p12_guardar');
 	var valido = _p12_validaAutorizaciones();
+	//console.log(valido);
 	if(valido.length==0)
 	{
 		_p12_panelCalculo.setLoading(true);
+		var esPagoDirecto = _p12_smap.PAGODIRECTO=='S';
 		Ext.Ajax.request(
 		{
 			url       : _p12_urlGuardar
 			,jsonData :
 			{
-				slist1 : _p12_listaWS
+				slist1  : _p12_listaWS
+				,slist2 : esPagoDirecto ? [] : _p12_slist1
 			}
 			,success  : function(response)
 			{
@@ -1428,7 +1388,13 @@ function _p12_guardar()
 	}
 	else
 	{
-		mensajeError(valido);
+		centrarVentanaInterna(Ext.Msg.show({
+	           title      : 'Error',
+	           msg        : valido,
+	           width      : 600,
+	           icon    	  : Ext.Msg.ERROR,
+	           buttons    : Ext.Msg.OK
+	    }));
 	}
 }
 
@@ -1460,7 +1426,7 @@ function _p12_validaAutorizaciones()
                 {
                     result = result + 'Reclamaciones no autoriza el siniestro ' + siniestroIte.NMSINIES + '<br/>';
                 }
-				if(siniestroIte.AUTMEDIC!='S')
+				if(false && siniestroIte.AUTMEDIC!='S')
 				{
 					result = result + 'El m&eacute;dico no autoriza el siniestro ' + siniestroIte.NMSINIES + '<br/>';
 				}
@@ -1472,29 +1438,32 @@ function _p12_validaAutorizaciones()
 				{
 					result = result + 'Reclamaciones no autoriza la factura para el siniestro ' + siniestroIte.NMSINIES + '<br/>';
 				}
-				if(factura['AUTMEDIC'+siniestroIte.NMSINIES]!='S')
+				if(false && factura['AUTMEDIC'+siniestroIte.NMSINIES]!='S')
 				{
 					result = result + 'El m&eacute;dico no autoriza la factura para el siniestro ' + siniestroIte.NMSINIES + '<br/>';
 				}
             }
-			for(i=0;i<siniestros.length;i++)
-            {
-                var siniestroIte = siniestros[i];
-                var conceptosSiniestro = _p12_llist1[i];
-                var j;
-                for(j=0;j<conceptosSiniestro.length;j++)
-                {
-                	var conceptoSiniestroIte = conceptosSiniestro[j];
-                	/*if(conceptoSiniestroIte.AUTRECLA!='S')
-                    {
-                        result = result + 'Reclamaciones no autoriza el concepto \'' + conceptoSiniestroIte.OTVALOR + '\' del siniestro ' + siniestroIte.NMSINIES + '<br/>';
-                    }*/
-                    if(conceptoSiniestroIte.AUTMEDIC!='S')
-                    {
-                        result = result + 'El m&eacute;dico no autoriza el concepto \'' + conceptoSiniestroIte.OTVALOR + '\' del siniestro ' + siniestroIte.NMSINIES + '<br/>';
-                    }
-                }
-            }
+			if(!esHospital)
+			{
+				for(i=0;i<siniestros.length;i++)
+	            {
+	                var siniestroIte = siniestros[i];
+	                var conceptosSiniestro = _p12_llist1[i];
+	                var j;
+	                for(j=0;j<conceptosSiniestro.length;j++)
+	                {
+	                	var conceptoSiniestroIte = conceptosSiniestro[j];
+	                	/*if(conceptoSiniestroIte.AUTRECLA!='S')
+	                    {
+	                        result = result + 'Reclamaciones no autoriza el concepto \'' + conceptoSiniestroIte.OTVALOR + '\' del siniestro ' + siniestroIte.NMSINIES + '<br/>';
+	                    }*/
+	                    if(false && conceptoSiniestroIte.AUTMEDIC!='S')
+	                    {
+	                        result = result + 'El m&eacute;dico no autoriza el concepto \'' + conceptoSiniestroIte.OTVALOR + '\' del siniestro ' + siniestroIte.NMSINIES + '<br/>';
+	                    }
+	                }
+	            }
+			}
 		}
 	}
 	else
@@ -1506,14 +1475,45 @@ function _p12_validaAutorizaciones()
 		for(i=0;i<facturas.length;i++)
 		{
 			var facturaIte = facturas[i];
-			debug('validando factura '+facturaIte.NFACTURA);
+			
+			if(+ facturaIte.PTIMPORT <= 0){
+				result = result + 'Verifica el Importe ' + facturaIte.NFACTURA + '<br/>';
+			}
+			
+			if(+facturaIte.DCTONUEX > +facturaIte.DESCNUME){
+				result = result + 'Verifica el Descuento ' + facturaIte.NFACTURA + '<br/>';
+			}
+			
 			if(facturaIte.AUTRECLA!='S')
             {
                 result = result + 'Reclamaciones no autoriza la factura ' + facturaIte.NFACTURA + '<br/>';
             }
-            if(facturaIte.AUTMEDIC!='S')
+            if(false && facturaIte.AUTMEDIC!='S')
             {
                 result = result + 'El m&eacute;dico no autoriza la factura ' + facturaIte.NFACTURA + '<br/>';
+            }
+            
+            
+            
+            var conceptos = _p12_llist1[i];
+            //console.log(conceptos);
+            var j;
+            for(j=0;j<conceptos.length;j++)
+            {
+            	//var facturaIte = conceptos[j];
+            	var conceptosInt = conceptos[j];
+            	
+            	if(+ conceptosInt.PTIMPORT <= 0){
+    				result = result + 'Verifica el Importe del concepto ' + conceptosInt.NFACTURA + '<br/>';
+    			}
+    			
+    			if(+conceptosInt.DCTOIMEX > +conceptosInt.DESTOIMP){
+    				result = result + 'Verifica el Descuento ' + conceptosInt.NFACTURA + '<br/>';
+    			}
+    			if(+conceptosInt.PTPCIOEX > +conceptosInt.PTPRECIO){
+    				result = result + 'Verifica el Precio ' + conceptosInt.NFACTURA + '<br/>';
+    			}
+            	
             }
 		}
 	}

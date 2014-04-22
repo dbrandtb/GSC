@@ -75,8 +75,6 @@
 				{type:'string', name:'CDICD2'},
 				{type:'string', name:'NMRECLAMO'},
 				{type:'string', name:'CDPERSON'},
-				{type:'string', name:'DSICD'},
-				{type:'string', name:'DSICD2'},
 				{type:'string', name:'BENEFICIARIO'},
 				{type:'string', name:'FERECEP'}
 		    ]
@@ -135,8 +133,8 @@
 					displayField: 'value',
 					valueField: 'key',
 					allowBlank:false,
-					//forceSelection : true,
 					readOnly   : true,
+					//forceSelection : true,
 					//emptyText:'Seleccione...',
 					store : Ext.create('Ext.data.Store', {
 	                    model:'Generic',
@@ -161,8 +159,8 @@
 					displayField: 'value',
 					valueField: 'key',
 					allowBlank:false,
-					forceSelection : true,
 					readOnly   : true,
+					//forceSelection : true,
 					//emptyText:'Seleccione...',
 					store : Ext.create('Ext.data.Store', {
 	                    model:'Generic',
@@ -195,8 +193,8 @@
 					displayField: 'value',
 					valueField  : 'key',
 					allowBlank  : false,
-					forceSelection : true,
 					readOnly   : true,
+					//forceSelection : true,
 					//emptyText   :'Seleccione...',
 					store : Ext.create('Ext.data.Store', {
 	                    model:'Generic',
@@ -326,8 +324,7 @@
 			                           			});
 			                           		}
 			                           	}
-		                           },
-		                           {
+		                           }, {
 		                               title : 'DOCUMENTACION',
 		                               width: '350',
 		                               loader : {
@@ -573,11 +570,11 @@
                     if(records.length > 0){
                     	pnlInformacionGral.getForm().loadRecord(records[0]);  
                     }else {
-                        showMessage('Error', 'No hay datos de la p&oacute;liza', Ext.Msg.OK, Ext.Msg.ERROR);
+                    	centrarVentanaInterna(showMessage('Error', 'No hay datos de la p&oacute;liza', Ext.Msg.OK, Ext.Msg.ERROR));
                     }
                 }else {
-                    showMessage('Error', 'Error al obtener los datos de la p&oacute;liza, intente m\u00E1s tarde',
-                    Ext.Msg.OK, Ext.Msg.ERROR);
+                	centrarVentanaInterna(showMessage('Error', 'Error al obtener los datos de la p&oacute;liza, intente m\u00E1s tarde',
+                    Ext.Msg.OK, Ext.Msg.ERROR));
                 }
             }
         });
