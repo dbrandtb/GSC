@@ -62,6 +62,10 @@ public class CotizacionAction extends PrincipalCoreAction
 		
 		GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 		gc.setEsMovil(session!=null&&session.containsKey("ES_MOVIL")&&((Boolean)session.get("ES_MOVIL"))==true);
+		if(!gc.isEsMovil() && smap1.containsKey("movil"))
+		{
+			gc.setEsMovil(true);
+		}
 		
 		UserVO usuario  = (UserVO) session.get("USUARIO");
 		if(gc.isEsMovil())
@@ -191,7 +195,7 @@ public class CotizacionAction extends PrincipalCoreAction
 				+ "\n################################"
 				+ "\n################################"
 				);
-		return SUCCESS;
+		return gc.isEsMovil() ? "success_mobile" : SUCCESS;
 	}
 	/*/////////////////////////////*/
 	////// cotizacion dinamica //////

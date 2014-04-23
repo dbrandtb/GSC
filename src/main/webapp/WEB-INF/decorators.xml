@@ -36,7 +36,7 @@
         <pattern>/endosos/endosoExtraprima.action</pattern>
         <pattern>/endosos/endosoFormaPago.action</pattern>
         <pattern>/endosos/endosoAgente.action</pattern>
-        <pattern>/emision/mcotizacion.action</pattern>
+        <pattern>/emision/mcotizacion.action*</pattern>
         
         <pattern>/*/includes/*.action</pattern>
         
@@ -63,7 +63,7 @@
 		<pattern>/jsp-script/proceso/siniestros/subirDocumentosSiniestros.jsp</pattern>
 		<pattern>/flujocotizacion/principal.action</pattern>
         <pattern>/jsp/consultas/agentes/consultaAgentes.jsp</pattern>
-        
+        <pattern>/jsp-script/proceso/emision/cotizaciontouch.jsp</pattern>
        
         
 	</decorator>
@@ -111,8 +111,7 @@
         <pattern>/jsp-script/proceso/rehabilitacion/*.jsp</pattern>
         <pattern>/endosos/*.action</pattern>
         <pattern>/jsp-script/proceso/endosos/*.jsp</pattern>
-        <pattern>/emision/*.action</pattern>
-        <pattern>/jsp-script/proceso/emision/*.jsp</pattern>
+        <pattern>/jsp-script/proceso/emision/cotizacion.jsp</pattern>
         
         <pattern>/siniestros/*.action</pattern>
         <pattern>/jsp-script/proceso/siniestros/*.jsp</pattern>
