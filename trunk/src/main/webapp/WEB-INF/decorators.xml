@@ -36,6 +36,7 @@
         <pattern>/endosos/endosoExtraprima.action</pattern>
         <pattern>/endosos/endosoFormaPago.action</pattern>
         <pattern>/endosos/endosoAgente.action</pattern>
+        <pattern>/emision/mcotizacion.action</pattern>
         
         <pattern>/*/includes/*.action</pattern>
         
