@@ -23,16 +23,18 @@
 	     </interceptors>
         
         <action name="cotizacion" class="CotizacionAction" method="pantallaCotizacion">
+            <interceptor-ref name="customStack" />
             <result name="success">/jsp-script/proceso/emision/cotizacion.jsp</result>
+            <result name="success_mobile">/jsp-script/proceso/emision/cotizaciontouch.jsp</result>
         </action>
         
         <action name="mcotizacion" class="CotizacionAction" method="pantallaCotizacion">
-            <interceptor-ref name="deviceInterceptor" />
+            <interceptor-ref name="customStack" />
             <result name="success">/jsp-script/proceso/emision/cotizaciontouch.jsp</result>
         </action>
         
         <action name="cotizar" class="CotizacionAction" method="cotizar">
-            <interceptor-ref name="deviceInterceptor" />
+            <interceptor-ref name="customStack" />
             <interceptor-ref name="json">
                 <param name="enableSMD">true</param>
                 <param name="ignoreSMDMethodInterfaces">false</param>
