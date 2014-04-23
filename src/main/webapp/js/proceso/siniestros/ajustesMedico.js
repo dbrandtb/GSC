@@ -599,8 +599,8 @@ Ext.onReady(function() {
 			            readOnly   : true,
 			            width:550
 			        },
-.                    gridIncisos
-                    ,
+			        gridInforGral,
+			        gridIncisos,
                     {
             			id:'idTotalAjustado'
         		        ,xtype      : 'displayfield'
