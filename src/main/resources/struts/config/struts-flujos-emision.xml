@@ -32,6 +32,7 @@
         </action>
         
         <action name="cotizar" class="CotizacionAction" method="cotizar">
+            <interceptor-ref name="deviceInterceptor" />
             <interceptor-ref name="json">
                 <param name="enableSMD">true</param>
                 <param name="ignoreSMDMethodInterfaces">false</param>
