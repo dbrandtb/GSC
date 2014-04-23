@@ -6,6 +6,10 @@ public class WSException extends Exception {
 	 * 
 	 */
 	private static final long serialVersionUID = 911555617504858834L;
+	
+	/**
+	 * Payload del WS, xml que tiene contenida la peticion que se estaba realizando a un WS
+	 */
 	private String payload;
 
 	public WSException() {
