@@ -18,6 +18,7 @@ var mcdinSesion    = [];
 var mcdinUrlNuevo  = '<s:url namespace="/mesacontrol" action="guardarTramiteDinamico" />';
 var mcdinUrlCargar = '<s:url namespace="/mesacontrol" action="loadTareasDinamico"     />';
 var _4_urlReload   = '<s:url namespace="/mesacontrol" action="mcdinamica"             />';
+var _4_urlReporte  = '<s:url namespace="/reportes" action="procesoObtencionReporte" />';
 
 //Obtenemos el contenido en formato JSON de la propiedad solicitada:
 var _4_smap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
@@ -289,6 +290,48 @@ Ext.onReady(function()
 		    	,buttons       :
 		    	[
 					{
+					    text     : 'Reporte'
+					    ,icon    : '${ctx}/resources/fam3icons/icons/printer.png'
+					    ,hidden  : mcdinInput['tiptra']!='1'
+					    ,handler : function()
+					    {
+					        Ext.MessageBox.confirm('Confirmar', '¿Generar reporte con la sucursal y producto seleccionados?', function(btn)
+					        {
+					            if(btn === 'yes')
+					            {   
+					                Ext.create('Ext.form.Panel').submit(
+					                {
+					                    standardSubmit : true,
+					                    url:_4_urlReporte,
+					                    params:
+					                    {
+					                        cdreporte : 'REPEXC007'
+					                        ,'params.pv_cdunieco_i' : mcdinFiltro.items.items[0].getValue()
+					                        ,'params.pv_cdramo_i'   : mcdinFiltro.items.items[1].getValue()
+					                    },
+					                    success: function(form, action)
+					                    {
+					                        
+					                    },
+					                    failure: function(form, action)
+					                    {
+					                        switch (action.failureType)
+					                        {
+					                            case Ext.form.action.Action.CONNECT_FAILURE:
+					                                Ext.Msg.alert('Error', 'Error de comunicaci&oacute;n');
+					                                break;
+					                            case Ext.form.action.Action.SERVER_INVALID:
+					                            case Ext.form.action.Action.LOAD_FAILURE:
+					                                Ext.Msg.alert('Error', 'Error del servidor, consulte a soporte');
+					                                break;
+					                       }
+					                    }
+					                });
+					            }
+					        });
+					    }
+					}
+					,{
                         text     : 'Limpiar'
                         ,icon    : '${ctx}/resources/fam3icons/icons/control_repeat_blue.png'
                         ,handler : function()
