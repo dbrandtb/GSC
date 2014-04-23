@@ -50,6 +50,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	/*/////////////////////////////*/
 	public String pantallaCotizacion()
 	{
+		this.session=ActionContext.getContext().getSession();
 		log.debug("\n"
 				+ "\n################################"
 				+ "\n################################"
@@ -57,8 +58,17 @@ public class CotizacionAction extends PrincipalCoreAction
 				+ "\n######                    ######"
 				);
 		log.debug("smap1: "+smap1);
+		log.debug("session: "+session);
+		
+		GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+		gc.setEsMovil(session!=null&&session.containsKey("ES_MOVIL")&&((Boolean)session.get("ES_MOVIL"))==true);
 		
 		UserVO usuario  = (UserVO) session.get("USUARIO");
+		if(gc.isEsMovil())
+		{
+			smap1=new HashMap<String,String>();
+			smap1.put("cdtipsit","SL");
+		}
 		String cdtipsit = smap1.get("cdtipsit");
 		
 		String ntramite;
@@ -100,7 +110,6 @@ public class CotizacionAction extends PrincipalCoreAction
         
         ////////////////////////////////////////
         ////// obtener campos de tatrisit //////
-        GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
         gc.setCdtipsit(cdtipsit);
         
         List<ComponenteVO>camposAgrupados    = new ArrayList<ComponenteVO>(0);
@@ -111,6 +120,7 @@ public class CotizacionAction extends PrincipalCoreAction
         try
         {
 	        List<ComponenteVO>tatrisit=kernelManager.obtenerTatrisit(cdtipsit);
+        	
 	        List<ComponenteVO>temp=new ArrayList<ComponenteVO>();
 	        for(ComponenteVO tatriIte:tatrisit)
 			{
@@ -152,8 +162,9 @@ public class CotizacionAction extends PrincipalCoreAction
 			imap.put("camposAgrupados",gc.getItems());
 			
 			gc.generaParcialConEditor(camposIndividuales);
-			imap.put("camposIndividuales",gc.getColumns());
-			imap.put("fieldsIndividuales",gc.getFields());
+			imap.put("itemsIndividuales"  , gc.getItems());
+			imap.put("camposIndividuales" , gc.getColumns());
+			imap.put("fieldsIndividuales" , gc.getFields());
         }
         catch(Exception ex)
         {
@@ -167,7 +178,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		
 		//Obtenemos la edad m�xima para la cotizacion:
         try {
-        	smap1.put("edadMaximaCotizacion", 
+        	smap1.put("edadMaximaCotizacion",
         			catalogosManager.obtieneCantidadMaxima(cdramo, cdtipsit, TipoTramite.POLIZA_NUEVA, Rango.ANIOS, Validacion.EDAD_MAX_COTIZACION));
         } catch(Exception e) {
         	log.error("Error al obtener la edad m�xima de cotizaci�n", e);
@@ -713,6 +724,7 @@ public class CotizacionAction extends PrincipalCoreAction
             ////// 2. planes //////
             
             GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+            gc.setEsMovil(session!=null&&session.containsKey("ES_MOVIL")&&((Boolean)session.get("ES_MOVIL"))==true);
             
             gc.genera(tatriPlanes);
             
