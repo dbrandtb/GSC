@@ -835,7 +835,7 @@ Ext.onReady(function() {
 		    				// --> Pago por reembolso
 		    				// Si es pago por reembolso insertar en la tabla el valor de otvalor05
 		    				var rec = new modelListAsegAfiliados({
-			    				USERASIGNADO: json.otvalor16mc
+			    				USERASIGNADO: json.otvalor17mc
 		                    });
 			    			storeListAsegPagDirecto.add(rec);
 		    				validaTipoPagoReembolso(tipoPago,numeroTramite);
@@ -915,7 +915,7 @@ Ext.onReady(function() {
 		    				COMMENME:   json[i].COMMENME,
 		    				AUTMEDIC:   json[i].AUTMEDIC,
 		    				NTRAMITE:	numeroTramite,
-		    				USERASIGNADO: dato.OTVALOR16
+		    				USERASIGNADO: dato.OTVALOR17
 	                    });
 		    			storeListAsegPagDirecto.add(rec);
 		    		}
