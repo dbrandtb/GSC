@@ -47,6 +47,7 @@ public class GeneradorCampos
     private boolean conItem   = true;
     private boolean conColumn = true;
     private boolean conButton = false;
+    private boolean esMovil   = false;
     
     public GeneradorCampos(String context)
     {
@@ -222,23 +223,59 @@ public class GeneradorCampos
         ////// Ext.create('Ext...',{}) //////
         if(esCombo)
         {
-        	item.setComposedName("Ext.create('Ext.form.ComboBox',{");
+        	if(!esMovil)
+        	{
+        		item.setComposedName("Ext.create('Ext.form.ComboBox',{");
+        	}
+        	else
+        	{
+        		item.setComposedName("Ext.create('MiSelectField',{");
+        	}
         }
         else if(tipoCampo.equals(ComponenteVO.TIPOCAMPO_ALFANUMERICO))
         {
-        	item.setComposedName("Ext.create('Ext.form.TextField',{");
+        	if(!esMovil)
+        	{
+        		item.setComposedName("Ext.create('Ext.form.TextField',{");
+        	}
+        	else
+        	{
+        		item.setComposedName("Ext.create('Ext.field.Text',{");
+        	}
         }
         else if(tipoCampo.equals(ComponenteVO.TIPOCAMPO_TEXTAREA))
         {
-        	item.setComposedName("Ext.create('Ext.form.TextArea',{");
+        	if(!esMovil)
+        	{
+        		item.setComposedName("Ext.create('Ext.form.TextArea',{");
+        	}
+        	else
+        	{
+        		item.setComposedName("Ext.create('Ext.field.TextArea',{");
+        	}
         }
         else if(tipoCampo.equals(ComponenteVO.TIPOCAMPO_NUMERICO)||tipoCampo.equals(ComponenteVO.TIPOCAMPO_PORCENTAJE))
         {
-        	item.setComposedName("Ext.create('Ext.form.NumberField',{");
+        	if(!esMovil)
+        	{
+        		item.setComposedName("Ext.create('Ext.form.NumberField',{");
+        	}
+        	else
+        	{
+        		item.setComposedName("Ext.create('Ext.field.Number',{");
+        	}
         }
         else if(tipoCampo.equals(ComponenteVO.TIPOCAMPO_FECHA))
         {
-        	item.setComposedName("Ext.create('Ext.form.DateField',{");
+        	if(!esMovil)
+        	{
+        		item.setComposedName("Ext.create('Ext.form.DateField',{");
+        	}
+        	else
+        	{
+        		item.setComposedName("Ext.create('Ext.field.DatePicker',{");
+        		item.add(Item.crear("picker",null,Item.OBJ).add("yearFrom",1940));
+        	}
         }
         item.setComposedNameClose("})");
         ////// Ext.create('Ext...',{}) //////
@@ -282,6 +319,7 @@ public class GeneradorCampos
         item.add("id"         , compId);
         item.add("cdatribu"   , cdatribu);
         item.add("fieldLabel" , fieldLabel);
+        item.add("label" , fieldLabel);
         item.add("allowBlank" , !comp.isObligatorio());
         item.add("name"       , name);
         item.add("readOnly"   , comp.isSoloLectura());
@@ -290,7 +328,10 @@ public class GeneradorCampos
         	item.add(Item.crear("value" , value).setQuotes(""));
         }
         item.add("hidden"     , comp.isOculto());
-        item.add("style"      , "margin:5px");
+        if(!esMovil)
+        {
+        	item.add("style"      , "margin:5px");
+        }
         ////// id, cdatribu, fieldLabel, allowBlank, name, readOnly, value, hidden, style //////
         
         ////// format //////
@@ -397,11 +438,12 @@ public class GeneradorCampos
                 		  "function(remoto)"
                 		+ "{"
                 		+ "    debug('Heredar "+name+"');"
-                		+ "    if(!this.noEsPrimera||remoto==true)"
+                		+ "    me = this;"
+                		+ "    if(!me.noEsPrimera||remoto==true)"
                 		+ "    {"
                 		+ "        debug('Hereda por primera vez o porque la invoca el padre');"
-                		+ "        this.noEsPrimera=true;"
-                		+ "        this.getStore().load("
+                		+ "        me.noEsPrimera=true;"
+                		+ "        me.getStore().load("
                 		+ "        {"
                 		+ "            params    :"
                 		+ "            {"
@@ -439,7 +481,15 @@ public class GeneradorCampos
                 		+ "    {"
                 		+ "        fn:function()"
                 		+ "        {"
-                		+ "            this.heredar();"
+                		+ "            debug('change');"
+                		+ "            if(this.heredar)"
+                		+ "            {"
+                		+ "                this.heredar();"
+                		+ "            }"
+                		+ "            else"
+                		+ "            {"
+                		+ "                _g_heredarCombo(false,'"+compId+"','"+compAnteriorId+"');"
+                		+ "            }"
                 		+ "        }"
                 		+ "    }"
                 		+ "}")
@@ -473,6 +523,7 @@ public class GeneradorCampos
             		Item.crear("reader", null, Item.OBJ)
             		.add("type","json")
             		.add("root","lista")
+            		.add("rootProperty","lista")
             		);
             
             ////// extraParams //////
@@ -698,7 +749,7 @@ public class GeneradorCampos
 	    
 		    col=new Item();
 		    col.setType(Item.OBJ);
-		    col.add("header"    , header);
+		    col.add("text"      , header);
 		    col.add("dataIndex" , dataIndex);
 		    if(comp.getWidth()==0)
 		    {
@@ -707,6 +758,10 @@ public class GeneradorCampos
 		    else
 		    {
 		    	col.add("width" , comp.getWidth());
+		    }
+		    if(esMovil)
+		    {
+		    	col.add("width" , 200);
 		    }
 		    col.add("hidden"    , hidden);
 		    
@@ -817,8 +872,15 @@ public class GeneradorCampos
     			+ "    {"
     			+ "        fn:function()"
     			+ "        {"
-    			+ "            debug('blur');"
-    			+ "            Ext.getCmp('"+this.idPrefix+(editor?"editor_":"")+(idx+1)+"').heredar(true);"
+    			+ "            debug('blur',Ext.getCmp('"+this.idPrefix+(editor?"editor_":"")+(idx+1)+"'));"
+    		    + "            if(Ext.getCmp('"+this.idPrefix+(editor?"editor_":"")+(idx+1)+"').heredar)"
+    		    + "            {"
+    			+ "                Ext.getCmp('"+this.idPrefix+(editor?"editor_":"")+(idx+1)+"').heredar(true);"
+    			+ "            }"
+    			+ "            else"
+    			+ "            {"
+    			+ "                _g_heredarCombo(true,'"+this.idPrefix+(editor?"editor_":"")+(idx+1)+"','"+this.idPrefix+(editor?"editor_":"")+(idx)+"');"
+    			+ "            }"
     			+ "        }"
     			+ "    }"
     			+ "}")
@@ -846,14 +908,29 @@ public class GeneradorCampos
     			+ "        fn:function()"
     			+ "        {"
     			+ "            debug('blur');"
-    			+ "            Ext.getCmp('"+this.idPrefix+(editor?"editor_":"")+(idx+1)+"').heredar(true);"
+    			+ "            if(Ext.getCmp('"+this.idPrefix+(editor?"editor_":"")+(idx+1)+"').heredar)"
+    			+ "            {"
+    			+ "                Ext.getCmp('"+this.idPrefix+(editor?"editor_":"")+(idx+1)+"').heredar(true);"
+    			+ "            }"
+    			+ "            else"
+    			+ "            {"
+    			+ "                _g_heredarCombo(true,'"+this.idPrefix+(editor?"editor_":"")+(idx+1)+"','"+this.idPrefix+(editor?"editor_":"")+(idx)+"');"
+    			+ "            }"
     			+ "        }"
     			+ "    }"
     			+ "    ,change      :"
     			+ "    {"
     			+ "        fn : function()"
     			+ "        {"
-    			+ "            this.heredar();"
+    			+ "            debug('change');"
+    			+ "            if(this.heredar)"
+    			+ "            {"
+    			+ "                this.heredar();"
+    			+ "            }"
+    			+ "            else"
+    			+ "            {"
+    			+ "                _g_heredarCombo(true,'"+this.idPrefix+(editor?"editor_":"")+(idx)+"','"+this.idPrefix+(editor?"editor_":"")+(idx-1)+"');"
+    			+ "            }"
     			+ "        }"
     			+ "    }"
     			+ "}")
@@ -925,6 +1002,14 @@ public class GeneradorCampos
 
 	public void setButtons(Item buttons) {
 		this.buttons = buttons;
+	}
+
+	public boolean isEsMovil() {
+		return esMovil;
+	}
+
+	public void setEsMovil(boolean esMovil) {
+		this.esMovil = esMovil;
 	}
     
 }
