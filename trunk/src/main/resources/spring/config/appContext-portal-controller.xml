@@ -4,6 +4,9 @@
        
     <bean id="authenticationInterceptor" class="mx.com.gseguros.interceptors.AuthenticationInterceptor"/>
     
+    <bean id="deviceInterceptor" class="mx.com.gseguros.interceptors.DeviceInterceptor"/>
+    
+    
     <bean id="paginaPrincipalAction" class="mx.com.aon.portal.web.PaginaPrincipalAction" scope="prototype">
     	<property name="paginaPrincipalManager" ref="paginaPrincipalManager"/>
     </bean>

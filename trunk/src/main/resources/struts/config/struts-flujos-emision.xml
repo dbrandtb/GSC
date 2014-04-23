@@ -11,6 +11,16 @@
     </package>
     
     <package name="emision" extends="json-default" namespace="/emision">
+    
+         <interceptors>
+            
+	       <interceptor name="deviceInterceptor" class="deviceInterceptor"/>
+	       
+	       <interceptor-stack name="customStack">
+	           <interceptor-ref name="deviceInterceptor"/>
+	           <interceptor-ref name="defaultStack" />
+	       </interceptor-stack>
+	     </interceptors>
         
         <action name="cotizacion" class="CotizacionAction" method="pantallaCotizacion">
             <result name="success">/jsp-script/proceso/emision/cotizacion.jsp</result>
