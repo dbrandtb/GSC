@@ -9,6 +9,7 @@ import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.exception.ApplicationException;
+import mx.com.gseguros.exception.WSException;
 import mx.com.gseguros.portal.general.model.RespuestaVO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
@@ -98,8 +99,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 				logger.debug("Resultado sincrono para primer ejecucion de WS: "+resultado.getCodigo()+" - "+resultado.getMensaje());
 			}
 		} catch (Exception re) {
-			logger.error(re);
-			throw new Exception("Error de conexion: " + re.getMessage());
+			throw new WSException("Error de conexion: " + re.getMessage(), re, stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
 		}
 		
 		return resWS;
@@ -150,8 +150,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 				logger.debug("Resultado sincrono para primer ejecucion de WS: "+resultado.getCodigo()+" - "+resultado.getMensaje());
 			}
 		} catch (Exception re) {
-			logger.error(re);
-			throw new Exception("Error de conexion: " + re.getMessage());
+			throw new WSException("Error de conexion: " + re.getMessage(), re, stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
 		}
 		
 		return resWS;
@@ -203,8 +202,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 				logger.debug("Resultado de WS ejecutaReclamoGS: "+resultado.getCodigo()+" - "+resultado.getMensaje());
 			}
 		} catch (Exception re) {
-			logger.error(re);
-			throw new Exception("Error de conexion: " + re.getMessage());
+			throw new WSException("Error de conexion: " + re.getMessage(), re, stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
 		}
 		
 		return resWS;
@@ -331,32 +329,40 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 							kernelManager.movBitacobro((String) params.get("pv_cdunieco_i"),
 									(String) params.get("pv_cdramo_i"),
 									(String) params.get("pv_estado_i"),
-									(String) params.get("pv_nmpoliza_i"), "ErrWSrec",
+									(String) params.get("pv_nmpoliza_i"),
+									(String) params.get("pv_nmsuplem_i"),
+									"ErrWSrec",
 									"Error en Recibo " + params.get("NumRec")
 											+ " >>> " + respuesta.getCodigo() + " - "
 											+ respuesta.getMensaje(),
-									 usuario, null);
-						} catch (ApplicationException e1) {
-							logger.error("Error en llamado a PL", e1);
+									 usuario, null, "ws.ice2sigs.url", "reciboGS",
+									 resultWS.getXmlIn(), Integer.toString(respuesta.getCodigo()));
+						} catch (Exception e1) {
+							logger.error("Error al insertar en Bitacora", e1);
 						}
 					}
 				}
-			}catch(Exception e){
+			}catch(WSException e){
 				logger.error("Error al insertar recibo: "+recibo.getNumRec()+" tramite: "+ntramite);
+				logger.error("Imprimpriendo el xml enviado al WS: Payload: " + e.getPayload());
 				try {
 					kernelManager.movBitacobro(
 							(String) params.get("pv_cdunieco_i"),
 							(String) params.get("pv_cdramo_i"),
 							(String) params.get("pv_estado_i"),
 							(String) params.get("pv_nmpoliza_i"),
+							(String) params.get("pv_nmsuplem_i"),
 							"ErrWSrecCx",
 							"Error en Recibo " + recibo.getNumRec()
 									+ " Msg: " + e.getMessage() + " ***Cause: "
 									+ e.getCause(),
-							 usuario, null);
+							 usuario, null, "ws.ice2sigs.url", "reciboGS",
+							 e.getPayload(), null);
 				} catch (Exception e1) {
-					logger.error("Error en llamado a PL", e1);
+					logger.error("Error al insertar en Bitacora", e1);
 				}
+			}catch (Exception e){
+				logger.error("Error Excepcion al insertar recibo: "+recibo.getNumRec()+" tramite: "+ntramite,e);
 			}
 		}
 		
@@ -496,35 +502,45 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 								kernelManager.movBitacobro((String) params.get("pv_cdunieco_i"),
 										(String) params.get("pv_cdramo_i"),
 										(String) params.get("pv_estado_i"),
-										(String) params.get("pv_nmpoliza_i"), "ErrWSsin",
+										(String) params.get("pv_nmpoliza_i"),
+										(String) params.get("pv_nmsuplem_i"),
+										"ErrWSsin",
 										"Error en Siniestro: " + reclamo.getNumSin() + " Inciso: " + reclamo.getIncPol() 
 												+ " >>> " + respuesta.getCodigo() + " - "
 												+ respuesta.getMensaje(),
-										 usuario, (String) params.get("pv_ntramite_i"));
-							} catch (ApplicationException e1) {
-								logger.error("Error en llamado a PL", e1);
+										 usuario, (String) params.get("pv_ntramite_i"), "ws.ice2sigs.url", "reclamoGS",
+										 resultWS.getXmlIn(), Integer.toString(respuesta.getCodigo()));
+							} catch (Exception e1) {
+								logger.error("Error al insertar en Bitacora", e1);
 							}
 						}
 					}
 					
-				}catch(Exception e){
+				}catch(WSException e){
 					logger.error("Error al enviar el Reclamo: " + reclamo.getIcodreclamo(), e);
 					res.setSuccess(false);
 					res.setMensaje("Error al enviar alg&uacute;n Reclamo para la solicitud de Pago. Intente nuevamente.");
+					logger.error("Imprimpriendo el xml enviado al WS: Payload: " + e.getPayload());
 					try {
 						kernelManager.movBitacobro(
 								(String) params.get("pv_cdunieco_i"),
 								(String) params.get("pv_cdramo_i"),
 								(String) params.get("pv_estado_i"),
 								(String) params.get("pv_nmpoliza_i"),
+								(String) params.get("pv_nmsuplem_i"),
 								"ErrWSsinCx",
 								"Error en Siniestro: " + reclamo.getNumSin() + " Inciso: " + reclamo.getIncPol()
 										+ " Msg: " + e.getMessage() + " ***Cause: "
 										+ e.getCause(),
-								 usuario, (String) params.get("pv_ntramite_i"));
+								 usuario, (String) params.get("pv_ntramite_i"), "ws.ice2sigs.url", "reclamoGS",
+								 e.getPayload(), null);
 					} catch (Exception e1) {
-						logger.error("Error en llamado a PL", e1);
+						logger.error("Error al insertar en Bitacora", e1);
 					}
+				}catch (Exception e){
+					logger.error("Error al enviar el Reclamo: " + reclamo.getIcodreclamo(), e);
+					res.setSuccess(false);
+					res.setMensaje("Error al enviar alg&uacute;n Reclamo para la solicitud de Pago. Intente nuevamente.");
 				}
 			}
 		}else {

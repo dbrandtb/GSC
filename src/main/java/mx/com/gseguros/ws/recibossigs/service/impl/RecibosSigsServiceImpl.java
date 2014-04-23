@@ -10,6 +10,7 @@ import java.util.HashMap;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.WSException;
 import mx.com.gseguros.portal.emision.model.DatosRecibosDxNVO;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.ws.model.WrapperResultadosWS;
@@ -104,23 +105,25 @@ public class RecibosSigsServiceImpl implements RecibosSigsService {
 			calendarios = (GeneradorRecibosDxnRespuesta) resultWS.getResultadoWS();
 			logger.debug("XML de entrada: " + resultWS.getXmlIn());
 			
-		}catch(Exception e){
+		}catch(WSException e){
 			logger.error("Error al generar los datos de Recibos DxN: " + e.getMessage()
 					+ " Guardando en bitacora el error, getCause: " + e.getCause(),e);
+			logger.error("Imprimpriendo el xml enviado al WS: Payload: " + e.getPayload());
 			
 			try {
 				
-				kernelManager.movBitacobro((String) params.get("pv_cdunieco_i"),
-						(String) params.get("pv_cdramo_i"),
-						(String) params.get("pv_estado_i"),
-						(String) params.get("pv_nmpoliza_i"), "ErrWsDXNCx", "Msg: "
-								+ e.getMessage() + " ***Cause: " + e.getCause(),
-						userVO.getUser(), null);
+				kernelManager.movBitacobro((String) params.get("pv_cdunieco_i"), (String) params.get("pv_cdramo_i"),
+						(String) params.get("pv_estado_i"), (String) params.get("pv_nmpoliza_i"), (String) params.get("pv_nmsuplem_i"), 
+						"ErrWsDXNCx", "Msg: " + e.getMessage() + " ***Cause: " + e.getCause(), userVO.getUser(), null,
+						"ws.recibossigs.url", "generarRecibosDxNGS",  e.getPayload(), null);
 			} catch (Exception e1) {
-				logger.error("Error en llamado a PL", e1);
+				logger.error("Error al insertar en Bitacora", e1);
 			}
 			
 			return false;
+		}catch (Exception e){
+			logger.error("Error al generar los datos de Recibos DxN: " + e.getMessage()
+				+ " Guardando en bitacora el error, getCause: " + e.getCause(),e);
 		}
 		
 		
@@ -128,14 +131,12 @@ public class RecibosSigsServiceImpl implements RecibosSigsService {
 			logger.error("Guardando en bitacora el estatus");
 
 			try {
-				kernelManager.movBitacobro((String) params.get("pv_cdunieco_i"),
-						(String) params.get("pv_cdramo_i"),
-						(String) params.get("pv_estado_i"),
-						(String) params.get("pv_nmpoliza_i"), "ErrWsDXN",
-						calendarios.getCodigo() + " - " + calendarios.getMensaje(),
-						userVO.getUser(), null);
+				kernelManager.movBitacobro((String) params.get("pv_cdunieco_i"), (String) params.get("pv_cdramo_i"),
+						(String) params.get("pv_estado_i"), (String) params.get("pv_nmpoliza_i"), (String) params.get("pv_nmsuplem_i"),
+						"ErrWsDXN", calendarios.getCodigo() + " - " + calendarios.getMensaje(), userVO.getUser(), null,
+						"ws.recibossigs.url", "generarRecibosDxNGS", resultWS.getXmlIn(), Integer.toString(calendarios.getCodigo()));
 			} catch (Exception e1) {
-				logger.error("Error en llamado a PL", e1);
+				logger.error("Error al insertar en Bitacora", e1);
 			}
 			return false;
 		}else{
@@ -295,9 +296,8 @@ public class RecibosSigsServiceImpl implements RecibosSigsService {
 				resWS.setXmlIn(stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
 				logger.debug("Resultado para ejecucion de WS generarRecibosDxNGS: "+resultado.getCodigo()+" - "+resultado.getMensaje());
 			}
-		} catch (RemoteException re) {
-			logger.error(re);
-			throw new Exception("Error de conexion: " + re.getMessage());
+		} catch (Exception re) {
+			throw new WSException("Error de conexion: " + re.getMessage(), re, stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
 		}
 		
 		return resWS;
