@@ -250,6 +250,60 @@ function centrarVentanaInterna(ventana)
 	ventana.setPosition(ventana.getPosition()[0],y);
 }
 
+function consultaDinamica(nombreStoredProcedure,procedureParams,form,callback)
+{
+	debug('>consultaDinamica',nombreStoredProcedure,procedureParams);
+	var jsonData =
+	{
+		stringMap :
+		{
+			nombreStoredProcedure : nombreStoredProcedure			
+		}
+	    ,linkedObjectMap : procedureParams
+	};
+	debug('datos a enviar:',jsonData);
+	if(form)
+	{
+		form.setLoading(true);
+	}
+	Ext.Ajax.request(
+	{
+		url       : _global_urlConsultaDinamica
+		,jsonData : jsonData
+		,success  : function(response)
+		{
+			if(form)
+			{
+				form.setLoading(false);
+			}
+			jsonData = Ext.decode(response.responseText);
+			if(jsonData.success)
+			{
+				if(jsonData.stringList.length>0)
+				{
+					callback(jsonData.stringList);
+				}
+				else
+				{
+					mensajeWarning('No hay resultados');
+				}
+			}
+			else
+			{
+				mensajeError(jsonData.mensaje);
+			}
+		}
+	    ,failure  : function()
+	    {
+	    	if(form)
+	    	{
+	    		form.setLoading(false);
+	    	}
+	    	errorComunicacion();
+	    }
+	});
+	debug('<consultaDinamica');
+}	
 
 ////////////////////////////
 ////// INICIO MODELOS //////
@@ -391,6 +445,27 @@ Ext.define('RowCobertura',{
 /////////////////////////
 
 var extjs_custom_override_mayusculas=true;
+var defaultComboListeners =
+{
+	load : function(store,records,success)
+	{
+		debug('success:',success);
+		debug('store:',store,'records:',records);
+	}
+};
+var viewConfigAutoSize =
+{
+    listeners :
+    {
+        refresh : function(dataview)
+        {
+            Ext.each(dataview.panel.columns, function(column)
+            {
+                column.autoSize();
+            });
+        }
+    }
+};
 
 Ext.onReady(function()
 {

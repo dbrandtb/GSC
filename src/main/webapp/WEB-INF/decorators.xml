@@ -125,6 +125,12 @@
         
         <pattern>/reportes/*.action</pattern>
         <pattern>/jsp-script/reportes/*.jsp</pattern>
+        
+        <pattern>/jsp-script/proceso/reexpedicionDocumentos/marcoReexpedicionDocumentos.jsp</pattern>
+        
+        <!-- >tomcat -->
+        <pattern>/reexpediciondocumentos/principal.action*</pattern>
+        <!-- <tomcat -->
 
    	</decorator>
 	
