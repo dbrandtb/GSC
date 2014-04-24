@@ -2,7 +2,7 @@
 <struts>
     <include file="struts-default.xml" />
     
-    <package name="procesoemision" extends="json-default" namespace="/procesoemision">
+    <package name="procesoemision" namespace="/procesoemision" extends="default">
         
         <action name="busquedaPoliza" class="ConsultasPolizaAction">
             <result name="success">/jsp/consultas/consultasPolizas.jsp</result>
@@ -10,17 +10,19 @@
        
     </package>
     
-    <package name="emision" extends="json-default" namespace="/emision">
+    <package name="emision" namespace="/emision" extends="default" >
     
-         <interceptors>
+        <interceptors>
             
-	       <interceptor name="deviceInterceptor" class="deviceInterceptor"/>
-	       
-	       <interceptor-stack name="customStack">
-	           <interceptor-ref name="deviceInterceptor"/>
-	           <interceptor-ref name="defaultStack" />
-	       </interceptor-stack>
-	     </interceptors>
+            <interceptor name="deviceInterceptor" class="deviceInterceptor"/>
+            
+            <interceptor-stack name="customStack">
+                <interceptor-ref name="deviceInterceptor"/>
+                <interceptor-ref name="defaultStack" />
+            </interceptor-stack>
+            
+        </interceptors>
+        
         
         <action name="cotizacion" class="CotizacionAction" method="pantallaCotizacion">
             <interceptor-ref name="customStack" />
