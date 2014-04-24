@@ -7,7 +7,8 @@
 ////// variables //////
 var _p15_form;
 
-var _p15_urlHabilitarRecibos = '<s:url namespace="/endosos" action="habilitarRecibosSubsecuentes" />';
+var _p15_urlHabilitarRecibos = '<s:url namespace="/endosos"  action="habilitarRecibosSubsecuentes" />';
+var _p15_urlReporte          = '<s:url namespace="/reportes" action="procesoObtencionReporte" />';
 ////// variables //////
 
 Ext.onReady(function()
@@ -49,7 +50,7 @@ Ext.onReady(function()
                 xtype       : 'datefield'
                 ,itemId     : '_p15_fechaInicio'
                 ,name       : 'fechaInicio'
-                ,fieldLabel : 'Fecha de inicio'
+                ,fieldLabel : 'Fecha de proceso'
                 ,value      : new Date()
                 ,allowBlank : false
             }
@@ -129,6 +130,33 @@ function _p15_botonHabilitarHandler()
 		    	if(response.success)
 		    	{
 		    		mensajeCorrecto('Recibos habilitados',response.mensaje);
+		    		Ext.create('Ext.form.Panel').submit(
+                    {
+                        standardSubmit : true,
+                        url:_p15_urlReporte,
+                        params:
+                        {
+                            cdreporte : 'REPEXC008'
+                            ,'params.pv_feproces_i' : Ext.Date.format(_p15_getFechaInicio().getValue(),'d/m/Y')
+                        },
+                        success: function(form, action)
+                        {
+                            
+                        },
+                        failure: function(form, action)
+                        {
+                            switch (action.failureType)
+                            {
+                                case Ext.form.action.Action.CONNECT_FAILURE:
+                                    Ext.Msg.alert('Error', 'Error de comunicaci&oacute;n');
+                                    break;
+                                case Ext.form.action.Action.SERVER_INVALID:
+                                case Ext.form.action.Action.LOAD_FAILURE:
+                                    Ext.Msg.alert('Error', 'Error del servidor, consulte a soporte');
+                                    break;
+                           }
+                        }
+                    });
 		    	}
 		    	else
 		    	{
