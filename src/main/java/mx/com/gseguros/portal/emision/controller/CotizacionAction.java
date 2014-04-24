@@ -68,11 +68,6 @@ public class CotizacionAction extends PrincipalCoreAction
 		}
 		
 		UserVO usuario  = (UserVO) session.get("USUARIO");
-		if(gc.isEsMovil())
-		{
-			smap1=new HashMap<String,String>();
-			smap1.put("cdtipsit","SL");
-		}
 		String cdtipsit = smap1.get("cdtipsit");
 		
 		String ntramite;

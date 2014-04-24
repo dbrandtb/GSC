@@ -1217,4 +1217,47 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
             return mapper.build(map);
         }
 	}
+	
+	@Override
+	public void habilitaRecibosSubsecuentes(
+			Date fechaDeInicio
+			,Date fechaDeFin
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza) throws Exception
+	{
+		Map<String,Object>params=new HashMap<String,Object>();
+		params.put("fechaDeInicio" , fechaDeInicio);
+		params.put("fechaDeFin"    , fechaDeFin);
+		params.put("cdunieco"      , cdunieco);
+		params.put("cdramo"        , cdramo);
+		params.put("estado"        , estado);
+		params.put("nmpoliza"      , nmpoliza);
+		log.info("dao params: "+params);
+		ejecutaSP(new HabilitaRecibosSubsecuentes(getDataSource()),params);
+	}
+	
+	protected class HabilitaRecibosSubsecuentes extends StoredProcedure
+	{
+		protected HabilitaRecibosSubsecuentes(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SATELITES.P_HABILITAR_RECIBOS_SUB");
+			declareParameter(new SqlParameter("fechaDeInicio" , OracleTypes.DATE));
+			declareParameter(new SqlParameter("fechaDeFin"    , OracleTypes.DATE));
+			declareParameter(new SqlParameter("cdunieco"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdramo"        , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("estado"        , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("nmpoliza"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
+	        declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			compile();
+		}
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception
+		{
+            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+            return mapper.build(map);
+        }
+	}
+	
 }

@@ -14,6 +14,7 @@ import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cancelacion.service.CancelacionManager;
 import mx.com.gseguros.portal.cotizacion.controller.ComplementariosCoberturasAction;
 import mx.com.gseguros.portal.cotizacion.model.Item;
@@ -7120,6 +7121,70 @@ public class EndososAction extends PrincipalCoreAction
 	/*/////////////////////////////*/
 	////// guardarEndosoAgente //////
 	/////////////////////////////////
+	
+	public String pantallaRecibosSubsecuentes()
+	{
+		log.info(""
+				+ "\n#########################################"
+				+ "\n###### pantallaRecibosSubsecuentes ######"
+				);
+		
+		imap1              = new HashMap<String,Item>();
+		GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+		String pantalla    = "RECIBOS_SUBSECUENTES";
+		String seccion     = "FILTRO";
+		
+		try
+		{
+			List<ComponenteVO> listaDeComponentes = pantallasManager.obtenerComponentes(null, null, null, null, null, null, pantalla, seccion, null);
+			gc.generaComponentes(listaDeComponentes, true, false, true, false, false, false);
+			imap1.put("itemsDeFormulario",gc.getItems());
+		}
+		catch(Exception ex)
+		{
+			log.error("error al cargar la pantalla de recibos subsecuentes",ex);
+		}
+		
+		log.info(""
+				+ "\n###### pantallaRecibosSubsecuentes ######"
+				+ "\n#########################################"
+				);
+		return SUCCESS;
+	}
+	
+	public String habilitarRecibosSubsecuentes()
+	{
+		log.info(""
+				+ "\n##########################################"
+				+ "\n###### habilitarRecibosSubsecuentes ######"
+				);
+		log.info("smap1: "+smap1);
+		try
+		{
+			String cdunieco      = smap1.get("cdunieco");
+			String cdramo        = smap1.get("cdramo");
+			String estado        = smap1.get("estado");
+			String nmpoliza      = smap1.get("nmpoliza");
+			String fechaDeInicio = smap1.get("fechaInicio");
+			String fechaDeFin    = smap1.get("fechaFin");
+			Date   fechaDeInicioDate = renderFechas.parse(fechaDeInicio);
+			Date   fechaDeFinDate    = renderFechas.parse(fechaDeFin);
+			endososManager.habilitaRecibosSubsecuentes(fechaDeInicioDate, fechaDeFinDate, cdunieco, cdramo, estado, nmpoliza);
+			success=true;
+			mensaje="Recibos habilitados correctamente";
+		}
+		catch(Exception ex)
+		{
+			log.error("error al habilitar recibos subsecuentes",ex);
+			mensaje=ex.getMessage();
+			success=false;
+		}
+		log.info(""
+				+ "\n###### habilitarRecibosSubsecuentes ######"
+				+ "\n##########################################"
+				);
+		return SUCCESS;
+	}
 	
 	///////////////////////////////
 	////// getters y setters //////

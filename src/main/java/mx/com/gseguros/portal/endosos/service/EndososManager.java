@@ -242,4 +242,12 @@ public interface EndososManager
 			,String nmpoliza
 			,String nmsuplem
 			,String cdagente) throws Exception;
+	
+	public void habilitaRecibosSubsecuentes(
+			Date fechaDeInicio
+			,Date fechaDeFin
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza) throws Exception;
 }
