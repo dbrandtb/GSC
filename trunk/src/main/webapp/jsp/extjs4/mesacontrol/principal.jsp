@@ -837,6 +837,7 @@ Ext.onReady(function(){
         		    	    	,name       : 'smap1.pv_nmpoliza_i'
         		    	    	,allowBlank : false
                                 ,value      : 0
+                                ,hidden     : true
         		    	    }
         		    	    ,{
                                 xtype       : 'numberfield'
@@ -844,6 +845,7 @@ Ext.onReady(function(){
                                 ,name       : 'smap1.pv_nmsolici_i'
                                 ,allowBlank : false
                                 ,value      : 0
+                                ,hidden     : true
                             }
         		    	    /*,{
         		    	    	xtype       : 'textfield'
