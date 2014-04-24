@@ -16,12 +16,20 @@
             
             <interceptor name="deviceInterceptor" class="deviceInterceptor"/>
             
+            <!-- <interceptor-stack name="secureStack">
+                <interceptor-ref name="authenticationInterceptor" />
+                <interceptor-ref name="defaultStack" />
+            </interceptor-stack> -->
+            
             <interceptor-stack name="customStack">
+                <interceptor-ref name="authenticationInterceptor"/>
                 <interceptor-ref name="deviceInterceptor"/>
                 <interceptor-ref name="defaultStack" />
             </interceptor-stack>
             
         </interceptors>
+        
+        <default-interceptor-ref name="secureStack" />
         
         
         <action name="cotizacion" class="CotizacionAction" method="pantallaCotizacion">
@@ -31,7 +39,6 @@
         </action>
         
         <action name="mcotizacion" class="CotizacionAction" method="pantallaCotizacion">
-            <interceptor-ref name="customStack" />
             <result name="success">/jsp-script/proceso/emision/cotizaciontouch.jsp</result>
         </action>
         
