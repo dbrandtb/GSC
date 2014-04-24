@@ -29,7 +29,7 @@
             
         </interceptors>
         
-        <default-interceptor-ref name="secureStack" />
+        <!-- <default-interceptor-ref name="secureStack" /> -->
         
         
         <action name="cotizacion" class="CotizacionAction" method="pantallaCotizacion">
