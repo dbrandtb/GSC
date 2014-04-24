@@ -49,6 +49,10 @@
         <interceptors>
         
             <interceptor name="authenticationInterceptor" class="authenticationInterceptor" />
+            
+            <!-- Interceptor temporal para redirigir a la cotización si la petición viene de un movil: -->
+            <interceptor name="deviceInterceptor" class="deviceInterceptor"/>
+            <!-- Fin de interceptor temporal -->
         
             <interceptor-stack name="defaultStack">
                 <interceptor-ref name="exception" />
@@ -75,6 +79,14 @@
                 <interceptor-ref name="defaultStack" />
             </interceptor-stack>
             
+            <!-- Stack Interceptor temporal para redirigir a la cotización si la petición viene de un movil: -->
+            <interceptor-stack name="customStack">
+                <interceptor-ref name="authenticationInterceptor"/>
+                <interceptor-ref name="deviceInterceptor"/>
+                <interceptor-ref name="defaultStack" />
+            </interceptor-stack>
+            <!-- Fin de Stack interceptor temporal -->
+            
         </interceptors>
         
         <default-interceptor-ref name="secureStack" />
@@ -85,9 +97,25 @@
             <result name="datosPoliza">/jsp/portal/login.jsp</result>
         </global-results>
 
+
 		<action name="load" class="paginaPrincipalAction" method="obtenPaginaPrincipal">
-			<result>/jsp/portal/portal.jsp</result>
+			
+			<!-- Interceptor temporal para redirigir a la cotización si la petición viene de un movil: -->
+            <interceptor-ref name="customStack" />
+            <!-- Fin de Interceptor temporal -->
+			
+			<result name="success">/jsp/portal/portal.jsp</result>
+			
+            <!-- Result temporal para redirigir a la cotización si la petición viene de un movil: -->
+            <result name="success_mobile" type="redirectAction">
+                <param name="namespace">emision</param>
+                <param name="actionName">cotizacion</param>
+                <param name="smap1.cdtipsit">SL</param>
+            </result>
+            <!-- Fin de Result temporal -->
+            
 		</action>
+		
         
         <action name="obtieneMenuPrincipal" class="menuAction" method="llenadoMenuPrincipal">
             <result name="input">/jsp/menu/menu.jsp</result>
