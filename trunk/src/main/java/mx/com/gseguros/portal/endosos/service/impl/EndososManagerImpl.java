@@ -700,4 +700,16 @@ public class EndososManagerImpl implements EndososManager
 				+ "\n#########################################"
 				);
 	}
+	
+	@Override
+	public void habilitaRecibosSubsecuentes(
+			Date fechaDeInicio
+			,Date fechaDeFin
+			,String cdunieco
+			,String cdramo
+			,String estado
+			,String nmpoliza) throws Exception
+	{
+		endososDAO.habilitaRecibosSubsecuentes(fechaDeInicio,fechaDeFin,cdunieco,cdramo,estado,nmpoliza);
+	}
 }
