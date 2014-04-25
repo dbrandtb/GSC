@@ -755,7 +755,7 @@ Ext.onReady(function() {
 			        	break;
 			        case '2' : // ACCIDENTE
 			        case '3' : // MATERNIDAD
-			        	Ext.getCmp('idCopagoFin').setValue('0');
+			        	Ext.getCmp('idCopagoFin').setValue(Ext.getCmp('idCopago').getValue());
 			        	Ext.getCmp('idPenalCircHospitalario').setValue('0');
 			        	Ext.getCmp('idPenalCambioZona').setValue('0');
 			        	if(e.getValue() == "3"){
@@ -2578,7 +2578,7 @@ Ext.onReady(function() {
 			    					    }
 			    					});
 						}else{
-							Ext.getCmp('idCopagoFin').setValue('0');
+							Ext.getCmp('idCopagoFin').setValue(Ext.getCmp('idCopago').getValue());
 				        	Ext.getCmp('idPenalCircHospitalario').setValue('0');
 				        	Ext.getCmp('idPenalCambioZona').setValue('0');
 						}
@@ -2732,7 +2732,11 @@ Ext.onReady(function() {
 	
 	function validacionCopagoTotal()
 	{
-		var copagoOrig= Ext.getCmp('idCopago').getValue() ;
+		var copagoOrig = Ext.getCmp('idCopago').getValue() ;
+		
+		
+		console.log("VALOR DEL COPAGO");
+		console.log(copagoOrig);
 		var sumatoria = 0;
 	    if( copagoOrig =="NO" || copagoOrig =="NA")
 	    {
@@ -2758,7 +2762,7 @@ Ext.onReady(function() {
 	        return true;
 	    }
 	    else{
-	    	sumatoria = + Ext.getCmp('idPenalCircHospitalario').getValue() + +Ext.getCmp('idPenalCambioZona').getValue() +  +copagoOrig.replace("%","");
+	    	sumatoria = + Ext.getCmp('idPenalCircHospitalario').getValue() + +Ext.getCmp('idPenalCambioZona').getValue() +  +copagoOrig;//.replace("%","");
 	        Ext.getCmp('idCopagoFin').setValue(sumatoria);
 	        return true;
 	    }

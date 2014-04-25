@@ -16,6 +16,9 @@ var _p12_lpdir   = <s:property value='lpdirJson'                   escapeHtml='f
 var _p12_lprem   = <s:property value='lpremJson'                   escapeHtml='false' />;//lista de datos preembolso
 var _p12_listaWS = <s:property value='listaImportesWebServiceJson' escapeHtml='false' />;
 
+var _p12_penalTotal = <s:property value='datosPenalizacionJson' escapeHtml='false' />; //Informacion de penalizacion
+
+debug('penalizacion:'    , _p12_penalTotal);
 debug('_p12_smap:'    , _p12_smap);
 debug('_p12_smap2:'   , _p12_smap2);
 debug('_p12_smap3:'   , _p12_smap3);
@@ -137,6 +140,7 @@ Ext.onReady(function()
 	////// componentes //////
 	var totalglobal = 0.0;
     
+	//PAGO DIRECTO
     if(_p12_smap.OTVALOR02=='1')
     {
         debug('PAGO DIRECTO');
@@ -198,6 +202,7 @@ Ext.onReady(function()
             if(_p12_smap2.CDGARANT=='18HO'||_p12_smap2.CDGARANT=='18MA')
             {
             	debug('HOSPITAL');
+            	var causaSiniestro = _p12_penalTotal[indice].causaSiniestro;
             	var importe   = _p12_lhosp[indice].PTIMPORT*1.0;
             	var descuento = _p12_lhosp[indice].DESTO*1.0;
             	var iva       = _p12_lhosp[indice].IVA*1.0;
@@ -216,30 +221,38 @@ Ext.onReady(function()
             		deducible = sDeducible.replace(',','')*1.0;
             	}
             	var subttDedu = subttDesc - deducible;
-            	_p12_slist2[indice].COPAGOAUX = _p12_slist2[indice].COPAGO;
-            	_p12_slist2[indice].COPAGO = 0;
-            	if(
-            		!(!_p12_slist2[indice].COPAGOAUX
-            		||_p12_slist2[indice].COPAGOAUX.toLowerCase()=='na'
-            		||_p12_slist2[indice].COPAGOAUX.toLowerCase()=='no')	
-            	)
-            	{
-            		_p12_slist2[indice].COPAGO = _p12_slist2[indice].COPAGOAUX;
+            	
+            	if(causaSiniestro !="2"){
+            		var totalPenalizacion = _p12_penalTotal[indice].totalPenalizacion;
+            		var copagoaplica = subttDedu*(totalPenalizacion/100.0);
+            		
+            	}else{
+            		_p12_slist2[indice].COPAGOAUX = _p12_slist2[indice].COPAGO;
+                	_p12_slist2[indice].COPAGO = 0;
+                	if(
+                		!(!_p12_slist2[indice].COPAGOAUX
+                		||_p12_slist2[indice].COPAGOAUX.toLowerCase()=='na'
+                		||_p12_slist2[indice].COPAGOAUX.toLowerCase()=='no')	
+                	)
+                	{
+                		_p12_slist2[indice].COPAGO = _p12_slist2[indice].COPAGOAUX;
+                	}
+                	var copago    = _p12_slist2[indice].COPAGO*1.0;
+                	var tipcopag  = _p12_slist2[indice].TIPOCOPAGO;
+                	if(tipcopag=='$')
+                	{
+                		var copagoaplica = copago;
+                	}
+                	else if(tipcopag=='%')
+                	{
+                		var copagoaplica = subttDedu*(copago/100.0);
+                	}
+                	else
+                	{
+                		var copagoaplica = 0.0;
+                	}
             	}
-            	var copago    = _p12_slist2[indice].COPAGO*1.0;
-            	var tipcopag  = _p12_slist2[indice].TIPOCOPAGO;
-            	if(tipcopag=='$')
-            	{
-            		var copagoaplica = copago;
-            	}
-            	else if(tipcopag=='%')
-            	{
-            		var copagoaplica = subttDedu*(copago/100.0);
-            	}
-            	else
-            	{
-            		var copagoaplica = 0.0;
-            	}
+            	
             	var total = subttDedu - ( copagoaplica + iva );
             	debug('subttDesc',subttDesc);
             	debug('deducible',deducible);
@@ -319,6 +332,16 @@ Ext.onReady(function()
                                 return Ext.util.Format.usMoney(value);
                             }
                         }
+            	        /*,{
+                            xtype       : 'displayfield'
+                            ,labelWidth : 200
+                            ,fieldLabel : 'Penalizaci&oacute;n'
+                            ,value      : copagoaplica
+                            ,valueToRaw : function(value)
+                            {
+                                return Ext.util.Format.usMoney(value);
+                            }
+                        }*/
             	        ,{
                             xtype       : 'displayfield'
                             ,labelWidth : 200
@@ -564,6 +587,7 @@ Ext.onReady(function()
     }
     else
     {
+    	//PAGO POR REEMBOLSO
         debug('REEMBOLSO');
         var indice;
         for(indice = 0;indice<_p12_slist1.length;indice++)
@@ -875,6 +899,9 @@ Ext.onReady(function()
             _p12_paneles.push(panelIterado);
         }
     }
+	
+	
+	
     _p12_paneles.push(Ext.create('Ext.form.Panel',
     {
     	title     : 'TOTAL'

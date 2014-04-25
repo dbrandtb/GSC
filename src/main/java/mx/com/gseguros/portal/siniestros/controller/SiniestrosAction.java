@@ -37,6 +37,7 @@ import mx.com.gseguros.portal.siniestros.model.AutorizacionServicioVO;
 import mx.com.gseguros.portal.siniestros.model.CoberturaPolizaVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaManteniVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaPorcentajeVO;
+import mx.com.gseguros.portal.siniestros.model.ConsultaProveedorVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaTDETAUTSVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaTTAPVAATVO;
 import mx.com.gseguros.portal.siniestros.model.DatosSiniestroVO;
@@ -67,7 +68,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
 	private static final String IMPORTE_WS_CEDULAR = "cedular";
 	
     private static final long serialVersionUID = -6321288906841302337L;
-	private Logger logger = Logger.getLogger(SiniestrosAction.class);	
+	private Logger logger = Logger.getLogger(SiniestrosAction.class);
 	private DateFormat renderFechas = new SimpleDateFormat("dd/MM/yyyy");
 	private boolean success;
     private SiniestrosManager siniestrosManager;
@@ -121,6 +122,8 @@ public class SiniestrosAction extends PrincipalCoreAction{
     private List<Map<String,String>> lprem;
     private List<Map<String,String>> listaImportesWS;
     private List<Map<String,String>> facturasxTramite;
+    
+    private List<Map<String,String>> datosPenalizacion;
 	
     private List<List<Map<String,String>>> llist1;
     
@@ -158,8 +161,6 @@ public class SiniestrosAction extends PrincipalCoreAction{
     public String autorizacionServicios() {
 	logger.debug(" **** Entrando a autorizacion Servicio ****");
 	try {
-		logger.debug("PARAMETROS INICIALES " + params);
-		
 		//Obtenemos el Rol a ocupar
 		UserVO usuario  = (UserVO)session.get("USUARIO");
     	String cdrol    = usuario.getRolActivo().getObjeto().getValue();
@@ -194,8 +195,6 @@ public class SiniestrosAction extends PrincipalCoreAction{
 		params.put("ntramite",ntramite);
 		params.put("cdrol",cdrol);
 		setParamsJson(params);
-		logger.debug("PARAMETROS FINALES " + params);
-		
 		
 		/*params={nmAutSer=98, cdrol=, ntramite=1673}*/
 	} catch (Exception e) {
@@ -266,15 +265,11 @@ public class SiniestrosAction extends PrincipalCoreAction{
 	 */
 	public String guardaAutorizacionServicio(){
 			logger.debug(" **** Entrando a guardado de Autorizaciï¿½n de Servicio ****");
-			logger.debug("VALOR DE LOS PARAMETROS DE ENTRADA AL MOMENTO DE GUARDARLO");
-			logger.debug(params);
 			
 			try {
 					this.session=ActionContext.getContext().getSession();
 			        UserVO usuario=(UserVO) session.get("USUARIO");
-			        logger.debug("VALOR DEL ROL");
-					logger.debug(usuario.getRolActivo().getObjeto().getValue());
-					
+			        
 					HashMap<String, Object> paramsR = new HashMap<String, Object>();
 					paramsR.put("pv_nmautser_i",params.get("nmautser"));
 					paramsR.put("pv_nmautant_i",params.get("nmautant"));
@@ -346,8 +341,6 @@ public class SiniestrosAction extends PrincipalCoreAction{
 							paramsMCAut.put("pv_nombre_i",null);
 							paramsMCAut.put("pv_festatus_i",null);
 							
-							logger.debug("VALOR DEL STATUS");
-							logger.debug(params.get("status"));
 							if(params.get("status").trim().equalsIgnoreCase("2")){
 								paramsMCAut.put("pv_status_i",EstatusTramite.CONFIRMADO.getCodigo());//  con
 								//generarAutoriServicio();
@@ -426,8 +419,6 @@ public class SiniestrosAction extends PrincipalCoreAction{
 								paramsO.put("pv_nmAutSer_i" , lista.get(0).getNmautser());
 								paramsO.put("pv_cdperson_i" , params.get("cdperson"));
 								paramsO.put("pv_nmsuplem_i" , params.get("nmsuplem"));
-								logger.debug("VALORES A ENVIAR PARA LA GENERACION DEL PDF");
-								logger.debug(paramsO);
 								generarAutoriServicio(paramsO);
 				    			
 							}
@@ -2360,6 +2351,7 @@ E=OK, AUTMEDIC=S, AAAPERTU=2014, NMSITUAC=1, NMSUPLEM=245671518430000000}]*/
     		/*"CDPRESTA" , "NOMBRE" , "ISR" , "CEDULAR" , "IVA"*/
     		Map<String,String> proveedor      = null;
     		Map<String,String> siniestro      = null;
+    		
     		/*{CDUNIECO=1006, CDRAMO=2, ESTADO=M, NMPOLIZA=44,
  NMSUPLEM=245671518430000000, NMSITUAC=1, AAAPERTU=2014, STATUS=W, NMSINIES=20, CDCONCEP=1, OTVALOR=Costo Administr
 acion de Salud, IDCONCEP=2, DESCRIPC=HCPC, CANTIDAD=2, DESTOPOR=1, DESTOIMP=16, DEDUCIBLE=NA, COPAGO=$100.00, AUTME
@@ -2372,6 +2364,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     		lhosp           = new ArrayList<Map<String,String>>();
     		lpdir           = new ArrayList<Map<String,String>>();
     		lprem           = new ArrayList<Map<String,String>>();
+    		datosPenalizacion = new ArrayList<Map<String,String>>();
     		listaImportesWS = new ArrayList<Map<String,String>>(); 
     		if(esPagoDirecto)
     		{
@@ -2402,6 +2395,32 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     				String nmsinies = siniestroIte.get("NMSINIES");
     				String nfactura = factura.get("NFACTURA");
     				
+    				Map<String,String> penalizacion = new HashMap<String,String>();
+    				
+    				// verificamos si tiene exclusion de polizas
+    				HashMap<String, Object> paramExclusion = new HashMap<String, Object>();
+    		   		paramExclusion.put("pv_cdunieco_i",cdunieco);
+    		   		paramExclusion.put("pv_estado_i",estado);
+    		   		paramExclusion.put("pv_cdramo_i",cdramo);
+    		   		paramExclusion.put("pv_nmpoliza_i",nmpoliza);
+    		   		paramExclusion.put("pv_nmsituac_i",nmsituac);
+    		   		
+    		   		existePenalizacion = siniestrosManager.validaExclusionPenalizacion(paramExclusion);
+    		   		//penalizacion.put("EXTPENALIZACION", existePenalizacion);
+    				//Obtenemos la información general del siniestro y obtenemos los valores para la validación de las penalizaciones
+    				
+    				List<Map<String,String>> informacionGral = siniestrosManager.obtieneDatosGeneralesSiniestro(cdunieco, cdramo,
+    						estado, nmpoliza,nmsituac, nmsuplem, status, aaapertu, nmsinies, factura.get("NTRAMITE"));
+    				
+    				
+    				double penalizacionCambioZona = penalizacionCambioZona(existePenalizacion,informacionGral.get(0).get("CDCAUSA"),informacionGral.get(0).get("CIRHOSPI"),
+    						informacionGral.get(0).get("DSZONAT"),informacionGral.get(0).get("CDPROVEE"),informacionGral.get(0).get("CIRHOPROV"));
+    				
+    				double penalizacionCirculoHosp = calcularPenalizacionCirculo(informacionGral.get(0).get("CIRHOSPI"), informacionGral.get(0).get("CIRHOPROV"),informacionGral.get(0).get("CDCAUSA"));
+    				
+    				penalizacion.put("causaSiniestro", informacionGral.get(0).get("CDCAUSA"));
+    				penalizacion.put("penalizacionCambioZona",""+penalizacionCambioZona);
+    				penalizacion.put("penalizacionCirculoHosp",""+penalizacionCirculoHosp);
     				Map<String,String>autorizacionesFactura = siniestrosManager.obtenerAutorizacionesFactura(
     						cdunieco, cdramo, estado, nmpoliza, nmsuplem,
     						nmsituac, aaapertu, status, nmsinies, nfactura);
@@ -2412,6 +2431,14 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     				
     				Map<String,String>copagoDeducibleSiniestroIte =siniestrosManager.obtenerCopagoDeducible(
     						cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura);
+    				
+    				
+    				double totalPenalizacion = calcularPorcentajeTotalPenalizacion(penalizacionCambioZona,penalizacionCirculoHosp,informacionGral.get(0).get("CDCAUSA"),copagoDeducibleSiniestroIte.get("COPAGO"),copagoDeducibleSiniestroIte.get("TIPOCOPAGO"));
+    				
+    				penalizacion.put("totalPenalizacion",""+totalPenalizacion);
+    				
+    				datosPenalizacion.add(penalizacion);		
+    						
     				String sDeducibleSiniestroIte     = copagoDeducibleSiniestroIte.get("DEDUCIBLE").replace(",","");
     				double deducibleSiniestroIte      = 0d;
     				String sCopagoSiniestroIte        = copagoDeducibleSiniestroIte.get("COPAGO");
@@ -2565,6 +2592,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     							logger.debug("new import "+hPTIMPORT);
     							logger.debug("new desto "+hDESTO);
     							logger.debug("new iva "+hIVA);
+    							
     							hosp.put("PTIMPORT" , hPTIMPORT+"");
     							hosp.put("DESTO"    , hDESTO+"");
     							hosp.put("IVA"      , hIVA+"");
@@ -3158,8 +3186,95 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     }
     
     
+    //calcularPorcentajeTotalPenalizacion(penalizacionCambioZona,penalizacionCirculoHosp,informacionGral.get(0).get("CDCAUSA"),copagoDeducibleSiniestroIte.get("COPAGO"),copagoDeducibleSiniestroIte.get("TIPOCOPAGO"));
+    private double calcularPorcentajeTotalPenalizacion(double penalizacionCambioZona, double penalizacionCirculoHosp, String causaSiniestro, String copagoOriginal, String tipoCopago) {
+		// TODO Auto-generated method stub
+    	double copagoPenaTotal = 0d;
+    	double copagoOriginalPoliza = 0d;
+    	
+    	if(copagoOriginal.equalsIgnoreCase("no") || copagoOriginal.equalsIgnoreCase("na")){
+    		copagoOriginalPoliza = 0d;
+    	}else{
+    		copagoOriginalPoliza= Double.parseDouble(copagoOriginal);
+    	}
+    	
+    	
+    	if(!causaSiniestro.equalsIgnoreCase("2")){
+    		if(tipoCopago.equalsIgnoreCase("%")){
+    			copagoPenaTotal = penalizacionCambioZona + penalizacionCirculoHosp + copagoOriginalPoliza;
+    		}else{
+    			//VERIFICAR ESTE CAMPO
+    			copagoPenaTotal = penalizacionCambioZona + penalizacionCirculoHosp + copagoOriginalPoliza;
+    		}
+		}else{
+			copagoPenaTotal = Double.parseDouble(""+copagoOriginalPoliza);
+		}
+    	
+    	return copagoPenaTotal;
+	}
+
+
+	private double penalizacionCambioZona(String existePenalizacion, String causaSiniestro, String circuloHospAsegurado,
+    		String zonaTarifiAsegurado, String idProveedor, String circuloHospProveedor) {
+		double penalizacionCambioZona = 0;
+		if(!causaSiniestro.equalsIgnoreCase("2")){
+			//obtenemos la penalización por el cambio de zona
+			if(existePenalizacion.equalsIgnoreCase("s")){
+				//obtenemos el valor del porcentaje
+				try{
+					//Obtenemos la informacion de la zona hospitalaria
+					List<ConsultaProveedorVO> medicos = siniestrosManager.getConsultaListaProveedorMedico(Rol.MEDICO.getCdrol(),idProveedor);
+					porcentajePenalizacion = siniestrosManager.validaPorcentajePenalizacion(zonaTarifiAsegurado, medicos.get(0).getZonaHospitalaria());
+					penalizacionCambioZona =  Double.parseDouble(porcentajePenalizacion);
+					
+					
+				}catch(Exception ex){
+					logger.debug("Error en la obtencion de la consulta"+ex);
+					penalizacionCambioZona =  Double.parseDouble("0");
+				}
+			}
+		}
+		return penalizacionCambioZona;
+	}
     
-    public String consultaCalculoSiniestros()
+    
+    
+    private double calcularPenalizacionCirculo(String circuloHospAsegurado, String circuloHospProveedor, String causaSiniestro){
+    	double penaliCirculoHosp= 0;
+    	String valor1 = null;
+    	String valor2 = null;
+    	logger.debug("VALOR 1 circuloHospAsegurado "+circuloHospAsegurado);
+    	logger.debug("VALOR 2 circuloHospProveedor "+circuloHospProveedor);
+    	if(!causaSiniestro.equalsIgnoreCase("2")){
+    		if(circuloHospAsegurado.equalsIgnoreCase("PLUS 100")) {valor1="1";}
+        	if(circuloHospAsegurado.equalsIgnoreCase("PLUS 500")) {valor1="2";}
+        	if(circuloHospAsegurado.equalsIgnoreCase("PLUS 1000")){valor1="3";}
+        	if(circuloHospProveedor.equalsIgnoreCase("PLUS 100")) {valor2="1";}
+        	if(circuloHospProveedor.equalsIgnoreCase("PLUS 500")) {valor2="2";}
+        	if(circuloHospProveedor.equalsIgnoreCase("PLUS 1000")){valor2="3";}
+        	
+        	String valorCirculoHosp = valor1+""+valor2;
+        	logger.debug(valorCirculoHosp);
+        	logger.debug(Integer.parseInt(valorCirculoHosp));
+        	switch(Integer.parseInt(valorCirculoHosp))
+        	{
+	        case 12 :
+	        case 23 :
+	        	penaliCirculoHosp = 20;//Ext.getCmp('idPenalCircHospitalario').setValue('20');
+	            break;
+	        case 13 :
+	        	penaliCirculoHosp = 40;//Ext.getCmp('idPenalCircHospitalario').setValue('40');
+	            break;
+	        default:
+	        	penaliCirculoHosp = 0;
+	          
+        	}
+		}
+    	return penaliCirculoHosp;
+    }
+
+
+	public String consultaCalculoSiniestros()
     {
     	logger.debug(""
     			+ "\n########################################"
@@ -5243,6 +5358,30 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 
 	public void setFacturasxTramite(List<Map<String, String>> facturasxTramite) {
 		this.facturasxTramite = facturasxTramite;
+	}
+
+
+	public List<Map<String, String>> getDatosPenalizacion() {
+		return datosPenalizacion;
+	}
+
+
+	public void setDatosPenalizacion(List<Map<String, String>> datosPenalizacion) {
+		this.datosPenalizacion = datosPenalizacion;
+	}
+	
+	
+	public String getDatosPenalizacionJson() {
+		String r=null;
+		try
+		{
+			r=JSONUtil.serialize(datosPenalizacion);
+		}
+		catch (JSONException ex)
+		{
+			logger.error("error al convertir datosPenalizacion a json",ex);
+		}
+		return r;
 	}
 	
 	
