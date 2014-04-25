@@ -47,9 +47,14 @@ Ext.override(Ext.Picker,
 ////// variables //////
 var _mcotiza_navView;
 var _mcotiza_storeIncisos;
+var _mcotiza_selectedCdperpag;
+var _mcotiza_selectedCdplan;
+var _mcotiza_selectedDsplan;
+var _mcotiza_selectedNmsituac;
 
-var _mcotiza_urlCotizar = '<s:url namespace="/emision"     action="cotizar" />';
-var _mcotiza_urlViewDoc = '<s:url namespace ="/documentos" action="descargaDocInline" />';
+var _mcotiza_urlCotizar = '<s:url namespace="/emision"         action="cotizar" />';
+var _mcotiza_urlViewDoc = '<s:url namespace ="/documentos"     action="descargaDocInline" />';
+var _mcotiza_urlComprar = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4" />';
 
 var _mcotiza_smap1         = <s:property value="%{convertToJSON('smap1')}"  escapeHtml="false" />;
 var EDAD_MAXIMA_COTIZACION = <s:property value="smap1.edadMaximaCotizacion" />;
@@ -57,11 +62,158 @@ var EDAD_MAXIMA_COTIZACION = <s:property value="smap1.edadMaximaCotizacion" />;
 var _mcotiza_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
 var _mcotiza_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 var _mcotiza_reporteCotizacion = '<s:text name="rdf.cotizacion.nombre" />';
+var _mcotiza_urlEnviarCorreo   = '<s:url namespace="/" action="enviaCorreo" />';
 
 debug('_mcotiza_smap1:',_mcotiza_smap1);
 ////// variables //////
 
 ////// funciones //////
+function _mcotiza_enviarPorCorreo()
+{
+	debug('>_mcotiza_enviarPorCorreo');
+	Ext.Msg.prompt(
+		'Enviar cotizaci&oacute;n',
+		'Correo(s) electr&oacute;nico(s):',
+		function (buttonId, value)
+		{
+		    debug(buttonId,value,'c');
+			if(buttonId=='ok')
+			{
+				var valido = true;
+				if(valido)
+				{
+					valido = value.length>0;
+					if(!valido)
+					{
+						Ext.Msg.alert('Error','Introduce un correo');
+					}
+				}
+				if(valido)
+				{
+					_mcotiza_navView.setMasked(
+					{
+						xtype    : 'loadmask'
+						,message : 'Enviando...'
+					});
+					Ext.Ajax.request(
+	    			{
+	    				url     : _mcotiza_urlEnviarCorreo
+	    				,params :
+	    				{
+	    					to        : value
+	    					,archivos : _mcotiza_urlImprimirCotiza
+										+ '?p_cdplan='
+										+ _mcotiza_selectedCdplan
+										+ '&p_estado=W'
+										+ '&p_poliza='
+										+ Ext.ComponentQuery.query('#_mcotiza_nmpolizaField')[0].getValue()
+										+ '&p_unieco='
+										+ _mcotiza_smap1.cdunieco
+										+ '&p_ramo='
+										+ _mcotiza_smap1.cdramo
+										+ '&p_cdusuari='
+										+ _mcotiza_smap1.user
+										+ '&p_ntramite='
+										+ _mcotiza_smap1.ntramite
+										+ '&destype=cache'
+										+ "&desformat=PDF"
+										+ "&userid="
+										+ _mcotiza_reportsServerUser
+										+ "&ACCESSIBLE=YES"
+										+ "&report="
+										+ _mcotiza_reporteCotizacion
+										+ "&paramform=no"
+	    			    },
+	    			    callback : function(options,success,response)
+	    			    {
+							_mcotiza_navView.setMasked(false);
+	    			    	if (success)
+	    			    	{
+	    			    		var json = Ext.decode(response.responseText);
+								debug('response:',json);
+	    			    		if (json.success == true)
+	    			    		{
+									Ext.Msg.alert('Aviso','Cotizaci&oacute;n enviada');
+	    			    		}
+	    			    		else
+	    			    		{
+	    			    			Ext.Msg.alert('Error','Error al enviar');
+	    			    		}
+	    			    	}
+	    			    	else
+	    			    	{
+	    			    		Ext.Msg.alert('Error','Error de comunicaci&oacute;n');
+	    			    	}
+	    			    }
+	    			});
+				}
+			}
+		},
+		null,
+		false,
+		null,
+		{
+		    autoCapitalize: true,
+		    placeHolder: 'Separados por coma...'
+		}
+	);
+	debug('<_mcotiza_enviarPorCorreo');
+}
+
+function _mcotiza_comprar()
+{
+    debug('>_mcotiza_comprar');
+    _mcotiza_navView.setMasked(
+    {
+        xtype    : 'loadmask'
+        ,message : 'Generando tr&aacute;mite...'
+    });
+    Ext.Ajax.request( 
+    {
+        url      : _mcotiza_urlComprar
+        ,params  :
+        {
+            comprarNmpoliza        : _mcotiza_getFieldNmpoliza().getValue()
+            ,comprarCdplan         : _mcotiza_selectedCdplan
+            ,comprarCdperpag       : _mcotiza_selectedCdperpag
+            ,comprarCdramo         : _mcotiza_smap1.cdramo
+            ,comprarCdciaaguradora : '20'
+            ,comprarCdunieco       : _mcotiza_smap1.cdunieco
+            ,cdtipsit              : _mcotiza_smap1.cdtipsit
+            ,'smap1.fechaInicio'   : Ext.Date.format(_mcotiza_getFieldFechaInicio().getValue(),'d/m/Y')
+            ,'smap1.fechaFin'      : Ext.Date.format(_mcotiza_getFieldFechaFin().getValue(),'d/m/Y')
+            ,'smap1.nombreTitular' : ''
+            ,'smap1.ntramite'      : _mcotiza_smap1.ntramite
+        }
+        ,success : function(response,opts)
+        {
+        	_mcotiza_navView.setMasked(false);
+            var json = Ext.decode(response.responseText);
+            debug('response:',json);
+            if (json.success == true)
+            {
+           		_mcotiza_getBotonLectura().setText('Tr&aacute;mite '+json.comprarNmpoliza+' generado para '+_mcotiza_selectedDsplan);
+           		_mcotiza_getBotonLectura().show();
+           		_mcotiza_getBotonPlan().hide();
+                _mcotiza_getBotonComprar().hide();
+				_mcotiza_getBotonCorreo().hide();
+                _mcotiza_getBotonImprimir().hide();
+            	Ext.Msg.alert('Tr&aacute;mite generado','Se ha generado el tr&aacute;mite '+json.comprarNmpoliza);
+            }
+            else
+            {
+            	Ext.Msg.alert('Error','Error al cotizar');
+            }
+        }
+        ,failure : function()
+        {
+        	_mcotiza_navView.setMasked(false);
+        	Ext.Msg.alert('Error','Error de comunicaci&oacute;n');
+        }
+    });
+    debug('<_mcotiza_comprar');
+}
+
 function _mcotiza_imprimir()
 {
     var me = this;
@@ -113,15 +265,10 @@ function _mcotiza_tarifaSelect(columnName, record, row, column, eOpts)
     if(columnName=='DSPERPAG')
     {
         debug('DSPERPAG');
-        Ext.ComponentQuery.query('#_mcotiza_botImprimirId')[0].setDisabled(true);
-        Ext.ComponentQuery.query('#_mcotiza_botImprimirId')[0].setText('Sin plan');
-        /*
-        Ext.getCmp('_mcotiza_botDetallesId').setDisabled(true);
-        Ext.getCmp('_mcotiza_botCoberturasId').setDisabled(true);
-        Ext.getCmp('_mcotiza_botMailId').setDisabled(true);
-        Ext.getCmp('_mcotiza_botImprimirId').setDisabled(true);
-        Ext.getCmp('_mcotiza_botComprarId').setDisabled(true);
-        */
+        _mcotiza_getBotonPlan().setText('Sin plan');
+        _mcotiza_getBotonComprar().setDisabled(true);
+        _mcotiza_getBotonCorreo().setDisabled(true);
+        _mcotiza_getBotonImprimir().setDisabled(true);
     }
     else
     {
@@ -135,15 +282,10 @@ function _mcotiza_tarifaSelect(columnName, record, row, column, eOpts)
         debug('_mcotiza_selectedCdplan',_mcotiza_selectedCdplan);
         debug('_mcotiza_selectedDsplan',_mcotiza_selectedDsplan);
         debug('_mcotiza_selectedNmsituac',_mcotiza_selectedNmsituac);
-        Ext.ComponentQuery.query('#_mcotiza_botImprimirId')[0].setDisabled(false);
-        Ext.ComponentQuery.query('#_mcotiza_botImprimirId')[0].setText('Imprimir '+_mcotiza_selectedDsplan);
-        /*
-        Ext.getCmp('_mcotiza_botDetallesId').setDisabled(false);
-        Ext.getCmp('_mcotiza_botCoberturasId').setDisabled(false);
-        Ext.getCmp('_mcotiza_botMailId').setDisabled(false);
-        Ext.getCmp('_mcotiza_botImprimirId').setDisabled(false);
-        Ext.getCmp('_mcotiza_botComprarId').setDisabled(false);
-        */
+        _mcotiza_getBotonPlan().setText(_mcotiza_selectedDsplan);
+        _mcotiza_getBotonComprar().setDisabled(false);
+        _mcotiza_getBotonCorreo().setDisabled(false);
+        _mcotiza_getBotonImprimir().setDisabled(false);
     }
 }
 
@@ -166,6 +308,7 @@ function _mcotiza_construirGrid(json)
 	var grid = Ext.create('Ext.grid.Grid',
 	{
 		title    : 'Cotizaci&oacute;n'
+		,itemId  : '_mcotiza_GridTarifas'
 		,columns : columns
 		,items   :
 		[
@@ -178,7 +321,34 @@ function _mcotiza_construirGrid(json)
                    }
 		    	,items  :
 		    	[
-		    	    {
+					{
+						xtype     : 'button'
+						,text     : ''
+						,ui       : 'action'
+						,itemId   : '_mcotiza_botonLectura'
+						,hidden   : true
+					}
+		    	    ,{
+		    	    	xtype     : 'button'
+		    	    	,text     : 'Sin plan'
+		    	    	,ui       : 'confirm'
+		    	    	,itemId   : '_mcotiza_botonPlan'
+		    	    }
+		    	    ,{
+		    	    	xtype     : 'button'
+		    	    	,text     : 'Generar tr&aacute;mite'
+		    	    	,disabled : true
+		    	    	,itemId   : '_mcotiza_botonComprar'
+		    	    	,handler  : _mcotiza_comprar
+		    	    }
+					,{
+						xtype     : 'button'
+						,text     : 'Enviar...'
+						,disabled : true
+						,itemId   : '_mcotiza_botonCorreo'
+						,handler  : _mcotiza_enviarPorCorreo
+					}
+		    	    ,{
 		    	    	xtype     : 'button'
 		    	    	,text     : 'Imprimir'
 		    	    	,disabled : true
@@ -446,12 +616,18 @@ function _mcotiza_cotiza()
             json['slist1'].push(inciso);
         });
         debug(json);
+		_mcotiza_navView.setMasked(
+		{
+		    xtype    : 'loadmask'
+		    ,message : 'Cotizando...'
+		});
         Ext.Ajax.request(
         {
             url       : _mcotiza_urlCotizar
             ,jsonData : json
             ,success  : function(response)
             {
+				_mcotiza_navView.setMasked(false);
             	json = Ext.decode(response.responseText);
             	debug('response:',json);
             	Ext.ComponentQuery.query('#_mcotiza_nmpolizaField')[0].setValue(json.smap1.nmpoliza);
@@ -459,6 +635,7 @@ function _mcotiza_cotiza()
             }
             ,failure  : function()
             {
+				_mcotiza_navView.setMasked(false);
             	Ext.Msg.alert('Aviso','Error al cotizar');
             }
         });
@@ -515,16 +692,6 @@ function _mcotiza_incisoItemDisclosure(listPanel,event,rowIndex)
 	formIncisoTmp.items.items[0].items.items[0].setValue(rowIndex);
 	_mcotiza_navView.items.items[0].setActiveItem(1);
 	debug('<_mcotiza_incisoItemDisclosure');
-}
-
-function _mcotiza_getFormDatosGenerales()
-{
-	return Ext.ComponentQuery.query('#_mcotiza_formDatosGene')[0];
-}
-
-function _mcotiza_getFormInciso()
-{
-	return Ext.ComponentQuery.query('#_mcotiza_formAsegurados')[0];
 }
 
 function _mcotiza_nuevoAsegurado()
@@ -599,21 +766,24 @@ function _mcotiza_editarAsegurado()
 
 function debug(a,b,c,d)
 {
-	if(d!=undefined)
+	if(false)
 	{
-		console.log(a,b,c,d);
-	}
-	else if(c!=undefined)
-	{
-		console.log(a,b,c);
-	}
-	else if(b!=undefined)
-	{
-		console.log(a,b);
-	}
-	else
-	{
-		console.log(a);
+		if(d!=undefined)
+		{
+			console.log(a,b,c,d);
+		}
+		else if(c!=undefined)
+		{
+			console.log(a,b,c);
+		}
+		else if(b!=undefined)
+		{
+			console.log(a,b);
+		}
+		else
+		{
+			console.log(a);
+		}
 	}
 }
 ////// funciones //////
@@ -859,7 +1029,6 @@ Ext.setup({onReady:function()
 			        	,title   : 'Cotizar'
 			        	,titulo  : 'Cotizar'
 			        	,iconCls : 'star'
-			        	,html    : 'Espere un momento...'
 			        }
 		    	]
 		    	,listeners      :
@@ -884,6 +1053,53 @@ Ext.setup({onReady:function()
 	Ext.Viewport.add(_mcotiza_navView);
 	
 }});
+
+////// getters //////
+function _mcotiza_getFormDatosGenerales()
+{
+    return Ext.ComponentQuery.query('#_mcotiza_formDatosGene')[0];
+}
+function _mcotiza_getFormInciso()
+{
+    return Ext.ComponentQuery.query('#_mcotiza_formAsegurados')[0];
+}
+function _mcotiza_getBotonComprar()
+{
+	return Ext.ComponentQuery.query('#_mcotiza_botonComprar')[0];
+}
+function _mcotiza_getBotonPlan()
+{
+	return Ext.ComponentQuery.query('#_mcotiza_botonPlan')[0];
+}
+function _mcotiza_getBotonImprimir()
+{
+	return Ext.ComponentQuery.query('#_mcotiza_botImprimirId')[0];
+}
+function _mcotiza_getGridTarifas()
+{
+	return Ext.ComponentQuery.query('#_mcotiza_GridTarifas')[0];
+}
+function _mcotiza_getFieldNmpoliza()
+{
+	return Ext.ComponentQuery.query('#_mcotiza_nmpolizaField')[0];
+}
+function _mcotiza_getFieldFechaInicio()
+{
+	return Ext.ComponentQuery.query('#_mcotiza_feinivalField')[0];
+}
+function _mcotiza_getFieldFechaFin()
+{
+    return Ext.ComponentQuery.query('#_mcotiza_fefinvalField')[0];
+}
+function _mcotiza_getBotonLectura()
+{
+	return Ext.ComponentQuery.query('#_mcotiza_botonLectura')[0];
+}
+function _mcotiza_getBotonCorreo()
+{
+	return Ext.ComponentQuery.query('#_mcotiza_botonCorreo')[0];
+}
+////// getters //////
 
 </script>
 </head>
