@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
-import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
 
 import org.apache.commons.lang.StringUtils;
