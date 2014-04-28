@@ -170,8 +170,8 @@ public class ReexpedicionDocumentosAction extends PrincipalCoreAction
 				);
 		try
 		{
-			String direccionIPLocal  = "http://localhost";
-			int    puertoLocal       = ServletActionContext.getRequest().getServerPort();
+			String direccionIPLocal  = ServletActionContext.getRequest().getLocalAddr();
+			int    puertoLocal       = ServletActionContext.getRequest().getLocalPort();
 			String contexto          = ServletActionContext.getServletContext().getServletContextName();
 			String urlReporte        = direccionIPLocal+":"+puertoLocal+"/"+contexto+"/reportes/procesoObtencionReporte.action";
 			stringMap=new HashMap<String,String>();
