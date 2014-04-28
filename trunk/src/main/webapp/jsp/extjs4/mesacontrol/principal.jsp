@@ -20,7 +20,7 @@
     var mesConUrlInitManual    = '<s:url namespace="/mesacontrol"     action="obtenerValoresDefectoInsercionManual" />';
     var mesConUrlSaveTra       = '<s:url namespace="/mesacontrol"     action="guardarTramiteManual" />';
     var mesConUrlLoadCatalo    = '<s:url namespace="/catalogos"       action="obtieneCatalogo" />';
-    var mesConUrlCotizar       = '<s:url namespace="/"                action="cotizacionVital" />';
+    var mesConUrlCotizar       = '<s:url namespace="/emision"         action="cotizacion" />';
     var mesConUrlDetMC         = '<s:url namespace="/mesacontrol"     action="obtenerDetallesTramite" />';
     var mesConUrlFinDetalleMC  = '<s:url namespace="/mesacontrol"      action="finalizarDetalleTramiteMC" />';
     var mesConUrlLoadRamos     = '<s:url namespace="/"                 action="obtenerRamos" />';
@@ -632,10 +632,10 @@ Ext.onReady(function(){
                         ,standardSubmit : true
                         ,params         :
                         {
-                            ntramite  : record.get('ntramite')
-                            ,cdunieco : record.get('cdunieco')
-                            ,cdramo   : record.get('cdramo')
-                            ,cdtipsit : record.get('cdtipsit')
+                            'smap1.ntramite'  : record.get('ntramite')
+                            ,'smap1.cdunieco' : record.get('cdunieco')
+                            ,'smap1.cdramo'   : record.get('cdramo')
+                            ,'smap1.cdtipsit' : record.get('cdtipsit')
                         }
                     });
             	}

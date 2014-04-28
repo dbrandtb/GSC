@@ -11,7 +11,7 @@ debug('###################################');
 ////// variables //////
 var mesConUrlDocu         = '<s:url namespace="/documentos"  action="ventanaDocumentosPoliza"   />';
 var mesConUrlDatCom       = '<s:url namespace="/"            action="datosComplementarios"      />';
-var mesConUrlCotizar      = '<s:url namespace="/"            action="cotizacionVital"           />';
+var mesConUrlCotizar      = '<s:url namespace="/emision"     action="cotizacion     "           />';
 var mesConUrlDetMC        = '<s:url namespace="/mesacontrol" action="obtenerDetallesTramite"    />';
 var mesConUrlFinDetalleMC = '<s:url namespace="/mesacontrol" action="finalizarDetalleTramiteMC" />';
 ////// variables //////
@@ -85,10 +85,10 @@ function _4_onComplementariosClick(grid,rowIndex)
                 ,standardSubmit : true
                 ,params         :
                 {
-                    ntramite  : record.get('ntramite')
-                    ,cdunieco : record.get('cdunieco')
-                    ,cdramo   : record.get('cdramo')
-                    ,cdtipsit : record.get('cdtipsit')
+                    'smap1.ntramite'  : record.get('ntramite')
+                    ,'smap1.cdunieco' : record.get('cdunieco')
+                    ,'smap1.cdramo'   : record.get('cdramo')
+                    ,'smap1.cdtipsit' : record.get('cdtipsit')
                 }
             });
         }
