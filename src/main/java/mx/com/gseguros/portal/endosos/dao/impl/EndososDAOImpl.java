@@ -514,9 +514,11 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	}
 	
 	@Override
-	public List<Map<String,String>> obtenerNombreEndosos() throws Exception
+	public List<Map<String,String>> obtenerNombreEndosos(String cdsisrol) throws Exception
 	{
-		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerNombreEndosos(this.getDataSource()), new HashMap<String,String>());
+		Map<String,String> params = new HashMap<String,String>();
+		params.put("cdsisrol",cdsisrol);
+		Map<String,Object> resultadoMap=this.ejecutaSP(new ObtenerNombreEndosos(this.getDataSource()), params);
 		return (List<Map<String,String>>) resultadoMap.get("pv_registro_o");
 	}
 	
@@ -526,6 +528,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		{
 			super(dataSource, "PKG_LISTAS.P_GET_TTIPSUPL");
 			
+			declareParameter(new SqlParameter("cdsisrol"         , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
 			declareParameter(new SqlOutParameter("pv_messages_o" , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));

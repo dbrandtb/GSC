@@ -280,10 +280,10 @@ public class EndososManagerImpl implements EndososManager
 	}
 	
 	@Override
-	public List<Map<String, String>> obtenerNombreEndosos() throws Exception
+	public List<Map<String, String>> obtenerNombreEndosos(String cdsisrol) throws Exception
 	{
 		log.debug("EndososManager obtenerNombreEndosos");
-		List<Map<String,String>> lista=endososDAO.obtenerNombreEndosos();
+		List<Map<String,String>> lista=endososDAO.obtenerNombreEndosos(cdsisrol);
 		lista=lista!=null?lista:new ArrayList<Map<String,String>>(0);
 		log.debug("EndososManager obtenerNombreEndosos lista size: "+lista.size());
 		return lista;
