@@ -7,7 +7,7 @@ var _URL_OBTENCION_REPORTE = '<s:url namespace="/reportes" action="procesoObtenc
 
 var cdreporte =  '<s:property value="cdreporte" />';
 
-console.log("cdreporte=" + cdreporte);
+debug("cdreporte",cdreporte);
 
 Ext.onReady(function(){
     Ext.create('Ext.form.Panel', {
@@ -26,13 +26,13 @@ Ext.onReady(function(){
                 handler: function(btn, e) {
                     
                 	var formCmpRep = this.up('form').getForm();
-                    console.log(formCmpRep.getValues());
+                    debug(formCmpRep.getValues());
                 	
                 	if (formCmpRep.isValid()) {
                         
                         //Iteramos los fields del formulario para buscar los del tipo datefield
                         Ext.Array.each(formCmpRep.getFields().items, function(item){
-                            console.log(item);
+                        	debug(item);
                         });
                         
                         formCmpRep.submit({
