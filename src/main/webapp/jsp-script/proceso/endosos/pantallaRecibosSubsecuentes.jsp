@@ -7,8 +7,10 @@
 ////// variables //////
 var _p15_form;
 
-var _p15_urlHabilitarRecibos = '<s:url namespace="/endosos"  action="habilitarRecibosSubsecuentes" />';
-var _p15_urlReporte          = '<s:url namespace="/reportes" action="procesoObtencionReporte" />';
+var _p15_urlHabilitarRecibos  = '<s:url namespace="/endosos"                action="habilitarRecibosSubsecuentes" />';
+var _p15_urlReporte           = '<s:url namespace="/reportes"               action="procesoObtencionReporte"      />';
+var _p15_urlObtenerDatosEmail = '<s:url namespace="/reexpediciondocumentos" action="obtenerDatosEmail"            />';
+var _p15_urlEnviarCorreo      = '<s:url namespace="/"                       action="enviaCorreo" />';
 ////// variables //////
 
 Ext.onReady(function()
@@ -129,32 +131,88 @@ function _p15_botonHabilitarHandler()
 		    	debug('response:',response);
 		    	if(response.success)
 		    	{
-		    		mensajeCorrecto('Recibos habilitados',response.mensaje);
-		    		Ext.create('Ext.form.Panel').submit(
+		    		//mensajeCorrecto('Recibos habilitados',response.mensaje);
+		    		form.setLoading(true);
+                    Ext.Ajax.request(
                     {
-                        standardSubmit : true,
-                        url:_p15_urlReporte,
-                        params:
+                        url      : _p15_urlObtenerDatosEmail
+                        ,success : function(response)
                         {
-                            cdreporte : 'REPEXC008'
-                            ,'params.pv_feproces_i' : Ext.Date.format(_p15_getFechaInicio().getValue(),'d/m/Y')
-                        },
-                        success: function(form, action)
-                        {
-                            
-                        },
-                        failure: function(form, action)
-                        {
-                            switch (action.failureType)
+                            form.setLoading(false);
+                            var json=Ext.decode(response.responseText);
+                            debug('email data response:',json);
+                            if(json.success)
                             {
-                                case Ext.form.action.Action.CONNECT_FAILURE:
-                                    Ext.Msg.alert('Error', 'Error de comunicaci&oacute;n');
-                                    break;
-                                case Ext.form.action.Action.SERVER_INVALID:
-                                case Ext.form.action.Action.LOAD_FAILURE:
-                                    Ext.Msg.alert('Error', 'Error del servidor, consulte a soporte');
-                                    break;
-                           }
+                            	form.setLoading(true);
+                            	Ext.Ajax.request(
+                                {
+                                    url     : _p15_urlEnviarCorreo
+                                    ,params :
+                                    {
+                                        to        : json.stringMap.correos
+                                        ,archivos : json.stringMap.url
+                                                    + '?cdreporte=REPEXC008'
+                                                    + '&params.pv_feproces_i='
+                                                    + Ext.Date.format(_p15_getFechaInicio().getValue(),'d/m/Y')
+                                    },
+                                    callback : function(options,success,response)
+                                    {
+                                        form.setLoading(false);
+                                        if (success)
+                                        {
+                                            var json = Ext.decode(response.responseText);
+                                            if (json.success == true)
+                                            {
+                                            	mensajeCorrecto('Aviso','Correo(s) enviado(s)');
+                                            	Ext.create('Ext.form.Panel').submit(
+                                                {
+                                                    standardSubmit : true,
+                                                    url:_p15_urlReporte,
+                                                    params:
+                                                    {
+                                                        cdreporte : 'REPEXC008'
+                                                        ,'params.pv_feproces_i' : Ext.Date.format(_p15_getFechaInicio().getValue(),'d/m/Y')
+                                                    },
+                                                    success: function(form, action)
+                                                    {
+                                                        
+                                                    },
+                                                    failure: function(form, action)
+                                                    {
+                                                        switch (action.failureType)
+                                                        {
+                                                            case Ext.form.action.Action.CONNECT_FAILURE:
+                                                                Ext.Msg.alert('Error', 'Error de comunicaci&oacute;n');
+                                                                break;
+                                                            case Ext.form.action.Action.SERVER_INVALID:
+                                                            case Ext.form.action.Action.LOAD_FAILURE:
+                                                                Ext.Msg.alert('Error', 'Error del servidor, consulte a soporte');
+                                                                break;
+                                                       }
+                                                    }
+                                                });
+                                            }
+                                            else
+                                            {
+                                                mensajeError('Error al enviar');
+                                            }
+                                        }
+                                        else
+                                        {
+                                            errorComunicacion();
+                                        }
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                mensajeError(json.mensaje);
+                            }
+                        }
+                        ,failure : function()
+                        {
+                            form.setLoading(false);
+                            errorComunicacion();
                         }
                     });
 		    	}
