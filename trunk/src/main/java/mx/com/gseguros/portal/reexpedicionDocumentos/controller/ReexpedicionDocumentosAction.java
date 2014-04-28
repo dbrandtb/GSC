@@ -162,6 +162,58 @@ public class ReexpedicionDocumentosAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	public String obtenerDatosEmail()
+	{
+		logger.info(""
+				+ "\n###############################"
+				+ "\n###### obtenerDatosEmail ######"
+				);
+		try
+		{
+			String direccionIPLocal  = "http://localhost";
+			int    puertoLocal       = ServletActionContext.getRequest().getServerPort();
+			String contexto          = ServletActionContext.getServletContext().getServletContextName();
+			String urlReporte        = direccionIPLocal+":"+puertoLocal+"/"+contexto+"/reportes/procesoObtencionReporte.action";
+			stringMap=new HashMap<String,String>();
+			stringMap.put("url",urlReporte);
+			
+			LinkedHashMap<String,Object> parametros = new LinkedHashMap<String,Object>();
+			parametros.put("param1","1");//el id del proceso que recibe el PL para regresar los correos a cuales se debe enviar
+			List<Map<String,String>> listaEmails = consultasManager.consultaDinamica("PKG_CONSULTA.P_OBTIENE_EMAIL", parametros);
+			String correos = "";
+			if(listaEmails!=null)
+			{
+				boolean primero=true;
+				for(Map<String,String>email:listaEmails)
+				{
+					if(primero)
+					{
+						correos=email.get("DESCRIPL");
+						primero=false;
+					}	
+					else
+					{
+						correos=correos+","+email.get("DESCRIPL");
+					}
+				}
+			}
+			stringMap.put("correos",correos);
+			success = true;
+			mensaje = "Correo(s) obtenido(s)";
+		}
+		catch(Exception ex)
+		{
+			logger.error("error al obtener los datos de email de recibos subsecuentes",ex);
+			success = false;
+			mensaje = ex.getMessage();
+		}
+		logger.info(""
+				+ "\n###### obtenerDatosEmail ######"
+				+ "\n###############################"
+				);
+		return SUCCESS;
+	}
+	
 	public void setReexpedicionDocumentosManager(
 			ReexpedicionDocumentosManager reexpedicionDocumentosManager) {
 		this.reexpedicionDocumentosManager = reexpedicionDocumentosManager;

@@ -19,5 +19,8 @@
             </interceptor-ref>
             <result type="json" />
         </action>
+        <action name="obtenerDatosEmail" class="reexpedicionDocumentosAction" method="obtenerDatosEmail">
+            <result type="json" />
+        </action>
     </package>
 </struts>
