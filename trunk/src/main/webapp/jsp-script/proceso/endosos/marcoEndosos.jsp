@@ -1215,22 +1215,35 @@ Ext.onReady(function()
         	        }
         	        ,success : function(response)
         	        {
+        	        	debug('storeligas:',marendStoreLigas);
         	            var json=Ext.decode(response.responseText);
         	            debug(json);
-        	            for(var i=0;i<json.lista.length;i++)
+        	            var ligasSinAcceso = [];
+        	            for(var i=0;i<marendStoreLigas.data.items.length;i++)
         	            {
-        	                var cdtipsup=json.lista[i].key*1;
-        	                var dstipsup=json.lista[i].value;
-        	                debug('buscando ',cdtipsup,dstipsup);
-        	                var contador=0;
-        	                marendStoreLigas.each(function(liga)
-        	                {
-        	                    debug('->en ',liga.get('texto'));
-        	                    if(liga.get('texto')==cdtipsup)
-        	                    {
-        	                        liga.set('texto',dstipsup);
-        	                    }
-        	                });
+        	            	debug('Se busca el nombre de:',marendStoreLigas.data.items[i]);
+        	            	var acceso = false;
+        	            	for(var j=0;j<json.lista.length;j++)
+        	            	{
+        	            		var cdtipsup = json.lista[j].key-0;
+        	            		var dstipsup = json.lista[j].value;
+        	            		debug('en:',cdtipsup,dstipsup);
+        	            		if(marendStoreLigas.data.items[i].get('texto')==cdtipsup)
+        	            		{
+        	            			acceso = true;
+        	            			marendStoreLigas.data.items[i].set('texto',dstipsup);
+        	            		}
+        	            	}
+        	            	if(!acceso
+        	            			&&(marendStoreLigas.data.items[i].get('texto')+'').lastIndexOf('*')<0)
+        	            	{
+        	            		debug('no se encontro');
+        	            		ligasSinAcceso.push(i-0);
+        	            	}
+        	            }
+        	            for(var i=ligasSinAcceso.length-1;i>=0;i--)
+        	            {
+        	            	marendStoreLigas.removeAt(ligasSinAcceso[i]);
         	            }
         	        }
         	        

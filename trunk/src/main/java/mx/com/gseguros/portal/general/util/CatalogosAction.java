@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
+import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
@@ -136,7 +137,8 @@ public class CatalogosAction extends PrincipalCoreAction {
 					lista = catalogosManager.obtieneRolesSistema();
 					break;
 				case ENDOSOS:
-					List<Map<String,String>>nombresEndosos=endososManager.obtenerNombreEndosos();
+					UserVO usuario = (UserVO)session.get("USUARIO");
+					List<Map<String,String>>nombresEndosos=endososManager.obtenerNombreEndosos(usuario.getRolActivo().getObjeto().getValue());
 					lista=new ArrayList<GenericVO>(0);
 					for(Map<String,String> nombre:nombresEndosos) {
 						lista.add(new GenericVO(nombre.get("CDTIPSUP"), nombre.get("DSTIPSUP")));
