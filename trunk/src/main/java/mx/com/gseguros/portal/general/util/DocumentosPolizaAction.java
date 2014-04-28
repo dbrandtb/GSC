@@ -52,45 +52,23 @@ public class DocumentosPolizaAction extends PrincipalCoreAction {
 			if(StringUtils.isNotBlank(url) && StringUtils.isNotBlank(contentType)) {
 				fileInputStream = HttpUtil.obtenInputStream(url);
 			} else {
+				logger.debug(this.getText("ruta.documentos.poliza")+"/"+idPoliza+"/"+filename);
 				fileInputStream = new FileInputStream(new File(this.getText("ruta.documentos.poliza")+"/"+idPoliza+"/"+filename));
 	
-				String fileType = filename.substring(filename.lastIndexOf(".") + 1,
-						filename.length());
+				String fileType = filename.substring(filename.lastIndexOf(".") + 1, filename.length());
 				fileType = fileType.trim();
-	
-				if (Constantes.FORMAT_TXT.equalsIgnoreCase(fileType)) {
-					contentType = "text/plain";
-				} else if (Constantes.FORMAT_HTM.equalsIgnoreCase(fileType)) {
-					contentType = "text/html";
-				} else if (Constantes.FORMAT_HTML.equalsIgnoreCase(fileType)) {
-					contentType = "text/html";
-				} else if (Constantes.FORMAT_DOC.equalsIgnoreCase(fileType)) {
-					contentType = "application/msword";
-				} else if (Constantes.FORMAT_DOCX.equalsIgnoreCase(fileType)) {
-					contentType = "application/msword";
-				} else if (Constantes.FORMAT_XLS.equalsIgnoreCase(fileType)) {
-					contentType = "application/vnd.ms-excel";
-				} else if (Constantes.FORMAT_XLSX.equalsIgnoreCase(fileType)) {
-					contentType = "application/vnd.ms-excel";
-				} else if (Constantes.FORMAT_PDF.equalsIgnoreCase(fileType)) {
-					contentType = "application/pdf";
-				} else if (Constantes.FORMAT_PPT.equalsIgnoreCase(fileType)) {
-					contentType = "application/ppt";
-				} else if (Constantes.FORMAT_GIF.equalsIgnoreCase(fileType)) {
-					contentType = "image/gif";
-				} else if (Constantes.FORMAT_BMP.equalsIgnoreCase(fileType)) {
-					contentType = "image/bmp";
-				} else if (Constantes.FORMAT_JPG.equalsIgnoreCase(fileType)) {
-					contentType = "image/jpeg";
-				} else if (Constantes.FORMAT_JPEG.equalsIgnoreCase(fileType)) {
-					contentType = "image/jpeg";
-				} else if (Constantes.FORMAT_PNG.equalsIgnoreCase(fileType)) {
-					contentType = "image/png";
-				} else if (Constantes.FORMAT_TIF.equalsIgnoreCase(fileType)) {
-					contentType = "image/tiff";
-				} else {
-					contentType = "application/octet-stream";
+				
+				// Se asigna el contentType asociado al tipo de archivo, si no existe le asignamos uno por default:
+				for (TipoArchivo tipoArch : TipoArchivo.values()) {
+					if(tipoArch.toString().equalsIgnoreCase(fileType)) {
+						contentType = tipoArch.getContentType();
+						break;
+					}
+			    }
+				if(contentType == null) {
+					contentType = TipoArchivo.DEFAULT.getContentType();
 				}
+				
 			}
 
 		} catch (Exception e) {

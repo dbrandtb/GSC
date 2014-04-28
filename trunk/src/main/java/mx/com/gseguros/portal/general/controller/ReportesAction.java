@@ -13,7 +13,7 @@ import mx.com.gseguros.portal.general.model.ParamReporteVO;
 import mx.com.gseguros.portal.general.model.ReporteVO;
 import mx.com.gseguros.portal.general.service.ReportesManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
-import mx.com.gseguros.utils.Constantes;
+import mx.com.gseguros.portal.general.util.TipoArchivo;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
@@ -90,8 +90,8 @@ public class ReportesAction extends PrincipalCoreAction {
 		
 		try {
 			String username = ((UserVO)session.get("USUARIO")).getUser();
-			contentType     = "application/vnd.ms-excel";
-			filename        = cdreporte+"."+Constantes.FORMAT_XLS;
+			contentType     = TipoArchivo.XLS.getContentType();
+			filename        = cdreporte + TipoArchivo.XLS.getExtension();
 			fileInputStream = reportesManager.obtenerDatosReporte(cdreporte, username, params);
 		} catch (Exception e) {
 			logger.error("Error en la obtención del reporte", e);
