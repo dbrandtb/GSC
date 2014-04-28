@@ -2,6 +2,7 @@ package mx.com.gseguros.portal.general.service;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 import mx.com.gseguros.portal.general.model.ParamReporteVO;
 import mx.com.gseguros.portal.general.model.ReporteVO;
@@ -24,13 +25,15 @@ public interface ReportesManager {
 	 */
 	public List<ParamReporteVO> obtenerParametrosReportes(String cdreporte) throws Exception;
 	
+	
 	/**
 	 * Lleva a cabo el proceso para obtener el contenido en bytes de un reporte
 	 * @param cdreporte
-	 * @param username username dentro de la aplicaci&oacute;n 
+	 * @param username username dentro de la aplicaci&oacute;n
+	 * @param params
 	 * @return
 	 * @throws Exception
 	 */
-	public InputStream obtenerDatosReporte(String cdreporte, String username, List<ParamReporteVO> paramReporteVO) throws Exception;
+	public InputStream obtenerDatosReporte(String cdreporte, String username, Map<String, String> params) throws Exception;
 	
 }

@@ -1,6 +1,7 @@
 package mx.com.gseguros.portal.general.service.impl;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +37,16 @@ public class ReportesManagerImpl implements ReportesManager {
 	
 	
 	@Override
-	public InputStream obtenerDatosReporte(String cdreporte, String username, List<ParamReporteVO> paramsReporte) throws Exception {
+	public InputStream obtenerDatosReporte(String cdreporte, String username, Map<String, String> params) throws Exception {
+		
+		// Se genera una lista con los parametros de entrada del reporte:
+		List<ParamReporteVO> paramsReporte = new ArrayList<ParamReporteVO>();
+		for(Map.Entry<String, String> entry : params.entrySet()){
+		    ParamReporteVO paramReporte = new ParamReporteVO();
+		    paramReporte.setNombre(entry.getKey());
+		    paramReporte.setValor(entry.getValue());
+		    paramsReporte.add(paramReporte);
+		}
 		
 		// Se actualizan los valores de los parametros del reporte:
 		for(ParamReporteVO paramReporte : paramsReporte) {

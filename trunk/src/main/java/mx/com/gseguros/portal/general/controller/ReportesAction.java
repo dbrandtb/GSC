@@ -88,21 +88,11 @@ public class ReportesAction extends PrincipalCoreAction {
 	
 	public String procesoObtencionReporte() throws Exception {
 		
-		String username = ((UserVO)session.get("USUARIO")).getUser();
-		
-		// Se arman los parametros de entrada del reporte:
-		List<ParamReporteVO> paramsReporte = new ArrayList<ParamReporteVO>();
-		for(Map.Entry<String, String> entry : params.entrySet()){
-		    ParamReporteVO paramReporte = new ParamReporteVO();
-		    paramReporte.setNombre(entry.getKey());
-		    paramReporte.setValor(entry.getValue());
-		    paramsReporte.add(paramReporte);
-		}
-		
 		try {
-			contentType = "application/vnd.ms-excel";
-			filename = cdreporte+"."+Constantes.FORMAT_XLS;
-			fileInputStream = reportesManager.obtenerDatosReporte(cdreporte, username, paramsReporte);
+			String username = ((UserVO)session.get("USUARIO")).getUser();
+			contentType     = "application/vnd.ms-excel";
+			filename        = cdreporte+"."+Constantes.FORMAT_XLS;
+			fileInputStream = reportesManager.obtenerDatosReporte(cdreporte, username, params);
 		} catch (Exception e) {
 			logger.error("Error en la obtención del reporte", e);
 		}
