@@ -8,6 +8,7 @@
 var _p16_formulario;
 var _p16_gridPolizas;
 var _p16_urlRegeneraMedicinaPreventiva = '<s:url namespace="/reexpediciondocumentos" action="regeneraMedicinaPreventiva" />';
+var _p16_urlDocumentos                 = '<s:url namespace="/documentos"             action="ventanaDocumentosPoliza" />';
 ////// variables //////
 Ext.onReady(function()
 {
@@ -107,6 +108,37 @@ function _p16_getGridPolizas()
 ////// getters //////
 
 ////// funciones //////
+function _p16_verDocumentos(grid,rowIndex,colIndex)
+{
+	var record=grid.getStore().getAt(rowIndex);
+    debug(record);
+    Ext.create('Ext.window.Window',
+    {
+        title        : 'Documentos del tr&aacute;mite '+record.get('NTRAMITE')
+        ,modal       : true
+        ,buttonAlign : 'center'
+        ,width       : 600
+        ,height      : 400
+        ,autoScroll  : true
+        ,loader      :
+        {
+            url       : _p16_urlDocumentos
+            ,params   :
+            {
+                'smap1.nmpoliza'  : record.get('NMPOLIZA')
+                ,'smap1.cdunieco' : record.get('CDUNIECO')
+                ,'smap1.cdramo'   : record.get('CDRAMO')
+                ,'smap1.estado'   : record.get('ESTADO')
+                ,'smap1.nmsuplem' : '0'
+                ,'smap1.ntramite' : record.get('NTRAMITE')
+                ,'smap1.nmsolici' : ''
+                ,'smap1.tipomov'  : '0'
+            }
+            ,scripts  : true
+            ,autoLoad : true
+        }
+    }).show();
+}
 function _p16_regenerarMedicinaPreventiva(grid,rowIndex,colIndex)
 {
 	debug('>_p16_regenerarMedicinaPreventiva row,col: ',rowIndex,colIndex);
