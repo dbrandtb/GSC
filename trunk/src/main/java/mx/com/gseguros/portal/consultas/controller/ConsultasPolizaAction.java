@@ -3,8 +3,12 @@ package mx.com.gseguros.portal.consultas.controller;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.apache.struts2.ServletActionContext;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
+import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosAgenteVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosAseguradoVO;
@@ -18,6 +22,9 @@ import mx.com.gseguros.portal.consultas.model.ConsultaPolizaAseguradoVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaReciboAgenteVO;
 import mx.com.gseguros.portal.consultas.model.CopagoVO;
 import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
+import mx.com.gseguros.portal.cotizacion.model.Item;
+import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.portal.general.util.GeneradorCampos;
 
 /**
  *
@@ -35,6 +42,8 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     private boolean success;
     
     private ConsultasPolizaManager consultasPolizaManager;
+    
+    private KernelManagerSustituto kernelManager;
     
     private HashMap<String,String> params;
     
@@ -60,6 +69,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
     
     private List<CopagoVO> datosCopagosPoliza;
 
+    private Map<String,Item> itemMap;
 
     public String execute() throws Exception {
     	return SUCCESS;
@@ -385,6 +395,56 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
 		return SUCCESS;
     }
     
+	public String pantallaConsultaTatrisit()
+	{
+		logger.info(""
+				+ "\n######################################"
+				+ "\n###### pantallaConsultaTatrisit ######"
+				);
+		logger.info("params: "+params);
+		try
+		{
+			String cdtipsit = params.get("cdtipsit");
+			List<ComponenteVO> camposTatrisit = kernelManager.obtenerTatrisit(cdtipsit);
+			List<ComponenteVO> tatrisitTemp   = new ArrayList<ComponenteVO>();
+			//buscar cp
+			for(ComponenteVO t:camposTatrisit) if(t.getNameCdatribu().equals("3")) tatrisitTemp.add(t);
+			//buscar estado
+			for(ComponenteVO t:camposTatrisit) if(t.getNameCdatribu().equals("4")) tatrisitTemp.add(t);
+			//buscar municipio
+			for(ComponenteVO t:camposTatrisit) if(t.getNameCdatribu().equals("17")) tatrisitTemp.add(t);
+			//agregar todos los demas
+			for(ComponenteVO comp : camposTatrisit)
+			{
+				comp.setSoloLectura(true);
+				comp.setObligatorio(false);
+				comp.setMinLength(0);
+				if(!comp.getNameCdatribu().equals("3")
+						&&!comp.getNameCdatribu().equals("4")
+						&&!comp.getNameCdatribu().equals("17")
+						)
+				{
+					tatrisitTemp.add(comp);
+				}
+			}
+			camposTatrisit=tatrisitTemp;
+			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+			gc.setCdtipsit(cdtipsit);
+			gc.generaComponentes(camposTatrisit, true, true, true, false, false, false);
+			itemMap=new HashMap<String,Item>();
+			itemMap.put("fieldsModelo",gc.getFields());
+			itemMap.put("itemsFormulario",gc.getItems());
+		}
+		catch(Exception ex)
+		{
+			logger.error("error al generar pantalla de consulta de tatrisit",ex);
+		}
+		logger.info(""
+				+ "\n###### pantallaConsultaTatrisit ######"
+				+ "\n######################################"
+				);
+		return SUCCESS;
+	}
     
     //Getters and setters:
     
@@ -495,6 +555,18 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
 
 	public void setDatosCopagosPoliza(List<CopagoVO> datosCopagosPoliza) {
 		this.datosCopagosPoliza = datosCopagosPoliza;
+	}
+
+	public Map<String, Item> getItemMap() {
+		return itemMap;
+	}
+
+	public void setItemMap(Map<String, Item> itemMap) {
+		this.itemMap = itemMap;
+	}
+
+	public void setKernelManager(KernelManagerSustituto kernelManager) {
+		this.kernelManager = kernelManager;
 	}
 
 }

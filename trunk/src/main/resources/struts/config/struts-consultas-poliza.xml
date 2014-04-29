@@ -141,6 +141,10 @@
         <action name="includes/ventanaAseguradosPoliza" class="ConsultasPolizaAction">
 		    <result>/jsp/consultas/polizas/includes/aseguradosPoliza.jsp</result>
 		</action>
+		
+		<action name="pantallaConsultaTatrisit" class="ConsultasPolizaAction" method="pantallaConsultaTatrisit">
+		    <result>/jsp/consultas/polizas/pantallaConsultaTatrisit.jsp</result>
+		</action>
 
 	</package>
 
