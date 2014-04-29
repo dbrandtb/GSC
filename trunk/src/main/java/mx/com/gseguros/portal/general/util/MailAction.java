@@ -7,6 +7,7 @@ import java.util.Date;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.utils.MailMail;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.validator.UrlValidator;
@@ -35,6 +36,8 @@ public class MailAction extends ActionSupport {
 	
 	private MailMail mailMail;
 	
+	private String nombreArchivo;
+	
 	
 	public String enviaCorreo() throws Exception {
 		
@@ -46,11 +49,14 @@ public class MailAction extends ActionSupport {
 			
 			Date date = new Date();
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_hmmss");
-			String nombreArchivo = "cotizacion_" + sdf.format(date) + ".pdf";
+			if(StringUtils.isBlank(nombreArchivo))
+			{
+				nombreArchivo = "cotizacion_" + sdf.format(date) + ".pdf";
+			}
 			String nombreCompletoArchivo = this.getText("ruta.documentos.poliza")+ "/" + nombreArchivo;
 			if(HttpUtil.generaArchivo(archivos, nombreCompletoArchivo)){
-				//Se realiza el envío de correo:
-				//TODO: modificar nombre de metodo de action y modificar funcionalidad para subir más de un archivo
+				//Se realiza el envï¿½o de correo:
+				//TODO: modificar nombre de metodo de action y modificar funcionalidad para subir mï¿½s de un archivo
 				success = mailMail.sendMail(to.split(";"), null,
 						null, asunto, mensaje, new String[]{nombreCompletoArchivo});
 			}
@@ -159,6 +165,16 @@ public class MailAction extends ActionSupport {
 
 	public void setMailMail(MailMail mailMail) {
 		this.mailMail = mailMail;
+	}
+
+
+	public String getNombreArchivo() {
+		return nombreArchivo;
+	}
+
+
+	public void setNombreArchivo(String nombreArchivo) {
+		this.nombreArchivo = nombreArchivo;
 	}
 	
 }
