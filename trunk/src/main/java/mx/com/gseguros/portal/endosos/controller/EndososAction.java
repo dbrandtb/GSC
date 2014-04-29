@@ -4507,7 +4507,8 @@ public class EndososAction extends PrincipalCoreAction
 		long max=30l*24l*60l*60l*1000l;
 		
 		String dssuplem="";
-		List<Map<String,String>>endosos=endososManager.obtenerNombreEndosos();
+		// Obtenemos TODOS los nombres de los endosos:
+		List<Map<String,String>>endosos=endososManager.obtenerNombreEndosos("");
 		for(Map<String,String>endoso:endosos)
 		{
 			if(endoso.get("CDTIPSUP").equalsIgnoreCase(cdtipsup))
