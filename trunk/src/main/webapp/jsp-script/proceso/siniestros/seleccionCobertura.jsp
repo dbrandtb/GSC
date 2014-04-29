@@ -128,8 +128,7 @@
                             plugins: [this.cellEditing],
                             store: storeFacturasTramite,
                             columns:[
-                                        <s:property value="imap.columnas" />
-                                        ,{
+                                        {
                                             xtype : 'actioncolumn',
                                             width : 50,
                                             sortable : false,
@@ -140,7 +139,8 @@
                                                         scope : this,
                                                         handler : this.onEditClick
                                                     }]
-                                        }
+                                        },
+                                        <s:property value="imap.columnas" />
                                     ],
                             viewConfig :
                             {

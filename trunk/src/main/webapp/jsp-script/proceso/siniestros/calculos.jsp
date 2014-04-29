@@ -325,7 +325,7 @@ Ext.onReady(function()
             	        ,{
                             xtype       : 'displayfield'
                             ,labelWidth : 200
-                            ,fieldLabel : 'Copago'
+                            ,fieldLabel : 'Copago' //  PAGO DIRECRO
                             ,value      : copagoaplica
                             ,valueToRaw : function(value)
                             {
@@ -723,6 +723,11 @@ Ext.onReady(function()
             var ptimpoajus  = _p12_lprem[indice].SUBTOTAL*1.0;
             var destopor    = _p12_slist1[indice].DESCPORC*1.0;
             var destoimp    = _p12_slist1[indice].DESCNUME*1.0;
+            var totalPenalizacion = _p12_penalTotal[indice].totalPenalizacion;
+            debug('totalPenalizacion:'    , totalPenalizacion);
+            var _facturaIndividual = _p12_slist1[indice];
+            debug('_facturaIndividual:'    , _facturaIndividual);
+            
             var destoaplica = (ptimpoajus*(_p12_slist1[indice].DESCPORC/100.0)) + destoimp;
             var subttdesc   = ptimpoajus-destoaplica;
             var sDeducible  = _p12_slist2[indice].DEDUCIBLE;
@@ -735,18 +740,25 @@ Ext.onReady(function()
             {
                 deducible = sDeducible.replace(',','')*1.0;
             }
+            
             var subttdeduc  = subttdesc-deducible;
-            _p12_slist2[indice].COPAGOAUX = _p12_slist2[indice].COPAGO;
-            _p12_slist2[indice].COPAGO = 0;
-            if(
-                !(!_p12_slist2[indice].COPAGOAUX
-                ||_p12_slist2[indice].COPAGOAUX.toLowerCase()=='na'
-                ||_p12_slist2[indice].COPAGOAUX.toLowerCase()=='no')    
-            )
-            {
-                _p12_slist2[indice].COPAGO = _p12_slist2[indice].COPAGOAUX;
-            }
-            var copago      = _p12_slist2[indice].COPAGO*1.0;
+            if(_facturaIndividual.CDGARANT=='18HO'||_facturaIndividual.CDGARANT=='18MA')
+           	{
+            	var copago      = totalPenalizacion *1.0;
+           	}else{
+           		_p12_slist2[indice].COPAGOAUX = _p12_slist2[indice].COPAGO;
+                _p12_slist2[indice].COPAGO = 0;
+                if(
+                    !(!_p12_slist2[indice].COPAGOAUX
+                    ||_p12_slist2[indice].COPAGOAUX.toLowerCase()=='na'
+                    ||_p12_slist2[indice].COPAGOAUX.toLowerCase()=='no')    
+                )
+                {
+                    _p12_slist2[indice].COPAGO = _p12_slist2[indice].COPAGOAUX;
+                }
+                var copago      = _p12_slist2[indice].COPAGO*1.0;
+           	}
+            
             var tipcopag    = _p12_slist2[indice].TIPOCOPAGO;
             if(tipcopag=='$')
             {
@@ -857,7 +869,7 @@ Ext.onReady(function()
                         xtype       : 'displayfield'
                         ,labelWidth : 200
                         ,value      : copagoaplica
-                        ,fieldLabel : 'Copago'
+                        ,fieldLabel : 'Copago'  // PAGO POR REEMBOLSO
                         ,valueToRaw : function(value)
                         {
                             return Ext.util.Format.usMoney(value);
