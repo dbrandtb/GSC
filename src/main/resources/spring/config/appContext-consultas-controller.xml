@@ -4,6 +4,7 @@
 
     <bean id="ConsultasPolizaAction" class="mx.com.gseguros.portal.consultas.controller.ConsultasPolizaAction" scope="prototype">
         <property name="consultasPolizaManager" ref="consultasPolizaManager"/>
+        <property name="kernelManager"          ref="kernelManagerSustituto"/>
     </bean>
     
     <bean id="consultasSiniestroAction" class="mx.com.gseguros.portal.consultas.controller.ConsultasSiniestroAction" scope="prototype">
