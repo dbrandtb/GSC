@@ -69,7 +69,7 @@ public interface Ice2sigsService {
 	 * @return
 	 */
 	public boolean ejecutaWSclienteSalud(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem,
+			String estado, String nmpoliza, String nmsuplem, String ntramite,
 			Ice2sigsService.Operacion op, UserVO userVO);
 	
 	

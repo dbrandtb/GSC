@@ -210,7 +210,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 	
 	
 	public boolean ejecutaWSclienteSalud(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem,
+			String estado, String nmpoliza, String nmsuplem, String ntramite,
 			Ice2sigsService.Operacion op, UserVO userVO) {
 		
 		logger.debug("********************* Entrando a Ejecuta WSclienteSalud ******************************");
@@ -227,6 +227,8 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 		params.put("pv_estado_i", estado);
 		params.put("pv_nmpoliza_i", nmpoliza);
 		params.put("pv_nmsuplem_i", nmsuplem);
+		params.put("pv_ntramite_i", ntramite);
+		
 		try {
 			result = kernelManager.obtenDatosClienteWS(params);
 			if(result.getItemList() != null && result.getItemList().size() > 0){
@@ -280,6 +282,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 		params.put("pv_estado_i", estado);
 		params.put("pv_nmpoliza_i", nmpoliza);
 		params.put("pv_nmsuplem_i", nmsuplem);
+		params.put("pv_ntramite_i", ntramite);
 		
 		WrapperResultados result = null;
 		WrapperResultadosWS resultWS = null;
@@ -335,7 +338,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 									"Error en Recibo " + params.get("NumRec")
 											+ " >>> " + respuesta.getCodigo() + " - "
 											+ respuesta.getMensaje(),
-									 usuario, null, "ws.ice2sigs.url", "reciboGS",
+									 usuario, (String) params.get("pv_ntramite_i"), "ws.ice2sigs.url", "reciboGS",
 									 resultWS.getXmlIn(), Integer.toString(respuesta.getCodigo()));
 						} catch (Exception e1) {
 							logger.error("Error al insertar en Bitacora", e1);
@@ -356,7 +359,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 							"Error en Recibo " + recibo.getNumRec()
 									+ " Msg: " + e.getMessage() + " ***Cause: "
 									+ e.getCause(),
-							 usuario, null, "ws.ice2sigs.url", "reciboGS",
+							 usuario, (String) params.get("pv_ntramite_i"), "ws.ice2sigs.url", "reciboGS",
 							 e.getPayload(), null);
 				} catch (Exception e1) {
 					logger.error("Error al insertar en Bitacora", e1);
@@ -485,7 +488,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 						// Se crea un HashMap por cada invocacion asincrona del WS, para evitar issue (sobreescritura de valores):
 						HashMap<String, Object> paramsBitacora = new HashMap<String, Object>();
 						paramsBitacora.putAll(params);
-						paramsBitacora.put("NumSin", reclamo.getNumSin());
+						paramsBitacora.put("NumSin", reclamo.getIcodreclamo());
 						paramsBitacora.put("NumInc", reclamo.getIncPol());
 						
 						ejecutaReclamoGS(op, reclamo, paramsBitacora, async);
@@ -505,7 +508,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 										(String) params.get("pv_nmpoliza_i"),
 										(String) params.get("pv_nmsuplem_i"),
 										"ErrWSsin",
-										"Error en Siniestro: " + reclamo.getNumSin() + " Inciso: " + reclamo.getIncPol() 
+										"Error en ReclamoCod: " + reclamo.getIcodreclamo() + " Inciso: " + reclamo.getIncPol() 
 												+ " >>> " + respuesta.getCodigo() + " - "
 												+ respuesta.getMensaje(),
 										 usuario, (String) params.get("pv_ntramite_i"), "ws.ice2sigs.url", "reclamoGS",
@@ -529,7 +532,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 								(String) params.get("pv_nmpoliza_i"),
 								(String) params.get("pv_nmsuplem_i"),
 								"ErrWSsinCx",
-								"Error en Siniestro: " + reclamo.getNumSin() + " Inciso: " + reclamo.getIncPol()
+								"Error en ReclamoCod: " + reclamo.getIcodreclamo() + " Inciso: " + reclamo.getIncPol()
 										+ " Msg: " + e.getMessage() + " ***Cause: "
 										+ e.getCause(),
 								 usuario, (String) params.get("pv_ntramite_i"), "ws.ice2sigs.url", "reclamoGS",

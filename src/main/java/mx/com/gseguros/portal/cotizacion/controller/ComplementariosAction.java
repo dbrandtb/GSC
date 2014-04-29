@@ -1315,7 +1315,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			//TODO:ELIMINAR ejecutaWSclienteSalud(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, );
 			//PolizaVO poliza = new PolizaVO();
 			// Ejecutamos el Web Service de Cliente Salud:
-			ice2sigsService.ejecutaWSclienteSalud(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, Ice2sigsService.Operacion.INSERTA, (UserVO) session.get("USUARIO"));
+			ice2sigsService.ejecutaWSclienteSalud(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, panel1.get("pv_ntramite"), Ice2sigsService.Operacion.INSERTA, (UserVO) session.get("USUARIO"));
 			
 			String tipoMov = "1";
 			
@@ -1441,11 +1441,11 @@ public class ComplementariosAction extends PrincipalCoreAction
 		//String sucursal = map1.get("sucursal");
 
 		//String nmsolici = map1.get("nmsolici");
-		//String nmtramite = map1.get("nmtramite");
+		String nmtramite = map1.get("nmtramite");
 		//String operacion = map1.get("operacion");
 
 		// Ejecutamos el Web Service de Cliente Salud:
-		ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, Ice2sigsService.Operacion.INSERTA, (UserVO) session.get("USUARIO"));
+		ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmtramite, Ice2sigsService.Operacion.INSERTA, (UserVO) session.get("USUARIO"));
 		
 		success = true;
 		return SUCCESS;

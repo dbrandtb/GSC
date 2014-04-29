@@ -11,6 +11,12 @@
     <bean id="reportesAction" class="mx.com.gseguros.portal.general.controller.ReportesAction" scope="prototype" >
         <property name="reportesManager" ref="reportesManagerImpl" />
     </bean>
+
+    <bean id="webServicesAction" class="mx.com.gseguros.portal.general.controller.WebServicesAction" scope="prototype" >
+        <property name="webServicesManager" ref="webServicesManagerImpl"></property>
+        <property name="ice2sigsService"    ref="ice2sigsServiceImpl"></property>
+        <property name="recibosSigsService" ref="recibosSigsServiceImpl"></property>
+    </bean>
     
 	
 </beans>
