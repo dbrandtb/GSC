@@ -28,7 +28,7 @@ Ext.override(Ext.form.TextField,
 //Obtenemos el contenido en formato JSON de la propiedad solicitada:
 var _0_smap1      = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 
-var _0_rowEditing = Ext.create('Ext.grid.plugin.RowEditing',{ clicksToEdit : 1 });
+var _0_rowEditing = Ext.create('Ext.grid.plugin.RowEditing',{ clicksToEdit : 1, errorSummary : true });
 
 var _0_reporteCotizacion = '<s:text name="rdf.cotizacion.nombre"/>';
 var _0_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
@@ -635,8 +635,27 @@ function _0_agregarAsegu(boton)
 {
 	var grid=boton.up().up();
 	debug('_0_agregarAsegu');
-	_0_storeIncisos.add({contador : _0_storeIncisos.getCount()+1});
-	_0_rowEditing.startEdit(_0_storeIncisos.getCount()-1,1);
+	var arrayEditores = _0_rowEditing.editor.form.monitor.getItems().items; 
+	debug('arrayEditores:',arrayEditores);
+	var record = new _0_modelo();
+	for(var i = 0;i<arrayEditores.length;i++)
+	{
+		var iEditor = arrayEditores[i];
+		if(iEditor.store)
+		{
+			record.set(iEditor.name,iEditor.store.getAt(0).get('key'));
+		}
+		else if(iEditor.format)
+		{
+			record.set(iEditor.name,Ext.Date.format(new Date(),'d/m/Y'));
+		}
+		else
+		{
+			record.set(iEditor.name,iEditor.name);
+		}
+	}
+	record.set('contador',_0_storeIncisos.getCount()+1);
+	_0_storeIncisos.add(record);
 	_0_rowEditing.startEdit(_0_storeIncisos.getCount()-1,1);
 	window.parent.scrollTo(0, _0_formAgrupados.getHeight());
 }

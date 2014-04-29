@@ -366,6 +366,7 @@ Ext.onReady(function()
 		    	    }
 		    	]
     		});
+    		this.items[0].forceSelection=false;
     		this.callParent();
     	}
     });
