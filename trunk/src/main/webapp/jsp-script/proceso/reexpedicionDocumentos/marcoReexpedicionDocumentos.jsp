@@ -7,8 +7,9 @@
 ////// variables //////
 var _p16_formulario;
 var _p16_gridPolizas;
-var _p16_urlRegeneraMedicinaPreventiva = '<s:url namespace="/reexpediciondocumentos" action="regeneraMedicinaPreventiva" />';
-var _p16_urlDocumentos                 = '<s:url namespace="/documentos"             action="ventanaDocumentosPoliza" />';
+var _p16_urlRegeneraMedicinaPreventiva             = '<s:url namespace="/reexpediciondocumentos" action="regeneraMedicinaPreventiva" />';
+var _p16_urlRegeneraMedicinaPreventivaEspecialista = '<s:url namespace="/reexpediciondocumentos" action="regeneraMedicinaPreventivaEspecialista" />';
+var _p16_urlDocumentos                             = '<s:url namespace="/documentos"             action="ventanaDocumentosPoliza" />';
 ////// variables //////
 Ext.onReady(function()
 {
@@ -172,6 +173,40 @@ function _p16_regenerarMedicinaPreventiva(grid,rowIndex,colIndex)
 	    }
 	});
 	debug('<_p16_regenerarMedicinaPreventiva');
+}
+function _p16_regenerarMedicinaPreventivaEspecialista(grid,rowIndex,colIndex)
+{
+    debug('>_p16_regenerarMedicinaPreventivaEspecialista row,col: ',rowIndex,colIndex);
+    var record  = grid.getStore().getAt(rowIndex);
+    debug('record:',record);
+    grid.setLoading(true);
+    Ext.Ajax.request(
+    {
+        url       : _p16_urlRegeneraMedicinaPreventivaEspecialista
+        ,jsonData :
+        {
+            stringMap : record.getData()
+        }
+        ,success  : function(response)
+        {
+            grid.setLoading(false);
+            var jsonResponse = Ext.decode(response.responseText);
+            if(jsonResponse.success)
+            {
+                mensajeCorrecto('Aviso',jsonResponse.mensaje);
+            }
+            else
+            {
+                mensajeError(jsonResponse.mensaje);
+            }
+        }
+        ,failure  : function()
+        {
+            grid.setLoading(false);
+            errorComunicacion();
+        }
+    });
+    debug('<_p16_regenerarMedicinaPreventivaEspecialista');
 }
 function _p16_buscarPolizas()
 {

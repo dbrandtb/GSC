@@ -115,10 +115,10 @@ public class ReexpedicionDocumentosAction extends PrincipalCoreAction
 			String estado   = stringMap.get("ESTADO");
 			String nmpoliza = stringMap.get("NMPOLIZA");
 			String nmsuplem = stringMap.get("NMSUPLEM");
-			String reportePagina1 = "P_1_ESPE.rdf";
-			String reportePagina2 = "P_2_ESPE.rdf";
-			String pdfPagina1 = "P_1_ESPE.pdf";
-			String pdfPagina2 = "P_2_ESPE.pdf";
+			String reportePagina1 = "P_1_INDIS.rdf";
+			String reportePagina2 = "P_2_INDIS.rdf";
+			String pdfPagina1 = "P_1_INDIS.pdf";
+			String pdfPagina2 = "P_2_INDIS.pdf";
 			
 			String url=this.getText("ruta.servidor.reports")
 					+ "?destype=cache"
@@ -158,6 +158,68 @@ public class ReexpedicionDocumentosAction extends PrincipalCoreAction
 		logger.info(""
 				+ "\n###### regeneraMedicinaPreventiva ######"
 				+ "\n########################################"
+				);
+		return SUCCESS;
+	}
+	
+	public String regeneraMedicinaPreventivaEspecialista()
+	{
+		logger.info(""
+				+ "\n####################################################"
+				+ "\n###### regeneraMedicinaPreventivaEspecialista ######"
+				);
+		logger.info("stringMap: "+stringMap);
+		try
+		{
+			String ntramite = stringMap.get("NTRAMITE");
+			String cdunieco = stringMap.get("CDUNIECO");
+			String cdramo   = stringMap.get("CDRAMO");
+			String estado   = stringMap.get("ESTADO");
+			String nmpoliza = stringMap.get("NMPOLIZA");
+			String nmsuplem = stringMap.get("NMSUPLEM");
+			String reportePagina1 = "P_1_ESPE.rdf";
+			String reportePagina2 = "P_2_ESPE.rdf";
+			String pdfPagina1 = "P_1_ESPE.pdf";
+			String pdfPagina2 = "P_2_ESPE.pdf";
+			
+			String url=this.getText("ruta.servidor.reports")
+					+ "?destype=cache"
+					+ "&desformat=PDF"
+					+ "&userid="+this.getText("pass.servidor.reports")
+					+ "&report="+reportePagina1
+					+ "&paramform=no"
+					+ "&ACCESSIBLE=YES"
+					+ "&p_unieco="+cdunieco
+					+ "&p_ramo="+cdramo
+					+ "&p_estado='M'"
+					+ "&p_poliza="+nmpoliza
+					+ "&p_suplem="+nmsuplem;
+			HttpUtil.generaArchivo(url,this.getText("ruta.documentos.poliza")+"/"+ntramite+"/"+pdfPagina1);
+			url=this.getText("ruta.servidor.reports")
+					+ "?destype=cache"
+					+ "&desformat=PDF"
+					+ "&userid="+this.getText("pass.servidor.reports")
+					+ "&report="+reportePagina2
+					+ "&paramform=no"
+					+ "&ACCESSIBLE=YES"
+					+ "&p_unieco="+cdunieco
+					+ "&p_ramo="+cdramo
+					+ "&p_estado='M'"
+					+ "&p_poliza="+nmpoliza
+					+ "&p_suplem="+nmsuplem;
+			HttpUtil.generaArchivo(url,this.getText("ruta.documentos.poliza")+"/"+ntramite+"/"+pdfPagina2);
+			mensaje = "Documento de medicina preventiva expecialista reexpedido";
+			success = true;
+		}
+		catch(Exception ex)
+		{
+			logger.error("error al regenerar medicina preventiva",ex);
+			mensaje = ex.getMessage();
+			success = false;
+		}
+		logger.info(""
+				+ "\n###### regeneraMedicinaPreventivaEspecialista ######"
+				+ "\n####################################################"
 				);
 		return SUCCESS;
 	}
