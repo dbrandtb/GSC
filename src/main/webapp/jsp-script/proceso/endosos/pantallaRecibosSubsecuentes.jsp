@@ -149,11 +149,14 @@ function _p15_botonHabilitarHandler()
                                     url     : _p15_urlEnviarCorreo
                                     ,params :
                                     {
-                                        to        : json.stringMap.correos
-                                        ,archivos : json.stringMap.url
-                                                    + '?cdreporte=REPEXC008'
-                                                    + '&params.pv_feproces_i='
-                                                    + Ext.Date.format(_p15_getFechaInicio().getValue(),'d/m/Y')
+                                        to             : json.stringMap.correos
+                                        ,archivos      : json.stringMap.url
+                                                         + '?cdreporte=REPEXC008'
+                                                         + '&params.pv_feproces_i='
+                                                         + Ext.Date.format(_p15_getFechaInicio().getValue(),'d/m/Y')
+                                        ,asunto        : 'Recibos subsecuentes habilitados'
+                                        ,mensaje       : 'Se habilitaron recibos subsecuentes a partir de la fecha '+Ext.Date.format(_p15_getFechaInicio().getValue(),'d/m/Y')
+                                        ,nombreArchivo : 'recibos_habilitados_('+Ext.Date.format(_p15_getFechaInicio().getValue(),'Ymd')+').xls'
                                     },
                                     callback : function(options,success,response)
                                     {
