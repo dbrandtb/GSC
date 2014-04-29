@@ -657,6 +657,7 @@ function _0_agregarAsegu(boton)
 	record.set('contador',_0_storeIncisos.getCount()+1);
 	_0_storeIncisos.add(record);
 	_0_rowEditing.startEdit(_0_storeIncisos.getCount()-1,1);
+	_0_rowEditing.startEdit(_0_storeIncisos.getCount()-1,1);
 	window.parent.scrollTo(0, _0_formAgrupados.getHeight());
 }
 
@@ -941,6 +942,12 @@ function _0_validarBase()
 
 function _0_tarifaSelect(selModel, record, row, column, eOpts)
 {
+	debug('column:',column);
+	if(column>0)
+	{
+		column = (column * 2) -1;
+	}
+	debug('( column * 2 )-1:',column);
     var columnName=_0_gridTarifas.columns[column].dataIndex;
     debug('record',record);
     debug('columnName',columnName);
