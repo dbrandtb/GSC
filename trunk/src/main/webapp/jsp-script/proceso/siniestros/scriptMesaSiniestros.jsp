@@ -780,6 +780,7 @@ var msgWindow;
 	        fn: function(buttonId, text, opt){
 	        	if(buttonId == 'yes'){
 	        		
+	        		mcdinGrid.setLoading(true);
 	        		Ext.Ajax.request({
 						url: _UrlSolicitarPago,
 						params: {
@@ -787,6 +788,7 @@ var msgWindow;
 				    		'params.pv_tipmov_i'   : record.get('parametros.pv_otvalor02')
 				    	},
 						success: function(response, opts) {
+							mcdinGrid.setLoading(false);
 							var respuesta = Ext.decode(response.responseText);
 							if(respuesta.success){
 								mensajeCorrecto('Aviso','El pago se ha solicitado con &eacute;xito.');	
@@ -796,6 +798,7 @@ var msgWindow;
 							
 						},
 						failure: function(){
+							mcdinGrid.setLoading(false);
 							mensajeError('No se pudo solicitar el pago.');
 						}
 					});

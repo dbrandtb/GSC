@@ -9,5 +9,9 @@
     <bean id="reportesManagerImpl" class="mx.com.gseguros.portal.general.service.impl.ReportesManagerImpl">
         <property name="reportesDAO" ref="reportesDAOImpl"/>
     </bean>
+
+    <bean id="webServicesManagerImpl" class="mx.com.gseguros.portal.general.service.impl.WebServicesManagerImpl">
+        <property name="webServicesDAO" ref="webServicesDAOImpl"/>
+    </bean>
     
 </beans>

@@ -580,6 +580,7 @@ public class EndososAction extends PrincipalCoreAction
 						(String) omap1.get("pv_estado_i"),
 						(String) omap1.get("pv_nmpoliza_i"),
 						respuestaEndosoNombres.get("pv_nmsuplem_o"),
+						confirmado,
 						Ice2sigsService.Operacion.ACTUALIZA,
 						(UserVO) session.get("USUARIO"));
 				//ejecutaWSclienteSaludEndoso((String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"), (String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"), respuestaEndosoNombres.get("pv_nmsuplem_o"), "ACTUALIZA");
@@ -1115,6 +1116,7 @@ public class EndososAction extends PrincipalCoreAction
 						smap1.get("pv_estado"), 
 						smap1.get("pv_nmpoliza"), 
 						resEndDomi.get("pv_nmsuplem_o"), 
+						tramiteGenerado,
 						Ice2sigsService.Operacion.ACTUALIZA, 
 						(UserVO) session.get("USUARIO"));
 				//ejecutaWSclienteSaludEndoso(smap1.get("pv_cdunieco"), smap1.get("pv_cdramo"), smap1.get("pv_estado"), smap1.get("pv_nmpoliza"), resEndDomi.get("pv_nmsuplem_o"), "ACTUALIZA");
@@ -4012,7 +4014,7 @@ public class EndososAction extends PrincipalCoreAction
 			    ///////////////////////////////////////
 				
 				// Ejecutamos el Web Service de Cliente Salud:
-				ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, Ice2sigsService.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
+				ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, tramiteGenerado, Ice2sigsService.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
 				//ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
 				
 				/**
@@ -4435,7 +4437,7 @@ public class EndososAction extends PrincipalCoreAction
 			    ///////////////////////////////////////
 				
 				// Ejecutamos el Web Service de Cliente Salud:
-				ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, Ice2sigsService.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
+				ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, tramiteGenerado, Ice2sigsService.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
 				//ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
 				
 				/**
@@ -4689,7 +4691,7 @@ public class EndososAction extends PrincipalCoreAction
 			case CAMBIO_DOMICILIO:
 				
 				// Ejecutamos el Web Service de Cliente Salud:
-				ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, Ice2sigsService.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
+				ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramiteEnd, Ice2sigsService.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
 				//ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
 				
 				//insertaURLrecibosEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsitGS, sucursal, nmsolici, ntramiteEmi, cdtipsup);
@@ -4721,7 +4723,7 @@ public class EndososAction extends PrincipalCoreAction
 			case CAMBIO_DOMICILIO_ASEGURADO_TITULAR:
 				
 				// Ejecutamos el Web Service de Cliente Salud:
-				ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, Ice2sigsService.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
+				ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramiteEnd, Ice2sigsService.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
 				//ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
 				
 				// Ejecutamos el Web Service de Recibos:
@@ -5172,7 +5174,7 @@ public class EndososAction extends PrincipalCoreAction
 			    ///////////////////////////////////////
 
 				// Ejecutamos el Web Service de Cliente Salud:
-				ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, Ice2sigsService.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
+				ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, tramiteGenerado, Ice2sigsService.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
 				//ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
 				
 				String cdtipsitGS = "213";

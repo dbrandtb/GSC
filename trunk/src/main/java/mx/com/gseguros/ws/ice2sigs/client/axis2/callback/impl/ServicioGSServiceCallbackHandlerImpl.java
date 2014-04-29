@@ -64,7 +64,7 @@ public class ServicioGSServiceCallbackHandlerImpl extends ServicioGSServiceCallb
 					(String) params.get("pv_nmsuplem_i"), 
 					"ErrWScliCx", 
 					"Msg: " + e.getMessage() + " ***Cause: " + e.getCause(),
-					 usuario, null, "ws.ice2sigs.url", "clienteSaludGS",
+					 usuario, (String) params.get("pv_ntramite_i"), "ws.ice2sigs.url", "clienteSaludGS",
 					 stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString(), null);
 		} catch (Exception e1) {
 			logger.error("Error al insertar en bitacora", e1);
@@ -101,7 +101,7 @@ public class ServicioGSServiceCallbackHandlerImpl extends ServicioGSServiceCallb
 						(String) params.get("pv_nmsuplem_i"), 
 						"ErrWScli",
 						respuesta.getCodigo() + " - " + respuesta.getMensaje(),
-						usuario, null, "ws.ice2sigs.url", "clienteSaludGS",
+						usuario, (String) params.get("pv_ntramite_i"), "ws.ice2sigs.url", "clienteSaludGS",
 						stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString(), Integer.toString(respuesta.getCodigo()));
 			} catch (Exception e1) {
 				logger.error("Error al insertar en bitacora", e1);
@@ -137,7 +137,7 @@ public class ServicioGSServiceCallbackHandlerImpl extends ServicioGSServiceCallb
 					"Error en Recibo " + params.get("NumRec")
 							+ " Msg: " + e.getMessage() + " ***Cause: "
 							+ e.getCause(),
-					 usuario, null, "ws.ice2sigs.url", "reciboGS",
+					 usuario, (String) params.get("pv_ntramite_i"), "ws.ice2sigs.url", "reciboGS",
 					 stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString(), null);
 		} catch (Exception e1) {
 			logger.error("Error al insertar en Bitacora", e1);
@@ -176,7 +176,7 @@ public class ServicioGSServiceCallbackHandlerImpl extends ServicioGSServiceCallb
 						"Error en Recibo " + params.get("NumRec")
 								+ " >>> " + respuesta.getCodigo() + " - "
 								+ respuesta.getMensaje(),
-						 usuario,null, "ws.ice2sigs.url", "reciboGS",
+						 usuario,(String) params.get("pv_ntramite_i"), "ws.ice2sigs.url", "reciboGS",
 						 stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString(), Integer.toString(respuesta.getCodigo()));
 			} catch (Exception e1) {
 				logger.error("Error al insertar en bitacora", e1);
@@ -207,7 +207,7 @@ public class ServicioGSServiceCallbackHandlerImpl extends ServicioGSServiceCallb
 					(String) params.get("pv_nmpoliza_i"),
 					(String) params.get("pv_nmsuplem_i"),
 					"ErrWSsinCx",
-					"Error en Siniestro: " + params.get("NumSin") + " Inciso: " + params.get("NumInc") 
+					"Error en ReclamoCod: " + params.get("NumSin") + " Inciso: " + params.get("NumInc") 
 							+ " Msg: " + e.getMessage() + " ***Cause: "
 							+ e.getCause(),
 					 usuario, (String) params.get("pv_ntramite_i"), "ws.ice2sigs.url", "reclamoGS",
@@ -244,7 +244,7 @@ public class ServicioGSServiceCallbackHandlerImpl extends ServicioGSServiceCallb
 						(String) params.get("pv_nmpoliza_i"),
 						(String) params.get("pv_nmsuplem_i"),
 						"ErrWSsin",
-						"Error en Siniestro: " + params.get("NumSin") + " Inciso: " + params.get("NumInc") 
+						"Error en ReclamoCod: " + params.get("NumSin") + " Inciso: " + params.get("NumInc") 
 								+ " >>> " + respuesta.getCodigo() + " - "
 								+ respuesta.getMensaje(),
 						 usuario, (String) params.get("pv_ntramite_i"), "ws.ice2sigs.url", "reclamoGS",

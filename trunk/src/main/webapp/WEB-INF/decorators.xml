@@ -125,6 +125,9 @@
         
         <pattern>/reportes/*.action</pattern>
         <pattern>/jsp-script/reportes/*.jsp</pattern>
+
+        <pattern>/general/*.action</pattern>
+        <pattern>/jsp-script/general/*.jsp</pattern>
         
         <pattern>/jsp-script/proceso/reexpedicionDocumentos/marcoReexpedicionDocumentos.jsp</pattern>
         

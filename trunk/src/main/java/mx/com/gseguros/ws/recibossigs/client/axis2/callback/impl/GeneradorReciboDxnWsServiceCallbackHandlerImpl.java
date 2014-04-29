@@ -59,7 +59,7 @@ public class GeneradorReciboDxnWsServiceCallbackHandlerImpl extends GeneradorRec
 					(String) params.get("pv_cdramo_i"), (String) params.get("pv_estado_i"),
 					(String) params.get("pv_nmpoliza_i"), (String) params.get("pv_nmsuplem_i"),
 					"ErrWsDXNCx", "Msg: " + e.getMessage() + " ***Cause: " + e.getCause(),
-					 usuario, null, "ws.recibossigs.url", "generarRecibosDxNGS",
+					 usuario, (String) params.get("pv_ntramite_i"), "ws.recibossigs.url", "generaRecDxn",
 					 stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString(), null);
 		} catch (Exception e1) {
 			logger.error("Error en guardado a Bitacora a PL", e1);
@@ -94,7 +94,7 @@ public class GeneradorReciboDxnWsServiceCallbackHandlerImpl extends GeneradorRec
 			try {
 				kernelManager.movBitacobro((String) params.get("pv_cdunieco_i"), (String) params.get("pv_cdramo_i"),
 						(String) params.get("pv_estado_i"), (String) params.get("pv_nmpoliza_i"), (String) params.get("pv_nmsuplem_i"),
-						"ErrWsDXN", respuesta.getCodigo() + " - " + respuesta.getMensaje(), usuario, null, "ws.recibossigs.url", "generarRecibosDxNGS",
+						"ErrWsDXN", respuesta.getCodigo() + " - " + respuesta.getMensaje(), usuario, (String) params.get("pv_ntramite_i"), "ws.recibossigs.url", "generaRecDxn",
 						stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString(), Integer.toString(respuesta.getCodigo()));
 			} catch (Exception e1) {
 				logger.error("Error en llamado a PL", e1);

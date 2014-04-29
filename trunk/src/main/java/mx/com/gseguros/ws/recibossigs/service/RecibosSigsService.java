@@ -1,6 +1,7 @@
 package mx.com.gseguros.ws.recibossigs.service;
 
 import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub.GeneradorRecibosDxnRespuesta;
 
 
 public interface RecibosSigsService {
@@ -37,5 +38,7 @@ public interface RecibosSigsService {
 	public boolean generaRecibosDxN(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String nmsuplem, String cdtipsitGS,
 			String sucursal, String nmsolici, String ntramite, UserVO userVO);
+	
+	public boolean guardaCalendariosDxnFinaliza(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String cdtipsitGS, String sucursal, String nmsolici, String ntramite, GeneradorRecibosDxnRespuesta calendarios);
 
 }

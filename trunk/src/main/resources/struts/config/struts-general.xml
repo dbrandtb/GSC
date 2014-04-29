@@ -20,6 +20,47 @@
             <result type="json"/>
         </action>
         
+        <action name="reenvioDatosWS" class="webServicesAction">
+            <result>/jsp-script/general/reenvioDatosWS.jsp</result>
+        </action>
+        
+        <action name="obtienePeticionesWSFallidas" class="webServicesAction"
+			method="obtienePeticionesFallidasWS">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					loadList.*,
+					success
+				</param>
+			</result>
+		</action>
+
+        <action name="reenviaPeticionWS" class="webServicesAction"
+			method="reenviaPeticionWS">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					mensajeRespuesta,
+					success
+				</param>
+			</result>
+		</action>
+
+        <action name="eliminaPeticionWS" class="webServicesAction"
+			method="eliminaPeticionWS">
+			<interceptor-ref name="json">
+                <param name="enableSMD">true</param>
+                <param name="ignoreSMDMethodInterfaces">false</param>
+            </interceptor-ref>
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					mensajeRespuesta,
+					success
+				</param>
+			</result>
+		</action>
+        
 	</package>
 	
 </struts>

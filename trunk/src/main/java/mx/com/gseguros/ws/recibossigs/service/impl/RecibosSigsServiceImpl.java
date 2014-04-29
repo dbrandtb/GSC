@@ -58,6 +58,7 @@ public class RecibosSigsServiceImpl implements RecibosSigsService {
 		params.put("pv_estado_i", estado);
 		params.put("pv_nmpoliza_i", nmpoliza);
 		params.put("pv_nmsuplem_i", nmsuplem);
+		params.put("pv_ntramite_i", ntramite);
 		
 		WrapperResultados result = null;
 		DatosRecibosDxNVO datosRecDxN = null;
@@ -114,8 +115,8 @@ public class RecibosSigsServiceImpl implements RecibosSigsService {
 				
 				kernelManager.movBitacobro((String) params.get("pv_cdunieco_i"), (String) params.get("pv_cdramo_i"),
 						(String) params.get("pv_estado_i"), (String) params.get("pv_nmpoliza_i"), (String) params.get("pv_nmsuplem_i"), 
-						"ErrWsDXNCx", "Msg: " + e.getMessage() + " ***Cause: " + e.getCause(), userVO.getUser(), null,
-						"ws.recibossigs.url", "generarRecibosDxNGS",  e.getPayload(), null);
+						"ErrWsDXNCx", "Msg: " + e.getMessage() + " ***Cause: " + e.getCause(), userVO.getUser(), (String) params.get("pv_ntramite_i"),
+						"ws.recibossigs.url", "generaRecDxn",  e.getPayload(), null);
 			} catch (Exception e1) {
 				logger.error("Error al insertar en Bitacora", e1);
 			}
@@ -133,108 +134,124 @@ public class RecibosSigsServiceImpl implements RecibosSigsService {
 			try {
 				kernelManager.movBitacobro((String) params.get("pv_cdunieco_i"), (String) params.get("pv_cdramo_i"),
 						(String) params.get("pv_estado_i"), (String) params.get("pv_nmpoliza_i"), (String) params.get("pv_nmsuplem_i"),
-						"ErrWsDXN", calendarios.getCodigo() + " - " + calendarios.getMensaje(), userVO.getUser(), null,
-						"ws.recibossigs.url", "generarRecibosDxNGS", resultWS.getXmlIn(), Integer.toString(calendarios.getCodigo()));
+						"ErrWsDXN", calendarios.getCodigo() + " - " + calendarios.getMensaje(), userVO.getUser(), (String) params.get("pv_ntramite_i"),
+						"ws.recibossigs.url", "generaRecDxn", resultWS.getXmlIn(), Integer.toString(calendarios.getCodigo()));
 			} catch (Exception e1) {
 				logger.error("Error al insertar en Bitacora", e1);
 			}
 			return false;
 		}else{
+			guardaCalendariosDxnFinaliza(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsitGS, sucursal, nmsolici, ntramite, calendarios);
+		}
+		
+		return true;
+	}
+	
+	public boolean guardaCalendariosDxnFinaliza(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String cdtipsitGS, String sucursal, String nmsolici, String ntramite, GeneradorRecibosDxnRespuesta calendarios){
+		
+		if(calendarios == null) return false;
+		
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdunieco_i", cdunieco);
+		params.put("pv_cdramo_i", cdramo);
+		params.put("pv_estado_i", estado);
+		params.put("pv_nmpoliza_i", nmpoliza);
+		params.put("pv_nmsuplem_i", nmsuplem);
+		
+		logger.debug("********* Total de calendarios *********** : "+calendarios.getCalendariosEntidad().length);
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		int cont = 0;
+		
+		for(CalendarioEntidad cal : calendarios.getCalendariosEntidad()){
+			cont++;
 			
-			logger.debug("********* Total de calendarios *********** : "+calendarios.getCalendariosEntidad().length);
-			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-			int cont = 0;
+			logger.debug(">>>Calendario: "+cal.getPeriodo());
+			logger.debug(">>>Dia Inicio: "+cal.getFechaIncio().get(Calendar.DAY_OF_MONTH));
 			
-			for(CalendarioEntidad cal : calendarios.getCalendariosEntidad()){
-				cont++;
-				
-				logger.debug(">>>Calendario: "+cal.getPeriodo());
-				logger.debug(">>>Dia Inicio: "+cal.getFechaIncio().get(Calendar.DAY_OF_MONTH));
-				
-				String fechaCorte = null;
-				String fechaEmision = null;
-				String fechaStatus = null;
-				String fechaInicio = null;
-				String fechaTermino = null;
-				
-				
-				/**
-				 * COMMENT: Se ha obtenido el valor del calendario original pasandolo a otro calendario ya que el original venia incompleto y al hacer un getTime
-				 * 			Regresaba un Date Erroneo
-				 */
-				
-				Calendar calendar =  Calendar.getInstance();
-				
-				if(cal.getFechaCorte() != null){
-					calendar.set(cal.getFechaCorte().get(Calendar.YEAR), cal.getFechaCorte().get(Calendar.MONTH), cal.getFechaCorte().get(Calendar.DAY_OF_MONTH));
-					fechaCorte = sdf.format(calendar.getTime());
-				}
-				if(cal.getFechaEmision() != null){
-					calendar.set(cal.getFechaEmision().get(Calendar.YEAR), cal.getFechaEmision().get(Calendar.MONTH), cal.getFechaEmision().get(Calendar.DAY_OF_MONTH));
-					fechaEmision = sdf.format(calendar.getTime());
-				}
-				if(cal.getFechaEstatus() != null){
-					calendar.set(cal.getFechaEstatus().get(Calendar.YEAR), cal.getFechaEstatus().get(Calendar.MONTH), cal.getFechaEstatus().get(Calendar.DAY_OF_MONTH));
-					fechaStatus = sdf.format(calendar.getTime());
-				}
-				if(cal.getFechaIncio() != null){
-					calendar.set(cal.getFechaIncio().get(Calendar.YEAR), cal.getFechaIncio().get(Calendar.MONTH), cal.getFechaIncio().get(Calendar.DAY_OF_MONTH));
-					fechaInicio = sdf.format(calendar.getTime());
-				}
-				if(cal.getFechaTermino() != null){
-					calendar.set(cal.getFechaTermino().get(Calendar.YEAR), cal.getFechaTermino().get(Calendar.MONTH), cal.getFechaTermino().get(Calendar.DAY_OF_MONTH));
-					fechaTermino = sdf.format(calendar.getTime());
-				}
-				
-				params.put("pi_ADMINISTRADORA", cal.getAdministradora());
-				params.put("pi_ANIO", cal.getAnho());
-				params.put("pi_ESTATUS", cal.getEstatus());
-				params.put("Pi_FECHACORTE", fechaCorte);
-				params.put("pi_FECHAEMISION", fechaEmision);
-				params.put("pi_FECHASTATUS", fechaStatus);
-				params.put("pi_FECHAINICIO", fechaInicio);
-				params.put("pi_FECHATERMINO", fechaTermino);
-				params.put("pi_HORAEMISION", cal.getHoraEmision());
-				params.put("pi_PERIODO", cal.getPeriodo());
-				params.put("pi_RETENEDORA", cal.getRetenedora());
-				
-				try {
-					kernelManager.guardaPeriodosDxN(params);
-				} catch (Exception e) {
-					logger.error("Error en llamado a PL", e);
-				}
-				
-				if(cont == 1)continue;
-				
-				String parametros = "?9999,0,"+sucursal+","+cdtipsitGS+","+nmpoliza+",0,0,,"+cont;
-				logger.debug("URL Generada para Recibo: "+ urlImpresionRecibos + parametros);
-				
-				HashMap<String, Object> paramsR =  new HashMap<String, Object>();
-				paramsR.put("pv_cdunieco_i", cdunieco);
-				paramsR.put("pv_cdramo_i", cdramo);
-				paramsR.put("pv_estado_i", estado);
-				paramsR.put("pv_nmpoliza_i", nmpoliza);
-				paramsR.put("pv_nmsuplem_i", nmsuplem);
-				paramsR.put("pv_feinici_i", new Date());
-				paramsR.put("pv_cddocume_i", urlImpresionRecibos + parametros);
-				paramsR.put("pv_dsdocume_i", "Recibo "+cont);
-				paramsR.put("pv_nmsolici_i", nmsolici);
-				paramsR.put("pv_ntramite_i", ntramite);
-				paramsR.put("pv_tipmov_i", "1");
-				paramsR.put("pv_swvisible_i", Constantes.NO);
-				
-				try{
-					kernelManager.guardarArchivo(paramsR);
-				} catch (Exception e) {
-					logger.error("Error en llamado a PL", e);
-				}
+			String fechaCorte = null;
+			String fechaEmision = null;
+			String fechaStatus = null;
+			String fechaInicio = null;
+			String fechaTermino = null;
+			
+			
+			/**
+			 * COMMENT: Se ha obtenido el valor del calendario original pasandolo a otro calendario ya que el original venia incompleto y al hacer un getTime
+			 * 			Regresaba un Date Erroneo
+			 */
+			
+			Calendar calendar =  Calendar.getInstance();
+			
+			if(cal.getFechaCorte() != null){
+				calendar.set(cal.getFechaCorte().get(Calendar.YEAR), cal.getFechaCorte().get(Calendar.MONTH), cal.getFechaCorte().get(Calendar.DAY_OF_MONTH));
+				fechaCorte = sdf.format(calendar.getTime());
+			}
+			if(cal.getFechaEmision() != null){
+				calendar.set(cal.getFechaEmision().get(Calendar.YEAR), cal.getFechaEmision().get(Calendar.MONTH), cal.getFechaEmision().get(Calendar.DAY_OF_MONTH));
+				fechaEmision = sdf.format(calendar.getTime());
+			}
+			if(cal.getFechaEstatus() != null){
+				calendar.set(cal.getFechaEstatus().get(Calendar.YEAR), cal.getFechaEstatus().get(Calendar.MONTH), cal.getFechaEstatus().get(Calendar.DAY_OF_MONTH));
+				fechaStatus = sdf.format(calendar.getTime());
+			}
+			if(cal.getFechaIncio() != null){
+				calendar.set(cal.getFechaIncio().get(Calendar.YEAR), cal.getFechaIncio().get(Calendar.MONTH), cal.getFechaIncio().get(Calendar.DAY_OF_MONTH));
+				fechaInicio = sdf.format(calendar.getTime());
+			}
+			if(cal.getFechaTermino() != null){
+				calendar.set(cal.getFechaTermino().get(Calendar.YEAR), cal.getFechaTermino().get(Calendar.MONTH), cal.getFechaTermino().get(Calendar.DAY_OF_MONTH));
+				fechaTermino = sdf.format(calendar.getTime());
 			}
 			
+			params.put("pi_ADMINISTRADORA", cal.getAdministradora());
+			params.put("pi_ANIO", cal.getAnho());
+			params.put("pi_ESTATUS", cal.getEstatus());
+			params.put("Pi_FECHACORTE", fechaCorte);
+			params.put("pi_FECHAEMISION", fechaEmision);
+			params.put("pi_FECHASTATUS", fechaStatus);
+			params.put("pi_FECHAINICIO", fechaInicio);
+			params.put("pi_FECHATERMINO", fechaTermino);
+			params.put("pi_HORAEMISION", cal.getHoraEmision());
+			params.put("pi_PERIODO", cal.getPeriodo());
+			params.put("pi_RETENEDORA", cal.getRetenedora());
+			
 			try {
-				kernelManager.lanzaProcesoDxN(params);
+				kernelManager.guardaPeriodosDxN(params);
 			} catch (Exception e) {
 				logger.error("Error en llamado a PL", e);
 			}
+			
+			if(cont == 1)continue;
+			
+			String parametros = "?9999,0,"+sucursal+","+cdtipsitGS+","+nmpoliza+",0,0,,"+cont;
+			logger.debug("URL Generada para Recibo: "+ urlImpresionRecibos + parametros);
+			
+			HashMap<String, Object> paramsR =  new HashMap<String, Object>();
+			paramsR.put("pv_cdunieco_i", cdunieco);
+			paramsR.put("pv_cdramo_i", cdramo);
+			paramsR.put("pv_estado_i", estado);
+			paramsR.put("pv_nmpoliza_i", nmpoliza);
+			paramsR.put("pv_nmsuplem_i", nmsuplem);
+			paramsR.put("pv_feinici_i", new Date());
+			paramsR.put("pv_cddocume_i", urlImpresionRecibos + parametros);
+			paramsR.put("pv_dsdocume_i", "Recibo "+cont);
+			paramsR.put("pv_nmsolici_i", nmsolici);
+			paramsR.put("pv_ntramite_i", ntramite);
+			paramsR.put("pv_tipmov_i", "1");
+			paramsR.put("pv_swvisible_i", Constantes.NO);
+			
+			try{
+				kernelManager.guardarArchivo(paramsR);
+			} catch (Exception e) {
+				logger.error("Error en llamado a PL", e);
+			}
+		}
+		
+		try {
+			kernelManager.lanzaProcesoDxN(params);
+		} catch (Exception e) {
+			logger.error("Error en llamado a PL", e);
+			return false;
 		}
 		
 		return true;
