@@ -63,7 +63,7 @@ Ext.onReady(function()
 	/*///////////////////*/
 	var gridPeticiones = Ext.create('Ext.grid.Panel',
 	    {
-    	title : 'Peticiones de WS fallidas'
+    	title : 'Peticiones de WS Fallidas'
     	,height : 400
     	,selModel: {
 	 		selType: 'checkboxmodel',
