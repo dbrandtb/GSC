@@ -89,7 +89,13 @@ public class ReportesAction extends PrincipalCoreAction {
 	public String procesoObtencionReporte() throws Exception {
 		
 		try {
-			String username = ((UserVO)session.get("USUARIO")).getUser();
+			// Obtenemos el username de la sesion, si no existe generamos uno:
+			String username = null;
+			if(session != null && session.get("USUARIO") != null) {
+				username = ((UserVO)session.get("USUARIO")).getUser();
+			} else {
+				username = new StringBuffer("user_").append(System.currentTimeMillis()).toString();
+			}
 			contentType     = TipoArchivo.XLS.getContentType();
 			filename        = cdreporte + TipoArchivo.XLS.getExtension();
 			fileInputStream = reportesManager.obtenerDatosReporte(cdreporte, username, params);
