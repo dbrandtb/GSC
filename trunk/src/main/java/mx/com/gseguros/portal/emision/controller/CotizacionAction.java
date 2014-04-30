@@ -23,6 +23,7 @@ import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.general.util.Validacion;
 import mx.com.gseguros.utils.Constantes;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 
@@ -94,7 +95,14 @@ public class CotizacionAction extends PrincipalCoreAction
         		DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usuario.getUser());
         		ntramite="";
         		cdunieco=datUsu.getCdunieco();
-        		cdramo=datUsu.getCdramo();
+        		if(StringUtils.isBlank(smap1.get("cdramo")))
+        		{
+        			cdramo=datUsu.getCdramo();
+        		}
+        		else
+        		{
+        			cdramo=smap1.get("cdramo");
+        		}
         		smap1.put("ntramite","");
         		smap1.put("cdunieco",cdunieco);
         		smap1.put("cdramo",cdramo);
