@@ -3,7 +3,7 @@
 <struts>
 	<include file="struts-default.xml" />
 
-	<package name="consultasPoliza" extends="json-default" namespace="/consultasPoliza">
+	<package name="consultasPoliza" namespace="/consultasPoliza" extends="default" >
 
 		<action name="consultaDatosPoliza" class="ConsultasPolizaAction"
 			method="consultaDatosPoliza">
@@ -142,9 +142,9 @@
 		    <result>/jsp/consultas/polizas/includes/aseguradosPoliza.jsp</result>
 		</action>
 		
-		<action name="pantallaConsultaTatrisit" class="ConsultasPolizaAction" method="pantallaConsultaTatrisit">
-		    <result>/jsp/consultas/polizas/pantallaConsultaTatrisit.jsp</result>
-		</action>
+		<action name="includes/verDatosTatrisit" class="ConsultasPolizaAction" method="obtenerDatosTatrisit">
+            <result>/jsp/consultas/polizas/includes/datosTatrisit.jsp</result>
+        </action>
 
 	</package>
 

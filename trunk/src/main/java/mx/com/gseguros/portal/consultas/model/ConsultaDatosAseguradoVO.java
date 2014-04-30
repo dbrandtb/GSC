@@ -17,9 +17,9 @@ public class ConsultaDatosAseguradoVO implements Serializable{
 	 */
 	private static final long serialVersionUID = -8555353864912795413L;
 
-	//private String cdgarant;//garantia
 	private String cdperson;
 	private String nmsituac;
+	private String cdtipsit;
 	private String titular;
 	private String cdrfc;
 	private String cdrol;
@@ -34,71 +34,65 @@ public class ConsultaDatosAseguradoVO implements Serializable{
 		return Sexo;
 	}
 
-
 	public void setSexo(String sexo) {
 		Sexo = sexo;
 	}
-
 
 	public String getFenacimi() {
 		return fenacimi;
 	}
 
-
 	public void setFenacimi(String fenacimi) {
 		this.fenacimi = fenacimi;
 	}
-
 
 	public String getCdperson() {
 		return cdperson;
 	}
 
-
 	public void setCdperson(String cdperson) {
 		this.cdperson = cdperson;
 	}
-
 
 	public String getNmsituac() {
 		return nmsituac;
 	}
 
-
 	public void setNmsituac(String nmsituac) {
 		this.nmsituac = nmsituac;
 	}
 
+	public String getCdtipsit() {
+		return cdtipsit;
+	}
+
+	public void setCdtipsit(String cdtipsit) {
+		this.cdtipsit = cdtipsit;
+	}
 
 	public String getTitular() {
 		return titular;
 	}
 
-
 	public void setTitular(String titular) {
 		this.titular = titular;
 	}
-
 
 	public String getCdrfc() {
 		return cdrfc;
 	}
 
-
 	public void setCdrfc(String cdrfc) {
 		this.cdrfc = cdrfc;
 	}
-
 
 	public String getCdrol() {
 		return cdrol;
 	}
 
-
 	public void setCdrol(String cdrol) {
 		this.cdrol = cdrol;
 	}
-
 
 	public String getDsrol() {
 		return dsrol;

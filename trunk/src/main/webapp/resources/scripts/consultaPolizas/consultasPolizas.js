@@ -498,15 +498,16 @@ Ext.onReady(function() {
         extend: 'Ext.data.Model',
         fields: [
             {type:'string', name:'cdperson'},
-            {type:'string',    name:'cdrfc'},
-            {type:'string',    name:'cdrol'},
-            {type:'string',    name:'dsrol'},
-            {type:'date',    name:'fenacimi', dateFormat: 'd/m/Y'},
-            {type:'string',    name:'nmsituac'},
-            {type:'string',    name:'sexo'},
-            {type:'string',    name:'titular'},
-            {type:'string',    name:'status'},
-            {type:'string',    name:'parentesco'}
+            {type:'string', name:'cdrfc'},
+            {type:'string', name:'cdrol'},
+            {type:'string', name:'dsrol'},
+            {type:'date'  , name:'fenacimi', dateFormat: 'd/m/Y'},
+            {type:'string', name:'nmsituac'},
+            {type:'string', name:'cdtipsit'},
+            {type:'string', name:'sexo'},
+            {type:'string', name:'titular'},
+            {type:'string', name:'status'},
+            {type:'string', name:'parentesco'}
         ]
     });
     
@@ -541,15 +542,15 @@ Ext.onReady(function() {
             {text:'Nombre',dataIndex:'titular',width:200,align:'left'},
             {text:'Estatus',dataIndex:'status',width:100,align:'left'},
             {text:'RFC',dataIndex:'cdrfc',width:100,align:'left'},
-            {text:'Sexo',dataIndex:'sexo',width:90 , align:'left'},
+            //////////{text:'Sexo',dataIndex:'sexo',width:90 , align:'left'},
             {text:'Fecha Nac.',dataIndex:'fenacimi',width:100, align:'left',renderer: Ext.util.Format.dateRenderer('d/m/Y')}
             ,{
-            	xtype         : 'actioncolumn'
-            	,icon         : _CONTEXT+'/resources/fam3icons/icons/lock.png'
-            	,width        : 30
-            	,menuDisabled : true
-            	,sortable     : false
-            	,handler      : function(grid,rowIndex)
+            	xtype         : 'actioncolumn',
+            	icon         : _CONTEXT+'/resources/fam3icons/icons/lock.png',
+            	width        : 30,
+            	menuDisabled : true,
+            	sortable     : false,
+            	handler      : function(grid,rowIndex)
             	{
             		var record = grid.getStore().getAt(rowIndex);
             		var values = panelBusqueda.down('form').getForm().getValues();
@@ -571,6 +572,24 @@ Ext.onReady(function() {
                             params   : values
                         }
                      }).show();
+            	}
+            },{
+            	xtype        : 'actioncolumn',
+            	icon         : _CONTEXT+'/resources/fam3icons/icons/information.png',
+            	width        : 30,
+            	menuDisabled : true,
+            	sortable     : false,
+            	handler      : function(grid, rowIndex) {
+            		// Se obtiene los parametros a enviar y se complementan:
+            		var record = grid.getStore().getAt(rowIndex);
+            		var values = panelBusqueda.down('form').getForm().getValues();
+            		values['params.nmsituac']=record.get('nmsituac');
+            		values['params.cdtipsit']=record.get('cdtipsit');
+            		debug('parametros para obtener los datos de tatrisit:', values);
+            		// Se invoca al loader del panel que contendrá los datos de tatrisit:
+            		tabDatosGeneralesPoliza.down('panel[name=pnlDatosTatrisit]').getLoader().load({
+            			params: values
+            		});
             	}
             }
         ]
@@ -685,7 +704,24 @@ Ext.onReady(function() {
             title: 'ASEGURADOS',
             itemId: 'tabDatosAsegurados',
             items:[{
-                items:[gridDatosAsegurado]
+                items:[
+                    gridDatosAsegurado, 
+                    {
+       		    		xtype  : 'panel',
+       		    		name   : 'pnlDatosTatrisit',
+       		    		layout : 'fit',
+                        region : 'center',
+                        loader: {
+                            url: _URL_LOADER_VER_TATRISIT,
+                            scripts  : true,
+                            loadMask : true,
+                            autoLoad : false,
+                            ajaxOptions: {
+                                method: 'POST'
+                            }
+                        }
+       		    	}
+                ]
             }]
         }, {
             id: 'tbDocumentos',
@@ -1179,6 +1215,8 @@ Ext.onReady(function() {
         //gridDatosTarificacion.getStore().removeAll();
         gridCopagosPoliza.getStore().removeAll();
         gridDatosAsegurado.getStore().removeAll();
+        //Limpiamos seccion de Datos de tatrisit:
+        tabDatosGeneralesPoliza.down('panel[name=pnlDatosTatrisit]').update('');
         tabDatosGeneralesPoliza.setActiveTab(0);
         tabPanelAgentes.setActiveTab(0);
         tabDatosGeneralesPoliza.hide();
