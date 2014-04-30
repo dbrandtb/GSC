@@ -44,7 +44,7 @@
             var datComPolizaMaestra;
             var sesionDsrol='<s:property value="map1.sesiondsrol" />';
             var datComUrlMCUpdateStatus= '<s:url namespace="/mesacontrol"     action="actualizarStatusTramite" />';
-            var datComUrlMC            = '<s:url namespace="/mesacontrol"     action="principal" />';
+            var datComUrlMC            = '<s:url namespace="/mesacontrol"     action="mcdinamica" />';
             var urlPantallaValosit     = '<s:url namespace="/"                action="pantallaValosit" />';
             var urlPantallaAgentes     = '<s:url namespace="/flujocotizacion" action="principal" />';
             var urlServidorReports      = '<s:text name="ruta.servidor.reports" />';
@@ -482,6 +482,12 @@
                                                                                 Ext.create('Ext.form.Panel').submit
                                                                                 ({
                                                                                     url             : datComUrlMC
+                                                                                    ,params         :
+                                                                                    {
+                                                                                    	'smap1.gridTitle':'Tareas',
+                                                                                    	'smap2.pv_cdtiptra_i':1,
+                                                                                    	'smap1.editable':1
+                                                                                    }
                                                                                     ,standardSubmit : true
                                                                                 });
                                                                             }
@@ -872,6 +878,12 @@
 										                                                                {
 										                                                                    standardSubmit : true
 										                                                                    ,url           : datComUrlMC
+										                                                                    ,params        :
+						                                                                                    {
+						                                                                                        'smap1.gridTitle':'Tareas',
+						                                                                                        'smap2.pv_cdtiptra_i':1,
+						                                                                                        'smap1.editable':1
+						                                                                                    }
 										                                                                });
 										                                                            }
 										                                                        }
@@ -991,6 +1003,12 @@
 				                                                                ({
 				                                                                    url             : datComUrlMC
 				                                                                    ,standardSubmit : true
+				                                                                    ,params         :
+                                                                                    {
+                                                                                        'smap1.gridTitle':'Tareas',
+                                                                                        'smap2.pv_cdtiptra_i':1,
+                                                                                        'smap1.editable':1
+                                                                                    }
 				                                                                });
 				                                                            }
 				                                                            else
@@ -1113,6 +1131,12 @@
                                                                                 ({
                                                                                     url             : datComUrlMC
                                                                                     ,standardSubmit : true
+                                                                                    ,params         :
+                                                                                    {
+                                                                                        'smap1.gridTitle':'Tareas',
+                                                                                        'smap2.pv_cdtiptra_i':1,
+                                                                                        'smap1.editable':1
+                                                                                    }
                                                                                 });
                                                                             }
                                                                             else
@@ -1235,6 +1259,12 @@
                                                                                 ({
                                                                                     url             : datComUrlMC
                                                                                     ,standardSubmit : true
+                                                                                    ,params         :
+                                                                                    {
+                                                                                        'smap1.gridTitle':'Tareas',
+                                                                                        'smap2.pv_cdtiptra_i':1,
+                                                                                        'smap1.editable':1
+                                                                                    }
                                                                                 });
                                                                             }
                                                                             else
