@@ -223,20 +223,23 @@ Ext.onReady(function()
             	var subttDedu = subttDesc - deducible;
             	
             	if(causaSiniestro !="2"){
-            		var totalPenalizacion = _p12_penalTotal[indice].totalPenalizacion;
-            		var copagoaplica = subttDedu*(totalPenalizacion/100.0);
+            		var copagoPesos       = _p12_penalTotal[indice].copagoPesos;
+            		var copagoPorcentajes = _p12_penalTotal[indice].copagoPorcentajes;
             		
+            		var copagoaplica = (copagoPesos*1.0) + (subttDedu*(copagoPorcentajes/100.0));
             	}else{
             		_p12_slist2[indice].COPAGOAUX = _p12_slist2[indice].COPAGO;
                 	_p12_slist2[indice].COPAGO = 0;
+                	
                 	if(
                 		!(!_p12_slist2[indice].COPAGOAUX
                 		||_p12_slist2[indice].COPAGOAUX.toLowerCase()=='na'
-                		||_p12_slist2[indice].COPAGOAUX.toLowerCase()=='no')	
+                		||_p12_slist2[indice].COPAGOAUX.toLowerCase()=='no')
                 	)
                 	{
-                		_p12_slist2[indice].COPAGO = _p12_slist2[indice].COPAGOAUX;
+                		_p12_slist2[indice].COPAGO = _p12_slist2[indice].COPAGOAUX.replace(",","");
                 	}
+                	
                 	var copago    = _p12_slist2[indice].COPAGO*1.0;
                 	var tipcopag  = _p12_slist2[indice].TIPOCOPAGO;
                 	if(tipcopag=='$')
@@ -720,14 +723,10 @@ Ext.onReady(function()
                 }
             });
             debug('indice,_p12_lprem[indice]',indice,_p12_lprem[indice]);
+            
             var ptimpoajus  = _p12_lprem[indice].SUBTOTAL*1.0;
             var destopor    = _p12_slist1[indice].DESCPORC*1.0;
             var destoimp    = _p12_slist1[indice].DESCNUME*1.0;
-            var totalPenalizacion = _p12_penalTotal[indice].totalPenalizacion;
-            debug('totalPenalizacion:'    , totalPenalizacion);
-            var _facturaIndividual = _p12_slist1[indice];
-            debug('_facturaIndividual:'    , _facturaIndividual);
-            
             var destoaplica = (ptimpoajus*(_p12_slist1[indice].DESCPORC/100.0)) + destoimp;
             var subttdesc   = ptimpoajus-destoaplica;
             var sDeducible  = _p12_slist2[indice].DEDUCIBLE;
@@ -740,42 +739,53 @@ Ext.onReady(function()
             {
                 deducible = sDeducible.replace(',','')*1.0;
             }
-            
             var subttdeduc  = subttdesc-deducible;
+            _p12_slist2[indice].COPAGOAUX = _p12_slist2[indice].COPAGO;
+            _p12_slist2[indice].COPAGO = 0;
+            if(
+                !(!_p12_slist2[indice].COPAGOAUX
+                ||_p12_slist2[indice].COPAGOAUX.toLowerCase()=='na'
+                ||_p12_slist2[indice].COPAGOAUX.toLowerCase()=='no')    
+            )
+            {
+                _p12_slist2[indice].COPAGO = _p12_slist2[indice].COPAGOAUX.replace(",","");
+            }
+            var copago      = _p12_slist2[indice].COPAGO*1.0;
+            var tipcopag    = _p12_slist2[indice].TIPOCOPAGO;
+            var causaSiniestro = _p12_penalTotal[indice].causaSiniestro;
+            var _facturaIndividual = _p12_slist1[indice];
+            
             if(_facturaIndividual.CDGARANT=='18HO'||_facturaIndividual.CDGARANT=='18MA')
            	{
-            	var copago      = totalPenalizacion *1.0;
+            	if(causaSiniestro !="2"){
+            		var copagoPesos       = _p12_penalTotal[indice].copagoPesos;
+            		var copagoPorcentajes = _p12_penalTotal[indice].copagoPorcentajes;
+            		var copagoaplica 	  = (copagoPesos*1.0) + (subttdeduc*(copagoPorcentajes/100.0));
+            	}else{
+            		if(tipcopag=='$'){
+                        var copagoaplica = copago;
+                    }
+                    else if(tipcopag=='%'){
+                        var copagoaplica = subttdeduc*(copago/100.0);
+                    }
+                    else{
+                        var copagoaplica = 0.0;
+                    }
+            	}
            	}else{
-           		_p12_slist2[indice].COPAGOAUX = _p12_slist2[indice].COPAGO;
-                _p12_slist2[indice].COPAGO = 0;
-                if(
-                    !(!_p12_slist2[indice].COPAGOAUX
-                    ||_p12_slist2[indice].COPAGOAUX.toLowerCase()=='na'
-                    ||_p12_slist2[indice].COPAGOAUX.toLowerCase()=='no')    
-                )
-                {
-                    _p12_slist2[indice].COPAGO = _p12_slist2[indice].COPAGOAUX;
+           		if(tipcopag=='$'){
+                    var copagoaplica = copago;
                 }
-                var copago      = _p12_slist2[indice].COPAGO*1.0;
+                else if(tipcopag=='%'){
+                    var copagoaplica = subttdeduc*(copago/100.0);
+                }
+                else{
+                    var copagoaplica = 0.0;
+                }
            	}
-            
-            var tipcopag    = _p12_slist2[indice].TIPOCOPAGO;
-            if(tipcopag=='$')
-            {
-                var copagoaplica = copago;
-            }
-            else if(tipcopag=='%')
-            {
-                var copagoaplica = subttdeduc*(copago/100.0);
-            }
-            else
-            {
-                var copagoaplica = 0.0;
-            }
             var total = subttdeduc - copagoaplica;
             _p12_slist1[indice]['TOTALFACTURA']=total;
             totalglobal = totalglobal + total;
-            
             var panelTotales = Ext.create('Ext.panel.Panel',
             {
             	defaults :
@@ -1603,7 +1613,6 @@ function _p12_validaAutorizaciones()
             var j;
             for(j=0;j<conceptos.length;j++)
             {
-            	//var facturaIte = conceptos[j];
             	var conceptosInt = conceptos[j];
             	
             	if(+ conceptosInt.PTIMPORT <= 0){

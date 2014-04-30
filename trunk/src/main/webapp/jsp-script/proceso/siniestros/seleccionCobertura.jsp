@@ -429,17 +429,21 @@
             }
             function _selCobAvanza()
             {
+            	console.log("_selCobParams");
+            	console.log(_selCobParams);
                 var params =
                 {
                     'params.ntramite' : _selCobParams.ntramite,
                     'params.tipopago' : _selCobParams.tipopago
                 }
-                Ext.create('Ext.form.Panel').submit(
+                
+                alert("ENTRA"+_selCobParams);
+                /*Ext.create('Ext.form.Panel').submit(
                 {
                     url             : _selCobParams.otvalor02==TipoPago.Directo ? _selCobUrlAvanza : _selCobUrlAvanzaReembolso
                     ,standardSubmit : true
                     ,params         : params
-                });
+                });*/
             }
         </script>
     </head>

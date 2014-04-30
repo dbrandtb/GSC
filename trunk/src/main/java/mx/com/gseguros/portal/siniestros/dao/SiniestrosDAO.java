@@ -87,6 +87,10 @@ public interface SiniestrosDAO {
 
 	public String guardaAltaSiniestroAltaTramite(String ntramite) throws DaoException;
 
+	
+	public String guardaAltaSiniestroSinAutorizacion(String ntramite,String cdunieco,String cdramo, String estado,String nmpoliza,
+			  String nmsuplem,String nmsituac, String cdtipsit) throws DaoException;
+	
 	public String guardaAltaMsinival(HashMap<String, Object> paramMsinival) throws DaoException;
 
 	public List<ListaFacturasVO> obtieneListadoFacturas(HashMap<String, Object> paramFact) throws DaoException;
@@ -367,5 +371,4 @@ public interface SiniestrosDAO {
 			,String cdmotivo
 			,String cdclausu
 			) throws Exception;
-	
 }

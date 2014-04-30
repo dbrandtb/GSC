@@ -418,7 +418,19 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			throw new ApplicationException(daoExc.getMessage(), daoExc);
 		}
 	}
-
+	
+	@Override
+	public String getAltaSiniestroSinAutorizacion(String ntramite,String cdunieco,String cdramo, String estado,String nmpoliza,
+												  String nmsuplem,String nmsituac, String cdtipsit) throws ApplicationException {
+		// TODO Auto-generated method stub
+		try {
+			return siniestrosDAO.guardaAltaSiniestroSinAutorizacion(ntramite, cdunieco, cdramo, estado, nmpoliza,
+					  												nmsuplem, nmsituac, cdtipsit);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}
+	
 	@Override
 	public String getAltaMsinival(HashMap<String, Object> paramMsinival) throws ApplicationException {
 		// TODO Auto-generated method stub
@@ -517,10 +529,11 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 	 * aaapertu
 	 */
 	@Override
-	public List<Map<String,String>> listaSiniestrosTramite(String ntramite) throws Exception
+	public List<Map<String,String>> listaSiniestrosTramite(String ntramite,String procesoInterno) throws Exception
 	{
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("pv_ntramite_i" , ntramite);
+		params.put("pv_autoServ_i" , procesoInterno);
 		log.debug("listaSiniestrosTramite params: "+params);
 		List<Map<String,String>> lista = siniestrosDAO.listaSiniestrosTramite(params);
 		if(lista == null)

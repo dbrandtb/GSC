@@ -149,6 +149,9 @@ public interface SiniestrosManager {
 
 	public String getAltaSiniestroAltaTramite(String ntramite) throws ApplicationException;
 
+	public String getAltaSiniestroSinAutorizacion(String ntramite,String cdunieco,String cdramo, String estado,String nmpoliza,
+			  									  String nmsuplem,String nmsituac, String cdtipsit) throws ApplicationException;
+	
 	public String getAltaMsinival(HashMap<String, Object> paramMsinival) throws ApplicationException;
 
 	public List<ListaFacturasVO> getConsultaListaFacturas(HashMap<String, Object> paramFact) throws ApplicationException;
@@ -188,7 +191,7 @@ public interface SiniestrosManager {
 	 * 54647 NMRECLAM,
 	 * aaapertu
 	 */
-	public List<Map<String,String>> listaSiniestrosTramite(String ntramite) throws Exception;
+	public List<Map<String,String>> listaSiniestrosTramite(String ntramite,String procesoInterno) throws Exception;
 	
 	/**
 	 * PKG_PRESINIESTRO.P_GET_TRAMITE_COMPLETO

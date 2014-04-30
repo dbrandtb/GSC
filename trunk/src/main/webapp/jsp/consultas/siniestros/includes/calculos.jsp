@@ -16,6 +16,9 @@ var _p12_lpdir   = <s:property value='lpdirJson'                   escapeHtml='f
 var _p12_lprem   = <s:property value='lpremJson'                   escapeHtml='false' />;//lista de datos preembolso
 var _p12_listaWS = <s:property value='listaImportesWebServiceJson' escapeHtml='false' />;
 
+var _p12_penalTotal = <s:property value='datosPenalizacionJson' escapeHtml='false' />; //Informacion de penalizacion
+
+debug('penalizacion:'    , _p12_penalTotal);
 debug('_p12_smap:'    , _p12_smap);
 debug('_p12_smap2:'   , _p12_smap2);
 debug('_p12_smap3:'   , _p12_smap3);
@@ -137,6 +140,7 @@ Ext.onReady(function()
 	////// componentes //////
 	var totalglobal = 0.0;
     
+	//PAGO DIRECTO
     if(_p12_smap.OTVALOR02=='1')
     {
         debug('PAGO DIRECTO');
@@ -198,6 +202,7 @@ Ext.onReady(function()
             if(_p12_smap2.CDGARANT=='18HO'||_p12_smap2.CDGARANT=='18MA')
             {
             	debug('HOSPITAL');
+            	var causaSiniestro = _p12_penalTotal[indice].causaSiniestro;
             	var importe   = _p12_lhosp[indice].PTIMPORT*1.0;
             	var descuento = _p12_lhosp[indice].DESTO*1.0;
             	var iva       = _p12_lhosp[indice].IVA*1.0;
@@ -216,30 +221,41 @@ Ext.onReady(function()
             		deducible = sDeducible.replace(',','')*1.0;
             	}
             	var subttDedu = subttDesc - deducible;
-            	_p12_slist2[indice].COPAGOAUX = _p12_slist2[indice].COPAGO;
-            	_p12_slist2[indice].COPAGO = 0;
-            	if(
-            		!(!_p12_slist2[indice].COPAGOAUX
-            		||_p12_slist2[indice].COPAGOAUX.toLowerCase()=='na'
-            		||_p12_slist2[indice].COPAGOAUX.toLowerCase()=='no')	
-            	)
-            	{
-            		_p12_slist2[indice].COPAGO = _p12_slist2[indice].COPAGOAUX;
+            	
+            	if(causaSiniestro !="2"){
+            		var copagoPesos       = _p12_penalTotal[indice].copagoPesos;
+            		var copagoPorcentajes = _p12_penalTotal[indice].copagoPorcentajes;
+            		
+            		var copagoaplica = (copagoPesos*1.0) + (subttDedu*(copagoPorcentajes/100.0));
+            	}else{
+            		_p12_slist2[indice].COPAGOAUX = _p12_slist2[indice].COPAGO;
+                	_p12_slist2[indice].COPAGO = 0;
+                	
+                	if(
+                		!(!_p12_slist2[indice].COPAGOAUX
+                		||_p12_slist2[indice].COPAGOAUX.toLowerCase()=='na'
+                		||_p12_slist2[indice].COPAGOAUX.toLowerCase()=='no')
+                	)
+                	{
+                		_p12_slist2[indice].COPAGO = _p12_slist2[indice].COPAGOAUX.replace(",","");
+                	}
+                	
+                	var copago    = _p12_slist2[indice].COPAGO*1.0;
+                	var tipcopag  = _p12_slist2[indice].TIPOCOPAGO;
+                	if(tipcopag=='$')
+                	{
+                		var copagoaplica = copago;
+                	}
+                	else if(tipcopag=='%')
+                	{
+                		var copagoaplica = subttDedu*(copago/100.0);
+                	}
+                	else
+                	{
+                		var copagoaplica = 0.0;
+                	}
             	}
-            	var copago    = _p12_slist2[indice].COPAGO*1.0;
-            	var tipcopag  = _p12_slist2[indice].TIPOCOPAGO;
-            	if(tipcopag=='$')
-            	{
-            		var copagoaplica = copago;
-            	}
-            	else if(tipcopag=='%')
-            	{
-            		var copagoaplica = subttDedu*(copago/100.0);
-            	}
-            	else
-            	{
-            		var copagoaplica = 0.0;
-            	}
+            	
             	var total = subttDedu - ( copagoaplica + iva );
             	debug('subttDesc',subttDesc);
             	debug('deducible',deducible);
@@ -312,13 +328,23 @@ Ext.onReady(function()
             	        ,{
                             xtype       : 'displayfield'
                             ,labelWidth : 200
-                            ,fieldLabel : 'Copago'
+                            ,fieldLabel : 'Copago' //  PAGO DIRECRO
                             ,value      : copagoaplica
                             ,valueToRaw : function(value)
                             {
                                 return Ext.util.Format.usMoney(value);
                             }
                         }
+            	        /*,{
+                            xtype       : 'displayfield'
+                            ,labelWidth : 200
+                            ,fieldLabel : 'Penalizaci&oacute;n'
+                            ,value      : copagoaplica
+                            ,valueToRaw : function(value)
+                            {
+                                return Ext.util.Format.usMoney(value);
+                            }
+                        }*/
             	        ,{
                             xtype       : 'displayfield'
                             ,labelWidth : 200
@@ -560,6 +586,7 @@ Ext.onReady(function()
     }
     else
     {
+    	//PAGO POR REEMBOLSO
         debug('REEMBOLSO');
         var indice;
         for(indice = 0;indice<_p12_slist1.length;indice++)
@@ -692,6 +719,7 @@ Ext.onReady(function()
                 }
             });
             debug('indice,_p12_lprem[indice]',indice,_p12_lprem[indice]);
+            
             var ptimpoajus  = _p12_lprem[indice].SUBTOTAL*1.0;
             var destopor    = _p12_slist1[indice].DESCPORC*1.0;
             var destoimp    = _p12_slist1[indice].DESCNUME*1.0;
@@ -716,26 +744,44 @@ Ext.onReady(function()
                 ||_p12_slist2[indice].COPAGOAUX.toLowerCase()=='no')    
             )
             {
-                _p12_slist2[indice].COPAGO = _p12_slist2[indice].COPAGOAUX;
+                _p12_slist2[indice].COPAGO = _p12_slist2[indice].COPAGOAUX.replace(",","");
             }
             var copago      = _p12_slist2[indice].COPAGO*1.0;
             var tipcopag    = _p12_slist2[indice].TIPOCOPAGO;
-            if(tipcopag=='$')
-            {
-                var copagoaplica = copago;
-            }
-            else if(tipcopag=='%')
-            {
-                var copagoaplica = subttdeduc*(copago/100.0);
-            }
-            else
-            {
-                var copagoaplica = 0.0;
-            }
+            var causaSiniestro = _p12_penalTotal[indice].causaSiniestro;
+            var _facturaIndividual = _p12_slist1[indice];
+            
+            if(_facturaIndividual.CDGARANT=='18HO'||_facturaIndividual.CDGARANT=='18MA')
+           	{
+            	if(causaSiniestro !="2"){
+            		var copagoPesos       = _p12_penalTotal[indice].copagoPesos;
+            		var copagoPorcentajes = _p12_penalTotal[indice].copagoPorcentajes;
+            		var copagoaplica 	  = (copagoPesos*1.0) + (subttdeduc*(copagoPorcentajes/100.0));
+            	}else{
+            		if(tipcopag=='$'){
+                        var copagoaplica = copago;
+                    }
+                    else if(tipcopag=='%'){
+                        var copagoaplica = subttdeduc*(copago/100.0);
+                    }
+                    else{
+                        var copagoaplica = 0.0;
+                    }
+            	}
+           	}else{
+           		if(tipcopag=='$'){
+                    var copagoaplica = copago;
+                }
+                else if(tipcopag=='%'){
+                    var copagoaplica = subttdeduc*(copago/100.0);
+                }
+                else{
+                    var copagoaplica = 0.0;
+                }
+           	}
             var total = subttdeduc - copagoaplica;
             _p12_slist1[indice]['TOTALFACTURA']=total;
             totalglobal = totalglobal + total;
-            
             var panelTotales = Ext.create('Ext.panel.Panel',
             {
             	defaults :
@@ -829,7 +875,7 @@ Ext.onReady(function()
                         xtype       : 'displayfield'
                         ,labelWidth : 200
                         ,value      : copagoaplica
-                        ,fieldLabel : 'Copago'
+                        ,fieldLabel : 'Copago'  // PAGO POR REEMBOLSO
                         ,valueToRaw : function(value)
                         {
                             return Ext.util.Format.usMoney(value);
@@ -1102,7 +1148,7 @@ Ext.onReady(function()
 	    ,renderTo : '_p12_divpri'
 	    ,items    :
 	    [
-	        ,_p12_formTramite
+	        _p12_formTramite
 	        ,_p12_formFactura
 	        ,_p12_formProveedor
 	        ,_p12_formSiniestro
@@ -1121,10 +1167,27 @@ Ext.onReady(function()
 	_p12_formFactura.loadRecord(new _p12_Factura(_p12_smap2));
 	_p12_formProveedor.loadRecord(new _p12_Proveedor(_p12_smap3));
 	_p12_formSiniestro.loadRecord(new _p12_Siniestro(_p12_smap2));
+	/*_p12_storeFacturas.load(
+	{
+		params : { 'smap.ntramite' : _p12_smap.NTRAMITE }
+	});
+	_p12_storeSiniestros.load(
+    {
+        params : { 'smap.ntramite' : _p12_smap.NTRAMITE }
+    });*/
 	////// loader //////
 });
 
 ////// funciones //////
+function _p12_mostrarWindowAutoriza(grid,record)
+{
+	debug('_p12_mostrarWindowAutoriza record:',record.raw);
+	_p12_formAutoriza.getForm().reset();
+	_p12_formAutoriza.loadRecord(new _p12_Concepto(record.raw));
+	_p12_windowAutoriza.show();
+	centrarVentanaInterna(_p12_windowAutoriza);
+}
+
 function _p12_rechazoSiniestro()
 {
 	debug('_p12_rechazoSiniestro');
@@ -1339,6 +1402,13 @@ function _p12_calcular()
 }
 --%>
 
+function _p12_guardar_click()
+{
+	debug('_p12_guardar_click');
+	var ventana = Ext.MessageBox.confirm('Guardar pagos','¿Desea guardar el importe total?',_p12_guardar_confirmar);
+	centrarVentanaInterna(ventana);
+}
+
 function _p12_guardar_confirmar(boton)
 {
 	debug('_p12_guardar_confirmar:',boton);
@@ -1500,7 +1570,6 @@ function _p12_validaAutorizaciones()
             var j;
             for(j=0;j<conceptos.length;j++)
             {
-            	//var facturaIte = conceptos[j];
             	var conceptosInt = conceptos[j];
             	
             	if(+ conceptosInt.PTIMPORT <= 0){
