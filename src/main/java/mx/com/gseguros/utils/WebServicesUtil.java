@@ -13,15 +13,21 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.impl.llom.util.AXIOMUtil;
+import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axis2.Constants;
 import org.apache.axis2.addressing.EndpointReference;
+import org.apache.axis2.client.OperationClient;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
+import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.description.AxisOperation;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.description.OutInAxisOperation;
 import org.apache.axis2.transport.http.HTTPConstants;
+import org.apache.axis2.wsdl.WSDLConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
@@ -87,7 +93,7 @@ public class WebServicesUtil {
 	       	defaultOptions.setTimeOutInMilliSeconds(timeout);
 	       }
 	       defaultOptions.setTo(new EndpointReference(direccionWS));
-	       //defaultOptions.setAction(actionWS);
+	       defaultOptions.setAction("tns:"+actionWS);
 	       
 	       if("0".equals(modo)){
 		       
@@ -119,12 +125,12 @@ public class WebServicesUtil {
 	    	   throw new Exception("Error en codigo de mode");
 	       }
 
-	       AxisService axisServ = new AxisService();
-           AxisOperation axisOp = new OutInAxisOperation(new QName(actionWS));
-           axisServ.addOperation(axisOp);
+//	       AxisService axisServ = new AxisService();
+//         AxisOperation axisOp = new OutInAxisOperation(new QName(actionWS));
+//         axisServ.addOperation(axisOp);
            
            serviceClient.setOptions(defaultOptions);
-           serviceClient.setAxisService(axisServ);
+//         serviceClient.setAxisService(axisServ);
            
 	        
 	       /**invoke service*/
@@ -136,6 +142,89 @@ public class WebServicesUtil {
 	       }
 	       logger.debug(" Respuesta invocaServicio " +  actionWS + " = " + respuesta);
 	        
+		logger.debug("Termina Invoca Servicio [ " + actionWS + " ]");
+		return respuesta;
+	}
+
+	public static OMElement invocaServicioAxis2(String direccionWS, String actionWS, OMElement mensaje, Long timeout, Options options, boolean asincrono, String modo) throws Exception {
+		
+		logger.debug("Inicia Invoca Servicio [ " + actionWS + " ]");
+		/**Declaración de variables*/
+		OMElement respuesta = null;
+		
+		/**Create the service client*/
+		logger.debug(" ***** Parametros Servicio ***** ");
+		logger.debug(" Direccion = " + direccionWS);
+		logger.debug(" Action    = " + actionWS);
+		logger.debug(" Mensaje   = " + mensaje);
+		logger.debug(" Timeout   = " + timeout);
+		logger.debug(" Asincrono = " + asincrono);
+		
+		Options defaultOptions = new Options();
+		if(timeout != null){
+			defaultOptions.setTimeOutInMilliSeconds(timeout);
+		}
+		defaultOptions.setTo(new EndpointReference(direccionWS));
+		//defaultOptions.setAction(actionWS);
+		defaultOptions.setExceptionToBeThrownOnSOAPFault(true);
+		defaultOptions.setUseSeparateListener(false);
+		
+		if("0".equals(modo)){
+			
+		}else if("1".equals(modo)){
+			defaultOptions.setProperty(HTTPConstants.CHUNKED, Boolean.TRUE);
+		}else if("2".equals(modo)){
+			defaultOptions.setProperty(HTTPConstants.CHUNKED, Boolean.FALSE);
+		}else if("3".equals(modo)){
+			defaultOptions.setProperty(HTTPConstants.REUSE_HTTP_CLIENT, Boolean.TRUE);
+		}else if("4".equals(modo)){
+			defaultOptions.setCallTransportCleanup(true);
+		}else if("5".equals(modo)){
+			defaultOptions.setProperty(HTTPConstants.CHUNKED, Boolean.FALSE);
+			defaultOptions.setProperty(HTTPConstants.REUSE_HTTP_CLIENT, Boolean.TRUE);
+		}else if("6".equals(modo)){
+			defaultOptions.setProperty(HTTPConstants.CHUNKED, Boolean.FALSE);
+			defaultOptions.setProperty(HTTPConstants.REUSE_HTTP_CLIENT, Boolean.TRUE);
+			defaultOptions.setCallTransportCleanup(true);
+		}else if("7".equals(modo)){
+			defaultOptions.setProperty(Constants.Configuration.DISABLE_SOAP_ACTION, Boolean.TRUE);
+		}else if("8".equals(modo)){
+			defaultOptions.setProperty(Constants.Configuration.DISABLE_SOAP_ACTION, Boolean.FALSE);
+		}else if("9".equals(modo)){
+			defaultOptions.setProperty(Constants.Configuration.MESSAGE_TYPE,HTTPConstants.MEDIA_TYPE_APPLICATION_ECHO_XML);
+		}else if("10".equals(modo)){
+			defaultOptions.setProperty(Constants.Configuration.DISABLE_SOAP_ACTION, Boolean.TRUE);
+			defaultOptions.setProperty(Constants.Configuration.MESSAGE_TYPE,HTTPConstants.MEDIA_TYPE_APPLICATION_ECHO_XML);
+		}else{
+			throw new Exception("Error en codigo de mode");
+		}
+		
+		AxisService axisServ = new AxisService();
+		AxisOperation axisOp = new OutInAxisOperation(new QName(actionWS));
+		axisServ.addOperation(axisOp);
+		
+		ServiceClient serviceClient = new ServiceClient(null, axisServ);
+		serviceClient.setOptions(defaultOptions);
+		
+		OperationClient callerOp = serviceClient.createClient(new QName(actionWS));
+		MessageContext messageCtx = new MessageContext(); 
+		
+		SOAPEnvelope messageEnvelop = OMAbstractFactory.getSOAP12Factory().getDefaultEnvelope();
+		messageEnvelop.getBody().addChild(mensaje);
+		
+		messageCtx.setEnvelope(messageEnvelop);
+		callerOp.addMessageContext(messageCtx);
+		
+		callerOp.execute(!asincrono);
+		
+		/**invoke service*/
+		if(!asincrono) {
+			MessageContext resultMessage = callerOp.getMessageContext(WSDLConstants.MESSAGE_LABEL_IN_VALUE);
+			respuesta = AXIOMUtil.stringToOM(resultMessage.getEnvelope().toString());
+		} 
+		
+		logger.debug(" Respuesta invocaServicio " +  actionWS + " = " + respuesta);
+		
 		logger.debug("Termina Invoca Servicio [ " + actionWS + " ]");
 		return respuesta;
 	}
