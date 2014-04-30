@@ -69,9 +69,9 @@ public class WebServicesUtil {
 		       }
 		       defaultOptions.setTo(new EndpointReference(direccionWS));
 		       defaultOptions.setAction(actionWS);
-		       defaultOptions.setProperty(HTTPConstants.CHUNKED, Boolean.FALSE);
-		       defaultOptions.setProperty(HTTPConstants.REUSE_HTTP_CLIENT, Boolean.TRUE);
-		       defaultOptions.setCallTransportCleanup(true);
+//		       defaultOptions.setProperty(HTTPConstants.CHUNKED, Boolean.FALSE);
+//		       defaultOptions.setProperty(HTTPConstants.REUSE_HTTP_CLIENT, Boolean.TRUE);
+//		       defaultOptions.setCallTransportCleanup(true);
 	           serviceClient.setOptions(defaultOptions);
 		}
 	        
