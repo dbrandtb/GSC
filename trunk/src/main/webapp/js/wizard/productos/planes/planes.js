@@ -270,7 +270,7 @@ agregar = function() {
                                 	windowPlan.close();
                             	},
                             	success: function(form, action) {
-	                            	Ext.MessageBox.alert('Estado', Ext.util.JSON.decode(action.response.responseText).mensajeRespuesta);
+	                            	Ext.MessageBox.alert('Estado', 'Cobertura agregada');
                                 	windowPlan.close();
                                 	store.load();
                                 	Ext.getCmp('arbol-productos').getRootNode().reload();
