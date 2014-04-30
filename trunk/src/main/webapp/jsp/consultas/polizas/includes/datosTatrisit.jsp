@@ -24,8 +24,7 @@ Ext.onReady(function()
 	////// componentes //////
 	_p17_formulario = Ext.create('Ext.form.Panel',
 	{
-		title : 'Datos del asegurado'
-		,defaults :
+		defaults :
 		{
 			style : 'margin : 5px;'
 		}

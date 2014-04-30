@@ -7,7 +7,7 @@ Ext.onReady(function() {
         allowDeselect: true
     });
     
-    // Conversiï¿½n para el tipo de moneda
+    // Conversion para el tipo de moneda
     Ext.util.Format.thousandSeparator = ',';
     Ext.util.Format.decimalSeparator = '.';
     
@@ -63,19 +63,6 @@ Ext.onReady(function() {
                                 
                                 //Mostrar session de datos generales:
                                 tabDatosGeneralesPoliza.show();
-                                
-                                /*
-                                //Datos de Tarificaciï¿½n
-                                storeDatosTarificacion.load({
-                                    params: panelBusqueda.down('form').getForm().getValues(),
-                                    callback: function(records, operation, success){
-                                        if(!success){
-                                            showMessage('Error', 'Error al obtener la tarificaci\u00F3n de la p\u00F3liza', 
-                                                Ext.Msg.OK, Ext.Msg.ERROR)
-                                        }              
-                                    }
-                                });
-                                */
                                 
                                 //Datos de Copagos de poliza
                                 storeCopagosPoliza.load({
@@ -493,6 +480,8 @@ Ext.onReady(function() {
     ]);
     
     
+    /**INFORMACION DE LA SECCION DE ASEGURADOS**/
+    //-------------------------------------------------------------------------------------------------------------
     // Modelo
     Ext.define('AseguradosModel', {
         extend: 'Ext.data.Model',
@@ -542,11 +531,12 @@ Ext.onReady(function() {
             {text:'Nombre',dataIndex:'titular',width:200,align:'left'},
             {text:'Estatus',dataIndex:'status',width:100,align:'left'},
             {text:'RFC',dataIndex:'cdrfc',width:100,align:'left'},
-            //////////{text:'Sexo',dataIndex:'sexo',width:90 , align:'left'},
+            {text:'Sexo',dataIndex:'sexo',width:60 , align:'left'},
             {text:'Fecha Nac.',dataIndex:'fenacimi',width:100, align:'left',renderer: Ext.util.Format.dateRenderer('d/m/Y')}
             ,{
-            	xtype         : 'actioncolumn',
+            	xtype        : 'actioncolumn',
             	icon         : _CONTEXT+'/resources/fam3icons/icons/lock.png',
+            	tooltip      : 'Ver exclusiones',
             	width        : 30,
             	menuDisabled : true,
             	sortable     : false,
@@ -576,6 +566,7 @@ Ext.onReady(function() {
             },{
             	xtype        : 'actioncolumn',
             	icon         : _CONTEXT+'/resources/fam3icons/icons/information.png',
+            	tooltip      : 'Ver detalle del asegurado',
             	width        : 30,
             	menuDisabled : true,
             	sortable     : false,
@@ -587,9 +578,11 @@ Ext.onReady(function() {
             		values['params.cdtipsit']=record.get('cdtipsit');
             		debug('parametros para obtener los datos de tatrisit:', values);
             		// Se invoca al loader del panel que contendrá los datos de tatrisit:
-            		tabDatosGeneralesPoliza.down('panel[name=pnlDatosTatrisit]').getLoader().load({
+            		var pnlDatosTatrisit = tabDatosGeneralesPoliza.down('panel[name=pnlDatosTatrisit]');
+            		pnlDatosTatrisit.getLoader().load({
             			params: values
             		});
+            		pnlDatosTatrisit.setTitle('Detalle de ' + record.get('titular') + ':');
             	}
             }
         ]
@@ -1216,6 +1209,7 @@ Ext.onReady(function() {
         gridCopagosPoliza.getStore().removeAll();
         gridDatosAsegurado.getStore().removeAll();
         //Limpiamos seccion de Datos de tatrisit:
+        tabDatosGeneralesPoliza.down('panel[name=pnlDatosTatrisit]').setTitle('');
         tabDatosGeneralesPoliza.down('panel[name=pnlDatosTatrisit]').update('');
         tabDatosGeneralesPoliza.setActiveTab(0);
         tabPanelAgentes.setActiveTab(0);
