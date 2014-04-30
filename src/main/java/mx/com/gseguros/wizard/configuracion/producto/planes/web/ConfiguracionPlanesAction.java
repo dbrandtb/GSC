@@ -189,6 +189,7 @@ public class ConfiguracionPlanesAction extends Padre{
 			}
 			MensajesVO mensajeVO = null;
 			mensajeVO = planesConfiguracionManager.guardaCoberturaPlanes(cdRamo, cdPlanTmp, cdTipSit, codigoCondicion,obligatorio);
+			log.debug("mensajeVO text: "+mensajeVO.getText()+", title: "+mensajeVO.getTitle());
 			
 //			//Obtener mensaje de respuesta que se va a mostrar a partir de un codigo:
 //			Map<String, String> params = new HashMap<String, String>();
@@ -198,7 +199,7 @@ public class ConfiguracionPlanesAction extends Padre{
 //				log.debug("title-->>" + mensajeVO.getTitle());
 //				log.debug("MsgText-->>" + mensajeVO.getMsgText());
 //			}
-			if("2".equals(mensajeVO.getTitle())){//Cuando pv_title_o es 2, fue success
+			if("2".equals(mensajeVO.getTitle())||mensajeVO.getTitle()==null||mensajeVO.getTitle().equals("")){//Cuando pv_title_o es 2, fue success
 				success=true;
 			}
 			mensajeRespuesta = mensajeVO.getMsgText();

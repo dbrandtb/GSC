@@ -7,9 +7,8 @@
 	
     // pre-define fields in the form
 	var claveCatalogo = new Ext.form.TextField({
-        fieldLabel: '<s:text name="config.coberturas.altaCatalogo.clave"/>',
+        fieldLabel: 'Clave',
         allowBlank: false,
-        blankText : '<s:text name="req.config.coberturas.valida.clave"/>',
         maxLength : '4',
    		maxLengthText : 'El codigo de cobertura maximo de 4 caracteres',
         name: 'claveCobertura',
@@ -17,11 +16,10 @@
     });
     
 	var descripcionCatalogo = new Ext.form.TextField({
-        fieldLabel: '<s:text name="config.coberturas.altaCatalogo.descripcion"/>',
+        fieldLabel: 'Descripci&oacute;n',
         allowBlank: false,
         maxLength : '50',
    		maxLengthText : 'Cincuenta caracteres maximo',
-        blankText : '<s:text name="req.config.coberturas.valida.descripcion"/>',
         name: 'descripcionCobertura',
         anchor: '90%'  
     });  
@@ -46,7 +44,6 @@ var comboTipoCobertura =new Ext.form.ComboBox({
     	                    tpl: '<tpl for="."><div ext:qtip="{key}" class="x-combo-list-item">{value}</div></tpl>',
 							store: dsTipoCobertura,
 							allowBlank:false,
-						    blankText : '<s:text name="req.config.coberturas.valida.tipoCobertura"/>',
 						    displayField:'value',
 						    valueField: 'key',
 					    	typeAhead: true,
@@ -54,9 +51,8 @@ var comboTipoCobertura =new Ext.form.ComboBox({
 					    	anchor: '90%', 
 						    mode: 'local',
 					    	triggerAction: 'all',
-						    emptyText:'<s:text name="config.coberturas.select.tipoCobertura"/>',
 					    	selectOnFocus:true,
-						    fieldLabel: '<s:text name="config.coberturas.altaCatalogo.tipoCobertura"/>',
+						    fieldLabel: 'Tipo',
 					    	name:"tipoCobertura",
 					    	selectFirst : function() {
          						this.focusAndSelect(this.store.data.first());
@@ -100,7 +96,6 @@ var comboRamoCobertura =new Ext.form.ComboBox({
     	                    tpl: '<tpl for="."><div ext:qtip="{key}" class="x-combo-list-item">{value}</div></tpl>',
 							store: dsRamoCobertura,
 							allowBlank:false,
-						    blankText : '<s:text name="req.config.coberturas.valida.ramo"/>',
 						    displayField:'value',
 						    valueField: 'key',
 					    	typeAhead: true,
@@ -108,9 +103,8 @@ var comboRamoCobertura =new Ext.form.ComboBox({
 					    	anchor: '90%',
 						    mode: 'local',
 					    	triggerAction: 'all',
-						    emptyText:'<s:text name="config.coberturas.select.ramo"/>',
 					    	selectOnFocus:true,
-						    fieldLabel: '<s:text name="config.coberturas.altaCatalogo.ramo"/>',
+						    fieldLabel: 'Ramo',
 					    	name:"ramoCobertura",
 					    	selectFirst : function() {
          						this.focusAndSelect(this.store.data.first());
@@ -135,7 +129,7 @@ var comboRamoCobertura =new Ext.form.ComboBox({
 			});			
     
     var reinstalacion = new Ext.form.Checkbox({
-        fieldLabel: '<s:text name="config.coberturas.altaCatalogo.reinstalacion"/>',
+        fieldLabel: 'Reinstalaci&oacute;n',
         id:'reinstalacion-check',
         name: 'reinstalacion',            
                 onClick:function(){
@@ -147,7 +141,7 @@ var comboRamoCobertura =new Ext.form.ComboBox({
     });  
     
     var indiceInflacionario = new Ext.form.Checkbox({
-        fieldLabel: '<s:text name="config.coberturas.altaCatalogo.indInfla"/>',
+        fieldLabel: '&Iacute;ndice inflacionario',
         id:'indice-inflacionario-check',
         name: 'indiceInflacionario',                
                 onClick:function(){
@@ -177,7 +171,7 @@ var comboRamoCobertura =new Ext.form.ComboBox({
 
     // define window and show it in desktop
     var window = new Ext.Window({
-        title: '<s:text name="config.coberturas.altaCatalogo.titulo"/>',
+        title: 'T&iacute;tulo',
         width: 400,
         height:195,
         layout: 'fit',
@@ -190,13 +184,13 @@ var comboRamoCobertura =new Ext.form.ComboBox({
         
 
 buttons: [{
-            text: '<s:text name="config.coberturas.btn.guardar"/>', 
+            text: 'Guardar', 
             handler: function() {
                 // check form value 
                 if (formPanel.form.isValid()) {
 	 		        formPanel.form.submit({			      
-			            waitTitle:'<s:text name="ventana.configCobertura.proceso.mensaje.titulo"/>',
-					    waitMsg:'<s:text name="ventana.configCobertura.proceso.mensaje"/>',
+			            waitTitle:'Cargando',
+					    waitMsg:'Cargando',
 			            failure: function(form, action) {
 						    Ext.MessageBox.alert('Status', 'Elemento ya existe');
 						},
@@ -213,14 +207,14 @@ buttons: [{
 				}             
 	        }
         },{
-            text: '<s:text name="config.coberturas.btn.limpiar"/>',
+            text: 'Limpiar',
             handler: function(){
             	formPanel.form.reset();            	
             	//reinstalacion.reset();
             	//Ext.getCmp('indice-inflacionario-check').reset();
             }
         },{
-            text: '<s:text name="config.coberturas.btn.cancelar"/>',
+            text: 'Cancelar',
             handler: function(){
             			window.close();
             		 }
