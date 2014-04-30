@@ -148,11 +148,7 @@ public class WebServicesUtil {
 
 	public static OMElement invocaServicioAxis2(String direccionWS, String actionWS, OMElement mensaje, Long timeout, Options options, boolean asincrono, String modo) throws Exception {
 		
-		logger.debug("Inicia Invoca Servicio [ " + actionWS + " ]");
-		/**Declaración de variables*/
-		OMElement respuesta = null;
-		
-		/**Create the service client*/
+		logger.debug("Inicia Invoca Servicio Axis2 ["+direccionWS+" Metodo: "+actionWS+"]");
 		logger.debug(" ***** Parametros Servicio ***** ");
 		logger.debug(" Direccion = " + direccionWS);
 		logger.debug(" Action    = " + actionWS);
@@ -160,14 +156,16 @@ public class WebServicesUtil {
 		logger.debug(" Timeout   = " + timeout);
 		logger.debug(" Asincrono = " + asincrono);
 		
+		OMElement respuesta = null;
+		
 		Options defaultOptions = new Options();
 		if(timeout != null){
 			defaultOptions.setTimeOutInMilliSeconds(timeout);
 		}
 		defaultOptions.setTo(new EndpointReference(direccionWS));
 		//defaultOptions.setAction(actionWS);
-		defaultOptions.setExceptionToBeThrownOnSOAPFault(true);
-		defaultOptions.setUseSeparateListener(false);
+		//defaultOptions.setExceptionToBeThrownOnSOAPFault(true);
+		//defaultOptions.setUseSeparateListener(false);
 		
 		if("0".equals(modo)){
 			
@@ -199,20 +197,15 @@ public class WebServicesUtil {
 			throw new Exception("Error en codigo de mode");
 		}
 		
-		AxisService axisServ = new AxisService();
-		AxisOperation axisOp = new OutInAxisOperation(new QName(actionWS));
-		axisServ.addOperation(axisOp);
-		
-		ServiceClient serviceClient = new ServiceClient(null, axisServ);
+		ServiceClient serviceClient = new ServiceClient();
 		serviceClient.setOptions(defaultOptions);
-		
-		OperationClient callerOp = serviceClient.createClient(new QName(actionWS));
-		MessageContext messageCtx = new MessageContext(); 
 		
 		SOAPEnvelope messageEnvelop = OMAbstractFactory.getSOAP12Factory().getDefaultEnvelope();
 		messageEnvelop.getBody().addChild(mensaje);
-		
+		MessageContext messageCtx = new MessageContext(); 
 		messageCtx.setEnvelope(messageEnvelop);
+		
+		OperationClient callerOp = serviceClient.createClient(ServiceClient.ANON_OUT_IN_OP);
 		callerOp.addMessageContext(messageCtx);
 		
 		callerOp.execute(!asincrono);
@@ -225,7 +218,6 @@ public class WebServicesUtil {
 		
 		logger.debug(" Respuesta invocaServicio " +  actionWS + " = " + respuesta);
 		
-		logger.debug("Termina Invoca Servicio [ " + actionWS + " ]");
 		return respuesta;
 	}
 	
