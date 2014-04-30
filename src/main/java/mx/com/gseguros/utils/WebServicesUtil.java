@@ -31,11 +31,12 @@ public class WebServicesUtil {
     
 	/**
 	 * Método para invocar Servicio Web
-	 * @param  action    Acción del servicio web a invocar 
-	 * @param  mensaje   PayLoad del servicio web para invocar
-	 * @param  direccion URL del servicio web
+	 * @param  direccionWS URL del servicio web
+	 * @param  actionWS    Acción del servicio web a invocar 
+	 * @param  mensaje     PayLoad del servicio web para invocar
+	 * @param  timeout     Tiempo de espera para la llamada
 	 * @param  asincrono true = síncrono, false = asíncrono
-	 *  
+	 * 
 	 * @return respuesta OMElement con el mensaje de respuesta 
 	 * @throws Exception Si ocurre error en la invocación del servicio
 	 */
@@ -88,6 +89,11 @@ public class WebServicesUtil {
 		return respuesta;
 	}
 	
+	/**
+	 * Metodo que formatea un xml en linea a un xml con formato identado
+	 * @param xml
+	 * @return
+	 */
 	public static String formatXml(String xml){
 		String xmlString = null;
         try{
