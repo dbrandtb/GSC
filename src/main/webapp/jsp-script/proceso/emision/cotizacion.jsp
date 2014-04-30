@@ -651,7 +651,13 @@ function _0_agregarAsegu(boton)
 		}
 		else
 		{
-			record.set(iEditor.name,iEditor.name);
+			if(iEditor.name!='nombre'
+					&&iEditor.name!='nombre2'
+					&&iEditor.name!='apat'
+					&&iEditor.name!='amat')
+			{
+				record.set(iEditor.name,iEditor.name);
+			}
 		}
 	}
 	record.set('contador',_0_storeIncisos.getCount()+1);
