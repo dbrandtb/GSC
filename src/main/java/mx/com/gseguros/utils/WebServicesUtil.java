@@ -3,6 +3,7 @@ package mx.com.gseguros.utils;
 import java.io.StringReader;
 import java.io.StringWriter;
 
+import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -17,6 +18,9 @@ import org.apache.axis2.Constants;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
+import org.apache.axis2.description.AxisOperation;
+import org.apache.axis2.description.AxisService;
+import org.apache.axis2.description.OutInAxisOperation;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -83,9 +87,11 @@ public class WebServicesUtil {
 	       	defaultOptions.setTimeOutInMilliSeconds(timeout);
 	       }
 	       defaultOptions.setTo(new EndpointReference(direccionWS));
-	       defaultOptions.setAction(actionWS);
+	       //defaultOptions.setAction(actionWS);
 	       
-	       if("1".equals(modo)){
+	       if("0".equals(modo)){
+		       
+	       }else if("1".equals(modo)){
 		       defaultOptions.setProperty(HTTPConstants.CHUNKED, Boolean.TRUE);
 	       }else if("2".equals(modo)){
 	    	   defaultOptions.setProperty(HTTPConstants.CHUNKED, Boolean.FALSE);
@@ -113,8 +119,13 @@ public class WebServicesUtil {
 	    	   throw new Exception("Error en codigo de mode");
 	       }
 
+	       AxisService axisServ = new AxisService();
+           AxisOperation axisOp = new OutInAxisOperation(new QName(actionWS));
+           axisServ.addOperation(axisOp);
+           
            serviceClient.setOptions(defaultOptions);
-	
+           serviceClient.setAxisService(axisServ);
+           
 	        
 	       /**invoke service*/
 	       if(asincrono) {
