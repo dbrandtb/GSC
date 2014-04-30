@@ -437,13 +437,12 @@
                     'params.tipopago' : _selCobParams.tipopago
                 }
                 
-                alert("ENTRA"+_selCobParams);
-                /*Ext.create('Ext.form.Panel').submit(
+                Ext.create('Ext.form.Panel').submit(
                 {
                     url             : _selCobParams.otvalor02==TipoPago.Directo ? _selCobUrlAvanza : _selCobUrlAvanzaReembolso
                     ,standardSubmit : true
                     ,params         : params
-                });*/
+                });
             }
         </script>
     </head>
