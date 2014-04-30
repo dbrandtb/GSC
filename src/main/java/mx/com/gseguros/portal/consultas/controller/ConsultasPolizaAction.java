@@ -395,7 +395,7 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
 		return SUCCESS;
     }
     
-	public String pantallaConsultaTatrisit()
+	public String obtenerDatosTatrisit()
 	{
 		logger.info(""
 				+ "\n######################################"

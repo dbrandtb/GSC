@@ -21,6 +21,7 @@
             var _URL_CONSULTA_DOCUMENTOS =          '<s:url namespace="/documentos" action="ventanaDocumentosPoliza" />';
             var _URL_LOADER_RECIBOS      =          '<s:url namespace="/general" action="loadRecibos" />';
             var _URL_LOADER_VER_EXCLUSIONES =       '<s:url namespace="/consultasPoliza" action="includes/verExclusiones" />';
+            var _URL_LOADER_VER_TATRISIT    =       '<s:url namespace="/consultasPoliza" action="includes/verDatosTatrisit" />';
             
             var _MSG_ERROR =                           'Error';
             var _MSG_INFO  =                           'Info';

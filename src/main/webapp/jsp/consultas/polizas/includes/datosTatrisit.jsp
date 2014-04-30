@@ -1,5 +1,5 @@
 <%@ include file="/taglibs.jsp"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" %>
 <script>
 ////// variables //////
 var _p17_formulario;
@@ -95,4 +95,4 @@ Ext.onReady(function()
 ////// funciones //////
 ////// funciones //////
 </script>
-<div id="_p17_divpri"></div>
+<div id="_p17_divpri" style="height:300px"></div>
