@@ -314,7 +314,22 @@ Ext.onReady(function() {
 	            					json = Ext.decode(response.responseText);
 	            					if(json.success==true)
 	            					{
-	            						mensajeCorrecto('Datos guardados',json.mensaje);
+	            						var params =
+	            		                {
+	            		                    'params.ntramite' : _11_params.NTRAMITE,
+	            		                    'params.tipopago' : _11_params.OTVALOR02
+	            		                };
+	            						
+	            		                mensajeCorrecto('Datos guardados',json.mensaje,function()
+        			            		{
+        			            		    Ext.create('Ext.form.Panel').submit(
+        			            		    {
+        			            		        url             : _selCobUrlAvanza
+        			            		        ,standardSubmit : true
+        			            		        ,params         : params
+        			            		    });
+        			            		});
+	            						
 	            					}
 	            					else
 	            					{

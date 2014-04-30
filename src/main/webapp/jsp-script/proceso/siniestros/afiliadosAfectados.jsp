@@ -10,6 +10,7 @@
             ////// variables //////
             var _CONTEXT = '${ctx}';
             var _URL_CONSULTA_DATOS_TARIFA_POLIZA = '<s:url namespace="/consultasPoliza" action="consultaDatosTarifaPoliza" />';
+            var _selCobUrlAvanza              = '<s:url namespace="/siniestros" action="afiliadosAfectados"/>';
             
             // Obtenemos el contenido en formato JSON de la propiedad solicitada:
             var _11_params = <s:property value="%{convertToJSON('params')}" escapeHtml="false" />;
@@ -27,12 +28,13 @@
             _11_itemsRechazo[2]['width']  = 500;
             _11_itemsRechazo[2]['height'] = 150;
             
-            var _11_urlGuardar                  = '<s:url namespace="/siniestros"  action="guardarAfiliadosAfectados"     />';
-            var _11_urlIniciarSiniestroTworksin = '<s:url namespace="/siniestros"  action="iniciarSiniestroTworksin"      />';
-            var _11_urlActualizarSiniestro      = '<s:url namespace="/siniestros"  action="actualizarMultiSiniestro"      />';
-            var _11_urlTabbedPanel              = '<s:url namespace="/siniestros"  action="detalleSiniestro"              />';
-            var _11_urlCancelar                 = '<s:url namespace="/siniestros"  action="includes/rechazoReclamaciones" />';
-            var _11_urlMesaControl              = '<s:url namespace="/mesacontrol" action="mcdinamica"                    />';
+            var _11_urlGuardar                    = '<s:url namespace="/siniestros"  action="guardarAfiliadosAfectados"     />';
+            var _11_urlIniciarSiniestroTworksin   = '<s:url namespace="/siniestros"  action="iniciarSiniestroTworksin"      />';
+            var _11_urlIniciarSiniestroSinAutServ = '<s:url namespace="/siniestros"  action="generarSiniestrosinAutServ"    />';
+            var _11_urlActualizarSiniestro        = '<s:url namespace="/siniestros"  action="actualizarMultiSiniestro"      />';
+            var _11_urlTabbedPanel                = '<s:url namespace="/siniestros"  action="detalleSiniestro"              />';
+            var _11_urlCancelar                   = '<s:url namespace="/siniestros"  action="includes/rechazoReclamaciones" />';
+            var _11_urlMesaControl                = '<s:url namespace="/mesacontrol" action="mcdinamica"                    />';
             
             var _11_form;
             var _11_recordActivo;
@@ -77,6 +79,7 @@
                     ,NMSUPLEM        : '<s:property value='%{getSlist1().get(#contador).get("NMSUPLEM")}'  escapeHtml="false" />'
                     ,NMSITUAC        : '<s:property value='%{getSlist1().get(#contador).get("NMSITUAC")}'  escapeHtml="false" />'
                     ,ESTADO          : '<s:property value='%{getSlist1().get(#contador).get("ESTADO")}'    escapeHtml="false" />'
+                    ,CDTIPSIT        : '<s:property value='%{getSlist1().get(#contador).get("CDTIPSIT")}'  escapeHtml="false" />'
                 });
                 <s:set name="contador" value="#contador+1" />
             </s:iterator>
@@ -153,35 +156,6 @@
                                     text            :'ICD2',                     width           : 50, 
                                     align           :'center',                                  dataIndex       :'icdSecundario'
                                 },
-                                /*{
-                                    text            : 'CPT/HCPC',                       width           : 110,
-                                    align           :'center',                          dataIndex       :'cpthcpc'
-                                },
-                                {
-                                    text            :'Cantidad',                        width           : 110,  
-                                    align           :'center',                          dataIndex       :'cantidad'
-                                },
-                                {
-                                    text            :'Importe <br/>Arancel',            width           : 110,          renderer        :Ext.util.Format.usMoney,
-                                    align           :'center',                          dataIndex       :'importeArancel'
-                                },
-                                {
-                                    text            :'Subtotal <br/>Arancel',           width           : 110,          renderer        :Ext.util.Format.usMoney, 
-                                    align           :'center',                          dataIndex       :'subtoArancel'
-                                },
-                                {
-                                    text            :'%<br/>Desc.',  
-                                    dataIndex       :'porcDescuento',
-                                    align           :'center',
-                                    width           :50
-                                },
-                                {
-                                    text            :'$<br/>Desc.',  
-                                    dataIndex       :'impoDescuento',
-                                    align           :'center',
-                                    width           :80
-                                    ,renderer       :Ext.util.Format.usMoney
-                                },*/
                                 {
                                     text            :'Copago',                          width           : 50,          
                                     align           :'center',
@@ -200,6 +174,14 @@
                                     dataIndex       :'noReclamo',
                                     width           :60
                                 },
+                                {
+                                    text            :'CDTIPSIT',
+                                    align           :'center',
+                                    dataIndex       :'CDTIPSIT',
+                                    width           :60,
+                                    hidden			: true
+                                },
+                                
                                 <s:property value="imap.columnas" />
                             ];
             
@@ -216,6 +198,7 @@ function revisarDocumento(grid,rowIndex)
 	
 	if(valido)
 	{
+		//1.- Se revisa si ya tiene autorizacion
 	    valido = _11_validaAutorizacion(record);
 	}
 	
@@ -248,6 +231,7 @@ function revisarDocumento(grid,rowIndex)
 	
 	if(valido)
 	{
+		//4.- ya hay siniestro
 		Ext.create('Ext.form.Panel').submit(
         {
         	url             : _11_urlTabbedPanel
@@ -287,16 +271,85 @@ function _11_editar(grid,rowindex)
 function _11_validaAutorizacion(record)
 {
 	debug('_11_validaAutorizacion: ',record.raw);
-	
-	var valido = true;
-	var nAut = record.get('NoAutorizacion');
-	valido = nAut && nAut>0;
-	if(!valido)
+	//Obtenemos los valores de Cobertura y subcobertura
+	var cober_SubCober = _11_params.OTVALOR12+"_"+_11_params.OTVALOR14;
+	debug('VALORES DE LOS PARAMETROS',_11_params);
+	debug('VALORES DE LOS PARAMETROS record',record.raw);
+	switch(cober_SubCober)
 	{
-		_11_pedirAutorizacion(record);
-	}
-	debug('!_11_validaAutorizacion: ',valido?'si':'no');
-	return valido;
+		// 3.- No tiene y no necesita pero no hay siniestro
+        case "18HO_18HO024" :
+        case "18HO_18HO025" :
+        case "18HO_18HO026" :
+        case "18MA_18MA030" :
+        case "18MA_18MA017" :
+        case "18MA_18MA004" :
+            var valido = true;
+	    	var idReclamacion = record.raw.IdReclamacion;
+	    	valido = idReclamacion && idReclamacion>0;
+	    	if(!valido){
+	    		var json =
+	    		{
+	    			'params.ntramite' : _11_params.NTRAMITE,
+	    			'params.cdunieco' : record.raw.CDUNIECO,
+	   				'params.cdramo'   : record.raw.CDRAMO,
+	  				'params.estado'   : record.raw.ESTADO,
+	 				'params.nmpoliza' : record.raw.noPoliza,
+	 				'params.nmsuplem' : record.raw.NMSUPLEM,
+	 				'params.nmsituac' : record.raw.NMSITUAC,
+	 				'params.cdtipsit' : record.raw.CDTIPSIT
+	    		};
+	    		debug('datos a enviar:',json);
+	    		Ext.Ajax.request(
+	    		{
+	    			url      : _11_urlIniciarSiniestroSinAutServ
+	    			,params  : json
+	    			,success : function(response)
+	    			{
+	    				
+	    				json = Ext.decode(response.responseText);
+	    				debug('respuesta:',json);
+	    				if(json.success==true)
+	    				{
+	    					mensajeCorrecto('Datos guardados',json.mensaje,function()
+	    					{
+	    						Ext.create('Ext.form.Panel').submit(
+	    				        {
+	    				            standardSubmit :true
+	    				            ,params        :
+	    				            {
+	    				                'params.ntramite' : _11_params.NTRAMITE
+	    				            }
+	    				        });
+	    					});
+	    				}
+	    				else
+	    				{
+	    					mensajeError(json.mensaje);
+	    				}
+	    			}
+	    		    ,failure : function()
+	    		    {
+	    		    	errorComunicacion();
+	    		    }
+	    		});
+	    	}
+	    	return valido;
+            break;
+        default:
+        	//2.- No tiene y necesita
+        	var valido = true;
+	    	var nAut = record.get('NoAutorizacion');
+	    	valido = nAut && nAut>0;
+	    	if(!valido)
+	    	{
+	    		_11_pedirAutorizacion(record);
+	    	}
+	    	debug('!_11_validaAutorizacion: ',valido?'si':'no');
+	    	return valido;
+	    }
+	
+	
 }
 
 function _11_pedirAutorizacion(record)

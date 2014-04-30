@@ -1326,6 +1326,9 @@ Ext.onReady(function() {
     if(valorAction == null)
 	{
     	Ext.getCmp('cmbTipoPago').setValue('1');
+    	oficinaEmisora.load();
+    	Ext.getCmp('cmbOficEmisora').setValue('1000');
+    	
 	}else{
 		
 			
