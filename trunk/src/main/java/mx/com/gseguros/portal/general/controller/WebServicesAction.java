@@ -71,6 +71,7 @@ public class WebServicesAction extends PrincipalCoreAction{
     		}
     		
     		OMElement resultadoWS = WebServicesUtil.invocaServicio(urlWS, metodoWS, AXIOMUtil.stringToOM(xmlEnvio), null , null, false, params.get("modo"));
+    		//OMElement resultadoWS = WebServicesUtil.invocaServicioAxis2(urlWS, metodoWS, AXIOMUtil.stringToOM(xmlEnvio), null , null, false, params.get("modo"));
     		mensajeRespuesta = WebServicesUtil.formatXml(resultadoWS.toString());
     		
     		if("ws.recibossigs.url".equals(peticionWS.get("CDURLWS")) && "generaRecDxn".equalsIgnoreCase(metodoWS)){
