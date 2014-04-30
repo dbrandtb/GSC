@@ -13,6 +13,7 @@ import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.axis2.Constants;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
@@ -40,7 +41,7 @@ public class WebServicesUtil {
 	 * @return respuesta OMElement con el mensaje de respuesta 
 	 * @throws Exception Si ocurre error en la invocación del servicio
 	 */
-	public static OMElement invocaServicio(String direccionWS, String actionWS, OMElement mensaje, Long timeout, Options options, boolean asincrono) throws Exception {
+	public static OMElement invocaServicio(String direccionWS, String actionWS, OMElement mensaje, Long timeout, Options options, boolean asincrono, String modo) throws Exception {
 		
 	    logger.debug("Inicia Invoca Servicio [ " + actionWS + " ]");
         /**Declaración de variables*/
@@ -48,33 +49,72 @@ public class WebServicesUtil {
 		
 		/**Create the service client*/
 		logger.debug(" ***** Parametros Servicio ***** ");
-		logger.debug(" Action    = " + actionWS);
 		logger.debug(" Direccion = " + direccionWS);
-		logger.debug(" Asincrono = " + asincrono);
+		logger.debug(" Action    = " + actionWS);
 		logger.debug(" Mensaje   = " + mensaje);
 		logger.debug(" Timeout   = " + timeout);
+		logger.debug(" Asincrono = " + asincrono);
 		
 		ServiceClient serviceClient = new ServiceClient();
 		
-		if(options != null){
-			if(timeout != null){
-		       	options.setTimeOutInMilliSeconds(timeout);
-		       }
-			options.setTo(new EndpointReference(direccionWS));
-			options.setAction(actionWS);
-			serviceClient.setOptions(options);
-		}else {
-			Options defaultOptions = new Options();
-		       if(timeout != null){
-		       	defaultOptions.setTimeOutInMilliSeconds(timeout);
-		       }
-		       defaultOptions.setTo(new EndpointReference(direccionWS));
-		       defaultOptions.setAction(actionWS);
-//		       defaultOptions.setProperty(HTTPConstants.CHUNKED, Boolean.FALSE);
-//		       defaultOptions.setProperty(HTTPConstants.REUSE_HTTP_CLIENT, Boolean.TRUE);
-//		       defaultOptions.setCallTransportCleanup(true);
-	           serviceClient.setOptions(defaultOptions);
-		}
+//		if(options != null){
+//			if(timeout != null){
+//		       	options.setTimeOutInMilliSeconds(timeout);
+//		       }
+//			options.setTo(new EndpointReference(direccionWS));
+//			options.setAction(actionWS);
+//			serviceClient.setOptions(options);
+//		}else {
+//			Options defaultOptions = new Options();
+//		       if(timeout != null){
+//		       	defaultOptions.setTimeOutInMilliSeconds(timeout);
+//		       }
+//		       defaultOptions.setTo(new EndpointReference(direccionWS));
+//		       defaultOptions.setAction(actionWS);
+////		       defaultOptions.setProperty(HTTPConstants.CHUNKED, Boolean.FALSE);
+////		       defaultOptions.setProperty(HTTPConstants.REUSE_HTTP_CLIENT, Boolean.TRUE);
+////		       defaultOptions.setCallTransportCleanup(true);
+//	           serviceClient.setOptions(defaultOptions);
+//		}
+		
+
+		   Options defaultOptions = new Options();
+	       if(timeout != null){
+	       	defaultOptions.setTimeOutInMilliSeconds(timeout);
+	       }
+	       defaultOptions.setTo(new EndpointReference(direccionWS));
+	       defaultOptions.setAction(actionWS);
+	       
+	       if("1".equals(modo)){
+		       defaultOptions.setProperty(HTTPConstants.CHUNKED, Boolean.TRUE);
+	       }else if("2".equals(modo)){
+	    	   defaultOptions.setProperty(HTTPConstants.CHUNKED, Boolean.FALSE);
+	       }else if("3".equals(modo)){
+	    	   defaultOptions.setProperty(HTTPConstants.REUSE_HTTP_CLIENT, Boolean.TRUE);
+	       }else if("4".equals(modo)){
+	    	   defaultOptions.setCallTransportCleanup(true);
+	       }else if("5".equals(modo)){
+	    	   defaultOptions.setProperty(HTTPConstants.CHUNKED, Boolean.FALSE);
+	    	   defaultOptions.setProperty(HTTPConstants.REUSE_HTTP_CLIENT, Boolean.TRUE);
+	       }else if("6".equals(modo)){
+	    	   defaultOptions.setProperty(HTTPConstants.CHUNKED, Boolean.FALSE);
+	    	   defaultOptions.setProperty(HTTPConstants.REUSE_HTTP_CLIENT, Boolean.TRUE);
+	    	   defaultOptions.setCallTransportCleanup(true);
+	       }else if("7".equals(modo)){
+	    	   defaultOptions.setProperty(Constants.Configuration.DISABLE_SOAP_ACTION, Boolean.TRUE);
+	       }else if("8".equals(modo)){
+	    	   defaultOptions.setProperty(Constants.Configuration.DISABLE_SOAP_ACTION, Boolean.FALSE);
+	       }else if("9".equals(modo)){
+	    	   defaultOptions.setProperty(Constants.Configuration.MESSAGE_TYPE,HTTPConstants.MEDIA_TYPE_APPLICATION_ECHO_XML);
+	       }else if("10".equals(modo)){
+	    	   defaultOptions.setProperty(Constants.Configuration.DISABLE_SOAP_ACTION, Boolean.TRUE);
+	    	   defaultOptions.setProperty(Constants.Configuration.MESSAGE_TYPE,HTTPConstants.MEDIA_TYPE_APPLICATION_ECHO_XML);
+	       }else{
+	    	   throw new Exception("Error en codigo de mode");
+	       }
+
+           serviceClient.setOptions(defaultOptions);
+	
 	        
 	       /**invoke service*/
 	       if(asincrono) {
