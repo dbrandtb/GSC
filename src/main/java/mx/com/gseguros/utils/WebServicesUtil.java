@@ -202,6 +202,7 @@ public class WebServicesUtil {
 		
 		SOAPEnvelope messageEnvelop = OMAbstractFactory.getSOAP12Factory().getDefaultEnvelope();
 		messageEnvelop.getBody().addChild(mensaje);
+		logger.debug("MESSAGE ENVELOPE GENERADO: " + messageEnvelop.toString());
 		MessageContext messageCtx = new MessageContext(); 
 		messageCtx.setEnvelope(messageEnvelop);
 		
