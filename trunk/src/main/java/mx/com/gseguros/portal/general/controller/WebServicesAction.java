@@ -14,7 +14,6 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.llom.util.AXIOMUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.struts2.json.JSONUtil;
 
 public class WebServicesAction extends PrincipalCoreAction{
 
