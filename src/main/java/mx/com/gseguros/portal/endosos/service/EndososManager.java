@@ -243,7 +243,7 @@ public interface EndososManager
 			,String nmsuplem
 			,String cdagente) throws Exception;
 	
-	public void habilitaRecibosSubsecuentes(
+	public List<Map<String,String>> habilitaRecibosSubsecuentes(
 			Date fechaDeInicio
 			,Date fechaDeFin
 			,String cdunieco

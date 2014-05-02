@@ -1,6 +1,7 @@
 package mx.com.gseguros.portal.endosos.dao.impl;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -1222,7 +1223,7 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 	}
 	
 	@Override
-	public void habilitaRecibosSubsecuentes(
+	public List<Map<String,String>> habilitaRecibosSubsecuentes(
 			Date fechaDeInicio
 			,Date fechaDeFin
 			,String cdunieco
@@ -1238,7 +1239,13 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 		params.put("estado"        , estado);
 		params.put("nmpoliza"      , nmpoliza);
 		log.info("dao params: "+params);
-		ejecutaSP(new HabilitaRecibosSubsecuentes(getDataSource()),params);
+		Map<String,Object>salida=ejecutaSP(new HabilitaRecibosSubsecuentes(getDataSource()),params);
+		List<Map<String,String>> lista = (List<Map<String,String>>)salida.get("pv_registro_o");
+		if(lista==null||lista.size()==0)
+		{
+			lista=new ArrayList<Map<String,String>>();
+		}
+		return lista;
 	}
 	
 	protected class HabilitaRecibosSubsecuentes extends StoredProcedure
@@ -1252,8 +1259,9 @@ public class EndososDAOImpl extends AbstractManagerDAO implements EndososDAO
 			declareParameter(new SqlParameter("cdramo"        , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("estado"        , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("nmpoliza"      , OracleTypes.VARCHAR));
-			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
-	        declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_registro_o" , OracleTypes.CURSOR, new DinamicMapper()));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+	        declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
 			compile();
 		}
 		public WrapperResultados mapWrapperResultados(Map map) throws Exception

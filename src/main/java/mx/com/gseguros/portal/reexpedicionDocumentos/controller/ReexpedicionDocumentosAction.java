@@ -230,17 +230,19 @@ public class ReexpedicionDocumentosAction extends PrincipalCoreAction
 				+ "\n###############################"
 				+ "\n###### obtenerDatosEmail ######"
 				);
+		logger.info("stringMap: "+stringMap);
 		try
 		{
 			String direccionIPLocal  = ServletActionContext.getRequest().getLocalAddr();
 			int    puertoLocal       = ServletActionContext.getRequest().getLocalPort();
 			String contexto          = ServletActionContext.getServletContext().getServletContextName();
 			String urlReporte        = "http://"+direccionIPLocal+":"+puertoLocal+"/"+contexto+"/reportes/procesoObtencionReporte.action";
-			stringMap=new HashMap<String,String>();
+			//stringMap=new HashMap<String,String>();
 			stringMap.put("url",urlReporte);
 			
 			LinkedHashMap<String,Object> parametros = new LinkedHashMap<String,Object>();
 			parametros.put("param1","1");//el id del proceso que recibe el PL para regresar los correos a cuales se debe enviar
+			parametros.put("param2",stringMap.get("cdunieco"));
 			List<Map<String,String>> listaEmails = consultasManager.consultaDinamica("PKG_CONSULTA.P_OBTIENE_EMAIL", parametros);
 			String correos = "";
 			if(listaEmails!=null)

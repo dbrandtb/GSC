@@ -132,92 +132,138 @@ function _p15_botonHabilitarHandler()
 		    	if(response.success)
 		    	{
 		    		//mensajeCorrecto('Recibos habilitados',response.mensaje);
-		    		form.setLoading(true);
-                    Ext.Ajax.request(
-                    {
-                        url      : _p15_urlObtenerDatosEmail
-                        ,success : function(response)
+		    		var listaCdunieco=response.slist1;
+					debug('listaCdunieco:',listaCdunieco);
+		    		if(listaCdunieco.length==0)
+		    		{
+		    			Ext.create('Ext.form.Panel').submit(
                         {
-                            form.setLoading(false);
-                            var json=Ext.decode(response.responseText);
-                            debug('email data response:',json);
-                            if(json.success)
+                            standardSubmit : true,
+                            url:_p15_urlReporte,
+                            params:
                             {
-                            	form.setLoading(true);
-                            	Ext.Ajax.request(
+                                cdreporte : 'REPEXC008'
+                                ,'params.pv_feproces_i' : Ext.Date.format(_p15_getFechaInicio().getValue(),'d/m/Y')
+                            },
+                            success: function(form, action)
+                            {
+                                
+                            },
+                            failure: function(form, action)
+                            {
+                                switch (action.failureType)
                                 {
-                                    url     : _p15_urlEnviarCorreo
-                                    ,params :
-                                    {
-                                        to             : json.stringMap.correos
-                                        ,archivos      : json.stringMap.url
-                                                         + '?cdreporte=REPEXC008'
-                                                         + '&params.pv_feproces_i='
-                                                         + Ext.Date.format(_p15_getFechaInicio().getValue(),'d/m/Y')
-                                        ,asunto        : 'Recibos subsecuentes habilitados'
-                                        ,mensaje       : 'Se habilitaron recibos subsecuentes a partir de la fecha '+Ext.Date.format(_p15_getFechaInicio().getValue(),'d/m/Y')
-                                        ,nombreArchivo : 'recibos_habilitados_('+Ext.Date.format(_p15_getFechaInicio().getValue(),'Ymd')+').xls'
-                                    },
-                                    callback : function(options,success,response)
-                                    {
-                                        form.setLoading(false);
-                                        if (success)
-                                        {
-                                            var json = Ext.decode(response.responseText);
-                                            if (json.success == true)
-                                            {
-                                            	mensajeCorrecto('Aviso','Correo(s) enviado(s)');
-                                            	Ext.create('Ext.form.Panel').submit(
-                                                {
-                                                    standardSubmit : true,
-                                                    url:_p15_urlReporte,
-                                                    params:
-                                                    {
-                                                        cdreporte : 'REPEXC008'
-                                                        ,'params.pv_feproces_i' : Ext.Date.format(_p15_getFechaInicio().getValue(),'d/m/Y')
-                                                    },
-                                                    success: function(form, action)
-                                                    {
-                                                        
-                                                    },
-                                                    failure: function(form, action)
-                                                    {
-                                                        switch (action.failureType)
-                                                        {
-                                                            case Ext.form.action.Action.CONNECT_FAILURE:
-                                                                Ext.Msg.alert('Error', 'Error de comunicaci&oacute;n');
-                                                                break;
-                                                            case Ext.form.action.Action.SERVER_INVALID:
-                                                            case Ext.form.action.Action.LOAD_FAILURE:
-                                                                Ext.Msg.alert('Error', 'Error del servidor, consulte a soporte');
-                                                                break;
-                                                       }
-                                                    }
-                                                });
-                                            }
-                                            else
-                                            {
-                                                mensajeError('Error al enviar');
-                                            }
-                                        }
-                                        else
-                                        {
-                                            errorComunicacion();
-                                        }
-                                    }
-                                });
+                                    case Ext.form.action.Action.CONNECT_FAILURE:
+                                        Ext.Msg.alert('Error', 'Error de comunicaci&oacute;n');
+                                        break;
+                                    case Ext.form.action.Action.SERVER_INVALID:
+                                    case Ext.form.action.Action.LOAD_FAILURE:
+                                        Ext.Msg.alert('Error', 'Error del servidor, consulte a soporte');
+                                        break;
+                               }
                             }
-                            else
-                            {
-                                mensajeError(json.mensaje);
-                            }
-                        }
-                        ,failure : function()
-                        {
-                            form.setLoading(false);
-                            errorComunicacion();
-                        }
-                    });
+                        });
+		    		}
+		    		var contador=0;
+		    		for(var i=0;i<listaCdunieco.length;i++)
+		    		{
+			    		form.setLoading(true);
+	                    Ext.Ajax.request(
+	                    {
+	                        url      : _p15_urlObtenerDatosEmail
+							,params  :
+							{
+								'stringMap.cdunieco':listaCdunieco[i].CDUNIECO
+							}
+	                        ,success : function(response)
+	                        {
+	                            form.setLoading(false);
+	                            var json=Ext.decode(response.responseText);
+	                            debug('email data response:',json);
+	                            if(json.success)
+	                            {
+	                            	form.setLoading(true);
+	                            	Ext.Ajax.request(
+	                                {
+	                                    url     : _p15_urlEnviarCorreo
+	                                    ,params :
+	                                    {
+	                                        to             : json.stringMap.correos
+	                                        ,archivos      : json.stringMap.url
+	                                                         + '?cdreporte=REPEXC008'
+	                                                         + '&params.pv_feproces_i='
+	                                                         + Ext.Date.format(_p15_getFechaInicio().getValue(),'d/m/Y')
+															 + '&params.pv_cdunieco_i='
+															 + json.stringMap.cdunieco
+	                                        ,asunto        : 'Recibos subsecuentes habilitados'
+	                                        ,mensaje       : 'Se habilitaron recibos subsecuentes a partir de la fecha '+Ext.Date.format(_p15_getFechaInicio().getValue(),'d/m/Y')
+	                                        ,nombreArchivo : 'recibos_habilitados_('+Ext.Date.format(_p15_getFechaInicio().getValue(),'Ymd')+').xls'
+	                                    },
+	                                    callback : function(options,success,response)
+	                                    {
+											contador = contador + 1;
+											if(contador==listaCdunieco.length-1)
+											{
+												Ext.create('Ext.form.Panel').submit(
+										        {
+										            standardSubmit : true,
+										            url:_p15_urlReporte,
+										            params:
+										            {
+										                cdreporte : 'REPEXC008'
+										                ,'params.pv_feproces_i' : Ext.Date.format(_p15_getFechaInicio().getValue(),'d/m/Y')
+										            },
+										            success: function(form, action)
+										            {
+										                
+										            },
+										            failure: function(form, action)
+										            {
+										                switch (action.failureType)
+										                {
+										                    case Ext.form.action.Action.CONNECT_FAILURE:
+										                        Ext.Msg.alert('Error', 'Error de comunicaci&oacute;n');
+										                        break;
+										                    case Ext.form.action.Action.SERVER_INVALID:
+										                    case Ext.form.action.Action.LOAD_FAILURE:
+										                        Ext.Msg.alert('Error', 'Error del servidor, consulte a soporte');
+										                        break;
+										               }
+										            }
+										        });
+											}
+	                                        form.setLoading(false);
+	                                        if (success)
+	                                        {
+	                                            var json = Ext.decode(response.responseText);
+	                                            if (json.success == true)
+	                                            {
+	                                            	mensajeCorrecto('Aviso','Correo enviado de sucursal '+json.stringMap.cdunieco);
+	                                            }
+	                                            else
+	                                            {
+	                                                mensajeError('Error al enviar correo de sucursal '+json.stringMap.cdunieco);
+	                                            }
+	                                        }
+	                                        else
+	                                        {
+	                                            errorComunicacion();
+	                                        }
+	                                    }
+	                                });
+	                            }
+	                            else
+	                            {
+	                                mensajeError(json.mensaje);
+	                            }
+	                        }
+	                        ,failure : function()
+	                        {
+	                            form.setLoading(false);
+	                            errorComunicacion();
+	                        }
+	                    });
+		    		}
 		    	}
 		    	else
 		    	{

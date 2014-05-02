@@ -702,7 +702,7 @@ public class EndososManagerImpl implements EndososManager
 	}
 	
 	@Override
-	public void habilitaRecibosSubsecuentes(
+	public List<Map<String,String>> habilitaRecibosSubsecuentes(
 			Date fechaDeInicio
 			,Date fechaDeFin
 			,String cdunieco
@@ -710,6 +710,6 @@ public class EndososManagerImpl implements EndososManager
 			,String estado
 			,String nmpoliza) throws Exception
 	{
-		endososDAO.habilitaRecibosSubsecuentes(fechaDeInicio,fechaDeFin,cdunieco,cdramo,estado,nmpoliza);
+		return endososDAO.habilitaRecibosSubsecuentes(fechaDeInicio,fechaDeFin,cdunieco,cdramo,estado,nmpoliza);
 	}
 }
