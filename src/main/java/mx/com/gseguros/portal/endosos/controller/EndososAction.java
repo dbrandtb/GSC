@@ -206,6 +206,7 @@ public class EndososAction extends PrincipalCoreAction
 			actionDomicilio.setSession(session);
 			actionDomicilio.setSmap1(smap1);
 			actionDomicilio.setKernelManager(kernelManager);
+			actionDomicilio.setPantallasManager(pantallasManager);
 			actionDomicilio.mostrarPantallaDomicilio();
 			item1=actionDomicilio.getItem1();
 			item2=actionDomicilio.getItem2();
