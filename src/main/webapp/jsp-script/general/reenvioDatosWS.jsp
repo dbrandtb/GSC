@@ -116,7 +116,7 @@ Ext.onReady(function()
             					    		'params.pv_seqidws_i' : seqIdWS
             						},
             						success: function(response, opt) {
-            							gridPeticiones.setLoading(false)
+            							gridPeticiones.setLoading(false);
             							var jsonRes=Ext.decode(response.responseText);
             							
             							if(jsonRes.success == true){
@@ -175,7 +175,7 @@ Ext.onReady(function()
                    						}
             						},
             						failure: function(){
-            							gridPeticiones.setLoading(false)
+            							gridPeticiones.setLoading(false);
             							mensajeError('No se pudo reenviar la Petici&oacute;n WS.');
             						}
             					});
