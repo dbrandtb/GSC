@@ -7172,7 +7172,7 @@ public class EndososAction extends PrincipalCoreAction
 			String fechaDeFin    = smap1.get("fechaFin");
 			Date   fechaDeInicioDate = renderFechas.parse(fechaDeInicio);
 			Date   fechaDeFinDate    = renderFechas.parse(fechaDeFin);
-			endososManager.habilitaRecibosSubsecuentes(fechaDeInicioDate, fechaDeFinDate, cdunieco, cdramo, estado, nmpoliza);
+			slist1=endososManager.habilitaRecibosSubsecuentes(fechaDeInicioDate, fechaDeFinDate, cdunieco, cdramo, estado, nmpoliza);
 			success=true;
 			mensaje="Recibos habilitados correctamente";
 		}
