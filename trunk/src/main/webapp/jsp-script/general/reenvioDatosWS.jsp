@@ -107,15 +107,18 @@ Ext.onReady(function()
                         		
                         		var saveList = [];
                         		saveList.push(model.getSelection()[0].data);
+                        		gridPeticiones.setLoading(true);
     		            		
                         		Ext.Ajax.request({
             						url: _UrlReenviarPeticion,
+            						timeout : 120000,
             						params: {
             					    		'params.pv_seqidws_i' : seqIdWS
             						},
             						success: function(response, opt) {
+            							gridPeticiones.setLoading(false)
             							var jsonRes=Ext.decode(response.responseText);
-
+            							
             							if(jsonRes.success == true){
             								//mensajeCorrecto('Aviso','Se ha reenviado correctamente la Petici&oacute;n WS, Respuesta: '+ jsonRes.mensajeRespuesta);
             								var ventanaResWS = Ext.create('Ext.window.Window',{
@@ -172,6 +175,7 @@ Ext.onReady(function()
                    						}
             						},
             						failure: function(){
+            							gridPeticiones.setLoading(false)
             							mensajeError('No se pudo reenviar la Petici&oacute;n WS.');
             						}
             					});
