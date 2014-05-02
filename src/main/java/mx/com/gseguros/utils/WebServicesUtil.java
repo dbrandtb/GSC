@@ -41,112 +41,18 @@ public class WebServicesUtil {
 	private final static Log logger = LogFactory.getLog(WebServicesUtil.class);
     
 	/**
-	 * Método para invocar Servicio Web
+	 * Método para invocar Servicio Web Axis2
 	 * @param  direccionWS URL del servicio web
-	 * @param  actionWS    Acción del servicio web a invocar 
+	 * @param  actionWS    Solo informativo, Metodo del servicio web a invocar 
 	 * @param  mensaje     PayLoad del servicio web para invocar
 	 * @param  timeout     Tiempo de espera para la llamada
+	 * @param  Options     Opciones del Service Client
 	 * @param  asincrono true = síncrono, false = asíncrono
 	 * 
 	 * @return respuesta OMElement con el mensaje de respuesta 
 	 * @throws Exception Si ocurre error en la invocación del servicio
 	 */
-	public static OMElement invocaServicio(String direccionWS, String actionWS, OMElement mensaje, Long timeout, Options options, boolean asincrono, String modo) throws Exception {
-		
-	    logger.debug("Inicia Invoca Servicio [ " + actionWS + " ]");
-        /**Declaración de variables*/
-		OMElement respuesta = null;
-		
-		/**Create the service client*/
-		logger.debug(" ***** Parametros Servicio ***** ");
-		logger.debug(" Direccion = " + direccionWS);
-		logger.debug(" Action    = " + actionWS);
-		logger.debug(" Mensaje   = " + mensaje);
-		logger.debug(" Timeout   = " + timeout);
-		logger.debug(" Asincrono = " + asincrono);
-		
-		ServiceClient serviceClient = new ServiceClient();
-		
-//		if(options != null){
-//			if(timeout != null){
-//		       	options.setTimeOutInMilliSeconds(timeout);
-//		       }
-//			options.setTo(new EndpointReference(direccionWS));
-//			options.setAction(actionWS);
-//			serviceClient.setOptions(options);
-//		}else {
-//			Options defaultOptions = new Options();
-//		       if(timeout != null){
-//		       	defaultOptions.setTimeOutInMilliSeconds(timeout);
-//		       }
-//		       defaultOptions.setTo(new EndpointReference(direccionWS));
-//		       defaultOptions.setAction(actionWS);
-////		       defaultOptions.setProperty(HTTPConstants.CHUNKED, Boolean.FALSE);
-////		       defaultOptions.setProperty(HTTPConstants.REUSE_HTTP_CLIENT, Boolean.TRUE);
-////		       defaultOptions.setCallTransportCleanup(true);
-//	           serviceClient.setOptions(defaultOptions);
-//		}
-		
-
-		   Options defaultOptions = new Options();
-	       if(timeout != null){
-	       	defaultOptions.setTimeOutInMilliSeconds(timeout);
-	       }
-	       defaultOptions.setTo(new EndpointReference(direccionWS));
-	       defaultOptions.setAction("tns:"+actionWS);
-	       
-	       if("0".equals(modo)){
-		       
-	       }else if("1".equals(modo)){
-		       defaultOptions.setProperty(HTTPConstants.CHUNKED, Boolean.TRUE);
-	       }else if("2".equals(modo)){
-	    	   defaultOptions.setProperty(HTTPConstants.CHUNKED, Boolean.FALSE);
-	       }else if("3".equals(modo)){
-	    	   defaultOptions.setProperty(HTTPConstants.REUSE_HTTP_CLIENT, Boolean.TRUE);
-	       }else if("4".equals(modo)){
-	    	   defaultOptions.setCallTransportCleanup(true);
-	       }else if("5".equals(modo)){
-	    	   defaultOptions.setProperty(HTTPConstants.CHUNKED, Boolean.FALSE);
-	    	   defaultOptions.setProperty(HTTPConstants.REUSE_HTTP_CLIENT, Boolean.TRUE);
-	       }else if("6".equals(modo)){
-	    	   defaultOptions.setProperty(HTTPConstants.CHUNKED, Boolean.FALSE);
-	    	   defaultOptions.setProperty(HTTPConstants.REUSE_HTTP_CLIENT, Boolean.TRUE);
-	    	   defaultOptions.setCallTransportCleanup(true);
-	       }else if("7".equals(modo)){
-	    	   defaultOptions.setProperty(Constants.Configuration.DISABLE_SOAP_ACTION, Boolean.TRUE);
-	       }else if("8".equals(modo)){
-	    	   defaultOptions.setProperty(Constants.Configuration.DISABLE_SOAP_ACTION, Boolean.FALSE);
-	       }else if("9".equals(modo)){
-	    	   defaultOptions.setProperty(Constants.Configuration.MESSAGE_TYPE,HTTPConstants.MEDIA_TYPE_APPLICATION_ECHO_XML);
-	       }else if("10".equals(modo)){
-	    	   defaultOptions.setProperty(Constants.Configuration.DISABLE_SOAP_ACTION, Boolean.TRUE);
-	    	   defaultOptions.setProperty(Constants.Configuration.MESSAGE_TYPE,HTTPConstants.MEDIA_TYPE_APPLICATION_ECHO_XML);
-	       }else{
-	    	   throw new Exception("Error en codigo de mode");
-	       }
-
-//	       AxisService axisServ = new AxisService();
-//         AxisOperation axisOp = new OutInAxisOperation(new QName(actionWS));
-//         axisServ.addOperation(axisOp);
-           
-           serviceClient.setOptions(defaultOptions);
-//         serviceClient.setAxisService(axisServ);
-           
-	        
-	       /**invoke service*/
-	       if(asincrono) {
-	       	serviceClient.fireAndForget(mensaje);
-	       } else {
-	       	respuesta = serviceClient.sendReceive(mensaje);
-	       	
-	       }
-	       logger.debug(" Respuesta invocaServicio " +  actionWS + " = " + respuesta);
-	        
-		logger.debug("Termina Invoca Servicio [ " + actionWS + " ]");
-		return respuesta;
-	}
-
-	public static OMElement invocaServicioAxis2(String direccionWS, String actionWS, OMElement mensaje, Long timeout, Options options, boolean asincrono, String modo) throws Exception {
+	public static OMElement invocaServicioAxis2(String direccionWS, String actionWS, OMElement mensaje, Long timeout, Options options, boolean asincrono) throws Exception {
 		
 		logger.debug("Inicia Invoca Servicio Axis2 ["+direccionWS+" Metodo: "+actionWS+"]");
 		logger.debug(" ***** Parametros Servicio ***** ");
@@ -158,51 +64,27 @@ public class WebServicesUtil {
 		
 		OMElement respuesta = null;
 		
-		Options defaultOptions = new Options();
+		/**
+		 * Si las opciones que envian son nulas se les asigna unas por default
+		 */
+		if(options == null ){
+			options =  new Options();
+		}
 		if(timeout != null){
-			defaultOptions.setTimeOutInMilliSeconds(timeout);
+			options.setTimeOutInMilliSeconds(timeout);
 		}
-		defaultOptions.setTo(new EndpointReference(direccionWS));
-		//defaultOptions.setAction(actionWS);
-		//defaultOptions.setExceptionToBeThrownOnSOAPFault(true);
-		//defaultOptions.setUseSeparateListener(false);
-		
-		if("0".equals(modo)){
-			
-		}else if("1".equals(modo)){
-			defaultOptions.setProperty(HTTPConstants.CHUNKED, Boolean.TRUE);
-		}else if("2".equals(modo)){
-			defaultOptions.setProperty(HTTPConstants.CHUNKED, Boolean.FALSE);
-		}else if("3".equals(modo)){
-			defaultOptions.setProperty(HTTPConstants.REUSE_HTTP_CLIENT, Boolean.TRUE);
-		}else if("4".equals(modo)){
-			defaultOptions.setCallTransportCleanup(true);
-		}else if("5".equals(modo)){
-			defaultOptions.setProperty(HTTPConstants.CHUNKED, Boolean.FALSE);
-			defaultOptions.setProperty(HTTPConstants.REUSE_HTTP_CLIENT, Boolean.TRUE);
-		}else if("6".equals(modo)){
-			defaultOptions.setProperty(HTTPConstants.CHUNKED, Boolean.FALSE);
-			defaultOptions.setProperty(HTTPConstants.REUSE_HTTP_CLIENT, Boolean.TRUE);
-			defaultOptions.setCallTransportCleanup(true);
-		}else if("7".equals(modo)){
-			defaultOptions.setProperty(Constants.Configuration.DISABLE_SOAP_ACTION, Boolean.TRUE);
-		}else if("8".equals(modo)){
-			defaultOptions.setProperty(Constants.Configuration.DISABLE_SOAP_ACTION, Boolean.FALSE);
-		}else if("9".equals(modo)){
-			defaultOptions.setProperty(Constants.Configuration.MESSAGE_TYPE,HTTPConstants.MEDIA_TYPE_APPLICATION_ECHO_XML);
-		}else if("10".equals(modo)){
-			defaultOptions.setProperty(Constants.Configuration.DISABLE_SOAP_ACTION, Boolean.TRUE);
-			defaultOptions.setProperty(Constants.Configuration.MESSAGE_TYPE,HTTPConstants.MEDIA_TYPE_APPLICATION_ECHO_XML);
-		}else{
-			throw new Exception("Error en codigo de mode");
-		}
+		options.setTo(new EndpointReference(direccionWS));
 		
 		ServiceClient serviceClient = new ServiceClient();
-		serviceClient.setOptions(defaultOptions);
+		serviceClient.setOptions(options);
 		
+		/**
+		 * Se rea un SOAPEnvelope con Soap 11 el cual se le fija el body con el xml que viene de la BD, el xml de la BD es un SOAPEnvelope por lo que 
+		 * siempre debe de traer un header y body, por ellos se obtiene doble getFirstElement el cual da como resultado el contenido del Body
+		 */
 		SOAPEnvelope messageEnvelop = OMAbstractFactory.getSOAP11Factory().getDefaultEnvelope();
 		messageEnvelop.getBody().addChild(mensaje.getFirstElement().getFirstElement());
-		logger.debug("MESSAGE ENVELOPE GENERADO: " + messageEnvelop.toString());
+		//logger.debug("MESSAGE ENVELOPE GENERADO: " + messageEnvelop.toString());
 		MessageContext messageCtx = new MessageContext(); 
 		messageCtx.setEnvelope(messageEnvelop);
 		
@@ -214,7 +96,7 @@ public class WebServicesUtil {
 		/**invoke service*/
 		if(!asincrono) {
 			MessageContext resultMessage = callerOp.getMessageContext(WSDLConstants.MESSAGE_LABEL_IN_VALUE);
-			respuesta = AXIOMUtil.stringToOM(resultMessage.getEnvelope().toString());
+			respuesta = resultMessage.getEnvelope().getFirstElement();
 		} 
 		
 		logger.debug(" Respuesta invocaServicio " +  actionWS + " = " + respuesta);

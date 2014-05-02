@@ -111,8 +111,7 @@ Ext.onReady(function()
                         		Ext.Ajax.request({
             						url: _UrlReenviarPeticion,
             						params: {
-            					    		'params.pv_seqidws_i' : seqIdWS,
-            					    		'params.modo'         : panelPeticiones.down('[name=params.pv_cdramo_i]').getValue()
+            					    		'params.pv_seqidws_i' : seqIdWS
             						},
             						success: function(response, opt) {
             							var jsonRes=Ext.decode(response.responseText);
@@ -167,7 +166,7 @@ Ext.onReady(function()
     				            	            	}]
     										}).show();
     										centrarVentanaInterna(ventanaResWS);
-            								recargaGridPeticiones();        							
+            								        							
                    						}else {
                    							mensajeError('No se pudo reenviar la Petici&oacute;n WS. ' + jsonRes.mensajeRespuesta);
                    						}
