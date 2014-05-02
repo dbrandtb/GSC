@@ -396,19 +396,18 @@ public class SiniestrosAction extends PrincipalCoreAction{
 				    		if(params.get("status").trim().equalsIgnoreCase("2")){
 								//paramsMCAut.put("pv_status_i",EstatusTramite.CONFIRMADO.getCodigo());
 				    			
-				    			MesaControlAction mca = new MesaControlAction();
-				    			mca.setKernelManager(kernelManagerSustituto);
-				    			mca.setSession(session);
-				    			Map<String,String>smap1=new HashMap<String,String>();
-				    			smap1.put("ntramite" , params.get("idNumtramiteInicial"));
-				    			smap1.put("status"   , EstatusTramite.CONFIRMADO.getCodigo());
-				    			smap1.put("cdmotivo" , null);
-				    			smap1.put("comments" , null);
-				    			smap1.put("rol_destino" , null);
-				    			smap1.put("usuario_destino" , null);
-				    			mca.setSmap1(smap1);
-				    			mca.actualizarStatusTramite();
+				    			String statusNuevo = EstatusTramite.CONFIRMADO.getCodigo();
+				    			String ntramite = params.get("idNumtramiteInicial");
+				    			String comments = null;
+				    			String cdmotivo = null;
+				    			UserVO usu=(UserVO)session.get("USUARIO");
+				    			String cdusuariSesion = usu.getUser();
+				    			String cdsisrolSesion = usu.getRolActivo().getObjeto().getValue();
+				    			String rolDestino     = null;
+				    			String usuarioDestino = null;
+				    			String cdclausu       = null;
 				    			
+				    			siniestrosManager.moverTramite(ntramite, statusNuevo, comments, cdusuariSesion, cdsisrolSesion, usuarioDestino, rolDestino, cdmotivo, cdclausu);
 				    			
 				    			Map<String,Object>paramsO =new HashMap<String,Object>();
 								paramsO.put("pv_ntramite_i" , params.get("idNumtramiteInicial"));
