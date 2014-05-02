@@ -29,6 +29,12 @@ var urlGuardarp4           = '<s:url namespace="/endosos" action="guardarEndosoD
 var urlGuardarp4Simple     = '<s:url namespace="/endosos" action="guardarEndosoDomicilioSimple" />';
 var enddomUrlDoc           = '<s:url namespace="/documentos" action="ventanaDocumentosPolizaClon" />';
 var _ComboColoniasUrl      = '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
+<s:if test='smap1!=null&&smap1.habilitaEdicion!=null&&smap1.habilitaEdicion=="1"'>
+var _p4_habilitaEdicion = true;
+</s:if>
+<s:else>
+var _p4_habilitaEdicion = false;
+</s:else>
 var formPanelp4;
 <s:if test='smap1!=null&&smap1.botonCopiar!=null&&smap1.botonCopiar=="1"'>
 var esElContratanteP4      = false;
@@ -154,6 +160,7 @@ Ext.onReady(function(){
             Ext.create('Ext.panel.Panel',
             {
                 title           : 'Direcci&oacute;n',
+                itemId          : 'panelDireccionp4',
                 collapsible     : true,
                 titleCollapse   : true,
                 style           : 'margin:5px;',
@@ -167,19 +174,8 @@ Ext.onReady(function(){
                     columns : 2
                 },
                 items           :
-                /*
-                map.put("CDPERSON" , rs.getString("CDPERSON"));
-                map.put("NMORDDOM" , rs.getString(""));
-                map.put("DSDOMICI" , rs.getString(""));
-                map.put("NMTELEFO" , rs.getString(""));
-                map.put("CDPOSTAL" , rs.getString(""));
-                map.put("CDEDO"    , rs.getString(""));
-                map.put("CDMUNICI" , rs.getString(""));
-                map.put("CDCOLONI" , rs.getString(""));
-                map.put("NMNUMERO" , rs.getString(""));
-                map.put("NMNUMINT" , rs.getString(""));
-                */
                 [
+                    /*
                     {
                         fieldLabel     : 'Consecutivo',
                         xtype          : 'numberfield',
@@ -270,6 +266,8 @@ Ext.onReady(function(){
                         allowBlank     : true,
                         readOnly       : !esElContratanteP4
                     }
+                    */
+                    <s:property value="item3" />
                 ]
             })
             ,Ext.create('Ext.panel.Panel',
@@ -393,6 +391,41 @@ Ext.onReady(function(){
             }
         ]
     });
+    debug('_p4_habilitaEdicion:',_p4_habilitaEdicion);
+    if(!_p4_habilitaEdicion)//si es asegurado solo puede leer cp, estado y municipio
+    {
+        formPanelp4.items.items[2].items.items[1].setReadOnly(true);//cp
+        formPanelp4.items.items[2].items.items[2].setReadOnly(true);//estado
+        formPanelp4.items.items[2].items.items[3].setReadOnly(true);//municipio
+    }
+    
+    //establecer cargar colonia al cambiar cod pos
+    formPanelp4.items.items[2].items.items[1].on('blur',function()
+    {
+        debug('cod pos change');
+        formPanelp4.items.items[2].items.items[4].getStore().load(
+        {
+            params :
+            {
+                'params.cp' : formPanelp4.items.items[2].items.items[1].getValue()
+            }
+            ,callback : function()
+            {
+                var hay=false;
+                formPanelp4.items.items[2].items.items[4].getStore().each(function(record)
+                {
+                    if(formPanelp4.items.items[2].items.items[4].getValue()==record.get('key'))
+                    {
+                        hay=true;
+                    }
+                });
+                if(!hay)
+                {
+                    formPanelp4.items.items[2].items.items[4].setValue('');
+                }
+            }
+        });
+    });
     /*///////////////////*/
     ////// contenido //////
     ///////////////////////
@@ -436,8 +469,12 @@ Ext.onReady(function(){
             debug(resp);
             formPanelp4.loadRecord(resp);
             
-            Ext.getCmp('coloniaId').getStore().load({
-                params: {catalogo:'COLONIAS','params.cp': resp.data['smap1.CODPOSTAL']}
+            Ext.ComponentQuery.query('[name="smap1.CDCOLONI"]')[Ext.ComponentQuery.query('[name="smap1.CDCOLONI"]').length-1].getStore().load(
+            {
+                params :
+                {
+                    'params.cp' : resp.data['smap1.CODPOSTAL']
+                }
             });
         },
         failure:function()

@@ -210,6 +210,7 @@ public class EndososAction extends PrincipalCoreAction
 			actionDomicilio.mostrarPantallaDomicilio();
 			item1=actionDomicilio.getItem1();
 			item2=actionDomicilio.getItem2();
+			item3=actionDomicilio.getItem3();
 		}
 		log.debug(""
 				+ "\n######                         ######"
