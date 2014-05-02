@@ -2733,10 +2733,6 @@ Ext.onReady(function() {
 	function validacionCopagoTotal()
 	{
 		var copagoOrig = Ext.getCmp('idCopago').getValue() ;
-		
-		
-		console.log("VALOR DEL COPAGO");
-		console.log(copagoOrig);
 		var sumatoria = 0;
 	    if( copagoOrig =="NO" || copagoOrig =="NA")
 	    {
