@@ -235,8 +235,8 @@ function _p15_botonHabilitarHandler()
 	                                        form.setLoading(false);
 	                                        if (success)
 	                                        {
-	                                            var json = Ext.decode(response.responseText);
-	                                            if (json.success == true)
+	                                            var json2 = Ext.decode(response.responseText);
+	                                            if (json2.success == true)
 	                                            {
 	                                            	mensajeCorrecto('Aviso','Correo enviado de sucursal '+json.stringMap.cdunieco);
 	                                            }
