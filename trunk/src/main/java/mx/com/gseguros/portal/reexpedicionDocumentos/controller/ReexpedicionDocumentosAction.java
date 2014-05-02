@@ -255,7 +255,7 @@ public class ReexpedicionDocumentosAction extends PrincipalCoreAction
 					}	
 					else
 					{
-						correos=correos+","+email.get("DESCRIPL");
+						correos=correos+";"+email.get("DESCRIPL");
 					}
 				}
 			}
