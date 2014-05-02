@@ -203,6 +203,16 @@
             });
             if(nAsegActivos==1)
             {
+            	debug("recordActivo.get('nmsituac'):",recordActivo.get('nmsituac'));
+            	debug("marendStoreAsegurados.getAt(1).get('cdperson'):",marendStoreAsegurados.getAt(1).get('cdperson'));
+            	debug("recordActivo.get('cdperson'):",recordActivo.get('cdperson'));
+            	debug("recordActivo.get('nmsituac')==0"
+                        +"&& marendStoreAsegurados.getCount()>1"
+                        +"&& marendStoreAsegurados.getAt(1).get('cdperson')!=recordActivo.get('cdperson')"
+                        +"? '1' : '0':",recordActivo.get('nmsituac')==0
+                        && marendStoreAsegurados.getCount()>1
+                        && marendStoreAsegurados.getAt(1).get('cdperson')!=recordActivo.get('cdperson')
+                        ? '1' : '0');
             	Ext.getCmp('marendMenuOperaciones').collapse();
                 Ext.getCmp('marendLoaderFrame').setTitle(recordOperacion.get('texto'));
                 Ext.getCmp('marendLoaderFrame').getLoader().load(
@@ -224,6 +234,10 @@
                         ,'smap1.botonCopiar'     : '0'//recordActivo.get('cdrol')==1?'0':'1'//es asegurado? 
                         ,'smap1.cdtipsit'        : recordActivo.get('CDTIPSIT')
                         ,'smap1.ntramite'        : recordActivo.get('NTRAMITE')
+                        ,'smap1.habilitaEdicion' : recordActivo.get('nmsituac')==0
+                                                      && marendStoreAsegurados.getCount()>1
+                                                      && marendStoreAsegurados.getAt(1).get('cdperson')!=recordActivo.get('cdperson')
+                                                      ? '1' : '0'
                     }
                 });
             }
