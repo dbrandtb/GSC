@@ -308,17 +308,29 @@ public class CotizacionAction extends PrincipalCoreAction
             String llaveRol="";
             String llaveSexo="";
             String llaveFenacimi="";
-            if(cdtipsit.equalsIgnoreCase("SL")||cdtipsit.equalsIgnoreCase("SN"))
+            if(cdramo.equals("2"))
             {
-            	llaveRol      = "parametros.pv_otvalor16";
-            	llaveFenacimi = "parametros.pv_otvalor02";
-            	llaveSexo     = "parametros.pv_otvalor01";
+	            if(cdtipsit.equalsIgnoreCase("SL")||cdtipsit.equalsIgnoreCase("SN"))
+	            {
+	            	llaveRol      = "parametros.pv_otvalor16";
+	            	llaveFenacimi = "parametros.pv_otvalor02";
+	            	llaveSexo     = "parametros.pv_otvalor01";
+	            }
+	            else if(cdtipsit.equalsIgnoreCase("GB"))
+	            {
+	            	llaveRol="parametros.pv_otvalor01";
+	            	llaveSexo="H";
+	            	llaveFenacimi="DATE";
+	            }
             }
-            else if(cdtipsit.equalsIgnoreCase("GB"))
+            else if(cdramo.equals("4"))
             {
-            	llaveRol="parametros.pv_otvalor01";
-            	llaveSexo="H";
-            	llaveFenacimi="DATE";
+            	if(cdtipsit.equalsIgnoreCase("MS"))
+            	{
+            		llaveRol      = "parametros.pv_otvalor03";
+	            	llaveFenacimi = "parametros.pv_otvalor01";
+	            	llaveSexo     = "parametros.pv_otvalor02";
+            	}
             }
             ////// 1. indicar para la situacion el indice //////
             
