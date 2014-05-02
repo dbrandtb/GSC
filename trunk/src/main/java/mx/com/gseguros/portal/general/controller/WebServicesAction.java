@@ -64,16 +64,27 @@ public class WebServicesAction extends PrincipalCoreAction{
     		logger.debug("Url WS: " + urlWS);
     		logger.debug("Metodo WS: " + metodoWS);
     		
+    		/**
+    		 * Si es el ws de reclamos se avisa que no es debido ejecutarlo de esta forma pues faltan otros procesos
+    		 * para este caso si se puede ejecutar desde un boton el cual es la solicitud de pago en la mesa de control
+    		 */
     		if("ws.ice2sigs.url".equals(peticionWS.get("CDURLWS")) && "reclamoGS".equalsIgnoreCase(metodoWS)){
     			mensajeRespuesta = "Por favor ejecute este WS desde el boton Solicitar Pago en la pantalla de Mesa de Control de Siniestros.";
         		success = false;
         		return SUCCESS;	
     		}
     		
-    		//OMElement resultadoWS = WebServicesUtil.invocaServicio(urlWS, metodoWS, AXIOMUtil.stringToOM(xmlEnvio), null , null, false, params.get("modo"));
-    		OMElement resultadoWS = WebServicesUtil.invocaServicioAxis2(urlWS, metodoWS, AXIOMUtil.stringToOM(xmlEnvio), null , null, false, params.get("modo"));
+    		/**
+    		 * Invocacion del WS de la peticion
+    		 */
+    		OMElement resultadoWS = WebServicesUtil.invocaServicioAxis2(urlWS, metodoWS, AXIOMUtil.stringToOM(xmlEnvio), null , null, false);
     		mensajeRespuesta = WebServicesUtil.formatXml(resultadoWS.toString());
     		
+    		
+    		/**
+    		 * Si es el Ws de obtencion de Calendarios de DXN se deben de mandar a insertar a la bd, generar pdfs y finalizar el proceso
+    		 * Debe recordarse que para la ejecucion de este WS anteriormente se debio de enviar el WS de el primer Recibo
+    		 */
     		if("ws.recibossigs.url".equals(peticionWS.get("CDURLWS")) && "generaRecDxn".equalsIgnoreCase(metodoWS)){
     			
     			/**
