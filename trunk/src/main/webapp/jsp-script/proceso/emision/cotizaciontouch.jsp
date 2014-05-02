@@ -154,7 +154,7 @@ function _mcotiza_enviarPorCorreo()
 		null,
 		{
 		    autoCapitalize: true,
-		    placeHolder: 'Separados por coma...'
+		    placeHolder: 'Separados por ;'
 		}
 	);
 	debug('<_mcotiza_enviarPorCorreo');
