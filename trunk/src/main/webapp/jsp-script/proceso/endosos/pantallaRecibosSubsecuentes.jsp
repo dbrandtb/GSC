@@ -212,6 +212,7 @@ function _p15_botonHabilitarHandler()
 										            {
 										                cdreporte : 'REPEXC008'
 										                ,'params.pv_feproces_i' : Ext.Date.format(_p15_getFechaInicio().getValue(),'d/m/Y')
+										                ,'params.pv_cdunieco_i' : _p15_form.getValues().cdunieco
 										            },
 										            success: function(form, action)
 										            {
