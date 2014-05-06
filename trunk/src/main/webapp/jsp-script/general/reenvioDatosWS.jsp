@@ -139,12 +139,14 @@ Ext.onReady(function()
     				        	            			text: 'Eliminar esta petici&oacute;n de la Bit&aacute;cora'
     				            	            		,icon:_CONTEXT+'/resources/fam3icons/icons/delete.png'
     				            	            		,handler: function() {
+    				            	            			ventanaResWS.setLoading(true);
     				            	            			Ext.Ajax.request({
     				                    						url: _UrlEliminarPeticion,
     				                    						jsonData: {
     				                    							saveList : 	saveList
     				                    						},
     				                    						success: function(response, opt) {
+    				                    							ventanaResWS.setLoading(false);
     				                    							var jsonRes=Ext.decode(response.responseText);
 
     				                    							if(jsonRes.success == true){
@@ -156,6 +158,7 @@ Ext.onReady(function()
     				                           						}
     				                    						},
     				                    						failure: function(){
+    				                    							ventanaResWS.setLoading(false);
     				                    							mensajeError('No se pudo eliminar la Petici&oacute;n WS.');
     				                    						}
     				                    					});
