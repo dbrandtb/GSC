@@ -197,7 +197,7 @@ function _p15_botonHabilitarHandler()
 															 + json.stringMap.cdunieco
 	                                        ,asunto        : 'Recibos subsecuentes habilitados'
 	                                        ,mensaje       : 'Se habilitaron recibos subsecuentes a partir de la fecha '+Ext.Date.format(_p15_getFechaInicio().getValue(),'d/m/Y')
-	                                        ,nombreArchivo : 'recibos_habilitados_('+Ext.Date.format(_p15_getFechaInicio().getValue(),'Ymd')+').xls'
+	                                        ,nombreArchivo : 'recibos_habilitados_('+Ext.Date.format(new Date(),'m-d-Y g:i:s.u')+').xls'
 	                                    },
 	                                    callback : function(options,success,response)
 	                                    {
