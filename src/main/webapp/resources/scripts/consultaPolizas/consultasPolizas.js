@@ -696,26 +696,23 @@ Ext.onReady(function() {
         }, {
             title: 'ASEGURADOS',
             itemId: 'tabDatosAsegurados',
-            items:[{
-                items:[
-                    gridDatosAsegurado, 
-                    {
-       		    		xtype  : 'panel',
-       		    		name   : 'pnlDatosTatrisit',
-       		    		layout : 'fit',
-                        region : 'center',
-                        loader: {
-                            url: _URL_LOADER_VER_TATRISIT,
-                            scripts  : true,
-                            loadMask : true,
-                            autoLoad : false,
-                            ajaxOptions: {
-                                method: 'POST'
-                            }
-                        }
-       		    	}
-                ]
-            }]
+            items:[
+				gridDatosAsegurado, 
+				{
+					xtype  : 'panel',
+					name   : 'pnlDatosTatrisit',
+					autoScroll : true,
+				    loader: {
+				        url: _URL_LOADER_VER_TATRISIT,
+				        scripts  : true,
+				        loadMask : true,
+				        autoLoad : false,
+				        ajaxOptions: {
+				            method: 'POST'
+				        }
+				    }
+				}
+            ]
         }, {
             id: 'tbDocumentos',
             title : 'DOCUMENTACION',
