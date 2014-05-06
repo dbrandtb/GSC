@@ -1421,16 +1421,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 	}
 	
 	public String ejecutaWSManualCliente() {
-		// String cdunieco = "1";
-		// String cdramo = "2";
-		// String estado = "M";
-		// String nmpoliza = "4";
-		// String nmsuplem = "245658212000000000";
-		// String cdtipsitGS = "213";
-		// String sucursal = "1000";
-		//
-		// String nmsolici = "2540";
-		// String nmtramite = "10";
 
 		String cdunieco = map1.get("cdunieco");
 		String cdramo = map1.get("cdramo");
@@ -1440,12 +1430,14 @@ public class ComplementariosAction extends PrincipalCoreAction
 		//String cdtipsitGS = map1.get("subramo");
 		//String sucursal = map1.get("sucursal");
 
-		//String nmsolici = map1.get("nmsolici");
 		String nmtramite = map1.get("nmtramite");
-		//String operacion = map1.get("operacion");
+		
+		String operacion = map1.get("operacion");
+		if(StringUtils.isBlank(operacion)) operacion = "INSERTA";
+		Ice2sigsService.Operacion operation = Ice2sigsService.Operacion.valueOf(operacion);
 
 		// Ejecutamos el Web Service de Cliente Salud:
-		ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmtramite, Ice2sigsService.Operacion.INSERTA, (UserVO) session.get("USUARIO"));
+		ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmtramite, operation, (UserVO) session.get("USUARIO"));
 		
 		success = true;
 		return SUCCESS;
@@ -1463,10 +1455,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 
 		String nmsolici = map1.get("nmsolici");
 		String nmtramite = map1.get("nmtramite");
-
-//		String operacion = map1.get("operacion");
-//		if(StringUtils.isBlank(operacion)) operacion = "INSERTA";
-//		Operacion op = Operacion.valueOf(operacion);
 
 		String tipoMov = "1";
 		
