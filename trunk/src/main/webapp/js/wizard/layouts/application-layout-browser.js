@@ -1074,7 +1074,7 @@ new Ext.Viewport({
             connAV.request ({url: 'atributosVariables/LimpiarSesionExpresion.action'});
            
             Ext.getCmp('hidden-valor-defecto-atributos-variables').setValue("");
-            Ext.getCmp('hidden-radio-atributos-variables').setValue('N');
+            Ext.getCmp('hidden-radio-atributos-variables').setValue('A');
                 	
 	 		Ext.getCmp('obligatorio-check-atributos-variables').setValue(false);
 			Ext.getCmp('obligatorio-check-atributos-variables').setRawValue("N");
