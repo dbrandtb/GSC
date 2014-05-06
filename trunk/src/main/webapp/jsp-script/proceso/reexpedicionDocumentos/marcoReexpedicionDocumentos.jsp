@@ -239,6 +239,6 @@ function _p16_buscarPolizas()
 </script>
 </head>
 <body>
-<div id='_p16_divpri'></div>
+<div id='_p16_divpri' style="height:800px;"></div>
 </body>
 </html>
