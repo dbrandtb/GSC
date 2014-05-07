@@ -7,7 +7,7 @@ import java.util.Date;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.utils.MailMail;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.validator.UrlValidator;
