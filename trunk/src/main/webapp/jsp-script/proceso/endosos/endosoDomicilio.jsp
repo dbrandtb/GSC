@@ -392,6 +392,8 @@ Ext.onReady(function(){
         ]
     });
     debug('_p4_habilitaEdicion:',_p4_habilitaEdicion);
+    formPanelp4.items.items[2].items.items[4].setEditable(true);
+    
     if(!_p4_habilitaEdicion)//si es asegurado solo puede leer cp, estado y municipio
     {
         formPanelp4.items.items[2].items.items[1].setReadOnly(true);//cp
