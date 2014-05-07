@@ -229,6 +229,7 @@ Ext.onReady(function()
 	    	
 	    	debug('codpost:',_5_formDomicil.items.items[1]);
 	    	debug('colonia:',_5_formDomicil.items.items[4]);
+	    	_5_formDomicil.items.items[4].setEditable(true);
 	    	
 	    	//cargar colonia
 	    	_5_formDomicil.items.items[4].getStore().load(
