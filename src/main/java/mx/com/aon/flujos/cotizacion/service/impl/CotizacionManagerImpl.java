@@ -13,7 +13,7 @@ import mx.com.aon.configurador.pantallas.model.components.ItemVO;
 import mx.com.aon.configurador.pantallas.model.components.RecordVO;
 import mx.com.aon.flujos.cotizacion.model.ResultadoCotizacionVO;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 public class CotizacionManagerImpl {

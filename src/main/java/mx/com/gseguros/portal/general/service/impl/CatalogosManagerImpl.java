@@ -11,7 +11,7 @@ import mx.com.gseguros.portal.general.util.Rango;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.general.util.Validacion;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class CatalogosManagerImpl implements CatalogosManager {
 	

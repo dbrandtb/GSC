@@ -6,7 +6,7 @@ package mx.com.aon.configurador.pantallas.model.components;
 import java.io.Serializable;
 
 import net.sf.json.JSONObject;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 

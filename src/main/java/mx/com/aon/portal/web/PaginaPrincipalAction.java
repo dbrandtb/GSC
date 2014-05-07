@@ -10,8 +10,8 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.service.PaginaPrincipalManager;
 import mx.com.gseguros.exception.ApplicationException;
 
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Clase que carga la configuracion asignada para cada pantalla.
@@ -191,7 +191,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 					
 					case 1:
 						if (StringUtils.isNotBlank(portalVO.getEspecificacion())) {
-							session.put("CONTENIDO_TOP", StringEscapeUtils.unescapeHtml(portalVO.getEspecificacion()));
+							session.put("CONTENIDO_TOP", StringEscapeUtils.unescapeHtml4(portalVO.getEspecificacion()));
 						
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 														
@@ -202,7 +202,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 						break;
 					case 2:
 						if (StringUtils.isNotBlank(portalVO.getEspecificacion())) {
-							session.put("CONTENIDO_NAV", StringEscapeUtils.unescapeHtml(portalVO.getEspecificacion()));
+							session.put("CONTENIDO_NAV", StringEscapeUtils.unescapeHtml4(portalVO.getEspecificacion()));
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 														
 							logger.debug("contenido-nav:"+portalVO.getDescripcionArchivo());
@@ -211,7 +211,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 						break;
 					case 3:
 						if (StringUtils.isNotBlank(portalVO.getEspecificacion())) {
-							session.put("CONTENIDO_TOPLEFT", StringEscapeUtils.unescapeHtml(portalVO.getEspecificacion()));
+							session.put("CONTENIDO_TOPLEFT", StringEscapeUtils.unescapeHtml4(portalVO.getEspecificacion()));
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 														
 							logger.debug("contenido-topLeft"+portalVO.getDescripcionArchivo());
@@ -224,7 +224,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 						break;
 					case 4:
 						if (StringUtils.isNotBlank(portalVO.getEspecificacion())) {
-							session.put("CONTENIDO_TOPCENTER",StringEscapeUtils.unescapeHtml(portalVO.getEspecificacion()));
+							session.put("CONTENIDO_TOPCENTER",StringEscapeUtils.unescapeHtml4(portalVO.getEspecificacion()));
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 													
 							logger.debug("contenido-topCenter"+portalVO.getDescripcionArchivo());
@@ -236,7 +236,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 						break;
 					case 5:
 						if (StringUtils.isNotBlank(portalVO.getEspecificacion())) {
-							session.put("CONTENIDO_TOPRIGHT",StringEscapeUtils.unescapeHtml(portalVO.getEspecificacion()));
+							session.put("CONTENIDO_TOPRIGHT",StringEscapeUtils.unescapeHtml4(portalVO.getEspecificacion()));
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-topRight"+portalVO.getDescripcionArchivo());
@@ -249,7 +249,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 					case 6:
 
 						if (StringUtils.isNotBlank(portalVO.getEspecificacion())) {
-							session.put("CONTENIDO_LEFT_1", StringEscapeUtils.unescapeHtml(portalVO.getEspecificacion()));
+							session.put("CONTENIDO_LEFT_1", StringEscapeUtils.unescapeHtml4(portalVO.getEspecificacion()));
 						}else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {							
 							logger.debug("contenido-left-1"+portalVO.getDescripcionArchivo());
 							session.put("CONTENIDO_LEFT_1_IMAGE", obtenCadena(portalVO.getDescripcionArchivo()));						
@@ -263,7 +263,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 						break;
 					case 7:
 						if (StringUtils.isNotBlank(portalVO.getEspecificacion())) {
-							session.put("CONTENIDO_LEFT_2", StringEscapeUtils.unescapeHtml(portalVO.getEspecificacion()));
+							session.put("CONTENIDO_LEFT_2", StringEscapeUtils.unescapeHtml4(portalVO.getEspecificacion()));
 						}else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-left-2"+portalVO.getDescripcionArchivo());
@@ -278,7 +278,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 						break;
 					case 8:
 						if (StringUtils.isNotBlank(portalVO.getEspecificacion())) {
-							session.put("CONTENIDO_LEFT_3", StringEscapeUtils.unescapeHtml(portalVO.getEspecificacion()));
+							session.put("CONTENIDO_LEFT_3", StringEscapeUtils.unescapeHtml4(portalVO.getEspecificacion()));
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-left-3"+portalVO.getDescripcionArchivo());
@@ -294,7 +294,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 					case 9:
 
 						if (StringUtils.isNotBlank(portalVO.getEspecificacion())) {
-							session.put("CONTENIDO_LEFT_4", StringEscapeUtils.unescapeHtml(portalVO.getEspecificacion()));
+							session.put("CONTENIDO_LEFT_4", StringEscapeUtils.unescapeHtml4(portalVO.getEspecificacion()));
 						    logger.debug("contenido_left_4"+ portalVO.getEspecificacion() );
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
@@ -310,7 +310,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 						break;
 					case 10:
 						if (StringUtils.isNotBlank(portalVO.getEspecificacion())) {
-							session.put("CONTENIDO_LEFT_5", StringEscapeUtils.unescapeHtml(portalVO.getEspecificacion()));
+							session.put("CONTENIDO_LEFT_5", StringEscapeUtils.unescapeHtml4(portalVO.getEspecificacion()));
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-left-5"+portalVO.getDescripcionArchivo());
@@ -325,7 +325,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 						break;
 					case 11:
 						if (StringUtils.isNotBlank(portalVO.getEspecificacion())) {
-							session.put("CONTENIDO_RIGHT_1", StringEscapeUtils.unescapeHtml(portalVO.getEspecificacion()));
+							session.put("CONTENIDO_RIGHT_1", StringEscapeUtils.unescapeHtml4(portalVO.getEspecificacion()));
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-right-1"+portalVO.getDescripcionArchivo());
@@ -341,7 +341,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 						break;
 					case 12:
 						if (StringUtils.isNotBlank(portalVO.getEspecificacion())) {
-							session.put("CONTENIDO_RIGHT_2", StringEscapeUtils.unescapeHtml(portalVO.getEspecificacion()));
+							session.put("CONTENIDO_RIGHT_2", StringEscapeUtils.unescapeHtml4(portalVO.getEspecificacion()));
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-right-2"+portalVO.getDescripcionArchivo());
@@ -358,7 +358,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 					case 13:
 
 						if (StringUtils.isNotBlank(portalVO.getEspecificacion())) {
-							session.put("CONTENIDO_RIGHT_3", StringEscapeUtils.unescapeHtml(portalVO.getEspecificacion()));
+							session.put("CONTENIDO_RIGHT_3", StringEscapeUtils.unescapeHtml4(portalVO.getEspecificacion()));
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-right-3"+portalVO.getDescripcionArchivo());
@@ -375,7 +375,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 					case 14:
 
 						if (StringUtils.isNotBlank(portalVO.getEspecificacion())) {
-							session.put("CONTENIDO_RIGHT_4", StringEscapeUtils.unescapeHtml(portalVO.getEspecificacion()));
+							session.put("CONTENIDO_RIGHT_4", StringEscapeUtils.unescapeHtml4(portalVO.getEspecificacion()));
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-right-4"+portalVO.getDescripcionArchivo());
@@ -393,7 +393,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 					case 15:
 
 						if (StringUtils.isNotBlank(portalVO.getEspecificacion())) {
-							session.put("CONTENIDO_RIGHT_5", StringEscapeUtils.unescapeHtml(portalVO.getEspecificacion()));
+							session.put("CONTENIDO_RIGHT_5", StringEscapeUtils.unescapeHtml4(portalVO.getEspecificacion()));
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-right-5"+portalVO.getDescripcionArchivo());
@@ -411,7 +411,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 					case 16:
 
 						if (StringUtils.isNotBlank(portalVO.getEspecificacion())) {
-							session.put("CONTENIDO_MAIN", StringEscapeUtils.unescapeHtml(portalVO.getEspecificacion()));
+							session.put("CONTENIDO_MAIN", StringEscapeUtils.unescapeHtml4(portalVO.getEspecificacion()));
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-main"+portalVO.getContenido());
@@ -424,7 +424,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 					case 17:
 
 						if (StringUtils.isNotBlank(portalVO.getEspecificacion())) {
-							session.put("CONTENIDO_NEWS", StringEscapeUtils.unescapeHtml(portalVO.getEspecificacion()));
+							session.put("CONTENIDO_NEWS", StringEscapeUtils.unescapeHtml4(portalVO.getEspecificacion()));
 						}else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-news"+portalVO.getDescripcionArchivo());
@@ -441,7 +441,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 					case 18:
 
 						if (StringUtils.isNotBlank(portalVO.getEspecificacion())) {
-							session.put("CONTENIDO_KNEWTHAT",StringEscapeUtils.unescapeHtml(portalVO.getEspecificacion()));
+							session.put("CONTENIDO_KNEWTHAT",StringEscapeUtils.unescapeHtml4(portalVO.getEspecificacion()));
 						}else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-newThat"+portalVO.getDescripcionArchivo());
@@ -459,7 +459,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 					case 19:
 
 						if (StringUtils.isNotBlank(portalVO.getEspecificacion())) {
-							session.put("CONTENIDO_MAINDOWN",StringEscapeUtils.unescapeHtml(portalVO.getEspecificacion()));
+							session.put("CONTENIDO_MAINDOWN",StringEscapeUtils.unescapeHtml4(portalVO.getEspecificacion()));
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-mainDown"+portalVO.getDescripcionArchivo());
@@ -472,7 +472,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 					case 20:
 
 						if (StringUtils.isNotBlank(portalVO.getEspecificacion())) {
-							session.put("CONTENIDO_OTHERLEFT",StringEscapeUtils.unescapeHtml(portalVO.getEspecificacion()));
+							session.put("CONTENIDO_OTHERLEFT",StringEscapeUtils.unescapeHtml4(portalVO.getEspecificacion()));
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-otherLeft"+portalVO.getDescripcionArchivo());
@@ -489,7 +489,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 					case 21:
 
 						if (StringUtils.isNotBlank(portalVO.getEspecificacion())) {
-							session.put("CONTENIDO_OTHERRIGHT",StringEscapeUtils.unescapeHtml(portalVO.getEspecificacion()));
+							session.put("CONTENIDO_OTHERRIGHT",StringEscapeUtils.unescapeHtml4(portalVO.getEspecificacion()));
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-otherRight"+portalVO.getDescripcionArchivo());
@@ -506,7 +506,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 					case 22:
 
 						if (StringUtils.isNotBlank(portalVO.getEspecificacion())) {
-							session.put("CONTENIDO_OTHERS", StringEscapeUtils.unescapeHtml(portalVO.getEspecificacion()));
+							session.put("CONTENIDO_OTHERS", StringEscapeUtils.unescapeHtml4(portalVO.getEspecificacion()));
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-others"+portalVO.getDescripcionArchivo());
@@ -519,7 +519,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 					case 23:
 
 						if (StringUtils.isNotBlank(portalVO.getEspecificacion())) {
-							session.put("CONTENIDO_FOOTERLEFT",StringEscapeUtils.unescapeHtml(portalVO.getEspecificacion()));
+							session.put("CONTENIDO_FOOTERLEFT",StringEscapeUtils.unescapeHtml4(portalVO.getEspecificacion()));
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-footerLeft"+portalVO.getDescripcionArchivo());
@@ -532,7 +532,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 					case 24:
 
 						if (StringUtils.isNotBlank(portalVO.getEspecificacion())) {
-							session.put("CONTENIDO_FOOTERCENTER",StringEscapeUtils.unescapeHtml(portalVO.getEspecificacion()));
+							session.put("CONTENIDO_FOOTERCENTER",StringEscapeUtils.unescapeHtml4(portalVO.getEspecificacion()));
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-footerCenter"+portalVO.getDescripcionArchivo());
@@ -545,7 +545,7 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 					case 25:
 
 						if (StringUtils.isNotBlank(portalVO.getEspecificacion())) {
-							session.put("CONTENIDO_FOOTERRIGHT",StringEscapeUtils.unescapeHtml(portalVO.getEspecificacion()));
+							session.put("CONTENIDO_FOOTERRIGHT",StringEscapeUtils.unescapeHtml4(portalVO.getEspecificacion()));
 						} else if (StringUtils.isNotBlank(portalVO.getDescripcionArchivo())) {
 							
 							logger.debug("contenido-footerRight"+portalVO.getDescripcionArchivo());

@@ -17,7 +17,7 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.general.model.RolVO;
 import mx.com.gseguros.utils.Constantes;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 
 /**

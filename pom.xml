@@ -65,6 +65,12 @@
             <groupId>org.apache.velocity</groupId>
             <artifactId>velocity-tools</artifactId>
             <version>2.0</version>
+            <exclusions>
+            	<exclusion>
+            		<artifactId>commons-lang</artifactId>
+            		<groupId>commons-lang</groupId>
+            	</exclusion>
+            </exclusions>
         </dependency>
         <!-- PARA tags -->
 
@@ -175,6 +181,12 @@
             <artifactId>json-lib</artifactId>
             <version>2.4</version>
             <classifier>jdk15</classifier>
+            <exclusions>
+            	<exclusion>
+            		<artifactId>commons-lang</artifactId>
+            		<groupId>commons-lang</groupId>
+            	</exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -214,11 +226,6 @@
 
 
         <!-- Utilidades Apache commons -->
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.6</version>
-        </dependency>
         <dependency>
             <groupId>commons-net</groupId>
             <artifactId>commons-net</artifactId>

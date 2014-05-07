@@ -22,7 +22,7 @@ import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.interceptor.ServletRequestAware;
 
 /**

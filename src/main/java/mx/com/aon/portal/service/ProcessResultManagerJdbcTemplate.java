@@ -8,7 +8,7 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.utils.Constantes;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.opensymphony.xwork2.ActionSupport;

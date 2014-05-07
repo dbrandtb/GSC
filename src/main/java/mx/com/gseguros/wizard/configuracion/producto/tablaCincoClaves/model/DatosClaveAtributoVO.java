@@ -2,8 +2,8 @@ package mx.com.gseguros.wizard.configuracion.producto.tablaCincoClaves.model;
 
 import java.io.Serializable;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class DatosClaveAtributoVO implements Serializable{
 	/**

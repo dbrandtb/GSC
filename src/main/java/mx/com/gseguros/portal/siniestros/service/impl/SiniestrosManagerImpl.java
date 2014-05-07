@@ -29,7 +29,7 @@ import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Reclamo;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 public class SiniestrosManagerImpl implements SiniestrosManager {
 	private SiniestrosDAO siniestrosDAO;
 	

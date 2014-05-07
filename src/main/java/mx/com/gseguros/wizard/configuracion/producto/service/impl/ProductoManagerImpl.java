@@ -36,7 +36,7 @@ import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
 import mx.com.aon.portal.util.ConvertUtil;
 import mx.com.aon.portal.util.WrapperResultados;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.support.SqlLobValue;
 import org.springframework.jdbc.support.lob.OracleLobHandler;
@@ -140,8 +140,8 @@ public class ProductoManagerImpl extends AbstractManagerJdbcTemplateInvoke imple
 				throw new ApplicationException("No existe producto " + idProducto);
 			} else {
 				producto.setCodigoRamo(Integer.parseInt(idProducto));
-				producto.setDescripcion(StringEscapeUtils.unescapeHtml(producto.getDescripcion()));
-				producto.setDescripcionRamo(StringEscapeUtils.unescapeHtml(producto.getDescripcionRamo()));
+				producto.setDescripcion(StringEscapeUtils.unescapeHtml4(producto.getDescripcion()));
+				producto.setDescripcionRamo(StringEscapeUtils.unescapeHtml4(producto.getDescripcionRamo()));
 			}
 
 			List<LlaveValorVO> lista = obtenerRamoPolizaProducto(idProducto);

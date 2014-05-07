@@ -9,7 +9,7 @@ import java.util.Map;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.gseguros.utils.HttpUtil;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 public class DocumentosPolizaAction extends PrincipalCoreAction {

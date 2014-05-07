@@ -28,8 +28,8 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -463,8 +463,8 @@ public class PrincipalProductosAction extends Padre {
 		boolean result = true;
 		ProductoVO productoVO = new ProductoVO();
 		productoVO.setCodigoRamo(codigoRamo);
-		productoVO.setDescripcionRamo(StringEscapeUtils.escapeHtml(descripcionRamo));
-		productoVO.setDescripcion(StringEscapeUtils.escapeHtml(descripcion));
+		productoVO.setDescripcionRamo(StringEscapeUtils.escapeHtml4(descripcionRamo));
+		productoVO.setDescripcion(StringEscapeUtils.escapeHtml4(descripcion));
 		productoVO.setCodigoTipoParametro(claveTipoProducto);
 		productoVO.setCodigoTipoRamo(claveTipoRamo);
 		productoVO.setCodigoTipoPoliza(claveTipoPoliza);

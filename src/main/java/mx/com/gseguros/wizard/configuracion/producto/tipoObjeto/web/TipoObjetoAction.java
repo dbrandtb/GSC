@@ -16,7 +16,7 @@ import mx.com.gseguros.wizard.configuracion.producto.web.Padre;
 import mx.com.gseguros.wizard.model.MensajesVO;
 import mx.com.gseguros.wizard.service.CatalogService;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

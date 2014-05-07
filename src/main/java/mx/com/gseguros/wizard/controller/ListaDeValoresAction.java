@@ -15,8 +15,8 @@ import mx.com.gseguros.wizard.configuracion.producto.tablaCincoClaves.model.Dato
 import mx.com.gseguros.wizard.configuracion.producto.web.Padre;
 
 
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -641,7 +641,7 @@ public class ListaDeValoresAction extends Padre {
 				LlaveValorVO valor = new LlaveValorVO();
 
 				valor.setKey(valorClave);
-				valor.setValue(StringEscapeUtils.escapeHtml(valorDescripcion));
+				valor.setValue(StringEscapeUtils.escapeHtml4(valorDescripcion));
 
 				lista.add(valor);
 				session.put(CARGAMANUAL, lista);
@@ -686,7 +686,7 @@ public class ListaDeValoresAction extends Padre {
 					LlaveValorVO listaGrid = new LlaveValorVO();
 					listaGrid.setKey(valorClave);
 					listaGrid.setValue(StringEscapeUtils
-							.escapeHtml(valorDescripcion));
+							.escapeHtml4(valorDescripcion));
 					temporal.add(listaGrid);
 					session.put(CARGAMANUAL, temporal);
 					success = true;

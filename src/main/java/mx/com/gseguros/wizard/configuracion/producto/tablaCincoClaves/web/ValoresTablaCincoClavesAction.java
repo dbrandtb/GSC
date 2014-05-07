@@ -16,7 +16,7 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.aon.portal.service.PagedList;
 import mx.com.aon.tmp.FormatoFecha;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
