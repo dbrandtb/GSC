@@ -47,8 +47,21 @@ public class WebServicesAction extends PrincipalCoreAction{
        	return SUCCESS;
     }
 
-   
-
+    public String obtienePayloadPeticionWS(){
+    	
+    	try {
+    		loadList = webServicesManager.obtieneDetallePeticionWS(params);
+    		mensajeRespuesta = WebServicesUtil.formatXml(loadList.get(0).get("XMLIN"));
+    	}catch( Exception e){
+    		mensajeRespuesta = e.getMessage();
+    		logger.error("Error en obtienePayloadPeticionWS",e);
+    		success =  false;
+    		return SUCCESS;
+    	}
+    	success = true;
+    	return SUCCESS;
+    }
+    
     public String reenviaPeticionWS(){
     	
     	try {

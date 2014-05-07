@@ -35,6 +35,17 @@
 			</result>
 		</action>
 
+        <action name="obtienePayloadPeticionWS" class="webServicesAction"
+			method="obtienePayloadPeticionWS">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					mensajeRespuesta,
+					success
+				</param>
+			</result>
+		</action>
+		
         <action name="reenviaPeticionWS" class="webServicesAction"
 			method="reenviaPeticionWS">
 			<result type="json">

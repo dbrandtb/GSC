@@ -12,6 +12,7 @@ extjs_custom_override_mayusculas = false;
 var recargaGridPeticiones;
 
 var _UrlPeticionesFallidas = '<s:url namespace="/general"    action="obtienePeticionesWSFallidas" />';
+var _UrlPayloadPeticion    = '<s:url namespace="/general"    action="obtienePayloadPeticionWS" />';
 var _UrlReenviarPeticion   = '<s:url namespace="/general"    action="reenviaPeticionWS" />';
 var _UrlEliminarPeticion   = '<s:url namespace="/general"    action="eliminaPeticionWS" />';
 
@@ -132,6 +133,7 @@ Ext.onReady(function()
     										        xtype     : 'textareafield',
     										        grow      : true,
     										        value     : jsonRes.mensajeRespuesta,
+    										        readOnly  : true,
     										        width     : 450,
     										        height    : 400
     										    }],
@@ -164,8 +166,8 @@ Ext.onReady(function()
     				                    					});
     				            	            		}
     				            	            	},{
-    				            	            	    text: 'Cerrar',
-    				            	            	    icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+    				            	            	    text: 'Aceptar',
+    				            	            	    icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
     				            	            	    handler: function() {
     				            	            	    	ventanaResWS.close();
     				            	            	    }
@@ -241,6 +243,67 @@ Ext.onReady(function()
             	}else{
             		showMessage("Aviso","Debe seleccionar almenos un registro", Ext.Msg.OK, Ext.Msg.INFO);
             	}
+            }
+        },{
+            icon    : '${ctx}/resources/fam3icons/icons/zoom.png',
+            text    : 'Ver Payload Xml',
+            handler : function(btn, e){
+            	var model =  gridPeticiones.getSelectionModel();
+            	if(model.hasSelection() && model.getSelection().length == 1){
+            		
+            		var seqIdWS = model.getSelection()[0].get('SEQIDWS');
+            		
+            		gridPeticiones.setLoading(true);
+            		
+            		Ext.Ajax.request({
+						url: _UrlPayloadPeticion,
+						params: {
+					    		'params.pv_seqidws_i' : seqIdWS
+						},
+						success: function(response, opt) {
+							gridPeticiones.setLoading(false);
+							var jsonRes=Ext.decode(response.responseText);
+							
+							if(jsonRes.success == true){
+
+								var ventanaPayload = Ext.create('Ext.window.Window',{
+									title   : 'Payload Xml de la Petici&oacute;n',
+									modal  : true,
+									layout: {type:'hbox', pack: 'center'},
+									width  : 500,
+									height : 500,
+									items  :
+									[{
+								        xtype     : 'textareafield',
+								        grow      : true,
+								        value     : jsonRes.mensajeRespuesta,
+								        readOnly  : true,
+								        width     : 450,
+								        height    : 400
+								    }],
+								    buttons: [{
+		            	            	    text: 'Aceptar',
+		            	            	    icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
+		            	            	    handler: function() {
+		            	            	    	ventanaPayload.close();
+		            	            	    }
+		            	            	}]
+								}).show();
+								centrarVentanaInterna(ventanaPayload);
+								        							
+       						}else {
+       							mensajeError('No se pudo obtener el Payload de la Petici&oacute;n WS. ' + jsonRes.mensajeRespuesta);
+       						}
+						},
+						failure: function(){
+							gridPeticiones.setLoading(false);
+							mensajeError('No se pudo obtener el Payload de la Petici&oacute;n WS.');
+						}
+					});
+            	}else{
+            		showMessage("Aviso","Debe seleccionar un solo registro para esta operaci&oacute;n", Ext.Msg.OK, Ext.Msg.INFO);
+            	}
+            	
             }
         }]
     });
