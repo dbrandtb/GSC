@@ -27,7 +27,7 @@ import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.json.JSONUtil;

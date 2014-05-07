@@ -1,6 +1,6 @@
 package mx.com.gseguros.portal.cotizacion.controller;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import mx.com.aon.core.web.PrincipalCoreAction;

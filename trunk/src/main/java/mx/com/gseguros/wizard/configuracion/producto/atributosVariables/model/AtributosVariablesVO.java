@@ -2,7 +2,7 @@ package mx.com.gseguros.wizard.configuracion.producto.atributosVariables.model;
 
 import java.io.Serializable;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author Edgar Perez

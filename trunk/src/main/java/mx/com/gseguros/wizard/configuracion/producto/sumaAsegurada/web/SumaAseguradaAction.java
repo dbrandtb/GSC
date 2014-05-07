@@ -9,7 +9,7 @@ import mx.com.gseguros.wizard.configuracion.producto.sumaAsegurada.model.SumaAse
 import mx.com.gseguros.wizard.configuracion.producto.sumaAsegurada.model.SumaAseguradaVO;
 import mx.com.gseguros.wizard.configuracion.producto.web.Padre;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

@@ -1,26 +1,19 @@
 package mx.com.gseguros.wizard.configuracion.producto.service.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.aon.portal.service.PagedList;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.wizard.configuracion.producto.model.ClavesVO;
 import mx.com.gseguros.wizard.configuracion.producto.model.ListaDeValoresVO;
 import mx.com.gseguros.wizard.configuracion.producto.model.LlaveValorVO;
 import mx.com.gseguros.wizard.configuracion.producto.service.ListaDeValoresManager;
 import mx.com.gseguros.wizard.configuracion.producto.tablaCincoClaves.model.DatosClaveAtributoVO;
-import mx.com.gseguros.wizard.configuracion.producto.tablaCincoClaves.model.DescripcionCincoClavesVO;
-import mx.com.gseguros.wizard.configuracion.producto.tablaCincoClaves.model.ValoresCincoClavesVO;
-import mx.com.gseguros.exception.ApplicationException;
-import mx.com.aon.portal.service.PagedList;
-import mx.com.aon.portal.util.WrapperResultados;
 
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-
-import mx.com.gseguros.exception.DaoException;
 
 /**
  * 

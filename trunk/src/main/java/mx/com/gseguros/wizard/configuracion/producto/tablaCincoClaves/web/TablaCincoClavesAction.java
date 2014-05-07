@@ -14,7 +14,7 @@ import mx.com.gseguros.wizard.configuracion.producto.tablaCincoClaves.model.Dato
 import mx.com.gseguros.wizard.configuracion.producto.web.Padre;
 import mx.com.gseguros.exception.ApplicationException;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

@@ -23,7 +23,7 @@ import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.general.util.Validacion;
 import mx.com.gseguros.utils.Constantes;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 

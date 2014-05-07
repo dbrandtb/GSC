@@ -33,7 +33,7 @@ import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Recibo;
 import mx.com.gseguros.ws.ice2sigs.client.model.ReciboWrapper;
 import oracle.jdbc.driver.OracleTypes;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;

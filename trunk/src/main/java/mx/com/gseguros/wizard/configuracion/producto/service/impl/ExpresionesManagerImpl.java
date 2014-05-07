@@ -19,7 +19,7 @@ import mx.com.gseguros.wizard.configuracion.producto.expresiones.model.VariableV
 import mx.com.gseguros.wizard.configuracion.producto.model.LlaveValorVO;
 import mx.com.gseguros.wizard.configuracion.producto.service.ExpresionesManager;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 public class ExpresionesManagerImpl extends AbstractManagerJdbcTemplateInvoke implements ExpresionesManager {

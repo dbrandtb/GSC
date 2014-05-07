@@ -3,12 +3,12 @@ package mx.com.aon.portal.web;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
-
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.MenuPrincipalVO;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.service.MenuPrincipalManager;
+
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @see Clase Java que carga el menu.
@@ -190,6 +190,7 @@ public class MenuAction extends PrincipalCoreAction {
 			listaMenuVertical = menuPrincipalManagerJdbcTemplate.getListaMenuVertical(claveCliente,claveRol, usuario);
 			
 			logger.debug("listaMenuVertical->" + listaMenuVertical);
+			logger.debug("esMovil" + session.get("ES_MOVIL"));
 			if(listaMenuVertical != null){
 			logger.debug("listaMenuVertical size: " + listaMenuVertical.size() );
 			}

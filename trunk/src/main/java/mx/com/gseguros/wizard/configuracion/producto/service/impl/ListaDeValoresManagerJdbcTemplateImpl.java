@@ -5,24 +5,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import oracle.jdbc.driver.OracleTypes;
-
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.jdbc.core.SqlParameter;
-
+import mx.com.aon.portal.service.PagedList;
+import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
+import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.wizard.configuracion.producto.model.ClavesVO;
 import mx.com.gseguros.wizard.configuracion.producto.model.ListaDeValoresVO;
 import mx.com.gseguros.wizard.configuracion.producto.model.LlaveValorVO;
 import mx.com.gseguros.wizard.configuracion.producto.service.ListaDeValoresManager;
 import mx.com.gseguros.wizard.configuracion.producto.tablaCincoClaves.model.DatosClaveAtributoVO;
-import mx.com.gseguros.exception.ApplicationException;
-import mx.com.gseguros.exception.DaoException;
-import mx.com.aon.portal.service.PagedList;
-import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
-import mx.com.aon.portal.util.WrapperResultados;
+
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 
 
 public class ListaDeValoresManagerJdbcTemplateImpl extends AbstractManagerJdbcTemplateInvoke implements ListaDeValoresManager {
@@ -326,7 +322,7 @@ public class ListaDeValoresManagerJdbcTemplateImpl extends AbstractManagerJdbcTe
 				boolean inserted = true;
 				WrapperResultados res = null;
 				
-				claveVO.setValue(StringEscapeUtils.escapeHtml(claveVO.getValue()));
+				claveVO.setValue(StringEscapeUtils.escapeHtml4(claveVO.getValue()));
 				params.put("PI_OTCLAVE", claveVO.getKey());
 				params.put("PI_OTVALOR", claveVO.getValue());
 				params.put("PI_ACCION", claveVO.getNick());

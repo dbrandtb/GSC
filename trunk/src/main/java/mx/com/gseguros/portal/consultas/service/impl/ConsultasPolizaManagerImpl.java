@@ -11,7 +11,7 @@ import mx.com.gseguros.portal.consultas.dao.ConsultasPolizaDAO;
 import mx.com.gseguros.portal.consultas.model.CopagoVO;
 import mx.com.gseguros.portal.consultas.service.ConsultasPolizaManager;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class ConsultasPolizaManagerImpl extends
 		AbstractManagerJdbcTemplateInvoke implements ConsultasPolizaManager {

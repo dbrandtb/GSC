@@ -13,7 +13,7 @@ import mx.com.gseguros.wizard.configuracion.producto.service.ReglaNegocioManager
 import mx.com.gseguros.wizard.configuracion.producto.util.ReglaNegocio;
 import mx.com.gseguros.wizard.configuracion.producto.web.ExpresionesPadre;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import mx.com.aon.portal.service.PagedList;

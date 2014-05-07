@@ -10,7 +10,7 @@ import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.utils.Constantes;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 /**

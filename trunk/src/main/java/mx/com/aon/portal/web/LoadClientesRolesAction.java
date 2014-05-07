@@ -15,7 +15,7 @@ import mx.com.aon.portal.service.principal.PrincipalManager;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.general.model.RolVO;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *

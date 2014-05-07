@@ -19,7 +19,7 @@ import mx.com.gseguros.portal.general.model.ReporteVO;
 import mx.com.gseguros.utils.Constantes;
 import oracle.jdbc.driver.OracleTypes;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;

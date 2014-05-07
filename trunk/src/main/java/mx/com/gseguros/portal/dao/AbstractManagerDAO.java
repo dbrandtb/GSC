@@ -7,7 +7,7 @@ import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.general.model.BaseVO;
 import mx.com.gseguros.utils.Constantes;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.jdbc.object.StoredProcedure;

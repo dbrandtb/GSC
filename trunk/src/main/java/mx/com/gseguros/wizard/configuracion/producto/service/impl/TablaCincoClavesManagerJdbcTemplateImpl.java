@@ -5,11 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import oracle.jdbc.driver.OracleTypes;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.jdbc.core.SqlParameter;
-
+import mx.com.aon.portal.service.PagedList;
+import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
+import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.wizard.configuracion.producto.model.LlaveValorVO;
 import mx.com.gseguros.wizard.configuracion.producto.service.TablaCincoClavesManagerJdbcTemplate;
@@ -17,12 +16,8 @@ import mx.com.gseguros.wizard.configuracion.producto.tablaCincoClaves.model.Dato
 import mx.com.gseguros.wizard.configuracion.producto.tablaCincoClaves.model.DescripcionCincoClavesVO;
 import mx.com.gseguros.wizard.configuracion.producto.tablaCincoClaves.model.DescripcionVeinticincoAtributosVO;
 import mx.com.gseguros.wizard.configuracion.producto.tablaCincoClaves.model.ValoresCincoClavesVO;
-import mx.com.aon.portal.service.PagedList;
-import mx.com.aon.portal.service.impl.AbstractManagerJdbcTemplateInvoke;
-import mx.com.gseguros.exception.ApplicationException;
-import mx.com.gseguros.exception.DaoException;
-import mx.com.aon.portal.util.ConvertUtil;
-import mx.com.aon.portal.util.WrapperResultados;
+
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * 
