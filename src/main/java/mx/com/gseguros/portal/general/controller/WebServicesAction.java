@@ -12,7 +12,7 @@ import mx.com.gseguros.ws.recibossigs.service.RecibosSigsService;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.llom.util.AXIOMUtil;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 public class WebServicesAction extends PrincipalCoreAction{
