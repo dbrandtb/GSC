@@ -785,9 +785,17 @@ function _0_validarCustom()
 	debug('cdramo'   , cdramo);
 	debug('cdtipsit' , cdtipsit);
 	
-	//////////////////////////
-	////// para SL y SN //////
-	if(valido&&(cdtipsit=='SL'||cdtipsit=='SN'))
+	///////////////////////////////
+	////// para SL y SN y MS //////
+	var atributoParentesco = 'parametros.pv_otvalor16';
+	var atributoFechaNacim = 'parametros.pv_otvalor02';
+	if(cdtipsit=='MS')
+	{
+		atributoParentesco = 'parametros.pv_otvalor03';
+		atributoFechaNacim = 'parametros.pv_otvalor01';
+	}
+	debug('atributoParentesco:',atributoParentesco);
+	if(valido&&(cdtipsit=='SL'||cdtipsit=='SN'||cdtipsit=='MS'))
 	{
 		//////////////////////////////////////
 		////// repeticion de parentesco //////
@@ -797,11 +805,11 @@ function _0_validarCustom()
 			var nConyugue  = 0;
 			_0_storeIncisos.each(function(record)
 		    {
-				if(record.get('parametros.pv_otvalor16')=='T')
+				if(record.get(atributoParentesco)=='T')
 				{
 					nTitular=nTitular+1;
 				}
-				else if(record.get('parametros.pv_otvalor16')=='C')
+				else if(record.get(atributoParentesco)=='C')
 	            {
 					nConyugue=nConyugue+1;
 	            }
@@ -822,7 +830,7 @@ function _0_validarCustom()
 			var algunMayor = false;
 			_0_storeIncisos.each(function(record)
             {
-                var fechaNacimiento = new Date(record.get('parametros.pv_otvalor02'));
+                var fechaNacimiento = new Date(record.get(atributoFechaNacim));
                 var hoy = new Date();
                 var edad = parseInt((hoy
                         / 365
