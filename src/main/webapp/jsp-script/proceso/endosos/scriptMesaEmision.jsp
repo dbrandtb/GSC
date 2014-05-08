@@ -11,7 +11,7 @@ debug('###################################');
 ////// variables //////
 var mesConUrlDocu         = '<s:url namespace="/documentos"  action="ventanaDocumentosPoliza"   />';
 var mesConUrlDatCom       = '<s:url namespace="/"            action="datosComplementarios"      />';
-var mesConUrlCotizar      = '<s:url namespace="/emision"     action="cotizacion     "           />';
+var mesConUrlCotizar      = '<s:url namespace="/emision"     action="cotizacion"                />';
 var mesConUrlDetMC        = '<s:url namespace="/mesacontrol" action="obtenerDetallesTramite"    />';
 var mesConUrlFinDetalleMC = '<s:url namespace="/mesacontrol" action="finalizarDetalleTramiteMC" />';
 ////// variables //////
