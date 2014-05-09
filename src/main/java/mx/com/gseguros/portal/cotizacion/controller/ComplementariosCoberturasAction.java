@@ -1138,28 +1138,31 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 						
 						try
 						{
-							String cpanterior = (String) valositAseguradoIterado.get("pv_otvalor03");
-							String cpnuevo    = parametros.get("pv_otvalor03");
-							log.debug("compara "+cpanterior+" con "+cpnuevo
-									+" para cdperson "+asegurado.get("cdperson"));
-							if(!cpanterior.equalsIgnoreCase(cpnuevo))
+							if(smap1.get("cdramo").equals("2"))
 							{
-								String cdpersonAfectadoValosit = (String) asegurado.get("cdperson");
-								log.debug("mdomicil borrar para cdperson "+cdpersonAfectadoValosit);
-								
-								Map<String,String> paramBorrarDomicil=new LinkedHashMap<String,String>(0);
-								paramBorrarDomicil.put("pv_cdperson_i" , cdpersonAfectadoValosit);
-								paramBorrarDomicil.put("pv_nmorddom_i" , null);
-								paramBorrarDomicil.put("pv_msdomici_i" , null);
-								paramBorrarDomicil.put("pv_nmtelefo_i" , null);
-								paramBorrarDomicil.put("pv_cdpostal_i" , null);
-								paramBorrarDomicil.put("pv_cdedo_i"    , null);
-								paramBorrarDomicil.put("pv_cdmunici_i" , null);
-								paramBorrarDomicil.put("pv_cdcoloni_i" , null);
-								paramBorrarDomicil.put("pv_nmnumero_i" , null);
-								paramBorrarDomicil.put("pv_nmnumint_i" , null);
-								paramBorrarDomicil.put("pv_accion_i"   , "B");//borrar
-								kernelManager.pMovMdomicil(paramBorrarDomicil);
+								String cpanterior = (String) valositAseguradoIterado.get("pv_otvalor03");
+								String cpnuevo    = parametros.get("pv_otvalor03");
+								log.debug("compara "+cpanterior+" con "+cpnuevo
+										+" para cdperson "+asegurado.get("cdperson"));
+								if(!cpanterior.equalsIgnoreCase(cpnuevo))
+								{
+									String cdpersonAfectadoValosit = (String) asegurado.get("cdperson");
+									log.debug("mdomicil borrar para cdperson "+cdpersonAfectadoValosit);
+									
+									Map<String,String> paramBorrarDomicil=new LinkedHashMap<String,String>(0);
+									paramBorrarDomicil.put("pv_cdperson_i" , cdpersonAfectadoValosit);
+									paramBorrarDomicil.put("pv_nmorddom_i" , null);
+									paramBorrarDomicil.put("pv_msdomici_i" , null);
+									paramBorrarDomicil.put("pv_nmtelefo_i" , null);
+									paramBorrarDomicil.put("pv_cdpostal_i" , null);
+									paramBorrarDomicil.put("pv_cdedo_i"    , null);
+									paramBorrarDomicil.put("pv_cdmunici_i" , null);
+									paramBorrarDomicil.put("pv_cdcoloni_i" , null);
+									paramBorrarDomicil.put("pv_nmnumero_i" , null);
+									paramBorrarDomicil.put("pv_nmnumint_i" , null);
+									paramBorrarDomicil.put("pv_accion_i"   , "B");//borrar
+									kernelManager.pMovMdomicil(paramBorrarDomicil);
+								}
 							}
 						}
 						catch(Exception ex)
