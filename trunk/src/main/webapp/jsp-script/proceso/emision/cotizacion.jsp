@@ -846,7 +846,7 @@ function _0_validarCustom()
                         / 1000));
                 if (edad > EDAD_MAXIMA_COTIZACION)
                 {
-                    algunMayor = true;
+                    //algunMayor = true;
                 }
             });
             valido = !algunMayor;
