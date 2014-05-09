@@ -357,6 +357,6 @@ Ext.onReady(function()
 
 </head>
 <body>
-<div id="mainDiv" style="height:1500px;"></div>
+<div id="mainDiv" style="height:400px;"></div>
 </body>
 </html>

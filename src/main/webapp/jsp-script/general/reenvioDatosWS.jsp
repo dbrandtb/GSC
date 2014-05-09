@@ -173,7 +173,7 @@ Ext.onReady(function()
     				            	            	    }
     				            	            	}]
     										}).show();
-    										centrarVentanaInterna(ventanaResWS);
+//    										centrarVentanaInterna(ventanaResWS);
             								        							
                    						}else {
                    							mensajeError('No se pudo reenviar la Petici&oacute;n WS. ' + jsonRes.mensajeRespuesta);
@@ -289,7 +289,7 @@ Ext.onReady(function()
 		            	            	    }
 		            	            	}]
 								}).show();
-								centrarVentanaInterna(ventanaPayload);
+//								centrarVentanaInterna(ventanaPayload);
 								        							
        						}else {
        							mensajeError('No se pudo obtener el Payload de la Petici&oacute;n WS. ' + jsonRes.mensajeRespuesta);
@@ -400,6 +400,6 @@ Ext.onReady(function()
 
 </head>
 <body>
-<div id="mainDivPet" style="height:1500px;"></div>
+<div id="mainDivPet" style="height:450px;"></div>
 </body>
 </html>
