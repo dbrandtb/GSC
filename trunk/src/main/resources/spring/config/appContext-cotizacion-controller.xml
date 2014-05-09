@@ -38,6 +38,7 @@
         <property name="ice2sigsService"    ref="ice2sigsServiceImpl"></property>
         <property name="recibosSigsService" ref="recibosSigsServiceImpl"></property>
         <property name="catalogosManager"   ref="catalogosManagerImpl"/>
+        <property name="consultasManager"   ref="consultasManagerImpl"/>
     </bean>
     
     <bean id="MesaControlAction" class="mx.com.gseguros.portal.cotizacion.controller.MesaControlAction" scope="prototype">
