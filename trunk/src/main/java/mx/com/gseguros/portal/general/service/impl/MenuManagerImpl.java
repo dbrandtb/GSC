@@ -36,6 +36,24 @@ public class MenuManagerImpl implements MenuManager {
 	}
 
 	@Override
+	public List<Map<String, String>> obtieneOpcionesMenu(Map<String, String> params) throws ApplicationException{
+		try {
+			return menuDAO.obtieneOpcionesMenu(params);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}
+
+	@Override
+	public List<Map<String, String>> obtieneOpcionesSubMenu(Map<String, String> params) throws ApplicationException{
+		try {
+			return menuDAO.obtieneOpcionesSubMenu(params);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}
+
+	@Override
 	public String guardaOpcionLiga(Map<String, String> params) throws ApplicationException{
 		try {
 			return menuDAO.guardaOpcionLiga(params);
@@ -48,6 +66,15 @@ public class MenuManagerImpl implements MenuManager {
 	public String guardaMenu(Map<String, String> params) throws ApplicationException{
 		try {
 			return menuDAO.guardaMenu(params);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}
+
+	@Override
+	public String guardaOpcionMenu(Map<String, String> params) throws ApplicationException{
+		try {
+			return menuDAO.guardaOpcionMenu(params);
 		} catch (DaoException daoExc) {
 			throw new ApplicationException(daoExc.getMessage(), daoExc);
 		}
@@ -66,6 +93,15 @@ public class MenuManagerImpl implements MenuManager {
 	public String eliminaMenu(Map<String, String> params) throws ApplicationException{
 		try {
 			return menuDAO.eliminaMenu(params);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}
+
+	@Override
+	public String eliminaOpcionMenu(Map<String, String> params) throws ApplicationException{
+		try {
+			return menuDAO.eliminaOpcionMenu(params);
 		} catch (DaoException daoExc) {
 			throw new ApplicationException(daoExc.getMessage(), daoExc);
 		}

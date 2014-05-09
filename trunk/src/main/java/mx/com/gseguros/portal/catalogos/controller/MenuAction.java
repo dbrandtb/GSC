@@ -75,6 +75,30 @@ public class MenuAction extends PrincipalCoreAction{
     	success = true;
     	return SUCCESS;
     }
+
+    public String obtieneOpcionesMenu() throws Exception {
+    	try {
+    		loadList = menuManager.obtieneOpcionesMenu(params);
+    	}catch( Exception e){
+    		logger.error("Error en obtieneOpcionesMenu",e);
+    		success =  false;
+    		return SUCCESS;
+    	}
+    	success = true;
+    	return SUCCESS;
+    }
+
+    public String obtieneOpcionesSubMenu() throws Exception {
+    	try {
+    		loadList = menuManager.obtieneOpcionesSubMenu(params);
+    	}catch( Exception e){
+    		logger.error("Error en obtieneOpcionesSubMenu",e);
+    		success =  false;
+    		return SUCCESS;
+    	}
+    	success = true;
+    	return SUCCESS;
+    }
     
     public String guardaOpcionLiga(){
        	
@@ -103,6 +127,20 @@ public class MenuAction extends PrincipalCoreAction{
     	return SUCCESS;
     }
 
+    public String guardaOpcionMenu(){
+    	
+    	try {
+    		menuManager.guardaOpcionMenu(params);
+    	}catch( Exception e){
+    		logger.error("Error en guardaOpcionMenu",e);
+    		errorMessage = e.getMessage();
+    		success =  false;
+    		return SUCCESS;
+    	}
+    	success = true;
+    	return SUCCESS;
+    }
+
     public String eliminaOpcionLiga(){
     	
     	try {
@@ -122,6 +160,19 @@ public class MenuAction extends PrincipalCoreAction{
     		menuManager.eliminaMenu(params);
     	}catch( Exception e){
     		logger.error("Error en eliminaMenu",e);
+    		success =  false;
+    		return SUCCESS;
+    	}
+    	success = true;
+    	return SUCCESS;
+    }
+
+    public String eliminaOpcionMenu(){
+    	
+    	try {
+    		menuManager.eliminaOpcionMenu(params);
+    	}catch( Exception e){
+    		logger.error("Error en eliminaOpcionMenu",e);
     		success =  false;
     		return SUCCESS;
     	}
