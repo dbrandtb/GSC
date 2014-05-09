@@ -57,7 +57,7 @@ function _4_onComplementariosClick(grid,rowIndex)
     debug(rowIndex);
     var record=grid.getStore().getAt(rowIndex);
     debug(record);
-    if(record.get('estado')=='W'&&record.get('status')!='4')
+    if(record.get('estado')=='W'&&record.get('status')!='4'&&record.get('status')!='11')
     {
         if(record.get('nmsolici')>0)
         {
