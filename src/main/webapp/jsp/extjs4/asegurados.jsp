@@ -52,18 +52,18 @@
             var _URL_COBERTURAS=            '<s:url namespace="/flujocotizacion" action="obtenerCoberturas4" />';
             var _URL_DETALLE_COBERTURA=     '<s:url namespace="/flujocotizacion" action="obtenerAyudaCoberturas4" />';
             var urlComprarCotizacion=       '<s:url namespace="/flujocotizacion" action="comprarCotizacion4" />';
-            var urlDatosComplementarios='<s:url namespace="/" action="datosComplementarios" />';
-            var urlDetalleCotizacion='<s:url namespace="/" action="detalleCotizacion" />';
+            var urlDatosComplementarios=    '<s:url namespace="/"                action="datosComplementarios" />';
+            var urlDetalleCotizacion=       '<s:url namespace="/"                action="detalleCotizacion" />';
             var contexto='${ctx}';
-            var urlVentanaDocumentos = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza" />';
+            var urlVentanaDocumentos =      '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza" />';
             var urlImprimirCotiza    = '<s:text name="ruta.servidor.reports" />';
             var repSrvUsr            = '<s:text name="pass.servidor.reports" />';
-            var urlEnviarCorreo      = '<s:url namespace="/" action="enviaCorreo" />';
-            var urlDatosComplementarios = '<s:url namespace="/" action="datosComplementarios" />';
-            var urlDocumentosTramite = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza" />';
-            var panDocUrlViewDoc     = '<s:url namespace ="/documentos"     action="descargaDocInline" />';
-            var datComUrlMCUpdateStatus= '<s:url namespace="/mesacontrol"     action="actualizarStatusTramite" />';
-            var datComUrlMC            = '<s:url namespace="/mesacontrol"     action="principal" />';
+            var urlEnviarCorreo      =      '<s:url namespace="/general"         action="enviaCorreo" />';
+            var urlDatosComplementarios =   '<s:url namespace="/"                action="datosComplementarios" />';
+            var urlDocumentosTramite =      '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza" />';
+            var panDocUrlViewDoc     =      '<s:url namespace ="/documentos"     action="descargaDocInline" />';
+            var datComUrlMCUpdateStatus=    '<s:url namespace="/mesacontrol"     action="actualizarStatusTramite" />';
+            var datComUrlMC            =    '<s:url namespace="/mesacontrol"     action="principal" />';
             <s:if test="ntramite!=null&&ntramite.length()>0">
                 var hayTramiteCargado=true;
                 var ntramiteCargado='<s:property value="ntramite" />';

@@ -16,11 +16,6 @@
             
             <interceptor name="deviceInterceptor" class="deviceInterceptor"/>
             
-            <!-- <interceptor-stack name="secureStack">
-                <interceptor-ref name="authenticationInterceptor" />
-                <interceptor-ref name="defaultStack" />
-            </interceptor-stack> -->
-            
             <interceptor-stack name="customStack">
                 <interceptor-ref name="authenticationInterceptor"/>
                 <interceptor-ref name="deviceInterceptor"/>

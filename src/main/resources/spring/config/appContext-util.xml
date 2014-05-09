@@ -3,10 +3,13 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">  
     
+    
     <!-- Documentos -->
     <bean id="documentosPolizaAction" class="mx.com.gseguros.portal.general.util.DocumentosPolizaAction" scope="prototype">
     </bean>
     
+    
+    <!-- Envio de correos -->
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
        <property name="host" value="${mail.host}" />
         <property name="port" value="${mail.port}" />
@@ -21,15 +24,9 @@
         </property>
     </bean>
     
-    <bean id="mailMail" class="mx.com.gseguros.utils.MailMail">
-        <property name="mailSender" ref="mailSender" />
-        <property name="simpleMailMessage" ref="cotizacionMailMessage" />
-        <property name="fromAlias" value="General de Seguros" />
-    </bean>
-    
-    <bean id="cotizacionMailMessage" class="org.springframework.mail.SimpleMailMessage">
-        <property name="from" value="${mail.from}" />
-        <!-- <property name="to" value="" /> -->
+    <!-- Mensaje de mail por default // TODO: Eliminar y obtener la info de BD -->
+    <bean id="defaultMailMessage" class="org.springframework.mail.SimpleMailMessage">
+        <!-- <property name="from" value="${mail.from}" /> -->
         <property name="subject">
             <value><![CDATA[ Cotización solicitada ]]></value>
         </property>

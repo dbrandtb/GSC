@@ -62,7 +62,7 @@ var EDAD_MAXIMA_COTIZACION = <s:property value="smap1.edadMaximaCotizacion" />;
 var _mcotiza_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
 var _mcotiza_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 var _mcotiza_reporteCotizacion = '<s:text name="rdf.cotizacion.nombre" />';
-var _mcotiza_urlEnviarCorreo   = '<s:url namespace="/" action="enviaCorreo" />';
+var _mcotiza_urlEnviarCorreo   = '<s:url namespace="/general" action="enviaCorreo" />';
 
 debug('_mcotiza_smap1:',_mcotiza_smap1);
 ////// variables //////
@@ -100,8 +100,8 @@ function _mcotiza_enviarPorCorreo()
 	    				url     : _mcotiza_urlEnviarCorreo
 	    				,params :
 	    				{
-	    					to        : value
-	    					,archivos : _mcotiza_urlImprimirCotiza
+	    					to        : value,
+	    					urlArchivo: _mcotiza_urlImprimirCotiza
 										+ '?p_cdplan='
 										+ _mcotiza_selectedCdplan
 										+ '&p_estado=W'
@@ -122,7 +122,8 @@ function _mcotiza_enviarPorCorreo()
 										+ "&ACCESSIBLE=YES"
 										+ "&report="
 										+ _mcotiza_reporteCotizacion
-										+ "&paramform=no"
+										+ "&paramform=no",
+							nombreArchivo : 'cotizacion_'+Ext.Date.format(new Date(),'Y-d-m_g_i_s_u')+'.pdf'
 	    			    },
 	    			    callback : function(options,success,response)
 	    			    {

@@ -18,5 +18,9 @@
         <property name="recibosSigsService" ref="recibosSigsServiceImpl"></property>
     </bean>
     
+    <bean id="mailAction" class="mx.com.gseguros.portal.general.util.MailAction" scope="prototype">
+        <property name="mailService" ref="mailServiceImpl"/>
+    </bean>
+    
 	
 </beans>
