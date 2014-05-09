@@ -755,12 +755,13 @@
 										                                                            	    		Ext.getCmp('venDocVenEmiBotCancelar').setDisabled(true);
 										                                                            	    		if(json.mensajeRespuesta&&json.mensajeRespuesta.length>0)
 										                                                            	    		{
-										                                                            	    			Ext.Msg.show({
+										                                                            	    			var ventanaTmp = Ext.Msg.show({
 									                                                                                        title:'Aviso del sistema',
 									                                                                                        msg: json.mensajeRespuesta,
 									                                                                                        buttons: Ext.Msg.OK,
 									                                                                                        icon: Ext.Msg.WARNING
 									                                                                                    });
+										                                                            	    			centrarVentanaInterna(ventanaTmp);
 										                                                            	    		}
 										                                                            	    	}
 										                                                            	    	else
