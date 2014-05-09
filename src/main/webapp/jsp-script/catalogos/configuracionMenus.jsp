@@ -11,17 +11,20 @@
 var _CONTEXT = '${ctx}';
 extjs_custom_override_mayusculas = false;
 
-var recargaGridOpcionesLiga;
-var recargaGridMenus;
-var recargaGridOpMenu;
-var recargaGridOpSubMenu;
+var _CDELEMENTO_DEFAULT_GSEGUROS = '6442'; 
+var _ESTADO_MENU_ACTIVO = '1'; 
+var _TIPO_MENU_SESION = '2'; 
 
-var _UrlOpcionesLiga      = '<s:url namespace="/catalogos"    action="obtieneOpcionesLiga" />';
-var _UrlGuardaOpcionLiga  = '<s:url namespace="/catalogos"    action="guardaOpcionLiga" />';
-var _UrlEliminaOpcionLiga = '<s:url namespace="/catalogos"    action="eliminaOpcionLiga" />';
+var _CDNIVEL_PADRE_RAIZ = '0';
+var _CDTITULO_PADRE_RAIZ = '221';
+
+var recargaGridMenus;
 
 var _URL_CARGA_CATALOGO = '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
-var _CAT_ROLES_SISTEMA = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@ROLES_SISTEMA"/>';
+var _CAT_ROLES_SISTEMA  = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@ROLES_SISTEMA"/>';
+var _CAT_TIPOS_MENU     = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_MENU"/>';
+
+var _UrlOpcionesLiga      = '<s:url namespace="/catalogos"    action="obtieneOpcionesLiga" />';
 
 var _UrlMenusPorRol = '<s:url namespace="/catalogos"    action="obtieneMenusPorRol" />';
 var _UrlGuardaMenu  = '<s:url namespace="/catalogos"    action="guardaMenu" />';
@@ -32,8 +35,8 @@ var _UrlGuardaOpMenu  = '<s:url namespace="/catalogos"    action="guardaOpMenu" 
 var _UrlEliminaOpMenu = '<s:url namespace="/catalogos"    action="eliminaOpMenu" />';
 
 var _UrlOpSubMenu        = '<s:url namespace="/catalogos"    action="obtieneOpSubMenu" />';
-var _UrlGuardaOpSubMenu  = '<s:url namespace="/catalogos"    action="guardaOpSubMenu" />';
-var _UrlEliminaOpSubMenu = '<s:url namespace="/catalogos"    action="guardaOpSubMenu" />';
+var _UrlGuardaOpSubMenu  = '<s:url namespace="/catalogos"    action="guardaOpMenu" />'; // este action se reusa en opciones menu y opciones submenu
+var _UrlEliminaOpSubMenu = '<s:url namespace="/catalogos"    action="eliminaOpMenu" />';// este action se reusa en opciones menu y opciones submenu
 
 var _MSG_SIN_DATOS          = 'No hay datos';
 var _MSG_BUSQUEDA_SIN_DATOS = 'No hay datos para la b\u00FAsqueda actual.';
@@ -42,25 +45,20 @@ var _MSG_BUSQUEDA_SIN_DATOS = 'No hay datos para la b\u00FAsqueda actual.';
 ////// variables //////
 ///////////////////////
 
-///////////////////////
-////// funciones //////
-/*///////////////////*/
-/*///////////////////*/
-////// funciones //////
-///////////////////////
-
 Ext.onReady(function()
 {
 	
 	/////////////////////
 	////// modelos //////
 	/*/////////////////*/
+	
 	Ext.define('gridOpLigaModel',
-	{
-		extend : 'Ext.data.Model'
-		,fields :
-		['CDTITULO','DSTITULO','DSURL','SWTIPDES','DSTIPDES']
+			{
+				extend : 'Ext.data.Model'
+				,fields :
+				['CDTITULO','DSTITULO','DSURL','SWTIPDES','DSTIPDES']
 	});
+	
 	Ext.define('gridMenusModel',
 	{
 		extend : 'Ext.data.Model'
@@ -75,12 +73,6 @@ Ext.onReady(function()
 				['CDNIVEL','CDNIVEL_PADRE','DSMENU_EST','CDTITULO','DSTITULO']
 	});
 	
-	Ext.define('gridOpSubMenuModel',
-	{
-		extend : 'Ext.data.Model'
-		,fields :
-		['CDNIVEL','CDNIVEL_PADRE','DSMENU_EST','CDTITULO','DSTITULO']
-	});
 	/*/////////////////*/
 	////// modelos //////
 	/////////////////////
@@ -88,19 +80,7 @@ Ext.onReady(function()
 	////////////////////
 	////// stores //////
 	/*////////////////*/
-	var opcionesLigaStore = Ext.create('Ext.data.Store',
-    {
-		pageSize : 20,
-        autoLoad : true
-        ,model   : 'gridOpLigaModel'
-        ,proxy   :
-        {
-            type         : 'memory'
-            ,enablePaging : true
-            ,reader      : 'json'
-            ,data        : []
-        }
-    });
+	
 	var menusStore = Ext.create('Ext.data.Store',
     {
 		pageSize : 20,
@@ -115,19 +95,6 @@ Ext.onReady(function()
         }
     });
 	
-	var opcionesSubMenuStore = Ext.create('Ext.data.Store',
-    {
-		pageSize : 20,
-        autoLoad : true
-        ,model   : 'gridOpSubMenuModel'
-        ,proxy   :
-        {
-            type         : 'memory'
-            ,enablePaging : true
-            ,reader      : 'json'
-            ,data        : []
-        }
-    });
 	/*////////////////*/
 	////// stores //////
 	////////////////////
@@ -135,86 +102,7 @@ Ext.onReady(function()
 	///////////////////////
 	////// contenido //////
 	/*///////////////////*/
-	var gridOpcionesLiga = Ext.create('Ext.grid.Panel',
-	    {
-    	title : 'Opciones Liga/URL'
-    	,height : 300
-    	,selType: 'checkboxmodel'
-    	,store : opcionesLigaStore
-    	,columns :
-    	[ { header     : 'CD Opci&oacute;n' , dataIndex : 'CDTITULO', hidden: true},
-    	  { header     : 'Nombre Opci&oacute;n' , dataIndex : 'DSTITULO', flex: 1},
-          { header     : 'Liga/URL' , dataIndex : 'DSURL' , flex: 3}
-		]
-    	,bbar     :
-        {
-            displayInfo : true,
-            store       : opcionesLigaStore,
-            xtype       : 'pagingtoolbar'
-        },
-        tbar: [{
-            icon    : '${ctx}/resources/fam3icons/icons/add.png',
-            text    : 'Agregar opci&oacute;n',
-            handler : function(){agregarEditarOpcionLiga();}
-        },{
-            icon    : '${ctx}/resources/fam3icons/icons/pencil.png',
-            text    : 'Editar opci&oacute;n',
-            handler : function()
-            {
-            	var model =  gridOpcionesLiga.getSelectionModel();
-            	if(model.hasSelection()){
-            		var record = model.getLastSelected();
-            		agregarEditarOpcionLiga(record);
-            		
-            	}else{
-            		showMessage("Aviso","Debe seleccionar un registro", Ext.Msg.OK, Ext.Msg.INFO);
-            	}
-            }
-        },{
-            icon    : '${ctx}/resources/fam3icons/icons/delete.png',
-            text    : 'Eliminar opci&oacute;n',
-            scope   : this,
-            handler : function (btn, e){
-            	var model =  gridOpcionesLiga.getSelectionModel();
-            	if(model.hasSelection()){
-            		
-            		Ext.Msg.show({
-    		            title: 'Aviso',
-    		            msg: '&iquest;Esta seguro que desea eliminar esta opci&oacute;n liga/URL?',
-    		            buttons: Ext.Msg.YESNO,
-    		            fn: function(buttonId, text, opt) {
-    		            	if(buttonId == 'yes') {
-    		            		Ext.Ajax.request({
-            						url: _UrlEliminaOpcionLiga,
-            						params: {
-            					    		'params.pv_cdtitulo_i' : model.getLastSelected().get('CDTITULO')
-            						},
-            						success: function(response, opt) {
-            							var jsonRes=Ext.decode(response.responseText);
-
-            							if(jsonRes.success == true){
-            								mensajeCorrecto('Aviso','Se ha eliminado la opci&oacute;n correctamente.');
-            								recargaGridOpcionesLiga();        							
-                   						}else {
-                   							mensajeError('No se pudo eliminar la opci&oacute;n.');
-                   						}
-            						},
-            						failure: function(){
-            							mensajeError('No se pudo eliminar la opci&oacute;n.');
-            						}
-            					});
-    		            	}
-            			},
-    		            animateTarget: btn,
-    		            icon: Ext.Msg.QUESTION
-        			});
-            		
-            	}else{
-            		showMessage("Aviso","Debe seleccionar un registro", Ext.Msg.OK, Ext.Msg.INFO);
-            	}
-            }
-        }]
-    });
+	
 	
 	var gridMenus = Ext.create('Ext.grid.Panel',
 	    {
@@ -224,12 +112,17 @@ Ext.onReady(function()
     	,store : menusStore
     	,columns :
     	[ { header     : 'CDMENU' , dataIndex : 'CDMENU', hidden: true},
+    	  { header     : 'CDELEMENTO' , dataIndex : 'CDELEMENTO', hidden: true},
           { header     : 'Nombre Men&uacute;', dataIndex : 'DSMENU', flex: 1},
           { header     : 'CDPERSON' , dataIndex : 'CDPERSON', hidden: true},
           { header     : 'CDROL' , dataIndex : 'CDROL', hidden: true},
           { header     : 'CDUSUARIO' , dataIndex : 'CDUSUARIO', hidden: true},
           { header     : 'CDESTADO' ,dataIndex : 'CDESTADO', hidden: true},
-          { header     : 'CDTIPOMENU' ,dataIndex : 'CDTIPOMENU', hidden: true}
+          { header     : 'Tipo Men&uacute;' ,dataIndex : 'CDTIPOMENU', flex: 1, renderer : function(value){
+        	  if("1"== value) return "MENU GENERAL";
+        	  	else if("2"== value) return "MENU SESION";
+        	  		else return res;
+          }}
 		]
     	,bbar     :
         {
@@ -240,7 +133,7 @@ Ext.onReady(function()
         },
         tbar: [{
             icon    : '${ctx}/resources/fam3icons/icons/add.png',
-            text    : 'Agregar menu',
+            text    : 'Agregar Men&uacute;',
             handler : function()
             {
             	if(Ext.isEmpty(panelMenus.down('[name=cdsisrol]').getValue())){
@@ -251,7 +144,7 @@ Ext.onReady(function()
             }
         },{
             icon    : '${ctx}/resources/fam3icons/icons/pencil.png',
-            text    : 'Editar menu',
+            text    : 'Editar Men&uacute;',
             handler : function()
             {
             	var model =  gridMenus.getSelectionModel();
@@ -264,21 +157,8 @@ Ext.onReady(function()
             	}
             }
         },{
-            icon    : '${ctx}/resources/fam3icons/icons/user_edit.png',
-            text    : 'Ver/Editar Opciones Menu',
-            handler : function()
-            {
-            	var model =  gridMenus.getSelectionModel();
-            	if(model.hasSelection()){
-            		var record = model.getLastSelected();
-					windowOpcionesMenu(record.get('CDMENU'));            		
-            	}else{
-            		showMessage("Aviso","Debe seleccionar un registro", Ext.Msg.OK, Ext.Msg.INFO);
-            	}
-            }
-        },{
             icon    : '${ctx}/resources/fam3icons/icons/delete.png',
-            text    : 'Eliminar menu',
+            text    : 'Eliminar Men&uacute;',
             scope   : this,
             handler : function (btn, e){
             	var model =  gridMenus.getSelectionModel();
@@ -319,6 +199,19 @@ Ext.onReady(function()
             		showMessage("Aviso","Debe seleccionar un registro", Ext.Msg.OK, Ext.Msg.INFO);
             	}
             }
+        },'-',{
+            icon    : '${ctx}/resources/fam3icons/icons/user_edit.png',
+            text    : 'Ver/Editar Opciones Men&uacute;',
+            handler : function()
+            {
+            	var model =  gridMenus.getSelectionModel();
+            	if(model.hasSelection()){
+            		var record = model.getLastSelected();
+					windowOpcionesMenu(record.get('CDMENU'), record.get('CDTIPOMENU'));            		
+            	}else{
+            		showMessage("Aviso","Debe seleccionar un registro", Ext.Msg.OK, Ext.Msg.INFO);
+            	}
+            }
         }]
     });
 		
@@ -332,24 +225,16 @@ Ext.onReady(function()
 	    [{
 	    	layout: 'column',
 	    	border: false,
-	    	items: [{
-		    	xtype: 'textfield',
-		    	fieldLabel: 'Nombre de Opci&oacute;n:',
-		    	name: 'dstitle',
-		    	labelWidth: 120,
-		    	flex: 1
-		    },{
-		    	xtype: 'button',
-		    	text: 'Buscar Opciones',
-		    	handler: function(){
-		    		recargaGridOpcionesLiga();
-		    	}
-		    }]
-	    },gridOpcionesLiga,
+	    	html:'<br/><strong>Agregar o editar URLs de las Opciones de Men&uacute;:</strong><br/>'
+	     },{
+	    	xtype: 'button',
+	    	text : 'Ver y Editar Opciones Liga/URL',
+	    	handler: verEditarOpcionesURL
+	    },
 	     {
 	    	layout: 'column',
 	    	border: false,
-	    	html:'<br/><br/><strong>Para configurar menus, primero seleccione un rol.</strong><br/>'
+	    	html:'<br/><strong>Para configurar los Menus, primero seleccione un rol:</strong><br/>'
 	     },
 	     {
             xtype         : 'combo',
@@ -361,8 +246,9 @@ Ext.onReady(function()
             displayField  : 'value',
             forceSelection: true,
             queryMode     :'local',
-            editable      : false,
+            //editable      : false,
             forceSelection: true,
+            typeAhead     : true,
             store         : Ext.create('Ext.data.Store', {
                 model     : 'Generic',
                 autoLoad  : true,
@@ -395,24 +281,6 @@ Ext.onReady(function()
 	////// contenido //////
 	///////////////////////
 	
-	recargaGridOpcionesLiga = function(){
-		
-		var params = {
-			'params.pv_dstitulo_i'	: panelMenus.down('[name=dstitle]').getValue()
-		};
-		cargaStorePaginadoLocal(opcionesLigaStore, _UrlOpcionesLiga, 'loadList', params, function (options, success, response){
-    		if(success){
-                var jsonResponse = Ext.decode(response.responseText);
-                
-                if(!jsonResponse.success) {
-                    showMessage(_MSG_SIN_DATOS, _MSG_BUSQUEDA_SIN_DATOS, Ext.Msg.OK, Ext.Msg.INFO);
-                }
-            }else{
-                showMessage('Error', 'Error al obtener los datos.', Ext.Msg.OK, Ext.Msg.ERROR);
-            }
-    	}, gridOpcionesLiga);
-	};
-
 	recargaGridMenus = function(){
     	
 		var params = {
@@ -433,87 +301,6 @@ Ext.onReady(function()
     	}, gridMenus);
 	};
 	
-	function agregarEditarOpcionLiga(record){
-
-		var panelEdicionOpcionLiga = Ext.create('Ext.form.Panel',{
-	        border  : false
-	        ,bodyStyle:'padding:5px;'
-	        ,url: _UrlGuardaOpcionLiga
-	        ,items :
-	        [   {
-			        xtype      : 'textfield'
-			    	,fieldLabel : 'Nombre de la Opci&oacute;n'
-		    		,labelWidth: 120
-		    		,width: 350
-		    		,allowBlank:false
-			    	,name       : 'params.pv_dstitulo_i'
-			    	,value: record? record.get('DSTITULO') : ''
-			    	,readOnly: record?true:false
-	    		},{
-			        xtype      : 'textfield'
-				   	,fieldLabel : 'Liga/URL'
-			    	,labelWidth: 120
-			    	,width: 600
-			    	,allowBlank:false
-				   	,name       : 'params.pv_dsurl_i'
-				   	,value: record? record.get('DSURL') : ''
-				
-		    	}
-	        ]
-	    });
-		 var windowOpcionLiga = Ext.create('Ext.window.Window', {
-	          title: record?'Editar Opci&oacute;n Liga/URL':'Agregar Opci&oacute;n Liga/URL',
-	          closeAction: 'hide',
-	          modal:true,
-	          items:[panelEdicionOpcionLiga],
-	          bodyStyle:'padding:15px;',
-	          buttons:[{
-	                 text: 'Guardar',
-	                 icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
-	                 handler: function() {
-	                       if (panelEdicionOpcionLiga.form.isValid()) {
-	                    	   
-	                    	   panelEdicionOpcionLiga.form.submit({
-	           		        	waitMsg:'Procesando...',			
-	           		        	params: {
-	           		        		'params.pv_cdtitulo_i'   : record? record.get('CDTITULO') : ''
-	           		        	},
-	           		        	failure: function(form, action) {
-	           		        		mensajeError("Error al guardar la opci&oacute;n");
-	           					},
-	           					success: function(form, action) {
-	           						
-	           						recargaGridOpcionesLiga();
-	           						panelEdicionOpcionLiga.getForm().reset();
-	           						windowOpcionLiga.close();
-	                               	mensajeCorrecto("Aviso","Se ha guardado la opci&oacute;n.");
-	           						
-	           						
-	           					}
-	           				});
-	                       	
-	                       } else {
-	                           Ext.Msg.show({
-	                                  title: 'Aviso',
-	                                  msg: 'Complete la informaci&oacute;n requerida',
-	                                  buttons: Ext.Msg.OK,
-	                                  icon: Ext.Msg.WARNING
-	                              });
-	                       }
-	                   }
-	             },
-	           {
-	                 text: 'Cancelar',
-	                 icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
-	                 handler: function() {
-	                	 panelEdicionOpcionLiga.getForm().reset();
-	                	 windowOpcionLiga.close();
-	                 }
-	           }
-	          ]
-	          });
-		 windowOpcionLiga.show();
-	}
 	
 	function agregarEditarMenu(record){
 
@@ -530,7 +317,38 @@ Ext.onReady(function()
 		    		,allowBlank:false
 			    	,name       : 'params.pv_dsmenu_i'
 			    	,value: record? record.get('DSMENU') : ''
-	    		}
+	    		},{
+                    xtype         : 'combobox',
+                    labelWidth    : 120,
+                    width         : 350,
+                    name          : 'params.pv_cdtipomenu_i',
+                    fieldLabel    : 'Tipo de Men&uacute;',
+		    		allowBlank    : false,
+		    		readOnly      : record?true:false,
+                    valueField    : 'key',
+                    displayField  : 'value',
+                    forceSelection: true,
+                    queryMode     :'local',
+                    store         : Ext.create('Ext.data.Store', {
+                        model     : 'Generic',
+                        autoLoad  : true,
+                        proxy     : {
+                            type        : 'ajax'
+                            ,url        : _URL_CARGA_CATALOGO
+                            ,extraParams: {catalogo:_CAT_TIPOS_MENU}
+                            ,reader     :
+                            {
+                                type  : 'json'
+                                ,root : 'lista'
+                            }
+                        },
+                        listeners:{
+                        	load: function(){
+                        		panelEdicionMenu.getForm().findField('params.pv_cdtipomenu_i').setValue(record? record.get('CDTIPOMENU') : '');
+                        	}
+                        }
+                    })
+                }
 	        ]
 	    });
 		 var windowMenu = Ext.create('Ext.window.Window', {
@@ -549,12 +367,11 @@ Ext.onReady(function()
 	           		        	waitMsg:'Procesando...',			
 	           		        	params: {
 	           		        		'params.pv_cdmenu_i'    : record? record.get('CDMENU') : '',
-	           		        		'params.pv_cdelemento_i': '6442',
+	           		        		'params.pv_cdelemento_i': _CDELEMENTO_DEFAULT_GSEGUROS,
 	           		        		'params.pv_cdperson_i'  : '',
 	           		        		'params.pv_cdrol_i'     : record? record.get('CDROL') : panelMenus.down('[name=cdsisrol]').getValue(),
 	           		        		'params.pv_cdusuario_i' : '',
-	           		        		'params.pv_cdestado_i'  : '1',
-	           		        		'params.pv_cdtipomenu_i': '1'
+	           		        		'params.pv_cdestado_i'  : _ESTADO_MENU_ACTIVO
 	           		        	},
 	           		        	failure: function(form, action) {
 	           		        		mensajeError("Error al guardar el Men&uacute;. " + action.result.errorMessage);
@@ -591,8 +408,18 @@ Ext.onReady(function()
 	}
 	
 	
-	function windowOpcionesMenu(_cdMenu){
+	function windowOpcionesMenu(_cdMenu, _cdTipoMenu){
 		debug('CdMenu: ',_cdMenu);
+
+		/**
+		 * If, para que un tipo menu sesion no tenga submenus
+		 */
+		if(_TIPO_MENU_SESION == _cdTipoMenu){
+			windowOpcionesSubMenu(_CDNIVEL_PADRE_RAIZ,'Menu Sesion');
+			return;
+		}
+		
+		var recargaGridOpMenu;
 		
 		var opcionesMenuStore = Ext.create('Ext.data.Store',
 			    {
@@ -626,14 +453,14 @@ Ext.onReady(function()
 		        },
 		        tbar: [{
 		            icon    : '${ctx}/resources/fam3icons/icons/add.png',
-		            text    : 'Agregar opci&oacute;n menu',
+		            text    : 'Agregar opci&oacute;n Men&uacute;',
 		            handler : function()
 		            {
 		            	agregarEditarOpMenu();
 		            }
 		        },{
 		            icon    : '${ctx}/resources/fam3icons/icons/pencil.png',
-		            text    : 'Editar opci&oacute;n menu',
+		            text    : 'Editar opci&oacute;n Men&uacute;',
 		            handler : function()
 		            {
 		            	var model =  gridOpMenu.getSelectionModel();
@@ -646,22 +473,8 @@ Ext.onReady(function()
 		            	}
 		            }
 		        },{
-		            icon    : '${ctx}/resources/fam3icons/icons/user_edit.png',
-		            text    : 'Ver/Editar Opciones SubMenu',
-		            handler : function()
-		            {
-		            	var model =  gridOpMenu.getSelectionModel();
-		            	if(model.hasSelection()){
-		            		var record = model.getLastSelected();
-		            		
-		            		
-		            	}else{
-		            		showMessage("Aviso","Debe seleccionar un registro", Ext.Msg.OK, Ext.Msg.INFO);
-		            	}
-		            }
-		        },{
 		            icon    : '${ctx}/resources/fam3icons/icons/delete.png',
-		            text    : 'Eliminar opci&oacute;n menu',
+		            text    : 'Eliminar opci&oacute;n Men&uacute;',
 		            scope   : this,
 		            handler : function (btn, e){
 		            	var model =  gridOpMenu.getSelectionModel();
@@ -676,14 +489,15 @@ Ext.onReady(function()
 		    		            		Ext.Ajax.request({
 		            						url: _UrlEliminaOpMenu,
 		            						params: {
-		            					    		'params.pv_cdmenu_i' : model.getLastSelected().get('CDMENU')
+		            					    		'params.pv_cdmenu_i'  : _cdMenu,
+		            					    		'params.pv_cdnivel_i' : model.getLastSelected().get('CDNIVEL')
 		            						},
 		            						success: function(response, opt) {
 		            							var jsonRes=Ext.decode(response.responseText);
 
 		            							if(jsonRes.success == true){
 		            								mensajeCorrecto('Aviso','Se ha eliminado la opci&oacute;n de menu correctamente.');
-		    										recargaGridMenus();        							
+		            								recargaGridOpMenu();      							
 		                   						}else {
 		                   							mensajeError('No se pudo eliminar la opci&oacute;n de menu.');
 		                   						}
@@ -702,16 +516,28 @@ Ext.onReady(function()
 		            		showMessage("Aviso","Debe seleccionar un registro", Ext.Msg.OK, Ext.Msg.INFO);
 		            	}
 		            }
+		        },'-',{
+		            icon    : '${ctx}/resources/fam3icons/icons/user_edit.png',
+		            text    : 'Ver/Editar Opciones Sub Men&uacute;',
+		            handler : function()
+		            {
+		            	var model =  gridOpMenu.getSelectionModel();
+		            	if(model.hasSelection()){
+		            		var record = model.getLastSelected();
+		            		windowOpcionesSubMenu(record.get('CDNIVEL'), record.get('DSMENU_EST'));
+		            	}else{
+		            		showMessage("Aviso","Debe seleccionar un registro", Ext.Msg.OK, Ext.Msg.INFO);
+		            	}
+		            }
 		        }]
 		    });
 		var windowOpMenu = Ext.create('Ext.window.Window', {
 			  title : 'Opciones de Men&uacute;',
-	          //closeAction: 'hide',
 	          modal:true,
-	          width : 600,
-	          height : 400,
+	          width : 700,
+	          height : 350,
 	          items:[gridOpMenu],
-	          bodyStyle:'padding:15px;',
+	          //bodyStyle:'padding:5px;',
 	          buttons:[{
 		                 text: 'Cerrar',
 		                 icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
@@ -721,7 +547,616 @@ Ext.onReady(function()
 	           		} ]
 	          });
 		 	windowOpMenu.show();
+		 	
+		 	recargaGridOpMenu = function(){
+		    	
+				var params = {
+					'params.PV_CDMENU_I'	: _cdMenu
+				};
+				cargaStorePaginadoLocal(opcionesMenuStore, _UrlOpMenu, 'loadList', params, function (options, success, response){
+		    		if(success){
+		                var jsonResponse = Ext.decode(response.responseText);
+		                
+		                if(!jsonResponse.success) {
+		                    showMessage(_MSG_SIN_DATOS, _MSG_BUSQUEDA_SIN_DATOS, Ext.Msg.OK, Ext.Msg.INFO);
+		                }
+		            }else{
+		                showMessage('Error', 'Error al obtener los datos.', Ext.Msg.OK, Ext.Msg.ERROR);
+		            }
+		    	}, gridOpMenu);
+			};
+			
+			recargaGridOpMenu();
+		
+		 	function agregarEditarOpMenu(record){
+
+				var panelEdicionOpMenu = Ext.create('Ext.form.Panel',{
+			        border  : false
+			        ,bodyStyle:'padding:5px;'
+			        ,url: _UrlGuardaOpMenu
+			        ,items :
+			        [   {
+					        xtype      : 'textfield'
+					    	,fieldLabel : 'Nombre de la Opci&oacute;n de Men&uacute;'
+				    		,labelWidth: 120
+				    		,width: 350
+				    		,allowBlank:false
+					    	,name       : 'params.pv_dsmenu_est_i'
+					    	,value: record? record.get('DSMENU_EST') : ''
+			    		}
+			        ]
+			    });
+				 var windowEdicionOpMenu = Ext.create('Ext.window.Window', {
+			          title: record?'Editar Opci&oacute;n Men&uacute;':'Agregar Opci&oacute;n Men&uacute;',
+			          closeAction: 'hide',
+			          modal:true,
+			          items:[panelEdicionOpMenu],
+			          bodyStyle:'padding:15px;',
+			          buttons:[{
+			                 text: 'Guardar',
+			                 icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
+			                 handler: function() {
+			                       if (panelEdicionOpMenu.form.isValid()) {
+			                    	   
+			                    	   panelEdicionOpMenu.form.submit({
+			           		        	waitMsg:'Procesando...',			
+			           		        	params: {
+			           		        		'params.pv_cdmenu_i'       : _cdMenu,
+			           		        		'params.pv_cdnivel_i'      : record? record.get('CDNIVEL') : '',
+			           		        		'params.pv_cdramo_i'       : '',
+			           		        		'params.pv_cdnivel_padre_i': _CDNIVEL_PADRE_RAIZ,
+			           		        		'params.pv_cdtitulo_i'     : _CDTITULO_PADRE_RAIZ,
+			           		        		'params.pv_cdestado_i'     : _ESTADO_MENU_ACTIVO,
+			           		        		'params.pv_cdtipsit_i'     : ''
+			           		        	},
+			           		        	failure: function(form, action) {
+			           		        		mensajeError("Error al guardar la Opci&oacute;n de Men&uacute;. " + action.result.errorMessage);
+			           					},
+			           					success: function(form, action) {
+			           						recargaGridOpMenu();
+			           						panelEdicionOpMenu.getForm().reset();
+			           						windowEdicionOpMenu.close();
+			                               	mensajeCorrecto("Aviso","Se ha guardado la Opci&oacute;n de Men&uacute;");
+			           					}
+			           				});
+			                       	
+			                       } else {
+			                           Ext.Msg.show({
+			                                  title: 'Aviso',
+			                                  msg: 'Complete la informaci&oacute;n requerida',
+			                                  buttons: Ext.Msg.OK,
+			                                  icon: Ext.Msg.WARNING
+			                              });
+			                       }
+			                   }
+			             },
+			           {
+			                 text: 'Cancelar',
+			                 icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+			                 handler: function() {
+			                	 panelEdicionOpMenu.getForm().reset();
+			                	 windowEdicionOpMenu.close();
+			                 }
+			           }
+			          ]
+			          });
+				 windowEdicionOpMenu.show();
+			}
+		 	
+		 	
+		 	function windowOpcionesSubMenu(_cdNivelPadre, _NombreOpcionPadre){
+				debug('CdNivelPadre: ',_cdNivelPadre);
 				
+				var recargaGridOpSubMenu;
+				
+				var opcionesSubMenuStore = Ext.create('Ext.data.Store',
+					    {
+							pageSize : 20,
+					        autoLoad : true
+					        ,model   : 'gridOpMenuModel'
+					        ,proxy   :
+					        {
+					            type         : 'memory'
+					            ,enablePaging : true
+					            ,reader      : 'json'
+					            ,data        : []
+					        }
+				});
+				
+				var gridOpSubMenu = Ext.create('Ext.grid.Panel',
+					    {
+				    	height : 300
+				    	,selType: 'checkboxmodel'
+				    	,store : opcionesSubMenuStore
+				    	,columns :
+				    	[ { header     : 'CDNIVEL' , dataIndex : 'CDNIVEL', hidden: true},
+				    	  { header     : 'CDTITULO' , dataIndex : 'CDTITULO', hidden: true},
+				          { header     : 'Nombre Opci&oacute;n Men&uacute;', dataIndex : 'DSMENU_EST', flex: 1},
+				          { header     : 'Nombre Opci&oacute;n Liga/URL', dataIndex : 'DSTITULO', flex: 1}
+						]
+				    	,bbar     :
+				        {
+				            displayInfo : true,
+				            store       : opcionesSubMenuStore,
+				            xtype       : 'pagingtoolbar'
+				            
+				        },
+				        tbar: [{
+				            icon    : '${ctx}/resources/fam3icons/icons/add.png',
+				            text    : 'Agregar opci&oacute;n Sub Men&uacute;',
+				            handler : function()
+				            {
+				            	agregarEditarOpSubMenu();
+				            }
+				        },{
+				            icon    : '${ctx}/resources/fam3icons/icons/pencil.png',
+				            text    : 'Editar opci&oacute;n Sub Men&uacute;',
+				            handler : function()
+				            {
+				            	var model =  gridOpSubMenu.getSelectionModel();
+				            	if(model.hasSelection()){
+				            		var record = model.getLastSelected();
+				            		agregarEditarOpSubMenu(record);
+				            		
+				            	}else{
+				            		showMessage("Aviso","Debe seleccionar un registro", Ext.Msg.OK, Ext.Msg.INFO);
+				            	}
+				            }
+				        },{
+				            icon    : '${ctx}/resources/fam3icons/icons/delete.png',
+				            text    : 'Eliminar opci&oacute;n Sub Men&uacute;',
+				            scope   : this,
+				            handler : function (btn, e){
+				            	var model =  gridOpSubMenu.getSelectionModel();
+				            	if(model.hasSelection()){
+				            		
+				            		Ext.Msg.show({
+				    		            title: 'Aviso',
+				    		            msg: '&iquest;Esta seguro que desea eliminar esta opci&oacute;n de Sub Men&uacute;?',
+				    		            buttons: Ext.Msg.YESNO,
+				    		            fn: function(buttonId, text, opt) {
+				    		            	if(buttonId == 'yes') {
+				    		            		Ext.Ajax.request({
+				            						url: _UrlEliminaOpSubMenu,
+				            						params: {
+				            					    		'params.pv_cdmenu_i'  : _cdMenu,
+				            					    		'params.pv_cdnivel_i' : model.getLastSelected().get('CDNIVEL')
+				            						},
+				            						success: function(response, opt) {
+				            							var jsonRes=Ext.decode(response.responseText);
+
+				            							if(jsonRes.success == true){
+				            								mensajeCorrecto('Aviso','Se ha eliminado la opci&oacute;n de Sub Men&uacute; correctamente.');
+				            								recargaGridOpSubMenu();      							
+				                   						}else {
+				                   							mensajeError('No se pudo eliminar la opci&oacute;n de Sub Men&uacute;.');
+				                   						}
+				            						},
+				            						failure: function(){
+				            							mensajeError('No se pudo eliminar la opci&oacute;n de Sub Men&uacute;.');
+				            						}
+				            					});
+				    		            	}
+				            			},
+				    		            animateTarget: btn,
+				    		            icon: Ext.Msg.QUESTION
+				        			});
+				            		
+				            	}else{
+				            		showMessage("Aviso","Debe seleccionar un registro", Ext.Msg.OK, Ext.Msg.INFO);
+				            	}
+				            }
+				        },'-',{
+				            icon    : '${ctx}/resources/fam3icons/icons/user_edit.png',
+				            text    : 'Ver/Editar Opciones Sub Men&uacute;',
+				            hidden  : _TIPO_MENU_SESION == _cdTipoMenu?true:false,
+				            handler : function()
+				            {
+				            	var model =  gridOpSubMenu.getSelectionModel();
+				            	if(model.hasSelection()){
+				            		var record = model.getLastSelected();
+				            		windowOpcionesSubMenu(record.get('CDNIVEL'), record.get('DSMENU_EST'));
+				            	}else{
+				            		showMessage("Aviso","Debe seleccionar un registro", Ext.Msg.OK, Ext.Msg.INFO);
+				            	}
+				            }
+				        }]
+				    });
+				
+				var windowOpSubMenu = Ext.create('Ext.window.Window', {
+					  title : _TIPO_MENU_SESION == _cdTipoMenu?'Opciones de Sub Men&uacute;' : 'Opciones de Sub Men&uacute; para: '+ _NombreOpcionPadre,
+			          modal:true,
+			          width : 800,
+			          height : 400,
+			          items:[gridOpSubMenu],
+			          //bodyStyle:'padding:5px;',
+			          buttons:[{
+				                 text: 'Cerrar',
+				                 icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+				                 handler: function() {
+				                	 windowOpSubMenu.close();
+				                 }
+			           		} ]
+			          });
+				 	windowOpSubMenu.show();
+				 	
+				 	recargaGridOpSubMenu = function(){
+				    	
+						var params = {
+							'params.PV_CDMENU_I'	: _cdMenu,
+							'params.PV_CDNIVEL_PADRE_I'	: _cdNivelPadre
+						};
+						cargaStorePaginadoLocal(opcionesSubMenuStore, _UrlOpSubMenu, 'loadList', params, function (options, success, response){
+				    		if(success){
+				                var jsonResponse = Ext.decode(response.responseText);
+				                
+				                if(!jsonResponse.success) {
+				                    showMessage(_MSG_SIN_DATOS, _MSG_BUSQUEDA_SIN_DATOS, Ext.Msg.OK, Ext.Msg.INFO);
+				                }
+				            }else{
+				                showMessage('Error', 'Error al obtener los datos.', Ext.Msg.OK, Ext.Msg.ERROR);
+				            }
+				    	}, gridOpSubMenu);
+					};
+					
+					recargaGridOpSubMenu();
+				
+				 	function agregarEditarOpSubMenu(record){
+
+						var panelEdicionOpSubMenu = Ext.create('Ext.form.Panel',{
+					        border  : false
+					        ,bodyStyle:'padding:5px;'
+					        ,url: _UrlGuardaOpSubMenu
+					        ,items :
+					        [   {
+							        xtype      : 'textfield'
+							    	,fieldLabel : 'Nombre de la Opci&oacute;n de Sub Men&uacute;'
+						    		,labelWidth: 120
+						    		,width: 400
+						    		,allowBlank:false
+							    	,name       : 'params.pv_dsmenu_est_i'
+							    	,value: record? record.get('DSMENU_EST') : ''
+					    		},{
+			                        xtype         : 'combobox',
+			                        labelWidth    : 120,
+			                        width         : 400,
+			                        name          : 'params.pv_cdtitulo_i',
+			                        fieldLabel    : 'Opci&oacute;n Liga/URL',
+						    		allowBlank    : false,
+			                        valueField    : 'CDTITULO',
+			                        displayField  : 'DSTITULO',
+			                        tpl: Ext.create('Ext.XTemplate',
+			                                '<tpl for=".">',
+			                                    '<div class="x-boundlist-item">{CDTITULO} - {DSTITULO}</div>',
+			                                '</tpl>'
+			                        ),
+			                        displayTpl: Ext.create('Ext.XTemplate',
+			                                '<tpl for=".">',
+			                                    '{CDTITULO} - {DSTITULO}',
+			                                '</tpl>'
+			                        ),
+			                        forceSelection: true,
+			                        queryMode     :'local',
+			                        store         : Ext.create('Ext.data.Store', {
+				                        model     : 'gridOpLigaModel',
+				                        autoLoad  : true,
+				                        proxy     : {
+				                            type         : 'ajax'
+				                            ,url         : _UrlOpcionesLiga
+				                            ,extraParams : {'params.pv_dstitulo_i' : ''}
+				                            ,reader      : { type  : 'json' ,root : 'loadList' }
+				                        },
+				                        listeners: {
+				                        	load: function(){
+				                        		panelEdicionOpSubMenu.getForm().findField('params.pv_cdtitulo_i').setValue(record? record.get('CDTITULO') : '0');
+				                        	}
+				                        }
+			                        })
+			                    },{
+			            	    	xtype: 'button',
+			            	    	text : 'Ver y Editar Opciones Liga/URL',
+			            	    	handler: verEditarOpcionesURL
+			            	    }
+					        ]
+					    });
+						 var windowEdicionOpSubMenu = Ext.create('Ext.window.Window', {
+					          title: record?'Editar Opci&oacute;n Sub Men&uacute;':'Agregar Opci&oacute;n Sub Men&uacute;',
+					          closeAction: 'hide',
+					          modal:true,
+					          items:[panelEdicionOpSubMenu],
+					          bodyStyle:'padding:15px;',
+					          buttons:[{
+					                 text: 'Guardar',
+					                 icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
+					                 handler: function() {
+					                       if (panelEdicionOpSubMenu.form.isValid()) {
+					                    	   
+					                    	   panelEdicionOpSubMenu.form.submit({
+					           		        	waitMsg:'Procesando...',			
+					           		        	params: {
+					           		        		'params.pv_cdmenu_i'       : _cdMenu,
+					           		        		'params.pv_cdnivel_i'      : record? record.get('CDNIVEL') : '',
+					           		        		'params.pv_cdramo_i'       : '',
+					           		        		'params.pv_cdnivel_padre_i': _cdNivelPadre,
+					           		        		'params.pv_cdestado_i'     : _ESTADO_MENU_ACTIVO,
+					           		        		'params.pv_cdtipsit_i'     : ''
+					           		        	},
+					           		        	failure: function(form, action) {
+					           		        		mensajeError("Error al guardar la Opci&oacute;n de Sub Men&uacute;. " + action.result.errorMessage);
+					           					},
+					           					success: function(form, action) {
+					           						recargaGridOpSubMenu();
+					           						panelEdicionOpSubMenu.getForm().reset();
+					           						windowEdicionOpSubMenu.close();
+					                               	mensajeCorrecto("Aviso","Se ha guardado la Opci&oacute;n de Sub Men&uacute;");
+					           					}
+					           				});
+					                       	
+					                       } else {
+					                           Ext.Msg.show({
+					                                  title: 'Aviso',
+					                                  msg: 'Complete la informaci&oacute;n requerida',
+					                                  buttons: Ext.Msg.OK,
+					                                  icon: Ext.Msg.WARNING
+					                              });
+					                       }
+					                   }
+					             },
+					           {
+					                 text: 'Cancelar',
+					                 icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+					                 handler: function() {
+					                	 panelEdicionOpSubMenu.getForm().reset();
+					                	 windowEdicionOpSubMenu.close();
+					                 }
+					           }
+					          ]
+					          });
+						 windowEdicionOpSubMenu.show();
+					}
+			}
+	}
+	
+	function verEditarOpcionesURL(){
+		
+		var _UrlGuardaOpcionLiga  = '<s:url namespace="/catalogos"    action="guardaOpcionLiga" />';
+		var _UrlEliminaOpcionLiga = '<s:url namespace="/catalogos"    action="eliminaOpcionLiga" />';
+		
+		var recargaGridOpcionesLiga;
+		
+		var opcionesLigaStore = Ext.create('Ext.data.Store',
+			    {
+					pageSize : 20,
+			        autoLoad : true
+			        ,model   : 'gridOpLigaModel'
+			        ,proxy   :
+			        {
+			            type         : 'memory'
+			            ,enablePaging : true
+			            ,reader      : 'json'
+			            ,data        : []
+			        }
+			    });
+		
+		var gridOpcionesLiga = Ext.create('Ext.grid.Panel',
+			    {
+		    	title : 'Opciones Liga/URL'
+		    	,height : 300
+		    	,selType: 'checkboxmodel'
+		    	,store : opcionesLigaStore
+		    	,columns :
+		    	[ { header     : 'C&oacute;digo' , dataIndex : 'CDTITULO', flex: 1},
+		    	  { header     : 'Nombre Opci&oacute;n' , dataIndex : 'DSTITULO', flex: 3},
+		          { header     : 'Liga/URL' , dataIndex : 'DSURL' , flex: 5}
+				]
+		    	,bbar     :
+		        {
+		            displayInfo : true,
+		            store       : opcionesLigaStore,
+		            xtype       : 'pagingtoolbar'
+		        },
+		        tbar: [{
+		            icon    : '${ctx}/resources/fam3icons/icons/add.png',
+		            text    : 'Agregar opci&oacute;n',
+		            handler : function(){agregarEditarOpcionLiga();}
+		        },{
+		            icon    : '${ctx}/resources/fam3icons/icons/pencil.png',
+		            text    : 'Editar opci&oacute;n',
+		            handler : function()
+		            {
+		            	var model =  gridOpcionesLiga.getSelectionModel();
+		            	if(model.hasSelection()){
+		            		var record = model.getLastSelected();
+		            		agregarEditarOpcionLiga(record);
+		            		
+		            	}else{
+		            		showMessage("Aviso","Debe seleccionar un registro", Ext.Msg.OK, Ext.Msg.INFO);
+		            	}
+		            }
+		        },{
+		            icon    : '${ctx}/resources/fam3icons/icons/delete.png',
+		            text    : 'Eliminar opci&oacute;n',
+		            scope   : this,
+		            handler : function (btn, e){
+		            	var model =  gridOpcionesLiga.getSelectionModel();
+		            	if(model.hasSelection()){
+		            		
+		            		Ext.Msg.show({
+		    		            title: 'Aviso',
+		    		            msg: '&iquest;Esta seguro que desea eliminar esta opci&oacute;n liga/URL?',
+		    		            buttons: Ext.Msg.YESNO,
+		    		            fn: function(buttonId, text, opt) {
+		    		            	if(buttonId == 'yes') {
+		    		            		Ext.Ajax.request({
+		            						url: _UrlEliminaOpcionLiga,
+		            						params: {
+		            					    		'params.pv_cdtitulo_i' : model.getLastSelected().get('CDTITULO')
+		            						},
+		            						success: function(response, opt) {
+		            							var jsonRes=Ext.decode(response.responseText);
+
+		            							if(jsonRes.success == true){
+		            								mensajeCorrecto('Aviso','Se ha eliminado la opci&oacute;n correctamente.');
+		            								recargaGridOpcionesLiga();        							
+		                   						}else {
+		                   							mensajeError('No se pudo eliminar la opci&oacute;n.');
+		                   						}
+		            						},
+		            						failure: function(){
+		            							mensajeError('No se pudo eliminar la opci&oacute;n.');
+		            						}
+		            					});
+		    		            	}
+		            			},
+		    		            animateTarget: btn,
+		    		            icon: Ext.Msg.QUESTION
+		        			});
+		            		
+		            	}else{
+		            		showMessage("Aviso","Debe seleccionar un registro", Ext.Msg.OK, Ext.Msg.INFO);
+		            	}
+		            }
+		        }]
+		    });
+		
+		
+			var windowOpcionesLiga = Ext.create('Ext.window.Window', {
+		          title: 'Ver/Editar Opciones Liga/URL',
+		          modal:true,
+		          height : 450,
+		          width  : 800,
+		          items:[{
+		        	layout: {type:'hbox', pack: 'center'},
+		        	defaults: {
+			    		style: 'margin: 10px'// para hacer que los componentes se separen 5px
+			    	},
+			    	border: false,
+			    	items: [{
+				    	xtype: 'textfield',
+				    	fieldLabel: 'Nombre de Opci&oacute;n:',
+				    	name: 'dstitle',
+				    	labelWidth: 120
+				    },{
+				    	xtype: 'button',
+				    	text: 'Buscar Opciones',
+				    	handler: function(){
+				    		recargaGridOpcionesLiga();
+				    	}
+				    }]
+		          	},gridOpcionesLiga],
+		          bodyStyle:'padding:15px;',
+		          buttons:[
+		           {
+		                 text: 'Aceptar',
+		                 icon:_CONTEXT+'/resources/fam3icons/icons/acept.png',
+		                 handler: function() {
+		                	 windowOpcionesLiga.close();
+		                 }
+		           }
+		          ]
+		          });
+				windowOpcionesLiga.show();
+				
+				recargaGridOpcionesLiga = function(){
+					
+					var params = {
+						'params.pv_dstitulo_i'	: windowOpcionesLiga.down('[name=dstitle]').getValue()
+					};
+					cargaStorePaginadoLocal(opcionesLigaStore, _UrlOpcionesLiga, 'loadList', params, function (options, success, response){
+			    		if(success){
+			                var jsonResponse = Ext.decode(response.responseText);
+			                
+			                if(!jsonResponse.success) {
+			                    showMessage(_MSG_SIN_DATOS, _MSG_BUSQUEDA_SIN_DATOS, Ext.Msg.OK, Ext.Msg.INFO);
+			                }
+			            }else{
+			                showMessage('Error', 'Error al obtener los datos.', Ext.Msg.OK, Ext.Msg.ERROR);
+			            }
+			    	}, gridOpcionesLiga);
+				};
+				
+				function agregarEditarOpcionLiga(record){
+
+					var panelEdicionOpcionLiga = Ext.create('Ext.form.Panel',{
+				        border  : false
+				        ,bodyStyle:'padding:5px;'
+				        ,url: _UrlGuardaOpcionLiga
+				        ,items :
+				        [   {
+						        xtype      : 'textfield'
+						    	,fieldLabel : 'Nombre de la Opci&oacute;n'
+					    		,labelWidth: 120
+					    		,width: 350
+					    		,allowBlank:false
+						    	,name       : 'params.pv_dstitulo_i'
+						    	,value: record? record.get('DSTITULO') : ''
+						    	,readOnly: record?true:false
+				    		},{
+						        xtype      : 'textfield'
+							   	,fieldLabel : 'Liga/URL'
+						    	,labelWidth: 120
+						    	,width: 600
+						    	,allowBlank:false
+							   	,name       : 'params.pv_dsurl_i'
+							   	,value: record? record.get('DSURL') : ''
+							
+					    	}
+				        ]
+				    });
+					
+					 var windowEdicionOpcionLiga = Ext.create('Ext.window.Window', {
+				          title: record?'Editar Opci&oacute;n Liga/URL':'Agregar Opci&oacute;n Liga/URL',
+				          closeAction: 'hide',
+				          modal:true,
+				          items:[panelEdicionOpcionLiga],
+				          bodyStyle:'padding:15px;',
+				          buttons:[{
+				                 text: 'Guardar',
+				                 icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
+				                 handler: function() {
+				                       if (panelEdicionOpcionLiga.form.isValid()) {
+				                    	   
+				                    	   panelEdicionOpcionLiga.form.submit({
+				           		        	waitMsg:'Procesando...',			
+				           		        	params: {
+				           		        		'params.pv_cdtitulo_i'   : record? record.get('CDTITULO') : ''
+				           		        	},
+				           		        	failure: function(form, action) {
+				           		        		mensajeError("Error al guardar la opci&oacute;n");
+				           					},
+				           					success: function(form, action) {
+				           						
+				           						recargaGridOpcionesLiga();
+				           						panelEdicionOpcionLiga.getForm().reset();
+				           						windowEdicionOpcionLiga.close();
+				                               	mensajeCorrecto("Aviso","Se ha guardado la opci&oacute;n.");
+				           						
+				           						
+				           					}
+				           				});
+				                       	
+				                       } else {
+				                           Ext.Msg.show({
+				                                  title: 'Aviso',
+				                                  msg: 'Complete la informaci&oacute;n requerida',
+				                                  buttons: Ext.Msg.OK,
+				                                  icon: Ext.Msg.WARNING
+				                              });
+				                       }
+				                   }
+				             },
+				           {
+				                 text: 'Cancelar',
+				                 icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+				                 handler: function() {
+				                	 panelEdicionOpcionLiga.getForm().reset();
+				                	 windowEdicionOpcionLiga.close();
+				                 }
+				           }
+				          ]
+				          });
+					 windowEdicionOpcionLiga.show();
+				}
 		
 	}
 
@@ -730,6 +1165,6 @@ Ext.onReady(function()
 
 </head>
 <body>
-<div id="mainDivMenus" style="height:1500px;"></div>
+<div id="mainDivMenus" style="height:350px;"></div>
 </body>
 </html>

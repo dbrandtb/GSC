@@ -59,6 +59,45 @@ public class MenuDAOImpl extends AbstractManagerDAO implements MenuDAO {
     		compile();
     	}
     }
+
+    @Override
+    public List<Map<String, String>> obtieneOpcionesMenu(Map params) throws DaoException {
+    	Map<String, Object> resultado = ejecutaSP(new ObtieneOpcionesMenu(getDataSource()), params);
+    	return (List<Map<String, String>>) resultado.get("pv_registro_o");
+    }
+    
+    protected class ObtieneOpcionesMenu extends StoredProcedure {
+    	
+    	protected ObtieneOpcionesMenu(DataSource dataSource) {
+    		super(dataSource, "PKG_MENU.OPTIENE_MENU_PADRE");
+    		declareParameter(new SqlParameter("PV_CDMENU_I", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DinamicMapper()));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_text_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
+
+    @Override
+    public List<Map<String, String>> obtieneOpcionesSubMenu(Map params) throws DaoException {
+    	Map<String, Object> resultado = ejecutaSP(new ObtieneOpcionesSubMenu(getDataSource()), params);
+    	return (List<Map<String, String>>) resultado.get("pv_registro_o");
+    }
+    
+    protected class ObtieneOpcionesSubMenu extends StoredProcedure {
+    	
+    	protected ObtieneOpcionesSubMenu(DataSource dataSource) {
+    		super(dataSource, "PKG_MENU.OBTIENE_MENU_HIJOS");
+    		declareParameter(new SqlParameter("PV_CDMENU_I", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("PV_CDNIVEL_PADRE_I", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DinamicMapper()));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_text_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
     
     @Override
 	public String guardaOpcionLiga(Map params)
@@ -114,6 +153,35 @@ public class MenuDAOImpl extends AbstractManagerDAO implements MenuDAO {
 	}
 
 	@Override
+	public String guardaOpcionMenu(Map params)
+			throws DaoException {
+		logger.debug("Params guardaOpcionMenu: "+ params);
+		Map<String, Object> mapResult = ejecutaSP(new GuardaOpcionMenu(getDataSource()), params);
+		
+		return (String) mapResult.get("pv_title_o");
+	}
+	
+	protected class GuardaOpcionMenu extends StoredProcedure {
+		
+		protected GuardaOpcionMenu(DataSource dataSource) {
+			super(dataSource, "PKG_MENU.P_GUARDA_OPCION_MENU");
+			
+			declareParameter(new SqlParameter("pv_cdmenu_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdnivel_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dsmenu_est_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdnivel_padre_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtitulo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdestado_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_text_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	@Override
 	public String eliminaOpcionLiga(Map params)
 			throws DaoException {
 		logger.debug("Params eliminaOpcionLiga: "+ params);
@@ -150,6 +218,29 @@ public class MenuDAOImpl extends AbstractManagerDAO implements MenuDAO {
 			super(dataSource, "PKG_MENU.P_ELIMINA_MENU");
 			
 			declareParameter(new SqlParameter("pv_cdmenu_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_text_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
+	@Override
+	public String eliminaOpcionMenu(Map params)
+			throws DaoException {
+		logger.debug("Params eliminaOpcionMenu: "+ params);
+		Map<String, Object> mapResult = ejecutaSP(new EliminaOpcionMenu(getDataSource()), params);
+		
+		return (String) mapResult.get("pv_title_o");
+	}
+	
+	protected class EliminaOpcionMenu extends StoredProcedure {
+		
+		protected EliminaOpcionMenu(DataSource dataSource) {
+			super(dataSource, "PKG_MENU.P_ELIMINA_OPCION");
+			
+			declareParameter(new SqlParameter("pv_cdmenu_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdnivel_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_text_o", OracleTypes.VARCHAR));

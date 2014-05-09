@@ -102,6 +102,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case PENALIZACIONES:
 				case PLANES:
 				case TIPO_MONEDA:
+				case TIPO_MENU:
 					lista = catalogosManager.getTmanteni(cat);
 	                break;
 				case MC_ESTATUS_TRAMITE:
