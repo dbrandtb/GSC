@@ -88,6 +88,9 @@ var _4_botonesGrid =
 <s:elseif test='%{getSmap2().get("pv_cdtiptra_i").equalsIgnoreCase("16")}'>
 	<%@ include file="/jsp-script/proceso/siniestros/scriptMesaSiniestros.jsp"%>
 </s:elseif>
+<s:elseif test='%{getSmap2().get("pv_cdtiptra_i").equalsIgnoreCase("17")}'>
+<%@ include file="/jsp-script/proceso/emision/scriptMesaAutorizacionEmisiones.jsp"%>
+</s:elseif>
 
 _4_botones.width = (_4_botones.items.length*20)+10;
 
@@ -118,6 +121,11 @@ function _4_cambiarTiptra(cdtiptra)
     {
         editable = '';
         titulo   = 'Reclamaciones en proceso';
+    }
+	else if(cdtiptra=='17')
+    {
+        editable = '';
+        titulo   = 'Emisiones en espera';
     }
 	
 	Ext.create('Ext.form.Panel').submit(
@@ -259,6 +267,15 @@ Ext.onReady(function()
 					    	_4_cambiarTiptra(1);
 					    }
 					}
+                    ,{
+                        text      : 'Auto. Emisiones'
+                        ,icon     : '${ctx}/resources/fam3icons/icons/book_key.png'
+                        ,disabled : mcdinInput['tiptra']=='17'
+                        ,handler  : function()
+                            {
+                                _4_cambiarTiptra(17);
+                            }
+                    }
 					,{
                         text      : 'Endosos'
                         ,icon     : '${ctx}/resources/fam3icons/icons/overlays.png'
@@ -366,7 +383,10 @@ Ext.onReady(function()
 		    	    }
 		    	]
     		});
-    		this.items[0].forceSelection=false;
+    		if(this.items[0])
+    		{
+    			this.items[0].forceSelection=false;
+    		}
     		this.callParent();
     	}
     });
