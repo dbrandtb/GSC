@@ -10,7 +10,7 @@ var _p15_form;
 var _p15_urlHabilitarRecibos  = '<s:url namespace="/endosos"                action="habilitarRecibosSubsecuentes" />';
 var _p15_urlReporte           = '<s:url namespace="/reportes"               action="procesoObtencionReporte"      />';
 var _p15_urlObtenerDatosEmail = '<s:url namespace="/reexpediciondocumentos" action="obtenerDatosEmail"            />';
-var _p15_urlEnviarCorreo      = '<s:url namespace="/"                       action="enviaCorreo" />';
+var _p15_urlEnviarCorreo      = '<s:url namespace="/general"                action="enviaCorreo" />';
 ////// variables //////
 
 Ext.onReady(function()
@@ -188,16 +188,16 @@ function _p15_botonHabilitarHandler()
 	                                    url     : _p15_urlEnviarCorreo
 	                                    ,params :
 	                                    {
-	                                        to             : json.stringMap.correos
-	                                        ,archivos      : json.stringMap.url
-	                                                         + '?cdreporte=REPEXC008'
-	                                                         + '&params.pv_feproces_i='
-	                                                         + Ext.Date.format(_p15_getFechaInicio().getValue(),'d/m/Y')
-															 + '&params.pv_cdunieco_i='
-															 + json.stringMap.cdunieco
-	                                        ,asunto        : 'Recibos subsecuentes habilitados'
-	                                        ,mensaje       : 'Se habilitaron recibos subsecuentes a partir de la fecha '+Ext.Date.format(_p15_getFechaInicio().getValue(),'d/m/Y')
-	                                        ,nombreArchivo : 'recibos_habilitados_('+Ext.Date.format(new Date(),'m-d-Y g:i:s.u')+').xls'
+	                                        to            : json.stringMap.correos,
+	                                        asunto        : 'Recibos subsecuentes habilitados',
+	                                        mensaje       : 'Se habilitaron recibos subsecuentes a partir de la fecha '+Ext.Date.format(_p15_getFechaInicio().getValue(),'d/m/Y'),
+	                                        urlArchivo    : json.stringMap.url
+				                                            + '?cdreporte=REPEXC008'
+				                                            + '&params.pv_feproces_i='
+				                                            + Ext.Date.format(_p15_getFechaInicio().getValue(),'d/m/Y')
+				                                            + '&params.pv_cdunieco_i='
+				                                            + json.stringMap.cdunieco,
+	                                        nombreArchivo : 'recibos_habilitados_' + Ext.Date.format(new Date(),'Y-d-m_g_i_s_u') + '.xls'
 	                                    },
 	                                    callback : function(options,success,response)
 	                                    {

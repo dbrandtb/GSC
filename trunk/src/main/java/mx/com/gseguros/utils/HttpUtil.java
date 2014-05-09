@@ -14,8 +14,6 @@ public class HttpUtil {
 
 	private static Logger logger = Logger.getLogger(HttpUtil.class);
 
-	// private final String USER_AGENT = "Mozilla/5.0";
-
 	public static final String GET = "GET";
 	public static final String POST = "POST";
 	public static final int CODIGO_RESPUESTA_OK = 200;
@@ -29,7 +27,6 @@ public class HttpUtil {
 	 */
 	public static boolean generaArchivo(String urlOrigen, String rutaDestino) {
 		
-		logger.debug("Entrando a generaReporte()");
 		logger.debug("urlOrigen=" + urlOrigen);
 		logger.debug("rutaDestino=" + rutaDestino);
 		boolean isArchivoGenerado = false;
@@ -84,6 +81,24 @@ public class HttpUtil {
 			}
 		}
 		return isArchivoGenerado;
+	}
+	
+	
+	/**
+	 * Obtiene un archivo a partir de su URL y lo genera en una ruta destino
+	 * @param urlOrigen   URL de donde se obtendrá el flujo de datos del archivo a guardar 
+	 * @param rutaDestino Ruta y nombre del archivo donde se almacenará el archivo con el flujo de datos
+	 * @return objeto File que hace referencia al archivo creado, null si no se cre&oacute;
+	 */
+	public static File generaYObtenArchivo(String urlOrigen, String rutaDestino) {
+		File file = null;
+		if (generaArchivo(urlOrigen, rutaDestino)) {
+			file = new File(rutaDestino);
+			if(logger.isDebugEnabled()) {
+				logger.debug("Se obtiene referencia al archivo " + rutaDestino);
+			}
+		}
+		return file;
 	}
 	
 	

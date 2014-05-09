@@ -1,16 +1,17 @@
 package mx.com.gseguros.portal.general.util;
 
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+import mx.com.gseguros.portal.general.service.MailService;
 import mx.com.gseguros.utils.HttpUtil;
-import mx.com.gseguros.utils.MailMail;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.validator.UrlValidator;
 
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -20,70 +21,60 @@ public class MailAction extends ActionSupport {
 	
 	private final static Log logger = LogFactory.getLog(MailAction.class);
 	
+	private MailService mailService;
+	
 	private boolean success;
 	
-	private String to;
+	private List<String> to;
 	
-	private String cc;
+	private List<String> cc;
 	
-	private String bcc;
+	private List<String> bcc;
 	
 	private String asunto;
 	
 	private String mensaje;
 	
-	private String archivos;
+	private List<String> archivos;
 	
-	private MailMail mailMail;
-	
+	/**
+	 * Nombre que tendr&aacute; el archivo adjunto obtenido de urlArchivo
+	 */
 	private String nombreArchivo;
 	
+	/**
+	 * URL del archivo adjunto
+	 */
+	private String urlArchivo;
 	
+	
+	/**
+	 * Envia un e-mail. Se pueden adjuntar archivos de 2 formas: <br/>
+	 * 1.- Enviando una lista de rutas completas del servidor, usando el atributo "archivos". <br/> 
+	 * 2.- Si el contenido de un archivo proviene de una URL, enviamos los parametros 
+	 *     urlArchivo (contenido) y nombreArchivo (nombre que tendr&aacute; el archivo adjunto).  
+	 * @return
+	 * @throws Exception
+	 */
 	public String enviaCorreo() throws Exception {
 		
 		try{
-			UrlValidator urlValidator = new UrlValidator();
-			//Obtenemos el nombre del archivo:
-			//String [] aux = archivos.split("/");
-			//String nombreArchivo = aux[aux.length-1];
-			
-			Date date = new Date();
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_hmmss");
-			if(StringUtils.isBlank(nombreArchivo))
-			{
-				nombreArchivo = "cotizacion_" + sdf.format(date) + ".pdf";
-			}
-			String nombreCompletoArchivo = this.getText("ruta.documentos.poliza")+ "/" + nombreArchivo;
-			if(HttpUtil.generaArchivo(archivos, nombreCompletoArchivo)){
-				//Se realiza el envï¿½o de correo:
-				//TODO: modificar nombre de metodo de action y modificar funcionalidad para subir mï¿½s de un archivo
-				success = mailMail.sendMail(to.split(";"), null,
-						null, asunto, mensaje, new String[]{nombreCompletoArchivo});
-			}
-				
-			//Si el arhivo fue generado, almacenamos la ruta y nombre del archivo:
-			/*
-			for(String ruta : archivos) {
-				if( StringUtils.isNotBlank(ruta) ) {
-					//Si la referencia al archivo es una URL, entonces lo creamos en el servidor:
-					if(urlValidator.isValid(ruta)) {
-						//TODO: arreglar para que sea independiente del SO
-						//Obtenemos el nombre del archivo:
-						String [] aux = ruta.split("/");
-						String nombreArchivo = aux[aux.length-1];
-						String nombreCompletoArchivo = this.getText("ruta.documentos.poliza")+ "/" + nombreArchivo;
-						boolean isArchivoGenerado = HttpUtil.generaArchivo(ruta, nombreCompletoArchivo);
-						//Si el arhivo fue generado, almacenamos la ruta y nombre del archivo:
-						if(isArchivoGenerado) {
-							listaDocumentos.add(nombreCompletoArchivo);
-						}
-					} else {
-						listaDocumentos.add(ruta);
+			// Si viene la url de un archivo lo agrega a la lista de archivos adjuntos:
+			if(StringUtils.isNotBlank(urlArchivo) && StringUtils.isNotBlank(nombreArchivo) ) {
+				String nombreCompletoArchivo = this.getText("ruta.documentos.temporal") + File.separator + nombreArchivo;
+				if(HttpUtil.generaArchivo(urlArchivo, nombreCompletoArchivo)) {
+					if(archivos == null) {
+						archivos = new ArrayList<String>();
 					}
+					archivos.add(nombreCompletoArchivo);
+				} else {
+					String mensaje = new StringBuffer("El archivo ").append(nombreCompletoArchivo).append(" no existe, no se adjuntará").toString(); 
+					throw new Exception(mensaje);
 				}
 			}
-			*/
 			
+			success = mailService.enviaCorreo(obtieneEMails(to),obtieneEMails(cc), obtieneEMails(bcc),
+					asunto, mensaje, obtieneRutasAdjuntos(archivos));
 			
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
@@ -91,90 +82,123 @@ public class MailAction extends ActionSupport {
 		
 		return SUCCESS;
 	}
+	
+	
+	/**
+	 * 
+	 * @param rutasArchivos
+	 * @return
+	 */
+	private String[] obtieneRutasAdjuntos(List<String> rutasArchivos) {
+		
+		String[] rutas = null;
+		if(rutasArchivos != null && !rutasArchivos.isEmpty()) {
+			rutas = rutasArchivos.toArray(new String[rutasArchivos.size()]);
+		}
+		return rutas;
+	}
+	
+	
+	/**
+	 * Busca todos los emails separados por ";" dentro de cada elemento de una lista y los devuelve en un arreglo
+	 * @param lstMails lista 
+	 * @return Arreglo de Strings con todos los mails obtenidos
+	 */
+	private String[] obtieneEMails(List<String> lstMails) {
+		
+		String[] arrEmails = null;
+		if(lstMails != null && !lstMails.isEmpty()) {
+			List<String> emails = new ArrayList<String>();
+			for(String strMails : lstMails) {
+				// Se agregan todos los e-mails separados por ";":
+				emails.addAll( Arrays.asList( StringUtils.split(strMails, ";") ) );
+			}
+			arrEmails = emails.toArray(new String[lstMails.size()]);
+		}
+		return arrEmails;
+	}
 
 
+	//Getters and setters
+	
 	public boolean isSuccess() {
 		return success;
 	}
-
 
 	public void setSuccess(boolean success) {
 		this.success = success;
 	}
 
-
-	public String getTo() {
+	public List<String> getTo() {
 		return to;
 	}
 
-
-	public void setTo(String to) {
+	public void setTo(List<String> to) {
 		this.to = to;
 	}
 
-
-	public String getCc() {
+	public List<String> getCc() {
 		return cc;
 	}
 
-
-	public void setCc(String cc) {
+	public void setCc(List<String> cc) {
 		this.cc = cc;
 	}
 
-
-	public String getBcc() {
+	public List<String> getBcc() {
 		return bcc;
 	}
 
-
-	public void setBcc(String bcc) {
+	public void setBcc(List<String> bcc) {
 		this.bcc = bcc;
 	}
-
 
 	public String getAsunto() {
 		return asunto;
 	}
 
-
 	public void setAsunto(String asunto) {
 		this.asunto = asunto;
 	}
-
 
 	public String getMensaje() {
 		return mensaje;
 	}
 
-
 	public void setMensaje(String mensaje) {
 		this.mensaje = mensaje;
 	}
-	
-	
-	public String getArchivos() {
+
+	public List<String> getArchivos() {
 		return archivos;
 	}
 
-
-	public void setArchivos(String archivos) {
+	public void setArchivos(List<String> archivos) {
 		this.archivos = archivos;
 	}
-
-
-	public void setMailMail(MailMail mailMail) {
-		this.mailMail = mailMail;
-	}
-
 
 	public String getNombreArchivo() {
 		return nombreArchivo;
 	}
 
-
 	public void setNombreArchivo(String nombreArchivo) {
 		this.nombreArchivo = nombreArchivo;
+	}
+
+	public String getUrlArchivo() {
+		return urlArchivo;
+	}
+
+	public void setUrlArchivo(String urlArchivo) {
+		this.urlArchivo = urlArchivo;
+	}
+
+	/**
+	 * mailService setter
+	 * @param mailService
+	 */
+	public void setMailService(MailService mailService) {
+		this.mailService = mailService;
 	}
 	
 }

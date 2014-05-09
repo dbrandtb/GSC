@@ -38,7 +38,7 @@ var _0_urlCotizar              = '<s:url namespace="/emision"         action="co
 var _0_urlDetalleCotizacion    = '<s:url namespace="/"                action="detalleCotizacion" />';
 var _0_urlCoberturas           = '<s:url namespace="/flujocotizacion" action="obtenerCoberturas4" />';
 var _0_urlDetalleCobertura     = '<s:url namespace="/flujocotizacion" action="obtenerAyudaCoberturas4" />';
-var _0_urlEnviarCorreo         = '<s:url namespace="/"                action="enviaCorreo" />';
+var _0_urlEnviarCorreo         = '<s:url namespace="/general"         action="enviaCorreo" />';
 var _0_urlViewDoc              = '<s:url namespace ="/documentos"     action="descargaDocInline" />';
 var _0_urlComprar              = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4" />';
 var _0_urlVentanaDocumentos    = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza" />';
@@ -313,8 +313,8 @@ function _0_mail()
 		    				url : _0_urlEnviarCorreo
 		    				,params :
 		    				{
-		    					to : Ext.getCmp('_0_idInputCorreos').getValue()
-		    					,archivos : _0_urlImprimirCotiza
+		    					to : Ext.getCmp('_0_idInputCorreos').getValue(),
+		    					urlArchivo : _0_urlImprimirCotiza
 		    					            + '?p_cdplan='
 		    					            + _0_selectedCdplan
 		    					            + "&p_estado='W'"
@@ -335,7 +335,8 @@ function _0_mail()
 		    					            + "&ACCESSIBLE=YES"
 		    					            + "&report="
 		    					            + _0_reporteCotizacion
-		    					            + "&paramform=no"
+		    					            + "&paramform=no",
+		    					nombreArchivo : 'cotizacion_'+Ext.Date.format(new Date(),'Y-d-m_g_i_s_u')+'.pdf'
 		    			    },
 		    			    callback : function(options,success,response)
 		    			    {

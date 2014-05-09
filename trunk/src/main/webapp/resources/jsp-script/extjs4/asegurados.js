@@ -1819,40 +1819,22 @@ Ext
 																								.request({
 																									url : urlEnviarCorreo,
 																									params : {
-																										to : Ext
-																												.getCmp(
-																														'idInputCorreos')
-																												.getValue(),
-																										archivos : urlImprimirCotiza
-																												+ '?p_cdplan='
-																												+ selected_cd_plan
+																										to : Ext.getCmp('idInputCorreos').getValue(),
+																										urlArchivo : urlImprimirCotiza
+																												+ '?p_cdplan='   + selected_cd_plan
 																												+ "&p_estado='W'"
-																												+ '&p_poliza='
-																												+ Ext
-																														.getCmp(
-																																'idCotizacion')
-																														.getValue()
-																												+ '&p_unieco='
-																												+ inputCdunieco
-																												+ '&p_ramo='
-																												+ inputCdramo
-																												+ '&p_cdusuari='
-																												+ sesionUsuarioUser
-																												+ '&p_ntramite='
-																												+ ntramiteCargado
+																												+ '&p_poliza='   + Ext.getCmp('idCotizacion').getValue()
+																												+ '&p_unieco='   + inputCdunieco
+																												+ '&p_ramo='     + inputCdramo
+																												+ '&p_cdusuari=' + sesionUsuarioUser
+																												+ '&p_ntramite=' + ntramiteCargado
 																												+ '&destype=cache'
 																												+ "&desformat=PDF"
-																												+ "&userid="
-																												+ repSrvUsr
-																												+ "&ACCESSIBLE=YES" // parametro
-																																	// que
-																																	// habilita
-																																	// salida
-																																	// en
-																																	// PDF
-																												+ "&report="
-																												+ _NOMBRE_REPORTE_COTIZACION
-																												+ "&paramform=no"
+																												+ "&userid="     + repSrvUsr
+																												+ "&ACCESSIBLE=YES" // habilita salida en PDF
+																												+ "&report="     + _NOMBRE_REPORTE_COTIZACION
+																												+ "&paramform=no",
+																										nombreArchivo : 'cotizacion_'+Ext.Date.format(new Date(),'Y-d-m_g_i_s_u')+'.pdf'
 																									},
 																									callback : function(
 																											options,

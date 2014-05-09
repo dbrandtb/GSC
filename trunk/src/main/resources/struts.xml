@@ -14,7 +14,7 @@
     <include file="struts/config/struts-consultas.xml"/>
     <include file="struts/config/struts-consultas-poliza.xml"/>
     <include file="struts/config/struts-consultas-siniestro.xml"/>
-    <include file="struts/config/struts-documentosPoliza.xml"/>
+    <include file="struts/config/struts-documentos.xml"/>
     <include file="struts/config/struts-flujos-cancelacion.xml"/>
     <include file="struts/config/struts-flujos-cotizacion.xml"/>
     <include file="struts/config/struts-flujos-emision.xml"/>
@@ -316,10 +316,6 @@
         <action name="agregarExclusionDetalle" class="beanDatosComplementariosCoberturas" method="agregarExclusionDetalle">
             <result name="success" type="json" />
         </action>
-        
-        <action name="enviaCorreo" class="mailAction" method="enviaCorreo">
-            <result name="success" type="json" />
-		</action>
 		
 		<action name="buscarPersonasRepetidas" class="beanDatosComplementarios" method="buscarPersonasRepetidas">
 		    <result name="success" type="json" />
