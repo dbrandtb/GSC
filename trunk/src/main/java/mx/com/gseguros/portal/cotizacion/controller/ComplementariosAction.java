@@ -18,13 +18,16 @@ import java.util.Map.Entry;
 
 import mx.com.aon.configurador.pantallas.model.components.GridVO;
 import mx.com.aon.core.web.PrincipalCoreAction;
-import mx.com.aon.flujos.cotizacion4.web.ResultadoCotizacion4Action;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
+import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
+import mx.com.gseguros.portal.general.util.ConstantesProducto;
+import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.Rango;
 import mx.com.gseguros.portal.general.util.TipoTramite;
@@ -35,6 +38,8 @@ import mx.com.gseguros.ws.recibossigs.service.RecibosSigsService;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
+
+import com.opensymphony.xwork2.ActionContext;
 
 /**
  * 
@@ -83,6 +88,9 @@ public class ComplementariosAction extends PrincipalCoreAction
 	private List<Map<String,String>>slist1;
 	private GridVO gridResultados;
 	private String mensajeRespuesta;
+	private String auxiliarProductoCdramo   = null;
+	private String auxiliarProductoCdtipsit = null;
+	private ConsultasManager consultasManager;
 
 	public String mostrarPantalla()
 	/*
@@ -371,7 +379,22 @@ public class ComplementariosAction extends PrincipalCoreAction
 	}
 
 	public String pantallaAsegurados() {
+		log.info(""
+				+ "\n################################"
+				+ "\n###### pantallaAsegurados ######"
+				);
 		log.debug("map1: "+map1);
+		if(map1!=null)
+		{
+			if(map1.get("cdtipsit")!=null)
+			{
+				auxiliarProductoCdtipsit = map1.get("cdtipsit");
+			}
+			if(map1.get("cdramo")!=null)
+			{
+				auxiliarProductoCdramo = map1.get("cdramo");
+			}
+		}
 		return scrInt.intercept(this,
 				ScreenInterceptor.PANTALLA_COMPLEMENTARIOS_ASEGURADOS);
 	}
@@ -707,12 +730,21 @@ public class ComplementariosAction extends PrincipalCoreAction
 					.add(Item.crear("hidden",true))
 					);
 			
-			String maxLenContratante = catalogosManager.obtieneCantidadMaxima(
+			String maxLenContratante = null;
+			try
+			{
+				maxLenContratante = catalogosManager.obtieneCantidadMaxima(
 					map1.get("cdramo")
 					,map1.get("cdtipsit")
 					,TipoTramite.POLIZA_NUEVA
 					,Rango.LONGITUD
 					,Validacion.LONGITUD_MAX_CONTRATANTE);
+			}
+			catch(Exception ex)
+			{
+				log.error("error sin efectos en obtener cantidad maxima",ex);
+				maxLenContratante = "0";
+			}
 			
 			map1.put("maxLenContratante",maxLenContratante);
 			log.debug("map1: "+map1);
@@ -865,7 +897,12 @@ public class ComplementariosAction extends PrincipalCoreAction
 					valositAsegurado=valositAseguradoIteradoTemp;
 					log.debug("se puso pv_");
 					
-					valositAsegurado.put("pv_otvalor02", (String)aseg.get("fenacimi"));
+					String cdatribuFenacimi = ConstantesProducto.ramo(map1.get("pv_cdramo")).getCdatribuFechaNacimi();
+					if(cdatribuFenacimi.length()==1)
+					{
+						cdatribuFenacimi = "0"+cdatribuFenacimi;
+					}
+					valositAsegurado.put("pv_otvalor"+cdatribuFenacimi, (String)aseg.get("fenacimi"));
 					log.debug("se agregaron los nuevos");
 					
 					//convertir a string el total
@@ -1232,18 +1269,90 @@ public class ComplementariosAction extends PrincipalCoreAction
 			UserVO us=(UserVO)session.get("USUARIO");
 			DatosUsuario datUs=kernelManager.obtenerDatosUsuario(us.getUser());
 			
+			String cdunieco = panel2.get("pv_cdunieco");
+			String cdramo   = panel2.get("pv_cdramo");
+			String estado   = "W";
+			String nmpoliza = panel1.get("pv_nmpoliza");
+			String cdusuari = us.getUser();
+			String cdelemen = us.getEmpresa().getElementoId();
+			String ntramite = panel1.get("pv_ntramite");
+			
+			String cdpersonSesion = datUs.getCdperson();
+			
+			LinkedHashMap<String,Object>paramValidaEdadAsegu=new LinkedHashMap<String,Object>();
+			paramValidaEdadAsegu.put("1cdunieco" , cdunieco);
+			paramValidaEdadAsegu.put("2cdramo"   , cdramo);
+			paramValidaEdadAsegu.put("3estado"   , estado);
+			paramValidaEdadAsegu.put("4nmpoliza" , nmpoliza);
+			List<Map<String,String>> listaAseguradosEdadInvalida = consultasManager.consultaDinamica("PKG_CONSULTA.P_VALIDA_EDAD_ASEGURADOS", paramValidaEdadAsegu);
+			if(listaAseguradosEdadInvalida.size()>0)
+			{
+				mensajeRespuesta = "La p&oacute;liza se envi&oacute; a autorizaci&oacute;n debido a que:<br/>";
+				for(Map<String,String>iAseguradoEdadInvalida:listaAseguradosEdadInvalida)
+				{
+					mensajeRespuesta = mensajeRespuesta + iAseguradoEdadInvalida.get("NOMBRE");
+					if(iAseguradoEdadInvalida.get("SUPERAMINI").substring(0, 1).equals("-"))
+					{
+						mensajeRespuesta = mensajeRespuesta + " no llega a la edad de "+iAseguradoEdadInvalida.get("EDADMINI")+" a&ntilde;os<br/>";
+					}
+					else
+					{
+						mensajeRespuesta = mensajeRespuesta + " supera la edad de "+iAseguradoEdadInvalida.get("EDADMAXI")+" a&ntilde;os<br/>";
+					}
+				}
+				
+				Map<String,Object>paramsMesaControl=new HashMap<String,Object>();
+				paramsMesaControl.put("pv_cdunieco_i"   , cdunieco);
+				paramsMesaControl.put("pv_cdramo_i"     , cdramo);
+				paramsMesaControl.put("pv_estado_i"     , estado);
+				paramsMesaControl.put("pv_nmpoliza_i"   , nmpoliza);
+				paramsMesaControl.put("pv_nmsuplem_i"   , "0");
+				paramsMesaControl.put("pv_cdsucadm_i"   , cdunieco);
+				paramsMesaControl.put("pv_cdsucdoc_i"   , cdunieco);
+				paramsMesaControl.put("pv_cdtiptra_i"   , TipoTramite.EMISION_EN_ESPERA.getCdtiptra());
+				paramsMesaControl.put("pv_ferecepc_i"   , new Date());
+				paramsMesaControl.put("pv_cdagente_i"   , null);
+				paramsMesaControl.put("pv_referencia_i" , null);
+				paramsMesaControl.put("pv_nombre_i"     , null);
+				paramsMesaControl.put("pv_festatus_i"   , new Date());
+				paramsMesaControl.put("pv_status_i"     , EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo());
+				paramsMesaControl.put("pv_comments_i"   , mensajeRespuesta);
+				paramsMesaControl.put("pv_nmsolici_i"   , null);
+				paramsMesaControl.put("pv_cdtipsit_i"   , null);
+				paramsMesaControl.put("pv_otvalor01"    , cdusuari);
+				paramsMesaControl.put("pv_otvalor02"    , cdelemen);
+				paramsMesaControl.put("pv_otvalor03"    , ntramite);
+				paramsMesaControl.put("pv_otvalor04"    , cdpersonSesion);
+				WrapperResultados wr=kernelManager.PMovMesacontrol(paramsMesaControl);
+				String ntramiteAutorizacion=(String) wr.getItemMap().get("ntramite");
+				mensajeRespuesta = mensajeRespuesta + "<br/>Tr&aacute;mite de autorizaci&oacute;n: "+ntramiteAutorizacion;
+				
+				Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
+	        	parDmesCon.put("pv_ntramite_i"   , ntramite);
+	        	parDmesCon.put("pv_feinicio_i"   , new Date());
+	        	parDmesCon.put("pv_cdclausu_i"   , null);
+	        	parDmesCon.put("pv_comments_i"   , "El tr&aacute;mite se envi&oacute; a autorizaci&oacute;n ("+ntramiteAutorizacion+")");
+	        	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
+	        	parDmesCon.put("pv_cdmotivo_i"   , null);
+	        	kernelManager.movDmesacontrol(parDmesCon);
+				
+	        	kernelManager.mesaControlUpdateStatus(ntramite, EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo());
+	        	
+				success = true;
+				return SUCCESS;
+			}
+			
 			//obtener poliza completa
             /**/
 			Map<String,String>paramObtenerPoliza=new LinkedHashMap<String,String>(0);
-			//paramObtenerPoliza.put("pv_cdunieco" , datUs.getCdunieco());
-			//paramObtenerPoliza.put("pv_cdramo"   , datUs.getCdramo());
-			paramObtenerPoliza.put("pv_cdunieco" , panel2.get("pv_cdunieco"));
-			paramObtenerPoliza.put("pv_cdramo"   , panel2.get("pv_cdramo"));
-			paramObtenerPoliza.put("pv_estado"   , "W");
-			paramObtenerPoliza.put("pv_nmpoliza" , panel1.get("pv_nmpoliza"));
-			paramObtenerPoliza.put("pv_cdusuari" , us.getUser());
+			paramObtenerPoliza.put("pv_cdunieco" , cdunieco);
+			paramObtenerPoliza.put("pv_cdramo"   , cdramo);
+			paramObtenerPoliza.put("pv_estado"   , estado);
+			paramObtenerPoliza.put("pv_nmpoliza" , nmpoliza);
+			paramObtenerPoliza.put("pv_cdusuari" , cdusuari);
 			Map<String,Object>polizaCompleta=kernelManager.getInfoMpolizasCompleta(paramObtenerPoliza);
 			log.debug("poliza a emitir: "+polizaCompleta);
+			String cdperpag = (String)polizaCompleta.get("cdperpag");
 			/**/
 			
 			/*
@@ -1262,41 +1371,42 @@ public class ComplementariosAction extends PrincipalCoreAction
             pv_fecha
             */
 			Map<String,Object>paramEmi=new LinkedHashMap<String,Object>(0);
-			paramEmi.put("pv_cdusuari"  , us.getUser());
-			//paramEmi.put("pv_cdunieco"  , datUs.getCdunieco());
-			//paramEmi.put("pv_cdramo"    , datUs.getCdramo());
-			paramEmi.put("pv_cdunieco"  , panel2.get("pv_cdunieco"));
-			paramEmi.put("pv_cdramo"    , panel2.get("pv_cdramo"));
-			paramEmi.put("pv_estado"    , "W");
-			paramEmi.put("pv_nmpoliza"  , panel1.get("pv_nmpoliza"));
+			paramEmi.put("pv_cdusuari"  , cdusuari);
+			paramEmi.put("pv_cdunieco"  , cdunieco);
+			paramEmi.put("pv_cdramo"    , cdramo);
+			paramEmi.put("pv_estado"    , estado);
+			paramEmi.put("pv_nmpoliza"  , nmpoliza);
 			paramEmi.put("pv_nmsituac"  , "1");
 			paramEmi.put("pv_nmsuplem"  , "0");
-			paramEmi.put("pv_cdelement" , us.getEmpresa().getElementoId()); 
-			paramEmi.put("pv_cdcia"     , panel2.get("pv_cdunieco"));
+			paramEmi.put("pv_cdelement" , cdelemen); 
+			paramEmi.put("pv_cdcia"     , cdunieco);
 			paramEmi.put("pv_cdplan"    , null);
-			paramEmi.put("pv_cdperpag"  , (String)polizaCompleta.get("cdperpag"));
-			paramEmi.put("pv_cdperson"  , datUs.getCdperson());
+			paramEmi.put("pv_cdperpag"  , cdperpag);
+			paramEmi.put("pv_cdperson"  , cdpersonSesion);
 			paramEmi.put("pv_fecha"     , new Date());
-			paramEmi.put("pv_ntramite"  , panel1.get("pv_ntramite"));
+			paramEmi.put("pv_ntramite"  , ntramite);
 			mx.com.aon.portal.util.WrapperResultados wr=kernelManager.emitir(paramEmi);
 			log.debug("emision obtenida "+wr.getItemMap());
 			//panel2=new HashMap<String,String>(0);
-			panel2.put("nmpoliza",(String)wr.getItemMap().get("nmpoliza"));
-			panel2.put("nmpoliex",(String)wr.getItemMap().get("nmpoliex"));
+			String nmpolizaEmitida = (String)wr.getItemMap().get("nmpoliza");
+			String nmpoliexEmitida = (String)wr.getItemMap().get("nmpoliex");
+			String nmsuplemEmitida = (String)wr.getItemMap().get("nmsuplem");
+			panel2.put("nmpoliza",nmpolizaEmitida);
+			panel2.put("nmpoliex",nmpoliexEmitida);
 			/**/
 			
 			
 			/**
 			 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
 			 */
-			String _cdunieco = panel2.get("pv_cdunieco");
-			String _cdramo = panel2.get("pv_cdramo");
+			String _cdunieco = cdunieco;
+			String _cdramo   = cdramo;
 			String edoPoliza = "M";
-			String _nmpoliza = (String)wr.getItemMap().get("nmpoliza");
-			String _nmsuplem = (String)wr.getItemMap().get("nmsuplem");
+			String _nmpoliza = nmpolizaEmitida;
+			String _nmsuplem = nmsuplemEmitida;
 			
 			String cdtipsitGS = "213";
-			String sucursal = panel2.get("pv_cdunieco");
+			String sucursal = cdunieco;
 			if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 			
 			String esDxN = (String)wr.getItemMap().get("esdxn");
@@ -1309,13 +1419,13 @@ public class ComplementariosAction extends PrincipalCoreAction
 			logger.debug(">>>>>>>>>> suplemento: "+ _nmsuplem);
 			logger.debug(">>>>>>>>>> subramoGS: "+ cdtipsitGS);
 			logger.debug(">>>>>>>>>> sucursal: "+ sucursal);
-			logger.debug(">>>>>>>>>> nmsolici: "+ panel1.get("pv_nmpoliza"));
-			logger.debug(">>>>>>>>>> nmtramite: "+ panel1.get("pv_ntramite"));
+			logger.debug(">>>>>>>>>> nmsolici: "+ nmpoliza);
+			logger.debug(">>>>>>>>>> nmtramite: "+ ntramite);
 			
 			//TODO:ELIMINAR ejecutaWSclienteSalud(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, );
 			//PolizaVO poliza = new PolizaVO();
 			// Ejecutamos el Web Service de Cliente Salud:
-			ice2sigsService.ejecutaWSclienteSalud(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, panel1.get("pv_ntramite"), Ice2sigsService.Operacion.INSERTA, (UserVO) session.get("USUARIO"));
+			ice2sigsService.ejecutaWSclienteSalud(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, Ice2sigsService.Operacion.INSERTA, us);
 			
 			String tipoMov = "1";
 			
@@ -1325,38 +1435,36 @@ public class ComplementariosAction extends PrincipalCoreAction
 				ice2sigsService.ejecutaWSrecibos(_cdunieco, _cdramo,
 						edoPoliza, _nmpoliza, 
 						_nmsuplem, rutaCarpeta,
-						cdtipsitGS, sucursal, panel1.get("pv_nmpoliza"), panel1.get("pv_ntramite"), 
+						cdtipsitGS, sucursal, nmpoliza, ntramite, 
 						false, tipoMov,
-						(UserVO) session.get("USUARIO"));
+						us);
 				// Ejecutamos el Web Service de Recibos DxN:
-				recibosSigsService.generaRecibosDxN(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, cdtipsitGS, sucursal, panel1.get("pv_nmpoliza"), panel1.get("pv_ntramite"), (UserVO) session.get("USUARIO"));
+				recibosSigsService.generaRecibosDxN(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, cdtipsitGS, sucursal, nmpoliza, ntramite, us);
 			}else{
 				
 				// Ejecutamos el Web Service de Recibos:
 				ice2sigsService.ejecutaWSrecibos(_cdunieco, _cdramo,
 						edoPoliza, _nmpoliza, 
 						_nmsuplem, rutaCarpeta,
-						cdtipsitGS, sucursal, panel1.get("pv_nmpoliza"),panel1.get("pv_ntramite"), 
+						cdtipsitGS, sucursal, nmpoliza,ntramite, 
 						true, tipoMov,
-						(UserVO) session.get("USUARIO"));
+						us);
 			}
 			
 			Map<String,String>paramsGetDoc=new LinkedHashMap<String,String>(0);
 			//paramsGetDoc.put("pv_cdunieco_i" , datUs.getCdunieco());
 			//paramsGetDoc.put("pv_cdramo_i"   , datUs.getCdramo());panel2.get("pv_cdunieco")
-			paramsGetDoc.put("pv_cdunieco_i" , panel2.get("pv_cdunieco"));
-			paramsGetDoc.put("pv_cdramo_i"   , panel2.get("pv_cdramo"));
+			paramsGetDoc.put("pv_cdunieco_i" , cdunieco);
+			paramsGetDoc.put("pv_cdramo_i"   , cdramo);
 			paramsGetDoc.put("pv_estado_i"   , "M");
-			paramsGetDoc.put("pv_nmpoliza_i" , panel2.get("nmpoliza"));
+			paramsGetDoc.put("pv_nmpoliza_i" , nmpolizaEmitida);
 			paramsGetDoc.put("pv_nmsuplem_i" , _nmsuplem);
-			paramsGetDoc.put("pv_ntramite_i" , panel1.get("pv_ntramite"));
+			paramsGetDoc.put("pv_ntramite_i" , ntramite);
 			List<Map<String,String>>listaDocu=kernelManager.obtenerListaDocumentos(paramsGetDoc);
 			//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
 			for(Map<String,String> docu:listaDocu)
 			{
 				log.debug("docu iterado: "+docu);
-				String nmsolici=docu.get("nmsolici");
-				String nmsituac=docu.get("nmsituac");
 				String descripc=docu.get("descripc");
 				String descripl=docu.get("descripl");
 				String url=this.getText("ruta.servidor.reports")
@@ -1366,10 +1474,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 						+ "&report="+descripl
 						+ "&paramform=no"
 						+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
-						+ "&p_unieco="+panel2.get("pv_cdunieco")
-						+ "&p_ramo="+panel2.get("pv_cdramo")
+						+ "&p_unieco="+cdunieco
+						+ "&p_ramo="+cdramo
 						+ "&p_estado='M'"
-						+ "&p_poliza="+panel2.get("nmpoliza")
+						+ "&p_poliza="+nmpolizaEmitida
 						+ "&p_suplem="+_nmsuplem
 						+ "&desname="+rutaCarpeta+"/"+descripc;
 				if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
@@ -1395,11 +1503,11 @@ public class ComplementariosAction extends PrincipalCoreAction
 			
 			log.debug("se inserta detalle nuevo para emision");
         	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
-        	parDmesCon.put("pv_ntramite_i"   , panel1.get("pv_ntramite"));
+        	parDmesCon.put("pv_ntramite_i"   , ntramite);
         	parDmesCon.put("pv_feinicio_i"   , new Date());
         	parDmesCon.put("pv_cdclausu_i"   , null);
         	parDmesCon.put("pv_comments_i"   , "El tr&aacute;mite se emiti&oacute;");
-        	parDmesCon.put("pv_cdusuari_i"   , datUsu.getCdusuari());
+        	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
         	parDmesCon.put("pv_cdmotivo_i"   , null);
         	kernelManager.movDmesacontrol(parDmesCon);
 			
@@ -1417,6 +1525,238 @@ public class ComplementariosAction extends PrincipalCoreAction
 				+ "\n########################"
 				+ "\n########################"
 				+ "");
+		return SUCCESS;
+	}
+	
+	public String autorizaEmision()
+	{
+		this.session=ActionContext.getContext().getSession();
+		logger.debug(""
+				+ "\n#############################"
+				+ "\n###### autorizaEmision ######"
+				);
+		logger.debug("panel1"+panel1);
+		
+		try
+		{
+			String ntramiteAut = panel1.get("ntramite");
+			String cdunieco    = panel1.get("cdunieco");
+			String cdramo      = panel1.get("cdramo");
+			String estado      = "W";
+			String nmpoliza    = panel1.get("nmpoliza");
+			String ntramite    = panel1.get("otvalor03");
+			String cdusuari    = panel1.get("otvalor01");
+			String cdelemen    = panel1.get("otvalor02");
+			String cdperson    = panel1.get("otvalor04");
+			
+			String fechaEmision   = panel1.get("ferecepc");
+			Date fechaEmisionDate = renderFechas.parse(fechaEmision);
+			Date fechaDia         = new Date();
+			
+			UserVO us = (UserVO)session.get("USUARIO");
+			
+			//obtener poliza completa
+            /**/
+			Map<String,String>paramObtenerPoliza=new LinkedHashMap<String,String>(0);
+			paramObtenerPoliza.put("pv_cdunieco" , cdunieco);
+			paramObtenerPoliza.put("pv_cdramo"   , cdramo);
+			paramObtenerPoliza.put("pv_estado"   , estado);
+			paramObtenerPoliza.put("pv_nmpoliza" , nmpoliza);
+			paramObtenerPoliza.put("pv_cdusuari" , cdusuari);
+			Map<String,Object>polizaCompleta=kernelManager.getInfoMpolizasCompleta(paramObtenerPoliza);
+			log.debug("poliza a emitir: "+polizaCompleta);
+			String cdperpag = (String)polizaCompleta.get("cdperpag");
+			/**/
+			
+			/*
+			pv_cdusuari
+            pv_cdunieco
+            pv_cdramo
+            pv_estado
+            pv_nmpoliza
+            pv_nmsituac
+            pv_nmsuplem
+            pv_cdelement
+            pv_cdcia
+            pv_cdplan
+            pv_cdperpag
+            pv_cdperson
+            pv_fecha
+            */
+			Map<String,Object>paramEmi=new LinkedHashMap<String,Object>(0);
+			paramEmi.put("pv_cdusuari"  , cdusuari);
+			paramEmi.put("pv_cdunieco"  , cdunieco);
+			paramEmi.put("pv_cdramo"    , cdramo);
+			paramEmi.put("pv_estado"    , estado);
+			paramEmi.put("pv_nmpoliza"  , nmpoliza);
+			paramEmi.put("pv_nmsituac"  , "1");
+			paramEmi.put("pv_nmsuplem"  , "0");
+			paramEmi.put("pv_cdelement" , cdelemen); 
+			paramEmi.put("pv_cdcia"     , cdunieco);
+			paramEmi.put("pv_cdplan"    , null);
+			paramEmi.put("pv_cdperpag"  , cdperpag);
+			paramEmi.put("pv_cdperson"  , cdperson);
+			paramEmi.put("pv_fecha"     , fechaEmisionDate);
+			paramEmi.put("pv_ntramite"  , ntramite);
+			mx.com.aon.portal.util.WrapperResultados wr=kernelManager.emitir(paramEmi);
+			log.debug("emision obtenida "+wr.getItemMap());
+			//panel2=new HashMap<String,String>(0);
+			String nmpolizaEmitida = (String)wr.getItemMap().get("nmpoliza");
+			String nmpoliexEmitida = (String)wr.getItemMap().get("nmpoliex");
+			String nmsuplemEmitida = (String)wr.getItemMap().get("nmsuplem");
+			
+			/**
+			 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
+			 */
+			String _cdunieco = cdunieco;
+			String _cdramo   = cdramo;
+			String edoPoliza = "M";
+			String _nmpoliza = nmpolizaEmitida;
+			String _nmsuplem = nmsuplemEmitida;
+			
+			String cdtipsitGS = "213";
+			String sucursal = cdunieco;
+			if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
+			
+			String esDxN = (String)wr.getItemMap().get("esdxn");
+			
+			logger.debug(">>>>>>>>>>>>>>>>>>>>>>>>>> Parametros para WS de cliente y recibos: <<<<<<<<<<<<<<<<<<<<<<< ");
+			logger.debug(">>>>>>>>>> cdunieco: "+ _cdunieco);
+			logger.debug(">>>>>>>>>> cdramo: "+ _cdramo);
+			logger.debug(">>>>>>>>>> estado: "+ edoPoliza);
+			logger.debug(">>>>>>>>>> nmpoliza: "+ _nmpoliza);
+			logger.debug(">>>>>>>>>> suplemento: "+ _nmsuplem);
+			logger.debug(">>>>>>>>>> subramoGS: "+ cdtipsitGS);
+			logger.debug(">>>>>>>>>> sucursal: "+ sucursal);
+			logger.debug(">>>>>>>>>> nmsolici: "+ nmpoliza);
+			logger.debug(">>>>>>>>>> nmtramite: "+ ntramite);
+			
+			//TODO:ELIMINAR ejecutaWSclienteSalud(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, );
+			//PolizaVO poliza = new PolizaVO();
+			// Ejecutamos el Web Service de Cliente Salud:
+			ice2sigsService.ejecutaWSclienteSalud(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, Ice2sigsService.Operacion.INSERTA, us);
+			
+			String tipoMov = "1";
+			
+			String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
+            File carpeta = new File(rutaCarpeta);
+            if(!carpeta.exists())
+            {
+            	log.debug("no existe la carpeta::: "+rutaCarpeta);
+            	carpeta.mkdir();
+            	if(carpeta.exists())
+            	{
+            		log.debug("carpeta creada");
+            	}
+            	else
+            	{
+            		log.debug("carpeta NO creada");
+            	}
+            }
+            else
+            {
+            	log.debug("existe la carpeta   ::: "+rutaCarpeta);
+            }
+			
+			if(StringUtils.isNotBlank(esDxN) && "S".equalsIgnoreCase(esDxN)){
+				
+				// Ejecutamos el Web Service de Recibos:
+				ice2sigsService.ejecutaWSrecibos(_cdunieco, _cdramo,
+						edoPoliza, _nmpoliza, 
+						_nmsuplem, rutaCarpeta,
+						cdtipsitGS, sucursal, nmpoliza, ntramite, 
+						false, tipoMov,
+						us);
+				// Ejecutamos el Web Service de Recibos DxN:
+				recibosSigsService.generaRecibosDxN(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, cdtipsitGS, sucursal, nmpoliza, ntramite, us);
+			}else{
+				
+				// Ejecutamos el Web Service de Recibos:
+				ice2sigsService.ejecutaWSrecibos(_cdunieco, _cdramo,
+						edoPoliza, _nmpoliza, 
+						_nmsuplem, rutaCarpeta,
+						cdtipsitGS, sucursal, nmpoliza,ntramite, 
+						true, tipoMov,
+						us);
+			}
+			
+			Map<String,String>paramsGetDoc=new LinkedHashMap<String,String>(0);
+			//paramsGetDoc.put("pv_cdunieco_i" , datUs.getCdunieco());
+			//paramsGetDoc.put("pv_cdramo_i"   , datUs.getCdramo());panel2.get("pv_cdunieco")
+			paramsGetDoc.put("pv_cdunieco_i" , cdunieco);
+			paramsGetDoc.put("pv_cdramo_i"   , cdramo);
+			paramsGetDoc.put("pv_estado_i"   , "M");
+			paramsGetDoc.put("pv_nmpoliza_i" , nmpolizaEmitida);
+			paramsGetDoc.put("pv_nmsuplem_i" , _nmsuplem);
+			paramsGetDoc.put("pv_ntramite_i" , ntramite);
+			List<Map<String,String>>listaDocu=kernelManager.obtenerListaDocumentos(paramsGetDoc);
+			//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
+			for(Map<String,String> docu:listaDocu)
+			{
+				log.debug("docu iterado: "+docu);
+				String descripc=docu.get("descripc");
+				String descripl=docu.get("descripl");
+				String url=this.getText("ruta.servidor.reports")
+						+ "?destype=cache"
+						+ "&desformat=PDF"
+						+ "&userid="+this.getText("pass.servidor.reports")
+						+ "&report="+descripl
+						+ "&paramform=no"
+						+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+						+ "&p_unieco="+cdunieco
+						+ "&p_ramo="+cdramo
+						+ "&p_estado='M'"
+						+ "&p_poliza="+nmpolizaEmitida
+						+ "&p_suplem="+_nmsuplem
+						+ "&desname="+rutaCarpeta+"/"+descripc;
+				if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
+				{
+					// C R E D E N C I A L _ X X X X X X . P D F
+					//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+					url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("."));
+				}
+				log.debug(""
+						+ "\n#################################"
+						+ "\n###### Se solicita reporte ######"
+						+ "\na "+url+""
+						+ "\n#################################");
+				HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
+				log.debug(""
+						+ "\n######                    ######"
+						+ "\n###### reporte solicitado ######"
+						+ "\na "+url+""
+						+ "\n################################"
+						+ "\n################################"
+						+ "");
+			}
+			
+			log.debug("se inserta detalle nuevo para emision");
+        	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
+        	parDmesCon.put("pv_ntramite_i"   , ntramite);
+        	parDmesCon.put("pv_feinicio_i"   , fechaDia);
+        	parDmesCon.put("pv_cdclausu_i"   , null);
+        	parDmesCon.put("pv_comments_i"   , "La emisi&oacute;n del tr&aacute;mite se autoriz&oacute;");
+        	parDmesCon.put("pv_cdusuari_i"   , us.getUser());
+        	parDmesCon.put("pv_cdmotivo_i"   , null);
+        	kernelManager.movDmesacontrol(parDmesCon);
+			
+        	kernelManager.mesaControlUpdateStatus(ntramiteAut, EstatusTramite.CONFIRMADO.getCodigo());
+        	
+        	mensajeRespuesta = "P&oacute;liza emitida: "+nmpoliexEmitida;
+        	
+			success=true;
+		}
+		catch(Exception ex)
+		{
+			logger.error("error al autorizar emision",ex);
+			success = false;
+			mensajeRespuesta = ex.getMessage();
+		}
+		
+		logger.debug(""
+				+ "\n###### autorizaEmision ######"
+				+ "\n#############################"
+				);
 		return SUCCESS;
 	}
 	
@@ -1697,12 +2037,46 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 	public String getCdatribuRol()
 	{
-		return ResultadoCotizacion4Action.cdatribuRol;
+		String cdatribu = null;
+		try
+		{
+			if(auxiliarProductoCdtipsit==null)
+			{
+				cdatribu = ConstantesProducto.ramo("2").getCdatribuParentesco();
+			}
+			else
+			{
+				cdatribu = ConstantesProducto.ramo(auxiliarProductoCdramo).getCdatribuParentesco();
+			}
+		}
+		catch(Exception ex)
+		{
+			log.error("error en getCdatribuRol",ex);
+			cdatribu = "";
+		}
+		return cdatribu;
 	}
 	
 	public String getCdatribuSexo()
 	{
-		return ResultadoCotizacion4Action.cdatribuSexo;
+		String cdatribu = null;
+		try
+		{
+			if(auxiliarProductoCdtipsit==null)
+			{
+				cdatribu = ConstantesProducto.ramo("2").getCdatribuSexo();
+			}
+			else
+			{
+				cdatribu = ConstantesProducto.ramo(auxiliarProductoCdramo).getCdatribuSexo();
+			}
+		}
+		catch(Exception ex)
+		{
+			log.error("error en getCdatribuSexo",ex);
+			cdatribu = "";
+		}
+		return cdatribu;
 	}
 
 	public List<Map<String, Object>> getList1() {
@@ -1795,6 +2169,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 
 	public void setCatalogosManager(CatalogosManager catalogosManager) {
 		this.catalogosManager = catalogosManager;
+	}
+
+	public void setConsultasManager(ConsultasManager consultasManager) {
+		this.consultasManager = consultasManager;
 	}
 
 }
