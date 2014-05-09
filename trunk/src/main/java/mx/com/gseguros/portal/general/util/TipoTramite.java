@@ -17,7 +17,8 @@ public enum TipoTramite {
 	CAMBIO_FORMA_PAGO("13"),
 	AUTORIZACION_SERVICIOS("14"),
 	ENDOSO_PARADO_POR_AUTORIZACION("15"),
-	SINIESTRO("16");
+	SINIESTRO("16"),
+	EMISION_EN_ESPERA("17");
 
 	private String cdtiptra;
 
