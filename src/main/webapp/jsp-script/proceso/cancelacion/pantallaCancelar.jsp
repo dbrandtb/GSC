@@ -1,93 +1,134 @@
 <%@ include file="/taglibs.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <script>
-    ///////////////////////
     ////// variables //////
-    /*///////////////////*/
     //var panCanUrlCat        = '<s:url namespace="/flujocotizacion"  action="cargarCatalogos" />';
     var panCanUrlCat        = '<s:url namespace="/catalogos"        action="obtieneCatalogo" />';
     var panCanUrlCancelar   = '<s:url namespace="/cancelacion"      action="cancelacionUnica" />';
-    /*
-    var panCanInput         = [];
-    panCanInput['cdunieco'] = '<s:property value="smap1.cdunieco" />';
-    panCanInput['cdramo']   = '<s:property value="smap1.cdramo"   />';
-    panCanInput['cdtipsit'] = '<s:property value="smap1.cdtipsit" />';
-    panCanInput['estado']   = '<s:property value="smap1.estado"   />';
-    panCanInput['nmpoliza'] = '<s:property value="smap1.NMPOLIZA" />';
-    panCanInput['dsunieco'] = '<s:property value="smap1.dsunieco" />';
-    panCanInput['dsramo']   = '<s:property value="smap1.dsramo"   />';
-    panCanInput['dstipsit'] = '<s:property value="smap1.dstipsit" />';
-    panCanInput['nmpoliex'] = '<s:property value="smap1.nmpoliex" />';
-    debug('panCanInput:',panCanInput);
-    */
+    var panCanInputFecha;
+    var panCanForm;
     
     // Obtenemos el contenido en formato JSON de la propiedad solicitada:
     var pancanInSmap1=<s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
     debug('pancanInSmap1',pancanInSmap1);
-    
-    /*///////////////////*/
     ////// variables //////
-    ///////////////////////
     
-    ///////////////////////
     ////// funciones //////
-    /*///////////////////*/
-    
-    /*///////////////////*/
+    function comboMotivocambio(combo,nue,ant)
+    {
+    	debug('>comboMotivocambio:',combo,ant,nue);
+    	if(nue=='22')
+    	{
+    		debug(22);
+    		panCanInputFecha.setValue(new Date());
+    		panCanInputFecha.setReadOnly(true);
+    	}
+    	else if(nue=='24')
+    	{
+    		debug(24);
+    		panCanInputFecha.setValue(new Date());
+            panCanInputFecha.setReadOnly(true);
+            panCanForm.setLoading(true);
+            Ext.Ajax.request(
+       	    {
+       	        url       : _global_urlConsultaDinamica
+       	        ,jsonData :
+       	        {
+       	             stringMap :
+       	             {
+       	                 nombreStoredProcedure : 'PKG_SATELITES.P_VAL_CANC_PRORR_CON_DER'           
+       	             }
+       	             ,linkedObjectMap :
+       	             {
+       	            	 param1  : pancanInSmap1.CDUNIAGE
+       	            	 ,param2 : pancanInSmap1.CDRAMO
+       	            	 ,param3 : pancanInSmap1.ESTADO
+       	            	 ,param4 : pancanInSmap1.NMPOLIZA
+       	             }
+       	         }
+       	        ,success  : function(response)
+       	        {
+       	        	panCanForm.setLoading(false);
+       	            jsonData = Ext.decode(response.responseText);
+       	            if(jsonData.success)
+       	            {
+       	            }
+       	            else
+       	            {
+       	                mensajeError(jsonData.mensaje);
+       	                combo.setValue('22');
+       	            }
+       	        }
+       	        ,failure  : function()
+       	        {
+       	        	panCanForm.setLoading(false);
+       	            errorComunicacion();
+       	            combo.setValue('22');
+       	        }
+       	    });
+    	}
+    	else if(nue=='25')
+    	{
+    		debug(25);
+    		panCanInputFecha.setValue(new Date());
+            panCanInputFecha.setReadOnly(false);
+            panCanForm.setLoading(true);
+            Ext.Ajax.request(
+            {
+                url       : _global_urlConsultaDinamica
+                ,jsonData :
+                {
+                     stringMap :
+                     {
+                         nombreStoredProcedure : 'PKG_SATELITES.P_VAL_CANC_PRORR_SIN_DER'           
+                     }
+                     ,linkedObjectMap :
+                     {
+                         param1  : pancanInSmap1.CDUNIAGE
+                         ,param2 : pancanInSmap1.CDRAMO
+                         ,param3 : pancanInSmap1.ESTADO
+                         ,param4 : pancanInSmap1.NMPOLIZA
+                     }
+                 }
+                ,success  : function(response)
+                {
+                	panCanForm.setLoading(false);
+                    jsonData = Ext.decode(response.responseText);
+                    if(jsonData.success)
+                    {
+                    }
+                    else
+                    {
+                        mensajeError(jsonData.mensaje);
+                        combo.setValue('22');
+                    }
+                }
+                ,failure  : function()
+                {
+                	panCanForm.setLoading(false);
+                    errorComunicacion();
+                    combo.setValue('22');
+                }
+            });
+    	}
+    	debug('<comboMotivocambio');
+    }
     ////// funciones //////
-    ///////////////////////
     
 Ext.onReady(function()
 {
     
-    /////////////////////
     ////// modelos //////
-    /*/////////////////*/
-    /*/////////////////*/
     ////// modelos //////
-    /////////////////////
     
-    ////////////////////
     ////// stores //////
-    /*////////////////*/
-    
-    /*////////////////*/
     ////// stores //////
-    ////////////////////
     
-    /////////////////////////
     ////// componentes //////
-    /*/////////////////////*
-    Ext.define('Panel1',{
-        extend:'Ext.panel.Panel',
-        title:'Objeto asegurado',
-        layout:{
-            type:'column',
-            columns:2
-        },
-        frame:false,
-        style:'margin:5px;',
-        collapsible:true,
-        titleCollapse:true,
-        <s:property value="item2" />
-    });
-    Ext.define('FormPanel',{
-        extend:'Ext.form.Panel',
-        renderTo:'maindiv',
-        frame:false,
-        buttonAlign:'center',
-        items:[
-            new Panel1()
-        ]
-    });
-    /*/////////////////////*/
     ////// componentes //////
-    /////////////////////////
     
-    ///////////////////////
     ////// contenido //////
-    /*///////////////////*/
-    Ext.create('Ext.form.Panel',
+    panCanForm = Ext.create('Ext.form.Panel',
     {
     	renderTo     : 'panCanDivPri'
     	,id          : 'panCanFormPri'
@@ -104,74 +145,6 @@ Ext.onReady(function()
     	,items       :
     	[
     	    <s:property value="imap.itemsMarcocancelacionModelocandidata" />
-    	    /*
-    	    {
-    	    	xtype       : 'textfield'
-    	    	,fieldLabel : 'Sucursal'
-    	    	,readOnly   : true
-    	    	,value      : panCanInput['dsunieco']
-    	    }
-    	    ,{
-    	        xtype       : 'textfield'
-                ,fieldLabel : 'Producto'
-                ,readOnly   : true
-                ,value      : panCanInput['dsramo']
-            }
-    	    ,{
-                xtype       : 'textfield'
-                ,fieldLabel : 'Modalidad'
-                ,readOnly   : true
-                ,value      : panCanInput['dstipsit']
-            }
-    	    ,{
-                xtype       : 'textfield'
-                ,fieldLabel : 'P&oacute;liza'
-                ,readOnly   : true
-                ,value      : panCanInput['nmpoliex']
-            }
-    	    ,Ext.create('Ext.form.field.ComboBox',
-	        {
-	            fieldLabel      : 'Motivo de cancelaci&oacute;n'
-	            ,name           : 'smap1.motivo'
-	            ,displayField   : 'value'
-	            ,valueField     : 'key'
-	            ,allowBlank     : false
-	            ,forceSelection : true
-	            ,queryMode      : 'local'
-	            ,store          : Ext.create('Ext.data.Store',
-	            {
-	                model     : 'Generic'
-	                ,autoLoad : true
-	                ,proxy    :
-	                {
-	                    type         : 'ajax'
-	                    ,url         : panCanUrlCat
-	                    ,extraParams : {catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MOTIVOS_CANCELACION"/>'}
-	                    ,reader      :
-	                    {
-	                        type  : 'json'
-	                        ,root : 'lista'
-	                    }
-	                }
-	            })
-	        })
-	        ,{
-    	    	xtype       : 'datefield'
-    	    	,name       : 'smap1.fecha'
-    	    	,fieldLabel : 'Fecha de cancelaci&oacute;n'
-    	    	,format     : 'd/m/Y'
-    	    	,value      : new Date()
-    	    	,allowBlank : false
-    	    }
-    	    ,{
-    	    	xtype       : 'textarea'
-    	    	,name       : 'smap1.comentarios'
-    	    	,fieldLabel : 'Comentarios'
-    	    	,allowBlank : true
-    	    	,colspan    : 2
-    	    	,width      : 520
-    	    }
-    	    */
     	]
     	,buttonAlign : 'center'
     	,buttons     :
@@ -188,17 +161,6 @@ Ext.onReady(function()
     	    			form.setLoading(true);
     	    			form.submit(
     	    			{
-    	    				/*
-    	    				params   :
-    	    				{
-    	    					'smap1.cdunieco'  : panCanInput['cdunieco']
-    	    			        ,'smap1.cdramo'   : panCanInput['cdramo']
-    	    			        ,'smap1.cdtipsit' : panCanInput['cdtipsit']
-    	    			        ,'smap1.estado'   : panCanInput['estado']
-    	    			        ,'smap1.nmpoliza' : panCanInput['nmpoliza']
-    	    				}
-    	    				,
-    	    				*/
     	    				success : function(formu,action)
                             {
     	    					form.setLoading(false);
@@ -253,47 +215,17 @@ Ext.onReady(function()
     	    }
     	]
     });
-    /*///////////////////*/
-    ////// contenido //////
-    ///////////////////////
     
-    //////////////////////
+    var comboMotivoCanc = panCanForm.items.items[6];
+    debug('comboMotivoCanc:',comboMotivoCanc);
+    panCanInputFecha = panCanForm.items.items[9];
+    debug('panCanInputFecha:',panCanInputFecha);
+    comboMotivoCanc.addListener('change',comboMotivocambio);
+    comboMotivocambio(comboMotivoCanc,'22');
+    ////// contenido //////
+    
     ////// cargador //////
-    /*//////////////////*
-    Ext.define('LoaderForm',
-    {
-        extend:'Modelo1',
-        proxy:
-        {
-            extraParams:{
-            },
-            type:'ajax',
-            url : urlCargar,
-            reader:{
-                type:'json'
-            }
-        }
-    });
-
-    var loaderForm=Ext.ModelManager.getModel('LoaderForm');
-    loaderForm.load(123, {
-        success: function(resp) {
-            //console.log(resp);
-            formPanel.loadRecord(resp);
-        },
-        failure:function()
-        {
-            Ext.Msg.show({
-                title:'Error',
-                icon: Ext.Msg.ERROR,
-                msg: 'Error al cargar',
-                buttons: Ext.Msg.OK
-            });
-        }
-    });
-    /*//////////////////*/
     ////// cargador //////
-    //////////////////////
     
 });
 </script>
