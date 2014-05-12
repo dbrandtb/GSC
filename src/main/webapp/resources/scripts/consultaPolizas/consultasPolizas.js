@@ -494,7 +494,7 @@ Ext.onReady(function() {
             {type:'string', name:'nmsituac'},
             {type:'string', name:'cdtipsit'},
             {type:'string', name:'sexo'},
-            {type:'string', name:'titular'},
+            {type:'string', name:'nombre'},
             {type:'string', name:'status'},
             {type:'string', name:'parentesco'}
         ]
@@ -528,7 +528,7 @@ Ext.onReady(function() {
             //{text:'Rol',dataIndex:'dsrol',width:130 , align:'left'},
             {text:'Tipo de <br/>asegurado',dataIndex:'parentesco',width:100 , align:'left'},
             {text:'Clave <br/>Asegurado',dataIndex:'cdperson',width:100,align:'left'},
-            {text:'Nombre',dataIndex:'titular',width:200,align:'left'},
+            {text:'Nombre',dataIndex:'nombre',width:200,align:'left'},
             {text:'Estatus',dataIndex:'status',width:100,align:'left'},
             {text:'RFC',dataIndex:'cdrfc',width:100,align:'left'},
             {text:'Sexo',dataIndex:'sexo',width:60 , align:'left'},
@@ -582,7 +582,7 @@ Ext.onReady(function() {
             		pnlDatosTatrisit.getLoader().load({
             			params: values
             		});
-            		pnlDatosTatrisit.setTitle('Detalle de ' + record.get('titular') + ':');
+            		pnlDatosTatrisit.setTitle('Detalle de ' + record.get('nombre') + ':');
             	}
             }
         ]

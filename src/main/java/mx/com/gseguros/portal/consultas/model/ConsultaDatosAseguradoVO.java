@@ -20,7 +20,7 @@ public class ConsultaDatosAseguradoVO implements Serializable{
 	private String cdperson;
 	private String nmsituac;
 	private String cdtipsit;
-	private String titular;
+	private String nombre;
 	private String cdrfc;
 	private String cdrol;
 	private String dsrol;
@@ -70,12 +70,12 @@ public class ConsultaDatosAseguradoVO implements Serializable{
 		this.cdtipsit = cdtipsit;
 	}
 
-	public String getTitular() {
-		return titular;
+	public String getNombre() {
+		return nombre;
 	}
 
-	public void setTitular(String titular) {
-		this.titular = titular;
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
 	}
 
 	public String getCdrfc() {

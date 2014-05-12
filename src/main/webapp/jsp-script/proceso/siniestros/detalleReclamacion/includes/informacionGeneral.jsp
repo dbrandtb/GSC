@@ -20,16 +20,16 @@
 	var _PAGO_DIRECTO = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@DIRECTO.codigo" />';
 	var _REEMBOLSO    = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@REEMBOLSO.codigo" />';
 
-	var _URL_CATALOGOS              = '<s:url namespace="/catalogos"       action="obtieneCatalogo" />';
-	var _URL_INFO_GRAL_SINIESTRO    = '<s:url namespace="/siniestros"      action="obtieneDatosGeneralesSiniestro" />';
-	var _URL_ACTUALIZA_INFO_GRAL_SIN= '<s:url namespace="/siniestros"      action="actualizaDatosGeneralesSiniestro" />';
-	var _URL_LOADER_VER_COBERTURAS  = '<s:url namespace="/consultasPoliza" action="includes/verCoberturasPoliza" />';
-	var _URL_LOADER_VER_EXCLUSIONES = '<s:url namespace="/consultasPoliza" action="includes/verExclusiones" />';
-	var _URL_LOADER_HISTORIAL_RECLAMACIONES = '<s:url namespace="/siniestros" action="includes/historialReclamaciones" />';
+	var _URL_CATALOGOS                      = '<s:url namespace="/catalogos"       action="obtieneCatalogo" />';
+	var _URL_INFO_GRAL_SINIESTRO            = '<s:url namespace="/siniestros"      action="obtieneDatosGeneralesSiniestro" />';
+	var _URL_ACTUALIZA_INFO_GRAL_SIN        = '<s:url namespace="/siniestros"      action="actualizaDatosGeneralesSiniestro" />';
+	var _URL_LOADER_VER_COBERTURAS          = '<s:url namespace="/consultasPoliza" action="includes/verCoberturasPoliza" />';
+	var _URL_LOADER_VER_EXCLUSIONES         = '<s:url namespace="/consultasPoliza" action="includes/verExclusiones" />';
+	var _URL_LOADER_HISTORIAL_RECLAMACIONES = '<s:url namespace="/siniestros"      action="includes/historialReclamaciones" />';
 	var _URL_LOADER_DATOS_POLIZA            = '<s:url namespace="/consultasPoliza" action="includes/ventanaDatosPoliza" />';
 	var _URL_LOADER_ASEGURADOS_POLIZA       = '<s:url namespace="/consultasPoliza" action="includes/ventanaAseguradosPoliza" />';
-	var _URL_LOADER_CONSULTA_DOCUMENTOS     = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza" />';
-    var _URL_LOADER_RECIBOS                 = '<s:url namespace="/general" action="loadRecibos" />';
+	var _URL_LOADER_CONSULTA_DOCUMENTOS     = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza" />';
+    var _URL_LOADER_RECIBOS                 = '<s:url namespace="/general"         action="includes/loadRecibos" />';
 
 	Ext.onReady(function() {
 		
