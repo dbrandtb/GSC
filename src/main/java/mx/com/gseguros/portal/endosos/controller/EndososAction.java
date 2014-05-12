@@ -15,6 +15,7 @@ import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.portal.cancelacion.service.CancelacionManager;
+import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.controller.ComplementariosCoberturasAction;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
@@ -60,6 +61,7 @@ public class EndososAction extends PrincipalCoreAction
 	private String                   error;
 	private CancelacionManager       cancelacionManager;
 	private boolean                  endosoSimple = false;
+	private ConsultasManager         consultasManager;
 
 	//////////////////////////////
 	////// marco de endosos //////
@@ -3505,6 +3507,61 @@ public class EndososAction extends PrincipalCoreAction
 					fechaEndosoD,
 					cdtipsit);
 		    
+			List<Map<String,String>>invalidos = new ArrayList<Map<String,String>>();
+			if(alta)
+			{
+				LinkedHashMap<String,Object> paramsValidaEdad=new LinkedHashMap<String,Object>();
+				paramsValidaEdad.put("1cdunieco" , cdunieco);
+				paramsValidaEdad.put("2cdramo"   , cdramo);
+				paramsValidaEdad.put("3estado"   , estado);
+				paramsValidaEdad.put("4nmpoliza" , nmpoliza);
+				paramsValidaEdad.put("5nmsuplem" , nmsuplem);
+				invalidos=consultasManager.consultaDinamica("PKG_CONSULTA.P_VALIDA_EDAD_ASEGURADOS", paramsValidaEdad);
+				
+				if(invalidos.size()>0)
+				{
+					String cdtipsup = alta ? TipoEndoso.ALTA_ASEGURADOS.getCdTipSup().toString()
+						     : TipoEndoso.BAJA_ASEGURADOS.getCdTipSup().toString();
+					
+					String dssuplem="";
+					// Obtenemos TODOS los nombres de los endosos:
+					List<Map<String,String>>endosos=endososManager.obtenerNombreEndosos("");
+					for(Map<String,String>endoso:endosos)
+					{
+						if(endoso.get("CDTIPSUP").equalsIgnoreCase(cdtipsup))
+						{
+							dssuplem=endoso.get("DSTIPSUP");
+						}
+					}
+					
+					Map<String,Object>paramsMesaControl=new HashMap<String,Object>();
+					paramsMesaControl.put("pv_cdunieco_i"   , cdunieco);
+					paramsMesaControl.put("pv_cdramo_i"     , cdramo);
+					paramsMesaControl.put("pv_estado_i"     , estado);
+					paramsMesaControl.put("pv_nmpoliza_i"   , nmpoliza);
+					paramsMesaControl.put("pv_nmsuplem_i"   , nmsuplem);
+					paramsMesaControl.put("pv_cdsucadm_i"   , cdunieco);
+					paramsMesaControl.put("pv_cdsucdoc_i"   , cdunieco);
+					paramsMesaControl.put("pv_cdtiptra_i"   , "15");
+					paramsMesaControl.put("pv_ferecepc_i"   , fechaEndosoD);
+					paramsMesaControl.put("pv_cdagente_i"   , null);
+					paramsMesaControl.put("pv_referencia_i" , null);
+					paramsMesaControl.put("pv_nombre_i"     , null);
+					paramsMesaControl.put("pv_festatus_i"   , fechaEndosoD);
+					paramsMesaControl.put("pv_status_i"     , "8");
+					paramsMesaControl.put("pv_comments_i"   , "");
+					paramsMesaControl.put("pv_nmsolici_i"   , null);
+					paramsMesaControl.put("pv_cdtipsit_i"   , cdtipsit);
+					paramsMesaControl.put("pv_otvalor01"    , ntramite);
+					paramsMesaControl.put("pv_otvalor02"    , cdtipsup);
+					paramsMesaControl.put("pv_otvalor03"    , dssuplem);
+					paramsMesaControl.put("pv_otvalor04"    , nsuplogi);
+					paramsMesaControl.put("pv_otvalor05"    , cdusuari);
+					WrapperResultados wr=kernelManager.PMovMesacontrol(paramsMesaControl);
+					tramiteGenerado=(String) wr.getItemMap().get("ntramite");
+				}
+			}
+			
 			if(tramiteGenerado==null||tramiteGenerado.length()==0)
 			{
 			
@@ -3593,9 +3650,24 @@ public class EndososAction extends PrincipalCoreAction
 			}
 			else
 			{
-				mensaje="El endoso "+nsuplogi
-						+" se guard&oacute; en mesa de control para autorizaci&oacute;n "
-						+ "con n&uacute;mero de tr&aacute;mite "+tramiteGenerado;
+				String mensajeInvalido = "";
+				if(alta&&invalidos.size()>0)
+				{
+					Map<String,String>aseguradoInvalido=invalidos.get(0);
+					mensajeInvalido = " debido a que "+aseguradoInvalido.get("NOMBRE");
+					if(aseguradoInvalido.get("SUPERAMINI").substring(0, 1).equals("-"))
+					{
+						mensajeInvalido = mensajeInvalido + " no llega a la edad de "+aseguradoInvalido.get("EDADMINI")+" a&ntilde;os<br/>";
+					}
+					else
+					{
+						mensajeInvalido = mensajeInvalido + " supera la edad de "+aseguradoInvalido.get("EDADMAXI")+" a&ntilde;os<br/>";
+					}
+				}
+					mensaje="El endoso "+nsuplogi
+							+" se guard&oacute; en mesa de control para autorizaci&oacute;n"
+							+" con n&uacute;mero de tr&aacute;mite "+tramiteGenerado
+							+mensajeInvalido;
 			}
 			
 			success=true;
@@ -7333,6 +7405,10 @@ public class EndososAction extends PrincipalCoreAction
 
 	public void setEndosoSimple(boolean endosoSimple) {
 		this.endosoSimple = endosoSimple;
+	}
+
+	public void setConsultasManager(ConsultasManager consultasManager) {
+		this.consultasManager = consultasManager;
 	}
 	
 }
