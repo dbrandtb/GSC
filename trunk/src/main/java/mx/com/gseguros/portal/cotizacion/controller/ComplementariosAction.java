@@ -1284,6 +1284,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			paramValidaEdadAsegu.put("2cdramo"   , cdramo);
 			paramValidaEdadAsegu.put("3estado"   , estado);
 			paramValidaEdadAsegu.put("4nmpoliza" , nmpoliza);
+			paramValidaEdadAsegu.put("5nmsuplem" , "0");
 			List<Map<String,String>> listaAseguradosEdadInvalida = consultasManager.consultaDinamica("PKG_CONSULTA.P_VALIDA_EDAD_ASEGURADOS", paramValidaEdadAsegu);
 			if(listaAseguradosEdadInvalida.size()>0)
 			{
