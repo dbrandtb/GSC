@@ -36,7 +36,7 @@
        	        {
        	             stringMap :
        	             {
-       	                 nombreStoredProcedure : 'PKG_SATELITES.P_VAL_CANC_PRORR_CON_DER'           
+       	                 nombreStoredProcedure : 'PKG_SATELITES.P_VALIDA_CANCELACION_A_PRORRATA'           
        	             }
        	             ,linkedObjectMap :
        	             {
@@ -80,7 +80,7 @@
                 {
                      stringMap :
                      {
-                         nombreStoredProcedure : 'PKG_SATELITES.P_VAL_CANC_PRORR_SIN_DER'           
+                         nombreStoredProcedure : 'PKG_SATELITES.P_VALIDA_CANCELACION_A_PRORRATA'           
                      }
                      ,linkedObjectMap :
                      {
