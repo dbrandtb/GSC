@@ -9,6 +9,7 @@
         <property name="pantallasManager"   ref="pantallasManagerImpl"/>
         <property name="cancelacionManager" ref="cancelacionManagerImpl"/>
         <property name="ice2sigsService"    ref="ice2sigsServiceImpl"></property>
+        <property name="consultasManager"   ref="consultasManagerImpl"></property>
     </bean>
     
 </beans>
