@@ -92,8 +92,6 @@
 		<pattern>/subirArchivoMostrarBarra.action</pattern>
 		<pattern>/jsp/extjs4/subirArchivoBarra.jsp</pattern>
 		
-		<pattern>/procesoemision/busquedaPoliza.action</pattern>
-		
 		<!-- mesa de control -->
 		<pattern>/mesacontrol/principal.action</pattern>
         <pattern>/jsp/extjs4/mesacontrol/principal.jsp</pattern>
@@ -112,6 +110,7 @@
         <pattern>/endosos/*.action</pattern>
         <pattern>/jsp-script/proceso/endosos/*.jsp</pattern>
         <pattern>/jsp-script/proceso/emision/cotizacion.jsp</pattern>
+        <pattern>/emision/cotizacion.action</pattern>
         
         <pattern>/siniestros/*.action</pattern>
         <pattern>/jsp-script/proceso/siniestros/*.jsp</pattern>
