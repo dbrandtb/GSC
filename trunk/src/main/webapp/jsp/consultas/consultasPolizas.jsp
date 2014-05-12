@@ -18,8 +18,8 @@
             var _URL_CONSULTA_DATOS_AGENTE =        '<s:url namespace="/consultasPoliza" action="consultaDatosAgente" />';
             var _URL_CONSULTA_RECIBOS_AGENTE =      '<s:url namespace="/consultasPoliza" action="consultaRecibosAgente" />';
             var _URL_CONSULTA_COPAGOS_POLIZA =      '<s:url namespace="/consultasPoliza" action="consultaCopagosPoliza" />';
-            var _URL_CONSULTA_DOCUMENTOS =          '<s:url namespace="/documentos" action="ventanaDocumentosPoliza" />';
-            var _URL_LOADER_RECIBOS      =          '<s:url namespace="/general" action="loadRecibos" />';
+            var _URL_CONSULTA_DOCUMENTOS =          '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza" />';
+            var _URL_LOADER_RECIBOS      =          '<s:url namespace="/general"         action="includes/loadRecibos" />';
             var _URL_LOADER_VER_EXCLUSIONES =       '<s:url namespace="/consultasPoliza" action="includes/verExclusiones" />';
             var _URL_LOADER_VER_TATRISIT    =       '<s:url namespace="/consultasPoliza" action="includes/verDatosTatrisit" />';
             
