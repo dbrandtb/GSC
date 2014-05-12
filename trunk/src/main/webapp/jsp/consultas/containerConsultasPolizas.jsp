@@ -8,7 +8,7 @@
     </head>
     <body>
     
-    <iframe src="${ctx}/procesoemision/busquedaPoliza.action" width="1000" height="710" frameborder="0" scrolling="no">
+    <iframe src="${ctx}/consultasPoliza/busquedaPoliza.action" width="1000" height="710" frameborder="0" scrolling="no">
     </iframe>
 
     </body>
