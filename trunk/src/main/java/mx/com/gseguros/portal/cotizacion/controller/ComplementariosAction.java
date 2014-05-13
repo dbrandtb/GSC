@@ -29,6 +29,7 @@ import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.util.ConstantesProducto;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.portal.general.util.ObjetoBD;
 import mx.com.gseguros.portal.general.util.Rango;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.general.util.Validacion;
@@ -1280,12 +1281,12 @@ public class ComplementariosAction extends PrincipalCoreAction
 			String cdpersonSesion = datUs.getCdperson();
 			
 			LinkedHashMap<String,Object>paramValidaEdadAsegu=new LinkedHashMap<String,Object>();
-			paramValidaEdadAsegu.put("1cdunieco" , cdunieco);
-			paramValidaEdadAsegu.put("2cdramo"   , cdramo);
-			paramValidaEdadAsegu.put("3estado"   , estado);
-			paramValidaEdadAsegu.put("4nmpoliza" , nmpoliza);
-			paramValidaEdadAsegu.put("5nmsuplem" , "0");
-			List<Map<String,String>> listaAseguradosEdadInvalida = consultasManager.consultaDinamica("PKG_CONSULTA.P_VALIDA_EDAD_ASEGURADOS", paramValidaEdadAsegu);
+			paramValidaEdadAsegu.put("param1", cdunieco);
+			paramValidaEdadAsegu.put("param2", cdramo);
+			paramValidaEdadAsegu.put("param3", estado);
+			paramValidaEdadAsegu.put("param4", nmpoliza);
+			paramValidaEdadAsegu.put("param5", "0");
+			List<Map<String,String>> listaAseguradosEdadInvalida = consultasManager.consultaDinamica(ObjetoBD.VALIDA_EDAD_ASEGURADOS, paramValidaEdadAsegu);
 			if(listaAseguradosEdadInvalida.size()>0)
 			{
 				mensajeRespuesta = "La p&oacute;liza se envi&oacute; a autorizaci&oacute;n debido a que:<br/>";

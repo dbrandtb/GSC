@@ -22,6 +22,7 @@ import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.portal.general.util.ObjetoBD;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
@@ -3516,7 +3517,7 @@ public class EndososAction extends PrincipalCoreAction
 				paramsValidaEdad.put("3estado"   , estado);
 				paramsValidaEdad.put("4nmpoliza" , nmpoliza);
 				paramsValidaEdad.put("5nmsuplem" , nmsuplem);
-				invalidos=consultasManager.consultaDinamica("PKG_CONSULTA.P_VALIDA_EDAD_ASEGURADOS", paramsValidaEdad);
+				invalidos=consultasManager.consultaDinamica(ObjetoBD.VALIDA_EDAD_ASEGURADOS, paramsValidaEdad);
 				
 				if(invalidos.size()>0)
 				{

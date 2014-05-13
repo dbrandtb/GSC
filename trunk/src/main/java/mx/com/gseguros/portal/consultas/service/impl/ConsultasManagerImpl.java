@@ -7,6 +7,7 @@ import java.util.Map;
 
 import mx.com.gseguros.portal.consultas.dao.ConsultasDAO;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
+import mx.com.gseguros.portal.general.util.ObjetoBD;
 
 import org.apache.log4j.Logger;
 
@@ -17,15 +18,15 @@ public class ConsultasManagerImpl implements ConsultasManager
 	private ConsultasDAO consultasDAO;
 	
 	@Override
-	public List<Map<String,String>> consultaDinamica(String storedProcedure,LinkedHashMap<String,Object>params) throws Exception
+	public List<Map<String,String>> consultaDinamica(ObjetoBD objetoBD,LinkedHashMap<String,Object>params) throws Exception
 	{
 		logger.debug(""
 				+ "\n##############################"
 				+ "\n###### consultaDinamica ######"
 				);
-		logger.debug("storedProcedure: "+storedProcedure);
+		logger.debug("storedProcedure: "+ objetoBD.getNombre());
 		logger.debug("params: "+params);
-		List<Map<String,String>> lista = consultasDAO.consultaDinamica(storedProcedure,params);
+		List<Map<String,String>> lista = consultasDAO.consultaDinamica(objetoBD.getNombre(), params);
 		if(lista==null)
 		{
 			lista = new ArrayList<Map<String,String>>();

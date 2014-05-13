@@ -5,10 +5,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
-
-import org.apache.log4j.Logger;
-import org.apache.struts2.ServletActionContext;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.UserVO;
@@ -17,6 +13,10 @@ import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.portal.general.util.ObjetoBD;
+
+import org.apache.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
 
 public class ConsultasAction extends PrincipalCoreAction
 {
@@ -54,7 +54,7 @@ public class ConsultasAction extends PrincipalCoreAction
 		logger.info("mapaLigadoObjetoEntrada: "+mapaLigadoObjetoEntrada);
 		try
 		{
-			listaMapasStringSalida = consultasManager.consultaDinamica("PKG_CONSULTA.P_GET_DATOS_PROVEEDORES", mapaLigadoObjetoEntrada);
+			listaMapasStringSalida = consultasManager.consultaDinamica(ObjetoBD.OBTIENE_DATOS_PROVEEDORES, mapaLigadoObjetoEntrada);
 		}
 		catch(Exception ex)
 		{
@@ -120,7 +120,7 @@ public class ConsultasAction extends PrincipalCoreAction
 		logger.info("mapaLigadoObjetoEntrada: "+mapaLigadoObjetoEntrada);
 		try
 		{
-			listaMapasStringSalida = consultasManager.consultaDinamica("PKG_CONSULTA.P_GET_DATOS_FACTURAS", mapaLigadoObjetoEntrada);
+			listaMapasStringSalida = consultasManager.consultaDinamica(ObjetoBD.OBTIENE_DATOS_FACTURAS, mapaLigadoObjetoEntrada);
 		}
 		catch(Exception ex)
 		{
@@ -191,8 +191,8 @@ public class ConsultasAction extends PrincipalCoreAction
 			{
 				throw new Exception("No se recibieron datos");
 			}
-			String nombreStoredProcedure = stringMap.get("nombreStoredProcedure");
-			stringList = consultasManager.consultaDinamica(nombreStoredProcedure, linkedObjectMap);
+			ObjetoBD objetoBD = ObjetoBD.valueOf( stringMap.get("accion") );
+			stringList = consultasManager.consultaDinamica(objetoBD, linkedObjectMap);
 			success    = true;
 		}
 		catch(Exception ex)

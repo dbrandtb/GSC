@@ -1,0 +1,37 @@
+package mx.com.gseguros.portal.general.util;
+/**
+ * Enum de Objetos de Base de Datos
+ */
+public enum ObjetoBD {
+	
+	OBTIENE_DATOS_FACTURAS   ("PKG_CONSULTA.P_GET_DATOS_FACTURAS", "SP"),
+	OBTIENE_DATOS_PROVEEDORES("PKG_CONSULTA.P_GET_DATOS_PROVEEDORES", "SP"),
+	OBTIENE_DATOS_REEXPED_DOC("PKG_CONSULTA.P_OBTIENE_DATOS_REEXPED_DOC", "SP"),
+	OBTIENE_EMAIL            ("PKG_CONSULTA.P_OBTIENE_EMAIL", "SP"),
+	VALIDA_CANC_A_PRORRATA   ("PKG_SATELITES.P_VALIDA_CANC_A_PRORRATA", "SP"),
+	VALIDA_EDAD_ASEGURADOS   ("PKG_CONSULTA.P_VALIDA_EDAD_ASEGURADOS", "SP");
+	
+
+	/**
+	 * Nombre del objeto de BD
+	 */
+	private String nombre;
+	
+	/**
+	 * Tipo del objeto de BD
+	 */
+	private String tipo;
+
+	private ObjetoBD(String nombre, String tipo) {
+		this.nombre = nombre;
+		this.tipo   = tipo;
+	}
+
+	public String getNombre() {
+		return nombre;
+	}
+
+	public String getTipo() {
+		return tipo;
+	}
+}

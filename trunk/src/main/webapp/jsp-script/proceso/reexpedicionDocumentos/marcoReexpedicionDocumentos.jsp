@@ -226,7 +226,7 @@ function _p16_buscarPolizas()
 	if(valido)
 	{
 		_p16_getGridPolizas().getStore().removeAll();
-		consultaDinamica('PKG_CONSULTA.P_OBTIENE_DATOS_REEXPED_DOC',form.getValues(),form,function(lista)
+		consultaDinamica(Accion.ObtieneDatosReexpDoc, form.getValues(), form, function(lista)
 		{
 			debug('>callback');
 			_p16_getGridPolizas().getStore().loadData(lista);

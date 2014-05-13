@@ -5,6 +5,17 @@
 var _global_urlConsultaDinamica = '<s:url namespace="/consultas" action="consultaDinamica" />';
 
 /* ********** CATALOGOS JS ******************** */
+
+// Catalogo de ACCIONES PERSISTENTES:
+var Accion = {
+    ObtieneDatosFacturas      : '<s:property value="@mx.com.gseguros.portal.general.util.ObjetoBD@OBTIENE_DATOS_FACTURAS" />',
+    ObtieneDatosProveedores   : '<s:property value="@mx.com.gseguros.portal.general.util.ObjetoBD@OBTIENE_DATOS_PROVEEDORES" />',
+    ObtieneDatosReexpDoc      : '<s:property value="@mx.com.gseguros.portal.general.util.ObjetoBD@OBTIENE_DATOS_REEXPED_DOC" />',
+    ObtieneEmail              : '<s:property value="@mx.com.gseguros.portal.general.util.ObjetoBD@OBTIENE_EMAIL" />',
+    ValidaCancelacionProrrata : '<s:property value="@mx.com.gseguros.portal.general.util.ObjetoBD@VALIDA_CANC_A_PRORRATA" />',
+    ValidaEdadAsegurados      : '<s:property value="@mx.com.gseguros.portal.general.util.ObjetoBD@VALIDA_EDAD_ASEGURADOS" />'
+};
+
 // Nombre de catálogos:
 var Cat = {
     Agentes                   : '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@AGENTES" />',
