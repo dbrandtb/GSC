@@ -37,6 +37,7 @@ Ext.onReady(function() {
 					},{
                         xtype         : 'combo',
                         labelWidth    : 100,
+                        width         : 400,
                         name          : 'params.cdsisrol',
                         fieldLabel    : 'Rol',
                         hidden        : editMode,
