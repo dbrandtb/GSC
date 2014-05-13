@@ -1,8 +1,10 @@
 <%@ page language="java"%>
 <%@ taglib uri="/struts-tags" prefix="s" %>
 <script type="text/javascript">
-/* ********** CATALOGOS JS ******************** */
+/* ********** VARIABLES GLOBALES ************** */
+var _global_urlConsultaDinamica = '<s:url namespace="/consultas" action="consultaDinamica" />';
 
+/* ********** CATALOGOS JS ******************** */
 // Nombre de catálogos:
 var Cat = {
     Agentes                   : '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@AGENTES" />',

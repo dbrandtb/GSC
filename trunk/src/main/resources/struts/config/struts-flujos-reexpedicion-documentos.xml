@@ -5,13 +5,6 @@
         <action name="principal" class="reexpedicionDocumentosAction" method="principal">
             <result name="success">/jsp-script/proceso/reexpedicionDocumentos/marcoReexpedicionDocumentos.jsp</result>
         </action>
-        <action name="consultaDinamica" class="reexpedicionDocumentosAction" method="consultaDinamica">
-            <interceptor-ref name="json">
-                <param name="enableSMD">true</param>
-                <param name="ignoreSMDMethodInterfaces">false</param>
-            </interceptor-ref>
-            <result type="json" />
-        </action>
         <action name="regeneraMedicinaPreventiva" class="reexpedicionDocumentosAction" method="regeneraMedicinaPreventiva">
             <interceptor-ref name="json">
                 <param name="enableSMD">true</param>

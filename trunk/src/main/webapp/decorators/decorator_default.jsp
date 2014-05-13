@@ -7,9 +7,6 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <link href="${ctx}/resources/extjs4/resources/my-custom-theme/my-custom-theme-all.css" rel="stylesheet" type="text/css" />
         <link href="${ctx}/resources/extjs4/extra-custom-theme.css" rel="stylesheet" type="text/css" />
-        <script>
-            var _global_urlConsultaDinamica = '<s:url namespace="/reexpediciondocumentos" action="consultaDinamica" />';
-        </script>
         <script type="text/javascript" src="${ctx}/resources/extjs4/jquery-1.10.2.min.js"></script>
         <script type="text/javascript" src="${ctx}/resources/extjs4/ext-all.js"></script>
         <script type="text/javascript" src="${ctx}/resources/extjs4/locale/ext-lang-es.js"></script>
