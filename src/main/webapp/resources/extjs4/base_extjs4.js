@@ -250,16 +250,22 @@ function centrarVentanaInterna(ventana)
 	ventana.setPosition(ventana.getPosition()[0],y);
 }
 
-function consultaDinamica(nombreStoredProcedure,procedureParams,form,callback)
+/** 
+ * Realiza una consulta de acuerdo a la accion indicada
+ * @param accion   Accion a ejecutar
+ * @param inParams Parametros de entrada de la accion
+ * @return lista de elementos obtenidos al ejecutar la accion
+ */
+function consultaDinamica(accion,inParams,form,callback)
 {
-	debug('>consultaDinamica',nombreStoredProcedure,procedureParams);
+	debug('>consultaDinamica',accion,inParams);
 	var jsonData =
 	{
 		stringMap :
 		{
-			nombreStoredProcedure : nombreStoredProcedure			
+			accion : accion			
 		}
-	    ,linkedObjectMap : procedureParams
+	    ,linkedObjectMap : inParams
 	};
 	debug('datos a enviar:',jsonData);
 	if(form)

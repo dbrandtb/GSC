@@ -12,6 +12,7 @@ import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.portal.general.util.ObjetoBD;
 import mx.com.gseguros.portal.reexpedicionDocumentos.service.ReexpedicionDocumentosManager;
 import mx.com.gseguros.utils.HttpUtil;
 
@@ -212,7 +213,7 @@ public class ReexpedicionDocumentosAction extends PrincipalCoreAction
 			LinkedHashMap<String,Object> parametros = new LinkedHashMap<String,Object>();
 			parametros.put("param1","1");//el id del proceso que recibe el PL para regresar los correos a cuales se debe enviar
 			parametros.put("param2",stringMap.get("cdunieco"));
-			List<Map<String,String>> listaEmails = consultasManager.consultaDinamica("PKG_CONSULTA.P_OBTIENE_EMAIL", parametros);
+			List<Map<String,String>> listaEmails = consultasManager.consultaDinamica(ObjetoBD.OBTIENE_EMAIL, parametros);
 			String correos = "";
 			if(listaEmails!=null)
 			{
