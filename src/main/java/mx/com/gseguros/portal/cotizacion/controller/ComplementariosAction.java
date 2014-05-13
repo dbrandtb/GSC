@@ -904,6 +904,13 @@ public class ComplementariosAction extends PrincipalCoreAction
 						cdatribuFenacimi = "0"+cdatribuFenacimi;
 					}
 					valositAsegurado.put("pv_otvalor"+cdatribuFenacimi, (String)aseg.get("fenacimi"));
+					
+					String cdatribusSexo = ConstantesProducto.ramo(map1.get("pv_cdramo")).getCdatribuSexo();
+					if(cdatribusSexo.length()==1)
+					{
+						cdatribusSexo = "0"+cdatribusSexo;
+					}
+					valositAsegurado.put("pv_otvalor"+cdatribusSexo, (String)aseg.get("sexo"));
 					log.debug("se agregaron los nuevos");
 					
 					//convertir a string el total
