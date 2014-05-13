@@ -103,6 +103,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case PLANES:
 				case TIPO_MONEDA:
 				case TIPO_MENU:
+				case REFERENCIAS_TRAMITE_NUEVO:
 					lista = catalogosManager.getTmanteni(cat);
 	                break;
 				case MC_ESTATUS_TRAMITE:
