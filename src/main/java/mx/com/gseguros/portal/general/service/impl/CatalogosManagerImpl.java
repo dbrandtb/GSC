@@ -68,8 +68,8 @@ public class CatalogosManagerImpl implements CatalogosManager {
 	
 	
 	@Override
-	public List<GenericVO> obtieneRolesSistema() throws Exception {
-		return catalogosDAO.obtieneRolesSistema();
+	public List<GenericVO> obtieneRolesSistema(String dsRol) throws Exception {
+		return catalogosDAO.obtieneRolesSistema(dsRol);
 	}
 	
 	

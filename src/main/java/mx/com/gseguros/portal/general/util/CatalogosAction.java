@@ -135,7 +135,11 @@ public class CatalogosAction extends PrincipalCoreAction {
 					}
 					break;
 				case ROLES_SISTEMA:
-					lista = catalogosManager.obtieneRolesSistema();
+					String filtro = null;
+					if(params!=null){
+						filtro = params.get("dsRol");
+					}
+					lista = catalogosManager.obtieneRolesSistema(filtro);
 					break;
 				case ENDOSOS:
 					UserVO usuario = (UserVO)session.get("USUARIO");

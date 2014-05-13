@@ -25,7 +25,7 @@ public interface CatalogosManager {
 	
 	public List<GenericVO> obtieneAtributosRol(String cdAtribu, String cdTipSit ,String cdRamo, String valAnt, String cdRol) throws Exception;
 	
-	public List<GenericVO> obtieneRolesSistema() throws Exception;
+	public List<GenericVO> obtieneRolesSistema(String dsRol) throws Exception;
 	
 	public List<GenericVO> obtieneStatusTramite(Map<String,String> params) throws Exception;
 	
