@@ -4,10 +4,44 @@
 <script>
 </s:if>
 ////// variables //////
-var _4_urlAutorizarEmision = '<s:url namespace="/" action="autorizaEmision" />';
+var _4_urlAutorizarEmision = '<s:url namespace="/"           action="autorizaEmision"         />';
+var _4_urlVerDocumentos    = '<s:url namespace="/documentos" action="ventanaDocumentosPoliza" />';
 ////// variables //////
 
 ////// funciones //////
+function _4_onFolderClick(grid,rowIndex)
+{
+    debug(rowIndex);
+    var record=grid.getStore().getAt(rowIndex);
+    debug(record);
+    Ext.create('Ext.window.Window',
+    {
+        title        : 'Documentaci&oacute;n'
+        ,modal       : true
+        ,buttonAlign : 'center'
+        ,width       : 600
+        ,height      : 400
+        ,autoScroll  : true
+        ,loader      :
+        {
+            url       : _4_urlVerDocumentos
+            ,params   :
+            {
+                'smap1.nmpoliza'  : record.get('nmpoliza')&&record.get('nmpoliza').length>0?record.get('nmpoliza'):'0'
+                ,'smap1.cdunieco' : record.get('cdunieco')
+                ,'smap1.cdramo'   : record.get('cdramo')
+                ,'smap1.estado'   : record.get('estado')
+                ,'smap1.nmsuplem' : '0'
+                ,'smap1.ntramite' : record.get('parametros.pv_otvalor03')
+                ,'smap1.nmsolici' : record.get('nmsolici')&&record.get('nmsolici').length>0?record.get('nmsolici'):'0'
+                ,'smap1.tipomov'  : '0'
+            }
+            ,scripts  : true
+            ,autoLoad : true
+        }
+    }).show();
+}
+
 function _4_preVerComments(grid,rowIndex)
 {
 	debug('>_4_preVerComments');
