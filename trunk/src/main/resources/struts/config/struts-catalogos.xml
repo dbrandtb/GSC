@@ -217,6 +217,16 @@
                 </param>
             </result>
         </action>
+        
+        <action name="creaEditaRolSistema" class="usuarioAction" method="creaEditaRolSistema">
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    errorMessage,
+                    success
+                </param>
+            </result>
+        </action>
 
 	</package>
 

@@ -79,6 +79,17 @@ public class UsuarioAction extends PrincipalCoreAction{
 		return SUCCESS;
 	}
 	
+	public String creaEditaRolSistema() throws Exception {
+		try{
+			usuarioManager.creaEditaRolSistema(params);
+			success=true;
+		} catch(Exception e) {
+			logger.error(e.getMessage(), e);
+			errorMessage = "Error al guardar el Rol.";
+		}
+		return SUCCESS;
+	}
+	
 	public String guardaUsuario() throws Exception {
     	try{
         	usuarioManager.guardaUsuario(params);
