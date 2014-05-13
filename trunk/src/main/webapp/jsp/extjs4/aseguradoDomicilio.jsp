@@ -365,7 +365,10 @@ Ext.onReady(function(){
     
     if(inputNmsituacp4>0)//si es asegurado solo puede leer cp, estado y municipio
     {
-    	formPanelp4.items.items[2].items.items[1].setReadOnly(true);//cp
+    	if(inputCdtipsitp4!='MS')
+    	{
+    		formPanelp4.items.items[2].items.items[1].setReadOnly(true);//cp
+    	}
     	formPanelp4.items.items[2].items.items[2].setReadOnly(true);//estado
     	formPanelp4.items.items[2].items.items[3].setReadOnly(true);//municipio
     }

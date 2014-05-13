@@ -691,6 +691,10 @@ function _0_cotizar(boton)
 				{
 					var fecha='';
 					fecha+=value.getDate();
+					if((fecha+'x').length==2)//1x 
+					{
+						fecha = ('x'+fecha).replace('x','0');//x1=01 
+					}
 					fecha+='/';
 					fecha+=value.getMonth()+1<10?
 							(('x'+(value.getMonth()+1)).replace('x','0'))

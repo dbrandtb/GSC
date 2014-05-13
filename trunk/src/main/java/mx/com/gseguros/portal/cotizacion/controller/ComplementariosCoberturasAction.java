@@ -633,7 +633,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 			
 			gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			List<ComponenteVO>listaCamposDomicilio = pantallasManager.obtenerComponentes(
-					null, null, null, null, null, null, "ASEGURADO_DOMICILIO", "FORMULARIO", null);
+					null, null, smap1.get("pv_cdramo"), smap1.get("cdtipsit"), null, null, "ASEGURADO_DOMICILIO", "FORMULARIO", null);
 			
 			gc.generaComponentes(listaCamposDomicilio, true, false, true, false, false, false);
 			
