@@ -217,6 +217,7 @@ Ext.onReady(function()
     });
     
     var comboMotivoCanc = panCanForm.items.items[6];
+    comboMotivoCanc.width=400;
     debug('comboMotivoCanc:',comboMotivoCanc);
     panCanInputFecha = panCanForm.items.items[9];
     debug('panCanInputFecha:',panCanInputFecha);
