@@ -18,6 +18,7 @@ import mx.com.gseguros.portal.general.dao.impl.UsuarioDAOImpl;
 import mx.com.gseguros.portal.general.model.RolVO;
 import mx.com.gseguros.portal.general.model.UsuarioVO;
 import mx.com.gseguros.portal.general.service.UsuarioManager;
+import mx.com.gseguros.utils.Constantes;
 
 import org.apache.log4j.Logger;
 
@@ -28,6 +29,15 @@ public class UsuarioManagerImpl implements UsuarioManager {
 	
 	private UsuarioDAO usuarioDAO;
 	
+	
+	@Override
+	public boolean creaEditaRolSistema(Map<String, String> params) throws Exception {
+		if(Constantes.MSG_TITLE_OK.equals(usuarioDAO.creaEditaRolSistema(params))){
+			return true;
+		} else {
+			return false;
+		}
+	}
 	
 	@Override
 	public GenericVO guardaUsuario(Map<String, String> params) throws Exception {

@@ -13,6 +13,8 @@ import mx.com.gseguros.portal.general.model.UsuarioVO;
 
 public interface UsuarioManager {
 	
+	public boolean creaEditaRolSistema(Map<String, String> params) throws Exception;
+	
 	public GenericVO guardaUsuario(Map<String, String> params) throws Exception;
 
 	public List<UsuarioVO> obtieneUsuarios(Map<String, String> params) throws Exception;

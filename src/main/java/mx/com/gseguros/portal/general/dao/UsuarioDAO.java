@@ -13,6 +13,8 @@ import mx.com.gseguros.portal.general.model.UsuarioVO;
 
 public interface UsuarioDAO {
 
+	public String creaEditaRolSistema(Map params) throws DaoException;
+	
 	public GenericVO guardaUsuario(Map params) throws DaoException;
 
 	public List<UsuarioVO> obtieneUsuarios(Map params) throws DaoException;

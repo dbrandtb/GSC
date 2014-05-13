@@ -30,6 +30,29 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 	
 	
 	@Override
+	public String creaEditaRolSistema(Map params) throws DaoException {
+		try {
+			Map<String, Object> result = ejecutaSP(new CreaEditaRolSistema(getDataSource()), params);
+			return (String) result.get("pv_title_o");
+		} catch (Exception e) {
+			throw new DaoException(e.getMessage(), e);
+		}
+	}
+	
+	protected class CreaEditaRolSistema extends StoredProcedure {
+		
+		protected CreaEditaRolSistema(DataSource dataSource){
+			super(dataSource, "PKG_GENERA_USUARIO.P_MOV_TSISROL");
+			declareParameter(new SqlParameter("pv_accion_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdsisrol_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_dssisrol_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
 	public GenericVO guardaUsuario(Map params) throws DaoException {
 		try {
 			HashMap<String, Object> parametros = new HashMap<String, Object>();
