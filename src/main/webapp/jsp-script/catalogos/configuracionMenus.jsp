@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Configuracion de Menus por Rol</title>
+<title>Configuracion de Men&uacute;s por Rol</title>
 <script>
 ///////////////////////
 ////// variables //////
@@ -173,7 +173,7 @@ Ext.onReady(function()
     		            	if(buttonId == 'yes') {
     		            		Ext.Msg.show({
     		    		            title: 'Aviso',
-    		    		            msg: 'Se eliminar&aacute;n todos los Submenus asociados a este Men&uacute;',
+    		    		            msg: 'Se eliminar&aacute;n todos los Sub Men&uacute;s asociados a este Men&uacute;',
     		    		            buttons: Ext.Msg.YESNO,
     		    		            fn: function(buttonId, text, opt) {
     		    		            	if(buttonId == 'yes') {
@@ -228,7 +228,7 @@ Ext.onReady(function()
     });
 		
 	var panelMenus = Ext.create('Ext.panel.Panel',{
-		title: 'Administraci&oacute;n de Menus',
+		title: 'Administraci&oacute;n de Men&uacute;s',
 		defaults : {
 			style : 'margin : 5px;'
 		}
@@ -237,17 +237,17 @@ Ext.onReady(function()
 	    [{
 	    	layout: 'column',
 	    	border: false,
-	    	html:'<br/><strong>Agregar o editar URLs para Menus:</strong><br/>'
+	    	html:'<br/><strong>Agregar o editar URLs para Men&uacute;s:</strong><br/>'
 	     },{
 	    	xtype: 'button',
-	    	text : 'Agregar/Editar URLs para Menus',
-	    	tooltip: 'Agrega o edita las URLs para los menus',
+	    	text : 'Agregar/Editar URLs para Men&uacute;s',
+	    	tooltip: 'Agrega o edita las URLs para los Men&uacute;s',
 	    	handler: verEditarOpcionesURL
 	    },
 	     {
 	    	layout: 'column',
 	    	border: false,
-	    	html:'<br/><strong>Para configurar los Menus, primero seleccione un rol:</strong><br/>'
+	    	html:'<br/><strong>Para configurar los Men&uacute;s, primero seleccione un rol:</strong><br/>'
 	     },
 	     {
             xtype         : 'combobox',
@@ -870,8 +870,8 @@ Ext.onReady(function()
 			                        })
 			                    },{
 			            	    	xtype: 'button',
-			            	    	text : 'Agregar/Editar URLs para Menus',
-			            	    	tooltip: 'Agrega o edita las URLs para los menus',
+			            	    	text : 'Agregar/Editar URLs para Men&uacute;s',
+			            	    	tooltip: 'Agrega o edita las URLs para los Men&uacute;s',
 			            	    	handler: verEditarOpcionesURL
 			            	    }
 					        ]
@@ -957,7 +957,7 @@ Ext.onReady(function()
 		
 		var gridOpcionesLiga = Ext.create('Ext.grid.Panel',
 			    {
-		    	title : 'URLs existentes para Menus'
+		    	title : 'URLs existentes para Men&uacute;s'
 		    	,height : 300
 		    	,selType: 'checkboxmodel'
 		    	,store : opcionesLigaStore
@@ -1038,7 +1038,7 @@ Ext.onReady(function()
 		
 		
 			var windowOpcionesLiga = Ext.create('Ext.window.Window', {
-		          title: 'URLs de Menus',
+		          title: 'URLs de Men&uacute;s',
 		          modal:true,
 		          height : 450,
 		          width  : 800,
