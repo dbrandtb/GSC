@@ -79,6 +79,11 @@
         
         <action name="busquedaUsuarios" class="usuarioAction" method="obtieneUsuarios">
    			<result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                	usuarios.*,
+                    success
+                </param>
             </result>
         </action>
         
@@ -102,6 +107,10 @@
         
         <action name="guardaUsuario" class="usuarioAction" method="guardaUsuario">
             <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    success
+                </param>
             </result>
         </action>
         
@@ -151,31 +160,61 @@
         
         <action name="guardaOpcionLiga" class="menusAction" method="guardaOpcionLiga">
             <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    errorMessage,
+                    success
+                </param>
             </result>
         </action>
 
         <action name="guardaMenu" class="menusAction" method="guardaMenu">
             <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    errorMessage,
+                    success
+                </param>
             </result>
         </action>
 
         <action name="guardaOpMenu" class="menusAction" method="guardaOpcionMenu">
             <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    errorMessage,
+                    success
+                </param>
             </result>
         </action>
 
         <action name="eliminaOpcionLiga" class="menusAction" method="eliminaOpcionLiga">
             <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    errorMessage,
+                    success
+                </param>
             </result>
         </action>
         
         <action name="eliminaMenu" class="menusAction" method="eliminaMenu">
             <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    errorMessage,
+                    success
+                </param>
             </result>
         </action>
 
         <action name="eliminaOpMenu" class="menusAction" method="eliminaOpcionMenu">
             <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">
+                    errorMessage,
+                    success
+                </param>
             </result>
         </action>
 

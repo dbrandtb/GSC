@@ -133,7 +133,7 @@ Ext.onReady(function()
         },
         tbar: [{
             icon    : '${ctx}/resources/fam3icons/icons/add.png',
-            text    : 'Agregar Men&uacute;',
+            text    : 'Agregar',
             handler : function()
             {
             	if(Ext.isEmpty(panelMenus.down('[name=cdsisrol]').getValue())){
@@ -144,7 +144,7 @@ Ext.onReady(function()
             }
         },{
             icon    : '${ctx}/resources/fam3icons/icons/pencil.png',
-            text    : 'Editar Men&uacute;',
+            text    : 'Editar',
             handler : function()
             {
             	var model =  gridMenus.getSelectionModel();
@@ -158,11 +158,12 @@ Ext.onReady(function()
             }
         },{
             icon    : '${ctx}/resources/fam3icons/icons/delete.png',
-            text    : 'Eliminar Men&uacute;',
+            text    : 'Eliminar',
             scope   : this,
             handler : function (btn, e){
             	var model =  gridMenus.getSelectionModel();
             	if(model.hasSelection()){
+            		
             		
             		Ext.Msg.show({
     		            title: 'Aviso',
@@ -170,25 +171,36 @@ Ext.onReady(function()
     		            buttons: Ext.Msg.YESNO,
     		            fn: function(buttonId, text, opt) {
     		            	if(buttonId == 'yes') {
-    		            		Ext.Ajax.request({
-            						url: _UrlEliminaMenu,
-            						params: {
-            					    		'params.pv_cdmenu_i' : model.getLastSelected().get('CDMENU')
-            						},
-            						success: function(response, opt) {
-            							var jsonRes=Ext.decode(response.responseText);
+    		            		Ext.Msg.show({
+    		    		            title: 'Aviso',
+    		    		            msg: 'Se eliminar&aacute;n todos los Submenus asociados a este Men&uacute;',
+    		    		            buttons: Ext.Msg.YESNO,
+    		    		            fn: function(buttonId, text, opt) {
+    		    		            	if(buttonId == 'yes') {
+    		    		            		Ext.Ajax.request({
+    		            						url: _UrlEliminaMenu,
+    		            						params: {
+    		            					    		'params.pv_cdmenu_i' : model.getLastSelected().get('CDMENU')
+    		            						},
+    		            						success: function(response, opt) {
+    		            							var jsonRes=Ext.decode(response.responseText);
 
-            							if(jsonRes.success == true){
-            								mensajeCorrecto('Aviso','Se ha eliminado el menu correctamente.');
-    										recargaGridMenus();        							
-                   						}else {
-                   							mensajeError('No se pudo eliminar el menu.');
-                   						}
-            						},
-            						failure: function(){
-            							mensajeError('No se pudo eliminar el menu.');
-            						}
-            					});
+    		            							if(jsonRes.success == true){
+    		            								mensajeCorrecto('Aviso','Se ha eliminado el menu correctamente.');
+    		    										recargaGridMenus();        							
+    		                   						}else {
+    		                   							mensajeError('No se pudo eliminar el menu.');
+    		                   						}
+    		            						},
+    		            						failure: function(){
+    		            							mensajeError('No se pudo eliminar el menu.');
+    		            						}
+    		            					});
+    		    		            	}
+    		            			},
+    		    		            animateTarget: btn,
+    		    		            icon: Ext.Msg.WARNING
+    		        			});
     		            	}
             			},
     		            animateTarget: btn,
@@ -201,7 +213,7 @@ Ext.onReady(function()
             }
         },'-',{
             icon    : '${ctx}/resources/fam3icons/icons/user_edit.png',
-            text    : 'Ver/Editar Opciones Men&uacute;',
+            text    : 'Editar Opciones Men&uacute;',
             handler : function()
             {
             	var model =  gridMenus.getSelectionModel();
@@ -225,10 +237,11 @@ Ext.onReady(function()
 	    [{
 	    	layout: 'column',
 	    	border: false,
-	    	html:'<br/><strong>Agregar o editar URLs de las Opciones de Men&uacute;:</strong><br/>'
+	    	html:'<br/><strong>Agregar o editar URLs para Menus:</strong><br/>'
 	     },{
 	    	xtype: 'button',
-	    	text : 'Ver y Editar Opciones Liga/URL',
+	    	text : 'Agregar/Editar URLs para Menus',
+	    	tooltip: 'Agrega o edita las URLs para los menus',
 	    	handler: verEditarOpcionesURL
 	    },
 	     {
@@ -237,7 +250,7 @@ Ext.onReady(function()
 	    	html:'<br/><strong>Para configurar los Menus, primero seleccione un rol:</strong><br/>'
 	     },
 	     {
-            xtype         : 'combo',
+            xtype         : 'combobox',
             labelWidth    : 100,
             width         : 400,
             name          : 'cdsisrol',
@@ -245,8 +258,9 @@ Ext.onReady(function()
             valueField    : 'key',
             displayField  : 'value',
             forceSelection: true,
-            queryMode     :'local',
-            //editable      : false,
+            queryMode   : 'remote',
+            queryParam  : 'params.dsRol',
+            minChars    : 3,
             forceSelection: true,
             typeAhead     : true,
             store         : Ext.create('Ext.data.Store', {
@@ -359,7 +373,7 @@ Ext.onReady(function()
 	          bodyStyle:'padding:15px;',
 	          buttons:[{
 	                 text: 'Guardar',
-	                 icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
+	                 icon:_CONTEXT+'/resources/fam3icons/icons/acccept.png',
 	                 handler: function() {
 	                       if (panelEdicionMenu.form.isValid()) {
 	                    	   
@@ -453,14 +467,14 @@ Ext.onReady(function()
 		        },
 		        tbar: [{
 		            icon    : '${ctx}/resources/fam3icons/icons/add.png',
-		            text    : 'Agregar opci&oacute;n Men&uacute;',
+		            text    : 'Agregar',
 		            handler : function()
 		            {
 		            	agregarEditarOpMenu();
 		            }
 		        },{
 		            icon    : '${ctx}/resources/fam3icons/icons/pencil.png',
-		            text    : 'Editar opci&oacute;n Men&uacute;',
+		            text    : 'Editar',
 		            handler : function()
 		            {
 		            	var model =  gridOpMenu.getSelectionModel();
@@ -474,7 +488,7 @@ Ext.onReady(function()
 		            }
 		        },{
 		            icon    : '${ctx}/resources/fam3icons/icons/delete.png',
-		            text    : 'Eliminar opci&oacute;n Men&uacute;',
+		            text    : 'Eliminar',
 		            scope   : this,
 		            handler : function (btn, e){
 		            	var model =  gridOpMenu.getSelectionModel();
@@ -518,7 +532,7 @@ Ext.onReady(function()
 		            }
 		        },'-',{
 		            icon    : '${ctx}/resources/fam3icons/icons/user_edit.png',
-		            text    : 'Ver/Editar Opciones Sub Men&uacute;',
+		            text    : 'Editar Opciones Sub Men&uacute;',
 		            handler : function()
 		            {
 		            	var model =  gridOpMenu.getSelectionModel();
@@ -539,8 +553,8 @@ Ext.onReady(function()
 	          items:[gridOpMenu],
 	          //bodyStyle:'padding:5px;',
 	          buttons:[{
-		                 text: 'Cerrar',
-		                 icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+		                 text: 'Regresar / Salir',
+		                 icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
 		                 handler: function() {
 		                	 windowOpMenu.close();
 		                 }
@@ -672,7 +686,7 @@ Ext.onReady(function()
 				    	[ { header     : 'CDNIVEL' , dataIndex : 'CDNIVEL', hidden: true},
 				    	  { header     : 'CDTITULO' , dataIndex : 'CDTITULO', hidden: true},
 				          { header     : 'Nombre Opci&oacute;n Men&uacute;', dataIndex : 'DSMENU_EST', flex: 1},
-				          { header     : 'Nombre Opci&oacute;n Liga/URL', dataIndex : 'DSTITULO', flex: 1}
+				          { header     : 'Nombre de la URL', dataIndex : 'DSTITULO', flex: 1}
 						]
 				    	,bbar     :
 				        {
@@ -683,14 +697,14 @@ Ext.onReady(function()
 				        },
 				        tbar: [{
 				            icon    : '${ctx}/resources/fam3icons/icons/add.png',
-				            text    : 'Agregar opci&oacute;n Sub Men&uacute;',
+				            text    : 'Agregar',
 				            handler : function()
 				            {
 				            	agregarEditarOpSubMenu();
 				            }
 				        },{
 				            icon    : '${ctx}/resources/fam3icons/icons/pencil.png',
-				            text    : 'Editar opci&oacute;n Sub Men&uacute;',
+				            text    : 'Editar',
 				            handler : function()
 				            {
 				            	var model =  gridOpSubMenu.getSelectionModel();
@@ -704,7 +718,7 @@ Ext.onReady(function()
 				            }
 				        },{
 				            icon    : '${ctx}/resources/fam3icons/icons/delete.png',
-				            text    : 'Eliminar opci&oacute;n Sub Men&uacute;',
+				            text    : 'Eliminar',
 				            scope   : this,
 				            handler : function (btn, e){
 				            	var model =  gridOpSubMenu.getSelectionModel();
@@ -748,7 +762,7 @@ Ext.onReady(function()
 				            }
 				        },'-',{
 				            icon    : '${ctx}/resources/fam3icons/icons/user_edit.png',
-				            text    : 'Ver/Editar Opciones Sub Men&uacute;',
+				            text    : 'Editar Opciones Sub Men&uacute;',
 				            hidden  : _TIPO_MENU_SESION == _cdTipoMenu?true:false,
 				            handler : function()
 				            {
@@ -771,8 +785,8 @@ Ext.onReady(function()
 			          items:[gridOpSubMenu],
 			          //bodyStyle:'padding:5px;',
 			          buttons:[{
-				                 text: 'Cerrar',
-				                 icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+			        	  text: 'Regresar / Salir',
+			                 icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
 				                 handler: function() {
 				                	 windowOpSubMenu.close();
 				                 }
@@ -821,8 +835,11 @@ Ext.onReady(function()
 			                        labelWidth    : 120,
 			                        width         : 400,
 			                        name          : 'params.pv_cdtitulo_i',
-			                        fieldLabel    : 'Opci&oacute;n Liga/URL',
+			                        fieldLabel    : 'Nombre de la URL',
 						    		allowBlank    : false,
+						    		queryMode   : 'remote',
+						            queryParam  : 'params.pv_dstitulo_i',
+						            minChars    : 3,
 			                        valueField    : 'CDTITULO',
 			                        displayField  : 'DSTITULO',
 			                        tpl: Ext.create('Ext.XTemplate',
@@ -836,7 +853,6 @@ Ext.onReady(function()
 			                                '</tpl>'
 			                        ),
 			                        forceSelection: true,
-			                        queryMode     :'local',
 			                        store         : Ext.create('Ext.data.Store', {
 				                        model     : 'gridOpLigaModel',
 				                        autoLoad  : true,
@@ -854,7 +870,8 @@ Ext.onReady(function()
 			                        })
 			                    },{
 			            	    	xtype: 'button',
-			            	    	text : 'Ver y Editar Opciones Liga/URL',
+			            	    	text : 'Agregar/Editar URLs para Menus',
+			            	    	tooltip: 'Agrega o edita las URLs para los menus',
 			            	    	handler: verEditarOpcionesURL
 			            	    }
 					        ]
@@ -940,14 +957,14 @@ Ext.onReady(function()
 		
 		var gridOpcionesLiga = Ext.create('Ext.grid.Panel',
 			    {
-		    	title : 'Opciones Liga/URL'
+		    	title : 'URLs existentes para Menus'
 		    	,height : 300
 		    	,selType: 'checkboxmodel'
 		    	,store : opcionesLigaStore
 		    	,columns :
 		    	[ { header     : 'C&oacute;digo' , dataIndex : 'CDTITULO', flex: 1},
-		    	  { header     : 'Nombre Opci&oacute;n' , dataIndex : 'DSTITULO', flex: 3},
-		          { header     : 'Liga/URL' , dataIndex : 'DSURL' , flex: 5}
+		    	  { header     : 'Nombre de URL' , dataIndex : 'DSTITULO', flex: 3},
+		          { header     : 'URL' , dataIndex : 'DSURL' , flex: 5}
 				]
 		    	,bbar     :
 		        {
@@ -957,11 +974,11 @@ Ext.onReady(function()
 		        },
 		        tbar: [{
 		            icon    : '${ctx}/resources/fam3icons/icons/add.png',
-		            text    : 'Agregar opci&oacute;n',
+		            text    : 'Agregar',
 		            handler : function(){agregarEditarOpcionLiga();}
 		        },{
 		            icon    : '${ctx}/resources/fam3icons/icons/pencil.png',
-		            text    : 'Editar opci&oacute;n',
+		            text    : 'Editar',
 		            handler : function()
 		            {
 		            	var model =  gridOpcionesLiga.getSelectionModel();
@@ -975,7 +992,7 @@ Ext.onReady(function()
 		            }
 		        },{
 		            icon    : '${ctx}/resources/fam3icons/icons/delete.png',
-		            text    : 'Eliminar opci&oacute;n',
+		            text    : 'Eliminar',
 		            scope   : this,
 		            handler : function (btn, e){
 		            	var model =  gridOpcionesLiga.getSelectionModel();
@@ -983,7 +1000,7 @@ Ext.onReady(function()
 		            		
 		            		Ext.Msg.show({
 		    		            title: 'Aviso',
-		    		            msg: '&iquest;Esta seguro que desea eliminar esta opci&oacute;n liga/URL?',
+		    		            msg: '&iquest;Esta seguro que desea eliminar esta URL?',
 		    		            buttons: Ext.Msg.YESNO,
 		    		            fn: function(buttonId, text, opt) {
 		    		            	if(buttonId == 'yes') {
@@ -996,14 +1013,14 @@ Ext.onReady(function()
 		            							var jsonRes=Ext.decode(response.responseText);
 
 		            							if(jsonRes.success == true){
-		            								mensajeCorrecto('Aviso','Se ha eliminado la opci&oacute;n correctamente.');
+		            								mensajeCorrecto('Aviso','Se ha eliminado la URL correctamente.');
 		            								recargaGridOpcionesLiga();        							
 		                   						}else {
-		                   							mensajeError('No se pudo eliminar la opci&oacute;n.');
+		                   							mensajeError(jsonRes.errorMessage);
 		                   						}
 		            						},
 		            						failure: function(){
-		            							mensajeError('No se pudo eliminar la opci&oacute;n.');
+		            							mensajeError('No se pudo eliminar la URL.');
 		            						}
 		            					});
 		    		            	}
@@ -1021,7 +1038,7 @@ Ext.onReady(function()
 		
 		
 			var windowOpcionesLiga = Ext.create('Ext.window.Window', {
-		          title: 'Ver/Editar Opciones Liga/URL',
+		          title: 'URLs de Menus',
 		          modal:true,
 		          height : 450,
 		          width  : 800,
@@ -1033,12 +1050,12 @@ Ext.onReady(function()
 			    	border: false,
 			    	items: [{
 				    	xtype: 'textfield',
-				    	fieldLabel: 'Nombre de Opci&oacute;n:',
+				    	fieldLabel: 'Nombre de URL:',
 				    	name: 'dstitle',
 				    	labelWidth: 120
 				    },{
 				    	xtype: 'button',
-				    	text: 'Buscar Opciones',
+				    	text: 'Buscar URL',
 				    	handler: function(){
 				    		recargaGridOpcionesLiga();
 				    	}
@@ -1048,7 +1065,7 @@ Ext.onReady(function()
 		          buttons:[
 		           {
 		                 text: 'Aceptar',
-		                 icon:_CONTEXT+'/resources/fam3icons/icons/acept.png',
+		                 icon:_CONTEXT+'/resources/fam3icons/icons/accept.png',
 		                 handler: function() {
 		                	 windowOpcionesLiga.close();
 		                 }
@@ -1084,16 +1101,15 @@ Ext.onReady(function()
 				        ,items :
 				        [   {
 						        xtype      : 'textfield'
-						    	,fieldLabel : 'Nombre de la Opci&oacute;n'
+						    	,fieldLabel : 'Nombre de la URL'
 					    		,labelWidth: 120
 					    		,width: 350
 					    		,allowBlank:false
 						    	,name       : 'params.pv_dstitulo_i'
 						    	,value: record? record.get('DSTITULO') : ''
-						    	,readOnly: record?true:false
 				    		},{
 						        xtype      : 'textfield'
-							   	,fieldLabel : 'Liga/URL'
+							   	,fieldLabel : 'URL'
 						    	,labelWidth: 120
 						    	,width: 600
 						    	,allowBlank:false
@@ -1105,7 +1121,7 @@ Ext.onReady(function()
 				    });
 					
 					 var windowEdicionOpcionLiga = Ext.create('Ext.window.Window', {
-				          title: record?'Editar Opci&oacute;n Liga/URL':'Agregar Opci&oacute;n Liga/URL',
+				          title: record?'Editar URL':'Agregar URL',
 				          closeAction: 'hide',
 				          modal:true,
 				          items:[panelEdicionOpcionLiga],
@@ -1122,14 +1138,14 @@ Ext.onReady(function()
 				           		        		'params.pv_cdtitulo_i'   : record? record.get('CDTITULO') : ''
 				           		        	},
 				           		        	failure: function(form, action) {
-				           		        		mensajeError("Error al guardar la opci&oacute;n");
+				           		        		mensajeError("Error al guardar la URL");
 				           					},
 				           					success: function(form, action) {
 				           						
 				           						recargaGridOpcionesLiga();
 				           						panelEdicionOpcionLiga.getForm().reset();
 				           						windowEdicionOpcionLiga.close();
-				                               	mensajeCorrecto("Aviso","Se ha guardado la opci&oacute;n.");
+				                               	mensajeCorrecto("Aviso","Se ha guardado la URL.");
 				           						
 				           						
 				           					}

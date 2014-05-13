@@ -263,14 +263,17 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
 
 
 	@Override
-	public List<GenericVO> obtieneRolesSistema() throws DaoException {
-		Map<String, Object> resultado = ejecutaSP(new ObtieneRolesSistema(getDataSource()), new HashMap<String,Object>());
+	public List<GenericVO> obtieneRolesSistema(String dsRol) throws DaoException {
+		HashMap<String,Object> params =  new HashMap<String, Object>();
+		params.put("pv_dssysrol_i", dsRol);
+		Map<String, Object> resultado = ejecutaSP(new ObtieneRolesSistema(getDataSource()), params);
 		return (List<GenericVO>) resultado.get("PV_REGISTRO_O");
 	}
 	
 	protected class ObtieneRolesSistema extends StoredProcedure {
 		protected ObtieneRolesSistema(DataSource dataSource) {
 			super(dataSource, "PKG_GENERA_USUARIO.P_BUSCA_ROL");
+			declareParameter(new SqlParameter("pv_dssysrol_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("PV_REGISTRO_O", OracleTypes.CURSOR, new ObtieneRolesSistemaMapper()));
 			declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("PV_TITLE_O", OracleTypes.VARCHAR));

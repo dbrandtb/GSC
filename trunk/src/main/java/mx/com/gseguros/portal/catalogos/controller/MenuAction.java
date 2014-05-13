@@ -146,6 +146,7 @@ public class MenuAction extends PrincipalCoreAction{
     	try {
     		menuManager.eliminaOpcionLiga(params);
     	}catch( Exception e){
+    		errorMessage = e.getMessage();
     		logger.error("Error en eliminaOpcionLiga",e);
     		success =  false;
     		return SUCCESS;
