@@ -32,6 +32,9 @@ public class ConsultasAction extends PrincipalCoreAction
 	private ConsultasManager             consultasManager;
 	private PantallasManager             pantallasManager;
 	private Map<String,Item>             mapaItem;
+	private LinkedHashMap<String,Object> linkedObjectMap;
+	private List<Map<String,String>>     stringList;
+	private Map<String,String>           stringMap;
 	
 	private boolean       success = false;
 	private static Logger logger  = Logger.getLogger(ConsultasAction.class);
@@ -173,6 +176,37 @@ public class ConsultasAction extends PrincipalCoreAction
 				);
 		return SUCCESS;
 	}
+	
+	public String consultaDinamica()
+	{
+		logger.info(""
+				+ "\n##############################"
+				+ "\n###### consultaDinamica ######"
+				);
+		logger.info("linkedObjectMap: "+linkedObjectMap);
+		logger.info("stringMap: "+stringMap);
+		try
+		{
+			if(stringMap==null)
+			{
+				throw new Exception("No se recibieron datos");
+			}
+			String nombreStoredProcedure = stringMap.get("nombreStoredProcedure");
+			stringList = consultasManager.consultaDinamica(nombreStoredProcedure, linkedObjectMap);
+			success    = true;
+		}
+		catch(Exception ex)
+		{
+			logger.error("error en la consulta dinamica",ex);
+			mensaje = ex.getMessage();
+			success = false;
+		}
+		logger.info(""
+				+ "\n###### consultaDinamica ######"
+				+ "\n##############################"
+				);
+		return SUCCESS;
+	}
 
 	///////////////////////////////
 	////// getters y setters //////
@@ -274,6 +308,30 @@ public class ConsultasAction extends PrincipalCoreAction
 	public void setMapaLigadoObjetoEntrada(
 			LinkedHashMap<String, Object> mapaLigadoObjetoEntrada) {
 		this.mapaLigadoObjetoEntrada = mapaLigadoObjetoEntrada;
+	}
+
+	public LinkedHashMap<String, Object> getLinkedObjectMap() {
+		return linkedObjectMap;
+	}
+
+	public void setLinkedObjectMap(LinkedHashMap<String, Object> linkedObjectMap) {
+		this.linkedObjectMap = linkedObjectMap;
+	}
+
+	public List<Map<String, String>> getStringList() {
+		return stringList;
+	}
+
+	public void setStringList(List<Map<String, String>> stringList) {
+		this.stringList = stringList;
+	}
+
+	public Map<String, String> getStringMap() {
+		return stringMap;
+	}
+
+	public void setStringMap(Map<String, String> stringMap) {
+		this.stringMap = stringMap;
 	}
 	
 }

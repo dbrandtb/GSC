@@ -69,37 +69,6 @@ public class ReexpedicionDocumentosAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
-	public String consultaDinamica()
-	{
-		logger.info(""
-				+ "\n##############################"
-				+ "\n###### consultaDinamica ######"
-				);
-		logger.info("linkedObjectMap: "+linkedObjectMap);
-		logger.info("stringMap: "+stringMap);
-		try
-		{
-			if(stringMap==null)
-			{
-				throw new Exception("No se recibieron datos");
-			}
-			String nombreStoredProcedure = stringMap.get("nombreStoredProcedure");
-			stringList = consultasManager.consultaDinamica(nombreStoredProcedure, linkedObjectMap);
-			success    = true;
-		}
-		catch(Exception ex)
-		{
-			logger.error("error en la consulta dinamica",ex);
-			mensaje = ex.getMessage();
-			success = false;
-		}
-		logger.info(""
-				+ "\n###### consultaDinamica ######"
-				+ "\n##############################"
-				);
-		return SUCCESS;
-	}
-	
 	public String regeneraMedicinaPreventiva()
 	{
 		logger.info(""
