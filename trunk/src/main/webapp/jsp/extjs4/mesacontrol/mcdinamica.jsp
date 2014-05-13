@@ -481,6 +481,23 @@ Ext.onReady(function()
     mcdinGrid      = new McdinGrid();
     mcdinFiltro    = new McdinFiltro();
     mcdinFormNuevo = new McdinFormNuevo();
+    if(mcdinFormNuevo
+    		&&mcdinFormNuevo.items
+    		&&mcdinFormNuevo.items.items[0]
+            &&mcdinFormNuevo.items.items[0].items
+            &&mcdinFormNuevo.items.items[0].items.items[8])
+    {
+    	var comboTmp =mcdinFormNuevo.items.items[0].items.items[8];
+    	debug('combo tooltip',comboTmp);
+    	comboTmp.addListener('afterrender',function()
+    	{
+		    Ext.create('Ext.tip.ToolTip',
+		    {
+		        target : comboTmp.getEl()
+		        ,html  : 'Usar transferencia cuando es cambio de producto'
+		    });    		
+    	});
+    }
     
     Ext.create('Ext.panel.Panel',
     {
