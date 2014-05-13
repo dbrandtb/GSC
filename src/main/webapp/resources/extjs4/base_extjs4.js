@@ -254,7 +254,8 @@ function centrarVentanaInterna(ventana)
  * Realiza una consulta de acuerdo a la accion indicada
  * @param accion   Accion a ejecutar
  * @param inParams Parametros de entrada de la accion
- * @return lista de elementos obtenidos al ejecutar la accion
+ * @param form     Elemento para setLoading(true);
+ * @param callback Funcion que recibe el array
  */
 function consultaDinamica(accion,inParams,form,callback)
 {
