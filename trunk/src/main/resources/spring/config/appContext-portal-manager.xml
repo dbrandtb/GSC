@@ -50,4 +50,8 @@
         <property name="pantallasDAO" ref="pantallasDAOImpl"/>
     </bean>
     
+    <bean id="navigationManagerImpl" class="mx.com.gseguros.portal.general.service.impl.NavigationManagerImpl">
+        <property name="usuarioDAO" ref="usuarioDAOImpl"/>
+    </bean>
+    
 </beans>
