@@ -1,6 +1,6 @@
 package mx.com.gseguros.portal.general.dao;
 
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -8,7 +8,6 @@ import mx.com.aon.portal.model.IsoVO;
 import mx.com.aon.portal.model.UsuarioRolEmpresaVO;
 import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.DaoException;
-import mx.com.gseguros.portal.general.model.RolVO;
 import mx.com.gseguros.portal.general.model.UsuarioVO;
 
 public interface UsuarioDAO {
@@ -26,5 +25,7 @@ public interface UsuarioDAO {
 	public List<UsuarioRolEmpresaVO> obtieneRolesCliente(String user) throws DaoException;
 
 	public IsoVO obtieneVariablesIso(String user) throws DaoException;
+	
+	public void guardarSesion(String idSesion,String cdusuari,String cdsisrol,String userAgent,boolean esMovil,Date fecha) throws Exception;
 
 }
