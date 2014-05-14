@@ -3328,12 +3328,23 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     	String valor1 = null;
     	String valor2 = null;
     	if(!causaSiniestro.equalsIgnoreCase("2")){
-    		if(circuloHospAsegurado.equalsIgnoreCase("PLUS 100")) {valor1="1";}
-        	if(circuloHospAsegurado.equalsIgnoreCase("PLUS 500")) {valor1="2";}
-        	if(circuloHospAsegurado.equalsIgnoreCase("PLUS 1000")){valor1="3";}
-        	if(circuloHospProveedor.equalsIgnoreCase("PLUS 100")) {valor2="1";}
-        	if(circuloHospProveedor.equalsIgnoreCase("PLUS 500")) {valor2="2";}
-        	if(circuloHospProveedor.equalsIgnoreCase("PLUS 1000")){valor2="3";}
+    		if(circuloHospAsegurado == null){
+    			valor1="0";
+    		}else{
+    			if(circuloHospAsegurado.equalsIgnoreCase("PLUS 100")) {valor1="1";}
+            	if(circuloHospAsegurado.equalsIgnoreCase("PLUS 500")) {valor1="2";}
+            	if(circuloHospAsegurado.equalsIgnoreCase("PLUS 1000")){valor1="3";}
+    		}
+    		
+    		if(circuloHospProveedor == null){
+    			valor2="0";
+    		}else{
+    			if(circuloHospProveedor.equalsIgnoreCase("PLUS 100")) {valor2="1";}
+            	if(circuloHospProveedor.equalsIgnoreCase("PLUS 500")) {valor2="2";}
+            	if(circuloHospProveedor.equalsIgnoreCase("PLUS 1000")){valor2="3";}
+    		}
+    		
+        	
         	
         	String valorCirculoHosp = valor1+""+valor2;
         	switch(Integer.parseInt(valorCirculoHosp))
