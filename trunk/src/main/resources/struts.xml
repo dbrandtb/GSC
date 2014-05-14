@@ -53,48 +53,28 @@
             
             <!-- Interceptor temporal para redirigir a la cotización si la petición viene de un movil: -->
             <interceptor name="deviceInterceptor" class="deviceInterceptor"/>
-            <!-- Fin de interceptor temporal -->
-        
-            <interceptor-stack name="defaultStack">
-                <interceptor-ref name="exception" />
-				<!--  <interceptor-ref name="alias" />-->
-                <interceptor-ref name="servletConfig" />
-                <interceptor-ref name="prepare" />
-                <!-- <interceptor-ref name="i18n" />
-                <interceptor-ref name="chain" />
-                <interceptor-ref name="modelDriven" />-->
-                <interceptor-ref name="fileUpload" />              
-                <interceptor-ref name="staticParams" />
-                <interceptor-ref name="params" />
-                <interceptor-ref name="conversionError" />
-                <interceptor-ref name="validation">
-                    <param name="excludeMethods">cancel,execute,delete,edit,list</param>
-                </interceptor-ref>
-                <interceptor-ref name="workflow">
-                    <param name="excludeMethods">input,back,cancel</param>
-                </interceptor-ref>
+            
+            <!-- Stack Interceptor temporal para redirigir a la cotización si la petición viene de un movil: -->
+            <interceptor-stack name="cotizacionDeviceStack">
+                <interceptor-ref name="authenticationInterceptor"/>
+                <interceptor-ref name="deviceInterceptor"/>
+                <interceptor-ref name="defaultStack" />
             </interceptor-stack>
-
+            
             <interceptor-stack name="secureStack">
                 <interceptor-ref name="authenticationInterceptor" />
                 <interceptor-ref name="defaultStack" />
             </interceptor-stack>
             
-            <!-- Stack Interceptor temporal para redirigir a la cotización si la petición viene de un movil: -->
-            <interceptor-stack name="customStack">
-                <interceptor-ref name="authenticationInterceptor"/>
-                <interceptor-ref name="deviceInterceptor"/>
-                <interceptor-ref name="defaultStack" />
-            </interceptor-stack>
-            <!-- Fin de Stack interceptor temporal -->
-            
         </interceptors>
+        
         
         <default-interceptor-ref name="secureStack" />
         
+        
         <global-results>
             <result name="denied">/jsp/extjs4/denegado.jsp</result>
-	    <result name="login">/jsp/portal/login.jsp</result>
+	        <result name="login">/jsp/portal/login.jsp</result>
             <result name="datosPoliza">/jsp/portal/login.jsp</result>
         </global-results>
 
@@ -102,19 +82,16 @@
 		<action name="load" class="paginaPrincipalAction" method="obtenPaginaPrincipal">
 			
 			<!-- Interceptor temporal para redirigir a la cotización si la petición viene de un movil: -->
-            <interceptor-ref name="customStack" />
-            <!-- Fin de Interceptor temporal -->
-			
-			<result name="success">/jsp/portal/portal.jsp</result>
-			
+            <interceptor-ref name="cotizacionDeviceStack" />
+            
             <!-- Result temporal para redirigir a la cotización si la petición viene de un movil: -->
             <result name="success_mobile" type="redirectAction">
                 <param name="namespace">emision</param>
                 <param name="actionName">cotizacion</param>
                 <param name="smap1.cdtipsit">SL</param>
             </result>
-            <!-- Fin de Result temporal -->
             
+			<result name="success">/jsp/portal/portal.jsp</result>
 		</action>
 		
         
