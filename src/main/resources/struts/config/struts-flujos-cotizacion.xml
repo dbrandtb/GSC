@@ -4,28 +4,6 @@
 <struts>
     
     <package name="flujocotizacion" namespace="/flujocotizacion" extends="default">
-    
-        <interceptors>
-            <interceptor-stack name="defaultStack">
-                <interceptor-ref name="exception" />
-                <interceptor-ref name="alias" />
-                <interceptor-ref name="servletConfig" />
-                <interceptor-ref name="prepare" />
-                <interceptor-ref name="i18n" />
-                <interceptor-ref name="chain" />
-                <interceptor-ref name="modelDriven" />
-                <interceptor-ref name="fileUpload" />
-                <interceptor-ref name="staticParams" />
-                <interceptor-ref name="params" />
-                <interceptor-ref name="conversionError" />
-                <interceptor-ref name="validation">
-                    <param name="excludeMethods">cancel,execute,delete,edit,list</param>
-                </interceptor-ref>
-                <interceptor-ref name="workflow">
-                    <param name="excludeMethods">input,back,cancel</param>
-                </interceptor-ref>
-            </interceptor-stack>
-        </interceptors>
         
         <action name="obtenCotizacion4" class="cotizacionVital" method="obtenerResultadosCotizacion">
             <result name="success" type="json" />
