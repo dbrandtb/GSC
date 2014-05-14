@@ -1,9 +1,9 @@
-<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN" "http://struts.apache.org/dtds/struts-2.3.dtd">
 
 <struts>
-    <include file="struts-default.xml" />
 
-    <package name="consultas" extends="json-default" namespace="/consultas">
+    <package name="consultas" namespace="/consultas" extends="default">
     
         <action name="pantallaConsultaProveedores" class="consultasAction" method="pantallaConsultaProveedores">
             <result name="success">/jsp/consultas/proveedores/consultaProveedores.jsp</result>

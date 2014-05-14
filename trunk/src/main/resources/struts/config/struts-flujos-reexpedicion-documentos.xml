@@ -1,7 +1,10 @@
-<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN" "http://struts.apache.org/dtds/struts-2.3.dtd">
+
 <struts>
-    <include file="struts-default.xml" />
+
     <package name="reexpediciondocumentos" namespace="/reexpediciondocumentos" extends="default">
+    
         <action name="principal" class="reexpedicionDocumentosAction" method="principal">
             <result name="success">/jsp-script/proceso/reexpedicionDocumentos/marcoReexpedicionDocumentos.jsp</result>
         </action>
@@ -22,5 +25,6 @@
         <action name="obtenerDatosEmail" class="reexpedicionDocumentosAction" method="obtenerDatosEmail">
             <result type="json" />
         </action>
+        
     </package>
 </struts>

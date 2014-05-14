@@ -46,6 +46,7 @@
     <include file="struts/config/struts-cotizacionautos.xml"/>
     
     <package name="default" namespace="/" extends="struts-default, json-default">
+    
         <interceptors>
         
             <interceptor name="authenticationInterceptor" class="authenticationInterceptor" />
