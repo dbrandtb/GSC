@@ -2,6 +2,7 @@ package mx.com.gseguros.portal.general.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -261,6 +262,37 @@ public class UsuarioDAOImpl extends AbstractManagerDAO implements UsuarioDAO {
 			declareParameter(new SqlParameter("PV_CDSISROL_I", OracleTypes.VARCHAR));
 	        declareParameter(new SqlOutParameter("PV_MSG_ID_O", OracleTypes.VARCHAR));
 	        declareParameter(new SqlOutParameter("PV_TITLE_O", OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
+	@Override
+	public void guardarSesion(String idSesion,String cdusuari,String cdsisrol,String userAgent,boolean esMovil,Date fecha) throws Exception
+	{
+		Map<String,Object>params=new HashMap<String,Object>();
+		params.put("idSesion"  , idSesion);
+		params.put("cdusuari"  , cdusuari);
+		params.put("cdsisrol"  , cdsisrol);
+		params.put("userAgent" , userAgent);
+		params.put("esMovil" , esMovil?"S":"N");
+		params.put("fecha"     , fecha);
+		ejecutaSP(new GuardarSesion(getDataSource()),params);
+	}
+	
+	protected class GuardarSesion extends StoredProcedure {
+
+		protected GuardarSesion(DataSource dataSource)
+		{
+			super(dataSource, "PKG_SATELITES.P_INSERTA_SESION");
+			
+			declareParameter(new SqlParameter("idSesion"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdusuari"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("cdsisrol"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("userAgent" , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("esMovil"   , OracleTypes.CHAR));
+			declareParameter(new SqlParameter("fecha"     , OracleTypes.TIMESTAMP));
+	        declareParameter(new SqlOutParameter("PV_MSG_ID_O" , OracleTypes.VARCHAR));
+	        declareParameter(new SqlOutParameter("PV_TITLE_O"  , OracleTypes.VARCHAR));
 			compile();
 		}
 	}
