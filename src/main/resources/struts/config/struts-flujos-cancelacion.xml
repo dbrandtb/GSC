@@ -1,8 +1,9 @@
-<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN" "http://struts.apache.org/dtds/struts-2.3.dtd">
+
 <struts>
-    <include file="struts-default.xml" />
     
-    <package name="cancelacion" extends="json-default" namespace="/cancelacion">
+    <package name="cancelacion" namespace="/cancelacion" extends="default">
         
         <action name="principal" class="CancelacionAction" method="marcoCancelacion">
             <result name="success">/jsp-script/proceso/cancelacion/marcoCancelacion.jsp</result>

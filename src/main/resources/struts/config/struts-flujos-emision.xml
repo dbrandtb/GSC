@@ -4,19 +4,6 @@
 <struts>
     
     <package name="emision" namespace="/emision" extends="default" >
-    
-        <interceptors>
-            
-            <interceptor name="deviceInterceptor" class="deviceInterceptor"/>
-            
-            <interceptor-stack name="customStack">
-                <interceptor-ref name="authenticationInterceptor"/>
-                <interceptor-ref name="deviceInterceptor"/>
-                <interceptor-ref name="defaultStack" />
-            </interceptor-stack>
-            
-        </interceptors>
-
         
         <action name="cotizacion" class="CotizacionAction" method="pantallaCotizacion">
             <interceptor-ref name="customStack" />
