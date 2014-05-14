@@ -31,6 +31,21 @@ public class ConsultasPolizaManagerImpl extends
 		return result;
 	}
 
+	public String consultaMensajeAgente(String cdunieco, String cdramo,
+			String estado, String nmpoliza) throws ApplicationException {
+		
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdunieco_i", cdunieco);
+		params.put("pv_cdramo_i", cdramo);
+		params.put("pv_estado_i", estado);
+		params.put("pv_nmpoliza_i", nmpoliza);
+		
+		WrapperResultados result = this.returnBackBoneInvoke(params,
+				ConsultasPolizaDAO.OBTIENE_MENSAJE_AGENTE);
+		
+		return (String) result.getItemMap().get("MensajeAgente");
+	}
+
 	public WrapperResultados consultaSuplemento(String nmpoliex)
 			throws ApplicationException {
 

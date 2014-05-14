@@ -156,15 +156,14 @@ Ext.onReady(function() {
     
     
     var storeSuplementos = new Ext.data.Store({
+    	pageSize : 20,
         model: 'SuplementoModel',
         proxy: {
-            type: 'ajax',
-            url : _URL_CONSULTA_DATOS_SUPLEMENTO,
-            reader: {
-                type: 'json',
-                root: 'datosSuplemento'
+            type         : 'memory'
+                ,enablePaging : true
+                ,reader      : 'json'
+                ,data        : []
             }
-        }
     });
     
     var gridSuplementos = Ext.create('Ext.grid.Panel', {
@@ -893,7 +892,7 @@ Ext.onReady(function() {
             title:'BUSQUEDA DE POLIZAS',
             colspan:2,
             width:990,
-            height:140,
+            height:170,
             items: [
                 {
                     xtype: 'form',
@@ -1115,7 +1114,13 @@ Ext.onReady(function() {
                             }
                         }
                     ]
-                }
+                },{
+        	    	layout: 'column',
+        	    	margin: '5',
+        	    	border: false,
+        	    	name: 'mensajeAgente',
+        	    	html:''
+        	     }
             ]
         },
         {
@@ -1165,9 +1170,9 @@ Ext.onReady(function() {
     */
     function cargaStoreSuplementos(params){
         
-        //console.log('Params busqueda de suplemento=');console.log(params);
+        debug('Params busqueda de suplemento: ',params);
         
-        gridSuplementos.setLoading(true);
+        /*gridSuplementos.setLoading(true);
         storeSuplementos.load({
             params: params,
             callback: function(records, operation, success) {
@@ -1178,6 +1183,9 @@ Ext.onReady(function() {
                 //Limpiar seleccion de la lista de opciones de consulta
                 limpiaSeleccionTiposConsulta();
                 
+                //Mostrar un mensaje para el agente  
+                cambiaTextoMensajeAgente('Esto es un mensaje de prueba para la aplicacion donde no se puede meter mucho mas texto del que puede ser.');
+                
                 if (!success) {
                     showMessage(_MSG_ERROR, _MSG_BUSQUEDA_SIN_DATOS, Ext.Msg.OK, Ext.Msg.ERROR);
                     return;
@@ -1187,7 +1195,30 @@ Ext.onReady(function() {
                     return;
                 }
             }
-        });
+        });*/
+        
+        cargaStorePaginadoLocal(storeSuplementos, _URL_CONSULTA_DATOS_SUPLEMENTO, 'datosSuplemento', params, function (options, success, response){
+    		if(success){
+                var jsonResponse = Ext.decode(response.responseText);
+                
+                if(!jsonResponse.success) {
+                	showMessage(_MSG_ERROR, _MSG_BUSQUEDA_SIN_DATOS, Ext.Msg.OK, Ext.Msg.ERROR);
+                    return;
+                }
+                
+                gridSuplementos.setLoading(false);
+                //gridSuplementos.getView().el.focus();
+                
+                //Limpiar seleccion de la lista de opciones de consulta
+                limpiaSeleccionTiposConsulta();
+                
+                //Mostrar un mensaje para el agente  
+                cambiaTextoMensajeAgente(jsonResponse.mensajeRes);
+                
+            }else{
+                showMessage('Error', 'Error al obtener los datos.', Ext.Msg.OK, Ext.Msg.ERROR);
+            }
+    	}, gridSuplementos);
         
     }
 
@@ -1217,6 +1248,14 @@ Ext.onReady(function() {
     function limpiaSeleccionTiposConsulta() {
         listViewOpcionesConsulta.getSelectionModel().deselectAll();
         listViewOpcionesConsulta.collapse('top', false);
+    }
+
+    function cambiaTextoMensajeAgente(texto) {
+    	if(!Ext.isEmpty(texto)){
+    		panelBusqueda.down('[name=mensajeAgente]').update('<span style="color:#E96707;font-size:14px;font-weight:bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Aviso: '+texto+'</span>');
+    	}else {
+    		panelBusqueda.down('[name=mensajeAgente]').update('<span></span>');
+    	}
     }
     
     function cargaPolizasAsegurado(formBusqueda, btn) {

@@ -2,6 +2,7 @@ package mx.com.gseguros.portal.consultas.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +39,7 @@ public class ConsultasPolizaDAO extends AbstractDAO {
 	public static final String OBTIENE_DATOS_ASEGURADO =   "OBTIENE_DATOS_ASEGURADO";
 	public static final String OBTIENE_DATOS_COBERTURAS =  "OBTIENE_DATOS_COBERTURAS";
 	public static final String OBTIENE_DATOS_POLIZA =      "OBTIENE_DATOS_POLIZA";
+	public static final String OBTIENE_MENSAJE_AGENTE =      "OBTIENE_MENSAJE_AGENTE";
 	public static final String OBTIENE_DATOS_SITUACION =   "OBTIENE_DATOS_SITUACION";
 	public static final String OBTIENE_DATOS_SUPLEMENTO =  "OBTIENE_DATOS_SUPLEMENTO";
 	public static final String OBTIENE_DATOS_TARIFA =      "OBTIENE_DATOS_TARIFA";
@@ -51,6 +53,7 @@ public class ConsultasPolizaDAO extends AbstractDAO {
 		addStoredProcedure(OBTIENE_DATOS_ASEGURADO,   new ObtieneDatosAsegurado(getDataSource()));
 		addStoredProcedure(OBTIENE_DATOS_COBERTURAS,  new ObtieneDatosCoberturas(getDataSource()));
 		addStoredProcedure(OBTIENE_DATOS_POLIZA,      new ObtieneDatosPoliza(getDataSource()));
+		addStoredProcedure(OBTIENE_MENSAJE_AGENTE,    new ObtieneMensajeAgente(getDataSource()));
 		addStoredProcedure(OBTIENE_DATOS_SITUACION,   new ObtieneDatosSituacion(getDataSource()));
 		addStoredProcedure(OBTIENE_DATOS_SUPLEMENTO,  new ObtieneDatosSuplemento(getDataSource()));
 		addStoredProcedure(OBTIENE_DATOS_TARIFA,      new ObtieneDatosTarifa(getDataSource()));
@@ -84,6 +87,32 @@ public class ConsultasPolizaDAO extends AbstractDAO {
             List result = (List) map.get("pv_registro_o");
             wrapperResultados.setItemList(result);
             return wrapperResultados;
+		}
+	}
+
+	protected class ObtieneMensajeAgente extends CustomStoredProcedure {
+		
+		protected ObtieneMensajeAgente(DataSource dataSource) {
+			
+			super(dataSource, "PKG_CONSULTA.P_Get_Datos_prevex");
+			
+			declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_estado_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_mensaje_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			compile();
+			
+		}
+		
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			WrapperResultados wrapperResultados = mapper.build(map);
+			wrapperResultados.setItemMap(new HashMap<String, Object>());
+            wrapperResultados.getItemMap().put("MensajeAgente", map.get("pv_mensaje_o")); 
+			return wrapperResultados;
 		}
 	}
 

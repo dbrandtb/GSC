@@ -41,6 +41,8 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
      */
     private boolean success;
     
+    private String mensajeRes;
+    
     private ConsultasPolizaManager consultasPolizaManager;
     
     private KernelManagerSustituto kernelManager;
@@ -108,12 +110,23 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
      */
     public String consultaDatosSuplemento(){
     	logger.debug(" **** Entrando a consultaDatosSuplemento ****");
+    	mensajeRes = "";
     	try {
     		
     		WrapperResultados result = consultasPolizaManager.consultaSuplemento(params.get("nmpoliex"));
     		datosSuplemento = (ArrayList<ConsultaDatosSuplementoVO>) result.getItemList();
     		
     		logger.debug("Resultado de la consultaDatosSuplemento:" + datosSuplemento);
+    		
+    		if(datosSuplemento != null && !datosSuplemento.isEmpty()){
+    			try{
+    				mensajeRes = consultasPolizaManager.consultaMensajeAgente(datosSuplemento.get(0).getCdunieco(), datosSuplemento.get(0).getCdramo(),
+							  datosSuplemento.get(0).getEstado(), datosSuplemento.get(0).getNmpoliza());
+    				logger.debug("Mensaje para Agente: "+ mensajeRes);
+    			}catch(Exception e){
+    				logger.error("Error!! no se pudo obtener el mensaje para el Agente de esta poliza!",e);
+    			}
+    		}
     		
     	}catch( Exception e){
     		success = false;
@@ -567,6 +580,14 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
 
 	public void setKernelManager(KernelManagerSustituto kernelManager) {
 		this.kernelManager = kernelManager;
+	}
+
+	public String getMensajeRes() {
+		return mensajeRes;
+	}
+
+	public void setMensajeRes(String mensajeRes) {
+		this.mensajeRes = mensajeRes;
 	}
 
 }
