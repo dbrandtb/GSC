@@ -1,6 +1,7 @@
 package mx.com.aon.portal.web;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
@@ -14,8 +15,10 @@ import mx.com.aon.portal.service.UsuarioManager;
 import mx.com.aon.portal.service.principal.PrincipalManager;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.general.model.RolVO;
+import mx.com.gseguros.utils.Utilerias;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.ServletActionContext;
 
 /**
  *
@@ -28,6 +31,7 @@ public class LoadClientesRolesAction extends PrincipalCoreAction {
     private boolean success;
     private String user;
     private NavigationManager navigationManager;
+    private mx.com.gseguros.portal.general.service.NavigationManager navigationManagerNuevo;
     private UsuarioManager usuarioManager;
     private transient PrincipalManager principalManagerJdbcTemplate;
     private List<RamaVO> listaRolCliente;
@@ -42,7 +46,7 @@ public class LoadClientesRolesAction extends PrincipalCoreAction {
 
     /**
      * Cambia el usuario actual en sesion por uno
-     * que tenga el rol seleccionado del árbol
+     * que tenga el rol seleccionado del ï¿½rbol
      * @return success
      * @throws Exception
      */
@@ -87,13 +91,29 @@ public class LoadClientesRolesAction extends PrincipalCoreAction {
                         }
                         userVO.setRolActivo(rolActivo);
                         session.put("USUARIO", userVO);
+                        logger.debug("session: "+session);
+                        String userAgent = ServletActionContext.getRequest().getHeader("User-Agent");
+                        try
+                        {
+                        	navigationManagerNuevo.guardarSesion(
+                        			ServletActionContext.getRequest().getSession().getId(),
+                        			userVO.getUser(),
+                        			rolActivo.getObjeto().getValue(),
+                        			userAgent,
+                        			Utilerias.esSesionMovil(userAgent),
+                        			new Date());
+                        }
+                        catch(Exception ex)
+                        {
+                        	logger.error("error al guardar sesion en base de datos",ex);
+                        }
                         break;
                     }
                 }
                 try
                 {
                     String msg = principalManagerJdbcTemplate.configuracionCompleta(_codigoCliente);
-                    logger.debug("Configuración: " + msg);
+                    logger.debug("Configuraciï¿½n: " + msg);
                     codigoValido = true;
                 } catch (Exception e) {
                     logger.error(e.toString(),e);
@@ -137,14 +157,14 @@ public class LoadClientesRolesAction extends PrincipalCoreAction {
         pais.setValue(isoLocal.getPais());
         usuario.setPais(pais);
         String cdPais = usuario.getPais().getValue();
-        logger.debug("El país del usuario es : " + cdPais);
+        logger.debug("El paï¿½s del usuario es : " + cdPais);
         usuario.setFormatoFecha(isoLocal.getFormatoFecha());
         usuario.setFormatoNumerico(isoLocal.getFormatoNumerico());
         usuario.setIdioma(languague);
         usuario.setTamagnoPaginacionGrid(numReg);
         logger.debug("En seleccionaRolCliente: " + isoLocal.getClientDateFormat());
         usuario.setClientFormatDate(isoLocal.getClientDateFormat());
-        //Agregados códigos de Idioma y Región
+        //Agregados cï¿½digos de Idioma y Regiï¿½n
         //languague.setValue(iso.getCdIdioma());
         //usuario.setIdioma(languague);
         BaseObjectVO region = new BaseObjectVO();
@@ -153,7 +173,7 @@ public class LoadClientesRolesAction extends PrincipalCoreAction {
     }
 
     /**
-     * Método que carga la pantalla que contiene el árbol de clientes y roles
+     * Mï¿½todo que carga la pantalla que contiene el ï¿½rbol de clientes y roles
      * @return success
      * @throws Exception
      */
@@ -165,7 +185,7 @@ public class LoadClientesRolesAction extends PrincipalCoreAction {
         ///////////////////////////////////////////////////////////////////////////////
         ////// Crear un usuario y complementar su propiedades:                   //////
         ////// formato decha, formato numerico, idioma, tamanio paginacion grid, //////
-        ////// cliente format date y region. Se guarda en sesión                 //////
+        ////// cliente format date y region. Se guarda en sesiï¿½n                 //////
         ///////////////////////////////////////////////////////////////////////////////
         UserVO usuario = (UserVO) session.get("USUARIO");
         session.put("MessageConf", null);
@@ -208,7 +228,7 @@ public class LoadClientesRolesAction extends PrincipalCoreAction {
                 logger.error(e.toString(), e);
                 addActionError(e.getMessage());
                 //success = false; //jtezva -> inecesario, no es json
-                session.put("MessageConf", e.getMessage()); //Se pone en sesión el mensaje a mostrar
+                session.put("MessageConf", e.getMessage()); //Se pone en sesiï¿½n el mensaje a mostrar
                 //return SUCCESS; //jtezva -> se sustituyo por la variable retorno
             }
             if(configuracionCompleta)
@@ -240,7 +260,7 @@ public class LoadClientesRolesAction extends PrincipalCoreAction {
                 logger.debug("En seleccionaRolCliente: " + iso.getClientDateFormat());
                 userList.get(0).setClientFormatDate(iso.getClientDateFormat());
 
-                //Agregados códigos de Idioma y Región
+                //Agregados cï¿½digos de Idioma y Regiï¿½n
                 languague.setValue(iso.getCdIdioma());
                 userList.get(0).setIdioma(languague);
                 //BaseObjectVO region = new BaseObjectVO();
@@ -276,8 +296,8 @@ public class LoadClientesRolesAction extends PrincipalCoreAction {
     }
 
     /**
-     * Carga los elementos del árbol de clientes y roles para el usuario en sesión.
-     * Se supone que esta llamada json se llama desde la vista de árbol
+     * Carga los elementos del ï¿½rbol de clientes y roles para el usuario en sesiï¿½n.
+     * Se supone que esta llamada json se llama desde la vista de ï¿½rbol
      * que fue cargada por obtenRolesClientes(), por lo que no se valida
      * que este vacia, porque de ser asi se habria validado en obtenRolesClientes()
      * @return SUCCESS
@@ -477,4 +497,9 @@ public class LoadClientesRolesAction extends PrincipalCoreAction {
     public void setUsuarioManager(UsuarioManager usuarioManager) {
         this.usuarioManager = usuarioManager;
     }
+
+	public void setNavigationManagerNuevo(
+			mx.com.gseguros.portal.general.service.NavigationManager navigationManagerNuevo) {
+		this.navigationManagerNuevo = navigationManagerNuevo;
+	}
 }
