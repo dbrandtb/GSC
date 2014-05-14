@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.general.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import mx.com.aon.portal.model.IsoVO;
@@ -10,10 +11,12 @@ import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.general.dao.UsuarioDAO;
 import mx.com.gseguros.portal.general.service.NavigationManager;
 
+import org.apache.log4j.Logger;
+
 public class NavigationManagerImpl implements NavigationManager {
 	
 	private UsuarioDAO usuarioDAO;
-	
+	private static final Logger logger = Logger.getLogger(NavigationManagerImpl.class);
 	
 	@Override
 	public List<ItemVO> getMenuNavegacion(String perfil) throws ApplicationException {
@@ -75,6 +78,20 @@ public class NavigationManagerImpl implements NavigationManager {
 	public void setUsuarioDAO(UsuarioDAO usuarioDAO) {
 		this.usuarioDAO = usuarioDAO;
 	}
-	
 
+	@Override
+	public void guardarSesion(String idSesion, String cdusuari, String cdsisrol, String userAgent, boolean esMovil, Date fecha) throws Exception
+	{
+		logger.info(""
+				+ "\n###########################"
+				+ "\n###### guardarSesion ######"
+				);
+		logger.info("idSesion: "+idSesion);
+		logger.info("cdusuari: "+cdusuari);
+		logger.info("cdsisrol: "+cdsisrol);
+		logger.info("userAgent: "+userAgent);
+		logger.info("esMovil: "+esMovil);
+		logger.info("fecha: "+fecha);
+		usuarioDAO.guardarSesion(idSesion,cdusuari,cdsisrol,userAgent,esMovil,fecha);
+	}
 }
