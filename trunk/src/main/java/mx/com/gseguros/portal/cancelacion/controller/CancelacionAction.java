@@ -233,10 +233,13 @@ public class CancelacionAction extends PrincipalCoreAction
 		{
 			String cdtipsup = TipoEndoso.CANCELACION_UNICA.getCdTipSup().toString();
 			
+			String nmsuplem = null;
+			String ntramite = null;
+			
 			UserVO usuario=(UserVO)session.get("USUARIO");
 			smap1.put("pv_usuario_i"  , usuario.getUser());
 			smap1.put("pv_cdtipsup_i" , cdtipsup);
-			cancelacionManager.cancelaPoliza(smap1);	
+			nmsuplem = cancelacionManager.cancelaPoliza(smap1);	
 			
 			String cdunieco = smap1.get("pv_cdunieco_i");
 			String cdramo   = smap1.get("pv_cdramo_i");
@@ -246,15 +249,13 @@ public class CancelacionAction extends PrincipalCoreAction
 			//PKG_CONSULTA.P_IMP_DOC_CANCELACION
 			//nmsolici,nmsituac,descripc,descripl,ntramite,nmsuplem
 			List<Map<String,String>>listaDocu=cancelacionManager.reimprimeDocumentos(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
-			String nmsuplem = null;
-			String ntramite = null;
 			
 			for(Map<String,String> docu:listaDocu)
 			{
 				log.debug("docu iterado: "+docu);
 				String descripc = docu.get("descripc");
 				String descripl = docu.get("descripl");
-				nmsuplem = docu.get("nmsuplem");
+				
 				ntramite = docu.get("ntramite");
 				
 				String rutaCarpeta = this.getText("ruta.documentos.poliza")+"/"+ntramite;

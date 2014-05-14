@@ -62,11 +62,13 @@ public class CancelacionManagerImpl implements CancelacionManager
 	
 	//pkg_cancela.p_cancela_poliza
 	@Override
-	public void cancelaPoliza (Map<String,String> params) throws Exception
+	public String cancelaPoliza (Map<String,String> params) throws Exception
 	{
+		String nmsuplemCancela = null;
 		log.debug("CancelacionManager cancelaPoliza params: "+params);
-		cancelacionDAO.cancelaPoliza(params);
+		nmsuplemCancela = cancelacionDAO.cancelaPoliza(params);
 		log.debug("CancelacionManager cancelaPoliza end");
+		return nmsuplemCancela;
 	}
 	
 	//pkg_cancela.p_selecciona_poliza_unica
