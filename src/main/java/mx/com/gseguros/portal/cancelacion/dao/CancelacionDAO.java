@@ -13,7 +13,7 @@ public interface CancelacionDAO
     public Map<String,String>       obtenerDetalleCancelacion (Map<String,String> params) throws Exception;
     public List<Map<String,String>> obtenerPolizasCandidatas  (Map<String,String> params) throws Exception;
     public void                     seleccionaPolizas         (Map<String,Object> params) throws Exception;
-    public void                     cancelaPoliza             (Map<String,String> params) throws Exception;
+    public String                   cancelaPoliza             (Map<String,String> params) throws Exception;
     public void                     seleccionaPolizaUnica     (Map<String,Object> params) throws Exception;
     public void                     actualizarTagrucan        (Map<String,String> params) throws Exception;
     public void                     cancelacionMasiva         (Map<String,String> params) throws Exception;

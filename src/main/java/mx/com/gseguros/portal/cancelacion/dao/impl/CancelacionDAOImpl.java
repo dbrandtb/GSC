@@ -169,9 +169,10 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 	////// cancelar poliza //////
 	/*/////////////////////////*/
 	@Override
-	public void cancelaPoliza (Map<String,String> params) throws Exception
+	public String cancelaPoliza (Map<String,String> params) throws Exception
 	{
-		ejecutaSP(new CancelaPoliza(getDataSource()),Utilerias.ponFechas(params));
+		Map<String,Object> resultadoMap = ejecutaSP(new CancelaPoliza(getDataSource()),Utilerias.ponFechas(params));
+		return (String) resultadoMap.get("pv_nmsuplem_o");
 	}
 	
 	protected class CancelaPoliza extends StoredProcedure
@@ -193,6 +194,7 @@ public class CancelacionDAOImpl extends AbstractManagerDAO implements Cancelacio
 			declareParameter(new SqlParameter("pv_usuario_i"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdtipsup_i" , OracleTypes.VARCHAR));
 			
+			declareParameter(new SqlOutParameter("pv_nmsuplem_o"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_texto_o"  , OracleTypes.VARCHAR));
