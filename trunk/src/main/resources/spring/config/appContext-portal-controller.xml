@@ -23,6 +23,7 @@
          <property name="navigationManager" ref="navigationManagerJdbcTemplate"></property>
 		 <property name="principalManagerJdbcTemplate" ref="principalManagerJdbcTemplate" />
          <property name="usuarioManager" ref="usuarioManager"></property>
+         <property name="navigationManagerNuevo" ref="navigationManagerImpl"></property>
     </bean>
 
     <!-- Bean que utilizara GS para no pasar por el login -->
