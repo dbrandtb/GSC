@@ -1332,6 +1332,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 				paramsMesaControl.put("pv_otvalor02"    , cdelemen);
 				paramsMesaControl.put("pv_otvalor03"    , ntramite);
 				paramsMesaControl.put("pv_otvalor04"    , cdpersonSesion);
+				paramsMesaControl.put("pv_otvalor05"    , "EMISION");
 				WrapperResultados wr=kernelManager.PMovMesacontrol(paramsMesaControl);
 				String ntramiteAutorizacion=(String) wr.getItemMap().get("ntramite");
 				mensajeRespuesta = mensajeRespuesta + "<br/>Tr&aacute;mite de autorizaci&oacute;n: "+ntramiteAutorizacion;
