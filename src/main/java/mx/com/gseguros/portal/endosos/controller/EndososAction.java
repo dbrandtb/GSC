@@ -17,13 +17,16 @@ import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.portal.cancelacion.service.CancelacionManager;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.controller.ComplementariosCoberturasAction;
+import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
+import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
 import mx.com.gseguros.portal.general.util.TipoEndoso;
+import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.utils.HttpUtil;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
@@ -505,7 +508,7 @@ public class EndososAction extends PrincipalCoreAction
 				kernelManager.movMpersona(paramPersona);
 			}
 			
-			String confirmado=this.confirmarEndoso((String)omap1.get("pv_cdunieco_i"),
+			Object[] endosoConfirmado=this.confirmarEndoso((String)omap1.get("pv_cdunieco_i"),
 					(String)omap1.get("pv_cdramo_i"),
 					(String)omap1.get("pv_estado_i"),
 					(String)omap1.get("pv_nmpoliza_i"),
@@ -516,8 +519,9 @@ public class EndososAction extends PrincipalCoreAction
 					(Date)omap1.get("pv_fecha_i"),
 					"SL"
 					);
+			String confirmado = !(Boolean)endosoConfirmado[1]?(String)endosoConfirmado[0]:null;
 		    
-			if(confirmado==null||confirmado.length()==0)
+			if(confirmado==null)
 			{
 			    ///////////////////////////////////////
 			    ////// re generar los documentos //////
@@ -802,7 +806,7 @@ public class EndososAction extends PrincipalCoreAction
 			else
 			{
 				
-				String tramiteGenerado=this.confirmarEndoso(
+				Object endosoConfirmado[]=this.confirmarEndoso(
 						smap1.get("pv_cdunieco_i"), 
 						smap1.get("pv_cdramo_i"), 
 						smap1.get("pv_estado_i"), 
@@ -814,8 +818,9 @@ public class EndososAction extends PrincipalCoreAction
 						fechaEndosoD,
 						smap1.get("pv_cdtipsit_i")
 						);
+				String tramiteGenerado=!(Boolean)endosoConfirmado[1]?(String)endosoConfirmado[0]:null;
 			    
-				if(tramiteGenerado==null||tramiteGenerado.length()==0)
+				if(tramiteGenerado==null)
 				{
 
 				    ///////////////////////////////////////
@@ -1039,7 +1044,7 @@ public class EndososAction extends PrincipalCoreAction
 			////// guardar persona datos fijos //////
 			/////////////////////////////////////////
 			
-			String tramiteGenerado=this.confirmarEndoso(
+			Object[] endosoConfirmado=this.confirmarEndoso(
 					(String)mapGuaEnd.get("pv_cdunieco_i"),
 					(String)mapGuaEnd.get("pv_cdramo_i"),
 					(String)mapGuaEnd.get("pv_estado_i"),
@@ -1051,8 +1056,9 @@ public class EndososAction extends PrincipalCoreAction
 					renderFechas.parse((String)smap2.get("pv_fecha_i")),
 					smap2.get("cdtipsit")
 					);
+			String tramiteGenerado=!(Boolean)endosoConfirmado[1]?(String)endosoConfirmado[0]:null;
 		    
-			if(tramiteGenerado==null||tramiteGenerado.length()==0)
+			if(tramiteGenerado==null)
 			{
 				
 			    ///////////////////////////////////////
@@ -1726,7 +1732,7 @@ public class EndososAction extends PrincipalCoreAction
 				}
 				endososManager.calcularValorEndoso(paramCalcValorEndoso);
 				
-				String tramiteGenerado=this.confirmarEndoso(
+				Object[] endosoConfirmado=this.confirmarEndoso(
 						(String)omap1.get("pv_cdunieco_i"), 
 						(String)omap1.get("pv_cdramo_i"), 
 						(String)omap1.get("pv_estado_i"), 
@@ -1740,8 +1746,9 @@ public class EndososAction extends PrincipalCoreAction
 						(Date)omap1.get("pv_fecha_i"), 
 						smap1.get("cdtipsit")
 						);
+				String tramiteGenerado=!(Boolean)endosoConfirmado[1]?(String)endosoConfirmado[0]:null;
 			    
-				if(tramiteGenerado==null||tramiteGenerado.length()==0)
+				if(tramiteGenerado==null)
 				{
 				
 				    ///////////////////////////////////////
@@ -2202,7 +2209,7 @@ public class EndososAction extends PrincipalCoreAction
 			if(smap1.get("confirmar").equalsIgnoreCase("si"))
 			{
 				
-				String tramiteGenerado=this.confirmarEndoso(
+				Object[] endosoConfirmado=this.confirmarEndoso(
 						smap1.get("cdunieco"),
 						smap1.get("cdramo"),
 						smap1.get("estado"),
@@ -2213,9 +2220,10 @@ public class EndososAction extends PrincipalCoreAction
 						"",
 						renderFechas.parse(smap1.get("fecha_endoso")),
 						smap1.get("cdtipsit")
-						);	    
+						);
+				String tramiteGenerado=!(Boolean)endosoConfirmado[1]?(String)endosoConfirmado[0]:null;
 		    
-				if(tramiteGenerado==null||tramiteGenerado.length()==0)
+				if(tramiteGenerado==null)
 				{
 				
 				    ///////////////////////////////////////
@@ -3023,9 +3031,13 @@ public class EndososAction extends PrincipalCoreAction
 			String cdusuari = usuario.getUser();
 			Date   fechaHoy = new Date();
 			String ntramite = smap2.get("NTRAMITE");
+			String cdsisrol = usuario.getRolActivo().getObjeto().getValue();
 			
-			String fechaEndoso  = smap3.get("fecha_endoso");
-			Date   fechaEndosoD = renderFechas.parse(fechaEndoso);
+			String fechaEndoso    = smap3.get("fecha_endoso");
+			Date   fechaEndosoD   = renderFechas.parse(fechaEndoso);
+			
+			DatosUsuario datUsu   = kernelManager.obtenerDatosUsuario(cdusuari);
+			String cdpersonSesion = datUsu.getCdperson();
 			
 			Map<String,String>paramsIniciarEndoso=new HashMap<String,String>(0);
 			paramsIniciarEndoso.put("pv_cdunieco_i" , cdunieco);
@@ -3494,7 +3506,7 @@ public class EndososAction extends PrincipalCoreAction
 				//////////////////////////
 			}
 			
-			String tramiteGenerado=this.confirmarEndoso(
+			Object[] endosoConfirmado=this.confirmarEndoso(
 					cdunieco, 
 					cdramo, 
 					estado,
@@ -3507,6 +3519,7 @@ public class EndososAction extends PrincipalCoreAction
 					"",
 					fechaEndosoD,
 					cdtipsit);
+			String tramiteGenerado=!(Boolean)endosoConfirmado[1]?(String)endosoConfirmado[0]:null;
 		    
 			List<Map<String,String>>invalidos = new ArrayList<Map<String,String>>();
 			if(alta)
@@ -3521,8 +3534,24 @@ public class EndososAction extends PrincipalCoreAction
 				
 				if(invalidos.size()>0)
 				{
+					kernelManager.mesaControlUpdateStatus((String)endosoConfirmado[0], EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo());
+					
 					String cdtipsup = alta ? TipoEndoso.ALTA_ASEGURADOS.getCdTipSup().toString()
 						     : TipoEndoso.BAJA_ASEGURADOS.getCdTipSup().toString();
+					
+					String mensajeRespuesta = "El endoso se envi&oacute; a autorizaci&oacute;n debido a que:<br/>";
+					for(Map<String,String>iAseguradoEdadInvalida:invalidos)
+					{
+						mensajeRespuesta = mensajeRespuesta + iAseguradoEdadInvalida.get("NOMBRE");
+						if(iAseguradoEdadInvalida.get("SUPERAMINI").substring(0, 1).equals("-"))
+						{
+							mensajeRespuesta = mensajeRespuesta + " no llega a la edad de "+iAseguradoEdadInvalida.get("EDADMINI")+" a&ntilde;os<br/>";
+						}
+						else
+						{
+							mensajeRespuesta = mensajeRespuesta + " supera la edad de "+iAseguradoEdadInvalida.get("EDADMAXI")+" a&ntilde;os<br/>";
+						}
+					}
 					
 					String dssuplem="";
 					// Obtenemos TODOS los nombres de los endosos:
@@ -3543,21 +3572,24 @@ public class EndososAction extends PrincipalCoreAction
 					paramsMesaControl.put("pv_nmsuplem_i"   , nmsuplem);
 					paramsMesaControl.put("pv_cdsucadm_i"   , cdunieco);
 					paramsMesaControl.put("pv_cdsucdoc_i"   , cdunieco);
-					paramsMesaControl.put("pv_cdtiptra_i"   , "15");
+					paramsMesaControl.put("pv_cdtiptra_i"   , TipoTramite.EMISION_EN_ESPERA.getCdtiptra());
 					paramsMesaControl.put("pv_ferecepc_i"   , fechaEndosoD);
 					paramsMesaControl.put("pv_cdagente_i"   , null);
 					paramsMesaControl.put("pv_referencia_i" , null);
 					paramsMesaControl.put("pv_nombre_i"     , null);
 					paramsMesaControl.put("pv_festatus_i"   , fechaEndosoD);
-					paramsMesaControl.put("pv_status_i"     , "8");
-					paramsMesaControl.put("pv_comments_i"   , "");
+					paramsMesaControl.put("pv_status_i"     , EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo());
+					paramsMesaControl.put("pv_comments_i"   , mensajeRespuesta);
 					paramsMesaControl.put("pv_nmsolici_i"   , null);
 					paramsMesaControl.put("pv_cdtipsit_i"   , cdtipsit);
-					paramsMesaControl.put("pv_otvalor01"    , ntramite);
-					paramsMesaControl.put("pv_otvalor02"    , cdtipsup);
-					paramsMesaControl.put("pv_otvalor03"    , dssuplem);
-					paramsMesaControl.put("pv_otvalor04"    , nsuplogi);
-					paramsMesaControl.put("pv_otvalor05"    , cdusuari);
+					paramsMesaControl.put("pv_otvalor01"    , cdusuari);
+					paramsMesaControl.put("pv_otvalor02"    , cdelemen);
+					paramsMesaControl.put("pv_otvalor03"    , (Integer.valueOf((String)endosoConfirmado[0])).toString());
+					paramsMesaControl.put("pv_otvalor04"    , cdpersonSesion);
+					paramsMesaControl.put("pv_otvalor05"    , dssuplem);
+					paramsMesaControl.put("pv_otvalor06"    , cdtipsup);
+					paramsMesaControl.put("pv_otvalor07"    , nsuplogi);
+					paramsMesaControl.put("pv_otvalor08"    , ntramite);
 					WrapperResultados wr=kernelManager.PMovMesacontrol(paramsMesaControl);
 					tramiteGenerado=(String) wr.getItemMap().get("ntramite");
 				}
@@ -4016,7 +4048,7 @@ public class EndososAction extends PrincipalCoreAction
     			//////////////////////////
 			}
 			
-			String tramiteGenerado=this.confirmarEndoso(
+			Object[] endosoConfirmado=this.confirmarEndoso(
 					cdunieco,
 					cdramo,
 					estado,
@@ -4027,8 +4059,9 @@ public class EndososAction extends PrincipalCoreAction
 					"",
 					renderFechas.parse(fechaEndoso),
 					cdtipsit);
+			String tramiteGenerado=!(Boolean)endosoConfirmado[1]?(String)endosoConfirmado[0]:null;
 			
-			if(tramiteGenerado==null||tramiteGenerado.length()==0)
+			if(tramiteGenerado==null)
 			{
 
 			    ///////////////////////////////////////
@@ -4439,7 +4472,7 @@ public class EndososAction extends PrincipalCoreAction
     			//////////////////////////
 			}
 			
-			String tramiteGenerado=this.confirmarEndoso(
+			Object[] endosoConfirmado=this.confirmarEndoso(
 					cdunieco,
 					cdramo,
 					estado,
@@ -4450,8 +4483,9 @@ public class EndososAction extends PrincipalCoreAction
 					"",
 					renderFechas.parse(fechaEndoso),
 					cdtipsit);
+			String tramiteGenerado=!(Boolean)endosoConfirmado[1]?(String)endosoConfirmado[0]:null;
 		    
-			if(tramiteGenerado==null||tramiteGenerado.length()==0)
+			if(tramiteGenerado==null)
 			{
 				
 			    ///////////////////////////////////////
@@ -4568,11 +4602,11 @@ public class EndososAction extends PrincipalCoreAction
 	/**
 	 * +-30 dias ? PKG_SATELITES.P_MOV_MESACONTROL : PKG_ENDOSOS.P_CONFIRMAR_ENDOSOB
 	 */
-	private String confirmarEndoso(String cdunieco,String cdramo,String estado,String nmpoliza,
+	private Object[] confirmarEndoso(String cdunieco,String cdramo,String estado,String nmpoliza,
 			String nmsuplem, String nsuplogi, String cdtipsup, String dscoment, Date fechaEndoso,
 			String cdtipsit)throws Exception
 	{
-		String ntramiteEndoso="";
+		Object tramites[]=new Object[2];
 		String ntramiteEmision=endososManager.obtenerNtramiteEmision(cdunieco, cdramo, estado, nmpoliza);
 		UserVO usuario = (UserVO)session.get("USUARIO");
 		String cdusuari = usuario.getUser();
@@ -4626,7 +4660,8 @@ public class EndososAction extends PrincipalCoreAction
 		if(dif>max)
 		{
 			WrapperResultados wr=kernelManager.PMovMesacontrol(paramsMesaControl);
-			ntramiteEndoso=(String) wr.getItemMap().get("ntramite");
+			tramites[0]=(String) wr.getItemMap().get("ntramite");//ntramite 
+			tramites[1]=Boolean.FALSE;
 		}
 		else
 		{	
@@ -4640,12 +4675,15 @@ public class EndososAction extends PrincipalCoreAction
 			paramConfirmarEndosoB.put("pv_cdtipsup_i" , cdtipsup);
 			paramConfirmarEndosoB.put("pv_dscoment_i" , dscoment);
 			endososManager.confirmarEndosoB(paramConfirmarEndosoB);
-			ntramiteEndoso="";
 			
-			kernelManager.PMovMesacontrol(paramsMesaControl);
+			WrapperResultados wr=kernelManager.PMovMesacontrol(paramsMesaControl);
+			
+			tramites[0]=(String) wr.getItemMap().get("ntramite");
+			tramites[1]=Boolean.TRUE;
+			
 		}
 	    
-	    return ntramiteEndoso;
+	    return tramites;
 	}
 	/*//////////////////////////*/
 	////// confirmar endoso //////
@@ -5174,7 +5212,7 @@ public class EndososAction extends PrincipalCoreAction
 			////// valor endoso //////
 			//////////////////////////
 			
-			String tramiteGenerado=this.confirmarEndoso(
+			Object[] endosoConfirmado=this.confirmarEndoso(
 					cdunieco,
 					cdramo,
 					estado,
@@ -5186,8 +5224,9 @@ public class EndososAction extends PrincipalCoreAction
 					dFechaEndoso,
 					cdtipsit
 					);
+			String tramiteGenerado=!(Boolean)endosoConfirmado[1]?(String)endosoConfirmado[0]:null;
 		    
-			if(tramiteGenerado==null||tramiteGenerado.length()==0)
+			if(tramiteGenerado==null)
 			{
 				///////////////////////////////////////
 			    ////// re generar los documentos //////
@@ -5581,9 +5620,10 @@ public class EndososAction extends PrincipalCoreAction
 			//////////////////////////
 			
 			//+- 30 dias ? PKG_SATELITES.P_MOV_MESACONTROL : PKG_ENDOSOS.P_CONFIRMAR_ENDOSOB
-			String tramiteGenerado=this.confirmarEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, cdtipsup, "", dFecha, cdtipsit);
+			Object[] endosoConfirmado=this.confirmarEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, cdtipsup, "", dFecha, cdtipsit);
+			String tramiteGenerado=!(Boolean)endosoConfirmado[1]?(String)endosoConfirmado[0]:null;
 			
-			if(tramiteGenerado==null||tramiteGenerado.length()==0)
+			if(tramiteGenerado==null)
 			{
 				//PKG_CONSULTA.P_reImp_documentos
 				String nmsolici = this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite);
@@ -5888,9 +5928,10 @@ public class EndososAction extends PrincipalCoreAction
 			//////////////////////////
 			
 			//+- 30 dias ? PKG_SATELITES.P_MOV_MESACONTROL : PKG_ENDOSOS.P_CONFIRMAR_ENDOSOB
-			String tramiteGenerado=this.confirmarEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, cdtipsup, "", dFecha, cdtipsit);
+			Object[] endosoConfirmado=this.confirmarEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, cdtipsup, "", dFecha, cdtipsit);
+			String tramiteGenerado=!(Boolean)endosoConfirmado[1]?(String)endosoConfirmado[0]:null;
 			
-			if(tramiteGenerado==null||tramiteGenerado.length()==0)
+			if(tramiteGenerado==null)
 			{
 				//PKG_CONSULTA.P_reImp_documentos
 				String nmsolici = this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite);
@@ -6213,10 +6254,11 @@ public class EndososAction extends PrincipalCoreAction
 					,cdrazonReexp, comentaReexp, feIniVig, feFinvig, sFecha, cdusuari, cdtipsup);
 			
 			//+- 30 dias ? PKG_SATELITES.P_MOV_MESACONTROL : PKG_ENDOSOS.P_CONFIRMAR_ENDOSOB
-			String tramiteGenerado=this.confirmarEndoso(cdunieco, cdramo, estado, nmpoliza
+			Object[] endosoConfirmado=this.confirmarEndoso(cdunieco, cdramo, estado, nmpoliza
 					,nmsuplem, nsuplogi, cdtipsup, comentaReexp, dFecha, cdtipsit);
+			String tramiteGenerado=!(Boolean)endosoConfirmado[1]?(String)endosoConfirmado[0]:null;
 			
-			if(tramiteGenerado==null||tramiteGenerado.length()==0)
+			if(tramiteGenerado==null)
 			{
 				
 				List<Map<String,String>>listaDocu=cancelacionManager.reimprimeDocumentos(cdunieco, cdramo, estado, nmpoliza, cdtipsup);
@@ -6589,9 +6631,10 @@ public class EndososAction extends PrincipalCoreAction
 			endososManager.calcularValorEndoso(cdunieco, cdramo, estado, nmpoliza, nmsituac, nmsuplem, dFecha, cdtipsup);
 			
 			//+- 30 dias ? PKG_SATELITES.P_MOV_MESACONTROL : PKG_ENDOSOS.P_CONFIRMAR_ENDOSOB
-			String tramiteGenerado=this.confirmarEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, cdtipsup, "", dFecha, cdtipsit);
+			Object[] endosoConfirmado=this.confirmarEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, cdtipsup, "", dFecha, cdtipsit);
+			String tramiteGenerado=!(Boolean)endosoConfirmado[1]?(String)endosoConfirmado[0]:null;
 			
-			if(StringUtils.isBlank(tramiteGenerado))
+			if(tramiteGenerado==null)
 			{
 				//PKG_CONSULTA.P_reImp_documentos
 				String nmsolici = this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite);
@@ -6825,10 +6868,11 @@ public class EndososAction extends PrincipalCoreAction
 			endososManager.calcularComisionBase(cdunieco, cdramo, estado, nmpoliza, nmsuplem);
 			
 			//+- 30 dias ? PKG_SATELITES.P_MOV_MESACONTROL : PKG_ENDOSOS.P_CONFIRMAR_ENDOSOB
-			String tramiteGenerado=this.confirmarEndoso(cdunieco, cdramo, estado, nmpoliza
+			Object[] endosoConfirmado=this.confirmarEndoso(cdunieco, cdramo, estado, nmpoliza
 					,nmsuplem, nsuplogi, cdtipsup, "", dFecha, cdtipsit);
+			String tramiteGenerado=!(Boolean)endosoConfirmado[1]?(String)endosoConfirmado[0]:null;
 			
-			if(StringUtils.isBlank(tramiteGenerado))
+			if(tramiteGenerado==null)
 			{
 				String nmsolici=this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite);
 				
@@ -7152,9 +7196,10 @@ public class EndososAction extends PrincipalCoreAction
 			endososManager.calcularRecibosCambioAgente(cdunieco,cdramo,estado,nmpoliza,nmsuplem,cdagente);
 			
 	   		//+-30 dias ? PKG_SATELITES.P_MOV_MESACONTROL : PKG_ENDOSOS.P_CONFIRMAR_ENDOSOB
-	   		String tramiteGenerado=confirmarEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, cdtipsup, comentariosEndoso, dFecha, cdtipsit);
+	   		Object[] endosoConfirmado=confirmarEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, cdtipsup, comentariosEndoso, dFecha, cdtipsit);
+	   		String tramiteGenerado=!(Boolean)endosoConfirmado[1]?(String)endosoConfirmado[0]:null;
 	   		
-	   		if(StringUtils.isBlank(tramiteGenerado))
+	   		if(tramiteGenerado==null)
 	   		{
 	   			
 	   			//PKG_CONSULTA.P_reImp_documentos
