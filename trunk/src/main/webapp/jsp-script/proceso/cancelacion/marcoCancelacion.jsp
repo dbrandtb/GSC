@@ -552,6 +552,9 @@ Ext.onReady(function()
    	                                            ,buttons : Ext.Msg.OK
    	                                        });
 	    	    						}
+	    	    						
+	    	    						Ext.getCmp('marcanMenuOperaciones').expand();
+	    	    		                Ext.getCmp('marcanLoaderFrame').update('');
 	    	    					}
 	    	    				    ,failure : function(action,response)
 	    	    				    {
