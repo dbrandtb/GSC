@@ -22,6 +22,17 @@ public interface ConsultasPolizaManager {
 	 * @throws         ApplicationException
 	 */
 	public WrapperResultados consultaPoliza(String cdunieco, String cdramo, String estado, String nmpoliza)throws ApplicationException;
+
+	/**
+	 * Consulta si el agente de una poliza en la imagen dada se le debe de mostrar un mensaje
+	 * @param cdunieco Unidad Economica
+	 * @param cdramo   Ramo
+	 * @param estado   Estado
+	 * @param nmpoliza Numero de poliza
+	 * @return         Sting mensaje para el Agente
+	 * @throws         ApplicationException
+	 */
+	public String consultaMensajeAgente(String cdunieco, String cdramo, String estado, String nmpoliza)throws ApplicationException;
 	
 	
 	/**
