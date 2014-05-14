@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.general.service;
 
+import java.util.Date;
 import java.util.List;
 
 import mx.com.aon.portal.model.IsoVO;
@@ -25,5 +26,7 @@ public interface NavigationManager {
 	public IsoVO getVariablesIso(String user)throws ApplicationException;
 
 	public List<UserVO> getAttributesUser(String user) throws ApplicationException;
+	
+	public void guardarSesion(String idSesion, String cdusuari, String cdsisrol, String userAgent, boolean esMovil, Date fecha) throws Exception;
 	
 }
