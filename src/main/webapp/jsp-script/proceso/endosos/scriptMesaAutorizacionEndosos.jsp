@@ -79,7 +79,7 @@ function _4_autorizarEndoso()
 		valido=status=='8';
 		if(!valido)
 		{
-			mensajeWarning('El endoso ya est&aacute; confirmado');
+			mensajeWarning('El endoso ya est&aacute; confirmado o requiere autorizaci&oacute;n del gerente');
 		}
 	}
 	
