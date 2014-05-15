@@ -521,6 +521,7 @@ Ext.onReady(function()
     ////// cargador //////
     /*//////////////////*/
     loadMcdinStore = function (){
+    	mcdinGrid.setLoading(true);
 	    Ext.Ajax.request(
 	    {
 	        url      : mcdinUrlCargar
@@ -540,6 +541,7 @@ Ext.onReady(function()
 	        }
 	        ,success : function(response)
 	        {
+	        	mcdinGrid.setLoading(false);
 	        	debug('responseText',response.responseText);
 	            var jsonResponse = Ext.decode(response.responseText);
 	            debug(jsonResponse);
@@ -554,6 +556,7 @@ Ext.onReady(function()
 	        }
 	        ,failure : function()
 	        {
+	        	mcdinGrid.setLoading(false);
 	            var msg=Ext.Msg.show(
 	            {
 	                title   : 'Error',

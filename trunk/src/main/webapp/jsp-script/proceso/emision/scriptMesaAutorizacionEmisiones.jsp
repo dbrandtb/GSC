@@ -8,11 +8,105 @@ var _4_urlAutorizarEmision = '<s:url namespace="/"            action="autorizaEm
 var _4_urlVerDocumentos    = '<s:url namespace="/documentos"  action="ventanaDocumentosPoliza" />';
 var _4_urlAutorizarEndoso  = '<s:url namespace="/endosos"     action="autorizarEndoso"         />';
 var _4_urlUpdateStatus     = '<s:url namespace="/mesacontrol" action="actualizarStatusTramite" />';
+var _4_urlRegresarEmision  = '<s:url namespace="/mesacontrol" action="regresarEmisionEnAutori" />';
+
+var _4_windowComentario;
+var _4_recordAutoSelected;
+var _4_windowComentarioOperacion;
+var _4_windowComentarioTipo;
 ////// variables //////
 
 ////// funciones //////
+function _4_moverTramite()
+{
+	debug('>_4_moverTramite');
+	var ventana   = _4_windowComentario;
+	var record    = _4_recordAutoSelected;
+	var coment    = _4_windowComentario.items.items[0].getValue();
+	var operacion = _4_windowComentarioOperacion;
+	var tipo      = _4_windowComentarioTipo;
+	debug('record:',record.data);
+	debug('comentario:',coment);
+	debug('operacion:',operacion);
+	debug('tipo:',tipo);
+	if(tipo=='EMISION'&&operacion=='regresar')
+	{
+		debug('>regresar emision');
+		ventana.setLoading(true);
+		Ext.Ajax.request(
+		{
+			url       : _4_urlRegresarEmision
+			,jsonData :
+			{
+				smap1 :
+				{
+					ntramiteAuto : record.get('ntramite')
+					,ntramiteEmi : record.get('parametros.pv_otvalor03')
+					,comentario  : coment
+				}
+			}
+		    ,success : function(response)
+		    {
+		    	ventana.setLoading(false);
+		    	var json = Ext.decode(response.responseText);
+		    	if(json.success)
+		    	{
+		    		mensajeCorrecto('Aviso',json.mensaje);
+		    		ventana.hide();
+		    	}
+		    	else
+		    	{
+		    		mensajeError(json.mensaje);
+		    	}
+		    }
+		    ,failure : function()
+		    {
+		    	ventana.setLoading(false);
+		    	errorComunicacion();
+		    }
+		});
+		debug('<regresar emision');
+	}
+	debug('<_4_moverTramite');
+}
+
+function _4_onRegresarClick(grid,rowIndex)
+{
+	debug('>_4_onRegresarClick');
+	_4_recordAutoSelected=grid.getStore().getAt(rowIndex);
+	debug('_4_recordAutoSelected:',_4_recordAutoSelected);
+	var valido = true;
+	if(valido)
+	{
+		valido = _4_recordAutoSelected.get('status')=='11';
+		if(!valido)
+		{
+			mensajeWarning('Este tr&aacute;mite no se puede regresar, verifique el status');
+		}
+	}
+	if(valido)
+	{
+		valido = _4_recordAutoSelected.get('parametros.pv_otvalor05')=='EMISION';
+		if(!valido)
+		{
+			mensajeWarning('Solo se pueden regresar tr&aacute;mites de emisi&oacute;n');
+		}
+	}
+	if(valido)
+	{
+		_4_windowComentarioTipo=_4_recordAutoSelected.get('parametros.pv_otvalor05');
+		_4_windowComentarioOperacion = 'regresar';
+		_4_windowComentario.items.items[0].setValue('');
+		_4_windowComentario.setTitle('Regresar tr&aacute;mite');
+		_4_windowComentario.show();
+		centrarVentanaInterna(_4_windowComentario);
+	}
+	debug('<_4_onRegresarClick');
+}
+
 function _4_onFolderClick(grid,rowIndex)
 {
+	//return _4_onRegresarClick(grid,rowIndex);
     debug(rowIndex);
     var record=grid.getStore().getAt(rowIndex);
     debug(record);
@@ -171,6 +265,34 @@ Ext.onReady(function()
 	////// componentes //////
 	
 	////// contenido //////
+	_4_windowComentario = Ext.create('Ext.window.Window',
+	{
+		width        : 300
+		,height      : 200
+		,modal       : true
+		,buttonAlign : 'center'
+		,items       : Ext.create('Ext.form.field.TextArea',
+		{
+			width   : 285
+			,height : 120
+		})
+		,buttons     :
+		[
+		    {
+		    	text     : 'Enviar'
+		    	,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
+		    	,handler : _4_moverTramite
+		    }
+		    ,{
+		    	text     : 'Cancelar'
+		    	,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
+		    	,handler : function()
+		    	{
+		    		_4_windowComentario.hide();
+		    	}
+		    }
+		]
+	});
 	////// contenido //////
 });
 <s:if test="false">
