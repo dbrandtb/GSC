@@ -1244,6 +1244,15 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 		WrapperResultados res = this.returnBackBoneInvoke(params,ProcesoDAO.HABILITA_SIG_RECIBO);
 		return res.getMsgTitle();
 	}
+
+	public String obtenCdtipsitGS(Map<String, Object> params) throws ApplicationException{
+		String cdtipsitGS = null;
+		WrapperResultados res = this.returnBackBoneInvoke(params,ProcesoDAO.OBTEN_CDTIPSIT_GS);
+		cdtipsitGS = (String) res.getItemMap().get("cdtipsitGS");
+		logger.debug(">>>> cdTipsitGS obtenido para URLs de recibos: " + cdtipsitGS);
+		return cdtipsitGS;
+	}
+	
 	public boolean validaDatosDxN(HashMap<String, Object> params) throws ApplicationException{
 		WrapperResultados res = this.returnBackBoneInvoke(params,ProcesoDAO.VALIDA_DATOS_DXN);
 		boolean exito = "1".equals(res.getItemMap().get("EXITO"));

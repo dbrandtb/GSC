@@ -48,7 +48,7 @@ public class RecibosSigsServiceImpl implements RecibosSigsService {
 	private KernelManagerSustituto kernelManager;
 
 	
-	public boolean generaRecibosDxN(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String cdtipsitGS, String sucursal, String nmsolici, String ntramite, UserVO userVO){
+	public boolean generaRecibosDxN(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String sucursal, String nmsolici, String ntramite, UserVO userVO){
 		
 		logger.debug("*** Entrando a metodo Genera Recibos DxN, para la poliza: " + nmpoliza + " cdunieco: " + cdunieco + "***");
 		
@@ -141,15 +141,17 @@ public class RecibosSigsServiceImpl implements RecibosSigsService {
 			}
 			return false;
 		}else{
-			guardaCalendariosDxnFinaliza(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsitGS, sucursal, nmsolici, ntramite, calendarios);
+			guardaCalendariosDxnFinaliza(cdunieco, cdramo, estado, nmpoliza, nmsuplem, sucursal, nmsolici, ntramite, calendarios);
 		}
 		
 		return true;
 	}
 	
-	public boolean guardaCalendariosDxnFinaliza(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String cdtipsitGS, String sucursal, String nmsolici, String ntramite, GeneradorRecibosDxnRespuesta calendarios){
+	public boolean guardaCalendariosDxnFinaliza(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String sucursal, String nmsolici, String ntramite, GeneradorRecibosDxnRespuesta calendarios){
 		
 		if(calendarios == null) return false;
+		
+		String cdtipsitGS = null;
 		
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("pv_cdunieco_i", cdunieco);
@@ -217,6 +219,7 @@ public class RecibosSigsServiceImpl implements RecibosSigsService {
 			
 			try {
 				kernelManager.guardaPeriodosDxN(params);
+				cdtipsitGS = kernelManager.obtenCdtipsitGS(params);
 			} catch (Exception e) {
 				logger.error("Error en llamado a PL", e);
 			}

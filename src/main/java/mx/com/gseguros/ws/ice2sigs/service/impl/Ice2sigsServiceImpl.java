@@ -268,11 +268,12 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 	
 	public boolean ejecutaWSrecibos(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String nmsuplem,
-			String rutaPoliza, String cdtipsitGS, String sucursal,
+			String rutaPoliza, String sucursal,
 			String nmsolici, String ntramite, boolean async,
 			String tipoMov, UserVO userVO) {
 		
 		boolean allInserted = true;
+		String cdtipsitGS = null;
 		
 		logger.debug("*** Entrando a metodo Recibos WS ice2sigs, para la poliza: " + nmpoliza + " sucursal: " + sucursal + " tipoMov: " + tipoMov + "***");
 		
@@ -290,6 +291,9 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 		try {
 			result = kernelManager.obtenDatosRecibos(params);
 			recibos = (ArrayList<ReciboWrapper>) result.getItemList();
+			
+			cdtipsitGS = kernelManager.obtenCdtipsitGS(params);
+			
 		} catch (Exception e1) {
 			logger.error("Error en llamar al PL de obtencion de RECIBOS",e1);
 			return false;
@@ -499,7 +503,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 						logger.debug("XML de entrada: " + resultWS.getXmlIn());
 						
 						if (Estatus.EXITO.getCodigo() != respuesta.getCodigo()) {
-							logger.error("Guardando en bitacora el estatus");
+							logger.error("Guardando en bitacora el estatus de Error del WS");
 
 							try {
 								kernelManager.movBitacobro((String) params.get("pv_cdunieco_i"),
@@ -516,6 +520,9 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 							} catch (Exception e1) {
 								logger.error("Error al insertar en Bitacora", e1);
 							}
+							
+							res.setSuccess(false);
+							res.setMensaje("Error al enviar alg&uacute;n Reclamo para la solicitud de Pago. Intente nuevamente.");
 						}
 					}
 					

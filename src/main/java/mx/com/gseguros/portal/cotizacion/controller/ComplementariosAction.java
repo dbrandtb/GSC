@@ -1406,16 +1406,12 @@ public class ComplementariosAction extends PrincipalCoreAction
 			/**/
 			
 			
-			/**
-			 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
-			 */
 			String _cdunieco = cdunieco;
 			String _cdramo   = cdramo;
 			String edoPoliza = "M";
 			String _nmpoliza = nmpolizaEmitida;
 			String _nmsuplem = nmsuplemEmitida;
 			
-			String cdtipsitGS = "213";
 			String sucursal = cdunieco;
 			if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 			
@@ -1427,7 +1423,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 			logger.debug(">>>>>>>>>> estado: "+ edoPoliza);
 			logger.debug(">>>>>>>>>> nmpoliza: "+ _nmpoliza);
 			logger.debug(">>>>>>>>>> suplemento: "+ _nmsuplem);
-			logger.debug(">>>>>>>>>> subramoGS: "+ cdtipsitGS);
 			logger.debug(">>>>>>>>>> sucursal: "+ sucursal);
 			logger.debug(">>>>>>>>>> nmsolici: "+ nmpoliza);
 			logger.debug(">>>>>>>>>> nmtramite: "+ ntramite);
@@ -1445,18 +1440,18 @@ public class ComplementariosAction extends PrincipalCoreAction
 				ice2sigsService.ejecutaWSrecibos(_cdunieco, _cdramo,
 						edoPoliza, _nmpoliza, 
 						_nmsuplem, rutaCarpeta,
-						cdtipsitGS, sucursal, nmpoliza, ntramite, 
+						sucursal, nmpoliza, ntramite, 
 						false, tipoMov,
 						us);
 				// Ejecutamos el Web Service de Recibos DxN:
-				recibosSigsService.generaRecibosDxN(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, cdtipsitGS, sucursal, nmpoliza, ntramite, us);
+				recibosSigsService.generaRecibosDxN(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, sucursal, nmpoliza, ntramite, us);
 			}else{
 				
 				// Ejecutamos el Web Service de Recibos:
 				ice2sigsService.ejecutaWSrecibos(_cdunieco, _cdramo,
 						edoPoliza, _nmpoliza, 
 						_nmsuplem, rutaCarpeta,
-						cdtipsitGS, sucursal, nmpoliza,ntramite, 
+						sucursal, nmpoliza,ntramite, 
 						true, tipoMov,
 						us);
 			}
@@ -1615,16 +1610,12 @@ public class ComplementariosAction extends PrincipalCoreAction
 			String nmpoliexEmitida = (String)wr.getItemMap().get("nmpoliex");
 			String nmsuplemEmitida = (String)wr.getItemMap().get("nmsuplem");
 			
-			/**
-			 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
-			 */
 			String _cdunieco = cdunieco;
 			String _cdramo   = cdramo;
 			String edoPoliza = "M";
 			String _nmpoliza = nmpolizaEmitida;
 			String _nmsuplem = nmsuplemEmitida;
 			
-			String cdtipsitGS = "213";
 			String sucursal = cdunieco;
 			if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 			
@@ -1636,7 +1627,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 			logger.debug(">>>>>>>>>> estado: "+ edoPoliza);
 			logger.debug(">>>>>>>>>> nmpoliza: "+ _nmpoliza);
 			logger.debug(">>>>>>>>>> suplemento: "+ _nmsuplem);
-			logger.debug(">>>>>>>>>> subramoGS: "+ cdtipsitGS);
 			logger.debug(">>>>>>>>>> sucursal: "+ sucursal);
 			logger.debug(">>>>>>>>>> nmsolici: "+ nmpoliza);
 			logger.debug(">>>>>>>>>> nmtramite: "+ ntramite);
@@ -1674,18 +1664,18 @@ public class ComplementariosAction extends PrincipalCoreAction
 				ice2sigsService.ejecutaWSrecibos(_cdunieco, _cdramo,
 						edoPoliza, _nmpoliza, 
 						_nmsuplem, rutaCarpeta,
-						cdtipsitGS, sucursal, nmpoliza, ntramite, 
+						sucursal, nmpoliza, ntramite, 
 						false, tipoMov,
 						us);
 				// Ejecutamos el Web Service de Recibos DxN:
-				recibosSigsService.generaRecibosDxN(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, cdtipsitGS, sucursal, nmpoliza, ntramite, us);
+				recibosSigsService.generaRecibosDxN(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, sucursal, nmpoliza, ntramite, us);
 			}else{
 				
 				// Ejecutamos el Web Service de Recibos:
 				ice2sigsService.ejecutaWSrecibos(_cdunieco, _cdramo,
 						edoPoliza, _nmpoliza, 
 						_nmsuplem, rutaCarpeta,
-						cdtipsitGS, sucursal, nmpoliza,ntramite, 
+						sucursal, nmpoliza,ntramite, 
 						true, tipoMov,
 						us);
 			}
@@ -1777,7 +1767,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String estado = map1.get("estado");
 		String nmpoliza = map1.get("nmpoliza");
 		String nmsuplem = map1.get("nmsuplem");
-		//String cdtipsitGS = map1.get("subramo");
 		//String sucursal = map1.get("sucursal");
 
 		String nmtramite = map1.get("nmtramite");
@@ -1800,7 +1789,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String estado = map1.get("estado");
 		String nmpoliza = map1.get("nmpoliza");
 		String nmsuplem = map1.get("nmsuplem");
-		String cdtipsitGS = map1.get("subramo");
 		String sucursal = map1.get("sucursal");
 
 		String nmsolici = map1.get("nmsolici");
@@ -1809,7 +1797,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String tipoMov = "1";
 		
 		// Ejecutamos el Web Service de Recibos:
-		ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, null, cdtipsitGS, sucursal, nmsolici, nmtramite, true, tipoMov, (UserVO) session.get("USUARIO"));
+		ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, null, sucursal, nmsolici, nmtramite, true, tipoMov, (UserVO) session.get("USUARIO"));
 
 		success = true;
 		return SUCCESS;
@@ -1823,13 +1811,12 @@ public class ComplementariosAction extends PrincipalCoreAction
 		String estado = map1.get("estado");
 		String nmpoliza = map1.get("nmpoliza");
 		String nmsuplem = map1.get("nmsuplem");
-		String cdtipsitGS = map1.get("subramo");
 		String sucursal = map1.get("sucursal");
 		String nmsolici = map1.get("nmsolici");
 		String nmtramite = map1.get("nmtramite");
 
 		// Ejecutamos el Web Service de Recibos DxN:
-		recibosSigsService.generaRecibosDxN(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsitGS, sucursal, nmsolici, nmtramite, (UserVO) session.get("USUARIO"));
+		recibosSigsService.generaRecibosDxN(cdunieco, cdramo, estado, nmpoliza, nmsuplem, sucursal, nmsolici, nmtramite, (UserVO) session.get("USUARIO"));
 		success = true;
 		return SUCCESS;
 	}
