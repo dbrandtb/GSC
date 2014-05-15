@@ -16,6 +16,7 @@ var _STATUS_TRAMITE_EN_REVISION_MEDICA      = '<s:property value="@mx.com.gsegur
 var _STATUS_TRAMITE_RECHAZADO               = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@RECHAZADO.codigo" />';
 var _STATUS_TRAMITE_EN_CAPTURA              = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_CAPTURA.codigo" />';
 var _STATUS_TRAMITE_EN_ESPERA_DE_ASIGNACION = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_ESPERA_DE_ASIGNACION.codigo" />';
+var _STATUS_TRAMITE_CONFIRMADO              = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@CONFIRMADO.codigo" />';
 
 // Catalogo Tipos de tramite a utilizar:
 var _TIPO_TRAMITE_SINIESTRO = '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@SINIESTRO.cdtiptra" />';
@@ -771,6 +772,11 @@ var msgWindow;
 	
 	function solicitarPago(grid,rowIndex,colIndex){
 		var record = grid.getStore().getAt(rowIndex);
+		
+		if(record.get('status') == _STATUS_TRAMITE_CONFIRMADO){
+			mensajeWarning('Ya se ha solicitado el pago para este tr&aacute;mite.');	
+			return;
+		}
 		
 		msgWindow = Ext.Msg.show({
 	        title: 'Aviso',
