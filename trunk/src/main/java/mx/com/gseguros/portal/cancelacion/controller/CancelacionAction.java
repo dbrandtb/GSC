@@ -294,10 +294,7 @@ public class CancelacionAction extends PrincipalCoreAction
 						+ "");
 			}
 			
-			/**
-			 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
-			 */
-			String cdtipsitGS = "213";
+			
 			String sucursal = cdunieco;
 			if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 			
@@ -305,7 +302,7 @@ public class CancelacionAction extends PrincipalCoreAction
 			ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
 					estado, nmpoliza, 
 					nmsuplem, null, 
-					cdtipsitGS, sucursal, "", ntramite, 
+					sucursal, "", ntramite, 
 					true, cdtipsup, 
 					(UserVO) session.get("USUARIO"));
 			
@@ -423,10 +420,7 @@ public class CancelacionAction extends PrincipalCoreAction
 			
 			logger.debug("Datos de polizas caceladas para WS: "+ polizasCanceladas);
 			for(PolizaVO polizaC : polizasCanceladas){
-				/**
-				 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
-				 */
-				String cdtipsitGS = "213";
+				
 				String sucursal = polizaC.getCdunieco();
 				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 				
@@ -434,7 +428,7 @@ public class CancelacionAction extends PrincipalCoreAction
 				ice2sigsService.ejecutaWSrecibos(polizaC.getCdunieco(), polizaC.getCdramo(), 
 						polizaC.getEstado(), polizaC.getNmpoliza(), 
 						polizaC.getNmsuplem(), null, 
-						cdtipsitGS, sucursal, "", "", 
+						sucursal, "", "", 
 						true, cdtipsup, 
 						(UserVO) session.get("USUARIO"));
 				

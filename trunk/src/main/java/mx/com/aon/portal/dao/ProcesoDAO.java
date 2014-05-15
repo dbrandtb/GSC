@@ -142,6 +142,7 @@ public class ProcesoDAO extends AbstractDAO {
 	public static final String GUARDA_PERIODOS_DXN =	"GUARDA_PERIODOS_DXN";
 	public static final String LANZA_PROCESO_DXN =	"LANZA_PROCESO_DXN";
 	public static final String VALIDAR_EXTRAPRIMA       =	"VALIDAR_EXTRAPRIMA";
+	public static final String OBTEN_CDTIPSIT_GS       =	"OBTEN_CDTIPSIT_GS";
 	public static final String VALIDAR_EXTRAPRIMA_SITUAC_READ  =	"VALIDAR_EXTRAPRIMA_SITUAC_READ";
 	public static final String VALIDAR_EXTRAPRIMA_SITUAC   =	"VALIDAR_EXTRAPRIMA_SITUAC";
 	public static final String P_OBTIENE_MESACONTROL_SUPER = "P_OBTIENE_MESACONTROL_SUPER";
@@ -239,6 +240,7 @@ public class ProcesoDAO extends AbstractDAO {
 		addStoredProcedure(GUARDA_PERIODOS_DXN, new GuardaPeriodosDxN(getDataSource()));
 		addStoredProcedure(LANZA_PROCESO_DXN, new LanzaProcesoDxN(getDataSource()));
 		addStoredProcedure(VALIDAR_EXTRAPRIMA, new ValidarExtraprima(getDataSource()));
+		addStoredProcedure(OBTEN_CDTIPSIT_GS, new  ObtenCdtipsitGS(getDataSource()));
 		addStoredProcedure(VALIDAR_EXTRAPRIMA_SITUAC, new ValidarExtraprimaSituac(getDataSource()));
 		addStoredProcedure(VALIDAR_EXTRAPRIMA_SITUAC_READ, new ValidarExtraprimaSituacRead(getDataSource()));
 		addStoredProcedure(HABILITA_SIG_RECIBO, new HabilitaSigRecibo(getDataSource()));
@@ -4398,6 +4400,30 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
 			return wrapperResultados;
 		}   	
 
+    }
+
+    protected class ObtenCdtipsitGS extends CustomStoredProcedure {
+    	
+    	protected ObtenCdtipsitGS(DataSource dataSource) {
+    		super(dataSource, "Pkg_Consulta.P_OBTIENE_SUBRAMO");
+    		declareParameter(new SqlParameter("pv_cdunieco_i" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdramo_i"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_estado_i"   , OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_nmpoliza_i" , OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_cdsubram_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_title_o ", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+    		WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+    		WrapperResultados wrapperResultados=mapper.build(map);
+    		wrapperResultados.setItemMap(new HashMap<String, Object>());
+    		wrapperResultados.getItemMap().put("cdtipsitGS", map.get("pv_cdsubram_o"));
+    		return wrapperResultados;
+    	}   	
+    	
     }
     
     protected class ValidarExtraprimaSituac extends CustomStoredProcedure {

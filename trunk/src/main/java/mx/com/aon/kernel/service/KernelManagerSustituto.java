@@ -233,6 +233,8 @@ public interface KernelManagerSustituto {
 	public WrapperResultados guardaPeriodosDxN(Map<String, Object> params) throws ApplicationException;
 	public WrapperResultados lanzaProcesoDxN(Map<String, Object> params) throws ApplicationException;
 	public String habilitaSigRecibo(Map<String, String> params) throws ApplicationException;
+
+	public String obtenCdtipsitGS(Map<String, Object> params) throws ApplicationException;
 	/**
 	 * PKG_SATELITES.P_OBT_DATOS_MPOLIPER
 	 * @param cdunieco

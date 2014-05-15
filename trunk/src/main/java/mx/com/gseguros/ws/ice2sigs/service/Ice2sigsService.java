@@ -81,7 +81,6 @@ public interface Ice2sigsService {
 	 * @param nmpoliza
 	 * @param nmsuplem
 	 * @param rutaPoliza
-	 * @param cdtipsitGS
 	 * @param sucursal
 	 * @param nmsolici
 	 * @param ntramite
@@ -93,7 +92,7 @@ public interface Ice2sigsService {
 	 */
 	public boolean ejecutaWSrecibos(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String nmsuplem,
-			String rutaPoliza, String cdtipsitGS, String sucursal,
+			String rutaPoliza, String sucursal,
 			String nmsolici, String ntramite, boolean async,
 			String tipoMov, UserVO userVO);
 

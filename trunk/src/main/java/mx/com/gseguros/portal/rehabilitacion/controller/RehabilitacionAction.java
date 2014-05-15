@@ -326,10 +326,6 @@ public class RehabilitacionAction extends PrincipalCoreAction
 						+ "");
 			}
 			
-			/**
-			 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
-			 */
-			String cdtipsitGS = "213";
 			String sucursal = cdunieco;
 			if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 			
@@ -337,7 +333,7 @@ public class RehabilitacionAction extends PrincipalCoreAction
 			ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
 					estado, nmpoliza, 
 					nmsuplemRehab, null, 
-					cdtipsitGS, sucursal, "", ntramite, 
+					sucursal, "", ntramite, 
 					true, cdtipsup, 
 					(UserVO) session.get("USUARIO"));
 			

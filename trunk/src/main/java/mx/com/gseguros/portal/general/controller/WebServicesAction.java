@@ -99,17 +99,13 @@ public class WebServicesAction extends PrincipalCoreAction{
     		 */
     		if("ws.recibossigs.url".equals(peticionWS.get("CDURLWS")) && "generaRecDxn".equalsIgnoreCase(metodoWS)){
     			
-    			/**
-    			 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
-    			 */
-    			String cdtipsitGS = "213";
     			String sucursal = peticionWS.get("CDUNIECO");
     			if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
     			
     			GeneraRecDxnResponseE calendarios = GeneraRecDxnResponseE.Factory.parse(resultadoWS.getXMLStreamReaderWithoutCaching());
     			
     			boolean gcal = recibosSigsService.guardaCalendariosDxnFinaliza(peticionWS.get("CDUNIECO"), peticionWS.get("CDRAMO"), peticionWS.get("ESTADO"), peticionWS.get("NMPOLIZA"),
-    					peticionWS.get("NMSUPLEM"), cdtipsitGS, sucursal, null, peticionWS.get("NTRAMITE"), calendarios.getGeneraRecDxnResponse().get_return());
+    					peticionWS.get("NMSUPLEM"), sucursal, null, peticionWS.get("NTRAMITE"), calendarios.getGeneraRecDxnResponse().get_return());
     			
     			if(!gcal){
     				mensajeRespuesta = "Error en guardaCalendariosDxnFinaliza.";

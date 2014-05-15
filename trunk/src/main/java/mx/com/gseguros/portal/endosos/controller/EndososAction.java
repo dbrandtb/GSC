@@ -596,16 +596,14 @@ public class EndososAction extends PrincipalCoreAction
 				//ejecutaWSclienteSaludEndoso((String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"), (String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"), respuestaEndosoNombres.get("pv_nmsuplem_o"), "ACTUALIZA");
 				
 				/**
-				 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
-				 
-				String cdtipsitGS = "213";
+				 * 
 				String sucursal = (String)omap1.get("pv_cdunieco_i");
 				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 				
 				String nmsolici = listaDocu.get(0).get("nmsolici");
 				String nmtramite = listaDocu.get(0).get("ntramite");
 				
-				insertaURLrecibosEndoso((String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"), (String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"), respuestaEndosoNombres.get("pv_nmsuplem_o"), cdtipsitGS, sucursal, 
+				insertaURLrecibosEndoso((String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"), (String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"), respuestaEndosoNombres.get("pv_nmsuplem_o"), sucursal, 
 						nmsolici, nmtramite, TipoEndoso.CORRECCION_NOMBRE_Y_RFC.getCdTipSup().toString());
 				*/
 				mensaje="Se ha guardado el endoso "+respuestaEndosoNombres.get("pv_nsuplogi_o");
@@ -1135,9 +1133,7 @@ public class EndososAction extends PrincipalCoreAction
 				
 
 				/**
-				 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
-				 
-				String cdtipsitGS = "213";
+				 * 
 				String sucursal = smap1.get("pv_cdunieco");
 				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 				
@@ -1145,7 +1141,7 @@ public class EndososAction extends PrincipalCoreAction
 				String nmtramite = listaDocu.get(0).get("ntramite");
 				
 				insertaURLrecibosEndoso(smap1.get("pv_cdunieco"), smap1.get("pv_cdramo"), smap1.get("pv_estado"), 
-						smap1.get("pv_nmpoliza"), resEndDomi.get("pv_nmsuplem_o"), cdtipsitGS, sucursal, nmsolici, nmtramite, TipoEndoso.CAMBIO_DOMICILIO.getCdTipSup().toString());
+						smap1.get("pv_nmpoliza"), resEndDomi.get("pv_nmsuplem_o"), sucursal, nmsolici, nmtramite, TipoEndoso.CAMBIO_DOMICILIO.getCdTipSup().toString());
 				*/
 				
 			    mensaje="Se ha guardado el endoso "+resEndDomi.get("pv_nsuplogi_o");
@@ -1818,10 +1814,6 @@ public class EndososAction extends PrincipalCoreAction
 					////// re generar los documentos //////
 				    ///////////////////////////////////////
 					
-					/**
-					 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
-					 */
-					String cdtipsitGS = "213";
 					String sucursal = (String)omap1.get("pv_cdunieco_i");
 					if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 					
@@ -1836,7 +1828,7 @@ public class EndososAction extends PrincipalCoreAction
 					ice2sigsService.ejecutaWSrecibos((String)omap1.get("pv_cdunieco_i"), (String)omap1.get("pv_cdramo_i"), 
 							(String)omap1.get("pv_estado_i"), (String)omap1.get("pv_nmpoliza_i"), 
 							respEndCob.get("pv_nmsuplem_o"), rutaCarpeta, 
-							cdtipsitGS, sucursal, nmsolici, nmtramite, 
+							sucursal, nmsolici, nmtramite, 
 							true, tipomov, 
 							(UserVO) session.get("USUARIO"));
 					
@@ -3658,10 +3650,6 @@ public class EndososAction extends PrincipalCoreAction
 				////// re generar los documentos //////
 			    ///////////////////////////////////////
 				
-				/**
-				 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
-				 */
-				String cdtipsitGS = "213";
 				String sucursal = cdunieco;
 				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 				
@@ -3674,7 +3662,7 @@ public class EndososAction extends PrincipalCoreAction
 				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
 						estado, nmpoliza, 
 						nmsuplem, rutaCarpeta, 
-						cdtipsitGS, sucursal, nmsolici, ntramite, 
+						sucursal, nmsolici, ntramite, 
 						true, tipomov, 
 						(UserVO) session.get("USUARIO"));
 				
@@ -4126,10 +4114,6 @@ public class EndososAction extends PrincipalCoreAction
 				ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, tramiteGenerado, Ice2sigsService.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
 				//ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
 				
-				/**
-				 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
-				 */
-				String cdtipsitGS = "213";
 				String sucursal = cdunieco;
 				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 				
@@ -4140,7 +4124,7 @@ public class EndososAction extends PrincipalCoreAction
 				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
 						estado, nmpoliza, 
 						nmsuplem, rutaCarpeta, 
-						cdtipsitGS, sucursal, nmsolici, nmtramite, 
+						sucursal, nmsolici, nmtramite, 
 						true, cdtipsup, 
 						(UserVO) session.get("USUARIO"));
 				mensaje="Endoso confirmado "+nsuplogi;
@@ -4550,10 +4534,6 @@ public class EndososAction extends PrincipalCoreAction
 				ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, tramiteGenerado, Ice2sigsService.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
 				//ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
 				
-				/**
-				 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
-				 */
-				String cdtipsitGS = "213";
 				String sucursal = cdunieco;
 				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 				
@@ -4564,7 +4544,7 @@ public class EndososAction extends PrincipalCoreAction
 				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
 						estado, nmpoliza, 
 						nmsuplem, rutaCarpeta, 
-						cdtipsitGS, sucursal, nmsolici, nmtramite, 
+						sucursal, nmsolici, nmtramite, 
 						true, cdtipsup, 
 						(UserVO) session.get("USUARIO"));
 				
@@ -4787,7 +4767,6 @@ public class EndososAction extends PrincipalCoreAction
 			////// re generar los documentos //////
 		    ///////////////////////////////////////
 			
-			String cdtipsitGS = "213";
 			String sucursal = cdunieco;
 			if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 			
@@ -4808,7 +4787,7 @@ public class EndososAction extends PrincipalCoreAction
 				ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, ntramiteEnd, Ice2sigsService.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
 				//ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
 				
-				//insertaURLrecibosEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsitGS, sucursal, nmsolici, ntramiteEmi, cdtipsup);
+				//insertaURLrecibosEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, sucursal, nmsolici, ntramiteEmi, cdtipsup);
 				
 				break;
 							
@@ -4827,7 +4806,7 @@ public class EndososAction extends PrincipalCoreAction
 			case CANCELACION_POR_REEXPEDICION:
 				// Ejecutamos el Web Service de Recibos:
 				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, 
-						rutaCarpeta, cdtipsitGS, sucursal, nmsolici, ntramiteEmi, true, cdtipsup, 
+						rutaCarpeta, sucursal, nmsolici, ntramiteEmi, true, cdtipsup, 
 						(UserVO) session.get("USUARIO"));
 				break;
 			case INCREMENTO_EDAD_ASEGURADO:
@@ -4844,7 +4823,7 @@ public class EndososAction extends PrincipalCoreAction
 				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
 						estado, nmpoliza, 
 						nmsuplem, rutaCarpeta, 
-						cdtipsitGS, sucursal, nmsolici, ntramiteEmi, 
+						sucursal, nmsolici, ntramiteEmi, 
 						true, cdtipsup, 
 						(UserVO) session.get("USUARIO"));
 				break;
@@ -5292,7 +5271,6 @@ public class EndososAction extends PrincipalCoreAction
 				ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, tramiteGenerado, Ice2sigsService.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
 				//ejecutaWSclienteSaludEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, "ACTUALIZA");
 				
-				String cdtipsitGS = "213";
 				String sucursal = cdunieco;
 				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 				
@@ -5305,7 +5283,7 @@ public class EndososAction extends PrincipalCoreAction
 				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
 						estado, nmpoliza, 
 						nmsuplem, rutaCarpeta, 
-						cdtipsitGS, sucursal, nmsolici, nmtramite, 
+						sucursal, nmsolici, nmtramite, 
 						true, tipomov, 
 						(UserVO) session.get("USUARIO"));
 				
@@ -5628,7 +5606,6 @@ public class EndososAction extends PrincipalCoreAction
 				//PKG_CONSULTA.P_reImp_documentos
 				String nmsolici = this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite);
 				
-				String cdtipsitGS = "213";
 				String sucursal = cdunieco;
 				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 				
@@ -5636,7 +5613,7 @@ public class EndososAction extends PrincipalCoreAction
 				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
 						estado, nmpoliza, 
 						nmsuplem, null, 
-						cdtipsitGS, sucursal, nmsolici, ntramite, 
+						sucursal, nmsolici, ntramite, 
 						true, cdtipsup, 
 						(UserVO) session.get("USUARIO"));
 				
@@ -5936,7 +5913,6 @@ public class EndososAction extends PrincipalCoreAction
 				//PKG_CONSULTA.P_reImp_documentos
 				String nmsolici = this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite);
 				
-				String cdtipsitGS = "213";
 				String sucursal = cdunieco;
 				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 
@@ -5944,7 +5920,7 @@ public class EndososAction extends PrincipalCoreAction
 				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
 						estado, nmpoliza, 
 						nmsuplem, null, 
-						cdtipsitGS, sucursal, nmsolici, ntramite, 
+						sucursal, nmsolici, ntramite, 
 						true, cdtipsup, 
 						(UserVO) session.get("USUARIO"));
 				
@@ -6310,10 +6286,6 @@ public class EndososAction extends PrincipalCoreAction
 				mensaje="Se ha generado la p&oacute;liza "+nmpolizaNuevaPoliza
 						+" con n&uacute;mero de tr&aacute;mite "+ntramiteNuevaPoliza;
 				
-				/**
-				 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
-				 */
-				String cdtipsitGS = "213";
 				String sucursal = cdunieco;
 				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 				
@@ -6321,7 +6293,7 @@ public class EndososAction extends PrincipalCoreAction
 				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
 						estado, nmpoliza, 
 						nmsuplem, null, 
-						cdtipsitGS, sucursal, "", ntramite, 
+						sucursal, "", ntramite, 
 						true, cdtipsup, 
 						(UserVO) session.get("USUARIO"));
 			}
@@ -6638,10 +6610,7 @@ public class EndososAction extends PrincipalCoreAction
 			{
 				//PKG_CONSULTA.P_reImp_documentos
 				String nmsolici = this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite);
-				/**
-				 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
-				 */
-				String cdtipsitGS = "213";
+				
 				String sucursal = cdunieco;
 				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 				
@@ -6649,7 +6618,7 @@ public class EndososAction extends PrincipalCoreAction
 				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
 						estado, nmpoliza, 
 						nmsuplem, null, 
-						cdtipsitGS, sucursal, nmsolici, ntramite, 
+						sucursal, nmsolici, ntramite, 
 						true, cdtipsup, 
 						(UserVO) session.get("USUARIO"));
 				
@@ -6876,10 +6845,6 @@ public class EndososAction extends PrincipalCoreAction
 			{
 				String nmsolici=this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite);
 				
-				/**
-				 * TODO: Poner variable el cdTipSitGS de la poliza y la sucursal
-				 */
-				String cdtipsitGS = "213";
 				String sucursal = cdunieco;
 				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 				
@@ -6887,7 +6852,7 @@ public class EndososAction extends PrincipalCoreAction
 				ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
 						estado, nmpoliza, 
 						nmsuplem, null, 
-						cdtipsitGS, sucursal, nmsolici, ntramite, 
+						sucursal, nmsolici, ntramite, 
 						true, cdtipsup, 
 						(UserVO) session.get("USUARIO"));
 				
@@ -7205,7 +7170,6 @@ public class EndososAction extends PrincipalCoreAction
 	   			//PKG_CONSULTA.P_reImp_documentos
 	   			String nmsolici=this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, ntramite);
 	   			
-	   			String cdtipsitGS = "213";
 				String sucursal = cdunieco;
 				if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
 				
@@ -7213,7 +7177,7 @@ public class EndososAction extends PrincipalCoreAction
 	   			ice2sigsService.ejecutaWSrecibos(cdunieco, cdramo, 
 						estado, nmpoliza, 
 						nmsuplem, null, 
-						cdtipsitGS, sucursal, nmsolici, ntramite, 
+						sucursal, nmsolici, ntramite, 
 						true, cdtipsup, 
 						(UserVO) session.get("USUARIO"));
 	   			

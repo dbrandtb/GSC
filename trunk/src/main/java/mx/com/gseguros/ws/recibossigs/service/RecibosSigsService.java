@@ -29,16 +29,15 @@ public interface RecibosSigsService {
 	 * @param estado
 	 * @param nmpoliza
 	 * @param nmsuplem
-	 * @param cdtipsitGS
 	 * @param sucursal
 	 * @param nmsolici
 	 * @param ntramite
 	 * @return
 	 */
 	public boolean generaRecibosDxN(String cdunieco, String cdramo,
-			String estado, String nmpoliza, String nmsuplem, String cdtipsitGS,
+			String estado, String nmpoliza, String nmsuplem,
 			String sucursal, String nmsolici, String ntramite, UserVO userVO);
 	
-	public boolean guardaCalendariosDxnFinaliza(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String cdtipsitGS, String sucursal, String nmsolici, String ntramite, GeneradorRecibosDxnRespuesta calendarios);
+	public boolean guardaCalendariosDxnFinaliza(String cdunieco, String cdramo, String estado, String nmpoliza, String nmsuplem, String sucursal, String nmsolici, String ntramite, GeneradorRecibosDxnRespuesta calendarios);
 
 }
