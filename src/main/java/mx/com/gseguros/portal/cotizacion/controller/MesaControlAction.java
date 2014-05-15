@@ -20,10 +20,13 @@ import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.PantallasManager;
+import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 
 import org.apache.struts2.ServletActionContext;
+
+import com.opensymphony.xwork2.ActionContext;
 
 public class MesaControlAction extends PrincipalCoreAction
 {
@@ -744,6 +747,54 @@ public class MesaControlAction extends PrincipalCoreAction
 	/*/////////////////////////////////////////*/
 	////// guardar tramite manual dinamico //////
 	/////////////////////////////////////////////
+	
+	public String regresarEmisionEnAutori()
+	{
+		this.session=ActionContext.getContext().getSession();
+		log.info(""
+				+ "\n#####################################"
+				+ "\n###### regresarEmisionEnAutori ######"
+				);
+		log.info("smap1: "+smap1);
+		String ntramiteAuto = smap1.get("ntramiteAuto");
+		String ntramiteEmi  = smap1.get("ntramiteEmi");
+		String comentario   = smap1.get("comentario");
+		log.info("ntramiteAuto:"+ntramiteAuto);
+		log.info("ntramiteEmi:"+ntramiteEmi);
+		log.info("comentario:"+comentario);
+		String cdusuari;
+		{
+			UserVO usuario = (UserVO)session.get("USUARIO");
+			cdusuari = usuario.getUser();
+		}
+		log.info("cdusuari:"+cdusuari);
+		try
+		{
+			kernelManager.mesaControlUpdateStatus(ntramiteEmi  , EstatusTramite.PENDIENTE.getCodigo());
+			kernelManager.mesaControlUpdateStatus(ntramiteAuto , EstatusTramite.CONFIRMADO.getCodigo());
+			Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
+        	parDmesCon.put("pv_ntramite_i"   , ntramiteEmi);
+        	parDmesCon.put("pv_feinicio_i"   , new Date());
+        	parDmesCon.put("pv_cdclausu_i"   , null);
+        	parDmesCon.put("pv_comments_i"   , "El gerente regres&oacute; el tr&aacute;mite con las siguientes observaciones:<br/>"+comentario);
+        	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
+        	parDmesCon.put("pv_cdmotivo_i"   , null);
+        	kernelManager.movDmesacontrol(parDmesCon);
+        	mensaje = "Tr&aacute;mite regresado";
+        	success = true;
+		}
+		catch(Exception ex)
+		{
+			log.error("error al regresar emision de autorizacion",ex);
+			success = false;
+			mensaje = ex.getMessage();
+		}
+		log.info(""
+				+ "\n###### regresarEmisionEnAutori ######"
+				+ "\n#####################################"
+				);
+		return SUCCESS;
+	}
 	
 	/////////////////////////////////
 	////// getters ans setters //////
