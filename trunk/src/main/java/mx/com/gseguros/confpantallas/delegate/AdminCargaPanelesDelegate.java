@@ -354,10 +354,10 @@ public class AdminCargaPanelesDelegate {
 					rgsAttr.append("dia = '' + dia;").append("\n");
 					rgsAttr.append("var nD = dia.length;").append("\n");
 					rgsAttr.append("if(nD == 1){dia = '0' + dia;}").append("\n");
-					rgsAttr.append("var año = dateTemp.getFullYear();").append("\n");
-					rgsAttr.append("año = '' + año;").append("\n");
+					rgsAttr.append("var ano = dateTemp.getFullYear();").append("\n");
+					rgsAttr.append("ano = '' + ano;").append("\n");
 					rgsAttr.append("\n");
-					rgsAttr.append("Ext.getCmp('"+ctrlHijo+"').setValue(dia + '/'+ mes  +'/' + año);");
+					rgsAttr.append("Ext.getCmp('"+ctrlHijo+"').setValue(dia + '/'+ mes  +'/' + ano);");
 					rgsAttr.append("\n");
 					rgsAttr.append("}},");
 				}else if (attrLts.getAttr().equals("isPadre")){
@@ -474,7 +474,7 @@ public class AdminCargaPanelesDelegate {
 				String factor = "";
 				Integer n = 0;
 				if(resto.indexOf("A") > -1){
-					factor = "Año";
+					factor = "Ano";
 					resto = resto.substring(resto.indexOf("A")+1).trim();
 					n = Integer.parseInt(resto);
 				}else if(resto.indexOf("M") > -1){
@@ -515,15 +515,15 @@ public class AdminCargaPanelesDelegate {
 			cal.add(Calendar.MONTH, -n);
 		}else if(factor.equals("Mes") && signo.equals("mas")){
 			cal.add(Calendar.MONTH, n);
-		}else if(factor.equals("Año") && signo.equals("menos")){
+		}else if(factor.equals("Ano") && signo.equals("menos")){
 			cal.add(Calendar.YEAR, -n);
-		}else if(factor.equals("Año") && signo.equals("mas")){
+		}else if(factor.equals("Ano") && signo.equals("mas")){
 			cal.add(Calendar.YEAR, n);
 		}
 		String dia = getDia00(cal.get(Calendar.DAY_OF_MONTH));
 		String mes = getMes00(cal.get(Calendar.MONTH)+1);
-		String año = String.valueOf(cal.get(Calendar.YEAR));
-		return dia + "/" + mes + "/" + año; 
+		String ano = String.valueOf(cal.get(Calendar.YEAR));
+		return dia + "/" + mes + "/" + ano; 
 	}
 	private String getDia00(int dia){
 		String rgs = "";
