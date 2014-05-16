@@ -71,7 +71,7 @@ public interface KernelManagerSustituto {
     public List<Map<String,String>>    obtenerResultadosCotizacion2(Map<String,String> params) throws ApplicationException;
     public List<CoberturaCotizacionVO> obtenerCoberturas(Map<String,String> parameters) throws ApplicationException;
     public AyudaCoberturaCotizacionVO obtenerAyudaCobertura(String idCobertura,String idRamo,String idCiaAsegurador) throws ApplicationException;
-    public List<ComponenteVO> obtenerTatrisit(String cdtipsit) throws ApplicationException;
+    public List<ComponenteVO> obtenerTatrisit(String cdtipsit,String cdusuari) throws ApplicationException;
     public List<ComponenteVO> obtenerTatripol(String[] args) throws ApplicationException;
     public DatosUsuario obtenerDatosUsuario(String cdusuario) throws ApplicationException;
     public WrapperResultados movDetalleSuplemento(Map<String,Object> parameters) throws ApplicationException;
@@ -185,10 +185,10 @@ public interface KernelManagerSustituto {
 	 * @param nmsuplem Suplemento
 	 * @param codigo   Codigo de error siplificado que indica de que WS se trata y si el tipo de error es de conexion
 	 * @param mensaje  Mensaje de errir, ya sea de una Excepcion o el error que responde el WS
-	 * @param usuario  Usuario que ejecutó el llamado al WS
+	 * @param usuario  Usuario que ejecutï¿½ el llamado al WS
 	 * @param ntramite Tramite
 	 * @param cdurlws  Codigo del properties que contiene la url del WS
-	 * @param metodows Metodo que se ejectó del WS
+	 * @param metodows Metodo que se ejectï¿½ del WS
 	 * @param xmlin    Xml de entrada que se ejecuto para el WS
 	 * @param cderrws  Codigo de Error que regreso el WS
 	 * @return

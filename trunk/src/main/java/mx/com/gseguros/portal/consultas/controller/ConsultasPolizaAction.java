@@ -9,6 +9,7 @@ import org.apache.struts2.ServletActionContext;
 
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
+import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosAgenteVO;
 import mx.com.gseguros.portal.consultas.model.ConsultaDatosAseguradoVO;
@@ -418,7 +419,12 @@ public class ConsultasPolizaAction extends PrincipalCoreAction{
 		try
 		{
 			String cdtipsit = params.get("cdtipsit");
-			List<ComponenteVO> camposTatrisit = kernelManager.obtenerTatrisit(cdtipsit);
+			String cdusuari;
+			{
+				UserVO usuario=(UserVO)session.get("USUARIO");
+				cdusuari=usuario.getUser();
+			}
+			List<ComponenteVO> camposTatrisit = kernelManager.obtenerTatrisit(cdtipsit,cdusuari);
 			List<ComponenteVO> tatrisitTemp   = new ArrayList<ComponenteVO>();
 			//buscar cp
 			for(ComponenteVO t:camposTatrisit) if(t.getNameCdatribu().equals("3")) tatrisitTemp.add(t);

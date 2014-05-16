@@ -975,7 +975,12 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 		{
 			log.debug("smap1: "+smap1);
 			smap1.put("timestamp",""+System.currentTimeMillis());
-			List<ComponenteVO>tatrisit=kernelManager.obtenerTatrisit(smap1.get("cdtipsit"));
+			String cdusuari;
+			{
+				UserVO usuario=(UserVO)session.get("USUARIO");
+				cdusuari=usuario.getUser();
+			}
+			List<ComponenteVO>tatrisit=kernelManager.obtenerTatrisit(smap1.get("cdtipsit"),cdusuari);
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			gc.setCdtipsit(smap1.get("cdtipsit"));
 			List<ComponenteVO>tatriTemp=new ArrayList<ComponenteVO>(0);

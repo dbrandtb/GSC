@@ -126,7 +126,7 @@ public class CotizacionAction extends PrincipalCoreAction
         
         try
         {
-	        List<ComponenteVO>tatrisit=kernelManager.obtenerTatrisit(cdtipsit);
+	        List<ComponenteVO>tatrisit=kernelManager.obtenerTatrisit(cdtipsit,usuario.getUser());
         	
 	        List<ComponenteVO>temp=new ArrayList<ComponenteVO>();
 	        for(ComponenteVO tatriIte:tatrisit)

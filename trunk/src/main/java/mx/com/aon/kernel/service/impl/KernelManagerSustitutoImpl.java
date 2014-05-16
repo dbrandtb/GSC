@@ -273,10 +273,11 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return res;
     }
     
-    public List<ComponenteVO> obtenerTatrisit(String cdtipsit) throws ApplicationException
+    public List<ComponenteVO> obtenerTatrisit(String cdtipsit,String cdusuari) throws ApplicationException
     {
         Map<String,Object> parameters=new HashMap<String,Object>(0);
         parameters.put("pv_cdtipsit_i",cdtipsit);
+        parameters.put("pv_cdusuari_i",cdusuari);
         log.debug("### kernel sustituto obtenerTatrisit map: "+parameters);
         List<ComponenteVO> lista= this.getAllBackBoneInvoke(parameters, ProcesoDAO.OBTENER_TATRISIT);
         lista=lista!=null?lista:new ArrayList<ComponenteVO>(0);
@@ -1274,7 +1275,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 	        log.debug("### validaUsuarioSucursal message:"+res.getMsgText());
 	        return res;
 		} catch(Exception e) {
-			throw new ApplicationException(new StringBuilder("El usuario ").append(username).append(" no está asociado a la sucursal de documento elegida, debe elegir otra.").toString(), e);
+			throw new ApplicationException(new StringBuilder("El usuario ").append(username).append(" no estï¿½ asociado a la sucursal de documento elegida, debe elegir otra.").toString(), e);
 		}
 	}
 	

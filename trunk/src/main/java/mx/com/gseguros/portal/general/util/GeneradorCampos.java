@@ -220,6 +220,13 @@ public class GeneradorCampos
         Item item=new Item();
         item.setType(Item.OBJ);
         
+        if(StringUtils.isNotBlank(comp.getDefaultValue()))
+        {
+        	tipoCampo = ComponenteVO.TIPOCAMPO_ALFANUMERICO;
+        	esCombo   = false;
+        	comp.setSoloLectura(true);
+        }
+        
         ////// Ext.create('Ext...',{}) //////
         if(esCombo)
         {
