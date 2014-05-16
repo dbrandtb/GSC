@@ -222,9 +222,10 @@ public class GeneradorCampos
         
         if(StringUtils.isNotBlank(comp.getDefaultValue()))
         {
-        	tipoCampo = ComponenteVO.TIPOCAMPO_ALFANUMERICO;
-        	esCombo   = false;
+        	//tipoCampo = ComponenteVO.TIPOCAMPO_ALFANUMERICO;
+        	//esCombo   = false;
         	comp.setSoloLectura(true);
+        	comp.setValue("'"+comp.getDefaultValue()+"'");
         }
         
         ////// Ext.create('Ext...',{}) //////
