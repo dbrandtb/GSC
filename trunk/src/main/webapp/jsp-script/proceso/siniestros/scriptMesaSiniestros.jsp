@@ -10,13 +10,16 @@ var _CONTEXT = '${ctx}';
 // Catalogo Tipos de pago a utilizar:
 var _PAGO_DIRECTO = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@DIRECTO.codigo" />';
 var _REEMBOLSO    = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@REEMBOLSO.codigo" />';
-
+var _URL_CATALOGOS                      = '<s:url namespace="/catalogos"   action="obtieneCatalogo" />';
 // Catalogo Estatus de tramite a utilizar:
 var _STATUS_TRAMITE_EN_REVISION_MEDICA      = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_REVISION_MEDICA.codigo" />';
 var _STATUS_TRAMITE_RECHAZADO               = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@RECHAZADO.codigo" />';
 var _STATUS_TRAMITE_EN_CAPTURA              = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_CAPTURA.codigo" />';
 var _STATUS_TRAMITE_EN_ESPERA_DE_ASIGNACION = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@EN_ESPERA_DE_ASIGNACION.codigo" />';
 var _STATUS_TRAMITE_CONFIRMADO              = '<s:property value="@mx.com.gseguros.portal.general.util.EstatusTramite@CONFIRMADO.codigo" />';
+var _CAT_DESTINOPAGO                        = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@DESTINOPAGO"/>';
+var _CAT_CONCEPTO                           = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CATCONCEPTO"/>';
+
 
 // Catalogo Tipos de tramite a utilizar:
 var _TIPO_TRAMITE_SINIESTRO = '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@SINIESTRO.cdtiptra" />';
@@ -33,6 +36,9 @@ var _UrlDetalleSiniestro        = '<s:url namespace="/siniestros" action="detall
 var _UrlDetalleSiniestroDirecto = '<s:url namespace="/siniestros" action="afiliadosAfectados"        />';
 var _UrlSolicitarPago           = '<s:url namespace="/siniestros" action="solicitarPago"             />';
 var _urlSeleccionCobertura      = '<s:url namespace="/siniestros" action="seleccionCobertura"        />';
+var _URL_CATALOGOS              = '<s:url namespace="/catalogos"   action="obtieneCatalogo" />';
+var _URL_CONSULTA_TRAMITE       = '<s:url namespace="/siniestros"       action="consultaListadoMesaControl" />';
+var _URL_CONCEPTODESTINO        = '<s:url namespace="/siniestros"       action="guardarConceptoDestino" />';
 
 var _mesasin_url_lista_reasignacion = '<s:url namespace="/siniestros" action="obtenerUsuariosPorRol" />';
 
@@ -778,6 +784,38 @@ var msgWindow;
 			return;
 		}
 		
+		storeDestinoPago =Ext.create('Ext.data.Store', {
+	        model:'Generic',
+	        autoLoad:true,
+	        proxy:
+	        {
+	            type: 'ajax',
+	            url: _URL_CATALOGOS,
+	            extraParams : {catalogo:_CAT_DESTINOPAGO},
+	            reader:
+	            {
+	                type: 'json',
+	                root: 'lista'
+	            }
+	        }
+	    });
+		
+		storeCatConcepto =Ext.create('Ext.data.Store', {
+	        model:'Generic',
+	        autoLoad:true,
+	        proxy:
+	        {
+	            type: 'ajax',
+	            url: _URL_CATALOGOS,
+	            extraParams : {catalogo:_CAT_CONCEPTO},
+	            reader:
+	            {
+	                type: 'json',
+	                root: 'lista'
+	            }
+	        }
+	    });
+		
 		msgWindow = Ext.Msg.show({
 	        title: 'Aviso',
 	        msg: '&iquest;Esta seguro que desea solicitar el pago?',
@@ -785,29 +823,151 @@ var msgWindow;
 	        icon: Ext.Msg.QUESTION,
 	        fn: function(buttonId, text, opt){
 	        	if(buttonId == 'yes'){
+	        		var record = grid.getStore().getAt(rowIndex);
 	        		
-	        		mcdinGrid.setLoading(true);
+	        		var pagocheque = Ext.create('Ext.form.field.ComboBox',
+   		    	    {
+   		    	        colspan	   :2,				fieldLabel   	: 'Destino Pago', 	name			:'destinoPago',
+   		    	        allowBlank : false,			editable     	: false,			displayField    : 'value',
+   		    	        valueField:'key',			forceSelection  : true,			width			:350,
+   		    	        queryMode    :'local',		store 			: storeDestinoPago
+   		    	    });
+   		    		
+   		    		var concepPago = Ext.create('Ext.form.field.ComboBox',
+   		    	    {
+   		    	        colspan	   :2,				fieldLabel   	: 'Concepto Pago', 	name			:'concepPago',
+   		    	        allowBlank : false,			editable     	: false,			displayField    : 'value',
+   		    	        valueField:'key',			forceSelection  : true,			width			:350,
+   		    	        queryMode    :'local',		store 			: storeCatConcepto
+   		    	    });
+	        		
+   		    		var cdramoTramite="";
+   		    		var cdtipsitTramite ="";
+	        		//LLAMADA A LA MESA DE CONTROL PARA VERIFICAR LOS CAMPOS OTVALOR18 Y OTVALOR19
 	        		Ext.Ajax.request({
-						url: _UrlSolicitarPago,
-						params: {
-				    		'params.pv_ntramite_i' : record.get('ntramite'),
-				    		'params.pv_tipmov_i'   : record.get('parametros.pv_otvalor02')
-				    	},
-						success: function(response, opts) {
-							mcdinGrid.setLoading(false);
-							var respuesta = Ext.decode(response.responseText);
-							if(respuesta.success){
-								mensajeCorrecto('Aviso','El pago se ha solicitado con &eacute;xito.');	
-							}else {
-								mensajeError(respuesta.mensaje);
-							}
-							
-						},
-						failure: function(){
-							mcdinGrid.setLoading(false);
-							mensajeError('No se pudo solicitar el pago.');
-						}
-					});
+	        			url     : _URL_CONSULTA_TRAMITE
+	        			,params:{
+	        				'params.ntramite': record.get('ntramite')
+	                    }
+	        			,success : function (response)
+	        			{
+		        			 	if(Ext.decode(response.responseText).listaMesaControl != null)
+		        		    	{
+		        			    	var json=Ext.decode(response.responseText).listaMesaControl[0];
+		        			    	cdramoTramite = json.cdramomc;
+		           		    		cdtipsitTramite = json.cdtipsitmc;
+		        			    	
+		        			    	if(json.otvalor18mc !=null)
+	        			    		{
+		        			    		panelModificacion.query('combo[name=destinoPago]')[0].setValue(json.otvalor18mc);
+	        			    		}
+		        			    	
+		        			    	if(json.otvalor19mc !=null)
+	        			    		{
+		        			    		panelModificacion.query('combo[name=concepPago]')[0].setValue(json.otvalor19mc);
+	        			    		}
+	        		    		}
+	        			    },
+	        			    failure : function ()
+	        			    {
+	        			        me.up().up().setLoading(false);
+	        			        Ext.Msg.show({
+	        			            title:'Error',
+	        			            msg: 'Error de comunicaci&oacute;n',
+	        			            buttons: Ext.Msg.OK,
+	        			            icon: Ext.Msg.ERROR
+	        			        });
+	        			    }
+	        		});
+	        		
+		    		
+			        windowCvePago = Ext.create('Ext.window.Window',{
+				        modal       : true,
+				        buttonAlign : 'center',
+				        width       : 550,
+				        autoScroll  : true,
+				        items       : [
+			        	        		panelModificacion = Ext.create('Ext.form.Panel', {
+			        	                title: 'Destino de Pago',
+			        	                bodyPadding: 5,
+			        	                items: [pagocheque,
+			        	                        concepPago],
+			        	        	    buttonAlign:'center',
+			        	        	    buttons: [{
+			        	            		text: 'Solicitar'
+			        	            		,icon:_CONTEXT+'/resources/fam3icons/icons/accept.png'
+			        	            		,buttonAlign : 'center',
+			        	            		handler: function() { 
+			        	            			if (panelModificacion.form.isValid()) {
+			        	            				var datos=panelModificacion.form.getValues();
+			        	            				
+			        	            				Ext.Ajax.request({
+			        	        	        			url     : _URL_CONCEPTODESTINO
+			        	        	        			,jsonData: {
+			        	        	        				params:{ntramite:record.get('ntramite'),cdtipsit:cdtipsitTramite,destinoPago:datos.destinoPago,concepPago:datos.concepPago}
+	        	                                        }
+			        	        	        			,success : function (response)
+			        	        	        			{
+			        	        		        			 	
+			        	        	        				windowCvePago.close();
+			        	        	        				mcdinGrid.setLoading(true);
+			        	        	     	        		Ext.Ajax.request({
+			        	        	     						url: _UrlSolicitarPago,
+			        	        	     						params: {
+			        	        	     				    		'params.pv_ntramite_i' : record.get('ntramite'),
+			        	        	     				    		'params.pv_tipmov_i'   : record.get('parametros.pv_otvalor02')
+			        	        	     				    	},
+			        	        	     						success: function(response, opts) {
+			        	        	     							mcdinGrid.setLoading(false);
+			        	        	     							var respuesta = Ext.decode(response.responseText);
+			        	        	     							if(respuesta.success){
+			        	        	     								mensajeCorrecto('Aviso','El pago se ha solicitado con &eacute;xito.');	
+			        	        	     							}else {
+			        	        	     								mensajeError(respuesta.mensaje);
+			        	        	     							}
+			        	        	     							
+			        	        	     						},
+			        	        	     						failure: function(){
+			        	        	     							mcdinGrid.setLoading(false);
+			        	        	     							mensajeError('No se pudo solicitar el pago.');
+			        	        	     						}
+			        	        	     					});
+			        	        	     	        		
+			        	        	        			    },
+			        	        	        			    failure : function ()
+			        	        	        			    {
+			        	        	        			        me.up().up().setLoading(false);
+			        	        	        			        Ext.Msg.show({
+			        	        	        			            title:'Error',
+			        	        	        			            msg: 'Error de comunicaci&oacute;n',
+			        	        	        			            buttons: Ext.Msg.OK,
+			        	        	        			            icon: Ext.Msg.ERROR
+			        	        	        			        });
+			        	        	        			    }
+			        	        	        		});
+			        	            			}else {
+			        	                            Ext.Msg.show({
+			        	                                   title: 'Aviso',
+			        	                                   msg: 'Complete la informaci&oacute;n requerida',
+			        	                                   buttons: Ext.Msg.OK,
+			        	                                   icon: Ext.Msg.WARNING
+			        	                               });
+			        	                        }
+			        	            		}
+			        	            	},{
+			        	            	    text: 'Cancelar',
+			        	            	    icon:_CONTEXT+'/resources/fam3icons/icons/cancel.png',
+			        	            	    buttonAlign : 'center',
+			        	            	    handler: function() {
+			        	            	        windowCvePago.close();
+			        	            	    }
+			        	            	}
+			        	            	]
+			        	            })  
+				            	]
+				    }).show();
+					centrarVentana(windowCvePago);
+
 	        	}
 	        	
 	        }
