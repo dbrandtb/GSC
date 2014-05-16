@@ -195,7 +195,7 @@ Ext.onReady(function()
                     {
                         xtype       : 'datefield'
                         ,format     : 'd/m/Y'
-                        ,fieldLabel : 'Fecha'
+                        ,fieldLabel : 'Fecha de efecto'
                         ,allowBlank : false
                         ,value      : new Date()
                         ,name       : 'fecha_endoso'

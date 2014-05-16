@@ -163,7 +163,7 @@ Ext.onReady(function()
 	_5_fieldFechaEndoso=Ext.create('Ext.form.field.Date',
 	{
 	    format      : 'd/m/Y'
-	    ,fieldLabel : 'Fecha'
+	    ,fieldLabel : 'Fecha de efecto'
 	    ,allowBlank : false
 	    ,value      : new Date()
 	    ,name       : 'fecha_endoso'

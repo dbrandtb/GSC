@@ -202,7 +202,7 @@ Ext.onReady(function()
             	[
             	    {
                         xtype       : 'datefield'
-                        ,fieldLabel : 'Fecha de inicio'
+                        ,fieldLabel : 'Fecha de efecto'
                         ,format     : 'd/m/Y'
                         ,value      : pantallaValositInput['fechainicio']
                         ,allowBlank : false

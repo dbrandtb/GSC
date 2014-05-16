@@ -689,7 +689,7 @@
                             [
                                 {
                                     xtype       : 'datefield'
-                                    ,fieldLabel : 'Fecha de inicio'
+                                    ,fieldLabel : 'Fecha de efecto'
                                     ,format     : 'd/m/Y'
                                     ,value      : new Date()
                                     ,allowBlank : false
