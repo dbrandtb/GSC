@@ -1668,6 +1668,49 @@ public String generarSiniestroSinAutorizacion()
     	return SUCCESS;
     }
     
+    public String guardarConceptoDestino()
+    {
+    	logger.debug(""
+    			+ "\n###############################################"
+    			+ "\n###############################################"
+    			+ "\n###### guardarConceptoDestino			  ######"
+    			+ "\n######                           		  ######"
+    			);
+    	logger.debug("params: "+params);
+    	
+    	try
+    	{
+    		String ntramite = params.get("ntramite");
+    		String cdtipsit = params.get("cdtipsit");
+    		String cdDestinoPago = params.get("destinoPago");
+    		String cdConceptoPago = params.get("concepPago");
+    		
+    		Map<String,Object> otvalor = new HashMap<String,Object>();
+    		otvalor.put("pv_ntramite_i" , ntramite);
+    		otvalor.put("pv_cdtipsit_i" , cdtipsit);
+    		otvalor.put("pv_otvalor18_i"  , cdDestinoPago);
+    		otvalor.put("pv_otvalor19_i"  , cdConceptoPago);
+    		siniestrosManager.actualizaOTValorMesaControl(otvalor);
+    		
+    		success = true;
+    		mensaje = "Tr&aacute;mite actualizado";
+    	}
+    	catch(Exception ex)
+    	{
+    		success=false;
+    		logger.error("error al seleccionar la cobertura",ex);
+    		mensaje = ex.getMessage();
+    	}
+    	
+    	logger.debug(""
+    			+ "\n######                           		  ######"
+    			+ "\n###### 	guardarConceptoDestino 	      ######"
+    			+ "\n###############################################"
+    			+ "\n###############################################"
+    			);
+    	return SUCCESS;
+    }
+    
     public String guardarCoberturaxFactura()
     {
     	logger.debug(""
