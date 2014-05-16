@@ -192,7 +192,7 @@ Ext.onReady(function()
     _10_fieldFechaEndoso=Ext.create('Ext.form.field.Date',
     {
         format      : 'd/m/Y'
-        ,fieldLabel : 'Fecha'
+        ,fieldLabel : 'Fecha de efecto'
         ,allowBlank : false
         ,value      : '<s:property value="smap1.fechaInicioEndoso" />'
         ,readOnly   : true
