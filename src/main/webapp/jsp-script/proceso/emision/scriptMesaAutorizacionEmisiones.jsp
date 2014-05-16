@@ -67,6 +67,95 @@ function _4_moverTramite()
 		});
 		debug('<regresar emision');
 	}
+	else if(tipo=='EMISION'&&operacion=='emitir')
+	{
+		ventana.setLoading(true);
+        debug('Autorizar emision');
+        Ext.Ajax.request(
+        {
+            url       : _4_urlAutorizarEmision
+            ,jsonData :
+            {
+                panel1  : record.raw
+                ,panel2 :
+                {
+                    observaciones : coment
+                }
+            }
+            ,success  : function(response)
+            {
+                ventana.setLoading(false);
+                var jsonResponse = Ext.decode(response.responseText);
+                debug('jsonResponse:',jsonResponse);
+                if(jsonResponse.success)
+                {
+	                ventana.hide();
+                    mensajeCorrecto('Aviso',jsonResponse.mensajeRespuesta);
+                }
+                else
+                {
+                    mensajeError(jsonResponse.mensajeRespuesta);
+                }
+            }
+            ,failure  : function()
+            {
+                ventana.setLoading(false);
+                errorComunicacion();
+            }
+        });
+    }
+	else if(tipo!='EMISION'&&operacion=='emitir')
+	{
+		ventana.setLoading(true);
+        Ext.Ajax.request(
+        {
+            url       : _4_urlAutorizarEndoso
+            ,params   :
+            {
+                'smap1.ntramiteemi'  : record.get('parametros.pv_otvalor08')
+                ,'smap1.ntramiteend' : record.get('parametros.pv_otvalor03')
+                ,'smap1.cdunieco'    : record.get('cdunieco')
+                ,'smap1.cdramo'      : record.get('cdramo')
+                ,'smap1.estado'      : record.get('estado')
+                ,'smap1.nmpoliza'    : record.get('nmpoliza')
+                ,'smap1.nmsuplem'    : record.get('nmsuplem')
+                ,'smap1.nsuplogi'    : record.get('parametros.pv_otvalor07')
+                ,'smap1.cdtipsup'    : record.get('parametros.pv_otvalor06')
+                ,'smap1.status'      : '3'
+                ,'smap1.fechaEndoso' : Ext.Date.format(record.get('ferecepc'),'d/m/Y')
+                ,'smap1.observacion' : coment
+            }
+            ,success  : function(response)
+            {
+                ventana.setLoading(false);
+                var json=Ext.decode(response.responseText);
+                if(json.success==true)
+                {
+                	ventana.hide();
+                    Ext.Ajax.request
+                    ({
+                        url     : _4_urlUpdateStatus
+                        ,params : 
+                        {
+                            'smap1.ntramite'  : record.get('ntramite')
+                            ,'smap1.status'   : '3'//confirmado 
+                            ,'smap1.comments' : ''
+                        }
+                    });
+                    mensajeCorrecto('Aviso','Endoso autorizado');
+                }
+                else
+                {
+                    mensajeError(json.error);
+                }
+            }
+            ,failure  : function()
+            {
+                ventana.setLoading(false);
+                errorComunicacion();
+            }
+        });
+    }
 	debug('<_4_moverTramite');
 }
 
@@ -157,99 +246,28 @@ function _4_preVerComments(grid,rowIndex)
 
 function _4_preAutorizarEmision(grid,rowIndex)
 {
-	debug('>_4_preAutorizarEmision',grid.getStore().getAt(rowIndex).data);
-	if(grid.getStore().getAt(rowIndex).get('status')=='11')
-	{
-		grid.setLoading(true);
-		var record=grid.getStore().getAt(rowIndex);
-		if(record.get('parametros.pv_otvalor05')=='EMISION')
-		{
-			debug('Autorizar emision');
-			Ext.Ajax.request(
-			{
-				url       : _4_urlAutorizarEmision
-				,jsonData :
-				{
-					panel1 : grid.getStore().getAt(rowIndex).raw
-				}
-				,success  : function(response)
-				{
-					grid.setLoading(false);
-					var jsonResponse = Ext.decode(response.responseText);
-					debug('jsonResponse:',jsonResponse);
-					if(jsonResponse.success)
-					{
-						mensajeCorrecto('Aviso',jsonResponse.mensajeRespuesta);
-					}
-					else
-					{
-						mensajeError(jsonResponse.mensajeRespuesta);
-					}
-				}
-			    ,failure  : function()
-			    {
-			    	grid.setLoading(false);
-			    	errorComunicacion();
-			    }
-			});
-		}
-		else
-		{
-			debug('Autorizar endoso');
-			Ext.Ajax.request(
-	        {
-	            url       : _4_urlAutorizarEndoso
-	            ,params   :
-	            {
-	                'smap1.ntramiteemi'  : record.get('parametros.pv_otvalor08')
-	                ,'smap1.ntramiteend' : record.get('parametros.pv_otvalor03')
-	                ,'smap1.cdunieco'    : record.get('cdunieco')
-	                ,'smap1.cdramo'      : record.get('cdramo')
-	                ,'smap1.estado'      : record.get('estado')
-	                ,'smap1.nmpoliza'    : record.get('nmpoliza')
-	                ,'smap1.nmsuplem'    : record.get('nmsuplem')
-	                ,'smap1.nsuplogi'    : record.get('parametros.pv_otvalor07')
-	                ,'smap1.cdtipsup'    : record.get('parametros.pv_otvalor06')
-	                ,'smap1.status'      : '3'
-	                ,'smap1.fechaEndoso' : Ext.Date.format(record.get('ferecepc'),'d/m/Y')
-	                ,'smap1.observacion' : ''
-	            }
-	            ,success  : function(response)
-	            {
-	            	grid.setLoading(false);
-	                var json=Ext.decode(response.responseText);
-	                if(json.success==true)
-	                {
-	                	Ext.Ajax.request
-                        ({
-                            url     : _4_urlUpdateStatus
-                            ,params : 
-                            {
-                                'smap1.ntramite'  : record.get('ntramite')
-                                ,'smap1.status'   : '3'//confirmado 
-                                ,'smap1.comments' : ''
-                            }
-                        });
-	                	mensajeCorrecto('Aviso','Endoso autorizado');
-	                }
-	                else
-	                {
-	                    mensajeError(json.error);
-	                }
-	            }
-	            ,failure  : function()
-	            {
-	            	grid.setLoading(false);
-	                errorComunicacion();
-	            }
-	        });
-		}
-	}
-	else
-	{
-		mensajeWarning('El tr&aacute;mite ya est&aacute; autorizado');
-	}
-	debug('<_4_preAutorizarEmision');
+	debug('>_4_preAutorizarEmision');
+    _4_recordAutoSelected=grid.getStore().getAt(rowIndex);
+    debug('_4_recordAutoSelected:',_4_recordAutoSelected);
+    var valido = true;
+    if(valido)
+    {
+        valido = _4_recordAutoSelected.get('status')=='11';
+        if(!valido)
+        {
+            mensajeWarning('Este tr&aacute;mite no se puede autorizar, verifique el status');
+        }
+    }
+    if(valido)
+    {
+        _4_windowComentarioTipo=_4_recordAutoSelected.get('parametros.pv_otvalor05');
+        _4_windowComentarioOperacion = 'emitir';
+        _4_windowComentario.items.items[0].setValue('');
+        _4_windowComentario.setTitle('Autorizar tr&aacute;mite');
+        _4_windowComentario.show();
+        centrarVentanaInterna(_4_windowComentario);
+    }
+    debug('<_4_preAutorizarEmision');
 }
 ////// funciones //////
 
