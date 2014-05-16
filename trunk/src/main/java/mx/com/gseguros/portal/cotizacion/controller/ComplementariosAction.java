@@ -1553,6 +1553,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			String cdusuari    = panel1.get("otvalor01");
 			String cdelemen    = panel1.get("otvalor02");
 			String cdperson    = panel1.get("otvalor04");
+			String comentarios = panel2.get("observaciones");
 			
 			String fechaEmision   = panel1.get("ferecepc");
 			Date fechaEmisionDate = renderFechas.parse(fechaEmision);
@@ -1735,7 +1736,7 @@ public class ComplementariosAction extends PrincipalCoreAction
         	parDmesCon.put("pv_ntramite_i"   , ntramite);
         	parDmesCon.put("pv_feinicio_i"   , fechaDia);
         	parDmesCon.put("pv_cdclausu_i"   , null);
-        	parDmesCon.put("pv_comments_i"   , "La emisi&oacute;n del tr&aacute;mite se autoriz&oacute;");
+        	parDmesCon.put("pv_comments_i"   , "La emisi&oacute;n del tr&aacute;mite se autoriz&oacute; con las siguientes observaciones:<br/>"+comentarios);
         	parDmesCon.put("pv_cdusuari_i"   , us.getUser());
         	parDmesCon.put("pv_cdmotivo_i"   , null);
         	kernelManager.movDmesacontrol(parDmesCon);
