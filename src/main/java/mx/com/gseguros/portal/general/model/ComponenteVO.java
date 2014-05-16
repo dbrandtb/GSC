@@ -51,6 +51,7 @@ public class ComponenteVO
 	private String  paramName5    = null;
 	private String  paramValue5   = null;
 	private boolean comboVacio    = false;
+	private String  defaultValue  = null;
 	
 	private String swsuscri = null;
 	private String swtarifi = null;
@@ -414,5 +415,13 @@ public class ComponenteVO
 
 	public void setWidth(int width) {
 		this.width = width;
+	}
+
+	public String getDefaultValue() {
+		return defaultValue;
+	}
+
+	public void setDefaultValue(String defaultValue) {
+		this.defaultValue = defaultValue;
 	}
 }

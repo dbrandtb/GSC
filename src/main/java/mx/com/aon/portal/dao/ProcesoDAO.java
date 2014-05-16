@@ -1231,6 +1231,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
         {
             super(dataSource,"PKG_LISTAS.P_GET_ATRI_SITUACION");
             declareParameter(new SqlParameter("pv_cdtipsit_i",      OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdusuari_i",      OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtieneTatrisitMapper()));
             declareParameter(new SqlOutParameter("pv_messages_o",   OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
@@ -1314,6 +1315,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
             result.setSwsuscri(rs.getString("SWSUSCRI"));
             result.setSwtarifi(rs.getString("SWTARIFI"));
             result.setSwpresen(rs.getString("SWPRESEN"));
+            result.setDefaultValue(rs.getString("VALOR"));
             
             return result;
         }

@@ -1897,7 +1897,12 @@ public class EndososAction extends PrincipalCoreAction
 		{
 			try
 			{
-				List<ComponenteVO>tatrisit=kernelManager.obtenerTatrisit(smap1.get("cdtipsit"));
+				String cdusuari;
+				{
+					UserVO usuario = (UserVO)session.get("USUARIO");
+					cdusuari=usuario.getUser();
+				}
+				List<ComponenteVO>tatrisit=kernelManager.obtenerTatrisit(smap1.get("cdtipsit"),cdusuari);
 				GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 				gc.setCdtipsit(smap1.get("cdtipsit"));
 				List<ComponenteVO>tatriTemp=new ArrayList<ComponenteVO>(0);
@@ -1970,7 +1975,12 @@ public class EndososAction extends PrincipalCoreAction
 			
 			mensaje = endososManager.obtieneFechaInicioVigenciaPoliza(cdunieco, cdramo, estado, nmpoliza);
 			
-			List<ComponenteVO>tatrisit=kernelManager.obtenerTatrisit(smap1.get("cdtipsit"));
+			String cdusuari;
+			{
+				UserVO usuario=(UserVO)session.get("USUARIO");
+				cdusuari=usuario.getUser();
+			}
+			List<ComponenteVO>tatrisit=kernelManager.obtenerTatrisit(smap1.get("cdtipsit"),cdusuari);
 			GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 			gc.setCdtipsit(smap1.get("cdtipsit"));
 			List<ComponenteVO>tatriTemp=new ArrayList<ComponenteVO>(0);
@@ -2867,7 +2877,12 @@ public class EndososAction extends PrincipalCoreAction
 				
 				////////////////////////////////////////////////
 				////// campos de tatrisit para individual //////
-				List<ComponenteVO>tatrisit=kernelManager.obtenerTatrisit(cdtipsit);
+				String cdusuari;
+				{
+					UserVO usuario=(UserVO)session.get("USUARIO");
+					cdusuari=usuario.getUser();
+				}
+				List<ComponenteVO>tatrisit=kernelManager.obtenerTatrisit(cdtipsit,cdusuari);
 				gc.setCdtipsit(cdtipsit);
 				
 				List<String>exclusiones=new ArrayList<String>();
@@ -5428,7 +5443,7 @@ public class EndososAction extends PrincipalCoreAction
 					throw new Exception("No hay deducible definido para este producto");
 				}
 				
-				List<ComponenteVO>tatrisit = kernelManager.obtenerTatrisit(cdtipsit);
+				List<ComponenteVO>tatrisit = kernelManager.obtenerTatrisit(cdtipsit,cdusuari);
 				List<ComponenteVO>temp     = new ArrayList<ComponenteVO>();
 				for(ComponenteVO tatrisitIte:tatrisit)
 				{
@@ -5735,7 +5750,7 @@ public class EndososAction extends PrincipalCoreAction
 					throw new Exception("No hay copago definido para este producto");
 				}
 				
-				List<ComponenteVO>tatrisit = kernelManager.obtenerTatrisit(cdtipsit);
+				List<ComponenteVO>tatrisit = kernelManager.obtenerTatrisit(cdtipsit,cdusuari);
 				List<ComponenteVO>temp     = new ArrayList<ComponenteVO>();
 				for(ComponenteVO tatrisitIte:tatrisit)
 				{
@@ -6429,7 +6444,7 @@ public class EndososAction extends PrincipalCoreAction
 					throw new Exception("No hay extraprima definida para este producto");
 				}
 				
-				List<ComponenteVO>tatrisit = kernelManager.obtenerTatrisit(cdtipsit);
+				List<ComponenteVO>tatrisit = kernelManager.obtenerTatrisit(cdtipsit,cdusuari);
 				List<ComponenteVO>temp     = new ArrayList<ComponenteVO>();
 				for(ComponenteVO tatrisitIte:tatrisit)
 				{
