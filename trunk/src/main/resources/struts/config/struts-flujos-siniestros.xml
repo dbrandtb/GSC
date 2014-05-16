@@ -49,6 +49,15 @@
 			</result>
 		</action>
 		
+		<action name="guardarConceptoDestino" class="siniestrosAction" method="guardarConceptoDestino">
+		<interceptor-ref name="json">
+	            <param name="enableSMD">true</param>
+	            <param name="ignoreSMDMethodInterfaces">false</param>
+	        </interceptor-ref>
+	        <result type="json"/>
+		</action>
+		
+		
 		<action name="consultaListaAutorizacion" class="siniestrosAction"
 			method="consultaListaAutorizacion">
 			<result type="json">
