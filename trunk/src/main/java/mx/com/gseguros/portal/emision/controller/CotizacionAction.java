@@ -13,11 +13,13 @@ import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
+import mx.com.gseguros.portal.general.util.ObjetoBD;
 import mx.com.gseguros.portal.general.util.Rango;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.general.util.Validacion;
@@ -36,15 +38,15 @@ public class CotizacionAction extends PrincipalCoreAction
 	private static Logger           log              = Logger.getLogger(CotizacionAction.class);
 	private static SimpleDateFormat renderFechas     = new SimpleDateFormat("dd/MM/yyyy"); 
 	
-	private transient KernelManagerSustituto   kernelManager;
-	private transient CatalogosManager catalogosManager;
-	private boolean                  success;
-	private Map<String,String>       smap1;
-	private Map<String,Item>         imap;
-	private List<Map<String,String>> slist1;
-	private List<Map<String,String>> slist2;
-	private String                   error;
-	
+	private transient CatalogosManager       catalogosManager;
+	private ConsultasManager                 consultasManager;
+	private String                           error;
+	private Map<String,Item>                 imap;
+	private transient KernelManagerSustituto kernelManager;
+	private List<Map<String,String>>         slist1;
+	private List<Map<String,String>>         slist2;
+	private Map<String,String>               smap1;
+	private boolean                          success;
 	
 	/////////////////////////////////
 	////// cotizacion dinamica //////
@@ -308,29 +310,33 @@ public class CotizacionAction extends PrincipalCoreAction
             String llaveRol="";
             String llaveSexo="";
             String llaveFenacimi="";
-            if(cdramo.equals("2"))
+            try
             {
-	            if(cdtipsit.equalsIgnoreCase("SL")||cdtipsit.equalsIgnoreCase("SN"))
-	            {
-	            	llaveRol      = "parametros.pv_otvalor16";
-	            	llaveFenacimi = "parametros.pv_otvalor02";
-	            	llaveSexo     = "parametros.pv_otvalor01";
-	            }
-	            else if(cdtipsit.equalsIgnoreCase("GB"))
-	            {
-	            	llaveRol="parametros.pv_otvalor01";
-	            	llaveSexo="H";
-	            	llaveFenacimi="DATE";
-	            }
-            }
-            else if(cdramo.equals("4"))
-            {
-            	if(cdtipsit.equalsIgnoreCase("MS"))
+            	LinkedHashMap<String,Object>p=new LinkedHashMap<String,Object>();
+            	p.put("cdtipsit",cdtipsit);
+            	Map<String,String>atributos=consultasManager.consultaDinamica(ObjetoBD.OBTIENE_ATRIBUTOS, p).get(0);
+            	llaveRol=atributos.get("PARENTESCO");
+            	if(llaveRol.length()==1)
             	{
-            		llaveRol      = "parametros.pv_otvalor03";
-	            	llaveFenacimi = "parametros.pv_otvalor01";
-	            	llaveSexo     = "parametros.pv_otvalor02";
+            		llaveRol="0"+llaveRol;
             	}
+            	llaveRol="parametros.pv_otvalor"+llaveRol;
+            	llaveSexo=atributos.get("SEXO");
+            	if(llaveSexo.length()==1)
+            	{
+            		llaveSexo="0"+llaveSexo;
+            	}
+            	llaveSexo="parametros.pv_otvalor"+llaveSexo;
+            	llaveFenacimi=atributos.get("FENACIMI");
+            	if(llaveFenacimi.length()==1)
+            	{
+            		llaveFenacimi="0"+llaveFenacimi;
+            	}
+            	llaveFenacimi="parametros.pv_otvalor"+llaveFenacimi;
+            }
+            catch(Exception ex)
+            {
+            	log.error("error al obtener atributos",ex);
             }
             ////// 1. indicar para la situacion el indice //////
             
@@ -836,6 +842,10 @@ public class CotizacionAction extends PrincipalCoreAction
 
 	public void setSlist2(List<Map<String, String>> slist2) {
 		this.slist2 = slist2;
+	}
+
+	public void setConsultasManager(ConsultasManager consultasManager) {
+		this.consultasManager = consultasManager;
 	}
 
 }
