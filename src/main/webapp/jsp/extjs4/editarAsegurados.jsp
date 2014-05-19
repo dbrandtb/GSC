@@ -19,11 +19,12 @@
 	var inputEstadop2=   '<s:property value="map1.estado" />';
 	var inputNmpolizap2= '<s:property value="map1.nmpoliza" />';
 	var inputCdtipsitp2= '<s:property value="map1.cdtipsit" />';
+	debug('inputCdtipsitp2:',inputCdtipsitp2);
 	var inputMaxLenContratante = <s:property value="map1.maxLenContratante" />;
-	var CDATRIBU_ROLp2='<s:property value="cdatribuRol" />';
+	var CDATRIBU_ROLp2="<s:property value='%{getCdatribuRol(map1.cdtipsit)}' />";
 	debug('CDATRIBU_ROLp2:',CDATRIBU_ROLp2);
 	var gridPersonasp2;
-	var CDATRIBU_SEXOp2='<s:property value="cdatribuSexo" />';
+	var CDATRIBU_SEXOp2="<s:property value='%{getCdatribuSexo(map1.cdtipsit)}' />";
 	debug('CDATRIBU_SEXOp2:',CDATRIBU_SEXOp2);
 	var storeRolesp2;
 	var storeGenerosp2;
@@ -213,10 +214,11 @@
         //console.log("###############################");
         submitValues['list1']=incisosJson;
         var map1={
-        'pv_cdunieco':inputCdunieco,
-        'pv_cdramo':inputCdramo,
-        'pv_estado':inputEstado,
-        'pv_nmpoliza':inputNmpoliza};
+        'pv_cdunieco' : inputCdunieco,
+        'pv_cdramo'   : inputCdramo,
+        'pv_estado'   : inputEstado,
+        'pv_nmpoliza' : inputNmpoliza,
+        'cdtipsit'    : inputCdtipsitp2};
         submitValues['map1']=map1;
         //window.console&&console.log(submitValues);
         //Submit the Ajax request and handle the response

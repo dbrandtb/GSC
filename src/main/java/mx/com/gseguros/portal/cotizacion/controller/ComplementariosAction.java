@@ -26,7 +26,6 @@ import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
-import mx.com.gseguros.portal.general.util.ConstantesProducto;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
@@ -898,20 +897,31 @@ public class ComplementariosAction extends PrincipalCoreAction
 					valositAsegurado=valositAseguradoIteradoTemp;
 					log.debug("se puso pv_");
 					
-					String cdatribuFenacimi = ConstantesProducto.ramo(map1.get("pv_cdramo")).getCdatribuFechaNacimi();
-					if(cdatribuFenacimi.length()==1)
+					LinkedHashMap<String,Object>parametrosAtributos=new LinkedHashMap<String,Object>();
+					parametrosAtributos.put("cdtipsit",map1.get("cdtipsit"));
+					try
 					{
-						cdatribuFenacimi = "0"+cdatribuFenacimi;
-					}
-					valositAsegurado.put("pv_otvalor"+cdatribuFenacimi, (String)aseg.get("fenacimi"));
+						Map<String,String>atributos=consultasManager.consultaDinamica(ObjetoBD.OBTIENE_ATRIBUTOS, parametrosAtributos).get(0);
 					
-					String cdatribusSexo = ConstantesProducto.ramo(map1.get("pv_cdramo")).getCdatribuSexo();
-					if(cdatribusSexo.length()==1)
-					{
-						cdatribusSexo = "0"+cdatribusSexo;
+						String cdatribuFenacimi = atributos.get("FENACIMI");
+						if(cdatribuFenacimi.length()==1)
+						{
+							cdatribuFenacimi = "0"+cdatribuFenacimi;
+						}
+						valositAsegurado.put("pv_otvalor"+cdatribuFenacimi, (String)aseg.get("fenacimi"));
+						
+						String cdatribusSexo = atributos.get("SEXO");
+						if(cdatribusSexo.length()==1)
+						{
+							cdatribusSexo = "0"+cdatribusSexo;
+						}
+						valositAsegurado.put("pv_otvalor"+cdatribusSexo, (String)aseg.get("sexo"));
+						log.debug("se agregaron los nuevos");
 					}
-					valositAsegurado.put("pv_otvalor"+cdatribusSexo, (String)aseg.get("sexo"));
-					log.debug("se agregaron los nuevos");
+					catch(Exception ex)
+					{
+						log.error("error en obtener los atributos",ex);
+					}
 					
 					//convertir a string el total
 					Map<String,String>paramsNuevos=new LinkedHashMap<String,String>(0);
@@ -2033,19 +2043,14 @@ public class ComplementariosAction extends PrincipalCoreAction
 		this.map4 = map4;
 	}
 	
-	public String getCdatribuRol()
+	public String getCdatribuRol(String auxiliarProductoCdtipsit)
 	{
 		String cdatribu = null;
 		try
 		{
-			if(auxiliarProductoCdtipsit==null)
-			{
-				cdatribu = ConstantesProducto.ramo("2").getCdatribuParentesco();
-			}
-			else
-			{
-				cdatribu = ConstantesProducto.ramo(auxiliarProductoCdramo).getCdatribuParentesco();
-			}
+			LinkedHashMap<String,Object>p=new LinkedHashMap<String,Object>();
+			p.put("cdtipsit" , auxiliarProductoCdtipsit);
+			cdatribu = consultasManager.consultaDinamica(ObjetoBD.OBTIENE_ATRIBUTOS, p).get(0).get("PARENTESCO");
 		}
 		catch(Exception ex)
 		{
@@ -2055,19 +2060,14 @@ public class ComplementariosAction extends PrincipalCoreAction
 		return cdatribu;
 	}
 	
-	public String getCdatribuSexo()
+	public String getCdatribuSexo(String auxiliarProductoCdtipsit)
 	{
 		String cdatribu = null;
 		try
 		{
-			if(auxiliarProductoCdtipsit==null)
-			{
-				cdatribu = ConstantesProducto.ramo("2").getCdatribuSexo();
-			}
-			else
-			{
-				cdatribu = ConstantesProducto.ramo(auxiliarProductoCdramo).getCdatribuSexo();
-			}
+			LinkedHashMap<String,Object>p=new LinkedHashMap<String,Object>();
+			p.put("cdtipsit" , auxiliarProductoCdtipsit);
+			cdatribu = consultasManager.consultaDinamica(ObjetoBD.OBTIENE_ATRIBUTOS, p).get(0).get("SEXO");
 		}
 		catch(Exception ex)
 		{
