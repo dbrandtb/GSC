@@ -273,83 +273,148 @@ function _11_validaAutorizacion(record)
 	debug('_11_validaAutorizacion: ',record.raw);
 	//Obtenemos los valores de Cobertura y subcobertura
 	var cober_SubCober = _11_params.OTVALOR12+"_"+_11_params.OTVALOR14;
-	debug('VALORES DE LOS PARAMETROS',_11_params);
-	debug('VALORES DE LOS PARAMETROS record',record.raw);
-	switch(cober_SubCober)
-	{
-		// 3.- No tiene y no necesita pero no hay siniestro
-        case "18HO_18HO024" :
-        case "18HO_18HO025" :
-        case "18HO_18HO026" :
-        case "18MA_18MA030" :
-        case "18MA_18MA017" :
-        case "18MA_18MA004" :
-            var valido = true;
-	    	var idReclamacion = record.raw.IdReclamacion;
-	    	valido = idReclamacion && idReclamacion>0;
-	    	if(!valido){
-	    		var json =
-	    		{
-	    			'params.ntramite' : _11_params.NTRAMITE,
-	    			'params.cdunieco' : record.raw.CDUNIECO,
-	   				'params.cdramo'   : record.raw.CDRAMO,
-	  				'params.estado'   : record.raw.ESTADO,
-	 				'params.nmpoliza' : record.raw.noPoliza,
-	 				'params.nmsuplem' : record.raw.NMSUPLEM,
-	 				'params.nmsituac' : record.raw.NMSITUAC,
-	 				'params.cdtipsit' : record.raw.CDTIPSIT
-	    		};
-	    		debug('datos a enviar:',json);
-	    		Ext.Ajax.request(
-	    		{
-	    			url      : _11_urlIniciarSiniestroSinAutServ
-	    			,params  : json
-	    			,success : function(response)
-	    			{
-	    				
-	    				json = Ext.decode(response.responseText);
-	    				debug('respuesta:',json);
-	    				if(json.success==true)
-	    				{
-	    					mensajeCorrecto('Datos guardados',json.mensaje,function()
-	    					{
-	    						Ext.create('Ext.form.Panel').submit(
-	    				        {
-	    				            standardSubmit :true
-	    				            ,params        :
-	    				            {
-	    				                'params.ntramite' : _11_params.NTRAMITE
-	    				            }
-	    				        });
-	    					});
-	    				}
-	    				else
-	    				{
-	    					mensajeError(json.mensaje);
-	    				}
-	    			}
-	    		    ,failure : function()
-	    		    {
-	    		    	errorComunicacion();
-	    		    }
-	    		});
-	    	}
-	    	return valido;
-            break;
-        default:
-        	//2.- No tiene y necesita
-        	var valido = true;
-	    	var nAut = record.get('NoAutorizacion');
-	    	valido = nAut && nAut>0;
-	    	if(!valido)
-	    	{
-	    		_11_pedirAutorizacion(record);
-	    	}
-	    	debug('!_11_validaAutorizacion: ',valido?'si':'no');
-	    	return valido;
-	    }
 	
-	
+	// Verificamos la cobertura del tramite
+	if(_11_params.OTVALOR12 == "18HO" || _11_params.OTVALOR12 == "18MA"){ // Hospitalización
+		switch(cober_SubCober) 
+		{
+			// 3.- No tiene y no necesita pero no hay siniestro
+	        case "18HO_18HO024" :
+	        case "18HO_18HO025" :
+	        case "18HO_18HO026" :
+	        case "18MA_18MA030" :
+	        case "18MA_18MA017" :
+	        case "18MA_18MA004" :
+	            var valido = true;
+		    	var idReclamacion = record.raw.IdReclamacion;
+		    	valido = idReclamacion && idReclamacion>0;
+		    	if(!valido){
+		    		//Preguntamos si esta seguro de generar el siniestro
+		    		msgWindow = Ext.Msg.show({
+				        title: 'Aviso',
+				        msg: '&iquest;Esta seguro que desea generar el Siniestro para dicho asegurado ?',
+				        buttons: Ext.Msg.YESNO,
+				        icon: Ext.Msg.QUESTION,
+				        fn: function(buttonId, text, opt){
+				        	if(buttonId == 'yes'){
+					    		var json =
+					    		{
+					    			'params.ntramite' : _11_params.NTRAMITE,
+					    			'params.cdunieco' : record.raw.CDUNIECO,
+					   				'params.cdramo'   : record.raw.CDRAMO,
+					  				'params.estado'   : record.raw.ESTADO,
+					 				'params.nmpoliza' : record.raw.noPoliza,
+					 				'params.nmsuplem' : record.raw.NMSUPLEM,
+					 				'params.nmsituac' : record.raw.NMSITUAC,
+					 				'params.cdtipsit' : record.raw.CDTIPSIT
+					    		};
+					    		
+					    		Ext.Ajax.request(
+					    		{
+					    			url      : _11_urlIniciarSiniestroSinAutServ
+					    			,params  : json
+					    			,success : function(response)
+					    			{
+					    				
+					    				json = Ext.decode(response.responseText);
+					    				if(json.success==true)
+					    				{
+					    					mensajeCorrecto('Datos guardados',json.mensaje,function()
+					    					{
+					    						Ext.create('Ext.form.Panel').submit(
+					    				        {
+					    				            standardSubmit :true
+					    				            ,params        :
+					    				            {
+					    				                'params.ntramite' : _11_params.NTRAMITE
+					    				            }
+					    				        });
+					    					});
+					    				}
+					    				else
+					    				{
+					    					mensajeError(json.mensaje);
+					    				}
+					    			}
+					    		    ,failure : function()
+					    		    {
+					    		    	errorComunicacion();
+					    		    }
+					    		});
+			        		}
+				        }
+				    });
+		    		centrarVentana(msgWindow);
+		    	}
+		    	return valido;
+	            break;
+	        default:
+	        	//2.- No tiene y necesita
+	        	var valido = true;
+		    	var nAut = record.get('NoAutorizacion');
+		    	valido = nAut && nAut>0;
+		    	if(!valido)
+		    	{
+		    		_11_pedirAutorizacion(record);
+		    	}
+		    	debug('!_11_validaAutorizacion: ',valido?'si':'no');
+		    	return valido;
+		    }
+		
+		
+	}else{
+		var valido = true;
+    	var idReclamacion = record.raw.IdReclamacion;
+    	valido = idReclamacion && idReclamacion>0;
+    	if(!valido){
+    		var json =
+    		{
+    			'params.ntramite' : _11_params.NTRAMITE,
+    			'params.cdunieco' : record.raw.CDUNIECO,
+   				'params.cdramo'   : record.raw.CDRAMO,
+  				'params.estado'   : record.raw.ESTADO,
+ 				'params.nmpoliza' : record.raw.noPoliza,
+ 				'params.nmsuplem' : record.raw.NMSUPLEM,
+ 				'params.nmsituac' : record.raw.NMSITUAC,
+ 				'params.cdtipsit' : record.raw.CDTIPSIT
+    		};
+    		
+    		Ext.Ajax.request(
+    		{
+    			url      : _11_urlIniciarSiniestroSinAutServ
+    			,params  : json
+    			,success : function(response)
+    			{
+    				
+    				json = Ext.decode(response.responseText);
+    				
+    				if(json.success==true)
+    				{
+    					mensajeCorrecto('Datos guardados',json.mensaje,function()
+    					{
+    						Ext.create('Ext.form.Panel').submit(
+    				        {
+    				            standardSubmit :true
+    				            ,params        :
+    				            {
+    				                'params.ntramite' : _11_params.NTRAMITE
+    				            }
+    				        });
+    					});
+    				}
+    				else
+    				{
+    					mensajeError(json.mensaje);
+    				}
+    			}
+    		    ,failure : function()
+    		    {
+    		    	errorComunicacion();
+    		    }
+    		});
+    	}
+    	return valido;
+	}
 }
 
 function _11_pedirAutorizacion(record)
@@ -381,7 +446,6 @@ function _11_asociarAutorizacion()
 			,'params.cdperson' : _11_recordActivo.get('codAfiliado')
 			,'params.ntramite' : _11_params.NTRAMITE
 		};
-		debug('datos a enviar:',json);
 		
 		_11_formPedirAuto.setLoading(true);
 		Ext.Ajax.request(
@@ -392,7 +456,7 @@ function _11_asociarAutorizacion()
 			{
 				_11_formPedirAuto.setLoading(false);
 				json = Ext.decode(response.responseText);
-				debug('respuesta:',json);
+				
 				if(json.success==true)
 				{
 					mensajeCorrecto('Datos guardados',json.mensaje,function()

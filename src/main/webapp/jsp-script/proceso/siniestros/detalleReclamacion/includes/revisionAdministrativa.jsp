@@ -1075,7 +1075,7 @@ Ext.define('EditorFacturas', {
  		
  		windowFacturas.setTitle('Agregar Factura');
  		windowFacturas.show();
- 		centrarVentana(windowFacturas);
+ 		centrarVentanaInterna(windowFacturas);
  		
  	},
  	onRemoveClick: function(grid, rowIndex){
@@ -1088,7 +1088,7 @@ Ext.define('EditorFacturas', {
  		
  		panelEdicionFacturas.getForm().reset();
  		
- 		centrarVentana(Ext.Msg.show({
+ 		centrarVentanaInterna(Ext.Msg.show({
 	        title: 'Aviso',
 	        msg: '&iquest;Esta seguro que desea eliminar esta factura?',
 	        buttons: Ext.Msg.YESNO,
@@ -1164,7 +1164,7 @@ Ext.define('EditorFacturas', {
 				
 				windowFacturas.setTitle('Editar Factura');
 				windowFacturas.show();
-		 		centrarVentana(windowFacturas);
+				centrarVentanaInterna(windowFacturas);
 			}
 		});
  		panelEdicionFacturas.down('[name="params.ptimport"]').setValue(record.get('PTIMPORT') == null || record.get('PTIMPORT') == ''? "0":record.get('PTIMPORT'));
@@ -1388,7 +1388,7 @@ Ext.define('EditorConceptos', {
  			
  			windowConceptos.setTitle('Agregar Concepto');
  			windowConceptos.show();
- 			centrarVentana(windowConceptos);
+ 			centrarVentanaInterna(windowConceptos);
  		}else {
  			centrarVentanaInterna(mensajeWarning("Debe seleccionar una factura para poder agregar un concepto a la misma."));
  		} 
@@ -1425,7 +1425,7 @@ Ext.define('EditorConceptos', {
 				
 				windowConceptos.setTitle('Editar Concepto');
 				windowConceptos.show();
-		 		centrarVentana(windowConceptos);
+				centrarVentanaInterna(windowConceptos);
 			}
 		});
  		
@@ -1482,7 +1482,7 @@ Ext.define('EditorConceptos', {
  		var record=grid.getStore().getAt(rowIndex);
  		_Operacion = 'D';
  		
- 		centrarVentana(Ext.Msg.show({
+ 		centrarVentanaInterna(Ext.Msg.show({
 	        title: 'Aviso',
 	        msg: '&iquest;Esta seguro que desea eliminar este concepto?',
 	        buttons: Ext.Msg.YESNO,
@@ -1607,7 +1607,7 @@ function _mostrarVentanaAjustes(grid,rowIndex,colIndex){
 	         }
 	    }
     }).show();
-    centrarVentana(windowLoader);
+    centrarVentanaInterna(windowLoader);
 }
         //jtezva
         _revAdm_formRechazo.items.items[1].on('select',function(combo, records, eOpts)
