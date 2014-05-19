@@ -41,6 +41,8 @@ public class ReportesAction extends PrincipalCoreAction {
 	protected boolean success;
 	
 	private String cdreporte;
+	private String cdPantalla;
+	private String cdSeccion;
 	
 	
 	public String execute() throws Exception {
@@ -58,24 +60,10 @@ public class ReportesAction extends PrincipalCoreAction {
 	public String obtenerComponentesReporte() throws Exception {
 		
 		// Obtenemos los parametros del reporte solicitado:
-		paramsReporte = reportesManager.obtenerParametrosReportes(cdreporte);
+		List<ComponenteVO> lstCmp = reportesManager.obtenerParametrosReportes(cdreporte, cdPantalla, cdSeccion);
 		
 		// Generamos los campos/items para presentarlos:
 		GeneradorCampos gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
-		List<ComponenteVO> lstCmp = new ArrayList<ComponenteVO>();
-		
-		for(ParamReporteVO paramRep : paramsReporte) {
-			ComponenteVO cmp = new ComponenteVO();
-			cmp.setType(ComponenteVO.TIPO_GENERICO);
-			cmp.setLabel(paramRep.getDescripcion());
-			cmp.setTipoCampo(paramRep.getTipo());
-			// Se asigna el valor por default si lo tiene:
-			cmp.setValue(org.springframework.util.StringUtils.quote(paramRep.getValor()));
-			// Se asigna el nombre del campo:
-			cmp.setNameCdatribu("params." + paramRep.getNombre());
-			cmp.setObligatorio(paramRep.isObligatorio());
-			lstCmp.add(cmp);
-		}
         gc.generaComponentes(lstCmp, true, false, true, false, false, false);
         params = new HashMap<String, String>();
         params.put("items", gc.getItems().toString());
@@ -176,6 +164,26 @@ public class ReportesAction extends PrincipalCoreAction {
 
 	public void setCdreporte(String cdreporte) {
 		this.cdreporte = cdreporte;
+	}
+
+
+	public String getCdPantalla() {
+		return cdPantalla;
+	}
+
+
+	public void setCdPantalla(String cdPantalla) {
+		this.cdPantalla = cdPantalla;
+	}
+
+
+	public String getCdSeccion() {
+		return cdSeccion;
+	}
+
+
+	public void setCdSeccion(String cdSeccion) {
+		this.cdSeccion = cdSeccion;
 	}
 
 }

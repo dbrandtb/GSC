@@ -8,6 +8,7 @@ import java.util.Map;
 
 import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.general.dao.ReportesDAO;
+import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.model.ParamReporteVO;
 import mx.com.gseguros.portal.general.model.ReporteVO;
 import mx.com.gseguros.portal.general.service.ReportesManager;
@@ -29,9 +30,11 @@ public class ReportesManagerImpl implements ReportesManager {
 
 
 	@Override
-	public List<ParamReporteVO> obtenerParametrosReportes(String cdreporte) throws Exception {
+	public List<ComponenteVO> obtenerParametrosReportes(String cdreporte, String cdPantalla, String cdSeccion) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("pv_cdreporte_i", cdreporte);
+		params.put("pv_cdreporte_i",  cdreporte);
+		params.put("pv_cdpantalla_i", cdPantalla);
+		params.put("pv_cdseccion_i",  cdSeccion);
 		return reportesDAO.obtenerParametrosReporte(params);
 	}
 	
@@ -47,6 +50,8 @@ public class ReportesManagerImpl implements ReportesManager {
 		    paramReporte.setValor(entry.getValue());
 		    paramsReporte.add(paramReporte);
 		}
+		
+		logger.debug(">>>>> Params en obtenerDatosReporte: "+params);
 		
 		// Se actualizan los valores de los parametros del reporte:
 		for(ParamReporteVO paramReporte : paramsReporte) {

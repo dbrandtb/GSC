@@ -13,6 +13,10 @@ public class ReporteVO implements Serializable {
 	
 	private String dsReporte;	
 	
+	private String cdPantalla;	
+	
+	private String cdSeccion;	
+	
 	
 	public ReporteVO() {
 		super();
@@ -53,4 +57,20 @@ public class ReporteVO implements Serializable {
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
+
+	public String getCdPantalla() {
+		return cdPantalla;
+	}
+
+	public void setCdPantalla(String cdPantalla) {
+		this.cdPantalla = cdPantalla;
+	}
+
+	public String getCdSeccion() {
+		return cdSeccion;
+	}
+
+	public void setCdSeccion(String cdSeccion) {
+		this.cdSeccion = cdSeccion;
+	}
 }
