@@ -14,6 +14,7 @@ import javax.sql.DataSource;
 import mx.com.gseguros.exception.DaoException;
 import mx.com.gseguros.portal.dao.AbstractManagerDAO;
 import mx.com.gseguros.portal.general.dao.ReportesDAO;
+import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.model.ParamReporteVO;
 import mx.com.gseguros.portal.general.model.ReporteVO;
 import mx.com.gseguros.utils.Constantes;
@@ -74,6 +75,8 @@ public class ReportesDAOImpl extends AbstractManagerDAO implements ReportesDAO {
         	ReporteVO reporte = new ReporteVO();
         	reporte.setCdReporte(rs.getString("CDREPORTE"));
         	reporte.setDsReporte(rs.getString("DSREPORTE"));
+        	reporte.setCdPantalla(rs.getString("CDPANTALLA"));
+        	reporte.setCdSeccion(rs.getString("CDSECCION"));
         	return reporte;
         }
     }
@@ -81,15 +84,17 @@ public class ReportesDAOImpl extends AbstractManagerDAO implements ReportesDAO {
     
     @SuppressWarnings("unchecked")
 	@Override
-	public List<ParamReporteVO> obtenerParametrosReporte(Map<String, Object> params) throws DaoException {
+	public List<ComponenteVO> obtenerParametrosReporte(Map<String, Object> params) throws DaoException {
     	Map<String, Object> result = ejecutaSP(new ObtieneParametrosReportesSP(this.getDataSource()), params);
-		return (List<ParamReporteVO>)result.get("pv_registro_o");
+		return (List<ComponenteVO>)result.get("pv_registro_o");
     }
     
     protected class ObtieneParametrosReportesSP extends StoredProcedure {
     	protected ObtieneParametrosReportesSP(DataSource dataSource) {
-            super(dataSource,"PKG_TAEXTRACCION.GET_PARAMETROS");
+            super(dataSource,"PKG_TAEXTRACCION.GET_PARAMETROS2");
             declareParameter(new SqlParameter("pv_cdreporte_i", OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdpantalla_i", OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdseccion_i", OracleTypes.VARCHAR));
             declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ObtieneParametrosReportesMapper()));
             declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.NUMERIC));
             declareParameter(new SqlOutParameter("pv_title_o",    OracleTypes.VARCHAR));
@@ -97,18 +102,159 @@ public class ReportesDAOImpl extends AbstractManagerDAO implements ReportesDAO {
     	}
     }
     
-    protected class ObtieneParametrosReportesMapper implements RowMapper<ParamReporteVO> {
-        public ParamReporteVO mapRow(ResultSet rs, int rowNum) throws SQLException {
-        	ParamReporteVO reporteParam = new ParamReporteVO();
-        	reporteParam.setNombre(rs.getString("NOMPARAM"));
-        	reporteParam.setDescripcion(rs.getString("DESCPARAM"));
-        	reporteParam.setTipo(rs.getString("TIPOPARAM"));
-        	reporteParam.setValor(rs.getString("VALINICIO"));
-        	boolean obligatorio = (StringUtils.isNotBlank(rs.getString("SWOBLIGA")) && rs.getString("SWOBLIGA").equals(Constantes.SI)) ? true : false;
-        	reporteParam.setObligatorio(obligatorio);
-        	return reporteParam;
-        }
-    }
+    protected class ObtieneParametrosReportesMapper implements RowMapper<ComponenteVO> {
+		String llaveLabel       = "LABEL";
+		String llaveTipoCampo   = "TIPOCAMPO";
+		String llaveCatalogo    = "CATALOGO";
+		String llaveDependiente = "SWDEPEND";
+		String llaveMinLength   = "MINLENGTH";
+		String llaveMaxLength   = "MAXLENGTH";
+		String llaveObligatorio = "SWOBLIGA";
+		String llaveColumna     = "SWCOLUMN";
+		String llaveRenderer    = "RENDERER";
+		String llaveName        = "NAME_CDATRIBU";
+		String llaveSoloLectura = "SWLECTURA";
+		String llaveQueryParam  = "QUERYPARAM";
+		String llaveValue       = "VALUE";
+		String llaveOculto      = "SWOCULTO";
+		String llaveParam1      = "PARAM1";
+		String llaveValue1      = "VALUE1";
+		String llaveParam2      = "PARAM2";
+		String llaveValue2      = "VALUE2";
+		String llaveParam3      = "PARAM3";
+		String llaveValue3      = "VALUE3";
+		String llaveParam4      = "PARAM4";
+		String llaveValue4      = "VALUE4";
+		String llaveParam5      = "PARAM5";
+		String llaveValue5      = "VALUE5";
+		String llaveComboVacio  = "SWCVACIO";
+		String llaveIcon        = "ICONO";
+		String llaveHandler     = "HANDLER";
+		
+		public ComponenteVO mapRow(ResultSet rs, int rowNum) throws SQLException
+		{
+			String  label        = rs.getString(llaveLabel);
+			String  tipoCampo    = rs.getString(llaveTipoCampo);
+			String  catalogo     = rs.getString(llaveCatalogo);
+			
+			String  sDependiente  = rs.getString(llaveDependiente);
+			boolean isDependiente = false;
+			if(StringUtils.isNotBlank(sDependiente)&&sDependiente.equalsIgnoreCase(Constantes.SI))
+			{
+				isDependiente = true;
+			}
+			
+			String  sMinLength    = rs.getString(llaveMinLength);
+			int     minLength     = -1;
+			boolean flagMinLength = false;
+			if(StringUtils.isNotBlank(sMinLength))
+			{
+				minLength     = (Integer)Integer.parseInt(sMinLength);
+				flagMinLength = true;
+			}
+			
+			String  sMaxLength    = rs.getString(llaveMaxLength);
+			int     maxLength     = -1;
+			boolean flagMaxLength = false;
+			if(StringUtils.isNotBlank(sMaxLength))
+			{
+				maxLength     = (Integer)Integer.parseInt(sMaxLength);
+				flagMaxLength = true;
+			}
+			
+			String  sObligatorio  = rs.getString(llaveObligatorio);
+			boolean isObligatorio = false;
+			if(StringUtils.isNotBlank(sObligatorio)&&sObligatorio.equalsIgnoreCase(Constantes.SI))
+			{
+				isObligatorio = true;
+			}
+			
+			String  columna  = rs.getString(llaveColumna);
+			
+			String sRenderer = rs.getString(llaveRenderer);
+			String renderer  = null;
+			if(StringUtils.isNotBlank(sRenderer))
+			{
+				if(sRenderer.equalsIgnoreCase(ComponenteVO.RENDERER_MONEY))
+				{
+					renderer = ComponenteVO.RENDERER_MONEY_EXT;
+				}
+				else if(!sRenderer.equalsIgnoreCase(Constantes.NO))
+				{
+					renderer = sRenderer;
+				}
+			}
+			
+			String  nameCdatribu = rs.getString(llaveName);
+			boolean flagEsAtribu = false;
+			if(StringUtils.isNotBlank(nameCdatribu))
+			{
+				flagEsAtribu = true;
+				try
+				{
+					int aux = (Integer)Integer.parseInt(nameCdatribu);
+				}
+				catch(Exception ex)
+				{
+					flagEsAtribu = false;
+				}
+			}
+			
+			String sSoloLectura   = rs.getString(llaveSoloLectura);
+			boolean isSoloLectura = false;
+			if(StringUtils.isNotBlank(sSoloLectura)&&sSoloLectura.equalsIgnoreCase(Constantes.SI))
+			{
+				isSoloLectura = true;
+			}
+			
+			String queryParam = rs.getString(llaveQueryParam);
+			String value      = rs.getString(llaveValue);
+			
+			String  sOculto  = rs.getString(llaveOculto);
+			boolean isOculto = false;
+			if(StringUtils.isNotBlank(sOculto)&&sOculto.equalsIgnoreCase(Constantes.SI))
+			{
+				isOculto = true;
+			}
+			
+			String  paramName1   = rs.getString(llaveParam1);
+			String  paramValue1  = rs.getString(llaveValue1);
+			String  paramName2   = rs.getString(llaveParam2);
+			String  paramValue2  = rs.getString(llaveValue2);
+			String  paramName3   = rs.getString(llaveParam3);
+			String  paramValue3  = rs.getString(llaveValue3);
+			String  paramName4   = rs.getString(llaveParam4);
+			String  paramValue4  = rs.getString(llaveValue4);
+			String  paramName5   = rs.getString(llaveParam5);
+			String  paramValue5  = rs.getString(llaveValue5);
+			
+			String  sComboVacio  = rs.getString(llaveComboVacio);
+			boolean isComboVacio = false;
+			if(StringUtils.isNotBlank(sComboVacio)&&sComboVacio.equalsIgnoreCase(Constantes.SI))
+			{
+				isComboVacio = true;
+			}
+			
+			String  icon    = rs.getString(llaveIcon);
+			String  handler = rs.getString(llaveHandler);
+			
+			ComponenteVO comp = new ComponenteVO(
+					ComponenteVO.TIPO_GENERICO,
+					label         , tipoCampo     , catalogo,
+					isDependiente , minLength     , flagMinLength,
+					maxLength     , flagMaxLength , isObligatorio,
+					columna       , renderer      , "params."+nameCdatribu,
+					flagEsAtribu  , isSoloLectura , queryParam,
+					value         , isOculto      , paramName1,
+					paramValue1   , paramName2    , paramValue2,
+					paramName3    , paramValue3   , paramName4,
+					paramValue4   , paramName5    , paramValue5,
+					isComboVacio  , icon          , handler
+					);
+			
+			return comp;
+		}
+	}
     
     
 	@Override
@@ -147,7 +293,7 @@ public class ReportesDAOImpl extends AbstractManagerDAO implements ReportesDAO {
     
     protected class ArmaReporteSP extends StoredProcedure {
     	protected ArmaReporteSP(DataSource dataSource) {
-            super(dataSource,"PKG_TAEXTRACCION.ARMA_REPORTE");
+            super(dataSource,"PKG_TAEXTRACCION.ARMA_REPORTE2");
             declareParameter(new SqlParameter("pv_cdreporte_i", OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_usuario_i", OracleTypes.VARCHAR));
             compile();

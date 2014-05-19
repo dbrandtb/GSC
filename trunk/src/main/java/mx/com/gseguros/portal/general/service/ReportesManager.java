@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
+import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.model.ParamReporteVO;
 import mx.com.gseguros.portal.general.model.ReporteVO;
 
@@ -23,7 +24,7 @@ public interface ReportesManager {
 	 * @return lista de par&aacute;metros del reporte solicitado
 	 * @throws Exception
 	 */
-	public List<ParamReporteVO> obtenerParametrosReportes(String cdreporte) throws Exception;
+	public List<ComponenteVO> obtenerParametrosReportes(String cdreporte, String cdPantalla, String cdSeccion) throws Exception;
 	
 	
 	/**

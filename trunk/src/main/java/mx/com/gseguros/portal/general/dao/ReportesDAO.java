@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import mx.com.gseguros.exception.DaoException;
+import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.model.ParamReporteVO;
 import mx.com.gseguros.portal.general.model.ReporteVO;
 
@@ -25,7 +26,7 @@ public interface ReportesDAO {
 	 * @return
 	 * @throws DaoException
 	 */
-	public List<ParamReporteVO> obtenerParametrosReporte(Map<String, Object> params) throws DaoException;
+	public List<ComponenteVO> obtenerParametrosReporte(Map<String, Object> params) throws DaoException;
 	
 	
 	/**

@@ -8,7 +8,6 @@
 	    // URLS:
 	    var _URL_LISTA_REPORTES             = '<s:url namespace="/reportes" action="obtenerListaReportes" />';            
 	    var _URL_LOADER_COMPONENTES_REPORTE = '<s:url namespace="/reportes" action="includes/obtenerComponentesReporte" />';
-	    var _URL_OBTENCION_REPORTE          = '<s:url namespace="/reportes" action="procesoObtencionReporte" />';
     
         Ext.onReady(function(){
             
@@ -18,7 +17,9 @@
                 extend : 'Ext.data.Model',
                 fields : [
                     "cdReporte",
-                    "dsReporte"
+                    "dsReporte",
+                    "cdPantalla",
+                    "cdSeccion"
                 ]
             });
         	
@@ -60,7 +61,7 @@
        		    	    title  : 'Seleccione un reporte:',
        		    	    hideHeaders: true,
        		    	    collapsible : true,
-       		    	    width: 200,
+       		    	    width: 250,
        		    	    margins : '0 5 0 0',
        		    	    store : storeReportes,
 		                columns: [{
@@ -73,7 +74,9 @@
        		    	    		// Cargar componentes del reporte elegido:
        		    	    		this.up('panel').down('[name=pnlComponentesReporte]').getLoader().load({
        		    	    			params: {
-       		    	    				cdreporte : record.get('cdReporte')
+       		    	    				cdreporte : record.get('cdReporte'),
+       		    	    				cdPantalla: record.get('cdPantalla'),
+       		    	    				cdSeccion: record.get('cdSeccion')
        		    	    			}
        		    	    		});
        		    	    	}
