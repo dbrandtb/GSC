@@ -324,6 +324,7 @@ public class AtributoDAO extends AbstractDAO {
     		atributosVariablesVO.setModificableComplementario(rs.getString("SWCOMUPD"));
     		atributosVariablesVO.setApareceEndoso(rs.getString("SWENDOSO"));
     		atributosVariablesVO.setObligatorioEndoso(rs.getString("SWENDOBL"));
+    		atributosVariablesVO.setAtributoParaTodos(rs.getString("SWSUSCRI"));
 //    		atributosVariablesVO.setCotizador(rs.getString("SWCOTIZA"));
     		
     		

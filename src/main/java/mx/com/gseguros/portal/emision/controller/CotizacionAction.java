@@ -94,7 +94,7 @@ public class CotizacionAction extends PrincipalCoreAction
         {
         	try
         	{
-        		DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usuario.getUser());
+        		DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usuario.getUser(),cdtipsit);//cdramo
         		ntramite="";
         		cdunieco=datUsu.getCdunieco();
         		if(StringUtils.isBlank(smap1.get("cdramo")))

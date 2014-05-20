@@ -263,10 +263,11 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return res;
     }
     
-    public DatosUsuario obtenerDatosUsuario(String cdusuario) throws ApplicationException
+    public DatosUsuario obtenerDatosUsuario(String cdusuario,String cdtipsit) throws ApplicationException
     {
         Map<String,Object>parameters=new HashMap<String,Object>(0);
         parameters.put("pv_cdusuari_i",cdusuario);
+        parameters.put("pv_cdtipsit_i",cdtipsit);
         log.debug("### kernel sustituto obtenerDatosUsuario map: "+parameters);
         DatosUsuario res=(DatosUsuario) this.getBackBoneInvoke(parameters, ProcesoDAO.OBTENER_DATOS_USUARIO);
         log.debug("### kernel sustituto obtenerDatosUsuario return: "+res);

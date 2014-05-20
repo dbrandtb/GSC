@@ -269,7 +269,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 		try
 		{
 			UserVO usuSes=(UserVO)session.get("USUARIO");
-			DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usuSes.getUser());
+			DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usuSes.getUser(),null);//cdtipsit
 			
 			/*
 			pv_cdramo_i       smap1 ready!
@@ -718,7 +718,6 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 		{
 			
 			UserVO usuSes=(UserVO)session.get("USUARIO");
-			DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usuSes.getUser());
 			
 			log.debug(smap1);
 			/*
@@ -839,7 +838,6 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 			log.debug(smap1);
 			log.debug(parametros);
 			UserVO usuSes=(UserVO)session.get("USUARIO");
-			DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usuSes.getUser());
 			
 			/*
 			pv_cdunieco    smap1  ready!
@@ -930,7 +928,6 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 		try
 		{
 			UserVO usuarioSesion=(UserVO) this.session.get("USUARIO");
-            DatosUsuario userData=kernelManager.obtenerDatosUsuario(usuarioSesion.getUser());
             log.debug("se inserta detalle nuevo");
             log.debug(omap1);
             
@@ -944,7 +941,7 @@ public class ComplementariosCoberturasAction extends PrincipalCoreAction{
 			
 			
             omap1.put("pv_feinicio_i"   , new Date());
-            omap1.put("pv_cdusuari_i"   , userData.getCdusuari());
+            omap1.put("pv_cdusuari_i"   , usuarioSesion.getUser());
             omap1.put("pv_cdmotivo_i"   , null);
             kernelManager.movDmesacontrol(omap1);
             
