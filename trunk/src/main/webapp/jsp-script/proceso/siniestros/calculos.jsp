@@ -1601,7 +1601,7 @@ function _p12_validaAutorizaciones()
             {
                 result = result + 'Reclamaciones no autoriza la factura ' + facturaIte.NFACTURA + '<br/>';
             }
-            if(false && facturaIte.AUTMEDIC!='S')
+            if(facturaIte.AUTMEDIC!='S')
             {
                 result = result + 'El m&eacute;dico no autoriza la factura ' + facturaIte.NFACTURA + '<br/>';
             }
