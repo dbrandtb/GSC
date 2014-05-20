@@ -31,27 +31,6 @@ import org.springframework.jdbc.support.lob.OracleLobHandler;
 public class ReportesDAOImpl extends AbstractManagerDAO implements ReportesDAO {
 	
 	private static Logger logger = Logger.getLogger(ReportesDAOImpl.class);
-	
-	
-	protected class ObtieneReporteExcelSP extends StoredProcedure {
-    	protected ObtieneReporteExcelSP(DataSource dataSource) {
-            super(dataSource,"PKG_EXTRACC_EXCEL.P_CONS_EXTRACC_REP");
-            declareParameter(new SqlParameter("pv_idreporte_i",   OracleTypes.VARCHAR));
-            declareParameter(new SqlParameter("pv_codusr_i",      OracleTypes.VARCHAR));
-            declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ObtieneReporteExcelMapper()));
-            declareParameter(new SqlOutParameter("pv_msg_id_o",   OracleTypes.NUMERIC));
-            declareParameter(new SqlOutParameter("pv_title_o",    OracleTypes.VARCHAR));
-            compile();
-    	}
-    }
-    
-    protected class ObtieneReporteExcelMapper implements RowMapper<InputStream> {
-        public InputStream mapRow(ResultSet rs, int rowNum) throws SQLException {
-        	OracleLobHandler lobHandler = new OracleLobHandler();
-            return new ByteArrayInputStream(lobHandler.getBlobAsBytes(rs, "data"));
-        }
-    }
-    
     
 	@SuppressWarnings("unchecked")
 	@Override
