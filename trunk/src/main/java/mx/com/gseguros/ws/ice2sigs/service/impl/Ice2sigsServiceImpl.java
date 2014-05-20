@@ -379,7 +379,9 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 		logger.debug("*** Empieza generacion de URLs para Recibos ***");
 		
 		String visible = null;
+		int contVisible = 0;
 		for(ReciboWrapper recVO: recibos){
+			
 			recibo = recVO.getRecibo();
 			
 			/**
@@ -390,7 +392,8 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 			/**
 			 * Por default se permite imprimir solo el primer recibo y los demas se guardan ocultos.
 			 */
-			visible = (1 == recibo.getNumRec()) ? Constantes.SI : Constantes.NO;
+			contVisible++;
+			visible = (1 == contVisible) ? Constantes.SI : Constantes.NO;
 			
 			try{
 				int numEndoso;
