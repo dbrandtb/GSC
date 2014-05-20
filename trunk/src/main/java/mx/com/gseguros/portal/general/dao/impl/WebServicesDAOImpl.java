@@ -33,6 +33,7 @@ public class WebServicesDAOImpl extends AbstractManagerDAO implements WebService
     		declareParameter(new SqlParameter("pv_cdunieco_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_cdramo_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlParameter("pv_nmpoliza_i", OracleTypes.VARCHAR));
+    		declareParameter(new SqlParameter("pv_cdcodigo_i", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new DinamicMapper()));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));

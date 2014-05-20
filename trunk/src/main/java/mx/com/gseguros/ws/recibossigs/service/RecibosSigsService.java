@@ -21,6 +21,22 @@ public interface RecibosSigsService {
 		}
 
 	}
+
+	public enum TipoError {
+		
+		ErrWsDXN("7"), ErrWsDXNCx("8");
+		
+		private String codigo;
+		
+		private TipoError(String codigo) {
+			this.codigo = codigo;
+		}
+		
+		public String getCodigo() {
+			return codigo;
+		}
+		
+	}
 	
 	/**
 	 * Genera los recibos de descuento por nomina

@@ -12,6 +12,7 @@ import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboGSRe
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboRespuesta;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReclamoGSResponseE;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReclamoRespuesta;
+import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService.Estatus;
 
 import org.apache.axis2.AxisFault;
@@ -62,7 +63,7 @@ public class ServicioGSServiceCallbackHandlerImpl extends ServicioGSServiceCallb
 					(String) params.get("pv_estado_i"),
 					(String) params.get("pv_nmpoliza_i"), 
 					(String) params.get("pv_nmsuplem_i"), 
-					"ErrWScliCx", 
+					Ice2sigsService.TipoError.ErrWScliCx.getCodigo(), 
 					"Msg: " + e.getMessage() + " ***Cause: " + e.getCause(),
 					 usuario, (String) params.get("pv_ntramite_i"), "ws.ice2sigs.url", "clienteSaludGS",
 					 stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString(), null);
@@ -99,7 +100,7 @@ public class ServicioGSServiceCallbackHandlerImpl extends ServicioGSServiceCallb
 						(String) params.get("pv_estado_i"),
 						(String) params.get("pv_nmpoliza_i"),
 						(String) params.get("pv_nmsuplem_i"), 
-						"ErrWScli",
+						Ice2sigsService.TipoError.ErrWScli.getCodigo(),
 						respuesta.getCodigo() + " - " + respuesta.getMensaje(),
 						usuario, (String) params.get("pv_ntramite_i"), "ws.ice2sigs.url", "clienteSaludGS",
 						stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString(), Integer.toString(respuesta.getCodigo()));
@@ -133,8 +134,8 @@ public class ServicioGSServiceCallbackHandlerImpl extends ServicioGSServiceCallb
 					(String) params.get("pv_estado_i"),
 					(String) params.get("pv_nmpoliza_i"),
 					(String) params.get("pv_nmsuplem_i"),
-					"ErrWSrecCx",
-					"Error en Recibo " + params.get("NumRec")
+					Ice2sigsService.TipoError.ErrWSrecCx.getCodigo(),
+					"Error Recibo " + params.get("NumRec") + " TipEnd: " + params.get("TipEnd") + " NumEnd: " + params.get("NumEnd")
 							+ " Msg: " + e.getMessage() + " ***Cause: "
 							+ e.getCause(),
 					 usuario, (String) params.get("pv_ntramite_i"), "ws.ice2sigs.url", "reciboGS",
@@ -172,8 +173,8 @@ public class ServicioGSServiceCallbackHandlerImpl extends ServicioGSServiceCallb
 						(String) params.get("pv_estado_i"),
 						(String) params.get("pv_nmpoliza_i"),
 						(String) params.get("pv_nmsuplem_i"),
-						"ErrWSrec",
-						"Error en Recibo " + params.get("NumRec")
+						Ice2sigsService.TipoError.ErrWSrec.getCodigo(),
+						"Error Recibo " + params.get("NumRec") + " TipEnd: " + params.get("TipEnd") + " NumEnd: " + params.get("NumEnd")
 								+ " >>> " + respuesta.getCodigo() + " - "
 								+ respuesta.getMensaje(),
 						 usuario,(String) params.get("pv_ntramite_i"), "ws.ice2sigs.url", "reciboGS",
@@ -206,7 +207,7 @@ public class ServicioGSServiceCallbackHandlerImpl extends ServicioGSServiceCallb
 					(String) params.get("pv_estado_i"),
 					(String) params.get("pv_nmpoliza_i"),
 					(String) params.get("pv_nmsuplem_i"),
-					"ErrWSsinCx",
+					Ice2sigsService.TipoError.ErrWSsinCx.getCodigo(),
 					"Error en ReclamoCod: " + params.get("NumSin") + " Inciso: " + params.get("NumInc") 
 							+ " Msg: " + e.getMessage() + " ***Cause: "
 							+ e.getCause(),
@@ -243,7 +244,7 @@ public class ServicioGSServiceCallbackHandlerImpl extends ServicioGSServiceCallb
 						(String) params.get("pv_estado_i"),
 						(String) params.get("pv_nmpoliza_i"),
 						(String) params.get("pv_nmsuplem_i"),
-						"ErrWSsin",
+						Ice2sigsService.TipoError.ErrWSsin.getCodigo(),
 						"Error en ReclamoCod: " + params.get("NumSin") + " Inciso: " + params.get("NumInc") 
 								+ " >>> " + respuesta.getCodigo() + " - "
 								+ respuesta.getMensaje(),

@@ -310,16 +310,18 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 		
 		Recibo recibo = null;
 		for(ReciboWrapper recVO: recibos){
+			recibo = recVO.getRecibo();
+			Operacion operacion = Operacion.valueOf(recVO.getOperacion());
 			
 			try{
-				recibo = recVO.getRecibo();
-				Operacion operacion = Operacion.valueOf(recVO.getOperacion());
 				
 				if(async){
 					// Se crea un HashMap por cada invocacion asincrona del WS, para evitar issue (sobreescritura de valores):
 					HashMap<String, Object> paramsBitacora = new HashMap<String, Object>();
 					paramsBitacora.putAll(params);
 					paramsBitacora.put("NumRec", recibo.getNumRec());
+					paramsBitacora.put("TipEnd", recibo.getTipEnd());
+					paramsBitacora.put("NumEnd", recibo.getNumEnd());
 					
 					ejecutaReciboGS(operacion, recibo, paramsBitacora, async);
 				}else{
@@ -338,8 +340,8 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 									(String) params.get("pv_estado_i"),
 									(String) params.get("pv_nmpoliza_i"),
 									(String) params.get("pv_nmsuplem_i"),
-									"ErrWSrec",
-									"Error en Recibo " + params.get("NumRec")
+									Ice2sigsService.TipoError.ErrWSrec.getCodigo(),
+									"Error Recibo " + recibo.getNumRec() + " TipEnd: " + recibo.getTipEnd() + " NumEnd: " + recibo.getNumEnd()
 											+ " >>> " + respuesta.getCodigo() + " - "
 											+ respuesta.getMensaje(),
 									 usuario, (String) params.get("pv_ntramite_i"), "ws.ice2sigs.url", "reciboGS",
@@ -359,8 +361,8 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 							(String) params.get("pv_estado_i"),
 							(String) params.get("pv_nmpoliza_i"),
 							(String) params.get("pv_nmsuplem_i"),
-							"ErrWSrecCx",
-							"Error en Recibo " + recibo.getNumRec()
+							Ice2sigsService.TipoError.ErrWSrecCx.getCodigo(),
+							"Error Recibo " + recibo.getNumRec() + " TipEnd: " + recibo.getTipEnd() + " NumEnd: " + recibo.getNumEnd()
 									+ " Msg: " + e.getMessage() + " ***Cause: "
 									+ e.getCause(),
 							 usuario, (String) params.get("pv_ntramite_i"), "ws.ice2sigs.url", "reciboGS",
@@ -514,7 +516,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 										(String) params.get("pv_estado_i"),
 										(String) params.get("pv_nmpoliza_i"),
 										(String) params.get("pv_nmsuplem_i"),
-										"ErrWSsin",
+										Ice2sigsService.TipoError.ErrWSsin.getCodigo(),
 										"Error en ReclamoCod: " + reclamo.getIcodreclamo() + " Inciso: " + reclamo.getIncPol() 
 												+ " >>> " + respuesta.getCodigo() + " - "
 												+ respuesta.getMensaje(),
@@ -541,7 +543,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 								(String) params.get("pv_estado_i"),
 								(String) params.get("pv_nmpoliza_i"),
 								(String) params.get("pv_nmsuplem_i"),
-								"ErrWSsinCx",
+								Ice2sigsService.TipoError.ErrWSsinCx.getCodigo(),
 								"Error en ReclamoCod: " + reclamo.getIcodreclamo() + " Inciso: " + reclamo.getIncPol()
 										+ " Msg: " + e.getMessage() + " ***Cause: "
 										+ e.getCause(),

@@ -57,6 +57,22 @@ public interface Ice2sigsService {
 
 	}
 
+	public enum TipoError {
+		
+		ErrWScli("1"), ErrWScliCx("2"), ErrWSrec("3"), ErrWSrecCx("4"), ErrWSsin("5"), ErrWSsinCx("6");
+		
+		private String codigo;
+		
+		private TipoError(String codigo) {
+			this.codigo = codigo;
+		}
+		
+		public String getCodigo() {
+			return codigo;
+		}
+		
+	}
+
 	/**
 	 * Ejecuta el metodo expuesto de cliente del WS de iceToSigs
 	 * @param cdunieco
