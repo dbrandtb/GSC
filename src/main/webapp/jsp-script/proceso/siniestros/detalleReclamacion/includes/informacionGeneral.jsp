@@ -390,7 +390,7 @@
 	                width : 180,
 	                icon : _CONTEXT + '/resources/fam3icons/icons/application_view_list.png',
 	                handler: function() {
-	                    Ext.create('Ext.window.Window', {
+	                	centrarVentanaInterna(Ext.create('Ext.window.Window', {
 	                       title        : 'Coberturas de la p&oacute;liza',
 	                       //modal       : true,
 	                       buttonAlign : 'center',
@@ -409,7 +409,7 @@
 	                               'params.suplemento': _NMSUPLEM
 	                           }
 	                       }
-	                    }).showAt(150,150);
+	                    }).showAt());
 	                }
 		        },{
 		        	colspan    : 1,
@@ -462,7 +462,7 @@
 	                width   : 180,
 	                icon    : _CONTEXT + '/resources/fam3icons/icons/application_view_list.png',
 	                handler : function() {
-                        Ext.create('Ext.window.Window', {
+	                	centrarVentanaInterna(Ext.create('Ext.window.Window', {
                            title       : 'Exclusiones de la p&oacute;liza',
                            modal       : true,
                            buttonAlign : 'center',
@@ -482,7 +482,7 @@
                                    //'params.nmsuplem': _NMSUPLEM
                                }
                            }
-                        }).show();
+                        }).show());
                     }
 		        },{
 		        	//colspan    : 1,
