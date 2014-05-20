@@ -115,7 +115,7 @@ public class RecibosSigsServiceImpl implements RecibosSigsService {
 				
 				kernelManager.movBitacobro((String) params.get("pv_cdunieco_i"), (String) params.get("pv_cdramo_i"),
 						(String) params.get("pv_estado_i"), (String) params.get("pv_nmpoliza_i"), (String) params.get("pv_nmsuplem_i"), 
-						"ErrWsDXNCx", "Msg: " + e.getMessage() + " ***Cause: " + e.getCause(), userVO.getUser(), (String) params.get("pv_ntramite_i"),
+						RecibosSigsService.TipoError.ErrWsDXNCx.getCodigo(), "Msg: " + e.getMessage() + " ***Cause: " + e.getCause(), userVO.getUser(), (String) params.get("pv_ntramite_i"),
 						"ws.recibossigs.url", "generaRecDxn",  e.getPayload(), null);
 			} catch (Exception e1) {
 				logger.error("Error al insertar en Bitacora", e1);
@@ -134,7 +134,7 @@ public class RecibosSigsServiceImpl implements RecibosSigsService {
 			try {
 				kernelManager.movBitacobro((String) params.get("pv_cdunieco_i"), (String) params.get("pv_cdramo_i"),
 						(String) params.get("pv_estado_i"), (String) params.get("pv_nmpoliza_i"), (String) params.get("pv_nmsuplem_i"),
-						"ErrWsDXN", calendarios.getCodigo() + " - " + calendarios.getMensaje(), userVO.getUser(), (String) params.get("pv_ntramite_i"),
+						RecibosSigsService.TipoError.ErrWsDXN.getCodigo(), calendarios.getCodigo() + " - " + calendarios.getMensaje(), userVO.getUser(), (String) params.get("pv_ntramite_i"),
 						"ws.recibossigs.url", "generaRecDxn", resultWS.getXmlIn(), Integer.toString(calendarios.getCodigo()));
 			} catch (Exception e1) {
 				logger.error("Error al insertar en Bitacora", e1);

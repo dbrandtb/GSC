@@ -106,6 +106,7 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case DESTINOPAGO:
 				case CATCONCEPTO:
 				case REFERENCIAS_TRAMITE_NUEVO:
+				case TERRORWS:
 					lista = catalogosManager.getTmanteni(cat);
 	                break;
 				case MC_ESTATUS_TRAMITE:

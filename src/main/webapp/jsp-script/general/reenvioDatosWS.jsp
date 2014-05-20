@@ -19,6 +19,11 @@ var _UrlEliminarPeticion   = '<s:url namespace="/general"    action="eliminaPeti
 var _MSG_SIN_DATOS          = 'No hay datos';
 var _MSG_BUSQUEDA_SIN_DATOS = 'No hay datos para la b\u00FAsqueda actual.';
 
+var _URL_CARGA_CATALOGO = '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
+var _CAT_SUCURSALES  = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@MC_SUCURSALES_ADMIN"/>';
+var _CAT_PRODUCTOS  = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@RAMOS"/>';
+var _CAT_TIPOS_ERROR_WS  = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TERRORWS"/>';
+
 
 Ext.onReady(function()
 {
@@ -79,10 +84,10 @@ Ext.onReady(function()
     	  { header     : 'P&oacute;liza' , dataIndex : 'NMPOLIZA', flex: 2},
     	  { header     : 'Tr&aacute;mite', dataIndex : 'NTRAMITE', flex: 1},
     	  { header     : 'Suplemento'    , dataIndex : 'NMSUPLEM', hidden: true},
-    	  { header     : 'C&oacute;digo Tipo Error' , dataIndex : 'CDCODIGO', flex: 2},
+    	  { header     : 'Tipo Error' , dataIndex : 'CDCODIGO', flex: 2},
     	  { header     : 'Mensaje'  , dataIndex : 'MENSAJE', flex: 5},
     	  { header     : 'C&oacute;digo Error WS' , dataIndex : 'CDERRWS', flex: 1},
-    	  { header     : 'Fecha'   , dataIndex : 'FECHAHR', flex: 2},
+    	  { header     : 'Fecha'   , dataIndex : 'FECHAHR', flex: 1},
           { header     : 'Usuario' , dataIndex : 'USUARIO' , flex: 2}
 		]
     	,bbar :
@@ -321,25 +326,131 @@ Ext.onReady(function()
 	    	border: false,
 	    	bodyStyle:'padding:5px;',
 	    	defaults: {
-	    		style: 'margin: 15px'// para hacer que los componentes se separen 5px
+	    		style: 'margin: 5px'// para hacer que los componentes se separen 5px
 	    	},
 	    	buttonAlign: 'center',
 	    	items: [{
-		    	xtype: 'textfield',
-		    	fieldLabel: 'Producto',
-		    	labelWidth: 50,
-		    	name: 'params.pv_cdramo_i'
-		    },{
-		    	xtype: 'textfield',
-		    	fieldLabel: 'Sucursal',
-		    	labelWidth: 50,
-		    	name: 'params.pv_cdunieco_i'
-		    },{
+	            xtype         : 'combobox',
+	            labelWidth    : 50,
+	            width         : 250,
+	            name          : 'params.pv_cdunieco_i',
+	            fieldLabel    : 'Sucursal',
+	            valueField    : 'key',
+	            displayField  : 'value',
+	            forceSelection: true,
+	            queryMode     : 'local',
+	            typeAhead     : true,
+	            anyMatch      : true,
+	            tpl: Ext.create('Ext.XTemplate',
+	                    '<tpl for=".">',
+	                        '<div class="x-boundlist-item">{key} - {value}</div>',
+	                    '</tpl>'
+	            ),
+	            listeners: {
+	            	  /*change: function (combobox, newvalue) {
+	            	            if(newvalue){
+	            	            	newvalue = newvalue.toUpperCase();
+	            	            	storeCombo = combobox.getStore();
+	            	            	storeCombo.clearFilter();
+	            	            	
+	            	            	storeCombo.filterBy(function (filteredRecord) {
+	            	            	
+		            	            	var valorEnKey   = filteredRecord.get('key').toUpperCase().lastIndexOf(newvalue);
+		            	            	var valorEnValue = filteredRecord.get('value').toUpperCase().lastIndexOf(newvalue);
+		            	            		
+		            	            	if(valorEnKey > -1 || valorEnValue > -1){
+		            	            		return true;
+		            	            	}else{
+		            	            		return false;
+		            	            	}
+				            	    });
+	            	            }
+	            	        },*/
+	            	select: function(combo, records){
+	            		panelPeticiones.down('[name=params.pv_cdramo_i]').getStore().load({
+	            			params: {
+	            				'params.idPadre': records[0].get('key')
+	            			}
+	            		});
+	            	}
+	            	
+	            },
+	            store         : Ext.create('Ext.data.Store', {
+	                model     : 'Generic',
+	                autoLoad  : true,
+	                proxy     : {
+	                    type        : 'ajax'
+	                    ,url        : _URL_CARGA_CATALOGO
+	                    ,extraParams: {catalogo:_CAT_SUCURSALES}
+	                    ,reader     :
+	                    {
+	                        type  : 'json'
+	                        ,root : 'lista'
+	                    }
+	                }
+	            })
+	        },{
+	            xtype         : 'combobox',
+	            labelWidth    : 50,
+	            width         : 200,
+	            name          : 'params.pv_cdramo_i',
+	            fieldLabel    : 'Producto',
+	            valueField    : 'key',
+	            displayField  : 'value',
+	            forceSelection: true,
+	            queryMode     : 'local',
+	            typeAhead     : true,
+	            anyMatch      : true,
+	            tpl: Ext.create('Ext.XTemplate',
+	                    '<tpl for=".">',
+	                        '<div class="x-boundlist-item">{key} - {value}</div>',
+	                    '</tpl>'
+	            ),
+	            store         : Ext.create('Ext.data.Store', {
+	                model     : 'Generic',
+	                proxy     : {
+	                    type        : 'ajax'
+	                    ,url        : _URL_CARGA_CATALOGO
+	                    ,extraParams: {catalogo:_CAT_PRODUCTOS}
+	                    ,reader     :
+	                    {
+	                        type  : 'json'
+	                        ,root : 'lista'
+	                    }
+	                }
+	            })
+	        },{
 		    	xtype: 'textfield',
 		    	fieldLabel: 'P&oacute;liza',
-		    	labelWidth: 50,
+		    	labelWidth: 30,
 		    	name: 'params.pv_nmpoliza_i'
-		    }],
+		    },{
+	            xtype         : 'combobox',
+	            labelWidth    : 60,
+	            width         : 250,
+	            name          : 'params.pv_cdcodigo_i',
+	            fieldLabel    : 'Tipo Error',
+	            valueField    : 'key',
+	            displayField  : 'value',
+	            forceSelection: true,
+	            queryMode     : 'local',
+	            typeAhead     : true,
+	            anyMatch      : true,
+	            store         : Ext.create('Ext.data.Store', {
+	                model     : 'Generic',
+	                autoLoad  : true,
+	                proxy     : {
+	                    type        : 'ajax'
+	                    ,url        : _URL_CARGA_CATALOGO
+	                    ,extraParams: {catalogo:_CAT_TIPOS_ERROR_WS}
+	                    ,reader     :
+	                    {
+	                        type  : 'json'
+	                        ,root : 'lista'
+	                    }
+	                }
+	            })
+	        }],
 		    buttons:
 	            [
 	                {

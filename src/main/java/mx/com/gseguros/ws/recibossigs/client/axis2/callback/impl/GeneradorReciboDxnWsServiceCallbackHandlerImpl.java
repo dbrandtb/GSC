@@ -3,12 +3,14 @@ package mx.com.gseguros.ws.recibossigs.client.axis2.callback.impl;
 import java.util.HashMap;
 
 import mx.com.aon.kernel.service.KernelManagerSustituto;
+import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService.Estatus;
 import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceCallbackHandler;
 import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub;
 import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub.CalendarioEntidad;
 import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub.GeneraRecDxnResponseE;
 import mx.com.gseguros.ws.recibossigs.client.axis2.GeneradorReciboDxnWsServiceStub.GeneradorRecibosDxnRespuesta;
+import mx.com.gseguros.ws.recibossigs.service.RecibosSigsService;
 
 import org.apache.axis2.AxisFault;
 
@@ -58,7 +60,7 @@ public class GeneradorReciboDxnWsServiceCallbackHandlerImpl extends GeneradorRec
 			kernelManager.movBitacobro((String) params.get("pv_cdunieco_i"),
 					(String) params.get("pv_cdramo_i"), (String) params.get("pv_estado_i"),
 					(String) params.get("pv_nmpoliza_i"), (String) params.get("pv_nmsuplem_i"),
-					"ErrWsDXNCx", "Msg: " + e.getMessage() + " ***Cause: " + e.getCause(),
+					RecibosSigsService.TipoError.ErrWsDXNCx.getCodigo(), "Msg: " + e.getMessage() + " ***Cause: " + e.getCause(),
 					 usuario, (String) params.get("pv_ntramite_i"), "ws.recibossigs.url", "generaRecDxn",
 					 stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString(), null);
 		} catch (Exception e1) {
@@ -94,7 +96,7 @@ public class GeneradorReciboDxnWsServiceCallbackHandlerImpl extends GeneradorRec
 			try {
 				kernelManager.movBitacobro((String) params.get("pv_cdunieco_i"), (String) params.get("pv_cdramo_i"),
 						(String) params.get("pv_estado_i"), (String) params.get("pv_nmpoliza_i"), (String) params.get("pv_nmsuplem_i"),
-						"ErrWsDXN", respuesta.getCodigo() + " - " + respuesta.getMensaje(), usuario, (String) params.get("pv_ntramite_i"), "ws.recibossigs.url", "generaRecDxn",
+						RecibosSigsService.TipoError.ErrWsDXN.getCodigo(), respuesta.getCodigo() + " - " + respuesta.getMensaje(), usuario, (String) params.get("pv_ntramite_i"), "ws.recibossigs.url", "generaRecDxn",
 						stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString(), Integer.toString(respuesta.getCodigo()));
 			} catch (Exception e1) {
 				logger.error("Error en llamado a PL", e1);
