@@ -91,7 +91,7 @@ public class ReportesDAOImpl extends AbstractManagerDAO implements ReportesDAO {
     
     protected class ObtieneParametrosReportesSP extends StoredProcedure {
     	protected ObtieneParametrosReportesSP(DataSource dataSource) {
-            super(dataSource,"PKG_TAEXTRACCION.GET_PARAMETROS2");
+            super(dataSource,"PKG_TAEXTRACCION.GET_PARAMETROS");
             declareParameter(new SqlParameter("pv_cdreporte_i", OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdpantalla_i", OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_cdseccion_i", OracleTypes.VARCHAR));
@@ -293,7 +293,7 @@ public class ReportesDAOImpl extends AbstractManagerDAO implements ReportesDAO {
     
     protected class ArmaReporteSP extends StoredProcedure {
     	protected ArmaReporteSP(DataSource dataSource) {
-            super(dataSource,"PKG_TAEXTRACCION.ARMA_REPORTE2");
+            super(dataSource,"PKG_TAEXTRACCION.ARMA_REPORTE");
             declareParameter(new SqlParameter("pv_cdreporte_i", OracleTypes.VARCHAR));
             declareParameter(new SqlParameter("pv_usuario_i", OracleTypes.VARCHAR));
             compile();
