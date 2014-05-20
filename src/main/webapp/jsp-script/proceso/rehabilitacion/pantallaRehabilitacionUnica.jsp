@@ -148,6 +148,10 @@ Ext.onReady(function(){
             afterrender : heredarPanel
         }
     });
+    debug('fecha:',Ext.ComponentQuery.query('[name="smap1.pv_fereinst_i"]'));
+    debug('panrehuniInSmap1.pv_fereinst_i:',panrehuniInSmap1['FECANCEL']);
+    debug('new:',Ext.Date.parse(panrehuniInSmap1['FECANCEL'],"d/m/Y"));
+    Ext.ComponentQuery.query('[name="smap1.pv_fereinst_i"]')[Ext.ComponentQuery.query('[name="smap1.pv_fereinst_i"]').length-1].minValue=Ext.Date.parse(panrehuniInSmap1['FECANCEL'],"d/m/Y");
     /*///////////////////*/
     ////// contenido //////
     ///////////////////////
