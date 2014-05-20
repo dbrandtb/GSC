@@ -173,7 +173,7 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 		logger.debug("PasswordLDAP=" +   this.getText("ldap.security.credentials"));
 		logger.debug("SearchBaseLDAP=" + this.getText("ldap.base.search"));
 		
-		Hashtable env = datosConexionLDAP(this.getText("ldap.security.principal"), this.getText("ldap.security.credentials"));
+		Hashtable env = obtenerDatosConexionLDAP(this.getText("ldap.security.principal"), this.getText("ldap.security.credentials"));
 		boolean existeUsuario = false;
 		try {
 			 ctx = new InitialLdapContext(env, null);
@@ -217,7 +217,7 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 
 	private boolean validarAuth(String dn, String password) {
 		boolean validadausuario = false;
-		Hashtable env1 = datosConexionLDAP(dn, password);
+		Hashtable env1 = obtenerDatosConexionLDAP(dn, password);
 		try {
 			DirContext ctx1 = new InitialLdapContext(env1, null);
 			validadausuario = true;
@@ -228,12 +228,9 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 		return validadausuario;
 	}
 
-	private Hashtable datosConexionLDAP(String user, String pass) {
+	private Hashtable obtenerDatosConexionLDAP(String user, String pass) {
 		Hashtable<String, String> env = new Hashtable<String, String>();
 		try {
-			// String url = Constantes.URLLDAP;
-			// String contexto = Constantes.ContextoLDAP;
-			// String tipoAuth = "simple";
 			env.put(Context.INITIAL_CONTEXT_FACTORY, this.getText("ldap.factory.initial"));
 			env.put(Context.SECURITY_AUTHENTICATION, this.getText("ldap.security.authentication"));
 			env.put(Context.SECURITY_PRINCIPAL, user);
