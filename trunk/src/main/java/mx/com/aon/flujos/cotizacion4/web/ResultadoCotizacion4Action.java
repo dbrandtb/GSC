@@ -156,7 +156,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
         {
         	try
         	{
-        		DatosUsuario datUsu=kernelManagerSustituto.obtenerDatosUsuario(usuario.getUser());
+        		DatosUsuario datUsu=kernelManagerSustituto.obtenerDatosUsuario(usuario.getUser(),cdtipsit);//cdunieco,cdramo
         		cdunieco=datUsu.getCdunieco();
         		cdramo=datUsu.getCdramo();
         		//cdtipsit=datUsu.getCdtipsit();//ahora viene en la URL
@@ -225,7 +225,6 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             /*///////////////////////////////////////////////*/
             long t1=System.currentTimeMillis();
             //log.debug("######$ antes de pedir datos usuario: "+t1);
-            //DatosUsuario datosUsuario=kernelManagerSustituto.obtenerDatosUsuario(usuario.getUser());
             long t2=System.currentTimeMillis();
             /*log.debug("######$ despues de pedir datos usuario: "+t2);
             log.debug("######$ tiempo pidiendo datos usuario: "+(t2-t1));
@@ -893,7 +892,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
         try
         {
             UserVO usuarioSesion=(UserVO) this.session.get("USUARIO");
-            DatosUsuario userData=kernelManagerSustituto.obtenerDatosUsuario(usuarioSesion.getUser());
+            DatosUsuario userData=kernelManagerSustituto.obtenerDatosUsuario(usuarioSesion.getUser(),cdtipsit);//cdperson,cdagente,nmcuadro
             
             Map<String,Object>parameters=new HashMap<String,Object>(0);
             parameters.put("pv_cdunieco_i", comprarCdunieco);
@@ -1037,7 +1036,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             	parDmesCon.put("pv_feinicio_i"   , new Date());
             	parDmesCon.put("pv_cdclausu_i"   , null);
             	parDmesCon.put("pv_comments_i"   , "Se guard&oacute; una cotizaci&oacute;n nueva para el tr&aacute;mite");
-            	parDmesCon.put("pv_cdusuari_i"   , userData.getCdusuari());
+            	parDmesCon.put("pv_cdusuari_i"   , usuarioSesion.getUser());
             	parDmesCon.put("pv_cdmotivo_i"   , null);
             	kernelManagerSustituto.movDmesacontrol(parDmesCon);
             }
@@ -1073,7 +1072,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             	parDmesCon.put("pv_feinicio_i"   , new Date());
             	parDmesCon.put("pv_cdclausu_i"   , null);
             	parDmesCon.put("pv_comments_i"   , "Se guard&oacute; un nuevo tr&aacute;mite en mesa de control desde cotizaci&oacute;n de agente");
-            	parDmesCon.put("pv_cdusuari_i"   , userData.getCdusuari());
+            	parDmesCon.put("pv_cdusuari_i"   , usuarioSesion.getUser());
             	parDmesCon.put("pv_cdmotivo_i"   , null);
             	kernelManagerSustituto.movDmesacontrol(parDmesCon);
             }

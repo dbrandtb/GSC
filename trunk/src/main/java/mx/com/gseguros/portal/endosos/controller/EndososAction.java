@@ -3043,7 +3043,7 @@ public class EndososAction extends PrincipalCoreAction
 			String fechaEndoso    = smap3.get("fecha_endoso");
 			Date   fechaEndosoD   = renderFechas.parse(fechaEndoso);
 			
-			DatosUsuario datUsu   = kernelManager.obtenerDatosUsuario(cdusuari);
+			DatosUsuario datUsu   = kernelManager.obtenerDatosUsuario(cdusuari,cdtipsit);//cdperson
 			String cdpersonSesion = datUsu.getCdperson();
 			
 			Map<String,String>paramsIniciarEndoso=new HashMap<String,String>(0);

@@ -259,7 +259,6 @@ public class MesaControlAction extends PrincipalCoreAction
 		try
 		{
 			UserVO user = (UserVO)session.get("USUARIO");
-			//DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usu.getUser());
 			
 			Map<String,Object>omap=new LinkedHashMap<String,Object>(0);
 			Iterator it=smap1.entrySet().iterator();
@@ -323,7 +322,6 @@ public class MesaControlAction extends PrincipalCoreAction
 		{
 			//Se obtienen los datos del usuario:
 			UserVO usu=(UserVO)session.get("USUARIO");
-			//DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usu.getUser());
 			
 			String statusNuevo=smap1.get("status");
 			String ntramite=smap1.get("ntramite");
@@ -454,8 +452,7 @@ public class MesaControlAction extends PrincipalCoreAction
 		try
 		{
 			UserVO usu=(UserVO)session.get("USUARIO");
-			DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usu.getUser());
-			smap1.put("pv_cdusuari_fin_i",datUsu.getCdusuari());
+			smap1.put("pv_cdusuari_fin_i",usu.getUser());
 			smap1.put("pv_cdmotivo_i", null);
 			kernelManager.mesaControlFinalizarDetalle(smap1);
 			success=true;

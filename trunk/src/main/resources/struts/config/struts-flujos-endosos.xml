@@ -323,6 +323,15 @@
             <result type="json" />
         </action>
         
+        <action name="pantallaJavaExterno" class="beanDatosComplementarios" method="pantallaJavaExterno">
+            <result name="success">/jsp-script/proceso/endosos/pantallaJavaExterno.jsp</result>
+        </action>
+        
+        <action name="operacionJavaExterno" class="beanDatosComplementarios" method="operacionJavaExterno">
+            <result name="success" type="json" />
+        </action>
+        
+        
     </package>
 
 </struts>

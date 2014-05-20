@@ -236,7 +236,6 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 		try
 		{
 			UserVO usu=(UserVO)session.get("USUARIO");
-			DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usu.getUser());
 			
 			long timestamp=System.currentTimeMillis();
 			String random=((long)(Math.random()*10000l))+"";
@@ -257,7 +256,7 @@ public class SubirArchivoAction extends PrincipalCoreAction implements ServletRe
 					+ "&ACCESSIBLE=YES"
 					+ "&p_fecha="+renderFechas.format(calendarHoy.getTime())
 					+ "&p_tramite="+smap1.get("ntramite")
-					+ "&p_usuario="+datUsu.getCdusuari()
+					+ "&p_usuario="+usu.getUser()
 					+ "&desname="+filePath;
 			logger.debug("se pide el contrarecibo a: "+requestUrl);
 			logger.debug("se guardara el contrarecibo en: "+filePath);

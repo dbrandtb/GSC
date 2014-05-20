@@ -1156,8 +1156,8 @@ new Ext.Viewport({
 	        		{name: 'obligatorioComplementario',	type: 'string',		mapping:'obligatorioComplementario'},
 	        		{name: 'modificableComplementario',	type: 'string',		mapping:'modificableComplementario'},
 	        		{name: 'apareceEndoso', 		 	type: 'string',		mapping:'apareceEndoso'},
-	        		{name: 'obligatorioEndoso', 		type: 'string',		mapping:'obligatorioEndoso'}
-	        		
+	        		{name: 'obligatorioEndoso', 		type: 'string',		mapping:'obligatorioEndoso'},
+	        		{name: 'atributoParaTodos',         type: 'string',     mapping:'atributoParaTodos'}
 				]),			
 			remoteSort: true
     	});
@@ -1288,8 +1288,14 @@ new Ext.Viewport({
                 	Ext.getCmp('obligatorio-endoso-check-atributos-variables').setRawValue("N");
                 }
                 
-                Ext.getCmp('atributo-para-todos-check-atributos-variables').setValue(false);
-    			Ext.getCmp('atributo-para-todos-check-atributos-variables').setRawValue("N");
+                //console.log('recAtributosVariables:',recAtributosVariables);
+                if(recAtributosVariables.get('atributoParaTodos')=="S"){
+                    Ext.getCmp('atributo-para-todos-check-atributos-variables').setValue(true);
+        			Ext.getCmp('atributo-para-todos-check-atributos-variables').setRawValue("S");
+        		}else{
+        		    Ext.getCmp('atributo-para-todos-check-atributos-variables').setValue(false);
+        		    Ext.getCmp('atributo-para-todos-check-atributos-variables').setRawValue("N");
+        		}
                 
                 //*******************************
                 Ext.getCmp('hidden-clave-campo-atributos-variables').setValue(recAtributosVariables.get('claveCampo'));

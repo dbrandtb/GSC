@@ -5,6 +5,9 @@
 package mx.com.gseguros.portal.cotizacion.controller;
 
 import java.io.File;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -1106,7 +1109,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 			//////////////////////////////////////////
 			
 			UserVO usuario=(UserVO)session.get("USUARIO");
-			DatosUsuario datosUsuario=kernelManager.obtenerDatosUsuario(usuario.getUser());
 			
 			//////////////////////////
 			////// sigsvdef end //////
@@ -1257,7 +1259,6 @@ public class ComplementariosAction extends PrincipalCoreAction
 			log.debug("panel2"+panel2);
 			
 			UserVO usu=(UserVO)session.get("USUARIO");
-			DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usu.getUser());
 			
 			/*list1=kernelManager.obtenerAsegurados(panel2);
 			log.debug("asegurados para iterar reportes:");
@@ -1285,7 +1286,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 			
 			//obtener usuario y datos de ususario
 			UserVO us=(UserVO)session.get("USUARIO");
-			DatosUsuario datUs=kernelManager.obtenerDatosUsuario(us.getUser());
+			DatosUsuario datUs=kernelManager.obtenerDatosUsuario(us.getUser(),panel2.get("pv_cdtipsit"));//cdperson
 			
 			String cdunieco = panel2.get("pv_cdunieco");
 			String cdramo   = panel2.get("pv_cdramo");
@@ -2075,6 +2076,60 @@ public class ComplementariosAction extends PrincipalCoreAction
 			cdatribu = "";
 		}
 		return cdatribu;
+	}
+	
+	public String pantallaJavaExterno()
+	{
+		log.info(""
+				+ "\n#################################"
+				+ "\n###### pantallaJavaExterno ######"
+				);
+		log.info(""
+				+ "\n###### pantallaJavaExterno ######"
+				+ "\n#################################"
+				);
+		return SUCCESS;
+	}
+	
+	public String operacionJavaExterno()
+	{
+		log.info(""
+				+ "\n##################################"
+				+ "\n###### operacionJavaExterno ######"
+				);
+		log.info("panel1: "+panel1);
+		String a = panel1.get("a");
+		String b = panel1.get("b");
+		String c = null;
+		try
+		{
+			File carpeta         = new File("/opt/ice/gseguros");
+			String clase         = "Prueba";
+			String metodo        = "prueba";
+			Class<?>[]parametros = new Class[]
+					{
+					String.class
+					,String.class
+					,Object.class
+					,Object.class
+					};
+			ClassLoader loader = new URLClassLoader(new URL[]{carpeta.toURI().toURL()},getClass().getClassLoader());
+			Class<?>    cls    = loader.loadClass(clase);
+			Method      m      = cls.getMethod(metodo, parametros);
+			
+			c=(String)m.invoke(cls.newInstance(),a,b,log,consultasManager);
+			log.debug("c: "+c);
+			panel1.put("c",c);
+		}
+		catch(Exception ex)
+		{
+			log.error("error:",ex);
+		}
+		log.info(""
+				+ "\n###### operacionJavaExterno ######"
+				+ "\n##################################"
+				);
+		return SUCCESS;
 	}
 
 	public List<Map<String, Object>> getList1() {
