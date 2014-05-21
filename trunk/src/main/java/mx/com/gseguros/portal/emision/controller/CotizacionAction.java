@@ -13,6 +13,7 @@ import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
@@ -46,6 +47,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	private List<Map<String,String>>         slist1;
 	private List<Map<String,String>>         slist2;
 	private Map<String,String>               smap1;
+	private StoredProceduresManager          storedProceduresManager;
 	private boolean                          success;
 	
 	/////////////////////////////////
@@ -237,7 +239,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			String fefin    = slist1.get(0).get("fefin");
 			
 			Date fechaHoy = new Date();
-					
+			
 			////////////////////////////////
 			////// si no hay nmpoliza //////
 			if(nmpoliza==null||nmpoliza.length()==0)
@@ -310,6 +312,7 @@ public class CotizacionAction extends PrincipalCoreAction
             String llaveRol="";
             String llaveSexo="";
             String llaveFenacimi="";
+            String llaveCodPostal="";
             try
             {
             	LinkedHashMap<String,Object>p=new LinkedHashMap<String,Object>();
@@ -333,12 +336,28 @@ public class CotizacionAction extends PrincipalCoreAction
             		llaveFenacimi="0"+llaveFenacimi;
             	}
             	llaveFenacimi="parametros.pv_otvalor"+llaveFenacimi;
+            	llaveCodPostal=atributos.get("CODPOSTAL");
+            	if(llaveCodPostal.length()==1)
+            	{
+            		llaveCodPostal="0"+llaveCodPostal;
+            	}
+            	llaveCodPostal="parametros.pv_otvalor"+llaveCodPostal;
             }
             catch(Exception ex)
             {
             	log.error("error al obtener atributos",ex);
             }
             ////// 1. indicar para la situacion el indice //////
+            
+            ////// parche. Validar codigo postal //////
+            if(StringUtils.isNotBlank(llaveCodPostal)&&StringUtils.isNotBlank(slist1.get(0).get(llaveCodPostal)))
+            {
+            	LinkedHashMap<String,Object>paramsValues=new LinkedHashMap<String,Object>();
+            	paramsValues.put("param1",slist1.get(0).get(llaveCodPostal));
+            	paramsValues.put("param2",cdtipsit);
+            	storedProceduresManager.procedureVoidCall(ObjetoBD.VALIDA_CODPOSTAL_TARIFA.getNombre(), paramsValues, null);
+            }
+            //// parche. Validar codigo postal //////
             
             ////// 2. ordenar //////
             int indiceTitular=-1;
@@ -774,7 +793,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		{
 			log.debug("error al cotizar",ex);
 			success=false;
-			error=ex.toString();
+			error=ex.getMessage();
 		}
 		
 		log.debug("\n"
@@ -846,6 +865,11 @@ public class CotizacionAction extends PrincipalCoreAction
 
 	public void setConsultasManager(ConsultasManager consultasManager) {
 		this.consultasManager = consultasManager;
+	}
+
+	public void setStoredProceduresManager(
+			StoredProceduresManager storedProceduresManager) {
+		this.storedProceduresManager = storedProceduresManager;
 	}
 
 }
