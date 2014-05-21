@@ -81,8 +81,9 @@ function createGrid(){
 			                	successProperty : '@success',
 			                	params : {'cdGarant': recordEliminar.get('key')},
 			                	callback: function (options, success, response) {
-			                		grid2.getStore().reload();
-									Ext.Msg.alert('Estatus', Ext.util.JSON.decode(response.responseText).mensajeRespuesta);
+			                		Ext.Msg.alert('Estatus', Ext.util.JSON.decode(response.responseText).mensajeRespuesta);
+			                		store.load();// se recarga grid de coberturas
+			                		Ext.getCmp('arbol-productos').getRootNode().reload();
 								}
 							});
 						}

@@ -166,7 +166,7 @@ public class PlanesConfiguracionManagerImpl extends AbstractManagerJdbcTemplateI
 		params.put("pv_cdplan_i", cdPlan);
 		params.put("pv_cdtipsit_i", cdTipSit);
 		try{
-			returnBackBoneInvoke(params, "ELIMINA_PLAN");
+			returnBackBoneInvoke(params, "ELIMINA_PLAN_CONFIGURACION");
 		}catch (Exception e) {
 			e.getMessage();
 			throw new ApplicationException("Error during transaction");
