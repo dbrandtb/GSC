@@ -452,7 +452,14 @@ Ext.onReady(function()
 	            })
 	        }],
 		    buttons:
-	            [
+		    	[	{
+	                    text     : 'Limpiar'
+	                    ,icon    : '${ctx}/resources/fam3icons/icons/control_repeat_blue.png'
+	                    ,handler : function()
+	                    {
+	                    	panelPeticiones.getForm().reset();
+	                    }
+	                },
 	                {
 	                    text     : 'Buscar'
 	                    ,icon    : '${ctx}/resources/fam3icons/icons/zoom.png'
@@ -472,14 +479,6 @@ Ext.onReady(function()
 	                                ,buttons : Ext.Msg.OK
 	                            });
 	                        }
-	                    }
-	                },
-	                {
-	                    text     : 'Limpiar'
-	                    ,icon    : '${ctx}/resources/fam3icons/icons/control_repeat_blue.png'
-	                    ,handler : function()
-	                    {
-	                    	panelPeticiones.getForm().reset();
 	                    }
 	                }
 	            ]
