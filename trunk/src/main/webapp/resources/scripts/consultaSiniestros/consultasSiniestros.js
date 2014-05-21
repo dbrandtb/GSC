@@ -1015,6 +1015,7 @@ Ext.onReady(function() {
 	        	url: _URL_LOADER_INFO_GRAL_RECLAMACION,
 	        	scripts: true,
 	        	autoLoad: true,
+	        	loadMask : true,
 	        	ajaxOptions: {
 	        		method: 'POST'
 	        	}
@@ -1033,6 +1034,7 @@ Ext.onReady(function() {
         		url: _URL_LOADER_REV_ADMIN,
         		scripts: true,
         		autoLoad: true,
+        		loadMask : true,
         		ajaxOptions: {
         			method: 'POST'
 		    	}
@@ -1051,6 +1053,7 @@ Ext.onReady(function() {
 	        	url: _URL_LOADER_CALCULOS,
 	        	scripts: true,
 	        	autoLoad: true,
+	        	loadMask : true,
 	        	params:{
 			    	'params.ntramite': _NTRAMITE
                 },
