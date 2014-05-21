@@ -4,7 +4,10 @@
  */
 package mx.com.gseguros.portal.cotizacion.controller;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -94,6 +97,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	private String auxiliarProductoCdramo   = null;
 	private String auxiliarProductoCdtipsit = null;
 	private ConsultasManager consultasManager;
+	private boolean exito = false;
 
 	public String mostrarPantalla()
 	/*
@@ -2104,20 +2108,18 @@ public class ComplementariosAction extends PrincipalCoreAction
 		try
 		{
 			File carpeta         = new File("/opt/ice/gseguros");
-			String clase         = "Prueba";
+			String clase         = "Probando";
 			String metodo        = "prueba";
 			Class<?>[]parametros = new Class[]
 					{
 					String.class
 					,String.class
-					,Object.class
-					,Object.class
 					};
 			ClassLoader loader = new URLClassLoader(new URL[]{carpeta.toURI().toURL()},getClass().getClassLoader());
 			Class<?>    cls    = loader.loadClass(clase);
 			Method      m      = cls.getMethod(metodo, parametros);
 			
-			c=(String)m.invoke(cls.newInstance(),a,b,log,consultasManager);
+			c=(String)m.invoke(cls.newInstance(),a,b);
 			log.debug("c: "+c);
 			panel1.put("c",c);
 		}
@@ -2128,6 +2130,145 @@ public class ComplementariosAction extends PrincipalCoreAction
 		log.info(""
 				+ "\n###### operacionJavaExterno ######"
 				+ "\n##################################"
+				);
+		return SUCCESS;
+	}
+	
+	public String pantallaCompiladora()
+	{
+		log.info(""
+				+ "\n#################################"
+				+ "\n###### pantallaCompiladora ######"
+				);
+		log.info(""
+				+ "\n###### pantallaCompiladora ######"
+				+ "\n#################################"
+				);
+		return SUCCESS;
+	}
+	
+	public String compilarProceso()
+	{
+		log.info(""
+				+ "\n#############################"
+				+ "\n###### compilarProceso ######"
+				);
+		//ENTRADA
+		log.info("map1: "+map1);
+		
+		//VARIABLES DE ENTRADA OBTENIDAS DEL MAPA
+		String archivo = map1.get("archivo");
+		String codigo  = map1.get("codigo");
+		log.info("archivo: "+archivo);
+		log.info("codigo: "+codigo);
+		
+		//PROPIEDAD PARA EL SUBMIT DE EXT
+		success = true;
+		
+		exito = true;
+		
+		//ESCRIBIR ARCHIVO JAVA
+		if(exito)
+		{
+			try
+			{
+				File archivoJava = new File(archivo);
+				PrintStream streamArchivoJava = new PrintStream(archivoJava);
+				streamArchivoJava.print(codigo);
+				streamArchivoJava.close();
+			}
+			catch(Exception ex)
+			{
+				log.error("error al crear archivo java",ex);
+				mensajeRespuesta=ex.getMessage();
+				exito=false;
+			}
+		}
+		
+		//RECONOCER SISTEMA OPERATIVO
+		boolean esWindows = false;
+		if(exito)
+		{
+			if(System.getProperty("os.name").toLowerCase().indexOf("windows") != -1)
+			{
+				esWindows = true;
+			}
+			log.info("es windows: "+esWindows);
+		}
+		
+		//COMPILAR
+		if(exito)
+		{
+			try
+			{
+				String[] finalCommand; 
+				if(esWindows)
+				{
+					finalCommand = new String[4];
+			        // Use the appropriate path for your windows version.
+			        //finalCommand[0] = "C:\\winnt\\system32\\cmd.exe";    // Windows NT/2000
+			        finalCommand[0] = "C:\\windows\\system32\\cmd.exe";    // Windows XP/2003
+			        //finalCommand[0] = "C:\\windows\\syswow64\\cmd.exe";  // Windows 64-bit
+			        finalCommand[1] = "/y";
+			        finalCommand[2] = "/c";
+			        finalCommand[3] = "javac "+archivo;
+				}
+				else
+				{
+					finalCommand = new String[3];
+			        finalCommand[0] = "/bin/sh";
+			        finalCommand[1] = "-c";
+			        finalCommand[2] = "javac "+archivo;
+				}
+				
+				//EJECUTAR COMANDO
+				final Process pr = Runtime.getRuntime().exec(finalCommand);
+				pr.waitFor();
+				
+				//ESCUCHAR ERRORES
+				mensajeRespuesta="";
+				BufferedReader br_err = null;
+				try
+				{
+					br_err = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
+					String buff = null;
+					while ((buff = br_err.readLine()) != null)
+					{
+						log.error("Error :" + buff);
+						mensajeRespuesta=mensajeRespuesta+(buff.replaceAll(" ", "&nbsp;"))+"<br/>";
+						exito=false;
+						try
+						{
+							Thread.sleep(1);
+						} catch(Exception e) {}
+					}
+					br_err.close();
+				}
+				catch (Exception ex)
+				{
+					log.error("Error al imprimir errores de proceso",ex);
+					mensajeRespuesta=mensajeRespuesta+ex;
+					exito=false;
+				}
+				finally
+				{
+					try
+					{
+						br_err.close();
+					} catch (Exception ex) {}
+				}
+			}
+			catch(Exception ex)
+			{
+				log.error("error al compilar",ex);
+				mensajeRespuesta=ex.getMessage();
+				exito=false;				
+			}
+		}
+		
+		log.info(""
+				+ "\n###### compilarProceso ######"
+				+ "\n#############################"
 				);
 		return SUCCESS;
 	}
@@ -2226,6 +2367,14 @@ public class ComplementariosAction extends PrincipalCoreAction
 
 	public void setConsultasManager(ConsultasManager consultasManager) {
 		this.consultasManager = consultasManager;
+	}
+
+	public boolean isExito() {
+		return exito;
+	}
+
+	public void setExito(boolean exito) {
+		this.exito = exito;
 	}
 
 }
