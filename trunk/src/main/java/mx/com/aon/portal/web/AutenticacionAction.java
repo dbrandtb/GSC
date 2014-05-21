@@ -8,6 +8,8 @@ import javax.naming.Context;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
+import javax.naming.directory.BasicAttribute;
+import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
@@ -65,6 +67,7 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 			//boolean existeUsuario = validaUsuarioLdap(user, password);
 			boolean existeUsuario = true;
 			if (!existeUsuario) {
+				//insertaRegistroLdap(user, password);
 				errorMessage = "El usuario no existe o la clave es incorrecta";
 			} else {
 				success = creaSesionDeUsuario(user);
@@ -163,6 +166,31 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 	public void setSession(Map session) {
 		this.session = session;
 	}
+
+	// método para insertar el registro en ldap
+	private boolean insertaRegistroLdap(String user, String password) throws Exception {
+		DirContext ctx;
+		Hashtable env = obtenerDatosConexionLDAP(this.getText("ldap.security.principal"), this.getText("ldap.security.credentials"));
+		logger.debug(env);
+		try {
+			ctx = new InitialLdapContext(env, null);
+			Attributes matchAttrs = new BasicAttributes(true);
+			matchAttrs.put(new BasicAttribute("uid", user));
+			matchAttrs.put(new BasicAttribute("cn", user));
+			matchAttrs.put(new BasicAttribute("sn", user));
+			matchAttrs.put(new BasicAttribute("userpassword", password.getBytes("UTF8")));
+			matchAttrs.put(new BasicAttribute("objectclass", "top"));
+			matchAttrs.put(new BasicAttribute("objectclass", "person"));
+			matchAttrs.put(new BasicAttribute("objectclass", "organizationalPerson"));
+			matchAttrs.put(new BasicAttribute("objectclass", "inetorgperson"));
+			String name = "cn=" + user +","+this.getText("ldap.base.search");
+			InitialLdapContext iniDirContext = (InitialLdapContext) ctx;
+			iniDirContext.bind(name, ctx, matchAttrs);
+			return true;
+		} catch (NamingException e) {
+			throw new Exception("Error en el proceso de validaci&oacute;n de usuario",e);
+		}
+    }
 
 	public boolean validaUsuarioLdap(String user, String password) throws Exception {
 		DirContext ctx;
