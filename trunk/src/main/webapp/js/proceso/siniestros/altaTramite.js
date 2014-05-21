@@ -1122,7 +1122,6 @@ Ext.onReady(function() {
                         xtype: 'datefield',
                         format: 'd/m/Y',
                         editable: true,
-                        allowBlank:false,
                         labelWidth : 250,
                         width		 : 500,
                         value:new Date()

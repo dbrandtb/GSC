@@ -47,6 +47,11 @@ var _URL_ActualizaStatusTramite =      '<s:url namespace="/mesacontrol" action="
 
 var panDocUrlViewDoc     = '<s:url namespace ="/documentos" action="descargaDocInline" />';
 
+
+var mesConUrlDetMC        = '<s:url namespace="/mesacontrol" action="obtenerDetallesTramite"    />';
+var mesConUrlFinDetalleMC = '<s:url namespace="/mesacontrol" action="finalizarDetalleTramiteMC" />';
+
+
 var windowLoader;
 var msgWindow;
 
@@ -974,6 +979,235 @@ var msgWindow;
 	    });
 		centrarVentana(msgWindow);
 	}
+
+	
+	function _4_onClockClick(grid,rowIndex)
+	{
+	    var record=grid.getStore().getAt(rowIndex);
+	    debug(record);
+	    var window=Ext.create('Ext.window.Window',
+	    {
+	        title        : 'Detalles del tr&aacute;mite '+record.get('ntramite')
+	        ,modal       : true
+	        ,buttonAlign : 'center'
+	        ,width       : 700
+	        ,height      : 400
+	        
+	        ,items       :
+	        [
+	            Ext.create('Ext.grid.Panel',
+	            {
+	                height      : 190
+	                ,autoScroll : true
+	                ,store      : new Ext.data.Store(
+	                {
+	                    model     : 'DetalleMC'
+	                    ,autoLoad : true
+	                    ,proxy    :
+	                    {
+	                        type         : 'ajax'
+	                        ,url         : mesConUrlDetMC
+	                        ,extraParams :
+	                        {
+	                            'smap1.pv_ntramite_i' : record.get('ntramite')
+	                        }
+	                        ,reader      :
+	                        {
+	                            type  : 'json'
+	                            ,root : 'slist1'
+	                        }
+	                    }
+	                })
+	                ,columns : 
+	                [
+	                    {
+	                        header     : 'Tr&aacute;mite'
+	                        ,dataIndex : 'NTRAMITE'
+	                        ,width     : 60
+	                    }
+	                    ,{
+	                        header     : 'Consecutivo'
+	                        ,dataIndex : 'NMORDINA'
+	                        ,width     : 80
+	                    }
+	                    ,{
+	                        header     : 'Fecha de inicio'
+	                        ,xtype     : 'datecolumn'
+	                        ,dataIndex : 'FECHAINI'
+	                        ,format    : 'd M Y'
+	                        ,width     : 90
+	                    }
+	                    ,{
+	                        header     : 'Usuario inicio'
+	                        ,dataIndex : 'usuario_ini'
+	                        ,width     : 150
+	                    }
+	                    ,{
+	                        header     : 'Fecha de fin'
+	                        ,xtype     : 'datecolumn'
+	                        ,dataIndex : 'FECHAFIN'
+	                        ,format    : 'd M Y'
+	                        ,width     : 90
+	                    }
+	                    ,{
+	                        header     : 'Usuario fin'
+	                        ,dataIndex : 'usuario_fin'
+	                        ,width     : 150
+	                    }
+	                    ,{
+	                        width         : 30
+	                        ,menuDisabled : true
+	                        ,dataIndex    : 'FECHAFIN'
+	                        ,renderer     : function(value)
+	                        {
+	                            debug(value);
+	                            if(value&&value!=null)
+	                            {
+	                                value='';
+	                            }
+	                            else
+	                            {
+	                                value='<img src="${ctx}/resources/fam3icons/icons/accept.png" style="cursor:pointer;" data-qtip="Finalizar" />';
+	                            }
+	                            return value;
+	                        }
+	                    }
+	                    /*,{
+	                        width         : 30
+	                        ,menuDisabled : true
+	                        ,dataIndex    : 'CDCLAUSU'
+	                        ,renderer     : function(value)
+	                        {
+	                            debug(value);
+	                            if(value&&value!=null&&value.length>0)
+	                            {
+	                                value='<img src="${ctx}/resources/fam3icons/icons/printer.png" style="cursor:pointer;" data-qtip="Imprimir" />';
+	                            }
+	                            else
+	                            {
+	                                value='';
+	                            }
+	                            return value;
+	                        }
+	                    }*/
+	                ]
+	                ,listeners :
+	                {
+	                    cellclick : function(grid, td,
+	                            cellIndex, record, tr,
+	                            rowIndex, e, eOpts)
+	                    {
+	                        debug(record);
+	                        if(cellIndex<6)
+	                        {
+	                            Ext.getCmp('inputReadDetalleHtmlVisor').setValue(record.get('COMMENTS'));
+	                        }
+	                        else if(cellIndex==6&&$(td).find('img').length>0)
+	                        {
+	                            debug('finalizar');
+	                            Ext.create('Ext.window.Window',
+	                            {
+	                                title        : 'Finalizar detalle'
+	                                ,width       : 600
+	                                ,height      : 400
+	                                ,buttonAlign : 'center'
+	                                ,modal       : true
+	                                ,closable    : false
+	                                ,autoScroll  : true
+	                                ,items       :
+	                                [
+	                                    Ext.create('Ext.form.HtmlEditor', {
+	                                        id      : 'inputHtmlEditorFinalizarDetalleMesCon'
+	                                        ,width  : 570
+	                                        ,height : 300
+	                                        ,value  : record.get('COMMENTS')
+	                                    })
+	                                ]
+	                                ,buttons     :
+	                                [
+	                                    {
+	                                        text     : 'Guardar'
+	                                        ,icon    : '${ctx}/resources/fam3icons/icons/disk.png'
+	                                        ,handler : function()
+	                                        {
+	                                            var win=this.up().up();
+	                                            win.setLoading(true);
+	                                            Ext.Ajax.request
+	                                            ({
+	                                                url      : mesConUrlFinDetalleMC
+	                                                ,params  :
+	                                                {
+	                                                    'smap1.pv_ntramite_i'  : record.get('NTRAMITE')
+	                                                    ,'smap1.pv_nmordina_i' : record.get('NMORDINA')
+	                                                    ,'smap1.pv_comments_i' : Ext.getCmp('inputHtmlEditorFinalizarDetalleMesCon').getValue()
+	                                                }
+	                                                ,success : function (response)
+	                                                {
+	                                                    var json=Ext.decode(response.responseText);
+	                                                    if(json.success==true)
+	                                                    {
+	                                                        win.destroy();
+	                                                        window.destroy();
+	                                                        Ext.Msg.show({
+	                                                            title:'Detalle actualizado',
+	                                                            msg: 'Se finaliz&oacute; el detalle',
+	                                                            buttons: Ext.Msg.OK
+	                                                        });
+	                                                    }
+	                                                    else
+	                                                    {
+	                                                        win.setLoading(false);
+	                                                        Ext.Msg.show({
+	                                                            title:'Error',
+	                                                            msg: 'Error al finalizar detalle',
+	                                                            buttons: Ext.Msg.OK,
+	                                                            icon: Ext.Msg.ERROR
+	                                                        });
+	                                                    }
+	                                                }
+	                                                ,failure : function()
+	                                                {
+	                                                    win.setLoading(false);
+	                                                    Ext.Msg.show({
+	                                                        title:'Error',
+	                                                        msg: 'Error de comunicaci&oacute;n',
+	                                                        buttons: Ext.Msg.OK,
+	                                                        icon: Ext.Msg.ERROR
+	                                                    });
+	                                                }
+	                                            });
+	                                        }
+	                                    }
+	                                    ,{
+	                                        text     : 'Cancelar'
+	                                        ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
+	                                        ,handler : function()
+	                                        {
+	                                            this.up().up().destroy();
+	                                        }
+	                                    }
+	                                ]
+	                            }).show();
+	                        }
+	                        /*else if(cellIndex==5&&$(td).find('img').length>0)
+	                        {
+	                            debug("APRETASTE EL BOTON IMPRIMIR PARA EL RECORD:",record);
+	                        }*/
+	                    }
+	                }
+	            })
+	            ,Ext.create('Ext.form.HtmlEditor',
+	            {
+	                id        : 'inputReadDetalleHtmlVisor'
+	                ,width    : 690
+	                ,height   : 200
+	                ,readOnly : true
+	            })
+	        ]
+	    }).show();
+	    window.center();
+	    Ext.getCmp('inputReadDetalleHtmlVisor').getToolbar().hide();
+	}
 	
 function reasignarClick(grid,dataIndex)
 {
@@ -1076,6 +1310,32 @@ function reasignarClick(grid,dataIndex)
 	}
 }
 
+
+Ext.onReady(function()
+		{
+			
+			/////////////////////
+			////// modelos //////
+			Ext.define('DetalleMC',{
+		        extend:'Ext.data.Model',
+		        fields:
+		        [
+		            "NTRAMITE"
+		            ,"NMORDINA"
+		            ,"CDTIPTRA"
+		            ,"CDCLAUSU"
+		            ,{name:"FECHAINI",type:'date',dateFormat:'d/m/Y'}
+		            ,{name:"FECHAFIN",type:'date',dateFormat:'d/m/Y'}
+		            ,"COMMENTS"
+		            ,"CDUSUARI_INI"
+		            ,"CDUSUARI_FIN"
+		            ,"usuario_ini"
+		            ,"usuario_fin"
+		        ]
+		    });
+		    ////// modelos //////
+			/////////////////////
+		});
 <s:if test="false">
 </script>
 </s:if>
