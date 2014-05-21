@@ -35,6 +35,7 @@ var _0_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
 var _0_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 
 var _0_urlCotizar              = '<s:url namespace="/emision"         action="cotizar" />';
+var _0_urlCotizarExterno       = '<s:url namespace="/externo"         action="cotizar" />';
 var _0_urlDetalleCotizacion    = '<s:url namespace="/"                action="detalleCotizacion" />';
 var _0_urlCoberturas           = '<s:url namespace="/flujocotizacion" action="obtenerCoberturas4" />';
 var _0_urlDetalleCobertura     = '<s:url namespace="/flujocotizacion" action="obtenerAyudaCoberturas4" />';
@@ -711,7 +712,7 @@ function _0_cotizar(boton)
 		_0_panelPri.setLoading(true);
 		Ext.Ajax.request(
 		{
-			url       : _0_urlCotizar
+			url       : _0_smap1['externo']=='si'?_0_urlCotizarExterno:_0_urlCotizar
 			,jsonData : json
 			,success  : function(response)
 			{
@@ -767,6 +768,7 @@ function _0_cotizar(boton)
 				}
 				else
 				{
+					_0_bloquear(false);
 					mensajeError('Error al cotizar:<br/>'+json.error);
 				}
 			}
