@@ -3289,22 +3289,28 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     		
     		copagoOriginalPoliza= Double.parseDouble(copagoModificado);
     	}
-    	if(!causaSiniestro.equalsIgnoreCase("2")){
-    		if(tipoCopago.equalsIgnoreCase("%")){
-    			copagoPenaPorcentaje = penalizacionCambioZona + penalizacionCirculoHosp + Double.parseDouble(""+copagoOriginalPoliza);
-    			copagoFinal = copagoPenaPorcentaje+"|"+copagoPenaPesos;
+    	
+    	if(causaSiniestro != null)
+    	{
+    		if(!causaSiniestro.equalsIgnoreCase("2")){
+        		if(tipoCopago.equalsIgnoreCase("%")){
+        			copagoPenaPorcentaje = penalizacionCambioZona + penalizacionCirculoHosp + Double.parseDouble(""+copagoOriginalPoliza);
+        			copagoFinal = copagoPenaPorcentaje+"|"+copagoPenaPesos;
+        		}else{
+        			copagoPenaPorcentaje = penalizacionCambioZona + penalizacionCirculoHosp;
+        			copagoPenaPesos		 = Double.parseDouble(""+copagoOriginalPoliza);
+        			copagoFinal = copagoPenaPorcentaje+"|"+copagoPenaPesos;
+        		}
     		}else{
-    			copagoPenaPorcentaje = penalizacionCambioZona + penalizacionCirculoHosp;
-    			copagoPenaPesos		 = Double.parseDouble(""+copagoOriginalPoliza);
-    			copagoFinal = copagoPenaPorcentaje+"|"+copagoPenaPesos;
+    			if(tipoCopago.equalsIgnoreCase("%")){
+        			copagoFinal = copagoOriginalPoliza+"|"+copagoPenaPesos;
+        		}else{
+        			copagoFinal = copagoPenaPorcentaje+"|"+copagoOriginalPoliza;
+        		}
     		}
-		}else{
-			if(tipoCopago.equalsIgnoreCase("%")){
-    			copagoFinal = copagoOriginalPoliza+"|"+copagoPenaPesos;
-    		}else{
-    			copagoFinal = copagoPenaPorcentaje+"|"+copagoOriginalPoliza;
-    		}
-		}
+    	}else{
+    		copagoFinal = copagoPenaPorcentaje+"|"+copagoOriginalPoliza;
+    	}
     	return copagoFinal;
 	}
 
@@ -3312,19 +3318,21 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 	private double penalizacionCambioZona(String existePenalizacion, String causaSiniestro, String circuloHospAsegurado,
     		String zonaTarifiAsegurado, String idProveedor) {
 		double penalizacionCambioZona = 0;
-		if(!causaSiniestro.equalsIgnoreCase("2")){
-			//obtenemos la penalización por el cambio de zona
-			if(existePenalizacion.equalsIgnoreCase("s")){
-				//obtenemos el valor del porcentaje
-				try{
-					//Obtenemos la informacion de la zona hospitalaria
-					List<ConsultaProveedorVO> medicos = siniestrosManager.getConsultaListaProveedorMedico(Rol.MEDICO.getCdrol(),idProveedor);
-					//	String circuloHosProveedor = medicos.get(0).getCirculo();
-					porcentajePenalizacion = siniestrosManager.validaPorcentajePenalizacion(zonaTarifiAsegurado, medicos.get(0).getZonaHospitalaria());
-					penalizacionCambioZona =  Double.parseDouble(porcentajePenalizacion);
-				}catch(Exception ex){
-					logger.debug("Error en la obtencion de la consulta"+ex);
-					penalizacionCambioZona =  Double.parseDouble("0");
+		if(causaSiniestro!= null){
+			if(!causaSiniestro.equalsIgnoreCase("2")){
+				//obtenemos la penalización por el cambio de zona
+				if(existePenalizacion.equalsIgnoreCase("s")){
+					//obtenemos el valor del porcentaje
+					try{
+						//Obtenemos la informacion de la zona hospitalaria
+						List<ConsultaProveedorVO> medicos = siniestrosManager.getConsultaListaProveedorMedico(Rol.MEDICO.getCdrol(),idProveedor);
+						//	String circuloHosProveedor = medicos.get(0).getCirculo();
+						porcentajePenalizacion = siniestrosManager.validaPorcentajePenalizacion(zonaTarifiAsegurado, medicos.get(0).getZonaHospitalaria());
+						penalizacionCambioZona =  Double.parseDouble(porcentajePenalizacion);
+					}catch(Exception ex){
+						logger.debug("Error en la obtencion de la consulta"+ex);
+						penalizacionCambioZona =  Double.parseDouble("0");
+					}
 				}
 			}
 		}
@@ -3337,40 +3345,42 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     	double penaliCirculoHosp= 0;
     	String valor1 = null;
     	String valor2 = null;
-    	if(!causaSiniestro.equalsIgnoreCase("2")){
-    		if(circuloHospAsegurado == null){
-    			valor1="0";
-    		}else{
-    			if(circuloHospAsegurado.equalsIgnoreCase("PLUS 100")) {valor1="1";}
-            	if(circuloHospAsegurado.equalsIgnoreCase("PLUS 500")) {valor1="2";}
-            	if(circuloHospAsegurado.equalsIgnoreCase("PLUS 1000")){valor1="3";}
+    	if(causaSiniestro !=null){
+        	if(!causaSiniestro.equalsIgnoreCase("2")){
+        		if(circuloHospAsegurado == null){
+        			valor1="0";
+        		}else{
+        			if(circuloHospAsegurado.equalsIgnoreCase("PLUS 100")) {valor1="1";}
+                	if(circuloHospAsegurado.equalsIgnoreCase("PLUS 500")) {valor1="2";}
+                	if(circuloHospAsegurado.equalsIgnoreCase("PLUS 1000")){valor1="3";}
+        		}
+        		
+        		if(circuloHospProveedor == null){
+        			valor2="0";
+        		}else{
+        			if(circuloHospProveedor.equalsIgnoreCase("PLUS 100")) {valor2="1";}
+                	if(circuloHospProveedor.equalsIgnoreCase("PLUS 500")) {valor2="2";}
+                	if(circuloHospProveedor.equalsIgnoreCase("PLUS 1000")){valor2="3";}
+        		}
+        		
+            	
+            	
+            	String valorCirculoHosp = valor1+""+valor2;
+            	switch(Integer.parseInt(valorCirculoHosp))
+            	{
+    	        case 12 :
+    	        case 23 :
+    	        	penaliCirculoHosp = 20;
+    	            break;
+    	        case 13 :
+    	        	penaliCirculoHosp = 40;
+    	            break;
+    	        default:
+    	        	penaliCirculoHosp = 0;
+    	          
+            	}
     		}
-    		
-    		if(circuloHospProveedor == null){
-    			valor2="0";
-    		}else{
-    			if(circuloHospProveedor.equalsIgnoreCase("PLUS 100")) {valor2="1";}
-            	if(circuloHospProveedor.equalsIgnoreCase("PLUS 500")) {valor2="2";}
-            	if(circuloHospProveedor.equalsIgnoreCase("PLUS 1000")){valor2="3";}
-    		}
-    		
-        	
-        	
-        	String valorCirculoHosp = valor1+""+valor2;
-        	switch(Integer.parseInt(valorCirculoHosp))
-        	{
-	        case 12 :
-	        case 23 :
-	        	penaliCirculoHosp = 20;
-	            break;
-	        case 13 :
-	        	penaliCirculoHosp = 40;
-	            break;
-	        default:
-	        	penaliCirculoHosp = 0;
-	          
-        	}
-		}
+    	}
     	return penaliCirculoHosp;
     }
 
