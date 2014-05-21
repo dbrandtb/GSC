@@ -14,6 +14,10 @@ var mesConUrlDatCom       = '<s:url namespace="/"            action="datosComple
 var mesConUrlCotizar      = '<s:url namespace="/emision"     action="cotizacion"                />';
 var mesConUrlDetMC        = '<s:url namespace="/mesacontrol" action="obtenerDetallesTramite"    />';
 var mesConUrlFinDetalleMC = '<s:url namespace="/mesacontrol" action="finalizarDetalleTramiteMC" />';
+
+var ROL_MESA_DE_CONTROL    = '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@MESA_DE_CONTROL.cdsisrol" />';
+var ROL_SUSCRIPTOR    = '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@SUSCRIPTOR.cdsisrol" />';
+
 ////// variables //////
 ///////////////////////
 
@@ -61,6 +65,10 @@ function _4_onComplementariosClick(grid,rowIndex)
     {
         if(record.get('nmsolici')>0)
         {
+        	if(EstatusTramite.EnRevisionMedica == record.get('status') && (ROL_MESA_DE_CONTROL == mcdinSesion['rol'] || ROL_SUSCRIPTOR == mcdinSesion['rol'] )){
+        		mensajeWarning('Usted no puede realizar esta acci&oacute;n.');
+        		return;
+        	}
             Ext.create('Ext.form.Panel').submit(
             {
                 url             : mesConUrlDatCom
