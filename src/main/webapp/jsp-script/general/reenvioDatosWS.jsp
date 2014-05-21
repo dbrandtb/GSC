@@ -35,7 +35,7 @@ Ext.onReady(function()
 	{
 		extend : 'Ext.data.Model'
 		,fields :
-		['CDUNIECO','CDRAMO','NMPOLIZA','NMSUPLEM','CDCODIGO',
+		['CDUNIECO','CDRAMO','NMPOLIZA','NMSUPLEM','DESCRIPL',
 		 'MENSAJE','USUARIO','FECHAHR','NTRAMITE','CDERRWS','SEQIDWS']
 	});
 	
@@ -82,12 +82,12 @@ Ext.onReady(function()
     	  { header     : 'Producto' , dataIndex : 'CDRAMO', flex: 1},
     	  { header     : 'Sucursal' , dataIndex : 'CDUNIECO', flex: 1},
     	  { header     : 'P&oacute;liza' , dataIndex : 'NMPOLIZA', flex: 2},
-    	  { header     : 'Tr&aacute;mite', dataIndex : 'NTRAMITE', flex: 1},
+    	  { header     : 'Tr&aacute;mite', dataIndex : 'NTRAMITE', flex: 2},
     	  { header     : 'Suplemento'    , dataIndex : 'NMSUPLEM', hidden: true},
-    	  { header     : 'Tipo Error' , dataIndex : 'CDCODIGO', flex: 2},
-    	  { header     : 'Mensaje'  , dataIndex : 'MENSAJE', flex: 5},
+    	  { header     : 'Tipo Error' , dataIndex : 'DESCRIPL', flex: 3},
+    	  { header     : 'Mensaje'  , dataIndex : 'MENSAJE', flex: 6},
     	  { header     : 'C&oacute;digo Error WS' , dataIndex : 'CDERRWS', flex: 1},
-    	  { header     : 'Fecha'   , dataIndex : 'FECHAHR', flex: 1},
+    	  { header     : 'Fecha'   , dataIndex : 'FECHAHR', flex: 2},
           { header     : 'Usuario' , dataIndex : 'USUARIO' , flex: 2}
 		]
     	,bbar :
