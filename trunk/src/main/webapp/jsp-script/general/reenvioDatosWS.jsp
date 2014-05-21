@@ -249,7 +249,7 @@ Ext.onReady(function()
             		showMessage("Aviso","Debe seleccionar almenos un registro", Ext.Msg.OK, Ext.Msg.INFO);
             	}
             }
-        },{
+        },'-',{
             icon    : '${ctx}/resources/fam3icons/icons/zoom.png',
             text    : 'Ver Payload Xml',
             handler : function(btn, e){
@@ -337,7 +337,7 @@ Ext.onReady(function()
 	            fieldLabel    : 'Sucursal',
 	            valueField    : 'key',
 	            displayField  : 'value',
-	            forceSelection: true,
+	            forceSelection: false,
 	            queryMode     : 'local',
 	            typeAhead     : true,
 	            anyMatch      : true,
@@ -397,7 +397,7 @@ Ext.onReady(function()
 	            fieldLabel    : 'Producto',
 	            valueField    : 'key',
 	            displayField  : 'value',
-	            forceSelection: true,
+	            forceSelection: false,
 	            queryMode     : 'local',
 	            typeAhead     : true,
 	            anyMatch      : true,
