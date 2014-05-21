@@ -242,6 +242,11 @@ public class ConfiguracionPlanesAction extends Padre{
 		datosPlan.setCdGarant(cdGarant);
 		mensajeRespuesta = planesConfiguracionManager.borrarCoberturasPlan(datosPlan);
 		
+		// Se recarga el arbol de productos en sesion:
+		List<RamaVO> temporalTree=(List<RamaVO>) session.get("ARBOL_PRODUCTOS");
+		session.put("ARBOL_PRODUCTOS_RECARGAR", temporalTree);
+		session.remove("ARBOL_PRODUCTOS");
+		
 		return SUCCESS;
 	}
 	
