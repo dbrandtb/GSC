@@ -331,6 +331,13 @@
             <result name="success" type="json" />
         </action>
         
+        <action name="pantallaCompiladora" class="beanDatosComplementarios" method="pantallaCompiladora">
+            <result name="success">/jsp-script/proceso/endosos/pantallaCompiladora.jsp</result>
+        </action>
+        
+        <action name="compilarProceso" class="beanDatosComplementarios" method="compilarProceso">
+            <result name="success" type="json" />
+        </action>
         
     </package>
 
