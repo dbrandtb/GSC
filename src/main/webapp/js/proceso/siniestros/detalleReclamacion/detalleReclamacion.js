@@ -13,6 +13,7 @@ Ext.onReady(function() {
 	    	        	url: _URL_LOADER_INFO_GRAL_RECLAMACION,
 	    	        	scripts: true,
 	    	        	autoLoad: false,
+	    	        	loadMask : true,
 	    	        	ajaxOptions: {
 	    	        		method: 'POST'
 	    	        	}
@@ -28,6 +29,7 @@ Ext.onReady(function() {
 	    	        	url: _URL_LOADER_REV_ADMIN,
 	    	        	scripts: true,
 	    	        	autoLoad: false,
+	    	        	loadMask : true,
 	    	        	ajaxOptions: {
 	    	        		method: 'POST'
 	    	        	}
@@ -43,6 +45,7 @@ Ext.onReady(function() {
 	    	        	url: _URL_LOADER_CALCULOS,
 	    	        	scripts: true,
 	    	        	autoLoad: false,
+	    	        	loadMask : true,
 	    	        	ajaxOptions: {
 	    	        		method: 'POST'
 	    	        	},
