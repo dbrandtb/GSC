@@ -71,9 +71,10 @@
     margin-left:2px;
     text-decoration:none !important;
 }
+/* Chrome25+ and Firefox Bug fix, 100% width causes issues with the date picker, replaced with a fixed width */
 table.x-date-inner {
-    width:100%;
-    table-layout:fixed;
+   width:200px !important; /* original was width : 100% */
+                           /* original was table-layout:fixed */
 }
 .x-date-inner th {
     width:25px;
