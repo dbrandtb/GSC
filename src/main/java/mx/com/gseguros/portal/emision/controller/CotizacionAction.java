@@ -313,39 +313,40 @@ public class CotizacionAction extends PrincipalCoreAction
             String llaveSexo="";
             String llaveFenacimi="";
             String llaveCodPostal="";
-            try
-            {
+            try {
             	LinkedHashMap<String,Object>p=new LinkedHashMap<String,Object>();
             	p.put("cdtipsit",cdtipsit);
             	Map<String,String>atributos=consultasManager.consultaDinamica(ObjetoBD.OBTIENE_ATRIBUTOS, p).get(0);
-            	llaveRol=atributos.get("PARENTESCO");
-            	if(llaveRol.length()==1)
-            	{
-            		llaveRol="0"+llaveRol;
+            	if(atributos.get("PARENTESCO") != null) {
+            		llaveRol=atributos.get("PARENTESCO");
+                	if(llaveRol.length()==1) {
+                		llaveRol="0"+llaveRol;
+                	}
+                	llaveRol="parametros.pv_otvalor"+llaveRol;
             	}
-            	llaveRol="parametros.pv_otvalor"+llaveRol;
-            	llaveSexo=atributos.get("SEXO");
-            	if(llaveSexo.length()==1)
-            	{
-            		llaveSexo="0"+llaveSexo;
+            	if(atributos.get("SEXO") != null) {
+            		llaveSexo=atributos.get("SEXO");
+            		if(llaveSexo.length()==1) {
+                		llaveSexo="0"+llaveSexo;
+                	}
+                	llaveSexo="parametros.pv_otvalor"+llaveSexo;
             	}
-            	llaveSexo="parametros.pv_otvalor"+llaveSexo;
-            	llaveFenacimi=atributos.get("FENACIMI");
-            	if(llaveFenacimi.length()==1)
-            	{
-            		llaveFenacimi="0"+llaveFenacimi;
+            	if(atributos.get("FENACIMI") != null) {
+            		llaveFenacimi=atributos.get("FENACIMI");
+                	if(llaveFenacimi.length()==1) {
+                		llaveFenacimi="0"+llaveFenacimi;
+                	}
+                	llaveFenacimi="parametros.pv_otvalor"+llaveFenacimi;
             	}
-            	llaveFenacimi="parametros.pv_otvalor"+llaveFenacimi;
-            	llaveCodPostal=atributos.get("CODPOSTAL");
-            	if(llaveCodPostal.length()==1)
-            	{
-            		llaveCodPostal="0"+llaveCodPostal;
+            	if(atributos.get("CODPOSTAL") != null) {
+            		llaveCodPostal=atributos.get("CODPOSTAL");
+                	if(llaveCodPostal.length()==1) {
+                		llaveCodPostal="0"+llaveCodPostal;
+                	}
+                	llaveCodPostal="parametros.pv_otvalor"+llaveCodPostal;
             	}
-            	llaveCodPostal="parametros.pv_otvalor"+llaveCodPostal;
-            }
-            catch(Exception ex)
-            {
-            	log.error("error al obtener atributos",ex);
+            } catch(Exception ex){
+            	log.error("error al obtener atributos", ex);
             }
             ////// 1. indicar para la situacion el indice //////
             
