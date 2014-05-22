@@ -8,6 +8,17 @@
 <script src="${ctx}/resources/touch-2.3.1/src/locale/ext-lang-es.js"></script>
 <script>
 ////// textos //////
+var _text_aceptar           = 'Aceptar';
+var _text_cancelar          = 'Cancelar';
+var _text_enviar            = 'Enviar';
+var _text_siguiente         = 'Siguiente';
+var _text_anterior          = 'Anterior';
+var _text_regresar          = 'Regresar';
+var _text_cargando          = 'Cargando';
+var _text_error             = 'Error';
+var _text_datosIncompletos  = 'Datos incompletos';
+var _text_errorComunicacion = 'Error de comunicaci&oacute;n';
+
 var _t01 = 'Inicio de sesi&oacute;n';
 var _t02 = 'Datos de usuario:';
 var _t03 = 'Usuario';
@@ -17,18 +28,21 @@ var _t06 = 'Introduzca su nombre de usuario y contrase&ntilde;a';
 var _t07 = 'Introduce el nombre de usuario';
 var _t08 = 'Introduce la contrase&ntilde;a';
 var _t09 = 'Error interno del servidor, consulte a soporte';
-var _t10 = 'Cargando...';
+var _t10 = 'Seleccionar rol';
+var _t11 = 'No puede acceder en este momento';
 ////// textos //////
 
 ////// variables globales //////
-var _urlLogin    = '<s:url namespace="/seguridad" action="autenticaUsuario"     />';
-var _urlRedirect = '<s:url namespace="/"          action="seleccionaRolCliente" />';
-var _CTX         = '${ctx}';
+var _urlLogin              = '<s:url namespace="/seguridad" action="autenticaUsuario"         />';
+var _urlPantallaArbolJson  = '<s:url namespace="/"          action="seleccionaRolClienteJson" />';
+var _urlCargarArbolRol     = '<s:url namespace="/"          action="ArbolRolCliente"          />';
+var _urlRegresaCodigoArbol = '<s:url namespace="/"          action="regresaCodigo"            />';
+var _urlPortalExtjs        = '<s:url namespace="/"          action="load"                     />';
 ////// variables globales //////
 
 function debug(a,b,c,d)
 {
-	if(true)
+	if(false)
     {
         if(d!=undefined)
             console.log(a,b,c,d);
@@ -41,9 +55,33 @@ function debug(a,b,c,d)
     }
 }
 
-function datosIncompletos(mensaje,callback)
+function datosIncompletos(message,callback)
 {
-	Ext.Msg.alert('<s:text name="touch.datosIncompletos" />', message, callback);
+	Ext.Msg.alert(_text_datosIncompletos, message, callback);
+}
+
+function mensajeError(message,callback)
+{
+    Ext.Msg.alert(_text_error, message, callback);
+}
+
+function errorComunicacion(callback)
+{
+	mensajeError(_text_errorComunicacion,callback);
+}
+
+function maskui()
+{
+	Ext.Viewport.setMasked(
+	{
+		xtype    : 'loadmask'
+		,message : _text_cargando
+	});
+}
+
+function unmaskui()
+{
+    Ext.Viewport.setMasked(false);
 }
 </script>
 <script src="app.js"></script>

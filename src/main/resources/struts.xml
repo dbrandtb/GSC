@@ -123,7 +123,12 @@
 	            <param name="actionName">load</param>
 	            <param name="namespace">/</param>
 	        </result>
-		</action>		
+		</action>
+		
+		<action name="seleccionaRolClienteJson" class="loadClientesRolesAction" method="obtenRolesClientes">
+            <result name="success" type="json" />
+            <result name="load"    type="json" />
+        </action>		
 		
 		<action name="ArbolRolCliente" class="loadClientesRolesAction" method="jsonObtenRolesClientes">
 			<result name="success" type="json">			
