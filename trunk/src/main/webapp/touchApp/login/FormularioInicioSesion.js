@@ -6,10 +6,14 @@ Ext.define('FormularioInicioSesion',
         title      : ''
         ,url       : ''
         ,msgError  : ''
-        ,msgEspera : ''
         ,items     :
         [
             {
+                xtype   : 'toolbar'
+                ,docked : 'top'
+                ,title  : 'a'
+            }
+            ,{
                 xtype  : 'fieldset'
                 ,items :
                 [
@@ -58,8 +62,12 @@ Ext.define('FormularioInicioSesion',
         debug('>LoginForm onButtonTap');
         var form=button.up('formpanel');
         debug("form.get('msgError'):",form.get('msgError'));
-        debug("form.get('msgEspera'):",form.get('msgEspera'));
-        var record = Ext.create('LoginFormModel',form.getValues());
+        var validatorConfig = form.getValues();
+        validatorConfig.textos={
+            usuarioValida   : form.textos.usuarioValida
+            ,passwordValida : form.textos.passwordValida
+        };
+        var record = Ext.create('FormularioInicioSesionModelo',validatorConfig);
         var message="";
         debug('record:',record);
         var errors=record.validate();
@@ -68,7 +76,7 @@ Ext.define('FormularioInicioSesion',
             debug('valid');
             form.submit(
             {
-                waitMsg  : form.get('msgEspera')
+                waitMsg  : _text_cargando
                 ,success : function()
                 {
                     debug('>success');
@@ -79,11 +87,10 @@ Ext.define('FormularioInicioSesion',
                 {
                     debug('>failure');
                     var msgServer = Ext.isEmpty(action.errorMessage) ? form.get('msgError') : action.errorMessage;
-                    Ext.Msg.alert('Error', msgServer, function(){});
+                    mensajeError(msgServer, function(){});
                     debug('<failure');
                 }
             });
-
         }
         else
         {
@@ -92,10 +99,12 @@ Ext.define('FormularioInicioSesion',
             {
                 message += rec.config.message+"<br>";
             });
-            Ext.Msg.alert("Datos incompletos", message, function(){});
+            datosIncompletos(message, function(){});
         }
         debug('<LoginForm onButtonTap');
     }
+    ,callback    : function(){debug('FormularioInicioSesion empty callback');}
+    ,textos      : {}
     ,constructor : function(config)
     {
         debug('>LoginForm constructor');
@@ -105,7 +114,7 @@ Ext.define('FormularioInicioSesion',
         me.setTitle(config.textos.titulo);
         me.setUrl(config.url);
         me.setMsgError(config.textos.msgError);
-        me.setMsgEspera(config.textos.msgEspera);
+        me.down('toolbar').setTitle(config.textos.titulo);
         me.down('[name=user]').setLabel(config.textos.usuario);
         me.down('[name=password]').setLabel(config.textos.contrasena);
         me.down('fieldset').setTitle(config.textos.tituloFieldSet);
@@ -113,23 +122,7 @@ Ext.define('FormularioInicioSesion',
         me.down('button').setText(config.textos.boton);
         me.down('button').setHandler(me.onButtonTap);
         me.callback = config.callback;
-        Ext.define('LoginFormModel',
-        {
-            extend  : 'Ext.data.Model'
-            ,config :
-            {
-                fields       :
-                [
-                    {name  : 'user'     , type : 'string'}
-                    ,{name : 'password' , type : 'password'}
-                ]
-                ,validations :
-                [
-                    {type  : 'presence' , name : 'user'     , message : config.textos.usuarioValida}
-                    ,{type : 'presence' , name : 'password' , message : config.textos.passwordValida}
-                ]
-            }
-        });
+        me.textos   = config.textos;
         debug('<LoginForm constructor');
     }
 });

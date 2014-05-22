@@ -43,6 +43,7 @@ public class LoadClientesRolesAction extends PrincipalCoreAction {
     private int numReg;
     private int registrosEncontrados;
     private String _codigoCliente = null;
+    private boolean soloUnRol = false;
 
     /**
      * Cambia el usuario actual en sesion por uno
@@ -275,6 +276,7 @@ public class LoadClientesRolesAction extends PrincipalCoreAction {
                 session.put("CARGA_USUARIO_COMPLETO", userList);
                 obtenCodigoTree();
                 retorno="load";
+                soloUnRol=true;
             }
         }
         else
@@ -501,5 +503,13 @@ public class LoadClientesRolesAction extends PrincipalCoreAction {
 	public void setNavigationManagerNuevo(
 			mx.com.gseguros.portal.general.service.NavigationManager navigationManagerNuevo) {
 		this.navigationManagerNuevo = navigationManagerNuevo;
+	}
+
+	public boolean isSoloUnRol() {
+		return soloUnRol;
+	}
+
+	public void setSoloUnRol(boolean soloUnRol) {
+		this.soloUnRol = soloUnRol;
 	}
 }
