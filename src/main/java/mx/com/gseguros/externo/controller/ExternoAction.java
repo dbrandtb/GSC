@@ -224,6 +224,11 @@ public class ExternoAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	public String mlogin()
+	{
+		return SUCCESS;
+	}
+	
 	public void setStoredProceduresManager(
 			StoredProceduresManager storedProceduresManager) {
 		this.storedProceduresManager = storedProceduresManager;

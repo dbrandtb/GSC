@@ -7,7 +7,9 @@
 
 		<interceptors>
 			<interceptor name="authenticationInterceptor" class="authenticationInterceptor" />
+			<interceptor name="deviceInterceptor"         class="deviceInterceptor"/>
 			<interceptor-stack name="loggingStack">
+			    <interceptor-ref name="deviceInterceptor"/>
 				<interceptor-ref name="authenticationInterceptor" />
 				<interceptor-ref name="defaultStack" />
 			</interceptor-stack>
@@ -16,6 +18,10 @@
 		<action name="login">
 			<interceptor-ref name="loggingStack"></interceptor-ref>
 			<result name="login">/jsp/portal/login.jsp</result>
+			<result name="login_movil" type="redirectAction">
+                <param name="actionName">mlogin</param>
+                <param name="namespace">/touchApp/login</param>
+            </result>
 			<result name="load" type="redirectAction">
                 <param name="actionName">load</param>
                 <param name="namespace">/</param>
@@ -95,5 +101,11 @@
         <!-- Fin Actions temporales -->
         
 	</package>
+	
+	<package name="loginApp" namespace="/touchApp/login" extends="struts-default, json-default">
+        <action name="mlogin" class="ExternoAction" method="mlogin">
+            <result name="success">/touchApp/login/index.jsp</result>
+        </action>
+    </package>
 
 </struts>
