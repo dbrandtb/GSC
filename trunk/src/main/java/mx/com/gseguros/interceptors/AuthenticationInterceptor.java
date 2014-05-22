@@ -15,11 +15,11 @@ import com.opensymphony.xwork2.interceptor.Interceptor;
 /**
  * Interceptor que proporciona autenticacion para acciones seguras de la aplicacion.
  * <br/><br/>
- * Primero, verifica en la sesion web si existe el usuario (si ya está firmado).
- * Si no está presente, el interceptor altera el flujo de la petición regresando una
+ * Primero, verifica en la sesion web si existe el usuario (si ya estï¿½ firmado).
+ * Si no estï¿½ presente, el interceptor altera el flujo de la peticiï¿½n regresando una
  * cadena de control que causa que la peticion se redirija a la pagina de login.
  * <br/><br/>
- * Si el objeto del usuario está presente en el mapa de sesion, entonces el interceptor
+ * Si el objeto del usuario estï¿½ presente en el mapa de sesion, entonces el interceptor
  * inyecta el objeto usuario dentro del action a traves de setUser
  * y permite que continue el procesamiento de la peticion.
  *
@@ -47,8 +47,12 @@ public class AuthenticationInterceptor implements Interceptor {
 		
 		//Si el usuario no existe en sesion, detenemos el action y redirigimos al result global INPUT
 		if (user == null) {
+			if(session.get("ES_MOVIL")!=null&&(Boolean)session.get("ES_MOVIL"))
+			{
+				return "login_movil";
+			}
 		    return Action.LOGIN;
-		} else { //Si el usuario ya está en sesion (logged) se continua el flujo de ejecucion a otros interceprotes y luego al action
+		} else { //Si el usuario ya estï¿½ en sesion (logged) se continua el flujo de ejecucion a otros interceprotes y luego al action
 				
 			/* TODO: Implementar en los actions que necesiten al usuario
 		    Action action = ( Action ) actionInvocation.getAction();

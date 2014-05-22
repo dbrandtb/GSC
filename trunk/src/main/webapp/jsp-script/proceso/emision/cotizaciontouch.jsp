@@ -52,9 +52,10 @@ var _mcotiza_selectedCdplan;
 var _mcotiza_selectedDsplan;
 var _mcotiza_selectedNmsituac;
 
-var _mcotiza_urlCotizar = '<s:url namespace="/emision"         action="cotizar" />';
-var _mcotiza_urlViewDoc = '<s:url namespace ="/documentos"     action="descargaDocInline" />';
-var _mcotiza_urlComprar = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4" />';
+var _mcotiza_urlCotizar        = '<s:url namespace="/emision"         action="cotizar" />';
+var _mcotiza_urlCotizarExterno = '<s:url namespace="/externo"         action="cotizar" />';
+var _mcotiza_urlViewDoc        = '<s:url namespace ="/documentos"     action="descargaDocInline" />';
+var _mcotiza_urlComprar        = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4" />';
 
 var _mcotiza_smap1         = <s:property value="%{convertToJSON('smap1')}"  escapeHtml="false" />;
 var EDAD_MAXIMA_COTIZACION = <s:property value="smap1.edadMaximaCotizacion" />;
@@ -624,7 +625,7 @@ function _mcotiza_cotiza()
 		});
         Ext.Ajax.request(
         {
-            url       : _mcotiza_urlCotizar
+            url       : _mcotiza_smap1['externo']=='si'?_mcotiza_urlCotizarExterno:_mcotiza_urlCotizar
             ,jsonData : json
             ,success  : function(response)
             {
