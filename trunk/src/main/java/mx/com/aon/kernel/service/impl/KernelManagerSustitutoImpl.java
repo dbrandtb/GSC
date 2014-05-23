@@ -286,6 +286,18 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         return lista;
     }
     
+    public List<ComponenteVO> obtenerTatrisin(String cdramo,String cdtipsit) throws ApplicationException
+    {
+        Map<String,Object> parameters=new HashMap<String,Object>(0);
+        parameters.put("pv_cdramo_i"   , cdramo);
+        parameters.put("pv_cdtipsit_i" , cdtipsit);
+        log.debug("### kernel sustituto obtenerTatrisin map: "+parameters);
+        List<ComponenteVO> lista= this.getAllBackBoneInvoke(parameters, ProcesoDAO.OBTENER_TATRISIN);
+        lista=lista!=null?lista:new ArrayList<ComponenteVO>(0);
+        log.debug("### kernel sustituto obtenerTatrisin lista size: "+lista.size());
+        return lista;
+    }
+    
     public List<ComponenteVO> obtenerTatripol(String args[]) throws ApplicationException
     {
         Map<String,Object> parameters=new HashMap<String,Object>(0);

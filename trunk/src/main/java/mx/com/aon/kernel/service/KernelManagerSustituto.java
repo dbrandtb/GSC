@@ -72,6 +72,7 @@ public interface KernelManagerSustituto {
     public List<CoberturaCotizacionVO> obtenerCoberturas(Map<String,String> parameters) throws ApplicationException;
     public AyudaCoberturaCotizacionVO obtenerAyudaCobertura(String idCobertura,String idRamo,String idCiaAsegurador) throws ApplicationException;
     public List<ComponenteVO> obtenerTatrisit(String cdtipsit,String cdusuari) throws ApplicationException;
+    public List<ComponenteVO> obtenerTatrisin(String cdramo,String cdtipsit) throws ApplicationException;
     public List<ComponenteVO> obtenerTatripol(String[] args) throws ApplicationException;
     public DatosUsuario obtenerDatosUsuario(String cdusuario,String cdtipsit) throws ApplicationException;
     public WrapperResultados movDetalleSuplemento(Map<String,Object> parameters) throws ApplicationException;

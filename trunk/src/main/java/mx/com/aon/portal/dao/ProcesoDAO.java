@@ -81,6 +81,7 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String OBTENER_COBERTURAS="OBTENER_COBERTURAS";
     public static final String OBTENER_AYUDA_COBERTURA="OBTENER_AYUDA_COBERTURA";
     public static final String OBTENER_TATRISIT="OBTENER_TATRISIT";
+    public static final String OBTENER_TATRISIN="OBTENER_TATRISIN";
     public static final String OBTENER_TATRIPOL="OBTENER_TATRIPOL";
     public static final String OBTENER_DATOS_USUARIO="OBTENER_DATOS_USUARIO";
     public static final String INSERTAR_DETALLE_SUPLEMEN="INSERTAR_DETALLE_SUPLEME";
@@ -175,6 +176,7 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(OBTENER_COBERTURAS, new ObtieneCoberturas(getDataSource()));
         addStoredProcedure(OBTENER_AYUDA_COBERTURA, new ObtieneAyudaCoberturas(getDataSource()));
         addStoredProcedure(OBTENER_TATRISIT, new ObtieneTatrisit(getDataSource()));
+        addStoredProcedure(OBTENER_TATRISIN, new ObtieneTatrisin(getDataSource()));
         addStoredProcedure(OBTENER_TATRIPOL, new ObtieneTatripol(getDataSource()));
         addStoredProcedure(OBTENER_DATOS_USUARIO, new ObtieneDatosUsuario(getDataSource()));
         addStoredProcedure(INSERTAR_DETALLE_SUPLEMEN, new InsertarDetalleSuplemen(getDataSource()));
@@ -4604,6 +4606,102 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
             WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
             return mapper.build(map);
         }   	
+    }
+    
+    protected class ObtieneTatrisin extends CustomStoredProcedure
+    {
+    	protected ObtieneTatrisin(DataSource dataSource)
+        {
+            super(dataSource,"PKG_LISTAS.P_GET_ATRI_SINIESTRO");
+            declareParameter(new SqlParameter("pv_cdramo_i",      OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdtipsit_i",      OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_registro_o",   OracleTypes.CURSOR, new ObtieneTatrisinMapper()));
+            declareParameter(new SqlOutParameter("pv_messages_o",   OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o",     OracleTypes.NUMERIC));
+            declareParameter(new SqlOutParameter("pv_title_o",      OracleTypes.VARCHAR));
+    	}
+    	
+    	public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+            WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+            WrapperResultados wrapperResultados = mapper.build(map);
+            List result = (List) map.get("pv_registro_o");
+            wrapperResultados.setItemList(result);
+            return wrapperResultados;
+    	}
+    }
+    
+    protected class ObtieneTatrisinMapper implements RowMapper {
+        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+        	ComponenteVO result=new ComponenteVO();
+        	result.setFlagEsAtribu(true);
+            result.setType(ComponenteVO.TIPO_TATRISIN);
+            result.setNameCdatribu(rs.getString("CDATRIBU"));
+            result.setTipoCampo(rs.getString("SWFORMAT"));
+            
+            String sMinlen = rs.getString("NMLMIN");
+            int minlen = -1;
+            boolean fMinlen = false;
+            if(StringUtils.isNotBlank(sMinlen))
+            {
+            	try
+            	{
+            		minlen=(Integer)Integer.parseInt(sMinlen);
+            		fMinlen = true;
+            	}
+            	catch(Exception ex)
+            	{
+            		minlen=-1;
+            		fMinlen=false;
+            	}
+            }
+            result.setMinLength(minlen);
+            result.setFlagMinLength(fMinlen);
+            
+            String sMaxlen = rs.getString("NMLMAX");
+            int maxlen = -1;
+            boolean fMaxlen = false;
+            if(StringUtils.isNotBlank(sMaxlen))
+            {
+            	try
+            	{
+            		maxlen=(Integer)Integer.parseInt(sMaxlen);
+            		fMaxlen = true;
+            	}
+            	catch(Exception ex)
+            	{
+            		maxlen=-1;
+            		fMaxlen=false;
+            	}
+            }
+            result.setMaxLength(maxlen);
+            result.setFlagMaxLength(fMaxlen);
+            
+            String sObliga = rs.getString("SWOBLIGA");
+            boolean isObliga = false;
+            if(StringUtils.isNotBlank(sObliga)&&sObliga.equalsIgnoreCase(Constantes.SI))
+            {
+            	isObliga = true;
+            }
+            result.setObligatorio(isObliga);
+            
+            result.setLabel(rs.getString("DSATRIBU"));
+            result.setCatalogo(rs.getString("OTTABVAL"));
+            
+            String sDepend = rs.getString("CDTABLJ1");
+            boolean isDepend = false;
+            if(StringUtils.isNotBlank(sDepend))
+            {
+            	isDepend = true;
+            }
+            result.setDependiente(isDepend);
+            
+            result.setSwsuscri(rs.getString("SWSUSCRI"));
+            result.setSwtarifi(rs.getString("SWTARIFI"));
+            result.setSwpresen(rs.getString("SWPRESEN"));
+            result.setDefaultValue(rs.getString("VALOR"));
+            
+            return result;
+        }
     }
     
 }

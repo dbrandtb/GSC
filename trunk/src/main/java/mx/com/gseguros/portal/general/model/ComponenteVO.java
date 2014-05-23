@@ -10,6 +10,7 @@ public class ComponenteVO
 	public final static int TIPO_TATRIPOL = 2;
 	public final static int TIPO_TATRIGAR = 3;
 	public final static int TIPO_TATRIPER = 4;
+	public final static int TIPO_TATRISIN = 5;
 	
 	public final static String TIPOCAMPO_ALFANUMERICO = "A";
 	public final static String TIPOCAMPO_NUMERICO     = "N";
