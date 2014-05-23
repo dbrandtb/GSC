@@ -1,4 +1,5 @@
 Ext.onReady(function() {
+	Ext.Ajax.timeout = 950000;
 
  	var image = Ext.create('Ext.Img', {
     	src: '../../images/confpantallas/icon/paneles.png',rowspan: 2
