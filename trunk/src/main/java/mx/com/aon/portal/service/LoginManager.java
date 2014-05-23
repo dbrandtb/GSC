@@ -10,6 +10,8 @@
  */
 package mx.com.aon.portal.service;
 
+import java.util.Hashtable;
+
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.ApplicationException;
 
@@ -35,7 +37,15 @@ public interface LoginManager {
 	 * @return
 	 * @throws ApplicationException
 	 */
-	UserVO validaUsuario(String user, String password) throws ApplicationException;
+	UserVO validaUsuario(String user, String password) throws Exception;
+	
+	public boolean validaUsuarioLdap(boolean unicamenteExiste, String user, String password) throws Exception;
+	
+	public boolean validarAuth(String dn, String password);
+	
+	public Hashtable obtenerDatosConexionLDAP(String user, String pass);
+	
+	public boolean insertaRegistroLdap(String user, String password) throws Exception;
 
 
     /**
@@ -44,6 +54,6 @@ public interface LoginManager {
      * @return
      * @throws ApplicationException
      */
-    UserVO obtenerDatosUsuario(String user) throws ApplicationException;
+    UserVO obtenerDatosUsuario(String user) throws Exception;
 
 }

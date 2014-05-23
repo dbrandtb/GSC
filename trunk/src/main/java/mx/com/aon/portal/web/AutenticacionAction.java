@@ -46,14 +46,6 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 	private boolean success;
 	private String errorMessage;
 
-	public String getErrorMessage() {
-		return errorMessage;
-	}
-
-	public void setErrorMessage(String errorMessage) {
-		this.errorMessage = errorMessage;
-	}
-
 	@SuppressWarnings("unchecked")
 	protected Map session;
 
@@ -62,21 +54,69 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 		return INPUT;
 	}
 
-	public String autenticaUsuario() throws Exception {
+	
+	public String existeUsuarioLDAP() throws Exception {
 		try {
-			//boolean existeUsuario = validaUsuarioLdap(user, password);
-			boolean existeUsuario = true;
-			if (!existeUsuario) {
-				//insertaRegistroLdap(user, password);
-				errorMessage = "El usuario no existe o la clave es incorrecta";
-			} else {
-				success = creaSesionDeUsuario(user);
-			}
+			success = true;
+			//success = loginManager.validaUsuarioLdap(true, user, password);
 			return SUCCESS;
 
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);
 			errorMessage = ex.getMessage();
+			return SUCCESS;
+		}
+	}
+	
+	public String autenticaUsuario() throws Exception {
+		try {
+			boolean existeUsuario = loginManager.validaUsuarioLdap(false, user, password);
+			if (existeUsuario) {
+				success = creaSesionDeUsuario(user);
+			} else {
+				errorMessage = "El usuario no existe o la clave es incorrecta";
+			}
+			return SUCCESS;
+
+		} catch (Exception ex) {
+			logger.error(ex.getMessage(), ex);
+			errorMessage = "Error en el proceso de validaci&oacute;n de usuario. Consulte a Soporte T&eacute;cnico.";
+			return SUCCESS;
+		}
+	}
+
+	
+	public String autenticaUsuarioTmp() throws Exception {
+		try {
+			
+			success = creaSesionDeUsuario(user);
+			boolean quitar = false;
+			if (quitar) {
+				boolean existeUsuarioLDAP = loginManager.validaUsuarioLdap(true, user, password);
+				
+				if(existeUsuarioLDAP){
+					logger.debug("Usuario "+user+" si existe en LDAP, validando Password...");
+					boolean validPass = loginManager.validaUsuarioLdap(false, user, password);
+					if(!validPass){
+						((SessionMap) session).invalidate();
+						logger.debug("Password Incorrecto!!!");
+						success = false;
+						errorMessage = "El usuario no existe o la clave es incorrecta";
+					}else {
+						logger.debug("Password Correcto, redireccionando a menu de Roles...");
+					}
+				}else {
+					logger.debug("No existe usuario, Insertando usuario "+user+" en LDAP");
+					loginManager.insertaRegistroLdap(user, password);
+				}
+				
+			} 
+			return SUCCESS;
+
+		} catch (Exception ex) {
+			logger.error(ex.getMessage(), ex);
+			errorMessage = "Error en el proceso de validaci&oacute;n de usuario. Consulte a Soporte T&eacute;cnico.";
+			success = false;
 			return SUCCESS;
 		}
 	}
@@ -146,6 +186,23 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 		return SUCCESS;
 	}
 
+
+	public void setLoginManager(LoginManager loginManager) {
+		this.loginManager = loginManager;
+	}
+
+	public void setNavigationManager(NavigationManager navigationManager) {
+		this.navigationManager = navigationManager;
+	}
+
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
+	}
+	
 	public String getUser() {
 		return user;
 	}
@@ -166,125 +223,13 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 	public void setSession(Map session) {
 		this.session = session;
 	}
-
-	// m�todo para insertar el registro en ldap
-	private boolean insertaRegistroLdap(String user, String password) throws Exception {
-		DirContext ctx;
-		Hashtable env = obtenerDatosConexionLDAP(this.getText("ldap.security.principal"), this.getText("ldap.security.credentials"));
-		logger.debug(env);
-		try {
-			ctx = new InitialLdapContext(env, null);
-			Attributes matchAttrs = new BasicAttributes(true);
-			matchAttrs.put(new BasicAttribute("uid", user));
-			matchAttrs.put(new BasicAttribute("cn", user));
-			matchAttrs.put(new BasicAttribute("sn", user));
-			matchAttrs.put(new BasicAttribute("userpassword", password.getBytes("UTF8")));
-			matchAttrs.put(new BasicAttribute("objectclass", "top"));
-			matchAttrs.put(new BasicAttribute("objectclass", "person"));
-			matchAttrs.put(new BasicAttribute("objectclass", "organizationalPerson"));
-			matchAttrs.put(new BasicAttribute("objectclass", "inetorgperson"));
-			String name = "cn=" + user +","+this.getText("ldap.base.search");
-			InitialLdapContext iniDirContext = (InitialLdapContext) ctx;
-			iniDirContext.bind(name, ctx, matchAttrs);
-			return true;
-		} catch (NamingException e) {
-			throw new Exception("Error en el proceso de validaci&oacute;n de usuario",e);
-		}
-    }
-
-	public boolean validaUsuarioLdap(String user, String password) throws Exception {
-		DirContext ctx;
-		logger.debug("URLLDAP=" +        this.getText("ldap.provider.url"));
-		logger.debug("ContextoLDAP=" +   this.getText("ldap.factory.initial"));
-		logger.debug("TipoAuthLDAP=" +   this.getText("ldap.security.authentication"));
-		logger.debug("UsuarioLDAP=" +    this.getText("ldap.security.principal"));
-		logger.debug("PasswordLDAP=" +   this.getText("ldap.security.credentials"));
-		logger.debug("SearchBaseLDAP=" + this.getText("ldap.base.search"));
-		
-		Hashtable env = obtenerDatosConexionLDAP(this.getText("ldap.security.principal"), this.getText("ldap.security.credentials"));
-		boolean existeUsuario = false;
-		try {
-			 ctx = new InitialLdapContext(env, null);
-		} catch (NamingException e) {
-			throw new Exception("Error de conexi&oacute;n",e);
-			//logger.error("Error en el proceso de validacion de usuario", e);
-		}
-			
-		try{
-				SearchControls searchCtls = new SearchControls();
-				String returnedAtts[] = { "uid", "sn", "givenName", "mail", "cn" };
-				searchCtls.setReturningAttributes(returnedAtts);
-				searchCtls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-				String searchFilter = "(cn="+user+")";
-				// String searchBase = "cn=Users,dc=biosnettcs,dc=com";
-				NamingEnumeration<SearchResult> results = ctx.search(
-						this.getText("ldap.base.search"), searchFilter, searchCtls);
-				while (results.hasMoreElements()) {
-					SearchResult searchResult = (SearchResult) results.next();
-					Attributes attrs = searchResult.getAttributes();
-					// OBTENEMOS LA UNIDAD ORGANIZATIVA DEL UID BUSCADO CON SU UID Y
-					// LO COMPLETAMOS CON LA BASE
-					String dn = searchResult.getName() + ","
-							+ this.getText("ldap.base.search");
 	
-					if (attrs != null) {
-						// EL UID EXISTE AHORA VALIDAR PASSWORD
-						existeUsuario = validarAuth(dn, password);
-						// SI VALIDO ES false PASSWORD INCORRECTO, SI ES true
-						// PASSWORD CORRECTO
-					}
-				}
-				ctx.close();
-			}
-			catch(Exception err)
-			{
-				logger.error("Error en el proceso de validacion de usuario", err);
-			}
-		return existeUsuario;
+	public String getErrorMessage() {
+		return errorMessage;
 	}
 
-	private boolean validarAuth(String dn, String password) {
-		boolean validadausuario = false;
-		Hashtable env1 = obtenerDatosConexionLDAP(dn, password);
-		try {
-			DirContext ctx1 = new InitialLdapContext(env1, null);
-			validadausuario = true;
-			ctx1.close();
-		} catch (NamingException e) {
-			logger.error("Error en la validacion LDAP", e);
-		}
-		return validadausuario;
-	}
-
-	private Hashtable obtenerDatosConexionLDAP(String user, String pass) {
-		Hashtable<String, String> env = new Hashtable<String, String>();
-		try {
-			env.put(Context.INITIAL_CONTEXT_FACTORY, this.getText("ldap.factory.initial"));
-			env.put(Context.SECURITY_AUTHENTICATION, this.getText("ldap.security.authentication"));
-			env.put(Context.SECURITY_PRINCIPAL, user);
-			env.put(Context.SECURITY_CREDENTIALS, pass);
-			env.put(Context.PROVIDER_URL, this.getText("ldap.provider.url"));
-
-		} catch (Exception e) {
-			logger.error("Error en la creacion de conexion LDAP", e);
-		}
-		return env;
-	}
-
-	public void setLoginManager(LoginManager loginManager) {
-		this.loginManager = loginManager;
-	}
-
-	public void setNavigationManager(NavigationManager navigationManager) {
-		this.navigationManager = navigationManager;
-	}
-
-	public boolean isSuccess() {
-		return success;
-	}
-
-	public void setSuccess(boolean success) {
-		this.success = success;
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
 	}
 
 }

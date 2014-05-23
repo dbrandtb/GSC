@@ -10,6 +10,8 @@
 	    <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 	    <script language="javascript">
 	        var _CONTEXT = "${ctx}";
+	        var _URL_VALIDA_USUARIO = '<s:url namespace="/seguridad" action="autenticaUsuario" />';
+	        var _URL_VALIDA_EXISTE_USUARIO = '<s:url namespace="/seguridad" action="existeUsuarioLDAP" />';
 	    </script>
 	    <link href="${ctx}/resources/extjs4/resources/my-custom-theme/my-custom-theme-all.css" rel="stylesheet" type="text/css" />
 	    <link href="${ctx}/resources/extjs4/extra-custom-theme.css" rel="stylesheet" type="text/css" />

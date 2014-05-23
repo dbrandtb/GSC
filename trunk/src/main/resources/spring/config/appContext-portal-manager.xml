@@ -19,6 +19,12 @@
     <!--UsuarioManager -->
 
     <bean id="loginManager" class="mx.com.aon.portal.service.impl.LoginManagerImpl">
+	    <property name="Ldap_provider_url" value="${ldap.provider.url}"></property>
+	    <property name="Ldap_factory_initial" value="${ldap.factory.initial}"></property>
+	    <property name="Ldap_security_authentication" value="${ldap.security.authentication}"></property>
+	    <property name="Ldap_security_principal" value="${ldap.security.principal}"></property>
+	    <property name="Ldap_security_credentials" value="${ldap.security.credentials}"></property>
+	    <property name="Ldap_base_search" value="${ldap.base.search}"></property>
     </bean>
 
 	<bean id="navigationManagerJdbcTemplate" class="mx.com.aon.portal.service.impl.NavigationManagerJdbcTemplateImpl" parent="abstractManagerJdbcTemplateInvoke">
