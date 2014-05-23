@@ -17,24 +17,38 @@
 
 		<action name="login">
 			<interceptor-ref name="loggingStack"></interceptor-ref>
-			<result name="login">/jsp/portal/login.jsp</result>
-			<result name="login_movil" type="redirectAction">
-                <param name="actionName">mlogin</param>
-                <param name="namespace">/touchApp/login</param>
+			<result name="loginform">/jsp/portal/login.jsp</result>
+			<result name="loginform_movil" type="redirectAction">
+                <param name="actionName">application</param>
+                <param name="namespace">/touchApp</param>
+            </result>
+			<result name="tree" type="redirectAction">
+                <param name="actionName">seleccionaRolCliente</param>
+                <param name="namespace">/</param>
+            </result>
+            <result name="tree_movil" type="redirectAction">
+                <param name="actionName">application</param>
+                <param name="namespace">/touchApp</param>
+                <param name="estadoSesion">arbol</param>
             </result>
 			<result name="load" type="redirectAction">
                 <param name="actionName">load</param>
                 <param name="namespace">/</param>
             </result>
-            <result name="tree" type="redirectAction">
-                <param name="actionName">seleccionaRolCliente</param>
-                <param name="namespace">/</param>
+            <result name="load_movil" type="redirectAction">
+                <param name="actionName">application</param>
+                <param name="namespace">/touchApp</param>
+                <param name="estadoSesion">menu</param>
             </result>
 		</action>
 		
 		<action name="logout" class="autenticacionAction"
             method="logoutUsuario">
             <result name="success">/jsp/portal/login.jsp</result>
+        </action>
+        
+        <action name="logoutJson" class="autenticacionAction" method="logoutUsuario">
+            <result type="json" />
         </action>
 
 		<!--<action name="datosPoliza"> <result>/jsp/ConsultaDatos/consultaDatosPoliza.jsp</result> 
@@ -102,9 +116,9 @@
         
 	</package>
 	
-	<package name="loginApp" namespace="/touchApp/login" extends="struts-default, json-default">
-        <action name="mlogin" class="ExternoAction" method="mlogin">
-            <result name="success">/touchApp/login/index.jsp</result>
+	<package name="loginApp" namespace="/touchApp" extends="struts-default, json-default">
+        <action name="application" class="ExternoAction" method="aplicacionMovil">
+            <result name="success">/touchApp/index.jsp</result>
         </action>
     </package>
 
