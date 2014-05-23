@@ -138,13 +138,6 @@ public class PaginaPrincipalAction extends PrincipalCoreAction {
 	
 	@SuppressWarnings("unchecked")
 	public String obtenPaginaPrincipal() throws Exception {
-		
-        ////////////// Codigo temporal para redirigir a la cotización si la petición viene de un móvil
-        logger.debug("ES_MOVIL===" + session.get("ES_MOVIL"));
-        if(session.containsKey("ES_MOVIL")&&((Boolean)session.get("ES_MOVIL"))) {
-        	return "success_mobile";
-        }
-        ////////////// Fin de codigo temporal
 
 		if (logger.isDebugEnabled()) {
 			logger.debug("Entrando al metodo getConfiguracionPagina");
