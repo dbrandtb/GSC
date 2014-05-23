@@ -1032,6 +1032,12 @@ Ext.setup({onReady:function()
 			        	,titulo  : 'Cotizar'
 			        	,iconCls : 'star'
 			        }
+			        ,{
+			            xtype    : 'formpanel'
+			            ,title   : 'Regresar'
+			            ,titulo  : 'Regresar'
+			            ,iconCls : 'arrow_left'
+			        }
 		    	]
 		    	,listeners      :
 	            {
@@ -1046,6 +1052,15 @@ Ext.setup({onReady:function()
 	                    {
 	                    	_mcotiza_cotiza();
 	                    }
+	                    else if(tabpanel.getActiveItem().config.titulo.toLowerCase()=='regresar')
+                        {
+	                    	_mcotiza_navView.setMasked(
+                   	        {
+                   	            xtype    : 'loadmask'
+                   	            ,message : 'Cargando...'
+                   	        });
+                            window.location.replace('${ctx}');
+                        }
 	                }
 	            }
 		    })
