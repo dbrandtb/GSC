@@ -6,7 +6,6 @@
     <package name="emision" namespace="/emision" extends="default" >
         
         <action name="cotizacion" class="CotizacionAction" method="pantallaCotizacion">
-            <interceptor-ref name="cotizacionDeviceStack" />
             <result name="success">/jsp-script/proceso/emision/cotizacion.jsp</result>
             <result name="success_mobile">/jsp-script/proceso/emision/cotizaciontouch.jsp</result>
         </action>
@@ -16,7 +15,6 @@
         </action>
         
         <action name="cotizar" class="CotizacionAction" method="cotizar">
-            <interceptor-ref name="cotizacionDeviceStack" />
             <interceptor-ref name="json">
                 <param name="enableSMD">true</param>
                 <param name="ignoreSMDMethodInterfaces">false</param>
