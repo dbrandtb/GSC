@@ -32,6 +32,7 @@ public class ExternoAction extends PrincipalCoreAction
 	private Map<String,String>       smap1;
 	private StoredProceduresManager  storedProceduresManager;
 	private boolean                  success;
+	private String                   estadoSesion;
 	
 	public String cotizar()
 	{
@@ -224,8 +225,17 @@ public class ExternoAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
-	public String mlogin()
+	public String aplicacionMovil()
 	{
+		logger.info(""
+				+ "\n#############################"
+				+ "\n###### aplicacionMovil ######"
+				);
+		logger.debug("estadoSesion: "+estadoSesion);
+		logger.info(""
+				+ "\n###### aplicacionMovil ######"
+				+ "\n#############################"
+				);
 		return SUCCESS;
 	}
 	
@@ -272,6 +282,14 @@ public class ExternoAction extends PrincipalCoreAction
 
 	public void setSlist2(List<Map<String, String>> slist2) {
 		this.slist2 = slist2;
+	}
+
+	public String getEstadoSesion() {
+		return estadoSesion;
+	}
+
+	public void setEstadoSesion(String estadoSesion) {
+		this.estadoSesion = estadoSesion;
 	}
 	
 }
