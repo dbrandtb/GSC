@@ -167,7 +167,7 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 		this.session = session;
 	}
 
-	// método para insertar el registro en ldap
+	// mï¿½todo para insertar el registro en ldap
 	private boolean insertaRegistroLdap(String user, String password) throws Exception {
 		DirContext ctx;
 		Hashtable env = obtenerDatosConexionLDAP(this.getText("ldap.security.principal"), this.getText("ldap.security.credentials"));
