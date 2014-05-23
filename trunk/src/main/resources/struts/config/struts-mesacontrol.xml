@@ -20,6 +20,9 @@
         <action name="actualizarStatusTramite" method="actualizarStatusTramite" class="MesaControlAction">
             <result name="success" type="json" />
         </action>
+        <action name="actualizaComentariosTramite" method="actualizaComentariosTramite" class="MesaControlAction">
+            <result name="success" type="json" />
+        </action>
         <action name="obtenerDetallesTramite" method="obtenerDetallesTramite" class="MesaControlAction">
             <result name="success" type="json" />
         </action>

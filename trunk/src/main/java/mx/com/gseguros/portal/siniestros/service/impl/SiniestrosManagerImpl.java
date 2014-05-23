@@ -474,7 +474,7 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 		try
 		{
 			String[] keys = new String[]{
-					"pv_cdramo_i","pv_cdtipsit_i", "pv_cdsucadm_i", "pv_cdsucdoc_i",
+					"pv_cdramo_i","pv_cdtipsit_i", "pv_cdsucadm_i", "pv_cdsucdoc_i","pv_comments_i",
 					"pv_otvalor01_i","pv_otvalor02_i","pv_otvalor03_i","pv_otvalor04_i","pv_otvalor05_i","pv_otvalor06_i","pv_otvalor07_i","pv_otvalor08_i","pv_otvalor09_i","pv_otvalor10_i",
 					"pv_otvalor11_i","pv_otvalor12_i","pv_otvalor13_i","pv_otvalor14_i","pv_otvalor15_i","pv_otvalor16_i","pv_otvalor17_i","pv_otvalor18_i","pv_otvalor19_i","pv_otvalor20_i",
 					"pv_otvalor21_i","pv_otvalor22_i","pv_otvalor23_i","pv_otvalor24_i","pv_otvalor25_i","pv_otvalor26_i","pv_otvalor27_i","pv_otvalor28_i","pv_otvalor29_i","pv_otvalor30_i",

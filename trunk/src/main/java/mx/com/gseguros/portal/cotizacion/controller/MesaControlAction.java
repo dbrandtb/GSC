@@ -51,6 +51,9 @@ public class MesaControlAction extends PrincipalCoreAction
 	private String                         mensaje;
 	private String                         errorMessage;
 	
+	private Map<String,Object>             params;
+	private String						   tmpNtramite;
+	
 	public String principal()
 	{
 		log.debug(""
@@ -398,6 +401,39 @@ public class MesaControlAction extends PrincipalCoreAction
 				+ "\n#####################################"
 				+ "\n#####################################"
 				);
+		return SUCCESS;
+	}
+
+	public String actualizaComentariosTramite()
+	{
+		log.debug(""
+				+ "\n#########################################"
+				+ "\n#########################################"
+				+ "\n###### actualizaComentariosTramite ######"
+				+ "\n######                             ######"
+				);
+		log.debug("params: "+params);
+		try
+		{
+			HashMap<String,Object> temp =  new HashMap<String, Object>();
+			temp.put("pv_ntramite_i", tmpNtramite);
+			temp.put("pv_comments_i", mensaje);
+			
+			siniestrosManager.actualizaOTValorMesaControl(temp);
+			
+		} catch(Exception ex) {
+			success=false;
+			log.error("error al actualizar status de tramite de mesa de control",ex);
+			mensaje=ex.getMessage();
+		}
+		log.debug(""
+				+ "\n######                             ######"
+				+ "\n###### actualizaComentariosTramite ######"
+				+ "\n#########################################"
+				+ "\n#########################################"
+				);
+		
+		success=true;
 		return SUCCESS;
 	}
 	/*////////////////////////////////////////////*/
@@ -910,6 +946,22 @@ public class MesaControlAction extends PrincipalCoreAction
 
 	public void setErrorMessage(String errorMessage) {
 		this.errorMessage = errorMessage;
+	}
+
+	public Map<String, Object> getParams() {
+		return params;
+	}
+
+	public void setParams(Map<String, Object> params) {
+		this.params = params;
+	}
+
+	public String getTmpNtramite() {
+		return tmpNtramite;
+	}
+
+	public void setTmpNtramite(String tmpNtramite) {
+		this.tmpNtramite = tmpNtramite;
 	}
 	
 }
