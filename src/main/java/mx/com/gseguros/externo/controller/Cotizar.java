@@ -148,30 +148,34 @@ public class Cotizar
         			"PKG_SATELITES.P_OBT_ATRIBUTOS",
         			paramsObtAtributos,
         			null);
-        	llaveRol=atributos.get("PARENTESCO");
-        	if(llaveRol.length()==1)
-        	{
-        		llaveRol="0"+llaveRol;
+        	if(atributos.get("PARENTESCO") != null) {
+        		llaveRol=atributos.get("PARENTESCO");
+            	if(llaveRol.length()==1) {
+            		llaveRol="0"+llaveRol;
+            	}
+            	llaveRol="parametros.pv_otvalor"+llaveRol;
         	}
-        	llaveRol="parametros.pv_otvalor"+llaveRol;
-        	llaveSexo=atributos.get("SEXO");
-        	if(llaveSexo.length()==1)
-        	{
-        		llaveSexo="0"+llaveSexo;
+        	if(atributos.get("SEXO") != null) {
+        		llaveSexo=atributos.get("SEXO");
+        		if(llaveSexo.length()==1) {
+            		llaveSexo="0"+llaveSexo;
+            	}
+            	llaveSexo="parametros.pv_otvalor"+llaveSexo;
         	}
-        	llaveSexo="parametros.pv_otvalor"+llaveSexo;
-        	llaveFenacimi=atributos.get("FENACIMI");
-        	if(llaveFenacimi.length()==1)
-        	{
-        		llaveFenacimi="0"+llaveFenacimi;
+        	if(atributos.get("FENACIMI") != null) {
+        		llaveFenacimi=atributos.get("FENACIMI");
+            	if(llaveFenacimi.length()==1) {
+            		llaveFenacimi="0"+llaveFenacimi;
+            	}
+            	llaveFenacimi="parametros.pv_otvalor"+llaveFenacimi;
         	}
-        	llaveFenacimi="parametros.pv_otvalor"+llaveFenacimi;
-        	llaveCodPostal=atributos.get("CODPOSTAL");
-        	if(llaveCodPostal.length()==1)
-        	{
-        		llaveCodPostal="0"+llaveCodPostal;
+        	if(atributos.get("CODPOSTAL") != null) {
+        		llaveCodPostal=atributos.get("CODPOSTAL");
+            	if(llaveCodPostal.length()==1) {
+            		llaveCodPostal="0"+llaveCodPostal;
+            	}
+            	llaveCodPostal="parametros.pv_otvalor"+llaveCodPostal;
         	}
-        	llaveCodPostal="parametros.pv_otvalor"+llaveCodPostal;
         }
         catch(Exception ex)
         {
@@ -550,5 +554,10 @@ public class Cotizar
         		+ "\n#####################"
         		);
         return result;
+    }
+    
+    public static void main(String args[])
+    {
+    	System.out.println("Hola mundo!");
     }
 }
