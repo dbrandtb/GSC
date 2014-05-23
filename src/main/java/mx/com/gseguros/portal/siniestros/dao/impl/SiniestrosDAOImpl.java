@@ -1164,6 +1164,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdsucadm_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_cdsucdoc_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("pv_comments_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_otvalor01_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_otvalor02_i", OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_otvalor03_i", OracleTypes.VARCHAR));
