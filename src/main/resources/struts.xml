@@ -75,30 +75,26 @@
         
         <global-results>
             <result name="denied">/jsp/extjs4/denegado.jsp</result>
-	        <result name="login">/jsp/portal/login.jsp</result>
-	        <result name="login_movil" type="redirectAction">
-                <param name="actionName">mlogin</param>
-                <param name="namespace">/touchApp/login</param>
+	        <result name="login" type="redirectAction">
+                <param name="actionName">login</param>
+                <param name="namespace">/seguridad</param>
+            </result>
+            <result name="tree" type="redirectAction">
+                <param name="actionName">seleccionaRolCliente</param>
+                <param name="namespace">/</param>
+            </result>
+            <result name="tree_movil" type="redirectAction">
+                <param name="actionName">application</param>
+                <param name="namespace">/touchApp</param>
+                <param name="estadoSesion">arbol</param>
             </result>
             <result name="datosPoliza">/jsp/portal/login.jsp</result>
         </global-results>
 
 
 		<action name="load" class="paginaPrincipalAction" method="obtenPaginaPrincipal">
-			
-			<!-- Interceptor temporal para redirigir a la cotización si la petición viene de un movil: -->
-            <interceptor-ref name="cotizacionDeviceStack" />
-            
-            <!-- Result temporal para redirigir a la cotización si la petición viene de un movil: -->
-            <result name="success_mobile" type="redirectAction">
-                <param name="namespace">emision</param>
-                <param name="actionName">cotizacion</param>
-                <param name="smap1.cdtipsit">SL</param>
-            </result>
-            
 			<result name="success">/jsp/portal/portal.jsp</result>
 		</action>
-		
         
         <action name="obtieneMenuPrincipal" class="menuAction" method="llenadoMenuPrincipal">
             <result name="input">/jsp/menu/menu.jsp</result>
@@ -119,10 +115,24 @@
 	    	<exception-mapping result="success" exception="java.sql.SQLException">/jsp/portal/treeRolElemento.jsp</exception-mapping>
 	    	<exception-mapping result="success" exception="java.lang.Exception">/jsp/portal/treeRolElemento.jsp</exception-mapping>
 			<result name="success">/jsp/portal/treeRolElemento.jsp</result>
+			<result name="tree_movil" type="redirectAction">
+                <param name="actionName">application</param>
+                <param name="namespace">/touchApp</param>
+                <param name="estadoSesion">arbol</param>
+            </result>
+			<result name="login" type="redirectAction">
+                <param name="actionName">login</param>
+                <param name="namespace">/seguridad</param>
+			</result>
 			<result name="load" type="redirectAction">
 	            <param name="actionName">load</param>
 	            <param name="namespace">/</param>
 	        </result>
+	        <result name="load_movil" type="redirectAction">
+                <param name="actionName">application</param>
+                <param name="namespace">/touchApp</param>
+                <param name="estadoSesion">menu</param>
+            </result>
 		</action>
 		
 		<action name="seleccionaRolClienteJson" class="loadClientesRolesAction" method="obtenRolesClientes">
