@@ -55,7 +55,7 @@ public class ExternoAction extends PrincipalCoreAction
 		{
 			try
 			{
-				File carpeta         = new File("/opt/ice/gseguros");
+				File carpeta         = new File("/u01/wlserver/wldomain/gseguros");
 				String clase         = "Cotizar";
 				String metodo        = "cotizar";
 				Class<?>[]parametros = new Class[]
