@@ -703,11 +703,17 @@ public class EndososAction extends PrincipalCoreAction
 			
 			this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, null);
 			
-			this.confirmarEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, cdtipsup, "", dFechaEndoso, "SL");
+			Object[] result = this.confirmarEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, cdtipsup, "", dFechaEndoso, "SL");
 			
 			mensaje = "Endoso generado";
 			
 			success=true;
+			
+			String tramiteGenerado = null;
+			if( result != null && result.length > 0 ) tramiteGenerado = (String) result[0];
+			
+			// Ejecutamos el Web Service de Cliente Salud:
+			ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, tramiteGenerado, Ice2sigsService.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
 		}
 		catch(Exception ex)
 		{
@@ -1317,11 +1323,17 @@ public class EndososAction extends PrincipalCoreAction
 			
 			this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, null);
 			
-			this.confirmarEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, cdtipsup, "", dFechaEndoso, cdtipsit);
-			
+			Object[] result = this.confirmarEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, cdtipsup, "", dFechaEndoso, cdtipsit);
 			mensaje = "Endoso generado";
-			
 			success=true;
+			
+			String tramiteGenerado = null;
+			if( result != null && result.length > 0 ) tramiteGenerado = (String) result[0];
+			
+			// Ejecutamos el Web Service de Cliente Salud:
+			ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, tramiteGenerado, Ice2sigsService.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
+			
+
 		}
 		catch(Exception ex)
 		{
@@ -2532,11 +2544,17 @@ public class EndososAction extends PrincipalCoreAction
 			
 			this.regeneraDocumentos(cdunieco, cdramo, estado, nmpoliza, nmsuplem, cdtipsup, null);
 			
-			this.confirmarEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, cdtipsup, "", dFechaEndoso, cdtipsit);
+			Object[] result = this.confirmarEndoso(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nsuplogi, cdtipsup, "", dFechaEndoso, cdtipsit);
 			
 			mensaje = "Endoso generado";
 			
 			success=true;
+			
+			String tramiteGenerado = null;
+			if( result != null && result.length > 0 ) tramiteGenerado = (String) result[0];
+			
+			// Ejecutamos el Web Service de Cliente Salud:
+			ice2sigsService.ejecutaWSclienteSalud(cdunieco, cdramo, estado, nmpoliza, nmsuplem, tramiteGenerado, Ice2sigsService.Operacion.ACTUALIZA, (UserVO) session.get("USUARIO"));
 		}
 		catch(Exception ex)
 		{
