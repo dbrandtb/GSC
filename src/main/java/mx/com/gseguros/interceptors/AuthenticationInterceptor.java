@@ -44,60 +44,141 @@ public class AuthenticationInterceptor implements Interceptor {
 		limpiarTokensViejos(session);
 		
 		UserVO user = (UserVO) session.get(Constantes.USER);
+		logger.debug("usuario en sesion: "+user);
 		
-		//Si el usuario no existe en sesion, detenemos el action y redirigimos al result global INPUT
-		if (user == null) {
-			if(session.get("ES_MOVIL")!=null&&(Boolean)session.get("ES_MOVIL"))
-			{
-				return "login_movil";
-			}
-		    return Action.LOGIN;
-		} else { //Si el usuario ya est� en sesion (logged) se continua el flujo de ejecucion a otros interceprotes y luego al action
-				
-			/* TODO: Implementar en los actions que necesiten al usuario
-		    Action action = ( Action ) actionInvocation.getAction();
-		    if (action instanceof UserAware) {
-		        ((UserAware)action).setUser(user);
-		    }
-		    */
-			if(Action.LOGIN.equalsIgnoreCase(actionInvocation.getInvocationContext().getName())){
-				
-				boolean rolAsignado = false;
-				
-				if(user.getRolActivo()!=null){
-					logger.info("Rol Activo: "+user.getRolActivo().getObjeto());
-					if(user.getRolActivo().getObjeto()!=null && StringUtils.isNotBlank(user.getRolActivo().getObjeto().getValue()))
-						rolAsignado = true;
-				}
-				
-				if(rolAsignado){
-					logger.info("-->Ya Contiene un Rol Asignado<--");
-					return "load";
-				}else{
-					return "tree";
-				}
-				
-			}
-			
-			
-			/**TODO: agregar logica para redireccion del usuario al login, arbol, menu o pagina solicitada **/
-//			if(rolAsignado){
-//				
-//				
-//			}else {
-//				
-//			}
-			
-		    
-		    /*
-		     * We just return the control string from the invoke method.  If we wanted, we could hold the string for
-		     * a few lines and do some post processing.  When we do return the string, execution climbs back out of the 
-		     * recursive hole, through the higher up interceptors, and finally arrives back at the actionInvocation itself,
-		     * who then fires the result based upon the result string returned.
-		     */
-		    return actionInvocation.invoke();
+		boolean esMovil     = false;
+		String  sufijoMovil = "";
+		if(session.get("ES_MOVIL")!=null&&(Boolean)session.get("ES_MOVIL"))
+		{
+			esMovil     = true;
+			sufijoMovil = "_movil";
 		}
-
+		
+		//se redirigio al login o entro desde el login
+		if(actionInvocation.getInvocationContext().getName().equals("ArbolRolCliente")
+				||actionInvocation.getInvocationContext().getName().equals("regresaCodigo")
+				||actionInvocation.getInvocationContext().getName().equals("seleccionaRolClienteJson")
+				)
+		{
+			logger.info("return invoke especial: "+actionInvocation.getInvocationContext().getName());
+			return actionInvocation.invoke();
+		}
+		else
+		{
+			if(Action.LOGIN.equalsIgnoreCase(actionInvocation.getInvocationContext().getName()))
+			{
+				logger.info("LOGIN");
+				if (user == null)
+				{
+					//no hay usuario en sesion, se va al formulario
+					logger.info("return login loginform;");
+				    return "loginform"+sufijoMovil;
+				}
+				else
+				{
+					boolean rolAsignado = false;
+					if(user.getRolActivo()!=null)
+					{
+						logger.info("Rol Activo: "+user.getRolActivo().getObjeto());
+						if(user.getRolActivo().getObjeto()!=null && StringUtils.isNotBlank(user.getRolActivo().getObjeto().getValue()))
+						{
+							rolAsignado = true;
+						}
+					}
+					if(!rolAsignado)
+					{
+						//entro al login pero ya tenia usuario en sesion sin rol
+						logger.info("return login tree;");
+						return "tree"+sufijoMovil;
+					}
+					else
+					{
+						//entro al login pero ya tenia usuario y rol
+						logger.info("-->Ya Contiene un Rol Asignado<--");
+						logger.info("return login load;");
+					    return "load"+sufijoMovil;
+					}
+				}
+			}
+			//se mando al arbol o quiere entrar desde el arbol
+			else if(actionInvocation.getInvocationContext().getName().equalsIgnoreCase("seleccionaRolCliente"))
+			{
+				logger.info("TREE");
+				if (user == null)
+				{
+					//no hay usuario en sesion, se redirige a login (no al loginform)
+					logger.info("return tree login");
+				    return Action.LOGIN;
+				}
+				else
+				{
+					boolean rolAsignado = false;
+					if(user.getRolActivo()!=null)
+					{
+						logger.info("Rol Activo: "+user.getRolActivo().getObjeto());
+						if(user.getRolActivo().getObjeto()!=null && StringUtils.isNotBlank(user.getRolActivo().getObjeto().getValue()))
+						{
+							rolAsignado = true;
+						}
+					}
+					if(!rolAsignado)
+					{
+						//quiere acceder pero no selecciono rol
+						logger.info("return tree invoke (jsp)");
+						if(!esMovil)
+						{
+							return actionInvocation.invoke();
+						}
+						else
+						{
+							return "tree_movil";
+						}
+					}
+					else
+					{
+						//entro al login pero ya tenia usuario y rol
+						logger.info("-->Ya Contiene un Rol Asignado<--");
+						logger.info("return tree load;");
+					    return "load"+sufijoMovil;
+					}
+				}
+			}
+			//quiere acceder a otra url
+			else
+			{
+				logger.info("INVOKE");
+				if (user == null)
+				{
+					//no hay usuario en sesion, se redirige a login (no al loginform)
+					logger.info("return invoke login");
+				    return Action.LOGIN;
+				}
+				else
+				{
+					boolean rolAsignado = false;
+					if(user.getRolActivo()!=null)
+					{
+						logger.info("Rol Activo: "+user.getRolActivo().getObjeto());
+						if(user.getRolActivo().getObjeto()!=null && StringUtils.isNotBlank(user.getRolActivo().getObjeto().getValue()))
+						{
+							rolAsignado = true;
+						}
+					}
+					if(!rolAsignado)
+					{
+						//quiere acceder pero no selecciono rol
+						logger.info("return invoke tree");
+						return "tree"+sufijoMovil;
+					}
+					else
+					{
+						//tiene usuario y rol correctos
+						logger.info("return invoke invoke");
+						return actionInvocation.invoke();
+					}
+				}
+			}
+		}
 	}
 	
 	public void destroy() {
