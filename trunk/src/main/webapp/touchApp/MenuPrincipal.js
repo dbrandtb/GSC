@@ -68,6 +68,7 @@ Ext.define('MenuPrincipal',
         }
         if(valida)
         {
+        	maskui();
             window.location.replace(_contexto+liga);
         }
         debug('<MenuPrincipal enItemTap');
