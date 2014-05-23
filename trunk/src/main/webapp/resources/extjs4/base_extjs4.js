@@ -157,6 +157,18 @@ function errorComunicacion()
 	centrarVentanaInterna(tmpMensajeEmergente);
 }
 
+function mensajeInfo(mensaje,callback){
+
+	var tmpMensajeEmergente=Ext.Msg.show({
+			title    : 'Aviso'
+			,icon    : Ext.Msg.INFO
+			,msg     : mensaje
+			,buttons : Ext.Msg.OK
+			,fn      : callback 
+	});
+	centrarVentanaInterna(tmpMensajeEmergente);
+}
+
 function mensajeWarning(mensaje,funcion)
 {
 	if(funcion)
