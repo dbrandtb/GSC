@@ -55,8 +55,13 @@
 			</action> <action name="consultaDatosSuplemento"> <result>/jsp/ConsultaDatos/consultaDatosPoliza.jsp</result> 
 			</action> -->
 
+		<action name="existeUsuarioLDAP" class="autenticacionAction"
+			method="existeUsuarioLDAP">
+			<result name="success" type="json" />
+		</action>
+		
 		<action name="autenticaUsuario" class="autenticacionAction"
-			method="autenticaUsuario">
+			method="autenticaUsuarioTmp">
 			<result name="success" type="json" />
 		</action>
 		
