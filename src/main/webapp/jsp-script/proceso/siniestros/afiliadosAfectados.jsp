@@ -292,7 +292,7 @@ function _11_validaAutorizacion(record)
 		    		//Preguntamos si esta seguro de generar el siniestro
 		    		msgWindow = Ext.Msg.show({
 				        title: 'Aviso',
-				        msg: '&iquest;Esta seguro que desea generar el Siniestro para dicho asegurado ?',
+				        msg: '&iquest;Desea generar el Siniestro para dicho asegurado ?',
 				        buttons: Ext.Msg.YESNO,
 				        icon: Ext.Msg.QUESTION,
 				        fn: function(buttonId, text, opt){
@@ -367,51 +367,62 @@ function _11_validaAutorizacion(record)
     	var idReclamacion = record.raw.IdReclamacion;
     	valido = idReclamacion && idReclamacion>0;
     	if(!valido){
-    		var json =
-    		{
-    			'params.ntramite' : _11_params.NTRAMITE,
-    			'params.cdunieco' : record.raw.CDUNIECO,
-   				'params.cdramo'   : record.raw.CDRAMO,
-  				'params.estado'   : record.raw.ESTADO,
- 				'params.nmpoliza' : record.raw.noPoliza,
- 				'params.nmsuplem' : record.raw.NMSUPLEM,
- 				'params.nmsituac' : record.raw.NMSITUAC,
- 				'params.cdtipsit' : record.raw.CDTIPSIT
-    		};
-    		
-    		Ext.Ajax.request(
-    		{
-    			url      : _11_urlIniciarSiniestroSinAutServ
-    			,params  : json
-    			,success : function(response)
-    			{
-    				
-    				json = Ext.decode(response.responseText);
-    				
-    				if(json.success==true)
-    				{
-    					mensajeCorrecto('Datos guardados',json.mensaje,function()
-    					{
-    						Ext.create('Ext.form.Panel').submit(
-    				        {
-    				            standardSubmit :true
-    				            ,params        :
-    				            {
-    				                'params.ntramite' : _11_params.NTRAMITE
-    				            }
-    				        });
-    					});
-    				}
-    				else
-    				{
-    					mensajeError(json.mensaje);
-    				}
-    			}
-    		    ,failure : function()
-    		    {
-    		    	errorComunicacion();
-    		    }
-    		});
+    		//Preguntamos si esta seguro de generar el siniestro
+    		msgWindow = Ext.Msg.show({
+		        title: 'Aviso',
+		        msg: '&iquest;Desea generar el Siniestro para dicho asegurado ?',
+		        buttons: Ext.Msg.YESNO,
+		        icon: Ext.Msg.QUESTION,
+		        fn: function(buttonId, text, opt){
+		        	if(buttonId == 'yes'){
+			    		var json =
+			    		{
+			    			'params.ntramite' : _11_params.NTRAMITE,
+			    			'params.cdunieco' : record.raw.CDUNIECO,
+			   				'params.cdramo'   : record.raw.CDRAMO,
+			  				'params.estado'   : record.raw.ESTADO,
+			 				'params.nmpoliza' : record.raw.noPoliza,
+			 				'params.nmsuplem' : record.raw.NMSUPLEM,
+			 				'params.nmsituac' : record.raw.NMSITUAC,
+			 				'params.cdtipsit' : record.raw.CDTIPSIT
+			    		};
+			    		
+			    		Ext.Ajax.request(
+			    		{
+			    			url      : _11_urlIniciarSiniestroSinAutServ
+			    			,params  : json
+			    			,success : function(response)
+			    			{
+			    				
+			    				json = Ext.decode(response.responseText);
+			    				if(json.success==true)
+			    				{
+			    					mensajeCorrecto('Datos guardados',json.mensaje,function()
+			    					{
+			    						Ext.create('Ext.form.Panel').submit(
+			    				        {
+			    				            standardSubmit :true
+			    				            ,params        :
+			    				            {
+			    				                'params.ntramite' : _11_params.NTRAMITE
+			    				            }
+			    				        });
+			    					});
+			    				}
+			    				else
+			    				{
+			    					mensajeError(json.mensaje);
+			    				}
+			    			}
+			    		    ,failure : function()
+			    		    {
+			    		    	errorComunicacion();
+			    		    }
+			    		});
+	        		}
+		        }
+		    });
+    		centrarVentana(msgWindow);
     	}
     	return valido;
 	}

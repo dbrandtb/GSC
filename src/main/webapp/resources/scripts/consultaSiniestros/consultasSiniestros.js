@@ -1037,7 +1037,13 @@ Ext.onReady(function() {
         		loadMask : true,
         		ajaxOptions: {
         			method: 'POST'
-		    	}
+		    	},
+	        	params : {
+	        		'params.cdunieco' : _CDUNIECO,
+	        		'params.cdramo'   : _CDRAMO,
+	        		'params.estado'   : _ESTADO,
+	        		'params.nmpoliza' : _NMPOLIZA
+	        	}
 		    },
 		    listeners : {
 		        activate : function(tab) {

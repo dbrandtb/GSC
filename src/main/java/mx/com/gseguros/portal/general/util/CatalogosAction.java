@@ -115,6 +115,9 @@ public class CatalogosAction extends PrincipalCoreAction {
 				case TATRISIT:
 		            lista = catalogosManager.obtieneAtributosSituacion(params.get("cdatribu"), params.get("cdtipsit"), params.get("idPadre"));
 					break;
+				case TATRISIN:
+		            lista = catalogosManager.obtieneAtributosSiniestro(params.get("cdatribu"), params.get("cdtipsit"), params.get("idPadre"));
+					break;
 				case TATRIPOL:
 			        lista = catalogosManager.obtieneAtributosPoliza(params.get("cdatribu"), params.get("cdramo"), params.get("idPadre"));
 					break;

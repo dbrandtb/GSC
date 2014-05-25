@@ -205,10 +205,8 @@ Ext.onReady(function()
             	var causaSiniestro = _p12_penalTotal[indice].causaSiniestro;
             	var importe   = _p12_lhosp[indice].PTIMPORT*1.0;
             	var descuento = _p12_lhosp[indice].DESTO*1.0;
-            	var iva       = _p12_lhosp[indice].IVA*1.0;
             	debug('importe'   , importe);
             	debug('descuento' , descuento);
-            	debug('iva'       , iva);
             	var subttDesc = importe - descuento;
             	var deducible = 0;
             	var sDeducible = _p12_slist2[indice].DEDUCIBLE;
@@ -256,7 +254,9 @@ Ext.onReady(function()
                 	}
             	}
             	
+            	var iva       = _p12_lhosp[indice].IVA*1.0;
             	var total = subttDedu - ( copagoaplica + iva );
+            	var baseIva = _p12_lhosp[indice].BASEIVA*1.0;
             	debug('subttDesc',subttDesc);
             	debug('deducible',deducible);
             	debug('subttDedu',subttDedu);
@@ -335,20 +335,19 @@ Ext.onReady(function()
                                 return Ext.util.Format.usMoney(value);
                             }
                         }
-            	        /*,{
+                        ,{
                             xtype       : 'displayfield'
                             ,labelWidth : 200
-                            ,fieldLabel : 'Penalizaci&oacute;n'
-                            ,value      : copagoaplica
+                            ,fieldLabel : 'Base IVA'
+                            ,value      : baseIva
                             ,valueToRaw : function(value)
                             {
                                 return Ext.util.Format.usMoney(value);
                             }
-                        }*/
-            	        ,{
+                        },{
                             xtype       : 'displayfield'
                             ,labelWidth : 200
-                            ,fieldLabel : 'IVA'
+                            ,fieldLabel : 'IVA' //IVA PAGO DIRECTO HOSPI
                             ,value      : iva
                             ,valueToRaw : function(value)
                             {

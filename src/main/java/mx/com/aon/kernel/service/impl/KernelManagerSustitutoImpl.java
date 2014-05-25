@@ -297,6 +297,19 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         log.debug("### kernel sustituto obtenerTatrisin lista size: "+lista.size());
         return lista;
     }
+    public List<ComponenteVO> obtenerTatrisinPoliza(String cdunieco,String cdramo,String estado,String nmpoliza) throws ApplicationException
+    {
+    	Map<String,Object> parameters=new HashMap<String,Object>(0);
+    	parameters.put("cdunieco" , cdunieco);
+        parameters.put("cdramo"   , cdramo);
+        parameters.put("estado"   , estado);
+        parameters.put("nmpoliza" , nmpoliza);
+        log.debug("### kernel sustituto obtenerTatrisinPoliza map: "+parameters);
+        List<ComponenteVO> lista= this.getAllBackBoneInvoke(parameters, ProcesoDAO.OBTENER_TATRISIN_POLIZA);
+        lista=lista!=null?lista:new ArrayList<ComponenteVO>(0);
+        log.debug("### kernel sustituto obtenerTatrisinPoliza lista size: "+lista.size());
+        return lista;
+    }
     
     public List<ComponenteVO> obtenerTatripol(String args[]) throws ApplicationException
     {
@@ -869,6 +882,31 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         WrapperResultados res=this.returnBackBoneInvoke(param, ProcesoDAO.P_MOV_MESACONTROL);
         log.debug("### kernel sustituto PMovMesacontrol id:"+res.getMsgId());
         log.debug("### kernel sustituto PMovMesacontrol mesage:"+res.getMsgText());
+        return res;
+	}
+	
+	public WrapperResultados PMovTvalosin(Map<String, Object> param) throws ApplicationException
+	{
+		if(param!=null)
+		{
+			for(int i=1;i<=50;i++)
+			{
+				String cdatribu=i+"";
+				if(cdatribu.length()<2)
+				{
+					cdatribu = "0" + cdatribu;
+				}
+				String key = "pv_otvalor"+cdatribu;
+				if((!param.containsKey(key))&&(!param.containsKey(key.toLowerCase())))
+				{
+					param.put(key,null);
+				}
+			}
+		}
+		log.debug("### kernel PMovTvalosin map: "+param);
+        WrapperResultados res=this.returnBackBoneInvoke(param, ProcesoDAO.P_MOV_TVALOSIN);
+        log.debug("### kernel sustituto PMovTvalosin id:"+res.getMsgId());
+        log.debug("### kernel sustituto PMovTvalosin mesage:"+res.getMsgText());
         return res;
 	}
 	
