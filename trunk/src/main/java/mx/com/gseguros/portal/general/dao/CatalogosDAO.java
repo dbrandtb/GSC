@@ -17,6 +17,8 @@ public interface CatalogosDAO {
 	
 	public List<GenericVO> obtieneAtributosSituacion(String cdAtribu, String cdTipSit ,String otValor) throws DaoException;
 	
+	public List<GenericVO> obtieneAtributosSiniestro(String cdAtribu, String cdTipSit ,String otValor) throws DaoException;
+	
 	public List<GenericVO> obtieneAtributosPoliza(String cdAtribu, String cdRamo, String otValor) throws DaoException;
 
 	public List<GenericVO> obtieneAtributosGarantia(String cdAtribu, String cdTipSit, String cdRamo, String valAnt, String cdGarant) throws DaoException;

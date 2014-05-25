@@ -137,6 +137,41 @@ public class CatalogosDAOImpl extends AbstractManagerDAO implements CatalogosDAO
         }
     }
     
+    @Override
+	public List<GenericVO> obtieneAtributosSiniestro(String cdAtribu, String cdTipSit, String otValor) throws DaoException {
+		try {
+    		HashMap<String,Object> params = new HashMap<String,Object>();
+            params.put("pv_cdatribu_i",cdAtribu);
+            params.put("pv_cdtipsit_i",cdTipSit);
+            params.put("pv_otvalor_i",otValor);
+    		
+    		Map<String, Object> resultado = ejecutaSP(new ObtieneAtributosSin(getDataSource()), params);
+    		return (List<GenericVO>) resultado.get("pv_registro_o");
+		} catch (Exception e) {
+			throw new DaoException(e.getMessage(), e);
+		}
+	}
+    
+    protected class ObtieneAtributosSin extends StoredProcedure {
+
+        protected ObtieneAtributosSin(DataSource dataSource) {
+            super(dataSource, "PKG_LISTAS.P_GET_ATRIBUTOS_SIN");
+            declareParameter(new SqlParameter("pv_cdtipsit_i", OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_cdatribu_i", OracleTypes.VARCHAR));
+            declareParameter(new SqlParameter("pv_otvalor_i", OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.CURSOR, new ObtieneAtributosSinMapper()));
+            declareParameter(new SqlOutParameter("pv_messages_o", OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.VARCHAR));
+            declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+            compile();
+        }
+    }
+
+    protected class ObtieneAtributosSinMapper implements RowMapper {
+        public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new GenericVO(rs.getString("CODIGO"),rs.getString("DESCRIPCION"));
+        }
+    }
 
 	@Override
 	public List<GenericVO> obtieneAtributosPoliza(String cdAtribu, String cdRamo, String otValor) throws DaoException {

@@ -2517,7 +2517,19 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     				factura.put("AUTRECLA"+nmsinies,autorizacionesFactura.get("AUTRECLA"));
     				factura.put("COMMENAR"+nmsinies,autorizacionesFactura.get("COMMENAR"));
     				
-    				Map<String,String>copagoDeducibleSiniestroIte =siniestrosManager.obtenerCopagoDeducible(
+    				//OBTENEMOS LA INFORMACIÓN ADICIONAL DE LA FACTURA
+    				List<Map<String, String>> listaFactura = siniestrosManager.P_GET_FACTURAS_SINIESTRO(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies);
+    				
+    				//LE  COLOCAMOS LA VALIDACION INICIAL POR SI AL CASO NO TRAE DATOS
+    				String aplicaIVA= "S";
+					String seleccionAplica= "D";
+					
+    				if(listaFactura.get(0).get("APLICA_IVA") != null){
+    					aplicaIVA= listaFactura.get(0).get("APLICA_IVA");
+    					seleccionAplica =listaFactura.get(0).get("ANTES_DESPUES");
+    				}
+    				
+	            	Map<String,String>copagoDeducibleSiniestroIte =siniestrosManager.obtenerCopagoDeducible(
     						cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura);
     				
     				//5.- Obtenemos el total de penalización
@@ -2669,6 +2681,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     							logger.debug("concepto desto + copago % "+DESTOPOR);
     							logger.debug("concepto destoimp + copago $ "+DESTOIMP);
     							
+    							//CALCULOS ANTES DE COPAGO
     							double hPTIMPORT = Double.parseDouble(hosp.get("PTIMPORT"));
     							double hDESTO    = Double.parseDouble(hosp.get("DESTO"));
     							double hIVA      = Double.parseDouble(hosp.get("IVA"));
@@ -2747,7 +2760,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     							row.put("DESTOAPLICA",descuentoAplicado+"");
     							double subtotalDescuento=subtotalArancel-descuentoAplicado;//++
     							logger.debug("subtotalDescuento "+subtotalDescuento);
-    							row.put("SUBTTDESCUENTO",subtotalDescuento+"");
+    							row.put("SUBTTDESCUENTO",subtotalDescuento+""); // SUBTOTAL A OCUPAR CUANDO SEA ANTES DE COPAGO
     							
     							boolean copagoPorc = false;
     							double  copago = 0d;
@@ -2796,12 +2809,27 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     							subtotalImpuestos = subtotalImpuestos - cedularaplicado;
     							row.put("SUBTTIMPUESTOS",subtotalImpuestos+"");
     							
-    							double ivaaplicado       = subtotalImpuestos*(ivaprov/100d);//++
-    							logger.debug("ivaaplicado "+ivaaplicado);
-    							row.put("IVAAPLICA",ivaaplicado+"");
-    							double ptimportauto      = subtotalImpuestos-ivaaplicado;//++
-    							logger.debug("ptimportauto "+ptimportauto);
-    							row.put("PTIMPORTAUTO",ptimportauto+"");
+    			            	double ivaaplicado =0d;
+    			            	double ptimportauto =0d;
+    			            	if(aplicaIVA.equalsIgnoreCase("S")){
+    			            		if(seleccionAplica.equalsIgnoreCase("A")){ // ANTES DEL COPAGO
+    			            			ivaaplicado       = subtotalDescuento*(ivaprov/100d);//++
+    			            			row.put("IVAAPLICA",ivaaplicado+"");
+    	    							ptimportauto      = subtotalDescuento-ivaaplicado;//++
+    	    							row.put("PTIMPORTAUTO",ptimportauto+"");
+    	    							
+    			            		}else{
+    			            			ivaaplicado       = subtotalImpuestos*(ivaprov/100d);//++
+    			            			row.put("IVAAPLICA",ivaaplicado+"");
+    	    							ptimportauto      = subtotalImpuestos-ivaaplicado;//++
+    	    							row.put("PTIMPORTAUTO",ptimportauto+"");
+    			            		}
+    			            	}else{
+    			            		ivaaplicado       = 0d;//++
+        							row.put("IVAAPLICA",ivaaplicado+"");
+        							ptimportauto      = subtotalImpuestos-ivaaplicado;//++
+        							row.put("PTIMPORTAUTO",ptimportauto+"");
+    			            	}
     							
     							double ptimport = Double.parseDouble(row.get("PTIMPORT"));
     							logger.debug("ptimport "+ptimport);
@@ -2870,7 +2898,32 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 						
 						
 						importeSiniestroIte = subttDesto - copagoAplicadoSiniestroIte;
-						ivaSiniestroIte = hIVA;
+						
+						double hIVADesCopago  = importeSiniestroIte*(ivaprov/100d);
+						logger.debug("Iva a ocupar despues de copago");
+						logger.debug(hIVADesCopago);
+						
+						hosp.put("PTIMPORT_DESCOPAGO" , importeSiniestroIte+"");
+						hosp.put("IVA_DESCOPAGO"    , hIVADesCopago+"");
+						
+		            	double importeBase=0d;
+		            	
+		            	importeBase= hPTIMPORT - DESTOIMP;
+		            	if(aplicaIVA.equalsIgnoreCase("S")){
+		            		//SI LOS VALORES SON ANTES DE COPAGO ENTONCES SE QUEDAN IGUALES LOS VALORES DE DESCUENTO, IVA Y PTIMPORT
+		            		if(seleccionAplica.equalsIgnoreCase("D")){ // ANTES DEL COPAGO
+		            			hosp.put("IVA"    , hIVADesCopago+"");
+		            			hosp.put("BASEIVA" , importeSiniestroIte+"");
+		            		}else{
+		            			
+		            			hosp.put("BASEIVA" , importeBase+"");
+		            		}
+		            	}else{
+		            		hosp.put("IVA"    ,0d+"");
+		            		hosp.put("BASEIVA" , importeBase+"");
+		            	}
+						
+						ivaSiniestroIte = Double.parseDouble(hosp.get("IVA"));//hIVA;
 						ivrSiniestroIte = 0d;
 						isrSiniestroIte = 0d;
 						cedSiniestroIte = 0d;
@@ -3528,7 +3581,19 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     				factura.put("AUTRECLA"+nmsinies,autorizacionesFactura.get("AUTRECLA"));
     				factura.put("COMMENAR"+nmsinies,autorizacionesFactura.get("COMMENAR"));
     				
-    				Map<String,String>copagoDeducibleSiniestroIte =siniestrosManager.obtenerCopagoDeducible(
+    				//OBTENEMOS LA INFORMACIÓN ADICIONAL DE LA FACTURA
+    				List<Map<String, String>> listaFactura = siniestrosManager.P_GET_FACTURAS_SINIESTRO(cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies);
+    				
+    				//LE  COLOCAMOS LA VALIDACION INICIAL POR SI AL CASO NO TRAE DATOS
+    				String aplicaIVA= "S";
+					String seleccionAplica= "D";
+					
+    				if(listaFactura.get(0).get("APLICA_IVA") != null){
+    					aplicaIVA= listaFactura.get(0).get("APLICA_IVA");
+    					seleccionAplica =listaFactura.get(0).get("ANTES_DESPUES");
+    				}
+    				
+	            	Map<String,String>copagoDeducibleSiniestroIte =siniestrosManager.obtenerCopagoDeducible(
     						cdunieco, cdramo, estado, nmpoliza, nmsuplem, nmsituac, aaapertu, status, nmsinies, nfactura);
     				
     				//5.- Obtenemos el total de penalización
@@ -3680,6 +3745,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     							logger.debug("concepto desto + copago % "+DESTOPOR);
     							logger.debug("concepto destoimp + copago $ "+DESTOIMP);
     							
+    							//CALCULOS ANTES DE COPAGO
     							double hPTIMPORT = Double.parseDouble(hosp.get("PTIMPORT"));
     							double hDESTO    = Double.parseDouble(hosp.get("DESTO"));
     							double hIVA      = Double.parseDouble(hosp.get("IVA"));
@@ -3758,7 +3824,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     							row.put("DESTOAPLICA",descuentoAplicado+"");
     							double subtotalDescuento=subtotalArancel-descuentoAplicado;//++
     							logger.debug("subtotalDescuento "+subtotalDescuento);
-    							row.put("SUBTTDESCUENTO",subtotalDescuento+"");
+    							row.put("SUBTTDESCUENTO",subtotalDescuento+""); // SUBTOTAL A OCUPAR CUANDO SEA ANTES DE COPAGO
     							
     							boolean copagoPorc = false;
     							double  copago = 0d;
@@ -3807,12 +3873,27 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     							subtotalImpuestos = subtotalImpuestos - cedularaplicado;
     							row.put("SUBTTIMPUESTOS",subtotalImpuestos+"");
     							
-    							double ivaaplicado       = subtotalImpuestos*(ivaprov/100d);//++
-    							logger.debug("ivaaplicado "+ivaaplicado);
-    							row.put("IVAAPLICA",ivaaplicado+"");
-    							double ptimportauto      = subtotalImpuestos-ivaaplicado;//++
-    							logger.debug("ptimportauto "+ptimportauto);
-    							row.put("PTIMPORTAUTO",ptimportauto+"");
+    			            	double ivaaplicado =0d;
+    			            	double ptimportauto =0d;
+    			            	if(aplicaIVA.equalsIgnoreCase("S")){
+    			            		if(seleccionAplica.equalsIgnoreCase("A")){ // ANTES DEL COPAGO
+    			            			ivaaplicado       = subtotalDescuento*(ivaprov/100d);//++
+    			            			row.put("IVAAPLICA",ivaaplicado+"");
+    	    							ptimportauto      = subtotalDescuento-ivaaplicado;//++
+    	    							row.put("PTIMPORTAUTO",ptimportauto+"");
+    	    							
+    			            		}else{
+    			            			ivaaplicado       = subtotalImpuestos*(ivaprov/100d);//++
+    			            			row.put("IVAAPLICA",ivaaplicado+"");
+    	    							ptimportauto      = subtotalImpuestos-ivaaplicado;//++
+    	    							row.put("PTIMPORTAUTO",ptimportauto+"");
+    			            		}
+    			            	}else{
+    			            		ivaaplicado       = 0d;//++
+        							row.put("IVAAPLICA",ivaaplicado+"");
+        							ptimportauto      = subtotalImpuestos-ivaaplicado;//++
+        							row.put("PTIMPORTAUTO",ptimportauto+"");
+    			            	}
     							
     							double ptimport = Double.parseDouble(row.get("PTIMPORT"));
     							logger.debug("ptimport "+ptimport);
@@ -3881,7 +3962,32 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 						
 						
 						importeSiniestroIte = subttDesto - copagoAplicadoSiniestroIte;
-						ivaSiniestroIte = hIVA;
+						
+						double hIVADesCopago  = importeSiniestroIte*(ivaprov/100d);
+						logger.debug("Iva a ocupar despues de copago");
+						logger.debug(hIVADesCopago);
+						
+						hosp.put("PTIMPORT_DESCOPAGO" , importeSiniestroIte+"");
+						hosp.put("IVA_DESCOPAGO"    , hIVADesCopago+"");
+						
+		            	double importeBase=0d;
+		            	
+		            	importeBase= hPTIMPORT - DESTOIMP;
+		            	if(aplicaIVA.equalsIgnoreCase("S")){
+		            		//SI LOS VALORES SON ANTES DE COPAGO ENTONCES SE QUEDAN IGUALES LOS VALORES DE DESCUENTO, IVA Y PTIMPORT
+		            		if(seleccionAplica.equalsIgnoreCase("D")){ // ANTES DEL COPAGO
+		            			hosp.put("IVA"    , hIVADesCopago+"");
+		            			hosp.put("BASEIVA" , importeSiniestroIte+"");
+		            		}else{
+		            			
+		            			hosp.put("BASEIVA" , importeBase+"");
+		            		}
+		            	}else{
+		            		hosp.put("IVA"    ,0d+"");
+		            		hosp.put("BASEIVA" , importeBase+"");
+		            	}
+						
+						ivaSiniestroIte = Double.parseDouble(hosp.get("IVA"));//hIVA;
 						ivrSiniestroIte = 0d;
 						isrSiniestroIte = 0d;
 						cedSiniestroIte = 0d;
@@ -4161,7 +4267,6 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     							logger.debug("<<REEMBOLSO");
     						//pago reembolso
     					}
-    					    					
     				}
     				
     				logger.debug(">>Calculando total factura iterada para WS");

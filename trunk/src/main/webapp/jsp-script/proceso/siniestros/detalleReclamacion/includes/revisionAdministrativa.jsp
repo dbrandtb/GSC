@@ -77,7 +77,9 @@ Ext.onReady(function() {
                  {type:'string',    name:'DESTIPOMONEDA'},
                  {type:'string',    name:'TASACAMB'},
                  {type:'string',    name:'PTIMPORTA'},
-                 {type:'string',    name:'DCTONUEX'}
+                 {type:'string',    name:'DCTONUEX'},
+                 {type:'string',    name:'APLICA_IVA'},
+                 {type:'string',    name:'ANTES_DESPUES'}
 				]
     });
 	
@@ -321,6 +323,20 @@ Ext.onReady(function() {
         width: 400,
         url: _URL_GuardaFactura
         ,bodyStyle:'padding:5px;'
+       	,listeners : { 
+	    		afterrender : function(){
+	    			var aplicaIva= panelEdicionFacturas.items.items[13];
+	    			var Antes_despues= panelEdicionFacturas.items.items[14];
+	    			aplicaIva.on('change',function(){
+                    	if(this.value == "S")
+                   		{
+                    		Antes_despues.show();
+                   		}else{
+                   			Antes_despues.hide();
+                   		}
+                    })
+	       	}
+       	}
         ,items :
         [   
              {
@@ -517,8 +533,8 @@ Ext.onReady(function() {
 	    	        }
 	    	}
 	    	
+	    	<s:property value='%{"," + imap.tatrisinItems}' />
 	    	<s:property value='%{"," + imap.itemsEdicion}' />
-	    	
         ]
     });
 	for(var i=13;i<panelEdicionFacturas.items.items.length;i++)
@@ -999,6 +1015,16 @@ Ext.define('EditorFacturas', {
  					width : 150,
  					hidden: true
  				},{
+ 					header : 'Aplica IVa',
+ 					dataIndex : 'APLICA_IVA',
+ 					width : 150,
+ 					hidden: true
+ 				},{
+ 					header : 'Antes_DEspues',
+ 					dataIndex : 'ANTES_DESPUES',
+ 					width : 150,
+ 					hidden: true
+ 				},{
  					xtype : 'actioncolumn',
  					width : 50,
  					sortable : false,
@@ -1061,6 +1087,8 @@ Ext.define('EditorFacturas', {
  		panelEdicionFacturas.down('[name="params.nfactura"]').setReadOnly(false);
  		panelEdicionFacturas.down('[name="params.cdgarant"]').setReadOnly(false);
  		panelEdicionFacturas.down('[name="params.tipoMoneda"]').setValue('001');
+ 		panelEdicionFacturas.down('[name="parametros.pv_otvalor01"]').setValue("S");
+		panelEdicionFacturas.down('[name="parametros.pv_otvalor02"]').setValue("D");
  		//xca<<<<
  		//panelEdicionFacturas.down('[name="params.tipoMoneda"]').setValue('001');
  		panelEdicionFacturas.down('[name="params.tasacamb"]').setValue('0');
@@ -1152,6 +1180,21 @@ Ext.define('EditorFacturas', {
  		panelEdicionFacturas.down('[name="params.tasacamb"]').setValue(record.get('TASACAMB') == null || record.get('TASACAMB') == ''? "0":record.get('TASACAMB'));
  		panelEdicionFacturas.down('[name="params.ptimporta"]').setValue(record.get('PTIMPORTA') == null || record.get('PTIMPORTA') == ''? "0":record.get('PTIMPORTA'));
  		panelEdicionFacturas.down('[name="params.dctonuex"]').setValue(record.get('DCTONUEX') == null || record.get('DCTONUEX') == ''? "0":record.get('DCTONUEX'));
+ 		
+ 		if(record.get('APLICA_IVA') == null || record.get('APLICA_IVA') ==""){
+ 			panelEdicionFacturas.down('[name="parametros.pv_otvalor01"]').setValue("S");
+ 			panelEdicionFacturas.down('[name="parametros.pv_otvalor02"]').setValue("D");
+ 		}else{
+ 			panelEdicionFacturas.down('[name="parametros.pv_otvalor01"]').setValue(record.get('APLICA_IVA'));
+ 	 		panelEdicionFacturas.down('[name="parametros.pv_otvalor02"]').setValue(record.get('ANTES_DESPUES'));
+ 	 		
+ 	 		panelEdicionFacturas.query('combo[name=parametros.pv_otvalor02]')[0].show();
+ 	 		if(record.get('APLICA_IVA') =="S"){
+ 	 			panelEdicionFacturas.query('combo[name=parametros.pv_otvalor02]')[0].show();
+ 	 		}else{
+ 	 			panelEdicionFacturas.query('combo[name=parametros.pv_otvalor02]')[0].hide();
+ 	 		}
+ 		}
  		
  		panelPrincipal.setLoading(true);
  		storeSubcoberturas.load({

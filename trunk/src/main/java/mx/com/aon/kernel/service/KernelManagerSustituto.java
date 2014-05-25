@@ -73,6 +73,7 @@ public interface KernelManagerSustituto {
     public AyudaCoberturaCotizacionVO obtenerAyudaCobertura(String idCobertura,String idRamo,String idCiaAsegurador) throws ApplicationException;
     public List<ComponenteVO> obtenerTatrisit(String cdtipsit,String cdusuari) throws ApplicationException;
     public List<ComponenteVO> obtenerTatrisin(String cdramo,String cdtipsit) throws ApplicationException;
+    public List<ComponenteVO> obtenerTatrisinPoliza(String cdunieco,String cdramo,String estado,String nmpoliza) throws ApplicationException;
     public List<ComponenteVO> obtenerTatripol(String[] args) throws ApplicationException;
     public DatosUsuario obtenerDatosUsuario(String cdusuario,String cdtipsit) throws ApplicationException;
     public WrapperResultados movDetalleSuplemento(Map<String,Object> parameters) throws ApplicationException;
@@ -152,6 +153,7 @@ public interface KernelManagerSustituto {
 			,String accion) throws ApplicationException;
 	public List<Map<String, String>> obtenerPolicot(Map<String, String> smap1) throws ApplicationException;
 	public WrapperResultados PMovMesacontrol(Map<String, Object> parMesCon) throws ApplicationException;
+	public WrapperResultados PMovTvalosin(Map<String, Object> parTvalosin) throws ApplicationException;
 	public List<Map<String, String>> loadMesaControl(Map<String,String> params) throws ApplicationException;
 	public List<Map<String, String>> loadMesaControlUsuario(Map<String,String> params) throws ApplicationException;
 	public List<Map<String, String>> loadMesaControlSuper(Map<String,String>params) throws ApplicationException;

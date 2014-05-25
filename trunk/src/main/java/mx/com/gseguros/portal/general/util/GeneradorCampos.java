@@ -544,6 +544,15 @@ public class GeneradorCampos
                         .add("catalogo"          , Catalogos.TATRISIT.getCdTabla())
                         );
             }
+            else if(comp.getType()==ComponenteVO.TIPO_TATRISIN)
+            {
+            	proxy.add(
+                        Item.crear("extraParams" , null, Item.OBJ)
+                        .add("'params.cdatribu'" , cdatribu)
+                        .add("'params.cdtipsit'" , "SL")
+                        .add("catalogo"          , Catalogos.TATRISIN.getCdTabla())
+                        );
+            }
             else if(comp.getType()==ComponenteVO.TIPO_TATRIPOL)
             {
             	proxy.add(

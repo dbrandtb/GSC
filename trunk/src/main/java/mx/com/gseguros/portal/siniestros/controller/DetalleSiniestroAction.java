@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
+import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.controller.MesaControlAction;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
@@ -51,7 +52,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	private List<Map<String, String>> loadList;
     private List<Map<String, String>> saveList;
     private List<Map<String, String>> deleteList;
-	
+    private Map<String, String> parametros;
 	private HashMap<String, String> params;
 	private HashMap<String,Object> paramsO;
 	
@@ -121,6 +122,10 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	    	String cdrol    = usuario.getRolActivo().getObjeto().getValue();
 	    	String pantalla = "AFILIADOS_AGRUPADOS";
 	    	String seccion  = "COLUMNAS";
+	    	String cdunieco  = params.get("cdunieco");
+	    	String cdramo    = params.get("cdramo");
+	    	String estado    = params.get("estado");
+	    	String nmpoliza  = params.get("nmpoliza");
 	    	
 	    	List<ComponenteVO> componentes = pantallasManager.obtenerComponentes(
 	    			null, null, null, null, null, cdrol, pantalla, seccion, null);
@@ -132,9 +137,15 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	    	
 	    	GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 	    	
+	    	imap = new HashMap<String,Item>();
+	    	
+	    	List<ComponenteVO>tatrisin=kernelManager.obtenerTatrisinPoliza(cdunieco,cdramo,estado,nmpoliza);
+	    	gc.generaComponentes(tatrisin, true, false, true, false, false, false);
+	    	imap.put("tatrisinItems",gc.getItems());
+	    	
+	    	gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
 	    	gc.generaComponentes(componentes, true, false, false, true,false, false);
 	    	
-	    	imap = new HashMap<String,Item>();
 	    	imap.put("gridColumns",gc.getColumns());
 	    	
 	    	pantalla = "DETALLE_FACTURA";
@@ -183,7 +194,24 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	   	return SUCCESS;
 	}
 	
-	public String guardaFacturaTramite(){
+	public String guardaFacturaTramite() throws ApplicationException{
+		
+		Map<String,Object>paramsTvalosin = new HashMap<String,Object>();
+		paramsTvalosin.put("pv_cdunieco"  , params.get("cdunieco"));
+		paramsTvalosin.put("pv_cdramo"    , params.get("cdramo"));
+		paramsTvalosin.put("pv_aaapertu"    , params.get("aaapertu"));
+		paramsTvalosin.put("pv_status"    , params.get("status"));
+		paramsTvalosin.put("pv_nmsinies"    , params.get("nmsinies"));
+		paramsTvalosin.put("pv_cdtipsit"    , "SL");
+		paramsTvalosin.put("pv_nmsuplem"    , params.get("nmsuplem"));
+		paramsTvalosin.put("pv_cdusuari"    , null);
+		paramsTvalosin.put("pv_feregist"    , null);
+		paramsTvalosin.put("pv_otvalor01"    , parametros.get("pv_otvalor01"));
+		paramsTvalosin.put("pv_otvalor02"    , parametros.get("pv_otvalor02"));
+		paramsTvalosin.put("pv_accion_i","I");
+        kernelManager.PMovTvalosin(paramsTvalosin);
+		
+		//realizamos el llamado al guardado
 		
 		String cdunieco  = params.get("cdunieco");
 		String cdramo    = params.get("cdramo");
@@ -260,6 +288,22 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	   					null,null,null,null,null,
 	    				Constantes.MAUTSINI_AREA_MEDICA, autmedic, Constantes.MAUTSINI_FACTURA, commenme, Constantes.UPDATE_MODE);
 			
+				
+				Map<String,Object>paramsTvalosin = new HashMap<String,Object>();
+				paramsTvalosin.put("pv_cdunieco"  , params.get("cdunieco"));
+				paramsTvalosin.put("pv_cdramo"    , params.get("cdramo"));
+				paramsTvalosin.put("pv_aaapertu"    , params.get("aaapertu"));
+				paramsTvalosin.put("pv_status"    , params.get("status"));
+				paramsTvalosin.put("pv_nmsinies"    , params.get("nmsinies"));
+				paramsTvalosin.put("pv_cdtipsit"    , "SL");
+				paramsTvalosin.put("pv_nmsuplem"    , params.get("nmsuplem"));
+				paramsTvalosin.put("pv_cdusuari"    , null);
+				paramsTvalosin.put("pv_feregist"    , null);
+				paramsTvalosin.put("pv_otvalor01"    , parametros.get("pv_otvalor01"));
+				paramsTvalosin.put("pv_otvalor02"    , parametros.get("pv_otvalor02"));
+				paramsTvalosin.put("pv_accion_i","I");
+		        kernelManager.PMovTvalosin(paramsTvalosin);
+		        
 			
 			boolean cancela     = StringUtils.isNotBlank(params.get("cancelar"));
     		String  cdmotivo    = params.get("cdmotivo");
@@ -507,6 +551,15 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 
 	public HashMap<String, String> getParams() {
 		return params;
+	}
+
+	
+	public Map<String, String> getParametros() {
+		return parametros;
+	}
+
+	public void setParametros(Map<String, String> parametros) {
+		this.parametros = parametros;
 	}
 
 	public String getParamsJson() {
