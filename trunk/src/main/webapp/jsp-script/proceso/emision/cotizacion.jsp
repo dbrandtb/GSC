@@ -917,8 +917,10 @@ function _0_validarBase()
 				var nAsegurados=_0_storeIncisos.getCount();
 				var hayAlgunNombre=false;
 				var nNombresValidos=0;
+				var datosFaltan = '';
 				_0_storeIncisos.each(function(record)
 			    {
+					debug('evaluando nombres:',record.data);
 					var recordConNombre;
 					if(record.get('nombre').length>0
 							||record.get('nombre2').length>0
@@ -927,11 +929,65 @@ function _0_validarBase()
 							)
 					{
 						hayAlgunNombre=true;
-						if(record.get('nombre').length>0
-								&&record.get('apat').length>0
-	                            &&record.get('amat').length>0)
+					}
+					if(record.get('nombre').length>0
+							&&record.get('apat').length>0
+                            &&record.get('amat').length>0)
+					{
+						debug('valido');
+						nNombresValidos=nNombresValidos+1;
+					}
+					else
+					{
+						debug('no valido');
+						var contador = record.get('contador');
+						var llaveDatosFaltan=0;
+						if(record.get('nombre').length==0)
 						{
-							nNombresValidos=nNombresValidos+1;
+							llaveDatosFaltan = llaveDatosFaltan +1;
+						}
+						if(record.get('apat').length==0)
+						{
+							llaveDatosFaltan = llaveDatosFaltan +2;
+						}
+						if(record.get('amat').length==0)
+						{
+							llaveDatosFaltan = llaveDatosFaltan +4;
+						}
+						if(llaveDatosFaltan==1)
+						{
+							debug('+1');
+							datosFaltan = datosFaltan + 'Falta el nombre para el inciso '+contador+'<br/>';
+						}
+						else if(llaveDatosFaltan==2)
+                        {
+							debug('+2');
+                            datosFaltan = datosFaltan + 'Falta el apellido paterno para el inciso '+contador+'<br/>';
+                        }
+						else if(llaveDatosFaltan==3)
+						{
+							debug('+4');
+							datosFaltan = datosFaltan + 'Falta el nombre y el apellido paterno para el inciso '+contador+'<br/>';
+						}
+						else if(llaveDatosFaltan==4)
+						{
+							debug('+4');
+							datosFaltan = datosFaltan + 'Falta el apellido materno para el inciso '+contador+'<br/>';
+						}
+						else if(llaveDatosFaltan==5)
+						{
+							debug('+5');
+							datosFaltan = datosFaltan + 'Falta el nombre y el apellido materno para el inciso '+contador+'<br/>';
+						}
+						else if(llaveDatosFaltan==6)
+						{
+							debug('+6');
+							datosFaltan = datosFaltan + 'Faltan los apellidos para el inciso '+contador+'<br/>';
+						}
+						else if(llaveDatosFaltan==7)
+						{
+							debug('+7');
+							datosFaltan = datosFaltan + 'Falta el nombre y los apellidos para el inciso '+contador+'<br/>';
 						}
 					}
 			    });
@@ -942,7 +998,7 @@ function _0_validarBase()
 				}
 				else
 				{
-					mensajeWarning('Si introduce el nombre de alg&uacute;n asegurado, es requerido introducirlo para el resto de asegurados');
+					mensajeWarning('Si introduce el nombre de alg&uacute;n asegurado, es requerido introducirlo para el resto de asegurados:<br/>'+datosFaltan);
 				}
 			}
 			else
