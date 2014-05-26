@@ -857,8 +857,33 @@ public class GeneradorCampos
     		{
 	    		if(conEditor)
 	    		{
-	    			Item editor=this.generaItem(listcomp, comp, idx, true);
+	    			Item editor = this.generaItem(listcomp, comp, idx, true);
 	    			column.add("editor",editor);
+	    			boolean esCombo = StringUtils.isNotBlank(comp.getCatalogo());
+	    			if(esCombo)
+	    			{
+	    				column.add(Item.crear("renderer","function(value){"
+	    						+ "debug('store:',"
+	    						+ "'"+(this.idPrefix+"editor_"+idx)+"',"
+	    						+ "Ext.getCmp('"+(this.idPrefix+"editor_"+idx)+"').getStore(),"
+	    						+ "value"
+	    						+ ");"
+	    						+ "var store = Ext.getCmp('"+(this.idPrefix+"editor_"+idx)+"').getStore();"
+	    						+ "store.each(function(record)"
+	    						+ "{"
+	    						+ "    debug('buscando en record:',record);"
+	    						+ "    if(record.get('key')==value)"
+	    						+ "    {"
+	    						+ "        value=record.get('value');"
+	    						+ "        debug('encontrado:',value);"
+	    						+ "    }"
+	    						+ "    else"
+	    						+ "    {"
+	    						+ "        debug('no es');"
+	    						+ "    }"
+	    						+ "});"
+	    						+ "return value;}").setQuotes(""));
+	    			}
 	    		}
 	    		columns.add(column);
     		}
