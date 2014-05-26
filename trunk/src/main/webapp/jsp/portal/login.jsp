@@ -12,6 +12,9 @@
 	        var _CONTEXT = "${ctx}";
 	        var _URL_VALIDA_USUARIO = '<s:url namespace="/seguridad" action="autenticaUsuario" />';
 	        var _URL_VALIDA_EXISTE_USUARIO = '<s:url namespace="/seguridad" action="existeUsuarioLDAP" />';
+	        
+	        var _MODO_AGREGAR_USUARIOS_A_LDAP = <s:text name="login.modo.agregar.usuarios.ldap"/>;
+	        
 	    </script>
 	    <link href="${ctx}/resources/extjs4/resources/my-custom-theme/my-custom-theme-all.css" rel="stylesheet" type="text/css" />
 	    <link href="${ctx}/resources/extjs4/extra-custom-theme.css" rel="stylesheet" type="text/css" />

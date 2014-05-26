@@ -1,6 +1,5 @@
 Ext.onReady(function(){
 
-	
 	Ext.apply(Ext.form.field.VTypes, {
         
         password: function(val, field) {
@@ -103,7 +102,7 @@ Ext.onReady(function(){
 	
     function validarUsuario() {
     	if (loginForm.form.isValid()) {
-    		if(loginForm.down('[name=passwordConfirm]').isHidden()){
+    		if(_MODO_AGREGAR_USUARIOS_A_LDAP && loginForm.down('[name=passwordConfirm]').isHidden()){
     			loginForm.form.submit({
         			url: _URL_VALIDA_EXISTE_USUARIO,
     	        	waitMsg:'Procesando...',
@@ -147,8 +146,8 @@ Ext.onReady(function(){
                         break;
                     case Ext.form.action.Action.SERVER_INVALID:
                     case Ext.form.action.Action.LOAD_FAILURE:
-                	    var msgServer = Ext.isEmpty(action.result.errorMessage) ? 'Error interno del servidor, consulte a soporte' : action.result.errorMessage;
-                        Ext.Msg.show({title: 'Error', msg: msgServer, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
+                    	 var msgServer = Ext.isEmpty(action.result.errorMessage) ? 'Error interno del servidor, consulte a soporte' : action.result.errorMessage;
+                         Ext.Msg.show({title: 'Error', msg: msgServer, buttons: Ext.Msg.OK, icon: Ext.Msg.ERROR});
                         break;
                 }
 			},

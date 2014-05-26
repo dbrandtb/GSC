@@ -61,53 +61,7 @@ public class LoginManagerImpl implements LoginManager {
 	private String Ldap_security_credentials;
 	private String Ldap_base_search;
 
-	/**
-	 * Funcion que valida el usuario y password pasados por parametro y en caso
-	 * de ser valido consulta el perfil de la pagina principal para agregarlo a
-	 * la sesion.
-	 * 
-	 * @param user
-	 *            - Identificador del usuario
-	 * @param password
-	 *            - Constrasenia del usuario
-	 * @return UserVO Bean con la informacion del usuario
-	 * @throws ApplicationException
-	 *             Es lanzada en errores de configuracion de aplicacion error en
-	 *             las consultas a BD
-	 */
-	public UserVO validaUsuario(String user, String password) throws Exception {
 
-		Map<String, String> mapa = new HashMap<String, String>();
-		mapa.put("user", user);
-		mapa.put("password", password);
-
-		UserVO userVO = null;
-
-		Endpoint manager = (Endpoint) endpoints.get("VALIDA_USUARIO");
-		userVO = (UserVO) manager.invoke(mapa);
-
-		if (userVO == null) {
-			throw new Exception("Usuario y/o password no validos");
-		}
-
-		manager = (Endpoint) endpoints.get("CONSULTA_PERFIL");
-		userVO.setFuentesPerfil((PerfilVO) manager.invoke(userVO.getPerfil()));
-
-		return userVO;
-	}
-
-	/**
-	 * Funcion que valida el usuario y password pasados por parametro y en caso
-	 * de ser valido consulta el perfil de la pagina principal para agregarlo a
-	 * la sesion.
-	 * 
-	 * @param user
-	 *            - Identificador del usuario
-	 * @return UserVO Bean con la informacion del usuario
-	 * @throws ApplicationException
-	 *             Es lanzada en errores de configuracion de aplicacion error en
-	 *             las consultas a BD
-	 */
 	public UserVO obtenerDatosUsuario(String user) throws Exception {
 
 		Map<String, String> mapa = new HashMap<String, String>();
@@ -161,17 +115,17 @@ public class LoginManagerImpl implements LoginManager {
 		return userVO;
 	}
 
-	public boolean validaUsuarioLdap(boolean unicamenteExiste, String user,
+	public boolean validaUsuarioLDAP(boolean unicamenteExiste, String user,
 			String password) throws Exception {
 		DirContext ctx;
-		logger.debug("URLLDAP=" + Ldap_provider_url);
-		logger.debug("ContextoLDAP=" + Ldap_factory_initial);
-		logger.debug("TipoAuthLDAP=" + Ldap_security_authentication);
-		logger.debug("UsuarioLDAP=" + Ldap_security_principal);
-		logger.debug("PasswordLDAP=" + Ldap_security_credentials);
-		logger.debug("SearchBaseLDAP=" + Ldap_base_search);
+//		logger.debug("URLLDAP=" + Ldap_provider_url);
+//		logger.debug("ContextoLDAP=" + Ldap_factory_initial);
+//		logger.debug("TipoAuthLDAP=" + Ldap_security_authentication);
+//		logger.debug("UsuarioLDAP=" + Ldap_security_principal);
+//		logger.debug("PasswordLDAP=" + Ldap_security_credentials);
+//		logger.debug("SearchBaseLDAP=" + Ldap_base_search);
 
-		Hashtable env = obtenerDatosConexionLDAP(Ldap_security_principal,
+		Hashtable env = obtieneDatosConexionLDAP(Ldap_security_principal,
 				Ldap_security_credentials);
 		boolean existeUsuario = false;
 		ctx = new InitialLdapContext(env, null);
@@ -196,7 +150,7 @@ public class LoginManagerImpl implements LoginManager {
 				if (unicamenteExiste) {
 					existeUsuario = true;
 				} else {
-					existeUsuario = validarAuth(dn, password);
+					existeUsuario = validaDatosConexionLDAP(dn, password);
 					// SI VALIDO ES false PASSWORD INCORRECTO, SI ES true
 					// PASSWORD CORRECTO
 				}
@@ -207,20 +161,20 @@ public class LoginManagerImpl implements LoginManager {
 		return existeUsuario;
 	}
 
-	public boolean validarAuth(String dn, String password) {
-		boolean validadausuario = false;
-		Hashtable env1 = obtenerDatosConexionLDAP(dn, password);
+	public boolean validaDatosConexionLDAP(String dn, String password) {
+		boolean validadaUsuario = false;
+		Hashtable env1 = obtieneDatosConexionLDAP(dn, password);
 		try {
 			DirContext ctx1 = new InitialLdapContext(env1, null);
-			validadausuario = true;
+			validadaUsuario = true;
 			ctx1.close();
 		} catch (NamingException e) {
-			logger.error("Error en la validacion LDAP", e);
+			logger.error("Error en la validacion LDAP " + e.getMessage());
 		}
-		return validadausuario;
+		return validadaUsuario;
 	}
 
-	public Hashtable obtenerDatosConexionLDAP(String user, String pass) {
+	public Hashtable obtieneDatosConexionLDAP(String user, String pass) {
 		Hashtable<String, String> env = new Hashtable<String, String>();
 		try {
 			env.put(Context.INITIAL_CONTEXT_FACTORY, Ldap_factory_initial);
@@ -237,10 +191,10 @@ public class LoginManagerImpl implements LoginManager {
 	}
 
 	// método para insertar el registro en ldap
-	public boolean insertaRegistroLdap(String user, String password)
+	public boolean insertaUsuarioLDAP(String user, String password)
 			throws Exception {
 		DirContext ctx;
-		Hashtable env = obtenerDatosConexionLDAP(Ldap_security_principal,
+		Hashtable env = obtieneDatosConexionLDAP(Ldap_security_principal,
 				Ldap_security_credentials);
 		logger.debug(env);
 

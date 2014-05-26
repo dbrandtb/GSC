@@ -31,29 +31,53 @@ import mx.com.gseguros.exception.ApplicationException;
 public interface LoginManager {
 	
 	/**
-	 * Autentifica y extrae la informacion correspondiente al usuario a validar
+	 * Valida si existe un usuario en LDAP deacuerdo a sus credenciales
+	 * @param unicamenteExiste true si se desea validar el usuario/password, false si solo se desea saber si existe el usuario en LDAP
 	 * @param user
 	 * @param password
 	 * @return
-	 * @throws ApplicationException
+	 * @throws Exception
 	 */
-	UserVO validaUsuario(String user, String password) throws Exception;
+	public boolean validaUsuarioLDAP(boolean unicamenteExiste, String user, String password) throws Exception;
 	
-	public boolean validaUsuarioLdap(boolean unicamenteExiste, String user, String password) throws Exception;
+	/**
+	 * Valida los datos de conexion de LDAP
+	 * @param dn
+	 * @param password
+	 * @return
+	 */
+	public boolean validaDatosConexionLDAP(String dn, String password);
 	
-	public boolean validarAuth(String dn, String password);
+	/**
+	 * Obtiene los datos de conexion de LDAP
+	 * @param user
+	 * @param pass
+	 * @return
+	 */
+	public Hashtable obtieneDatosConexionLDAP(String user, String pass);
 	
-	public Hashtable obtenerDatosConexionLDAP(String user, String pass);
-	
-	public boolean insertaRegistroLdap(String user, String password) throws Exception;
+	/**
+	 * Inserta un nuevo usuario/password en LDAP
+	 * @param user
+	 * @param password
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean insertaUsuarioLDAP(String user, String password) throws Exception;
 
 
-    /**
-     *   extrae la informacion correspondiente al usuario a validar
-     * @param user
-     * @return
-     * @throws ApplicationException
-     */
+	/**
+	 * Funcion que valida el usuario y password pasados por parametro y en caso
+	 * de ser valido consulta el perfil de la pagina principal para agregarlo a
+	 * la sesion.
+	 * 
+	 * @param user
+	 *            - Identificador del usuario
+	 * @return UserVO Bean con la informacion del usuario
+	 * @throws Exception
+	 *             Es lanzada en errores de configuracion de aplicacion error en
+	 *             las consultas a BD
+	 */
     UserVO obtenerDatosUsuario(String user) throws Exception;
 
 }
