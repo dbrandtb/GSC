@@ -4,6 +4,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
+import javax.naming.AuthenticationException;
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
@@ -57,8 +58,9 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 	
 	public String existeUsuarioLDAP() throws Exception {
 		try {
-			success = true;
-			//success = loginManager.validaUsuarioLdap(true, user, password);
+			
+			success = loginManager.validaUsuarioLDAP(true, user, password);
+			//logger.debug(new StringBuilder("Existe usuario '").append(user).append("' en LDAP? ").append(success));
 			return SUCCESS;
 
 		} catch (Exception ex) {
@@ -69,11 +71,20 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 	}
 	
 	public String autenticaUsuario() throws Exception {
+		/**
+		 * Si es true agrega los usuarios en LDAP si ya existen previamente en BD (flujo temporal), <br/> false si solo autentica en LDAP y BD (flujo correcto)
+		 */
+		if(new Boolean(getText("login.modo.agregar.usuarios.ldap"))){
+			return autenticaUsuarioAgregaLDAP();
+		}
+		
 		try {
-			boolean existeUsuario = loginManager.validaUsuarioLdap(false, user, password);
+			boolean existeUsuario = loginManager.validaUsuarioLDAP(false, user, password);
 			if (existeUsuario) {
+				logger.info("Usuario "+user+" ha sido valido exitosamente en LDAP, creando sesion...");
 				success = creaSesionDeUsuario(user);
 			} else {
+				logger.info("El usuario "+user+" no existe o la clave es incorrecta.");
 				errorMessage = "El usuario no existe o la clave es incorrecta";
 			}
 			return SUCCESS;
@@ -86,37 +97,40 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 	}
 
 	
-	public String autenticaUsuarioTmp() throws Exception {
+	public String autenticaUsuarioAgregaLDAP() throws Exception {
 		try {
-			
-			success = creaSesionDeUsuario(user);
-			boolean quitar = false;
-			if (quitar) {
-				boolean existeUsuarioLDAP = loginManager.validaUsuarioLdap(true, user, password);
+			boolean sesionUsuarioCreada = creaSesionDeUsuario(user);
+			if (sesionUsuarioCreada) {
+				boolean existeUsuarioLDAP = loginManager.validaUsuarioLDAP(true, user, password);
 				
 				if(existeUsuarioLDAP){
-					logger.debug("Usuario "+user+" si existe en LDAP, validando Password...");
-					boolean validPass = loginManager.validaUsuarioLdap(false, user, password);
+					logger.info("Usuario "+user+" si existe en LDAP, validando Password...");
+					boolean validPass = loginManager.validaUsuarioLDAP(false, user, password);
 					if(!validPass){
 						((SessionMap) session).invalidate();
-						logger.debug("Password Incorrecto!!!");
-						success = false;
+						logger.info("Password Incorrecto!!! "+user+"/"+password);
 						errorMessage = "El usuario no existe o la clave es incorrecta";
 					}else {
-						logger.debug("Password Correcto, redireccionando a menu de Roles...");
+						logger.info("Password Correcto, redireccionando a menu de Roles...");
+						success = true;
 					}
 				}else {
-					logger.debug("No existe usuario, Insertando usuario "+user+" en LDAP");
-					loginManager.insertaRegistroLdap(user, password);
+					logger.info("No existe usuario, Insertando usuario "+user+"/"+password+" en LDAP");
+					loginManager.insertaUsuarioLDAP(user, password);
+					logger.info("Usuario Creado en LDAP, redireccionando a menu de Roles...");
+					success =  true;
 				}
 				
 			} 
 			return SUCCESS;
 
+		} catch (AuthenticationException ax) {
+			logger.info(ax.getMessage());
+			errorMessage = "Error en el proceso de validaci&oacute;n de usuario. Consulte a Soporte T&eacute;cnico.";
+			return SUCCESS;
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);
 			errorMessage = "Error en el proceso de validaci&oacute;n de usuario. Consulte a Soporte T&eacute;cnico.";
-			success = false;
 			return SUCCESS;
 		}
 	}
@@ -146,7 +160,6 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 			errorMessage = "Usted no posee un rol asociado, por favor contacte al administrador";
 		} else {
 			exito = true;
-			errorMessage = "EXITO";
 		}
 		return exito;
 	}

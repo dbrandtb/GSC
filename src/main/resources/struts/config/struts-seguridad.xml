@@ -61,7 +61,7 @@
 		</action>
 		
 		<action name="autenticaUsuario" class="autenticacionAction"
-			method="autenticaUsuarioTmp">
+			method="autenticaUsuario">
 			<result name="success" type="json" />
 		</action>
 		
