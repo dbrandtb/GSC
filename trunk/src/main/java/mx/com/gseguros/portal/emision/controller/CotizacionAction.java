@@ -19,6 +19,7 @@ import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
+import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
 import mx.com.gseguros.portal.general.util.Rango;
@@ -44,6 +45,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	private String                           error;
 	private Map<String,Item>                 imap;
 	private transient KernelManagerSustituto kernelManager;
+	private PantallasManager                 pantallasManager;
 	private List<Map<String,String>>         slist1;
 	private List<Map<String,String>>         slist2;
 	private Map<String,String>               smap1;
@@ -176,6 +178,18 @@ public class CotizacionAction extends PrincipalCoreAction
 			imap.put("itemsIndividuales"  , gc.getItems());
 			imap.put("camposIndividuales" , gc.getColumns());
 			imap.put("fieldsIndividuales" , gc.getFields());
+			
+			List<ComponenteVO>validaciones=pantallasManager.obtenerComponentes(
+					null, null, cdramo, cdtipsit, null, null, "VALIDACIONES_COTIZA", gc.isEsMovil()?"MOVIL":"DESKTOP", null);
+			if(validaciones.size()>0)
+			{
+				gc.generaComponentes(validaciones, true, false, true, false, false, true);
+				imap.put("validacionCustomButton" , gc.getButtons());
+			}
+			else
+			{
+				imap.put("validacionCustomButton" , null);
+			}
         }
         catch(Exception ex)
         {
@@ -871,6 +885,9 @@ public class CotizacionAction extends PrincipalCoreAction
 	public void setStoredProceduresManager(
 			StoredProceduresManager storedProceduresManager) {
 		this.storedProceduresManager = storedProceduresManager;
+	}
+	public void setPantallasManager(PantallasManager pantallasManager) {
+		this.pantallasManager = pantallasManager;
 	}
 
 }
