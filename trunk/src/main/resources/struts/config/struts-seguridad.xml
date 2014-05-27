@@ -80,10 +80,6 @@
 		    <result name="consultasSaludVital">/jsp/consultas/containerConsultasPolizas.jsp</result>
 		    <result name="error">/jsp/portal/login.jsp</result>
         </action>
-
-		<action name="pruebaWSweblogic" class="cotizaSaludVitalAction" method="pruebaWSweblogic">
-		 <result name="success" type="json" />
-        </action>
 		
 		<action name="cotizacionSaludVital" class="autenticacionAction" method="cotizacionSaludVital">
 		  <result name="success" type="redirectAction">
