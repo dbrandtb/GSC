@@ -64,16 +64,6 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
     
     private List<RamaVO> listaRolCliente;
     private List<UserVO> userList;
-
-    
-    /**
-     * Obtiene los datos generales de una p&oacute;liza
-     * @return String result
-     */
-    public String pruebaWSweblogic(){
-    	success = true;
-    	return SUCCESS;
-    }
     
     
     /**
