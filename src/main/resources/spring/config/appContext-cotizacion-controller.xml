@@ -21,9 +21,10 @@
     </bean>
     
     <bean id="CotizacionAction" class="mx.com.gseguros.portal.emision.controller.CotizacionAction" scope="prototype">
-        <property name="kernelManager"           ref="kernelManagerSustituto"/>
         <property name="catalogosManager"        ref="catalogosManagerImpl"/>
         <property name="consultasManager"        ref="consultasManagerImpl"/>
+        <property name="kernelManager"           ref="kernelManagerSustituto"/>
+        <property name="pantallasManager"        ref="pantallasManagerImpl"/>
         <property name="storedProceduresManager" ref="storedProceduresManagerImpl"/>
     </bean>
     
