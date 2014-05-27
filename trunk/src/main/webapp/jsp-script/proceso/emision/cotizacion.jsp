@@ -67,8 +67,8 @@ var _0_botDetalleCobertura;
 var _0_windowAyudaCobertura;
 var _0_selectedIdcobertura;
 
-var EDAD_MAXIMA_COTIZACION=<s:property value="smap1.edadMaximaCotizacion"/>;
-debug('EDAD_MAXIMA_COTIZACION=', EDAD_MAXIMA_COTIZACION);
+var _0_validacion_custom;
+
 debug('_0_smap1: ',_0_smap1);
 /*///////////////////*/
 ////// variables //////
@@ -781,108 +781,6 @@ function _0_cotizar(boton)
 	}
 }
 
-function _0_validarCustom()
-{
-	var valido=true;
-	var cdunieco = _0_smap1.cdunieco;
-	var cdramo   = _0_smap1.cdramo;
-	var cdtipsit = _0_smap1.cdtipsit;
-	debug('_0_validarCustom');
-	debug('cdunieco' , cdunieco);
-	debug('cdramo'   , cdramo);
-	debug('cdtipsit' , cdtipsit);
-	
-	///////////////////////////////
-	////// para SL y SN y MS //////
-	var atributoParentesco = 'parametros.pv_otvalor16';
-	var atributoFechaNacim = 'parametros.pv_otvalor02';
-	if(cdtipsit=='MS')
-	{
-		atributoParentesco = 'parametros.pv_otvalor03';
-		atributoFechaNacim = 'parametros.pv_otvalor01';
-	}
-	debug('atributoParentesco:',atributoParentesco);
-	if(valido&&(cdtipsit=='SL'||cdtipsit=='SN'||cdtipsit=='MS'))
-	{
-		//////////////////////////////////////
-		////// repeticion de parentesco //////
-		if(valido)
-		{
-			var nTitular   = 0;
-			var nConyugue  = 0;
-			_0_storeIncisos.each(function(record)
-		    {
-				if(record.get(atributoParentesco)=='T')
-				{
-					nTitular=nTitular+1;
-				}
-				else if(record.get(atributoParentesco)=='C')
-	            {
-					nConyugue=nConyugue+1;
-	            }
-		    });
-			valido=nTitular==1&&nConyugue<2;
-			if(!valido)
-			{
-				mensajeWarning('Solo puede haber un titular y un(a) c&oacute;nyugue');
-			}
-		}
-        ////// repeticion de parentesco //////
-		//////////////////////////////////////
-		
-		////////////////////////////////
-		////// validacion de edad maxima de cotizacion //////
-		if(valido)
-		{
-			var algunMayor = false;
-			_0_storeIncisos.each(function(record)
-            {
-                var fechaNacimiento = new Date(record.get(atributoFechaNacim));
-                var hoy = new Date();
-                var edad = parseInt((hoy
-                        / 365
-                        / 24
-                        / 60
-                        / 60
-                        / 1000 - fechaNacimiento
-                        / 365
-                        / 24
-                        / 60
-                        / 60
-                        / 1000));
-                if (edad > EDAD_MAXIMA_COTIZACION)
-                {
-                    //algunMayor = true;
-                }
-            });
-            valido = !algunMayor;
-            if(!valido)
-            {
-                mensajeWarning('La edad del asegurado no debe exceder de '+EDAD_MAXIMA_COTIZACION+' a&ntilde;os');
-            }
-		}
-	    ////// validacion de edad maxima de cotizacion //////
-		////////////////////////////////
-	}
-    ////// para SL y SN //////
-	//////////////////////////
-	
-	////// para SN //////
-	if(valido&&cdtipsit=='SN')
-	{
-		var cp=_0_formAgrupados.items.items[2].getValue();
-		debug('cp',cp);
-		valido=cp>=36000&&cp<=38998;
-		if(!valido)
-		{
-			mensajeWarning('C&oacute;digo postal no v&aacute;lido para este producto');
-		}
-	}
-	////// para SN //////
-	debug('_0_validarCustom fin');
-	return valido;
-}
-
 function _0_validarBase()
 {
 	var valido=false;
@@ -994,7 +892,7 @@ function _0_validarBase()
 				valido=hayAlgunNombre?(nAsegurados==nNombresValidos):true;
 				if(valido)
 				{
-					valido=_0_validarCustom();
+					valido=_0_validacion_custom();
 				}
 				else
 				{
@@ -1008,7 +906,7 @@ function _0_validarBase()
 		}
 		else
 		{
-			mensajeWarning('No hay asegurados');
+			mensajeWarning('No hay incisos');
 		}
 	}
 	else
@@ -1069,6 +967,16 @@ Ext.onReady(function()
     /////////////////////
     ////// modelos //////
     /*/////////////////*/
+	_0_validacion_custom = function()
+    {
+		mensajeWarning('Falta definir la validaci&oacute;n para el producto');
+        return true;
+    };
+    <s:if test='%{getImap().get("validacionCustomButton")!=null}'>
+	    var botonValidacionCustom = <s:property value="imap.validacionCustomButton" escapeHtml="false"/>;
+	     _0_validacion_custom=botonValidacionCustom.handler;
+    </s:if>
+    
     Ext.define('ModeloDetalleCotizacion',
     {
     	extend : 'Ext.data.Model'
