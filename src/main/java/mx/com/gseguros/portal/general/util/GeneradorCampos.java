@@ -288,6 +288,11 @@ public class GeneradorCampos
         item.setComposedNameClose("})");
         ////// Ext.create('Ext...',{}) //////
         
+        if(esMovil)
+        {
+        	item.add("labelAlign","top");
+        }
+        
         ////// id, cdatribu, fieldLabel, allowBlank, name, readOnly, value, hidden, style //////
         String auxIdEditor = "";
         if(esEditor)
