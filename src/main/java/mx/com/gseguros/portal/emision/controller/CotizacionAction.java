@@ -183,12 +183,27 @@ public class CotizacionAction extends PrincipalCoreAction
 					null, null, cdramo, cdtipsit, null, null, "VALIDACIONES_COTIZA", gc.isEsMovil()?"MOVIL":"DESKTOP", null);
 			if(validaciones.size()>0)
 			{
-				gc.generaComponentes(validaciones, true, false, true, false, false, true);
+				gc.generaComponentes(validaciones, true, false, false, false, false, true);
 				imap.put("validacionCustomButton" , gc.getButtons());
 			}
 			else
 			{
 				imap.put("validacionCustomButton" , null);
+			}
+			
+			List<ComponenteVO>modeloExtra = pantallasManager.obtenerComponentes(
+					null, null, cdramo, cdtipsit, null, null, "VALIDACIONES_COTIZA", "MODELO", null);
+			gc.generaComponentes(modeloExtra, true, true, true, true, true, false);
+			imap.put("modeloExtraFields"  , gc.getFields());
+			if(modeloExtra.size()>0)
+			{
+				imap.put("modeloExtraColumns" , gc.getColumns());
+				imap.put("modeloExtraItems"   , gc.getItems());
+			}
+			else
+			{
+				imap.put("modeloExtraColumns" , null);
+				imap.put("modeloExtraItems"   , null);
 			}
         }
         catch(Exception ex)
