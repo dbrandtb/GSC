@@ -21,11 +21,13 @@ Ext.define('FormularioInicioSesion',
                         xtype       : 'textfield'
                         ,name       : 'user'
                         ,allowBlank : false
+                        ,labelAlign : 'top'
                     }
                     ,{
                         xtype       : 'passwordfield'
                         ,name       : 'password' 
                         ,allowBlank : false
+                        ,labelAlign : 'top'
                     }
                 ]
             }
