@@ -47,6 +47,8 @@ var _0_urlDatosComplementarios = '<s:url namespace="/"                action="da
 var _0_urlUpdateStatus         = '<s:url namespace="/mesacontrol"     action="actualizarStatusTramite" />';
 var _0_urlMesaControl          = '<s:url namespace="/mesacontrol"     action="principal" />';
 
+var _0_modeloExtraFields = [<s:property value="imap.modeloExtraFields" />];
+
 var _0_panelPri;
 var _0_formAgrupados;
 var _0_gridIncisos;
@@ -655,13 +657,19 @@ function _0_agregarAsegu(boton)
 		}
 		else
 		{
-			if(iEditor.name!='nombre'
-					&&iEditor.name!='nombre2'
-					&&iEditor.name!='apat'
-					&&iEditor.name!='amat')
+			var estaEnModeloExtra=false;
+			debug('_0_modeloExtraFields.length:',_0_modeloExtraFields.length);
+			for(var j=0;j<_0_modeloExtraFields.length;j++)
 			{
-				record.set(iEditor.name,iEditor.name);
+				if(iEditor.name==_0_modeloExtraFields[j].name)
+				{
+					estaEnModeloExtra=true;
+				}
 			}
+			if(!estaEnModeloExtra)
+            {
+                record.set(iEditor.name,iEditor.name);
+            }
 		}
 	}
 	record.set('contador',_0_storeIncisos.getCount()+1);
@@ -783,137 +791,70 @@ function _0_cotizar(boton)
 
 function _0_validarBase()
 {
-	var valido=false;
-	debug('_0_validarBase');
-	var valido=_0_formAgrupados.isValid();
+	var valido=true;
+	debug('>_0_validarBase');
+	
+	//form validation
+	if(valido)
+	{
+		valido=_0_formAgrupados.isValid();
+		if(!valido)
+		{
+			datosIncompletos();
+		}
+	}
+	
+	//algun inciso
 	if(valido)
 	{
 		valido=_0_storeIncisos.getCount()>0;
-		if(valido)
-		{
-			_0_storeIncisos.each(function(record)
-			{
-				for(var key in record.data)
-	            {
-	                var value=record.data[key];
-	                if(key!='nombre'
-	                		&&key!='nombre2'
-	                		&&key!='apat'
-	                		&&key!='amat')
-	                {
-	                	debug('value',value);
-	                	valido=valido&&value;
-	                	if(!valido)
-	                	{
-	                		debug('falta: ',key);
-	                	}
-	                }
-	            }
-			});
-			if(valido)
-			{
-				var nAsegurados=_0_storeIncisos.getCount();
-				var hayAlgunNombre=false;
-				var nNombresValidos=0;
-				var datosFaltan = '';
-				_0_storeIncisos.each(function(record)
-			    {
-					debug('evaluando nombres:',record.data);
-					var recordConNombre;
-					if(record.get('nombre').length>0
-							||record.get('nombre2').length>0
-							||record.get('apat').length>0
-							||record.get('amat').length>0
-							)
-					{
-						hayAlgunNombre=true;
-					}
-					if(record.get('nombre').length>0
-							&&record.get('apat').length>0
-                            &&record.get('amat').length>0)
-					{
-						debug('valido');
-						nNombresValidos=nNombresValidos+1;
-					}
-					else
-					{
-						debug('no valido');
-						var contador = record.get('contador');
-						var llaveDatosFaltan=0;
-						if(record.get('nombre').length==0)
-						{
-							llaveDatosFaltan = llaveDatosFaltan +1;
-						}
-						if(record.get('apat').length==0)
-						{
-							llaveDatosFaltan = llaveDatosFaltan +2;
-						}
-						if(record.get('amat').length==0)
-						{
-							llaveDatosFaltan = llaveDatosFaltan +4;
-						}
-						if(llaveDatosFaltan==1)
-						{
-							debug('+1');
-							datosFaltan = datosFaltan + 'Falta el nombre para el inciso '+contador+'<br/>';
-						}
-						else if(llaveDatosFaltan==2)
-                        {
-							debug('+2');
-                            datosFaltan = datosFaltan + 'Falta el apellido paterno para el inciso '+contador+'<br/>';
-                        }
-						else if(llaveDatosFaltan==3)
-						{
-							debug('+4');
-							datosFaltan = datosFaltan + 'Falta el nombre y el apellido paterno para el inciso '+contador+'<br/>';
-						}
-						else if(llaveDatosFaltan==4)
-						{
-							debug('+4');
-							datosFaltan = datosFaltan + 'Falta el apellido materno para el inciso '+contador+'<br/>';
-						}
-						else if(llaveDatosFaltan==5)
-						{
-							debug('+5');
-							datosFaltan = datosFaltan + 'Falta el nombre y el apellido materno para el inciso '+contador+'<br/>';
-						}
-						else if(llaveDatosFaltan==6)
-						{
-							debug('+6');
-							datosFaltan = datosFaltan + 'Faltan los apellidos para el inciso '+contador+'<br/>';
-						}
-						else if(llaveDatosFaltan==7)
-						{
-							debug('+7');
-							datosFaltan = datosFaltan + 'Falta el nombre y los apellidos para el inciso '+contador+'<br/>';
-						}
-					}
-			    });
-				valido=hayAlgunNombre?(nAsegurados==nNombresValidos):true;
-				if(valido)
-				{
-					valido=_0_validacion_custom();
-				}
-				else
-				{
-					mensajeWarning('Si introduce el nombre de alg&uacute;n asegurado, es requerido introducirlo para el resto de asegurados:<br/>'+datosFaltan);
-				}
-			}
-			else
-			{
-				mensajeWarning('Los datos de los asegurados son requeridos');
-			}
-		}
-		else
+		if(!valido)
 		{
 			mensajeWarning('No hay incisos');
 		}
 	}
-	else
+	
+	//validar atributos de tatrisit en grid
+	if(valido)
 	{
-		datosIncompletos();
+		_0_storeIncisos.each(function(record)
+        {
+            for(var key in record.data)
+            {
+                debug('modelo extra fields:',_0_modeloExtraFields);
+                var estaEnModeloExtra=false;
+                debug('_0_modeloExtraFields.length:',_0_modeloExtraFields.length);
+                for(var i=0;i<_0_modeloExtraFields.length;i++)
+                {
+                    if(key==_0_modeloExtraFields[i].name)
+                    {
+                        estaEnModeloExtra=true;
+                    }
+                }
+                if(!estaEnModeloExtra)
+                {
+                	var value=record.data[key];
+                	valido=valido&&value;
+                    if(!valido)
+                    {
+                        debug('falta: ',key);
+                    }
+                }
+            }
+        });
+        if(!valido)
+        {
+            mensajeWarning('Los datos de los asegurados son requeridos');
+        }
 	}
-	debug('_0_validarBase fin');
+	
+	//custom validation
+	if(valido)
+	{
+		valido=_0_validacion_custom();
+	}
+	
+	debug('<_0_validarBase');
 	return valido;
 }
 
@@ -1002,11 +943,7 @@ Ext.onReady(function()
     	,fields :
     	[
             <s:property value="imap.fieldsIndividuales"/>
-            ,'nombre'
-            ,'nombre2'
-            ,'apat'
-            ,'amat'
-            ,'contador'
+            <s:property value='%{","+imap.modeloExtraFields}' />
     	]
     });
     /*/////////////////*/
@@ -1307,30 +1244,9 @@ Ext.onReady(function()
                     	,menuDisabled : true
                     }
                     ,<s:property value="imap.camposIndividuales"/>
-                    ,{
-                    	dataIndex : 'nombre'
-                    	,header   : 'NOMBRE'
-                    	,editor   : 'textfield'
-                    	,flex     : 1
-                    }
-                    ,{
-                        dataIndex : 'nombre2'
-                        ,header   : 'SEGUNDO NOMBRE'
-                        ,editor   : 'textfield'
-                        ,flex     : 1
-                    }
-                    ,{
-                        dataIndex : 'apat'
-                        ,header   : 'A. PATERNO'
-                        ,editor   : 'textfield'
-                        ,flex     : 1
-                    }
-                    ,{
-                        dataIndex : 'amat'
-                        ,header   : 'A. MATERNO'
-                        ,editor   : 'textfield'
-                        ,flex     : 1
-                    }
+                    <s:if test='%{getImap().get("modeloExtraColumns")!=null}' >
+                        ,<s:property value="imap.modeloExtraColumns" />
+                    </s:if>
                     ,{
                     	xtype  : 'actioncolumn'
                     	,width : 30
