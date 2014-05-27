@@ -64,6 +64,9 @@ var _mcotiza_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 var _mcotiza_reporteCotizacion = '<s:text name="rdf.cotizacion.nombre" />';
 var _mcotiza_urlEnviarCorreo   = '<s:url namespace="/general" action="enviaCorreo" />';
 
+var _mcotiza_modeloExtraFields = [<s:property value="imap.modeloExtraFields" />];
+
+var _mcotiza_incisoTpl;
 var _mcotiza_validacion_custom;
 
 debug('_mcotiza_smap1:',_mcotiza_smap1);
@@ -397,16 +400,28 @@ function _mcotiza_construirGrid(json)
 
 function _mcotiza_validaAsegurado(values)
 {
+	debug('>_mcotiza_validaAsegurado',values);
 	var valido = true;
 	if(valido)
 	{
 		for(var att in values)
         {
-            if(att!='rowIndex' && att!='nombre2')
+			debug('atrubito a validar:',att,values[att]);
+            var estaEnModeloExtra=false;
+            for(var i=0;i<_mcotiza_modeloExtraFields.length;i++)
             {
-                if(values[att]==null || values[att]==undefined || values[att]=='')
+                if(att==_mcotiza_modeloExtraFields[i].name)
                 {
-                    valido = false;
+                    estaEnModeloExtra=true;
+                }
+            }
+            if(!estaEnModeloExtra&&att!='rowIndex')
+            {
+                var value=values[att];
+                valido=valido&&value;
+                if(!valido)
+                {
+                    debug('falta: ',att);
                 }
             }
         }
@@ -415,6 +430,7 @@ function _mcotiza_validaAsegurado(values)
             Ext.Msg.alert('Aviso','Verifica los datos');
         }
 	}
+	debug('<_mcotiza_validaAsegurado');
 	return valido;
 }
 
@@ -422,6 +438,8 @@ function _mcotiza_cotiza()
 {
 	debug('_mcotiza_cotiza');
 	var valido = true;
+	
+	////// validacion de datos generales //////
 	if(valido)
 	{
 		var values = _mcotiza_getFormDatosGenerales().getValues();
@@ -444,6 +462,9 @@ function _mcotiza_cotiza()
 			});
 		}
 	}
+	////// validacion de datos generales //////
+	
+	////// al menos un inciso //////
 	if(valido)
 	{
 		valido = _mcotiza_storeIncisos.getCount()>0;
@@ -455,10 +476,14 @@ function _mcotiza_cotiza()
             });
 		}
 	}
+	////// al menos un inciso //////
+	
 	if(valido)
 	{
 		valido = _mcotiza_validacion_custom();
 	}
+	
+	////// request //////
 	if(valido)
 	{
 		var json=
@@ -540,6 +565,7 @@ function _mcotiza_cotiza()
             }
         });
 	}
+	////// request //////
 }
 
 function _g_heredarCombo(remoto,compId,compAnteriorId)
@@ -696,10 +722,13 @@ Ext.setup({onReady:function()
         Ext.Msg.alert('Aviso','Falta definir la validaci&oacute;n para el producto');
         return true;
     };
+    _mcotiza_incisoTpl = 'Inciso';
     <s:if test='%{getImap().get("validacionCustomButton")!=null}'>
 		var botonValidacionCustom = <s:property value="imap.validacionCustomButton" escapeHtml="false"/>;
 	    _mcotiza_validacion_custom=botonValidacionCustom.handler;
+	    _mcotiza_incisoTpl=botonValidacionCustom.text;
 	</s:if>
+	debug('_mcotiza_incisoTpl:',_mcotiza_incisoTpl);
 	
 	Ext.define('MiSelectField',
 	{
@@ -769,11 +798,8 @@ Ext.setup({onReady:function()
 		{
 			fields :
 			[
-			    'nombre'
-			    ,'nombre2'
-			    ,'apat'
-			    ,'amat'
-			    ,<s:property value="imap.fieldsIndividuales" />
+			    <s:property value="imap.fieldsIndividuales" />
+			    <s:property value='%{","+imap.modeloExtraFields}' />
 			]
 		}
 	});
@@ -873,31 +899,10 @@ Ext.setup({onReady:function()
 				        		    	,readOnly : true
 				        		    	,hidden   : true
 				        		    }
-				        		    ,<s:property value="imap.itemsIndividuales"/>
-				        		    ,{
-				        		    	xtype       : 'textfield'
-				        		    	,labelAlign : 'top'
-				        		    	,label      : 'NOMBRE'
-				        		    	,name       : 'nombre'
-				        		    }
-				        		    ,{
-	                                    xtype       : 'textfield'
-	                                    ,labelAlign : 'top'
-	                                    ,label      : 'SEGUNDO NOMBRE'
-	                                    ,name       : 'nombre2'
-	                                }
-				        		    ,{
-	                                    xtype       : 'textfield'
-	                                    ,labelAlign : 'top'
-	                                    ,label      : 'APELLIDO PATERNO'
-	                                    ,name       : 'apat'
-	                                }
-				        		    ,{
-	                                    xtype       : 'textfield'
-	                                    ,labelAlign : 'top'
-	                                    ,label      : 'APELLIDO MATERNO'
-	                                    ,name       : 'amat'
-	                                }
+				        		    ,<s:property value="imap.itemsIndividuales" />
+				        		    <s:if test='%{getImap().get("modeloExtraItems")!=null}' >
+				        		        ,<s:property value="imap.modeloExtraItems"  />
+				        		    </s:if>
 				        		]
 				        	}
 				        	,{
@@ -938,7 +943,7 @@ Ext.setup({onReady:function()
                         ,iconCls          : 'more'
                         ,itemId           : '_mcotiza_listAsegurados'
                         ,store            : _mcotiza_storeIncisos
-                        ,itemTpl          : '{nombre} {nombre2} {apat} {amat}'
+                        ,itemTpl          : _mcotiza_incisoTpl
                         ,onItemDisclosure : _mcotiza_incisoItemDisclosure
                     }
 			        ,{
