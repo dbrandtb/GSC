@@ -25,15 +25,10 @@ import org.apache.struts2.ServletActionContext;
  * @author HMLT
  */
 public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
-    
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 7885456537983878685L;
 
 	private static org.apache.log4j.Logger logger =org.apache.log4j.Logger.getLogger(CotizaSaludVitalAction.class);
-	
 	
 	public static String DEFAULT_DATE_FORMAT_PARAM = "defaultDateFormat";
     public static String DEFAULT_DECIMAL_SEPARATOR_PARAM = "defaultDecimalSeparator";
@@ -48,7 +43,6 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
 	private NavigationManager navigationManager;
     private UsuarioManager usuarioManager;
     private transient PrincipalManager principalManagerJdbcTemplate;
-
     
     private HashMap<String,String> params;
     
@@ -59,8 +53,6 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
     private boolean codigoValido;
     private int numReg;
     private String cdtipsit;
-
-
     
     private List<RamaVO> listaRolCliente;
     private List<UserVO> userList;
@@ -79,8 +71,8 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
 			
 			setCodigoCliente(codigoCliente);
 			setCodigoRol(codigoRol);
-//			setCodigoCliente("6442");
-//			setCodigoRol("EJECUTIVOCUENTA");
+			//setCodigoCliente("6442");
+			//setCodigoRol("EJECUTIVOCUENTA");
 			
 			obtenCodigoTree();
 			
@@ -96,15 +88,22 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
         return true;
     }
     
+    
+    /**
+     * Realiza un acceso directo a distintos m&oacute;dulos de la aplicaci&oacute;n 
+     * @return
+     * @throws Exception
+     */
     public String accesoDirecto() throws Exception {
     	
     	String acceso = (String)params.get("acceso");
-    	logger.debug(" >>>>>>>> Entrando a Acceso Directo para usuario: " + user + " acceso: " + acceso);
+    	logger.info(" >>>>>>>> Entrando a Acceso Directo para usuario: " + user + " acceso: " + acceso);
     	
-    	if("cotizadorSaludVital".equals(acceso) || "consultasSaludVital".equals(acceso)){
+    	if("cotizadorSaludVital".equals(acceso) || "consultasSaludVital".equals(acceso)
+    			|| "cotizador".equals(acceso) || "consultaPolizas".equals(acceso)){
     		instanciaUsuarioLigaDirecta();
     	} else {
-    		acceso= "error";
+    		acceso= "login";
     	}
     	
     	return acceso;
@@ -139,6 +138,7 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
 		exito = true;
 		return exito;
 	}
+    
     
     /**
      * Método que carga la pantalla que contiene el árbol de clientes y roles
@@ -232,6 +232,7 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
         return retorno;
     }
     
+    
     @SuppressWarnings("unchecked")
     public String obtenCodigoTree() throws Exception
     {
@@ -307,6 +308,7 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
         return retorno;
     }
     
+    
     /**
      * Metodo que complementa los datos necesarios de un usuario
      * para que no se ciclen los jsp en taglibs.jsp:
@@ -357,108 +359,85 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
 		this.success = success;
 	}
 
-
 	public String getCodigoCliente() {
 		return codigoCliente;
 	}
-
 
 	public void setCodigoCliente(String codigoCliente) {
 		this.codigoCliente = codigoCliente;
 	}
 
-
 	public String getCodigoRol() {
 		return codigoRol;
 	}
-
 
 	public void setCodigoRol(String codigoRol) {
 		this.codigoRol = codigoRol;
 	}
 
-
 	public void setLoginManager(LoginManager loginManager) {
 		this.loginManager = loginManager;
 	}
-
 
 	public void setNavigationManager(NavigationManager navigationManager) {
 		this.navigationManager = navigationManager;
 	}
 
-
 	public List<RamaVO> getListaRolCliente() {
 		return listaRolCliente;
 	}
-
 
 	public void setListaRolCliente(List<RamaVO> listaRolCliente) {
 		this.listaRolCliente = listaRolCliente;
 	}
 
-
 	public List<UserVO> getUserList() {
 		return userList;
 	}
-
 
 	public void setUserList(List<UserVO> userList) {
 		this.userList = userList;
 	}
 
-
 	public void setUsuarioManager(UsuarioManager usuarioManager) {
 		this.usuarioManager = usuarioManager;
 	}
-
 
 	public boolean isCodigoValido() {
 		return codigoValido;
 	}
 
-
 	public void setCodigoValido(boolean codigoValido) {
 		this.codigoValido = codigoValido;
 	}
-
 
 	public int getNumReg() {
 		return numReg;
 	}
 
-
 	public void setNumReg(int numReg) {
 		this.numReg = numReg;
 	}
-
 
 	public void setPrincipalManagerJdbcTemplate(
 			PrincipalManager principalManagerJdbcTemplate) {
 		this.principalManagerJdbcTemplate = principalManagerJdbcTemplate;
 	}
 
-
 	public String getUser() {
 		return user;
 	}
-
 
 	public void setUser(String user) {
 		this.user = user;
 	}
 
-
 	public String getCdtipsit() {
 		return cdtipsit;
 	}
-
 
 	public void setCdtipsit(String cdtipsit) {
 		this.cdtipsit = cdtipsit;
 	}
 	
-	
-
-    
 }

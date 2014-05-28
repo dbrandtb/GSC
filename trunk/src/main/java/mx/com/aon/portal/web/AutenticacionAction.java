@@ -1,20 +1,9 @@
 package mx.com.aon.portal.web;
 
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
 import javax.naming.AuthenticationException;
-import javax.naming.Context;
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
-import javax.naming.directory.Attributes;
-import javax.naming.directory.BasicAttribute;
-import javax.naming.directory.BasicAttributes;
-import javax.naming.directory.DirContext;
-import javax.naming.directory.SearchControls;
-import javax.naming.directory.SearchResult;
-import javax.naming.ldap.InitialLdapContext;
 
 import mx.com.aon.portal.model.IsoVO;
 import mx.com.aon.portal.model.RamaVO;
@@ -69,6 +58,7 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 			return SUCCESS;
 		}
 	}
+	
 	
 	public String autenticaUsuario() throws Exception {
 		/**
@@ -137,7 +127,8 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 			return SUCCESS;
 		}
 	}
-
+	
+	
 	private boolean creaSesionDeUsuario(String usuario) throws Exception {
 
 		boolean exito = false;
@@ -167,6 +158,7 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 		return exito;
 	}
 	
+	
 	public String logoutUsuario() throws Exception {
 		try {
 			logger.debug(":X :X :X Terminando Session X: X: X:"+ ServletActionContext.getRequest().getSession().getId());
@@ -181,15 +173,16 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 			return SUCCESS;
 		}
 	}
-
-
-	/**
+	
+	
+	/*
 	 * Action temporal para GSeguros, que redirigira a la pantalla de cotizacion
 	 * Salud Vital
 	 * 
 	 * @return
 	 * @throws Exception
 	 */
+	/*
 	public String cotizacionSaludVital() throws Exception {
 		
 		try {
@@ -201,8 +194,9 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 		
 		return SUCCESS;
 	}
-
-
+	*/
+	
+	
 	public void setLoginManager(LoginManager loginManager) {
 		this.loginManager = loginManager;
 	}
