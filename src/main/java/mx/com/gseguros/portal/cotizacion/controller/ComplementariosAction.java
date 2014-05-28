@@ -2272,6 +2272,20 @@ public class ComplementariosAction extends PrincipalCoreAction
 				);
 		return SUCCESS;
 	}
+	
+	public String redireccion()
+	{
+		log.info(""
+				+ "\n#########################"
+				+ "\n###### redireccion ######"
+				);
+		log.info("map1: "+map1);
+		log.info(""
+				+ "\n###### redireccion ######"
+				+ "\n#########################"
+				);
+		return SUCCESS;
+	}
 
 	public List<Map<String, Object>> getList1() {
 		return list1;
