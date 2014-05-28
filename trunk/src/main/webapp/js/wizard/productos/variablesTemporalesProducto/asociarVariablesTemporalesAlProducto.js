@@ -198,6 +198,29 @@ Ext.onReady(function() {
 											var nombreExp = Ext.getCmp('grid-variables-temporales-producto').getSelectionModel().getSelected().get('nombreCabecera');
 											var descExp = Ext.getCmp('grid-variables-temporales-producto').getSelectionModel().getSelected().get('descripcionCabecera');
 											
+											console.log("codigoExpresion:", codigoExpresion, "nombreExp",nombreExp,"descExp",descExp);
+											
+											var conn2 = new Ext.data.Connection();
+											var params2 = {
+													codigoVariableProducto: nombreExp
+											};
+						            		conn2.request ({
+													url: 'librerias/DesasociarVariableDelProducto.action',
+													method: 'POST',
+													successProperty : '@success',
+													params : params2,
+						    	       				callback: function (options, success, response) {
+			                       						if (success) {
+				        	                  				Ext.MessageBox.alert('Aviso', 'Variable borrada exitosamente.');
+				        	                  				storeVariablesProducto.load();
+				        	                  				storeComboVariables.load();
+		            	           						} else {
+				                       							Ext.MessageBox.alert('Error', 'Variable no borrada.');        	                							
+		    	                	      				}
+		       		               					},
+							            	   		waitTitle:'Espere',
+							    					waitMsg:'Procesando...'
+				    		       			});
 											
 										} else {
 											Ext.MessageBox.alert('Status','Seleccione un registro.');
