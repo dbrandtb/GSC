@@ -312,24 +312,34 @@ public class PrincipalLibreriasAction extends ExpresionesPadre {
 	
 	@SuppressWarnings("unchecked")
 	public String desasociarVariableDelProducto() throws Exception{
-		//log.debug("CODIGOvARIABLE"+codigoVariableProducto);
+		log.debug("desasociarVariableDelProducto: "+codigoVariableProducto);
 		if(codigoVariableProducto != null && 
 				StringUtils.isNotBlank(codigoVariableProducto)&& 
 				!codigoVariableProducto.equals("undefined")){
-			if(!session.containsKey("CATALOGO_VARIABLES_TEMPORALES_PRODUCTO"))
+			
+			if(!session.containsKey("CATALOGO_VARIABLES_TEMPORALES_PRODUCTO")){
+//				log.debug("CARGA CATALOGO DE VARIABLES PROD");
 				listaCatalogoVariablesProducto();
-				//log.debug("CARGA CATALOGO DE VARIABLES PROD");
-			if(!session.containsKey("VARIABLES_TEMPORALES_ASOCIADAS_AL_PRODUCTO"))
+			}
+			if(!session.containsKey("VARIABLES_TEMPORALES_ASOCIADAS_AL_PRODUCTO")){
+//				log.debug("CARGA VARIABLES ASOCIADAS");
 				listaVariablesAsociadasAlProducto();
-				//log.debug("CARGA VARIABLES ASOCIADAS");
+			}
+				
 			listaReglaNegocioVariables = (List<ReglaNegocioVO>) session.get("CATALOGO_VARIABLES_TEMPORALES_PRODUCTO");
 			listaReglaNegocioVariablesProducto = (List<ReglaNegocioVO>) session.get("VARIABLES_TEMPORALES_ASOCIADAS_AL_PRODUCTO");
+			
+//			log.debug("listaReglaNegocioVariablesProducto para eliminar variable: "+listaReglaNegocioVariablesProducto);
 			if(contieneVariable(codigoVariableProducto, listaReglaNegocioVariablesProducto)!=-1){
-				//log.debug("ENTRO AL IF DE CONTIENE VARIABLE");
+//				log.debug("ENTRO AL IF DE CONTIENE VARIABLE DEL PROD");
+				
 				int posicion = contieneVariable(codigoVariableProducto, listaReglaNegocioVariablesProducto);
 				ReglaNegocioVO variableVO = listaReglaNegocioVariablesProducto.get(posicion);
+				
+//				log.debug("variableVO: "+variableVO);
+				
 				if(!variableVO.isTemporal()){
-					//log.debug("ENTRO AL IF DE TEMPORAL");
+//					log.debug("ENTRO AL IF DE TEMPORAL---NO TMP");
 					if(!session.containsKey("VARIABLES_DESASOCIADAS_DEL_PRODUCTO")){
 						//log.debug("NO CONTIENE LA LAVE VARIABLES_DESASOCIADAS_DEL_PRODUCTO");
 						session.put("VARIABLES_DESASOCIADAS_DEL_PRODUCTO", new ArrayList<ReglaNegocioVO>());
