@@ -172,7 +172,8 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 
 			gc.generaParcial(camposAgrupados);
-			imap.put("camposAgrupados",gc.getItems());
+			imap.put("camposAgrupados" , gc.getItems());
+			imap.put("fieldsAgrupados" , gc.getFields());
 			
 			gc.generaParcialConEditor(camposIndividuales);
 			imap.put("itemsIndividuales"  , gc.getItems());
@@ -762,6 +763,8 @@ public class CotizacionAction extends PrincipalCoreAction
             	tatriPrima.setRenderer("function(v)"
             			+ "{"
             			+ "    debug('valor:',v);"
+            			+ "    v=v.toFixed(2);"
+            			+ "    debug('valor fixed:',v);"
             			+ "    var v2='';"
             			+ "    var ultimoPunto=-3;"
             			+ "    for(var i=(v+'').length-1;i>=0;i--)"
@@ -784,10 +787,6 @@ public class CotizacionAction extends PrincipalCoreAction
             			+ "        {"
             			+ "            v2='$ '+v2;"
             			+ "        }"
-            			+ "    }"
-            			+ "    if(v2.substring(v2.lastIndexOf('.')).length==2)"
-            			+ "    {"
-            			+ "        v2=v2+'0';"
             			+ "    }"
             			+ "    return v2;"
             			+ "}");
@@ -868,6 +867,103 @@ public class CotizacionAction extends PrincipalCoreAction
 	/*/////////////////*/
 	////// cotizar //////
 	/////////////////////
+	
+	public String cargarCotizacion()
+	{
+		log.info(""
+				+ "\n##############################"
+				+ "\n###### cargarCotizacion ######"
+				);
+		log.info("smap1: "+smap1);
+		success = true;
+		
+		String cdramo   = smap1.get("cdramo");
+		String cdtipsit = smap1.get("cdtipsit");
+		String nmpoliza = smap1.get("nmpoliza");
+		log.info("cdramo: "+cdramo);
+		log.info("cdtipsit: "+cdtipsit);
+		log.info("nmpoliza: "+nmpoliza);
+		
+		//validar nmpoliza contra producto y situacion
+		if(success)
+		{
+			try
+			{
+				LinkedHashMap<String,Object>paramsValidaCargarCotizacion=new LinkedHashMap<String,Object>();
+				paramsValidaCargarCotizacion.put("param1" , cdramo);
+				paramsValidaCargarCotizacion.put("param2" , cdtipsit);
+				paramsValidaCargarCotizacion.put("param3" , nmpoliza);
+				storedProceduresManager.procedureVoidCall(ObjetoBD.VALIDA_CARGAR_COTIZACION.getNombre(), paramsValidaCargarCotizacion, null);
+			}
+			catch(Exception ex)
+			{
+				log.error("error obtenido al validar carga de cotizacion",ex);
+				error=ex.getMessage();
+				success = false;
+			}
+		}
+		//validar nmpoliza contra producto y situacion
+		
+		//recupera tvalosit
+		if(success)
+		{
+			try
+			{
+				LinkedHashMap<String,Object>paramsObtenerTvalosit=new LinkedHashMap<String,Object>();
+				paramsObtenerTvalosit.put("param1" , cdramo);
+				paramsObtenerTvalosit.put("param2" , cdtipsit);
+				paramsObtenerTvalosit.put("param3" , nmpoliza);
+				slist1 = storedProceduresManager.procedureListCall(ObjetoBD.OBTIENE_TVALOSIT_COTIZACION.getNombre(), paramsObtenerTvalosit, null);
+				for(Map<String,String>iInciso:slist1)
+				{
+					String iCdunieco = iInciso.get("CDUNIECO");
+					String iEstado   = iInciso.get("ESTADO");
+					String iNmsituac = iInciso.get("NMSITUAC");
+					log.info("iCdunieco: "+iCdunieco);
+					log.info("iEstado: "+iEstado);
+					log.info("iNmsituac: "+iNmsituac);
+					LinkedHashMap<String,Object>paramsObtenerMpersonaCotizacion=new LinkedHashMap<String,Object>();
+					paramsObtenerMpersonaCotizacion.put("param1",iCdunieco);
+					paramsObtenerMpersonaCotizacion.put("param2",cdramo);
+					paramsObtenerMpersonaCotizacion.put("param3",iEstado);
+					paramsObtenerMpersonaCotizacion.put("param4",nmpoliza);
+					paramsObtenerMpersonaCotizacion.put("param5",iNmsituac);
+					iInciso.putAll(storedProceduresManager.procedureMapCall(ObjetoBD.OBTIENE_MPERSONA_COTIZACION.getNombre(),
+							paramsObtenerMpersonaCotizacion, null));
+					//copiar OTVALORXX a PARAMETROS.PV_OTVALORXX
+					Map<String,String>iIncisoOtvalor=new HashMap<String,String>();
+					for(Entry<String,String>en:iInciso.entrySet())
+					{
+						String key   = en.getKey();
+						String value = en.getValue();
+						if(key.length()>"otvalor".length()
+								&&key.substring(0, "otvalor".length()).equalsIgnoreCase("otvalor"))
+						{
+							iIncisoOtvalor.put(("PARAMETROS.PV_"+key).toLowerCase(),value);
+						}
+						else
+						{
+							iIncisoOtvalor.put(key.toLowerCase(),value);
+						}
+					}
+					iInciso.putAll(iIncisoOtvalor);
+				}
+			}
+			catch(Exception ex)
+			{
+				log.error("error al recuperar tvalosit",ex);
+				error   = ex.getMessage();
+				success = false;
+			}
+		}
+		//recupera tvalosit
+		
+		log.info(""
+				+ "\n###### cargarCotizacion ######"
+				+ "\n##############################"
+				);
+		return SUCCESS;
+	}
 	
 	///////////////////////////////
 	////// getters y setters //////
