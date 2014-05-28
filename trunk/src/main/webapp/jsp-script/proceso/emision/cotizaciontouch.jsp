@@ -312,15 +312,18 @@ function _mcotiza_construirGrid(json)
 	
 	var columns = Ext.JSON.decode(json.smap1.columnas,false);
 	debug('columns:',columns);
-	Ext.ComponentQuery.query('navigationview')[0].getNavigationBar().add(
+	if(Ext.ComponentQuery.query('#_mcotiza_resetButton').length==0)
 	{
-	    xtype    : 'button'
-	    ,itemId  : '_mcotiza_resetButton'
-	    ,ui      : 'confirm'
-	    ,text    : 'Nueva'
-	    ,align   : 'right'
-	    ,handler : _mcotiza_nueva
-	});
+		Ext.ComponentQuery.query('navigationview')[0].getNavigationBar().add(
+		{
+		    xtype    : 'button'
+		    ,itemId  : '_mcotiza_resetButton'
+		    ,ui      : 'confirm'
+		    ,text    : 'Nueva'
+		    ,align   : 'right'
+		    ,handler : _mcotiza_nueva
+		});
+	}
 	var grid = Ext.create('Ext.grid.Grid',
 	{
 		title    : 'Cotizaci&oacute;n'
