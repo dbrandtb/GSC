@@ -758,8 +758,39 @@ public class CotizacionAction extends PrincipalCoreAction
             	tatriPrima.setLabel(plan.getValue());
             	tatriPrima.setTipoCampo(ComponenteVO.TIPOCAMPO_PORCENTAJE);
             	tatriPrima.setColumna(Constantes.SI);
-            	tatriPrima.setRenderer(ComponenteVO.RENDERER_MONEY_EXT);
             	tatriPrima.setNameCdatribu("MNPRIMA"+plan.getKey());
+            	tatriPrima.setRenderer("function(v)"
+            			+ "{"
+            			+ "    debug('valor:',v);"
+            			+ "    var v2='';"
+            			+ "    var ultimoPunto=-3;"
+            			+ "    for(var i=(v+'').length-1;i>=0;i--)"
+            			+ "    {"
+            			+ "        var digito=(v+'').charAt(i);"
+            			+ "        if(digito=='.')"
+            			+ "        {"
+            			+ "            ultimoPunto=-2;"
+            			+ "        }"
+            			+ "        if(ultimoPunto>-3)"
+            			+ "        {"
+            			+ "            ultimoPunto=ultimoPunto+1;"
+            			+ "        }"
+            			+ "        if(ultimoPunto%3==0&&ultimoPunto>0)"
+            			+ "        {"
+            			+ "            digito=digito+',';"
+            			+ "        }"
+            			+ "        v2=digito+v2;"
+            			+ "        if(i==0)"
+            			+ "        {"
+            			+ "            v2='$ '+v2;"
+            			+ "        }"
+            			+ "    }"
+            			+ "    if(v2.substring(v2.lastIndexOf('.')).length==2)"
+            			+ "    {"
+            			+ "        v2=v2+'0';"
+            			+ "    }"
+            			+ "    return v2;"
+            			+ "}");
             	
             	/*Map<String,String>mapaPlan=new HashMap<String,String>();
             	mapaPlan.put("OTVALOR08","S");
