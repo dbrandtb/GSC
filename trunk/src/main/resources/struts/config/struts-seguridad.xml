@@ -66,10 +66,6 @@
 		</action>
 		
 		<!-- Actions temporales que utilizara GS para no pasar por el login -->
-		
-		<action name="cotizarSaludVital" class="cotizaSaludVitalAction" method="cotizaSaludVital">
-		  <result name="success">/jsp/extjs4/asegurados.jsp</result>
-        </action>
         
         <action name="accesoDirecto" class="cotizaSaludVitalAction" method="accesoDirecto">
 		    <result name="cotizadorSaludVital" type="redirectAction">
@@ -102,12 +98,6 @@
             </result>
         </action>
         <action name="regresaCodigo" class="loadClientesRolesAction" method="obtenCodigoTree">
-            <!-- <result name="success" type="json"><param name="ignoreHierarchy">false</param></result>
-            <result name="confcompleta" type="json"><param name="ignoreHierarchy">false</param></result> -->
-            <!-- <result name="confcompleta" type="redirectAction">
-                <param name="actionName">cotizacionVital</param>
-                <param name="namespace">/</param>
-            </result> -->
             <result name="success" type="redirectAction">
                 <param name="actionName">cotizacionVital</param>
                 <param name="namespace">/</param>
