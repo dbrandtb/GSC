@@ -5,6 +5,7 @@
 <head>
 <title>Cotizar</title>
 <link rel="stylesheet" href="${ctx}/resources/touch-2.3.1/resources/css/sencha-touch.css"></style>
+<script src="${ctx}/resources/extjs4/jquery-1.10.2.min.js"></script>
 <script src="${ctx}/resources/touch-2.3.1/sencha-touch-all.js"></script>
 <script src="${ctx}/resources/touch-2.3.1/src/locale/ext-lang-es.js"></script>
 <script>
@@ -56,6 +57,7 @@ var _mcotiza_urlCotizar        = '<s:url namespace="/emision"         action="co
 var _mcotiza_urlCotizarExterno = '<s:url namespace="/externo"         action="cotizar" />';
 var _mcotiza_urlViewDoc        = '<s:url namespace ="/documentos"     action="descargaDocInline" />';
 var _mcotiza_urlComprar        = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4" />';
+var _mcotiza_urlRedirect       = '<s:url namespace ="/"               action="redireccion" />';
 
 var _mcotiza_smap1         = <s:property value="%{convertToJSON('smap1')}"  escapeHtml="false" />;
 
@@ -73,6 +75,16 @@ debug('_mcotiza_smap1:',_mcotiza_smap1);
 ////// variables //////
 
 ////// funciones //////
+function _mcotiza_nueva()
+{
+	debug('>_mcotiza_nueva');
+	_mcotiza_navView.pop(_mcotiza_navView.getItems().length-1);
+	_mcotiza_getFormDatosGenerales().reset();
+	_mcotiza_storeIncisos.removeAll();
+	_mcotiza_getFormInciso().reset();
+	_mcotiza_navView.items.items[0].setActiveItem(0);
+	debug('<_mcotiza_nueva');
+}
 function _mcotiza_enviarPorCorreo()
 {
 	debug('>_mcotiza_enviarPorCorreo');
@@ -246,22 +258,11 @@ function _mcotiza_imprimir()
             + _mcotiza_reporteCotizacion
             + "&paramform=no";
     debug(urlRequestImpCotiza);
-    var numRand = Math.floor((Math.random() * 100000) + 1);
-    debug(numRand);
-    var windowVerDocu = Ext.create('Ext.Container',
-    {
-        title : 'Impresi&oacute;n'
-        ,html : '<iframe innerframe="'
-                + numRand
-                + '" frameborder="0" width="800" height="800"'
-                + 'src="'
-                + _mcotiza_urlViewDoc
-                + "?contentType=application/pdf&url="
-                + encodeURIComponent(urlRequestImpCotiza)
-                + "\">"
-                + '</iframe>'
-    });
-    _mcotiza_navView.push(windowVerDocu);
+    $(['<form action="'+_mcotiza_urlRedirect+'" target="_blank">'
+       ,'<input type="text" name="map1.url" value="'+urlRequestImpCotiza+'" />'
+       ,'</form>'].join("")
+       )
+   .submit();
 }
 
 function _mcotiza_tarifaSelect(columnName, record, row, column, eOpts)
@@ -311,6 +312,15 @@ function _mcotiza_construirGrid(json)
 	
 	var columns = Ext.JSON.decode(json.smap1.columnas,false);
 	debug('columns:',columns);
+	Ext.ComponentQuery.query('navigationview')[0].getNavigationBar().add(
+	{
+	    xtype    : 'button'
+	    ,itemId  : '_mcotiza_resetButton'
+	    ,ui      : 'confirm'
+	    ,text    : 'Nueva'
+	    ,align   : 'right'
+	    ,handler : _mcotiza_nueva
+	});
 	var grid = Ext.create('Ext.grid.Grid',
 	{
 		title    : 'Cotizaci&oacute;n'
@@ -322,9 +332,9 @@ function _mcotiza_construirGrid(json)
 		    	xtype   : 'toolbar'
 		    	,docked : 'bottom'
 	    		,layout :
-                   {
-                       pack : 'center'
-                   }
+                {
+                    pack : 'center'
+                }
 		    	,items  :
 		    	[
 					{
@@ -342,21 +352,21 @@ function _mcotiza_construirGrid(json)
 		    	    }
 		    	    ,{
 		    	    	xtype     : 'button'
-		    	    	,text     : 'Generar tr&aacute;mite'
+		    	    	,text     : 'Generar'
 		    	    	,disabled : true
 		    	    	,itemId   : '_mcotiza_botonComprar'
 		    	    	,handler  : _mcotiza_comprar
 		    	    }
 					,{
 						xtype     : 'button'
-						,text     : 'Enviar...'
+						,icon     : '${ctx}/resources/fam3icons/icons/email.png'
 						,disabled : true
 						,itemId   : '_mcotiza_botonCorreo'
 						,handler  : _mcotiza_enviarPorCorreo
 					}
 		    	    ,{
 		    	    	xtype     : 'button'
-		    	    	,text     : 'Imprimir'
+		    	    	,icon     : '${ctx}/resources/fam3icons/icons/printer.png'
 		    	    	,disabled : true
 		    	    	,itemId   : '_mcotiza_botImprimirId'
 		    	    	,handler  : _mcotiza_imprimir
