@@ -188,7 +188,7 @@ Ext.onReady(function()
         {
             load : function (action,records)
             {
-                debug("records",records);
+                debug("Records Cargados en mcdinStore: ",records);
             }
         }
     });
@@ -521,51 +521,32 @@ Ext.onReady(function()
     ////// cargador //////
     /*//////////////////*/
     loadMcdinStore = function (){
-    	mcdinGrid.setLoading(true);
-	    Ext.Ajax.request(
-	    {
-	        url      : mcdinUrlCargar
-	        ,params  :
-	        {
+    	var params = {
 	            'smap1.pv_cdunieco_i'   : mcdinInput['cdunieco']
-	             ,'smap1.pv_ntramite_i' : mcdinInput['ntramite']
-	             ,'smap1.pv_cdramo_i'   : mcdinInput['cdramo']
-	             ,'smap1.pv_nmpoliza_i' : mcdinInput['nmpoliza']
-	             ,'smap1.pv_estado_i'   : mcdinInput['estado']
-	             ,'smap1.pv_cdagente_i' : mcdinInput['cdagente']
-	             ,'smap1.pv_status_i'   : mcdinInput['status']
-	             ,'smap1.pv_cdtipsit_i' : mcdinInput['cdtipsit']
-	             ,'smap1.pv_fedesde_i'  : mcdinInput['fedesde']
-	             ,'smap1.pv_fehasta_i'  : mcdinInput['fehasta']
-	             ,'smap1.pv_cdtiptra_i' : mcdinInput['tiptra']
-	        }
-	        ,success : function(response)
-	        {
-	        	mcdinGrid.setLoading(false);
-	        	debug('responseText',response.responseText);
-	            var jsonResponse = Ext.decode(response.responseText);
-	            debug(jsonResponse);
-	            mcdinStore.setProxy(
-	            {
-	                type         : 'memory',
-	                enablePaging : true,
-	                reader       : 'json',
-	                data         : jsonResponse.olist1
-	            });
-	            mcdinStore.load();
-	        }
-	        ,failure : function()
-	        {
-	        	mcdinGrid.setLoading(false);
-	            var msg=Ext.Msg.show(
-	            {
-	                title   : 'Error',
-	                icon    : Ext.Msg.ERROR,
-	                msg     : 'Error de comunicaci&oacute;n',
-	                buttons : Ext.Msg.OK
-	            });
-	        }
-	    });
+		        ,'smap1.pv_ntramite_i' : mcdinInput['ntramite']
+		        ,'smap1.pv_cdramo_i'   : mcdinInput['cdramo']
+		        ,'smap1.pv_nmpoliza_i' : mcdinInput['nmpoliza']
+		        ,'smap1.pv_estado_i'   : mcdinInput['estado']
+		        ,'smap1.pv_cdagente_i' : mcdinInput['cdagente']
+		        ,'smap1.pv_status_i'   : mcdinInput['status']
+		        ,'smap1.pv_cdtipsit_i' : mcdinInput['cdtipsit']
+		        ,'smap1.pv_fedesde_i'  : mcdinInput['fedesde']
+		        ,'smap1.pv_fehasta_i'  : mcdinInput['fehasta']
+		        ,'smap1.pv_cdtiptra_i' : mcdinInput['tiptra']
+		   };
+    	
+    	cargaStorePaginadoLocal(mcdinStore, mcdinUrlCargar, 'olist1', params, function (options, success, response){
+    		if(success){
+                var jsonResponse = Ext.decode(response.responseText);
+                
+                if(!jsonResponse.success) {
+                    showMessage(_MSG_SIN_DATOS, _MSG_BUSQUEDA_SIN_DATOS, Ext.Msg.OK, Ext.Msg.INFO);
+                }
+            }else{
+                showMessage('Error', 'Error al obtener los datos.', Ext.Msg.OK, Ext.Msg.ERROR);
+            }
+    	}, mcdinGrid);
+    	
     }
     
     loadMcdinStore();
