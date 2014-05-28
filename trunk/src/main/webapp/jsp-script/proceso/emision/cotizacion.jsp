@@ -34,18 +34,19 @@ var _0_reporteCotizacion = '<s:text name="rdf.cotizacion.nombre"/>';
 var _0_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
 var _0_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 
-var _0_urlCotizar              = '<s:url namespace="/emision"         action="cotizar" />';
-var _0_urlCotizarExterno       = '<s:url namespace="/externo"         action="cotizar" />';
-var _0_urlDetalleCotizacion    = '<s:url namespace="/"                action="detalleCotizacion" />';
-var _0_urlCoberturas           = '<s:url namespace="/flujocotizacion" action="obtenerCoberturas4" />';
+var _0_urlCotizar              = '<s:url namespace="/emision"         action="cotizar"                 />';
+var _0_urlCotizarExterno       = '<s:url namespace="/externo"         action="cotizar"                 />';
+var _0_urlDetalleCotizacion    = '<s:url namespace="/"                action="detalleCotizacion"       />';
+var _0_urlCoberturas           = '<s:url namespace="/flujocotizacion" action="obtenerCoberturas4"      />';
 var _0_urlDetalleCobertura     = '<s:url namespace="/flujocotizacion" action="obtenerAyudaCoberturas4" />';
-var _0_urlEnviarCorreo         = '<s:url namespace="/general"         action="enviaCorreo" />';
-var _0_urlViewDoc              = '<s:url namespace ="/documentos"     action="descargaDocInline" />';
-var _0_urlComprar              = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4" />';
+var _0_urlEnviarCorreo         = '<s:url namespace="/general"         action="enviaCorreo"             />';
+var _0_urlViewDoc              = '<s:url namespace ="/documentos"     action="descargaDocInline"       />';
+var _0_urlComprar              = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4"      />';
 var _0_urlVentanaDocumentos    = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza" />';
-var _0_urlDatosComplementarios = '<s:url namespace="/"                action="datosComplementarios" />';
+var _0_urlDatosComplementarios = '<s:url namespace="/"                action="datosComplementarios"    />';
 var _0_urlUpdateStatus         = '<s:url namespace="/mesacontrol"     action="actualizarStatusTramite" />';
-var _0_urlMesaControl          = '<s:url namespace="/mesacontrol"     action="principal" />';
+var _0_urlMesaControl          = '<s:url namespace="/mesacontrol"     action="principal"               />';
+var _0_urlLoad                 = '<s:url namespace="/emision"         action="cargarCotizacion"        />';
 
 var _0_modeloExtraFields = [<s:property value="imap.modeloExtraFields" />];
 
@@ -55,6 +56,7 @@ var _0_gridIncisos;
 var _0_storeIncisos;
 var _0_gridTarifas;
 var _0_botCotizar;
+var _0_botCargar;
 var _0_botLimpiar;
 var _0_fieldNtramite;
 var _0_fieldNmpoliza;
@@ -637,6 +639,126 @@ function _0_limpiar()
 	_0_formAgrupados.items.items[2].focus();
 }
 
+function _0_cargar()
+{
+	debug('>_0_cargar');
+	Ext.Msg.prompt(
+    'Cargar cotizaci&oacute;n',
+    'N&uacute;mero de cotizaci&oacute;n:',
+    function (buttonId, value)
+    {
+        debug('nmpoliza',value);
+        var valido=true;
+        //boton pulsado y valor capturado
+        if(valido)
+        {
+            valido = buttonId=='ok'&&(value+'').length>0;
+        }
+        //valor numerico
+        if(valido)
+        {
+            valido = !isNaN(value);
+            if(!valido)
+            {
+                mensajeWarning('Introduce un n&uacute;mero v&aacute;lido');
+            }
+        }
+        //request
+        if(valido)
+        {
+        	_0_panelPri.setLoading(true);
+            Ext.Ajax.request(
+            {
+                url      : _0_urlLoad
+                ,params  :
+                {
+                    'smap1.nmpoliza'  : value
+                    ,'smap1.cdramo'   : _0_smap1.cdramo
+                    ,'smap1.cdtipsit' : _0_smap1.cdtipsit
+                }
+                ,success : function(response)
+                {
+                	_0_panelPri.setLoading(false);
+                    var json=Ext.decode(response.responseText);
+                    debug('json response:',json);
+                    if(json.success)
+                    {
+                    	_0_limpiar();
+                        for(var i=0;i<json.slist1.length;i++)
+                        {
+                        	_0_storeIncisos.add(new _0_modelo(json.slist1[i]));
+                        }
+                        debug('store:',_0_storeIncisos);
+                        var primerInciso = new _0_modeloAgrupado(json.slist1[0]);
+                        debug('primerInciso:',primerInciso);
+                        //leer elementos anidados
+                        var form      = _0_formAgrupados;
+                        var formItems = form.items.items;
+                        var numBlurs  = 0;
+                        for(var i=0;i<formItems.length;i++)
+                        {
+                            var item=formItems[i];
+                            if(item.hasListener('blur'))
+                            {
+                                var numBlursSeguidos = 1;
+                                for(var j=i+1;j<formItems.length;j++)
+                                {
+                                    if(formItems[j].hasListener('blur'))
+                                    {
+                                        numBlursSeguidos=numBlursSeguidos+1;
+                                    }
+                                }
+                                if(numBlursSeguidos>numBlurs)
+                                {
+                                    numBlurs=numBlursSeguidos;
+                                }
+                            }
+                        }
+                        debug('numBlurs:',numBlurs);
+                        var i=0;
+                        var renderiza=function()
+                        {
+                            debug('renderiza',i);
+                            form.loadRecord(primerInciso);
+                            if(i<numBlurs)
+                            {
+                                i=i+1;
+                                for(var j=0;j<formItems.length;j++)
+                                {
+                                    if(formItems[j].hasListener('blur'))
+                                    {
+                                        debug('tiene blur',formItems[j]);
+                                        formItems[j+1].heredar(true);
+                                    }
+                                }
+                                setTimeout(renderiza,1000);
+                            }
+                            else
+                            {
+                            	_0_fieldNmpoliza.setValue(value);
+                            	_0_panelPri.setLoading(false);
+                            }
+                        }
+                        _0_panelPri.setLoading(true);
+                        renderiza();
+                    }
+                    else
+                    {
+                        mensajeError(json.error);
+                    }
+                }
+                ,failure : function()
+                {
+                	_0_panelPri.setLoading(false);
+                    errorComunicacion();
+                }
+            });
+        }
+    });
+    debug('<_mcotiza_load');
+	debug('<_0_cargar');
+}
+
 function _0_agregarAsegu(boton)
 {
 	var grid=boton.up().up();
@@ -946,6 +1068,15 @@ Ext.onReady(function()
             <s:property value='%{","+imap.modeloExtraFields}' />
     	]
     });
+    
+    Ext.define('_0_modeloAgrupado',
+    {
+        extend  : 'Ext.data.Model'
+        ,fields :
+        [
+            <s:property value="imap.fieldsAgrupados"/>
+        ]
+    });
     /*/////////////////*/
     ////// modelos //////
     /////////////////////
@@ -1142,6 +1273,7 @@ Ext.onReady(function()
                 [
                     _0_botCotizar
                     ,_0_botLimpiar
+                    ,_0_botCargar
                     //>agregado para cancelar un tramite
                     ,{
                         text     : 'Rechazar'
@@ -1426,6 +1558,13 @@ Ext.onReady(function()
         text     : _0_smap1.ntramite?'Precaptura':'Cotizar'
         ,icon    : '${ctx}/resources/fam3icons/icons/calculator.png'
         ,handler : _0_cotizar
+    });
+    
+    _0_botCargar=Ext.create('Ext.Button',
+    {
+        text     : 'Cargar'
+        ,icon    : '${ctx}/resources/fam3icons/icons/database_refresh.png'
+        ,handler : _0_cargar
     });
     
     _0_botLimpiar=Ext.create('Ext.Button',
