@@ -46,6 +46,8 @@ Ext.override(Ext.Picker,
 ////// overrides //////
 
 ////// variables //////
+var _text_cargando = 'Cargando...';
+
 var _mcotiza_navView;
 var _mcotiza_storeIncisos;
 var _mcotiza_selectedCdperpag;
@@ -53,11 +55,12 @@ var _mcotiza_selectedCdplan;
 var _mcotiza_selectedDsplan;
 var _mcotiza_selectedNmsituac;
 
-var _mcotiza_urlCotizar        = '<s:url namespace="/emision"         action="cotizar" />';
-var _mcotiza_urlCotizarExterno = '<s:url namespace="/externo"         action="cotizar" />';
-var _mcotiza_urlViewDoc        = '<s:url namespace ="/documentos"     action="descargaDocInline" />';
+var _mcotiza_urlCotizar        = '<s:url namespace="/emision"         action="cotizar"            />';
+var _mcotiza_urlCotizarExterno = '<s:url namespace="/externo"         action="cotizar"            />';
+var _mcotiza_urlViewDoc        = '<s:url namespace="/documentos "     action="descargaDocInline"  />';
 var _mcotiza_urlComprar        = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4" />';
-var _mcotiza_urlRedirect       = '<s:url namespace ="/"               action="redireccion" />';
+var _mcotiza_urlRedirect       = '<s:url namespace="/"                action="redireccion"        />';
+var _mcotiza_urlLoad           = '<s:url namespace="/emision"         action="cargarCotizacion"   />';
 
 var _mcotiza_smap1         = <s:property value="%{convertToJSON('smap1')}"  escapeHtml="false" />;
 
@@ -75,6 +78,138 @@ debug('_mcotiza_smap1:',_mcotiza_smap1);
 ////// variables //////
 
 ////// funciones //////
+function maskui()
+{
+    Ext.Viewport.setMasked(
+    {
+        xtype    : 'loadmask'
+        ,message : _text_cargando
+    });
+}
+
+function unmaskui()
+{
+    Ext.Viewport.setMasked(false);
+}
+
+function _mcotiza_load()
+{
+	debug('>_mcotiza_load');
+	Ext.Msg.prompt(
+		    'Cargar cotizaci&oacute;n',
+		    'N&uacute;mero de cotizaci&oacute;n:',
+		    function (buttonId, value)
+		    {
+		    	debug('nmpoliza',value);
+		    	var valido=true;
+		    	//boton pulsado y valor capturado
+		    	if(valido)
+		    	{
+		    		valido = buttonId=='ok'&&(value+'').length>0;
+		    	}
+		    	//valor numerico
+		    	if(valido)
+		    	{
+		    		valido = !isNaN(value);
+		    		if(!valido)
+		    		{
+		    			Ext.Msg.alert('Error','Introduce un n&uacute;mero v&aacute;lido');
+		    		}
+		    	}
+		    	//request
+		    	if(valido)
+		    	{
+		    		maskui();
+		    		Ext.Ajax.request(
+		    		{
+		    			url      : _mcotiza_urlLoad
+		    			,params  :
+		    			{
+		    				'smap1.nmpoliza'  : value
+		    				,'smap1.cdramo'   : _mcotiza_smap1.cdramo
+		    				,'smap1.cdtipsit' : _mcotiza_smap1.cdtipsit
+		    			}
+		    		    ,success : function(response)
+		    		    {
+		    		    	unmaskui();
+		    		    	var json=Ext.JSON.decode(response.responseText);
+		    		    	debug('json response:',json);
+		    		    	if(json.success)
+		    		    	{
+		    		    		_mcotiza_nueva();
+		    		    		for(var i=0;i<json.slist1.length;i++)
+		    		    		{
+		    		    			_mcotiza_storeIncisos.add(new _mcotiza_Inciso(json.slist1[i]));
+		    		    		}
+		    		    		debug('store:',_mcotiza_storeIncisos);
+		    		    		var primerInciso = new _mcotiza_IncisoAgrupado(json.slist1[0]);
+		    		    		debug('primerInciso:',primerInciso);
+		    		    		//leer elementos anidados
+		    		    		var form      = _mcotiza_getFormDatosGenerales();
+		    		    		var formItems =_mcotiza_getFormDatosGenerales().items.items[0].items.items;
+		    		    		var numBlurs  = 0;
+		    		    		for(var i=0;i<formItems.length;i++)
+		    		    		{
+		    		    			var item=formItems[i];
+		    		    			if(item.hasListener('blur'))
+		    		    			{
+		    		    				var numBlursSeguidos = 1;
+		    		    				for(var j=i+1;j<formItems.length;j++)
+		    		    				{
+		    		    					if(formItems[j].hasListener('blur'))
+		    		    					{
+		    		    						numBlursSeguidos=numBlursSeguidos+1;
+		    		    					}
+		    		    				}
+		    		    				if(numBlursSeguidos>numBlurs)
+		    		    				{
+		    		    					numBlurs=numBlursSeguidos;
+		    		    				}
+		    		    			}
+		    		    		}
+		    		    		debug('numBlurs:',numBlurs);
+		    		    		var i=0;
+		    		    		var renderiza=function()
+		    		    		{
+		    		    			debug('renderiza',i);
+		    		    			form.setRecord(primerInciso);
+		    		    			if(i<numBlurs)
+		    		    			{
+		    		    				i=i+1;
+		    		    				for(var j=0;j<formItems.length;j++)
+		    		    				{
+		    		    					if(formItems[j].hasListener('blur'))
+		    		    					{
+		    		    						debug('tiene blur',formItems[j]);
+		    		    						_g_heredarCombo(true,formItems[j+1].id,formItems[j].id);
+		    		    					}
+		    		    				}
+		    		    				setTimeout(renderiza,1000);
+		    		    			}
+		    		    			else
+		    		    			{
+		    		    				_mcotiza_getFieldNmpoliza().setValue(value);
+		    		    				unmaskui();
+		    		    			}
+		    		    		}
+		    		    		maskui();
+		    		    		renderiza();
+		    		    	}
+		    		    	else
+		    		    	{
+		    		    		Ext.Msg.alert('Error',json.error);
+		    		    	}
+		    		    }
+		    		    ,failure : function()
+		    		    {
+		    		    	unmaskui();
+		    		    	Ext.Msg.alert('Error','Error de comunicaci&oacute;n');
+		    		    }
+		    		});
+		    	}
+		    });
+	debug('<_mcotiza_load');
+}
 function _mcotiza_nueva()
 {
 	debug('>_mcotiza_nueva');
@@ -312,6 +447,7 @@ function _mcotiza_construirGrid(json)
 	
 	var columns = Ext.JSON.decode(json.smap1.columnas,false);
 	debug('columns:',columns);
+	Ext.ComponentQuery.query('#_mcotiza_loadButton')[0].hide();
 	if(Ext.ComponentQuery.query('#_mcotiza_resetButton').length==0)
 	{
 		Ext.ComponentQuery.query('navigationview')[0].getNavigationBar().add(
@@ -583,6 +719,7 @@ function _mcotiza_cotiza()
 
 function _g_heredarCombo(remoto,compId,compAnteriorId)
 {
+	debug('>_g_heredarCombo',remoto,compId,compAnteriorId);
 	var thisCmp=Ext.getCmp(compId);
 	debug('Heredar "+name+"');
 	if(!thisCmp.noEsPrimera||remoto==true)
@@ -811,10 +948,22 @@ Ext.setup({onReady:function()
 		{
 			fields :
 			[
-			    <s:property value="imap.fieldsIndividuales" />
+			    <s:property value="imap.fieldsIndividuales"       />
 			    <s:property value='%{","+imap.modeloExtraFields}' />
 			]
 		}
+	});
+	
+	Ext.define('_mcotiza_IncisoAgrupado',
+	{
+	    extend  : 'Ext.data.Model'
+	    ,config :
+	    {
+	        fields :
+	        [
+	            <s:property value='imap.fieldsAgrupados' />
+	        ]
+	    }
 	});
 	////// modelos //////
 	
@@ -1001,7 +1150,15 @@ Ext.setup({onReady:function()
 	});
 	
 	Ext.Viewport.add(_mcotiza_navView);
-	
+	Ext.ComponentQuery.query('navigationview')[0].getNavigationBar().add(
+    {
+        xtype    : 'button'
+        ,itemId  : '_mcotiza_loadButton'
+        ,ui      : 'confirm'
+        ,text    : 'Cargar'
+        ,align   : 'right'
+        ,handler : _mcotiza_load
+    });
 }});
 
 ////// getters //////
