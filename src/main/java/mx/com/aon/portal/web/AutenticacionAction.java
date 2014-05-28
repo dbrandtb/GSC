@@ -79,7 +79,10 @@ public class AutenticacionAction extends ActionSupport implements SessionAware {
 		}
 		
 		try {
-			boolean existeUsuario = loginManager.validaUsuarioLDAP(false, user, password);
+			/**
+			 * TODO: descomentar cuado ya se vaya a validar el password de los usuarios
+			 */
+			boolean existeUsuario = true;//loginManager.validaUsuarioLDAP(false, user, password);
 			if (existeUsuario) {
 				logger.info("Usuario "+user+" ha sido valido exitosamente en LDAP, creando sesion...");
 				success = creaSesionDeUsuario(user);
