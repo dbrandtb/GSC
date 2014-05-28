@@ -67,40 +67,7 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
     
     
     /**
-     * Obtiene los datos generales de una p&oacute;liza
-     * @return String result
-     */
-    @Deprecated
-    public String cotizaSaludVital(){
-    	logger.debug(" **** Entrando a cotizaSaludVital ****");
-        try {
-        	creaSesionDeUsuario(user);
-        
-        	obtenRolesClientes();
-			
-			setCodigoCliente(codigoCliente);
-			setCodigoRol(codigoRol);
-//			setCodigoCliente("6442");
-//			setCodigoRol("EJECUTIVOCUENTA");
-			
-			obtenCodigoTree();
-			
-			UserVO usuario=(UserVO) session.get("USUARIO");
-	        logger.debug("### usuario name: "+usuario.getName());
-	        logger.debug("### usuario user: "+usuario.getUser());
-	        logger.debug("### usuario empresa cdelemento id: "+usuario.getEmpresa().getElementoId());
-	        logger.debug("### usuario codigopersona: "+usuario.getCodigoPersona());
-        }catch( Exception e){
-            logger.error("Error en el proceso Interno", e);
-            return SUCCESS;
-        }
-        
-        success = true;
-        return SUCCESS;
-    }
-    
-    /**
-     * Obtiene los datos generales de una p&oacute;liza
+     * Crea el usuario en sesion automaticamente
      * @return String result
      */
     public boolean instanciaUsuarioLigaDirecta(){

@@ -72,7 +72,6 @@
     <!-- decorator que incluye taglibs, framework UI, utilerias JS -->
 	<decorator name="default" page="decorator_default.jsp">
 		<pattern>/seguridad/accesoDirecto.action</pattern>
-		<pattern>/seguridad/cotizarSaludVital.action</pattern>
 		<pattern>/cotizacionVital.action</pattern>
 		<pattern>/jsp/extjs4/asegurados.jsp</pattern>
 		<pattern>/jsp/extjs4/aseguradosGB.jsp</pattern>
