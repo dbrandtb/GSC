@@ -51,10 +51,6 @@
             <result type="json" />
         </action>
 
-		<!--<action name="datosPoliza"> <result>/jsp/ConsultaDatos/consultaDatosPoliza.jsp</result> 
-			</action> <action name="consultaDatosSuplemento"> <result>/jsp/ConsultaDatos/consultaDatosPoliza.jsp</result> 
-			</action> -->
-
 		<action name="existeUsuarioLDAP" class="autenticacionAction"
 			method="existeUsuarioLDAP">
 			<result name="success" type="json" />
@@ -65,19 +61,30 @@
 			<result name="success" type="json" />
 		</action>
 		
-		<!-- Actions temporales que utilizara GS para no pasar por el login -->
+		<!-- Actions temporales que utilizara GS para no pasar por el login: -->
         
         <action name="accesoDirecto" class="cotizaSaludVitalAction" method="accesoDirecto">
-		    <result name="cotizadorSaludVital" type="redirectAction">
+            <result name="login" type="redirectAction">
+                <param name="actionName">login</param>
+                <param name="namespace">/seguridad</param>
+            </result>
+            <result name="cotizador" type="redirectAction">
+                <param name="actionName">cotizacion</param>
+                <param name="namespace">/emision</param>
+                <param name="smap1.cdramo">${params.cdramo}</param>
+                <param name="smap1.cdtipsit">${params.cdtipsit}</param>
+            </result>
+		    <result name="consultaPolizas">/jsp/consultas/containerConsultasPolizas.jsp</result>
+            <!-- Eliminar results: -->
+            <result name="cotizadorSaludVital" type="redirectAction">
                 <param name="actionName">cotizacionVital</param>
                 <param name="namespace">/</param>
                 <param name="cdtipsit">${cdtipsit}</param>
             </result>
-		    <result name="consultasSaludVital">/jsp/consultas/containerConsultasPolizas.jsp</result>
-		    <result name="error">/jsp/portal/login.jsp</result>
+            <result name="consultasSaludVital">/jsp/consultas/containerConsultasPolizas.jsp</result>
         </action>
 		
-		<action name="cotizacionSaludVital" class="autenticacionAction" method="cotizacionSaludVital">
+		<!-- <action name="cotizacionSaludVital" class="autenticacionAction" method="cotizacionSaludVital">
 		  <result name="success" type="redirectAction">
 		      <param name="actionName">seleccionaRolCliente</param>
               <param name="namespace">/seguridad</param>
@@ -102,8 +109,8 @@
                 <param name="actionName">cotizacionVital</param>
                 <param name="namespace">/</param>
             </result>
-        </action>
-        <!-- Fin Actions temporales -->
+        </action> -->
+        <!-- Fin de Actions temporales -->
         
 	</package>
 	
