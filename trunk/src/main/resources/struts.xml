@@ -332,6 +332,10 @@
 			<result name="success">/jsp/wizard/indexWithIframe.jsp</result>
 		</action>
 		<!-- PARA WIZARD DE PARAMETRIZACION -->
+
+        <action name="redireccion" class="beanDatosComplementarios" method="redireccion">
+            <result name="success">/jsp-script/general/redireccion.jsp</result>
+        </action>
                 
     </package>
 
