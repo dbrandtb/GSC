@@ -21,7 +21,9 @@
 			<result name="SUCCESS">/jsp/confpantallas/data.jsp</result>
 		</action>
 		
-		
+		<action name="pintajson" class="mx.com.gseguros.confpantallas.action.PintaJson">
+		    <result name="SUCCESS">/jsp/confpantallas/commonJson.jsp</result>
+		</action>
 		
     </package>
     
