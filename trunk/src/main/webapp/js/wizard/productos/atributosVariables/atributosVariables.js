@@ -480,8 +480,8 @@ Ext.form.Field.prototype.msgTarget = "side";
 		            allowBlank: false,
 		            blankText : 'Descripci\u00F3n Requerida',
 		            id:'id-descripcion-atributos-variables',
-		            maxLength: 15,
-		            maxLengthText: 'M&aacute;ximo 15 caracteres',
+		            maxLength: 120,
+		            maxLengthText: 'M&aacute;ximo 120 caracteres',
         		    fieldLabel: 'Descripci\u00F3n*',
 		            width: 150
         		},{
