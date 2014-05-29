@@ -5,8 +5,8 @@ creaAltaCatalogoIncisos = function(dataStore) {
         fieldLabel: 'Clave*',
         allowBlank: false,
         blankText : 'Clave Requerida',
-        maxLength : '2',
-   		maxLengthText : 'Dos D\u00EDgitos M\u00E1ximo',
+        maxLength : '6',
+   		maxLengthText : 'Seis D\u00EDgitos M\u00E1ximo',
         name: 'claveCatalogo',
         anchor: '90%' 
     });
