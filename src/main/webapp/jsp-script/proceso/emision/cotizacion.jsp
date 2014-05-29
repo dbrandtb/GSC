@@ -48,11 +48,22 @@ var _0_urlUpdateStatus         = '<s:url namespace="/mesacontrol"     action="ac
 var _0_urlMesaControl          = '<s:url namespace="/mesacontrol"     action="principal"               />';
 var _0_urlLoad                 = '<s:url namespace="/emision"         action="cargarCotizacion"        />';
 
-var _0_modeloExtraFields = [<s:property value="imap.modeloExtraFields" />];
+var _0_modeloExtraFields = [
+<s:if test='%{getImap().get("modeloExtraFields")!=null}'>
+    <s:property value="imap.modeloExtraFields" />
+</s:if>
+];
+
+var _0_necesitoIncisos = true;
+<s:if test='%{getImap().get("fieldsIndividuales")==null}'>
+    _0_necesitoIncisos = false;
+</s:if>
+debug('_0_necesitoIncisos:',_0_necesitoIncisos);
 
 var _0_panelPri;
 var _0_formAgrupados;
 var _0_gridIncisos;
+var _0_botonera;
 var _0_storeIncisos;
 var _0_gridTarifas;
 var _0_botCotizar;
@@ -398,6 +409,7 @@ function _0_bloquear(b)
 		_0_formAgrupados.items.items[i].setReadOnly(b);
 	}
 	_0_gridIncisos.setDisabled(b);
+	_0_botonera.setDisabled(b);
 	if(b)
 	{
 		window.parent.scrollTo(0, _0_formAgrupados.getHeight()+_0_gridIncisos.getHeight());
@@ -811,34 +823,42 @@ function _0_cotizar(boton)
 		    slist1 : []
 		    ,smap1 : _0_smap1 
 		};
-		_0_storeIncisos.each(function(record)
+		if(_0_necesitoIncisos)
+		{
+			_0_storeIncisos.each(function(record)
+			{
+				var inciso=_0_formAgrupados.getValues();
+				for(var key in record.data)
+				{
+					var value=record.data[key];
+					debug(typeof value,key,value);
+					if((typeof value=='object')&&value&&value.getDate)
+					{
+						var fecha='';
+						fecha+=value.getDate();
+						if((fecha+'x').length==2)//1x 
+						{
+							fecha = ('x'+fecha).replace('x','0');//x1=01 
+						}
+						fecha+='/';
+						fecha+=value.getMonth()+1<10?
+								(('x'+(value.getMonth()+1)).replace('x','0'))
+								:(value.getMonth()+1);
+						fecha+='/';
+						fecha+=value.getFullYear();
+						value=fecha;
+					}
+					inciso[key]=value;
+				}
+				json['slist1'].push(inciso);
+			});
+		}
+		else
 		{
 			var inciso=_0_formAgrupados.getValues();
-			for(var key in record.data)
-			{
-				var value=record.data[key];
-				debug(typeof value,key,value);
-				if((typeof value=='object')&&value&&value.getDate)
-				{
-					var fecha='';
-					fecha+=value.getDate();
-					if((fecha+'x').length==2)//1x 
-					{
-						fecha = ('x'+fecha).replace('x','0');//x1=01 
-					}
-					fecha+='/';
-					fecha+=value.getMonth()+1<10?
-							(('x'+(value.getMonth()+1)).replace('x','0'))
-							:(value.getMonth()+1);
-					fecha+='/';
-					fecha+=value.getFullYear();
-					value=fecha;
-				}
-				inciso[key]=value;
-			}
 			json['slist1'].push(inciso);
-		});
-		debug(json);
+		}
+		debug('json para cotizar:',json);
 		_0_panelPri.setLoading(true);
 		Ext.Ajax.request(
 		{
@@ -927,7 +947,7 @@ function _0_validarBase()
 	}
 	
 	//algun inciso
-	if(valido)
+	if(valido&&_0_necesitoIncisos)
 	{
 		valido=_0_storeIncisos.getCount()>0;
 		if(!valido)
@@ -937,15 +957,16 @@ function _0_validarBase()
 	}
 	
 	//validar atributos de tatrisit en grid
-	if(valido)
+	if(valido&&_0_necesitoIncisos)
 	{
 		_0_storeIncisos.each(function(record)
         {
             for(var key in record.data)
             {
-                debug('modelo extra fields:',_0_modeloExtraFields);
+            	debug('validando:',record.data);
+                //debug('modelo extra fields:',_0_modeloExtraFields);
                 var estaEnModeloExtra=false;
-                debug('_0_modeloExtraFields.length:',_0_modeloExtraFields.length);
+                //debug('_0_modeloExtraFields.length:',_0_modeloExtraFields.length);
                 for(var i=0;i<_0_modeloExtraFields.length;i++)
                 {
                     if(key==_0_modeloExtraFields[i].name)
@@ -966,7 +987,7 @@ function _0_validarBase()
         });
         if(!valido)
         {
-            mensajeWarning('Los datos de los asegurados son requeridos');
+            mensajeWarning('Los datos de los incisos son requeridos');
         }
 	}
 	
@@ -1059,14 +1080,18 @@ Ext.onReady(function()
         ]
     });
     
+    var tmp = [];
+    <s:if test='%{getImap().get("fieldsIndividuales")!=null}'>
+        tmp.push(<s:property value="imap.fieldsIndividuales" />);
+	</s:if>
+	<s:if test='%{getImap().get("modeloExtraFields")!=null}'>
+	    tmp.push(<s:property value="imap.modeloExtraFields"  />);
+	</s:if>
+	debug('_0_modelo fields:',tmp);
     Ext.define('_0_modelo',
     {
     	extend  : 'Ext.data.Model'
-    	,fields :
-    	[
-            <s:property value="imap.fieldsIndividuales"/>
-            <s:property value='%{","+imap.modeloExtraFields}' />
-    	]
+    	,fields : tmp
     });
     
     Ext.define('_0_modeloAgrupado',
@@ -1249,6 +1274,38 @@ Ext.onReady(function()
     	}
     });
     
+    var tmp = [
+		{
+	        dataIndex     : 'contador'
+	        ,width        : 30
+	        ,menuDisabled : true
+	    }
+	];
+    <s:if test='%{getImap().get("camposIndividuales")!=null}' >
+       tmp.push(<s:property value="imap.camposIndividuales"/>);
+    </s:if>
+    <s:if test='%{getImap().get("modeloExtraColumns")!=null}' >
+       tmp.push(<s:property value="imap.modeloExtraColumns" />);
+    </s:if>
+    tmp.push(
+    {
+        xtype  : 'actioncolumn'
+        ,width : 30
+        ,menuDisabled : true
+        ,sortable : false
+        ,icon : '${ctx}/resources/fam3icons/icons/delete.png'
+        ,handler : function(grid,rowIndex,colIndex)
+        {
+            _0_storeIncisos.removeAt(rowIndex);
+            var contador=1;
+            _0_storeIncisos.each(function(record)
+            {
+                record.set('contador',contador);
+                contador=contador+1;
+            });
+        }
+    });
+    debug('_0_GridIncisos columns:',tmp);
     Ext.define('_0_GridIncisos',
     {
         extend         : 'Ext.grid.Panel'
@@ -1257,9 +1314,10 @@ Ext.onReady(function()
             debug('_0_GridIncisos initComponent');
             Ext.apply(this,
             {
-            	title        : 'Datos de asegurados'
+            	title        : 'Datos de incisos'
             	,store       : _0_storeIncisos
             	,minHeight   : 250
+            	,hidden      : !_0_necesitoIncisos
             	,tbar        :
             	[
             	    {
@@ -1268,135 +1326,7 @@ Ext.onReady(function()
             	    	,handler : _0_agregarAsegu
             	    }
             	]
-                ,buttonAlign : 'center'
-                ,buttons     :
-                [
-                    _0_botCotizar
-                    ,_0_botLimpiar
-                    ,_0_botCargar
-                    //>agregado para cancelar un tramite
-                    ,{
-                        text     : 'Rechazar'
-                        ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
-                        ,hidden  : (!_0_smap1.ntramite) || _0_smap1.ntramite.length==0
-                        ,handler : function()
-                        {
-                            //console.log(form.getValues());
-                            Ext.create('Ext.window.Window',
-                            {
-                                title        : 'Guardar detalle'
-                                ,width       : 600
-                                ,height      : 400
-                                ,buttonAlign : 'center'
-                                ,modal       : true
-                                ,closable    : false
-                                ,autoScroll  : true
-                                ,items       :
-                                [
-                                    Ext.create('Ext.form.HtmlEditor',
-                                    {
-                                        id        : 'inputTextareaCommentsToRechazo'
-                                        ,width  : 570
-                                        ,height : 300
-                                    })
-                                ]
-                                ,buttons    :
-                                [
-                                    {
-                                        text     : 'Rechazar'
-                                        ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
-                                        ,handler : function()
-                                        {
-                                            debug('rechazar');
-                                            var window=this.up().up();
-                                            window.setLoading(true);
-                                            Ext.Ajax.request
-                                            ({
-                                                url     : _0_urlUpdateStatus
-                                                ,params : 
-                                                {
-                                                    'smap1.ntramite' : _0_smap1.ntramite
-                                                    ,'smap1.status'  : '4'//rechazado
-                                                    ,'smap1.comments' : Ext.getCmp('inputTextareaCommentsToRechazo').getValue()
-                                                }
-                                                ,success : function(response)
-                                                {
-                                                    window.setLoading(false);
-                                                    var json=Ext.decode(response.responseText);
-                                                    if(json.success==true)
-                                                    {
-                                                        Ext.create('Ext.form.Panel').submit
-                                                        ({
-                                                            url             : _0_urlMesaControl
-                                                            ,standardSubmit : true
-                                                        });
-                                                    }
-                                                    else
-                                                    {
-                                                        Ext.Msg.show({
-                                                            title:'Error',
-                                                            msg: 'Error al rechazar',
-                                                            buttons: Ext.Msg.OK,
-                                                            icon: Ext.Msg.ERROR
-                                                        });
-                                                    }
-                                                }
-                                                ,failure : function()
-                                                {
-                                                    window.setLoading(false);
-                                                    Ext.Msg.show({
-                                                        title:'Error',
-                                                        msg: 'Error de comunicaci&oacute;n',
-                                                        buttons: Ext.Msg.OK,
-                                                        icon: Ext.Msg.ERROR
-                                                    });
-                                                }
-                                            });
-                                        }
-                                    }
-                                    ,{
-                                        text  : 'Cancelar'
-                                        ,icon : '${ctx}/resources/fam3icons/icons/cancel.png'
-                                        ,handler : function()
-                                        {
-                                            this.up().up().destroy();
-                                        }
-                                    }
-                                ]
-                            }).show();
-                        }
-                    }
-                    //<agregado para cancelar un tramite
-                ]
-                ,columns     :
-                [
-                    {
-                    	dataIndex     : 'contador'
-                    	,width        : 30
-                    	,menuDisabled : true
-                    }
-                    ,<s:property value="imap.camposIndividuales"/>
-                    <s:if test='%{getImap().get("modeloExtraColumns")!=null}' >
-                        ,<s:property value="imap.modeloExtraColumns" />
-                    </s:if>
-                    ,{
-                    	xtype  : 'actioncolumn'
-                    	,width : 30
-                    	,menuDisabled : true
-                    	,sortable : false
-                    	,icon : '${ctx}/resources/fam3icons/icons/delete.png'
-                    	,handler : function(grid,rowIndex,colIndex)
-                    	{
-                    		_0_storeIncisos.removeAt(rowIndex);
-                    		var contador=1;
-                    		_0_storeIncisos.each(function(record)
-                    		{
-                    			record.set('contador',contador);
-                    			contador=contador+1;
-                    		});
-                    	}
-                    }
-                ]
+                ,columns     : tmp
                 ,plugins     :
                 [
                     _0_rowEditing
@@ -1404,6 +1334,119 @@ Ext.onReady(function()
             });
             this.callParent();
         }
+    });
+    
+    Ext.define('_0_Botonera',
+    {
+    	extend         : 'Ext.panel.Panel'
+    	,initComponent : function()
+    	{
+    		Ext.apply(this,
+    		{
+                buttonAlign : 'center'
+                ,border     : 0
+		        ,buttons    :
+		        [
+		            _0_botCotizar
+		            ,_0_botLimpiar
+		            ,_0_botCargar
+		            //>agregado para cancelar un tramite
+		            ,{
+		                text     : 'Rechazar'
+		                ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
+		                ,hidden  : (!_0_smap1.ntramite) || _0_smap1.ntramite.length==0
+		                ,handler : function()
+		                {
+		                    //console.log(form.getValues());
+		                    Ext.create('Ext.window.Window',
+		                    {
+		                        title        : 'Guardar detalle'
+		                        ,width       : 600
+		                        ,height      : 400
+		                        ,buttonAlign : 'center'
+		                        ,modal       : true
+		                        ,closable    : false
+		                        ,autoScroll  : true
+		                        ,items       :
+		                        [
+		                            Ext.create('Ext.form.HtmlEditor',
+		                            {
+		                                id        : 'inputTextareaCommentsToRechazo'
+		                                ,width  : 570
+		                                ,height : 300
+		                            })
+		                        ]
+		                        ,buttons    :
+		                        [
+		                            {
+		                                text     : 'Rechazar'
+		                                ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
+		                                ,handler : function()
+		                                {
+		                                    debug('rechazar');
+		                                    var window=this.up().up();
+		                                    window.setLoading(true);
+		                                    Ext.Ajax.request
+		                                    ({
+		                                        url     : _0_urlUpdateStatus
+		                                        ,params : 
+		                                        {
+		                                            'smap1.ntramite' : _0_smap1.ntramite
+		                                            ,'smap1.status'  : '4'//rechazado
+		                                            ,'smap1.comments' : Ext.getCmp('inputTextareaCommentsToRechazo').getValue()
+		                                        }
+		                                        ,success : function(response)
+		                                        {
+		                                            window.setLoading(false);
+		                                            var json=Ext.decode(response.responseText);
+		                                            if(json.success==true)
+		                                            {
+		                                                Ext.create('Ext.form.Panel').submit
+		                                                ({
+		                                                    url             : _0_urlMesaControl
+		                                                    ,standardSubmit : true
+		                                                });
+		                                            }
+		                                            else
+		                                            {
+		                                                Ext.Msg.show({
+		                                                    title:'Error',
+		                                                    msg: 'Error al rechazar',
+		                                                    buttons: Ext.Msg.OK,
+		                                                    icon: Ext.Msg.ERROR
+		                                                });
+		                                            }
+		                                        }
+		                                        ,failure : function()
+		                                        {
+		                                            window.setLoading(false);
+		                                            Ext.Msg.show({
+		                                                title:'Error',
+		                                                msg: 'Error de comunicaci&oacute;n',
+		                                                buttons: Ext.Msg.OK,
+		                                                icon: Ext.Msg.ERROR
+		                                            });
+		                                        }
+		                                    });
+		                                }
+		                            }
+		                            ,{
+		                                text  : 'Cancelar'
+		                                ,icon : '${ctx}/resources/fam3icons/icons/cancel.png'
+		                                ,handler : function()
+		                                {
+		                                    this.up().up().destroy();
+		                                }
+		                            }
+		                        ]
+		                    }).show();
+		                }
+		            }
+		            //<agregado para cancelar un tramite
+		        ]
+    		});
+    		this.callParent();
+    	}
     });
     
     Ext.define('_0_PanelPri',
@@ -1423,6 +1466,7 @@ Ext.onReady(function()
    		        [
    		            _0_formAgrupados
    		            ,_0_gridIncisos
+   		            ,_0_botonera
    		        ]
     		});
     		this.callParent();
@@ -1576,6 +1620,7 @@ Ext.onReady(function()
     
     _0_formAgrupados = new _0_FormAgrupados();
     _0_gridIncisos   = new _0_GridIncisos();
+    _0_botonera      = new _0_Botonera();
     _0_panelPri      = new _0_PanelPri();
     /*///////////////////*/
     ////// contenido //////
