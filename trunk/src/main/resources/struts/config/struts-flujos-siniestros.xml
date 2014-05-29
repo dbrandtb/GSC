@@ -502,6 +502,17 @@
 			</result>
 		</action>
 		
+		<action name="obtieneMontoArancel" class="siniestrosAction"
+			method="getObtieneMontoArancel">
+			<result type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">
+					success,
+					montoArancel
+				</param>
+			</result>
+		</action>
+		
 		<action name="validaExclusionPenalizacion" class="siniestrosAction"
 			method="validaExclusionPenalizacion">
 			<result type="json">

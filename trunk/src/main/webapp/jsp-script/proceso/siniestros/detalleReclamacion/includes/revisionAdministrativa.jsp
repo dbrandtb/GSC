@@ -8,8 +8,7 @@ var _CONTEXT = '${ctx}';
 //Catalogo Tipos de pago a utilizar:
 var _PAGO_DIRECTO = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@DIRECTO.codigo" />';
 var _REEMBOLSO    = '<s:property value="@mx.com.gseguros.portal.general.util.TipoPago@REEMBOLSO.codigo" />';
-
-
+var _ROL_ACTIVO   = '<s:property value="@mx.com.gseguros.portal.general.util.RolSistema@MEDICO_AJUSTADOR.cdsisrol" />';
 var _URL_LoadFacturas =  '<s:url namespace="/siniestros" action="loadListaFacturasTramite" />';
 var _URL_GuardaFactura =  '<s:url namespace="/siniestros" action="guardaFacturaTramite" />';
 var _URL_ActualizaFactura =  '<s:url namespace="/siniestros" action="actualizaFacturaTramite" />';
@@ -29,6 +28,8 @@ var _CATALOGO_SUBCOBERTURAS  = '<s:property value="@mx.com.gseguros.portal.gener
 var _CATALOGO_TipoConcepto  = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_CONCEPTO_SINIESTROS"/>';
 var _CATALOGO_ConceptosMedicos  = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@CODIGOS_MEDICOS"/>';
 var _CATALOGO_TipoMoneda   = '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TIPO_MONEDA"/>';
+
+var _URL_MONTO_ARANCEL		= '<s:url namespace="/siniestros"  action="obtieneMontoArancel"/>';
 
 var _Operacion;
 var _Nmordina;
@@ -79,7 +80,8 @@ Ext.onReady(function() {
                  {type:'string',    name:'PTIMPORTA'},
                  {type:'string',    name:'DCTONUEX'},
                  {type:'string',    name:'APLICA_IVA'},
-                 {type:'string',    name:'ANTES_DESPUES'}
+                 {type:'string',    name:'ANTES_DESPUES'},
+                 {type:'string',    name:'CDPRESTA'}
 				]
     });
 	
@@ -88,7 +90,7 @@ Ext.onReady(function() {
         fields: ["CDUNIECO","CDRAMO","ESTADO","NMPOLIZA","NMSUPLEM",
          		"NMSITUAC","AAAPERTU","STATUS","NMSINIES","NFACTURA",
         		"CDGARANT","CDCONVAL","CDCONCEP","IDCONCEP","CDCAPITA",
-        		"DSGARANT","DSSUBGAR","DESIDCONCEP","DESCONCEP","TOTAJUSMED","SUBTAJUSTADO",
+        		"DSGARANT","DSSUBGAR","DESIDCONCEP","DESCONCEP","TOTAJUSMED","SUBTAJUSTADO","PTMTOARA",
         		"NMORDINA",{name:"FEMOVIMI", type: "date", dateFormat: "d/m/Y"},"CDMONEDA","PTPRECIO","CANTIDAD",
         		"DESTOPOR","DESTOIMP","PTIMPORT","PTRECOBR","NMANNO",
         		"NMAPUNTE","USERREGI",{name:"FEREGIST", type: "date", dateFormat: "d/m/Y"},"PTPCIOEX","DCTOIMEX","PTIMPOEX"]
@@ -548,7 +550,14 @@ Ext.onReady(function() {
         ,url: _URL_GuardaConcepto
         ,items :
         [   
-            {
+             {
+		        xtype      : 'textfield'
+		    	,fieldLabel : 'Proveedor'
+	    		,allowBlank:false
+		    	,name       : 'params.idProvFactura'
+		    	,labelWidth: 150
+		    	,hidden: true
+    		},{
         	xtype       : 'combo',
         	name        : 'params.cdconval',
         	fieldLabel  : 'Sub Cobertura',
@@ -581,11 +590,6 @@ Ext.onReady(function() {
             			'params.idPadre' : cdTipo
             			,catalogo        : _CATALOGO_ConceptosMedicos
             		};
-            		/*storeConceptosCatalogo.load({
-            			params: {
-            				'params.idPadre' : cdTipo
-            			}
-            		});*/
             	}
             }
         },{
@@ -603,7 +607,50 @@ Ext.onReady(function() {
             ,queryParam  : 'params.descripc'
             ,hideTrigger : true
             ,minChars    : 3
-        },{
+            /*,listeners : {
+   				change:function(e){
+   					Ext.Ajax.request(
+					{
+					    url     : _URL_MONTO_ARANCEL
+					    ,params:{
+							'params.tipoConcepto'   : panelEdicionConceptos.down('combo[name=params.idconcep]').getValue(),
+							'params.idProveedor'    : panelEdicionConceptos.down('[name="params.idProvFactura"]').getValue(),
+                            'params.idConceptoTipo' : e.getValue()
+		                }
+					    ,success : function (response)
+					    {
+					    	console.log("Respuesta del llamado al metodo");
+                            console.log(Ext.decode(response.responseText));
+					    },
+					    failure : function ()
+					    {
+					        me.up().up().setLoading(false);
+					        Ext.Msg.show({
+					            title:'Error',
+					            msg: 'Error de comunicaci&oacute;n',
+					            buttons: Ext.Msg.OK,
+					            icon: Ext.Msg.ERROR
+					        });
+					    }
+					});
+   	    		}
+   	        }*/
+        
+        },
+        {
+       		xtype      : 'numberfield'
+   			,fieldLabel : 'Precio Arancel'
+  			,labelWidth: 150
+  			,allowBlank:false
+  			,allowDecimals: true
+			,decimalSeparator: '.'
+			,minValue: 0
+			,name       : 'params.ptprecioArancel'
+			/*,listeners: {
+					change: calculaImporteConcepto
+			}*/
+   		},
+   		{
 	        xtype      : 'numberfield'
 	    	,fieldLabel : 'Tasa Cambio'
             ,allowDecimals: true
@@ -627,18 +674,18 @@ Ext.onReady(function() {
    	    		}
    	        }
    		},
-           {
-		        xtype      : 'numberfield'
-		    	,fieldLabel : 'Precio'
-	    		,labelWidth: 150
-	    		,allowBlank:false
-	    		,allowDecimals: true
-	               ,decimalSeparator: '.'
-	               ,minValue: 0
-		    	,name       : 'params.ptprecio'
-		    	,listeners: {
-		    		change: calculaImporteConcepto
-		    	}
+        {
+       		xtype      : 'numberfield'
+   			,fieldLabel : 'Precio Factura'
+  			,labelWidth: 150
+  			,allowBlank:false
+  			,allowDecimals: true
+			,decimalSeparator: '.'
+			,minValue: 0
+			,name       : 'params.ptprecio'
+			,listeners: {
+					change: calculaImporteConcepto
+			}
    		},
    		{
 	        xtype      : 'numberfield'
@@ -1025,6 +1072,11 @@ Ext.define('EditorFacturas', {
  					width : 150,
  					hidden: true
  				},{
+ 					header : 'CDPRESTA',
+ 					dataIndex : 'CDPRESTA',
+ 					width : 150,
+ 					hidden: true
+ 				},{
  					xtype : 'actioncolumn',
  					width : 50,
  					sortable : false,
@@ -1330,6 +1382,11 @@ Ext.define('EditorConceptos', {
  					width : 150,
  					renderer : Ext.util.Format.usMoney
  				},{
+ 					header : 'valor Arancel',
+ 					dataIndex : 'PTMTOARA',
+ 					width : 150,
+ 					renderer : Ext.util.Format.usMoney
+ 				},{
  					xtype : 'actioncolumn',
  					width : 80,
  					sortable : false,
@@ -1389,6 +1446,9 @@ Ext.define('EditorConceptos', {
  			//Validamos el tipo de moneda  Pesos 	 --> No aparecer el campo de tipo cambio 
  			//							   Diferente --> Que aparezca el tipo de cambio
  			panelEdicionConceptos.down('[name="params.tasacamb1"]').setReadOnly(false);
+ 			//Campo para el proveedor de la factura al momento de guardarlo
+ 			panelEdicionConceptos.down('[name="params.idProvFactura"]').setReadOnly(false);
+ 			
  			panelEdicionConceptos.down('[name="params.ptprecio"]').setReadOnly(false);
  			panelEdicionConceptos.down('[name="params.destoimp"]').setReadOnly(false);
  			
@@ -1399,6 +1459,9 @@ Ext.define('EditorConceptos', {
  			panelEdicionConceptos.down('[name="params.ptpcioex"]').setValue("0");
  			panelEdicionConceptos.down('[name="params.dctoimex"]').setValue("0");
  			panelEdicionConceptos.down('[name="params.ptimpoex"]').setValue("0");
+ 			
+ 			
+ 			panelEdicionConceptos.down('[name="params.idProvFactura"]').setValue(record.get('CDPRESTA'));
  			
  			//panelEdicionConceptos.down('[name="params.cdmonedaM"]').setValue(record.get('CDMONEDA'));
  			if(record.get('CDMONEDA') == '001')
@@ -1438,8 +1501,12 @@ Ext.define('EditorConceptos', {
  	},
  	onEditClick: function(grid, rowIndex){
  		var seleccionFactura = gridFacturas.getSelectionModel().getSelection()[0];
-			
+		console.log("VALOR DE SELECCION FACTURA");
+		console.log(seleccionFactura);
  		var record=grid.getStore().getAt(rowIndex);
+ 		console.log("VALOR DEL RECORD");
+		console.log(record);
+ 		
  		_Operacion = 'U';
  		_Nmordina = record.get('NMORDINA');
  		debug("Editando...");
@@ -1480,6 +1547,8 @@ Ext.define('EditorConceptos', {
  		panelEdicionConceptos.down('[name="params.dctoimex"]').setValue(record.get('DCTOIMEX'));
  		panelEdicionConceptos.down('[name="params.ptimpoex"]').setValue(record.get('PTIMPOEX'));
  		
+ 		
+ 		
  		panelEdicionConceptos.down('[name="params.ptprecio"]').setValue(record.get('PTPRECIO'));
  		panelEdicionConceptos.down('[name="params.destopor"]').setValue(record.get('DESTOPOR'));
  		panelEdicionConceptos.down('[name="params.destoimp"]').setValue(record.get('DESTOIMP'));
@@ -1499,6 +1568,7 @@ Ext.define('EditorConceptos', {
 		panelEdicionConceptos.query('numberfield[name=params.ptpcioex]')[0].show();
 		panelEdicionConceptos.query('numberfield[name=params.dctoimex]')[0].show();
 		panelEdicionConceptos.query('numberfield[name=params.ptimpoex]')[0].show();
+		panelEdicionConceptos.down('[name="params.idProvFactura"]').setValue(seleccionFactura.get('CDPRESTA'));
 		
  		if(seleccionFactura.get('CDMONEDA')== '001')
 		{
@@ -1519,6 +1589,8 @@ Ext.define('EditorConceptos', {
 			}
 		}
  		
+ 		//console.log(record.get('MONTOARANCEL'));
+ 		panelEdicionConceptos.down('[name="params.ptprecioArancel"]').setValue(record.get('PTMTOARA'));
  		
  	},
  	onRemoveClick: function(grid, rowIndex){
