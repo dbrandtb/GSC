@@ -114,7 +114,7 @@ Ext.onReady(function() {
 						sortable : true,
 						id : 'nombreCabecera'
 					}, {
-						header : "Descripción",
+						header : "Descripciï¿½n",
 						dataIndex : 'descripcionCabecera',
 						width : 250,
 						sortable : true
@@ -160,6 +160,7 @@ Ext.onReady(function() {
 																			.load();
 																	storeComboVariables
 																			.load();
+																			Ext.MessageBox.alert('Aviso', 'Variable asociada exitosamente.');
 																}
 															});
 										} else {
@@ -198,7 +199,7 @@ Ext.onReady(function() {
 											var nombreExp = Ext.getCmp('grid-variables-temporales-producto').getSelectionModel().getSelected().get('nombreCabecera');
 											var descExp = Ext.getCmp('grid-variables-temporales-producto').getSelectionModel().getSelected().get('descripcionCabecera');
 											
-											console.log("codigoExpresion:", codigoExpresion, "nombreExp",nombreExp,"descExp",descExp);
+											//console.log("codigoExpresion:", codigoExpresion, "nombreExp",nombreExp,"descExp",descExp);
 											
 											var conn2 = new Ext.data.Connection();
 											var params2 = {
@@ -294,6 +295,7 @@ Ext.onReady(function() {
 															labelAlign : 'right',
 															items : [ {
 																xtype : 'button',
+																hidden:true,
 																text : 'Agregar al Cat\u00E1logo',
 																name : 'AgregarAlCatalogo',
 																buttonAlign : "left",
@@ -307,6 +309,7 @@ Ext.onReady(function() {
 						buttons : [
 								{
 									text : 'Guardar',
+									hidden:true,
 									handler : function() {
 										variablesProductoForm.form
 												.submit({
@@ -334,6 +337,7 @@ Ext.onReady(function() {
 								},
 								{
 									text : 'Cancelar',
+									hidden:true,
 									handler : function() {
 										variablesProductoForm.form
 												.load({
