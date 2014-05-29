@@ -26,8 +26,8 @@
          <property name="navigationManagerNuevo" ref="navigationManagerImpl"></property>
     </bean>
 
-    <!-- Bean que utilizara GS para no pasar por el login -->
-     <bean id="cotizaSaludVitalAction" class="mx.com.gseguros.portal.consultas.controller.CotizaSaludVitalAction" scope="prototype">
+     <!-- Acceso directo desde la Oficina Virtual de GS para acceder sin el login: -->
+     <bean id="accesoDirectoAction" class="mx.com.gseguros.portal.general.controller.AccesoDirectoAction" scope="prototype">
          <property name="navigationManager" ref="navigationManagerJdbcTemplate"></property>
 		 <property name="principalManagerJdbcTemplate" ref="principalManagerJdbcTemplate" />
          <property name="usuarioManager" ref="usuarioManager"></property>
