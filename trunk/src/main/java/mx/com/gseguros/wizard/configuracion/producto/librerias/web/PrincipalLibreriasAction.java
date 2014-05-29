@@ -212,62 +212,53 @@ public class PrincipalLibreriasAction extends ExpresionesPadre {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public String listaVariablesAsociadasAlProducto() throws Exception{
-		log.debug("Entro a lista de variables asociadas al producto"+session.get("CODIGO_NIVEL0"));
-		//log.debug("variables asociadas al producto en session"+session.get("VARIABLES_TEMPORALES_ASOCIADAS_AL_PRODUCTO"));
-		if(session.containsKey("CODIGO_NIVEL0")){
+	public String listaVariablesAsociadasAlProducto() throws Exception
+	{
+		log.info(""
+				+ "\n###############################################"
+				+ "\n###### listaVariablesAsociadasAlProducto ######"
+				);
+		log.debug("Entro a lista de variables asociadas al producto: "+session.get("CODIGO_NIVEL0"));
+		if(session.containsKey("CODIGO_NIVEL0"))
+		{
 			cdramo = (String)session.get("CODIGO_NIVEL0");
 		}
-		if(session.containsKey("VARIABLES_TEMPORALES_ASOCIADAS_AL_PRODUCTO") && !session.containsKey("REFRESH_VTP"))
+		if(session.containsKey("VARIABLES_TEMPORALES_ASOCIADAS_AL_PRODUCTO") && !session.containsKey("REFRESH_VTP") && false)
+		{
 			listaReglaNegocioVariablesProducto = (List<ReglaNegocioVO>) session.get("VARIABLES_TEMPORALES_ASOCIADAS_AL_PRODUCTO");
-		else{
-			/*if(!session.containsKey("CATALOGO_VARIABLES_TEMPORALES_PRODUCTO")){
-				listaReglaNegocioVariables = reglaNegocioManager.obtenerReglasNegocio(reglaNegocio.VariableTemporal);
-			}else{
-				listaReglaNegocioVariables = (List<ReglaNegocioVO>) session.get("CATALOGO_VARIABLES_TEMPORALES_PRODUCTO");
-			}*/
-			session.remove("REFRESH_VTP");
-			if(cdramo != null && StringUtils.isNotBlank(cdramo)){
-				//log.debug("RAMO-"+cdramo);
-				//log.debug("ENTRO METODO PARA CARGAR GRID");
-				listaReglaNegocioVariablesProducto = reglaNegocioManager.obtenerVariablesTemporalesAsociadasAlProducto(cdramo);
-				/*for (ReglaNegocioVO list : listaReglaNegocioVariablesProducto) {
-					log.debug("clave**"+list.getNombre());
-					log.debug("descripcion**"+list.getDescripcion());
-				}*/
-			}
-			List<Integer> variablesARemover = new ArrayList<Integer>();
-//			if(listaReglaNegocioVariablesProducto != null && !listaReglaNegocioVariablesProducto.isEmpty()){
-//				for(ReglaNegocioVO variableProducto:listaReglaNegocioVariablesProducto){
-//					for(int i=0;i<listaReglaNegocioVariables.size();i++){
-//						if(variableProducto.getCodigo().equals(listaReglaNegocioVariablesProducto.get(i).getCodigo()))
-//							variablesARemover.add(i);
-//					}
-//				}				
-//			}
-//			if(!variablesARemover.isEmpty()){
-//				for(int i: variablesARemover){
-//					listaReglaNegocioVariables.remove(i);
-//				}
-//				session.put("CATALOGO_VARIABLES_TEMPORALES_PRODUCTO", listaReglaNegocioVariables);
-//			}
-			//listaReglaNegocioVariables = removerListaDeOtraLista(listaReglaNegocioVariables, listaReglaNegocioVariablesProducto);
-			//session.put("CATALOGO_VARIABLES_TEMPORALES_PRODUCTO", listaReglaNegocioVariables);
+			log.info("desde sesion: "+listaReglaNegocioVariablesProducto);
 		}
-		if(listaReglaNegocioVariablesProducto==null){
+		else
+		{
+			session.remove("REFRESH_VTP");
+			if(cdramo != null && StringUtils.isNotBlank(cdramo))
+			{
+				listaReglaNegocioVariablesProducto = reglaNegocioManager.obtenerVariablesTemporalesAsociadasAlProducto(cdramo);
+				log.info("desde bd: "+listaReglaNegocioVariablesProducto);
+			}
+		}
+		if(listaReglaNegocioVariablesProducto==null)
+		{
 			listaReglaNegocioVariablesProducto = new ArrayList<ReglaNegocioVO>();
 		}
 		session.put("VARIABLES_TEMPORALES_ASOCIADAS_AL_PRODUCTO", listaReglaNegocioVariablesProducto);
 		session.put("VARIABLES_TEMPORALES_ASOCIADAS_AL_PRODUCTO_DESDE_LA_BASE", listaReglaNegocioVariablesProducto);
 		
 		success = true;
+		log.info(""
+				+ "\n###### listaVariablesAsociadasAlProducto ######"
+				+ "\n###############################################"
+				);
 		return SUCCESS;
 	}
 	
 	@SuppressWarnings("unchecked")
-	public String asociarVariableAlProducto() throws Exception{
-		
-		
+	public String asociarVariableAlProducto() throws Exception
+	{
+		log.info(""
+				+ "\n#######################################"
+				+ "\n###### asociarVariableAlProducto ######"
+				);
 		boolean isDebugEnabled = log.isDebugEnabled();
 		
 		if(isDebugEnabled){
@@ -288,30 +279,52 @@ public class PrincipalLibreriasAction extends ExpresionesPadre {
 				listaVariablesAsociadasAlProducto();
 			listaReglaNegocioVariables = (List<ReglaNegocioVO>) session.get("CATALOGO_VARIABLES_TEMPORALES_PRODUCTO");
 			listaReglaNegocioVariablesProducto = (List<ReglaNegocioVO>) session.get("VARIABLES_TEMPORALES_ASOCIADAS_AL_PRODUCTO");
-			if(contieneVariable(codigoVariableProducto, listaReglaNegocioVariables)!=-1){
+			if(contieneVariable(codigoVariableProducto, listaReglaNegocioVariables)!=-1)
+			{
 				int posicion = contieneVariable(codigoVariableProducto, listaReglaNegocioVariables);
-				if(isDebugEnabled){
+				if(isDebugEnabled)
+				{
 					log.debug("posicion = " + posicion);
 				}
 				ReglaNegocioVO variableTemporalVO = listaReglaNegocioVariables.get(posicion);
+				String codigoRamo;
+				if(session.containsKey("CODIGO_NIVEL0"))
+				{
+					codigoRamo = (String) session.get("CODIGO_NIVEL0");
+				}else{
+					codigoRamo = "1";
+				}
+				List<ReglaNegocioVO>listaConRegistroUnico=new ArrayList<ReglaNegocioVO>();
+				listaConRegistroUnico.add(variableTemporalVO);
+				reglaNegocioManager.asociarVariablesDelProducto(listaConRegistroUnico,codigoRamo);
 				variableTemporalVO.setTemporal(true);
 				listaReglaNegocioVariablesProducto.add(variableTemporalVO);
 				listaReglaNegocioVariables.remove(posicion);
 				session.put("CATALOGO_VARIABLES_TEMPORALES_PRODUCTO", listaReglaNegocioVariables);
 				session.put("VARIABLES_TEMPORALES_ASOCIADAS_AL_PRODUCTO", listaReglaNegocioVariablesProducto);
-			}else {
-				if(isDebugEnabled){
+			}
+			else
+			{
+				if(isDebugEnabled)
+				{
 					log.debug("posicion es -1");
 				}
 			}
-			
 		}
 		success = true;
+		log.info(""
+				+ "\n###### asociarVariableAlProducto ######"
+				+ "\n#######################################"
+				);
 		return SUCCESS;
 	}
 	
 	@SuppressWarnings("unchecked")
 	public String desasociarVariableDelProducto() throws Exception{
+		log.info(""
+				+ "\n###########################################"
+				+ "\n###### desasociarVariableDelProducto ######"
+				);
 		log.debug("desasociarVariableDelProducto: "+codigoVariableProducto);
 		if(codigoVariableProducto != null && 
 				StringUtils.isNotBlank(codigoVariableProducto)&& 
@@ -336,7 +349,16 @@ public class PrincipalLibreriasAction extends ExpresionesPadre {
 				int posicion = contieneVariable(codigoVariableProducto, listaReglaNegocioVariablesProducto);
 				ReglaNegocioVO variableVO = listaReglaNegocioVariablesProducto.get(posicion);
 				
-//				log.debug("variableVO: "+variableVO);
+				String codigoRamo;
+				if(session.containsKey("CODIGO_NIVEL0"))
+				{
+					codigoRamo = (String) session.get("CODIGO_NIVEL0");
+				}else{
+					codigoRamo = "1";
+				}
+				List<ReglaNegocioVO> listaConRegistroUnico=new ArrayList<ReglaNegocioVO>();
+				listaConRegistroUnico.add(variableVO);
+				reglaNegocioManager.desasociarVariablesDelProducto(listaConRegistroUnico, codigoRamo);
 				
 				if(!variableVO.isTemporal()){
 //					log.debug("ENTRO AL IF DE TEMPORAL---NO TMP");
@@ -359,6 +381,10 @@ public class PrincipalLibreriasAction extends ExpresionesPadre {
 			}
 		}
 		success = true;
+		log.info(""
+				+ "\n###### desasociarVariableDelProducto ######"
+				+ "\n###########################################"
+				);
 		return SUCCESS;
 	}
 	
@@ -376,62 +402,103 @@ public class PrincipalLibreriasAction extends ExpresionesPadre {
 	
 	@SuppressWarnings("unchecked")
 	public List<ReglaNegocioVO> removerListaDeOtraLista(List<ReglaNegocioVO> lista, List<ReglaNegocioVO> listaARemover){
+		log.info(""
+				+ "\n#####################################"
+				+ "\n###### removerListaDeOtraLista ######"
+				);
+		log.info("lista padre: "+lista);
+		log.info("hijos desconocidos: "+listaARemover);
 		List<Integer> variablesARemover = new ArrayList<Integer>();
-		if(lista != null && !lista.isEmpty() && listaARemover != null && !listaARemover.isEmpty() ){
-			for(ReglaNegocioVO variableProducto:lista){
-				for(int i=0;i<listaARemover.size();i++){
-					if(variableProducto.getCodigo()!=null && listaARemover.get(i).getCodigo()!=null&&variableProducto.getCodigo().equals(listaARemover.get(i).getCodigo()))
+		if(lista != null && !lista.isEmpty() && listaARemover != null && !listaARemover.isEmpty() )
+		{
+			for(ReglaNegocioVO variableProducto:lista)
+			{
+				for(int i=0;i<listaARemover.size();i++)
+				{
+					if(
+						variableProducto.getCodigoExpresion()!=null&&listaARemover.get(i).getCodigoExpresion()!=null
+						&&variableProducto.getCodigoExpresion().equals(listaARemover.get(i).getCodigoExpresion())
+						&&variableProducto.getNombre()!=null&&listaARemover.get(i).getNombre()!=null
+						&&variableProducto.getNombre().equals(listaARemover.get(i).getNombre())
+						&&variableProducto.getDescripcion()!=null&&listaARemover.get(i).getDescripcion()!=null
+						&&variableProducto.getDescripcion().equals(listaARemover.get(i).getDescripcion())
+						)
+					{
+						log.info("se planea remover el hijo: "+i);
 						variablesARemover.add(i);
+					}
 				}
 			}				
-			if(!variablesARemover.isEmpty()){
-				for(int i: variablesARemover){
-					lista.remove(i);
+			if(!variablesARemover.isEmpty())
+			{
+				for(int i=variablesARemover.size()-1;i>=0;i--)
+				{
+					log.info("se quita hijo "+variablesARemover.get(i).intValue());
+					lista.remove(variablesARemover.get(i).intValue());
 				}
-				
 			}
 		}
+		log.info("padre final: "+lista);
+		log.info(""
+				+ "\n###### removerListaDeOtraLista ######"
+				+ "\n#####################################"
+				);
 		return lista;
 	}
 	
 	@SuppressWarnings("unchecked")
 	public String guardarVariablesTemporalesDelProducto() throws Exception{
+		log.info(""
+				+ "\n###################################################"
+				+ "\n###### guardarVariablesTemporalesDelProducto ######"
+				);
 		String codigoRamo;
-		if(session.containsKey("CODIGO_NIVEL0")){
+		if(session.containsKey("CODIGO_NIVEL0"))
+		{
 			codigoRamo = (String) session.get("CODIGO_NIVEL0");
 		}else{
 			codigoRamo = "1";
 		}
-		log.debug("SESSION VARIABLES DESASOCIADAS"+session.get("VARIABLES_DESASOCIADAS_DEL_PRODUCTO"));
-		if( session.containsKey("VARIABLES_DESASOCIADAS_DEL_PRODUCTO") && 
-				!((List<ReglaNegocioVO>)session.get("VARIABLES_DESASOCIADAS_DEL_PRODUCTO")).isEmpty() && 
-				session.get("VARIABLES_DESASOCIADAS_DEL_PRODUCTO")!=null){
-		/*	log.debug("ENTRO A VARIABLES DESASOCIADAS DEL PRODUCTO"+session.get("VARIABLES_DESASOCIADAS_DEL_PRODUCTO"));
-		List<ReglaNegocioVO> provisional = (ArrayList<ReglaNegocioVO>)session.get("VARIABLES_DESASOCIADAS_DEL_PRODUCTO");
-		for(ReglaNegocioVO desasociadas : provisional)
-			{
-				log.debug("nombre//"+desasociadas.getNombre());
-				log.debug("descripcion//"+desasociadas.getDescripcion());
-			}*/
+		log.info("codigoRamo: "+codigoRamo);
+		log.debug("SESSION VARIABLES DESASOCIADAS: "+session.get("VARIABLES_DESASOCIADAS_DEL_PRODUCTO"));
+		if(
+			session.containsKey("VARIABLES_DESASOCIADAS_DEL_PRODUCTO")
+			&&session.get("VARIABLES_DESASOCIADAS_DEL_PRODUCTO")!=null
+			&&!((List<ReglaNegocioVO>)session.get("VARIABLES_DESASOCIADAS_DEL_PRODUCTO")).isEmpty()
+			)
+		{
+			log.info("desasociar variables: "+(List<ReglaNegocioVO>)session.get("VARIABLES_DESASOCIADAS_DEL_PRODUCTO"));
 			reglaNegocioManager.desasociarVariablesDelProducto((List<ReglaNegocioVO>)session.get("VARIABLES_DESASOCIADAS_DEL_PRODUCTO"), codigoRamo);
-		}if( session.containsKey("VARIABLES_TEMPORALES_ASOCIADAS_AL_PRODUCTO") && 
-				!((List<ReglaNegocioVO>)session.get("VARIABLES_TEMPORALES_ASOCIADAS_AL_PRODUCTO")).isEmpty()){
-			//log.debug("**ENTRO A VARIABLES ASOCIADAS DEL PRODUCTO**");
+		}
+		if(
+			session.containsKey("VARIABLES_TEMPORALES_ASOCIADAS_AL_PRODUCTO")
+			&&session.get("VARIABLES_TEMPORALES_ASOCIADAS_AL_PRODUCTO")!=null
+			&&!((List<ReglaNegocioVO>)session.get("VARIABLES_TEMPORALES_ASOCIADAS_AL_PRODUCTO")).isEmpty())
+		{
 			listaReglaNegocioVariables = (List<ReglaNegocioVO>) session.get("VARIABLES_TEMPORALES_ASOCIADAS_AL_PRODUCTO");
-			List<ReglaNegocioVO> variablesAsociadasDesdeLaBase= (List<ReglaNegocioVO>) session.get("VARIABLES_TEMPORALES_ASOCIADAS_AL_PRODUCTO_DESDE_LA_BASE");
+			log.info("asociar variables: "+listaReglaNegocioVariables);
+			List<ReglaNegocioVO> variablesAsociadasDesdeLaBase=(List<ReglaNegocioVO>) session.get("VARIABLES_TEMPORALES_ASOCIADAS_AL_PRODUCTO_DESDE_LA_BASE");
+			log.info("varibles en bd: "+variablesAsociadasDesdeLaBase);
 			listaReglaNegocioVariables = removerListaDeOtraLista(listaReglaNegocioVariables, variablesAsociadasDesdeLaBase);
+			log.info("variables que realmente se asocian: "+listaReglaNegocioVariables);
 			success = true;
-			if(!listaReglaNegocioVariables.isEmpty()){
-				//log.debug("LISTA"+listaReglaNegocioVariables);
+			if(!listaReglaNegocioVariables.isEmpty())
+			{
+				log.info("Se agregan");
 				reglaNegocioManager.asociarVariablesDelProducto(listaReglaNegocioVariables,codigoRamo);
 				success = true;
-			}else{
-				success=false;
+			}else
+			{
+				log.info("No hay ninguna que agregar");
+				success = true;
 			}
 		}else{
-			success=false;
+			success=true;
 		}
-		
+		log.info(""
+				+ "\n###### guardarVariablesTemporalesDelProducto ######"
+				+ "\n###################################################"
+				);
 		return SUCCESS;
 	}
 	
