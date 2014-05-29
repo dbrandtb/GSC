@@ -100,6 +100,7 @@ public class SiniestrosAction extends PrincipalCoreAction{
     private String diasMaximos;
     private String montoMaximo;
     private String existePenalizacion;
+    private String montoArancel;
     private String existeDocAutServicio;
     private String autorizarProceso;
     private String porcentajePenalizacion;
@@ -1462,6 +1463,19 @@ public String generarSiniestroSinAutorizacion()
 	   	return SUCCESS;
   }
    
+   public String getObtieneMontoArancel(){
+	   	logger.debug(" **** Entrando al metodo de obtener monto del arancel  ****");
+	   	logger.debug(params);
+	   	try {
+	   		montoArancel = siniestrosManager.getObtieneMontoArancel(params.get("tipoConcepto"),params.get("idProveedor"),params.get("idConceptoTipo"));
+	   	}catch( Exception e){
+	   		logger.error("Error al consultar la Lista de los asegurados ",e);
+	   		return SUCCESS;
+	   	}
+	   	success = true;
+	   	return SUCCESS;
+ }
+   
    public String validaAutorizacionProceso(){
 	   	logger.debug(" **** Entrando al metodo de validacion de Penalizacion ****");
 	   	try {
@@ -2315,7 +2329,6 @@ public String generarSiniestroSinAutorizacion()
     		String idconcep  = params.get("idconcep");
     		String cdcapita  = params.get("cdcapita");
     		String nmordina  = params.get("nmordina");
-//    		String femovimi  = params.get("femovimi");
     		Date   dFemovimi = new Date();
     		String cdmoneda  = params.get("cdmoneda");
     		String ptprecio  = params.get("ptprecio");
@@ -2335,6 +2348,7 @@ public String generarSiniestroSinAutorizacion()
     		String ptpcioex  = params.get("ptpcioex");
     		String dctoimex  = params.get("dctoimex");
     		String ptimpoex  = params.get("ptimpoex");
+    		String mtoArancel= params.get("ptprecioArancel");
     		
     		if(StringUtils.isBlank(operacion)) operacion = Constantes.INSERT_MODE;
     		
@@ -2344,7 +2358,7 @@ public String generarSiniestroSinAutorizacion()
     				cdgarant, cdconval, cdconcep, idconcep, cdcapita,
     				nmordina, dFemovimi, cdmoneda, ptprecio, cantidad,
     				destopor, destoimp, ptimport, ptrecobr, nmanno,
-    				nmapunte, userregi, dFeregist, operacion,ptpcioex,dctoimex,ptimpoex);
+    				nmapunte, userregi, dFeregist, operacion,ptpcioex,dctoimex,ptimpoex,mtoArancel);
     		
     		mensaje = "Datos guardados";
     		success = true;
@@ -2736,6 +2750,7 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
     							double cantidad = Double.valueOf(row.get("CANTIDAD"));
     							logger.debug("cantidad "+cantidad);
     							double precioArancel = 0d;
+    							//Obtenemos el valor original del arancel
     							if(StringUtils.isNotBlank(row.get("IMP_ARANCEL")))
     							{
     								precioArancel = Double.valueOf(row.get("IMP_ARANCEL"));
@@ -5670,6 +5685,16 @@ DIC=null, COMMENME=null, PTIMPORT=346, IMP_ARANCEL=null}*/
 			logger.error("error al convertir datosPenalizacion a json",ex);
 		}
 		return r;
+	}
+
+
+	public String getMontoArancel() {
+		return montoArancel;
+	}
+
+
+	public void setMontoArancel(String montoArancel) {
+		this.montoArancel = montoArancel;
 	}
 	
 	

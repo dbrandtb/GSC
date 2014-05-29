@@ -720,7 +720,8 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			String accion,
 			String ptpcioex,
 			String dctoimex,
-			String ptimpoex) throws Exception
+			String ptimpoex,
+			String mtoArancel) throws Exception
 	{
 		siniestrosDAO.P_MOV_MSINIVAL(cdunieco,
 				 cdramo,
@@ -753,7 +754,8 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 				 accion,
 				 ptpcioex,
 				 dctoimex,
-				 ptimpoex);
+				 ptimpoex,
+				 mtoArancel);
 	}
 	
 	@Override
@@ -1205,6 +1207,16 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 				+ "\n###### moverTramite ######"
 				+ "\n##########################"
 				);
+	}
+
+	@Override
+	//String tipoConcepto, String idProveedor, String idConceptoTipo
+	public String getObtieneMontoArancel(String tipoConcepto, String idProveedor, String idConceptoTipo ) throws Exception {
+		try {
+			return siniestrosDAO.getObtieneMontoArancel(tipoConcepto, idProveedor, idConceptoTipo );
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
 	}
 		
 }

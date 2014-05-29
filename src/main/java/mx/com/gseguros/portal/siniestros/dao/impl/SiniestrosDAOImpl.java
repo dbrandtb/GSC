@@ -1612,7 +1612,8 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			String accion,
 			String ptpcioex,
 			String dctoimex,
-			String ptimpoex) throws Exception
+			String ptimpoex,
+			String mtoArancel) throws Exception
 	{
 		Map<String,Object>p=new HashMap<String,Object>();
 		p.put("pv_cdunieco_i" , cdunieco);
@@ -1647,6 +1648,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 		p.put("pv_ptpcioex_i"   , ptpcioex);
 		p.put("pv_dctoimex_i"   , dctoimex);
 		p.put("pv_ptimpoex_i"   , ptimpoex);
+		p.put("pv_ptmtoara_i"   , mtoArancel);
 		logger.debug("P_MOV_MSINIVAL params: "+p);
 		ejecutaSP(new PMOVMSINIVAL(this.getDataSource()), p);
 		logger.debug("P_MOV_MSINIVAL end");
@@ -1689,7 +1691,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			declareParameter(new SqlParameter("pv_ptpcioex_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_dctoimex_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlParameter("pv_ptimpoex_i"   , OracleTypes.VARCHAR));
-			
+			declareParameter(new SqlParameter("pv_ptmtoara_i"   , OracleTypes.VARCHAR));
 			declareParameter(new SqlOutParameter("pv_msg_id_o" , OracleTypes.NUMERIC));
 			declareParameter(new SqlOutParameter("pv_title_o"  , OracleTypes.VARCHAR));
 			compile();
@@ -3037,4 +3039,32 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 			compile();
 		}
 	}
+
+
+	@Override
+	public String getObtieneMontoArancel(String tipoConcepto, String idProveedor, String idConceptoTipo) throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_tipoConcepto_i", tipoConcepto);
+		params.put("pv_idProveedor_i", idProveedor);
+		params.put("pv_idConceptoTipo_i", idConceptoTipo);
+		
+		Map<String, Object> resultado = ejecutaSP(new ObtieneMontoArancel(getDataSource()), params);
+		logger.debug( resultado.get("pv_registro_o"));
+		return (String) resultado.get("pv_registro_o");
+	}
+	
+    protected class ObtieneMontoArancel extends StoredProcedure {
+    	
+    	protected ObtieneMontoArancel(DataSource dataSource) {
+    		
+    		super(dataSource, "PKG_SINIESTRO.P_GET_ARANCELES");
+    		declareParameter(new SqlParameter("pv_tipoConcepto_i",   OracleTypes.VARCHAR)); 	// 1.- CPT 2.- HCPT 3.- UB
+    		declareParameter(new SqlParameter("pv_idProveedor_i",   OracleTypes.VARCHAR));		// Id. del proveedor
+    		declareParameter(new SqlParameter("pv_idConceptoTipo_i", OracleTypes.VARCHAR));		// Id. del concepto
+    		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.VARCHAR));
+    		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+    		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+    		compile();
+    	}
+    }
 }

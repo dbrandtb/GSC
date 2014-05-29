@@ -291,7 +291,8 @@ public interface SiniestrosManager {
 			String accion,
 			String ptpcioex,
 			String dctoimex,
-			String ptimpoex) throws Exception;
+			String ptimpoex,
+			String mtoArancel) throws Exception;
 	
 	/**
 	 * CDUNIECO,CDRAMO,ESTADO,NMPOLIZA,NMSUPLEM,
@@ -452,5 +453,7 @@ public interface SiniestrosManager {
 			,String cdmotivo
 			,String cdclausu
 			) throws Exception;
+
+	public String getObtieneMontoArancel(String tipoConcepto, String idProveedor, String idConceptoTipo)throws Exception;
 	
 }

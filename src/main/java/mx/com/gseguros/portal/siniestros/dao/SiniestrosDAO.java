@@ -230,7 +230,8 @@ public interface SiniestrosDAO {
 			String accion,
 			String ptpcioex,
 			String dctoimex,
-			String ptimpoex) throws Exception;
+			String ptimpoex,
+			String mtoArancel) throws Exception;
 	
 	public List<Map<String,String>>P_GET_MSINIVAL(
 			String cdunieco,
@@ -371,4 +372,6 @@ public interface SiniestrosDAO {
 			,String cdmotivo
 			,String cdclausu
 			) throws Exception;
+
+	public String getObtieneMontoArancel(String tipoConcepto, String idProveedor, String idConceptoTipo) throws Exception;
 }

@@ -275,16 +275,16 @@ function _11_validaAutorizacion(record)
 	var cober_SubCober = _11_params.OTVALOR12+"_"+_11_params.OTVALOR14;
 	
 	// Verificamos la cobertura del tramite
-	if(_11_params.OTVALOR12 == "18HO" || _11_params.OTVALOR12 == "18MA"){ // Hospitalización
+	if(_11_params.OTVALOR12 == "18HO" || _11_params.OTVALOR12 == "18PS" || _11_params.OTVALOR12 == "18MA"){ // Hospitalización
 		switch(cober_SubCober) 
 		{
 			// 3.- No tiene y no necesita pero no hay siniestro
 	        case "18HO_18HO024" :
 	        case "18HO_18HO025" :
 	        case "18HO_18HO026" :
-	        case "18MA_18MA030" :
-	        case "18MA_18MA017" :
-	        case "18MA_18MA004" :
+	        case "18HO_18HO027" :
+	        case "18PS_18PS001" :
+	        case "18PS_18PS002" :
 	            var valido = true;
 		    	var idReclamacion = record.raw.IdReclamacion;
 		    	valido = idReclamacion && idReclamacion>0;
