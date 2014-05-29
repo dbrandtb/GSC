@@ -1,9 +1,9 @@
-package mx.com.gseguros.portal.consultas.controller;
+package mx.com.gseguros.portal.general.controller;
 
 import java.util.HashMap;
 import java.util.List;
 
-import mx.com.aon.flujos.cotizacion4.web.ResultadoCotizacion4Action;
+import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.portal.model.BaseObjectVO;
 import mx.com.aon.portal.model.EmpresaVO;
 import mx.com.aon.portal.model.IsoVO;
@@ -24,11 +24,11 @@ import org.apache.struts2.ServletActionContext;
  *
  * @author HMLT
  */
-public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
+public class AccesoDirectoAction extends PrincipalCoreAction {
 
 	private static final long serialVersionUID = 7885456537983878685L;
 
-	private static org.apache.log4j.Logger logger =org.apache.log4j.Logger.getLogger(CotizaSaludVitalAction.class);
+	private static org.apache.log4j.Logger logger =org.apache.log4j.Logger.getLogger(AccesoDirectoAction.class);
 	
 	public static String DEFAULT_DATE_FORMAT_PARAM = "defaultDateFormat";
     public static String DEFAULT_DECIMAL_SEPARATOR_PARAM = "defaultDecimalSeparator";
@@ -52,7 +52,6 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
     private String _codigoCliente = null;
     private boolean codigoValido;
     private int numReg;
-    private String cdtipsit;
     
     private List<RamaVO> listaRolCliente;
     private List<UserVO> userList;
@@ -63,7 +62,7 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
      * @return String result
      */
     public boolean instanciaUsuarioLigaDirecta(){
-    	logger.debug(" **** Entrando a instanciar usuario para Liga Directa ****");
+    	logger.debug(">>>> Entrando a instanciar usuario para Liga Directa ****");
         try {
         	creaSesionDeUsuario(user);
         
@@ -77,12 +76,12 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
 			obtenCodigoTree();
 			
 			UserVO usuario=(UserVO) session.get("USUARIO");
-	        logger.debug("### usuario name: "+usuario.getName());
-	        logger.debug("### usuario user: "+usuario.getUser());
-	        logger.debug("### usuario empresa cdelemento id: "+usuario.getEmpresa().getElementoId());
-	        logger.debug("### usuario codigopersona: "+usuario.getCodigoPersona());
+	        logger.debug(">>>> usuario name: "+usuario.getName());
+	        logger.debug(">>>> usuario user: "+usuario.getUser());
+	        logger.debug(">>>> usuario empresa cdelemento id: "+usuario.getEmpresa().getElementoId());
+	        logger.debug(">>>> usuario codigopersona: "+usuario.getCodigoPersona());
         }catch( Exception e){
-            logger.error("Error en el proceso Interno", e);
+            logger.error(">>>> Error en el proceso Interno", e);
             return false;
         }
         return true;
@@ -97,12 +96,13 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
     public String accesoDirecto() throws Exception {
     	
     	String acceso = (String)params.get("acceso");
-    	logger.info(" >>>>>>>> Entrando a Acceso Directo para usuario: " + user + " acceso: " + acceso);
+    	logger.info(new StringBuilder(">>>> Entrando a Acceso Directo: ").append(acceso).append(" con usuario: ").append(user));
     	
-    	if("cotizadorSaludVital".equals(acceso) || "consultasSaludVital".equals(acceso)
-    			|| "cotizador".equals(acceso) || "consultaPolizas".equals(acceso)){
+    	if("cotizador".equals(acceso) || "consultaPolizas".equals(acceso)){
     		instanciaUsuarioLigaDirecta();
+    		logger.info(new StringBuilder(">>>> Redirigiendo a Acceso Directo: ").append(acceso));
     	} else {
+    		logger.warn(new StringBuilder(">>>> No está definido el Acceso Directo: ").append(acceso));
     		acceso= "login";
     	}
     	
@@ -115,23 +115,23 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
 		boolean exito = false;
 		
 		String dateFormat = ServletActionContext.getServletContext().getInitParameter(DEFAULT_DATE_FORMAT_PARAM);
-        String decimalSeparator = ServletActionContext.getServletContext().getInitParameter(DEFAULT_DECIMAL_SEPARATOR_PARAM);
+        //String decimalSeparator = ServletActionContext.getServletContext().getInitParameter(DEFAULT_DECIMAL_SEPARATOR_PARAM);
 
 		UserVO userVO = new UserVO();
 		userVO.setUser(usuario);
 		userVO = loginManager.obtenerDatosUsuario(usuario);
 
-		logger.debug("***** DATOS USUARIO *****: " + userVO);
+		logger.debug(">>>> DATOS USUARIO *****: " + userVO);
 
 		//userVO.setDecimalSeparator(decimalSeparator);
 		IsoVO isoVO = navigationManager.getVariablesIso(userVO.getUser());
 
-		logger.debug("***** DATOS USUARIO222 *****: " + userVO);
+		logger.debug(">>>> DATOS USUARIO222 *****: " + userVO);
 		userVO.setClientFormatDate(isoVO.getClientDateFormat());
 		userVO.setFormatDate(dateFormat);
 		userVO.setDecimalSeparator(isoVO.getFormatoNumerico());
 
-		logger.debug("***** DATOS USUARIO333 *****: " + userVO);
+		logger.debug(">>>> DATOS USUARIO333 *****: " + userVO);
 		session.put(Constantes.USER, userVO);
 		session.put("userVO", userVO);
 		
@@ -145,7 +145,6 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
      * @return success
      * @throws Exception
      */
-    @SuppressWarnings("unchecked")
     public String obtenRolesClientes() throws Exception {
 
         String retorno=SUCCESS;
@@ -160,7 +159,7 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
         listaRolCliente = usuarioManager.getClientesRoles(usuario.getUser());
         numReg = navigationManager.getNumRegistro(usuario.getUser());
         userList = usuarioManager.getAttributesUser(usuario.getUser());
-        logger.debug("Usuarios totales: "+(userList!=null?userList.size():"null")+ " pero solo el de sesion se complemento (ERROR)");
+        logger.debug(">>>> Usuarios totales: "+(userList!=null?userList.size():"null")+ " pero solo el de sesion se complemento (ERROR)");
        
         complementaUsuario(usuario);
         session.put("USUARIO", usuario);
@@ -191,7 +190,7 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
             catch (Exception e)
             {
                 configuracionCompleta=false;
-                logger.error(e.toString(), e);
+                logger.error(e.getMessage(), e);
                 addActionError(e.getMessage());
                 //success = false; //jtezva -> inecesario, no es json
                 session.put("MessageConf", e.getMessage()); //Se pone en sesión el mensaje a mostrar
@@ -217,7 +216,7 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
         else
         // tiene almenos dos clientes o dos roles distintos
         {
-            logger.debug("listaRolCliente=" + listaRolCliente.size());
+            logger.debug(">>>> listaRolCliente=" + listaRolCliente.size());
             for (RamaVO nodos : listaRolCliente) {
                 if (nodos.getChildren() != null) {
                     nodos.setLeaf(false);
@@ -225,7 +224,7 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
             }
             session.put("CARGA_USUARIO_COMPLETO", userList);
             success = true;
-            logger.debug("retorno=" + retorno);
+            logger.debug(">>>> retorno=" + retorno);
         }
         ////////////////////////////////////////////////
         
@@ -237,7 +236,7 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
     public String obtenCodigoTree() throws Exception
     {
         String retorno=SUCCESS;
-        logger.debug("Entrada metodo getCodigoTree");
+        logger.debug(">>>> Entrada metodo getCodigoTree");
         if (StringUtils.isNotBlank(codigoCliente) && StringUtils.isNotBlank(codigoRol))
         // Si se reciben los parametros del cliente
         {
@@ -280,10 +279,10 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
                 try
                 {
                     String msg = principalManagerJdbcTemplate.configuracionCompleta(_codigoCliente);
-                    logger.debug("Configuración: " + msg);
+                    logger.debug(">>>> Configuración: " + msg);
                     codigoValido = true;
                 } catch (Exception e) {
-                    logger.error(e.toString(),e);
+                    logger.error(e.getMessage(), e);
                     addActionError(e.getMessage());
                     codigoValido = false;
                     retorno= "confcompleta";
@@ -299,8 +298,8 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
         //si no intento guardar la configuracion de un usuario leido por parametros incorrectos
         //o si se cargo un usuario, se cargo correctamente
         {
-            logger.debug("Salida metodo getCodigoTree");
-            logger.debug("CODIGO VALIDO: " + codigoValido);
+            logger.debug(">>>> Salida metodo getCodigoTree");
+            logger.debug(">>>> CODIGO VALIDO: " + codigoValido);
             UserVO usuario = (UserVO) session.get("USUARIO");
             complementaUsuario(usuario);
             session.put("USUARIO", usuario);
@@ -325,12 +324,12 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
         pais.setValue(isoLocal.getPais());
         usuario.setPais(pais);
         String cdPais = usuario.getPais().getValue();
-        logger.debug("El país del usuario es : " + cdPais);
+        logger.debug(">>>> El país del usuario es : " + cdPais);
         usuario.setFormatoFecha(isoLocal.getFormatoFecha());
         usuario.setFormatoNumerico(isoLocal.getFormatoNumerico());
         usuario.setIdioma(languague);
         usuario.setTamagnoPaginacionGrid(numReg);
-        logger.debug("En seleccionaRolCliente: " + isoLocal.getClientDateFormat());
+        logger.debug(">>>> En seleccionaRolCliente: " + isoLocal.getClientDateFormat());
         usuario.setClientFormatDate(isoLocal.getClientDateFormat());
         //Agregados códigos de Idioma y Región
         //languague.setValue(iso.getCdIdioma());
@@ -430,14 +429,6 @@ public class CotizaSaludVitalAction extends ResultadoCotizacion4Action{
 
 	public void setUser(String user) {
 		this.user = user;
-	}
-
-	public String getCdtipsit() {
-		return cdtipsit;
-	}
-
-	public void setCdtipsit(String cdtipsit) {
-		this.cdtipsit = cdtipsit;
 	}
 	
 }

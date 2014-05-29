@@ -41,8 +41,6 @@ public class AuthenticationInterceptor implements Interceptor {
 		//Obtenemos la sesion por medio del ActionInvocation
 		Map session = actionInvocation.getInvocationContext().getSession();
 		
-		limpiarTokensViejos(session);
-		
 		UserVO user = (UserVO) session.get(Constantes.USER);
 		logger.debug("usuario en sesion: "+user);
 		
@@ -182,17 +180,6 @@ public class AuthenticationInterceptor implements Interceptor {
 	}
 	
 	public void destroy() {
-	}
-	
-	
-	/**
-	 * Eliminamos de sesion la variable del usuario si el valor de esta
-	 * no corresponde a una instancia del objeto UserVO
-	 * @param session
-	 */
-	private void limpiarTokensViejos(Map session){
-		Object userToken = session.get(Constantes.USER);
-		if ( !( userToken instanceof UserVO ) )session.remove(Constantes.USER);		
 	}
 	
 }

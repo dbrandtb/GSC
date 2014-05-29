@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import mx.com.gseguros.utils.Utilerias;
 
 import org.apache.log4j.Logger;
-import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.StrutsStatics;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -15,7 +14,7 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 
 /**
- * Interceptor que redirige la petici�n dependiendo del dispositivo origen
+ * Interceptor que redirige la peticion dependiendo del dispositivo origen
  *
  */
 public class DeviceInterceptor implements Interceptor {
@@ -28,34 +27,31 @@ public class DeviceInterceptor implements Interceptor {
 	public void init() {
 	}
 
-	private static final String RESULT_CODE_SUFFIX_MOBILE = "mobile";
-	private static final String REQUEST_HEADER_ACCEPT = "Accept";
-	private static final String[] MOBILE_BROWSER_UAS = {"iPhone OS","Android","BlackBerry","Windows Phone"};
+	//private static final String RESULT_CODE_SUFFIX_MOBILE = "mobile";
+	//private static final String REQUEST_HEADER_ACCEPT = "Accept";
+	//private static final String[] MOBILE_BROWSER_UAS = {"iPhone OS","Android","BlackBerry","Windows Phone"};
 	
 	@Override
 	public String intercept(ActionInvocation invocation) throws Exception {
 
         ActionContext context = invocation.getInvocationContext();
-        HttpServletRequest request = (HttpServletRequest) context.get(StrutsStatics.HTTP_REQUEST);
-        logger.debug("request=" + request);
-        
-        HttpServletRequest request2 = ServletActionContext.getRequest();
-        logger.debug("request2=" + request2);
+        HttpServletRequest request = (HttpServletRequest) context.get(StrutsStatics.HTTP_REQUEST);        
+        //HttpServletRequest request2 = ServletActionContext.getRequest();
 		
 		Map session = invocation.getInvocationContext().getSession();
 		if(session != null) {
 			String ua = request.getHeader("User-Agent").toLowerCase();
 			logger.debug("user agent: "+ua);
 			if(Utilerias.esSesionMovil(ua)) {
-			    logger.debug("movil");
+			    logger.info("peticion desde movil");
 			    session.put("ES_MOVIL", true);
 			} else {
-			    logger.debug("desktop");
+			    logger.info("peticion desde desktop");
 			    session.put("ES_MOVIL", false);
 			}	
 		}
 		
-/*
+		/*
 	    invocation.addPreResultListener(new PreResultListener() {
 	        public void beforeResult(ActionInvocation invocation, String resultCode) {
 
@@ -90,7 +86,7 @@ public class DeviceInterceptor implements Interceptor {
 	            }
 	        }
 	    });
-*/
+		*/
 	    return invocation.invoke();
 	}
 	

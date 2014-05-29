@@ -61,9 +61,8 @@
 			<result name="success" type="json" />
 		</action>
 		
-		<!-- Actions temporales que utilizara GS para no pasar por el login: -->
-        
-        <action name="accesoDirecto" class="cotizaSaludVitalAction" method="accesoDirecto">
+		<!-- Acceso directo desde la Oficina Virtual de GS para acceder sin el login: -->
+        <action name="accesoDirecto" class="accesoDirectoAction" method="accesoDirecto">
             <result name="login" type="redirectAction">
                 <param name="actionName">login</param>
                 <param name="namespace">/seguridad</param>
@@ -75,42 +74,7 @@
                 <param name="smap1.cdtipsit">${params.cdtipsit}</param>
             </result>
 		    <result name="consultaPolizas">/jsp/consultas/containerConsultasPolizas.jsp</result>
-            <!-- Eliminar results: -->
-            <result name="cotizadorSaludVital" type="redirectAction">
-                <param name="actionName">cotizacionVital</param>
-                <param name="namespace">/</param>
-                <param name="cdtipsit">${cdtipsit}</param>
-            </result>
-            <result name="consultasSaludVital">/jsp/consultas/containerConsultasPolizas.jsp</result>
         </action>
-		
-		<!-- <action name="cotizacionSaludVital" class="autenticacionAction" method="cotizacionSaludVital">
-		  <result name="success" type="redirectAction">
-		      <param name="actionName">seleccionaRolCliente</param>
-              <param name="namespace">/seguridad</param>
-		  </result>
-        </action>
-        <action name="seleccionaRolCliente" class="loadClientesRolesAction" method="obtenRolesClientes">
-            <result name="success" type="redirectAction">
-              <param name="actionName">regresaCodigo</param>
-              <param name="namespace">/seguridad</param>
-              <param name="codigoCliente">6442</param>
-              <param name="codigoRol">EJECUTIVOCUENTA</param>
-            </result>
-            <result name="load" type="redirectAction">
-              <param name="actionName">regresaCodigo</param>
-              <param name="namespace">/seguridad</param>
-              <param name="codigoCliente">6442</param>
-              <param name="codigoRol">EJECUTIVOCUENTA</param>
-            </result>
-        </action>
-        <action name="regresaCodigo" class="loadClientesRolesAction" method="obtenCodigoTree">
-            <result name="success" type="redirectAction">
-                <param name="actionName">cotizacionVital</param>
-                <param name="namespace">/</param>
-            </result>
-        </action> -->
-        <!-- Fin de Actions temporales -->
         
 	</package>
 	
