@@ -69,7 +69,17 @@ var _mcotiza_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 var _mcotiza_reporteCotizacion = '<s:text name="rdf.cotizacion.nombre" />';
 var _mcotiza_urlEnviarCorreo   = '<s:url namespace="/general" action="enviaCorreo" />';
 
-var _mcotiza_modeloExtraFields = [<s:property value="imap.modeloExtraFields" />];
+var _mcotiza_modeloExtraFields = [
+<s:if test='%{getImap().get("modeloExtraFields")!=null}'>
+    <s:property value="imap.modeloExtraFields" />
+</s:if>
+];
+
+var _mcotiza_necesitoIncisos = true;
+<s:if test='%{getImap().get("fieldsIndividuales")==null}'>
+    _mcotiza_necesitoIncisos = false;
+</s:if>
+debug('_mcotiza_necesitoIncisos:',_mcotiza_necesitoIncisos);
 
 var _mcotiza_incisoTpl;
 var _mcotiza_validacion_custom;
@@ -614,7 +624,7 @@ function _mcotiza_cotiza()
 	////// validacion de datos generales //////
 	
 	////// al menos un inciso //////
-	if(valido)
+	if(valido&&_mcotiza_necesitoIncisos)
 	{
 		valido = _mcotiza_storeIncisos.getCount()>0;
 		if(!valido)
@@ -640,56 +650,64 @@ function _mcotiza_cotiza()
             slist1 : []
             ,smap1 : _mcotiza_smap1
         };
-        _mcotiza_storeIncisos.each(function(record)
-        {
-            var inciso=_mcotiza_getFormDatosGenerales().getValues();
-            for(var key in inciso)
-            {
-                var value=inciso[key];
-                debug(typeof value,key,value);
-                if((typeof value=='object')&&value&&value.getDate)
-                {
-                    debug('fecha object');
-                    var fecha='';
-                    fecha+=value.getDate();
-                    fecha+='/';
-                    fecha+=value.getMonth()+1<10?
-                            (('x'+(value.getMonth()+1)).replace('x','0'))
-                            :(value.getMonth()+1);
-                    fecha+='/';
-                    fecha+=value.getFullYear();
-                    value=fecha;
-                    debug('pasado a:',value);
-                    inciso[key]=value;
-                }
-            }
-            for(var key in record.data)
-            {
-                var value=record.data[key];
-                debug(typeof value,key,value);
-                if((typeof value=='object')&&value&&value.getDate)
-                {
-                	debug('fecha object');
-                    var fecha='';
-                    fecha+=value.getDate();
-                    fecha+='/';
-                    fecha+=value.getMonth()+1<10?
-                            (('x'+(value.getMonth()+1)).replace('x','0'))
-                            :(value.getMonth()+1);
-                    fecha+='/';
-                    fecha+=value.getFullYear();
-                    value=fecha;
-                    debug('pasado a:',value);
-                }
-                else
-                {
-                	debug('no fecha object');
-                }
-                inciso[key]=value;
-            }
-            json['slist1'].push(inciso);
-        });
-        debug(json);
+		if(_mcotiza_necesitoIncisos)
+		{
+	        _mcotiza_storeIncisos.each(function(record)
+	        {
+	            var inciso=_mcotiza_getFormDatosGenerales().getValues();
+	            for(var key in inciso)
+	            {
+	                var value=inciso[key];
+	                debug(typeof value,key,value);
+	                if((typeof value=='object')&&value&&value.getDate)
+	                {
+	                    debug('fecha object');
+	                    var fecha='';
+	                    fecha+=value.getDate();
+	                    fecha+='/';
+	                    fecha+=value.getMonth()+1<10?
+	                            (('x'+(value.getMonth()+1)).replace('x','0'))
+	                            :(value.getMonth()+1);
+	                    fecha+='/';
+	                    fecha+=value.getFullYear();
+	                    value=fecha;
+	                    debug('pasado a:',value);
+	                    inciso[key]=value;
+	                }
+	            }
+	            for(var key in record.data)
+	            {
+	                var value=record.data[key];
+	                debug(typeof value,key,value);
+	                if((typeof value=='object')&&value&&value.getDate)
+	                {
+	                	debug('fecha object');
+	                    var fecha='';
+	                    fecha+=value.getDate();
+	                    fecha+='/';
+	                    fecha+=value.getMonth()+1<10?
+	                            (('x'+(value.getMonth()+1)).replace('x','0'))
+	                            :(value.getMonth()+1);
+	                    fecha+='/';
+	                    fecha+=value.getFullYear();
+	                    value=fecha;
+	                    debug('pasado a:',value);
+	                }
+	                else
+	                {
+	                	debug('no fecha object');
+	                }
+	                inciso[key]=value;
+	            }
+	            json['slist1'].push(inciso);
+	        });
+		}
+		else
+		{
+			var inciso=_mcotiza_getFormDatosGenerales().getValues();
+			json['slist1'].push(inciso);
+		}
+        debug('json para cotizar: ',json);
 		_mcotiza_navView.setMasked(
 		{
 		    xtype    : 'loadmask'
@@ -941,16 +959,19 @@ Ext.setup({onReady:function()
 	    }
 	});
 	
+	var tmp = [];
+    <s:if test='%{getImap().get("fieldsIndividuales")!=null}'>
+        tmp.push(<s:property value="imap.fieldsIndividuales" />);
+    </s:if>
+    <s:if test='%{getImap().get("modeloExtraFields")!=null}'>
+        tmp.push(<s:property value="imap.modeloExtraFields"  />);
+    </s:if>
 	Ext.define('_mcotiza_Inciso',
 	{
 		extend  : 'Ext.data.Model'
 		,config :
 		{
-			fields :
-			[
-			    <s:property value="imap.fieldsIndividuales"       />
-			    <s:property value='%{","+imap.modeloExtraFields}' />
-			]
+			fields : tmp
 		}
 	});
 	
@@ -1045,6 +1066,7 @@ Ext.setup({onReady:function()
 			        	xtype    : 'formpanel'
 			        	,title   : '&nbsp;Inciso&nbsp;'
 			        	,titulo  : 'Edici&oacute;n de incisos'
+			        	,hidden  : !_mcotiza_necesitoIncisos
 			        	,iconCls : 'add'
 			        	,itemId  : '_mcotiza_formAsegurados'
 			        	,items   :
@@ -1061,7 +1083,9 @@ Ext.setup({onReady:function()
 				        		    	,readOnly : true
 				        		    	,hidden   : true
 				        		    }
-				        		    ,<s:property value="imap.itemsIndividuales" />
+				        		    <s:if test='%{getImap().get("itemsIndividuales")!=null}' >
+					        		    ,<s:property value="imap.itemsIndividuales" />
+	                                </s:if>
 				        		    <s:if test='%{getImap().get("modeloExtraItems")!=null}' >
 				        		        ,<s:property value="imap.modeloExtraItems"  />
 				        		    </s:if>
@@ -1103,6 +1127,7 @@ Ext.setup({onReady:function()
                         ,title            : '&nbsp;Incisos&nbsp;'
                         ,titulo           : 'Incisos'
                         ,iconCls          : 'more'
+                        ,hidden           : !_mcotiza_necesitoIncisos
                         ,itemId           : '_mcotiza_listAsegurados'
                         ,store            : _mcotiza_storeIncisos
                         ,itemTpl          : _mcotiza_incisoTpl
