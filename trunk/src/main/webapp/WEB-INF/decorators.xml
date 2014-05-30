@@ -127,6 +127,9 @@
         <pattern>/general/*.action</pattern>
         <pattern>/jsp-script/general/*.jsp</pattern>
         
+        <pattern>/confpantallas/cotizacionDemo.action</pattern>
+        <pattern>/jsp-script/proceso/emision/cotizacionDemo.jsp</pattern>
+        
         <pattern>/jsp-script/proceso/reexpedicionDocumentos/marcoReexpedicionDocumentos.jsp</pattern>
         
         <!-- >tomcat -->

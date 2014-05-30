@@ -13,6 +13,8 @@ import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
+import mx.com.gseguros.confpantallas.delegate.AdminCargaPanelesDelegate;
+import mx.com.gseguros.confpantallas.model.ViewBean;
 import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
@@ -243,6 +245,86 @@ public class CotizacionAction extends PrincipalCoreAction
 				+ "\n################################"
 				);
 		return gc.isEsMovil() ? "success_mobile" : SUCCESS;
+	}
+
+	public String pantallaCotizacionDemo() {
+		this.session = ActionContext.getContext().getSession();
+		log.debug("\n" + "\n####################################"
+				       + "\n####################################"
+				       + "\n###### pantallaCotizacionDemo ######"
+				       + "\n######                    ##########");
+		log.debug("smap1: " + smap1);
+		log.debug("session: " + session);
+
+		UserVO usuario = (UserVO) session.get("USUARIO");
+		String cdtipsit = smap1.get("cdtipsit");
+
+		String ntramite = null;
+		String cdunieco = null;
+		String cdramo = null;
+
+		smap1.put("user", usuario.getUser());
+
+		// ///////////////////////////////////////////////////////
+		// //// poner valores a ntramite, cdunieco y cdramo //////
+		if (smap1.get("ntramite") != null){
+			ntramite = smap1.get("ntramite");
+			cdunieco = smap1.get("cdunieco");
+			cdramo = smap1.get("cdramo");
+		} else {
+			// cuando no hay ntramite es porque esta cotizando un agente por fuera,
+			// y se obtiene cdunieco y cdramo por medio de ese agente
+			try {
+				DatosUsuario datUsu = kernelManager.obtenerDatosUsuario(
+						usuario.getUser(), cdtipsit);// cdramo
+				ntramite = "";
+				cdunieco = datUsu.getCdunieco();
+				if (StringUtils.isBlank(smap1.get("cdramo"))) {
+					cdramo = datUsu.getCdramo();
+				} else {
+					cdramo = smap1.get("cdramo");
+				}
+				smap1.put("ntramite", "");
+				smap1.put("cdunieco", cdunieco);
+				smap1.put("cdramo", cdramo);
+			} catch (Exception ex) {
+				log.error("error al obtener los datos del agente", ex);
+			}
+		}
+		// //// poner valores a ntramite, cdunieco y cdramo //////
+		// ///////////////////////////////////////////////////////
+
+		// //////////////////////////////////////
+		// //// obtener campos de tatrisit //////
+		imap = new HashMap<String, Item>();
+
+//		logger.debug("Peticion de pantalla Demo: " + smap1.get("nombrePanel"));
+//		AdminCargaPanelesDelegate adm = new AdminCargaPanelesDelegate();
+//		HashMap<String, Object> data = adm.GeneraJson(smap1.get("nombrePanel"));
+//		List<ViewBean> listadePaneles = (List<ViewBean>) data.get("lista");
+//		ViewBean pnl = listadePaneles.get(0);
+//		smap1.put("panelGenerado", pnl.getCodigo());
+		smap1.put("panelGenerado", "Ext.define('ComboData', {extend: 'Ext.data.Model',fields: [{type: 'string', name: 'key'},{type: 'string', name: 'value'}]}); var valTSINOA = 'TSINOA'; var storeTSINOA = Ext.create('Ext.data.Store',{model:'ComboData',proxy: {type: 'ajax',url: '../confpantallas/cargainfo.action',reader: {type: 'json',root: 'success'},extraParams: {tarea: 'llenaCombo', tabla:valTSINOA, valor:valTSINOA}},autoLoad: false}); var target = new Ext.form.Panel({ id: 'contenedor',autoScroll:true,border: false,renderTo: Ext.getBody()}); var miVarpanel_4 = Ext.form.Panel({xtype:'form',name:'panel_4',height:364,width:350,collapsible:false,margin:'5',frame:true,closable:false,bodyPadding:'5 5 5 5',autoScroll:false,resizable:false,bodyBorder:true,titleAlign:'left',id:'panel_4',title:'Titulo del formulario 4',items:[{name:'combobox_5',fieldLabel:'PRODUCTO',labelAlign:'left',xtype:'combobox',margin:'5 5 5 5',padding:'0 0 0 0',anchor:'95%',width:303,height:24,labelWidth:100,disabled:false,editable:true,hideTrigger:false,allowBlank:false,queryMode:'remote',multiSelect:false,triggerAction:'all',selectOnFocus:false,readOnly:false,displayField:'value',valueField:'key',typeAhead:false,id:'combobox_5'},{id:'combobox_6',name:'combobox_6',fieldLabel:'SERVICIO',labelAlign:'left',xtype:'combobox',margin:'5 5 5 5',padding:'0 0 0 0',anchor:'95%',width:303,height:24,labelWidth:100,disabled:false,editable:true,hideTrigger:false,allowBlank:false,queryMode:'remote',multiSelect:false,triggerAction:'all',selectOnFocus:false,readOnly:false,displayField:'value',valueField:'key',typeAhead:false},{id:'texto_2',name:'texto_2',fieldLabel:'MARCA',labelAlign:'left',xtype:'textfield',margin:'5 5 5 5',padding:'0 0 0 0',anchor:'95%',width:303,height:24,labelWidth:100,maxLength:5,minLength:1,allowBlank:false,disabled:false,readOnly:false},{id:'numerico_2',name:'numerico_2',fieldLabel:'MODELO',labelAlign:'left',xtype:'numberfield',margin:'5 5 5 5',padding:'0 0 0 0',anchor:'95%',width:303,height:24,labelWidth:100,editable:true,hideTrigger:true,disabled:false,allowBlank:false,readOnly:false,value:'0',maxValue:4,minValue:1},{id:'texto_3',name:'texto_3',fieldLabel:'DESCRIPCIÓN',labelAlign:'left',xtype:'textfield',margin:'5 5 5 5',padding:'0 0 0 0',anchor:'95%',width:303,height:24,labelWidth:100,maxLength:10,minLength:1,allowBlank:false,disabled:false,readOnly:false},{id:'combobox_7',name:'combobox_7',fieldLabel:'D TERC SIN SEG',labelAlign:'left',xtype:'combobox',margin:'5 5 5 5',padding:'0 0 0 0',anchor:'95%',width:303,height:24,labelWidth:100,disabled:false,editable:true,hideTrigger:false,allowBlank:false,queryMode:'remote',multiSelect:false,triggerAction:'all',selectOnFocus:false,readOnly:false,store:storeTSINOA,displayField:'value',valueField:'key',typeAhead:false}]}); target.add(miVarpanel_4);");
+		
+		// //// obtener campos de tatrisit //////
+		// //////////////////////////////////////
+
+		// Obtenemos la edad mï¿½xima para la cotizacion:
+		try {
+			smap1.put("edadMaximaCotizacion", catalogosManager
+					.obtieneCantidadMaxima(cdramo, cdtipsit,
+							TipoTramite.POLIZA_NUEVA, Rango.ANIOS,
+							Validacion.EDAD_MAX_COTIZACION));
+		} catch (Exception e) {
+			log.error("Error al obtener la edad maxima de cotizacion", e);
+			smap1.put("edadMaximaCotizacion", "0");
+		}
+
+		log.debug("\n" + "\n######                    ##########"
+				       + "\n###### pantallaCotizacionDemo ######"
+				       + "\n####################################"
+				       + "\n####################################");
+		return SUCCESS;
 	}
 	/*/////////////////////////////*/
 	////// cotizacion dinamica //////
