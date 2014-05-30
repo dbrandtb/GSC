@@ -957,6 +957,7 @@ function _0_cotizar(boton)
 					
 					_0_panelPri.add(_0_gridTarifas);
 					_0_panelPri.doLayout();
+                    setTimeout(function(){debug('timeout 1000');window.parent.scrollTo(0, 99999);},1000);
 				}
 				else
 				{
