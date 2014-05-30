@@ -292,11 +292,11 @@ function _11_validaAutorizacion(record)
 		    		//Preguntamos si esta seguro de generar el siniestro
 		    		msgWindow = Ext.Msg.show({
 				        title: 'Aviso',
-				        msg: '&iquest;Desea generar el Siniestro para dicho asegurado ?',
+				        msg: '&iquest;Desea asociar el asegurado con la autorizaci&oacute;n de Servicio ?',
 				        buttons: Ext.Msg.YESNO,
 				        icon: Ext.Msg.QUESTION,
 				        fn: function(buttonId, text, opt){
-				        	if(buttonId == 'yes'){
+				        	if(buttonId == 'no'){
 					    		var json =
 					    		{
 					    			'params.ntramite' : _11_params.NTRAMITE,
@@ -341,6 +341,16 @@ function _11_validaAutorizacion(record)
 					    		    	errorComunicacion();
 					    		    }
 					    		});
+			        		}else{
+			        			var valido = true;
+			    		    	var nAut = record.get('NoAutorizacion');
+			    		    	valido = nAut && nAut>0;
+			    		    	if(!valido)
+			    		    	{
+			    		    		_11_pedirAutorizacion(record);
+			    		    	}
+			    		    	debug('!_11_validaAutorizacion: ',valido?'si':'no');
+			    		    	return valido;
 			        		}
 				        }
 				    });
@@ -370,11 +380,11 @@ function _11_validaAutorizacion(record)
     		//Preguntamos si esta seguro de generar el siniestro
     		msgWindow = Ext.Msg.show({
 		        title: 'Aviso',
-		        msg: '&iquest;Desea generar el Siniestro para dicho asegurado ?',
+		        msg: '&iquest;Desea asociar el asegurado con la autorizaci&oacute;n de Servicio',
 		        buttons: Ext.Msg.YESNO,
 		        icon: Ext.Msg.QUESTION,
 		        fn: function(buttonId, text, opt){
-		        	if(buttonId == 'yes'){
+		        	if(buttonId == 'no'){
 			    		var json =
 			    		{
 			    			'params.ntramite' : _11_params.NTRAMITE,
@@ -419,6 +429,16 @@ function _11_validaAutorizacion(record)
 			    		    	errorComunicacion();
 			    		    }
 			    		});
+	        		}else{
+	        			var valido = true;
+	    		    	var nAut = record.get('NoAutorizacion');
+	    		    	valido = nAut && nAut>0;
+	    		    	if(!valido)
+	    		    	{
+	    		    		_11_pedirAutorizacion(record);
+	    		    	}
+	    		    	debug('!_11_validaAutorizacion: ',valido?'si':'no');
+	    		    	return valido;
 	        		}
 		        }
 		    });

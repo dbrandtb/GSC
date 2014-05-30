@@ -607,8 +607,8 @@ Ext.onReady(function() {
             ,queryParam  : 'params.descripc'
             ,hideTrigger : true
             ,minChars    : 3
-            /*,listeners : {
-   				change:function(e){
+            ,listeners : {
+   				select:function(e){
    					Ext.Ajax.request(
 					{
 					    url     : _URL_MONTO_ARANCEL
@@ -619,8 +619,7 @@ Ext.onReady(function() {
 		                }
 					    ,success : function (response)
 					    {
-					    	console.log("Respuesta del llamado al metodo");
-                            console.log(Ext.decode(response.responseText));
+					    	panelEdicionConceptos.down('[name="params.ptprecioArancel"]').setValue(Ext.decode(response.responseText).montoArancel);
 					    },
 					    failure : function ()
 					    {
@@ -634,7 +633,7 @@ Ext.onReady(function() {
 					    }
 					});
    	    		}
-   	        }*/
+   	        }
         
         },
         {
@@ -1382,7 +1381,7 @@ Ext.define('EditorConceptos', {
  					width : 150,
  					renderer : Ext.util.Format.usMoney
  				},{
- 					header : 'valor Arancel',
+ 					header : 'Valor Arancel',
  					dataIndex : 'PTMTOARA',
  					width : 150,
  					renderer : Ext.util.Format.usMoney
@@ -1501,11 +1500,7 @@ Ext.define('EditorConceptos', {
  	},
  	onEditClick: function(grid, rowIndex){
  		var seleccionFactura = gridFacturas.getSelectionModel().getSelection()[0];
-		console.log("VALOR DE SELECCION FACTURA");
-		console.log(seleccionFactura);
- 		var record=grid.getStore().getAt(rowIndex);
- 		console.log("VALOR DEL RECORD");
-		console.log(record);
+		var record=grid.getStore().getAt(rowIndex);
  		
  		_Operacion = 'U';
  		_Nmordina = record.get('NMORDINA');
@@ -1591,6 +1586,7 @@ Ext.define('EditorConceptos', {
  		
  		//console.log(record.get('MONTOARANCEL'));
  		panelEdicionConceptos.down('[name="params.ptprecioArancel"]').setValue(record.get('PTMTOARA'));
+ 		debug('monto arancel record',record.get('PTMTOARA'))
  		
  	},
  	onRemoveClick: function(grid, rowIndex){
