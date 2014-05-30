@@ -58,6 +58,7 @@ var _0_necesitoIncisos = true;
 <s:if test='%{getImap().get("fieldsIndividuales")==null}'>
     _0_necesitoIncisos = false;
 </s:if>
+_0_smap1.conincisos=_0_necesitoIncisos?'si':'no';
 debug('_0_necesitoIncisos:',_0_necesitoIncisos);
 
 var _0_panelPri;
@@ -773,44 +774,59 @@ function _0_cargar()
 
 function _0_agregarAsegu(boton)
 {
-	var grid=boton.up().up();
-	debug('_0_agregarAsegu');
-	var arrayEditores = _0_rowEditing.editor.form.monitor.getItems().items; 
-	debug('arrayEditores:',arrayEditores);
-	var record = new _0_modelo();
-	for(var i = 0;i<arrayEditores.length;i++)
+	var valido=true;
+	if(valido)
 	{
-		var iEditor = arrayEditores[i];
-		if(iEditor.store)
+		if(!_0_necesitoIncisos)
 		{
-			record.set(iEditor.name,iEditor.store.getAt(0).get('key'));
-		}
-		else if(iEditor.format)
-		{
-			record.set(iEditor.name,Ext.Date.format(new Date(),'d/m/Y'));
-		}
-		else
-		{
-			var estaEnModeloExtra=false;
-			debug('_0_modeloExtraFields.length:',_0_modeloExtraFields.length);
-			for(var j=0;j<_0_modeloExtraFields.length;j++)
+			valido=_0_storeIncisos.getCount()<1;
+			if(!valido)
 			{
-				if(iEditor.name==_0_modeloExtraFields[j].name)
-				{
-					estaEnModeloExtra=true;
-				}
+				mensajeWarning('Solo se puede introducir un inciso');
 			}
-			if(!estaEnModeloExtra)
-            {
-                record.set(iEditor.name,iEditor.name);
-            }
 		}
 	}
-	record.set('contador',_0_storeIncisos.getCount()+1);
-	_0_storeIncisos.add(record);
-	_0_rowEditing.startEdit(_0_storeIncisos.getCount()-1,1);
-	_0_rowEditing.startEdit(_0_storeIncisos.getCount()-1,1);
-	window.parent.scrollTo(0, _0_formAgrupados.getHeight());
+	if(valido)
+	{
+	    var grid=boton.up().up();
+		debug('_0_agregarAsegu');
+		var arrayEditores = _0_rowEditing.editor.form.monitor.getItems().items; 
+		debug('arrayEditores:',arrayEditores);
+		var record = new _0_modelo();
+		for(var i = 0;i<arrayEditores.length;i++)
+		{
+			var iEditor = arrayEditores[i];
+			if(iEditor.store)
+			{
+				record.set(iEditor.name,iEditor.store.getAt(0).get('key'));
+			}
+			else if(iEditor.format)
+			{
+				record.set(iEditor.name,Ext.Date.format(new Date(),'d/m/Y'));
+			}
+			else
+			{
+				var estaEnModeloExtra=false;
+				debug('_0_modeloExtraFields.length:',_0_modeloExtraFields.length);
+				for(var j=0;j<_0_modeloExtraFields.length;j++)
+				{
+					if(iEditor.name==_0_modeloExtraFields[j].name)
+					{
+						estaEnModeloExtra=true;
+					}
+				}
+				if(!estaEnModeloExtra)
+	            {
+	                record.set(iEditor.name,iEditor.name);
+	            }
+			}
+		}
+		record.set('contador',_0_storeIncisos.getCount()+1);
+		_0_storeIncisos.add(record);
+		_0_rowEditing.startEdit(_0_storeIncisos.getCount()-1,1);
+		_0_rowEditing.startEdit(_0_storeIncisos.getCount()-1,1);
+		window.parent.scrollTo(0, _0_formAgrupados.getHeight());
+	}
 }
 
 function _0_cotizar(boton)
@@ -856,6 +872,32 @@ function _0_cotizar(boton)
 		else
 		{
 			var inciso=_0_formAgrupados.getValues();
+			if(_0_storeIncisos.getCount()==1)
+			{
+				var record=_0_storeIncisos.getAt(0);
+				for(var key in record.data)
+                {
+                    var value=record.data[key];
+                    debug(typeof value,key,value);
+                    if((typeof value=='object')&&value&&value.getDate)
+                    {
+                        var fecha='';
+                        fecha+=value.getDate();
+                        if((fecha+'x').length==2)//1x 
+                        {
+                            fecha = ('x'+fecha).replace('x','0');//x1=01 
+                        }
+                        fecha+='/';
+                        fecha+=value.getMonth()+1<10?
+                                (('x'+(value.getMonth()+1)).replace('x','0'))
+                                :(value.getMonth()+1);
+                        fecha+='/';
+                        fecha+=value.getFullYear();
+                        value=fecha;
+                    }
+                    inciso[key]=value;
+                }
+			}
 			json['slist1'].push(inciso);
 		}
 		debug('json para cotizar:',json);
@@ -1317,7 +1359,7 @@ Ext.onReady(function()
             	title        : 'Datos de incisos'
             	,store       : _0_storeIncisos
             	,minHeight   : 250
-            	,hidden      : !_0_necesitoIncisos
+            	//,hidden      : !_0_necesitoIncisos
             	,tbar        :
             	[
             	    {

@@ -13,8 +13,6 @@ import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal.util.WrapperResultados;
-import mx.com.gseguros.confpantallas.delegate.AdminCargaPanelesDelegate;
-import mx.com.gseguros.confpantallas.model.ViewBean;
 import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.portal.consultas.service.ConsultasManager;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
@@ -230,6 +228,7 @@ public class CotizacionAction extends PrincipalCoreAction
         ////////////////////////////////////////
 		
 		//Obtenemos la edad mï¿½xima para la cotizacion:
+		/*
         try {
         	smap1.put("edadMaximaCotizacion",
         			catalogosManager.obtieneCantidadMaxima(cdramo, cdtipsit, TipoTramite.POLIZA_NUEVA, Rango.ANIOS, Validacion.EDAD_MAX_COTIZACION));
@@ -237,6 +236,7 @@ public class CotizacionAction extends PrincipalCoreAction
         	log.error("Error al obtener la edad mï¿½xima de cotizaciï¿½n", e);
         	smap1.put("edadMaximaCotizacion", "0");
         }
+        */
         
 		log.debug("\n"
 				+ "\n######                    ######"
@@ -304,7 +304,7 @@ public class CotizacionAction extends PrincipalCoreAction
 //		List<ViewBean> listadePaneles = (List<ViewBean>) data.get("lista");
 //		ViewBean pnl = listadePaneles.get(0);
 //		smap1.put("panelGenerado", pnl.getCodigo());
-		smap1.put("panelGenerado", "Ext.define('ComboData', {extend: 'Ext.data.Model',fields: [{type: 'string', name: 'key'},{type: 'string', name: 'value'}]}); var valTSINOA = 'TSINOA'; var storeTSINOA = Ext.create('Ext.data.Store',{model:'ComboData',proxy: {type: 'ajax',url: '../confpantallas/cargainfo.action',reader: {type: 'json',root: 'success'},extraParams: {tarea: 'llenaCombo', tabla:valTSINOA, valor:valTSINOA}},autoLoad: false}); var target = new Ext.form.Panel({ id: 'contenedor',autoScroll:true,border: false,renderTo: Ext.getBody()}); var miVarpanel_4 = Ext.form.Panel({xtype:'form',name:'panel_4',height:364,width:350,collapsible:false,margin:'5',frame:true,closable:false,bodyPadding:'5 5 5 5',autoScroll:false,resizable:false,bodyBorder:true,titleAlign:'left',id:'panel_4',title:'Titulo del formulario 4',items:[{name:'combobox_5',fieldLabel:'PRODUCTO',labelAlign:'left',xtype:'combobox',margin:'5 5 5 5',padding:'0 0 0 0',anchor:'95%',width:303,height:24,labelWidth:100,disabled:false,editable:true,hideTrigger:false,allowBlank:false,queryMode:'remote',multiSelect:false,triggerAction:'all',selectOnFocus:false,readOnly:false,displayField:'value',valueField:'key',typeAhead:false,id:'combobox_5'},{id:'combobox_6',name:'combobox_6',fieldLabel:'SERVICIO',labelAlign:'left',xtype:'combobox',margin:'5 5 5 5',padding:'0 0 0 0',anchor:'95%',width:303,height:24,labelWidth:100,disabled:false,editable:true,hideTrigger:false,allowBlank:false,queryMode:'remote',multiSelect:false,triggerAction:'all',selectOnFocus:false,readOnly:false,displayField:'value',valueField:'key',typeAhead:false},{id:'texto_2',name:'texto_2',fieldLabel:'MARCA',labelAlign:'left',xtype:'textfield',margin:'5 5 5 5',padding:'0 0 0 0',anchor:'95%',width:303,height:24,labelWidth:100,maxLength:5,minLength:1,allowBlank:false,disabled:false,readOnly:false},{id:'numerico_2',name:'numerico_2',fieldLabel:'MODELO',labelAlign:'left',xtype:'numberfield',margin:'5 5 5 5',padding:'0 0 0 0',anchor:'95%',width:303,height:24,labelWidth:100,editable:true,hideTrigger:true,disabled:false,allowBlank:false,readOnly:false,value:'0',maxValue:4,minValue:1},{id:'texto_3',name:'texto_3',fieldLabel:'DESCRIPCIÓN',labelAlign:'left',xtype:'textfield',margin:'5 5 5 5',padding:'0 0 0 0',anchor:'95%',width:303,height:24,labelWidth:100,maxLength:10,minLength:1,allowBlank:false,disabled:false,readOnly:false},{id:'combobox_7',name:'combobox_7',fieldLabel:'D TERC SIN SEG',labelAlign:'left',xtype:'combobox',margin:'5 5 5 5',padding:'0 0 0 0',anchor:'95%',width:303,height:24,labelWidth:100,disabled:false,editable:true,hideTrigger:false,allowBlank:false,queryMode:'remote',multiSelect:false,triggerAction:'all',selectOnFocus:false,readOnly:false,store:storeTSINOA,displayField:'value',valueField:'key',typeAhead:false}]}); target.add(miVarpanel_4);");
+		smap1.put("panelGenerado", "Ext.define('ComboData', {extend: 'Ext.data.Model',fields: [{type: 'string', name: 'key'},{type: 'string', name: 'value'}]}); var valTSINOA = 'TSINOA'; var storeTSINOA = Ext.create('Ext.data.Store',{model:'ComboData',proxy: {type: 'ajax',url: '../confpantallas/cargainfo.action',reader: {type: 'json',root: 'success'},extraParams: {tarea: 'llenaCombo', tabla:valTSINOA, valor:valTSINOA}},autoLoad: false}); var target = new Ext.form.Panel({ id: 'contenedor',autoScroll:true,border: false,renderTo: Ext.getBody()}); var miVarpanel_4 = Ext.form.Panel({xtype:'form',name:'panel_4',height:364,width:350,collapsible:false,margin:'5',frame:true,closable:false,bodyPadding:'5 5 5 5',autoScroll:false,resizable:false,bodyBorder:true,titleAlign:'left',id:'panel_4',title:'Titulo del formulario 4',items:[{name:'combobox_5',fieldLabel:'PRODUCTO',labelAlign:'left',xtype:'combobox',margin:'5 5 5 5',padding:'0 0 0 0',anchor:'95%',width:303,height:24,labelWidth:100,disabled:false,editable:true,hideTrigger:false,allowBlank:false,queryMode:'remote',multiSelect:false,triggerAction:'all',selectOnFocus:false,readOnly:false,displayField:'value',valueField:'key',typeAhead:false,id:'combobox_5'},{id:'combobox_6',name:'combobox_6',fieldLabel:'SERVICIO',labelAlign:'left',xtype:'combobox',margin:'5 5 5 5',padding:'0 0 0 0',anchor:'95%',width:303,height:24,labelWidth:100,disabled:false,editable:true,hideTrigger:false,allowBlank:false,queryMode:'remote',multiSelect:false,triggerAction:'all',selectOnFocus:false,readOnly:false,displayField:'value',valueField:'key',typeAhead:false},{id:'texto_2',name:'texto_2',fieldLabel:'MARCA',labelAlign:'left',xtype:'textfield',margin:'5 5 5 5',padding:'0 0 0 0',anchor:'95%',width:303,height:24,labelWidth:100,maxLength:5,minLength:1,allowBlank:false,disabled:false,readOnly:false},{id:'numerico_2',name:'numerico_2',fieldLabel:'MODELO',labelAlign:'left',xtype:'numberfield',margin:'5 5 5 5',padding:'0 0 0 0',anchor:'95%',width:303,height:24,labelWidth:100,editable:true,hideTrigger:true,disabled:false,allowBlank:false,readOnly:false,value:'0',maxValue:4,minValue:1},{id:'texto_3',name:'texto_3',fieldLabel:'DESCRIPCIï¿½N',labelAlign:'left',xtype:'textfield',margin:'5 5 5 5',padding:'0 0 0 0',anchor:'95%',width:303,height:24,labelWidth:100,maxLength:10,minLength:1,allowBlank:false,disabled:false,readOnly:false},{id:'combobox_7',name:'combobox_7',fieldLabel:'D TERC SIN SEG',labelAlign:'left',xtype:'combobox',margin:'5 5 5 5',padding:'0 0 0 0',anchor:'95%',width:303,height:24,labelWidth:100,disabled:false,editable:true,hideTrigger:false,allowBlank:false,queryMode:'remote',multiSelect:false,triggerAction:'all',selectOnFocus:false,readOnly:false,store:storeTSINOA,displayField:'value',valueField:'key',typeAhead:false}]}); target.add(miVarpanel_4);");
 		
 		// //// obtener campos de tatrisit //////
 		// //////////////////////////////////////
@@ -361,6 +361,8 @@ public class CotizacionAction extends PrincipalCoreAction
 			String fefin    = slist1.get(0).get("fefin");
 			
 			Date fechaHoy = new Date();
+			
+			boolean conIncisos = StringUtils.isNotBlank(smap1.get("conincisos"))&&smap1.get("conincisos").equals("si");
 			
 			////////////////////////////////
 			////// si no hay nmpoliza //////
@@ -427,80 +429,84 @@ public class CotizacionAction extends PrincipalCoreAction
             ////// mpolizas //////
             //////////////////////
 			
-            ////////////////////////////////
-            ////// ordenar al titular //////
-            
-            ////// 1. indicar para la situacion el indice //////
             String llaveRol="";
             String llaveSexo="";
-            String llaveFenacimi="";
+            String llaveFenacimi="DATE";
             String llaveCodPostal="";
-            try {
-            	LinkedHashMap<String,Object>p=new LinkedHashMap<String,Object>();
-            	p.put("cdtipsit",cdtipsit);
-            	Map<String,String>atributos=consultasManager.consultaDinamica(ObjetoBD.OBTIENE_ATRIBUTOS, p).get(0);
-            	if(atributos.get("PARENTESCO") != null) {
-            		llaveRol=atributos.get("PARENTESCO");
-                	if(llaveRol.length()==1) {
-                		llaveRol="0"+llaveRol;
-                	}
-                	llaveRol="parametros.pv_otvalor"+llaveRol;
-            	}
-            	if(atributos.get("SEXO") != null) {
-            		llaveSexo=atributos.get("SEXO");
-            		if(llaveSexo.length()==1) {
-                		llaveSexo="0"+llaveSexo;
-                	}
-                	llaveSexo="parametros.pv_otvalor"+llaveSexo;
-            	}
-            	if(atributos.get("FENACIMI") != null) {
-            		llaveFenacimi=atributos.get("FENACIMI");
-                	if(llaveFenacimi.length()==1) {
-                		llaveFenacimi="0"+llaveFenacimi;
-                	}
-                	llaveFenacimi="parametros.pv_otvalor"+llaveFenacimi;
-            	}
-            	if(atributos.get("CODPOSTAL") != null) {
-            		llaveCodPostal=atributos.get("CODPOSTAL");
-                	if(llaveCodPostal.length()==1) {
-                		llaveCodPostal="0"+llaveCodPostal;
-                	}
-                	llaveCodPostal="parametros.pv_otvalor"+llaveCodPostal;
-            	}
-            } catch(Exception ex){
-            	log.error("error al obtener atributos", ex);
-            }
-            ////// 1. indicar para la situacion el indice //////
             
-            ////// parche. Validar codigo postal //////
-            if(StringUtils.isNotBlank(llaveCodPostal)&&StringUtils.isNotBlank(slist1.get(0).get(llaveCodPostal)))
+            if(conIncisos)
             {
-            	LinkedHashMap<String,Object>paramsValues=new LinkedHashMap<String,Object>();
-            	paramsValues.put("param1",slist1.get(0).get(llaveCodPostal));
-            	paramsValues.put("param2",cdtipsit);
-            	storedProceduresManager.procedureVoidCall(ObjetoBD.VALIDA_CODPOSTAL_TARIFA.getNombre(), paramsValues, null);
+	            ////////////////////////////////
+	            ////// ordenar al titular //////
+	            
+	            ////// 1. indicar para la situacion el indice //////
+	            try {
+	            	LinkedHashMap<String,Object>p=new LinkedHashMap<String,Object>();
+	            	p.put("cdtipsit",cdtipsit);
+	            	Map<String,String>atributos=consultasManager.consultaDinamica(ObjetoBD.OBTIENE_ATRIBUTOS, p).get(0);
+	            	if(atributos.get("PARENTESCO") != null) {
+	            		llaveRol=atributos.get("PARENTESCO");
+	                	if(llaveRol.length()==1) {
+	                		llaveRol="0"+llaveRol;
+	                	}
+	                	llaveRol="parametros.pv_otvalor"+llaveRol;
+	            	}
+	            	if(atributos.get("SEXO") != null) {
+	            		llaveSexo=atributos.get("SEXO");
+	            		if(llaveSexo.length()==1) {
+	                		llaveSexo="0"+llaveSexo;
+	                	}
+	                	llaveSexo="parametros.pv_otvalor"+llaveSexo;
+	            	}
+	            	if(atributos.get("FENACIMI") != null) {
+	            		llaveFenacimi=atributos.get("FENACIMI");
+	                	if(llaveFenacimi.length()==1) {
+	                		llaveFenacimi="0"+llaveFenacimi;
+	                	}
+	                	llaveFenacimi="parametros.pv_otvalor"+llaveFenacimi;
+	            	}
+	            	if(atributos.get("CODPOSTAL") != null) {
+	            		llaveCodPostal=atributos.get("CODPOSTAL");
+	                	if(llaveCodPostal.length()==1) {
+	                		llaveCodPostal="0"+llaveCodPostal;
+	                	}
+	                	llaveCodPostal="parametros.pv_otvalor"+llaveCodPostal;
+	            	}
+	            } catch(Exception ex){
+	            	log.error("error al obtener atributos", ex);
+	            }
+	            ////// 1. indicar para la situacion el indice //////
+	            
+	            ////// parche. Validar codigo postal //////
+	            if(StringUtils.isNotBlank(llaveCodPostal)&&StringUtils.isNotBlank(slist1.get(0).get(llaveCodPostal)))
+	            {
+	            	LinkedHashMap<String,Object>paramsValues=new LinkedHashMap<String,Object>();
+	            	paramsValues.put("param1",slist1.get(0).get(llaveCodPostal));
+	            	paramsValues.put("param2",cdtipsit);
+	            	storedProceduresManager.procedureVoidCall(ObjetoBD.VALIDA_CODPOSTAL_TARIFA.getNombre(), paramsValues, null);
+	            }
+	            //// parche. Validar codigo postal //////
+	            
+	            ////// 2. ordenar //////
+	            int indiceTitular=-1;
+	            for(int i=0;i<slist1.size();i++)
+	            {
+	            	if(slist1.get(i).get(llaveRol).equalsIgnoreCase("T"))
+	            	{
+	            		indiceTitular=i;
+	            	}
+	            }
+	            List<Map<String,String>> temp    = new ArrayList<Map<String,String>>(0);
+	            Map<String,String>       titular = slist1.get(indiceTitular);
+	            temp.add(titular);
+	            slist1.remove(indiceTitular);
+	            temp.addAll(slist1);
+	            slist1=temp;
+	            ////// 2. ordenar //////
+	            
+	            ////// ordenar al titular //////
+	            ////////////////////////////////
             }
-            //// parche. Validar codigo postal //////
-            
-            ////// 2. ordenar //////
-            int indiceTitular=-1;
-            for(int i=0;i<slist1.size();i++)
-            {
-            	if(slist1.get(i).get(llaveRol).equalsIgnoreCase("T"))
-            	{
-            		indiceTitular=i;
-            	}
-            }
-            List<Map<String,String>> temp    = new ArrayList<Map<String,String>>(0);
-            Map<String,String>       titular = slist1.get(indiceTitular);
-            temp.add(titular);
-            slist1.remove(indiceTitular);
-            temp.addAll(slist1);
-            slist1=temp;
-            ////// 2. ordenar //////
-            
-            ////// ordenar al titular //////
-            ////////////////////////////////
             
             //////////////////////////////////////////
             ////// mpolisit y tvalosit iterados //////
@@ -609,7 +615,7 @@ public class CotizacionAction extends PrincipalCoreAction
             }
             ////// mpolisit y tvalosit iterados //////
             //////////////////////////////////////////
-            
+	        
             /////////////////////////////
             ////// clonar personas //////
             contador=1;
