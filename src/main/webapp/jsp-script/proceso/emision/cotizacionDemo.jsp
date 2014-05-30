@@ -1,0 +1,1265 @@
+<%@ include file="/taglibs.jsp"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<html>
+<head>
+<script>
+
+///////////////////////
+////// variables //////
+/*///////////////////*/
+
+//Obtenemos el contenido en formato JSON de la propiedad solicitada:
+var _0_smap1      = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
+
+_0_smap1.panelGenerado = '';
+
+var _0_rowEditing = Ext.create('Ext.grid.plugin.RowEditing',{ clicksToEdit : 1, errorSummary : true });
+
+var _0_reporteCotizacion = '<s:text name="rdf.cotizacion.nombre"/>';
+var _0_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
+var _0_reportsServerUser = '<s:text name="pass.servidor.reports" />';
+
+var _0_urlCotizar              = '<s:url namespace="/emision"         action="cotizar" />';
+var _0_urlCotizarExterno       = '<s:url namespace="/externo"         action="cotizar" />';
+var _0_urlDetalleCotizacion    = '<s:url namespace="/"                action="detalleCotizacion" />';
+var _0_urlCoberturas           = '<s:url namespace="/flujocotizacion" action="obtenerCoberturas4" />';
+var _0_urlDetalleCobertura     = '<s:url namespace="/flujocotizacion" action="obtenerAyudaCoberturas4" />';
+var _0_urlEnviarCorreo         = '<s:url namespace="/general"         action="enviaCorreo" />';
+var _0_urlViewDoc              = '<s:url namespace ="/documentos"     action="descargaDocInline" />';
+var _0_urlComprar              = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4" />';
+var _0_urlVentanaDocumentos    = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza" />';
+var _0_urlDatosComplementarios = '<s:url namespace="/"                action="datosComplementarios" />';
+var _0_urlUpdateStatus         = '<s:url namespace="/mesacontrol"     action="actualizarStatusTramite" />';
+var _0_urlMesaControl          = '<s:url namespace="/mesacontrol"     action="principal" />';
+
+var _0_panelPri;
+var _0_formAgrupados;
+var _0_gridTarifas;
+var _0_botCotizar;
+var _0_botLimpiar;
+var _0_fieldNtramite;
+var _0_fieldNmpoliza;
+var _0_selectedCdplan;
+var _0_selectedDsplan;
+var _0_selectedCdperpag;
+var _0_selectedNmsituac;
+var _0_gridCoberturas;
+var _0_storeCoberturas;
+var _0_windowCoberturas;
+var _0_botDetalleCobertura;
+var _0_windowAyudaCobertura;
+var _0_selectedIdcobertura;
+
+var EDAD_MAXIMA_COTIZACION=<s:property value="smap1.edadMaximaCotizacion"/>;
+debug('EDAD_MAXIMA_COTIZACION=', EDAD_MAXIMA_COTIZACION);
+debug('_0_smap1: ',_0_smap1);
+/*///////////////////*/
+////// variables //////
+///////////////////////
+
+///////////////////////
+////// funciones //////
+/*///////////////////*/
+function _0_comprar()
+{
+	debug('comprar');
+	_0_panelPri.setLoading(true);
+	var nombreTitular = '';
+	Ext.Ajax.request(
+	{
+        url      : _0_urlComprar
+        ,params  :
+        {
+            comprarNmpoliza        : _0_fieldNmpoliza.getValue()
+            ,comprarCdplan         : _0_selectedCdplan
+            ,comprarCdperpag       : _0_selectedCdperpag
+            ,comprarCdramo         : _0_smap1.cdramo
+            ,comprarCdciaaguradora : '20'
+            ,comprarCdunieco       : _0_smap1.cdunieco
+            ,cdtipsit              : _0_smap1.cdtipsit
+//            ,'smap1.fechaInicio'   : Ext.Date.format(Ext.getCmp('fechaInicioVigencia').getValue(),'d/m/Y')
+//            ,'smap1.fechaFin'      : Ext.Date.format(Ext.getCmp('fechaFinVigencia').getValue(),'d/m/Y')
+            ,'smap1.nombreTitular' : ''
+            ,'smap1.ntramite'      : _0_smap1.ntramite
+        }
+	    ,success : function(response,opts)
+	    {
+	    	_0_panelPri.setLoading(false);
+            var json = Ext.decode(response.responseText);
+            if (json.success == true)
+            {
+            	
+            	Ext.getCmp('_0_botComprarId').hide();
+            	Ext.getCmp('_0_botDetallesId').hide();
+            	Ext.getCmp('_0_botCoberturasId').hide();
+            	Ext.getCmp('_0_botEditarId').hide();
+            	Ext.getCmp('_0_botMailId').hide();
+            	Ext.getCmp('_0_botImprimirId').hide();
+                
+                window.parent.scrollTo(0, 0);
+                
+                debug("mostrar documentos");
+                
+                var ntramite = json.comprarNmpoliza;
+                debug("ntramite",ntramite);
+                if (!(_0_smap1.ntramite&&_0_smap1.ntramite>0))
+                {
+                    Ext.create('Ext.window.Window',
+                    {
+                    	width        : 600
+                    	,height      : 400
+                    	,title       : 'Subir documentos de tu tr&aacute;mite'
+                    	,closable    : false
+                    	,modal       : true
+                    	,buttonAlign : 'center'
+                    	,loadingMask : true
+                    	,loader      :
+                    	{
+                    		url       : _0_urlVentanaDocumentos
+                    		,scripts  : true
+                    		,autoLoad : true
+                    		,params   :
+                    		{
+                    			'smap1.cdunieco'  : _0_smap1.cdunieco
+                    			,'smap1.cdramo'   : _0_smap1.cdramo
+                    			,'smap1.estado'   : 'W'
+                    			,'smap1.nmpoliza' : _0_fieldNmpoliza.getValue()
+                    			,'smap1.nmsuplem' : '0'
+                    			,'smap1.ntramite' : ntramite
+                    			,'smap1.tipomov'  : '0'
+                    		}
+                    	}
+                    	,buttons     :
+                    	[
+                    	    {
+                    	    	text     : 'Aceptar'
+                    	    	,icon    : '${ctx}/resources/fam3icons/icons/accept.png'
+                    	    	,handler : function()
+                    	    	{
+                    	    		this.up().up().destroy();
+                    	    	}
+                    	    }
+                    	]
+                    }).show();
+                    var msg = Ext.Msg.show(
+                    {
+                    	title    : 'Solicitud enviada'
+                    	,msg     : 'Su solicitud ha sido enviada a mesa de control con el n&uacute;mero de tr&aacute;mite '
+                    	            + json.comprarNmpoliza
+                    	            + ', ahora puede subir los documentos del trámite'
+                    	,buttons : Ext.Msg.OK
+                    	,y       : 50
+                    });
+                    msg.setY(50);
+                }
+                else
+                {
+                	var msg = Ext.Msg.show(
+                	{
+                		title    : 'Tr&aacute;mite actualizado'
+                		,msg     : 'La cotizaci&oacute;n se guard&oacute; para el tr&aacute;mite '
+                		            + _0_smap1.ntramite
+                		            + '<br/>y no podr&aacute; ser modificada posteriormente'
+                		,buttons : Ext.Msg.OK
+                		,y       : 50
+                		,fn      : function()
+                		{
+                			Ext.create('Ext.form.Panel').submit(
+                			{
+                				url             : _0_urlDatosComplementarios
+                				,standardSubmit : true
+                				,params         :
+                				{
+                					cdunieco         : _0_smap1.cdunieco
+                					,cdramo          : _0_smap1.cdramo
+                					,estado          : 'W'
+                					,nmpoliza        : _0_fieldNmpoliza.getValue()
+                					,'map1.ntramite' : _0_smap1.ntramite
+                					,cdtipsit        : _0_smap1.cdtipsit
+                				}
+                			});
+                		}
+                	});
+                    msg.setY(50);
+                }
+            }
+            else
+            {
+            	
+            }
+        }
+	    ,failure : function()
+        {
+            _0_panelPri.setLoading(false);
+            errorComunicacion();
+        }
+    });
+}
+
+function _0_imprimir()
+{
+	var me = this;
+    var urlRequestImpCotiza = _0_urlImprimirCotiza
+            + '?p_cdplan='
+            + _0_selectedCdplan
+            + '&p_estado=W'
+            + '&p_poliza='
+            + _0_fieldNmpoliza.getValue()
+            + '&p_unieco='
+            + _0_smap1.cdunieco
+            + '&p_ramo='
+            + _0_smap1.cdramo
+            + '&p_cdusuari='
+            + _0_smap1.user
+            + '&p_ntramite='
+            + _0_smap1.ntramite
+            + '&destype=cache'
+            + "&desformat=PDF"
+            + "&userid="
+            + _0_reportsServerUser
+            + "&ACCESSIBLE=YES"
+            + "&report="
+            + _0_reporteCotizacion
+            + "&paramform=no";
+    debug(urlRequestImpCotiza);
+    var numRand = Math.floor((Math.random() * 100000) + 1);
+    debug(numRand);
+    var windowVerDocu = Ext.create('Ext.window.Window',
+    {
+        title          : 'Cotizaci&oacute;n'
+        ,width         : 700
+        ,height        : 500
+        ,collapsible   : true
+        ,titleCollapse : true
+        ,html : '<iframe innerframe="'
+                + numRand
+                + '" frameborder="0" width="100" height="100"'
+                + 'src="'
+                + _0_urlViewDoc
+                + "?contentType=application/pdf&url="
+                + encodeURIComponent(urlRequestImpCotiza)
+                + "\">"
+                + '</iframe>'
+        ,listeners :
+        {
+            resize : function(win,width,height,opt)
+            {
+                debug(width,height);
+                $('[innerframe="'+ numRand+ '"]').attr(
+                {
+                	'width'   : width - 20
+                	,'height' : height - 60
+                });
+            }
+        }
+    }).show();
+    windowVerDocu.center();
+}
+
+function _0_mail()
+{
+	Ext.create('Ext.window.Window',
+	{
+		title : 'Enviar cotizaci&oacute;n'
+		,width : 550
+		,modal : true
+		,height : 150
+		,buttonAlign : 'center'
+		,bodyPadding : 5
+		,items :
+		[
+		    {
+		    	xtype       : 'textfield'
+		    	,id         : '_0_idInputCorreos'
+		    	,fieldLabel : 'Correo(s)'
+		    	,emptyText  : 'Correo(s) separados por ;'
+		    	,labelWidth : 100
+		    	,allowBlank : false
+		    	,blankText  : 'Introducir correo(s) separados por ;'
+		    	,width      : 500
+		    }
+		]
+		,buttons :
+		[
+		    {
+		    	text : 'Enviar'
+		    	,icon : '${ctx}/resources/fam3icons/icons/accept.png'
+		    	,handler : function()
+		    	{
+		    		var me = this;
+		    		if (Ext.getCmp('_0_idInputCorreos').getValue().length > 0
+		    				&&Ext.getCmp('_0_idInputCorreos').getValue() != 'Correo(s) separados por ;')
+		    		{
+		    			debug('Se va a enviar cotizacion');
+		    			me.up().up().setLoading(true);
+		    			Ext.Ajax.request(
+		    			{
+		    				url : _0_urlEnviarCorreo
+		    				,params :
+		    				{
+		    					to : Ext.getCmp('_0_idInputCorreos').getValue(),
+		    					urlArchivo : _0_urlImprimirCotiza
+		    					            + '?p_cdplan='
+		    					            + _0_selectedCdplan
+		    					            + "&p_estado='W'"
+		    					            + '&p_poliza='
+		    					            + _0_fieldNmpoliza.getValue()
+		    					            + '&p_unieco='
+		    					            + _0_smap1.cdunieco
+		    					            + '&p_ramo='
+		    					            + _0_smap1.cdramo
+		    					            + '&p_cdusuari='
+		    					            + _0_smap1.user
+		    					            + '&p_ntramite='
+		    					            + _0_smap1.ntramite
+		    					            + '&destype=cache'
+		    					            + "&desformat=PDF"
+		    					            + "&userid="
+		    					            + _0_reportsServerUser
+		    					            + "&ACCESSIBLE=YES"
+		    					            + "&report="
+		    					            + _0_reporteCotizacion
+		    					            + "&paramform=no",
+		    					nombreArchivo : 'cotizacion_'+Ext.Date.format(new Date(),'Y-d-m_g_i_s_u')+'.pdf'
+		    			    },
+		    			    callback : function(options,success,response)
+		    			    {
+		    			    	me.up().up().setLoading(false);
+		    			    	if (success)
+		    			    	{
+		    			    		var json = Ext.decode(response.responseText);
+		    			    		if (json.success == true)
+		    			    		{
+		    			    			me.up().up().destroy();
+		    			    			Ext.Msg.show(
+		    			    			{
+		    			    				title : 'Correo enviado'
+		    			    				,msg : 'El correo ha sido enviado'
+		    			    				,buttons : Ext.Msg.OK
+		    			    			});
+		    			    		}
+		    			    		else
+		    			    		{
+		    			    			mensajeError('Error al enviar');
+		    			    		}
+		    			    	}
+		    			    	else
+		    			    	{
+		    			    		errorComunicacion();
+		    			    	}
+		    			    }
+		    			});
+		    		}
+		    		else
+		    		{
+		    			mensajeWarning('Introduzca al menos un correo');
+		    		}
+		    	}
+		    }
+		    ,
+		    {
+		    	text     : 'Cancelar'
+		    	,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
+                ,handler : function()
+                {
+                    this.up().up().destroy();
+                }
+		    }
+		]
+    }).show();
+	Ext.getCmp('_0_idInputCorreos').focus();
+}
+
+function _0_bloquear(b)
+{
+	for(var i=2;i<_0_formAgrupados.items.items.length-1;i++)
+	{
+		_0_formAgrupados.items.items[i].setReadOnly(b);
+	}
+	if(b)
+	{
+		window.parent.scrollTo(0, _0_formAgrupados.getHeight());
+	}
+}
+
+function _0_detallesCobertura()
+{
+	_0_windowCoberturas.setLoading(true);
+	Ext.Ajax.request(
+	{
+		url      : _0_urlDetalleCobertura
+        ,params  :
+        {
+            idCobertura       : _0_selectedIdcobertura
+            ,idCiaAseguradora : '20'
+            ,idRamo           : _0_smap1.cdramo
+        }
+        ,success : function(response)
+        {
+            _0_windowCoberturas.setLoading(false);
+            var jsonResp = Ext.decode(response.responseText);
+            if (jsonResp.ayudaCobertura
+                    && jsonResp.ayudaCobertura.dsGarant
+                    && jsonResp.ayudaCobertura.dsGarant.length > 0
+                    && jsonResp.ayudaCobertura.dsAyuda
+                    && jsonResp.ayudaCobertura.dsAyuda.length > 0) {
+                _0_windowAyudaCobertura.html = '<table width=430 ><tr><td align=left bgcolor="#98012e" style="color:white;font-size:11px;"><b>'
+                        + jsonResp.ayudaCobertura.dsGarant
+                        + '</b></td></tr><tr><td style="font-size:11px; ">'
+                        + jsonResp.ayudaCobertura.dsAyuda
+                        + '</td></tr></table>';
+                _0_windowAyudaCobertura.show();
+            }
+            else
+            {
+            	mensajeWarning('No hay detalle de cobertura');
+            }
+        }
+        ,failure : function()
+        {
+        	_0_windowCoberturas.setLoading(false);
+            mensajeError('Error al obtener detalle');
+        }
+    });
+}
+function _0_coberturas()
+{
+	_0_storeCoberturas.load(
+	{
+        params :
+        {
+            jsonCober_unieco   : _0_smap1.cdunieco
+            ,jsonCober_estado  : 'W'
+            ,jsonCober_nmpoiza : _0_fieldNmpoliza.getValue()
+            ,jsonCober_cdplan  : _0_selectedCdplan
+            ,jsonCober_cdramo  : _0_smap1.cdramo
+            ,jsonCober_cdcia   : '20'
+            ,jsonCober_situa   : _0_selectedNmsituac
+        }
+    });
+	_0_gridCoberturas.setTitle('Plan ' + _0_selectedDsplan);
+	_0_botDetalleCobertura.setDisabled(true);
+	_0_windowCoberturas.show();
+}
+
+function _0_detalles()
+{
+	Ext.Ajax.request(
+	{
+        url      : _0_urlDetalleCotizacion
+        ,params  :
+        {
+            'panel1.pv_cdunieco_i'  : _0_smap1.cdunieco
+            ,'panel1.pv_cdramo_i'   : _0_smap1.cdramo
+            ,'panel1.pv_estado_i'   : 'W'
+            ,'panel1.pv_nmpoliza_i' : _0_fieldNmpoliza.getValue()
+            ,'panel1.pv_cdperpag_i' : _0_selectedCdperpag
+            ,'panel1.pv_cdplan_i'   : _0_selectedCdplan
+        }
+        ,success : function(response)
+        {
+            var json = Ext.decode(response.responseText);
+            debug(json);
+            if (json.success == true)
+            {
+            	var orden = 0;
+                var parentescoAnterior = 'qwerty';
+                for ( var i = 0; i < json.slist1.length; i++)
+                {
+                    if (json.slist1[i].parentesco != parentescoAnterior)
+                    {
+                        orden++;
+                        parentescoAnterior = json.slist1[i].parentesco;
+                    }
+                    json.slist1[i].orden_parentesco = orden+ '_'+ json.slist1[i].parentesco;
+                }
+                debug(json);
+                Ext.create('Ext.window.Window',
+                {
+                	title       : 'Detalles de cotizaci&oacute;n'
+                	,maxHeight  : 500
+                	,width      : 700
+                	,autoScroll : true
+                	,modal      : true
+                	,items      :
+                	[
+                	    Ext.create('Ext.grid.Panel',
+                	    {
+                	    	store    : Ext.create('Ext.data.Store',
+                	    	{
+                	    		model       : 'ModeloDetalleCotizacion'
+                	    		,groupField : 'orden_parentesco'
+                	    		,sorters    :
+                	    		[
+                	    		    {
+                	    		    	sorterFn : function(o1,o2)
+                	    		    	{
+                	    		    		if (o1.get('orden') === o2.get('orden'))
+                	    		    		{
+                	    		    			return 0;
+                	    		    		}
+                	    		    		return o1.get('orden') < o2.get('orden') ? -1 : 1;
+                	    		    	}
+                	    		    }
+                	    		]
+                	    	    ,proxy      :
+                	    	    {
+                	    	    	type    : 'memory'
+                	    	    	,reader : 'json'
+                	    	    }
+                	    	    ,data : json.slist1
+                	    	})
+                	    	,columns :
+                	    	[
+                	    	    {
+                	    	    	header           : 'Nombre de la cobertura'
+                	    	    	,dataIndex       : 'Nombre_garantia'
+                	    	    	,flex            : 1
+                	    	    	,summaryType     : 'count'
+                	    	    	,summaryRenderer : function(value)
+                	    	    	{
+                	    	    		return Ext.String.format('Total de {0} cobertura{1}',value,value !== 1 ? 's': '');
+                	    	    	}
+                	    	    }
+                	    	    ,{
+                                    header       : 'Importe por cobertura'
+                                    ,dataIndex   : 'Importe'
+                                    ,flex        : 1
+                                    ,renderer    : Ext.util.Format.usMoney
+                                    ,align       : 'right'
+                                    ,summaryType : 'sum'
+                                } 
+                	    	]
+                	        ,features :
+                	        [
+                	            {
+                	            	groupHeaderTpl :
+                	            	[
+                	            	    '{name:this.formatName}'
+                	            	    ,{
+                	            	    	formatName : function(name)
+                	            	    	{
+                	            	    		return name.split("_")[1];
+                	            	    	}
+                	            	    }
+                	            	]
+                	            ,ftype          : 'groupingsummary'
+                	            ,startCollapsed : true
+                	            }
+                	        ]
+                	    })
+                	    ,Ext.create('Ext.toolbar.Toolbar',
+                	    {
+                	    	buttonAlign : 'right'
+                	    	,items      :
+                	    	[
+                	    	    '->'
+                	    	    ,Ext.create('Ext.form.Label',
+                	    	    {
+                	    	    	style          : 'color:white;'
+                	    	    	,initComponent : function()
+                	    	    	{
+                	    	    		var sum = 0;
+                	    	    		for ( var i = 0; i < json.slist1.length; i++)
+                	    	    		{
+                	    	    			sum += parseFloat(json.slist1[i].Importe);
+                	    	    		}
+                	    	    		this.setText('Total: '+ Ext.util.Format.usMoney(sum));
+                	    	    		this.callParent();
+                	    	    	}
+                	    	    })
+                	    	]
+                	    })
+                	]
+                }).show();
+            }
+            else
+            {
+            	mensajeError('Error al obtener detalle');
+            }
+        }
+        ,failure : errorComunicacion
+	});
+}
+
+function _0_nueva()
+{
+	_0_formAgrupados.getForm().reset();
+	_0_fieldNmpoliza.setValue('');
+    _0_panelPri.remove(_0_gridTarifas);
+    _0_panelPri.doLayout();
+    _0_bloquear(false);
+    //_0_formAgrupados.items.items[2].focus();
+}
+
+function _0_clonar()
+{
+	_0_panelPri.remove(_0_gridTarifas);
+	_0_panelPri.doLayout();
+    _0_fieldNmpoliza.setValue('');
+    _0_bloquear(false);
+    //_0_formAgrupados.items.items[2].focus();
+}
+
+function _0_editar()
+{
+	_0_panelPri.remove(_0_gridTarifas);
+	_0_panelPri.doLayout();
+	_0_bloquear(false);
+	//_0_formAgrupados.items.items[2].focus();
+}
+
+function _0_limpiar()
+{
+	_0_formAgrupados.getForm().reset();
+	//_0_formAgrupados.items.items[2].focus();
+}
+
+function _0_agregarAsegu(boton)
+{
+	var grid=boton.up().up();
+	debug('_0_agregarAsegu');
+	var arrayEditores = _0_rowEditing.editor.form.monitor.getItems().items; 
+	debug('arrayEditores:',arrayEditores);
+	for(var i = 0;i<arrayEditores.length;i++)
+	{
+		var iEditor = arrayEditores[i];
+		if(iEditor.store)
+		{
+			record.set(iEditor.name,iEditor.store.getAt(0).get('key'));
+		}
+		else if(iEditor.format)
+		{
+			record.set(iEditor.name,Ext.Date.format(new Date(),'d/m/Y'));
+		}
+		else
+		{
+			if(iEditor.name!='nombre'
+					&&iEditor.name!='nombre2'
+					&&iEditor.name!='apat'
+					&&iEditor.name!='amat')
+			{
+				record.set(iEditor.name,iEditor.name);
+			}
+		}
+	}
+	window.parent.scrollTo(0, _0_formAgrupados.getHeight());
+}
+
+function _0_cotizar(boton)
+{
+	debug('_0_cotizar');
+	if(_0_validarBase())
+	{
+		var json=
+		{
+		    slist1 : []
+		    ,smap1 : _0_smap1 
+		};
+		debug(json);
+		_0_panelPri.setLoading(true);
+		Ext.Ajax.request(
+		{
+			url       : _0_smap1['externo']=='si'?_0_urlCotizarExterno:_0_urlCotizar
+			,jsonData : json
+			,success  : function(response)
+			{
+				_0_bloquear(true);
+				_0_panelPri.setLoading(false);
+				json=Ext.decode(response.responseText);
+				if(json.success==true)
+				{
+					debug(Ext.decode(json.smap1.fields));
+					debug(Ext.decode(json.smap1.columnas));
+					debug(json.slist2);
+					
+					_0_fieldNmpoliza.setValue(json.smap1.nmpoliza);
+					
+					Ext.define('_0_modeloTarifa',
+					{
+						extend  : 'Ext.data.Model'
+						,fields : Ext.decode(json.smap1.fields)
+					});
+					
+					_0_gridTarifas=Ext.create('Ext.grid.Panel',
+                    {
+                        title             : 'Resultados'
+                        ,store            : Ext.create('Ext.data.Store',
+                        {
+                            model : '_0_modeloTarifa'
+                            ,data : json.slist2
+                        })
+                        ,columns          : Ext.decode(json.smap1.columnas)
+                        ,selType          : 'cellmodel'
+                        ,minHeight        : 100
+                        ,enableColumnMove : false
+                        ,buttonAlign      : 'center'
+                        ,buttons          :
+                        [
+                            new _0_BotComprar()
+                            ,new _0_BotDetalles()
+                            ,new _0_BotCoberturas()
+                            ,new _0_BotEditar()
+                            ,new _0_BotClonar()
+                            ,new _0_BotNueva()
+                            ,new _0_BotMail()
+                            ,new _0_BotImprimir()
+                        ]
+                        ,listeners        :
+                        {
+                            select : _0_tarifaSelect
+                        }
+                    });
+					
+					_0_panelPri.add(_0_gridTarifas);
+					_0_panelPri.doLayout();
+				}
+				else
+				{
+					_0_bloquear(false);
+					mensajeError('Error al cotizar:<br/>'+json.error);
+				}
+			}
+		    ,failure  : function(response)
+		    {
+		    	_0_panelPri.setLoading(false);
+		    	errorComunicacion();
+		    }
+		});
+	}
+}
+
+function _0_validarBase()
+{
+	var valido=true;
+	debug('>_0_validarBase');
+	
+	//form validation
+	if(valido)
+	{
+		valido=_0_formAgrupados.isValid();
+		if(!valido)
+		{
+			datosIncompletos();
+		}
+	}
+
+	debug('<_0_validarBase');
+	return valido;
+}
+
+function _0_tarifaSelect(selModel, record, row, column, eOpts)
+{
+	debug('column:',column);
+	if(column>0)
+	{
+		column = (column * 2) -1;
+	}
+	debug('( column * 2 )-1:',column);
+    var columnName=_0_gridTarifas.columns[column].dataIndex;
+    debug('record',record);
+    debug('columnName',columnName);
+    if(columnName=='DSPERPAG')
+    {
+    	debug('DSPERPAG');
+    	Ext.getCmp('_0_botDetallesId').setDisabled(true);
+    	Ext.getCmp('_0_botCoberturasId').setDisabled(true);
+    	Ext.getCmp('_0_botMailId').setDisabled(true);
+    	Ext.getCmp('_0_botImprimirId').setDisabled(true);
+    	Ext.getCmp('_0_botComprarId').setDisabled(true);
+    }
+    else
+    {
+    	// M N P R I M A X
+    	//0 1 2 3 4 5 6 7
+    	_0_selectedCdperpag = record.get("CDPERPAG");
+    	_0_selectedCdplan   = columnName.substr(7);
+    	_0_selectedDsplan   = record.get("DSPLAN"+_0_selectedCdplan);
+    	_0_selectedNmsituac = record.get("NMSITUAC");
+    	debug('_0_selectedCdperpag',_0_selectedCdperpag);
+    	debug('_0_selectedCdplan',_0_selectedCdplan);
+    	debug('_0_selectedDsplan',_0_selectedDsplan);
+    	debug('_0_selectedNmsituac',_0_selectedNmsituac);
+    	
+    	Ext.getCmp('_0_botDetallesId').setDisabled(false);
+    	Ext.getCmp('_0_botCoberturasId').setDisabled(false);
+    	Ext.getCmp('_0_botMailId').setDisabled(false);
+    	Ext.getCmp('_0_botImprimirId').setDisabled(false);
+    	Ext.getCmp('_0_botComprarId').setDisabled(false);
+    }
+}
+/*///////////////////*/
+////// funciones //////
+///////////////////////
+    
+Ext.onReady(function()
+{
+	
+	 <s:property value="smap1.panelGenerado" escapeHtml="false" />
+	 _0_formAgrupados = target;
+
+	 
+	 _0_fieldNtramite=Ext.create('Ext.form.field.Number',
+				{
+				    name        : 'ntramite'
+				    ,fieldLabel : 'TR&Aacute;MITE'
+				    ,hidden     : !(_0_smap1.ntramite&&_0_smap1.ntramite>0)
+				    ,readOnly   : true
+				    ,value      : _0_smap1.ntramite
+				});
+			    
+	 _0_fieldNmpoliza=Ext.create('Ext.form.field.Number',
+			    {
+			        name        : 'nmpoliza'
+			        ,fieldLabel : 'COTIZACI&Oacute;N'
+			        ,readOnly   : true
+			    });
+			    
+	 _0_panelPri = Ext.create('Ext.panel.Panel',{
+		 	renderTo  : '_0_divPri'
+		 	,bodyStyle   : 'padding:10px;'
+			,items   :
+			[
+			    _0_fieldNtramite
+			    ,_0_fieldNmpoliza
+			    ,_0_formAgrupados
+			    ,{
+                    id          : 'fechaInicioVigencia'
+                    ,name       : 'feini'
+                    ,fieldLabel : 'INICIO DE VIGENCIA'
+                    ,xtype      : 'datefield'
+                    ,format     : 'd/m/Y'
+                    ,editable   : true
+                    ,allowBlank : false
+                    ,value      : new Date()
+                    ,listeners  :
+                    {
+                        change : function(field,value)
+                        {
+                            try
+                            {
+                                Ext.getCmp('fechaFinVigencia').setValue(Ext.Date.add(value,Ext.Date.YEAR,1));
+                            }
+                            catch (e) {}
+                        }
+                    }
+                },
+                {
+                    id          : 'fechaFinVigencia'
+                    ,name       : 'fefin'
+                    ,fieldLabel : 'FIN DE VIGENCIA'
+                    ,xtype      : 'datefield'
+                    ,format     : 'd/m/Y'
+                    ,readOnly   : true
+                    ,allowBlank : false
+                    ,value      : Ext.Date.add(new Date(),Ext.Date.YEAR,1)
+                }
+			]
+			 ,buttonAlign : 'center'
+	         ,buttons     : [{
+	             				text     : _0_smap1.ntramite?'Precaptura':'Cotizar'
+	             			   ,icon    : '${ctx}/resources/fam3icons/icons/calculator.png'
+	             			   ,handler : _0_cotizar
+	             			},{
+	             		        text     : 'Limpiar'
+	             		       ,icon    : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
+	             		       ,handler : _0_limpiar
+	             		    }]
+		});
+	 
+    /////////////////////
+    ////// modelos //////
+    /*/////////////////*/
+    Ext.define('ModeloDetalleCotizacion',
+    {
+    	extend : 'Ext.data.Model'
+    	,fields :
+    	[
+			'Codigo_Garantia'
+			,{
+				name : 'Importe'
+				,type : 'float'
+			}
+			,'Nombre_garantia'
+			,'cdtipcon'
+			,'nmsituac'
+			,'orden'
+			,'parentesco'
+			,'orden_parentesco'
+        ]
+    });
+    
+    /*/////////////////*/
+    ////// modelos //////
+    /////////////////////
+    
+    ////////////////////
+    ////// stores //////
+    /*////////////////*/
+    _0_storeCoberturas=Ext.create('Ext.data.Store',
+    {
+        autoLoad : false
+        ,model   : 'RowCobertura'
+        ,proxy   :
+        {
+            type    : 'ajax'
+            ,url    : _0_urlCoberturas
+            ,reader :
+            {
+                type  : 'json'
+                ,root : 'listaCoberturas'
+            }
+        }
+    });
+    
+    
+    /*////////////////*/
+    ////// stores //////
+    ////////////////////
+    
+    /////////////////////////
+    ////// componentes //////
+    /*/////////////////////*/
+    Ext.define('_0_BotComprar',
+    {
+        extend    : 'Ext.Button'
+        ,id       : '_0_botComprarId'
+        ,text     : _0_smap1.ntramite?'Complementar tr&aacute;mite':'Generar tr&aacute;mite'
+        ,icon     : '${ctx}/resources/fam3icons/icons/book_next.png'
+        ,disabled : true
+        ,handler  : _0_comprar
+        ,hidden   : _0_smap1.readOnly&&_0_smap1.readOnly.length>0
+    });
+    
+    Ext.define('_0_BotImprimir',
+    {
+        extend    : 'Ext.Button'
+        ,id       : '_0_botImprimirId'
+        ,text     : 'Imprimir'
+        ,icon     : '${ctx}/resources/fam3icons/icons/printer.png'
+        ,disabled : true
+        ,handler  : _0_imprimir
+    });
+    
+    Ext.define('_0_BotMail',
+    {
+        extend    : 'Ext.Button'
+        ,id       : '_0_botMailId'
+        ,text     : 'Enviar'
+        ,icon     : '${ctx}/resources/fam3icons/icons/email.png'
+        ,disabled : true
+        ,handler  : _0_mail
+    });
+    
+    Ext.define('_0_BotCoberturas',
+    {
+        extend    : 'Ext.Button'
+        ,id       : '_0_botCoberturasId'
+        ,text     : 'Coberturas'
+        ,icon     : '${ctx}/resources/fam3icons/icons/table.png'
+        ,disabled : true
+        ,handler  : _0_coberturas
+    });
+    
+    Ext.define('_0_BotDetalles',
+    {
+        extend    : 'Ext.Button'
+        ,id       : '_0_botDetallesId'
+        ,text     : 'Detalles'
+        ,icon     : '${ctx}/resources/fam3icons/icons/text_list_numbers.png'
+        ,disabled : true
+        ,handler  : _0_detalles
+    });
+    
+    Ext.define('_0_BotNueva',
+    {
+    	extend   : 'Ext.Button'
+    	,id      : '_0_botNuevaId'
+        ,text    : 'Nueva'
+        ,icon    : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
+        ,handler : _0_nueva
+    });
+    
+    Ext.define('_0_BotClonar',
+    {
+    	extend   : 'Ext.Button'
+        ,id      : '_0_botClonarId'
+        ,text    : 'Clonar'
+        ,icon    : '${ctx}/resources/fam3icons/icons/control_repeat_blue.png'
+        ,handler : _0_clonar
+    });
+    
+    Ext.define('_0_BotEditar',
+    {
+    	extend   : 'Ext.Button'
+        ,id      : '_0_botEditarId'
+        ,text    : 'Editar'
+        ,icon    : '${ctx}/resources/fam3icons/icons/pencil.png'
+        ,handler : _0_editar
+    });
+    
+//    Ext.define("_0_FormAgrupados",
+//    {
+//    	extend         : 'Ext.form.Panel'
+//    	,title         : 'Datos generales'
+//    	/*,layout        :
+//        {
+//            type     : 'table'
+//            ,columns : 2
+//        }*/
+//    	,initComponent : function()
+//    	{
+//    		debug('_0_FormAgrupados initComponent');
+//    		Ext.apply(this,
+//    		{
+//    			defaults :
+//    			{
+//    				style : 'margin : 5px;'
+//    			}
+//    			,items   :
+//    			[
+//    			    _0_fieldNtramite
+//    			    ,_0_fieldNmpoliza
+//    			   
+//    			    ,{
+//                        id          : 'fechaInicioVigencia'
+//                        ,name       : 'feini'
+//                        ,fieldLabel : 'INICIO DE VIGENCIA'
+//                        ,xtype      : 'datefield'
+//                        ,format     : 'd/m/Y'
+//                        ,editable   : true
+//                        ,allowBlank : false
+//                        ,value      : new Date()
+//                        ,listeners  :
+//                        {
+//                            change : function(field,value)
+//                            {
+//                                try
+//                                {
+//                                    Ext.getCmp('fechaFinVigencia').setValue(Ext.Date.add(value,Ext.Date.YEAR,1));
+//                                }
+//                                catch (e) {}
+//                            }
+//                        }
+//                    },
+//                    {
+//                        id          : 'fechaFinVigencia'
+//                        ,name       : 'fefin'
+//                        ,fieldLabel : 'FIN DE VIGENCIA'
+//                        ,xtype      : 'datefield'
+//                        ,format     : 'd/m/Y'
+//                        ,readOnly   : true
+//                        ,allowBlank : false
+//                        ,value      : Ext.Date.add(new Date(),Ext.Date.YEAR,1)
+//                    }
+//    			]
+//    		});
+//    		this.callParent();
+//    	}
+//    });
+    
+//    Ext.define('_0_PanelPri',
+//    {
+//    	extend         : 'Ext.panel.Panel'
+//    	,initComponent : function()
+//        {
+//    		debug('_0_panelPri initComponent');
+//    		Ext.apply(this,
+//    		{
+//    			renderTo  : '_0_divPri'
+//   		        ,defaults :
+//   		        {
+//   		            style : 'margin:5px;'
+//   		        }
+//   		        ,items    :
+//   		        [
+//   		            _0_formAgrupados
+//   		        ]
+//    		});
+//    		this.callParent();
+//        }
+//    });
+    /*/////////////////////*/
+    ////// componentes //////
+    /////////////////////////
+    
+    ///////////////////////
+    ////// contenido //////
+    /*///////////////////*/
+    _0_windowAyudaCobertura = new Ext.Window(
+    {
+    	title        : 'Detalle de cobertura'
+    	,width       : 450
+    	,height      : 350
+    	,bodyStyle   : 'background:white'
+    	,overflow    : 'auto'
+    	,modal       : true
+    	,autoScroll  : true
+    	,buttonAlign : 'center'
+    	,closable    : false
+    	,buttons     :
+    	[
+    	    {
+    	    	text     : 'Cerrar'
+    	    	,handler : function()
+    	    	{
+    	    		this.up().up().hide();
+    	    	}
+    	    }
+    	]
+    });
+    
+    _0_botDetalleCobertura=Ext.create('Ext.Button',
+    {
+        text     : 'Ver detalle'
+        ,icon    : '${ctx}/resources/fam3icons/icons/text_list_numbers.png'
+        ,handler : _0_detallesCobertura
+    });
+    
+    _0_gridCoberturas=Ext.create('Ext.grid.Panel',
+    {
+        title        : 'Sin plan'
+        ,store       : _0_storeCoberturas
+        ,height      : 300
+        ,selType     : 'cellmodel'
+        ,buttonAlign : 'center'
+        ,buttons     : [ _0_botDetalleCobertura ]
+        ,columns     :
+        [
+            {
+                dataIndex : 'dsGarant'
+                ,text : 'Cobertura'
+                ,flex : 1
+            }
+            ,{
+                dataIndex : 'sumaAsegurada'
+                ,text : 'Suma asegurada'
+                ,flex : 1
+            }
+            ,{
+                dataIndex : 'deducible'
+                ,text : 'Deducible'
+                ,flex : 1
+            }
+        ]
+        ,listeners   :
+        {
+            itemclick : function(dv, record, item,index, e)
+            {
+                var y = this.getSelectionModel().getCurrentPosition().row;
+                var x = this.getSelectionModel().getCurrentPosition().column;
+                if (x == 0)
+                {
+                	_0_selectedIdcobertura=record.get('cdGarant');
+                    _0_botDetalleCobertura.setDisabled(false);
+                }
+                else
+                {
+                    _0_botDetalleCobertura.setDisabled(true);
+                }
+            }
+        }
+    });
+    
+    _0_windowCoberturas = new Ext.Window(
+    {
+        plain        : true
+        ,width       : 500
+        ,height      : 400
+        ,modal       : true
+        ,autoScroll  : true
+        ,title       : 'Coberturas'
+        ,layout      : 'fit'
+        ,bodyStyle   : 'padding:5px;'
+        ,buttonAlign : 'center'
+        ,closeAction : 'hide'
+        ,closable    : true
+        ,items       : [ _0_gridCoberturas ] 
+        ,buttons     :
+        [
+            {
+            	text     : 'Regresar'
+            	,icon    : '${ctx}/resources/fam3icons/icons/arrow_left.png'
+            	,handler : function()
+            	{
+                    this.up().up().hide();
+                }
+            }
+        ]
+    });
+    
+    
+//    var panelTemporal = new _0_FormAgrupados();
+//    _0_panelPri      = new _0_PanelPri();
+    /*///////////////////*/
+    ////// contenido //////
+    ///////////////////////
+    
+    //////////////////////
+    ////// cargador //////
+    /*//////////////////*/
+    /*//////////////////*/
+    ////// cargador //////
+    //////////////////////
+    
+    if(_0_smap1.cdtipsit=='SL')
+    {
+        Ext.create('Ext.window.Window',
+        {
+            closable   : false
+            ,width     : 153
+            ,header    : false
+            ,border    : false
+            ,height    : 340
+            ,resizable : false
+            ,items     :
+            [
+                {
+                    xtype : 'image'
+                    ,src  : '${ctx}/images/proceso/emision/imagencotizador.PNG'
+                }
+            ]
+        }).showAt(800, 50);
+    }
+    
+    if(_0_smap1.ntramite&&_0_smap1.ntramite.length>0)
+    {
+    	Ext.create('Ext.window.Window',
+    	{
+            title           : 'Documentos del tr&aacute;mite ' + _0_smap1.ntramite
+            ,closable       : false
+            ,width          : 300
+            ,height         : 300
+            ,autoScroll     : true
+            ,collapsible    : true
+            ,titleCollapse  : true
+            ,startCollapsed : true
+            ,resizable      : false
+            ,loader         :
+            {
+                scripts   : true
+                ,autoLoad : true
+                ,url      : _0_urlVentanaDocumentos
+                ,params   :
+                {
+                    'smap1.cdunieco'  : _0_smap1.cdunieco
+                    ,'smap1.cdramo'   : _0_smap1.cdramo
+                    ,'smap1.estado'   : 'W'
+                    ,'smap1.nmpoliza' : '0'
+                    ,'smap1.nmsuplem' : '0'
+                    ,'smap1.nmsolici' : '0'
+                    ,'smap1.ntramite' : _0_smap1.ntramite
+                    ,'smap1.tipomov'  : '0'
+                }
+            }
+        }).showAt(450, 50);
+    }
+    
+    //_0_formAgrupados.items.items[2].focus();
+});
+</script>
+</head>
+<body>
+<div id="_0_divPri" style="height:1000px;"></div>
+</body>
+</html>
