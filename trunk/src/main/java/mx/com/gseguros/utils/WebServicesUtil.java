@@ -45,7 +45,7 @@ public class WebServicesUtil {
 	 * @return respuesta OMElement con el mensaje de respuesta contenida en el Body
 	 * @throws Exception Si ocurre error en la invocación del servicio
 	 */
-	public static OMElement invocaServicioAxis2(String direccionWS, String actionWS, OMElement mensaje, Long timeout, Options options, boolean asincrono) throws Exception {
+	public static OMElement invocaWebServiceAxis2Soap11(String direccionWS, String actionWS, OMElement mensaje, Long timeout, Options options, boolean asincrono) throws Exception {
 		
 		logger.debug("Inicia Invoca Servicio Axis2 ["+direccionWS+" Metodo: "+actionWS+"]");
 		logger.debug(" ***** Parametros Servicio ***** ");

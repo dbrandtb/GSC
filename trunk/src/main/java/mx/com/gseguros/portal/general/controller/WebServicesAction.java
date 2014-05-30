@@ -89,7 +89,7 @@ public class WebServicesAction extends PrincipalCoreAction{
     		/**
     		 * Invocacion del WS de la peticion
     		 */
-    		OMElement resultadoWS = WebServicesUtil.invocaServicioAxis2(urlWS, metodoWS, AXIOMUtil.stringToOM(xmlEnvio), null , null, false);
+    		OMElement resultadoWS = WebServicesUtil.invocaWebServiceAxis2Soap11(urlWS, metodoWS, AXIOMUtil.stringToOM(xmlEnvio), null , null, false);
     		mensajeRespuesta = WebServicesUtil.formatXml(resultadoWS.toString());
     		
     		
