@@ -509,11 +509,11 @@ function _0_detalles()
                     json.slist1[i].orden_parentesco = orden+ '_'+ json.slist1[i].parentesco;
                 }
                 debug(json);
-                Ext.create('Ext.window.Window',
+                var wndDetalleCotizacion = Ext.create('Ext.window.Window',
                 {
                 	title       : 'Detalles de cotizaci&oacute;n'
                 	,maxHeight  : 500
-                	,width      : 700
+                	,width      : 800
                 	,autoScroll : true
                 	,modal      : true
                 	,items      :
@@ -607,6 +607,7 @@ function _0_detalles()
                 	    })
                 	]
                 }).show();
+                centrarVentanaInterna(wndDetalleCotizacion);
             }
             else
             {
