@@ -3044,9 +3044,9 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 	@Override
 	public String getObtieneMontoArancel(String tipoConcepto, String idProveedor, String idConceptoTipo) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("pv_tipoConcepto_i", tipoConcepto);
-		params.put("pv_idProveedor_i", idProveedor);
-		params.put("pv_idConceptoTipo_i", idConceptoTipo);
+		//params.put("pv_tipoConcepto_i", tipoConcepto);
+		params.put("pv_cdpresta_i", idProveedor);
+		params.put("pv_cdcpt_i", idConceptoTipo);
 		
 		Map<String, Object> resultado = ejecutaSP(new ObtieneMontoArancel(getDataSource()), params);
 		logger.debug( resultado.get("pv_registro_o"));
@@ -3057,10 +3057,10 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     	
     	protected ObtieneMontoArancel(DataSource dataSource) {
     		
-    		super(dataSource, "PKG_SINIESTRO.P_GET_ARANCELES");
-    		declareParameter(new SqlParameter("pv_tipoConcepto_i",   OracleTypes.VARCHAR)); 	// 1.- CPT 2.- HCPT 3.- UB
-    		declareParameter(new SqlParameter("pv_idProveedor_i",   OracleTypes.VARCHAR));		// Id. del proveedor
-    		declareParameter(new SqlParameter("pv_idConceptoTipo_i", OracleTypes.VARCHAR));		// Id. del concepto
+    		super(dataSource, "PKG_SINIESTRO.P_GET_ARANCEL");
+    		//declareParameter(new SqlParameter("pv_tipoConcepto_i",   OracleTypes.VARCHAR)); 	// 1.- CPT 2.- HCPT 3.- UB
+    		declareParameter(new SqlParameter("pv_cdpresta_i",   OracleTypes.VARCHAR));		// Id. del proveedor
+    		declareParameter(new SqlParameter("pv_cdcpt_i", OracleTypes.VARCHAR));		// Id. del concepto
     		declareParameter(new SqlOutParameter("pv_registro_o", OracleTypes.VARCHAR));
     		declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
     		declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
