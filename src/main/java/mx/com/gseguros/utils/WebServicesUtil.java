@@ -34,15 +34,15 @@ public class WebServicesUtil {
 	private final static Log logger = LogFactory.getLog(WebServicesUtil.class);
     
 	/**
-	 * Método para invocar Servicio Web Axis2
+	 * Método para invocar un Web Service empleando Axis2 con Soap 1.1
 	 * @param  direccionWS URL del servicio web
 	 * @param  actionWS    Solo informativo, Metodo del servicio web a invocar 
-	 * @param  mensaje     PayLoad del servicio web para invocar
+	 * @param  mensaje     PayLoad del servicio web para invocar que incluye los niveles de SoapEnvelope su Body y Contenido
 	 * @param  timeout     Tiempo de espera para la llamada
 	 * @param  Options     Opciones del Service Client
 	 * @param  asincrono true = síncrono, false = asíncrono
 	 * 
-	 * @return respuesta OMElement con el mensaje de respuesta 
+	 * @return respuesta OMElement con el mensaje de respuesta contenida en el Body
 	 * @throws Exception Si ocurre error en la invocación del servicio
 	 */
 	public static OMElement invocaServicioAxis2(String direccionWS, String actionWS, OMElement mensaje, Long timeout, Options options, boolean asincrono) throws Exception {
@@ -91,7 +91,7 @@ public class WebServicesUtil {
 			/**invoke service*/
 			if(!asincrono) {
 				MessageContext resultMessage = callerOp.getMessageContext(WSDLConstants.MESSAGE_LABEL_IN_VALUE);
-				respuesta = resultMessage.getEnvelope().getFirstElement();
+				respuesta = resultMessage.getEnvelope().getBody().getFirstElement();
 			} 
 		}catch(Exception e){
 			throw e;
