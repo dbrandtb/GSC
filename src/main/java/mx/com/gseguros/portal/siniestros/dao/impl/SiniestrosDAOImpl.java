@@ -3042,7 +3042,7 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
 
 
 	@Override
-	public String getObtieneMontoArancel(String tipoConcepto, String idProveedor, String idConceptoTipo) throws Exception {
+	public String obtieneMontoArancelCPT(String tipoConcepto, String idProveedor, String idConceptoTipo) throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		//params.put("pv_tipoConcepto_i", tipoConcepto);
 		params.put("pv_cdpresta_i", idProveedor);

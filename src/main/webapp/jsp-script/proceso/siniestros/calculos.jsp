@@ -203,11 +203,12 @@ Ext.onReady(function()
             {
             	debug('HOSPITAL');
             	var causaSiniestro = _p12_penalTotal[indice].causaSiniestro;
-            	var importe   = _p12_lhosp[indice].PTIMPORT*1.0;
+            	var importe   = (_p12_lhosp[indice].PTIMPORT*1.0) + (_p12_lhosp[indice].DESTO*1.0);
             	var descuento = _p12_lhosp[indice].DESTO*1.0;
             	debug('importe'   , importe);
             	debug('descuento' , descuento);
             	var subttDesc = importe - descuento;
+            	debug('subttDesc' , subttDesc);
             	var deducible = 0;
             	var sDeducible = _p12_slist2[indice].DEDUCIBLE;
             	if(
@@ -255,8 +256,9 @@ Ext.onReady(function()
             	}
             	
             	var iva       = _p12_lhosp[indice].IVA*1.0;
-            	var total = subttDedu - ( copagoaplica + iva );
             	var baseIva = _p12_lhosp[indice].BASEIVA*1.0;
+            	var total = subttDedu - copagoaplica + iva ;
+            	debug('subttDedu',subttDedu);
             	debug('subttDesc',subttDesc);
             	debug('deducible',deducible);
             	debug('subttDedu',subttDedu);

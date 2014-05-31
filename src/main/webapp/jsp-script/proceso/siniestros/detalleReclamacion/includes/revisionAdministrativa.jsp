@@ -619,7 +619,11 @@ Ext.onReady(function() {
 		                }
 					    ,success : function (response)
 					    {
-					    	panelEdicionConceptos.down('[name="params.ptprecioArancel"]').setValue(Ext.decode(response.responseText).montoArancel);
+					    	if(Ext.decode(response.responseText).montoArancel == null){
+					    		panelEdicionConceptos.down('[name="params.ptprecioArancel"]').setValue("0");
+					    	}else{
+					    		panelEdicionConceptos.down('[name="params.ptprecioArancel"]').setValue(Ext.decode(response.responseText).montoArancel);
+					    	}
 					    },
 					    failure : function ()
 					    {
@@ -645,9 +649,7 @@ Ext.onReady(function() {
 			,decimalSeparator: '.'
 			,minValue: 0
 			,name       : 'params.ptprecioArancel'
-			/*,listeners: {
-					change: calculaImporteConcepto
-			}*/
+			,readOnly: (Ext.isEmpty(_CDROL) || _CDROL != _ROL_ACTIVO)
    		},
    		{
 	        xtype      : 'numberfield'
