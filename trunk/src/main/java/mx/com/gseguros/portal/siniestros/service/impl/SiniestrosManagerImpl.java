@@ -1211,9 +1211,9 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 
 	@Override
 	//String tipoConcepto, String idProveedor, String idConceptoTipo
-	public String getObtieneMontoArancel(String tipoConcepto, String idProveedor, String idConceptoTipo ) throws Exception {
+	public String obtieneMontoArancelCPT(String tipoConcepto, String idProveedor, String idConceptoTipo ) throws Exception {
 		try {
-			return siniestrosDAO.getObtieneMontoArancel(tipoConcepto, idProveedor, idConceptoTipo );
+			return siniestrosDAO.obtieneMontoArancelCPT(tipoConcepto, idProveedor, idConceptoTipo );
 		} catch (DaoException daoExc) {
 			throw new ApplicationException(daoExc.getMessage(), daoExc);
 		}

@@ -373,5 +373,5 @@ public interface SiniestrosDAO {
 			,String cdclausu
 			) throws Exception;
 
-	public String getObtieneMontoArancel(String tipoConcepto, String idProveedor, String idConceptoTipo) throws Exception;
+	public String obtieneMontoArancelCPT(String tipoConcepto, String idProveedor, String idConceptoTipo) throws Exception;
 }

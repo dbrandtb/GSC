@@ -79,15 +79,21 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 				+ "\n######                        ######"
 				);
 		logger.debug("params:"+params);
+		UserVO usuario= (UserVO)session.get("USUARIO");
+		params.put("cdrol", usuario.getRolActivo().getObjeto().getValue());
 		
 		if(!params.containsKey("nmsinies"))
 		{
 			try{
 				String ntramite = params.get("ntramite");
+				usuario= (UserVO)session.get("USUARIO");
+				params.put("cdrol", usuario.getRolActivo().getObjeto().getValue());
+				
 				Map<String,String> paramsRes = (HashMap<String, String>) siniestrosManager.obtenerLlaveSiniestroReembolso(ntramite);
 				
 				for(Entry<String,String>en:paramsRes.entrySet()){
 					params.put(en.getKey().toLowerCase(),en.getValue());
+					params.put("cdrol", usuario.getRolActivo().getObjeto().getValue());
 				}
 				
 			}catch(Exception ex){
@@ -184,7 +190,7 @@ public class DetalleSiniestroAction extends PrincipalCoreAction {
 	public String loadListaFacturasTramite(){
 	   	try {
 	   			loadList = siniestrosManager.P_GET_FACTURAS_SINIESTRO(params.get("cdunieco"), params.get("cdramo"), params.get("estado"), params.get("nmpoliza"), params.get("nmsuplem"), params.get("nmsituac"), params.get("aaapertu"), params.get("status"), params.get("nmsinies")); 
-	   		
+		   		
 	   	}catch( Exception e){
 	   		logger.error("Error en loadListaFacturasTramite",e);
 	   		success =  false;
