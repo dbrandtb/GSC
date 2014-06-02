@@ -49,6 +49,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	private List<Map<String,String>>         slist1;
 	private List<Map<String,String>>         slist2;
 	private Map<String,String>               smap1;
+	private Map<String,String>               params;
 	private StoredProceduresManager          storedProceduresManager;
 	private boolean                          success;
 	
@@ -304,7 +305,25 @@ public class CotizacionAction extends PrincipalCoreAction
 //		List<ViewBean> listadePaneles = (List<ViewBean>) data.get("lista");
 //		ViewBean pnl = listadePaneles.get(0);
 //		smap1.put("panelGenerado", pnl.getCodigo());
-		smap1.put("panelGenerado", "Ext.define('ComboData', {extend: 'Ext.data.Model',fields: [{type: 'string', name: 'key'},{type: 'string', name: 'value'}]}); var valTSINOA = 'TSINOA'; var storeTSINOA = Ext.create('Ext.data.Store',{model:'ComboData',proxy: {type: 'ajax',url: '../confpantallas/cargainfo.action',reader: {type: 'json',root: 'success'},extraParams: {tarea: 'llenaCombo', tabla:valTSINOA, valor:valTSINOA}},autoLoad: false}); var target = new Ext.form.Panel({ id: 'contenedor',autoScroll:true,border: false,renderTo: Ext.getBody()}); var miVarpanel_4 = Ext.form.Panel({xtype:'form',name:'panel_4',height:364,width:350,collapsible:false,margin:'5',frame:true,closable:false,bodyPadding:'5 5 5 5',autoScroll:false,resizable:false,bodyBorder:true,titleAlign:'left',id:'panel_4',title:'Titulo del formulario 4',items:[{name:'combobox_5',fieldLabel:'PRODUCTO',labelAlign:'left',xtype:'combobox',margin:'5 5 5 5',padding:'0 0 0 0',anchor:'95%',width:303,height:24,labelWidth:100,disabled:false,editable:true,hideTrigger:false,allowBlank:false,queryMode:'remote',multiSelect:false,triggerAction:'all',selectOnFocus:false,readOnly:false,displayField:'value',valueField:'key',typeAhead:false,id:'combobox_5'},{id:'combobox_6',name:'combobox_6',fieldLabel:'SERVICIO',labelAlign:'left',xtype:'combobox',margin:'5 5 5 5',padding:'0 0 0 0',anchor:'95%',width:303,height:24,labelWidth:100,disabled:false,editable:true,hideTrigger:false,allowBlank:false,queryMode:'remote',multiSelect:false,triggerAction:'all',selectOnFocus:false,readOnly:false,displayField:'value',valueField:'key',typeAhead:false},{id:'texto_2',name:'texto_2',fieldLabel:'MARCA',labelAlign:'left',xtype:'textfield',margin:'5 5 5 5',padding:'0 0 0 0',anchor:'95%',width:303,height:24,labelWidth:100,maxLength:5,minLength:1,allowBlank:false,disabled:false,readOnly:false},{id:'numerico_2',name:'numerico_2',fieldLabel:'MODELO',labelAlign:'left',xtype:'numberfield',margin:'5 5 5 5',padding:'0 0 0 0',anchor:'95%',width:303,height:24,labelWidth:100,editable:true,hideTrigger:true,disabled:false,allowBlank:false,readOnly:false,value:'0',maxValue:4,minValue:1},{id:'texto_3',name:'texto_3',fieldLabel:'DESCRIPCI�N',labelAlign:'left',xtype:'textfield',margin:'5 5 5 5',padding:'0 0 0 0',anchor:'95%',width:303,height:24,labelWidth:100,maxLength:10,minLength:1,allowBlank:false,disabled:false,readOnly:false},{id:'combobox_7',name:'combobox_7',fieldLabel:'D TERC SIN SEG',labelAlign:'left',xtype:'combobox',margin:'5 5 5 5',padding:'0 0 0 0',anchor:'95%',width:303,height:24,labelWidth:100,disabled:false,editable:true,hideTrigger:false,allowBlank:false,queryMode:'remote',multiSelect:false,triggerAction:'all',selectOnFocus:false,readOnly:false,store:storeTSINOA,displayField:'value',valueField:'key',typeAhead:false}]}); target.add(miVarpanel_4);");
+		
+		params =  new HashMap<String,String>();
+		params.put("PV_CDPANTALLA_I", "1");
+		params.put("PV_CDRAMO_I", "2");
+		params.put("PV_CDTIPSIT_I", "FA");
+		
+		Map<String,String> result = null;
+		try {
+			result = pantallasManager.obtienePantalla(params);
+		} catch (Exception e) {
+			log.error("Error al obtener codigo de pantalla para pantalla: " + params, e);
+			smap1.put("edadMaximaCotizacion", "0");
+		}
+		
+		logger.debug("variablesGeneradas: " + result.get("DSSTORES"));
+		logger.debug("panelGenerado: " + result.get("DSARCHIVOSEC"));
+		
+		smap1.put("variablesGeneradas", result.get("DSSTORES"));
+		smap1.put("panelGenerado", result.get("DSARCHIVOSEC"));
 		
 		// //// obtener campos de tatrisit //////
 		// //////////////////////////////////////
@@ -1128,6 +1147,14 @@ public class CotizacionAction extends PrincipalCoreAction
 	}
 	public void setPantallasManager(PantallasManager pantallasManager) {
 		this.pantallasManager = pantallasManager;
+	}
+
+	public Map<String, String> getParams() {
+		return params;
+	}
+
+	public void setParams(Map<String, String> params) {
+		this.params = params;
 	}
 
 }

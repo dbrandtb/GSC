@@ -795,9 +795,9 @@ function _0_tarifaSelect(selModel, record, row, column, eOpts)
 Ext.onReady(function()
 {
 	
-	 <s:property value="smap1.panelGenerado" escapeHtml="false" />
-	 _0_formAgrupados = target;
-
+	 <s:property value="smap1.variablesGeneradas" escapeHtml="false" />
+	 
+	 _0_formAgrupados = <s:property value="smap1.panelGenerado" escapeHtml="false" />
 	 
 	 _0_fieldNtramite=Ext.create('Ext.form.field.Number',
 				{

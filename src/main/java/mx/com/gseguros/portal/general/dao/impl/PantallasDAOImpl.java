@@ -385,4 +385,28 @@ public class PantallasDAOImpl extends AbstractManagerDAO implements PantallasDAO
 	/*///////////////////////*/
 	////// obtener arbol //////
 	///////////////////////////
+	
+	
+	@Override
+	public List<Map<String,String>> obtienePantalla(Map<String, String> params) throws Exception
+	{
+		Map<String,Object> resultadoMap = this.ejecutaSP(new ObtienePantalla(this.getDataSource()), params);
+		return (List<Map<String,String>>) resultadoMap.get("PV_REGISTRO_O");
+	}
+	
+	protected class ObtienePantalla extends StoredProcedure
+	{
+		protected ObtienePantalla(DataSource dataSource)
+		{
+			super(dataSource,"PKG_CONF_PANTALLAS.P_GET_PANTALLA_FINAL");
+			declareParameter(new SqlParameter("PV_CDPANTALLA_I"  , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDRAMO_I"      , OracleTypes.VARCHAR));
+			declareParameter(new SqlParameter("PV_CDTIPSIT_I"    , OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("PV_REGISTRO_O" , OracleTypes.CURSOR, new DinamicMapper()));//PANTALLA,SECCION
+			declareParameter(new SqlOutParameter("PV_MSG_ID_O"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("PV_TITLE_O"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+	
 }

@@ -64,4 +64,6 @@ public interface PantallasManager
 	 * PKG_CONF_PANTALLAS.P_OBT_ARBOL_TCONFCMP
 	 */
 	public Item                     obtenerArbol               ()                          throws Exception;
+	
+	public Map<String,String> obtienePantalla(Map<String,String> params) throws Exception;
 }
