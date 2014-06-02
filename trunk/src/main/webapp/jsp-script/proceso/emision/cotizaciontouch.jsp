@@ -73,7 +73,7 @@ var _mcotiza_smap1         = <s:property value="%{convertToJSON('smap1')}"  esca
 
 var _mcotiza_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
 var _mcotiza_reportsServerUser = '<s:text name="pass.servidor.reports" />';
-var _mcotiza_reporteCotizacion = '<s:text name="rdf.cotizacion.nombre" />';
+var _mcotiza_reporteCotizacion = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 var _mcotiza_urlEnviarCorreo   = '<s:url namespace="/general" action="enviaCorreo" />';
 
 var _mcotiza_modeloExtraFields = [
@@ -382,26 +382,20 @@ function _mcotiza_imprimir()
 {
     var me = this;
     var urlRequestImpCotiza = _mcotiza_urlImprimirCotiza
-            + '?p_cdplan='
-            + _mcotiza_selectedCdplan
+            + '?p_unieco='      + _mcotiza_smap1.cdunieco
+            + '&p_ramo='        + _mcotiza_smap1.cdramo
+            + '&p_subramo='     + _mcotiza_smap1.cdtipsit
             + '&p_estado=W'
-            + '&p_poliza='
-            + Ext.ComponentQuery.query('#_mcotiza_nmpolizaField')[0].getValue()
-            + '&p_unieco='
-            + _mcotiza_smap1.cdunieco
-            + '&p_ramo='
-            + _mcotiza_smap1.cdramo
-            + '&p_cdusuari='
-            + _mcotiza_smap1.user
-            + '&p_ntramite='
-            + _mcotiza_smap1.ntramite
+            + '&p_poliza='      + Ext.ComponentQuery.query('#_mcotiza_nmpolizaField')[0].getValue()
+            + '&p_suplem=0'
+            + '&p_cdplan='      + _mcotiza_selectedCdplan
+            + '&p_ntramite='    + _mcotiza_smap1.ntramite            
+            + '&p_cdusuari='    + _mcotiza_smap1.user
             + '&destype=cache'
             + "&desformat=PDF"
-            + "&userid="
-            + _mcotiza_reportsServerUser
+            + "&userid="        + _mcotiza_reportsServerUser
             + "&ACCESSIBLE=YES"
-            + "&report="
-            + _mcotiza_reporteCotizacion
+            + "&report="        + _mcotiza_reporteCotizacion
             + "&paramform=no";
     debug(urlRequestImpCotiza);
     $(['<form action="'+_mcotiza_urlRedirect+'" target="_blank">'
