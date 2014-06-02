@@ -1831,12 +1831,12 @@ public String generarSiniestroSinAutorizacion()
 	    	String subcobertura = factura.get("CDCONVAL");
 	    	String valorComplementario = "0";
 	    	
-	    	if(cobertura.equalsIgnoreCase("18HO") || cobertura.equalsIgnoreCase("18MA"))
+	    	if(cobertura.equalsIgnoreCase("18HO") || cobertura.equalsIgnoreCase("18PS"))
 	    	{
-	    		if(cobertura.equalsIgnoreCase("18HO") && (subcobertura.equalsIgnoreCase("18HO024")|| subcobertura.equalsIgnoreCase("18HO025")|| subcobertura.equalsIgnoreCase("18HO026"))){
+	    		if(cobertura.equalsIgnoreCase("18HO") && (subcobertura.equalsIgnoreCase("18HO024")|| subcobertura.equalsIgnoreCase("18HO025")|| subcobertura.equalsIgnoreCase("18HO026")|| subcobertura.equalsIgnoreCase("18HO027"))){
 		    		valorComplementario = "1";
 		    	}
-		    	if(cobertura.equalsIgnoreCase("18MA") && (subcobertura.equalsIgnoreCase("18MA004")||subcobertura.equalsIgnoreCase("18MA017")||subcobertura.equalsIgnoreCase("18MA030"))){
+		    	if(cobertura.equalsIgnoreCase("18PS") && (subcobertura.equalsIgnoreCase("18PS001")||subcobertura.equalsIgnoreCase("18PS002"))){
 		    		valorComplementario = "1";
 			    }
 	    	}else{
