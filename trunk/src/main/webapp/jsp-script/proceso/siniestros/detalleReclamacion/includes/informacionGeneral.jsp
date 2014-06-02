@@ -30,6 +30,7 @@
 	var _URL_LOADER_ASEGURADOS_POLIZA       = '<s:url namespace="/consultasPoliza" action="includes/ventanaAseguradosPoliza" />';
 	var _URL_LOADER_CONSULTA_DOCUMENTOS     = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza" />';
     var _URL_LOADER_RECIBOS                 = '<s:url namespace="/general"         action="includes/loadRecibos" />';
+    var _UrlDetalleSiniestroDirecto 		= '<s:url namespace="/siniestros" action="afiliadosAfectados"        />';
 
 	Ext.onReady(function() {
 		
@@ -685,6 +686,19 @@
 		        icon:_CONTEXT+'/resources/fam3icons/icons/arrow_refresh.png',
 		        handler:function(){
 		        	this.up('form').getForm().reset();
+		        }
+		    },{
+		        text:'Regresar',
+		        icon:_CONTEXT+'/resources/fam3icons/icons/application_side_contract.png',
+		        hidden: (_TIPOPAGO == _REEMBOLSO),
+		        handler:function(){
+		        	Ext.create('Ext.form.Panel').submit(
+        			{
+        				url             : _UrlDetalleSiniestroDirecto
+        				,params         : {	'params.tipopago' :_TIPOPAGO,
+        									'params.ntramite' : _NTRAMITE}
+        			    ,standardSubmit : true
+        			});
 		        }
 		    }]
 		});
