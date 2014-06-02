@@ -223,6 +223,12 @@ public class PantallasManagerImpl implements PantallasManager
 		
 		return iArbol;
     }
+	
+	public Map<String,String> obtienePantalla(Map<String,String> params) throws Exception{
+		
+		List<Map<String, String>>  res = pantallasDAO.obtienePantalla(params);
+		return res.get(0); 
+    }
 
 	///////////////////////////////
 	////// getters y setters //////

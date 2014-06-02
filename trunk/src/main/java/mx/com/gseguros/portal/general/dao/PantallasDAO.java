@@ -27,4 +27,12 @@ public interface PantallasDAO
 	 * PKG_CONF_PANTALLAS.P_OBT_ARBOL_TCONFCMP
 	 */
 	public List<Map<String,String>> obtenerArbol               ()                          throws Exception;
+	
+	/**
+	 * Obtiene codigo ExtJS generado por el diseñador visual de pantallas
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
+	public List<Map<String,String>> obtienePantalla(Map<String,String> params) throws Exception;
 }
