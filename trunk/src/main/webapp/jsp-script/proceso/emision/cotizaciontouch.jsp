@@ -62,7 +62,14 @@ var _mcotiza_urlComprar        = '<s:url namespace="/flujocotizacion" action="co
 var _mcotiza_urlRedirect       = '<s:url namespace="/"                action="redireccion"        />';
 var _mcotiza_urlLoad           = '<s:url namespace="/emision"         action="cargarCotizacion"   />';
 
+var _mcotiza_necesitoIncisos = true;
+<s:if test='%{getImap().get("fieldsIndividuales")==null}'>
+    _mcotiza_necesitoIncisos = false;
+</s:if>
+debug('_mcotiza_necesitoIncisos:',_mcotiza_necesitoIncisos);
+
 var _mcotiza_smap1         = <s:property value="%{convertToJSON('smap1')}"  escapeHtml="false" />;
+ _mcotiza_smap1.conincisos = _mcotiza_necesitoIncisos?'si':'no';
 
 var _mcotiza_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
 var _mcotiza_reportsServerUser = '<s:text name="pass.servidor.reports" />';
@@ -74,12 +81,6 @@ var _mcotiza_modeloExtraFields = [
     <s:property value="imap.modeloExtraFields" />
 </s:if>
 ];
-
-var _mcotiza_necesitoIncisos = true;
-<s:if test='%{getImap().get("fieldsIndividuales")==null}'>
-    _mcotiza_necesitoIncisos = false;
-</s:if>
-debug('_mcotiza_necesitoIncisos:',_mcotiza_necesitoIncisos);
 
 var _mcotiza_incisoTpl;
 var _mcotiza_validacion_custom;
@@ -607,8 +608,9 @@ function _mcotiza_cotiza()
 		{
 			if(att!='nmpoliza')
 			{
-				if(values[att]==null || values[att]==undefined || values[att]=='')
+				if(values[att]==null || values[att]==undefined || (values[att]+'x')=='x')
 				{
+				    debug('falta:',att,values[att],'<-valor');
 					valido = false;
 				}
 			}
@@ -704,7 +706,57 @@ function _mcotiza_cotiza()
 		}
 		else
 		{
+		    debug('producto sin incisos');
 			var inciso=_mcotiza_getFormDatosGenerales().getValues();
+			for(var key in inciso)
+			{
+			    var value=inciso[key];
+                debug(typeof value,key,value);
+                if((typeof value=='object')&&value&&value.getDate)
+                {
+                    debug('fecha object');
+                    var fecha='';
+                    fecha+=value.getDate();
+                    fecha+='/';
+                    fecha+=value.getMonth()+1<10?
+                            (('x'+(value.getMonth()+1)).replace('x','0'))
+                            :(value.getMonth()+1);
+                    fecha+='/';
+                    fecha+=value.getFullYear();
+                    value=fecha;
+                    debug('pasado a:',value);
+                    inciso[key]=value;
+                }
+            }
+			if(_mcotiza_storeIncisos.getCount()==1)
+            {
+                var record=_mcotiza_storeIncisos.getAt(0);
+                debug('record unico:',record);
+                for(var key in record.data)
+                {
+                    var value=record.data[key];
+                    debug(typeof value,key,value);
+                    if((typeof value=='object')&&value&&value.getDate)
+                    {
+                        debug('fecha object');
+                        var fecha='';
+                        fecha+=value.getDate();
+                        fecha+='/';
+                        fecha+=value.getMonth()+1<10?
+                                (('x'+(value.getMonth()+1)).replace('x','0'))
+                                :(value.getMonth()+1);
+                        fecha+='/';
+                        fecha+=value.getFullYear();
+                        value=fecha;
+                        debug('pasado a:',value);
+                    }
+                    else
+                    {
+                        debug('no fecha object');
+                    }
+                    inciso[key]=value;
+                }
+            }
 			json['slist1'].push(inciso);
 		}
         debug('json para cotizar: ',json);
@@ -793,7 +845,22 @@ function _mcotiza_nuevoAsegurado()
 	debug('>_mcotiza_nuevoAsegurado');
 	var valuesTmp = _mcotiza_getFormInciso().getValues();
 	debug('valuesTmp:',valuesTmp);
-	var valido = _mcotiza_validaAsegurado(valuesTmp);
+	var valido = true;
+	if(valido)
+	{
+	    if(!_mcotiza_necesitoIncisos)
+	    {
+	        valido=_mcotiza_storeIncisos.getCount()<1;
+	        if(!valido)
+	        {
+                Ext.Msg.alert('Aviso','Solo se puede introducir un inciso');
+            }
+        }
+	}
+	if(valido)
+	{
+	    valido = _mcotiza_validaAsegurado(valuesTmp);
+	}
 	if(valido)
 	{
 		var recordTmp = new _mcotiza_Inciso(valuesTmp);
@@ -816,7 +883,7 @@ function _mcotiza_borrarAsegurado()
     	valido = rowIndex!=null&&rowIndex!=undefined&&(rowIndex+'').length>0;
     	if(!valido)
     	{
-    		Ext.Msg.alert('Aviso','Debes seleccionar un asegurado');
+    		Ext.Msg.alert('Aviso','Debes seleccionar un inciso');
     	}
     }
     if(valido)
@@ -842,7 +909,7 @@ function _mcotiza_editarAsegurado()
         valido = rowIndex!=null&&rowIndex!=undefined&&(rowIndex+'').length>0;
         if(!valido)
         {
-            Ext.Msg.alert('Aviso','Debes seleccionar un asegurado');
+            Ext.Msg.alert('Aviso','Debes seleccionar un inciso');
         }
     }
     if(valido)
@@ -1066,7 +1133,7 @@ Ext.setup({onReady:function()
 			        	xtype    : 'formpanel'
 			        	,title   : '&nbsp;Inciso&nbsp;'
 			        	,titulo  : 'Edici&oacute;n de incisos'
-			        	,hidden  : !_mcotiza_necesitoIncisos
+			        	//,hidden  : !_mcotiza_necesitoIncisos
 			        	,iconCls : 'add'
 			        	,itemId  : '_mcotiza_formAsegurados'
 			        	,items   :
@@ -1127,7 +1194,7 @@ Ext.setup({onReady:function()
                         ,title            : '&nbsp;Incisos&nbsp;'
                         ,titulo           : 'Incisos'
                         ,iconCls          : 'more'
-                        ,hidden           : !_mcotiza_necesitoIncisos
+                        //,hidden           : !_mcotiza_necesitoIncisos
                         ,itemId           : '_mcotiza_listAsegurados'
                         ,store            : _mcotiza_storeIncisos
                         ,itemTpl          : _mcotiza_incisoTpl
