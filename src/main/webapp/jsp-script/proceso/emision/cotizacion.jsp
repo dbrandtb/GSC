@@ -30,7 +30,7 @@ var _0_smap1      = <s:property value="%{convertToJSON('smap1')}" escapeHtml="fa
 
 var _0_rowEditing = Ext.create('Ext.grid.plugin.RowEditing',{ clicksToEdit : 1, errorSummary : true });
 
-var _0_reporteCotizacion = '<s:text name="rdf.cotizacion.nombre"/>';
+var _0_reporteCotizacion = '<s:text name='%{"rdf.cotizacion.nombre."+smap1.cdtipsit.toUpperCase()}' />';
 var _0_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
 var _0_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 
@@ -233,26 +233,20 @@ function _0_imprimir()
 {
 	var me = this;
     var urlRequestImpCotiza = _0_urlImprimirCotiza
-            + '?p_cdplan='
-            + _0_selectedCdplan
+            + '?p_unieco='      + _0_smap1.cdunieco
+            + '&p_ramo='        + _0_smap1.cdramo
+            + '&p_subramo='     + _0_smap1.cdtipsit
             + '&p_estado=W'
-            + '&p_poliza='
-            + _0_fieldNmpoliza.getValue()
-            + '&p_unieco='
-            + _0_smap1.cdunieco
-            + '&p_ramo='
-            + _0_smap1.cdramo
-            + '&p_cdusuari='
-            + _0_smap1.user
-            + '&p_ntramite='
-            + _0_smap1.ntramite
+            + '&p_poliza='      + _0_fieldNmpoliza.getValue()
+            + '&p_suplem=0'
+            + '&p_cdplan='      + _0_selectedCdplan
+            + '&p_ntramite='    + _0_smap1.ntramite
+            + '&p_cdusuari='    + _0_smap1.user
             + '&destype=cache'
             + "&desformat=PDF"
-            + "&userid="
-            + _0_reportsServerUser
+            + "&userid="        + _0_reportsServerUser
             + "&ACCESSIBLE=YES"
-            + "&report="
-            + _0_reporteCotizacion
+            + "&report="        + _0_reporteCotizacion
             + "&paramform=no";
     debug(urlRequestImpCotiza);
     var numRand = Math.floor((Math.random() * 100000) + 1);
