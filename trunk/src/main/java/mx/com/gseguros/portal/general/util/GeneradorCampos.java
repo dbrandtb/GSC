@@ -362,6 +362,13 @@ public class GeneradorCampos
 		}
         ////// decimales //////
         
+        ////// numericos no menores a cero //////
+        if(tipoCampo.equals(ComponenteVO.TIPOCAMPO_NUMERICO)||tipoCampo.equals(ComponenteVO.TIPOCAMPO_PORCENTAJE))
+        {
+        	item.add("minValue",0);
+        }
+        ////// numericos no menores a cero //////
+        
         ////// minLength, maxLength //////
         if((tipoCampo.equals(ComponenteVO.TIPOCAMPO_ALFANUMERICO)
         		||tipoCampo.equals(ComponenteVO.TIPOCAMPO_TEXTAREA)
