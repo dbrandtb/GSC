@@ -620,7 +620,14 @@ function _0_nueva()
     _0_panelPri.remove(_0_gridTarifas);
     _0_panelPri.doLayout();
     _0_bloquear(false);
-    _0_formAgrupados.items.items[2].focus();
+    if(_0_formAgrupados.items.items[2])
+    {
+        _0_formAgrupados.items.items[2].focus();
+    }
+    else if(_0_formAgrupados.items.items[0].items.items[2])
+    {
+        _0_formAgrupados.items.items[0].items.items[2].focus();
+    }
 }
 
 function _0_clonar()
@@ -629,7 +636,14 @@ function _0_clonar()
 	_0_panelPri.doLayout();
     _0_fieldNmpoliza.setValue('');
     _0_bloquear(false);
-    _0_formAgrupados.items.items[2].focus();
+    if(_0_formAgrupados.items.items[2])
+    {
+        _0_formAgrupados.items.items[2].focus();
+    }
+    else if(_0_formAgrupados.items.items[0].items.items[2])
+    {
+        _0_formAgrupados.items.items[0].items.items[2].focus();
+    }
 }
 
 function _0_editar()
@@ -637,14 +651,28 @@ function _0_editar()
 	_0_panelPri.remove(_0_gridTarifas);
 	_0_panelPri.doLayout();
 	_0_bloquear(false);
-	_0_formAgrupados.items.items[2].focus();
+	if(_0_formAgrupados.items.items[2])
+    {
+        _0_formAgrupados.items.items[2].focus();
+    }
+    else if(_0_formAgrupados.items.items[0].items.items[2])
+    {
+        _0_formAgrupados.items.items[0].items.items[2].focus();
+    }
 }
 
 function _0_limpiar()
 {
 	_0_formAgrupados.getForm().reset();
 	_0_storeIncisos.removeAll();
-	_0_formAgrupados.items.items[2].focus();
+	if(_0_formAgrupados.items.items[2])
+    {
+        _0_formAgrupados.items.items[2].focus();
+    }
+    else if(_0_formAgrupados.items.items[0].items.items[2])
+    {
+        _0_formAgrupados.items.items[0].items.items[2].focus();
+    }
 }
 
 function _0_cargar()
@@ -1256,11 +1284,6 @@ Ext.onReady(function()
     {
     	extend         : 'Ext.form.Panel'
     	,title         : 'Datos generales'
-    	/*,layout        :
-        {
-            type     : 'table'
-            ,columns : 2
-        }*/
     	,initComponent : function()
     	{
     		debug('_0_FormAgrupados initComponent');
@@ -1658,6 +1681,50 @@ Ext.onReady(function()
     
     _0_formAgrupados = new _0_FormAgrupados();
     _0_gridIncisos   = new _0_GridIncisos();
+    if(_0_smap1.cdtipsit=='AF')
+    {
+        _0_gridIncisos.setTitle('Datos del contratante');
+    }
+    <s:if test='%{getSmap1().get("CDATRIBU_DERECHO")!=null}'>
+        var items=_0_formAgrupados.items.items;
+        debug('items a reordenar:',items);
+        var cdatribus_derechos=_0_smap1.CDATRIBU_DERECHO.split(',');
+        debug('cdatribus_derechos:',cdatribus_derechos);
+        var itemsIzq=[];
+        var itemsDer=[];
+        for(var i=0;i<items.length;i++)
+        {
+            var iItem=items[i];
+            debug('item revisado:',iItem);
+            var indexOfIItem=$.inArray(iItem.cdatribu,cdatribus_derechos);
+            debug('indexOfIItem:',indexOfIItem);
+            if(indexOfIItem==-1)
+            {
+                debug('izquierdo');
+                itemsIzq.push(iItem);
+            }
+            else
+            {
+                debug('derecho');
+                itemsDer.push(iItem);
+            }
+        }
+        _0_formAgrupados.removeAll(false);
+        _0_formAgrupados.layout='hbox';
+        _0_formAgrupados.add(
+        [
+            {
+                xtype  : 'fieldset'
+                ,title : 'Datos generales'
+                ,items : itemsIzq
+            }
+            ,{
+                xtype  : 'fieldset'
+                ,title : 'Datos de coberturas'
+                ,items : itemsDer
+            }
+        ]);
+    </s:if>
     _0_botonera      = new _0_Botonera();
     _0_panelPri      = new _0_PanelPri();
     /*///////////////////*/
@@ -1724,7 +1791,19 @@ Ext.onReady(function()
         }).showAt(450, 50);
     }
     
-    _0_formAgrupados.items.items[2].focus();
+    if(_0_formAgrupados.items.items[2])
+    {
+        _0_formAgrupados.items.items[2].focus();
+    }
+    else if(_0_formAgrupados.items.items[0].items.items[2])
+    {
+        _0_formAgrupados.items.items[0].items.items[2].focus();
+        debug('_0_formAgrupados.items.items[0].items.items[2].focus();',_0_formAgrupados.items.items[0].items.items[2]);
+    }
+    else
+    {
+        debug('no focus:',_0_formAgrupados.items.items[0].items.items);
+    }
 });
 </script>
 </head>
