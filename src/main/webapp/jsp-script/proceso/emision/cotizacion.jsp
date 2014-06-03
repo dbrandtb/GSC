@@ -240,6 +240,8 @@ function _0_imprimir()
             + '&p_poliza='      + _0_fieldNmpoliza.getValue()
             + '&p_suplem=0'
             + '&p_cdplan='      + _0_selectedCdplan
+            + '&p_plan='        + _0_selectedCdplan
+            + '&p_perpag='      + _0_selectedCdperpag
             + '&p_ntramite='    + _0_smap1.ntramite
             + '&p_cdusuari='    + _0_smap1.user
             + '&destype=cache'
@@ -326,27 +328,23 @@ function _0_mail()
 		    				{
 		    					to : Ext.getCmp('_0_idInputCorreos').getValue(),
 		    					urlArchivo : _0_urlImprimirCotiza
-		    					            + '?p_cdplan='
-		    					            + _0_selectedCdplan
-		    					            + "&p_estado='W'"
-		    					            + '&p_poliza='
-		    					            + _0_fieldNmpoliza.getValue()
-		    					            + '&p_unieco='
-		    					            + _0_smap1.cdunieco
-		    					            + '&p_ramo='
-		    					            + _0_smap1.cdramo
-		    					            + '&p_cdusuari='
-		    					            + _0_smap1.user
-		    					            + '&p_ntramite='
-		    					            + _0_smap1.ntramite
-		    					            + '&destype=cache'
-		    					            + "&desformat=PDF"
-		    					            + "&userid="
-		    					            + _0_reportsServerUser
-		    					            + "&ACCESSIBLE=YES"
-		    					            + "&report="
-		    					            + _0_reporteCotizacion
-		    					            + "&paramform=no",
+                                             + '?p_unieco='      + _0_smap1.cdunieco
+                                             + '&p_ramo='        + _0_smap1.cdramo
+                                             + '&p_subramo='     + _0_smap1.cdtipsit
+                                             + '&p_estado=W'
+                                             + '&p_poliza='      + _0_fieldNmpoliza.getValue()
+                                             + '&p_suplem=0'
+                                             + '&p_cdplan='      + _0_selectedCdplan
+                                             + '&p_plan='        + _0_selectedCdplan
+                                             + '&p_perpag='      + _0_selectedCdperpag
+                                             + '&p_ntramite='    + _0_smap1.ntramite
+                                             + '&p_cdusuari='    + _0_smap1.user
+                                             + '&destype=cache'
+                                             + "&desformat=PDF"
+                                             + "&userid="        + _0_reportsServerUser
+                                             + "&ACCESSIBLE=YES"
+                                             + "&report="        + _0_reporteCotizacion
+                                             + "&paramform=no",
 		    					nombreArchivo : 'cotizacion_'+Ext.Date.format(new Date(),'Y-d-m_g_i_s_u')+'.pdf'
 		    			    },
 		    			    callback : function(options,success,response)

@@ -263,29 +263,25 @@ function _mcotiza_enviarPorCorreo()
 	    				url     : _mcotiza_urlEnviarCorreo
 	    				,params :
 	    				{
-	    					to        : value,
-	    					urlArchivo: _mcotiza_urlImprimirCotiza
-										+ '?p_cdplan='
-										+ _mcotiza_selectedCdplan
-										+ '&p_estado=W'
-										+ '&p_poliza='
-										+ Ext.ComponentQuery.query('#_mcotiza_nmpolizaField')[0].getValue()
-										+ '&p_unieco='
-										+ _mcotiza_smap1.cdunieco
-										+ '&p_ramo='
-										+ _mcotiza_smap1.cdramo
-										+ '&p_cdusuari='
-										+ _mcotiza_smap1.user
-										+ '&p_ntramite='
-										+ _mcotiza_smap1.ntramite
-										+ '&destype=cache'
-										+ "&desformat=PDF"
-										+ "&userid="
-										+ _mcotiza_reportsServerUser
-										+ "&ACCESSIBLE=YES"
-										+ "&report="
-										+ _mcotiza_reporteCotizacion
-										+ "&paramform=no",
+	    					to         : value,
+	    					urlArchivo : _mcotiza_urlImprimirCotiza
+                                         + '?p_unieco='      + _mcotiza_smap1.cdunieco
+                                         + '&p_ramo='        + _mcotiza_smap1.cdramo
+                                         + '&p_subramo='     + _mcotiza_smap1.cdtipsit
+                                         + '&p_estado=W'
+                                         + '&p_poliza='      + Ext.ComponentQuery.query('#_mcotiza_nmpolizaField')[0].getValue()
+                                         + '&p_suplem=0'
+                                         + '&p_cdplan='      + _mcotiza_selectedCdplan
+                                         + '&p_plan='        + _mcotiza_selectedCdplan
+                                         + '&p_perpag='      + _mcotiza_selectedCdperpag
+                                         + '&p_ntramite='    + _mcotiza_smap1.ntramite            
+                                         + '&p_cdusuari='    + _mcotiza_smap1.user
+                                         + '&destype=cache'
+                                         + "&desformat=PDF"
+                                         + "&userid="        + _mcotiza_reportsServerUser
+                                         + "&ACCESSIBLE=YES"
+                                         + "&report="        + _mcotiza_reporteCotizacion
+                                         + "&paramform=no",
 							nombreArchivo : 'cotizacion_'+Ext.Date.format(new Date(),'Y-d-m_g_i_s_u')+'.pdf'
 	    			    },
 	    			    callback : function(options,success,response)
@@ -389,6 +385,8 @@ function _mcotiza_imprimir()
             + '&p_poliza='      + Ext.ComponentQuery.query('#_mcotiza_nmpolizaField')[0].getValue()
             + '&p_suplem=0'
             + '&p_cdplan='      + _mcotiza_selectedCdplan
+            + '&p_plan='        + _mcotiza_selectedCdplan
+            + '&p_perpag='      + _mcotiza_selectedCdperpag
             + '&p_ntramite='    + _mcotiza_smap1.ntramite            
             + '&p_cdusuari='    + _mcotiza_smap1.user
             + '&destype=cache'
