@@ -506,8 +506,8 @@ function _0_detalles()
                 var wndDetalleCotizacion = Ext.create('Ext.window.Window',
                 {
                 	title       : 'Detalles de cotizaci&oacute;n'
-                	,maxHeight  : 500
-                	,width      : 800
+                	//,maxHeight  : 500
+                	,width      : 600
                 	,autoScroll : true
                 	,modal      : true
                 	,items      :
@@ -543,7 +543,7 @@ function _0_detalles()
                 	    	    {
                 	    	    	header           : 'Nombre de la cobertura'
                 	    	    	,dataIndex       : 'Nombre_garantia'
-                	    	    	,flex            : 1
+                	    	    	,flex            : 3
                 	    	    	,summaryType     : 'count'
                 	    	    	,summaryRenderer : function(value)
                 	    	    	{
