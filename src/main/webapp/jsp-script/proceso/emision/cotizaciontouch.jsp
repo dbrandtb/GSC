@@ -1263,7 +1263,7 @@ Ext.setup({onReady:function()
         [
             {
                 xtype   : 'fieldset'
-                ,title  : 'Datos generales'
+                //,title  : 'Datos generales'
                 ,itemId : 'mcotizaFieldsetDatosGeneralesIzq'
                 ,items  : itemsIzq
             }
