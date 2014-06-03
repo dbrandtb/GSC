@@ -28,6 +28,14 @@
 	<bean id="generadorReciboDxnWsServiceCallbackHandlerImpl" class="mx.com.gseguros.ws.recibossigs.client.axis2.callback.impl.GeneradorReciboDxnWsServiceCallbackHandlerImpl" scope="prototype">
         <property name="kernelManager" ref="kernelManagerSustituto"/>
     </bean>
+    
+    <!-- WS NADA -->
+	<bean id="nadaServiceImpl" class="mx.com.gseguros.ws.nada.service.impl.NadaServiceImpl">
+        <property name="endpoint"      value="${ws.nada.vehicle.url}"></property>
+        <property name="endpointToken" value="${ws.nada.login.url}"></property>
+        <property name="user"          value="${ws.nada.login.user}"></property>
+        <property name="password"      value="${ws.nada.login.pass}"></property>
+	</bean>
 	
 	
 </beans>

@@ -26,6 +26,8 @@ import mx.com.gseguros.portal.general.util.Rango;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.general.util.Validacion;
 import mx.com.gseguros.utils.Constantes;
+import mx.com.gseguros.ws.nada.client.axis2.VehicleStub.VehicleValue_Struc;
+import mx.com.gseguros.ws.nada.service.NadaService;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -51,6 +53,7 @@ public class CotizacionAction extends PrincipalCoreAction
 	private Map<String,String>               smap1;
 	private Map<String,String>               params;
 	private StoredProceduresManager          storedProceduresManager;
+	private NadaService          			 nadaService;
 	private boolean                          success;
 	
 	/////////////////////////////////
@@ -270,6 +273,21 @@ public class CotizacionAction extends PrincipalCoreAction
 	}
 
 	public String pantallaCotizacionDemo() {
+		
+		/**
+		 * TODO: Eliminar codigo de ejemplo para el WS de NADA
+		 */
+		
+		VehicleValue_Struc datosAuto= nadaService.obtieneDatosAutomovilNADA("1GCHK23275F895304");
+		if(datosAuto != null){
+			logger.debug("Resultados....");	
+			logger.debug("getVehicleYear: "+datosAuto.getVehicleYear());	
+			logger.debug("getMakeDescr: "+datosAuto.getMakeDescr());	
+			logger.debug("getSeriesDescr: "+datosAuto.getSeriesDescr());	
+			logger.debug("getWeight: "+datosAuto.getWeight());	
+		}
+		
+		
 		this.session=ActionContext.getContext().getSession();
 		log.debug("\n"
 				+ "\n####################################"
@@ -1242,6 +1260,10 @@ public class CotizacionAction extends PrincipalCoreAction
 
 	public void setParams(Map<String, String> params) {
 		this.params = params;
+	}
+
+	public void setNadaService(NadaService nadaService) {
+		this.nadaService = nadaService;
 	}
 
 }
