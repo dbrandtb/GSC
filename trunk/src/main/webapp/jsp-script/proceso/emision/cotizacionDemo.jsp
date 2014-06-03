@@ -3,7 +3,6 @@
 <html>
 <head>
 <script>
-
 ///////////////////////
 ////// variables //////
 /*///////////////////*/
@@ -19,23 +18,41 @@ var _0_reporteCotizacion = '<s:text name="rdf.cotizacion.nombre"/>';
 var _0_urlImprimirCotiza = '<s:text name="ruta.servidor.reports" />';
 var _0_reportsServerUser = '<s:text name="pass.servidor.reports" />';
 
-var _0_urlCotizar              = '<s:url namespace="/emision"         action="cotizar" />';
-var _0_urlCotizarExterno       = '<s:url namespace="/externo"         action="cotizar" />';
-var _0_urlDetalleCotizacion    = '<s:url namespace="/"                action="detalleCotizacion" />';
-var _0_urlCoberturas           = '<s:url namespace="/flujocotizacion" action="obtenerCoberturas4" />';
+var _0_urlCotizar              = '<s:url namespace="/emision"         action="cotizar"                 />';
+var _0_urlCotizarExterno       = '<s:url namespace="/externo"         action="cotizar"                 />';
+var _0_urlDetalleCotizacion    = '<s:url namespace="/"                action="detalleCotizacion"       />';
+var _0_urlCoberturas           = '<s:url namespace="/flujocotizacion" action="obtenerCoberturas4"      />';
 var _0_urlDetalleCobertura     = '<s:url namespace="/flujocotizacion" action="obtenerAyudaCoberturas4" />';
-var _0_urlEnviarCorreo         = '<s:url namespace="/general"         action="enviaCorreo" />';
-var _0_urlViewDoc              = '<s:url namespace ="/documentos"     action="descargaDocInline" />';
-var _0_urlComprar              = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4" />';
+var _0_urlEnviarCorreo         = '<s:url namespace="/general"         action="enviaCorreo"             />';
+var _0_urlViewDoc              = '<s:url namespace ="/documentos"     action="descargaDocInline"       />';
+var _0_urlComprar              = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4"      />';
 var _0_urlVentanaDocumentos    = '<s:url namespace="/documentos"      action="ventanaDocumentosPoliza" />';
-var _0_urlDatosComplementarios = '<s:url namespace="/"                action="datosComplementarios" />';
+var _0_urlDatosComplementarios = '<s:url namespace="/"                action="datosComplementarios"    />';
 var _0_urlUpdateStatus         = '<s:url namespace="/mesacontrol"     action="actualizarStatusTramite" />';
-var _0_urlMesaControl          = '<s:url namespace="/mesacontrol"     action="principal" />';
+var _0_urlMesaControl          = '<s:url namespace="/mesacontrol"     action="principal"               />';
+var _0_urlLoad                 = '<s:url namespace="/emision"         action="cargarCotizacion"        />';
+
+var _0_modeloExtraFields = [
+<s:if test='%{getImap().get("modeloExtraFields")!=null}'>
+    <s:property value="imap.modeloExtraFields" />
+</s:if>
+];
+
+var _0_necesitoIncisos = true;
+<s:if test='%{getImap().get("fieldsIndividuales")==null}'>
+    _0_necesitoIncisos = false;
+</s:if>
+_0_smap1.conincisos=_0_necesitoIncisos?'si':'no';
+debug('_0_necesitoIncisos:',_0_necesitoIncisos);
 
 var _0_panelPri;
 var _0_formAgrupados;
+var _0_gridIncisos;
+var _0_botonera;
+var _0_storeIncisos;
 var _0_gridTarifas;
 var _0_botCotizar;
+var _0_botCargar;
 var _0_botLimpiar;
 var _0_fieldNtramite;
 var _0_fieldNmpoliza;
@@ -50,8 +67,8 @@ var _0_botDetalleCobertura;
 var _0_windowAyudaCobertura;
 var _0_selectedIdcobertura;
 
-var EDAD_MAXIMA_COTIZACION=<s:property value="smap1.edadMaximaCotizacion"/>;
-debug('EDAD_MAXIMA_COTIZACION=', EDAD_MAXIMA_COTIZACION);
+var _0_validacion_custom;
+
 debug('_0_smap1: ',_0_smap1);
 /*///////////////////*/
 ////// variables //////
@@ -77,8 +94,8 @@ function _0_comprar()
             ,comprarCdciaaguradora : '20'
             ,comprarCdunieco       : _0_smap1.cdunieco
             ,cdtipsit              : _0_smap1.cdtipsit
-//            ,'smap1.fechaInicio'   : Ext.Date.format(Ext.getCmp('fechaInicioVigencia').getValue(),'d/m/Y')
-//            ,'smap1.fechaFin'      : Ext.Date.format(Ext.getCmp('fechaFinVigencia').getValue(),'d/m/Y')
+            ,'smap1.fechaInicio'   : Ext.Date.format(Ext.getCmp('fechaInicioVigencia').getValue(),'d/m/Y')
+            ,'smap1.fechaFin'      : Ext.Date.format(Ext.getCmp('fechaFinVigencia').getValue(),'d/m/Y')
             ,'smap1.nombreTitular' : ''
             ,'smap1.ntramite'      : _0_smap1.ntramite
         }
@@ -376,9 +393,11 @@ function _0_bloquear(b)
 	{
 		_0_formAgrupados.items.items[i].setReadOnly(b);
 	}
+	_0_gridIncisos.setDisabled(b);
+	_0_botonera.setDisabled(b);
 	if(b)
 	{
-		window.parent.scrollTo(0, _0_formAgrupados.getHeight());
+		window.parent.scrollTo(0, _0_formAgrupados.getHeight()+_0_gridIncisos.getHeight());
 	}
 }
 
@@ -474,11 +493,11 @@ function _0_detalles()
                     json.slist1[i].orden_parentesco = orden+ '_'+ json.slist1[i].parentesco;
                 }
                 debug(json);
-                Ext.create('Ext.window.Window',
+                var wndDetalleCotizacion = Ext.create('Ext.window.Window',
                 {
                 	title       : 'Detalles de cotizaci&oacute;n'
                 	,maxHeight  : 500
-                	,width      : 700
+                	,width      : 800
                 	,autoScroll : true
                 	,modal      : true
                 	,items      :
@@ -572,6 +591,7 @@ function _0_detalles()
                 	    })
                 	]
                 }).show();
+                centrarVentanaInterna(wndDetalleCotizacion);
             }
             else
             {
@@ -586,6 +606,7 @@ function _0_nueva()
 {
 	_0_formAgrupados.getForm().reset();
 	_0_fieldNmpoliza.setValue('');
+    _0_storeIncisos.removeAll();
     _0_panelPri.remove(_0_gridTarifas);
     _0_panelPri.doLayout();
     _0_bloquear(false);
@@ -615,35 +636,181 @@ function _0_limpiar()
 	//_0_formAgrupados.items.items[2].focus();
 }
 
+function _0_cargar()
+{
+	debug('>_0_cargar');
+	Ext.Msg.prompt(
+    'Cargar cotizaci&oacute;n',
+    'N&uacute;mero de cotizaci&oacute;n:',
+    function (buttonId, value)
+    {
+        debug('nmpoliza',value);
+        var valido=true;
+        //boton pulsado y valor capturado
+        if(valido)
+        {
+            valido = buttonId=='ok'&&(value+'').length>0;
+        }
+        //valor numerico
+        if(valido)
+        {
+            valido = !isNaN(value);
+            if(!valido)
+            {
+                mensajeWarning('Introduce un n&uacute;mero v&aacute;lido');
+            }
+        }
+        //request
+        if(valido)
+        {
+        	_0_panelPri.setLoading(true);
+            Ext.Ajax.request(
+            {
+                url      : _0_urlLoad
+                ,params  :
+                {
+                    'smap1.nmpoliza'  : value
+                    ,'smap1.cdramo'   : _0_smap1.cdramo
+                    ,'smap1.cdtipsit' : _0_smap1.cdtipsit
+                }
+                ,success : function(response)
+                {
+                	_0_panelPri.setLoading(false);
+                    var json=Ext.decode(response.responseText);
+                    debug('json response:',json);
+                    if(json.success)
+                    {
+                    	_0_limpiar();
+                        for(var i=0;i<json.slist1.length;i++)
+                        {
+                        	_0_storeIncisos.add(new _0_modelo(json.slist1[i]));
+                        }
+                        debug('store:',_0_storeIncisos);
+                        var primerInciso = new _0_modeloAgrupado(json.slist1[0]);
+                        debug('primerInciso:',primerInciso);
+                        //leer elementos anidados
+                        var form      = _0_formAgrupados;
+                        var formItems = form.items.items;
+                        var numBlurs  = 0;
+                        for(var i=0;i<formItems.length;i++)
+                        {
+                            var item=formItems[i];
+                            if(item.hasListener('blur'))
+                            {
+                                var numBlursSeguidos = 1;
+                                for(var j=i+1;j<formItems.length;j++)
+                                {
+                                    if(formItems[j].hasListener('blur'))
+                                    {
+                                        numBlursSeguidos=numBlursSeguidos+1;
+                                    }
+                                }
+                                if(numBlursSeguidos>numBlurs)
+                                {
+                                    numBlurs=numBlursSeguidos;
+                                }
+                            }
+                        }
+                        debug('numBlurs:',numBlurs);
+                        var i=0;
+                        var renderiza=function()
+                        {
+                            debug('renderiza',i);
+                            form.loadRecord(primerInciso);
+                            if(i<numBlurs)
+                            {
+                                i=i+1;
+                                for(var j=0;j<formItems.length;j++)
+                                {
+                                    if(formItems[j].hasListener('blur'))
+                                    {
+                                        debug('tiene blur',formItems[j]);
+                                        formItems[j+1].heredar(true);
+                                    }
+                                }
+                                setTimeout(renderiza,1000);
+                            }
+                            else
+                            {
+                            	_0_fieldNmpoliza.setValue(value);
+                            	_0_panelPri.setLoading(false);
+                            }
+                        }
+                        _0_panelPri.setLoading(true);
+                        renderiza();
+                    }
+                    else
+                    {
+                        mensajeError(json.error);
+                    }
+                }
+                ,failure : function()
+                {
+                	_0_panelPri.setLoading(false);
+                    errorComunicacion();
+                }
+            });
+        }
+    });
+    debug('<_mcotiza_load');
+	debug('<_0_cargar');
+}
+
 function _0_agregarAsegu(boton)
 {
-	var grid=boton.up().up();
-	debug('_0_agregarAsegu');
-	var arrayEditores = _0_rowEditing.editor.form.monitor.getItems().items; 
-	debug('arrayEditores:',arrayEditores);
-	for(var i = 0;i<arrayEditores.length;i++)
+	var valido=true;
+	if(valido)
 	{
-		var iEditor = arrayEditores[i];
-		if(iEditor.store)
+		if(!_0_necesitoIncisos)
 		{
-			record.set(iEditor.name,iEditor.store.getAt(0).get('key'));
-		}
-		else if(iEditor.format)
-		{
-			record.set(iEditor.name,Ext.Date.format(new Date(),'d/m/Y'));
-		}
-		else
-		{
-			if(iEditor.name!='nombre'
-					&&iEditor.name!='nombre2'
-					&&iEditor.name!='apat'
-					&&iEditor.name!='amat')
+			valido=_0_storeIncisos.getCount()<1;
+			if(!valido)
 			{
-				record.set(iEditor.name,iEditor.name);
+				mensajeWarning('Solo se puede introducir un inciso');
 			}
 		}
 	}
-	window.parent.scrollTo(0, _0_formAgrupados.getHeight());
+	if(valido)
+	{
+	    var grid=boton.up().up();
+		debug('_0_agregarAsegu');
+		var arrayEditores = _0_rowEditing.editor.form.monitor.getItems().items; 
+		debug('arrayEditores:',arrayEditores);
+		var record = new _0_modelo();
+		for(var i = 0;i<arrayEditores.length;i++)
+		{
+			var iEditor = arrayEditores[i];
+			if(iEditor.store)
+			{
+				record.set(iEditor.name,iEditor.store.getAt(0).get('key'));
+			}
+			else if(iEditor.format)
+			{
+				record.set(iEditor.name,Ext.Date.format(new Date(),'d/m/Y'));
+			}
+			else
+			{
+				var estaEnModeloExtra=false;
+				debug('_0_modeloExtraFields.length:',_0_modeloExtraFields.length);
+				for(var j=0;j<_0_modeloExtraFields.length;j++)
+				{
+					if(iEditor.name==_0_modeloExtraFields[j].name)
+					{
+						estaEnModeloExtra=true;
+					}
+				}
+				if(!estaEnModeloExtra)
+	            {
+	                record.set(iEditor.name,iEditor.name);
+	            }
+			}
+		}
+		record.set('contador',_0_storeIncisos.getCount()+1);
+		_0_storeIncisos.add(record);
+		_0_rowEditing.startEdit(_0_storeIncisos.getCount()-1,1);
+		_0_rowEditing.startEdit(_0_storeIncisos.getCount()-1,1);
+		window.parent.scrollTo(0, _0_formAgrupados.getHeight());
+	}
 }
 
 function _0_cotizar(boton)
@@ -656,7 +823,68 @@ function _0_cotizar(boton)
 		    slist1 : []
 		    ,smap1 : _0_smap1 
 		};
-		debug(json);
+		if(_0_necesitoIncisos)
+		{
+			_0_storeIncisos.each(function(record)
+			{
+				var inciso=_0_formAgrupados.getValues();
+				for(var key in record.data)
+				{
+					var value=record.data[key];
+					debug(typeof value,key,value);
+					if((typeof value=='object')&&value&&value.getDate)
+					{
+						var fecha='';
+						fecha+=value.getDate();
+						if((fecha+'x').length==2)//1x 
+						{
+							fecha = ('x'+fecha).replace('x','0');//x1=01 
+						}
+						fecha+='/';
+						fecha+=value.getMonth()+1<10?
+								(('x'+(value.getMonth()+1)).replace('x','0'))
+								:(value.getMonth()+1);
+						fecha+='/';
+						fecha+=value.getFullYear();
+						value=fecha;
+					}
+					inciso[key]=value;
+				}
+				json['slist1'].push(inciso);
+			});
+		}
+		else
+		{
+			var inciso=_0_formAgrupados.getValues();
+			if(_0_storeIncisos.getCount()==1)
+			{
+				var record=_0_storeIncisos.getAt(0);
+				for(var key in record.data)
+                {
+                    var value=record.data[key];
+                    debug(typeof value,key,value);
+                    if((typeof value=='object')&&value&&value.getDate)
+                    {
+                        var fecha='';
+                        fecha+=value.getDate();
+                        if((fecha+'x').length==2)//1x 
+                        {
+                            fecha = ('x'+fecha).replace('x','0');//x1=01 
+                        }
+                        fecha+='/';
+                        fecha+=value.getMonth()+1<10?
+                                (('x'+(value.getMonth()+1)).replace('x','0'))
+                                :(value.getMonth()+1);
+                        fecha+='/';
+                        fecha+=value.getFullYear();
+                        value=fecha;
+                    }
+                    inciso[key]=value;
+                }
+			}
+			json['slist1'].push(inciso);
+		}
+		debug('json para cotizar:',json);
 		_0_panelPri.setLoading(true);
 		Ext.Ajax.request(
 		{
@@ -713,6 +941,7 @@ function _0_cotizar(boton)
 					
 					_0_panelPri.add(_0_gridTarifas);
 					_0_panelPri.doLayout();
+                    setTimeout(function(){debug('timeout 1000');window.parent.scrollTo(0, 99999);},1000);
 				}
 				else
 				{
@@ -743,7 +972,58 @@ function _0_validarBase()
 			datosIncompletos();
 		}
 	}
-
+	
+	//algun inciso
+	if(valido&&_0_necesitoIncisos)
+	{
+		valido=_0_storeIncisos.getCount()>0;
+		if(!valido)
+		{
+			mensajeWarning('No hay incisos');
+		}
+	}
+	
+	//validar atributos de tatrisit en grid
+	if(valido&&_0_necesitoIncisos)
+	{
+		_0_storeIncisos.each(function(record)
+        {
+            for(var key in record.data)
+            {
+            	debug('validando:',record.data);
+                //debug('modelo extra fields:',_0_modeloExtraFields);
+                var estaEnModeloExtra=false;
+                //debug('_0_modeloExtraFields.length:',_0_modeloExtraFields.length);
+                for(var i=0;i<_0_modeloExtraFields.length;i++)
+                {
+                    if(key==_0_modeloExtraFields[i].name)
+                    {
+                        estaEnModeloExtra=true;
+                    }
+                }
+                if(!estaEnModeloExtra)
+                {
+                	var value=record.data[key];
+                	valido=valido&&value;
+                    if(!valido)
+                    {
+                        debug('falta: ',key);
+                    }
+                }
+            }
+        });
+        if(!valido)
+        {
+            mensajeWarning('Los datos de los incisos son requeridos');
+        }
+	}
+	
+	//custom validation
+	if(valido)
+	{
+		valido=_0_validacion_custom();
+	}
+	
 	debug('<_0_validarBase');
 	return valido;
 }
@@ -794,82 +1074,25 @@ function _0_tarifaSelect(selModel, record, row, column, eOpts)
     
 Ext.onReady(function()
 {
-	
-	 <s:property value="smap1.variablesGeneradas" escapeHtml="false" />
-	 
-	 _0_formAgrupados = <s:property value="smap1.panelGenerado" escapeHtml="false" />
-	 
-	 _0_fieldNtramite=Ext.create('Ext.form.field.Number',
-				{
-				    name        : 'ntramite'
-				    ,fieldLabel : 'TR&Aacute;MITE'
-				    ,hidden     : !(_0_smap1.ntramite&&_0_smap1.ntramite>0)
-				    ,readOnly   : true
-				    ,value      : _0_smap1.ntramite
-				});
-			    
-	 _0_fieldNmpoliza=Ext.create('Ext.form.field.Number',
-			    {
-			        name        : 'nmpoliza'
-			        ,fieldLabel : 'COTIZACI&Oacute;N'
-			        ,readOnly   : true
-			    });
-			    
-	 _0_panelPri = Ext.create('Ext.panel.Panel',{
-		 	renderTo  : '_0_divPri'
-		 	,bodyStyle   : 'padding:10px;'
-			,items   :
-			[
-			    _0_fieldNtramite
-			    ,_0_fieldNmpoliza
-			    ,_0_formAgrupados
-			    ,{
-                    id          : 'fechaInicioVigencia'
-                    ,name       : 'feini'
-                    ,fieldLabel : 'INICIO DE VIGENCIA'
-                    ,xtype      : 'datefield'
-                    ,format     : 'd/m/Y'
-                    ,editable   : true
-                    ,allowBlank : false
-                    ,value      : new Date()
-                    ,listeners  :
-                    {
-                        change : function(field,value)
-                        {
-                            try
-                            {
-                                Ext.getCmp('fechaFinVigencia').setValue(Ext.Date.add(value,Ext.Date.YEAR,1));
-                            }
-                            catch (e) {}
-                        }
-                    }
-                },
-                {
-                    id          : 'fechaFinVigencia'
-                    ,name       : 'fefin'
-                    ,fieldLabel : 'FIN DE VIGENCIA'
-                    ,xtype      : 'datefield'
-                    ,format     : 'd/m/Y'
-                    ,readOnly   : true
-                    ,allowBlank : false
-                    ,value      : Ext.Date.add(new Date(),Ext.Date.YEAR,1)
-                }
-			]
-			 ,buttonAlign : 'center'
-	         ,buttons     : [{
-	             				text     : _0_smap1.ntramite?'Precaptura':'Cotizar'
-	             			   ,icon    : '${ctx}/resources/fam3icons/icons/calculator.png'
-	             			   ,handler : _0_cotizar
-	             			},{
-	             		        text     : 'Limpiar'
-	             		       ,icon    : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
-	             		       ,handler : _0_limpiar
-	             		    }]
-		});
-	 
+    
     /////////////////////
     ////// modelos //////
     /*/////////////////*/
+	_0_validacion_custom = function()
+    {
+		mensajeWarning('Falta definir la validaci&oacute;n para el producto');
+        return true;
+    };
+    <s:if test='%{getImap().get("validacionCustomButton")!=null}'>
+	    var botonValidacionCustom = <s:property value="imap.validacionCustomButton" escapeHtml="false"/>;
+	     _0_validacion_custom=botonValidacionCustom.handler;
+    </s:if>
+    
+    /**
+     * Modelos y variables del diseñador de pantallas
+     */
+    <s:property value="smap1.variablesGeneradas" escapeHtml="false" />
+
     Ext.define('ModeloDetalleCotizacion',
     {
     	extend : 'Ext.data.Model'
@@ -887,6 +1110,20 @@ Ext.onReady(function()
 			,'parentesco'
 			,'orden_parentesco'
         ]
+    });
+    
+    var tmp = [];
+    <s:if test='%{getImap().get("fieldsIndividuales")!=null}'>
+        tmp.push(<s:property value="imap.fieldsIndividuales" />);
+	</s:if>
+	<s:if test='%{getImap().get("modeloExtraFields")!=null}'>
+	    tmp.push(<s:property value="imap.modeloExtraFields"  />);
+	</s:if>
+	debug('_0_modelo fields:',tmp);
+    Ext.define('_0_modelo',
+    {
+    	extend  : 'Ext.data.Model'
+    	,fields : tmp
     });
     
     /*/////////////////*/
@@ -912,7 +1149,10 @@ Ext.onReady(function()
         }
     });
     
-    
+    _0_storeIncisos = Ext.create('Ext.data.Store',
+    {
+    	model : '_0_modelo'
+    });
     /*////////////////*/
     ////// stores //////
     ////////////////////
@@ -998,87 +1238,182 @@ Ext.onReady(function()
         ,handler : _0_editar
     });
     
-//    Ext.define("_0_FormAgrupados",
-//    {
-//    	extend         : 'Ext.form.Panel'
-//    	,title         : 'Datos generales'
-//    	/*,layout        :
-//        {
-//            type     : 'table'
-//            ,columns : 2
-//        }*/
-//    	,initComponent : function()
-//    	{
-//    		debug('_0_FormAgrupados initComponent');
-//    		Ext.apply(this,
-//    		{
-//    			defaults :
-//    			{
-//    				style : 'margin : 5px;'
-//    			}
-//    			,items   :
-//    			[
-//    			    _0_fieldNtramite
-//    			    ,_0_fieldNmpoliza
-//    			   
-//    			    ,{
-//                        id          : 'fechaInicioVigencia'
-//                        ,name       : 'feini'
-//                        ,fieldLabel : 'INICIO DE VIGENCIA'
-//                        ,xtype      : 'datefield'
-//                        ,format     : 'd/m/Y'
-//                        ,editable   : true
-//                        ,allowBlank : false
-//                        ,value      : new Date()
-//                        ,listeners  :
-//                        {
-//                            change : function(field,value)
-//                            {
-//                                try
-//                                {
-//                                    Ext.getCmp('fechaFinVigencia').setValue(Ext.Date.add(value,Ext.Date.YEAR,1));
-//                                }
-//                                catch (e) {}
-//                            }
-//                        }
-//                    },
-//                    {
-//                        id          : 'fechaFinVigencia'
-//                        ,name       : 'fefin'
-//                        ,fieldLabel : 'FIN DE VIGENCIA'
-//                        ,xtype      : 'datefield'
-//                        ,format     : 'd/m/Y'
-//                        ,readOnly   : true
-//                        ,allowBlank : false
-//                        ,value      : Ext.Date.add(new Date(),Ext.Date.YEAR,1)
-//                    }
-//    			]
-//    		});
-//    		this.callParent();
-//    	}
-//    });
     
-//    Ext.define('_0_PanelPri',
-//    {
-//    	extend         : 'Ext.panel.Panel'
-//    	,initComponent : function()
-//        {
-//    		debug('_0_panelPri initComponent');
-//    		Ext.apply(this,
-//    		{
-//    			renderTo  : '_0_divPri'
-//   		        ,defaults :
-//   		        {
-//   		            style : 'margin:5px;'
-//   		        }
-//   		        ,items    :
-//   		        [
-//   		            _0_formAgrupados
-//   		        ]
-//    		});
-//    		this.callParent();
-//        }
-//    });
+    var tmp = [
+		{
+	        dataIndex     : 'contador'
+	        ,width        : 30
+	        ,menuDisabled : true
+	    }
+	];
+    <s:if test='%{getImap().get("camposIndividuales")!=null}' >
+       tmp.push(<s:property value="imap.camposIndividuales"/>);
+    </s:if>
+    <s:if test='%{getImap().get("modeloExtraColumns")!=null}' >
+       tmp.push(<s:property value="imap.modeloExtraColumns" />);
+    </s:if>
+    tmp.push(
+    {
+        xtype  : 'actioncolumn'
+        ,width : 30
+        ,menuDisabled : true
+        ,sortable : false
+        ,icon : '${ctx}/resources/fam3icons/icons/delete.png'
+        ,handler : function(grid,rowIndex,colIndex)
+        {
+            _0_storeIncisos.removeAt(rowIndex);
+            var contador=1;
+            _0_storeIncisos.each(function(record)
+            {
+                record.set('contador',contador);
+                contador=contador+1;
+            });
+        }
+    });
+    debug('_0_GridIncisos columns:',tmp);
+    Ext.define('_0_GridIncisos',
+    {
+        extend         : 'Ext.grid.Panel'
+        ,initComponent : function()
+        {
+            debug('_0_GridIncisos initComponent');
+            Ext.apply(this,
+            {
+            	title        : 'Datos de incisos'
+            	,store       : _0_storeIncisos
+            	,minHeight   : 250
+            	//,hidden      : !_0_necesitoIncisos
+            	,tbar        :
+            	[
+            	    {
+            	    	text     : 'Agregar'
+            	    	,icon    : '${ctx}/resources/fam3icons/icons/add.png'
+            	    	,handler : _0_agregarAsegu
+            	    }
+            	]
+                ,columns     : tmp
+                ,plugins     :
+                [
+                    _0_rowEditing
+                ]
+            });
+            this.callParent();
+        }
+    });
+    
+    Ext.define('_0_Botonera',
+    {
+    	extend         : 'Ext.panel.Panel'
+    	,initComponent : function()
+    	{
+    		Ext.apply(this,
+    		{
+                buttonAlign : 'center'
+                ,border     : 0
+		        ,buttons    :
+		        [
+		            _0_botCotizar
+		            ,_0_botLimpiar
+		            ,_0_botCargar
+		            //>agregado para cancelar un tramite
+		            ,{
+		                text     : 'Rechazar'
+		                ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
+		                ,hidden  : (!_0_smap1.ntramite) || _0_smap1.ntramite.length==0
+		                ,handler : function()
+		                {
+		                    //console.log(form.getValues());
+		                    Ext.create('Ext.window.Window',
+		                    {
+		                        title        : 'Guardar detalle'
+		                        ,width       : 600
+		                        ,height      : 400
+		                        ,buttonAlign : 'center'
+		                        ,modal       : true
+		                        ,closable    : false
+		                        ,autoScroll  : true
+		                        ,items       :
+		                        [
+		                            Ext.create('Ext.form.HtmlEditor',
+		                            {
+		                                id        : 'inputTextareaCommentsToRechazo'
+		                                ,width  : 570
+		                                ,height : 300
+		                            })
+		                        ]
+		                        ,buttons    :
+		                        [
+		                            {
+		                                text     : 'Rechazar'
+		                                ,icon    : '${ctx}/resources/fam3icons/icons/cancel.png'
+		                                ,handler : function()
+		                                {
+		                                    debug('rechazar');
+		                                    var window=this.up().up();
+		                                    window.setLoading(true);
+		                                    Ext.Ajax.request
+		                                    ({
+		                                        url     : _0_urlUpdateStatus
+		                                        ,params : 
+		                                        {
+		                                            'smap1.ntramite' : _0_smap1.ntramite
+		                                            ,'smap1.status'  : '4'//rechazado
+		                                            ,'smap1.comments' : Ext.getCmp('inputTextareaCommentsToRechazo').getValue()
+		                                        }
+		                                        ,success : function(response)
+		                                        {
+		                                            window.setLoading(false);
+		                                            var json=Ext.decode(response.responseText);
+		                                            if(json.success==true)
+		                                            {
+		                                                Ext.create('Ext.form.Panel').submit
+		                                                ({
+		                                                    url             : _0_urlMesaControl
+		                                                    ,standardSubmit : true
+		                                                });
+		                                            }
+		                                            else
+		                                            {
+		                                                Ext.Msg.show({
+		                                                    title:'Error',
+		                                                    msg: 'Error al rechazar',
+		                                                    buttons: Ext.Msg.OK,
+		                                                    icon: Ext.Msg.ERROR
+		                                                });
+		                                            }
+		                                        }
+		                                        ,failure : function()
+		                                        {
+		                                            window.setLoading(false);
+		                                            Ext.Msg.show({
+		                                                title:'Error',
+		                                                msg: 'Error de comunicaci&oacute;n',
+		                                                buttons: Ext.Msg.OK,
+		                                                icon: Ext.Msg.ERROR
+		                                            });
+		                                        }
+		                                    });
+		                                }
+		                            }
+		                            ,{
+		                                text  : 'Cancelar'
+		                                ,icon : '${ctx}/resources/fam3icons/icons/cancel.png'
+		                                ,handler : function()
+		                                {
+		                                    this.up().up().destroy();
+		                                }
+		                            }
+		                        ]
+		                    }).show();
+		                }
+		            }
+		            //<agregado para cancelar un tramite
+		        ]
+    		});
+    		this.callParent();
+    	}
+    });
+    
     /*/////////////////////*/
     ////// componentes //////
     /////////////////////////
@@ -1188,9 +1523,91 @@ Ext.onReady(function()
         ]
     });
     
+    _0_fieldNtramite=Ext.create('Ext.form.field.Number',
+	{
+	    name        : 'ntramite'
+	    ,fieldLabel : 'TR&Aacute;MITE'
+	    ,hidden     : !(_0_smap1.ntramite&&_0_smap1.ntramite>0)
+	    ,readOnly   : true
+	    ,value      : _0_smap1.ntramite
+	});
     
-//    var panelTemporal = new _0_FormAgrupados();
-//    _0_panelPri      = new _0_PanelPri();
+    _0_fieldNmpoliza=Ext.create('Ext.form.field.Number',
+    {
+        name        : 'nmpoliza'
+        ,fieldLabel : 'COTIZACI&Oacute;N'
+        ,readOnly   : true
+    });
+    
+    _0_botCotizar=Ext.create('Ext.Button',
+    {
+        text     : _0_smap1.ntramite?'Precaptura':'Cotizar'
+        ,icon    : '${ctx}/resources/fam3icons/icons/calculator.png'
+        ,handler : _0_cotizar
+    });
+    
+    _0_botCargar=Ext.create('Ext.Button',
+    {
+        text     : 'Cargar'
+        ,icon    : '${ctx}/resources/fam3icons/icons/database_refresh.png'
+        ,handler : _0_cargar
+    });
+    
+    _0_botLimpiar=Ext.create('Ext.Button',
+    {
+        text     : 'Limpiar'
+        ,icon    : '${ctx}/resources/fam3icons/icons/arrow_refresh.png'
+        ,handler : _0_limpiar
+    });
+    
+    _0_formAgrupados = <s:property value="smap1.panelGenerado" escapeHtml="false" />
+    _0_gridIncisos   = new _0_GridIncisos();
+    _0_botonera      = new _0_Botonera();			    
+	 
+    _0_panelPri = Ext.create('Ext.panel.Panel',{
+		 	renderTo  : '_0_divPri'
+		 	,bodyStyle   : 'padding:10px;'
+			,items   :
+			[
+			    _0_fieldNtramite
+			    ,_0_fieldNmpoliza
+			    ,_0_formAgrupados
+			    ,{
+                   id          : 'fechaInicioVigencia'
+                   ,name       : 'feini'
+                   ,fieldLabel : 'INICIO DE VIGENCIA'
+                   ,xtype      : 'datefield'
+                   ,format     : 'd/m/Y'
+                   ,editable   : true
+                   ,allowBlank : false
+                   ,value      : new Date()
+                   ,listeners  :
+                   {
+                       change : function(field,value)
+                       {
+                           try
+                           {
+                               Ext.getCmp('fechaFinVigencia').setValue(Ext.Date.add(value,Ext.Date.YEAR,1));
+                           }
+                           catch (e) {}
+                       }
+                   }
+               },
+               {
+                   id          : 'fechaFinVigencia'
+                   ,name       : 'fefin'
+                   ,fieldLabel : 'FIN DE VIGENCIA'
+                   ,xtype      : 'datefield'
+                   ,format     : 'd/m/Y'
+                   ,readOnly   : true
+                   ,allowBlank : false
+                   ,value      : Ext.Date.add(new Date(),Ext.Date.YEAR,1)
+               }
+               ,_0_gridIncisos
+               ,_0_botonera
+			]
+    });
+
     /*///////////////////*/
     ////// contenido //////
     ///////////////////////

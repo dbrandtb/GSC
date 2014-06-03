@@ -270,74 +270,89 @@ public class CotizacionAction extends PrincipalCoreAction
 	}
 
 	public String pantallaCotizacionDemo() {
-		this.session = ActionContext.getContext().getSession();
-		log.debug("\n" + "\n####################################"
-				       + "\n####################################"
-				       + "\n###### pantallaCotizacionDemo ######"
-				       + "\n######                    ##########");
-		log.debug("smap1: " + smap1);
-		log.debug("session: " + session);
-
-		UserVO usuario = (UserVO) session.get("USUARIO");
-		String cdtipsit = smap1.get("cdtipsit");
-
-		String ntramite = null;
-		String cdunieco = null;
-		String cdramo = null;
-
-		smap1.put("user", usuario.getUser());
-
-		// ///////////////////////////////////////////////////////
-		// //// poner valores a ntramite, cdunieco y cdramo //////
-		if (smap1.get("ntramite") != null){
-			ntramite = smap1.get("ntramite");
-			cdunieco = smap1.get("cdunieco");
-			cdramo = smap1.get("cdramo");
-		} else {
-			// cuando no hay ntramite es porque esta cotizando un agente por fuera,
-			// y se obtiene cdunieco y cdramo por medio de ese agente
-			try {
-				DatosUsuario datUsu = kernelManager.obtenerDatosUsuario(
-						usuario.getUser(), cdtipsit);// cdramo
-				ntramite = "";
-				cdunieco = datUsu.getCdunieco();
-				if (StringUtils.isBlank(smap1.get("cdramo"))) {
-					cdramo = datUsu.getCdramo();
-				} else {
-					cdramo = smap1.get("cdramo");
-				}
-				smap1.put("ntramite", "");
-				smap1.put("cdunieco", cdunieco);
-				smap1.put("cdramo", cdramo);
-			} catch (Exception ex) {
-				log.error("error al obtener los datos del agente", ex);
-			}
-		}
-		// //// poner valores a ntramite, cdunieco y cdramo //////
-		// ///////////////////////////////////////////////////////
-
-		// //////////////////////////////////////
-		// //// obtener campos de tatrisit //////
-		imap = new HashMap<String, Item>();
-
-//		logger.debug("Peticion de pantalla Demo: " + smap1.get("nombrePanel"));
-//		AdminCargaPanelesDelegate adm = new AdminCargaPanelesDelegate();
-//		HashMap<String, Object> data = adm.GeneraJson(smap1.get("nombrePanel"));
-//		List<ViewBean> listadePaneles = (List<ViewBean>) data.get("lista");
-//		ViewBean pnl = listadePaneles.get(0);
-//		smap1.put("panelGenerado", pnl.getCodigo());
+		this.session=ActionContext.getContext().getSession();
+		log.debug("\n"
+				+ "\n####################################"
+				+ "\n####################################"
+				+ "\n###### pantallaCotizacionDemo ######"
+				+ "\n######                        ######"
+				);
+		log.debug("smap1: "+smap1);
+		log.debug("session: "+session);
 		
+		GeneradorCampos gc=new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+		gc.setEsMovil(session!=null&&session.containsKey("ES_MOVIL")&&((Boolean)session.get("ES_MOVIL"))==true);
+		if(!gc.isEsMovil() && smap1.containsKey("movil"))
+		{
+			gc.setEsMovil(true);
+		}
+		
+		UserVO usuario  = (UserVO) session.get("USUARIO");
+		String cdtipsit = smap1.get("cdtipsit");
+		
+		String ntramite=null;
+		String cdunieco=null;
+		String cdramo=null;
+		
+		smap1.put("user",usuario.getUser());
+		
+		/////////////////////////////////////////////////////////
+		////// poner valores a ntramite, cdunieco y cdramo //////
+        if(smap1.get("ntramite")!=null)
+        //cuando viene ntramite tambien vienen cdunieco y cdramo
+        {
+        	ntramite = smap1.get("ntramite");
+        	cdunieco = smap1.get("cdunieco");
+        	cdramo   = smap1.get("cdramo");
+        }
+        else
+        //cuando no hay ntramite es porque esta cotizando un agente por fuera,
+        //y se obtiene cdunieco y cdramo por medio de ese agente
+        {
+        	try
+        	{
+        		DatosUsuario datUsu=kernelManager.obtenerDatosUsuario(usuario.getUser(),cdtipsit);//cdramo
+        		ntramite="";
+        		cdunieco=datUsu.getCdunieco();
+        		if(StringUtils.isBlank(smap1.get("cdramo")))
+        		{
+        			cdramo=datUsu.getCdramo();
+        		}
+        		else
+        		{
+        			cdramo=smap1.get("cdramo");
+        		}
+        		smap1.put("ntramite","");
+        		smap1.put("cdunieco",cdunieco);
+        		smap1.put("cdramo",cdramo);
+        	}
+        	catch(Exception ex)
+        	{
+        		log.error("error al obtener los datos del agente",ex);
+        	}
+        }
+		////// poner valores a ntramite, cdunieco y cdramo //////
+        /////////////////////////////////////////////////////////
+        
+        ////////////////////////////////////////
+        ////// obtener campos de tatrisit //////
+        gc.setCdtipsit(cdtipsit);
+        
+        //List<ComponenteVO>camposAgrupados    = new ArrayList<ComponenteVO>(0);
+        List<ComponenteVO>camposIndividuales = new ArrayList<ComponenteVO>(0);
+        
+        imap = new HashMap<String,Item>();
+        
 		params =  new HashMap<String,String>();
 		params.put("PV_CDPANTALLA_I", "1");
-		params.put("PV_CDRAMO_I", "2");
-		params.put("PV_CDTIPSIT_I", "FA");
+		params.put("PV_CDRAMO_I", "16");
+		params.put("PV_CDTIPSIT_I", "AF");
 		
 		Map<String,String> result = null;
 		try {
 			result = pantallasManager.obtienePantalla(params);
 		} catch (Exception e) {
 			log.error("Error al obtener codigo de pantalla para pantalla: " + params, e);
-			smap1.put("edadMaximaCotizacion", "0");
 		}
 		
 		logger.debug("variablesGeneradas: " + result.get("DSSTORES"));
@@ -345,26 +360,77 @@ public class CotizacionAction extends PrincipalCoreAction
 		
 		smap1.put("variablesGeneradas", result.get("DSSTORES"));
 		smap1.put("panelGenerado", result.get("DSARCHIVOSEC"));
+        try
+        {
+			if(camposIndividuales.size()>0)
+			{
+				gc.generaParcialConEditor(camposIndividuales);
+				imap.put("itemsIndividuales"  , gc.getItems());
+				imap.put("camposIndividuales" , gc.getColumns());
+				imap.put("fieldsIndividuales" , gc.getFields());
+			}
+			else
+			{
+				imap.put("itemsIndividuales"  , null);
+				imap.put("camposIndividuales" , null);
+				imap.put("fieldsIndividuales" , null);
+			}
+			
+			List<ComponenteVO>validaciones=pantallasManager.obtenerComponentes(
+					null, null, cdramo, cdtipsit, null, null, "VALIDACIONES_COTIZA", gc.isEsMovil()?"MOVIL":"DESKTOP", null);
+			if(validaciones.size()>0)
+			{
+				gc.generaComponentes(validaciones, true, false, false, false, false, true);
+				imap.put("validacionCustomButton" , gc.getButtons());
+			}
+			else
+			{
+				imap.put("validacionCustomButton" , null);
+			}
+			
+			List<ComponenteVO>modeloExtra = pantallasManager.obtenerComponentes(
+					null, null, cdramo, cdtipsit, null, null, "VALIDACIONES_COTIZA", "MODELO", null);
+			gc.generaComponentes(modeloExtra, true, true, true, true, true, false);
+			if(modeloExtra.size()>0)
+			{
+				imap.put("modeloExtraFields"  , gc.getFields());
+				imap.put("modeloExtraColumns" , gc.getColumns());
+				imap.put("modeloExtraItems"   , gc.getItems());
+			}
+			else
+			{
+				imap.put("modeloExtraFields"  , null);
+				imap.put("modeloExtraColumns" , null);
+				imap.put("modeloExtraItems"   , null);
+			}
+        }
+        catch(Exception ex)
+        {
+        	log.error("error al obtener los campos de cotizacion",ex);
+        }
+        
+		log.debug("camposIndividuales: "+camposIndividuales);
+        ////// obtener campos de tatrisit //////
+        ////////////////////////////////////////
 		
-		// //// obtener campos de tatrisit //////
-		// //////////////////////////////////////
-
-		// Obtenemos la edad m�xima para la cotizacion:
-		try {
-			smap1.put("edadMaximaCotizacion", catalogosManager
-					.obtieneCantidadMaxima(cdramo, cdtipsit,
-							TipoTramite.POLIZA_NUEVA, Rango.ANIOS,
-							Validacion.EDAD_MAX_COTIZACION));
-		} catch (Exception e) {
-			log.error("Error al obtener la edad maxima de cotizacion", e);
-			smap1.put("edadMaximaCotizacion", "0");
-		}
-
-		log.debug("\n" + "\n######                    ##########"
-				       + "\n###### pantallaCotizacionDemo ######"
-				       + "\n####################################"
-				       + "\n####################################");
-		return SUCCESS;
+		//Obtenemos la edad m�xima para la cotizacion:
+		/*
+        try {
+        	smap1.put("edadMaximaCotizacion",
+        			catalogosManager.obtieneCantidadMaxima(cdramo, cdtipsit, TipoTramite.POLIZA_NUEVA, Rango.ANIOS, Validacion.EDAD_MAX_COTIZACION));
+        } catch(Exception e) {
+        	log.error("Error al obtener la edad m�xima de cotizaci�n", e);
+        	smap1.put("edadMaximaCotizacion", "0");
+        }
+        */
+        
+		log.debug("\n"
+				+ "\n######                        ######"
+				+ "\n###### pantallaCotizacionDemo ######"
+				+ "\n####################################"
+				+ "\n####################################"
+				);
+		return gc.isEsMovil() ? "success_mobile" : SUCCESS;
 	}
 	/*/////////////////////////////*/
 	////// cotizacion dinamica //////
