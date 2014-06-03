@@ -1322,6 +1322,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
             result.setSwtarifi(rs.getString("SWTARIFI"));
             result.setSwpresen(rs.getString("SWPRESEN"));
             result.setDefaultValue(rs.getString("VALOR"));
+            result.setValue(rs.getString("OTVALOR01"));
             
             return result;
         }
