@@ -241,8 +241,19 @@ Ext.onReady(function(){
                         ,format     : 'd/m/Y'
                         ,fieldLabel : 'Fecha de efecto'
                         ,allowBlank : false
-                        ,value      : new Date()
+                        //,value      : new Date()
                         ,name       : 'fecha_endoso'
+                        ,listeners  :
+                        {
+                            blur : function()
+                            {
+                                if(this.isValid())
+                                {
+                                    this.setReadOnly(true);
+                                    mensajeWarning('La fecha ha sido establecida y no se podr&aacute; modificar. Si requiere una fecha diferente cargue de nuevo la pantalla seleccionando el tipo de endoso en el men&uacute; lateral izquierdo');
+                                }
+                            }
+                        }
                     }
                 ]
                 ,defaults    : 
@@ -388,6 +399,19 @@ Ext.onReady(function(){
                                 {
                                     debug(rowIndex);
                                     var record=venExcluStoreDisp.getAt(rowIndex);
+                                    
+                                    var valido=true;
+                                    if(valido)
+                                    {
+                                        valido = Ext.getCmp('_2_fieldFechaId').getValue();
+                                        if(!valido)
+                                        {
+                                            mensajeWarning('Introduzca la fecha de efecto');
+                                        }
+                                    }
+                                    
+                                    if(valido)
+                                    {
                                     Ext.Ajax.request(
                                     {
                                         url     : venExcluUrlLoadHtml
@@ -587,6 +611,7 @@ Ext.onReady(function(){
                                             });
                                         }
                                     });
+                                    }
                                 }
                             }
                         ]
@@ -647,6 +672,17 @@ Ext.onReady(function(){
                         debug(rowIndex,cellIndex);
                         if($(td).find('img').length>0)//si hay accion
                         {
+                            var valido=true;
+                            if(valido)
+                            {
+                                valido = Ext.getCmp('_2_fieldFechaId').getValue();
+                                if(!valido)
+                                {
+                                    mensajeWarning('Introduzca la fecha de efecto');
+                                }
+                            }
+                            if(valido)
+                            {
                             if(cellIndex==1)
                             {
                                 var record=venExcluStoreUsa.getAt(rowIndex);
@@ -822,6 +858,7 @@ Ext.onReady(function(){
                                     }
                                 });
                             }//end if cell index = 2
+                            }
                         }//end if find img
                     }
                 }
