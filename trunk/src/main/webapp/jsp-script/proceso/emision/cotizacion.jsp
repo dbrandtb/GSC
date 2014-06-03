@@ -1715,12 +1715,12 @@ Ext.onReady(function()
         [
             {
                 xtype  : 'fieldset'
-                ,title : 'Datos generales'
+                ,title : '<span style="font:bold 14px Calibri;">DATOS GENERALES</span>'
                 ,items : itemsIzq
             }
             ,{
                 xtype  : 'fieldset'
-                ,title : 'Datos de coberturas'
+                ,title : '<span style="font:bold 14px Calibri;">DATOS DE COBERTURAS</span>'
                 ,items : itemsDer
             }
         ]);
