@@ -1125,8 +1125,8 @@ Ext.setup({onReady:function()
 			        }
 			        ,{
 			        	xtype    : 'formpanel'
-			        	,title   : '&nbsp;Inciso&nbsp;'
-			        	,titulo  : 'Edici&oacute;n de incisos'
+			        	,title   : _mcotiza_smap1.cdtipsit=='AF'?'&nbsp;Contratante&nbsp;':'&nbsp;Inciso&nbsp;'
+			        	,titulo  : _mcotiza_smap1.cdtipsit=='AF'?'Edici&oacute;n de contratante':'Edici&oacute;n de incisos'
 			        	//,hidden  : !_mcotiza_necesitoIncisos
 			        	,iconCls : 'add'
 			        	,itemId  : '_mcotiza_formAsegurados'
@@ -1134,7 +1134,7 @@ Ext.setup({onReady:function()
 			        	[
 				        	{
 				        		xtype  : 'fieldset'
-				        		,title : 'Edici&oacute;n de incisos'
+				        		,title : _mcotiza_smap1.cdtipsit=='AF'?'Edici&oacute;n de contratante':'Edici&oacute;n de incisos'
 				        		,items :
 				        		[
 				        		    {
@@ -1185,8 +1185,8 @@ Ext.setup({onReady:function()
 			        }
 			        ,{
                         xtype             : 'list'
-                        ,title            : '&nbsp;Incisos&nbsp;'
-                        ,titulo           : 'Incisos'
+                        ,title            : _mcotiza_smap1.cdtipsit=='AF'?'&nbsp;Contratante&nbsp;':'&nbsp;Incisos&nbsp;'
+                        ,titulo           : _mcotiza_smap1.cdtipsit=='AF'?'Contratante':'Incisos'
                         ,iconCls          : 'more'
                         //,hidden           : !_mcotiza_necesitoIncisos
                         ,itemId           : '_mcotiza_listAsegurados'
@@ -1234,6 +1234,79 @@ Ext.setup({onReady:function()
 		    })
 		]
 	});
+	
+	<s:if test='%{getSmap1().get("CDATRIBU_DERECHO")!=null}'>
+	    var form=_mcotiza_getFormDatosGenerales();
+	    var items=form.items.items[0].items.items;
+        debug('items a reordenar:',items);
+        var cdatribus_derechos=_mcotiza_smap1.CDATRIBU_DERECHO.split(',');
+        debug('cdatribus_derechos:',cdatribus_derechos);
+        var itemsIzq=[];
+        var itemsDer=[];
+        for(var i=0;i<items.length;i++)
+        {
+            var iItem=items[i];
+            debug('item revisado:',iItem);
+            var indexOfIItem=$.inArray(iItem.config.cdatribu,cdatribus_derechos);
+            debug('indexOfIItem:',indexOfIItem);
+            if(indexOfIItem==-1)
+            {
+                debug('izquierdo');
+                itemsIzq.push(iItem);
+            }
+            else
+            {
+                debug('derecho');
+                itemsDer.push(iItem);
+            }
+        }
+        form.removeAll(false);
+        form.add(
+        [
+            {
+                xtype   : 'fieldset'
+                ,title  : 'Datos generales'
+                ,itemId : 'mcotizaFieldsetDatosGeneralesIzq'
+                ,items  : itemsIzq
+            }
+            ,{
+                xtype   : 'fieldset'
+                ,title  : 'Datos de coberturas'
+                ,itemId : 'mcotizaFieldsetDatosGeneralesDer'
+                ,hidden : true
+                ,items  : itemsDer
+            }
+            ,{
+                xtype   : 'toolbar'
+                ,docked : 'top'
+                ,layout :
+                {
+                    pack : 'center'
+                }
+                ,items  :
+                [
+                    {
+                        text     : 'Datos generales'
+                        ,ui      : 'decline-round'
+                        ,handler : function()
+                        {
+                            Ext.ComponentQuery.query('#mcotizaFieldsetDatosGeneralesIzq')[0].show();
+                            Ext.ComponentQuery.query('#mcotizaFieldsetDatosGeneralesDer')[0].hide();
+                        }
+                    }
+                    ,{
+                        text     : 'Datos de coberturas'
+                        ,ui      : 'decline-round'
+                        ,handler : function()
+                        {
+                            Ext.ComponentQuery.query('#mcotizaFieldsetDatosGeneralesIzq')[0].hide();
+                            Ext.ComponentQuery.query('#mcotizaFieldsetDatosGeneralesDer')[0].show();
+                        }
+                    }
+                ]
+            }
+        ]);
+	</s:if>
 	
 	Ext.Viewport.add(_mcotiza_navView);
 	Ext.ComponentQuery.query('navigationview')[0].getNavigationBar().add(
