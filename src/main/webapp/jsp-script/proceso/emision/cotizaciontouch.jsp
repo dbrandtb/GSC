@@ -57,9 +57,8 @@ var _mcotiza_selectedNmsituac;
 
 var _mcotiza_urlCotizar        = '<s:url namespace="/emision"         action="cotizar"            />';
 var _mcotiza_urlCotizarExterno = '<s:url namespace="/externo"         action="cotizar"            />';
-var _mcotiza_urlViewDoc        = '<s:url namespace="/documentos "     action="descargaDocInline"  />';
+var _mcotiza_urlViewDoc        = '<s:url namespace="/documentos"      action="descargaDocInline"  />';
 var _mcotiza_urlComprar        = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4" />';
-var _mcotiza_urlRedirect       = '<s:url namespace="/"                action="redireccion"        />';
 var _mcotiza_urlLoad           = '<s:url namespace="/emision"         action="cargarCotizacion"   />';
 
 var _mcotiza_necesitoIncisos = true;
@@ -396,8 +395,9 @@ function _mcotiza_imprimir()
             + "&report="        + _mcotiza_reporteCotizacion
             + "&paramform=no";
     debug(urlRequestImpCotiza);
-    $(['<form action="'+_mcotiza_urlRedirect+'" target="_blank">'
-       ,'<input type="text" name="map1.url" value="'+urlRequestImpCotiza+'" />'
+    $(['<form action="'+_mcotiza_urlViewDoc+'" target="_blank">'
+       ,'<input type="text" name="url"         value="'+urlRequestImpCotiza+'" />'
+       ,'<input type="text" name="contentType" value="application/pdf" />'
        ,'</form>'].join("")
        )
    .submit();
