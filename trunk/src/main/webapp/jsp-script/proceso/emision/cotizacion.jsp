@@ -1375,7 +1375,7 @@ Ext.onReady(function()
             {
             	title        : 'Datos de incisos'
             	,store       : _0_storeIncisos
-            	,minHeight   : 250
+            	,minHeight   : 140
             	//,hidden      : !_0_necesitoIncisos
             	,tbar        :
             	[
