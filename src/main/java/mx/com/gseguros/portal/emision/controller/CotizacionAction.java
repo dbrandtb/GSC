@@ -227,18 +227,39 @@ public class CotizacionAction extends PrincipalCoreAction
 		log.debug("camposIndividuales: "+camposIndividuales);
         ////// obtener campos de tatrisit //////
         ////////////////////////////////////////
-		
-		//Obtenemos la edad m�xima para la cotizacion:
-		/*
-        try {
-        	smap1.put("edadMaximaCotizacion",
-        			catalogosManager.obtieneCantidadMaxima(cdramo, cdtipsit, TipoTramite.POLIZA_NUEVA, Rango.ANIOS, Validacion.EDAD_MAX_COTIZACION));
-        } catch(Exception e) {
-        	log.error("Error al obtener la edad m�xima de cotizaci�n", e);
-        	smap1.put("edadMaximaCotizacion", "0");
-        }
-        */
         
+		////// parches por situacion //////
+		if(cdtipsit.equalsIgnoreCase("AF"))
+		{
+			try
+			{
+				List<ComponenteVO>cdatribusDerechos=pantallasManager.obtenerComponentes(null, null, cdramo, cdtipsit, null, null, "COTIZACION_CUSTOM", "CDATRIBU_DERECHO", null);
+				if(cdatribusDerechos.size()>0)
+				{
+					String cdatribusConcatenados="";
+					for(int i=0;i<cdatribusDerechos.size();i++)
+					{
+						cdatribusConcatenados=cdatribusConcatenados+cdatribusDerechos.get(i).getNameCdatribu();
+						if(i<cdatribusDerechos.size()-1)
+						{
+							cdatribusConcatenados=cdatribusConcatenados+",";
+						}
+					}
+					smap1.put("CDATRIBU_DERECHO",cdatribusConcatenados);
+				}
+				else
+				{
+					smap1.put("CDATRIBU_DERECHO",null);
+				}
+			}
+			catch(Exception ex)
+			{
+				log.error("error al obtener CDATRIBU_DERECHO para AF",ex);
+				smap1.put("CDATRIBU_DERECHO",null);
+			}
+		}
+		////// parches por situacion //////
+		
 		log.debug("\n"
 				+ "\n######                    ######"
 				+ "\n###### pantallaCotizacion ######"
