@@ -25,6 +25,10 @@
        <action name="cargarCotizacion" class="CotizacionAction" method="cargarCotizacion">
            <result type="json" />
        </action>
+       
+       <action name="webServiceNada" class="CotizacionAction" method="webServiceNada">
+           <result type="json" />
+       </action>
     </package>
     
 </struts>
