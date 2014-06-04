@@ -837,27 +837,28 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
                     &&jsonCober_cdplan!=null&&jsonCober_cdplan.length()>0
                     )//cuando se reciben parametros se calcula
             {
-                UserVO usuario=(UserVO) session.get("USUARIO");
                 Map<String,String>mapaCoberturas=new HashMap<String,String>(0);
-                mapaCoberturas.put("pv_usuario_i",   usuario.getUser());
                 mapaCoberturas.put("pv_cdunieco_i",  jsonCober_unieco);
+                mapaCoberturas.put("pv_cdramo_i",    jsonCober_cdramo);
                 mapaCoberturas.put("pv_estado_i",    jsonCober_estado);
                 mapaCoberturas.put("pv_nmpoliza_i",  jsonCober_nmpoiza);
                 mapaCoberturas.put("pv_nmsituac_i",  jsonCober_situa);
+                /*UserVO usuario=(UserVO) session.get("USUARIO");
+                mapaCoberturas.put("pv_usuario_i",   usuario.getUser());
                 mapaCoberturas.put("pv_nmsuplem_i",  "0");
                 mapaCoberturas.put("pv_cdplan_i",    jsonCober_cdplan);
-                mapaCoberturas.put("pv_cdramo_i",    jsonCober_cdramo);
                 mapaCoberturas.put("pv_cdcia_i",     jsonCober_cdcia);
                 mapaCoberturas.put("pv_region_i",    "ME");
                 mapaCoberturas.put("pv_pais_i",      usuario.getPais().getValue());
                 mapaCoberturas.put("pv_idioma_i",    usuario.getIdioma().getValue());
-                this.listaCoberturas=this.kernelManagerSustituto.obtenerCoberturas(mapaCoberturas);
-                session.put(SK_COBERTURAS_COTIZACION,listaCoberturas);
+                session.put(SK_COBERTURAS_COTIZACION,listaCoberturas);*/
+                
+                this.slist1=this.kernelManagerSustituto.obtenerCoberturasUsuario(mapaCoberturas);
             }
-            else//cuando dan refresh se obtiene calculo anterior
+            /*else//cuando dan refresh se obtiene calculo anterior
             {
                 listaCoberturas=(List<CoberturaCotizacionVO>) session.get(SK_COBERTURAS_COTIZACION);
-            }
+            }*/
             success=true;
         }
         catch(Exception ex)
