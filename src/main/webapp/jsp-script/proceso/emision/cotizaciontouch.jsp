@@ -60,6 +60,7 @@ var _mcotiza_urlCotizarExterno = '<s:url namespace="/externo"         action="co
 var _mcotiza_urlViewDoc        = '<s:url namespace="/documentos"      action="descargaDocInline"  />';
 var _mcotiza_urlComprar        = '<s:url namespace="/flujocotizacion" action="comprarCotizacion4" />';
 var _mcotiza_urlLoad           = '<s:url namespace="/emision"         action="cargarCotizacion"   />';
+var _mcotiza_urlNada           = '<s:url namespace="/emision"         action="webServiceNada"     />';
 
 var _mcotiza_necesitoIncisos = true;
 <s:if test='%{getImap().get("fieldsIndividuales")==null}'>
@@ -164,6 +165,7 @@ function _mcotiza_load()
 		    		    			if(item.hasListener('blur'))
 		    		    			{
 		    		    				var numBlursSeguidos = 1;
+		    		    				debug('contando blur:',item);
 		    		    				for(var j=i+1;j<formItems.length;j++)
 		    		    				{
 		    		    					if(formItems[j].hasListener('blur'))
@@ -188,10 +190,13 @@ function _mcotiza_load()
 		    		    				i=i+1;
 		    		    				for(var j=0;j<formItems.length;j++)
 		    		    				{
-		    		    					if(formItems[j].hasListener('blur'))
+		    		    				    var iItem  = formItems[j];
+		    		    				    var iItem2 = formItems[j+1];
+                                            debug('iItem2:',iItem2,'store:',iItem2?iItem2._store:'iItem2 no');
+		    		    					if(iItem.hasListener('blur')&&iItem2&&iItem2._store)
 		    		    					{
-		    		    						debug('tiene blur',formItems[j]);
-		    		    						_g_heredarCombo(true,formItems[j+1].id,formItems[j].id);
+		    		    						debug('tiene blur y lo hacemos heredar',iItem);
+		    		    						_g_heredarCombo(true,iItem2.id,iItem.id);
 		    		    					}
 		    		    				}
 		    		    				setTimeout(renderiza,1000);
@@ -783,7 +788,7 @@ function _g_heredarCombo(remoto,compId,compAnteriorId)
 {
 	debug('>_g_heredarCombo',remoto,compId,compAnteriorId);
 	var thisCmp=Ext.getCmp(compId);
-	debug('Heredar "+name+"');
+	debug('Heredar:',thisCmp);
 	if(!thisCmp.noEsPrimera||remoto==true)
 	{
 		debug('Hereda por primera vez o porque la invoca el padre');
@@ -1232,6 +1237,47 @@ Ext.setup({onReady:function()
 		    })
 		]
 	});
+	
+	if(_mcotiza_smap1.cdtipsit=='AF')
+	{
+	    _mcotiza_navView.down('[name=parametros.pv_otvalor03]').addListener('blur',function(comp)
+        {
+            var vim=comp.getValue();
+            debug('>llamando a nada:',vim);
+            maskui();
+            Ext.Ajax.request(
+            {
+                url     : _mcotiza_urlNada
+                ,params :
+                {
+                    'smap1.vim':vim
+                }
+                ,success : function(response)
+                {
+                    unmaskui();
+                    var json=Ext.JSON.decode(response.responseText);
+                    debug('nada response:',json);
+                    if(json.success)
+                    {
+                        _mcotiza_navView.down('[name=parametros.pv_otvalor04]').setValue(json.smap1.AUTO_MARCA);
+                        _mcotiza_navView.down('[name=parametros.pv_otvalor05]').setValue(json.smap1.AUTO_ANIO);
+                        _mcotiza_navView.down('[name=parametros.pv_otvalor06]').setValue(json.smap1.AUTO_DESCRIPCION);
+                        _mcotiza_navView.down('[name=parametros.pv_otvalor07]').setValue(json.smap1.AUTO_PRECIO);
+                    }
+                    else
+                    {
+                        Ext.Msg.alert('Error',json.error);
+                    }
+                }
+                ,failure : function()
+                {
+                    unmaskui();
+                    Ext.Msg.alert('Error','Error de comunicaci&oacute;n');
+                }
+            });
+            debug('<llamando a nada');
+        });
+	}
 	
 	<s:if test='%{getSmap1().get("CDATRIBU_DERECHO")!=null}'>
 	    var form=_mcotiza_getFormDatosGenerales();
