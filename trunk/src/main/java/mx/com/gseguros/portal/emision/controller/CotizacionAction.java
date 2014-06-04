@@ -309,7 +309,7 @@ public class CotizacionAction extends PrincipalCoreAction
 		if(success)
 		{
 			smap1.put("AUTO_ANIO"        , datosAuto.getVehicleYear()+"");
-			smap1.put("AUTO_DESCRIPCION" , datosAuto.getSeriesDescr());
+			smap1.put("AUTO_DESCRIPCION" , datosAuto.getSeriesDescr()+" "+datosAuto.getBodyDescr());
 			smap1.put("AUTO_PRECIO"      , datosAuto.getAvgTradeIn().toString());
 			smap1.put("AUTO_MARCA"       , datosAuto.getMakeDescr());
 		}
