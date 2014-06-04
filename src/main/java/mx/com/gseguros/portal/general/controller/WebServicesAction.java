@@ -104,11 +104,15 @@ public class WebServicesAction extends PrincipalCoreAction{
     			
     			GeneraRecDxnResponseE calendarios = GeneraRecDxnResponseE.Factory.parse(resultadoWS.getXMLStreamReaderWithoutCaching());
     			
-    			boolean gcal = recibosSigsService.guardaCalendariosDxnFinaliza(peticionWS.get("CDUNIECO"), peticionWS.get("CDRAMO"), peticionWS.get("ESTADO"), peticionWS.get("NMPOLIZA"),
-    					peticionWS.get("NMSUPLEM"), sucursal, null, peticionWS.get("NTRAMITE"), calendarios.getGeneraRecDxnResponse().get_return());
+    			boolean gcal = false;
+    					
+    			if(RecibosSigsService.Estatus.EXITO.getCodigo() == calendarios.getGeneraRecDxnResponse().get_return().getCodigo()){
+    				gcal = recibosSigsService.guardaCalendariosDxnFinaliza(peticionWS.get("CDUNIECO"), peticionWS.get("CDRAMO"), peticionWS.get("ESTADO"), peticionWS.get("NMPOLIZA"),
+        					peticionWS.get("NMSUPLEM"), sucursal, null, peticionWS.get("NTRAMITE"), calendarios.getGeneraRecDxnResponse().get_return());
+    			}
     			
     			if(!gcal){
-    				mensajeRespuesta = "Error en guardaCalendariosDxnFinaliza.";
+    				mensajeRespuesta = "Error en guardaCalendariosDxnFinaliza. El tipo de resultado que devulve los calendarios no es EXITO.";
             		success = false;
             		return SUCCESS;	
     			}
