@@ -522,11 +522,12 @@ function _0_detalles()
                 	    		    {
                 	    		    	sorterFn : function(o1,o2)
                 	    		    	{
+                	    		    	    debug('sorting:',o1,o2);
                 	    		    		if (o1.get('orden') === o2.get('orden'))
                 	    		    		{
                 	    		    			return 0;
                 	    		    		}
-                	    		    		return o1.get('orden') < o2.get('orden') ? -1 : 1;
+                	    		    		return o1.get('orden')-0 < o2.get('orden')-0 ? -1 : 1;
                 	    		    	}
                 	    		    }
                 	    		]
@@ -1182,6 +1183,20 @@ Ext.onReady(function()
     {
         autoLoad : false
         ,model   : 'RowCobertura'
+        ,sorters    :
+        [
+            {
+                sorterFn : function(o1,o2)
+                {
+                    debug('sorting:',o1,o2);
+                    if (o1.get('orden') === o2.get('orden'))
+                    {
+                        return 0;
+                    }
+                    return o1.get('orden')-0 < o2.get('orden')-0 ? -1 : 1;
+                }
+            }
+        ]
         ,proxy   :
         {
             type    : 'ajax'
@@ -1189,7 +1204,7 @@ Ext.onReady(function()
             ,reader :
             {
                 type  : 'json'
-                ,root : 'listaCoberturas'
+                ,root : 'slist1'
             }
         }
     });
@@ -1584,12 +1599,12 @@ Ext.onReady(function()
         ,columns     :
         [
             {
-                dataIndex : 'dsGarant'
+                dataIndex : 'NOMBRE_GARANTIA'
                 ,text : 'Cobertura'
-                ,flex : 1
+                ,flex : 3
             }
             ,{
-                dataIndex : 'sumaAsegurada'
+                dataIndex : 'SUMA_ASEGURADA'
                 ,text : 'Suma asegurada'
                 ,flex : 1
             }
@@ -1607,7 +1622,7 @@ Ext.onReady(function()
                 var x = this.getSelectionModel().getCurrentPosition().column;
                 if (x == 0)
                 {
-                	_0_selectedIdcobertura=record.get('cdGarant');
+                	_0_selectedIdcobertura=record.get('GARANTIA');
                     _0_botDetalleCobertura.setDisabled(false);
                 }
                 else
