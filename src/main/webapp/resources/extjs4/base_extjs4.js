@@ -451,6 +451,21 @@ Ext.define('RowCobertura',{
     extend:'Ext.data.Model',
     fields:
     [
+        "CDCAPITA"
+        ,"GARANTIA"
+        ,"NOMBRE_GARANTIA"
+        ,"SUMA_ASEGURADA"
+        ,"SWOBLIGA"
+        ,"cdagrupa"
+        ,"cdtipbca"
+        ,"fereduci"
+        ,"orden"
+        ,"ptreduci"
+        ,"ptvalbas"
+        ,"status"
+        ,"swmanual"
+        ,"swreas"
+        ,"swrevalo",
         {type:'string',name:'cdCiaaseg'},
         {type:'string',name:'cdGarant'},
         {type:'string',name:'cdRamo'},
