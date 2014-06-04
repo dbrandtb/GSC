@@ -1204,7 +1204,7 @@ Ext.onReady(function()
             ,reader :
             {
                 type  : 'json'
-                ,root : 'slist1'
+                ,root : 'listaCoberturas'
             }
         }
     });
@@ -1599,12 +1599,12 @@ Ext.onReady(function()
         ,columns     :
         [
             {
-                dataIndex : 'NOMBRE_GARANTIA'
+                dataIndex : 'dsGarant'
                 ,text : 'Cobertura'
                 ,flex : 3
             }
             ,{
-                dataIndex : 'SUMA_ASEGURADA'
+                dataIndex : 'sumaAsegurada'
                 ,text : 'Suma asegurada'
                 ,flex : 1
             }
@@ -1622,7 +1622,7 @@ Ext.onReady(function()
                 var x = this.getSelectionModel().getCurrentPosition().column;
                 if (x == 0)
                 {
-                	_0_selectedIdcobertura=record.get('GARANTIA');
+                	_0_selectedIdcobertura=record.get('cdGarant');
                     _0_botDetalleCobertura.setDisabled(false);
                 }
                 else
