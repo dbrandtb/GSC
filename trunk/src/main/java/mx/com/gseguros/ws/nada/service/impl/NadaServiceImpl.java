@@ -48,6 +48,8 @@ public class NadaServiceImpl implements NadaService {
 			WrapperResultadosWS resultWS = this.ejecutaDatosAutoNadaWS(vin, 0, VehicleTypes.UsedCar, Integer.parseInt(fecha), 3);
 			datosVehiculo = (VehicleValue_Struc) resultWS.getResultadoWS();
 			
+		} catch(WSException wse){
+			logger.error("Error en WS Datos Auto NADA, xml enviado: " + wse.getPayload(), wse);
 		} catch (Exception e){
 			logger.error("Error en WS obtieneDatosAutomovilNADA" + e.getMessage(),e);
 		}
@@ -124,6 +126,9 @@ public class NadaServiceImpl implements NadaService {
 		
 		try{
 			getVehicleValuesByVinRequest.setToken(this.obtieneLoginTokenNada());
+		}catch(WSException wse){
+			logger.error("Error en WS Token, xml enviado: " + wse.getPayload(), wse);
+			throw new Exception("Error al obtener el Token para esta peticion. " + wse.getMessage());
 		}catch(Exception tkn){
 			logger.error(tkn);
 			throw new Exception("Error al obtener el Token para esta peticion. " + tkn.getMessage());
