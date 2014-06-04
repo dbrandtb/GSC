@@ -276,8 +276,8 @@ public class CotizacionAction extends PrincipalCoreAction
 		
 		/**
 		 * TODO: Eliminar codigo de ejemplo para el WS de NADA
-		 */
-		
+		 * 1GCHK23275F895304
+		 
 		VehicleValue_Struc datosAuto= nadaService.obtieneDatosAutomovilNADA("1GCHK23275F895304");
 		if(datosAuto != null){
 			logger.debug("Resultados....");	
@@ -286,7 +286,7 @@ public class CotizacionAction extends PrincipalCoreAction
 			logger.debug("getSeriesDescr: "+datosAuto.getSeriesDescr());	
 			logger.debug("getWeight: "+datosAuto.getWeight());	
 		}
-		
+		*/
 		
 		this.session=ActionContext.getContext().getSession();
 		log.debug("\n"
