@@ -22,9 +22,6 @@ import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
-import mx.com.gseguros.portal.general.util.Rango;
-import mx.com.gseguros.portal.general.util.TipoTramite;
-import mx.com.gseguros.portal.general.util.Validacion;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.ws.nada.client.axis2.VehicleStub.VehicleValue_Struc;
 import mx.com.gseguros.ws.nada.service.NadaService;
@@ -270,6 +267,58 @@ public class CotizacionAction extends PrincipalCoreAction
 				+ "\n################################"
 				);
 		return gc.isEsMovil() ? "success_mobile" : SUCCESS;
+	}
+	
+	public String webServiceNada()
+	{
+		log.info(""
+				+ "\n############################"
+				+ "\n###### webServiceNada ######"
+				);
+		log.info("smap1: "+smap1);
+		
+		String  vim                  = null;
+		success                      = true;
+		VehicleValue_Struc datosAuto = null;
+		
+		//revisar numero de serie
+		if(success)
+		{
+			
+			success = smap1!=null&&StringUtils.isNotBlank(vim=smap1.get("vim"));
+			if(!success)
+			{
+				error="No se recibi&oacute; el n&uacute;mero de serie";
+				log.error(error);
+			}
+		}
+		
+		//llamar web service
+		if(success)
+		{
+			datosAuto = nadaService.obtieneDatosAutomovilNADA(vim);
+			success     = datosAuto!=null;
+			if(!success)
+			{
+				error="No se encontr&oacute; informaci&oacute;n para el n&uacute;mero de serie";
+				log.error(error);
+			}
+		}
+		
+		//datos regresados
+		if(success)
+		{
+			smap1.put("AUTO_ANIO"        , datosAuto.getVehicleYear()+"");
+			smap1.put("AUTO_DESCRIPCION" , datosAuto.getSeriesDescr());
+			smap1.put("AUTO_PRECIO"      , datosAuto.getAvgTradeIn().toString());
+			smap1.put("AUTO_MARCA"       , datosAuto.getMakeDescr());
+		}
+		
+		log.info(""
+				+ "\n###### webServiceNada ######"
+				+ "\n############################"
+				);
+		return SUCCESS;
 	}
 
 	public String pantallaCotizacionDemo() {
