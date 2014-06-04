@@ -1176,10 +1176,11 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     protected class ObtieneCoberturasMapper implements RowMapper {
         public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
             CoberturaCotizacionVO result=new CoberturaCotizacionVO();
-            result.setDeducible(        rs.getString("deducible"));
-            result.setCdGarant(         rs.getString("CDGARANT"));
-            result.setDsGarant(         rs.getString("DSGARANT"));
-            result.setSumaAsegurada(    rs.getString("SUMASEG"));
+            result.setDeducible(     rs.getString("deducible"));
+            result.setCdGarant(      rs.getString("CDGARANT"));
+            result.setDsGarant(      rs.getString("DSGARANT"));
+            result.setSumaAsegurada( rs.getString("SUMASEG"));
+            result.setOrden(         rs.getString("orden"));
             result.setCdCiaaseg(null);
             result.setCdRamo(null);
             return result;
