@@ -47,6 +47,7 @@ var _0_urlDatosComplementarios = '<s:url namespace="/"                action="da
 var _0_urlUpdateStatus         = '<s:url namespace="/mesacontrol"     action="actualizarStatusTramite" />';
 var _0_urlMesaControl          = '<s:url namespace="/mesacontrol"     action="principal"               />';
 var _0_urlLoad                 = '<s:url namespace="/emision"         action="cargarCotizacion"        />';
+var _0_urlNada                 = '<s:url namespace="/emision"         action="webServiceNada"          />';
 
 var _0_modeloExtraFields = [
 <s:if test='%{getImap().get("modeloExtraFields")!=null}'>
@@ -735,6 +736,7 @@ function _0_cargar()
                             if(item.hasListener('blur'))
                             {
                                 var numBlursSeguidos = 1;
+                                debug('contando blur:',item);
                                 for(var j=i+1;j<formItems.length;j++)
                                 {
                                     if(formItems[j].hasListener('blur'))
@@ -759,10 +761,13 @@ function _0_cargar()
                                 i=i+1;
                                 for(var j=0;j<formItems.length;j++)
                                 {
-                                    if(formItems[j].hasListener('blur'))
+                                    var iItem  = formItems[j]; 
+                                    var iItem2 = formItems[j+1];
+                                    debug('iItem2:',iItem2,'store:',iItem2?iItem2.store:'iItem2 no');
+                                    if(iItem.hasListener('blur')&&iItem2&&iItem2.store)
                                     {
-                                        debug('tiene blur',formItems[j]);
-                                        formItems[j+1].heredar(true);
+                                        debug('tiene blur y lo hacemos heredar',formItems[j]);
+                                        iItem2.heredar(true);
                                     }
                                 }
                                 setTimeout(renderiza,1000);
@@ -1682,6 +1687,43 @@ Ext.onReady(function()
     if(_0_smap1.cdtipsit=='AF')
     {
         _0_gridIncisos.setTitle('Datos del contratante');
+        _0_formAgrupados.down('[name=parametros.pv_otvalor03]').addListener('blur',function()
+        {
+            var vim=this.value;
+            debug('>llamando a nada:',vim);
+            _0_formAgrupados.setLoading(true);
+            Ext.Ajax.request(
+            {
+                url     : _0_urlNada
+                ,params :
+                {
+                    'smap1.vim':vim
+                }
+                ,success : function(response)
+                {
+                    _0_formAgrupados.setLoading(false);
+                    var json=Ext.decode(response.responseText);
+                    debug('nada response:',json);
+                    if(json.success)
+                    {
+                        _0_formAgrupados.down('[name=parametros.pv_otvalor04]').setValue(json.smap1.AUTO_MARCA);
+                        _0_formAgrupados.down('[name=parametros.pv_otvalor05]').setValue(json.smap1.AUTO_ANIO);
+                        _0_formAgrupados.down('[name=parametros.pv_otvalor06]').setValue(json.smap1.AUTO_DESCRIPCION);
+                        _0_formAgrupados.down('[name=parametros.pv_otvalor07]').setValue(json.smap1.AUTO_PRECIO);
+                    }
+                    else
+                    {
+                        mensajeError(json.error);
+                    }
+                }
+                ,failure : function()
+                {
+                    _0_formAgrupados.setLoading(false);
+                    errorComunicacion();
+                }
+            });
+            debug('<llamando a nada');
+        });
     }
     <s:if test='%{getSmap1().get("CDATRIBU_DERECHO")!=null}'>
         var items=_0_formAgrupados.items.items;
