@@ -31,6 +31,8 @@ public class CoberturaCotizacionVO implements Serializable{
     private String cdCiaaseg;
     
     private String cdRamo;
+    
+    private String orden;
 
     /**
      * @return the cdGarant
@@ -115,5 +117,13 @@ public class CoberturaCotizacionVO implements Serializable{
     public void setCdRamo(String cdRamo) {
         this.cdRamo = cdRamo;
     }
+
+	public String getOrden() {
+		return orden;
+	}
+
+	public void setOrden(String orden) {
+		this.orden = orden;
+	}
   
 }
