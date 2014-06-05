@@ -1083,7 +1083,7 @@ Ext.onReady(function() {
 	    tabDatosGeneralesPoliza.insert(3,{
         	title: 'Documentaci&oacute;n',
             loader: {
-	        	url: _UrlDocumentosPoliza,
+	        	url: _URLDOCUMENTOSPOLIZA,
 	        	scripts: true,
 	        	autoLoad: true,
 	        	loadMask : true,
