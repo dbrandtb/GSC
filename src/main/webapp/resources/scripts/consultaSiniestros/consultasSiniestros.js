@@ -507,6 +507,8 @@ Ext.onReady(function() {
     	        title: 'Revisi&oacute;n Administrativa'
     	    }, {
     	        title: 'C&aacute;lculos'
+    	    }, {
+    	        title: 'Documentaci&oacute;n'
     	    }]
 	});
 
@@ -1000,10 +1002,13 @@ Ext.onReady(function() {
 	    tabDatosGeneralesPoliza.insert(2,{
         	title: 'C&aacute;lculos'
         });
+        
+        tabDatosGeneralesPoliza.remove(tabDatosGeneralesPoliza.getComponent(3));
+	    tabDatosGeneralesPoliza.insert(3,{
+        	title: 'Documentaci&oacute;n'
+        });
 	    
 	    storeListAsegPagDirecto.removeAll();
-
-	    
 	    return true;
     }
     
@@ -1073,6 +1078,40 @@ Ext.onReady(function() {
                 }
             }
         });
+        
+        tabDatosGeneralesPoliza.remove(tabDatosGeneralesPoliza.getComponent(3));
+	    tabDatosGeneralesPoliza.insert(3,{
+        	title: 'Documentaci&oacute;n',
+            loader: {
+	        	url: _UrlDocumentosPoliza,
+	        	scripts: true,
+	        	autoLoad: true,
+	        	loadMask : true,
+	        	 params : {
+                    'smap1.readOnly' :  true,
+	        	 	'smap1.ntramite' :  _NTRAMITE,
+                    'smap1.cdtippag' :  _TIPOPAGO,
+	                'smap1.cdtipate' :  "",
+	        	 	'smap1.cdtiptra' : _TIPO_TRAMITE_SINIESTRO,
+	        	 	'smap1.cdunieco' :  _CDUNIECO,
+                    'smap1.cdramo'   :  _CDRAMO,
+                    'smap1.estado'   :  _ESTADO,
+                    'smap1.nmpoliza' :  _NMPOLIZA,
+                    'smap1.nmsuplem' :  _NMSUPLEM,
+                    'smap1.nmsolici' : '',
+                    'smap1.tipomov'  : '0'
+                },
+                ajaxOptions: {
+	        		method: 'POST'
+	        	}
+	        },
+            listeners : {
+                activate : function(tab) {
+                    tab.loader.load();
+                }
+            }
+        });
+        
 	    tabDatosGeneralesPoliza.setActiveTab(0);
     	return true;
     }
