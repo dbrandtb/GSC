@@ -44,7 +44,7 @@
             var _CATALOGO_PROVEEDORES  				= '<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@PROVEEDORES"/>';
             var _URL_CATALOGOS 						= '<s:url namespace="/catalogos" action="obtieneCatalogo" />';
             var _URL_CONSULTA_DATOS_SUPLEMENTO 		= '<s:url namespace="/consultasPoliza" action="consultaDatosSuplemento" />';
-            var _UrlDocumentosPoliza        		= '<s:url namespace="/documentos" action="ventanaDocumentosPoliza"   />';
+            var _URLDOCUMENTOSPOLIZA        		= '<s:url namespace="/documentos" action="ventanaDocumentosPoliza"   />';
             
             var _TIPO_TRAMITE_SINIESTRO = '<s:property value="@mx.com.gseguros.portal.general.util.TipoTramite@SINIESTRO.cdtiptra" />';
 
