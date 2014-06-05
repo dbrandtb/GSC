@@ -3,8 +3,18 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Configuracion de Men&uacute;s por Rol</title>
+<title>Configuraci&oacute;n de Men&uacute;s por Rol</title>
 <script>
+
+///////////////////////
+////// Overrides //////
+/*///////////////////*/
+// Sobreescribimos CheckboxModel con Selección Simple:
+Ext.selection.CheckboxModel.override({
+    mode: 'SINGLE',
+    allowDeselect: true
+});
+
 ///////////////////////
 ////// variables //////
 /*///////////////////*/
