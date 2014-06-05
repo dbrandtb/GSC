@@ -446,12 +446,12 @@ Ext.onReady(function() {
 			            if(success){
 			                var jsonResponse = Ext.decode(response.responseText);
 			                if(jsonResponse.listaPoliza == null) {								
-			                    Ext.Msg.show({
+			                	centrarVentanaInterna(Ext.Msg.show({
 			                        title: 'Aviso',
 			                        msg: 'No se encontraron P&oacute;liza de dicho asegurado',
 			                        buttons: Ext.Msg.OK,
 			                        icon: Ext.Msg.WARNING
-			                    });
+			                    }));
 			                    
 			                    Ext.getCmp('idAsegurado').setValue('');
 			                    storeListadoAsegurado.removeAll();
@@ -459,12 +459,12 @@ Ext.onReady(function() {
 			                    return;
 			                }
 			            }else{
-			                Ext.Msg.show({
+			            	centrarVentanaInterna(Ext.Msg.show({
 			                    title: 'Aviso',
 			                    msg: 'Error al obtener los datos.',
 			                    buttons: Ext.Msg.OK,
 			                    icon: Ext.Msg.ERROR
-			                });
+			                }));
 			            }
 			        });
 			        // AQUI VA LA INFORMACION PARA LA VALIDACION DEL CAMPO
@@ -511,12 +511,12 @@ Ext.onReady(function() {
 					    failure : function ()
 					    {
 					        me.up().up().setLoading(false);
-					        Ext.Msg.show({
+					        centrarVentanaInterna(Ext.Msg.show({
 					            title:'Error',
 					            msg: 'Error de comunicaci&oacute;n',
 					            buttons: Ext.Msg.OK,
 					            icon: Ext.Msg.ERROR
-					        });
+					        }));
 					    }
 					});
     		}
@@ -575,12 +575,12 @@ Ext.onReady(function() {
 	        	
 	        	if(Ext.getCmp('idCobAfectada').getValue() =="18MA"){
 	        		if(+ Ext.getCmp('idMesesAsegurado').getValue() < 10 ){
-	        			Ext.Msg.show({
+	        			centrarVentanaInterna(Ext.Msg.show({
 	  		               title: 'Error',
 	  		               msg: 'El n&uacute;mero de meses es menor al m&iacute;nimo requerido',
 	  		               buttons: Ext.Msg.OK,
 	  		               icon: Ext.Msg.ERROR
-	  		           	});
+	  		           	}));
         			}
 	        	}
 	        }
@@ -637,12 +637,12 @@ Ext.onReady(function() {
     	            failure : function ()
     	            {
     	                me.up().up().setLoading(false);
-    	                Ext.Msg.show({
+    	                centrarVentanaInterna(Ext.Msg.show({
     	                    title:'Error',
     	                    msg: 'Error de comunicaci&oacute;n',
     	                    buttons: Ext.Msg.OK,
     	                    icon: Ext.Msg.ERROR
-    	                });
+    	                }));
     	            }
     	        });
     	    }
@@ -683,12 +683,12 @@ Ext.onReady(function() {
     	            failure : function ()
     	            {
     	                me.up().up().setLoading(false);
-    	                Ext.Msg.show({
+    	                centrarVentanaInterna(Ext.Msg.show({
     	                    title:'Error',
     	                    msg: 'Error de comunicaci&oacute;n',
     	                    buttons: Ext.Msg.OK,
     	                    icon: Ext.Msg.ERROR
-    	                });
+    	                }));
     	            }
     	        });
     	    }
@@ -871,12 +871,12 @@ Ext.onReady(function() {
 						{
 							if(Ext.getCmp('porcentajeEqQuirurg').getValue()>=100)
 							{
-								Ext.Msg.show({
+								centrarVentanaInterna(Ext.Msg.show({
 			        				title: 'Aviso',
 			        				msg: 'El porcentaje es mayor al del Cirujano',
 			        				buttons: Ext.Msg.OK,
 			        				icon: Ext.Msg.WARNING
-			        			});
+			        			}));
 								
 								Ext.getCmp('porcentajeEqQuirurg').setValue('');
 							}
@@ -933,12 +933,12 @@ Ext.onReady(function() {
 	        			panelConceptosAutorizados.getForm().reset();
 	        			ventanaConceptosAutorizado.close();
 	        		} else {
-	        			Ext.Msg.show({
+	        			centrarVentanaInterna(Ext.Msg.show({
 	        				title: 'Aviso',
 	        				msg: 'Complete la informaci&oacute;n requerida',
 	        				buttons: Ext.Msg.OK,
 	        				icon: Ext.Msg.WARNING
-	        			});
+	        			}));
 	        		}
 	        	}
 		},
@@ -985,12 +985,12 @@ Ext.onReady(function() {
 					ModificarEquipoQuirurguico(storeQuirurgico);
 					ventanaEqQuirurgicoBase.close();
 				} else {
-					Ext.Msg.show({
+					centrarVentanaInterna(Ext.Msg.show({
 						title: 'Aviso',
 						msg: 'Complete la informaci&oacute;n requerida',
 						buttons: Ext.Msg.OK,
 						icon: Ext.Msg.WARNING
-					});
+					}));
 				}
 			}
 		},
@@ -1034,12 +1034,12 @@ Ext.onReady(function() {
 					panelEquipoQuirurgico.getForm().reset();
 					ventanaEqQuirurgico.close();
 				} else {
-					Ext.Msg.show({
+					centrarVentanaInterna(Ext.Msg.show({
 						title: 'Aviso',
 						msg: 'Complete la informaci&oacute;n requerida',
 						buttons: Ext.Msg.OK,
 						icon: Ext.Msg.WARNING
-					});
+					}));
 				}
 			}
 		},
@@ -1333,31 +1333,31 @@ Ext.onReady(function() {
 						if(success){
 							var jsonResponse = Ext.decode(response.responseText);
 							if(jsonResponse.listaAutorizacion == null) {								
-								Ext.Msg.show({
+								centrarVentanaInterna(Ext.Msg.show({
 									title: 'Aviso',
 									msg: 'No se encontraron datos.',
 									buttons: Ext.Msg.OK,
 									icon: Ext.Msg.WARNING
-								});
+								}));
 								return;
 							}
 							
 						}else{
-							Ext.Msg.show({
+							centrarVentanaInterna(Ext.Msg.show({
 								title: 'Aviso',
 								msg: 'Error al obtener los datos.',
 								buttons: Ext.Msg.OK,
 								icon: Ext.Msg.ERROR
-							});
+							}));
 						}
 					});
 				} else {
-					Ext.Msg.show({
+					centrarVentanaInterna(Ext.Msg.show({
 						title: 'Aviso',
 						msg: 'Complete la informaci&oacute;n requerida',
 						buttons: Ext.Msg.OK,
 						icon: Ext.Msg.WARNING
-					});
+					}));
 				}
 			}	
 		}] 
@@ -1437,12 +1437,12 @@ Ext.onReady(function() {
 						cargarInformacionAutorizacionServicio(nmautser,null,null);
 					}else {
 						//Ext.Msg.alert('Aviso', 'Debe de seleccionar una cl&aacute;usula para realizar la edici&oacute;n');
-						Ext.Msg.show({
+						centrarVentanaInterna(Ext.Msg.show({
 							title: 'Aviso',
 							msg: 'Debe de seleccionar un registro para realizar la edici&oacute;n',
 							buttons: Ext.Msg.OK,
 							icon: Ext.Msg.ERROR
-						});
+						}));
 						
 					}
 				}
@@ -1775,12 +1775,12 @@ Ext.onReady(function() {
 								    failure : function ()
 								    {
 								        me.up().up().setLoading(false);
-								        Ext.Msg.show({
+								        centrarVentanaInterna(Ext.Msg.show({
 								            title:'Error',
 								            msg: 'Error de comunicaci&oacute;n',
 								            buttons: Ext.Msg.OK,
 								            icon: Ext.Msg.ERROR
-								        });
+								        }));
 								    }
 							});
 			 			}
@@ -1938,12 +1938,12 @@ Ext.onReady(function() {
 			 		    if (panelInicialPrincipal.form.isValid()) {
 			 		    		guardadoAutorizacionServicio(_Existe);
 			 		    } else {
-			 		        Ext.Msg.show({
+			 		    	centrarVentanaInterna(Ext.Msg.show({
 			 		               title: 'Aviso',
 			 		               msg: 'Complete la informaci&oacute;n requerida',
 			 		               buttons: Ext.Msg.OK,
 			 		               icon: Ext.Msg.WARNING
-			 		           });
+			 		           }));
 			 		    }
 			 		}
 			 	}
@@ -1995,16 +1995,16 @@ Ext.onReady(function() {
 											 					}
 												 				else
 											 					{
-												 					Ext.Msg.show({
+												 					centrarVentanaInterna(Ext.Msg.show({
 													 		               title: 'Error',
 													 		               msg: 'La fecha de autorizaci&oacute;n y fecha vencimiento son requeridas',
 													 		               buttons: Ext.Msg.OK,
 													 		               icon: Ext.Msg.ERROR
-													 		           });
+													 		           }));
 											 					}
 												    		}else
 											    			{
-												    			Ext.Msg.show({
+												    			centrarVentanaInterna(Ext.Msg.show({
 												    		        title: 'Aviso',
 												    		        msg: 'Este tr&aacute;mite debe de ser turnada al gerente  &iquest;Deseas guardar los cambios?',
 												    		        buttons: Ext.Msg.YESNO,
@@ -2015,7 +2015,7 @@ Ext.onReady(function() {
 												    		        	}
 												    		        	
 												    		        }
-												    		    });
+												    		    }));
 											    			}
 														}else{
 																Ext.getCmp('idstatus').setValue("2");
@@ -2025,12 +2025,12 @@ Ext.onReady(function() {
 													    failure : function ()
 													    {
 													        me.up().up().setLoading(false);
-													        Ext.Msg.show({
+													        centrarVentanaInterna(Ext.Msg.show({
 													            title:'Error',
 													            msg: 'Error de comunicaci&oacute;n',
 													            buttons: Ext.Msg.OK,
 													            icon: Ext.Msg.ERROR
-													        });
+													        }));
 													    }
 												});
 		                                }
@@ -2038,22 +2038,22 @@ Ext.onReady(function() {
 		        				    failure : function ()
 		        				    {
 		        				        me.up().up().setLoading(false);
-		        				        Ext.Msg.show({
+		        				        centrarVentanaInterna(Ext.Msg.show({
 		        				            title:'Error',
 		        				            msg: 'Error de comunicaci&oacute;n',
 		        				            buttons: Ext.Msg.OK,
 		        				            icon: Ext.Msg.ERROR
-		        				        });
+		        				        }));
 		        				    }
 		        				});
 			 				}
 			 		    } else {
-			 		        Ext.Msg.show({
+			 		    	centrarVentanaInterna(Ext.Msg.show({
 			 		               title: 'Aviso',
 			 		               msg: 'Complete la informaci&oacute;n requerida',
 			 		               buttons: Ext.Msg.OK,
 			 		               icon: Ext.Msg.WARNING
-			 		           });
+			 		           }));
 			 		    }
 			 		}
 			 	}
@@ -2129,12 +2129,12 @@ Ext.onReady(function() {
 		    failure : function ()
 		    {
 		        me.up().up().setLoading(false);
-		        Ext.Msg.show({
+		        centrarVentanaInterna(Ext.Msg.show({
 		            title:'Error',
 		            msg: 'Error de comunicaci&oacute;n',
 		            buttons: Ext.Msg.OK,
 		            icon: Ext.Msg.ERROR
-		        });
+		        }));
 		    }
 		});
 		
@@ -2259,12 +2259,12 @@ Ext.onReady(function() {
 	            failure : function ()
 	            {
 	                me.up().up().setLoading(false);
-	                Ext.Msg.show({
+	                centrarVentanaInterna(Ext.Msg.show({
 	                    title:'Error',
 	                    msg: 'Error de comunicaci&oacute;n',
 	                    buttons: Ext.Msg.OK,
 	                    icon: Ext.Msg.ERROR
-	                });
+	                }));
 	            }
 	        });
 			
@@ -2301,12 +2301,12 @@ Ext.onReady(function() {
 		failure : function ()
 		{
 			me.up().up().setLoading(false);
-			Ext.Msg.show({
+			centrarVentanaInterna(Ext.Msg.show({
 				title:'Error',
 				msg: 'Error de comunicaci&oacute;n',
 				buttons: Ext.Msg.OK,
 				icon: Ext.Msg.ERROR
-			});
+			}));
 		}
 		});
 		return true;
@@ -2487,12 +2487,12 @@ Ext.onReady(function() {
     				storeQuirurgico.removeAll();
                 }
                 else{
-                    Ext.Msg.show({
+                	centrarVentanaInterna(Ext.Msg.show({
                         title:'Error',
                         msg: 'Error al modificar los registros',
                         buttons: Ext.Msg.OK,
                         icon: Ext.Msg.ERROR
-                    });
+                    }));
                     
                     respuesta= false;
                 }
@@ -2500,12 +2500,12 @@ Ext.onReady(function() {
             failure:function(response,opts)
             {
             	panelInicialPrincipal.setLoading(false);
-                Ext.Msg.show({
+            	centrarVentanaInterna(Ext.Msg.show({
                     title:'Error',
                     msg: 'Error de comunicaci&oacute;n',
                     buttons: Ext.Msg.OK,
                     icon: Ext.Msg.ERROR
-                });
+                }));
                 respuesta=false;
             }
         });
@@ -2569,12 +2569,12 @@ Ext.onReady(function() {
 			    					    failure : function ()
 			    					    {
 			    					        me.up().up().setLoading(false);
-			    					        Ext.Msg.show({
+			    					        centrarVentanaInterna(Ext.Msg.show({
 			    					            title:'Error',
 			    					            msg: 'Error de comunicaci&oacute;n',
 			    					            buttons: Ext.Msg.OK,
 			    					            icon: Ext.Msg.ERROR
-			    					        });
+			    					        }));
 			    					    }
 			    					});
 						}else{
@@ -2589,12 +2589,12 @@ Ext.onReady(function() {
 	            failure : function ()
 	            {
 	                me.up().up().setLoading(false);
-	                Ext.Msg.show({
+	                centrarVentanaInterna(Ext.Msg.show({
 	                    title:'Error',
 	                    msg: 'Error de comunicaci&oacute;n',
 	                    buttons: Ext.Msg.OK,
 	                    icon: Ext.Msg.ERROR
-	                });
+	                }));
 	            }
 	        });
 		
@@ -2635,12 +2635,12 @@ Ext.onReady(function() {
 		        failure : function ()
 		        {
 		            me.up().up().setLoading(false);
-		            Ext.Msg.show({
+		            centrarVentanaInterna(Ext.Msg.show({
 		                title:'Error',
 		                msg: 'Error de comunicaci&oacute;n',
 		                buttons: Ext.Msg.OK,
 		                icon: Ext.Msg.ERROR
-		            });
+		            }));
 		        }
 		    });
 		    
@@ -2687,12 +2687,12 @@ Ext.onReady(function() {
 		            failure : function ()
 		            {
 		                me.up().up().setLoading(false);
-		                Ext.Msg.show({
+		                centrarVentanaInterna(Ext.Msg.show({
 		                    title:'Error',
 		                    msg: 'Error de comunicaci&oacute;n',
 		                    buttons: Ext.Msg.OK,
 		                    icon: Ext.Msg.ERROR
-		                });
+		                }));
 		            }
 		        });
 		    }
