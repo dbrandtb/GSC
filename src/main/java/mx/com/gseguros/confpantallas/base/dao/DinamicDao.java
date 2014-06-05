@@ -134,6 +134,12 @@ public class DinamicDao {
 		String qry = this.getSqlSelectSql(query,objeto);
 		jdbcTemplate.update(qry);
 	}
+	public String setCFExtjs (HashMap<String, String> mapa){
+		String rgs = "";
+		this.ejecuta(mapa);
+		
+		return rgs;
+	}
 	public String setPanel (HashMap<String, Object> mapa){
 		String rgs = "";
 		try{
@@ -147,6 +153,7 @@ public class DinamicDao {
 			while (itlP.hasNext()) {
 				Map map =  itlP.next();
 				actualP = map.get("IDPANEL").toString();
+				rgs = actualP;
 				data.put("idpanel", actualP);
 				data.put("query", "deletePanelAttr");
 				this.ejecuta(data);
@@ -160,6 +167,9 @@ public class DinamicDao {
 				this.ejecuta(data);
 				data.put("query", "deleteControlesAttrSql");
 				this.ejecuta(data);
+				data.put("query", "deleteCodigoExtJS");
+				this.ejecuta(data);
+				
 			}
 			ArrayList<DinamicPanelVo> arryPaneles = (ArrayList<DinamicPanelVo>) mapa.get("newPanel");
 			Iterator<DinamicPanelVo> itP = arryPaneles.iterator();
@@ -296,6 +306,8 @@ public class DinamicDao {
 			rgs = "DELETE DNC_DOCCONTROLGRID_ATTR WHERE IDPANEL = "+mapa.get("idpanel");
 		}else if(qry.equals("deleteControlesAttrSql")){
 			rgs = "DELETE DNC_DOCCONTROLGRID_SQL WHERE IDPANEL = "+mapa.get("idpanel");
+		}else if(qry.equals("deleteCodigoExtJS")){
+			rgs = "DELETE TPANTALLAS WHERE CDPANTALLA = "+mapa.get("idpanel");
 		}else if(qry.equals("listaValoresTablaApoyo")){
 			rgs = "SELECT A.OTCLAVE KEY, A.OTVALOR VALUE FROM TTAPVAT1 A, TTAPDSCL B "
 					+ "WHERE A.NMTABLA = (SELECT C.NMTABLA FROM TTAPTABL C WHERE C.CDTABLA = '"+mapa.get("tabla")+"') "
@@ -324,6 +336,8 @@ public class DinamicDao {
 					+ "WHERE C.CDTABLA = '"+mapa.get("store")+"') AND A.NMTABLA = B.NMTABLA";
 		}else if(qry.equals("SqlQuery")){
 			rgs = "SELECT VALOR FROM DNC_DOCCONTROLGRID_SQL WHERE IDCONTROL = "+mapa.get("valor")+" AND IDPANEL = " +mapa.get("tabla");
+		}else if(qry.equals("setCFExtjs")){
+			rgs = "INSERT INTO TPANTALLAS (CDPANTALLA,DATOS,COMPONENTES) VALUES ("+mapa.get("panel")+",'"+mapa.get("stores")+"','"+mapa.get("codigo")+"')";
 		}
 		return rgs;
 	}
