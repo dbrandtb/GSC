@@ -10,8 +10,10 @@ import mx.com.gseguros.confpantallas.base.dao.DinamicDao;
 import mx.com.gseguros.confpantallas.model.DinamicAttrVo;
 import mx.com.gseguros.confpantallas.model.DinamicControlAttrVo;
 import mx.com.gseguros.confpantallas.model.DinamicControlVo;
+import mx.com.gseguros.confpantallas.model.DinamicData;
 import mx.com.gseguros.confpantallas.model.DinamicPanelAttrVo;
 import mx.com.gseguros.confpantallas.model.DinamicPanelVo;
+import mx.com.gseguros.confpantallas.model.ViewBean;
 import net.sf.json.JSONArray;
 
 public class AdminPanelesDelegate {
@@ -108,6 +110,46 @@ public class AdminPanelesDelegate {
 			datas.put("lstdeLstCtrolGridAttr", lstdeLstCtrolGridAttr);
 			datas.put("lstdeLstCtrolGridSql", lstdeLstCtrolGridSql);
 			rgs = dao.setPanel(datas);
+			// tengo que man dar a obtener el codigo ExtJS
+			AdminCargaPanelesDelegate adm = new AdminCargaPanelesDelegate();
+			 HashMap<String, Object> dataExt = adm.GeneraJson(panel);
+			 List<ViewBean> listadePaneles = (List<ViewBean>) dataExt.get("lista");
+			 StringBuffer stl = new StringBuffer();
+			 for (int i = 0; i < listadePaneles.size(); i++){
+				 ViewBean pnl = new ViewBean();
+				 pnl = listadePaneles.get(i);
+				 //este es el codigo Extjs
+				 System.out.println("este es el codigo Extjs");
+				 System.out.println(pnl.getCodigo());
+				 stl.append(pnl.getCodigo()).append("\n");
+			 }
+			 
+			 String acP = rgs;
+			 rgs = "";
+			 List<DinamicData> lt = adm.GetListaTablas((List<String>) dataExt.get("listaCmb"),(List<String>) dataExt.get("listaCmbHijo"));
+			 StringBuffer st = new StringBuffer();
+			 if(lt.size() > 0){
+				 //sesion.put("listaCatalogosEA", lt);
+				 System.out.println("este es el codigo de los stores");
+				 System.out.println(lt);
+				 st.append("Ext.QuickTips.init();").append("\n");
+				 st.append("Ext.define('ComboData', {extend: 'Ext.data.Model',fields: [{type: 'string', name: 'key'},{type: 'string', name: 'value'}]});").append("\n");
+				 for (int i = 0; i < lt.size(); i++){
+					 DinamicData cp = lt.get(i);
+					 st.append("var val").append(cp.getNombreVar()).append(" = '").append(cp.getNombreVar()).append("';").append("\n");
+					 st.append("var store").append(cp.getNombreVar()).append("= Ext.create('Ext.data.Store',{model:'ComboData',proxy: {type: 'ajax',url: '../confpantallas/cargainfo.action',reader: {type: 'json',root: 'success'},extraParams: {tarea: '");
+					 st.append(cp.getDescripcion()).append("', tabla:val").append(cp.getNombreVar()).append(", valor:val").append(cp.getNombreVar()).append("}},autoLoad: false});").append("\n");
+				 }
+				 System.out.println(st.toString());
+			 }
+
+			 HashMap<String, String> dataE = new HashMap<String, String>();
+			 dataE.put("query", "setCFExtjs");
+			 dataE.put("panel", acP);
+			 dataE.put("stores", st.toString());
+			 dataE.put("codigo", stl.toString());
+			rgs = dao.setCFExtjs(dataE);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			rgs = e.toString();
