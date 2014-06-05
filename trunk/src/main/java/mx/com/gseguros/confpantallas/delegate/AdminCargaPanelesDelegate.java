@@ -394,7 +394,7 @@ public class AdminCargaPanelesDelegate {
 					rgsAttr.append(this.getAttrModel(attrLts.getValor(), idP));
 					rgsAttr.append("] }),").append("\n");
 					rgsAttr.append("autoLoad: true,").append("\n");
-					rgsAttr.append("proxy: { type: 'ajax', url : '../../confpantallas/cargainfo.action', ").append("\n");
+					rgsAttr.append("proxy: { type: 'ajax', url : './confpantallas/cargainfo.action', ").append("\n");
 					rgsAttr.append("reader: {type: 'json',root: 'success'}, extraParams: {tarea: 'llenaGrid', tabla:'");
 					rgsAttr.append(idP).append("', valor:'").append(this.getValorAttr(listaAttrControl, "query")).append("'} } }),").append("\n");
 				}else if (attrLts.getAttr().equals("query")){
