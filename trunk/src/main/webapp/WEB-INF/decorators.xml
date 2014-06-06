@@ -49,6 +49,8 @@
 		<pattern>/jsp/portal/login.jsp</pattern>
 		<pattern>/editarAsegurados.action</pattern>
 		<pattern>/jsp/extjs4/editarAsegurados.jsp</pattern>
+		<pattern>/editarAseguradosAuto.action</pattern>
+        <pattern>/jsp/extjs4/editarAseguradosAuto.jsp</pattern>
 		<pattern>/editarCoberturas.action</pattern>
 		<pattern>/jsp/extjs4/aseguradoCoberturas.jsp</pattern>
 		<pattern>/pantallaDomicilio.action</pattern>
