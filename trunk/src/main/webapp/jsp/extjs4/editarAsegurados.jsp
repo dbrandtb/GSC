@@ -21,11 +21,7 @@
 	var inputCdtipsitp2= '<s:property value="map1.cdtipsit" />';
 	debug('inputCdtipsitp2:',inputCdtipsitp2);
 	var inputMaxLenContratante = <s:property value="map1.maxLenContratante" />;
-	var CDATRIBU_ROLp2="<s:property value='%{getCdatribuRol(map1.cdtipsit)}' />";
-	debug('CDATRIBU_ROLp2:',CDATRIBU_ROLp2);
 	var gridPersonasp2;
-	var CDATRIBU_SEXOp2="<s:property value='%{getCdatribuSexo(map1.cdtipsit)}' />";
-	debug('CDATRIBU_SEXOp2:',CDATRIBU_SEXOp2);
 	var storeRolesp2;
 	var storeGenerosp2;
 	var storePersonasp2;
@@ -677,7 +673,7 @@ debug("validarYGuardar flag:2");
 	        {
 	            type: 'ajax',
 	            url : urlCargarCatalogosp2,
-	            extraParams:{'params.cdatribu':CDATRIBU_SEXOp2,'params.cdtipsit':inputCdtipsitp2,catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@TATRISIT"/>'},
+	            extraParams:{catalogo:'<s:property value="@mx.com.gseguros.portal.general.util.Catalogos@SEXO"/>'},
 	            reader:
 	            {
 	                type: 'json',
