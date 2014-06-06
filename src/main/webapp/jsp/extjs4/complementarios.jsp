@@ -33,7 +33,11 @@
             var inputNtramite='<s:property value='map1.ntramite' />';
             var inputCdtipsit='<s:property value='cdtipsit' />';
             debug("inputNtramite",inputNtramite);
-            var urlEditarAsegurados='<s:url namespace="/" action="editarAsegurados" />';
+            var urlEditarAsegurados=[];
+            urlEditarAsegurados['SL']='<s:url namespace="/" action="editarAsegurados"     />';
+            urlEditarAsegurados['SN']='<s:url namespace="/" action="editarAsegurados"     />';
+            urlEditarAsegurados['MS']='<s:url namespace="/" action="editarAsegurados"     />';
+            urlEditarAsegurados['AF']='<s:url namespace="/" action="editarAseguradosAuto" />';
             var contexto='${ctx}';
             var urlRecotizar='<s:url namespace="/" action="recotizar" />';
             var accordion;
@@ -584,12 +588,12 @@
 									                                        /**/
 									                                        if(json.mensajeRespuesta&&json.mensajeRespuesta.length>0)
 									                                        {
-									                                        	Ext.Msg.show({
+									                                        	centrarVentanaInterna(Ext.Msg.show({
 							                                                        title:'Verificar datos',
 							                                                        msg: json.mensajeRespuesta,
 							                                                        buttons: Ext.Msg.OK,
 							                                                        icon: Ext.Msg.WARNING
-							                                                    });
+							                                                    }));
 									                                        }
 									                                        else
 									                                        {
@@ -1341,13 +1345,14 @@
                         	,cls:'claseTitulo'
                         	,loader:
                         	{
-                        		url:urlEditarAsegurados
-                        		,params:{
-                                    'map1.cdunieco' :  inputCdunieco,
-                                    'map1.cdramo' :    inputCdramo,
-                                    'map1.estado' :    inputEstado,
-                                    'map1.nmpoliza' :  inputNmpoliza,
-                                    'map1.cdtipsit' :  inputCdtipsit
+                        		url     : urlEditarAsegurados[inputCdtipsit]
+                        		,params :
+                        		{
+                                    'map1.cdunieco'  : inputCdunieco
+                                    ,'map1.cdramo'   : inputCdramo
+                                    ,'map1.cdtipsit' : inputCdtipsit
+                                    ,'map1.estado'   : inputEstado
+                                    ,'map1.nmpoliza' : inputNmpoliza
                                 }
                         		,scripts:true
                         		,autoLoad:true
@@ -1499,7 +1504,7 @@
         </script>
     </head>
     <body>
-        <div id="maindiv" style="height:800px;"></div>
+        <div id="maindiv" style="height:1200px;"></div>
         <%--////////////////////////////////////
         ////// para el parser de archivos //////
         ////////////////////////////////////--%
