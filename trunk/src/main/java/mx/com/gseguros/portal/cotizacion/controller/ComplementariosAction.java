@@ -32,6 +32,7 @@ import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.cotizacion.model.Item;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
+import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
@@ -81,6 +82,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	private Item item2;
 	private Item item3;
 	private Item item4;
+	private Item item5;
 	private Map<String, String> map1;
 	private Map<String, String> map2;
 	private Map<String, String> map3;
@@ -98,6 +100,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	private String auxiliarProductoCdtipsit = null;
 	private ConsultasManager consultasManager;
 	private boolean exito = false;
+	private PantallasManager pantallasManager;
 
 	public String mostrarPantalla()
 	/*
@@ -763,6 +766,82 @@ public class ComplementariosAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	public String pantallaAseguradosAuto()
+	{
+		log.info(""
+				+ "\n####################################"
+				+ "\n###### pantallaAseguradosAuto ######"
+				);
+		log.info("map1: "+map1);
+		String cdunieco = map1.get("cdunieco");
+		String cdramo   = map1.get("cdramo");
+		String cdtipsit = map1.get("cdtipsit");
+		String estado   = map1.get("estado");
+		String nmpoliza = map1.get("nmpoliza");
+		log.info("cdunieco: " + cdunieco);
+		log.info("cdramo: "   + cdramo);
+		log.info("cdtipsit: " + cdtipsit);
+		log.info("estado: "   + estado);
+		log.info("nmpoliza: " + nmpoliza);
+		
+		GeneradorCampos gc;
+		
+		boolean success = true;
+		if(success)
+		{
+			try
+			{
+				UserVO usuario  = (UserVO)session.get("USUARIO");
+				String cdsisrol = usuario.getRolActivo().getObjeto().getValue();
+				String pantalla = "EDITAR_ASEGURADOS";
+				String seccion  = "ASEGURADO";
+				List<ComponenteVO>componenteAsegurado=pantallasManager.obtenerComponentes(
+						null, cdunieco, cdramo, cdtipsit, estado, cdsisrol, pantalla, seccion, null);
+				gc = new GeneradorCampos(ServletActionContext.getServletContext().getServletContextName());
+				gc.generaComponentes(componenteAsegurado, true, true, true, true, true, false);
+				item1=gc.getFields();
+				item2=gc.getItems();
+				item3=gc.getColumns();
+				
+				seccion = "VALIDA_BORRAR";
+				List<ComponenteVO> botonBorrar=pantallasManager.obtenerComponentes(
+						null, cdunieco, cdramo, cdtipsit, estado, cdsisrol, pantalla, seccion, null);
+				if(botonBorrar.size()>0)
+				{
+					gc.generaComponentes(botonBorrar, true, false, false, false, false, true);
+					item4=gc.getButtons();
+				}
+				else
+				{
+					item4=null;
+				}
+				
+				seccion = "VALIDA_GUARDAR";
+				List<ComponenteVO> botonGuardar=pantallasManager.obtenerComponentes(
+						null, cdunieco, cdramo, cdtipsit, estado, cdsisrol, pantalla, seccion, null);
+				if(botonGuardar.size()>0)
+				{
+					gc.generaComponentes(botonGuardar, true, false, false, false, false, true);
+					item5=gc.getButtons();
+				}
+				else
+				{
+					item5=null;
+				}
+			}
+			catch(Exception ex)
+			{
+				log.error("error al cargar la pantalla de asegurados de auto",ex);
+			}
+		}
+		
+		log.info(""
+				+ "\n###### pantallaAseguradosAuto ######"
+				+ "\n####################################"
+				);
+		return SUCCESS;
+	}
+	
 	public String cargarPantallaAsegurados() {
 		log.debug("cargarPantallaAsegurados map1: "+map1);
 		try
@@ -1057,6 +1136,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 				paramValExtraprima.put("pv_nmpoliza_i" , panel1.get("nmpoliza"));
 				statusValidacionExtraprimas=(String) kernelManager.validarExtraprima(paramValExtraprima).getItemMap().get("status");
 				log.debug("tiene status la extraprima: "+statusValidacionExtraprimas);
+				if(statusValidacionExtraprimas==null)
+				{
+					statusValidacionExtraprimas="N";
+				}
 			}
 			catch(Exception ex)
 			{
@@ -2050,36 +2133,14 @@ public class ComplementariosAction extends PrincipalCoreAction
 	
 	public String getCdatribuRol(String auxiliarProductoCdtipsit)
 	{
-		String cdatribu = null;
-		try
-		{
-			LinkedHashMap<String,Object>p=new LinkedHashMap<String,Object>();
-			p.put("cdtipsit" , auxiliarProductoCdtipsit);
-			cdatribu = consultasManager.consultaDinamica(ObjetoBD.OBTIENE_ATRIBUTOS, p).get(0).get("PARENTESCO");
-		}
-		catch(Exception ex)
-		{
-			log.error("error en getCdatribuRol",ex);
-			cdatribu = "";
-		}
-		return cdatribu;
+		log.error("DEPRECATED getCdatribuRol",new Exception("DEPRECATED getCdatribuRol"));
+		return null;
 	}
 	
 	public String getCdatribuSexo(String auxiliarProductoCdtipsit)
 	{
-		String cdatribu = null;
-		try
-		{
-			LinkedHashMap<String,Object>p=new LinkedHashMap<String,Object>();
-			p.put("cdtipsit" , auxiliarProductoCdtipsit);
-			cdatribu = consultasManager.consultaDinamica(ObjetoBD.OBTIENE_ATRIBUTOS, p).get(0).get("SEXO");
-		}
-		catch(Exception ex)
-		{
-			log.error("error en getCdatribuSexo",ex);
-			cdatribu = "";
-		}
-		return cdatribu;
+		log.error("DEPRECATED getCdatribuSexo",new Exception("DEPRECATED getCdatribuSexo"));
+		return null;
 	}
 	
 	public String pantallaJavaExterno()
@@ -2389,6 +2450,18 @@ public class ComplementariosAction extends PrincipalCoreAction
 
 	public void setExito(boolean exito) {
 		this.exito = exito;
+	}
+
+	public void setPantallasManager(PantallasManager pantallasManager) {
+		this.pantallasManager = pantallasManager;
+	}
+
+	public Item getItem5() {
+		return item5;
+	}
+
+	public void setItem5(Item item5) {
+		this.item5 = item5;
 	}
 
 }
