@@ -43,6 +43,7 @@
         <property name="recibosSigsService" ref="recibosSigsServiceImpl"></property>
         <property name="catalogosManager"   ref="catalogosManagerImpl"/>
         <property name="consultasManager"   ref="consultasManagerImpl"/>
+        <property name="pantallasManager"   ref="pantallasManagerImpl"/>
     </bean>
     
     <bean id="MesaControlAction" class="mx.com.gseguros.portal.cotizacion.controller.MesaControlAction" scope="prototype">
