@@ -105,7 +105,7 @@ function validarRFC(rfc,tper)
 	}
 	if(!valido)
 	{
-		Ext.create('Ext.window.Window',
+		var ven=Ext.create('Ext.window.Window',
 		{
 			title        : 'Error'
 			,height      : 130
@@ -131,6 +131,7 @@ function validarRFC(rfc,tper)
 		        }
 		    ]
 		}).show();
+		centrarVentanaInterna(ven);
 	}
 	return valido;
 }
