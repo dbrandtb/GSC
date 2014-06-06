@@ -363,14 +363,17 @@ Ext.onReady(function(){
     combocoloni.setEditable(true);
     //combocoloni.forceSelection=false;
     
-    if(inputNmsituacp4>0)//si es asegurado solo puede leer cp, estado y municipio
+    if((inputCdramop4+'x')=='2x'||(inputCdramop4+'x')=='4x')
     {
-    	if(inputCdtipsitp4!='MS')
-    	{
-    		formPanelp4.items.items[2].items.items[1].setReadOnly(true);//cp
-    	}
-    	formPanelp4.items.items[2].items.items[2].setReadOnly(true);//estado
-    	formPanelp4.items.items[2].items.items[3].setReadOnly(true);//municipio
+	    if(inputNmsituacp4>0)//si es asegurado solo puede leer cp, estado y municipio
+	    {
+	    	if(inputCdtipsitp4!='MS')
+	    	{
+	    		formPanelp4.items.items[2].items.items[1].setReadOnly(true);//cp
+	    	}
+	    	formPanelp4.items.items[2].items.items[2].setReadOnly(true);//estado
+	    	formPanelp4.items.items[2].items.items[3].setReadOnly(true);//municipio
+	    }
     }
     
     //establecer cargar colonia al cambiar cod pos
@@ -438,10 +441,10 @@ Ext.onReady(function(){
     loaderFormp4.load(123, {
         success: function(resp) {
             //console.log(resp);
-        	resp.data['smap1.asegurado'] =inputNombreaseguradop4;
-        	resp.data['smap1.rfc']       =inputCdrfcp4;
         	//console.log(resp);
             formPanelp4.loadRecord(resp);
+            formPanelp4.down('[name=smap1.asegurado]').setValue(inputNombreaseguradop4);
+            formPanelp4.down('[name=smap1.rfc]').setValue(inputCdrfcp4);
             
             debug('[name="smap1.CDCOLONI"]:',Ext.ComponentQuery.query('[name="smap1.CDCOLONI"]').length);
             Ext.ComponentQuery.query('[name="smap1.CDCOLONI"]')[Ext.ComponentQuery.query('[name="smap1.CDCOLONI"]').length-1].getStore().load(
@@ -454,10 +457,13 @@ Ext.onReady(function(){
         },
         failure:function()
         {
+        	formPanelp4.down('[name=smap1.asegurado]').setValue(inputNombreaseguradop4);
+        	formPanelp4.down('[name=smap1.rfc]').setValue(inputCdrfcp4);
+            formPanelp4.down('[name=smap1.NMORDDOM]').setValue(1);
             Ext.Msg.show({
-                title:'Error',
-                icon: Ext.Msg.ERROR,
-                msg: 'Error al cargar',
+                title:'Aviso',
+                icon: Ext.Msg.WARNING,
+                msg: 'No se encotr&oacute; domicilio anteior',
                 buttons: Ext.Msg.OK
             });
         }
@@ -529,7 +535,7 @@ Ext.onReady(function(){
 	                    Ext.Msg.show({
 	                        title:'Error',
 	                        icon: Ext.Msg.ERROR,
-	                        msg: 'Error al cargar',
+	                        msg: 'No se encontr&oacute; domicilio anterior',
 	                        buttons: Ext.Msg.OK
 	                    });
 	                }
