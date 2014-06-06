@@ -3,10 +3,11 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
     <bean id="catalogoAction" class="mx.com.gseguros.portal.general.util.CatalogosAction" scope="prototype">
-        <property name="catalogosManager" ref="catalogosManagerImpl"/>
-        <property name="kernelManager"    ref="kernelManagerSustituto"/>
-        <property name="endososManager" ref="endososManagerImpl"/>
-        <property name="siniestrosManager" ref="siniestrosManagerImpl"/>
+        <property name="catalogosManager"        ref="catalogosManagerImpl"/>
+        <property name="kernelManager"           ref="kernelManagerSustituto"/>
+        <property name="endososManager"          ref="endososManagerImpl"/>
+        <property name="siniestrosManager"       ref="siniestrosManagerImpl"/>
+        <property name="storedProceduresManager" ref="storedProceduresManagerImpl"/>
     </bean>
 
     <bean id="clausuladoAction" class="mx.com.gseguros.portal.catalogos.controller.ClausuladoAction" scope="prototype">
