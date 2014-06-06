@@ -4,6 +4,10 @@ package mx.com.gseguros.portal.general.util;
  */
 public enum ObjetoBD {
 	
+	BORRAR_MPOLIPER            ("PKG_SATELITES.P_BORRA_MPOLIPER"           , "SP"),
+	GENERAR_CDPERSON           ("PKG_COTIZA.P_GET_CDPERSON"                , "SP"),
+	MOV_MPERSONA               ("PKG_SATELITES.P_MOV_MPERSONA"             , "SP"),
+	MOV_MPOLIPER               ("PKG_SATELITES.P_MOV_MPOLIPER"             , "SP"),
 	OBTIENE_ATRIBUTOS          ("PKG_SATELITES.P_OBT_ATRIBUTOS"            , "SP"),
 	OBTIENE_DATOS_FACTURAS     ("PKG_CONSULTA.P_GET_DATOS_FACTURAS"        , "SP"),
 	OBTIENE_DATOS_PROVEEDORES  ("PKG_CONSULTA.P_GET_DATOS_PROVEEDORES"     , "SP"),
