@@ -1236,6 +1236,216 @@ public class CotizacionAction extends PrincipalCoreAction
 		return SUCCESS;
 	}
 	
+	public String guardarSituacionesAuto()
+	{
+		log.info(""
+				+ "\n####################################"
+				+ "\n###### guardarSituacionesAuto ######"
+				);
+		log.info("smap1: "+smap1);
+		
+		String cdunieco = null;
+		String cdramo   = null;
+		String cdtipsit = null;
+		String estado   = null;
+		String nmpoliza = null;
+		success = true;
+		
+		//obtener parametros
+		if(success)
+		{
+			try
+			{
+				cdunieco = smap1.get("cdunieco");
+				cdramo   = smap1.get("cdramo");
+				cdtipsit = smap1.get("cdtipsit");
+				estado   = smap1.get("estado");
+				nmpoliza = smap1.get("nmpoliza");
+				log.info("cdunieco: " + cdunieco);
+				log.info("cdramo: "   + cdramo);
+				log.info("cdtipsit: " + cdtipsit);
+				log.info("estado: "   + estado);
+				log.info("nmpoliza: " + nmpoliza);
+			}
+			catch(Exception ex)
+			{
+				log.error("error al obtener parametros",ex);
+				error   = "No se recibieron los datos necesarios";
+				success = false;
+			}
+		}
+		
+		//poner cdperson restantes
+		if(success)
+		{
+			try
+			{
+				for(Map<String,String>iAsegu:slist1)
+				{
+					if(StringUtils.isBlank(iAsegu.get("cdperson")))
+					{
+						Map<String,Object>cdperson=storedProceduresManager.procedureParamsCall(
+								ObjetoBD.GENERAR_CDPERSON.getNombre(),
+								new LinkedHashMap<String,Object>(),
+								null,
+								new String[]{"pv_cdperson_o"},
+								null);
+						iAsegu.put("cdperson",(String)cdperson.get("pv_cdperson_o"));
+					}
+				}
+			}
+			catch(Exception ex)
+			{
+				log.error("error al completar cdperson de asegurados",ex);
+				error   = ex.getMessage();
+				success = false;
+			}
+		}
+		
+		//ordenar nmsituac
+		if(success)
+		{
+			try
+			{
+				List<Map<String,String>>listaAux=new ArrayList<Map<String,String>>();
+				
+				//agregar titular
+				for(Map<String,String>aseg:slist1)
+				{
+					if(aseg.get("cdrol").equals("1"))
+					{
+						listaAux.add(aseg);
+					}
+				}
+				
+				//agregar demas
+				for(Map<String,String>aseg:slist1)
+				{
+					if(!aseg.get("cdrol").equals("1"))
+					{
+						listaAux.add(aseg);
+					}
+				}
+				slist1=listaAux;
+				
+				//poner nmsituac
+				int i=0;
+				for(Map<String,String>aseg:slist1)
+				{
+					i=i+1;
+					aseg.put("nmsituac",i+"");
+				}
+			}
+			catch(Exception ex)
+			{
+				log.error("error al ordenar nmsituac",ex);
+				error   = ex.getMessage();
+				success = false;
+			}
+		}
+		
+		//borrar mpoliper
+		if(success)
+		{
+			try
+			{
+				LinkedHashMap<String,Object>paramsBorrarMpoliper=new LinkedHashMap<String,Object>();
+				paramsBorrarMpoliper.put("param1" , cdunieco);
+				paramsBorrarMpoliper.put("param2" , cdramo);
+				paramsBorrarMpoliper.put("param3" , estado);
+				paramsBorrarMpoliper.put("param4" , nmpoliza);
+				storedProceduresManager.procedureVoidCall(ObjetoBD.BORRAR_MPOLIPER.getNombre(), paramsBorrarMpoliper, null);
+			}
+			catch(Exception ex)
+			{
+				log.error("error al borrar mpoliper",ex);
+				error   = ex.getMessage();
+				success = false;
+			}
+		}
+		
+		//insertar mpersona y mpoliper
+		if(success)
+		{
+			for(Map<String,String>aseg:slist1)
+			{
+				//insertar mpersona
+				if(success)
+				{
+					try
+					{
+						LinkedHashMap<String,Object> parametros=new LinkedHashMap<String,Object>(0);
+						parametros.put("param01_pv_cdperson_i"    , aseg.get("cdperson"));
+						parametros.put("param02_pv_cdtipide_i"    , "1");
+						parametros.put("param03_pv_cdideper_i"    , aseg.get("cdrfc"));
+						parametros.put("param04_pv_dsnombre_i"    , aseg.get("nombre"));
+						parametros.put("param05_pv_cdtipper_i"    , "1");
+						parametros.put("param06_pv_otfisjur_i"    , aseg.get("tpersona"));
+						parametros.put("param07_pv_otsexo_i"      , aseg.get("sexo"));
+						parametros.put("param08_pv_fenacimi_i"    , renderFechas.parse((String)aseg.get("fenacimi")));
+						parametros.put("param09_pv_cdrfc_i"       , aseg.get("cdrfc"));
+						parametros.put("param10_pv_dsemail_i"     , "");
+						parametros.put("param11_pv_dsnombre1_i"   , aseg.get("segundo_nombre"));
+						parametros.put("param12_pv_dsapellido_i"  , aseg.get("Apellido_Paterno"));
+						parametros.put("param13_pv_dsapellido1_i" , aseg.get("Apellido_Materno"));
+						parametros.put("param14_pv_feingreso_i"   , new Date());
+						parametros.put("param15_pv_cdnacion_i"    , aseg.get("nacional"));
+						parametros.put("param16_pv_accion_i"      , "I");
+						String[] tipos=new String[]{
+								"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
+								"VARCHAR","VARCHAR","VARCHAR","DATE",
+								"VARCHAR","VARCHAR","VARCHAR","VARCHAR",
+								"VARCHAR","DATE"   ,"VARCHAR","VARCHAR"
+						};
+						storedProceduresManager.procedureVoidCall(ObjetoBD.MOV_MPERSONA.getNombre(), parametros, tipos);
+					}
+					catch(Exception ex)
+					{
+						log.error("error al insertar mpersona "+aseg,ex);
+						error   = ex.getMessage();
+						success = false;
+					}
+				}
+				
+				//insertar mpoliper
+				if(success)
+				{
+					try
+					{
+						LinkedHashMap<String,Object> parametros=new LinkedHashMap<String,Object>(0);
+						parametros.put("param01_pv_cdunieco_i" , cdunieco);
+						parametros.put("param02_pv_cdramo_i"   , cdramo);
+						parametros.put("param03_pv_estado_i"   , estado);
+						parametros.put("param04_pv_nmpoliza_i" , nmpoliza);
+						parametros.put("param05_pv_nmsituac_i" , aseg.get("nmsituac"));
+						parametros.put("param06_pv_cdrol_i"    , aseg.get("cdrol"));
+						parametros.put("param07_pv_cdperson_i" , aseg.get("cdperson"));
+						parametros.put("param08_pv_nmsuplem_i" , "0");
+						parametros.put("param09_pv_status_i"   , "V");
+						parametros.put("param10_pv_nmorddom_i" , "1");
+						parametros.put("param11_pv_swreclam_i" , null);
+						parametros.put("param12_pv_accion_i"   , "I");
+						parametros.put("param13_pv_swexiper_i" , aseg.get("swexiper"));
+						storedProceduresManager.procedureVoidCall(ObjetoBD.MOV_MPOLIPER.getNombre(), parametros, null);
+					}
+					catch(Exception ex)
+					{
+						log.error("error al insertar mpoliper "+aseg,ex);
+						error   = ex.getMessage();
+						success = false;
+					}
+				}
+			}
+		}
+		
+		log.info("slist1: "+slist1);
+		log.info(""
+				+ "\n###### guardarSituacionesAuto ######"
+				+ "\n####################################"
+				);
+		return SUCCESS;
+	}
+	
 	///////////////////////////////
 	////// getters y setters //////
 	/*///////////////////////////*/
