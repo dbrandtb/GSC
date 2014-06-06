@@ -198,6 +198,9 @@
         <action name="editarAsegurados" class="beanDatosComplementarios" method="pantallaAsegurados">
             <result name="success">/jsp/extjs4/editarAsegurados.jsp</result>
         </action>
+        <action name="editarAseguradosAuto" class="beanDatosComplementarios" method="pantallaAseguradosAuto">
+            <result name="success">/jsp/extjs4/editarAseguradosAuto.jsp</result>
+        </action>
         <action name="cargarComplementariosAsegurados" class="beanDatosComplementarios" method="cargarPantallaAsegurados">
             <result name="success" type="json" />
         </action>
