@@ -3,7 +3,9 @@ package mx.com.gseguros.portal.general.util;
 public enum TipoSituacion {
 	
 	SALUD_VITAL("SL"),
-	SALUD_NOMINA("SN");
+	SALUD_NOMINA("SN"),
+	AUTOS_FRONTERIZOS("AF")
+	;
 
 	private String cdtipsit;
 
