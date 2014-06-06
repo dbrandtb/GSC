@@ -1048,7 +1048,7 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             	parMesCon.put("pv_cdunieco_i"   , comprarCdunieco);
             	parMesCon.put("pv_cdramo_i"     , comprarCdramo);
             	parMesCon.put("pv_estado_i"     , "W");
-            	parMesCon.put("pv_nmpoliza_i"   , "");
+            	parMesCon.put("pv_nmpoliza_i"   , "0");
             	parMesCon.put("pv_nmsuplem_i"   , "0");
             	parMesCon.put("pv_cdsucadm_i"   , null);
             	parMesCon.put("pv_cdsucdoc_i"   , null);
@@ -1100,16 +1100,22 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             
             String urlReporteCotizacion=""
             					+ getText("ruta.servidor.reports")
-                                + "?p_cdplan="+comprarCdplan
-                                + "&p_estado='W'"
-                                + "&p_poliza="+nmPolizaOriginal
-                                + "&p_ramo="+comprarCdramo
-                                + "&p_unieco="+comprarCdunieco
+            					+ "?p_unieco="      + comprarCdunieco
+            					+ "&p_ramo="        + comprarCdramo
+            					+ "&p_subramo="     + cdtipsit
+            					+ "&p_estado='W'"
+            					+ "&p_poliza="      + nmPolizaOriginal
+            					+ "&p_suplem=0"
+            					+ "&p_cdplan="      + comprarCdplan
+            					+ "&p_plan="        + comprarCdplan
+            					+ "&p_perpag="      + comprarCdperpag
+            					+ "&p_ntramite="    + (ntramite!=null?ntramite:"")
+            					+ "&p_cdusuari="    + usuarioSesion.getUser()
                                 + "&destype=cache"
                                 + "&desformat=PDF"
-                                + "&userid="+getText("pass.servidor.reports")
+                                + "&userid="        + getText("pass.servidor.reports")
                                 + "&ACCESSIBLE=YES"
-                                + "&report="+getText("rdf.cotizacion.nombre")
+                                + "&report="        + getText("rdf.cotizacion.nombre."+cdtipsit)
                                 + "&paramform=no"
                                 ;
             String nombreArchivoCotizacion="cotizacion.pdf";
@@ -1121,18 +1127,18 @@ public class ResultadoCotizacion4Action extends PrincipalCoreAction{
             HttpUtil.generaArchivo(urlReporteCotizacion, pathArchivoCotizacion);
             
             Map<String,Object>mapArchivo=new LinkedHashMap<String,Object>(0);
-            mapArchivo.put("pv_cdunieco_i" , comprarCdunieco);
-            mapArchivo.put("pv_cdramo_i"   , comprarCdramo);
-            mapArchivo.put("pv_estado_i"   , "W");
-            mapArchivo.put("pv_nmpoliza_i" , "0");
-            mapArchivo.put("pv_nmsuplem_i" , "0");
-            mapArchivo.put("pv_feinici_i"  , new Date());
-            mapArchivo.put("pv_cddocume_i" , nombreArchivoCotizacion);
-            mapArchivo.put("pv_dsdocume_i" , "COTIZACI&Oacute;N");
-            mapArchivo.put("pv_ntramite_i" , ntramite);
-            mapArchivo.put("pv_nmsolici_i" , nmPolizaOriginal);
-            mapArchivo.put("pv_tipmov_i"   , "1");
-            mapArchivo.put("pv_swvisible_i"   , null);
+            mapArchivo.put("pv_cdunieco_i"  , comprarCdunieco);
+            mapArchivo.put("pv_cdramo_i"    , comprarCdramo);
+            mapArchivo.put("pv_estado_i"    , "W");
+            mapArchivo.put("pv_nmpoliza_i"  , "0");
+            mapArchivo.put("pv_nmsuplem_i"  , "0");
+            mapArchivo.put("pv_feinici_i"   , new Date());
+            mapArchivo.put("pv_cddocume_i"  , nombreArchivoCotizacion);
+            mapArchivo.put("pv_dsdocume_i"  , "COTIZACI&Oacute;N");
+            mapArchivo.put("pv_ntramite_i"  , ntramite);
+            mapArchivo.put("pv_nmsolici_i"  , nmPolizaOriginal);
+            mapArchivo.put("pv_tipmov_i"    , "1");
+            mapArchivo.put("pv_swvisible_i" , null);
             kernelManagerSustituto.guardarArchivo(mapArchivo);
             //!agregar cotizacion.pdf
             //////////////////////////////////
