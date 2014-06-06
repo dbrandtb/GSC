@@ -1277,6 +1277,17 @@ Ext.setup({onReady:function()
             });
             debug('<llamando a nada');
         });
+        var comboTipoValor =_mcotiza_navView.down('[name=parametros.pv_otvalor02]');
+        var itemSumaAsegu  =_mcotiza_navView.down('[name=parametros.pv_otvalor07]');
+        var changeFunction = function()
+        {
+            debug('>comboTipoValor change');
+            itemSumaAsegu.setValue('');
+            itemSumaAsegu.setReadOnly((comboTipoValor.getValue()+'x')=='1x');
+            debug('<comboTipoValor change');
+        };
+        comboTipoValor.addListener('change',changeFunction);
+        changeFunction();
 	}
 	
 	<s:if test='%{getSmap1().get("CDATRIBU_DERECHO")!=null}'>
