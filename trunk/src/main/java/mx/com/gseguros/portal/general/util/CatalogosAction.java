@@ -2,6 +2,7 @@ package mx.com.gseguros.portal.general.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -10,11 +11,11 @@ import mx.com.aon.core.web.PrincipalCoreAction;
 import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.aon.portal.model.UserVO;
 import mx.com.aon.portal2.web.GenericVO;
+import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.portal.endosos.service.EndososManager;
 import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.siniestros.model.CoberturaPolizaVO;
 import mx.com.gseguros.portal.siniestros.model.ConsultaProveedorVO;
-import mx.com.gseguros.portal.siniestros.model.DatosSiniestroVO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 
 import org.apache.log4j.Logger;
@@ -30,11 +31,12 @@ public class CatalogosAction extends PrincipalCoreAction {
 
 	private Logger logger = Logger.getLogger(CatalogosAction.class);
 	
-	private CatalogosManager       catalogosManager;
-	private KernelManagerSustituto kernelManager;
-	private EndososManager         endososManager;
-	private SiniestrosManager 	   siniestrosManager;
-    
+	private CatalogosManager        catalogosManager;
+	private EndososManager          endososManager;
+	private KernelManagerSustituto  kernelManager;
+	private SiniestrosManager 	    siniestrosManager;
+    private StoredProceduresManager storedProceduresManager; 
+	
     private boolean success;
     
     /**
@@ -275,6 +277,16 @@ public class CatalogosAction extends PrincipalCoreAction {
 						lista.add(new GenericVO(ele.get("CDCAUMOT"),ele.get("DSCAUMOT")));
 					}
 					break;
+				case ROLES_RAMO:
+					LinkedHashMap<String,Object>params2=new LinkedHashMap<String,Object>();
+					params2.putAll(params);
+					List<Map<String,String>>lista2=storedProceduresManager.procedureListCall("PKG_LISTAS.P_GET_ROLES_X_RAMO", params2, null);
+					lista=new ArrayList<GenericVO>();
+					for(Map<String,String>iElem : lista2)
+					{
+						lista.add(new GenericVO(iElem.get("CDROL"),iElem.get("DSROL")));
+					}
+					break;
 				default:
 					throw new Exception("Catalogo no existente: " + cat);
 					//break;
@@ -352,6 +364,11 @@ public class CatalogosAction extends PrincipalCoreAction {
 
 	public void setSiniestrosManager(SiniestrosManager siniestrosManager) {
 		this.siniestrosManager = siniestrosManager;
+	}
+
+	public void setStoredProceduresManager(
+			StoredProceduresManager storedProceduresManager) {
+		this.storedProceduresManager = storedProceduresManager;
 	}
 	
 }
