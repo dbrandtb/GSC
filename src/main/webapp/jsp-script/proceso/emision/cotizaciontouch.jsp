@@ -622,6 +622,37 @@ function _mcotiza_cotiza()
 	}
 	////// validacion de datos generales //////
 	
+	////// factor convenido //////
+	if(_mcotiza_smap1.cdtipsit=='AF'&&valido)
+	{
+	    var value=_mcotiza_navView.down('[name=parametros.pv_otvalor07]').getValue()-0;
+	    var minval=_mcotiza_navView.down('[name=parametros.pv_otvalor07]').getMinValue()-0;
+	    var maxval=_mcotiza_navView.down('[name=parametros.pv_otvalor07]').getMaxValue()-0;
+	    if(valido)
+	    {
+	        valido=value>=minval;
+	        if(!valido)
+	        {
+    	        Ext.Msg.alert('Aviso','La suma asegurada no puede ser menor a '+minval.toFixed(2),function()
+                {
+                    _mcotiza_navView.items.items[0].setActiveItem(0);
+                });
+	        }
+	    }
+	    if(valido)
+	    {
+	        valido = value<=maxval;
+	        if(!valido)
+	        {
+	            Ext.Msg.alert('Aviso','La suma asegurada no puede ser mayor a '+maxval.toFixed(2),function()
+                {
+                    _mcotiza_navView.items.items[0].setActiveItem(0);
+                });
+	        }
+	    }
+	}
+	////// factor convenido //////
+	
 	////// al menos un inciso //////
 	if(valido&&_mcotiza_necesitoIncisos)
 	{
@@ -1250,7 +1281,9 @@ Ext.setup({onReady:function()
                 url     : _mcotiza_urlNada
                 ,params :
                 {
-                    'smap1.vim':vim
+                    'smap1.vim'       : vim
+                    ,'smap1.cdramo'   : _mcotiza_smap1.cdramo
+                    ,'smap1.cdtipsit' : _mcotiza_smap1.cdtipsit
                 }
                 ,success : function(response)
                 {
@@ -1263,6 +1296,10 @@ Ext.setup({onReady:function()
                         _mcotiza_navView.down('[name=parametros.pv_otvalor05]').setValue(json.smap1.AUTO_ANIO);
                         _mcotiza_navView.down('[name=parametros.pv_otvalor06]').setValue(json.smap1.AUTO_DESCRIPCION);
                         _mcotiza_navView.down('[name=parametros.pv_otvalor07]').setValue(json.smap1.AUTO_PRECIO);
+                        _mcotiza_navView.down('[name=parametros.pv_otvalor07]').setMinValue((json.smap1.AUTO_PRECIO-0)*(1-(json.smap1.FACTOR_MIN-0)));
+                        _mcotiza_navView.down('[name=parametros.pv_otvalor07]').setMaxValue((json.smap1.AUTO_PRECIO-0)*(1+(json.smap1.FACTOR_MAX-0)));
+                        debug('set min value:',(json.smap1.AUTO_PRECIO-0)*(1-(json.smap1.FACTOR_MIN-0)));
+                        debug('set max value:',(json.smap1.AUTO_PRECIO-0)*(1+(json.smap1.FACTOR_MAX-0)));
                     }
                     else
                     {
