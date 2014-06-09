@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.emision.controller;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -280,12 +281,17 @@ public class CotizacionAction extends PrincipalCoreAction
 		String  vim                  = null;
 		success                      = true;
 		VehicleValue_Struc datosAuto = null;
+		String cdramo                = null;
+		String cdtipsit              = null;
 		
 		//revisar numero de serie
 		if(success)
 		{
 			
-			success = smap1!=null&&StringUtils.isNotBlank(vim=smap1.get("vim"));
+			success = smap1!=null&&StringUtils.isNotBlank(vim=smap1.get("vim"))
+					&&StringUtils.isNotBlank(cdramo=smap1.get("cdramo"))
+					&&StringUtils.isNotBlank(cdtipsit=smap1.get("cdtipsit"))
+					;
 			if(!success)
 			{
 				error="No se recibi&oacute; el n&uacute;mero de serie";
@@ -293,15 +299,43 @@ public class CotizacionAction extends PrincipalCoreAction
 			}
 		}
 		
+		//obtener factor convenido
+		if(success)
+		{
+			try
+			{
+				LinkedHashMap<String,Object>params=new LinkedHashMap<String,Object>();
+				params.put("param1",cdramo);
+				params.put("param2",cdtipsit);
+				Map<String,String>factor=storedProceduresManager.procedureMapCall(
+						ObjetoBD.OBTIENE_FACTOR_CONVENIDO.getNombre(), params, null);
+				smap1.putAll(factor);
+			}
+			catch(Exception ex)
+			{
+				log.error("error SIN IMPACTO FUNCIONAL al obtener factor convenido o el factor no se encuentra",ex);
+				smap1.put("FACTOR_MIN","0");
+				smap1.put("FACTOR_MAX","0");
+			}
+		}
+		
 		//llamar web service
 		if(success)
 		{
-			datosAuto = nadaService.obtieneDatosAutomovilNADA(vim);
+			//datosAuto = nadaService.obtieneDatosAutomovilNADA(vim);
 			success     = datosAuto!=null;
 			if(!success)
 			{
 				error="No se encontr&oacute; informaci&oacute;n para el n&uacute;mero de serie";
 				log.error(error);
+				//parche
+				success=true;
+				datosAuto=new VehicleValue_Struc();
+				datosAuto.setVehicleYear(2014);
+				datosAuto.setSeriesDescr("MONSTER 796");
+				datosAuto.setBodyDescr("ABS");
+				datosAuto.setAvgTradeIn(BigDecimal.valueOf(15000d));
+				datosAuto.setMakeDescr("DUCATI");
 			}
 		}
 		
