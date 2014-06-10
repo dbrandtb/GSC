@@ -1727,6 +1727,7 @@ Ext.onReady(function()
                         _0_formAgrupados.down('[name=parametros.pv_otvalor05]').setValue(json.smap1.AUTO_ANIO);
                         _0_formAgrupados.down('[name=parametros.pv_otvalor06]').setValue(json.smap1.AUTO_DESCRIPCION);
                         _0_formAgrupados.down('[name=parametros.pv_otvalor07]').setValue(json.smap1.AUTO_PRECIO);
+                        _0_formAgrupados.down('[name=parametros.pv_otvalor26]').setValue(json.smap1.AUTO_PRECIO);
                         _0_formAgrupados.down('[name=parametros.pv_otvalor07]').setMinValue((json.smap1.AUTO_PRECIO-0)*(1-(json.smap1.FACTOR_MIN-0)));
                         _0_formAgrupados.down('[name=parametros.pv_otvalor07]').setMaxValue((json.smap1.AUTO_PRECIO-0)*(1+(json.smap1.FACTOR_MAX-0)));
                         debug('set min value:',(json.smap1.AUTO_PRECIO-0)*(1-(json.smap1.FACTOR_MIN-0)));
