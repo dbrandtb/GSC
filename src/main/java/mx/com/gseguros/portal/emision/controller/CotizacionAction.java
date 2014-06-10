@@ -1,5 +1,6 @@
 package mx.com.gseguros.portal.emision.controller;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,6 +23,7 @@ import mx.com.gseguros.portal.general.service.CatalogosManager;
 import mx.com.gseguros.portal.general.service.PantallasManager;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
+import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.ws.nada.client.axis2.VehicleStub.VehicleValue_Struc;
 import mx.com.gseguros.ws.nada.service.NadaService;
@@ -141,6 +143,17 @@ public class CotizacionAction extends PrincipalCoreAction
 	        	if(tatriIte.getSwpresen().equalsIgnoreCase("S"))
 	        	{
 	        		temp.add(tatriIte);
+	        	}
+	        	else
+	        	{
+	        		if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit()))
+	        		{
+	        			if(tatriIte.getNameCdatribu().equalsIgnoreCase("26"))
+	        			{
+	        				tatriIte.setOculto(true);
+	        				temp.add(tatriIte);
+	        			}
+	        		}
 	        	}
 			}
 	        tatrisit=temp;
@@ -322,11 +335,19 @@ public class CotizacionAction extends PrincipalCoreAction
 		if(success)
 		{
 			datosAuto = nadaService.obtieneDatosAutomovilNADA(vim);
-			success     = datosAuto!=null;
+			success   = datosAuto!=null;
 			if(!success)
 			{
 				error="No se encontr&oacute; informaci&oacute;n para el n&uacute;mero de serie";
 				log.error(error);
+				/*parche
+				datosAuto = new VehicleValue_Struc();
+				datosAuto.setVehicleYear(1);
+				datosAuto.setSeriesDescr("a");
+				datosAuto.setBodyDescr("b");
+				datosAuto.setAvgTradeIn(BigDecimal.valueOf(123d));
+				datosAuto.setMakeDescr("c");
+				success=true;*/
 			}
 		}
 		
