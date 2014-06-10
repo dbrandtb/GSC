@@ -101,6 +101,7 @@
 				}
 				if(valido) {
 					form.setLoading(true);
+					// Se habilitan los recibos subsecuentes y se obtiene una lista de las sucursales:
 					Ext.Ajax.request({
 						url      : _p15_urlHabilitarRecibos,
 						jsonData : {
@@ -115,6 +116,7 @@
 					    		var listaCdunieco=response.slist1;
 								debug('listaCdunieco:',listaCdunieco);
 					    		if(listaCdunieco.length==0) {
+					    			// Se mandan los bytes del reporte a la UI:
 					    			Ext.create('Ext.form.Panel').submit({
 			                            standardSubmit : true,
 			                            url:_p15_urlReporte,
@@ -142,6 +144,7 @@
 					    		var respuestaEnvioMail='';
 					    		for(var i=0;i<listaCdunieco.length;i++) {
 						    		form.setLoading(true);
+						    		// Se obtienen los datos del email para enviar informacion de la sucursal:
 				                    Ext.Ajax.request({
 				                        url    : _p15_urlObtenerDatosEmail,
 										params : {
@@ -153,6 +156,7 @@
 				                            debug('email data response:',json);
 				                            if(json.success) {
 				                            	form.setLoading(true);
+				                            	// Se envia el correo con informacion de la sucursal:
 				                            	Ext.Ajax.request({
 				                                    url    : _p15_urlEnviarCorreo,
 				                                    params : {
@@ -174,13 +178,14 @@
 				                                    		respuestaEnvioMail += '<font style="color:red;">Error al enviar correo de sucursal <strong>' 
 				                                    		                          + json.stringMap.cdunieco + '</strong></font><br/>';
 				                                    	}
+				                                    	// Si ya se ejecutaron todas las peticiones de envio de correo: 
 														if(contador==listaCdunieco.length-1) {
 															form.setLoading(false);
 															// Se muestra el conjunto de mensajes de respuesta de envio de emails:
 															debug(respuestaEnvioMail);
 														    mensajeInfo(respuestaEnvioMail);
 															
-															// Se mandan los bytes del documento a la UI:
+															// Se mandan los bytes del reporte a la UI:
 															Ext.create('Ext.form.Panel').submit({
 													            standardSubmit : true,
 													            url:_p15_urlReporte,
