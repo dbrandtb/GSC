@@ -1,6 +1,5 @@
 package mx.com.gseguros.portal.emision.controller;
 
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -322,20 +321,12 @@ public class CotizacionAction extends PrincipalCoreAction
 		//llamar web service
 		if(success)
 		{
-			//datosAuto = nadaService.obtieneDatosAutomovilNADA(vim);
+			datosAuto = nadaService.obtieneDatosAutomovilNADA(vim);
 			success     = datosAuto!=null;
 			if(!success)
 			{
 				error="No se encontr&oacute; informaci&oacute;n para el n&uacute;mero de serie";
 				log.error(error);
-				//parche
-				success=true;
-				datosAuto=new VehicleValue_Struc();
-				datosAuto.setVehicleYear(2014);
-				datosAuto.setSeriesDescr("MONSTER 796");
-				datosAuto.setBodyDescr("ABS");
-				datosAuto.setAvgTradeIn(BigDecimal.valueOf(15000d));
-				datosAuto.setMakeDescr("DUCATI");
 			}
 		}
 		
