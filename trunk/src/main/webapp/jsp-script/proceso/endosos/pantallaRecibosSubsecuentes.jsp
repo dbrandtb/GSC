@@ -165,6 +165,7 @@ function _p15_botonHabilitarHandler()
                         });
 		    		}
 		    		var contador=0;
+		    		var respuestaEnvioMail='';
 		    		for(var i=0;i<listaCdunieco.length;i++)
 		    		{
 			    		form.setLoading(true);
@@ -201,9 +202,18 @@ function _p15_botonHabilitarHandler()
 	                                    },
 	                                    callback : function(options,success,response)
 	                                    {
-											contador = contador + 1;
+	                                    	form.setLoading(false);
+	                                    	if(success) {
+	                                    		respuestaEnvioMail += 'Correo enviado de sucursal ' + json.stringMap.cdunieco + '<br/>';
+	                                    	} else {
+	                                    		respuestaEnvioMail += '<fontError al enviar correo de sucursal ' + json.stringMap.cdunieco + '<br/>';
+	                                    	}
 											if(contador==listaCdunieco.length-1)
 											{
+												// Se muestra el conjunto de mensajes de respuesta de envio de emails:
+											    mensajeInfo(respuestaEnvioMail);
+												
+												// Se mandan los bytes del documento a la UI:
 												Ext.create('Ext.form.Panel').submit(
 										        {
 										            standardSubmit : true,
@@ -233,23 +243,7 @@ function _p15_botonHabilitarHandler()
 										            }
 										        });
 											}
-	                                        form.setLoading(false);
-	                                        if (success)
-	                                        {
-	                                            var json2 = Ext.decode(response.responseText);
-	                                            if (json2.success == true)
-	                                            {
-	                                            	mensajeCorrecto('Aviso','Correo enviado de sucursal '+json.stringMap.cdunieco);
-	                                            }
-	                                            else
-	                                            {
-	                                                mensajeError('Error al enviar correo de sucursal '+json.stringMap.cdunieco);
-	                                            }
-	                                        }
-	                                        else
-	                                        {
-	                                            errorComunicacion();
-	                                        }
+											contador = contador + 1;
 	                                    }
 	                                });
 	                            }
