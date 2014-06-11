@@ -730,7 +730,7 @@
 										                                                            	Ext.Ajax.request(
 										                                                            	{
 										                                                            		url     : urlEmitir
-										                                                            		,timeout : 180000
+										                                                            		,timeout : 240000
 										                                                            		,params :
 										                                                            		{
 										                                                                        'panel1.pv_nmpoliza'  : inputNmpoliza
@@ -771,10 +771,10 @@
 										                                                            	    	else
 										                                                            	    	{
 										                                                            	    		Ext.Msg.show({
-									                                                                                    title:'Error',
-									                                                                                    msg: 'Error al emitir la poliza',
-									                                                                                    buttons: Ext.Msg.OK,
-									                                                                                    icon: Ext.Msg.ERROR
+									                                                                                    title    :'Aviso'
+									                                                                                    ,msg     : json.mensajeRespuesta
+									                                                                                    ,buttons : Ext.Msg.OK
+									                                                                                    ,icon    : Ext.Msg.WARNING
 									                                                                                });
 										                                                            	    	}
 										                                                            	    }
