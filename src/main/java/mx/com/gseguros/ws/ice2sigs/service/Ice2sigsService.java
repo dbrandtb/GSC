@@ -10,6 +10,8 @@ import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.AseguradoR
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Ccomision;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.CcomisionRespuesta;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.Cliente;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneral;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralRespuesta;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteRespuesta;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAgenteRespuesta;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoCoberturaRespuesta;
@@ -27,7 +29,7 @@ public interface Ice2sigsService {
 
 	public enum Operacion {
 
-		INSERTA(1), ACTUALIZA(2), CONSULTA(3);
+		INSERTA(1), ACTUALIZA(2), CONSULTA(3), CONSULTA_GENERAL(4);
 
 		private int codigo;
 
@@ -87,6 +89,21 @@ public interface Ice2sigsService {
 	public boolean ejecutaWSclienteSalud(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String nmsuplem, String ntramite,
 			Ice2sigsService.Operacion op, UserVO userVO);
+
+	/**
+	 * Ejecuta el metodo expuesto de cliente del WS de iceToSigs
+	 * @param cdunieco
+	 * @param cdramo
+	 * @param estado
+	 * @param nmpoliza
+	 * @param nmsuplem
+	 * @param op
+	 * @param userVO
+	 * @return
+	 */
+	public ClienteGeneralRespuesta ejecutaWSclienteGeneral(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem, String ntramite,
+			Ice2sigsService.Operacion op, ClienteGeneral cliente, UserVO userVO, boolean async);
 	
 	
 	/**

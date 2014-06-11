@@ -221,19 +221,19 @@
             }
                 
            /**
-            * auto generated Axis2 call back method for movimientoAseguradoEndosoGS method
-            * override this method for handling normal response from movimientoAseguradoEndosoGS operation
+            * auto generated Axis2 call back method for clienteGeneralGS method
+            * override this method for handling normal response from clienteGeneralGS operation
             */
-           public void receiveResultmovimientoAseguradoEndosoGS(
-                    mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoEndosoGSResponseE result
+           public void receiveResultclienteGeneralGS(
+                    mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralGSResponseE result
                         ) {
            }
 
           /**
            * auto generated Axis2 Error handler
-           * override this method for handling error response from movimientoAseguradoEndosoGS operation
+           * override this method for handling error response from clienteGeneralGS operation
            */
-            public void receiveErrormovimientoAseguradoEndosoGS(java.lang.Exception e) {
+            public void receiveErrorclienteGeneralGS(java.lang.Exception e) {
             }
                 
            /**
@@ -250,6 +250,22 @@
            * override this method for handling error response from comisionReciboAgenteGS operation
            */
             public void receiveErrorcomisionReciboAgenteGS(java.lang.Exception e) {
+            }
+                
+           /**
+            * auto generated Axis2 call back method for movimientoAseguradoEndosoGS method
+            * override this method for handling normal response from movimientoAseguradoEndosoGS operation
+            */
+           public void receiveResultmovimientoAseguradoEndosoGS(
+                    mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.MovimientoAseguradoEndosoGSResponseE result
+                        ) {
+           }
+
+          /**
+           * auto generated Axis2 Error handler
+           * override this method for handling error response from movimientoAseguradoEndosoGS operation
+           */
+            public void receiveErrormovimientoAseguradoEndosoGS(java.lang.Exception e) {
             }
                 
 

@@ -25,6 +25,7 @@ import mx.com.aon.portal2.web.GenericVO;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.portal.cotizacion.model.DatosUsuario;
 import mx.com.gseguros.portal.general.model.ComponenteVO;
+import mx.com.gseguros.utils.Constantes;
 
 import org.apache.log4j.Logger;
 
@@ -633,6 +634,21 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
         log.debug("### kernel sustituto borraMpoliper id:"+res.getMsgId());
         log.debug("### kernel sustituto borraMpoliper mesage:"+res.getMsgText());
         return res;
+    }
+
+    public WrapperResultados existeDomicilioContratante(String cdideper){
+    	log.debug("buscando datos Domicilio para cdideper: " + cdideper);
+    	WrapperResultados res = null;
+    	try{
+    		HashMap<String, String> parameters =  new HashMap<String, String>();
+    		parameters.put("pv_cdideper_i", cdideper);
+    		res=this.returnBackBoneInvoke(parameters, ProcesoDAO.P_EXISTE_DOMICILIO);
+    		
+    		log.debug("REsultados de Buscar Domicilio: " + res.getItemMap());
+    	}catch(Exception e){
+    		log.error(e);
+    	}
+    	return res;
     }
     
     public List<Map<String,String>> obtenerCoberturasUsuario(Map<String,String> parametros) throws ApplicationException
@@ -1301,7 +1317,7 @@ public class KernelManagerSustitutoImpl extends AbstractManagerJdbcTemplateInvok
 		String cdtipsitGS = null;
 		WrapperResultados res = this.returnBackBoneInvoke(params,ProcesoDAO.OBTEN_CDTIPSIT_GS);
 		cdtipsitGS = (String) res.getItemMap().get("cdtipsitGS");
-		logger.debug(">>>> cdTipsitGS obtenido para URLs de recibos: " + cdtipsitGS);
+		logger.debug(">>>> cdTipsitGS obtenido: " + cdtipsitGS);
 		return cdtipsitGS;
 	}
 	

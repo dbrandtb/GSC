@@ -103,6 +103,7 @@ public class ProcesoDAO extends AbstractDAO {
     public static final String P_MOV_MPERSONA="P_MOV_MPERSONA";
     public static final String P_MOV_MPOLIPER="P_MOV_MPOLIPER";
     public static final String P_BORRA_MPOLIPER="P_BORRA_MPOLIPER";
+    public static final String P_EXISTE_DOMICILIO="P_EXISTE_DOMICILIO";
     public static final String OBTENER_COBERTURAS_USUARIO="OBTENER_COBERTURAS_USUARIO";
     public static final String P_MOV_MPOLIGAR="P_MOV_MPOLIGAR";
     public static final String P_MOV_MPOLICAP="P_MOV_MPOLICAP";
@@ -222,6 +223,7 @@ public class ProcesoDAO extends AbstractDAO {
         addStoredProcedure(P_MOV_TVALOSIN, new PMovTvalosin(getDataSource()));
         addStoredProcedure(P_MOV_DMESACONTROL, new PMovDmesacontrol(getDataSource()));
         addStoredProcedure(P_BORRA_MPOLIPER, new PBorraMpoliper(getDataSource()));
+        addStoredProcedure(P_EXISTE_DOMICILIO, new PExisteDomicilio(getDataSource()));
 
         addStoredProcedure(OBTIENE_DATOS_RECIBOS, new ObtenDatosRecibos(getDataSource()));
         addStoredProcedure(OBTIENE_CATALOGO_COLONIAS, new ObtenCatalogoColonias(getDataSource()));
@@ -342,6 +344,41 @@ public class ProcesoDAO extends AbstractDAO {
 			return wrapperResultados;
 		}
 	}
+	protected class PExisteDomicilio extends CustomStoredProcedure {
+		
+		protected PExisteDomicilio(DataSource dataSource) {
+			super(dataSource, "PKG_CONSULTA.P_EXISTE_DAT_MDOMICIL");
+			
+			declareParameter(new SqlParameter("pv_cdideper_i", OracleTypes.VARCHAR));
+			
+			declareParameter(new SqlOutParameter("pv_cdperson_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_existe_o", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o", OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o", OracleTypes.VARCHAR));
+			
+			
+			compile();
+			
+		}
+		
+		public WrapperResultados mapWrapperResultados(Map map) throws Exception {
+			WrapperResultadosGeneric mapper = new WrapperResultadosGeneric();
+			WrapperResultados wrapperResultados = mapper.build(map);
+			
+			String existe = null;
+			String cdperson = null;
+			
+			if(map.get("pv_existe_o") != null)   existe   = map.get("pv_existe_o").toString();
+			if(map.get("pv_cdperson_o") != null) cdperson = map.get("pv_cdperson_o").toString();
+			
+			wrapperResultados.setItemMap(new HashMap<String, Object>());
+			wrapperResultados.getItemMap().put("EXISTE_DOMICILIO", existe);
+			wrapperResultados.getItemMap().put("CDPERSON", cdperson);
+			
+			return wrapperResultados;
+		}
+	}
+
 	protected class GeneraSuplementoFisico extends CustomStoredProcedure {
 		
 		protected GeneraSuplementoFisico(DataSource dataSource) {
@@ -1989,6 +2026,7 @@ protected class ActualizaValoresSituaciones extends CustomStoredProcedure {
     		r.put("tpersona",           otfisjur);
     		r.put("nacional",           cdnacion);
     		r.put("swexiper",           rs.getString("swexiper"));
+    		r.put("cdideper",           rs.getString("cdideper"));
     		return r;
     	}
     }
