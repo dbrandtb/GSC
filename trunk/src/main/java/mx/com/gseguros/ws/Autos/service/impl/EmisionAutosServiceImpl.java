@@ -6,12 +6,12 @@ import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.WSException;
 import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.ws.Autos.client.axis2.CotizacionIndividualWSServiceStub;
-import mx.com.gseguros.ws.Autos.client.axis2.CotizacionIndividualWSServiceStub.EmisionPolizaRequest;
-import mx.com.gseguros.ws.Autos.client.axis2.CotizacionIndividualWSServiceStub.Inciso;
-import mx.com.gseguros.ws.Autos.client.axis2.CotizacionIndividualWSServiceStub.Response;
-import mx.com.gseguros.ws.Autos.client.axis2.CotizacionIndividualWSServiceStub.WsEmitirCotizacion;
-import mx.com.gseguros.ws.Autos.client.axis2.CotizacionIndividualWSServiceStub.WsEmitirCotizacionE;
-import mx.com.gseguros.ws.Autos.client.axis2.CotizacionIndividualWSServiceStub.WsEmitirCotizacionResponseE;
+import mx.com.gseguros.ws.Autos.client.axis2.CotizacionIndividualWSServiceStub.Cotizacion;
+import mx.com.gseguros.ws.Autos.client.axis2.CotizacionIndividualWSServiceStub.CotizacionRequest;
+import mx.com.gseguros.ws.Autos.client.axis2.CotizacionIndividualWSServiceStub.GuardarCotizacionResponse;
+import mx.com.gseguros.ws.Autos.client.axis2.CotizacionIndividualWSServiceStub.WsGuardarCotizacion;
+import mx.com.gseguros.ws.Autos.client.axis2.CotizacionIndividualWSServiceStub.WsGuardarCotizacionE;
+import mx.com.gseguros.ws.Autos.client.axis2.CotizacionIndividualWSServiceStub.WsGuardarCotizacionResponseE;
 import mx.com.gseguros.ws.Autos.client.axis2.WsEmitirPolizaStub;
 import mx.com.gseguros.ws.Autos.client.axis2.WsEmitirPolizaStub.SDTPoliza;
 import mx.com.gseguros.ws.Autos.client.axis2.WsEmitirPolizaStub.WsEmitirPolizaEMITIRPOLIZA;
@@ -41,7 +41,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 		logger.debug(">>>>> Entrando a metodo WS Cotiza y Emite para Auto");
 		
 		SDTPoliza polizaEmiRes = null;
-		Inciso inciso = null;
+		Cotizacion datosCotizacionAuto = null;
 		
 		//Se invoca servicio para obtener los datos del auto
 		HashMap<String, Object> params = new HashMap<String, Object>();
@@ -55,38 +55,26 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 //		try {
 //			result = kernelManager.obtenDatosAutoWS(params);
 //			if(result.getItemList() != null && result.getItemList().size() > 0){
-//				inciso = ((ArrayList<Inciso>) result.getItemList()).get(0);
+//				datosCotizacionAuto = ((ArrayList<datosCotizacionAuto>) result.getItemList()).get(0);
 //			}
 //		} catch (Exception e1) {
-//			logger.error("Error en llamar al PL de obtencion de ejecutaWSclienteGeneral",e1);
-//			return null;
+//			logger.error("Error en llamar al PL de obtencion de datos para Emision WS Autos",e1);
 //		}	
-		inciso =  new Inciso();
 		
-		if(inciso != null){
+		if(datosCotizacionAuto != null){
 			try{
-				Inciso[] incisos = new Inciso[1];
-				incisos[0] = inciso;
-				
-				EmisionPolizaRequest datosCotizacionAuto =  new EmisionPolizaRequest();
-//				datosCotizacionAuto.setCodigo(codigo);
-//				datosCotizacionAuto.setFechaEmision(fechaEmision);
-//				datosCotizacionAuto.setIdCliente(idCliente);
-//				datosCotizacionAuto.setIdCotizacion(idCotizacion);
-				datosCotizacionAuto.setIncisos(incisos);
-				
-
 				WrapperResultadosWS resultWSCot = this.ejecutaCotizacionAutosWS(datosCotizacionAuto);
 						
-				Response cotRes = (Response) resultWSCot.getResultadoWS();
+				GuardarCotizacionResponse cotRes = (GuardarCotizacionResponse) resultWSCot.getResultadoWS();
 				
 				if(cotRes != null && cotRes.getExito()){
 					logger.debug("REspuesta de WS Cotizacion cotRes.getCodigo()" +cotRes.getCodigo());
 					logger.debug("REspuesta de WS Cotizacion cotRes.getMensaje()" +cotRes.getMensaje());
 					logger.debug("REspuesta de WS Cotizacion cotRes.toString()" +cotRes.toString());
-
-					//logger.debug("REspuesta de WS Cotizacion cotRes.toString()" +cotRes.getOMElement(new QName(localPart), null));
 					
+					/**
+					 * TODO: Ver de donde se saca el numero de cotizacion, el cual se manda a la emision.
+					 */
 					long numSolicitud = cotRes.getCodigo();
 					WrapperResultadosWS resultWSEmi = this.ejecutaEmisionAutosWS(numSolicitud);
 					
@@ -109,7 +97,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 		return polizaEmiRes;
 	}
 	
-	private WrapperResultadosWS ejecutaCotizacionAutosWS(EmisionPolizaRequest datosCotizacionAuto) throws Exception{
+	private WrapperResultadosWS ejecutaCotizacionAutosWS(Cotizacion datosCotizacionAuto) throws Exception{
 		
 		WrapperResultadosWS resultWS = new WrapperResultadosWS();
 		CotizacionIndividualWSServiceStub stubGS = null;
@@ -123,25 +111,30 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 			throw new Exception("Error de preparacion de Axis2: " + e.getMessage());
 		}
 		
-		WsEmitirCotizacion wsEmitirCotizacion =  new WsEmitirCotizacion();
-		wsEmitirCotizacion.setArg0(datosCotizacionAuto);
 		
-		WsEmitirCotizacionE wsEmitirCotizacionE = new WsEmitirCotizacionE();
-		wsEmitirCotizacionE.setWsEmitirCotizacion(wsEmitirCotizacion);
+		CotizacionRequest cotizacionRequest = new CotizacionRequest();
+		cotizacionRequest.setCodigo(0);
+		cotizacionRequest.setCotizacion(datosCotizacionAuto);
 		
-		WsEmitirCotizacionResponseE wsEmitirCotizacionResponseE = null;
-		Response response = null;
+		WsGuardarCotizacion wsGuardarCotizacion =  new WsGuardarCotizacion();
+		wsGuardarCotizacion.setArg0(cotizacionRequest);
+		
+		WsGuardarCotizacionE wsGuardarCotizacionE = new WsGuardarCotizacionE();
+		wsGuardarCotizacionE.setWsGuardarCotizacion(wsGuardarCotizacion);
+		
+		WsGuardarCotizacionResponseE wsGuardarCotizacionResponseE = null;
+		GuardarCotizacionResponse responseCot = null;
 		
 		try {
-			wsEmitirCotizacionResponseE = stubGS.wsEmitirCotizacion(wsEmitirCotizacionE);
-			response = wsEmitirCotizacionResponseE.getWsEmitirCotizacionResponse().get_return();
-			resultWS.setResultadoWS(response);
+			wsGuardarCotizacionResponseE = stubGS.wsGuardarCotizacion(wsGuardarCotizacionE);
+			responseCot = wsGuardarCotizacionResponseE.getWsGuardarCotizacionResponse().get_return();
+			resultWS.setResultadoWS(responseCot);
 			resultWS.setXmlIn(stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
 			
 			logger.debug("Xml enviado para obtener Cotizacion de auto: " + stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
 			
 		} catch (Exception re) {
-			throw new WSException("Error de conexion: " + re.getMessage(), re, stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
+			throw new WSException("Error de conexion Cotizacion Autos: " + re.getMessage(), re, stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
 		}
 		
 		return resultWS;
@@ -177,7 +170,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 			logger.debug("Xml enviado para emitir poliza de auto: " + stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
 			
 		} catch (Exception re) {
-			throw new WSException("Error de conexion: " + re.getMessage(), re, stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
+			throw new WSException("Error de conexion Emision Autos: " + re.getMessage(), re, stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
 		}
 		
 		return resultWS;
