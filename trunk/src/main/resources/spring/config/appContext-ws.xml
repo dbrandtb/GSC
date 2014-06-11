@@ -9,7 +9,12 @@
 	    <property name="siniestrosManager" ref="siniestrosManagerImpl"/>
 	    <property name="endpoint" value="${ws.ice2sigs.url}"></property>
 	    <property name="urlImpresionRecibos" value="${recibos.impresion.url}"></property>
-	</bean>	
+	</bean>
+	
+	<bean id="emisionAutosServiceImpl" class="mx.com.gseguros.ws.Autos.service.impl.EmisionAutosServiceImpl">
+        <property name="endpoint"                value = "${ws.ice2sigs.url}"          />
+	    <property name="storedProceduresManager" ref   = "storedProceduresManagerImpl" />
+    </bean>
 	
 	<!-- Callback handler para el WS ice2sigs. Ya que se usa como modelo de datos usamos el scope "prototype" -->
 	<bean id="servicioGSServiceCallbackHandlerImpl" class="mx.com.gseguros.ws.ice2sigs.client.axis2.callback.impl.ServicioGSServiceCallbackHandlerImpl" scope="prototype">
