@@ -1218,5 +1218,16 @@ public class SiniestrosManagerImpl implements SiniestrosManager {
 			throw new ApplicationException(daoExc.getMessage(), daoExc);
 		}
 	}
-		
+
+	@Override
+	public void eliminaDocumentosxTramite(String ntramite) throws Exception {
+		// TODO Auto-generated method stub
+		try {
+			siniestrosDAO.eliminacionDocumentosxTramite(ntramite);
+		} catch (DaoException daoExc) {
+			throw new ApplicationException(daoExc.getMessage(), daoExc);
+		}
+	}
+	
+	
 }

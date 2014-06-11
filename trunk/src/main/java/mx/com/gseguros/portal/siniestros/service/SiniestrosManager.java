@@ -455,5 +455,7 @@ public interface SiniestrosManager {
 			) throws Exception;
 
 	public String obtieneMontoArancelCPT(String tipoConcepto, String idProveedor, String idConceptoTipo)throws Exception;
+
+	public void eliminaDocumentosxTramite(String ntramite) throws Exception;
 	
 }

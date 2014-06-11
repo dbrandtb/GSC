@@ -60,7 +60,7 @@ var panDocUrlViewDoc     = '<s:url namespace ="/documentos" action="descargaDocI
 var venDocUrlImpConrec   = '<s:url namespace ="/documentos" action="generarContrarecibo" />';
 
 var _URLhabilitaSigRec   = '<s:url namespace ="/documentos" action="habilitaSigRec" />';
-
+var panelSeleccionDocumento;
 //Obtenemos el contenido en formato JSON de la propiedad solicitada:
 var panDocSmap1 = <s:property value="%{convertToJSON('smap1')}" escapeHtml="false" />;
 debug('panDocSmap1:', panDocSmap1);
@@ -300,7 +300,7 @@ Ext.onReady(function()
                 ,bodyPadding : 5
                 ,items       :
                 [
-                    Ext.create('Ext.form.Panel',
+                    panelSeleccionDocumento= Ext.create('Ext.form.Panel',
                     {
                         border       : 0
                         ,url         : panDocUrlUploadDoc
@@ -375,7 +375,13 @@ Ext.onReady(function()
                                 valueField     : 'id',
                                 displayField   : 'nombre',
                                 triggerAction  : 'all',
-                                hidden         : panDocSmap1.cdtiptra!='16'
+                                hidden         : panDocSmap1.cdtiptra!='16',
+                                listeners : {
+                            		change:function(e){
+                            			panelSeleccionDocumento.down('[name="smap1.descripcion"]').setValue(e.rawValue);
+                            		}
+                            	}
+                                
                             }
                             ,Ext.create('Ext.panel.Panel',
                             {
