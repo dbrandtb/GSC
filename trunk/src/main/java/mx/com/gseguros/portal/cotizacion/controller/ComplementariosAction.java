@@ -37,9 +37,12 @@ import mx.com.gseguros.portal.general.util.EstatusTramite;
 import mx.com.gseguros.portal.general.util.GeneradorCampos;
 import mx.com.gseguros.portal.general.util.ObjetoBD;
 import mx.com.gseguros.portal.general.util.Rango;
+import mx.com.gseguros.portal.general.util.TipoSituacion;
 import mx.com.gseguros.portal.general.util.TipoTramite;
 import mx.com.gseguros.portal.general.util.Validacion;
 import mx.com.gseguros.utils.HttpUtil;
+import mx.com.gseguros.ws.Autos.client.axis2.WsEmitirPolizaStub.SDTPoliza;
+import mx.com.gseguros.ws.Autos.service.EmisionAutosService;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
 import mx.com.gseguros.ws.recibossigs.service.RecibosSigsService;
 
@@ -101,6 +104,7 @@ public class ComplementariosAction extends PrincipalCoreAction
 	private ConsultasManager consultasManager;
 	private boolean exito = false;
 	private PantallasManager pantallasManager;
+	private EmisionAutosService emisionAutosService;
 
 	public String mostrarPantalla()
 	/*
@@ -1335,23 +1339,218 @@ public class ComplementariosAction extends PrincipalCoreAction
 	{
 		log.debug(""
 				+ "\n########################"
-				+ "\n########################"
-				+ "\n######            ######"
 				+ "\n######   emitir   ######"
-				+ "\n######            ######"
 				+ "");
-		try
+		log.debug("panel1"+panel1);
+		log.debug("panel2"+panel2);
+		
+		////// variables 
+		success                = true;
+		String ntramite        = null;
+		UserVO us              = null;
+		String cdunieco        = null;
+		String cdramo          = null;
+		String cdtipsit        = null;
+		String estado          = "W";
+		String nmpoliza        = null;
+		String cdpersonSesion  = null;
+		String cdusuari        = null;
+		String cdelemen        = null;
+		String rutaCarpeta     = null;
+		String cdperpag        = null;
+		String nmpolizaEmitida = null;
+		String nmpoliexEmitida = null;
+		String nmsuplemEmitida = null;
+		String esDxN           = null;
+		String tipoMov         = TipoTramite.POLIZA_NUEVA.getCdtiptra();
+		
+		////// obtener parametros
+		if(success)
 		{
-			log.debug("panel1"+panel1);
-			log.debug("panel2"+panel2);
-			
-			UserVO usu=(UserVO)session.get("USUARIO");
-			
-			/*list1=kernelManager.obtenerAsegurados(panel2);
-			log.debug("asegurados para iterar reportes:");
-			log.debug(list1);*/
-			
-			String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+panel1.get("pv_ntramite");
+			try
+			{
+				success = success && (ntramite = panel1.get("pv_ntramite")      )!=null;
+				success = success && (us       = (UserVO)session.get("USUARIO") )!=null;
+				success = success && (cdunieco = panel2.get("pv_cdunieco")      )!=null;
+				success = success && (cdramo   = panel2.get("pv_cdramo")        )!=null;
+				success = success && (cdtipsit = panel2.get("pv_cdtipsit")      )!=null;
+				success = success && (nmpoliza = panel2.get("pv_nmpoliza")      )!=null;
+				if(!success)
+				{
+					mensajeRespuesta="No se recibieron todos los datos";
+				}
+			}
+			catch(Exception ex)
+			{
+				log.error("Error al procesar los datos",ex);
+				mensajeRespuesta = "Error al procesar los datos";
+				success          = false;
+			}
+		}
+		
+		////// datos de la sesion del usuario
+		if(success)
+		{
+			try
+			{
+				DatosUsuario datUs = kernelManager.obtenerDatosUsuario(us.getUser(),cdtipsit);
+				cdpersonSesion = datUs.getCdperson();
+				cdusuari       = us.getUser();
+				cdelemen       = us.getEmpresa().getElementoId();
+			}
+			catch(Exception ex)
+			{
+				log.error("error al obtener los datos de usuario",ex);
+				mensajeRespuesta = ex.getMessage();
+				success          = false;
+			}
+		}
+		
+		////// validar edad asegurados
+		if(success)
+		{
+			try
+			{
+				LinkedHashMap<String,Object>paramValidaEdadAsegu=new LinkedHashMap<String,Object>();
+				paramValidaEdadAsegu.put("param1", cdunieco);
+				paramValidaEdadAsegu.put("param2", cdramo);
+				paramValidaEdadAsegu.put("param3", estado);
+				paramValidaEdadAsegu.put("param4", nmpoliza);
+				paramValidaEdadAsegu.put("param5", "0");
+				List<Map<String,String>> listaAseguradosEdadInvalida = consultasManager.consultaDinamica(
+						ObjetoBD.VALIDA_EDAD_ASEGURADOS, paramValidaEdadAsegu);
+				
+				if(listaAseguradosEdadInvalida.size()>0)
+				{
+					mensajeRespuesta = "La p&oacute;liza se envi&oacute; a autorizaci&oacute;n debido a que:<br/>";
+					for(Map<String,String>iAseguradoEdadInvalida:listaAseguradosEdadInvalida)
+					{
+						mensajeRespuesta = mensajeRespuesta + iAseguradoEdadInvalida.get("NOMBRE");
+						if(iAseguradoEdadInvalida.get("SUPERAMINI").substring(0, 1).equals("-"))
+						{
+							mensajeRespuesta = mensajeRespuesta + " no llega a la edad de "+iAseguradoEdadInvalida.get("EDADMINI")+" a&ntilde;os<br/>";
+						}
+						else
+						{
+							mensajeRespuesta = mensajeRespuesta + " supera la edad de "+iAseguradoEdadInvalida.get("EDADMAXI")+" a&ntilde;os<br/>";
+						}
+					}
+					
+					Map<String,Object>paramsMesaControl=new HashMap<String,Object>();
+					paramsMesaControl.put("pv_cdunieco_i"   , cdunieco);
+					paramsMesaControl.put("pv_cdramo_i"     , cdramo);
+					paramsMesaControl.put("pv_estado_i"     , estado);
+					paramsMesaControl.put("pv_nmpoliza_i"   , nmpoliza);
+					paramsMesaControl.put("pv_nmsuplem_i"   , "0");
+					paramsMesaControl.put("pv_cdsucadm_i"   , cdunieco);
+					paramsMesaControl.put("pv_cdsucdoc_i"   , cdunieco);
+					paramsMesaControl.put("pv_cdtiptra_i"   , TipoTramite.EMISION_EN_ESPERA.getCdtiptra());
+					paramsMesaControl.put("pv_ferecepc_i"   , new Date());
+					paramsMesaControl.put("pv_cdagente_i"   , null);
+					paramsMesaControl.put("pv_referencia_i" , null);
+					paramsMesaControl.put("pv_nombre_i"     , null);
+					paramsMesaControl.put("pv_festatus_i"   , new Date());
+					paramsMesaControl.put("pv_status_i"     , EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo());
+					paramsMesaControl.put("pv_comments_i"   , mensajeRespuesta);
+					paramsMesaControl.put("pv_nmsolici_i"   , null);
+					paramsMesaControl.put("pv_cdtipsit_i"   , null);
+					paramsMesaControl.put("pv_otvalor01"    , cdusuari);
+					paramsMesaControl.put("pv_otvalor02"    , cdelemen);
+					paramsMesaControl.put("pv_otvalor03"    , ntramite);
+					paramsMesaControl.put("pv_otvalor04"    , cdpersonSesion);
+					paramsMesaControl.put("pv_otvalor05"    , "EMISION");
+					WrapperResultados wr=kernelManager.PMovMesacontrol(paramsMesaControl);
+					String ntramiteAutorizacion=(String) wr.getItemMap().get("ntramite");
+					mensajeRespuesta = mensajeRespuesta + "<br/>Tr&aacute;mite de autorizaci&oacute;n: "+ntramiteAutorizacion;
+					
+					Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
+		        	parDmesCon.put("pv_ntramite_i"   , ntramite);
+		        	parDmesCon.put("pv_feinicio_i"   , new Date());
+		        	parDmesCon.put("pv_cdclausu_i"   , null);
+		        	parDmesCon.put("pv_comments_i"   , "El tr&aacute;mite se envi&oacute; a autorizaci&oacute;n ("+ntramiteAutorizacion+")");
+		        	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
+		        	parDmesCon.put("pv_cdmotivo_i"   , null);
+		        	kernelManager.movDmesacontrol(parDmesCon);
+					
+		        	kernelManager.mesaControlUpdateStatus(ntramite, EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo());
+		        	
+					success = false;
+				}
+			}
+			catch(Exception ex)
+			{
+				log.error("error al validar la edad de los asegurados",ex);
+				mensajeRespuesta = ex.getMessage();
+				success          = false;
+			}
+		}
+		
+		////// obtener forma de pago
+		if(success)
+		{
+			try
+			{
+				Map<String,String>paramObtenerPoliza=new LinkedHashMap<String,String>(0);
+				paramObtenerPoliza.put("pv_cdunieco" , cdunieco);
+				paramObtenerPoliza.put("pv_cdramo"   , cdramo);
+				paramObtenerPoliza.put("pv_estado"   , estado);
+				paramObtenerPoliza.put("pv_nmpoliza" , nmpoliza);
+				paramObtenerPoliza.put("pv_cdusuari" , cdusuari);
+				Map<String,Object>polizaCompleta=kernelManager.getInfoMpolizasCompleta(paramObtenerPoliza);
+				log.debug("poliza a emitir: "+polizaCompleta);
+				cdperpag = (String)polizaCompleta.get("cdperpag");
+			}
+			catch(Exception ex)
+			{
+				log.error("error al obtener los datos completos de la poliza",ex);
+				mensajeRespuesta = ex.getMessage();
+				success          = false;
+			}
+		}
+		
+		////// emision
+		if(success)
+		{
+			try
+			{
+				Map<String,Object>paramEmi=new LinkedHashMap<String,Object>(0);
+				paramEmi.put("pv_cdusuari"  , cdusuari);
+				paramEmi.put("pv_cdunieco"  , cdunieco);
+				paramEmi.put("pv_cdramo"    , cdramo);
+				paramEmi.put("pv_estado"    , estado);
+				paramEmi.put("pv_nmpoliza"  , nmpoliza);
+				paramEmi.put("pv_nmsituac"  , "1");
+				paramEmi.put("pv_nmsuplem"  , "0");
+				paramEmi.put("pv_cdelement" , cdelemen); 
+				paramEmi.put("pv_cdcia"     , cdunieco);
+				paramEmi.put("pv_cdplan"    , null);
+				paramEmi.put("pv_cdperpag"  , cdperpag);
+				paramEmi.put("pv_cdperson"  , cdpersonSesion);
+				paramEmi.put("pv_fecha"     , new Date());
+				paramEmi.put("pv_ntramite"  , ntramite);
+				mx.com.aon.portal.util.WrapperResultados wr=kernelManager.emitir(paramEmi);
+				log.debug("emision obtenida "+wr.getItemMap());
+				
+				nmpolizaEmitida = (String)wr.getItemMap().get("nmpoliza");
+				nmpoliexEmitida = (String)wr.getItemMap().get("nmpoliex");
+				nmsuplemEmitida = (String)wr.getItemMap().get("nmsuplem");
+				esDxN           = (String)wr.getItemMap().get("esdxn");
+				
+				panel2.put("nmpoliza",nmpolizaEmitida);
+				panel2.put("nmpoliex",nmpoliexEmitida);
+			}
+			catch(Exception ex)
+			{
+				log.error("error en el pl de emitir",ex);
+				mensajeRespuesta = ex.getMessage();
+				success          = false;
+			}
+		}
+		
+		////// crear carpeta para los documentos
+		if(success)
+		{
+			rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
             File carpeta = new File(rutaCarpeta);
             if(!carpeta.exists())
             {
@@ -1364,268 +1563,197 @@ public class ComplementariosAction extends PrincipalCoreAction
             	else
             	{
             		log.debug("carpeta NO creada");
+            		success          = false;
+            		mensajeRespuesta = "Error al crear la carpeta de documentos";
             	}
             }
             else
             {
             	log.debug("existe la carpeta   ::: "+rutaCarpeta);
             }
-			
-			//obtener usuario y datos de ususario
-			UserVO us=(UserVO)session.get("USUARIO");
-			DatosUsuario datUs=kernelManager.obtenerDatosUsuario(us.getUser(),panel2.get("pv_cdtipsit"));//cdperson
-			
-			String cdunieco = panel2.get("pv_cdunieco");
-			String cdramo   = panel2.get("pv_cdramo");
-			String estado   = "W";
-			String nmpoliza = panel1.get("pv_nmpoliza");
-			String cdusuari = us.getUser();
-			String cdelemen = us.getEmpresa().getElementoId();
-			String ntramite = panel1.get("pv_ntramite");
-			
-			String cdpersonSesion = datUs.getCdperson();
-			
-			LinkedHashMap<String,Object>paramValidaEdadAsegu=new LinkedHashMap<String,Object>();
-			paramValidaEdadAsegu.put("param1", cdunieco);
-			paramValidaEdadAsegu.put("param2", cdramo);
-			paramValidaEdadAsegu.put("param3", estado);
-			paramValidaEdadAsegu.put("param4", nmpoliza);
-			paramValidaEdadAsegu.put("param5", "0");
-			List<Map<String,String>> listaAseguradosEdadInvalida = consultasManager.consultaDinamica(ObjetoBD.VALIDA_EDAD_ASEGURADOS, paramValidaEdadAsegu);
-			if(listaAseguradosEdadInvalida.size()>0)
-			{
-				mensajeRespuesta = "La p&oacute;liza se envi&oacute; a autorizaci&oacute;n debido a que:<br/>";
-				for(Map<String,String>iAseguradoEdadInvalida:listaAseguradosEdadInvalida)
-				{
-					mensajeRespuesta = mensajeRespuesta + iAseguradoEdadInvalida.get("NOMBRE");
-					if(iAseguradoEdadInvalida.get("SUPERAMINI").substring(0, 1).equals("-"))
-					{
-						mensajeRespuesta = mensajeRespuesta + " no llega a la edad de "+iAseguradoEdadInvalida.get("EDADMINI")+" a&ntilde;os<br/>";
-					}
-					else
-					{
-						mensajeRespuesta = mensajeRespuesta + " supera la edad de "+iAseguradoEdadInvalida.get("EDADMAXI")+" a&ntilde;os<br/>";
-					}
-				}
-				
-				Map<String,Object>paramsMesaControl=new HashMap<String,Object>();
-				paramsMesaControl.put("pv_cdunieco_i"   , cdunieco);
-				paramsMesaControl.put("pv_cdramo_i"     , cdramo);
-				paramsMesaControl.put("pv_estado_i"     , estado);
-				paramsMesaControl.put("pv_nmpoliza_i"   , nmpoliza);
-				paramsMesaControl.put("pv_nmsuplem_i"   , "0");
-				paramsMesaControl.put("pv_cdsucadm_i"   , cdunieco);
-				paramsMesaControl.put("pv_cdsucdoc_i"   , cdunieco);
-				paramsMesaControl.put("pv_cdtiptra_i"   , TipoTramite.EMISION_EN_ESPERA.getCdtiptra());
-				paramsMesaControl.put("pv_ferecepc_i"   , new Date());
-				paramsMesaControl.put("pv_cdagente_i"   , null);
-				paramsMesaControl.put("pv_referencia_i" , null);
-				paramsMesaControl.put("pv_nombre_i"     , null);
-				paramsMesaControl.put("pv_festatus_i"   , new Date());
-				paramsMesaControl.put("pv_status_i"     , EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo());
-				paramsMesaControl.put("pv_comments_i"   , mensajeRespuesta);
-				paramsMesaControl.put("pv_nmsolici_i"   , null);
-				paramsMesaControl.put("pv_cdtipsit_i"   , null);
-				paramsMesaControl.put("pv_otvalor01"    , cdusuari);
-				paramsMesaControl.put("pv_otvalor02"    , cdelemen);
-				paramsMesaControl.put("pv_otvalor03"    , ntramite);
-				paramsMesaControl.put("pv_otvalor04"    , cdpersonSesion);
-				paramsMesaControl.put("pv_otvalor05"    , "EMISION");
-				WrapperResultados wr=kernelManager.PMovMesacontrol(paramsMesaControl);
-				String ntramiteAutorizacion=(String) wr.getItemMap().get("ntramite");
-				mensajeRespuesta = mensajeRespuesta + "<br/>Tr&aacute;mite de autorizaci&oacute;n: "+ntramiteAutorizacion;
-				
-				Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
-	        	parDmesCon.put("pv_ntramite_i"   , ntramite);
-	        	parDmesCon.put("pv_feinicio_i"   , new Date());
-	        	parDmesCon.put("pv_cdclausu_i"   , null);
-	        	parDmesCon.put("pv_comments_i"   , "El tr&aacute;mite se envi&oacute; a autorizaci&oacute;n ("+ntramiteAutorizacion+")");
-	        	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
-	        	parDmesCon.put("pv_cdmotivo_i"   , null);
-	        	kernelManager.movDmesacontrol(parDmesCon);
-				
-	        	kernelManager.mesaControlUpdateStatus(ntramite, EstatusTramite.EN_ESPERA_DE_AUTORIZACION.getCodigo());
-	        	
-				success = true;
-				return SUCCESS;
-			}
-			
-			//obtener poliza completa
-            /**/
-			Map<String,String>paramObtenerPoliza=new LinkedHashMap<String,String>(0);
-			paramObtenerPoliza.put("pv_cdunieco" , cdunieco);
-			paramObtenerPoliza.put("pv_cdramo"   , cdramo);
-			paramObtenerPoliza.put("pv_estado"   , estado);
-			paramObtenerPoliza.put("pv_nmpoliza" , nmpoliza);
-			paramObtenerPoliza.put("pv_cdusuari" , cdusuari);
-			Map<String,Object>polizaCompleta=kernelManager.getInfoMpolizasCompleta(paramObtenerPoliza);
-			log.debug("poliza a emitir: "+polizaCompleta);
-			String cdperpag = (String)polizaCompleta.get("cdperpag");
-			/**/
-			
-			/*
-			pv_cdusuari
-            pv_cdunieco
-            pv_cdramo
-            pv_estado
-            pv_nmpoliza
-            pv_nmsituac
-            pv_nmsuplem
-            pv_cdelement
-            pv_cdcia
-            pv_cdplan
-            pv_cdperpag
-            pv_cdperson
-            pv_fecha
-            */
-			Map<String,Object>paramEmi=new LinkedHashMap<String,Object>(0);
-			paramEmi.put("pv_cdusuari"  , cdusuari);
-			paramEmi.put("pv_cdunieco"  , cdunieco);
-			paramEmi.put("pv_cdramo"    , cdramo);
-			paramEmi.put("pv_estado"    , estado);
-			paramEmi.put("pv_nmpoliza"  , nmpoliza);
-			paramEmi.put("pv_nmsituac"  , "1");
-			paramEmi.put("pv_nmsuplem"  , "0");
-			paramEmi.put("pv_cdelement" , cdelemen); 
-			paramEmi.put("pv_cdcia"     , cdunieco);
-			paramEmi.put("pv_cdplan"    , null);
-			paramEmi.put("pv_cdperpag"  , cdperpag);
-			paramEmi.put("pv_cdperson"  , cdpersonSesion);
-			paramEmi.put("pv_fecha"     , new Date());
-			paramEmi.put("pv_ntramite"  , ntramite);
-			mx.com.aon.portal.util.WrapperResultados wr=kernelManager.emitir(paramEmi);
-			log.debug("emision obtenida "+wr.getItemMap());
-			//panel2=new HashMap<String,String>(0);
-			String nmpolizaEmitida = (String)wr.getItemMap().get("nmpoliza");
-			String nmpoliexEmitida = (String)wr.getItemMap().get("nmpoliex");
-			String nmsuplemEmitida = (String)wr.getItemMap().get("nmsuplem");
-			panel2.put("nmpoliza",nmpolizaEmitida);
-			panel2.put("nmpoliex",nmpoliexEmitida);
-			/**/
-			
-			
+		}
+		
+		////// ws cliente y recibos
+		if(success)
+		{
 			String _cdunieco = cdunieco;
 			String _cdramo   = cdramo;
 			String edoPoliza = "M";
 			String _nmpoliza = nmpolizaEmitida;
 			String _nmsuplem = nmsuplemEmitida;
-			
 			String sucursal = cdunieco;
-			if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
-			
-			String esDxN = (String)wr.getItemMap().get("esdxn");
-			
-			logger.debug(">>>>>>>>>>>>>>>>>>>>>>>>>> Parametros para WS de cliente y recibos: <<<<<<<<<<<<<<<<<<<<<<< ");
-			logger.debug(">>>>>>>>>> cdunieco: "+ _cdunieco);
-			logger.debug(">>>>>>>>>> cdramo: "+ _cdramo);
-			logger.debug(">>>>>>>>>> estado: "+ edoPoliza);
-			logger.debug(">>>>>>>>>> nmpoliza: "+ _nmpoliza);
-			logger.debug(">>>>>>>>>> suplemento: "+ _nmsuplem);
-			logger.debug(">>>>>>>>>> sucursal: "+ sucursal);
-			logger.debug(">>>>>>>>>> nmsolici: "+ nmpoliza);
-			logger.debug(">>>>>>>>>> nmtramite: "+ ntramite);
-			
-			//TODO:ELIMINAR ejecutaWSclienteSalud(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, );
-			//PolizaVO poliza = new PolizaVO();
-			// Ejecutamos el Web Service de Cliente Salud:
-			ice2sigsService.ejecutaWSclienteSalud(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, Ice2sigsService.Operacion.INSERTA, us);
-			
-			String tipoMov = "1";
-			
-			if(StringUtils.isNotBlank(esDxN) && "S".equalsIgnoreCase(esDxN)){
-				
-				// Ejecutamos el Web Service de Recibos:
-				ice2sigsService.ejecutaWSrecibos(_cdunieco, _cdramo,
-						edoPoliza, _nmpoliza, 
-						_nmsuplem, rutaCarpeta,
-						sucursal, nmpoliza, ntramite, 
-						false, tipoMov,
-						us);
-				// Ejecutamos el Web Service de Recibos DxN:
-				recibosSigsService.generaRecibosDxN(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, sucursal, nmpoliza, ntramite, us);
-			}else{
-				
-				// Ejecutamos el Web Service de Recibos:
-				ice2sigsService.ejecutaWSrecibos(_cdunieco, _cdramo,
-						edoPoliza, _nmpoliza, 
-						_nmsuplem, rutaCarpeta,
-						sucursal, nmpoliza,ntramite, 
-						true, tipoMov,
-						us);
-			}
-			
-			Map<String,String>paramsGetDoc=new LinkedHashMap<String,String>(0);
-			//paramsGetDoc.put("pv_cdunieco_i" , datUs.getCdunieco());
-			//paramsGetDoc.put("pv_cdramo_i"   , datUs.getCdramo());panel2.get("pv_cdunieco")
-			paramsGetDoc.put("pv_cdunieco_i" , cdunieco);
-			paramsGetDoc.put("pv_cdramo_i"   , cdramo);
-			paramsGetDoc.put("pv_estado_i"   , "M");
-			paramsGetDoc.put("pv_nmpoliza_i" , nmpolizaEmitida);
-			paramsGetDoc.put("pv_nmsuplem_i" , _nmsuplem);
-			paramsGetDoc.put("pv_ntramite_i" , ntramite);
-			List<Map<String,String>>listaDocu=kernelManager.obtenerListaDocumentos(paramsGetDoc);
-			//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
-			for(Map<String,String> docu:listaDocu)
+			if("1".equals(sucursal))
 			{
-				log.debug("docu iterado: "+docu);
-				String descripc=docu.get("descripc");
-				String descripl=docu.get("descripl");
-				String url=this.getText("ruta.servidor.reports")
-						+ "?destype=cache"
-						+ "&desformat=PDF"
-						+ "&userid="+this.getText("pass.servidor.reports")
-						+ "&report="+descripl
-						+ "&paramform=no"
-						+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
-						+ "&p_unieco="+cdunieco
-						+ "&p_ramo="+cdramo
-						+ "&p_estado='M'"
-						+ "&p_poliza="+nmpolizaEmitida
-						+ "&p_suplem="+_nmsuplem
-						+ "&desname="+rutaCarpeta+"/"+descripc;
-				if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
+				sucursal = "1000";
+			}
+			logger.debug(">>>>>>>>>>>>>>>>>>>>>>>>>> Parametros para WS de cliente y recibos: <<<<<<<<<<<<<<<<<<<<<<< ");
+			logger.debug(">>>>>>>>>> cdunieco: "   + _cdunieco);
+			logger.debug(">>>>>>>>>> cdramo: "     + _cdramo);
+			logger.debug(">>>>>>>>>> estado: "     + edoPoliza);
+			logger.debug(">>>>>>>>>> nmpoliza: "   + _nmpoliza);
+			logger.debug(">>>>>>>>>> suplemento: " + _nmsuplem);
+			logger.debug(">>>>>>>>>> sucursal: "   + sucursal);
+			logger.debug(">>>>>>>>>> nmsolici: "   + nmpoliza);
+			logger.debug(">>>>>>>>>> nmtramite: "  + ntramite);
+			
+			//ws cliente
+			if(success)
+			{
+				try
 				{
-					// C R E D E N C I A L _ X X X X X X . P D F
-					//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-					url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("."));
+					if(cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_VITAL.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_NOMINA.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.MULTISALUD.getCdtipsit())
+							)
+					{
+						ice2sigsService.ejecutaWSclienteSalud(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, Ice2sigsService.Operacion.INSERTA, us);
+					}
+					else if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit()))
+					{
+						ice2sigsService.ejecutaWSclienteSalud(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, Ice2sigsService.Operacion.INSERTA, us);
+					}
 				}
-				log.debug(""
-						+ "\n#################################"
-						+ "\n###### Se solicita reporte ######"
-						+ "\na "+url+""
-						+ "\n#################################");
-				HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
-				log.debug(""
-						+ "\n######                    ######"
-						+ "\n###### reporte solicitado ######"
-						+ "\na "+url+""
-						+ "\n################################"
-						+ "\n################################"
-						+ "");
+				catch(Exception ex)
+				{
+					log.error("error en el ws de cliente",ex);
+					mensajeRespuesta = ex.getMessage();
+					success          = false;
+				}
 			}
 			
-			log.debug("se inserta detalle nuevo para emision");
-        	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
-        	parDmesCon.put("pv_ntramite_i"   , ntramite);
-        	parDmesCon.put("pv_feinicio_i"   , new Date());
-        	parDmesCon.put("pv_cdclausu_i"   , null);
-        	parDmesCon.put("pv_comments_i"   , "El tr&aacute;mite se emiti&oacute;");
-        	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
-        	parDmesCon.put("pv_cdmotivo_i"   , null);
-        	kernelManager.movDmesacontrol(parDmesCon);
+			////// ws de cotizacion y emision para autos
+			if(success && cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit()))
+			{
+				SDTPoliza aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo,
+							estado, nmpolizaEmitida, nmsuplemEmitida, ntramite, us);
+				success = aux!=null && aux.getNumpol()>0l;
+				if(!success)
+				{
+					mensajeRespuesta = "Error en el Web Service de cotizaci&oacute;n. No se pudo emitir la p&oacute;liza";
+				}
+			}
 			
-			success=true;
+			//ws recibos
+			if(success)
+			{
+				try
+				{
+					if(StringUtils.isNotBlank(esDxN) && "S".equalsIgnoreCase(esDxN))
+					{	
+						// Ejecutamos el Web Service de Recibos:
+						ice2sigsService.ejecutaWSrecibos(_cdunieco, _cdramo,
+								edoPoliza, _nmpoliza, 
+								_nmsuplem, rutaCarpeta,
+								sucursal, nmpoliza, ntramite, 
+								false, tipoMov,
+								us);
+						// Ejecutamos el Web Service de Recibos DxN:
+						recibosSigsService.generaRecibosDxN(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, sucursal, nmpoliza, ntramite, us);
+					}
+					else
+					{
+						// Ejecutamos el Web Service de Recibos:
+						ice2sigsService.ejecutaWSrecibos(_cdunieco, _cdramo,
+								edoPoliza, _nmpoliza, 
+								_nmsuplem, rutaCarpeta,
+								sucursal, nmpoliza,ntramite, 
+								true, tipoMov,
+								us);
+					}
+				}
+				catch(Exception ex)
+				{
+					log.error("error al lanzar ws recibos",ex);
+					mensajeRespuesta = ex.getMessage();
+					success          = false;
+				}
+			}
 		}
-		catch(Exception ex)
+		
+		////// documentos
+		if(success)
 		{
-			log.debug("Error al emitir",ex);
-			success=false;
+			try
+			{
+				Map<String,String>paramsGetDoc=new LinkedHashMap<String,String>(0);
+				paramsGetDoc.put("pv_cdunieco_i" , cdunieco);
+				paramsGetDoc.put("pv_cdramo_i"   , cdramo);
+				paramsGetDoc.put("pv_estado_i"   , "M");
+				paramsGetDoc.put("pv_nmpoliza_i" , nmpolizaEmitida);
+				paramsGetDoc.put("pv_nmsuplem_i" , nmsuplemEmitida);
+				paramsGetDoc.put("pv_ntramite_i" , ntramite);
+				List<Map<String,String>>listaDocu=kernelManager.obtenerListaDocumentos(paramsGetDoc);
+				
+				//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
+				for(Map<String,String> docu:listaDocu)
+				{
+					log.debug("docu iterado: "+docu);
+					String descripc=docu.get("descripc");
+					String descripl=docu.get("descripl");
+					String url=this.getText("ruta.servidor.reports")
+							+ "?destype=cache"
+							+ "&desformat=PDF"
+							+ "&userid="+this.getText("pass.servidor.reports")
+							+ "&report="+descripl
+							+ "&paramform=no"
+							+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+							+ "&p_unieco="+cdunieco
+							+ "&p_ramo="+cdramo
+							+ "&p_estado='M'"
+							+ "&p_poliza="+nmpolizaEmitida
+							+ "&p_suplem="+nmsuplemEmitida
+							+ "&desname="+rutaCarpeta+"/"+descripc;
+					if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
+					{
+						// C R E D E N C I A L _ X X X X X X . P D F
+						//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+						url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("."));
+					}
+					log.debug(""
+							+ "\n#################################"
+							+ "\n###### Se solicita reporte ######"
+							+ "\na "+url);
+					HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
+					log.debug(""
+							+ "\n######                    ######"
+							+ "\n###### reporte solicitado ######"
+							+ "\n################################"
+							+ "");
+				}
+			}
+			catch(Exception ex)
+			{
+				log.error("error al generar documentacion de emision",ex);
+				mensajeRespuesta = ex.getMessage();
+				success          = false;
+			}
 		}
+		
+		////// detalle emision
+		if(success)
+		{
+			try
+			{
+				log.debug("se inserta detalle nuevo para emision");
+	        	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
+	        	parDmesCon.put("pv_ntramite_i"   , ntramite);
+	        	parDmesCon.put("pv_feinicio_i"   , new Date());
+	        	parDmesCon.put("pv_cdclausu_i"   , null);
+	        	parDmesCon.put("pv_comments_i"   , "El tr&aacute;mite se emiti&oacute;");
+	        	parDmesCon.put("pv_cdusuari_i"   , cdusuari);
+	        	parDmesCon.put("pv_cdmotivo_i"   , null);
+	        	kernelManager.movDmesacontrol(parDmesCon);
+			}
+			catch(Exception ex)
+			{
+				log.error("error al insertar detalle de emision",ex);
+				mensajeRespuesta = ex.getMessage();
+				success          = false;
+			}
+		}
+		
 		log.debug(""
-				+ "\n######            ######"
 				+ "\n######   emitir   ######"
-				+ "\n######            ######"
-				+ "\n########################"
 				+ "\n########################"
 				+ "");
 		return SUCCESS;
@@ -1640,216 +1768,326 @@ public class ComplementariosAction extends PrincipalCoreAction
 				);
 		logger.debug("panel1"+panel1);
 		
-		try
+		////// variables
+		success                 = true;
+		String ntramiteAut      = null;
+		String cdunieco         = null;
+		String cdramo           = null;
+		String estado           = "W";
+		String nmpoliza         = null;
+		String ntramite         = null;
+		String cdusuari         = null;
+		String cdelemen         = null;
+		String cdperson         = null;
+		String comentarios      = null;
+		String fechaEmision     = null;
+		Date   fechaEmisionDate = null;
+		Date   fechaDia         = new Date();
+		String cdperpag         = null;
+		UserVO us               = null;
+		String nmpolizaEmitida  = null;
+		String nmpoliexEmitida  = null;
+		String nmsuplemEmitida  = null;
+		String esDxN            = null;
+		String tipoMov          = TipoTramite.POLIZA_NUEVA.getCdtiptra();
+		String rutaCarpeta      = null;
+		
+		////// obtener parametros
+		if(success)
 		{
-			String ntramiteAut = panel1.get("ntramite");
-			String cdunieco    = panel1.get("cdunieco");
-			String cdramo      = panel1.get("cdramo");
-			String estado      = "W";
-			String nmpoliza    = panel1.get("nmpoliza");
-			String ntramite    = panel1.get("otvalor03");
-			String cdusuari    = panel1.get("otvalor01");
-			String cdelemen    = panel1.get("otvalor02");
-			String cdperson    = panel1.get("otvalor04");
-			String comentarios = panel2.get("observaciones");
-			
-			String fechaEmision   = panel1.get("ferecepc");
-			Date fechaEmisionDate = renderFechas.parse(fechaEmision);
-			Date fechaDia         = new Date();
-			
-			UserVO us = (UserVO)session.get("USUARIO");
-			
-			//obtener poliza completa
-            /**/
-			Map<String,String>paramObtenerPoliza=new LinkedHashMap<String,String>(0);
-			paramObtenerPoliza.put("pv_cdunieco" , cdunieco);
-			paramObtenerPoliza.put("pv_cdramo"   , cdramo);
-			paramObtenerPoliza.put("pv_estado"   , estado);
-			paramObtenerPoliza.put("pv_nmpoliza" , nmpoliza);
-			paramObtenerPoliza.put("pv_cdusuari" , cdusuari);
-			Map<String,Object>polizaCompleta=kernelManager.getInfoMpolizasCompleta(paramObtenerPoliza);
-			log.debug("poliza a emitir: "+polizaCompleta);
-			String cdperpag = (String)polizaCompleta.get("cdperpag");
-			/**/
-			
-			/*
-			pv_cdusuari
-            pv_cdunieco
-            pv_cdramo
-            pv_estado
-            pv_nmpoliza
-            pv_nmsituac
-            pv_nmsuplem
-            pv_cdelement
-            pv_cdcia
-            pv_cdplan
-            pv_cdperpag
-            pv_cdperson
-            pv_fecha
-            */
-			Map<String,Object>paramEmi=new LinkedHashMap<String,Object>(0);
-			paramEmi.put("pv_cdusuari"  , cdusuari);
-			paramEmi.put("pv_cdunieco"  , cdunieco);
-			paramEmi.put("pv_cdramo"    , cdramo);
-			paramEmi.put("pv_estado"    , estado);
-			paramEmi.put("pv_nmpoliza"  , nmpoliza);
-			paramEmi.put("pv_nmsituac"  , "1");
-			paramEmi.put("pv_nmsuplem"  , "0");
-			paramEmi.put("pv_cdelement" , cdelemen); 
-			paramEmi.put("pv_cdcia"     , cdunieco);
-			paramEmi.put("pv_cdplan"    , null);
-			paramEmi.put("pv_cdperpag"  , cdperpag);
-			paramEmi.put("pv_cdperson"  , cdperson);
-			paramEmi.put("pv_fecha"     , fechaEmisionDate);
-			paramEmi.put("pv_ntramite"  , ntramite);
-			mx.com.aon.portal.util.WrapperResultados wr=kernelManager.emitir(paramEmi);
-			log.debug("emision obtenida "+wr.getItemMap());
-			//panel2=new HashMap<String,String>(0);
-			String nmpolizaEmitida = (String)wr.getItemMap().get("nmpoliza");
-			String nmpoliexEmitida = (String)wr.getItemMap().get("nmpoliex");
-			String nmsuplemEmitida = (String)wr.getItemMap().get("nmsuplem");
-			
+			try
+			{
+				success = success && ( ntramiteAut      = panel1.get("ntramite")           )!=null;
+				success = success && ( cdunieco         = panel1.get("cdunieco")           )!=null;
+				success = success && ( cdramo           = panel1.get("cdramo")             )!=null;
+				success = success && ( nmpoliza         = panel1.get("nmpoliza")           )!=null;
+				success = success && ( ntramite         = panel1.get("otvalor03")          )!=null;
+				success = success && ( cdusuari         = panel1.get("otvalor01")          )!=null;
+				success = success && ( cdelemen         = panel1.get("otvalor02")          )!=null;
+				success = success && ( cdperson         = panel1.get("otvalor04")          )!=null;
+				success = success && ( comentarios      = panel2.get("observaciones")      )!=null;
+				success = success && ( fechaEmision     = panel1.get("ferecepc")           )!=null;
+				success = success && ( fechaEmisionDate = renderFechas.parse(fechaEmision) )!=null;
+				success = success && ( us               = (UserVO)session.get("USUARIO")   )!=null;
+				if(!success)
+				{
+					mensajeRespuesta = "No se recibieron todos los datos";
+				}
+			}
+			catch(Exception ex)
+			{
+				log.error("error al procesar los datos",ex);
+				mensajeRespuesta = "Error al procesar los datos";
+				success          = false;
+			}
+		}
+		
+		////// cdtener datos poliza
+		if(success)
+		{
+			try
+			{
+				Map<String,String>paramObtenerPoliza=new LinkedHashMap<String,String>(0);
+				paramObtenerPoliza.put("pv_cdunieco" , cdunieco);
+				paramObtenerPoliza.put("pv_cdramo"   , cdramo);
+				paramObtenerPoliza.put("pv_estado"   , estado);
+				paramObtenerPoliza.put("pv_nmpoliza" , nmpoliza);
+				paramObtenerPoliza.put("pv_cdusuari" , cdusuari);
+				Map<String,Object>polizaCompleta=kernelManager.getInfoMpolizasCompleta(paramObtenerPoliza);
+				log.debug("poliza a emitir: "+polizaCompleta);
+				cdperpag = (String)polizaCompleta.get("cdperpag");
+			}
+			catch(Exception ex)
+			{
+				log.error("error al obtener los datos completos de la poliza",ex);
+				mensajeRespuesta = ex.getMessage();
+				success          = false;
+			}
+		}
+		
+		////// emision
+		if(success)
+		{
+			try
+			{
+				Map<String,Object>paramEmi=new LinkedHashMap<String,Object>(0);
+				paramEmi.put("pv_cdusuari"  , cdusuari);
+				paramEmi.put("pv_cdunieco"  , cdunieco);
+				paramEmi.put("pv_cdramo"    , cdramo);
+				paramEmi.put("pv_estado"    , estado);
+				paramEmi.put("pv_nmpoliza"  , nmpoliza);
+				paramEmi.put("pv_nmsituac"  , "1");
+				paramEmi.put("pv_nmsuplem"  , "0");
+				paramEmi.put("pv_cdelement" , cdelemen); 
+				paramEmi.put("pv_cdcia"     , cdunieco);
+				paramEmi.put("pv_cdplan"    , null);
+				paramEmi.put("pv_cdperpag"  , cdperpag);
+				paramEmi.put("pv_cdperson"  , cdperson);
+				paramEmi.put("pv_fecha"     , fechaEmisionDate);
+				paramEmi.put("pv_ntramite"  , ntramite);
+				mx.com.aon.portal.util.WrapperResultados wr=kernelManager.emitir(paramEmi);
+				log.debug("emision obtenida "+wr.getItemMap());
+				
+				nmpolizaEmitida = (String)wr.getItemMap().get("nmpoliza");
+				nmpoliexEmitida = (String)wr.getItemMap().get("nmpoliex");
+				nmsuplemEmitida = (String)wr.getItemMap().get("nmsuplem");
+				esDxN           = (String)wr.getItemMap().get("esdxn");
+			}
+			catch(Exception ex)
+			{
+				log.error("error en el pl de emision",ex);
+				mensajeRespuesta = ex.getMessage();
+				success          = false;
+			}
+		}
+		
+		////// carpeta documentos
+		if(success)
+		{
+			try
+			{
+				rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
+	            File carpeta = new File(rutaCarpeta);
+	            if(!carpeta.exists())
+	            {
+	            	log.debug("no existe la carpeta::: "+rutaCarpeta);
+	            	carpeta.mkdir();
+	            	if(carpeta.exists())
+	            	{
+	            		log.debug("carpeta creada");
+	            	}
+	            	else
+	            	{
+	            		log.debug("carpeta NO creada");
+	            		success          = false;
+	            		mensajeRespuesta = "Error al crear la carpeta de documentos";
+	            	}
+	            }
+	            else
+	            {
+	            	log.debug("existe la carpeta   ::: "+rutaCarpeta);
+	            }
+			}
+			catch(Exception ex)
+			{
+				log.error("error al crear la carpeta",ex);
+				mensajeRespuesta = ex.getMessage();
+				success          = false;
+			}
+		}
+		
+		////// ws cliente y recibos
+		if(success)
+		{
 			String _cdunieco = cdunieco;
 			String _cdramo   = cdramo;
 			String edoPoliza = "M";
 			String _nmpoliza = nmpolizaEmitida;
 			String _nmsuplem = nmsuplemEmitida;
+			String sucursal  = cdunieco;
 			
-			String sucursal = cdunieco;
-			if(StringUtils.isNotBlank(sucursal) && "1".equals(sucursal)) sucursal = "1000";
-			
-			String esDxN = (String)wr.getItemMap().get("esdxn");
+			if("1".equals(sucursal))
+			{
+				sucursal = "1000";
+			}
 			
 			logger.debug(">>>>>>>>>>>>>>>>>>>>>>>>>> Parametros para WS de cliente y recibos: <<<<<<<<<<<<<<<<<<<<<<< ");
-			logger.debug(">>>>>>>>>> cdunieco: "+ _cdunieco);
-			logger.debug(">>>>>>>>>> cdramo: "+ _cdramo);
-			logger.debug(">>>>>>>>>> estado: "+ edoPoliza);
-			logger.debug(">>>>>>>>>> nmpoliza: "+ _nmpoliza);
-			logger.debug(">>>>>>>>>> suplemento: "+ _nmsuplem);
-			logger.debug(">>>>>>>>>> sucursal: "+ sucursal);
-			logger.debug(">>>>>>>>>> nmsolici: "+ nmpoliza);
-			logger.debug(">>>>>>>>>> nmtramite: "+ ntramite);
+			logger.debug(">>>>>>>>>> cdunieco: "   + _cdunieco);
+			logger.debug(">>>>>>>>>> cdramo: "     + _cdramo);
+			logger.debug(">>>>>>>>>> estado: "     + edoPoliza);
+			logger.debug(">>>>>>>>>> nmpoliza: "   + _nmpoliza);
+			logger.debug(">>>>>>>>>> suplemento: " + _nmsuplem);
+			logger.debug(">>>>>>>>>> sucursal: "   + sucursal);
+			logger.debug(">>>>>>>>>> nmsolici: "   + nmpoliza);
+			logger.debug(">>>>>>>>>> nmtramite: "  + ntramite);
 			
-			//TODO:ELIMINAR ejecutaWSclienteSalud(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, );
-			//PolizaVO poliza = new PolizaVO();
-			// Ejecutamos el Web Service de Cliente Salud:
-			ice2sigsService.ejecutaWSclienteSalud(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, Ice2sigsService.Operacion.INSERTA, us);
-			
-			String tipoMov = "1";
-			
-			String rutaCarpeta=this.getText("ruta.documentos.poliza")+"/"+ntramite;
-            File carpeta = new File(rutaCarpeta);
-            if(!carpeta.exists())
-            {
-            	log.debug("no existe la carpeta::: "+rutaCarpeta);
-            	carpeta.mkdir();
-            	if(carpeta.exists())
-            	{
-            		log.debug("carpeta creada");
-            	}
-            	else
-            	{
-            		log.debug("carpeta NO creada");
-            	}
-            }
-            else
-            {
-            	log.debug("existe la carpeta   ::: "+rutaCarpeta);
-            }
-			
-			if(StringUtils.isNotBlank(esDxN) && "S".equalsIgnoreCase(esDxN)){
-				
-				// Ejecutamos el Web Service de Recibos:
-				ice2sigsService.ejecutaWSrecibos(_cdunieco, _cdramo,
-						edoPoliza, _nmpoliza, 
-						_nmsuplem, rutaCarpeta,
-						sucursal, nmpoliza, ntramite, 
-						false, tipoMov,
-						us);
-				// Ejecutamos el Web Service de Recibos DxN:
-				recibosSigsService.generaRecibosDxN(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, sucursal, nmpoliza, ntramite, us);
-			}else{
-				
-				// Ejecutamos el Web Service de Recibos:
-				ice2sigsService.ejecutaWSrecibos(_cdunieco, _cdramo,
-						edoPoliza, _nmpoliza, 
-						_nmsuplem, rutaCarpeta,
-						sucursal, nmpoliza,ntramite, 
-						true, tipoMov,
-						us);
-			}
-			
-			Map<String,String>paramsGetDoc=new LinkedHashMap<String,String>(0);
-			//paramsGetDoc.put("pv_cdunieco_i" , datUs.getCdunieco());
-			//paramsGetDoc.put("pv_cdramo_i"   , datUs.getCdramo());panel2.get("pv_cdunieco")
-			paramsGetDoc.put("pv_cdunieco_i" , cdunieco);
-			paramsGetDoc.put("pv_cdramo_i"   , cdramo);
-			paramsGetDoc.put("pv_estado_i"   , "M");
-			paramsGetDoc.put("pv_nmpoliza_i" , nmpolizaEmitida);
-			paramsGetDoc.put("pv_nmsuplem_i" , _nmsuplem);
-			paramsGetDoc.put("pv_ntramite_i" , ntramite);
-			List<Map<String,String>>listaDocu=kernelManager.obtenerListaDocumentos(paramsGetDoc);
-			//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
-			for(Map<String,String> docu:listaDocu)
+			//ws cliente
+			if(success)
 			{
-				log.debug("docu iterado: "+docu);
-				String descripc=docu.get("descripc");
-				String descripl=docu.get("descripl");
-				String url=this.getText("ruta.servidor.reports")
-						+ "?destype=cache"
-						+ "&desformat=PDF"
-						+ "&userid="+this.getText("pass.servidor.reports")
-						+ "&report="+descripl
-						+ "&paramform=no"
-						+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
-						+ "&p_unieco="+cdunieco
-						+ "&p_ramo="+cdramo
-						+ "&p_estado='M'"
-						+ "&p_poliza="+nmpolizaEmitida
-						+ "&p_suplem="+_nmsuplem
-						+ "&desname="+rutaCarpeta+"/"+descripc;
-				if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
+				try
 				{
-					// C R E D E N C I A L _ X X X X X X . P D F
-					//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-					url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("."));
+					if(cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_VITAL.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.SALUD_NOMINA.getCdtipsit())
+							||cdtipsit.equalsIgnoreCase(TipoSituacion.MULTISALUD.getCdtipsit())
+							)
+					{
+						ice2sigsService.ejecutaWSclienteSalud(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, Ice2sigsService.Operacion.INSERTA, us);
+					}
+					else if(cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit()))
+					{
+						ice2sigsService.ejecutaWSclienteSalud(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, ntramite, Ice2sigsService.Operacion.INSERTA, us);
+					}
 				}
-				log.debug(""
-						+ "\n#################################"
-						+ "\n###### Se solicita reporte ######"
-						+ "\na "+url+""
-						+ "\n#################################");
-				HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
-				log.debug(""
-						+ "\n######                    ######"
-						+ "\n###### reporte solicitado ######"
-						+ "\na "+url+""
-						+ "\n################################"
-						+ "\n################################"
-						+ "");
+				catch(Exception ex)
+				{
+					log.error("error en el ws de cliente",ex);
+					mensajeRespuesta = ex.getMessage();
+					success          = false;
+				}
 			}
 			
-			log.debug("se inserta detalle nuevo para emision");
-        	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
-        	parDmesCon.put("pv_ntramite_i"   , ntramite);
-        	parDmesCon.put("pv_feinicio_i"   , fechaDia);
-        	parDmesCon.put("pv_cdclausu_i"   , null);
-        	parDmesCon.put("pv_comments_i"   , "La emisi&oacute;n del tr&aacute;mite se autoriz&oacute; con las siguientes observaciones:<br/>"+comentarios);
-        	parDmesCon.put("pv_cdusuari_i"   , us.getUser());
-        	parDmesCon.put("pv_cdmotivo_i"   , null);
-        	kernelManager.movDmesacontrol(parDmesCon);
+			////// ws de cotizacion y emision para autos
+			if(success && cdtipsit.equalsIgnoreCase(TipoSituacion.AUTOS_FRONTERIZOS.getCdtipsit()))
+			{
+				SDTPoliza aux = emisionAutosService.cotizaEmiteAutomovilWS(cdunieco, cdramo,
+							estado, nmpolizaEmitida, nmsuplemEmitida, ntramite, us);
+				success = aux!=null && aux.getNumpol()>0l;
+				if(!success)
+				{
+					mensajeRespuesta = "Error en el Web Service de cotizaci&oacute;n. No se pudo emitir la p&oacute;liza";
+				}
+			}
 			
-        	kernelManager.mesaControlUpdateStatus(ntramiteAut, EstatusTramite.CONFIRMADO.getCodigo());
-        	
-        	mensajeRespuesta = "P&oacute;liza emitida: "+nmpoliexEmitida;
-        	
-			success=true;
+			// ws recibos
+			if(success)
+			{
+				if(StringUtils.isNotBlank(esDxN) && "S".equalsIgnoreCase(esDxN)){
+					
+					// Ejecutamos el Web Service de Recibos:
+					ice2sigsService.ejecutaWSrecibos(_cdunieco, _cdramo,
+							edoPoliza, _nmpoliza, 
+							_nmsuplem, rutaCarpeta,
+							sucursal, nmpoliza, ntramite, 
+							false, tipoMov,
+							us);
+					// Ejecutamos el Web Service de Recibos DxN:
+					recibosSigsService.generaRecibosDxN(_cdunieco, _cdramo, edoPoliza, _nmpoliza, _nmsuplem, sucursal, nmpoliza, ntramite, us);
+				}else{
+					
+					// Ejecutamos el Web Service de Recibos:
+					ice2sigsService.ejecutaWSrecibos(_cdunieco, _cdramo,
+							edoPoliza, _nmpoliza, 
+							_nmsuplem, rutaCarpeta,
+							sucursal, nmpoliza,ntramite, 
+							true, tipoMov,
+							us);
+				}
+			}
 		}
-		catch(Exception ex)
+		
+		////// documentacion
+		if(success)
 		{
-			logger.error("error al autorizar emision",ex);
-			success = false;
-			mensajeRespuesta = ex.getMessage();
+			try
+			{
+				Map<String,String>paramsGetDoc=new LinkedHashMap<String,String>(0);
+				paramsGetDoc.put("pv_cdunieco_i" , cdunieco);
+				paramsGetDoc.put("pv_cdramo_i"   , cdramo);
+				paramsGetDoc.put("pv_estado_i"   , "M");
+				paramsGetDoc.put("pv_nmpoliza_i" , nmpolizaEmitida);
+				paramsGetDoc.put("pv_nmsuplem_i" , nmsuplemEmitida);
+				paramsGetDoc.put("pv_ntramite_i" , ntramite);
+				List<Map<String,String>>listaDocu=kernelManager.obtenerListaDocumentos(paramsGetDoc);
+				
+				//listaDocu contiene: nmsolici,nmsituac,descripc,descripl
+				for(Map<String,String> docu:listaDocu)
+				{
+					log.debug("docu iterado: "+docu);
+					String descripc=docu.get("descripc");
+					String descripl=docu.get("descripl");
+					String url=this.getText("ruta.servidor.reports")
+							+ "?destype=cache"
+							+ "&desformat=PDF"
+							+ "&userid="+this.getText("pass.servidor.reports")
+							+ "&report="+descripl
+							+ "&paramform=no"
+							+ "&ACCESSIBLE=YES" //parametro que habilita salida en PDF
+							+ "&p_unieco="+cdunieco
+							+ "&p_ramo="+cdramo
+							+ "&p_estado='M'"
+							+ "&p_poliza="+nmpolizaEmitida
+							+ "&p_suplem="+nmsuplemEmitida
+							+ "&desname="+rutaCarpeta+"/"+descripc;
+					if(descripc.substring(0, 6).equalsIgnoreCase("CREDEN"))
+					{
+						// C R E D E N C I A L _ X X X X X X . P D F
+						//0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+						url+="&p_cdperson="+descripc.substring(11, descripc.lastIndexOf("."));
+					}
+					log.debug(""
+							+ "\n#################################"
+							+ "\n###### Se solicita reporte ######"
+							+ "\na "+url);
+					HttpUtil.generaArchivo(url,rutaCarpeta+"/"+descripc);
+					log.debug(""
+							+ "\n###### reporte solicitado ######"
+							+ "\n################################"
+							+ "");
+				}
+			}
+			catch(Exception ex)
+			{
+				log.error("error al crear documentacion",ex);
+				success          = false;
+				mensajeRespuesta = ex.getMessage();
+			}
+		}
+		
+		////// detalle emision
+		if(success)
+		{
+			try
+			{
+				log.debug("se inserta detalle nuevo para emision");
+	        	Map<String,Object>parDmesCon=new LinkedHashMap<String,Object>(0);
+	        	parDmesCon.put("pv_ntramite_i"   , ntramite);
+	        	parDmesCon.put("pv_feinicio_i"   , fechaDia);
+	        	parDmesCon.put("pv_cdclausu_i"   , null);
+	        	parDmesCon.put("pv_comments_i"   , "La emisi&oacute;n del tr&aacute;mite se autoriz&oacute; con las siguientes observaciones:<br/>"+comentarios);
+	        	parDmesCon.put("pv_cdusuari_i"   , us.getUser());
+	        	parDmesCon.put("pv_cdmotivo_i"   , null);
+	        	kernelManager.movDmesacontrol(parDmesCon);
+				
+	        	kernelManager.mesaControlUpdateStatus(ntramiteAut, EstatusTramite.CONFIRMADO.getCodigo());
+	        	
+	        	mensajeRespuesta = "P&oacute;liza emitida: "+nmpoliexEmitida;
+			}
+			catch(Exception ex)
+			{
+				log.error("error al guardar detalle de emision",ex);
+				mensajeRespuesta = ex.getMessage();
+				success          = false;
+			}
 		}
 		
 		logger.debug(""
@@ -2462,6 +2700,10 @@ public class ComplementariosAction extends PrincipalCoreAction
 
 	public void setItem5(Item item5) {
 		this.item5 = item5;
+	}
+
+	public void setEmisionAutosService(EmisionAutosService emisionAutosService) {
+		this.emisionAutosService = emisionAutosService;
 	}
 
 }
