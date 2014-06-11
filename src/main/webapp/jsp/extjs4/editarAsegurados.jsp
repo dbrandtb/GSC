@@ -350,6 +350,7 @@
                                         sexo:typeof recordContApart.get('sexo')=='string'?recordContApart.get('sexo'):recordContApart.get('sexo').get('key'),
                                         cdperson:recordContApart.get('cdperson'),
                                         swexiper:recordContApart.get('swexiper'),
+                                        cdideper:recordContApart.get('cdideper'),
                                         nombre: recordContApart.get('nombre'),
                                         segundo_nombre: recordContApart.get('segundo_nombre'),
                                         Apellido_Paterno: recordContApart.get('Apellido_Paterno'),
@@ -410,6 +411,7 @@
                                             sexo:typeof recordAsegu.get('sexo')=='string'?recordAsegu.get('sexo'):recordAsegu.get('sexo').get('key'),
                                             cdperson:recordAsegu.get('cdperson'),
                                             swexiper:recordAsegu.get('swexiper'),
+                                            cdideper:recordAsegu.get('cdideper'),
                                             nombre: recordAsegu.get('nombre'),
                                             segundo_nombre: recordAsegu.get('segundo_nombre'),
                                             Apellido_Paterno: recordAsegu.get('Apellido_Paterno'),
@@ -439,6 +441,7 @@
                                         sexo:typeof recordAsegu.get('sexo')=='string'?recordAsegu.get('sexo'):recordAsegu.get('sexo').get('key'),
                                         cdperson: recordAsegu.get('cdperson'),
                                         swexiper: recordAsegu.get('swexiper'),
+                                        cdideper: recordAsegu.get('cdideper'),
                                         nombre: recordAsegu.get('nombre'),
                                         segundo_nombre: recordAsegu.get('segundo_nombre'),
                                         Apellido_Paterno: recordAsegu.get('Apellido_Paterno'),
@@ -516,6 +519,7 @@
                                                                             sexo:typeof recordContApar2.get('sexo')=='string'?recordContApar2.get('sexo'):recordContApar2.get('sexo').get('key'),
                                                                             cdperson: recordContApar2.get('cdperson'),
                                                                             swexiper: recordContApar2.get('swexiper'),
+                                                                            cdideper: recordContApar2.get('cdideper'),
                                                                             nombre: recordContApar2.get('nombre'),
                                                                             segundo_nombre: recordContApar2.get('segundo_nombre'),
                                                                             Apellido_Paterno: recordContApar2.get('Apellido_Paterno'),
@@ -537,6 +541,7 @@
                                                                                 sexo:typeof recordAsegu2.get('sexo')=='string'?recordAsegu2.get('sexo'):recordAsegu2.get('sexo').get('key'),
                                                                                 cdperson: recordAsegu2.get('cdperson'),
                                                                                 swexiper: recordAsegu2.get('swexiper'),
+                                                                                cdideper: recordAsegu2.get('cdideper'),
                                                                                 nombre: recordAsegu2.get('nombre'),
                                                                                 segundo_nombre: recordAsegu2.get('segundo_nombre'),
                                                                                 Apellido_Paterno: recordAsegu2.get('Apellido_Paterno'),
@@ -553,6 +558,7 @@
                                                                             sexo:typeof recordAsegu2.get('sexo')=='string'?recordAsegu2.get('sexo'):recordAsegu2.get('sexo').get('key'),
                                                                             cdperson: recordAsegu2.get('cdperson'),
                                                                             swexiper: recordAsegu2.get('swexiper'),
+                                                                            cdideper: recordAsegu2.get('cdideper'),
                                                                             nombre: recordAsegu2.get('nombre'),
                                                                             segundo_nombre: recordAsegu2.get('segundo_nombre'),
                                                                             Apellido_Paterno: recordAsegu2.get('Apellido_Paterno'),
@@ -912,6 +918,7 @@ debug("validarYGuardar flag:2");
                 {
                 	gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdperson",'');
                 	gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("swexiper",'N');
+                	gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdideper",'');
                     if(field.getValue().length>8)
                     {
                         clearTimeout(timeoutBuscarRFCBp2);
@@ -923,7 +930,13 @@ debug("validarYGuardar flag:2");
                                 url     : urlAutoRFCp2
                                 ,params :
                                 {
-                                    'map1.pv_rfc_i' : field.getValue()
+                                    'map1.pv_rfc_i'     : field.getValue(),
+                                    'map1.cdtipsit'     : inputCdtipsitp2,
+                                    'map1.pv_cdunieco_i':inputCduniecop2,
+                   	        		'map1.pv_cdramo_i'  :inputCdramop2,
+                   	        		'map1.pv_estado_i'  :inputEstadop2,
+                   	        		'map1.pv_nmpoliza_i':inputNmpolizap2,
+                                    'map1.esContratante': 'S'
                                 }
                                 ,success:function(response)
                                 {
@@ -966,9 +979,18 @@ debug("validarYGuardar flag:2");
                                                                                ,handler : function(grid, rowIndex, colIndex) {
                                                                                    var record = grid.getStore().getAt(rowIndex);
                                                                                    debug(record);
+                                                                                   
+                                                                                   debug('cliente obtenido de WS? ', json.clienteWS);
+                                                                                   
                                                                                    gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdrfc",record.get("RFCCLI"));
-                                                                                   gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdperson",record.get("CLAVECLI"));
-                                                                                   gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("swexiper",'S');
+                                                                                   
+                                                                                   if(json.clienteWS){
+                                                                                	   gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdideper",record.get("CLAVECLI"));
+                                                                                   }else{
+                                                                                	   gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("cdperson",record.get("CLAVECLI"));
+                                                                                       gridTomadorp2.getView().getSelectionModel().getSelection()[0].set("swexiper",'S');
+                                                                                   }
+                                                                                   
                                                                                    grid.up().up().destroy();
                                                                                }
                                                                            }
@@ -1026,6 +1048,10 @@ debug("validarYGuardar flag:2");
             	{
             		gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdperson",'');
             		gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("swexiper",'N');
+            		gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdideper",'');
+
+            		var esContratante = gridPersonasp2.getSelectionModel().getLastSelected().get('estomador');
+            		
             		if(field.getValue().length>8)
             		{
             			clearTimeout(timeoutBuscarRFCBp2);
@@ -1037,13 +1063,23 @@ debug("validarYGuardar flag:2");
 		            			url     : urlAutoRFCp2
 		            			,params :
 		            			{
-		            				'map1.pv_rfc_i' : field.getValue()
+		            				'map1.pv_rfc_i'     : field.getValue(),
+		            				'map1.cdtipsit'     : inputCdtipsitp2,
+		            				'map1.pv_cdunieco_i':inputCduniecop2,
+                   	        		'map1.pv_cdramo_i'  :inputCdramop2,
+                   	        		'map1.pv_estado_i'  :inputEstadop2,
+                   	        		'map1.pv_nmpoliza_i':inputNmpolizap2,
+		            				'map1.esContratante': esContratante? 'S':'N'
 		            			}
 		            		    ,success:function(response)
 		            		    {
 		            		    	gridPersonasp2.setLoading(false);
 		            		    	var json=Ext.decode(response.responseText);
 		            		    	debug(json);
+		            		    	if(json && !json.success){
+		            		    		mensajeError("Error al Buscar RFC, Intente nuevamente. Si el problema persiste consulte a soporte t&eacute;cnico.");
+		            		    		return;
+		            		    	}
 		            		    	if(json&&json.slist1&&json.slist1.length>0)
 		            		    	{
 		            		    		Ext.create('Ext.window.Window',
@@ -1080,9 +1116,17 @@ debug("validarYGuardar flag:2");
 			            		    		    	                           ,handler : function(grid, rowIndex, colIndex) {
 			            		    		    	                               var record = grid.getStore().getAt(rowIndex);
 			            		    		    	                               debug(record);
+			            		    		    	                               debug('cliente obtenido de WS? ', json.clienteWS);
+			            		    		    	                               
 			            		    		    	                               gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdrfc",record.get("RFCCLI"));
-			            		    		    	                               gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdperson",record.get("CLAVECLI"));
-			            		    		    	                               gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("swexiper",'S');
+			            		    		    	                               
+			            		    		    	                               if(json.clienteWS){
+			            		    		    	                            	   gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdideper",record.get("CLAVECLI"));
+			            		    		    	                               }else{
+			            		    		    	                            	   gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("cdperson",record.get("CLAVECLI"));
+				            		    		    	                               gridPersonasp2.getView().getSelectionModel().getSelection()[0].set("swexiper",'S');
+			            		    		    	                               }
+			            		    		    	                               
 			            		    		    	                               grid.up().up().destroy();
 			            		    		    	                           }
 		            		    		    	                           }
@@ -1360,6 +1404,7 @@ debug("validarYGuardar flag:2");
                                         recordCont.set('cdrfc','');
                                         recordCont.set('cdperson','');
                                         recordCont.set('swexiper','N');
+                                        recordCont.set('cdideper','');
                                         debug('se reinicia',recordCont);
 	                        		}
 	                        	}
@@ -1848,6 +1893,7 @@ debug("validarYGuardar flag:2");
                                         sexo:typeof recordContApart.get('sexo')=='string'?recordContApart.get('sexo'):recordContApart.get('sexo').get('key'),
                                         cdperson:recordContApart.get('cdperson'),
                                         swexiper:recordContApart.get('swexiper'),
+                                        cdideper:recordContApart.get('cdideper'),
                                         nombre: recordContApart.get('nombre'),
                                         segundo_nombre: recordContApart.get('segundo_nombre'),
                                         Apellido_Paterno: recordContApart.get('Apellido_Paterno'),
@@ -1908,6 +1954,7 @@ debug("validarYGuardar flag:2");
 	                                        sexo:typeof recordAsegu.get('sexo')=='string'?recordAsegu.get('sexo'):recordAsegu.get('sexo').get('key'),
 	                                        cdperson:recordAsegu.get('cdperson'),
 	                                        swexiper:recordAsegu.get('swexiper'),
+	                                        cdideper:recordAsegu.get('cdideper'),
 	                                        nombre: recordAsegu.get('nombre'),
 	                                        segundo_nombre: recordAsegu.get('segundo_nombre'),
 	                                        Apellido_Paterno: recordAsegu.get('Apellido_Paterno'),
@@ -1937,6 +1984,7 @@ debug("validarYGuardar flag:2");
 	                                    sexo:typeof recordAsegu.get('sexo')=='string'?recordAsegu.get('sexo'):recordAsegu.get('sexo').get('key'),
 	                                    cdperson: recordAsegu.get('cdperson'),
 	                                    swexiper: recordAsegu.get('swexiper'),
+	                                    cdideper: recordAsegu.get('cdideper'),
 	                                    nombre: recordAsegu.get('nombre'),
 	                                    segundo_nombre: recordAsegu.get('segundo_nombre'),
 	                                    Apellido_Paterno: recordAsegu.get('Apellido_Paterno'),
@@ -2014,6 +2062,7 @@ debug("validarYGuardar flag:2");
                                                                             sexo:typeof recordContApar2.get('sexo')=='string'?recordContApar2.get('sexo'):recordContApar2.get('sexo').get('key'),
                                                                             cdperson: recordContApar2.get('cdperson'),
                                                                             swexiper: recordContApar2.get('swexiper'),
+                                                                            cdideper: recordContApar2.get('cdideper'),
                                                                             nombre: recordContApar2.get('nombre'),
                                                                             segundo_nombre: recordContApar2.get('segundo_nombre'),
                                                                             Apellido_Paterno: recordContApar2.get('Apellido_Paterno'),
@@ -2035,6 +2084,7 @@ debug("validarYGuardar flag:2");
                                                                                 sexo:typeof recordAsegu2.get('sexo')=='string'?recordAsegu2.get('sexo'):recordAsegu2.get('sexo').get('key'),
                                                                                 cdperson: recordAsegu2.get('cdperson'),
                                                                                 swexiper: recordAsegu2.get('swexiper'),
+                                                                                cdideper: recordAsegu2.get('cdideper'),
                                                                                 nombre: recordAsegu2.get('nombre'),
                                                                                 segundo_nombre: recordAsegu2.get('segundo_nombre'),
                                                                                 Apellido_Paterno: recordAsegu2.get('Apellido_Paterno'),
@@ -2051,6 +2101,7 @@ debug("validarYGuardar flag:2");
                                                                             sexo:typeof recordAsegu2.get('sexo')=='string'?recordAsegu2.get('sexo'):recordAsegu2.get('sexo').get('key'),
                                                                             cdperson: recordAsegu2.get('cdperson'),
                                                                             swexiper: recordAsegu2.get('swexiper'),
+                                                                            cdideper: recordAsegu2.get('cdideper'),
                                                                             nombre: recordAsegu2.get('nombre'),
                                                                             segundo_nombre: recordAsegu2.get('segundo_nombre'),
                                                                             Apellido_Paterno: recordAsegu2.get('Apellido_Paterno'),
