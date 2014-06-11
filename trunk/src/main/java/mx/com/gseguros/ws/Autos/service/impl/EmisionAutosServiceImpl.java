@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import mx.com.aon.portal.model.UserVO;
 import mx.com.gseguros.exception.WSException;
+import mx.com.gseguros.externo.service.StoredProceduresManager;
 import mx.com.gseguros.ws.Autos.client.axis2.CotizacionIndividualWSServiceStub;
 import mx.com.gseguros.ws.Autos.client.axis2.CotizacionIndividualWSServiceStub.EmisionPolizaRequest;
 import mx.com.gseguros.ws.Autos.client.axis2.CotizacionIndividualWSServiceStub.Inciso;
@@ -21,7 +22,7 @@ import mx.com.gseguros.ws.model.WrapperResultadosWS;
 import org.apache.axis2.AxisFault;
 
 /**
- * Implementación de los métodos para invocar al WS recibossigs
+ * Implementaciï¿½n de los mï¿½todos para invocar al WS recibossigs
  * @author Ricardo
  *
  */
@@ -32,6 +33,7 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 	private static final long WS_TIMEOUT =  20000;
 	
 	private String endpoint;
+	private StoredProceduresManager storedProceduresManager;
 	
 	public SDTPoliza cotizaEmiteAutomovilWS(String cdunieco, String cdramo,
 			String estado, String nmpoliza, String nmsuplem, String ntramite, UserVO userVO){
@@ -183,6 +185,11 @@ public class EmisionAutosServiceImpl implements EmisionAutosService {
 	
 	public void setEndpoint(String endpoint) {
 		this.endpoint = endpoint;
+	}
+
+	public void setStoredProceduresManager(
+			StoredProceduresManager storedProceduresManager) {
+		this.storedProceduresManager = storedProceduresManager;
 	}
 
 }
