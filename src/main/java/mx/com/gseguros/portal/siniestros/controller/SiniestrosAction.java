@@ -492,6 +492,13 @@ public class SiniestrosAction extends PrincipalCoreAction{
 				        }
 					}else{
 						
+						//obtenemos los valores de la mesa de control por tramite
+						List<MesaControlVO> lista = siniestrosManager.getConsultaListaMesaControl(params.get("idNumTramite").toString());
+						String valorTipoAtencion = lista.get(0).getOtvalor07mc();
+						if(!valorTipoAtencion.equalsIgnoreCase(params.get("cmbTipoAtencion"))){
+							siniestrosManager.eliminaDocumentosxTramite(params.get("idNumTramite").toString());
+						}
+						
 						ProcesoAltaTramite(params.get("idNumTramite").toString());
 						//despues de esto tengo que actualizar la mesa de control
 						Map<String,Object> otvalor = new HashMap<String,Object>();

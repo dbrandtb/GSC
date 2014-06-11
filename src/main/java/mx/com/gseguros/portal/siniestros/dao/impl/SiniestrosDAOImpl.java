@@ -3067,4 +3067,26 @@ Map<String, Object> mapResult = ejecutaSP(new ObtieneListadoTTAPVAATSP(getDataSo
     		compile();
     	}
     }
+
+
+	@Override
+	public void eliminacionDocumentosxTramite(String ntramite) throws Exception {
+		// TODO Auto-generated method stub
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_ntramite_i", ntramite);
+		Map<String,Object> resultadoMap=this.ejecutaSP(new EliminacionDocumentosxTramite(this.getDataSource()), params);
+	}
+	
+	protected class EliminacionDocumentosxTramite extends StoredProcedure
+	{
+		protected EliminacionDocumentosxTramite(DataSource dataSource)
+		{
+			super(dataSource, "PKG_PRESINIESTRO.P_ELIMINA_DOCTOS_X_TRAMITE");
+			declareParameter(new SqlParameter("pv_ntramite_i", OracleTypes.VARCHAR));
+			declareParameter(new SqlOutParameter("pv_msg_id_o"   , OracleTypes.NUMERIC));
+			declareParameter(new SqlOutParameter("pv_title_o"    , OracleTypes.VARCHAR));
+			compile();
+		}
+	}
+
 }
