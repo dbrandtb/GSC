@@ -6,6 +6,8 @@ import mx.com.aon.kernel.service.KernelManagerSustituto;
 import mx.com.gseguros.exception.ApplicationException;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceCallbackHandler;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralGSResponseE;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralRespuesta;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludGSResponseE;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludRespuesta;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReciboGSResponseE;
@@ -103,6 +105,75 @@ public class ServicioGSServiceCallbackHandlerImpl extends ServicioGSServiceCallb
 						Ice2sigsService.TipoError.ErrWScli.getCodigo(),
 						respuesta.getCodigo() + " - " + respuesta.getMensaje(),
 						usuario, (String) params.get("pv_ntramite_i"), "ws.ice2sigs.url", "clienteSaludGS",
+						stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString(), Integer.toString(respuesta.getCodigo()));
+			} catch (Exception e1) {
+				logger.error("Error al insertar en bitacora", e1);
+			}
+		}
+	}
+
+	@Override
+	public void receiveErrorclienteGeneralGS(Exception e) {
+		logger.error("Error en WS clienteGeneral: " + e.getMessage() + " Guardando en bitacora el error, getCause: " + e.getCause(),e);
+		
+		HashMap<String, Object> params = (HashMap<String, Object>) this.clientData;
+		
+		ServicioGSServiceStub stubGS = (ServicioGSServiceStub) params.get("STUB");
+		logger.debug("Imprimpriendo el xml enviado al WS: ");
+		try {
+			logger.debug(stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
+		} catch (AxisFault ex) {
+			logger.error(ex);
+		}
+		
+		String usuario = (String) params.get("USUARIO");
+		try {
+			kernelManager.movBitacobro(
+					(String) params.get("pv_cdunieco_i"),
+					(String) params.get("pv_cdramo_i"),
+					(String) params.get("pv_estado_i"),
+					(String) params.get("pv_nmpoliza_i"), 
+					(String) params.get("pv_nmsuplem_i"), 
+					Ice2sigsService.TipoError.ErrWScliCx.getCodigo(), 
+					"Msg: " + e.getMessage() + " ***Cause: " + e.getCause(),
+					usuario, (String) params.get("pv_ntramite_i"), "ws.ice2sigs.url", "clienteGeneralGS",
+					stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString(), null);
+		} catch (Exception e1) {
+			logger.error("Error al insertar en bitacora", e1);
+		}
+	}
+	
+	@Override
+	public void receiveResultclienteGeneralGS(ClienteGeneralGSResponseE result) {
+		logger.debug("Comunicacion exitosa WS clienteGeneral");
+		ClienteGeneralRespuesta respuesta = result.getClienteGeneralGSResponse().get_return();
+		logger.debug("Resultado al ejecutar el WS cliente: " + respuesta.getCodigo() + " - " + respuesta.getMensaje());
+		
+		//TODO: RBS cambiar el param por PolizaVO
+		HashMap<String, Object> params = (HashMap<String, Object>) this.clientData;
+		
+		ServicioGSServiceStub stubGS = (ServicioGSServiceStub) params.get("STUB");
+		logger.debug("Imprimpriendo el xml enviado al WS: ");
+		try {
+			logger.debug(stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
+		} catch (AxisFault e) {
+			logger.error(e);
+		}
+		
+		if (Estatus.EXITO.getCodigo() != respuesta.getCodigo() && Estatus.LLAVE_DUPLICADA.getCodigo() != respuesta.getCodigo()) {
+			logger.error("Guardando en bitacora el estatus");
+			
+			String usuario = (String) params.get("USUARIO");
+			try {
+				kernelManager.movBitacobro(
+						(String) params.get("pv_cdunieco_i"),
+						(String) params.get("pv_cdramo_i"),
+						(String) params.get("pv_estado_i"),
+						(String) params.get("pv_nmpoliza_i"),
+						(String) params.get("pv_nmsuplem_i"), 
+						Ice2sigsService.TipoError.ErrWScli.getCodigo(),
+						respuesta.getCodigo() + " - " + respuesta.getMensaje(),
+						usuario, (String) params.get("pv_ntramite_i"), "ws.ice2sigs.url", "clienteGeneralGS",
 						stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString(), Integer.toString(respuesta.getCodigo()));
 			} catch (Exception e1) {
 				logger.error("Error al insertar en bitacora", e1);

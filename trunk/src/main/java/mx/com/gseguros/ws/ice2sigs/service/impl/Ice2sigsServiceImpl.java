@@ -14,6 +14,11 @@ import mx.com.gseguros.portal.general.model.RespuestaVO;
 import mx.com.gseguros.portal.siniestros.service.SiniestrosManager;
 import mx.com.gseguros.utils.Constantes;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneral;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralGS;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralGSE;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralGSResponseE;
+import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteGeneralRespuesta;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSalud;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludGS;
 import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ClienteSaludGSE;
@@ -32,6 +37,7 @@ import mx.com.gseguros.ws.ice2sigs.client.axis2.ServicioGSServiceStub.ReclamoRes
 import mx.com.gseguros.ws.ice2sigs.client.axis2.callback.impl.ServicioGSServiceCallbackHandlerImpl;
 import mx.com.gseguros.ws.ice2sigs.client.model.ReciboWrapper;
 import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService;
+import mx.com.gseguros.ws.ice2sigs.service.Ice2sigsService.Estatus;
 import mx.com.gseguros.ws.model.WrapperResultadosWS;
 
 import org.apache.axis2.AxisFault;
@@ -96,7 +102,58 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 				resultado = RespuestaGS.getClienteSaludGSResponse().get_return();
 				resWS.setResultadoWS(resultado);
 				resWS.setXmlIn(stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
-				logger.debug("Resultado sincrono para primer ejecucion de WS: "+resultado.getCodigo()+" - "+resultado.getMensaje());
+				logger.debug("Resultado ejecucion de WS clienteSaludGS: "+resultado.getCodigo()+" - "+resultado.getMensaje());
+			}
+		} catch (Exception re) {
+			throw new WSException("Error de conexion: " + re.getMessage(), re, stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
+		}
+		
+		return resWS;
+	}
+
+	private WrapperResultadosWS ejecutaClienteGeneralGS(Operacion operacion,
+			ClienteGeneral cliente, HashMap<String, Object> params, boolean async) throws Exception {
+		
+		ClienteGeneralRespuesta resultado = null;
+		WrapperResultadosWS resWS = new WrapperResultadosWS();
+		ServicioGSServiceStub stubGS = null;
+		
+		try {
+			logger.info(new StringBuffer("endpoint a invocar=").append(endpoint));
+			stubGS = new ServicioGSServiceStub(endpoint);
+		} catch (AxisFault e) {
+			logger.error(e);
+			throw new Exception("Error de preparacion de Axis2: "
+					+ e.getMessage());
+		}
+		stubGS._getServiceClient().getOptions().setTimeOutInMilliSeconds(WS_TIMEOUT);
+		
+		ClienteGeneralGSResponseE RespuestaGS = null;
+		
+		ClienteGeneralGS clienteS = new ClienteGeneralGS();
+		clienteS.setArg0(operacion.getCodigo());
+		clienteS.setArg1(cliente);
+		
+		ClienteGeneralGSE clienteE = new ClienteGeneralGSE();
+		clienteE.setClienteGeneralGS(clienteS);
+		
+		try {
+			if(async){
+				//TODO: RBS Cambiar params por PolizaVO
+				//Se genera una nueva instancia en cada llamado, para evitar corrupcion de datos en el handler:
+				WebApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(ServletActionContext.getServletContext());
+				ServicioGSServiceCallbackHandlerImpl callback = (ServicioGSServiceCallbackHandlerImpl)context.getBean("servicioGSServiceCallbackHandlerImpl");
+				// Se setean los parametros al callback handler:
+				params.put("STUB", stubGS);
+				callback.setClientData(params);
+				
+				stubGS.startclienteGeneralGS(clienteE, callback);
+			} else {
+				RespuestaGS = stubGS.clienteGeneralGS(clienteE);
+				resultado = RespuestaGS.getClienteGeneralGSResponse().get_return();
+				resWS.setResultadoWS(resultado);
+				resWS.setXmlIn(stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
+				logger.debug("Resultado ejecucion de WS clienteGeneralGS: "+resultado.getCodigo()+" - "+resultado.getMensaje());
 			}
 		} catch (Exception re) {
 			throw new WSException("Error de conexion: " + re.getMessage(), re, stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
@@ -147,7 +204,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 				resultado = RespuestaGS.getReciboGSResponse().get_return();
 				resWS.setResultadoWS(resultado);
 				resWS.setXmlIn(stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
-				logger.debug("Resultado sincrono para primer ejecucion de WS: "+resultado.getCodigo()+" - "+resultado.getMensaje());
+				logger.debug("Resultado ejecucion de WS reciboGS: "+resultado.getCodigo()+" - "+resultado.getMensaje());
 			}
 		} catch (Exception re) {
 			throw new WSException("Error de conexion: " + re.getMessage(), re, stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
@@ -199,7 +256,7 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 				resultado = RespuestaGS.getReclamoGSResponse().get_return();
 				resWS.setResultadoWS(resultado);
 				resWS.setXmlIn(stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
-				logger.debug("Resultado de WS ejecutaReclamoGS: "+resultado.getCodigo()+" - "+resultado.getMensaje());
+				logger.debug("Resultado ejecucion de WS ejecutaReclamoGS: "+resultado.getCodigo()+" - "+resultado.getMensaje());
 			}
 		} catch (Exception re) {
 			throw new WSException("Error de conexion: " + re.getMessage(), re, stubGS._getServiceClient().getLastOperationContext().getMessageContext("Out").getEnvelope().toString());
@@ -263,6 +320,110 @@ public class Ice2sigsServiceImpl implements Ice2sigsService {
 		}
 
 		return exito;
+	}
+
+	public ClienteGeneralRespuesta ejecutaWSclienteGeneral(String cdunieco, String cdramo,
+			String estado, String nmpoliza, String nmsuplem, String ntramite,
+			Ice2sigsService.Operacion op, ClienteGeneral cliente, UserVO userVO, boolean async) {
+		
+		logger.debug("********************* Entrando a Ejecuta WSclienteGeneral ******************************");
+		logger.debug("********************* Operacion a Realizar: " + op);
+		
+		ClienteGeneralRespuesta clientesRespuesta = null;
+		WrapperResultadosWS resultWS = null;
+		WrapperResultados result = null;
+		
+		//Se invoca servicio para obtener los datos del cliente
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("pv_cdunieco_i", cdunieco);
+		params.put("pv_cdramo_i", cdramo);
+		params.put("pv_estado_i", estado);
+		params.put("pv_nmpoliza_i", nmpoliza);
+		params.put("pv_nmsuplem_i", nmsuplem);
+		params.put("pv_ntramite_i", ntramite);
+		
+		
+		if(Ice2sigsService.Operacion.CONSULTA_GENERAL.getCodigo() != op.getCodigo()){
+			try {
+				result = kernelManager.obtenDatosClienteWS(params);
+				if(result.getItemList() != null && result.getItemList().size() > 0){
+					cliente = ((ArrayList<ClienteGeneral>) result.getItemList()).get(0);
+				}
+			} catch (Exception e1) {
+				logger.error("Error en llamar al PL de obtencion de ejecutaWSclienteGeneral",e1);
+				return null;
+			}	
+		}
+		
+		
+		if(cliente != null){
+			
+			String usuario = "SIN USUARIO";
+			if(userVO != null){
+				usuario = userVO.getUser();
+			}
+			
+			logger.debug(">>>>>>> Ejecutando WS Cliente General Clave: " + cliente.getClaveCli());
+			logger.debug(">>>>>>> Ejecutando WS Cliente General RFC: " + cliente.getRfcCli());
+			try{
+				
+				if(async){
+					params.put("USUARIO", usuario);
+					ejecutaClienteGeneralGS(op, cliente, params, async);
+				}else{
+					resultWS = ejecutaClienteGeneralGS(op, cliente, null, async);
+					clientesRespuesta = (ClienteGeneralRespuesta) resultWS.getResultadoWS();
+					
+					logger.debug("XML de entrada: " + resultWS.getXmlIn());
+
+					if (Ice2sigsService.Operacion.CONSULTA_GENERAL.getCodigo() != op.getCodigo() && Estatus.EXITO.getCodigo() != clientesRespuesta.getCodigo() 
+							&& Estatus.LLAVE_DUPLICADA.getCodigo() != clientesRespuesta.getCodigo()) {
+						logger.error("Guardando en bitacora el estatus");
+
+						try {
+							kernelManager.movBitacobro(
+									(String) params.get("pv_cdunieco_i"),
+									(String) params.get("pv_cdramo_i"),
+									(String) params.get("pv_estado_i"),
+									(String) params.get("pv_nmpoliza_i"),
+									(String) params.get("pv_nmsuplem_i"), 
+									Ice2sigsService.TipoError.ErrWScli.getCodigo(),
+									clientesRespuesta.getCodigo() + " - " + clientesRespuesta.getMensaje(),
+									usuario, (String) params.get("pv_ntramite_i"), "ws.ice2sigs.url", "clienteGeneralGS",
+									resultWS.getXmlIn(), Integer.toString(clientesRespuesta.getCodigo()));
+						} catch (Exception e1) {
+							logger.error("Error al insertar en bitacora", e1);
+						}
+					}
+				}
+			}catch(WSException e){
+				logger.error("Error al ejecutar WS Cliente General Clave: " + cliente.getClaveCli() + " RFC: " + cliente.getRfcCli(), e);
+				logger.error("Imprimpriendo el xml enviado al WS: Payload: " + e.getPayload());
+				if (Ice2sigsService.Operacion.CONSULTA_GENERAL.getCodigo() != op.getCodigo()){
+					try {
+						kernelManager.movBitacobro(
+								(String) params.get("pv_cdunieco_i"),
+								(String) params.get("pv_cdramo_i"),
+								(String) params.get("pv_estado_i"),
+								(String) params.get("pv_nmpoliza_i"), 
+								(String) params.get("pv_nmsuplem_i"), 
+								Ice2sigsService.TipoError.ErrWScliCx.getCodigo(), 
+								"Msg: " + e.getMessage() + " ***Cause: " + e.getCause(),
+								usuario, (String) params.get("pv_ntramite_i"), "ws.ice2sigs.url", "clienteGeneralGS",
+								e.getPayload(), null);
+					} catch (Exception e1) {
+						logger.error("Error al insertar en bitacora", e1);
+					}
+				}
+				
+			}catch (Exception e){
+				logger.error("Error al ejecutar WS Cliente General Clave: " + cliente.getClaveCli() + " RFC: " + cliente.getRfcCli(), e);
+			}
+		}else{
+			logger.error("Error, No se tienen datos del Cliente");
+		}
+		
+		return clientesRespuesta;
 	}
 
 	

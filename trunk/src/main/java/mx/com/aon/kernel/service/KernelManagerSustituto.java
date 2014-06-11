@@ -269,4 +269,12 @@ public interface KernelManagerSustituto {
      */
     public WrapperResultados validaUsuarioSucursal(String cdunieco, String cdramo, String cdtipsit, String username) throws ApplicationException;
     
+    /**
+     * Verifica si los datos del domicilio ya estan guardados y regresa el cdperson
+     * @param cdideper
+     * @return
+     */
+    public WrapperResultados existeDomicilioContratante(String cdideper);
+    
+    
 }
